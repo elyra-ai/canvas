@@ -11,6 +11,9 @@ import isEmpty from "lodash/isEmpty";
 
 export default class PipelineOutHandler {
 
+	// Creates a new pipeline flow using the pipelineFlow provided by the host
+	// app and the canvasInfo.  It is assumed the primary_pipeline ID in the
+	// pipelineFlow is the same as the primary_pipeline ID in the canvasInfo.
 	static createPipelineFlow(pipelineFlow, canvasInfo) {
 		const copyPipelineFlow = JSON.parse(JSON.stringify(pipelineFlow));
 		const copyCanvasInfo = JSON.parse(JSON.stringify(canvasInfo));
@@ -20,9 +23,9 @@ export default class PipelineOutHandler {
 
 	static createPipelinesFromCanvasInfo(canvasInfo) {
 		if (canvasInfo) {
-			return canvasInfo.map((canvasInfoPipeline) => this.createPipeline(canvasInfoPipeline));
+			return canvasInfo.pipelines.map((canvasInfoPipeline) => this.createPipeline(canvasInfoPipeline));
 		}
-		return [];
+		return {};
 	}
 
 	static createPipeline(canvasInfoPipeline) {

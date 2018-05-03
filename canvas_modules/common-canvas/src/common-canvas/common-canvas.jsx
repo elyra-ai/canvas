@@ -326,9 +326,9 @@ export default class CommonCanvas extends React.Component {
 		let tip = null;
 		let commonCanvasWidth = parseInt(canvasStyles.canvasMinWidth, 10); // ParseInt to remove "px"
 		const paletteFlyoutWidth = parseInt(canvasStyles.paletteFlyoutWidth, 10); // ParseInt to remove "px"
-		const canvasInfoPipeline = this.objectModel.getCanvasInfoPipeline();
+		const canvasInfo = this.objectModel.getCanvasInfo();
 
-		if (canvasInfoPipeline !== null) {
+		if (canvasInfo !== null) {
 			if (this.state.showContextMenu) {
 				contextMenuWrapper = (<ContextMenuWrapper
 					containingDivId={this.itemsContainerDivId}
@@ -340,7 +340,7 @@ export default class CommonCanvas extends React.Component {
 			canvas = (
 				<DiagramCanvasD3
 					ref="canvas"
-					canvas={canvasInfoPipeline}
+					canvasInfo={canvasInfo}
 					config={this.props.config}
 					canvasController={this.canvasController}
 				>
@@ -403,9 +403,10 @@ export default class CommonCanvas extends React.Component {
 
 		let emptyCanvas = null;
 
-		if (canvasInfoPipeline === null ||
-				(canvasInfoPipeline.nodes.length === 0 &&
-					canvasInfoPipeline.comments.length === 0)) {
+		const primaryPipeline = this.objectModel.getCanvasInfoPipeline();
+		if (primaryPipeline === null ||
+				(primaryPipeline.nodes.length === 0 &&
+					primaryPipeline.comments.length === 0)) {
 			if (this.props.config.emptyCanvasContent) {
 				emptyCanvas = (
 					<div className="empty-canvas">

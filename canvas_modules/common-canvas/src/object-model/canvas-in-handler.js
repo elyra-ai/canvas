@@ -12,17 +12,20 @@ import has from "lodash/has";
 export default class CanvasInHandler {
 
 	static convertCanvasToCanvasInfo(canvas) {
-		const canvasInfo = [];
+		// There is only one pipeline in a canvas document conained in the
+		// canvas.diagram field.
 		const canvasInfoPipeline = {
-			id: canvas.id,
 			sub_id: canvas.diagram.id,
 			nodes: this.getNodes(canvas.diagram.nodes),
 			comments: this.getComments(canvas.diagram.comments),
 			links: this.getLinks(canvas.diagram.links),
 			runtime_ref: ""
 		};
-		canvasInfo.push(canvasInfoPipeline);
-		return canvasInfo;
+		return {
+			id: canvas.id,
+			primary_pipeline: canvas.diagram.id,
+			pipelines: [canvasInfoPipeline]
+		};
 	}
 
 	static getNodes(canvasNodes) {

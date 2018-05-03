@@ -360,29 +360,38 @@ const canvasinfo = (state = [], action) => {
 	// make sure node dimensions are calculated for all nodes in all current
 	// pipelines.
 	case "SET_PIPELINE_FLOW": {
+		let canvasInfoPipelines = [];
 		if (action.data.pipelines) {
-			return action.data.pipelines.map((pFlowPipline) => {
+			canvasInfoPipelines = action.data.pipelines.map((pFlowPipline) => {
 				const pipeline = PipelineInHandler.convertPipelineToCanvasInfoPipeline(pFlowPipline);
 				return Object.assign({}, pipeline, { nodes: nodes(pipeline.nodes, action) });
 			});
 		}
-		return [];
+		// TODO -Think about moving all top level pipeline flow fields into canvas info.
+		return {
+			id: action.data.id,
+			primary_pipeline: action.data.primary_pipeline,
+			pipelines: canvasInfoPipelines
+		};
 	}
 
 	// Save incoming pipelines as our current (state) pipelines and make sure
 	// node dimensions are calculated for all nodes in all current
 	// pipelines. This will replace all pipelines with the incomming ones.
-	case "SET_CANVAS_INFO":
-		return action.data.map((pipeline) => {
+	case "SET_CANVAS_INFO": {
+		const canvasInfoPipelines = action.data.pipelines.map((pipeline) => {
 			return Object.assign({}, pipeline, { nodes: nodes(pipeline.nodes, action) });
 		});
-
+		return Object.assign({}, action.data, { pipelines: canvasInfoPipelines });
+	}
 	// Ensure node dimensions are calculated for all nodes in all current
 	// pipelines when layout info is changed.
-	case "SET_LAYOUT_INFO":
-		return state.map((pipeline) => {
+	case "SET_LAYOUT_INFO": {
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
 			return Object.assign({}, pipeline, { nodes: nodes(pipeline.nodes, action) });
 		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
 
 	case "ADD_NODE":
 	case "ADD_AUTO_NODE":
@@ -403,8 +412,8 @@ const canvasinfo = (state = [], action) => {
 	case "ADD_COMMENT":
 	case "EDIT_COMMENT":
 	case "ADD_COMMENT_ATTR":
-	case "REMOVE_COMMENT_ATTR":
-		return state.map((pipeline) => {
+	case "REMOVE_COMMENT_ATTR": {
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
 			if (pipeline.sub_id === action.pipelineId) {
 				return Object.assign({}, pipeline, {
 					nodes: nodes(pipeline.nodes, action),
@@ -413,6 +422,8 @@ const canvasinfo = (state = [], action) => {
 			}
 			return pipeline;
 		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
 
 	default:
 		return state;
@@ -610,14 +621,18 @@ export default class ObjectModel {
 		const initialState = {
 			selections: [],
 			layoutinfo: LayoutDimensions.getLayout(),
-			canvasinfo: [
-				{
-					sub_id: "empty-pipeline",
-					nodes: [],
-					comments: [],
-					links: []
-				}
-			],
+			canvasinfo: {
+				id: "empty-pipeline-flow",
+				primary_pipeline: "empty-pipeline",
+				pipelines: [
+					{
+						sub_id: "empty-pipeline",
+						nodes: [],
+						comments: [],
+						links: []
+					}
+				]
+			},
 			pipelineflow: getInitialPipelineFlow("empty-pipeline-flow", "empty-pipeline"),
 			palette: {}
 		};
@@ -764,7 +779,7 @@ export default class ObjectModel {
 	// Deprectaed TODO - Remove this method when WML Canvas supports pipeline Flow
 	getCanvas() {
 		if (this.oldCanvas) {
-			return CanvasOutHandler.getCanvasBasedOnCanvas(this.oldCanvas, this.getCanvasInfo());
+			return CanvasOutHandler.getCanvasBasedOnCanvasInfo(this.oldCanvas, this.getCanvasInfo());
 		}
 		return {};
 	}
@@ -786,7 +801,7 @@ export default class ObjectModel {
 	}
 
 	getPrimaryPipelineId() {
-		const pipelineFlow = this.store.getState().pipelineflow;
+		const pipelineFlow = this.store.getState().canvasinfo;
 		return pipelineFlow.primary_pipeline;
 	}
 
@@ -856,9 +871,14 @@ export default class ObjectModel {
 		return this.store.getState().canvasinfo;
 	}
 
+	// Returns the pipeline for the id passed in or the primary pipeline if
+	// no id is passed in.
 	getCanvasInfoPipeline(pipelineId) {
+		if (!this.getCanvasInfo()) {
+			return null;
+		}
 		const pId = pipelineId || this.getPrimaryPipelineId();
-		const pipelines = this.getCanvasInfo();
+		const pipelines = this.getCanvasInfo().pipelines;
 		const p = pipelines.find((pipeline) => {
 			return pipeline.sub_id === pId;
 		});
@@ -902,12 +922,19 @@ export default class ObjectModel {
 			return Object.assign({}, node, { x_pos: lookup[node.id].value.x, y_pos: lookup[node.id].value.y });
 		});
 
-		const newCanvasInfo = this.getCanvasInfo().map((ciPipeline) => {
+		const canvasInfo = this.getCanvasInfo();
+
+		const newCanvasInfoPipelines = canvasInfo.pipelines.map((ciPipeline) => {
 			if (ciPipeline.sub_id === canvasInfoPipeline.sub_id) {
 				return Object.assign({}, canvasInfoPipeline, { nodes: newNodes });
 			}
 			return ciPipeline;
 		});
+
+		const newCanvasInfo = {
+			primary_pipeline: canvasInfo.primary_pipeline,
+			pipelines: newCanvasInfoPipelines
+		};
 
 		this.setCanvasInfo(newCanvasInfo);
 	}

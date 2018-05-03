@@ -39,7 +39,7 @@ export default class DiagramCanvas extends React.Component {
 
 	componentDidMount() {
 		this.canvasD3Layout =
-			new CanvasD3Layout(this.props.canvas,
+			new CanvasD3Layout(this.props.canvasInfo,
 				this.svgCanvasDivSelector,
 				"100%", "100%",
 				this.props.config,
@@ -49,7 +49,7 @@ export default class DiagramCanvas extends React.Component {
 
 	componentDidUpdate() {
 		if (this.canvasD3Layout) {
-			this.canvasD3Layout.setCanvasInfo(this.props.canvas, this.props.config);
+			this.canvasD3Layout.setCanvasInfo(this.props.canvasInfo, this.props.config);
 		}
 	}
 
@@ -158,7 +158,7 @@ export default class DiagramCanvas extends React.Component {
 }
 
 DiagramCanvas.propTypes = {
-	canvas: PropTypes.object,
+	canvasInfo: PropTypes.object,
 	config: PropTypes.object.isRequired,
 	children: PropTypes.element,
 	canvasController: PropTypes.object.isRequired

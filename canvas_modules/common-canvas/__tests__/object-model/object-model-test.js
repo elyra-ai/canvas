@@ -23,33 +23,21 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should create a canvas");
 		const objectModel = new ObjectModel();
 
-		const expectedCanvas =
-			[{	nodes: [{ id: "node1", name: "Node 1" },
-				{ id: "node2", name: "Node 2" }]
-			}];
+		const expectedPipeline =
+			{	sub_id: "123",
+				nodes: [
+					{ id: "node1", name: "Node 1" },
+					{ id: "node2", name: "Node 2" }]
+			};
 
-		deepFreeze(expectedCanvas);
+		setupStartCanvasInfo("123", expectedPipeline, objectModel);
 
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: expectedCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline));
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
-
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 
@@ -57,66 +45,51 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should clear a canvas");
 		const objectModel = new ObjectModel();
 
-		const startCanvas =
-			[
-				{ diagram:
-					{
-						nodes: [
-							{ id: "node1", x_pos: 10, y_pos: 10 },
-							{ id: "node2", x_pos: 20, y_pos: 20 },
-							{ id: "node3", x_pos: 30, y_pos: 30 }
-						],
-						comments: [
-							{ id: "comment1", x_pos: 50, y_pos: 50 },
-							{ id: "comment2", x_pos: 60, y_pos: 60 }
-						]
-					}
-				}
-			];
+		const startPipeline =
+			{
+				sub_id: "123",
+				nodes: [
+					{ id: "node1", x_pos: 10, y_pos: 10 },
+					{ id: "node2", x_pos: 20, y_pos: 20 },
+					{ id: "node3", x_pos: 30, y_pos: 30 }
+				],
+				comments: [
+					{ id: "comment1", x_pos: 50, y_pos: 50 },
+					{ id: "comment2", x_pos: 60, y_pos: 60 }
+				]
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({ type: "CLEAR_PIPELINE_FLOW" });
 
-		const expectedCanvas = null;
-		const actualCanvas = objectModel.getCanvasInfo();
+		const expectedPipeline = null;
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should add a node", () => {
 		logger.info("should add a node");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ nodes: [
-				{ id: "node1", x_pos: 10, y_pos: 10 },
-				{ id: "node2", x_pos: 20, y_pos: 20 },
-				{ id: "node3", x_pos: 30, y_pos: 30 }
-			],
-			comments: [
-				{ id: "comment1", x_pos: 50, y_pos: 50 },
-				{ id: "comment2", x_pos: 60, y_pos: 60 }
-			]
-			}
-		];
+		const startPipeline =
+			{ sub_id: "123",
+				nodes: [
+					{ id: "node1", x_pos: 10, y_pos: 10 },
+					{ id: "node2", x_pos: 20, y_pos: 20 },
+					{ id: "node3", x_pos: 30, y_pos: 30 }
+				],
+				comments: [
+					{ id: "comment1", x_pos: 50, y_pos: 50 },
+					{ id: "comment2", x_pos: 60, y_pos: 60 }
+				]
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		var newNodeData = { id: "node4", label: "Type", image: "imageName", type: "execution_node",
 			operator_id_ref: "type", class_name: "canvas-node",
@@ -128,12 +101,14 @@ describe("ObjectModel handle model OK", () => {
 		// imageName - Just for Testing
 		objectModel.dispatch({
 			type: "ADD_NODE",
-			data: { newNode: newNodeData }
+			data: { newNode: newNodeData },
+			pipelineId: "123"
 		});
 
 
-		const expectedCanvas = [
+		const expectedPipeline =
 			{
+				sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -149,91 +124,73 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment2", x_pos: 60, y_pos: 60 }
 				],
 				links: []
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should move a node", () => {
 		logger.info("should move a node");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ nodes: [
-				{ id: "node1", x_pos: 10, y_pos: 10 },
-				{ id: "node2", x_pos: 20, y_pos: 20 },
-				{ id: "node3", x_pos: 30, y_pos: 30 }
-			],
-			comments: [
-				{ id: "comment1", x_pos: 50, y_pos: 50 },
-				{ id: "comment2", x_pos: 60, y_pos: 60 }
-			],
-			links: []
-			}];
+		const startPipeline =
+			{ sub_id: "123",
+				nodes: [
+					{ id: "node1", x_pos: 10, y_pos: 10 },
+					{ id: "node2", x_pos: 20, y_pos: 20 },
+					{ id: "node3", x_pos: 30, y_pos: 30 }
+				],
+				comments: [
+					{ id: "comment1", x_pos: 50, y_pos: 50 },
+					{ id: "comment2", x_pos: 60, y_pos: 60 }
+				],
+				links: []
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "MOVE_OBJECTS",
 			data: { nodes: ["node1", "node2", "node3"],
 				offsetX: 5,
-				offsetY: 7 }
+				offsetY: 7 },
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ nodes: [
-				{ id: "node1", x_pos: 15, y_pos: 17 },
-				{ id: "node2", x_pos: 25, y_pos: 27 },
-				{ id: "node3", x_pos: 35, y_pos: 37 }
-			],
-			comments: [
-				{ id: "comment1", x_pos: 50, y_pos: 50 },
-				{ id: "comment2", x_pos: 60, y_pos: 60 }
-			],
-			links: []
-			}];
+		const expectedPipeline =
+			{ sub_id: "123",
+				nodes: [
+					{ id: "node1", x_pos: 15, y_pos: 17 },
+					{ id: "node2", x_pos: 25, y_pos: 27 },
+					{ id: "node3", x_pos: 35, y_pos: 37 }
+				],
+				comments: [
+					{ id: "comment1", x_pos: 50, y_pos: 50 },
+					{ id: "comment2", x_pos: 60, y_pos: 60 }
+				],
+				links: []
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should delete a node", () => {
 		logger.info("should delete a node");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -243,33 +200,24 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment1", x_pos: 50, y_pos: 50 },
 					{ id: "comment2", x_pos: 60, y_pos: 60 }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
-
-		/* objectModel.dispatch({
-			type: "DELETE_OBJECTS",
-			data: { selectedObjectIds: ["node1", "node3"] }
-		}); */
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "DELETE_OBJECT",
-			data: { id: "node1" }
+			data: { id: "node1" },
+			pipelineId: "123"
 		});
 
 		objectModel.dispatch({
 			type: "DELETE_OBJECT",
-			data: { id: "node3" }
+			data: { id: "node3" },
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ zoom: 100,
+		const expectedPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node2", x_pos: 20, y_pos: 20 }
 				],
@@ -278,30 +226,22 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment2", x_pos: 60, y_pos: 60 }
 				],
 				links: []
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should disconnect a node", () => {
 		logger.info("should disconnect a node");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -315,23 +255,18 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "DISCONNECT_NODES",
-			data: { selectedNodeIds: ["node1"] }
+			data: { selectedNodeIds: ["node1"] },
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ zoom: 100,
+		const expectedPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -344,30 +279,22 @@ describe("ObjectModel handle model OK", () => {
 				links: [
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should add node attr", () => {
 		logger.info("should add node attr");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -381,24 +308,20 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "ADD_NODE_ATTR",
-			data: { objIds: ["node1"],
-				attrName: "bgcolor" }
+			data: {
+				objIds: ["node1"],
+				attrName: "bgcolor" },
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ zoom: 100,
+		const expectedPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": ["bgcolor"] },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -412,30 +335,22 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should remove node attr", () => {
 		logger.info("should remove node attr");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": ["bgcolor"] },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -449,24 +364,20 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "REMOVE_NODE_ATTR",
-			data: { objIds: ["node1"],
-				attrName: "bgcolor" }
+			data: {
+				objIds: ["node1"],
+				attrName: "bgcolor" },
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ zoom: 100,
+		const expectedPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": [] },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -480,30 +391,22 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should add a comment", () => {
 		logger.info("should add a comment");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -513,15 +416,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment1", x_pos: 50, y_pos: 50 },
 					{ id: "comment2", x_pos: 60, y_pos: 60 }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		/* objectModel.dispatch({
 			type: "ADD_COMMENT",
@@ -534,11 +431,12 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "ADD_COMMENT",
-			data: { id: "comment3",	x_pos: 200,	y_pos: 300,	selectedObjectIds: []	}
+			data: { id: "comment3",	x_pos: 200,	y_pos: 300,	selectedObjectIds: []	},
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ zoom: 100,
+		const expectedPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -550,31 +448,23 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment3",	x_pos: 200,	y_pos: 300 }
 				],
 				links: []
-			}];
+			};
 
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		expect(isEqual(JSON.stringify(expectedCanvas), JSON.stringify(actualCanvas))).to.be.true;
+		expect(isEqual(JSON.stringify(expectedPipeline), JSON.stringify(actualPipeline))).to.be.true;
 	});
 
 	it("should edit a comment", () => {
 		logger.info("should edit a comment");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -584,23 +474,18 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment1", x_pos: 50, y_pos: 50 },
 					{ id: "comment2", x_pos: 60, y_pos: 60 }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "EDIT_COMMENT",
-			data: { nodes: ["comment2"], offsetX: 425, offsetY: 125, height: 45, width: 250, label: "this is a new comment string" }
+			data: { nodes: ["comment2"], offsetX: 425, offsetY: 125, height: 45, width: 250, label: "this is a new comment string" },
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ zoom: 100,
+		const expectedPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -616,30 +501,22 @@ describe("ObjectModel handle model OK", () => {
 						width: 250 }
 				],
 				links: []
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		expect(isEqual(JSON.stringify(expectedCanvas), JSON.stringify(actualCanvas))).to.be.true;
+		expect(isEqual(JSON.stringify(expectedPipeline), JSON.stringify(actualPipeline))).to.be.true;
 	});
 
 	it("should move a comment", () => {
 		logger.info("should move a comment");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -650,25 +527,20 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment2", x_pos: 60, y_pos: 60 }
 				],
 				links: []
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "MOVE_OBJECTS",
 			data: { nodes: ["comment1", "comment2"],
 				offsetX: 5,
-				offsetY: 7 }
+				offsetY: 7 },
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ zoom: 100,
+		const expectedPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -679,66 +551,51 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment2", x_pos: 65, y_pos: 67 }
 				],
 				links: []
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should delete a comment", () => {
 		logger.info("should delete a comment");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ "zoom": 100,
-				"nodes": [
+		const startPipeline =
+			{ sub_id: "123",
+				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
 					{ id: "node3", x_pos: 30, y_pos: 30 }
 				],
-				"comments": [
+				comments: [
 					{ id: "comment1", x_pos: 50, y_pos: 50 },
 					{ id: "comment2", x_pos: 60, y_pos: 60 },
 					{ id: "comment3", x_pos: 70, y_pos: 70 }
 				],
-				"links": []
-			}];
-		deepFreeze(startCanvas);
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+				links: []
+			};
 
-		/* objectModel.dispatch({
-			type: "DELETE_OBJECTS",
-			data: { selectedObjectIds: ["comment1", "comment2"] }
-		});*/
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "DELETE_OBJECT",
-			data: { id: "comment1" }
+			data: { id: "comment1" },
+			pipelineId: "123"
 		});
 
 		objectModel.dispatch({
 			type: "DELETE_OBJECT",
-			data: { id: "comment2" }
+			data: { id: "comment2" },
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ "zoom": 100,
+		const expectedPipeline =
+			{ "sub_id": "123",
 				"nodes": [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -748,22 +605,14 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment3", x_pos: 70, y_pos: 70 }
 				],
 				"links": []
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 
 	});
 
@@ -771,8 +620,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should add comment attr");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -786,24 +635,19 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "ADD_COMMENT_ATTR",
 			data: { objIds: ["comment1"],
-				attrName: "bgcolor" }
+				attrName: "bgcolor" },
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ zoom: 100,
+		const expectedPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -817,30 +661,22 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should remove comment attr", () => {
 		logger.info("should remove comment attr");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -854,24 +690,19 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "REMOVE_COMMENT_ATTR",
 			data: { objIds: ["comment1"],
-				attrName: "bgcolor" }
+				attrName: "bgcolor" },
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ zoom: 100,
+		const expectedPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -885,30 +716,22 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should add a link", () => {
 		logger.info("should add a link");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -922,32 +745,28 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "ADD_LINK",
 			data: { id: "link3", class_name: "canvas-node-link",
 				type: "nodeLink", srcNodeId: "node2", trgNodeId: "node3",
-				srcNodePortId: "sourceport1", trgNodePortId: "targetport1" }
+				srcNodePortId: "sourceport1", trgNodePortId: "targetport1" },
+			pipelineId: "123"
 		});
 
 		objectModel.dispatch({
 			type: "ADD_LINK",
 			data: { id: "link4", class_name: "canvas-comment-link",
-				type: "commentLink", srcNodeId: "comment1", trgNodeId: "node2" }
+				type: "commentLink", srcNodeId: "comment1", trgNodeId: "node2" },
+			pipelineId: "123"
 		});
 
 
-		const expectedCanvas = [
-			{ zoom: 100,
+		const expectedPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -966,23 +785,15 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link4", class_name: "canvas-comment-link",
 						srcNodeId: "comment1", trgNodeId: "node2", type: "commentLink" }
 				]
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		// var exp = JSON.stringify(expectedCanvas);
-		// var act = JSON.stringify(actualCanvas);
+		// var exp = JSON.stringify(expectedPipeline);
+		// var act = JSON.stringify(actualPipeline);
 		//
 		// for (var i = 0; i < act.length; i++) {
 		// 	if (exp[i] !== act[i]) {
@@ -993,15 +804,15 @@ describe("ObjectModel handle model OK", () => {
 		// }
 
 
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should delete a link", () => {
 		logger.info("should delete a link");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1015,23 +826,18 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "DELETE_LINK",
-			data: { id: "link1" }
+			data: { id: "link1" },
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ zoom: 100,
+		const expectedPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1044,30 +850,22 @@ describe("ObjectModel handle model OK", () => {
 				links: [
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should delete a link when a node is deleted", () => {
 		logger.info("should delete a link when a node is deleted.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1081,23 +879,18 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "DELETE_OBJECT",
-			data: { id: "node1" }
+			data: { id: "node1" },
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ zoom: 100,
+		const expectedPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node2", x_pos: 20, y_pos: 20 },
 					{ id: "node3", x_pos: 30, y_pos: 30 }
@@ -1109,30 +902,22 @@ describe("ObjectModel handle model OK", () => {
 				links: [
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should delete a link when a comment is deleted", () => {
 		logger.info("should delete a link when a comment is deleted.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1146,23 +931,18 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "DELETE_OBJECT",
-			data: { id: "comment1" }
+			data: { id: "comment1" },
+			pipelineId: "123"
 		});
 
-		const expectedCanvas = [
-			{ zoom: 100,
+		const expectedPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1174,30 +954,22 @@ describe("ObjectModel handle model OK", () => {
 				links: [
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
-			delete actualCanvas[0].nodes[i].width;
-			delete actualCanvas[0].nodes[i].height;
-			delete actualCanvas[0].nodes[i].outputPortsHeight;
-			delete actualCanvas[0].nodes[i].inputPortsHeight;
-		}
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
 	it("should select an object", () => {
 		logger.info("should select an object.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1211,15 +983,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
@@ -1239,8 +1005,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should clear current selections.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1254,15 +1020,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
@@ -1287,9 +1047,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should select toggle off comment.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
-				sub_id: "empty-pipeline",
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1303,15 +1062,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
@@ -1323,8 +1076,8 @@ describe("ObjectModel handle model OK", () => {
 		const expectedSelections = ["node3"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
@@ -1333,9 +1086,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should select toggle on comment.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
-				sub_id: "empty-pipeline",
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1349,24 +1101,16 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["node3"]
 		});
 
-
 		objectModel.toggleSelection("comment1", true);
-
 
 		const expectedSelections = ["node3", "comment1"];
 		const actualSelections = objectModel.getSelectedObjectIds();
@@ -1381,9 +1125,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should select toggle off node.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
-				sub_id: "empty-pipeline",
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1397,15 +1140,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
@@ -1429,9 +1166,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should select toggle on node.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
-				sub_id: "empty-pipeline",
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1445,15 +1181,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
@@ -1475,9 +1205,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should select nodes in a simple subgraph.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
-				sub_id: "empty-pipeline",
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1494,15 +1223,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link3", srcNodeId: "node3", trgNodeId: "node4" },
 					{ id: "link4", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
@@ -1524,9 +1247,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should select nodes in a fork subgraph.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
-				sub_id: "empty-pipeline",
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1543,15 +1265,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link3", srcNodeId: "node2", trgNodeId: "node4" },
 					{ id: "link4", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
@@ -1573,9 +1289,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should select nodes in a merge subgraph.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
-				sub_id: "empty-pipeline",
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1592,15 +1307,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link3", srcNodeId: "node3", trgNodeId: "node4" },
 					{ id: "link4", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
@@ -1622,9 +1331,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should select nodes in a simple partial subgraph.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
-				sub_id: "empty-pipeline",
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1643,15 +1351,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link5", srcNodeId: "node4", trgNodeId: "node5" },
 					{ id: "link4", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
@@ -1673,9 +1375,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should select nodes in a complex subgraph.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
-				sub_id: "empty-pipeline",
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1714,15 +1415,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link16", srcNodeId: "node7", trgNodeId: "node4" },
 					{ id: "link17", srcNodeId: "node6", trgNodeId: "node4" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
@@ -1745,9 +1440,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should select nodes in a complex partial subgraph.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
-				sub_id: "empty-pipeline",
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1786,15 +1480,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link16", srcNodeId: "node7", trgNodeId: "node4" },
 					{ id: "link17", srcNodeId: "node6", trgNodeId: "node4" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
@@ -1817,9 +1505,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should select nodes in a complex single input subgraph.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
-				sub_id: "empty-pipeline",
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1858,15 +1545,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link16", srcNodeId: "node7", trgNodeId: "node4" },
 					{ id: "link17", srcNodeId: "node6", trgNodeId: "node4" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
@@ -1888,9 +1569,8 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("should select nodes in a complex subgraph starting with comment.");
 		const objectModel = new ObjectModel();
 
-		const startCanvas = [
-			{ zoom: 100,
-				sub_id: "empty-pipeline",
+		const startPipeline =
+			{ sub_id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1929,15 +1609,9 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link16", srcNodeId: "node7", trgNodeId: "node4" },
 					{ id: "link17", srcNodeId: "node6", trgNodeId: "node4" }
 				]
-			}];
+			};
 
-		deepFreeze(startCanvas);
-
-		objectModel.dispatch({
-			type: "SET_CANVAS_INFO",
-			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
-		});
+		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
@@ -1954,5 +1628,38 @@ describe("ObjectModel handle model OK", () => {
 
 		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
+
+	function setupStartCanvasInfo(primaryPipeline, pipeline, objectModel) {
+		const canvasInfo =
+			{	id: "456",
+				primary_pipeline: primaryPipeline,
+				pipelines: [pipeline]
+			};
+
+		deepFreeze(canvasInfo);
+
+		objectModel.dispatch({
+			type: "SET_CANVAS_INFO",
+			data: canvasInfo,
+			layoutinfo: objectModel.getLayout()
+		});
+	}
+
+	function getPipelineWithoutTransientData(objectModel) {
+		const pipeline = objectModel.getCanvasInfoPipeline();
+
+		if (pipeline === null) {
+			return null;
+		}
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < pipeline.nodes.length; i++) {
+			delete pipeline.nodes[i].width;
+			delete pipeline.nodes[i].height;
+			delete pipeline.nodes[i].outputPortsHeight;
+			delete pipeline.nodes[i].inputPortsHeight;
+		}
+		return pipeline;
+	}
 
 });

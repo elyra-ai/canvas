@@ -19,12 +19,12 @@ const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
 function getCanvasData() {
 	const canvasData = getServerData(getCanvasUrl);
-	return canvasData[0]; // Canvas info returned is an array of pipelines. Return the first.
+	return canvasData.pipelines[0]; // Canvas info returned has an array of pipelines. Return the first.
 }
 
 function getCanvasDataForSecondCanvas() {
 	const canvasData = getServerData(getCanvasUrl2);
-	return canvasData[0]; // Canvas info returned is an array of pipelines. Return the first.
+	return canvasData.pipelines[0]; // Canvas info returned has an array of pipelines. Return the first.
 }
 
 function getEventLogData() {

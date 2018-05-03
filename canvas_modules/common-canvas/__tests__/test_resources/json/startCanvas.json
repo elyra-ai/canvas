@@ -1,95 +1,100 @@
-[{
-  "sub_id": "empty-pipeline",
-  "nodes": [
+{
+  "primary_pipeline": "empty-pipeline",
+  "pipelines": [
     {
-      "id": "2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
-      "class_name": "canvas-node",
-      "image": "/images/filter.svg",
-      "output_ports": [
+      "sub_id": "empty-pipeline",
+      "nodes": [
         {
-          "id": "outPort",
-          "label": "Output Port",
-          "cardinality": {
-            "min": 0,
-            "max": 1
-          }
+          "id": "2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
+          "class_name": "canvas-node",
+          "image": "/images/filter.svg",
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "input_ports": [],
+          "x_pos": 154,
+          "y_pos": 97,
+          "label": "Var. File"
+        },
+        {
+          "id": "b4f90b52-d198-42f0-85cc-31af3914dd4f",
+          "class_name": "canvas-node",
+          "image": "/images/filter.svg",
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "x_pos": 327,
+          "y_pos": 214,
+          "label": "Select"
+        },
+        {
+          "id": "64505c88-132a-4753-8b39-81adf1e8599d",
+          "class_name": "canvas-node",
+          "image": "/images/filter.svg",
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "x_pos": 500,
+          "y_pos": 82,
+          "label": "Sort"
         }
       ],
-      "input_ports": [],
-      "x_pos": 154,
-      "y_pos": 97,
-      "label": "Var. File"
-    },
-    {
-      "id": "b4f90b52-d198-42f0-85cc-31af3914dd4f",
-      "class_name": "canvas-node",
-      "image": "/images/filter.svg",
-      "output_ports": [
+      "comments": [],
+      "links": [
         {
-          "id": "outPort",
-          "label": "Output Port",
-          "cardinality": {
-            "min": 0,
-            "max": 1
-          }
-        }
-      ],
-      "input_ports": [
+          "id": "7ec57e11-fe0b-4bc8-a3b8-b72920bf1a55",
+          "class_name": "canvas-data-link",
+          "srcNodeId": "2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
+          "trgNodeId": "b4f90b52-d198-42f0-85cc-31af3914dd4f"
+        },
         {
-          "id": "inPort",
-          "label": "Input Port",
-          "cardinality": {
-            "min": 0,
-            "max": 1
-          }
+          "id": "acd2988b-2f6f-482b-a110-e393d3fe42b6",
+          "class_name": "canvas-data-link",
+          "srcNodeId": "b4f90b52-d198-42f0-85cc-31af3914dd4f",
+          "trgNodeId": "64505c88-132a-4753-8b39-81adf1e8599d"
         }
-      ],
-      "x_pos": 327,
-      "y_pos": 214,
-      "label": "Select"
-    },
-    {
-      "id": "64505c88-132a-4753-8b39-81adf1e8599d",
-      "class_name": "canvas-node",
-      "image": "/images/filter.svg",
-      "output_ports": [
-        {
-          "id": "outPort",
-          "label": "Output Port",
-          "cardinality": {
-            "min": 0,
-            "max": 1
-          }
-        }
-      ],
-      "input_ports": [
-        {
-          "id": "inPort",
-          "label": "Input Port",
-          "cardinality": {
-            "min": 0,
-            "max": 1
-          }
-        }
-      ],
-      "x_pos": 500,
-      "y_pos": 82,
-      "label": "Sort"
-    }
-  ],
-  "comments": [],
-  "links": [
-    {
-      "id": "7ec57e11-fe0b-4bc8-a3b8-b72920bf1a55",
-      "class_name": "canvas-data-link",
-      "srcNodeId": "2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
-      "trgNodeId": "b4f90b52-d198-42f0-85cc-31af3914dd4f"
-    },
-    {
-      "id": "acd2988b-2f6f-482b-a110-e393d3fe42b6",
-      "class_name": "canvas-data-link",
-      "srcNodeId": "b4f90b52-d198-42f0-85cc-31af3914dd4f",
-      "trgNodeId": "64505c88-132a-4753-8b39-81adf1e8599d"
+      ]
     }
   ]
-}]
+}

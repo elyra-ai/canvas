@@ -14,16 +14,16 @@ export default class CanvasOutHandler {
 	// format based on the initial canvas passed in.
 	// ==========================================================================
 
-	static getCanvasBasedOnCanvas(oldCanvas, canvasinfo) {
-		return Object.assign({}, oldCanvas, { diagram: this.getDiagram(oldCanvas, canvasinfo) });
+	static getCanvasBasedOnCanvasInfo(oldCanvas, canvasinfo) {
+		return Object.assign({}, oldCanvas, { diagram: this.getDiagram(oldCanvas, canvasinfo.pipelines[0]) });
 	}
 
-	static getDiagram(oldCanvas, canvasinfo) {
+	static getDiagram(oldCanvas, canvasinfoPipeline) {
 		return {
-			id: canvasinfo.sub_id,
-			nodes: this.getCanvasNodes(canvasinfo.nodes, oldCanvas),
-			comments: this.getCanvasComments(canvasinfo.comments),
-			links: this.getCanvasLinks(canvasinfo.links)
+			id: canvasinfoPipeline.sub_id,
+			nodes: this.getCanvasNodes(canvasinfoPipeline.nodes, oldCanvas),
+			comments: this.getCanvasComments(canvasinfoPipeline.comments),
+			links: this.getCanvasLinks(canvasinfoPipeline.links)
 		};
 	}
 
