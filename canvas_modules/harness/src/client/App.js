@@ -77,6 +77,7 @@ class App extends React.Component {
 			paletteNavEnabled: false,
 			paletteOpened: false,
 			propertiesInfo: {},
+			propertiesInfo2: {},
 			propertiesJson: null,
 			selectedPanel: null,
 			selectedLayout: NONE,
@@ -86,6 +87,7 @@ class App extends React.Component {
 			selectedPaletteLayout: FLYOUT,
 			showContextMenu: false,
 			showPropertiesDialog: false,
+			showPropertiesDialog2: false,
 			tipConfig: {
 				"palette": true,
 				"nodes": true,
@@ -94,12 +96,16 @@ class App extends React.Component {
 			},
 			extraCanvasDisplayed: false,
 			applyOnBlur: true,
+			validateFlowOnOpen: true,
 			narrowPalette: true,
 			schemaValidationEnabled: true,
 			disableNotification: false
 		};
 
+		// There are several functions and variables with the identifiers name and name2. This is needed
+		// to support two canvases displayed in the test harness simultaneously.
 		this.currentEditorId = null;
+		this.currentEditorId2 = null;
 
 		this.openConsole = this.openConsole.bind(this);
 		this.log = this.log.bind(this);
@@ -138,6 +144,7 @@ class App extends React.Component {
 		this.setPipelineFlow = this.setPipelineFlow.bind(this);
 		this.setTipConfig = this.setTipConfig.bind(this);
 		this.showExtraCanvas = this.showExtraCanvas.bind(this);
+		this.validateFlowOnOpen = this.validateFlowOnOpen.bind(this);
 		this.addNodeTypeToPalette = this.addNodeTypeToPalette.bind(this);
 		this.getCanvasInfo = this.getCanvasInfo.bind(this);
 		this.setNodeLabel = this.setNodeLabel.bind(this);
@@ -152,6 +159,7 @@ class App extends React.Component {
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 		this.selectionChangeHandler = this.selectionChangeHandler.bind(this);
+		this.selectionChangeHandler2 = this.selectionChangeHandler2.bind(this);
 		this.tipHandler = this.tipHandler.bind(this);
 
 		this.applyDiagramEdit = this.applyDiagramEdit.bind(this);
@@ -162,11 +170,14 @@ class App extends React.Component {
 		// common-properties
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
+		this.closePropertiesEditorDialog2 = this.closePropertiesEditorDialog2.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
+		this.propertiesControllerHandler2 = this.propertiesControllerHandler2.bind(this);
+
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 
 		try {
@@ -214,7 +225,9 @@ class App extends React.Component {
 		if (canvasJson) {
 			this.canvasController.setPipelineFlow(canvasJson);
 			NodeToForm.setNodeForms(this.canvasController.getNodes());
-			FlowValidation.validateFlow(this.canvasController, this.getNodeForm);
+			if (this.state.validateFlowOnOpen) {
+				FlowValidation.validateFlow(this.canvasController, this.getNodeForm);
+			}
 			this.setFlowNotificationMessages();
 			TestService.postCanvas(canvasJson);
 			this.log("Canvas diagram set");
@@ -538,6 +551,10 @@ class App extends React.Component {
 		this.log("show extra canvas", enabled);
 	}
 
+	validateFlowOnOpen(enabled) {
+		this.setState({ validateFlowOnOpen: enabled });
+	}
+
 	usePropertiesContainerType(type) {
 		this.setState({ propertiesContainerType: type });
 		this.log("set properties container", type);
@@ -562,15 +579,19 @@ class App extends React.Component {
 		this.log("applyPropertyChanges()", data);
 
 		if (appData && appData.nodeId) {
+			const currentEditorNodeId = (appData.inExtraCanvas) ? this.currentEditorId2 : this.currentEditorId;
+			const canvasController = (appData.inExtraCanvas) ? this.canvasController2 : this.canvasController;
+			const propertiesController = (appData.inExtraCanvas) ? this.propertiesController2 : this.propertiesController;
+
 			// store parameters in case properties were opened from canvas
-			this.canvasController.setNodeParameters(appData.nodeId, form);
-			this.canvasController.setNodeLabel(appData.nodeId, additionalInfo.title);
-			this.canvasController.setNodeMessages(appData.nodeId, additionalInfo.messages);
+			canvasController.setNodeParameters(appData.nodeId, form);
+			canvasController.setNodeLabel(appData.nodeId, additionalInfo.title);
+			canvasController.setNodeMessages(appData.nodeId, additionalInfo.messages);
 			// undo/redo was clicked so reapply settings
-			if (appData.nodeId === this.currentEditorId) {
-				this.propertiesController.setPropertyValues(undoInfo.properties);
-				this.propertiesController.setErrorMessages(undoInfo.messages);
-				this.propertiesController.setTitle(additionalInfo.title);
+			if (appData.nodeId === currentEditorNodeId) {
+				propertiesController.setPropertyValues(undoInfo.properties);
+				propertiesController.setErrorMessages(undoInfo.messages);
+				propertiesController.setTitle(additionalInfo.title);
 			}
 		}
 	}
@@ -741,14 +762,15 @@ class App extends React.Component {
 		this.log("editActionHandler() " + data.editType, type, data.label);
 	}
 
-	extraCanvasActionHandler(data) {
+	extraCanvasActionHandler(action, source) {
 		var sessionData = {
 			canvas2: this.canvasController2.getCanvasInfo()
 		};
 		TestService.postSessionData(sessionData);
+		this.contextMenuActionHandler(action, source, true);
 	}
 
-	contextMenuActionHandler(action, source) {
+	contextMenuActionHandler(action, source, inExtraCanvas) {
 		if (action === "streamProperties") {
 			this.log("action: streamProperties");
 		} else if (action === "addComment") {
@@ -764,7 +786,7 @@ class App extends React.Component {
 		} else if (action === "deleteLink") {
 			this.log("action: deleteLink", source.id);
 		} else if (action === "editNode") {
-			this.editNodeHandler(source.targetObject.id);
+			this.editNodeHandler(source.targetObject.id, inExtraCanvas);
 		} else if (action === "viewModel") {
 			this.log("action: viewModel", source.targetObject.id);
 		} else if (action === "disconnectNode") {
@@ -837,27 +859,35 @@ class App extends React.Component {
 		return decorators;
 	}
 
-	editNodeHandler(nodeId) {
+	editNodeHandler(nodeId, inExtraCanvas) {
 		this.log("action: editNode", nodeId);
-		if (nodeId && this.currentEditorId !== nodeId) {
+		const canvasController = (inExtraCanvas) ? this.canvasController2 : this.canvasController;
+		const currentEditorNodeId = (inExtraCanvas) ? this.currentEditorId2 : this.currentEditorId;
+		const commonPropertiesRef = (inExtraCanvas) ? this.CommonProperties2 : this.CommonProperties;
+		if (nodeId && currentEditorNodeId !== nodeId) {
 			// apply properties from previous node if node selection has changed w/o closing editor
-			if (this.currentEditorId && this.canvasController.getNode(this.currentEditorId)) {
-				this.CommonProperties.getWrappedInstance().applyPropertiesEditing(false);
+			if (currentEditorNodeId && canvasController.getNode(currentEditorNodeId)) {
+				commonPropertiesRef.getWrappedInstance().applyPropertiesEditing(false);
 			}
-			this.currentEditorId = nodeId; // set new node
-			const appData = { nodeId: nodeId };
+			if (inExtraCanvas) {
+				this.currentEditorId2 = nodeId;
+			} else {
+				this.currentEditorId = nodeId;
+			}
+			// currentEditorNodeId = nodeId; // set new node
+			const appData = { nodeId: nodeId, inExtraCanvas: inExtraCanvas };
 
 			const nodeForm = this.getNodeForm(nodeId);
 			// harness: when adding nodes via double-click, nodeForm isn't set because CreateAutoNodeAction
 			// works differently than CreateNodeAction
 			if (!nodeForm) {
-				NodeToForm.setNodeForm(nodeId, this.canvasController.getNode(nodeId).operator_id_ref);
+				NodeToForm.setNodeForm(nodeId, canvasController.getNode(nodeId).operator_id_ref);
 			}
 			const properties = this.getNodeForm(nodeId);
 
 			// set current parameterSet
 			// get the current parameters for the node from the internal ObjectModel
-			const node = this.canvasController.getNode(nodeId);
+			const node = canvasController.getNode(nodeId);
 			if (node) {
 				if (properties.data.formData) {
 					if (!isEmpty(node.parameters)) {
@@ -875,7 +905,7 @@ class App extends React.Component {
 				}
 			}
 
-			const messages = this.canvasController.getNodeMessages(nodeId);
+			const messages = canvasController.getNodeMessages(nodeId);
 			const propsInfo = {
 				title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 				messages: messages,
@@ -885,7 +915,11 @@ class App extends React.Component {
 				additionalComponents: properties.additionalComponents
 			};
 
-			this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
+			if (inExtraCanvas) {
+				this.setState({ showPropertiesDialog2: true, propertiesInfo2: propsInfo });
+			} else {
+				this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
+			}
 		}
 	}
 
@@ -906,6 +940,26 @@ class App extends React.Component {
 			}
 			this.setState({ showPropertiesDialog: false });
 			this.currentEditorId = null;
+		}
+	}
+
+	selectionChangeHandler2(data) {
+		this.log("selectionChangeHandler2", data);
+		if (data && data.selectedNodes) {
+			// only show properties if exactly one node is selected and no other elements like comments
+			if (data.selection.length === 1 && data.selectedNodes.length === 1) {
+				this.editNodeHandler(data.selectedNodes[0].id, true);
+				return;
+			}
+		}
+		// apply properties from previous node if node selection has to more than one node
+		if (this.currentEditorId2) {
+			// don't apply changes if node has been removed
+			if (this.canvasController2.getNode(this.currentEditorId2)) {
+				this.CommonProperties2.getWrappedInstance().applyPropertiesEditing(false);
+			}
+			this.setState({ showPropertiesDialog2: false });
+			this.currentEditorId2 = null;
 		}
 	}
 
@@ -952,6 +1006,12 @@ class App extends React.Component {
 		this.setState({ showPropertiesDialog: false, propertiesInfo: {} });
 	}
 
+	closePropertiesEditorDialog2() {
+		this.currentEditorId2 = null;
+		this.canvasController2.setSelections([]); // clear selection
+		this.setState({ showPropertiesDialog2: false, propertiesInfo2: {} });
+	}
+
 	handleEmptyCanvasLinkClick() {
 		window.alert("Sorry the tour is not included with the test harness. :-( But " +
 			"this is a good example of how a host app could add their own link to " +
@@ -962,6 +1022,12 @@ class App extends React.Component {
 		this.log("propertiesControllerHandler()");
 		this.propertiesController = propertiesController;
 		this.propertiesController.setCommandStack(this.canvasController.getCommandStack());
+	}
+
+	propertiesControllerHandler2(propertiesController) {
+		this.log("propertiesControllerHandler2()");
+		this.propertiesController2 = propertiesController;
+		this.propertiesController2.setCommandStack(this.canvasController2.getCommandStack());
 	}
 
 	propertyListener(data) {
@@ -975,18 +1041,20 @@ class App extends React.Component {
 	}
 
 	propertyActionHandler(actionId, appData, data) {
+		const propertiesController = (appData && appData.inExtraCanvas) ? this.propertiesController2 : this.propertiesController;
+
 		if (actionId === "increment") {
 			const propertyId = { name: data.parameter_ref };
-			let value = this.propertiesController.getPropertyValue(propertyId);
-			this.propertiesController.updatePropertyValue(propertyId, value += 1);
+			let value = propertiesController.getPropertyValue(propertyId);
+			propertiesController.updatePropertyValue(propertyId, value += 1);
 		}
 		if (actionId === "decrement") {
 			const propertyId = { name: data.parameter_ref };
-			let value = this.propertiesController.getPropertyValue(propertyId);
-			this.propertiesController.updatePropertyValue(propertyId, value -= 1);
+			let value = propertiesController.getPropertyValue(propertyId);
+			propertiesController.updatePropertyValue(propertyId, value -= 1);
 		}
 		if (actionId === "dm-update") {
-			const dm = this.propertiesController.getDatasetMetadata();
+			const dm = propertiesController.getDatasetMetadata();
 			// Add field to the first schema
 			const newFieldName = "Added Field " + (dm[0].fields.length);
 			const newField = {
@@ -999,7 +1067,7 @@ class App extends React.Component {
 				}
 			};
 			dm[0].fields.push(newField);
-			this.propertiesController.setDatasetMetadata(dm[0]);
+			propertiesController.setDatasetMetadata(dm[0]);
 		}
 		this.log("propertyActionHandler() " + actionId);
 	}
@@ -1125,6 +1193,14 @@ class App extends React.Component {
 			closePropertiesDialog: this.closePropertiesEditorDialog,
 			helpClickHandler: this.helpClickHandler
 		};
+		const callbacks2 = {
+			controllerHandler: this.propertiesControllerHandler2,
+			propertyListener: this.propertyListener,
+			actionHandler: this.propertyActionHandler,
+			applyPropertyChanges: this.applyPropertyChanges,
+			closePropertiesDialog: this.closePropertiesEditorDialog2,
+			helpClickHandler: this.helpClickHandler
+		};
 		const commonProperties = (
 			<CommonProperties
 				ref={(instance) => {
@@ -1138,12 +1214,30 @@ class App extends React.Component {
 				customConditionOps={[CustomOpMax]}
 			/>);
 
+		const commonProperties2 = (
+			<CommonProperties
+				ref={(instance) => {
+					this.CommonProperties2 = instance;
+				} }
+				propertiesInfo={this.state.propertiesInfo2}
+				propertiesConfig={propertiesConfig}
+				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel, CustomDatasetsPanel]}
+				callbacks={callbacks2}
+				customControls={[CustomToggleControl, CustomTableControl]}
+				customConditionOps={[CustomOpMax]}
+			/>);
+
+
 		let commonPropertiesContainer = null;
 		let rightFlyoutContent = null;
+		let rightFlyoutContent2 = null;
 		let showRightFlyoutProperties = false;
+		let showRightFlyoutProperties2 = false;
 		if (this.state.propertiesContainerType === FLYOUT) {
 			rightFlyoutContent = commonProperties;
+			rightFlyoutContent2 = commonProperties2;
 			showRightFlyoutProperties = this.state.showPropertiesDialog && this.state.propertiesContainerType === FLYOUT;
+			showRightFlyoutProperties2 = this.state.showPropertiesDialog2 && this.state.propertiesContainerType === FLYOUT;
 		} else {
 			commonPropertiesContainer = (<IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>
 				<div id="common-properties">
@@ -1190,6 +1284,10 @@ class App extends React.Component {
 							toolbarConfig={toolbarConfig}
 							canvasController={this.canvasController2}
 							notificationConfig={notificationConfig2}
+							rightFlyoutContent={rightFlyoutContent2}
+							showRightFlyout={showRightFlyoutProperties2}
+							closeRightFlyout={this.closePropertiesEditorDialog2}
+							selectionChangeHandler={this.selectionChangeHandler2}
 						/>
 					</div>
 				</div>);
@@ -1221,7 +1319,9 @@ class App extends React.Component {
 			narrowPalette: this.state.narrowPalette,
 			setNarrowPalette: this.setNarrowPalette,
 			schemaValidation: this.schemaValidation,
-			schemaValidationEnabled: this.state.schemaValidationEnabled
+			schemaValidationEnabled: this.state.schemaValidationEnabled,
+			validateFlowOnOpen: this.state.validateFlowOnOpen,
+			changeValidateFlowOnOpen: this.validateFlowOnOpen
 		};
 
 		const sidePanelPropertiesConfig = {
@@ -1234,7 +1334,6 @@ class App extends React.Component {
 			closeSidePanelModal: this.closeSidePanelModal,
 			applyOnBlur: this.state.applyOnBlur,
 			useApplyOnBlur: this.useApplyOnBlur
-
 		};
 
 		const sidePanelAPIConfig = {

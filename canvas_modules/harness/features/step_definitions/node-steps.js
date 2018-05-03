@@ -930,4 +930,10 @@ module.exports = function() {
 
 	});
 
+	//
+	this.Then(/^I select node (\d+) the "([^"]*)" node from extra canvas$/, function(nodeIndex, nodeName) {
+		var nodeNumber = nodeIndex - 1;
+		browser.$("#canvas-div-1").$$(".node-group")[nodeNumber].click();
+	});
+
 };

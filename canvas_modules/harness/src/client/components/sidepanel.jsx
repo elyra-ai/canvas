@@ -55,6 +55,8 @@ export default class SidePanel extends React.Component {
 				setNarrowPalette={this.props.canvasConfig.setNarrowPalette}
 				schemaValidation={this.props.canvasConfig.schemaValidation}
 				schemaValidationEnabled={this.props.canvasConfig.schemaValidationEnabled}
+				validateFlowOnOpen={this.props.canvasConfig.validateFlowOnOpen}
+				changeValidateFlowOnOpen={this.props.canvasConfig.changeValidateFlowOnOpen}
 				log={this.props.log}
 			/>);
 			break;
@@ -122,6 +124,8 @@ SidePanel.propTypes = {
 		setNarrowPalette: PropTypes.func,
 		schemaValidation: PropTypes.func,
 		schemaValidationEnabled: PropTypes.bool,
+		validateFlowOnOpen: PropTypes.bool,
+		changeValidateFlowOnOpen: PropTypes.func
 	}),
 	propertiesConfig: PropTypes.shape({
 		closePropertiesEditorDialog: PropTypes.func,

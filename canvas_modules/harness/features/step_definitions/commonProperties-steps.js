@@ -453,8 +453,19 @@ module.exports = function() {
 		expect(found).toEqual(true);
 	});
 
-	function clickApplyButton() {
-		const applyButtons = browser.$$("#properties-apply-button");
+	this.Then(/^I enter "([^"]*)" in the "([^"]*)" field in "([^"]*)" canvas$/, function(value, fieldName, canvas) {
+		const startElement = (canvas === "top") ? browser.$$(".canvas-single")[0] : browser.$$(".canvas-single")[1];
+		const inputField = startElement.$("#editor-control-" + fieldName);
+		inputField.setValue("", Number(value));
+		clickApplyButton(startElement);
+
+		var lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
+		expect(value).toEqual((lastEventLog.data.form[fieldName]).toString());
+	});
+
+	function clickApplyButton(startElement) {
+		const start = (startElement) ? startElement : browser;
+		const applyButtons = start.$$("#properties-apply-button");
 		const button = applyButtons[applyButtons.length - 1];
 		button.click();
 		browser.pause(500);

@@ -84,6 +84,7 @@ export default class SidePanelForms extends React.Component {
 		this.schemaValidationChange = this.schemaValidationChange.bind(this);
 		this.narrowPalette = this.narrowPalette.bind(this);
 		this.onDragStart = this.onDragStart.bind(this);
+		this.changeValidateFlowOnOpen = this.changeValidateFlowOnOpen.bind(this);
 
 	}
 
@@ -406,6 +407,10 @@ export default class SidePanelForms extends React.Component {
 	extraCanvasChange(changeEvent) {
 		this.props.showExtraCanvas(changeEvent.target.checked);
 		this.setState({ extraCanvasOptions: changeEvent.target.checked });
+	}
+
+	changeValidateFlowOnOpen(changeEvent) {
+		this.props.changeValidateFlowOnOpen(changeEvent.target.checked);
 	}
 
 	schemaValidationChange(changeEvent) {
@@ -753,6 +758,16 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
+		const validateFlowOnOpen = (
+			<div className="sidepanel-children">
+				<div className="sidepanel-headers">Validate flow on open</div>
+				<ToggleButton dark
+					id="sidepanel-validateFlowOnOpen-toggle"
+					checked={this.props.validateFlowOnOpen}
+					onChange={this.changeValidateFlowOnOpen}
+				/>
+			</div>);
+
 		return (
 			<div>
 				{canvasInput}
@@ -776,6 +791,8 @@ export default class SidePanelForms extends React.Component {
 				{nodeDraggable}
 				{divider}
 				{schemaValidation}
+				{divider}
+				{validateFlowOnOpen}
 				{divider}
 				{extraCanvas}
 				{canvasInput2}
@@ -807,4 +824,6 @@ SidePanelForms.propTypes = {
 	setTipConfig: PropTypes.func,
 	narrowPalette: PropTypes.bool,
 	setNarrowPalette: PropTypes.func,
+	validateFlowOnOpen: PropTypes.bool,
+	changeValidateFlowOnOpen: PropTypes.func
 };

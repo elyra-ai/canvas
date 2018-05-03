@@ -147,6 +147,7 @@ export default class SidePanelModal extends React.Component {
 		this.props.useApplyOnBlur(changeEvent.target.checked);
 	}
 
+
 	render() {
 		// var divider = (<div
 		// 	className="sidepanel-children sidepanel-divider"
@@ -218,6 +219,7 @@ export default class SidePanelModal extends React.Component {
 					onChange={this.useApplyOnBlur}
 				/>
 			</div>);
+
 		const divider = (<div className="sidepanel-children sidepanel-divider" />);
 		return (
 			<div>
@@ -242,4 +244,5 @@ SidePanelModal.propTypes = {
 	closeSidePanelModal: PropTypes.func,
 	applyOnBlur: PropTypes.bool,
 	useApplyOnBlur: PropTypes.func
+
 };
