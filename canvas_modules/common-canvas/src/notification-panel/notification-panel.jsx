@@ -48,14 +48,31 @@ class NotificationPanel extends React.Component {
 				</div>)
 				: null;
 
-			notifications.push(<div className="notifications-button-container" key={index} >
+			const timestamp = message.timestamp
+				? (<div className="notification-message-timestamp">
+					<div className="notification-message-timestamp-icon">
+						<Icon type="time" />
+					</div>
+					<div className="notification-message-string">
+						{message.timestamp}
+					</div>
+				</div>)
+				: null;
+
+			notifications.push(<div className="notifications-button-container" key={index + "-" + message.id} >
 				<button
 					className={"notifications " + className + message.type}
-					onClick={this.notificationCallback.bind(this, index, message.callback)}
+					onClick={this.notificationCallback.bind(this, message.id, message.callback)}
 				>
 					{type}
 					<div className="notification-message-details">
-						{message.message}
+						<div className="notification-message-title">
+							{message.title}
+						</div>
+						<div className="notification-message-content">
+							{message.content}
+						</div>
+						{timestamp}
 					</div>
 				</button>
 			</div>);
@@ -73,16 +90,17 @@ class NotificationPanel extends React.Component {
 		}
 	}
 
-	notificationCallback(index, messageCallback) {
+	notificationCallback(id, messageCallback) {
 		if (messageCallback) {
-			messageCallback(index);
+			messageCallback(id);
 		}
 	}
 
 	render() {
 		const notificationPanelClassName = this.props.isNotificationOpen ? "" : "panel-hidden";
 		const notificationPanel = this.state.messages.length > 0
-			? (<div>
+			? (<div className="notification-panel">
+				<div className="notification-panel-header">{this.props.notificationHeader}</div>
 				<div className="notification-panel-messages">
 					{this.getNotifications()}
 				</div>
@@ -99,6 +117,7 @@ class NotificationPanel extends React.Component {
 }
 
 NotificationPanel.propTypes = {
+	notificationHeader: PropTypes.string,
 	isNotificationOpen: PropTypes.bool,
 	messages: PropTypes.array,
 	canvasController: PropTypes.object

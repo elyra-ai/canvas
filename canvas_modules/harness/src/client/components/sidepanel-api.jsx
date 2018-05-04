@@ -26,10 +26,7 @@ import {
 	API_ADD_NOTIFICATION_MESSAGE,
 	INPUT_PORT,
 	OUTPUT_PORT,
-	ERROR,
-	WARNING,
-	READY,
-	OTHER
+	NOTIFICATION_MESSAGE_TYPE
 } from "../constants/constants.js";
 
 const defaultNodeType = {
@@ -80,9 +77,13 @@ export default class SidePanelAPI extends React.Component {
 			appendTimestamp: false,
 			attachCallback: false,
 			appendLink: false,
+			notificationTitle: "",
 			notificationMessage: "",
-			notificationType: READY
+			deleteNotificationmessageId: "",
+			notificationType: NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL
 		};
+
+		this.messageCounter = 0;
 
 		this.createNotificationMessage = this.createNotificationMessage.bind(this);
 		this.notificationMessageCallback = this.notificationMessageCallback.bind(this);
@@ -317,16 +318,12 @@ export default class SidePanelAPI extends React.Component {
 		}
 	}
 
-	createNotificationMessage() {
-		let messageTimestamp = <div />;
-		let messageLink = <div />;
+	deleteNotificationMessage(evt) {
+		this.props.deleteNotificationMessages(this.state.deleteNotificationmessageId);
+	}
 
-		if (this.state.appendTimestamp) {
-			messageTimestamp = (<div className="sidepanel-notification-timestamp">
-				<img draggable="false" src="/images/timestamp.svg" />
-				{Date().toString()}
-			</div>);
-		}
+	createNotificationMessage() {
+		let messageLink = <div />;
 
 		if (this.state.appendLink) {
 			messageLink = (<div>
@@ -334,23 +331,25 @@ export default class SidePanelAPI extends React.Component {
 			</div>);
 		}
 
-		const messageDetails = (<div>
+		const messageContent = (<div>
 			{this.state.notificationMessage}
-			{messageTimestamp}
 			{messageLink}
 		</div>);
 
 		return [
 			{
+				id: "harness-message-" + this.messageCounter++,
 				type: this.state.notificationType,
-				message: messageDetails,
+				title: this.state.notificationTitle ? this.state.notificationTitle : null,
+				content: messageContent,
+				timestamp: this.state.appendTimestamp ? new Date().toLocaleString("en-US") : null,
 				callback: this.state.attachCallback ? this.notificationMessageCallback : null
 			}
 		];
 	}
 
-	notificationMessageCallback() {
-		this.props.log("Notification Message Callback", "Message received: " + this.state.notificationMessage);
+	notificationMessageCallback(id) {
+		this.props.log("Notification Message Callback", "Message " + id + " was clicked.");
 	}
 
 	render() {
@@ -488,15 +487,13 @@ export default class SidePanelAPI extends React.Component {
 					checked={this.state.disableNotification}
 					onChange={this.onDisableNotificationToggle.bind(this)}
 				/>
-				<div className="sidepanel-headers">Message Details</div>
-				<TextField dark
-					id="messageDetails"
-					type="textarea"
-					rows={5}
-					placeholder="Message"
-					onChange={this.onFieldChange.bind(this, "notificationMessage")}
-					value={this.state.notificationMessage}
+				<div className="sidepanel-headers">Append Message to Notification Panel</div>
+				<ToggleButton dark
+					id="sidepanel-api-notification-append"
+					checked={this.state.appendNotifications}
+					onChange={this.onAppendNotificationToggle.bind(this)}
 				/>
+				{divider}
 				<div className="sidepanel-headers">Message Type</div>
 				<RadioGroup
 					name="notification_message_type"
@@ -504,18 +501,28 @@ export default class SidePanelAPI extends React.Component {
 					dark
 					onChange={this.onNotificationMessageTypeChange.bind(this)}
 					choices={[
-						READY,
-						WARNING,
-						ERROR,
-						OTHER
+						NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL,
+						NOTIFICATION_MESSAGE_TYPE.SUCCESS,
+						NOTIFICATION_MESSAGE_TYPE.WARNING,
+						NOTIFICATION_MESSAGE_TYPE.ERROR
 					]}
-					selected={READY}
+					selected={NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL}
 				/>
-				<div className="sidepanel-headers">Append Message to Notification Panel</div>
-				<ToggleButton dark
-					id="sidepanel-api-notification-append"
-					checked={this.state.appendNotifications}
-					onChange={this.onAppendNotificationToggle.bind(this)}
+				<TextField dark
+					id="messageTitle"
+					placeholder="Message Title"
+					type="text"
+					onChange={this.onFieldChange.bind(this, "notificationTitle")}
+					value={this.state.notificationTitle}
+				/>
+				<div className="sidepanel-headers">Message Content</div>
+				<TextField dark
+					id="messageContent"
+					type="textarea"
+					rows={4}
+					placeholder="Message"
+					onChange={this.onFieldChange.bind(this, "notificationMessage")}
+					value={this.state.notificationMessage}
 				/>
 				<div className="sidepanel-headers">Add Timestamp to Message</div>
 				<ToggleButton dark
@@ -537,6 +544,23 @@ export default class SidePanelAPI extends React.Component {
 					checked={this.state.appendLink}
 					onChange={this.onAppendLinkToggle.bind(this)}
 				/>
+				{divider}
+				<TextField dark
+					id="deleteMessageWithId"
+					placeholder="Delete Message with ID..."
+					type="text"
+					onChange={this.onFieldChange.bind(this, "deleteNotificationmessageId")}
+					value={this.state.deleteNotificationmessageId}
+				/>
+				<div className="sidepanel-api-delete-notification-message-submit">
+					<Button dark
+						id="deleteNotificationmessageSubmit"
+						disabled={this.state.deleteNotificationmessageId.length < 1}
+						onClick={this.deleteNotificationMessage.bind(this)}
+					>
+						Delete Message
+					</Button>
+				</div>
 			</div>);
 		}
 
@@ -566,5 +590,6 @@ SidePanelAPI.propTypes = {
 	setPortLabel: PropTypes.func,
 	setNotificationMessages: PropTypes.func,
 	appendNotificationMessages: PropTypes.func,
+	deleteNotificationMessages: PropTypes.func,
 	disableNotification: PropTypes.func,
 };

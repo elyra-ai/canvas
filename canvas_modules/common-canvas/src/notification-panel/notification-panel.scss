@@ -7,17 +7,10 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-$notification-left-border-color-width: 4px;
-$notification-top-margin-height: 8px;
+$notification-panel-arrow-height: 8px;
+$notification-panel-header-height: 35px;
 
-.notification-popup-arrow {
-	display: block;
-	fill: #FFFFFF;
-	stroke: #DFE3E6;
-	position: absolute;
-	right: 24px;
-	width: 16px;
-}
+$notification-left-border-color-width: 4px;
 
 // This section adds an ease-in ease-out effect for the notification-panel-container
 .notification-panel-container {
@@ -27,18 +20,48 @@ $notification-top-margin-height: 8px;
 
 	&.panel-hidden {
 		transition: 0.25s ease-in-out;
-		visibility: hidden;
 		display: block;
 		opacity: 0;
-		margin-top: -$notification-top-margin-height;
+		margin-top: -$notification-panel-arrow-height;
+		visibility: hidden;
 	}
+}
+
+.notification-panel {
+	position: absolute;
+	width: 300px;
+	right: 8px;
+}
+
+.notification-popup-arrow {
+	display: block;
+	fill: #F5F7FA;
+	stroke: #DFE3E6;
+	position: absolute;
+	right: 16px;
+	width: 16px;
+}
+
+.notification-panel-header {
+	position: absolute;
+	height: $notification-panel-header-height;
+	margin-top: $notification-panel-arrow-height;
+	width: inherit;
+	background-color: #F5F7FA;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding-left: 12px;
+	border: 1px solid #DFE3E6;
+	border-bottom: 0;
+	font-weight: 400;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
 }
 
 .notification-panel-messages {
 	position: absolute;
-	right: 8px;
-	margin-top: $notification-top-margin-height;
-	width: 300px;
+	width: inherit;
+	margin-top: $notification-panel-arrow-height + $notification-panel-header-height;
 	max-height: 300px;
 	overflow-y: auto;
 	background-color: #FFFFFF;
@@ -73,7 +96,7 @@ $notification-top-margin-height: 8px;
 		}
 
 		&:hover {
-			background-color: #F0F3F6;
+			background-color: #F5F7FA;
 
 			&.error {
 				border-left: $notification-left-border-color-width solid #E51F33;
@@ -81,11 +104,11 @@ $notification-top-margin-height: 8px;
 			&.warning {
 				border-left: $notification-left-border-color-width solid #EFC100;
 			}
-			&.ready {
+			&.success {
 				border-left: $notification-left-border-color-width solid #00884B;
 			}
-			&.other {
-				border-left: $notification-left-border-color-width solid #F0F3F6;
+			&.informational {
+				border-left: $notification-left-border-color-width solid #F5F7FA;
 			}
 		}
 
@@ -105,10 +128,35 @@ $notification-top-margin-height: 8px;
 
 		.notification-message-details {
 			text-align: left;
+
+			.notification-message-title {
+				color: #152935;
+				font-weight: 400;
+			}
+
+			.notification-message-content {
+				color: #5A6872;
+			}
 		}
 	}
 }
 
 .notification-panel-messages + * {
 	clear: both;
+}
+
+.notification-message-timestamp {
+	display: inline-flex;
+	color: #5A6872;
+	svg {
+		width: 10px;
+		height: 10px;
+		margin-right: 3px;
+	}
+
+	.notification-message-string {
+		font-size: 10px;
+		margin-top: auto;
+		margin-bottom: auto;
+	}
 }

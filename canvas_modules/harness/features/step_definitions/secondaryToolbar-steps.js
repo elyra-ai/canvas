@@ -105,4 +105,16 @@ module.exports = function() {
 		}
 		expect(actionFound).toEqual(true);
 	});
+
+	this.Then(/^I verify the action "([^"]*)" in the toolbar has svg with className "([^"]*)"$/, function(actionId, svgClassName) {
+		const actionItems = browser.$("#toolbar-items").$$("li");
+		let actionFound = false;
+		for (const action of actionItems) {
+			if (action.getAttribute("id") === actionId) {
+				actionFound = true;
+				expect(action.$("svg").getAttribute("class")).toEqual(svgClassName);
+			}
+		}
+		expect(actionFound).toEqual(true);
+	});
 };

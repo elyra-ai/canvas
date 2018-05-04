@@ -32,13 +32,15 @@ _defineConstant("TOOLBAR", {
 
 _defineConstant("NOTIFICATION_BELL_ICON", {
 	DEFAULT: "bell",
-	ERROR: "bellError",
-	WARNING: "bellWarning",
-	READY: "bellReady"
+	DOT: "bellDot"
 });
+
+_defineConstant("DEFAULT_NOTIFICATION_HEADER", "Notifications");
 
 _defineConstant("ERROR", "error");
 _defineConstant("WARNING", "warning");
+_defineConstant("INFORMATION", "info");
+_defineConstant("SUCCESS", "success");
 
 _defineConstant("NONE", "none");
 _defineConstant("HORIZONTAL", "horizonal");

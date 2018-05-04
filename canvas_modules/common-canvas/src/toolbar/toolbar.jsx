@@ -45,14 +45,15 @@ class Toolbar extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.notificationConfig) {
-			const newAction = this.props.canvasController.determineNotificationBellIconState(nextProps.notificationConfig.enable);
+			const bellObject = this.props.canvasController.determineNotificationBellIconState(nextProps.notificationConfig.enable);
 
-			if (this.state.notificationConfig && ((this.state.notificationConfig.action !== newAction) ||
-					(this.state.notificationConfig.label !== nextProps.notificationConfig.label) ||
-					(this.state.notificationConfig.enable !== nextProps.notificationConfig.enable) ||
-					(typeof nextProps.notificationConfig.callback === "undefined"))) {
+			if (this.state.notificationConfig &&
+				((this.state.notificationConfig.label !== nextProps.notificationConfig.label) ||
+				(this.state.notificationConfig.enable !== nextProps.notificationConfig.enable) ||
+				(typeof nextProps.notificationConfig.callback === "undefined"))) {
 				const newConfig = Object.assign({}, nextProps.notificationConfig);
-				newConfig.action = newAction;
+				newConfig.action = bellObject.icon;
+				newConfig.className = bellObject.className;
 				this.setState({ notificationConfig: newConfig });
 			}
 		}
@@ -179,6 +180,11 @@ class Toolbar extends React.Component {
 			actionClickHandler = () => actionsHandler(actionObj.action);
 		}
 		let icon = <Icon type={actionObj.action} />;
+
+		if (actionObj.className) {
+			icon = <Icon type={actionObj.action} className={actionObj.className} />;
+		}
+
 		if (actionObj.iconEnabled) {
 			icon = (<img id={"toolbar-icon-" + actionObj.action} className={"toolbar-icons " + overflowClassName}
 				src={actionObj.iconEnabled}

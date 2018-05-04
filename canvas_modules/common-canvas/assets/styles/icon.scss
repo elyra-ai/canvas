@@ -22,14 +22,14 @@
 	fill: #C7C7C7;
 }
 
-.canvas-icon {
-	.error {
+.canvas-icon.bellDot {
+	&.error > .dot {
 		fill: #E51F33;
 	}
-	.warning {
+	&.warning > .dot {
 		fill: #EFC100;
 	}
-	.ready {
+	&.success > .dot {
 		fill: #00884B;
 	}
 }

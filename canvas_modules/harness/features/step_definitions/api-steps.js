@@ -145,29 +145,29 @@ module.exports = function() {
 
 	this.Then(/^I have selected the "([^"]*)" message type in the api sidepanel$/, function(messageType) {
 		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
-		const radioOptions = apiSidePanel.$$("div")[5].$$("label");
+		const radioOptions = apiSidePanel.$$("div")[6].$$("label");
 
 		try {
-			if (messageType === "ready") {
-				const ready = radioOptions[0];
-				ready.scroll();
+			if (messageType === "informational") {
+				const informational = radioOptions[0];
+				informational.scroll();
 				browser.pause(500);
-				ready.click();
+				informational.click();
+			} else if (messageType === "success") {
+				const success = radioOptions[1];
+				success.scroll();
+				browser.pause(500);
+				success.click();
 			} else if (messageType === "warning") {
-				const warning = radioOptions[1];
+				const warning = radioOptions[2];
 				warning.scroll();
 				browser.pause(500);
 				warning.click();
 			} else if (messageType === "error") {
-				const error = radioOptions[2];
+				const error = radioOptions[3];
 				error.scroll();
 				browser.pause(500);
 				error.click();
-			} else if (messageType === "other") {
-				const other = radioOptions[3];
-				other.scroll();
-				browser.pause(500);
-				other.click();
 			}
 		} catch (err) {
 			console.log("Err = " + err);
@@ -177,8 +177,19 @@ module.exports = function() {
 
 	this.When(/^I enter "([^"]*)" into the message details field$/, function(textboxValue) {
 		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
-		const textbox = apiSidePanel.$("#messageDetails");
+		const textbox = apiSidePanel.$("#messageContent");
 		textbox.setValue("", textboxValue);
+	});
+
+	this.Then(/^I enter "([^"]*)" into the delete message with id field$/, function(messageId) {
+		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
+		const textbox = apiSidePanel.$("#deleteMessageWithId");
+		textbox.setValue("", messageId);
+	});
+
+	this.Then("I click on the delete message submit button in the api sidepanel", function() {
+		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
+		apiSidePanel.$("#deleteNotificationmessageSubmit").click();
 	});
 
 	function getAPISubmitButton() {

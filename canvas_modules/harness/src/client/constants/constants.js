@@ -69,7 +69,9 @@ _defineConstant("TIP_NODES", "Nodes");
 _defineConstant("TIP_PORTS", "Ports");
 _defineConstant("TIP_LINKS", "Links");
 
-_defineConstant("ERROR", "error");
-_defineConstant("WARNING", "warning");
-_defineConstant("READY", "ready");
-_defineConstant("OTHER", "other");
+_defineConstant("NOTIFICATION_MESSAGE_TYPE", {
+	INFORMATIONAL: "informational",
+	WARNING: "warning",
+	ERROR: "error",
+	SUCCESS: "success"
+});

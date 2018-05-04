@@ -44,51 +44,84 @@ Feature: handleNotificationPanelClickOutside
 		Given I am on the test harness
 		Given I have toggled the app side api panel
 		Given I have selected the "Add Notification Message" API
+		Then I verify the the notification panel has 0 messages
 
-		Then I have selected the "other" message type in the api sidepanel
-		When I enter "Test other message in notification panel" into the message details field
+		Then I have selected the "informational" message type in the api sidepanel
+		When I enter "Test informational message in notification panel" into the message details field
 		And I call the API by clicking on the Submit button
 		Then I click on the secondary toolbar open notification button
-		Then I verify the action "notification-close-action" in the toolbar has svg of type "bellReady"
-		Then I verify the the content of the notification message at index 0 is of type "other"
-		Then I verify the the content of the notification message at index 0 contains text "Test other message in notification panel"
+		Then I verify the action "notification-close-action" in the toolbar has svg of type "bellDot"
+		Then I verify the action "notification-close-action" in the toolbar has svg with className "canvas-icon fill bellDot success"
+		Then I verify the the notification panel has 1 messages
+		Then I verify the the content of the notification message at index 0 is of type "informational"
+		Then I verify the the content of the notification message at index 0 contains text "Test informational message in notification panel"
 
-		Then I have selected the "ready" message type in the api sidepanel
-		When I enter "Test ready message in notification panel" into the message details field
+		Then I have selected the "success" message type in the api sidepanel
+		When I enter "Test success message in notification panel" into the message details field
 		Then I click on the toggle with label "sidepanel-api-notification-timestamp" in the api sidepanel
 		And I call the API by clicking on the Submit button
 		Then I click on the secondary toolbar open notification button
-		Then I verify the action "notification-close-action" in the toolbar has svg of type "bellReady"
-		Then I verify the the content of the notification message at index 1 is of type "ready"
-		Then I verify the the content of the notification message at index 1 contains text "Test ready message in notification panel"
-		Then I verify the the content of the notification message at index 1 contains custom content ".sidepanel-notification-timestamp"
+		Then I verify the action "notification-close-action" in the toolbar has svg of type "bellDot"
+		Then I verify the action "notification-close-action" in the toolbar has svg with className "canvas-icon fill bellDot success"
+		Then I verify the the notification panel has 2 messages
+		Then I verify the the content of the notification message at index 1 is of type "success"
+		Then I verify the the content of the notification message at index 1 contains text "Test success message in notification panel"
+		Then I verify the the content of the notification message at index 1 contains timestamp
 
 		Then I have selected the "warning" message type in the api sidepanel
 		When I enter "Test warning message in notification panel" into the message details field
 		Then I click on the toggle with label "sidepanel-api-notification-callback" in the api sidepanel
 		And I call the API by clicking on the Submit button
 		Then I click on the secondary toolbar open notification button
-		Then I verify the action "notification-close-action" in the toolbar has svg of type "bellWarning"
+		Then I verify the action "notification-close-action" in the toolbar has svg of type "bellDot"
+		Then I verify the action "notification-close-action" in the toolbar has svg with className "canvas-icon fill bellDot warning"
+		Then I verify the the notification panel has 3 messages
 		Then I verify the the content of the notification message at index 2 is of type "clickable.warning"
 		Then I verify the the content of the notification message at index 2 contains text "Test warning message in notification panel"
-		Then I verify the the content of the notification message at index 2 contains custom content ".sidepanel-notification-timestamp"
+		Then I verify the the content of the notification message at index 2 contains timestamp
 		Then I click the notification message at index 2
-		Then I verify the event log of event type "Notification Message Callback" has data "Message received: Test warning message in notification panel"
+		Then I verify the event log of event type "Notification Message Callback" has data "Message harness-message-2 was clicked."
 
 		Then I have selected the "error" message type in the api sidepanel
 		When I enter "Test error message in notification panel" into the message details field
 		Then I click on the toggle with label "sidepanel-api-notification-link" in the api sidepanel
 		And I call the API by clicking on the Submit button
 		Then I click on the secondary toolbar open notification button
-		Then I verify the action "notification-close-action" in the toolbar has svg of type "bellError"
+		Then I verify the action "notification-close-action" in the toolbar has svg of type "bellDot"
+		Then I verify the action "notification-close-action" in the toolbar has svg with className "canvas-icon fill bellDot error"
+		Then I verify the the notification panel has 4 messages
 		Then I verify the the content of the notification message at index 3 is of type "clickable.error"
 		Then I verify the the content of the notification message at index 3 contains text "Test error message in notification panel"
-		Then I verify the the content of the notification message at index 3 contains custom content ".sidepanel-notification-timestamp"
+		Then I verify the the content of the notification message at index 3 contains timestamp
 		Then I click the notification message at index 3
-		Then I verify the event log of event type "Notification Message Callback" has data "Message received: Test error message in notification panel"
+		Then I verify the event log of event type "Notification Message Callback" has data "Message harness-message-3 was clicked."
 		Then I verify the the content of the notification message at index 3 contains custom content "a"
 		Then I verify the browser has 1 tabs
 		Then I click the notification message link at index 3
 		Then I verify the browser has 2 tabs
 		Then I switch focus back to main tab
 		Then I pause for 1 seconds
+
+		# Delete messages
+		Then I enter "harness-message-3" into the delete message with id field
+		Then I click on the delete message submit button in the api sidepanel
+		Then I verify the the notification panel has 3 messages
+		Then I click on the secondary toolbar open notification button
+		Then I verify the action "notification-close-action" in the toolbar has svg with className "canvas-icon fill bellDot warning"
+
+		Then I enter "harness-message-2" into the delete message with id field
+		Then I click on the delete message submit button in the api sidepanel
+		Then I verify the the notification panel has 2 messages
+		Then I click on the secondary toolbar open notification button
+		Then I verify the action "notification-close-action" in the toolbar has svg with className "canvas-icon fill bellDot success"
+
+		Then I enter "harness-message-1" into the delete message with id field
+		Then I click on the delete message submit button in the api sidepanel
+		Then I verify the the notification panel has 1 messages
+		Then I click on the secondary toolbar open notification button
+		Then I verify the action "notification-close-action" in the toolbar has svg with className "canvas-icon fill bellDot success"
+
+		Then I enter "harness-message-0" into the delete message with id field
+		Then I click on the delete message submit button in the api sidepanel
+		Then I verify the the notification panel has 0 messages
+		Then I verify the action "notification-open-action" in the toolbar has svg with className "canvas-icon fill bell info"

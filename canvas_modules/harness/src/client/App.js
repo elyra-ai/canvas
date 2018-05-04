@@ -52,8 +52,7 @@ import {
 	NONE,
 	INPUT_PORT,
 	OUTPUT_PORT,
-	ERROR,
-	WARNING
+	NOTIFICATION_MESSAGE_TYPE
 } from "./constants/constants.js";
 
 import listview32 from "../graphics/list-view_32.svg";
@@ -124,6 +123,7 @@ class App extends React.Component {
 		this.setNotificationMessages = this.setNotificationMessages.bind(this);
 		this.setNotificationMessages2 = this.setNotificationMessages2.bind(this);
 		this.appendNotificationMessages = this.appendNotificationMessages.bind(this);
+		this.deleteNotificationMessages = this.deleteNotificationMessages.bind(this);
 		this.disableNotification = this.disableNotification.bind(this);
 
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
@@ -260,14 +260,14 @@ class App extends React.Component {
 			if (nodeMessages.hasOwnProperty(nodeId)) {
 				const node = nodeMessages[nodeId];
 				const errors = node.filter(function(message) {
-					return message.type === ERROR;
+					return message.type === NOTIFICATION_MESSAGE_TYPE.ERROR;
 				});
 
 				const warnings = node.filter(function(message) {
-					return message.type === WARNING;
+					return message.type === NOTIFICATION_MESSAGE_TYPE.WARNING;
 				});
 
-				const type = errors.length > 0 ? ERROR : WARNING;
+				const type = errors.length > 0 ? NOTIFICATION_MESSAGE_TYPE.ERROR : NOTIFICATION_MESSAGE_TYPE.WARNING;
 				let generatedMessage = this.canvasController.getNode(nodeId).label + " node has ";
 				if (errors.length > 0) {
 					generatedMessage += errors.length + " errors";
@@ -280,8 +280,10 @@ class App extends React.Component {
 				}
 
 				const summarizedMessage = {
+					id: "notification-" + nodeId,
+					title: this.canvasController.getNode(nodeId).label,
 					type: type,
-					message: generatedMessage
+					content: generatedMessage
 				};
 
 				notificationMessages.push(summarizedMessage);
@@ -302,14 +304,14 @@ class App extends React.Component {
 			if (nodeMessages.hasOwnProperty(nodeId)) {
 				const node = nodeMessages[nodeId];
 				const errors = node.filter(function(message) {
-					return message.type === ERROR;
+					return message.type === NOTIFICATION_MESSAGE_TYPE.ERROR;
 				});
 
 				const warnings = node.filter(function(message) {
-					return message.type === WARNING;
+					return message.type === NOTIFICATION_MESSAGE_TYPE.WARNING;
 				});
 
-				const type = errors.length > 0 ? ERROR : WARNING;
+				const type = errors.length > 0 ? NOTIFICATION_MESSAGE_TYPE.ERROR : NOTIFICATION_MESSAGE_TYPE.WARNING;
 				let generatedMessage = this.canvasController2.getNode(nodeId).label + " node has ";
 				if (errors.length > 0) {
 					generatedMessage += errors.length + " errors";
@@ -322,8 +324,10 @@ class App extends React.Component {
 				}
 
 				const summarizedMessage = {
+					id: "notification-" + nodeId,
+					title: this.canvasController2.getNode(nodeId).label,
 					type: type,
-					message: generatedMessage
+					content: generatedMessage
 				};
 
 				notificationMessages.push(summarizedMessage);
@@ -444,6 +448,11 @@ class App extends React.Component {
 		if (this.state.disableNotification !== newState) {
 			this.setState({ disableNotification: newState });
 		}
+	}
+
+	deleteNotificationMessages(messageId) {
+		this.canvasController.deleteNotificationMessages(messageId);
+		this.log("Delete Notification Message", "Deleted message " + messageId);
 	}
 
 	sidePanelCanvas() {
@@ -1177,8 +1186,8 @@ class App extends React.Component {
 			{ action: "arrangeVertically", label: "Arrange Vertically", enable: layoutAction }
 		];
 
-		const notificationConfig = { action: "notification", label: "Notifications", enable: !this.state.disableNotification };
-		const notificationConfig2 = { action: "notification", label: "Notifications", enable: true };
+		const notificationConfig = { action: "notification", label: "Notifications", enable: !this.state.disableNotification, notificationHeader: "Notifications" };
+		const notificationConfig2 = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications Canvas 2" };
 
 		const propertiesConfig = {
 			containerType: this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType,
@@ -1345,6 +1354,7 @@ class App extends React.Component {
 			setPortLabel: this.setPortLabel,
 			setNotificationMessages: this.setNotificationMessages,
 			appendNotificationMessages: this.appendNotificationMessages,
+			deleteNotificationMessages: this.deleteNotificationMessages,
 			disableNotification: this.disableNotification
 		};
 

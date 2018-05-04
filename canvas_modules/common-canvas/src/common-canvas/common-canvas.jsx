@@ -23,6 +23,8 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 import TooltipWrapper from "../tooltip/tooltip-wrapper.jsx";
 import isEmpty from "lodash/isEmpty";
 
+import { DEFAULT_NOTIFICATION_HEADER } from "./constants/canvas-constants.js";
+
 import globalStyles from "../../assets/styles/global.scss";
 import canvasStyles from "../../assets/styles/common-canvas.scss";
 
@@ -73,7 +75,7 @@ export default class CommonCanvas extends React.Component {
 
 		this.pendingTooltip = null;
 
-		this.configureToolbarBellIconState = this.configureToolbarBellIconState.bind(this);
+		this.configureToolbarBellIconClassName = this.configureToolbarBellIconClassName.bind(this);
 	}
 
 	componentDidMount() {
@@ -308,9 +310,9 @@ export default class CommonCanvas extends React.Component {
 		}
 	}
 
-	configureToolbarBellIconState(newState) {
+	configureToolbarBellIconClassName(newState) {
 		const newConfig = Object.assign({}, this.state.notificationConfig);
-		newConfig.action = newState;
+		newConfig.className = newState;
 		this.setState({ notificationConfig: newConfig });
 	}
 
@@ -372,7 +374,11 @@ export default class CommonCanvas extends React.Component {
 				}
 			}
 
+			const notificationHeader = this.state.notificationConfig && this.state.notificationConfig.notificationHeader
+				? this.state.notificationConfig.notificationHeader
+				: DEFAULT_NOTIFICATION_HEADER;
 			notificationPanel = (<NotificationPanel
+				notificationHeader={notificationHeader}
 				isNotificationOpen={this.state.isNotificationOpen}
 				messages={this.canvasController.getNotificationMessages()}
 				canvasController={this.canvasController}

@@ -202,6 +202,12 @@
 	margin-left: 15px;
 }
 
+.sidepanel-api-delete-notification-message-submit {
+	position: relative;
+	display: flex;
+	flex-flow: row-reverse;
+}
+
 #buttonOneTimeLayoutHorizontal , #buttonOneTimeLayoutVertical {
 	width: 100%;
 	text-align: center;

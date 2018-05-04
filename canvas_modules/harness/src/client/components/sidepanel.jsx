@@ -85,6 +85,7 @@ export default class SidePanel extends React.Component {
 				setPortLabel={this.props.apiConfig.setPortLabel}
 				setNotificationMessages={this.props.apiConfig.setNotificationMessages}
 				appendNotificationMessages={this.props.apiConfig.appendNotificationMessages}
+				deleteNotificationMessages={this.props.apiConfig.deleteNotificationMessages}
 				disableNotification={this.props.apiConfig.disableNotification}
 			/>);
 			break;
@@ -147,6 +148,7 @@ SidePanel.propTypes = {
 		setPortLabel: PropTypes.func,
 		setNotificationMessages: PropTypes.func,
 		appendNotificationMessages: PropTypes.func,
+		deleteNotificationMessages: PropTypes.func,
 		disableNotification: PropTypes.func
 	}),
 	openSidepanelCanvas: PropTypes.bool,

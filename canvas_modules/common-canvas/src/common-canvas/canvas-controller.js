@@ -146,22 +146,40 @@ export default class CanvasController {
 	setNotificationMessages(newMessages) {
 		this.notificationMessages = newMessages;
 		// Update the bell icon to the correct state
-		this.setNotificationBellIconState(this.determineNotificationBellIconState(false));
+		this.setNotificationBellIconClassName(this.determineNotificationBellIconState(false));
 	}
 
 	// Append newMessages to list of notificationMessages
 	appendNotificationMessages(newMessages) {
 		this.notificationMessages = this.notificationMessages.concat(newMessages);
 		// Update the bell icon to the correct state
-		this.setNotificationBellIconState(this.determineNotificationBellIconState(false));
+		this.setNotificationBellIconClassName(this.determineNotificationBellIconState(false));
+	}
+
+	// Delete messages from notificationMessages with given messageId or array of messageIds
+	deleteNotificationMessages(messageIds) {
+		let messageIdsList = messageIds;
+		if (!Array.isArray(messageIds)) {
+			messageIdsList = [messageIds];
+		}
+
+		for (const messageId of messageIdsList) {
+			for (let idx = 0; idx < this.notificationMessages.length; idx++) {
+				const message = this.notificationMessages[idx];
+				if (message.id === messageId) {
+					this.notificationMessages.splice(idx, 1);
+					break;
+				}
+			}
+		}
 	}
 
 	// Sets the state of the notification bell icon in the toolbar
-	setNotificationBellIconState(newState) {
-		this.commonCanvas.configureToolbarBellIconState(newState);
+	setNotificationBellIconClassName(newState) {
+		this.commonCanvas.configureToolbarBellIconClassName(newState);
 	}
 
-	// Available states are in constants.NOTIFICATION_BELL_ICON
+	// Available states are in canvas-constants NOTIFICATION_BELL_ICON
 	determineNotificationBellIconState(bellIconEnabled) {
 		const errors = this.notificationMessages.filter(function(message) {
 			return message.type === constants.ERROR;
@@ -171,16 +189,22 @@ export default class CanvasController {
 			return message.type === constants.WARNING;
 		});
 
+		let className = "canvas-icon fill bell " + constants.INFORMATION;
 		if (bellIconEnabled) {
+			const bellIconClassName = "canvas-icon fill bellDot ";
 			if (errors.length > 0) {
-				return constants.NOTIFICATION_BELL_ICON.ERROR;
+				className = bellIconClassName + constants.ERROR;
 			} else if (warnings.length > 0) {
-				return constants.NOTIFICATION_BELL_ICON.WARNING;
+				className = bellIconClassName + constants.WARNING;
 			} else if (this.notificationMessages.length > 0) {
-				return constants.NOTIFICATION_BELL_ICON.READY;
+				className = bellIconClassName + constants.SUCCESS;
 			}
 		}
-		return constants.NOTIFICATION_BELL_ICON.DEFAULT;
+
+		return {
+			icon: this.notificationMessages.length > 0 ? constants.NOTIFICATION_BELL_ICON.DOT : constants.NOTIFICATION_BELL_ICON.DEFAULT,
+			className: className
+		};
 	}
 
 	moveObjects(data) {

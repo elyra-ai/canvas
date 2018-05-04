@@ -13,8 +13,12 @@ import testUtils from "./utilities/test-utils.js";
 
 module.exports = function() {
 	this.Then(/^I verify the the notification panel has (\d+) messages$/, function(numMessages) {
-		const notificationMessages = browser.$(".notification-panel-messages").$$(".notifications-button-container");
-		expect(notificationMessages.length).toEqual(Number(numMessages));
+		if (Number(numMessages) === 0) {
+			expect(browser.$$(".notification-panel-messages").length).toEqual(0);
+		} else {
+			const notificationMessages = browser.$(".notification-panel-messages").$$(".notifications-button-container");
+			expect(notificationMessages.length).toEqual(Number(numMessages));
+		}
 	});
 
 	this.Then(/^I verify the the content of the notification message at index (\d+) is of type "([^"]*)"$/, function(messageIdx, messageType) {
@@ -36,6 +40,13 @@ module.exports = function() {
 			messageTextFound = true;
 		}
 		expect(messageTextFound).toEqual(true);
+	});
+
+	this.Then(/^I verify the the content of the notification message at index (\d+) contains timestamp$/, function(messageIdx) {
+		const notificationMessages = browser.$(".notification-panel-messages").$$(".notifications-button-container");
+		const messageDetails = notificationMessages[messageIdx].$(".notification-message-details");
+		expect(messageDetails.$$(".notification-message-timestamp-icon").length).toEqual(1);
+		expect(messageDetails.$$(".notification-message-string").length).toEqual(1);
 	});
 
 	this.Then(/^I verify the the content of the notification message at index (\d+) contains custom content "([^"]*)"$/, function(messageIdx, customDiv) {
