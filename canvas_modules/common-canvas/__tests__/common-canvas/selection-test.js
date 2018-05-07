@@ -13,15 +13,13 @@ import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
 import CanvasController from "../../src/common-canvas/canvas-controller";
-import log4js from "log4js";
+// import log4js from "log4js";
 
-const logger = log4js.getLogger("selection-test");
+// const logger = log4js.getLogger("selection-test");
 const canvasController = new CanvasController();
 
 describe("Selection notification tests", () => {
 	it("Should select node and comment", () => {
-		logger.info("selection event should contain selected nodes and comments");
-
 		const objectModel = canvasController.getObjectModel();
 		const startPipeline =
 			{ sub_id: "123",
@@ -62,8 +60,6 @@ describe("Selection notification tests", () => {
 	});
 
 	it("should select nodes in a fork subgraph", () => {
-		logger.info("should select nodes in a fork subgraph.");
-
 		const objectModel = canvasController.getObjectModel();
 		const startPipeline =
 			{ sub_id: "123",
@@ -112,8 +108,6 @@ describe("Selection notification tests", () => {
 	});
 
 	it("should select toggle off node", () => {
-		logger.info("should select toggle off node.");
-
 		const objectModel = canvasController.getObjectModel();
 		const startPipeline =
 			{ sub_id: "123",
@@ -161,8 +155,6 @@ describe("Selection notification tests", () => {
 	});
 
 	it("should deselect node", () => {
-		logger.info("should deselect node");
-
 		const objectModel = canvasController.getObjectModel();
 		const startPipeline =
 			{ sub_id: "123",
@@ -208,8 +200,6 @@ describe("Selection notification tests", () => {
 	});
 
 	it("should deselect node and comment", () => {
-		logger.info("should deselect node and comment");
-
 		const objectModel = canvasController.getObjectModel();
 		const startPipeline =
 			{ sub_id: "123",
@@ -255,8 +245,6 @@ describe("Selection notification tests", () => {
 	});
 
 	it("should clear selection for deleted node", () => {
-		logger.info("should clear selection for deleted node");
-
 		const objectModel = canvasController.getObjectModel();
 
 		const startPipeline =
@@ -304,8 +292,6 @@ describe("Selection notification tests", () => {
 	});
 
 	it("should clear selection for deleted objects", () => {
-		logger.info("should clear selection for deleted objects");
-
 		const objectModel = canvasController.getObjectModel();
 		const startPipeline =
 			{ sub_id: "123",

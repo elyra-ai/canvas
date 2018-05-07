@@ -8,7 +8,7 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-import log4js from "log4js";
+// import log4js from "log4js";
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
@@ -23,14 +23,11 @@ import addNodeVerticalLayoutCanvas from "../test_resources/json/addNodeVerticalL
 import moveVarNode from "../test_resources/json/moveVarNode.json";
 import moveNodeHorizontalLayoutCanvas from "../test_resources/json/moveNodeHorizontalLayoutCanvas.json";
 import moveNodeVerticalLayoutCanvas from "../test_resources/json/moveNodeVerticalLayoutCanvas.json";
-import nodeParameters from "../test_resources/json/nodeParameters.json";
 import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
-import startPipelineFlowParamsAdded from "../test_resources/json/startPipelineFlowParamsAdded.json";
 import pipelineFlowTest1Start from "../test_resources/json/pipelineFlowTest1Start.json";
 import pipelineFlowTest1Expected from "../test_resources/json/pipelineFlowTest1Expected.json";
 import pipelineFlowV1 from "../test_resources/json/pipelineFlowV1.json";
 import pipelineFlowV2 from "../test_resources/json/pipelineFlowV2.json";
-import addAppDataToLinksFlowExpected from "../test_resources/json/addAppDataToLinksFlowExpected.json";
 
 
 import ObjectModel from "../../src/object-model/object-model.js";
@@ -38,14 +35,12 @@ import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CL
 	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK } from "../../src/common-canvas/constants/canvas-constants.js";
 import CloneMultipleObjectsAction from "../../src/command-actions/cloneMultipleObjectsAction.js";
 
-const logger = log4js.getLogger("object-model-test");
+// const logger = log4js.getLogger("object-model-test");
 const objectModel = new ObjectModel();
 
 describe("ObjectModel API handle model OK", () => {
 
 	it("should layout a canvas horiziontally", () => {
-		logger.info("should layout a canvas horiziontally");
-
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
@@ -68,8 +63,6 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 	it("should layout a canvas vertically", () => {
-		logger.info("should layout a canvas vertically");
-
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
@@ -92,8 +85,6 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 	it("should oneTimeLayout a canvas horiziontally", () => {
-		logger.info("should oneTimeLayout a canvas horiziontally");
-
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
@@ -111,8 +102,6 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 	it("should oneTimeLayout a canvas vertically", () => {
-		logger.info("should oneTimeLayout a canvas vertically");
-
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
@@ -129,8 +118,6 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 	it("should move a node after oneTimeLayout horiziontally", () => {
-		logger.info("should move a node after oneTimeLayout horiziontally");
-
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
@@ -149,8 +136,6 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 	it("should move a node after oneTimeLayout vertically", () => {
-		logger.info("should move a node after oneTimeLayout vertically");
-
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
@@ -167,16 +152,15 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
-	it("should return parameters of a node", () => {
-		logger.info("should return parameters of a node");
-
-		deepFreeze(startPipelineFlow);
-
-		objectModel.setPipelineFlow(startPipelineFlow);
-		var actualParameters = objectModel.getNodeParameters("idGWRVT47XDV");
-
-		const expectedParameters = nodeParameters;
-
+	it("should return parameters of an execution node", () => {
+		const actualParameters = getNodeParametersFromStartFlow("idGWRVT47XDV");
+		const expectedParameters =
+			{
+				"props": [
+					{ "field1": "execution-node-param-val1" },
+					{ "field2": "execution-node-param-val2" }
+				]
+			};
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedParameters, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualParameters, null, 4));
@@ -184,126 +168,136 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(expectedParameters, actualParameters)).to.be.true;
 	});
 
-	it("should save parameters of a node", () => {
-		logger.info("should save parameters of a node");
+	it("should return parameters of a binding node", () => {
+		const actualParameters = getNodeParametersFromStartFlow("id8I6RH2V91XW");
+		const expectedParameters =
+			{
+				"props": [
+					{ "field1": "binding-node-param-val1" },
+					{ "field2": "binding-node-param-val2" }
+				]
+			};
 
-		deepFreeze(startPipelineFlow);
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedParameters, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualParameters, null, 4));
 
-		objectModel.setPipelineFlow(startPipelineFlow);
-		objectModel.setNodeParameters("id8I6RH2V91XW", { "paramA": "Value for Param A", "paramB": "Value for Param B" });
-
-		const expectedCanvas = startPipelineFlowParamsAdded;
-		const actualCanvas = objectModel.getPipelineFlow();
-
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
-
-		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
+		expect(isEqual(expectedParameters, actualParameters)).to.be.true;
 	});
 
-	it("should save a messages for a node", () => {
-		logger.info("should save a messages for a node");
+	it("should return parameters of a super node", () => {
+		const actualParameters = getNodeParametersFromStartFlow("nodeIDSuperNodePE");
+		const expectedParameters =
+			{
+				"props": [
+					{ "field1": "super-node-param-val1" },
+					{ "field2": "super-node-param-val2" }
+				]
+			};
 
-		deepFreeze(startPipelineFlow);
-		const expectedMessage = { "id_ref": "controlOne", "type": "warning", "text": "This is a test message" };
-		objectModel.setPipelineFlow(startPipelineFlow);
-		objectModel.setNodeMessage("id8I6RH2V91XW", expectedMessage);
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedParameters, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualParameters, null, 4));
 
-		const actualMessage = objectModel.getNodeMessage("id8I6RH2V91XW", "controlOne");
-
-		expect(isEqual(expectedMessage, actualMessage)).to.be.true;
+		expect(isEqual(expectedParameters, actualParameters)).to.be.true;
 	});
 
-	it("should save multiple messages for a node", () => {
-		logger.info("should save multiple messages for a node");
+	it("should return parameters of a model node", () => {
+		const actualParameters = getNodeParametersFromStartFlow("id125TTEEIK7V");
+		const expectedParameters =
+			{
+				"props": [
+					{ "field1": "model-node-param-val1" },
+					{ "field2": "model-node-param-val2" }
+				]
+			};
 
-		deepFreeze(startPipelineFlow);
-		const message1 = { "id_ref": "controlOne", "type": "warning", "text": "This is a test message" };
-		const message2 = { "id_ref": "controlTwo", "type": "error", "text": "This is an error test message" };
-		const message3 = { "id_ref": "controlThree", "type": "info", "text": "" };
-		const expectedMessages = [
-			message1,
-			message2,
-			message3
-		];
-		objectModel.setPipelineFlow(startPipelineFlow);
-		objectModel.setNodeMessage("id8I6RH2V91XW", message1);
-		objectModel.setNodeMessage("id8I6RH2V91XW", message2);
-		objectModel.setNodeMessage("id8I6RH2V91XW", message3);
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedParameters, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualParameters, null, 4));
 
-		const actualMessages = objectModel.getNodeMessages("id8I6RH2V91XW");
-
-
-		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
-		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
-
-
-		expect(isEqual(expectedMessages, actualMessages)).to.be.true;
+		expect(isEqual(expectedParameters, actualParameters)).to.be.true;
 	});
 
-	it("should save one control messages for a node", () => {
-		logger.info("should save one control messages for a node");
-
-		deepFreeze(startPipelineFlow);
-		const message1 = { "id_ref": "controlOne", "type": "warning", "text": "This is a test message" };
-		const message2 = { "id_ref": "controlOne", "type": "error", "text": "This is an error test message" };
-		const message3 = { "id_ref": "controlThree", "type": "info", "text": "" };
-		const expectedMessages = [
-			message2,
-			message3
-		];
-		objectModel.setPipelineFlow(startPipelineFlow);
-		objectModel.setNodeMessage("id8I6RH2V91XW", message1);
-		objectModel.setNodeMessage("id8I6RH2V91XW", message2);
-		objectModel.setNodeMessage("id8I6RH2V91XW", message3);
-
-		const actualMessages = objectModel.getNodeMessages("id8I6RH2V91XW");
-
-		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
-		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
-
-		expect(isEqual(expectedMessages, actualMessages)).to.be.true;
+	it("should save parameters of an execution binding node", () => {
+		shouldReturnSetParameters("idGWRVT47XDV");
 	});
 
-	it("should clear all messages for a node", () => {
-		logger.info("should clear all control messages for a node");
+	it("should save parameters of a binding node", () => {
+		shouldReturnSetParameters("id8I6RH2V91XW");
+	});
 
-		deepFreeze(startPipelineFlow);
-		const message1 = { "id_ref": "controlOne", "type": "warning", "text": "This is a test message" };
-		const message2 = { "id_ref": "controlTwo", "type": "error", "text": "This is an error test message" };
-		const message3 = { "id_ref": "controlThree", "type": "info", "text": "" };
-		const expectedMessages = [
-			message1,
-			message2,
-			message3
-		];
-		objectModel.setPipelineFlow(startPipelineFlow);
-		objectModel.setNodeMessage("id8I6RH2V91XW", message1);
-		objectModel.setNodeMessage("id8I6RH2V91XW", message2);
-		objectModel.setNodeMessage("id8I6RH2V91XW", message3);
+	it("should save parameters of a supernode", () => {
+		shouldReturnSetParameters("nodeIDSuperNodePE");
+	});
 
-		const actualMessages = objectModel.getNodeMessages("id8I6RH2V91XW");
+	it("should save parameters of a model node", () => {
+		shouldReturnSetParameters("id125TTEEIK7V");
+	});
 
-		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
-		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
 
-		expect(isEqual(expectedMessages, actualMessages)).to.be.true;
+	it("should save a messages for an execution node", () => {
+		shouldSaveNodeMessage("idGWRVT47XDV");
+	});
 
-		const expectedClearedMessages = [];
+	it("should save a messages for a binding node", () => {
+		shouldSaveNodeMessage("id8I6RH2V91XW");
+	});
 
-		objectModel.setNodeMessages("id8I6RH2V91XW", expectedClearedMessages);
-		const actualClearedMessages = objectModel.getNodeMessages("id8I6RH2V91XW");
+	it("should save a messages for a supernode", () => {
+		shouldSaveNodeMessage("nodeIDSuperNodePE");
+	});
 
-		// logger.info("Expected Messages = " + JSON.stringify(expectedClearedMessages, null, 4));
-		// logger.info("Actual messages   = " + JSON.stringify(actualClearedMessages, null, 4));
+	it("should save a messages for a model node", () => {
+		shouldSaveNodeMessage("id125TTEEIK7V");
+	});
 
-		expect(isEqual(expectedClearedMessages, actualClearedMessages)).to.be.true;
+	it("should save multiple messages for an execution node", () => {
+		shouldSaveMultipleNodeMessages("idGWRVT47XDV");
+	});
 
+	it("should save multiple messages for a binding node", () => {
+		shouldSaveMultipleNodeMessages("id8I6RH2V91XW");
+	});
+
+	it("should save multiple messages for a supernode", () => {
+		shouldSaveMultipleNodeMessages("nodeIDSuperNodePE");
+	});
+
+	it("should save multiple messages for a model node", () => {
+		shouldSaveMultipleNodeMessages("id125TTEEIK7V");
+	});
+
+	it("should save one control messages for an execution node", () => {
+		shouldSaveOneNodeMessage("idGWRVT47XDV");
+	});
+
+	it("should save one control messages for a binding node", () => {
+		shouldSaveOneNodeMessage("id8I6RH2V91XW");
+	});
+
+	it("should save one control messages for a supernode", () => {
+		shouldSaveOneNodeMessage("nodeIDSuperNodePE");
+	});
+
+	it("should save one control messages for a model node", () => {
+		shouldSaveOneNodeMessage("id125TTEEIK7V");
+	});
+
+	it("should clear all messages for an execution node", () => {
+		shouldClearAllNodeMessages("idGWRVT47XDV");
+	});
+
+	it("should clear all messages for a binding node", () => {
+		shouldClearAllNodeMessages("id8I6RH2V91XW");
+	});
+
+	it("should clear all messages for a supernode", () => {
+		shouldClearAllNodeMessages("nodeIDSuperNodePE");
+	});
+
+	it("should clear all messages for a model node", () => {
+		shouldClearAllNodeMessages("id125TTEEIK7V");
 	});
 
 	it("should upgrade a pipelineFlow from v1 to v2", () => {
-		logger.info("should upgrade a pipelineFlow from v1 to v2");
-
 		deepFreeze(pipelineFlowV1);
 
 		objectModel.setPipelineFlow(pipelineFlowV1);
@@ -318,7 +312,6 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 	it("should add palette item into existing test category", () => {
-		logger.info("should add palette item into existing test category");
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const nodeTypeObj = {
 			"label": "MyNodeType",
@@ -337,8 +330,6 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 	it("should add palette item into new category without label", () => {
-		logger.info("should add palette item into new category without label");
-
 		const newCategoryName = "newCategory";
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const nodeTypeObj = {
@@ -362,7 +353,6 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 	it("should add palette item into new category with label", () => {
-		logger.info("should add palette item into new category with label");
 		const newCategoryName = "newCategory";
 		const newCategoryLabel = "New Category";
 		objectModel.setPipelineFlowPalette(paletteJson);
@@ -387,8 +377,6 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 	it("should handle pipeline flow with no app_data in links", () => {
-		logger.info("should handle pipeline flow with no app_data in links");
-
 		objectModel.setPipelineFlow(pipelineFlowTest1Start);
 
 		const actualPipelineFlow = objectModel.getPipelineFlow();
@@ -400,90 +388,89 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(JSON.stringify(actualPipelineFlow, null, 2), JSON.stringify(expectedPipelineFlow, null, 2))).to.be.true;
 	});
 
-	it("should return custom app_data and ui_data for links", () => {
-		logger.info("should return custom app_data and ui_data for links");
-
-		const startPipelineFlowLinkAppData = JSON.parse(JSON.stringify(startPipelineFlow));
-		// add app_data and ui_data to existing link
-		startPipelineFlowLinkAppData.pipelines[0].nodes[0].inputs[0].links[0].app_data.myData = "myValue";
-		deepFreeze(startPipelineFlowLinkAppData);
-
-		objectModel.setPipelineFlow(startPipelineFlowLinkAppData);
-
-		const expectedCanvas = addAppDataToLinksFlowExpected;
-		const actualCanvas = objectModel.getPipelineFlow();
-
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
-
-		expect(isEqual(JSON.stringify(actualCanvas, null, 2), JSON.stringify(expectedCanvas, null, 2))).to.be.true;
+	it("should return custom app_data and ui_data for links from an execution node", () => {
+		shouldReturnCustomAppDataAndUiDataForLinks("idGWRVT47XDV", null);
 	});
 
-	it("should add links for existing nodes", () => {
-		logger.info("should add links for existing nodes");
-
-		const startPipelineFlowNoLinks = JSON.parse(JSON.stringify(startPipelineFlow));
-		// remove existing link array
-		delete startPipelineFlowNoLinks.pipelines[0].nodes[0].inputs[0].links;
-		deepFreeze(startPipelineFlowNoLinks);
-
-		objectModel.setPipelineFlow(startPipelineFlowNoLinks);
-
-		const expectedCanvas = startPipelineFlow;
-
-		const linkData = {
-			"editType": "linkNodes",
-			"nodes": [{ "id": "id8I6RH2V91XW" }],
-			"targetNodes": [{ "id": "idGWRVT47XDV" }],
-			"linkType": "data"
-		};
-		const nodeLinks = objectModel.createNodeLinks(linkData);
-		objectModel.addLinks(nodeLinks);
-		const actualCanvas = objectModel.getPipelineFlow();
-
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
-
-		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
+	it("should return custom app_data and ui_data for links from an exit binding node", () => {
+		shouldReturnCustomAppDataAndUiDataForLinks("id5KIRGGJ3FYT", null);
 	});
 
-	it("should update label for a node", () => {
-		logger.info("should update label for a node");
-
-		deepFreeze(startPipelineFlow);
-		const newLabel = "newNodeLabel";
-		objectModel.setPipelineFlow(startPipelineFlow);
-		objectModel.setNodeLabel("id8I6RH2V91XW", newLabel);
-
-		expect(isEqual(newLabel, objectModel.getNode("id8I6RH2V91XW").label)).to.be.true;
+	it("should return custom app_data and ui_data for links from a supernode", () => {
+		shouldReturnCustomAppDataAndUiDataForLinks("nodeIDSuperNodePE", "input2SuperNodePE");
 	});
 
-	it("should update input port label for a node", () => {
-		logger.info("should update input port label for a node");
-
-		deepFreeze(startPipelineFlow);
-		const newLabel = "newPortLabel";
-		objectModel.setPipelineFlow(startPipelineFlow);
-		objectModel.setInputPortLabel("id8I6RH2V91XW", "inPort", newLabel);
-		const node = objectModel.getNode("id8I6RH2V91XW");
-
-		expect(isEqual(newLabel, objectModel.getPort(node.input_ports, "inPort").label)).to.be.true;
+	it("should return custom app_data and ui_data for links from a model node", () => {
+		shouldReturnCustomAppDataAndUiDataForLinks("id125TTEEIK7V", null);
 	});
 
-	it("should update output port label for a node", () => {
-		logger.info("should update output port label for a node");
 
-		deepFreeze(startPipelineFlow);
-		const newLabel = "newPortLabel";
-		objectModel.setPipelineFlow(startPipelineFlow);
-		objectModel.setOutputPortLabel("idGWRVT47XDV", "outPort", newLabel);
-		const node = objectModel.getNode("idGWRVT47XDV");
+	it("should add links for existing execution node", () => {
+		shouldAddLinksForExistingNodes("idGWRVT47XDV", null, "id8I6RH2V91XW", "outPort");
+	});
 
-		expect(isEqual(newLabel, objectModel.getPort(node.output_ports, "outPort").label)).to.be.true;
+	it("should add links for existing exit binding node", () => {
+		shouldAddLinksForExistingNodes("id5KIRGGJ3FYT", null, "nodeIDSuperNodePE", "output1SuperNodePE");
+	});
+
+	it("should add links for existing supernode", () => {
+		shouldAddLinksForExistingNodes("nodeIDSuperNodePE", "input2SuperNodePE", "idGWRVT47XDV");
+	});
+
+
+	it("should add links for existing model node", () => {
+		shouldAddLinksForExistingNodes("id125TTEEIK7V", null, "nodeIDSuperNodePE");
+	});
+
+	it("should update label for an executiom node", () => {
+		shouldUpdateNodeLabel("idGWRVT47XDV", "New test label");
+	});
+
+	it("should update label for a binding node", () => {
+		shouldUpdateNodeLabel("id5KIRGGJ3FYT", "New test label");
+	});
+
+	it("should update label for a supernode", () => {
+		shouldUpdateNodeLabel("nodeIDSuperNodePE", "New test label");
+	});
+
+	it("should update label for a model node", () => {
+		shouldUpdateNodeLabel("id125TTEEIK7V", "New test label");
+	});
+
+	it("should update input port label for an execution node", () => {
+		shouldUpdateInputPortLabel("idGWRVT47XDV", "inPort", "New port label");
+	});
+
+	it("should update input port label for a binding exit node", () => {
+		shouldUpdateInputPortLabel("id5KIRGGJ3FYT", "inPort", "New port label");
+	});
+
+	it("should update input port label for a supernode", () => {
+		shouldUpdateInputPortLabel("nodeIDSuperNodePE", "input1SuperNodePE", "New port label");
+	});
+
+	it("should update input port label for a model node", () => {
+		shouldUpdateInputPortLabel("id125TTEEIK7V", "inPort", "New port label");
+	});
+
+	it("should update output port label for an execution node", () => {
+		shouldUpdateOutputPortLabel("idGWRVT47XDV", "outPort", "New port label");
+	});
+
+	it("should update output port label for a binding entry node", () => {
+		shouldUpdateOutputPortLabel("id8I6RH2V91XW", "outPort", "New port label");
+	});
+
+	it("should update output port label for a supernode", () => {
+		shouldUpdateOutputPortLabel("nodeIDSuperNodePE", "output1SuperNodePE", "New port label");
+	});
+
+	it("should update output port label for a model node", () => {
+		shouldUpdateOutputPortLabel("id125TTEEIK7V", "outPort", "New port label");
 	});
 
 	it("should create node with fixed node id", () => {
-		logger.info("should create node with fixed node id");
 		const uniqueNodeId = "myUniqueNodeId";
 
 		deepFreeze(startCanvas);
@@ -512,8 +499,6 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 	it("should create node with non-null node id", () => {
-		logger.info("should create node with non-null node id");
-
 		deepFreeze(startCanvas);
 
 		objectModel.setEmptyPipelineFlow();
@@ -527,7 +512,6 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 	it("should create node links with fixed id", () => {
-		logger.info("should create node links with fixed id");
 		const uniqueNodeId = "myUniqueNodeId";
 		const uniqueNodeLink = "myUniqueLinkId";
 
@@ -572,7 +556,6 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 	it("should create comment with fixed comment id", () => {
-		logger.info("should create comment with fixed comment id");
 		const uniqueCommentId = "myUniqueCommentId";
 		const uniqueCommentLinkId = "myUniqueCommentLinkId";
 
@@ -623,7 +606,6 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 	it("should clone a node, comment, node_link and comment_link with fixed ids", () => {
-		logger.info("should clone a node, comment, node_link and comment_link with fixed ids");
 		const uniqueCommentId = "myUniqueCommentId";
 		const uniqueCommentLinkId = "myUniqueCommentLinkId";
 		const uniqueClonedNodeId = "myUniqueClonedNodeId";
@@ -687,5 +669,204 @@ describe("ObjectModel API handle model OK", () => {
 
 		expect(isEqual(objectModel.getCanvasInfoPipeline(), clonedCanvas)).to.be.true;
 	});
+
+	function getNodeParametersFromStartFlow(nodeId) {
+		deepFreeze(startPipelineFlow);
+		objectModel.setPipelineFlow(startPipelineFlow);
+
+		return objectModel.getNodeParameters(nodeId);
+	}
+
+	function shouldReturnSetParameters(nodeId) {
+		const actualParameters = { "paramA": "Value for Param A", "paramB": "Value for Param B" };
+
+		deepFreeze(startPipelineFlow);
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setNodeParameters(nodeId, actualParameters);
+
+		const node = objectModel.getPipelineFlow().pipelines[0].nodes.find((n) => n.id === nodeId);
+		const expectedParameters = node.parameters;
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedParameters, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualParameters, null, 2));
+
+		expect(isEqual(JSON.stringify(expectedParameters, null, 4), JSON.stringify(actualParameters, null, 4))).to.be.true;
+	}
+
+	function shouldSaveNodeMessage(nodeId) {
+		deepFreeze(startPipelineFlow);
+		const expectedMessage = { "id_ref": "controlOne", "type": "warning", "text": "This is a test message" };
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setNodeMessage(nodeId, expectedMessage);
+
+		const actualMessage = objectModel.getNodeMessage(nodeId, "controlOne");
+
+		expect(isEqual(expectedMessage, actualMessage)).to.be.true;
+	}
+
+	function shouldSaveMultipleNodeMessages(nodeId) {
+		deepFreeze(startPipelineFlow);
+		const message1 = { "id_ref": "controlOne", "type": "warning", "text": "This is a test message" };
+		const message2 = { "id_ref": "controlTwo", "type": "error", "text": "This is an error test message" };
+		const message3 = { "id_ref": "controlThree", "type": "info", "text": "" };
+		const expectedMessages = [
+			message1,
+			message2,
+			message3
+		];
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setNodeMessage(nodeId, message1);
+		objectModel.setNodeMessage(nodeId, message2);
+		objectModel.setNodeMessage(nodeId, message3);
+
+		const actualMessages = objectModel.getNodeMessages(nodeId);
+
+		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
+		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
+
+		expect(isEqual(expectedMessages, actualMessages)).to.be.true;
+	}
+
+	function shouldSaveOneNodeMessage(nodeId) {
+		deepFreeze(startPipelineFlow);
+		const message1 = { "id_ref": "controlOne", "type": "warning", "text": "This is a test message" };
+		const message2 = { "id_ref": "controlOne", "type": "error", "text": "This is an error test message" };
+		const message3 = { "id_ref": "controlThree", "type": "info", "text": "" };
+		const expectedMessages = [
+			message2,
+			message3
+		];
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setNodeMessage(nodeId, message1);
+		objectModel.setNodeMessage(nodeId, message2);
+		objectModel.setNodeMessage(nodeId, message3);
+
+		const actualMessages = objectModel.getNodeMessages(nodeId);
+
+		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
+		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
+
+		expect(isEqual(expectedMessages, actualMessages)).to.be.true;
+	}
+
+	function shouldClearAllNodeMessages(nodeId) {
+		deepFreeze(startPipelineFlow);
+		const message1 = { "id_ref": "controlOne", "type": "warning", "text": "This is a test message" };
+		const message2 = { "id_ref": "controlTwo", "type": "error", "text": "This is an error test message" };
+		const message3 = { "id_ref": "controlThree", "type": "info", "text": "" };
+		const expectedMessages = [
+			message1,
+			message2,
+			message3
+		];
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setNodeMessage(nodeId, message1);
+		objectModel.setNodeMessage(nodeId, message2);
+		objectModel.setNodeMessage(nodeId, message3);
+
+		const actualMessages = objectModel.getNodeMessages(nodeId);
+
+		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
+		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
+
+		expect(isEqual(expectedMessages, actualMessages)).to.be.true;
+
+		const expectedClearedMessages = [];
+
+		objectModel.setNodeMessages(nodeId, expectedClearedMessages);
+		const actualClearedMessages = objectModel.getNodeMessages(nodeId);
+
+		// logger.info("Expected Messages = " + JSON.stringify(expectedClearedMessages, null, 4));
+		// logger.info("Actual messages   = " + JSON.stringify(actualClearedMessages, null, 4));
+
+		expect(isEqual(expectedClearedMessages, actualClearedMessages)).to.be.true;
+	}
+
+	function shouldReturnCustomAppDataAndUiDataForLinks(targetNodeId, targetPortId) {
+		const startPipelineFlowLinkAppData = JSON.parse(JSON.stringify(startPipelineFlow));
+
+		// add app_data and ui_data to existing link
+		const node = startPipelineFlowLinkAppData.pipelines[0].nodes.find((n) => n.id === targetNodeId);
+		const myAppDataValue = { "some_data": { "f1": "val1", "f2": "val2" } };
+		let input = node.inputs[0];
+		if (targetPortId) {
+			input = node.inputs.find((inp) => inp.id === targetPortId);
+		}
+		input.links[0].app_data.myData = myAppDataValue;
+
+		deepFreeze(startPipelineFlowLinkAppData);
+		objectModel.setPipelineFlow(startPipelineFlowLinkAppData);
+
+		const actualNode = objectModel.getPipelineFlow().pipelines[0].nodes.find((n) => n.id === targetNodeId);
+		input = actualNode.inputs[0];
+		if (targetPortId) {
+			input = actualNode.inputs.find((inp) => inp.id === targetPortId);
+		}
+		const actualValue = input.links[0].app_data.myData;
+
+		// logger.info("Expected Canvas = " + JSON.stringify(myAppDataValue, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualValue, null, 2));
+
+		expect(isEqual(JSON.stringify(actualValue, null, 2), JSON.stringify(myAppDataValue, null, 2))).to.be.true;
+	}
+
+	function 	shouldAddLinksForExistingNodes(targetNodeId, targetPortId, sourceNodeId, sourcePortId) {
+		const startPipelineFlowNoLinks = JSON.parse(JSON.stringify(startPipelineFlow));
+
+		// remove existing link array
+		const node = startPipelineFlowNoLinks.pipelines[0].nodes.find((n) => n.id === targetNodeId);
+		let input = node.inputs[0];
+		if (targetPortId) {
+			input = node.inputs.find((inp) => inp.id === targetPortId);
+		}
+		delete input.links;
+		deepFreeze(startPipelineFlowNoLinks);
+
+		objectModel.setPipelineFlow(startPipelineFlowNoLinks);
+
+		const linkData = {
+			"editType": "linkNodes",
+			"nodes": [{ "id": sourceNodeId, "portId": sourcePortId }],
+			"targetNodes": [{ "id": targetNodeId, "portId": targetPortId }],
+			"linkType": "data",
+			"class_name": "canvas-data-link"
+		};
+		const nodeLinks = objectModel.createNodeLinks(linkData);
+		objectModel.addLinks(nodeLinks);
+		const actualCanvas = objectModel.getPipelineFlow();
+
+		// The canvas should have returned to its original state.
+		const expectedCanvas = startPipelineFlow;
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
+
+		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
+	}
+
+	function shouldUpdateNodeLabel(nodeId, newLabel) {
+		deepFreeze(startPipelineFlow);
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setNodeLabel(nodeId, newLabel);
+		expect(isEqual(newLabel, objectModel.getNode(nodeId).label)).to.be.true;
+	}
+
+	function shouldUpdateInputPortLabel(nodeId, portId, newLabel) {
+		deepFreeze(startPipelineFlow);
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setInputPortLabel(nodeId, portId, newLabel);
+		const node = objectModel.getNode(nodeId);
+
+		expect(isEqual(newLabel, objectModel.getPort(node.input_ports, portId).label)).to.be.true;
+	}
+
+	function shouldUpdateOutputPortLabel(nodeId, portId, newLabel) {
+		deepFreeze(startPipelineFlow);
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setOutputPortLabel(nodeId, portId, newLabel);
+		const node = objectModel.getNode(nodeId);
+
+		expect(isEqual(newLabel, objectModel.getPort(node.output_ports, portId).label)).to.be.true;
+	}
 
 });

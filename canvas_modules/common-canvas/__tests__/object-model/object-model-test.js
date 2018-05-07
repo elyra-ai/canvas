@@ -13,14 +13,13 @@ import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
 import ObjectModel from "../../src/object-model/object-model.js";
-import log4js from "log4js";
+// import log4js from "log4js";
 
-const logger = log4js.getLogger("object-model-test");
+// const logger = log4js.getLogger("object-model-test");
 
 describe("ObjectModel handle model OK", () => {
 
 	it("should create a canvas", () => {
-		logger.info("should create a canvas");
 		const objectModel = new ObjectModel();
 
 		const expectedPipeline =
@@ -42,7 +41,6 @@ describe("ObjectModel handle model OK", () => {
 
 
 	it("should clear a canvas", () => {
-		logger.info("should clear a canvas");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -73,7 +71,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should add a node", () => {
-		logger.info("should add a node");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -135,7 +132,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should move a node", () => {
-		logger.info("should move a node");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -186,7 +182,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should delete a node", () => {
-		logger.info("should delete a node");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -237,7 +232,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should disconnect a node", () => {
-		logger.info("should disconnect a node");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -290,7 +284,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should add node attr", () => {
-		logger.info("should add node attr");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -346,7 +339,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should remove node attr", () => {
-		logger.info("should remove node attr");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -402,7 +394,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should add a comment", () => {
-		logger.info("should add a comment");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -460,7 +451,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should edit a comment", () => {
-		logger.info("should edit a comment");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -512,7 +502,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should move a comment", () => {
-		logger.info("should move a comment");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -562,7 +551,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should delete a comment", () => {
-		logger.info("should delete a comment");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -617,7 +605,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should add comment attr", () => {
-		logger.info("should add comment attr");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -672,7 +659,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should remove comment attr", () => {
-		logger.info("should remove comment attr");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -727,7 +713,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should add a link", () => {
-		logger.info("should add a link");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -808,7 +793,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should delete a link", () => {
-		logger.info("should delete a link");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -861,7 +845,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should delete a link when a node is deleted", () => {
-		logger.info("should delete a link when a node is deleted.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -913,7 +896,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should delete a link when a comment is deleted", () => {
-		logger.info("should delete a link when a comment is deleted.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -965,7 +947,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should select an object", () => {
-		logger.info("should select an object.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -1002,7 +983,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should clear current selections", () => {
-		logger.info("should clear current selections.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -1044,7 +1024,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should select toggle off comment", () => {
-		logger.info("should select toggle off comment.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -1083,7 +1062,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should select toggle on comment", () => {
-		logger.info("should select toggle on comment.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -1122,7 +1100,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should select toggle off node", () => {
-		logger.info("should select toggle off node.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -1163,7 +1140,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should select toggle on node", () => {
-		logger.info("should select toggle on node.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -1202,7 +1178,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should select nodes in a simple subgraph", () => {
-		logger.info("should select nodes in a simple subgraph.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -1244,7 +1219,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should select nodes in a fork subgraph", () => {
-		logger.info("should select nodes in a fork subgraph.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -1286,7 +1260,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should select nodes in a merge subgraph", () => {
-		logger.info("should select nodes in a merge subgraph.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -1328,7 +1301,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should select nodes in a simple partial subgraph", () => {
-		logger.info("should select nodes in a simple partial subgraph.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -1372,7 +1344,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should select nodes in a complex subgraph", () => {
-		logger.info("should select nodes in a complex subgraph.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -1437,7 +1408,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should select nodes in a complex patial subgraph", () => {
-		logger.info("should select nodes in a complex partial subgraph.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -1502,7 +1472,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should select nodes in a complex single input subgraph", () => {
-		logger.info("should select nodes in a complex single input subgraph.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -1566,7 +1535,6 @@ describe("ObjectModel handle model OK", () => {
 	});
 
 	it("should select nodes in a complex subgraph starting with comment", () => {
-		logger.info("should select nodes in a complex subgraph starting with comment.");
 		const objectModel = new ObjectModel();
 
 		const startPipeline =

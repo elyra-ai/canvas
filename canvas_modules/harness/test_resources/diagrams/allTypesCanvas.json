@@ -19,7 +19,7 @@
       "id": "153651d6-9b88-423c-b01b-861f12d01489",
       "nodes": [
         {
-          "id": "50c869ee-bb8e-4738-9cfb-a4728c3ae0b5",
+          "id": "id8I6RH2V91XW",
           "type": "binding",
           "op": "variablefile",
           "app_data": {
@@ -73,7 +73,7 @@
           }
         },
         {
-          "id": "d8095f2d-8ef4-41a8-9709-5369f54f5243",
+          "id": "idGWRVT47XDV",
           "type": "execution_node",
           "op": "dummy_operator",
           "app_data": {
@@ -105,7 +105,7 @@
               },
               "links": [
                 {
-                  "node_id_ref": "50c869ee-bb8e-4738-9cfb-a4728c3ae0b5",
+                  "node_id_ref": "id8I6RH2V91XW",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
@@ -200,10 +200,10 @@
               },
               "links": [
                 {
-                  "node_id_ref": "d8095f2d-8ef4-41a8-9709-5369f54f5243",
+                  "node_id_ref": "idGWRVT47XDV",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "canvas-data-link"
+                      "class_name": "d3-data-link"
                     }
                   }
                 }
@@ -282,7 +282,7 @@
                   "node_id_ref": "nodeIDSuperNodePE",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "canvas-data-link"
+                      "class_name": "d3-data-link"
                     }
                   }
                 }
@@ -396,11 +396,11 @@
               "content": "The 4 different node types",
               "associated_id_refs": [
                 {
-                  "node_ref": "50c869ee-bb8e-4738-9cfb-a4728c3ae0b5",
+                  "node_ref": "id8I6RH2V91XW",
                   "class_name": "canvas-comment-link"
                 },
                 {
-                  "node_ref": "d8095f2d-8ef4-41a8-9709-5369f54f5243",
+                  "node_ref": "idGWRVT47XDV",
                   "class_name": "canvas-comment-link"
                 },
                 {
