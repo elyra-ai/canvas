@@ -22,7 +22,7 @@ describe("Selection notification tests", () => {
 	it("Should select node and comment", () => {
 		const objectModel = canvasController.getObjectModel();
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -62,7 +62,7 @@ describe("Selection notification tests", () => {
 	it("should select nodes in a fork subgraph", () => {
 		const objectModel = canvasController.getObjectModel();
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -110,7 +110,7 @@ describe("Selection notification tests", () => {
 	it("should select toggle off node", () => {
 		const objectModel = canvasController.getObjectModel();
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -157,7 +157,7 @@ describe("Selection notification tests", () => {
 	it("should deselect node", () => {
 		const objectModel = canvasController.getObjectModel();
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -202,7 +202,7 @@ describe("Selection notification tests", () => {
 	it("should deselect node and comment", () => {
 		const objectModel = canvasController.getObjectModel();
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -248,7 +248,7 @@ describe("Selection notification tests", () => {
 		const objectModel = canvasController.getObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -294,7 +294,7 @@ describe("Selection notification tests", () => {
 	it("should clear selection for deleted objects", () => {
 		const objectModel = canvasController.getObjectModel();
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },

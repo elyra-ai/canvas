@@ -39,7 +39,7 @@
           "description": ""
         },
         "userData": {
-          "typeId": "type",
+          "typeId": "",
           "enabled": true,
           "cacheState": "disabled",
           "containsModel": false,
@@ -72,10 +72,10 @@
           "description": ""
         },
         "userData": {
-          "typeId": "applyc50",
+          "typeId": "",
           "enabled": true,
           "cacheState": "disabled",
-          "containsModel": true,
+          "containsModel": false,
           "created": 1487882554507,
           "updated": 1486425182922
         }
@@ -105,7 +105,7 @@
           "description": ""
         },
         "userData": {
-          "typeId": "derive",
+          "typeId": "",
           "enabled": true,
           "cacheState": "disabled",
           "containsModel": false,
@@ -138,7 +138,7 @@
           "description": ""
         },
         "userData": {
-          "typeId": "applyneuralnetwork",
+          "typeId": "",
           "enabled": true,
           "cacheState": "disabled",
           "containsModel": true,
@@ -223,7 +223,7 @@
           "description": ""
         },
         "userData": {
-          "typeId": "filter",
+          "typeId": "",
           "enabled": true,
           "cacheState": "disabled",
           "containsModel": false,
@@ -252,7 +252,7 @@
           "typeId": "c50",
           "enabled": true,
           "cacheState": "disabled",
-          "containsModel": false,
+          "containsModel": true,
           "created": 1487882554507,
           "updated": 1420358068606
         }

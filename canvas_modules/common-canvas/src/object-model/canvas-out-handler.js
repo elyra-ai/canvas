@@ -20,7 +20,7 @@ export default class CanvasOutHandler {
 
 	static getDiagram(oldCanvas, canvasinfoPipeline) {
 		return {
-			id: canvasinfoPipeline.sub_id,
+			id: canvasinfoPipeline.id,
 			nodes: this.getCanvasNodes(canvasinfoPipeline.nodes, oldCanvas),
 			comments: this.getCanvasComments(canvasinfoPipeline.comments),
 			links: this.getCanvasLinks(canvasinfoPipeline.links)

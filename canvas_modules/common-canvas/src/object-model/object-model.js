@@ -367,12 +367,7 @@ const canvasinfo = (state = [], action) => {
 				return Object.assign({}, pipeline, { nodes: nodes(pipeline.nodes, action) });
 			});
 		}
-		// TODO -Think about moving all top level pipeline flow fields into canvas info.
-		return {
-			id: action.data.id,
-			primary_pipeline: action.data.primary_pipeline,
-			pipelines: canvasInfoPipelines
-		};
+		return Object.assign({}, action.data, { pipelines: canvasInfoPipelines });
 	}
 
 	// Save incoming pipelines as our current (state) pipelines and make sure
@@ -414,7 +409,7 @@ const canvasinfo = (state = [], action) => {
 	case "ADD_COMMENT_ATTR":
 	case "REMOVE_COMMENT_ATTR": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
-			if (pipeline.sub_id === action.pipelineId) {
+			if (pipeline.id === action.pipelineId) {
 				return Object.assign({}, pipeline, {
 					nodes: nodes(pipeline.nodes, action),
 					comments: comments(pipeline.comments, action),
@@ -424,20 +419,6 @@ const canvasinfo = (state = [], action) => {
 		});
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
-
-	default:
-		return state;
-	}
-};
-
-
-const pipelineflow = (state = {}, action) => {
-	switch (action.type) {
-	case "CLEAR_PIPELINE_FLOW":
-		return null;
-
-	case "SET_PIPELINE_FLOW":
-		return Object.assign({}, action.data, { pipelines: [] }); // Pipelines will be restored by pipeline-out-handler
 
 	default:
 		return state;
@@ -520,8 +501,8 @@ const selections = (state = [], action) => {
 		// In some instances, with an external object model, the same canvas may
 		// be set multiple times. Consequently, we only clear the selections if
 		// we're given a completely new canvas.
-		if (action.data && action.currentPipelineFlow &&
-				action.data.id !== action.currentPipelineFlow.id) {
+		if (action.data && action.currentCanvasInfo &&
+				action.data.id !== action.currentCanvasInfo.id) {
 			return [];
 		}
 		return state;
@@ -552,34 +533,6 @@ const layoutinfo = (state = LayoutDimensions.getLayout(), action) => {
 	default:
 		return state;
 	}
-};
-
-const getInitialPipelineFlow = (flowId, primaryPipelineId) => {
-	var newFlowId = flowId;
-	if (!flowId) {
-		newFlowId = getUUID();
-	}
-	var newPrimaryPipelineId = primaryPipelineId;
-	if (!primaryPipelineId) {
-		newPrimaryPipelineId = getUUID();
-	}
-
-	return {
-		"doc_type": "pipeline",
-		"version": "2.0",
-		"json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
-		"id": newFlowId,
-		"primary_pipeline": newPrimaryPipelineId,
-		"pipelines": [
-			{
-				"id": newPrimaryPipelineId,
-				"runtime_ref": "empty_runtime",
-				"nodes": []
-			}
-		],
-		"runtimes": [{ "id": "empty_runtime", "name": "empty_runtime" }],
-		"schemas": []
-	};
 };
 
 // Returns a copy of the node passed in with additional fields which contains
@@ -614,26 +567,14 @@ const getUUID = () => {
 export default class ObjectModel {
 
 	constructor() {
-		// Put 'selections' reducer first so slections are handled before canvas and pipeline flow actions
-		// Also put layoutinfo reducer before canvas info becuase node heights and width are calculated
-		// based on layoutinfo.
-		var combinedReducer = combineReducers({ selections, layoutinfo, canvasinfo, pipelineflow, palette });
+		// Put selections reducer first so selections are handled before
+		// canvasinfo actions. Also, put layoutinfo reducer before canvasinfo
+		// because node heights and width are calculated based on layoutinfo.
+		var combinedReducer = combineReducers({ selections, layoutinfo, canvasinfo, palette });
 		const initialState = {
 			selections: [],
 			layoutinfo: LayoutDimensions.getLayout(),
-			canvasinfo: {
-				id: "empty-pipeline-flow",
-				primary_pipeline: "empty-pipeline",
-				pipelines: [
-					{
-						sub_id: "empty-pipeline",
-						nodes: [],
-						comments: [],
-						links: []
-					}
-				]
-			},
-			pipelineflow: getInitialPipelineFlow("empty-pipeline-flow", "empty-pipeline"),
+			canvasinfo: this.getEmptyCanvasInfo(),
 			palette: {}
 		};
 		this.store = createStore(combinedReducer, initialState);
@@ -767,11 +708,6 @@ export default class ObjectModel {
 	// TODO - Remember to also remove declaration of ObjectModel.oldCanvas from above
 	setCanvas(canvas) {
 		this.oldCanvas = canvas; // TODO - Remember to remvove the declaration of this global when WML Canvas UI supports pipleine flow.
-		this.executeWithSelectionChange(this.store.dispatch, {
-			type: "SET_PIPELINE_FLOW",
-			data: getInitialPipelineFlow(canvas.id, canvas.diagram.id),
-			layoutinfo: this.store.getState().layoutinfo,
-			currentPipelineFlow: this.store.getState().pipelineflow });
 		var canvasInfo = CanvasInHandler.convertCanvasToCanvasInfo(canvas);
 		this.setCanvasInfo(canvasInfo);
 	}
@@ -782,6 +718,35 @@ export default class ObjectModel {
 			return CanvasOutHandler.getCanvasBasedOnCanvasInfo(this.oldCanvas, this.getCanvasInfo());
 		}
 		return {};
+	}
+
+	getEmptyCanvasInfo() {
+		const newFlowId = getUUID();
+		const newPipelineId = getUUID();
+
+		return {
+			"doc_type": "pipeline",
+			"version": "2.0",
+			"json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
+			"id": newFlowId,
+			"primary_pipeline": newPipelineId,
+			"pipelines": [
+				{
+					"id": newPipelineId,
+					"runtime_ref": "empty_runtime",
+					"nodes": [],
+					"comments": [],
+					"link": []
+				}
+			],
+			"runtimes": [{ "id": "empty_runtime", "name": "empty_runtime" }],
+			"schemas": []
+		};
+	}
+
+	setEmptyPipelineFlow() {
+		const emptyPipelineFlow = PipelineOutHandler.createPipelineFlow(this.getEmptyCanvasInfo());
+		this.setPipelineFlow(emptyPipelineFlow);
 	}
 
 	setPipelineFlow(newPipelineFlow) {
@@ -797,12 +762,11 @@ export default class ObjectModel {
 			type: "SET_PIPELINE_FLOW",
 			data: pipelineFlow,
 			layoutinfo: this.store.getState().layoutinfo,
-			currentPipelineFlow: this.store.getState().pipelineflow });
+			currentCanvasInfo: this.store.getState().canvasinfo });
 	}
 
 	getPrimaryPipelineId() {
-		const pipelineFlow = this.store.getState().canvasinfo;
-		return pipelineFlow.primary_pipeline;
+		return this.getCanvasInfo().primary_pipeline;
 	}
 
 	validateAndUpgrade(newPipelineFlow) {
@@ -845,14 +809,6 @@ export default class ObjectModel {
 		return pal;
 	}
 
-	setEmptyPipelineFlow() {
-		this.executeWithSelectionChange(this.store.dispatch, {
-			type: "SET_PIPELINE_FLOW",
-			data: getInitialPipelineFlow("empty-pipeline-flow", "empty-pipeline"),
-			layoutinfo: this.store.getState().layoutinfo,
-			currentPipelineFlow: this.store.getState().pipelineflow });
-	}
-
 	// Returns a pipeline flow based on the initial pipeline flow we were given
 	// with the changes to canvasinfo made by the user. We don't do this in the
 	// redux code because that would result is continuous update of the pipelineflow
@@ -860,7 +816,7 @@ export default class ObjectModel {
 	// handle when testing.
 	getPipelineFlow() {
 		const pipelineFlow =
-			PipelineOutHandler.createPipelineFlow(this.store.getState().pipelineflow, this.getCanvasInfo());
+			PipelineOutHandler.createPipelineFlow(this.getCanvasInfo());
 		if (this.schemaValidation) {
 			validatePipelineFlowAgainstSchema(pipelineFlow);
 		}
@@ -880,7 +836,7 @@ export default class ObjectModel {
 		const pId = pipelineId || this.getPrimaryPipelineId();
 		const pipelines = this.getCanvasInfo().pipelines;
 		const p = pipelines.find((pipeline) => {
-			return pipeline.sub_id === pId;
+			return pipeline.id === pId;
 		});
 		return (typeof p === "undefined") ? null : p;
 	}
@@ -925,7 +881,7 @@ export default class ObjectModel {
 		const canvasInfo = this.getCanvasInfo();
 
 		const newCanvasInfoPipelines = canvasInfo.pipelines.map((ciPipeline) => {
-			if (ciPipeline.sub_id === canvasInfoPipeline.sub_id) {
+			if (ciPipeline.id === canvasInfoPipeline.id) {
 				return Object.assign({}, canvasInfoPipeline, { nodes: newNodes });
 			}
 			return ciPipeline;

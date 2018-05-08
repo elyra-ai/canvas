@@ -103,6 +103,9 @@
           "type": "execution_node",
           "op": "org.apache.spark.ml.ibm.transformers.Join",
           "app_data": {
+            "wml_data": {
+              "typeId": "Join"
+            },
             "ui_data": {
               "label": "nodeID1PE",
               "image": "/images/nodes/derive.svg",
@@ -112,9 +115,6 @@
               "description": {
                 "default": "nodeID1PE - Join two or more datasets"
               }
-            },
-            "wml_data": {
-              "typeId": "Join"
             }
           },
           "inputs": [
@@ -261,6 +261,9 @@
           "type": "execution_node",
           "op": "org.apache.spark.ml.ibm.transformers.Filter",
           "app_data": {
+            "wml_data": {
+              "typeId": "filter-records"
+            },
             "ui_data": {
               "label": "nodeID2PE",
               "image": "/images/nodes/derive.svg",
@@ -270,9 +273,6 @@
               "description": {
                 "default": "nodeID2PE - Filter record data"
               }
-            },
-            "wml_data": {
-              "typeId": "filter-records"
             }
           },
           "inputs": [
@@ -319,6 +319,9 @@
           "type": "execution_node",
           "op": "org.apache.spark.ml.ibm.transformers.Filter",
           "app_data": {
+            "wml_data": {
+              "typeId": "filter-records"
+            },
             "ui_data": {
               "label": "nodeID3PE",
               "image": "/images/nodes/derive.svg",
@@ -328,9 +331,6 @@
               "description": {
                 "default": "nodeID3PE - Filter record data"
               }
-            },
-            "wml_data": {
-              "typeId": "filter-records"
             }
           },
           "inputs": [

@@ -120,6 +120,7 @@ export default class CanvasD3Layout {
 		// when the operation is complete.
 		this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
 		this.activePipeline = this.canvasInfo.pipelines[0];
+		this.primaryPipeline = this.canvasInfo.pipelines.find((p) => p.id === this.canvasInfo.primaryPipeline);
 
 		this.createCanvas();
 		this.displayCanvas();
@@ -971,7 +972,7 @@ export default class CanvasD3Layout {
 								id: that.getId("node_tip", d.id),
 								type: TIP_TYPE_NODE,
 								targetObj: this,
-								pipelineId: that.activePipeline.sub_id,
+								pipelineId: that.activePipeline.id,
 								node: d
 							});
 						}
@@ -1069,7 +1070,7 @@ export default class CanvasD3Layout {
 												id: that.getId("node_port_tip", port.id),
 												type: TIP_TYPE_PORT,
 												targetObj: this,
-												pipelineId: that.activePipeline.sub_id,
+												pipelineId: that.activePipeline.id,
 												node: d,
 												port: port
 											});
@@ -1097,7 +1098,7 @@ export default class CanvasD3Layout {
 												id: that.getId("node_port_tip", port.id),
 												type: TIP_TYPE_PORT,
 												targetObj: this,
-												pipelineId: that.activePipeline.sub_id,
+												pipelineId: that.activePipeline.id,
 												node: d,
 												port: port
 											});
@@ -1150,7 +1151,7 @@ export default class CanvasD3Layout {
 												id: that.getId("node_port_tip", port.id),
 												type: TIP_TYPE_PORT,
 												targetObj: this,
-												pipelineId: that.activePipeline.sub_id,
+												pipelineId: that.activePipeline.id,
 												node: d,
 												port: port
 											});
@@ -2650,7 +2651,7 @@ export default class CanvasD3Layout {
 						type: TIP_TYPE_LINK,
 						targetObj: this,
 						mousePos: { x: d3Event.clientX, y: d3Event.clientY },
-						pipelineId: that.activePipeline.sub_id,
+						pipelineId: that.activePipeline.id,
 						link: link
 					});
 				}

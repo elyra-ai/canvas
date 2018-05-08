@@ -102,10 +102,10 @@
           "description": ""
         },
         "userData": {
-          "typeId": "applyneuralnetwork",
+          "typeId": "",
           "enabled": true,
           "cacheState": "disabled",
-          "containsModel": true,
+          "containsModel": false,
           "created": 1487882554507,
           "updated": 1486425171534
         }
@@ -173,7 +173,7 @@
           {
             "name": "outPort",
             "label": "Output Port",
-            "cardinality": "0:-1"
+            "cardinality": "0:1"
           }
         ],
         "inputPorts": [],
@@ -192,7 +192,7 @@
           {
             "name": "outPort",
             "label": "Output Port",
-            "cardinality": "0:-1"
+            "cardinality": "0:1"
           }
         ],
         "inputPorts": [

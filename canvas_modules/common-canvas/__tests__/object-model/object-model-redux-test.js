@@ -23,7 +23,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const expectedPipeline =
-			{	sub_id: "123",
+			{	id: "123",
 				nodes: [
 					{ id: "node1", name: "Node 1" },
 					{ id: "node2", name: "Node 2" }]
@@ -45,7 +45,7 @@ describe("ObjectModel handle model OK", () => {
 
 		const startPipeline =
 			{
-				sub_id: "123",
+				id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -74,7 +74,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -105,7 +105,7 @@ describe("ObjectModel handle model OK", () => {
 
 		const expectedPipeline =
 			{
-				sub_id: "123",
+				id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -135,7 +135,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -159,7 +159,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 15, y_pos: 17 },
 					{ id: "node2", x_pos: 25, y_pos: 27 },
@@ -185,7 +185,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -212,7 +212,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node2", x_pos: 20, y_pos: 20 }
 				],
@@ -235,7 +235,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -260,7 +260,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -287,7 +287,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -314,7 +314,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": ["bgcolor"] },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -342,7 +342,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": ["bgcolor"] },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -369,7 +369,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": [] },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -397,7 +397,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -427,7 +427,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -454,7 +454,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -475,7 +475,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -505,7 +505,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -529,7 +529,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -554,7 +554,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -583,7 +583,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ "sub_id": "123",
+			{ "id": "123",
 				"nodes": [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -608,7 +608,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -634,7 +634,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -662,7 +662,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -688,7 +688,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -716,7 +716,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -751,7 +751,7 @@ describe("ObjectModel handle model OK", () => {
 
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -796,7 +796,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -821,7 +821,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -848,7 +848,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -873,7 +873,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node2", x_pos: 20, y_pos: 20 },
 					{ id: "node3", x_pos: 30, y_pos: 30 }
@@ -899,7 +899,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -924,7 +924,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		const expectedPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -950,7 +950,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -986,7 +986,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1027,7 +1027,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1065,7 +1065,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1103,7 +1103,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1143,7 +1143,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1181,7 +1181,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1222,7 +1222,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1263,7 +1263,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1304,7 +1304,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1347,7 +1347,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1411,7 +1411,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1475,7 +1475,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1538,7 +1538,7 @@ describe("ObjectModel handle model OK", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
-			{ sub_id: "123",
+			{ id: "123",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },

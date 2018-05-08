@@ -26,8 +26,6 @@ import moveNodeVerticalLayoutCanvas from "../test_resources/json/moveNodeVertica
 import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
 import pipelineFlowTest1Start from "../test_resources/json/pipelineFlowTest1Start.json";
 import pipelineFlowTest1Expected from "../test_resources/json/pipelineFlowTest1Expected.json";
-import pipelineFlowV1 from "../test_resources/json/pipelineFlowV1.json";
-import pipelineFlowV2 from "../test_resources/json/pipelineFlowV2.json";
 
 
 import ObjectModel from "../../src/object-model/object-model.js";
@@ -233,19 +231,19 @@ describe("ObjectModel API handle model OK", () => {
 	});
 
 
-	it("should save a messages for an execution node", () => {
+	it("should save a message for an execution node", () => {
 		shouldSaveNodeMessage("idGWRVT47XDV");
 	});
 
-	it("should save a messages for a binding node", () => {
+	it("should save a message for a binding node", () => {
 		shouldSaveNodeMessage("id8I6RH2V91XW");
 	});
 
-	it("should save a messages for a supernode", () => {
+	it("should save a message for a supernode", () => {
 		shouldSaveNodeMessage("nodeIDSuperNodePE");
 	});
 
-	it("should save a messages for a model node", () => {
+	it("should save a message for a model node", () => {
 		shouldSaveNodeMessage("id125TTEEIK7V");
 	});
 
@@ -295,20 +293,6 @@ describe("ObjectModel API handle model OK", () => {
 
 	it("should clear all messages for a model node", () => {
 		shouldClearAllNodeMessages("id125TTEEIK7V");
-	});
-
-	it("should upgrade a pipelineFlow from v1 to v2", () => {
-		deepFreeze(pipelineFlowV1);
-
-		objectModel.setPipelineFlow(pipelineFlowV1);
-
-		const expectedCanvas = pipelineFlowV2;
-		const actualCanvas = objectModel.getPipelineFlow();
-
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
-
-		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
 	});
 
 	it("should add palette item into existing test category", () => {

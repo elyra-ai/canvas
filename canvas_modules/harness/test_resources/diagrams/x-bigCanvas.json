@@ -1590,7 +1590,7 @@
           {
             "name": "outPort2",
             "label": "Output Port Two",
-            "cardinality": "0:1"
+            "cardinality": "0:-1"
           }
         ],
         "inputPorts": [

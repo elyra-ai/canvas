@@ -383,7 +383,15 @@
               "x_pos": 179,
               "y_pos": 315,
               "class_name": "canvas-node",
-              "label": "Type"
+              "label": "Type",
+              "messages": [
+                {
+                  "id_ref": "metadata",
+                  "validation_id": "validField_metadata[0]_108.12905184830979",
+                  "type": "warning",
+                  "text": "Invalid Field, field not found in schema"
+                }
+              ]
             }
           },
           "inputs": [
@@ -509,7 +517,27 @@
               "x_pos": 635,
               "y_pos": 18.999996185302734,
               "class_name": "canvas-node",
-              "label": "Derive"
+              "label": "Derive",
+              "messages": [
+                {
+                  "id_ref": "formula_measure_type",
+                  "validation_id": "formula_measure_type",
+                  "type": "warning",
+                  "text": "Field cannot be default"
+                },
+                {
+                  "id_ref": "custom_name",
+                  "validation_id": "custom_name",
+                  "type": "warning",
+                  "text": "Annotation is empty when there is a custom name"
+                },
+                {
+                  "id_ref": "annotation",
+                  "validation_id": "annotation",
+                  "type": "warning",
+                  "text": "Field cannot be empty nor contain \"quotes\""
+                }
+              ]
             }
           },
           "inputs": [

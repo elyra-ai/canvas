@@ -15,13 +15,16 @@ export default class CanvasInHandler {
 		// There is only one pipeline in a canvas document conained in the
 		// canvas.diagram field.
 		const canvasInfoPipeline = {
-			sub_id: canvas.diagram.id,
+			id: canvas.diagram.id,
 			nodes: this.getNodes(canvas.diagram.nodes),
 			comments: this.getComments(canvas.diagram.comments),
 			links: this.getLinks(canvas.diagram.links),
 			runtime_ref: ""
 		};
 		return {
+			doc_type: "pipeline",
+			version: "2.0",
+			json_schema: "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
 			id: canvas.id,
 			primary_pipeline: canvas.diagram.id,
 			pipelines: [canvasInfoPipeline]
@@ -40,6 +43,9 @@ export default class CanvasInHandler {
 				label: canvasNode.objectData.label,
 				type: nodeType
 			};
+			if (canvasNode.objectData && canvasNode.objectData.description) {
+				newNode.description = canvasNode.objectData.description;
+			}
 			if (canvasNode.inputPorts) {
 				newNode.input_ports = this.getInputPorts(canvasNode.inputPorts, 1);
 			}
@@ -51,6 +57,10 @@ export default class CanvasInHandler {
 			}
 			if (nodeType === "super_node") {
 				newNode.subflow_ref = { pipeline_id_ref: canvasNode.subDiagramId, url: "app_defined" };
+			}
+
+			if (nodeType === "model_node") {
+				newNode.model_ref = "";
 			}
 
 			if (nodeType === "execution_node") {
