@@ -736,7 +736,7 @@ export default class ObjectModel {
 					"runtime_ref": "empty_runtime",
 					"nodes": [],
 					"comments": [],
-					"link": []
+					"links": []
 				}
 			],
 			"runtimes": [{ "id": "empty_runtime", "name": "empty_runtime" }],

@@ -178,10 +178,6 @@ describe("canvas controller APIs for notification panel work correctly", () => {
 
 describe("toolbar notification icon state renders correctly", () => {
 	let wrapper;
-	beforeEach(() => {
-		canvasController.getObjectModel().setEmptyPipelineFlow();
-		canvasController.getObjectModel().setPipelineFlowPalette({});
-	});
 
 	afterEach(() => {
 		canvasController = new CanvasController();
