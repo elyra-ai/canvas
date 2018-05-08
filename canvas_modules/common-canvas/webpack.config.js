@@ -14,7 +14,7 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 // const SassLintPlugin = require("sasslint-webpack-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-
+const nodeExternals = require("webpack-node-externals");
 
 module.exports = {
 	context: __dirname,
@@ -91,8 +91,8 @@ module.exports = {
 		modules: ["node_modules"],
 		extensions: [".js", ".jsx", ".json"]
 	},
-	externals: {
-		"react": "react",
-		"react-dom": "react-dom"
-	}
+	externals: [nodeExternals(
+		{
+			whitelist: [/^d3.*$/]
+		})]
 };
