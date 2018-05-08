@@ -145,7 +145,7 @@ module.exports = function() {
 
 	this.Then(/^I have selected the "([^"]*)" message type in the api sidepanel$/, function(messageType) {
 		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
-		const radioOptions = apiSidePanel.$$("div")[6].$$("label");
+		const radioOptions = apiSidePanel.$(".sidepanel-api-notification-message-types").$$("label");
 
 		try {
 			if (messageType === "informational") {
@@ -179,17 +179,6 @@ module.exports = function() {
 		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
 		const textbox = apiSidePanel.$("#messageContent");
 		textbox.setValue("", textboxValue);
-	});
-
-	this.Then(/^I enter "([^"]*)" into the delete message with id field$/, function(messageId) {
-		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
-		const textbox = apiSidePanel.$("#deleteMessageWithId");
-		textbox.setValue("", messageId);
-	});
-
-	this.Then("I click on the delete message submit button in the api sidepanel", function() {
-		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
-		apiSidePanel.$("#deleteNotificationmessageSubmit").click();
 	});
 
 	function getAPISubmitButton() {

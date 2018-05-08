@@ -97,8 +97,7 @@ class App extends React.Component {
 			applyOnBlur: true,
 			validateFlowOnOpen: true,
 			narrowPalette: true,
-			schemaValidationEnabled: true,
-			disableNotification: false
+			schemaValidationEnabled: true
 		};
 
 		// There are several functions and variables with the identifiers name and name2. This is needed
@@ -124,7 +123,6 @@ class App extends React.Component {
 		this.setNotificationMessages2 = this.setNotificationMessages2.bind(this);
 		this.appendNotificationMessages = this.appendNotificationMessages.bind(this);
 		this.deleteNotificationMessages = this.deleteNotificationMessages.bind(this);
-		this.disableNotification = this.disableNotification.bind(this);
 
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
 		this.sidePanelModal = this.sidePanelModal.bind(this);
@@ -283,7 +281,8 @@ class App extends React.Component {
 					id: "notification-" + nodeId,
 					title: this.canvasController.getNode(nodeId).label,
 					type: type,
-					content: generatedMessage
+					content: generatedMessage,
+					callback: this.notificationmessageCallback.bind(this, nodeId, false)
 				};
 
 				notificationMessages.push(summarizedMessage);
@@ -327,7 +326,8 @@ class App extends React.Component {
 					id: "notification-" + nodeId,
 					title: this.canvasController2.getNode(nodeId).label,
 					type: type,
-					content: generatedMessage
+					content: generatedMessage,
+					callback: this.notificationmessageCallback.bind(this, nodeId, true)
 				};
 
 				notificationMessages.push(summarizedMessage);
@@ -444,15 +444,20 @@ class App extends React.Component {
 		this.log("Added nodeType to palette", { nodeTypeObj: nodeTypeObj, category: category, categoryLabel: categoryLabel });
 	}
 
-	disableNotification(newState) {
-		if (this.state.disableNotification !== newState) {
-			this.setState({ disableNotification: newState });
-		}
-	}
-
 	deleteNotificationMessages(messageId) {
 		this.canvasController.deleteNotificationMessages(messageId);
 		this.log("Delete Notification Message", "Deleted message " + messageId);
+	}
+
+	// Open node editor on notification message click
+	notificationmessageCallback(nodeId, inExtraCanvas) {
+		if (inExtraCanvas) {
+			this.canvasController2.setSelections([nodeId]);
+			this.canvasController2.closeNotificationPanel();
+		} else {
+			this.canvasController.setSelections([nodeId]);
+			this.canvasController.closeNotificationPanel();
+		}
 	}
 
 	sidePanelCanvas() {
@@ -596,6 +601,10 @@ class App extends React.Component {
 			canvasController.setNodeParameters(appData.nodeId, form);
 			canvasController.setNodeLabel(appData.nodeId, additionalInfo.title);
 			canvasController.setNodeMessages(appData.nodeId, additionalInfo.messages);
+
+			// set notification message if errors/warnings
+			this.setFlowNotificationMessages();
+
 			// undo/redo was clicked so reapply settings
 			if (appData.nodeId === currentEditorNodeId) {
 				propertiesController.setPropertyValues(undoInfo.properties);
@@ -1186,7 +1195,7 @@ class App extends React.Component {
 			{ action: "arrangeVertically", label: "Arrange Vertically", enable: layoutAction }
 		];
 
-		const notificationConfig = { action: "notification", label: "Notifications", enable: !this.state.disableNotification, notificationHeader: "Notifications" };
+		const notificationConfig = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications" };
 		const notificationConfig2 = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications Canvas 2" };
 
 		const propertiesConfig = {
@@ -1354,8 +1363,7 @@ class App extends React.Component {
 			setPortLabel: this.setPortLabel,
 			setNotificationMessages: this.setNotificationMessages,
 			appendNotificationMessages: this.appendNotificationMessages,
-			deleteNotificationMessages: this.deleteNotificationMessages,
-			disableNotification: this.disableNotification
+			deleteNotificationMessages: this.deleteNotificationMessages
 		};
 
 		const mainView = (<div id="app-container">

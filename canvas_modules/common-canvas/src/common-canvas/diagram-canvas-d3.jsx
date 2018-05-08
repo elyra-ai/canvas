@@ -121,7 +121,9 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	focusOnCanvas() {
-		document.getElementById(this.svgCanvasDivId).focus(); // Set focus on div so keybord events go there.
+		if (document.getElementById(this.svgCanvasDivId)) {
+			document.getElementById(this.svgCanvasDivId).focus(); // Set focus on div so keybord events go there.
+		}
 	}
 
 	zoomIn() {

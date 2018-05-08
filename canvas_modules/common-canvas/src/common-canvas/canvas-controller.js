@@ -176,7 +176,9 @@ export default class CanvasController {
 
 	// Sets the state of the notification bell icon in the toolbar
 	setNotificationBellIconClassName(newState) {
-		this.commonCanvas.configureToolbarBellIconClassName(newState);
+		if (this.commonCanvas) {
+			this.commonCanvas.configureToolbarBellIconClassName(newState);
+		}
 	}
 
 	// Available states are in canvas-constants NOTIFICATION_BELL_ICON

@@ -212,10 +212,6 @@ export default class SidePanelAPI extends React.Component {
 		this.setState(stateObj);
 	}
 
-	onDisableNotificationToggle(changeEvent) {
-		this.props.disableNotification(changeEvent.target.checked);
-	}
-
 	onNotificationMessageTypeChange(evt, obj) {
 		this.setState({ notificationType: obj.selected });
 	}
@@ -481,12 +477,6 @@ export default class SidePanelAPI extends React.Component {
 		let setNotificationMessages = <div />;
 		if (this.state.selectedOperation === API_ADD_NOTIFICATION_MESSAGE) {
 			setNotificationMessages = (<div className="sidepanel-children" id="sidepanel-api-notificationMessages">
-				<div className="sidepanel-headers">Disable Notifications</div>
-				<ToggleButton dark
-					id="sidepanel-api-notification-disable"
-					checked={this.state.disableNotification}
-					onChange={this.onDisableNotificationToggle.bind(this)}
-				/>
 				<div className="sidepanel-headers">Append Message to Notification Panel</div>
 				<ToggleButton dark
 					id="sidepanel-api-notification-append"
@@ -495,19 +485,21 @@ export default class SidePanelAPI extends React.Component {
 				/>
 				{divider}
 				<div className="sidepanel-headers">Message Type</div>
-				<RadioGroup
-					name="notification_message_type"
-					id="notification_message_type"
-					dark
-					onChange={this.onNotificationMessageTypeChange.bind(this)}
-					choices={[
-						NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL,
-						NOTIFICATION_MESSAGE_TYPE.SUCCESS,
-						NOTIFICATION_MESSAGE_TYPE.WARNING,
-						NOTIFICATION_MESSAGE_TYPE.ERROR
-					]}
-					selected={NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL}
-				/>
+				<div className="sidepanel-api-notification-message-types">
+					<RadioGroup
+						name="notification_message_type"
+						id="notification_message_type"
+						dark
+						onChange={this.onNotificationMessageTypeChange.bind(this)}
+						choices={[
+							NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL,
+							NOTIFICATION_MESSAGE_TYPE.SUCCESS,
+							NOTIFICATION_MESSAGE_TYPE.WARNING,
+							NOTIFICATION_MESSAGE_TYPE.ERROR
+						]}
+						selected={NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL}
+					/>
+				</div>
 				<TextField dark
 					id="messageTitle"
 					placeholder="Message Title"
@@ -590,6 +582,5 @@ SidePanelAPI.propTypes = {
 	setPortLabel: PropTypes.func,
 	setNotificationMessages: PropTypes.func,
 	appendNotificationMessages: PropTypes.func,
-	deleteNotificationMessages: PropTypes.func,
-	disableNotification: PropTypes.func,
+	deleteNotificationMessages: PropTypes.func
 };
