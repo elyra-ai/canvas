@@ -22,16 +22,11 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	const controlType = paramInfo.control.controlType;
 	switch (controlType) {
 	case "selectcolumn": {
-		const foundField = dataModelFields.find(function(dataModelField) {
-			return paramInfo.value === dataModelField.name;
-		});
-		return typeof foundField !== "undefined";
+		return typeof valueInDataset(dataModelFields, paramInfo.value) !== "undefined";
 	}
 	case "selectcolumns": {
 		for (const paramValue of paramInfo.value) {
-			const foundField = dataModelFields.find(function(dataModelField) {
-				return paramValue === dataModelField.name;
-			});
+			const foundField = valueInDataset(dataModelFields, paramValue);
 
 			if (typeof foundField === "undefined") {
 				return false;
@@ -43,6 +38,13 @@ function evaluate(paramInfo, param2Info, value, controller) {
 		logger.warn("Ignoring unsupported condition operation 'colDoesExists' for control type " + controlType);
 		return true;
 	}
+}
+
+// Return the field if found in dataset, else undefined
+function valueInDataset(dataset, field) {
+	return dataset.find(function(dataModelField) {
+		return field === dataModelField.name;
+	});
 }
 
 
