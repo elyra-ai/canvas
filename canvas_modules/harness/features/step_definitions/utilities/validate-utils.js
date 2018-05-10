@@ -200,21 +200,24 @@ function isObjectModelEmpty(objectModel) {
 	return count;
 }
 
-function getNodeIdForLabel(nodeText) {
-	var result = browser.execute(function(labelText) {
+function getNodeIdForLabel(nodeText, extraCanvas) {
+	var result = browser.execute(function(labelText, extraCanv) {
 		/* global document */
 		var nodeId = null;
+		const inst = extraCanv === true ? "1" : "0";
 
 		var domLabels = document.getElementsByClassName("d3-node-label");
 		for (let idx = 0; idx < domLabels.length; idx++) {
-			if (domLabels.item(idx).__data__.label === labelText) {
-				nodeId = domLabels.item(idx).id;
-				break;
+			if (domLabels.item(idx).id.startsWith("node_label_" + inst)) {
+				if (domLabels.item(idx).__data__.label === labelText) {
+					nodeId = domLabels.item(idx).id;
+					break;
+				}
 			}
 		}
 
 		return nodeId;
-	}, nodeText);
+	}, nodeText, extraCanvas);
 
 	return result.value.substr(11);
 }

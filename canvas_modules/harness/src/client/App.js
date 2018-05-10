@@ -155,6 +155,7 @@ class App extends React.Component {
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.extraCanvasActionHandler = this.extraCanvasActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
+		this.extraCanvasClickActionHandler = this.extraCanvasClickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 		this.selectionChangeHandler = this.selectionChangeHandler.bind(this);
 		this.selectionChangeHandler2 = this.selectionChangeHandler2.bind(this);
@@ -343,13 +344,11 @@ class App extends React.Component {
 
 	setPaletteJSON(paletteJson) {
 		this.canvasController.setPipelineFlowPalette(paletteJson);
-		this.getPipelineFlow();
 		this.log("Palette set");
 	}
 
 	setPaletteJSON2(paletteJson) {
 		this.canvasController2.setPipelineFlowPalette(paletteJson);
-		this.getPipelineFlow(this.canvasController2);
 		this.log("Palette set 2");
 	}
 
@@ -577,6 +576,18 @@ class App extends React.Component {
 	// common-canvas
 	clickActionHandler(source) {
 		this.log("clickActionHandler()", source);
+		if (source.clickType === "DOUBLE_CLICK" &&
+				source.objectType === "node") {
+			this.editNodeHandler(source.id);
+		}
+	}
+
+	extraCanvasClickActionHandler(source) {
+		this.log("extraCanvasClickActionHandler()", source);
+		if (source.clickType === "DOUBLE_CLICK" &&
+				source.objectType === "node") {
+			this.editNodeHandler(source.id, true);
+		}
 	}
 
 	applyDiagramEdit(data, options) {
@@ -943,13 +954,6 @@ class App extends React.Component {
 
 	selectionChangeHandler(data) {
 		this.log("selectionChangeHandler", data);
-		if (data && data.selectedNodes) {
-			// only show properties if exactly one node is selected and no other elements like comments
-			if (data.selection.length === 1 && data.selectedNodes.length === 1) {
-				this.editNodeHandler(data.selectedNodes[0].id);
-				return;
-			}
-		}
 		// apply properties from previous node if node selection has to more than one node
 		if (this.currentEditorId) {
 			// don't apply changes if node has been removed
@@ -963,13 +967,6 @@ class App extends React.Component {
 
 	selectionChangeHandler2(data) {
 		this.log("selectionChangeHandler2", data);
-		if (data && data.selectedNodes) {
-			// only show properties if exactly one node is selected and no other elements like comments
-			if (data.selection.length === 1 && data.selectedNodes.length === 1) {
-				this.editNodeHandler(data.selectedNodes[0].id, true);
-				return;
-			}
-		}
 		// apply properties from previous node if node selection has to more than one node
 		if (this.currentEditorId2) {
 			// don't apply changes if node has been removed
@@ -1298,7 +1295,7 @@ class App extends React.Component {
 							contextMenuHandler={this.contextMenuHandler}
 							contextMenuActionHandler= {this.extraCanvasActionHandler}
 							editActionHandler= {this.extraCanvasActionHandler}
-							clickActionHandler= {this.extraCanvasActionHandler}
+							clickActionHandler= {this.extraCanvasClickActionHandler}
 							toolbarConfig={toolbarConfig}
 							canvasController={this.canvasController2}
 							notificationConfig={notificationConfig2}

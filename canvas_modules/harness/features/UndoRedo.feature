@@ -347,7 +347,7 @@ Feature: UndoRedo
 		Given I have toggled the app side panel
 		Then I open the palette
 		Then I add node 1 a "C5.0" node from the "Modeling" category onto the canvas at 350, 200
-		Then I select node 1 the "C5.0" node
+		Then I double click the "C5.0" node to open its properties
 		Then I click on title edit icon
 		Then I enter new title "My C5.0 model"
 		Then I send "Backspace" to the "editor-control-samplingRatio" textbox control
@@ -356,7 +356,7 @@ Feature: UndoRedo
 		Then I verify the event log has the "error" message for the "samplingRatio" parameter of "Select a sampling ratio"
 		Then I verify the event log title is "My C5.0 model"
 		Then I pause for 1 seconds
-		Then I select node 1 the "C5.0" node
+		Then I double click the "My C5.0 model" node to open its properties
 		Then I click undo
 		Then I click on the "Save" button
 		Then I verify the event log for the "samplingRatio" parameter contains "1"

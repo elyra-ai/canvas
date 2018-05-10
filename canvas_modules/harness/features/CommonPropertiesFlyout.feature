@@ -64,7 +64,7 @@ Feature: CommonPropertiesFlyout
 			Given I have toggled the app side panel
 			Given I have uploaded diagram "/test_resources/diagrams/allNodes.json"
 			Given I have toggled the app side panel
-			Then I click the "Aggregate" node to select it
+			Then I double click the "Aggregate" node to open its properties
 			Then I click on the help icon in the fly-out panel
 			Then I verify the help icon for id "aggregate" with help data was clicked
 			Then I verify the help data contains app data

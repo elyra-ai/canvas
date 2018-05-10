@@ -618,6 +618,13 @@ module.exports = function() {
 		browser.pause(1000); // Wait for properties to be displayed
 	});
 
+	this.Then(/^I double click the "([^"]*)" node to open its properties in extra canvas$/, function(nodeName) {
+		var nodeId = getNodeIdForLabel(nodeName, true);
+		var nodeSelector = "#node_grp_" + nodeId;
+		browser.$(nodeSelector).doubleClick();
+		browser.pause(1000); // Wait for properties to be displayed
+	});
+
 	this.Then(/^I click the "([^"]*)" node to select it$/, function(nodeName) {
 		var nodeId = getNodeIdForLabel(nodeName);
 		var nodeSelector = "#node_grp_" + nodeId;

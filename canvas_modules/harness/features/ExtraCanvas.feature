@@ -52,7 +52,7 @@ Scenario: Sanity test to perform extra canvas property edit operation
 	Given I have uploaded diagram for extra canvas "/test_resources/diagrams/modelerCanvas.json"
 	Given I have toggled the app side panel
 
-	Then I select node 3 the "C5.0" node
+	Then I double click the "C5.0" node to open its properties
 	Then I enter "10" in the "samplingRatio" field in "top" canvas
-	Then I select node 1 the "Define Types" node from extra canvas
+	Then I double click the "Define Types" node to open its properties in extra canvas
 	Then I enter "25" in the "samplingRatio" field in "extra" canvas

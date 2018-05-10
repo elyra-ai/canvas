@@ -63,7 +63,7 @@ Feature: Toolbar
 		Then I select node 3 the "C5.0" node
 		Then I click on the secondary toolbar create comment button
 		Then I edit comment 1 with the comment text "New Comment"
-		Then I select node 5 the "Var. File" node
+		Then I double click the "Define Types" node to open its properties
 		Then I click on the secondary toolbar overflow button
 		Then I click on the secondary toolbar delete button
 		Then I verify the number of nodes are 5
