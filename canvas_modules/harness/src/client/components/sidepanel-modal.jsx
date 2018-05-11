@@ -41,6 +41,7 @@ export default class SidePanelModal extends React.Component {
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
+		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 	}
 
 	componentWillMount() {
@@ -147,6 +148,10 @@ export default class SidePanelModal extends React.Component {
 		this.props.useApplyOnBlur(changeEvent.target.checked);
 	}
 
+	useDisplayAdditionalComponents(changeEvent) {
+		this.props.useDisplayAdditionalComponents(changeEvent.target.checked);
+	}
+
 
 	render() {
 		// var divider = (<div
@@ -220,6 +225,17 @@ export default class SidePanelModal extends React.Component {
 				/>
 			</div>);
 
+		const addtlCmpts = (
+			<div className="sidepanel-children" id="sidepanel-properties-additional-components">
+				<div className="sidepanel-headers">Display additional components</div>
+				<ToggleButton dark
+					id="sidepanel-additionalComponents-toggle"
+					checked={ this.props.displayAdditionalComponents }
+					onChange={ this.useDisplayAdditionalComponents }
+				/>
+			</div>
+		);
+
 		const divider = (<div className="sidepanel-children sidepanel-divider" />);
 		return (
 			<div>
@@ -228,6 +244,8 @@ export default class SidePanelModal extends React.Component {
 				{containerType}
 				{divider}
 				{applyOnBlur}
+				{divider}
+				{addtlCmpts}
 			</div>
 		);
 	}
@@ -243,6 +261,7 @@ SidePanelModal.propTypes = {
 	showPropertiesDialog: PropTypes.bool,
 	closeSidePanelModal: PropTypes.func,
 	applyOnBlur: PropTypes.bool,
-	useApplyOnBlur: PropTypes.func
-
+	useApplyOnBlur: PropTypes.func,
+	displayAdditionalComponents: PropTypes.bool,
+	useDisplayAdditionalComponents: PropTypes.func
 };

@@ -72,6 +72,8 @@ export default class SidePanel extends React.Component {
 				closeSidePanelModal={this.props.propertiesConfig.closeSidePanelModal}
 				applyOnBlur={this.props.propertiesConfig.applyOnBlur}
 				useApplyOnBlur={this.props.propertiesConfig.useApplyOnBlur}
+				displayAdditionalComponents={this.props.propertiesConfig.displayAdditionalComponents}
+				useDisplayAdditionalComponents={this.props.propertiesConfig.useDisplayAdditionalComponents}
 			/>);
 			break;
 		case SIDE_PANEL_API:
@@ -136,7 +138,9 @@ SidePanel.propTypes = {
 		propertiesContainerType: PropTypes.string,
 		closeSidePanelModal: PropTypes.func,
 		applyOnBlur: PropTypes.bool,
-		useApplyOnBlur: PropTypes.func
+		useApplyOnBlur: PropTypes.func,
+		displayAdditionalComponents: PropTypes.bool,
+		useDisplayAdditionalComponents: PropTypes.func
 	}),
 	apiConfig: PropTypes.shape({
 		getCanvasInfo: PropTypes.func,

@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 14] */
+/* eslint complexity: ["error", 16] */
 /* eslint max-len: ["error", 200] */
 /* eslint no-alert: "off" */
 
@@ -31,9 +31,9 @@ import CustomTogglePanel from "./components/custom-panels/CustomTogglePanel";
 import CustomMapPanel from "./components/custom-panels/CustomMapPanel";
 import CustomButtonPanel from "./components/custom-panels/CustomButtonPanel";
 import CustomDatasetsPanel from "./components/custom-panels/CustomDatasetsPanel";
-
 import CustomToggleControl from "./components/custom-controls/CustomToggleControl";
 import CustomTableControl from "./components/custom-controls/CustomTableControl";
+import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
 
 import CustomOpMax from "./custom/condition-ops/customMax";
 
@@ -94,6 +94,7 @@ class App extends React.Component {
 				"links": true
 			},
 			extraCanvasDisplayed: false,
+			displayAdditionalComponents: false,
 			applyOnBlur: true,
 			validateFlowOnOpen: true,
 			narrowPalette: true,
@@ -131,6 +132,7 @@ class App extends React.Component {
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
+		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.setNarrowPalette = this.setNarrowPalette.bind(this);
 		this.schemaValidation = this.schemaValidation.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -559,6 +561,11 @@ class App extends React.Component {
 		this.log("apply changes on blur", enabled);
 	}
 
+	useDisplayAdditionalComponents(enabled) {
+		this.setState({ displayAdditionalComponents: enabled });
+		this.log("additional components display", enabled);
+	}
+
 	showExtraCanvas(enabled) {
 		this.setState({ extraCanvasDisplayed: enabled });
 		this.log("show extra canvas", enabled);
@@ -933,15 +940,15 @@ class App extends React.Component {
 					properties.data.titleDefinition.title = node.label;
 				}
 			}
-
 			const messages = canvasController.getNodeMessages(nodeId);
+			const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 			const propsInfo = {
 				title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 				messages: messages,
 				formData: properties.data.formData,
 				parameterDef: properties.data,
 				appData: appData,
-				additionalComponents: properties.additionalComponents
+				additionalComponents: additionalComponents
 			};
 
 			if (inExtraCanvas) {
@@ -1005,12 +1012,12 @@ class App extends React.Component {
 	// common-properties
 	openPropertiesEditorDialog() {
 		var properties = this.state.propertiesJson;
-
+		const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,
 			parameterDef: properties,
-			additionalComponents: properties.additionalComponents,
+			additionalComponents: additionalComponents
 		};
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
 	}
@@ -1198,7 +1205,7 @@ class App extends React.Component {
 		const propertiesConfig = {
 			containerType: this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === FLYOUT,
-			applyOnBlur: this.state.applyOnBlur
+			applyOnBlur: this.state.applyOnBlur,
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
@@ -1348,7 +1355,9 @@ class App extends React.Component {
 			propertiesContainerType: this.state.propertiesContainerType,
 			closeSidePanelModal: this.closeSidePanelModal,
 			applyOnBlur: this.state.applyOnBlur,
-			useApplyOnBlur: this.useApplyOnBlur
+			useApplyOnBlur: this.useApplyOnBlur,
+			displayAdditionalComponents: this.state.displayAdditionalComponents,
+			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents
 		};
 
 		const sidePanelAPIConfig = {
