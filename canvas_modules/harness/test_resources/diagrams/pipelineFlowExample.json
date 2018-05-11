@@ -6,9 +6,7 @@
   "app_data": {
     "ui_data": {
       "name": "Pipeline Flow Example",
-      "description": {
-        "default": "An example pipeline flow document with a sub-pipeline"
-      },
+      "description": "An example pipeline flow document with a sub-pipeline",
       "class_name": "pipeline-flow-overall"
     },
     "wml_data": {
@@ -30,9 +28,7 @@
               "x_pos": 100,
               "y_pos": 170,
               "class_name": "canvas-node",
-              "description": {
-                "default": "EntryID1PE"
-              }
+              "description": "EntryID1PE"
             }
           },
           "outputs": [
@@ -56,9 +52,7 @@
               "x_pos": 100,
               "y_pos": 270,
               "class_name": "canvas-node",
-              "description": {
-                "default": "entryID2PE"
-              }
+              "description": "entryID2PE"
             }
           },
           "outputs": [
@@ -82,9 +76,7 @@
               "x_pos": 100,
               "y_pos": 370,
               "class_name": "canvas-node",
-              "description": {
-                "default": "entryID3PE"
-              }
+              "description": "entryID3PE"
             }
           },
           "outputs": [
@@ -112,9 +104,7 @@
               "x_pos": 250,
               "y_pos": 170,
               "class_name": "canvas-node",
-              "description": {
-                "default": "nodeID1PE - Join two or more datasets"
-              }
+              "description": "nodeID1PE - Join two or more datasets"
             }
           },
           "inputs": [
@@ -196,9 +186,7 @@
               "x_pos": 400,
               "y_pos": 170,
               "class_name": "canvas-node",
-              "description": {
-                "default": "nodeIDSuperNodePE"
-              }
+              "description": "nodeIDSuperNodePE"
             }
           },
           "inputs": [
@@ -270,9 +258,7 @@
               "x_pos": 700,
               "y_pos": 170,
               "class_name": "canvas-node",
-              "description": {
-                "default": "nodeID2PE - Filter record data"
-              }
+              "description": "nodeID2PE - Filter record data"
             }
           },
           "inputs": [
@@ -328,9 +314,7 @@
               "x_pos": 700,
               "y_pos": 270,
               "class_name": "canvas-node",
-              "description": {
-                "default": "nodeID3PE - Filter record data"
-              }
+              "description": "nodeID3PE - Filter record data"
             }
           },
           "inputs": [
@@ -381,9 +365,7 @@
               "x_pos": 800,
               "y_pos": 170,
               "class_name": "canvas-node",
-              "description": {
-                "default": "exitID1PE"
-              }
+              "description": "exitID1PE"
             }
           },
           "inputs": [
@@ -417,9 +399,7 @@
               "x_pos": 800,
               "y_pos": 270,
               "class_name": "canvas-node",
-              "description": {
-                "default": "exitID2PE"
-              }
+              "description": "exitID2PE"
             }
           },
           "inputs": [
@@ -542,9 +522,7 @@
               "x_pos": 784,
               "y_pos": 202,
               "class_name": "nodes",
-              "description": {
-                "default": "Filter record data"
-              }
+              "description": "Filter record data"
             }
           },
           "inputs": [
@@ -595,9 +573,7 @@
               "x_pos": 651,
               "y_pos": 70,
               "class_name": "nodes",
-              "description": {
-                "default": "nodeID2SE Join two or more datasets"
-              }
+              "description": "nodeID2SE Join two or more datasets"
             }
           },
           "inputs": [
@@ -672,9 +648,7 @@
               "x_pos": 651,
               "y_pos": 170,
               "class_name": "nodes",
-              "description": {
-                "default": "exitID1SE"
-              }
+              "description": "exitID1SE"
             }
           },
           "inputs": [

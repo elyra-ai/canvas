@@ -6,9 +6,7 @@
   "app_data": {
     "ui_data": {
       "name": "Pipeline Flow Example",
-      "description": {
-        "default": "An example pipeline flow document with a sub-pipeline"
-      },
+      "description": "An example pipeline flow document with a sub-pipeline",
       "class_name": "pipeline-flow-overall"
     },
     "wml_data": {
@@ -72,9 +70,7 @@
           "app_data": {
             "ui_data": {
               "label": "entryID1PE",
-              "description": {
-                "default": "EntryID1PE"
-              },
+              "description": "EntryID1PE",
               "image": "/images/nodes/varfile.svg",
               "x_pos": 100,
               "y_pos": 170,
@@ -97,9 +93,7 @@
           "app_data": {
             "ui_data": {
               "label": "entryID2PE",
-              "description": {
-                "default": "entryID2PE"
-              },
+              "description": "entryID2PE",
               "image": "/images/nodes/varfile.svg",
               "x_pos": 100,
               "y_pos": 270,
@@ -130,9 +124,7 @@
           "app_data": {
             "ui_data": {
               "label": "entryID3PE",
-              "description": {
-                "default": "entryID3PE"
-              },
+              "description": "entryID3PE",
               "image": "/images/nodes/varfile.svg",
               "x_pos": 100,
               "y_pos": 370,
@@ -215,9 +207,7 @@
           "app_data": {
             "ui_data": {
               "label": "nodeID1PE",
-              "description": {
-                "default": "nodeID1PE - Join two or more datasets"
-              },
+              "description": "nodeID1PE - Join two or more datasets",
               "image": "/images/nodes/derive.svg",
               "x_pos": 250,
               "y_pos": 170,
@@ -292,9 +282,7 @@
           "app_data": {
             "ui_data": {
               "label": "nodeIDSuperNodePE",
-              "description": {
-                "default": "nodeIDSuperNodePE"
-              },
+              "description": "nodeIDSuperNodePE",
               "image": "/images/nodes/derive.svg",
               "x_pos": 400,
               "y_pos": 170,
@@ -349,9 +337,7 @@
           "app_data": {
             "ui_data": {
               "label": "nodeID2PE",
-              "description": {
-                "default": "nodeID2PE - Filter record data"
-              },
+              "description": "nodeID2PE - Filter record data",
               "image": "/images/nodes/derive.svg",
               "x_pos": 700,
               "y_pos": 170,
@@ -408,9 +394,7 @@
           "app_data": {
             "ui_data": {
               "label": "nodeID3PE",
-              "description": {
-                "default": "nodeID3PE - Filter record data"
-              },
+              "description": "nodeID3PE - Filter record data",
               "image": "/images/nodes/derive.svg",
               "x_pos": 700,
               "y_pos": 270,
@@ -439,9 +423,7 @@
           "app_data": {
             "ui_data": {
               "label": "exitID1PE",
-              "description": {
-                "default": "exitID1PE"
-              },
+              "description": "exitID1PE",
               "image": "/images/nodes/derive.svg",
               "x_pos": 800,
               "y_pos": 170,
@@ -472,9 +454,7 @@
           "app_data": {
             "ui_data": {
               "label": "exitID2PE",
-              "description": {
-                "default": "exitID2PE"
-              },
+              "description": "exitID2PE",
               "image": "/images/nodes/derive.svg",
               "x_pos": 800,
               "y_pos": 270,
@@ -552,9 +532,7 @@
           "app_data": {
             "ui_data": {
               "label": "Filter",
-              "description": {
-                "default": "Filter record data"
-              },
+              "description": "Filter record data",
               "image": "/images/nodes/derive.svg",
               "x_pos": 784,
               "y_pos": 202,
@@ -636,9 +614,7 @@
           "app_data": {
             "ui_data": {
               "label": "nodeID2SE",
-              "description": {
-                "default": "nodeID2SE Join two or more datasets"
-              },
+              "description": "nodeID2SE Join two or more datasets",
               "image": "/images/nodes/derive.svg",
               "x_pos": 651,
               "y_pos": 70,
@@ -673,9 +649,7 @@
           "app_data": {
             "ui_data": {
               "label": "exitID1SE",
-              "description": {
-                "default": "exitID1SE"
-              },
+              "description": "exitID1SE",
               "image": "/images/nodes/derive.svg",
               "x_pos": 651,
               "y_pos": 170,

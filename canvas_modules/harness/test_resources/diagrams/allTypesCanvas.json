@@ -170,9 +170,7 @@
               "x_pos": 500,
               "y_pos": 170,
               "class_name": "canvas-node",
-              "description": {
-                "default": "nodeIDSuperNodePE"
-              }
+              "description": "nodeIDSuperNodePE"
             }
           },
           "inputs": [

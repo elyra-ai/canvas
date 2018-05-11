@@ -44,7 +44,7 @@ export default class CanvasOutHandler {
 			newNode.className = canvasnode.class_name;
 			newNode.objectData = {
 				label: canvasnode.label,
-				description: ""
+				description: canvasnode.description || ""
 			};
 			if (canvasnode.decorations) {
 				newNode.decorations = this.getCanvasDecorations(canvasnode.decorations);
