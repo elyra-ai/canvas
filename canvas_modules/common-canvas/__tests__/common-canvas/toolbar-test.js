@@ -50,7 +50,7 @@ describe("Toolbar renders correctly", () => {
 		const actions = wrapper.find(".list-item-containers");
 		expect(actions.length).to.equal(5);
 
-		expect(wrapper.find(".list-item.list-item-disabled").length).to.equal(2);
+		expect(wrapper.find(".list-item.list-item-disabled").length).to.equal(1); // Palette is never disabled
 	});
 });
 

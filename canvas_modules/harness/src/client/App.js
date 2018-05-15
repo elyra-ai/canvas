@@ -98,7 +98,8 @@ class App extends React.Component {
 			applyOnBlur: true,
 			validateFlowOnOpen: true,
 			narrowPalette: true,
-			schemaValidationEnabled: true
+			schemaValidationEnabled: true,
+			harnessNotificationMessages: []
 		};
 
 		// There are several functions and variables with the identifiers name and name2. This is needed
@@ -123,7 +124,7 @@ class App extends React.Component {
 		this.setNotificationMessages = this.setNotificationMessages.bind(this);
 		this.setNotificationMessages2 = this.setNotificationMessages2.bind(this);
 		this.appendNotificationMessages = this.appendNotificationMessages.bind(this);
-		this.deleteNotificationMessages = this.deleteNotificationMessages.bind(this);
+		this.clearNotificationMessages = this.clearNotificationMessages.bind(this);
 
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
 		this.sidePanelModal = this.sidePanelModal.bind(this);
@@ -435,9 +436,15 @@ class App extends React.Component {
 		this.log("Schema validation enabled ", enabled);
 	}
 
-	appendNotificationMessages(messages) {
-		this.canvasController.appendNotificationMessages(messages);
-		this.log("Appended Notification Message", "Appended " + messages.length + " notification messages");
+	appendNotificationMessages(message) {
+		const that = this;
+		this.setState({
+			harnessNotificationMessages: this.state.harnessNotificationMessages.concat(message)
+		}, function() {
+			that.canvasController.setNotificationMessages(that.state.harnessNotificationMessages);
+		});
+
+		this.log("Set Notification Messages", "Set " + this.state.harnessNotificationMessages.length + " notification messages");
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
@@ -445,9 +452,9 @@ class App extends React.Component {
 		this.log("Added nodeType to palette", { nodeTypeObj: nodeTypeObj, category: category, categoryLabel: categoryLabel });
 	}
 
-	deleteNotificationMessages(messageId) {
-		this.canvasController.deleteNotificationMessages(messageId);
-		this.log("Delete Notification Message", "Deleted message " + messageId);
+	clearNotificationMessages(messageId) {
+		this.canvasController.clearNotificationMessages();
+		this.log("Cleared Notification Message");
 	}
 
 	// Open node editor on notification message click
@@ -455,9 +462,11 @@ class App extends React.Component {
 		if (inExtraCanvas) {
 			this.canvasController2.setSelections([nodeId]);
 			this.canvasController2.closeNotificationPanel();
+			this.editNodeHandler(nodeId, inExtraCanvas);
 		} else {
 			this.canvasController.setSelections([nodeId]);
 			this.canvasController.closeNotificationPanel();
+			this.editNodeHandler(nodeId);
 		}
 	}
 
@@ -1367,9 +1376,8 @@ class App extends React.Component {
 			addNodeTypeToPalette: this.addNodeTypeToPalette,
 			setNodeLabel: this.setNodeLabel,
 			setPortLabel: this.setPortLabel,
-			setNotificationMessages: this.setNotificationMessages,
 			appendNotificationMessages: this.appendNotificationMessages,
-			deleteNotificationMessages: this.deleteNotificationMessages
+			clearNotificationMessages: this.clearNotificationMessages
 		};
 
 		const mainView = (<div id="app-container">

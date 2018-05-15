@@ -15,10 +15,6 @@ import { ERROR, WARNING } from "../common-canvas/constants/canvas-constants";
 class NotificationPanel extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			messages: this.props.messages
-		};
-
 		this.handleNotificationPanelClickOutside = this.handleNotificationPanelClickOutside.bind(this);
 	}
 
@@ -36,11 +32,11 @@ class NotificationPanel extends React.Component {
 
 	getNotifications() {
 		const notifications = [];
-		if (!this.state.messages) {
+		if (!this.props.messages) {
 			return notifications;
 		}
-		for (let index = 0; index < this.state.messages.length; index++) {
-			const message = this.state.messages[index];
+		for (let index = 0; index < this.props.messages.length; index++) {
+			const message = this.props.messages[index];
 			const className = message.callback ? " clickable " : "";
 			const type = message.type === ERROR || message.type === WARNING
 				? (<div className="notification-message-type">
@@ -98,7 +94,7 @@ class NotificationPanel extends React.Component {
 
 	render() {
 		const notificationPanelClassName = this.props.isNotificationOpen ? "" : "panel-hidden";
-		const notificationPanel = this.state.messages.length > 0
+		const notificationPanel = this.props.messages.length > 0
 			? (<div className="notification-panel">
 				<div className="notification-panel-header">{this.props.notificationHeader}</div>
 				<div className="notification-panel-messages">

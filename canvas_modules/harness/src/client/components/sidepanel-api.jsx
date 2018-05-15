@@ -73,13 +73,11 @@ export default class SidePanelAPI extends React.Component {
 			newLabel: "",
 			nodes: [],
 			ports: [],
-			appendNotifications: true,
 			appendTimestamp: false,
 			attachCallback: false,
 			appendLink: false,
 			notificationTitle: "",
 			notificationMessage: "",
-			deleteNotificationmessageId: "",
 			notificationType: NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL
 		};
 
@@ -216,10 +214,6 @@ export default class SidePanelAPI extends React.Component {
 		this.setState({ notificationType: obj.selected });
 	}
 
-	onAppendNotificationToggle(changeEvent) {
-		this.setState({ appendNotifications: changeEvent.target.checked });
-	}
-
 	onAppendTimestampToggle(changeEvent) {
 		this.setState({ appendTimestamp: changeEvent.target.checked });
 	}
@@ -303,19 +297,15 @@ export default class SidePanelAPI extends React.Component {
 		}
 		case API_ADD_NOTIFICATION_MESSAGE: {
 			const message = this.createNotificationMessage();
-			if (this.state.appendNotifications) {
-				this.props.appendNotificationMessages(message);
-			} else {
-				this.props.setNotificationMessages(message);
-			}
+			this.props.appendNotificationMessages(message);
 			break;
 		}
 		default:
 		}
 	}
 
-	deleteNotificationMessage(evt) {
-		this.props.deleteNotificationMessages(this.state.deleteNotificationmessageId);
+	clearNotificationMessages(evt) {
+		this.props.clearNotificationMessages();
 	}
 
 	createNotificationMessage() {
@@ -477,12 +467,15 @@ export default class SidePanelAPI extends React.Component {
 		let setNotificationMessages = <div />;
 		if (this.state.selectedOperation === API_ADD_NOTIFICATION_MESSAGE) {
 			setNotificationMessages = (<div className="sidepanel-children" id="sidepanel-api-notificationMessages">
-				<div className="sidepanel-headers">Append Message to Notification Panel</div>
-				<ToggleButton dark
-					id="sidepanel-api-notification-append"
-					checked={this.state.appendNotifications}
-					onChange={this.onAppendNotificationToggle.bind(this)}
-				/>
+				<div className="sidepanel-headers">Clear Notification Messages</div>
+				<div className="sidepanel-api-clear-notification-message-submit">
+					<Button dark
+						id="clearNotificationMessagesubmit"
+						onClick={this.clearNotificationMessages.bind(this)}
+					>
+						Clear Messages
+					</Button>
+				</div>
 				{divider}
 				<div className="sidepanel-headers">Message Type</div>
 				<div className="sidepanel-api-notification-message-types">
@@ -536,23 +529,6 @@ export default class SidePanelAPI extends React.Component {
 					checked={this.state.appendLink}
 					onChange={this.onAppendLinkToggle.bind(this)}
 				/>
-				{divider}
-				<TextField dark
-					id="deleteMessageWithId"
-					placeholder="Delete Message with ID..."
-					type="text"
-					onChange={this.onFieldChange.bind(this, "deleteNotificationmessageId")}
-					value={this.state.deleteNotificationmessageId}
-				/>
-				<div className="sidepanel-api-delete-notification-message-submit">
-					<Button dark
-						id="deleteNotificationmessageSubmit"
-						disabled={this.state.deleteNotificationmessageId.length < 1}
-						onClick={this.deleteNotificationMessage.bind(this)}
-					>
-						Delete Message
-					</Button>
-				</div>
 			</div>);
 		}
 
@@ -580,7 +556,6 @@ SidePanelAPI.propTypes = {
 	addNodeTypeToPalette: PropTypes.func,
 	setNodeLabel: PropTypes.func,
 	setPortLabel: PropTypes.func,
-	setNotificationMessages: PropTypes.func,
 	appendNotificationMessages: PropTypes.func,
-	deleteNotificationMessages: PropTypes.func
+	clearNotificationMessages: PropTypes.func
 };

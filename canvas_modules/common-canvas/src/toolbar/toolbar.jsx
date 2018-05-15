@@ -13,6 +13,7 @@ import Tooltip from "../tooltip/tooltip.jsx";
 import ObserveSize from "react-observe-size";
 import Icon from "../icons/icon.jsx";
 import { TOOLBAR } from "../common-canvas/constants/canvas-constants.js";
+import constants from "../common-canvas/constants/canvas-constants";
 
 // eslint override
 /* global window document */
@@ -23,8 +24,6 @@ class Toolbar extends React.Component {
 		super(props);
 
 		this.state = {
-			config: this.props.config,
-			notificationConfig: this.props.notificationConfig,
 			defaultToolbarWidth: TOOLBAR.ICON_WIDTH * 5, // Width of toolbar with palette, zoom, and notification icons
 			maxToolbarWidth: 0, // Width of toolbar if displaying all icons and dividers
 			dividerCount: 0,
@@ -43,22 +42,6 @@ class Toolbar extends React.Component {
 		}
 	}
 
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.notificationConfig) {
-			const bellObject = this.props.canvasController.determineNotificationBellIconState(nextProps.notificationConfig.enable);
-
-			if (this.state.notificationConfig &&
-				((this.state.notificationConfig.label !== nextProps.notificationConfig.label) ||
-				(this.state.notificationConfig.enable !== nextProps.notificationConfig.enable) ||
-				(typeof nextProps.notificationConfig.callback === "undefined"))) {
-				const newConfig = Object.assign({}, nextProps.notificationConfig);
-				newConfig.action = bellObject.icon;
-				newConfig.className = bellObject.className;
-				this.setState({ notificationConfig: newConfig });
-			}
-		}
-	}
-
 	getObjectWidth(classOrId) {
 		const firstChar = classOrId.charAt(0);
 		const remaining = classOrId.substring(1);
@@ -74,7 +57,29 @@ class Toolbar extends React.Component {
 	// Need to set a className for notification bell icon in the DOM
 	// to be used in notification-panel.jsx: handleNotificationPanelClickOutside()
 	getActionClassName(action) {
-		return action.indexOf("bell") > -1 ? "notificationBellIcon" : action;
+		return action.indexOf(constants.NOTIFICATION_BELL_ICON.DEFAULT) > -1 ? "notificationBellIcon" : action;
+	}
+
+	getNotificationIconStateObject(isIconEnabled) {
+		const notificationMessages = this.props.canvasController.getNotificationMessages();
+		const errorMessages = this.props.canvasController.getNotificationMessages(constants.ERROR);
+		const warningMessages = this.props.canvasController.getNotificationMessages(constants.WARNING);
+
+		let className = "canvas-icon fill" + constants.NOTIFICATION_BELL_ICON.DEFAULT + " " + constants.INFORMATION;
+		if (isIconEnabled) {
+			const bellIconClassName = "canvas-icon fill " + constants.NOTIFICATION_BELL_ICON.DOT + " ";
+			if (errorMessages.length > 0) {
+				className = bellIconClassName + constants.ERROR;
+			} else if (warningMessages.length > 0) {
+				className = bellIconClassName + constants.WARNING;
+			} else if (notificationMessages.length > 0) {
+				className = bellIconClassName + constants.SUCCESS;
+			}
+		}
+		return {
+			icon: notificationMessages.length > 0 ? constants.NOTIFICATION_BELL_ICON.DOT : constants.NOTIFICATION_BELL_ICON.DEFAULT,
+			className: className
+		};
 	}
 
 	calculateMaxToolbarWidth(list) {
@@ -98,7 +103,7 @@ class Toolbar extends React.Component {
 	calculateDisplayItems(toolbarWidth) {
 		const numObjects = this.props.config.length;
 		if (this.state.maxToolbarWidth >= toolbarWidth) { // need to minimize
-			const definition = this.state.config;
+			const definition = this.props.config;
 			let availableWidth = toolbarWidth - this.state.defaultToolbarWidth + TOOLBAR.ICON_WIDTH;
 
 			if (availableWidth < TOOLBAR.ICON_WIDTH) {
@@ -137,11 +142,11 @@ class Toolbar extends React.Component {
 			utilityActions = definition.map(function(actionObj, actionObjNum) {
 				if (actionObj.action) {
 					const actionId = actionObj.action + "-action";
-					if (actionObj.enable === true) {
+					if (actionObj.action.startsWith("notification") || actionObj.action.startsWith(constants.NOTIFICATION_BELL_ICON.DEFAULT)) {
+						return that.generateNotificationIcon(actionObj, actionId, overflow);
+					} else if (actionObj.enable === true) {
 						if (actionObj.action.startsWith("palette")) {
 							return that.generatePaletteIcon(actionObj, overflow);
-						} else if (actionObj.action.startsWith("bell")) {
-							return that.generateNotificationIcon(actionObj, overflow);
 						}
 						return that.generateEnabledActionIcon(actionObj, actionId, actionsHandler, overflow);
 					}
@@ -250,9 +255,20 @@ class Toolbar extends React.Component {
 		return palette;
 	}
 
-	generateNotificationIcon(actionObj, overflow) {
+	generateNotificationIcon(actionObj, actionId, overflow) {
+		const notificationStateObj = this.getNotificationIconStateObject(actionObj.enable);
+		actionObj.icon = notificationStateObj.icon;
+		actionObj.className = notificationStateObj.className;
 		actionObj.callback = this.props.canvasController.openNotificationPanel.bind(this.props.canvasController);
-		let notification = this.generateEnabledActionIcon(actionObj, "notification-open-action", null, overflow);
+
+		let notification;
+		if (actionObj.enable) {
+			actionObj.action = constants.NOTIFICATION_BELL_ICON.DOT;
+			notification = this.generateEnabledActionIcon(actionObj, "notification-open-action", null, overflow);
+		} else {
+			actionObj.action = constants.NOTIFICATION_BELL_ICON.DEFAULT;
+			notification = this.generateDisabledActionIcon(actionObj, actionId, overflow);
+		}
 
 		if (this.props.isNotificationOpen) {
 			actionObj.callback = this.props.canvasController.closeNotificationPanel.bind(this.props.canvasController);
@@ -303,7 +319,7 @@ class Toolbar extends React.Component {
 			: window.innerWidth; // in Jest tests, no common-canvas set
 		const that = this;
 		let actionContainer = <div />;
-		if (this.state.config && this.state.config.length > 0) {
+		if (this.props.config && this.props.config.length > 0) {
 			const displayItems = this.calculateDisplayItems(toolbarWidth);
 			const actions = that.generateActionItems(
 				that.props.config,
@@ -327,7 +343,7 @@ class Toolbar extends React.Component {
 			typeof this.props.notificationConfig.enable !== "undefined") {
 			const notificationBell = [
 				{ divider: true },
-				this.state.notificationConfig
+				this.props.notificationConfig
 			];
 			rightAlignedActionItems = rightAlignedActionItems.concat(notificationBell);
 		}

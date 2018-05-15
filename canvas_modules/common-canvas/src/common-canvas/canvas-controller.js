@@ -66,8 +66,6 @@ export default class CanvasController {
 		// Increment the global instance ID by 1 each time a new
 		// canvas controller is created.
 		this.instanceId = commonCanvasControllerInstanceId++;
-
-		this.notificationMessages = [];
 	}
 
 	setCanvasConfig(config) {
@@ -141,72 +139,12 @@ export default class CanvasController {
 		this.objectModel.setSelections(newSelection);
 	}
 
-	// Sets notificationMessages to newMessages.
-	// This will overwrite any existing messages in notificationMessages
 	setNotificationMessages(newMessages) {
-		this.notificationMessages = newMessages;
-		// Update the bell icon to the correct state
-		this.setNotificationBellIconClassName(this.determineNotificationBellIconState(false));
+		this.objectModel.setNotificationMessages(newMessages);
 	}
 
-	// Append newMessages to list of notificationMessages
-	appendNotificationMessages(newMessages) {
-		this.notificationMessages = this.notificationMessages.concat(newMessages);
-		// Update the bell icon to the correct state
-		this.setNotificationBellIconClassName(this.determineNotificationBellIconState(false));
-	}
-
-	// Delete messages from notificationMessages with given messageId or array of messageIds
-	deleteNotificationMessages(messageIds) {
-		let messageIdsList = messageIds;
-		if (!Array.isArray(messageIds)) {
-			messageIdsList = [messageIds];
-		}
-
-		for (const messageId of messageIdsList) {
-			for (let idx = 0; idx < this.notificationMessages.length; idx++) {
-				const message = this.notificationMessages[idx];
-				if (message.id === messageId) {
-					this.notificationMessages.splice(idx, 1);
-					break;
-				}
-			}
-		}
-	}
-
-	// Sets the state of the notification bell icon in the toolbar
-	setNotificationBellIconClassName(newState) {
-		if (this.commonCanvas) {
-			this.commonCanvas.configureToolbarBellIconClassName(newState);
-		}
-	}
-
-	// Available states are in canvas-constants NOTIFICATION_BELL_ICON
-	determineNotificationBellIconState(bellIconEnabled) {
-		const errors = this.notificationMessages.filter(function(message) {
-			return message.type === constants.ERROR;
-		});
-
-		const warnings = this.notificationMessages.filter(function(message) {
-			return message.type === constants.WARNING;
-		});
-
-		let className = "canvas-icon fill bell " + constants.INFORMATION;
-		if (bellIconEnabled) {
-			const bellIconClassName = "canvas-icon fill bellDot ";
-			if (errors.length > 0) {
-				className = bellIconClassName + constants.ERROR;
-			} else if (warnings.length > 0) {
-				className = bellIconClassName + constants.WARNING;
-			} else if (this.notificationMessages.length > 0) {
-				className = bellIconClassName + constants.SUCCESS;
-			}
-		}
-
-		return {
-			icon: this.notificationMessages.length > 0 ? constants.NOTIFICATION_BELL_ICON.DOT : constants.NOTIFICATION_BELL_ICON.DEFAULT,
-			className: className
-		};
+	clearNotificationMessages() {
+		this.objectModel.clearNotificationMessages();
 	}
 
 	moveObjects(data) {
@@ -378,8 +316,8 @@ export default class CanvasController {
 		return this.objectModel.getFlowMessages();
 	}
 
-	getNotificationMessages() {
-		return this.notificationMessages;
+	getNotificationMessages(messageType) {
+		return this.objectModel.getNotificationMessages(messageType);
 	}
 
 	isInternalObjectModelEnabled() {

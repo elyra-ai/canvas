@@ -524,7 +524,6 @@ const selections = (state = [], action) => {
 	}
 };
 
-
 const layoutinfo = (state = LayoutDimensions.getLayout(), action) => {
 	switch (action.type) {
 	case "SET_LAYOUT_INFO":
@@ -559,6 +558,19 @@ const setNodeDimensions = (node, layoutInfo) => {
 	return newNode;
 };
 
+const notifications = (state = [], action) => {
+	switch (action.type) {
+	case "CLEAR_NOTIFICATION_MESSAGES":
+		return [];
+
+	case "SET_NOTIFICATION_MESSAGES":
+		return [...action.data];
+
+	default:
+		return state;
+	}
+};
+
 const getUUID = () => {
 	return uuid4();
 };
@@ -570,12 +582,13 @@ export default class ObjectModel {
 		// Put selections reducer first so selections are handled before
 		// canvasinfo actions. Also, put layoutinfo reducer before canvasinfo
 		// because node heights and width are calculated based on layoutinfo.
-		var combinedReducer = combineReducers({ selections, layoutinfo, canvasinfo, palette });
+		var combinedReducer = combineReducers({ selections, layoutinfo, canvasinfo, palette, notifications });
 		const initialState = {
 			selections: [],
 			layoutinfo: LayoutDimensions.getLayout(),
 			canvasinfo: this.getEmptyCanvasInfo(),
-			palette: {}
+			palette: {},
+			notifications: []
 		};
 		this.store = createStore(combinedReducer, initialState);
 
@@ -2055,6 +2068,24 @@ export default class ObjectModel {
 				this.selectionChangeHandler(newSelection);
 			}
 		}
+	}
+
+	clearNotificationMessages() {
+		this.store.dispatch({ type: "CLEAR_NOTIFICATION_MESSAGES" });
+	}
+
+	setNotificationMessages(messages) {
+		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: messages });
+	}
+
+	getNotificationMessages(messageType) {
+		const notificationMessages = this.store.getState().notifications;
+		if (messageType) {
+			return notificationMessages.filter((message) => {
+				return message.type === messageType;
+			});
+		}
+		return notificationMessages;
 	}
 
 }

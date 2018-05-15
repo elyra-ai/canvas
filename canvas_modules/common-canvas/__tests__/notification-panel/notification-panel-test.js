@@ -149,30 +149,27 @@ describe("canvas controller APIs for notification panel work correctly", () => {
 
 	it("set messages correctly in canvasController", () => {
 		canvasController.setNotificationMessages([]);
-		expect(isEqual(canvasController.getNotificationMessages(), [])).to.be.true;
+		expect(canvasController.getNotificationMessages()).to.eql([]);
 
 		canvasController.setNotificationMessages(notificationMessages);
-		expect(canvasController.getNotificationMessages()).to.equal(notificationMessages);
+		expect(canvasController.getNotificationMessages()).to.eql(notificationMessages);
 	});
 
-	it("append messages correctly in canvasController", () => {
-		canvasController.appendNotificationMessages([notificationMessage0]);
-		expect(isEqual(canvasController.getNotificationMessages(), [notificationMessage0])).to.be.true;
-
-		canvasController.appendNotificationMessages([notificationMessage1, notificationMessage2]);
-		expect(isEqual(canvasController.getNotificationMessages(), [notificationMessage0, notificationMessage1, notificationMessage2])).to.be.true;
-
-		canvasController.setNotificationMessages([]);
-		expect(isEqual(canvasController.getNotificationMessages(), [])).to.be.true;
-	});
-
-	it("delete messages correctly in canvasController", () => {
+	it("get messages correctly in canvasController", () => {
 		canvasController.setNotificationMessages(notificationMessages);
-		canvasController.deleteNotificationMessages("notification-1");
-		expect(isEqual(canvasController.getNotificationMessages(), [notificationMessage0, notificationMessage2, notificationMessage3])).to.be.true;
 
-		canvasController.deleteNotificationMessages(["notification-0", "notification-2"]);
-		expect(isEqual(canvasController.getNotificationMessages(), [notificationMessage3])).to.be.true;
+		expect(isEqual(canvasController.getNotificationMessages("informational"), [notificationMessage0])).to.be.true;
+		expect(isEqual(canvasController.getNotificationMessages("success"), [notificationMessage1])).to.be.true;
+		expect(isEqual(canvasController.getNotificationMessages("warning"), [notificationMessage2])).to.be.true;
+		expect(isEqual(canvasController.getNotificationMessages("error"), [notificationMessage3])).to.be.true;
+
+	});
+
+	it("clear messages correctly in canvasController", () => {
+		canvasController.setNotificationMessages(notificationMessages);
+		canvasController.clearNotificationMessages();
+		expect(isEqual(canvasController.getNotificationMessages(), [])).to.be.true;
+
 	});
 });
 
@@ -185,8 +182,6 @@ describe("toolbar notification icon state renders correctly", () => {
 	});
 
 	it("notification icon should be disabled in toolbar if no messages", () => {
-		canvasController.setNotificationMessages([]);
-
 		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
 		wrapper = mountWithIntl(<CommonCanvas
 			config={canvasConfig}
@@ -213,8 +208,6 @@ describe("toolbar notification icon state renders correctly", () => {
 	});
 
 	it("notification icon should be in correct states in toolbar", () => {
-		canvasController.setNotificationMessages([]);
-
 		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
 		wrapper = mountWithIntl(<CommonCanvas
 			config={canvasConfig}
@@ -237,32 +230,27 @@ describe("toolbar notification icon state renders correctly", () => {
 		expect(notificationIcon).to.have.length(1);
 		expect(notificationIcon.find(".canvas-icon.fill.bellDot.success")).to.have.length(1);
 
-		canvasController.appendNotificationMessages([notificationMessage1]);
+		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
 		expect(notificationIcon.find(".canvas-icon.fill.bellDot.success")).to.have.length(1);
 
-		canvasController.appendNotificationMessages([notificationMessage2]);
+		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2]);
 		expect(notificationIcon.find(".canvas-icon.fill.bellDot.warning")).to.have.length(1);
 
-		canvasController.appendNotificationMessages([notificationMessage3]);
+		canvasController.setNotificationMessages(notificationMessages);
 		expect(notificationIcon.find(".canvas-icon.fill.bellDot.error")).to.have.length(1);
 
 		expect(canvasController.getNotificationMessages().length).to.equal(4);
 
-		canvasController.deleteNotificationMessages("notification-3");
+		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2]);
 		wrapper.update();
 		expect(notificationIcon.find(".canvas-icon.fill.bellDot.warning")).to.have.length(1);
 
-		canvasController.deleteNotificationMessages("notification-0");
-		wrapper.update();
-		expect(notificationIcon.find(".canvas-icon.fill.bellDot.warning")).to.have.length(1);
-
-		canvasController.deleteNotificationMessages("notification-2");
+		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
 		wrapper.update();
 		expect(notificationIcon.find(".canvas-icon.fill.bellDot.success")).to.have.length(1);
 
-		canvasController.deleteNotificationMessages("notification-1");
+		canvasController.setNotificationMessages([]);
 		wrapper.update();
-
 		expect(wrapper.find("li[id='bell-action']").find("svg[type='bell']")).to.have.length(1);
 	});
 
