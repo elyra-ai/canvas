@@ -64,16 +64,19 @@ class Toolbar extends React.Component {
 		const notificationMessages = this.props.canvasController.getNotificationMessages();
 		const errorMessages = this.props.canvasController.getNotificationMessages(constants.ERROR);
 		const warningMessages = this.props.canvasController.getNotificationMessages(constants.WARNING);
+		const successMessages = this.props.canvasController.getNotificationMessages(constants.SUCCESS);
 
-		let className = "canvas-icon fill" + constants.NOTIFICATION_BELL_ICON.DEFAULT + " " + constants.INFORMATION;
+		let className = "canvas-icon fill " + constants.NOTIFICATION_BELL_ICON.DEFAULT + " " + constants.INFORMATION;
 		if (isIconEnabled) {
 			const bellIconClassName = "canvas-icon fill " + constants.NOTIFICATION_BELL_ICON.DOT + " ";
 			if (errorMessages.length > 0) {
 				className = bellIconClassName + constants.ERROR;
 			} else if (warningMessages.length > 0) {
 				className = bellIconClassName + constants.WARNING;
-			} else if (notificationMessages.length > 0) {
+			} else if (successMessages.length > 0) {
 				className = bellIconClassName + constants.SUCCESS;
+			} else {
+				className = bellIconClassName + constants.INFORMATION;
 			}
 		}
 		return {

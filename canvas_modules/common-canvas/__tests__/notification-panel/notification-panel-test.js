@@ -228,7 +228,7 @@ describe("toolbar notification icon state renders correctly", () => {
 		canvasController.setNotificationMessages([notificationMessage0]);
 		const notificationIcon = wrapper.find("li[id='notification-open-action']");
 		expect(notificationIcon).to.have.length(1);
-		expect(notificationIcon.find(".canvas-icon.fill.bellDot.success")).to.have.length(1);
+		expect(notificationIcon.find(".canvas-icon.fill.bellDot.info")).to.have.length(1);
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
 		expect(notificationIcon.find(".canvas-icon.fill.bellDot.success")).to.have.length(1);
@@ -248,6 +248,10 @@ describe("toolbar notification icon state renders correctly", () => {
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
 		wrapper.update();
 		expect(notificationIcon.find(".canvas-icon.fill.bellDot.success")).to.have.length(1);
+
+		canvasController.setNotificationMessages([notificationMessage0]);
+		wrapper.update();
+		expect(notificationIcon.find(".canvas-icon.fill.bellDot.info")).to.have.length(1);
 
 		canvasController.setNotificationMessages([]);
 		wrapper.update();

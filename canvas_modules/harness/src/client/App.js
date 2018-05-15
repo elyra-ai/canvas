@@ -98,8 +98,7 @@ class App extends React.Component {
 			applyOnBlur: true,
 			validateFlowOnOpen: true,
 			narrowPalette: true,
-			schemaValidationEnabled: true,
-			harnessNotificationMessages: []
+			schemaValidationEnabled: true
 		};
 
 		// There are several functions and variables with the identifiers name and name2. This is needed
@@ -182,6 +181,9 @@ class App extends React.Component {
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 
+		this.harnessNotificationMessages = [];
+		this.flowNotificationMessages = [];
+
 		try {
 			this.canvasController = new CanvasController();
 			this.canvasController.setEmptyPipelineFlow();
@@ -204,7 +206,6 @@ class App extends React.Component {
 		}
 		TestService.postSessionData(sessionData);
 		NodeToForm.initialize();
-		// this.sidePanelCanvas();
 	}
 
 	getLabelString(labelId, defaultLabel) {
@@ -292,7 +293,8 @@ class App extends React.Component {
 				notificationMessages.push(summarizedMessage);
 			}
 		}
-		this.setNotificationMessages(notificationMessages);
+		this.flowNotificationMessages = notificationMessages;
+		this.setNotificationMessages(this.flowNotificationMessages.concat(this.harnessNotificationMessages));
 	}
 
 	setNotificationMessages(messages) {
@@ -437,14 +439,9 @@ class App extends React.Component {
 	}
 
 	appendNotificationMessages(message) {
-		const that = this;
-		this.setState({
-			harnessNotificationMessages: this.state.harnessNotificationMessages.concat(message)
-		}, function() {
-			that.canvasController.setNotificationMessages(that.state.harnessNotificationMessages);
-		});
-
-		this.log("Set Notification Messages", "Set " + this.state.harnessNotificationMessages.length + " notification messages");
+		this.harnessNotificationMessages = this.harnessNotificationMessages.concat(message);
+		this.canvasController.setNotificationMessages(this.flowNotificationMessages.concat(this.harnessNotificationMessages));
+		this.log("Set Notification Messages", "Set " + (this.flowNotificationMessages + this.harnessNotificationMessages.length) + " notification messages");
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
@@ -453,6 +450,8 @@ class App extends React.Component {
 	}
 
 	clearNotificationMessages(messageId) {
+		this.harnessNotificationMessages = [];
+		this.flowNotificationMessages = [];
 		this.canvasController.clearNotificationMessages();
 		this.log("Cleared Notification Message");
 	}

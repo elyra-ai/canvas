@@ -30,6 +30,9 @@
 		fill: #EFC100;
 	}
 	&.success > .dot {
-		fill: #00884B;
+		fill: #5AA700;
+	}
+	&.info > .dot {
+		fill: #5596E6;
 	}
 }

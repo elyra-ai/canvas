@@ -10,7 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Icon from "../icons/icon.jsx";
-import { ERROR, WARNING } from "../common-canvas/constants/canvas-constants";
+import { INFORMATION } from "../common-canvas/constants/canvas-constants";
 
 class NotificationPanel extends React.Component {
 	constructor(props) {
@@ -38,11 +38,10 @@ class NotificationPanel extends React.Component {
 		for (let index = 0; index < this.props.messages.length; index++) {
 			const message = this.props.messages[index];
 			const className = message.callback ? " clickable " : "";
-			const type = message.type === ERROR || message.type === WARNING
-				? (<div className="notification-message-type">
-					<Icon type={message.type} />
-				</div>)
-				: null;
+			const iconType = message.type.startsWith(INFORMATION) ? INFORMATION + "Hollow" : message.type;
+			const type = (<div className="notification-message-type">
+				<Icon type={iconType} />
+			</div>);
 
 			const timestamp = message.timestamp
 				? (<div className="notification-message-timestamp">

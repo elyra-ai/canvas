@@ -30,6 +30,7 @@ $notification-left-border-color-width: 4px;
 .notification-panel {
 	position: absolute;
 	width: 300px;
+	height: 100%;
 	right: 8px;
 }
 
@@ -62,7 +63,7 @@ $notification-left-border-color-width: 4px;
 	position: absolute;
 	width: inherit;
 	margin-top: $notification-panel-arrow-height + $notification-panel-header-height;
-	max-height: 300px;
+	max-height: calc((100% / 2) - #{$notification-panel-header-height});
 	overflow-y: auto;
 	background-color: #FFFFFF;
 	border: 1px solid #DFE3E6;
@@ -105,10 +106,10 @@ $notification-left-border-color-width: 4px;
 				border-left: $notification-left-border-color-width solid #EFC100;
 			}
 			&.success {
-				border-left: $notification-left-border-color-width solid #00884B;
+				border-left: $notification-left-border-color-width solid #5AA700;
 			}
 			&.informational {
-				border-left: $notification-left-border-color-width solid #F5F7FA;
+				border-left: $notification-left-border-color-width solid #5596E6;
 			}
 		}
 

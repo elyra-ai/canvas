@@ -329,6 +329,29 @@ export default class Icon extends React.Component {
 						s3.6,8,8,8s8-3.6,8-8c0-2.1-0.8-4.2-2.3-5.7C12.2,0.8,10.1,0,8,0z"
 					/>
 				</svg>,
+			infoHollow:
+				<svg xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 16 16"
+					className={CLASS_NAME + " fill"}
+					{...this.props}
+				>
+					<polygon fill="#5596E6" points="8.5,11.5 8.5,6.3 6.3,6.3 6.3,7.5 7.4,7.5 7.4,11.5 5.7,11.5 5.7,12.6 10.3,12.6 10.3,11.5 " />
+					<path fill="#5596E6" d="M8,2.9c-0.5,0-0.9,0.4-0.9,0.9S7.5,4.6,8,4.6c0.5,0,0.9-0.4,0.9-0.9S8.4,2.9,8,2.9z" />
+					<path fill="#5596E6" d="M8,16c-4.4,0-8-3.6-8-8s3.6-8,8-8s8,3.6,8,8S12.4,16,8,16z M8,1.2C4.2,1.2,1.1,4.3,1.1,8s3.1,6.9,6.9,6.9
+						s6.9-3.1,6.9-6.9S11.8,1.2,8,1.2z"
+					/>
+				</svg>,
+			success:
+				<svg xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 16 16"
+					className={CLASS_NAME}
+					{...this.props}
+				>
+					<path fill="#5AA700" d="M8,0C3.6,0,0,3.6,0,8s3.6,8,8,8s8-3.6,8-8S12.4,0,8,0z M8,14.9c-3.8,0-6.9-3.1-6.9-6.9S4.2,1.2,8,1.2
+						s6.9,3.1,6.9,6.9S11.8,14.9,8,14.9z"
+					/>
+					<polygon fill="#5AA700" points="6.9,11.2 4,8.3 4.9,7.4 6.9,9.4 11.1,5.2 12,6.1 " />
+				</svg>,
 			circle:
 				<svg xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 32 32"
