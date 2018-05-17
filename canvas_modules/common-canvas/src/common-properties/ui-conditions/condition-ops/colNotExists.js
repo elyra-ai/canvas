@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import logger from "./../../../../utils/logger";
+import PropertyUtils from "./../../util/property-utils.js";
 
 function op() {
 	return "colNotExists";
@@ -21,17 +22,15 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			return true;
 		}
 		for (const field of dataModelFields) {
-			if (field.name === paramInfo.value) {
+			if (PropertyUtils.fieldValueMatchesProto(paramInfo.value, field)) {
 				return false;
 			}
-
 		}
 		return true;
 	}
 	logger.warn("Ignoring unsupported condition operation 'colNotExists' for control type " + paramInfo.control.controlType);
 	return true;
 }
-
 
 // Public Methods ------------------------------------------------------------->
 

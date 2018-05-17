@@ -150,12 +150,27 @@ export class ParameterDef {
 		}
 		return false;
 	}
+
 	isSubPanelEdit() {
 		if (this.editStyle === EditStyle.SUBPANEL) {
 			return true;
 		}
 		return false;
 	}
+
+	/**
+	 * Determines if the given parameter object represents a compound field.
+	 *
+	 * @return True if the parameter represents a compound field
+	 */
+	isCompoundField() {
+		if (this.role && this.type) {
+			const isObject = this.type === Type.OBJECT || this.baseType() === Type.OBJECT;
+			return isObject && this.role === ParamRole.COLUMN;
+		}
+		return false;
+	}
+
 	propType() {
 		// If we don't recognize the base type as one of the built-in types, assume it's a structure
 		let value;

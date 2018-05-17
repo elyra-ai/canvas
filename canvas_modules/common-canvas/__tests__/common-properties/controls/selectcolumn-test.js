@@ -349,21 +349,21 @@ describe("selectcolumn control filters values correctly with multi input", () =>
 			{ label: "0.BP", value: "0.BP" },
 			{ label: "0.Na", value: "0.Na" },
 			{ label: "0.drug", value: "0.drug" },
-			{ label: "age2", value: "age2" },
-			{ label: "BP2", value: "BP2" },
-			{ label: "Na2", value: "Na2" },
-			{ label: "drug2", value: "drug2" },
-			{ label: "age3", value: "age3" },
-			{ label: "BP3", value: "BP3" },
-			{ label: "Na3", value: "Na3" },
-			{ label: "drug3", value: "drug3" },
+			{ label: "0.age2", value: "0.age2" },
+			{ label: "0.BP2", value: "0.BP2" },
+			{ label: "0.Na2", value: "0.Na2" },
+			{ label: "0.drug2", value: "0.drug2" },
+			{ label: "0.age3", value: "0.age3" },
+			{ label: "0.BP3", value: "0.BP3" },
+			{ label: "0.Na3", value: "0.Na3" },
+			{ label: "0.drug3", value: "0.drug3" },
 			{ label: "1.age", value: "1.age" },
 			{ label: "1.BP", value: "1.BP" },
 			{ label: "1.Na", value: "1.Na" },
 			{ label: "1.drug", value: "1.drug" },
-			{ label: "intAndRange", value: "intAndRange" },
-			{ label: "stringAndDiscrete", value: "stringAndDiscrete" },
-			{ label: "stringAndSet", value: "stringAndSet" }
+			{ label: "1.intAndRange", value: "1.intAndRange" },
+			{ label: "1.stringAndDiscrete", value: "1.stringAndDiscrete" },
+			{ label: "1.stringAndSet", value: "1.stringAndSet" }
 		];
 		const actualOptions = select3.prop("options");
 		expect(actualOptions).to.eql(expectedOptions);
@@ -385,10 +385,10 @@ describe("selectcolumn control filters values correctly with multi schema input"
 		let expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "0.age", value: "0.age" },
-			{ label: "age2", value: "age2" },
-			{ label: "age3", value: "age3" },
+			{ label: "0.age2", value: "0.age2" },
+			{ label: "0.age3", value: "0.age3" },
 			{ label: "1.age", value: "1.age" },
-			{ label: "intAndRange", value: "intAndRange" }
+			{ label: "1.intAndRange", value: "1.intAndRange" }
 		];
 		expect(options).to.eql(expectedOptions);
 
@@ -396,10 +396,10 @@ describe("selectcolumn control filters values correctly with multi schema input"
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "0.BP", value: "0.BP" },
-			{ label: "BP2", value: "BP2" },
-			{ label: "BP3", value: "BP3" },
+			{ label: "0.BP2", value: "0.BP2" },
+			{ label: "0.BP3", value: "0.BP3" },
 			{ label: "1.BP", value: "1.BP" },
-			{ label: "stringAndDiscrete", value: "stringAndDiscrete" }
+			{ label: "1.stringAndDiscrete", value: "1.stringAndDiscrete" }
 		];
 		expect(options).to.eql(expectedOptions);
 
@@ -407,8 +407,8 @@ describe("selectcolumn control filters values correctly with multi schema input"
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "0.drug", value: "0.drug" },
-			{ label: "drug2", value: "drug2" },
-			{ label: "drug3", value: "drug3" },
+			{ label: "0.drug2", value: "0.drug2" },
+			{ label: "0.drug3", value: "0.drug3" },
 			{ label: "1.drug", value: "1.drug" },
 		];
 		expect(options).to.eql(expectedOptions);
@@ -417,10 +417,10 @@ describe("selectcolumn control filters values correctly with multi schema input"
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "0.drug", value: "0.drug" },
-			{ label: "drug2", value: "drug2" },
-			{ label: "drug3", value: "drug3" },
+			{ label: "0.drug2", value: "0.drug2" },
+			{ label: "0.drug3", value: "0.drug3" },
 			{ label: "1.drug", value: "1.drug" },
-			{ label: "stringAndSet", value: "stringAndSet" }
+			{ label: "1.stringAndSet", value: "1.stringAndSet" }
 		];
 		expect(options).to.eql(expectedOptions);
 
@@ -428,15 +428,15 @@ describe("selectcolumn control filters values correctly with multi schema input"
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "0.drug", value: "0.drug" },
-			{ label: "drug2", value: "drug2" },
-			{ label: "drug3", value: "drug3" },
+			{ label: "0.drug2", value: "0.drug2" },
+			{ label: "0.drug3", value: "0.drug3" },
 			{ label: "0.age", value: "0.age" },
-			{ label: "age2", value: "age2" },
-			{ label: "age3", value: "age3" },
+			{ label: "0.age2", value: "0.age2" },
+			{ label: "0.age3", value: "0.age3" },
 			{ label: "1.drug", value: "1.drug" },
-			{ label: "stringAndSet", value: "stringAndSet" },
+			{ label: "1.stringAndSet", value: "1.stringAndSet" },
 			{ label: "1.age", value: "1.age" },
-			{ label: "intAndRange", value: "intAndRange" }
+			{ label: "1.intAndRange", value: "1.intAndRange" }
 		];
 		expect(options).to.have.deep.members(expectedOptions);
 	});

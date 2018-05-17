@@ -5,12 +5,12 @@
   "current_parameters": {
     "structuretableReadonlyColumnStartValue": [
       [
-        "Cholesterol",
+        { "link_ref": "0", "field_name": "Cholesterol" },
         1,
         "Ascending"
       ],
       [
-        "0.Age",
+        { "link_ref": "0", "field_name": "Age" },
         2,
         "Ascending"
       ]
@@ -29,15 +29,15 @@
     "structuretable_filter": [
       [
         1,
-        "0.BP"
+        { "link_ref": "0", "field_name": "BP" }
       ],
       [
         2,
-        "2.BP"
+        { "link_ref": "2", "field_name": "BP" }
       ],
       [
         3,
-        "data.BP"
+        { "link_ref": "data", "field_name": "BP" }
       ]
     ]
   },
@@ -70,9 +70,9 @@
       "id": "structuretableReadonlyColumnStartValue",
       "key_definition": {
         "id": "field",
-        "type": "string",
+        "type": "object",
         "role": "column",
-        "default": ""
+        "default": {}
       },
       "parameters": [
         {
@@ -99,7 +99,7 @@
       "parameters": [
         {
           "id": "field",
-          "type": "string",
+          "type": "object",
           "role": "column"
         }
       ]
@@ -108,9 +108,9 @@
       "id": "structuretableNoButtons",
       "key_definition": {
         "id": "field",
-        "type": "string",
+        "type": "object",
         "role": "column",
-        "default": ""
+        "default": {}
       },
       "parameters": [
         {
@@ -132,7 +132,7 @@
       "parameters": [
         {
           "id": "field",
-          "type": "string",
+          "type": "object",
           "role": "column"
         },
         {
@@ -376,10 +376,10 @@
           {
             "parameter_ref": "schema",
             "label": {
-              "default": "Type"
+              "default": "Schema"
             },
             "description": {
-              "default": "Select data type"
+              "default": "Select datarecord schema"
             },
             "width": 26,
             "summary": true,

@@ -348,26 +348,26 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 		addFieldsButtons.at(0).simulate("click");
 
 		propertyUtils.fieldPicker([], [
-			{ "name": "age", "schema": "0" },
-			{ "name": "AGE", "schema": "0" },
-			{ "name": "Na", "schema": "0" },
-			{ "name": "drug", "schema": "0" },
-			{ "name": "age2", "schema": "0" },
-			{ "name": "BP2", "schema": "0" },
-			{ "name": "Na2", "schema": "0" },
-			{ "name": "drug2", "schema": "0" },
-			{ "name": "age3", "schema": "0" },
-			{ "name": "BP3", "schema": "0" },
-			{ "name": "Na3", "schema": "0" },
-			{ "name": "drug3", "schema": "0" },
-			{ "name": "age", "schema": "1" },
-			{ "name": "AGE", "schema": "1" },
-			{ "name": "BP", "schema": "1" },
-			{ "name": "Na", "schema": "1" },
-			{ "name": "drug", "schema": "1" },
-			{ "name": "intAndRange", "schema": "1" },
-			{ "name": "stringAndDiscrete", "schema": "1" },
-			{ "name": "stringAndSet", "schema": "1" }
+			{ "name": "age", "schema": "Schema-1" },
+			{ "name": "AGE", "schema": "Schema-1" },
+			{ "name": "Na", "schema": "Schema-1" },
+			{ "name": "drug", "schema": "Schema-1" },
+			{ "name": "age2", "schema": "Schema-1" },
+			{ "name": "BP2", "schema": "Schema-1" },
+			{ "name": "Na2", "schema": "Schema-1" },
+			{ "name": "drug2", "schema": "Schema-1" },
+			{ "name": "age3", "schema": "Schema-1" },
+			{ "name": "BP3", "schema": "Schema-1" },
+			{ "name": "Na3", "schema": "Schema-1" },
+			{ "name": "drug3", "schema": "Schema-1" },
+			{ "name": "age", "schema": "Schema-2" },
+			{ "name": "AGE", "schema": "Schema-2" },
+			{ "name": "BP", "schema": "Schema-2" },
+			{ "name": "Na", "schema": "Schema-2" },
+			{ "name": "drug", "schema": "Schema-2" },
+			{ "name": "intAndRange", "schema": "Schema-2" },
+			{ "name": "stringAndDiscrete", "schema": "Schema-2" },
+			{ "name": "stringAndSet", "schema": "Schema-2" }
 		]);
 
 		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
@@ -376,11 +376,11 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 		expect(summary.find(".control-summary-list-rows").at(0)
 			.find("span")
 			.at(0)
-			.text()).to.equal("1.age");
+			.text()).to.equal("Schema-2.age");
 		expect(summary.find(".control-summary-list-rows").at(1)
 			.find("span")
 			.at(0)
-			.text()).to.equal("1.AGE");
+			.text()).to.equal("Schema-2.AGE");
 	});
 });
 
@@ -400,13 +400,13 @@ describe("selectcolumns control filters values correctly with multi input", () =
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
 		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Filter by Type` control
 		const fieldTable = [
-			{ "name": "age", "schema": "0" },
-			{ "name": "AGE", "schema": "0" },
-			{ "name": "age2", "schema": "0" },
-			{ "name": "age3", "schema": "0" },
-			{ "name": "age", "schema": "1" },
-			{ "name": "AGE", "schema": "1" },
-			{ "name": "intAndRange", "schema": "1" }
+			{ "name": "age", "schema": "Schema-1" },
+			{ "name": "AGE", "schema": "Schema-1" },
+			{ "name": "age2", "schema": "Schema-1" },
+			{ "name": "age3", "schema": "Schema-1" },
+			{ "name": "age", "schema": "Schema-2" },
+			{ "name": "AGE", "schema": "Schema-2" },
+			{ "name": "intAndRange", "schema": "Schema-2" }
 		];
 		propertyUtils.fieldPicker([], fieldTable);
 	});
@@ -416,17 +416,17 @@ describe("selectcolumns control filters values correctly with multi input", () =
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
 		addFieldsButtons.at(1).simulate("click"); // open filter picker for `Filter by Types` control
 		const fieldTable = [
-			{ "name": "age", "schema": "0" },
-			{ "name": "AGE", "schema": "0" },
-			{ "name": "Na", "schema": "0" },
-			{ "name": "age2", "schema": "0" },
-			{ "name": "Na2", "schema": "0" },
-			{ "name": "age3", "schema": "0" },
-			{ "name": "Na3", "schema": "0" },
-			{ "name": "age", "schema": "1" },
-			{ "name": "AGE", "schema": "1" },
-			{ "name": "Na", "schema": "1" },
-			{ "name": "intAndRange", "schema": "1" }
+			{ "name": "age", "schema": "Schema-1" },
+			{ "name": "AGE", "schema": "Schema-1" },
+			{ "name": "Na", "schema": "Schema-1" },
+			{ "name": "age2", "schema": "Schema-1" },
+			{ "name": "Na2", "schema": "Schema-1" },
+			{ "name": "age3", "schema": "Schema-1" },
+			{ "name": "Na3", "schema": "Schema-1" },
+			{ "name": "age", "schema": "Schema-2" },
+			{ "name": "AGE", "schema": "Schema-2" },
+			{ "name": "Na", "schema": "Schema-2" },
+			{ "name": "intAndRange", "schema": "Schema-2" }
 		];
 		propertyUtils.fieldPicker([], fieldTable);
 	});
@@ -437,11 +437,11 @@ describe("selectcolumns control filters values correctly with multi input", () =
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
 		addFieldsButtons.at(2).simulate("click");
 		const fieldTable = [
-			{ "name": "BP", "schema": "0" },
-			{ "name": "BP2", "schema": "0" },
-			{ "name": "BP3", "schema": "0" },
-			{ "name": "BP", "schema": "1" },
-			{ "name": "stringAndDiscrete", "schema": "1" }
+			{ "name": "BP", "schema": "Schema-1" },
+			{ "name": "BP2", "schema": "Schema-1" },
+			{ "name": "BP3", "schema": "Schema-1" },
+			{ "name": "BP", "schema": "Schema-2" },
+			{ "name": "stringAndDiscrete", "schema": "Schema-2" }
 		];
 		propertyUtils.fieldPicker([], fieldTable);
 	});
@@ -451,16 +451,16 @@ describe("selectcolumns control filters values correctly with multi input", () =
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
 		addFieldsButtons.at(3).simulate("click");
 		const fieldTable = [
-			{ "name": "BP", "schema": "0" },
-			{ "name": "drug", "schema": "0" },
-			{ "name": "BP2", "schema": "0" },
-			{ "name": "drug2", "schema": "0" },
-			{ "name": "BP3", "schema": "0" },
-			{ "name": "drug3", "schema": "0" },
-			{ "name": "BP", "schema": "1" },
-			{ "name": "drug", "schema": "1" },
-			{ "name": "stringAndDiscrete", "schema": "1" },
-			{ "name": "stringAndSet", "schema": "1" }
+			{ "name": "BP", "schema": "Schema-1" },
+			{ "name": "drug", "schema": "Schema-1" },
+			{ "name": "BP2", "schema": "Schema-1" },
+			{ "name": "drug2", "schema": "Schema-1" },
+			{ "name": "BP3", "schema": "Schema-1" },
+			{ "name": "drug3", "schema": "Schema-1" },
+			{ "name": "BP", "schema": "Schema-2" },
+			{ "name": "drug", "schema": "Schema-2" },
+			{ "name": "stringAndDiscrete", "schema": "Schema-2" },
+			{ "name": "stringAndSet", "schema": "Schema-2" }
 		];
 		propertyUtils.fieldPicker([], fieldTable);
 	});
@@ -470,11 +470,11 @@ describe("selectcolumns control filters values correctly with multi input", () =
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
 		addFieldsButtons.at(4).simulate("click");
 		const fieldTable = [
-			{ "name": "drug", "schema": "0" },
-			{ "name": "drug2", "schema": "0" },
-			{ "name": "drug3", "schema": "0" },
-			{ "name": "drug", "schema": "1" },
-			{ "name": "stringAndSet", "schema": "1" }
+			{ "name": "drug", "schema": "Schema-1" },
+			{ "name": "drug2", "schema": "Schema-1" },
+			{ "name": "drug3", "schema": "Schema-1" },
+			{ "name": "drug", "schema": "Schema-2" },
+			{ "name": "stringAndSet", "schema": "Schema-2" }
 		];
 		propertyUtils.fieldPicker([], fieldTable);
 	});
@@ -484,18 +484,18 @@ describe("selectcolumns control filters values correctly with multi input", () =
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
 		addFieldsButtons.at(5).simulate("click");
 		const fieldTable = [
-			{ "name": "drug", "schema": "0" },
-			{ "name": "drug2", "schema": "0" },
-			{ "name": "drug3", "schema": "0" },
-			{ "name": "drug", "schema": "1" },
-			{ "name": "stringAndSet", "schema": "1" },
-			{ "name": "age", "schema": "0" },
-			{ "name": "AGE", "schema": "0" },
-			{ "name": "age2", "schema": "0" },
-			{ "name": "age3", "schema": "0" },
-			{ "name": "age", "schema": "1" },
-			{ "name": "AGE", "schema": "1" },
-			{ "name": "intAndRange", "schema": "1" }
+			{ "name": "drug", "schema": "Schema-1" },
+			{ "name": "drug2", "schema": "Schema-1" },
+			{ "name": "drug3", "schema": "Schema-1" },
+			{ "name": "drug", "schema": "Schema-2" },
+			{ "name": "stringAndSet", "schema": "Schema-2" },
+			{ "name": "age", "schema": "Schema-1" },
+			{ "name": "AGE", "schema": "Schema-1" },
+			{ "name": "age2", "schema": "Schema-1" },
+			{ "name": "age3", "schema": "Schema-1" },
+			{ "name": "age", "schema": "Schema-2" },
+			{ "name": "AGE", "schema": "Schema-2" },
+			{ "name": "intAndRange", "schema": "Schema-2" }
 		];
 		propertyUtils.fieldPicker([], fieldTable);
 	});

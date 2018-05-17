@@ -170,7 +170,8 @@ function convertType(storage) {
 
 /**
  * Converts the input list of currentParameters into a simple array of field names
- * 	Will also remove invalid fields in currentParameters that are not in the data model
+ * 	Will also remove invalid fields in currentParameters that are not in the data model.
+ *
  * @param control the control to format the input list for
  * @param controlValues array of the currentControlValues
  * @param fields the filtered list of fields from the data model
@@ -180,11 +181,78 @@ function getFieldsFromControlValues(control, controlValues, fields) {
 	const outputList = [];
 	if (controlValues) {
 		for (const controlValue of controlValues) {
-			const fieldName = Array.isArray(controlValue) ? controlValue[dataColumnIndex] : controlValue;
+			let fieldName = controlValue;
+			if (Array.isArray(controlValue)) {
+				fieldName = stringifyFieldValue(controlValue[dataColumnIndex], control);
+			} else if (toType(controlValue) === "object") {
+				fieldName = stringifyFieldValue(controlValue, control);
+			}
 			outputList.push(fieldName);
 		}
 	}
 	return outputList;
+}
+
+/**
+ * Returns the string field name for both string and object based field values.
+ * If the control's propType is structure, return the combined schema and field names.
+ *
+ * @param value A field value. Can be string or object
+ * @param control The control definition for the parameter
+ * @param excludeSchema When true, exclude the schema prefix on compound entries
+ * @return A string field name value or null
+ */
+function stringifyFieldValue(value, control, excludeSchema) {
+	const theType = toType(value);
+	if (theType === "object") {
+		if (control && control.valueDef && value.link_ref) {
+			let stringName;
+			if (!excludeSchema) {
+				stringName = value.link_ref + "." + value.field_name;
+			} else {
+				stringName = value.field_name;
+			}
+			return stringName;
+		}
+		return null;
+	}
+	return value;
+}
+
+/**
+ * Returns true if the given field value matches the provided field prototype.
+ *
+ * @param fieldValue A persistent field value
+ * @param fieldProto A field prototype structure
+ * @return True if the field value matches the field prototype
+ */
+function fieldValueMatchesProto(fieldValue, fieldProto) {
+	const theType = toType(fieldValue);
+	if (theType === "object" && fieldValue.link_ref) {
+		return fieldValue.link_ref === fieldProto.schema &&
+						fieldValue.field_name === fieldProto.origName;
+	}
+	return fieldValue === fieldProto.name;
+}
+
+/**
+ * Converts a display string for a field name into the value it is stored as.
+ *
+ * @param stringValue A field name, either plain or in schema.name format
+ * @param The control The control
+ * @param controller Properties controller
+ * @return The field name in canonical format for storage (string or object)
+ */
+function fieldStringToValue(stringValue, control, controller) {
+	if (control.role === "column" && control.valueDef.propType === "structure") {
+		const dataModelFields = controller.getDatasetMetadataFields();
+		for (const field of dataModelFields) {
+			if (field.name === stringValue) {
+				return { link_ref: field.schema, field_name: field.origName };
+			}
+		}
+	}
+	return stringValue;
 }
 
 module.exports = {
@@ -194,5 +262,8 @@ module.exports = {
 	getTableFieldIndex: getTableFieldIndex,
 	convertInputDataModel: convertInputDataModel,
 	getFieldsFromControlValues: getFieldsFromControlValues,
-	copy: copy
+	copy: copy,
+	stringifyFieldValue: stringifyFieldValue,
+	fieldValueMatchesProto: fieldValueMatchesProto,
+	fieldStringToValue: fieldStringToValue
 };

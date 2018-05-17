@@ -4,14 +4,14 @@
   },
   "current_parameters": {
     "fields": [
-      "1.age",
-      "1.AGE"
+      { "link_ref": "Schema-2", "field_name" : "age" },
+      { "link_ref": "Schema-2", "field_name" : "AGE" }
     ],
     "fields1_panel": [
-      "0.age"
+      { "link_ref": "Schema-1", "field_name" : "age" }
     ],
     "fields2_panel": [
-      "0.BP"
+      { "link_ref": "Schema-1", "field_name" : "BP" }
     ],
     "fields_filter_measurement": [],
     "fields_filter_measurements": [],
@@ -23,50 +23,50 @@
   "parameters": [
     {
       "id": "fields",
-      "type": "array[string]",
+      "type": "array[object]",
       "role": "column",
       "required": true
     },
     {
       "id": "fields1_panel",
-      "type": "array[string]",
+      "type": "array[object]",
       "role": "column",
       "required": true
     },
     {
       "id": "fields2_panel",
-      "type": "array[string]",
+      "type": "array[object]",
       "role": "column",
       "required": true
     },
     {
       "id": "fields_filter_measurement",
-      "type": "array[string]",
+      "type": "array[object]",
       "role": "column"
     },
     {
       "id": "fields_filter_measurements",
-      "type": "array[string]",
+      "type": "array[object]",
       "role": "column"
     },
     {
       "id": "fields_filter_type",
-      "type": "array[string]",
+      "type": "array[object]",
       "role": "column"
     },
     {
       "id": "fields_filter_types",
-      "type": "array[string]",
+      "type": "array[object]",
       "role": "column"
     },
     {
       "id": "fields_filter_and",
-      "type": "array[string]",
+      "type": "array[object]",
       "role": "column"
     },
     {
       "id": "fields_filter_or",
-      "type": "array[string]",
+      "type": "array[object]",
       "role": "column"
     }
   ],
@@ -86,7 +86,8 @@
           "default": "selectcolumns with parameter value set to 'age'"
         },
         "moveable_rows": true,
-        "summary": true
+        "summary": true,
+        "rows": 12
       },
       {
         "parameter_ref": "fields1_panel",
@@ -318,6 +319,7 @@
   ],
   "dataset_metadata": [
     {
+      "name": "Schema-1",
       "fields": [
         {
           "name": "age",
@@ -439,6 +441,7 @@
       ]
     },
     {
+      "name": "Schema-2",
       "fields": [
         {
           "name": "age",

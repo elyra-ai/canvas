@@ -118,7 +118,8 @@ class SummaryPanel extends React.Component {
 							};
 							if (this.props.controller.isSummary(colPropertyId) || showCustom) {
 								// This allows array cell content to look acceptable
-								const contentValue = JSON.stringify(rowValue[colIdx]).replace("\"", "")
+								const displayValue = this._getSummaryDisplayValue(rowValue[colIdx], colPropertyId);
+								const contentValue = JSON.stringify(displayValue).replace("\"", "")
 									.replace(new RegExp("\"", "g"), "") + " ";
 								rowData.push(
 									<td key={"control-summary-table-row-multi-data-" + colIdx}
@@ -133,10 +134,11 @@ class SummaryPanel extends React.Component {
 							}
 						}
 					} else if (this.props.controller.isSummary(propertyId) || showCustom) { // only push row data if control is in summary
+						const displayValue = this._getSummaryDisplayValue(rowValue, propertyId);
 						rowData.push(
 							<td key={"control-summary-table-row-multi-data-" + rowIdx} className={"control-summary-table-row-multi-data"}>
-								<Tooltip id={uuid4()} tip={rowValue} mousePos={this.state.mousePos}>
-									<span id={"span_" + uuid4()}>{rowValue}</span>
+								<Tooltip id={uuid4()} tip={displayValue} mousePos={this.state.mousePos}>
+									<span id={"span_" + uuid4()}>{displayValue}</span>
 								</Tooltip>
 							</td>);
 					}
@@ -184,6 +186,27 @@ class SummaryPanel extends React.Component {
 			}
 		}
 		return summaryTables;
+	}
+
+	/**
+	 * Retrieves a properly formatted summary display value.
+	 *
+	 * @param displayValue The default value to display
+	 * @param propertyId The id of the property to display
+	 * @return A formatted display value
+	 */
+	_getSummaryDisplayValue(displayValue, propertyId) {
+		let returnValue = displayValue;
+		const control = this.props.controller.getControl(propertyId);
+		if (PropertyUtils.toType(displayValue) === "object") {
+			if (control.valueDef.propType === "structure" && control.role === "column") {
+				returnValue = PropertyUtils.stringifyFieldValue(displayValue, control);
+			} else {
+				// We don't know what this object is, but we know we can't display it as an object
+				returnValue = JSON.stringify(displayValue);
+			}
+		}
+		return returnValue;
 	}
 
 	_getSummaryIconState() {

@@ -3,7 +3,7 @@
     "title": "Gradient Boosted Tree Classifier"
   },
   "current_parameters": {
-    "targetField": [ "Sex"],
+    "targetField": "Sex",
     "inputFieldList": [
       "Age",
       "BP"

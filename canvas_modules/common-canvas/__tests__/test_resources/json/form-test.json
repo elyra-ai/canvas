@@ -190,27 +190,28 @@
                         {
                           "itemType": "control",
                           "control": {
-                            "labelVisible": true,
                             "name": "target",
                             "label": {
                               "text": "Target label: resource"
                             },
+                            "labelVisible": true,
                             "controlType": "selectcolumn",
                             "valueDef": {
                               "propType": "string",
                               "isList": false,
                               "isMap": false
-                            }
+                            },
+                            "role": "column"
                           }
                         },
                         {
                           "itemType": "control",
                           "control": {
-                            "labelVisible": true,
                             "name": "inputs",
                             "label": {
                               "text": "inputs"
                             },
+                            "labelVisible": true,
                             "controlType": "selectcolumns",
                             "valueDef": {
                               "propType": "string",
@@ -239,7 +240,6 @@
                   {
                     "itemType": "control",
                     "control": {
-                      "labelVisible": true,
                       "name": "enum_param",
                       "label": {
                         "text": "Enum label: resource"
@@ -247,6 +247,7 @@
                       "description": {
                         "text": "Enum description: default"
                       },
+                      "labelVisible": true,
                       "controlType": "radioset",
                       "valueDef": {
                         "propType": "string",
@@ -281,7 +282,6 @@
                               {
                                 "itemType": "control",
                                 "control": {
-                                  "labelVisible": true,
                                   "name": "int_param",
                                   "label": {
                                     "text": "Int label: default"
@@ -289,6 +289,7 @@
                                   "description": {
                                     "text": "Int description: default"
                                   },
+                                  "labelVisible": true,
                                   "controlType": "numberfield",
                                   "valueDef": {
                                     "propType": "integer",
@@ -318,11 +319,11 @@
                               {
                                 "itemType": "control",
                                 "control": {
-                                  "labelVisible": true,
                                   "name": "double_param",
                                   "label": {
                                     "text": "double_param"
                                   },
+                                  "labelVisible": true,
                                   "controlType": "numberfield",
                                   "valueDef": {
                                     "propType": "double",
@@ -368,7 +369,6 @@
                         {
                           "itemType": "control",
                           "control": {
-                            "labelVisible": true,
                             "name": "str_param",
                             "label": {
                               "text": "String label: default"
@@ -376,6 +376,7 @@
                             "description": {
                               "text": "String desciption: default"
                             },
+                            "labelVisible": true,
                             "controlType": "textfield",
                             "valueDef": {
                               "propType": "string",

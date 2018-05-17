@@ -3,57 +3,57 @@
     "title": "Select Column"
   },
   "current_parameters": {
-    "field": "0.age",
-    "field1_panel": "0.age",
-    "field2_panel": "0.BP",
-    "field_filter_measurement": "",
-    "field_filter_type": "",
-    "field_filter_role": "",
-    "field_filter_and": "",
-    "field_filter_or": ""
+    "field": { "link_ref": "0", "field_name": "age" },
+    "field1_panel": { "link_ref": "0", "field_name": "age" },
+    "field2_panel": { "link_ref": "0", "field_name": "BP" },
+    "field_filter_measurement": {},
+    "field_filter_type": {},
+    "field_filter_role": {},
+    "field_filter_and": {},
+    "field_filter_or": {}
   },
   "parameters": [
     {
       "id": "field",
-      "type": "string",
+      "type": "object",
       "role": "column",
       "required": true
     },
     {
       "id": "field1_panel",
-      "type": "string",
+      "type": "object",
       "role": "column",
       "required": true
     },
     {
       "id": "field2_panel",
-      "type": "string",
+      "type": "object",
       "role": "column",
       "required": true
     },
     {
       "id": "field_filter_measurement",
-      "type": "string",
+      "type": "object",
       "role": "column"
     },
     {
       "id": "field_filter_type",
-      "type": "string",
+      "type": "object",
       "role": "column"
     },
     {
       "id": "field_filter_role",
-      "type": "string",
+      "type": "object",
       "role": "column"
     },
     {
       "id": "field_filter_and",
-      "type": "string",
+      "type": "object",
       "role": "column"
     },
     {
       "id": "field_filter_or",
-      "type": "string",
+      "type": "object",
       "role": "column"
     }
   ],

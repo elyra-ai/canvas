@@ -3,51 +3,58 @@
     "title": "Column Selection Panel"
   },
   "current_parameters": {
-    "field1_panel": "0.Age",
-    "field2_panel": "0.BP",
-    "selectcolumn": "",
-    "selectcolumns": "",
+    "field1_panel": { "link_ref": "0", "field_name": "Age" },
+    "field2_panel": { "link_ref": "0", "field_name": "BP" },
+    "selectcolumn": {},
+    "selectcolumns": [],
     "selectcolumns2": [
-      "0.Age",
-      "Drug",
-      "2.Age"
+      { "link_ref": "0", "field_name": "Age" },
+      { "link_ref": "0", "field_name": "Drug" },
+      { "link_ref": "2", "field_name": "Age" }
     ],
-    "selectcolumns3": ""
+    "selectcolumns3": [],
+    "BADVAR1": "0.Age"
   },
   "parameters": [
     {
       "id": "field1_panel",
-      "type": "string",
+      "type": "object",
       "role": "column",
       "required": true
     },
     {
       "id": "field2_panel",
-      "type": "string",
+      "type": "object",
       "role": "column",
       "required": true
     },
     {
       "id": "selectcolumn",
-      "type": "string",
+      "type": "object",
       "role": "column",
       "required": true
     },
     {
       "id": "selectcolumns",
-      "type": "array[string]",
+      "type": "array[object]",
       "role": "column",
       "required": true
     },
     {
       "id": "selectcolumns2",
-      "type": "array[string]",
+      "type": "array[object]",
       "role": "column",
       "required": true
     },
     {
       "id": "selectcolumns3",
-      "type": "array[string]",
+      "type": "array[object]",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "BADVAR1",
+      "type": "string",
       "role": "column",
       "required": true
     }
@@ -121,6 +128,15 @@
         "description": {
           "default": "selectcolumns control where values are shared with selectcolumns 'Select Columns1'"
         }
+      },
+      {
+        "parameter_ref": "BADVAR1",
+        "label": {
+          "default": "Improper String Type"
+        },
+        "description": {
+          "default": "An example of a compound field that incorrectly uses a string data type"
+        }
       }
     ],
     "group_info": [
@@ -162,6 +178,16 @@
             "parameter_refs": [
               "selectcolumns2",
               "selectcolumns3"
+            ]
+          },
+          {
+            "id": "bad-var",
+            "label": {
+              "default": "Bad Field Test"
+            },
+            "type": "columnSelection",
+            "parameter_refs": [
+              "BADVAR1"
             ]
           }
         ]

@@ -1072,8 +1072,9 @@ class CommonPropertiesComponents extends React.Component {
 				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--selectcolumn" className="section-subtitle">selectcolumn</h3>
 					<p>A dropdown control that contains the available fields provided in the <span className="highlight">dataset_metadata</span>.
-						The type of the parameter associated with the dropdown list must be of <span className="highlight">type</span> string
-						and the <span className="highlight">role</span> must be set to column.</p>
+						If there can be only a single input data link to the node using a selectColumn control, then the type of the parameter associated with the dropdown list
+						must be of <span className="highlight">type string</span> and
+						the <span className="highlight">role</span> must be set to <span className="highlight">column</span>.</p>
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
@@ -1088,10 +1089,15 @@ class CommonPropertiesComponents extends React.Component {
 							</pre>
 						</div>
 					</div>
-					<p>If multiple input schemas are provided in the <span className="highlight">dataset_metadata</span>, the
-						<span className="highlight">selectcolumn</span> control will display all the fields from both schemas.
-						If there are multiple fields with the same name from different schemas, the field name will be prefixed
-						with the schema name followed by a period.
+					<p>If multiple input schemas are supported by a given node type, then the type of the parameter for the selectColumn control must be
+						of <span className="highlight">type object</span>, and the role must be set to <span className="highlight">column</span>.
+						The <span className="highlight">selectcolumn</span> control will display all the fields from both schemas,
+						and field names displayed in the UI will be prefixed with the schema name followed by a period.
+					</p>
+					<p>For nodes with one or more field parameters that are of type: object and role: column,
+						field values in parameter sets are represented by objects instead of strings. Within these objects,
+						there is a link_ref attribute that corresponds to the data link / data schema for the field,
+						and a field_name attribute that corresponds to the field name within the dataset.
 					</p>
 					<div className="section-row">
 						<div className="section-column">
@@ -1112,7 +1118,7 @@ class CommonPropertiesComponents extends React.Component {
 				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--selectcolumns" className="section-subtitle">selectcolumns</h3>
 					<p>A multi-select control for column selections. The type of the parameter associated with this control
-						must be of <span className="highlight">type</span> array[string] and
+						must be of <span className="highlight">type</span> array[string] (for single input nodes) or array[object] (for multi-input nodes), and
 						the <span className="highlight">role</span> must be set to <span className="highlight">column</span>.
 						The <span className="highlight">type</span> in <span className="highlight">group_info</span> needs
 						to be set to <a className="properties-documentation-page-intro-link" href="#/properties#--columnSelection">
@@ -1133,10 +1139,11 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 					<p>Similar to the <a className="properties-documentation-page-intro-link" href="#/properties#--selectcolumn">
-						selectcolumn</a> control above, if multiple input schemas are provided in
-						the <span className="highlight">dataset_metadata</span>, the <span className="highlight">selectcolumns</span> control
-						will display all the fields from both schemas. If there are multiple fields with the same name from different schemas,
-						the field name will be prefixed with the schema name followed by a period.
+						selectcolumn</a> control above, if two or more datasets could be provided to a node type, then the operator
+						definition for field parameters in that node should be declared as type object rather than string.
+						The <span className="highlight">selectcolumns</span> control
+						will display all the fields from both schemas.
+						Field names are prefixed with the schema name followed by a period.
 						The field-picker will display an additional column that shows the schema where the field came from.
 					</p>
 					<div className="section-row">
@@ -1227,9 +1234,9 @@ class CommonPropertiesComponents extends React.Component {
 						to be set to <a className="properties-documentation-page-intro-link" href="#/properties#--columnSelection">
 						columnSelection</a>.
 					</p>
-					<p>If multiple input schemas are provided, similar to <a className="properties-documentation-page-intro-link" href="#/properties#--selectcolumns">
-						selectcolumns</a>, the field names will be prefixed with the schema name followed by a decimal
-						for fields with the same name in different schemas.</p>
+					<p>If multiple input schemas are supported, similar to <a className="properties-documentation-page-intro-link" href="#/properties#--selectcolumns">
+						selectcolumn</a>, field names will be prefixed in the UI with the schema name followed by a decimal.
+						Those same fields will be stored in parameter sets as compound objects with link_ref and field_name attributes.</p>
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties

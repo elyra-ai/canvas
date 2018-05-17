@@ -11,21 +11,21 @@
       ],
       [
         2,
-        "0.BADVAR",
+        { "link_ref": "0", "field_name": "BADVAR" },
         "BADVAR"
       ],
       [
         3,
-        "3.Cholesterol",
+        { "link_ref": "3", "field_name": "Cholesterol" },
         "BADVAR"
       ]
     ],
     "fields": [
-      "age",
+      { "link_ref": "0", "field_name": "age" },
       "BADVAR",
-      "data_1.BADVAR",
-      "K",
-      "schema.drug"
+      { "link_ref": "data_1", "field_name": "BADVAR" },
+      { "link_ref": "data_1", "field_name": "K" },
+      { "link_ref": "schema", "field_name": "drug" }
     ]
   },
   "parameters": [
@@ -37,7 +37,7 @@
     },
     {
       "id": "fields",
-      "type": "array[string]",
+      "type": "array[object]",
       "role": "column",
       "required": true
     }
@@ -52,7 +52,7 @@
       "parameters": [
         {
           "id": "field",
-          "type": "string",
+          "type": "object",
           "role": "column"
         },
         {

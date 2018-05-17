@@ -107,7 +107,8 @@ const Type = {
 	PASSWORD: "password",
 	DATE: "date",
 	TIME: "time",
-	STRUCTURE: "structure"
+	STRUCTURE: "structure",
+	OBJECT: "object"
 };
 
 const Separator = {

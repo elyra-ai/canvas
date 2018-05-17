@@ -1040,7 +1040,7 @@ describe("structuretable control with multi input schemas renders correctly", ()
 		expect(firstSummary.find(".control-summary-list-rows")).to.have.length(5);
 
 		const expectedSummary = [
-			"Cholesterol",
+			"0.Cholesterol",
 			"0.Age",
 			"0.BP",
 			"data.BP",
@@ -1067,7 +1067,7 @@ describe("structuretable control with multi input schemas renders correctly", ()
 		expect(tableRows).to.have.length(22);
 
 		const expectedSummary = [
-			"0.Age", "Sex", "0.BP", "Cholesterol", "0.Na", "K", "Drug", "Ag",
+			"0.Age", "0.Sex", "0.BP", "0.Cholesterol", "0.Na", "0.K", "0.Drug", "0.Ag",
 			"data.Age", "data.BP", "data.Na", "data.drug", "data.drug2", "data.drug3", "data.drug4",
 			"2.Age", "2.BP", "2.Na", "2.drug", "2.drug2", "2.drug3", "2.drug4"
 		];
@@ -1089,14 +1089,14 @@ describe("structuretable control with multi input schemas renders correctly", ()
 		const addFieldsButtons = wideflyoutWrapper.find("Button"); // field picker buttons
 		addFieldsButtons.at(0).simulate("click"); // open filter picker
 
-		propertyUtils.fieldPicker(["data.Age", "Cholesterol"]);
+		propertyUtils.fieldPicker(["data.Age", "0.Cholesterol"]);
 
 		const tableRows = wideflyoutWrapper.find("#flexible-table-structuretableSortableColumns").find(".table-row");
 		expect(tableRows).to.have.length(2);
 
 		let row = tableRows.at(1).find("td");
 		expect(row).to.have.length(8); // includes scrollbar column
-		expect(row.at(1).text()).to.equal("Cholesterol");
+		expect(row.at(1).text()).to.equal("0.Cholesterol");
 		expect(row.at(5).find(".Dropdown-placeholder")
 			.text()).to.equal("...");
 
@@ -1139,7 +1139,7 @@ describe("structuretable control with multi input schemas renders correctly", ()
 			.find("span")
 			.at(0)
 			.text()
-			.trim()).to.equal("Cholesterol");
+			.trim()).to.equal("0.Cholesterol");
 		expect(summaryRow.at(1)
 			.find("span")
 			.at(0)

@@ -10,6 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ControlUtils from "./../../util/control-utils";
+import PropertyUtils from "./../../util/property-utils";
 
 export default class ReadonlyControl extends React.Component {
 
@@ -17,6 +18,8 @@ export default class ReadonlyControl extends React.Component {
 		let controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		if (typeof controlValue === "undefined" || controlValue === null) {
 			controlValue = "";
+		} else if (typeof controlValue === "object" && controlValue.link_ref) {
+			controlValue = PropertyUtils.stringifyFieldValue(controlValue, this.props.control);
 		}
 
 		const conditionProps = {

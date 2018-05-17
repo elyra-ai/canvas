@@ -32,7 +32,7 @@ export class EditorTab {
 
 class ValueDef {
 	constructor(propType, isList, isMap, defaultValue) {
-		this.propType = propType;
+		this.propType = propType === Type.OBJECT ? Type.STRUCTURE : propType;
 		this.isList = isList;
 		this.isMap = isMap;
 		this.defaultValue = defaultValue;
@@ -287,6 +287,7 @@ function _makeStringControl(parameter) {
 			}
 			break;
 		case ParamRole.COLUMN:
+			role = ParamRole.COLUMN;
 			controlType = ControlType.SELECTCOLUMN;
 			break;
 		case ParamRole.EXPRESSION:
@@ -426,6 +427,16 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				controlType = ControlType.TEXTFIELD;
 			}
 			break;
+		case Type.OBJECT:
+			if (parameter.isCompoundField()) {
+				const returnObject = _makeStringControl(parameter);
+				controlType = returnObject.controlType;
+				role = returnObject.role;
+			} else {
+				logger.warn("Complex parameter type that is not a field! Name: " + parameter.name);
+				controlType = ControlType.READONLY;
+			}
+			break;
 		default:
 			role = "???" + parameter.propType() + "???";
 			controlType = ControlType.TEXTAREA;
@@ -537,7 +548,6 @@ function _makeSubControl(parameter, l10nProvider) {
 			controlType = ControlType.ONEOFSELECT;
 			break;
 		case ParamRole.COLUMN:
-			role = ParamRole.COLUMN;
 			if (_isEmbeddedMultiOption(parameter)) {
 				controlType = ControlType.SELECTCOLUMNS;
 			} else {
@@ -550,7 +560,6 @@ function _makeSubControl(parameter, l10nProvider) {
 		case ParamRole.EXPRESSION:
 			controlType = ControlType.EXPRESSION;
 			break;
-
 		default:
 			controlType = ControlType.TEXTFIELD;
 		}
@@ -578,6 +587,15 @@ function _makeSubControl(parameter, l10nProvider) {
 	case Type.TIME:
 		role = "time";
 		controlType = ControlType.TIMEFIELD;
+		break;
+	case Type.OBJECT:
+		role = parameter.getRole();
+		if (role === ParamRole.COLUMN) {
+			controlType = ControlType.SELECTCOLUMN;
+		} else {
+			logger.warn("Complex subControl type that is not a field! Name: " + parameter.name);
+			controlType = ControlType.READONLY;
+		}
 		break;
 	default:
 		role = "???" + parameter.propType() + "???";

@@ -85,7 +85,8 @@ class StructureTableControl extends AbstractTable {
 		if (currentControlValues && field) {
 			const dataColumnIndex = PropertyUtils.getTableFieldIndex(this.props.control);
 			for (let i = 0; i < currentControlValues.length; i++) {
-				if ((this.props.control.defaultRow && currentControlValues[i][dataColumnIndex] === field) ||
+				const fieldValue = currentControlValues[i][dataColumnIndex];
+				if ((this.props.control.defaultRow && fieldValue === field) ||
 						(currentControlValues[i] === field)) {
 					return currentControlValues[i];
 				}
@@ -94,8 +95,10 @@ class StructureTableControl extends AbstractTable {
 
 		for (let idx = 0; idx < this.props.control.subControls.length; idx++) {
 			const subControl = this.props.control.subControls[idx];
-			if (subControl.role === ParamRole.COLUMN || subControl.role === ParamRole.NEW_COLUMN) {
+			if (subControl.role === ParamRole.COLUMN) {
 				row.push(field);
+			} else if (subControl.role === ParamRole.NEW_COLUMN) {
+				row.push(PropertyUtils.stringifyFieldValue(field, subControl).replace(".", "_"));
 			} else if (typeof this.props.control.defaultRow !== "undefined") {
 				let defaultRowIndex = idx;
 				// defaultRow does not contain the first column field, ex: aggregate.json
@@ -145,7 +148,6 @@ class StructureTableControl extends AbstractTable {
 			controlType: "structure-table"
 		};
 		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
-
 		const errorMessage = conditionState.message;
 		const messageType = conditionState.messageType;
 		const icon = conditionState.icon;

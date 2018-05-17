@@ -97,8 +97,9 @@ const controls = [
 			{
 				"name": "field",
 				"controlType": "textfield",
+				"role": "column",
 				"valueDef": {
-					"propType": "string",
+					"propType": "structure",
 					"isList": false,
 					"isMap": false
 				}
@@ -496,7 +497,7 @@ describe("Properties Controller datasetMetadata", () => {
 				"origName": "Age"
 			},
 			{
-				"name": "age",
+				"name": "0.age",
 				"type": "integer",
 				"metadata": {
 					"description": "",
@@ -518,7 +519,7 @@ describe("Properties Controller datasetMetadata", () => {
 				"origName": "Age"
 			},
 			{
-				"name": "Drug",
+				"name": "data_2.Drug",
 				"type": "string",
 				"metadata": {
 					"description": "",
@@ -584,7 +585,7 @@ describe("Properties Controller datasetMetadata", () => {
 				"origName": "drug2"
 			},
 			{
-				"name": "drug3",
+				"name": "3.drug3",
 				"type": "string",
 				"metadata": {
 					"description": "",
@@ -617,7 +618,7 @@ describe("Properties Controller datasetMetadata", () => {
 				"origName": "drug"
 			},
 			{
-				"name": "drugs",
+				"name": "schema.drugs",
 				"type": "string",
 				"metadata": {
 					"description": "",

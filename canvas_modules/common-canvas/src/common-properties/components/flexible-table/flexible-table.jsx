@@ -141,9 +141,9 @@ class FlexibleTable extends React.Component {
 		}
 
 		// if any columns had decimals floored, allocate additional space to the first column
-		if (sumColumnWidth < parentTableWidth) {
+		if (sumColumnWidth < parentTableWidth - 1) {
 			const firstColWith = parseInt(widths[0], 10);
-			widths[0] = firstColWith + parentTableWidth - sumColumnWidth + "px";
+			widths[0] = firstColWith + parentTableWidth - sumColumnWidth - 1 + "px";
 		}
 
 		return widths;

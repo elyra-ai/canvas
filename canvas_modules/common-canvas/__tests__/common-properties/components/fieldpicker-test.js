@@ -451,7 +451,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 			"BADVAR",
 			"0.BADVAR",
 			"3.Cholesterol",
-			"Date",
+			"data_2.Date",
 			"data_1.Timestamp",
 			"data_2.Timestamp"
 		];
@@ -681,7 +681,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(row4Columns.at(1).text()).to.equal("Age");
 		expect(row4Columns.at(2).text()).to.equal("schema");
 
-		propertyUtils.fieldPicker(["0.Age", "age", "data_1.Age"]);
+		propertyUtils.fieldPicker(["0.Age", "0.age", "data_1.Age"]);
 
 		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
 		wrapper.update();
@@ -699,7 +699,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 			"0.BADVAR",
 			"3.Cholesterol",
 			"0.Age",
-			"age",
+			"0.age",
 			"data_1.Age"
 		];
 

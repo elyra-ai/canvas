@@ -17,7 +17,7 @@ import PropertyUtils from "./util/property-utils.js";
 import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
-import { ControlType } from "./constants/form-constants";
+import { ControlType, Type, ParamRole } from "./constants/form-constants";
 import cloneDeep from "lodash/cloneDeep";
 import ConditionOps from "./ui-conditions/condition-ops/condition-ops";
 
@@ -48,6 +48,7 @@ export default class PropertiesController {
 		this.visibleSubPanelCounter = 0;
 		this.conditionOps = ConditionOps.getConditionOps();
 	}
+
 	subscribe(callback) {
 		this.propertiesStore.subscribe(callback);
 	}
@@ -98,6 +99,9 @@ export default class PropertiesController {
 				datasetMetadata = this.form.data.datasetMetadata;
 				this.setPropertyValues(this.form.data.currentParameters);
 			}
+			// Determine from the current control set whether or not there can be multiple input datasets
+			this.multipleSchemas = this._canHaveMultipleSchemas();
+			// Set the opening dataset(s), during which multiples are flattened and compound names generated if necessary
 			this.setDatasetMetadata(datasetMetadata);
 			// for control.type of structuretable that do not use FieldPicker, we need to add to
 			// the controlValue any missing data model fields.  We need to do it here so that
@@ -110,6 +114,7 @@ export default class PropertiesController {
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
 		}
 	}
+
 	getForm() {
 		return this.form;
 	}
@@ -117,6 +122,7 @@ export default class PropertiesController {
 	setAppData(appData) {
 		this.appData = appData;
 	}
+
 	getAppData() {
 		return this.appData;
 	}
@@ -246,12 +252,14 @@ export default class PropertiesController {
 		const rowData = [];
 		const fields = this.getDatasetMetadataFields();
 		const updateCells = [];
+		const multiSchema = this._isMultiSchemaControl(control);
 		for (let i = 0; i < fields.length; i++) {
 			const row = [];
 			const fieldIndex = this._indexOfField(fields[i].name, controlValue);
 			for (let k = 0; k < control.subControls.length; k++) {
 				if (k === control.keyIndex) {
-					row.push(fields[i].name);
+					const fieldValue = multiSchema ? { link_ref: fields[i].schema, field_name: fields[i].origName } : fields[i].name;
+					row.push(fieldValue);
 				} else if (fieldIndex > -1 && controlValue.length > i && controlValue[i].length > k) {
 					row.push(controlValue[i][k]);
 				} else {
@@ -262,6 +270,46 @@ export default class PropertiesController {
 			rowData.push(row);
 		}
 		return rowData;
+	}
+
+	/**
+	 * Determines if the given control supports multiple input schemas.
+	 *
+	 * @param control A control structure
+	 * @return True if the control supports multiple input schemas
+	 */
+	_isMultiSchemaControl(control) {
+		if (control.role === ParamRole.COLUMN && control.valueDef.propType === Type.STRUCTURE) {
+			return true;
+		}
+		if (PropertyUtils.toType(control.subControls) === "array") {
+			for (const keyName in control.subControls) {
+				if (control.subControls.hasOwnProperty(keyName)) {
+					const subControl = control.subControls[keyName];
+					if (subControl.role === ParamRole.COLUMN && subControl.valueDef.propType === Type.STRUCTURE) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Determines if the current form can accept multiple input schemas.
+	 *
+	 * @return True if multiple input datasets are supported in this node
+	 */
+	_canHaveMultipleSchemas() {
+		for (const keyName in this.controls) {
+			if (this.controls.hasOwnProperty(keyName)) {
+				const control = this.controls[keyName];
+				if (this._isMultiSchemaControl(control)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	_getDefaultSubControlValue(col, fieldName, fields, control) {
@@ -286,6 +334,8 @@ export default class PropertiesController {
 								subControl.valueDef.propType === "long" ||
 								subControl.valueDef.propType === "double") {
 			val = 0;
+		} else if (subControl.valueDef.propType === "structure") {
+			val = {};
 		} else {
 			val = null;
 		}
@@ -387,7 +437,7 @@ export default class PropertiesController {
 	}
 
 	/**
-	* Returns the op to run
+	* Returns the op to run.
 	*	@param op string
 	* @return op method to run
 	*/
@@ -406,7 +456,7 @@ export default class PropertiesController {
 	}
 
 	/**
-	* Returns datasetMetadata passed into common-properties
+	* Returns datasetMetadata passed into common-properties.
 	*	@return passed in value
 	*/
 	getDatasetMetadata() {
@@ -414,7 +464,7 @@ export default class PropertiesController {
 	}
 
 	/**
-	* Returns a list field objects.  Based on datasetMetadata passed int common-properties
+	* Returns a list field objects.  Based on datasetMetadata passed into common-properties.
 	*	@return array[field]
 	*/
 	getDatasetMetadataFields() {
@@ -422,7 +472,7 @@ export default class PropertiesController {
 	}
 
 	/**
-	* Returns a list of schema names
+	* Returns a list of schema names.
 	*	@return array[string]
 	*/
 	getDatasetMetadataSchemas() {
@@ -473,21 +523,25 @@ export default class PropertiesController {
 			for (const sharedCtr of sharedCtrlNames) {
 				const ctrlName = sharedCtr.controlName;
 				if (ctrlName !== skipControlName) {
+					const control = this.getControl({ name: ctrlName });
 					// only remove from the main list the values that are in other controls
 					const propValue = this.getPropertyValue({ name: ctrlName });
 					if (Array.isArray(propValue)) {
 						for (const arrayValue of propValue) {
 							if (Array.isArray(arrayValue)) {
-								const fieldIdx = PropertyUtils.getTableFieldIndex(this.getControl({ name: ctrlName }));
+								// Two dimensional arrays
+								const fieldIdx = PropertyUtils.getTableFieldIndex(control);
 								if (fieldIdx >= 0 && fieldIdx < arrayValue.length) {
-									usedFields.push(arrayValue[fieldIdx]);
+									usedFields.push(PropertyUtils.stringifyFieldValue(arrayValue[fieldIdx], control));
 								}
-							} else { // one dimensional arrays
-								usedFields.push(arrayValue);
+							} else {
+								// Single dimensional arrays
+								usedFields.push(PropertyUtils.stringifyFieldValue(arrayValue, control));
 							}
 						}
-					} else if (typeof propValue === "string") { // simple property values
-						usedFields.push(propValue);
+					} else {
+						// Plain properties
+						usedFields.push(PropertyUtils.stringifyFieldValue(propValue, control));
 					}
 				}
 			}
@@ -504,9 +558,9 @@ export default class PropertiesController {
 
 	/**
 	 * This method parses the inDatasetMetadata into fields and schemaNames to be
-	 * used throughout common-properties
+	 * used throughout common-properties.
 	 *
-	 * @param inDatasetMetadata datasetMetadata schema.
+	 * @param inDatasetMetadata Array of datasetMetadata schemata
 	 */
 	setDatasetMetadata(inDatasetMetadata) {
 		const schemaNames = [];
@@ -547,19 +601,19 @@ export default class PropertiesController {
 					}
 				}
 			}
-			// add schema name if there are duplicate field names
-			const isMultipleSchemas = schemas.length > 1;
-			if (isMultipleSchemas) {
-				for (const field of fields) {
-					const foundFields = fields.filter(function(elementField) {
-						return field.origName === elementField.origName;
-					});
-					if (foundFields.length > 1) {
-						field.name = field.schema + "." + field.origName;
-					}
-				}
+		}
+
+		// Adjust field names for multi-schema scenarios in which setForm is not called
+		if (typeof this.multipleSchemas === "undefined") {
+			// Determine from the current control set whether or not there can be multiple input datasets
+			this.multipleSchemas = this._canHaveMultipleSchemas();
+		}
+		if (this.multipleSchemas) {
+			for (const field of fields) {
+				field.name = field.schema + "." + field.origName;
 			}
 		}
+
 		// store values in redux
 		this.propertiesStore.setDatasetMetadata({ schemas: inDatasetMetadata, fields: fields, schemaNames: schemaNames });
 	}

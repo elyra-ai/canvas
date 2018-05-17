@@ -16,7 +16,7 @@ import FlexibleTable from "./../components/flexible-table";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import Icon from "./../../icons/icon.jsx";
 import PropertyUtils from "./../util/property-utils";
-import { ControlType, EditStyle } from "./../constants/form-constants";
+import { ControlType, EditStyle, Type, ParamRole } from "./../constants/form-constants";
 import Tooltip from "./../../tooltip/tooltip.jsx";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES,
 	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH, ELLIPSIS_STRING, DISPLAY_CHARS_DEFAULT } from "./../constants/constants";
@@ -133,6 +133,27 @@ export default class AbstractTable extends React.Component {
 		if (this.props.control.subControls) {
 			updatedControlValues = this.setReadOnlyColumnValue(controlValue);
 		}
+
+		// Here we convert any compound field strings into compound values for storage
+		if (Array.isArray(updatedControlValues)) {
+			for (let idx = 0; idx < updatedControlValues.length; idx++) {
+				const value = updatedControlValues[idx];
+				if (Array.isArray(value)) {
+					for (let idx2 = 0; idx2 < this.props.control.subControls.length; idx2++) {
+						const subControl = this.props.control.subControls[idx2];
+						if (subControl.role === "column" && subControl.valueDef.propType === "structure") {
+							updatedControlValues[idx][idx2] = PropertyUtils.fieldStringToValue(
+								value[idx2], subControl, this.props.controller);
+						}
+					}
+				} else if (this.props.control.role === "column" && this.props.control.valueDef.propType === "structure") {
+					updatedControlValues[idx] = PropertyUtils.fieldStringToValue(
+						value, this.props.control, this.props.controller);
+				}
+			}
+		}
+
+		// Update the property value
 		this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
 		const selectedRows = Array.isArray(inSelectedRows) ? inSelectedRows : [];
 		this.updateRowSelections(this.props.control.name, selectedRows);
@@ -226,6 +247,8 @@ export default class AbstractTable extends React.Component {
 		cellContent = controlValue[rowIndex][colIndex];
 		if (Array.isArray(cellContent)) {
 			cellContent = cellContent.join(", ");
+		} else if (PropertyUtils.toType(cellContent) === Type.OBJECT && columnDef.role === ParamRole.COLUMN) {
+			cellContent = PropertyUtils.stringifyFieldValue(cellContent, columnDef);
 		}
 		let cellClassName = "";
 		const ControlFactory = this.props.controller.getControlFactory();

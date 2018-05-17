@@ -94,7 +94,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 	});
 
 	it("should show correct values from selectcolumn controls with multi schema input", () => {
-		expect(panels).to.have.length(4);
+		expect(panels).to.have.length(5);
 		const selectColumnControls = panels.at(1).find("Dropdown");
 		expect(selectColumnControls).to.have.length(2);
 
@@ -104,17 +104,17 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		let expectedSelectColumn1Options = [
 			{ label: "...", value: "" },
 			{ label: "0.Age", value: "0.Age" },
-			{ label: "Sex", value: "Sex" },
-			{ label: "Drug", value: "Drug" },
+			{ label: "0.Sex", value: "0.Sex" },
+			{ label: "0.Drug", value: "0.Drug" },
 			{ label: "0.drug2", value: "0.drug2" },
 			{ label: "data.Age", value: "data.Age" },
 			{ label: "data.BP", value: "data.BP" },
-			{ label: "bp", value: "bp" },
+			{ label: "data.bp", value: "data.bp" },
 			{ label: "data.drug2", value: "data.drug2" },
 			{ label: "2.Age", value: "2.Age" },
-			{ label: "drug", value: "drug" },
+			{ label: "2.drug", value: "2.drug" },
 			{ label: "2.drug2", value: "2.drug2" },
-			{ label: "drug3", value: "drug3" }
+			{ label: "2.drug3", value: "2.drug3" }
 		];
 		let actualOptions = selectColumn1.prop("options");
 		expect(actualOptions).to.eql(expectedSelectColumn1Options);
@@ -124,18 +124,18 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 
 		let expectedSelectColumn2Options = [
 			{ label: "...", value: "" },
-			{ label: "Sex", value: "Sex" },
+			{ label: "0.Sex", value: "0.Sex" },
 			{ label: "0.BP", value: "0.BP" },
-			{ label: "Drug", value: "Drug" },
+			{ label: "0.Drug", value: "0.Drug" },
 			{ label: "0.drug2", value: "0.drug2" },
 			{ label: "data.Age", value: "data.Age" },
 			{ label: "data.BP", value: "data.BP" },
-			{ label: "bp", value: "bp" },
+			{ label: "data.bp", value: "data.bp" },
 			{ label: "data.drug2", value: "data.drug2" },
 			{ label: "2.Age", value: "2.Age" },
-			{ label: "drug", value: "drug" },
+			{ label: "2.drug", value: "2.drug" },
 			{ label: "2.drug2", value: "2.drug2" },
-			{ label: "drug3", value: "drug3" }
+			{ label: "2.drug3", value: "2.drug3" }
 		];
 		let actualOptions2 = selectColumn2.prop("options");
 		expect(actualOptions2).to.eql(expectedSelectColumn2Options);
@@ -144,17 +144,17 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		expectedSelectColumn1Options = [
 			{ label: "...", value: "" },
 			{ label: "0.Age", value: "0.Age" },
-			{ label: "Sex", value: "Sex" },
-			{ label: "Drug", value: "Drug" },
+			{ label: "0.Sex", value: "0.Sex" },
+			{ label: "0.Drug", value: "0.Drug" },
 			{ label: "0.drug2", value: "0.drug2" },
 			{ label: "data.Age", value: "data.Age" },
 			{ label: "data.BP", value: "data.BP" },
-			{ label: "bp", value: "bp" },
+			{ label: "data.bp", value: "data.bp" },
 			{ label: "data.drug2", value: "data.drug2" },
 			{ label: "2.Age", value: "2.Age" },
-			{ label: "drug", value: "drug" },
+			{ label: "2.drug", value: "2.drug" },
 			{ label: "2.drug2", value: "2.drug2" },
-			{ label: "drug3", value: "drug3" }
+			{ label: "2.drug3", value: "2.drug3" }
 		];
 		actualOptions = selectColumn1.prop("options");
 		expect(actualOptions).to.eql(expectedSelectColumn1Options);
@@ -162,17 +162,17 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		expectedSelectColumn2Options = [
 			{ label: "...", value: "" },
 			{ label: "0.Age", value: "0.Age" },
-			{ label: "Sex", value: "Sex" },
+			{ label: "0.Sex", value: "0.Sex" },
 			{ label: "0.BP", value: "0.BP" },
-			{ label: "Drug", value: "Drug" },
+			{ label: "0.Drug", value: "0.Drug" },
 			{ label: "0.drug2", value: "0.drug2" },
 			{ label: "data.Age", value: "data.Age" },
 			{ label: "data.BP", value: "data.BP" },
-			{ label: "bp", value: "bp" },
+			{ label: "data.bp", value: "data.bp" },
 			{ label: "2.Age", value: "2.Age" },
-			{ label: "drug", value: "drug" },
+			{ label: "2.drug", value: "2.drug" },
 			{ label: "2.drug2", value: "2.drug2" },
-			{ label: "drug3", value: "drug3" }
+			{ label: "2.drug3", value: "2.drug3" }
 		];
 		actualOptions2 = selectColumn2.prop("options");
 		expect(actualOptions2).to.eql(expectedSelectColumn2Options);
@@ -218,16 +218,16 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		const expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "0.Age", value: "0.Age" },
-			{ label: "Sex", value: "Sex" },
+			{ label: "0.Sex", value: "0.Sex" },
 			{ label: "0.BP", value: "0.BP" },
-			{ label: "Drug", value: "Drug" },
+			{ label: "0.Drug", value: "0.Drug" },
 			{ label: "data.Age", value: "data.Age" },
 			{ label: "data.BP", value: "data.BP" },
-			{ label: "bp", value: "bp" },
+			{ label: "data.bp", value: "data.bp" },
 			{ label: "data.drug2", value: "data.drug2" },
 			{ label: "2.Age", value: "2.Age" },
-			{ label: "drug", value: "drug" },
-			{ label: "drug3", value: "drug3" }
+			{ label: "2.drug", value: "2.drug" },
+			{ label: "2.drug3", value: "2.drug3" }
 		];
 		expect(actualOptions).to.have.deep.members(expectedOptions);
 	});
@@ -241,7 +241,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		const table2Rows = selectColumnsTable2.find(".column-select-table-row");
 		expect(table2Rows).to.have.length(3);
 
-		const table2Initial = ["0.Age", "Drug", "2.Age"];
+		const table2Initial = ["0.Age", "0.Drug", "2.Age"];
 		for (let idx = 0; idx < table2Rows.length; idx++) {
 			expect(table2Rows.at(idx).find("td")
 				.at(0)
@@ -264,20 +264,33 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ "name": "drug2", "schema": "2" },
 			{ "name": "drug3", "schema": "2" }
 		];
-		const selectcolumns3 = ["Sex",
+		const selectcolumns3 = [
+			"0.Sex",
 			"0.BP",
 			"0.drug2",
 			"data.Age",
 			"data.BP",
-			"bp",
+			"data.bp",
 			"data.drug2",
-			"drug",
+			"2.drug",
 			"2.drug2",
-			"drug3"
+			"2.drug3"
 		];
-		propertyUtils.fieldPicker(selectcolumns3, fieldTable);
+		const selectcolumns3A = [
+			{ "link_ref": "0", "field_name": "Sex" },
+			{ "link_ref": "0", "field_name": "BP" },
+			{ "link_ref": "0", "field_name": "drug2" },
+			{ "link_ref": "data", "field_name": "Age" },
+			{ "link_ref": "data", "field_name": "BP" },
+			{ "link_ref": "data", "field_name": "bp" },
+			{ "link_ref": "data", "field_name": "drug2" },
+			{ "link_ref": "2", "field_name": "drug" },
+			{ "link_ref": "2", "field_name": "drug2" },
+			{ "link_ref": "2", "field_name": "drug3" }
+		];
 
-		expect(controller.getPropertyValue({ name: "selectcolumns3" })).to.have.deep.members(selectcolumns3);
+		propertyUtils.fieldPicker(selectcolumns3, fieldTable);
+		expect(controller.getPropertyValue({ name: "selectcolumns3" })).to.have.deep.members(selectcolumns3A);
 
 		// Verify field picker from selectcolumns2 gets the correct fields
 		const fieldTable2Input = [
@@ -293,7 +306,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 				"origName": "Age"
 			},
 			{
-				"name": "Drug",
+				"name": "0.Drug",
 				"type": "string",
 				"metadata": {
 					"description": "",
@@ -316,6 +329,11 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			}
 		];
 		expect(controller.getFilteredDatasetMetadata({ name: "selectcolumns2" })).to.have.deep.members(fieldTable2Input);
+	});
+
+	it("should handle improply defined string fields as strings", () => {
+		const badVar1 = panels.at(4).find(".Dropdown-placeholder");
+		expect(badVar1.text()).to.equal("0.Age");
 	});
 });
 

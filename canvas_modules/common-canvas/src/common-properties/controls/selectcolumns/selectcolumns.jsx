@@ -14,9 +14,10 @@ import MoveableTableRows from "./../../components/moveable-table-rows";
 import AbstractTable from "./../abstract-table.jsx";
 import { injectIntl, intlShape } from "react-intl";
 import ControlUtils from "./../../util/control-utils";
+import PropertyUtils from "./../../util/property-utils";
 import { TABLE_SCROLLBAR_WIDTH } from "./../../constants/constants";
 
-class SelectColoumns extends AbstractTable {
+class SelectColumns extends AbstractTable {
 
 	getRowClassName(rowIndex) {
 		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
@@ -31,7 +32,7 @@ class SelectColoumns extends AbstractTable {
 		if (controlValue) {
 			for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				const columns = [];
-				const cellContent = controlValue[rowIndex];
+				const cellContent = PropertyUtils.stringifyFieldValue(controlValue[rowIndex], this.props.control);
 				columns.push({
 					key: rowIndex + "-0-field",
 					column: "name",
@@ -146,7 +147,7 @@ class SelectColoumns extends AbstractTable {
 	}
 }
 
-SelectColoumns.propTypes = {
+SelectColumns.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
@@ -154,4 +155,4 @@ SelectColoumns.propTypes = {
 	intl: intlShape
 };
 
-export default injectIntl(SelectColoumns);
+export default injectIntl(SelectColumns);

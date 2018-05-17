@@ -12,6 +12,7 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import Dropdown from "react-dropdown";
 import ControlUtils from "./../../util/control-utils";
+import PropertyUtils from "./../../util/property-utils.js";
 import { ControlType } from "./../../constants/form-constants";
 
 export default class DropDown extends React.Component {
@@ -73,8 +74,9 @@ export default class DropDown extends React.Component {
 	}
 
 	getSelectedOption(options, selectedValue) {
+		const value = PropertyUtils.stringifyFieldValue(selectedValue, this.props.control);
 		const selectedOption = options.find(function(option) {
-			return option.value === selectedValue;
+			return option.value === value;
 		});
 		return selectedOption;
 	}
@@ -202,6 +204,9 @@ export default class DropDown extends React.Component {
 			}
 		} else if (value === this.emptyLabel) {
 			value = "";
+		}
+		if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
+			value = PropertyUtils.fieldStringToValue(value, this.props.control, this.props.controller);
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
