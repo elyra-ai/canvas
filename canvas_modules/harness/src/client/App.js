@@ -186,10 +186,7 @@ class App extends React.Component {
 
 		try {
 			this.canvasController = new CanvasController();
-			this.canvasController.setEmptyPipelineFlow();
-
 			this.canvasController2 = new CanvasController();
-			this.canvasController2.setEmptyPipelineFlow();
 		} catch (err) {
 			console.error("Error setting up canvas controllers: " + err);
 		}
@@ -221,8 +218,6 @@ class App extends React.Component {
 	}
 
 	setDiagramJSON(canvasJson) {
-		this.canvasController.setEmptyPipelineFlow();
-		this.forceUpdate();
 		this.canvasController.getCommandStack().clearCommandStack();
 		NodeToForm.clearNodeForms();
 		if (canvasJson) {
@@ -240,8 +235,6 @@ class App extends React.Component {
 	}
 
 	setDiagramJSON2(canvasJson) {
-		this.canvasController2.setEmptyPipelineFlow();
-		this.forceUpdate();
 		this.canvasController2.getCommandStack().clearCommandStack();
 		NodeToForm.clearNodeForms();
 		if (canvasJson) {
