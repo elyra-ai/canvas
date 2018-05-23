@@ -138,6 +138,18 @@
 	stroke-width: 8;
 }
 
+.d3-node-super-expand-outline {
+	fill: transparent;
+}
+
+.d3-node-super-expand-outline:hover {
+	fill: #DFE3E6;
+}
+
+.d3-node-super-expand {
+	fill: #3d70b2;
+}
+
 .d3-node-ellipsis-background {
 	fill: transparent;
 	stroke-width: 0;
@@ -472,5 +484,5 @@ g .d3-data-link:hover,
 g .d3-selectable-link:hover,
 g .d3-selectable-link:hover ~ .d3-selectable-link,      /* Colors arrow head when hovering over line. */
 g .d3-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
-	stroke: #56ACF2;
+	stroke: #3D70B2;
 }
