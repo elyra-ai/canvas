@@ -31,13 +31,12 @@ export default class SidePanelModal extends React.Component {
 		super(props);
 		this.state = {
 			commonProperties: "",
-			commonPropertiesFiles: [],
-			selectedPropertiesDropdownFile: "",
-			fileChooserVisible: false
+			commonPropertiesFiles: []
 		};
 
 		this.onPropertiesSelect = this.onPropertiesSelect.bind(this);
 		this.isReadyToSubmitProperties = this.isReadyToSubmitProperties.bind(this);
+		this.isReadyToSubmitPropertiesDropdownData = this.isReadyToSubmitPropertiesDropdownData.bind(this);
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
@@ -56,25 +55,7 @@ export default class SidePanelModal extends React.Component {
 	}
 
 	onDropdownSelect(evt, obj) {
-		// close any existing properties before opening a new properties file
-		this.props.closePropertiesEditorDialog();
-
-		if (obj.selected === CHOOSE_FROM_LOCATION) {
-			this.setState({
-				fileChooserVisible: true,
-				selectedPropertiesDropdownFile: ""
-			});
-		} else {
-			const that = this;
-			this.setState({
-				selectedPropertiesDropdownFile: obj.selected,
-				commonProperties: "",
-				fileChooserVisible: false
-			}, function() {
-				that.getSelectedFile();
-				that.props.closeSidePanelModal();
-			});
-		}
+		this.props.setPropertiesDropdownSelect(obj.selected);
 	}
 
 	onPropertiesSelect(evt) {
@@ -85,7 +66,6 @@ export default class SidePanelModal extends React.Component {
 			if (fileExt === "json") {
 				this.setState({
 					commonProperties: evt.target.files[0],
-					selectedPropertiesDropdownFile: ""
 				});
 				this.props.log("Common Properties JSON file selected", filename);
 			}
@@ -94,8 +74,8 @@ export default class SidePanelModal extends React.Component {
 
 	getSelectedFile() {
 		const that = this;
-		this.props.log("Submit common properties file", this.state.selectedPropertiesDropdownFile);
-		FormsService.getFileContent("properties", this.state.selectedPropertiesDropdownFile)
+		this.props.log("Submit common properties file", this.props.selectedPropertiesDropdownFile);
+		FormsService.getFileContent("properties", this.props.selectedPropertiesDropdownFile)
 			.then(function(res) {
 				that.props.setPropertiesJSON(res);
 			});
@@ -119,14 +99,15 @@ export default class SidePanelModal extends React.Component {
 	}
 
 	isReadyToSubmitProperties() {
-		if (this.state.commonProperties !== "" || this.state.selectedPropertiesDropdownFile !== "") {
+		if (this.state.commonProperties !== "" || this.isReadyToSubmitPropertiesDropdownData()) {
 			return true;
 		}
 		return false;
 	}
 
 	isReadyToSubmitPropertiesDropdownData() {
-		if (this.state.selectedPropertiesDropdownFile !== "") {
+		if (this.props.selectedPropertiesDropdownFile !== "" &&
+				this.props.selectedPropertiesDropdownFile !== CHOOSE_FROM_LOCATION) {
 			return true;
 		}
 		return false;
@@ -160,7 +141,7 @@ export default class SidePanelModal extends React.Component {
 		const space = (<div className="sidepanel-spacer" />);
 
 		let fileChooser = <div />;
-		if (this.state.fileChooserVisible) {
+		if (this.props.fileChooserVisible) {
 			fileChooser = (<div>
 				<FormControl
 					required="required"
@@ -188,7 +169,7 @@ export default class SidePanelModal extends React.Component {
 					dark
 					options={this.state.commonPropertiesFiles}
 					onSelect={this.onDropdownSelect.bind(this)}
-					value={this.state.selectedPropertiesDropdownFile}
+					value={this.props.selectedPropertiesDropdownFile}
 				/>
 				{space}
 				{fileChooser}
@@ -263,5 +244,8 @@ SidePanelModal.propTypes = {
 	applyOnBlur: PropTypes.bool,
 	useApplyOnBlur: PropTypes.func,
 	displayAdditionalComponents: PropTypes.bool,
-	useDisplayAdditionalComponents: PropTypes.func
+	useDisplayAdditionalComponents: PropTypes.func,
+	setPropertiesDropdownSelect: PropTypes.func,
+	selectedPropertiesDropdownFile: PropTypes.string,
+	fileChooserVisible: PropTypes.bool
 };

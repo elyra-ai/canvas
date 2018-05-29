@@ -44,6 +44,7 @@ import {
 	SIDE_PANEL_MODAL,
 	SIDE_PANEL_API,
 	SIDE_PANEL,
+	CHOOSE_FROM_LOCATION,
 	PORTS_CONNECTION,
 	VERTICAL_FORMAT,
 	CURVE_LINKS,
@@ -60,6 +61,7 @@ import download32 from "../graphics/save_32.svg";
 import justify32 from "../graphics/justify_32.svg";
 import api32 from "../graphics/api_32.svg";
 import template32 from "ibm-design-icons/dist/svg/object-based/template_32.svg";
+import FormsService from "./services/FormsService";
 
 class App extends React.Component {
 	constructor(props) {
@@ -98,7 +100,22 @@ class App extends React.Component {
 			applyOnBlur: true,
 			validateFlowOnOpen: true,
 			narrowPalette: true,
-			schemaValidationEnabled: true
+			schemaValidationEnabled: true,
+			canvasFileChooserVisible: false,
+			canvasFileChooserVisible2: false,
+			paletteFileChooserVisible: false,
+			paletteFileChooserVisible2: false,
+			canvasDiagram: "",
+			canvasDiagram2: "",
+			selectedCanvasDropdownFile: "",
+			selectedCanvasDropdownFile2: "",
+			selectedPaletteDropdownFile: "",
+			selectedPaletteDropdownFile2: "",
+			canvasPalette: "",
+			canvasPalette2: "",
+			apiSelectedOperation: "",
+			selectedPropertiesDropdownFile: "",
+			propertiesFileChooserVisible: false
 		};
 
 		// There are several functions and variables with the identifiers name and name2. This is needed
@@ -129,6 +146,10 @@ class App extends React.Component {
 		this.sidePanelModal = this.sidePanelModal.bind(this);
 		this.sidePanelAPI = this.sidePanelAPI.bind(this);
 		this.closeSidePanelModal = this.closeSidePanelModal.bind(this);
+		this.setCanvasDropdownFile = this.setCanvasDropdownFile.bind(this);
+		this.setCanvasDropdownFile2 = this.setCanvasDropdownFile2.bind(this);
+		this.setPaletteDropdownSelect = this.setPaletteDropdownSelect.bind(this);
+		this.setPaletteDropdownSelect2 = this.setPaletteDropdownSelect2.bind(this);
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
@@ -172,6 +193,7 @@ class App extends React.Component {
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog2 = this.closePropertiesEditorDialog2.bind(this);
+		this.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
@@ -180,6 +202,8 @@ class App extends React.Component {
 		this.propertiesControllerHandler2 = this.propertiesControllerHandler2.bind(this);
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
+
+		this.setApiSelectedOperation = this.setApiSelectedOperation.bind(this);
 
 		this.harnessNotificationMessages = [];
 		this.flowNotificationMessages = [];
@@ -203,6 +227,119 @@ class App extends React.Component {
 		}
 		TestService.postSessionData(sessionData);
 		NodeToForm.initialize();
+	}
+
+	setCanvasDropdownFile(selectedCanvasDropdownFile) {
+		if (selectedCanvasDropdownFile === CHOOSE_FROM_LOCATION) {
+			this.setState({
+				canvasFileChooserVisible: true,
+				selectedCanvasDropdownFile: CHOOSE_FROM_LOCATION
+			});
+		} else {
+			var that = this;
+			this.setState({
+				selectedCanvasDropdownFile: selectedCanvasDropdownFile,
+				canvasDiagram: "",
+				canvasFileChooserVisible: false
+			}, function() {
+				that.log("Submit canvas diagram", that.state.selectedCanvasDropdownFile);
+				FormsService.getFileContent("diagrams", that.state.selectedCanvasDropdownFile)
+					.then(function(res) {
+						that.setDiagramJSON(res);
+					});
+			});
+		}
+	}
+
+	setCanvasDropdownFile2(selectedCanvasDropdownFile2) {
+		if (selectedCanvasDropdownFile2 === CHOOSE_FROM_LOCATION) {
+			this.setState({
+				canvasFileChooserVisible2: true,
+				selectedCanvasDropdownFile2: CHOOSE_FROM_LOCATION
+			});
+		} else {
+			var that = this;
+			this.setState({
+				selectedCanvasDropdownFile2: selectedCanvasDropdownFile2,
+				canvasDiagram2: "",
+				canvasFileChooserVisible2: false
+			}, function() {
+				that.log("Submit canvas diagram", that.state.selectedCanvasDropdownFile2);
+				FormsService.getFileContent("diagrams", that.state.selectedCanvasDropdownFile2)
+					.then(function(res) {
+						that.setDiagramJSON2(res);
+					});
+			});
+		}
+	}
+
+	setPaletteDropdownSelect(selectedPaletteDropdownFile) {
+		if (selectedPaletteDropdownFile === CHOOSE_FROM_LOCATION) {
+			this.setState({
+				paletteFileChooserVisible: true,
+				selectedPaletteDropdownFile: CHOOSE_FROM_LOCATION
+			});
+		} else {
+			var that = this;
+			this.setState({
+				selectedPaletteDropdownFile: selectedPaletteDropdownFile,
+				canvasPalette: "",
+				paletteFileChooserVisible: false
+			}, function() {
+				that.log("Submit canvas palette", that.state.selectedPaletteDropdownFile);
+				FormsService.getFileContent("palettes", that.state.selectedPaletteDropdownFile)
+					.then(function(res) {
+						that.setPaletteJSON(res);
+					});
+			});
+		}
+	}
+
+	setPaletteDropdownSelect2(selectedPaletteDropdownFile2) {
+		if (selectedPaletteDropdownFile2 === CHOOSE_FROM_LOCATION) {
+			this.setState({
+				paletteFileChooserVisible2: true,
+				selectedPaletteDropdownFile2: CHOOSE_FROM_LOCATION
+			});
+		} else {
+			var that = this;
+			this.setState({
+				selectedPaletteDropdownFile2: selectedPaletteDropdownFile2,
+				canvasPalette2: "",
+				paletteFileChooserVisible2: false
+			}, function() {
+				that.log("Submit canvas palette", that.state.selectedPaletteDropdownFile2);
+				FormsService.getFileContent("palettes", that.state.selectedPaletteDropdownFile2)
+					.then(function(res) {
+						that.setPaletteJSON2(res);
+					});
+			});
+		}
+	}
+
+	setPropertiesDropdownSelect(selectedPropertiesDropdownFile) {
+		// close any existing properties before opening a new properties file
+		this.closePropertiesEditorDialog();
+
+		if (selectedPropertiesDropdownFile === CHOOSE_FROM_LOCATION) {
+			this.setState({
+				propertiesFileChooserVisible: true,
+				selectedPropertiesDropdownFile: CHOOSE_FROM_LOCATION
+			});
+		} else {
+			const that = this;
+			this.setState({
+				selectedPropertiesDropdownFile: selectedPropertiesDropdownFile,
+				propertiesFileChooserVisible: false
+			}, function() {
+				that.log("Submit common properties file", that.state.selectedPropertiesDropdownFile);
+				FormsService.getFileContent("properties", that.state.selectedPropertiesDropdownFile)
+					.then(function(res) {
+						that.setPropertiesJSON(res);
+					});
+				that.closeSidePanelModal();
+			});
+		}
 	}
 
 	getLabelString(labelId, defaultLabel) {
@@ -391,6 +528,11 @@ class App extends React.Component {
 	setPipelineFlow(flow) {
 		this.canvasController.setPipelineFlow(flow);
 		this.log("Updated pipeline flow");
+	}
+
+	setApiSelectedOperation(operation) {
+		this.setState({ apiSelectedOperation: operation });
+		this.log("API Operation Selected");
 	}
 
 	getPipelineFlow(canvController) {
@@ -1322,20 +1464,37 @@ class App extends React.Component {
 		}
 
 		const sidePanelCanvasConfig = {
-			canvasConfig: commonCanvasConfig,
+			commonCanvasConfig: commonCanvasConfig,
 			enableNavPalette: this.enableNavPalette,
 			internalObjectModel: this.state.internalObjectModel,
 			setDiagramJSON: this.setDiagramJSON,
 			setPaletteJSON: this.setPaletteJSON,
 			setDiagramJSON2: this.setDiagramJSON2,
 			setPaletteJSON2: this.setPaletteJSON2,
+			canvasFileChooserVisible: this.state.canvasFileChooserVisible,
+			canvasFileChooserVisible2: this.state.canvasFileChooserVisible2,
+			paletteFileChooserVisible: this.state.paletteFileChooserVisible,
+			paletteFileChooserVisible2: this.state.paletteFileChooserVisible2,
+			setCanvasDropdownFile: this.setCanvasDropdownFile,
+			setCanvasDropdownFile2: this.setCanvasDropdownFile2,
+			selectedCanvasDropdownFile: this.state.selectedCanvasDropdownFile,
+			selectedCanvasDropdownFile2: this.state.selectedCanvasDropdownFile2,
+			setPaletteDropdownSelect: this.setPaletteDropdownSelect,
+			setPaletteDropdownSelect2: this.setPaletteDropdownSelect2,
+			selectedPaletteDropdownFile: this.state.selectedPaletteDropdownFile,
+			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
 			setLayoutDirection: this.setLayoutDirection,
+			selectedLayout: this.state.selectedLayout,
 			useInternalObjectModel: this.useInternalObjectModel,
 			setRenderingEngine: this.setRenderingEngine,
 			setConnectionType: this.setConnectionType,
+			selectedConnectionType: this.state.selectedConnectionType,
 			setNodeFormatType: this.setNodeFormatType,
+			selectedNodeFormat: this.state.selectedNodeFormat,
 			setLinkType: this.setLinkType,
+			selectedLinkType: this.state.selectedLinkType,
 			setPaletteLayout: this.setPaletteLayout,
+			selectedPaletteLayout: this.state.selectedPaletteLayout,
 			setTipConfig: this.setTipConfig,
 			extraCanvasDisplayed: this.state.extraCanvasDisplayed,
 			showExtraCanvas: this.showExtraCanvas,
@@ -1358,18 +1517,23 @@ class App extends React.Component {
 			applyOnBlur: this.state.applyOnBlur,
 			useApplyOnBlur: this.useApplyOnBlur,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
-			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents
+			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
+			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
+			fileChooserVisible: this.state.propertiesFileChooserVisible,
+			setPropertiesDropdownSelect: this.setPropertiesDropdownSelect
 		};
 
 		const sidePanelAPIConfig = {
 			getCanvasInfo: this.getCanvasInfo,
+			setApiSelectedOperation: this.setApiSelectedOperation,
 			getPipelineFlow: this.getPipelineFlow,
 			setPipelineFlow: this.setPipelineFlow,
 			addNodeTypeToPalette: this.addNodeTypeToPalette,
 			setNodeLabel: this.setNodeLabel,
 			setPortLabel: this.setPortLabel,
 			appendNotificationMessages: this.appendNotificationMessages,
-			clearNotificationMessages: this.clearNotificationMessages
+			clearNotificationMessages: this.clearNotificationMessages,
+			selectedOperation: this.state.apiSelectedOperation
 		};
 
 		const mainView = (<div id="app-container">

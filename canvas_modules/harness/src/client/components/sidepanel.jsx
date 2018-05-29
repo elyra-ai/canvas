@@ -34,20 +34,37 @@ export default class SidePanel extends React.Component {
 		switch (this.props.selectedPanel) {
 		case SIDE_PANEL_CANVAS:
 			view = (<SidePanelCanvas
-				canvasConfig={this.props.canvasConfig.canvasConfig}
+				commonCanvasConfig={this.props.canvasConfig.commonCanvasConfig}
 				enableNavPalette={this.props.canvasConfig.enableNavPalette}
 				internalObjectModel={this.props.canvasConfig.internalObjectModel}
 				setDiagramJSON={this.props.canvasConfig.setDiagramJSON}
 				setPaletteJSON={this.props.canvasConfig.setPaletteJSON}
 				setDiagramJSON2={this.props.canvasConfig.setDiagramJSON2}
 				setPaletteJSON2={this.props.canvasConfig.setPaletteJSON2}
+				canvasFileChooserVisible={this.props.canvasConfig.canvasFileChooserVisible}
+				canvasFileChooserVisible2={this.props.canvasConfig.canvasFileChooserVisible2}
+				paletteFileChooserVisible={this.props.canvasConfig.paletteFileChooserVisible}
+				paletteFileChooserVisible2={this.props.canvasConfig.paletteFileChooserVisible2}
+				setCanvasDropdownFile={this.props.canvasConfig.setCanvasDropdownFile}
+				setCanvasDropdownFile2={this.props.canvasConfig.setCanvasDropdownFile2}
+				selectedCanvasDropdownFile={this.props.canvasConfig.selectedCanvasDropdownFile}
+				selectedCanvasDropdownFile2={this.props.canvasConfig.selectedCanvasDropdownFile2}
+				setPaletteDropdownSelect={this.props.canvasConfig.setPaletteDropdownSelect}
+				setPaletteDropdownSelect2={this.props.canvasConfig.setPaletteDropdownSelect2}
+				selectedPaletteDropdownFile={this.props.canvasConfig.selectedPaletteDropdownFile}
+				selectedPaletteDropdownFile2={this.props.canvasConfig.selectedPaletteDropdownFile2}
 				setLayoutDirection={this.props.canvasConfig.setLayoutDirection}
+				selectedLayout={this.props.canvasConfig.selectedLayout}
 				useInternalObjectModel={this.props.canvasConfig.useInternalObjectModel}
 				setRenderingEngine={this.props.canvasConfig.setRenderingEngine}
 				setConnectionType={this.props.canvasConfig.setConnectionType}
+				selectedConnectionType={this.props.canvasConfig.selectedConnectionType}
 				setNodeFormatType={this.props.canvasConfig.setNodeFormatType}
+				selectedNodeFormat={this.props.canvasConfig.selectedNodeFormat}
 				setLinkType={this.props.canvasConfig.setLinkType}
+				selectedLinkType={this.props.canvasConfig.selectedLinkType}
 				setPaletteLayout={this.props.canvasConfig.setPaletteLayout}
+				selectedPaletteLayout={this.props.canvasConfig.selectedPaletteLayout}
 				setTipConfig={this.props.canvasConfig.setTipConfig}
 				extraCanvasDisplayed={this.props.canvasConfig.extraCanvasDisplayed}
 				showExtraCanvas={this.props.canvasConfig.showExtraCanvas}
@@ -74,12 +91,17 @@ export default class SidePanel extends React.Component {
 				useApplyOnBlur={this.props.propertiesConfig.useApplyOnBlur}
 				displayAdditionalComponents={this.props.propertiesConfig.displayAdditionalComponents}
 				useDisplayAdditionalComponents={this.props.propertiesConfig.useDisplayAdditionalComponents}
+				selectedPropertiesDropdownFile={this.props.propertiesConfig.selectedPropertiesDropdownFile}
+				fileChooserVisible={this.props.propertiesConfig.fileChooserVisible}
+				setPropertiesDropdownSelect={this.props.propertiesConfig.setPropertiesDropdownSelect}
 			/>);
 			break;
 		case SIDE_PANEL_API:
 			view = (<SidePanelAPI
 				log={this.props.log}
 				getCanvasInfo={this.props.apiConfig.getCanvasInfo}
+				selectedOperation={this.props.apiConfig.selectedOperation}
+				setApiSelectedOperation={this.props.apiConfig.setApiSelectedOperation}
 				getPipelineFlow={this.props.apiConfig.getPipelineFlow}
 				setPipelineFlow={this.props.apiConfig.setPipelineFlow}
 				addNodeTypeToPalette={this.props.apiConfig.addNodeTypeToPalette}
@@ -104,20 +126,37 @@ export default class SidePanel extends React.Component {
 
 SidePanel.propTypes = {
 	canvasConfig: PropTypes.shape({
-		canvasConfig: PropTypes.object,
+		commonCanvasConfig: PropTypes.object,
 		enableNavPalette: PropTypes.func,
 		internalObjectModel: PropTypes.bool,
 		setDiagramJSON: PropTypes.func,
 		setPaletteJSON: PropTypes.func,
 		setDiagramJSON2: PropTypes.func,
 		setPaletteJSON2: PropTypes.func,
+		canvasFileChooserVisible: PropTypes.bool,
+		canvasFileChooserVisible2: PropTypes.bool,
+		paletteFileChooserVisible: PropTypes.bool,
+		paletteFileChooserVisible2: PropTypes.bool,
+		selectedCanvasDropdownFile: PropTypes.string,
+		selectedCanvasDropdownFile2: PropTypes.string,
+		setCanvasDropdownFile: PropTypes.func,
+		setCanvasDropdownFile2: PropTypes.func,
+		selectedPaletteDropdownFile: PropTypes.string,
+		selectedPaletteDropdownFile2: PropTypes.string,
+		setPaletteDropdownSelect: PropTypes.func,
+		setPaletteDropdownSelect2: PropTypes.func,
 		setLayoutDirection: PropTypes.func,
+		selectedLayout: PropTypes.string,
 		useInternalObjectModel: PropTypes.func,
 		setRenderingEngine: PropTypes.func,
 		setConnectionType: PropTypes.func,
+		selectedConnectionType: PropTypes.string,
 		setNodeFormatType: PropTypes.func,
+		selectedNodeFormat: PropTypes.string,
 		setLinkType: PropTypes.func,
+		selectedLinkType: PropTypes.string,
 		setPaletteLayout: PropTypes.func,
+		selectedPaletteLayout: PropTypes.string,
 		setTipConfig: PropTypes.func,
 		extraCanvasDisplayed: PropTypes.bool,
 		showExtraCanvas: PropTypes.func,
@@ -139,10 +178,15 @@ SidePanel.propTypes = {
 		applyOnBlur: PropTypes.bool,
 		useApplyOnBlur: PropTypes.func,
 		displayAdditionalComponents: PropTypes.bool,
-		useDisplayAdditionalComponents: PropTypes.func
+		useDisplayAdditionalComponents: PropTypes.func,
+		selectedPropertiesDropdownFile: PropTypes.string,
+		fileChooserVisible: PropTypes.bool,
+		setPropertiesDropdownSelect: PropTypes.func
 	}),
 	apiConfig: PropTypes.shape({
 		getCanvasInfo: PropTypes.func,
+		selectedOperation: PropTypes.string,
+		setApiSelectedOperation: PropTypes.func,
 		getPipelineFlow: PropTypes.func,
 		setPipelineFlow: PropTypes.func,
 		addNodeTypeToPalette: PropTypes.func,

@@ -61,11 +61,10 @@ export default class SidePanelAPI extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selectedOperation: "",
-			pipelineFlow: JSON.stringify(this.props.getPipelineFlow()),
+			pipelineFlow: "",
 			categoryId: "",
 			categoryName: "",
-			paletteItem: JSON.stringify(defaultNodeType),
+			paletteItem: "",
 			isValidPipelineFlow: true,
 			isValidPaletteItem: true,
 			nodeId: "",
@@ -85,6 +84,12 @@ export default class SidePanelAPI extends React.Component {
 
 		this.createNotificationMessage = this.createNotificationMessage.bind(this);
 		this.notificationMessageCallback = this.notificationMessageCallback.bind(this);
+	}
+
+	componentWillMount() {
+		this.setState({
+			pipelineFlow: JSON.stringify(this.props.getPipelineFlow()),
+			paletteItem: JSON.stringify(defaultNodeType) });
 	}
 
 	onOperationSelect(evt, obj) {
@@ -123,8 +128,9 @@ export default class SidePanelAPI extends React.Component {
 			}
 		}
 
+		this.props.setApiSelectedOperation(operation);
+
 		this.setState({
-			selectedOperation: operation,
 			nodeId: nodeId,	// id of selected node
 			portId: portId, // id of selected port
 			nodes: nodes, // list of nodes in format { value: label, id: nodeId }
@@ -138,10 +144,10 @@ export default class SidePanelAPI extends React.Component {
 		const newState = { nodeId: obj.selected, portId: "", newLabel: "" };
 		const existingNode = this.props.getCanvasInfo().nodes.find((node) => (node.id === nodeId));
 		if (existingNode) {
-			if (this.state.selectedOperation === API_SET_NODE_LABEL) {
+			if (this.props.selectedOperation === API_SET_NODE_LABEL) {
 				// when op to set node name is selected, set the current node name in text field
 				newState.newLabel = existingNode.label;
-			} else if (this.state.selectedOperation === API_SET_INPUT_PORT_LABEL) {
+			} else if (this.props.selectedOperation === API_SET_INPUT_PORT_LABEL) {
 				// get list of input ports for the selected node and select the first one by default
 				newState.ports = this.getNodePortList(existingNode.input_ports);
 				if (!isEmpty(newState.ports)) {
@@ -151,7 +157,7 @@ export default class SidePanelAPI extends React.Component {
 					});
 					newState.newLabel = port.label;
 				}
-			} else if (this.state.selectedOperation === API_SET_OUTPUT_PORT_LABEL) {
+			} else if (this.props.selectedOperation === API_SET_OUTPUT_PORT_LABEL) {
 				// get list of output ports for the selected node and select the first one by default
 				newState.ports = this.getNodePortList(existingNode.output_ports);
 				if (!isEmpty(newState.ports)) {
@@ -172,7 +178,7 @@ export default class SidePanelAPI extends React.Component {
 		const newState = { portId: obj.selected };
 		const existingNode = this.props.getCanvasInfo().nodes.find((node) => (node.id === this.state.nodeId));
 		if (existingNode) {
-			const ports = (this.state.selectedOperation === API_SET_INPUT_PORT_LABEL
+			const ports = (this.props.selectedOperation === API_SET_INPUT_PORT_LABEL
 				? existingNode.input_ports : existingNode.output_ports);
 			const existingPort = ports.find((port) => (port.id === portId));
 			if (existingPort) {
@@ -238,7 +244,7 @@ export default class SidePanelAPI extends React.Component {
 	}
 
 	isReadyToSubmit() {
-		switch (this.state.selectedOperation) {
+		switch (this.props.selectedOperation) {
 		case API_SET_PIPELINEFLOW: {
 			return this.state.isValidPipelineFlow;
 		}
@@ -257,7 +263,7 @@ export default class SidePanelAPI extends React.Component {
 	}
 
 	callAPI() {
-		switch (this.state.selectedOperation) {
+		switch (this.props.selectedOperation) {
 		case API_SET_PIPELINEFLOW:
 			this.props.setPipelineFlow(JSON.parse(this.state.pipelineFlow));
 			break;
@@ -358,7 +364,7 @@ export default class SidePanelAPI extends React.Component {
 						API_SET_OUTPUT_PORT_LABEL,
 						API_ADD_NOTIFICATION_MESSAGE]}
 					onSelect={this.onOperationSelect.bind(this)}
-					value={this.state.selectedOperation}
+					value={this.props.selectedOperation}
 				/>
 			</div>);
 
@@ -375,7 +381,7 @@ export default class SidePanelAPI extends React.Component {
 
 
 		let setPipelineFlow = <div />;
-		if (this.state.selectedOperation === API_SET_PIPELINEFLOW) {
+		if (this.props.selectedOperation === API_SET_PIPELINEFLOW) {
 			setPipelineFlow = (<div className="sidepanel-children" id="sidepanel-api-pipelineFlow">
 				<TextField dark
 					id="pipelineFlow"
@@ -394,7 +400,7 @@ export default class SidePanelAPI extends React.Component {
 		}
 
 		let addItemToPaletteSection = <div />;
-		if (this.state.selectedOperation === API_ADD_PALETTE_ITEM) {
+		if (this.props.selectedOperation === API_ADD_PALETTE_ITEM) {
 			addItemToPaletteSection = (<div className="sidepanel-children" id="sidepanel-api-paletteItem">
 				<TextField dark
 					id="categoryId"
@@ -422,9 +428,9 @@ export default class SidePanelAPI extends React.Component {
 		}
 
 		let setNodePortLabelSection = <div />;
-		if (this.state.selectedOperation === API_SET_NODE_LABEL ||
-				this.state.selectedOperation === API_SET_INPUT_PORT_LABEL ||
-				this.state.selectedOperation === API_SET_OUTPUT_PORT_LABEL) {
+		if (this.props.selectedOperation === API_SET_NODE_LABEL ||
+				this.props.selectedOperation === API_SET_INPUT_PORT_LABEL ||
+				this.props.selectedOperation === API_SET_OUTPUT_PORT_LABEL) {
 
 			setNodePortLabelSection = (<div className="sidepanel-children" id="sidepanel-api-nodePortLabel">
 				<Dropdown
@@ -437,8 +443,8 @@ export default class SidePanelAPI extends React.Component {
 					value={this.state.nodeId}
 					text="Node Selection"
 				/>
-				{(this.state.selectedOperation === API_SET_INPUT_PORT_LABEL ||
-					this.state.selectedOperation === API_SET_OUTPUT_PORT_LABEL) &&
+				{(this.props.selectedOperation === API_SET_INPUT_PORT_LABEL ||
+					this.props.selectedOperation === API_SET_OUTPUT_PORT_LABEL) &&
 					<Dropdown
 						name="portIdDropDown"
 						id="sidepanel-portId-dropdown"
@@ -456,16 +462,16 @@ export default class SidePanelAPI extends React.Component {
 					type="text"
 					onChange={this.onFieldChange.bind(this, "newLabel")}
 					value={this.state.newLabel}
-					disabled={(this.state.selectedOperation === API_SET_NODE_LABEL && !this.state.nodeId) ||
-					((this.state.selectedOperation === API_SET_INPUT_PORT_LABEL ||
-						this.state.selectedOperation === API_SET_OUTPUT_PORT_LABEL) &&
+					disabled={(this.props.selectedOperation === API_SET_NODE_LABEL && !this.state.nodeId) ||
+					((this.props.selectedOperation === API_SET_INPUT_PORT_LABEL ||
+						this.props.selectedOperation === API_SET_OUTPUT_PORT_LABEL) &&
 						!this.state.portId)}
 				/>
 			</div>);
 		}
 
 		let setNotificationMessages = <div />;
-		if (this.state.selectedOperation === API_ADD_NOTIFICATION_MESSAGE) {
+		if (this.props.selectedOperation === API_ADD_NOTIFICATION_MESSAGE) {
 			setNotificationMessages = (<div className="sidepanel-children" id="sidepanel-api-notificationMessages">
 				<div className="sidepanel-headers">Clear Notification Messages</div>
 				<div className="sidepanel-api-clear-notification-message-submit">
@@ -551,6 +557,8 @@ export default class SidePanelAPI extends React.Component {
 SidePanelAPI.propTypes = {
 	log: PropTypes.func,
 	getCanvasInfo: PropTypes.func,
+	setApiSelectedOperation: PropTypes.func,
+	selectedOperation: PropTypes.string,
 	getPipelineFlow: PropTypes.func,
 	setPipelineFlow: PropTypes.func,
 	addNodeTypeToPalette: PropTypes.func,

@@ -49,18 +49,8 @@ export default class SidePanelForms extends React.Component {
 			canvasDiagram2: "",
 			canvasPalette: "",
 			canvasPalette2: "",
-			canvasFileChooserVisible: false,
-			paletteFileChooserVisible: false,
-			canvasFileChooserVisible2: false,
-			paletteFileChooserVisible2: false,
 			canvasFiles: [],
-			paletteFiles: [],
-			selectedCanvasDropdownFile: "",
-			selectedPaletteDropdownFile: "",
-			selectedCanvasDropdownFile2: "",
-			selectedPaletteDropdownFile2: "",
-			extraCanvasOptions: false,
-			oneTimeLayout: NONE
+			paletteFiles: []
 		};
 
 		this.onCanvasFileSelect = this.onCanvasFileSelect.bind(this);
@@ -160,101 +150,20 @@ export default class SidePanelForms extends React.Component {
 		}
 	}
 
-
 	onCanvasDropdownSelect(evt, obj) {
-		if (obj.selected === CHOOSE_FROM_LOCATION) {
-			this.setState({
-				canvasFileChooserVisible: true,
-				selectedCanvasDropdownFile: ""
-			});
-		} else {
-			var that = this;
-			this.setState({
-				selectedCanvasDropdownFile: obj.selected,
-				canvasDiagram: "",
-				canvasFileChooserVisible: false
-			}, function() {
-				that.props.log("Submit canvas diagram", that.state.selectedCanvasDropdownFile);
-				FormsService.getFileContent("diagrams", that.state.selectedCanvasDropdownFile)
-					.then(function(res) {
-						that.props.setDiagramJSON(res);
-					});
-			});
-		}
+		this.props.setCanvasDropdownFile(obj.selected);
 	}
 
 	onCanvasDropdownSelect2(evt, obj) {
-		if (obj.selected === CHOOSE_FROM_LOCATION) {
-			this.setState({
-				canvasFileChooserVisible2: true,
-				selectedCanvasDropdownFile2: ""
-			});
-		} else {
-			var that = this;
-			this.setState({
-				selectedCanvasDropdownFile2: obj.selected,
-				canvasDiagram2: "",
-				canvasFileChooserVisible2: false
-			}, function() {
-				that.props.log("Submit canvas diagram", that.state.selectedCanvasDropdownFile2);
-				FormsService.getFileContent("diagrams", that.state.selectedCanvasDropdownFile2)
-					.then(function(res) {
-						that.props.setDiagramJSON2(res);
-					});
-			});
-		}
+		this.props.setCanvasDropdownFile2(obj.selected);
 	}
 
 	onPaletteDropdownSelect(evt, obj) {
-		if (obj.selected === CHOOSE_FROM_LOCATION) {
-			this.setState({
-				paletteFileChooserVisible: true,
-				selectedPaletteDropdownFile: ""
-			});
-		} else {
-			var that = this;
-			this.setState({
-				selectedPaletteDropdownFile: obj.selected,
-				canvasPalette: "",
-				paletteFileChooserVisible: false
-			}, function() {
-				that.props.log("Submit canvas palette", that.state.selectedPaletteDropdownFile);
-				FormsService.getFileContent("palettes", that.state.selectedPaletteDropdownFile)
-					.then(function(res) {
-						that.props.setPaletteJSON(res);
-						// enable palette
-						if (that.isReadyToSubmitPaletteData()) {
-							that.props.enableNavPalette(true);
-						}
-					});
-			});
-		}
+		this.props.setPaletteDropdownSelect(obj.selected);
 	}
 
 	onPaletteDropdownSelect2(evt, obj) {
-		if (obj.selected === CHOOSE_FROM_LOCATION) {
-			this.setState({
-				paletteFileChooserVisible2: true,
-				selectedPaletteDropdownFile2: ""
-			});
-		} else {
-			var that = this;
-			this.setState({
-				selectedPaletteDropdownFile2: obj.selected,
-				canvasPalette2: "",
-				paletteFileChooserVisible2: false
-			}, function() {
-				that.props.log("Submit canvas palette", that.state.selectedPaletteDropdownFile2);
-				FormsService.getFileContent("palettes", that.state.selectedPaletteDropdownFile2)
-					.then(function(res) {
-						that.props.setPaletteJSON2(res);
-						// enable palette
-						if (that.isReadyToSubmitPaletteData2()) {
-							that.props.enableNavPalette(true);
-						}
-					});
-			});
-		}
+		this.props.setPaletteDropdownSelect2(obj.selected);
 	}
 
 	onDragStart(ev) {
@@ -297,14 +206,14 @@ export default class SidePanelForms extends React.Component {
 	}
 
 	isReadyToSubmitCanvasData() {
-		if (this.state.canvasDiagram !== "" || this.state.selectedCanvasDropdownFile !== "") {
+		if (this.state.canvasDiagram !== "") {
 			return true;
 		}
 		return false;
 	}
 
 	isReadyToSubmitCanvasData2() {
-		if (this.state.canvasDiagram2 !== "" || this.state.selectedCanvasDropdownFile2 !== "") {
+		if (this.state.canvasDiagram2 !== "") {
 			return true;
 		}
 		return false;
@@ -343,14 +252,14 @@ export default class SidePanelForms extends React.Component {
 	}
 
 	isReadyToSubmitPaletteData() {
-		if (this.state.canvasPalette !== "" || this.state.selectedPaletteDropdownFile !== "") {
+		if (this.state.canvasPalette !== "") {
 			return true;
 		}
 		return false;
 	}
 
 	isReadyToSubmitPaletteData2() {
-		if (this.state.canvasPalette2 !== "" || this.state.selectedPaletteDropdownFile2 !== "") {
+		if (this.state.canvasPalette2 !== "") {
 			return true;
 		}
 		return false;
@@ -358,9 +267,6 @@ export default class SidePanelForms extends React.Component {
 
 	layoutDirectionOptionChange(evt, obj) {
 		this.props.setLayoutDirection(obj.selected);
-		this.setState({
-			oneTimeLayout: obj.selected
-		});
 	}
 
 	useInternalObjectModel(changeEvent) {
@@ -384,7 +290,7 @@ export default class SidePanelForms extends React.Component {
 	}
 
 	tipConfigChange(evt) {
-		const tipConf = Object.assign({}, this.props.canvasConfig.tipConfig);
+		const tipConf = Object.assign({}, this.props.commonCanvasConfig.tipConfig);
 		switch (evt.currentTarget.id) {
 		case "tip_palette":
 			tipConf.palette = evt.currentTarget.checked;
@@ -406,7 +312,6 @@ export default class SidePanelForms extends React.Component {
 
 	extraCanvasChange(changeEvent) {
 		this.props.showExtraCanvas(changeEvent.target.checked);
-		this.setState({ extraCanvasOptions: changeEvent.target.checked });
 	}
 
 	changeValidateFlowOnOpen(changeEvent) {
@@ -426,7 +331,7 @@ export default class SidePanelForms extends React.Component {
 		var space = (<div className="sidepanel-spacer" />);
 
 		var canvasFileChooserVisible = <div />;
-		if (this.state.canvasFileChooserVisible) {
+		if (this.props.canvasFileChooserVisible) {
 			canvasFileChooserVisible = (<div>
 				{space}
 				<FormControl
@@ -450,7 +355,7 @@ export default class SidePanelForms extends React.Component {
 		}
 
 		var paletteFileChooserVisible = <div />;
-		if (this.state.paletteFileChooserVisible) {
+		if (this.props.paletteFileChooserVisible) {
 			paletteFileChooserVisible = (<div>
 				{space}
 				<FormControl
@@ -484,7 +389,7 @@ export default class SidePanelForms extends React.Component {
 					dark
 					options={this.state.canvasFiles}
 					onSelect={this.onCanvasDropdownSelect.bind(this)}
-					value={this.state.selectedCanvasDropdownFile}
+					value={this.props.selectedCanvasDropdownFile}
 				/>
 				{canvasFileChooserVisible}
 			</div>
@@ -501,14 +406,14 @@ export default class SidePanelForms extends React.Component {
 					dark
 					options={this.state.paletteFiles}
 					onSelect={this.onPaletteDropdownSelect.bind(this)}
-					value={this.state.selectedPaletteDropdownFile}
+					value={this.props.selectedPaletteDropdownFile}
 				/>
 				{paletteFileChooserVisible}
 			</div>
 		</div>);
 
 		var canvasFileChooserVisible2 = <div />;
-		if (this.state.canvasFileChooserVisible2) {
+		if (this.props.canvasFileChooserVisible2) {
 			canvasFileChooserVisible2 = (<div>
 				{space}
 				<FormControl
@@ -532,7 +437,7 @@ export default class SidePanelForms extends React.Component {
 		}
 
 		var paletteFileChooserVisible2 = <div />;
-		if (this.state.paletteFileChooserVisible2) {
+		if (this.props.paletteFileChooserVisible2) {
 			paletteFileChooserVisible2 = (<div>
 				{space}
 				<FormControl
@@ -559,7 +464,7 @@ export default class SidePanelForms extends React.Component {
 			<div className="canvasField">
 				<div className="sidepanel-headers">Canvas Diagram</div>
 				<Dropdown
-					disabled={!this.state.extraCanvasOptions}
+					disabled={!this.props.extraCanvasDisplayed}
 					name="CanvasDropdown"
 					text="Canvas"
 					id="sidepanel-canvas-dropdown2"
@@ -567,7 +472,7 @@ export default class SidePanelForms extends React.Component {
 					dark
 					options={this.state.canvasFiles}
 					onSelect={this.onCanvasDropdownSelect2.bind(this)}
-					value={this.state.selectedCanvasDropdownFile2}
+					value={this.props.selectedCanvasDropdownFile2}
 				/>
 				{canvasFileChooserVisible2}
 			</div>
@@ -577,7 +482,7 @@ export default class SidePanelForms extends React.Component {
 			<div className="formField">
 				<div className="sidepanel-headers">Canvas Palette</div>
 				<Dropdown
-					disabled={!this.state.extraCanvasOptions}
+					disabled={!this.props.extraCanvasDisplayed}
 					name="PaletteDropdown"
 					text="Palette"
 					id="sidepanel-palette-dropdown2"
@@ -585,7 +490,7 @@ export default class SidePanelForms extends React.Component {
 					dark
 					options={this.state.paletteFiles}
 					onSelect={this.onPaletteDropdownSelect2.bind(this)}
-					value={this.state.selectedPaletteDropdownFile2}
+					value={this.props.selectedPaletteDropdownFile2}
 				/>
 				{paletteFileChooserVisible2}
 			</div>
@@ -602,7 +507,7 @@ export default class SidePanelForms extends React.Component {
 					HORIZONTAL,
 					VERTICAL
 				]}
-				selected={NONE}
+				selected={this.props.selectedLayout}
 			/>
 		</div>);
 
@@ -629,7 +534,7 @@ export default class SidePanelForms extends React.Component {
 					PORTS_CONNECTION,
 					HALO_CONNECTION
 				]}
-				selected={PORTS_CONNECTION}
+				selected={this.props.selectedConnectionType}
 			/>
 		</div>);
 
@@ -643,7 +548,7 @@ export default class SidePanelForms extends React.Component {
 					VERTICAL_FORMAT,
 					HORIZONTAL_FORMAT
 				]}
-				selected={VERTICAL_FORMAT}
+				selected={this.props.selectedNodeFormat}
 			/>
 		</div>);
 
@@ -658,7 +563,7 @@ export default class SidePanelForms extends React.Component {
 					ELBOW_LINKS,
 					STRAIGHT_LINKS
 				]}
-				selected={CURVE_LINKS}
+				selected={this.props.selectedLinkType}
 			/>
 		</div>);
 
@@ -672,7 +577,7 @@ export default class SidePanelForms extends React.Component {
 					FLYOUT,
 					MODAL
 				]}
-				selected={FLYOUT}
+				selected={this.props.selectedPaletteLayout}
 			/>
 			<div className="sidepanel-headers">Show Narrow Palette</div>
 			<div>
@@ -691,28 +596,28 @@ export default class SidePanelForms extends React.Component {
 				name={TIP_PALETTE}
 				dark
 				onChange={this.tipConfigChange}
-				checked={this.props.canvasConfig.tipConfig.palette}
+				checked={this.props.commonCanvasConfig.tipConfig.palette}
 			/>
 			<Checkbox
 				id="tip_nodes"
 				name={TIP_NODES}
 				dark
 				onChange={this.tipConfigChange}
-				checked={this.props.canvasConfig.tipConfig.nodes}
+				checked={this.props.commonCanvasConfig.tipConfig.nodes}
 			/>
 			<Checkbox
 				id="tip_ports"
 				name={TIP_PORTS}
 				dark
 				onChange={this.tipConfigChange}
-				checked={this.props.canvasConfig.tipConfig.ports}
+				checked={this.props.commonCanvasConfig.tipConfig.ports}
 			/>
 			<Checkbox
 				id="tip_links"
 				name={TIP_LINKS}
 				dark
 				onChange={this.tipConfigChange}
-				checked={this.props.canvasConfig.tipConfig.links}
+				checked={this.props.commonCanvasConfig.tipConfig.links}
 			/>
 		</div>);
 
@@ -803,24 +708,41 @@ export default class SidePanelForms extends React.Component {
 }
 
 SidePanelForms.propTypes = {
-	canvasConfig: PropTypes.object,
+	commonCanvasConfig: PropTypes.object,
 	enableNavPalette: PropTypes.func,
 	internalObjectModel: PropTypes.bool,
 	setDiagramJSON: PropTypes.func,
 	setPaletteJSON: PropTypes.func,
 	setDiagramJSON2: PropTypes.func,
 	setPaletteJSON2: PropTypes.func,
+	canvasFileChooserVisible: PropTypes.bool,
+	canvasFileChooserVisible2: PropTypes.bool,
+	paletteFileChooserVisible: PropTypes.bool,
+	paletteFileChooserVisible2: PropTypes.bool,
+	setCanvasDropdownFile: PropTypes.func,
+	setCanvasDropdownFile2: PropTypes.func,
+	selectedCanvasDropdownFile: PropTypes.string,
+	selectedCanvasDropdownFile2: PropTypes.string,
+	setPaletteDropdownSelect: PropTypes.func,
+	setPaletteDropdownSelect2: PropTypes.func,
+	selectedPaletteDropdownFile: PropTypes.string,
+	selectedPaletteDropdownFile2: PropTypes.string,
 	setLayoutDirection: PropTypes.func,
+	selectedLayout: PropTypes.string,
 	useInternalObjectModel: PropTypes.func,
 	setConnectionType: PropTypes.func,
+	selectedConnectionType: PropTypes.string,
 	setNodeFormatType: PropTypes.func,
+	selectedNodeFormat: PropTypes.string,
 	setLinkType: PropTypes.func,
+	selectedLinkType: PropTypes.string,
 	extraCanvasDisplayed: PropTypes.bool,
 	showExtraCanvas: PropTypes.func,
 	schemaValidationEnabled: PropTypes.bool,
 	schemaValidation: PropTypes.func,
 	log: PropTypes.func,
 	setPaletteLayout: PropTypes.func,
+	selectedPaletteLayout: PropTypes.string,
 	setTipConfig: PropTypes.func,
 	narrowPalette: PropTypes.bool,
 	setNarrowPalette: PropTypes.func,
