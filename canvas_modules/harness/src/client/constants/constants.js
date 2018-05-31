@@ -73,5 +73,6 @@ _defineConstant("NOTIFICATION_MESSAGE_TYPE", {
 	INFORMATIONAL: "informational",
 	WARNING: "warning",
 	ERROR: "error",
-	SUCCESS: "success"
+	SUCCESS: "success",
+	UNSPECIFIED: "unspecified"
 });

@@ -61,6 +61,23 @@ const notificationMessage3 = {
 	callback: notificationMessageCallback
 };
 
+const notificationMessage4 = {
+	id: "notification-4",
+	title: "Notification Message 4",
+	type: ""
+};
+
+const notificationMessage5 = {
+	id: "notification-5",
+	title: "Notification Message 5",
+	type: null
+};
+
+const notificationMessage6 = {
+	id: "notification-6",
+	title: "Notification Message 6"
+};
+
 const notificationMessages = [
 	notificationMessage0,
 	notificationMessage1,
@@ -143,7 +160,7 @@ describe("notification panel renders correctly", () => {
 });
 
 describe("canvas controller APIs for notification panel work correctly", () => {
-	afterEach(() => {
+	beforeEach(() => {
 		canvasController = new CanvasController();
 	});
 
@@ -173,11 +190,49 @@ describe("canvas controller APIs for notification panel work correctly", () => {
 	});
 });
 
+describe("null, empty string and undefined type messages are handled correctly", () => {
+	beforeEach(() => {
+		canvasController = new CanvasController();
+	});
+
+	it("gets unspecified message correctly if type passed in is an empty string", () => {
+		const expectedMessage4 = {
+			id: "notification-4",
+			title: "Notification Message 4",
+			type: "unspecified"
+		};
+		canvasController.setNotificationMessages([notificationMessage4]);
+		expect(isEqual(canvasController.getNotificationMessages("unspecified"), [expectedMessage4])).to.be.true;
+	});
+
+	it("gets unspecified message correctly if type passed in is null", () => {
+		const expectedMessage5 = {
+			id: "notification-5",
+			title: "Notification Message 5",
+			type: "unspecified"
+		};
+		canvasController.setNotificationMessages([notificationMessage5]);
+		expect(isEqual(canvasController.getNotificationMessages("unspecified"), [expectedMessage5])).to.be.true;
+	});
+
+	it("gets unspecified message correctly if type is not passed in", () => {
+		const expectedMessage6 = {
+			id: "notification-6",
+			title: "Notification Message 6",
+			type: "unspecified"
+		};
+		canvasController.setNotificationMessages([notificationMessage6]);
+		expect(isEqual(canvasController.getNotificationMessages("unspecified"), [expectedMessage6])).to.be.true;
+	});
+});
+
 describe("toolbar notification icon state renders correctly", () => {
 	let wrapper;
 
-	afterEach(() => {
+	beforeEach(() => {
 		canvasController = new CanvasController();
+	});
+	afterEach(() => {
 		wrapper.unmount();
 	});
 

@@ -2075,7 +2075,15 @@ export default class ObjectModel {
 	}
 
 	setNotificationMessages(messages) {
-		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: messages });
+		const newMessages = [];
+		messages.forEach((message) => {
+			const newMessageObj = Object.assign({}, message);
+			if (newMessageObj.type === null || newMessageObj.type === "" || typeof newMessageObj.type === "undefined") {
+				newMessageObj.type = "unspecified";
+			}
+			newMessages.push(newMessageObj);
+		});
+		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: newMessages });
 	}
 
 	getNotificationMessages(messageType) {

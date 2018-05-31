@@ -99,6 +99,9 @@ $notification-left-border-color-width: 4px;
 		&:hover {
 			background-color: #F5F7FA;
 
+			&.unspecified {
+				border-left: $notification-left-border-color-width solid #F5F7FA;
+			}
 			&.error {
 				border-left: $notification-left-border-color-width solid #E51F33;
 			}
@@ -116,7 +119,8 @@ $notification-left-border-color-width: 4px;
 		.notification-message-type {
 			display: flex;
 			justify-content: center;
-			padding-top: 3px;
+			height: 23px;
+			width: 25px;
 
 			> svg {
 				display: flex;
