@@ -157,6 +157,7 @@
         {
           "id": "nodeIDSuperNodePE",
           "type": "super_node",
+          "sub_type": "canvas",
           "subflow_ref": {
             "pipeline_id_ref": "modeler-sub-pipeline"
           },

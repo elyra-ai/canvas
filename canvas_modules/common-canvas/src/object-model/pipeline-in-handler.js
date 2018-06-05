@@ -36,8 +36,8 @@ export default class PipelineInHandler {
 	}
 
 	static convertNodes(nodes) {
-		return nodes.map((node) =>
-			({
+		return nodes.map((node) => {
+			const obj = {
 				"id": node.id,
 				"type": node.type,
 				"operator_id_ref": node.op,
@@ -55,8 +55,13 @@ export default class PipelineInHandler {
 				"app_data": has(node, "app_data") ? this.removeUiDataFromAppData(node.app_data) : [],
 				"subflow_ref": has(node, "subflow_ref") ? node.subflow_ref : {},
 				"model_ref": has(node, "model_ref") ? node.model_ref : ""
-			})
-		);
+			};
+			// Separate initialization needed to ensure that only valid enumeration values are used
+			if (has(node, "sub_type")) {
+				obj.sub_type = node.sub_type;
+			}
+			return obj;
+		});
 	}
 
 	static convertLabel(obj) {

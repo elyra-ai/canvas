@@ -230,6 +230,10 @@ describe("ObjectModel API handle model OK", () => {
 		shouldReturnSetParameters("id125TTEEIK7V");
 	});
 
+	it("should preserve supernode options", () => {
+		shouldPreserveSupernodeOptions("nodeIDSuperNodePE", "canvas", "modeler-sub-pipeline");
+	});
+
 
 	it("should save a message for an execution node", () => {
 		shouldSaveNodeMessage("idGWRVT47XDV");
@@ -675,6 +679,14 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualParameters, null, 2));
 
 		expect(isEqual(JSON.stringify(expectedParameters, null, 4), JSON.stringify(actualParameters, null, 4))).to.be.true;
+	}
+
+	function shouldPreserveSupernodeOptions(nodeId, subType, pipelineIdRef) {
+		deepFreeze(startPipelineFlow);
+		objectModel.setPipelineFlow(startPipelineFlow);
+		const node = objectModel.getPipelineFlow().pipelines[0].nodes.find((n) => n.id === nodeId);
+		expect(isEqual(subType, node.sub_type)).to.be.true;
+		expect(isEqual(pipelineIdRef, node.subflow_ref.pipeline_id_ref)).to.be.true;
 	}
 
 	function shouldSaveNodeMessage(nodeId) {

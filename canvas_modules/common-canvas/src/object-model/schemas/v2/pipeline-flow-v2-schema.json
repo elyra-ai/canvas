@@ -203,6 +203,13 @@
             "super_node"
           ]
         },
+        "sub_type": {
+          "description": "Sub-flow editing type. The default is 'canvas'",
+          "enum": [
+            "canvas",
+            "shaper"
+          ]
+        },
         "subflow_ref": {
           "description": "Refers to the sub-flow associated with this supernode",
           "type": "object",

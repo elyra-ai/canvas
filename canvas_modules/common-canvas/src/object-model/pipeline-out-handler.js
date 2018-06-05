@@ -63,6 +63,7 @@ export default class PipelineOutHandler {
 		}
 
 		if (ciNode.type === "super_node") {
+			newNode.sub_type = ciNode.sub_type;
 			newNode.subflow_ref = ciNode.subflow_ref;
 		}
 
