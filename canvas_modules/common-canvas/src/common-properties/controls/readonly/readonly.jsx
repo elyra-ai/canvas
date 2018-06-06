@@ -10,6 +10,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ControlUtils from "./../../util/control-utils";
+import ValidationMessage from "./../../components/validation-message";
+import { STATES } from "./../../constants/constants.js";
+import classNames from "classnames";
 import PropertyUtils from "./../../util/property-utils";
 
 export default class ReadonlyControl extends React.Component {
@@ -21,39 +24,17 @@ export default class ReadonlyControl extends React.Component {
 		} else if (typeof controlValue === "object" && controlValue.link_ref) {
 			controlValue = PropertyUtils.stringifyFieldValue(controlValue, this.props.control);
 		}
-
-		const conditionProps = {
-			propertyId: this.props.propertyId,
-			controlType: "textfield"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
-
-		const errorMessage = this.props.tableControl ? null : conditionState.message;
-		const messageType = conditionState.messageType;
-		const icon = this.props.tableControl ? <div /> : conditionState.icon;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
-		stateStyle.paddingBottom = "2px";
-
-		let controlIconContainerClass = "control-icon-container";
-		if (messageType !== "info") {
-			controlIconContainerClass = "control-icon-container-enabled";
-		}
+		const state = this.props.controller.getControlState(this.props.propertyId);
 
 		return (
-			<div className="readonly-control editor_control_area">
-				<div id={controlIconContainerClass}>
-					<text
-						{...stateDisabled}
-						style={stateStyle}
-						id={ControlUtils.getControlID(this.props.control, this.props.propertyId)}
-						className="readonly-control-text"
-					>
-						{controlValue}
-					</text>
-					{icon}
-				</div>
-				{errorMessage}
+			<div
+				className={classNames("properties-readonly", { "hide": state === STATES.HIDDEN })}
+				data-id={ControlUtils.getDataId(this.props.propertyId)}
+			>
+				<span disabled={state === STATES.DISABLED}>
+					{controlValue}
+				</span>
+				<ValidationMessage inTable={this.props.tableControl} state={state} messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)} />
 			</div>
 		);
 	}

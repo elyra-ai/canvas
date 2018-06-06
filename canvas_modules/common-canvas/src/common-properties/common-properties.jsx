@@ -19,13 +19,11 @@ import PropertiesController from "./properties-controller";
 import logger from "../../utils/logger";
 import PropertyUtils from "./util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants";
-import { Size } from "./constants/form-constants";
 import isEqual from "lodash/isEqual";
 import TitleEditor from "./components/title-editor";
+import classNames from "classnames";
 
 import { injectIntl, intlShape } from "react-intl";
-
-import globalStyles from "../../assets/styles/global.scss";
 
 class CommonProperties extends React.Component {
 	constructor(props) {
@@ -48,7 +46,6 @@ class CommonProperties extends React.Component {
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
-		this.getEditorWidth = this.getEditorWidth.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 	}
 	componentWillMount() {
@@ -86,6 +83,7 @@ class CommonProperties extends React.Component {
 			this.currentParameters = this.propertiesController.getPropertyValues();
 		}
 	}
+
 	onBlur(e) {
 		// apply properties when focus leave common properties.
 		// subdialogs and summary panel causes focus to leave but shouldn't apply settings
@@ -94,17 +92,6 @@ class CommonProperties extends React.Component {
 			!this.propertiesController.isSummaryPanelShowing() && !this.propertiesController.isSubPanelsShowing()) {
 			this.applyPropertiesEditing(false);
 		}
-	}
-
-	getEditorWidth() {
-		const editorSize = this.propertiesController.getForm().editorSize;
-		let width = parseInt(globalStyles.smallFlyoutWidth, 10);
-		if (editorSize === Size.MEDIUM) {
-			width = parseInt(globalStyles.mediumFlyoutWidth, 10);
-		} else if (editorSize === Size.LARGE) {
-			width = parseInt(globalStyles.mediumFlyoutWidth, 10);
-		}
-		return width;
 	}
 
 	setForm() {
@@ -198,7 +185,7 @@ class CommonProperties extends React.Component {
 			cancelHandler = null;
 		}
 		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
-
+		const editorSize = this.propertiesController.getForm().editorSize;
 		const formData = this.propertiesController.getForm();
 		if (formData !== null) {
 			let propertiesDialog = [];
@@ -247,7 +234,7 @@ class CommonProperties extends React.Component {
 					{editorForm}
 				</PropertiesEditor>);
 			} else if (this.props.propertiesConfig.containerType === "Custom") {
-				propertiesDialog = (<div className="custom-container">
+				propertiesDialog = (<div className="properties-custom-container">
 					{editorForm}
 				</div>);
 			} else { // Modal
@@ -264,13 +251,11 @@ class CommonProperties extends React.Component {
 					{editorForm}
 				</PropertiesModal>);
 			}
-			const propertiesId = this.props.propertiesConfig.rightFlyout ? "common-properties-right-flyout-panel" : "";
-			const editorWidth = this.getEditorWidth();
+			const className = classNames("properties-wrapper", { "properties-right-flyout": this.props.propertiesConfig.rightFlyout }, `properties-${editorSize}`);
 			return (
 				<div
 					ref={ (ref) => (this.commonProperties = ref) }
-					id={propertiesId}
-					style={{ width: editorWidth + "px" }}
+					className={className}
 					tabIndex="0"
 					onBlur={this.onBlur}
 				>

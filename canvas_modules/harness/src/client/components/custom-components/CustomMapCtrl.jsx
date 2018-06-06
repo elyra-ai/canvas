@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -9,10 +9,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Icon from "ap-components-react/dist/components/Icon";
+import Icon from "carbon-components-react/lib/components/Icon";
 import CustomMapSummary from "./CustomMapSummary";
-
-//* eslint no-unused-expressions: ["error", { "allow": ["CustomMapCtrl"] }] */
+import Button from "carbon-components-react/lib/components/Button";
 
 
 export default class CustomMapCtrl extends React.Component {
@@ -159,9 +158,9 @@ export default class CustomMapCtrl extends React.Component {
 		if (message && message.text) {
 			messageText = message.text;
 			if (message.type === "warning") {
-				icon = (<Icon type="warning" />);
+				icon = (<Icon className="warning" name="warning--glyph" />);
 			} else if (message.type === "error") {
-				icon = (<Icon type="error-o" />);
+				icon = (<Icon className="error" name="error--glyph" />);
 			}
 		}
 		const state = this.props.controller.getControlState(this.props.propertyId);
@@ -179,12 +178,12 @@ export default class CustomMapCtrl extends React.Component {
 						I should be a map!
 					</div>
 					<div className="condition">
-						<div className="map-icon">{icon}</div>
+						<div className="icon">{icon}</div>
 						<div>{messageText}</div>
 					</div>
-					<button data-id="go_to_svl" onClick={this.gotoSVL.bind(this)}>Go to SVL</button>
-					<button data-id="go_to_armonk" onClick={this.gotoArmonk.bind(this)}>Go to Armonk</button>
-					<button data-id="zoom_out" onClick={this.zoomOut.bind(this)}>Zoom Out</button>
+					<Button small data-id="go_to_svl" onClick={this.gotoSVL.bind(this)}>Go to SVL</Button>
+					<Button small data-id="go_to_armonk" onClick={this.gotoArmonk.bind(this)}>Go to Armonk</Button>
+					<Button small data-id="zoom_out" onClick={this.zoomOut.bind(this)}>Zoom Out</Button>
 				</div>
 			</div>
 		);

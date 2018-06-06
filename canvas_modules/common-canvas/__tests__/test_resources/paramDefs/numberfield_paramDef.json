@@ -6,7 +6,6 @@
     "number_int": 10,
     "number_dbl": 11.012,
     "number_null": null,
-    "number_placeholder": null,
     "number_random": 12345,
     "number_longControlName": 12,
     "number_error": -1,
@@ -17,7 +16,10 @@
     "disable": true,
     "number_disabled": 10,
     "number_random_disabled": 10,
-    "number_zero": 0
+    "number_zero": 0,
+    "number_table": [
+      []
+    ]
   },
   "parameters": [
     {
@@ -54,13 +56,13 @@
       "required": true
     },
     {
+      "id": "number_placeholder",
+      "type": "double"
+    },
+    {
       "id": "number_null",
       "type": "integer",
       "required": true
-    },
-    {
-      "id": "number_placeholder",
-      "type": "double"
     },
     {
       "id": "number_random",
@@ -109,6 +111,33 @@
       "id": "number_random_disabled",
       "type": "integer",
       "required": true
+    },
+    {
+      "id": "number_table",
+      "type": "array[numberfields]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "numberfields",
+      "parameters": [
+        {
+          "id": "numberfield",
+          "type": "integer"
+        },
+        {
+          "id": "numberfield2",
+          "type": "integer"
+        },
+        {
+          "id": "numberfield_on_panel",
+          "type": "integer"
+        },
+        {
+          "id": "numberfield_sub_panel",
+          "type": "integer"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -182,18 +211,6 @@
         }
       },
       {
-        "parameter_ref": "number_placeholder",
-        "label": {
-          "default": "Placeholder text"
-        },
-        "description": {
-          "default": "numberfield with placeholder text 'Enter a number'"
-        },
-        "place_holder_text": {
-          "default": "Enter a number"
-        }
-      },
-      {
         "parameter_ref": "number_random",
         "label": {
           "default": "Random"
@@ -218,6 +235,18 @@
         },
         "description": {
           "default": "numberfield with long control labels"
+        }
+      },
+      {
+        "parameter_ref": "number_placeholder",
+        "label": {
+          "default": "Placeholder text"
+        },
+        "description": {
+          "default": "numberfield with placeholder text 'Enter a number'"
+        },
+        "place_holder_text": {
+          "default": "Enter a number"
         }
       },
       {
@@ -291,6 +320,59 @@
             "max": 9999
           }
         }
+      },
+      {
+        "parameter_ref": "number_table",
+        "label": {
+          "default": "Numberfield control in a table"
+        },
+        "description": {
+          "default": "clear numbers to show error and warning",
+          "placement": "on_panel"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "numberfields",
+        "parameters": [
+          {
+            "parameter_ref": "numberfield",
+            "width": 10,
+            "label": {
+              "default": "Standard"
+            }
+          },
+          {
+            "parameter_ref": "numberfield2",
+            "width": 10,
+            "label": {
+              "default": "Additional"
+            }
+          },
+          {
+            "parameter_ref": "numberfield_on_panel",
+            "width": 10,
+            "label": {
+              "default": "on_panel"
+            },
+            "description": {
+              "default": "numberfield with `edit_style=on_panel`"
+            },
+            "edit_style": "on_panel"
+          },
+          {
+            "parameter_ref": "numberfield_sub_panel",
+            "width": 10,
+            "label": {
+              "default": "sub_panel"
+            },
+            "description": {
+              "default": "numberfield with `edit_style=sub_panel`"
+            },
+            "edit_style": "subpanel"
+          }
+        ]
       }
     ],
     "group_info": [
@@ -308,9 +390,9 @@
           "number_zero",
           "number_undefined",
           "number_null",
-          "number_placeholder",
           "number_random",
-          "number_longControlName"
+          "number_longControlName",
+          "number_placeholder"
         ]
       },
       {
@@ -328,6 +410,30 @@
           "disable",
           "number_disabled",
           "number_random_disabled"
+        ]
+      },
+      {
+        "id": "numberfield-table-panels",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "numberfield-table-summary",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Edit numberfield table"
+            },
+            "group_info": [
+              {
+                "id": "numberfield-table-summary-ctrls",
+                "parameter_refs": [
+                  "number_table"
+                ]
+              }
+            ]
+          }
         ]
       }
     ]
@@ -363,6 +469,42 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "number_warning",
+            "op": "greaterThan",
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "number_table[0]",
+          "message": {
+            "default": "Needs to be greaterThan 1"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "number_table[0]",
+            "op": "greaterThan",
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "number_table[1]",
+          "message": {
+            "default": "Needs to be greaterThan 1"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "number_table[1]",
             "op": "greaterThan",
             "value": 1
           }

@@ -12,31 +12,30 @@
     "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues"
   },
   "scripts": {
-    "test": "jest",
-    "test-coverage": "jest --coverage",
+    "test": "NODE_ENV=test jest",
+    "test-coverage": "NODE_ENV=test jest --coverage",
     "bundle-report": "webpack-bundle-analyzer --host 127.0.0.1 --port 8888 dist/stats.json",
-    "debug": "node --inspect-brk node_modules/.bin/jest --runInBand"
+    "debug": "NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
     "@wdp/pipeline-schemas": "^2.0.1",
-    "ap-components-react": "3.7.0",
+    "carbon-components": "8.20.3",
+    "carbon-components-react": "5.48.1",
+    "carbon-icons": "6.3.2",
     "codemirror": "5.33",
     "d3": "4.10.0",
     "dagre": "0.7.4",
-    "ibm-design-colors": "1.6.0",
     "immutable-undo": "1.1.1",
     "jsonschema": "1.2.2",
     "lodash": "4.17.4",
     "log4js": "0.6.38",
     "moment": "2.20.1",
     "prop-types": "15.5.10",
-    "react-bootstrap": "0.31.2",
     "react-codemirror2": "4.0.0",
     "react-contextmenu": "2.6.5",
-    "react-dropdown": "1.3.0",
     "react-intl": "2.3.0",
     "react-observe-size": "0.1.3",
-    "reactable": "0.14.1",
+    "reactable": "1.0.0",
     "redux": "3.7.2",
     "seedrandom": "2.4.3",
     "uuid": "3.1.0"
@@ -52,12 +51,13 @@
     "babel-preset-react-hmre": "1.1.1",
     "babel-preset-stage-1": "6.24.1",
     "chai": "4.1.0",
-    "chai-enzyme": "0.8.0",
+    "chai-enzyme": "1.0.0-beta.0",
     "copy-webpack-plugin": "4.0.1",
     "css-loader": "0.28.4",
     "deep-freeze": "0.0.1",
-    "enzyme": "2.9.1",
-    "enzyme-react-intl": "1.4.8",
+    "enzyme": "3.3.0",
+    "enzyme-adapter-react-16": "1.1.1",
+    "enzyme-react-intl": "2.0.0",
     "eslint": "4.3.0",
     "eslint-plugin-react": "7.1.0",
     "extract-text-webpack-plugin": "3.0.0",
@@ -69,14 +69,14 @@
     "grunt-jsonlint": "1.1.0",
     "grunt-webpack": "3.0.2",
     "grunt-yamllint": "0.3.0",
-    "jest": "20.0.4",
+    "jest": "22.4.3",
     "jest-localstorage-mock": "2.0.1",
     "optimize-css-assets-webpack-plugin": "3.1.1",
     "path": "0.12.7",
     "postcss-loader": "2.0.6",
-    "react": "15.5.4",
-    "react-dom": "15.5.4",
-    "react-test-renderer": "15.5.4",
+    "react": "16.3.2",
+    "react-dom": "16.3.2",
+    "react-test-renderer": "16.3.2",
     "sass-lint": "1.10.2",
     "sass-loader": "6.0.6",
     "sasslint-webpack-plugin": "1.0.4",
@@ -90,8 +90,8 @@
     "webpack-node-externals": "1.7.2"
   },
   "peerDependencies": {
-    "react": ">=15.x < 16",
-    "react-dom": ">=15.x < 16"
+    "react": "16.x",
+    "react-dom": "16.x"
   },
   "publishConfig": {
     "registry": "https://na.artifactory.swg-devops.com:443/artifactory/api/npm/wcp-wdp-npm-local"
@@ -115,6 +115,7 @@
       "./__mocks__/globalMock.js",
       "jest-localstorage-mock"
     ],
+    "setupTestFrameworkScriptFile": "./jest-setup.js",
     "verbose": true,
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",

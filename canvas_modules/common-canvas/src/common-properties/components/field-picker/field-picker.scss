@@ -7,76 +7,34 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-.rightside-modal-container #field-picker-table .modal__buttons {
-	position: absolute;
-	border-top: unset;
-	padding-top: 7px;
-	z-index: 1;
-}
-
-.rightside-modal-container #field-picker-table #flexible-table-container-wrapper {
+.properties-wf-modal .properties-fp-table .properties-ft-container-wrapper {
 	height: 100%;
 }
 
 // this can be removed after bootstrap.css is gone
-#field-picker-table #flexible-table-container-wrapper .field-picker-data-rows td {
+.properties-fp-table .properties-ft-container-wrapper .properties-fp-data-rows td {
 	border-top: 0;
+	vertical-align: middle;
 }
 
-.rightside-modal-container #field-picker-table .flexible-table-container-absolute {
+.properties-wf-modal .properties-fp-table .properties-ft-container-absolute {
 	height: 450px;
 }
 
-.field-picker-checkbox {
-	width: 20px;
-	position: relative;
-
-	// position checkbox within row
-	label {
-		padding-bottom: 10px;
-		top: -2px;
-	}
-}
-
-.field-picker-data {
+.properties-fp-data {
 	height: 100%;
 	display: flex;
 	align-items: center;
 }
 
-.field-picker-data-type-icon {
+.properties-fp-data-type-icon {
 	width: 15px;
 	height: 15px;
 	float: left;
 	margin-right: 5px;
 }
 
-.filter-list-li {
-	float: left;
-	width: 14px;
-	margin-right: 2px;
-	padding: 2px;
-	-webkit-appearance: none;
-	border: 0;
-	background-color: inherit;
-}
-
-.filter-list-li.filter:hover {
-	cursor: pointer;
-	background-color: #F0F3F6;
-}
-
-
-#field-picker-back-button {
-	height: 32px;
-	width: 32px;
-	border: 0;
-	padding: 0;
-	padding-top: 2px;
-	padding-left: 4px;
-}
-
-#field-picker-filter-list {
+.properties-fp-filter-list {
 	list-style-type: none;
 	float: right;
 	margin-top: 6px;
@@ -85,21 +43,56 @@
 	height: 22px;
 }
 
-#field-picker-back-button svg.icon {
+.properties-fp-filter-list-title.properties-fp-filter-list-li {
+	width: auto;
+	height: 32px;
+	margin-left: 10px;
+	cursor: default;
+}
+
+.properties-fp-filter-list-li {
+	float: left;
+	width: 14px;
+	margin-right: 2px;
+	padding: 2px;
+	-webkit-appearance: none;
+	border: 0;
+	background-color: inherit;
+	cursor: pointer;
+}
+
+.properties-fp-filter-list-li.properties-fp-filter:hover {
+	background-color: $ui-03;
+}
+
+.properties-fp-back-button.bx--btn.bx--btn--sm.bx--btn--secondary {
+	border: 0;
+}
+.properties-fp-back-button {
+	height: 32px;
+	width: 32px;
+	border: 0;
+	padding: 0;
+	padding-top: 2px;
+	padding-left: 4px;
+}
+
+.properties-fp-back-button svg.icon {
 	overflow: visible;
 }
 
-#field-picker-back-button > svg:not(:root) {
+.properties-fp-back-button > svg:not(:root) {
 	margin-right: 5px;
 	transform: translateY(4px);
 }
-
-#filter-list-title {
-	width: auto;
-	height: 32px;
+.properties-fp-top-row {
+	button.bx--btn > svg:not(:root) {
+		top: -5px;
+		left: -5px;
+	}
 }
 
-#field-picker-table {
+.properties-fp-table {
 	width: 100%;
 
 	// Set a height for the thead so the body height can be calculated accordingly
@@ -107,38 +100,52 @@
 		height: 35px;
 	}
 }
-
-#field-picker-buttons-container {
+.properties-fp-top-row {
+	margin-bottom: 6px;
 	display: flex;
-	float: right;
 	justify-content: space-between;
 }
 
-#reset-fields-button {
+.properties-wf-modal .properties-fp-top-row {
+	width: 50%;
+	float: right;
+}
+
+.properties-fp-reset-button-container {
 	border: 0;
 	float: right;
 	height: 32px;
 	width: 90px;
 	padding-right: 0;
 	line-height: 0.5;
+	cursor: pointer;
+	&:hover:not([disabled]) {
+		background-color: $brand-01;
+	}
+	&:hover:not([disabled]) .properties-fp-reset-button {
+		&.icon > svg > path {
+			fill: $inverse-01;
+		}
+		&.label {
+			text-decoration-color: $ui-01;
+			color: $ui-01;
+		}
+	}
 }
-
-#reset-fields-button-label {
-	float: left;
-	padding-top: 5px;
-	padding-right: 5px;
-	text-decoration: underline;
-}
-
-.reset-fields-button-icon {
-	float: left;
-	margin-top: -5px;
-}
-.reset-fields-button-icon > svg {
-	height: 18px;
-	width: 18px;
-}
-
-#reset-fields-button:hover .reset-fields-button-icon > svg > path {
-	fill: #FFFFFF;
+.properties-fp-reset-button {
+	&.label {
+		float: left;
+		padding-top: 5px;
+		padding-right: 5px;
+		text-decoration: underline;
+		font-size: 14px;
+		color: $brand-01;
+	}
+	&.icon {
+		float: left;
+	}
+	&.icon > svg {
+		height: 18px;
+		width: 18px;
+	}
 }

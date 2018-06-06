@@ -7,7 +7,14 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-@import "./control-item/control-item.scss";
-@import "./title-editor/title-editor.scss";
-@import "./moveable-table-rows/moveable-table-rows.scss";
-@import "./field-picker/field-picker.scss";
+@import "./control-item/control-item";
+@import "./title-editor/title-editor";
+@import "./moveable-table-rows/moveable-table-rows";
+@import "./field-picker/field-picker";
+@import "./properties-modal/properties-modal";
+@import "./wide-flyout/wide-flyout";
+@import "./validation-message/validation-message";
+@import "./properties-buttons/properties-buttons";
+@import "./icon-button/icon-button";
+@import "./editor-form/editor-form";
+@import "./flexible-table/flexible-table";

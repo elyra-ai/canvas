@@ -12,10 +12,7 @@ import ReactDOM from "react-dom";
 
 import CommonPropertiesComponents from "./components/common-properties-components.jsx";
 import CommonPropertiesConditions from "./components/common-properties-conditions.jsx";
-import "../styles/properties.scss";
-import "../styles/App.scss";
 import "../styles/index.scss";
-import "../styles/custom-datasets-table.scss";
 import App from "./App";
 import { IntlProvider } from "react-intl";
 import { HashRouter, Route } from "react-router-dom";

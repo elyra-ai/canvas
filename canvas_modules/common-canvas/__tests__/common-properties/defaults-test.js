@@ -9,7 +9,6 @@
 
 import propertyUtils from "../_utils_/property-utils";
 import defaultsParamDef from "../test_resources/paramDefs/defaults_paramDef.json";
-import { ReactWrapper } from "enzyme";
 import { expect } from "chai";
 
 // base test cases
@@ -26,47 +25,47 @@ describe("default values renders correctly", () => {
 	});
 
 	it("should render number field with default value", () => {
-		const defaultField = wrapper.find("#editor-control-default_num");
+		const defaultField = wrapper.find("div[data-id='properties-default_num'] input");
 		expect(defaultField).to.have.length(1);
-		expect(defaultField.prop("value")).to.equal("25");
+		expect(defaultField.prop("value")).to.equal(25);
 	});
 	it("should render 0 number field with no default value", () => {
-		const defaultField = wrapper.find("#editor-control-noDefault_num");
+		const defaultField = wrapper.find("div[data-id='properties-noDefault_num'] input");
 		expect(defaultField).to.have.length(1);
-		expect(defaultField.prop("value")).to.equal("0");
+		expect(defaultField.prop("value")).to.equal(0);
 	});
 	it("should render string field with default value", () => {
-		const defaultField = wrapper.find("#editor-control-default_text");
+		const defaultField = wrapper.find("div[data-id='properties-default_text'] input");
 		expect(defaultField).to.have.length(1);
 		expect(defaultField.prop("value")).to.equal("This is a default text");
 	});
 	it("should render an empty string field with no default value", () => {
-		const defaultField = wrapper.find("#editor-control-noDefault_text");
+		const defaultField = wrapper.find("div[data-id='properties-noDefault_text'] input");
 		expect(defaultField).to.have.length(1);
 		expect(defaultField.prop("value")).to.equal("");
 	});
 	it("should render array field with default value", () => {
-		const defaultField = wrapper.find("#editor-control-default_array");
+		const defaultField = wrapper.find("div[data-id='properties-default_array'] textarea");
 		expect(defaultField).to.have.length(1);
 		expect(defaultField.text()).to.equal("a\nb");
 	});
 	it("should render an empty array field with no default value", () => {
-		const defaultField = wrapper.find("#editor-control-noDefault_array");
+		const defaultField = wrapper.find("div[data-id='properties-noDefault_array'] textarea");
 		expect(defaultField).to.have.length(1);
 		expect(defaultField.text()).to.equal("");
 	});
-	it("should render array field with default value", () => {
-		const defaultField = wrapper.find("#editor-control-default_undefined");
+	it("should render field with default value", () => {
+		const defaultField = wrapper.find("div[data-id='properties-default_undefined'] input");
 		expect(defaultField).to.have.length(1);
 		expect(defaultField.prop("value")).to.equal("This is an undefined parameter");
 	});
 	it("should render string field with a parameter_ref default value", () => {
-		const defaultField = wrapper.find("#editor-control-default_parameterRef");
+		const defaultField = wrapper.find("div[data-id='properties-default_parameterRef'] input");
 		expect(defaultField).to.have.length(1);
 		expect(defaultField.prop("value")).to.equal("this is the control value");
 	});
 	it("should render an empty string field with no parameter_ref default value", () => {
-		const defaultField = wrapper.find("#editor-control-noDefault_parameterRef");
+		const defaultField = wrapper.find("div[data-id='properties-noDefault_parameterRef'] input");
 		expect(defaultField).to.have.length(1);
 		expect(defaultField.prop("value")).to.equal("");
 	});
@@ -87,99 +86,72 @@ describe("add rows in tables with correct default values", () => {
 	});
 
 	it("should render datamodel table with new rows with correct default values", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(0); // Summary link Default datamodel fields
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementById("flexible-table-field_types"); // needed since modal dialogs are outside `wrapper`
-		const table = new ReactWrapper(tableHtml, true);
-		const tableRows = table.find(".table-row");
+		const wideflyout = propertyUtils.openSummaryPanel(wrapper, "summary-panel");
+		const tableRows = wideflyout.find("tr.table-row");
 		expect(tableRows).to.have.length(4);
-		const rowOne = tableRows.at(0);
-		expect(rowOne.find(".Dropdown-placeholder").text()).to.equal("integer");
-		const rowTwo = tableRows.at(1);
-		expect(rowTwo.find(".Dropdown-placeholder").text()).to.equal("string");
-		const rowThree = tableRows.at(2);
-		expect(rowThree.find(".Dropdown-placeholder").text()).to.equal("password");
-		const rowFour = tableRows.at(2);
-		expect(rowFour.find(".Dropdown-placeholder").text()).to.equal("password");
+		expect(wideflyout.find("div[data-id='properties-field_types_0_2'] span").text()).to.equal("integer");
+		expect(wideflyout.find("div[data-id='properties-field_types_1_2'] span").text()).to.equal("string");
+		expect(wideflyout.find("div[data-id='properties-field_types_2_2'] span").text()).to.equal("password");
+		expect(wideflyout.find("div[data-id='properties-field_types_3_2'] span").text()).to.equal("password");
 	});
 
 	it("should render structure list editor table with new rows with correct default values", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Summary link Default Structure List Editor
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const modelHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const modalWrapper = new ReactWrapper(modelHtml, true);
-		const table = modalWrapper.find("#flexible-table-structureListEditorDefault");
-		let tableRows = table.find(".table-row");
+		let wideflyout = propertyUtils.openSummaryPanel(wrapper, "structureListEditorDefault-summary-panel");
+		let tableRows = wideflyout.find("tr.table-row");
 		expect(tableRows).to.have.length(1);
-		const rowOne = tableRows.at(0);
-		expect(rowOne.find(".toggletext_text").text()).to.equal("Ascending");
+		expect(wideflyout.find("div[data-id='properties-structureListEditorDefault_0_2'] span").text()).to.equal("Ascending");
 
 		// add a row
-		const addButton = table.find("#add-fields-button");
+		const addButton = wideflyout.find("button.properties-add-fields-button");
 		addButton.simulate("click");
-		tableRows = table.find(".table-row");
+		wideflyout = wrapper.find("div[data-id='properties-structureListEditorDefault-summary-panel']");
+		tableRows = wideflyout.find("tr.table-row");
 		expect(tableRows).to.have.length(2);
-		const rowTwo = tableRows.at(1);
-		expect(rowTwo.find(".toggletext_text").text()).to.equal("Ascending");
+		expect(wideflyout.find("div[data-id='properties-structureListEditorDefault_1_2'] span").text()).to.equal("Ascending");
 
 		// change the parameter_ref control value and then add a new row.
-		const radioButton = modalWrapper.find("input[value='Descending'][name='sLE_DefaultSortOrder']");
-		radioButton.simulate("change", { target: { checked: true, value: "Descending" } });
-		expect(renderedController.getPropertyValue({ name: "sLE_DefaultSortOrder" })).to.equal("Descending");
+		renderedController.updatePropertyValue({ name: "sLE_DefaultSortOrder" }, "Descending");
 		addButton.simulate("click");
-		tableRows = table.find(".table-row");
+		wideflyout = wrapper.find("div[data-id='properties-structureListEditorDefault-summary-panel']");
+		tableRows = wideflyout.find("tr.table-row");
 		expect(tableRows).to.have.length(3);
-		const rowThree = tableRows.at(2);
-		expect(rowThree.find(".toggletext_text").text()).to.equal("Descending");
+		expect(wideflyout.find("div[data-id='properties-structureListEditorDefault_2_2'] span").text()).to.equal("Descending");
 	});
 
 	it("should render column structure table with new rows with correct default values", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(2); // Summary link Default Parameter Structure Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const modelHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const modalWrapper = new ReactWrapper(modelHtml, true);
-		const table = modalWrapper.find("#flexible-table-columnStructureTableDefault");
-		let tableRows = table.find(".table-row");
+		let wideflyout = propertyUtils.openSummaryPanel(wrapper, "structureTableDefault-summary-panel");
+
+		let tableRows = wideflyout.find("tr.table-row");
 		expect(tableRows).to.have.length(0);
 
 		// add a row
-		const addFieldsButtons = modalWrapper.find("Button"); // field picker buttons
-		addFieldsButtons.at(0).simulate("click"); // open filter picker
-		propertyUtils.fieldPicker(["Age"]);
-		modalWrapper.find("#properties-apply-button").simulate("click");
-		tableRows = table.find(".table-row");
+		let fieldPickerWrapper = propertyUtils.openFieldPicker(wrapper, "properties-structureTableDefault-default");
+		propertyUtils.fieldPicker(fieldPickerWrapper, ["Age"]);
+		wideflyout = wrapper.find("div[data-id='properties-structureTableDefault-summary-panel']");
+		tableRows = wideflyout.find("tr.table-row");
 		expect(tableRows).to.have.length(1);
-		const rowOne = tableRows.at(0);
-		expect(rowOne.find(".toggletext_text").text()).to.equal("Ascending");
+		expect(wideflyout.find("div[data-id='properties-columnStructureTableDefault_0_1'] span").text()).to.equal("Ascending");
 
 		// change the parameter_ref control value and then add a new row.
-		const radioButton = modalWrapper.find("input[value='Descending'][name='CST_DefaultSortOrder']");
-		radioButton.simulate("change", { target: { checked: true, value: "Descending" } });
-		expect(renderedController.getPropertyValue({ name: "CST_DefaultSortOrder" })).to.equal("Descending");
-		addFieldsButtons.at(0).simulate("click"); // open filter picker
-		propertyUtils.fieldPicker(["Sex"]);
-		modalWrapper.find("#properties-apply-button").simulate("click");
-		tableRows = table.find(".table-row");
+		renderedController.updatePropertyValue({ name: "CST_DefaultSortOrder" }, "Descending");
+		fieldPickerWrapper = propertyUtils.openFieldPicker(wrapper, "properties-structureTableDefault-default");
+		propertyUtils.fieldPicker(fieldPickerWrapper, ["Sex"]);
+		wideflyout = wrapper.find("div[data-id='properties-structureTableDefault-summary-panel']");
+		tableRows = wideflyout.find("tr.table-row");
 		expect(tableRows).to.have.length(2);
-		const rowTwo = tableRows.at(1);
-		expect(rowTwo.find(".toggletext_text").text()).to.equal("Descending");
+		expect(wideflyout.find("div[data-id='properties-columnStructureTableDefault_1_1'] span").text()).to.equal("Descending");
 	});
 
 	it("should render column structure table where new rows have correct defaultRow", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(3); // Summary link Default Row Structure Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const modelHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const modalWrapper = new ReactWrapper(modelHtml, true);
-		const table = modalWrapper.find("#flexible-table-columnStructureTableDefaultRow");
-		let tableRows = table.find(".table-row");
+		let wideflyout = propertyUtils.openSummaryPanel(wrapper, "structureTableDefaultRow");
+		let tableRows = wideflyout.find("tr.table-row");
 		expect(tableRows).to.have.length(2);
 
 		// add a row
-		const addFieldsButtons = modalWrapper.find("Button"); // field picker buttons
-		addFieldsButtons.at(0).simulate("click"); // open filter picker
-		propertyUtils.fieldPicker(["Sex"]);
-		modalWrapper.find("#properties-apply-button").simulate("click");
-		tableRows = table.find(".table-row");
+		const fieldPickerWrapper = propertyUtils.openFieldPicker(wrapper, "properties-columnStructureTableDefaultRow");
+		propertyUtils.fieldPicker(fieldPickerWrapper, ["Sex"]);
+		wideflyout = wrapper.find("div[data-id='properties-structureTableDefaultRow']");
+		tableRows = wideflyout.find("tr.table-row");
 		expect(tableRows).to.have.length(3);
 
 		const expectedRows = [

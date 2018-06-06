@@ -31,7 +31,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify that the "([^"]*)" control is displayed$/, function(controlId) {
-		const control = browser.$(".modal-dialog").$("#" + controlId);
+		const control = browser.$("div[data-id='properties-ci-" + controlId + "']");
 		expect(control).not.toBe(null);
 	});
 
@@ -77,18 +77,21 @@ module.exports = function() {
 			expect(summaryTablePlaceholder).toBe("More than ten fields...");
 		});
 
-	this.Then(/^I verify that a wideflyout dialog has opened$/, function() {
-		const wideFlyOutClassElement = browser.$(".rightside-modal-container");
-		expect(wideFlyOutClassElement.value).not.toBe(null);
-	});
+	this.Then(/^I verify that the "([^"]*)" panel wideflyout dialog has opened$/,
+		function(panelName) {
+			const panel = browser.$("div[data-id='properties-" + panelName + "']");
+			expect(panel).not.toBe(null);
+			const wideFlyOutClassElement = panel.$(".properties-wf-content.show");
+			expect(wideFlyOutClassElement.value).not.toBe(null);
+		});
 
 	function findCategory(categoryName) {
 		// find the catergory
-		const categories = browser.$("#category-parent-container-right-flyout-panel").$$(".category-title-container-right-flyout-panel");
+		const categories = browser.$(".right-flyout-panel").$$(".properties-category-container");
 		var category = null;
 		for (let idx = 0; idx < categories.length; idx++) {
 			const panel = categories[idx];
-			if (panel.$(".category-title-right-flyout-panel").getText() === categoryName.toUpperCase()) {
+			if (panel.$(".properties-category-title").getText() === categoryName.toUpperCase()) {
 				category = panel;
 				break;
 			}
@@ -97,11 +100,11 @@ module.exports = function() {
 	}
 
 	function findSummaryLinkButton(category, linkName) {
-		const summaryLinks = category.$$(".control-summary-link-buttons");
+		const summaryLinks = category.$$(".properties-summary-link-button");
 		var linkButton = null;
 		for (let idx = 0; idx < summaryLinks.length; idx++) {
-			const button = summaryLinks[idx].$("a");
-			if (button.getText() === linkName) {
+			const button = summaryLinks[idx];
+			if (button.$(".properties-icon-button-label").getText() === linkName) {
 				linkButton = button;
 				break;
 			}
@@ -110,11 +113,11 @@ module.exports = function() {
 	}
 
 	function findSummaryContainer(category, linkName) {
-		const summaryLinks = category.$$(".control-summary");
+		const summaryLinks = category.$$(".properties-summary-link-button");
 		var summaryContainer = null;
 		for (let idx = 0; idx < summaryLinks.length; idx++) {
 			const summary = summaryLinks[idx];
-			if (summary.$("a").getText() === linkName) {
+			if (summary.$(".properties-icon-button-label").getText() === linkName) {
 				summaryContainer = summary;
 				break;
 			}

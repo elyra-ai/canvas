@@ -1,0 +1,17 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+.properties-checkboxset {
+	&.hide {
+		display: none;
+	}
+	.bx--checkbox-wrapper { //override carbon checkbox styling TODO currently doesn't override
+		margin-bottom: 0.5rem;
+	}
+}

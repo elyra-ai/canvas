@@ -6,6 +6,8 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+import { dropdownSelect } from "./utilities/test-utils.js";
+
 /* eslint no-console: "off" */
 /* global browser */
 
@@ -33,43 +35,11 @@ module.exports = function() {
 	});
 
 	this.Then(/^I select node "([^"]*)" in the node drop-down list$/, function(nodeName) {
-		// get the list of drop down options.
-		browser.$("#sidepanel-api-nodePortLabel").scroll();
-		browser.$("#sidepanel-api-nodePortLabel")
-			.$$(".select")[0]
-			.$(".button")
-			.click("svg");
-		// get the list of drop down options.
-		var nodeList = browser.$("#sidepanel-api-nodePortLabel")
-			.$$(".select")[0]
-			.$(".select__options")
-			.$$("button");
-		for (var idx = 0; idx < nodeList.length; idx++) {
-			if (nodeList[idx].getText() === nodeName) {
-				nodeList[idx].click();
-				break;
-			}
-		}
+		dropdownSelect(browser.$("#sidepanel-api-nodeSelection"), nodeName);
 	});
 
 	this.Then(/^I select port "([^"]*)" in the port drop-down list$/, function(portName) {
-		// get the list of drop down options.
-		browser.$("#sidepanel-api-nodePortLabel").scroll();
-		browser.$("#sidepanel-api-nodePortLabel")
-			.$$(".select")[1]
-			.$(".button")
-			.click("svg");
-		// get the list of drop down options.
-		var portList = browser.$("#sidepanel-api-nodePortLabel")
-			.$$(".select")[1]
-			.$(".select__options")
-			.$$("button");
-		for (var idx = 0; idx < portList.length; idx++) {
-			if (portList[idx].getText() === portName) {
-				portList[idx].click();
-				break;
-			}
-		}
+		dropdownSelect(browser.$("#sidepanel-api-portSelection"), portName);
 	});
 
 	this.Then(/^I verify that "([^"]*)" was added in palette category "([^"]*)"$/, function(nodeTypeName, categoryName) {
@@ -93,7 +63,7 @@ module.exports = function() {
 	});
 
 	this.When(/^I update the pipelineflow to add input and output ports to node "([^"]*)"$/, function(nodeName) {
-		const textField = browser.$("#pipelineFlow");
+		const textField = browser.$("#sidepanel-api-pipelineFlow").$("textarea");
 		const pipelineFlow = JSON.parse(textField.getText());
 		const nodeList = pipelineFlow.pipelines[0].nodes;
 		const node = nodeList.find((nd) => nd.app_data.ui_data.label === nodeName);
@@ -144,27 +114,26 @@ module.exports = function() {
 	});
 
 	this.Then(/^I have selected the "([^"]*)" message type in the api sidepanel$/, function(messageType) {
-		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
-		const radioOptions = apiSidePanel.$(".sidepanel-api-notification-message-types").$$("label");
-
+		const apiSidePanel = browser.$("#sidepanel-api-nm-types");
+		const radioOptions = apiSidePanel.$$(".radioButtonWrapper");
 		try {
 			if (messageType === "informational") {
-				const informational = radioOptions[0];
+				const informational = radioOptions[0].$("label");
 				informational.scroll();
 				browser.pause(500);
 				informational.click();
 			} else if (messageType === "success") {
-				const success = radioOptions[1];
+				const success = radioOptions[1].$("label");
 				success.scroll();
 				browser.pause(500);
 				success.click();
 			} else if (messageType === "warning") {
-				const warning = radioOptions[2];
+				const warning = radioOptions[2].$("label");
 				warning.scroll();
 				browser.pause(500);
 				warning.click();
 			} else if (messageType === "error") {
-				const error = radioOptions[3];
+				const error = radioOptions[3].$("label");
 				error.scroll();
 				browser.pause(500);
 				error.click();
@@ -177,12 +146,12 @@ module.exports = function() {
 
 	this.When(/^I enter "([^"]*)" into the message details field$/, function(textboxValue) {
 		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
-		const textbox = apiSidePanel.$("#messageContent");
+		const textbox = apiSidePanel.$("#sidepanel-api-nm-content textarea");
 		textbox.setValue("", textboxValue);
 	});
 
 	function getAPISubmitButton() {
-		return browser.$("#canvasFileSubmit");
+		return browser.$("#sidepanel-api-submit").$("button");
 	}
 
 	function findNodeIndexModal(nodeType) {

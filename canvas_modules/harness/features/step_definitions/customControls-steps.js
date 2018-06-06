@@ -19,10 +19,10 @@ module.exports = function() {
 	});
 
 	this.Then("I click on slider", function() {
-		const sliderInput = browser.$(".text--slider");
+		const sliderInput = browser.$(".bx--slider");
 		// needed since screen sizes can be different
-		for (var cntr = 1; cntr < 200; cntr++) {
-			browser.leftClick(".noUi-origin", 15, 2);
+		for (var cntr = 15; cntr < 600; cntr += 15) {
+			browser.leftClick(".bx--slider__track", cntr, 2);
 			const value = parseInt(sliderInput.getValue(), 10);
 			if (value >= 65) {
 				return;
@@ -31,15 +31,15 @@ module.exports = function() {
 	});
 
 	this.Then(/^I validate the dropdown has (\d+) options$/, function(numOptions) {
-		const dropdown = browser.$$(".Dropdown-placeholder");
-		dropdown[0].click(); // selects the dropdown in the slider panel
-		const options = browser.$(".Dropdown-menu").$$(".Dropdown-option");
+		browser.$("div[data-id='properties-color']").click(".bx--dropdown-v2");
+		browser.pause(500);
+		const options = browser.$("div[data-id='properties-color").$$(".bx--list-box__menu-item");
 		expect(options.length).toEqual(Number(numOptions));
 	});
 
 	this.Then("I verify custom summary panel", function() {
 		// check to see if there are 2 rows of data in the summary panel
-		const dataRows = browser.$$(".control-summary-table-row-multi-data");
+		const dataRows = browser.$$(".properties-summary-values");
 		expect(dataRows.length).toEqual(3);
 		// check the custom react object is render correctly
 		const customMap = browser.$(".custom-map-summary").$$(".span-text");
@@ -66,13 +66,14 @@ module.exports = function() {
 	});
 
 	this.Then("I show the map", function() {
-		const showMapCheckbox = browser.$(".control-contents").$(".properties-tooltips-container")
+		const showMapCheckbox = browser.$("div[data-id='properties-checkbox-panel']")
+			.$(".properties-tooltips-container")
 			.$("label");
 		showMapCheckbox.click();
 	});
 
 	this.Then(/^I validate map has error$/, function() {
-		const icon = browser.$$(".map-icon .icon");
+		const icon = browser.$$(".custom-map .icon svg");
 		expect(icon.length).toEqual(1);
 	});
 };

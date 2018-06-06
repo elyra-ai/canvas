@@ -1,0 +1,48 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+.properties-icon-button {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	border-style: none;
+	padding: 5px 2px 5px 0;
+	font-size: 100%;
+	background: unset;
+	> svg {
+		height: 20px;
+		width: 20px;
+		margin-right: 3px;
+		fill: $brand-01;
+		&[disabled] {
+			opacity: 0.5;
+		}
+	}
+	span {
+		color: $brand-01;
+		text-decoration: underline;
+		&[disabled] {
+			opacity: 0.5;
+		}
+	}
+	.hide {
+		display: none;
+	}
+	&:hover:not([disabled]) {
+		span {
+			color: $brand-02;
+		}
+		> svg {
+			fill: $brand-02;
+		}
+	}
+	&[disabled] {
+		cursor: default;
+	}
+}

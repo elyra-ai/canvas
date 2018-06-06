@@ -208,7 +208,7 @@
         ]
       },
       {
-        "id": "column-selection",
+        "id": "column-selection-panel",
         "label": {
           "default": "Column Selection"
         },

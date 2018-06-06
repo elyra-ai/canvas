@@ -7,6 +7,31 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-@import "./actions/actions.scss";
-@import "./components/components.scss";
-@import "./controls/controls.scss";
+@import "./actions/actions";
+@import "./components/components";
+@import "./controls/controls";
+@import "./panels/panels";
+@import "./../../assets/styles/global";
+
+.properties-right-flyout {
+	width: 0;
+	height: 100%;
+	background-color: $ui-01;
+	overflow: hidden;
+	border-left: 2px solid $ui-04;
+	outline: none;
+	&.properties-small {
+		width: $common-properties-small-flyout-width;
+	}
+	&.properties-medium {
+		width: $common-properties-medium-flyout-width;
+	}
+	&.properties-large {
+		width: $common-properties-medium-flyout-width;
+	}
+}
+
+.properties-right-flyout > .properties-custom-container {
+	height: calc(100% - 90px);
+	overflow-y: auto;
+}

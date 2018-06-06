@@ -10,7 +10,12 @@
     "blueberry-size": "tiny",
     "fruit-size": "bigfruit",
     "radioBoolean": true,
-    "radioDouble": 1.23
+    "radioDouble": 1.23,
+    "disablePanelSelector": true,
+    "fruit-color11": "red11",
+    "hidePanelSelector": true,
+    "fruit-color21": "red21",
+    "number": 11
   },
   "parameters": [
     {
@@ -75,6 +80,35 @@
         1.23,
         5.32
       ],
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "disablePanelSelector",
+      "type": "boolean"
+    },
+    {
+      "id": "fruit-color11",
+      "enum": [
+        "red11",
+        "blue11",
+        "yellow11"
+      ]
+    },
+    {
+      "id": "hidePanelSelector",
+      "type": "boolean"
+    },
+    {
+      "id": "fruit-color21",
+      "enum": [
+        "red21",
+        "blue21",
+        "yellow21"
+      ]
+    },
+    {
+      "id": "number",
       "type": "double",
       "required": true
     }
@@ -160,6 +194,51 @@
         },
         "control": "radioset",
         "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "disablePanelSelector",
+        "label": {
+          "default": "Disable 'Fruit Color11' Panel Selector"
+        },
+        "description": {
+          "default": "Disable Fruit Color radioset and panelselector"
+        }
+      },
+      {
+        "parameter_ref": "fruit-color11",
+        "label": {
+          "default": "Fruit Color11"
+        },
+        "description": {
+          "default": "Shows red, yellow, or blue values"
+        }
+      },
+      {
+        "parameter_ref": "hidePanelSelector",
+        "label": {
+          "default": "Hide 'Fruit Color21' Panel Selector"
+        },
+        "description": {
+          "default": "Hide Fruit Color radioset and panelselector"
+        }
+      },
+      {
+        "parameter_ref": "fruit-color21",
+        "label": {
+          "default": "Fruit Color21"
+        },
+        "description": {
+          "default": "Shows red, yellow, or blue values"
+        }
+      },
+      {
+        "parameter_ref": "number",
+        "label": {
+          "default": "number"
+        },
+        "description": {
+          "default": "A control between a panelSelector control.  Also used to display dynamic text in panel text."
+        }
       }
     ],
     "group_info": [
@@ -459,9 +538,174 @@
             ]
           }
         ]
+      },
+      {
+        "id": "panel-selectors-filter",
+        "label": {
+          "default": "Filter"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "panel-selector11",
+            "label": {
+              "default": "Panel Selector"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "disablePanelSelector",
+              "fruit-color11",
+              "number"
+            ],
+            "group_info": [
+              {
+                "id": "dynamicTextPercent",
+                "type": "textPanel",
+                "label": {
+                  "default": "Dynamic Percent"
+                },
+                "description": {
+                  "default": "Percent: ${percent(number, 6)} with 6 decimals. Percent: ${percent(number,2)} with 2 decimals"
+                }
+              },
+              {
+                "id": "dynamicTextSum",
+                "type": "textPanel",
+                "label": {
+                  "default": "Dynamic Sum"
+                },
+                "description": {
+                  "default": "Sum: ${sum(number, number)} with (number, number). Sum: ${sum(number, 2, number)} with (number, 2, number)"
+                }
+              },
+              {
+                "id": "panel-selector-fields11",
+                "label": {
+                  "default": "Colors"
+                },
+                "type": "panelSelector",
+                "depends_on_ref": "fruit-color11",
+                "group_info": [
+                  {
+                    "id": "red11",
+                    "type": "textPanel",
+                    "description": {
+                      "default": "Apples ripen six to 10 times faster at room temperature than if they are refrigerated."
+                    }
+                  },
+                  {
+                    "id": "blue11",
+                    "type": "textPanel",
+                    "label": {
+                      "default": "Blueberries"
+                    },
+                    "description": {
+                      "default": "Blueberries freeze in just 4 minutes."
+                    }
+                  },
+                  {
+                    "id": "yellow11",
+                    "type": "textPanel",
+                    "label": {
+                      "default": "Lemons"
+                    },
+                    "description": {
+                      "default": "Lemons are a hybrid between a sour orange and a citron."
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "panel-selector21",
+            "label": {
+              "default": "Panel Selector"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "hidePanelSelector",
+              "fruit-color21"
+            ],
+            "group_info": [
+              {
+                "id": "panel-selector-fields21",
+                "label": {
+                  "default": "Colors"
+                },
+                "type": "panelSelector",
+                "depends_on_ref": "fruit-color21",
+                "group_info": [
+                  {
+                    "id": "red21",
+                    "type": "textPanel",
+                    "description": {
+                      "default": "Apples ripen six to 10 times faster at room temperature than if they are refrigerated."
+                    }
+                  },
+                  {
+                    "id": "blue21",
+                    "type": "textPanel",
+                    "label": {
+                      "default": "Blueberries"
+                    },
+                    "description": {
+                      "default": "Blueberries freeze in just 4 minutes."
+                    }
+                  },
+                  {
+                    "id": "yellow21",
+                    "type": "textPanel",
+                    "label": {
+                      "default": "Lemons"
+                    },
+                    "description": {
+                      "default": "Lemons are a hybrid between a sour orange and a citron."
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   },
+  "conditions": [
+    {
+      "enabled": {
+        "parameter_refs": [
+          "number"
+        ],
+        "group_refs": [
+          "panel-selector-fields11",
+          "dynamicTextPercent",
+          "dynamicTextSum"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disablePanelSelector",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "panel-selector-fields21"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hidePanelSelector",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ],
   "dataset_metadata": [],
   "resources": {
     "fruit-color1.red1.label": "Red",

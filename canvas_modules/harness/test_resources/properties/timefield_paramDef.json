@@ -11,8 +11,11 @@
     "time_without_a_ui_hint": "06:30:00Z",
     "hide_time_field": true,
     "hidden_time": "06:30:00Z",
-    "disable_time_field" : true,
-    "disabled_time": "06:30:00Z"
+    "disable_time_field": true,
+    "disabled_time": "06:30:00Z",
+    "time_table": [
+      []
+    ]
   },
   "parameters": [
     {
@@ -62,6 +65,33 @@
       "id": "disabled_time",
       "type": "time",
       "required": false
+    },
+    {
+      "id": "time_table",
+      "type": "array[timefields]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "timefields",
+      "parameters": [
+        {
+          "id": "timefield",
+          "type": "time"
+        },
+        {
+          "id": "timefield2",
+          "type": "time"
+        },
+        {
+          "id": "timefield_on_panel",
+          "type": "time"
+        },
+        {
+          "id": "timefield_sub_panel",
+          "type": "time"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -117,10 +147,10 @@
           "default": "Time H:m:s with null and placeholder"
         },
         "description": {
-          "default": "Optional timefield with null and placeholder text"
+          "default": "Optional timefield with null and placeholder time"
         },
         "time_format": "H:m:s",
-        "place_holder_text": {
+        "place_holder_time": {
           "default": "Enter a time: H:m:s"
         }
       },
@@ -155,6 +185,59 @@
           "default": "Initially disbaled time, enabled by clicking checkbox."
         },
         "time_format": "HH:mm:ss"
+      },
+      {
+        "parameter_ref": "time_table",
+        "label": {
+          "default": "Timefield control in a table"
+        },
+        "description": {
+          "default": "Enter invalid time to show error",
+          "placement": "on_panel"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "timefields",
+        "parameters": [
+          {
+            "parameter_ref": "timefield",
+            "width": 10,
+            "label": {
+              "default": "Standard"
+            }
+          },
+          {
+            "parameter_ref": "timefield2",
+            "width": 10,
+            "label": {
+              "default": "Additional"
+            }
+          },
+          {
+            "parameter_ref": "timefield_on_panel",
+            "width": 10,
+            "label": {
+              "default": "on_panel"
+            },
+            "description": {
+              "default": "timefield with `edit_style=on_panel`"
+            },
+            "edit_style": "on_panel"
+          },
+          {
+            "parameter_ref": "timefield_sub_panel",
+            "width": 10,
+            "label": {
+              "default": "sub_panel"
+            },
+            "description": {
+              "default": "timefield with `edit_style=sub_panel`"
+            },
+            "edit_style": "subpanel"
+          }
+        ]
       }
     ],
     "group_info": [
@@ -184,6 +267,30 @@
           "hidden_time",
           "disable_time_field",
           "disabled_time"
+        ]
+      },
+      {
+        "id": "timefield-table-panels",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "timefield-table-summary",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Edit timefield table"
+            },
+            "group_info": [
+              {
+                "id": "timefield-table-summary-ctrls",
+                "parameter_refs": [
+                  "time_table"
+                ]
+              }
+            ]
+          }
         ]
       }
     ]

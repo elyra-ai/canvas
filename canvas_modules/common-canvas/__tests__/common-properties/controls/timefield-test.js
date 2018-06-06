@@ -14,31 +14,28 @@ import TimefieldControl from "../../../src/common-properties/controls/timefield"
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
-import isEqual from "lodash/isEqual";
 
-const TIMEIELD_PARAM_DEF = require("../../test_resources/paramDefs/timefield_paramDef.json");
-
-const controller = new Controller();
-
-const control = {
-	name: "test-timefield",
-	additionalText: "Enter time",
-	valueDef: {
-		isList: false,
-		propType: "time"
-	}
-};
-propertyUtils.setControls(controller, [control]);
-const propertyId = { name: "test-timefield" };
-
-function setPropertyValue() {
-	controller.setPropertyValues(
-		{ "test-timefield": "05:12:48" }
-	);
-}
+import TIMEFIELD_PARAM_DEF from "../../test_resources/paramDefs/timefield_paramDef.json";
 
 describe("timefield-control renders correctly", () => {
-
+	const controller = new Controller();
+	const control = {
+		name: "test-timefield",
+		additionalText: "Enter time",
+		valueDef: {
+			isList: false,
+			propType: "time"
+		}
+	};
+	propertyUtils.setControls(controller, [control]);
+	const propertyId = { name: "test-timefield" };
+	beforeEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+		controller.setPropertyValues(
+			{ "test-timefield": "05:12:48" }
+		);
+	});
 	it("props should have been defined", () => {
 		const wrapper = mount(
 			<TimefieldControl
@@ -60,12 +57,12 @@ describe("timefield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find("[type='text']"); // input dom element will have type 'text' for a time field.
+		const timeWrapper = wrapper.find("div[data-id='properties-test-timefield']");
+		const input = timeWrapper.find("input");
 		expect(input).to.have.length(1);
 	});
 
 	it("should allow a valid time to be entered in `TimefieldControl`", () => {
-		setPropertyValue();
 		const wrapper = mount(
 			<TimefieldControl
 				control={control}
@@ -73,13 +70,13 @@ describe("timefield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find("[type='text']"); // input dom element will have type 'text' for a time field.
+		const timeWrapper = wrapper.find("div[data-id='properties-test-timefield']");
+		const input = timeWrapper.find("input");
 		input.simulate("change", { target: { value: "10:06:21" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal("10:06:21+00:00");
 	});
 
 	it("should allow invalid format date to be entered in `TimefieldControl`", () => {
-		setPropertyValue();
 		const wrapper = mount(
 			<TimefieldControl
 				control={control}
@@ -87,7 +84,8 @@ describe("timefield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find("[type='text']"); // input dom element will have type 'text' for a time field.
+		const timeWrapper = wrapper.find("div[data-id='properties-test-timefield']");
+		const input = timeWrapper.find("input");
 		input.simulate("change", { target: { value: "1000:06:21" } });
 
 		// When invalid times are entered they are not rejected but accepted and a messages is displayed
@@ -99,7 +97,6 @@ describe("timefield-control renders correctly", () => {
 	});
 
 	it("should set correct state null in `TimefieldControl`", () => {
-		setPropertyValue();
 		const wrapper = mount(
 			<TimefieldControl
 				control={control}
@@ -107,7 +104,8 @@ describe("timefield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find("[type='text']"); // input dom element will have type 'text' for a time field.
+		const timeWrapper = wrapper.find("div[data-id='properties-test-timefield']");
+		const input = timeWrapper.find("input");
 		input.simulate("change", { target: { value: "" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal(null);
 	});
@@ -120,8 +118,9 @@ describe("timefield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find("[type='text']"); // input dom element will have type 'text' for a time field.
-		expect(input.get(0).type).to.equal("text");
+		const timeWrapper = wrapper.find("div[data-id='properties-test-timefield']");
+		const input = timeWrapper.find("input");
+		expect(input.getDOMNode().type).to.equal("text");
 	});
 
 	it("should set placeholder text in `TimefieldControl`", () => {
@@ -132,141 +131,110 @@ describe("timefield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find("[type='text']");
-		expect(input.get(0).placeholder).to.equal(control.additionalText);
+		const timeWrapper = wrapper.find("div[data-id='properties-test-timefield']");
+		const input = timeWrapper.find("input");
+		expect(input.getDOMNode().placeholder).to.equal(control.additionalText);
 	});
 });
 
 describe("error messages renders correctly for timefield controls", () => {
+	let wrapper;
+	let controller;
+	beforeEach(() => {
+		const flyout = propertyUtils.flyoutEditorForm(TIMEFIELD_PARAM_DEF);
+		controller = flyout.controller;
+		wrapper = flyout.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
 	it("should show error message when time with invalid format is entered", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(TIMEIELD_PARAM_DEF);
-		const wrapper = renderedObject.wrapper;
 
 		// Simulate entering an invalid date information
-		let input = wrapper.find("#editor-control-time_hms");
+		let timeWrapper = wrapper.find("div[data-id='properties-time_hms']");
+		const input = timeWrapper.find("input");
 		input.simulate("change", { target: { value: "qqqqq" } });
-		wrapper.update();
-
+		timeWrapper = wrapper.find("div[data-id='properties-time_hms']");
 		// Check an error message is displayed with the expected error message.
 		const timefieldErrorMessages = {
 			"validation_id": "Format_time_hms_594.9764123314005",
 			"type": "error",
 			"text": "Invalid time. Format should be H:m:s",
 		};
-		const actual = renderedObject.controller.getErrorMessage({ name: "time_hms" });
-		expect(isEqual(JSON.parse(JSON.stringify(timefieldErrorMessages)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+		const actual = controller.getErrorMessage({ name: "time_hms" });
+		expect(timefieldErrorMessages).to.eql(actual);
+		let messageWrapper = timeWrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(1);
 
 		// // Now simulate entering a valid time with the correct format.
-		input = wrapper.find("#editor-control-time_hms");
 		input.simulate("change", { target: { value: "10:45:9" } });
-		wrapper.update();
 
 		// Ensure the error message is no longer displayed.
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(0);
-		expect(wrapper.find(".form__validation--error")).to.have.length(0);
+		timeWrapper = wrapper.find("div[data-id='properties-time_hms']");
+		messageWrapper = timeWrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(0);
 	});
 
 	it("should show error message when empty string is entered in a required field", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(TIMEIELD_PARAM_DEF);
-		const wrapper = renderedObject.wrapper;
-
 		// Simulate entering an empty string in a required field
-		let input = wrapper.find("#editor-control-time_hms");
+		let timeWrapper = wrapper.find("div[data-id='properties-time_hms']");
+		const input = timeWrapper.find("input");
 		input.simulate("change", { target: { value: "" } });
-		wrapper.update();
-
+		timeWrapper = wrapper.find("div[data-id='properties-time_hms']");
 		// Check an error message is displayed with the expected error message.
 		const timefieldErrorMessages = {
 			"validation_id": "required_time_hms_594.9764123314005",
 			"type": "error",
 			"text": "Required parameter 'Required Time H:m:s' has no value",
 		};
-		const actual = renderedObject.controller.getErrorMessage({ name: "time_hms" });
+		const actual = controller.getErrorMessage({ name: "time_hms" });
 
-		// console.log("Error - " + JSON.stringify(actual));
-
-		expect(isEqual(JSON.parse(JSON.stringify(timefieldErrorMessages)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+		expect(timefieldErrorMessages).to.eql(actual);
+		let messageWrapper = timeWrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid time with the correct format.
-		input = wrapper.find("#editor-control-time_hms");
 		input.simulate("change", { target: { value: "10:45:9" } });
-		wrapper.update();
 
 		// Ensure the error message is no longer displayed.
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(0);
-		expect(wrapper.find(".form__validation--error")).to.have.length(0);
+		timeWrapper = wrapper.find("div[data-id='properties-time_hms']");
+		messageWrapper = timeWrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(0);
 	});
 
 	it("should not show error message when empty string is entered in a non-required field", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(TIMEIELD_PARAM_DEF);
-		const wrapper = renderedObject.wrapper;
-
 		// Simulate entering an empty string in a non-required field
-		const input = wrapper.find("#editor-control-time_hms_non_req");
+		let timeWrapper = wrapper.find("div[data-id='properties-time_hms_non_req']");
+		const input = timeWrapper.find("input");
 		input.simulate("change", { target: { value: "" } });
-		wrapper.update();
 
 		// Ensure an error message is not displayed.
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(0);
-		expect(wrapper.find(".form__validation--error")).to.have.length(0);
+		timeWrapper = wrapper.find("div[data-id='properties-time_hms_non_req']");
+		const messageWrapper = timeWrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(0);
 	});
 
 	it("should reveal time field when checkbox is clicked", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(TIMEIELD_PARAM_DEF);
-		const wrapper = renderedObject.wrapper;
-
-		// First check the hidden field is not displayed (style.display should be
-		// set to 'none').
-		const input = wrapper.find("#editor-control-hidden_time");
-		expect(isEqual(input.props().style.display, "none")).to.be.true;
-
-		// Get the 'Hide hidden time' checkbox input control.
-		const checkbox = wrapper.find("#editor-control-hide_time_field");
-
-		// First check to see if it is checked
-		expect(checkbox.prop("checked")).to.be.true;
-
-		// Simulate clicking the 'Hide hidden time' checkbox
-		checkbox.simulate("change", { target: { checked: false } });
+		// First check the hidden field is not displayed
+		let timeWrapper = wrapper.find("div[data-id='properties-hidden_time']");
+		expect(timeWrapper.hasClass("hide")).to.equal(true);
+		controller.updatePropertyValue({ name: "hide_time_field" }, false);
 		wrapper.update();
-
-		// Now check to see if it is unchecked.
-		expect(checkbox.prop("checked")).to.be.false;
-
 		// After the checkbox is unchecked there should be no in-line style
 		// applied to the time field (which makes it be hidden).
-		expect(isEqual(typeof input.props().style.display, "undefined")).to.be.true;
+		timeWrapper = wrapper.find("div[data-id='properties-hidden_time']");
+		expect(timeWrapper.hasClass("hide")).to.equal(false);
 	});
 
 	it("should enable time field when checkbox is clicked", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(TIMEIELD_PARAM_DEF);
-		const wrapper = renderedObject.wrapper;
-
-		// First check the disbaled field is showing disabled color.
-		const input = wrapper.find("#editor-control-disabled_time");
-		expect(isEqual(input.props().style.color, "#c7c7c7")).to.be.true;
-
-		// Get the 'Enable disabled time' checkbox input control.
-		const checkbox = wrapper.find("#editor-control-disable_time_field");
-
-		// First check to see if it is checked
-		expect(checkbox.prop("checked")).to.be.true;
-
-		// Simulate clicking the 'Hide hidden time' checkbox
-		checkbox.simulate("change", { target: { checked: false } });
+		let timeWrapper = wrapper.find("div[data-id='properties-disabled_time']");
+		expect(timeWrapper.find("input").prop("disabled")).to.equal(true);
+		controller.updatePropertyValue({ name: "disable_time_field" }, false);
 		wrapper.update();
-
-		// Now check to see if it is unchecked.
-		expect(checkbox.prop("checked")).to.be.false;
-
-		// After the checkbox is unchecked there should be no in-line style
-		// applied to the time field (which makes it show as enabled).
-		expect(isEqual(typeof input.props().style.color, "undefined")).to.be.true;
+		// After the checkbox is unchecked control should not be disabled
+		timeWrapper = wrapper.find("div[data-id='properties-disabled_time']");
+		expect(timeWrapper.find("input").prop("disabled")).to.equal(false);
 	});
 });

@@ -9,23 +9,28 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import TextField from "ap-components-react/dist/components/TextField";
-import { CHARACTER_LIMITS } from "./../../constants/constants.js";
+import TextArea from "carbon-components-react/lib/components/TextArea";
+import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
+import { STATES } from "./../../constants/constants.js";
+import { CHARACTER_LIMITS } from "./../../constants/constants.js";
+import classNames from "classnames";
 
 export default class TextareaControl extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
-		this.handleChange = this.handleChange.bind(this);
+		this.charLimit = ControlUtils.getCharLimit(props.control, CHARACTER_LIMITS.TEXT_AREA);
 	}
 
 	handleChange(evt) {
-		let input = evt.target.value;
-		if (this.props.control.valueDef && this.props.control.valueDef.isList) { // array
-			input = this.splitNewlines(evt.target.value);
+		let value = evt.target.value;
+		if (this.charLimit !== -1 && value) {
+			value = value.substring(0, this.charLimit);
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, input);
+		if (this.props.control.valueDef && this.props.control.valueDef.isList) { // array
+			value = this.splitNewlines(value);
+		}
+		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 
 	splitNewlines(text) {
@@ -41,54 +46,34 @@ export default class TextareaControl extends React.Component {
 
 	joinNewlines(list) {
 		if (Array.isArray(list)) {
-			return list.length === 0 ? [] : list.join("\n");
+			return list.length === 0 ? "" : list.join("\n");
 		}
 		return list;
 	}
 
 	render() {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const conditionProps = {
-			propertyId: this.props.propertyId,
-			controlType: "textfieldbox"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
+		let value = controlValue ? controlValue : "";
+		const state = this.props.controller.getControlState(this.props.propertyId);
+		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
 
-		const errorMessage = conditionState.message;
-		const messageType = conditionState.messageType;
-		const icon = conditionState.icon;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
+		value = this.joinNewlines(value);
 
-		let controlIconContainerClass = "control-icon-container";
-		if (messageType !== "info") {
-			controlIconContainerClass = "control-icon-container-enabled";
-		}
-
-		let value = this.joinNewlines(controlValue);
-		if (value && value.toString() === "") {
-			value = "";
-		}
-
-		const charLimit = ControlUtils.getCharLimit(this.props.control, CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_AREA);
+		const className = classNames("properties-textarea", { "hide": state === STATES.HIDDEN }, messageInfo ? messageInfo.type : null);
 		return (
-			<div className="editor_control_area" style={stateStyle}>
-				<div id={controlIconContainerClass}>
-					<TextField {...stateDisabled}
-						style={stateStyle}
-						type="textarea"
-						id={ControlUtils.getControlID(this.props.control, this.props.propertyId)}
-						placeholder={this.props.control.additionalText}
-						onChange={this.handleChange}
-						value={value}
-						rows={4}
-						maxCount={charLimit}
-						maxLength={charLimit}
-					/>
-					{icon}
-				</div>
-				{errorMessage}
+			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				<TextArea
+					id={ControlUtils.getControlId(this.props.propertyId)}
+					disabled={state === STATES.DISABLED}
+					placeholder={this.props.control.additionalText}
+					onChange={this.handleChange.bind(this)}
+					value={value}
+					labelText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
+				/>
+				<ValidationMessage inTable={this.props.tableControl} state={state} messageInfo={messageInfo} />
 			</div>
+
 		);
 	}
 }
@@ -96,5 +81,6 @@ export default class TextareaControl extends React.Component {
 TextareaControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
-	controller: PropTypes.object.isRequired
+	controller: PropTypes.object.isRequired,
+	tableControl: PropTypes.bool
 };

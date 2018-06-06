@@ -19,7 +19,6 @@
 	top: 0;
 	padding-top: 50px;
 	box-shadow: none;
-	border-left: 1px solid #CCCCCC;
 	position: fixed;
 }
 
@@ -38,6 +37,9 @@
 	top: 50px;
 	height: calc(100% - 50px);
 	overflow-x: scroll;
+	p {
+		font-weight: 200;
+	}
 }
 
 #conditions-documentation-container,
@@ -54,19 +56,15 @@
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-	background-color: #F0F3F6;
+	background-color: $ui-03;
 	z-index: 4;
 }
 
 #properties-documentation-title,
 #conditions-documentation-title {
-	background-color: #F0F3F6;
-	color: #152935;
+	color: $text-01;
 	padding: 14px;
-	width: auto;
-	text-decoration: none;
 	font-size: 14px;
-	height: 50px;
 }
 
 #properties-documentation-menu,
@@ -79,13 +77,14 @@
 	margin-top: 5px;
 	margin-right: 10px;
 	padding-left: 10px;
-	background: #F0F3F6;
+	background: $ui-03;
 }
 
 .properties-documentation-navbar-li {
 	float: left;
 	height: 50px;
-	background-color: #5596E6;
+	display: flex;
+	align-items: center;
 }
 
 .properties-documentation-navbar-li::after {
@@ -97,39 +96,44 @@
 	display: block;
 	text-align: center;
 	padding: 14px 12px;
-	color: #152935;
-	fill: #3FB8AF;
+	color: $text-01;
+	fill: $brand-01;
 	box-sizing: content-box;
 	font-size: 16px;
-	background-color: #F0F3F6;
+	background-color: $ui-03;
 	height: 22px;
+	cursor: pointer;
 }
 
 .properties-documentation-navbar-li a:hover {
-	color: #5596E6;
+	color: $brand-02;
+	border-bottom: 4px solid $brand-02;
 	height: 18px;
 }
 
 /* Header section */
 .properties-documentation-section-header {
-	background: #F5F7FA;
+	background: $ui-02;
 	padding: 4.5em 4em 2em;
 	position: relative;
-	color: #152935;
+	color: $text-01;
+	> h1 {
+		font-size: 4rem;
+	}
 }
 
 .properties-documentation-page-link {
 	text-align: center;
 	display: block;
 	margin: 1.5em 0 0;
-	color: #152935;
+	color: $text-01;
 	font-size: 1em;
 	vertical-align: middle;
 	text-decoration: none;
 }
 
 .properties-documentation-page-link:hover {
-	color: #152935;
+	color: $text-01;
 	text-decoration: underline;
 }
 
@@ -141,6 +145,7 @@
 #properties-documentation-content,
 #conditions-documentation-content {
 	padding: 1em;
+	background-color: $ui-01;
 }
 
 .conditions-documentation-panels-controls-component,
@@ -156,6 +161,7 @@
 
 .section-subtitle {
 	margin-top: 15px;
+	font-weight: 400;
 }
 
 .properties-documentation-section-title {
@@ -169,6 +175,20 @@
 
 .section-description-link:hover {
 	text-decoration: underline;
+}
+
+.section-description {
+	& p {
+		margin-bottom: 10px;
+	}
+	& ul {
+		list-style-type: disc;
+		margin-left: 1em;
+		margin-bottom: 10px;
+	}
+	& li {
+		margin-bottom: 5px;
+	}
 }
 
 .section-row {
@@ -187,10 +207,12 @@
 	flex-grow: 1;
 	flex-shrink: 0;
 	padding-right: 1em;
-}
-
-.section-column > div {
-	width: unset;
+	.properties-custom-container {
+		width: 100%;
+		background-color: $ui-02;
+		border: 1px solid $ui-04;
+		margin: 5px 0;
+	}
 }
 
 .section-column-code {
@@ -198,8 +220,14 @@
 }
 
 .json-block {
-	font-size: 0.875em;
+	font-size: 12px;
+	line-height: 1.5;
 	max-height: 565px;
+	background-color: $ui-02;
+	border: 1px solid $ui-04;
+	padding: 5px;
+	margin: 5px 0;
+	overflow: auto;
 }
 
 #expression-section-column-code > .json-block {
@@ -211,7 +239,7 @@
 }
 
 .highlight {
-	background-color: #F5F5F5;
+	background-color: $ui-04;
 	font-weight: 400;
 	border-radius: 4px;
 }
@@ -219,14 +247,31 @@
 .conditions-documentation-control-table-container {
 	width: 100%;
 	overflow-x: scroll;
+	.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+		padding: 8px;
+		border-top: 1px solid $ui-03;
+		line-height: 1.25;
+		vertical-align: bottom;
+	}
 }
 
-.conditions-documentation-control-table tr.reactable-column-header {
-	display: table-row;
-}
-
-.conditions-documentation-control-table tr.reactable-column-header > th {
-	display: table-cell;
+.conditions-documentation-control-table {
+	width: 100%;
+	height: 100%;
+	& tr.reactable-column-header {
+		display: table-row;
+		> th {
+			display: table-cell;
+			text-align: left;
+			font-weight: 700;
+		}
+	}
+	> thead > tr > th:focus {
+		outline: none;
+	}
+	& tr {
+		border-bottom-color: $ui-03;
+	}
 }
 
 .properties-documentation-list-indent {
@@ -240,6 +285,6 @@
 	position: absolute;
 }
 
-#conditions-documentation-control-table > thead > tr > th:focus {
-	outline: none;
+.properties-documentation-show-flyout-button {
+	margin: 5px 0;
 }

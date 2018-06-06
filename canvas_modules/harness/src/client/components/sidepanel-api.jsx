@@ -12,11 +12,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import isEmpty from "lodash/isEmpty";
-import Button from "ap-components-react/dist/components/Button";
-import Dropdown from "ap-components-react/dist/components/Dropdown";
-import TextField from "ap-components-react/dist/components/TextField";
-import RadioGroup from "ap-components-react/dist/components/RadioGroup";
-import ToggleButton from "ap-components-react/dist/components/ToggleButton";
+import Button from "carbon-components-react/lib/components/Button";
+import Dropdown from "carbon-components-react/lib/components/Dropdown";
+import DropdownItem from "carbon-components-react/lib/components/DropdownItem";
+import TextArea from "carbon-components-react/lib/components/TextArea";
+import TextInput from "carbon-components-react/lib/components/TextInput";
+import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
+import RadioButton from "carbon-components-react/lib/components/RadioButton";
+import Toggle from "carbon-components-react/lib/components/Toggle";
 import {
 	API_SET_PIPELINEFLOW,
 	API_ADD_PALETTE_ITEM,
@@ -92,8 +95,8 @@ export default class SidePanelAPI extends React.Component {
 			paletteItem: JSON.stringify(defaultNodeType) });
 	}
 
-	onOperationSelect(evt, obj) {
-		const operation = obj.selected;
+	onOperationSelect(evt) {
+		const operation = evt.value;
 		let nodes = [];
 		let ports = [];
 		let nodeId = "";
@@ -127,10 +130,9 @@ export default class SidePanelAPI extends React.Component {
 				}
 			}
 		}
-
 		this.props.setApiSelectedOperation(operation);
-
 		this.setState({
+			selectedOperation: operation,
 			nodeId: nodeId,	// id of selected node
 			portId: portId, // id of selected port
 			nodes: nodes, // list of nodes in format { value: label, id: nodeId }
@@ -139,9 +141,10 @@ export default class SidePanelAPI extends React.Component {
 		this.props.log("Operation selected", operation);
 	}
 
-	onNodeSelect(evt, obj) {
-		const nodeId = obj.selected;
-		const newState = { nodeId: obj.selected, portId: "", newLabel: "" };
+	onNodeSelect(evt) {
+		const nodeItem = this.state.nodes.find((node) => node.label === evt.value);
+		const nodeId = nodeItem.value;
+		const newState = { nodeId: nodeId, portId: "", newLabel: "" };
 		const existingNode = this.props.getCanvasInfo().nodes.find((node) => (node.id === nodeId));
 		if (existingNode) {
 			if (this.props.selectedOperation === API_SET_NODE_LABEL) {
@@ -173,9 +176,10 @@ export default class SidePanelAPI extends React.Component {
 		this.props.log("Node selected", nodeId);
 	}
 
-	onPortSelect(evt, obj) {
-		const portId = obj.selected;
-		const newState = { portId: obj.selected };
+	onPortSelect(evt) {
+		const portItem = this.state.ports.find((port) => port.label === evt.value);
+		const portId = portItem.value;
+		const newState = { portId: portId };
 		const existingNode = this.props.getCanvasInfo().nodes.find((node) => (node.id === this.state.nodeId));
 		if (existingNode) {
 			const ports = (this.props.selectedOperation === API_SET_INPUT_PORT_LABEL
@@ -216,20 +220,20 @@ export default class SidePanelAPI extends React.Component {
 		this.setState(stateObj);
 	}
 
-	onNotificationMessageTypeChange(evt, obj) {
-		this.setState({ notificationType: obj.selected });
+	onNotificationMessageTypeChange(value) {
+		this.setState({ notificationType: value });
 	}
 
-	onAppendTimestampToggle(changeEvent) {
-		this.setState({ appendTimestamp: changeEvent.target.checked });
+	onAppendTimestampToggle(checked) {
+		this.setState({ appendTimestamp: checked });
 	}
 
-	onAttachCallback(changeEvent) {
-		this.setState({ attachCallback: changeEvent.target.checked });
+	onAttachCallback(checked) {
+		this.setState({ attachCallback: checked });
 	}
 
-	onAppendLinkToggle(changeEvent) {
-		this.setState({ appendLink: changeEvent.target.checked });
+	onAppendLinkToggle(checked) {
+		this.setState({ appendLink: checked });
 	}
 
 	getNodePortList(items) {
@@ -344,34 +348,45 @@ export default class SidePanelAPI extends React.Component {
 		this.props.log("Notification Message Callback", "Message " + id + " was clicked.");
 	}
 
+	dropdownOptions(inOptions) {
+		const options = [];
+		let key = 1;
+		for (const option of inOptions) {
+			if (typeof option === "string") {
+				options.push(<DropdownItem key={"option." + ++key}itemText={option} value={option} />);
+			} else {
+				options.push(<DropdownItem key={"option." + ++key}itemText={option.label} value={option.label} />);
+			}
+
+		}
+		return options;
+	}
+
 	render() {
 		const divider = (<div className="sidepanel-children sidepanel-divider" />);
 		const space = (<div className="sidepanel-spacer" />);
-
+		const dropdownOptions = this.dropdownOptions([
+			API_SET_PIPELINEFLOW,
+			API_ADD_PALETTE_ITEM,
+			API_SET_NODE_LABEL,
+			API_SET_INPUT_PORT_LABEL,
+			API_SET_OUTPUT_PORT_LABEL,
+			API_ADD_NOTIFICATION_MESSAGE]);
 		const operationSelection =
 			(<div className="sidepanel-children" id="sidepanel-api-list">
 				<Dropdown
-					name="operationDropdown"
-					text="Operations"
-					id="sidepanel-operation-dropdown"
-					maxVisibleItems={7}
-					dark
-					options={[
-						API_SET_PIPELINEFLOW,
-						API_ADD_PALETTE_ITEM,
-						API_SET_NODE_LABEL,
-						API_SET_INPUT_PORT_LABEL,
-						API_SET_OUTPUT_PORT_LABEL,
-						API_ADD_NOTIFICATION_MESSAGE]}
-					onSelect={this.onOperationSelect.bind(this)}
+					defaultText="Operations"
+					ariaLabel="Operations"
+					onChange={this.onOperationSelect.bind(this)}
 					value={this.props.selectedOperation}
-				/>
+				>
+					{dropdownOptions}
+				</Dropdown>
 			</div>);
 
 		const submit =
 			(<div className="sidepanel-children" id="sidepanel-api-submit">
-				<Button dark
-					id="canvasFileSubmit"
+				<Button
 					disabled={!this.isReadyToSubmit()}
 					onClick={this.callAPI.bind(this)}
 				>
@@ -383,15 +398,13 @@ export default class SidePanelAPI extends React.Component {
 		let setPipelineFlow = <div />;
 		if (this.props.selectedOperation === API_SET_PIPELINEFLOW) {
 			setPipelineFlow = (<div className="sidepanel-children" id="sidepanel-api-pipelineFlow">
-				<TextField dark
-					id="pipelineFlow"
-					type="textarea"
+				<TextArea
+					labelText="Pipeline Flow"
 					rows={20}
 					onChange={this.onFieldChange.bind(this, "pipelineFlow")}
 					value={this.state.pipelineFlow}
 				/>
-				<Button dark
-					id="refreshPipeline"
+				<Button small
 					onClick={this.refreshPipeline.bind(this)}
 				>
 					Refresh
@@ -401,25 +414,26 @@ export default class SidePanelAPI extends React.Component {
 
 		let addItemToPaletteSection = <div />;
 		if (this.props.selectedOperation === API_ADD_PALETTE_ITEM) {
-			addItemToPaletteSection = (<div className="sidepanel-children" id="sidepanel-api-paletteItem">
-				<TextField dark
+			addItemToPaletteSection = (<div className="sidepanel-children">
+				<TextInput
+					labelText="Category id"
+					hideLabel
 					id="categoryId"
 					placeholder="Category id"
-					type="text"
 					onChange={this.onFieldChange.bind(this, "categoryId")}
 					value={this.state.categoryId}
 				/>
-				<TextField dark
+				<TextInput
 					id="categoryName"
 					placeholder="Category name"
-					type="text"
+					labelText="Category name"
+					hideLabel
 					onChange={this.onFieldChange.bind(this, "categoryName")}
 					value={this.state.categoryName}
 				/>
-				<TextField dark
-					id="paletteItem"
+				<TextArea
+					labelText="Palette Node Item"
 					placeholder="Palette node item"
-					type="textarea"
 					rows={10}
 					onChange={this.onFieldChange.bind(this, "paletteItem")}
 					value={this.state.paletteItem}
@@ -432,34 +446,36 @@ export default class SidePanelAPI extends React.Component {
 				this.props.selectedOperation === API_SET_INPUT_PORT_LABEL ||
 				this.props.selectedOperation === API_SET_OUTPUT_PORT_LABEL) {
 
-			setNodePortLabelSection = (<div className="sidepanel-children" id="sidepanel-api-nodePortLabel">
-				<Dropdown
-					name="nodeIdDropDown"
-					id="sidepanel-nodeId-dropdown"
-					maxVisibleItems={6}
-					dark
-					options={this.state.nodes}
-					onSelect={this.onNodeSelect.bind(this)}
-					value={this.state.nodeId}
-					text="Node Selection"
-				/>
-				{(this.props.selectedOperation === API_SET_INPUT_PORT_LABEL ||
-					this.props.selectedOperation === API_SET_OUTPUT_PORT_LABEL) &&
+			setNodePortLabelSection = (<div className="sidepanel-children" id="sidepanel-api-portlabel">
+				<div id="sidepanel-api-nodeSelection">
 					<Dropdown
-						name="portIdDropDown"
-						id="sidepanel-portId-dropdown"
-						maxVisibleItems={6}
-						dark
-						options={this.state.ports}
-						onSelect={this.onPortSelect.bind(this)}
+						disabled={isEmpty(this.state.nodes)}
+						onChange={this.onNodeSelect.bind(this)}
+						value={this.state.nodeId}
+						defaultText="Node Selection"
+						ariaLabel="Node Selection"
+					>
+						{this.dropdownOptions(this.state.nodes)}
+					</Dropdown>
+				</div>
+				<div className="sidepanel-spacer" />
+				<div id="sidepanel-api-portSelection">
+					<Dropdown
+						disabled={isEmpty(this.state.ports)}
+						onChange={this.onPortSelect.bind(this)}
 						value={this.state.portId}
-						text="Port Selection"
-					/>
-				}
-				<TextField dark
+						ariaLabel="Port Selection"
+						defaultText="Port Selection"
+					>
+						{this.dropdownOptions(this.state.ports)}
+					</Dropdown>
+				</div>
+				<div className="sidepanel-spacer" />
+				<TextInput
 					id="newLabel"
+					labelText="Label"
+					hideLabel
 					placeholder="Label"
-					type="text"
 					onChange={this.onFieldChange.bind(this, "newLabel")}
 					value={this.state.newLabel}
 					disabled={(this.props.selectedOperation === API_SET_NODE_LABEL && !this.state.nodeId) ||
@@ -475,7 +491,7 @@ export default class SidePanelAPI extends React.Component {
 			setNotificationMessages = (<div className="sidepanel-children" id="sidepanel-api-notificationMessages">
 				<div className="sidepanel-headers">Clear Notification Messages</div>
 				<div className="sidepanel-api-clear-notification-message-submit">
-					<Button dark
+					<Button small
 						id="clearNotificationMessagesubmit"
 						onClick={this.clearNotificationMessages.bind(this)}
 					>
@@ -484,57 +500,75 @@ export default class SidePanelAPI extends React.Component {
 				</div>
 				{divider}
 				<div className="sidepanel-headers">Message Type</div>
-				<div className="sidepanel-api-notification-message-types">
-					<RadioGroup
+				<div id="sidepanel-api-nm-types">
+					<RadioButtonGroup
+						className="sidepanel-radio-group"
 						name="notification_message_type"
-						id="notification_message_type"
-						dark
 						onChange={this.onNotificationMessageTypeChange.bind(this)}
-						choices={[
-							NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL,
-							NOTIFICATION_MESSAGE_TYPE.SUCCESS,
-							NOTIFICATION_MESSAGE_TYPE.WARNING,
-							NOTIFICATION_MESSAGE_TYPE.ERROR
-						]}
-						selected={NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL}
+						defaultSelected={NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL}
+					>
+						<RadioButton
+							value={NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL}
+							labelText={NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL}
+						/>
+						<RadioButton
+							value={NOTIFICATION_MESSAGE_TYPE.SUCCESS}
+							labelText={NOTIFICATION_MESSAGE_TYPE.SUCCESS}
+						/>
+						<RadioButton
+							value={NOTIFICATION_MESSAGE_TYPE.WARNING}
+							labelText={NOTIFICATION_MESSAGE_TYPE.WARNING}
+						/>
+						<RadioButton
+							value={NOTIFICATION_MESSAGE_TYPE.ERROR}
+							labelText={NOTIFICATION_MESSAGE_TYPE.ERROR}
+						/>
+					</RadioButtonGroup>
+				</div>
+				<div id="sidepanel-api-nm-title">
+					<TextInput
+						id="messageTitle"
+						labelText="Message Title"
+						hideLabel
+						placeholder="Message Title"
+						onChange={this.onFieldChange.bind(this, "notificationTitle")}
+						value={this.state.notificationTitle}
 					/>
 				</div>
-				<TextField dark
-					id="messageTitle"
-					placeholder="Message Title"
-					type="text"
-					onChange={this.onFieldChange.bind(this, "notificationTitle")}
-					value={this.state.notificationTitle}
-				/>
-				<div className="sidepanel-headers">Message Content</div>
-				<TextField dark
-					id="messageContent"
-					type="textarea"
-					rows={4}
-					placeholder="Message"
-					onChange={this.onFieldChange.bind(this, "notificationMessage")}
-					value={this.state.notificationMessage}
-				/>
-				<div className="sidepanel-headers">Add Timestamp to Message</div>
-				<ToggleButton dark
-					id="sidepanel-api-notification-timestamp"
-					checked={this.state.appendTimestamp}
-					onChange={this.onAppendTimestampToggle.bind(this)}
-				/>
-				<div className="sidepanel-headers">
-					Add Callback to Message for logging the message in the test harness console
+				<div id="sidepanel-api-nm-content">
+					<TextArea
+						labelText="Message Content"
+						rows={4}
+						placeholder="Message"
+						onChange={this.onFieldChange.bind(this, "notificationMessage")}
+						value={this.state.notificationMessage}
+					/>
 				</div>
-				<ToggleButton dark
-					id="sidepanel-api-notification-callback"
-					checked={this.state.attachCallback}
-					onChange={this.onAttachCallback.bind(this)}
-				/>
-				<div className="sidepanel-headers">Add Link to Wiki</div>
-				<ToggleButton dark
-					id="sidepanel-api-notification-link"
-					checked={this.state.appendLink}
-					onChange={this.onAppendLinkToggle.bind(this)}
-				/>
+				<div id="sidepanel-api-nm-timestamp">
+					<div className="sidepanel-headers">Add Timestamp to Message</div>
+					<Toggle
+						id="sidepanel-api-notification-timestamp"
+						toggled={this.state.appendTimestamp}
+						onToggle={this.onAppendTimestampToggle.bind(this)}
+					/></div>
+				<div id="sidepanel-api-nm-callback">
+					<div className="sidepanel-headers">
+					Add Callback to Message for logging the message in the test harness console
+					</div>
+					<Toggle
+						id="sidepanel-api-notification-callback"
+						toggled={this.state.attachCallback}
+						onToggle={this.onAttachCallback.bind(this)}
+					/>
+				</div>
+				<div id="sidepanel-api-nm-link">
+					<div className="sidepanel-headers">Add Link to Wiki</div>
+					<Toggle
+						id="sidepanel-api-notification-link"
+						toggled={this.state.appendLink}
+						onToggle={this.onAppendLinkToggle.bind(this)}
+					/>
+				</div>
 			</div>);
 		}
 
@@ -542,12 +576,12 @@ export default class SidePanelAPI extends React.Component {
 			<div>
 				{space}
 				{operationSelection}
-				{divider}
+				{space}
 				{setPipelineFlow}
 				{addItemToPaletteSection}
 				{setNodePortLabelSection}
 				{setNotificationMessages}
-				{divider}
+				{space}
 				{submit}
 			</div>
 		);

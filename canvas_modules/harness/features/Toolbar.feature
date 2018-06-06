@@ -115,7 +115,7 @@ Feature: Toolbar
 		Then I verify the node 6 position is "translate(125, 360)"
 
 		Given I have toggled the app side panel
-		Given I have selected the "Vertical" fixed Layout
+		Given I have selected the "vertical" fixed Layout
 		Given I have toggled the app side panel
 		Then I click on the secondary toolbar horizontal layout button
 		Then I verify the node 1 position is "translate(125, 515)"
@@ -126,7 +126,7 @@ Feature: Toolbar
 		Then I verify the node 6 position is "translate(125, 360)"
 
 		Given I have toggled the app side panel
-		Given I have selected the "None" fixed Layout
+		Given I have selected the "none" fixed Layout
 		Given I have toggled the app side panel
 		Then I click on the secondary toolbar horizontal layout button
 		Then I verify the node 1 position is "translate(500, 127.5)"
@@ -137,7 +137,7 @@ Feature: Toolbar
 		Then I verify the node 6 position is "translate(350, 127.5)"
 
 		Given I have toggled the app side panel
-		Given I have selected the "Horizontal" fixed Layout
+		Given I have selected the "horizontal" fixed Layout
 		Given I have toggled the app side panel
 		Then I click on the secondary toolbar vertical layout button
 		Then I verify the node 1 position is "translate(500, 127.5)"

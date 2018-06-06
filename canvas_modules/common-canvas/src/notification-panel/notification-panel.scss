@@ -36,8 +36,8 @@ $notification-left-border-color-width: 4px;
 
 .notification-popup-arrow {
 	display: block;
-	fill: #F5F7FA;
-	stroke: #DFE3E6;
+	fill: $ui-02;
+	stroke: $ui-04;
 	position: absolute;
 	right: 16px;
 	width: 16px;
@@ -48,12 +48,12 @@ $notification-left-border-color-width: 4px;
 	height: $notification-panel-header-height;
 	margin-top: $notification-panel-arrow-height;
 	width: inherit;
-	background-color: #F5F7FA;
+	background-color: $ui-02;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	padding-left: 12px;
-	border: 1px solid #DFE3E6;
+	border: 1px solid $ui-04;
 	border-bottom: 0;
 	font-weight: 400;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
@@ -65,12 +65,12 @@ $notification-left-border-color-width: 4px;
 	margin-top: $notification-panel-arrow-height + $notification-panel-header-height;
 	max-height: calc((100% / 2) - #{$notification-panel-header-height});
 	overflow-y: auto;
-	background-color: #FFFFFF;
-	border: 1px solid #DFE3E6;
+	background-color: $ui-01;
+	border: 1px solid $ui-04;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
 
 	.notifications-button-container {
-		border-bottom: 1px solid #DFE3E6;
+		border-bottom: 1px solid $ui-04;
 	}
 
 	.notifications-button-container:nth-last-of-type(1) {
@@ -82,7 +82,7 @@ $notification-left-border-color-width: 4px;
 		display: inline-flex;
 		width: 100%;
 		border-style: none;
-		border-left: $notification-left-border-color-width solid #FFFFFF;
+		border-left: $notification-left-border-color-width solid $ui-01;
 		cursor: default;
 
 		&.clickable {
@@ -93,26 +93,26 @@ $notification-left-border-color-width: 4px;
 		&:focus {
 			outline: none;
 			border-style: none;
-			border-left: $notification-left-border-color-width solid #FFFFFF;
+			border-left: $notification-left-border-color-width solid $ui-01;
 		}
 
 		&:hover {
-			background-color: #F5F7FA;
+			background-color: $ui-02;
 
 			&.unspecified {
-				border-left: $notification-left-border-color-width solid #F5F7FA;
+				border-left: $notification-left-border-color-width solid $field-01;
 			}
 			&.error {
-				border-left: $notification-left-border-color-width solid #E51F33;
+				border-left: $notification-left-border-color-width solid $support-01;
 			}
 			&.warning {
-				border-left: $notification-left-border-color-width solid #EFC100;
+				border-left: $notification-left-border-color-width solid $support-03;
 			}
 			&.success {
-				border-left: $notification-left-border-color-width solid #5AA700;
+				border-left: $notification-left-border-color-width solid $support-02;
 			}
 			&.informational {
-				border-left: $notification-left-border-color-width solid #5596E6;
+				border-left: $notification-left-border-color-width solid $support-04;
 			}
 		}
 
@@ -135,12 +135,13 @@ $notification-left-border-color-width: 4px;
 			text-align: left;
 
 			.notification-message-title {
-				color: #152935;
-				font-weight: 400;
+				color: $text-01;
+				font-weight: 500;
+				line-height: 1.5;
 			}
 
 			.notification-message-content {
-				color: #5A6872;
+				color: $text-02;
 			}
 		}
 	}
@@ -152,11 +153,12 @@ $notification-left-border-color-width: 4px;
 
 .notification-message-timestamp {
 	display: inline-flex;
-	color: #5A6872;
+	color: $text-02;
 	svg {
 		width: 10px;
 		height: 10px;
 		margin-right: 3px;
+		margin-top: 3px;
 	}
 
 	.notification-message-string {

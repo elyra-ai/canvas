@@ -9,61 +9,29 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import ControlUtils from "./../../util/control-utils";
 import { injectIntl, intlShape } from "react-intl";
-import Icon from "./../../../icons/icon.jsx";
+import classNames from "classnames";
+import Accordion from "carbon-components-react/lib/components/Accordion";
+import AccordionItem from "carbon-components-react/lib/components/AccordionItem";
+import ControlUtils from "./../../util/control-utils";
+import { STATES } from "./../../constants/constants.js";
+
 
 class TwistyPanel extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			showTwistyPanel: false,
-			panelHeight: 0
-		};
-		this.handleLinkClicked = this.handleLinkClicked.bind(this);
-	}
-
-	handleLinkClicked() {
-		if (this.props.children) {
-			if (this.twistyPanelDiv.clientHeight !== 0) {
-				this.setState({ showTwistyPanel: false, panelHeight: 0 });
-			} else {
-				this.setState({ showTwistyPanel: true, panelHeight: this.twistyContent.clientHeight });
-			}
-		}
-	}
 
 	render() {
 		const propertyId = { name: this.props.panelId };
-		const conditionProps = {
-			propertyId: propertyId,
-			controlType: "panel"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
-		const iconClassName = (this.state.showTwistyPanel) ? "twistypanel_icon rotate" : "twistypanel_icon";
-		const link = (<div onClick={this.handleLinkClicked} className="control-twisty-link-buttons">
-			<div className={iconClassName} >
-				<Icon type="rightArrow" {...stateDisabled} />
-			</div>
-			<span className="twistypanel_text" {...stateDisabled} style={stateStyle}>
-				{this.props.label}
-			</span>
-		</div>);
-		const panelStyle = this.state.panelHeight + "px";
-		const twistyPanel = (
-			<div ref={ (elem) => (this.twistyPanelDiv = elem)} className="twistypanel-panel" style= {{ height: panelStyle }}>
-				<div ref={ (elem) => (this.twistyContent = elem)} className="twistypanel-content">
-					{this.props.children}
-				</div>
-			</div>
-		);
+		const state = this.props.controller.getPanelState(propertyId);
 
 		return (
-			<div className={"control-twisty twisty-control-panel"} style={stateStyle}>
-				{link}
-				{twistyPanel}
+			<div className={classNames("properties-twisty-panel", { "hide": state === STATES.HIDDEN })}
+				disabled={state === STATES.DISABLED} data-id={ControlUtils.getDataId(propertyId)}
+			>
+				<Accordion>
+					<AccordionItem title={this.props.label}>
+						{this.props.children}
+					</AccordionItem>
+				</Accordion>
 			</div>
 		);
 	}

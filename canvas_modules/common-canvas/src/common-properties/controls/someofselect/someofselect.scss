@@ -7,5 +7,24 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import ValidationIcon from "./validation-icon.jsx";
-module.exports = ValidationIcon;
+.properties-someofselect {
+	.properties-ft-container-absolute-noheader tr {
+		border-bottom: 0;
+	}
+	&.hide {
+		display: none;
+	}
+	&.error {
+		.properties-ft-container-absolute-noheader {
+			border: 1px solid $support-01;
+		}
+	}
+	&.warning {
+		.properties-ft-container-absolute-noheader {
+			border: 1px solid $support-03;
+		}
+	}
+	.table .bx--form-item.bx--checkbox-wrapper {
+		margin: 5px 0 5px 5px;
+	}
+}

@@ -9,6 +9,7 @@
 
 import logger from "../../../utils/logger";
 import { ParamRole } from "../constants/form-constants";
+import uuid4 from "uuid/v4";
 
 /**
  * A better type identifier than a simple 'typeOf' call:
@@ -44,6 +45,10 @@ function formatMessage(intl, key, defaultMessage) {
 		formattedMessage = defaultMessage;
 	}
 	return formattedMessage;
+}
+
+function generateId() {
+	return "properties-" + uuid4();
 }
 
 /*
@@ -265,5 +270,6 @@ module.exports = {
 	copy: copy,
 	stringifyFieldValue: stringifyFieldValue,
 	fieldValueMatchesProto: fieldValueMatchesProto,
-	fieldStringToValue: fieldStringToValue
+	fieldStringToValue: fieldStringToValue,
+	generateId: generateId
 };

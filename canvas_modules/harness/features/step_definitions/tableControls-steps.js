@@ -12,9 +12,8 @@
 module.exports = function() {
 
 	this.Then(/^I select the row (\d+) in the table "([^"]*)"$/, function(rowNumber, tableControlId) {
-		// Write code here that turns the phrase above into concrete actions
-		const containingDiv = browser.$("#" + tableControlId);
-		const rows = containingDiv.$("#flexible-table-container")
+		const containingDiv = browser.$("div[data-id='properties-" + tableControlId + "']");
+		const rows = containingDiv.$(".properties-ft-control-container")
 			.$(".reactable-data")
 			.$$("tr");
 		rows[Number(rowNumber) - 1].$$("td")[0].click();
@@ -46,12 +45,12 @@ module.exports = function() {
 		});
 
 	this.Then(/^I click the "([^"]*)" button on the "([^"]*)" table$/, function(buttonName, tableName) {
-		const tableDiv = browser.$("#flexible-table-" + tableName);
+		const tableDiv = browser.$("div[data-id='properties-ft-" + tableName + "']");
 		expect(tableDiv.value).not.toBe(null);
 		if (buttonName === "Add") {
-			tableDiv.$("#add-fields-button").click();
+			tableDiv.$(".properties-add-fields-button").click();
 		} else {
-			tableDiv.$(".remove-fields-button").click();
+			tableDiv.$(".properties-remove-fields-button").click();
 		}
 	});
 

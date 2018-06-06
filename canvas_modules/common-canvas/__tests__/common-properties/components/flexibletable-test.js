@@ -9,14 +9,12 @@
 
 import React from "react";
 import FlexibleTable from "../../../src/common-properties/components/flexible-table";
-// import { mount } from "enzyme";
 import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
 import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
-import { ReactWrapper } from "enzyme";
 
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 
@@ -148,12 +146,11 @@ describe("FlexibleTable renders correctly", () => {
 				onSort={onSort}
 			/>
 		);
-
-		const table = wrapper.find("#flexible-table-container");
+		const table = wrapper.find("div.properties-ft-control-container");
 		expect(table).to.have.length(1);
 		expect(table.find(".reactable-column-header")).to.have.length(1);
-		expect(table.find(".reactable-data")).to.have.length(1);
-		expect(table.find(".reactable-data").find("tr")).to.have.length(6);
+		expect(table.find("tbody.reactable-data")).to.have.length(1);
+		expect(table.find("tbody.reactable-data").find("tr")).to.have.length(6);
 
 	});
 
@@ -171,7 +168,7 @@ describe("FlexibleTable renders correctly", () => {
 			/>
 		);
 
-		const input = wrapper.find("#flexible-table-search");
+		const input = wrapper.find("div.properties-ft-search-container").find("input");
 		expect(input).to.have.length(1);
 		input.simulate("change", { target: { value: "e" } });
 		// the verification is that the onFilter function gets the text as input
@@ -190,8 +187,7 @@ describe("FlexibleTable renders correctly", () => {
 				onSort={onSort}
 			/>
 		);
-
-		const input = wrapper.find(".flexible-table-column");
+		const input = wrapper.find("div.properties-ft-column");
 		expect(input).to.have.length(1);
 		input.simulate("click");
 		// the verification is that the onSort function gets invoked with proper column name
@@ -210,9 +206,9 @@ describe("FlexibleTable renders correctly", () => {
 				onSort={onSort}
 			/>
 		);
-		const tableBody = wrapper.find("#flexible-table-container");
+		const tableBody = wrapper.find("div.properties-ft-control-container");
 		expect(tableBody).to.have.length(1);
-		const tableData = tableBody.find(".reactable-data");
+		const tableData = tableBody.find("tbody.reactable-data");
 		const row = tableData.childAt(0);
 		row.simulate("click");
 		expect(handleRowClick).to.have.property("callCount", 1);
@@ -231,22 +227,21 @@ describe("text cells should display limited text", () => {
 		wrapper.unmount();
 	});
 	it("Cell text field display default limited amount", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Configure Rename fields
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementById("flexible-table-structuretableReadonlyColumnDefaultIndex"); // needed since modal dialogs are outside `wrapper`
-		const renameTable = new ReactWrapper(tableHtml, true);
+		let tableSummary = wrapper.find("div[data-id='properties-structuretableReadonlyColumnDefaultIndex-summary-panel']"); // Configure Rename fields
+		tableSummary.find("button").simulate("click"); // open the summary panel (modal)
+		tableSummary = wrapper.find("div[data-id='properties-structuretableReadonlyColumnDefaultIndex-summary-panel']"); // Configure Rename fields
 		// verify the display value is the default limit
-		const labelCells = renameTable.find("td[data-label='new_label']");
+		const labelCells = tableSummary.find("td[data-label='new_label']");
 		expect(labelCells).to.have.length(2);
 		expect(labelCells.at(1).text()).to.equal("blood pressure plus additional characters to test display_chars...");
 	});
 	it("Cell text field display specified limited amount", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Configure Sortable Columns
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementById("flexible-table-structuretableSortableColumns"); // needed since modal dialogs are outside `wrapper`
-		const renameTable = new ReactWrapper(tableHtml, true);
+		let tableSummary = wrapper.find("div[data-id='properties-structuretableSortableColumns-summary-panel']"); // Configure Sortable Columns
+		tableSummary.find("button").simulate("click"); // open the summary panel (modal)
+
+		tableSummary = wrapper.find("div[data-id='properties-structuretableSortableColumns-summary-panel']"); // Configure Sortable Columns
 		// verify the display value is the default limit
-		const labelCells = renameTable.find("td[data-label='new_label']");
+		const labelCells = tableSummary.find("td[data-label='new_label']");
 		expect(labelCells).to.have.length(2);
 		expect(labelCells.at(1).text()).to.equal("blood pre...");
 	});

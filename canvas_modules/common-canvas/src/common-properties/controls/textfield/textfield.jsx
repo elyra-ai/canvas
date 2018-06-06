@@ -9,71 +9,48 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import TextField from "ap-components-react/dist/components/TextField";
+import TextInput from "carbon-components-react/lib/components/TextInput";
+import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
+import { STATES } from "./../../constants/constants.js";
 import { CHARACTER_LIMITS } from "./../../constants/constants.js";
+import classNames from "classnames";
 
 export default class TextfieldControl extends React.Component {
+
 	constructor(props) {
 		super(props);
-		this.handleChange = this.handleChange.bind(this);
-		this.keyPress = this.keyPress.bind(this);
+		this.charLimit = ControlUtils.getCharLimit(props.control, CHARACTER_LIMITS.TEXT_FIELD);
 	}
 
 	handleChange(evt) {
-		this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.value);
-	}
-
-	keyPress(e) {
-		if (e.keyCode === 13) {
-			// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/819
-			e.preventDefault();
+		let value = evt.target.value;
+		if (this.charLimit !== -1 && value) {
+			value = value.substring(0, this.charLimit);
 		}
+		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 
 	render() {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const value = controlValue ? controlValue : "";
+		const state = this.props.controller.getControlState(this.props.propertyId);
+		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
 
-		const conditionProps = {
-			propertyId: this.props.propertyId,
-			controlType: "textfield"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
-
-		const errorMessage = this.props.tableControl ? null : conditionState.message;
-		const messageType = conditionState.messageType;
-		const icon = this.props.tableControl ? <div /> : conditionState.icon;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
-		stateStyle.paddingBottom = "2px";
-
-		let controlIconContainerClass = "control-icon-container";
-		if (messageType !== "info") {
-			controlIconContainerClass = "control-icon-container-enabled";
-		}
-
-		let charLimit;
-		if (!this.props.tableControl) {
-			charLimit = ControlUtils.getCharLimit(this.props.control, CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_FIELD);
-		}
+		const className = classNames("properties-textfield", "properties-input-control", { "hide": state === STATES.HIDDEN }, messageInfo ? messageInfo.type : null);
 		return (
-			<div className="editor_control_area" style={stateStyle}>
-				<div id={controlIconContainerClass}>
-					<TextField {...stateDisabled}
-						style={stateStyle}
-						id={ControlUtils.getControlID(this.props.control, this.props.propertyId)}
-						disabledPlaceholderAnimation
-						placeholder={this.props.control.additionalText}
-						onChange={this.handleChange}
-						onKeyDown={this.keyPress}
-						value={value}
-						maxCount={charLimit}
-						maxLength={charLimit}
-					/>
-					{icon}
-				</div>
-				{errorMessage}
+			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				<TextInput
+					autoComplete={this.props.tableControl === true ? "off" : "on"}
+					id={ControlUtils.getControlId(this.props.propertyId)}
+					disabled={state === STATES.DISABLED}
+					placeholder={this.props.control.additionalText}
+					onChange={this.handleChange.bind(this)}
+					value={value}
+					labelText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
+				/>
+				<ValidationMessage inTable={this.props.tableControl} state={state} messageInfo={messageInfo} />
 			</div>
 		);
 	}

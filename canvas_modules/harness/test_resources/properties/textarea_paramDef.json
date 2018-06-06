@@ -1,0 +1,509 @@
+{
+  "titleDefinition": {
+    "title": "TextArea Fields"
+  },
+  "current_parameters": {
+    "string": "testing, textarea, control",
+    "string_array": [],
+    "string_charLimit": [
+      "testing"
+    ],
+    "string_null": null,
+    "string_empty": "",
+    "string_placeholder": null,
+    "string_error": [
+      "testing",
+      "textarea",
+      "control"
+    ],
+    "string_warning": [
+      "testing",
+      "textarea",
+      "control"
+    ],
+    "hide": true,
+    "string_hidden": [
+      "testing",
+      "textarea",
+      "control"
+    ],
+    "disable": true,
+    "string_disabled": [
+      "testing",
+      "textarea",
+      "control"
+    ],
+    "string_table": [
+      [
+        [
+          "Hopper"
+        ],
+        [
+          "Turing"
+        ],
+        [
+          "Shannon"
+        ],
+        [
+          "Babbage"
+        ]
+      ],
+      []
+    ],
+    "string_table_cond": [
+      [
+        [
+          "Hopper"
+        ],
+        [
+          "Turing"
+        ],
+        [
+          "Shannon"
+        ],
+        [
+          "Babbage"
+        ]
+      ],
+      []
+    ]
+  },
+  "parameters": [
+    {
+      "id": "string",
+      "type": "string"
+    },
+    {
+      "id": "string_array",
+      "type": "array[string]"
+    },
+    {
+      "id": "string_charLimit",
+      "type": "array[string]"
+    },
+    {
+      "id": "string_default",
+      "type": "array[string]",
+      "default": "default testing"
+    },
+    {
+      "id": "string_empty",
+      "type": "array[string]",
+      "default": "ERROR - should not be set"
+    },
+    {
+      "id": "string_undefined",
+      "type": "array[string]"
+    },
+    {
+      "id": "string_null",
+      "type": "array[string]",
+      "default": "ERROR - should not be set"
+    },
+    {
+      "id": "string_placeholder",
+      "type": "array[string]"
+    },
+    {
+      "id": "string_error",
+      "type": "array[string]"
+    },
+    {
+      "id": "string_warning",
+      "type": "array[string]"
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "string_hidden",
+      "type": "array[string]",
+      "required": true
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "string_disabled",
+      "type": "array[string]",
+      "required": true
+    },
+    {
+      "id": "string_table",
+      "type": "array[textareas]"
+    },
+    {
+      "id": "string_table_cond",
+      "type": "array[textareas]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "textareas",
+      "parameters": [
+        {
+          "id": "textarea",
+          "type": "array[string]"
+        },
+        {
+          "id": "textarea2",
+          "type": "array[string]"
+        },
+        {
+          "id": "textarea_on_panel",
+          "type": "array[string]"
+        },
+        {
+          "id": "textarea_sub_panel",
+          "type": "array[string]"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "textarea",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "string Fields"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "string",
+        "label": {
+          "default": "string"
+        },
+        "control": "textarea",
+        "description": {
+          "default": "textarea with sting value"
+        }
+      },
+      {
+        "parameter_ref": "string_array",
+        "label": {
+          "default": "string array"
+        },
+        "description": {
+          "default": "textarea with string array value"
+        }
+      },
+      {
+        "parameter_ref": "string_charLimit",
+        "label": {
+          "default": "string with char limit"
+        },
+        "description": {
+          "default": "textarea with parameter value with a char_limit of `20`"
+        },
+        "char_limit": 20
+      },
+      {
+        "parameter_ref": "string_default",
+        "label": {
+          "default": "Default"
+        },
+        "description": {
+          "default": "textarea with parameter value set to 'default testing' by default"
+        }
+      },
+      {
+        "parameter_ref": "string_empty",
+        "label": {
+          "default": "Empty"
+        },
+        "description": {
+          "default": "textarea with parameter value set to '\"\"'"
+        }
+      },
+      {
+        "parameter_ref": "string_null",
+        "label": {
+          "default": "Null"
+        },
+        "description": {
+          "default": "textarea with parameter value set to 'null'"
+        }
+      },
+      {
+        "parameter_ref": "string_undefined",
+        "label": {
+          "default": "Undefined"
+        },
+        "description": {
+          "default": "textarea with parameter value set to 'undefined'"
+        }
+      },
+      {
+        "parameter_ref": "string_placeholder",
+        "label": {
+          "default": "Placeholder text"
+        },
+        "description": {
+          "default": "textarea with placeholder text 'Enter a string'"
+        },
+        "place_holder_text": {
+          "default": "Enter a string"
+        }
+      },
+      {
+        "parameter_ref": "string_error",
+        "label": {
+          "default": "Error"
+        },
+        "description": {
+          "default": "textarea with error when set to 'error'"
+        }
+      },
+      {
+        "parameter_ref": "string_warning",
+        "label": {
+          "default": "Warning"
+        },
+        "description": {
+          "default": "textarea with warning when set to 'warn'"
+        }
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'string Hidden'"
+        }
+      },
+      {
+        "parameter_ref": "string_hidden",
+        "label": {
+          "default": "string Hidden"
+        }
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'string Disabled'"
+        }
+      },
+      {
+        "parameter_ref": "string_disabled",
+        "label": {
+          "default": "string Disabled"
+        }
+      },
+      {
+        "parameter_ref": "string_table",
+        "label": {
+          "default": "textarea control in a table"
+        }
+      },
+      {
+        "parameter_ref": "string_table_cond",
+        "label": {
+          "default": "textarea conditions in a table"
+        },
+        "description": {
+          "default": "Type 'error' in `Standard` column to show an `error`. Type 'warn' in `Additional` column to show an `warn`",
+          "placement": "on_panel"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "textareas",
+        "parameters": [
+          {
+            "parameter_ref": "textarea",
+            "width": 10,
+            "label": {
+              "default": "Standard"
+            }
+          },
+          {
+            "parameter_ref": "textarea2",
+            "width": 10,
+            "label": {
+              "default": "Additional"
+            }
+          },
+          {
+            "parameter_ref": "textarea_on_panel",
+            "width": 10,
+            "label": {
+              "default": "on_panel"
+            },
+            "description": {
+              "default": "textarea with `edit_style=on_panel`"
+            },
+            "edit_style": "on_panel"
+          },
+          {
+            "parameter_ref": "textarea_sub_panel",
+            "width": 10,
+            "label": {
+              "default": "sub_panel"
+            },
+            "description": {
+              "default": "textarea with `edit_style=sub_panel`"
+            },
+            "edit_style": "subpanel"
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "textarea-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "string",
+          "string_array",
+          "string_charLimit",
+          "string_default",
+          "string_empty",
+          "string_undefined",
+          "string_null",
+          "string_placeholder"
+        ]
+      },
+      {
+        "id": "textarea-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "string_error",
+          "string_warning",
+          "hide",
+          "string_hidden",
+          "disable",
+          "string_disabled"
+        ]
+      },
+      {
+        "id": "textarea-table-panels",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "textarea-table-summary",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Edit textarea table"
+            },
+            "group_info": [
+              {
+                "id": "textarea-table-summary-ctrls",
+                "parameter_refs": [
+                  "string_table",
+                  "string_table_cond"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "string_error",
+          "message": {
+            "default": "Should not be 'error'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "string_error",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "string_warning",
+          "message": {
+            "default": "Should not be 'warn'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "string_warning",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "string_table_cond[1]",
+          "message": {
+            "default": "Should not be 'warn'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "string_table_cond[1]",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "string_table_cond[0]",
+          "message": {
+            "default": "Should not be 'error'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "string_table_cond[0]",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "string_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "string_disabled"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ]
+}

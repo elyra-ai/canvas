@@ -1,0 +1,63 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+.properties-input-control {
+	&.hide {
+		display: none;
+	}
+	.bx--form-item { // carbon overrides
+		margin-right: 0;
+		margin-bottom: 0;
+	}
+
+	&.error {
+		input {
+			border-bottom: 2px solid $support-01;
+		}
+	}
+	&.warning {
+		input {
+			border-bottom: 2px solid $support-03;
+		}
+	}
+}
+
+.table-row  { // overrides when in a table cell
+	> td {
+		> .properties-input-control {
+			input { //override styling from carbon
+				background: unset;
+				background-color: unset;
+				margin: 0;
+				padding: 0;
+				border-bottom: 2px solid $text-02;
+				height: 2rem;
+				&:focus {
+					border-top: 0;
+					border-right: 0;
+					border-left: 0;
+					border-bottom: 2px solid $text-01;
+				}
+			}
+			&.error {
+				input {
+					border-bottom: 2px solid $support-01;
+				}
+			}
+			&.warning {
+				input {
+					border-bottom: 2px solid $support-03;
+				}
+			}
+		}
+	}
+	.bx--text-input {
+		min-width: 0;
+	}
+}

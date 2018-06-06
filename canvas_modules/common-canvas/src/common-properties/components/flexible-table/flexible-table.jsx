@@ -14,14 +14,15 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { injectIntl, intlShape } from "react-intl";
 import { Table, Thead, Th, Tr, Td } from "reactable";
-import TextField from "ap-components-react/dist/components/TextField";
+import Search from "carbon-components-react/lib/components/Search";
+
 import Icon from "./../../../icons/icon.jsx";
 import PropertyUtils from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES } from "./../../constants/constants";
 import isEmpty from "lodash/isEmpty";
 import ObserveSize from "react-observe-size";
-
+import classNames from "classnames";
 import uuid4 from "uuid/v4";
 
 const sortDir = {
@@ -59,11 +60,13 @@ class FlexibleTable extends React.Component {
 		this._adjustTableHeight();
 		window.addEventListener("resize", this._adjustTableHeight);
 		this._setHeaderElement();
+		this.tableNode = ReactDOM.findDOMNode(this.refs.table);
 	}
 
 	componentDidUpdate() {
 		this._adjustTableHeight();
 		this._setHeaderElement();
+		this.tableNode = ReactDOM.findDOMNode(this.refs.table);
 	}
 
 	componentWillUnmount() {
@@ -218,11 +221,11 @@ class FlexibleTable extends React.Component {
 	}
 
 	scrollToRow(alignTop) {
-		var element = document.getElementById("moveablerow-table-" + this.props.scrollKey);
-		if (element && typeof this.props.scrollToRow === "number") {
-			var tableBody = element.getElementsByClassName("reactable-data");
+		if (this.tableNode && typeof this.props.scrollToRow === "number") {
+			var tableBody = this.tableNode.getElementsByClassName("reactable-data");
 			var tableRows = tableBody[tableBody.length - 1].getElementsByTagName("tr");
-			if (tableRows.length !== 0 && this.props.scrollToRow <= tableRows.length - 1) {
+			if (tableRows.length !== 0 && this.props.scrollToRow <= tableRows.length - 1 &&
+			typeof tableRows[this.props.scrollToRow] === "function") {
 				tableRows[this.props.scrollToRow].scrollIntoView(alignTop);
 			}
 		}
@@ -261,11 +264,11 @@ class FlexibleTable extends React.Component {
 			}
 			if (typeof this.state.columnSortDir[columnDef.key] !== "undefined") {
 				const arrowIcon = ((this.state.columnSortDir[columnDef.key] === sortDir.ASC)
-					? <Icon type="upCaret" {...this.props.stateDisabled} />
-					: <Icon type="downCaret" {...this.props.stateDisabled} />);
+					? <Icon type="upCaret" disabled={this.props.tableState === STATES.DISABLED} />
+					: <Icon type="downCaret" disabled={this.props.tableState === STATES.DISABLED} />);
 				headers.push(<Th className={className} key={"flexible-table-headers" + j} column={columnDef.key} style={columnStyle} >
 					<div
-						className="flexible-table-column properties-tooltips-container"
+						className="properties-ft-column properties-tooltips-container"
 						onClick={this.sortHeaderClick.bind(this, columnDef.key)}
 					>
 						{ isEmpty(tooltip)
@@ -284,7 +287,7 @@ class FlexibleTable extends React.Component {
 					</div>
 				</Th>);
 			} else {
-				headers.push(<Th className={className} key={"flexible-table-headers" + j} column={columnDef.key} style={columnStyle}>
+				headers.push(<Th className={className} key={"properties-ft-headers" + j} column={columnDef.key} style={columnStyle}>
 					<div className="properties-tooltips-container">
 						{ isEmpty(tooltip)
 							? columnDef.label
@@ -380,6 +383,7 @@ class FlexibleTable extends React.Component {
 		const headers = headerInfo.headers;
 		const searchLabel = headerInfo.searchLabel;
 		const tableContent = this.generateTableRows(columnWidths, tableWidth);
+		const disabled = this.props.tableState === STATES.DISABLED;
 
 		let renderTable = "";
 		let searchBar = null;
@@ -388,26 +392,19 @@ class FlexibleTable extends React.Component {
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
 			const placeHolder = PropertyUtils.formatMessage(this.props.intl,
 				MESSAGE_KEYS.TABLE_SEARCH_PLACEHOLDER, MESSAGE_KEYS_DEFAULTS.TABLE_SEARCH_PLACEHOLDER) + " " + searchLabel;
-			const disabled = this.props.stateDisabled && (typeof this.props.stateDisabled.disabled !== "undefined" || Object.keys(this.props.stateDisabled) > 0);
-			const className = disabled ? "disabled" : "";
-			searchBar = (<div className="flexible-table-search-container">
-				<div className={"flexible-table-search-bar " + className}>
-					<TextField
-						key="flexible-table-search-bar"
-						type="search"
-						id="flexible-table-search"
-						className="flexible-table-toolbar"
-						placeholder={placeHolder}
-						disabledPlaceholderAnimation
+
+			searchBar = (
+				<div className={classNames("properties-ft-search-container", { "disabled": disabled })}>
+					<Search
+						className="properties-ft-search-text"
+						placeHolderText={placeHolder}
 						onChange={this.handleFilterChange}
-						value={this.props.filterKeyword}
 						disabled={disabled}
+						small
+						labelText={""}
 					/>
 				</div>
-				<div id="flexible-table-search-icon" className="flexible-table-toolbar">
-					<Icon type="search" {...this.props.stateDisabled} />
-				</div>
-			</div>
+
 			);
 
 			if (renderHeader) {
@@ -432,57 +429,40 @@ class FlexibleTable extends React.Component {
 		}
 
 		const heightStyle = this.props.noAutoSize ? {} : { height: tableHeight + "px" };
-		const containerId = renderHeader ? "flexible-table-container" : "flexible-table-container-noheader";
-		const containerClass = renderHeader ? "flexible-table-container-absolute" : "flexible-table-container-absolute-noheader";
-		const conditionIconClass = this.props.icon &&
-			this.props.icon.props.validateErrorMessage &&
-			this.props.icon.props.validateErrorMessage.type !== CONDITION_MESSAGE_TYPE.INFO ? "flexible-table-container-icon" : "";
-
-		let tableStyle = {};
-		if (this.props.validationStyle && this.props.validationStyle.borderColor) {
-			tableStyle = {
-				borderColor: this.props.validationStyle.borderColor
-			};
-		}
-
+		const containerId = renderHeader ? "properties-ft-container" : "properties-ft-container-noheader";
+		const containerClass = renderHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
+		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass + this.props.messageInfo.type;
 		renderTable = (
 			<div>
 				{searchBar}
-				{this.props.label}
-				<div className={conditionIconClass} >
-					<div className="flexible-table-container-icon-first-column">
-						{this.props.topRightPanel}
-						<ObserveSize observerFn={(element) => this._updateTableWidth(element)}>
-							<div id="flexible-table-container-wrapper" style={ heightStyle }>
-								<div className={containerClass} style={tableStyle}>
-									<div ref={ (ref) => (this.flexibleTableDiv = ref) } id={containerId} style={{ width: tableWidth }}>
-										<Table {...filterProps}
-											className={"table flexible-table"}
-											id="table"
-											ref="table"
-											sortable={this.props.sortable}
-											onSort={this.onSort}
-											{...hideTableHeader}
-										>
-											<Thead key="flexible-table-thead">
-												{headers}
-											</Thead>
-											{tableContent}
-										</Table>
-									</div>
+				<div className="properties-ft-container-panel">
+					{this.props.topRightPanel}
+					<ObserveSize observerFn={(element) => this._updateTableWidth(element)}>
+						<div className="properties-ft-container-wrapper" style={ heightStyle }>
+							<div className={messageClass}>
+								<div ref={ (ref) => (this.flexibleTableDiv = ref) } className={containerId} style={{ width: tableWidth }}>
+									<Table {...filterProps}
+										className={"table properties-ft"}
+										ref="table"
+										sortable={this.props.sortable}
+										onSort={this.onSort}
+										{...hideTableHeader}
+									>
+										<Thead key="properties-ft-thead">
+											{headers}
+										</Thead>
+										{tableContent}
+									</Table>
 								</div>
 							</div>
-						</ObserveSize>
-					</div>
-					<div className="flexible-table-container-icon-second-column">
-						{this.props.icon}
-					</div>
+						</div>
+					</ObserveSize>
 				</div>
 			</div>
 		);
 
 		return (
-			<div id={"flexible-table-" + this.props.scrollKey} className="flexible-table-control-container">
+			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container">
 				{renderTable}
 			</div>
 		);
@@ -501,15 +481,13 @@ FlexibleTable.propTypes = {
 	onSort: PropTypes.func,
 	onFilter: PropTypes.func,
 	alignTop: PropTypes.bool,
-	label: PropTypes.object,
 	topRightPanel: PropTypes.object,
-	icon: PropTypes.object,
-	validationStyle: PropTypes.object,
 	scrollKey: PropTypes.string,
-	stateDisabled: PropTypes.object,
 	intl: intlShape,
 	rows: PropTypes.number,
-	noAutoSize: PropTypes.bool
+	noAutoSize: PropTypes.bool,
+	tableState: PropTypes.string,
+	messageInfo: PropTypes.object
 };
 
 export default injectIntl(FlexibleTable);

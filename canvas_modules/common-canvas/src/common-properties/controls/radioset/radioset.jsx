@@ -11,6 +11,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import ControlUtils from "./../../util/control-utils";
 import ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
+import ValidationMessage from "./../../components/validation-message";
+import RadioButton from "carbon-components-react/lib/components/RadioButton";
+import classNames from "classnames";
 import { STATES } from "./../../constants/constants.js";
 import { ORIENTATIONS } from "./../../constants/form-constants.js";
 
@@ -78,7 +81,7 @@ export default class RadiosetControl extends React.Component {
 
 	handleChange(evt) {
 		const oldVal = this.props.controller.getPropertyValue(this.props.propertyId);
-		const newVal = this.convertTargetValue(evt.target.value);
+		const newVal = this.convertTargetValue(evt);
 		this.props.controller.updatePropertyValue(this.props.propertyId, newVal);
 
 		if (oldVal !== newVal) {
@@ -88,76 +91,52 @@ export default class RadiosetControl extends React.Component {
 
 	render() {
 		var controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const conditionProps = {
-			propertyId: this.props.propertyId,
-			controlType: "checkbox"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
-
-		const errorMessage = conditionState.message;
-		const messageType = conditionState.messageType;
-		const icon = conditionState.icon;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
-
-		let controlIconContainerClass = "control-icon-container";
-		if (messageType !== "info") {
-			controlIconContainerClass = "control-icon-container-enabled";
-		}
-
-		var buttons = [];
-		let cssClasses = "control";
-		let cssIndicator;
-		if (stateDisabled.disabled === true) {
-			cssIndicator = "control__indicator nohover";
-		} else {
-			cssIndicator = "control__indicator";
-		}
-		if (this.props.control.orientation === ORIENTATIONS.VERTICAL) {
-			cssClasses += " control-radio-block";
-			cssIndicator += " control__indicator-block";
-		} else {
-			cssClasses += " radio_horizontal_label";
-		}
+		const state = this.props.controller.getControlState(this.props.propertyId);
+		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
+		const messageType = (messageInfo) ? messageInfo.type : "info";
 
 		if (!this.props.control.values && this.props.control.controlType === "radioset") {
 			this.props.control.values = [true, false];
 			this.props.control.valueLabels = ["true", "false"];
 		}
+		var buttons = [];
 		let wasChecked = false;
 		const valueSet = this.props.controller.getFilteredEnumItems(this.props.propertyId, this.props.control);
 		for (var i = 0; i < valueSet.values.length; i++) {
-			var val = valueSet.values[i];
-			var checked = val === controlValue;
+			var checked = valueSet.values[i] === controlValue;
+			// RadioButton only accepts values of type string || number
+			var val = (this.props.control.valueDef.propType === "boolean") ? valueSet.values[i].toString() : valueSet.values[i];
 			wasChecked = wasChecked || checked;
 			var optionalPanel = this.getOptionalPanel(val);
 			buttons.push(
-				<span key={i}>
-					<label key={i} className={cssClasses}>
-						<input type="radio"
-							{...stateDisabled}
-							name={this.props.control.name}
-							value={val}
-							onChange={this.handleChange}
-							checked={checked}
-						/>
-						{valueSet.valueLabels[i]}
-						<div className={cssIndicator} />
-					</label>
+				<div key={i} className="properties-radioset-panel">
+					<RadioButton
+						key={i}
+						disabled={state === STATES.DISABLED}
+						labelText={valueSet.valueLabels[i]}
+						value={val}
+						onChange={this.handleChange}
+						checked={checked}
+					/>
 					{optionalPanel}
-				</span>
+				</div>
 			);
 		}
 		if (controlValue && controlValue.length > 0 && !wasChecked) {
 			this.setEmptySelection = true;
 		}
+
 		return (
-			<div id={ControlUtils.getControlID(this.props.control, this.props.propertyId)} className="radio" style={stateStyle} >
-				<div id={controlIconContainerClass} >
-					<div id="radioset-control-container">{buttons}</div>
-					{icon}
+			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
+				className={classNames("properties-radioset ", { "hide": state === STATES.HIDDEN })}
+			>
+				<div
+					className={classNames("properties-radio-button-group " + messageType,
+						{ "horizontal": this.props.control.orientation !== ORIENTATIONS.VERTICAL })}
+				>
+					{buttons}
 				</div>
-				{errorMessage}
+				<ValidationMessage state={state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 			</div>
 		);
 	}
@@ -166,5 +145,6 @@ export default class RadiosetControl extends React.Component {
 RadiosetControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	control: PropTypes.object.isRequired
+	control: PropTypes.object.isRequired,
+	tableControl: PropTypes.bool
 };

@@ -15,8 +15,8 @@ import FlexibleTable from "./../flexible-table";
 import PropertiesButtons from "./../properties-buttons";
 import PropertyUtils from "./../../util/property-utils";
 
-import Button from "ap-components-react/dist/components/Button";
-import Checkbox from "ap-components-react/dist/components/Checkbox";
+import Button from "carbon-components-react/lib/components/Button";
+import Checkbox from "carbon-components-react/lib/components/Checkbox";
 import { injectIntl, intlShape } from "react-intl";
 
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, DATA_TYPES, TOOL_TIP_DELAY, FP_CHECKBOX_WIDTH } from "./../../constants/constants";
@@ -24,6 +24,7 @@ import Icon from "./../../../icons/icon.jsx";
 
 import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
+import isEqual from "lodash/isEqual";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 
@@ -48,8 +49,6 @@ class FieldPicker extends React.Component {
 		this.getVisibleData = this.getVisibleData.bind(this);
 		this.handleSave = this.handleSave.bind(this);
 		this.handleCancel = this.handleCancel.bind(this);
-		this.handleCheckAll = this.handleCheckAll.bind(this);
-		this.handleFieldChecked = this.handleFieldChecked.bind(this);
 		this.handleReset = this.handleReset.bind(this);
 		this.getNewSelections = this.getNewSelections.bind(this);
 		this.onSort = this.onSort.bind(this);
@@ -60,6 +59,21 @@ class FieldPicker extends React.Component {
 		this.filterList = this.getAvailableFilters();
 	}
 
+	componentWillReceiveProps(newProps) {
+		let fields = this.state.fields;
+		let selectedFields = this.state.selectedFields;
+		if (newProps.fields) {
+			if (!isEqual(Object.keys(newProps.fields), Object.keys(this.state.fields))) {
+				fields = newProps.fields;
+			}
+		}
+		if (newProps.currentFields) {
+			if (!isEqual(Object.keys(newProps.currentFields), Object.keys(this.state.selectedFields))) {
+				selectedFields = newProps.fcurrentFields;
+			}
+		}
+		this.setState({ fields: fields, selectedFields: selectedFields });
+	}
 	onFilter(filterString) {
 		this.setState({ filterText: filterString });
 	}
@@ -130,17 +144,19 @@ class FieldPicker extends React.Component {
 					}
 				}
 			}
-
+			// TODO need to make checkbox Id unique
 			const columns = [];
 			columns.push({
 				column: "checkbox",
 				width: FP_CHECKBOX_WIDTH,
-				content: (<div className="field-picker-checkbox">
-					<Checkbox id={"field-picker-checkbox-" + i}
+				content: (<div className="properties-fp-checkbox">
+					<Checkbox id={"properties-fp-checkbox-" + i}
 						checked={checked}
-						onChange={this.handleFieldChecked}
+						onChange={this.handleFieldChecked.bind(this, field.name)}
 						data-name={field.name}
 						data-type={field.type}
+						hideLabel
+						labelText={field.name}
 					/></div>)
 			});
 			columns.push({ column: "fieldName", content: field.origName });
@@ -149,16 +165,16 @@ class FieldPicker extends React.Component {
 			}
 			columns.push({
 				column: "dataType",
-				content: (<div className="field-picker-data">
-					<div className={"field-picker-data-type-icon"}>
+				content: (<div className="properties-fp-data">
+					<div className={"properties-fp-data-type-icon"}>
 						<Icon type={field.type} />
 					</div>
-					<div className="field-type">{field.type}</div>
+					<div className="properties-fp-field-type">{field.type}</div>
 				</div>),
 				value: field.type
 			});
 
-			tableData.push({ className: "field-picker-data-rows", columns: columns });
+			tableData.push({ className: "properties-fp-data-rows", columns: columns });
 		}
 		return tableData;
 	}
@@ -205,12 +221,12 @@ class FieldPicker extends React.Component {
 		this.props.closeFieldPicker();
 	}
 
-	handleCheckAll(evt) {
+	handleCheckAll(checked) {
 		let selectAll = [];
 		const selectedFields = this.state.selectedFields;
 		const visibleData = this.getVisibleData();
 
-		if (evt.target.checked) {
+		if (checked) {
 			selectAll = Array.from(this.state.selectedFields);
 			for (const field of visibleData) {
 				selectAll.push(field.name);
@@ -227,7 +243,7 @@ class FieldPicker extends React.Component {
 
 		this.setState({
 			selectedFields: selectAll,
-			checkedAll: evt.target.checked
+			checkedAll: checked
 		});
 	}
 
@@ -242,15 +258,14 @@ class FieldPicker extends React.Component {
 		});
 	}
 
-	handleFieldChecked(evt) {
+	handleFieldChecked(fieldName, checked) {
 		const current = this.state.selectedFields;
-		const selectedFieldName = evt.currentTarget.getAttribute("data-name");
 
-		if (evt.target.checked) {
-			this.setState({ selectedFields: current.concat(selectedFieldName) });
+		if (checked) {
+			this.setState({ selectedFields: current.concat(fieldName) });
 		} else if (current) {
 			const modified = current.filter(function(element) {
-				return element !== selectedFieldName;
+				return element !== fieldName;
 			});
 
 			this.setState({
@@ -319,11 +334,14 @@ class FieldPicker extends React.Component {
 				>
 					<div>
 						<Button
-							id="field-picker-back-button"
-							back icon="back"
+							className="properties-fp-back-button"
+							icon="arrow--left"
+							type="button"
+							small
+							kind="secondary"
 							onClick={this.handleSave}
 						/>
-						<label className="control-label">{this.props.title}</label>
+						<label className="properties-fp-button-label">{this.props.title}</label>
 					</div>
 				</Tooltip>
 			</div>
@@ -350,14 +368,14 @@ class FieldPicker extends React.Component {
 					delay={TOOL_TIP_DELAY}
 					className="properties-tooltips"
 				>
-					<button type="button" id="reset-fields-button"
-						className="button"
+					<button type="button"
+						className="properties-fp-reset-button-container"
 						onClick={this.handleReset}
 						onMouseEnter={this.mouseEnterResetButton}
 						onMouseLeave={this.mouseLeaveResetButton}
 					>
-						<div id="reset-fields-button-label">{resetLabel}</div>
-						<div className="reset-fields-button-icon">
+						<div className="properties-fp-reset-button label">{resetLabel}</div>
+						<div className="properties-fp-reset-button icon">
 							<Icon type="reset" />
 						</div>
 					</button>
@@ -394,7 +412,7 @@ class FieldPicker extends React.Component {
 							className="properties-tooltips"
 							disable={isEmpty(filter.type)}
 						>
-							<button type="button" className="filter-list-li filter"
+							<button type="button" className="properties-fp-filter-list-li properties-fp-filter"
 								data-type={filter.type}
 								onClick={that.filterType.bind(that)}
 								aria-label={filterLabel + " " + filter.type}
@@ -408,8 +426,8 @@ class FieldPicker extends React.Component {
 			return (row);
 		});
 		return (
-			<ul id="field-picker-filter-list">
-				<li id="filter-list-title" className="filter-list-li">
+			<ul className="properties-fp-filter-list">
+				<li className="properties-fp-filter-list-title properties-fp-filter-list-li">
 					{filterLabel}
 				</li>
 				{filters}
@@ -443,12 +461,14 @@ class FieldPicker extends React.Component {
 			MESSAGE_KEYS.FIELDPICKER_SCHEMACOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SCHEMACOLUMN_LABEL);
 		const dataTypeColumnLabel = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.FIELDPICKER_DATATYPECOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_DATATYPECOLUMN_LABEL);
-
+		// TODO get label from resource and make id unique
 		const headers = [];
-		headers.push({ "key": "checkbox", "label": <div className="field-picker-checkbox">
-			<Checkbox id={"field-picker-checkbox-all"}
-				onChange={this.handleCheckAll}
+		headers.push({ "key": "checkbox", "label": <div className="properties-fp-checkbox">
+			<Checkbox id={"properties-fp-checkbox-all"}
+				onChange={this.handleCheckAll.bind(this)}
 				checked={checkedAll}
+				hideLabel
+				labelText="Check all fields"
 			/>
 		</div>, "width": FP_CHECKBOX_WIDTH });
 		headers.push({ "key": "fieldName", "label": fieldColumnLabel });
@@ -460,7 +480,7 @@ class FieldPicker extends React.Component {
 		const tableData = this.getTableData(checkedAll);
 
 		return (
-			<FlexibleTable className="table" id="table"
+			<FlexibleTable className="properties-fp-table"
 				sortable={["fieldName", "schemaName", "dataType"]}
 				filterable={["fieldName"]}
 				onFilter={this.onFilter}
@@ -482,7 +502,7 @@ class FieldPicker extends React.Component {
 
 		if (this.props.rightFlyout) {
 			return (<div>
-				<div className="field-picker-top-row">
+				<div className="properties-fp-top-row">
 					{filterTypes}
 					{resetButton}
 				</div>
@@ -492,7 +512,7 @@ class FieldPicker extends React.Component {
 		}
 
 		return (<div>
-			<div className="field-picker-top-row">
+			<div className="properties-fp-top-row">
 				{backButton}
 				{resetButton}
 			</div>

@@ -1,0 +1,145 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+.properties-primaryTabs {
+	.bx--tabs__nav-item {
+		margin-left: 1rem;
+	}
+}
+
+.properties-category-container {
+	position: relative;
+	&:last-of-type {
+		.properties-category-content.show {
+			border-bottom: 0;
+		}
+	}
+}
+
+.properties-category-title {
+	height: 46px;
+	width: 100%;
+	font-size: 12px;
+	color: $text-02;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-left: 20px;
+	padding-right: 20px;
+	border: 0; // override for button styling
+	outline: none; // override for button styling
+	border-bottom: 2px solid $ui-04;
+	cursor: pointer;
+	&:hover {
+		background-color: $ui-03;
+	}
+	> svg {
+		height: 12px;
+		width: 12px;
+	}
+}
+
+.properties-category-content {
+	height: 100%;
+	padding-left: 10px;
+	padding-right: 20px;
+	border-bottom: 2px solid $ui-04;
+	display: none;
+	&.show {
+		display: inherit;
+	}
+}
+
+.properties-text-panel {
+	cursor: text;
+	padding: 4px 0;
+	line-height: 1.5;
+	.panel-label {
+		font-weight: 600;
+	}
+	&[disabled] {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+	&.hide {
+		display: none;
+	}
+}
+
+.properties-sub-category-container {
+	padding: 5px 8px;
+	.properties-sub-category-title {
+		padding: 8px 0;
+		font-weight: 500;
+		font-size: 14px;
+	}
+	.properties-sub-panel-content {
+		> .properties-control-panel {
+			border-left: 5px solid $ui-03;
+			padding: 0 8px;
+		}
+	}
+}
+
+.properties-action-panel {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+
+.properties-static-text-container {
+	display: flex;
+	align-items: center;
+	.properties-static-text {
+		cursor: text;
+		font-size: 14px;
+		color: $text-01;
+		&.info {
+			font-style: italic;
+			color: $text-02;
+		}
+	}
+	svg {
+		width: 17px;
+		height: 17px;
+		margin-right: 10px;
+	}
+}
+
+.properties-h-separator {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.properties-link-text-container {
+	display: flex;
+	margin-left: -5px;
+	padding: 4px 0;
+	svg {
+		width: 17px;
+		height: 17px;
+		margin-right: 5px;
+		margin-top: 2px;
+	}
+	&.warning {
+		svg {
+			fill: $support-03;
+		}
+	}
+	&.error {
+		svg {
+			fill: $support-01;
+		}
+	}
+	.properties-link-text {
+		cursor: pointer;
+		font-size: 14px;
+		line-height: 1.4;
+	}
+}

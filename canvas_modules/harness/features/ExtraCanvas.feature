@@ -14,6 +14,7 @@ Scenario: Sanity test to perform extra canvas node operation
 	Given I have selected the "Ports" connection type
 
 	Then I click on extra canvas toggle
+	Then I pause for 2 seconds
 
 	Given I have uploaded palette for extra canvas "/test_resources/palettes/modelerPalette.json"
 	Given I have uploaded diagram for extra canvas "/test_resources/diagrams/modelerCanvas.json"
@@ -47,6 +48,7 @@ Scenario: Sanity test to perform extra canvas property edit operation
 	Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 
 	Then I click on extra canvas toggle
+	Then I pause for 2 seconds
 
 	Given I have uploaded palette for extra canvas "/test_resources/palettes/modelerPalette.json"
 	Given I have uploaded diagram for extra canvas "/test_resources/diagrams/modelerCanvas.json"

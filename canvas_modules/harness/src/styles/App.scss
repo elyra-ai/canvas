@@ -15,8 +15,6 @@
 .canvas-container,
 .canvas-container.double {
 	height: calc(100% - 52px);
-	// width: 100%;
-	-webkit-transition: width 0.5s;
 	transition: width 0.5s;
 }
 
@@ -24,12 +22,11 @@
 	height: 50%;
 }
 
-#title {
-	background-color: #F0F3F6;
-	color: #152935;
+.harness-title {
+	color: $text-01;
 	width: auto;
-	text-decoration: none;
 	font-size: 14px;
+	padding: 5px;
 }
 
 /* Styles for elements displayed for empty canvas. */
@@ -44,7 +41,7 @@
 
 .empty-harness-link {
 	display: block;
-	color: #152935;
+	color: $text-01;
 	opacity: 0.2;
 	font-size: 20px;
 	text-align: center;
@@ -55,7 +52,7 @@
 
 .empty-harness-text {
 	display: block;
-	color: #152935;
+	color: $text-01;
 	opacity: 0.2;
 	font-size: 20px;
 	text-align: center;
@@ -75,31 +72,29 @@
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-	background-color: #F0F3F6;
-	z-index: 4;
-	border-bottom: 2px solid #DFE3E6;
+	background-color: $ui-03;
+	border-bottom: 2px solid $ui-04;
 }
 
 .navbar-li {
 	float: left;
+	height: 100%;
+	display: flex;
+	align-items: center;
 }
 
-.navbar-li a, #palette-true a {
+.navbar-li a {
 	display: block;
 	text-align: center;
 	padding: 14px;
 	width: 18px;
-	fill: #3D70B2;
+	fill: $brand-01;
 	box-sizing: content-box;
+	cursor: pointer;
 }
 
-.navbar-li a:hover, #palette-true a:hover {
-	background-color: #DFE3E6;
-	color: #3D70B2;
-}
-
-#palette-false {
-	display: none;
+.navbar-li a:hover {
+	background-color: $ui-04;
 }
 
 .action-bar-sidepanel {
@@ -107,18 +102,17 @@
 }
 
 .nav-divider {
-	border-left: 2px solid #DFE3E6;
+	border-left: 2px solid $ui-04;
 }
 
 /*Console*/
 #app-console {
 	font-size: small;
-	border-top: 1px solid #152935;
-	background-color: rgba(243, 243, 243, 0.8);
+	border-top: 1px solid $text-01;
+	background-color: $ui-03;
 	position: fixed;
 	bottom: 0;
 	width: 100%;
-	-webkit-transition: height 2s;
 	transition: height 2s;
 	overflow-y: auto;
 	z-index: 1;
@@ -130,7 +124,7 @@
 .console-pretty-json {
 	margin: 0 10px 10px 0;
 	border: 0;
-	border-bottom: 1px dashed #CCC;
+	border-bottom: 1px dashed $ui-05;
 }
 
 .console-entry {
@@ -143,8 +137,7 @@
 }
 
 .console-entry:hover {
-	list-style: none;
-	background-color: #DFE3E6;
+	background-color: $ui-04;
 }
 
 .console-entry:hover::before {
@@ -152,120 +145,7 @@
 	padding-right: 12px;
 }
 
-/*SidePanel*/
-#app-sidepanel {
-	background-color: #F0F3F6;
-	top: 50px;
-	position: fixed;
-	right: 0;
-	height: calc(100% - 50px);
-	-webkit-transition: width 0.5s;
-	transition: width 0.5s;
-	color: #152935;
-	overflow: auto;
-	z-index: 100;
-	box-sizing: border-box;
-	font-size: small;
-	overflow-x: hidden;
-}
 
-.sidepanel-headers {
-	padding-bottom: 5px;
-}
-
-.sidepanel-children {
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-.sidepanel-divider {
-	width: 100%;
-	margin: 0 0 5px;
-	border-bottom: 2px solid #DFE3E6;
-	padding: 5px 0;
-}
-
-.sidepanel-spacer {
-	width: 100%;
-	padding: 6px 0 0;
-}
-
-.sidepanel-list-item-icon {
-	height: 40px;
-	width: 40px;
-	min-width: 32px;
-	float: left;
-}
-
-.sidepanel-list-item-text {
-	line-height: 30px;
-	margin-left: 15px;
-}
-
-.sidepanel-api-delete-notification-message-submit {
-	position: relative;
-	display: flex;
-	flex-flow: row-reverse;
-}
-
-#buttonOneTimeLayoutHorizontal , #buttonOneTimeLayoutVertical {
-	width: 100%;
-	text-align: center;
-}
-
-#properties-documentation-link {
-	float: right;
-	margin-top: -26px;
-	text-decoration: underline;
-}
-
-#properties-documentation-link a {
-	color: #152935;
-}
-
-#properties-documentation-link a:hover {
-	color: #3D70B2;
-}
-
-/*Override ap-components-react styles*/
-#app-sidepanel label {
-	color: #152935;
-}
-
-#app-sidepanel .button {
-	line-height: 1;
-	margin-top: 2px;
-	margin-bottom: 2px;
-}
-
-.toggle__checkbox {
-	margin-top: 5px;
-}
-
-#app-sidepanel .radio--dark + label,
-#app-sidepanel .checkbox--dark + label {
-	font-weight: 100;
-}
-
-.checkbox--dark + label::before, .checkbox--dark[type="checkbox"][disabled] + label::before {
-	border: 2px solid #8C9BA5;
-}
-
-.text--dark, .text--dark:focus {
-	border-color: #8C9BA5;
-	color: #152935;
-}
-
-/* Dropdown menu */
-#app-sidepanel .select__options__item {
-	border-left: 1px solid #152935;
-	border-right: 1px solid #152935;
-	border-bottom: 1px solid #152935;
-}
-
-#app-sidepanel .select > .select__button > .select__button__arrow {
-	top: 10px;
-}
 
 /* This styles are used in the decoratorCanvas.json canvas file. */
 
@@ -415,89 +295,6 @@
 	fill: #2BE2CA;
 }
 
-.properties-editing {
-	top: 75px;
-	left: 75px;
-	min-width: 700px;
-	z-index: 2;
-}
-
-.properties-large {
-	width: 70%;
-}
-
-.properties-medium {
-	width: 55%;
-}
-
-.properties-small {
-	width: 40%;
-}
-
-/* These are used in custom common-properties */
-
-.custom-slider {
-	display: flex;
-	overflow-x: hidden;
-	.icon {
-		margin-top: 15px;
-		width: 20px;
-	}
-	.slider {
-		display: block;
-		width: 100%;
-		.text--slider {
-			padding: 0.5em 25px 0.5em 0;
-		}
-		p {
-			display: none;
-		}
-	}
-	.message {
-		margin-top: -15px;
-	}
-}
-
-.custom-toggle {
-	display: flex;
-	.text {
-		padding-left: 10px;
-	}
-	.icon {
-		margin-left: auto;
-	}
-}
-
-.table-row .custom-toggle {
-	padding-top: 6px;
-}
-
-.custom-map-summary {
-	span {
-		display: block;
-	}
-	text {
-		color: #0000CD;
-		font-weight: 600;
-	}
-}
-
-.custom-map {
-	.condition {
-		margin-top: 5px;
-		margin-bottom: 10px;
-		display: flex;
-		.map-icon {
-			height: 20px;
-			width: 20px;
-			margin-right: 4px;
-		}
-	}
-	button {
-		margin-right: 4px;
-	}
-}
-
 .list-item-containers .list-item.overflow {
 	width: 170px;
 }
@@ -509,5 +306,15 @@
 		height: 10px;
 		margin-top: -3px;
 		margin-right: 5px;
+	}
+}
+
+.sidepanel-file-uploader {
+	.bx--label-description,
+	.bx--form-item {
+		margin-bottom: 0;
+	}
+	.bx--file-container {
+		margin-top: 5px;
 	}
 }

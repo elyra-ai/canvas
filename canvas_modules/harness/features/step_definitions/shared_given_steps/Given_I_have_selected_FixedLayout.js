@@ -15,18 +15,18 @@ module.exports = function() {
 	this.Then(/^I have selected the "([^"]*)" fixed Layout$/, function(fixedLayout) {
 
 		try {
-			if (fixedLayout === "None") {
-				var noneLabel = browser.$("#sidepanel-layout-direction").$$("div")[2].$("label");
+			if (fixedLayout === "none") {
+				var noneLabel = browser.$("#sidepanel-layout-direction").$$(".radioButtonWrapper")[0].$("label");
 				noneLabel.scroll();
 				browser.pause(500);
 				noneLabel.click();
-			} else if (fixedLayout === "Horizontal") {
-				var horizontalLabel = browser.$("#sidepanel-layout-direction").$$("div")[4].$("label");
+			} else if (fixedLayout === "horizontal") {
+				var horizontalLabel = browser.$("#sidepanel-layout-direction").$$(".radioButtonWrapper")[1].$("label");
 				horizontalLabel.scroll();
 				browser.pause(500);
 				horizontalLabel.click();
-			} else if (fixedLayout === "Vertical") {
-				var verticalLabel = browser.$("#sidepanel-layout-direction").$$("div")[6].$("label");
+			} else if (fixedLayout === "vertical") {
+				var verticalLabel = browser.$("#sidepanel-layout-direction").$$(".radioButtonWrapper")[2].$("label");
 				verticalLabel.scroll();
 				browser.pause(500);
 				verticalLabel.click();
@@ -42,12 +42,12 @@ module.exports = function() {
 
 		try {
 			if (containerType === "Custom" || containerType === "Flyout") {
-				var customContainer = browser.$("#sidepanel-properties-container-type").$$("div")[2].$("label");
+				var customContainer = browser.$("#sidepanel-properties-container-type").$$(".radioButtonWrapper")[0].$("label");
 				customContainer.scroll();
 				browser.pause(500);
 				customContainer.click();
 			} else if (containerType === "Modal") {
-				var modalContainer = browser.$("#sidepanel-properties-container-type").$$("div")[4].$("label");
+				var modalContainer = browser.$("#sidepanel-properties-container-type").$$(".radioButtonWrapper")[1].$("label");
 				modalContainer.scroll();
 				browser.pause(500);
 				modalContainer.click();

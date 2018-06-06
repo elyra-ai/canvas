@@ -12,7 +12,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { UnControlled as CodeMirror } from "react-codemirror2";
+import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
+import { STATES } from "./../../constants/constants.js";
+
 
 // required for server side rendering.
 let cm = null;
@@ -77,12 +80,6 @@ export default class ExpressionControl extends React.Component {
 		return results;
 	}
 
-	getControlId() {
-		const row = (typeof this.props.propertyId.row === "undefined") ? "" : "_" + this.props.propertyId.row;
-		const col = (typeof this.props.propertyId.col === "undefined") ? "" : "_" + this.props.propertyId.col;
-		return "ExpressionEditor-" + this.props.propertyId.name + row + col;
-	}
-
 	// Add the dataset field names to the autocomplete list
 	addonHints(editor, options) {
 		var results = {};
@@ -129,57 +126,37 @@ export default class ExpressionControl extends React.Component {
 
 	render() {
 		var controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const conditionProps = {
-			propertyId: this.props.propertyId,
-			controlType: "textfieldbox"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
+		const state = this.props.controller.getControlState(this.props.propertyId);
+		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
+		const messageType = (messageInfo) ? messageInfo.type : "info";
 
-		const errorMessage = conditionState.message;
-		var messageType = conditionState.messageType;
-		const icon = conditionState.icon;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
-
-		let controlIconContainerClass = "control-icon-container";
-		if (messageType !== "info") {
-			controlIconContainerClass = "control-icon-container-enabled";
-		}
-
-		messageType = (stateDisabled.disabled) ? "disabled" : messageType;
+		const theme = (state === STATES.DISABLED) ? "disabled" : messageType;
 
 		const mirrorOptions = {
 			mode: this.props.control.language,
 			placeholder: this.props.control.additionalText,
-			theme: messageType + " default",
-			readOnly: (stateDisabled.disabled) ? "nocursor" : false,
+			theme: theme + " default",
+			readOnly: (state === STATES.DISABLED) ? "nocursor" : false,
 			extraKeys: { "Ctrl-Space": "autocomplete" },
 			autoRefresh: true
 		};
 
+		const className = "properties-expression-editor " + messageType;
 		return (
-			<div>
-				<div className="editor_control_area" style={stateStyle}>
-					<div id={controlIconContainerClass}>
-						<div ref={ (ref) => (this.expressionEditorDiv = ref) } id={this.getControlId()}
-							className="expression_editor_control"
-						>
-							<CodeMirror
-								ref= { (ref) => (this.codeMirror = ref)}
-								options={mirrorOptions}
-								onChange={this.handleChange}
-								editorDidMount={this.editorDidMount}
-								value={controlValue}
-								cursor={this.cursor}
-							/>
-						</div>
-						{icon}
-					</div>
-				</div>
-				<div className="expression-validation-message">
-					{errorMessage}
-				</div>
+			<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
+				className={className}
+			>
+				<CodeMirror
+					ref= { (ref) => (this.codeMirror = ref)}
+					options={mirrorOptions}
+					onChange={this.handleChange}
+					editorDidMount={this.editorDidMount}
+					value={controlValue}
+					cursor={this.cursor}
+				/>
+				<ValidationMessage state={state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 			</div>
+
 		);
 	}
 }
@@ -187,5 +164,6 @@ export default class ExpressionControl extends React.Component {
 ExpressionControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
-	controller: PropTypes.object.isRequired
+	controller: PropTypes.object.isRequired,
+	tableControl: PropTypes.bool
 };

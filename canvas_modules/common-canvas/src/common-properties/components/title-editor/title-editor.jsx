@@ -11,13 +11,20 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import Icon from "./../../../icons/icon.jsx";
-import TextField from "ap-components-react/dist/components/TextField";
+import TextInput from "carbon-components-react/lib/components/TextInput";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
+import PropertyUtils from "./../../util/property-utils";
 
-export default class TitleEditor extends Component {
+import { injectIntl, intlShape } from "react-intl";
+
+class TitleEditor extends Component {
 	constructor(props) {
 		super(props);
 		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
 		this.helpClickHandler = this.helpClickHandler.bind(this);
+		this.id = PropertyUtils.generateId();
+		this.labelText = PropertyUtils.formatMessage(props.intl,
+			MESSAGE_KEYS.TITLE_EDITOR_LABEL, MESSAGE_KEYS_DEFAULTS.TITLE_EDITOR_LABEL);
 	}
 
 	_handleKeyPress(e) {
@@ -43,24 +50,27 @@ export default class TitleEditor extends Component {
 
 	render() {
 		const propertiesTitleEdit = this.props.labelEditable === false ? <div />
-			: (<button type="button" className="title-edit-right-flyout-panel" onClick={this.editTitleClickHandler}>
+			: (<button type="button" className="properties-title-editor-btn edit" data-id="edit" onClick={this.editTitleClickHandler}>
 				<Icon type="edit" />
 			</button>);
 
 		const helpButton = this.props.help
-			? (<button type="button" className="title-help-right-flyout-panel" onClick={this.helpClickHandler}>
+			? (<button type="button" className="properties-title-editor-btn" data-id="help" onClick={this.helpClickHandler}>
 				<Icon type="info" />
 			</button>)
 			: <div />;
+
 		return (
-			<div className="node-title-container-right-flyout-panel">
-				<div className="node-title-right-flyout-panel">
-					<TextField
-						id="node-title-editor-right-flyout-panel"
+			<div className="properties-title-editor">
+				<div className="properties-title-editor-input">
+					<TextInput
+						id={this.id}
 						value={this.props.controller.getTitle()}
 						onChange={(e) => this.props.controller.setTitle(e.target.value)}
 						onKeyPress={(e) => this._handleKeyPress(e)}
 						readOnly={this.props.labelEditable === false}
+						labelText={this.labelText}
+						hideLabel
 					/>
 				</div>
 				{propertiesTitleEdit}
@@ -74,5 +84,8 @@ TitleEditor.propTypes = {
 	helpClickHandler: PropTypes.func,
 	controller: PropTypes.object,
 	labelEditable: PropTypes.bool,
-	help: PropTypes.object
+	help: PropTypes.object,
+	intl: intlShape
 };
+
+export default injectIntl(TitleEditor);

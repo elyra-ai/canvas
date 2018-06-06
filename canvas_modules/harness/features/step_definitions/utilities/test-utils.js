@@ -9,8 +9,9 @@
 
 /* global browser */
 
+import { getBaseDir, getURL } from "./test-config.js";
 import { getHarnessData } from "./HTTPClient-utils.js";
-import { getURL } from "./test-config.js";
+
 
 const testUrl = getURL();
 const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
@@ -74,6 +75,33 @@ function isSchemaValidationError() {
 	return schemaValError;
 }
 
+function loadUnknownFile(dropdownElement, fileName) {
+	dropdownSelect(dropdownElement, "Choose from location...");
+	const fileInput = dropdownElement.$(".sidepanel-file-uploader")
+		.$("input");
+	// this will not work with relative paths
+	fileInput.setValue(getBaseDir() + fileName);
+	dropdownElement.$(".sidepanel-file-upload-submit")
+		.click("button");
+	browser.pause(600);
+}
+
+function dropdownSelect(dropdownElement, selectedItemName) {
+	// need to click on the canvas drop down
+	dropdownElement.click(".bx--dropdown");
+	browser.pause(600);
+	dropdownElement.$(".bx--dropdown-list")
+		.moveToObject();
+	browser.pause(600);
+	// get the list of drop down options.
+	const fileOptions = dropdownElement.$(".bx--dropdown-list")
+		.$("li[value='" + selectedItemName + "']");
+	fileOptions.scroll();
+	browser.pause(600);
+	fileOptions.click();
+	browser.pause(600);
+}
+
 
 module.exports = {
 	getCanvasData: getCanvasData,
@@ -81,5 +109,7 @@ module.exports = {
 	getEventLogData: getEventLogData,
 	getLastEventLogData: getLastEventLogData,
 	getLastLogOfType: getLastLogOfType,
-	isSchemaValidationError: isSchemaValidationError
+	isSchemaValidationError: isSchemaValidationError,
+	dropdownSelect: dropdownSelect,
+	loadUnknownFile: loadUnknownFile
 };

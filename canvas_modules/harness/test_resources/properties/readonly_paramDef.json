@@ -12,7 +12,14 @@
     "hide": true,
     "readonly_hidden": "Babbage",
     "disable": true,
-    "readonly_disabled": "Shannon"
+    "readonly_disabled": "Shannon",
+    "readonly_table": [
+      ["Hopper", "Turing", "Shannon", "Babbage"]
+    ],
+    "table_cond": false,
+    "readonly_table_cond": [
+      ["Hopper", "Turing", "Shannon", "Babbage"]
+    ]
   },
   "parameters": [
     {
@@ -59,6 +66,41 @@
     {
       "id": "readonly_disabled",
       "type": "string"
+    },
+    {
+      "id": "readonly_table",
+      "type": "array[readonly]"
+    },
+    {
+      "id": "readonly_table_cond",
+      "type": "array[readonly]"
+    },
+    {
+      "id": "table_cond",
+      "type": "boolean"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "readonly",
+      "parameters": [
+        {
+          "id": "readonly",
+          "type": "string"
+        },
+        {
+          "id": "readonly2",
+          "type": "string"
+        },
+        {
+          "id": "readonly_on_panel",
+          "type": "string"
+        },
+        {
+          "id": "readonly_sub_panel",
+          "type": "string"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -163,6 +205,71 @@
           "default": "Readonly Disabled"
         },
         "control": "readonly"
+      },
+      {
+        "parameter_ref": "readonly_table",
+        "label": {
+          "default": "Readonly control in a table"
+        }
+      },
+      {
+        "parameter_ref": "readonly_table_cond",
+        "label": {
+          "default": "Readonly conditions in a table"
+        }
+      },
+      {
+        "parameter_ref": "table_cond",
+        "label": {
+          "default": "Click to show table messages"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "readonly",
+        "parameters": [
+          {
+            "parameter_ref": "readonly",
+            "width": 10,
+            "label": {
+              "default": "Standard"
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "readonly2",
+            "width": 10,
+            "label": {
+              "default": "Additional"
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "readonly_on_panel",
+            "width": 10,
+            "label": {
+              "default": "on_panel"
+            },
+            "description": {
+              "default": "readonly with `edit_style=on_panel`"
+            },
+            "edit_style": "on_panel",
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "readonly_sub_panel",
+            "width": 10,
+            "label": {
+              "default": "sub_panel"
+            },
+            "description": {
+              "default": "readonly with `edit_style=sub_panel`"
+            },
+            "edit_style": "subpanel",
+            "control": "readonly"
+          }
+        ]
       }
     ],
     "group_info": [
@@ -193,6 +300,32 @@
           "readonly_hidden",
           "disable",
           "readonly_disabled"
+        ]
+      },
+      {
+        "id": "readonly-table-panels",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "readonly-table-summary",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Edit readonly table"
+            },
+            "group_info": [
+              {
+                "id": "readonly-table-summary-ctrls",
+                "parameter_refs": [
+                  "readonly_table",
+                  "table_cond",
+                  "readonly_table_cond"
+                ]
+              }
+            ]
+          }
         ]
       }
     ],
@@ -235,6 +368,42 @@
             "parameter_ref": "readonly_warning",
             "op": "notEquals",
             "value": "Turing"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "readonly_table_cond[1]",
+          "message": {
+            "default": "Readonly in a table warning testing"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "table_cond",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "readonly_table_cond[0]",
+          "message": {
+            "default": "Readonly in a table error testing"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "table_cond",
+            "op": "equals",
+            "value": false
           }
         }
       }

@@ -10,7 +10,7 @@
 import logger from "./../../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "react-bootstrap/lib/Button";
+import Button from "carbon-components-react/lib/components/Button";
 import PropertyUtils from "./../../util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
 
@@ -49,8 +49,10 @@ class SubPanelButton extends React.Component {
 		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
 
 		const button = (<Button
-			style={{ "display": "inline" }}
-			bsSize="xsmall"
+			className="properties-subpanel-button"
+			type="button"
+			small
+			kind="secondary"
 			onClick={this.showSubPanel}
 		>
 			{this.props.label}

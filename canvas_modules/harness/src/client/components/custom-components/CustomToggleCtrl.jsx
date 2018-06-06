@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -9,8 +9,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Icon from "ap-components-react/dist/components/Icon";
-import ToggleButton from "ap-components-react/dist/components/ToggleButton";
+import Icon from "carbon-components-react/lib/components/Icon";
+import Toggle from "carbon-components-react/lib/components/Toggle";
+import ToggleSmall from "carbon-components-react/lib/components/ToggleSmall";
 
 export default class CustomToggleCtrl extends React.Component {
 	constructor(props) {
@@ -20,23 +21,21 @@ export default class CustomToggleCtrl extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 	}
 
-	handleChange(evt) {
-		this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.checked);
+	handleChange(checked) {
+		this.props.controller.updatePropertyValue(this.props.propertyId, checked);
 	}
 	render() {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const message = this.props.controller.getErrorMessage(this.props.propertyId);
-		let messageText = <div />;
-		let iconContainer = <div className="icon" />;
+		let messageText;
+		let icon;
 		if (message && message.text && !this.props.table) {
 			messageText = message.text;
-			let icon = <div />;
 			if (message.type === "warning") {
-				icon = (<Icon type="warning" />);
+				icon = (<Icon className="warning" name="warning--glyph" />);
 			} else if (message.type === "error") {
-				icon = (<Icon type="error-o" />);
+				icon = (<Icon className="error" name="error--glyph" />);
 			}
-			iconContainer = (<div className="icon">{icon}</div>);
 		}
 		const state = this.props.controller.getControlState(this.props.propertyId);
 		var visibility;
@@ -46,10 +45,6 @@ export default class CustomToggleCtrl extends React.Component {
 		} else if (state === "disabled") {
 			disabled = true;
 		}
-		let label = <div className="text" />;
-		if (!this.props.table) {
-			label = (<div className="text">Toggle</div>);
-		}
 		let id = this.props.propertyId.name;
 		if (typeof this.props.propertyId.row !== "undefined") {
 			id += "_" + this.props.propertyId.row;
@@ -57,19 +52,31 @@ export default class CustomToggleCtrl extends React.Component {
 				id += "_" + this.props.propertyId.col;
 			}
 		}
+		let toggle = (
+			<Toggle
+				disabled={disabled}
+				id={id}
+				toggled={controlValue}
+				onToggle={this.handleChange}
+			/>
+		);
+		if (this.props.table) {
+			toggle = (<ToggleSmall
+				disabled={disabled}
+				id={id}
+				toggled={controlValue}
+				onToggle={this.handleChange}
+			/>);
+		}
 		return (
 			<div style={visibility}>
 				<div className="custom-toggle" >
-					<ToggleButton
-						disabled={disabled}
-						id={id}
-						checked={controlValue}
-						onChange={this.handleChange}
-					/>
-					{label}
-					{iconContainer}
+					{toggle}
 				</div>
-				{messageText}
+				<div className="condition">
+					<div className="icon">{icon}</div>
+					<div>{messageText}</div>
+				</div>
 			</div>
 		);
 	}

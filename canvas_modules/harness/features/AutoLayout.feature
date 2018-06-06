@@ -10,7 +10,7 @@ Scenario: Sanity test for autoLayout operations in Vertical Fixed Layout
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
-	Given I have selected the "Vertical" fixed Layout
+	Given I have selected the "vertical" fixed Layout
 	Given I have selected the "Flyout" palette layout
 	Given I have selected the "Halo" connection type
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
@@ -40,7 +40,7 @@ Scenario: Sanity test for autoLayout operations in Horizontal Fixed Layout
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
-	Given I have selected the "Horizontal" fixed Layout
+	Given I have selected the "horizontal" fixed Layout
 	Given I have selected the "Flyout" palette layout
 	Given I have selected the "Halo" connection type
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
@@ -70,7 +70,7 @@ Scenario: Sanity test for autoLayout operations in None Fixed Layout
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
-	Given I have selected the "None" fixed Layout
+	Given I have selected the "none" fixed Layout
 	Given I have selected the "Flyout" palette layout
 	Given I have selected the "Halo" connection type
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"

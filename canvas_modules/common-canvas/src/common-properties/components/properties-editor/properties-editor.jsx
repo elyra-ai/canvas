@@ -26,13 +26,7 @@ export default class PropertiesEditor extends Component {
 
 		return (
 			<div className={propertyEditingClass} >
-				<div className="properties-title"
-					style={{ "paddingBottom": "10px" }}
-				>
-					<h2>
-						<div>{this.props.title}</div>
-					</h2>
-				</div>
+				<h2>{this.props.title}</h2>
 				<div className="properties-body">
 					{this.props.children}
 				</div>

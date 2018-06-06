@@ -10,6 +10,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Icon from "./../../../icons/icon.jsx";
+import classNames from "classnames";
+
 
 export default class MoveableTableRows extends React.Component {
 	constructor(props) {
@@ -131,23 +133,22 @@ export default class MoveableTableRows extends React.Component {
 
 	render() {
 
-		var moveCol = <tc />;
+		var moveCol = null;
 		if (typeof this.props.control.moveableRows !== "undefined" && this.props.control.moveableRows) {
 			const moveImages = this.getTableRowMoveImages();
 			moveCol = (
 				<div
-					id="table-row-move-button-container"
+					className="properties-mr-button-container"
 				>
 					{moveImages}
 				</div>
 			);
 		}
 
-		const tableKey = "moveablerow-table-" + this.props.control.name;
-		var content = (<table id="structure-table">
+		var content = (<table className="properties-mr-table-container">
 			<tbody>
-				<tr className="structure-table-content-row" style={this.props.stateStyle}>
-					<td className="structure-table-content-row-first-column">
+				<tr className={classNames("properties-mr-table-content", { "disabled": this.props.disabled })}>
+					<td>
 						{this.props.tableContainer}
 					</td>
 					<td>
@@ -159,7 +160,7 @@ export default class MoveableTableRows extends React.Component {
 		);
 
 		return (
-			<div id= {tableKey}>
+			<div>
 				{content}
 			</div>
 		);
@@ -173,6 +174,5 @@ MoveableTableRows.propTypes = {
 	setCurrentControlValueSelected: PropTypes.func.isRequired,
 	setScrollToRow: PropTypes.func.isRequired,
 	tableContainer: PropTypes.object.isRequired,
-	stateStyle: PropTypes.object,
 	disabled: PropTypes.bool
 };

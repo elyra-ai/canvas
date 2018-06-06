@@ -1,71 +1,330 @@
 {
-	"titleDefinition": {
-		"title": "Checkboxset"
-	},
-	"current_parameters": {
-		"checkboxSetNull": null
-	},
-	"parameters": [
-		{
-			"id": "checkboxSetNull",
-			"type": "array[string]",
-			"enum": [
-				"integer",
-				"string",
-				"boolean"
-			],
-			"default": ""
-		},
-		{
-			"id": "checkboxSetUndefined",
-			"type": "array[string]",
-			"enum": [
-				"Na",
-				"drug"
-			]
-		}
-	],
-	"uihints": {
-		"id": "checkboxset",
-		"icon": "images/default.svg",
-		"label": {
-			"default": "Checkboxset"
-		},
-		"description": {
-			"default": "Test condition handling in controls"
-		},
-		"parameter_info": [
-			{
-				"parameter_ref": "checkboxSetNull",
-				"label": {
-					"default": "Null"
-				},
-				"description": {
-					"default": "checkboxset with null"
-				}
-			},
-			{
-				"parameter_ref": "checkboxSetUndefined",
-				"label": {
-					"default": "Undefined"
-				},
-				"description": {
-					"default": "checkboxset with undefined"
-				}
-			}
-		],
-		"group_info": [
-			{
-				"id": "checkboxset-values",
-				"label": {
-					"default": "Values"
-				},
-				"type": "controls",
-				"parameter_refs": [
-					"checkboxSetNull",
-					"checkboxSetUndefined"
-				]
-			}
-		]
-	}
+  "titleDefinition": {
+    "title": "Checkboxset"
+  },
+  "current_parameters": {
+    "checkboxset_number": [
+      0,
+      20
+    ],
+    "checkboxset_null": null,
+    "error": false,
+    "checkbox_error": [
+      "apple"
+    ],
+    "warning": false,
+    "checkbox_warning": [
+      "orange"
+    ],
+    "disable": true,
+    "checkbox_disabled": [
+      "pear"
+    ],
+    "hide": true,
+    "checkbox_hidden": [
+      "pear"
+    ]
+  },
+  "parameters": [
+    {
+      "id": "checkboxset_number",
+      "type": "array[integer]",
+      "enum": [
+        0,
+        10,
+        20,
+        30
+      ]
+    },
+    {
+      "id": "checkboxset_null",
+      "type": "array[string]",
+      "enum": [
+        "apple",
+        "orange",
+        "pear"
+      ]
+    },
+    {
+      "id": "checkboxset_undefined",
+      "type": "array[string]",
+      "enum": [
+        "apple",
+        "orange",
+        "pear"
+      ]
+    },
+    {
+      "id": "checkboxset_default",
+      "type": "array[string]",
+      "enum": [
+        "apple",
+        "orange",
+        "pear"
+      ],
+      "default": [
+        "apple"
+      ]
+    },
+    {
+      "id": "error",
+      "type": "boolean"
+    },
+    {
+      "id": "checkboxset_error",
+      "type": "array[string]",
+      "enum": [
+        "apple",
+        "orange",
+        "pear"
+      ]
+    },
+    {
+      "id": "warning",
+      "type": "boolean"
+    },
+    {
+      "id": "checkboxset_warning",
+      "type": "array[string]",
+      "enum": [
+        "apple",
+        "orange",
+        "pear"
+      ]
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "checkboxset_disable",
+      "type": "array[string]",
+      "enum": [
+        "apple",
+        "orange",
+        "pear"
+      ]
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "checkboxset_hidden",
+      "type": "array[string]",
+      "enum": [
+        "apple",
+        "orange",
+        "pear"
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "checkboxset",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Checkboxset"
+    },
+    "description": {
+      "default": "Test condition handling in controls"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "checkboxset_number",
+        "label": {
+          "default": "Number Checkboxset"
+        },
+        "description": {
+          "default": "checkboxset with integers for values"
+        },
+        "control": "checkboxset"
+      },
+      {
+        "parameter_ref": "checkboxset_null",
+        "label": {
+          "default": "Null value checkboxset"
+        },
+        "description": {
+          "default": "checkboxset with value set to 'null'"
+        }
+      },
+      {
+        "parameter_ref": "checkboxset_undefined",
+        "label": {
+          "default": "Undefined value checkboxset"
+        },
+        "description": {
+          "default": "checkboxset with value 'undefined'"
+        }
+      },
+      {
+        "parameter_ref": "checkboxset_default",
+        "label": {
+          "default": "checkboxset default"
+        },
+        "description": {
+          "default": "checkboxset with a default value of 'apple'"
+        }
+      },
+      {
+        "parameter_ref": "error",
+        "label": {
+          "default": "Set 'checkboxset error'"
+        }
+      },
+      {
+        "parameter_ref": "checkboxset_error",
+        "label": {
+          "default": "checkboxset error"
+        },
+        "description": {
+          "default": "checkboxset with error when 'error' checked"
+        }
+      },
+      {
+        "parameter_ref": "warning",
+        "label": {
+          "default": "Set 'checkboxset warning'"
+        }
+      },
+      {
+        "parameter_ref": "checkboxset_warning",
+        "label": {
+          "default": "checkboxset warning"
+        },
+        "description": {
+          "default": "checkboxset with warning when checked"
+        }
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'checkboxset disabled'"
+        }
+      },
+      {
+        "parameter_ref": "checkboxset_disable",
+        "label": {
+          "default": "checkboxset disabled"
+        },
+        "description": {
+          "default": "checkboxset that is disabled"
+        }
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'checkboxset hidden'"
+        }
+      },
+      {
+        "parameter_ref": "checkboxset_hidden",
+        "label": {
+          "default": "checkboxset hidden"
+        },
+        "description": {
+          "default": "checkboxset that is hidden"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "id": "checkboxset-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "checkboxset_number",
+          "checkboxset_null",
+          "checkboxset_undefined",
+          "checkboxset_default"
+        ]
+      },
+      {
+        "id": "checkboxset-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "error",
+          "checkboxset_error",
+          "warning",
+          "checkboxset_warning",
+          "disable",
+          "checkboxset_disable",
+          "hide",
+          "checkboxset_hidden"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "checkboxset_error",
+          "message": {
+            "default": "Needs to be false"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "error",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "checkboxset_warning",
+          "message": {
+            "default": "Needs to be false"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "warning",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "checkboxset_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "checkboxset_disable"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ],
+  "resources": {}
 }

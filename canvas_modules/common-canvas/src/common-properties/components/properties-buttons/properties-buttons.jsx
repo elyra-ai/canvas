@@ -9,7 +9,8 @@
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Button from "ap-components-react/dist/components/Button";
+import Button from "carbon-components-react/lib/components/Button";
+import classNames from "classnames";
 
 import { MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
 
@@ -21,33 +22,37 @@ export default class PropertiesButtons extends Component {
 		const rejectButtonLabel = (typeof this.props.rejectLabel === "undefined") ? MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL : this.props.rejectLabel;
 
 		let rejectButton;
-		let applyButton;
-		if (this.props.showPropertiesButtons !== false) {
-			if (this.props.cancelHandler) {
-				rejectButton = (
-					<Button
-						id="properties-cancel-button"
-						semantic href=""
-						hyperlink
-						onClick={this.props.cancelHandler}
-					>
-						{rejectButtonLabel}
-					</Button>
-				);
-			}
-			applyButton = (
+		if (this.props.cancelHandler) {
+			rejectButton = (
 				<Button
-					id="properties-apply-button"
-					semantic href=""
-					onClick={this.props.okHandler}
-					style={{ "marginRight": "10px" }}
+					data-id="properties-cancel-button"
+					className="properties-cancel-button"
+					type="button"
+					small
+					kind="secondary"
+					onClick={this.props.cancelHandler}
 				>
-					{applyButtonLabel}
+					{rejectButtonLabel}
 				</Button>
 			);
 		}
+		const applyButton = (
+			<Button
+				data-id="properties-apply-button"
+				className="properties-apply-button"
+				type="button"
+				small
+				onClick={this.props.okHandler}
+			>
+				{applyButtonLabel}
+			</Button>
+		);
+
 		return (
-			<div className="modal__buttons">
+			<div
+				className={classNames("properties-modal-buttons", { "hide": (typeof (this.props.showPropertiesButtons) !== "undefined" &&
+					!this.props.showPropertiesButtons) })}
+			>
 				{rejectButton}
 				{applyButton}
 			</div>

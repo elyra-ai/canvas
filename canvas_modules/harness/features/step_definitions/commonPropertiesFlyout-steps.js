@@ -15,9 +15,21 @@ import testUtils from "./utilities/test-utils.js";
 
 module.exports = function() {
 
+	this.Then("I click on title edit icon", function() {
+		var editTitle = browser.$("button.properties-title-editor-btn.edit");
+		expect(editTitle).not.toBe(null);
+		editTitle.click();
+	});
+	this.Then(/^I enter new title "([^"]*)"$/, function(newTitle) {
+		var textbox = browser.$("div.properties-title-editor-input").$("input");
+		textbox.setValue(newTitle);
+		// browser.keys("Enter");
+		// browser.pause(500);
+	});
+	// =======================
 	this.Then(/^I see common properties flyout title "([^"]*)"$/, function(givenTitle) {
 		browser.pause(500);
-		expect(browser.getValue("#node-title-editor-right-flyout-panel")).toEqual(givenTitle);
+		expect(browser.getValue(".properties-title-editor-input input")).toEqual(givenTitle);
 	});
 
 	this.Then("I don't see the common properties flyout", function() {
@@ -25,23 +37,12 @@ module.exports = function() {
 		expect(isEmpty(browser.$$("#node-title-editor-right-flyout-panel"))).toBe(true);
 	});
 
-	this.Then("I click on title edit icon", function() {
-		var editTitle = browser.$(".title-edit-right-flyout-panel");
-		expect(editTitle).not.toBe(null);
-		editTitle.click();
-	});
 
 	this.Then("I verify there is no title edit icon", function() {
 		var editTitle = browser.$$(".title-edit-right-flyout-panel");
 		expect(editTitle.length).toEqual(0);
 	});
 
-	this.Then(/^I enter new title "([^"]*)"$/, function(newTitle) {
-		var textbox = browser.$("#node-title-editor-right-flyout-panel");
-		textbox.setValue(newTitle);
-		// browser.keys("Enter");
-		// browser.pause(500);
-	});
 
 	this.Then(/^I verify the new title "([^"]*)"$/, function(newTitle) {
 		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
@@ -83,9 +84,9 @@ module.exports = function() {
 	});
 
 	this.Then(/^I click the "([^"]*)" category from flyout$/, function(categoryName) {
-		const categories = browser.$("#category-parent-container-right-flyout-panel").$$(".category-title-container-right-flyout-panel");
+		const categories = browser.$(".right-flyout-panel").$$(".properties-category-container");
 		for (let idx = 0; idx < categories.length; idx++) {
-			const category = categories[idx].$(".category-title-right-flyout-panel");
+			const category = categories[idx].$(".properties-category-title");
 			if (category.getText() === categoryName.toUpperCase()) {
 				category.click();
 				break;

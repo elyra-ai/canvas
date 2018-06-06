@@ -10,9 +10,9 @@
 import React from "react";
 import TitleEditor from "../../../src/common-properties/components/title-editor";
 import Controller from "../../../src/common-properties/properties-controller";
-import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
+import { mountWithIntl } from "enzyme-react-intl";
 
 const controller = new Controller();
 controller.setTitle("test title");
@@ -31,7 +31,7 @@ const help = { data: "test-data" };
 describe("title-editor renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<TitleEditor
 				controller={controller}
 				helpClickHandler={helpClickHandler}
@@ -51,7 +51,7 @@ describe("title-editor renders correctly", () => {
 			expect(inAppData).to.eql(appData);
 			done();
 		}
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<TitleEditor
 				controller={controller}
 				helpClickHandler={callback}
@@ -59,49 +59,49 @@ describe("title-editor renders correctly", () => {
 				help={help}
 			/>
 		);
-		const helpButton = wrapper.find(".title-help-right-flyout-panel");
+		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']");
 		expect(helpButton).to.have.length(1);
 		helpButton.simulate("click");
 	});
 	it("test with no help", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<TitleEditor
 				controller={controller}
 				helpClickHandler={helpClickHandler}
 				labelEditable
 			/>
 		);
-		expect(wrapper.find(".title-help-right-flyout-panel")).to.have.length(0);
+		expect(wrapper.find(".properties-title-editor-btn[data-id='help']")).to.have.length(0);
 	});
 	it("test help button without a callback", () => {
 		helpClickHandler.reset();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<TitleEditor
 				controller={controller}
 				labelEditable
 				help={help}
 			/>
 		);
-		const helpButton = wrapper.find(".title-help-right-flyout-panel");
+		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']");
 		helpButton.simulate("click");
 	});
 	it("test edit link", () => {
 		helpClickHandler.reset();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<TitleEditor
 				controller={controller}
 				labelEditable
 				help={help}
 			/>
 		);
-		const titleEdit = wrapper.find(".title-edit-right-flyout-panel");
+		const titleEdit = wrapper.find(".properties-title-editor-btn[data-id='edit']");
 		titleEdit.simulate("click");
-		expect(wrapper.find("input").node).to.equal(document.activeElement);
+		expect(wrapper.find("input").getDOMNode()).to.equal(document.activeElement);
 	});
 	it("test editing node title", () => {
 		controller.setTitle("test title");
 		helpClickHandler.reset();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<TitleEditor
 				controller={controller}
 				labelEditable
@@ -113,7 +113,7 @@ describe("title-editor renders correctly", () => {
 	});
 	it("test label is readonly", () => {
 		helpClickHandler.reset();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<TitleEditor
 				controller={controller}
 				labelEditable={false}

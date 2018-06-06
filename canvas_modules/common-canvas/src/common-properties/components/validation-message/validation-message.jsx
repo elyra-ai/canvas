@@ -9,38 +9,33 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import Icon from "carbon-components-react/lib/components/Icon";
+import { STATES } from "./../../constants/constants.js";
+import classNames from "classnames";
 
 export default class ValidationMessage extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-		};
-	}
 
 	render() {
-		let errorMessage = <div className="validation-error-message" />;
-		if (this.props.validateErrorMessage && this.props.validateErrorMessage.text !== "") {
-			const errorType = this.props.validateErrorMessage.type;
-			let controlTypeStyle = "";
-			if (this.props.controlType) {
-				controlTypeStyle = "validation-error-message-type-" + this.props.controlType;
-			}
-
-			errorMessage = (
-				<div className="validation-error-message">
-					<p className={"form__validation validation-error-message-color-" + errorType + " " + controlTypeStyle}
-						style={{ "display": "block" }}
-					>
-						<span className={"form__validation--" + errorType}>{this.props.validateErrorMessage.text}</span>
-					</p>
-				</div>
-			);
+		if (!this.props.messageInfo) {
+			return null;
 		}
-		return errorMessage;
+		const className = classNames("properties-validation-message",
+			{ "hide": this.props.state === STATES.HIDDEN || this.props.state === STATES.DISABLED || this.props.inTable });
+		return (
+			<div className={className}>
+				<div className="icon">
+					<Icon className={this.props.messageInfo.type} name={this.props.messageInfo.type + "--glyph"} />
+				</div>
+				<span>{this.props.messageInfo.text}</span>
+			</div>);
 	}
 }
 
 ValidationMessage.propTypes = {
-	validateErrorMessage: PropTypes.object.isRequired,
-	controlType: PropTypes.string
+	messageInfo: PropTypes.shape({
+		text: PropTypes.string,
+		type: PropTypes.string
+	}),
+	state: PropTypes.string,
+	inTable: PropTypes.bool
 };

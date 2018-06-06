@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -11,24 +11,25 @@
 	height: 45px;
 	min-width: 258px;
 	width: 100%;
-	background-color: #F9F9F9;
-	border-bottom: 2px solid #dfe3e6;
+	background-color: $ui-02;
+	border-bottom: 2px solid $ui-04;
 	box-sizing: content-box;
 	position: relative;
-	-webkit-transition: all 0.2s;
-	transition: all 0.2s;
+	-webkit-transition: 0.2s;
+	transition: 0.2s;
 }
 
 .toolbar-fixed-location {
-	position: fixed !important;
+	position: fixed;
 	z-index: 2;
 }
 
 #toolbar-items {
 	height: 45px;
 	list-style-type: none;
-	margin-bottom: 0px;
-	padding: 0px;
+	margin: 0;
+	padding: 0;
+
 	display: flex;
 }
 
@@ -47,12 +48,6 @@
 	justify-content: center;
 	box-sizing: content-box;
 	cursor: pointer;
-	/* Prevent elements from being selectable */
-	/* This stops it being dragged incorrectly.*/
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-o-user-select: none;
 	user-select: none;
 
 	&.toolbar-divider {
@@ -65,24 +60,27 @@
 	width: 150px;
 }
 
-.list-item:hover {
-	background-color: #DFE3E6;
-}
-
-.list-item:active {
-	background-color: #8C9BA5;
+.list-item {
+	&:hover {
+		background-color: $ui-04;
+	}
+	&:active {
+		background-color: $ui-05;
+	}
 }
 
 .list-item-containers .list-item-disabled {
-	cursor: default
+	cursor: default;
 }
 
-.list-item-disabled:hover {
-	background-color: transparent;
+.list-item-disabled {
+	&:hover, &:active {
+		background-color: transparent;
+	}
 }
 
 .toolbar-divider {
-	border-right: 2px solid #dfe3e6;
+	border-right: 2px solid $ui-04;
 }
 
 #overflow-action {
@@ -90,7 +88,7 @@
 }
 
 .overflow-toolbar-divider {
-	border-bottom: 1px solid #DFE3E6;
+	border-bottom: 1px solid $ui-04;
 }
 
 .toolbar-item {
@@ -104,7 +102,7 @@
 .toolbar-item.overflow {
 	height: 32px;
 	width: inherit;
-	margin: 0px;
+	margin: 0;
 	display: flex;
 	justify-content: flex-start;
 }
@@ -115,10 +113,6 @@
 	margin: auto;
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
-	-khtml-user-drag: none;
-	-moz-user-drag: none;
-	-o-user-drag: none;
-	user-drag: none;
 }
 
 .toolbar-icons.overflow, .toolbar-item.overflow > svg {
@@ -133,12 +127,12 @@
 
 .overflow-toolbar-icon-label {
 	margin: auto;
-	margin-left: 0px;
-	color: #000000;
+	margin-left: 0;
+	color: $text-01;
 }
 
 .overflow-toolbar-icon-label.disabled {
-	color: #c7c7c7;
+	opacity: 0.5;
 }
 
 .toolbar-popover-list {
@@ -147,21 +141,11 @@
 	display: block;
 	position: absolute;
 	list-style-type: none;
-	padding: 0px;
+	padding: 0;
+	border: 2px solid $ui-04;
+	background-color: $ui-02;
 }
 
 .toolbar-popover-list-hide {
 	display: none;
-}
-
-.toolbar-popover-list>.list-item-containers {
-	background-color: #f0f3f6;
-}
-
-.toolbar-popover-list>.list-item-containers>.list-item:hover {
-	background-color: #dfe3e6;
-}
-
-.toolbar-popover-list>.list-item-containers>.list-item-disabled:hover {
-	background-color: #f0f3f6;
 }

@@ -9,27 +9,25 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Checkbox from "ap-components-react/dist/components/Checkbox";
+import Checkbox from "carbon-components-react/lib/components/Checkbox";
 import ControlUtils from "./../../util/control-utils";
+import classNames from "classnames";
+import ValidationMessage from "./../../components/validation-message";
+import { STATES } from "./../../constants/constants.js";
 
 export default class CheckboxsetControl extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-		this.handleChange = this.handleChange.bind(this);
-	}
 
-	handleChange(evt) {
+	handleChange(val, checked) {
 		let values = this.props.controller.getPropertyValue(this.props.propertyId);
 		if (typeof values === "undefined" || values === null) {
 			values = [];
 		}
-		var index = values.indexOf(evt.target.id);
-		if (evt.target.checked && index < 0) {
+		const index = values.indexOf(val);
+		if (checked && index < 0) {
 			// Add to values
-			values = values.concat([evt.target.id]);
+			values = values.concat([val]);
 		}
-		if (!(evt.target.checked) && index >= 0) {
+		if (!(checked) && index >= 0) {
 			// Remove from values
 			values.splice(index, 1);
 		}
@@ -41,52 +39,31 @@ export default class CheckboxsetControl extends React.Component {
 		if (typeof controlValue === "undefined" || controlValue === null) {
 			controlValue = [];
 		}
-		const conditionProps = {
-			propertyId: this.props.propertyId,
-			controlType: "checkboxset"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
+		const state = this.props.controller.getControlState(this.props.propertyId);
 
-		const errorMessage = conditionState.message;
-		const messageType = conditionState.messageType;
-		const icon = conditionState.icon;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
-
-		let controlIconContainerClass = "control-icon-container";
-		if (messageType !== "info") {
-			controlIconContainerClass = "control-icon-container-enabled";
-		}
-		var buttons = [];
-
+		const checkboxes = [];
 		for (var i = 0; i < this.props.control.values.length; i++) {
-			var val = this.props.control.values[i];
-			var checked = (controlValue.indexOf(val) >= 0);
-			var classType = "";
-			if (this.state.validateErrorMessage && this.state.validateErrorMessage.type) {
-				classType = this.state.validateErrorMessage.type;
-			}
-			buttons.push(<Checkbox ref={val}
-				{...stateDisabled}
-				className={"checkboxset-ui-conditions-state-" + classType}
-				style={stateStyle}
-				id={val}
+			const id = {
+				name: this.props.propertyId.name,
+				row: i
+			};
+			const val = this.props.control.values[i];
+			const checked = (controlValue.indexOf(val) >= 0);
+			checkboxes.push(<Checkbox
+				disabled={state === STATES.DISABLED}
+				id={ControlUtils.getControlId(id)}
 				key={val + i}
-				name={this.props.control.valueLabels[i]}
-				onChange={this.handleChange}
+				labelText={this.props.control.valueLabels[i]}
+				onChange={this.handleChange.bind(this, val)}
 				checked={checked}
 			/>);
 		}
-
 		return (
-			<div style={stateStyle}>
-				<div id={controlIconContainerClass}>
-					<div id={ControlUtils.getControlID(this.props.control, this.props.propertyId)} className="checkbox" style={stateStyle} >
-						{buttons}
-					</div>
-					{icon}
+			<div className={classNames("properties-checkboxset", { "hide": state === STATES.HIDDEN })} data-id={ControlUtils.getDataId(this.props.propertyId)} >
+				<div className="properties-checkboxset-container">
+					{checkboxes}
 				</div>
-				{errorMessage}
+				<ValidationMessage inTable={this.props.tableControl} state={state} messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)} />
 			</div>
 		);
 	}
@@ -95,5 +72,6 @@ export default class CheckboxsetControl extends React.Component {
 CheckboxsetControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
-	controller: PropTypes.object.isRequired
+	controller: PropTypes.object.isRequired,
+	tableControl: PropTypes.bool
 };

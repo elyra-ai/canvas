@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -11,7 +11,8 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import Dropdown from "ap-components-react/dist/components/Dropdown";
+import Dropdown from "carbon-components-react/lib/components/DropdownV2";
+import Button from "carbon-components-react/lib/components/Button";
 import {
 	CONTAINERS_RIGHT_FLYOUT_PROPERTIES,
 	CONTAINERS_RIGHT_FLYOUT_CANVAS,
@@ -111,9 +112,9 @@ class CommonPropertiesComponents extends React.Component {
 		window.scrollTo(0, 0);
 	}
 
-	onMenuDropdownSelect(evt, obj) {
-		location.href = `${"#/properties#" + obj.selected}`;
-		document.querySelector(`#${obj.selected}`).scrollIntoView();
+	onMenuDropdownSelect(obj) {
+		location.href = `${"#/properties#" + obj.selectedItem.id}`;
+		document.querySelector(`#${obj.selectedItem.id}`).scrollIntoView();
 	}
 
 	setRightFlyoutState(content) {
@@ -242,18 +243,28 @@ class CommonPropertiesComponents extends React.Component {
 		return JSON.stringify(json, jsonReplacer, 2);
 	}
 
+	dropdownOptions(inOptions) {
+		const options = [];
+		for (const option of inOptions) {
+			options.push({ id: option, text: option });
+		}
+		return options;
+	}
+
 	renderRightFlyoutButton(content) {
 		let buttonText = "View in Flyout";
 		if (this.state.showRightFlyout && content === this.state.rightFlyoutContent) {
 			buttonText = "Close Flyout";
 		}
-		const openFlyoutButton = (<button
-			className="properties-documentation-show-flyout-button button"
+		const openFlyoutButton = (<Button
+			className="properties-documentation-show-flyout-button"
 			type="button"
+			small
+			kind="secondary"
 			onClick={() => this.setRightFlyoutState(content)}
 		>
 			{buttonText}
-		</button>);
+		</Button>);
 
 		return openFlyoutButton;
 	}
@@ -261,9 +272,8 @@ class CommonPropertiesComponents extends React.Component {
 	render() {
 		const dropMenu = (<div id="properties-documentation-menu" className="header__dropdown">
 			<Dropdown
-				name="Navigation"
-				text="Navigation"
-				options={[
+				label="Navigation"
+				items={this.dropdownOptions([
 					"Groups",
 					"--controls",
 					"--panels",
@@ -306,11 +316,10 @@ class CommonPropertiesComponents extends React.Component {
 					"--generatedValues",
 					"Actions",
 					"--button"
-				]}
-				compact
-				dark
-				inline
-				onSelect={this.onMenuDropdownSelect}
+				])}
+				type="inline"
+				onChange={this.onMenuDropdownSelect}
+				itemToString={(item) => item.text }
 			/>
 		</div>);
 
@@ -318,26 +327,26 @@ class CommonPropertiesComponents extends React.Component {
 			<nav id="properties-documentation-action-bar">
 				<ul className="properties-documentation-navbar-items">
 					<li className="properties-documentation-navbar-li">
-						<a id="properties-documentation-title">WDP Common Properties Components</a>
+						<span id="properties-documentation-title">WDP Common Properties Components</span>
 					</li>
 					<li className="properties-documentation-navbar-li nav-divider">
 						<a className="properties-documentation-nav-link"
-							onClick={() => this.onMenuDropdownSelect(null, { selected: "Groups" })}
+							onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Groups" } })}
 						>Groups</a>
 					</li>
 					<li className="properties-documentation-navbar-li">
 						<a className="properties-documentation-nav-link"
-							onClick={() => this.onMenuDropdownSelect(null, { selected: "Controls" })}
+							onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Controls" } })}
 						>Controls</a>
 					</li>
 					<li className="properties-documentation-navbar-li">
 						<a className="properties-documentation-nav-link"
-							onClick={() => this.onMenuDropdownSelect(null, { selected: "Complex" })}
+							onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Complex" } })}
 						>Complex Types</a>
 					</li>
 					<li className="properties-documentation-navbar-li">
 						<a className="properties-documentation-nav-link"
-							onClick={() => this.onMenuDropdownSelect(null, { selected: "Actions" })}
+							onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Actions" } })}
 						>Action Controls</a>
 					</li>
 				</ul>

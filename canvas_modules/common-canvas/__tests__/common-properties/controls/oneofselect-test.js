@@ -9,18 +9,22 @@
 
 import React from "react";
 import OneofselectControl from "../../../src/common-properties/controls/dropdown";
+import propertyUtils from "../../_utils_/property-utils";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
-import propertyUtils from "../../_utils_/property-utils";
-import oneofselectParamDef from "../../test_resources/paramDefs/oneofselect_paramDef.json";
 
 const controller = new Controller();
 
+const emptyValueIndicator = "...";
+
 const control = {
-	"name": "method",
+	"name": "test-oneofselect",
 	"label": {
-		"text": "Merge method"
+		"text": "oneofselect"
+	},
+	"description": {
+		"text": "oneofselect description"
 	},
 	"controlType": "oneofselect",
 	"valueDef": {
@@ -41,11 +45,16 @@ const control = {
 		"Ranked condition"
 	]
 };
+const propertyName = "test-oneofselect";
+const propertyId = { name: propertyName };
 
-const propertyId = { name: "test-oneofselect" };
+propertyUtils.setControls(controller, [control]);
 
 describe("oneofselect renders correctly", () => {
-
+	afterEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+	});
 	it("props should have been defined", () => {
 		const wrapper = mount(
 			<OneofselectControl
@@ -59,7 +68,7 @@ describe("oneofselect renders correctly", () => {
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 	});
 
-	it("should render a oneofselect", () => {
+	it("should render a oneofselect with empty value label", () => {
 		const wrapper = mount(
 			<OneofselectControl
 				control={control}
@@ -67,112 +76,131 @@ describe("oneofselect renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find(".Dropdown-control-panel");
-		expect(input).to.have.length(1);
-	});
 
-});
+		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
+	});
+	it("dropdown handles null correctly", () => {
+		controller.setPropertyValues(
+			{ propertyName: null }
+		);
+		const wrapper = mount(
+			<OneofselectControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		let dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
+		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		dropdownButton.simulate("click");
 
-describe("oneofselect works correctly in common-properties", () => {
-	const expectedOptions = [
-		{ label: "red", value: "red" },
-		{ label: "orange", value: "orange" },
-		{ label: "yellow", value: "yellow" },
-		{ label: "green", value: "green" },
-		{ label: "blue", value: "blue" },
-		{ label: "purple", value: "purple" }
-	];
-	let wrapper;
-	beforeEach(() => {
-		wrapper = propertyUtils.flyoutEditorForm(oneofselectParamDef).wrapper;
+		// select the first item
+		dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		expect(dropdownList).to.be.length(4);
+		dropdownList.at(0).simulate("click");
+		expect(controller.getPropertyValue(propertyId)).to.equal(control.values[0]);
 	});
-
-	afterEach(() => {
-		wrapper.unmount();
+	it("dropdown handles undefined correctly", () => {
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<OneofselectControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		let dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
+		// open the dropdown
+		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		dropdownButton.simulate("click");
+		// select the first item
+		dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		expect(dropdownList).to.be.length(4);
+		dropdownList.at(0).simulate("click");
+		expect(controller.getPropertyValue(propertyId)).to.equal(control.values[0]);
 	});
-	it("Validate oneofselect rendered correctly", () => {
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the VALUES category
-		const dropDowns = category.find("Dropdown");
-		expect(dropDowns).to.have.length(7);
-		const options = dropDowns.at(0).prop("options"); // oneofselect
-		expect(options).to.eql(expectedOptions);
+	it("oneofselect placeholder rendered correctly", () => {
+		control.additionalText = "EmptyList...";
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<OneofselectControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		expect(dropdownWrapper.find("div > span").text()).to.equal(control.additionalText);
 	});
-	it("Validate oneofselect placeholder rendered correctly", () => {
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the VALUES category
-		const dropDown = category.find("Dropdown").at(6);
-		const placeholder = dropDown.find(".Dropdown-placeholder"); // oneofselect_placeholder
-		expect(placeholder.text()).to.equals("None...");
+	it("dropdown renders when disabled", () => {
+		controller.updateControlState(propertyId, "disabled");
+		const wrapper = mount(
+			<OneofselectControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		expect(dropdownWrapper.find("DropdownV2").prop("disabled")).to.equal(true);
 	});
-});
-
-describe("Conditions on oneofselect work correctly in common-properties", () => {
-	const expectedOptions = [
-		{ label: "red", value: "red" },
-		{ label: "orange", value: "orange" },
-		{ label: "yellow", value: "yellow" },
-		{ label: "green", value: "green" },
-		{ label: "blue", value: "blue" },
-		{ label: "purple", value: "purple" }
-	];
-	let wrapper;
-	beforeEach(() => {
-		wrapper = propertyUtils.flyoutEditorForm(oneofselectParamDef).wrapper;
+	it("dropdown renders when hidden", () => {
+		controller.updateControlState(propertyId, "hidden");
+		const wrapper = mount(
+			<OneofselectControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		expect(dropdownWrapper.hasClass("hide")).to.equal(true);
 	});
-
-	afterEach(() => {
-		wrapper.unmount();
-	});
-	it("Validate oneofselect_error should have warning message when set to red", () => {
-		let category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
-		const newValue = { label: "red", value: "red" };
-		propertyUtils.dropDown(category, 0, newValue, expectedOptions);
-		// CONDITIONS category has index 2 now because alerts tab was added
-		category = wrapper.find(".category-title-container-right-flyout-panel").at(2);
-		expect(category.find(".validation-error-message-icon-dropdown")).to.have.length(1);
-		expect(category.find(".validation-error-message-color-error")).to.have.length(1);
-	});
-	it("Validate oneofselect_warning should have warning message when set to yellow", () => {
-		let category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
-		const newValue = { label: "yellow", value: "yellow" };
-		propertyUtils.dropDown(category, 1, newValue, expectedOptions);
-		// CONDITIONS category has index 2 now because alerts tab was added
-		category = wrapper.find(".category-title-container-right-flyout-panel").at(2);
-		expect(category.find(".validation-warning-message-icon-dropdown")).to.have.length(1);
-		expect(category.find(".validation-error-message-color-warning")).to.have.length(1);
-	});
-});
-
-describe("Filtered enumerations on oneofselect work correctly in common-properties", () => {
-	let wrapper;
-	beforeEach(() => {
-		const form = propertyUtils.flyoutEditorForm(oneofselectParamDef);
-		wrapper = form.wrapper;
-	});
-
-	afterEach(() => {
-		wrapper.unmount();
-	});
-
 	it("Validate someofselect filtered correctly", () => {
-		const startingOptions = [
-			{ value: "orange", label: "Orange" },
-			{ value: "yellow", label: "Yellow" },
-			{ value: "green", label: "Green" },
-			{ value: "purple", label: "Purple" }
-		];
-		const expectedOptions = [
-			{ value: "red", label: "Red" },
-			{ value: "blue", label: "Blue" }
-		];
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the FILTERS category
-		const newValue = { value: "purple", label: "Purple" };
-		propertyUtils.dropDown(category, 0, newValue, startingOptions); // validate correct start options
-
-		propertyUtils.selectCheckbox(category, 0, "editor-control-filter");
-		const dropDowns = category.find("Dropdown");
-		expect(dropDowns).to.have.length(1);
-
-		const options = dropDowns.at(0).prop("options");
-		expect(options).to.eql(expectedOptions);
+		controller.setControlStates({ "test-oneofselect": { "enumFilter": ["order", "gtt"] } });
+		const wrapper = mount(
+			<OneofselectControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		let dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		// open the dropdown
+		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		dropdownButton.simulate("click");
+		dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		// select the first item
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		expect(dropdownList).to.be.length(2);
+	});
+	it("dropdown renders correctly in a table", () => {
+		// TODO:  Need to ad this test case
+	});
+	it("dropdown renders messages correctly", () => {
+		controller.updateErrorMessage(propertyId, {
+			validation_id: propertyId.name,
+			type: "warning",
+			text: "bad dropdown value"
+		});
+		const wrapper = mount(
+			<OneofselectControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		const messageWrapper = dropdownWrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(1);
 	});
 });

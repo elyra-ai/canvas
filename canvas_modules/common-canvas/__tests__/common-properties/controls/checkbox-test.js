@@ -6,54 +6,180 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-
+import React from "react";
 import { expect } from "chai";
+import Controller from "./../../../src/common-properties/properties-controller";
+import Checkbox from "./../../../src/common-properties/controls/checkbox";
+import { mount } from "enzyme";
 import propertyUtils from "../../_utils_/property-utils";
-import Controller from "../../../src/common-properties/properties-controller";
-import isEqual from "lodash/isEqual";
-
-const CONDITIONS_TEST_FORM_DATA = require("../../test_resources/json/conditions-test-formData.json");
 
 const controller = new Controller();
 
-describe("condition messages renders correctly with checkbox control", () => {
-	it("checkboxTypes control should have warning message if none are checked", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+const control = {
+	name: "test-checkbox"
+};
+propertyUtils.setControls(controller, [control]);
 
-		const input = wrapper.find("#editor-control-checkboxTypes");
-		expect(input).to.have.length(1);
-		expect(input.find("input[type='checkbox']")).to.have.length(3);
-		let checkbox = wrapper.find("input[type='checkbox']").at(1);
-		checkbox.simulate("change", { target: { checked: true, id: "string" } });
-		wrapper.update();
+const propertyId = { name: "test-checkbox" };
 
-		const checkboxSingleMessages = {
-			"validation_id": "checkboxSingle",
-			"type": "error",
-			"text": "Checkbox single should be checked if data type is selected"
+describe("checkbox control tests", () => {
+	beforeEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+		controller.setPropertyValues(
+			{ "test-checkbox": false }
+		);
+	});
+	it("checkbox props should have been defined", () => {
+		const wrapper = mount(
+			<Checkbox
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+
+		expect(wrapper.prop("control")).to.equal(control);
+		expect(wrapper.prop("controller")).to.equal(controller);
+		expect(wrapper.prop("propertyId")).to.equal(propertyId);
+	});
+	it("checkbox label and description are rendered correctly", () => {
+		const controlWithLabel = {
+			name: "test-checkboxLabel",
+			label: {
+				text: "checkbox label"
+			},
+			description: {
+				text: "checkbox description"
+			}
 		};
-
-		const actual = controller.getErrorMessage({ name: "checkboxSingle" });
-		expect(isEqual(JSON.parse(JSON.stringify(checkboxSingleMessages)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-
-		expect(wrapper.find(".validation-error-message-icon-checkbox")).to.have.length(1);
-		expect(wrapper.find(".validation-error-message-color-error")).to.have.length(1);
-
-		checkbox = wrapper.find("input[type='checkbox']").at(1);
-		checkbox.simulate("change", { target: { checked: false, id: "string" } });
-		wrapper.update();
-
-		const checkboxTypesMessages = {
-			"validation_id": "checkboxTypes",
-			"type": "warning",
-			"text": "No data types are selected"
+		const wrapper = mount(
+			<Checkbox
+				control={controlWithLabel}
+				controller={controller}
+				propertyId={{ name: "test-checkboxLabel" }}
+			/>
+		);
+		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkboxLabel']");
+		expect(checkboxWrapper.find("label > span").text()).to.equal(controlWithLabel.label.text);
+		expect(checkboxWrapper.find("div.properties-tooltips span").text()).to.equal(controlWithLabel.description.text);
+	});
+	it("checkbox updates correctly", () => {
+		controller.setPropertyValues(
+			{ "test-checkbox": false }
+		);
+		const wrapper = mount(
+			<Checkbox
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkbox']");
+		const checkbox = checkboxWrapper.find("input");
+		expect(checkbox.getDOMNode().checked).to.equal(false);
+		checkbox.getDOMNode().checked = true;
+		checkbox.simulate("change");
+		expect(controller.getPropertyValue(propertyId)).to.equal(true);
+	});
+	it("checkbox handles null correctly", () => {
+		controller.setPropertyValues(
+			{ "test-checkbox": null }
+		);
+		const wrapper = mount(
+			<Checkbox
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkbox']");
+		const checkbox = checkboxWrapper.find("input");
+		expect(checkbox.getDOMNode().checked).to.equal(false);
+		checkbox.getDOMNode().checked = true;
+		checkbox.simulate("change");
+		expect(controller.getPropertyValue(propertyId)).to.equal(true);
+	});
+	it("checkbox handles undefined correctly", () => {
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<Checkbox
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkbox']");
+		const checkbox = checkboxWrapper.find("input");
+		expect(checkbox.getDOMNode().checked).to.equal(false);
+		checkbox.getDOMNode().checked = true;
+		checkbox.simulate("change");
+		expect(controller.getPropertyValue(propertyId)).to.equal(true);
+	});
+	it("checkbox renders when disabled", () => {
+		controller.updateControlState(propertyId, "disabled");
+		const wrapper = mount(
+			<Checkbox
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkbox']");
+		expect(checkboxWrapper.find("input").prop("disabled")).to.equal(true);
+	});
+	it("checkbox renders when hidden", () => {
+		controller.updateControlState(propertyId, "hidden");
+		const wrapper = mount(
+			<Checkbox
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkbox']");
+		expect(checkboxWrapper.hasClass("hide")).to.equal(true);
+	});
+	it("checkbox renders correctly in a table", () => {
+		const controlWithLabel = {
+			name: "test-checkboxLabel",
+			label: {
+				text: "checkbox label"
+			},
+			description: {
+				text: "checkbox description"
+			}
 		};
-		const actualType = controller.getErrorMessage({ name: "checkboxTypes" });
-		expect(isEqual(JSON.parse(JSON.stringify(checkboxTypesMessages)),
-			JSON.parse(JSON.stringify(actualType)))).to.be.true;
-
-		expect(wrapper.find(".validation-warning-message-icon-checkboxset")).to.have.length(1);
-		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
+		const wrapper = mount(
+			<Checkbox
+				control={controlWithLabel}
+				controller={controller}
+				propertyId={{ name: "test-checkboxLabel" }}
+				tableControl
+			/>
+		);
+		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkboxLabel']");
+		// isn't actually visible.  Visibility controlled by carbon component
+		expect(checkboxWrapper.find("label > span").text()).to.equal(controlWithLabel.label.text);
+		expect(checkboxWrapper.find("div.properties-tooltips text")).to.have.length(0);
+	});
+	it("checkbox renders messages correctly", () => {
+		controller.updateErrorMessage(propertyId, {
+			validation_id: propertyId.name,
+			type: "warning",
+			text: "bad checkbox value"
+		});
+		const wrapper = mount(
+			<Checkbox
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkbox']");
+		const messageWrapper = checkboxWrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(1);
 	});
 });

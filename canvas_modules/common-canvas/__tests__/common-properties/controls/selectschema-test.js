@@ -18,6 +18,8 @@ import selectschemaParamDef from "../../test_resources/paramDefs/selectschema_pa
 
 const controller = new Controller();
 
+const emptyValueIndicator = "...";
+
 const control = {
 	"name": "selectschema",
 	"label": {
@@ -37,6 +39,9 @@ const control = {
 
 const propertyId = { name: "test-selectschema" };
 
+// controls selectColumn, selectSchema and oneofselect are all dropdown controls.
+// a set of dropdown basic unit test cases are defined in oneofselect-test.js and
+// do not need to be repeated in selectColumn and selectSchema.
 describe("selectschema renders correctly", () => {
 
 	it("props should have been defined", () => {
@@ -51,19 +56,28 @@ describe("selectschema renders correctly", () => {
 		expect(wrapper.prop("controller")).to.equal(controller);
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 	});
-
-	it("selectschema should render a DropdownControl", () => {
+	it("should have '...' as first selected option", () => {
+		controller.setPropertyValues(
+			{ "test-selectschema": null }
+		);
 		const wrapper = mount(
 			<SelectSchemaControl
 				control={control}
-				controller={controller}
 				propertyId={propertyId}
+				controller = {controller}
 			/>
 		);
-		const input = wrapper.find(".Dropdown-control-panel");
-		expect(input).to.have.length(1);
+		let dropdownWrapper = wrapper.find("div[data-id='properties-test-selectschema']");
+		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
+		// open the dropdown
+		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		dropdownButton.simulate("click");
+		// select the first item
+		dropdownWrapper = wrapper.find("div[data-id='properties-test-selectschema']");
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		expect(dropdownList).to.be.length(1);
+		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
-
 });
 
 describe("selectschema works correctly in common-properties", () => {
@@ -89,41 +103,23 @@ describe("selectschema works correctly in common-properties", () => {
 		wrapper.unmount();
 	});
 	it("Validate selectschema rendered correctly", () => {
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the VALUES category
-		const dropDowns = category.find("Dropdown");
-		expect(dropDowns).to.have.length(6);
-		const options = dropDowns.at(0).prop("options"); // selectschema
+		const dropDown = wrapper.find("div[data-id='properties-selectschema'] DropdownV2");
+		const options = dropDown.prop("items"); // selectschema
 		expect(options).to.eql(expectedOptions);
 	});
 	it("Validate selectschema_placeholder rendered correctly", () => {
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the VALUES category
-		const dropDowns = category.find("Dropdown");
-		const dropDown = dropDowns.at(5); // selectschema_placeholder
-		const placeholder = dropDown.find(".Dropdown-placeholder"); // oneofselect_placeholder
-		expect(placeholder.text()).to.equals("None...");
+		const dropDown = wrapper.find("div[data-id='properties-selectschema_placeholder'] DropdownV2");
+		expect(dropDown.find("div > span").text()).to.equal("None...");
 	});
 	it("Validate selectschema can select ''", () => {
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the VALUES category
-		const newValue = { label: "...", value: "" };
-		propertyUtils.dropDown(category, 0, newValue, expectedOptions);
+		let dropDown = wrapper.find("div[data-id='properties-selectschema'] DropdownV2");
+		// open the dropdown
+		const dropdownButton = dropDown.find("div[role='button']");
+		dropdownButton.simulate("click");
+		// select the first item
+		dropDown = wrapper.find("div[data-id='properties-selectschema'] DropdownV2");
+		const dropdownList = dropDown.find("div.bx--list-box__menu-item");
+		dropdownList.at(0).simulate("click");
 		expect(propertiesController.getPropertyValue({ name: "selectschema" })).to.equal("");
-	});
-	it("Validate selectschema_error should have warning message when set to Drugs_0", () => {
-		let category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
-		const newValue = { label: "Drugs_0", value: "Drugs_0" };
-		propertyUtils.dropDown(category, 0, newValue, expectedOptions);
-		// CONDITIONS category has index 2 now because alerts tab was added
-		category = wrapper.find(".category-title-container-right-flyout-panel").at(2);
-		expect(category.find(".validation-error-message-icon-dropdown")).to.have.length(1);
-		expect(category.find(".validation-error-message-color-error")).to.have.length(1);
-	});
-	it("Validate selectschema_warning should have warning message when set to 1", () => {
-		let category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
-		const newValue = { label: "1", value: "1" };
-		propertyUtils.dropDown(category, 1, newValue, expectedOptions);
-		// CONDITIONS category has index 2 now because alerts tab was added
-		category = wrapper.find(".category-title-container-right-flyout-panel").at(2);
-		expect(category.find(".validation-warning-message-icon-dropdown")).to.have.length(1);
-		expect(category.find(".validation-error-message-color-warning")).to.have.length(1);
 	});
 });

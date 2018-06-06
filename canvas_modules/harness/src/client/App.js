@@ -1244,7 +1244,7 @@ class App extends React.Component {
 		var navBar = (<div className="app-navbar">
 			<ul className="app-navbar-items">
 				<li className="navbar-li">
-					<a id="title">Canvas Testbed</a>
+					<span className="harness-title">Canvas Testbed</span>
 				</li>
 				<li className="navbar-li nav-divider" data-tip="console">
 					<a onClick={this.openConsole.bind(this) }>

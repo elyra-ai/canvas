@@ -13,6 +13,48 @@ import testUtils from "./utilities/test-utils.js";
 /* global browser */
 
 module.exports = function() {
+	this.Then(/^I enter "([^"]*)" in the textbox "([^"]*)"$/, function(textboxValue, controlId) {
+
+		var textbox = browser.$("div[data-id='properties-" + controlId + "']");
+		textbox.$("input").setValue("", textboxValue);
+		clickApplyButton();
+		var lastEventLog = testUtils.getLastEventLogData();
+
+		expect(textboxValue).toEqual((lastEventLog.data.form[controlId]).toString());
+	});
+	this.Then(/^I verify "([^"]*)" is not present in the textbox "([^"]*)"/, function(textboxValue, controlId) {
+		var lastEventLog = testUtils.getLastEventLogData(2);
+		expect("").toEqual((lastEventLog.data.form[controlId]).toString());
+
+	});
+
+	this.Then(/^I verify "([^"]*)" is present in the textbox "([^"]*)"/, function(textboxValue, controlId) {
+		var lastEventLog = testUtils.getLastEventLogData(2);
+		expect(textboxValue).toEqual((lastEventLog.data.form[controlId]).toString());
+	});
+
+	this.Then(/^I send "([^"]*)" to the "([^"]*)" textbox control$/, function(key, controlId) {
+		const textbox = browser.$("div[data-id='properties-" + controlId + "']").$("input");
+		textbox.click();
+		textbox.keys("Backspace");
+	});
+
+	this.Then(/^I verify the event log for the "([^"]*)" parameter contains "([^"]*)"$/, function(parameterName, values) {
+		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
+		// console.log(JSON.stringify(lastEventLog.data.form, null, 2));
+		expect(values).toEqual((String(lastEventLog.data.form[parameterName])));
+	});
+
+	function clickApplyButton(startElement) {
+		const start = (startElement) ? startElement : browser;
+		const applyButtons = start.$$("button.properties-apply-button");
+		const button = applyButtons[applyButtons.length - 1];
+		button.click();
+		browser.pause(500);
+	}
+	// ==============================================
+	// TODO consider deleting all functions below
+	// ===============================================
 
 	this.Then(/^I select the "([^"]*)" tab in "([^"]*)"$/, function(tabName, mode) {
 		const labelName = (mode === "flyout") ? tabName.toUpperCase() : tabName;
@@ -37,21 +79,6 @@ module.exports = function() {
 		textbox.setValue("", textValue);
 	});
 
-	this.Then(/^I send "([^"]*)" to the "([^"]*)" textbox control$/, function(key, controlId) {
-		const textbox = browser.$("#" + controlId);
-		textbox.click();
-		textbox.keys("Backspace");
-	});
-
-	this.Then(/^I enter "([^"]*)" in the textbox Column name$/, function(textboxValue) {
-
-		var textbox = browser.$("#editor-control-colName");
-		textbox.setValue("", textboxValue);
-		clickApplyButton();
-		var lastEventLog = testUtils.getLastEventLogData();
-
-		expect(textboxValue).toEqual((lastEventLog.data.form.colName).toString());
-	});
 
 	this.Then(/^I select "([^"]*)" dropdown option$/, function(dropdownValue) {
 		var dropdown = browser.$(".Dropdown-placeholder");
@@ -258,16 +285,6 @@ module.exports = function() {
 		clickApplyButton();
 	});
 
-	this.Then("I verify testValue is not present", function() {
-		var lastEventLog = testUtils.getLastEventLogData(2);
-		expect("").toEqual((lastEventLog.data.form.colName).toString());
-
-	});
-
-	this.Then("I verify testValue is present", function() {
-		var lastEventLog = testUtils.getLastEventLogData(2);
-		expect("testValue").toEqual((lastEventLog.data.form.colName).toString());
-	});
 
 	this.Then(/^I select the Tab (\d+)$/, function(tabNumber) {
 		var tabIndex = tabNumber - 1;
@@ -304,6 +321,13 @@ module.exports = function() {
 
 	this.Then("I click on modal OK button", function() {
 		clickApplyButton();
+	});
+
+	this.Then(/^I click on the "([^"]*)" panel OK button$/, function(panelName) {
+		const panel = browser.$("div[data-id='properties-" + panelName + "']");
+		expect(panel).not.toBe(null);
+
+		clickApplyButton(panel);
 	});
 
 	this.Then(/^I select the "([^"]*)" enable button$/, function(buttonName) {
@@ -361,7 +385,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I move the mouse to coordinates (\d+), (\d+) in common-properties$/, function(mouseX, mouseY) {
-		browser.moveToObject("#common-properties-right-flyout-panel", Number(mouseX), Number(mouseY));
+		browser.moveToObject(".right-flyout-panel", Number(mouseX), Number(mouseY));
 	});
 
 	/** Verify the tooltip over the given text in the summaryPanel is 'visible'
@@ -407,7 +431,7 @@ module.exports = function() {
 	* Action steps
  	*/
 	this.Then(/^I click the "([^"]*)" action$/, function(actionName) {
-		const buttons = browser.$$(".properties-action-button .button");
+		const buttons = browser.$$(".properties-action-button button");
 		for (const button of buttons) {
 			if (button.getText() === actionName) {
 				button.click();
@@ -416,7 +440,7 @@ module.exports = function() {
 		}
 	});
 	this.Then(/^I verify that readonly value is "([^"]*)"$/, function(value) {
-		const text = browser.$$(".readonly-control text")[0];
+		const text = browser.$$(".properties-readonly span")[0];
 		expect(value).toEqual(text.getText());
 	});
 
@@ -425,11 +449,6 @@ module.exports = function() {
 		expect(title).toEqual(lastEventLog.data.title);
 	});
 
-	this.Then(/^I verify the event log for the "([^"]*)" parameter contains "([^"]*)"$/, function(parameterName, values) {
-		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
-		// console.log((lastEventLog.data.form[parameterName]).toString());
-		expect(values).toEqual((String(lastEventLog.data.form[parameterName])));
-	});
 
 	this.Then(/^I verify the event log has no error messages$/, function() {
 		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
@@ -455,21 +474,13 @@ module.exports = function() {
 
 	this.Then(/^I enter "([^"]*)" in the "([^"]*)" field in "([^"]*)" canvas$/, function(value, fieldName, canvas) {
 		const startElement = (canvas === "top") ? browser.$$(".canvas-single")[0] : browser.$$(".canvas-single")[1];
-		const inputField = startElement.$("#editor-control-" + fieldName);
+		const inputField = startElement.$("div[data-id='properties-" + fieldName + "'] input");
 		inputField.setValue("", Number(value));
 		clickApplyButton(startElement);
 
 		var lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
 		expect(value).toEqual((lastEventLog.data.form[fieldName]).toString());
 	});
-
-	function clickApplyButton(startElement) {
-		const start = (startElement) ? startElement : browser;
-		const applyButtons = start.$$("#properties-apply-button");
-		const button = applyButtons[applyButtons.length - 1];
-		button.click();
-		browser.pause(500);
-	}
 
 	function clickCancelButton() {
 		const cancelButtons = browser.$$("#properties-cancel-button");

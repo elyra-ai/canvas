@@ -7,15 +7,16 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-@import "./readonly/readonly.scss";
-@import "./selectcolumns/selectcolumns.scss";
-
-.number-generator {
-	color: #3D70B2;
-	text-decoration: underline;
-	cursor: pointer;
-	-webkit-appearance: none;
-	border: 0;
-	padding: 0;
-	background-color: inherit;
-}
+@import "./readonly/readonly";
+@import "./selectcolumns/selectcolumns";
+@import "./checkbox/checkbox";
+@import "./checkboxset/checkboxset";
+@import "./dropdown/dropdown";
+@import "./expression/expression";
+@import "./radioset/radioset";
+@import "./textarea/textarea";
+@import "./someofselect/someofselect";
+@import "./toggletext/toggletext";
+@import "./textfield/textfield";
+@import "./abstract-table";
+@import "./numberfield/numberfield";

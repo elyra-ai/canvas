@@ -14,14 +14,10 @@ import { expect } from "chai";
 import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
 import Controller from "../../../src/common-properties/properties-controller";
-import isEqual from "lodash/isEqual";
-import { ReactWrapper } from "enzyme";
 
 import selectcolumnsParamDef from "../../test_resources/paramDefs/selectcolumns_paramDef.json";
 import selectcolumnsMultiInputParamDef from "../../test_resources/paramDefs/selectcolumns_multiInput_paramDef.json";
 import rowDisplayParamDef from "../../test_resources/paramDefs/displayRows_paramDef.json";
-
-const CONDITIONS_TEST_FORM_DATA = require("../../test_resources/json/conditions-test-formData.json");
 
 const controller = new Controller();
 
@@ -72,6 +68,7 @@ function setPropertyValue() {
 	);
 }
 
+
 var selectedRows = [];
 function getSelectedRows() {
 	return selectedRows;
@@ -81,7 +78,7 @@ function updateSelectedRows(row) {
 	return selectedRows[row];
 }
 
-const openFieldPicker = sinon.spy();
+const openFieldPickerSpy = sinon.spy();
 
 describe("selectcolumns renders correctly", () => {
 	setPropertyValue();
@@ -91,7 +88,7 @@ describe("selectcolumns renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				openFieldPicker={openFieldPicker}
+				openFieldPicker={openFieldPickerSpy}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={selectedRows}
 			/>
@@ -101,7 +98,7 @@ describe("selectcolumns renders correctly", () => {
 		expect(wrapper.prop("controller")).to.equal(controller);
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 		expect(wrapper.prop("updateSelectedRows")).to.equal(updateSelectedRows);
-		expect(wrapper.prop("openFieldPicker")).to.equal(openFieldPicker);
+		expect(wrapper.prop("openFieldPicker")).to.equal(openFieldPickerSpy);
 		expect(wrapper.prop("selectedRows")).to.equal(selectedRows);
 	});
 
@@ -111,14 +108,14 @@ describe("selectcolumns renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				openFieldPicker={openFieldPicker}
+				openFieldPicker={openFieldPickerSpy}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRows()}
 			/>
 		);
-		expect(wrapper.find("#add-fields-button")).to.have.length(1);
-		expect(wrapper.find(".remove-fields-button")).to.have.length(1);
-		expect(wrapper.find(".column-select-table-row")).to.have.length(3);
+		expect(wrapper.find("button.properties-add-fields-button")).to.have.length(1);
+		expect(wrapper.find("button.properties-remove-fields-button")).to.have.length(1);
+		expect(wrapper.find("tr.column-select-table-row")).to.have.length(3);
 	});
 
 	it("should select add columns button and openFieldPicker should be invoked", () => {
@@ -127,19 +124,19 @@ describe("selectcolumns renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				openFieldPicker={openFieldPicker}
+				openFieldPicker={openFieldPickerSpy}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRows()}
 			/>
 		);
 
 		// select the add column button
-		const addColumnButton = wrapper.find("#add-fields-button");
+		const addColumnButton = wrapper.find("button.properties-add-fields-button");
 		expect(addColumnButton).to.have.length(1);
 		addColumnButton.simulate("click");
 
 		// validate the openFieldPicker is invoked
-		expect(openFieldPicker).to.have.property("callCount", 1);
+		expect(openFieldPickerSpy).to.have.property("callCount", 1);
 	});
 
 	it("should select row and remove button row should be removed", () => {
@@ -149,155 +146,43 @@ describe("selectcolumns renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				openFieldPicker={openFieldPicker}
+				openFieldPicker={openFieldPickerSpy}
 				rightFlyout
 			/>
 		);
 		// select the second row in the table
-		const tableData = wrapper.find(".column-select-table-row");
+		const tableData = wrapper.find("tr.column-select-table-row");
 		expect(tableData).to.have.length(3);
 		tableData.at(1).simulate("click");
 		// ensure removed button is enabled and select it
-		const enabledRemoveColumnButton = wrapper.find(".remove-fields-button");
+		const enabledRemoveColumnButton = wrapper.find("button.properties-remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
-		expect(enabledRemoveColumnButton.prop("disabled")).to.be.undefined;
+		expect(enabledRemoveColumnButton.prop("disabled")).to.equal(false);
 		enabledRemoveColumnButton.simulate("click");
 		// validate the second row is deleted
 		expect(controller.getPropertyValue(propertyId)).to.have.same.members(["Age", "K"]);
 	});
-
-	it("should ensure moveableRows are rendered", () => {
+	it("selectColumns renders messages correctly", () => {
+		controller.updateErrorMessage(propertyId, {
+			validation_id: propertyId.name,
+			type: "warning",
+			text: "bad selectColumns value"
+		});
 		const wrapper = mountWithIntl(
 			<SelectColumns
-				control={moveableRowControl}
+				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				openFieldPicker={openFieldPicker}
+				openFieldPicker={openFieldPickerSpy}
 				rightFlyout
 			/>
 		);
-		// see if moveable rows container and buttons rendered and are disabled
-		expect(wrapper.find("#table-row-move-button-container")).to.have.length(1);
-		const moveButtons = wrapper.find(".table-row-move-button");
-		expect(moveButtons).to.have.length(4);
-		expect(moveButtons.at(0).prop("disabled")).to.equal(true);
-		expect(moveButtons.at(1).prop("disabled")).to.equal(true);
-		expect(moveButtons.at(2).prop("disabled")).to.equal(true);
-		expect(moveButtons.at(3).prop("disabled")).to.equal(true);
-	});
-
-	it("selectcolumns control will have updated options by the controller", () => {
-
-		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
-		const wrapper = renderedObject.wrapper;
-		const selectColumnsController = renderedObject.controller;
-
-		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
-		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
-
-		const datasetMetadata = selectColumnsController.getDatasetMetadata();
-
-		const newField1 = {
-			"name": "age5",
-			"type": "integer",
-			"metadata": {
-				"description": "",
-				"measure": "range",
-				"modeling_role": "both"
-			}
-		};
-
-		const newField2 = {
-			"name": "BP5",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "discrete",
-				"modeling_role": "input"
-			}
-		};
-
-		const newField3 = {
-			"name": "Na5",
-			"type": "double",
-			"metadata": {
-				"description": "",
-				"measure": "range",
-				"modeling_role": "input"
-			}
-		};
-
-		const newField4 = {
-			"name": "drug5",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "set",
-				"modeling_role": "target"
-			}
-		};
-
-		datasetMetadata[0].fields.push(newField1);
-		datasetMetadata[0].fields.push(newField2);
-		datasetMetadata[0].fields.push(newField3);
-		datasetMetadata[0].fields.push(newField4);
-
-		selectColumnsController.setDatasetMetadata(datasetMetadata);
-
-		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Filter by Type` control
-		propertyUtils.fieldPicker([], ["age", "age2", "age3", "age4", "age5"]);
-		wrapper.unmount();
-	});
-
-});
-
-describe("condition messages renders correctly with columnselect control", () => {
-	it("columnselect control should have error message from empty input", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
-		const conditionsPropertyId = { name: "columnSelectInputFieldList" };
-		const input = wrapper.find("#flexible-table-columnSelectInputFieldList");
-		expect(input).to.have.length(1);
-
-		// select the second row in the table
-		var tableData = input.find(".column-select-table-row");
-		expect(tableData).to.have.length(2);
-		tableData.at(1).simulate("click");
-		wrapper.update();
-		// ensure removed button is enabled and select it
-		var enabledRemoveColumnButton = input.find(".remove-fields-button");
-		expect(enabledRemoveColumnButton).to.have.length(1);
-		expect(enabledRemoveColumnButton.prop("disabled")).to.be.undefined;
-		enabledRemoveColumnButton.simulate("click");
-		wrapper.update();
-		// validate the second row is deleted
-		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.same.members(["Age"]);
-
-		tableData = input.find(".column-select-table-row");
-		expect(tableData).to.have.length(1);
-		tableData.at(0).simulate("click");
-		wrapper.update();
-		// ensure removed button is enabled and select it
-		enabledRemoveColumnButton = input.find(".remove-fields-button");
-		expect(enabledRemoveColumnButton).to.have.length(1);
-		expect(enabledRemoveColumnButton.prop("disabled")).to.be.undefined;
-		enabledRemoveColumnButton.simulate("click");
-		wrapper.update();
-		// validate the first row is deleted
-		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(0);
-
-		const columnSelectInputFieldListErrorMessages = {
-			"validation_id": "columnSelectInputFieldList",
-			"type": "error",
-			"text": "Select one or more input fields."
-		};
-		const actual = controller.getErrorMessage(conditionsPropertyId);
-		expect(isEqual(JSON.parse(JSON.stringify(columnSelectInputFieldListErrorMessages)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+		const selectColumnsWrapper = wrapper.find("div[data-id='properties-test-columnSelect']");
+		const messageWrapper = selectColumnsWrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(1);
 	});
 });
+
 
 describe("selectcolumns control filters values correctly", () => {
 	let wrapper;
@@ -311,17 +196,14 @@ describe("selectcolumns control filters values correctly", () => {
 	});
 
 	it("should filter type value from selectcolumn control", () => {
-		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
-		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
-		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Filter by Type` control
-		propertyUtils.fieldPicker(["age"], ["age", "age2", "age3", "age4"]);
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_type");
+		propertyUtils.fieldPicker(fieldPicker, ["age"], ["age", "age2", "age3", "age4"]);
 	});
 	it("should filter role values from selectcolumn control", () => {
-		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
-		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
-		addFieldsButtons.at(2).simulate("click"); // open filter picker for `Filter by Modeling Roles` control
-		propertyUtils.fieldPicker([], ["age", "drug", "age2", "drug2", "age3", "drug3", "age4", "drug4"]);
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-fields_filter_roles");
+		propertyUtils.fieldPicker(fieldPicker, [], ["age", "drug", "age2", "drug2", "age3", "drug3", "age4", "drug4"]);
 	});
+
 });
 
 describe("selectcolumns with multi input schemas renders correctly", () => {
@@ -336,20 +218,17 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 	});
 
 	it("should prefix the correct schema for fields selected", () => {
-		const valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // VALUES category
-		valuesCategory.find(".control-summary-link-buttons").at(0)
-			.find(".button")
-			.simulate("click");
+		// open the summary panel
+		// let summaryPanelWrapper = wrapper.find("div[data-id='properties-selectcolumns-values2']");
+		// summaryPanelWrapper.find("button").simulate("click");
+		const wideflyout = propertyUtils.openSummaryPanel(wrapper, "selectcolumns-values2");
+		// open the select columns field picker
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields");
 
-		const wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const wideflyoutWrapper = new ReactWrapper(wfhtml, true);
-		const addFieldsButtons = valuesCategory.find("#add-fields-button"); // field picker buttons
-		expect(addFieldsButtons).to.have.length(2);
-		addFieldsButtons.at(0).simulate("click");
-
-		propertyUtils.fieldPicker([], [
+		propertyUtils.fieldPicker(fieldPicker, [], [
 			{ "name": "age", "schema": "Schema-1" },
 			{ "name": "AGE", "schema": "Schema-1" },
+			{ "name": "BP", "schema": "Schema-1" },
 			{ "name": "Na", "schema": "Schema-1" },
 			{ "name": "drug", "schema": "Schema-1" },
 			{ "name": "age2", "schema": "Schema-1" },
@@ -370,35 +249,24 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 			{ "name": "stringAndSet", "schema": "Schema-2" }
 		]);
 
-		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
-		const summary = valuesCategory.find(".control-summary.control-panel").at(0);
-		expect(summary.find(".control-summary-list-rows")).to.have.length(2);
-		expect(summary.find(".control-summary-list-rows").at(0)
+		wideflyout.find("button.properties-apply-button")
+			.at(0)
+			.simulate("click");
+		const panel = wrapper.find("div[data-id='properties-selectcolumns-values2']");
+		expect(panel.find("tr.properties-summary-row")).to.have.length(2);
+		expect(panel.find("tr.properties-summary-row").at(0)
 			.find("span")
 			.at(0)
 			.text()).to.equal("Schema-2.age");
-		expect(summary.find(".control-summary-list-rows").at(1)
+		expect(panel.find("tr.properties-summary-row").at(1)
 			.find("span")
 			.at(0)
 			.text()).to.equal("Schema-2.AGE");
 	});
-});
-
-describe("selectcolumns control filters values correctly with multi input", () => {
-	let wrapper;
-	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsMultiInputParamDef);
-		wrapper = renderedObject.wrapper;
-	});
-
-	afterEach(() => {
-		wrapper.unmount();
-	});
 
 	it("should filter by type in selectcolumns control", () => {
-		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
-		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
-		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Filter by Type` control
+		// open the "filter by type" select columns field picker
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_type");
 		const fieldTable = [
 			{ "name": "age", "schema": "Schema-1" },
 			{ "name": "AGE", "schema": "Schema-1" },
@@ -408,13 +276,12 @@ describe("selectcolumns control filters values correctly with multi input", () =
 			{ "name": "AGE", "schema": "Schema-2" },
 			{ "name": "intAndRange", "schema": "Schema-2" }
 		];
-		propertyUtils.fieldPicker([], fieldTable);
+		propertyUtils.fieldPicker(fieldPicker, [], fieldTable);
 	});
 
 	it("should filter by types in selectcolumns control", () => {
-		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
-		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
-		addFieldsButtons.at(1).simulate("click"); // open filter picker for `Filter by Types` control
+		// open the "filter by types" select columns field picker
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_types");
 		const fieldTable = [
 			{ "name": "age", "schema": "Schema-1" },
 			{ "name": "AGE", "schema": "Schema-1" },
@@ -428,14 +295,13 @@ describe("selectcolumns control filters values correctly with multi input", () =
 			{ "name": "Na", "schema": "Schema-2" },
 			{ "name": "intAndRange", "schema": "Schema-2" }
 		];
-		propertyUtils.fieldPicker([], fieldTable);
+		propertyUtils.fieldPicker(fieldPicker, [], fieldTable);
 	});
 
 
 	it("should filter by measurement in selectcolumns control", () => {
-		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
-		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
-		addFieldsButtons.at(2).simulate("click");
+		// open the "filter by types" select columns field picker
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_measurement");
 		const fieldTable = [
 			{ "name": "BP", "schema": "Schema-1" },
 			{ "name": "BP2", "schema": "Schema-1" },
@@ -443,13 +309,11 @@ describe("selectcolumns control filters values correctly with multi input", () =
 			{ "name": "BP", "schema": "Schema-2" },
 			{ "name": "stringAndDiscrete", "schema": "Schema-2" }
 		];
-		propertyUtils.fieldPicker([], fieldTable);
+		propertyUtils.fieldPicker(fieldPicker, [], fieldTable);
 	});
 
 	it("should filter by measurements in selectcolumns control", () => {
-		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
-		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
-		addFieldsButtons.at(3).simulate("click");
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_measurements");
 		const fieldTable = [
 			{ "name": "BP", "schema": "Schema-1" },
 			{ "name": "drug", "schema": "Schema-1" },
@@ -462,13 +326,11 @@ describe("selectcolumns control filters values correctly with multi input", () =
 			{ "name": "stringAndDiscrete", "schema": "Schema-2" },
 			{ "name": "stringAndSet", "schema": "Schema-2" }
 		];
-		propertyUtils.fieldPicker([], fieldTable);
+		propertyUtils.fieldPicker(fieldPicker, [], fieldTable);
 	});
 
 	it("should filter by type and measurement in selectcolumns control", () => {
-		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
-		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
-		addFieldsButtons.at(4).simulate("click");
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_and");
 		const fieldTable = [
 			{ "name": "drug", "schema": "Schema-1" },
 			{ "name": "drug2", "schema": "Schema-1" },
@@ -476,13 +338,11 @@ describe("selectcolumns control filters values correctly with multi input", () =
 			{ "name": "drug", "schema": "Schema-2" },
 			{ "name": "stringAndSet", "schema": "Schema-2" }
 		];
-		propertyUtils.fieldPicker([], fieldTable);
+		propertyUtils.fieldPicker(fieldPicker, [], fieldTable);
 	});
 
 	it("should filter by type or measurement in selectcolumns control", () => {
-		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
-		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
-		addFieldsButtons.at(5).simulate("click");
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_or");
 		const fieldTable = [
 			{ "name": "drug", "schema": "Schema-1" },
 			{ "name": "drug2", "schema": "Schema-1" },
@@ -497,7 +357,7 @@ describe("selectcolumns control filters values correctly with multi input", () =
 			{ "name": "AGE", "schema": "Schema-2" },
 			{ "name": "intAndRange", "schema": "Schema-2" }
 		];
-		propertyUtils.fieldPicker([], fieldTable);
+		propertyUtils.fieldPicker(fieldPicker, [], fieldTable);
 	});
 });
 
@@ -513,31 +373,30 @@ describe("selectcolumns control displays the proper number of rows", () => {
 	});
 
 	it("should display 3 rows", () => {
-		const columnSelect = wrapper.find(".flexible-table-control-container").at(0);
-		const heightDiv = columnSelect.find("#flexible-table-container-wrapper");
+		const columnSelect = wrapper.find("div[data-id='properties-ft-columnSelect']");
+		const heightDiv = columnSelect.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.at(0).prop("style");
 		// console.log("STYLE: " + JSON.stringify(heightStyle));
-		expect(isEqual(JSON.parse(JSON.stringify(heightStyle)),
-			JSON.parse(JSON.stringify({ "height": "106px" })))).to.be.true;
+		expect(heightStyle).to.eql({ "height": "106px" });
 	});
 
-	it("should display 5 rows", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(2);
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		let tableHtml = document.getElementById("moveablerow-table-structurelist2"); 	// needed since modal dialogs are outside `wrapper`
-		let complexTable = new ReactWrapper(tableHtml, true);
-		const addButton = complexTable.find("#add-fields-button").at(0);
-		addButton.simulate("click"); 		// Add a row to the table
-		const editButton = complexTable.find(".table-subcell").at(0);
-		editButton.simulate("click"); 		// Invoke the sub-sub-panel
-		tableHtml = document.getElementById("flexible-table-fields2"); 		// needed since modal dialogs are outside `wrapper`
-		complexTable = new ReactWrapper(tableHtml, true);
-		const heightDiv = complexTable.find("#flexible-table-container-wrapper");
-		if (heightDiv.length > 2) {
-			const heightStyle = heightDiv.at(2).prop("style");
-			// console.log("STYLE: " + JSON.stringify(heightStyle));
-			expect(isEqual(JSON.parse(JSON.stringify(heightStyle)),
-				JSON.parse(JSON.stringify({ "height": "180px" })))).to.be.true;
-		}
+	it("should display 5 rows in select columns in subpanel", () => {
+		// open the summary on_panel and add a row to the table
+		const summaryPanelWrapper = wrapper.find("div[data-id='properties-structurelist-summary-panel2']");
+		summaryPanelWrapper.find("button").simulate("click");
+		let tableWrapper = wrapper.find("div[data-id='properties-structurelist2']");
+		const addFieldsButtons = tableWrapper.find("button.properties-add-fields-button"); // add row button
+		addFieldsButtons.at(0).simulate("click"); // add row button
+
+		// open the subpanel for the added row
+		tableWrapper = wrapper.find("div[data-id='properties-structurelist2']");
+		const editButton = tableWrapper.find(".properties-subpanel-button").at(0);
+		editButton.simulate("click");
+		const selectColumnsWrapper = wrapper.find("div[data-id='properties-structurelist2_0_1']");
+
+		const heightDiv = selectColumnsWrapper.find("div.properties-ft-container-wrapper");
+		const heightStyle = heightDiv.prop("style");
+		// console.log("STYLE: " + JSON.stringify(heightStyle));
+		expect(heightStyle).to.eql({ "height": "178px" });
 	});
 });

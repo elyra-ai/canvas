@@ -7,6 +7,34 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-.control-item {
-	padding: 4px 0 0;
+.properties-control-item {
+	padding: 5px 0;
+	&.hide {
+		display: none;
+	}
+	&[disabled] { //only disabled label and description.  Control will disabled itself
+		.properties-label-container, .properties-control-description {
+			opacity: 0.5;
+			pointer-events: none;
+		}
+	}
+}
+
+.properties-label-container {
+	display: flex;
+	align-items: center;
+	padding-bottom: 5px;
+	font-weight: 700;
+	.properties-number-generator {
+		margin-left: 3px;
+	}
+}
+
+.properties-control-description {
+	font-size: 12px;
+}
+
+.properties-required-indicator {
+	color: $brand-01;
+	font-weight: 700;
 }

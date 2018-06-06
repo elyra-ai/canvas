@@ -7,14 +7,12 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-@CHARSET "ISO-8859-1";
-
 /* Canvas styles */
 
 .d3-svg-canvas-div {
 	cursor: default;
 	height: 100%;
-	background-color: white;
+	background-color: $ui-01;
 }
 
 .d3-svg-canvas-div:focus {
@@ -23,7 +21,7 @@
 
 /* Pull-out region rectangle used for object selection */
 .d3-region-selector {
-	stroke: gray;
+	stroke: #808080;
 	fill: transparent;
 	stroke-dasharray: 2.2;
 }
@@ -48,7 +46,7 @@
 }
 
 .d3-obj-selection-highlight-austin[data-selected=yes] {
-	stroke: #5aaafa;
+	stroke: $support-04;
 	stroke-dasharray: none; /* Solid line */
 	stroke-width: 3;
 	fill: transparent;
@@ -61,15 +59,15 @@
 }
 
 .d3-node-body-outline-austin {
-	stroke: #dfe3e6;
+	stroke: $ui-03;
 	stroke-width: 1;
 	fill: #efefef;
 }
 
 .d3-node-body-outline-austin[hover=yes] {
-	stroke: #dfe3e6;
+	stroke: $ui-03;
 	stroke-width: 1;
-	fill: #f0f3f6;
+	fill: $ui-03;;
 }
 
 .d3-node-image-outline {
@@ -103,21 +101,21 @@
 }
 
 .d3-node-error-label {
-	fill: #e71d32; /* Error red */
+	fill: $support-01; /* Error red */
 }
 
 .d3-node-warning-label {
-	fill: #efc100; /* Warning yellow */
+	fill: $support-03; /* Warning yellow */
 }
 
 .d3-label-outline {
-	fill: #dfe3e6;
+	fill: $ui-03;
 	stroke: #aeaeae;
 	stroke-width: 2;
 }
 
 .d3-decorator-outline {
-	fill: #dfe3e6;
+	fill: $ui-03;
 	stroke: #aeaeae;
 	stroke-width: 2;
 }
@@ -134,7 +132,7 @@
 
 .d3-node-halo:hover {
 	fill: none;
-	stroke: #5aaafa;
+	stroke: $support-04;
 	stroke-width: 8;
 }
 
@@ -143,11 +141,11 @@
 }
 
 .d3-node-super-expand-outline:hover {
-	fill: #DFE3E6;
+	fill: $ui-03;
 }
 
 .d3-node-super-expand {
-	fill: #3d70b2;
+	fill: $brand-01;
 }
 
 .d3-node-ellipsis-background {
@@ -156,13 +154,13 @@
 }
 
 .d3-node-ellipsis {
-	fill: #3d70b2;
+	fill: $brand-01;
 	stroke-width: 0;
 }
 
 .d3-node-ellipsis:hover,
 .d3-node-ellipsis-background:hover~.d3-node-ellipsis {
-	fill: #5596e6;
+	fill: $brand-02;
 	stroke-width: 0;
 }
 
@@ -170,14 +168,14 @@
 .d3-error-circle {
 	stroke: #f5f7fa; /* Node background color */
 	stroke-width: 2;
-	fill: #e71d32;   /* Error red */
+	fill: $support-01;   /* Error red */
 }
 
 /* Warning indicator */
 .d3-warning-circle {
 	stroke: #f5f7fa; /* Node background color */
 	stroke-width: 2;
-	fill: #efc100;   /* Warning Yellow */
+	fill: $support-03;   /* Warning Yellow */
 }
 
 /* Invisible Error indicator */
@@ -200,7 +198,7 @@
 }
 
 .d3-node-port-output:hover {
-	fill: #5aaafa;   /* Dark blue */
+	fill: $support-04;   /* Dark blue */
 }
 
 .d3-node-port-input {
@@ -221,7 +219,7 @@
 }
 
 .d3-node-port-input-arrow[connected=yes] {
-	stroke: #5aaafa; /* Dark blue */
+	stroke: $support-04; /* Dark blue */
 	fill: transparent;
 }
 
@@ -269,57 +267,57 @@
 /* New connection dynamic line styles. */
 
 .d3-new-connection-line[linkType=nodeLink] {
-	stroke: #5aaafa;   /* Dark blue */
+	stroke: $support-04;   /* Dark blue */
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
 }
 
 .d3-new-connection-start[linkType=nodeLink] {
-	stroke: #5aaafa;   /* Dark blue */
-	fill: #FFFFFF;   /* White */
+	stroke: $support-04;   /* Dark blue */
+	fill: $ui-01;   /* White */
 }
 
 .d3-new-connection-blob[linkType=nodeLink] {
-	stroke: #5aaafa;   /* Dark blue */
-	fill: #5aaafa;   /* Dark blue */
+	stroke: $support-04;   /* Dark blue */
+	fill: $support-04;   /* Dark blue */
 }
 
 /* New connection dynamic line styles for the Austin theme. */
 
 .d3-new-connection-line-austin[linkType=nodeLink] {
-	stroke: #5aaafa;
+	stroke: $support-04;
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
 }
 
 .d3-new-connection-start-austin[linkType=nodeLink] {
-	stroke: #5aaafa;
-	fill: #FFFFFF;   /* White */
+	stroke: $support-04;
+	fill: $ui-01;   /* White */
 }
 
 .d3-new-connection-blob-austin[linkType=nodeLink] {
-	stroke: #5aaafa;
-	fill: #5aaafa;
+	stroke: $support-04;
+	fill: $support-04;
 }
 
 /* New connection dynamic line styles for comment links */
 
 .d3-new-connection-line[linkType=commentLink] {
-	stroke: gray;
+	stroke: #808080;
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
 }
 
 .d3-new-connection-blob[linkType=commentLink] {
-	stroke: gray;
-	fill: white;
+	stroke: #808080;
+	fill: $ui-01;
 }
 
 .d3-new-connection-arrow[linkType=commentLink] {
-	stroke: gray;
+	stroke: #808080;
 	stroke-width: 2;
 	fill: transparent;
 }
@@ -333,19 +331,19 @@
 /* New connection dynamic line styles for comment links for the Austin theme. */
 
 .d3-new-connection-line-austin[linkType=commentLink] {
-	stroke: gray;
+	stroke: #808080;
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
 }
 
 .d3-new-connection-blob-austin[linkType=commentLink] {
-	stroke: gray;
-	fill: #FFFFFF;  /* White */
+	stroke: #808080;
+	fill: $ui-01;  /* White */
 }
 
 .d3-new-connection-arrow-austin[linkType=commentLink] {
-	stroke: gray;
+	stroke: #808080;
 	stroke-width: 2;
 	fill: transparent;
 }
@@ -353,7 +351,7 @@
 /* Halo - Temporary connector line pulled out from halo */
 
 .d3-node-connector {
-	stroke: gray;
+	stroke: #808080;
 	stroke-dasharray: 2.2;
 }
 
@@ -361,7 +359,7 @@
 
 /* Style for comment background rectangle */
 .d3-comment-rect {
-	fill: #FFFFFF;
+	fill: $ui-01;
 	stroke: #c7c7c7;
 	stroke-width: 1;
 
@@ -375,7 +373,7 @@
 }
 
 .d3-comment-text {
-	fill: #5a6872;  /* Must be the same as color in .d3-comment-display */
+	fill: $text-02;  /* Must be the same as color in .d3-comment-display */
 }
 
 .d3-comment-text[beingedited=yes] {
@@ -399,7 +397,7 @@
 
 /* Style for comment text entry when shown in an HTML textarea control. */
 .d3-comment-entry {
-	color: #5a6872;  /* Must be the same as fill in .d3-comment-text */
+	color: $text-02;  /* Must be the same as fill in .d3-comment-text */
 	font-size: 12px;  /* Must be the same as font size in .d3-comment-text-tspan */
 	font-weight: 400;  /* Must be the same as font weight in .d3-comment-text-tspan */
 	position: absolute;
@@ -424,7 +422,7 @@
 
 .d3-comment-halo:hover {
 	fill: none;
-	stroke: #5aaafa;
+	stroke: $support-04;
 	stroke-width: 8;
 }
 
@@ -438,7 +436,7 @@
 }
 
 .d3-comment-link-arrow-head {
-	stroke: gray;
+	stroke: #808080;
 	stroke-width: 2;
 	fill: transparent;
 	stroke-dasharray: 0;
@@ -451,13 +449,13 @@
 }
 
 .d3-data-link {
-	stroke: #5aaafa;
+	stroke: $support-04;
 	fill: none;
 	stroke-width: 2;
 }
 
 .d3-data-link-austin {
-	stroke: #5aaafa;
+	stroke: $support-04;
 	fill: none;
 	stroke-width: 2;
 }
@@ -484,5 +482,5 @@ g .d3-data-link:hover,
 g .d3-selectable-link:hover,
 g .d3-selectable-link:hover ~ .d3-selectable-link,      /* Colors arrow head when hovering over line. */
 g .d3-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
-	stroke: #3D70B2;
+	stroke: $brand-01;
 }

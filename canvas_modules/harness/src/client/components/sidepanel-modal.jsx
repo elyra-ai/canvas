@@ -12,12 +12,14 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import FormControl from "react-bootstrap/lib/FormControl";
+import FileUploader from "carbon-components-react/lib/components/FileUploader";
 import PropTypes from "prop-types";
-import Button from "ap-components-react/dist/components/Button";
-import Dropdown from "ap-components-react/dist/components/Dropdown";
-import RadioGroup from "ap-components-react/dist/components/RadioGroup";
-import ToggleButton from "ap-components-react/dist/components/ToggleButton";
+import Button from "carbon-components-react/lib/components/Button";
+import Dropdown from "carbon-components-react/lib/components/Dropdown";
+import DropdownItem from "carbon-components-react/lib/components/DropdownItem";
+import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
+import RadioButton from "carbon-components-react/lib/components/RadioButton";
+import Toggle from "carbon-components-react/lib/components/Toggle";
 
 import {
 	CHOOSE_FROM_LOCATION,
@@ -54,8 +56,8 @@ export default class SidePanelModal extends React.Component {
 			});
 	}
 
-	onDropdownSelect(evt, obj) {
-		this.props.setPropertiesDropdownSelect(obj.selected);
+	onDropdownSelect(evt) {
+		this.props.setPropertiesDropdownSelect(evt.value);
 	}
 
 	onPropertiesSelect(evt) {
@@ -121,34 +123,37 @@ export default class SidePanelModal extends React.Component {
 		}
 	}
 
-	usePropertiesContainerType(evt, obj) {
-		this.props.usePropertiesContainerType(obj.selected);
+	usePropertiesContainerType(value) {
+		this.props.usePropertiesContainerType(value);
 	}
 
-	useApplyOnBlur(changeEvent) {
-		this.props.useApplyOnBlur(changeEvent.target.checked);
+	useApplyOnBlur(checked) {
+		this.props.useApplyOnBlur(checked);
 	}
 
-	useDisplayAdditionalComponents(changeEvent) {
-		this.props.useDisplayAdditionalComponents(changeEvent.target.checked);
+	dropdownOptions() {
+		const options = [];
+		let key = 1;
+		for (const option of this.state.commonPropertiesFiles) {
+			options.push(<DropdownItem key={"option." + ++key}itemText={option} value={option} />);
+		}
+		return options;
 	}
 
+	useDisplayAdditionalComponents(checked) {
+		this.props.useDisplayAdditionalComponents(checked);
+	}
 
 	render() {
-		// var divider = (<div
-		// 	className="sidepanel-children sidepanel-divider"
-		// />);
 		const space = (<div className="sidepanel-spacer" />);
 
 		let fileChooser = <div />;
 		if (this.props.fileChooserVisible) {
-			fileChooser = (<div>
-				<FormControl
-					required="required"
-					id="formFileInput"
-					type="file"
-					accept=".json"
-					ref="commonProperties"
+			fileChooser = (<div className="sidepanel-file-uploader">
+				<FileUploader
+					small
+					buttonLabel="Chose file"
+					accept={[".json"]}
 					onChange={this.onPropertiesSelect}
 				/>
 				{space}
@@ -156,24 +161,22 @@ export default class SidePanelModal extends React.Component {
 		}
 
 		const propertiesInput = (<div className="sidepanel-children" id="sidepanel-input">
-			<div className="formField">
-				<div className="sidepanel-headers">Common Properties</div>
-				<div id="properties-documentation-link">
+			<div className="filePicker">
+				<div className="sidepanel-headers">
+					<span>Common Properties</span>
 					<Link to="/properties" target="_blank">documentation</Link>
 				</div>
 				<Dropdown
-					name="PropertiesDropdown"
-					text="Properties"
-					id="sidepanel-properties-dropdown"
-					maxVisibleItems={10}
-					dark
-					options={this.state.commonPropertiesFiles}
-					onSelect={this.onDropdownSelect.bind(this)}
+					defaultText="Properties"
+					ariaLabel="Properties"
+					onChange={this.onDropdownSelect.bind(this)}
 					value={this.props.selectedPropertiesDropdownFile}
-				/>
+				>
+					{this.dropdownOptions()}
+				</Dropdown>
 				{space}
 				{fileChooser}
-				<Button data-compact dark
+				<Button small
 					disabled={!this.isReadyToSubmitProperties()}
 					onClick={this.submitProperties.bind(this)}
 				>
@@ -184,35 +187,40 @@ export default class SidePanelModal extends React.Component {
 
 		const containerType = (<div className="sidepanel-children" id="sidepanel-properties-container-type">
 			<div className="sidepanel-headers">Container Type</div>
-			<RadioGroup
+			<RadioButtonGroup
+				className="sidepanel-radio-group"
 				name="properties-container_type_radio"
-				dark
 				onChange={this.usePropertiesContainerType}
-				choices={[
-					FLYOUT,
-					MODAL
-				]}
-				selected={this.props.propertiesContainerType}
-			/>
+				valueSelected={this.props.propertiesContainerType}
+			>
+				<RadioButton
+					value={FLYOUT}
+					labelText={FLYOUT}
+				/>
+				<RadioButton
+					value={MODAL}
+					labelText={MODAL}
+				/>
+			</RadioButtonGroup>
 		</div>);
 
 		const applyOnBlur = (
 			<div className="sidepanel-children">
 				<div className="sidepanel-headers">Apply changes on blur</div>
-				<ToggleButton dark
+				<Toggle
 					id="sidepanel-applyOnBlur-toggle"
-					checked={this.props.applyOnBlur}
-					onChange={this.useApplyOnBlur}
+					toggled={this.props.applyOnBlur}
+					onToggle={this.useApplyOnBlur}
 				/>
 			</div>);
 
 		const addtlCmpts = (
 			<div className="sidepanel-children" id="sidepanel-properties-additional-components">
 				<div className="sidepanel-headers">Display additional components</div>
-				<ToggleButton dark
+				<Toggle
 					id="sidepanel-additionalComponents-toggle"
-					checked={ this.props.displayAdditionalComponents }
-					onChange={ this.useDisplayAdditionalComponents }
+					toggled={ this.props.displayAdditionalComponents }
+					onToggle={ this.useDisplayAdditionalComponents }
 				/>
 			</div>
 		);

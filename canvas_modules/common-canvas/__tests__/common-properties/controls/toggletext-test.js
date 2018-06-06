@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import ToggletextControl from "../../../src/common-properties/controls/toggletext";
+import Toggletext from "../../../src/common-properties/controls/toggletext";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
@@ -18,17 +18,21 @@ const controller = new Controller();
 
 const control = {
 	"name": "toggle",
-	"label": {
-		"text": "Order"
-	},
-	"visible": true,
-	"width": 16,
-	"controlType": "toggletext",
-	"valueDef": {
-		"propType": "string",
-		"isList": false,
-		"isMap": false
-	},
+	"values": [
+		"Ascending",
+		"Descending"
+	],
+	"valueLabels": [
+		"Sort Ascending",
+		"Sort Descending"
+	],
+	"valueIcons": [
+		"/images/up-triangle.svg",
+		"/images/down-triangle.svg"
+	]
+};
+const controlNoIcons = {
+	"name": "toggle",
 	"values": [
 		"Ascending",
 		"Descending"
@@ -36,75 +40,127 @@ const control = {
 	"valueLabels": [
 		"Ascending",
 		"Descending"
-	],
-	"valueIcons": [
-		"/images/up-triangle.svg",
-		"/images/down-triangle.svg"
 	]
 };
-propertyUtils.setControls(controller, [control]);
+propertyUtils.setControls(controller, [control, controlNoIcons]);
 
 const propertyId = { name: "toggle" };
 
-function setPropertyValue() {
-	controller.setPropertyValues(
-		{ toggle: "Ascending" }
-	);
-}
+describe("Toggletext renders correctly", () => {
 
-describe("ToggletextControl renders correctly", () => {
+	beforeEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+		controller.setPropertyValues(
+			{ toggle: "Ascending" }
+		);
+	});
 
-	it("props should have been defined", () => {
+	it("Toggletext props should have been defined", () => {
 		const wrapper = mount(
-			<ToggletextControl
+			<Toggletext
 				control={control}
-				values={control.values}
-				valueLabels={control.valueLabels}
-				valueIcons={control.valueIcons}
 				controller={controller}
 				propertyId={propertyId}
 			/>
 		);
-
-
 		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("values")).to.equal(control.values);
-		expect(wrapper.prop("valueLabels")).to.equal(control.valueLabels);
-		expect(wrapper.prop("valueIcons")).to.equal(control.valueIcons);
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 		expect(wrapper.prop("controller")).to.equal(controller);
 	});
 
-	it("should render a `ToggletextControl`", () => {
+	it("Toggletext should render correctly", () => {
 		const wrapper = mount(
-			<ToggletextControl
+			<Toggletext
 				control={control}
-				values={control.values}
-				valueLabels={control.valueLabels}
-				valueIcons={control.valueIcons}
 				controller={controller}
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find(".toggletext_control");
-		expect(input).to.have.length(1);
+		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
+		const button = toggleWrapper.find("button");
+		expect(button).to.have.length(1);
+		const image = button.find("img");
+		expect(image).to.have.length(1);
+		const text = button.find("span");
+		expect(text).to.have.length(1);
+		expect(text.text()).to.equal(control.valueLabels[0]);
 	});
 
-	it("should set correct state value in `ToggletextControl`", () => {
-		setPropertyValue(); // set to default value
+	it("Toggletext should render without icons", () => {
 		const wrapper = mount(
-			<ToggletextControl
-				control={control}
-				values={control.values}
-				valueLabels={control.valueLabels}
-				valueIcons={control.valueIcons}
+			<Toggletext
+				control={controlNoIcons}
 				controller={controller}
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find(".toggletext_icon");
-		input.simulate("click");
+		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
+		const button = toggleWrapper.find("button");
+		expect(button).to.have.length(1);
+		const image = button.find("img");
+		expect(image).to.have.length(0);
+		const text = button.find("span");
+		expect(text).to.have.length(1);
+		expect(text.text()).to.equal(controlNoIcons.valueLabels[0]);
+	});
+
+	it("toggletext should set correct value", () => {
+		const wrapper = mount(
+			<Toggletext
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
+		const button = toggleWrapper.find("button");
+		button.simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal("Descending");
+	});
+
+	it("toggletext renders when disabled", () => {
+		controller.updateControlState(propertyId, "disabled");
+		const wrapper = mount(
+			<Toggletext
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
+		expect(toggleWrapper.prop("disabled")).to.equal(true);
+	});
+
+	it("toggletext renders when hidden", () => {
+		controller.updateControlState(propertyId, "hidden");
+		const wrapper = mount(
+			<Toggletext
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
+		expect(toggleWrapper.hasClass("hide")).to.equal(true);
+	});
+
+	it("toggletext renders messages correctly", () => {
+		controller.updateErrorMessage(propertyId, {
+			validation_id: propertyId.name,
+			type: "warning",
+			text: "bad checkbox value"
+		});
+		const wrapper = mount(
+			<Toggletext
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
+		const messageWrapper = toggleWrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(1);
 	});
 
 });

@@ -778,11 +778,8 @@ export default class PropertiesController {
 	}
 
 	/**
-	 * State object may have up to 4 attributes
-	 * hidden: boolean value indicating if this control should be hidden
-	 * disabled: boolean value indicating if this control should be disabled
-	 * value: required string value of either "hidden", "disabled", "visible", or "enabled"
-	 * (hidden and disabled attributes are needed in the case where multiple panels/controls set different states on the control)
+	* @param propertyId
+	* @param state string ("disabled", "enabled", "hidden", "visible")
 	*/
 	updateControlState(propertyId, state) {
 		this.propertiesStore.updateControlState(propertyId, state);
@@ -804,11 +801,8 @@ export default class PropertiesController {
 	}
 
 	/**
-	 * State object may have up to 4 attributes
-	 * hidden: boolean value indicating if this panel should be hidden
-	 * disabled: boolean value indicating if this panel should be disabled
-	 * value: required string value of either "hidden", "disabled", "visible", or "enabled"
-	 * (hidden and disabled attributes are needed in the case where multiple panels/controls set different states on the control)
+	* @param panelId
+  * @param state string ("disabled", "enabled", "hidden", "visible")
 	*/
 	updatePanelState(panelId, state) {
 		this.propertiesStore.updatePanelState(panelId, state);

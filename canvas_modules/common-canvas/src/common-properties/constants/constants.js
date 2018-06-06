@@ -39,7 +39,8 @@ _defineConstant("MESSAGE_KEYS_DEFAULTS", {
 	PROPERTIESEDIT_REJECTBUTTON_LABEL: "Cancel",
 	TABLE_SEARCH_PLACEHOLDER: "Search in column",
 	LONG_TABLE_SUMMARY_PLACEHOLDER: "More than ten fields...",
-	ALERTS_TAB_TITLE: "Alerts"
+	ALERTS_TAB_TITLE: "Alerts",
+	TITLE_EDITOR_LABEL: "edit title"
 });
 
 _defineConstant("MESSAGE_KEYS", {
@@ -66,12 +67,13 @@ _defineConstant("MESSAGE_KEYS", {
 	PROPERTIESEDIT_REJECTBUTTON_LABEL: "propertiesEdit.rejectButton.label",
 	TABLE_SEARCH_PLACEHOLDER: "table.search.placeholder",
 	LONG_TABLE_SUMMARY_PLACEHOLDER: "summary.longTable.placeholder",
-	ALERTS_TAB_TITLE: "alerts.tab.title"
+	ALERTS_TAB_TITLE: "alerts.tab.title",
+	TITLE_EDITOR_LABEL: "title.editor.label"
 });
 
 _defineConstant("CHARACTER_LIMITS", {
-	NODE_PROPERTIES_DIALOG_TEXT_FIELD: 128,
-	NODE_PROPERTIES_DIALOG_TEXT_AREA: 1024
+	TEXT_FIELD: 128,
+	TEXT_AREA: 1024
 });
 
 _defineConstant("CONDITION_ERROR_MESSAGE", {
@@ -92,12 +94,6 @@ _defineConstant("CONDITION_MESSAGE_TYPE", {
 
 _defineConstant("SPINNER", "spinner");
 
-_defineConstant("VALIDATION_MESSAGE", {
-	WARNING: "#efc100",
-	ERROR: "#E71D32",
-	DISABLED: "#c7c7c7"
-});
-
 _defineConstant("DATA_TYPES", [
 	"integer",
 	"double",
@@ -114,8 +110,6 @@ _defineConstant("DEFAULT_TIME_FORMAT", "H:m:s");
 _defineConstant("ELLIPSIS_STRING", "...");
 
 _defineConstant("DISPLAY_CHARS_DEFAULT", 64);
-
-_defineConstant("EDITOR_CONTROL", "editor-control-");
 
 _defineConstant("TOOL_TIP_DELAY", 1000);
 
@@ -145,11 +139,6 @@ _defineConstant("CONDITION_DEFINITION_INDEX", {
 _defineConstant("ACTIONS", {
 	SET_PROPERTIES: "SET_PROPERTIES",
 	UPDATE_PROPERTY: "UPDATE_PROPERTY"
-});
-
-_defineConstant("CONTROL_TYPE", {
-	CONTROL: "control",
-	PANEL: "panel"
 });
 
 _defineConstant("DEFAULT_LABEL_EDITABLE", true);

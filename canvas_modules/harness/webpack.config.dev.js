@@ -60,7 +60,7 @@ const rules = [
 			{ loader: "style-loader", options: { sourceMap: true } },
 			{ loader: "css-loader", options: { sourceMap: true } },
 			{ loader: "postcss-loader", options: { ident: "postcss", sourceMap: true, plugins: [require("autoprefixer")] } },
-			{ loader: "sass-loader", options: { sourceMap: true } }
+			{ loader: "sass-loader", options: { sourceMap: true, includePaths: ["node_modules"] } }
 		]
 	},
 	{
@@ -87,8 +87,8 @@ var plugins = [
 		context: "./src",
 		glob: "**/*.scss",
 		quiet: false,
-		failOnWarning: true,
-		failOnError: true
+		failOnWarning: false,
+		failOnError: false
 	}),
 	new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.NoEmitOnErrorsPlugin(),

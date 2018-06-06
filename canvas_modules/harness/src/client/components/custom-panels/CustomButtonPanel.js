@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -10,7 +10,7 @@
 /* eslint-disable no-empty-function */
 /* eslint-disable no-unused-vars */
 import React from "react";
-import Button from "ap-components-react/dist/components/Button";
+import Button from "carbon-components-react/lib/components/Button";
 import paramDef from "./json/misclassification_paramDef.json";
 
 
@@ -203,11 +203,11 @@ class CustomButtonPanel {
 					{cost}
 				</div>
 				<br />
-				<Button medium semantic onClick={this.addRowAction} {...addDisabled}>
+				<Button small onClick={this.addRowAction} {...addDisabled}>
 					Add
 				</Button>
 				&nbsp; &nbsp;
-				<Button medium semantic onClick={this.removeRowsAction} {...removeDisabled}>
+				<Button small onClick={this.removeRowsAction} {...removeDisabled}>
 					Remove Selected
 				</Button>
 			</div>

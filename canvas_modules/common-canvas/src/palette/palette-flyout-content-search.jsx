@@ -10,7 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Icon from "../icons/icon.jsx";
-import TextField from "ap-components-react/dist/components/TextField";
+import TextInput from "carbon-components-react/lib/components/TextInput";
 
 class PaletteFlyoutContentSearch extends React.Component {
 
@@ -34,17 +34,15 @@ class PaletteFlyoutContentSearch extends React.Component {
 
 		if (this.props.isPaletteOpen) {
 			searchField = (
-				<div className="palette-flyout-search-bar">
-					<TextField
-						key="palette-flyout-search-text"
-						type="search"
-						className="palette-flyout-search-text"
-						placeholder={placeHolder}
-						disabledPlaceholderAnimation
-						onChange={this.props.handleFilterChange}
-						value={this.props.filterKeyword}
-					/>
-				</div>
+				<TextInput
+					key="palette-flyout-search-text"
+					id="palette-flyout-search-text"
+					placeholder={placeHolder}
+					onChange={this.props.handleFilterChange}
+					value={this.props.filterKeyword}
+					labelText={placeHolder}
+					hideLabel
+				/>
 			);
 		}
 

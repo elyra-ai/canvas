@@ -15,7 +15,13 @@
     "disable": true,
     "oneofselect_disabled": "blue",
     "filter": false,
-    "oneofselect_filtered": "orange"
+    "oneofselect_filtered": "orange",
+    "oneofselect_table_error": [
+      [
+        "cat",
+        "pear"
+      ]
+    ]
   },
   "parameters": [
     {
@@ -174,6 +180,49 @@
         "purple"
       ],
       "required": true
+    },
+    {
+      "id": "oneofselect_table_error",
+      "type": "array[oneofselect_table]",
+      "default": []
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "oneofselect_table",
+      "parameters": [
+        {
+          "id": "dropdown",
+          "enum": [
+            "dog",
+            "cat",
+            "pig",
+            "horse"
+          ],
+          "default": "horse"
+        },
+        {
+          "id": "textfield",
+          "enum": [
+            "apple",
+            "orange",
+            "pear",
+            "strawberry"
+          ]
+        },
+        {
+          "id": "color",
+          "enum": [
+            "red",
+            "green",
+            "blue",
+            "purple",
+            "orange",
+            "brown"
+          ],
+          "default": "red"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -310,6 +359,59 @@
         "description": {
           "default": "oneofselect filtered to have values 'red' and 'blue'"
         }
+      },
+      {
+        "parameter_ref": "oneofselect_table_error",
+        "label": {
+          "default": "One of select in a table errors"
+        },
+        "description": {
+          "default": "One of select in a table errors"
+        },
+        "text_before": {
+          "default": "To generated an error:  pet = pig || fruit = strawberry || color = purple"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "oneofselect_table",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "dropdown",
+            "label": {
+              "default": "Pet inline"
+            },
+            "description": {
+              "default": "Pet"
+            },
+            "width": 10,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "textfield",
+            "label": {
+              "default": "Fruit on-panel"
+            },
+            "description": {
+              "default": "Fruit"
+            },
+            "width": 10,
+            "edit_style": "on_panel"
+          },
+          {
+            "parameter_ref": "color",
+            "label": {
+              "default": "color"
+            },
+            "description": {
+              "default": "color subpanel"
+            },
+            "width": 10,
+            "edit_style": "subpanel"
+          }
+        ]
       }
     ],
     "group_info": [
@@ -345,7 +447,7 @@
         ]
       },
       {
-        "id": "oneofselect-conditions",
+        "id": "oneofselect-filters",
         "label": {
           "default": "Filters"
         },
@@ -353,6 +455,30 @@
         "parameter_refs": [
           "filter",
           "oneofselect_filtered"
+        ]
+      },
+      {
+        "id": "oneofselect-tables",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "oneofselect_table-error-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Oneofselect in a table"
+            },
+            "group_info": [
+              {
+                "id": "oneofselect_table_error",
+                "parameter_refs": [
+                  "oneofselect_table_error"
+                ]
+              }
+            ]
+          }
         ]
       }
     ]
@@ -456,6 +582,63 @@
             "parameter_ref": "filter",
             "op": "equals",
             "value": false
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest1",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "oneofselect_table_error[0]",
+          "message": {
+            "default": "pet equals pig"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "oneofselect_table_error[0]",
+            "op": "notEquals",
+            "value": "pig"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest2",
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "oneofselect_table_error[1]",
+          "message": {
+            "default": "fruit equals strawberry"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "oneofselect_table_error[1]",
+            "op": "notEquals",
+            "value": "strawberry"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest3",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "oneofselect_table_error[2]",
+          "message": {
+            "default": "color equals purple"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "oneofselect_table_error[2]",
+            "op": "notEquals",
+            "value": "purple"
           }
         }
       }

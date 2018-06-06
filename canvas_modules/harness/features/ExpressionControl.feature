@@ -11,7 +11,7 @@ Feature: ExpressionControl
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side common-properties panel
-		Then I have selected the "Modal" properties container type
+		Then I have selected the "Flyout" properties container type
 		Given I have uploaded JSON for common-properties "CLEM_FilterRows_paramDef.json"
 
 		# syntax highlighting and autocomplete features
@@ -51,18 +51,18 @@ Feature: ExpressionControl
 
 		# Select an existing row in the table and change it's value in the expression control
 		Then I open the "Configure Derive Node" summary link in the "Structure List Table" category
-		Then I select the row 1 in the table "editor-control-expressionCellTable"
+		Then I select the row 1 in the table "expressionCellTable"
 		Then I verify that the "ExpressionEditor" control is displayed
 		Then I enter "first" in ExpressionEditor and press autocomplete and select "first_index"
-		Then I click on the "OK" button
+		Then I click on the "expressionCellTable-summary-panel" panel OK button
 		Then I verify that the summary list contains the value of "first_index" for the "Configure Derive Node" summary link in the "Structure List Table" category
 
 		# Add a new row to the table and change it's value in the expression control
 		Then I open the "Configure Derive Node" summary link in the "Structure List Table" category
 		Then I click the "Add" button on the "expressionCellTable" table
-		Then I select the row 2 in the table "editor-control-expressionCellTable"
+		Then I select the row 2 in the table "expressionCellTable"
 		Then I enter "is_" in ExpressionEditor and press autocomplete and select "is_date"
-		Then I click on the "OK" button
+		Then I click on the "expressionCellTable-summary-panel" panel OK button
 		Then I verify that the summary list contains the value of "is_date" for the "Configure Derive Node" summary link in the "Structure List Table" category
 		Then I click on the "OK" button
 		Then I verify that the event log has a value of "is_date" for the "expressionCellTable" parameter

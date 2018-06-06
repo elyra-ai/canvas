@@ -8,31 +8,27 @@
  *******************************************************************************/
 
 .canvas-icon .stroke, .canvas-icon.stroke {
-	stroke: #3D70B2;
+	stroke: $brand-01;
 }
 .canvas-icon .fill, .canvas-icon.fill {
-	fill: #3D70B2;
+	fill: $brand-01;
 }
 
-.canvas-icon[disabled] .stroke, .canvas-icon.stroke[disabled] {
-	stroke: #C7C7C7;
-
-}
-.canvas-icon[disabled] .fill, .canvas-icon.fill[disabled] {
-	fill: #C7C7C7;
+.canvas-icon[disabled] {
+	opacity: 0.5;
 }
 
 .canvas-icon.bellDot {
 	&.error > .dot {
-		fill: #E51F33;
+		fill: $support-01;
 	}
 	&.warning > .dot {
-		fill: #EFC100;
+		fill: $support-03;
 	}
 	&.success > .dot {
-		fill: #5AA700;
+		fill: $support-02;
 	}
 	&.info > .dot {
-		fill: #5596E6;
+		fill: $support-04;
 	}
 }

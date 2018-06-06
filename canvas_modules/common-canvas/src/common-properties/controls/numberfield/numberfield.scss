@@ -1,0 +1,60 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+
+.properties-numberfield {
+	.bx--form-requirement { // carbon override to not display error
+		display: none;
+	}
+	.bx--form-item { // carbon overrides
+		margin-right: 0;
+		margin-bottom: 0;
+	}
+	.bx--number[data-invalid] { // carbon override to not display error
+		input[type="number"] {
+			box-shadow: none;
+		}
+	}
+	.bx--label {
+		display: none;
+	}
+}
+
+.table-row  { // overrides when in a table cell
+	> td {
+		> .properties-numberfield {
+			border-bottom: 2px solid $text-02;
+			input { //override styling from carbon
+				background: unset;
+				background-color: unset;
+				padding-left: 0;
+				padding-right: 0;
+				height: 2rem;
+				&:focus {
+					outline: unset;
+				}
+			}
+			&.error {
+				border-bottom: 2px solid $support-01;
+			}
+			&.warning {
+				border-bottom: 2px solid $support-03;
+			}
+			&:focus {
+				border-bottom: 2px solid $text-01;
+			}
+			.bx--number input[type="number"] {
+				min-width: 0;
+			}
+			.bx--number__controls {
+				left: 0;
+			}
+		}
+	}
+}

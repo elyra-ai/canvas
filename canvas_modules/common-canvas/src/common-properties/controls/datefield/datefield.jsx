@@ -9,18 +9,14 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import TextField from "ap-components-react/dist/components/TextField";
+import TextInput from "carbon-components-react/lib/components/TextInput";
+import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
 import moment from "moment";
-import { DEFAULT_DATE_FORMAT } from "./../../constants/constants.js";
+import { DEFAULT_DATE_FORMAT, STATES } from "./../../constants/constants.js";
+import classNames from "classnames";
 
 export default class DatefieldControl extends React.Component {
-	constructor(props) {
-		super(props);
-		this.stringValue = null;
-		this.handleChange = this.handleChange.bind(this);
-		this.clearValue = this.clearValue.bind(this);
-	}
 
 	handleChange(evt) {
 		let stringValue = null;
@@ -42,30 +38,10 @@ export default class DatefieldControl extends React.Component {
 		this.props.controller.updatePropertyValue(this.props.propertyId, stringValue);
 	}
 
-	clearValue() {
-		this.props.controller.updatePropertyValue(this.props.propertyId, null);
-	}
-
 	render() {
 		const stringValue = this.props.controller.getPropertyValue(this.props.propertyId);
-
-		const conditionProps = {
-			propertyId: this.props.propertyId,
-			controlType: "date"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
-
-		const errorMessage = this.props.tableControl ? null : conditionState.message;
-		const messageType = conditionState.messageType;
-		const icon = this.props.tableControl ? <div /> : conditionState.icon;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
-		stateStyle.paddingBottom = "2px";
-
-		let controlIconContainerClass = "control-icon-container";
-		if (messageType !== "info") {
-			controlIconContainerClass = "control-icon-container-enabled";
-		}
+		const state = this.props.controller.getControlState(this.props.propertyId);
+		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
 
 		let displayValue = "";
 		if (stringValue) {
@@ -82,23 +58,20 @@ export default class DatefieldControl extends React.Component {
 				displayValue = stringValue;
 			}
 		}
-
+		const className = classNames("properties-datefield", "properties-input-control", { "hide": state === STATES.HIDDEN }, messageInfo ? messageInfo.type : null);
 		return (
-			<div className="editor_control_area" style={stateStyle}>
-				<div id={controlIconContainerClass}>
-					<TextField {...stateDisabled}
-						style={stateStyle}
-						type="text"
-						id={ControlUtils.getControlID(this.props.control, this.props.propertyId)}
-						placeholder={this.props.control.additionalText}
-						disabledPlaceholderAnimation
-						onChange={this.handleChange}
-						value={displayValue}
-						onReset={() => this.clearValue()}
-					/>
-					{icon}
-				</div>
-				{errorMessage}
+			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				<TextInput
+					autoComplete="off"
+					id={ControlUtils.getControlId(this.props.propertyId)}
+					disabled={state === STATES.DISABLED}
+					placeholder={this.props.control.additionalText}
+					onChange={this.handleChange.bind(this)}
+					value={displayValue}
+					labelText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
+				/>
+				<ValidationMessage inTable={this.props.tableControl} state={state} messageInfo={messageInfo} />
 			</div>
 		);
 	}

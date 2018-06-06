@@ -12,7 +12,13 @@
     "hide": true,
     "selectschema_hidden": "random",
     "disable": true,
-    "selectschema_disabled": "random"
+    "selectschema_disabled": "random",
+    "selectschema_table_error": [
+      [
+        "Drugs_2",
+        "random"
+      ]
+    ]
   },
   "parameters": [
     {
@@ -62,6 +68,26 @@
     {
       "id": "selectschema_disabled",
       "required": true
+    },
+    {
+      "id": "selectschema_table_error",
+      "type": "array[selectschema_table]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "selectschema_table",
+      "parameters": [
+        {
+          "id": "schema_col1"
+        },
+        {
+          "id": "schema_col2"
+        },
+        {
+          "id": "schema_col3"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -179,6 +205,62 @@
           "default": "selectschema Disabled"
         },
         "control": "selectschema"
+      },
+      {
+        "parameter_ref": "selectschema_table_error",
+        "label": {
+          "default": "selectSchema in a table errors"
+        },
+        "description": {
+          "default": "selectSchema in a table errors"
+        },
+        "text_before": {
+          "default": "To generated an error:  inline = Drugs_0 || on_panel = 1 || subpanel = Drugs_2"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "selectschema_table",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "schema_col1",
+            "label": {
+              "default": "inline"
+            },
+            "description": {
+              "default": "inline"
+            },
+            "control": "selectschema",
+            "width": 10,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "schema_col2",
+            "label": {
+              "default": "on-panel"
+            },
+            "description": {
+              "default": "on-panel"
+            },
+            "control": "selectschema",
+            "width": 10,
+            "edit_style": "on_panel"
+          },
+          {
+            "parameter_ref": "schema_col3",
+            "label": {
+              "default": "subpanel"
+            },
+            "description": {
+              "default": "subpanel"
+            },
+            "control": "selectschema",
+            "width": 10,
+            "edit_style": "subpanel"
+          }
+        ]
       }
     ],
     "group_info": [
@@ -210,6 +292,30 @@
           "selectschema_hidden",
           "disable",
           "selectschema_disabled"
+        ]
+      },
+      {
+        "id": "selectschema-tables",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "selectschema_table-error-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Selectschema in a table"
+            },
+            "group_info": [
+              {
+                "id": "selectschema_table_error",
+                "parameter_refs": [
+                  "selectschema_table_error"
+                ]
+              }
+            ]
+          }
         ]
       }
     ]
@@ -275,6 +381,63 @@
             "parameter_ref": "disable",
             "op": "equals",
             "value": false
+          }
+        }
+      }
+    },
+		{
+      "validation": {
+        "id": "tableerrortest1",
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "selectschema_table_error[0]",
+          "message": {
+            "default": "inline equals Drugs_0"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "selectschema_table_error[0]",
+            "op": "notEquals",
+            "value": "Drugs_0"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest2",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "selectschema_table_error[1]",
+          "message": {
+            "default": "on_panel equals 1"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "selectschema_table_error[1]",
+            "op": "notEquals",
+            "value": "1"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest3",
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "selectschema_table_error[2]",
+          "message": {
+            "default": "subpanel equals Drugs_2"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "selectschema_table_error[2]",
+            "op": "notEquals",
+            "value": "Drugs_2"
           }
         }
       }
@@ -512,7 +675,7 @@
         }
       ]
     },
-		{
+    {
       "name": "Drugs",
       "fields": [
         {

@@ -53,6 +53,7 @@
     "label": {
       "default": "Panels"
     },
+		"help": {},
     "editor_size": "medium",
     "parameter_info": [
       {
@@ -207,7 +208,7 @@
         ]
       },
       {
-        "id": "column-selection",
+        "id": "column-selection-panel",
         "label": {
           "default": "Column Selection"
         },

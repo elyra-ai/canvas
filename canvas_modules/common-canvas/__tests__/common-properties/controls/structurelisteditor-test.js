@@ -11,15 +11,12 @@ import React from "react";
 import StructureListEditorControl from "../../../src/common-properties/controls/structurelisteditor";
 import SubPanelButton from "../../../src/common-properties/panels/sub-panel/button.jsx";
 import { mountWithIntl } from "enzyme-react-intl";
-import { ReactWrapper } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
-import isEqual from "lodash/isEqual";
 
 import structureListEditorParamDef from "../../test_resources/paramDefs/structurelisteditor_paramDef.json";
 
-const CONDITIONS_TEST_FORM_DATA = require("../../test_resources/json/conditions-test-formData.json");
 
 const controller = new Controller();
 
@@ -213,276 +210,15 @@ describe("StructureListEditorControl renders correctly", () => {
 				rightFlyout
 			/>
 		);
-
-		expect(wrapper.find("#structure-table")).to.have.length(1);
-		const buttons = wrapper.find("#structure-list-editor-table-buttons");
+		expect(wrapper.find("div.properties-sle-wrapper")).to.have.length(1);
+		const buttons = wrapper.find("div.properties-sle");
 		expect(buttons).to.have.length(1);
-		const tableContent = wrapper.find(".structure-table-content-row");
+		const tableContent = wrapper.find("div.properties-ft-control-container");
 		expect(tableContent).to.have.length(1);
-		expect(tableContent.find("#table-row-move-button-container")).to.have.length(1);
-		expect(tableContent.find(".table-row-move-button[disabled=true]")).to.have.length(4);
 		// checks to see of readonly controls are rendered
-		expect(tableContent.find(".readonly-control")).to.have.length(6);
+		expect(tableContent.find("div.properties-readonly")).to.have.length(6);
 	});
 
-	it("should select no rows and all move buttons disabled `StructureListEditorControl`", () => {
-		setPropertyValue();
-		const wrapper = mountWithIntl(
-			<StructureListEditorControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				rightFlyout
-			/>
-		);
-
-		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
-		expect(buttonContainer).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(4);
-	});
-
-	it("should select top row and move down one row", () => {
-		setPropertyValue();
-		const wrapper = mountWithIntl(
-			<StructureListEditorControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				rightFlyout
-			/>
-		);
-
-		// select the first row in the table
-		let tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		let tableData = tableBody.find(".reactable-data").children();
-		expect(tableData).to.have.length(6);
-		tableData.first().simulate("click");
-
-		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
-		expect(buttonContainer).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(2);
-		buttonContainer.find(".table-row-move-button[disabled=false]")
-			.at(0)
-			.simulate("click");
-
-		// validate the first row is moved
-		tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		tableData = tableBody.find(".reactable-data").children();
-		expect(tableData).to.have.length(6);
-		expect(tableData.at(0).children()
-			.at(0)
-			.text()).to.equal("one");
-		expect(tableData.at(1).children()
-			.at(0)
-			.text()).to.equal("Hello");
-	});
-
-	it("should select top row and move down to bottom row", () => {
-		setPropertyValue();
-		const wrapper = mountWithIntl(
-			<StructureListEditorControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				rightFlyout
-			/>
-		);
-
-		// select the first row in the table
-		let tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		let tableData = tableBody.find(".reactable-data").children();
-		expect(tableData).to.have.length(6);
-		tableData.first().simulate("click");
-
-		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
-		expect(buttonContainer).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(2);
-		buttonContainer.find(".table-row-move-button[disabled=false]")
-			.at(1)
-			.simulate("click");
-
-		// validate the first row is moved
-		tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		tableData = tableBody.find(".reactable-data").children();
-		expect(tableData).to.have.length(6);
-		expect(tableData.at(0).children()
-			.at(0)
-			.text()).to.equal("one");
-		expect(tableData.at(5).children()
-			.at(0)
-			.text()).to.equal("Hello");
-	});
-
-	it("should select bottom row and move up one row", () => {
-		setPropertyValue();
-		const wrapper = mountWithIntl(
-			<StructureListEditorControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				rightFlyout
-			/>
-		);
-
-		// select the last row in the table
-		let tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		let tableData = tableBody.find(".reactable-data").children();
-		expect(tableData).to.have.length(6);
-		tableData.at(5).simulate("click");
-
-		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
-		expect(buttonContainer).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
-		buttonContainer.find(".table-row-move-button[disabled=false]")
-			.at(1)
-			.simulate("click");
-
-		// validate the first row is moved
-		tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		tableData = tableBody.find(".reactable-data").children();
-		expect(tableData).to.have.length(6);
-		expect(tableData.at(4).children()
-			.at(0)
-			.text()).to.equal("Cholesterol");
-		expect(tableData.at(5).children()
-			.at(0)
-			.text()).to.equal("BP");
-	});
-
-	it("should select bottom row and move up to top row", () => {
-		setPropertyValue();
-		const wrapper = mountWithIntl(
-			<StructureListEditorControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				rightFlyout
-			/>
-		);
-
-		// select the last row in the table
-		let tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		let tableData = tableBody.find(".reactable-data").children();
-		expect(tableData).to.have.length(6);
-		tableData.at(5).simulate("click");
-
-		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
-		expect(buttonContainer).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
-		buttonContainer.find(".table-row-move-button[disabled=false]")
-			.at(0)
-			.simulate("click");
-
-		// validate the last row is moved
-		tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		tableData = tableBody.find(".reactable-data").children();
-		expect(tableData).to.have.length(6);
-		expect(tableData.at(0).children()
-			.at(0)
-			.text()).to.equal("Cholesterol");
-		expect(tableData.at(5).children()
-			.at(0)
-			.text()).to.equal("BP");
-	});
-
-	it("should select top row and correct move buttons enabled `StructureListEditorControl`", () => {
-		setPropertyValue();
-		const wrapper = mountWithIntl(
-			<StructureListEditorControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				rightFlyout
-			/>
-		);
-
-		// select the first row in the table
-		const tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		const tableData = tableBody.find(".reactable-data").children();
-		expect(tableData).to.have.length(6);
-		tableData.first().simulate("click");
-
-		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
-		expect(buttonContainer).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(2);
-	});
-
-	it("should select bottom row and correct move buttons enabled `StructureListEditorControl`", () => {
-		setPropertyValue();
-		const wrapper = mountWithIntl(
-			<StructureListEditorControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				rightFlyout
-			/>
-		);
-
-		// select the first row in the table
-		const tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		const tableData = tableBody.find(".reactable-data").children();
-		expect(tableData).to.have.length(6);
-		tableData.last().simulate("click");
-
-		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
-		expect(buttonContainer).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
-	});
-
-	it("should select middle row and all move buttons enabled `StructureListEditorControl`", () => {
-		setPropertyValue();
-		const wrapper = mountWithIntl(
-			<StructureListEditorControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				rightFlyout
-			/>
-		);
-
-		// select the first row in the table
-		const tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		const tableData = tableBody.find(".reactable-data").children();
-		expect(tableData).to.have.length(6);
-		tableData.at(2).simulate("click");
-
-		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
-		expect(buttonContainer).to.have.length(2);
-		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(4);
-	});
 
 	it("should select add row button and new row should display", () => {
 		setPropertyValue();
@@ -497,14 +233,12 @@ describe("StructureListEditorControl renders correctly", () => {
 		);
 
 		// select the add column button
-		const addColumnButton = wrapper.find("#add-fields-button");
+		const addColumnButton = wrapper.find("button.properties-add-fields-button");
 		expect(addColumnButton).to.have.length(1);
 		addColumnButton.simulate("click");
 
 		// The table content should increase by 1
-		const tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		const tableData = tableBody.find(".reactable-data").children();
+		const tableData = controller.getPropertyValue(propertyId);
 		expect(tableData).to.have.length(7);
 
 	});
@@ -522,157 +256,31 @@ describe("StructureListEditorControl renders correctly", () => {
 		);
 
 		// ensure the remove column button is disabled
-		const removeColumnButton = wrapper.find(".remove-fields-button");
+		let removeColumnButton = wrapper.find("button.properties-remove-fields-button");
 		expect(removeColumnButton.prop("disabled")).to.equal(true);
 
 		// select the first row in the table
-		var tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		var tableData = tableBody.find(".reactable-data").children();
+		const tableData = wrapper.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(6);
 		tableData.at(0).simulate("click");
 
 		// ensure removed button is enabled and select it
-		const enabledRemoveColumnButton = wrapper.find(".remove-fields-button");
-		expect(enabledRemoveColumnButton).to.have.length(1);
-		expect(enabledRemoveColumnButton.prop("disabled")).to.be.undefined;
-		enabledRemoveColumnButton.simulate("click");
+		removeColumnButton = wrapper.find("button.properties-remove-fields-button");
+		expect(removeColumnButton.prop("disabled")).to.equal(false);
+		removeColumnButton.simulate("click");
 
 		// validate the first row is deleted
-		tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		tableData = tableBody.find(".reactable-data").children();
-		expect(tableData).to.have.length(5);
-		expect(tableData.at(0).children()
-			.at(0)
-			.text()).to.equal("one");
-	});
-
-	it("should search correct keyword in table", () => {
-		setPropertyValue();
-		const wrapper = mountWithIntl(
-			<StructureListEditorControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				rightFlyout
-			/>
-		);
-		const input = wrapper.find("#flexible-table-search");
-		input.simulate("change", { target: { value: "one" } });
-		expect(wrapper.find(".table-row")).to.have.length(1);
-		input.simulate("change", { target: { value: "ONE" } });
-		expect(wrapper.find(".table-row")).to.have.length(1);
-
+		const tableRows = controller.getPropertyValue(propertyId);
+		expect(tableRows).to.have.length(5);
+		expect(tableRows[0][0]).to.equal("one");
 	});
 });
 
-/***********************/
-/* error checking tests*/
-/***********************/
-describe("condition messages renders correctly with structurelisteditor table", () => {
-	it("structurelisteditor control should have error message when notEquals []", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
-		const conditionsPropertyId = { name: "structurelisteditorTableInput" };
-		const input = wrapper.find("#editor-control-structurelisteditorTableInput");
-		expect(input).to.have.length(1);
-		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(1);
-
-		expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(0);
-		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(0);
-		// const dataRows = input.find(".public_fixedDataTable_bodyRow");
-		const dataRows = input.find(".table-row");
-		expect(dataRows).to.have.length(1);
-		dataRows.first().simulate("click");
-		const removeRowButton = input.find(".remove-fields-button");
-		expect(removeRowButton).to.have.length(1);
-
-		removeRowButton.simulate("click");
-		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(0);
-		wrapper.update();
-
-		expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(1);
-		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
-	});
-});
 
 /***********************/
 /* rendering tests     */
 /***********************/
-describe("should render table using CommonProperties element", () => {
-	var wrapper;
-	// var renderedController;
-	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structureListEditorParamDef);
-		wrapper = renderedObject.wrapper;
-		// renderedController = renderedObject.controller;
-	});
-
-	afterEach(() => {
-		wrapper.unmount();
-	});
-	it("table does not render with add-remove buttons", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(2); // Summary link Configure Inline Editing Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementById("flexible-table-inlineEditingTableNoButtons"); // needed since modal dialogs are outside `wrapper`
-		const noButtonTable = new ReactWrapper(tableHtml, true);
-		const addButtons = noButtonTable.find("#field-picker-buttons-container");
-		expect(addButtons).to.have.length(0);
-	});
-	it("only allow integer values in integer numberfield cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Summary link Configure No Add Buttons Inline Editing Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementById("flexible-table-inlineEditingTable"); // needed since modal dialogs are outside `wrapper`
-		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const integerCell = inlineEditTable.find("#editor-control-valueName_0");
-		expect(integerCell).to.have.length(1);
-		expect(integerCell.prop("value")).to.equal("1");
-		// enter a valid integer
-		integerCell.simulate("change", { target: { value: "2" } });
-		expect(integerCell.prop("value")).to.equal("2");
-
-		// enter an invalid integer
-		integerCell.simulate("change", { target: { value: "2.3" } });
-		expect(integerCell.prop("value")).to.equal("2");
-	});
-	it("only allow double values in double numberfield cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Summary link Configure Inline Editing Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementById("flexible-table-inlineEditingTable"); // needed since modal dialogs are outside `wrapper`
-		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const doubleCell = inlineEditTable.find("#editor-control-doubleName_0");
-		expect(doubleCell).to.have.length(1);
-		expect(doubleCell.prop("value")).to.equal("1.234");
-
-		// enter a valid double integer
-		doubleCell.simulate("change", { target: { value: "2.3" } });
-		expect(doubleCell.prop("value")).to.equal("2.3");
-	});
-	it("hide not visible column but display on-panel container", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(3); // Summary link Configure on-Panel Not Visible
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const modalWrapper = new ReactWrapper(tableHtml, true);
-		const onPanelTable = modalWrapper.find("#flexible-table-onPanelNotVisibleTable");
-		const tableRows = onPanelTable.find(".reactable-data").find("tr");
-		expect(tableRows).to.have.length(1);
-		const expressionField = tableRows.at(0).find("td[label='condition']");
-		expect(expressionField).to.have.length(0);
-		// no rows are selected so should not see on panel container displayed
-		let onPanelContainer = modalWrapper.find("#ExpressionEditor-onPanelNotVisibleTable_0_2");
-		expect(onPanelContainer).to.have.length(0);
-		// select the first row and not visible expression control column displays control below table
-		tableRows.at(0).simulate("click");
-		onPanelContainer = modalWrapper.find("#ExpressionEditor-onPanelNotVisibleTable_0_2");
-		expect(onPanelContainer).to.have.length(1);
-	});
-});
-
-/***********************/
-/* error checking tests*/
-/***********************/
-describe("should render table with error checking using CommonProperties element", () => {
+describe("StructureListEditor render from paramdef", () => {
 	var wrapper;
 	var renderedController;
 	beforeEach(() => {
@@ -685,180 +293,27 @@ describe("should render table with error checking using CommonProperties element
 		wrapper.unmount();
 	});
 
-	it("warning message generated when editing numberfield cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Warning Inline Editing Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const integerCell = inlineEditTable.find("#editor-control-valueName_0");
-		expect(integerCell).to.have.length(1);
-		expect(integerCell.prop("value")).to.equal("1");
-		// enter a valid integer
-		integerCell.simulate("change", { target: { value: "3" } });
-		expect(integerCell.prop("value")).to.equal("3");
-		wrapper.update();
-
-		const errorMessage = {
-			"validation_id": "tablewarningtest2",
-			"type": "warning",
-			"text": "field1 should not equal 3",
-		};
-		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableWarning" });
-		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
-		expect(inlineEditTable.find(".form__validation--warning")).to.have.length(1);
+	it("hide not visible column but display on-panel container", () => {
+		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "onPanelNotVisibleTable-summary-panel");
+		const tableRows = summaryPanel.find("tbody.reactable-data tr");
+		expect(tableRows).to.have.length(1);
+		const expressionField = tableRows.at(0).find("td[data-label='condition']");
+		expect(expressionField).to.have.length(0);
+		// no rows are selected so should not see on panel container displayed
+		let onPanelContainer = summaryPanel.find("div[data-id='properties-onPanelNotVisibleTable_0_2']");
+		expect(onPanelContainer).to.have.length(0);
+		// select the first row and not visible expression control column displays control below table
+		tableRows.at(0).simulate("click");
+		summaryPanel = wrapper.find("div.properties-wf-content.show");
+		onPanelContainer = summaryPanel.find("div[data-id='properties-onPanelNotVisibleTable_0_2']");
+		expect(onPanelContainer).to.have.length(1);
 	});
 
-	it("error message generated on OR condition when editing numberfield cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(6); // Summary link Configure Error 2 Inline Editing Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const doubleCell = inlineEditTable.find("#editor-control-doubleName_0");
-		expect(doubleCell).to.have.length(1);
-		expect(doubleCell.prop("value")).to.equal("1.234");
-
-		// enter a valid double integer
-		doubleCell.simulate("change", { target: { value: "2.3" } });
-		expect(doubleCell.prop("value")).to.equal("2.3");
-		wrapper.update();
-
-		const errorMessage = {
-			"validation_id": "tableerror2test1",
-			"type": "error",
-			"text": "fields are 2 or 2.3",
-		};
-		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableError2" });
-		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
-		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
-	});
-
-	it("error message generated on AND condition when editing numberfield cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error Inline Editing Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const doubleCell = inlineEditTable.find("#editor-control-doubleName_0");
-		expect(doubleCell).to.have.length(1);
-		expect(doubleCell.prop("value")).to.equal("1.234");
-		const integerCell = inlineEditTable.find("#editor-control-valueName_0");
-		expect(integerCell).to.have.length(1);
-		expect(integerCell.prop("value")).to.equal("1");
-		// enter a valid integer
-		integerCell.simulate("change", { target: { value: "2" } });
-		expect(integerCell.prop("value")).to.equal("2");
-
-		// enter a valid double integer
-		doubleCell.simulate("change", { target: { value: "2.3" } });
-		expect(doubleCell.prop("value")).to.equal("2.3");
-		wrapper.update();
-
-		const errorMessage = {
-			"validation_id": "tableerrortest1",
-			"type": "error",
-			"text": "fields are 2 and 2.3",
-		};
-		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
-		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
-		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
-	});
-	it("error message generated on when editing toggletext cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error Inline Editing Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const toggleCell = inlineEditTable.find(".toggletext_icon");
-		toggleCell.simulate("click");
-		expect(inlineEditTable.find(".toggletext_text").text()).to.equal("Descending");
-
-		const errorMessage = {
-			"validation_id": "tableerrortest2",
-			"type": "error",
-			"text": "order cannot be descending",
-		};
-		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
-		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
-		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
-	});
-	it("error message generated on when editing checkbox cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error Inline Editing Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const checkboxCell = inlineEditTable.find("input[type='checkbox']").at(1);
-		checkboxCell.simulate("change", { target: { checked: false, id: "string" } });
-
-		const errorMessage = {
-			"validation_id": "tableerrortest3",
-			"type": "error",
-			"text": "checkbox cannot be off",
-		};
-		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
-		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
-		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
-	});
-	it("error message generated on when editing oneofselect cell", () => {
-		const expectedOptions = [
-			{ label: "dog", value: "dog" },
-			{ label: "cat", value: "cat" },
-			{ label: "pig", value: "pig" },
-			{ label: "horse", value: "horse" }
-		];
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(6); // Summary link Configure Error 2 Inline Editing Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const newValue = { label: "horse", value: "horse" };
-		propertyUtils.dropDown(inlineEditTable, 0, newValue, expectedOptions);
-
-
-		const errorMessage = {
-			"validation_id": "tableerror2test3",
-			"type": "error",
-			"text": "animal equals horse",
-		};
-		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableError2" });
-		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
-		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
-	});
-	it("error message generated on when editing textfield cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(6); // Summary link Configure Error 2 Inline Editing Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const textfieldCell = inlineEditTable.find("input[type='text']");
-		textfieldCell.simulate("change", { target: { value: "pear" } });
-		expect(textfieldCell.prop("value")).to.equal("pear");
-
-		const errorMessage = {
-			"validation_id": "tableerror2test4",
-			"type": "error",
-			"text": "fruit equals pear",
-		};
-		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableError2" });
-		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
-		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
-	});
 	it("Error messages should not change when adding rows", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error Inline Editing Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const checkboxCell = inlineEditTable.find("input[type='checkbox']").at(1);
-		checkboxCell.simulate("change", { target: { checked: false, id: "string" } });
+		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "inlineEditingTableError-summary-panel");
+		const checkboxCell = summaryPanel.find("input[type='checkbox']").at(1);
+		checkboxCell.getDOMNode().checked = false;
+		checkboxCell.simulate("change");
 
 		const errorMessage = {
 			"validation_id": "tableerrortest3",
@@ -866,56 +321,50 @@ describe("should render table with error checking using CommonProperties element
 			"text": "checkbox cannot be off",
 		};
 		let actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
-		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
-		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+		expect(errorMessage).to.eql(actual);
 
 		// add a row and the error message should still be there
-		const addColumnButton = inlineEditTable.find("#add-fields-button");
+		const addColumnButton = summaryPanel.find("button.properties-add-fields-button");
 		expect(addColumnButton).to.have.length(1);
 		addColumnButton.simulate("click");
-		const tableData = inlineEditTable.find(".reactable-data").children();
-		expect(tableData).to.have.length(2);
 
 		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
-		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
-		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+		expect(errorMessage).to.eql(actual);
 		const messages = renderedController.getErrorMessages();
 		const rowErrorMsg = { "0": { "3": { type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } } };
-		expect(isEqual(JSON.parse(JSON.stringify(messages.inlineEditingTableError)),
-			JSON.parse(JSON.stringify(rowErrorMsg)))).to.be.true;
+		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
-		// remove the added row
+		// select the localhost row in the table
+		summaryPanel = wrapper.find("div.properties-wf-content.show");
+		var tableData = summaryPanel.find("tbody.reactable-data").children();
 		tableData.at(1).simulate("click");
-		const enabledRemoveColumnButton = inlineEditTable.find(".remove-fields-button");
-		expect(enabledRemoveColumnButton).to.have.length(1);
-		enabledRemoveColumnButton.simulate("click");
 
-
+		// ensure removed button is enabled and select it
+		summaryPanel = wrapper.find("div.properties-wf-content.show");
+		const removeColumnButton = summaryPanel.find("button.properties-remove-fields-button");
+		expect(removeColumnButton.prop("disabled")).to.equal(false);
+		removeColumnButton.simulate("click");
 	});
 	it("Error messages should not change when deleting rows", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error Inline Editing Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		let tableData = inlineEditTable.find(".reactable-data").children();
+		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "inlineEditingTableError-summary-panel");
+		let tableData = summaryPanel.find("tbody.reactable-data").children();
 
 		// add two rows to the table.
-		const addColumnButton = inlineEditTable.find("#add-fields-button");
-		expect(addColumnButton).to.have.length(1);
+		const addColumnButton = summaryPanel.find("button.properties-add-fields-button");
 		addColumnButton.simulate("click");
-		tableData = inlineEditTable.find(".reactable-data").children();
+		summaryPanel = wrapper.find("div.properties-wf-content.show");
+		tableData = summaryPanel.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(2);
 		addColumnButton.simulate("click");
-		tableData = inlineEditTable.find(".reactable-data").children();
+		summaryPanel = wrapper.find("div.properties-wf-content.show");
+		tableData = summaryPanel.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(3);
 
 		// set the error in the last row
-		const checkboxCell = inlineEditTable.find("input[type='checkbox']").at(3);
-		checkboxCell.simulate("change", { target: { checked: false, id: "string" } });
+		const checkboxCell = summaryPanel.find("input[type='checkbox']").at(3);
+		checkboxCell.getDOMNode().checked = false;
+		checkboxCell.simulate("change");
+
 
 		const errorMessage = {
 			"validation_id": "tableerrortest3",
@@ -923,92 +372,80 @@ describe("should render table with error checking using CommonProperties element
 			"text": "checkbox cannot be off",
 		};
 		let actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
-		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
-		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+		expect(errorMessage).to.eql(actual);
 
 		// remove the first row and ensure the error message is associated with the correct row.
 		tableData.at(0).simulate("click");
-		let enabledRemoveColumnButton = inlineEditTable.find(".remove-fields-button");
-		expect(enabledRemoveColumnButton).to.have.length(1);
-		enabledRemoveColumnButton.simulate("click");
+		const removeColumnButton = summaryPanel.find("button.properties-remove-fields-button");
+		removeColumnButton.simulate("click");
+
+
 		const messages = renderedController.getErrorMessages();
 		const rowErrorMsg = { "1": { "3": { type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } } };
-		expect(isEqual(JSON.parse(JSON.stringify(messages.inlineEditingTableError)),
-			JSON.parse(JSON.stringify(rowErrorMsg)))).to.be.true;
+		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
 		// remove the error row and ensure the error message is removed from the table.
-		tableData = inlineEditTable.find(".reactable-data").children();
+		summaryPanel = wrapper.find("div.properties-wf-content.show");
+		tableData = summaryPanel.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(2);
 		tableData.at(1).simulate("click");
-		enabledRemoveColumnButton = inlineEditTable.find(".remove-fields-button");
-		expect(enabledRemoveColumnButton).to.have.length(1);
-		enabledRemoveColumnButton.simulate("click");
+		removeColumnButton.simulate("click");
 		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
 		expect(actual).to.equal(null);
-		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(0);
-		expect(inlineEditTable.find(".form__validation--error")).to.have.length(0);
-
 	});
 	it("Error messages should not change when moving rows", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error Inline Editing Table
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
-		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		let tableData = inlineEditTable.find(".reactable-data").children();
+		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "inlineEditingTableError-summary-panel");
+		let tableData = summaryPanel.find("tbody.reactable-data").children();
 
 		// add four rows to the table.
-		const addColumnButton = inlineEditTable.find("#add-fields-button");
-		expect(addColumnButton).to.have.length(1);
+		const addColumnButton = summaryPanel.find("button.properties-add-fields-button");
 		addColumnButton.simulate("click");
-		tableData = inlineEditTable.find(".reactable-data").children();
+		summaryPanel = wrapper.find("div.properties-wf-content.show");
+		tableData = summaryPanel.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(2);
 		addColumnButton.simulate("click");
-		tableData = inlineEditTable.find(".reactable-data").children();
+		summaryPanel = wrapper.find("div.properties-wf-content.show");
+		tableData = summaryPanel.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(3);
 		addColumnButton.simulate("click");
-		tableData = inlineEditTable.find(".reactable-data").children();
+		summaryPanel = wrapper.find("div.properties-wf-content.show");
+		tableData = summaryPanel.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(4);
 		addColumnButton.simulate("click");
-		tableData = inlineEditTable.find(".reactable-data").children();
+		summaryPanel = wrapper.find("div.properties-wf-content.show");
+		tableData = summaryPanel.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(5);
 
 
 		// set the checkbox error in the last row
-		const checkboxCell = inlineEditTable.find("input[type='checkbox']").last();
-		checkboxCell.simulate("change", { target: { checked: false, id: "string" } });
+		const checkboxCell = summaryPanel.find("input[type='checkbox']").last();
+		checkboxCell.getDOMNode().checked = false;
+		checkboxCell.simulate("change");
 		let errorMessage = {
 			"validation_id": "tableerrortest3",
 			"type": "error",
 			"text": "checkbox cannot be off",
 		};
 		let actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
-		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
-		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+		expect(errorMessage).to.eql(actual);
 
 		// set the toggle text error in the first row.
 		// the table error message is always the error from the lowest row.
-		const toggleCell = inlineEditTable.find(".toggletext_icon").at(0);
+		const toggleCell = summaryPanel.find("div.properties-toggletext button").at(0);
 		toggleCell.simulate("click");
-		expect(inlineEditTable.find(".toggletext_text").at(0)
-			.text()).to.equal("Descending");
 		errorMessage = {
 			"validation_id": "tableerrortest2",
 			"type": "error",
 			"text": "order cannot be descending",
 		};
+
 		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
-		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
-		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+		expect(errorMessage).to.eql(actual);
 
 		// select the first row and move it to the bottom and make sure the error messages stay aligned.
 		tableData.at(0).simulate("click");
-		const moveRowBottom = inlineEditTable.find(".table-row-move-button").at(3);
+		summaryPanel = wrapper.find("div.properties-wf-content.show");
+		const moveRowBottom = summaryPanel.find("button.table-row-move-button").at(3);
 		moveRowBottom.simulate("click");
 		let messages = renderedController.getErrorMessages();
 		let rowErrorMsg = {
@@ -1016,15 +453,15 @@ describe("should render table with error checking using CommonProperties element
 			"4": { "2": { type: "error", text: "order cannot be descending", validation_id: "tableerrortest2" } }
 		};
 		// console.log(messages.inlineEditingTableError);
-		expect(isEqual(JSON.parse(JSON.stringify(messages.inlineEditingTableError)),
-			JSON.parse(JSON.stringify(rowErrorMsg)))).to.be.true;
+		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
 
 		// select the second from the last row and move it to the top and make sure the error messages stay aligned.
-		tableData = inlineEditTable.find(".reactable-data").children();
+		tableData = summaryPanel.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(5);
 		tableData.at(3).simulate("click");
-		const moveRowTop = inlineEditTable.find(".table-row-move-button").at(0);
+		summaryPanel = wrapper.find("div.properties-wf-content.show");
+		const moveRowTop = summaryPanel.find("button.table-row-move-button").at(0);
 		moveRowTop.simulate("click");
 
 		messages = renderedController.getErrorMessages();
@@ -1033,7 +470,6 @@ describe("should render table with error checking using CommonProperties element
 			"4": { "2": { type: "error", text: "order cannot be descending", validation_id: "tableerrortest2" } }
 		};
 		// console.log(messages.inlineEditingTableError);
-		expect(isEqual(JSON.parse(JSON.stringify(messages.inlineEditingTableError)),
-			JSON.parse(JSON.stringify(rowErrorMsg)))).to.be.true;
+		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 	});
 });

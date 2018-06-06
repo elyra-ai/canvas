@@ -4,20 +4,26 @@
   },
   "current_parameters": {
     "radioString": "entropy",
-    "radioBoolean" : true,
-    "radioBoolean2" : true,
-    "radioInteger" : 2,
-    "radioDouble" : 1.23,
-    "radioNull" : null,
+    "radioBoolean": true,
+    "radioBoolean2": true,
+    "radioInteger": 2,
+    "radioDouble": 1.23,
+    "radioNull": null,
     "radioLabelWrapped": "firstN",
-    "radioError" : "gini",
-    "radioWarning" : "gini",
-    "disable" : true,
-    "radioDisable" : "gini",
-    "hide" : true,
-    "radioHidden" : "gini",
-    "filter" : false,
-    "radioFilter" : "red"
+    "radioError": "gini",
+    "radioWarning": "gini",
+    "disable": true,
+    "radioDisable": "gini",
+    "hide": true,
+    "radioHidden": "gini",
+    "filter": false,
+    "radioFilter": "red",
+    "radioset_table_error": [
+      [
+        "dog",
+        "pear"
+      ]
+    ]
   },
   "parameters": [
     {
@@ -59,7 +65,10 @@
         2.34,
         3.23,
         1.23,
-        5.32
+        5.32,
+        6.78,
+        10.22,
+        11.34
       ],
       "type": "double",
       "required": true
@@ -151,6 +160,49 @@
         "blue"
       ],
       "required": true
+    },
+    {
+      "id": "radioset_table_error",
+      "type": "array[radioset_table]",
+      "default": []
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "radioset_table",
+      "parameters": [
+        {
+          "id": "radioset_col1",
+          "enum": [
+            "dog",
+            "cat",
+            "pig",
+            "horse"
+          ],
+          "default": "horse"
+        },
+        {
+          "id": "radioset_col2",
+          "enum": [
+            "apple",
+            "orange",
+            "pear",
+            "strawberry"
+          ]
+        },
+        {
+          "id": "radioset_col3",
+          "enum": [
+            "red",
+            "green",
+            "blue",
+            "purple",
+            "orange",
+            "brown"
+          ],
+          "default": "red"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -202,7 +254,8 @@
         "description": {
           "default": "RadioSet with enum number type"
         },
-        "control": "radioset"
+        "control": "radioset",
+        "orientation": "vertical"
       },
       {
         "parameter_ref": "radioDouble",
@@ -325,6 +378,62 @@
           "default": "Filtered by controlling checkbox"
         },
         "control": "radioset"
+      },
+      {
+        "parameter_ref": "radioset_table_error",
+        "label": {
+          "default": "Radioset in a table errors"
+        },
+        "description": {
+          "default": "Radioset in a table errors"
+        },
+        "text_before": {
+          "default": "To generated an error:  pet = pig || fruit = strawberry || color = purple"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "radioset_table",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "radioset_col1",
+            "label": {
+              "default": "Pet inline"
+            },
+            "description": {
+              "default": "Pet"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "control": "radioset"
+          },
+          {
+            "parameter_ref": "radioset_col2",
+            "label": {
+              "default": "Fruit on-panel"
+            },
+            "description": {
+              "default": "Fruit"
+            },
+            "width": 10,
+            "edit_style": "on_panel",
+            "control": "radioset"
+          },
+          {
+            "parameter_ref": "radioset_col3",
+            "label": {
+              "default": "color"
+            },
+            "description": {
+              "default": "color subpanel"
+            },
+            "width": 10,
+            "edit_style": "subpanel",
+            "control": "radioset"
+          }
+        ]
       }
     ],
     "group_info": [
@@ -361,6 +470,30 @@
           "radioHidden",
           "filter",
           "radioFilter"
+        ]
+      },
+      {
+        "id": "radioset-tables",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "radioset_table-error-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "radioset in a table"
+            },
+            "group_info": [
+              {
+                "id": "radioset_table_error",
+                "parameter_refs": [
+                  "radioset_table_error"
+                ]
+              }
+            ]
+          }
         ]
       }
     ]
@@ -434,13 +567,73 @@
       "enum_filter": {
         "target": {
           "parameter_ref": "radioFilter",
-          "values": ["red", "blue"]
+          "values": [
+            "red",
+            "blue"
+          ]
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "filter",
             "op": "equals",
             "value": true
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest1",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "radioset_table_error[0]",
+          "message": {
+            "default": "pet equals pig"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "radioset_table_error[0]",
+            "op": "notEquals",
+            "value": "pig"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest2",
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "radioset_table_error[1]",
+          "message": {
+            "default": "fruit equals strawberry"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "radioset_table_error[1]",
+            "op": "notEquals",
+            "value": "strawberry"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest3",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "radioset_table_error[2]",
+          "message": {
+            "default": "color equals purple"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "radioset_table_error[2]",
+            "op": "notEquals",
+            "value": "purple"
           }
         }
       }
@@ -451,8 +644,8 @@
     "withradioString.entropy.label": "Entropy",
     "withradioBoolean.true.label": "trueBoolean",
     "withradioBoolean.false.label": "falseBoolean",
-		"withradioLabelWrapped.firstN.label": "First N",
-		"withradioLabelWrapped.oneInN.label": "One in N",
-		"withradioLabelWrapped.longLabel.label": "This is really a longggggggggggggg label"
-	}
+    "withradioLabelWrapped.firstN.label": "First N",
+    "withradioLabelWrapped.oneInN.label": "One in N",
+    "withradioLabelWrapped.longLabel.label": "This is really a longggggggggggggg label"
+  }
 }

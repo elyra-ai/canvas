@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -11,7 +11,8 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import Dropdown from "ap-components-react/dist/components/Dropdown";
+import Dropdown from "carbon-components-react/lib/components/DropdownV2";
+import Button from "carbon-components-react/lib/components/Button";
 import {
 	TEXTFIELD_ERROR_PROPS_INFO,
 	TEXTFIELD_WARNING_PROPS_INFO,
@@ -89,9 +90,9 @@ class CommonPropertiesComponents extends React.Component {
 		window.scrollTo(0, 0);
 	}
 
-	onMenuDropdownSelect(evt, obj) {
-		location.href = `${"#/conditions#" + obj.selected}`;
-		document.querySelector(`#${obj.selected}`).scrollIntoView();
+	onMenuDropdownSelect(obj) {
+		location.href = `${"#/conditions#" + obj.selectedItem.id}`;
+		document.querySelector(`#${obj.selectedItem.id}`).scrollIntoView();
 	}
 
 	setRightFlyoutState(content) {
@@ -165,18 +166,28 @@ class CommonPropertiesComponents extends React.Component {
 		return JSON.stringify(json, jsonReplacer, 2);
 	}
 
+	dropdownOptions(inOptions) {
+		const options = [];
+		for (const option of inOptions) {
+			options.push({ id: option, text: option });
+		}
+		return options;
+	}
+
 	renderRightFlyoutButton(content) {
 		let buttonText = "View in Flyout";
 		if (this.state.showRightFlyout && content === this.state.rightFlyoutContent) {
 			buttonText = "Close Flyout";
 		}
-		const openFlyoutButton = (<button
-			className="properties-documentation-show-flyout-button button"
+		const openFlyoutButton = (<Button
+			className="properties-documentation-show-flyout-button"
 			type="button"
+			small
+			kind="secondary"
 			onClick={() => this.setRightFlyoutState(content)}
 		>
 			{buttonText}
-		</button>);
+		</Button>);
 
 		return openFlyoutButton;
 	}
@@ -184,9 +195,8 @@ class CommonPropertiesComponents extends React.Component {
 	render() {
 		const dropMenu = (<div id="conditions-documentation-menu" className="header__dropdown">
 			<Dropdown
-				name="Navigation"
-				text="Navigation"
-				options={[
+				label="Navigation"
+				options={this.dropdownOptions([
 					"Conditions",
 					"SingleConditions",
 					"--textfield",
@@ -215,11 +225,10 @@ class CommonPropertiesComponents extends React.Component {
 					"--columnSelection",
 					"--summaryPanel",
 					"--twistyPanel"
-				]}
-				compact
-				dark
-				inline
-				onSelect={this.onMenuDropdownSelect}
+				])}
+				type="inline"
+				onChange={this.onMenuDropdownSelect}
+				itemToString={(item) => item.text }
 			/>
 		</div>);
 
@@ -231,22 +240,22 @@ class CommonPropertiesComponents extends React.Component {
 					</li>
 					<li className="properties-documentation-navbar-li nav-divider">
 						<a className="conditions-documentation-nav-link conditions-intro"
-							onClick={() => this.onMenuDropdownSelect(null, { selected: "Conditions" })}
+							onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Conditions" } })}
 						>Conditions</a>
 					</li>
 					<li className="properties-documentation-navbar-li">
 						<a className="conditions-documentation-nav-link single-conditions"
-							onClick={() => this.onMenuDropdownSelect(null, { selected: "SingleConditions" })}
+							onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "SingleConditions" } })}
 						>Single Conditions</a>
 					</li>
 					<li className="properties-documentation-navbar-li">
 						<a className="conditions-documentation-nav-link group-conditions"
-							onClick={() => this.onMenuDropdownSelect(null, { selected: "GroupConditions" })}
+							onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "GroupConditions" } })}
 						>Group Conditions</a>
 					</li>
 					<li className="properties-documentation-navbar-li">
 						<a className="conditions-documentation-nav-link panels-conditions"
-							onClick={() => this.onMenuDropdownSelect(null, { selected: "PanelConditions" })}
+							onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "PanelConditions" } })}
 						>Panel Conditions</a>
 					</li>
 				</ul>

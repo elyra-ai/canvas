@@ -17,16 +17,21 @@ import testUtils from "./utilities/test-utils.js";
 module.exports = function() {
 
 	this.Then(/^I verify "([^"]*)" is a "([^"]*)" in ExpressionEditor$/, function(word, type) {
-		const CMline = browser.$(".expression_editor_control").$$(".CodeMirror-line")[0];
 		const searchClass = ".cm-" + type;
 		const testWord = (type === "string") ? "\"" + word + "\"" : word;
-
-		expect(testWord).toEqual(CMline.$$(searchClass)[0].getText());
-
+		const CMline = browser.$(".properties-expression-editor").$$(".CodeMirror-line");
+		let found = false;
+		for (let idx = 0; idx < CMline.length; idx++) {
+			if (CMline[idx].$$(searchClass)[0] && testWord === CMline[idx].$$(searchClass)[0].getText()) {
+				found = true;
+				break;
+			}
+		}
+		expect(found).toEqual(true);
 	});
 
 	this.Then(/^I verify that the placeholder text is "([^"]*)" in ExpressionEditor$/, function(testText) {
-		const CMplaceholder = browser.$(".expression_editor_control").$(".CodeMirror-placeholder");
+		const CMplaceholder = browser.$(".properties-expression-editor").$(".CodeMirror-placeholder");
 
 		expect(testText).toEqual(CMplaceholder.getText());
 
@@ -42,8 +47,8 @@ module.exports = function() {
 	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and verify error "([^"]*)" and save$/, function(enterText, errorText) {
 
 		browser.execute(getAutoCompleteCount, enterText);
-		const errLine = browser.$(".expression-validation-message");
-		expect(errorText).toEqual(errLine.$(".form__validation--error").getText());
+		const errLine = browser.$(".properties-validation-message");
+		expect(errorText).toEqual(errLine.$("span").getText());
 
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
@@ -52,7 +57,7 @@ module.exports = function() {
 
 	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and select "([^"]*)" a "([^"]*)"$/, function(enterText, selectText, type) {
 		browser.execute(selectAutoComplete, enterText);
-		const CMline = browser.$(".expression_editor_control").$$(".CodeMirror-line")[0];
+		const CMline = browser.$(".properties-expression-editor").$$(".CodeMirror-line")[0];
 		const searchClass = ".cm-" + type;
 
 		expect(selectText).toEqual(CMline.$$(searchClass)[0].getText());
@@ -63,14 +68,14 @@ module.exports = function() {
 		const setText = (type === "string") ? "\"" + enterText + "\"" : enterText;
 		browser.execute(setTextValue, setText, false);
 		browser.pause(3000);
-		const CMline = browser.$(".expression_editor_control").$$(".CodeMirror-line")[0];
+		const CMline = browser.$(".properties-expression-editor").$$(".CodeMirror-line")[0];
 		const searchClass = ".cm-" + type;
 		expect(setText).toEqual(CMline.$$(searchClass)[0].getText());
 	});
 
 	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and select "([^"]*)" and verify save$/, function(enterText, selectText) {
 		browser.execute(selectAutoComplete, enterText);
-		const CMline = browser.$(".expression_editor_control").$$(".CodeMirror-line")[0];
+		const CMline = browser.$(".properties-expression-editor").$$(".CodeMirror-line")[0];
 		const searchClass = ".cm-keyword";
 
 		expect(selectText).toEqual(CMline.$$(searchClass)[0].getText());
@@ -85,7 +90,7 @@ module.exports = function() {
 
 	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and select "([^"]*)" $/, function(enterText, selectText) {
 		browser.execute(selectAutoComplete, enterText);
-		const CMline = browser.$(".expression_editor_control").$$(".CodeMirror-line")[0];
+		const CMline = browser.$(".properties-expression-editor").$$(".CodeMirror-line")[0];
 		const searchClass = ".cm-keyword";
 
 		expect(selectText).toEqual(CMline.$$(searchClass)[0].getText());
@@ -96,8 +101,8 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify error "([^"]*)"$/, function(errorMsg) {
-		const expMsg = browser.$(".expression-validation-message")
-			.$(".form__validation--error")
+		const expMsg = browser.$(".properties-validation-message")
+			.$("span")
 			.getText();
 		expect(errorMsg).toEqual(expMsg);
 	});
@@ -128,7 +133,7 @@ module.exports = function() {
 	});
 
 	function getPropertiesApplyButton() {
-		const applyButtons = browser.$$("#properties-apply-button");
+		const applyButtons = browser.$$(".properties-apply-button");
 		return applyButtons[applyButtons.length - 1];
 	}
 

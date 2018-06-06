@@ -11,15 +11,17 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "ap-components-react/dist/components/Button";
+import IconButton from "../../components/icon-button";
 import WideFlyout from "./../../components/wide-flyout";
-import ControlUtils from "./../../util/control-utils";
-import ValidationIcon from "./../../components/validation-icon";
+import Icon from "carbon-components-react/lib/components/Icon";
 import { injectIntl, intlShape } from "react-intl";
 import isEmpty from "lodash/isEmpty";
 import PropertyUtils from "./../../util/property-utils";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, CONTROL_TYPE } from "./../../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
 import uuid4 from "uuid/v4";
+import { STATES } from "./../../constants/constants.js";
+import { Type, ParamRole } from "./../../constants/form-constants.js";
+import classNames from "classnames";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 
@@ -67,7 +69,7 @@ class SummaryPanel extends React.Component {
 	/*
 	* Returns summary tables to be displayed in summary panel
 	*/
-	_getSummaryTables(stateStyle) {
+	_getSummaryTables() {
 		const summaryTables = [];
 		const summaryControls = this.props.controller.getSummaryPanelControls(this.props.panelId);
 		// no controls in summary panel
@@ -122,8 +124,8 @@ class SummaryPanel extends React.Component {
 								const contentValue = JSON.stringify(displayValue).replace("\"", "")
 									.replace(new RegExp("\"", "g"), "") + " ";
 								rowData.push(
-									<td key={"control-summary-table-row-multi-data-" + colIdx}
-										className={"control-summary-table-row-multi-data"}
+									<td key={"summary-table-data-" + colIdx}
+										className={"properties-summary-row-data "}
 										style={{ width: colWidth }}
 										onMouseMove={this._onMouseMove.bind(this)}
 									>
@@ -136,7 +138,7 @@ class SummaryPanel extends React.Component {
 					} else if (this.props.controller.isSummary(propertyId) || showCustom) { // only push row data if control is in summary
 						const displayValue = this._getSummaryDisplayValue(rowValue, propertyId);
 						rowData.push(
-							<td key={"control-summary-table-row-multi-data-" + rowIdx} className={"control-summary-table-row-multi-data"}>
+							<td key={"summary-table-row-data-" + rowIdx} className={"properties-summary-row-data "}>
 								<Tooltip id={uuid4()} tip={displayValue} mousePos={this.state.mousePos}>
 									<span id={"span_" + uuid4()}>{displayValue}</span>
 								</Tooltip>
@@ -144,29 +146,25 @@ class SummaryPanel extends React.Component {
 					}
 					if (rowData.length > 0) {
 						summaryValues.push(
-							<tr key={"control-summary-table-rows-" + rowIdx} className={"control-summary-list-rows"}>
+							<tr key={"summary-table-row-" + rowIdx} className={"properties-summary-row"}>
 								{rowData}
 							</tr>);
 					}
 				}
 			} else if (controlValue) {
 				// assume simple parameter
-				// if (typeof controlValue === "string" || typeof controlValue === "boolean" || typeof controlValue === "number") {
 				if (this.props.controller.isSummary(propertyId) || showCustom) {
 					summaryValues.push(
-						<tr key={"control-summary-table-rows-" + controlName} className={"control-summary-list-rows"}>
-							<td key={"control-summary-table-row-multi-data-" + controlName} className={"control-summary-table-row-multi-data"}>
+						<tr key={"summary-row-" + controlName} className="properties-summary-row">
+							<td key={"summary-table-row-data-" + controlName} className={"properties-summary-rows-data"}>
 								{ controlValue }
 							</td>
 						</tr>
 					);
 				}
-				// } else if (showCustom) {
-				//	summaryValues.push(controlValue); // allows for custom objects to be displayed in summaryPanel
-				// }
 			}
 			if (summaryValues.length > 0) {
-				let summaryBody = (<table key={"summary-table-" + controlName} className={"control-summary-table"}>
+				let summaryBody = (<table key={"summary-table-" + controlName} className="properties-summary-table">
 					<tbody key={"summary-body-" + controlName}>
 						{summaryValues}
 					</tbody>
@@ -175,11 +173,11 @@ class SummaryPanel extends React.Component {
 					const largeTableLabel = PropertyUtils.formatMessage(this.props.intl,
 						MESSAGE_KEYS.LONG_TABLE_SUMMARY_PLACEHOLDER,
 						MESSAGE_KEYS_DEFAULTS.LONG_TABLE_SUMMARY_PLACEHOLDER);
-					summaryBody = (<div className={"control-summary-table"}>{largeTableLabel}</div>);
+					summaryBody = (<div className={"properties-summary-table"}><span>{largeTableLabel}</span></div>);
 				}
 				summaryTables.push(
-					<div key={"summary-container-" + controlName} className={"control-summary-configured-values"}>
-						<span key={"summary-text-" + controlName} className={"summary-label"} style={stateStyle}>{summaryControl.summaryLabel}</span>
+					<div key={"summary-container-" + controlName} className={"properties-summary-values"}>
+						<span key={"summary-text-" + controlName} className={"properties-summary-label"}>{summaryControl.summaryLabel}</span>
 						{summaryBody}
 					</div>
 				);
@@ -199,7 +197,7 @@ class SummaryPanel extends React.Component {
 		let returnValue = displayValue;
 		const control = this.props.controller.getControl(propertyId);
 		if (PropertyUtils.toType(displayValue) === "object") {
-			if (control.valueDef.propType === "structure" && control.role === "column") {
+			if (control.valueDef.propType === Type.STRUCTURE && control.role === ParamRole.COLUMN) {
 				returnValue = PropertyUtils.stringifyFieldValue(displayValue, control);
 			} else {
 				// We don't know what this object is, but we know we can't display it as an object
@@ -219,34 +217,25 @@ class SummaryPanel extends React.Component {
 			}
 		});
 		if (!isEmpty(msg)) {
-			return (<ValidationIcon
-				validateErrorMessage={msg}
-			/>);
+			return (<Icon className={msg.type} name={msg.type + "--glyph"} />);
 		}
 		return null;
 	}
 
 	render() {
 		const propertyId = { name: this.props.panelId };
-		const conditionProps = {
-			propertyId: propertyId,
-			controlType: CONTROL_TYPE.PANEL
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
-		const errorMessage = conditionState.message;
-		// const messageType = conditionState.messageType;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
+		const panelState = this.props.controller.getPanelState(propertyId);
+
 		const icon = this._getSummaryIconState();
-		const link = (<div className={"control-summary-link-buttons"}>
-			<Button
-				{...stateDisabled}
-				hyperlink
-				icon="plus"
+		const link = (<div className="properties-summary-link-container">
+			<IconButton
+				className="properties-summary-link-button"
+				icon="add--outline"
 				onClick={this.handleLinkClicked}
 			>
 				{this.props.label}
-			</Button> {icon}
+			</IconButton>
+			{icon}
 		</div>);
 
 		const applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
@@ -263,13 +252,12 @@ class SummaryPanel extends React.Component {
 				{this.props.children}
 			</div>
 		</WideFlyout>);
-
+		const className = classNames("properties-summary-panel", "properties-control-panel", { "hide": panelState === STATES.HIDDEN });
 		return (
-			<div className={"control-summary control-panel"} style={stateStyle}>
+			<div className={className} disabled={panelState === STATES.DISABLED} data-id={"properties-" + this.props.panelId}>
 				{flyout}
 				{link}
-				{this._getSummaryTables(stateStyle)}
-				{errorMessage}
+				{this._getSummaryTables()}
 			</div>
 		);
 	}

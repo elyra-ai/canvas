@@ -12,7 +12,8 @@ import PropTypes from "prop-types";
 import AbstractTable from "./../abstract-table.jsx";
 import MoveableTableRows from "./../../components/moveable-table-rows";
 import PropertyUtils from "./../../util/property-utils";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
+import ValidationMessage from "./../../components/validation-message";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, STATES } from "./../../constants/constants";
 import { injectIntl, intlShape } from "react-intl";
 import ControlUtils from "./../../util/control-utils";
 
@@ -43,22 +44,8 @@ class StructurelisteditorControl extends AbstractTable {
 	}
 
 	render() {
-		const conditionProps = {
-			propertyId: this.props.propertyId,
-			controlType: "structure-list-editor"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
-
-		const errorMessage = conditionState.message;
-		const messageType = conditionState.messageType;
-		const icon = conditionState.icon;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
-
-		let controlIconContainerClass = "control-icon-container";
-		if (messageType !== "info") {
-			controlIconContainerClass = "control-icon-container-enabled";
-		}
+		const tableState = this.props.controller.getControlState(this.props.propertyId);
+		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
 
 		const tableButtonConfig = {
 			addButtonLabel: PropertyUtils.formatMessage(this.props.intl,
@@ -70,24 +57,23 @@ class StructurelisteditorControl extends AbstractTable {
 			addButtonFunction: this.addRow
 		};
 
-		const table = this.createTable(stateStyle, stateDisabled, tableButtonConfig);
+		const table = this.createTable(tableState, tableButtonConfig);
 
-		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
-		const tableContainer = (<div id={ControlUtils.getControlID(this.props.control, this.props.propertyId)}>
-			<div id={controlIconContainerClass}>
-				<div id="structure-list-editor-table-buttons" className="structure-list-editor">
-					{table}
-				</div>
-				{icon}
+		const tableContainer = (<div>
+			<div className="properties-sle properties-sle-buttons">
+				{table}
 			</div>
-			{errorMessage}
+			<ValidationMessage state={tableState} messageInfo={messageInfo} />
 		</div>);
-		// stateStyle={stateStyle}
 
 		const onPanelContainer = this.getOnPanelContainer(this.props.controller.getSelectedRows(this.props.control.name));
 		return (
-			<div>
-				<div className="properties-structure-list-editor">
+			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
+				className="properties-sle-wrapper"
+			>
+				<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
+					className="properties-sle-container"
+				>
 					<MoveableTableRows
 						tableContainer={tableContainer}
 						control={this.props.control}
@@ -95,8 +81,7 @@ class StructurelisteditorControl extends AbstractTable {
 						propertyId={this.props.propertyId}
 						setScrollToRow={this.setScrollToRow}
 						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-						stateStyle={stateStyle}
-						disabled={disabled}
+						disabled={tableState === STATES.DISABLED}
 					/>
 				</div>
 				<div>

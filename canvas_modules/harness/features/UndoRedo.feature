@@ -81,11 +81,11 @@ Feature: UndoRedo
 		Given I have toggled the app side common-properties panel
 		Given I have uploaded JSON for common-properties "spark.AddColumn.json"
 		Then I pause for 1 seconds
-		Then I enter "testValue" in the textbox Column name
+		Then I enter "testValue" in the textbox "colName"
 		Then I click undo
-		Then I verify testValue is not present
+		Then I verify "testValue" is not present in the textbox "colName"
 		Then I click redo
-		Then I verify testValue is present
+		Then I verify "testValue" is present in the textbox "colName"
 
 		Given I have toggled the app side panel
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
@@ -350,7 +350,7 @@ Feature: UndoRedo
 		Then I double click the "C5.0" node to open its properties
 		Then I click on title edit icon
 		Then I enter new title "My C5.0 model"
-		Then I send "Backspace" to the "editor-control-samplingRatio" textbox control
+		Then I send "Backspace" to the "samplingRatio" textbox control
 		Then I click on the "Save" button
 		Then I verify the event log for the "samplingRatio" parameter contains "null"
 		Then I verify the event log has the "error" message for the "samplingRatio" parameter of "Select a sampling ratio"

@@ -8,19 +8,19 @@
  *******************************************************************************/
 
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import Dropdown from "react-dropdown";
+import Dropdown from "carbon-components-react/lib/components/DropdownV2";
 import ControlUtils from "./../../util/control-utils";
+import ValidationMessage from "./../../components/validation-message";
+import classNames from "classnames";
 import PropertyUtils from "./../../util/property-utils.js";
 import { ControlType } from "./../../constants/form-constants";
+import { STATES } from "./../../constants/constants.js";
+
 
 export default class DropDown extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			clippedClassName: ""
-		};
 		this.emptyLabel = "...";
 		if (props.control.additionalText) {
 			this.emptyLabel = props.control.additionalText;
@@ -28,56 +28,15 @@ export default class DropDown extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 		this.genSchemaSelectOptions = this.genSchemaSelectOptions.bind(this);
 		this.genSelectOptions = this.genSelectOptions.bind(this);
-		this.onBlur = this.onBlur.bind(this);
 		this.genFieldSelectOptions = this.genFieldSelectOptions.bind(this);
-	}
-
-	componentDidMount() {
-		if (this.clearCurrentValue) {
-			this.clearCurrentValue = false;
-			this.props.controller.updatePropertyValue(this.props.propertyId, "");
-		}
-	}
-
-
-	onBlur() {
-		this.props.controller.validateInput(this.props.propertyId);
-	}
-	// Added to prevent entire row being selected in table
-	onClick(evt) {
-		const me = ReactDOM.findDOMNode(this.refs.input);
-		const myRect = me.getBoundingClientRect();
-
-		// Required to prevent the dropdown menu from being clipped within table
-		const dropdowns = me.getElementsByClassName("Dropdown-menu");
-		if (dropdowns.length > 0) {
-			const dropdownRect = me.getElementsByClassName("Dropdown-control")[0].getBoundingClientRect();
-			const topPos = this._findTopPos(me, dropdownRect);
-			if (topPos !== null) {
-				const styles = "position: fixed; min-width: 200px; max-width: " + dropdownRect.width + "px; top: " + topPos + "px;";
-				dropdowns[0].setAttribute("style", styles);
-			} else {
-				const parentRect = document.querySelector(".panel-container-open-right-flyout-panel").getBoundingClientRect();
-
-				let clippedClassName = "";
-				// 200 is the height of .Dropdown-menu in common-properties.css
-				if (Math.abs((parentRect.top + parentRect.height) - (myRect.top + myRect.height)) < 200) {
-					clippedClassName = "Dropdown-menu-clipped";
-				}
-				this.setState({ clippedClassName: clippedClassName });
-			}
-		}
-
-		if (this.props.tableControl) {
-			evt.stopPropagation();
-		}
 	}
 
 	getSelectedOption(options, selectedValue) {
 		const value = PropertyUtils.stringifyFieldValue(selectedValue, this.props.control);
-		const selectedOption = options.find(function(option) {
+		let selectedOption = options.find(function(option) {
 			return option.value === value;
 		});
+		selectedOption = typeof selectedOption === "undefined" ? null : selectedOption;
 		return selectedOption;
 	}
 
@@ -135,76 +94,15 @@ export default class DropDown extends React.Component {
 			});
 		}
 		const selectedOption = this.getSelectedOption(options, selectedValue);
-		if (selectedValue && typeof selectedOption === "undefined") {
-			this.clearCurrentValue = true;
-		}
 		return {
 			options: options,
 			selectedOption: selectedOption
 		};
 	}
 
-	_findTopPos(me, dropdownRect) {
-		let topPos = "";
-		if (this.props.rightFlyout) {
-			// dropdown control is in wide-flyout
-			if (document.querySelector(".rightside-modal-container") !== null) {
-				topPos = dropdownRect.bottom;
-			} else { // dropdown control is in flyout, not within the wide-flyout
-				topPos = String(dropdownRect.top + dropdownRect.height);
-				let tableParent = false;
-				let elem = me.parentElement;
-				while (!tableParent) {
-					if (elem.parentElement.id && elem.parentElement.id === "flexible-table-container") {
-						// dropdown control is in flyout inside a table
-						tableParent = true;
-					}
-					elem = elem.parentElement;
-					if (elem.parentElement === null) {
-						break;
-					}
-				}
-				// dropdown control is not in table
-				if (!tableParent) {
-					topPos = null;
-				}
-			}
-		} else { // dropdown control is in modal dialog
-			const modal = document.querySelector(".modal-content");
-			topPos = dropdownRect.bottom;
-
-			if (modal !== null) {
-				const modalRect = modal.getBoundingClientRect();
-				topPos -= modalRect.top;
-			}
-		}
-		// Ensure that the menu is not clipped at the bottom
-		const menuHeight = document.querySelector(".Dropdown-menu").getBoundingClientRect().height;
-		const maxBottom = window.innerHeight;
-		let numericTop = parseFloat(topPos);
-		if (Number.isNaN(numericTop)) {
-			numericTop = 0;
-		}
-		if (numericTop + menuHeight > maxBottom) {
-			numericTop -= Math.max(numericTop + menuHeight - maxBottom, 0);
-			topPos = String(numericTop);
-		}
-		return topPos;
-	}
 
 	handleChange(evt) {
-		let value = evt.value;
-		// shouldn't have to do this but when "" or null the label is returned instead of value
-		if (this.props.control.valueLabels) {
-			for (let j = 0; j < this.props.control.valueLabels.length; j++) {
-				if (this.props.control.valueLabels[j] === evt.label) {
-					value = this.props.control.values[j];
-					break;
-				}
-			}
-		} else if (value === this.emptyLabel) {
-			value = "";
-		}
+		let value = evt.selectedItem.value;
 		if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
 			value = PropertyUtils.fieldStringToValue(value, this.props.control, this.props.controller);
 		}
@@ -213,22 +111,10 @@ export default class DropDown extends React.Component {
 
 	render() {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const conditionProps = {
-			propertyId: this.props.propertyId,
-			controlType: "dropdown"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
-
-		const errorMessage = this.props.tableControl ? null : conditionState.message;
-		const messageType = conditionState.messageType;
-		const icon = this.props.tableControl ? <div /> : conditionState.icon;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
-
-		let controlIconContainerClass = "control-icon-container";
-		if (messageType !== "info") {
-			controlIconContainerClass = "control-icon-container-enabled";
-		}
+		const state = this.props.controller.getControlState(this.props.propertyId);
+		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
+		const dropdownType = (this.props.tableControl) ? "inline" : "default";
+		const messageType = (messageInfo) ? messageInfo.type : "info";
 
 		let dropDown;
 		if (this.props.control.controlType === ControlType.SELECTSCHEMA) {
@@ -238,26 +124,20 @@ export default class DropDown extends React.Component {
 		} else {
 			dropDown = this.genSelectOptions(controlValue);
 		}
+
 		return (
-			<div id="oneofselect-control-container">
-				<div id={controlIconContainerClass}>
-					<div>
-						<div onClick={this.onClick.bind(this)} className={"Dropdown-control-panel " + this.state.clippedClassName} style={stateStyle}>
-							<Dropdown {...stateDisabled}
-								id={ControlUtils.getControlID(this.props.control, this.props.propertyId)}
-								name={this.props.control.name}
-								options={dropDown.options}
-								onChange={this.handleChange}
-								onBlur={this.onBlur}
-								value={dropDown.selectedOption}
-								placeholder={this.emptyLabel}
-								ref="input"
-							/>
-						</div>
-					</div>
-					{icon}
-				</div>
-				{errorMessage}
+			<div data-id={ControlUtils.getDataId(this.props.propertyId)}
+				className={classNames("properties-dropdown " + messageType, { "hide": state === STATES.HIDDEN })}
+			>
+				<Dropdown
+					disabled={state === STATES.DISABLED}
+					type={dropdownType}
+					items={dropDown.options}
+					onChange={this.handleChange}
+					selectedItem={dropDown.selectedOption}
+					label={this.emptyLabel}
+				/>
+				<ValidationMessage state={state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 			</div>
 		);
 	}
@@ -268,6 +148,5 @@ DropDown.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	tableControl: PropTypes.bool,
-	rightFlyout: PropTypes.bool,
 	fields: PropTypes.array
 };

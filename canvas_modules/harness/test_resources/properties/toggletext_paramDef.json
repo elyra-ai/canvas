@@ -1,0 +1,459 @@
+{
+  "titleDefinition": {
+    "title": "Toggle Set"
+  },
+  "current_parameters": {
+    "toggletext": "On",
+    "toggletextNoIcon": "Ascending",
+    "toggletextError": "Ascending",
+    "toggletextWarning": "Ascending",
+    "disable": true,
+    "toggletextDisable": "Ascending",
+    "hide": true,
+    "toggletextHidden": "Ascending",
+    "toggle_table": [
+      [
+        "Ascending",
+        "Ascending",
+        "Ascending",
+        "Ascending"
+      ]
+    ]
+  },
+  "parameters": [
+    {
+      "id": "toggletext",
+      "enum": [
+        "On",
+        "Off"
+      ]
+    },
+    {
+      "id": "toggletextNoIcon",
+      "enum": [
+        "Ascending",
+        "Descending"
+      ]
+    },
+    {
+      "id": "toggletextDefault",
+      "enum": [
+        "Ascending",
+        "Descending"
+      ],
+      "default": "Descending"
+    },
+    {
+      "id": "toggletextError",
+      "enum": [
+        "Ascending",
+        "Descending"
+      ]
+    },
+    {
+      "id": "toggletextWarning",
+      "enum": [
+        "Ascending",
+        "Descending"
+      ]
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "toggletextDisable",
+      "enum": [
+        "Ascending",
+        "Descending"
+      ]
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "toggletextHidden",
+      "enum": [
+        "Ascending",
+        "Descending"
+      ]
+    },
+    {
+      "id": "toggle_table",
+      "type": "array[togglefields]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "togglefields",
+      "parameters": [
+        {
+          "id": "toggletext",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ]
+        },
+        {
+          "id": "toggletext2",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ]
+        },
+        {
+          "id": "toggletext_on_panel",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ]
+        },
+        {
+          "id": "toggletext_sub_panel",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ]
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "toggletext",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "toggletext"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "toggletext",
+        "label": {
+          "default": "toggletext"
+        },
+        "control": "toggletext",
+        "value_icons": [
+          "/images/light-on.svg",
+          "/images/light-off.svg"
+        ]
+      },
+      {
+        "parameter_ref": "toggletextNoIcon",
+        "label": {
+          "default": "toggletext without icons"
+        },
+        "control": "toggletext"
+      },
+      {
+        "parameter_ref": "toggletextDefault",
+        "label": {
+          "default": "toggletext Default"
+        },
+        "description": {
+          "default": "toggletext with default set to `Descending`"
+        },
+        "control": "toggletext",
+        "value_icons": [
+          "/images/up-triangle.svg",
+          "/images/down-triangle.svg"
+        ]
+      },
+      {
+        "parameter_ref": "toggletextError",
+        "label": {
+          "default": "toggletext Error"
+        },
+        "description": {
+          "default": "toggletext with an error when set to `Descending`"
+        },
+        "control": "toggletext",
+        "value_icons": [
+          "/images/up-triangle.svg",
+          "/images/down-triangle.svg"
+        ]
+      },
+      {
+        "parameter_ref": "toggletextWarning",
+        "label": {
+          "default": "toggletext Warning"
+        },
+        "description": {
+          "default": "toggletext with a warning when set to `Descending`"
+        },
+        "control": "toggletext",
+        "value_icons": [
+          "/images/up-triangle.svg",
+          "/images/down-triangle.svg"
+        ]
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'toggletext Disabled'"
+        }
+      },
+      {
+        "parameter_ref": "toggletextDisable",
+        "label": {
+          "default": "toggletext Disabled"
+        },
+        "description": {
+          "default": "Disabled toggletext with enum string type"
+        },
+        "control": "toggletext",
+        "value_icons": [
+          "/images/up-triangle.svg",
+          "/images/down-triangle.svg"
+        ]
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'toggletext Hidden'"
+        }
+      },
+      {
+        "parameter_ref": "toggletextHidden",
+        "label": {
+          "default": "toggletext Hidden"
+        },
+        "description": {
+          "default": "Hidden toggletext with enum string type"
+        },
+        "control": "toggletext",
+        "value_icons": [
+          "/images/up-triangle.svg",
+          "/images/down-triangle.svg"
+        ]
+      },
+      {
+        "parameter_ref": "toggle_table",
+        "label": {
+          "default": "toggletext in a table"
+        },
+        "description": {
+          "default": "Toggle `Standard` column to show an `error`. Toggle `Additional` column to show an `warn`",
+          "placement": "on_panel"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "togglefields",
+        "parameters": [
+          {
+            "parameter_ref": "toggletext",
+            "width": 10,
+            "label": {
+              "default": "Standard"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          },
+          {
+            "parameter_ref": "toggletext2",
+            "width": 10,
+            "label": {
+              "default": "Additional"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          },
+          {
+            "parameter_ref": "toggletext_on_panel",
+            "width": 10,
+            "label": {
+              "default": "on_panel"
+            },
+            "description": {
+              "default": "toggletext with `edit_style=on_panel`"
+            },
+            "edit_style": "on_panel",
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          },
+          {
+            "parameter_ref": "toggletext_sub_panel",
+            "width": 10,
+            "label": {
+              "default": "sub_panel"
+            },
+            "description": {
+              "default": "toggletext with `edit_style=sub_panel`"
+            },
+            "edit_style": "subpanel",
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "toggletext-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "toggletext",
+          "toggletextNoIcon",
+          "toggletextDefault"
+        ]
+      },
+      {
+        "id": "toggletext-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "toggletextError",
+          "toggletextWarning",
+          "disable",
+          "toggletextDisable",
+          "hide",
+          "toggletextHidden"
+        ]
+      },
+      {
+        "id": "toggletext-table-panels",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "toggletext-table-summary",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Edit toggletext table"
+            },
+            "group_info": [
+              {
+                "id": "toggletext-table-summary-ctrls",
+                "parameter_refs": [
+                  "toggle_table"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "toggletextError",
+          "message": {
+            "default": "Testing toggletext error condition"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "toggletextError",
+            "op": "equals",
+            "value": "Ascending"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "toggletextWarning",
+          "message": {
+            "default": "Testing toggletext warning condition"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "toggletextWarning",
+            "op": "equals",
+            "value": "Ascending"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "toggle_table[1]",
+          "message": {
+            "default": "Testing toggletext error condition"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "toggle_table[1]",
+            "op": "equals",
+            "value": "Ascending"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "toggle_table[0]",
+          "message": {
+            "default": "Testing toggletext warning condition"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "toggle_table[0]",
+            "op": "equals",
+            "value": "Ascending"
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "toggletextHidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "toggletextDisable"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ]
+}

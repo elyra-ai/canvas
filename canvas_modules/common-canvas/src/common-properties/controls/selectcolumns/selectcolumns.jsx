@@ -12,10 +12,12 @@ import PropTypes from "prop-types";
 import FlexibleTable from "./../../components/flexible-table";
 import MoveableTableRows from "./../../components/moveable-table-rows";
 import AbstractTable from "./../abstract-table.jsx";
+import ValidationMessage from "./../../components/validation-message";
+import classNames from "classnames";
 import { injectIntl, intlShape } from "react-intl";
 import ControlUtils from "./../../util/control-utils";
 import PropertyUtils from "./../../util/property-utils";
-import { TABLE_SCROLLBAR_WIDTH } from "./../../constants/constants";
+import { TABLE_SCROLLBAR_WIDTH, STATES } from "./../../constants/constants";
 
 class SelectColumns extends AbstractTable {
 
@@ -27,12 +29,13 @@ class SelectColumns extends AbstractTable {
 	}
 
 
-	makeRows(controlValue, stateStyle) {
+	makeRows(controlValue, tableState) {
 		const rows = [];
 		if (controlValue) {
 			for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				const columns = [];
 				const cellContent = PropertyUtils.stringifyFieldValue(controlValue[rowIndex], this.props.control);
+				const rowClassName = classNames(this.getRowClassName(rowIndex), { "disabled": tableState === STATES.DISABLED });
 				columns.push({
 					key: rowIndex + "-0-field",
 					column: "name",
@@ -48,7 +51,7 @@ class SelectColumns extends AbstractTable {
 					key: rowIndex,
 					onClickCallback: this.handleRowClick.bind(this, rowIndex),
 					columns: columns,
-					className: this.getRowClassName(rowIndex)
+					className: rowClassName
 				});
 			}
 		}
@@ -68,39 +71,19 @@ class SelectColumns extends AbstractTable {
 
 	render() {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		const tableState = this.props.controller.getControlState(this.props.propertyId);
+		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
+
 		const sortFields = [];
 		const headers = [];
 		const filterFields = [];
-
-		const conditionProps = {
-			propertyId: this.props.propertyId,
-			controlType: "column-select"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
-
-		const errorMessage = conditionState.message;
-		const messageType = conditionState.messageType;
-		const icon = conditionState.icon;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
 
 		const tableButtonConfig = {
 			fieldPickerCloseFunction: this.onFieldPickerClose
 		};
 
-		let controlIconContainerClass = "column-select-control-icon-container";
-		if (messageType !== "info") {
-			controlIconContainerClass = "column-select-control-icon-container-enabled";
-		}
-
-		if (messageType === "error" || messageType === "warning") {
-			stateStyle.borderWidth = "2px";
-		}
-
-		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
-
-		const rows = this.makeRows(controlValue, stateStyle);
-		const topRightPanel = this.makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig);
+		const rows = this.makeRows(controlValue, tableState);
+		const topRightPanel = this.makeAddRemoveButtonPanel(tableState, tableButtonConfig);
 
 		const table =	(
 			<FlexibleTable
@@ -112,26 +95,24 @@ class SelectColumns extends AbstractTable {
 				alignTop={this.alignTop}
 				onFilter={this.onFilter}
 				onSort={this.onSort}
-				label={this.makeLabel(stateStyle)}
 				topRightPanel={topRightPanel}
-				icon={icon}
-				validationStyle={stateStyle}
 				scrollKey={this.props.control.name}
-				stateDisabled={stateDisabled}
+				tableState={tableState}
+				messageInfo={messageInfo}
 				rows={this.props.control.rows}
 			/>);
 
 		var content = (
 			<div>
-				<div id={controlIconContainerClass}>
+				<div className="properties-column-select-table">
 					{table}
 				</div>
-				{errorMessage}
+				<ValidationMessage state={tableState} messageInfo={messageInfo} />
 			</div>
 		);
 
 		return (
-			<div className="properties-column-select" style={stateStyle}>
+			<div data-id={ControlUtils.getDataId(this.props.propertyId)} className="properties-column-select" >
 				<MoveableTableRows
 					tableContainer={content}
 					control={this.props.control}
@@ -139,8 +120,7 @@ class SelectColumns extends AbstractTable {
 					propertyId={this.props.propertyId}
 					setScrollToRow={this.setScrollToRow}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-					stateStyle={stateStyle}
-					disabled={disabled}
+					disabled={tableState === STATES.DISABLED}
 				/>
 			</div>
 		);

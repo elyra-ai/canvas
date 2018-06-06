@@ -11,12 +11,14 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Tabs from "ap-components-react/dist/components/Tabs";
+import Tabs from "carbon-components-react/lib/components/Tabs";
+import Tab from "carbon-components-react/lib/components/Tab";
 import PropertyUtil from "./../../util/property-utils.js";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, STATES, VALIDATION_MESSAGE } from "./../../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, STATES } from "./../../constants/constants";
 import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
 import logger from "./../../../../utils/logger";
+import classNames from "classnames";
 
 import SelectorPanel from "./../../panels/selector";
 import SummaryPanel from "./../../panels/summary";
@@ -104,10 +106,7 @@ class EditorForm extends React.Component {
 	}
 
 	_getTabId(tab) {
-		if (this.props.rightFlyout) {
-			return tab.text;
-		}
-		return "primary-tab." + tab.group;
+		return tab.text;
 	}
 
 	_showCategoryPanel(panelid) {
@@ -127,34 +126,14 @@ class EditorForm extends React.Component {
 		}
 	}
 
-	_getPanelState(panelId) {
-		const panelState = this.props.controller.getPanelState({ name: panelId });
-		const stateStyle = {};
-		const stateDisabled = {};
-		if (panelState) {
-			switch (panelState) {
-			case STATES.DISABLED:
-				stateDisabled.disabled = true;
-				stateStyle.color = VALIDATION_MESSAGE.DISABLED;
-				stateStyle.pointerEvents = "none";
-				break;
-			case STATES.HIDDEN:
-				stateStyle.display = "none";
-				break;
-			default:
-			}
-		}
-
-		return {
-			state: panelState,
-			disabled: stateDisabled,
-			style: stateStyle
-		};
+	_modalTabsOnClick(tabId, evt) {
+		this.setState({ activeTabId: tabId });
 	}
 
 	genPrimaryTabs(key, tabs, propertyId, indexof) {
 		const tabContent = [];
 		let hasAlertsTab = false;
+		let modalSelected = 0;
 		for (var i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
 			if (i === 0 && tab.group === ALERT_TAB_GROUP) {
@@ -165,27 +144,21 @@ class EditorForm extends React.Component {
 			if (this.props.additionalComponents) {
 				additionalComponent = this.props.additionalComponents[tab.group];
 			}
-
 			if (this.props.rightFlyout) {
 				let panelArrow = <Icon type="downCaret" />;
-				let panelItemsContainerClass = "closed";
-				const styleObj = {};
+				let categoryOpen = false;
 				if (this.state.activeTabId === tab.text) {
 					panelArrow = <Icon type="upCaret" />;
-					panelItemsContainerClass = "open";
-					if (i === tabs.length - 1) {
-						styleObj.borderBottom = "none";
-					}
+					categoryOpen = true;
 				}
-				const panelItemsContainer = (<div className={"panel-container-" + panelItemsContainerClass + "-right-flyout-panel"} style={styleObj}>
+				const panelItemsContainer = (<div className={classNames("properties-category-content", { "show": categoryOpen }) }>
 					{panelItems}
 				</div>);
 
 				tabContent.push(
-					<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key} className="category-title-container-right-flyout-panel">
+					<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key} className="properties-category-container">
 						<button type="button" onClick={this._showCategoryPanel.bind(this, tab.text)}
-							id={"category-title-" + this._getContainerIndex(hasAlertsTab, i) + "-right-flyout-panel"}
-							className="category-title-right-flyout-panel"
+							className="properties-category-title"
 						>
 							{tab.text.toUpperCase()}{this._getMessageCountForCategory(tab)}
 							{panelArrow}
@@ -195,37 +168,33 @@ class EditorForm extends React.Component {
 					</div>
 				);
 			} else {
+				if (this.state.activeTabId === tab.text) {
+					modalSelected = i;
+				}
 				tabContent.push(
-					<Tabs.Panel
+					<Tab
+						key={i}
 						id={this._getTabId(tab)}
-						key={this._getContainerIndex(hasAlertsTab, i)}
-						title={tab.text}
+						tabIndex={i}
+						label={tab.text}
+						onClick={this._modalTabsOnClick.bind(this, tab.text)}
 					>
 						{panelItems}
 						{additionalComponent}
-					</Tabs.Panel>
+					</Tab>
 				);
 			}
 		}
 
 		if (this.props.rightFlyout) {
 			return (
-				<div key={key} id="category-parent-container-right-flyout-panel">
+				<div key={"cat." + key} className="properties-categories">
 					{tabContent}
 				</div>
 			);
 		}
-
-		const that = this;
 		return (
-			<Tabs key={key}
-				defaultActiveKey={0}
-				animation={false}
-				isTabActive={function active(id) {
-					return id === that.state.activeTabId;
-				}}
-				onTabClickHandler={(e, id) => this.setState({ activeTabId: id })}
-			>
+			<Tabs key={"tab." + key} className="properties-primaryTabs" selected={modalSelected}>
 				{tabContent}
 			</Tabs>
 		);
@@ -250,34 +219,29 @@ class EditorForm extends React.Component {
 			const tab = tabs[i];
 			const subPanelItems = this.genUIItem(i, tab.content, propertyId, indexof);
 			if (this.props.rightFlyout) {
-
-				const panelItemsContainer = (<div key={i + "-" + key} className="sub-panel-container-right-flyout-panel">
-					{subPanelItems}
-				</div>);
-
 				subTabs.push(
-					<div key={i + "-" + key} className="sub-category-items-container-right-flyout-panel">
-						<h3 className="sub-category-title-right-flyout-panel">{tab.text}</h3>
-						{panelItemsContainer}
+					<div key={i + "-" + key} className="properties-sub-category-container">
+						<h3 className="properties-sub-category-title">{tab.text}</h3>
+						<div key={i + "-" + key} className="properties-sub-panel-content">
+							{subPanelItems}
+						</div>
 					</div>
 				);
 			} else {
 				subTabs.push(
-					<Tabs.Panel
-						id={"sub-tab." + tab.group}
-						key={i}
-						title={tab.text}
-						className="sub-tab-parent-items-container"
+					<Tab
+						tabIndex={i}
+						label={tab.text}
 					>
 						{subPanelItems}
-					</Tabs.Panel>
+					</Tab>
 				);
 			}
 		}
 
 		if (this.props.rightFlyout) {
 			return (
-				<div key={key} id="sub-category-parent-container-right-flyout-panel">
+				<div key={key} className="properties-sub-category-container">
 					{subTabs}
 				</div>
 			);
@@ -285,7 +249,7 @@ class EditorForm extends React.Component {
 
 		return (
 			<div id={"sub-tab-container"}>
-				<Tabs vertical animation={false}>
+				<Tabs >
 					{subTabs}
 				</Tabs>
 			</div>
@@ -293,11 +257,9 @@ class EditorForm extends React.Component {
 	}
 
 	genPanelSelector(key, tabs, dependsOn, propertyId, indexof, panelId) {
-		const panelConditions = this._getPanelState(panelId);
 		const subPanels = this.generateAdditionalPanels(tabs, key, propertyId, indexof, false);
 		return (
-			<SelectorPanel id={"selector-panel." + dependsOn}
-				style={panelConditions.style}
+			<SelectorPanel
 				key={"selectorPanel" + key}
 				panels={subPanels}
 				dependsOn={dependsOn}
@@ -310,12 +272,12 @@ class EditorForm extends React.Component {
 		const subPanels = {};
 		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
-			let className = "control-panel";
+			let className = "properties-control-panel";
 			if (tab.content && tab.content.itemType === "textPanel") {
-				className = "text-panel";
+				className = "";
 			}
 			if (indent) {
-				className += " control-panel";
+				className += " properties-control-panel";
 			}
 			subPanels[tab.group] = (
 				<div className={className} key={tab.group + key}>
@@ -358,7 +320,7 @@ class EditorForm extends React.Component {
 			return this.ControlFactory.createControlItem(uiItem.control, propertyId);
 		} else if (uiItem.itemType === "additionalLink") {
 			var subPanel = this.genPanel(key, uiItem.panel, inPropertyId, indexof);
-			return (<SubPanelButton id={"sub-panel-button." + key}
+			return (<SubPanelButton key={"sub-panel-button." + key}
 				label={uiItem.text}
 				title={uiItem.secondaryText}
 				panel={subPanel}
@@ -366,28 +328,23 @@ class EditorForm extends React.Component {
 				rightFlyout={this.props.rightFlyout}
 			/>);
 		} else if (uiItem.itemType === "staticText") {
-			let textClass = "static-text";
-			let icon = <div />;
-			if (uiItem.textType === "info") {
-				icon = <div className="static-text-icon-container"><Icon type="info" /></div>;
-				textClass = "static-text info";
-			}
+			const textClass = classNames("properties-static-text", uiItem.textType);
+			const icon = uiItem.textType === "info" ? <div><Icon type="info" /></div> : null;
 			const text = <div className={textClass}>{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}</div>;
-			return <div key={"static-text." + key} className="static-text-container">{icon}{text}</div>;
+			return <div key={"static-text." + key} className="properties-static-text-container">{icon}{text}</div>;
 		} else if (uiItem.itemType === "linkText") { // linkText used for Alerts tab. Only used internally
-			let textClass = "link-text";
-			let icon = <div />;
+			const textClass = classNames("properties-link-text-container", uiItem.textType);
+			let icon = null;
 			if (uiItem.textType === "warning" || uiItem.textType === "error") {
-				icon = <Icon type="circle" />;
-				textClass = "link-text " + uiItem.textType;
+				icon = <div><Icon type="circle" /></div>;
 			}
 			const text = (
-				<a className={textClass} onClick={this._handleMessageClick.bind(this, uiItem.controlId)}>
+				<a className="properties-link-text" onClick={this._handleMessageClick.bind(this, uiItem.controlId)}>
 					{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}
 				</a>);
-			return <div key={"link-text." + key} className={"link-text-container " + uiItem.textType} >{icon}{text}</div>;
+			return <div key={"link-text." + key} className={textClass} >{icon}{text}</div>;
 		} else if (uiItem.itemType === "hSeparator") {
-			return <hr key={"h-separator." + key} className="h-separator" />;
+			return <hr key={"h-separator." + key} className="properties-h-separator" />;
 		} else if (uiItem.itemType === "panel") {
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		} else if (uiItem.itemType === "subTabs") {
@@ -404,18 +361,25 @@ class EditorForm extends React.Component {
 		} else if (uiItem.itemType === "action") {
 			return this.generateAction(key, uiItem.action);
 		} else if (uiItem.itemType === "textPanel" && uiItem.panel) {
-			const panelConditions = this._getPanelState(uiItem.panel.id);
-			const label = uiItem.panel.label ? (<div className="panel-label" style={panelConditions.style}>{uiItem.panel.label.text}</div>) : (<div />);
-			const description = uiItem.panel.description
-				? (<div className="panel-description" style={panelConditions.style}>{PropertyUtil.evaluateText(uiItem.panel.description.text, this.props.controller)}</div>)
-				: (<div />);
-			return (
-				<div className="properties-text-panel" key={"text-panel-" + key} style={panelConditions.style}>
-					{label}
-					{description}
-				</div>);
+			return this.generateTextPanel(key, uiItem.panel);
 		}
 		return <div key={"unknown." + key}>Unknown: {uiItem.itemType}</div>;
+	}
+
+	generateTextPanel(key, panel) {
+		const panelState = this.props.controller.getPanelState({ name: panel.id });
+		const label = panel.label ? (<div className="panel-label">{panel.label.text}</div>) : null;
+		const description = panel.description
+			? (<div className="panel-description">{PropertyUtil.evaluateText(panel.description.text, this.props.controller)}</div>)
+			: null;
+		return (
+			<div className={classNames("properties-text-panel", { "hide": panelState === STATES.HIDDEN })}
+				disabled={panelState === STATES.DISABLED}
+				key={"text-panel-" + key}
+			>
+				{label}
+				{description}
+			</div>);
 	}
 
 	generateAction(key, action) {
@@ -472,15 +436,15 @@ class EditorForm extends React.Component {
 	}
 
 	genPanel(key, panel, propertyId, indexof) {
-		// logger.info("genPanel");
-		// logger.info(panel);
-		const content = this.genUIContent(panel.uiItems, propertyId, indexof);
+		let content = this.genUIContent(panel.uiItems, propertyId, indexof);
 		const id = "panel." + key;
-		var uiObject;
+		let uiObject;
 		if (panel.panelType === "columnSelection") {
 			this.generateSharedControlNames(panel);
-			uiObject = (<div id={id}
-				className="control-panel"
+			// needs to be ran after setting shared controls to get correct fields in shared controls
+			content = this.genUIContent(panel.uiItems, propertyId, indexof);
+			uiObject = (<div
+				className="properties-control-panel"
 				key={key}
 			>
 				{content}
@@ -501,7 +465,7 @@ class EditorForm extends React.Component {
 			}
 		} else if (panel.panelType === "actionPanel") {
 			uiObject = (
-				<div className="action-panel" key={key} >
+				<div className="properties-action-panel" key={key} data-id={"properties-" + panel.id}>
 					{content}
 				</div>);
 		} else if (panel.panelType === "twisty") {
@@ -516,14 +480,10 @@ class EditorForm extends React.Component {
 					{content}
 				</TwistyPanel>);
 		} else {
-			uiObject = (<div id={id}
-				className="control-panel"
-				key={key}
-			>
+			uiObject = (<div className="properties-control-panel" key={key} data-id={"properties-" + panel.id}>
 				{content}
 			</div>);
 		}
-
 		return uiObject;
 	}
 
@@ -571,7 +531,7 @@ class EditorForm extends React.Component {
 			// create a list of field names to be passed into the field picker
 			const formattedFieldsList = PropertyUtil.getFieldsFromControlValues(this.fieldPickerControl, currentControlValues, fields);
 
-			return (<div id="field-picker-table">
+			return (<div className="properties-fp-table">
 				<FieldPicker
 					key="field-picker-control"
 					controller={this.props.controller}
@@ -641,14 +601,8 @@ class EditorForm extends React.Component {
 		}
 
 		return (
-			<div>
-				<div className="well">
-					<form className="form-horizontal">
-						<div className="section--light">
-							{content}
-						</div>
-					</form>
-				</div>
+			<div className="properties-editor-form">
+				{content}
 				{wideFly}
 			</div>
 		);

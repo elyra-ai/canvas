@@ -14,6 +14,9 @@ import AbstractTable from "./../abstract-table.jsx";
 import MoveableTableRows from "./../../components/moveable-table-rows";
 import PropertyUtils from "./../../util/property-utils";
 import { ParamRole } from "./../../constants/form-constants";
+import { STATES } from "./../../constants/constants";
+
+import ValidationMessage from "./../../components/validation-message";
 import { injectIntl, intlShape } from "react-intl";
 import findIndex from "lodash/findIndex";
 import reject from "lodash/reject";
@@ -143,41 +146,28 @@ class StructureTableControl extends AbstractTable {
 
 	render() {
 
-		const conditionProps = {
-			propertyId: this.props.propertyId,
-			controlType: "structure-table"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
-		const errorMessage = conditionState.message;
-		const messageType = conditionState.messageType;
-		const icon = conditionState.icon;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
+		const tableState = this.props.controller.getControlState(this.props.propertyId);
+		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
+
 
 		const tableButtonConfig = {
 			fieldPickerCloseFunction: this.onFieldPickerClose
 		};
 
-		let controlIconContainerClass = "control-icon-container";
-		if (messageType !== "info") {
-			controlIconContainerClass = "control-icon-container-enabled";
-		}
-
-		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
-
-		const table = this.createTable(stateStyle, stateDisabled, tableButtonConfig);
+		const table = this.createTable(tableState, tableButtonConfig);
 		const content = (
 			<div>
-				<div id={controlIconContainerClass}>
+				<div className="properties-st properties-st-buttons">
 					{table}
-					{icon}
 				</div>
-				{errorMessage}
-			</div>
-		);
+				<ValidationMessage state={tableState} messageInfo={messageInfo} />
+			</div>);
+
 		const onPanelContainer = this.getOnPanelContainer(this.props.controller.getSelectedRows(this.props.control.name));
 		return (
-			<div>
+			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
+				className="properties-column-structure-wrapper"
+			>
 				<div className="properties-column-structure">
 					<MoveableTableRows
 						tableContainer={content}
@@ -186,8 +176,7 @@ class StructureTableControl extends AbstractTable {
 						propertyId={this.props.propertyId}
 						setScrollToRow={this.setScrollToRow}
 						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-						stateStyle={stateStyle}
-						disabled={disabled}
+						disabled={tableState === STATES.DISABLED}
 					/>
 				</div>
 				<div>

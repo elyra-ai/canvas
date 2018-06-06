@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -15,11 +15,11 @@
 	font-size: 12px;
 	position: fixed;
 	padding: 5px 10px;
-	background-color: #F9F9F9;
-	border: 1px solid #CCCCCC;
+	background-color: $ui-02;
+	border: 1px solid $ui-04;
 	font-weight: 400;
 	opacity: 90%;
-	color: #5A6872;
+	color: $text-02;
 	line-height: 1.2;
 	text-align: center;
 	z-index: 8000;
@@ -63,12 +63,12 @@
 
 
 .common-canvas-tooltip #tipArrow polyline {
-	fill: #F9F9F9;
+	fill: $ui-02;
 	stroke-width: 0;
 }
 
 .common-canvas-tooltip #tipArrow polygon {
-	fill: #CCCCCC;
+	fill: $ui-04;
 }
 
 .common-canvas-tooltip[aria-hidden="false"] {
@@ -92,12 +92,12 @@
 .tip-palette-category {
 	font-size: 10px;
 	padding-bottom: 4px;
-	color: #9B9B9B;
+	color: $text-02;
 }
 
 .tip-palette-label, .tip-node-label {
 	font-weight: 600;
-	color: #1B496D;
+	color: $text-01;
 }
 
 .tip-palette-desc, .tip-node-desc {
@@ -105,7 +105,7 @@
 }
 
 .tip-palette-line, .tip-node-line {
-	background-color: #F0F3F6;
+	background-color: $ui-02;
 	border: 0;
 	height: 2px;
 	width: 24px;
@@ -118,6 +118,12 @@
 	height: 12px;
 	right: 10px;
 	top: 10px;
+	&.warning {
+		fill: $support-03;
+	}
+	&.error {
+		fill: $support-03;
+	}
 }
 
 .tip-port {
@@ -125,13 +131,13 @@
 }
 
 .properties-tooltips {
-	background-color: #FFFFFF;
-	color: #152935;
+	background-color: $ui-01;
+	color: $text-01;
 	min-width: 80px;
 	max-width: 250px;
 	padding: 5px 10px;
 }
 
 .properties-tooltips #tipArrow polyline {
-	fill: #FFFFFF;
+	fill: $ui-01;
 }

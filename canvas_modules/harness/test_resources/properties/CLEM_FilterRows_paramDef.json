@@ -17,7 +17,7 @@
     {
       "id": "conditionExpr",
       "type": "string",
-      "default": "is_real(salbegin)  and  gender  = \"F\" or BP = 120\n",
+      "default": "is_real(salbegin) and  \ngender  = \"F\" or BP = 120\n",
       "role": "expression",
       "required": true
     }

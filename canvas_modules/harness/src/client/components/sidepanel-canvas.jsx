@@ -12,12 +12,14 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import FormControl from "react-bootstrap/lib/FormControl";
-import Button from "ap-components-react/dist/components/Button";
-import Dropdown from "ap-components-react/dist/components/Dropdown";
-import Checkbox from "ap-components-react/dist/components/Checkbox";
-import RadioGroup from "ap-components-react/dist/components/RadioGroup";
-import ToggleButton from "ap-components-react/dist/components/ToggleButton";
+import FileUploader from "carbon-components-react/lib/components/FileUploader";
+import Button from "carbon-components-react/lib/components/Button";
+import Dropdown from "carbon-components-react/lib/components/Dropdown";
+import DropdownItem from "carbon-components-react/lib/components/DropdownItem";
+import Checkbox from "carbon-components-react/lib/components/Checkbox";
+import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
+import RadioButton from "carbon-components-react/lib/components/RadioButton";
+import Toggle from "carbon-components-react/lib/components/Toggle";
 
 
 import {
@@ -150,20 +152,20 @@ export default class SidePanelForms extends React.Component {
 		}
 	}
 
-	onCanvasDropdownSelect(evt, obj) {
-		this.props.setCanvasDropdownFile(obj.selected);
+	onCanvasDropdownSelect(evt) {
+		this.props.setCanvasDropdownFile(evt.value);
 	}
 
-	onCanvasDropdownSelect2(evt, obj) {
-		this.props.setCanvasDropdownFile2(obj.selected);
+	onCanvasDropdownSelect2(evt) {
+		this.props.setCanvasDropdownFile2(evt.value);
 	}
 
-	onPaletteDropdownSelect(evt, obj) {
-		this.props.setPaletteDropdownSelect(obj.selected);
+	onPaletteDropdownSelect(evt) {
+		this.props.setPaletteDropdownSelect(evt.value);
 	}
 
-	onPaletteDropdownSelect2(evt, obj) {
-		this.props.setPaletteDropdownSelect2(obj.selected);
+	onPaletteDropdownSelect2(evt) {
+		this.props.setPaletteDropdownSelect2(evt.value);
 	}
 
 	onDragStart(ev) {
@@ -265,44 +267,53 @@ export default class SidePanelForms extends React.Component {
 		return false;
 	}
 
-	layoutDirectionOptionChange(evt, obj) {
-		this.props.setLayoutDirection(obj.selected);
+	layoutDirectionOptionChange(value) {
+		this.props.setLayoutDirection(value);
 	}
 
-	useInternalObjectModel(changeEvent) {
-		this.props.useInternalObjectModel(changeEvent.target.checked);
+	useInternalObjectModel(checked) {
+		this.props.useInternalObjectModel(checked);
 	}
 
-	connectionTypeOptionChange(evt, obj) {
-		this.props.setConnectionType(obj.selected);
+	connectionTypeOptionChange(value) {
+		this.props.setConnectionType(value);
 	}
 
-	nodeFormatTypeOptionChange(evt, obj) {
-		this.props.setNodeFormatType(obj.selected);
+	nodeFormatTypeOptionChange(value) {
+		this.props.setNodeFormatType(value);
 	}
 
-	linkTypeOptionChange(evt, obj) {
-		this.props.setLinkType(obj.selected);
+	linkTypeOptionChange(value) {
+		this.props.setLinkType(value);
 	}
 
-	paletteLayoutOptionChange(evt, obj) {
-		this.props.setPaletteLayout(obj.selected);
+	paletteLayoutOptionChange(value) {
+		this.props.setPaletteLayout(value);
 	}
 
-	tipConfigChange(evt) {
+	dropdownOptions(stringOptions) {
+		const options = [];
+		let key = 1;
+		for (const option of stringOptions) {
+			options.push(<DropdownItem key={"option." + ++key}itemText={option} value={option} />);
+		}
+		return options;
+	}
+
+	tipConfigChange(checked, target) {
 		const tipConf = Object.assign({}, this.props.commonCanvasConfig.tipConfig);
-		switch (evt.currentTarget.id) {
+		switch (target) {
 		case "tip_palette":
-			tipConf.palette = evt.currentTarget.checked;
+			tipConf.palette = checked;
 			break;
 		case "tip_nodes":
-			tipConf.nodes = evt.currentTarget.checked;
+			tipConf.nodes = checked;
 			break;
 		case "tip_ports":
-			tipConf.ports = evt.currentTarget.checked;
+			tipConf.ports = checked;
 			break;
 		case "tip_links":
-			tipConf.links = evt.currentTarget.checked;
+			tipConf.links = checked;
 			break;
 		default:
 			return;
@@ -310,20 +321,20 @@ export default class SidePanelForms extends React.Component {
 		this.props.setTipConfig(tipConf);
 	}
 
-	extraCanvasChange(changeEvent) {
-		this.props.showExtraCanvas(changeEvent.target.checked);
+	extraCanvasChange(checked) {
+		this.props.showExtraCanvas(checked);
 	}
 
-	changeValidateFlowOnOpen(changeEvent) {
-		this.props.changeValidateFlowOnOpen(changeEvent.target.checked);
+	changeValidateFlowOnOpen(checked) {
+		this.props.changeValidateFlowOnOpen(checked);
 	}
 
-	schemaValidationChange(changeEvent) {
-		this.props.schemaValidation(changeEvent.target.checked);
+	schemaValidationChange(checked) {
+		this.props.schemaValidation(checked);
 	}
 
-	narrowPalette(changeEvent) {
-		this.props.setNarrowPalette(changeEvent.target.checked);
+	narrowPalette(checked) {
+		this.props.setNarrowPalette(checked);
 	}
 
 	render() {
@@ -332,193 +343,185 @@ export default class SidePanelForms extends React.Component {
 
 		var canvasFileChooserVisible = <div />;
 		if (this.props.canvasFileChooserVisible) {
-			canvasFileChooserVisible = (<div>
-				{space}
-				<FormControl
-					required="required"
-					id="canvasFileInput"
-					type="file"
-					accept=".json"
-					ref="canvasDiagram"
+			canvasFileChooserVisible = (<div className="sidepanel-file-uploader">
+				<FileUploader
+					small
+					buttonLabel="Chose file"
+					accept={[".json"]}
 					onChange={this.onCanvasFileSelect}
 				/>
 				{space}
-				<Button dark
-					id="canvasFileSubmit"
-					disabled={!this.isReadyToSubmitCanvasData()}
-					onClick={this.submitCanvas.bind(this)}
-
-				>
+				<div className="sidepanel-file-upload-submit">
+					<Button small
+						disabled={!this.isReadyToSubmitCanvasData()}
+						onClick={this.submitCanvas.bind(this)}
+					>
 					Submit
-				</Button>
+					</Button>
+				</div>
 			</div>);
 		}
 
 		var paletteFileChooserVisible = <div />;
 		if (this.props.paletteFileChooserVisible) {
-			paletteFileChooserVisible = (<div>
-				{space}
-				<FormControl
-					required="required"
-					id="paletteJsonInput"
-					type="file"
-					accept=".json"
-					ref="canvasPalette"
+			paletteFileChooserVisible = (<div className="sidepanel-file-uploader">
+				<FileUploader
+					small
+					buttonLabel="Chose file"
+					accept={[".json"]}
 					onChange={this.onCanvasPaletteSelect}
 				/>
 				{space}
-				<Button dark
-					id="paletteFileSubmit"
-					disabled={!this.isReadyToSubmitPaletteData()}
-					onClick={this.submitPalette.bind(this)}
-					onChange={(evt) => this.props.enableNavPalette(evt.target.checked)}
-				>
+				<div className="sidepanel-file-upload-submit">
+					<Button small
+						disabled={!this.isReadyToSubmitPaletteData()}
+						onClick={this.submitPalette.bind(this)}
+						onChange={(evt) => this.props.enableNavPalette(evt.target.checked)}
+					>
 					Submit
-				</Button>
+					</Button>
+				</div>
 			</div>);
 		}
 
 		var canvasInput = (<div className="sidepanel-children" id="sidepanel-canvas-input">
-			<div className="canvasField">
+			<div className="filePicker">
 				<div className="sidepanel-headers">Canvas Diagram</div>
 				<Dropdown
-					name="CanvasDropdown"
-					text="Canvas"
-					id="sidepanel-canvas-dropdown"
-					maxVisibleItems={10}
-					dark
-					options={this.state.canvasFiles}
-					onSelect={this.onCanvasDropdownSelect.bind(this)}
+					defaultText="Canvas"
+					ariaLabel="Canvas"
+					onChange={this.onCanvasDropdownSelect.bind(this)}
 					value={this.props.selectedCanvasDropdownFile}
-				/>
+				>
+					{this.dropdownOptions(this.state.canvasFiles)}
+				</Dropdown>
 				{canvasFileChooserVisible}
 			</div>
 		</div>);
 
 		var paletteInput = (<div className="sidepanel-children" id="sidepanel-palette-input">
-			<div className="formField">
+			<div className="filePicker">
 				<div className="sidepanel-headers">Canvas Palette</div>
 				<Dropdown
-					name="PaletteDropdown"
-					text="Palette"
-					id="sidepanel-palette-dropdown"
-					maxVisibleItems={10}
-					dark
-					options={this.state.paletteFiles}
-					onSelect={this.onPaletteDropdownSelect.bind(this)}
+					defaultText="Palette"
+					ariaLabel="Palette"
+					onChange={this.onPaletteDropdownSelect.bind(this)}
 					value={this.props.selectedPaletteDropdownFile}
-				/>
+				>
+					{this.dropdownOptions(this.state.paletteFiles)}
+				</Dropdown>
 				{paletteFileChooserVisible}
 			</div>
 		</div>);
 
 		var canvasFileChooserVisible2 = <div />;
 		if (this.props.canvasFileChooserVisible2) {
-			canvasFileChooserVisible2 = (<div>
+			canvasFileChooserVisible2 = (<div className="sidepanel-file-uploader">
 				{space}
-				<FormControl
-					required="required"
-					id="canvasFileInput2"
-					type="file"
-					accept=".json"
-					ref="canvasDiagram2"
+				<FileUploader
+					small
+					buttonLabel="Chose file"
+					accept={[".json"]}
 					onChange={this.onCanvasFileSelect2}
 				/>
 				{space}
-				<Button dark
-					id="canvasFileSubmit2"
-					disabled={!this.isReadyToSubmitCanvasData2()}
-					onClick={this.submitCanvas2.bind(this)}
-
-				>
+				<div className="sidepanel-file-upload-submit">
+					<Button small
+						disabled={!this.isReadyToSubmitCanvasData2()}
+						onClick={this.submitCanvas2.bind(this)}
+					>
 					Submit
-				</Button>
+					</Button>
+				</div>
 			</div>);
 		}
 
 		var paletteFileChooserVisible2 = <div />;
 		if (this.props.paletteFileChooserVisible2) {
-			paletteFileChooserVisible2 = (<div>
+			paletteFileChooserVisible2 = (<div className="sidepanel-file-uploader">
 				{space}
-				<FormControl
-					required="required"
-					id="paletteJsonInput2"
-					type="file"
-					accept=".json"
-					ref="canvasPalette2"
+				<FileUploader
+					small
+					buttonLabel="Chose file"
+					accept={[".json"]}
 					onChange={this.onCanvasPaletteSelect2}
 				/>
 				{space}
-				<Button dark
-					id="paletteFileSubmit"
-					disabled={!this.isReadyToSubmitPaletteData2()}
-					onClick={this.submitPalette2.bind(this)}
-					onChange={(evt) => this.props.enableNavPalette(evt.target.checked)}
-				>
+				<div className="sidepanel-file-upload-submit">
+					<Button small
+						disabled={!this.isReadyToSubmitPaletteData2()}
+						onClick={this.submitPalette2.bind(this)}
+						onChange={(evt) => this.props.enableNavPalette(evt.target.checked)}
+					>
 					Submit
-				</Button>
+					</Button>
+				</div>
 			</div>);
 		}
 
 		var canvasInput2 = (<div className="sidepanel-children" id="sidepanel-canvas-input2">
-			<div className="canvasField">
+			<div className="filePicker">
 				<div className="sidepanel-headers">Canvas Diagram</div>
 				<Dropdown
 					disabled={!this.props.extraCanvasDisplayed}
-					name="CanvasDropdown"
-					text="Canvas"
-					id="sidepanel-canvas-dropdown2"
-					maxVisibleItems={10}
-					dark
-					options={this.state.canvasFiles}
-					onSelect={this.onCanvasDropdownSelect2.bind(this)}
+					defaultText="Canvas"
+					ariaLabel="Canvas"
+					onChange={this.onCanvasDropdownSelect2.bind(this)}
 					value={this.props.selectedCanvasDropdownFile2}
-				/>
+				>
+					{this.dropdownOptions(this.state.canvasFiles)}
+				</Dropdown>
 				{canvasFileChooserVisible2}
 			</div>
 		</div>);
 
 		var paletteInput2 = (<div className="sidepanel-children" id="sidepanel-palette-input2">
-			<div className="formField">
+			<div className="filePicker">
 				<div className="sidepanel-headers">Canvas Palette</div>
 				<Dropdown
 					disabled={!this.props.extraCanvasDisplayed}
-					name="PaletteDropdown"
-					text="Palette"
-					id="sidepanel-palette-dropdown2"
-					maxVisibleItems={10}
-					dark
-					options={this.state.paletteFiles}
-					onSelect={this.onPaletteDropdownSelect2.bind(this)}
+					defaultText="Palette"
+					ariaLabel="Palette"
+					onChange={this.onPaletteDropdownSelect2.bind(this)}
 					value={this.props.selectedPaletteDropdownFile2}
-				/>
+				>
+					{this.dropdownOptions(this.state.paletteFiles)}
+				</Dropdown>
 				{paletteFileChooserVisible2}
 			</div>
 		</div>);
 
 		var layoutDirection = (<div className="sidepanel-children" id="sidepanel-layout-direction">
 			<div className="sidepanel-headers">Fixed Layout</div>
-			<RadioGroup
+			<RadioButtonGroup
+				className="sidepanel-radio-group"
 				name="layout_direction_radio"
-				dark
 				onChange={this.layoutDirectionOptionChange}
-				choices={[
-					NONE,
-					HORIZONTAL,
-					VERTICAL
-				]}
-				selected={this.props.selectedLayout}
-			/>
+				defaultSelected={this.props.selectedLayout}
+			>
+				<RadioButton
+					value={NONE}
+					labelText={NONE}
+				/>
+				<RadioButton
+					value={HORIZONTAL}
+					labelText={HORIZONTAL}
+				/>
+				<RadioButton
+					value={VERTICAL}
+					labelText={VERTICAL}
+				/>
+			</RadioButtonGroup>
 		</div>);
 
 		var enableObjectModel = (<div className="sidepanel-children" id="sidepanel-object-model">
 			<form>
 				<div className="sidepanel-headers">Use Object Model</div>
 				<div>
-					<ToggleButton dark
+					<Toggle
 						id="sidepanel-object-model-toggle"
-						checked={this.props.internalObjectModel}
-						onChange={this.useInternalObjectModel}
+						toggled={this.props.internalObjectModel}
+						onToggle={this.useInternalObjectModel}
 					/>
 				</div>
 			</form>
@@ -526,65 +529,88 @@ export default class SidePanelForms extends React.Component {
 
 		var connectionType = (<div className="sidepanel-children" id="sidepanel-connection-type">
 			<div className="sidepanel-headers">Connection Type</div>
-			<RadioGroup
+			<RadioButtonGroup
+				className="sidepanel-radio-group"
 				name="connection_type_radio"
-				dark
 				onChange={this.connectionTypeOptionChange}
-				choices={[
-					PORTS_CONNECTION,
-					HALO_CONNECTION
-				]}
-				selected={this.props.selectedConnectionType}
-			/>
+				defaultSelected={this.props.selectedConnectionType}
+			>
+				<RadioButton
+					value={PORTS_CONNECTION}
+					labelText={PORTS_CONNECTION}
+				/>
+				<RadioButton
+					value={HALO_CONNECTION}
+					labelText={HALO_CONNECTION}
+				/>
+			</RadioButtonGroup>
 		</div>);
 
 		var nodeFormatType = (<div className="sidepanel-children" id="sidepanel-node-format-type">
 			<div className="sidepanel-headers">Node Format Type (for 'Ports')</div>
-			<RadioGroup
+			<RadioButtonGroup
+				className="sidepanel-radio-group"
 				name="node_format_type_radio"
-				dark
 				onChange={this.nodeFormatTypeOptionChange}
-				choices={[
-					VERTICAL_FORMAT,
-					HORIZONTAL_FORMAT
-				]}
-				selected={this.props.selectedNodeFormat}
-			/>
+				defaultSelected={this.props.selectedNodeFormat}
+			>
+				<RadioButton
+					value={VERTICAL_FORMAT}
+					labelText={VERTICAL_FORMAT}
+				/>
+				<RadioButton
+					value={HORIZONTAL_FORMAT}
+					labelText={HORIZONTAL_FORMAT}
+				/>
+			</RadioButtonGroup>
 		</div>);
 
 		var linkType = (<div className="sidepanel-children" id="sidepanel-link-type">
 			<div className="sidepanel-headers">Link Type (for 'Ports')</div>
-			<RadioGroup
+			<RadioButtonGroup
+				className="sidepanel-radio-group"
 				name="link_type_radio"
-				dark
 				onChange={this.linkTypeOptionChange}
-				choices={[
-					CURVE_LINKS,
-					ELBOW_LINKS,
-					STRAIGHT_LINKS
-				]}
-				selected={this.props.selectedLinkType}
-			/>
+				defaultSelected={this.props.selectedLinkType}
+			>
+				<RadioButton
+					value={CURVE_LINKS}
+					labelText={CURVE_LINKS}
+				/>
+				<RadioButton
+					value={ELBOW_LINKS}
+					labelText={ELBOW_LINKS}
+				/>
+				<RadioButton
+					value={STRAIGHT_LINKS}
+					labelText={STRAIGHT_LINKS}
+				/>
+			</RadioButtonGroup>
 		</div>);
 
 		var paletteLayout = (<div className="sidepanel-children" id="sidepanel-palette-layout">
 			<div className="sidepanel-headers">Palette Layout</div>
-			<RadioGroup
+			<RadioButtonGroup
 				name="palette_layout_radio"
-				dark
+				className="sidepanel-radio-group"
 				onChange={this.paletteLayoutOptionChange}
-				choices={[
-					FLYOUT,
-					MODAL
-				]}
-				selected={this.props.selectedPaletteLayout}
-			/>
+				defaultSelected={this.props.selectedPaletteLayout}
+			>
+				<RadioButton
+					value={FLYOUT}
+					labelText={FLYOUT}
+				/>
+				<RadioButton
+					value={MODAL}
+					labelText={MODAL}
+				/>
+			</RadioButtonGroup>
 			<div className="sidepanel-headers">Show Narrow Palette</div>
 			<div>
-				<ToggleButton dark
+				<Toggle
 					id="sidepanel-narrow-flyout"
-					checked={this.props.narrowPalette}
-					onChange={this.narrowPalette}
+					toggled={this.props.narrowPalette}
+					onToggle={this.narrowPalette}
 				/>
 			</div>
 		</div>);
@@ -593,29 +619,25 @@ export default class SidePanelForms extends React.Component {
 			<div className="sidepanel-headers">Tips</div>
 			<Checkbox
 				id="tip_palette"
-				name={TIP_PALETTE}
-				dark
+				labelText={TIP_PALETTE}
 				onChange={this.tipConfigChange}
 				checked={this.props.commonCanvasConfig.tipConfig.palette}
 			/>
 			<Checkbox
 				id="tip_nodes"
-				name={TIP_NODES}
-				dark
+				labelText={TIP_NODES}
 				onChange={this.tipConfigChange}
 				checked={this.props.commonCanvasConfig.tipConfig.nodes}
 			/>
 			<Checkbox
 				id="tip_ports"
-				name={TIP_PORTS}
-				dark
+				labelText={TIP_PORTS}
 				onChange={this.tipConfigChange}
 				checked={this.props.commonCanvasConfig.tipConfig.ports}
 			/>
 			<Checkbox
 				id="tip_links"
-				name={TIP_LINKS}
-				dark
+				labelText={TIP_LINKS}
 				onChange={this.tipConfigChange}
 				checked={this.props.commonCanvasConfig.tipConfig.links}
 			/>
@@ -625,10 +647,10 @@ export default class SidePanelForms extends React.Component {
 			<form>
 				<div className="sidepanel-headers">Extra canvas</div>
 				<div>
-					<ToggleButton dark
+					<Toggle
 						id="sidepanel-object-extra-canvas"
-						checked={this.props.extraCanvasDisplayed}
-						onChange={this.extraCanvasChange}
+						toggled={this.props.extraCanvasDisplayed}
+						onToggle={this.extraCanvasChange}
 					/>
 				</div>
 			</form>
@@ -654,10 +676,10 @@ export default class SidePanelForms extends React.Component {
 			<form>
 				<div className="sidepanel-headers">Schema Validation</div>
 				<div>
-					<ToggleButton dark
+					<Toggle
 						id="sidepanel-schema-validation"
-						checked={this.props.schemaValidationEnabled}
-						onChange={this.schemaValidationChange}
+						toggled={this.props.schemaValidationEnabled}
+						onToggle={this.schemaValidationChange}
 					/>
 				</div>
 			</form>
@@ -666,10 +688,10 @@ export default class SidePanelForms extends React.Component {
 		const validateFlowOnOpen = (
 			<div className="sidepanel-children">
 				<div className="sidepanel-headers">Validate flow on open</div>
-				<ToggleButton dark
+				<Toggle
 					id="sidepanel-validateFlowOnOpen-toggle"
-					checked={this.props.validateFlowOnOpen}
-					onChange={this.changeValidateFlowOnOpen}
+					toggled={this.props.validateFlowOnOpen}
+					onToggle={this.changeValidateFlowOnOpen}
 				/>
 			</div>);
 

@@ -17,71 +17,66 @@ import propertyUtils from "../../_utils_/property-utils";
 import selectcolumnParamDef from "../../test_resources/paramDefs/selectcolumn_paramDef.json";
 import selectcolumnMultiInputParamDef from "../../test_resources/paramDefs/selectcolumn_multiInput_paramDef.json";
 
-const controller = new Controller();
+const emptyValueIndicator = "...";
 
-const control = {
-	"name": "targetField",
-	"label": {
-		"text": "Target column"
-	},
-	"description": {
-		"text": "Select a target column"
-	},
-	"controlType": "selectcolumn",
-	"valueDef": {
-		"propType": "string",
-		"isList": false,
-		"isMap": false,
-		"defaultValue": ""
-	},
-	"required": true
-};
-
-const fields = [
-	{
-		"name": "age",
-		"type": "integer",
-		"metadata": {
-			"description": "",
-			"measure": "range",
-			"modeling_role": "input"
-		}
-	},
-	{
-		"name": "BP",
-		"type": "string",
-		"metadata": {
-			"description": "",
-			"measure": "discrete",
-			"modeling_role": "input"
-		}
-	},
-	{
-		"name": "Na",
-		"type": "double",
-		"metadata": {
-			"description": "",
-			"measure": "range",
-			"modeling_role": "input"
-		}
-	}
-];
-propertyUtils.setControls(controller, [control]);
-const propertyId = { name: "targetField" };
-
-const emptyfields = [
-	{
-		"fields": []
-	}
-];
-function setPropertyValue() {
-	controller.setPropertyValues(
-		{ "targetField": "age" }
-	);
-}
-
+// controls selectColumn, selectSchema and oneofselect are all dropdown controls.
+// a set of dropdown basic unit test cases are defined in oneofselect-test.js and
+// do not need to be repeated in selectColumn and selectSchema.
 describe("selectcolumn control renders correctly", () => {
+	const control = {
+		"name": "targetField",
+		"label": {
+			"text": "Target column"
+		},
+		"description": {
+			"text": "Select a target column"
+		},
+		"controlType": "selectcolumn",
+		"valueDef": {
+			"propType": "string",
+			"isList": false,
+			"isMap": false,
+			"defaultValue": ""
+		},
+		"required": true
+	};
+	const fields = [
+		{
+			"name": "age",
+			"type": "integer",
+			"metadata": {
+				"description": "",
+				"measure": "range",
+				"modeling_role": "input"
+			}
+		},
+		{
+			"name": "BP",
+			"type": "string",
+			"metadata": {
+				"description": "",
+				"measure": "discrete",
+				"modeling_role": "input"
+			}
+		},
+		{
+			"name": "Na",
+			"type": "double",
+			"metadata": {
+				"description": "",
+				"measure": "range",
+				"modeling_role": "input"
+			}
+		}
+	];
+	const propertyId = { name: control.name };
+	const controller = new Controller();
+	propertyUtils.setControls(controller, [control]);
 
+	afterEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+	});
 	it("props should have been defined", () => {
 		const wrapper = mount(
 			<SelectColumn
@@ -98,68 +93,116 @@ describe("selectcolumn control renders correctly", () => {
 		expect(wrapper.prop("controller")).to.equal(controller);
 	});
 
-	it("should render correctly with emptyfields and null value selectcolumn", () => {
+	it("dropdown renders correctly in a table", () => {
+		// TODO:  Need to ad this test case
+	});
+	it("dropdown renders messages correctly", () => {
+		controller.updateErrorMessage(propertyId, {
+			validation_id: propertyId.name,
+			type: "warning",
+			text: "bad dropdown value"
+		});
+		const wrapper = mount(
+			<SelectColumn
+				control={control}
+				fields={fields}
+				propertyId={propertyId}
+				controller = {controller}
+			/>
+		);
+		const dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
+		const messageWrapper = dropdownWrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(1);
+	});
+
+	it("should have '...' as first selected option", () => {
 		controller.setPropertyValues(
 			{ "targetField": null }
 		);
 		const wrapper = mount(
 			<SelectColumn
 				control={control}
-				fields={emptyfields}
+				fields={fields}
 				propertyId={propertyId}
 				controller = {controller}
 			/>
 		);
-		const input = wrapper.find(".Dropdown-control");
-		expect(input).to.have.length(1); // TODO not sure what this is validating
+		let dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
+		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
+		// open the dropdown
+		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		dropdownButton.simulate("click");
+		// select the first item
+		dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		expect(dropdownList).to.be.length(4);
+		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
-
-	it("should render a empty selectcolumn and update the dropdown value", () => {
-		setPropertyValue();
+	it("should have '...' as first selected option when fields is empty", () => {
+		controller.setPropertyValues(
+			{ "targetField": null }
+		);
 		const wrapper = mount(
 			<SelectColumn
 				control={control}
-				fields={emptyfields}
+				fields={[]}
 				propertyId={propertyId}
 				controller = {controller}
 			/>
 		);
-
-		const input = wrapper.find(".Dropdown-control");
-		expect(input).to.have.length(1);
-		const evt = { value: "Na", label: "Na" };
-		input.root.node.handleChange(evt); // TODO should use click events if possible
-		expect(controller.getPropertyValue(propertyId)).to.equal("Na");
+		let dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
+		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
+		// open the dropdown
+		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		dropdownButton.simulate("click");
+		// select the first item
+		dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		expect(dropdownList).to.be.length(1);
+		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
+
 	it("should allow empty string to be set as valid field in selectcolumn control", () => {
-		setPropertyValue();
+		controller.setPropertyValues(
+			{ "targetField": "age" }
+		);
 		const wrapper = mount(
 			<SelectColumn
 				control={control}
-				fields={emptyfields}
+				fields={fields}
 				propertyId={propertyId}
 				controller = {controller}
 			/>
 		);
 
-		const input = wrapper.find(".Dropdown-control");
-		expect(input).to.have.length(1);
-		const evt = { value: "...", label: "..." }; // defect with Dropdown npm module.  Value is set to label when ""
-		input.root.node.handleChange(evt); // TODO should use click events if possible
+		let dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
+		expect(dropdownWrapper.find("div > span").text()).to.equal("age"); // should be the value for the control
+		// open the dropdown
+		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		dropdownButton.simulate("click");
+		// select the first item
+		dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		expect(dropdownList).to.be.length(4);
+		dropdownList.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal("");
+	});
+});
+describe("selectcolumn control renders correctly with paramDef", () => {
+	let wrapper;
+	let controller;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnParamDef);
+		wrapper = renderedObject.wrapper;
+		controller = renderedObject.controller;
+	});
+	afterEach(() => {
+		wrapper.unmount();
 	});
 
 	it("selectcolumn control will have updated options by the controller", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnParamDef);
-		const wrapper = renderedObject.wrapper;
-		const selectColumnController = renderedObject.controller;
-
-		const valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the values category
-		const dropDowns = valuesCategory.find("Dropdown");
-
-		expect(dropDowns.at(0).find(".Dropdown-placeholder")
-			.text()).to.equal("age");
-		let field1Options = dropDowns.at(0).prop("options");	// Field1 Panel
+		let dropdownField1 = wrapper.find("div[data-id='properties-field1_panel'] DropdownV2");
+		let field1Options = dropdownField1.prop("items");	// Field1 Panel
 		const field1OptionsExpectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "age", value: "age" },
@@ -181,9 +224,9 @@ describe("selectcolumn control renders correctly", () => {
 
 		expect(field1Options).to.eql(field1OptionsExpectedOptions);
 
-		expect(dropDowns.at(1).find(".Dropdown-placeholder")
-			.text()).to.equal("BP");
-		let field2Options = dropDowns.at(1).prop("options");	// Field2 Panel
+		let dropdownField2 = wrapper.find("div[data-id='properties-field2_panel'] DropdownV2");
+
+		let field2Options = dropdownField2.prop("items");	// Field2 Panel
 		const field2OptionsExpectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "BP", value: "BP" },
@@ -205,7 +248,7 @@ describe("selectcolumn control renders correctly", () => {
 
 		expect(field2Options).to.eql(field2OptionsExpectedOptions);
 
-		const datasetMetadata = selectColumnController.getDatasetMetadata();
+		const datasetMetadata = controller.getDatasetMetadata();
 
 		const newField1 = {
 			"name": "stringAndDiscrete2",
@@ -229,9 +272,12 @@ describe("selectcolumn control renders correctly", () => {
 
 		datasetMetadata[0].fields.push(newField1);
 		datasetMetadata[0].fields.push(newField2);
-		selectColumnController.setDatasetMetadata(datasetMetadata);
-		field1Options = dropDowns.at(0).prop("options");
-		field2Options = dropDowns.at(1).prop("options");
+		controller.setDatasetMetadata(datasetMetadata);
+		wrapper.update();
+		dropdownField1 = wrapper.find("div[data-id='properties-field1_panel'] DropdownV2");
+		field1Options = dropdownField1.prop("items");
+		dropdownField2 = wrapper.find("div[data-id='properties-field2_panel'] DropdownV2");
+		field2Options = dropdownField2.prop("items");
 
 		const dropDownValue1 = {
 			"label": "stringAndDiscrete2",
@@ -253,16 +299,9 @@ describe("selectcolumn control renders correctly", () => {
 
 	});
 
-});
-
-describe("selectcolumn control filters values correctly", () => {
-	const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnParamDef);
-	const wrapper = renderedObject.wrapper;
-
 	it("should filter values from selectcolumn control", () => {
-		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
-		const dropDowns = filterCategory.find("Dropdown");
-		let options = dropDowns.at(0).prop("options"); // by Type
+		const typeDropDown = wrapper.find("div[data-id='properties-field_filter_type'] DropdownV2");
+		let options = typeDropDown.prop("items"); // by Type
 		let expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "age", value: "age" },
@@ -271,7 +310,8 @@ describe("selectcolumn control filters values correctly", () => {
 			{ label: "age4", value: "age4" }
 		];
 		expect(options).to.eql(expectedOptions);
-		options = dropDowns.at(1).prop("options"); // by Types
+		const typesDropDown = wrapper.find("div[data-id='properties-field_filter_types'] DropdownV2");
+		options = typesDropDown.prop("items"); // by Types
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "age", value: "age" },
@@ -284,7 +324,8 @@ describe("selectcolumn control filters values correctly", () => {
 			{ label: "Na4", value: "Na4" }
 		];
 		expect(options).to.eql(expectedOptions);
-		options = dropDowns.at(2).prop("options"); // by Measurement
+		const measurementDropDown = wrapper.find("div[data-id='properties-field_filter_measurement'] DropdownV2");
+		options = measurementDropDown.prop("items"); // by Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "BP", value: "BP" },
@@ -293,7 +334,8 @@ describe("selectcolumn control filters values correctly", () => {
 			{ label: "BP4", value: "BP4" }
 		];
 		expect(options).to.eql(expectedOptions);
-		options = dropDowns.at(3).prop("options"); // by Measurements
+		const measurementsDropDown = wrapper.find("div[data-id='properties-field_filter_measurements'] DropdownV2");
+		options = measurementsDropDown.prop("items"); // by Measurements
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "BP", value: "BP" },
@@ -306,7 +348,8 @@ describe("selectcolumn control filters values correctly", () => {
 			{ label: "drug4", value: "drug4" }
 		];
 		expect(options).to.eql(expectedOptions);
-		options = dropDowns.at(4).prop("options"); // by Type and Measurement
+		const andDropDown = wrapper.find("div[data-id='properties-field_filter_and'] DropdownV2");
+		options = andDropDown.prop("items"); // by Type and Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "drug", value: "drug" },
@@ -315,7 +358,8 @@ describe("selectcolumn control filters values correctly", () => {
 			{ label: "drug4", value: "drug4" }
 		];
 		expect(options).to.eql(expectedOptions);
-		options = dropDowns.at(5).prop("options"); // by Type or Measurement
+		const orDropDown = wrapper.find("div[data-id='properties-field_filter_or'] DropdownV2");
+		options = orDropDown.prop("items"); // by Type or Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "drug", value: "drug" },
@@ -331,17 +375,21 @@ describe("selectcolumn control filters values correctly", () => {
 	});
 });
 
-describe("selectcolumn control filters values correctly with multi input", () => {
-	const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnMultiInputParamDef);
-	const wrapper = renderedObject.wrapper;
+describe("selectcolumn works correctly with multi input schemas", () => {
+	let wrapper;
+	let controller;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnMultiInputParamDef);
+		wrapper = renderedObject.wrapper;
+		controller = renderedObject.controller;
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
 
 	it("should show correct values from selectcolumn control", () => {
-		const valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // VALUES category
-		const selectColumnControls = valuesCategory.find("Dropdown");
-		expect(selectColumnControls).to.have.length(3);
 
-		const select3 = selectColumnControls.at(2);
-		expect(select3.find(".Dropdown-placeholder").text()).to.equal("0.age");
+		let selectField = wrapper.find("div[data-id='properties-field'] DropdownV2");
 
 		const expectedOptions = [
 			{ label: "...", value: "" },
@@ -365,23 +413,26 @@ describe("selectcolumn control filters values correctly with multi input", () =>
 			{ label: "1.stringAndDiscrete", value: "1.stringAndDiscrete" },
 			{ label: "1.stringAndSet", value: "1.stringAndSet" }
 		];
-		const actualOptions = select3.prop("options");
+		const actualOptions = selectField.prop("items");
 		expect(actualOptions).to.eql(expectedOptions);
 
-		select3.getNode().setValue("1.Na", "1.Na");
-		expect(select3.find(".Dropdown-placeholder").text()).to.equal("1.Na");
+		// Make sure you can select a item from the multiple databases
+		// open the dropdown
+		const dropdownButton = selectField.find("div[role='button']");
+		dropdownButton.simulate("click");
+		// select the first item
+		selectField = wrapper.find("div[data-id='properties-field'] DropdownV2");
+		const dropdownList = selectField.find("div.bx--list-box__menu-item");
+		dropdownList.at(15).simulate("click");
+		const expectedValue = { link_ref: "1", field_name: "Na" };
+		expect(controller.getPropertyValue({ name: "field" })).to.eql(expectedValue);
 	});
-});
-
-describe("selectcolumn control filters values correctly with multi schema input", () => {
-	const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnMultiInputParamDef);
-	const wrapper = renderedObject.wrapper;
 
 	it("should filter values from selectcolumn control", () => {
-		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // FILTER category
-		const dropDowns = filterCategory.find("Dropdown");
+		const filterCategory = wrapper.find("div.properties-category-container").at(1); // FILTER category
+		const dropDowns = filterCategory.find("DropdownV2");
 		expect(dropDowns).to.have.length(5);
-		let options = dropDowns.at(0).prop("options"); // by Type
+		let options = dropDowns.at(0).prop("items"); // by Type
 		let expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "0.age", value: "0.age" },
@@ -392,7 +443,7 @@ describe("selectcolumn control filters values correctly with multi schema input"
 		];
 		expect(options).to.eql(expectedOptions);
 
-		options = dropDowns.at(1).prop("options"); // by Measurement
+		options = dropDowns.at(1).prop("items"); // by Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "0.BP", value: "0.BP" },
@@ -403,7 +454,7 @@ describe("selectcolumn control filters values correctly with multi schema input"
 		];
 		expect(options).to.eql(expectedOptions);
 
-		options = dropDowns.at(2).prop("options"); // by Model Role
+		options = dropDowns.at(2).prop("items"); // by Model Role
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "0.drug", value: "0.drug" },
@@ -413,7 +464,7 @@ describe("selectcolumn control filters values correctly with multi schema input"
 		];
 		expect(options).to.eql(expectedOptions);
 
-		options = dropDowns.at(3).prop("options"); // by Type and Measurement
+		options = dropDowns.at(3).prop("items"); // by Type and Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "0.drug", value: "0.drug" },
@@ -424,7 +475,7 @@ describe("selectcolumn control filters values correctly with multi schema input"
 		];
 		expect(options).to.eql(expectedOptions);
 
-		options = dropDowns.at(4).prop("options"); // by Type or Measurement
+		options = dropDowns.at(4).prop("items"); // by Type or Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "0.drug", value: "0.drug" },

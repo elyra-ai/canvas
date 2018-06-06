@@ -12,7 +12,6 @@ import CommonProperties from "../../src/common-properties/common-properties.jsx"
 import EditorForm from "../../src/common-properties/components/editor-form";
 import UiConditionsParser from "../../src/common-properties/ui-conditions/ui-conditions-parser.js";
 import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
-import { ReactWrapper } from "enzyme";
 import { expect } from "chai";
 
 import CustomTableControl from "./custom-controls/CustomTableControl";
@@ -78,12 +77,9 @@ function createEditorForm(state, formData, controller) {
 
 // expectedFields is optional
 // fieldsToSelect is an array of field names or objects with name and schema. ex: { "name": "age", "schema": "schema1" }
-function fieldPicker(fieldsToSelect, expectedFields) {
-	const fphtml = document.getElementById("field-picker-table"); // needed since modal dialogs are outside `wrapper`
-	const fieldpicker = new ReactWrapper(fphtml, true);
-
+function fieldPicker(fieldpickerWrapper, fieldsToSelect, expectedFields) {
 	if (expectedFields) {
-		const rows = fieldpicker.find(".field-picker-data-rows");
+		const rows = fieldpickerWrapper.find("tr.properties-fp-data-rows");
 		expect(rows).to.have.length(expectedFields.length);
 		for (let i = 0; i < expectedFields.length; ++i) {
 			if (typeof expectedFields[i] === "object") {
@@ -105,20 +101,13 @@ function fieldPicker(fieldsToSelect, expectedFields) {
 	}
 
 	for (const field of fieldsToSelect) {
-		const checkbox = fieldpicker.find(`[data-name="${field}"]`);
-		checkbox.simulate("change", { target: { checked: true } });
+		const checkbox = fieldpickerWrapper.find(`input[data-name="${field}"]`);
+		expect(checkbox).to.have.length(1);
+		checkbox.getDOMNode().checked = true;
+		checkbox.simulate("change");
 	}
 
-	fieldpicker.find("#properties-apply-button").simulate("click"); // applies the field picker
-}
-
-// value and expectedOptions are in the form {label: <label>, value: <value>}
-function dropDown(wrapper, idx, value, expectedOptions) {
-	const dropdown = wrapper.find("Dropdown");
-	const options = dropdown.at(idx).prop("options");
-	expect(options).to.eql(expectedOptions); // check all values available
-	dropdown.at(idx).getNode()
-		.setValue(value.value, value.label); // set the dropdown value.
+	fieldpickerWrapper.find("button[data-id='properties-apply-button']").simulate("click"); // applies the field picker
 }
 
 function selectCheckbox(wrapper, idx, id) {
@@ -134,11 +123,37 @@ function setControls(controller, controls) {
 	controller.saveControls(parsedControls);
 }
 
+function genLongString(length) {
+	let str = "";
+	while (length > str.length) {
+		str += Math.random().toString(36)
+			.substr(2, 1);
+	}
+	return str;
+}
+
+function openSummaryPanel(wrapper, panelId) {
+	const summaryPanel = wrapper.find(`div[data-id='properties-${panelId}']`);
+	expect(summaryPanel).to.have.length(1);
+	summaryPanel.find("button.properties-summary-link-button")
+		.simulate("click");
+	return wrapper.find("div.properties-wf-content.show");
+}
+
+function openFieldPicker(wrapper, dataIdName) {
+	const tableWrapper = wrapper.find("div[data-id=\"" + dataIdName + "\"]");
+	const addFieldsButtons = tableWrapper.find("button.properties-add-fields-button"); // field picker buttons
+	addFieldsButtons.at(0).simulate("click"); // open filter picker
+	return wrapper.find("div.properties-fp-table");
+}
+
 module.exports = {
 	flyoutEditorForm: flyoutEditorForm,
 	createEditorForm: createEditorForm,
 	fieldPicker: fieldPicker,
-	dropDown: dropDown,
 	selectCheckbox: selectCheckbox,
-	setControls: setControls
+	setControls: setControls,
+	genLongString: genLongString,
+	openSummaryPanel: openSummaryPanel,
+	openFieldPicker: openFieldPicker
 };

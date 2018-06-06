@@ -52,7 +52,7 @@ module.exports = {
 						use: [
 							{ loader: "css-loader" },
 							{ loader: "postcss-loader", options: { ident: "postcss", plugins: [require("autoprefixer")] } },
-							{ loader: "sass-loader" }
+							{ loader: "sass-loader", options: { includePaths: ["node_modules"] } }
 						]
 					}
 				)

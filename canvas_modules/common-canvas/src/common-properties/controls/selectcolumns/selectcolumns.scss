@@ -8,24 +8,30 @@
  *******************************************************************************/
 
 // overwrite flexible-table.scss: .flexible-table-container-absolute-noheader tr
-.properties-column-select #flexible-table-container tbody>tr,
-.properties-column-select #flexible-table-container-noheader tbody>tr {
-	border-bottom: 0;
-
-	// this section can be removed once bootstrap css is gone
-	td {
-		border-top: 0;
+.properties-column-select .properties-ft-container ,
+.properties-column-select .properties-ft-container-noheader  {
+	& tbody>tr {
+		border-bottom: 0;
+	}
+	& tbody > tr > td {
+		padding: 8px;
 	}
 }
 
 .column-select-table-row {
 	font-weight: 500;
-	color: #3D70B2;
+	color: $brand-01;
+	&.disabled {
+		opacity: 0.5;
+	}
 }
 .column-select-table-selected-row {
-	background-color: #DFE3E6;
+	background-color: $ui-04;
+	&.disabled {
+		opacity: 0.5;
+	}
 }
 
-.properties-column-select #flexible-table-container-wrapper {
+.properties-column-select .properties-ft-container-wrapper {
 	height: 150px;
 }

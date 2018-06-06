@@ -7,40 +7,274 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import React from "react";
 import { expect } from "chai";
+import Controller from "./../../../src/common-properties/properties-controller";
+import Checkboxset from "./../../../src/common-properties/controls/checkboxset";
+import { mount } from "enzyme";
 import propertyUtils from "../../_utils_/property-utils";
 
-import checkboxsetParamDef from "../../test_resources/json/checkboxset_paramDef.json";
+const controller = new Controller();
 
-describe("checkboxset control renders correctly", () => {
+const control = {
+	name: "test-checkboxset",
+	values: ["apple", "grape", "orange", "pear"],
+	valueLabels: ["apple", "grape", "orange", "pear"]
+};
+const controlNull = {
+	name: "test-checkboxset-null",
+	values: ["apple", "orange", "pear"],
+	valueLabels: ["apple", "orange", "pear"]
+};
+const controlUndefined = {
+	name: "test-checkboxset-undefined",
+	values: ["apple", "orange", "pear"],
+	valueLabels: ["apple", "orange", "pear"]
+};
+const controlNumber = {
+	name: "test-checkboxset-number",
+	values: [10, 14.2, 20, -1, 25, 400],
+	valueLabels: ["10", "14.2", "20", "-1", "25", "400"]
+};
+const controlInvalid = {
+	name: "test-checkboxset-invalid",
+	values: ["orange", "pear", "peach"],
+	valueLabels: ["orange", "pear", "peach"]
+};
+propertyUtils.setControls(controller, [control, controlNull, controlNumber,
+	controlInvalid, controlUndefined]);
 
-	const renderedObject = propertyUtils.flyoutEditorForm(checkboxsetParamDef);
-	const wrapper = renderedObject.wrapper;
-	const controller = renderedObject.controller;
+const propertyId = { name: "test-checkboxset" };
 
-	it("checkboxset control should render when the controlValue is null", () => {
-
-		const valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the values category
-		const checkboxSet = valuesCategory.find("#editor-control-checkboxSetNull");
-		expect(checkboxSet).to.have.length(1);
-		expect(checkboxSet.find("input[type='checkbox']")).to.have.length(3);
-		propertyUtils.selectCheckbox(valuesCategory, 0, "integer"); // integer checkbox
-		propertyUtils.selectCheckbox(valuesCategory, 1, "string"); // string checkbox
-		propertyUtils.selectCheckbox(valuesCategory, 2, "boolean"); // boolean checkbox
-		const checkboxsetPropertyValue = controller.getPropertyValue({ name: "checkboxSetNull" });
-		expect(checkboxsetPropertyValue).to.eql(["integer", "string", "boolean"]);
-
+describe("checkboxset control tests", () => {
+	beforeEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+		controller.setPropertyValues(
+			{
+				"test-checkboxset": ["apple", "orange"],
+				"test-checkboxset-invalid": ["apple", "orange"],
+				"test-checkboxset-null": null,
+				"test-checkboxset-number": [14.2, 20, -1]
+			}
+		);
 	});
+	it("checkboxset props should have been defined", () => {
+		const wrapper = mount(
+			<Checkboxset
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				tableControl
+			/>
+		);
 
-	it("checkboxset control should render when the controlValue is undefined", () => {
-		const valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the values category
-		const checkboxSet = valuesCategory.find("#editor-control-checkboxSetUndefined");
-		expect(checkboxSet).to.have.length(1);
-		expect(checkboxSet.find("input[type='checkbox']")).to.have.length(2);
-		propertyUtils.selectCheckbox(valuesCategory, 3, "na"); // na checkbox
-		propertyUtils.selectCheckbox(valuesCategory, 4, "drug"); // drug checkbox
-		const checkboxsetPropertyValue = controller.getPropertyValue({ name: "checkboxSetUndefined" });
-		expect(checkboxsetPropertyValue).to.eql(["na", "drug"]);
+		expect(wrapper.prop("control")).to.equal(control);
+		expect(wrapper.prop("controller")).to.equal(controller);
+		expect(wrapper.prop("propertyId")).to.equal(propertyId);
+		expect(wrapper.prop("tableControl")).to.equal(true);
+	});
+	it("checkboxset labels are displayed", () => {
+		const wrapper = mount(
+			<Checkboxset
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset']");
+		const labels = checkboxsetWrapper.find(".properties-checkboxset-container label > span");
+		expect(labels).to.have.length(control.valueLabels.length);
+		for (let i = 0; i < labels.length; ++i) {
+			expect(labels.at(i).text()).to.equal(control.valueLabels[i]);
+		}
+	});
+	it("checkboxset number labels are displayed", () => {
+		const propertyIdNumber = { name: "test-checkboxset-number" };
+		const wrapper = mount(
+			<Checkboxset
+				control={controlNumber}
+				controller={controller}
+				propertyId={propertyIdNumber}
+			/>
+		);
+		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset-number']");
+		const labels = checkboxsetWrapper.find(".properties-checkboxset-container label > span");
+		expect(labels).to.have.length(controlNumber.valueLabels.length);
+		for (let i = 0; i < labels.length; ++i) {
+			expect(labels.at(i).text()).to.equal(controlNumber.valueLabels[i]);
+		}
+	});
+	it("checkboxset handles updates values correctly", () => {
+		const wrapper = mount(
+			<Checkboxset
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset']");
+		const checkboxes = checkboxsetWrapper.find("input");
+		// check to make sure correct checkboxes are checked
+		expect(checkboxes).to.have.length(control.valueLabels.length);
+		expect(checkboxes.at(0).getDOMNode().checked).to.equal(true);
+		expect(checkboxes.at(1).getDOMNode().checked).to.equal(false);
+		expect(checkboxes.at(2).getDOMNode().checked).to.equal(true);
+		expect(checkboxes.at(3).getDOMNode().checked).to.equal(false);
+		// unchecked a box
+		checkboxes.at(0).getDOMNode().checked = false;
+		checkboxes.at(0).simulate("change");
+		expect(controller.getPropertyValue(propertyId)).to.eql(["orange"]);
 
+		// checked a box
+		checkboxes.at(1).getDOMNode().checked = true;
+		checkboxes.at(1).simulate("change");
+		expect(controller.getPropertyValue(propertyId)).to.eql(["orange", "grape"]);
+
+		// checked a box
+		checkboxes.at(0).getDOMNode().checked = true;
+		checkboxes.at(0).simulate("change");
+		expect(controller.getPropertyValue(propertyId)).to.eql(["orange", "grape", "apple"]);
+
+		// unchecked a box
+		checkboxes.at(1).getDOMNode().checked = false;
+		checkboxes.at(1).simulate("change");
+		expect(controller.getPropertyValue(propertyId)).to.eql(["orange", "apple"]);
+	});
+	it("checkboxset handles number updates values correctly", () => {
+		const propertyIdNumber = { name: "test-checkboxset-number" };
+		const wrapper = mount(
+			<Checkboxset
+				control={controlNumber}
+				controller={controller}
+				propertyId={propertyIdNumber}
+			/>
+		);
+		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset-number']");
+		const checkboxes = checkboxsetWrapper.find("input");
+		expect(checkboxes).to.have.length(controlNumber.valueLabels.length);
+		expect(checkboxes.at(0).getDOMNode().checked).to.equal(false);
+		expect(checkboxes.at(1).getDOMNode().checked).to.equal(true);
+		expect(checkboxes.at(2).getDOMNode().checked).to.equal(true);
+		expect(checkboxes.at(3).getDOMNode().checked).to.equal(true);
+		expect(checkboxes.at(4).getDOMNode().checked).to.equal(false);
+		expect(checkboxes.at(5).getDOMNode().checked).to.equal(false);
+		// unchecked a box
+		checkboxes.at(2).getDOMNode().checked = false;
+		checkboxes.at(2).simulate("change");
+		expect(controller.getPropertyValue(propertyIdNumber)).to.eql([14.2, -1]);
+
+		// checked a box
+		checkboxes.at(0).getDOMNode().checked = true;
+		checkboxes.at(0).simulate("change");
+		expect(controller.getPropertyValue(propertyIdNumber)).to.eql([14.2, -1, 10]);
+	});
+	it("checkboxset handles invalid values correctly", () => {
+		const propertyIdInvalid = { name: "test-checkboxset-invalid" };
+		const wrapper = mount(
+			<Checkboxset
+				control={controlInvalid}
+				controller={controller}
+				propertyId={propertyIdInvalid}
+			/>
+		);
+		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset-invalid']");
+		const checkboxes = checkboxsetWrapper.find("input");
+		// check to make sure correct checkboxes are checked
+		expect(checkboxes).to.have.length(controlInvalid.valueLabels.length);
+		expect(checkboxes.at(0).getDOMNode().checked).to.equal(true);
+		expect(checkboxes.at(1).getDOMNode().checked).to.equal(false);
+		expect(checkboxes.at(2).getDOMNode().checked).to.equal(false);
+		// unchecked a box
+		checkboxes.at(2).getDOMNode().checked = true;
+		checkboxes.at(2).simulate("change");
+		expect(controller.getPropertyValue(propertyIdInvalid)).to.eql(["apple", "orange", "peach"]);
+	});
+	it("checkboxset handles null correctly", () => {
+		const propertyIdNull = { name: "test-checkboxset-null" };
+		const wrapper = mount(
+			<Checkboxset
+				control={controlNull}
+				controller={controller}
+				propertyId={propertyIdNull}
+			/>
+		);
+		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset-null']");
+		const checkboxes = checkboxsetWrapper.find("input");
+		// all no checkboxes should be checked
+		expect(checkboxes).to.have.length(controlNull.valueLabels.length);
+		checkboxes.forEach((checkbox) => {
+			expect(checkbox.getDOMNode().checked).to.equal(false);
+		});
+		const checkbox = checkboxes.at(1);
+		checkbox.getDOMNode().checked = true;
+		checkbox.simulate("change");
+		expect(controller.getPropertyValue(propertyIdNull)).to.eql(["orange"]);
+	});
+	it("checkboxset handles undefined correctly", () => {
+		const propertyIdUndefined = { name: "test-checkboxset-undefined" };
+		const wrapper = mount(
+			<Checkboxset
+				control={controlUndefined}
+				controller={controller}
+				propertyId={propertyIdUndefined}
+			/>
+		);
+		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset-undefined']");
+		const checkboxes = checkboxsetWrapper.find("input");
+		// all no checkboxes should be checked
+		expect(checkboxes).to.have.length(controlUndefined.valueLabels.length);
+		checkboxes.forEach((checkbox) => {
+			expect(checkbox.getDOMNode().checked).to.equal(false);
+		});
+		const checkbox = checkboxes.at(0);
+		checkbox.getDOMNode().checked = true;
+		checkbox.simulate("change");
+		expect(controller.getPropertyValue(propertyIdUndefined)).to.eql(["apple"]);
+	});
+	it("checkboxset renders when disabled", () => {
+		controller.updateControlState(propertyId, "disabled");
+		const wrapper = mount(
+			<Checkboxset
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset']");
+		const checkboxes = checkboxsetWrapper.find("input");
+		expect(checkboxes.length).to.have.gt(1);
+		checkboxes.forEach((checkbox) => {
+			expect(checkbox.prop("disabled")).to.equal(true);
+		});
+	});
+	it("checkboxset renders when hidden", () => {
+		controller.updateControlState(propertyId, "hidden");
+		const wrapper = mount(
+			<Checkboxset
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkboxset']");
+		expect(checkboxWrapper.hasClass("hide")).to.equal(true);
+	});
+	it("checkboxset renders messages correctly", () => {
+		controller.updateErrorMessage(propertyId, {
+			validation_id: propertyId.name,
+			type: "warning",
+			text: "bad checkbox value"
+		});
+		const wrapper = mount(
+			<Checkboxset
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkboxset']");
+		const messageWrapper = checkboxWrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(1);
 	});
 });

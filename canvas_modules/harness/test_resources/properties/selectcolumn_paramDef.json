@@ -20,7 +20,13 @@
     "field_filter_type": "",
     "field_filter_types": "",
     "field_filter_and": "",
-    "field_filter_or": ""
+    "field_filter_or": "",
+    "selectcolumn_table_error": [
+      [
+        "age",
+        "BP"
+      ]
+    ]
   },
   "parameters": [
     {
@@ -132,6 +138,32 @@
       "id": "field_filter_or",
       "type": "string",
       "role": "column"
+    },
+    {
+      "id": "selectcolumn_table_error",
+      "type": "array[selectcolumn_table]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "selectcolumn_table",
+      "parameters": [
+        {
+          "id": "field_col1",
+          "type": "string",
+          "role": "column"
+        },
+        {
+          "id": "field_col2",
+          "type": "string",
+          "role": "column"
+        },
+        {
+          "id": "field_col3",
+          "type": "string",
+          "role": "column"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -311,6 +343,59 @@
         "description": {
           "default": "Filters out all fields without a 'type' of 'integer' or 'measurement' of 'set'.  Should be all 'drug*' and 'age*' fields."
         }
+      },
+      {
+        "parameter_ref": "selectcolumn_table_error",
+        "label": {
+          "default": "selectcolumn in a table errors"
+        },
+        "description": {
+          "default": "selectcolumn in a table errors"
+        },
+        "text_before": {
+          "default": "To generated an error:  inline = age2 || on_panel = drug3 || subpanel = Na"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "selectcolumn_table",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "field_col1",
+            "label": {
+              "default": "inline"
+            },
+            "description": {
+              "default": "inline"
+            },
+            "width": 10,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "field_col2",
+            "label": {
+              "default": "on-panel"
+            },
+            "description": {
+              "default": "on-panel"
+            },
+            "width": 10,
+            "edit_style": "on_panel"
+          },
+          {
+            "parameter_ref": "field_col3",
+            "label": {
+              "default": "subpanel"
+            },
+            "description": {
+              "default": "subpanel"
+            },
+            "width": 10,
+            "edit_style": "subpanel"
+          }
+        ]
       }
     ],
     "group_info": [
@@ -377,6 +462,30 @@
           "field_filter_measurements",
           "field_filter_and",
           "field_filter_or"
+        ]
+      },
+      {
+        "id": "selectcolumn-tables",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "selectcolumn_table-error-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "selectcolumn in a table"
+            },
+            "group_info": [
+              {
+                "id": "selectcolumn_table_error",
+                "parameter_refs": [
+                  "selectcolumn_table_error"
+                ]
+              }
+            ]
+          }
         ]
       }
     ]
@@ -535,6 +644,63 @@
               }
             }
           ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest1",
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "selectcolumn_table_error[0]",
+          "message": {
+            "default": "inline equals age2"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "selectcolumn_table_error[0]",
+            "op": "notEquals",
+            "value": "age2"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest2",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "selectcolumn_table_error[1]",
+          "message": {
+            "default": "on_panel equals drug3"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "selectcolumn_table_error[1]",
+            "op": "notEquals",
+            "value": "drug3"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest3",
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "selectcolumn_table_error[2]",
+          "message": {
+            "default": "subpanel equals Na"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "selectcolumn_table_error[2]",
+            "op": "notEquals",
+            "value": "Na"
+          }
         }
       }
     }

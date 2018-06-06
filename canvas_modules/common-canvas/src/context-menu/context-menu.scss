@@ -1,46 +1,46 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
 
- /* Context Menu styles - used by react-contextmenu module */
+/* Context Menu styles - used by react-contextmenu module */
 
 .context-menu-popover {
 	min-width: 160px;
-	background-color: #f0f3f6;
+	background-color: $ui-02;
 	background-clip: padding-box;
-	border: none;
+	border: 0;
 	outline: none;
 	position: absolute;
 	z-index: 2;
-	-moz-box-shadow:2px 2px 2px rgba(0,0,0,0.2);
-	-webkit-box-shadow:2px 2px 2px rgba(0,0,0,0.2);
-	box-shadow:2px 2px 2px rgba(0,0,0,0.2);
+	-moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+	box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
-.context-menu-popover.popover>.arrow{
+.context-menu-popover.popover>.arrow {
 	display: none;
 }
-.context-menu-popover.popover>.popover-content{
-	padding: 0px;
+.context-menu-popover.popover>.popover-content {
+	padding: 0;
 }
 
 .react-contextmenu {
 	min-width: 160px;
 	text-align: left;
-	background-color: #f0f3f6;
+	background-color: $ui-02;
 	-webkit-background-clip: padding-box;
 	background-clip: padding-box;
-	border-radius: .25rem;
+	border-radius: 0.25rem;
 	outline: none;
 	display: none;
-	-moz-box-shadow:2px 2px 2px rgba(0,0,0,0.2);
-	-webkit-box-shadow:2px 2px 2px rgba(0,0,0,0.2);
-	box-shadow:2px 2px 2px rgba(0,0,0,0.2);
+	-moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+	box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
 .react-contextmenu--visible {
@@ -49,34 +49,35 @@
 
 .react-contextmenu-item {
 	height: 30px;
-	padding: 0.32em 1em;
+	padding: 0 1em;
 	clear: both;
-	color: #152935;
+	color: $text-01;
 	text-align: inherit;
 	white-space: nowrap;
 	background: 0 0;
 	border: 0;
+	display: flex;
+	align-items: center;
 }
 
 .react-contextmenu-item:active,
 .react-contextmenu-item:focus,
 .react-contextmenu-item:hover {
-	color: #262626;
-	background: #dfe3e6;
+	background: $ui-04;
 	text-decoration: none;
-	border: none;
+	border: 0;
 	outline: none; /* Suppress Chrome's blue active border */
 }
 
 .react-contextmenu-item.react-contextmenu-submenu {
-	padding: 0px 0px;
+	padding: 0;
 }
 
 .react-contextmenu-item.react-contextmenu-submenu > div {
 	padding-right: 27px;
 }
 
-.react-contextmenu-item.react-contextmenu-submenu > div:after {
+.react-contextmenu-item.react-contextmenu-submenu > div::after {
 	content: "▶";
 	display: inline-block;
 	position: absolute;
@@ -87,6 +88,6 @@
 	height: 1px;
 	display: block;
 	overflow: hidden;
-	background-color: #dfe3e6;
+	background-color: $ui-04;
 	padding: 0;
 }

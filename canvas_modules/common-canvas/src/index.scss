@@ -7,6 +7,13 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+
+@import "carbon-components/scss/globals/scss/vars";
+
 @import "./../assets/index.scss";
 @import "./common-properties/common-properties.scss";
 @import "./notification-panel/notification-panel.scss";
+@import "./icons/icon.scss";
+@import "./toolbar/toolbar.scss";
+@import "./tooltip/tooltip.scss";
+@import "./context-menu/context-menu.scss";

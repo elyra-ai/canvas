@@ -9,18 +9,16 @@
 
 import React from "react";
 import SomeOfSelectControl from "../../../src/common-properties/controls/someofselect";
-import { mount } from "enzyme";
+import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
 import SomeOfSelectParamDef from "../../test_resources/paramDefs/someofselect_paramDef.json";
-import FilteredEnumParamDef from "../../test_resources/paramDefs/filteredEnums_paramDef.json";
-
 
 const controller = new Controller();
 
 const control = {
-	"name": "method",
+	"name": "test-someofselect",
 	"label": {
 		"text": "Merge method"
 	},
@@ -43,13 +41,13 @@ const control = {
 		"Ranked condition"
 	]
 };
-
+propertyUtils.setControls(controller, [control]);
 const propertyId = { name: "test-someofselect" };
 
-describe("Multi-select renders correctly", () => {
+describe("SomeOfSelectControl renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<SomeOfSelectControl
 				control={control}
 				controller={controller}
@@ -61,101 +59,161 @@ describe("Multi-select renders correctly", () => {
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 	});
 
-	it("should render a Multi-select control", () => {
-		const wrapper = mount(
+	it("should render a SomeOfSelectControl", () => {
+		const wrapper = mountWithIntl(
 			<SomeOfSelectControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find(".form-control");
-		expect(input).to.have.length(1);
+		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
+		const someofselectCheckbox = someofselectWrapper.find("input");
+		expect(someofselectCheckbox).to.have.length(4);
+	});
+	it("SomeOfSelectControl updates correctly", () => {
+		controller.setPropertyValues(
+			{ "test-someofselect": ["Order"] }
+		);
+		const wrapper = mountWithIntl(
+			<SomeOfSelectControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
+		const someofselectCheckbox = someofselectWrapper.find("input");
+		expect(someofselectCheckbox).to.have.length(4);
+
+		expect(someofselectCheckbox.at(0).getDOMNode().checked).to.equal(true);
+		someofselectCheckbox.at(0).getDOMNode().checked = false;
+		someofselectCheckbox.at(0).simulate("change");
+		expect(controller.getPropertyValue(propertyId)).to.have.length(0);
+	});
+	it("SomeOfSelectControl handles null correctly", () => {
+		controller.setPropertyValues(
+			{ "test-someofselect": null }
+		);
+		const wrapper = mountWithIntl(
+			<SomeOfSelectControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
+		const someofselectCheckbox = someofselectWrapper.find("input");
+		expect(someofselectCheckbox).to.have.length(4);
+
+		someofselectCheckbox.forEach(function(checkbox) {
+			expect(checkbox.getDOMNode().checked).to.equal(false);
+		});
+		someofselectCheckbox.at(1).getDOMNode().checked = true;
+		someofselectCheckbox.at(1).simulate("change");
+		const controlValue = controller.getPropertyValue(propertyId);
+		expect(controlValue).to.have.length(1);
+		expect(controlValue[0]).to.equal("Keys");
+	});
+	it("SomeOfSelectControl handles undefined correctly", () => {
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mountWithIntl(
+			<SomeOfSelectControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
+		const someofselectCheckbox = someofselectWrapper.find("input");
+		expect(someofselectCheckbox).to.have.length(4);
+
+		someofselectCheckbox.forEach(function(checkbox) {
+			expect(checkbox.getDOMNode().checked).to.equal(false);
+		});
+		someofselectCheckbox.at(2).getDOMNode().checked = true;
+		someofselectCheckbox.at(2).simulate("change");
+		const controlValue = controller.getPropertyValue(propertyId);
+		expect(controlValue).to.have.length(1);
+		expect(controlValue[0]).to.equal("Condition");
+	});
+	it("SomeOfSelectControl renders when disabled", () => {
+		controller.updateControlState(propertyId, "disabled");
+		const wrapper = mountWithIntl(
+			<SomeOfSelectControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
+		const someofselectCheckbox = someofselectWrapper.find("input");
+		expect(someofselectCheckbox).to.have.length(4);
+
+		someofselectCheckbox.forEach(function(checkbox) {
+			expect(checkbox.prop("disabled")).to.equal(true);
+		});
+	});
+	it("SomeOfSelectControlrenders when hidden", () => {
+		controller.updateControlState(propertyId, "hidden");
+		const wrapper = mountWithIntl(
+			<SomeOfSelectControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
+		expect(someofselectWrapper.hasClass("hide")).to.equal(true);
+	});
+	it("checkbox renders messages correctly", () => {
+		controller.updateErrorMessage(propertyId, {
+			validation_id: propertyId.name,
+			type: "warning",
+			text: "bad someofselect value"
+		});
+		const wrapper = mountWithIntl(
+			<SomeOfSelectControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
+		const messageWrapper = someofselectWrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(1);
 	});
 });
 
 describe("someofselect works correctly in common-properties", () => {
-	const expectedOption = { "value": "green", "style": {}, "children": "green" };
 	let wrapper;
-	let controller1;
 	beforeEach(() => {
 		const form = propertyUtils.flyoutEditorForm(SomeOfSelectParamDef);
 		wrapper = form.wrapper;
-		controller1 = form.controller;
 	});
 
 	afterEach(() => {
 		wrapper.unmount();
 	});
-	it("Validate someofselect rendered correctly", () => {
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the FILTERED ENUMERATIONS category
-		const controls = category.find("FormControl");
-		expect(controls).to.have.length(5);
-		const options = controls.at(0).find("option"); // someeofselect
-		expect(options.at(3).props()).to.eql(expectedOption);
-	});
-	it("Validate someofselect_error should have warning message when set to red", () => {
-		controller1.updatePropertyValue({ name: "someofselect_error" }, ["red"]);
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the CONDITIONS category
-		expect(category.find(".validation-error-message-icon-selection")).to.have.length(1);
-		expect(category.find(".validation-error-message-color-error")).to.have.length(1);
-	});
-	it("Validate someofselect_warning should have warning message when set to yellow", () => {
-		controller1.updatePropertyValue({ name: "someofselect_warning" }, ["yellow", "green"]);
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the CONDITIONS category
-		expect(category.find(".validation-warning-message-icon-selection")).to.have.length(1);
-		expect(category.find(".validation-error-message-color-warning")).to.have.length(1);
-	});
+
 	it("Validate someofselect_disabled should have options filtered by enum_filter", () => {
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
-		const checkbox = category.find("#editor-control-disable").at(0);
-		const evt = { target: { checked: false } };
-		checkbox.simulate("change", evt);
-		const select = category.find("#editor-control-someofselect_disabled").at(0);
-		const options = select.find("option");
-		expect(options).to.have.length(3);
-	});
-});
+		// verify the original number of entries
+		let someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_disabled']");
+		let someofselectCheckbox = someofselectWrapper.find("input");
+		expect(someofselectCheckbox).to.have.length(6);
 
-describe("Filtered enumerations on someofselect work correctly in common-properties", () => {
-	const startingOptions = [
-		{ value: "red", label: "Red" },
-		{ value: "orange", label: "Orange" },
-		{ value: "yellow", label: "Yellow" },
-		{ value: "green", label: "Green" },
-		{ value: "blue", label: "Blue" },
-		{ value: "purple", label: "Purple" }
-	];
-	const expectedOptions = [
-		{ value: "red", label: "Red" },
-		{ value: "orange", label: "Orange" },
-		{ value: "yellow", label: "yellow" },
-		{ value: "teal", label: "teal" },
-		{ value: "purple", label: "Purple" }
-	];
+		// deselect the disable checkbox which will filter the list to a smaller number
+		const checkboxWrapper = wrapper.find("div[data-id='properties-disable']");
+		const checkbox = checkboxWrapper.find("input");
+		expect(checkbox.getDOMNode().checked).to.equal(true);
+		checkbox.getDOMNode().checked = false;
+		checkbox.simulate("change");
 
-	let wrapper;
-	beforeEach(() => {
-		const form = propertyUtils.flyoutEditorForm(FilteredEnumParamDef);
-		wrapper = form.wrapper;
-	});
-
-	afterEach(() => {
-		wrapper.unmount();
-	});
-
-	it("Validate someofselect filtered correctly", () => {
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the VALUES category
-		const newValue = { value: "orange", label: "Orange" };
-		propertyUtils.dropDown(category, 0, newValue, startingOptions);
-
-		const controls = category.find("FormControl");
-		expect(controls).to.have.length(1);
-		const dropDowns = category.find("Dropdown");
-		expect(dropDowns).to.have.length(2);
-
-		const options = dropDowns.at(1).prop("options");
-		// console.log("OPTIONS: " + JSON.stringify(dropDowns.at(1).prop("options")));
-		expect(JSON.stringify(options)).to.eql(JSON.stringify(expectedOptions));
+		// the number of entries should be filtered
+		someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_disabled']");
+		someofselectCheckbox = someofselectWrapper.find("input");
+		expect(someofselectCheckbox).to.have.length(3);
 	});
 });

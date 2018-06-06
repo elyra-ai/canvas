@@ -36,11 +36,11 @@ class PaletteContentList extends React.Component {
 			);
 		}
 
-		const style = this.props.style;
+		const style = {};
 		style.display = this.props.show ? "block" : "none";
 		return (
 			<div width="100%" draggable="false" className="palette-content-list palette-scroll"
-				style={ style }
+				style={ Object.assign(style, this.props.style) }
 			>
 				{contentItems}
 			</div>

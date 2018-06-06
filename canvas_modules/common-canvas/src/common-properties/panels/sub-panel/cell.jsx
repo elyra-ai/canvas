@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "react-bootstrap/lib/Button";
+import Button from "carbon-components-react/lib/components/Button";
 import { injectIntl, intlShape } from "react-intl";
 import uuid4 from "uuid/v4";
 import PropertyUtils from "./../../util/property-utils";
@@ -71,8 +71,10 @@ class SubPanelCell extends React.Component {
 						className="properties-tooltips"
 					>
 						<Button
-							style={{ "display": "inline" }}
-							bsSize="xsmall"
+							className="properties-subpanel-button"
+							type="button"
+							small
+							kind="secondary"
 							onClick={this.showSubPanel}
 							disabled={disabled}
 						>

@@ -139,7 +139,20 @@ Scenario: Sanity test tip location adjusted based on boundaries of browser
 	Given I have uploaded JSON for common-properties "CLEM_FilterRows_paramDef.json"
 
 	Then I move the mouse to coordinates 40, 120 in common-properties
-	And I verify the tip for label "Mode" is visible on the "right"
+	And I verify the tip for label "Mode" is visible on the "left"
 
 	Then I move the mouse to coordinates 100, 170 in common-properties
 	And I verify the tip for label "Modeler CLEM Condition Expression" is visible on the "left"
+
+	Scenario: Test if tips show up for the summary table values
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side common-properties panel
+		Then I have selected the "flyout" properties container type
+		Given I have uploaded JSON for common-properties "summaryPanel_paramDef.json"
+		Then I hover over the text "people in generation X" in summary "Values"
+		Then I pause for 1 seconds
+		Then I verify the tip below the text "people in generation X" in summary "Values" is "visible"
+		Then I move the mouse to coordinates 300, 100
+		Then I pause for 1 seconds
+		Then I verify the tip below the text "people in generation X" in summary "Values" is "hidden"

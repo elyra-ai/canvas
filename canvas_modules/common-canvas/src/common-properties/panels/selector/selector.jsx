@@ -11,18 +11,12 @@ import React from "react";
 import PropTypes from "prop-types";
 
 export default class SelectorPanel extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-		};
-	}
 
 	render() {
 		let panel = this.props.panels[this.props.controller.getPropertyValue({ name: this.props.dependsOn })];
 		if (typeof panel === "undefined") {
-			panel = <div className="control-panel" />;
+			panel = <div className="properties-control-panel" />;
 		}
-
 		return (panel);
 	}
 }

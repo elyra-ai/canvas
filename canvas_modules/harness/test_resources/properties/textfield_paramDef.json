@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "string": "testing",
+    "string_charLimit": "testing",
     "string_null": null,
     "string_empty": "",
     "string_placeholder": null,
@@ -13,36 +14,53 @@
     "hide": true,
     "string_hidden": "testing",
     "disable": true,
-    "string_disabled": "testing"
+    "string_disabled": "testing",
+    "string_table": [
+      [
+        "Hopper",
+        "Turing",
+        "Shannon",
+        "Babbage"
+      ],
+      []
+    ],
+    "string_table_cond": [
+      [
+        "Hopper",
+        "Turing",
+        "Shannon",
+        "Babbage"
+      ],
+      []
+    ]
   },
   "parameters": [
     {
       "id": "string",
-      "type": "string",
-      "required": true
+      "type": "string"
+    },
+    {
+      "id": "string_charLimit",
+      "type": "string"
     },
     {
       "id": "string_default",
       "type": "string",
-      "default": "default testing",
-      "required": true
+      "default": "default testing"
     },
     {
       "id": "string_empty",
       "type": "string",
-      "default": "ERROR - should not be set",
-      "required": true
+      "default": "ERROR - should not be set"
     },
     {
       "id": "string_undefined",
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     {
       "id": "string_null",
       "type": "string",
-      "default": "ERROR - should not be set",
-      "required": true
+      "default": "ERROR - should not be set"
     },
     {
       "id": "string_placeholder",
@@ -50,18 +68,15 @@
     },
     {
       "id": "string_longControlName",
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     {
       "id": "string_error",
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     {
       "id": "string_warning",
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     {
       "id": "hide",
@@ -80,6 +95,37 @@
       "id": "string_disabled",
       "type": "string",
       "required": true
+    },
+    {
+      "id": "string_table",
+      "type": "array[textfields]"
+    },
+    {
+      "id": "string_table_cond",
+      "type": "array[textfields]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "textfields",
+      "parameters": [
+        {
+          "id": "textfield",
+          "type": "string"
+        },
+        {
+          "id": "textfield2",
+          "type": "string"
+        },
+        {
+          "id": "textfield_on_panel",
+          "type": "string"
+        },
+        {
+          "id": "textfield_sub_panel",
+          "type": "string"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -97,6 +143,16 @@
         "description": {
           "default": "textfield with parameter value set to 'testing'"
         }
+      },
+      {
+        "parameter_ref": "string_charLimit",
+        "label": {
+          "default": "string with char limit"
+        },
+        "description": {
+          "default": "textfield with parameter value with a char_limit of `10`"
+        },
+        "char_limit": 10
       },
       {
         "parameter_ref": "string_default",
@@ -196,6 +252,65 @@
         "label": {
           "default": "string Disabled"
         }
+      },
+      {
+        "parameter_ref": "string_table",
+        "label": {
+          "default": "Textfield control in a table"
+        }
+      },
+      {
+        "parameter_ref": "string_table_cond",
+        "label": {
+          "default": "Textfield conditions in a table"
+        },
+        "description": {
+          "default": "Type 'error' in `Standard` column to show an `error`. Type 'warn' in `Additional` column to show an `warn`",
+          "placement": "on_panel"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "textfields",
+        "parameters": [
+          {
+            "parameter_ref": "textfield",
+            "width": 10,
+            "label": {
+              "default": "Standard"
+            }
+          },
+          {
+            "parameter_ref": "textfield2",
+            "width": 10,
+            "label": {
+              "default": "Additional"
+            }
+          },
+          {
+            "parameter_ref": "textfield_on_panel",
+            "width": 10,
+            "label": {
+              "default": "on_panel"
+            },
+            "description": {
+              "default": "textfield with `edit_style=on_panel`"
+            },
+            "edit_style": "on_panel"
+          },
+          {
+            "parameter_ref": "textfield_sub_panel",
+            "width": 10,
+            "label": {
+              "default": "sub_panel"
+            },
+            "description": {
+              "default": "textfield with `edit_style=sub_panel`"
+            },
+            "edit_style": "subpanel"
+          }
+        ]
       }
     ],
     "group_info": [
@@ -207,6 +322,7 @@
         "type": "controls",
         "parameter_refs": [
           "string",
+          "string_charLimit",
           "string_default",
           "string_empty",
           "string_undefined",
@@ -228,6 +344,31 @@
           "string_hidden",
           "disable",
           "string_disabled"
+        ]
+      },
+      {
+        "id": "textfield-table-panels",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "textfield-table-summary",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Edit textfield table"
+            },
+            "group_info": [
+              {
+                "id": "textfield-table-summary-ctrls",
+                "parameter_refs": [
+                  "string_table",
+                  "string_table_cond"
+                ]
+              }
+            ]
+          }
         ]
       }
     ]
@@ -265,6 +406,42 @@
             "parameter_ref": "string_warning",
             "op": "notEquals",
             "value": "warn"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "string_table_cond[1]",
+          "message": {
+            "default": "Should not be 'warn'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "string_table_cond[1]",
+            "op": "notEquals",
+            "value": "warn"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "string_table_cond[0]",
+          "message": {
+            "default": "Should not be 'error'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "string_table_cond[0]",
+            "op": "notEquals",
+            "value": "error"
           }
         }
       }

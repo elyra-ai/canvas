@@ -9,14 +9,13 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import TextField from "ap-components-react/dist/components/TextField";
+import TextInput from "carbon-components-react/lib/components/TextInput";
+import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
+import { STATES } from "./../../constants/constants.js";
+import classNames from "classnames";
 
 export default class PasswordControl extends React.Component {
-	constructor(props) {
-		super(props);
-		this.handleChange = this.handleChange.bind(this);
-	}
 
 	handleChange(evt) {
 		this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.value);
@@ -24,38 +23,26 @@ export default class PasswordControl extends React.Component {
 
 	render() {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const conditionProps = {
-			propertyId: this.props.propertyId,
-			controlType: "password"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
+		const value = controlValue ? controlValue : "";
+		const state = this.props.controller.getControlState(this.props.propertyId);
+		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
 
-		const errorMessage = conditionState.message;
-		const messageType = conditionState.messageType;
-		const icon = conditionState.icon;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
-		stateStyle.paddingBottom = "2px";
-
-		let controlIconContainerClass = "control-icon-container";
-		if (messageType !== "info") {
-			controlIconContainerClass = "control-icon-container-enabled";
-		}
+		const className = classNames("properties-pwdfield", "properties-input-control", { "hide": state === STATES.HIDDEN }, messageInfo ? messageInfo.type : null);
 
 		return (
-			<div className="editor_control_area" style={stateStyle}>
-				<div id={controlIconContainerClass}>
-					<TextField {...stateDisabled}
-						style={stateStyle}
-						type="password"
-						id={ControlUtils.getControlID(this.props.control, this.props.propertyId)}
-						placeholder={this.props.control.additionalText}
-						onChange={this.handleChange}
-						value={controlValue}
-					/>
-					{icon}
-				</div>
-				{errorMessage}
+			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				<TextInput
+					autoComplete="off"
+					id={ControlUtils.getControlId(this.props.propertyId)}
+					disabled={state === STATES.DISABLED}
+					placeholder={this.props.control.additionalText}
+					onChange={this.handleChange.bind(this)}
+					value={value}
+					labelText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
+					type="password"
+				/>
+				<ValidationMessage inTable={this.props.tableControl} state={state} messageInfo={messageInfo} />
 			</div>);
 	}
 }
@@ -63,5 +50,6 @@ export default class PasswordControl extends React.Component {
 PasswordControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
-	controller: PropTypes.object.isRequired
+	controller: PropTypes.object.isRequired,
+	tableControl: PropTypes.bool
 };

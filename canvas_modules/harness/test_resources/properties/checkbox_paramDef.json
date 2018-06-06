@@ -1,0 +1,417 @@
+{
+  "titleDefinition": {
+    "title": "Checkbox"
+  },
+  "current_parameters": {
+    "checkbox": true,
+    "checkbox_null": null,
+    "checkbox_table": [
+      [
+        true
+      ]
+    ],
+    "checkbox_table_cond": [
+      []
+    ],
+    "checkbox_error": false,
+    "checkbox_warning": false,
+    "disable": true,
+    "checkbox_disabled": false,
+    "hide": true,
+    "checkbox_hidden": false,
+    "table_cond": false
+  },
+  "parameters": [
+    {
+      "id": "checkbox",
+      "type": "boolean"
+    },
+    {
+      "id": "checkbox_null",
+      "type": "boolean"
+    },
+    {
+      "id": "checkbox_table",
+      "type": "array[checkboxes]"
+    },
+    {
+      "id": "checkbox_table_cond",
+      "type": "array[checkboxes]"
+    },
+    {
+      "id": "checkbox_default",
+      "default": true,
+      "type": "boolean"
+    },
+    {
+      "id": "checkbox_undefined",
+      "type": "boolean"
+    },
+    {
+      "id": "checkbox_error",
+      "type": "boolean"
+    },
+    {
+      "id": "checkbox_warning",
+      "type": "boolean"
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "checkbox_disable",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "table_cond",
+      "type": "boolean"
+    },
+    {
+      "id": "checkbox_hidden",
+      "type": "boolean",
+      "required": true
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "checkboxes",
+      "parameters": [
+        {
+          "id": "checkbox",
+          "type": "boolean"
+        },
+        {
+          "id": "checkbox2",
+          "type": "boolean"
+        },
+        {
+          "id": "checkbox_on_panel",
+          "type": "boolean"
+        },
+        {
+          "id": "checkbox_sub_panel",
+          "type": "boolean"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "checkbox",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Checkbox "
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "checkbox",
+        "label": {
+          "default": "checkbox"
+        },
+        "description": {
+          "default": "checkbox"
+        }
+      },
+      {
+        "parameter_ref": "checkbox_table",
+        "label": {
+          "default": "Checkbox in a table"
+        }
+      },
+      {
+        "parameter_ref": "checkbox_table_cond",
+        "label": {
+          "default": "Checkbox conditions in a table"
+        }
+      },
+      {
+        "parameter_ref": "checkbox_default",
+        "label": {
+          "default": "checkbox default"
+        },
+        "description": {
+          "default": "checkbox with a default value of 'true'"
+        }
+      },
+      {
+        "parameter_ref": "checkbox_undefined",
+        "label": {
+          "default": "checkbox undefined"
+        },
+        "description": {
+          "default": "checkbox with 'undefined' value"
+        }
+      },
+      {
+        "parameter_ref": "checkbox_null",
+        "label": {
+          "default": "checkbox null"
+        },
+        "description": {
+          "default": "checkbox with 'null' value"
+        }
+      },
+      {
+        "parameter_ref": "checkbox_error",
+        "label": {
+          "default": "checkbox error"
+        },
+        "description": {
+          "default": "checkbox with error when checked"
+        }
+      },
+      {
+        "parameter_ref": "checkbox_warning",
+        "label": {
+          "default": "checkbox warning"
+        },
+        "description": {
+          "default": "checkbox with warning when checked"
+        }
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'checkbox disabled'"
+        }
+      },
+      {
+        "parameter_ref": "checkbox_disable",
+        "label": {
+          "default": "checkbox disabled"
+        },
+        "description": {
+          "default": "checkbox that is disabled"
+        }
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'checkbox hidden'"
+        }
+      },
+      {
+        "parameter_ref": "checkbox_hidden",
+        "label": {
+          "default": "checkbox hidden"
+        },
+        "description": {
+          "default": "checkbox that is hidden"
+        }
+      },
+      {
+        "parameter_ref": "table_cond",
+        "label": {
+          "default": "Click to show table messages"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "checkboxes",
+        "parameters": [
+          {
+            "parameter_ref": "checkbox",
+            "width": 10,
+            "label": {
+              "default": "Standard"
+            }
+          },
+          {
+            "parameter_ref": "checkbox2",
+            "width": 10,
+            "label": {
+              "default": "Additional"
+            }
+          },
+          {
+            "parameter_ref": "checkbox_on_panel",
+            "width": 10,
+            "label": {
+              "default": "on_panel"
+            },
+            "description": {
+              "default": "checkbox with `edit_style=on_panel`"
+            },
+            "edit_style": "on_panel"
+          },
+          {
+            "parameter_ref": "checkbox_sub_panel",
+            "width": 10,
+            "label": {
+              "default": "sub_panel"
+            },
+            "description": {
+              "default": "checkbox with `edit_style=sub_panel`"
+            },
+            "edit_style": "subpanel"
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "checkbox-values-panels",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "checkbox",
+          "checkbox_default",
+          "checkbox_undefined",
+          "checkbox_null"
+        ]
+      },
+      {
+        "id": "checkbox-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "checkbox_error",
+          "checkbox_warning",
+          "disable",
+          "checkbox_disable",
+          "hide",
+          "checkbox_hidden"
+        ]
+      },
+      {
+        "id": "checkbox-table-panels",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "checkbox-table-summary",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Edit checkbox table"
+            },
+            "group_info": [
+              {
+                "id": "checkbox-table-summary-ctrls",
+                "parameter_refs": [
+                  "checkbox_table",
+                  "table_cond",
+                  "checkbox_table_cond"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "checkbox_error",
+          "message": {
+            "default": "Needs to be false"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "checkbox_error",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "checkbox_warning",
+          "message": {
+            "default": "Needs to be false"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "checkbox_warning",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "checkbox_table_cond[1]",
+          "message": {
+            "default": "Checkbox in a table warning testing"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "table_cond",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "checkbox_table_cond[0]",
+          "message": {
+            "default": "Checkbox in a table error testing"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "table_cond",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "checkbox_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "checkbox_disable"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ],
+  "resources": {}
+}

@@ -40,8 +40,7 @@ module.exports = function(grunt) {
 			options: {
 				configFile: ".sass-lint.yml"
 			},
-			target: ["./src/styles/*.scss", "./src/styles/analyze/*.scss",
-				"./src/styles/home/*.scss", "./src/components/**/*.scss"]
+			target: ["./src/**/*.scss"]
 		},
 		clean: {
 			coverage: {
@@ -69,7 +68,7 @@ module.exports = function(grunt) {
 				files: [{
 					expand: true,
 					flatten: false,
-					cwd: "./node_modules/@wdpx/ap-components/dist",
+					cwd: "./node_modules/carbon-components/src/globals/",
 					src: ["fonts/**/*"],
 					dest: ".build"
 				}]
@@ -78,23 +77,16 @@ module.exports = function(grunt) {
 				files: [{
 					expand: true,
 					flatten: false,
-					cwd: "./node_modules/@wdpx/ap-components/dist",
-					src: ["ap-components*.css"],
-					dest: ".build"
-				},
-				{
-					expand: true,
-					flatten: false,
-					cwd: "./node_modules/bootstrap/dist/css",
-					src: ["bootstrap*.css"],
-					dest: ".build"
-				},
-				{
-					expand: true,
-					flatten: false,
 					cwd: "./node_modules/@wdp/common-canvas/dist",
 					src: ["common-canvas*.css"],
 					dest: ".build"
+				},
+				{
+					expand: true,
+					flatten: false,
+					cwd: "./node_modules/codemirror/",
+					src: ["lib/codemirror.css", "addon/hint/show-hint.css"],
+					dest: ".build/codemirror"
 				}]
 			}
 		},

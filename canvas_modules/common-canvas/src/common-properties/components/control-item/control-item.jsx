@@ -9,16 +9,16 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 
 export default class ControlItem extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 
 	render() {
+		const className = classNames("properties-control-item", { "hide": this.props.hide });
 		return (
-			<div className="control-item">
+			<div data-id={this.props.id}
+				className={className} disabled={this.props.disabled}
+			>
 				{this.props.label}
 				{this.props.control}
 			</div>
@@ -27,6 +27,9 @@ export default class ControlItem extends React.Component {
 }
 
 ControlItem.propTypes = {
+	id: PropTypes.string,
 	control: PropTypes.object,
-	label: PropTypes.object
+	label: PropTypes.object,
+	hide: PropTypes.bool,
+	disabled: PropTypes.bool
 };

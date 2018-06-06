@@ -99,12 +99,12 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find("[type='number']");
+		const input = wrapper.find("input[type='number']");
 		expect(input).to.have.length(1);
 		input.simulate("change", { target: { value: "44" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal(44);
 
-		const inputIncrement = wrapper.find(".numpinput__spinner__top");
+		const inputIncrement = wrapper.find("button").at(0);
 		expect(inputIncrement).to.have.length(1);
 		inputIncrement.simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(45);
@@ -118,11 +118,11 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find("[type='number']");
+		const input = wrapper.find("input[type='number']");
 		input.simulate("change", { target: { value: "44" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal(44);
 
-		const inputDecrement = wrapper.find(".numpinput__spinner__bottom");
+		const inputDecrement = wrapper.find("button").at(1);
 		expect(inputDecrement).to.have.length(1);
 		inputDecrement.simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(43);
@@ -136,11 +136,11 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId2}
 			/>
 		);
-		const input = wrapper.find("[type='number']");
+		const input = wrapper.find("input[type='number']");
 		input.simulate("change", { target: { value: "44.3" } });
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.3);
 
-		const inputIncrement = wrapper.find(".numpinput__spinner__top");
+		const inputIncrement = wrapper.find("button").at(0);
 		expect(inputIncrement).to.have.length(1);
 		inputIncrement.simulate("click");
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.4);
@@ -154,11 +154,11 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId2}
 			/>
 		);
-		const input = wrapper.find("[type='number']");
+		const input = wrapper.find("input[type='number']");
 		input.simulate("change", { target: { value: "44.5" } });
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.5);
 
-		const inputDecrement = wrapper.find(".numpinput__spinner__bottom");
+		const inputDecrement = wrapper.find("button").at(1);
 		expect(inputDecrement).to.have.length(1);
 		inputDecrement.simulate("click");
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.4);
@@ -173,11 +173,11 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId2}
 			/>
 		);
-		const input = wrapper.find("[type='number']");
+		const input = wrapper.find("input[type='number']");
 		input.simulate("change", { target: { value: "44.6666" } });
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.6666);
 
-		const inputIncrement = wrapper.find(".numpinput__spinner__top");
+		const inputIncrement = wrapper.find("button").at(0);
 		expect(inputIncrement).to.have.length(1);
 		inputIncrement.simulate("click");
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.6688);
@@ -192,11 +192,11 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId2}
 			/>
 		);
-		const input = wrapper.find("[type='number']");
+		const input = wrapper.find("input[type='number']");
 		input.simulate("change", { target: { value: "44.6666" } });
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.6666);
 
-		const inputDecrement = wrapper.find(".numpinput__spinner__bottom");
+		const inputDecrement = wrapper.find("button").at(1);
 		expect(inputDecrement).to.have.length(1);
 		inputDecrement.simulate("click");
 		wrapper.update();
@@ -219,11 +219,11 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId3}
 			/>
 		);
-		const input = wrapper.find("[type='number']");
+		const input = wrapper.find("input[type='number']");
 		input.simulate("change", { target: { value: "45" } });
 		expect(controller.getPropertyValue(propertyId3)).to.equal(45);
 
-		const inputIncrement = wrapper.find(".numpinput__spinner__top");
+		const inputIncrement = wrapper.find("button").at(0);
 		expect(inputIncrement).to.have.length(1);
 		inputIncrement.simulate("click");
 		expect(controller.getPropertyValue(propertyId3)).to.equal(46);
@@ -236,7 +236,7 @@ describe("spinnerControl paramDef render correctly", () => {
 	const wrapper = renderedObject.wrapper;
 
 	it("should have displayed correct text in spinnerControl elements", () => {
-		const labels = wrapper.find(".control-label");
+		const labels = wrapper.find("label.properties-control-label");
 		expect(labels.at(0).text()).to.equal("Default");
 		expect(labels.at(1).text()).to.equal("Integer");
 		expect(labels.at(2).text()).to.equal("Double");

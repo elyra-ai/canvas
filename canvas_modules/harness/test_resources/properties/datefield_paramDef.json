@@ -12,8 +12,11 @@
     "date_without_a_ui_hint": "2018-01-07",
     "hide_date_field": true,
     "hidden_date": "2018-07-18",
-    "disable_date_field" : true,
-    "disabled_date": "2018-07-18"
+    "disable_date_field": true,
+    "disabled_date": "2018-07-18",
+    "date_table": [
+      []
+    ]
   },
   "parameters": [
     {
@@ -68,6 +71,33 @@
       "id": "disabled_date",
       "type": "date",
       "required": false
+    },
+    {
+      "id": "date_table",
+      "type": "array[datefields]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "datefields",
+      "parameters": [
+        {
+          "id": "datefield",
+          "type": "date"
+        },
+        {
+          "id": "datefield2",
+          "type": "date"
+        },
+        {
+          "id": "datefield_on_panel",
+          "type": "date"
+        },
+        {
+          "id": "datefield_sub_panel",
+          "type": "date"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -171,6 +201,59 @@
           "default": "Initially disbaled date, enabled by clicking checkbox."
         },
         "date_format": "M/D/YYYY"
+      },
+      {
+        "parameter_ref": "date_table",
+        "label": {
+          "default": "Datefield control in a table"
+        },
+        "description": {
+          "default": "Enter invalid date to show error",
+          "placement": "on_panel"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "datefields",
+        "parameters": [
+          {
+            "parameter_ref": "datefield",
+            "width": 10,
+            "label": {
+              "default": "Standard"
+            }
+          },
+          {
+            "parameter_ref": "datefield2",
+            "width": 10,
+            "label": {
+              "default": "Additional"
+            }
+          },
+          {
+            "parameter_ref": "datefield_on_panel",
+            "width": 10,
+            "label": {
+              "default": "on_panel"
+            },
+            "description": {
+              "default": "datefield with `edit_style=on_panel`"
+            },
+            "edit_style": "on_panel"
+          },
+          {
+            "parameter_ref": "datefield_sub_panel",
+            "width": 10,
+            "label": {
+              "default": "sub_panel"
+            },
+            "description": {
+              "default": "datefield with `edit_style=sub_panel`"
+            },
+            "edit_style": "subpanel"
+          }
+        ]
       }
     ],
     "group_info": [
@@ -201,6 +284,30 @@
           "hidden_date",
           "disable_date_field",
           "disabled_date"
+        ]
+      },
+      {
+        "id": "datefield-table-panels",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "datefield-table-summary",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Edit datefield table"
+            },
+            "group_info": [
+              {
+                "id": "datefield-table-summary-ctrls",
+                "parameter_refs": [
+                  "date_table"
+                ]
+              }
+            ]
+          }
         ]
       }
     ]

@@ -7,44 +7,47 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-.node-title-container-right-flyout-panel {
-	height: 45px;
+.properties-title-editor {
+	height: 47px;
 	display: flex;
 	align-items: center;
 	padding-left: 20px;
-	background: #FFFFFF;
+	border-bottom: 2px solid $ui-04;
 }
 
-.node-title-right-flyout-panel {
-	font-size: 24px;
+.properties-title-editor-input {
+	height: 100%;
 	width: 100%;
-	input[readonly] {
-		cursor: default;
+	input { //override styling from carbon
+		font-size: 24px;
+		background: unset;
+		margin: 0;
+		padding: 0;
+		&:focus {
+			border: 0;
+		}
+		&:not([readonly]):focus {
+			border-bottom: 2px solid $ui-04;
+		}
+		&[readonly] {
+			cursor: default;
+		}
 	}
 }
 
-#node-title-editor-right-flyout-panel {
-	margin: 0;
-	padding: 0;
-	border-bottom: 0;
-	&:not([readonly]):focus {
-		border-bottom: 2px solid #C7C7C7;
-	}
-}
-
-.title-edit-right-flyout-panel, .title-help-right-flyout-panel {
+.properties-title-editor-btn {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	height: 100%;
 	width: 45px;
-	-webkit-appearance: none;
 	border: 0;
-	outline: none;
-	padding: 0;
+	cursor: pointer;
 	&:hover {
-		background-color: #EFEFEF;
-		cursor: pointer;
+		background-color: $ui-03;
+	}
+	&:active {
+		background-color: $ui-04;
 	}
 	> svg {
 		height: 20px;

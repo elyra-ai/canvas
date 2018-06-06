@@ -10,84 +10,54 @@
 import React from "react";
 import PropTypes from "prop-types";
 import isEmpty from "lodash/isEmpty";
-import Checkbox from "ap-components-react/dist/components/Checkbox";
+import Checkbox from "carbon-components-react/lib/components/Checkbox";
+import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
-import { TOOL_TIP_DELAY } from "./../../constants/constants.js";
+import { TOOL_TIP_DELAY, STATES } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import uuid4 from "uuid/v4";
+import classNames from "classnames";
 
 export default class CheckboxControl extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-		this.handleChange = this.handleChange.bind(this);
-	}
 
-	handleChange(evt) {
-		this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.checked);
+	handleChange(value) {
+		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 
 	render() {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		var checked = false;
-		if (controlValue) {
-			checked = controlValue.toString() === "true";
-		}
-		const conditionProps = {
-			propertyId: this.props.propertyId,
-			controlType: "checkbox"
-		};
-		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
+		const state = this.props.controller.getControlState(this.props.propertyId);
 
-		const errorMessage = this.props.tableControl ? null : conditionState.message;
-		const messageType = conditionState.messageType;
-		const icon = this.props.tableControl ? <div /> : conditionState.icon;
-		const stateDisabled = conditionState.disabled;
-		const stateStyle = conditionState.style;
-
-		let controlIconContainerId = "control-icon-container";
-		if (messageType !== "info") {
-			controlIconContainerId = "control-icon-container-enabled";
-		}
-
-		const label = this.props.tableControl ? "" : this.props.control.label.text;
-		var cb = (<Checkbox {...stateDisabled}
-			style={stateStyle}
-			id={ControlUtils.getControlID(this.props.control, this.props.propertyId)}
-			name={label}
-			onChange={this.handleChange}
-			checked={checked}
-		/>);
+		const label = this.props.control.label ? this.props.control.label.text : "";
 		const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
 		let tooltip = "";
-		if (this.props.control.description && conditionState.showTooltip && !this.props.tableControl) {
+		if (this.props.control.description && !(state === STATES.DISABLED || state === STATES.HIDDEN) && !this.props.tableControl) {
 			tooltip = (
-				<div className="properties-tooltips">
-					{this.props.control.description.text}
-				</div>
+				<span >{this.props.control.description.text}</span>
 			);
 		}
-
 		return (
-			<div className="checkbox editor_control_area" data-id={ControlUtils.getDataId(this.props.propertyId)} style={stateStyle}>
-				<div id={controlIconContainerId}>
-					<div>
-						<div className="properties-tooltips-container">
-							<Tooltip
-								id={tooltipId}
-								tip={tooltip}
-								direction="right"
-								delay={TOOL_TIP_DELAY}
-								className="properties-tooltips"
-								disable={isEmpty(tooltip)}
-							>
-								{cb}
-							</Tooltip>
-						</div>
-					</div>
-					{icon}
+			<div className={classNames("properties-checkbox", { "hide": state === STATES.HIDDEN })} data-id={ControlUtils.getDataId(this.props.propertyId)} >
+				<div className="properties-tooltips-container">
+					<Tooltip
+						id={tooltipId}
+						tip={tooltip}
+						direction="right"
+						delay={TOOL_TIP_DELAY}
+						className="properties-tooltips"
+						disable={isEmpty(tooltip)}
+					>
+						<Checkbox
+							disabled={state === STATES.DISABLED}
+							id={ControlUtils.getControlId(this.props.propertyId)}
+							labelText={label}
+							onChange={this.handleChange.bind(this)}
+							checked={Boolean(controlValue)}
+							hideLabel={this.props.tableControl}
+						/>
+					</Tooltip>
 				</div>
-				{errorMessage}
+				<ValidationMessage inTable={this.props.tableControl} state={state} messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)} />
 			</div>
 		);
 	}

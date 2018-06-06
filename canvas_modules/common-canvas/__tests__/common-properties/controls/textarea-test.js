@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import TextAreaControl from "../../../src/common-properties/controls/textarea";
+import TextArea from "../../../src/common-properties/controls/textarea";
 import { CHARACTER_LIMITS } from "../../../src/common-properties/constants/constants.js";
 import { mount } from "enzyme";
 import { expect } from "chai";
@@ -25,22 +25,40 @@ const control = {
 		isList: false
 	}
 };
-const control2 = {
+const controlNoLimit = {
+	name: "test-textarea",
+	charLimit: -1,
+	valueDef: {
+		isList: false
+	}
 };
+const controlList = {
+	name: "test-textarea-list",
+	additionalText: "Add comment",
+	valueDef: {
+		isList: true
+	}
+};
+
 const propertyId = { name: "test-textarea" };
-propertyUtils.setControls(controller, [control]);
+const propertyIdList = { name: "test-textarea-list" };
+propertyUtils.setControls(controller, [control, controlList, controlNoLimit]);
 
-function setPropertyValue() {
-	controller.setPropertyValues(
-		{ "test-textarea": "Test value" }
-	);
-}
+describe("textarea control renders correctly", () => {
 
-describe("textarea-control renders correctly", () => {
+	beforeEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+		controller.setPropertyValues(
+			{ "test-textarea": "Test value",
+				"test-textarea-list": ["Hopper", "Turing", "Shannon", "Babbage"]
+			}
+		);
+	});
 
-	it("props should have been defined", () => {
+	it("textarea props should have been defined", () => {
 		const wrapper = mount(
-			<TextAreaControl
+			<TextArea
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -51,77 +69,193 @@ describe("textarea-control renders correctly", () => {
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 	});
 
-	it("should render a `TextAreaControl`", () => {
+	it("textarea should render", () => {
 		const wrapper = mount(
-			<TextAreaControl
+			<TextArea
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find(".text");
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
+		const input = textWrapper.find("textarea");
 		expect(input).to.have.length(1);
 	});
 
-	it("should set correct state value in `TextAreaControl`", () => {
-		setPropertyValue();
+	it("textarea should set correct value", () => {
 		const wrapper = mount(
-			<TextAreaControl
+			<TextArea
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find(".text");
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
+		const input = textWrapper.find("textarea");
 		input.simulate("change", { target: { value: "My new value" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal("My new value");
 	});
 
-	it("should set correct maxLength in `TextAreaControl`", () => {
+	it("textarea should set correct list value", () => {
 		const wrapper = mount(
-			<TextAreaControl
-				control={control}
+			<TextArea
+				control={controlList}
 				controller={controller}
-				propertyId={propertyId}
+				propertyId={propertyIdList}
 			/>
 		);
-		const input = wrapper.find(".text");
-		expect(input.get(0).maxLength).to.equal(control.charLimit);
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea-list']");
+		const input = textWrapper.find("textarea");
+		input.simulate("change", { target: { value: "My new value\nanother line" } });
+		expect(controller.getPropertyValue(propertyIdList)).to.eql(["My new value", "another line"]);
 	});
 
-	it("should set correct control type in `TextAreaControl`", () => {
+	it("textarea should not go over max chars", () => {
 		const wrapper = mount(
-			<TextAreaControl
+			<TextArea
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find(".text");
+		const value = propertyUtils.genLongString(control.charLimit + 10);
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
+		const input = textWrapper.find("textarea");
+		input.simulate("change", { target: { value: value } });
+		expect(controller.getPropertyValue(propertyId)).to.equal(value.substr(0, control.charLimit));
+	});
+
+	it("textarea should set maxLength correctly without charLimit", () => {
+		const wrapper = mount(
+			<TextArea
+				control={controlList}
+				controller={controller}
+				propertyId={propertyIdList}
+			/>
+		);
+		const value = propertyUtils.genLongString(CHARACTER_LIMITS.TEXT_AREA + 10);
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea-list']");
+		const input = textWrapper.find("textarea");
+		input.simulate("change", { target: { value: value } });
+		expect(controller.getPropertyValue(propertyIdList)).to.eql([value.substr(0, CHARACTER_LIMITS.TEXT_AREA)]);
+	});
+
+	it("textarea should not have a text limit when charList set to -1", () => {
+		const wrapper = mount(
+			<TextArea
+				control={controlNoLimit}
+				controller={controller}
+				propertyId={propertyIdList}
+			/>
+		);
+		const value = propertyUtils.genLongString(CHARACTER_LIMITS.TEXT_AREA + 10);
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea-list']");
+		const input = textWrapper.find("textarea");
+		input.simulate("change", { target: { value: value } });
+		expect(controller.getPropertyValue(propertyIdList)).to.equal(value.substr(0, CHARACTER_LIMITS.TEXT_AREA + 10));
+	});
+
+	it("textarea should set correct control type`", () => {
+		const wrapper = mount(
+			<TextArea
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
+		const input = textWrapper.find("textarea");
 		expect(input.get(0).type).to.equal("textarea");
 	});
 
-	it("should set placeholder text in `TextAreaControl`", () => {
+	it("textarea should set placeholder text", () => {
 		const wrapper = mount(
-			<TextAreaControl
+			<TextArea
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find(".text");
-		expect(input.get(0).placeholder).to.equal(control.additionalText);
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
+		const input = textWrapper.find("textarea");
+		expect(input.getDOMNode().placeholder).to.equal(control.additionalText);
 	});
 
-	it("should set maxLength correctly without charLimit in `TextAreaControl`", () => {
+	it("textarea handles null correctly", () => {
+		controller.setPropertyValues(
+			{ "test-text": null }
+		);
 		const wrapper = mount(
-			<TextAreaControl
-				control={control2}
+			<TextArea
+				control={control}
 				controller={controller}
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find(".text");
-		expect(input.get(0).maxLength).to.equal(CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_AREA);
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
+		const input = textWrapper.find("textarea");
+		input.simulate("change", { target: { value: "My new value" } });
+		expect(controller.getPropertyValue(propertyId)).to.equal("My new value");
+	});
+
+	it("textarea handles undefined correctly", () => {
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<TextArea
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
+		const input = textWrapper.find("textarea");
+		input.simulate("change", { target: { value: "My new value" } });
+		expect(controller.getPropertyValue(propertyId)).to.equal("My new value");
+	});
+
+	it("textarea renders when disabled", () => {
+		controller.updateControlState(propertyId, "disabled");
+		const wrapper = mount(
+			<TextArea
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
+		expect(textWrapper.find("textarea").prop("disabled")).to.equal(true);
+	});
+
+	it("textarea renders when hidden", () => {
+		controller.updateControlState(propertyId, "hidden");
+		const wrapper = mount(
+			<TextArea
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
+		expect(textWrapper.hasClass("hide")).to.equal(true);
+	});
+
+	it("textarea renders messages correctly", () => {
+		controller.updateErrorMessage(propertyId, {
+			validation_id: propertyId.name,
+			type: "warning",
+			text: "bad checkbox value"
+		});
+		const wrapper = mount(
+			<TextArea
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
+		const messageWrapper = textWrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(1);
 	});
 });

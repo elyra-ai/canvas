@@ -248,10 +248,10 @@ function findCategoryElement(nodeCategory) {
 }
 
 function getSummaryFromName(summaryName) {
-	const summaries = browser.$$(".control-summary-configured-values");
+	const summaries = browser.$$(".properties-summary-values");
 	let summary = null;
 	for (let idx = 0; idx < summaries.length; idx++) {
-		if (summaries[idx].$(".summary-label").getText() === summaryName) {
+		if (summaries[idx].$(".properties-summary-label").getText() === summaryName) {
 			summary = summaries[idx];
 			break;
 		}
@@ -260,10 +260,10 @@ function getSummaryFromName(summaryName) {
 }
 
 function getControlContainerFromName(name) {
-	const containers = browser.$$(".control-label-container");
+	const containers = browser.$$(".properties-tooltips-container");
 	let container = null;
 	for (let idx = 0; idx < containers.length; idx++) {
-		if (containers[idx].$(".control-label").getText() === name) {
+		if (containers[idx].$(".properties-control-label").getText() === name) {
 			container = containers[idx];
 			break;
 		}

@@ -8,8 +8,7 @@
  *******************************************************************************/
 
 @import "./global.scss";
-
-@CHARSET "ISO-8859-1";
+@import "carbon-components/scss/globals/scss/vars";
 
 $transition-speed: 0.2s;
 
@@ -34,13 +33,9 @@ $common-canvas-min-width: $common-canvas-toolbar-min-width + $canvas-palette-nar
 .right-flyout-panel {
 	height: 100%;
 	float: right;
-	-webkit-transition: $transition-speed;
-	transition: $transition-speed;
-	z-index: 3;
-	box-shadow: -2px 0 2px #DFE3E6;
-	overflow: hidden;
 	position: absolute;
 	right: 0;
+	transition: $transition-speed;
 }
 
 /* SVG Canvas styles */
@@ -125,6 +120,7 @@ $common-canvas-min-width: $common-canvas-toolbar-min-width + $canvas-palette-nar
 
 .empty-canvas {
 	position: absolute;
+	line-height: 1.5;
 	left: 50%;
 	top: 48%;
 	cursor: default;
@@ -142,7 +138,7 @@ $common-canvas-min-width: $common-canvas-toolbar-min-width + $canvas-palette-nar
 
 .empty-canvas-text {
 	display: block;
-	color: #152935;
+	color: $text-01;
 	opacity: 0.2;
 	font-size: 20px;
 	text-align: center;

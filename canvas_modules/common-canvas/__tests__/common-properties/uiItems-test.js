@@ -17,26 +17,26 @@ describe("editor-form renders correctly with correct uiItems", () => {
 	const renderedObject = propertyUtils.flyoutEditorForm(uiItemParamDef);
 	const wrapper = renderedObject.wrapper;
 	it("should have displayed correct number of staticText elements", () => {
-		const staticText = wrapper.find(".static-text");
+		const staticText = wrapper.find("div.properties-static-text");
 		expect(staticText).to.have.length(4);
-		const staticTextIcons = wrapper.find(".static-text-icon-container");
+		const staticTextIcons = wrapper.find("div.properties-static-text-container svg");
 		expect(staticTextIcons).to.have.length(1);
-		const staticTextWithIcon = wrapper.find(".static-text.info");
+		const staticTextWithIcon = wrapper.find("div.properties-static-text.info");
 		expect(staticTextWithIcon).to.have.length(1);
 	});
 	it("should have displayed correct text in staticText elements", () => {
-		let staticText = wrapper.find(".static-text");
+		let staticText = wrapper.find("div.properties-static-text");
 		expect(staticText.at(0).text()).to.equal("Some helpful text before the control");
-		const staticTextWithIcon = wrapper.find(".static-text.info");
+		const staticTextWithIcon = wrapper.find("div.properties-static-text.info");
 		expect(staticTextWithIcon.at(0).text()).to.equal("Hint: should have a separator after and icon");
 		expect(staticText.at(3).text()).to.equal("Sum: 2 with (numberfield, 2, numberfield). Percent: 0");
-		const input = wrapper.find("[type='number']");
-		input.simulate("change", { target: { value: "44" } });
-		staticText = wrapper.find(".static-text");
+		const input = wrapper.find("div[data-id='properties-numberfield'] input");
+		input.simulate("change", { target: { value: "44", validity: { badInput: false } } });
+		staticText = wrapper.find("div.properties-static-text");
 		expect(staticText.at(3).text()).to.equal("Sum: 90 with (numberfield, 2, numberfield). Percent: 2.27");
 	});
 	it("should have displayed correct number of separator elements", () => {
-		const separators = wrapper.find(".h-separator");
+		const separators = wrapper.find("hr.properties-h-separator");
 		expect(separators).to.have.length(2);
 	});
 });
@@ -46,7 +46,7 @@ describe("uiItemParamDef render correctly when the control label is hidden", () 
 	const wrapper = renderedObject.wrapper;
 
 	it("should have not displayed control label when labelVisible:false", () => {
-		const controllabels = wrapper.find(".control-label");
+		const controllabels = wrapper.find("label.properties-control-label");
 		expect(controllabels).to.have.length(2);
 	});
 });
@@ -55,17 +55,13 @@ describe("Flyout editor has the correct width", () => {
 	it("should display a fly out editor at normal width", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(panelParamDef);
 		const wrapper = renderedObject.wrapper;
-		const flyout = wrapper.find("#common-properties-right-flyout-panel");
+		const flyout = wrapper.find("div.properties-right-flyout.properties-small");
 		expect(flyout).to.have.length(1);
-		const flyoutStyle = flyout.prop("style");
-		expect(flyoutStyle).to.eql({ width: "318px" });
 	});
 	it("should display a wide fly out editor at wider width", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(panelParamDefWide);
 		const wrapper = renderedObject.wrapper;
-		const flyout = wrapper.find("#common-properties-right-flyout-panel");
+		const flyout = wrapper.find("div.properties-right-flyout.properties-medium");
 		expect(flyout).to.have.length(1);
-		const flyoutStyle = flyout.prop("style");
-		expect(flyoutStyle).to.eql({ width: "625px" });
 	});
 });

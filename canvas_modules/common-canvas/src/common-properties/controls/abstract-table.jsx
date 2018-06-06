@@ -10,8 +10,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "ap-components-react/dist/components/Button";
-import Checkbox from "ap-components-react/dist/components/Checkbox";
+import IconButton from "./../components/icon-button";
+import Checkbox from "carbon-components-react/lib/components/Checkbox";
 import FlexibleTable from "./../components/flexible-table";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import Icon from "./../../icons/icon.jsx";
@@ -22,10 +22,9 @@ import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES,
 	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH, ELLIPSIS_STRING, DISPLAY_CHARS_DEFAULT } from "./../constants/constants";
 
 import findIndex from "lodash/findIndex";
-import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
 import { intlShape } from "react-intl";
-
+import classNames from "classnames";
 import uuid4 from "uuid/v4";
 
 /* eslint max-depth: ["error", 5] */
@@ -57,11 +56,9 @@ export default class AbstractTable extends React.Component {
 		this.includeInFilter = this.includeInFilter.bind(this);
 
 		this.makeAddRemoveButtonPanel = this.makeAddRemoveButtonPanel.bind(this);
-		this.makeLabel = this.makeLabel.bind(this);
 		this.buildChildItem = this.buildChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
 
-		this.checkedAllValue = this.checkedAllValue.bind(this);
 		this.checkedAll = this.checkedAll.bind(this);
 
 		this.addOnClick = this.addOnClick.bind(this);
@@ -233,15 +230,14 @@ export default class AbstractTable extends React.Component {
 		this.setCurrentControlValueSelected(rows);
 	}
 
-	_makeCell(columnDef, controlValue, rowIndex, colIndex, stateStyle, stateDisabled) {
+	_makeCell(columnDef, controlValue, rowIndex, colIndex, tableState) {
 		let cellContent;
-		const disabled = this._getDisabledStatus(rowIndex, colIndex, stateDisabled);
 		const propertyId = {
 			name: this.props.control.name,
 			row: rowIndex,
 			col: colIndex
 		};
-		const cellDisabledClassName = disabled ? "disabled" : "";
+		const cellDisabled = this._getDisabledStatus(propertyId, tableState);
 		const tableInfo = { table: true };
 		// allows for custom contents in a cell
 		cellContent = controlValue[rowIndex][colIndex];
@@ -260,7 +256,7 @@ export default class AbstractTable extends React.Component {
 			cellContent = (<div className="table-text">
 				<span>{this._getCustomCtrlContent(propertyId, columnDef, cellContent, tableInfo)}</span>
 			</div>);
-			cellClassName = "table-cell " + cellDisabledClassName;
+			cellClassName = classNames("table-cell", { "disabled": cellDisabled });
 			if (columnDef.editStyle === EditStyle.ON_PANEL) {
 				// save the cell content in an object
 				this.onPanelContainer[rowIndex].push(<div key={colIndex}><br />{ControlFactory.createControlItem(columnDef, propertyId)}</div>);
@@ -286,18 +282,12 @@ export default class AbstractTable extends React.Component {
 		return cellContent;
 	}
 
-	_getDisabledStatus(rowIndex, colIndex, stateDisabled) {
-		if (typeof stateDisabled.disabled !== "undefined") {
-			return stateDisabled.disabled;
+	_getDisabledStatus(cellPropertyId, tableState) {
+		if (typeof tableState !== "undefined" && tableState === STATES.DISABLED) {
+			return true;
 		}
-		const row = stateDisabled[rowIndex];
-		if (row) {
-			const column = row[colIndex];
-			if (column) {
-				return column.disabled;
-			}
-		}
-		return false;
+		const cellState = this.props.controller.getControlState(cellPropertyId);
+		return cellState === STATES.DISABLED;
 	}
 
 	/**
@@ -338,54 +328,13 @@ export default class AbstractTable extends React.Component {
 		return hasFilter;
 	}
 
-	makeLabel(stateStyle) {
-		let label;
-		if (this.props.control.label && this.props.control.labelVisible !== false && !this.hasFilter()) {
-			if (!(this.props.control.description && this.props.control.description.placement === "on_panel")) {
-				let requiredIndicator;
-				if (this.props.control.required) {
-					requiredIndicator = <span className="required-control-indicator" style={stateStyle}>*</span>;
-				}
-				const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
-				let tooltip = "";
-				if (this.props.control.description) {
-					tooltip = (
-						<div className="properties-tooltips">
-							{this.props.control.description.text}
-						</div>
-					);
-				}
-				label = (
-					<div className={"label-container"}>
-						<div className="properties-tooltips-container">
-							<Tooltip
-								id={tooltipId}
-								tip={tooltip}
-								direction="right"
-								delay={TOOL_TIP_DELAY}
-								className="properties-tooltips"
-								disable={isEmpty(tooltip)}
-							>
-								<div>
-									<label className="control-label">{this.props.control.label.text}</label>
-									{requiredIndicator}
-								</div>
-							</Tooltip>
-						</div>
-					</div>
-				);
-			}
-		}
-		return label;
-	}
-
 	addOnClick(control) {
 		if (this.addOnClickCallback) {
 			this.addOnClickCallback(control, this.onFieldPickerCloseCallback);
 		}
 	}
 
-	makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig) {
+	makeAddRemoveButtonPanel(tableState, tableButtonConfig) {
 		this.onFieldPickerCloseCallback = (tableButtonConfig && tableButtonConfig.fieldPickerCloseFunction)
 			? tableButtonConfig.fieldPickerCloseFunction.bind(this)
 			: null;
@@ -393,17 +342,16 @@ export default class AbstractTable extends React.Component {
 		const removeOnClick = (tableButtonConfig && tableButtonConfig.removeButtonFunction)
 			? tableButtonConfig.removeButtonFunction
 			: this.removeSelected;
-		const disabled = !this.state.enableRemoveIcon || stateDisabled.disabled;
+		const disabled = !this.state.enableRemoveIcon || tableState === STATES.DISABLED;
 		const removeButtonLabel = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
-		const removeButton = (<a className="remove-fields-button"
+		const removeButton = (<button type="button" className="properties-remove-fields-button"
 			onClick={removeOnClick}
 			disabled={disabled}
-			role="button"
 			aria-label={removeButtonLabel}
 		>
 			<Icon type="remove" disabled={disabled} />
-		</a>);
+		</button>);
 
 		let addButtonDisabled = false;
 		this.addOnClickCallback = (tableButtonConfig && tableButtonConfig.addButtonFunction)
@@ -412,19 +360,20 @@ export default class AbstractTable extends React.Component {
 		const addButtonLabel = (tableButtonConfig && tableButtonConfig.addButtonLabel) ? tableButtonConfig.addButtonLabel
 			: PropertyUtils.formatMessage(this.props.intl,
 				MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_ADDBUTTON_LABEL);
-		if (stateDisabled.disabled) {
+		if (tableState === STATES.DISABLED) {
 			addButtonDisabled = true;
 			this.addOnClickCallback = null;
 		}
-		const addButton = (<Button
-			id="add-fields-button"
-			role="button"
-			icon="plus"
-			onClick={this.addOnClick.bind(this, this.props.control)}
-			disabled={addButtonDisabled}
-		>
-			{addButtonLabel}
-		</Button>);
+		const addButton = (
+			<IconButton
+				className="properties-add-fields-button"
+				icon="add--outline"
+				onClick={this.addOnClick.bind(this, this.props.control)}
+				disabled={addButtonDisabled}
+			>
+				{addButtonLabel}
+			</IconButton>
+		);
 
 		const addToolTip = (
 			<div className="properties-tooltips">
@@ -441,7 +390,7 @@ export default class AbstractTable extends React.Component {
 			</div>
 		);
 		return (
-			<div id="field-picker-buttons-container">
+			<div className="properties-at-buttons-container">
 				<div className="properties-tooltips-container add-remove-columns">
 					<Tooltip
 						id={uuid4() + "-tooltip-remove-columns-" + this.props.control.name}
@@ -469,8 +418,7 @@ export default class AbstractTable extends React.Component {
 		);
 	}
 
-	checkedAllValue(colIndex, evt) {
-		const flexibleTableCheckedAll = evt.target.checked;
+	checkedAllValue(colIndex, checked) {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		for (let i = 0; i < controlValue.length; i++) {
 			const propertyId = {
@@ -478,9 +426,9 @@ export default class AbstractTable extends React.Component {
 				row: i,
 				col: colIndex
 			};
-			this.props.controller.updatePropertyValue(propertyId, flexibleTableCheckedAll);
+			this.props.controller.updatePropertyValue(propertyId, checked);
 		}
-		this.checkedAll[colIndex] = flexibleTableCheckedAll;
+		this.checkedAll[colIndex] = checked;
 	}
 
 	checkedAll(colIndex) {
@@ -500,7 +448,7 @@ export default class AbstractTable extends React.Component {
 		return true;
 	}
 
-	createTable(stateStyle, stateDisabled, tableButtonConfig) {
+	createTable(tableState, tableButtonConfig) {
 		const that = this;
 		const rows = [];
 		let headers = [];
@@ -508,26 +456,19 @@ export default class AbstractTable extends React.Component {
 		const filterFields = [];
 		for (var j = 0; j < this.props.control.subControls.length; j++) {
 			const columnDef = this.props.control.subControls[j];
-			const checkboxName = this.props.control.name + j;
-
+			const checkboxName = this.props.control.name + j; // TODO might not be unique
 			// See if the entire column is disabled
-			const controlState = this.props.controller.getControlState({ name: this.props.control.name, col: j });
-			const disabled = controlState === STATES.DISABLED || controlState === STATES.HIDDEN
-				? { "disabled": true } : { "disabled": false };
-			const stateStyle2 = {};
-			stateStyle2.pointerEvents = controlState === STATES.DISABLED || controlState === STATES.HIDDEN
-				? "none" : "auto";
+			const colState = this.props.controller.getControlState({ name: this.props.control.name, col: j });
+			const disabled = colState === STATES.DISABLED || colState === STATES.HIDDEN;
 			const columnLabel = (columnDef.controlType === ControlType.CHECKBOX)
-				? (<div className="checkbox-container">
-					<div className="checkbox" style={stateStyle2}>
-						<Checkbox {...disabled}
-							id={checkboxName}
-							checked={this.checkedAll(j)}
-							onChange={this.checkedAllValue.bind(this, j)}
-						/>
-					</div>
-					<div className="checkbox-label"> {columnDef.label.text} </div>
-				</div>) : columnDef.label.text;
+				? (
+					<Checkbox
+						disabled={disabled}
+						id={checkboxName}
+						checked={this.checkedAll(j)}
+						onChange={this.checkedAllValue.bind(this, j)}
+						labelText={columnDef.label.text}
+					/>) : columnDef.label.text;
 			if (columnDef.visible) {
 				if (columnDef.sortable) {
 					sortFields.push(columnDef.name);
@@ -551,7 +492,7 @@ export default class AbstractTable extends React.Component {
 		this.filterFields = filterFields;
 
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		this.makeCells(rows, controlValue, stateStyle, stateDisabled);
+		this.makeCells(rows, controlValue, tableState);
 
 		if (this.props.rightFlyout) {
 			this.scrollToRow = null;
@@ -562,7 +503,7 @@ export default class AbstractTable extends React.Component {
 		}
 
 		const topRightPanel = (typeof this.props.control.addRemoveRows === "undefined" || this.props.control.addRemoveRows) // default to true.
-			? this.makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig)
+			? this.makeAddRemoveButtonPanel(tableState, tableButtonConfig)
 			: <div />;
 
 		const table =	(
@@ -575,11 +516,10 @@ export default class AbstractTable extends React.Component {
 				alignTop={this.alignTop}
 				onFilter={this.onFilter}
 				onSort={this.onSort}
-				label={this.makeLabel(stateStyle)}
 				topRightPanel={topRightPanel}
-				validationStyle={stateStyle}
 				scrollKey={this.props.control.name}
-				stateDisabled={stateDisabled}
+				tableState={tableState}
+				messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)}
 				rows={this.props.control.rows}
 			/>);
 		setTimeout(function() {
@@ -592,7 +532,7 @@ export default class AbstractTable extends React.Component {
 		);
 	}
 
-	makeCells(rows, controlValue, stateStyle, stateDisabled) {
+	makeCells(rows, controlValue, tableState) {
 		if (!Array.isArray(controlValue)) {
 			return;
 		}
@@ -606,7 +546,7 @@ export default class AbstractTable extends React.Component {
 					// the on-panel container will be available for display.
 					if (columnDef.visible || columnDef.editStyle === EditStyle.ON_PANEL) {
 						const content = this._makeCell(columnDef, controlValue, rowIndex,
-							colIndex, stateStyle, stateDisabled);
+							colIndex, tableState);
 						// only add content if column is visible
 						if (columnDef.visible) {
 							columns.push(content);
@@ -614,7 +554,7 @@ export default class AbstractTable extends React.Component {
 					}
 				}
 				if (this.props.control.childItem) {
-					const cell = this.buildChildItem(rowIndex, stateDisabled);
+					const cell = this.buildChildItem(rowIndex, tableState);
 					columns.push(cell);
 				}
 				// add padding for scrollbar
@@ -633,20 +573,19 @@ export default class AbstractTable extends React.Component {
 		}
 	}
 
-	buildChildItem(rowIndex, stateDisabled) {
+	buildChildItem(rowIndex, tableState) {
 		// Assumes the child item is an "ADDITIONAL_LINK" object.
 		// However, we will extract information from the and will create our own Cell-based invoker.
 		const propertyId = { name: this.props.propertyId.name, row: rowIndex };
 		const subItemButton = this.props.buildUIItem(rowIndex, this.props.control.childItem, propertyId, this.indexOfColumn);
 		// Hack to decompose the button into our own in-table link
-		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
 		const subCell = (
 			<div className="table-subcell">
 				<SubPanelCell
 					label={subItemButton.props.label}
 					title={subItemButton.props.title}
 					panel={subItemButton.props.panel}
-					disabled={disabled}
+					disabled={tableState === STATES.DISABLED}
 					controller={this.props.controller}
 					propertyId={this.props.propertyId}
 					rightFlyout={this.props.rightFlyout}

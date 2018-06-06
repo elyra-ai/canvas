@@ -50,6 +50,20 @@ const validationErrorMessages = {
 		"type": "warning",
 		"text": "Needs to be greaterThan 1",
 		"validation_id": "number_warning"
+	},
+	"number_table": {
+		"0": {
+			"0": {
+				"type": "error",
+				"text": "Needs to be greaterThan 1",
+				"validation_id": "number_table"
+			},
+			"1": {
+				"type": "warning",
+				"text": "Needs to be greaterThan 1",
+				"validation_id": "number_table"
+			}
+		}
 	}
 };
 
@@ -84,58 +98,60 @@ describe("CommonProperties renders correctly", () => {
 
 	it("should override a reject label", () => {
 		const wrapper = createCommonProperties("Editing", localMessages);
-		expect(wrapper.find("button[id='properties-cancel-button']").text()).to.equal("NOT");
+		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("NOT");
 	});
 
 	it("should override a apply label", () => {
 		const wrapper = createCommonProperties("Editing", localMessages);
-		expect(wrapper.find("button[id='properties-apply-button']").text()).to.equal("CONFIRM");
+		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("CONFIRM");
 	});
 
 	it("should override a structure table add button label", () => {
 		const wrapper = createCommonProperties("Editing", localMessages);
-		const tableButton = wrapper.find("#field-picker-buttons-container").find("a[id='add-fields-button']");
+		const tableButton = wrapper.find("div.properties-column-structure").find("span.properties-icon-button-label");
 		expect(tableButton.text()).to.equal("Add Some Stuff");
 	});
 
 });
 
 describe("CommonProperties works correctly in flyout", () => {
-
+	let wrapper;
+	afterEach(() => {
+		wrapper.unmount();
+	});
 	it("When applyOnBlur=true only the `Close` button should be rendered", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef); // default is applyOnBlur=true
-		const wrapper = renderedObject.wrapper;
-		expect(wrapper.find("#properties-apply-button").text()).to.equal("Close");
-		expect(wrapper.find("#properties-cancel-button")).to.have.length(0);
-		wrapper.unmount();
+		wrapper = renderedObject.wrapper;
+		const buttonWrapper = wrapper.find("div.properties-modal-buttons");
+		expect(buttonWrapper.find("button[data-id='properties-apply-button']").text()).to.equal("Close");
+		expect(buttonWrapper.find("button[data-id='properties-cancel-button']")).to.have.length(0);
 	});
 
 	it("When applyOnBlur=true applyPropertyChanges should be called only if values have changed", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef); // default is applyOnBlur=true
-		const wrapper = renderedObject.wrapper;
+		wrapper = renderedObject.wrapper;
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
-		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
+		wrapper.find("div.properties-right-flyout").simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		// make some changes
-		const tableBody = wrapper.find("#flexible-table-container").at(0);
-		const tableData = tableBody.find(".reactable-data");
+		const tableData = wrapper.find("tbody.reactable-data");
 		let row = tableData.childAt(0);
 		row.simulate("click");
 
 		// ensure remove button is enabled and click it
-		const enabledRemoveColumnButton = wrapper.find(".remove-fields-button");
+		const enabledRemoveColumnButton = wrapper.find("button.properties-remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
 		enabledRemoveColumnButton.simulate("click");
 
 		// save again: should save changes
-		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
+		wrapper.find("div.properties-right-flyout").simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 
 		// force blur should not save because no additional changes happened
-		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
+		wrapper.find("div.properties-right-flyout").simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 
@@ -145,100 +161,97 @@ describe("CommonProperties works correctly in flyout", () => {
 		enabledRemoveColumnButton.simulate("click");
 
 		// save again, should trigger a save
-		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
+		wrapper.find("div.properties-right-flyout").simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 2);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
-		wrapper.unmount();
 	});
 
 	it("When applyOnBlur=false `Cancel` and `Save` buttons should be rendered", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { applyOnBlur: false });
-		const wrapper = renderedObject.wrapper;
-		expect(wrapper.find("#properties-apply-button").text()).to.equal("Save");
-		expect(wrapper.find("#properties-cancel-button").text()).to.equal("Cancel");
-		wrapper.unmount();
+		wrapper = renderedObject.wrapper;
+		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("Save");
+		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("Cancel");
 	});
 
 	it("When applyOnBlur=false applyPropertyChanges should not be called", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { applyOnBlur: false });
-		const wrapper = renderedObject.wrapper;
+		wrapper = renderedObject.wrapper;
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		// make some changes
-		const tableBody = wrapper.find("#flexible-table-container").at(0);
-		const tableData = tableBody.find(".reactable-data");
+		const tableData = wrapper.find("tbody.reactable-data");
 		const row = tableData.childAt(0);
 		row.simulate("click");
 
 		// ensure remove button is enabled and click it
-		const enabledRemoveColumnButton = wrapper.find(".remove-fields-button");
+		const enabledRemoveColumnButton = wrapper.find("button.properties-remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
 		enabledRemoveColumnButton.simulate("click");
 
 		// save again: should save changes
-		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
+		wrapper.find("div.properties-right-flyout").simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
-		wrapper.unmount();
 	});
 });
 
 
 describe("CommonProperties validates on close in flyout", () => {
+	let wrapper;
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
 	it("Validate input when applyOnBlur=true the `Close` button pressed", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource); // default is applyOnBlur=true
-		const wrapper = renderedObject.wrapper;
+		wrapper = renderedObject.wrapper;
 		const controller = renderedObject.controller;
 		// should not have any messages to start
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
 		// click close and expect validation error messsages
-		wrapper.find("#properties-apply-button")
+		wrapper.find("button[data-id='properties-apply-button']")
 			.at(0)
 			.simulate("click");
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErrorMessages));
-		wrapper.unmount();
 	});
 
 	it("Validate input when applyOnBlur=true and focus changes", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource); // default is applyOnBlur=true
-		const wrapper = renderedObject.wrapper;
+		wrapper = renderedObject.wrapper;
 		const controller = renderedObject.controller;
 		// should not have any messages to start
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
 
 		// similate blur with no changes, expect validation error messages
-		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
+		wrapper.find("div.properties-right-flyout").simulate("blur");
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErrorMessages));
-		wrapper.unmount();
 	});
 
 
 	it("Validate input when applyOnBlur=false the `Save` button pressed", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { applyOnBlur: false });
-		const wrapper = renderedObject.wrapper;
+		wrapper = renderedObject.wrapper;
 		const controller = renderedObject.controller;
 		// should not have any messages to start
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
 		// click save and expect validation error messsages
-		wrapper.find("#properties-apply-button")
+		wrapper.find("button[data-id='properties-apply-button']")
 			.at(0)
 			.simulate("click");
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErrorMessages));
-		wrapper.unmount();
 	});
 
 	it("Do not validate input when applyOnBlur=false the `Cancel` button pressed", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { applyOnBlur: false });
-		const wrapper = renderedObject.wrapper;
+		wrapper = renderedObject.wrapper;
 		const controller = renderedObject.controller;
 		// should not have any messages to start
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
 		// click cancel and expect validation error messsages
-		wrapper.find("#properties-cancel-button")
+		wrapper.find("button[data-id='properties-cancel-button']")
 			.at(0)
 			.simulate("click");
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
-		wrapper.unmount();
 	});
 
 });

@@ -11,7 +11,7 @@
 import React from "react";
 
 import { Type, ControlType } from "./../constants/form-constants";
-import { VALIDATION_MESSAGE, STATES } from "./../constants/constants.js";
+import { STATES } from "./../constants/constants.js";
 import { PropertyDef } from "./../form/PropertyDef";
 import { makeControl } from "./../form/EditorForm";
 import { L10nProvider } from "./../form/L10nProvider";
@@ -35,6 +35,7 @@ import StructureTableControl from "./structuretable";
 import StructurelisteditorControl from "./structurelisteditor";
 
 import ControlItem from "./../components/control-item";
+import IconButton from "./../components/icon-button";
 import Tooltip from "./../../tooltip/tooltip.jsx";
 import { TOOL_TIP_DELAY } from "./../constants/constants.js";
 import isEmpty from "lodash/isEmpty";
@@ -74,17 +75,10 @@ export default class ControlFactory {
 	* @param tableInfo
 	*/
 	createControlItem(control, propertyId, tableInfo) {
-		const stateStyle = {};
-		let tooltipShow = true;
 		const controlState = this.controller.getControlState(propertyId);
-		if (controlState === STATES.HIDDEN) {
-			stateStyle.display = "none";
-			tooltipShow = false;
-		} else if (controlState === STATES.DISABLED) {
-			stateStyle.color = VALIDATION_MESSAGE.DISABLED;
-			stateStyle.pointerEvents = "none";
-			tooltipShow = false;
-		}
+		const hidden = controlState === STATES.HIDDEN;
+		const disabled = controlState === STATES.DISABLED;
+
 		const that = this;
 		function generateNumber() {
 			const generator = control.label.numberGenerator;
@@ -100,65 +94,62 @@ export default class ControlFactory {
 			let tooltip;
 			if (control.description) {
 				if (control.description.placement === "on_panel") {
-					description = <div className="control-description" style={stateStyle}>{control.description.text}</div>;
+					description = <div className="properties-control-description">{control.description.text}</div>;
 				// only show tooltip when control enabled and visible
-				} else if (tooltipShow) {
+				} else {
 					tooltip = control.description.text; // default to tooltip
 				}
 			}
 			let requiredIndicator;
 			if (control.required) {
-				requiredIndicator = <span className="required-control-indicator" style={stateStyle}>*</span>;
+				requiredIndicator = <span className="properties-required-indicator">*</span>;
 			}
 			let numberGenerator;
 			if (control.label.numberGenerator) {
-				numberGenerator = (<label>{"\u00A0\u00A0"}<button type="button" className="number-generator" onClick={generateNumber} style={stateStyle}>
-					{control.label.numberGenerator.label.default}
-				</button></label>);
+				numberGenerator = (<IconButton
+					className="properties-number-generator"
+					children={control.label.numberGenerator.label.default}
+					onClick={generateNumber} hide={hidden}
+					disabled={disabled}
+				/>);
 			}
-			let hasFilter = false;
-			if (control.subControls) {
-				for (const subControl of control.subControls) {
-					if (subControl.filterable) {
-						hasFilter = true;
-						break;
-					}
-				}
-			}
-			// structuretable labels w/o descriptions and filtering are created elsewhere
-			const isStructureTable = control.controlType === ControlType.STRUCTURETABLE || control.controlType === ControlType.STRUCTURELISTEDITOR ||
-				control.controlType === ControlType.SELECTCOLUMNS;
-			if (!isStructureTable || description || hasFilter) {
-				const tooltipId = uuid4() + "-tooltip_label_" + this._createElementId(propertyId);
-				const tipContent = (
-					<div className="properties-tooltips">
-						{tooltip}
-					</div>
-				);
-				label = (
-					<div key={"label-" + control.name} className={"default-label-container"} style={stateStyle}>
-						<div className = "properties-tooltips-container control-label-container">
-							<Tooltip
-								id={tooltipId}
-								tip={tipContent}
-								direction="right"
-								delay={TOOL_TIP_DELAY}
-								className="properties-tooltips"
-								disable={isEmpty(tooltip) || !tooltipShow}
-							>
-								<div>
-									<label className="control-label">{control.label.text}</label>
-									{requiredIndicator}
-									{numberGenerator}
-									{description}
-								</div>
-							</Tooltip>
+			const tooltipId = uuid4() + "-tooltip_label_" + this._createElementId(propertyId);
+			const tipContent = (
+				<div className="properties-tooltips">
+					{tooltip}
+				</div>
+			);
+			label = (
+				<div className="properties-tooltips-container">
+					<Tooltip
+						id={tooltipId}
+						tip={tipContent}
+						direction="right"
+						delay={TOOL_TIP_DELAY}
+						className="properties-tooltips"
+						disable={isEmpty(tooltip) || hidden || disabled}
+					>
+						<div>
+							<div className="properties-label-container">
+								<label className="properties-control-label">{control.label.text}</label>
+								{requiredIndicator}
+								{numberGenerator}
+							</div>
+							{description}
 						</div>
-					</div>);
-			}
+					</Tooltip>
+				</div>);
 		}
 		const controlObj = this.createControl(control, propertyId, tableInfo);
-		return <ControlItem key={"ctrl-item-" + control.name} label={label} control={controlObj} />;
+		return (
+			<ControlItem
+				key={"ctrl-item-" + control.name}
+				id={"properties-ci-" + control.name}
+				hide={hidden}
+				disabled={disabled}
+				label={label}
+				control={controlObj}
+			/>);
 	}
 
 	// Creates all controls that can be standalone or in tables
@@ -189,9 +180,6 @@ export default class ControlFactory {
 		} else if (control.controlType === ControlType.TOGGLETEXT) {
 			return (<ToggletextControl
 				{...props}
-				values={control.values}
-				valueLabels={control.valueLabels}
-				valueIcons={control.valueIcons}
 			/>);
 		} else if (control.controlType === ControlType.PASSWORDFIELD) {
 			return (<PasswordControl {...props} />);

@@ -1,0 +1,157 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+$flexible-table-header-row-height: 32px;
+$flexible-table-first-column-left-padding: 15px;
+
+.properties-ft-search-container {
+	width: 50%;
+	float: left;
+	margin-bottom: 6px;
+	.properties-ft-search-text {
+		float: left;
+	}
+	&.disabled {
+		opacity: 0.5;
+	}
+}
+
+.properties-ft-container-wrapper {
+	height: 200px;
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+}
+
+// selectcolumns and tables without headers
+.properties-ft-container-absolute-noheader {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+	border: 1px solid $ui-04;
+	background-color: $ui-01;
+	tr {
+		border-bottom: 1px solid $ui-04;
+	}
+	&.error {
+		border: 1px solid $support-01;
+	}
+	&.warning {
+		border: 1px solid $support-03;
+	}
+}
+
+.properties-ft-container-absolute {
+	height: 100%;
+	width: 100%;
+	border: 1px solid $ui-04;
+	background-color: $ui-01;
+	&.error {
+		border: 1px solid $support-01;
+	}
+	&.warning {
+		border: 1px solid $support-03;
+	}
+	.properties-ft-container {
+		height: 100%;
+	}
+
+	thead {
+		background-color: $ui-02;
+		border-bottom: 1px solid $ui-04;
+		display: inline-flex;
+		th {
+			height: 100%;
+			display: inline-flex;
+			align-items: center;
+			padding: 8px 0;
+			vertical-align: middle;
+			font-weight: 600;
+
+			// sort icon in header
+			svg {
+				padding-left: 3px;
+				width: 11px;
+				height: 11px;
+			}
+
+			// align labels and sort icon
+			.properties-ft-column {
+				display: inline-flex;
+				align-items: center;
+			}
+			&.reactable-header-sortable {
+				cursor: pointer;
+			}
+		}
+		th:first-of-type {
+			padding-left: $flexible-table-first-column-left-padding;
+		}
+		.reactable-th-scrollbar {
+			padding: 0;
+		}
+	}
+	tbody {
+		width: 100%;
+		position: absolute;
+		overflow-y: auto;
+		overflow-x: hidden; // address scrollbar with mouse issue
+		display: flex; // address scrollbar with mouse issue
+		flex-direction: column; // address scrollbar with mouse issue
+		tr {
+			border-bottom: 1px solid $ui-04;
+		}
+		.properties-fp-data-rows td {
+			padding-top: 5px;
+			padding-bottom: 5px;
+		}
+		td {
+			padding: 0 4px 0 0; // right padding so fields don't merge together
+			border-top: 0;
+		}
+		td:first-of-type {
+			padding-left: $flexible-table-first-column-left-padding;
+		}
+	}
+}
+
+.properties-ft {
+	width: 100%;
+	margin-bottom: 0;
+	overflow: hidden;
+}
+
+// text overflow in cell to truncate with ellipsis
+.table-row .table-text {
+	padding-top: 8px;
+	padding-bottom: 8px;
+	width: inherit;
+	margin-left: -$flexible-table-first-column-left-padding; // this is needed so the content will not expand the column width
+	display: inline-flex;
+	span {
+		word-wrap: break-word;
+		width: inherit;
+		padding-left: $flexible-table-first-column-left-padding;
+	}
+}
+
+// highlight selected rows in tables
+.table-selected-row {
+	background-color: $ui-04;
+}
+
+// disable blue outline from header on focus
+.reactable-header-sortable:focus {
+	outline: none;
+}
+
+.properties-ft-control-container {
+	width: 100%;
+}

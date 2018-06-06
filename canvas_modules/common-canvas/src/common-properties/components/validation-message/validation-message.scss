@@ -1,0 +1,37 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+.properties-validation-message {
+	padding-top: 5px;
+	display: flex;
+	align-items: center;
+	.icon {
+		margin-right: 5px;
+		svg {
+			height: 10px;
+			width: 10px;
+		}
+		.warning {
+			fill: $support-03;
+		}
+		.error {
+			fill: $support-01;
+		}
+		.info {
+			fill: $support-04;
+		}
+	}
+	span {
+		font-weight: 600;
+		font-size: 12px;
+	}
+	&.hide {
+		display: none;
+	}
+}

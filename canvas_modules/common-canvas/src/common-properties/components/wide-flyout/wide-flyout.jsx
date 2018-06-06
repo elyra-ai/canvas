@@ -8,15 +8,18 @@
  *******************************************************************************/
 
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import Modal from "react-bootstrap/lib/Modal";
 import PropertiesButtons from "./../properties-buttons";
+import classNames from "classnames";
 
 export default class WideFlyout extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			flyoutStyle: {}
+			style: {
+				height: 0
+			}
 		};
 		this.updateDimensions = this.updateDimensions.bind(this);
 	}
@@ -31,42 +34,59 @@ export default class WideFlyout extends Component {
 	}
 
 	updateDimensions() {
-		const propertiesContainer = document.getElementById("common-properties-right-flyout-panel");
-		if (propertiesContainer !== null) {
-			const canvasRect = propertiesContainer.getBoundingClientRect();
-			this.setState({
-				flyoutStyle: {
-					height: (canvasRect.height + "px"),
-					top: (canvasRect.top + "px")
-				}
-			});
+		if (this.wideFlyout) {
+			// used to find correct parent
+			if (!this.commonPropertiesParent) {
+				this.commonPropertiesParent = this.findPropertyWrapper(this.wideFlyout);
+			}
+			if (this.commonPropertiesParent) {
+				const commonProperties = ReactDOM.findDOMNode(this.commonPropertiesParent).getBoundingClientRect();
+				this.setState({
+					style: {
+						height: commonProperties.height + "px",
+						top: commonProperties.top + "px",
+					}
+				});
+			}
 		}
+	}
+	findPropertyWrapper(node) {
+		if (node && node.parentNode && node.parentNode.className && node.parentNode.className.includes("properties-right-flyout")) {
+			return node.parentNode;
+		} else if (node && node.parentNode) {
+			return this.findPropertyWrapper(node.parentNode);
+		}
+		return null;
 	}
 
 	render() {
-		var title = <div />;
-		if (this.props.title) {
-			title = (<div className="control-title">{this.props.title}</div>);
+		const overlay = (<div className={classNames("properties-wf-overlay", { "show": this.props.show })} />);
+		let title;
+		let buttons;
+		let children;
+		if (this.props.show) {
+			if (this.props.title) {
+				title = (<h2>{this.props.title}</h2>);
+			}
+			buttons = (<PropertiesButtons
+				okHandler={this.props.okHandler}
+				cancelHandler={this.props.cancelHandler}
+				showPropertiesButtons={this.props.showPropertiesButtons}
+				applyLabel={this.props.applyLabel}
+				rejectLabel={this.props.rejectLabel}
+			/>);
+			children = (<div className="properties-wf-children"> {this.props.children} </div>);
 		}
-
-		const buttons = (<PropertiesButtons
-			okHandler={this.props.okHandler}
-			cancelHandler={this.props.cancelHandler}
-			showPropertiesButtons={this.props.showPropertiesButtons}
-			applyLabel={this.props.applyLabel}
-			rejectLabel={this.props.rejectLabel}
-		/>);
-		return (<Modal className="rightside-modal-container" style={this.state.flyoutStyle}
-			show={this.props.show}
-			keyboard
-			backdrop="static"
-		>
-			{title}
-			<div className="rightside-modal-control-contents-container">
-				<div className="control-contents">{this.props.children}</div>
+		return (
+			<div className="properties-wf-modal" ref={ (ref) => (this.wideFlyout = ref) }>
+				{ overlay }
+				<div className={classNames("properties-wf-content", { "show": this.props.show })} style={this.state.style}>
+					{title}
+					{children}
+					{buttons}
+				</div>
 			</div>
-			{buttons}
-		</Modal>);
+		);
 	}
 }
 

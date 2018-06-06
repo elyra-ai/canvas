@@ -24,22 +24,18 @@
     },
     {
       "id": "spinner_int",
-      "type": "integer",
-      "required": true
+      "type": "integer"
     },
     {
       "id": "spinner_dbl",
-      "type": "double",
-      "required": true
+      "type": "double"
     },{
       "id": "spinner_undefined",
-      "type": "double",
-      "required": true
+      "type": "double"
     },
     {
       "id": "spinner_null",
-      "type": "integer",
-      "required": true
+      "type": "integer"
     },
     {
       "id": "spinner_placeholder",
@@ -47,18 +43,15 @@
     },
     {
       "id": "spinner_random",
-      "type": "integer",
-      "required": true
+      "type": "integer"
     },
     {
       "id": "spinner_error",
-      "type": "integer",
-      "required": true
+      "type": "integer"
     },
     {
       "id": "spinner_warning",
-      "type": "double",
-      "required": true
+      "type": "double"
     },
     {
       "id": "disable",
@@ -66,8 +59,7 @@
     },
     {
       "id": "spinner_disable",
-      "type": "integer",
-      "required": true
+      "type": "integer"
     },
     {
       "id": "hide",
@@ -75,8 +67,7 @@
     },
     {
       "id": "spinner_hidden",
-      "type": "integer",
-      "required": true
+      "type": "integer"
     }
   ],
   "uihints": {
@@ -243,7 +234,7 @@
         ]
       },
       {
-        "id": "spinner-values",
+        "id": "spinner-conditions",
         "label": {
           "default": "Conditions"
         },

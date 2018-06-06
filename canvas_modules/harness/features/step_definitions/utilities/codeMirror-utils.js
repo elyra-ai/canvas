@@ -10,7 +10,7 @@
 /* global document */
 
 function setTextValue(text, append) {
-	const container = document.getElementsByClassName("expression_editor_control")[0];
+	const container = document.getElementsByClassName("properties-expression-editor")[0];
 	var editor = container.getElementsByClassName("CodeMirror")[0].CodeMirror;
 	const newValue = (append) ? editor.getValue() + " " + text : text;
 	editor.setValue(newValue);
@@ -19,7 +19,7 @@ function setTextValue(text, append) {
 }
 
 function getAutoCompleteCount(text) {
-	const container = document.getElementsByClassName("expression_editor_control")[0];
+	const container = document.getElementsByClassName("properties-expression-editor")[0];
 	var editor = container.getElementsByClassName("CodeMirror")[0].CodeMirror;
 	editor.setValue(text);
 	editor.setCursor(1, text.length - 1);
@@ -48,7 +48,7 @@ function getAutoCompleteCount(text) {
 }
 
 function selectAutoComplete(text) {
-	const container = document.getElementsByClassName("expression_editor_control")[0];
+	const container = document.getElementsByClassName("properties-expression-editor")[0];
 	var editor = container.getElementsByClassName("CodeMirror")[0].CodeMirror;
 	editor.setValue(text);
 	editor.setCursor(1, text.length - 1);

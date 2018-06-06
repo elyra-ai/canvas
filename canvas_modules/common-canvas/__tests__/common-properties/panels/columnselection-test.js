@@ -16,12 +16,9 @@ import panelConditionsParamDef from "./../../test_resources/paramDefs/panelCondi
 
 describe("selectcolumn and selectcolumns controls work in columnSelection panel", () => {
 	let wrapper;
-	let panels;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(panelParamDef);
 		wrapper = renderedObject.wrapper;
-		const columnSelectionCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // COLUMN SELECTION category
-		panels = columnSelectionCategory.find(".control-panel");
 	});
 
 	afterEach(() => {
@@ -29,35 +26,32 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 	});
 
 	it("should show correct values from selectcolumn controls", () => {
-		const selectColumnControls = panels.at(1).find("Dropdown");
-		expect(selectColumnControls).to.have.length(2);
-
-		const selectColumn1 = selectColumnControls.at(0);
-		expect(selectColumn1.find(".Dropdown-placeholder").text()).to.equal("age");
+		const panel1 = wrapper.find("div[data-id='properties-field1_panel']");
+		expect(panel1.find("span.bx--list-box__label").text()).to.equal("age");
 		const expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "age", value: "age" },
 			{ label: "Na", value: "Na" },
 			{ label: "drug", value: "drug" }
 		];
-		const actualOptions = selectColumn1.prop("options");
+		const actualOptions = panel1.find("DropdownV2").prop("items");
 		expect(actualOptions).to.eql(expectedOptions);
 
-		const selectColumn2 = selectColumnControls.at(1);
-		expect(selectColumn2.find(".Dropdown-placeholder").text()).to.equal("BP");
+		const panel2 = wrapper.find("div[data-id='properties-field2_panel']");
+		expect(panel2.find("span.bx--list-box__label").text()).to.equal("BP");
 		const expectedOptions2 = [
 			{ label: "...", value: "" },
 			{ label: "BP", value: "BP" },
 			{ label: "Na", value: "Na" },
 			{ label: "drug", value: "drug" }
 		];
-		const actualOptions2 = selectColumn2.prop("options");
+		const actualOptions2 = panel2.find("DropdownV2").prop("items");
 		expect(actualOptions2).to.eql(expectedOptions2);
 	});
 
 	it("should show correct values from selectcolumn and selectcolumns controls", () => {
-		const selectColumn = panels.at(2).find("Dropdown");
-		expect(selectColumn).to.have.length(1);
+		let panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
+		expect(panel1.find("span.bx--list-box__label").text()).to.equal("...");
 		const expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "age", value: "age" },
@@ -65,27 +59,31 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 			{ label: "Na", value: "Na" },
 			{ label: "drug", value: "drug" }
 		];
-		const actualOptions = selectColumn.prop("options");
+		const actualOptions = panel1.find("DropdownV2").prop("items");
 		expect(actualOptions).to.eql(expectedOptions);
-		selectColumn.getNode().setValue("age", "age");
-
-		const addFieldsButtons = panels.at(2).find("Button"); // field picker buttons
-		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Select Fields` control
-		propertyUtils.fieldPicker(["BP"], ["BP", "Na", "drug"]);
-		const rows = panels.at(2).find(".column-select-table-row");
+		// open the dropdown
+		const dropdownButton = panel1.find("div[role='button']");
+		dropdownButton.simulate("click");
+		panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
+		const dropdownList = panel1.find("div.bx--list-box__menu-item");
+		expect(dropdownList).to.be.length(5);
+		// select age
+		dropdownList.at(1).simulate("click");
+		panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-selectcolumns");
+		propertyUtils.fieldPicker(fieldPicker, ["BP"], ["BP", "Na", "drug"]);
+		const panel2 = wrapper.find("div[data-id='properties-selectcolumns']");
+		const rows = panel2.find("tr.column-select-table-row");
 		expect(rows).to.have.length(1);
 	});
 });
 
 describe("selectcolumn and selectcolumns controls work in columnSelection panel with multi schema input", () => {
 	let wrapper;
-	let panels;
 	let controller;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(columnSelectionPanel);
 		wrapper = renderedObject.wrapper;
-		const valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // VALUES category
-		panels = valuesCategory.find(".control-panel");
 		controller = renderedObject.controller;
 	});
 
@@ -94,12 +92,8 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 	});
 
 	it("should show correct values from selectcolumn controls with multi schema input", () => {
-		expect(panels).to.have.length(5);
-		const selectColumnControls = panels.at(1).find("Dropdown");
-		expect(selectColumnControls).to.have.length(2);
-
-		const selectColumn1 = selectColumnControls.at(0);
-		expect(selectColumn1.find(".Dropdown-placeholder").text()).to.equal("0.Age");
+		let panel1 = wrapper.find("div[data-id='properties-field1_panel']");
+		expect(panel1.find("span.bx--list-box__label").text()).to.equal("0.Age");
 
 		let expectedSelectColumn1Options = [
 			{ label: "...", value: "" },
@@ -116,11 +110,11 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ label: "2.drug2", value: "2.drug2" },
 			{ label: "2.drug3", value: "2.drug3" }
 		];
-		let actualOptions = selectColumn1.prop("options");
+		let actualOptions = panel1.find("DropdownV2").prop("items");
 		expect(actualOptions).to.eql(expectedSelectColumn1Options);
 
-		const selectColumn2 = selectColumnControls.at(1);
-		expect(selectColumn2.find(".Dropdown-placeholder").text()).to.equal("0.BP");
+		let panel2 = wrapper.find("div[data-id='properties-field2_panel']");
+		expect(panel2.find("span.bx--list-box__label").text()).to.equal("0.BP");
 
 		let expectedSelectColumn2Options = [
 			{ label: "...", value: "" },
@@ -137,10 +131,16 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ label: "2.drug2", value: "2.drug2" },
 			{ label: "2.drug3", value: "2.drug3" }
 		];
-		let actualOptions2 = selectColumn2.prop("options");
+		let actualOptions2 = panel2.find("DropdownV2").prop("items");
 		expect(actualOptions2).to.eql(expectedSelectColumn2Options);
-
-		selectColumn1.getNode().setValue("data.drug2", "data.drug2");
+		// open the dropdown
+		const dropdownButton = panel1.find("div[role='button']");
+		dropdownButton.simulate("click");
+		panel1 = wrapper.find("div[data-id='properties-field1_panel']");
+		const dropdownList = panel1.find("div.bx--list-box__menu-item");
+		expect(dropdownList).to.be.length(13);
+		// select data.drug2
+		dropdownList.at(8).simulate("click");
 		expectedSelectColumn1Options = [
 			{ label: "...", value: "" },
 			{ label: "0.Age", value: "0.Age" },
@@ -156,7 +156,8 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ label: "2.drug2", value: "2.drug2" },
 			{ label: "2.drug3", value: "2.drug3" }
 		];
-		actualOptions = selectColumn1.prop("options");
+		panel1 = wrapper.find("div[data-id='properties-field1_panel']");
+		actualOptions = panel1.find("DropdownV2").prop("items");
 		expect(actualOptions).to.eql(expectedSelectColumn1Options);
 
 		expectedSelectColumn2Options = [
@@ -174,21 +175,14 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ label: "2.drug2", value: "2.drug2" },
 			{ label: "2.drug3", value: "2.drug3" }
 		];
-		actualOptions2 = selectColumn2.prop("options");
+		panel2 = wrapper.find("div[data-id='properties-field2_panel']");
+		actualOptions2 = panel2.find("DropdownV2").prop("items");
 		expect(actualOptions2).to.eql(expectedSelectColumn2Options);
 	});
 
 	it("should show correct values from selectcolumn and selectcolumns controls with multi schema input", () => {
-		const selectColumnControl = panels.at(2).find("Dropdown");
-		expect(selectColumnControl).to.have.length(1);
-		const selectColumnsTable = panels.at(2).find("#flexible-table-selectcolumns");
-		expect(selectColumnsTable).to.have.length(1);
-
-		expect(selectColumnControl.find(".Dropdown-placeholder").text()).to.equal("...");
-
-		const addFieldsButton = selectColumnsTable.find("Button"); // field picker buttons
-		expect(addFieldsButton).to.have.length(1);
-		addFieldsButton.simulate("click");
+		let panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
+		expect(panel1.find("span.bx--list-box__label").text()).to.equal("...");
 
 		const fieldTable = [
 			{ "name": "Age", "schema": "0" },
@@ -205,14 +199,22 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ "name": "drug2", "schema": "2" },
 			{ "name": "drug3", "schema": "2" }
 		];
-		let actualOptions = selectColumnControl.prop("options");
+		let actualOptions = panel1.find("DropdownV2").prop("items");
 		expect(actualOptions.length).to.equal(fieldTable.length + 1); // +1 for "..."
 
-		propertyUtils.fieldPicker(["0.drug2", "2.drug2"], fieldTable);
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-selectcolumns");
+		propertyUtils.fieldPicker(fieldPicker, ["0.drug2", "2.drug2"], fieldTable);
 
-		selectColumnControl.getNode().setValue("data.Age", "data.Age");
-
-		actualOptions = selectColumnControl.prop("options");
+		// open the dropdown
+		const dropdownButton = panel1.find("div[role='button']");
+		dropdownButton.simulate("click");
+		panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
+		const dropdownList = panel1.find("div.bx--list-box__menu-item");
+		expect(dropdownList).to.be.length(12);
+		// select data.Age
+		dropdownList.at(5).simulate("click");
+		panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
+		actualOptions = panel1.find("DropdownV2").prop("items");
 		expect(actualOptions.length).to.equal(fieldTable.length - 1);
 
 		const expectedOptions = [
@@ -233,12 +235,12 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 	});
 
 	it("should show correct values from selectcolumns controls with multi schema input", () => {
-		const selectColumnsTable2 = panels.at(3).find("#flexible-table-selectcolumns2");
+		const selectColumnsTable2 = wrapper.find("div[data-id='properties-ft-selectcolumns2']");
 		expect(selectColumnsTable2).to.have.length(1);
-		const selectColumnsTable3 = panels.at(3).find("#flexible-table-selectcolumns3");
+		const selectColumnsTable3 = wrapper.find("div[data-id='properties-ft-selectcolumns3']");
 		expect(selectColumnsTable3).to.have.length(1);
 
-		const table2Rows = selectColumnsTable2.find(".column-select-table-row");
+		const table2Rows = selectColumnsTable2.find("tr.column-select-table-row");
 		expect(table2Rows).to.have.length(3);
 
 		const table2Initial = ["0.Age", "0.Drug", "2.Age"];
@@ -247,10 +249,6 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 				.at(0)
 				.text()).to.equal(table2Initial[idx]);
 		}
-
-		const addFieldsButton = selectColumnsTable3.find("Button"); // field picker buttons
-		expect(addFieldsButton).to.have.length(1);
-		addFieldsButton.simulate("click");
 
 		const fieldTable = [
 			{ "name": "Sex", "schema": "0" },
@@ -288,8 +286,8 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ "link_ref": "2", "field_name": "drug2" },
 			{ "link_ref": "2", "field_name": "drug3" }
 		];
-
-		propertyUtils.fieldPicker(selectcolumns3, fieldTable);
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-selectcolumns3");
+		propertyUtils.fieldPicker(fieldPicker, selectcolumns3, fieldTable);
 		expect(controller.getPropertyValue({ name: "selectcolumns3" })).to.have.deep.members(selectcolumns3A);
 
 		// Verify field picker from selectcolumns2 gets the correct fields
@@ -332,20 +330,17 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 	});
 
 	it("should handle improply defined string fields as strings", () => {
-		const badVar1 = panels.at(4).find(".Dropdown-placeholder");
-		expect(badVar1.text()).to.equal("0.Age");
+		const panel1 = wrapper.find("div[data-id='properties-BADVAR1']");
+		expect(panel1.find("span.bx--list-box__label").text()).to.equal("0.Age");
 	});
 });
 
 describe("column selection panel visible and enabled conditions work correctly", () => {
 	let wrapper;
-	let panels;
 	let controller;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
 		wrapper = renderedObject.wrapper;
-		const columnSelectionCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // COLUMN SELECTION category
-		panels = columnSelectionCategory.find(".control-panel");
 		controller = renderedObject.controller;
 	});
 
@@ -354,40 +349,50 @@ describe("column selection panel visible and enabled conditions work correctly",
 	});
 
 	it("controls in column selection panel should be disabled", () => {
-		expect(panels).to.have.length(5); // include nested panels
-		const firstPanel = panels.at(1);
-
-		const disabledCheckbox = firstPanel.find("input[type='checkbox']");
-		expect(disabledCheckbox.props().checked).to.equal(false);
-		expect(firstPanel.find("Dropdown")).to.have.length(2);
+		// by default it is enabled
+		const checkboxWrapper = wrapper.find("div[data-id='properties-disableColumnSelectionPanel']");
+		const disabledCheckbox = checkboxWrapper.find("input");
+		expect(disabledCheckbox.getDOMNode().checked).to.equal(false);
 		expect(controller.getPanelState({ name: "selectcolumn-values" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "field1_panel" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "field2_panel" })).to.equal("enabled");
 
-		disabledCheckbox.simulate("change", { target: { checked: true } });
-		const disabledDropdowns = firstPanel.find(".Dropdown-control.Dropdown-disabled");
-		expect(disabledDropdowns).to.have.length(2);
+		// disable the controls
+		disabledCheckbox.getDOMNode().checked = true;
+		disabledCheckbox.simulate("change");
 		expect(controller.getPanelState({ name: "selectcolumn-values" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "field1_panel" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "field2_panel" })).to.equal("disabled");
+
+		// check that the controls are disabled.
+		const panel = wrapper.find("div[data-id='properties-disable-selectcolumn-values']");
+		const disabledPanel = panel.find("div.properties-control-panel").at(1);
+		const disabledItems = disabledPanel.find("div.properties-control-item");
+		expect(disabledItems).to.have.length(2);
+		expect(disabledItems.at(0).prop("disabled")).to.be.true;
+		expect(disabledItems.at(1).prop("disabled")).to.be.true;
 	});
 
 	it("controls in column selection panel should be hidden", () => {
-		const secondPanel = panels.at(3);
-
-		const hiddenCheckbox = secondPanel.find("input[type='checkbox']");
-		expect(hiddenCheckbox.props().checked).to.equal(false);
-
-		expect(secondPanel.find("Dropdown")).to.have.length(1);
-		const table = secondPanel.find(".structure-table-content-row");
-		expect(table).to.have.length(1);
+		const checkboxWrapper = wrapper.find("div[data-id='properties-hideColumnSelectionPanel']");
+		const hiddenCheckbox = checkboxWrapper.find("input");
+		expect(hiddenCheckbox.getDOMNode().checked).to.equal(false);
 
 		expect(controller.getPanelState({ name: "column-selection-panel" })).to.equal("visible");
 
-		hiddenCheckbox.simulate("change", { target: { checked: true } });
-
+		// hide the controls
+		hiddenCheckbox.getDOMNode().checked = true;
+		hiddenCheckbox.simulate("change");
 		expect(controller.getPanelState({ name: "column-selection-panel" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "selectcolumn" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "selectcolumns" })).to.equal("hidden");
+
+		// check that the controls are hidden.
+		const panel = wrapper.find("div[data-id='properties-hide-column-selection-panel']");
+		const hiddenPanel = panel.find("div.properties-control-panel").at(1);
+		const hiddenItems = hiddenPanel.find("div.properties-control-item");
+		expect(hiddenItems).to.have.length(2);
+		expect(hiddenItems.at(0).hasClass("hide")).to.be.true;
+		expect(hiddenItems.at(1).hasClass("hide")).to.be.true;
 	});
 });

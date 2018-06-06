@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 // vertical align row reorder buttons in moveable tables
-#table-row-move-button-container {
+.properties-mr-button-container {
 	width: 16px;
 	padding-left: 5px;
 	height: 100%;
@@ -23,10 +23,11 @@
 	outline: none;
 	background-color: inherit;
 	padding: 0;
+	margin-bottom: 9px;
 	&:not([disabled]) {
 		cursor: pointer;
 		svg:hover {
-			border-bottom: 2px solid #3D70B2;
+			border-bottom: 2px solid $brand-01;
 			padding-bottom: 0;
 		}
 	}
@@ -34,5 +35,25 @@
 		height: 14px;
 		width: 14px;
 		padding-bottom: 2px;
+	}
+}
+
+// layout tables to allow room for condition icon
+.properties-mr-table-container {
+	width: 100%;
+	display: inline-block;
+	> tbody {
+		width: 100%;
+		display: inline-block;
+		.properties-mr-table-content {
+			width: 100%;
+			display: flex;
+			&.disabled {
+				opacity: 0.5;
+			}
+			& > td:first-of-type {
+				width: calc(100%);
+			}
+		}
 	}
 }
