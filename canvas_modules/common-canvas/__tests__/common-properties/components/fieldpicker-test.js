@@ -307,12 +307,15 @@ describe("field-picker-control renders correctly", () => {
 				controller={controller}
 			/>
 		);
-		const input = wrapper.find("div.properties-ft-search-container").find("input[type='text']");
+		const searchContainer = wrapper.find("div.properties-ft-search-container");
+		const input = searchContainer.find("input[type='text']");
 		input.simulate("change", { target: { value: "Time" } });
 		expect(wrapper.find("tr.properties-fp-data-rows")).to.have.length(2);
 		// test case insensitive
 		input.simulate("change", { target: { value: "TIME" } });
 		expect(wrapper.find("tr.properties-fp-data-rows")).to.have.length(2);
+		searchContainer.find("button").simulate("click"); // click on the x button to remove search value
+		expect(wrapper.find("tr.properties-fp-data-rows")).to.have.length(filteredDataset.length);
 	});
 
 	it("should set checkedAll to true in `FieldPicker`", () => {

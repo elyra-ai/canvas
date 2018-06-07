@@ -190,7 +190,10 @@ class FieldPicker extends React.Component {
 		});
 
 		const visibleData = filteredData.filter(function(row) {
-			return row.name.toLowerCase().indexOf(that.state.filterText.toLowerCase()) > -1;
+			if (typeof that.state.filterText !== "undefined" && that.state.filterText !== null) {
+				return row.name.toLowerCase().indexOf(that.state.filterText.toLowerCase()) > -1;
+			}
+			return true;
 		});
 
 		return visibleData;
