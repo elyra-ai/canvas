@@ -247,6 +247,13 @@ export default class CanvasController {
 		this.objectModel.removeCustomAttrToComments(objIds, attrName);
 	}
 
+	/*
+	* allow application to set instanceId.  Needed for server side rendering to prevent
+	* new instanceId from being created on page refreshes.
+	*/
+	setInstanceId(instanceId) {
+		this.instanceId = instanceId;
+	}
 	// Return a unique identifier for this instance of common canvas.
 	getInstanceId() {
 		return this.instanceId;
