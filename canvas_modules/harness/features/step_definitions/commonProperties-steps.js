@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import { getControlContainerFromName, getSummaryFromName } from "./utilities/validate-utils.js";
+import isEmpty from "lodash/isEmpty";
 import testUtils from "./utilities/test-utils.js";
 
 /* global browser */
@@ -38,6 +39,61 @@ module.exports = function() {
 		textbox.click();
 		textbox.keys("Backspace");
 	});
+	this.Then("I click on title edit icon", function() {
+		var editTitle = browser.$("button.properties-title-editor-btn.edit");
+		expect(editTitle).not.toBe(null);
+		editTitle.click();
+	});
+	this.Then(/^I enter new title "([^"]*)"$/, function(newTitle) {
+		var textbox = browser.$("div.properties-title-editor-input").$("input");
+		textbox.setValue(newTitle);
+		// browser.keys("Enter");
+		// browser.pause(500);
+	});
+	// =======================
+	this.Then(/^I see common properties flyout title "([^"]*)"$/, function(givenTitle) {
+		browser.pause(500);
+		expect(browser.getValue(".properties-title-editor-input input")).toEqual(givenTitle);
+	});
+
+	this.Then("I don't see the common properties flyout", function() {
+		browser.pause(500);
+		expect(isEmpty(browser.$$("#node-title-editor-right-flyout-panel"))).toBe(true);
+	});
+
+	this.Then(/^I click the "([^"]*)" category from flyout$/, function(categoryName) {
+		const categories = browser.$(".right-flyout-panel").$$(".properties-category-container");
+		for (let idx = 0; idx < categories.length; idx++) {
+			const category = categories[idx].$(".properties-category-title");
+			if (category.getText() === categoryName.toUpperCase()) {
+				category.click();
+				break;
+			}
+		}
+	});
+
+	this.Then(/^I click the "([^"]*)" button on the "([^"]*)" table$/, function(buttonName, tableName) {
+		const tableDiv = browser.$("div[data-id='properties-ft-" + tableName + "']");
+		expect(tableDiv.value).not.toBe(null);
+		if (buttonName === "Add") {
+			tableDiv.$(".properties-add-fields-button").click();
+		} else {
+			tableDiv.$(".properties-remove-fields-button").click();
+		}
+	});
+	this.Then(/^I select the row (\d+) in the table "([^"]*)"$/, function(rowNumber, tableControlId) {
+		const containingDiv = browser.$("div[data-id='properties-" + tableControlId + "']");
+		const rows = containingDiv.$(".properties-ft-control-container")
+			.$(".reactable-data")
+			.$$("tr");
+		rows[Number(rowNumber) - 1].$$("td")[0].click();
+	});
+
+	this.Then(/^I verify the new title "([^"]*)"$/, function(newTitle) {
+		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
+		expect(newTitle).toEqual((lastEventLog.data.title).toString());
+	});
+
 
 	this.Then(/^I verify the event log for the "([^"]*)" parameter contains "([^"]*)"$/, function(parameterName, values) {
 		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
@@ -45,279 +101,6 @@ module.exports = function() {
 		expect(values).toEqual((String(lastEventLog.data.form[parameterName])));
 	});
 
-	function clickApplyButton(startElement) {
-		const start = (startElement) ? startElement : browser;
-		const applyButtons = start.$$("button.properties-apply-button");
-		const button = applyButtons[applyButtons.length - 1];
-		button.click();
-		browser.pause(500);
-	}
-	// ==============================================
-	// TODO consider deleting all functions below
-	// ===============================================
-
-	this.Then(/^I select the "([^"]*)" tab in "([^"]*)"$/, function(tabName, mode) {
-		const labelName = (mode === "flyout") ? tabName.toUpperCase() : tabName;
-		const tabList = (mode === "flyout") ? browser.$$(".category-title-container-right-flyout-panel") : browser.$(".tabs__list").$$("li");
-		for (var idx = 0; idx < tabList.length; idx++) {
-			const tabLabel = (mode === "flyout") ? tabList[idx].$("button") : tabList[idx];
-			if (tabLabel.getText() === labelName) {
-				tabLabel.click();
-				break;
-			}
-		}
-	});
-
-	this.Then(/^I see common properties title "([^"]*)"$/, function(givenTitle) {
-		browser.pause(500);
-		var dialogTitle = browser.getText(".modal-title");
-		expect(dialogTitle).toEqual(givenTitle);
-	});
-
-	this.Then(/^I enter text "([^"]*)" in the "([^"]*)" textbox control$/, function(textValue, controlId) {
-		var textbox = browser.$("#" + controlId);
-		textbox.setValue("", textValue);
-	});
-
-
-	this.Then(/^I select "([^"]*)" dropdown option$/, function(dropdownValue) {
-		var dropdown = browser.$(".Dropdown-placeholder");
-		dropdown.click();
-		var dropdownSelect = browser.$(".Dropdown-menu").$$(".Dropdown-option")[1];
-		dropdownSelect.click();
-		clickApplyButton();
-
-		var lastEventLog = testUtils.getLastEventLogData();
-
-		expect(dropdownValue).toEqual((lastEventLog.data.form.measurement).toString());
-	});
-
-
-	this.Then(/^I click on Add Columns button to open field picker at index "([^"]*)"$/, function(index) {
-		browser.$$("#add-fields-button")[index].click();
-		browser.pause(500);
-	});
-
-	this.Then(/^I click on Add Value button at index "([^"]*)"$/, function(index) {
-		browser.$$("#add-fields-button")[index].click();
-		browser.pause(500);
-	});
-
-	this.Then(/^I verify "([^"]*)" is not present second input control$/, function(firstInput) {
-		var checkSecondTablefields = browser.$(".reactable-data").$$("tr");
-		var fieldFlag = true;
-
-		checkSecondTablefields.forEach(function(checkSecondTablefield) {
-			var fieldName = checkSecondTablefield.$$("td")[1];
-			if (firstInput === fieldName.getText()) {
-				fieldFlag = false;
-			}
-		});
-		expect(fieldFlag).toEqual(true);
-	});
-
-	this.Then(/^I verify "([^"]*)" is not present first input control$/, function(secondInput) {
-		var checkFirstTablefields = browser.$(".reactable-data").$$("tr");
-		var fieldFlag = true;
-
-		checkFirstTablefields.forEach(function(checkFirstTablefield) {
-			var fieldName = checkFirstTablefield.$$("td")[1];
-			if (secondInput === fieldName.getText()) {
-				fieldFlag = false;
-			}
-		});
-		expect(fieldFlag).toEqual(true);
-	});
-
-	this.Then(/^I select "([^"]*)" radio button for Impurity$/, function(radioButtonOption) {
-
-		var tab = browser.$$(".tabs__tab")[1];
-		tab.click();
-
-		var filterField = browser.$("#editor-control-checkpointInterval");
-		filterField.setValue("", "1");
-
-		var radiobuttonGini = browser.$("#radioset-control-container").$$("label")[0];
-		radiobuttonGini.click();
-
-		clickApplyButton();
-
-		var lastEventLog = testUtils.getLastEventLogData();
-
-		expect("1").toEqual((lastEventLog.data.form.checkpointInterval).toString());
-		expect(radioButtonOption).toEqual((lastEventLog.data.form.impurity).toString());
-
-	});
-
-	this.Then(/^I select Repeatable partition assignment checkbox and click Generate$/, function() {
-
-		// Splitting into different options due to ESLint errors
-		const checkboxControl = browser.$("div[data-id=\"properties-useSamplingSeed\"]").$("label");
-		checkboxControl.click();
-
-		const numberGenerator = browser.$(".number-generator");
-		numberGenerator.click();
-
-		clickApplyButton();
-
-		var lastEventLog = testUtils.getLastEventLogData();
-		var checkboxPartitionClicked = JSON.stringify(lastEventLog).includes("samplingSeed");
-		expect(true).toEqual(checkboxPartitionClicked);
-		expect("-1").not.toEqual((lastEventLog.data.form.samplingSeed).toString());
-	});
-
-	this.Then(/^I change Order for Drug field and reorder$/, function() {
-
-		browser.pause(500);
-		var drugOrder = browser.$$(".toggletext_text")[1];
-		drugOrder.click();
-
-		var naRow = browser.$(".reactable-data").$$("tr")[0];
-		naRow.click();
-
-		var moveNaLast = browser.$$(".table-row-move-button:not([disabled])")[1];
-		moveNaLast.click();
-
-		var testmoveNaLast1 = browser.$(".table").$(".reactable-data");
-		var testmoveNaLast2 = testmoveNaLast1.$(".table-selected-row").$$("td")[0].getText();
-		expect("Na").toEqual(testmoveNaLast2);
-
-		var drugRow = browser.$(".reactable-data").$$("tr")[0];
-		drugRow.click();
-
-		var moveDrugDown = browser.$$(".table-row-move-button:not([disabled])")[0];
-		moveDrugDown.click();
-
-		var testmoveDrugDown1 = browser.$(".table").$(".reactable-data");
-		var testmoveDrugDown2 = testmoveDrugDown1.$(".table-selected-row").$$("td")[0].getText();
-		expect("Drug").toEqual(testmoveDrugDown2);
-
-		naRow = browser.$(".reactable-data").$$("tr")[2];
-		naRow.click();
-
-		var moveNaFirst = browser.$$(".table-row-move-button:not([disabled])")[0];
-		moveNaFirst.click();
-
-		var testmoveNaFirst1 = browser.$(".table").$(".reactable-data");
-		var testmoveNaFirst2 = testmoveNaFirst1.$(".table-selected-row").$$("td")[0].getText();
-		expect("Na").toEqual(testmoveNaFirst2);
-
-		drugRow = browser.$(".reactable-data").$$("tr")[2];
-		drugRow.click();
-
-		var moveDrugUp = browser.$$(".table-row-move-button:not([disabled])")[1];
-		moveDrugUp.click();
-
-		clickApplyButton();
-
-		var lastEventLog = testUtils.getLastEventLogData();
-		var naKey = (JSON.stringify(lastEventLog.data.form.keys[0])).includes("Na");
-		var drugKey = (JSON.stringify(lastEventLog.data.form.keys[1])).includes("Drug");
-		var drugValue = (JSON.stringify(lastEventLog.data.form.keys[1])).includes("Ascending");
-		var cholesterolKey = (JSON.stringify(lastEventLog.data.form.keys[2])).includes("Cholesterol");
-
-		expect(true).toEqual(naKey);
-		expect(true).toEqual(drugKey);
-		expect(true).toEqual(drugValue);
-		expect(true).toEqual(cholesterolKey);
-
-	});
-
-	this.Then(/^I check for validation error on Checkpoint Interval$/, function() {
-		const tab = browser.$$(".tabs__tab")[1];
-		tab.click();
-
-		const checkpointIntervalTextBoxTest = browser.$("#editor-control-checkpointInterval");
-		checkpointIntervalTextBoxTest.setValue("", 0);
-		var errormessage1 = browser.$$(".editor_control_area")[0]
-			.$(".validation-error-message")
-			.$("span")
-			.getText();
-		expect("The checkpoint interval value must either be >= 1 or -1 to disable").toEqual(errormessage1);
-
-		clickApplyButton();
-	});
-
-	this.Then(/^I check for table cell level validation$/, function() {
-		var tableCell1 = browser.$$("#editor-control-new_name_0")[0];
-		tableCell1.setValue("", "Na");
-		var tableCell2 = browser.$(".modal-title");
-		tableCell2.click();
-
-		var errormessage1 = browser.$$(".validation-error-message")[0].$("span");
-		var errormsg = errormessage1.getText();
-		// var errormsg = browser.$(".form__validation--error").getText();
-
-		expect("The given column name is already in use in the current dataset").toEqual(errormsg);
-		clickApplyButton();
-	});
-
-	this.Then(/^I check table cell enablement$/, function() {
-		var firstCheck = browser.$$(".properties-tooltips-container")[5];
-		var dropdowns = browser.$$(".Dropdown-control ");
-		var disabledDropdowns = browser.$$(".Dropdown-disabled");
-		expect(dropdowns.length).toEqual(10);
-		expect(disabledDropdowns.length).toEqual(9);
-		firstCheck.click();
-
-		// After turning off the checkbox, there should now be one more disabled dropdown
-		disabledDropdowns = browser.$$(".Dropdown-disabled");
-		expect(disabledDropdowns.length).toEqual(10);
-		clickApplyButton();
-	});
-
-	this.Then(/^I check for table validation$/, function() {
-		var tableRow1 = browser.$$("#editor-control-new_name_0")[0];
-		tableRow1.click();
-		browser.$(".remove-fields-button").click();
-
-		var tableRow2 = browser.$$("#editor-control-new_name_0")[0];
-		tableRow2.click();
-		browser.$(".remove-fields-button").click();
-
-		var warningMsg = browser.$(".form__validation--warning").getText();
-		expect("There are no selected columns to rename").toEqual(warningMsg);
-		clickApplyButton();
-	});
-
-
-	this.Then(/^I have closed the common properties dialog by clicking on close button$/, function() {
-		clickApplyButton();
-	});
-
-
-	this.Then(/^I select the Tab (\d+)$/, function(tabNumber) {
-		var tabIndex = tabNumber - 1;
-		var tab = browser.$$(".tabs__tab")[tabIndex];
-		tab.click();
-	});
-
-	this.Then(/^I update the value of Seed textbox with "([^"]*)"$/, function(seedValue) {
-		var seedTextBox = browser.$("#editor-control-numberfieldSeed");
-		seedTextBox.setValue("", seedValue);
-	});
-
-	this.Then(/^I verify the value of Seed textbox with "([^"]*)"$/, function(seedValue) {
-		var seedTextBox = browser.$("#editor-control-numberfieldSeed").getAttribute("value");
-		expect(seedTextBox).toEqual(seedValue);
-	});
-	this.Then(/^I verify that the validation error is "([^"]*)"$/, function(validationError) {
-		var validationDOMError = browser.$(".form__validation--error").getText();
-		expect(validationError).toEqual(validationDOMError);
-	});
-
-	this.Then(/^I verify that the validation warning is "([^"]*)"$/, function(validationWarning) {
-		var validationDOMError = browser.$(".form__validation--warning").getText();
-		expect(validationWarning).toEqual(validationDOMError);
-	});
-
-	this.Then("I close the subPanel dialog", function() {
-		clickCancelButton();
-	});
-
-	this.Then("I close the wideFlyout dialog", function() {
-		clickCancelButton();
-	});
 
 	this.Then("I click on modal OK button", function() {
 		clickApplyButton();
@@ -330,17 +113,6 @@ module.exports = function() {
 		clickApplyButton(panel);
 	});
 
-	this.Then(/^I select the "([^"]*)" enable button$/, function(buttonName) {
-		if (buttonName === "hide") {
-			var hideCheckBox = browser.$$(".control-panel")[4].$$("label")[2];
-			hideCheckBox.click();
-		} else if (buttonName === "disable") {
-			var disableCheckBox = browser.$$(".control-panel")[4].$$("label")[4];
-			disableCheckBox.click();
-		} else {
-			browser.$("#editor-control-" + buttonName).click();
-		}
-	});
 
 	this.Then(/^I click on the "([^"]*)" button$/, function(buttonName) {
 		if (buttonName === "OK" || buttonName === "Save") {
@@ -350,20 +122,8 @@ module.exports = function() {
 		}
 	});
 
-	this.Then(/^I select the "([^"]*)" button in "([^"]*)"$/, function(buttonName, mode) {
-		var button;
-		if (buttonName === "apply") {
-			button = (mode === "flyout") ? browser.$("#properties-apply-button") : browser.$("#properties-apply-button");
-		} else {
-			button = (mode === "flyout") ? browser.$("#properties-cancel-button") : browser.$("#properties-cancel-button");
-		}
-		button.click();
-
-	});
-
-	this.Then(/^I click the dropdown menu in the "([^"]*)" container$/, function(container) {
-		const dropdown = browser.$("#" + container).$(".Dropdown-placeholder");
-		dropdown.click();
+	this.Then(/^I have closed the common properties dialog by clicking on close button$/, function() {
+		clickApplyButton();
 	});
 
 	/** Hovers over the given text in the summaryPanel
@@ -481,6 +241,15 @@ module.exports = function() {
 		var lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
 		expect(value).toEqual((lastEventLog.data.form[fieldName]).toString());
 	});
+
+
+	function clickApplyButton(startElement) {
+		const start = (startElement) ? startElement : browser;
+		const applyButtons = start.$$("button.properties-apply-button");
+		const button = applyButtons[applyButtons.length - 1];
+		button.click();
+		browser.pause(500);
+	}
 
 	function clickCancelButton() {
 		const cancelButtons = browser.$$("#properties-cancel-button");
