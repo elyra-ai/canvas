@@ -486,6 +486,10 @@
           "description": "optional port id of a node this link connects to",
           "type": "string"
         },
+        "link_name": {
+          "description": "optional link name (used in parameter sets when there are multiple input sources)",
+          "type": "string"
+        },
         "app_data": {
           "$ref": "#/definitions/app_data_def"
         }

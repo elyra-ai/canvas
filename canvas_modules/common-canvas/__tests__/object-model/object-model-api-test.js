@@ -523,7 +523,8 @@ describe("ObjectModel API handle model OK", () => {
 			"editType": "linkNodes",
 			"nodes": [{ "id": sourceNodeId }],
 			"targetNodes": [{ "id": "b4f90b52-d198-42f0-85cc-31af3914dd4f" }],
-			"linkType": "data"
+			"linkType": "data",
+			"linkName": "testLink1"
 		};
 
 		const nodeLinks = objectModel.getAPIPipeline().createNodeLinks(linkData);
@@ -535,8 +536,12 @@ describe("ObjectModel API handle model OK", () => {
 			"class_name": "d3-data-link",
 			"srcNodeId": sourceNodeId,
 			"trgNodeId": "b4f90b52-d198-42f0-85cc-31af3914dd4f",
-			"type": "nodeLink"
+			"type": "nodeLink",
+			"linkName": "testLink1"
 		};
+
+		// console.log("EXPECTED:\n" + JSON.stringify(expectedNodeLink));
+		// console.log("ACTUAL:\n" + JSON.stringify(objectModel.getAPIPipeline().getLink(expectedLinkId)));
 
 		expect(isEqual(JSON.stringify(expectedNodeLink), JSON.stringify(objectModel.getAPIPipeline().getLink(expectedLinkId)))).to.be.true;
 	});
@@ -823,7 +828,8 @@ describe("ObjectModel API handle model OK", () => {
 			"nodes": [{ "id": sourceNodeId, "portId": sourcePortId }],
 			"targetNodes": [{ "id": targetNodeId, "portId": targetPortId }],
 			"linkType": "data",
-			"class_name": "canvas-data-link"
+			"class_name": "canvas-data-link",
+			"linkName": "testLink2"
 		};
 		const nodeLinks = objectModel.getAPIPipeline().createNodeLinks(linkData);
 		objectModel.getAPIPipeline().addLinks(nodeLinks);

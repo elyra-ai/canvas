@@ -362,7 +362,8 @@
                       "class_name": "canvas-data-link"
                     }
                   },
-                  "port_id_ref": "outPort6"
+                  "port_id_ref": "outPort6",
+                  "link_name": "link1"
                 },
                 {
                   "node_id_ref": "b16deb33-4e84-45f1-a7d2-6a2e5d8d2618",
@@ -371,7 +372,8 @@
                       "class_name": "canvas-data-link"
                     }
                   },
-                  "port_id_ref": "outPort7"
+                  "port_id_ref": "outPort7",
+                  "link_name": "link1"
                 }
               ]
             }
@@ -462,7 +464,8 @@
                       "class_name": "canvas-data-link"
                     }
                   },
-                  "port_id_ref": "outPort"
+                  "port_id_ref": "outPort",
+                  "link_name": "link1"
                 }
               ]
             },

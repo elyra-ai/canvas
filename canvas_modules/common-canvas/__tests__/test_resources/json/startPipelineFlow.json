@@ -111,7 +111,8 @@
                       "class_name": "d3-data-link"
                     }
                   },
-                  "port_id_ref": "outPort"
+                  "port_id_ref": "outPort",
+                  "link_name": "testLink2"
                 }
               ]
             }
@@ -206,7 +207,8 @@
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  }
+                  },
+                  "link_name": "testLink2"
                 }
               ],
               "parameters": {
@@ -285,7 +287,8 @@
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  }
+                  },
+                  "link_name": "testLink2"
                 }
               ],
               "parameters": {
@@ -367,7 +370,8 @@
                       "class_name": "d3-data-link"
                     }
                   },
-                  "port_id_ref": "output1SuperNodePE"
+                  "port_id_ref": "output1SuperNodePE",
+                  "link_name": "testLink2"
                 }
               ]
             }

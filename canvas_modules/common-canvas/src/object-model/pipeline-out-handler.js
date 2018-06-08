@@ -258,6 +258,10 @@ export default class PipelineOutHandler {
 		if (link.srcNodePortId) {
 			newNodeLink.port_id_ref = link.srcNodePortId;
 		}
+
+		if (link.linkName) {
+			newNodeLink.link_name = link.linkName;
+		}
 		return newNodeLink;
 	}
 

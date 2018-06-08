@@ -781,7 +781,7 @@ describe("ObjectModel handle model OK", () => {
 
 		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
 		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
-
+		//
 		// var exp = JSON.stringify(expectedPipeline);
 		// var act = JSON.stringify(actualPipeline);
 		//
@@ -793,8 +793,7 @@ describe("ObjectModel handle model OK", () => {
 		// 	}
 		// }
 
-
-		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
+		expect(isEqual(JSON.stringify(expectedPipeline), JSON.stringify(actualPipeline))).to.be.true;
 	});
 
 	it("should delete a link", () => {

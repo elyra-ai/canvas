@@ -349,7 +349,10 @@ const links = (state = [], action) => {
 		};
 
 		if (action.data.type === "nodeLink") {
-			Object.assign(newLink, { "srcNodePortId": action.data.srcNodePortId, "trgNodePortId": action.data.trgNodePortId });
+			Object.assign(newLink, {
+				"srcNodePortId": action.data.srcNodePortId,
+				"trgNodePortId": action.data.trgNodePortId,
+				"linkName": action.data.linkName });
 		}
 		return [
 			...state,
@@ -2147,7 +2150,7 @@ export class APIPipeline {
 		const linkNodeList = [];
 		data.nodes.forEach((srcInfo) => {
 			data.targetNodes.forEach((trgInfo) => {
-				const link = this.createNodeLink(srcInfo, trgInfo);
+				const link = this.createNodeLink(srcInfo, trgInfo, data.linkName);
 				if (link) {
 					linkNodeList.push(link);
 				}
@@ -2156,7 +2159,7 @@ export class APIPipeline {
 		return linkNodeList;
 	}
 
-	createNodeLink(srcInfo, trgInfo) {
+	createNodeLink(srcInfo, trgInfo, linkName) {
 		if (this.isConnectionAllowed(srcInfo, trgInfo)) {
 			const link = {};
 			link.id = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
@@ -2166,6 +2169,9 @@ export class APIPipeline {
 			link.srcNodePortId = srcInfo.portId;
 			link.trgNodeId = trgInfo.id;
 			link.trgNodePortId = trgInfo.portId;
+			if (linkName) {
+				link.linkName = linkName;
+			}
 			return link;
 		}
 		return null;

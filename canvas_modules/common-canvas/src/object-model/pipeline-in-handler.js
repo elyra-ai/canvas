@@ -174,6 +174,9 @@ export default class PipelineInHandler {
 								if (link.port_id_ref) { // according to the spec, port_id_ref is optional for links
 									newLink.srcNodePortId = link.port_id_ref;
 								}
+								if (link.link_name) { // link_name is also optional
+									newLink.linkName = link.link_name;
+								}
 								links.push(newLink);
 							}
 						});
