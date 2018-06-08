@@ -13,21 +13,21 @@ export default class EditCommentAction extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
-		this.previousComment = "";
+		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
+		this.previousComment = this.apiPipeline.getComment(this.data.id);
 	}
 
 	// Standard methods
 	do() {
-		this.previousComment = this.objectModel.getComment(this.data.nodes[0]);
-		this.objectModel.editComment(this.data);
+		this.apiPipeline.editComment(this.data);
 	}
 
 	undo() {
-		this.objectModel.updateComment(this.previousComment);
+		this.apiPipeline.editComment(this.previousComment);
 	}
 
 	redo() {
-		this.objectModel.editComment(this.data);
+		this.apiPipeline.editComment(this.data);
 	}
 
 }

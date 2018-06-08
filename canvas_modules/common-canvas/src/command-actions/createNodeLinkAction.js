@@ -8,32 +8,32 @@
  *******************************************************************************/
 import Action from "../command-stack/action.js";
 
-export default class CreateNodeAction extends Action {
+export default class CreateNodeLinkAction extends Action {
 	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-		this.newNode = this.apiPipeline.createNode(data);
+		this.linkNodeList = this.apiPipeline.createNodeLinks(data);
 	}
 
-	// Return augmented command object which will be passed to the
-	// client app.
 	getData() {
-		this.data.newNode = this.newNode;
+		this.data.linkIds = this.linkNodeList.map((link) => link.id);
 		return this.data;
 	}
 
-	// Standard methods
 	do() {
-		this.apiPipeline.addNode(this.newNode);
+		this.apiPipeline.addLinks(this.linkNodeList);
 	}
 
 	undo() {
-		this.apiPipeline.deleteNode(this.newNode.id);
+		this.linkNodeList.forEach((link) => {
+			this.apiPipeline.deleteLink(link);
+		});
 	}
 
 	redo() {
-		this.apiPipeline.addNode(this.newNode);
+		this.do();
 	}
+
 }

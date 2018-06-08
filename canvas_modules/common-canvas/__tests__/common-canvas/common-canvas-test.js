@@ -78,7 +78,6 @@ describe("CommonCanvas renders correctly", () => {
 });
 
 function createCommonCanvas(config, toolbarConfig, notificationConfig) {
-	canvasController.getObjectModel().setEmptyPipelineFlow();
 	canvasController.getObjectModel().setPipelineFlowPalette({});
 	const contextMenuHandler = sinon.spy();
 	const contextMenuActionHandler = sinon.spy();

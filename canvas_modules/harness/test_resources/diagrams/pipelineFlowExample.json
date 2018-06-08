@@ -469,10 +469,10 @@
           "type": "binding",
           "app_data": {
             "ui_data": {
-              "label": "",
-              "image": "",
-              "x_pos": 10,
-              "y_pos": 10
+              "label": "Entry ID1SE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 71,
+              "y_pos": 77
             }
           },
           "outputs": [
@@ -480,7 +480,7 @@
               "id": "entryPort1SE",
               "app_data": {
                 "ui_data": {
-                  "label": ""
+                  "label": "Entry Port1SE"
                 }
               }
             }
@@ -491,10 +491,10 @@
           "type": "binding",
           "app_data": {
             "ui_data": {
-              "label": "",
-              "image": "",
-              "x_pos": 10,
-              "y_pos": 10
+              "label": "Entry ID2SE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 73,
+              "y_pos": 281
             }
           },
           "outputs": [
@@ -502,7 +502,7 @@
               "id": "entryPort2SE",
               "app_data": {
                 "ui_data": {
-                  "label": ""
+                  "label": "Entry Port2SE"
                 }
               }
             }
@@ -517,11 +517,10 @@
               "typeId": "filter-records"
             },
             "ui_data": {
-              "label": "Filter",
+              "label": "Node ID1SE",
               "image": "/images/nodes/derive.svg",
-              "x_pos": 784,
-              "y_pos": 202,
-              "class_name": "nodes",
+              "x_pos": 237,
+              "y_pos": 102,
               "description": "Filter record data"
             }
           },
@@ -568,11 +567,10 @@
               "typeId": "Join"
             },
             "ui_data": {
-              "label": "nodeID2SE",
+              "label": "Node ID2SE",
               "image": "/images/nodes/derive.svg",
-              "x_pos": 651,
-              "y_pos": 70,
-              "class_name": "nodes",
+              "x_pos": 405,
+              "y_pos": 181,
               "description": "nodeID2SE Join two or more datasets"
             }
           },
@@ -585,7 +583,7 @@
                     "min": 1,
                     "max": 1
                   },
-                  "label": "input1NodeID2SE"
+                  "label": "Input 1NodeID2SE"
                 }
               },
               "links": [
@@ -643,11 +641,10 @@
           "type": "binding",
           "app_data": {
             "ui_data": {
-              "label": "exitID1SE",
+              "label": "Exit ID1SE",
               "image": "/images/nodes/derive.svg",
-              "x_pos": 651,
-              "y_pos": 170,
-              "class_name": "nodes",
+              "x_pos": 587,
+              "y_pos": 216,
               "description": "exitID1SE"
             }
           },
@@ -675,7 +672,18 @@
       ],
       "app_data": {
         "ui_data": {
-          "comments": []
+          "comments": [
+            {
+              "id": "1234ba0a-b234-3e33-b321-d693bf8f8888",
+              "x_pos": 299,
+              "y_pos": 330,
+              "width": 100,
+              "height": 60,
+              "class_name": "canvas-comment",
+              "content": "This is a comment in the sub-flow.",
+              "associated_id_refs": []
+            }
+          ]
         }
       },
       "runtime_ref": "SPSS-Modeler"

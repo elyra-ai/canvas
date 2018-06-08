@@ -6,13 +6,13 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint arrow-body-style: ["error", "always"] */
-/* eslint complexity: ["error", 26] */
+/* eslint arrow-body-style: ["off"] */
+/* eslint complexity: ["error", 31] */
 
 import { createStore, combineReducers } from "redux";
 import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
 	CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
-	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK } from "../common-canvas/constants/canvas-constants.js";
+	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK, CREATE_PIPELINE } from "../common-canvas/constants/canvas-constants.js";
 import dagre from "dagre/dist/dagre.min.js";
 import LayoutDimensions from "./layout-dimensions.js";
 import CanvasInHandler from "./canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
@@ -21,7 +21,6 @@ import PipelineInHandler from "./pipeline-in-handler.js";
 import PipelineOutHandler from "./pipeline-out-handler.js";
 import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
-import indexOf from "lodash/indexOf";
 import uuid4 from "uuid/v4";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
 import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@wdp/pipeline-schemas";
@@ -56,6 +55,24 @@ const nodes = (state = [], action) => {
 			});
 		}
 		return state;
+
+	case "SIZE_AND_POSITION_OBJECTS":
+		return state.map((node, index) => {
+			const idx = action.data.objectsInfo.findIndex((actionObjInfo) => {
+				return (actionObjInfo.id === node.id);
+			});
+			if (idx > -1) {
+				const newNode = Object.assign({}, node, {
+					height: action.data.objectsInfo[idx].height,
+					width: action.data.objectsInfo[idx].width,
+					x_pos: action.data.objectsInfo[idx].x_pos,
+					y_pos: action.data.objectsInfo[idx].y_pos
+				});
+				return newNode;
+			}
+
+			return node;
+		});
 
 	case "DELETE_OBJECT":
 		return state.filter((node) => {
@@ -158,11 +175,29 @@ const nodes = (state = [], action) => {
 			return node;
 		});
 
+	case "SET_SUPERNODE_FLAG":
+		return state.map((node, index) => {
+			if (action.data.nodeId === node.id) {
+				let newNode = Object.assign({}, node);
+				newNode.super_node_expanded = action.data.expanded;
+				newNode = setNodeDimensions(newNode, action.layoutinfo);
+				return newNode;
+			}
+			return node;
+		});
+
 	case "SET_PIPELINE_FLOW":
 	case "SET_LAYOUT_INFO":
 	case "SET_CANVAS_INFO":
 		return state.map((node, index) => {
 			let newNode = Object.assign({}, node);
+			// When changing node types we throw away any previous node width and heights
+			// This is mainly to satisfy the test harness.
+			if (action.previousLayout &&
+					action.previousLayout.nodeFormatType !== action.layoutinfo.nodeFormatType) {
+				newNode.width = null;
+				newNode.height = null;
+			}
 			newNode = setNodeDimensions(newNode, action.layoutinfo);
 			return newNode;
 		});
@@ -230,18 +265,35 @@ const comments = (state = [], action) => {
 
 	case "EDIT_COMMENT":
 		return state.map((comment, index) => {
-			if (action.data.nodes.findIndex((actionId) => {
-				return (actionId === comment.id);
-			}) > -1) {
-				const newComment = Object.assign({}, comment);
-				newComment.content = action.data.label;
-				newComment.height = action.data.height;
-				newComment.width = action.data.width;
-				newComment.x_pos = action.data.offsetX;
-				newComment.y_pos = action.data.offsetY;
+			if (action.data.id === comment.id) {
+				const newComment = Object.assign({}, comment, {
+					content: action.data.content,
+					height: action.data.height,
+					width: action.data.width,
+					x_pos: action.data.x_pos,
+					y_pos: action.data.y_pos
+				});
 				return newComment;
 			}
 			return comment;
+		});
+
+	case "SIZE_AND_POSITION_OBJECTS":
+		return state.map((com, index) => {
+			const idx = action.data.objectsInfo.findIndex((actionObjInfo) => {
+				return (actionObjInfo.id === com.id);
+			});
+			if (idx > -1) {
+				const newCom = Object.assign({}, com, {
+					height: action.data.objectsInfo[idx].height,
+					width: action.data.objectsInfo[idx].width,
+					x_pos: action.data.objectsInfo[idx].x_pos,
+					y_pos: action.data.objectsInfo[idx].y_pos
+				});
+				return newCom;
+			}
+
+			return com;
 		});
 
 	case "ADD_COMMENT_ATTR":
@@ -310,6 +362,16 @@ const links = (state = [], action) => {
 			return link.id !== action.data.id;
 		});
 
+	case "DELETE_LINKS": {
+		let newLinks = [...state];
+		action.data.forEach((linkToDelete) => {
+			newLinks = newLinks.filter((link) => {
+				return link.id !== action.data.id;
+			});
+		});
+		return newLinks;
+	}
+
 	// When a comment is added, links have to be created from the comment
 	// to each of the selected nodes.
 	case "ADD_COMMENT": {
@@ -353,9 +415,6 @@ const links = (state = [], action) => {
 
 const canvasinfo = (state = [], action) => {
 	switch (action.type) {
-	case "CLEAR_PIPELINE_FLOW":
-		return null;
-
 	// Convert incoming pipeline flow pipelines to be canvasInfo pipelines and
 	// make sure node dimensions are calculated for all nodes in all current
 	// pipelines.
@@ -379,6 +438,17 @@ const canvasinfo = (state = [], action) => {
 		});
 		return Object.assign({}, action.data, { pipelines: canvasInfoPipelines });
 	}
+	// Save incoming sub-pipeline to the pipeline flow pipelines array.
+	case "ADD_PIPELINE": {
+		return Object.assign({}, state, { pipelines: state.pipelines.concat(action.data) });
+	}
+	// Delete a pipeline from the pipeline flow pipelines array.
+	case "DELETE_PIPELINE": {
+		const canvasInfoPipelines = state.pipelines.filter((pipeline) => {
+			return pipeline.id !== action.data.id;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
 	// Ensure node dimensions are calculated for all nodes in all current
 	// pipelines when layout info is changed.
 	case "SET_LAYOUT_INFO": {
@@ -391,6 +461,7 @@ const canvasinfo = (state = [], action) => {
 	case "ADD_NODE":
 	case "ADD_AUTO_NODE":
 	case "REPLACE_NODES":
+	case "SIZE_AND_POSITION_OBJECTS":
 	case "SET_NODE_PARAMETERS":
 	case "SET_NODE_MESSAGE":
 	case "SET_NODE_MESSAGES":
@@ -399,10 +470,12 @@ const canvasinfo = (state = [], action) => {
 	case "SET_NODE_LABEL":
 	case "SET_INPUT_PORT_LABEL":
 	case "SET_OUTPUT_PORT_LABEL":
+	case "SET_SUPERNODE_FLAG":
 	case "MOVE_OBJECTS":
 	case "DELETE_OBJECT":
 	case "ADD_LINK":
 	case "DELETE_LINK":
+	case "DELETE_LINKS":
 	case "DISCONNECT_NODES":
 	case "ADD_COMMENT":
 	case "EDIT_COMMENT":
@@ -492,32 +565,62 @@ const nodetypes = (state = [], action) => {
 	}
 };
 
-const selections = (state = [], action) => {
+const selectioninfo = (state = [], action) => {
 	switch (action.type) {
-	case "CLEAR_PIPELINE_FLOW":
-		return [];
-
 	case "SET_PIPELINE_FLOW": {
 		// In some instances, with an external object model, the same canvas may
 		// be set multiple times. Consequently, we only clear the selections if
 		// we're given a completely new canvas.
 		if (action.data && action.currentCanvasInfo &&
 				action.data.id !== action.currentCanvasInfo.id) {
-			return [];
+			return {};
 		}
 		return state;
 	}
 
 	case "CLEAR_SELECTIONS":
-		return [];
+		return {};
 
 	case "SET_SELECTIONS":
-		return [...action.data];
+		return {
+			pipelineId: action.data.pipelineId,
+			selections: [...action.data.selections]
+		};
 
-	case "DELETE_OBJECT":
-		return state.filter((objId) => {
-			return action.data.id !== objId;
-		});
+	case "DELETE_OBJECT": {
+		if (state.selections) {
+			const newSelections = state.selections.filter((objId) => {
+				return action.data.id !== objId;
+			});
+			return {
+				pipelineId: state.pipelineId,
+				selections: newSelections
+			};
+		}
+		return state;
+	}
+
+	default:
+		return state;
+	}
+};
+
+const breadcrumbs = (state = [], action) => {
+	switch (action.type) {
+	case "SET_PIPELINE_FLOW":
+		return [{ pipelineId: action.data.primary_pipeline, pipelineFlowId: action.data.id }];
+
+	case "SET_CANVAS_INFO":
+		return [{ pipelineId: action.data.primary_pipeline, pipelineFlowId: action.data.id }];
+
+	case "ADD_NEW_BREADCRUMB":
+		return [
+			...state,
+			{ pipelineId: action.data.pipelineId, pipelineFlowId: action.data.pipelineFlowId }
+		];
+
+	case "SET_TO_PREVIOUS_BREADCRUMB":
+		return state.length > 1 ? state.slice(0, state.length - 1) : state;
 
 	default:
 		return state;
@@ -527,7 +630,20 @@ const selections = (state = [], action) => {
 const layoutinfo = (state = LayoutDimensions.getLayout(), action) => {
 	switch (action.type) {
 	case "SET_LAYOUT_INFO":
-		return Object.assign({}, action.layoutinfo);
+		return Object.assign({}, action.layoutinfo, { linkType: action.linkType });
+
+	default:
+		return state;
+	}
+};
+
+const notifications = (state = [], action) => {
+	switch (action.type) {
+	case "CLEAR_NOTIFICATION_MESSAGES":
+		return [];
+
+	case "SET_NOTIFICATION_MESSAGES":
+		return [...action.data];
 
 	default:
 		return state;
@@ -539,6 +655,7 @@ const layoutinfo = (state = LayoutDimensions.getLayout(), action) => {
 // layout info passed in, as well as the node width.
 const setNodeDimensions = (node, layoutInfo) => {
 	const newNode = Object.assign({}, node);
+
 	if (layoutInfo.connectionType === "ports") {
 		newNode.inputPortsHeight = node.input_ports
 			? (node.input_ports.length * (layoutInfo.portArcRadius * 2)) + ((node.input_ports.length - 1) * layoutInfo.portArcSpacing)
@@ -555,38 +672,29 @@ const setNodeDimensions = (node, layoutInfo) => {
 		newNode.height = layoutInfo.defaultNodeHeight;
 	}
 	newNode.width = layoutInfo.defaultNodeWidth;
-	return newNode;
-};
 
-const notifications = (state = [], action) => {
-	switch (action.type) {
-	case "CLEAR_NOTIFICATION_MESSAGES":
-		return [];
-
-	case "SET_NOTIFICATION_MESSAGES":
-		return [...action.data];
-
-	default:
-		return state;
+	if (newNode.type === "super_node" && newNode.super_node_expanded === true) {
+		newNode.height = Math.max(newNode.height, layoutInfo.superNodeDefaultWidth);
+		newNode.width = Math.max(newNode.width, layoutInfo.superNodeDefaultHeight);
 	}
-};
 
-const getUUID = () => {
-	return uuid4();
+	return newNode;
 };
 
 
 export default class ObjectModel {
 
 	constructor() {
-		// Put selections reducer first so selections are handled before
+		// Put selectioninfo reducer first so selections are handled before
 		// canvasinfo actions. Also, put layoutinfo reducer before canvasinfo
 		// because node heights and width are calculated based on layoutinfo.
-		var combinedReducer = combineReducers({ selections, layoutinfo, canvasinfo, palette, notifications });
+		var combinedReducer = combineReducers({ selectioninfo, layoutinfo, canvasinfo, breadcrumbs, palette, notifications });
+		const emptyCanvasInfo = this.getEmptyCanvasInfo();
 		const initialState = {
-			selections: [],
+			selectioninfo: {},
 			layoutinfo: LayoutDimensions.getLayout(),
-			canvasinfo: this.getEmptyCanvasInfo(),
+			canvasinfo: emptyCanvasInfo,
+			breadcrumbs: [{ pipelineId: emptyCanvasInfo.primary_pipeline, pipelineFlowId: emptyCanvasInfo.id }],
 			palette: {},
 			notifications: []
 		};
@@ -595,17 +703,19 @@ export default class ObjectModel {
 		// Default value for fixed layout behavior
 		this.fixedLayout = NONE;
 
-		// TODO - Remove this gloabal  variable when WML Canvas supports pipelineFlow
+		// TODO - Remove this global variable when WML Canvas supports pipelineFlow
 		this.oldCanvas = null;
 
-		// optional handler to generate the id of object model objects
+		// Optional handler to generate the id of object model objects
 		this.idGeneratorHandler = null;
 
-		// optional callback for notification of selection changes
-		this.selectionCallback = null;
+		// Optional callback for notification of selection changes
+		this.selectionChangeHandler = null;
 	}
 
+	// ---------------------------------------------------------------------------
 	// Standard methods
+	// ---------------------------------------------------------------------------
 
 	// Only used for testing
 	dispatch(action) {
@@ -620,7 +730,39 @@ export default class ObjectModel {
 		this.schemaValidation = schemaValidation;
 	}
 
+	setSelectionChangeHandler(selectionChangeHandler) {
+		this.selectionChangeHandler = selectionChangeHandler;
+	}
+
+	fixedAutoLayout(fixedLayoutDirection) {
+		this.fixedLayout = fixedLayoutDirection;
+		this.getAPIPipeline().autoLayout(fixedLayoutDirection);
+	}
+
+	// ---------------------------------------------------------------------------
+	// Unique ID generation
+	// ---------------------------------------------------------------------------
+
+	getUUID() {
+		return uuid4();
+	}
+
+	setIdGeneratorHandler(idGeneratorHandler) {
+		this.idGeneratorHandler = idGeneratorHandler;
+	}
+
+	getUniqueId(action, data) {
+		let uniqueId;
+		if (this.idGeneratorHandler) {
+			uniqueId = this.idGeneratorHandler(action, data);
+		}
+		// generate v4 uuid if no custom id was generated
+		return uniqueId ? uniqueId : this.getUUID();
+	}
+
+	// ---------------------------------------------------------------------------
 	// Palette methods
+	// ---------------------------------------------------------------------------
 
 	clearPaletteData() {
 		this.store.dispatch({ type: "CLEAR_PALETTE_DATA" });
@@ -650,26 +792,6 @@ export default class ObjectModel {
 
 	getPaletteData() {
 		return this.store.getState().palette;
-	}
-
-	setNodeLabel(nodeId, newLabel) {
-		this.store.dispatch({ type: "SET_NODE_LABEL", data: { nodeId: nodeId, label: newLabel }, pipelineId: this.getActivePipeline() });
-	}
-
-	setInputPortLabel(nodeId, portId, newLabel) {
-		this.store.dispatch({ type: "SET_INPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel }, pipelineId: this.getActivePipeline() });
-	}
-
-	setOutputPortLabel(nodeId, portId, newLabel) {
-		this.store.dispatch({ type: "SET_OUTPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel }, pipelineId: this.getActivePipeline() });
-	}
-
-	setIdGeneratorHandler(idGeneratorHandler) {
-		this.idGeneratorHandler = idGeneratorHandler;
-	}
-
-	setSelectionChangeHandler(selectionChangeHandler) {
-		this.selectionChangeHandler = selectionChangeHandler;
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
@@ -710,11 +832,47 @@ export default class ObjectModel {
 		return result;
 	}
 
-	// Canvas methods
+	validateAndUpgradePalette(newPalette) {
+		// Clone the palette to ensure we don't modify the incoming parameter.
+		let pal = JSON.parse(JSON.stringify(newPalette));
+
+		const version = extractPaletteVersion(pal);
+
+		if (this.schemaValidation) {
+			validatePaletteAgainstSchema(pal, version);
+		}
+
+		if (version !== LATEST_PALETTE_VERSION) {
+			pal = upgradePalette(pal);
+
+			if (this.schemaValidation) {
+				validatePaletteAgainstSchema(pal, LATEST_PALETTE_VERSION);
+			}
+		}
+		return pal;
+	}
+
+	// ---------------------------------------------------------------------------
+	// Pipeline Flow and Canvas methods
+	// ---------------------------------------------------------------------------
+
+	getAPIPipeline(pipelineId) {
+		if (pipelineId) {
+			return new APIPipeline(pipelineId, this);
+		}
+		return new APIPipeline(this.getCurrentBreadcrumb().pipelineId, this);
+	}
+
+	getSelectionAPIPipeline() {
+		const id = this.getSelectionInfo().pipelineId;
+		if (id) {
+			return this.getAPIPipeline(id);
+		}
+		return null;
+	}
 
 	clearPipelineFlow() {
-		this.clearSelection();
-		this.executeWithSelectionChange(this.store.dispatch, { type: "CLEAR_PIPELINE_FLOW" });
+		this.setCanvasInfo(this.getEmptyCanvasInfo());
 	}
 
 	// Deprectaed TODO - Remove this method when WML Canvas supports pipeline Flow
@@ -734,8 +892,8 @@ export default class ObjectModel {
 	}
 
 	getEmptyCanvasInfo() {
-		const newFlowId = getUUID();
-		const newPipelineId = getUUID();
+		const newFlowId = this.getUUID();
+		const newPipelineId = this.getUUID();
 
 		return {
 			"doc_type": "pipeline",
@@ -757,11 +915,6 @@ export default class ObjectModel {
 		};
 	}
 
-	setEmptyPipelineFlow() {
-		const emptyPipelineFlow = PipelineOutHandler.createPipelineFlow(this.getEmptyCanvasInfo());
-		this.setPipelineFlow(emptyPipelineFlow);
-	}
-
 	setPipelineFlow(newPipelineFlow) {
 		// TODO - Remove this if clause when we remove x-* test files.
 		if (newPipelineFlow.objectData) { // Old canvas docs will have an 'objectData' field
@@ -775,11 +928,7 @@ export default class ObjectModel {
 			type: "SET_PIPELINE_FLOW",
 			data: pipelineFlow,
 			layoutinfo: this.store.getState().layoutinfo,
-			currentCanvasInfo: this.store.getState().canvasinfo });
-	}
-
-	getPrimaryPipelineId() {
-		return this.getCanvasInfo().primary_pipeline;
+			currentCanvasInfo: this.getCanvasInfo() });
 	}
 
 	validateAndUpgrade(newPipelineFlow) {
@@ -802,26 +951,6 @@ export default class ObjectModel {
 		return pipelineFlow;
 	}
 
-	validateAndUpgradePalette(newPalette) {
-		// Clone the palette to ensure we don't modify the incoming parameter.
-		let pal = JSON.parse(JSON.stringify(newPalette));
-
-		const version = extractPaletteVersion(pal);
-
-		if (this.schemaValidation) {
-			validatePaletteAgainstSchema(pal, version);
-		}
-
-		if (version !== LATEST_PALETTE_VERSION) {
-			pal = upgradePalette(pal);
-
-			if (this.schemaValidation) {
-				validatePaletteAgainstSchema(pal, LATEST_PALETTE_VERSION);
-			}
-		}
-		return pal;
-	}
-
 	// Returns a pipeline flow based on the initial pipeline flow we were given
 	// with the changes to canvasinfo made by the user. We don't do this in the
 	// redux code because that would result is continuous update of the pipelineflow
@@ -836,168 +965,530 @@ export default class ObjectModel {
 		return pipelineFlow;
 	}
 
-	getCanvasInfo() {
-		return this.store.getState().canvasinfo;
-	}
-
-	// Returns the pipeline for the id passed in or the primary pipeline if
-	// no id is passed in.
+	// Returns the pipeline for the ID passed or the primary pipeline if no
+	// pipeline ID was provided otherwise null.
 	getCanvasInfoPipeline(pipelineId) {
-		if (!this.getCanvasInfo()) {
+		const canvasInfo = this.getCanvasInfo();
+		if (!canvasInfo) {
 			return null;
 		}
-		const pId = pipelineId || this.getPrimaryPipelineId();
-		const pipelines = this.getCanvasInfo().pipelines;
-		const p = pipelines.find((pipeline) => {
-			return pipeline.id === pId;
+		let pId = pipelineId;
+		if (!pId) {
+			pId = this.getPrimaryPipelineId();
+		}
+
+		const pipeline = canvasInfo.pipelines.find((p) => {
+			return p.id === pId;
 		});
-		return (typeof p === "undefined") ? null : p;
-	}
 
-	setActivePipeline(pipelineId) {
-		this.activePipelineId = pipelineId;
-	}
-
-	getActivePipeline() {
-		return this.activePipelineId ? this.activePipelineId : this.getPrimaryPipelineId();
+		return (typeof pipeline === "undefined") ? null : pipeline;
 	}
 
 	setCanvasInfo(canvasInfo) {
 		this.store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo, layoutinfo: this.getLayout() });
 	}
 
-	isCanvasEmpty() {
-		if ((this.getNodes() && this.getNodes().length > 0) ||
-				(this.getComments() && this.getComments().length > 0)) {
-			return false;
-		}
-		return true;
+	isPrimaryPipelineEmpty() {
+		const primaryPipeline = this.getAPIPipeline(this.getCanvasInfo().primary_pipeline);
+		return primaryPipeline.isEmpty();
 	}
 
-	fixedAutoLayout(fixedLayoutDirection) {
-		this.autoLayout(fixedLayoutDirection);
-		this.fixedLayout = fixedLayoutDirection;
+	getPrimaryPipelineId() {
+		return this.getCanvasInfo().primary_pipeline;
 	}
 
-	autoLayout(layoutDirection) {
-		var canvasInfoPipeline = this.getCanvasInfoPipeline();
-		var lookup = {};
-		if (layoutDirection === VERTICAL) {
-			lookup = this.dagreAutolayout(DAGRE_VERTICAL, canvasInfoPipeline);
-		} else {
-			lookup = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasInfoPipeline);
+	addPipeline(pipeline) {
+		this.store.dispatch({ type: "ADD_PIPELINE", data: pipeline });
+	}
+
+	deletePipeline(pipelineId) {
+		this.store.dispatch({ type: "DELETE_PIPELINE", data: { id: pipelineId } });
+	}
+
+	createCanvasInfoPipeline(pipelineInfo) {
+		const newPipelineId = this.getUniqueId(CREATE_PIPELINE, { pipeline: pipelineInfo });
+		const newCanvasInfoPipeline = Object.assign({}, pipelineInfo);
+		newCanvasInfoPipeline.id = newPipelineId;
+		return newCanvasInfoPipeline;
+	}
+
+	getCanvasInfo() {
+		return this.store.getState().canvasinfo;
+	}
+
+	// ---------------------------------------------------------------------------
+	// Breadcrumbs methods
+	// ---------------------------------------------------------------------------
+
+	// Adds a new breadcrumb, for the pipelineInfo passed in, to the array of
+	// breadcrumbs.
+	addNewBreadcrumb(pipelineInfo) {
+		if (pipelineInfo) {
+			this.store.dispatch({ type: "ADD_NEW_BREADCRUMB", data: pipelineInfo });
 		}
-		var newNodes = canvasInfoPipeline.nodes.map((node) => {
-			return Object.assign({}, node, { x_pos: lookup[node.id].value.x, y_pos: lookup[node.id].value.y });
+	}
+
+	// Sets the breadcrumbs to the previous breadcrumb in the breadcrumbs array.
+	setPreviousBreadcrumb() {
+		this.store.dispatch({ type: "SET_TO_PREVIOUS_BREADCRUMB" });
+	}
+
+	getCurrentBreadcrumb() {
+		const crumbs = this.store.getState().breadcrumbs;
+		return crumbs[crumbs.length - 1];
+	}
+
+	// Returns true if the pipelineId passed in is not the primary Pipeline
+	// breadcrumb. In other words, we are shwoing a sub-flow full screen.
+	isInSubFlowBreadcrumb(pipelineId) {
+		const crumbs = this.store.getState().breadcrumbs;
+		const idx = crumbs.findIndex((crumb) => {
+			return crumb.pipelineId === pipelineId;
 		});
+		return (idx > 0); // Return true if index is not the parent
+	}
 
-		const canvasInfo = this.getCanvasInfo();
 
-		const newCanvasInfoPipelines = canvasInfo.pipelines.map((ciPipeline) => {
-			if (ciPipeline.id === canvasInfoPipeline.id) {
-				return Object.assign({}, canvasInfoPipeline, { nodes: newNodes });
+	// ---------------------------------------------------------------------------
+	// Layout Info methods
+	// ---------------------------------------------------------------------------
+
+	setLayoutType(type, linkType) {
+		this.store.dispatch({ type: "SET_LAYOUT_INFO",
+			layoutinfo: LayoutDimensions.getLayout(type),
+			linkType: linkType,
+			previousLayout: this.getLayout() });
+	}
+
+	getLayout() {
+		return this.store.getState().layoutinfo;
+	}
+
+	// ---------------------------------------------------------------------------
+	// Notification Messages methods
+	// ---------------------------------------------------------------------------
+
+	clearNotificationMessages() {
+		this.store.dispatch({ type: "CLEAR_NOTIFICATION_MESSAGES" });
+	}
+
+	setNotificationMessages(messages) {
+		const newMessages = [];
+		messages.forEach((message) => {
+			const newMessageObj = Object.assign({}, message);
+			if (newMessageObj.type === null || newMessageObj.type === "" || typeof newMessageObj.type === "undefined") {
+				newMessageObj.type = "unspecified";
 			}
-			return ciPipeline;
+			newMessages.push(newMessageObj);
 		});
-
-		const newCanvasInfo = {
-			primary_pipeline: canvasInfo.primary_pipeline,
-			pipelines: newCanvasInfoPipelines
-		};
-
-		this.setCanvasInfo(newCanvasInfo);
+		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: newMessages });
 	}
 
-	dagreAutolayout(direction, canvasData) {
-		var nodeLinks = canvasData.links.filter((link) => {
-			return link.type === "nodeLink" || link.type === "associationLink";
-		});
-
-		var edges = nodeLinks.map((link) => {
-			return { "v": link.srcNodeId, "w": link.trgNodeId, "value": { "points": [] } };
-		});
-
-		var nodesData = canvasData.nodes.map((node) => {
-			return { "v": node.id, "value": { } };
-		});
-
-		// possible values: TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
-		// default TB for vertical layout
-		// set to LR for horizontal layout
-		var value = { };
-		var directionList = ["TB", "BT", "LR", "RL"];
-		if (directionList.indexOf(direction) >= 0) {
-			value = { "rankDir": direction };
-		}
-
-		var inputGraph = { nodes: nodesData, edges: edges, value: value };
-
-		var maxNodeSizes = this.getMaximumNodeSizes();
-
-		const initialMarginX = this.store.getState().layoutinfo.autoLayoutInitialMarginX;
-		const initialMarginY = this.store.getState().layoutinfo.autoLayoutInitialMarginY;
-		const verticalSpacing = this.store.getState().layoutinfo.autoLayoutVerticalSpacing;
-		const horizontalSpacing = this.store.getState().layoutinfo.autoLayoutHorizontalSpacing;
-
-		var g = dagre.graphlib.json.read(inputGraph);
-		g.graph().marginx = initialMarginX;
-		g.graph().marginy = initialMarginY;
-		if (direction === "TB") {
-			g.graph().nodesep = maxNodeSizes.width + horizontalSpacing; // distance to separate the nodes horiziontally
-			g.graph().ranksep = maxNodeSizes.height + verticalSpacing; // distance between each rank of nodes
-		} else {
-			g.graph().nodesep = maxNodeSizes.height + horizontalSpacing; // distance to separate the nodes horiziontally
-			g.graph().ranksep = maxNodeSizes.width + verticalSpacing; // distance between each rank of nodes
-		}
-		dagre.layout(g);
-
-		var outputGraph = dagre.graphlib.json.write(g);
-
-		var lookup = { };
-		for (var i = 0, len = outputGraph.nodes.length; i < len; i++) {
-			lookup[outputGraph.nodes[i].v] = outputGraph.nodes[i];
-		}
-		return lookup;
-	}
-
-	getMaximumNodeSizes() {
-		var maxWidth = this.store.getState().layoutinfo.defaultNodeWidth;
-		var maxHeight = this.store.getState().layoutinfo.defaultNodeHeight;
-
-		if (this.getCanvasInfo() &&
-				this.getNodes()) {
-			this.getNodes().forEach((node) => {
-				maxWidth = Math.max(maxWidth, node.width);
-				maxHeight = Math.max(maxHeight, node.height);
+	getNotificationMessages(messageType) {
+		const notificationMessages = this.store.getState().notifications;
+		if (messageType) {
+			return notificationMessages.filter((message) => {
+				return message.type === messageType;
 			});
 		}
-
-		return { width: maxWidth, height: maxHeight };
+		return notificationMessages;
 	}
 
+	// ---------------------------------------------------------------------------
+	// Selection methods
+	// ---------------------------------------------------------------------------
+
+	getSelectedObjectIds() {
+		return this.getSelectionInfo().selections || [];
+	}
+
+	getSelectedNodesIds() {
+		var objs = [];
+		const apiPipeline = this.getSelectedPipeline();
+		apiPipeline.getNodes().forEach((node) => {
+			if (this.getSelectedObjectIds().includes(node.id)) {
+				objs.push(node.id);
+			}
+		});
+		return objs;
+	}
+
+	getSelectedNodes() {
+		const objs = [];
+		const apiPipeline = this.getSelectedPipeline();
+		apiPipeline.getNodes().forEach((node) => {
+			if (this.getSelectedObjectIds().includes(node.id)) {
+				objs.push(node);
+			}
+		});
+
+		return objs;
+	}
+
+	getSelectedComments() {
+		const objs = [];
+		const apiPipeline = this.getSelectedPipeline();
+		apiPipeline.getComments().forEach((com) => {
+			if (this.getSelectedObjectIds().includes(com.id)) {
+				objs.push(com);
+			}
+		});
+
+		return objs;
+	}
+
+	getSelectionInfo() {
+		return this.store.getState().selectioninfo;
+	}
+
+	getSelectedPipeline() {
+		return this.getAPIPipeline(this.getSelectionInfo().pipelineId);
+	}
+
+	clearSelections() {
+		this.executeWithSelectionChange(this.store.dispatch, { type: "CLEAR_SELECTIONS" });
+	}
+
+	isSelected(objectId) {
+		return this.getSelectedObjectIds().indexOf(objectId) >= 0;
+	}
+
+	toggleSelection(objectId, toggleRequested, pipelineId) {
+		let newSelections = [objectId];
+
+		if (pipelineId === this.getSelectionInfo().pipelineId &&
+				toggleRequested) {
+			// If already selected then remove otherwise add
+			if (this.isSelected(objectId)) {
+				newSelections = this.getSelectedObjectIds().slice();
+				const index = newSelections.indexOf(objectId);
+				newSelections.splice(index, 1);
+			}	else {
+				newSelections = this.getSelectedObjectIds().concat(objectId);
+			}
+		}
+		this.setSelections(newSelections, pipelineId);
+	}
+
+	setSelections(newSelections, pipelineId) {
+		this.executeWithSelectionChange(this.store.dispatch, { type: "SET_SELECTIONS", data: { pipelineId: pipelineId, selections: newSelections } });
+	}
+
+	deleteSelectedObjects() {
+		const apiPipeline = this.getSelectedPipeline();
+		apiPipeline.deleteObjects({ "selectedObjectIds": this.getSelectedObjectIds() });
+	}
+
+	selectAll(pipelineId) {
+		const selected = [];
+		const pipeline = this.getAPIPipeline(pipelineId);
+		for (const node of pipeline.getNodes()) {
+			selected.push(node.id);
+		}
+		for (const comment of pipeline.getComments()) {
+			selected.push(comment.id);
+		}
+		this.setSelections(selected, pipelineId);
+	}
+
+	selectInRegion(minX, minY, maxX, maxY, pipelineId) {
+		const pipeline = this.getAPIPipeline(pipelineId);
+		var regionSelections = [];
+		for (const node of pipeline.getNodes()) {
+			if (minX < node.x_pos + node.width &&
+					maxX > node.x_pos &&
+					minY < node.y_pos + node.height &&
+					maxY > node.y_pos) {
+				regionSelections.push(node.id);
+			}
+		}
+		for (const comment of pipeline.getComments()) {
+			if (minX < comment.x_pos + comment.width &&
+					maxX > comment.x_pos &&
+					minY < comment.y_pos + comment.height &&
+					maxY > comment.y_pos) {
+				regionSelections.push(comment.id);
+			}
+		}
+		this.setSelections(regionSelections, pipelineId);
+	}
+
+	findNodesInSubGraph(startNodeId, endNodeId, selection, pipelineId) {
+		const pipeline = this.getAPIPipeline(pipelineId);
+		let retval = false;
+
+		selection.push(startNodeId);
+		if (startNodeId === endNodeId) {
+			retval = true;
+		} else {
+			for (const link of pipeline.getLinks()) {
+				if (link.srcNodeId === startNodeId) {
+					const newRetval = this.findNodesInSubGraph(link.trgNodeId, endNodeId, selection, pipelineId);
+					if (newRetval !== true) {
+						selection.pop();
+					}
+					// this handles the case where there are multiple outward paths.
+					// some of the outward paths coule be true and some false
+					// this will make sure that the node is in the selection list of one of the paths
+					// contains the end nodeId.
+					retval = retval || newRetval;
+				}
+			}
+		}
+
+		return retval;
+	}
+
+	selectSubGraph(endNodeId, pipelineId) {
+		const selection = [];
+		const currentSelectedObjects = this.getSelectedObjectIds();
+
+		// get all the nodes in the path from a currently selected object to the end node
+		let foundPath = false;
+		for (const startNodeId of currentSelectedObjects) {
+			foundPath = foundPath || this.findNodesInSubGraph(startNodeId, endNodeId, selection, pipelineId);
+		}
+		if (!foundPath) {
+			// if no subgraph found which is also the case if current selection was empty, just select endNode
+			selection.push(endNodeId);
+		}
+
+		// do not put multiple copies of a nodeId in selected nodeId list.
+		const selectedObjectIds = this.getSelectedObjectIds().slice();
+		for (const selected of selection) {
+			if (!this.isSelected(selected)) {
+				selectedObjectIds.push(selected);
+			}
+		}
+
+		this.setSelections(selectedObjectIds, pipelineId);
+	}
+
+	// Return true is nodeIds are contiguous.
+	// Depth-first search algorithm to determine if selected nodes ids all belong
+	// in one group. If selected nodes does not belong in the same group, then
+	// nodeIds are not contiguous.
+	areSelectedNodesContiguous() {
+		const nodeIds = this.getSelectedNodesIds();
+		const connectedNodesIdsGroup = [nodeIds[0]];
+		const apiPipeline = this.getSelectedPipeline();
+		for (const nodeId of nodeIds) {
+			this.addConnectedNodeIdToGroup(nodeId, connectedNodesIdsGroup, nodeIds, apiPipeline);
+		}
+		return connectedNodesIdsGroup.length === nodeIds.length;
+	}
+
+	// Recursive function to add all connected nodes into the group.
+	addConnectedNodeIdToGroup(nodeId, connectedNodesIdsGroup, nodeIds, apiPipeline) {
+		if (connectedNodesIdsGroup.includes(nodeId)) {
+			const nodeLinks = apiPipeline.getLinksContainingId(nodeId).filter((link) => {
+				return link.type === "nodeLink" || link.type === "associationLink";
+			});
+
+			for (const link of nodeLinks) {
+				if (nodeIds.includes(link.trgNodeId) && nodeIds.includes(link.srcNodeId)) {
+					if (!connectedNodesIdsGroup.includes(link.trgNodeId)) {
+						connectedNodesIdsGroup.push(link.trgNodeId);
+						this.addConnectedNodeIdToGroup(link.trgNodeId, connectedNodesIdsGroup, nodeIds, apiPipeline);
+					}
+					if (!connectedNodesIdsGroup.includes(link.srcNodeId)) {
+						connectedNodesIdsGroup.push(link.srcNodeId);
+						this.addConnectedNodeIdToGroup(link.srcNodeId, connectedNodesIdsGroup, nodeIds, apiPipeline);
+					}
+				}
+			}
+		}
+	}
+
+	// Returns an offset object containing the x and y distances into negative
+	// coordinate space that that the action would encroach. For the
+	// 'moveObjects' action this is the distance the selected objects would encroach
+	// into negative space. For other actions is is simply the offset amounts
+	// passed in, provided either one is negative.
+	// getOffsetIntoNegativeSpace(action, offsetX, offsetY) {
+	// 	var selObjs = this.getSelectedNodesAndComments();
+	// 	var highlightGap = this.store.getState().layoutinfo.highlightGap;
+	//
+	// 	var offset = { "x": 0, "y": 0 };
+	//
+	// 	if (action === "moveObjects") {
+	// 		selObjs.forEach((obj) => {
+	// 			offset.x = Math.min(offset.x, obj.x_pos + offsetX - highlightGap);
+	// 			offset.y = Math.min(offset.y, obj.y_pos + offsetY - highlightGap);
+	// 		});
+	//
+	// 		var noneSelObjs = this.getNoneSelectedNodesAndComments();
+	// 		noneSelObjs.forEach((obj) => {
+	// 			offset.x = Math.min(offset.x, obj.x_pos - highlightGap);
+	// 			offset.y = Math.min(offset.y, obj.y_pos - highlightGap);
+	// 		});
+	// 	} else {
+	// 		offset = { "x": Math.min(0, offsetX), "y": Math.min(0, offsetY) };
+	//
+	// 		var objs = this.getNodesAndComments();
+	// 		objs.forEach((obj) => {
+	// 			offset.x = Math.min(offset.x, obj.x_pos - highlightGap);
+	// 			offset.y = Math.min(offset.y, obj.y_pos - highlightGap);
+	// 		});
+	// 	}
+	//
+	// 	return offset;
+	// }
+
+	// getSelectedNodesAndComments() {
+	// 	var objs = this.getSelectedNodes();
+	// 	return objs.concat(this.getSelectedComments());
+	// }
+
+
+	// getNoneSelectedNodesAndComments() {
+	// 	var objs = [];
+	// 	this.pipeline.getNodes().forEach((node) => {
+	// 		if (!this.getSelectedObjectIds().includes(node.id)) {
+	// 			objs.push(node);
+	// 		}
+	// 	});
+	//
+	// 	this.pipeline.getComments().forEach((comment) => {
+	// 		if (!this.getSelectedObjectIds().includes(comment.id)) {
+	// 			objs.push(comment);
+	// 		}
+	// 	});
+	// 	return objs;
+	// }
+
+	// getNodesAndComments() {
+	// 	var objs = [];
+	// 	this.pipeline.getNodes().forEach((node) => {
+	// 		objs.push(node);
+	// 	});
+	//
+	// 	this.pipeline.getComments().forEach((comment) => {
+	// 		objs.push(comment);
+	// 	});
+	// 	return objs;
+	// }
+
+	executeWithSelectionChange(func, arg) {
+		let previousSelection = {
+			nodes: [],
+			comments: [],
+			pipelineId: ""
+		};
+
+		const prevPipelineId = this.getSelectionInfo().pipelineId;
+		if (this.selectionChangeHandler && prevPipelineId) {
+			previousSelection = {
+				nodes: this.getSelectedNodes(),
+				comments: this.getSelectedComments(),
+				pipelineId: prevPipelineId
+			};
+		}
+
+		func(arg);
+
+		const pipelineId = this.getSelectionInfo().pipelineId;
+		if (this.selectionChangeHandler && pipelineId) {
+
+			// determine delta in selected nodes and comments
+			const selectedNodes = this.getSelectedNodes();
+			const selectedComments = this.getSelectedComments();
+			const newSelection = {
+				selection: this.getSelectedObjectIds(),
+				selectedNodes: selectedNodes,
+				selectedComments: selectedComments,
+				addedNodes: difference(selectedNodes, previousSelection.nodes),
+				addedComments: difference(selectedComments, previousSelection.comments),
+				deselectedNodes: difference(previousSelection.nodes, selectedNodes),
+				deselectedComments: difference(previousSelection.comments, selectedComments),
+				pipelineId: pipelineId
+			};
+
+			// only trigger event if selection has changed
+			if (!isEmpty(newSelection.addedNodes) ||
+					!isEmpty(newSelection.addedComments) ||
+					!isEmpty(newSelection.deselectedNodes) ||
+					!isEmpty(newSelection.deselectedComments)) {
+				this.selectionChangeHandler(newSelection);
+			}
+		}
+	}
+
+	// ---------------------------------------------------------------------------
+	// Utility methods
+	// ---------------------------------------------------------------------------
+
+	hasErrorMessage(node) {
+		const messages = this.getNodeMessages(node);
+		if (messages) {
+			return (typeof messages.find((msg) => {
+				return msg.type === "error";
+			}) !== "undefined");
+		}
+		return false;
+	}
+
+	hasWarningMessage(node) {
+		const messages = this.getNodeMessages(node);
+		if (messages) {
+			return (typeof messages.find((msg) => {
+				return msg.type === "warning";
+			}) !== "undefined");
+		}
+		return false;
+	}
+
+	getNodeMessages(node) {
+		return node ? node.messages : null;
+	}
+
+}
+
+// ---------------------------------------------------------------------------
+// API Pipeline Class
+// ---------------------------------------------------------------------------
+export class APIPipeline {
+
+	constructor(pipelineId, objectModel) {
+		this.pipelineId = pipelineId;
+		this.objectModel = objectModel;
+		this.store = objectModel.store;
+	}
+
+	// ---------------------------------------------------------------------------
 	// Node AND comment methods
+	// ---------------------------------------------------------------------------
 
 	moveObjects(data) {
-		if (this.fixedLayout === NONE) {
-			this.store.dispatch({ type: "MOVE_OBJECTS", data: data, pipelineId: this.getActivePipeline() });
+		if (this.objectModel.fixedLayout === NONE) {
+			this.store.dispatch({ type: "MOVE_OBJECTS", data: data, pipelineId: this.pipelineId });
 		}
 	}
 
 	deleteObjects(source) {
-		this.executeWithSelectionChange((src) => {
+		this.objectModel.executeWithSelectionChange((src) => {
 			src.selectedObjectIds.forEach((selId) => {
-				this.store.dispatch({ type: "DELETE_OBJECT", data: { id: selId }, pipelineId: this.getActivePipeline() });
+				this.store.dispatch({ type: "DELETE_OBJECT", data: { id: selId }, pipelineId: this.pipelineId });
 			});
-			if (this.fixedLayout !== NONE) {
-				this.autoLayout(this.fixedLayout);
+			if (this.objectModel.fixedLayout !== NONE) {
+				this.autoLayout(this.objectModel.fixedLayout);
 			}
 		}, source);
 	}
 
+	// Delete an array of objects that have ids.
+	deleteObjectsWithIds(objects) {
+		const objectIds = [];
+		objects.forEach((object) => {
+			objectIds.push(object.id);
+		});
+		this.deleteObjects({ selectedObjectIds: objectIds });
+	}
+
 	deleteObject(id) {
-		this.executeWithSelectionChange(this.store.dispatch, { type: "DELETE_OBJECT", data: { id: id }, pipelineId: this.getActivePipeline() });
-		if (this.fixedLayout !== NONE) {
-			this.autoLayout(this.fixedLayout);
+		this.objectModel.executeWithSelectionChange(this.store.dispatch, { type: "DELETE_OBJECT", data: { id: id }, pipelineId: this.pipelineId });
+		if (this.objectModel.fixedLayout !== NONE) {
+			this.autoLayout(this.objectModel.fixedLayout);
 		}
 	}
 
@@ -1006,20 +1497,118 @@ export default class ObjectModel {
 		const selectedNodeIds = this.filterDataNodes(source.selectedObjectIds);
 		const newSource = Object.assign({}, source, { selectedNodeIds: selectedNodeIds });
 
-		this.store.dispatch({ type: "DISCONNECT_NODES", data: newSource, pipelineId: this.getActivePipeline() });
-		if (this.fixedLayout !== NONE) {
-			this.autoLayout(this.fixedLayout);
+		this.store.dispatch({ type: "DISCONNECT_NODES", data: newSource, pipelineId: this.pipelineId });
+		if (this.objectModel.fixedLayout !== NONE) {
+			this.autoLayout(this.objectModel.fixedLayout);
 		}
 	}
 
+	isEmpty() {
+		if (this.getNodes() && this.getNodes().length === 0 &&
+				this.getComments() && this.getComments().length === 0) {
+			return true;
+		}
+		return false;
+	}
+
+	getObject(objId) {
+		const node = this.getNode(objId);
+		if (node) {
+			return node;
+		}
+		const com = this.getComment(objId);
+		if (com) {
+			return com;
+		}
+		return null;
+	}
+
+	getAllObjectIds() {
+		var objIds = [];
+		this.getNodes().forEach((node) => {
+			objIds.push(node.id);
+		});
+
+		this.getComments().forEach((comment) => {
+			objIds.push(comment.id);
+		});
+
+		return objIds;
+	}
+	// Returns true if any of the node or comment definitions passed in exactly
+	// overlap any of the existing nodes and comments. This is used by the
+	// paste-from-clipboard code to detect if nodes and comments being pasted
+	// overlap existing nodes and comments.
+	exactlyOverlaps(nodeDefs, commentDefs) {
+		var overlaps = false;
+
+		if (nodeDefs && nodeDefs.length > 0) {
+			const index = nodeDefs.findIndex((nodeDef) => {
+				return this.exactlyOverlapsNodes(nodeDef);
+			});
+			if (index > -1) {
+				overlaps = true;
+			}
+		}
+		if (overlaps === false && commentDefs && commentDefs.length > 0) {
+			const index = commentDefs.findIndex((commentDef) => {
+				return this.exactlyOverlapsComments(commentDef);
+			});
+			if (index > -1) {
+				overlaps = true;
+			}
+		}
+
+		return overlaps;
+	}
+
+	// Return true if the new node definition passed in exactly overlaps any
+	// of the existing nodes.
+	exactlyOverlapsNodes(nodeDef) {
+		var overlap = false;
+		this.getNodes().forEach((canvasNode) => {
+			if (canvasNode.x_pos === nodeDef.x_pos &&
+					canvasNode.y_pos === nodeDef.y_pos) {
+				overlap = true;
+			}
+		});
+		return overlap;
+	}
+
+	// Return true if the new comment definition passed in exactly overlaps any
+	// of the existing comments.
+	exactlyOverlapsComments(comment) {
+		var overlap = false;
+		this.getComments().forEach((canvasComment) => {
+			if (canvasComment.x_pos === comment.x_pos &&
+					canvasComment.y_pos === comment.y_pos) {
+				overlap = true;
+			}
+		});
+		return overlap;
+	}
+
+	// Returns true if the object ID passed in exists in the array of objects
+	// passed in.
+	isObjectIdInObjects(objId, inObjects) {
+		if (inObjects) {
+			return inObjects.findIndex((object) => {
+				return object.id === objId;
+			}) > -1;
+		}
+		return false;
+	}
+
+	// ---------------------------------------------------------------------------
 	// Node methods
+	// ---------------------------------------------------------------------------
 
 	createNode(data) {
 		const nodeTemplate = data.nodeTemplate;
 		let node = {};
 		if (nodeTemplate !== null) {
 			node = Object.assign({}, nodeTemplate, {
-				"id": this.getUniqueId(CREATE_NODE, { "nodeType": nodeTemplate }),
+				"id": this.objectModel.getUniqueId(CREATE_NODE, { "nodeType": nodeTemplate }),
 				"x_pos": data.offsetX,
 				"y_pos": data.offsetY
 			});
@@ -1032,15 +1621,6 @@ export default class ObjectModel {
 		return node;
 	}
 
-	cloneNode(inNode) {
-		let node = Object.assign({}, inNode, { id: this.getUniqueId(CLONE_NODE, { "node": inNode }) });
-
-		// Add node height and width and, if appropriate, inputPortsHeight
-		// and outputPortsHeight
-		node = setNodeDimensions(node, this.store.getState().layoutinfo);
-		return node;
-	}
-
 	// Returns a source node for auto completion or null if no source node can be
 	// detected. The source node is either:
 	// 1. The selected node, if only *one* node is currently selected or
@@ -1048,7 +1628,7 @@ export default class ObjectModel {
 	// 3. The most-recent-but-one added node, provided it has one or more output ports
 	getAutoSourceNode() {
 		var sourceNode = null;
-		var selectedNodes = this.getSelectedNodes();
+		var selectedNodes = this.objectModel.getSelectedNodes();
 
 		if (selectedNodes.length === 1) {
 			sourceNode = selectedNodes[0];
@@ -1118,8 +1698,17 @@ export default class ObjectModel {
 		});
 	}
 
+	cloneNode(inNode) {
+		let node = Object.assign({}, inNode, { id: this.objectModel.getUniqueId(CLONE_NODE, { "node": inNode }) });
+
+		// Add node height and width and, if appropriate, inputPortsHeight
+		// and outputPortsHeight
+		node = setNodeDimensions(node, this.store.getState().layoutinfo);
+		return node;
+	}
+
 	replaceNodes(replacementNodes) {
-		this.store.dispatch({ type: "REPLACE_NODES", data: replacementNodes, pipelineId: this.getActivePipeline() });
+		this.store.dispatch({ type: "REPLACE_NODES", data: replacementNodes, pipelineId: this.pipelineId });
 	}
 
 	// Returns true if a new link needs to be created with the newly created
@@ -1161,89 +1750,23 @@ export default class ObjectModel {
 		return true;
 	}
 
-	// Returns a position for a new comment added by clicking the 'add comment'
-	// button on the toolbar. It searches for a position that is not already
-	// occupied by an existing comment.
-	getNewCommentPosition(svgPos) {
-		const pos = { x_pos: svgPos.x_pos, y_pos: svgPos.y_pos };
-
-		while (this.exactlyOverlaps(null, [pos])) {
-			pos.x_pos += 10;
-			pos.y_pos += 10;
+	isSourceOverlappingTarget(srcNode, trgNode) {
+		var highlightGap = this.store.getState().layoutinfo.highlightGap;
+		if (((srcNode.x_pos + srcNode.width + highlightGap >= trgNode.x_pos - highlightGap &&
+					trgNode.x_pos + trgNode.width + highlightGap >= srcNode.x_pos - highlightGap) &&
+					(srcNode.y_pos + srcNode.height + highlightGap >= trgNode.y_pos - highlightGap &&
+						trgNode.y_pos + trgNode.height + highlightGap >= srcNode.y_pos - highlightGap))) {
+			return true;
 		}
 
-		return pos;
-	}
-
-	// Returns true if any of the node or comment definitions passed in exactly
-	// overlap any of the existing nodes and comments. This is used by the
-	// paste-from-clipboard code to detect if nodes and comments being pasted
-	// overlap existing nodes and comments.
-	exactlyOverlaps(nodeDefs, commentDefs) {
-		var overlaps = false;
-
-		if (nodeDefs && nodeDefs.length > 0) {
-			const index = nodeDefs.findIndex((nodeDef) => {
-				return this.exactlyOverlapsNodes(nodeDef);
-			});
-			if (index > -1) {
-				overlaps = true;
-			}
-		}
-		if (overlaps === false && commentDefs && commentDefs.length > 0) {
-			const index = commentDefs.findIndex((commentDef) => {
-				return this.exactlyOverlapsComments(commentDef);
-			});
-			if (index > -1) {
-				overlaps = true;
-			}
-		}
-
-		return overlaps;
-	}
-
-	// Return true if the new node definition passed in exactly overlaps any
-	// of the existing nodes.
-	exactlyOverlapsNodes(nodeDef) {
-		var overlap = false;
-		this.getNodes().forEach((canvasNode) => {
-			if (canvasNode.x_pos === nodeDef.x_pos &&
-					canvasNode.y_pos === nodeDef.y_pos) {
-				overlap = true;
-			}
-		});
-		return overlap;
-	}
-
-	// Return true if the new comment definition passed in exactly overlaps any
-	// of the existing comments.
-	exactlyOverlapsComments(comment) {
-		var overlap = false;
-		this.getComments().forEach((canvasComment) => {
-			if (canvasComment.x_pos === comment.x_pos &&
-					canvasComment.y_pos === comment.y_pos) {
-				overlap = true;
-			}
-		});
-		return overlap;
-	}
-
-	// Returns true if the node ID passed in exists in the array of nodes
-	// passed in.
-	isNodeIdInNodes(nodeId, inNodes) {
-		if (inNodes) {
-			return inNodes.findIndex((node) => {
-				return node.id === nodeId;
-			}) > -1;
-		}
 		return false;
 	}
 
 	addNode(newNode) {
-		this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode }, pipelineId: this.getActivePipeline() });
+		this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode }, pipelineId: this.pipelineId });
 
-		if (this.fixedLayout !== NONE) {
-			this.autoLayout(this.fixedLayout);
+		if (this.objectModel.fixedLayout !== NONE) {
+			this.autoLayout(this.objectModel.fixedLayout);
 		}
 	}
 
@@ -1251,7 +1774,7 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "ADD_AUTO_NODE", data: {
 			newNode: newNode,
 			newLink: newLink },
-		pipelineId: this.getActivePipeline() });
+		pipelineId: this.pipelineId });
 	}
 
 	deleteNode(id) {
@@ -1259,12 +1782,83 @@ export default class ObjectModel {
 	}
 
 	getNodes() {
-		return this.getCanvasInfoPipeline().nodes;
+		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
+		if (pipeline) {
+			return pipeline.nodes;
+		}
+		return [];
+	}
+
+	getNode(nodeId) {
+		return this.getNodes().find((node) => {
+			return (node.id === nodeId);
+		});
+	}
+
+	isDataNode(objId) {
+		const node = this.getNode(objId);
+		return (typeof node !== "undefined"); // node will be undefined if objId references a comment
+	}
+
+	sizeAndPositionObjects(data) {
+		this.store.dispatch({ type: "SIZE_AND_POSITION_OBJECTS", data: data, pipelineId: this.pipelineId });
+	}
+
+	// Filters data node IDs from the list of IDs passed in and returns them
+	// in a new array. That is, the result array doesn't contain any comment IDs.
+	filterDataNodes(objectIds) {
+		return objectIds.filter((objId) => {
+			return this.isDataNode(objId);
+		});
+	}
+
+	expandSuperNodeInPlace(nodeId) {
+		this.store.dispatch({ type: "SET_SUPERNODE_FLAG", data: { nodeId: nodeId, expanded: true }, pipelineId: this.pipelineId, layoutinfo: this.objectModel.getLayout() });
+	}
+
+	collapseSuperNodeInPlace(nodeId) {
+		this.store.dispatch({ type: "SET_SUPERNODE_FLAG", data: { nodeId: nodeId, expanded: false }, pipelineId: this.pipelineId, layoutinfo: this.objectModel.getLayout() });
+	}
+
+	doesNodeHavePorts(node) {
+		return node.input_ports && node.input_ports.length > 0;
 	}
 
 	getNodeParameters(nodeId) {
 		var node = this.getNode(nodeId);
 		return (node ? node.parameters : null);
+	}
+
+	setNodeLabel(nodeId, newLabel) {
+		this.store.dispatch({ type: "SET_NODE_LABEL", data: { nodeId: nodeId, label: newLabel }, pipelineId: this.pipelineId });
+	}
+
+	setInputPortLabel(nodeId, portId, newLabel) {
+		this.store.dispatch({ type: "SET_INPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel }, pipelineId: this.pipelineId });
+	}
+
+	setOutputPortLabel(nodeId, portId, newLabel) {
+		this.store.dispatch({ type: "SET_OUTPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel }, pipelineId: this.pipelineId });
+	}
+
+	setNodeMessage(nodeId, message) {
+		this.store.dispatch({ type: "SET_NODE_MESSAGE", data: { nodeId: nodeId, message: message }, pipelineId: this.pipelineId });
+	}
+
+	setNodeMessages(nodeId, messages) {
+		this.store.dispatch({ type: "SET_NODE_MESSAGES", data: { nodeId: nodeId, messages: messages }, pipelineId: this.pipelineId });
+	}
+
+	setNodeParameters(nodeId, parameters) {
+		this.store.dispatch({ type: "SET_NODE_PARAMETERS", data: { nodeId: nodeId, parameters: parameters }, pipelineId: this.pipelineId });
+	}
+
+	addCustomAttrToNodes(objIds, attrName, attrValue) {
+		this.store.dispatch({ type: "ADD_NODE_ATTR", data: { objIds: objIds, attrName: attrName, attrValue: attrValue }, pipelineId: this.pipelineId });
+	}
+
+	removeCustomAttrFromNodes(objIds, attrName, attrValue) {
+		this.store.dispatch({ type: "REMOVE_NODE_ATTR", data: { objIds: objIds, attrName: attrName }, pipelineId: this.pipelineId });
 	}
 
 	getNodeMessages(nodeId) {
@@ -1285,58 +1879,155 @@ export default class ObjectModel {
 	}
 
 	hasErrorMessage(nodeId) {
-		const messages = this.getNodeMessages(nodeId);
-		if (messages) {
-			return (typeof messages.find((msg) => {
-				return msg.type === "error";
-			}) !== "undefined");
-		}
-		return false;
+		var node = this.getNode(nodeId);
+		return this.objectModel.hasErrorMessage(node);
 	}
 
 	hasWarningMessage(nodeId) {
-		const messages = this.getNodeMessages(nodeId);
-		if (messages) {
-			return (typeof messages.find((msg) => {
-				return msg.type === "warning";
-			}) !== "undefined");
+		var node = this.getNode(nodeId);
+		return this.objectModel.hasWarningMessage(node);
+	}
+
+	isFlowValid(includeMsgTypes) {
+		let validFlow = true;
+		const flowNodes = this.getNodes();
+		for (const node of flowNodes) {
+			if (validFlow) {
+				validFlow = this.isNodeValid(node, includeMsgTypes);
+			}
 		}
-		return false;
+		return validFlow;
 	}
 
-	setNodeMessage(nodeId, message) {
-		this.store.dispatch({ type: "SET_NODE_MESSAGE", data: { nodeId: nodeId, message: message }, pipelineId: this.getActivePipeline() });
-	}
-
-	setNodeMessages(nodeId, messages) {
-		this.store.dispatch({ type: "SET_NODE_MESSAGES", data: { nodeId: nodeId, messages: messages }, pipelineId: this.getActivePipeline() });
-	}
-
-	setNodeParameters(nodeId, parameters) {
-		this.store.dispatch({ type: "SET_NODE_PARAMETERS", data: { nodeId: nodeId, parameters: parameters }, pipelineId: this.getActivePipeline() });
-	}
-
-	addCustomAttrToNodes(objIds, attrName, attrValue) {
-		this.store.dispatch({ type: "ADD_NODE_ATTR", data: { objIds: objIds, attrName: attrName, attrValue: attrValue }, pipelineId: this.getActivePipeline() });
-	}
-
-	removeCustomAttrFromNodes(objIds, attrName, attrValue) {
-		this.store.dispatch({ type: "REMOVE_NODE_ATTR", data: { objIds: objIds, attrName: attrName }, pipelineId: this.getActivePipeline() });
-	}
-
-	canNodeBeDroppedOnLink(nodeType) {
-		if (nodeType.input_ports && nodeType.input_ports.length > 0 &&
-				nodeType.output_ports && nodeType.output_ports.length > 0) {
-			return true;
+	isNodeValid(node, includeMsgTypes) {
+		let validNode = true;
+		if (includeMsgTypes && Array.isArray(includeMsgTypes) && includeMsgTypes.length > 0) {
+			for (const msg of node.messages) {
+				if (includeMsgTypes.indexOf(msg.type) !== -1) {
+					validNode = false;
+				}
+			}
+		} else if (node.messages && node.messages.length > 0) {
+			validNode = false;
 		}
-		return false;
+		return validNode;
 	}
 
+	getFlowMessages() {
+		const flowNodes = this.getNodes();
+		const nodeMsgs = {};
+		flowNodes.forEach((node) => {
+			if (node.messages && node.messages.length > 0) {
+				nodeMsgs[node.id] = node.messages;
+			}
+		});
+		return nodeMsgs;
+	}
+
+	autoLayout(layoutDirection) {
+		const canvasInfoPipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
+		let lookup = {};
+		if (layoutDirection === VERTICAL) {
+			lookup = this.dagreAutolayout(DAGRE_VERTICAL, canvasInfoPipeline);
+		} else {
+			lookup = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasInfoPipeline);
+		}
+		var newNodes = canvasInfoPipeline.nodes.map((node) => {
+			return Object.assign({}, node, { x_pos: lookup[node.id].value.x, y_pos: lookup[node.id].value.y });
+		});
+
+		// TODO -- All code below can be moved to Redux reducers
+		const canvasInfo = this.objectModel.getCanvasInfo();
+
+		const newCanvasInfoPipelines = canvasInfo.pipelines.map((ciPipeline) => {
+			if (ciPipeline.id === canvasInfoPipeline.id) {
+				return Object.assign({}, canvasInfoPipeline, { nodes: newNodes });
+			}
+			return ciPipeline;
+		});
+
+		const newCanvasInfo = {
+			primary_pipeline: canvasInfo.primary_pipeline,
+			pipelines: newCanvasInfoPipelines
+		};
+
+		this.objectModel.setCanvasInfo(newCanvasInfo);
+	}
+
+	dagreAutolayout(direction, canvasInfoPipeline) {
+		var nodeLinks = canvasInfoPipeline.links.filter((link) => {
+			return link.type === "nodeLink" || link.type === "associationLink";
+		});
+
+		var edges = nodeLinks.map((link) => {
+			return { "v": link.srcNodeId, "w": link.trgNodeId, "value": { "points": [] } };
+		});
+
+		var nodesData = canvasInfoPipeline.nodes.map((node) => {
+			return { "v": node.id, "value": { } };
+		});
+
+		// possible values: TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
+		// default TB for vertical layout
+		// set to LR for horizontal layout
+		var value = { };
+		var directionList = ["TB", "BT", "LR", "RL"];
+		if (directionList.indexOf(direction) >= 0) {
+			value = { "rankDir": direction };
+		}
+
+		var inputGraph = { nodes: nodesData, edges: edges, value: value };
+
+		var maxNodeSizes = this.getMaximumNodeSizes();
+
+		const initialMarginX = this.store.getState().layoutinfo.autoLayoutInitialMarginX;
+		const initialMarginY = this.store.getState().layoutinfo.autoLayoutInitialMarginY;
+		const verticalSpacing = this.store.getState().layoutinfo.autoLayoutVerticalSpacing;
+		const horizontalSpacing = this.store.getState().layoutinfo.autoLayoutHorizontalSpacing;
+
+		var g = dagre.graphlib.json.read(inputGraph);
+		g.graph().marginx = initialMarginX;
+		g.graph().marginy = initialMarginY;
+		if (direction === "TB") {
+			g.graph().nodesep = maxNodeSizes.width + horizontalSpacing; // distance to separate the nodes horiziontally
+			g.graph().ranksep = maxNodeSizes.height + verticalSpacing; // distance between each rank of nodes
+		} else {
+			g.graph().nodesep = maxNodeSizes.height + horizontalSpacing; // distance to separate the nodes horiziontally
+			g.graph().ranksep = maxNodeSizes.width + verticalSpacing; // distance between each rank of nodes
+		}
+		dagre.layout(g);
+
+		var outputGraph = dagre.graphlib.json.write(g);
+
+		var lookup = { };
+		for (var i = 0, len = outputGraph.nodes.length; i < len; i++) {
+			lookup[outputGraph.nodes[i].v] = outputGraph.nodes[i];
+		}
+		return lookup;
+	}
+
+	getMaximumNodeSizes() {
+		var maxWidth = this.store.getState().layoutinfo.defaultNodeWidth;
+		var maxHeight = this.store.getState().layoutinfo.defaultNodeHeight;
+
+		if (this.objectModel.getCanvasInfo() &&
+				this.getNodes()) {
+			this.getNodes().forEach((node) => {
+				maxWidth = Math.max(maxWidth, node.width);
+				maxHeight = Math.max(maxHeight, node.height);
+			});
+		}
+
+		return { width: maxWidth, height: maxHeight };
+	}
+
+	// ---------------------------------------------------------------------------
 	// Comment methods
+	// ---------------------------------------------------------------------------
 
 	createComment(source) {
 		const info = {
-			id: this.getUniqueId(CREATE_COMMENT),
+			id: this.objectModel.getUniqueId(CREATE_COMMENT),
 			class_name: "d3-comment-rect",
 			content: "",
 			height: 42,
@@ -1349,24 +2040,38 @@ export default class ObjectModel {
 		source.selectedObjectIds.forEach((objId) => {
 			if (this.isDataNode(objId)) { // Only add links to data nodes, not comments
 				info.selectedObjectIds.push(objId);
-				info.linkIds.push(this.getUniqueId(CREATE_COMMENT_LINK, { "comment": info, "targetNode": this.getNode(objId) }));
+				info.linkIds.push(this.objectModel.getUniqueId(CREATE_COMMENT_LINK, { "comment": info, "targetNode": this.getNode(objId) }));
 			}
 		});
 		return info;
 	}
 
 	cloneComment(inComment) {
-		return Object.assign({}, inComment, { id: this.getUniqueId(CLONE_COMMENT, { "comment": inComment }) });
+		return Object.assign({}, inComment, { id: this.objectModel.getUniqueId(CLONE_COMMENT, { "comment": inComment }) });
 	}
 
 	addComment(data) {
 		if (typeof data.selectedObjectIds === "undefined") {
 			data.selectedObjectIds = [];
 		}
-		this.store.dispatch({ type: "ADD_COMMENT", data: data, pipelineId: this.getActivePipeline() });
-		if (this.fixedLayout !== NONE) {
-			this.autoLayout(this.fixedLayout);
+		this.store.dispatch({ type: "ADD_COMMENT", data: data, pipelineId: this.pipelineId });
+		if (this.objectModel.fixedLayout !== NONE) {
+			this.autoLayout(this.objectModel.fixedLayout);
 		}
+	}
+
+	// Returns a position for a new comment added by clicking the 'add comment'
+	// button on the toolbar. It searches for a position that is not already
+	// occupied by an existing comment.
+	getNewCommentPosition(svgPos) {
+		const pos = { x_pos: svgPos.x_pos, y_pos: svgPos.y_pos };
+
+		while (this.exactlyOverlaps(null, [pos])) {
+			pos.x_pos += 10;
+			pos.y_pos += 10;
+		}
+
+		return pos;
 	}
 
 	deleteComment(id) {
@@ -1374,36 +2079,38 @@ export default class ObjectModel {
 	}
 
 	getComments() {
-		return this.getCanvasInfoPipeline().comments;
+		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
+		if (pipeline) {
+			return pipeline.comments;
+		}
+		return [];
+
+	}
+
+	getComment(commentId) {
+		return this.getComments().find((comment) => {
+			return (comment.id === commentId);
+		});
 	}
 
 	editComment(data) {
-		this.store.dispatch({ type: "EDIT_COMMENT", data: data, pipelineId: this.getActivePipeline() });
-	}
-
-	// use updateComment when you have the comment structure from the state object.
-	// this method will format the input to be compatable with editComment interface.
-	updateComment(data) {
-		data.editType = "editComment";
-		data.nodes = [data.id];
-		data.offsetX = data.x_pos;
-		data.offsetY = data.y_pos;
-		data.label = data.content;
-		this.editComment(data);
+		this.store.dispatch({ type: "EDIT_COMMENT", data: data, pipelineId: this.pipelineId });
 	}
 
 	addCustomAttrToComments(objIds, attrName, attrValue) {
-		this.store.dispatch({ type: "ADD_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName, attrValue: attrValue }, pipelineId: this.getActivePipeline() });
+		this.store.dispatch({ type: "ADD_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName, attrValue: attrValue }, pipelineId: this.pipelineId });
 	}
 
 	removeCustomAttrFromComments(objIds, attrName) {
-		this.store.dispatch({ type: "REMOVE_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName }, pipelineId: this.getActivePipeline() });
+		this.store.dispatch({ type: "REMOVE_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName }, pipelineId: this.pipelineId });
 	}
 
+	// ---------------------------------------------------------------------------
 	// Link methods
+	// ---------------------------------------------------------------------------
 
 	createLink(newNode, srcNode) {
-		const linkId = this.getUniqueId(CREATE_NODE_LINK, { "sourceNode": srcNode, "targetNode": newNode });
+		const linkId = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": srcNode, "targetNode": newNode });
 		let newLink = {
 			id: linkId,
 			class_name: "d3-data-link",
@@ -1423,9 +2130,16 @@ export default class ObjectModel {
 	}
 
 	deleteLink(link) {
-		this.store.dispatch({ type: "DELETE_LINK", data: link, pipelineId: this.getActivePipeline() });
-		if (this.fixedLayout !== NONE) {
-			this.autoLayout(this.fixedLayout);
+		this.store.dispatch({ type: "DELETE_LINK", data: link, pipelineId: this.pipelineId });
+		if (this.objectModel.fixedLayout !== NONE) {
+			this.autoLayout(this.objectModel.fixedLayout);
+		}
+	}
+
+	deleteLinks(linksToDelete) {
+		this.store.dispatch({ type: "DELETE_LINKS", data: linksToDelete, pipelineId: this.pipelineId });
+		if (this.objectModel.fixedLayout !== NONE) {
+			this.autoLayout(this.objectModel.fixedLayout);
 		}
 	}
 
@@ -1445,7 +2159,7 @@ export default class ObjectModel {
 	createNodeLink(srcInfo, trgInfo) {
 		if (this.isConnectionAllowed(srcInfo, trgInfo)) {
 			const link = {};
-			link.id = this.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
+			link.id = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
 			link.type = "nodeLink";
 			link.class_name = "d3-data-link";
 			link.srcNodeId = srcInfo.id;
@@ -1459,7 +2173,7 @@ export default class ObjectModel {
 
 	cloneNodeLink(link, srcNodeId, trgNodeId) {
 		return {
-			id: this.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNodeId, "targetNodeId": trgNodeId }),
+			id: this.objectModel.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNodeId, "targetNodeId": trgNodeId }),
 			type: link.type,
 			class_name: link.class_name,
 			srcNodeId: srcNodeId,
@@ -1469,23 +2183,13 @@ export default class ObjectModel {
 		};
 	}
 
-	addLinks(linkList) {
-		linkList.forEach((link) => {
-			this.store.dispatch({ type: "ADD_LINK", data: link, pipelineId: this.getActivePipeline() });
-		});
-
-		if (this.fixedLayout !== NONE) {
-			this.autoLayout(this.fixedLayout);
-		}
-	}
-
 	createCommentLinks(data) {
 		const linkCommentList = [];
 		data.nodes.forEach((srcNodeId) => {
 			data.targetNodes.forEach((trgNodeId) => {
 				if (!this.commentLinkAlreadyExists(srcNodeId, trgNodeId)) {
 					const info = {};
-					info.id = this.getUniqueId(CREATE_COMMENT_LINK, { "comment": this.getComment(srcNodeId), "targetNode": this.getNode(trgNodeId) });
+					info.id = this.objectModel.getUniqueId(CREATE_COMMENT_LINK, { "comment": this.getComment(srcNodeId), "targetNode": this.getNode(trgNodeId) });
 					info.type = "commentLink";
 					info.class_name = "d3-comment-link";
 					info.srcNodeId = srcNodeId;
@@ -1499,7 +2203,7 @@ export default class ObjectModel {
 
 	cloneCommentLink(link, srcNodeId, trgNodeId) {
 		return {
-			id: this.getUniqueId(CLONE_COMMENT_LINK, { "link": link, "commentId": srcNodeId, "targetNodeId": trgNodeId }),
+			id: this.objectModel.getUniqueId(CLONE_COMMENT_LINK, { "link": link, "commentId": srcNodeId, "targetNodeId": trgNodeId }),
 			type: link.type,
 			class_name: link.class_name,
 			srcNodeId: srcNodeId,
@@ -1507,8 +2211,31 @@ export default class ObjectModel {
 		};
 	}
 
+	addLinks(linkList) {
+		linkList.forEach((link) => {
+			this.store.dispatch({ type: "ADD_LINK", data: link, pipelineId: this.pipelineId });
+		});
+
+		if (this.objectModel.fixedLayout !== NONE) {
+			this.autoLayout(this.objectModel.fixedLayout);
+		}
+	}
+
 	getLinks() {
-		return this.getCanvasInfoPipeline().links;
+		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
+		if (pipeline) {
+			return pipeline.links;
+		}
+		return [];
+
+	}
+
+	canNodeBeDroppedOnLink(nodeType) {
+		if (nodeType.input_ports && nodeType.input_ports.length > 0 &&
+				nodeType.output_ports && nodeType.output_ports.length > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	// Returns an array of links from canvas info links which link
@@ -1517,10 +2244,10 @@ export default class ObjectModel {
 		const linksList = this.getLinks();
 		const filteredLinks = linksList.filter((link) => {
 			// All links must point to a node so look for target node first
-			if (this.isNodeIdInNodes(link.trgNodeId, inNodes)) {
+			if (this.isObjectIdInObjects(link.trgNodeId, inNodes)) {
 				// Next look for any node or comment as the source object.
-				if (this.isNodeIdInNodes(link.srcNodeId, inNodes) ||
-						this.isCommentIdInComments(link.srcNodeId, inComments)) {
+				if (this.isObjectIdInObjects(link.srcNodeId, inNodes) ||
+						this.isObjectIdInObjects(link.srcNodeId, inComments)) {
 					return true;
 				}
 			}
@@ -1550,50 +2277,23 @@ export default class ObjectModel {
 		return returnLinks;
 	}
 
-	// Returns true if the comment ID passed in exists in the array of comments
-	// passed in.
-	isCommentIdInComments(commentId, inComments) {
-		if (inComments) {
-			return inComments.findIndex((comment) => {
-				return comment.id === commentId;
-			}) > -1;
-		}
-		return false;
-	}
-
-	// Utility functions
-
-	getNode(nodeId) {
-		const diagramNodes = this.getNodes();
-		return diagramNodes.find((node) => {
-			return (node.id === nodeId);
+	// Returns an array of node links for the array of nodes passed in.
+	getNodeLinks(inNodes) {
+		const nodeLinks = [];
+		inNodes.forEach((node) => {
+			const allNodeLinks = this.getLinksContainingId(node.id);
+			allNodeLinks.forEach((link) => {
+				if (link.type === "nodeLink") {
+					nodeLinks.push(link);
+				}
+			});
 		});
-	}
-
-	getComment(commentId) {
-		const diagramComments = this.getComments();
-		return diagramComments.find((comment) => {
-			return (comment.id === commentId);
-		});
+		return nodeLinks;
 	}
 
 	getLink(linkId) {
-		const diagramLinks = this.getLinks();
-		return diagramLinks.find((link) => {
+		return this.getLinks().find((link) => {
 			return (link.id === linkId);
-		});
-	}
-
-	isDataNode(objId) {
-		const node = this.getNode(objId);
-		return (typeof node !== "undefined"); // node will be undefined if objId references a comment
-	}
-
-	// Filters data node IDs from the list of IDs passed in and returns them
-	// in a new array. That is, the result array doesn't contain any comment IDs.
-	filterDataNodes(objectIds) {
-		return objectIds.filter((objId) => {
-			return this.isDataNode(objId);
 		});
 	}
 
@@ -1625,16 +2325,10 @@ export default class ObjectModel {
 		return true;
 	}
 
-	doesNodeHavePorts(node) {
-		return node.input_ports && node.input_ports.length > 0;
-	}
-
 	linkAlreadyExists(srcNodeInfo, trgNodeInfo) {
 		let exists = false;
 
-		const diagramLinks = this.getLinks();
-
-		diagramLinks.forEach((link) => {
+		this.getLinks().forEach((link) => {
 			if (link.srcNodeId === srcNodeInfo.id &&
 					(!link.srcNodePortId || link.srcNodePortId === srcNodeInfo.portId) &&
 					link.trgNodeId === trgNodeInfo.id &&
@@ -1648,9 +2342,7 @@ export default class ObjectModel {
 	commentLinkAlreadyExists(srcNodeId, trgNodeId) {
 		let exists = false;
 
-		const diagramLinks = this.getLinks();
-
-		diagramLinks.forEach((link) => {
+		this.getLinks().forEach((link) => {
 			if (link.srcNodeId === srcNodeId &&
 					link.trgNodeId === trgNodeId) {
 				exists = true;
@@ -1659,13 +2351,27 @@ export default class ObjectModel {
 		return exists;
 	}
 
-	isCardinalityExceeded(srcPortId, trgPortId, srcNode, trgNode) {
-		const diagramLinks = this.getLinks();
+	// Returns true if the comment with the commentId passed in
+	// is linked to nonselected nodes.
+	isCommentLinkedToNonSelectedNodes(commentId) {
+		const commentLinks = this.getLinksContainingId(commentId);
+		const selectedIds = this.objectModel.getSelectedObjectIds();
 
+		let linkedToNonSelectedNodes = false;
+		for (const commentLink of commentLinks) {
+			linkedToNonSelectedNodes = !selectedIds.includes(commentLink.trgNodeId);
+			if (linkedToNonSelectedNodes) {
+				return linkedToNonSelectedNodes;
+			}
+		}
+		return linkedToNonSelectedNodes;
+	}
+
+	isCardinalityExceeded(srcPortId, trgPortId, srcNode, trgNode) {
 		var srcCount = 0;
 		var trgCount = 0;
 
-		diagramLinks.forEach((link) => {
+		this.getLinks().forEach((link) => {
 			if (link.type === "nodeLink") {
 				if (link.srcNodeId === srcNode.id && srcPortId) {
 					if (link.srcNodePortId === srcPortId ||
@@ -1727,373 +2433,4 @@ export default class ObjectModel {
 		}
 		return null;
 	}
-
-	isFlowValid(includeMsgTypes) {
-		let validFlow = true;
-		const flowNodes = this.getNodes();
-		for (const node of flowNodes) {
-			if (validFlow) {
-				validFlow = this.isNodeValid(node, includeMsgTypes);
-			}
-		}
-		return validFlow;
-	}
-
-	isNodeValid(node, includeMsgTypes) {
-		let validNode = true;
-		if (includeMsgTypes && Array.isArray(includeMsgTypes) && includeMsgTypes.length > 0) {
-			for (const msg of node.messages) {
-				if (indexOf(includeMsgTypes, msg.type) !== -1) {
-					validNode = false;
-				}
-			}
-		} else if (node.messages && node.messages.length > 0) {
-			validNode = false;
-		}
-		return validNode;
-	}
-
-	getFlowMessages() {
-		const flowNodes = this.getNodes();
-		const nodeMsgs = {};
-		flowNodes.forEach((node) => {
-			if (node.messages && node.messages.length > 0) {
-				nodeMsgs[node.id] = node.messages;
-			}
-		});
-		return nodeMsgs;
-	}
-
-	// Methods to handle selections
-
-	clearSelection() {
-		this.executeWithSelectionChange(this.store.dispatch, { type: "CLEAR_SELECTIONS" });
-	}
-
-	getSelectedObjectIds() {
-		return this.store.getState().selections;
-	}
-
-	setSelections(newSelections) {
-		this.executeWithSelectionChange(this.store.dispatch, { type: "SET_SELECTIONS", data: newSelections });
-	}
-
-	deleteSelectedObjects() {
-		this.deleteObjects({ "selectedObjectIds": this.getSelectedObjectIds() });
-	}
-
-	getAllObjectIds() {
-		var objIds = [];
-		this.getNodes().forEach((node) => {
-			objIds.push(node.id);
-		});
-
-		this.getComments().forEach((comment) => {
-			objIds.push(comment.id);
-		});
-
-		return objIds;
-	}
-
-	selectAll() {
-		const selected = [];
-		for (const node of this.getNodes()) {
-			selected.push(node.id);
-		}
-		for (const comment of this.getComments()) {
-			selected.push(comment.id);
-		}
-		this.setSelections(selected);
-	}
-
-	isSelected(objectId) {
-		return this.getSelectedObjectIds().indexOf(objectId) >= 0;
-	}
-
-	// Either sets the target object as selected and removes any other
-	// selections or leaves as selected if this object is already selected.
-	ensureSelected(objectId) {
-		let alreadySelected = this.getSelectedObjectIds();
-
-		// If the operation is about to be done to a non-selected object,
-		// make it the only selected object.
-		if (alreadySelected.indexOf(objectId) < 0) {
-			alreadySelected = [objectId];
-		}
-		this.setSelections(alreadySelected);
-
-		return this.getSelectedObjectIds();
-	}
-
-	toggleSelection(objectId, toggleSelection) {
-		let toggleSelections = [objectId];
-
-		if (toggleSelection) {
-			// If already selected then remove otherwise add
-			if (this.isSelected(objectId)) {
-				toggleSelections = this.getSelectedObjectIds().slice();
-				const index = toggleSelections.indexOf(objectId);
-				toggleSelections.splice(index, 1);
-			}	else {
-				toggleSelections = this.getSelectedObjectIds().concat(objectId);
-			}
-		}
-		this.setSelections(toggleSelections);
-
-		return this.getSelectedObjectIds();
-	}
-
-	selectInRegion(minX, minY, maxX, maxY) {
-		var regionSelections = [];
-		for (const node of this.getNodes()) {
-			if (minX < node.x_pos + node.width &&
-					maxX > node.x_pos &&
-					minY < node.y_pos + node.height &&
-					maxY > node.y_pos) {
-				regionSelections.push(node.id);
-			}
-		}
-		for (const comment of this.getComments()) {
-			if (minX < comment.x_pos + comment.width &&
-					maxX > comment.x_pos &&
-					minY < comment.y_pos + comment.height &&
-					maxY > comment.y_pos) {
-				regionSelections.push(comment.id);
-			}
-		}
-		this.setSelections(regionSelections);
-	}
-
-	findNodesInSubGraph(startNodeId, endNodeId, selection) {
-		let retval = false;
-
-		selection.push(startNodeId);
-		if (startNodeId === endNodeId) {
-			retval = true;
-		} else {
-			const diagramLinks = this.getLinks();
-			for (const link of diagramLinks) {
-				if (link.srcNodeId === startNodeId) {
-					const newRetval = this.findNodesInSubGraph(link.trgNodeId, endNodeId, selection);
-					if (newRetval !== true) {
-						selection.pop();
-					}
-					// this handles the case where there are multiple outward paths.
-					// some of the outward paths coule be true and some false
-					// this will make sure that the node is in the selection list of one of the paths
-					// contains the end nodeId.
-					retval = retval || newRetval;
-				}
-			}
-		}
-
-		return retval;
-	}
-
-	selectSubGraph(endNodeId) {
-		const selection = [];
-		const currentSelectedObjects = this.getSelectedObjectIds();
-
-		// get all the nodes in the path from a currently selected object to the end node
-		let foundPath = false;
-		for (const startNodeId of currentSelectedObjects) {
-			foundPath = foundPath || this.findNodesInSubGraph(startNodeId, endNodeId, selection);
-		}
-		if (!foundPath) {
-			// if no subgraph found which is also the case if current selection was empty, just select endNode
-			selection.push(endNodeId);
-		}
-
-		// do not put multiple copies of a nodeId in selected nodeId list.
-		const selectedObjectIds = this.getSelectedObjectIds().slice();
-		for (const selected of selection) {
-			if (!this.isSelected(selected)) {
-				selectedObjectIds.push(selected);
-			}
-		}
-
-		this.setSelections(selectedObjectIds);
-
-		return this.getSelectedObjectIds();
-	}
-
-	// Returns an offset object containing the x and y distances into negative
-	// coordinate space that that the action would encroach. For the
-	// 'moveObjects' action this is the distance the selected objects would encroach
-	// into negative space. For other actions is is simply the offset amounts
-	// passed in, provided either one is negative.
-	getOffsetIntoNegativeSpace(action, offsetX, offsetY) {
-		var selObjs = this.getSelectedNodesAndComments();
-		var highlightGap = this.store.getState().layoutinfo.highlightGap;
-
-		var offset = { "x": 0, "y": 0 };
-
-		if (action === "moveObjects") {
-			selObjs.forEach((obj) => {
-				offset.x = Math.min(offset.x, obj.x_pos + offsetX - highlightGap);
-				offset.y = Math.min(offset.y, obj.y_pos + offsetY - highlightGap);
-			});
-
-			var noneSelObjs = this.getNoneSelectedNodesAndComments();
-			noneSelObjs.forEach((obj) => {
-				offset.x = Math.min(offset.x, obj.x_pos - highlightGap);
-				offset.y = Math.min(offset.y, obj.y_pos - highlightGap);
-			});
-		} else {
-			offset = { "x": Math.min(0, offsetX), "y": Math.min(0, offsetY) };
-
-			var objs = this.getNodesAndComments();
-			objs.forEach((obj) => {
-				offset.x = Math.min(offset.x, obj.x_pos - highlightGap);
-				offset.y = Math.min(offset.y, obj.y_pos - highlightGap);
-			});
-		}
-
-		return offset;
-	}
-
-	getSelectedNodesAndComments() {
-		var objs = this.getSelectedNodes();
-		return objs.concat(this.getSelectedComments());
-	}
-
-	getSelectedNodes() {
-		var objs = [];
-		this.getNodes().forEach((node) => {
-			if (this.getSelectedObjectIds().includes(node.id)) {
-				objs.push(node);
-			}
-		});
-
-		return objs;
-	}
-
-	getSelectedComments() {
-		var objs = [];
-		this.getComments().forEach((comment) => {
-			if (this.getSelectedObjectIds().includes(comment.id)) {
-				objs.push(comment);
-			}
-		});
-
-		return objs;
-	}
-
-	getNoneSelectedNodesAndComments() {
-		var objs = [];
-		this.getNodes().forEach((node) => {
-			if (!this.getSelectedObjectIds().includes(node.id)) {
-				objs.push(node);
-			}
-		});
-
-		this.getComments().forEach((comment) => {
-			if (!this.getSelectedObjectIds().includes(comment.id)) {
-				objs.push(comment);
-			}
-		});
-		return objs;
-	}
-
-	getNodesAndComments() {
-		var objs = [];
-		this.getNodes().forEach((node) => {
-			objs.push(node);
-		});
-
-		this.getComments().forEach((comment) => {
-			objs.push(comment);
-		});
-		return objs;
-	}
-
-	isSourceOverlappingTarget(srcNode, trgNode) {
-		var highlightGap = this.store.getState().layoutinfo.highlightGap;
-		if (((srcNode.x_pos + srcNode.width + highlightGap >= trgNode.x_pos - highlightGap &&
-					trgNode.x_pos + trgNode.width + highlightGap >= srcNode.x_pos - highlightGap) &&
-					(srcNode.y_pos + srcNode.height + highlightGap >= trgNode.y_pos - highlightGap &&
-						trgNode.y_pos + trgNode.height + highlightGap >= srcNode.y_pos - highlightGap))) {
-			return true;
-		}
-
-		return false;
-	}
-
-	// Methods to handle Layout info.
-
-	setLayoutType(type) {
-		this.store.dispatch({ type: "SET_LAYOUT_INFO", layoutinfo: LayoutDimensions.getLayout(type) });
-	}
-
-	getLayout() {
-		return this.store.getState().layoutinfo;
-	}
-
-	getUniqueId(action, data) {
-		let uniqueId;
-		if (this.idGeneratorHandler) {
-			uniqueId = this.idGeneratorHandler(action, data);
-		}
-		// generate v4 uuid if no custom id was generated
-		return uniqueId ? uniqueId : getUUID();
-	}
-
-	executeWithSelectionChange(func, arg) {
-		const previousSelection = {
-			nodes: this.getSelectedNodes(),
-			comments: this.getSelectedComments()
-		};
-
-		func(arg);
-
-		if (this.selectionChangeHandler) {
-			// determine delta in selected nodes and comments
-			const selectedNodes = this.getSelectedNodes();
-			const selectedComments = this.getSelectedComments();
-			const newSelection = {
-				selection: this.getSelectedObjectIds(),
-				selectedNodes: selectedNodes,
-				selectedComments: selectedComments,
-				addedNodes: difference(selectedNodes, previousSelection.nodes),
-				addedComments: difference(selectedComments, previousSelection.comments),
-				deselectedNodes: difference(previousSelection.nodes, selectedNodes),
-				deselectedComments: difference(previousSelection.comments, selectedComments)
-			};
-
-			// only trigger event if selection has changed
-			if (!isEmpty(newSelection.addedNodes) ||
-					!isEmpty(newSelection.addedComments) ||
-					!isEmpty(newSelection.deselectedNodes) ||
-					!isEmpty(newSelection.deselectedComments)) {
-				this.selectionChangeHandler(newSelection);
-			}
-		}
-	}
-
-	clearNotificationMessages() {
-		this.store.dispatch({ type: "CLEAR_NOTIFICATION_MESSAGES" });
-	}
-
-	setNotificationMessages(messages) {
-		const newMessages = [];
-		messages.forEach((message) => {
-			const newMessageObj = Object.assign({}, message);
-			if (newMessageObj.type === null || newMessageObj.type === "" || typeof newMessageObj.type === "undefined") {
-				newMessageObj.type = "unspecified";
-			}
-			newMessages.push(newMessageObj);
-		});
-		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: newMessages });
-	}
-
-	getNotificationMessages(messageType) {
-		const notificationMessages = this.store.getState().notifications;
-		if (messageType) {
-			return notificationMessages.filter((message) => {
-				return message.type === messageType;
-			});
-		}
-		return notificationMessages;
-	}
-
 }

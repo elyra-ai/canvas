@@ -14,20 +14,21 @@ export default class DeleteLinkAction extends Action {
 		this.data = data;
 		this.linkInfo = [];
 		this.objectModel = objectModel;
+		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 	}
 
 	// Standard methods
 	do() {
-		this.linkInfo = this.objectModel.getLink(this.data.id);
-		this.objectModel.deleteLink(this.data);
+		this.linkInfo = this.apiPipeline.getLink(this.data.id);
+		this.apiPipeline.deleteLink(this.data);
 	}
 
 	undo() {
-		this.objectModel.addLinks([this.linkInfo]);
+		this.apiPipeline.addLinks([this.linkInfo]);
 	}
 
 	redo() {
-		this.objectModel.deleteLink(this.data);
+		this.apiPipeline.deleteLink(this.data);
 	}
 
 }

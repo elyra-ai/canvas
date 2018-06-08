@@ -8,32 +8,42 @@
  *******************************************************************************/
 import Action from "../command-stack/action.js";
 
-export default class CreateNodeAction extends Action {
+export default class SizeAndPositionObjectsAction extends Action {
 	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-		this.newNode = this.apiPipeline.createNode(data);
-	}
-
-	// Return augmented command object which will be passed to the
-	// client app.
-	getData() {
-		this.data.newNode = this.newNode;
-		return this.data;
+		this.previousData = {};
+		this.previousData.objectsInfo = this.getPreviousNodesInfo(data);
 	}
 
 	// Standard methods
 	do() {
-		this.apiPipeline.addNode(this.newNode);
+		this.apiPipeline.sizeAndPositionObjects(this.data);
 	}
 
 	undo() {
-		this.apiPipeline.deleteNode(this.newNode.id);
+		this.apiPipeline.sizeAndPositionObjects(this.previousData);
 	}
 
 	redo() {
-		this.apiPipeline.addNode(this.newNode);
+		this.apiPipeline.sizeAndPositionObjects(this.data);
+	}
+
+	getPreviousNodesInfo(data) {
+		return data.objectsInfo.map((objInfo) => {
+			const obj = this.apiPipeline.getObject(objInfo.id);
+			if (obj) {
+				return {
+					id: obj.id,
+					x_pos: obj.x_pos,
+					y_pos: obj.y_pos,
+					width: obj.width,
+					height: obj.height
+				};
+			}
+			return null;
+		});
 	}
 }

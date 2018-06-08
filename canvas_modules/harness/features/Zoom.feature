@@ -19,8 +19,6 @@ Feature: Zoom
 
 		Then I resize the window size to 1330 width and 660 height
 
-		Then I verify zoom transform value is "translate(0,0) scale(1)"
-
 		Then I click zoom in
 		Then I verify zoom transform value is "translate(143.5,4.849999999999994) scale(1.1)"
 

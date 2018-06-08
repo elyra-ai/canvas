@@ -7,6 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import Action from "../command-stack/action.js";
+import has from "lodash/has";
 
 export default class DeleteObjectsAction extends Action {
 	constructor(data, objectModel) {
@@ -14,11 +15,13 @@ export default class DeleteObjectsAction extends Action {
 		this.data = data;
 		this.objectModel = objectModel;
 		this.objectsInfo = [];
+		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.nodes = this.objectModel.getSelectedNodes();
 		this.comments = this.objectModel.getSelectedComments();
 		this.links = [];
+
 		this.data.selectedObjectIds.forEach((id) => {
-			const objectLinks = this.objectModel.getLinksContainingId(id);
+			const objectLinks = this.apiPipeline.getLinksContainingId(id);
 			// ensure each link is only stored once
 			objectLinks.forEach((objectLink) => {
 				if (!this.links.find((link) => (link.id === objectLink.id))) {
@@ -26,27 +29,58 @@ export default class DeleteObjectsAction extends Action {
 				}
 			});
 		});
+
+		// Rememebr all the pipelines that are being deleted when any selected
+		// supernodes are being deleted.
+		this.data.deletedPipelines = [];
+		this.data.superNodes = this.getSuperNodesReferencedBy(this.data.selectedObjectIds);
+		this.data.superNodes.forEach((supernode) => {
+			if (has(supernode, "subflow_ref.pipeline_id_ref")) {
+				const deletedPipeline = this.objectModel.getCanvasInfoPipeline(supernode.subflow_ref.pipeline_id_ref);
+				this.data.deletedPipelines.push(deletedPipeline);
+			}
+		});
 	}
 
 	// Standard methods
 	do() {
-		this.objectModel.deleteObjects(this.data);
+		this.apiPipeline.deleteObjects(this.data);
+		this.data.deletedPipelines.forEach((pipeline) => {
+			this.objectModel.deletePipeline(pipeline.id);
+		});
+
 	}
 
 	undo() {
+		this.data.deletedPipelines.forEach((pipeline) => {
+			this.objectModel.addPipeline(pipeline);
+		});
+
 		this.nodes.forEach((node) => {
-			this.objectModel.addNode(node);
+			this.apiPipeline.addNode(node);
 		});
 
 		this.comments.forEach((comment) => {
-			this.objectModel.addComment(comment);
+			this.apiPipeline.addComment(comment);
 		});
 
-		this.objectModel.addLinks(this.links);
+		this.apiPipeline.addLinks(this.links);
 	}
 
 	redo() {
-		this.objectModel.deleteObjects(this.data);
+		this.do();
 	}
 
+	getSuperNodesReferencedBy(objectIds) {
+		const superNodes = [];
+		objectIds.forEach((id) => {
+			const node = this.apiPipeline.getNode(id);
+			if (node) {
+				if (node.type === "super_node") {
+					superNodes.push(node);
+				}
+			}
+		});
+		return superNodes;
+	}
 }

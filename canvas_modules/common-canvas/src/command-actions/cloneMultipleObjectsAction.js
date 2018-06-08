@@ -13,19 +13,20 @@ export default class CloneMultipleObjectsAction extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.clonedNodesInfo = [];
 		this.clonedCommentsInfo = [];
 		this.links = [];
 
 		if (data.objects.nodes) {
 			data.objects.nodes.forEach((node) => {
-				this.clonedNodesInfo.push({ originalId: node.id, node: this.objectModel.cloneNode(node) });
+				this.clonedNodesInfo.push({ originalId: node.id, node: this.apiPipeline.cloneNode(node) });
 			});
 		}
 
 		if (data.objects.comments) {
 			data.objects.comments.forEach((comment) => {
-				this.clonedCommentsInfo.push({ originalId: comment.id, comment: this.objectModel.cloneComment(comment) });
+				this.clonedCommentsInfo.push({ originalId: comment.id, comment: this.apiPipeline.cloneComment(comment) });
 			});
 		}
 
@@ -35,14 +36,14 @@ export default class CloneMultipleObjectsAction extends Action {
 					const srcClonedNode = this.findClonedNode(link.srcNodeId);
 					const trgClonedNode = this.findClonedNode(link.trgNodeId);
 					if (srcClonedNode && trgClonedNode) {
-						const newLink = this.objectModel.cloneNodeLink(link, srcClonedNode.id, trgClonedNode.id);
+						const newLink = this.apiPipeline.cloneNodeLink(link, srcClonedNode.id, trgClonedNode.id);
 						this.links.push(newLink);
 					}
 				} else {
 					const srcClonedComment = this.findClonedComment(link.srcNodeId);
 					const trgClonedNode = this.findClonedNode(link.trgNodeId);
 					if (srcClonedComment && trgClonedNode) {
-						const newLink = this.objectModel.cloneCommentLink(link, srcClonedComment.id, trgClonedNode.id);
+						const newLink = this.apiPipeline.cloneCommentLink(link, srcClonedComment.id, trgClonedNode.id);
 						this.links.push(newLink);
 					}
 				}
@@ -63,27 +64,27 @@ export default class CloneMultipleObjectsAction extends Action {
 	do() {
 		const addedObjectIds = [];
 		this.clonedNodesInfo.forEach((clonedNodeInfo) => {
-			this.objectModel.addNode(clonedNodeInfo.node);
+			this.apiPipeline.addNode(clonedNodeInfo.node);
 			addedObjectIds.push(clonedNodeInfo.node.id);
 		});
 		this.clonedCommentsInfo.forEach((clonedCommentInfo) => {
-			this.objectModel.addComment(clonedCommentInfo.comment);
+			this.apiPipeline.addComment(clonedCommentInfo.comment);
 			addedObjectIds.push(clonedCommentInfo.comment.id);
 		});
 
-		this.objectModel.addLinks(this.links);
-		this.objectModel.setSelections(addedObjectIds);
+		this.apiPipeline.addLinks(this.links);
+		this.objectModel.setSelections(addedObjectIds, this.apiPipeline.id);
 	}
 
 	undo() {
 		this.clonedNodesInfo.forEach((clonedNodeInfo) => {
-			this.objectModel.deleteNode(clonedNodeInfo.node.id);
+			this.apiPipeline.deleteNode(clonedNodeInfo.node.id);
 		});
 		this.clonedCommentsInfo.forEach((clonedCommentInfo) => {
-			this.objectModel.deleteComment(clonedCommentInfo.comment.id);
+			this.apiPipeline.deleteComment(clonedCommentInfo.comment.id);
 		});
 		this.links.forEach((link) => {
-			this.objectModel.deleteLink(link.id);
+			this.apiPipeline.deleteLink(link.id);
 		});
 	}
 

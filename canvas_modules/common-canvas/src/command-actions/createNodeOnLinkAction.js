@@ -13,7 +13,8 @@ export default class CreateNodeOnLinkAction extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
-		this.newNode = this.objectModel.createNode(data);
+		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
+		this.newNode = this.apiPipeline.createNode(data);
 
 		this.firstLinkSrcInfo = {
 			id: data.link.srcNodeId,
@@ -45,25 +46,25 @@ export default class CreateNodeOnLinkAction extends Action {
 
 	// Standard methods
 	do() {
-		this.objectModel.deleteLink({ id: this.data.link.id });
-		this.objectModel.addNode(this.newNode);
+		this.apiPipeline.deleteLink({ id: this.data.link.id });
+		this.apiPipeline.addNode(this.newNode);
 		// The new node must be added to the canvas before trying to create the
 		// links because the link creation code requires linked nodes to exist.
-		this.firstLink = this.objectModel.createNodeLink(this.firstLinkSrcInfo, this.firstLinkTrgInfo);
-		this.secondLink = this.objectModel.createNodeLink(this.secondLinkSrcInfo, this.secondLinkTrgInfo);
-		this.objectModel.addLinks([this.firstLink, this.secondLink]);
+		this.firstLink = this.apiPipeline.createNodeLink(this.firstLinkSrcInfo, this.firstLinkTrgInfo);
+		this.secondLink = this.apiPipeline.createNodeLink(this.secondLinkSrcInfo, this.secondLinkTrgInfo);
+		this.apiPipeline.addLinks([this.firstLink, this.secondLink]);
 	}
 
 	undo() {
-		this.objectModel.deleteLink({ id: this.firstLink.id });
-		this.objectModel.deleteLink({ id: this.secondLink.id });
-		this.objectModel.deleteNode(this.newNode.id);
-		this.objectModel.addLinks([this.data.link]);
+		this.apiPipeline.deleteLink({ id: this.firstLink.id });
+		this.apiPipeline.deleteLink({ id: this.secondLink.id });
+		this.apiPipeline.deleteNode(this.newNode.id);
+		this.apiPipeline.addLinks([this.data.link]);
 	}
 
 	redo() {
-		this.objectModel.deleteLink({ id: this.data.link.id });
-		this.objectModel.addNode(this.newNode);
-		this.objectModel.addLinks([this.firstLink, this.secondLink]);
+		this.apiPipeline.deleteLink({ id: this.data.link.id });
+		this.apiPipeline.addNode(this.newNode);
+		this.apiPipeline.addLinks([this.firstLink, this.secondLink]);
 	}
 }

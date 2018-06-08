@@ -796,7 +796,7 @@ module.exports = function() {
 		var nodeNumber = nodeIndex - 1;
 		var nodeSelector = ".node-group";
 		browser.$("#canvas-div-0").$$(nodeSelector)[nodeNumber].rightClick();
-		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[9].click();
+		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[7].click();
 
 		// verify node is not the canvas DOM
 		var count = 0;

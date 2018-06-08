@@ -13,11 +13,12 @@ export default class CreateAutoNodeAction extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
-		this.srcNode = this.objectModel.getAutoSourceNode();
-		this.newNode = this.objectModel.createAutoNode(data, this.srcNode);
+		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
+		this.srcNode = this.apiPipeline.getAutoSourceNode();
+		this.newNode = this.apiPipeline.createAutoNode(data, this.srcNode);
 		this.newLink = null;
-		if (this.objectModel.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {
-			this.newLink = this.objectModel.createLink(this.newNode, this.srcNode);
+		if (this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {
+			this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode);
 		}
 	}
 
@@ -33,15 +34,15 @@ export default class CreateAutoNodeAction extends Action {
 	// Standard methods
 	do() {
 		if (this.newLink) {
-			this.objectModel.addAutoNodeAndLink(this.newNode, this.newLink);
+			this.apiPipeline.addAutoNodeAndLink(this.newNode, this.newLink);
 		} else {
-			this.objectModel.addNode(this.newNode);
+			this.apiPipeline.addNode(this.newNode);
 		}
-		this.objectModel.setSelections([this.newNode.id]);
+		this.objectModel.setSelections([this.newNode.id], this.data.pipelineId);
 	}
 
 	undo() {
-		this.objectModel.deleteNode(this.newNode.id);
+		this.apiPipeline.deleteNode(this.newNode.id);
 	}
 
 	redo() {

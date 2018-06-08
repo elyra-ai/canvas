@@ -41,7 +41,6 @@ export default class DiagramCanvas extends React.Component {
 		this.canvasD3Layout =
 			new CanvasD3Layout(this.props.canvasInfo,
 				this.svgCanvasDivSelector,
-				"100%", "100%",
 				this.props.config,
 				this.props.canvasController);
 		this.focusOnCanvas();
@@ -62,17 +61,12 @@ export default class DiagramCanvas extends React.Component {
 		}
 	}
 
-	getNodeLinkAtMousePos(event) {
-		const element = document.elementFromPoint(event.clientX, event.clientY);
-
-		if (element && element.nodeName === "path") {
-			return this.canvasD3Layout.getNodeLinkForElement(element);
-		}
-		return null;
-	}
-
 	getSvgViewportOffset() {
 		return this.canvasD3Layout.getSvgViewportOffset();
+	}
+
+	getElementAtMousePos(event) {
+		return document.elementFromPoint(event.clientX, event.clientY);
 	}
 
 	mouseCoords(event) {
@@ -86,34 +80,10 @@ export default class DiagramCanvas extends React.Component {
 
 	drop(event) {
 		event.preventDefault();
-
-		const jsVal = this.getDNDJson(event);
 		const mousePos = this.mouseCoords(event);
-
-		// Offset mousePos so new node appers in center of mouse location.
-		mousePos.x -= (this.canvasD3Layout.layout.defaultNodeWidth / 2) * this.canvasD3Layout.zoomTransform.k;
-		mousePos.y -= (this.canvasD3Layout.layout.defaultNodeHeight / 2) * this.canvasD3Layout.zoomTransform.k;
-
-		const transPos = this.canvasD3Layout.transformMousePos(mousePos);
-		const link = this.getNodeLinkAtMousePos(event);
-
-		if (jsVal !== null) {
-			if (jsVal.operation === "createFromTemplate") {
-				if (link &&
-						this.props.canvasController.canNodeBeDroppedOnLink(jsVal.nodeTemplate) &&
-						this.props.canvasController.isInternalObjectModelEnabled()) {
-					this.props.canvasController.createNodeFromTemplateOnLinkAt(jsVal.nodeTemplate, link, transPos.x, transPos.y);
-				} else {
-					this.props.canvasController.createNodeFromTemplateAt(jsVal.nodeTemplate, transPos.x, transPos.y);
-				}
-
-			} else if (jsVal.operation === "createFromObject") {
-				this.props.canvasController.createNodeFromObjectAt(jsVal.sourceId, jsVal.sourceObjectTypeId, jsVal.label, transPos.x, transPos.y);
-
-			} else if (jsVal.operation === "addToCanvas" || jsVal.operation === "addTableFromConnection") {
-				this.props.canvasController.createNodeFromDataAt(transPos.x, transPos.y, jsVal.data);
-			}
-		}
+		const dropData = this.getDNDJson(event);
+		const element = this.getElementAtMousePos(event);
+		this.canvasD3Layout.nodeDropped(dropData, mousePos, element);
 	}
 
 	dragOver(event) {

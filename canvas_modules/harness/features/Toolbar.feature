@@ -156,44 +156,44 @@ Feature: Toolbar
 		Then I resize the window size to 1330 width and 660 height
 
 		Then I click on the secondary toolbar create comment button
-		Then I verify the comment 1 position is "translate(10, 10)"
+		Then I verify the comment 1 position is "translate(30, 30)"
 		Then I click zoom in
 		Then I click zoom in
-		Then I verify zoom transform value is "translate(515.025,243.99) scale(1.2100000000000002)"
+		Then I verify zoom transform value is "translate(490.825,219.79) scale(1.2100000000000002)"
 		Then I click on the secondary toolbar create comment button
-		Then I verify the comment 2 position is "translate(-415.6404958677685, -191.64462809917353)"
+		Then I verify the comment 2 position is "translate(-375.64049586776855, -151.64462809917353)"
 		Then I click zoom out
 		Then I click zoom out
 		Then I click zoom out
 		Then I click zoom out
-		Then I verify zoom transform value is "translate(728.3059900280034,339.204391776518) scale(0.8264462809917354)"
+		Then I verify zoom transform value is "translate(703.5126015982514,314.41100334676594) scale(0.8264462809917354)"
 		Then I click on the secondary toolbar create comment button
-		Then I verify the comment 3 position is "translate(-871.2502479338842, -400.4373140495868)"
+		Then I verify the comment 3 position is "translate(-821.2502479338843, -350.4373140495868)"
 		Then I click on the secondary toolbar create comment button
-		Then I verify the comment 4 position is "translate(-861.2502479338842, -390.4373140495868)"
+		Then I verify the comment 4 position is "translate(-811.2502479338843, -340.4373140495868)"
 
 		Given I have toggled the app side panel
 		Then I click on extra canvas toggle
 		Given I have toggled the app side panel
 
 		Then I click on the extra canvas secondary toolbar create comment button
-		Then I verify the comment 5 position is "translate(10, 10)"
+		Then I verify the comment 5 position is "translate(30, 30)"
 		Then I click extra canvas zoom in
 		Then I click extra canvas zoom in
-		Then I verify extra canvas zoom transform value is "translate(515.025,91.99) scale(1.2100000000000002)"
+		Then I verify extra canvas zoom transform value is "translate(490.825,67.78999999999999) scale(1.2100000000000002)"
 		Then I click on the extra canvas secondary toolbar create comment button
-		Then I verify the comment 6 position is "translate(-415.6404958677685, -66.02479338842974)"
+		Then I verify the comment 6 position is "translate(-375.64049586776855, -26.024793388429735)"
 		Then I click extra canvas zoom out
 		Then I click extra canvas zoom out
 		Then I click extra canvas zoom out
 		Then I click extra canvas zoom out
-		Then I verify extra canvas zoom transform value is "translate(728.3059900280034,135.29536916877262) scale(0.8264462809917354)"
+		Then I verify extra canvas zoom transform value is "translate(703.5126015982514,110.50198073902054) scale(0.8264462809917354)"
 		Then I click on the extra canvas secondary toolbar create comment button
-		Then I verify the comment 7 position is "translate(-871.2502479338842, -153.70739669421488)"
+		Then I verify the comment 7 position is "translate(-821.2502479338843, -103.70739669421488)"
 		Then I click on the extra canvas secondary toolbar create comment button
-		Then I verify the comment 8 position is "translate(-861.2502479338842, -143.70739669421488)"
+		Then I verify the comment 8 position is "translate(-811.2502479338843, -93.70739669421488)"
 
 		# Add 5th comment to first canvas
 		Then I click zoom to fit
 		Then I click on the secondary toolbar create comment button
-		Then I verify the comment 5 position is "translate(-1507.3213393854303, -404.4373140495868)"
+		Then I verify the comment 5 position is "translate(-1379.000876064967, -334.4373140495868)"

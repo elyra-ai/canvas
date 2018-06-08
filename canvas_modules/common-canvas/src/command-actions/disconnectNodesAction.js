@@ -13,6 +13,7 @@ export default class DisconnectNodesAction extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.links = [];
 	}
 
@@ -20,22 +21,22 @@ export default class DisconnectNodesAction extends Action {
 	do() {
 		this.data.selectedObjectIds.forEach((id) => {
 			// save all the links associated with each node, but don't store duplicate links
-			const objectLinks = this.objectModel.getLinksContainingId(id);
+			const objectLinks = this.apiPipeline.getLinksContainingId(id);
 			objectLinks.forEach((objectLink) => {
 				if (this.links.filter((link) => (link.id === objectLink.id)).length === 0) {
 					this.links.push(objectLink);
 				}
 			});
 		});
-		this.objectModel.disconnectNodes(this.data);
+		this.apiPipeline.disconnectNodes(this.data);
 	}
 
 	undo() {
-		this.objectModel.addLinks(this.links);
+		this.apiPipeline.addLinks(this.links);
 	}
 
 	redo() {
-		this.objectModel.disconnectNodes(this.data);
+		this.apiPipeline.disconnectNodes(this.data);
 	}
 
 }

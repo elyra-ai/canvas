@@ -6,6 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+/* eslint no-console: "off" */
 
 import { expect } from "chai";
 import difference from "lodash/difference";
@@ -14,8 +15,6 @@ import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
 import ObjectModel from "../../src/object-model/object-model.js";
 // import log4js from "log4js";
-
-// const logger = log4js.getLogger("object-model-test");
 
 describe("ObjectModel handle model OK", () => {
 
@@ -33,8 +32,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -59,13 +58,19 @@ describe("ObjectModel handle model OK", () => {
 
 		setupStartCanvasInfo("123", startPipeline, objectModel);
 
-		objectModel.dispatch({ type: "CLEAR_PIPELINE_FLOW" });
+		objectModel.clearPipelineFlow();
 
-		const expectedPipeline = null;
+		const expectedPipeline = {
+			"runtime_ref": "empty_runtime",
+			"nodes": [],
+			"comments": [],
+			"links": []
+		};
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
+		delete actualPipeline.id;
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -125,8 +130,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -175,8 +180,8 @@ describe("ObjectModel handle model OK", () => {
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -225,8 +230,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -277,8 +282,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -332,8 +337,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -387,8 +392,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -444,8 +449,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(JSON.stringify(expectedPipeline), JSON.stringify(actualPipeline))).to.be.true;
 	});
@@ -470,7 +475,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "EDIT_COMMENT",
-			data: { nodes: ["comment2"], offsetX: 425, offsetY: 125, height: 45, width: 250, label: "this is a new comment string" },
+			data: { id: "comment2", x_pos: 425, y_pos: 125, height: 45, width: 250, content: "this is a new comment string" },
 			pipelineId: "123"
 		});
 
@@ -495,8 +500,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(JSON.stringify(expectedPipeline), JSON.stringify(actualPipeline))).to.be.true;
 	});
@@ -544,8 +549,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -597,8 +602,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 
@@ -652,8 +657,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -706,8 +711,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -774,17 +779,17 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		// var exp = JSON.stringify(expectedPipeline);
 		// var act = JSON.stringify(actualPipeline);
 		//
 		// for (var i = 0; i < act.length; i++) {
 		// 	if (exp[i] !== act[i]) {
-		// 		logger.info("Mismatch at index = " + i + " exp = " + exp[i] + " act = " + act[i]);
+		// 		console.info("Mismatch at index = " + i + " exp = " + exp[i] + " act = " + act[i]);
 		// 	} else {
-		// 		// logger.info("Match OK at index = " + i + " exp = " + exp[i] + " act = " + act[i]);
+		// 		// console.info("Match OK at index = " + i + " exp = " + exp[i] + " act = " + act[i]);
 		// 	}
 		// }
 
@@ -838,8 +843,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -889,8 +894,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -940,8 +945,8 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualPipeline = getPipelineWithoutTransientData(objectModel);
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedPipeline, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualPipeline, null, 4));
 
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
@@ -970,14 +975,14 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["comment1", "node3"]
+			data: { pipelineId: "123", selections: ["comment1", "node3"] }
 		});
 
 		const expectedSelections = ["comment1", "node3"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
@@ -1006,8 +1011,9 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["comment1", "node3"]
+			data: { pipelineId: "123", selections: ["comment1", "node3"] }
 		});
+
 
 		objectModel.dispatch({
 			type: "CLEAR_SELECTIONS"
@@ -1017,8 +1023,8 @@ describe("ObjectModel handle model OK", () => {
 		const expectedSelections = [];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
@@ -1047,16 +1053,17 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["comment1", "node3"]
+			data: { pipelineId: "123", selections: ["comment1", "node3"] }
 		});
 
-		objectModel.toggleSelection("comment1", true);
+
+		objectModel.toggleSelection("comment1", true, "123");
 
 		const expectedSelections = ["node3"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
@@ -1085,16 +1092,16 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["node3"]
+			data: { pipelineId: "123", selections: ["node3"] }
 		});
 
-		objectModel.toggleSelection("comment1", true);
+		objectModel.toggleSelection("comment1", true, "123");
 
 		const expectedSelections = ["node3", "comment1"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
@@ -1123,18 +1130,17 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["comment1", "node3"]
+			data: { pipelineId: "123", selections: ["comment1", "node3"] }
 		});
 
-
-		objectModel.toggleSelection("node3", true);
+		objectModel.toggleSelection("node3", true, "123");
 
 
 		const expectedSelections = ["comment1"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
@@ -1163,16 +1169,16 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["comment1"]
+			data: { pipelineId: "123", selections: ["comment1"] }
 		});
 
-		objectModel.toggleSelection("node3", true);
+		objectModel.toggleSelection("node3", true, "123");
 
 		const expectedSelections = ["comment1", "node3"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
@@ -1204,7 +1210,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["node2"]
+			data: { pipelineId: "123", selections: ["node2"] }
 		});
 
 		objectModel.selectSubGraph("node4");
@@ -1212,8 +1218,8 @@ describe("ObjectModel handle model OK", () => {
 		const expectedSelections = ["node2", "node4", "node3"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
@@ -1245,7 +1251,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["node1"]
+			data: { pipelineId: "123", selections: ["node1"] }
 		});
 
 		objectModel.selectSubGraph("node4");
@@ -1253,8 +1259,8 @@ describe("ObjectModel handle model OK", () => {
 		const expectedSelections = ["node1", "node4", "node2"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
@@ -1286,7 +1292,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["node1"]
+			data: { pipelineId: "123", selections: ["node1"] }
 		});
 
 		objectModel.selectSubGraph("node4");
@@ -1294,8 +1300,8 @@ describe("ObjectModel handle model OK", () => {
 		const expectedSelections = ["node1", "node4", "node3"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
@@ -1329,7 +1335,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["node2"]
+			data: { pipelineId: "123", selections: ["node2"] }
 		});
 
 		objectModel.selectSubGraph("node4");
@@ -1337,8 +1343,8 @@ describe("ObjectModel handle model OK", () => {
 		const expectedSelections = ["node2", "node4", "node3"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
@@ -1392,7 +1398,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["node1"]
+			data: { pipelineId: "123", selections: ["node1"] }
 		});
 
 		objectModel.selectSubGraph("node13");
@@ -1401,8 +1407,8 @@ describe("ObjectModel handle model OK", () => {
 			"node5", "node6", "node7"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
-		// logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
+		// console.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		// console.info("Actual Selections   = " + JSON.stringify(actualSelections));
 
 		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
@@ -1456,7 +1462,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["node1"]
+			data: { pipelineId: "123", selections: ["node1"] }
 		});
 
 		objectModel.selectSubGraph("node12");
@@ -1465,8 +1471,8 @@ describe("ObjectModel handle model OK", () => {
 			"node5", "node6", "node7"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
@@ -1520,7 +1526,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["node8"]
+			data: { pipelineId: "123", selections: ["node8"] }
 		});
 
 		objectModel.selectSubGraph("node11");
@@ -1528,8 +1534,8 @@ describe("ObjectModel handle model OK", () => {
 		const expectedSelections = ["node8", "node11", "node4", "node12"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
-		// logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
+		// console.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		// console.info("Actual Selections   = " + JSON.stringify(actualSelections));
 
 		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
@@ -1583,7 +1589,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["comment1"]
+			data: { pipelineId: "123", selections: ["comment1"] }
 		});
 
 		objectModel.selectSubGraph("node13");
@@ -1591,8 +1597,8 @@ describe("ObjectModel handle model OK", () => {
 		const expectedSelections = ["comment1", "node13", "node7", "node4", "node11", "node12"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
@@ -1614,7 +1620,7 @@ describe("ObjectModel handle model OK", () => {
 	}
 
 	function getPipelineWithoutTransientData(objectModel) {
-		const pipeline = objectModel.getCanvasInfoPipeline();
+		const pipeline = objectModel.getCanvasInfoPipeline(objectModel.getPrimaryPipelineId());
 
 		if (pipeline === null) {
 			return null;

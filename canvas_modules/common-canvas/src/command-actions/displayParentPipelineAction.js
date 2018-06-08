@@ -8,32 +8,25 @@
  *******************************************************************************/
 import Action from "../command-stack/action.js";
 
-export default class CreateNodeAction extends Action {
+export default class DisplayParentPipeline extends Action {
 	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
-		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-		this.newNode = this.apiPipeline.createNode(data);
-	}
-
-	// Return augmented command object which will be passed to the
-	// client app.
-	getData() {
-		this.data.newNode = this.newNode;
-		return this.data;
+		this.oldPipelineInfo = this.objectModel.getCurrentBreadcrumb();
 	}
 
 	// Standard methods
 	do() {
-		this.apiPipeline.addNode(this.newNode);
+		this.objectModel.setPreviousBreadcrumb();
 	}
 
 	undo() {
-		this.apiPipeline.deleteNode(this.newNode.id);
+		this.objectModel.addNewBreadcrumb(this.oldPipelineInfo);
 	}
 
 	redo() {
-		this.apiPipeline.addNode(this.newNode);
+		this.do();
 	}
+
 }

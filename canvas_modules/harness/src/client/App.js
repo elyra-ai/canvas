@@ -795,8 +795,6 @@ class App extends React.Component {
 			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
 			{ action: "previewNode", label: this.getLabel("node-context.previewNode", "Preview") },
 			{ divider: true },
-			{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
-			{ divider: true },
 			{ submenu: true, label: this.getLabelString("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
 			{ divider: true },
 			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
@@ -810,8 +808,6 @@ class App extends React.Component {
 			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
 			{ action: "previewNode", label: this.getLabel("node-context.previewNode", "Preview") },
 			{ divider: true },
-			{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
-			{ divider: true },
 			{ submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
 			{ divider: true },
 			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
@@ -823,8 +819,8 @@ class App extends React.Component {
 			{ action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
 			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
 			{ divider: true },
-			{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
-			{ action: "expandSuperNode", label: this.getLabel("node-context.expandSuperNode", "Expand supernode") },
+			{ action: "expandSuperNodeInPlace", label: this.getLabel("node-context.expandSuperNodeInPlace", "Expand supernode") }, // TODO: only see expand if supernode and is collapsed
+			{ action: "collapseSuperNodeInPlace", label: this.getLabel("node-context.collapseSuperNodeInPlace", "Collapse supernode") }, // TODO: only see collapse if expanded
 			{ divider: true },
 			{ submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
 			{ divider: true },
@@ -835,8 +831,6 @@ class App extends React.Component {
 
 		const MULTI_SELECT_CONTEXT_MENU = [
 			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
-			{ divider: true },
-			{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
 			{ divider: true },
 			{ submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
 			{ divider: true },
@@ -871,8 +865,6 @@ class App extends React.Component {
 			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
 			{ action: "previewNode", label: this.getLabel("node-context.previewNode", "Preview") },
 			{ divider: true },
-			{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
-			{ divider: true },
 			{ submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
 			{ divider: true },
 			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
@@ -880,6 +872,11 @@ class App extends React.Component {
 			{ action: "deploy", label: this.getLabel("node-context.deploy", "Deploy") },
 			{ divider: true },
 			{ action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
+		];
+
+		const CREATE_SUPERNODE_MENU = [
+			{ divider: true },
+			{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") }
 		];
 
 		let menuDefinition = null;
@@ -895,7 +892,7 @@ class App extends React.Component {
 					menuDefinition = MULTI_SELECT_CONTEXT_MENU;
 				} else if (source.targetObject.containsModel === true) {
 					menuDefinition = APPLY_MODEL_NODE_CONTEXT_MENU;
-				} else if (source.targetObject.subDiagramId) {
+				} else if (source.targetObject.type === "super_node") {
 					menuDefinition = SUPER_NODE_CONTEXT_MENU;
 				} else if (source.targetObject &&
 					source.targetObject.userData &&
@@ -904,6 +901,10 @@ class App extends React.Component {
 					menuDefinition = DEPLOY_CONTEXT_MENU;
 				} else {
 					menuDefinition = NODE_CONTEXT_MENU;
+				}
+
+				if (this.canvasController.areSelectedNodesContiguous()) {
+					menuDefinition = menuDefinition.concat(CREATE_SUPERNODE_MENU);
 				}
 			}
 		} else if (source.type === "comment") {
@@ -972,8 +973,10 @@ class App extends React.Component {
 			this.log("action: disconnectNode", source.selectedObjectIds, source.targetObject.label);
 		} else if (action === "createSuperNode") {
 			this.log("action: createSuperNode", source.selectedObjectIds, source.targetObject.label);
-		} else if (action === "expandSuperNode") {
-			this.log("action: expandSuperNode", source.targetObject.id);
+		} else if (action === "expandSuperNodeInPlace") {
+			this.log("action: expandSuperNodeInPlace", source.targetObject.id);
+		} else if (action === "collapseSuperNodeInPlace") {
+			this.log("action: collapseSuperNodeInPlace", source.targetObject.id);
 		} else if (action === "deleteObjects") {
 			this.deleteObjectsActionHandler(source);
 		} else if (action === "executeNode") {

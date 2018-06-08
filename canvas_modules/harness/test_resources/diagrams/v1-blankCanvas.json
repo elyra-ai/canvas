@@ -2,7 +2,7 @@
 	"doc_type": "pipeline",
 	"version": "1.0",
 	"json_schema": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json",
-	"id": "24cc9881-f83a-4d38-b15b-8bf541e100fa",
+	"id": "blank-canvas-id",
 	"primary_pipeline": "empty-pipeline",
 	"pipelines": [
 		{

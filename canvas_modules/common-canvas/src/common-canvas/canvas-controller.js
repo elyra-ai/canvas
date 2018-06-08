@@ -7,21 +7,31 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import AddLinksAction from "../command-actions/addLinksAction.js";
+/* eslint complexity: ["error", 22] */
+/* eslint no-console: "off" */
+
 import ArrangeLayoutAction from "../command-actions/arrangeLayoutAction.js";
 import CloneMultipleObjectsAction from "../command-actions/cloneMultipleObjectsAction.js";
 import CommandStack from "../command-stack/command-stack.js";
 import constants from "./constants/canvas-constants";
 import CreateAutoNodeAction from "../command-actions/createAutoNodeAction.js";
 import CreateCommentAction from "../command-actions/createCommentAction.js";
+import CreateCommentLinkAction from "../command-actions/createCommentLinkAction.js";
 import CreateNodeAction from "../command-actions/createNodeAction.js";
+import CreateNodeLinkAction from "../command-actions/createNodeLinkAction.js";
 import CreateNodeOnLinkAction from "../command-actions/createNodeOnLinkAction.js";
+import CreateSuperNodeAction from "../command-actions/createSuperNodeAction.js";
+import CollapseSuperNodeInPlaceAction from "../command-actions/collapseSuperNodeInPlaceAction.js";
 import DeleteLinkAction from "../command-actions/deleteLinkAction.js";
 import DeleteObjectsAction from "../command-actions/deleteObjectsAction.js";
 import DisconnectNodesAction from "../command-actions/disconnectNodesAction.js";
+import DisplayParentPipelineAction from "../command-actions/displayParentPipelineAction.js";
+import DisplaySubPipelineAction from "../command-actions/displaySubPipelineAction.js";
 import EditCommentAction from "../command-actions/editCommentAction.js";
+import ExpandSuperNodeInPlaceAction from "../command-actions/expandSuperNodeInPlaceAction.js";
 import MoveObjectsAction from "../command-actions/moveObjectsAction.js";
 import ObjectModel from "../object-model/object-model.js";
+import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import has from "lodash/has";
 
 // Global instance ID counter
@@ -68,6 +78,10 @@ export default class CanvasController {
 		this.instanceId = commonCanvasControllerInstanceId++;
 	}
 
+	// ---------------------------------------------------------------------------
+	// Config methods
+	// ---------------------------------------------------------------------------
+
 	setCanvasConfig(config) {
 		this.canvasConfig = Object.assign(this.canvasConfig, config);
 		this.objectModel.setSchemaValidation(this.canvasConfig.schemaValidation);
@@ -83,9 +97,28 @@ export default class CanvasController {
 		this.commonCanvas = comcan;
 	}
 
-	setPipelineFlowPalette(palette) {
-		this.objectModel.setPipelineFlowPalette(palette);
+	// Allow application to set instanceId.  Needed for server side rendering to prevent
+	// new instanceId from being created on page refreshes.
+	setInstanceId(instanceId) {
+		this.instanceId = instanceId;
 	}
+
+	// Return a unique identifier for this instance of common canvas.
+	getInstanceId() {
+		return this.instanceId;
+	}
+
+	getObjectModel() {
+		return this.objectModel;
+	}
+
+	getCommandStack() {
+		return this.commandStack;
+	}
+
+	// ---------------------------------------------------------------------------
+	// Pipeline flow methods
+	// ---------------------------------------------------------------------------
 
 	setPipelineFlow(flow) {
 		this.objectModel.setPipelineFlow(flow);
@@ -99,6 +132,22 @@ export default class CanvasController {
 		this.objectModel.clearPipelineFlow();
 	}
 
+	getPipelineFlow() {
+		return this.objectModel.getPipelineFlow();
+	}
+
+	getPrimaryPipelineId() {
+		return this.objectModel.getPrimaryPipelineId();
+	}
+
+	getCanvasInfo() {
+		return this.objectModel.getCanvasInfo();
+	}
+
+	// ---------------------------------------------------------------------------
+	// Deprecated methods
+	// ---------------------------------------------------------------------------
+
 	setCanvas(canvas) {
 		this.objectModel.setCanvas(canvas); // TODO - Remove this method when WML Canvas moves to pipeline flow
 	}
@@ -107,176 +156,24 @@ export default class CanvasController {
 		this.objectModel.setPaletteData(paletteData); // TODO - Remove this method when WML Canvas moves to pipeline flow
 	}
 
-	clearPaletteData() {
-		this.objectModel.clearPaletteData();
-	}
-
-	setNodeParameters(nodeId, parameters) {
-		this.objectModel.setNodeParameters(nodeId, parameters);
-	}
-
-	setNodeMessages(nodeId, messages) {
-		this.objectModel.setNodeMessages(nodeId, messages);
-	}
-
-	setNodeMessage(nodeId, message) {
-		this.objectModel.setNodeMessage(nodeId, message);
-	}
-
-	setNodeLabel(nodeId, newLabel) {
-		this.objectModel.setNodeLabel(nodeId, newLabel);
-	}
-
-	setInputPortLabel(nodeId, portId, newLabel) {
-		this.objectModel.setInputPortLabel(nodeId, portId, newLabel);
-	}
-
-	setOutputPortLabel(nodeId, portId, newLabel) {
-		this.objectModel.setOutputPortLabel(nodeId, portId, newLabel);
-	}
-
-	setSelections(newSelection) {
-		this.objectModel.setSelections(newSelection);
-	}
-
-	setNotificationMessages(newMessages) {
-		this.objectModel.setNotificationMessages(newMessages);
-	}
-
-	clearNotificationMessages() {
-		this.objectModel.clearNotificationMessages();
-	}
-
-	moveObjects(data) {
-		this.objectModel.moveObjects(data);
-	}
-
-	deleteObjects(source) {
-		this.objectModel.deleteObjects(source);
-	}
-
-	deleteObject(id) {
-		this.objectModel.deleteObject(id);
-	}
-
-	deleteSelectedObjects() {
-		this.objectModel.deleteSelectedObjects();
-	}
-
-	disconnectNodes(source) {
-		this.objectModel.disconnectNodes(source);
-	}
-
-	addNode(node) {
-		this.objectModel.addNode(node);
-	}
-
-	createNode(data) {
-		this.objectModel.createNode(data);
-	}
-
-	deleteNode(nodeId) {
-		this.objectModel.deleteNode(nodeId);
-	}
-
-	addLinks(linkList) {
-		this.objectModel.addLinks(linkList);
-	}
-
-	deleteLink(source) {
-		this.objectModel.deleteLink(source);
-	}
-
-	createNodeLinks(data) {
-		this.objectModel.createNodeLinks(data);
-	}
-
-	createCommentLinks(data) {
-		this.objectModel.createCommentLinks(data);
-	}
-
-	getLink(linkId) {
-		return this.objectModel.getLink(linkId);
-	}
-
-	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
-		this.objectModel.addNodeTypeToPalette(nodeTypeObj, category, categoryLabel);
-	}
-
-	addCustomAttrToNodes(objIds, attrName) {
-		this.objectModel.addCustomAttrToNodes(objIds, attrName);
-	}
-
-	removeCustomAttrFromNodes(objIds, attrName) {
-		this.objectModel.removeCustomAttrToNodes(objIds, attrName);
-	}
-
-	fixedAutoLayout(selectedLayout) {
-		this.objectModel.fixedAutoLayout(selectedLayout);
-	}
-
-	autoLayout(layoutDirection) {
-		this.objectModel.autoLayout(layoutDirection);
-	}
-
-	createComment(source) {
-		this.objectModel.createComment(source);
-	}
-
-	addComment(info) {
-		this.objectModel.addComment(info);
-	}
-
-	editComment(data) {
-		this.objectModel.editComment(data);
-	}
-
-	deleteComment(id) {
-		this.objectModel.deleteComment(id);
-	}
-
-	getComments() {
-		return this.objectModel.getComments();
-	}
-
-	addCustomAttrToComments(objIds, attrName) {
-		this.objectModel.addCustomAttrToComments(objIds, attrName);
-	}
-
-	removeCustomAttrFromComments(objIds, attrName) {
-		this.objectModel.removeCustomAttrToComments(objIds, attrName);
-	}
-
-	/*
-	* allow application to set instanceId.  Needed for server side rendering to prevent
-	* new instanceId from being created on page refreshes.
-	*/
-	setInstanceId(instanceId) {
-		this.instanceId = instanceId;
-	}
-	// Return a unique identifier for this instance of common canvas.
-	getInstanceId() {
-		return this.instanceId;
-	}
-
-	getPipelineFlow() {
-		return this.objectModel.getPipelineFlow();
-	}
-
 	getCanvas() {
 		return this.objectModel.getCanvas(); // TODO - Remove this method when WML Canvas moves to pipeline flow
 	}
 
-	getCanvasInfo() {
-		return this.objectModel.getCanvasInfo();
+	// ---------------------------------------------------------------------------
+	// Palette methods
+	// ---------------------------------------------------------------------------
+
+	setPipelineFlowPalette(palette) {
+		this.objectModel.setPipelineFlowPalette(palette);
 	}
 
-	getNode(nodeId) {
-		return this.objectModel.getNode(nodeId);
+	clearPaletteData() {
+		this.objectModel.clearPaletteData();
 	}
 
-	getNodes() {
-		return this.objectModel.getNodes();
+	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel, pipelineId) {
+		this.objectModel.addNodeTypeToPalette(nodeTypeObj, category, categoryLabel);
 	}
 
 	getPaletteData() {
@@ -287,53 +184,270 @@ export default class CanvasController {
 		return this.objectModel.getPaletteNode(operatorId);
 	}
 
-	getNodeMessages(nodeId) {
-		return this.objectModel.getNodeMessages(nodeId);
+	// ---------------------------------------------------------------------------
+	// Node methods
+	// ---------------------------------------------------------------------------
+
+	addNode(node, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).addNode(node);
 	}
 
-	getNodeMessage(nodeId, controlName) {
-		return this.objectModel.getNodeMessage(nodeId, controlName);
+	createNode(data, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).createNode(data);
 	}
 
-	getAllObjectIds() {
-		return this.objectModel.getAllObjectIds();
+	deleteNode(nodeId, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).deleteNode(nodeId);
 	}
 
-	getOffsetIntoNegativeSpace(editType, offsetX, offsetY) {
-		return this.objectModel.getOffsetIntoNegativeSpace(editType, offsetX, offsetY);
+	disconnectNodes(source, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).disconnectNodes(source);
 	}
 
-	canNodeBeDroppedOnLink(operatorIdRef) {
-		return this.objectModel.canNodeBeDroppedOnLink(operatorIdRef);
+	setNodeParameters(nodeId, parameters, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodeParameters(nodeId, parameters);
 	}
 
-	getObjectModel() {
-		return this.objectModel;
+	setNodeMessages(nodeId, messages, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodeMessages(nodeId, messages);
 	}
 
-	getCommandStack() {
-		return this.commandStack;
+	setNodeMessage(nodeId, message, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodeMessage(nodeId, message);
+	}
+
+	setNodeLabel(nodeId, newLabel, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodeLabel(nodeId, newLabel);
+	}
+
+	setInputPortLabel(nodeId, portId, newLabel, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setInputPortLabel(nodeId, portId, newLabel);
+	}
+
+	setOutputPortLabel(nodeId, portId, newLabel, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setOutputPortLabel(nodeId, portId, newLabel);
+	}
+	getNode(nodeId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNode(nodeId);
+	}
+
+	getNodes(pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodes();
+	}
+
+	getNodeMessages(nodeId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeMessages(nodeId);
+	}
+
+	getNodeMessage(nodeId, controlName, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeMessage(nodeId, controlName);
+	}
+
+	getFlowMessages(pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getFlowMessages();
+	}
+
+	isFlowValid(includeMsgTypes, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).isFlowValid(includeMsgTypes);
+	}
+
+	addCustomAttrToNodes(objIds, attrName, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).addCustomAttrToNodes(objIds, attrName);
+	}
+
+	removeCustomAttrFromNodes(objIds, attrName, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).removeCustomAttrToNodes(objIds, attrName);
+	}
+
+	canNodeBeDroppedOnLink(operatorIdRef, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).canNodeBeDroppedOnLink(operatorIdRef);
+	}
+
+	fixedAutoLayout(selectedLayout) {
+		this.objectModel.fixedAutoLayout(selectedLayout);
+	}
+
+	autoLayout(layoutDirection, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).autoLayout(layoutDirection);
+	}
+
+	// ---------------------------------------------------------------------------
+	// Selections methods
+	// ---------------------------------------------------------------------------
+
+	setSelections(newSelection, pipelineId) {
+		this.objectModel.setSelections(newSelection, pipelineId);
+	}
+
+	clearSelections() {
+		if (!this.commonCanvas.isContextMenuDisplayed()) {
+			this.objectModel.clearSelections();
+		}
+	}
+
+	selectAll() {
+		this.objectModel.selectAll();
 	}
 
 	getSelectedObjectIds() {
 		return this.objectModel.getSelectedObjectIds();
 	}
 
-	getFlowMessages() {
-		return this.objectModel.getFlowMessages();
+	getSelectedNodes() {
+		return this.objectModel.getSelectedNodes();
+	}
+
+	getSelectedComments() {
+		return this.objectModel.getSelectedComments();
+	}
+
+	areSelectedNodesContiguous() {
+		return this.objectModel.areSelectedNodesContiguous();
+	}
+
+	// ---------------------------------------------------------------------------
+	// Notification messages methods
+	// ---------------------------------------------------------------------------
+
+	setNotificationMessages(newMessages) {
+		this.objectModel.setNotificationMessages(newMessages);
+	}
+
+	clearNotificationMessages() {
+		this.objectModel.clearNotificationMessages();
 	}
 
 	getNotificationMessages(messageType) {
 		return this.objectModel.getNotificationMessages(messageType);
 	}
 
+	// ---------------------------------------------------------------------------
+	// Objects (nodes and comments) methods
+	// ---------------------------------------------------------------------------
+
+	moveObjects(data, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).moveObjects(data);
+	}
+
+	deleteObjects(source, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).deleteObjects(source);
+	}
+
+	deleteObject(id, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).deleteObject(id);
+	}
+
+	deleteSelectedObjects() {
+		this.objectModel.deleteSelectedObjects();
+	}
+
+	getAllObjectIds() {
+		return this.objectModel.getAllObjectIds();
+	}
+
+	// getOffsetIntoNegativeSpace(editType, offsetX, offsetY) {
+	// 	return this.objectModel.getOffsetIntoNegativeSpace(editType, offsetX, offsetY);
+	// }
+
+	// ---------------------------------------------------------------------------
+	// Links methods
+	// ---------------------------------------------------------------------------
+
+	addLinks(linkList, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).addLinks(linkList);
+	}
+
+	deleteLink(source, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).deleteLink(source);
+	}
+
+	createNodeLinks(data, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).createNodeLinks(data);
+	}
+
+	createCommentLinks(data, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).createCommentLinks(data);
+	}
+
+	getLink(linkId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getLink(linkId);
+	}
+
+	// ---------------------------------------------------------------------------
+	// Comments methods
+	// ---------------------------------------------------------------------------
+
+	createComment(source, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).createComment(source);
+	}
+
+	addComment(info, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).addComment(info);
+	}
+
+	editComment(data, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).editComment(data);
+	}
+
+	deleteComment(id, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).deleteComment(id);
+	}
+
+	getComment(comId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getComment(comId);
+	}
+
+	getComments(pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getComments();
+	}
+
+	addCustomAttrToComments(objIds, attrName, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).addCustomAttrToComments(objIds, attrName);
+	}
+
+	removeCustomAttrFromComments(objIds, attrName, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).removeCustomAttrToComments(objIds, attrName);
+	}
+
+	// ---------------------------------------------------------------------------
+	// Command stack methods
+	// ---------------------------------------------------------------------------
+
+	undo() {
+		if (this.canUndo()) {
+			this.editActionHandler({ editType: "undo" });
+		}
+	}
+
+	redo() {
+		if (this.canRedo()) {
+			this.editActionHandler({ editType: "redo" });
+		}
+	}
+
+	canUndo() {
+		return this.getCommandStack().canUndo();
+	}
+
+	canRedo() {
+		return this.getCommandStack().canRedo();
+	}
+
 	isInternalObjectModelEnabled() {
 		return this.canvasConfig.enableInternalObjectModel;
 	}
 
-	isFlowValid(includeMsgTypes) {
-		return this.objectModel.isFlowValid(includeMsgTypes);
+	// ---------------------------------------------------------------------------
+	// Breadcrumbs methods
+	// ---------------------------------------------------------------------------
+
+	getCurrentBreadcrumb() {
+		return this.objectModel.getCurrentBreadcrumb();
 	}
+
+	// ---------------------------------------------------------------------------
+	// Operational methods
+	// ---------------------------------------------------------------------------
 
 	openPalette() {
 		if (this.commonCanvas) {
@@ -392,9 +506,11 @@ export default class CanvasController {
 
 	cutToClipboard() {
 		if (this.copyToClipboard()) {
+			const apiPipeline = this.objectModel.getSelectionAPIPipeline();
 			this.editActionHandler({
 				editType: "deleteSelectedObjects",
-				selectedObjectIds: this.objectModel.getSelectedObjectIds()
+				selectedObjectIds: this.objectModel.getSelectedObjectIds(),
+				pipelineId: apiPipeline.pipelineId
 			});
 		}
 	}
@@ -404,9 +520,14 @@ export default class CanvasController {
 	// the clipboard.
 	copyToClipboard() {
 		var copyData = {};
+
+		const apiPipeline = this.objectModel.getSelectionAPIPipeline();
+		if (!apiPipeline) {
+			return false;
+		}
 		var nodes = this.objectModel.getSelectedNodes();
 		var comments = this.objectModel.getSelectedComments();
-		var links = this.objectModel.getLinksBetween(nodes, comments);
+		var links = apiPipeline.getLinksBetween(nodes, comments);
 
 		if (nodes.length === 0 && comments.length === 0) {
 			return false;
@@ -432,7 +553,7 @@ export default class CanvasController {
 		return typeof localStorage === "undefined" || !localStorage.canvasClipboard || localStorage.canvasClipboard === "";
 	}
 
-	pasteFromClipboard() {
+	pasteFromClipboard(pipelineId) {
 		var pastedText = localStorage.canvasClipboard;
 
 		var objects = JSON.parse(pastedText);
@@ -443,10 +564,20 @@ export default class CanvasController {
 			return;
 		}
 
+		// Find a target pipeline for the objects to be pasted into: first, if
+		// a source object containing a pipelineId is provided (by the context menu)
+		// use it; second, ask the object model to make a suggestion.
+		let apiPipeline;
+		if (pipelineId) {
+			apiPipeline = this.objectModel.getAPIPipeline(pipelineId);
+		} else {
+			apiPipeline = this.objectModel.getAPIPipeline();
+		}
+
 		// Offset position of pasted nodes and comments if they exactly overlap
 		// existing nodes and comments - this can happen when pasting over the top
 		// of the canvas from which the nodes and comments were copied.
-		while (this.objectModel.exactlyOverlaps(objects.nodes, objects.comments)) {
+		while (apiPipeline.exactlyOverlaps(objects.nodes, objects.comments)) {
 			if (objects.nodes) {
 				objects.nodes.forEach((node) => {
 					node.x_pos += 10;
@@ -464,7 +595,8 @@ export default class CanvasController {
 
 		this.editActionHandler({
 			editType: "cloneMultipleObjects",
-			objects: objects
+			objects: objects,
+			pipelineId: apiPipeline.pipelineId
 		});
 	}
 
@@ -530,21 +662,24 @@ export default class CanvasController {
 	}
 
 	createAutoNode(nodeTemplate) {
+		const apiPipeline = this.objectModel.getAPIPipeline();
 		var data = {
 			editType: "createAutoNode",
-			nodeTemplate: nodeTemplate
+			nodeTemplate: nodeTemplate,
+			pipelineId: apiPipeline.pipelineId
 		};
 
 		this.editActionHandler(data);
 	}
 
 	// Called when a node is dragged from the palette onto the canvas
-	createNodeFromTemplateAt(nodeTemplate, x, y) {
+	createNodeFromTemplateAt(nodeTemplate, x, y, pipelineId) {
 		var data = {
 			editType: "createNode",
 			nodeTemplate: nodeTemplate,
 			offsetX: x,
-			offsetY: y
+			offsetY: y,
+			pipelineId: pipelineId
 		};
 
 		this.editActionHandler(data);
@@ -552,27 +687,29 @@ export default class CanvasController {
 
 	// Called when a node is dragged from the palette onto the canvas and dropped
 	// onto an existing link between two data nodes.
-	createNodeFromTemplateOnLinkAt(nodeTemplate, link, x, y) {
+	createNodeFromTemplateOnLinkAt(nodeTemplate, link, x, y, pipelineId) {
 		var data = {
 			editType: "createNodeOnLink",
 			nodeTemplate: nodeTemplate,
 			offsetX: x,
 			offsetY: y,
-			link: link
+			link: link,
+			pipelineId: pipelineId
 		};
 
 		this.editActionHandler(data);
 	}
 
 	// Called when a node is dragged from the 'output' window (in WML) onto the canvas
-	createNodeFromObjectAt(sourceId, sourceObjectTypeId, label, x, y) {
+	createNodeFromObjectAt(sourceId, sourceObjectTypeId, label, x, y, pipelineId) {
 		var data = {
 			editType: "createNode",
 			label: label, // label will be passed through to the external object model
 			offsetX: x,
 			offsetY: y,
 			sourceObjectId: sourceId,
-			sourceObjectTypeId: sourceObjectTypeId
+			sourceObjectTypeId: sourceObjectTypeId,
+			pipelineId: pipelineId
 		};
 
 		this.editActionHandler(data);
@@ -582,10 +719,21 @@ export default class CanvasController {
 	// The data object must contain the 'action' field that is passed to
 	// the host app from editActionHandler. The editActionHandler method
 	// does not intercept this action.
-	createNodeFromDataAt(x, y, data) {
+	createNodeFromDataAt(x, y, data, pipelineId) {
 		data.offsetX = x;
 		data.offsetY = y;
+		data.pipelineId = pipelineId;
 
+		this.editActionHandler(data);
+	}
+
+	displaySubPipeline(pipelineInfo) {
+		const data = { editType: "displaySubPipeline", pipelineInfo: pipelineInfo };
+		this.editActionHandler(data);
+	}
+
+	displayParentPipeline() {
+		const data = { editType: "displayParentPipeline" };
 		this.editActionHandler(data);
 	}
 
@@ -609,21 +757,35 @@ export default class CanvasController {
 	contextMenuActionHandler(action) {
 		// selectAll is supported for the external AND internal object models.
 		if (action === "selectAll") {
-			this.objectModel.selectAll();
+			this.objectModel.selectAll(this.contextMenuSource.pipelineId);
 		}
 
 		if (this.canvasConfig.enableInternalObjectModel) {
 			switch (action) {
+			case "createSuperNode": {
+				const command = new CreateSuperNodeAction(this.contextMenuSource, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "expandSuperNodeInPlace": {
+				const command = new ExpandSuperNodeInPlaceAction(this.contextMenuSource, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "collapseSuperNodeInPlace": {
+				const command = new CollapseSuperNodeInPlaceAction(this.contextMenuSource, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
 			case "deleteObjects": {
 				const command = new DeleteObjectsAction(this.contextMenuSource, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "addComment": {
-				const comment = this.objectModel.createComment(this.contextMenuSource);
-				const command = new CreateCommentAction(comment, this.objectModel);
+				const command = new CreateCommentAction(this.contextMenuSource, this.objectModel);
 				this.commandStack.do(command);
-				this.contextMenuSource.commentId = comment.id;
+				this.contextMenuSource = command.getData();
 				break;
 			}
 			case "deleteLink": {
@@ -636,11 +798,16 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
+			case "displayParentPipeline": {
+				const command = new DisplayParentPipelineAction({}, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
 			case "undo":
-				this.commandStack.undo();
+				this.undo();
 				break;
 			case "redo":
-				this.commandStack.redo();
+				this.redo();
 				break;
 			case "cut":
 				this.cutToClipboard();
@@ -649,7 +816,7 @@ export default class CanvasController {
 				this.copyToClipboard();
 				break;
 			case "paste":
-				this.pasteFromClipboard();
+				this.pasteFromClipboard(this.contextMenuSource.pipelineId);
 				break;
 			default:
 			}
@@ -664,7 +831,7 @@ export default class CanvasController {
 	}
 
 	toolbarMenuActionHandler(action) {
-		const source = {
+		let source = {
 			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
 		};
 		if (this.canvasConfig.enableInternalObjectModel) {
@@ -689,15 +856,9 @@ export default class CanvasController {
 				break;
 			case "addComment": {
 				const svgPos = this.commonCanvas.getSvgViewportOffset();
-				const comPos = this.objectModel.getNewCommentPosition(svgPos);
-				source.mousePos = {
-					x: comPos.x_pos,
-					y: comPos.y_pos
-				};
-				const comment = this.objectModel.createComment(source);
-				const command = new CreateCommentAction(comment, this.objectModel);
+				const command = new CreateCommentAction(source, this.objectModel, svgPos);
 				this.commandStack.do(command);
-				source.commentId = comment.id;
+				source = command.getData();
 				break;
 			}
 			case "arrangeHorizontally": {
@@ -728,17 +889,7 @@ export default class CanvasController {
 	}
 
 	clickActionHandler(source) {
-		if (source.clickType === "SINGLE_CLICK" && source.objectType === "canvas") {
-			// Don"t clear the selection if the canvas context menu is up
-			if (!this.commonCanvas.isContextMenuDisplayed()) {
-				this.objectModel.clearSelection();
-			}
-
-			// if (this.state.rightFlyoutContent && this.props.closeRightFlyout) {
-			// 	this.props.closeRightFlyout(); // Equivalent of canceling
-			// }
-		}
-
+		console.log("clickActionHandler - " + source.clickType + " on " + source.objectType);
 		if (this.handlers.clickActionHandler) {
 			this.handlers.clickActionHandler(source);
 		}
@@ -751,6 +902,7 @@ export default class CanvasController {
 	}
 
 	editActionHandler(cmndData) {
+		console.log("editActionHandler - " + cmndData.editType);
 		let data = cmndData;
 		if (this.canvasConfig.enableInternalObjectModel) {
 			switch (data.editType) {
@@ -784,38 +936,41 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
+			case "resizeObjects": {
+				const command = new SizeAndPositionObjectsAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
 			case "editComment": {
-				// only add editComment action, if value or size of comment has changed
-				const selectedComment = this.objectModel.getComment(data.nodes[0]);
-				if (selectedComment.content !== data.label ||
-						selectedComment.height !== data.height ||
-						selectedComment.width !== data.height) {
-					const command = new EditCommentAction(data, this.objectModel);
-					this.commandStack.do(command);
-				}
+				const command = new EditCommentAction(data, this.objectModel);
+				this.commandStack.do(command);
+				data = this.addHistoricalFieldsEditComment(data);
 				break;
 			}
 			case "linkNodes": {
-				const linkNodesList = this.objectModel.createNodeLinks(data);
-				if (linkNodesList.length > 0) {
-					const command = new AddLinksAction(linkNodesList, this.objectModel);
-					this.commandStack.do(command);
-					data.linkIds = linkNodesList.map((link) => link.id);
-				}
+				const command = new CreateNodeLinkAction(data, this.objectModel);
+				this.commandStack.do(command);
+				data = command.getData();
 				break;
 			}
 			case "linkComment": {
-				const linkCommentList = this.objectModel.createCommentLinks(data);
-				if (linkCommentList.length > 0) {
-					const command = new AddLinksAction(linkCommentList, this.objectModel);
-					this.commandStack.do(command);
-					data.linkIds = linkCommentList.map((link) => link.id);
-
-				}
+				const command = new CreateCommentLinkAction(data, this.objectModel);
+				this.commandStack.do(command);
+				data = command.getData();
 				break;
 			}
 			case "deleteSelectedObjects": {
 				const command = new DeleteObjectsAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "displaySubPipeline": {
+				const command = new DisplaySubPipelineAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "displayParentPipeline": {
+				const command = new DisplayParentPipelineAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
@@ -841,6 +996,18 @@ export default class CanvasController {
 		data.label = data.newNode.label;
 		data.operator_id_ref = data.newNode.operator_id_ref;
 		data.nodeTypeId = data.newNode.operator_id_ref; // TODO - Remove this when WML Canvas migrates to pipeline flow
+		return data;
+	}
+
+	// These fields are added to the data object because historically we've
+	// passed this information to WML Canvas in this way.
+	// TODO - Remove this if WML Canvas moved to GFE.
+	addHistoricalFieldsEditComment(data) {
+		data.nodes = [data.id];
+		data.label = data.content;
+		data.offsetX = data.x_pos;
+		data.offsetY = data.y_pos;
+
 		return data;
 	}
 }

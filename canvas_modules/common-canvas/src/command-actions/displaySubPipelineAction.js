@@ -8,7 +8,7 @@
  *******************************************************************************/
 import Action from "../command-stack/action.js";
 
-export default class AddLinksAction extends Action {
+export default class DisplaySubPipeline extends Action {
 	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
@@ -17,17 +17,15 @@ export default class AddLinksAction extends Action {
 
 	// Standard methods
 	do() {
-		this.objectModel.addLinks(this.data);
+		this.objectModel.addNewBreadcrumb(this.data.pipelineInfo);
 	}
 
 	undo() {
-		this.data.forEach((link) => {
-			this.objectModel.deleteLink(link);
-		});
+		this.objectModel.setPreviousBreadcrumb();
 	}
 
 	redo() {
-		this.objectModel.addLinks(this.data);
+		this.do();
 	}
 
 }

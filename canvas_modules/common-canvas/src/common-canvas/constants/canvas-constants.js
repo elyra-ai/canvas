@@ -63,10 +63,19 @@ _defineConstant("CREATE_NODE_LINK", "create_node_link");
 _defineConstant("CLONE_NODE_LINK", "clone_node_link");
 _defineConstant("CREATE_COMMENT_LINK", "create_comment_link");
 _defineConstant("CLONE_COMMENT_LINK", "clone_comment_link");
+_defineConstant("CREATE_PIPELINE", "create_pipeline");
 
 _defineConstant("NODE_MENU_ICON",
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 16.14\">" +
 	"<circle cx=\"2\" cy=\"2\" r=\"2\"/>" +
 	"<circle cx=\"2\" cy=\"8.03\" r=\"2\"/>" +
 	"<circle cx=\"2\" cy=\"14.14\" r=\"2\"/>" +
+	"</svg>");
+
+_defineConstant("SUPER_NODE_EXPAND_ICON",
+	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\" enable-background=\"new 0 0 16 16\">" +
+	"<g><path d=\"m14.9 9.1h-1.5c-.1 0-.1 0-.1.1v5.2h-11.6v-11.6h5.2c.1 0 .1 0 .1-.1v-1.5c0-.1 " +
+	"0-.1-.1-.1h-5.4c-.8 0-1.5.7-1.5 1.4v12c0 .8.7 1.5 1.5 1.5h12.1c.8 0 1.5-.7 1.5-1.4v-5.4c-.1-.1-.2-.1-.2-.1\"/>" +
+	"<path d=\"m10.4 0v1.4h3.2l-5.1 5v.1l1.1 1 4.9-5.1v3.3h1.5v-5.7z\"/>" +
+	"</g>" +
 	"</svg>");

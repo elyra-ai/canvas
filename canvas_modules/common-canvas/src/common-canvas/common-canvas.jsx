@@ -269,10 +269,10 @@ export default class CommonCanvas extends React.Component {
 		let pasteState = true;
 		let deleteState = true;
 
-		if (!this.canvasController.getCommandStack().canUndo()) {
+		if (!this.canvasController.canUndo()) {
 			undoState = false;
 		}
-		if (!this.canvasController.getCommandStack().canRedo()) {
+		if (!this.canvasController.canRedo()) {
 			redoState = false;
 		}
 		if (this.objectModel.getSelectedObjectIds().length === 0) {
@@ -405,10 +405,7 @@ export default class CommonCanvas extends React.Component {
 
 		let emptyCanvas = null;
 
-		const primaryPipeline = this.objectModel.getCanvasInfoPipeline();
-		if (primaryPipeline === null ||
-				(primaryPipeline.nodes.length === 0 &&
-					primaryPipeline.comments.length === 0)) {
+		if (this.objectModel.isPrimaryPipelineEmpty()) {
 			if (this.props.config.emptyCanvasContent) {
 				emptyCanvas = (
 					<div className="empty-canvas">

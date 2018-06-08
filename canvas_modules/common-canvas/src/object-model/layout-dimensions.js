@@ -118,9 +118,27 @@ const haloLayout = {
 	autoLayoutHorizontalSpacing: 80,
 
 	// Add comment toolbar action, default offset from viewport
-	addCommentOffset: 10,
+	addCommentOffset: 30,
 
-	// Everything below is unique for halo
+	// Supernode in-place containment area attributes
+	superNodeLabelPosX: 5,
+	superNodeLabelPosY: 8,
+	superNodeLabelWidth: 150,
+	superNodeEllipsisPosY: 5,
+	superNodeIconPosY: 5,
+	superNodeIconHeight: 14,
+	superNodeIconWidth: 14,
+	superNodeIconPadding: 2,
+	superNodeIconSeparation: 5,
+	superNodeDefaultWidth: 200,
+	superNodeDefaultHeight: 200,
+	supernodeSVGTopAreaHeight: 25,
+	supernodeSVGAreaPadding: 3,
+
+	// ---------------------------------------------------------------------------
+	// Below here are halo specific properties
+	// ---------------------------------------------------------------------------
+
 	// Comment Halo size
 	haloCommentGap: 11, // Gap between comment rectangle and its halo
 
@@ -240,7 +258,29 @@ const portsHorizontal = {
 	autoLayoutHorizontalSpacing: 80,
 
 	// Add comment toolbar action, default offset from viewport
-	addCommentOffset: 10,
+	addCommentOffset: 30,
+
+	// Supernode in-place containment area attributes
+	superNodeLabelPosX: 5,
+	superNodeLabelPosY: 8,
+	superNodeLabelWidth: 150,
+	superNodeEllipsisPosY: 5,
+	superNodeIconPosY: 5,
+	superNodeIconHeight: 14,
+	superNodeIconWidth: 14,
+	superNodeIconPadding: 2,
+	superNodeIconSeparation: 5,
+	superNodeDefaultWidth: 200,
+	superNodeDefaultHeight: 200,
+	supernodeSVGTopAreaHeight: 25,
+	supernodeSVGAreaPadding: 3,
+
+	// ---------------------------------------------------------------------------
+	// Below here are ports horizontal specific properties
+	// ---------------------------------------------------------------------------
+
+	// This can be overrriden from common-canvas config properties
+	linkType: "Curve",
 
 	// Everything below is unique for portsHorizontal
 	// Radius of the port circle
@@ -378,7 +418,29 @@ const portsVertical = {
 	autoLayoutHorizontalSpacing: 80,
 
 	// Add comment toolbar action, default offset from viewport
-	addCommentOffset: 10,
+	addCommentOffset: 30,
+
+	// Supernode in-place containment area attributes
+	superNodeLabelPosX: 5,
+	superNodeLabelPosY: 8,
+	superNodeLabelWidth: 150,
+	superNodeEllipsisPosY: 5,
+	superNodeIconPosY: 5,
+	superNodeIconHeight: 14,
+	superNodeIconWidth: 14,
+	superNodeIconPadding: 2,
+	superNodeIconSeparation: 5,
+	superNodeDefaultWidth: 200,
+	superNodeDefaultHeight: 200,
+	supernodeSVGTopAreaHeight: 25,
+	supernodeSVGAreaPadding: 3,
+
+	// ---------------------------------------------------------------------------
+	// Below here are ports vertical specific properties
+	// ---------------------------------------------------------------------------
+
+	// This can be overrriden from common-canvas config properties
+	linkType: "Curve",
 
 	// Everything below is unique for portsVertical
 	// Radius of the port circle

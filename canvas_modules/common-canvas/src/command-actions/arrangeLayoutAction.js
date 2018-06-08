@@ -13,19 +13,21 @@ export default class ArrangeLayoutAction extends Action {
 		super(layoutDirection);
 		this.layoutDirection = layoutDirection;
 		this.objectModel = objectModel;
-		this.existingNodes = this.objectModel.cloneNodes();
+		this.apiPipeline = this.objectModel.getAPIPipeline();
+		// Clone to nodes to remeber their original positions.
+		this.existingNodes = this.apiPipeline.cloneNodes();
 	}
 
 	// Standard methods
 	do() {
-		this.objectModel.autoLayout(this.layoutDirection);
+		this.apiPipeline.autoLayout(this.layoutDirection);
 	}
 
 	undo() {
-		this.objectModel.replaceNodes(this.existingNodes);
+		this.apiPipeline.replaceNodes(this.existingNodes);
 	}
 
 	redo() {
-		this.objectModel.autoLayout(this.layoutDirection);
+		this.apiPipeline.autoLayout(this.layoutDirection);
 	}
 }

@@ -13,23 +13,24 @@ export default class MoveObjectsAction extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 	}
 
 	// Standard methods
 	do() {
-		this.objectModel.moveObjects(this.data);
+		this.apiPipeline.moveObjects(this.data);
 	}
 
 	undo() {
 		this.data.offsetX = -(this.data.offsetX);
 		this.data.offsetY = -(this.data.offsetY);
-		this.objectModel.moveObjects(this.data);
+		this.apiPipeline.moveObjects(this.data);
 	}
 
 	redo() {
 		this.data.offsetX = -(this.data.offsetX);
 		this.data.offsetY = -(this.data.offsetY);
-		this.objectModel.moveObjects(this.data);
+		this.apiPipeline.moveObjects(this.data);
 	}
 
 }

@@ -20,10 +20,35 @@
 }
 
 /* Pull-out region rectangle used for object selection */
+
 .d3-region-selector {
 	stroke: #808080;
 	fill: transparent;
 	stroke-dasharray: 2.2;
+}
+
+/* Background rectangle for sub-flow display inside supernodes */
+
+.d3-subflow-background {
+	fill: white;
+}
+
+/* Back to Previous Flow control */
+
+.d3-back-to-previous-flow-box {
+	stroke: #DFE3E6;
+	fill: white;
+}
+
+.d3-back-to-previous-flow-box[data-pointer-hover=yes] {
+	stroke: #DFE3E6;
+	fill: #DFE3E6;
+}
+
+.d3-back-to-previous-flow-text {
+	font-size: 14px;
+	font-weight: 400;
+	fill: #3D70B2;
 }
 
 /* Node styles */
