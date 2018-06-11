@@ -25,8 +25,8 @@ import isEmpty from "lodash/isEmpty";
 
 import { DEFAULT_NOTIFICATION_HEADER } from "./constants/canvas-constants.js";
 
-import globalStyles from "../../assets/styles/global.scss";
-import canvasStyles from "../../assets/styles/common-canvas.scss";
+import globalStyles from "../global.scss";
+import canvasStyles from "./common-canvas.scss";
 
 
 export default class CommonCanvas extends React.Component {

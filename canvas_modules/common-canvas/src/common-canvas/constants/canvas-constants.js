@@ -9,7 +9,7 @@
 
 // Private Methods ------------------------------------------------------------>
 
-import styles from "../../../assets/styles/common-canvas.scss";
+import styles from "../common-canvas.scss";
 
 function _defineConstant(constName, value) {
 	Object.defineProperty(module.exports, constName, {

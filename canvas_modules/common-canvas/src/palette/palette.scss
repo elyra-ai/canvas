@@ -17,6 +17,9 @@
 	-webkit-transition: 0.2s;
 	transition: 0.2s;
 	cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
 }
 
 .palette-flyout-div-open {
@@ -87,6 +90,9 @@
 	height: 46px;
 	display: flex;
 	align-items: center;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
 }
 
 .palette-flyout-category-item-icon {
@@ -97,6 +103,9 @@
 .palette-flyout-text-container {
 	max-width: 205px;
 	display: flex;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
 }
 
 .palette-flyout-category-text {
@@ -182,6 +191,9 @@
 	border: 3px solid transparent; /* transparent border provides sizing hover zone */
 	cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
 	z-index: 2;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
 }
 
 .palette-show-button {
@@ -190,6 +202,9 @@
 	left: 35px;
 	width: 48px;
 	height: 48px;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
 }
 
 #paletteTooltip {
@@ -207,6 +222,9 @@
 	height: 20px;
 	float: left;
 	vertical-align: middle;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
 }
 
 .palette-topbar .right-navbar {
@@ -250,6 +268,9 @@
 	padding: 10px;
 	border-width: 0 0 0 2px;
 	cursor: pointer;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
 }
 
 .palette-category:hover {
@@ -267,6 +288,9 @@
 	padding-top: 10px;
 	padding-bottom: 10px;
 	cursor: pointer;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
 }
 
 .palette-grid-node-outer {
@@ -278,6 +302,9 @@
 	border-width: 1px;
 	border-color: $ui-03;
 	border-style: solid;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
 }
 
 .palette-grid-node-outer:hover {
@@ -314,6 +341,9 @@
 	border-style: solid;
 	display: flex;
 	align-items: center;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
 }
 
 .palette-list-item:hover {
@@ -339,4 +369,7 @@
 	cursor: pointer;
 	width: 20px;
 	height: 20px;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
 }
