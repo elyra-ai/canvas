@@ -494,8 +494,8 @@ class App extends React.Component {
 	}
 
 	setLayoutDirection(selectedLayout) {
-		this.canvasController.fixedAutoLayout(selectedLayout);
-		this.canvasController2.fixedAutoLayout(selectedLayout);
+		this.canvasController.setFixedAutoLayout(selectedLayout);
+		this.canvasController2.setFixedAutoLayout(selectedLayout);
 		this.setState({ selectedLayout: selectedLayout });
 		this.log("Layout selected", selectedLayout);
 	}

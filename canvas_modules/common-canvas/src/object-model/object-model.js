@@ -737,7 +737,7 @@ export default class ObjectModel {
 		this.selectionChangeHandler = selectionChangeHandler;
 	}
 
-	fixedAutoLayout(fixedLayoutDirection) {
+	setFixedAutoLayout(fixedLayoutDirection) {
 		this.fixedLayout = fixedLayoutDirection;
 		this.getAPIPipeline().autoLayout(fixedLayoutDirection);
 	}
@@ -1036,16 +1036,19 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "SET_TO_PREVIOUS_BREADCRUMB" });
 	}
 
+	getBreadcrumbs() {
+		return this.store.getState().breadcrumbs;
+	}
+
 	getCurrentBreadcrumb() {
-		const crumbs = this.store.getState().breadcrumbs;
+		const crumbs = this.getBreadcrumbs();
 		return crumbs[crumbs.length - 1];
 	}
 
 	// Returns true if the pipelineId passed in is not the primary Pipeline
 	// breadcrumb. In other words, we are shwoing a sub-flow full screen.
 	isInSubFlowBreadcrumb(pipelineId) {
-		const crumbs = this.store.getState().breadcrumbs;
-		const idx = crumbs.findIndex((crumb) => {
+		const idx = this.getBreadcrumbs().findIndex((crumb) => {
 			return crumb.pipelineId === pipelineId;
 		});
 		return (idx > 0); // Return true if index is not the parent
@@ -1526,18 +1529,6 @@ export class APIPipeline {
 		return null;
 	}
 
-	getAllObjectIds() {
-		var objIds = [];
-		this.getNodes().forEach((node) => {
-			objIds.push(node.id);
-		});
-
-		this.getComments().forEach((comment) => {
-			objIds.push(comment.id);
-		});
-
-		return objIds;
-	}
 	// Returns true if any of the node or comment definitions passed in exactly
 	// overlap any of the existing nodes and comments. This is used by the
 	// paste-from-clipboard code to detect if nodes and comments being pasted
@@ -1856,12 +1847,12 @@ export class APIPipeline {
 		this.store.dispatch({ type: "SET_NODE_PARAMETERS", data: { nodeId: nodeId, parameters: parameters }, pipelineId: this.pipelineId });
 	}
 
-	addCustomAttrToNodes(objIds, attrName, attrValue) {
-		this.store.dispatch({ type: "ADD_NODE_ATTR", data: { objIds: objIds, attrName: attrName, attrValue: attrValue }, pipelineId: this.pipelineId });
+	addCustomAttrToNodes(nodeIds, attrName, attrValue) {
+		this.store.dispatch({ type: "ADD_NODE_ATTR", data: { objIds: nodeIds, attrName: attrName, attrValue: attrValue }, pipelineId: this.pipelineId });
 	}
 
-	removeCustomAttrFromNodes(objIds, attrName, attrValue) {
-		this.store.dispatch({ type: "REMOVE_NODE_ATTR", data: { objIds: objIds, attrName: attrName }, pipelineId: this.pipelineId });
+	removeCustomAttrFromNodes(nodeIds, attrName, attrValue) {
+		this.store.dispatch({ type: "REMOVE_NODE_ATTR", data: { objIds: nodeIds, attrName: attrName }, pipelineId: this.pipelineId });
 	}
 
 	getNodeMessages(nodeId) {
@@ -2100,12 +2091,12 @@ export class APIPipeline {
 		this.store.dispatch({ type: "EDIT_COMMENT", data: data, pipelineId: this.pipelineId });
 	}
 
-	addCustomAttrToComments(objIds, attrName, attrValue) {
-		this.store.dispatch({ type: "ADD_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName, attrValue: attrValue }, pipelineId: this.pipelineId });
+	addCustomAttrToComments(comIds, attrName, attrValue) {
+		this.store.dispatch({ type: "ADD_COMMENT_ATTR", data: { objIds: comIds, attrName: attrName, attrValue: attrValue }, pipelineId: this.pipelineId });
 	}
 
-	removeCustomAttrFromComments(objIds, attrName) {
-		this.store.dispatch({ type: "REMOVE_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName }, pipelineId: this.pipelineId });
+	removeCustomAttrFromComments(comIds, attrName) {
+		this.store.dispatch({ type: "REMOVE_COMMENT_ATTR", data: { objIds: comIds, attrName: attrName }, pipelineId: this.pipelineId });
 	}
 
 	// ---------------------------------------------------------------------------

@@ -903,7 +903,7 @@ class CanvasRenderer {
 	}
 
 	zoomStart() {
-		consoleLog("Zoom start - x = " + d3Event.transform.x + " y = " + d3Event.transform.y + " k = " + d3Event.transform.k);
+		// consoleLog("Zoom start - x = " + d3Event.transform.x + " y = " + d3Event.transform.y + " k = " + d3Event.transform.k);
 
 		if (d3Event.sourceEvent && d3Event.sourceEvent.shiftKey) {
 			this.regionSelect = true;
@@ -963,7 +963,7 @@ class CanvasRenderer {
 	}
 
 	zoomEnd() {
-		consoleLog("Zoom end - x = " + d3Event.transform.x + " y = " + d3Event.transform.y + " k = " + d3Event.transform.k);
+		// consoleLog("Zoom end - x = " + d3Event.transform.x + " y = " + d3Event.transform.y + " k = " + d3Event.transform.k);
 
 		if (this.drawingNewLink) {
 			this.stopDrawingNewLink();
@@ -1095,10 +1095,17 @@ class CanvasRenderer {
 
 			var objs = this.getSelectedNodesAndComments();
 
-			objs.forEach(function(d) {
-				d.x_pos += d3Event.dx;
-				d.y_pos += d3Event.dy;
-			});
+			// consoleLog("Drag offset X = " + this.dragOffsetX + " y = " + this.dragOffsetY);
+			if (this.dragOffsetX < 5000 && this.dragOffsetX > -5000 &&
+					this.dragOffsetY < 5000 && this.dragOffsetY > -5000) {
+				objs.forEach(function(d) {
+					d.x_pos += d3Event.dx;
+					d.y_pos += d3Event.dy;
+				});
+			} else {
+				this.dragOffsetX -= d3Event.dx;
+				this.dragOffsetY -= d3Event.dy;
+			}
 
 			this.displayCanvas();
 			// consoleLog("Drag move - finished");

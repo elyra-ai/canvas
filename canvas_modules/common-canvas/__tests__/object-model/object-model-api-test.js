@@ -39,7 +39,7 @@ describe("ObjectModel API handle model OK", () => {
 	it("should layout a canvas horiziontally", () => {
 		deepFreeze(startCanvas);
 		objectModel.setCanvasInfo(startCanvas);
-		objectModel.fixedAutoLayout(HORIZONTAL);
+		objectModel.setFixedAutoLayout(HORIZONTAL);
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const apiPipeline = objectModel.getAPIPipeline();
 		const node = apiPipeline.createNode(filterNode);
@@ -62,7 +62,7 @@ describe("ObjectModel API handle model OK", () => {
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
-		objectModel.fixedAutoLayout(VERTICAL);
+		objectModel.setFixedAutoLayout(VERTICAL);
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const node = objectModel.getAPIPipeline().createNode(filterNode);
 		objectModel.getAPIPipeline().addNode(node);
@@ -469,7 +469,7 @@ describe("ObjectModel API handle model OK", () => {
 			return null;
 		});
 		objectModel.setCanvasInfo(startCanvas);
-		objectModel.fixedAutoLayout(VERTICAL);
+		objectModel.setFixedAutoLayout(VERTICAL);
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const node = objectModel.getAPIPipeline().createNode(filterNode);
 		objectModel.getAPIPipeline().addNode(node);
