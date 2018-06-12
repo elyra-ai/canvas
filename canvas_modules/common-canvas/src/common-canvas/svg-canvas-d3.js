@@ -17,6 +17,7 @@
 var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-zoom"));
 import { event as d3Event } from "d3-selection";
 import union from "lodash/union";
+import forIn from "lodash/forIn";
 import { NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "./constants/canvas-constants";
 
 const BACKSPACE_KEY = 8;
@@ -2898,7 +2899,6 @@ class CanvasRenderer {
 		const delta = this.resizeObject(nodeObj, this.nodeSizingDirection, minWidth, 80);
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
-			this.nodeSizingMovedNodes = [];
 			this.addToNodeSizingArray(nodeObj);
 			this.moveSurroundingNodes(nodeObj, delta);
 			this.displayNodes();
@@ -2908,13 +2908,13 @@ class CanvasRenderer {
 	}
 
 	addToNodeSizingArray(nodeObj) {
-		this.nodeSizingMovedNodes.push({
+		this.nodeSizingMovedNodes[nodeObj.id] = {
 			id: nodeObj.id,
 			x_pos: nodeObj.x_pos,
 			y_pos: nodeObj.y_pos,
 			width: nodeObj.width,
 			height: nodeObj.height
-		});
+		};
 	}
 
 	moveSurroundingNodes(nodeObj, delta) {
@@ -2928,7 +2928,7 @@ class CanvasRenderer {
 			yDelta = 0;
 
 			if (this.nodeSizingDirection.indexOf("n") > -1 &&
-			nodeObj.y_pos + nodeObj.height + nodeObj.width > node.y_pos + node.height + node.width && // check node is above supernode bottom right
+			nodeObj.y_pos + nodeObj.height > node.y_pos + node.height && // check node is above supernode bottom border
 			this.isNodePositionedWithinSuperNodeXBoundary(node, nodeObj)) {
 				node.y_pos -= delta.height;
 				yDelta = delta.height;
@@ -3031,7 +3031,7 @@ class CanvasRenderer {
 	// Finalises the sizing of a node by calling editActionHandler
 	// with an editNode action.
 	endNodeSizing() {
-		if (this.nodeSizingMovedNodes.length > 0) {
+		if (Object.keys(this.nodeSizingMovedNodes).length > 0) {
 			const data = {
 				editType: "resizeObjects",
 				objectsInfo: this.nodeSizingMovedNodes,
@@ -3039,6 +3039,7 @@ class CanvasRenderer {
 			};
 			this.canvasController.editActionHandler(data);
 		}
+		this.nodeSizingMovedNodes = [];
 		this.nodeSizing = false;
 	}
 
@@ -3295,7 +3296,7 @@ class CanvasRenderer {
 			// while dragging only remove lines that are affected by moving nodes/comments
 			let affectLinks;
 			if (this.nodeSizing) {
-				affectLinks = this.getConnectedLinks(this.nodeSizingMovedNodes);
+				affectLinks = this.getConnectedLinksFromNodeSizingArray(this.nodeSizingMovedNodes);
 			} else {
 				affectLinks = this.getConnectedLinks(this.getSelectedNodesAndComments());
 			}
@@ -3934,6 +3935,17 @@ class CanvasRenderer {
 		selectedObjects.forEach((selectedObject) => {
 			const linksContaining = this.activePipeline.links.filter(function(link) {
 				return (link.srcNodeId === selectedObject.id || link.trgNodeId === selectedObject.id);
+			});
+			links = union(links, linksContaining);
+		});
+		return links;
+	}
+
+	getConnectedLinksFromNodeSizingArray(selectedObjects) {
+		var links = [];
+		forIn(selectedObjects, (selectedObject, selectedObjectId) => {
+			const linksContaining = this.activePipeline.links.filter(function(link) {
+				return (link.srcNodeId === selectedObjectId || link.trgNodeId === selectedObjectId);
 			});
 			links = union(links, linksContaining);
 		});

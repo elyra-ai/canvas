@@ -32,10 +32,11 @@ export default class SizeAndPositionObjectsAction extends Action {
 	}
 
 	getPreviousNodesInfo(data) {
-		return data.objectsInfo.map((objInfo) => {
-			const obj = this.apiPipeline.getObject(objInfo.id);
+		const previousNodesInfo = [];
+		Object.keys(data.objectsInfo).forEach((nodeId) => {
+			const obj = this.apiPipeline.getObject(nodeId);
 			if (obj) {
-				return {
+				previousNodesInfo[nodeId] = {
 					id: obj.id,
 					x_pos: obj.x_pos,
 					y_pos: obj.y_pos,
@@ -43,7 +44,6 @@ export default class SizeAndPositionObjectsAction extends Action {
 					height: obj.height
 				};
 			}
-			return null;
 		});
 	}
 }

@@ -58,15 +58,13 @@ const nodes = (state = [], action) => {
 
 	case "SIZE_AND_POSITION_OBJECTS":
 		return state.map((node, index) => {
-			const idx = action.data.objectsInfo.findIndex((actionObjInfo) => {
-				return (actionObjInfo.id === node.id);
-			});
-			if (idx > -1) {
+			const nodeObj = action.data.objectsInfo[node.id];
+			if (typeof nodeObj !== "undefined") {
 				const newNode = Object.assign({}, node, {
-					height: action.data.objectsInfo[idx].height,
-					width: action.data.objectsInfo[idx].width,
-					x_pos: action.data.objectsInfo[idx].x_pos,
-					y_pos: action.data.objectsInfo[idx].y_pos
+					height: nodeObj.height,
+					width: nodeObj.width,
+					x_pos: nodeObj.x_pos,
+					y_pos: nodeObj.y_pos
 				});
 				return newNode;
 			}
@@ -280,15 +278,13 @@ const comments = (state = [], action) => {
 
 	case "SIZE_AND_POSITION_OBJECTS":
 		return state.map((com, index) => {
-			const idx = action.data.objectsInfo.findIndex((actionObjInfo) => {
-				return (actionObjInfo.id === com.id);
-			});
-			if (idx > -1) {
+			const comObj = action.data.objectsInfo[com.id];
+			if (typeof comObj !== "undefined") {
 				const newCom = Object.assign({}, com, {
-					height: action.data.objectsInfo[idx].height,
-					width: action.data.objectsInfo[idx].width,
-					x_pos: action.data.objectsInfo[idx].x_pos,
-					y_pos: action.data.objectsInfo[idx].y_pos
+					height: comObj.height,
+					width: comObj.width,
+					x_pos: comObj.x_pos,
+					y_pos: comObj.y_pos
 				});
 				return newCom;
 			}
