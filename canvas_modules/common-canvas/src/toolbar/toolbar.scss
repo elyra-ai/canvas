@@ -7,6 +7,10 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+$toolbar-icon-label-margin: 8px;
+$toolbar-icon-size: 16px;
+$toolbar-icon-width: ($toolbar-icon-label-margin * 2) + $toolbar-icon-size;
+
 #canvas-toolbar {
 	height: 45px;
 	min-width: 258px;
@@ -56,8 +60,8 @@
 }
 
 .list-item-containers .list-item.overflow {
-	height: 32px;
-	width: 150px;
+	height: auto;
+	width: 200px;
 }
 
 .list-item {
@@ -100,24 +104,26 @@
 }
 
 .toolbar-item.overflow {
-	height: 32px;
+	height: auto;
 	width: inherit;
 	margin: 0;
 	display: flex;
 	justify-content: flex-start;
+	padding-top: 8px;
+	padding-bottom: 8px;
 }
 
 .toolbar-icons, .toolbar-item > svg {
-	height: 16px;
-	width: 16px;
+	height: $toolbar-icon-size;
+	width: $toolbar-icon-size;
 	margin: auto;
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
 }
 
 .toolbar-icons.overflow, .toolbar-item.overflow > svg {
-	margin-left: 8px;
-	margin-right: 8px;
+	margin-left: $toolbar-icon-label-margin;
+	margin-right: $toolbar-icon-label-margin;
 	float: left;
 }
 
@@ -126,9 +132,12 @@
 }
 
 .overflow-toolbar-icon-label {
-	margin: auto;
 	margin-left: 0;
+	margin-right: $toolbar-icon-label-margin;
 	color: $text-01;
+	width: calc(100% - #{$toolbar-icon-width});
+	word-break: break-word;
+	hyphens: auto;
 }
 
 .overflow-toolbar-icon-label.disabled {
