@@ -10,17 +10,13 @@
 const haloLayout = {
 
 	// CSS classes
-	cssSelectionHighlight: "d3-obj-selection-highlight",
+	cssNodeSelectionHighlight: "d3-node-selection-highlight",
 	cssNodeBody: "d3-node-body-outline",
 	cssNodeLabel: "d3-node-label",
 	cssNodePortOutput: "d3-node-port-output",
 	cssNodePortInput: "d3-node-port-input",
 	cssNodePortInputArrow: "d3-node-port-input-arrow",
-	cssNewConnectionLine: "d3-new-connection-line",
-	cssNewConnectionStart: "d3-new-connection-start",
-	cssNewConnectionBlob: "d3-new-connection-blob",
-	cssNewConnectionArrow: "d3-new-connection-arrow",
-	cssDataLink: "d3-data-link",
+	cssCommentSelectionHighlight: "d3-comment-selection-highlight",
 
 	// Connection type decides whether the node to node connections use the
 	// 'halo' connection mechanism and arrows pointing directly from source to
@@ -150,17 +146,13 @@ const haloLayout = {
 
 const portsHorizontal = {
 	// CSS classes
-	cssSelectionHighlight: "d3-obj-selection-highlight-austin",
+	cssNodeSelectionHighlight: "d3-node-selection-highlight-austin",
 	cssNodeBody: "d3-node-body-outline-austin",
 	cssNodeLabel: "d3-node-label-austin",
 	cssNodePortOutput: "d3-node-port-output-austin",
 	cssNodePortInput: "d3-node-port-input-austin",
 	cssNodePortInputArrow: "d3-node-port-input-arrow-austin",
-	cssNewConnectionLine: "d3-new-connection-line-austin",
-	cssNewConnectionStart: "d3-new-connection-start-austin",
-	cssNewConnectionBlob: "d3-new-connection-blob-austin",
-	cssNewConnectionArrow: "d3-new-connection-arrow-austin",
-	cssDataLink: "d3-data-link-austin",
+	cssCommentSelectionHighlight: "d3-comment-selection-highlight-austin",
 
 	// Connection type decides whether the node to node connections use the
 	// 'halo' connection mechanism and arrows pointing directly from source to
@@ -217,7 +209,7 @@ const portsHorizontal = {
 	nodeShape: "port-arcs",
 
 	// The gap between a node or comment and its selection highlight outline
-	highlightGap: 2,
+	highlightGap: 1,
 
 	// Whether to display a link line when linked node/comments overlap
 	displayLinkOnOverlap: true,
@@ -310,17 +302,13 @@ const portsHorizontal = {
 
 const portsVertical = {
 	// CSS classes
-	cssSelectionHighlight: "d3-obj-selection-highlight",
+	cssNodeSelectionHighlight: "d3-node-selection-highlight",
 	cssNodeBody: "d3-node-body-outline",
 	cssNodeLabel: "d3-node-label",
 	cssNodePortOutput: "d3-node-port-output",
 	cssNodePortInput: "d3-node-port-input",
 	cssNodePortInputArrow: "d3-node-port-input-arrow",
-	cssNewConnectionLine: "d3-new-connection-line",
-	cssNewConnectionStart: "d3-new-connection-start",
-	cssNewConnectionBlob: "d3-new-connection-blob",
-	cssNewConnectionArrow: "d3-new-connection-arrow",
-	cssDataLink: "d3-data-link",
+	cssCommentSelectionHighlight: "d3-comment-selection-highlight",
 
 	// Connection type decides whether the node to node connections use the
 	// 'halo' connection mechanism and arrows pointing directly from source to

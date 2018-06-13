@@ -271,6 +271,31 @@ function getControlContainerFromName(name) {
 	return container;
 }
 
+function getNumberOfSelectedNodes() {
+	var items = browser.getAttribute(".d3-node-selection-highlight", "data-selected");
+	var selected = 0;
+
+	for (var idx = 0; idx < items.length; idx++) {
+		if (items[idx] === "yes") {
+			selected++;
+		}
+	}
+	return selected;
+}
+
+function getNumberOfSelectedComments() {
+	var items = browser.getAttribute(".d3-comment-selection-highlight", "data-selected");
+	var selected = 0;
+
+	for (var idx = 0; idx < items.length; idx++) {
+		if (items[idx] === "yes") {
+			selected++;
+		}
+	}
+	return selected;
+}
+
+
 module.exports = {
 	containLinkEvent: containLinkEvent,
 	containLinkInObjectModel: containLinkInObjectModel,
@@ -289,5 +314,7 @@ module.exports = {
 	findNodeIndexInPalette: findNodeIndexInPalette,
 	findCategoryElement: findCategoryElement,
 	getSummaryFromName: getSummaryFromName,
-	getControlContainerFromName: getControlContainerFromName
+	getControlContainerFromName: getControlContainerFromName,
+	getNumberOfSelectedNodes: getNumberOfSelectedNodes,
+	getNumberOfSelectedComments: getNumberOfSelectedComments
 };

@@ -7,12 +7,112 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+/* Some useful variations on Carbon colors */
+$blue: lighten($brand-02, 20%);
+$light-blue: lighten($brand-02, 34%);
+$dark-blue: lighten($brand-02, 10%);
+$very-dark-blue: darken($brand-01, 100%);
+$light-grey: lighten($ui-05, 20%);
+
+/* Canvas background color */
+$canvas-background-color: $ui-01;
+
+/* Region selection colors */
+$region-selector-stroke-color: $ui-05;
+$region-selector-fill-color: $ui-04;
+
+/* 'Back to previous flow' control colors */
+$back-to-previous-flow-box-color: $brand-01;
+$back-to-previous-flow-box-fill-hover: $ui-04;
+
+/* Node colors shared between themes */
+$node-selection-color: $brand-02;
+$node-label-color: $text-01;
+$node-decoration-outline: $ui-05;
+$node-halo-color: $brand-02;
+$node-super-expand-icon-outline-hover-color: $ui-04;
+$node-super-expand-icon-color: $brand-01;
+$node-ellipsis-color: $brand-01;
+$node-ellipsis-hover-color: $brand-02;
+$node-error-color: $support-01; /* Error red */
+$node-warning-color: $support-03; /* Warning yellow */
+
+/* Node colors for the Regular (Vertical) theme */
+$node-body-stroke: $blue;
+$node-body-fill: $light-blue;
+
+$node-port-output-stroke-color: $blue;
+$node-port-output-fill-color: $canvas-background-color;
+
+$node-port-output-connected-stroke-color: $blue;
+$node-port-output-connected-fill-color: $light-blue;
+
+$node-port-output-hover-stroke: $dark-blue;
+$node-port-output-hover-fill: $dark-blue;
+
+$node-port-input-stroke-color: $blue;
+$node-port-input-fill-color: $canvas-background-color;
+
+$node-port-input-connected-stroke-color: $blue;
+$node-port-input-connected-fill-color: $light-blue;
+
+$node-port-input-arrow-connected-stroke-color: $dark-blue;
+$node-port-input-arrow-connected-fill-color: transparent;
+
+
+/* Node colors for the Austin (Horizontal) theme */
+$node-body-stroke-austin: $light-grey;
+$node-body-fill-austin: $ui-02;
+
+$node-body-stroke-austin-hover: $ui-04;
+$node-body-fill-austin-hover: $ui-03;
+
+$node-port-output-stroke-color-austin: $very-dark-blue;
+$node-port-output-fill-color-austin: transparent;
+
+$node-port-output-connected-stroke-color-austin: $very-dark-blue;
+$node-port-output-connected-fill-color-austin: $very-dark-blue;
+
+$node-port-output-hover-stroke-austin: $very-dark-blue;
+$node-port-output-hover-fill-austin: $very-dark-blue;
+
+$node-port-input-stroke-color-austin: $very-dark-blue;
+$node-port-input-fill-color-austin: transparent;
+
+$node-port-input-connected-stroke-color-austin: transparent;
+$node-port-input-connected-fill-color-austin: transparent;
+
+$node-port-input-arrow-connected-stroke-color-austin: $very-dark-blue;
+$node-port-input-arrow-connected-fill-color-austin: transparent;
+
+/* Comment colors */
+$comment-outline-color: $light-grey;
+$comment-fill-color: $ui-01;
+$comment-text-color: $text-02;
+$comment-halo-color: $brand-02;
+
+/* Comment font */
+/* These values are used for both comment text and the comment textarea used for
+   text entry. They must be the same for each. */
+$comment-text-font-size: 12px;
+$comment-text-font-weight: 400;
+$comment-text-font-family: "ibm-plex-sans", Helvetica Neue, Arial, sans-serif;
+
+/* New link colors */
+$new-halo-link-color: $ui-05;
+
+/* Link colors */
+$comment-link-color: $light-grey;
+$object-link-color: $ui-05; /* Used for association links */
+$data-link-color: $dark-blue;
+$link-hightlight-color: $brand-01;
+
 /* Canvas styles */
 
 .d3-svg-canvas-div {
 	cursor: default;
 	height: 100%;
-	background-color: $ui-01;
+	background-color: $canvas-background-color;
 }
 
 .d3-svg-canvas-div:focus {
@@ -22,127 +122,126 @@
 /* Pull-out region rectangle used for object selection */
 
 .d3-region-selector {
-	stroke: #808080;
-	fill: transparent;
-	stroke-dasharray: 2.2;
+	stroke: $region-selector-stroke-color;
+	fill: $region-selector-fill-color;
+	opacity: 0.5;
 }
 
 /* Background rectangle for sub-flow display inside supernodes */
 
 .d3-subflow-background {
-	fill: white;
+	fill: $canvas-background-color;
 }
 
 /* Back to Previous Flow control */
 
 .d3-back-to-previous-flow-box {
-	stroke: #DFE3E6;
-	fill: white;
+	stroke: $back-to-previous-flow-box-color;
+	fill: $canvas-background-color;
 }
 
-.d3-back-to-previous-flow-box[data-pointer-hover=yes] {
-	stroke: #DFE3E6;
-	fill: #DFE3E6;
+.d3-back-to-previous-flow-box[data-pointer-hover="yes"] {
+	stroke: $back-to-previous-flow-box-color;
+	fill: $back-to-previous-flow-box-fill-hover;
 }
 
 .d3-back-to-previous-flow-text {
 	font-size: 14px;
 	font-weight: 400;
-	fill: #3D70B2;
+	fill: $back-to-previous-flow-box-color;
 }
 
-/* Node styles */
-
-.d3-obj-selection-highlight {
-	stroke-width: 0;
-	fill: transparent;
-}
-
-.d3-obj-selection-highlight[data-selected=yes] {
-	stroke: #60C3B9;
-	stroke-dasharray: 5,5;
-	stroke-width: 2;
-	fill: transparent;
-}
-
-.d3-obj-selection-highlight-austin {
-	stroke-width: 0;
-	fill: transparent;
-}
-
-.d3-obj-selection-highlight-austin[data-selected=yes] {
-	stroke: $support-04;
-	stroke-dasharray: none; /* Solid line */
-	stroke-width: 3;
-	fill: transparent;
-}
+/* Node styles - Regular (Vertical) Theme */
 
 .d3-node-body-outline {
-	stroke: #adc5e4;
+	stroke: $node-body-stroke;
 	stroke-width: 2;
-	fill: #e3ebf6;
+	fill: $node-body-fill;
 }
 
 .d3-node-body-outline-austin {
-	stroke: $ui-03;
+	stroke: $node-body-stroke-austin;
 	stroke-width: 1;
-	fill: #efefef;
+	fill: $node-body-fill-austin;
 }
 
-.d3-node-body-outline-austin[hover=yes] {
-	stroke: $ui-03;
+.d3-node-body-outline-austin[hover="yes"] {
+	stroke: $node-body-stroke-austin-hover;
 	stroke-width: 1;
-	fill: $ui-03;;
+	fill: $node-body-fill-austin-hover;
 }
 
-.d3-node-image-outline {
-	stroke: #adc5e4;
+.d3-node-selection-highlight {
+	stroke-width: 0;
+	fill: transparent;
+}
+
+.d3-node-selection-highlight[data-selected="yes"] {
+	stroke: $node-selection-color;
+	stroke-dasharray: 5, 5;
 	stroke-width: 2;
-	fill: #e3ebf6;
+	fill: transparent;
+}
+
+/* Node styles - Austin (Horizontal) Theme */
+
+.d3-node-selection-highlight-austin {
+	stroke-width: 0;
+	fill: transparent;
+}
+
+.d3-node-selection-highlight-austin[data-selected="yes"] {
+	stroke: $node-selection-color;
+	stroke-dasharray: none; /* Solid line */
+	stroke-width: 5;
+	fill: transparent;
+}
+
+/* Used for debugging node image position. */
+.d3-node-image-outline {
+	stroke: $node-body-stroke;
+	stroke-width: 2;
+	fill: $node-body-fill;
 }
 
 .d3-node-label {
 	font-size: 13px;
+	fill: $node-label-color;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-o-user-select: none;
 	user-select: none;
 }
 
 .d3-node-label-austin {
 	font-size: 12px;
 	font-weight: 600;
-	fill: #1d3458;
+	fill: $node-label-color;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-o-user-select: none;
 	user-select: none;
 }
 
+/* Node styles - Error indication */
+
 .d3-node-error-label {
-	fill: $support-01; /* Error red */
+	fill: $node-error-color;
 }
 
 .d3-node-warning-label {
-	fill: $support-03; /* Warning yellow */
+	fill: $node-warning-color;
 }
 
+/* Used for debugging label position */
 .d3-label-outline {
-	fill: $ui-03;
-	stroke: #aeaeae;
+	fill: $node-body-fill;
+	stroke: $node-body-stroke;
 	stroke-width: 2;
 }
 
 .d3-decorator-outline {
-	fill: $ui-03;
-	stroke: #aeaeae;
-	stroke-width: 2;
+	fill: transparent;
+	stroke: $node-decoration-outline;
+	stroke-width: 1;
 }
 
 .d3-decorator-image {
@@ -157,20 +256,20 @@
 
 .d3-node-halo:hover {
 	fill: none;
-	stroke: $support-04;
+	stroke: $node-halo-color;
 	stroke-width: 8;
 }
 
-.d3-node-super-expand-outline {
+.d3-node-super-expand-icon-outline {
 	fill: transparent;
 }
 
-.d3-node-super-expand-outline:hover {
-	fill: $ui-03;
+.d3-node-super-expand-icon-outline:hover {
+	fill: $node-super-expand-icon-outline-hover-color;
 }
 
-.d3-node-super-expand {
-	fill: $brand-01;
+.d3-node-super-expand-icon {
+	fill: $node-super-expand-icon-color;
 }
 
 .d3-node-ellipsis-background {
@@ -179,28 +278,28 @@
 }
 
 .d3-node-ellipsis {
-	fill: $brand-01;
+	fill: $node-ellipsis-color;
 	stroke-width: 0;
 }
 
 .d3-node-ellipsis:hover,
 .d3-node-ellipsis-background:hover~.d3-node-ellipsis {
-	fill: $brand-02;
+	fill: $node-ellipsis-hover-color;
 	stroke-width: 0;
 }
 
 /* Error indicator */
 .d3-error-circle {
-	stroke: #f5f7fa; /* Node background color */
+	stroke: $canvas-background-color;
 	stroke-width: 2;
-	fill: $support-01;   /* Error red */
+	fill: $node-error-color;
 }
 
 /* Warning indicator */
 .d3-warning-circle {
-	stroke: #f5f7fa; /* Node background color */
+	stroke: $canvas-background-color;
 	stroke-width: 2;
-	fill: $support-03;   /* Warning Yellow */
+	fill: $node-warning-color;
 }
 
 /* Invisible Error indicator */
@@ -211,30 +310,31 @@
 /* Styles for ports */
 
 .d3-node-port-output {
-	stroke: #a2bde0;  /* Blue */
-	fill: #f5f7fa;
+	stroke: $node-port-output-stroke-color;
+	fill: $node-port-output-fill-color;
 	stroke-width: 2;
 }
 
-.d3-node-port-output[connected=yes] {
-	stroke: #a2bde0;  /* Blue */
-	fill: #e3ebf6;    /* Light blue */
+.d3-node-port-output[connected="yes"] {
+	stroke: $node-port-output-connected-stroke-color;
+	fill: $node-port-output-connected-fill-color;
 	stroke-width: 2;
 }
 
 .d3-node-port-output:hover {
-	fill: $support-04;   /* Dark blue */
+	stroke: $node-port-output-hover-stroke;
+	fill: $node-port-output-hover-fill;
 }
 
 .d3-node-port-input {
-	stroke: #a2bde0;  /* Blue */
-	fill: #f5f7fa;
+	stroke: $node-port-input-stroke-color;
+	fill: $node-port-input-fill-color;
 	stroke-width: 2;
 }
 
-.d3-node-port-input[connected=yes] {
-	stroke: #a2bde0;  /* Blue */
-	fill: #e3ebf6;    /* Light blue */
+.d3-node-port-input[connected="yes"] {
+	stroke: $node-port-input-connected-stroke-color;
+	fill: $node-port-input-connected-fill-color;
 	stroke-width: 2;
 }
 
@@ -243,38 +343,39 @@
 	fill: transparent;
 }
 
-.d3-node-port-input-arrow[connected=yes] {
-	stroke: $support-04; /* Dark blue */
-	fill: transparent;
+.d3-node-port-input-arrow[connected="yes"] {
+	stroke: $node-port-input-arrow-connected-stroke-color;
+	fill: $node-port-input-arrow-connected-fill-color;
 }
 
 /* Styles for Austin theme */
 
 .d3-node-port-output-austin {
-	stroke: #1b496d;
-	fill: transparent;
+	stroke: $node-port-output-stroke-color-austin;
+	fill: $node-port-output-fill-color-austin;
 	stroke-width: 1.25;
 }
 
-.d3-node-port-output-austin[connected=yes] {
-	stroke: #1b496d;
-	fill: #1b496d;
+.d3-node-port-output-austin[connected="yes"] {
+	stroke: $node-port-output-connected-stroke-color-austin;
+	fill: $node-port-output-connected-fill-color-austin;
 	stroke-width: 2;
 }
 
 .d3-node-port-output-austin:hover {
-	fill: #1b496d;
+	stroke: $node-port-output-hover-stroke-austin;
+	fill: $node-port-output-hover-fill-austin;
 }
 
 .d3-node-port-input-austin {
-	stroke: #1b496d;
-	fill: transparent;
+	stroke: $node-port-input-stroke-color-austin;
+	fill: $node-port-input-fill-color-austin;
 	stroke-width: 1.25;
 }
 
-.d3-node-port-input-austin[connected=yes] {
-	stroke: transparent;
-	fill: transparent;
+.d3-node-port-input-austin[connected="yes"] {
+	stroke: $node-port-input-connected-stroke-color-austin;
+	fill: $node-port-input-connected-fill-color-austin;
 	stroke-width: 2;
 }
 
@@ -283,100 +384,62 @@
 	fill: transparent;
 }
 
-.d3-node-port-input-arrow-austin[connected=yes] {
-	stroke: #1b496d;
-	stroke-width: 2;
-	fill: transparent;
+.d3-node-port-input-arrow-austin[connected="yes"] {
+	stroke: $node-port-input-arrow-connected-stroke-color-austin;
+	stroke-width: 1;
+	fill: $node-port-input-arrow-connected-fill-color-austin;
 }
 
 /* New connection dynamic line styles. */
 
-.d3-new-connection-line[linkType=nodeLink] {
-	stroke: $support-04;   /* Dark blue */
+.d3-new-connection-line[linkType="nodeLink"] {
+	stroke: $data-link-color;
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
 }
 
-.d3-new-connection-start[linkType=nodeLink] {
-	stroke: $support-04;   /* Dark blue */
-	fill: $ui-01;   /* White */
+.d3-new-connection-start[linkType="nodeLink"] {
+	stroke: $data-link-color;
+	fill: $canvas-background-color;
 }
 
-.d3-new-connection-blob[linkType=nodeLink] {
-	stroke: $support-04;   /* Dark blue */
-	fill: $support-04;   /* Dark blue */
-}
-
-/* New connection dynamic line styles for the Austin theme. */
-
-.d3-new-connection-line-austin[linkType=nodeLink] {
-	stroke: $support-04;
-	stroke-width: 2;
-	stroke-dasharray: 10 10;
-	fill: none;
-}
-
-.d3-new-connection-start-austin[linkType=nodeLink] {
-	stroke: $support-04;
-	fill: $ui-01;   /* White */
-}
-
-.d3-new-connection-blob-austin[linkType=nodeLink] {
-	stroke: $support-04;
-	fill: $support-04;
+.d3-new-connection-blob[linkType="nodeLink"] {
+	stroke: $data-link-color;
+	fill: $data-link-color;
 }
 
 /* New connection dynamic line styles for comment links */
 
-.d3-new-connection-line[linkType=commentLink] {
-	stroke: #808080;
-	stroke-width: 2;
+.d3-new-connection-line[linkType="commentLink"] {
+	stroke: $comment-link-color;
+	stroke-width: 1;
 	stroke-dasharray: 10 10;
 	fill: none;
 }
 
-.d3-new-connection-blob[linkType=commentLink] {
-	stroke: #808080;
-	fill: $ui-01;
+.d3-new-connection-blob[linkType="commentLink"] {
+	stroke: $comment-link-color;
+	stroke-width: 4;
+	fill: $comment-link-color;
 }
 
-.d3-new-connection-arrow[linkType=commentLink] {
-	stroke: #808080;
+.d3-new-connection-arrow[linkType="commentLink"] {
+	stroke: $comment-link-color;
 	stroke-width: 2;
-	fill: transparent;
+	fill: $comment-link-color;
 }
 
 .d3-comment-port-circle {
-	stroke: #c5ccd6;
+	stroke: $comment-link-color;
 	stroke-width: 2;
-	fill: #c5ccd6;
-}
-
-/* New connection dynamic line styles for comment links for the Austin theme. */
-
-.d3-new-connection-line-austin[linkType=commentLink] {
-	stroke: #808080;
-	stroke-width: 2;
-	stroke-dasharray: 10 10;
-	fill: none;
-}
-
-.d3-new-connection-blob-austin[linkType=commentLink] {
-	stroke: #808080;
-	fill: $ui-01;  /* White */
-}
-
-.d3-new-connection-arrow-austin[linkType=commentLink] {
-	stroke: #808080;
-	stroke-width: 2;
-	fill: transparent;
+	fill: $comment-link-color;
 }
 
 /* Halo - Temporary connector line pulled out from halo */
 
 .d3-node-connector {
-	stroke: #808080;
+	stroke: $new-halo-link-color;
 	stroke-dasharray: 2.2;
 }
 
@@ -384,49 +447,68 @@
 
 /* Style for comment background rectangle */
 .d3-comment-rect {
-	fill: $ui-01;
-	stroke: #c7c7c7;
+	fill: $comment-fill-color;
+	stroke: $comment-outline-color;
 	stroke-width: 1;
 
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly. */
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-o-user-select: none;
 	user-select: none;
 }
 
-.d3-comment-text {
-	fill: $text-02;  /* Must be the same as color in .d3-comment-display */
+.d3-comment-selection-highlight {
+	stroke-width: 0;
+	fill: transparent;
 }
 
-.d3-comment-text[beingedited=yes] {
+.d3-comment-selection-highlight[data-selected="yes"] {
+	stroke: $node-selection-color;
+	stroke-dasharray: 5 5;
+	stroke-width: 2;
+	fill: transparent;
+}
+
+.d3-comment-selection-highlight-austin {
+	stroke-width: 0;
+	fill: transparent;
+}
+
+.d3-comment-selection-highlight-austin[data-selected="yes"] {
+	stroke: $node-selection-color;
+	stroke-dasharray: none; /* Solid line */
+	stroke-width: 3;
+	fill: transparent;
+}
+
+.d3-comment-text {
+	fill: $comment-text-color;  /* Must be the same as color in .d3-comment-display */
+}
+
+.d3-comment-text[beingedited="yes"] {
 	fill: transparent;
 }
 
 /* Style for comment text when displayed as SVG text */
 .d3-comment-text-tspan {
-	font-size: 12px;  /* Must be the same as font size in .comment-entry */
-	font-weight: 400;  /* Must be the same as font weight in .comment-entry */
+	font-size: $comment-text-font-size;
+	font-weight: $comment-text-font-weight;
+	font-family: $comment-text-font-family;
 	position: absolute;
 	pointer-events: none;   /* This prevents strange problems with div focus that occur when the text is clicked. */
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-o-user-select: none;
 	user-select: none;
 }
 
 /* Style for comment text entry when shown in an HTML textarea control. */
 .d3-comment-entry {
-	color: $text-02;  /* Must be the same as fill in .d3-comment-text */
-	font-size: 12px;  /* Must be the same as font size in .d3-comment-text-tspan */
-	font-weight: 400;  /* Must be the same as font weight in .d3-comment-text-tspan */
+	color: $comment-text-color;
+	font-size: $comment-text-font-size;
+	font-weight: $comment-text-font-weight;
+	font-family: $comment-text-font-family;
 	position: absolute;
-	border: none;
+	border: 0;
+	resize: none;
 	padding-left: 10px;  /* This needs to be the same as the commentWidthPadding in layout-dimensions.js */
 	padding-right: 10px; /* This needs to be the same as the commentWidthPadding  in layout-dimensions.js */
 	padding-top: 8px;    /* This needs to be the same as the commentHeightPadding in layout-dimensions.js */
@@ -447,46 +529,41 @@
 
 .d3-comment-halo:hover {
 	fill: none;
-	stroke: $support-04;
+	stroke: $comment-halo-color;
 	stroke-width: 8;
 }
 
 /* Link styles */
 
 .d3-comment-link {
-	stroke: #c7c7c7;
+	stroke: $comment-link-color;
 	fill: none;
 	stroke-width: 1;
 	stroke-dasharray: 7.3;
 }
 
 .d3-comment-link-arrow-head {
-	stroke: #808080;
+	stroke: $comment-link-color;
 	stroke-width: 2;
 	fill: transparent;
 	stroke-dasharray: 0;
 }
 
 .d3-object-link {
-	stroke: black;
+	stroke: $object-link-color;
+	stroke-width: 2;
 	fill: none;
 	stroke-dasharray: 5.5;
 }
 
 .d3-data-link {
-	stroke: $support-04;
-	fill: none;
-	stroke-width: 2;
-}
-
-.d3-data-link-austin {
-	stroke: $support-04;
+	stroke: $data-link-color;
 	fill: none;
 	stroke-width: 2;
 }
 
 .d3-data-link-arrow-head {
-	stroke: black;
+	stroke: $data-link-color;
 	stroke-width: 2;
 	fill: transparent;
 	stroke-dasharray: 0;
@@ -507,5 +584,5 @@ g .d3-data-link:hover,
 g .d3-selectable-link:hover,
 g .d3-selectable-link:hover ~ .d3-selectable-link,      /* Colors arrow head when hovering over line. */
 g .d3-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
-	stroke: $brand-01;
+	stroke: $link-hightlight-color;
 }

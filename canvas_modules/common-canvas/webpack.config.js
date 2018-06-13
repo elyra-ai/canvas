@@ -11,7 +11,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-// const SassLintPlugin = require("sasslint-webpack-plugin");
+const SassLintPlugin = require("sasslint-webpack-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const nodeExternals = require("webpack-node-externals");
@@ -67,14 +67,14 @@ module.exports = {
 		new webpack.DefinePlugin({
 			"process.env.NODE_ENV": "'production'"
 		}),
-		// new SassLintPlugin({
-		//	configFile: ".sass-lint.yml",
-		//	context: "./assets",
-		//	glob: "**/*.scss",
-		//	quiet: false,
-		//	failOnWarning: true,
-		//	failOnError: true
-		// }),
+		new SassLintPlugin({
+			configFile: ".sass-lint.yml",
+			context: "./src",
+			glob: "**/*.scss",
+			quiet: false,
+			failOnWarning: true,
+			failOnError: true
+		}),
 		new webpack.optimize.UglifyJsPlugin({ sourceMap: true }), // minify everything
 		new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
 		new ExtractTextPlugin("common-canvas.css"),

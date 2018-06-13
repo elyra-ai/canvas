@@ -86,6 +86,9 @@
 	transform: translateY(4px);
 }
 .properties-fp-top-row {
+	margin-bottom: 6px;
+	display: flex;
+	justify-content: space-between;
 	button.bx--btn > svg:not(:root) {
 		top: -5px;
 		left: -5px;
@@ -99,11 +102,6 @@
 	thead {
 		height: 35px;
 	}
-}
-.properties-fp-top-row {
-	margin-bottom: 6px;
-	display: flex;
-	justify-content: space-between;
 }
 
 .properties-wf-modal .properties-fp-top-row {

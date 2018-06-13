@@ -1166,7 +1166,7 @@ class CanvasRenderer {
 				const nodeOutlineSelector = that.getSelectorForId("node_outline", d.id);
 				that.canvasGrp.selectAll(nodeOutlineSelector)
 					.attr("data-selected", that.objectModel.isSelected(d.id) ? "yes" : "no")
-					.attr("class", that.layout.cssSelectionHighlight);
+					.attr("class", that.layout.cssNodeSelectionHighlight);
 			});
 
 		} else {
@@ -1395,9 +1395,8 @@ class CanvasRenderer {
 					if (this.layout.nodeShape === "port-arcs") {
 						nodeGrp.select(that.getId("#node_outline", d.id))
 							.attr("d", (nd) => this.getNodeShapePath(nd))
-							.attr("transform", (nd) => this.getNodeHighlightOutlineTranslate(nd)) // Scale and move the shape up and to the left to account for the padding
 							.attr("data-selected", function(nd) { return that.objectModel.isSelected(nd.id) ? "yes" : "no"; })
-							.attr("class", this.layout.cssSelectionHighlight)
+							.attr("class", this.layout.cssNodeSelectionHighlight)
 							.datum(node); // Set the __data__ to the updated data
 					} else { // Simple rectangle
 						nodeGrp.select(that.getId("#node_outline", d.id))
@@ -1407,7 +1406,7 @@ class CanvasRenderer {
 							.attr("x", -this.layout.highlightGap)
 							.attr("y", -this.layout.highlightGap)
 							.attr("data-selected", function(nd) { return that.objectModel.isSelected(nd.id) ? "yes" : "no"; })
-							.attr("class", this.layout.cssSelectionHighlight)
+							.attr("class", this.layout.cssNodeSelectionHighlight)
 							.datum(node); // Set the __data__ to the updated data
 					}
 
@@ -1665,7 +1664,7 @@ class CanvasRenderer {
 					.attr("height", this.layout.superNodeIconHeight + (2 * this.layout.superNodeIconPadding))
 					.attr("x", (nd) => this.getExpansionIconPosX(nd) - this.layout.superNodeIconPadding)
 					.attr("y", this.layout.superNodeIconPosY - this.layout.superNodeIconPadding)
-					.attr("class", "d3-node-super-expand-outline")
+					.attr("class", "d3-node-super-expand-icon-outline")
 					.on("click", () => {
 						stopPropagationAndPreventDefault();
 						this.renderSuperNodeFullPage(d);
@@ -1675,7 +1674,7 @@ class CanvasRenderer {
 				nodeGrp
 					.append("svg")
 					.attr("id", () => this.getId("node_exp_icon", d.id))
-					.attr("class", "d3-node-super-expand")
+					.attr("class", "d3-node-super-expand-icon")
 					.html(SUPER_NODE_EXPAND_ICON)
 					.attr("width", this.layout.superNodeIconWidth)
 					.attr("height", this.layout.superNodeIconHeight)
@@ -1915,7 +1914,7 @@ class CanvasRenderer {
 	getDecoratorClass(d, type) {
 		if (d.decorations) {
 			var dec = d.decorations.find((dc) => dc.position === type);
-			if (dec) {
+			if (dec && dec.class_name) {
 				return dec.class_name;
 			}
 		}
@@ -2004,32 +2003,32 @@ class CanvasRenderer {
 			this.drawingNewLinkArray[0].y2 = transPos.y;
 		}
 
-		this.canvasGrp.selectAll("." + this.layout.cssNewConnectionLine)
+		this.canvasGrp.selectAll(".d3-new-connection-line")
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("path")
 			.attr("d", (d) => that.getConnectorPath(d))
-			.attr("class", this.layout.cssNewConnectionLine)
+			.attr("class", "d3-new-connection-line")
 			.attr("linkType", linkType);
 
-		this.canvasGrp.selectAll("." + this.layout.cssNewConnectionStart)
+		this.canvasGrp.selectAll(".d3-new-connection-start")
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("circle")
 			.attr("cx", (d) => d.x1)
 			.attr("cy", (d) => d.y1)
 			.attr("r", this.layout.portRadius)
-			.attr("class", this.layout.cssNewConnectionStart)
+			.attr("class", "d3-new-connection-start")
 			.attr("linkType", linkType);
 
-		this.canvasGrp.selectAll("." + this.layout.cssNewConnectionBlob)
+		this.canvasGrp.selectAll(".d3-new-connection-blob")
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("circle")
 			.attr("cx", (d) => d.x2)
 			.attr("cy", (d) => d.y2)
 			.attr("r", this.layout.portRadius)
-			.attr("class", this.layout.cssNewConnectionBlob)
+			.attr("class", "d3-new-connection-blob")
 			.attr("linkType", linkType)
 			.on("mouseup", () => {
 				stopPropagationAndPreventDefault();
@@ -2064,22 +2063,22 @@ class CanvasRenderer {
 			"y2": transPos.y,
 			"type": linkType }];
 
-		this.canvasGrp.selectAll("." + this.layout.cssNewConnectionLine)
+		this.canvasGrp.selectAll(".d3-new-connection-line")
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("path")
 			.attr("d", (d) => that.getConnectorPath(d))
-			.attr("class", this.layout.cssNewConnectionLine)
+			.attr("class", "d3-new-connection-line")
 			.attr("linkType", linkType);
 
-		this.canvasGrp.selectAll("." + this.layout.cssNewConnectionBlob)
+		this.canvasGrp.selectAll(".d3-new-connection-blob")
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("circle")
 			.attr("cx", (d) => d.x2)
 			.attr("cy", (d) => d.y2)
 			.attr("r", this.layout.commentPortRadius)
-			.attr("class", this.layout.cssNewConnectionBlob)
+			.attr("class", "d3-new-connection-blob")
 			.attr("linkType", linkType)
 			.on("mouseup", () => {
 				stopPropagationAndPreventDefault();
@@ -2092,12 +2091,12 @@ class CanvasRenderer {
 			});
 
 		if (this.layout.commentLinkArrowHead) {
-			this.canvasGrp.selectAll("." + this.layout.cssNewConnectionArrow)
+			this.canvasGrp.selectAll(".d3-new-connection-arrow")
 				.data(this.drawingNewLinkArray)
 				.enter()
 				.append("path")
 				.attr("d", (d) => this.getArrowHead(d))
-				.attr("class", this.layout.cssNewConnectionArrow)
+				.attr("class", "d3-new-connection-arrow")
 				.attr("linkType", linkType)
 				.on("mouseup", () => {
 					stopPropagationAndPreventDefault();
@@ -2207,21 +2206,21 @@ class CanvasRenderer {
 								"L " + saveX2 + " " + saveY2;
 		}
 
-		this.canvasGrp.selectAll("." + this.layout.cssNewConnectionLine)
+		this.canvasGrp.selectAll(".d3-new-connection-line")
 			.transition()
 			.duration(duration)
 			.attr("d", newPath)
 			.on("end", () => {
-				this.canvasGrp.selectAll("." + this.layout.cssNewConnectionArrow).remove();
+				this.canvasGrp.selectAll(".d3-new-connection-arrow").remove();
 
-				this.canvasGrp.selectAll("." + this.layout.cssNewConnectionBlob)
+				this.canvasGrp.selectAll(".d3-new-connection-blob")
 					.transition()
 					.duration(1000)
 					.ease(d3.easeElastic)
 					.attr("cx", saveX1)
 					.attr("cy", saveY1);
 
-				this.canvasGrp.selectAll("." + this.layout.cssNewConnectionLine)
+				this.canvasGrp.selectAll(".d3-new-connection-line")
 					.transition()
 					.duration(1000)
 					.ease(d3.easeElastic)
@@ -2235,10 +2234,10 @@ class CanvasRenderer {
 		if (this.layout.connectionType === "halo") {
 			this.canvasGrp.selectAll(".d3-node-connector").remove();
 		} else {
-			this.canvasGrp.selectAll("." + this.layout.cssNewConnectionLine).remove();
-			this.canvasGrp.selectAll("." + this.layout.cssNewConnectionStart).remove();
-			this.canvasGrp.selectAll("." + this.layout.cssNewConnectionBlob).remove();
-			this.canvasGrp.selectAll("." + this.layout.cssNewConnectionArrow).remove();
+			this.canvasGrp.selectAll(".d3-new-connection-line").remove();
+			this.canvasGrp.selectAll(".d3-new-connection-start").remove();
+			this.canvasGrp.selectAll(".d3-new-connection-blob").remove();
+			this.canvasGrp.selectAll(".d3-new-connection-arrow").remove();
 		}
 	}
 
@@ -2347,23 +2346,13 @@ class CanvasRenderer {
 			});
 
 			if (data.inputPortsHeight < data.height) {
-				path += " L 0 0"; // Draw finishing segment back to origin
+				path += " Z"; // Draw finishing segment back to origin
 			}
 		} else {
-			path += " L 0 0"; // If no input ports just draw a straight line.
+			path += " Z"; // If no input ports just draw a straight line.
 		}
 		// console.log("Node path = " + path);
 		return path;
-	}
-
-	getNodeHighlightOutlineTranslate(data) {
-		const targetHeight = data.height + (2 * this.layout.highlightGap);
-		const yScale = targetHeight / data.height;
-
-		const targetWidth = data.width + (2 * this.layout.highlightGap);
-		const xScale = targetWidth / data.width;
-
-		return `translate (${-this.layout.highlightGap},${-this.layout.highlightGap}) scale(${xScale}, ${yScale})`;
 	}
 
 	getPortPositions(data, type) {
@@ -2430,7 +2419,7 @@ class CanvasRenderer {
 					.attr("height", d.height + (2 * that.layout.highlightGap))
 					.attr("width", d.width + (2 * that.layout.highlightGap))
 					.attr("data-selected", that.objectModel.isSelected(d.id) ? "yes" : "no")
-					.attr("class", that.layout.cssSelectionHighlight)
+					.attr("class", that.layout.cssCommentSelectionHighlight)
 					.datum(() => that.getComment(d.id)); // Set the __data__ to the updated data
 
 				// This code will remove custom attributes from a comment. This might happen when
@@ -2698,7 +2687,7 @@ class CanvasRenderer {
 						.attr("height", d.height + (2 * that.layout.highlightGap))
 						.attr("width", d.width + (2 * that.layout.highlightGap))
 						.attr("data-selected", that.objectModel.isSelected(d.id) ? "yes" : "no")
-						.attr("class", that.layout.cssSelectionHighlight)
+						.attr("class", that.layout.cssCommentSelectionHighlight)
 						.datum(comment); // Set the __data__ to the updated data
 
 					// Clip path for text
@@ -3424,7 +3413,7 @@ class CanvasRenderer {
 		// If the class name provided IS the historical default, or there is no classname, return
 		// the class name from the layout preferences. This allows the layout
 		// preferences to override any default class name passed in.
-		return this.layout.cssDataLink;
+		return "d3-data-link";
 	}
 
 	getAssociationLinkClass(d) {

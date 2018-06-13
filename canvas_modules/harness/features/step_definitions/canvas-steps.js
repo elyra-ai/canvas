@@ -9,7 +9,7 @@
 /* eslint no-console: "off" */
 
 import { clickSVGAreaAt, findCategoryElement, findNodeIndexInPalette,
-	getNodeIdForLabel } from "./utilities/validate-utils.js";
+	getNodeIdForLabel, getNumberOfSelectedComments, getNumberOfSelectedNodes } from "./utilities/validate-utils.js";
 import { isSchemaValidationError } from "./utilities/test-utils.js";
 
 /* global browser */
@@ -77,14 +77,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify that (\d+) objects are selected$/, function(numberOfSelectedObjects) {
-		var items = browser.getAttribute(".d3-obj-selection-highlight", "data-selected");
-		var selected = 0;
-
-		for (var idx = 0; idx < items.length; idx++) {
-			if (items[idx] === "yes") {
-				selected++;
-			}
-		}
+		const selected = getNumberOfSelectedNodes() + getNumberOfSelectedComments();
 		expect(selected).toEqual(Number(numberOfSelectedObjects));
 	});
 
