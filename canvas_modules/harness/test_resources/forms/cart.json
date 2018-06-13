@@ -277,7 +277,7 @@
           "Drug"
         ],
         "use_custom_name": false,
-        "target": [""],
+        "target": "",
         "custom_name": ""
       },
       "inputDataModel": {

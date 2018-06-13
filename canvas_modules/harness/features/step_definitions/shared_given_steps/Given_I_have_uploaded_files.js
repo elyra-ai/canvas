@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { dropdownSelect, loadUnknownFile } from "../utilities/test-utils.js";
+import { dropdownSelect, loadUnknownFile, selectSelect } from "../utilities/test-utils.js";
 
 module.exports = function() {
 
@@ -25,7 +25,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I have uploaded JSON for common-properties "([^"]*)"$/, function(propertiesFile) {
-		dropdownSelect(browser.$("#sidepanel-input"), propertiesFile);
+		selectSelect(browser.$("#sidepanel-input"), propertiesFile);
 	});
 
 };

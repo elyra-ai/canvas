@@ -102,6 +102,20 @@ function dropdownSelect(dropdownElement, selectedItemName) {
 	browser.pause(600);
 }
 
+function selectSelect(selectElement, selectedItemName) {
+	selectElement.click(".bx--select");
+	browser.pause(600);
+	selectElement.$(".bx--select-input")
+		.moveToObject();
+	browser.pause(600);
+	// get the list of drop down options.
+	const fileOptions = selectElement.$(".bx--select-input")
+		.$("option[value='" + selectedItemName + "']");
+	fileOptions.scroll();
+	browser.pause(600);
+	fileOptions.click();
+	browser.pause(600);
+}
 
 module.exports = {
 	getCanvasData: getCanvasData,
@@ -111,5 +125,6 @@ module.exports = {
 	getLastLogOfType: getLastLogOfType,
 	isSchemaValidationError: isSchemaValidationError,
 	dropdownSelect: dropdownSelect,
-	loadUnknownFile: loadUnknownFile
+	loadUnknownFile: loadUnknownFile,
+	selectSelect: selectSelect
 };

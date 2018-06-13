@@ -76,3 +76,7 @@ _defineConstant("NOTIFICATION_MESSAGE_TYPE", {
 	SUCCESS: "success",
 	UNSPECIFIED: "unspecified"
 });
+
+_defineConstant("LOCAL_FILE_OPTION", "Local File");
+_defineConstant("FORMS", "forms");
+_defineConstant("PARAMETER_DEFS", "parameterDefs");

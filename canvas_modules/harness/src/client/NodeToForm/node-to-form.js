@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import FormsService from "../services/FormsService";
+import { FORMS, PARAMETER_DEFS } from "../constants/constants.js";
 
 var nodeForms = {};
 var nodeToFormMap = {};
@@ -37,7 +38,8 @@ function loadForm(id, type, fileName) {
 // Export functions
 
 function initialize() {
-	setFileNamesMap("properties");
+	setFileNamesMap(FORMS);
+	setFileNamesMap(PARAMETER_DEFS);
 }
 
 function clearNodeForms() {

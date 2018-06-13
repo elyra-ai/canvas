@@ -13,6 +13,7 @@
     "componentId": "derive",
     "label": "Derive",
     "editorSize": "small",
+    "help": {},
     "uiItems": [
       {
         "itemType": "primaryTabs",
@@ -101,7 +102,7 @@
             "content": {
               "itemType": "panel",
               "panel": {
-                "id": "annotations",
+                "id": "annotation",
                 "panelType": "general",
                 "uiItems": [
                   {
@@ -258,7 +259,7 @@
       {
         "validation": {
           "fail_message": {
-            "type": "error",
+            "type": "warning",
             "message": {
               "default": "Field cannot be empty nor contain \"quotes\"",
               "resource_key": "new_name"
@@ -294,7 +295,7 @@
       {
         "validation": {
           "fail_message": {
-            "type": "error",
+            "type": "warning",
             "message": {
               "default": "Field cannot contain \"quote(s)\"",
               "resource_key": "formula_expr"
@@ -343,7 +344,7 @@
       {
         "validation": {
           "fail_message": {
-            "type": "error",
+            "type": "warning",
             "message": {
               "default": "Field cannot be default",
               "resource_key": "formula_measure_type"
@@ -362,7 +363,7 @@
       {
         "validation": {
           "fail_message": {
-            "type": "error",
+            "type": "warning",
             "message": {
               "default": "Field cannot contain \"quotes\"",
               "resource_key": "custom_name"
@@ -392,12 +393,12 @@
       {
         "validation": {
           "fail_message": {
-            "type": "error",
+            "type": "warning",
             "message": {
               "default": "Field cannot be empty nor contain \"quotes\"",
               "resource_key": "annotation"
             },
-            "focus_parameter_ref": "annotations"
+            "focus_parameter_ref": "annotation"
           },
           "evaluate": {
             "and": [

@@ -53,7 +53,9 @@ import {
 	NONE,
 	INPUT_PORT,
 	OUTPUT_PORT,
-	NOTIFICATION_MESSAGE_TYPE
+	NOTIFICATION_MESSAGE_TYPE,
+	FORMS,
+	PARAMETER_DEFS
 } from "./constants/constants.js";
 
 import listview32 from "../graphics/list-view_32.svg";
@@ -317,7 +319,7 @@ class App extends React.Component {
 		}
 	}
 
-	setPropertiesDropdownSelect(selectedPropertiesDropdownFile) {
+	setPropertiesDropdownSelect(selectedPropertiesDropdownFile, selectedFileCategory) {
 		// close any existing properties before opening a new properties file
 		this.closePropertiesEditorDialog();
 
@@ -333,10 +335,17 @@ class App extends React.Component {
 				propertiesFileChooserVisible: false
 			}, function() {
 				that.log("Submit common properties file", that.state.selectedPropertiesDropdownFile);
-				FormsService.getFileContent("properties", that.state.selectedPropertiesDropdownFile)
-					.then(function(res) {
-						that.setPropertiesJSON(res);
-					});
+				if (selectedFileCategory === PARAMETER_DEFS) {
+					FormsService.getFileContent(PARAMETER_DEFS, that.state.selectedPropertiesDropdownFile)
+						.then(function(res) {
+							that.setPropertiesJSON(res);
+						});
+				} else {
+					FormsService.getFileContent(FORMS, that.state.selectedPropertiesDropdownFile)
+						.then(function(res) {
+							that.setPropertiesJSON(res);
+						});
+				}
 				that.closeSidePanelModal();
 			});
 		}

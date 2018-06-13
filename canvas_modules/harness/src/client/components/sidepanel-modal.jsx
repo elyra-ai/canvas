@@ -15,8 +15,9 @@ import { Link } from "react-router-dom";
 import FileUploader from "carbon-components-react/lib/components/FileUploader";
 import PropTypes from "prop-types";
 import Button from "carbon-components-react/lib/components/Button";
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
-import DropdownItem from "carbon-components-react/lib/components/DropdownItem";
+import Select from "carbon-components-react/lib/components/Select";
+import SelectItemGroup from "carbon-components-react/lib/components/SelectItemGroup";
+import SelectItem from "carbon-components-react/lib/components/SelectItem";
 import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
 import RadioButton from "carbon-components-react/lib/components/RadioButton";
 import Toggle from "carbon-components-react/lib/components/Toggle";
@@ -24,8 +25,12 @@ import Toggle from "carbon-components-react/lib/components/Toggle";
 import {
 	CHOOSE_FROM_LOCATION,
 	FLYOUT,
-	MODAL
+	MODAL,
+	LOCAL_FILE_OPTION,
+	FORMS,
+	PARAMETER_DEFS
 } from "../constants/constants.js";
+
 import FormsService from "../services/FormsService";
 
 export default class SidePanelModal extends React.Component {
@@ -33,7 +38,8 @@ export default class SidePanelModal extends React.Component {
 		super(props);
 		this.state = {
 			commonProperties: "",
-			commonPropertiesFiles: []
+			commonPropertiesFormsFiles: [],
+			commonPropertiesParamDefsFiles: []
 		};
 
 		this.onPropertiesSelect = this.onPropertiesSelect.bind(this);
@@ -47,17 +53,19 @@ export default class SidePanelModal extends React.Component {
 
 	componentWillMount() {
 		var that = this;
-
-		FormsService.getFiles("properties")
+		FormsService.getFiles(FORMS)
 			.then(function(res) {
-				var list = res;
-				list.unshift(CHOOSE_FROM_LOCATION);
-				that.setState({ commonPropertiesFiles: res });
+				that.setState({ commonPropertiesFormsFiles: res });
+			});
+		FormsService.getFiles(PARAMETER_DEFS)
+			.then(function(res) {
+				that.setState({ commonPropertiesParamDefsFiles: res });
 			});
 	}
 
 	onDropdownSelect(evt) {
-		this.props.setPropertiesDropdownSelect(evt.value);
+		this.props.setPropertiesDropdownSelect(
+			evt.target.selectedOptions[0].value, evt.target.selectedOptions[0].parentElement.label);
 	}
 
 	onPropertiesSelect(evt) {
@@ -134,9 +142,25 @@ export default class SidePanelModal extends React.Component {
 	dropdownOptions() {
 		const options = [];
 		let key = 1;
-		for (const option of this.state.commonPropertiesFiles) {
-			options.push(<DropdownItem key={"option." + ++key}itemText={option} value={option} />);
+		const formOptions = [];
+		const paramDefOptions = [];
+		const choosefromlocation = [];
+		options.push(<SelectItem key = "choose-an-option" hidden text = "Choose an option..." />);
+		choosefromlocation.push(
+			<SelectItem key={"choose-from-location"} text = "Choose From Location" value = {CHOOSE_FROM_LOCATION} />);
+		options.push(
+			<SelectItemGroup key ={"choose-file-option"} label = {LOCAL_FILE_OPTION}>{choosefromlocation}
+			</SelectItemGroup>);
+		for (const option of this.state.commonPropertiesParamDefsFiles) {
+			paramDefOptions.push(<SelectItem key={"param-def-option-" + key++} text={option} value={option} />);
 		}
+		options.push(
+			<SelectItemGroup key ={"param-def-option"} label = {PARAMETER_DEFS}>{paramDefOptions}
+			</SelectItemGroup>);
+		for (const option of this.state.commonPropertiesFormsFiles) {
+			formOptions.push(<SelectItem key={"form-option-" + key++} text={option} value={option} />);
+		}
+		options.push(<SelectItemGroup key ={"form-option"} label = {FORMS}>{formOptions}</SelectItemGroup>);
 		return options;
 	}
 
@@ -146,7 +170,6 @@ export default class SidePanelModal extends React.Component {
 
 	render() {
 		const space = (<div className="sidepanel-spacer" />);
-
 		let fileChooser = <div />;
 		if (this.props.fileChooserVisible) {
 			fileChooser = (<div className="sidepanel-file-uploader">
@@ -166,14 +189,16 @@ export default class SidePanelModal extends React.Component {
 					<span>Common Properties</span>
 					<Link to="/properties" target="_blank">documentation</Link>
 				</div>
-				<Dropdown
-					defaultText="Properties"
-					ariaLabel="Properties"
+				<Select
+					id = "common-properties-select-item"
+					className = "common-properties-select-item"
+					iconDescription = "list of form and paramdef file options"
+					labelText="Properties"
 					onChange={this.onDropdownSelect.bind(this)}
 					value={this.props.selectedPropertiesDropdownFile}
 				>
 					{this.dropdownOptions()}
-				</Dropdown>
+				</Select>
 				{space}
 				{fileChooser}
 				<Button small

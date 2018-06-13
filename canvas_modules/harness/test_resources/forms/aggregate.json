@@ -1,17 +1,12 @@
 {
-  "title": {
-    "key": null,
-    "ref": null,
-    "props": {
-      "id": "dialog.nodePropertiesTitle",
-      "values": {}
-    },
-    "_owner": null,
-    "_store": {}
-  },
   "formData": {
     "componentId": "aggregate",
     "label": "Aggregate",
+    "help": {
+      "data": {
+        "url": "randomUrl"
+      }
+    },
     "editorSize": "small",
     "uiItems": [
       {
@@ -25,12 +20,14 @@
               "panel": {
                 "id": "basic-settings",
                 "panelType": "general",
+                "label": "Settings",
                 "uiItems": [
                   {
                     "itemType": "panel",
                     "panel": {
                       "id": "aggregation-settings",
                       "panelType": "columnSelection",
+                      "label": "Aggregations",
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -46,91 +43,110 @@
                               "isMap": false
                             }
                           }
-                        },
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "itemType": "panel",
+                    "panel": {
+                      "id": "aggregates-summary",
+                      "panelType": "summary",
+                      "label": "Aggregations",
+                      "uiItems": [
                         {
-                          "itemType": "control",
-                          "control": {
-                            "name": "aggregates",
-                            "label": {
-                              "text": "Aggregates"
-                            },
-                            "controlType": "structuretable",
-                            "valueDef": {
-                              "propType": "structure",
-                              "isList": false,
-                              "isMap": true
-                            },
-                            "subControls": [
+                          "itemType": "panel",
+                          "panel": {
+                            "id": "aggregates-settings",
+                            "panelType": "columnSelection",
+                            "uiItems": [
                               {
-                                "name": "field",
-                                "label": {
-                                  "text": "Field"
-                                },
-                                "visible": true,
-                                "width": 12,
-                                "controlType": "selectcolumn",
-                                "valueDef": {
-                                  "propType": "string",
-                                  "isList": false,
-                                  "isMap": false
-                                }
-                              },
-                              {
-                                "name": "operations",
-                                "label": {
-                                  "text": "Aggregate Operations"
-                                },
-                                "visible": true,
-                                "width": 32,
-                                "controlType": "checkboxset",
-                                "valueDef": {
-                                  "propType": "string",
-                                  "isList": true,
-                                  "isMap": false
-                                },
-                                "values": [
-                                  "Sum",
-                                  "Mean",
-                                  "Min",
-                                  "Max",
-                                  "SDev",
-                                  "Median",
-                                  "Count",
-                                  "Variance",
-                                  "FirstQuartile",
-                                  "ThirdQuartile"
-                                ],
-                                "valueLabels": [
-                                  "Sum",
-                                  "Mean",
-                                  "Minimum",
-                                  "Maximum",
-                                  "Std. Deviation",
-                                  "Median",
-                                  "Count",
-                                  "Variance",
-                                  "First Quartile",
-                                  "Third Quartile"
-                                ]
-                              }
-                            ],
-                            "keyIndex": 0,
-                            "defaultRow": [
-                              ["Min","Max"]
-                            ],
-                            "childItem": {
-                              "itemType": "additionalLink",
-                              "panel": {
-                                "id": "AggregateOpEntry",
-                                "panelType": "general",
-                                "uiItems": [
-                                  {
-                                    "itemType": "control",
-                                    "control": {
+                                "itemType": "control",
+                                "control": {
+                                  "name": "aggregates",
+                                  "childItem": {
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "AggregateOpEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "operations",
+                                            "label": {
+                                              "text": "Aggregate Operations"
+                                            },
+                                            "values": [
+                                              "Sum",
+                                              "Mean",
+                                              "Min",
+                                              "Max",
+                                              "SDev",
+                                              "Median",
+                                              "Count",
+                                              "Variance",
+                                              "FirstQuartile",
+                                              "ThirdQuartile"
+                                            ],
+                                            "controlType": "checkboxset",
+                                            "valueLabels": [
+                                              "Sum",
+                                              "Mean",
+                                              "Minimum",
+                                              "Maximum",
+                                              "Std. Deviation",
+                                              "Median",
+                                              "Count",
+                                              "Variance",
+                                              "First Quartile",
+                                              "Third Quartile"
+                                            ],
+                                            "summary": true,
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": true,
+                                              "isMap": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "text": "..."
+                                  },
+                                  "label": {
+                                    "text": "Aggregates"
+                                  },
+                                  "defaultRow": [
+                                    [
+                                      "Min",
+                                      "Max"
+                                    ]
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "visible": true,
+                                      "width": 12,
+                                      "controlType": "selectcolumn",
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "role": "column",
+                                      "summary": true
+                                    },
+                                    {
                                       "name": "operations",
                                       "label": {
                                         "text": "Aggregate Operations"
                                       },
+                                      "visible": true,
+                                      "width": 32,
                                       "controlType": "checkboxset",
                                       "valueDef": {
                                         "propType": "string",
@@ -160,14 +176,22 @@
                                         "Variance",
                                         "First Quartile",
                                         "Third Quartile"
-                                      ]
+                                      ],
+                                      "editStyle": "subpanel",
+                                      "summary": true
                                     }
+                                  ],
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structuretable",
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": false,
+                                    "isMap": true
                                   }
-                                ]
-                              },
-                              "text": "...",
-                              "secondaryText": "Aggregate Operations"
-                            }
+                                }
+                              }
+                            ]
                           }
                         }
                       ]
@@ -183,10 +207,10 @@
                           "itemType": "control",
                           "control": {
                             "name": "inc_record_count",
+                            "labelVisible": false,
                             "label": {
                               "text": "Include record count"
                             },
-                            "labelVisible": false,
                             "controlType": "checkbox",
                             "valueDef": {
                               "propType": "boolean",
@@ -205,6 +229,216 @@
                             "controlType": "textfield",
                             "valueDef": {
                               "propType": "string",
+                              "isList": false,
+                              "isMap": false
+                            }
+                          }
+                        },
+                        {
+                          "itemType": "control",
+                          "control": {
+                            "name": "extension",
+                            "label": {
+                              "text": "New field name extension"
+                            },
+                            "controlType": "textfield",
+                            "valueDef": {
+                              "propType": "string",
+                              "isList": false,
+                              "isMap": false
+                            }
+                          }
+                        },
+                        {
+                          "itemType": "control",
+                          "control": {
+                            "name": "add_as",
+                            "label": {
+                              "text": "Add as"
+                            },
+                            "values": [
+                              "Suffix",
+                              "Prefix"
+                            ],
+                            "controlType": "radioset",
+                            "valueLabels": [
+                              "Suffix",
+                              "Prefix"
+                            ],
+                            "valueDef": {
+                              "propType": "string",
+                              "isList": false,
+                              "isMap": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "itemType": "panel",
+                    "panel": {
+                      "id": "aggregate-exprs-summary",
+                      "panelType": "summary",
+                      "label": "Aggregates Expression",
+                      "uiItems": [
+                        {
+                          "itemType": "panel",
+                          "panel": {
+                            "id": "aggregate-exprs-settings",
+                            "panelType": "general",
+                            "label": "Aggregate Expression",
+                            "uiItems": [
+                              {
+                                "itemType": "control",
+                                "control": {
+                                  "name": "aggregate_exprs",
+                                  "childItem": {
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "AggregateExprEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "expression",
+                                            "label": {
+                                              "text": "Expression"
+                                            },
+                                            "language": "CLEM",
+                                            "controlType": "expression",
+                                            "summary": true,
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": false,
+                                              "isMap": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "text": "...",
+                                    "secondaryText": "Aggregate Expression"
+                                  },
+                                  "label": {
+                                    "text": "Aggregate Expression"
+                                  },
+                                  "defaultRow": [
+                                    ""
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "visible": true,
+                                      "width": 12,
+                                      "controlType": "textfield",
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "summary": true
+                                    },
+                                    {
+                                      "name": "expression",
+                                      "label": {
+                                        "text": "Expression"
+                                      },
+                                      "visible": true,
+                                      "width": 32,
+                                      "controlType": "expression",
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "summary": true
+                                    }
+                                  ],
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structurelisteditor",
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": false,
+                                    "isMap": true
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "text": "Optimization",
+            "group": "optimization",
+            "content": {
+              "itemType": "panel",
+              "panel": {
+                "id": "optimization",
+                "panelType": "general",
+                "label": "Optimization",
+                "uiItems": [
+                  {
+                    "itemType": "panel",
+                    "panel": {
+                      "id": "other-optimization",
+                      "panelType": "general",
+                      "uiItems": [
+                        {
+                          "itemType": "control",
+                          "control": {
+                            "name": "contiguous",
+                            "labelVisible": false,
+                            "label": {
+                              "text": "Keys are contiguous"
+                            },
+                            "controlType": "checkbox",
+                            "valueDef": {
+                              "propType": "boolean",
+                              "isList": false,
+                              "isMap": false
+                            }
+                          }
+                        },
+                        {
+                          "itemType": "control",
+                          "control": {
+                            "name": "allow_approximation",
+                            "labelVisible": false,
+                            "label": {
+                              "text": "Allow approximation for Median and Quartiles"
+                            },
+                            "controlType": "checkbox",
+                            "valueDef": {
+                              "propType": "boolean",
+                              "isList": false,
+                              "isMap": false
+                            }
+                          }
+                        },
+                        {
+                          "itemType": "control",
+                          "control": {
+                            "name": "bin_count",
+                            "label": {
+                              "text": "Number of bins"
+                            },
+                            "controlType": "numberfield",
+                            "valueDef": {
+                              "propType": "integer",
                               "isList": false,
                               "isMap": false
                             }
@@ -230,10 +464,10 @@
                     "itemType": "control",
                     "control": {
                       "name": "use_custom_name",
+                      "labelVisible": false,
                       "label": {
                         "text": "Custom name"
                       },
-                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -293,77 +527,154 @@
         "url": ""
       }
     ],
+    "conditions": [
+      {
+        "enabled": {
+          "parameter_refs": [
+            "bin_count"
+          ],
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "allow_approximation",
+              "op": "equals",
+              "value": true
+            }
+          }
+        }
+      },
+      {
+        "enabled": {
+          "parameter_refs": [
+            "custom_name"
+          ],
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "use_custom_name",
+              "op": "equals",
+              "value": true
+            }
+          }
+        }
+      }
+    ],
     "data": {
       "currentParameters": {
+        "add_as": "Suffix",
+        "contiguous": false,
         "inc_record_count": true,
         "aggregates": [
-          ["Cholesterol",["Min","Max"]],
-          ["K",["Mean","Sum","Min","Max","SDev","Median","Count","Variance","FirstQuartile","ThirdQuartile"]]
-				],
+          [
+            "Age",
+            [
+              "Mean"
+            ]
+          ],
+          [
+            "Na",
+            [
+              "Mean",
+              "Min",
+              "Max"
+            ]
+          ],
+          [
+            "K",
+            [
+              "Mean",
+              "Min",
+              "Max"
+            ]
+          ]
+        ],
         "annotation": "",
+        "aggregate_exprs": [],
         "count_field": "Record_Count",
-        "use_custom_name": true,
+        "use_custom_name": false,
+        "allow_approximation": false,
+        "bin_count": 1000,
         "custom_name": "",
-        "keys": ["Drug"]
+        "keys": [
+          "Sex",
+          "Drug"
+        ],
+        "extension": ""
       },
-      "inputDataModel": {
-        "columns": [
+      "datasetMetadata": {
+        "fields": [
           {
             "name": "Age",
-            "label": "",
-            "storage": "Integer",
-            "measure": "Range",
-            "modelingRole": "Input"
+            "type": "integer",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
           },
           {
             "name": "Sex",
-            "label": "",
-            "storage": "String",
-            "measure": "Discrete",
-            "modelingRole": "Input"
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
           },
           {
             "name": "BP",
-            "label": "",
-            "storage": "String",
-            "measure": "Discrete",
-            "modelingRole": "Input"
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
           },
           {
             "name": "Cholesterol",
-            "label": "",
-            "storage": "String",
-            "measure": "Discrete",
-            "modelingRole": "Input"
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
           },
           {
             "name": "Na",
-            "label": "",
-            "storage": "Real",
-            "measure": "Range",
-            "modelingRole": "Input"
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
           },
           {
             "name": "K",
-            "label": "",
-            "storage": "Real",
-            "measure": "Range",
-            "modelingRole": "Input"
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
           },
           {
             "name": "Drug",
-            "label": "",
-            "storage": "String",
-            "measure": "Discrete",
-            "modelingRole": "Input"
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "Na_to_K",
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
           }
         ]
       }
     }
-  },
-  "appData": {
-    "nodeId": "id5NHT2DM5S1E",
-    "updateUrl": "streams/153651d6-9b88-423c-b01b-861f12d01489/diagrams/153651d6-9b88-423c-b01b-861f12d01489/nodes/id5NHT2DM5S1E"
-  },
-  "additionalComponents": null
+  }
 }

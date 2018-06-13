@@ -120,6 +120,7 @@ function getNodeIdFromObjectModel(objectModel, nodeIndex) {
 /* eslint complexity: [2, 15] */
 function getObjectModelCount(objectModel, type, compare) {
 	var count = 0;
+
 	if (type === "nodes") {
 		var nodes = objectModel.nodes;
 		if (compare !== "") {

@@ -335,17 +335,15 @@
         "max_pct_missing": 70,
         "max_depth": 10,
         "annotation": "",
-        "sample_size": 1.0,
+        "sample_size": 1,
         "max_category_number": 49,
         "inputs": [],
         "use_custom_name": false,
-        "target": [
-          ""
-        ],
+        "target": "",
         "custom_name": "",
         "min_child_node_size": 5
       },
-			"datasetMetadata": {
+      "datasetMetadata": {
         "fields": []
       }
     }
