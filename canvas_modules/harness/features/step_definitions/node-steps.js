@@ -9,7 +9,9 @@
 /* eslint no-console: "off" */
 
 import { deleteLinkInObjectModel, findCategoryElement, findNodeIndexInPalette, getEventLogCount,
-	getNodeIdForLabel, getNodeIdFromObjectModel, getObjectModelCount, isObjectModelEmpty } from "./utilities/validate-utils.js";
+	getNodeFromObjectModel,
+	getNodeIdForLabel, getNodeIdFromObjectModel, getObjectModelCount, isObjectModelEmpty
+} from "./utilities/validate-utils.js";
 import { getCanvasData, getCanvasDataForSecondCanvas, getEventLogData } from "./utilities/test-utils.js";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
 
@@ -568,7 +570,7 @@ module.exports = function() {
 			}
 		});
 
-	// Then I double click "Var. File" node from the "Import" category onto the canvas at 100, 200
+	// Then I double click "Var. File" node from the "Import" category onto the canvas
 	//
 	this.Then(/^I double click "([^"]*)" node from the "([^"]*)" category onto the canvas$/,
 		function(nodeType, nodeCategory) {
@@ -937,10 +939,15 @@ module.exports = function() {
 
 	});
 
-	//
 	this.Then(/^I select node (\d+) the "([^"]*)" node from extra canvas$/, function(nodeIndex, nodeName) {
 		var nodeNumber = nodeIndex - 1;
 		browser.$("#canvas-div-1").$$(".node-group")[nodeNumber].click();
 	});
 
+	this.Then(/^I verify the node id "([^"]*)" has width (\d+) and height (\d+)$/, function(nodeId, width, height) {
+		const objectModel = getCanvasData();
+		const node = getNodeFromObjectModel(objectModel, nodeId);
+		expect(Number(node.width)).toEqual(Number(width));
+		expect(Number(node.height)).toEqual(Number(height));
+	});
 };

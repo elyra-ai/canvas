@@ -115,6 +115,19 @@ function getNodeIdFromObjectModel(objectModel, nodeIndex) {
 	return objectModel.nodes[nodeIndex].id;
 }
 
+// get the node from the object model given the node id.
+//
+function getNodeFromObjectModel(objectModel, nodeId) {
+	let node = null;
+	for (let idx = 0; idx < objectModel.nodes.length; idx++) {
+		if (objectModel.nodes[idx].id === nodeId) {
+			node = objectModel.nodes[idx];
+		}
+	}
+	expect(node).not.toEqual(null);
+	return node;
+}
+
 // get a count of the number of object types in the object model
 //
 /* eslint complexity: [2, 15] */
@@ -307,6 +320,7 @@ module.exports = {
 	getEventLogCount: getEventLogCount,
 	getLinkEventCount: getLinkEventCount,
 	getNodeIdFromObjectModel: getNodeIdFromObjectModel,
+	getNodeFromObjectModel: getNodeFromObjectModel,
 	getObjectModelCount: getObjectModelCount,
 	getPortLinks: getPortLinks,
 	isObjectModelEmpty: isObjectModelEmpty,

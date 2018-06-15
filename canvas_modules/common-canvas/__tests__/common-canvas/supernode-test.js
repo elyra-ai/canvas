@@ -26,78 +26,62 @@ import test4ExpectedFlow from "../test_resources/json/supernode-test4-expected-f
 import test4ExpectedUndoFlow from "../test_resources/json/supernode-test4-expected-undo-flow.json";
 import test5ExpectedFlow from "../test_resources/json/supernode-test5-expected-flow.json";
 import test5ExpectedUndoFlow from "../test_resources/json/supernode-test5-expected-undo-flow.json";
+import test6ExpectedFlow from "../test_resources/json/supernode-test6-expected-flow.json";
+import test6ExpectedUndoFlow from "../test_resources/json/supernode-test6-expected-undo-flow.json";
 
-const superNodeId = "nodeIDSuperNodePE";
+const superNodeId = "7015d906-2eae-45c1-999e-fb888ed957e5";
+// Supernode.
 const expandCollapseSupenodeSourceObject = {
 	"type": "node",
 	"targetObject": {
-		"id": superNodeId,
+		"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
 		"type": "super_node",
 		"output_ports": [
 			{
-				"id": "output1SuperNodePE",
-				"label": "output1SuperNodePE",
-				"subflow_node_ref": "exitID1SE",
-				"schema_ref": "schema2",
-				"app_data": {
-					"my_data": {
-						"my_field": "Execution node -> Outputs -> My data -> My field -> My value"
-					}
-				}
-			}
-		],
-		"input_ports": [
-			{
-				"id": "input1SuperNodePE",
-				"label": "input1SuperNodePE",
-				"subflow_node_ref": "entryID1SE",
-				"schema_ref": "schema3",
-				"app_data": {
-					"my_data": {
-						"my_field": "Super node -> Inputs -> My data -> My field -> My value"
-					}
-				}
-			}, {
-				"id": "input2SuperNodePE",
-				"label": "input2SuperNodePE",
-				"subflow_node_ref": "entryID2SE",
-				"schema_ref": "schema2",
-				"parameters": {
-					"props": [
-						{
-							"field1": "super-node-port2-param-val1"
-						}, {
-							"field2": "super-node-port2-param-val2"
-						}
-					]
+				"id": "7d1ac5ee-a599-451a-9036-dd2bafb53dd2_outPort",
+				"label": "Output Port",
+				"cardinality": {
+					"min": 0,
+					"max": -1
 				},
 				"app_data": {}
 			}
 		],
-		"label": "Super node",
-		"description": superNodeId,
-		"image": "/images/nodes/derive.svg",
-		"x_pos": 500,
-		"y_pos": 170,
-		"class_name": "canvas-node",
-		"decorations": [],
-		"parameters": {
-			"props": [
-				{
-					"field1": "super-node-param-val1"
-				}, {
-					"field2": "super-node-param-val2"
+		"input_ports": [
+			{
+				"id": "691e065f-8359-4b46-aad2-531702ef2a8e_inPort",
+				"label": "Input Port",
+				"cardinality": {
+					"min": 0,
+					"max": 1
+				},
+				"app_data": {
+					"my_data": {
+						"my_field": "Execution node -> Inputs -> My data -> My field -> My value"
+					}
 				}
-			]
-		},
-		"messages": [],
-		"app_data": {
-			"my_data": {
-				"value": "Super node - data value"
+			}, {
+				"id": "ba83fcf4-d7d7-4862-b7c9-f2e611f912df_inPort",
+				"label": "Input Port",
+				"cardinality": {
+					"min": 0,
+					"max": 1
+				},
+				"app_data": {}
 			}
-		},
+		],
+		"label": "Supernode",
+		"description": "supernode",
+		"image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
+		"x_pos": 297,
+		"y_pos": 235,
+		"class_name": "",
+		"decorations": [],
+		"parameters": [],
+		"messages": [],
+		"app_data": {},
 		"subflow_ref": {
-			"pipeline_id_ref": "modeler-sub-pipeline"
+			"pipeline_id_ref": "babad275-1719-4224-8d65-b04d0804d95c"
 		},
 		"model_ref": "",
 		"inputPortsHeight": 40,
@@ -105,18 +89,20 @@ const expandCollapseSupenodeSourceObject = {
 		"height": 75,
 		"width": 70
 	},
-	"id": superNodeId,
+	"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
+	"pipelineId": "153651d6-9b88-423c-b01b-861f12d01489",
 	"cmPos": {
-		"x": 530,
-		"y": 196
+		"x": 361,
+		"y": 251
 	},
 	"mousePos": {
-		"x": 530,
-		"y": 196
+		"x": 361,
+		"y": 251
 	},
-	"selectedObjectIds": [superNodeId],
+	"selectedObjectIds": ["7015d906-2eae-45c1-999e-fb888ed957e5"],
 	"zoom": 1
 };
+// Execution Node.
 const createSupernodeSourceObject1 = {
 	"type": "node",
 	"targetObject": {
@@ -203,6 +189,7 @@ const createSupernodeSourceObject1 = {
 	"selectedObjectIds": [],
 	"zoom": 1
 };
+// Binding (exit) node.
 const createSupernodeSourceObject2 = {
 	"type": "node",
 	"targetObject": {
@@ -297,8 +284,8 @@ describe("Create Supernode Action", () => {
 	// Uses test1ExpectedFlow and test1ExpectedUndoFlow
 	it("Create supernode with selected nodes and connected comments", () => {
 		const selections = [
-			"6f704d84-85be-4520-9d76-57fe2295b310",
-			"idGWRVT47XDV"
+			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+			"idGWRVT47XDV" // Execution
 		];
 		canvasController.setSelections(selections);
 
@@ -308,11 +295,23 @@ describe("Create Supernode Action", () => {
 
 		// Delete the newly created supernode and links IDs before comparing
 		const pipelineFlow = objectModel.getPipelineFlow();
-		delete pipelineFlow.pipelines[0].nodes[1].inputs[1].links[0].node_id_ref;
-		delete pipelineFlow.pipelines[0].nodes[4].id;
-		delete pipelineFlow.pipelines[0].nodes[4].subflow_ref.pipeline_id_ref;
-		delete pipelineFlow.pipelines[1].id;
+		delete pipelineFlow.pipelines[0].nodes[1].inputs[1].links[1].node_id_ref; // Delete link node_id_ref.
+		delete pipelineFlow.pipelines[0].nodes[11].inputs[0].links[0].node_id_ref; // Delete existing supernode link node_id_ref.
+		delete pipelineFlow.pipelines[0].nodes[11].inputs[1].links[0].node_id_ref; // Delete existing supernode link node_id_ref.
+		pipelineFlow.pipelines[0].nodes[11] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[11]);
 
+		delete pipelineFlow.pipelines[0].nodes[12].id; // Delete new supernode id.
+		delete pipelineFlow.pipelines[0].nodes[12].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
+
+		pipelineFlow.pipelines[0].nodes[12] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[12]);
+
+		delete pipelineFlow.pipelines[2].id; // Delete new subPipeline id.
+		delete pipelineFlow.pipelines[2].nodes[1].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
+		delete pipelineFlow.pipelines[2].nodes[2].id; // Delete new binding node id.
+		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
+		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
+
+		// console.log(JSON.stringify(pipelineFlow));
 		expect(isEqual(JSON.stringify(test1ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -325,10 +324,10 @@ describe("Create Supernode Action", () => {
 	// Uses test12ExpectedFlow and test2ExpectedUndoFlow
 	it("Create supernode with selected nodes and selected comments", () => {
 		const selections = [
-			"6f704d84-85be-4520-9d76-57fe2295b310",
-			"idGWRVT47XDV",
-			"id42ESQA3VPXB",
-			"c9b039c9-b098-412f-a08a-e9b722eadafc"
+			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+			"idGWRVT47XDV", // Execution
+			"id42ESQA3VPXB", // Comment
+			"c9b039c9-b098-412f-a08a-e9b722eadafc" // Comment
 		];
 		canvasController.setSelections(selections);
 
@@ -338,11 +337,21 @@ describe("Create Supernode Action", () => {
 
 		// Delete the newly created supernode and links IDs before comparing
 		const pipelineFlow = objectModel.getPipelineFlow();
-		delete pipelineFlow.pipelines[0].nodes[1].inputs[1].links[0].node_id_ref;
-		delete pipelineFlow.pipelines[0].nodes[4].id;
-		delete pipelineFlow.pipelines[0].nodes[4].subflow_ref.pipeline_id_ref;
-		delete pipelineFlow.pipelines[1].id;
+		delete pipelineFlow.pipelines[0].nodes[1].inputs[1].links[1].node_id_ref; // Delete link node_id_ref.
+		delete pipelineFlow.pipelines[0].nodes[11].inputs[0].links[0].node_id_ref; // Delete existing supernode link node_id_ref.
+		delete pipelineFlow.pipelines[0].nodes[11].inputs[1].links[0].node_id_ref; // Delete existing supernode link node_id_ref.
 
+		delete pipelineFlow.pipelines[0].nodes[12].id; // Delete new supernode id.
+		delete pipelineFlow.pipelines[0].nodes[12].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
+		pipelineFlow.pipelines[0].nodes[12] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[12]);
+
+		delete pipelineFlow.pipelines[2].id; // Delete new subPipeline id.
+		delete pipelineFlow.pipelines[2].nodes[1].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
+		delete pipelineFlow.pipelines[2].nodes[2].id; // Delete new binding node id.
+		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
+		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
+
+		// console.log(JSON.stringify(pipelineFlow));
 		expect(isEqual(JSON.stringify(test2ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -355,9 +364,9 @@ describe("Create Supernode Action", () => {
 	// Uses test3ExpectedFlow and test3ExpectedUndoFlow
 	it("Create supernode with selected nodes and selected comments connected to unselected nodes", () => {
 		const selections = [
-			"idGWRVT47XDV",
-			"nodeIDSuperNodePE",
-			"id42ESQA31234"
+			"idGWRVT47XDV", // Execution
+			"nodeIDMultiPlotPE", // Multiplot
+			"id42ESQA31234" // Comment
 		];
 		canvasController.setSelections(selections);
 
@@ -367,12 +376,21 @@ describe("Create Supernode Action", () => {
 
 		// Delete the newly created supernode and links IDs before comparing
 		const pipelineFlow = objectModel.getPipelineFlow();
-		delete pipelineFlow.pipelines[0].nodes[1].inputs[0].links[0].node_id_ref;
-		delete pipelineFlow.pipelines[0].nodes[2].inputs[0].links[0].node_id_ref;
-		delete pipelineFlow.pipelines[0].nodes[4].id;
-		delete pipelineFlow.pipelines[0].nodes[4].subflow_ref.pipeline_id_ref;
-		delete pipelineFlow.pipelines[1].id;
+		delete pipelineFlow.pipelines[0].nodes[1].inputs[0].links[0].node_id_ref; // Delete link node_id_ref.
+		delete pipelineFlow.pipelines[0].nodes[2].inputs[0].links[0].node_id_ref; // Delete link node_id_ref.
 
+		delete pipelineFlow.pipelines[0].nodes[12].id; // Delete new supernode id.
+		delete pipelineFlow.pipelines[0].nodes[12].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
+		pipelineFlow.pipelines[0].nodes[12] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[12]);
+
+		delete pipelineFlow.pipelines[2].id; // Delete new subPipeline id.
+		delete pipelineFlow.pipelines[2].nodes[0].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
+		delete pipelineFlow.pipelines[2].nodes[1].inputs[1].links[1].node_id_ref; // Delete new link node_id_ref.
+		delete pipelineFlow.pipelines[2].nodes[2].id; // Delete new binding node id.
+		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
+		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
+
+		// console.log(JSON.stringify(pipelineFlow));
 		expect(isEqual(JSON.stringify(test3ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -385,8 +403,8 @@ describe("Create Supernode Action", () => {
 	// Uses test4ExpectedFlow and test4ExpectedUndoFlow
 	it("Create supernode with selected nodes with multiple inputs and connected via associationLink", () => {
 		const selections = [
-			"id5KIRGGJ3FYT",
-			"id125TTEEIK7V"
+			"id5KIRGGJ3FYT", // Binding (exit)
+			"id125TTEEIK7V" // Model
 		];
 		canvasController.setSelections(selections);
 
@@ -396,10 +414,17 @@ describe("Create Supernode Action", () => {
 
 		// Delete the newly created supernode IDs before comparing
 		const pipelineFlow = objectModel.getPipelineFlow();
-		delete pipelineFlow.pipelines[0].nodes[4].id;
-		delete pipelineFlow.pipelines[0].nodes[4].subflow_ref.pipeline_id_ref;
-		delete pipelineFlow.pipelines[1].id;
+		delete pipelineFlow.pipelines[0].nodes[12].id; // Delete new supernode id.
+		delete pipelineFlow.pipelines[0].nodes[12].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
+		pipelineFlow.pipelines[0].nodes[12] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[12]);
 
+		delete pipelineFlow.pipelines[2].id; // Delete new subPipeline id.
+		delete pipelineFlow.pipelines[2].nodes[0].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
+		delete pipelineFlow.pipelines[2].nodes[1].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
+		delete pipelineFlow.pipelines[2].nodes[2].id; // Delete new binding node id.
+		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
+
+		// console.log(JSON.stringify(pipelineFlow));
 		expect(isEqual(JSON.stringify(test4ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -412,9 +437,9 @@ describe("Create Supernode Action", () => {
 	// Uses test5ExpectedFlow and test5ExpectedUndoFlow
 	it("Create supernode with input link to second port", () => {
 		const selections = [
-			"nodeIDSuperNodePE",
-			"id5KIRGGJ3FYT",
-			"id125TTEEIK7V"
+			"nodeIDMultiPlotPE", // Multiplot
+			"id5KIRGGJ3FYT", // Binding (exit)
+			"id125TTEEIK7V" // Model
 		];
 		canvasController.setSelections(selections);
 
@@ -424,10 +449,15 @@ describe("Create Supernode Action", () => {
 
 		// Delete the newly created supernode IDs before comparing
 		const pipelineFlow = objectModel.getPipelineFlow();
-		delete pipelineFlow.pipelines[0].nodes[3].id;
-		delete pipelineFlow.pipelines[0].nodes[3].subflow_ref.pipeline_id_ref;
-		delete pipelineFlow.pipelines[1].id;
+		delete pipelineFlow.pipelines[0].nodes[11].id; // Delete new supernode id.
+		delete pipelineFlow.pipelines[0].nodes[11].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
+		pipelineFlow.pipelines[0].nodes[11] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[11]);
 
+		delete pipelineFlow.pipelines[2].id; // Delete new subPipeline id.
+		delete pipelineFlow.pipelines[2].nodes[0].inputs[1].links[0].node_id_ref; // Delete new link node_id_ref.
+		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
+
+		// console.log(JSON.stringify(pipelineFlow));
 		expect(isEqual(JSON.stringify(test5ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -435,6 +465,47 @@ describe("Create Supernode Action", () => {
 
 		canvasController.contextMenuActionHandler("redo");
 		expect(isEqual(JSON.stringify(test5ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
+	});
+
+	// Uses test6ExpectedFlow and test6ExpectedUndoFlow
+	it("Create supernode with supernode", () => {
+		const selections = [
+			"nodeIDMultiPlotPE", // Multiplot
+			"idGWRVT47XDV", // Execution
+			"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
+		];
+		canvasController.setSelections(selections);
+
+		createSupernodeSourceObject1.selectedObjectIds = selections;
+		canvasController.contextMenuHandler(createSupernodeSourceObject1);
+		canvasController.contextMenuActionHandler("createSuperNode");
+
+		// Delete the newly created supernode IDs before comparing
+		const pipelineFlow = objectModel.getPipelineFlow();
+		delete pipelineFlow.pipelines[0].nodes[1].inputs[0].links[0].node_id_ref; // Delete link node_id_ref.
+		delete pipelineFlow.pipelines[0].nodes[2].inputs[0].links[0].node_id_ref; // Delete link node_id_ref.
+
+		delete pipelineFlow.pipelines[0].nodes[11].id; // Delete new supernode id.
+		delete pipelineFlow.pipelines[0].nodes[11].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
+		pipelineFlow.pipelines[0].nodes[11] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[11]);
+
+		delete pipelineFlow.pipelines[2].id; // Delete new subPipeline id.
+		delete pipelineFlow.pipelines[2].nodes[0].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
+		delete pipelineFlow.pipelines[2].nodes[2].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
+		delete pipelineFlow.pipelines[2].nodes[2].inputs[1].links[0].node_id_ref; // Delete new link node_id_ref.
+		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
+		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
+		delete pipelineFlow.pipelines[2].nodes[5].id; // Delete new binding node id.
+		delete pipelineFlow.pipelines[2].nodes[6].id; // Delete new binding node id.
+
+		// console.log(JSON.stringify(pipelineFlow));
+		expect(isEqual(JSON.stringify(test6ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
+
+		canvasController.contextMenuActionHandler("undo");
+		expect(isEqual(JSON.stringify(test6ExpectedUndoFlow), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
+
+		canvasController.contextMenuActionHandler("redo");
+		expect(isEqual(JSON.stringify(test6ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 	});
 });
 
@@ -468,4 +539,22 @@ function createCommonCanvas(config, canvasController) {
 		/>
 	);
 	return wrapper;
+}
+
+function removeSuperNodeSubflowNodeRef(node) {
+	if (node.inputs) {
+		node.inputs.forEach((input) => {
+			if (input.subflow_node_ref) {
+				delete input.subflow_node_ref;
+			}
+		});
+	}
+	if (node.outputs) {
+		node.outputs.forEach((input) => {
+			if (input.subflow_node_ref) {
+				delete input.subflow_node_ref;
+			}
+		});
+	}
+	return node;
 }

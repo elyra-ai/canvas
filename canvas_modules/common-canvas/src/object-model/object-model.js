@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint arrow-body-style: ["off"] */
-/* eslint complexity: ["error", 31] */
+/* eslint complexity: ["error", 32] */
 
 import { createStore, combineReducers } from "redux";
 import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
@@ -173,6 +173,22 @@ const nodes = (state = [], action) => {
 			return node;
 		});
 
+	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":
+		return state.map((node, index) => {
+			if (action.data.nodeId === node.id) {
+				return Object.assign({}, node, { input_ports: ports(node.input_ports, action) });
+			}
+			return node;
+		});
+
+	case "SET_OUTPUT_PORT_SUBFLOW_NODE_REF":
+		return state.map((node, index) => {
+			if (action.data.nodeId === node.id) {
+				return Object.assign({}, node, { output_ports: ports(node.output_ports, action) });
+			}
+			return node;
+		});
+
 	case "SET_SUPERNODE_FLAG":
 		return state.map((node, index) => {
 			if (action.data.nodeId === node.id) {
@@ -213,6 +229,24 @@ const ports = (state = [], action) => {
 			if (action.data.portId === port.id) {
 				const newPort = Object.assign({}, port);
 				newPort.label = action.data.label;
+				return newPort;
+			}
+			return port;
+		});
+	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":
+		return state.map((port, index) => {
+			if (action.data.portId === port.id) {
+				const newPort = Object.assign({}, port);
+				newPort.subflow_node_ref = action.data.subflowNodeRef;
+				return newPort;
+			}
+			return port;
+		});
+	case "SET_OUTPUT_PORT_SUBFLOW_NODE_REF":
+		return state.map((port, index) => {
+			if (action.data.portId === port.id) {
+				const newPort = Object.assign({}, port);
+				newPort.subflow_node_ref = action.data.subflowNodeRef;
 				return newPort;
 			}
 			return port;
@@ -469,6 +503,8 @@ const canvasinfo = (state = [], action) => {
 	case "SET_NODE_LABEL":
 	case "SET_INPUT_PORT_LABEL":
 	case "SET_OUTPUT_PORT_LABEL":
+	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":
+	case "SET_OUTPUT_PORT_SUBFLOW_NODE_REF":
 	case "SET_SUPERNODE_FLAG":
 	case "MOVE_OBJECTS":
 	case "DELETE_OBJECT":
@@ -1830,6 +1866,14 @@ export class APIPipeline {
 		this.store.dispatch({ type: "SET_OUTPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel }, pipelineId: this.pipelineId });
 	}
 
+	setInputPortSubflowNodeRef(nodeId, portId, subflowNodeRef) {
+		this.store.dispatch({ type: "SET_INPUT_PORT_SUBFLOW_NODE_REF", data: { nodeId: nodeId, portId: portId, subflowNodeRef: subflowNodeRef }, pipelineId: this.pipelineId });
+	}
+
+	setOutputPortSubflowNodeRef(nodeId, portId, subflowNodeRef) {
+		this.store.dispatch({ type: "SET_OUTPUT_PORT_SUBFLOW_NODE_REF", data: { nodeId: nodeId, portId: portId, subflowNodeRef: subflowNodeRef }, pipelineId: this.pipelineId });
+	}
+
 	setNodeMessage(nodeId, message) {
 		this.store.dispatch({ type: "SET_NODE_MESSAGE", data: { nodeId: nodeId, message: message }, pipelineId: this.pipelineId });
 	}
@@ -2008,6 +2052,28 @@ export class APIPipeline {
 		}
 
 		return { width: maxWidth, height: maxHeight };
+	}
+
+	// Return the dimensions of the bounding rectangle for the listOfNodes.
+	getBoundingRectForNodes(listOfNodes) {
+		let xLeft = listOfNodes[0].x_pos;
+		let yTop = listOfNodes[0].y_pos;
+		let xRight = listOfNodes[0].width + xLeft;
+		let yBot = listOfNodes[0].height + yTop;
+
+		listOfNodes.forEach((node) => {
+			xLeft = Math.min(xLeft, node.x_pos);
+			yTop = Math.min(yTop, node.y_pos);
+			xRight = Math.max(xRight, node.x_pos + node.width);
+			yBot = Math.max(yBot, node.y_pos + node.height);
+		});
+
+		return {
+			x: xLeft,
+			y: yTop,
+			width: xRight - xLeft,
+			height: yBot - yTop
+		};
 	}
 
 	// ---------------------------------------------------------------------------

@@ -18,6 +18,11 @@ const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 const getCanvasUrl2 = testUrl + "/v1/test-harness/canvas2";
 const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
+function getCanvas() {
+	const canvasData = getServerData(getCanvasUrl);
+	return canvasData;
+}
+
 function getCanvasData() {
 	const canvasData = getServerData(getCanvasUrl);
 	return canvasData.pipelines[0]; // Canvas info returned has an array of pipelines. Return the first.
@@ -118,6 +123,7 @@ function selectSelect(selectElement, selectedItemName) {
 }
 
 module.exports = {
+	getCanvas: getCanvas,
 	getCanvasData: getCanvasData,
 	getCanvasDataForSecondCanvas: getCanvasDataForSecondCanvas,
 	getEventLogData: getEventLogData,

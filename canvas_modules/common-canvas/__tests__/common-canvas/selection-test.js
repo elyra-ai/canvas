@@ -15,7 +15,7 @@ import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
 import CanvasController from "../../src/common-canvas/canvas-controller";
-import contiguousFlow from "../test_resources/json/contiguousCanvas.json";
+import supernodeFlow from "../test_resources/json/supernodeCanvas.json";
 
 // import log4js from "log4js";
 
@@ -394,7 +394,7 @@ describe("test areSelectedNodesContiguous() api", () => {
 	let canvasController;
 	beforeEach(() => {
 		canvasController = new CanvasController();
-		canvasController.getObjectModel().setPipelineFlow(contiguousFlow);
+		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
 	});
 
 	it("Select, Execution, and Supernode nodes should be contiguous", () => {
@@ -458,11 +458,11 @@ describe("test areSelectedNodesContiguous() api", () => {
 		expect(canvasController.areSelectedNodesContiguous()).to.be.true;
 	});
 
-	it("Binding entry, Select, and Supernode nodes should not be contiguous", () => {
+	it("Binding entry, Select, and Multiplot nodes should not be contiguous", () => {
 		const selections = [
 			"6f704d84-85be-4520-9d76-57fe2295b310",
 			"id8I6RH2V91XW",
-			"nodeIDSuperNodePE"
+			"nodeIDMultiPlotPE"
 		];
 		canvasController.setSelections(selections, canvasController.getPrimaryPipelineId());
 		expect(canvasController.areSelectedNodesContiguous()).to.be.false;

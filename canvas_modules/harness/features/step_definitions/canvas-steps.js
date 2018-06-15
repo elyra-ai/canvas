@@ -10,7 +10,7 @@
 
 import { clickSVGAreaAt, findCategoryElement, findNodeIndexInPalette,
 	getNodeIdForLabel, getNumberOfSelectedComments, getNumberOfSelectedNodes } from "./utilities/validate-utils.js";
-import { isSchemaValidationError } from "./utilities/test-utils.js";
+import { getCanvas, isSchemaValidationError } from "./utilities/test-utils.js";
 
 /* global browser */
 
@@ -84,23 +84,18 @@ module.exports = function() {
 
 	this.Then(/^I click option "([^"]*)" from the context menu$/, function(itemText) {
 		var items = browser.$(".context-menu-popover").$$(".react-contextmenu-item:not(.contextmenu-divider)");
-
-		// console.log("Number of context menu items " + items.length);
-		// for (let idx = 0; idx < items.length; idx++) {
-		// 	if (items[idx].$("span").type !== "NoSuchElement") { // This will skip sub-menu items that don't have a span
-		// 		console.log("Context menu item = " + items[idx].$("span").getText());
-		// 	}
-		// }
-
+		let menuItemFound = false;
 		for (let idx = 0; idx < items.length; idx++) {
 			if (items[idx].$("span").type !== "NoSuchElement") { // This will skip sub-menu items that don't have a span
 				if (items[idx].$("span").getText() === itemText) {
 					// console.log("Context menu item clicked = " + items[idx].$("span").getText());
 					items[idx].click();
+					menuItemFound = true;
 					break;
 				}
 			}
 		}
+		expect(menuItemFound).toBe(true);
 	});
 
 	this.Then("I select all objects in the canvas via Ctrl+A", function() {
@@ -263,5 +258,20 @@ module.exports = function() {
 
 	this.Then(/^I move the mouse to coordinates (\d+), (\d+)$/, function(mouseX, mouseY) {
 		browser.moveToObject(".d3-svg-canvas-div", Number(mouseX), Number(mouseY));
+	});
+
+	this.Then(/^I verify there are (\d+) pipelines$/, function(numPipelines) {
+		const objectModel = getCanvas();
+		expect(objectModel.pipelines.length).toEqual(Number(numPipelines));
+	});
+
+	this.Then(/^I verify pipeline (\d+) have (\d+) nodes/, function(pipelineNum, numNodes) {
+		const objectModel = getCanvas();
+		expect(objectModel.pipelines[pipelineNum].nodes.length).toEqual(Number(numNodes));
+	});
+
+	this.Then(/^I verify pipeline (\d+) have (\d+) links/, function(pipelineNum, numLinks) {
+		const objectModel = getCanvas();
+		expect(objectModel.pipelines[pipelineNum].links.length).toEqual(Number(numLinks));
 	});
 };
