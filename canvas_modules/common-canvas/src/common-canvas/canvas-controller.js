@@ -341,6 +341,10 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).canNodeBeDroppedOnLink(operatorIdRef);
 	}
 
+	isSuperNodeExpandedInPlace(nodeId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).isSuperNodeExpandedInPlace(nodeId);
+	}
+
 	// ---------------------------------------------------------------------------
 	// Comments methods
 	// ---------------------------------------------------------------------------

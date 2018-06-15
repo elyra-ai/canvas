@@ -1845,6 +1845,10 @@ export class APIPipeline {
 		this.store.dispatch({ type: "SET_SUPERNODE_FLAG", data: { nodeId: nodeId, expanded: false }, pipelineId: this.pipelineId, layoutinfo: this.objectModel.getLayout() });
 	}
 
+	isSuperNodeExpandedInPlace(nodeId) {
+		return this.getNode(nodeId).super_node_expanded === true;
+	}
+
 	doesNodeHavePorts(node) {
 		return node.input_ports && node.input_ports.length > 0;
 	}

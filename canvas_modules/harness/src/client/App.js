@@ -828,14 +828,21 @@ class App extends React.Component {
 			{ action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
 			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
 			{ divider: true },
-			{ action: "expandSuperNodeInPlace", label: this.getLabel("node-context.expandSuperNodeInPlace", "Expand supernode") }, // TODO: only see expand if supernode and is collapsed
-			{ action: "collapseSuperNodeInPlace", label: this.getLabel("node-context.collapseSuperNodeInPlace", "Collapse supernode") }, // TODO: only see collapse if expanded
-			{ divider: true },
 			{ submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
 			{ divider: true },
 			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
 			{ divider: true },
 			{ action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
+		];
+
+		const EXPAND_SUPER_NODE_CONTEXT_MENU = [
+			{ divider: true },
+			{ action: "expandSuperNodeInPlace", label: this.getLabel("node-context.expandSuperNodeInPlace", "Expand supernode") }
+		];
+
+		const COLLAPSE_SUPER_NODE_CONTEXT_MENU = [
+			{ divider: true },
+			{ action: "collapseSuperNodeInPlace", label: this.getLabel("node-context.collapseSuperNodeInPlace", "Collapse supernode") }
 		];
 
 		const MULTI_SELECT_CONTEXT_MENU = [
@@ -903,6 +910,11 @@ class App extends React.Component {
 					menuDefinition = APPLY_MODEL_NODE_CONTEXT_MENU;
 				} else if (source.targetObject.type === "super_node") {
 					menuDefinition = SUPER_NODE_CONTEXT_MENU;
+					if (this.canvasController.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
+						menuDefinition = menuDefinition.concat(COLLAPSE_SUPER_NODE_CONTEXT_MENU);
+					} else {
+						menuDefinition = menuDefinition.concat(EXPAND_SUPER_NODE_CONTEXT_MENU);
+					}
 				} else if (source.targetObject &&
 					source.targetObject.userData &&
 					source.targetObject.userData.deployable &&
