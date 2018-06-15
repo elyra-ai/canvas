@@ -496,7 +496,7 @@ class CanvasRenderer {
 
 	// Returns a new selector based on the selector passed in which includes
 	// a condition for the current pipeline Id. Note: we add an 'x' to the
-	// front of the pipleineId because CSS doesn't like value afetr the '='
+	// front of the pipelineId because CSS doesn't like value afetr the '='
 	// beginning with a number (and some pipelineIds start with numbers).
 	getSelector(selector) {
 		return selector + `[data-pipeline-id=x${this.activePipeline.id}]`;
@@ -984,7 +984,7 @@ class CanvasRenderer {
 					Math.abs(this.region.height) > 5) {
 				var { startX, startY, width, height } = this.getRegionDimensions();
 				this.isSelecting = true;
-				this.objectModel.selectInRegion(startX, startY, startX + width, startY + height);
+				this.objectModel.selectInRegion(startX, startY, startX + width, startY + height, this.activePipeline.id);
 			}
 			this.regionSelect = false;
 		}

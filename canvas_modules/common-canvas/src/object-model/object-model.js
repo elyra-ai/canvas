@@ -1378,19 +1378,17 @@ export default class ObjectModel {
 			pipelineId: ""
 		};
 
-		const prevPipelineId = this.getSelectionInfo().pipelineId;
-		if (this.selectionChangeHandler && prevPipelineId) {
+		if (this.selectionChangeHandler) {
 			previousSelection = {
 				nodes: this.getSelectedNodes(),
 				comments: this.getSelectedComments(),
-				pipelineId: prevPipelineId
+				pipelineId: this.getSelectionInfo().pipelineId
 			};
 		}
 
 		func(arg);
 
-		const pipelineId = this.getSelectionInfo().pipelineId;
-		if (this.selectionChangeHandler && pipelineId) {
+		if (this.selectionChangeHandler) {
 
 			// determine delta in selected nodes and comments
 			const selectedNodes = this.getSelectedNodes();
@@ -1403,7 +1401,8 @@ export default class ObjectModel {
 				addedComments: difference(selectedComments, previousSelection.comments),
 				deselectedNodes: difference(previousSelection.nodes, selectedNodes),
 				deselectedComments: difference(previousSelection.comments, selectedComments),
-				pipelineId: pipelineId
+				previousPipelineId: previousSelection.pipelineId,
+				selectedPipelineId: this.getSelectionInfo().pipelineId
 			};
 
 			// only trigger event if selection has changed

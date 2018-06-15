@@ -46,16 +46,21 @@ describe("Selection notification tests", () => {
 
 		setupStartCanvasInfo("123", startPipeline, objectModel);
 
+		let changeHandlerCalled = false;
 		objectModel.setSelectionChangeHandler((data) => {
+			changeHandlerCalled = true;
+			const selectedApiPipeline = objectModel.getAPIPipeline(data.selectedPipelineId);
 			expect(isEmpty(difference(data.selection, ["comment1", "node3"]))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, objectModel.getSelectedNodes()))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, objectModel.getSelectedComments()))).to.be.true;
-			expect(isEmpty(difference(data.addedNodes, [objectModel.getNode("node3")]))).to.be.true;
-			expect(isEmpty(difference(data.addedComments, [objectModel.getComment("comment1")]))).to.be.true;
+			expect(isEmpty(difference(data.addedNodes, [selectedApiPipeline.getNode("node3")]))).to.be.true;
+			expect(isEmpty(difference(data.addedComments, [selectedApiPipeline.getComment("comment1")]))).to.be.true;
 			expect(isEmpty(difference(data.deselectedNodes, []))).to.be.true;
 			expect(isEmpty(difference(data.deselectedComments, []))).to.be.true;
 		});
 		canvasController.setSelections(["comment1", "node3"]);
+
+		expect(changeHandlerCalled).to.be.true;
 
 		const expectedSelections = ["comment1", "node3"];
 		const actualSelections = canvasController.getSelectedObjectIds();
@@ -91,7 +96,9 @@ describe("Selection notification tests", () => {
 
 		canvasController.setSelections(["node1"], "123");
 
+		let changeHandlerCalled = false;
 		objectModel.setSelectionChangeHandler((data) => {
+			changeHandlerCalled = true;
 			expect(isEmpty(difference(data.selection, ["node1", "node4", "node2"]))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, canvasController.getSelectedNodes()))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, []))).to.be.true;
@@ -102,6 +109,8 @@ describe("Selection notification tests", () => {
 		});
 
 		objectModel.selectSubGraph("node4", "123");
+
+		expect(changeHandlerCalled).to.be.true;
 
 		const expectedSelections = ["node1", "node4", "node2"];
 		const actualSelections = canvasController.getSelectedObjectIds();
@@ -136,7 +145,9 @@ describe("Selection notification tests", () => {
 
 		canvasController.setSelections(["comment1", "node3"], "123");
 
+		let changeHandlerCalled = false;
 		objectModel.setSelectionChangeHandler((data) => {
+			changeHandlerCalled = true;
 			expect(isEmpty(difference(data.selection, ["comment1"]))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, canvasController.getSelectedComments()))).to.be.true;
@@ -148,12 +159,13 @@ describe("Selection notification tests", () => {
 
 		objectModel.toggleSelection("node3", true, "123");
 
+		expect(changeHandlerCalled).to.be.true;
+
 		const expectedSelections = ["comment1"];
 		const actualSelections = canvasController.getSelectedObjectIds();
 
 		// console.info("Expected Selections = " + JSON.stringify(expectedSelections, null, 2));
 		// console.info("Actual Selections   = " + JSON.stringify(actualSelections, null, 2));
-
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 		objectModel.setSelectionChangeHandler(null);
@@ -182,7 +194,9 @@ describe("Selection notification tests", () => {
 
 		canvasController.setSelections(["comment1", "node3"], "123");
 
+		let changeHandlerCalled = false;
 		objectModel.setSelectionChangeHandler((data) => {
+			changeHandlerCalled = true;
 			expect(isEmpty(difference(data.selection, ["comment1"]))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, [canvasController.getComment("comment1", "123")]))).to.be.true;
@@ -192,6 +206,8 @@ describe("Selection notification tests", () => {
 			expect(isEmpty(difference(data.deselectedComments, []))).to.be.true;
 		});
 		canvasController.setSelections(["comment1"]);
+
+		expect(changeHandlerCalled).to.be.true;
 
 		const expectedSelections = ["comment1"];
 		const actualSelections = canvasController.getSelectedObjectIds();
@@ -224,7 +240,9 @@ describe("Selection notification tests", () => {
 
 		canvasController.setSelections(["comment1", "node3"], "123");
 
+		let changeHandlerCalled = false;
 		objectModel.setSelectionChangeHandler((data) => {
+			changeHandlerCalled = true;
 			expect(isEmpty(difference(data.selection, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, []))).to.be.true;
@@ -234,6 +252,8 @@ describe("Selection notification tests", () => {
 			expect(isEmpty(difference(data.deselectedComments, [canvasController.getComment("comment1", "123")]))).to.be.true;
 		});
 		canvasController.setSelections([]);
+
+		expect(changeHandlerCalled).to.be.true;
 
 		const expectedSelections = [];
 		const actualSelections = canvasController.getSelectedObjectIds();
@@ -271,7 +291,9 @@ describe("Selection notification tests", () => {
 		canvasController.setSelections(["comment1", "node3"], "123");
 
 		const node3 = canvasController.getNode("node3", "123");
+		let changeHandlerCalled = false;
 		objectModel.setSelectionChangeHandler((data) => {
+			changeHandlerCalled = true;
 			expect(isEmpty(difference(data.selection, ["comment1"]))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, [canvasController.getComment("comment1", "123")]))).to.be.true;
@@ -282,6 +304,8 @@ describe("Selection notification tests", () => {
 		});
 
 		canvasController.deleteObject("node3", "123");
+
+		expect(changeHandlerCalled).to.be.true;
 
 		const expectedSelections = ["comment1"];
 		const actualSelections = canvasController.getSelectedObjectIds();
@@ -320,7 +344,9 @@ describe("Selection notification tests", () => {
 		const node3 = canvasController.getNode("node3", "123");
 		const comment1 = canvasController.getComment("comment1", "123");
 
+		let changeHandlerCalled = false;
 		objectModel.setSelectionChangeHandler((data) => {
+			changeHandlerCalled = true;
 			expect(isEmpty(difference(data.selection, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, []))).to.be.true;
@@ -330,6 +356,8 @@ describe("Selection notification tests", () => {
 			expect(isEmpty(difference(data.deselectedComments, [comment1]))).to.be.true;
 		});
 		canvasController.deleteSelectedObjects();
+
+		expect(changeHandlerCalled).to.be.true;
 
 		const expectedSelections = [];
 		const actualSelections = canvasController.getSelectedObjectIds();
