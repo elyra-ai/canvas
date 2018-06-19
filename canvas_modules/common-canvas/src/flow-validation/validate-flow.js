@@ -26,20 +26,25 @@ import isEqual from "lodash/isEqual";
 * @return (boolean) If flow is valid returns true, otherwise returns false.
 */
 function validateFlow(canvasController, getParameterData, setMessagesCallback, includeMsgTypes) {
+	return validatePipelineFlow(canvasController, canvasController.getPrimaryPipelineId(), getParameterData, setMessagesCallback, includeMsgTypes);
+}
+function validatePipelineFlow(canvasController, pipelineId, getParameterData, setMessagesCallback, includeMsgTypes) {
+	let flowValid = true;
 	// get the nodes in the flow
-	const nodes = canvasController.getNodes();
+	const nodes = canvasController.getNodes(pipelineId);
 	// traverse the flow
 	// this will just visit all the nodes and not traverse it via DAG
 	for (const node of nodes) {
-		// get the form data for the node
-		if (node.type === "execution_node" || node.type === "binding") {
-			const formData = _getFormData(node.id, getParameterData);
+		if (node.type === "super_node" && (node.sub_type || node.sub_type === "canvas")) {
+			flowValid = validatePipelineFlow(canvasController, node.subflow_ref.pipeline_id_ref, getParameterData, setMessagesCallback, includeMsgTypes);
+		} else if (node.type === "execution_node" || node.type === "binding") {
+			const formData = _getFormData(node.id, pipelineId, getParameterData, canvasController);
 			const propertiesController = _getPropertiesController(formData);
 			propertiesController.validatePropertiesValues();
-			_setNodeMessages(node, propertiesController, canvasController, setMessagesCallback);
+			_setNodeMessages(node, pipelineId, propertiesController, canvasController, setMessagesCallback);
 		}
 	}
-	return canvasController.isFlowValid(includeMsgTypes);
+	return canvasController.isFlowValid(includeMsgTypes, pipelineId) && flowValid;
 }
 
 /**
@@ -47,9 +52,9 @@ function validateFlow(canvasController, getParameterData, setMessagesCallback, i
 * @param {String} node id
 * @param {Function} callback function to get form | parameter data for a node
 */
-function _getFormData(nodeId, getParameterData) {
+function _getFormData(nodeId, pipelineId, getParameterData, canvasController) {
 	var formData = {};
-	var parameterData = getParameterData(nodeId);
+	var parameterData = getParameterData(nodeId, pipelineId, canvasController);
 	if (parameterData) {
 		if (parameterData.type === "parameterDef") {
 			formData = Form.makeForm(parameterData.data);
@@ -72,12 +77,12 @@ function _getPropertiesController(formData) {
 	return propertiesController;
 }
 
-function _setNodeMessages(node, propertiesController, canvasController, setMessagesCallback) {
-	const nodeMsgs = canvasController.getNodeMessages(node.id);
+function _setNodeMessages(node, pipelineId, propertiesController, canvasController, setMessagesCallback) {
+	const nodeMsgs = canvasController.getNodeMessages(node.id, pipelineId);
 	const errorMsgs = propertiesController.getErrorMessages(true);
 	if ((!nodeMsgs && errorMsgs.length > 0) ||
 			(nodeMsgs && !isEqual(errorMsgs, nodeMsgs))) {
-		canvasController.setNodeMessages(node.id, errorMsgs);
+		canvasController.setNodeMessages(node.id, errorMsgs, pipelineId);
 		if (setMessagesCallback) {
 			setMessagesCallback(node.id, errorMsgs);
 		}

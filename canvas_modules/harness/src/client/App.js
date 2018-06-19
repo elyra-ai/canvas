@@ -359,8 +359,15 @@ class App extends React.Component {
 		return (<FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />);
 	}
 
-	getNodeForm(nodeId) {
-		return NodeToForm.getNodeForm(nodeId);
+	getNodeForm(nodeId, pipelineId, canvasController) {
+		// if pipelineId is not passed in it will default to the main pipeline being viewed.
+		let nodeForm = NodeToForm.getNodeForm(nodeId);
+		// if form for node is not loaded then load it and get it.
+		if (!nodeForm) {
+			NodeToForm.setNodeForm(nodeId, canvasController.getNode(nodeId, pipelineId).operator_id_ref);
+			nodeForm = NodeToForm.getNodeForm(nodeId);
+		}
+		return nodeForm;
 	}
 
 	setDiagramJSON(canvasJson) {
@@ -1079,14 +1086,7 @@ class App extends React.Component {
 			}
 			// currentEditorNodeId = nodeId; // set new node
 			const appData = { nodeId: nodeId, inExtraCanvas: inExtraCanvas };
-
-			const nodeForm = this.getNodeForm(nodeId);
-			// harness: when adding nodes via double-click, nodeForm isn't set because CreateAutoNodeAction
-			// works differently than CreateNodeAction
-			if (!nodeForm) {
-				NodeToForm.setNodeForm(nodeId, canvasController.getNode(nodeId).operator_id_ref);
-			}
-			const properties = this.getNodeForm(nodeId);
+			const properties = this.getNodeForm(nodeId, null, canvasController);
 
 			// set current parameterSet
 			// get the current parameters for the node from the internal ObjectModel

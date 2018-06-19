@@ -12,6 +12,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 import isEqual from "lodash/isEqual";
 import flowValidationPipeline from "../test_resources/flow-validation/pipeline.json";
+import subFlowValidationPipeline from "../test_resources/flow-validation/subFlowPipeline.json";
 import flowValidationNoMsgsPipeline from "../test_resources/flow-validation/noMsgsPipeline.json";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import FlowValidation from "../../src/flow-validation/validate-flow.js";
@@ -26,6 +27,7 @@ const NodeIds = {
 	NOMSG2: "paramDefNodeNoMsgs2"
 };
 
+const FLOW_VALIDATION_DEFAULT_DEF = require("../test_resources/flow-validation/node_defaultData.json");
 const FLOW_VALIDATION_FORM_DEF = require("../test_resources/flow-validation/node_formData.json");
 const FLOW_VALIDATION_PARAM_DEF = require("../test_resources/flow-validation/node_paramDef.json");
 const FLOW_VALIDATION_TABLE_PARAM_DEF = require("../test_resources/flow-validation/node_table_paramDef.json");
@@ -73,7 +75,7 @@ function getFormData(nodeId) {
 		returnData = { "type": "parameterDef", "data": FLOW_VALIDATION_MODEL_DEF };
 		break;
 	default:
-		expect(false).to.be.true;
+		returnData = { "type": "parameterDef", "data": FLOW_VALIDATION_DEFAULT_DEF };
 	}
 	return returnData;
 }
@@ -136,6 +138,43 @@ describe("Flow validation API handle flows OK", () => {
 		expect(isEqual(expectedFlowMessages, actualFlowMessages)).to.be.true;
 	});
 });
+
+describe("Flow validation API handle subFlows OK", () => {
+	deepFreeze(subFlowValidationPipeline);
+	canvasController.setPipelineFlow(subFlowValidationPipeline);
+	FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages);
+
+	it("should generate errors for node with form data", () => {
+		const actualNodeMessages = canvasController.getNodeMessages(NodeIds.FORM);
+		// console.log("expected Node2Messages  = " + JSON.stringify(expectedNode2Messages, null, 4));
+		// console.log("actual NodeMessages  = " + JSON.stringify(actualNodeMessages, null, 4));
+		expect(isEqual(expectedNode2Messages, actualNodeMessages)).to.be.true;
+
+	});
+
+	it("should generate errors for node with parameterDef data", () => {
+		const actualNodeMessages = canvasController.getNodeMessages(NodeIds.PARAMDEF);
+		// console.log("expected Node1Messages  = " + JSON.stringify(expectedNode1Messages, null, 4));
+		// console.log("actual NodeMessages  = " + JSON.stringify(actualNode1Messages, null, 4));
+		expect(isEqual(expectedNode1Messages, actualNodeMessages)).to.be.true;
+
+	});
+
+	it("should generate errors for node with complex table data", () => {
+		const actualNodeMessages = canvasController.getNodeMessages(NodeIds.TABLEDEF);
+		// console.log("expected Node3Messages  = " + JSON.stringify(expectedNode1Messages, null, 4));
+		// console.log("actual Node1Messages  = " + JSON.stringify(actualNodeMessages, null, 4));
+		expect(isEqual(expectedNode3Messages, actualNodeMessages)).to.be.true;
+	});
+
+	it("should be able to get all messages for all nodes", () => {
+		const actualFlowMessages = canvasController.getFlowMessages();
+		// console.log("expected flowMessages  = " + JSON.stringify(expectedFlowMessages, null, 4));
+		// console.log("actual flowMessages  = " + JSON.stringify(actualFlowMessages, null, 4));
+		expect(isEqual(expectedFlowMessages, actualFlowMessages)).to.be.true;
+	});
+});
+
 
 describe("Flow validation API performance test", () => {
 

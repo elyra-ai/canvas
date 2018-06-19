@@ -26,14 +26,18 @@ function evaluate(paramInfo, param2Info, value, controller) {
 		return typeof valueInDataset(dataModelFields, paramInfo.value) !== "undefined";
 	}
 	case "selectcolumns": {
-		for (const paramValue of paramInfo.value) {
-			const foundField = valueInDataset(dataModelFields, paramValue);
+		if (paramInfo.value) {
+			for (const paramValue of paramInfo.value) {
+				const foundField = valueInDataset(dataModelFields, paramValue);
 
-			if (typeof foundField === "undefined") {
-				return false;
+				if (typeof foundField === "undefined") {
+					return false;
+				}
 			}
+			return true;
 		}
-		return true;
+		return false;
+
 	}
 	default:
 		logger.warn("Ignoring unsupported condition operation 'colDoesExists' for control type " + controlType);

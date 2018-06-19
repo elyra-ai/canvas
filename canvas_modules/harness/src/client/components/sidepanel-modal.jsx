@@ -174,7 +174,7 @@ export default class SidePanelModal extends React.Component {
 		if (this.props.fileChooserVisible) {
 			fileChooser = (<div className="sidepanel-file-uploader">
 				<FileUploader
-					small
+					small={"true"}
 					buttonLabel="Choose file"
 					accept={[".json"]}
 					onChange={this.onPropertiesSelect}

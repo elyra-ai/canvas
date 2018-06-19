@@ -1,0 +1,257 @@
+{
+  "title": {
+    "key": null,
+    "ref": null,
+    "props": {
+      "id": "dialog.nodePropertiesTitle",
+      "values": {}
+    },
+    "_owner": null,
+    "_store": {}
+  },
+  "formData": {
+    "componentId": "derive",
+    "label": "Derive",
+    "editorSize": "small",
+    "uiItems": [
+      {
+        "itemType": "primaryTabs",
+        "tabs": [
+          {
+            "text": "Settings",
+            "group": "basic-settings",
+            "content": {
+              "itemType": "panel",
+              "panel": {
+                "id": "basic-settings",
+                "panelType": "general",
+                "uiItems": [
+                  {
+                    "itemType": "control",
+                    "control": {
+                      "name": "new_name",
+                      "label": {
+                        "text": "Derive field"
+                      },
+                      "controlType": "textfield",
+                      "valueDef": {
+                        "propType": "string",
+                        "isList": false,
+                        "isMap": false
+                      }
+                    }
+                  },
+                  {
+                    "itemType": "control",
+                    "control": {
+                      "name": "formula_expr",
+                      "label": {
+                        "text": "Expression"
+                      },
+                      "controlType": "expression",
+                      "valueDef": {
+                        "propType": "string",
+                        "isList": false,
+                        "isMap": false
+                      }
+                    }
+                  },
+                  {
+                    "itemType": "control",
+                    "control": {
+                      "name": "formula_measure_type",
+                      "label": {
+                        "text": "Measurement"
+                      },
+                      "controlType": "oneofselect",
+                      "valueDef": {
+                        "propType": "string",
+                        "isList": false,
+                        "isMap": false
+                      },
+                      "values": [
+                        "Range",
+                        "Discrete",
+                        "Flag",
+                        "Set",
+                        "OrderedSet",
+                        "Typeless",
+                        "Collection",
+                        "Geospatial"
+                      ],
+                      "valueLabels": [
+                        "Range",
+                        "Discrete",
+                        "Flag",
+                        "Set",
+                        "Ordered Set",
+                        "Typeless",
+                        "Collection",
+                        "Geospatial"
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "text": "Annotations",
+            "group": "annotations",
+            "content": {
+              "itemType": "panel",
+              "panel": {
+                "id": "annotations",
+                "panelType": "general",
+                "uiItems": [
+                  {
+                    "itemType": "control",
+                    "control": {
+                      "name": "use_custom_name",
+                      "label": {
+                        "text": "Custom name"
+                      },
+                      "labelVisible": false,
+                      "controlType": "checkbox",
+                      "valueDef": {
+                        "propType": "boolean",
+                        "isList": false,
+                        "isMap": false
+                      }
+                    }
+                  },
+                  {
+                    "itemType": "control",
+                    "control": {
+                      "name": "custom_name",
+                      "label": {
+                        "text": ""
+                      },
+                      "controlType": "textfield",
+                      "valueDef": {
+                        "propType": "string",
+                        "isList": false,
+                        "isMap": false
+                      }
+                    }
+                  },
+                  {
+                    "itemType": "control",
+                    "control": {
+                      "name": "annotation",
+                      "label": {
+                        "text": "Annotation"
+                      },
+                      "controlType": "textarea",
+                      "valueDef": {
+                        "propType": "string",
+                        "isList": false,
+                        "isMap": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "buttons": [
+      {
+        "id": "ok",
+        "text": "OK",
+        "isPrimary": true,
+        "url": ""
+      },
+      {
+        "id": "cancel",
+        "text": "Cancel",
+        "isPrimary": false,
+        "url": ""
+      }
+    ],
+    "data": {
+      "currentParameters": {
+        "formula_measure_type": "Default",
+        "annotation": "",
+        "new_name": "Na_to_K",
+        "formula_expr": "Na/K",
+        "use_custom_name": false,
+        "custom_name": "Na_to_K"
+      },
+      "datasetMetadata": {
+        "fields": [
+          {
+            "name": "Age",
+            "type": "integer",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "Sex",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "BP",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "Cholesterol",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "Na",
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "K",
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "Drug",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "appData": {
+    "nodeId": "id2PZSCTRPRIJ",
+    "updateUrl": "streams/153651d6-9b88-423c-b01b-861f12d01489/diagrams/153651d6-9b88-423c-b01b-861f12d01489/nodes/id2PZSCTRPRIJ"
+  },
+  "additionalComponents": null
+}
