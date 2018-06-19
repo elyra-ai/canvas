@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -18,13 +18,13 @@ export default class PipelineInHandler {
 	// by extracting that info from the pipeline-flow pipeline provided. A
 	// 'canvas info' pipeline consists of an ID and three arrays: nodes,
 	// comments and links.
-	static convertPipelineToCanvasInfoPipeline(pipeline) {
+	static convertPipelineToCanvasInfoPipeline(pipeline, layoutInfo) {
 		const nodes = has(pipeline, "nodes") ? pipeline.nodes : [];
 		const comments = has(pipeline, "app_data.ui_data.comments") ? pipeline.app_data.ui_data.comments : [];
 
 		var canvas = {
 			"id": pipeline.id,
-			"nodes": this.convertNodes(nodes),
+			"nodes": this.convertNodes(nodes, layoutInfo),
 			"comments": this.convertComments(comments),
 			"links": this.convertLinks(nodes, comments),
 			"runtime_ref": pipeline.runtime_ref,
@@ -35,7 +35,7 @@ export default class PipelineInHandler {
 		return canvas;
 	}
 
-	static convertNodes(nodes) {
+	static convertNodes(nodes, layoutInfo) {
 		return nodes.map((node) => {
 			const obj = {
 				"id": node.id,
@@ -48,13 +48,16 @@ export default class PipelineInHandler {
 				"image": has(node, "app_data.ui_data.image") ? node.app_data.ui_data.image : "",
 				"x_pos": has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
 				"y_pos": has(node, "app_data.ui_data.y_pos") ? node.app_data.ui_data.y_pos : 10,
+				"width": has(node, "app_data.ui_data.width") ? node.app_data.ui_data.width : layoutInfo.defaultNodeWidth,
+				"height": has(node, "app_data.ui_data.height") ? node.app_data.ui_data.height : layoutInfo.defaultNodeHeight,
 				"class_name": has(node, "app_data.ui_data.class_name") ? node.app_data.ui_data.class_name : "",
 				"decorations": has(node, "app_data.ui_data.decorations") ? this.convertDecorations(node.app_data.ui_data.decorations) : [],
 				"parameters": has(node, "parameters") ? node.parameters : [],
 				"messages": has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
 				"app_data": has(node, "app_data") ? this.removeUiDataFromAppData(node.app_data) : [],
 				"subflow_ref": has(node, "subflow_ref") ? node.subflow_ref : {},
-				"model_ref": has(node, "model_ref") ? node.model_ref : ""
+				"model_ref": has(node, "model_ref") ? node.model_ref : "",
+				"isExpanded": has(node, "app_data.ui_data.isExpanded") ? node.app_data.ui_data.isExpanded : false
 			};
 			// Separate initialization needed to ensure that only valid enumeration values are used
 			if (has(node, "sub_type")) {

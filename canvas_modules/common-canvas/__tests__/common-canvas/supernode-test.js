@@ -239,33 +239,54 @@ const createSupernodeSourceObject2 = {
 
 describe("Expand and Collapse Supernode Action", () => {
 	let canvasController;
+	let objectModel;
 	beforeEach(() => {
 		canvasController = new CanvasController();
 		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
 		const config = { enableAutoLayout: "none", canvasController: canvasController, enableInternalObjectModel: true };
 		createCommonCanvas(config, canvasController);
+
+		objectModel = canvasController.getObjectModel();
 	});
 
-	it("Should set the super_node_expanded attribute correctly when expanded or collapsed", () => {
+	it("Should set the isExpanded attribute correctly when expanded or collapsed", () => {
 		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
-		expect(canvasController.getNode(superNodeId).super_node_expanded).to.be.true;
+		expect(canvasController.getNode(superNodeId).isExpanded).to.be.true;
 
 		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
 		canvasController.contextMenuActionHandler("collapseSuperNodeInPlace");
-		expect(canvasController.getNode(superNodeId).super_node_expanded).to.be.false;
+		expect(canvasController.getNode(superNodeId).isExpanded).to.be.false;
 	});
 
-	it("Should set the super_node_expanded attribute correctly with undo and redo", () => {
+	it("Should set the isExpanded attribute correctly with undo and redo", () => {
 		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
-		expect(canvasController.getNode(superNodeId).super_node_expanded).to.be.true;
+		expect(canvasController.getNode(superNodeId).isExpanded).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
-		expect(canvasController.getNode(superNodeId).super_node_expanded).to.be.false;
+		expect(canvasController.getNode(superNodeId).isExpanded).to.be.false;
 
 		canvasController.contextMenuActionHandler("redo");
-		expect(canvasController.getNode(superNodeId).super_node_expanded).to.be.true;
+		expect(canvasController.getNode(superNodeId).isExpanded).to.be.true;
+	});
+
+	it("Should save the width, height, and isExpanded attributes when the supernode is expanded in-place", () => {
+		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+		let pipelineFlow = objectModel.getPipelineFlow();
+
+		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.width).to.equal(200);
+		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.height).to.equal(200);
+		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.isExpanded).to.be.true;
+
+		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuActionHandler("collapseSuperNodeInPlace");
+		pipelineFlow = objectModel.getPipelineFlow();
+
+		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.width).to.be.undefined;
+		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.height).to.be.undefined;
+		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.isExpanded).to.be.undefined;
 	});
 });
 

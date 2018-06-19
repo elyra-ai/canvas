@@ -1845,7 +1845,7 @@ class CanvasRenderer {
 	}
 
 	isExpandedInPlace(data) {
-		return data.super_node_expanded === true;
+		return data.isExpanded === true;
 	}
 
 	isSuperNode(data) {

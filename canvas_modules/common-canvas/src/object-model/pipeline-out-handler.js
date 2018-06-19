@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -116,6 +116,15 @@ export default class PipelineOutHandler {
 		if (ciNode.description) {
 			uiData.description = ciNode.description;
 		}
+
+		// Only save the width, height, and isExpanded fields if the node is a
+		// supernode that is expanded in-place.
+		if (ciNode.type === "super_node" && ciNode.isExpanded) {
+			uiData.width = ciNode.width;
+			uiData.height = ciNode.height;
+			uiData.isExpanded = ciNode.isExpanded;
+		}
+
 		return uiData;
 	}
 

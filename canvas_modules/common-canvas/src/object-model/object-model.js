@@ -193,7 +193,7 @@ const nodes = (state = [], action) => {
 		return state.map((node, index) => {
 			if (action.data.nodeId === node.id) {
 				let newNode = Object.assign({}, node);
-				newNode.super_node_expanded = action.data.expanded;
+				newNode.isExpanded = action.data.isExpanded;
 				newNode = setNodeDimensions(newNode, action.layoutinfo);
 				return newNode;
 			}
@@ -455,7 +455,7 @@ const canvasinfo = (state = [], action) => {
 		let canvasInfoPipelines = [];
 		if (action.data.pipelines) {
 			canvasInfoPipelines = action.data.pipelines.map((pFlowPipline) => {
-				const pipeline = PipelineInHandler.convertPipelineToCanvasInfoPipeline(pFlowPipline);
+				const pipeline = PipelineInHandler.convertPipelineToCanvasInfoPipeline(pFlowPipline, action.layoutinfo);
 				return Object.assign({}, pipeline, { nodes: nodes(pipeline.nodes, action) });
 			});
 		}
@@ -708,7 +708,7 @@ const setNodeDimensions = (node, layoutInfo) => {
 	}
 	newNode.width = layoutInfo.defaultNodeWidth;
 
-	if (newNode.type === "super_node" && newNode.super_node_expanded === true) {
+	if (newNode.type === "super_node" && newNode.isExpanded === true) {
 		newNode.height = Math.max(newNode.height, layoutInfo.superNodeDefaultWidth);
 		newNode.width = Math.max(newNode.width, layoutInfo.superNodeDefaultHeight);
 	}
@@ -1838,11 +1838,11 @@ export class APIPipeline {
 	}
 
 	expandSuperNodeInPlace(nodeId) {
-		this.store.dispatch({ type: "SET_SUPERNODE_FLAG", data: { nodeId: nodeId, expanded: true }, pipelineId: this.pipelineId, layoutinfo: this.objectModel.getLayout() });
+		this.store.dispatch({ type: "SET_SUPERNODE_FLAG", data: { nodeId: nodeId, isExpanded: true }, pipelineId: this.pipelineId, layoutinfo: this.objectModel.getLayout() });
 	}
 
 	collapseSuperNodeInPlace(nodeId) {
-		this.store.dispatch({ type: "SET_SUPERNODE_FLAG", data: { nodeId: nodeId, expanded: false }, pipelineId: this.pipelineId, layoutinfo: this.objectModel.getLayout() });
+		this.store.dispatch({ type: "SET_SUPERNODE_FLAG", data: { nodeId: nodeId, isExpanded: false }, pipelineId: this.pipelineId, layoutinfo: this.objectModel.getLayout() });
 	}
 
 	isSuperNodeExpandedInPlace(nodeId) {
