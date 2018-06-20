@@ -641,6 +641,11 @@ module.exports = function() {
 		browser.keys(["Meta"]);
 	});
 
+	this.Then(/^I click the supernode label with node id "([^"]*)" to select it$/, function(nodeId) {
+		var nodeSelector = "#node_label_0_" + nodeId;
+		browser.$(nodeSelector).click();
+	});
+
 
 	// Then I disconnect links for node 1 a "Var. File" node on the canvas
 	//

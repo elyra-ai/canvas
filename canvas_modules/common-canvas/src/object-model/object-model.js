@@ -21,6 +21,7 @@ import PipelineInHandler from "./pipeline-in-handler.js";
 import PipelineOutHandler from "./pipeline-out-handler.js";
 import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
+import has from "lodash/has";
 import uuid4 from "uuid/v4";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
 import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@wdp/pipeline-schemas";
@@ -1019,6 +1020,27 @@ export default class ObjectModel {
 		return (typeof pipeline === "undefined") ? null : pipeline;
 	}
 
+	getNestedPipelineIds(pipelineId) {
+		let pipelineIds = [];
+		this.getAPIPipeline(pipelineId).getSuperNodes(pipelineId)
+			.forEach((supernode) => {
+				const subPipelineId = this.getSuperNodePipelineID(supernode);
+				if (subPipelineId) {
+					pipelineIds.push(subPipelineId);
+					pipelineIds = pipelineIds.concat(this.getNestedPipelineIds(subPipelineId));
+				}
+			});
+		return pipelineIds;
+	}
+
+	getSuperNodePipelineID(supernode) {
+		if (has(supernode, "subflow_ref.pipeline_id_ref")) {
+			return supernode.subflow_ref.pipeline_id_ref;
+		}
+		return null;
+	}
+
+
 	setCanvasInfo(canvasInfo) {
 		this.store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo, layoutinfo: this.getLayout() });
 	}
@@ -1818,6 +1840,16 @@ export class APIPipeline {
 		return this.getNodes().find((node) => {
 			return (node.id === nodeId);
 		});
+	}
+
+	getSuperNodes() {
+		const superNodes = [];
+		this.getNodes().forEach((node) => {
+			if (node.type === "super_node") {
+				superNodes.push(node);
+			}
+		});
+		return superNodes;
 	}
 
 	isDataNode(objId) {

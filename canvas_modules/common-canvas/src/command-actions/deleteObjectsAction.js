@@ -38,6 +38,7 @@ export default class DeleteObjectsAction extends Action {
 			if (has(supernode, "subflow_ref.pipeline_id_ref")) {
 				const deletedPipeline = this.objectModel.getCanvasInfoPipeline(supernode.subflow_ref.pipeline_id_ref);
 				this.data.deletedPipelines.push(deletedPipeline);
+				this.deleteNestedPipelines(supernode.subflow_ref.pipeline_id_ref);
 			}
 		});
 	}
@@ -82,5 +83,12 @@ export default class DeleteObjectsAction extends Action {
 			}
 		});
 		return superNodes;
+	}
+
+	deleteNestedPipelines(pipelineId) {
+		this.objectModel.getNestedPipelineIds(pipelineId).forEach((subPipelineId) => {
+			const deletedPipeline = this.objectModel.getCanvasInfoPipeline(subPipelineId);
+			this.data.deletedPipelines.push(deletedPipeline);
+		});
 	}
 }

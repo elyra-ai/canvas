@@ -82,3 +82,19 @@ Feature: Supernode
 		Then I verify pipeline 1 have 7 links
 		Then I verify pipeline 2 have 4 nodes
 		Then I verify pipeline 2 have 3 links
+		Then I verify there are 3 pipelines
+
+		# Delete supernode should remove nested subpipelines
+		Then I click the supernode label with node id "7015d906-2eae-45c1-999e-fb888ed957e5" to select it
+		Then I click on the secondary toolbar delete button
+		Then I verify there are 1 pipelines
+		Then I verify pipeline 0 have 13 nodes
+
+		Then I click undo
+		Then I verify pipeline 0 have 14 nodes
+		Then I verify pipeline 0 have 21 links
+		Then I verify pipeline 1 have 8 nodes
+		Then I verify pipeline 1 have 7 links
+		Then I verify pipeline 2 have 4 nodes
+		Then I verify pipeline 2 have 3 links
+		Then I verify there are 3 pipelines
