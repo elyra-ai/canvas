@@ -121,7 +121,7 @@ describe("radio renders and works correctly with different enum types", () => {
 	it("radioset control disabled", () => {
 		expect(labels.at(11).text()).to.equal("Radio Disabled");
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-disable']");
-		const checkbox = checkboxsetWrapper.find("input[id='properties-disable']");
+		const checkbox = checkboxsetWrapper.find("input");
 		// checked the disable box
 		checkbox.getDOMNode().checked = true;
 		checkbox.simulate("change");
@@ -136,7 +136,7 @@ describe("radio renders and works correctly with different enum types", () => {
 	it("radioset control hidden", () => {
 		expect(labels.at(12).text()).to.equal("Radio Hidden");
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-hide']");
-		const checkbox = checkboxsetWrapper.find("input[id='properties-hide']");
+		const checkbox = checkboxsetWrapper.find("input");
 		// checked the hidden box
 		checkbox.getDOMNode().checked = true;
 		checkbox.simulate("change");
@@ -149,8 +149,8 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("Validate radioFilter should have options filtered by enum_filter", () => {
-		const checkboxsetWrapper = wrapper.find("div[data-id='properties-filter']");
-		const checkbox = checkboxsetWrapper.find("input[id='properties-filter']");
+		const checkboxWrapper = wrapper.find("div[data-id='properties-filter']");
+		const checkbox = checkboxWrapper.find("input");
 		// checked the filter box
 		checkbox.getDOMNode().checked = true;
 		checkbox.simulate("change");

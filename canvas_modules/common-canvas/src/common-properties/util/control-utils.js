@@ -6,12 +6,17 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+import uuid4 from "uuid/v4";
 
 /**
 * Used to return a unique id for a control that requires an html id
+* @param propertyId (required)
+* @param id (optional)
+* @return returns a unique id used for control DOM ids
 */
-function getControlId(propertyId) {
-	return getDataId(propertyId);
+function getControlId(propertyId, id) {
+	const uuid = id ? id : uuid4();
+	return `${getDataId(propertyId)}-${uuid}`;
 }
 
 function getDataId(propertyId) {

@@ -17,6 +17,10 @@ import { DEFAULT_DATE_FORMAT, STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
 
 export default class DatefieldControl extends React.Component {
+	constructor(props) {
+		super(props);
+		this.id = ControlUtils.getControlId(this.props.propertyId);
+	}
 
 	handleChange(evt) {
 		let stringValue = null;
@@ -63,7 +67,7 @@ export default class DatefieldControl extends React.Component {
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<TextInput
 					autoComplete="off"
-					id={ControlUtils.getControlId(this.props.propertyId)}
+					id={this.id}
 					disabled={state === STATES.DISABLED}
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange.bind(this)}

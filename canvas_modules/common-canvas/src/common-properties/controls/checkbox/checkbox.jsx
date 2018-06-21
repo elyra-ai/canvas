@@ -20,6 +20,11 @@ import classNames from "classnames";
 
 export default class CheckboxControl extends React.Component {
 
+	constructor(props) {
+		super(props);
+		this.id = ControlUtils.getControlId(this.props.propertyId);
+	}
+
 	handleChange(value) {
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
@@ -49,7 +54,7 @@ export default class CheckboxControl extends React.Component {
 					>
 						<Checkbox
 							disabled={state === STATES.DISABLED}
-							id={ControlUtils.getControlId(this.props.propertyId)}
+							id={this.id}
 							labelText={label}
 							onChange={this.handleChange.bind(this)}
 							checked={Boolean(controlValue)}

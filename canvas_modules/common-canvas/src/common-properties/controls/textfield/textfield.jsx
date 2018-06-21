@@ -17,10 +17,10 @@ import { CHARACTER_LIMITS } from "./../../constants/constants.js";
 import classNames from "classnames";
 
 export default class TextfieldControl extends React.Component {
-
 	constructor(props) {
 		super(props);
 		this.charLimit = ControlUtils.getCharLimit(props.control, CHARACTER_LIMITS.TEXT_FIELD);
+		this.id = ControlUtils.getControlId(props.propertyId);
 	}
 
 	handleChange(evt) {
@@ -42,7 +42,7 @@ export default class TextfieldControl extends React.Component {
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<TextInput
 					autoComplete={this.props.tableControl === true ? "off" : "on"}
-					id={ControlUtils.getControlId(this.props.propertyId)}
+					id={this.id}
 					disabled={state === STATES.DISABLED}
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange.bind(this)}

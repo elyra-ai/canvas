@@ -66,7 +66,8 @@ describe("'panel selector insert' renders correctly", () => {
 	it("panel selector and controls should be disabled", () => {
 
 		// disabled
-		const disabledCheckbox = wrapper.find("input[id='properties-disablePanelSelector']");
+		const checkboxWrapper = wrapper.find("div[data-id='properties-disablePanelSelector']");
+		const disabledCheckbox = checkboxWrapper.find("input");
 		expect(disabledCheckbox.props().checked).to.equal(true);
 
 		expect(controller.getControlState({ name: "fruit-color11" })).to.equal("disabled");
@@ -91,7 +92,8 @@ describe("'panel selector insert' renders correctly", () => {
 	it("panel selector and controls should be hidden", () => {
 
 		// hidden
-		const hiddenCheckbox = wrapper.find("input[id='properties-hidePanelSelector']");
+		const checkboxWrapper = wrapper.find("div[data-id='properties-hidePanelSelector']");
+		const hiddenCheckbox = checkboxWrapper.find("input");
 		expect(hiddenCheckbox.props().checked).to.equal(true);
 
 		expect(controller.getControlState({ name: "fruit-color21" })).to.equal("hidden");

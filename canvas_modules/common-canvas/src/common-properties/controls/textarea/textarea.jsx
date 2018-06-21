@@ -20,6 +20,7 @@ export default class TextareaControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.charLimit = ControlUtils.getCharLimit(props.control, CHARACTER_LIMITS.TEXT_AREA);
+		this.id = ControlUtils.getControlId(this.props.propertyId);
 	}
 
 	handleChange(evt) {
@@ -63,7 +64,7 @@ export default class TextareaControl extends React.Component {
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<TextArea
-					id={ControlUtils.getControlId(this.props.propertyId)}
+					id={this.id}
 					disabled={state === STATES.DISABLED}
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange.bind(this)}

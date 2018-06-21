@@ -19,6 +19,7 @@ export default class NumberfieldControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.onDirection = this.onDirection.bind(this);
+		this.id = ControlUtils.getControlId(this.props.propertyId);
 	}
 
 	onDirection(direction) {
@@ -75,7 +76,7 @@ export default class NumberfieldControl extends React.Component {
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<NumberInput
 					ref= { (ref) => (this.numberInput = ref)}
-					id={ControlUtils.getControlId(this.props.propertyId)}
+					id={this.id}
 					onChange={this.handleChange.bind(this)}
 					disabled={state === STATES.DISABLED}
 					step={this.props.control.increment}

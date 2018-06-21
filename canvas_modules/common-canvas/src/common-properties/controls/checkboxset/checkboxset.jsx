@@ -14,8 +14,13 @@ import ControlUtils from "./../../util/control-utils";
 import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
 import { STATES } from "./../../constants/constants.js";
+import uuid4 from "uuid/v4";
 
 export default class CheckboxsetControl extends React.Component {
+	constructor(props) {
+		super(props);
+		this.uuid = uuid4();
+	}
 
 	handleChange(val, checked) {
 		let values = this.props.controller.getPropertyValue(this.props.propertyId);
@@ -51,7 +56,7 @@ export default class CheckboxsetControl extends React.Component {
 			const checked = (controlValue.indexOf(val) >= 0);
 			checkboxes.push(<Checkbox
 				disabled={state === STATES.DISABLED}
-				id={ControlUtils.getControlId(id)}
+				id={ControlUtils.getControlId(id, this.uuid)}
 				key={val + i}
 				labelText={this.props.control.valueLabels[i]}
 				onChange={this.handleChange.bind(this, val)}
