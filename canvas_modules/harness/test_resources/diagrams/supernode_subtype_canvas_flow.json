@@ -1,0 +1,175 @@
+{
+  "doc_type": "pipeline",
+  "version": "2.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
+  "id": "550fe970-0a2a-4ca7-8c8c-c123ef1bcfac",
+  "primary_pipeline": "dc362da9-26ed-4979-813c-910f06b893ad",
+  "pipelines": [
+    {
+      "id": "dc362da9-26ed-4979-813c-910f06b893ad",
+      "nodes": [
+        {
+          "id": "2776a2e9-d1ad-4a97-9e4d-6c7bd6f37ba9",
+          "type": "execution_node",
+          "op": "sample",
+          "app_data": {
+            "ui_data": {
+              "label": "Sample",
+              "image": "",
+              "x_pos": 235.30047598225516,
+              "y_pos": 150.39924909098917,
+              "description": "Samples the data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "29635258-7e44-49ef-a282-967f970e44f7",
+          "type": "super_node",
+          "sub_type": "canvas",
+          "subflow_ref": {
+            "pipeline_id_ref": "26d24aad-9ff4-461d-b649-8d1659b622ae"
+          },
+          "app_data": {
+            "ui_data": {
+              "label": "Supernode",
+              "image": "",
+              "x_pos": 383.55299849647616,
+              "y_pos": 165.6830142986408,
+              "description": "supernode"
+            }
+          },
+          "inputs": [
+            {
+              "id": "d17dc798-6486-4c74-87d5-69842ef0a922_inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "2776a2e9-d1ad-4a97-9e4d-6c7bd6f37ba9",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        }
+      },
+      "runtime_ref": "empty_runtime"
+    },
+    {
+      "id": "26d24aad-9ff4-461d-b649-8d1659b622ae",
+      "nodes": [
+        {
+          "id": "d17dc798-6486-4c74-87d5-69842ef0a922",
+          "type": "execution_node",
+          "op": "distribution",
+          "app_data": {
+            "ui_data": {
+              "label": "Distribution",
+              "image": "",
+              "x_pos": 383.55299849647616,
+              "y_pos": 165.6830142986408,
+              "description": "Displays results as a distribution"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "2776a2e9-d1ad-4a97-9e4d-6c7bd6f37ba9",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        }
+      },
+      "runtime_ref": "empty_runtime"
+    }
+  ],
+  "runtimes": [
+    {
+      "id": "empty_runtime",
+      "name": "empty_runtime"
+    }
+  ],
+  "schemas": []
+}
