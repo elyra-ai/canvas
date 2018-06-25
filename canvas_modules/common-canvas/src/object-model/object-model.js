@@ -1360,6 +1360,19 @@ export default class ObjectModel {
 		}
 	}
 
+	// Creates an empty pipeline.  Used for shaper and supernodes without sub pipeline defined
+	createEmptyPipeline() {
+		const primaryPipeline = this.getCanvasInfoPipeline(this.getPrimaryPipelineId());
+		const subPipelineInfo = {
+			"runtime_ref": primaryPipeline.runtime_ref,
+			"nodes": [],
+			"comments": [],
+			"links": []
+		};
+		const canvasInfoSubPipeline = this.createCanvasInfoPipeline(subPipelineInfo);
+		return canvasInfoSubPipeline;
+	}
+
 	// Returns an offset object containing the x and y distances into negative
 	// coordinate space that that the action would encroach. For the
 	// 'moveObjects' action this is the distance the selected objects would encroach

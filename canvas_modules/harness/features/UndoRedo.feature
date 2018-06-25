@@ -362,3 +362,23 @@ Feature: UndoRedo
 		Then I verify the event log for the "samplingRatio" parameter contains "1"
 		Then I verify the event log has no error messages
 		Then I verify the event log title is "C5.0"
+
+	Scenario: Test undo/redo of shaper node
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Flyout" palette layout
+		Given I have uploaded predefined palette "sparkPalette.json"
+		Given I have toggled the app side panel
+		Then I open the palette
+		Then I add node 1 a "Data Shaper" node from the "Transformations" category onto the canvas at 350, 200
+		Then I verify there are 2 pipelines
+		Then I verify pipeline 0 have 1 nodes
+		Then I verify pipeline 1 have 0 nodes
+		Then I click undo
+		Then I verify there are 1 pipelines
+		Then I verify pipeline 0 have 0 nodes
+		Then I click redo
+		Then I verify there are 2 pipelines
+		Then I verify pipeline 0 have 1 nodes
+		Then I verify pipeline 1 have 0 nodes

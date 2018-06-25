@@ -20,6 +20,13 @@ export default class CreateAutoNodeAction extends Action {
 		if (this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {
 			this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode);
 		}
+		this.newPipeline = null;
+		if (this.newNode && this.newNode.sub_type === "shaper") {
+			this.newPipeline = this.objectModel.createEmptyPipeline();
+			this.newNode.subflow_ref = {
+				pipeline_id_ref: this.newPipeline.id
+			};
+		}
 	}
 
 	// Return augmented command object which will be passed to the
@@ -28,6 +35,7 @@ export default class CreateAutoNodeAction extends Action {
 		this.data.sourceNode = this.srcNode;
 		this.data.newNode = this.newNode;
 		this.data.newLink = this.newLink;
+		this.data.newPipeline = this.newPipeline;
 		return this.data;
 	}
 
@@ -39,10 +47,16 @@ export default class CreateAutoNodeAction extends Action {
 			this.apiPipeline.addNode(this.newNode);
 		}
 		this.objectModel.setSelections([this.newNode.id], this.data.pipelineId);
+		if (this.newPipeline) {
+			this.objectModel.addPipeline(this.newPipeline);
+		}
 	}
 
 	undo() {
 		this.apiPipeline.deleteNode(this.newNode.id);
+		if (this.newPipeline) {
+			this.objectModel.deletePipeline(this.newPipeline.id);
+		}
 	}
 
 	redo() {

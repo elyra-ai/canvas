@@ -62,11 +62,13 @@ module.exports = function() {
 		"Data Audit": 1,
 		"Analysis": 2,
 		"Export Object Store": 0,
-		"Add Columns": 2
+		"Add Columns": 2,
+		"Data Shaper": 6
 	};
 
 
 	const expectedImages = {
+		"Data Shaper": "/images/palette-categories/operations_open.svg",
 		"Var. File": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyY" +
 		"XRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIge" +
 		"G1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZ" +
@@ -514,7 +516,8 @@ module.exports = function() {
 		"Data Audit": "",
 		"Analysis": "",
 		"Export Object Store": "",
-		"Add Column": "spark.AddColumn"
+		"Add Column": "spark.AddColumn",
+		"Data Shaper": "ibm.Shaper"
 	};
 
 
