@@ -143,7 +143,7 @@ class CommonProperties extends React.Component {
 			const valueInfo = { additionalInfo: {}, undoInfo: {} };
 			valueInfo.properties = this.propertiesController.getPropertyValues(true);
 			valueInfo.undoInfo.properties = this.propertiesController.getPropertyValues();
-			const errorMessages = this.propertiesController.getErrorMessages(true);
+			const errorMessages = this.propertiesController.getErrorMessages(true, true);
 			if (errorMessages) {
 				valueInfo.additionalInfo.messages = errorMessages;
 			}

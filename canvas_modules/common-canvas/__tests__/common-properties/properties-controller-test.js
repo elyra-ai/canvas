@@ -778,6 +778,44 @@ describe("Properties Controller property messages", () => {
 		};
 		expect(expectedValues).to.eql(actualValues);
 	});
+	it("should not get messages for hidden/disabled controls", () => {
+		reset();
+		controller.setErrorMessages({});
+		const goodParamId = { name: "param_good" };
+		const hiddenParamId = { name: "param_hidden" };
+		const disabledParamId = { name: "param_disabled" };
+		controller.updateErrorMessage(goodParamId, {
+			validation_id: "param_good",
+			type: "warning",
+			text: "This message should be returned"
+		});
+		controller.updateErrorMessage(hiddenParamId, {
+			validation_id: "param_hidden",
+			type: "warning",
+			text: "This message should NOT be returned"
+		});
+		controller.updateErrorMessage(disabledParamId, {
+			validation_id: "param_disabled",
+			type: "error",
+			text: "This message should NOT be returned"
+		});
+		controller.updateControlState(hiddenParamId, "hidden");
+		controller.updateControlState(disabledParamId, "disabled");
+
+		const expectedMessage = {
+			validation_id: "param_good",
+			type: "warning",
+			text: "This message should be returned"
+		};
+		const expectedValue = { "param_good": expectedMessage };
+
+		expect(controller.getErrorMessage(goodParamId, true)).to.eql(expectedMessage);
+		expect(controller.getErrorMessage(hiddenParamId, true)).to.be.null;
+		expect(controller.getErrorMessage(disabledParamId, true)).to.be.null;
+
+		const actualValues = controller.getErrorMessages(null, true);
+		expect(expectedValue).to.eql(actualValues);
+	});
 });
 
 describe("Properties Controller handlers", () => {

@@ -513,9 +513,9 @@ describe("condition renders correctly with structure table control", () => {
 		propertyUtils.openSummaryPanel(wrapper, "dummy_types-summary-panel");
 
 		// verify the table is HIDDEN
-		const cellControlDiv = wrapper.find("div[data-id='properties-dummy_types_0_2']");
-		expect(cellControlDiv.prop("disabled")).to.be.true;
-		expect(renderedController.getControlState({ name: "dummy_types", row: 0, col: 2 })).to.equal("disabled");
+		const cellControlDiv = wrapper.find("div[data-id='properties-dummy_types_0_5']");
+		expect(cellControlDiv.find("input").prop("disabled")).to.be.true;
+		expect(renderedController.getControlState({ name: "dummy_types", row: 0, col: 5 })).to.equal("disabled");
 	});
 });
 

@@ -211,7 +211,7 @@ class SummaryPanel extends React.Component {
 		const controls = this.props.controller.getSummaryPanelControls(this.props.panelId);
 		let msg = {};
 		controls.forEach((controlId) => {
-			const controlMsg = this.props.controller.getErrorMessage({ name: controlId });
+			const controlMsg = this.props.controller.getErrorMessage({ name: controlId }, true);
 			if (!isEmpty(controlMsg) && (!isEmpty(msg) || msg.type !== "error")) {
 				msg = controlMsg;
 			}

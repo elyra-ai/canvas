@@ -1310,6 +1310,60 @@
         }
       }
     },
+		{
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "structuretableRenameFields[1]",
+          "message": {
+            "default": "The field cannot contain 'bad'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretableRenameFields[1]",
+            "op": "notContains",
+            "value": "bad"
+          }
+        }
+      }
+    },
+		{
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "structuretableRenameFields[3]",
+          "message": {
+            "default": "The field cannot contain 'number'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretableRenameFields[3]",
+            "op": "notContains",
+            "value": "number"
+          }
+        }
+      }
+		},
+		{
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "dummy_types[2]",
+          "message": {
+            "default": "The field cannot be true"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "dummy_types[2]",
+            "op": "notContains",
+            "value": "Football"
+          }
+        }
+      }
+    },
     {
       "enabled": {
         "parameter_refs": [
@@ -1356,6 +1410,20 @@
       "visible": {
         "parameter_refs": [
           "dummy_types[4]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "dummy_types[1]",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+		{
+      "visible": {
+        "parameter_refs": [
+          "dummy_types[2]"
         ],
         "evaluate": {
           "condition": {

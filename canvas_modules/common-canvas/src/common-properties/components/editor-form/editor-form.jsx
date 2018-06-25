@@ -98,7 +98,7 @@ class EditorForm extends React.Component {
 
 	_getGroupedMessages() {
 		// returns messages grouped by type, first errors, then warnings
-		const messages = this.props.controller.getErrorMessages(true);
+		const messages = this.props.controller.getErrorMessages(true, true);
 		if (!isEmpty(messages)) {
 			return sortBy(messages, ["type"]);
 		}

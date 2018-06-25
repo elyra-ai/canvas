@@ -841,8 +841,16 @@ export default class PropertiesController {
 	* @param inPropertyId boolean
 	* @return error message object
 	*/
-	getErrorMessage(inPropertyId) {
+	getErrorMessage(inPropertyId, filterHiddenDisable) {
 		const propertyId = this.convertPropertyId(inPropertyId);
+		// don't return hidden message
+		if (filterHiddenDisable) {
+			const controlState = this.getControlState(propertyId);
+			if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN) {
+				return null;
+			}
+		}
+
 		return this.propertiesStore.getErrorMessage(propertyId);
 	}
 
@@ -852,28 +860,41 @@ export default class PropertiesController {
 	* @param filteredPipeline boolean
 	* @return object when filteredPipeline=false or array when filteredPipeline=true
 	*/
-	getErrorMessages(filteredPipeline) {
-		const messages = this.propertiesStore.getErrorMessages();
-		if (filteredPipeline) {
-			const pipelineMessages = [];
-			for (const paramKey in messages) {
-				if (!messages.hasOwnProperty(paramKey)) {
-					continue;
-				}
-				const paramMessage = this.getErrorMessage({ name: paramKey });
-				if (paramMessage && paramMessage.text) {
+	getErrorMessages(filteredPipeline, filterHiddenDisable) {
+		let messages = this.propertiesStore.getErrorMessages();
+		if (filteredPipeline || filterHiddenDisable) {
+			messages = this._filterMessages(messages, filteredPipeline, filterHiddenDisable);
+		}
+		return messages;
+	}
+
+	_filterMessages(messages, filteredPipeline, filterHiddenDisable) {
+		const filteredMessages = {};
+		const pipelineMessages = [];
+		for (const paramKey in messages) {
+			if (!messages.hasOwnProperty(paramKey)) {
+				continue;
+			}
+			const paramMessage = this.getErrorMessage({ name: paramKey }, filterHiddenDisable);
+			if (paramMessage && paramMessage.text) {
+				if (filteredPipeline) {
 					pipelineMessages.push({
 						id_ref: paramKey,
 						validation_id: paramMessage.validation_id,
 						type: paramMessage.type,
 						text: paramMessage.text
 					});
+				} else {
+					filteredMessages[paramKey] = paramMessage;
 				}
 			}
+		}
+		if (filteredPipeline) {
 			return pipelineMessages;
 		}
-		return messages;
+		return filteredMessages;
 	}
+
 	updateErrorMessage(inPropertyId, message) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		if (message && message.type !== "info") {
