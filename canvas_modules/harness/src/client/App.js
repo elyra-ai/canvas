@@ -402,9 +402,9 @@ class App extends React.Component {
 		}
 	}
 
-	setFlowNotificationMessages() {
+	setFlowNotificationMessages(pipelineId) {
 		const notificationMessages = [];
-		const nodeMessages = this.canvasController.getFlowMessages();
+		const nodeMessages = this.canvasController.getFlowMessages(pipelineId);
 		for (const nodeId in nodeMessages) {
 			if (nodeMessages.hasOwnProperty(nodeId)) {
 				const node = nodeMessages[nodeId];
@@ -417,7 +417,7 @@ class App extends React.Component {
 				});
 
 				const type = errors.length > 0 ? NOTIFICATION_MESSAGE_TYPE.ERROR : NOTIFICATION_MESSAGE_TYPE.WARNING;
-				let generatedMessage = this.canvasController.getNode(nodeId).label + " node has ";
+				let generatedMessage = this.canvasController.getNode(nodeId, pipelineId).label + " node has ";
 				if (errors.length > 0) {
 					generatedMessage += errors.length + " errors";
 					if (warnings.length > 0) {
@@ -430,10 +430,10 @@ class App extends React.Component {
 
 				const summarizedMessage = {
 					id: "notification-" + nodeId,
-					title: this.canvasController.getNode(nodeId).label,
+					title: this.canvasController.getNode(nodeId, pipelineId).label,
 					type: type,
 					content: generatedMessage,
-					callback: this.notificationmessageCallback.bind(this, nodeId, false)
+					callback: this.notificationmessageCallback.bind(this, nodeId, pipelineId, false)
 				};
 
 				notificationMessages.push(summarizedMessage);
@@ -448,9 +448,9 @@ class App extends React.Component {
 		this.log("Set Notification Message", "Set " + messages.length + " notification messages");
 	}
 
-	setFlowNotificationMessages2() {
+	setFlowNotificationMessages2(pipelineId) {
 		const notificationMessages = [];
-		const nodeMessages = this.canvasController2.getFlowMessages();
+		const nodeMessages = this.canvasController2.getFlowMessages(pipelineId);
 		for (const nodeId in nodeMessages) {
 			if (nodeMessages.hasOwnProperty(nodeId)) {
 				const node = nodeMessages[nodeId];
@@ -463,7 +463,7 @@ class App extends React.Component {
 				});
 
 				const type = errors.length > 0 ? NOTIFICATION_MESSAGE_TYPE.ERROR : NOTIFICATION_MESSAGE_TYPE.WARNING;
-				let generatedMessage = this.canvasController2.getNode(nodeId).label + " node has ";
+				let generatedMessage = this.canvasController2.getNode(nodeId, pipelineId).label + " node has ";
 				if (errors.length > 0) {
 					generatedMessage += errors.length + " errors";
 					if (warnings.length > 0) {
@@ -476,10 +476,10 @@ class App extends React.Component {
 
 				const summarizedMessage = {
 					id: "notification-" + nodeId,
-					title: this.canvasController2.getNode(nodeId).label,
+					title: this.canvasController2.getNode(nodeId, pipelineId).label,
 					type: type,
 					content: generatedMessage,
-					callback: this.notificationmessageCallback.bind(this, nodeId, true)
+					callback: this.notificationmessageCallback.bind(this, nodeId, pipelineId, true)
 				};
 
 				notificationMessages.push(summarizedMessage);
@@ -608,15 +608,15 @@ class App extends React.Component {
 	}
 
 	// Open node editor on notification message click
-	notificationmessageCallback(nodeId, inExtraCanvas) {
+	notificationmessageCallback(nodeId, pipelineId, inExtraCanvas) {
 		if (inExtraCanvas) {
-			this.canvasController2.setSelections([nodeId]);
+			this.canvasController2.setSelections([nodeId], pipelineId);
 			this.canvasController2.closeNotificationPanel();
-			this.editNodeHandler(nodeId, inExtraCanvas);
+			this.editNodeHandler(nodeId, pipelineId, inExtraCanvas);
 		} else {
-			this.canvasController.setSelections([nodeId]);
+			this.canvasController.setSelections([nodeId], pipelineId);
 			this.canvasController.closeNotificationPanel();
-			this.editNodeHandler(nodeId);
+			this.editNodeHandler(nodeId, pipelineId);
 		}
 	}
 
@@ -744,7 +744,7 @@ class App extends React.Component {
 		this.log("clickActionHandler()", source);
 		if (source.clickType === "DOUBLE_CLICK" &&
 				source.objectType === "node") {
-			this.editNodeHandler(source.id);
+			this.editNodeHandler(source.id, source.pipelineId);
 		}
 	}
 
@@ -752,7 +752,7 @@ class App extends React.Component {
 		this.log("extraCanvasClickActionHandler()", source);
 		if (source.clickType === "DOUBLE_CLICK" &&
 				source.objectType === "node") {
-			this.editNodeHandler(source.id, true);
+			this.editNodeHandler(source.id, source.pipelineId, true);
 		}
 	}
 
@@ -775,12 +775,12 @@ class App extends React.Component {
 			const propertiesController = (appData.inExtraCanvas) ? this.propertiesController2 : this.propertiesController;
 
 			// store parameters in case properties were opened from canvas
-			canvasController.setNodeParameters(appData.nodeId, form);
-			canvasController.setNodeLabel(appData.nodeId, additionalInfo.title);
-			canvasController.setNodeMessages(appData.nodeId, additionalInfo.messages);
+			canvasController.setNodeParameters(appData.nodeId, form, appData.pipelineId);
+			canvasController.setNodeLabel(appData.nodeId, additionalInfo.title, appData.pipelineId);
+			canvasController.setNodeMessages(appData.nodeId, additionalInfo.messages, appData.pipelineId);
 
 			// set notification message if errors/warnings
-			this.setFlowNotificationMessages();
+			this.setFlowNotificationMessages(appData.pipelineId);
 
 			// undo/redo was clicked so reapply settings
 			if (appData.nodeId === currentEditorNodeId) {
@@ -994,7 +994,7 @@ class App extends React.Component {
 		} else if (action === "deleteLink") {
 			this.log("action: deleteLink", source.id);
 		} else if (action === "editNode") {
-			this.editNodeHandler(source.targetObject.id, inExtraCanvas);
+			this.editNodeHandler(source.targetObject.id, source.pipelineId, inExtraCanvas);
 		} else if (action === "viewModel") {
 			this.log("action: viewModel", source.targetObject.id);
 		} else if (action === "disconnectNode") {
@@ -1069,14 +1069,14 @@ class App extends React.Component {
 		return decorators;
 	}
 
-	editNodeHandler(nodeId, inExtraCanvas) {
+	editNodeHandler(nodeId, activePipelineId, inExtraCanvas) {
 		this.log("action: editNode", nodeId);
 		const canvasController = (inExtraCanvas) ? this.canvasController2 : this.canvasController;
 		const currentEditorNodeId = (inExtraCanvas) ? this.currentEditorId2 : this.currentEditorId;
 		const commonPropertiesRef = (inExtraCanvas) ? this.CommonProperties2 : this.CommonProperties;
 		if (nodeId && currentEditorNodeId !== nodeId) {
 			// apply properties from previous node if node selection has changed w/o closing editor
-			if (currentEditorNodeId && canvasController.getNode(currentEditorNodeId)) {
+			if (currentEditorNodeId && canvasController.getNode(currentEditorNodeId, activePipelineId)) {
 				commonPropertiesRef.getWrappedInstance().applyPropertiesEditing(false);
 			}
 			if (inExtraCanvas) {
@@ -1085,12 +1085,12 @@ class App extends React.Component {
 				this.currentEditorId = nodeId;
 			}
 			// currentEditorNodeId = nodeId; // set new node
-			const appData = { nodeId: nodeId, inExtraCanvas: inExtraCanvas };
-			const properties = this.getNodeForm(nodeId, null, canvasController);
+			const appData = { nodeId: nodeId, inExtraCanvas: inExtraCanvas, pipelineId: activePipelineId };
+			const properties = this.getNodeForm(nodeId, activePipelineId, canvasController);
 
 			// set current parameterSet
 			// get the current parameters for the node from the internal ObjectModel
-			const node = canvasController.getNode(nodeId);
+			const node = canvasController.getNode(nodeId, activePipelineId);
 			if (node) {
 				if (properties.data.formData) {
 					if (!isEmpty(node.parameters)) {
@@ -1107,7 +1107,7 @@ class App extends React.Component {
 					properties.data.titleDefinition.title = node.label;
 				}
 			}
-			const messages = canvasController.getNodeMessages(nodeId);
+			const messages = canvasController.getNodeMessages(nodeId, activePipelineId);
 			const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 			const propsInfo = {
 				title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
@@ -1131,7 +1131,7 @@ class App extends React.Component {
 		// apply properties from previous node if node selection has to more than one node
 		if (this.currentEditorId) {
 			// don't apply changes if node has been removed
-			if (this.canvasController.getNode(this.currentEditorId)) {
+			if (this.canvasController.getNode(this.currentEditorId, data.selectedPipelineId)) {
 				this.CommonProperties.getWrappedInstance().applyPropertiesEditing(false);
 			}
 			this.setState({ showPropertiesDialog: false });
@@ -1144,7 +1144,7 @@ class App extends React.Component {
 		// apply properties from previous node if node selection has to more than one node
 		if (this.currentEditorId2) {
 			// don't apply changes if node has been removed
-			if (this.canvasController2.getNode(this.currentEditorId2)) {
+			if (this.canvasController2.getNode(this.currentEditorId2, data.selectedPipelineId)) {
 				this.CommonProperties2.getWrappedInstance().applyPropertiesEditing(false);
 			}
 			this.setState({ showPropertiesDialog2: false });

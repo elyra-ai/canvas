@@ -1891,7 +1891,7 @@ export class APIPipeline {
 	}
 
 	isSuperNodeExpandedInPlace(nodeId) {
-		return this.getNode(nodeId).super_node_expanded === true;
+		return this.getNode(nodeId).isExpanded === true;
 	}
 
 	doesNodeHavePorts(node) {

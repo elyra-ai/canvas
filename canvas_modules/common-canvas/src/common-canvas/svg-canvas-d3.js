@@ -1239,7 +1239,13 @@ class CanvasRenderer {
 					consoleLog("Node Group - double click");
 					d3Event.stopPropagation();
 					var selObjIds = this.objectModel.getSelectedObjectIds();
-					this.canvasController.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: selObjIds });
+					this.canvasController.clickActionHandler({
+						clickType: "DOUBLE_CLICK",
+						objectType: "node",
+						id: d.id,
+						selectedObjectIds: selObjIds,
+						pipelineId: this.activePipeline.id
+					});
 				})
 				.on("contextmenu", (d) => {
 					consoleLog("Node Group - context menu");
@@ -2586,7 +2592,8 @@ class CanvasRenderer {
 							clickType: "DOUBLE_CLICK",
 							objectType: "comment",
 							id: d.id,
-							selectedObjectIds: that.objectModel.getSelectedObjectIds() });
+							selectedObjectIds: that.objectModel.getSelectedObjectIds(),
+							pipelineId: this.activePipeline.id });
 					}
 				})
 				.on("contextmenu", (d) => {
