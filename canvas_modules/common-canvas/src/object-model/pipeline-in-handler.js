@@ -24,6 +24,7 @@ export default class PipelineInHandler {
 
 		var canvas = {
 			"id": pipeline.id,
+			"name": pipeline.name,
 			"nodes": this.convertNodes(nodes, layoutInfo),
 			"comments": this.convertComments(comments),
 			"links": this.convertLinks(nodes, comments),

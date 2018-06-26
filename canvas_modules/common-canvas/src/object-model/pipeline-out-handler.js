@@ -33,6 +33,7 @@ export default class PipelineOutHandler {
 	static createPipeline(canvasInfoPipeline) {
 		const newPipeline = {
 			id: canvasInfoPipeline.id,
+			name: canvasInfoPipeline.name,
 			nodes: this.createNodes(canvasInfoPipeline),
 			app_data: this.createPipelineAppData(canvasInfoPipeline),
 			runtime_ref: canvasInfoPipeline.runtime_ref
@@ -155,10 +156,10 @@ export default class PipelineOutHandler {
 				if (ciInputPort.subflow_node_ref) {
 					newInput.subflow_node_ref = ciInputPort.subflow_node_ref;
 				}
+			}
 
-				if (ciInputPort.schema_ref) {
-					newInput.schema_ref = ciInputPort.schema_ref;
-				}
+			if (ciInputPort.schema_ref) {
+				newInput.schema_ref = ciInputPort.schema_ref;
 			}
 
 			newInput.app_data =
@@ -189,10 +190,10 @@ export default class PipelineOutHandler {
 				if (ciOutputPort.subflow_node_ref) {
 					newOutput.subflow_node_ref = ciOutputPort.subflow_node_ref;
 				}
+			}
 
-				if (ciOutputPort.schema_ref) {
-					newOutput.schema_ref = ciOutputPort.schema_ref;
-				}
+			if (ciOutputPort.schema_ref) {
+				newOutput.schema_ref = ciOutputPort.schema_ref;
 			}
 
 			newOutput.app_data =
@@ -275,13 +276,16 @@ export default class PipelineOutHandler {
 	}
 
 	static createPipelineAppData(canvasInfoPipeline) {
-		if (canvasInfoPipeline.appData) {
-			return Object.assign({}, canvasInfoPipeline.appData, { ui_data: this.createPipelineUiData(canvasInfoPipeline) });
+		if (canvasInfoPipeline.app_data) {
+			return Object.assign({}, canvasInfoPipeline.app_data, { ui_data: this.createPipelineUiData(canvasInfoPipeline) });
 		}
 		return { ui_data: this.createPipelineUiData(canvasInfoPipeline) };
 	}
 
 	static createPipelineUiData(canvasInfoPipeline) {
+		if (canvasInfoPipeline.app_data && canvasInfoPipeline.app_data.ui_data) {
+			return Object.assign({}, canvasInfoPipeline.app_data.ui_data, { comments: this.createComments(canvasInfoPipeline.comments, canvasInfoPipeline.links) });
+		}
 		return { comments: this.createComments(canvasInfoPipeline.comments, canvasInfoPipeline.links) };
 	}
 

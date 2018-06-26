@@ -34,6 +34,7 @@
           "outputs": [
             {
               "id": "entryPort1PE",
+              "schema_ref": "schema1",
               "app_data": {
                 "ui_data": {
                   "label": "entryID1PE"
@@ -58,6 +59,7 @@
           "outputs": [
             {
               "id": "entryPort2PE",
+              "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
                   "label": "entryPort2PE"
@@ -82,6 +84,7 @@
           "outputs": [
             {
               "id": "entryPort3PE",
+              "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
                   "label": "entryPort3PE"
@@ -110,6 +113,7 @@
           "inputs": [
             {
               "id": "input1NodeID1PE",
+              "schema_ref": "schema1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
@@ -132,6 +136,7 @@
             },
             {
               "id": "input2NodeID1PE",
+              "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
@@ -156,6 +161,7 @@
           "outputs": [
             {
               "id": "output1NodeID1PE",
+              "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
@@ -264,6 +270,7 @@
           "inputs": [
             {
               "id": "input1NodeID2PE",
+              "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
@@ -289,6 +296,7 @@
           "outputs": [
             {
               "id": "output1NodeID2PE",
+              "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
                   "label": "output1NodeID2PE"
@@ -320,6 +328,7 @@
           "inputs": [
             {
               "id": "input1NodeID3PE",
+              "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
@@ -344,6 +353,7 @@
           "outputs": [
             {
               "id": "output1NodeID3PE",
+              "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
                   "label": "output1NodeID3PE"
@@ -371,6 +381,7 @@
           "inputs": [
             {
               "id": "exitPort1PE",
+             	"schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
                   "label": ""
@@ -405,6 +416,7 @@
           "inputs": [
             {
               "id": "exitPort2PE",
+              "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
                   "label": "exitPort2PE"
@@ -426,6 +438,7 @@
       ],
       "app_data": {
         "ui_data": {
+          "zoom": 100,
           "comments": [
             {
               "id": "4e32ba0a-b234-3e33-b321-d693bf8f8452",
@@ -527,6 +540,7 @@
           "inputs": [
             {
               "id": "input1nodeID1SE",
+              "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
                   "label": "input1nodeID1SE"
@@ -547,6 +561,7 @@
           "outputs": [
             {
               "id": "output1nodeID1SE",
+              "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
                   "label": "output1nodeID1SE"
@@ -577,6 +592,7 @@
           "inputs": [
             {
               "id": "input1NodeID2SE",
+              "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
@@ -599,6 +615,7 @@
             },
             {
               "id": "input2NodeID2SE",
+              "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
@@ -623,6 +640,7 @@
           "outputs": [
             {
               "id": "output1NodeID2SE",
+              "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
                   "label": "output1NodeID2SE"
@@ -651,6 +669,7 @@
           "inputs": [
             {
               "id": "exitPort1SE",
+              "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
                   "label": "exitPort1SE"
