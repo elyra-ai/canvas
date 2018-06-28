@@ -10,7 +10,7 @@
 /* eslint max-len: "off" */
 
 import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel,
-	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText, getNodeIdForLabel,
+	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText, getNodeIdForLabel, getNodeIdForLabelInSubFlow,
 	getNodeIdFromObjectModel, getObjectModelCount, getPortLinks } from "./utilities/validate-utils.js";
 import { getCanvasData, getEventLogData } from "./utilities/test-utils.js";
 import { simulateD3LinkCreation } from "./utilities/dragAndDrop-utils.js";
@@ -181,11 +181,9 @@ module.exports = function() {
 
 	});
 
-
-	// Then I link node "Var. File" output port "out3 to node "Select" input port "inport2"
+	// Then I link node "Var. File" output port "out3" to node "Select" input port "inport2"
 	//
 	this.Then(/^I link node "([^"]*)" output port "([^"]*)" to node "([^"]*)" input port "([^"]*)"$/, function(srcNodeText, srcPortId, trgNodeText, trgPortId) {
-
 		var srcNodeId = getNodeIdForLabel(srcNodeText);
 		var srcSelector = "#node_src_port_" + srcNodeId + "_" + srcPortId;
 
@@ -193,8 +191,20 @@ module.exports = function() {
 		var trgSelector = "#node_trg_port_" + trgNodeId + "_" + trgPortId;
 
 		browser.dragAndDrop(srcSelector, trgSelector);
-
 	});
+
+	// Then I link node "Var. File" output port "out3" to node "Select" input port "inport2" on the subflow
+	//
+	this.Then(/^I link node "([^"]*)" output port "([^"]*)" to node "([^"]*)" input port "([^"]*)" on the subflow$/, function(srcNodeText, srcPortId, trgNodeText, trgPortId) {
+		var srcNodeId = getNodeIdForLabelInSubFlow(srcNodeText);
+		var srcSelector = "#node_src_port_" + srcNodeId + "_" + srcPortId;
+
+		var trgNodeId = getNodeIdForLabelInSubFlow(trgNodeText);
+		var trgSelector = "#node_trg_port_" + trgNodeId + "_" + trgPortId;
+
+		browser.dragAndDrop(srcSelector, trgSelector);
+	});
+
 
 	// Then I link node "Var. File" output port "out3 to node "Select"
 	// This will simulate a drag from a specific port onto a target node rather

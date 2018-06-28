@@ -215,23 +215,31 @@ function isObjectModelEmpty(objectModel) {
 }
 
 function getNodeIdForLabel(nodeText, extraCanvas) {
-	var result = browser.execute(function(labelText, extraCanv) {
-		/* global document */
-		var nodeId = null;
-		const inst = extraCanv === true ? "1" : "0";
+	const inst = extraCanvas === true ? "1" : "0";
+	const selector = `div > svg > g > g > text[id^=node_label_${inst}]`;
+	return getLabel(nodeText, selector);
+}
 
-		var domLabels = document.getElementsByClassName("d3-node-label");
+function getNodeIdForLabelInSubFlow(nodeText, extraCanvas) {
+	const inst = extraCanvas === true ? "1" : "0";
+	const selector = `div > svg > g > g > svg > g > g > text[id^=node_label_${inst}]`;
+	return getLabel(nodeText, selector);
+}
+
+function getLabel(nodeText, selector) {
+	var nodeId = null;
+	var result = browser.execute(function(labelText, inSelector) {
+		/* global document */
+		var domLabels = document.querySelectorAll(inSelector);
 		for (let idx = 0; idx < domLabels.length; idx++) {
-			if (domLabels.item(idx).id.startsWith("node_label_" + inst)) {
-				if (domLabels.item(idx).__data__.label === labelText) {
-					nodeId = domLabels.item(idx).id;
-					break;
-				}
+			if (domLabels.item(idx).__data__.label === labelText) {
+				nodeId = domLabels.item(idx).id;
+				break;
 			}
 		}
 
 		return nodeId;
-	}, nodeText, extraCanvas);
+	}, nodeText, selector);
 
 	return result.value.substr(11);
 }
@@ -325,6 +333,7 @@ module.exports = {
 	getPortLinks: getPortLinks,
 	isObjectModelEmpty: isObjectModelEmpty,
 	getNodeIdForLabel: getNodeIdForLabel,
+	getNodeIdForLabelInSubFlow: getNodeIdForLabelInSubFlow,
 	clickSVGAreaAt: clickSVGAreaAt,
 	findNodeIndexInPalette: findNodeIndexInPalette,
 	findCategoryElement: findCategoryElement,

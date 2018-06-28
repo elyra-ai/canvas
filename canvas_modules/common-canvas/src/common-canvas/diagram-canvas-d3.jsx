@@ -12,6 +12,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import ObserveSize from "react-observe-size";
 
 import {
 	DND_DATA_TEXT
@@ -108,6 +109,16 @@ export default class DiagramCanvas extends React.Component {
 		this.canvasD3Layout.zoomToFit();
 	}
 
+	// Re-renders the diagram canvas when the canvas size changes. This refresh
+	// is needed because the output binding ports of sub-flows displayed full-page
+	// need to be rerendered as the canvas size changes. The canvas size might
+	// change when the right side panel is opened or the browser is resized.
+	refreshOnSizeChange() {
+		if (this.canvasD3Layout) {
+			this.canvasD3Layout.refreshOnSizeChange();
+		}
+	}
+
 	render() {
 		// Set tabindex to -1 so the focus (see componentDidMount above) can go to
 		// the div (which allows keyboard events to go there) and using -1 means
@@ -116,15 +127,17 @@ export default class DiagramCanvas extends React.Component {
 		const svgCanvas = (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} />);
 
 		return (
-			<div
-				id={this.canvasDivId}
-				className="common-canvas-drop-div"
-				onDragOver={this.dragOver}
-				onDrop={this.drop}
-			>
-				{svgCanvas}
-				{this.props.children}
-			</div>
+			<ObserveSize observerFn={(element) => this.refreshOnSizeChange()}>
+				<div
+					id={this.canvasDivId}
+					className="common-canvas-drop-div"
+					onDragOver={this.dragOver}
+					onDrop={this.drop}
+				>
+					{svgCanvas}
+					{this.props.children}
+				</div>
+			</ObserveSize>
 		);
 	}
 }

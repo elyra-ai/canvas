@@ -14,20 +14,20 @@ Feature: Supernode
 
 		Then I resize the window size to 1330 width and 660 height
 
-		Then I right click at position 300, 240 to display the context menu
+		Then I right click the "Supernode" node to display the context menu
 		Then I click option "Expand supernode" from the context menu
 		Then I verify the node id "7015d906-2eae-45c1-999e-fb888ed957e5" has width 200 and height 200
 
-		Then I click the "Partition" node to select it
-		Then I Cmd+click the "Distribution" node to add it to the selections
+		Then I click the "Partition" node in the subflow to select it
+		Then I Cmd+click the "Distribution" node in the subflow to add it to the selections
 		Then I verify that 2 objects are selected
 
 		# Right-click the Distribution node and create supernode.
-		Then I right click at position 440, 330 to display the context menu
+		Then I right click the "Partition" node in the subflow to display the context menu
 		Then I click option "Create supernode" from the context menu
 		Then I verify there are 3 pipelines
 
-		Then I right click at position 400, 330 to display the context menu
+		Then I right click the "Supernode" node in the subflow to display the context menu
 		Then I click option "Expand supernode" from the context menu
 
 		Then I verify pipeline 0 have 14 nodes
@@ -53,7 +53,7 @@ Feature: Supernode
 		Then I verify pipeline 0 have 15 nodes
 		Then I verify pipeline 1 have 8 nodes
 
-		Then I right click at position 300, 240 to display the context menu
+		Then I right click the "Supernode" node to display the context menu
 		Then I click option "Expand supernode" from the context menu
 
 		Then I click the "Derive" node to select it
@@ -63,17 +63,23 @@ Feature: Supernode
 		Then I verify pipeline 0 have 14 nodes
 		Then I verify pipeline 1 have 9 nodes
 
-		Then I link node "Distribution" output port "outPort" to node "Derive" input port "inPort"
+		# Without zooming in the browser.dragAndDrop() used by the link step does not
+		# work, presumably because the screen is zoomed out too much.
+		Then I click zoom in
+		Then I click zoom in
+		Then I link node "Distribution" output port "outPort" to node "Derive" input port "inPort" on the subflow
+		Then I click zoom out
+		Then I click zoom out
 
-		Then I click the "Distribution" node to select it
-		Then I Cmd+click the "Derive" node to add it to the selections
+		Then I click the "Distribution" node in the subflow to select it
+		Then I Cmd+click the "Derive" node in the subflow to add it to the selections
 		Then I verify that 2 objects are selected
 
 		# Right-click the Distribution node and create supernode.
-		Then I right click at position 450, 290 to display the context menu
+		Then I right click the "Distribution" node in the subflow to display the context menu
 		Then I click option "Create supernode" from the context menu
 
-		Then I right click at position 440, 330 to display the context menu
+		Then I right click the "Supernode" node in the subflow to display the context menu
 		Then I click option "Expand supernode" from the context menu
 
 		Then I verify pipeline 0 have 14 nodes

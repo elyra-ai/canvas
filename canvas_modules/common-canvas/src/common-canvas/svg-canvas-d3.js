@@ -98,18 +98,15 @@ export default class CanvasD3Layout {
 			const startTime = this.msgStart("Set Canvas Info CanvasD3Layout - starting -", canvasInfo.id);
 
 			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
+
 			if (this.renderer) {
-				this.renderer.setCanvasInfo(this.canvasInfo);
+				this.renderer.setCanvasInfoRenderer(this.canvasInfo);
 			} else {
 				this.renderer = new CanvasRenderer(
 					this.canvasController.getCurrentBreadcrumb().pipelineId,
 					this.canvasDiv,
 					this.canvasController,
 					this.canvasInfo);
-
-				if (this.objectModel.isInSubFlowBreadcrumb(this.canvasController.getCurrentBreadcrumb().pipelineId)) {
-					this.zoomToFit();
-				}
 			}
 
 			this.msgEnd("Set Canvas Info CanvasD3Layout - finished -", canvasInfo.id, startTime);
@@ -208,6 +205,10 @@ export default class CanvasD3Layout {
 		this.renderer.zoomToFit();
 	}
 
+	refreshOnSizeChange() {
+		this.renderer.refreshOnSizeChange();
+	}
+
 	getSvgViewportOffset() {
 		return this.renderer.getSvgViewportOffset();
 	}
@@ -215,14 +216,15 @@ export default class CanvasD3Layout {
 }
 
 class CanvasRenderer {
-	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, parentSuperNode) {
+	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, parentSupernodeD3Selection) {
 		this.pipelineId = pipelineId;
 		this.canvasDiv = canvasDiv;
 		this.canvasInfo = canvasInfo;
 		this.canvasController = canvasController;
 		this.objectModel = this.canvasController.getObjectModel();
 		this.activePipeline = this.getPipeline(pipelineId); // Must come after line setting this.canvasInfo
-		this.parentSuperNode = parentSuperNode;
+		this.parentSupernodeD3Selection = parentSupernodeD3Selection; // Optional parameter, only provided with sub-flow in-place display.
+		this.setDisplayState();
 
 		// An array of renderers for the supernodes on the canvas.
 		this.superRenderers = [];
@@ -262,8 +264,12 @@ class CanvasRenderer {
 		this.dragOffsetX = 0;
 		this.dragOffsetY = 0;
 
-		// When just changing selection, no need to re-render whole canvas
+		// Allow us to track when a selection is being made so there is
+		// no need to re-render whole canvas
 		this.selecting = false;
+
+		// Allows us to track when the binding nodes in a subflow are being moved.
+		this.movingBindingNodes = false;
 
 		// Used to monitor the region selection rectangle.
 		this.regionSelect = false;
@@ -308,11 +314,65 @@ class CanvasRenderer {
 
 		this.displayCanvas();
 
-		if (this.objectModel.isInSubFlowBreadcrumb(this.pipelineId)) {
+		// If we are showing a sub-flow in full screen mode, zoom it to fit the
+		// screen so it looks similar to the in-place sub-flow view.
+		if (this.isDisplayingSubFlowFullPage()) {
 			this.addBackToParentFlowArrow(this.canvasSVG);
+			this.zoomToFit();
 		}
 	}
 
+	setDisplayState() {
+		if (this.canvasController.getBreadcrumbs().length > 1 &&
+				this.canvasController.getCurrentBreadcrumb().pipelineId === this.pipelineId) {
+			this.displayState = "sub-flow-full-page";
+
+		} else if (this.parentSupernodeD3Selection) { // Existance of this varable means we are rendering an in-place sub-flow
+			this.displayState = "sub-flow-in-place";
+
+		} else {
+			this.displayState = "primary-flow-full-page";
+		}
+		consoleLog("Display state for " + this.activePipeline.id + " set to " + this.displayState);
+	}
+
+	isDisplayingPrimaryFlowFullPage() {
+		return this.displayState === "primary-flow-full-page";
+	}
+
+	isDisplayingSubFlow() {
+		return this.displayState === "sub-flow-in-place" || this.displayState === "sub-flow-full-page";
+	}
+
+	isDisplayingSubFlowInPlace() {
+		return this.displayState === "sub-flow-in-place";
+	}
+
+	isDisplayingSubFlowFullPage() {
+		return this.displayState === "sub-flow-full-page";
+	}
+
+	getParentSupernodeDatum() {
+		return this.getSupernodeReferencing(this.activePipeline.id);
+	}
+
+	getSupernodeReferencing(targetPipelineId) {
+		let node = null;
+		this.canvasInfo.pipelines.forEach((pipeline) => {
+			if (!node) {
+				node = this.getSupernodeReferencingTarget(pipeline, targetPipelineId);
+			}
+		});
+		return node;
+	}
+
+	getSupernodeReferencingTarget(pipeline, targetPipelineId) {
+		return this.getSuperNodes(pipeline).find((sn) => sn.subflow_ref.pipeline_id_ref === targetPipelineId);
+	}
+
+	getSuperNodes(pipeline) {
+		return pipeline.nodes.filter((node) => node.type === "super_node");
+	}
 
 	initializeZoomVariables() {
 		// Allows us to record the current zoom amounts.
@@ -331,28 +391,34 @@ class CanvasRenderer {
 		return this.canvasInfo.pipelines.find((p) => p.id === pipelineId);
 	}
 
-	setCanvasInfo(canvasInfo) {
+	setCanvasInfoRenderer(canvasInfo) {
+		consoleLog("setCanvasRenderer - start");
 		this.canvasInfo = canvasInfo;
 		this.activePipeline = this.getPipeline(this.pipelineId);
 		this.layout = this.objectModel.getLayout(); // Refresh the layout info in case it changed.
 
-		// If a supernode and its corresponding pipeline has been deleted we need
-		// to make sure the renderer is removed.
+		// Set the display state incase we changed from in-place to full-page
+		// sub-flow display.
+		this.setDisplayState();
+
+		// If a supernode and its corresponding pipeline has been deleted in the
+		// object model we need to make sure the renderer is removed.
 		this.superRenderers = this.cleanUpSuperRenderers();
 
 		// Must put displayCanvas() before calling superRenderers because supernode
-		// attributes/datum must be set otherwise superRenderer don't know what
-		// dimensions to render into.
+		// attributes/datum must be set otherwise superRenderer can't find the
+		// dimensions of the supernode it is rendering into.
 		this.displayCanvas();
 
 		if (!this.canvasController.isTipShowing()) { // No need to render if just displaying a tip
 			this.superRenderers.forEach((superRenderer) => {
-				superRenderer.setCanvasInfo(canvasInfo);
+				superRenderer.setCanvasInfoRenderer(canvasInfo);
 			});
 		}
+		consoleLog("setCanvasRenderer - end");
 	}
 
-	// Removes any super renderes that no longer have a corresponding pipeline
+	// Removes any super renderers that no longer have a corresponding pipeline
 	// in the canvas info. This mismatch might happen when an expanded supernode
 	// and its corresponding pipeline has been deleted.
 	cleanUpSuperRenderers() {
@@ -381,18 +447,31 @@ class CanvasRenderer {
 		this.canvasSVG.remove();
 	}
 
+	// This is called when the user changes the size of the canvas area.
+	refreshOnSizeChange() {
+		if (this.isDisplayingSubFlowFullPage()) {
+			this.displayBindingNodesToFitSVG();
+		}
+	}
+
 	displayCanvas() {
 		// consoleLog("Displaying Canvas. Inst = " + this.instanceId + "  Id = " + this.canvasInfo.id);
 
 		// If we are rendering a sub-flow and the parent supernode is NOT expanded
-		// in-place hide the SVG area.
-		if (this.parentSuperNode && !this.isExpandedInPlace(this.parentSuperNode.datum())) {
+		// don't display the SVG area.
+		if (this.isDisplayingSubFlowInPlace() && !this.isExpanded(this.getParentSupernodeDatum())) {
 			this.canvasSVG.style("display", "none");
 			return;
 		}
 
-		// Ensure the SVG are is displayed.
+		// Otherwise, always ensure the SVG area is displayed.
 		this.canvasSVG.style("display", "inherit");
+
+		// If we are handling a sub-flow set the supernode binding status for
+		// use when displaying the nodes.
+		if (this.isDisplayingSubFlow()) {
+			this.setSupernodesBindingStatus();
+		}
 
 		var startTime = Date.now();
 		this.displayComments(); // Show comments first so they appear under nodes, if there is overlap.
@@ -405,24 +484,42 @@ class CanvasRenderer {
 			consoleLog("Display Canvas N " + (endTimeNodes - endTimeComments) + " C " +
 			(endTimeComments - startTime) + " L " + (endTimeLinks - endTimeNodes));
 		}
-		if (this.parentSuperNode) {
-			this.displaySVGToFitSuperNode();
+
+		if (this.isDisplayingSubFlowInPlace()) {
+			this.displaySVGToFitSupernode();
 		}
 
-		// this.showBoundingRectangles(); // This can be uncommented for debugging to see bondaries.
+		if (this.isDisplayingSubFlowFullPage()) {
+			// The supernode will not have any calculated port positions when the
+			// subflow is being displayed full screen, so calculate them first.
+			this.setPortPositionsForNode(this.getParentSupernodeDatum());
+			this.displayBindingNodesToFitSVG();
+		}
+
+		// this.displayBoundingRectangles(); // This can be uncommented for debugging to see boundaries.
 	}
 
-	displaySVGToFitSuperNode() {
-		const superNodeDims = this.getSuperNodeDimensions();
-		this.canvasSVG.attr("width", superNodeDims.width);
-		this.canvasSVG.attr("height", superNodeDims.height);
-		this.canvasSVG.attr("x", superNodeDims.x);
-		this.canvasSVG.attr("y", superNodeDims.y);
-		this.zoomToFit();
+	// Called during a resize.
+	displaySVGToFitSupernode() {
+		const supernodeDims = this.getSupernodeDimensions();
+		this.canvasSVG.attr("width", supernodeDims.width);
+		this.canvasSVG.attr("height", supernodeDims.height);
+		this.canvasSVG.attr("x", supernodeDims.x);
+		this.canvasSVG.attr("y", supernodeDims.y);
+		this.zoomToFitForInPlaceSubFlow();
+		this.displayBindingNodesToFitSVG();
 	}
 
-	getSuperNodeDimensions() {
-		const datum = this.parentSuperNode.datum();
+	displayBindingNodesToFitSVG() {
+		this.moveSuperBindingNodes();
+		this.movingBindingNodes = true;
+		this.displayNodes();
+		this.displayLinks();
+		this.movingBindingNodes = false;
+	}
+
+	getSupernodeDimensions() {
+		const datum = this.getParentSupernodeDatum();
 		return {
 			width: datum.width - (2 * this.layout.supernodeSVGAreaPadding),
 			height: datum.height - this.layout.supernodeSVGTopAreaHeight - this.layout.supernodeSVGAreaPadding,
@@ -430,17 +527,61 @@ class CanvasRenderer {
 			y: this.layout.supernodeSVGTopAreaHeight,
 			x_pos: datum.x_pos + this.layout.supernodeSVGAreaPadding,
 			y_pos: datum.y_pos + this.layout.supernodeSVGTopAreaHeight
-
 		};
 	}
 
-	// Display bounding rectangles aroud the SVG area and the canvas area defined
+	// Moves the binding nodes in a sub-flow, which map to nodes in the parent
+	// supernode, to the edge of the SVG area.
+	moveSuperBindingNodes() {
+		const svgRect = this.getViewPortDimensions();
+		const transformedSVGRect = this.getTransformedSVGRect(svgRect, 0);
+
+		// consoleLog("transformedSVGRect" +
+		// 	" x = " + transformedSVGRect.x +
+		// 	" y = " + transformedSVGRect.y +
+		// 	" width = " + transformedSVGRect.width +
+		// 	" height = " + transformedSVGRect.height);
+
+		const nodeSelector = this.getSelectorForClass("node-group");
+		const supernodeDatum = this.getParentSupernodeDatum();
+		const svgHt = supernodeDatum.height - this.layout.supernodeSVGTopAreaHeight - this.layout.supernodeSVGAreaPadding;
+
+		const that = this;
+
+		this.canvasGrp.selectAll(nodeSelector).each(function(d) {
+			if (d.isSupernodeInputBinding) {
+				d.x_pos = transformedSVGRect.x - d.width;
+				const y = that.getSupernodePortYOffset(d.id, supernodeDatum.input_ports);
+				d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.output_ports[0].cy;
+			}
+			if (d.isSupernodeOutputBinding) {
+				d.x_pos = transformedSVGRect.x + transformedSVGRect.width;
+				const y = that.getSupernodePortYOffset(d.id, supernodeDatum.output_ports);
+				d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.input_ports[0].cy;
+			}
+		});
+	}
+
+	getSupernodePortYOffset(nodeId, ports) {
+		if (ports) {
+			const supernodePort = ports.find((port) => port.subflow_node_ref === nodeId);
+			return supernodePort.cy - this.layout.supernodeSVGTopAreaHeight;
+		}
+		return 0;
+	}
+
+	// Display bounding rectangles around the SVG area and the canvas area defined
 	// by the nodes and comments.
-	showBoundingRectangles() {
+	displayBoundingRectangles() {
+		if (!this.activePipeline) {
+			return;
+		}
 		const svgRect = this.getViewPortDimensions();
 		const canv = this.getCanvasDimensionsAdjustedForScale(1);
+		const transformedSVGRect = this.getTransformedSVGRect(svgRect, 1);
 
 		this.canvasGrp.selectAll(this.getId("#br_svg_rect")).remove();
+		this.canvasGrp.selectAll(this.getId("#br_svg_rect_trans")).remove();
 		this.canvasGrp.selectAll(this.getId("#br_canvas_rect")).remove();
 
 		this.canvasGrp
@@ -453,6 +594,17 @@ class CanvasRenderer {
 			.style("fill", "none")
 			.style("stroke", "black");
 
+		this.canvasGrp
+			.append("rect")
+			.attr("id", this.getId("br_svg_rect_trans"))
+			.attr("height", transformedSVGRect.height)
+			.attr("width", transformedSVGRect.width)
+			.attr("x", transformedSVGRect.x)
+			.attr("y", transformedSVGRect.y)
+			.style("fill", "none")
+			.style("stroke", "red");
+
+
 		if (canv) {
 			this.canvasGrp
 				.append("rect")
@@ -464,6 +616,9 @@ class CanvasRenderer {
 				.style("fill", "none")
 				.style("stroke", "blue")
 				.lower();
+		}
+		if (this.superRenderers.length > 0) {
+			this.superRenderers.forEach((sr) => sr.displayBoundingRectangles());
 		}
 	}
 
@@ -522,7 +677,7 @@ class CanvasRenderer {
 	// transformation amounts based on the local SVG -- that is, if we're
 	// displaying a sub-flow it is based on the SVG in the supernode.
 	getTransformedMousePos() {
-		return this.transformMousePos(this.getMousePos(this.canvasSVG));
+		return this.transformPos(this.getMousePos(this.canvasSVG));
 	}
 
 	// Returns the current mouse position. Note: Using d3.mouse is better than
@@ -542,13 +697,27 @@ class CanvasRenderer {
 		return { x: 0, y: 0 };
 	}
 
-	// Transforms the mouse x and y passed in by the current zoom transformation
-	// amounts. This is called from diagram-canvas-d3.jsx as well as from this
-	// module.
-	transformMousePos(pos) {
+	// Transforms the x and y fields of the object passed in by the current zoom
+	// transformation amounts to convert a coordinate position in screen pixels
+	// to a coordinate position in zoomed pixels.
+	transformPos(pos) {
 		return {
 			x: (pos.x - this.zoomTransform.x) / this.zoomTransform.k,
 			y: (pos.y - this.zoomTransform.y) / this.zoomTransform.k
+		};
+	}
+
+	// Transforms the x, y, height and width fields of the object passed in by the
+	// current zoom transformation amounts to convert coordinate positions and
+	// dimensions in screen pixels to coordinate positions and dimensions in
+	// zoomed pixels.
+	getTransformedSVGRect(svgRect, pad) {
+		const transPad = (pad / this.zoomTransform.k);
+		return {
+			x: (-this.zoomTransform.x / this.zoomTransform.k) + transPad,
+			y: (-this.zoomTransform.y / this.zoomTransform.k) + transPad,
+			height: (svgRect.height / this.zoomTransform.k) - (2 * transPad),
+			width: (svgRect.width / this.zoomTransform.k) - (2 * transPad)
 		};
 	}
 
@@ -557,7 +726,7 @@ class CanvasRenderer {
 		mousePos.x -= (this.layout.defaultNodeWidth / 2) * this.zoomTransform.k;
 		mousePos.y -= (this.layout.defaultNodeHeight / 2) * this.zoomTransform.k;
 
-		const transPos = this.transformMousePos(mousePos);
+		const transPos = this.transformPos(mousePos);
 		const link = this.getNodeLinkForElement(element);
 
 		if (dropData !== null) {
@@ -631,8 +800,9 @@ class CanvasRenderer {
 	createCanvasSVG() {
 		// consoleLog("Create Canvas. Inst = " + this.instanceId);
 
-		// For the primary pipeline we use the canvasDiv as the parent for the
-		// svg object and set width and height to fill the containing Div.
+		// For full screen display of primary or sub flows we use the canvasDiv as
+		// the parent for the svg object and set width and height to fill the
+		// containing Div.
 		let parentObject = this.canvasDiv;
 		let dims = {
 			width: "100%",
@@ -641,11 +811,11 @@ class CanvasRenderer {
 			y: 0
 		};
 
-		// When rendering supernode contents we use the parent super node as the
+		// When rendering supernode contents we use the parent supernode as the
 		// parent for the svg object.
-		if (this.parentSuperNode) {
-			parentObject = this.parentSuperNode;
-			dims = this.getSuperNodeDimensions();
+		if (this.isDisplayingSubFlowInPlace()) {
+			parentObject = this.parentSupernodeD3Selection;
+			dims = this.getSupernodeDimensions();
 		}
 
 		const canvasSVG = parentObject
@@ -657,7 +827,7 @@ class CanvasRenderer {
 			.attr("y", dims.y);
 
 		// Only attach the zoom behaviour to the top most SVG area
-		if (!this.parentSuperNode) {
+		if (!this.isDisplayingSubFlowInPlace()) {
 			canvasSVG
 				.call(this.zoom);
 		}
@@ -698,7 +868,7 @@ class CanvasRenderer {
 			.on("contextmenu.zoom", (d) => {
 				// consoleLog("Zoom - context menu - pId = " + this.pipelineId);
 				stopPropagationAndPreventDefault();
-				if (this.parentSuperNode) {
+				if (this.isDisplayingSubFlowInPlace()) {
 					this.canvasController.clearSelections();
 				}
 				this.openContextMenu("canvas");
@@ -710,7 +880,7 @@ class CanvasRenderer {
 
 		// If we're displaying a sub-flow inside a supernode we need a
 		// background rectangle to catch zoom event etc.
-		if (this.parentSuperNode) {
+		if (this.isDisplayingSubFlowInPlace()) {
 			canvasSVG
 				.append("rect")
 				.attr("x", -5000)
@@ -838,8 +1008,24 @@ class CanvasRenderer {
 	}
 
 	zoomToFit() {
-		const viewPortDimensions = this.getViewPortDimensions();
 		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, 10);
+		this.zoomToFitCanvas(canvasDimensions);
+	}
+
+
+	zoomToFitForInPlaceSubFlow() {
+		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, this.layout.supernodeZoomPadding);
+		this.zoomToFitCanvas(canvasDimensions);
+	}
+
+	zoomToFitCanvas(canvasDimensions) {
+		const viewPortDimensions = this.getViewPortDimensions();
+
+		// consoleLog("Zoom to fit: " +
+		// 	" viewPort.width " + viewPortDimensions.width +
+		// 	" viewPort.height " + viewPortDimensions.height +
+		// 	" canvas.width " + canvasDimensions.width +
+		// 	" canvas.height " + canvasDimensions.height);
 
 		if (canvasDimensions) {
 			const xRatio = viewPortDimensions.width / canvasDimensions.width;
@@ -885,15 +1071,14 @@ class CanvasRenderer {
 	}
 
 	// Returns the dimensions of the SVG area. When we are displaying a sub-flow
-	// we will have a parentSuperNode so we can use the dimensions we were
-	// provided with. If not we are displaying the primary pipeline in that case
-	// we can use getBoundingClientRect() to get the dimensions (for some
-	// reason that method doesn't return correct values with embedded SVG areas).
+	// we can use the supernode's dimensions. If not we are displaying
+	// full-page so we can use getBoundingClientRect() to get the dimensions
+	// (for some reason that method doesn't return correct values with embedded SVG areas).
 	getViewPortDimensions() {
 		let viewPortDimensions = {};
 
-		if (this.parentSuperNode) {
-			const dims = this.getSuperNodeDimensions();
+		if (this.isDisplayingSubFlowInPlace()) {
+			const dims = this.getSupernodeDimensions();
 			viewPortDimensions.width = dims.width;
 			viewPortDimensions.height = dims.height;
 
@@ -937,11 +1122,18 @@ class CanvasRenderer {
 			var y = d3Event.transform.y;
 			var k = d3Event.transform.k;
 
+			// this.displayBoundingRectangles(); // This can be uncommented for debugging to see boundaries.
+
 			// If we are not zooming we must be dragging so, if the canvas rectangle
 			// (nodes and comments) is smaller than the SVG area then don't let the
 			// canvas be dragged out of the SVG area.
 			if (k === this.zoomStartPoint.k) {
-				const canv = this.getCanvasDimensionsAdjustedForScale(k);
+				let canv;
+				if (this.isDisplayingSubFlowInPlace()) {
+					canv = this.getCanvasDimensionsAdjustedForScale(k, this.layout.supernodeZoomPadding);
+				} else {
+					canv = this.getCanvasDimensionsAdjustedForScale(k);
+				}
 				const zoomSvgRect = this.getViewPortDimensions();
 
 				if (canv && canv.width < zoomSvgRect.width) {
@@ -960,6 +1152,14 @@ class CanvasRenderer {
 			if (!ta.empty()) {
 				ta.style("transform", this.getTextAreaTransform());
 			}
+
+			if (this.isDisplayingSubFlowFullPage()) {
+				// The supernode will not have any calculated port positions when the
+				// subflow is being displayed full screen, so calculate them first.
+				this.setPortPositionsForNode(this.getParentSupernodeDatum());
+				this.displayBindingNodesToFitSVG();
+			}
+
 		}
 	}
 
@@ -991,8 +1191,10 @@ class CanvasRenderer {
 	}
 
 	// Returns the dimensions in SVG coordinates of the canvas area. This is
-	// based on the position and width and height of the nodes and comments. The
-	// dimensions are scaled by k and padded by pad (if provided).
+	// based on the position and width and height of the nodes and comments. It
+	// does not include the 'super binding nodes' which are the binding nodes in
+	// a sub-flow that map to a port in the containing supernode. The dimensions
+	// are scaled by k and padded by pad (if provided).
 	getCanvasDimensionsAdjustedForScale(k, pad) {
 		var canvLeft = Infinity;
 		let canvTop = Infinity;
@@ -1002,6 +1204,9 @@ class CanvasRenderer {
 		const selector = this.getSelectorForClass("node-group");
 
 		this.canvasGrp.selectAll(selector).each((d) => {
+			if (d.isSupernodeInputBinding || d.isSupernodeOutputBinding) { // Always ignore Supernode binding nodes
+				return;
+			}
 			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.highlightGap);
 			canvTop = Math.min(canvTop, d.y_pos - this.layout.highlightGap);
 			canvRight = Math.max(canvRight, d.x_pos + d.width + this.layout.highlightGap);
@@ -1076,11 +1281,10 @@ class CanvasRenderer {
 	}
 
 	dragStart(d) {
-		consoleLog("Drag start - started");
+		// consoleLog("Drag start - started");
 		this.dragOffsetX = 0;
 		this.dragOffsetY = 0;
 		// Note: Comment resizing is started by the comment highlight rectangle.
-		consoleLog("Drag start - finished");
 	}
 
 	dragMove() {
@@ -1139,13 +1343,26 @@ class CanvasRenderer {
 	}
 
 	displayNodes() {
-		// consoleLog("Displaying nodes");
+		consoleLog("Displaying nodes for " + this.activePipeline.id + " flags:" +
+			" tipShowing = " + this.canvasController.isTipShowing() +
+			", dragging = " + this.dragging +
+			", nodeSizing = " + this.nodeSizing +
+			", commentSizing = " + this.commentSizing +
+			", selecting = " + this.selecting +
+			", regionSelect = " + this.regionSelect);
 
 		// Do not return from here if there are no nodes because there may
 		// be still nodes on display that need to be deleted.
 
 		const that = this;
+
+		// Set the port positions for all ports - these will be needed when displaying
+		// nodes and links. This needs to be done here because resizing the supernode
+		// will cause its ports to move.
+		this.setPortPositionsAllNodes();
+
 		const nodeSelector = this.getSelectorForClass("node-group");
+
 
 		var nodeGroupSel = this.canvasGrp
 			.selectAll(nodeSelector)
@@ -1155,11 +1372,23 @@ class CanvasRenderer {
 		if (this.canvasController.isTipShowing() || this.commentSizing) {
 			return;
 
-		} else if (this.dragging && !this.nodeSizing && !this.commentSizing) {
-			// only transform nodes while dragging
+		} else if ((this.dragging && !this.nodeSizing && !this.commentSizing) || this.movingBindingNodes) {
 			nodeGroupSel
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.datum((d) => that.getNode(d.id)); // Set the __data__ to the updated data
+
+			if (this.isDisplayingSubFlowInPlace()) {
+				nodeGroupSel
+					.each(function(d) { // Use function so the 'this' pointer refers to the node.
+						if (d.isSupernodeInputBinding) {
+							that.updatePortRadius(this, d, that.layout.cssNodePortOutput);
+						}
+						if (d.isSupernodeOutputBinding) {
+							that.updatePortRadius(this, d, that.layout.cssNodePortInput);
+							that.updatePortArrowPath(this, d, that.layout.cssNodePortInputArrow);
+						}
+					});
+			}
 
 		} else if (this.selecting || this.regionSelect) {
 			nodeGroupSel.each(function(d) {
@@ -1250,58 +1479,40 @@ class CanvasRenderer {
 				.on("contextmenu", (d) => {
 					consoleLog("Node Group - context menu");
 					stopPropagationAndPreventDefault();
-					that.openContextMenu("node", d);
+					if (!d.isSupernodeInputBinding && !d.isSupernodeOutputBinding) {
+						that.openContextMenu("node", d);
+					}
 				})
 				.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
 
 			// Node selection highlighting outline for new nodes, flexible properties set in next step
-			if (this.layout.nodeShape === "port-arcs") {
-				newNodeGroups.append("path")
-					.attr("id", (d) => this.getId("node_outline", d.id))
-					.attr("data-pipeline-id", this.getNonNumericPipelineId())
-					.on("mousedown", (d) => {
-						if (this.isExpandedInPlaceSuperNode(d)) {
-							this.nodeSizing = true;
-							this.nodeSizingId = d.id;
-							// Note - node resizing and finalization of size is handled by drag functions.
-						}
-					})
-					.on("mousemove", (d) => {
-						if (this.isExpandedInPlaceSuperNode(d)) {
-							this.nodeSizingDirection = this.getSizingDirection(d);
-							this.displaySizingCursor("node_outline", d.id, this.nodeSizingDirection);
-						}
-					});
+			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
+				.append("path")
+				.attr("id", (d) => this.getId("node_outline", d.id))
+				.attr("data-pipeline-id", this.getNonNumericPipelineId())
+				.on("mousedown", (d) => {
+					if (this.isExpandedSupernode(d)) {
+						this.nodeSizing = true;
+						this.nodeSizingId = d.id;
+						// Note - node resizing and finalization of size is handled by drag functions.
+					}
+				})
+				.on("mouseenter", (d) => {
+					if (this.isExpandedSupernode(d)) {
+						this.nodeSizingDirection = this.getSizingDirection(d);
+						this.displaySizingCursor("node_outline", d.id, this.nodeSizingDirection);
+					}
+				});
 
-				newNodeGroups.append("path")
-					.attr("id", (d) => this.getId("node_body", d.id))
-					.style("filter", `url(${this.getId("#node_drop_shadow")})`);
-
-
-			} else { // simple rectangle
-				newNodeGroups.append("rect")
-					.attr("id", (d) => this.getId("node_outline", d.id))
-					.attr("data-pipeline-id", this.getNonNumericPipelineId())
-					.on("mousedown", (d) => {
-						if (this.isExpandedInPlaceSuperNode(d)) {
-							this.nodeSizing = true;
-							this.nodeSizingId = d.id;
-							// Note - node resizing and finalization of size is handled by drag functions.
-						}
-					})
-					.on("mousemove", (d) => {
-						if (this.isExpandedInPlaceSuperNode(d)) {
-							this.nodeSizingDirection = this.getSizingDirection(d);
-							this.displaySizingCursor("node_outline", d.id, this.nodeSizingDirection);
-						}
-					});
-
-				newNodeGroups.append("rect")
-					.attr("id", (d) => this.getId("node_body", d.id));
-			}
+			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
+				.append("path")
+				.attr("id", (d) => this.getId("node_body", d.id))
+				.filter(() => this.layout.nodeShape === "port-arcs") // Only the "port-arcs" nodes have a drop-shadow.
+				.style("filter", `url(${this.getId("#node_drop_shadow")})`);
 
 			// Image outline - this code used for debugging purposes
-			// newNodeGroups.append("rect")
+			// newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
+			//	.append("rect")
 			// 	.attr("width", this.layout.imageWidth)
 			// 	.attr("height", this.layout.imageHeight)
 			// 	.attr("x", this.layout.imagePosX)
@@ -1309,7 +1520,8 @@ class CanvasRenderer {
 			// 	.attr("class", "d3-node-image-outline");
 
 			// Node image
-			newNodeGroups.append("image")
+			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
+				.append("image")
 				.attr("id", (d) => this.getId("node_image", d.id))
 				.attr("xlink:href", (d) => d.image)
 				.attr("width", this.layout.imageWidth)
@@ -1318,7 +1530,8 @@ class CanvasRenderer {
 				.attr("class", "node-image");
 
 			// Label outline - this code used for debugging purposes
-			// newNodeGroups.append("rect")
+			// newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
+			//	.append("rect")
 			// 	.attr("width", this.layout.labelWidth)
 			// 	.attr("height", this.layout.labelHeight)
 			// 	.attr("x", this.layout.labelPosX)
@@ -1326,7 +1539,8 @@ class CanvasRenderer {
 			// 	.attr("class", "d3-label-outline");
 
 			// Label
-			newNodeGroups.append("text")
+			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
+				.append("text")
 				.attr("id", (d) => that.getId("node_label", d.id))
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
 					const labelObj = d3.select(this);
@@ -1345,10 +1559,10 @@ class CanvasRenderer {
 					}
 				});
 
-			// Create Supernode renderers for any super nodes. Display/hide will be hanlded in 'new and existing'.
-			newNodeGroups.filter((d) => this.isSuperNode(d))
+			// Create Supernode renderers for any super nodes. Display/hide will be handled in 'new and existing'.
+			newNodeGroups.filter((d) => this.isSupernode(d))
 				.each(function(d) {
-					that.createSuperNodeRenderer(d, d3.select(this));
+					that.createSupernodeRenderer(d, d3.select(this));
 				});
 
 			// Halo
@@ -1372,7 +1586,7 @@ class CanvasRenderer {
 			}
 
 			// Error indicator
-			newNodeGroups.append("circle")
+			newNodeGroups.filter((d) => !this.isSuperBindingNode(d)).append("circle")
 				.attr("id", (d) => that.getId("node_error_marker", d.id))
 				.attr("class", (d) => "node-error-marker " + that.getMessageCircleClass(d.messages))
 				.attr("cx", this.layout.errorCenterX)
@@ -1398,23 +1612,11 @@ class CanvasRenderer {
 						.datum(node); // Set the __data__ to the updated data
 
 					// Node selection highlighting: set flexible properties
-					if (this.layout.nodeShape === "port-arcs") {
-						nodeGrp.select(that.getId("#node_outline", d.id))
-							.attr("d", (nd) => this.getNodeShapePath(nd))
-							.attr("data-selected", function(nd) { return that.objectModel.isSelected(nd.id) ? "yes" : "no"; })
-							.attr("class", this.layout.cssNodeSelectionHighlight)
-							.datum(node); // Set the __data__ to the updated data
-					} else { // Simple rectangle
-						nodeGrp.select(that.getId("#node_outline", d.id))
-							.attr("width", (nd) => nd.width + (2 * this.layout.highlightGap))
-							.attr("height",
-								(nd) => nd.height + (2 * this.layout.highlightGap))
-							.attr("x", -this.layout.highlightGap)
-							.attr("y", -this.layout.highlightGap)
-							.attr("data-selected", function(nd) { return that.objectModel.isSelected(nd.id) ? "yes" : "no"; })
-							.attr("class", this.layout.cssNodeSelectionHighlight)
-							.datum(node); // Set the __data__ to the updated data
-					}
+					nodeGrp.select(that.getId("#node_outline", d.id))
+						.attr("d", (nd) => this.getNodeShapePathOutline(nd))
+						.attr("data-selected", function(nd) { return that.objectModel.isSelected(nd.id) ? "yes" : "no"; })
+						.attr("class", this.layout.cssNodeSelectionHighlight)
+						.datum(node); // Set the __data__ to the updated data
 
 					// This code will remove custom attributes from a node. This might happen when
 					// the user clicks the canvas background to remove the greyed out appearance of
@@ -1424,7 +1626,7 @@ class CanvasRenderer {
 					// of its own.
 					nodeGrp.select(that.getId("#node_image", d.id))
 						.attr("y", (nd) => this.getImagePosY(nd))
-						.style("display", function(nd) { return that.isExpandedInPlaceSuperNode(nd) ? "none" : "inherit"; })
+						.style("display", function(nd) { return that.isExpandedSupernode(nd) ? "none" : "inherit"; })
 						.datum(node) // Set the __data__ to the updated data
 						.each(function(nd) {
 							var imageObj = d3.select(this);
@@ -1450,8 +1652,8 @@ class CanvasRenderer {
 						.attr("class", function(nd) { return that.layout.cssNodeLabel + " " + that.getMessageLabelClass(nd.messages); });
 
 					// Supernode sub-flow display
-					if (that.isExpandedInPlaceSuperNode(d)) {
-						that.displaySuperNodeInPlace(d);
+					if (that.isExpandedSupernode(d)) {
+						that.displaySupernodeInPlace(d);
 					}
 
 					// Set cy for error circle in new and existing nodes
@@ -1463,25 +1665,13 @@ class CanvasRenderer {
 					// Handle port related objects
 					if (this.layout.connectionType === "ports") {
 						// Node body updates
-						if (this.layout.nodeShape === "port-arcs") {
-							nodeGrp.select(that.getId("#node_body", d.id))
-								.datum(node) // Set the __data__ to the updated data
-								.attr("d", (cd) => this.getNodeShapePath(cd))
-								.attr("class", (cd) => this.getNodeBodyClass(cd));
-						} else {
-							nodeGrp.select(that.getId("#node_body", d.id))
-								.datum(node) // Set the __data__ to the updated data
-								.attr("width", (cd) => cd.width)
-								.attr("height", (cd) => cd.height)
-								.attr("x", 0)
-								.attr("y", 0)
-								.attr("class", (cd) => this.getNodeBodyClass(cd));
-						}
+						nodeGrp.select(that.getId("#node_body", d.id))
+							.datum(node) // Set the __data__ to the updated data
+							.attr("d", (cd) => this.getNodeShapePath(cd))
+							.attr("class", (cd) => this.getNodeBodyClass(cd));
 
 						// Input ports
 						if (d.input_ports && d.input_ports.length > 0) {
-							const inputPortPositions = this.getPortPositions(d, "input");
-
 							// This selector will select all input ports which are for the currently
 							// active pipeline. It is necessary to select them by the active pipeline
 							// because an expanded super node will include its own input ports as well
@@ -1500,8 +1690,8 @@ class CanvasRenderer {
 								.attr("data-pipeline-id", this.getNonNumericPipelineId())
 								.attr("portId", (port) => port.id) // This is needed by getNodeInputPortAtMousePos
 								.attr("cx", 0)
-								.attr("r", this.layout.portRadius)
 								.attr("connected", "no")
+								.attr("isSupernodeBinding", this.isSuperBindingNode(d) ? "yes" : "no")
 								.on("mouseenter", function(port) {
 									stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
 									if (that.canShowTip(TIP_TYPE_PORT)) {
@@ -1520,7 +1710,8 @@ class CanvasRenderer {
 									this.canvasController.hideTip();
 								})
 								.merge(inputPortSelection)
-								.attr("cy", (port) => inputPortPositions[port.id])
+								.attr("r", () => this.getPortRadius(d))
+								.attr("cy", (port) => port.cy)
 								.attr("class", (port) =>
 									this.layout.cssNodePortInput + (port.class_name ? " " + port.class_name : ""))
 								.datum((port) => that.getNodePort(d.id, port.id, "input"));
@@ -1540,6 +1731,7 @@ class CanvasRenderer {
 								.attr("data-pipeline-id", this.getNonNumericPipelineId())
 								.attr("class", this.layout.cssNodePortInputArrow)
 								.attr("connected", "no")
+								.attr("isSupernodeBinding", this.isSuperBindingNode(d) ? "yes" : "no")
 								.on("mouseenter", function(port) {
 									stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
 									if (that.canShowTip(TIP_TYPE_PORT)) {
@@ -1557,7 +1749,7 @@ class CanvasRenderer {
 									this.canvasController.hideTip();
 								})
 								.merge(inputPortArrowSelection)
-								.attr("d", (port) => this.getArrowShapePath(inputPortPositions[port.id]))
+								.attr("d", (port) => this.getArrowShapePath(port.cy, d, this.zoomTransform.k))
 								.datum((port) => this.getNodePort(d.id, port.id, "input"));
 
 							inputPortArrowSelection.exit().remove();
@@ -1565,8 +1757,6 @@ class CanvasRenderer {
 
 						// Output ports
 						if (d.output_ports && d.output_ports.length > 0) {
-							const outputPortPositions = this.getPortPositions(d, "output");
-
 							// This selector will select all output ports which are for the currently
 							// active pipeline. It is necessary to select them by the active pipeline
 							// because an expanded super node will include its own output ports as well
@@ -1581,7 +1771,6 @@ class CanvasRenderer {
 								.append("circle")
 								.attr("id", (port) => this.getId("node_src_port", d.id, port.id))
 								.attr("data-pipeline-id", this.getNonNumericPipelineId())
-								.attr("r", this.layout.portRadius)
 								.on("mousedown", (port) => {
 									// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 									if (d3Event.button === 0) {
@@ -1590,8 +1779,8 @@ class CanvasRenderer {
 										this.drawingNewLinkSrcId = d.id;
 										this.drawingNewLinkSrcPortId = port.id;
 										this.drawingNewLinkAction = "node-node";
-										const srcNode = this.getNodeAtMousePos();
-										this.drawingNewLinkStartPos = { x: srcNode.x_pos + srcNode.width, y: srcNode.y_pos + outputPortPositions[port.id] };
+										const srcNode = this.getNode(d.id);
+										this.drawingNewLinkStartPos = { x: srcNode.x_pos + srcNode.width, y: srcNode.y_pos + port.cy };
 										this.drawingNewLinkArray = [];
 										this.drawNewLink();
 									}
@@ -1614,8 +1803,9 @@ class CanvasRenderer {
 									this.canvasController.hideTip();
 								})
 								.merge(outputPortSelection)
+								.attr("r", () => this.getPortRadius(d))
 								.attr("cx", (port) => d.width)
-								.attr("cy", (port) => outputPortPositions[port.id])
+								.attr("cy", (port) => port.cy)
 								.attr("class", (port) => this.layout.cssNodePortOutput + (port.class_name ? " " + port.class_name : ""))
 								.datum((port) => this.getNodePort(d.id, port.id, "output"));
 
@@ -1629,8 +1819,16 @@ class CanvasRenderer {
 		}
 	}
 
+	getPortRadius(d) {
+		return this.isSuperBindingNode(d) ? this.layout.supernodeBindingPortRadius / this.zoomTransform.k : this.layout.portRadius;
+	}
+
+	isSuperBindingNode(d) {
+		return d.isSupernodeInputBinding || d.isSupernodeOutputBinding;
+	}
+
 	addDynamicNodeIcons(d, nodeGrpSrc) {
-		if (!this.nodeSizing) {
+		if (!this.nodeSizing && !this.isSuperBindingNode(d)) {
 			const nodeGrp = d3.select(nodeGrpSrc);
 			if (this.layout.connectionType === "ports") {
 				this.canvasGrp.selectAll(this.getId("#node_body", d.id)).attr("hover", "yes");
@@ -1661,19 +1859,19 @@ class CanvasRenderer {
 					});
 			}
 
-			if (this.isExpandedInPlaceSuperNode(d)) {
+			if (this.isExpandedSupernode(d)) {
 				// Supernode expansion icon background
 				nodeGrp
 					.append("rect")
 					.attr("id", () => this.getId("node_exp_back", d.id))
-					.attr("width", this.layout.superNodeIconWidth + (2 * this.layout.superNodeIconPadding))
-					.attr("height", this.layout.superNodeIconHeight + (2 * this.layout.superNodeIconPadding))
-					.attr("x", (nd) => this.getExpansionIconPosX(nd) - this.layout.superNodeIconPadding)
-					.attr("y", this.layout.superNodeIconPosY - this.layout.superNodeIconPadding)
+					.attr("width", this.layout.supernodeIconWidth + (2 * this.layout.supernodeIconPadding))
+					.attr("height", this.layout.supernodeIconHeight + (2 * this.layout.supernodeIconPadding))
+					.attr("x", (nd) => this.getExpansionIconPosX(nd) - this.layout.supernodeIconPadding)
+					.attr("y", this.layout.supernodeIconPosY - this.layout.supernodeIconPadding)
 					.attr("class", "d3-node-super-expand-icon-outline")
 					.on("click", () => {
 						stopPropagationAndPreventDefault();
-						this.renderSuperNodeFullPage(d);
+						this.displaySupernodeFullPage(d);
 					});
 
 				// Supernode expansion icon
@@ -1682,16 +1880,54 @@ class CanvasRenderer {
 					.attr("id", () => this.getId("node_exp_icon", d.id))
 					.attr("class", "d3-node-super-expand-icon")
 					.html(SUPER_NODE_EXPAND_ICON)
-					.attr("width", this.layout.superNodeIconWidth)
-					.attr("height", this.layout.superNodeIconHeight)
+					.attr("width", this.layout.supernodeIconWidth)
+					.attr("height", this.layout.supernodeIconHeight)
 					.attr("x", (nd) => this.getExpansionIconPosX(nd))
-					.attr("y", this.layout.superNodeIconPosY)
+					.attr("y", this.layout.supernodeIconPosY)
 					.on("click", () => {
 						stopPropagationAndPreventDefault();
-						this.renderSuperNodeFullPage(d);
+						this.displaySupernodeFullPage(d);
 					});
 			}
 		}
+	}
+
+	setSupernodesBindingStatus() {
+		const supernodeDatum = this.getParentSupernodeDatum();
+		this.activePipeline.nodes.forEach((node) => {
+			if (supernodeDatum.input_ports && this.isEntryBindingNode(node)) {
+				supernodeDatum.input_ports.forEach((supernodeInputPort) => {
+					node.isSupernodeInputBinding = (supernodeInputPort.subflow_node_ref === node.id) ? true : node.isSupernodeInputBinding;
+				});
+			}
+			if (supernodeDatum.output_ports && this.isExitBindingNode(node)) {
+				supernodeDatum.output_ports.forEach((supernodeOutputPort) => {
+					node.isSupernodeOutputBinding = (supernodeOutputPort.subflow_node_ref === node.id) ? true : node.isSupernodeOutputBinding;
+				});
+			}
+		});
+	}
+
+	updatePortRadius(node, d, cssNodePort) {
+		const nodeGrp = d3.select(node);
+		const selector = this.getSelectorForClass(cssNodePort);
+		nodeGrp.selectAll(selector)
+			.attr("r", () => this.getPortRadius(d));
+	}
+
+	updatePortArrowPath(node, d, cssNodePortArrow) {
+		const nodeGrp = d3.select(node);
+		const selector = this.getSelectorForClass(cssNodePortArrow);
+		nodeGrp.selectAll(selector)
+			.attr("d", (port) => this.getArrowShapePath(port.cy, d, this.zoomTransform.k));
+	}
+
+	isEntryBindingNode(node) {
+		return node.type === "binding" && node.output_ports && node.output_ports.length > 0;
+	}
+
+	isExitBindingNode(node) {
+		return node.type === "binding" && node.input_ports && node.input_ports.length > 0;
 	}
 
 	removeDynamicNodeIcons(d) {
@@ -1700,23 +1936,23 @@ class CanvasRenderer {
 			this.canvasGrp.selectAll(this.getId("#node_ellipsis_background", d.id)).remove();
 		}
 
-		if (this.isExpandedInPlaceSuperNode(d)) {
+		if (this.isExpandedSupernode(d)) {
 			this.canvasGrp.selectAll(this.getId("#node_exp_icon", d.id)).remove();
 			this.canvasGrp.selectAll(this.getId("#node_exp_back", d.id)).remove();
 		}
 	}
 
-	createSuperNodeRenderer(d, superNodeD3Object) {
+	createSupernodeRenderer(d, supernodeD3Object) {
 		const superRenderer = new CanvasRenderer(
 			d.subflow_ref.pipeline_id_ref,
 			this.canvasDiv,
 			this.canvasController,
 			this.canvasInfo,
-			superNodeD3Object);
+			supernodeD3Object);
 		this.superRenderers.push(superRenderer);
 	}
 
-	deleteSuperNodeRenderer(d) {
+	deleteSupernodeRenderer(d) {
 		// TODO - using pipelineId as unique identifier for renderer may be
 		// a problem if two super nodes are displayed for the same sub-flow pipeline
 		const idx = this.indexOfSuperRenderer(d);
@@ -1726,7 +1962,7 @@ class CanvasRenderer {
 		}
 	}
 
-	displaySuperNodeInPlace(d) {
+	displaySupernodeInPlace(d) {
 		const ren = this.findSuperRenderer(d);
 		if (ren) {
 			ren.displayCanvas();
@@ -1744,10 +1980,10 @@ class CanvasRenderer {
 	indexOfSuperRenderer(d) {
 		// TODO - using pipelineId as unique identifier for renderer may be
 		// a problem if two super nodes are displayed for the same sub-flow pipeline
-		return this.superRenderers.indexOf((sr) => sr.pipelineId === d.subflow_ref.pipeline_id_ref);
+		return this.superRenderers.findIndex((sr) => sr.pipelineId === d.subflow_ref.pipeline_id_ref);
 	}
 
-	renderSuperNodeFullPage(d) {
+	displaySupernodeFullPage(d) {
 		this.canvasController.displaySubPipeline({ pipelineId: d.subflow_ref.pipeline_id_ref, pipelineFlowId: this.pipelineFlowId });
 	}
 
@@ -1766,24 +2002,24 @@ class CanvasRenderer {
 
 	getLabelText(data, textObj) {
 		let labelWidth = this.layout.labelWidth;
-		if (this.isExpandedInPlaceSuperNode(data)) {
-			labelWidth = this.layout.superNodeLabelWidth;
+		if (this.isExpandedSupernode(data)) {
+			labelWidth = this.layout.supernodeLabelWidth;
 		}
 
 		return this.trimLabelToWidth(data.label, labelWidth, this.layout.cssNodeLabel, textObj);
 	}
 
 	getLabelPosX(data) {
-		if (this.isExpandedInPlaceSuperNode(data)) {
-			return this.layout.superNodeLabelPosY;
+		if (this.isExpandedSupernode(data)) {
+			return this.layout.supernodeLabelPosY;
 		}
 		return this.layout.labelHorizontalJustification === "left" // If not "left" then "center"
 			? this.layout.labelPosX : this.layout.labelPosX + (this.layout.labelWidth / 2);
 	}
 
 	getLabelPosY(data) {
-		if (this.isExpandedInPlaceSuperNode(data)) {
-			return this.layout.superNodeLabelPosY;
+		if (this.isExpandedSupernode(data)) {
+			return this.layout.supernodeLabelPosY;
 		} else if (this.layout.labelAndIconVerticalJustification === "center") {
 			if (this.layout.nodeFormatType === "horizontal") {
 				return (data.height / 2) - (this.layout.labelHeight / 2);
@@ -1811,16 +2047,16 @@ class CanvasRenderer {
 	}
 
 	getEllipsisPosX(data) {
-		if (this.isExpandedInPlaceSuperNode(data)) {
-			return data.width - (2 * this.layout.superNodeIconSeparation) - this.layout.superNodeIconWidth - this.layout.ellipsisWidth;
+		if (this.isExpandedSupernode(data)) {
+			return data.width - (2 * this.layout.supernodeIconSeparation) - this.layout.supernodeIconWidth - this.layout.ellipsisWidth;
 		}
 
 		return this.layout.ellipsisPosX;
 	}
 
 	getEllipsisPosY(data) {
-		if (this.isExpandedInPlaceSuperNode(data)) {
-			return this.layout.superNodeEllipsisPosY;
+		if (this.isExpandedSupernode(data)) {
+			return this.layout.supernodeEllipsisPosY;
 		}
 
 		if (this.layout.labelAndIconVerticalJustification === "center") {
@@ -1835,26 +2071,25 @@ class CanvasRenderer {
 	}
 
 	getLabelHorizontalJustification(data) {
-		if (this.isExpandedInPlaceSuperNode(data)) {
+		if (this.isExpandedSupernode(data)) {
 			return "left";
 		}
 		return this.layout.labelHorizontalJustification === "left" ? "start" : "middle";
 	}
 
 	getExpansionIconPosX(data) {
-		return data.width - this.layout.superNodeIconSeparation - this.layout.superNodeIconWidth;
+		return data.width - this.layout.supernodeIconSeparation - this.layout.supernodeIconWidth;
 	}
 
-
-	isExpandedInPlaceSuperNode(data) {
-		return this.isSuperNode(data) && this.isExpandedInPlace(data);
+	isExpandedSupernode(data) {
+		return this.isSupernode(data) && this.isExpanded(data);
 	}
 
-	isExpandedInPlace(data) {
-		return data.isExpanded === true;
+	isExpanded(data) {
+		return data.is_expanded === true;
 	}
 
-	isSuperNode(data) {
+	isSupernode(data) {
 		return data.type === "super_node";
 	}
 
@@ -1886,7 +2121,9 @@ class CanvasRenderer {
 	// Adds a decorator to the nodeGroup passed in of the type passed in at the
 	// x and y position provided.
 	addDecorator(nodeGroup, type, x, y) {
-		var decGrp = nodeGroup.filter((d) => this.isDecoration(d, type));
+		var decGrp = nodeGroup
+			.filter((d) => !this.isSuperBindingNode(d))
+			.filter((d) => this.isDecoration(d, type));
 
 		decGrp.append("rect")
 			.attr("width", this.layout.decoratorWidth + 2)
@@ -2250,12 +2487,18 @@ class CanvasRenderer {
 	getNodeAtMousePos() {
 		const that = this;
 		var pos = this.getTransformedMousePos();
+
 		var node = null;
 		const selector = this.getSelectorForClass("node-group");
 		this.canvasGrp.selectAll(selector)
 			.each(function(d) {
-				if (pos.x >= d.x_pos - that.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
-						pos.x <= d.x_pos + d.width + that.layout.portRadius &&
+				let portRadius = that.layout.portRadius;
+				if (that.isSuperBindingNode(d)) {
+					portRadius = that.layout.supernodeBindingPortRadius / that.zoomTransform.k;
+				}
+
+				if (pos.x >= d.x_pos - portRadius && // Target port sticks out by its radius so need to allow for it.
+						pos.x <= d.x_pos + d.width + portRadius &&
 						pos.y >= d.y_pos &&
 						pos.y <= d.y_pos + d.height) {
 					node = d;
@@ -2290,7 +2533,42 @@ class CanvasRenderer {
 	}
 
 	// Returns a path string that will draw the outline shape of the node.
+	getNodeShapePathOutline(data) {
+		if (this.layout.nodeShape === "port-arcs") {
+			return this.getPortArcsNodeShapePath(data); // Port-arc outline does not have a highlight gap
+		}
+		return this.getRectangleNodeShapePath(data, this.layout.highlightGap);
+	}
+
+	// Returns a path string that will draw the body shape of the node.
 	getNodeShapePath(data) {
+		if (this.layout.nodeShape === "port-arcs") {
+			return this.getPortArcsNodeShapePath(data);
+		}
+		return this.getRectangleNodeShapePath(data);
+	}
+
+	// Returns a path that will draw the shape for the rectangle node
+	// display. This is draw as a path rather than an SVG rectangle to make the
+	// calling code more generic.
+	getRectangleNodeShapePath(data, highlightGap) {
+		const gap = highlightGap ? highlightGap : 0;
+		const x = 0 - gap;
+		const y = 0 - gap;
+		const width = data.width + gap;
+		const height = data.height + gap;
+
+		let path = "M " + x + " " + y + " L " + width + " " + y;
+		path += " L " + width + " " + height;
+		path += " L " + x + " " + height;
+		path += " Z"; // Draw a straight line back to origin.
+
+		return path;
+	}
+
+	// Returns a path that will draw the outline shape for the 'port-arcs' display
+	// which shows arcs around each of the node circles.
+	getPortArcsNodeShapePath(data) {
 		let path = "M 0 0 L " + data.width + " 0 "; // Draw line across the top of the node
 
 		if (data.output_ports && data.output_ports.length > 0) {
@@ -2357,44 +2635,41 @@ class CanvasRenderer {
 		} else {
 			path += " Z"; // If no input ports just draw a straight line.
 		}
-		// console.log("Node path = " + path);
 		return path;
 	}
 
-	getPortPositions(data, type) {
-		const portPositions = {};
-		var ports;
-		if (type === "input") {
-			ports = data.input_ports;
-		} else {
-			ports = data.output_ports;
-		}
+	// Sets the port positions on nodes for use when displaying nodes and links
+	setPortPositionsAllNodes() {
+		this.activePipeline.nodes.forEach((node) => {
+			this.setPortPositionsForNode(node);
+		});
+	}
 
-		if (data.height <= this.layout.defaultNodeHeight &&
-				ports.length === 1) {
-			portPositions[ports[0].id] = this.layout.portPosY;
+	setPortPositionsForNode(node) {
+		this.setPortPositionsByInfo(node, node.input_ports, node.inputPortsHeight);
+		this.setPortPositionsByInfo(node, node.output_ports, node.outputPortsHeight);
+	}
 
-		} else {
-			let centerPoint = 0;
+	setPortPositionsByInfo(data, ports, portsHeight) {
+		if (ports && ports.length > 0) {
+			if (data.height <= this.layout.defaultNodeHeight &&
+					ports.length === 1) {
+				ports[0].cy = this.layout.portPosY;
 
-			if (type === "input") {
-				if (data.inputPortsHeight < data.height) {
-					centerPoint = ((data.height - data.inputPortsHeight) / 2);
-				}
 			} else {
-				if (data.outputPortsHeight < data.height) {
-					centerPoint = ((data.height - data.outputPortsHeight) / 2);
+				let centerPoint = 0;
+
+				if (portsHeight < data.height) {
+					centerPoint = ((data.height - portsHeight) / 2);
 				}
+
+				ports.forEach((p) => {
+					centerPoint += this.layout.portArcRadius;
+					p.cy = centerPoint;
+					centerPoint += this.layout.portArcRadius + this.layout.portArcSpacing;
+				});
 			}
-
-			ports.forEach((p) => {
-				centerPoint += this.layout.portArcRadius;
-				portPositions[p.id] = centerPoint;
-				centerPoint += this.layout.portArcRadius + this.layout.portArcSpacing;
-			});
 		}
-
-		return portPositions;
 	}
 
 	displayComments() {
@@ -2523,7 +2798,7 @@ class CanvasRenderer {
 					stopPropagationAndPreventDefault();
 
 					// TODO - Enable editing for comments inside sub-flow
-					if (!that.parentSuperNode) {
+					if (!that.isDisplayingSubFlowInPlace()) {
 						that.canvasGrp.selectAll(that.getId("#comment_text", d.id)) // Make SVG text invisible when in edit mode.
 							.attr("beingedited", "yes");
 
@@ -2543,9 +2818,9 @@ class CanvasRenderer {
 						that.zoomTextAreaCenterY = d.y_pos + (d.height / 2);
 
 						// TODO - Need to calculate correct transform for text area when opened for comment in sub-flow
-						// if (that.parentSuperNode) {
-						// 	const dims = that.getSuperNodeDimensions();
-						// 	const superDatum = that.parentSuperNode.datum();
+						// if (that.isDisplayingSubFlowInPlace()) {
+						// 	const dims = that.getSupernodeDimensions();
+						// 	const superDatum = that.parentSupernode.datum();
 						// 	that.zoomTextAreaCenterX += superDatum.x_pos;
 						// 	that.zoomTextAreaCenterY += superDatum.y_pos;
 						// 	xPos += dims.x_pos;
@@ -2611,7 +2886,7 @@ class CanvasRenderer {
 					this.commentSizingId = d.id;
 					// Note - comment resizing and finalization of size is handled by drag functions.
 				})
-				.on("mousemove", (d) => {
+				.on("mouseenter", (d) => {
 					this.commentSizingDirection = this.getSizingDirection(d);
 					this.displaySizingCursor("comment_outline", d.id, this.commentSizingDirection);
 				});
@@ -2798,11 +3073,11 @@ class CanvasRenderer {
 		let k;
 
 		// TODO - Need to calculate correct transform for text area when opened for comment in sub-flow
-		if (this.parentSuperNode) {
-			// const dims = this.getSuperNodeDimensions();
+		if (this.isDisplayingSubFlowInPlace()) {
+			// const dims = this.getSupernodeDimensions();
 			const topLevelSVG = this.canvasDiv.selectAll("svg");
 			const topLevelTransform = d3.zoomTransform(topLevelSVG.node());
-			// const superDatum = this.parentSuperNode.datum();
+			// const superDatum = this.getParentSupernodeDatum();
 			k = this.zoomTransform.k + topLevelTransform.k;
 			x += topLevelTransform.x + this.zoomTransform.x - (this.zoomTextAreaCenterX * (1 - k));
 			y += topLevelTransform.y + this.zoomTransform.y - (this.zoomTextAreaCenterY * (1 - k));
@@ -2890,8 +3165,8 @@ class CanvasRenderer {
 		const nodeObj = this.getNode(this.nodeSizingId);
 		this.removeDynamicNodeIcons(nodeObj);
 		const minWidth =
-			this.layout.superNodeLabelWidth + this.layout.ellipsisWidth +
-			this.layout.superNodeIconWidth + (2 * this.layout.superNodeIconPadding);
+			this.layout.supernodeLabelWidth + this.layout.ellipsisWidth +
+			this.layout.supernodeIconWidth + (2 * this.layout.supernodeIconPadding);
 		const delta = this.resizeObject(nodeObj, this.nodeSizingDirection, minWidth, 80);
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
@@ -2899,7 +3174,10 @@ class CanvasRenderer {
 			this.moveSurroundingNodes(nodeObj, delta);
 			this.displayNodes();
 			this.displayLinks();
-			this.superRenderers.forEach((renderer) => renderer.displaySVGToFitSuperNode());
+			if (this.isDisplayingSubFlow()) {
+				this.displayBindingNodesToFitSVG();
+			}
+			this.superRenderers.forEach((renderer) => renderer.displaySVGToFitSupernode());
 		}
 	}
 
@@ -2925,24 +3203,24 @@ class CanvasRenderer {
 
 			if (this.nodeSizingDirection.indexOf("n") > -1 &&
 			nodeObj.y_pos + nodeObj.height > node.y_pos + node.height && // check node is above supernode bottom border
-			this.isNodePositionedWithinSuperNodeXBoundary(node, nodeObj)) {
+			this.isNodePositionedWithinSupernodeXBoundary(node, nodeObj)) {
 				node.y_pos -= delta.height;
 				yDelta = delta.height;
 			} else if (this.nodeSizingDirection.indexOf("s") > -1 &&
 			node.y_pos > nodeObj.y_pos && // check node is below supernode top right corner
-			this.isNodePositionedWithinSuperNodeXBoundary(node, nodeObj)) {
+			this.isNodePositionedWithinSupernodeXBoundary(node, nodeObj)) {
 				node.y_pos += delta.height;
 				yDelta = delta.height;
 			}
 
 			if (this.nodeSizingDirection.indexOf("w") > -1 &&
 			nodeObj.x_pos + nodeObj.width > node.x_pos + node.width && // check node is left of supernode right border
-			this.isNodePositionedWithinSuperNodeYBoundary(node, nodeObj)) {
+			this.isNodePositionedWithinSupernodeYBoundary(node, nodeObj)) {
 				node.x_pos -= delta.width;
 				xDelta = delta.width;
 			} else if (this.nodeSizingDirection.indexOf("e") > -1 &&
 			nodeObj.x_pos < node.x_pos && // check node is right of supernode left border
-			this.isNodePositionedWithinSuperNodeYBoundary(node, nodeObj)) {
+			this.isNodePositionedWithinSupernodeYBoundary(node, nodeObj)) {
 				node.x_pos += delta.width;
 				xDelta = delta.width;
 			}
@@ -2953,12 +3231,12 @@ class CanvasRenderer {
 		});
 	}
 
-	isNodePositionedWithinSuperNodeXBoundary(node, supernode) {
+	isNodePositionedWithinSupernodeXBoundary(node, supernode) {
 		return (node.x_pos >= supernode.x_pos && node.x_pos < supernode.x_pos + supernode.width) || // check node top border is within supernode
 			(node.x_pos + node.width <= supernode.x_pos + supernode.width && node.x_pos + node.width >= supernode.x_pos); // check node bottom border is within supernode
 	}
 
-	isNodePositionedWithinSuperNodeYBoundary(node, supernode) {
+	isNodePositionedWithinSupernodeYBoundary(node, supernode) {
 		return (node.y_pos >= supernode.y_pos && node.y_pos < supernode.y_pos + supernode.height) || // check node top border is within supernode
 			(node.y_pos + node.height <= supernode.y_pos + supernode.height && node.y_pos + node.height >= supernode.y_pos); // check node bottom border is within supernode
 	}
@@ -3276,7 +3554,7 @@ class CanvasRenderer {
 	}
 
 	displayLinks() {
-		// consoleLog("Displaying links");
+		consoleLog("Displaying links");
 
 		// Do not return from here if there are no links because there may
 		// be still links on display that need to be deleted.
@@ -3285,16 +3563,23 @@ class CanvasRenderer {
 		const that = this;
 		const linkSelector = this.getSelectorForClass("link-group");
 
-		if (this.selecting || this.regionSelect) {
+		if (this.selecting || this.regionSelect || this.canvasController.isTipShowing()) {
 			// no lines update needed when selecting objects/region
 			return;
-		} else if (this.dragging || this.commentSizing) {
-			// while dragging only remove lines that are affected by moving nodes/comments
+		} else if (this.dragging || this.nodeSizing || this.commentSizing || this.movingBindingNodes) {
+			// while dragging etc. only remove lines that are affected by moving nodes/comments
 			let affectLinks;
 			if (this.nodeSizing) {
 				affectLinks = this.getConnectedLinksFromNodeSizingArray(this.nodeSizingMovedNodes);
 			} else {
-				affectLinks = this.getConnectedLinks(this.getSelectedNodesAndComments());
+				let affectedNodesAndComments = this.getSelectedNodesAndComments();
+				// For sub-flow rendering, we need to add the supernode binding nodes
+				// because their links will also need to be refreshed when dragging is ocurring.
+				if (this.isDisplayingSubFlow()) {
+					affectedNodesAndComments = affectedNodesAndComments.concat(this.getSupernodeBindingNodes());
+				}
+
+				affectLinks = this.getConnectedLinks(affectedNodesAndComments);
 			}
 			this.canvasGrp.selectAll(linkSelector)
 				.filter(
@@ -3410,6 +3695,19 @@ class CanvasRenderer {
 			consoleLog("displayLinks R " + (timeAfterDelete - startTimeDrawingLines) +
 			" B " + (afterLineArray - timeAfterDelete) + " D " + (endTimeDrawingLines - afterLineArray));
 		}
+	}
+
+	// Adds the binding nodes, which map to the containing supernode's ports, to
+	// the set of affected nodes and comments.
+	getSupernodeBindingNodes() {
+		const snBindingNodes = [];
+		this.activePipeline.nodes.forEach((node) => {
+			if (node.isSupernodeInputBinding || node.isSupernodeOutputBinding) {
+				snBindingNodes.push(node);
+			}
+		});
+
+		return snBindingNodes;
 	}
 
 	getDataLinkClass(d) {
@@ -3589,21 +3887,17 @@ class CanvasRenderer {
 	}
 
 	getNodeLinkCoordsForPorts(srcNode, srcPortId, trgNode, trgPortId) {
-		var srcY = this.layout.portPosY;
-		var trgY = this.layout.portPosY;
+		let srcY = this.layout.portPosY;
+		let trgY = this.layout.portPosY;
 
 		if (srcNode.output_ports && srcNode.output_ports.length > 0) {
-			const outputPortPositions = this.getPortPositions(srcNode, "output");
-			if (outputPortPositions[srcPortId]) {
-				srcY = outputPortPositions[srcPortId];
-			}
+			const port = srcNode.output_ports.find((srcPort) => srcPort.id === srcPortId);
+			srcY = port ? port.cy : srcY;
 		}
 
 		if (trgNode.input_ports && trgNode.input_ports.length > 0) {
-			const inputPortPositions = this.getPortPositions(trgNode, "input");
-			if (inputPortPositions[trgPortId]) {
-				trgY = inputPortPositions[trgPortId];
-			}
+			const port = trgNode.input_ports.find((trgPort) => trgPort.id === trgPortId);
+			trgY = port ? port.cy : trgY;
 		}
 
 		return {
@@ -3726,10 +4020,24 @@ class CanvasRenderer {
 	}
 
 	// Returns arrow shape for Ports presentation.
-	getArrowShapePath(cy) {
-		let path = "M -2 " + (cy - 3);
-		path += " L 2 " + cy;
-		path += " L -2 " + (cy + 3);
+	getArrowShapePath(cy, d, k) {
+		let x1 = -2;
+		let x2 = 2;
+		let y1 = cy - 3;
+		let y2 = cy + 3;
+		// Offset the arrow for super binding input nodes to the left so they are not
+		// obstructed by the edge of the containing SVG area. Also, zoom them by the
+		// zoom amount so they stay a standard size when zooming.
+		if (this.isSuperBindingNode(d)) {
+			x1 = -5 / k;
+			x2 = -1 / k;
+			const ygap = 3 / k;
+			y1 = cy - ygap;
+			y2 = cy + ygap;
+		}
+		let path = "M " + x1 + " " + y1;
+		path += " L  " + x2 + " " + cy;
+		path += " L " + x1 + " " + y2;
 		return path;
 	}
 
@@ -3971,7 +4279,7 @@ class CanvasRenderer {
 	}
 
 	// Return the x,y coordinates of the svg group relative to the window's viewport
-	// This is used when a new comment is created from the toolbar ro make sure the
+	// This is used when a new comment is created from the toolbar to make sure the
 	// new comment always appears in the view port.
 	getSvgViewportOffset() {
 		let xPos = this.layout.addCommentOffset;
@@ -4008,5 +4316,5 @@ function stopPropagationAndPreventDefault() {
 }
 
 function consoleLog(msg) {
-	// console.log(msg);
+	console.log(msg);
 }

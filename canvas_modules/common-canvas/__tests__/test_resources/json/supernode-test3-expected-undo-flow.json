@@ -591,7 +591,10 @@
               "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
               "x_pos": 297,
               "y_pos": 235,
-              "description": "supernode"
+              "description": "supernode",
+              "is_expanded": false,
+              "expanded_width": 200,
+              "expanded_height": 200
             }
           },
           "inputs": [

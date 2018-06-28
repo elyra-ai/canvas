@@ -82,6 +82,9 @@ $node-port-input-fill-color-austin: transparent;
 $node-port-input-connected-stroke-color-austin: transparent;
 $node-port-input-connected-fill-color-austin: transparent;
 
+$node-port-input-connected-super-binding-stroke-color-austin: $very-dark-blue;
+$node-port-input-connected-super-binding-fill-color-austin: $ui-02;
+
 $node-port-input-arrow-connected-stroke-color-austin: $very-dark-blue;
 $node-port-input-arrow-connected-fill-color-austin: transparent;
 
@@ -376,7 +379,13 @@ $link-hightlight-color: $brand-01;
 .d3-node-port-input-austin[connected="yes"] {
 	stroke: $node-port-input-connected-stroke-color-austin;
 	fill: $node-port-input-connected-fill-color-austin;
-	stroke-width: 2;
+	stroke-width: 1;
+}
+
+.d3-node-port-input-austin[connected="yes"][isSupernodeBinding="yes"] {
+	stroke: $node-port-input-connected-super-binding-stroke-color-austin;
+	fill: $node-port-input-connected-super-binding-fill-color-austin;
+	stroke-width: 1;
 }
 
 .d3-node-port-input-arrow-austin {

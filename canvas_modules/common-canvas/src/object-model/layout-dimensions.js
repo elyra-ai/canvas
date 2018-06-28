@@ -75,7 +75,8 @@ const haloLayout = {
 	// The gap between a node or comment and its selection highlight rectangle
 	highlightGap: 4,
 
-	// Whether to display a link line when linked node/comments overlap
+	// Whether to display a link line when linked node/comments overlap. For halo
+	// we don't want to show the link when objects overlap but for ports we do.
 	displayLinkOnOverlap: false,
 
 	// What point to draw the link line towards. Possible values are image_center or node_center.
@@ -117,19 +118,21 @@ const haloLayout = {
 	addCommentOffset: 30,
 
 	// Supernode in-place containment area attributes
-	superNodeLabelPosX: 5,
-	superNodeLabelPosY: 8,
-	superNodeLabelWidth: 150,
-	superNodeEllipsisPosY: 5,
-	superNodeIconPosY: 5,
-	superNodeIconHeight: 14,
-	superNodeIconWidth: 14,
-	superNodeIconPadding: 2,
-	superNodeIconSeparation: 5,
-	superNodeDefaultWidth: 200,
-	superNodeDefaultHeight: 200,
+	supernodeLabelPosX: 5,
+	supernodeLabelPosY: 8,
+	supernodeLabelWidth: 150,
+	supernodeEllipsisPosY: 5,
+	supernodeIconPosY: 5,
+	supernodeIconHeight: 14,
+	supernodeIconWidth: 14,
+	supernodeIconPadding: 2,
+	supernodeIconSeparation: 5,
+	supernodeDefaultWidth: 200,
+	supernodeDefaultHeight: 200,
 	supernodeSVGTopAreaHeight: 25,
 	supernodeSVGAreaPadding: 3,
+	supernodeBindingPortRadius: 10,
+	supernodeZoomPadding: 40,
 
 	// ---------------------------------------------------------------------------
 	// Below here are halo specific properties
@@ -211,7 +214,8 @@ const portsHorizontal = {
 	// The gap between a node or comment and its selection highlight outline
 	highlightGap: 1,
 
-	// Whether to display a link line when linked node/comments overlap
+	// Whether to display a link line when linked node/comments overlap. For halo
+	// we don't want to show the link when objects overlap but for ports we do.
 	displayLinkOnOverlap: true,
 
 	// What point to draw the link line towards. Possible values are image_center or node_center.
@@ -253,19 +257,21 @@ const portsHorizontal = {
 	addCommentOffset: 30,
 
 	// Supernode in-place containment area attributes
-	superNodeLabelPosX: 5,
-	superNodeLabelPosY: 8,
-	superNodeLabelWidth: 150,
-	superNodeEllipsisPosY: 5,
-	superNodeIconPosY: 5,
-	superNodeIconHeight: 14,
-	superNodeIconWidth: 14,
-	superNodeIconPadding: 2,
-	superNodeIconSeparation: 5,
-	superNodeDefaultWidth: 200,
-	superNodeDefaultHeight: 200,
+	supernodeLabelPosX: 5,
+	supernodeLabelPosY: 8,
+	supernodeLabelWidth: 150,
+	supernodeEllipsisPosY: 5,
+	supernodeIconPosY: 5,
+	supernodeIconHeight: 14,
+	supernodeIconWidth: 14,
+	supernodeIconPadding: 2,
+	supernodeIconSeparation: 5,
+	supernodeDefaultWidth: 200,
+	supernodeDefaultHeight: 200,
 	supernodeSVGTopAreaHeight: 25,
 	supernodeSVGAreaPadding: 3,
+	supernodeBindingPortRadius: 8,
+	supernodeZoomPadding: 40,
 
 	// ---------------------------------------------------------------------------
 	// Below here are ports horizontal specific properties
@@ -274,7 +280,6 @@ const portsHorizontal = {
 	// This can be overrriden from common-canvas config properties
 	linkType: "Curve",
 
-	// Everything below is unique for portsHorizontal
 	// Radius of the port circle
 	portRadius: 3,
 
@@ -367,7 +372,8 @@ const portsVertical = {
 	// The gap between a node or comment and its selection highlight rectangle
 	highlightGap: 4,
 
-	// Whether to display a link line when linked node/comments overlap
+	// Whether to display a link line when linked node/comments overlap. For halo
+	// we don't want to show the link when objects overlap but for ports we do.
 	displayLinkOnOverlap: true,
 
 	// What point to draw the link line towards. Possible values are image_center or node_center.
@@ -409,19 +415,21 @@ const portsVertical = {
 	addCommentOffset: 30,
 
 	// Supernode in-place containment area attributes
-	superNodeLabelPosX: 5,
-	superNodeLabelPosY: 8,
-	superNodeLabelWidth: 150,
-	superNodeEllipsisPosY: 5,
-	superNodeIconPosY: 5,
-	superNodeIconHeight: 14,
-	superNodeIconWidth: 14,
-	superNodeIconPadding: 2,
-	superNodeIconSeparation: 5,
-	superNodeDefaultWidth: 200,
-	superNodeDefaultHeight: 200,
+	supernodeLabelPosX: 5,
+	supernodeLabelPosY: 8,
+	supernodeLabelWidth: 150,
+	supernodeEllipsisPosY: 5,
+	supernodeIconPosY: 5,
+	supernodeIconHeight: 14,
+	supernodeIconWidth: 14,
+	supernodeIconPadding: 2,
+	supernodeIconSeparation: 5,
+	supernodeDefaultWidth: 200,
+	supernodeDefaultHeight: 200,
 	supernodeSVGTopAreaHeight: 25,
 	supernodeSVGAreaPadding: 3,
+	supernodeBindingPortRadius: 10,
+	supernodeZoomPadding: 40,
 
 	// ---------------------------------------------------------------------------
 	// Below here are ports vertical specific properties
@@ -430,7 +438,6 @@ const portsVertical = {
 	// This can be overrriden from common-canvas config properties
 	linkType: "Curve",
 
-	// Everything below is unique for portsVertical
 	// Radius of the port circle
 	portRadius: 6,
 

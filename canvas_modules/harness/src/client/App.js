@@ -1510,7 +1510,6 @@ class App extends React.Component {
 			setLayoutDirection: this.setLayoutDirection,
 			selectedLayout: this.state.selectedLayout,
 			useInternalObjectModel: this.useInternalObjectModel,
-			setRenderingEngine: this.setRenderingEngine,
 			setConnectionType: this.setConnectionType,
 			selectedConnectionType: this.state.selectedConnectionType,
 			setNodeFormatType: this.setNodeFormatType,

@@ -67,6 +67,11 @@ const nodes = (state = [], action) => {
 					x_pos: nodeObj.x_pos,
 					y_pos: nodeObj.y_pos
 				});
+
+				if (newNode.type === "super_node" && newNode.is_expanded) {
+					newNode.expanded_width = nodeObj.width;
+					newNode.expanded_height = nodeObj.height;
+				}
 				return newNode;
 			}
 
@@ -194,7 +199,7 @@ const nodes = (state = [], action) => {
 		return state.map((node, index) => {
 			if (action.data.nodeId === node.id) {
 				let newNode = Object.assign({}, node);
-				newNode.isExpanded = action.data.isExpanded;
+				newNode.is_expanded = action.data.isExpanded;
 				newNode = setNodeDimensions(newNode, action.layoutinfo);
 				return newNode;
 			}
@@ -709,9 +714,9 @@ const setNodeDimensions = (node, layoutInfo) => {
 	}
 	newNode.width = layoutInfo.defaultNodeWidth;
 
-	if (newNode.type === "super_node" && newNode.isExpanded === true) {
-		newNode.height = Math.max(newNode.height, layoutInfo.superNodeDefaultWidth);
-		newNode.width = Math.max(newNode.width, layoutInfo.superNodeDefaultHeight);
+	if (newNode.type === "super_node" && newNode.is_expanded) {
+		newNode.width = newNode.expanded_width ? newNode.expanded_width : Math.max(layoutInfo.supernodeDefaultWidth, newNode.width);
+		newNode.height = newNode.expanded_height ? newNode.expanded_height : Math.max(layoutInfo.supernodeDefaultHeight, newNode.height);
 	}
 
 	return newNode;
@@ -900,7 +905,7 @@ export default class ObjectModel {
 	}
 
 	getSelectionAPIPipeline() {
-		const id = this.getSelectionInfo().pipelineId;
+		const id = this.getSelectedPipelineId();
 		if (id) {
 			return this.getAPIPipeline(id);
 		}
@@ -1040,7 +1045,6 @@ export default class ObjectModel {
 		return null;
 	}
 
-
 	setCanvasInfo(canvasInfo) {
 		this.store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo, layoutinfo: this.getLayout() });
 	}
@@ -1099,8 +1103,16 @@ export default class ObjectModel {
 		return crumbs[crumbs.length - 1];
 	}
 
-	// Returns true if the pipelineId passed in is not the primary Pipeline
-	// breadcrumb. In other words, we are shwoing a sub-flow full screen.
+	getPreviousBreadcrumb() {
+		const crumbs = this.getBreadcrumbs();
+		if (crumbs.length < 2) {
+			return null;
+		}
+		return crumbs[crumbs.length - 2];
+	}
+
+	// Returns true if the pipelineId passed in is not the primary pipeline
+	// breadcrumb. In other words, we are showing a sub-flow full screen.
 	isInSubFlowBreadcrumb(pipelineId) {
 		const idx = this.getBreadcrumbs().findIndex((crumb) => {
 			return crumb.pipelineId === pipelineId;
@@ -1202,7 +1214,11 @@ export default class ObjectModel {
 	}
 
 	getSelectedPipeline() {
-		return this.getAPIPipeline(this.getSelectionInfo().pipelineId);
+		return this.getAPIPipeline(this.getSelectedPipelineId());
+	}
+
+	getSelectedPipelineId() {
+		return this.getSelectionInfo().pipelineId;
 	}
 
 	clearSelections() {
@@ -1216,7 +1232,7 @@ export default class ObjectModel {
 	toggleSelection(objectId, toggleRequested, pipelineId) {
 		let newSelections = [objectId];
 
-		if (pipelineId === this.getSelectionInfo().pipelineId &&
+		if (pipelineId === this.getSelectedPipelineId() &&
 				toggleRequested) {
 			// If already selected then remove otherwise add
 			if (this.isSelected(objectId)) {
@@ -1453,7 +1469,7 @@ export default class ObjectModel {
 			previousSelection = {
 				nodes: this.getSelectedNodes(),
 				comments: this.getSelectedComments(),
-				pipelineId: this.getSelectionInfo().pipelineId
+				pipelineId: this.getSelectedPipelineId()
 			};
 		}
 
@@ -1473,7 +1489,7 @@ export default class ObjectModel {
 				deselectedNodes: difference(previousSelection.nodes, selectedNodes),
 				deselectedComments: difference(previousSelection.comments, selectedComments),
 				previousPipelineId: previousSelection.pipelineId,
-				selectedPipelineId: this.getSelectionInfo().pipelineId
+				selectedPipelineId: this.getSelectedPipelineId()
 			};
 
 			// only trigger event if selection has changed
@@ -1891,7 +1907,7 @@ export class APIPipeline {
 	}
 
 	isSuperNodeExpandedInPlace(nodeId) {
-		return this.getNode(nodeId).isExpanded === true;
+		return this.getNode(nodeId).is_expanded === true;
 	}
 
 	doesNodeHavePorts(node) {

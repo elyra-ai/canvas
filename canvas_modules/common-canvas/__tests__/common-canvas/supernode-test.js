@@ -86,8 +86,8 @@ const expandCollapseSupenodeSourceObject = {
 		"model_ref": "",
 		"inputPortsHeight": 40,
 		"outputPortsHeight": 20,
-		"height": 75,
-		"width": 70
+		"expanded_height": 75,
+		"expanded_width": 70
 	},
 	"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
 	"pipelineId": "153651d6-9b88-423c-b01b-861f12d01489",
@@ -174,8 +174,8 @@ const createSupernodeSourceObject1 = {
 		"model_ref": "",
 		"inputPortsHeight": 20,
 		"outputPortsHeight": 20,
-		"height": 75,
-		"width": 70
+		"expanded_height": 75,
+		"expanded_width": 70
 	},
 	"id": "idGWRVT47XDV",
 	"cmPos": {
@@ -221,8 +221,8 @@ const createSupernodeSourceObject2 = {
 		"model_ref": "",
 		"inputPortsHeight": 20,
 		"outputPortsHeight": 0,
-		"height": 75,
-		"width": 70
+		"expanded_height": 75,
+		"expanded_width": 70
 	},
 	"id": "id5KIRGGJ3FYT",
 	"cmPos": {
@@ -249,44 +249,44 @@ describe("Expand and Collapse Supernode Action", () => {
 		objectModel = canvasController.getObjectModel();
 	});
 
-	it("Should set the isExpanded attribute correctly when expanded or collapsed", () => {
+	it("Should set the is_expanded attribute correctly when expanded or collapsed", () => {
 		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
-		expect(canvasController.getNode(superNodeId).isExpanded).to.be.true;
+		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
 		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
 		canvasController.contextMenuActionHandler("collapseSuperNodeInPlace");
-		expect(canvasController.getNode(superNodeId).isExpanded).to.be.false;
+		expect(canvasController.getNode(superNodeId).is_expanded).to.be.false;
 	});
 
-	it("Should set the isExpanded attribute correctly with undo and redo", () => {
+	it("Should set the is_expanded attribute correctly with undo and redo", () => {
 		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
-		expect(canvasController.getNode(superNodeId).isExpanded).to.be.true;
+		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
-		expect(canvasController.getNode(superNodeId).isExpanded).to.be.false;
+		expect(canvasController.getNode(superNodeId).is_expanded).to.be.false;
 
 		canvasController.contextMenuActionHandler("redo");
-		expect(canvasController.getNode(superNodeId).isExpanded).to.be.true;
+		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 	});
 
-	it("Should save the width, height, and isExpanded attributes when the supernode is expanded in-place", () => {
+	it("Should save the expanded_width, expanded_height, and is_expanded attributes when the supernode is expanded in-place", () => {
 		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 		let pipelineFlow = objectModel.getPipelineFlow();
 
-		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.width).to.equal(200);
-		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.height).to.equal(200);
-		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.isExpanded).to.be.true;
+		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.expanded_width).to.equal(200);
+		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.expanded_height).to.equal(200);
+		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.is_expanded).to.be.true;
 
 		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
 		canvasController.contextMenuActionHandler("collapseSuperNodeInPlace");
 		pipelineFlow = objectModel.getPipelineFlow();
 
-		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.width).to.be.undefined;
-		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.height).to.be.undefined;
-		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.isExpanded).to.be.undefined;
+		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.expanded_width).to.equal(200);
+		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.expanded_height).to.equal(200);
+		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.is_expanded).to.be.false;
 	});
 });
 

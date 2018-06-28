@@ -9,8 +9,8 @@
 /* eslint no-console: "off" */
 
 import { deleteLinkInObjectModel, findCategoryElement, findNodeIndexInPalette, getEventLogCount,
-	getNodeFromObjectModel,
-	getNodeIdForLabel, getNodeIdFromObjectModel, getObjectModelCount, isObjectModelEmpty
+	getNodeFromObjectModel, getNodeIdForLabel, getNodeIdForLabelInSubFlow, getNodeIdFromObjectModel,
+	getObjectModelCount, isObjectModelEmpty
 } from "./utilities/validate-utils.js";
 import { getCanvasData, getCanvasDataForSecondCanvas, getEventLogData } from "./utilities/test-utils.js";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
@@ -636,6 +636,12 @@ module.exports = function() {
 		browser.$(nodeSelector).click();
 	});
 
+	this.Then(/^I click the "([^"]*)" node in the subflow to select it$/, function(nodeName) {
+		var nodeId = getNodeIdForLabelInSubFlow(nodeName);
+		var nodeSelector = "#node_grp_" + nodeId;
+		browser.$(nodeSelector).click();
+	});
+
 	this.Then(/^I Cmd\+click the "([^"]*)" node to add it to the selections$/, function(nodeName) {
 		browser.keys(["Meta"]);
 		var nodeId = getNodeIdForLabel(nodeName);
@@ -644,9 +650,34 @@ module.exports = function() {
 		browser.keys(["Meta"]);
 	});
 
+	this.Then(/^I Cmd\+click the "([^"]*)" node in the subflow to add it to the selections$/, function(nodeName) {
+		browser.keys(["Meta"]);
+		var nodeId = getNodeIdForLabelInSubFlow(nodeName);
+		var nodeSelector = "#node_grp_" + nodeId;
+		browser.$(nodeSelector).click();
+		browser.keys(["Meta"]);
+	});
+
+
 	this.Then(/^I click the supernode label with node id "([^"]*)" to select it$/, function(nodeId) {
 		var nodeSelector = "#node_label_0_" + nodeId;
 		browser.$(nodeSelector).click();
+	});
+
+	// Then I right click the "Var. File" node to display the context menu
+	//
+	this.Then(/^I right click the "([^"]*)" node to display the context menu$/, function(nodeName) {
+		var nodeId = getNodeIdForLabel(nodeName);
+		var nodeSelector = "#node_grp_" + nodeId;
+		browser.$(nodeSelector).rightClick();
+	});
+
+	// Then I right click the "Var. File" node in the subflow to display the context menu
+	//
+	this.Then(/^I right click the "([^"]*)" node in the subflow to display the context menu$/, function(nodeName) {
+		var nodeId = getNodeIdForLabelInSubFlow(nodeName);
+		var nodeSelector = "#node_grp_" + nodeId;
+		browser.$(nodeSelector).rightClick();
 	});
 
 

@@ -230,6 +230,10 @@ export default class CanvasController {
 		return this.objectModel.getSelectedComments();
 	}
 
+	getSelectedPipelineId() {
+		return this.objectModel.getSelectedPipelineId();
+	}
+
 	deleteSelectedObjects() {
 		this.objectModel.deleteSelectedObjects();
 	}

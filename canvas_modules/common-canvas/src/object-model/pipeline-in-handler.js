@@ -49,8 +49,6 @@ export default class PipelineInHandler {
 				"image": has(node, "app_data.ui_data.image") ? node.app_data.ui_data.image : "",
 				"x_pos": has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
 				"y_pos": has(node, "app_data.ui_data.y_pos") ? node.app_data.ui_data.y_pos : 10,
-				"width": has(node, "app_data.ui_data.width") ? node.app_data.ui_data.width : layoutInfo.defaultNodeWidth,
-				"height": has(node, "app_data.ui_data.height") ? node.app_data.ui_data.height : layoutInfo.defaultNodeHeight,
 				"class_name": has(node, "app_data.ui_data.class_name") ? node.app_data.ui_data.class_name : "",
 				"decorations": has(node, "app_data.ui_data.decorations") ? this.convertDecorations(node.app_data.ui_data.decorations) : [],
 				"parameters": has(node, "parameters") ? node.parameters : [],
@@ -58,7 +56,9 @@ export default class PipelineInHandler {
 				"app_data": has(node, "app_data") ? this.removeUiDataFromAppData(node.app_data) : [],
 				"subflow_ref": has(node, "subflow_ref") ? node.subflow_ref : {},
 				"model_ref": has(node, "model_ref") ? node.model_ref : "",
-				"isExpanded": has(node, "app_data.ui_data.isExpanded") ? node.app_data.ui_data.isExpanded : false
+				"is_expanded": has(node, "app_data.ui_data.is_expanded") ? node.app_data.ui_data.is_expanded : false,
+				"expanded_width": has(node, "app_data.ui_data.expanded_width") ? node.app_data.ui_data.expanded_width : layoutInfo.supernodeDefaultWidth,
+				"expanded_height": has(node, "app_data.ui_data.expanded_height") ? node.app_data.ui_data.expanded_height : layoutInfo.supernodeDefaultHeight
 			};
 			// Separate initialization needed to ensure that only valid enumeration values are used
 			if (has(node, "sub_type")) {
