@@ -10,7 +10,7 @@
 /* Palette styles */
 .palette-flyout-div {
 	font-size: 14px;
-	position: absolute;
+	position: relative;
 	height: 100%;
 	padding-bottom: 5px;
 	background-color: $ui-02;
@@ -23,21 +23,9 @@
 }
 
 .palette-flyout-div-open {
-	width: 250px;
 	.palette-flyout-search-icon {
 		pointer-events: none;
 		cursor: default;
-	}
-}
-
-.palette-flyout-div-closed-narrow {
-	width: 64px;
-}
-
-.palette-flyout-div-closed-none {
-	width: 0;
-	.palette-flyout-search {
-		display: none;
 	}
 }
 

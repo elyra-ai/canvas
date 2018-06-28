@@ -12,6 +12,7 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
+import sinon from "sinon";
 
 const canvasController = new CanvasController();
 
@@ -67,11 +68,14 @@ describe("Toolbar renders correctly", () => {
 });
 
 function createToolbar(config) {
+	const setToolbarWidth = sinon.spy();
 	const canvasToolbar = mount(
 		<Toolbar
 			config={config}
-			paletteState
+			isPaletteOpen
+			isNotificationOpen
 			canvasController={canvasController}
+			setToolbarWidth={setToolbarWidth}
 		/>
 	);
 	return canvasToolbar;

@@ -7,26 +7,9 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-@import "./../global.scss";
 @import "carbon-components/scss/globals/scss/vars";
 
 $transition-speed: 0.2s;
-
-$toolbar-icon-width: 64px; // TOOLBAR.ICON_WIDTH from canvas-constants.js
-$common-canvas-toolbar-min-width: $toolbar-icon-width * 5; // 5 icons in toolbar by default
-
-$canvas-palette-flyout-width: 250px;
-$canvas-palette-narrow-flyout-width: $toolbar-icon-width;
-
-$common-canvas-min-width: $common-canvas-toolbar-min-width + $canvas-palette-narrow-flyout-width;
-
-// sass-lint:disable no-misspelled-properties
-:export {
-	toolbarIconWidth: $toolbar-icon-width;
-	paletteFlyoutWidth: $canvas-palette-flyout-width;
-	canvasMinWidth: $common-canvas-min-width;
-}
-// sass-lint:enable no-misspelled-properties
 
 /* right flyout panel */
 
@@ -35,7 +18,6 @@ $common-canvas-min-width: $common-canvas-toolbar-min-width + $canvas-palette-nar
 	float: right;
 	position: absolute;
 	right: 0;
-	transition: $transition-speed;
 }
 
 /* SVG Canvas styles */
@@ -44,76 +26,30 @@ $common-canvas-min-width: $common-canvas-toolbar-min-width + $canvas-palette-nar
 	height: 100%;
 	width: 100%;
 	cursor: default;
+	display: flex;
 	position: relative;
-	-webkit-transition: $transition-speed;
-	transition: $transition-speed;
 }
 
 .common-canvas-items-container {
 	height: 100%;
-	position: absolute;
+	position: relative;
+}
+
+.common-canvas-right-side-items {
+	width: 100%;
 	-webkit-transition: $transition-speed;
 	transition: $transition-speed;
+	display: flex;
 }
 
 .common-canvas-drop-div {
 	height: calc(100% - 45px);
 	width: 100%;
-	min-width: 258px;
+	min-width: inherit;
 	position: absolute;
 	cursor: default;
 	top: 47px;
-	-webkit-transition: $transition-speed;
-	transition: $transition-speed;
 	overflow: hidden;
-}
-
-/* Size of common-canvas-items-container */
-
-.canvas-palette-flyout-div-closed-none {
-	left: 0;
-	width: 100%;
-}
-
-.canvas-palette-flyout-div-closed-narrow {
-	left: $canvas-palette-narrow-flyout-width;
-	width: calc(100% - #{$canvas-palette-narrow-flyout-width});
-}
-
-.canvas-palette-flyout-div-open {
-	left: $canvas-palette-flyout-width;
-	width: calc(100% - #{$canvas-palette-flyout-width});
-}
-
-.canvas-flyout-div-closed {
-	width: calc(100% - #{$common-canvas-min-width});
-}
-
-.canvas-flyout-div-open {
-	width: calc(100% - #{$common-canvas-min-width});
-}
-
-.canvas-flyout-div-open-medium,
-.canvas-flyout-div-open-large {
-	width: calc(100% - #{$common-properties-medium-flyout-width} - #{$toolbar-icon-width});
-}
-
-.canvas-palette-flyout-div-open.canvas-flyout-div-open {
-	width: calc(100% - #{$common-canvas-toolbar-min-width} - #{$canvas-palette-flyout-width});
-}
-
-.canvas-palette-flyout-div-open.canvas-flyout-div-open-medium,
-.canvas-palette-flyout-div-open.canvas-flyout-div-open-large {
-	width: calc(100% - #{$common-properties-medium-flyout-width} - #{$canvas-palette-flyout-width});
-}
-
-.canvas-palette-flyout-div-closed-none.canvas-flyout-div-open {
-	width: calc(100% - #{$common-canvas-toolbar-min-width});
-}
-
-.canvas-palette-flyout-div-closed-none.canvas-flyout-div-open-medium,
-.canvas-palette-flyout-div-closed-none.canvas-flyout-div-open-large {
-	width: calc(100% - #{$common-properties-medium-flyout-width});
 }
 
 /* Styles for empty canvas objects */
@@ -125,8 +61,6 @@ $common-canvas-min-width: $common-canvas-toolbar-min-width + $canvas-palette-nar
 	top: 48%;
 	cursor: default;
 	transform: translate(-50%, -50%);
-	-webkit-transition: $transition-speed;
-	transition: $transition-speed;
 	pointer-events: none;
 }
 

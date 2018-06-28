@@ -1,14 +1,14 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint complexity: ["error", 17] */
-/* eslint max-depth: ["error", 6] */
+/* eslint complexity: ["error", 15] */
+/* eslint max-depth: ["error", 5] */
 /* eslint no-return-assign: "off" */
 
 import React from "react";
@@ -23,11 +23,7 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 import TooltipWrapper from "../tooltip/tooltip-wrapper.jsx";
 import isEmpty from "lodash/isEmpty";
 
-import { DEFAULT_NOTIFICATION_HEADER } from "./constants/canvas-constants.js";
-
-import globalStyles from "../global.scss";
-import canvasStyles from "./common-canvas.scss";
-
+import { DEFAULT_NOTIFICATION_HEADER, PALETTE } from "./constants/canvas-constants.js";
 
 export default class CommonCanvas extends React.Component {
 	constructor(props) {
@@ -41,7 +37,9 @@ export default class CommonCanvas extends React.Component {
 			toolbarConfig: this.props.toolbarConfig,
 			notificationConfig: this.props.notificationConfig,
 			rightFlyoutContent: this.props.rightFlyoutContent,
-			tipDef: {}
+			tipDef: {},
+			rightFlyoutWidth: 0,
+			paletteWidth: PALETTE.OPEN_WIDTH
 		};
 
 		this.openContextMenu = this.openContextMenu.bind(this);
@@ -58,7 +56,10 @@ export default class CommonCanvas extends React.Component {
 		this.closeNotificationPanel = this.closeNotificationPanel.bind(this);
 
 		this.initializeController = this.initializeController.bind(this);
-		this.getEditorWidth = this.getEditorWidth.bind(this);
+
+		this.setToolbarWidth = this.setToolbarWidth.bind(this);
+		this.setPaletteWidth = this.setPaletteWidth.bind(this);
+		this.setRightFlyoutWidth = this.setRightFlyoutWidth.bind(this);
 
 		this.canvasController = this.props.canvasController;
 		this.initializeController(props);
@@ -78,6 +79,7 @@ export default class CommonCanvas extends React.Component {
 
 	componentDidMount() {
 		document.addEventListener("mousedown", this.hideTip, true);
+		this.setPaletteWidth();
 	}
 
 	componentWillReceiveProps(newProps) {
@@ -127,28 +129,36 @@ export default class CommonCanvas extends React.Component {
 		this.initializeController(newProps);
 	}
 
+	componentDidUpdate() {
+		this.setRightFlyoutWidth();
+		this.setPaletteWidth();
+	}
+
 	componentWillUnmount() {
 		this.unsubscribe();
 		document.removeEventListener("mousedown", this.hideTip, true);
 	}
 
-	getEditorWidth() {
-		let width = parseInt(globalStyles.smallFlyoutWidth, 10);
-		let className = "canvas-flyout-div-open";
-		if (this.flyoutContent) {
-			width = this.flyoutContent.offsetWidth;
+	setRightFlyoutWidth() {
+		if (this.props.showRightFlyout && this.flyoutContent && this.flyoutContent.offsetWidth !== this.state.rightFlyoutWidth) {
+			this.setState({ rightFlyoutWidth: this.flyoutContent.offsetWidth });
+		} else if (!this.props.showRightFlyout && this.state.rightFlyoutWidth !== 0) {
+			this.setState({ rightFlyoutWidth: 0 });
 		}
-		if (width > parseInt(globalStyles.smallFlyoutWidth, 10) + 10) {
-			if (width > parseInt(globalStyles.mediumFlyoutWidth, 10) + 10) {
-				className = "canvas-flyout-div-open-large";
-			} else {
-				className = "canvas-flyout-div-open-medium";
-			}
+	}
+
+	setPaletteWidth() {
+		let paletteWidth = this.props.config.enableNarrowPalette || typeof this.props.config.enableNarrowPalette === "undefined" ? PALETTE.NARROW_WIDTH : PALETTE.CLOSED_WIDTH;
+		if (this.state.isPaletteOpen) {
+			paletteWidth = PALETTE.OPEN_WIDTH;
 		}
-		return {
-			width: width,
-			className: className
-		};
+		if (paletteWidth !== this.state.paletteWidth) {
+			this.setState({ paletteWidth: paletteWidth });
+		}
+	}
+
+	setToolbarWidth(newToolbarWidth) {
+		this.setState({ toolbarWidth: newToolbarWidth });
 	}
 
 	getSvgViewportOffset() {
@@ -188,10 +198,12 @@ export default class CommonCanvas extends React.Component {
 		if (this.objectModel.getPaletteData()) {
 			this.setState({ isPaletteOpen: true });
 		}
+		this.setPaletteWidth();
 	}
 
 	closePalette() {
 		this.setState({ isPaletteOpen: false });
+		this.setPaletteWidth();
 	}
 
 	openContextMenu(menuDef) {
@@ -315,15 +327,11 @@ export default class CommonCanvas extends React.Component {
 	render() {
 		let canvas = null;
 		let palette = null;
-		const showNarrowPalette = this.props.config.enableNarrowPalette || typeof this.props.config.enableNarrowPalette === "undefined";
-		let paletteClass = showNarrowPalette ? "canvas-palette-flyout-div-closed-narrow" : "canvas-palette-flyout-div-closed-none";
 		let contextMenuWrapper = null;
 		let canvasToolbar = null;
 		let notificationPanel = null;
 		let rightFlyout = (<div className="right-flyout-panel" />);
 		let tip = null;
-		let commonCanvasWidth = parseInt(canvasStyles.canvasMinWidth, 10); // ParseInt to remove "px"
-		const paletteFlyoutWidth = parseInt(canvasStyles.paletteFlyoutWidth, 10); // ParseInt to remove "px"
 		const canvasInfo = this.objectModel.getCanvasInfo();
 
 		if (canvasInfo !== null) {
@@ -349,7 +357,6 @@ export default class CommonCanvas extends React.Component {
 
 			if (this.objectModel.getPaletteData()) {
 				if (this.props.config.enablePaletteLayout === "Modal") {
-					paletteClass = "canvas-palette-flyout-div-closed-none";
 					palette = (<Palette
 						paletteJSON={this.objectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}
@@ -357,15 +364,11 @@ export default class CommonCanvas extends React.Component {
 						canvasController={this.canvasController}
 					/>);
 				} else {
-					if (this.state.isPaletteOpen) {
-						paletteClass = "canvas-palette-flyout-div-open";
-						commonCanvasWidth += paletteFlyoutWidth;
-					}
 					palette = (<PaletteFlyout
 						paletteJSON={this.objectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}
 						canvasController={this.canvasController}
-						showNarrowPalette={showNarrowPalette}
+						paletteWidth={this.state.paletteWidth}
 					/>);
 				}
 			}
@@ -388,6 +391,8 @@ export default class CommonCanvas extends React.Component {
 					isPaletteOpen={this.state.isPaletteOpen}
 					isNotificationOpen={this.state.isNotificationOpen}
 					canvasController={this.canvasController}
+					toolbarWidth={this.state.toolbarWidth}
+					setToolbarWidth={this.setToolbarWidth}
 				/>);
 			}
 		}
@@ -395,9 +400,6 @@ export default class CommonCanvas extends React.Component {
 		if (typeof this.state.rightFlyoutContent !== "undefined" &&
 				this.state.rightFlyoutContent !== null &&
 				this.props.showRightFlyout) {
-			const widthObj = this.getEditorWidth();
-			paletteClass += (" " + widthObj.className);
-			commonCanvasWidth += widthObj.width;
 			rightFlyout = (<div className="right-flyout-panel" ref={ (elem) => this.flyoutContent = elem} >
 				{this.state.rightFlyoutContent}
 			</div>);
@@ -438,16 +440,21 @@ export default class CommonCanvas extends React.Component {
 			/>);
 		}
 
+		const canvasRightItemsContainerWidth = "calc(100% -  " + this.state.paletteWidth + "px)";
+		const canvasItemsContainerWidth = "calc(100% -  " + this.state.rightFlyoutWidth + "px)";
+
 		return (
-			<div className="common-canvas" style={{ minWidth: commonCanvasWidth + "px" }}>
+			<div className="common-canvas">
 				{palette}
-				<div id={this.itemsContainerDivId} className={"common-canvas-items-container " + paletteClass}>
-					{canvas}
-					{emptyCanvas}
-					{canvasToolbar}
-					{notificationPanel}
+				<div className="common-canvas-right-side-items" style={{ width: canvasRightItemsContainerWidth }}>
+					<div id={this.itemsContainerDivId} className="common-canvas-items-container" style={{ width: canvasItemsContainerWidth }}>
+						{canvas}
+						{emptyCanvas}
+						{canvasToolbar}
+						{notificationPanel}
+					</div>
+					{rightFlyout}
 				</div>
-				{rightFlyout}
 				{tip}
 			</div>
 		);

@@ -7,13 +7,25 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+@import "carbon-components/scss/globals/scss/vars";
+
 $toolbar-icon-label-margin: 8px;
 $toolbar-icon-size: 16px;
 $toolbar-icon-width: ($toolbar-icon-label-margin * 2) + $toolbar-icon-size;
+$toolbar-button-width: ($toolbar-icon-width * 2);
+$toolbar-divider-width: 2px;
+$toolbar-default-icons-count: 5;
+
+// sass-lint:disable no-misspelled-properties
+:export {
+	toolbarButtonWidth: $toolbar-button-width;
+	toolbarDividerWidth: $toolbar-divider-width;
+}
+// sass-lint:enable no-misspelled-properties
 
 #canvas-toolbar {
 	height: 45px;
-	min-width: 258px;
+	min-width: $toolbar-button-width * $toolbar-default-icons-count;
 	width: 100%;
 	background-color: $ui-02;
 	border-bottom: 2px solid $ui-04;
@@ -47,7 +59,7 @@ $toolbar-icon-width: ($toolbar-icon-label-margin * 2) + $toolbar-icon-size;
 
 .list-item-containers .list-item {
 	height: 45px;
-	width: 64px;
+	width: $toolbar-button-width;
 	display: flex;
 	justify-content: center;
 	box-sizing: content-box;
@@ -84,7 +96,7 @@ $toolbar-icon-width: ($toolbar-icon-label-margin * 2) + $toolbar-icon-size;
 }
 
 .toolbar-divider {
-	border-right: 2px solid $ui-04;
+	border-right: $toolbar-divider-width solid $ui-04;
 }
 
 #overflow-action {

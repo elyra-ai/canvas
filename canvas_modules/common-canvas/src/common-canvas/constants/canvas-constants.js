@@ -9,8 +9,6 @@
 
 // Private Methods ------------------------------------------------------------>
 
-import styles from "../common-canvas.scss";
-
 function _defineConstant(constName, value) {
 	Object.defineProperty(module.exports, constName, {
 		value: value,
@@ -24,11 +22,6 @@ _defineConstant("DND_DATA_TEXT", "text");
 _defineConstant("DRAG_MOVE", "move");
 _defineConstant("DRAG_LINK", "link");
 _defineConstant("DRAG_SELECT_REGION", "selectRegion");
-
-_defineConstant("TOOLBAR", {
-	ICON_WIDTH: parseInt(styles.toolbarIconWidth, 10),
-	DIVIDER_WIDTH: 2
-});
 
 _defineConstant("NOTIFICATION_BELL_ICON", {
 	DEFAULT: "bell",
@@ -64,6 +57,12 @@ _defineConstant("CLONE_NODE_LINK", "clone_node_link");
 _defineConstant("CREATE_COMMENT_LINK", "create_comment_link");
 _defineConstant("CLONE_COMMENT_LINK", "clone_comment_link");
 _defineConstant("CREATE_PIPELINE", "create_pipeline");
+
+_defineConstant("PALETTE", {
+	OPEN_WIDTH: 250,
+	CLOSED_WIDTH: 0,
+	NARROW_WIDTH: 64
+});
 
 _defineConstant("NODE_MENU_ICON",
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 16.14\">" +

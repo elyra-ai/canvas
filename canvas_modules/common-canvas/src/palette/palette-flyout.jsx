@@ -11,9 +11,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import PaletteFlyoutContent from "./palette-flyout-content.jsx";
 
-// eslint override
-/* global window document */
-
 class PaletteFlyout extends React.Component {
 	constructor(props) {
 		super(props);
@@ -21,18 +18,16 @@ class PaletteFlyout extends React.Component {
 	}
 
 	render() {
-		var className = "palette-flyout-div";
+		let className = "palette-flyout-div";
 		// hide side panel
 		if (this.props.showPalette) {
 			className += " palette-flyout-div-open";
-		} else if (this.props.showNarrowPalette) {
-			className += " palette-flyout-div-closed-narrow";
 		} else {
-			className += " palette-flyout-div-closed-none";
+			className += " palette-flyout-div-closed";
 		}
 
 		return (
-			<div className={className}>
+			<div className={className} style={{ width: this.props.paletteWidth + "px" }}>
 				<PaletteFlyoutContent
 					paletteJSON={this.props.paletteJSON}
 					canvasController={this.props.canvasController}
@@ -45,9 +40,9 @@ class PaletteFlyout extends React.Component {
 
 PaletteFlyout.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
-	showNarrowPalette: PropTypes.bool,
 	showPalette: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	paletteWidth: PropTypes.number.isRequired
 };
 
 export default PaletteFlyout;

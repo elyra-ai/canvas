@@ -12,24 +12,30 @@ import PropTypes from "prop-types";
 import Tooltip from "../tooltip/tooltip.jsx";
 import ObserveSize from "react-observe-size";
 import Icon from "../icons/icon.jsx";
-import { TOOLBAR } from "../common-canvas/constants/canvas-constants.js";
 import constants from "../common-canvas/constants/canvas-constants";
+
+import styles from "./toolbar.scss";
 
 // eslint override
 /* global window document */
 /* eslint max-depth: ["error", 5] */
+/* eslint no-return-assign: "off" */
 
 class Toolbar extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.toolbarIconWidth = parseInt(styles.toolbarButtonWidth, 10); // ParseInt to remove "px"
+		this.dividerWidth = parseInt(styles.toolbarDividerWidth, 10); // ParseInt to remove "px"
+
 		this.state = {
-			defaultToolbarWidth: TOOLBAR.ICON_WIDTH * 5, // Width of toolbar with palette, zoom, and notification icons
+			defaultToolbarWidth: this.toolbarIconWidth * 5, // Width of toolbar with palette, zoom, and notification icons
 			maxToolbarWidth: 0, // Width of toolbar if displaying all icons and dividers
 			dividerCount: 0,
 			showExtendedMenu: false
 		};
 
+		this.setToolbarWidth = this.setToolbarWidth.bind(this);
 		this.generatePaletteIcon = this.generatePaletteIcon.bind(this);
 		this.generateNotificationIcon = this.generateNotificationIcon.bind(this);
 		this.toggleShowExtendedMenu = this.toggleShowExtendedMenu.bind(this);
@@ -40,18 +46,13 @@ class Toolbar extends React.Component {
 		if (this.props.config) {
 			this.calculateMaxToolbarWidth(this.props.config);
 		}
+		this.setToolbarWidth();
 	}
 
-	getObjectWidth(classOrId) {
-		const firstChar = classOrId.charAt(0);
-		const remaining = classOrId.substring(1);
-		if (typeof document !== "undefined") {
-			const elem = (firstChar === "#") ? document.getElementById(remaining) : document.getElementsByClassName(remaining)[0];
-			if (elem !== null) {
-				return window.getComputedStyle(elem, null).getPropertyValue("width");
-			}
+	setToolbarWidth() {
+		if (this.toolbar && this.toolbar.offsetWidth !== this.props.toolbarWidth) {
+			this.props.setToolbarWidth(this.toolbar.offsetWidth);
 		}
-		return null;
 	}
 
 	// Need to set a className for notification bell icon in the DOM
@@ -90,9 +91,9 @@ class Toolbar extends React.Component {
 		let totalWidthSize = this.state.defaultToolbarWidth;
 		for (let i = 0; i < list.length; i++) {
 			if (list[i].action) {
-				totalWidthSize += TOOLBAR.ICON_WIDTH;
+				totalWidthSize += this.toolbarIconWidth;
 			} else if (list[i].divider) {
-				totalWidthSize += TOOLBAR.DIVIDER_WIDTH;
+				totalWidthSize += this.dividerWidth;
 				dividerCount++;
 			}
 		}
@@ -103,27 +104,27 @@ class Toolbar extends React.Component {
 		});
 	}
 
-	calculateDisplayItems(toolbarWidth) {
+	calculateDisplayItems() {
 		const numObjects = this.props.config.length;
-		if (this.state.maxToolbarWidth >= toolbarWidth) { // need to minimize
+		if (this.state.maxToolbarWidth >= this.props.toolbarWidth) { // need to minimize
 			const definition = this.props.config;
-			let availableWidth = toolbarWidth - this.state.defaultToolbarWidth + TOOLBAR.ICON_WIDTH;
+			let availableWidth = this.props.toolbarWidth - this.state.defaultToolbarWidth + this.toolbarIconWidth;
 
-			if (availableWidth < TOOLBAR.ICON_WIDTH) {
+			if (availableWidth < this.toolbarIconWidth) {
 				return 0;
 			}
 
 			let items = 0;
 			for (let i = 0; i < definition.length; i++) {
 				if (definition[i].action) {
-					availableWidth -= TOOLBAR.ICON_WIDTH;
+					availableWidth -= this.toolbarIconWidth;
 					items++;
 				} else if (definition[i].divider) {
-					availableWidth -= TOOLBAR.DIVIDER_WIDTH;
+					availableWidth -= this.dividerWidth;
 					items++;
 				}
 
-				if (availableWidth < TOOLBAR.ICON_WIDTH) {
+				if (availableWidth < this.toolbarIconWidth) {
 					items--;
 					break;
 				}
@@ -315,15 +316,10 @@ class Toolbar extends React.Component {
 	}
 
 	render() {
-		// Get width for toolbar from itemsContainerDivId container in common-canvas. The
-		// container doesn't include the palette or fly-out, so no calculation has to be done for the toolbar
-		const toolbarWidth = this.props.canvasController.commonCanvas
-			? parseFloat(this.getObjectWidth("#" + this.props.canvasController.commonCanvas.itemsContainerDivId))
-			: window.innerWidth; // in Jest tests, no common-canvas set
 		const that = this;
 		let actionContainer = <div />;
 		if (this.props.config && this.props.config.length > 0) {
-			const displayItems = this.calculateDisplayItems(toolbarWidth);
+			const displayItems = this.calculateDisplayItems();
 			const actions = that.generateActionItems(
 				that.props.config,
 				displayItems,
@@ -356,14 +352,15 @@ class Toolbar extends React.Component {
 			{rightAlignedContainerItems}
 		</div>);
 
-		const canvasToolbar = (<ObserveSize observerFn={(element) => this.setState({})}>
-			<div id="canvas-toolbar">
-				<ul id="toolbar-items">
-					{actionContainer}
-					{rightAlignedContainer}
-				</ul>
-			</div>
-		</ObserveSize>);
+		const canvasToolbar = (
+			<div id="canvas-toolbar" ref={ (elem) => this.toolbar = elem}>
+				<ObserveSize observerFn={(element) => this.setToolbarWidth()}>
+					<ul id="toolbar-items">
+						{actionContainer}
+						{rightAlignedContainer}
+					</ul>
+				</ObserveSize>
+			</div>);
 
 		return canvasToolbar;
 	}
@@ -374,7 +371,9 @@ Toolbar.propTypes = {
 	isPaletteOpen: PropTypes.bool,
 	isNotificationOpen: PropTypes.bool,
 	notificationConfig: PropTypes.object,
-	canvasController: PropTypes.object.isRequired
+	canvasController: PropTypes.object.isRequired,
+	toolbarWidth: PropTypes.number,
+	setToolbarWidth: PropTypes.func
 };
 
 export default Toolbar;

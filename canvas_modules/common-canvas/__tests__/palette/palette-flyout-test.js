@@ -77,16 +77,6 @@ describe("Palette renders correctly", () => {
 		expect(wrapper.find(PaletteFlyoutContentListItem)).to.have.length(1);
 	});
 
-	it("should show narrow palette", () => {
-		const config = {
-			showNarrowPalette: true,
-			showPalette: false
-		};
-		const wrapper = createMountedPalette(config);
-		const palette = wrapper.find(".palette-flyout-div-closed-narrow");
-		expect(palette).to.have.length(1);
-	});
-
 	it("should show wide palette", () => {
 		const palette = createMountedPalette().find(".palette-flyout-div-open");
 		expect(palette).to.have.length(1);
@@ -95,16 +85,18 @@ describe("Palette renders correctly", () => {
 	it("palette should be hidden", () => {
 		const config = {
 			showNarrowPalette: false,
-			showPalette: false
+			showPalette: false,
+			paletteWidth: 0
 		};
-		const palette = createMountedPalette(config).find(".palette-flyout-div-closed-none");
+		const palette = createMountedPalette(config).find(".palette-flyout-div-closed");
 		expect(palette).to.have.length(1);
 	});
+
 	it("open palette should show correct values for category and node with and without an image", () => {
 		const config = {
-			showNarrowPalette: true,
 			showPalette: true,
-			palette: testPalette
+			palette: testPalette,
+			paletteWidth: 250
 		};
 		const palette = createMountedPalette(config);
 		// 2 categories should be rendered
@@ -117,9 +109,9 @@ describe("Palette renders correctly", () => {
 	});
 	it("narrow palette should show correct values for category and node with and without an image", () => {
 		const config = {
-			showNarrowPalette: true,
 			showPalette: false,
-			palette: testPalette
+			palette: testPalette,
+			paletteWidth: 64
 		};
 		const palette = createMountedPalette(config);
 		// 2 categories should be rendered
@@ -229,20 +221,21 @@ function createPalette() {
 			paletteJSON={paletteSpec}
 			showPalette
 			canvasController={canvasController}
+			paletteWidth={64}
 		/>
 	);
 	return popupPalette;
 }
 function createMountedPalette(config) {
 	const showPalette = config ? config.showPalette : true;
-	const showNarrowPalette = config ? config.showNarrowPalette : true;
+	const paletteWidth = config ? config.paletteWidth : 64;
 	const palette = (config && config.palette) ? config.palette : paletteSpec;
 	const wrapper = mount(
 		<PaletteFlyout
 			paletteJSON={palette}
 			showPalette={showPalette}
 			canvasController={canvasController}
-			showNarrowPalette={showNarrowPalette}
+			paletteWidth={paletteWidth}
 		/>
 	);
 	return wrapper;

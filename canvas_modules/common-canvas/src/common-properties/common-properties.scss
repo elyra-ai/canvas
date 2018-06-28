@@ -11,7 +11,9 @@
 @import "./components/components";
 @import "./controls/controls";
 @import "./panels/panels";
-@import "./../global";
+
+$common-properties-small-flyout-width: 320px; // This aligns the right-flyout with the divider in DSX header
+$common-properties-medium-flyout-width: 625px; // This is an arbitrary width for wider-flyout panels
 
 .properties-right-flyout {
 	width: 0;
