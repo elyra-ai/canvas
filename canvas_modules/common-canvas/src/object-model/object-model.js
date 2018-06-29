@@ -240,14 +240,6 @@ const ports = (state = [], action) => {
 			return port;
 		});
 	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":
-		return state.map((port, index) => {
-			if (action.data.portId === port.id) {
-				const newPort = Object.assign({}, port);
-				newPort.subflow_node_ref = action.data.subflowNodeRef;
-				return newPort;
-			}
-			return port;
-		});
 	case "SET_OUTPUT_PORT_SUBFLOW_NODE_REF":
 		return state.map((port, index) => {
 			if (action.data.portId === port.id) {
