@@ -40,6 +40,7 @@ const showLinksTime = false;
 export default class CanvasD3Layout {
 
 	constructor(canvasInfo, canvasDivSelector, config, canvasController) {
+		const startTime = this.msgStart("CanvasD3Layout - Constructor - start", canvasInfo.id);
 
 		this.canvasController = canvasController;
 		this.objectModel = this.canvasController.getObjectModel();
@@ -65,6 +66,8 @@ export default class CanvasD3Layout {
 			this.canvasDiv,
 			this.canvasController,
 			this.canvasInfo);
+
+		this.msgEnd("CanvasD3Layout - Constructor - end", canvasInfo.id, startTime);
 	}
 
 	setCanvasInfo(canvasInfo, config) {
@@ -73,7 +76,7 @@ export default class CanvasD3Layout {
 				this.config.enableConnectionType !== config.enableConnectionType ||
 				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
 				this.config.enableLinkType !== config.enableLinkType) {
-			const startTime = this.msgStart("Initializing Canvas - starting", canvasInfo.id);
+			const startTime = this.msgStart("Initializing Canvas - start", canvasInfo.id);
 
 			// The canvasInfo does not need to be cloned here because the two
 			// calls below will cause the objectModel to be updated which will
@@ -92,10 +95,10 @@ export default class CanvasD3Layout {
 			this.initializeLayoutInfo(config);
 			this.renderer = null;
 
-			this.msgEnd("Initializing Canvas - finished", canvasInfo.id, startTime);
+			this.msgEnd("Initializing Canvas - end", canvasInfo.id, startTime);
 
 		} else {
-			const startTime = this.msgStart("Set Canvas Info CanvasD3Layout - starting -", canvasInfo.id);
+			const startTime = this.msgStart("Set Canvas Info - start", canvasInfo.id);
 
 			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
 
@@ -109,17 +112,18 @@ export default class CanvasD3Layout {
 					this.canvasInfo);
 			}
 
-			this.msgEnd("Set Canvas Info CanvasD3Layout - finished -", canvasInfo.id, startTime);
+			this.msgEnd("Set Canvas Info - end", canvasInfo.id, startTime);
 		}
 	}
 
 	msgStart(msg, canvasInfoId) {
-		consoleLog(msg + " Inst = " + this.canvasController.getInstanceId() + " Id = " + canvasInfoId);
+		consoleLog("FlowId = " + abbreviate(canvasInfoId) + " - " + msg);
 		return Date.now();
 	}
 
 	msgEnd(msg, canvasInfoId, startTime) {
-		consoleLog(msg + " Inst = " + this.canvasController.getInstanceId() + " Id = " + canvasInfoId + " Elapsed time = " + (Date.now() - startTime));
+		consoleLog("FlowId = " + abbreviate(canvasInfoId) + " - " + msg + " Elapsed time = " + (Date.now() - startTime));
+		consoleLog("--------------------------------------------------------------");
 	}
 
 	// Copies canvasInfo because we will need to update it (when moving
@@ -222,8 +226,9 @@ class CanvasRenderer {
 		this.canvasInfo = canvasInfo;
 		this.canvasController = canvasController;
 		this.objectModel = this.canvasController.getObjectModel();
-		this.activePipeline = this.getPipeline(pipelineId); // Must come after line setting this.canvasInfo
 		this.parentSupernodeD3Selection = parentSupernodeD3Selection; // Optional parameter, only provided with sub-flow in-place display.
+		this.activePipeline = this.getPipeline(pipelineId); // Must come after line setting this.canvasInfo
+		this.debug("CanvasRenderer constructor - start"); // This must come after this.activePipeline is set
 		this.setDisplayState();
 
 		// An array of renderers for the supernodes on the canvas.
@@ -320,6 +325,7 @@ class CanvasRenderer {
 			this.addBackToParentFlowArrow(this.canvasSVG);
 			this.zoomToFit();
 		}
+		this.debug("CanvasRenderer constructor - end");
 	}
 
 	setDisplayState() {
@@ -333,7 +339,7 @@ class CanvasRenderer {
 		} else {
 			this.displayState = "primary-flow-full-page";
 		}
-		consoleLog("Display state for " + this.activePipeline.id + " set to " + this.displayState);
+		this.debug("Display state set to " + this.displayState);
 	}
 
 	isDisplayingPrimaryFlowFullPage() {
@@ -392,7 +398,7 @@ class CanvasRenderer {
 	}
 
 	setCanvasInfoRenderer(canvasInfo) {
-		consoleLog("setCanvasRenderer - start");
+		this.debug("setCanvasInfoRenderer - start");
 		this.canvasInfo = canvasInfo;
 		this.activePipeline = this.getPipeline(this.pipelineId);
 		this.layout = this.objectModel.getLayout(); // Refresh the layout info in case it changed.
@@ -415,7 +421,7 @@ class CanvasRenderer {
 				superRenderer.setCanvasInfoRenderer(canvasInfo);
 			});
 		}
-		consoleLog("setCanvasRenderer - end");
+		this.debug("setCanvasInfoRenderer - end");
 	}
 
 	// Removes any super renderers that no longer have a corresponding pipeline
@@ -455,7 +461,7 @@ class CanvasRenderer {
 	}
 
 	displayCanvas() {
-		// consoleLog("Displaying Canvas. Inst = " + this.instanceId + "  Id = " + this.canvasInfo.id);
+		this.debug("displayCanvas");
 
 		// If we are rendering a sub-flow and the parent supernode is NOT expanded
 		// don't display the SVG area.
@@ -481,7 +487,7 @@ class CanvasRenderer {
 		this.displayLinks();
 		var endTimeLinks = Date.now();
 		if (showCanvasTime) {
-			consoleLog("Display Canvas N " + (endTimeNodes - endTimeComments) + " C " +
+			this.debug("Display Canvas N " + (endTimeNodes - endTimeComments) + " C " +
 			(endTimeComments - startTime) + " L " + (endTimeLinks - endTimeNodes));
 		}
 
@@ -511,6 +517,7 @@ class CanvasRenderer {
 	}
 
 	displayBindingNodesToFitSVG() {
+		this.debug("displayBindingNodesToFitSVG");
 		this.moveSuperBindingNodes();
 		this.movingBindingNodes = true;
 		this.displayNodes();
@@ -536,7 +543,7 @@ class CanvasRenderer {
 		const svgRect = this.getViewPortDimensions();
 		const transformedSVGRect = this.getTransformedSVGRect(svgRect, 0);
 
-		// consoleLog("transformedSVGRect" +
+		// this.debug("transformedSVGRect" +
 		// 	" x = " + transformedSVGRect.x +
 		// 	" y = " + transformedSVGRect.y +
 		// 	" width = " + transformedSVGRect.width +
@@ -673,7 +680,7 @@ class CanvasRenderer {
 		return id;
 	}
 
-	// Returns the current mouse posiiton transformed by the current zoom
+	// Returns the current mouse position transformed by the current zoom
 	// transformation amounts based on the local SVG -- that is, if we're
 	// displaying a sub-flow it is based on the SVG in the supernode.
 	getTransformedMousePos() {
@@ -798,7 +805,7 @@ class CanvasRenderer {
 	}
 
 	createCanvasSVG() {
-		// consoleLog("Create Canvas. Inst = " + this.instanceId);
+		this.debug("Create Canvas SVG.");
 
 		// For full screen display of primary or sub flows we use the canvasDiv as
 		// the parent for the svg object and set width and height to fill the
@@ -837,28 +844,28 @@ class CanvasRenderer {
 		// any in-place sub-flows.
 		canvasSVG
 			.on("mousemove.zoom", () => {
-				// consoleLog("Zoom - mousemove - pId = " + this.pipelineIdDrawing + " drawingNewLink = " + this.drawingNewLink);
+				// this.debug("Zoom - mousemove - " + drawingNewLink = " + this.drawingNewLink);
 				stopPropagationAndPreventDefault();
 				if (this.drawingNewLink === true) {
 					this.drawNewLink();
 				}
 			})
 			.on("mouseup.zoom", () => {
-				consoleLog("Zoom - mouseup - pId = " + this.pipelineId);
+				this.debug("Zoom - mouseup");
 				stopPropagationAndPreventDefault();
 				if (this.drawingNewLink === true) {
 					this.stopDrawingNewLink();
 				}
 			})
 			.on("click.zoom", () => {
-				consoleLog("Zoom - click - pId = " + this.pipelineId);
+				this.debug("Zoom - click");
 				this.selecting = true;
 				this.canvasController.clearSelections(); // Controller will make sure selections are not cleared when context menu is displayed
 				this.canvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
 				this.selecting = false;
 			})
 			.on("dblclick.zoom", () => {
-				// consoleLog("Zoom - double click - pId = " + this.pipelineId);
+				this.debug("Zoom - double click");
 				stopPropagationAndPreventDefault();
 				this.canvasController.clickActionHandler({
 					clickType: "DOUBLE_CLICK",
@@ -866,7 +873,7 @@ class CanvasRenderer {
 					selectedObjectIds: this.objectModel.getSelectedObjectIds() });
 			})
 			.on("contextmenu.zoom", (d) => {
-				// consoleLog("Zoom - context menu - pId = " + this.pipelineId);
+				this.debug("Zoom - context menu");
 				stopPropagationAndPreventDefault();
 				if (this.isDisplayingSubFlowInPlace()) {
 					this.canvasController.clearSelections();
@@ -1021,7 +1028,7 @@ class CanvasRenderer {
 	zoomToFitCanvas(canvasDimensions) {
 		const viewPortDimensions = this.getViewPortDimensions();
 
-		// consoleLog("Zoom to fit: " +
+		// this.debug("Zoom to fit: " +
 		// 	" viewPort.width " + viewPortDimensions.width +
 		// 	" viewPort.height " + viewPortDimensions.height +
 		// 	" canvas.width " + canvasDimensions.width +
@@ -1089,7 +1096,7 @@ class CanvasRenderer {
 	}
 
 	zoomStart() {
-		// consoleLog("Zoom start - x = " + d3Event.transform.x + " y = " + d3Event.transform.y + " k = " + d3Event.transform.k);
+		this.debug("Zoom start - x = " + JSON.stringify(d3Event.transform));
 
 		if (d3Event.sourceEvent && d3Event.sourceEvent.shiftKey) {
 			this.regionSelect = true;
@@ -1109,7 +1116,7 @@ class CanvasRenderer {
 	}
 
 	zoomAction() {
-		// consoleLog("Zoom action - x = " + d3Event.transform.x + " y = " + d3Event.transform.y + " k = " + d3Event.transform.k);
+		// this.debug("Zoom action -  + JSON.stringify(d3Event.transform));
 
 		if (this.regionSelect === true) {
 			const transPos = this.getTransformedMousePos();
@@ -1164,7 +1171,7 @@ class CanvasRenderer {
 	}
 
 	zoomEnd() {
-		// consoleLog("Zoom end - x = " + d3Event.transform.x + " y = " + d3Event.transform.y + " k = " + d3Event.transform.k);
+		this.debug("Zoom end - x = " + JSON.stringify(d3Event.transform));
 
 		if (this.drawingNewLink) {
 			this.stopDrawingNewLink();
@@ -1281,14 +1288,14 @@ class CanvasRenderer {
 	}
 
 	dragStart(d) {
-		// consoleLog("Drag start - started");
+		this.debug("Drag start - started");
 		this.dragOffsetX = 0;
 		this.dragOffsetY = 0;
 		// Note: Comment resizing is started by the comment highlight rectangle.
 	}
 
 	dragMove() {
-		// consoleLog("Drag move - started");
+		this.debug("dragMove - start");
 		this.dragging = true;
 		if (this.commentSizing) {
 			this.resizeComment();
@@ -1300,7 +1307,7 @@ class CanvasRenderer {
 
 			var objs = this.getSelectedNodesAndComments();
 
-			// consoleLog("Drag offset X = " + this.dragOffsetX + " y = " + this.dragOffsetY);
+			// this.debug("Drag offset X = " + this.dragOffsetX + " y = " + this.dragOffsetY);
 			if (this.dragOffsetX < 5000 && this.dragOffsetX > -5000 &&
 					this.dragOffsetY < 5000 && this.dragOffsetY > -5000) {
 				objs.forEach(function(d) {
@@ -1313,12 +1320,12 @@ class CanvasRenderer {
 			}
 
 			this.displayCanvas();
-			// consoleLog("Drag move - finished");
+			this.debug("dragMove - end");
 		}
 	}
 
 	dragEnd() {
-		consoleLog("Drag end - started");
+		this.debug("dragEnd - start");
 		if (this.commentSizing) {
 			this.dragging = false;
 			this.endCommentSizing();
@@ -1339,17 +1346,12 @@ class CanvasRenderer {
 			}
 			this.dragging = false;
 		}
-		consoleLog("Drag end - finished");
+		this.debug("dragEnd - end");
 	}
 
 	displayNodes() {
-		consoleLog("Displaying nodes for " + this.activePipeline.id + " flags:" +
-			" tipShowing = " + this.canvasController.isTipShowing() +
-			", dragging = " + this.dragging +
-			", nodeSizing = " + this.nodeSizing +
-			", commentSizing = " + this.commentSizing +
-			", selecting = " + this.selecting +
-			", regionSelect = " + this.regionSelect);
+		this.debug("displayNodes");
+		this.debugFlags();
 
 		// Do not return from here if there are no nodes because there may
 		// be still nodes on display that need to be deleted.
@@ -1425,7 +1427,7 @@ class CanvasRenderer {
 				})
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d) => {
-					consoleLog("Node Group - mouse down");
+					this.debug("Node Group - mouse down");
 					this.selecting = true;
 					d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
 					if (!this.objectModel.isSelected(d.id)) {
@@ -1446,26 +1448,26 @@ class CanvasRenderer {
 						selectedObjectIds: this.objectModel.getSelectedObjectIds(),
 						pipelineId: this.activePipeline.id });
 					this.selecting = false;
-					consoleLog("Node Group - finished mouse down");
+					this.debug("Node Group - finished mouse down");
 				})
 				.on("mousemove", (d) => {
-					// consoleLog("Node Group - mouse move");
+					// this.debug("Node Group - mouse move");
 					// Don't stop propogation. Mouse move messages must be allowed to
 					// propagate to canvas zoom operation.
 				})
 				.on("mouseup", (d) => {
 					d3Event.stopPropagation();
-					consoleLog("Node Group - mouse up");
+					this.debug("Node Group - mouse up");
 					if (this.drawingNewLink === true) {
 						this.completeNewLink(d);
 					}
 				})
 				.on("click", (d) => {
-					consoleLog("Node Group - click");
+					this.debug("Node Group - click");
 					d3Event.stopPropagation(); // Prevent click going through to zoom.click attached to SVG which would cancel this node selection
 				})
 				.on("dblclick", (d) => {
-					consoleLog("Node Group - double click");
+					this.debug("Node Group - double click");
 					d3Event.stopPropagation();
 					var selObjIds = this.objectModel.getSelectedObjectIds();
 					this.canvasController.clickActionHandler({
@@ -1477,7 +1479,7 @@ class CanvasRenderer {
 					});
 				})
 				.on("contextmenu", (d) => {
-					consoleLog("Node Group - context menu");
+					this.debug("Node Group - context menu");
 					stopPropagationAndPreventDefault();
 					if (!d.isSupernodeInputBinding && !d.isSupernodeOutputBinding) {
 						that.openContextMenu("node", d);
@@ -1574,7 +1576,7 @@ class CanvasRenderer {
 					.attr("cy", this.layout.haloCenterY)
 					.attr("r", this.layout.haloRadius)
 					.on("mousedown", (d) => {
-						consoleLog("Halo - mouse down");
+						this.debug("Halo - mouse down");
 						d3Event.stopPropagation();
 						this.drawingNewLink = true;
 						this.drawingNewLinkSrcId = d.id;
@@ -1963,6 +1965,7 @@ class CanvasRenderer {
 	}
 
 	displaySupernodeInPlace(d) {
+		this.debug("displaySupernodeInPlace");
 		const ren = this.findSuperRenderer(d);
 		if (ren) {
 			ren.displayCanvas();
@@ -2673,7 +2676,8 @@ class CanvasRenderer {
 	}
 
 	displayComments() {
-		// consoleLog("Displaying comments");
+		this.debug("displayComments");
+		this.debugFlags();
 
 		// Do not return from here if there are no comments because there may
 		// be still comments on display that need to be deleted.
@@ -2761,7 +2765,7 @@ class CanvasRenderer {
 				})
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d) => {
-					consoleLog("Comment Group - mouse down");
+					this.debug("Comment Group - mouse down");
 					this.selecting = true;
 					d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
 					if (!this.objectModel.isSelected(d.id)) {
@@ -2787,14 +2791,14 @@ class CanvasRenderer {
 						selectedObjectIds: this.objectModel.getSelectedObjectIds(),
 						pipelineId: this.activePipeline.id });
 					this.selecting = false;
-					consoleLog("Comment Group - finished mouse down");
+					this.debug("Comment Group - finished mouse down");
 				})
 				.on("click", (d) => {
-					consoleLog("Comment Group - click");
+					this.debug("Comment Group - click");
 					d3Event.stopPropagation(); // Prevent click going through to zoom.click attached to SVG which would cancel this comment selection
 				})
 				.on("dblclick", function(d) { // Use function keyword so 'this' pointer references the DOM text object
-					consoleLog("Comment Group - double click");
+					that.debug("Comment Group - double click");
 					stopPropagationAndPreventDefault();
 
 					// TODO - Enable editing for comments inside sub-flow
@@ -2844,7 +2848,7 @@ class CanvasRenderer {
 								that.autoSizeTextArea(this, datum);
 							})
 							.on("paste", function() {
-								consoleLog("Text area - Paste - Scroll Ht = " + this.scrollHeight);
+								that.debug("Text area - Paste - Scroll Ht = " + this.scrollHeight);
 								that.editingCommentChangesPending = true;
 								// Allow some time for pasted text (from context menu) to be
 								// loaded into the text area. Otherwise the text is not there
@@ -2852,7 +2856,7 @@ class CanvasRenderer {
 								setTimeout(that.autoSizeTextArea.bind(that), 500, this, datum);
 							})
 							.on("blur", function() {
-								consoleLog("Text area - blur");
+								that.debug("Text area - blur");
 								var commentObj = that.getComment(id);
 								commentObj.content = this.value;
 								that.saveCommentChanges(this);
@@ -2872,7 +2876,7 @@ class CanvasRenderer {
 					}
 				})
 				.on("contextmenu", (d) => {
-					consoleLog("Comment Group - context menu");
+					this.debug("Comment Group - context menu");
 					this.openContextMenu("comment", d);
 				})
 				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
@@ -2938,7 +2942,7 @@ class CanvasRenderer {
 					.attr("id", (d) => that.getId("comment_halo", d.id))
 					.attr("class", "d3-comment-halo")
 					.on("mousedown", (d) => {
-						consoleLog("Comment Halo - mouse down");
+						this.debug("Comment Halo - mouse down");
 						d3Event.stopPropagation();
 						this.drawingNewLink = true;
 						this.drawingNewLinkSrcId = d.id;
@@ -3024,7 +3028,7 @@ class CanvasRenderer {
 	}
 
 	autoSizeTextArea(textArea, datum) {
-		// consoleLog("autoSizeTextArea textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
+		this.debug("autoSizeTextArea - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 		if (this.textAreaHeight < textArea.scrollHeight) {
 			this.textAreaHeight = textArea.scrollHeight;
 			this.zoomTextAreaCenterY = datum.y_pos + (this.textAreaHeight / 2);
@@ -3554,7 +3558,8 @@ class CanvasRenderer {
 	}
 
 	displayLinks() {
-		consoleLog("Displaying links");
+		this.debug("displayLinks");
+		this.debugFlags();
 
 		// Do not return from here if there are no links because there may
 		// be still links on display that need to be deleted.
@@ -3612,10 +3617,10 @@ class CanvasRenderer {
 				d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
 			})
 			.on("mouseup", () => {
-				consoleLog("Line - mouse up");
+				this.debug("Line - mouse up");
 			})
 			.on("contextmenu", (d) => {
-				consoleLog("Context menu on canvas background.");
+				this.debug("Context menu on canvas background.");
 				this.openContextMenu("link", d);
 			})
 			.on("mouseenter", function(link) {
@@ -3692,7 +3697,7 @@ class CanvasRenderer {
 		var endTimeDrawingLines = Date.now();
 
 		if (showLinksTime) {
-			consoleLog("displayLinks R " + (timeAfterDelete - startTimeDrawingLines) +
+			this.debug("displayLinks R " + (timeAfterDelete - startTimeDrawingLines) +
 			" B " + (afterLineArray - timeAfterDelete) + " D " + (endTimeDrawingLines - afterLineArray));
 		}
 	}
@@ -3795,11 +3800,11 @@ class CanvasRenderer {
 			}
 
 			if (srcObj === null) {
-				consoleLog("Error drawing a link. A link was specified for source " + link.srcNodeId + " in the Canvas data that does not have a valid source node/comment.");
+				this.error("Error drawing a link. A link was specified for source " + link.srcNodeId + " in the Canvas data that does not have a valid source node/comment.");
 			}
 
 			if (trgNode === null) {
-				consoleLog("Error drawing a link. A link was specified for target " + link.trgNodeId + " in the Canvas data that does not have a valid target node.");
+				this.error("Error drawing a link. A link was specified for target " + link.trgNodeId + " in the Canvas data that does not have a valid target node.");
 			}
 
 			// Only proceed if we have a source and a target node/comment.
@@ -4299,6 +4304,41 @@ class CanvasRenderer {
 			y_pos: yPos
 		};
 	}
+
+	// Returns a string that explains which flags are set to true.
+	debugFlags() {
+		let str = "Flags:";
+		if (this.canvasController.isTipShowing()) {
+			str += " tipShowing = true";
+		}
+		if (this.dragging) {
+			str += ", dragging = true";
+		}
+		if (this.nodeSizing) {
+			str += ", nodeSizing = true";
+		}
+		if (this.commentSizing) {
+			str += ", commentSizing = true";
+		}
+		if (this.movingBindingNodes) {
+			str += " movingBindingNodes = true";
+		}
+		if (this.regionSelect) {
+			str += ", regionSelect = true";
+		}
+		if (str === "Flags:") {
+			str += " None set to true";
+		}
+		this.debug(str);
+	}
+
+	debug(msg) {
+		consoleLog("PipeId = " + abbreviate(this.activePipeline.id) + " - " + msg);
+	}
+
+	error(msg) {
+		consoleLog("PipeId = " + abbreviate(this.activePipeline.id) + " - " + msg);
+	}
 }
 
 
@@ -4315,6 +4355,13 @@ function stopPropagationAndPreventDefault() {
 	d3Event.preventDefault();
 }
 
+// Returns an abbrviated pipelineId for logging
+function abbreviate(idStr) {
+	if (idStr && idStr.length > 20) {
+		return idStr.substr(0, 17) + "...";
+	}
+	return idStr;
+}
 function consoleLog(msg) {
-	console.log(msg);
+	// console.log(msg);
 }
