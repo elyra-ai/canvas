@@ -90,6 +90,14 @@
 .properties-action-panel {
 	display: flex;
 	flex-wrap: wrap;
+	margin: 3px 0;
+	&[disabled] {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+	&.hide {
+		display: none;
+	}
 }
 
 

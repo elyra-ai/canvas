@@ -801,7 +801,7 @@ export default class PropertiesController {
 	}
 
 	/**
-	* @param panelId
+	* @param panelId {name: panel.id}
   * @param state string ("disabled", "enabled", "hidden", "visible")
 	*/
 	updatePanelState(panelId, state) {

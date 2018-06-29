@@ -464,8 +464,13 @@ class EditorForm extends React.Component {
 					</SummaryPanel>);
 			}
 		} else if (panel.panelType === "actionPanel") {
+			const panelState = this.props.controller.getPanelState({ name: panel.id });
 			uiObject = (
-				<div className="properties-action-panel" key={key} data-id={"properties-" + panel.id}>
+				<div className={classNames("properties-action-panel", { "hide": panelState === STATES.HIDDEN })}
+					key={"action-panel-" + key}
+					data-id={"properties-" + panel.id}
+					disabled={panelState === STATES.DISABLED}
+				>
 					{content}
 				</div>);
 		} else if (panel.panelType === "twisty") {

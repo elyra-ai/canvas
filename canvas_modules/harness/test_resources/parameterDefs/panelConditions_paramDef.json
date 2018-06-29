@@ -70,7 +70,10 @@
     "hideInit1PanelLevel3": false,
     "textfieldInit11": 1,
     "textfieldInit12": 2,
-    "textfieldInit13": 3
+    "textfieldInit13": 3,
+    "actionNumber": 0,
+    "actionDisable": false,
+    "actionHide": false
   },
   "parameters": [
     {
@@ -267,6 +270,18 @@
       "id": "textfieldInit13",
       "type": "string",
       "role": "new_column"
+    },
+    {
+      "id": "actionNumber",
+      "type": "integer"
+    },
+    {
+      "id": "actionDisable",
+      "type": "boolean"
+    },
+    {
+      "id": "actionHide",
+      "type": "boolean"
     }
   ],
   "complex_types": [
@@ -667,6 +682,28 @@
         "label": {
           "default": "textfieldInit13"
         }
+      },
+      {
+        "parameter_ref": "actionNumber",
+        "label": {
+          "default": "Integer"
+        },
+        "description": {
+          "default": "Try pressing Increment or Descrement buttons"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "actionDisable",
+        "label": {
+          "default": "Disable 'action panel'"
+        }
+      },
+      {
+        "parameter_ref": "actionHide",
+        "label": {
+          "default": "Hide 'action panel'"
+        }
       }
     ],
     "complex_type_info": [
@@ -753,6 +790,28 @@
             "summary": true
           }
         ]
+      }
+    ],
+    "action_info": [
+      {
+        "id": "increment",
+        "label": {
+          "resource_key": "increment"
+        },
+        "control": "button",
+        "data": {
+          "parameter_ref": "actionNumber"
+        }
+      },
+      {
+        "id": "decrement",
+        "label": {
+          "resource_key": "decrement"
+        },
+        "control": "button",
+        "data": {
+          "parameter_ref": "actionNumber"
+        }
       }
     ],
     "group_info": [
@@ -1265,6 +1324,38 @@
             ]
           }
         ]
+      },
+      {
+        "id": "action-panels",
+        "label": {
+          "default": "Action Panels"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "action-checkbox-control",
+            "type": "controls",
+            "parameter_refs": [
+              "actionDisable",
+              "actionHide"
+            ]
+          },
+          {
+            "id": "action-buttons-panel",
+            "type": "actionPanel",
+            "action_refs": [
+              "increment",
+              "decrement"
+            ]
+          },
+          {
+            "id": "action-number-control",
+            "type": "controls",
+            "parameter_refs": [
+              "actionNumber"
+            ]
+          }
+        ]
       }
     ]
   },
@@ -1749,6 +1840,34 @@
           }
         }
       }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "action-buttons-panel", "action-number-control"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "actionHide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "action-buttons-panel", "action-number-control"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "actionDisable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
     }
   ],
   "dataset_metadata": [
@@ -1792,5 +1911,9 @@
         }
       ]
     }
-  ]
+  ],
+  "resources": {
+    "increment": "Increment",
+    "decrement": "Decrement"
+  }
 }
