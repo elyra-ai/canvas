@@ -13,6 +13,7 @@ import EditorForm from "../../src/common-properties/components/editor-form";
 import UiConditionsParser from "../../src/common-properties/ui-conditions/ui-conditions-parser.js";
 import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
+import cloneDeep from "lodash/cloneDeep";
 
 import CustomTableControl from "./custom-controls/CustomTableControl";
 import CustomToggleControl from "./custom-controls/CustomToggleControl";
@@ -24,26 +25,39 @@ function controllerHandler(propertyController) {
 	renderedController = propertyController;
 }
 
-function flyoutEditorForm(paramDef, propertiesConfig) {
+function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverrides, propertiesInfoOverrides) {
 	const applyPropertyChanges = sinon.spy();
 	const closePropertiesDialog = sinon.spy();
-	const callbacks = {
+	let callbacks = {
 		applyPropertyChanges: applyPropertyChanges,
 		closePropertiesDialog: closePropertiesDialog,
 		controllerHandler: controllerHandler
 	};
-
-	const propertiesInfo = {
-		parameterDef: JSON.parse(JSON.stringify(paramDef))
-	};
-	let applyOnBlur = true;
-	if (propertiesConfig && typeof propertiesConfig.applyOnBlur !== "undefined") {
-		applyOnBlur = propertiesConfig.applyOnBlur;
+	if (callbacksOverrides) {
+		callbacks = Object.assign(callbacks, callbacksOverrides);
 	}
+
+	let propertiesInfo = {
+		parameterDef: cloneDeep(paramDef)
+	};
+
+	if (propertiesInfoOverrides) {
+		propertiesInfo = Object.assign(propertiesInfo, propertiesInfoOverrides);
+	}
+
+	let propertiesConfig = {
+		applyOnBlur: true,
+		rightFlyout: true,
+		containerType: "Custom"
+	};
+	if (propertiesConfigOverrides) {
+		propertiesConfig = Object.assign(propertiesConfig, propertiesConfigOverrides);
+	}
+
 	const wrapper = mountWithIntl(
 		<CommonProperties
 			propertiesInfo={propertiesInfo}
-			propertiesConfig={{ containerType: "Custom", rightFlyout: true, applyOnBlur: applyOnBlur }}
+			propertiesConfig={propertiesConfig}
 			callbacks={callbacks}
 			customControls={[CustomTableControl, CustomToggleControl]}
 			customConditionOps={[CustomOpMax]}

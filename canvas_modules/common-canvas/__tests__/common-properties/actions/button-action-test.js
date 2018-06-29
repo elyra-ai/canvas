@@ -14,10 +14,14 @@ import { expect } from "chai";
 import sinon from "sinon";
 import Controller from "./../../../src/common-properties/properties-controller";
 
+import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
+import propertyUtils from "../../_utils_/property-utils";
+
 const actionHandler = sinon.spy();
 const controller = new Controller();
 controller.setHandlers({ actionHandler: actionHandler });
-controller.setAppData({ nodeId: "1234" });
+const appData = { nodeId: "1234" };
+controller.setAppData(appData);
 
 const action = {
 	"name": "increment",
@@ -55,9 +59,9 @@ describe("action-button renders correctly", () => {
 		expect(button).to.have.length(1);
 	});
 	it("should fire action when button clicked", (done) => {
-		function callback(id, appData, data) {
+		function callback(id, inAppData, data) {
 			expect(id).to.equal("increment");
-			expect(appData.nodeId).to.equal("1234");
+			expect(inAppData).to.eql(appData);
 			expect(data.parameter_ref).to.equal("number");
 			done();
 		}
@@ -71,4 +75,20 @@ describe("action-button renders correctly", () => {
 		const button = wrapper.find("button");
 		button.simulate("click");
 	});
+});
+
+describe("actions using paramDef", () => {
+	it("should fire action when button clicked", (done) => {
+		const renderedObject = propertyUtils.flyoutEditorForm(ACTION_PARAMDEF, null, { actionHandler: callback }, { appData: appData });
+		const wrapper = renderedObject.wrapper;
+		function callback(id, inAppData, data) {
+			expect(id).to.equal("increment");
+			expect(inAppData).to.eql(appData);
+			expect(data.parameter_ref).to.equal("number");
+			done();
+		}
+		const button = wrapper.find("div[data-id='increment'] button");
+		button.simulate("click");
+	});
+
 });

@@ -30,7 +30,7 @@ export default class ButtonAction extends React.Component {
 
 	render() {
 		return (
-			<div className={"properties-action-button"}>
+			<div className={"properties-action-button"} data-id={this.props.action.name}>
 				<Button
 					type="button"
 					small

@@ -1,0 +1,208 @@
+{
+  "titleDefinition": {
+    "title": "Action Test",
+    "editable": false
+  },
+  "current_parameters": {
+    "number": 0,
+    "fields": [
+      "age"
+    ]
+  },
+  "parameters": [
+    {
+      "id": "number",
+      "type": "integer"
+    },
+    {
+      "id": "fields",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    }
+  ],
+  "uihints": {
+    "id": "actions",
+    "icon": "images/actions.svg",
+    "label": {
+      "default": "Action Test"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "number",
+        "label": {
+          "default": "Integer"
+        },
+        "description": {
+          "default": "Try pressing Increment or Descrement buttons"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "fields",
+        "label": {
+          "default": "Fields"
+        },
+        "description": {
+          "default": "Press 'Add Field' to add a new field"
+        },
+        "summary": true
+      }
+    ],
+    "action_info": [
+      {
+        "id": "increment",
+        "label": {
+          "resource_key": "increment"
+        },
+        "control": "button",
+        "data": {
+          "parameter_ref": "number"
+        }
+      },
+      {
+        "id": "decrement",
+        "label": {
+          "resource_key": "decrement"
+        },
+        "control": "button",
+        "data": {
+          "parameter_ref": "number"
+        }
+      },
+      {
+        "id": "dm-update",
+        "label": {
+          "resource_key": "dm-update"
+        },
+        "control": "button",
+        "data": {}
+      }
+    ],
+    "group_info": [
+      {
+        "id": "action-tests",
+        "label": {
+          "default": "Actions"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "increment-action-panel",
+            "type": "actionPanel",
+            "action_refs": [
+              "increment",
+              "decrement"
+            ]
+          },
+          {
+            "id": "number-control",
+            "type": "controls",
+            "parameter_refs": [
+              "number"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "summary-panel",
+        "label": {
+          "default": "Summary Panel Actions"
+        },
+        "type": "summaryPanel",
+        "group_info": [
+          {
+            "id": "dm-action-panel",
+            "type": "actionPanel",
+            "action_refs": [
+              "dm-update"
+            ]
+          },
+          {
+            "id": "summary-controls",
+            "type": "controls",
+            "parameter_refs": [
+              "fields"
+            ]
+          }
+        ]
+      }
+    ],
+    "help": {}
+  },
+  "conditions": [],
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "increment": "Increment",
+    "decrement": "Decrement",
+    "dm-update": "Add Field"
+  }
+}

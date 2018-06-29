@@ -31,56 +31,42 @@ class CommonProperties extends React.Component {
 		this.state = {
 			showPropertiesButtons: true
 		};
-		this.propertiesInfo = this.props.propertiesInfo;
 		this.propertiesController = new PropertiesController();
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
+		this.propertiesController.setAppData(props.propertiesInfo.appData);
+		this.propertiesController.setHandlers({
+			controllerHandler: props.callbacks.controllerHandler,
+			propertyListener: props.callbacks.propertyListener,
+			actionHandler: props.callbacks.actionHandler
+		});
+		this.propertiesController.setPipelineErrorMessages(props.propertiesInfo.messages);
+		this.setForm(props.propertiesInfo);
+		this.currentParameters = this.propertiesController.getPropertyValues();
 
 		this.propertiesController.subscribe(() => {
 			this.forceUpdate();
 		});
-
-		this.currentParameters = null;
-		// values used for undo/redo
 
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 	}
-	componentWillMount() {
-		this.setForm();
-		this.propertiesController.setHandlers({
-			controllerHandler: this.props.callbacks.controllerHandler,
-			propertyListener: this.props.callbacks.propertyListener,
-			actionHandler: this.props.callbacks.actionHandler
-		});
-		this.propertiesController.setPipelineErrorMessages(this.propertiesInfo.messages);
-	}
-
-	componentDidMount() {
-		this.currentParameters = this.propertiesController.getPropertyValues();
-	}
 
 	componentWillReceiveProps(newProps) {
 		if (newProps.propertiesInfo) {
-			if (!isEqual(Object.keys(newProps.propertiesInfo), Object.keys(this.propertiesInfo)) ||
-				(newProps.propertiesInfo.formData && !isEqual(newProps.propertiesInfo.formData, this.propertiesInfo.formData)) ||
-				(newProps.propertiesInfo.parameterDef && !isEqual(newProps.propertiesInfo.parameterDef, this.propertiesInfo.parameterDef))) {
-				this.propertiesInfo = newProps.propertiesInfo;
-				this.setForm();
-				this.currentParameters = null;
-				this.propertiesController.setPipelineErrorMessages(this.propertiesInfo.messages);
-				this.propertiesController.setAppData(this.propertiesInfo.appData);
+			if (!isEqual(Object.keys(newProps.propertiesInfo), Object.keys(this.props.propertiesInfo)) ||
+				(newProps.propertiesInfo.formData && !isEqual(newProps.propertiesInfo.formData, this.props.propertiesInfo.formData)) ||
+				(newProps.propertiesInfo.parameterDef && !isEqual(newProps.propertiesInfo.parameterDef, this.props.propertiesInfo.parameterDef)) ||
+				(newProps.propertiesInfo.appData && !isEqual(newProps.propertiesInfo.appData, this.props.propertiesInfo.appData))) {
+				this.setForm(newProps.propertiesInfo);
+				this.currentParameters = this.propertiesController.getPropertyValues();
+				this.propertiesController.setPipelineErrorMessages(newProps.propertiesInfo.messages);
+				this.propertiesController.setAppData(newProps.propertiesInfo.appData);
 				this.propertiesController.setCustomControls(newProps.customControls);
 				this.propertiesController.setConditionOps(newProps.customConditionOps);
 			}
-		}
-	}
-
-	componentDidUpdate(prevProps, prevState) {
-		if (!this.currentParameters) {
-			this.currentParameters = this.propertiesController.getPropertyValues();
 		}
 	}
 
@@ -94,13 +80,13 @@ class CommonProperties extends React.Component {
 		}
 	}
 
-	setForm() {
+	setForm(propertiesInfo) {
 		let formData = null;
 		try {
-			if (this.propertiesInfo.formData && Object.keys(this.propertiesInfo.formData).length !== 0) {
-				formData = this.propertiesInfo.formData;
-			} else if (this.propertiesInfo.parameterDef) {
-				formData = Form.makeForm(this.propertiesInfo.parameterDef, !this.props.propertiesConfig.rightFlyout);
+			if (propertiesInfo.formData && Object.keys(propertiesInfo.formData).length !== 0) {
+				formData = propertiesInfo.formData;
+			} else if (propertiesInfo.parameterDef) {
+				formData = Form.makeForm(propertiesInfo.parameterDef, !this.props.propertiesConfig.rightFlyout);
 			}
 			// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
 			if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
@@ -119,8 +105,8 @@ class CommonProperties extends React.Component {
 		if (formData && formData.data && formData.data.currentParameters) {
 			this.initialValueInfo.properties = JSON.parse(JSON.stringify(formData.data.currentParameters));
 		}
-		if (this.propertiesInfo.messages) {
-			this.initialValueInfo.additionalInfo.messages = JSON.parse(JSON.stringify(this.propertiesInfo.messages));
+		if (propertiesInfo.messages) {
+			this.initialValueInfo.additionalInfo.messages = JSON.parse(JSON.stringify(propertiesInfo.messages));
 		}
 		this.initialValueInfo.undoInfo.properties = this.propertiesController.getPropertyValues(); // used for undoing when node editor open
 		this.initialValueInfo.undoInfo.messages = this.propertiesController.getErrorMessages(); // used for undoing when node editor open
@@ -152,7 +138,7 @@ class CommonProperties extends React.Component {
 				valueInfo.additionalInfo.title = this.propertiesController.getTitle();
 			}
 			const command = new CommonPropertiesAction(valueInfo, this.initialValueInfo,
-				this.propertiesInfo.appData, this.props.callbacks.applyPropertyChanges);
+				this.props.propertiesInfo.appData, this.props.callbacks.applyPropertyChanges);
 			this.propertiesController.getCommandStack().do(command);
 
 			// if we don't close the dialog, set the currentParameters to the new parameters
@@ -215,7 +201,7 @@ class CommonProperties extends React.Component {
 				ref="editorForm"
 				key="editor-form-key"
 				controller={this.propertiesController}
-				additionalComponents={this.propertiesInfo.additionalComponents}
+				additionalComponents={this.props.propertiesInfo.additionalComponents}
 				showPropertiesButtons={this.showPropertiesButtons}
 				customPanels={this.props.customPanels}
 				rightFlyout={this.props.propertiesConfig.rightFlyout}
