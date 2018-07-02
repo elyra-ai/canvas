@@ -20,15 +20,15 @@ export default class SizeAndPositionObjectsAction extends Action {
 
 	// Standard methods
 	do() {
-		this.apiPipeline.sizeAndPositionObjects(this.data);
+		this.apiPipeline.sizeAndPositionObjects(this.data.objectsInfo);
 	}
 
 	undo() {
-		this.apiPipeline.sizeAndPositionObjects(this.previousData);
+		this.apiPipeline.sizeAndPositionObjects(this.previousData.objectsInfo);
 	}
 
 	redo() {
-		this.apiPipeline.sizeAndPositionObjects(this.data);
+		this.apiPipeline.sizeAndPositionObjects(this.data.objectsInfo);
 	}
 
 	getPreviousNodesInfo(data) {

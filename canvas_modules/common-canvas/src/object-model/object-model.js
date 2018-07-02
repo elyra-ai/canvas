@@ -1878,8 +1878,8 @@ export class APIPipeline {
 		return (typeof node !== "undefined"); // node will be undefined if objId references a comment
 	}
 
-	sizeAndPositionObjects(data) {
-		this.store.dispatch({ type: "SIZE_AND_POSITION_OBJECTS", data: data, pipelineId: this.pipelineId });
+	sizeAndPositionObjects(objectsInfo) {
+		this.store.dispatch({ type: "SIZE_AND_POSITION_OBJECTS", data: { objectsInfo: objectsInfo }, pipelineId: this.pipelineId });
 	}
 
 	// Filters data node IDs from the list of IDs passed in and returns them
@@ -2022,26 +2022,19 @@ export class APIPipeline {
 		} else {
 			lookup = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasInfoPipeline);
 		}
-		var newNodes = canvasInfoPipeline.nodes.map((node) => {
-			return Object.assign({}, node, { x_pos: lookup[node.id].value.x, y_pos: lookup[node.id].value.y });
+
+		const movedNodesInfo = [];
+		canvasInfoPipeline.nodes.forEach((node) => {
+			movedNodesInfo[node.id] = {
+				id: node.id,
+				x_pos: lookup[node.id].value.x,
+				y_pos: lookup[node.id].value.y,
+				width: node.width,
+				height: node.height
+			};
 		});
 
-		// TODO -- All code below can be moved to Redux reducers
-		const canvasInfo = this.objectModel.getCanvasInfo();
-
-		const newCanvasInfoPipelines = canvasInfo.pipelines.map((ciPipeline) => {
-			if (ciPipeline.id === canvasInfoPipeline.id) {
-				return Object.assign({}, canvasInfoPipeline, { nodes: newNodes });
-			}
-			return ciPipeline;
-		});
-
-		const newCanvasInfo = {
-			primary_pipeline: canvasInfo.primary_pipeline,
-			pipelines: newCanvasInfoPipelines
-		};
-
-		this.objectModel.setCanvasInfo(newCanvasInfo);
+		this.sizeAndPositionObjects(movedNodesInfo);
 	}
 
 	dagreAutolayout(direction, canvasInfoPipeline) {
