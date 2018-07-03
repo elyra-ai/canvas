@@ -8,7 +8,6 @@
  *******************************************************************************/
 
 /* eslint complexity: ["error", 22] */
-/* eslint no-console: "off" */
 
 import ArrangeLayoutAction from "../command-actions/arrangeLayoutAction.js";
 import CloneMultipleObjectsAction from "../command-actions/cloneMultipleObjectsAction.js";
@@ -30,6 +29,7 @@ import DisplaySubPipelineAction from "../command-actions/displaySubPipelineActio
 import EditCommentAction from "../command-actions/editCommentAction.js";
 import ExpandSuperNodeInPlaceAction from "../command-actions/expandSuperNodeInPlaceAction.js";
 import MoveObjectsAction from "../command-actions/moveObjectsAction.js";
+import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import has from "lodash/has";
@@ -46,6 +46,8 @@ export default class CanvasController {
 			"ports": true,
 			"links": true
 		};
+
+		this.logger = new Logger("CanvasController");
 
 		this.canvasConfig = {
 			enableConnectionType: "Ports",
@@ -754,6 +756,7 @@ export default class CanvasController {
 	}
 
 	contextMenuActionHandler(action) {
+		this.logger.log("contextMenuActionHandler - action: " + action);
 		// selectAll is supported for the external AND internal object models.
 		if (action === "selectAll") {
 			this.objectModel.selectAll(this.contextMenuSource.pipelineId);
@@ -830,6 +833,7 @@ export default class CanvasController {
 	}
 
 	toolbarMenuActionHandler(action) {
+		this.logger.log("toolbarMenuActionHandler - action: " + action);
 		let source = {
 			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
 		};
@@ -888,20 +892,21 @@ export default class CanvasController {
 	}
 
 	clickActionHandler(source) {
-		console.log("clickActionHandler - " + source.clickType + " on " + source.objectType);
+		this.logger.log("clickActionHandler - " + source.clickType + " on " + source.objectType);
 		if (this.handlers.clickActionHandler) {
 			this.handlers.clickActionHandler(source);
 		}
 	}
 
 	decorationActionHandler(node, id) {
+		this.logger.log("decorationActionHandler - node: " + node.id + " id: " + id);
 		if (this.handlers.decorationActionHandler) {
 			this.handlers.decorationActionHandler(node, id);
 		}
 	}
 
 	editActionHandler(cmndData) {
-		console.log("editActionHandler - " + cmndData.editType);
+		this.logger.log("editActionHandler - " + cmndData.editType);
 		let data = cmndData;
 		if (this.canvasConfig.enableInternalObjectModel) {
 			switch (data.editType) {

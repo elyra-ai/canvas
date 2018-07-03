@@ -18,7 +18,7 @@ import {
 	DND_DATA_TEXT
 } from "./constants/canvas-constants";
 
-import logger from "../../utils/logger";
+import Logger from "../logging/canvas-logger.js";
 import CanvasD3Layout from "./svg-canvas-d3.js";
 
 export default class DiagramCanvas extends React.Component {
@@ -27,6 +27,8 @@ export default class DiagramCanvas extends React.Component {
 
 		this.state = {
 		};
+
+		this.logger = new Logger("DiagramCanvas");
 
 		this.svgCanvasDivId = "d3-svg-canvas-div-" + this.props.canvasController.getInstanceId();
 		this.svgCanvasDivSelector = "#" + this.svgCanvasDivId;
@@ -57,7 +59,7 @@ export default class DiagramCanvas extends React.Component {
 		try {
 			return JSON.parse(event.dataTransfer.getData(DND_DATA_TEXT));
 		} catch (e) {
-			logger.info(e);
+			this.logger.error(e);
 			return null;
 		}
 	}

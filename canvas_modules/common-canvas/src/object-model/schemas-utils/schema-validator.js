@@ -6,7 +6,6 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint no-console: "off" */
 
 import pipelineFlowV1Schema from "../schemas/v1/pipeline-flow-v1-schema.json";
 import pipelineFlowUIV1Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v1-schema.json";
@@ -19,6 +18,9 @@ import pipelineFlowUIV2Schema from "@wdp/pipeline-schemas/common-pipeline/pipeli
 import pipelineConnectionV2Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-connection/pipeline-connection-v2-schema.json";
 import dataRecordMetadataV2Schema from "@wdp/pipeline-schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v2-schema.json";
 import paletteV2Schema from "../schemas/v2/palette-v2-schema.json";
+import Logger from "../../logging/canvas-logger.js";
+
+const logger = new Logger("SchemaValidator");
 
 var SchemaValidator = require("jsonschema").Validator;
 var validator1 = new SchemaValidator();
@@ -67,12 +69,14 @@ function validatePaletteAgainstSchema(paletteData, version) {
 // Validates the data provided, against the schema provided, using the validator
 // provided and throws an error if any schema validation errors are found.
 function validateAgainstSchema(data, schema, type, validator) {
-	var startTime = Date.now();
+	logger.logStartTimer("Schema validation");
 	const valResult = validator.validate(data, schema, { "nestedErrors": true });
-	console.log("Schema " + type + " validation time = " + (Date.now() - startTime));
-	console.log("Schema " + type + " validation result:");
-	console.log(valResult);
+	logger.logEndTimer("Schema validation");
+
+	logger.log("Schema " + type + " - validation result:");
+	logger.log(valResult);
 	if (valResult && valResult.errors && valResult.errors.length > 0) {
+		logger.error(valResult);
 		throw valResult;
 	}
 }
