@@ -2853,7 +2853,7 @@ class CanvasRenderer {
 							objectType: "comment",
 							id: d.id,
 							selectedObjectIds: that.objectModel.getSelectedObjectIds(),
-							pipelineId: this.activePipeline.id });
+							pipelineId: that.activePipeline.id });
 					}
 				})
 				.on("contextmenu", (d) => {
