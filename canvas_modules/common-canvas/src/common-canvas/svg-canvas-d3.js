@@ -104,6 +104,7 @@ export default class CanvasD3Layout {
 
 			if (this.renderer) {
 				this.renderer.setCanvasInfoRenderer(this.canvasInfo);
+				this.renderer.displayCanvas();
 			} else {
 				this.renderer = new CanvasRenderer(
 					this.canvasController.getCurrentBreadcrumb().pipelineId,
@@ -215,7 +216,7 @@ export default class CanvasD3Layout {
 class CanvasRenderer {
 	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, parentSupernodeD3Selection) {
 		this.logger = new Logger(["CanvasRenderer", "PipeId", pipelineId]);
-		this.logger.logStartTimer("constructor");
+		this.logger.logStartTimer("Constructor");
 		this.pipelineId = pipelineId;
 		this.canvasDiv = canvasDiv;
 		this.canvasInfo = canvasInfo;
@@ -319,7 +320,7 @@ class CanvasRenderer {
 			this.addBackToParentFlowArrow(this.canvasSVG);
 			this.zoomToFit();
 		}
-		this.logger.logEndTimer("constructor");
+		this.logger.logEndTimer("Constructor");
 	}
 
 	setDisplayState() {
@@ -405,11 +406,6 @@ class CanvasRenderer {
 		// object model we need to make sure the renderer is removed.
 		this.superRenderers = this.cleanUpSuperRenderers();
 
-		// Must put displayCanvas() before calling superRenderers because supernode
-		// attributes/datum must be set otherwise superRenderer can't find the
-		// dimensions of the supernode it is rendering into.
-		this.displayCanvas();
-
 		if (!this.canvasController.isTipShowing()) { // No need to render if just displaying a tip
 			this.superRenderers.forEach((superRenderer) => {
 				superRenderer.setCanvasInfoRenderer(canvasInfo);
@@ -455,17 +451,14 @@ class CanvasRenderer {
 		}
 	}
 
+	hideCanvas() {
+		this.canvasSVG.style("display", "none");
+	}
+
 	displayCanvas() {
-		this.logger.log("displayCanvas");
+		this.logger.logStartTimer("displayCanvas");
 
-		// If we are rendering a sub-flow and the parent supernode is NOT expanded
-		// don't display the SVG area.
-		if (this.isDisplayingSubFlowInPlace() && !this.isExpanded(this.getParentSupernodeDatum())) {
-			this.canvasSVG.style("display", "none");
-			return;
-		}
-
-		// Otherwise, always ensure the SVG area is displayed.
+		// Ensure the SVG area is displayed, incase it was previously hidden.
 		this.canvasSVG.style("display", "inherit");
 
 		// If we are handling a sub-flow set the supernode binding status for
@@ -490,6 +483,7 @@ class CanvasRenderer {
 		}
 
 		// this.displayBoundingRectangles(); // This can be uncommented for debugging to see boundaries.
+		this.logger.logEndTimer("displayCanvas");
 	}
 
 	// Called during a resize.
@@ -1083,7 +1077,7 @@ class CanvasRenderer {
 	}
 
 	zoomStart() {
-		this.logger.log("Zoom start - " + JSON.stringify(d3Event.transform));
+		this.logger.log("zoomStart - " + JSON.stringify(d3Event.transform));
 
 		if (d3Event.sourceEvent && d3Event.sourceEvent.shiftKey) {
 			this.regionSelect = true;
@@ -1103,7 +1097,7 @@ class CanvasRenderer {
 	}
 
 	zoomAction() {
-		// this.logger.log("Zoom action -  + JSON.stringify(d3Event.transform));
+		this.logger.log("zoomAction - " + JSON.stringify(d3Event.transform));
 
 		if (this.regionSelect === true) {
 			const transPos = this.getTransformedMousePos();
@@ -1153,12 +1147,11 @@ class CanvasRenderer {
 				this.setPortPositionsForNode(this.getParentSupernodeDatum());
 				this.displayBindingNodesToFitSVG();
 			}
-
 		}
 	}
 
 	zoomEnd() {
-		this.logger.log("Zoom end - " + JSON.stringify(d3Event.transform));
+		this.logger.log("zoomEnd - " + JSON.stringify(d3Event.transform));
 
 		if (this.drawingNewLink) {
 			this.stopDrawingNewLink();
@@ -1367,7 +1360,7 @@ class CanvasRenderer {
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.datum((d) => that.getNode(d.id)); // Set the __data__ to the updated data
 
-			if (this.isDisplayingSubFlowInPlace()) {
+			if (this.isDisplayingSubFlow()) {
 				nodeGroupSel
 					.each(function(d) { // Use function so the 'this' pointer refers to the node.
 						if (d.isSupernodeInputBinding) {
@@ -1642,8 +1635,15 @@ class CanvasRenderer {
 						.attr("class", function(nd) { return that.layout.cssNodeLabel + " " + that.getMessageLabelClass(nd.messages); });
 
 					// Supernode sub-flow display
-					if (that.isExpandedSupernode(d)) {
-						that.displaySupernodeInPlace(d);
+					if (this.isSupernode(d)) {
+						const ren = this.findSuperRenderer(d);
+						if (ren) {
+							if (this.isExpanded(d)) {
+								ren.displayCanvas();
+							} else {
+								ren.hideCanvas(d);
+							}
+						}
 					}
 
 					// Set cy for error circle in new and existing nodes
@@ -1950,14 +1950,6 @@ class CanvasRenderer {
 		if (idx > -1) {
 			this.superRenderers[idx].clearCanvas();
 			this.superRenderers = this.superRenderers.splice(idx, 1);
-		}
-	}
-
-	displaySupernodeInPlace(d) {
-		this.logger.log("displaySupernodeInPlace");
-		const ren = this.findSuperRenderer(d);
-		if (ren) {
-			ren.displayCanvas();
 		}
 	}
 
