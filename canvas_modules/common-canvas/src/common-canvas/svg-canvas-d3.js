@@ -368,10 +368,10 @@ class CanvasRenderer {
 	}
 
 	getSupernodeReferencingTarget(pipeline, targetPipelineId) {
-		return this.getSuperNodes(pipeline).find((sn) => sn.subflow_ref.pipeline_id_ref === targetPipelineId);
+		return this.getSupernodes(pipeline).find((sn) => sn.subflow_ref.pipeline_id_ref === targetPipelineId);
 	}
 
-	getSuperNodes(pipeline) {
+	getSupernodes(pipeline) {
 		return pipeline.nodes.filter((node) => node.type === "super_node");
 	}
 

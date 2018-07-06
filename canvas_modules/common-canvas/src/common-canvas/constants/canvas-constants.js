@@ -57,12 +57,15 @@ _defineConstant("CLONE_NODE_LINK", "clone_node_link");
 _defineConstant("CREATE_COMMENT_LINK", "create_comment_link");
 _defineConstant("CLONE_COMMENT_LINK", "clone_comment_link");
 _defineConstant("CREATE_PIPELINE", "create_pipeline");
+_defineConstant("CLONE_PIPELINE", "clone_pipeline");
 
 _defineConstant("PALETTE", {
 	OPEN_WIDTH: 250,
 	CLOSED_WIDTH: 0,
 	NARROW_WIDTH: 64
 });
+
+_defineConstant("SUPER_NODE", "super_node");
 
 _defineConstant("NODE_MENU_ICON",
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 16.14\">" +

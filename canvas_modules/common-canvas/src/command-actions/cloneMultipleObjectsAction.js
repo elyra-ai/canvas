@@ -1,12 +1,14 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
 import Action from "../command-stack/action.js";
+import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
+import has from "lodash/has";
 
 export default class CloneMultipleObjectsAction extends Action {
 	constructor(data, objectModel) {
@@ -17,10 +19,31 @@ export default class CloneMultipleObjectsAction extends Action {
 		this.clonedNodesInfo = [];
 		this.clonedCommentsInfo = [];
 		this.links = [];
+		this.clonedPipelines = []; // Map of original pipelineId to the new cloned pipeline.
+
+		// Clone the top-level pipeline with a new id and map it to its original pipeline id.
+		if (data.objects.pipelines) {
+			data.objects.pipelines.forEach((pipeline) => {
+				this.clonedPipelines[pipeline.id] = this.objectModel.getPipelineWithNewId(pipeline);
+			});
+		}
 
 		if (data.objects.nodes) {
 			data.objects.nodes.forEach((node) => {
-				this.clonedNodesInfo.push({ originalId: node.id, node: this.apiPipeline.cloneNode(node) });
+				if (node.type === SUPER_NODE) {
+					const clonedSupernode = this.apiPipeline.cloneNode(node);
+					let subPipelines = [];
+
+					if (has(clonedSupernode, "subflow_ref.pipeline_id_ref")) {
+						const subPipelineRef = this.clonedPipelines[clonedSupernode.subflow_ref.pipeline_id_ref];
+						clonedSupernode.subflow_ref.pipeline_id_ref = subPipelineRef.id;
+						// Need to update any subPipelines reference to the new ids.
+						subPipelines = this.updateSubPipelinesIdRef(clonedSupernode.subflow_ref.pipeline_id_ref, subPipelineRef);
+					}
+					this.clonedNodesInfo.push({ originalId: node.id, node: clonedSupernode, pipelines: subPipelines });
+				} else {
+					this.clonedNodesInfo.push({ originalId: node.id, node: this.apiPipeline.cloneNode(node) });
+				}
 			});
 		}
 
@@ -63,10 +86,16 @@ export default class CloneMultipleObjectsAction extends Action {
 	// Standard methods
 	do() {
 		const addedObjectIds = [];
+
 		this.clonedNodesInfo.forEach((clonedNodeInfo) => {
-			this.apiPipeline.addNode(clonedNodeInfo.node);
+			if (clonedNodeInfo.node.type === SUPER_NODE) {
+				this.apiPipeline.addSupernode(clonedNodeInfo.node, clonedNodeInfo.pipelines);
+			} else {
+				this.apiPipeline.addNode(clonedNodeInfo.node);
+			}
 			addedObjectIds.push(clonedNodeInfo.node.id);
 		});
+
 		this.clonedCommentsInfo.forEach((clonedCommentInfo) => {
 			this.apiPipeline.addComment(clonedCommentInfo.comment);
 			addedObjectIds.push(clonedCommentInfo.comment.id);
@@ -78,7 +107,11 @@ export default class CloneMultipleObjectsAction extends Action {
 
 	undo() {
 		this.clonedNodesInfo.forEach((clonedNodeInfo) => {
-			this.apiPipeline.deleteNode(clonedNodeInfo.node.id);
+			if (clonedNodeInfo.node.type === SUPER_NODE) {
+				this.apiPipeline.deleteSupernode(clonedNodeInfo.node);
+			} else {
+				this.apiPipeline.deleteNode(clonedNodeInfo.node.id);
+			}
 		});
 		this.clonedCommentsInfo.forEach((clonedCommentInfo) => {
 			this.apiPipeline.deleteComment(clonedCommentInfo.comment.id);
@@ -112,5 +145,20 @@ export default class CloneMultipleObjectsAction extends Action {
 			return clonedCommentInfo.comment;
 		}
 		return null;
+	}
+
+	updateSubPipelinesIdRef(originalPipelineId, pipeline) {
+		let subPipelines = [];
+		pipeline.nodes = pipeline.nodes.map((node) => {
+			if (has(node, "subflow_ref.pipeline_id_ref")) {
+				const subPipelineRef = this.clonedPipelines[node.subflow_ref.pipeline_id_ref];
+				subPipelines = subPipelines.concat(this.updateSubPipelinesIdRef(node.subflow_ref.pipeline_id_ref, subPipelineRef));
+				return Object.assign({}, node, { subflow_ref: { pipeline_id_ref: subPipelineRef.id } });
+			}
+			return node;
+		});
+
+		this.clonedPipelines[originalPipelineId] = pipeline;
+		return subPipelines.concat(pipeline);
 	}
 }

@@ -7,12 +7,13 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint arrow-body-style: ["off"] */
-/* eslint complexity: ["error", 32] */
+/* eslint complexity: ["error", 34] */
 
 import { createStore, combineReducers } from "redux";
 import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
 	CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
-	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK, CREATE_PIPELINE } from "../common-canvas/constants/canvas-constants.js";
+	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK, CREATE_PIPELINE,
+	CLONE_PIPELINE, SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 import dagre from "dagre/dist/dagre.min.js";
 import LayoutDimensions from "./layout-dimensions.js";
 import CanvasInHandler from "./canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
@@ -30,7 +31,8 @@ import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from ".
 const nodes = (state = [], action) => {
 	switch (action.type) {
 	case "ADD_NODE":
-	case "ADD_AUTO_NODE": {
+	case "ADD_AUTO_NODE":
+	case "ADD_SUPERNODE": {
 		return [
 			...state,
 			action.data.newNode
@@ -68,7 +70,7 @@ const nodes = (state = [], action) => {
 					y_pos: nodeObj.y_pos
 				});
 
-				if (newNode.type === "super_node" && newNode.is_expanded) {
+				if (newNode.type === SUPER_NODE && newNode.is_expanded) {
 					newNode.expanded_width = nodeObj.width;
 					newNode.expanded_height = nodeObj.height;
 				}
@@ -78,6 +80,7 @@ const nodes = (state = [], action) => {
 			return node;
 		});
 
+	case "DELETE_SUPERNODE":
 	case "DELETE_OBJECT":
 		return state.filter((node) => {
 			return node.id !== action.data.id; // filter will return all objects NOT found
@@ -489,6 +492,42 @@ const canvasinfo = (state = [], action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
+	case "ADD_SUPERNODE" : {
+		// Add the new supernode pipelines.
+		let canvasInfoPipelines = Object.assign({}, state, { pipelines: state.pipelines.concat(action.data.newSubPipelines) });
+		// Add the new supernode.
+		canvasInfoPipelines = canvasInfoPipelines.pipelines.map((pipeline) => {
+			if (pipeline.id === action.pipelineId) {
+				return Object.assign({}, pipeline, {
+					nodes: nodes(pipeline.nodes, action)
+				});
+			}
+			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
+	case "DELETE_SUPERNODE": {
+		// Delete the supernode pipelines.
+		let canvasInfoPipelines = state.pipelines;
+		action.data.pipelineIds.forEach((pipelineId) => {
+			canvasInfoPipelines = canvasInfoPipelines.filter((pipeline) => {
+				return pipeline.id !== pipelineId;
+			});
+		});
+
+		// Delete the supernode.
+		canvasInfoPipelines = canvasInfoPipelines.map((pipeline) => {
+			if (pipeline.id === action.pipelineId) {
+				return Object.assign({}, pipeline, {
+					nodes: nodes(pipeline.nodes, action)
+				});
+			}
+			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
 	case "ADD_NODE":
 	case "ADD_AUTO_NODE":
 	case "REPLACE_NODES":
@@ -706,7 +745,7 @@ const setNodeDimensions = (node, layoutInfo) => {
 	}
 	newNode.width = layoutInfo.defaultNodeWidth;
 
-	if (newNode.type === "super_node" && newNode.is_expanded) {
+	if (newNode.type === SUPER_NODE && newNode.is_expanded) {
 		newNode.width = newNode.expanded_width ? newNode.expanded_width : Math.max(layoutInfo.supernodeDefaultWidth, newNode.width);
 		newNode.height = newNode.expanded_height ? newNode.expanded_height : Math.max(layoutInfo.supernodeDefaultHeight, newNode.height);
 	}
@@ -1019,9 +1058,9 @@ export default class ObjectModel {
 
 	getNestedPipelineIds(pipelineId) {
 		let pipelineIds = [];
-		this.getAPIPipeline(pipelineId).getSuperNodes(pipelineId)
+		this.getAPIPipeline(pipelineId).getSupernodes()
 			.forEach((supernode) => {
-				const subPipelineId = this.getSuperNodePipelineID(supernode);
+				const subPipelineId = this.getSupernodePipelineID(supernode);
 				if (subPipelineId) {
 					pipelineIds.push(subPipelineId);
 					pipelineIds = pipelineIds.concat(this.getNestedPipelineIds(subPipelineId));
@@ -1030,7 +1069,7 @@ export default class ObjectModel {
 		return pipelineIds;
 	}
 
-	getSuperNodePipelineID(supernode) {
+	getSupernodePipelineID(supernode) {
 		if (has(supernode, "subflow_ref.pipeline_id_ref")) {
 			return supernode.subflow_ref.pipeline_id_ref;
 		}
@@ -1056,6 +1095,11 @@ export default class ObjectModel {
 
 	deletePipeline(pipelineId) {
 		this.store.dispatch({ type: "DELETE_PIPELINE", data: { id: pipelineId } });
+	}
+
+	// Clone the pipeline and assigns it a new id.
+	getPipelineWithNewId(pipeline) {
+		return Object.assign({}, pipeline, { id: this.getUniqueId(CLONE_PIPELINE, { "pipeline": pipeline }) });
 	}
 
 	createCanvasInfoPipeline(pipelineInfo) {
@@ -1838,6 +1882,42 @@ export class APIPipeline {
 		}
 	}
 
+	// Add the newSupernode to canvasInfo and an array of newSubPipelines that it references.
+	addSupernode(newSupernode, newSubPipelines) {
+		this.store.dispatch({
+			type: "ADD_SUPERNODE",
+			data: {
+				newNode: newSupernode,
+				newSubPipelines: newSubPipelines
+			},
+			pipelineId: this.pipelineId
+		});
+
+		if (this.objectModel.fixedLayout !== NONE) {
+			this.autoLayout(this.objectModel.fixedLayout);
+		}
+	}
+
+	deleteSupernode(supernode) {
+		let pipelineIds = [];
+		if (has(supernode, "subflow_ref.pipeline_id_ref")) {
+			pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
+			pipelineIds = pipelineIds.concat(this.objectModel.getNestedPipelineIds(supernode.subflow_ref.pipeline_id_ref));
+		}
+		this.store.dispatch({
+			type: "DELETE_SUPERNODE",
+			data: {
+				id: supernode.id,
+				pipelineIds: pipelineIds
+			},
+			pipelineId: this.pipelineId
+		});
+
+		if (this.objectModel.fixedLayout !== NONE) {
+			this.autoLayout(this.objectModel.fixedLayout);
+		}
+	}
+
 	addAutoNodeAndLink(newNode, newLink) {
 		this.store.dispatch({ type: "ADD_AUTO_NODE", data: {
 			newNode: newNode,
@@ -1863,10 +1943,11 @@ export class APIPipeline {
 		});
 	}
 
-	getSuperNodes() {
+	getSupernodes(inNodes) {
 		const superNodes = [];
-		this.getNodes().forEach((node) => {
-			if (node.type === "super_node") {
+		const listOfNodes = inNodes ? inNodes : this.getNodes();
+		listOfNodes.forEach((node) => {
+			if (node.type === SUPER_NODE) {
 				superNodes.push(node);
 			}
 		});

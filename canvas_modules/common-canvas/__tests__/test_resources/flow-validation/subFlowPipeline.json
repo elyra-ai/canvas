@@ -155,7 +155,7 @@
               "label": "Binding",
               "x_pos": 54,
               "y_pos": 39.5,
-              "description": "supernode binding node"
+              "description": "Supernode binding node"
             }
           },
           "outputs": [
@@ -181,7 +181,7 @@
               "label": "Binding",
               "x_pos": 587,
               "y_pos": 42.5,
-              "description": "supernode binding node"
+              "description": "Supernode binding node"
             }
           },
           "inputs": [
@@ -392,7 +392,7 @@
               "label": "Binding",
               "x_pos": 127,
               "y_pos": 42.5,
-              "description": "supernode binding node"
+              "description": "Supernode binding node"
             }
           },
           "outputs": [
@@ -418,7 +418,7 @@
               "label": "Binding",
               "x_pos": 587,
               "y_pos": 42.5,
-              "description": "supernode binding node"
+              "description": "Supernode binding node"
             }
           },
           "inputs": [

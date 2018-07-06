@@ -12,7 +12,7 @@ import { deleteLinkInObjectModel, findCategoryElement, findNodeIndexInPalette, g
 	getNodeFromObjectModel, getNodeIdForLabel, getNodeIdForLabelInSubFlow, getNodeIdFromObjectModel,
 	getObjectModelCount, isObjectModelEmpty
 } from "./utilities/validate-utils.js";
-import { getCanvasData, getCanvasDataForSecondCanvas, getEventLogData } from "./utilities/test-utils.js";
+import { getCanvasData, getEventLogData } from "./utilities/test-utils.js";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
 
 /* global browser */
@@ -623,13 +623,6 @@ module.exports = function() {
 		browser.pause(1000); // Wait for properties to be displayed
 	});
 
-	this.Then(/^I double click the "([^"]*)" node to open its properties in extra canvas$/, function(nodeName) {
-		var nodeId = getNodeIdForLabel(nodeName, true);
-		var nodeSelector = "#node_grp_" + nodeId;
-		browser.$(nodeSelector).doubleClick();
-		browser.pause(1000); // Wait for properties to be displayed
-	});
-
 	this.Then(/^I click the "([^"]*)" node to select it$/, function(nodeName) {
 		var nodeId = getNodeIdForLabel(nodeName);
 		var nodeSelector = "#node_grp_" + nodeId;
@@ -905,11 +898,6 @@ module.exports = function() {
 		browser.execute(simulateDragDrop, "#sidePanelNodeDraggable", 0, "#canvas-div-0", 0, xPos, yPos);
 	});
 
-	this.Then(/^I drag the Derive Node from side panel to extra canvas at (\d+), (\d+)$/, function(xPos, yPos) {
-		browser.execute(simulateDragDrop, "#sidePanelNodeDraggable", 0, "#canvas-div-1", 0, xPos, yPos);
-	});
-
-
 	this.Then("I verify the node move was not done", function() {
 		// MOVE OPERATION ISNT WORKING CURRENTLY IN D3
 	});
@@ -925,62 +913,6 @@ module.exports = function() {
 		var node = browser.$$(".node-group")[nodeIndex];
 		var actualNodePosition = node.getAttribute("transform");
 		expect(actualNodePosition).toEqual(givenNodePosition);
-	});
-
-	this.Then(/^I verify the number of nodes in extra canvas are (\d+)$/, function(nodes) {
-		try {
-			var nodesInCanvas = browser.$("#canvas-div-1").$$(".node-image").length;
-			expect(Number(nodes)).toEqual(nodesInCanvas);
-
-			// verify the number of nodes is in the internal object model
-			var objectModel = getCanvasDataForSecondCanvas();
-			var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", "");
-			expect(returnVal.value).toBe(Number(nodes));
-		} catch (err) {
-			console.log("Error = " + err);
-			throw err;
-		}
-	});
-
-	this.Then(/^I add node (\d+) a "([^"]*)" node from the "([^"]*)" category onto the extra canvas at (\d+), (\d+)$/,
-		function(inNodeIndex, nodeType, nodeCategory, canvasX, canvasY) {
-			try {
-				var categoryElem = findCategoryElement(nodeCategory);
-				categoryElem.click();
-				// drag the var file node to the canvas
-				const nodeIndex = findNodeIndexInPalette(nodeType);
-				browser.execute(simulateDragDrop, ".palette-list-item", nodeIndex, "#canvas-div-1", 0, canvasX, canvasY);
-				categoryElem.click(); // close category
-			} catch (err) {
-				console.log("Error = " + err);
-				throw err;
-			}
-		});
-
-	// Then I delete node 1 the "Var. File" node from extra canvas
-	//
-	this.Then(/^I delete node (\d+) the "([^"]*)" node from extra canvas$/, function(nodeIndex, nodeType) {
-		var nodeNumber = nodeIndex - 1;
-		var nodeSelector = ".node-group";
-		browser.$("#canvas-div-1").$$(nodeSelector)[nodeNumber].rightClick();
-
-		const contextMenu = browser.$(".context-menu-popover").$$(".react-contextmenu-item");
-		var menuItemDelete;
-		for (var menuIdx = 0; menuIdx < contextMenu.length; menuIdx++) {
-			if (contextMenu[menuIdx].isExisting("span")) {
-				var menuLabel = contextMenu[menuIdx].getText("span");
-				if (menuLabel === "Delete") {
-					menuItemDelete = contextMenu[menuIdx];
-				}
-			}
-		}
-		menuItemDelete.click();
-
-	});
-
-	this.Then(/^I select node (\d+) the "([^"]*)" node from extra canvas$/, function(nodeIndex, nodeName) {
-		var nodeNumber = nodeIndex - 1;
-		browser.$("#canvas-div-1").$$(".node-group")[nodeNumber].click();
 	});
 
 	this.Then(/^I verify the node id "([^"]*)" has width (\d+) and height (\d+)$/, function(nodeId, width, height) {

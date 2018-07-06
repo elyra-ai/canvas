@@ -44,6 +44,10 @@ module.exports = function() {
 		browser.$("#paste-action").click();
 	});
 
+	this.Then("I click on the extra canvas secondary toolbar paste button", function() {
+		browser.$$("#paste-action")[1].click();
+	});
+
 	this.Then("I click on the secondary toolbar open notification button", function() {
 		browser.$("#notification-open-action").click();
 	});

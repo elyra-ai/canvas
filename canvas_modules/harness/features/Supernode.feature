@@ -104,3 +104,40 @@ Feature: Supernode
 		Then I verify pipeline 2 have 4 nodes
 		Then I verify pipeline 2 have 3 links
 		Then I verify there are 3 pipelines
+
+	Scenario: Sanity test cut and copy supernode from first canvas to second canvas
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Flyout" palette layout
+		Given I have selected the "Ports" connection type
+		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
+
+		Then I click on extra canvas toggle
+		Then I pause for 2 seconds
+		Given I have toggled the app side panel
+
+		Then I click the "Supernode" node to select it
+
+		Then I click on the secondary toolbar cut button
+		Then I click on the extra canvas secondary toolbar paste button
+
+		Then I verify pipeline 0 have 13 nodes
+		Then I verify there are 1 pipelines
+		Then I verify extra canvas has a "Supernode" node
+
+		Then I click the "Multiplot" node to select it
+		Then I Cmd+click the "Execution node" node to add it to the selections
+		Then I right click the "Multiplot" node to display the context menu
+		Then I click option "Create supernode" from the context menu
+
+		Then I click the "Supernode" node to select it
+		Then I click on the secondary toolbar copy button
+		Then I click on the extra canvas secondary toolbar paste button
+
+		Then I verify pipeline 0 have 12 nodes
+		Then I verify there are 2 pipelines
+
+		Then I verify extra canvas has a "Supernode" node
+		Then I verify the extra canvas pipeline 0 have 2 nodes
+		Then I verify the extra canvas have 3 pipelines

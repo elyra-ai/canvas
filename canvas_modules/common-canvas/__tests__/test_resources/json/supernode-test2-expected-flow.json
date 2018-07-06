@@ -1144,7 +1144,7 @@
               "image": "",
               "x_pos": 0,
               "y_pos": -18.65471649169922,
-              "description": "supernode binding node"
+              "description": "Supernode binding node"
             }
           },
           "outputs": [
@@ -1175,7 +1175,7 @@
               "image": "",
               "x_pos": 3.9893436431884766,
               "y_pos": 131.6482696533203,
-              "description": "supernode binding node"
+              "description": "Supernode binding node"
             }
           },
           "outputs": [
@@ -1203,7 +1203,7 @@
               "image": "",
               "x_pos": 607.082706451416,
               "y_pos": 25.72130584716797,
-              "description": "supernode binding node"
+              "description": "Supernode binding node"
             }
           },
           "inputs": [
@@ -1383,7 +1383,7 @@
               "label": "Binding",
               "x_pos": -25,
               "y_pos": 138.5,
-              "description": "supernode binding node"
+              "description": "Supernode binding node"
             }
           },
           "outputs": [
@@ -1408,7 +1408,7 @@
               "label": "Binding",
               "x_pos": 447,
               "y_pos": 138.5,
-              "description": "supernode binding node"
+              "description": "Supernode binding node"
             }
           },
           "inputs": [
@@ -1456,7 +1456,7 @@
               "label": "Binding",
               "x_pos": 447,
               "y_pos": 218.5,
-              "description": "supernode binding node"
+              "description": "Supernode binding node"
             }
           },
           "inputs": [

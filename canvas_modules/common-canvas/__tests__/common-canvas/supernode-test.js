@@ -319,12 +319,12 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[0].nodes[1].inputs[1].links[1].node_id_ref; // Delete link node_id_ref.
 		delete pipelineFlow.pipelines[0].nodes[11].inputs[0].links[0].node_id_ref; // Delete existing supernode link node_id_ref.
 		delete pipelineFlow.pipelines[0].nodes[11].inputs[1].links[0].node_id_ref; // Delete existing supernode link node_id_ref.
-		pipelineFlow.pipelines[0].nodes[11] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[11]);
+		pipelineFlow.pipelines[0].nodes[11] = deleteSupernodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[11]);
 
 		delete pipelineFlow.pipelines[0].nodes[12].id; // Delete new supernode id.
 		delete pipelineFlow.pipelines[0].nodes[12].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
 
-		pipelineFlow.pipelines[0].nodes[12] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[12]);
+		pipelineFlow.pipelines[0].nodes[12] = deleteSupernodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[12]);
 
 		delete pipelineFlow.pipelines[2].id; // Delete new subPipeline id.
 		delete pipelineFlow.pipelines[2].nodes[1].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
@@ -364,7 +364,7 @@ describe("Create Supernode Action", () => {
 
 		delete pipelineFlow.pipelines[0].nodes[12].id; // Delete new supernode id.
 		delete pipelineFlow.pipelines[0].nodes[12].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
-		pipelineFlow.pipelines[0].nodes[12] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[12]);
+		pipelineFlow.pipelines[0].nodes[12] = deleteSupernodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[12]);
 
 		delete pipelineFlow.pipelines[2].id; // Delete new subPipeline id.
 		delete pipelineFlow.pipelines[2].nodes[1].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
@@ -402,7 +402,7 @@ describe("Create Supernode Action", () => {
 
 		delete pipelineFlow.pipelines[0].nodes[12].id; // Delete new supernode id.
 		delete pipelineFlow.pipelines[0].nodes[12].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
-		pipelineFlow.pipelines[0].nodes[12] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[12]);
+		pipelineFlow.pipelines[0].nodes[12] = deleteSupernodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[12]);
 
 		delete pipelineFlow.pipelines[2].id; // Delete new subPipeline id.
 		delete pipelineFlow.pipelines[2].nodes[0].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
@@ -437,7 +437,7 @@ describe("Create Supernode Action", () => {
 		const pipelineFlow = objectModel.getPipelineFlow();
 		delete pipelineFlow.pipelines[0].nodes[12].id; // Delete new supernode id.
 		delete pipelineFlow.pipelines[0].nodes[12].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
-		pipelineFlow.pipelines[0].nodes[12] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[12]);
+		pipelineFlow.pipelines[0].nodes[12] = deleteSupernodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[12]);
 
 		delete pipelineFlow.pipelines[2].id; // Delete new subPipeline id.
 		delete pipelineFlow.pipelines[2].nodes[0].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
@@ -472,7 +472,7 @@ describe("Create Supernode Action", () => {
 		const pipelineFlow = objectModel.getPipelineFlow();
 		delete pipelineFlow.pipelines[0].nodes[11].id; // Delete new supernode id.
 		delete pipelineFlow.pipelines[0].nodes[11].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
-		pipelineFlow.pipelines[0].nodes[11] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[11]);
+		pipelineFlow.pipelines[0].nodes[11] = deleteSupernodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[11]);
 
 		delete pipelineFlow.pipelines[2].id; // Delete new subPipeline id.
 		delete pipelineFlow.pipelines[2].nodes[0].inputs[1].links[0].node_id_ref; // Delete new link node_id_ref.
@@ -508,7 +508,7 @@ describe("Create Supernode Action", () => {
 
 		delete pipelineFlow.pipelines[0].nodes[11].id; // Delete new supernode id.
 		delete pipelineFlow.pipelines[0].nodes[11].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
-		pipelineFlow.pipelines[0].nodes[11] = removeSuperNodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[11]);
+		pipelineFlow.pipelines[0].nodes[11] = deleteSupernodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[11]);
 
 		delete pipelineFlow.pipelines[2].id; // Delete new subPipeline id.
 		delete pipelineFlow.pipelines[2].nodes[0].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
@@ -527,6 +527,234 @@ describe("Create Supernode Action", () => {
 
 		canvasController.contextMenuActionHandler("redo");
 		expect(isEqual(JSON.stringify(test6ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
+	});
+});
+
+describe("Copy and Paste Supernode", () => {
+	let canvasController;
+	let objectModel;
+	let apiPipeline;
+
+	const primaryPipelineId = "153651d6-9b88-423c-b01b-861f12d01489";
+
+	beforeEach(() => {
+		canvasController = new CanvasController();
+		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
+		const config = { enableAutoLayout: "none", canvasController: canvasController, enableInternalObjectModel: true };
+		createCommonCanvas(config, canvasController);
+
+		objectModel = canvasController.getObjectModel();
+		apiPipeline = objectModel.getAPIPipeline();
+
+		objectModel.setSchemaValidation(false);
+	});
+
+	it("Copy supernode and regular node into same canvas", () => {
+		const canvasInfoBefore = Object.assign({}, objectModel.getPipelineFlow());
+
+		const selections = [
+			"7015d906-2eae-45c1-999e-fb888ed957e5", // Supernode
+			"nodeIDMultiPlotPE" // Multiplot
+		];
+		canvasController.setSelections(selections, primaryPipelineId);
+		canvasController.copyToClipboard();
+		canvasController.pasteFromClipboard(primaryPipelineId);
+
+		const canvasInfo = objectModel.getPipelineFlow();
+
+		// const supernodesOriginal = apiPipeline.getSupernodes();
+		const supernodes = apiPipeline.getSupernodes();
+		expect(supernodes).to.have.length(2);
+		const originalSupernode = JSON.parse(JSON.stringify(supernodes[0]));
+		const clonedSupernode = JSON.parse(JSON.stringify(supernodes[1]));
+
+		// Delete the unique ids before comparing.
+		deleteSupernodeUniqueIds(originalSupernode);
+		deleteSupernodeUniqueIds(clonedSupernode);
+		expect(isEqual(JSON.stringify(originalSupernode), JSON.stringify(clonedSupernode))).to.be.true;
+
+		expect(canvasInfo.pipelines).to.have.length(3);
+		const originalPipeline = Object.assign({}, canvasInfo.pipelines[1]);
+		const clonedPipeline = Object.assign({}, canvasInfo.pipelines[2]);
+
+		// Delete the unique ids before comparing.
+		delete originalPipeline.id;
+		delete clonedPipeline.id;
+		expect(isEqual(JSON.stringify(originalPipeline), JSON.stringify(clonedPipeline))).to.be.true;
+
+		// Undo the clone action.
+		canvasController.contextMenuActionHandler("undo");
+		expect(isEqual(JSON.stringify(canvasInfoBefore), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
+	});
+
+	it("Copy supernode with subflow into same canvas", () => {
+		let selections = [
+			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+			"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
+		];
+		canvasController.setSelections(selections);
+
+		// Create supernode from selections.
+		createSupernodeSourceObject1.selectedObjectIds = selections;
+		canvasController.contextMenuHandler(createSupernodeSourceObject1);
+		canvasController.contextMenuActionHandler("createSuperNode");
+
+		let supernodes = apiPipeline.getSupernodes();
+		expect(supernodes).to.have.length(1);
+
+		const newSupernode = supernodes[0];
+		const canvasInfoBefore = Object.assign({}, objectModel.getPipelineFlow());
+
+		// Copy and paste the newly created supernode.
+		selections = [newSupernode.id];
+		canvasController.setSelections(selections, primaryPipelineId);
+		canvasController.copyToClipboard();
+		canvasController.pasteFromClipboard(primaryPipelineId);
+
+		const canvasInfo = objectModel.getPipelineFlow();
+
+		supernodes = apiPipeline.getSupernodes();
+		expect(supernodes).to.have.length(2);
+
+		const originalSupernode = JSON.parse(JSON.stringify(supernodes[0]));
+		const clonedSupernode = JSON.parse(JSON.stringify(supernodes[1]));
+
+		// Delete the unique ids before comparing.
+		deleteSupernodeUniqueIds(originalSupernode);
+		deleteSupernodeUniqueIds(clonedSupernode);
+		expect(isEqual(JSON.stringify(originalSupernode), JSON.stringify(clonedSupernode))).to.be.true;
+
+		expect(canvasInfo.pipelines).to.have.length(5);
+		const originalPipeline = Object.assign({}, canvasInfo.pipelines[2]);
+		const clonedPipeline = Object.assign({}, canvasInfo.pipelines[4]);
+
+		// Delete the unique ids before comparing.
+		deletePipelineUniqueIds(originalPipeline, 1);
+		deletePipelineUniqueIds(clonedPipeline, 1);
+		expect(isEqual(JSON.stringify(originalPipeline), JSON.stringify(clonedPipeline))).to.be.true;
+
+		// Undo the clone action.
+		canvasController.contextMenuActionHandler("undo");
+		expect(isEqual(JSON.stringify(canvasInfoBefore), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
+	});
+
+	it("Copy multiple supernodes with nested subflow into same canvas", () => {
+		let selections = [
+			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+			"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
+		];
+		canvasController.setSelections(selections);
+
+		// Create supernode from selections.
+		createSupernodeSourceObject1.selectedObjectIds = selections;
+		canvasController.contextMenuHandler(createSupernodeSourceObject1);
+		canvasController.contextMenuActionHandler("createSuperNode");
+
+		let supernodes = apiPipeline.getSupernodes();
+		expect(supernodes).to.have.length(1);
+
+		const newSupernode = supernodes[0];
+		const canvasInfoBefore1 = Object.assign({}, objectModel.getPipelineFlow());
+
+		// Copy and paste the newly created supernode.
+		selections = [newSupernode.id];
+		canvasController.setSelections(selections, primaryPipelineId);
+		canvasController.copyToClipboard();
+		canvasController.pasteFromClipboard(primaryPipelineId);
+
+		supernodes = apiPipeline.getSupernodes();
+		expect(supernodes).to.have.length(2);
+
+		const originalSupernode = JSON.parse(JSON.stringify(supernodes[0]));
+		const clonedSupernode = JSON.parse(JSON.stringify(supernodes[1]));
+
+		let canvasInfo = objectModel.getPipelineFlow();
+		expect(canvasInfo.pipelines).to.have.length(5);
+
+		// Create another supernode from the cloned supernode.
+		selections = [clonedSupernode.id];
+		canvasController.setSelections(selections);
+		createSupernodeSourceObject1.selectedObjectIds = selections;
+		canvasController.contextMenuHandler(createSupernodeSourceObject1);
+		canvasController.contextMenuActionHandler("createSuperNode");
+
+		supernodes = apiPipeline.getSupernodes();
+		expect(supernodes).to.have.length(2);
+
+		const newSupernode2 = JSON.parse(JSON.stringify(supernodes[1]));
+		const canvasInfoBefore2 = Object.assign({}, objectModel.getPipelineFlow());
+
+		// Copy and paste both supernodes in primary pipeline.
+		selections = [
+			originalSupernode.id,
+			newSupernode2.id
+		];
+		canvasController.setSelections(selections, primaryPipelineId);
+		canvasController.copyToClipboard();
+		canvasController.pasteFromClipboard(primaryPipelineId);
+
+		supernodes = apiPipeline.getSupernodes();
+		expect(supernodes).to.have.length(4);
+
+		const clonedOriginalSupernode = JSON.parse(JSON.stringify(supernodes[2]));
+		const clonedNewSupernode2 = JSON.parse(JSON.stringify(supernodes[3]));
+
+		canvasInfo = objectModel.getPipelineFlow();
+
+		// Delete the unique ids before comparing.
+		deleteSupernodeUniqueIds(originalSupernode);
+		deleteSupernodeUniqueIds(newSupernode2);
+		deleteSupernodeUniqueIds(clonedOriginalSupernode);
+		deleteSupernodeUniqueIds(clonedNewSupernode2);
+		expect(isEqual(JSON.stringify(originalSupernode), JSON.stringify(clonedOriginalSupernode))).to.be.true;
+		expect(isEqual(JSON.stringify(newSupernode2), JSON.stringify(clonedNewSupernode2))).to.be.true;
+
+		expect(canvasInfo.pipelines).to.have.length(11);
+		const originalPipeline = Object.assign({}, canvasInfo.pipelines[2]);
+		const originalPipelineSubflow = Object.assign({}, canvasInfo.pipelines[1]);
+		const clonedOriginalPipeline = Object.assign({}, canvasInfo.pipelines[7]);
+		const clonedOriginalPipelineSubflow = Object.assign({}, canvasInfo.pipelines[6]);
+		const originalPipeline2 = Object.assign({}, canvasInfo.pipelines[5]);
+		const originalPipeline2Subflow = Object.assign({}, canvasInfo.pipelines[4]);
+		const originalPipeline2NestedSubflow = Object.assign({}, canvasInfo.pipelines[3]);
+		const clonedOriginalPipeline2 = Object.assign({}, canvasInfo.pipelines[10]);
+		const clonedOriginalPipeline2Subflow = Object.assign({}, canvasInfo.pipelines[9]);
+		const clonedOriginalPipeline2NestedSubflow = Object.assign({}, canvasInfo.pipelines[8]);
+
+		// Verify the subPipeline references are correct.
+		expect(isEqual(originalPipeline.nodes[1].subflow_ref.pipeline_id_ref, originalPipelineSubflow.id)).to.be.true;
+		expect(isEqual(clonedOriginalPipeline.nodes[1].subflow_ref.pipeline_id_ref, clonedOriginalPipelineSubflow.id)).to.be.true;
+		expect(isEqual(originalPipeline2.nodes[0].subflow_ref.pipeline_id_ref, originalPipeline2Subflow.id)).to.be.true;
+		expect(isEqual(originalPipeline2Subflow.nodes[1].subflow_ref.pipeline_id_ref, originalPipeline2NestedSubflow.id)).to.be.true;
+		expect(isEqual(clonedOriginalPipeline2.nodes[0].subflow_ref.pipeline_id_ref, clonedOriginalPipeline2Subflow.id)).to.be.true;
+		expect(isEqual(clonedOriginalPipeline2Subflow.nodes[1].subflow_ref.pipeline_id_ref, clonedOriginalPipeline2NestedSubflow.id)).to.be.true;
+
+		// Delete the unique ids before comparing.
+		deletePipelineUniqueIds(originalPipeline, 1);
+		deletePipelineUniqueIds(clonedOriginalPipeline, 1);
+		deletePipelineUniqueIds(originalPipeline2, 0);
+		deletePipelineUniqueIds(clonedOriginalPipeline2, 0);
+		deletePipelineUniqueIds(originalPipeline2Subflow, 1);
+		deletePipelineUniqueIds(clonedOriginalPipeline2Subflow, 1);
+		deletePipelineUniqueIds(originalPipeline2NestedSubflow);
+		deletePipelineUniqueIds(clonedOriginalPipeline2NestedSubflow);
+
+		expect(isEqual(JSON.stringify(originalPipeline), JSON.stringify(clonedOriginalPipeline))).to.be.true;
+		expect(isEqual(JSON.stringify(originalPipeline2), JSON.stringify(clonedOriginalPipeline2))).to.be.true;
+		expect(isEqual(JSON.stringify(originalPipeline2Subflow), JSON.stringify(clonedOriginalPipeline2Subflow))).to.be.true;
+		expect(isEqual(JSON.stringify(originalPipeline2NestedSubflow), JSON.stringify(clonedOriginalPipeline2NestedSubflow))).to.be.true;
+
+		// Undo the clone action.
+		canvasController.contextMenuActionHandler("undo");
+		expect(isEqual(JSON.stringify(canvasInfoBefore2), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
+
+		canvasController.contextMenuActionHandler("undo"); // Undo the create supernode.
+		canvasController.contextMenuActionHandler("undo"); // Undo the clone.
+		expect(isEqual(JSON.stringify(canvasInfoBefore1), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
+
+		canvasController.contextMenuActionHandler("redo");
+		canvasController.contextMenuActionHandler("redo");
+		expect(isEqual(JSON.stringify(canvasInfoBefore2), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
 	});
 });
 
@@ -562,7 +790,7 @@ function createCommonCanvas(config, canvasController) {
 	return wrapper;
 }
 
-function removeSuperNodeSubflowNodeRef(node) {
+function deleteSupernodeSubflowNodeRef(node) {
 	if (node.inputs) {
 		node.inputs.forEach((input) => {
 			if (input.subflow_node_ref) {
@@ -578,4 +806,18 @@ function removeSuperNodeSubflowNodeRef(node) {
 		});
 	}
 	return node;
+}
+
+function deleteSupernodeUniqueIds(supernode) {
+	delete supernode.id;
+	delete supernode.subflow_ref.pipeline_id_ref;
+	delete supernode.x_pos;
+	delete supernode.y_pos;
+}
+
+function deletePipelineUniqueIds(pipeline, supernodePosition) {
+	delete pipeline.id;
+	if (typeof supernodePosition !== "undefined") {
+		delete pipeline.nodes[supernodePosition].subflow_ref.pipeline_id_ref;
+	}
 }

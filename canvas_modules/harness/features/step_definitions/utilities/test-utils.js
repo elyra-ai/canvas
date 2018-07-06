@@ -28,6 +28,11 @@ function getCanvasData() {
 	return canvasData.pipelines[0]; // Canvas info returned has an array of pipelines. Return the first.
 }
 
+function getSecondCanvas() {
+	const canvasData = getServerData(getCanvasUrl2);
+	return canvasData;
+}
+
 function getCanvasDataForSecondCanvas() {
 	const canvasData = getServerData(getCanvasUrl2);
 	return canvasData.pipelines[0]; // Canvas info returned has an array of pipelines. Return the first.
@@ -125,6 +130,7 @@ function selectSelect(selectElement, selectedItemName) {
 module.exports = {
 	getCanvas: getCanvas,
 	getCanvasData: getCanvasData,
+	getSecondCanvas: getSecondCanvas,
 	getCanvasDataForSecondCanvas: getCanvasDataForSecondCanvas,
 	getEventLogData: getEventLogData,
 	getLastEventLogData: getLastEventLogData,

@@ -19,6 +19,7 @@ export default class DeleteObjectsAction extends Action {
 		this.nodes = this.objectModel.getSelectedNodes();
 		this.comments = this.objectModel.getSelectedComments();
 		this.links = [];
+		this.supernodes = [];
 
 		this.data.selectedObjectIds.forEach((id) => {
 			const objectLinks = this.apiPipeline.getLinksContainingId(id);
@@ -30,31 +31,33 @@ export default class DeleteObjectsAction extends Action {
 			});
 		});
 
-		// Rememebr all the pipelines that are being deleted when any selected
+		// Remember all the pipelines that are being deleted when any selected
 		// supernodes are being deleted.
-		this.data.deletedPipelines = [];
-		this.data.superNodes = this.getSuperNodesReferencedBy(this.data.selectedObjectIds);
-		this.data.superNodes.forEach((supernode) => {
+		this.deletedSupernodePipelines = [];
+		this.supernodes = this.apiPipeline.getSupernodes(this.nodes);
+		this.supernodes.forEach((supernode) => {
 			if (has(supernode, "subflow_ref.pipeline_id_ref")) {
 				const deletedPipeline = this.objectModel.getCanvasInfoPipeline(supernode.subflow_ref.pipeline_id_ref);
-				this.data.deletedPipelines.push(deletedPipeline);
-				this.deleteNestedPipelines(supernode.subflow_ref.pipeline_id_ref);
+				this.deletedSupernodePipelines[supernode.id] = [deletedPipeline];
+				this.deleteNestedPipelines(supernode.id, supernode.subflow_ref.pipeline_id_ref);
 			}
+
+			// Remove the supernode(s) from list of all nodes to avoid duplicating add/delete node.
+			this.nodes = this.nodes.filter((node) => node.id !== supernode.id);
 		});
 	}
 
 	// Standard methods
 	do() {
-		this.apiPipeline.deleteObjects(this.data);
-		this.data.deletedPipelines.forEach((pipeline) => {
-			this.objectModel.deletePipeline(pipeline.id);
+		this.supernodes.forEach((supernode) => {
+			this.apiPipeline.deleteSupernode(supernode);
 		});
-
+		this.apiPipeline.deleteObjects(this.data);
 	}
 
 	undo() {
-		this.data.deletedPipelines.forEach((pipeline) => {
-			this.objectModel.addPipeline(pipeline);
+		this.supernodes.forEach((supernode) => {
+			this.apiPipeline.addSupernode(supernode, this.deletedSupernodePipelines[supernode.id]);
 		});
 
 		this.nodes.forEach((node) => {
@@ -72,23 +75,10 @@ export default class DeleteObjectsAction extends Action {
 		this.do();
 	}
 
-	getSuperNodesReferencedBy(objectIds) {
-		const superNodes = [];
-		objectIds.forEach((id) => {
-			const node = this.apiPipeline.getNode(id);
-			if (node) {
-				if (node.type === "super_node") {
-					superNodes.push(node);
-				}
-			}
-		});
-		return superNodes;
-	}
-
-	deleteNestedPipelines(pipelineId) {
+	deleteNestedPipelines(supernodeId, pipelineId) {
 		this.objectModel.getNestedPipelineIds(pipelineId).forEach((subPipelineId) => {
 			const deletedPipeline = this.objectModel.getCanvasInfoPipeline(subPipelineId);
-			this.data.deletedPipelines.push(deletedPipeline);
+			this.deletedSupernodePipelines[supernodeId].push(deletedPipeline);
 		});
 	}
 }

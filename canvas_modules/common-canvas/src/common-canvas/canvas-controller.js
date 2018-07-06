@@ -531,9 +531,10 @@ export default class CanvasController {
 		if (!apiPipeline) {
 			return false;
 		}
-		var nodes = this.objectModel.getSelectedNodes();
-		var comments = this.objectModel.getSelectedComments();
-		var links = apiPipeline.getLinksBetween(nodes, comments);
+		const nodes = this.objectModel.getSelectedNodes();
+		const comments = this.objectModel.getSelectedComments();
+		const links = apiPipeline.getLinksBetween(nodes, comments);
+		const pipelines = [];
 
 		if (nodes.length === 0 && comments.length === 0) {
 			return false;
@@ -541,6 +542,17 @@ export default class CanvasController {
 
 		if (nodes && nodes.length > 0) {
 			copyData.nodes = nodes;
+			const supernodes = apiPipeline.getSupernodes(nodes);
+			supernodes.forEach((supernode) => {
+				if (has(supernode, "subflow_ref.pipeline_id_ref")) {
+					pipelines.push(this.objectModel.getCanvasInfoPipeline(supernode.subflow_ref.pipeline_id_ref));
+					const subPiplines = this.objectModel.getNestedPipelineIds(supernode.subflow_ref.pipeline_id_ref);
+					subPiplines.forEach((subPiplineId) => {
+						pipelines.push(this.objectModel.getCanvasInfoPipeline(subPiplineId));
+					});
+				}
+			});
+			copyData.pipelines = pipelines;
 		}
 		if (comments && comments.length > 0) {
 			copyData.comments = comments;
@@ -570,7 +582,7 @@ export default class CanvasController {
 			return;
 		}
 
-		// If a pipeline is not provided (liek when the user clicks paste in the
+		// If a pipeline is not provided (like when the user clicks paste in the
 		// toolbar or uses keyboard short cut) this will get an APIPipeline for
 		// the latest breadcrumbs entry.
 		const apiPipeline = this.objectModel.getAPIPipeline(pipelineId);

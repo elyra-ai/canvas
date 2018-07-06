@@ -8,6 +8,7 @@
  *******************************************************************************/
 import Action from "../command-stack/action.js";
 import SupernodeIcon from "../../assets/images/supernode.svg";
+import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CreateSuperNodeAction extends Action {
 	constructor(data, objectModel) {
@@ -139,7 +140,7 @@ export default class CreateSuperNodeAction extends Action {
 			label: "Supernode",
 			input_ports: supernodeInputPorts,
 			output_ports: supernodeOutputPorts,
-			type: "super_node",
+			type: SUPER_NODE,
 			subflow_ref: {
 				pipeline_id_ref: this.canvasInfoSubPipeline.id
 			},
@@ -279,7 +280,7 @@ export default class CreateSuperNodeAction extends Action {
 
 	createBindingNode(link, bindingNodePort, pos) {
 		const bindingNodeTemplate = {
-			description: "supernode binding node",
+			description: "Supernode binding node",
 			label: "Binding",
 			type: "binding"
 		};
@@ -311,8 +312,7 @@ export default class CreateSuperNodeAction extends Action {
 		// Delete links from comments that are not in the subpipeline.
 		this.apiPipeline.deleteLinks(this.linksToDelete);
 
-		this.objectModel.addPipeline(this.canvasInfoSubPipeline);
-		this.apiPipeline.addNode(this.supernode);
+		this.apiPipeline.addSupernode(this.supernode, [this.canvasInfoSubPipeline]);
 
 		// Add subflow_node_ref to supernode ports.
 		this.supernodeEntryBindingNodes.forEach((bindingNode) => {
