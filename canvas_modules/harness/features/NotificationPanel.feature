@@ -1,4 +1,4 @@
-Feature: handleNotificationPanelClickOutside
+Feature: NotificationPanel
 
 	** Make sure the test harness is running and listening to http://localhost:3001 ***
 
@@ -11,6 +11,7 @@ Feature: handleNotificationPanelClickOutside
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have uploaded palette "/test_resources/palettes/sparkPalette.json"
+		Given I have selected the "Flyout" palette layout
 		Given I have toggled the app side panel
 
 		Then I verify the action "bell-action" in the toolbar is "disabled"

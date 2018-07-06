@@ -52,6 +52,7 @@ import multiPortsCanvasV0 from "../../../harness/test_resources/diagrams/x-multi
 
 // const logger = log4js.getLogger("object-model-test");
 const objectModel = new ObjectModel();
+objectModel.setSchemaValidation(true); // Ensure we validate against the schemas as we upgrade
 
 describe("ObjectModel files handling test", () => {
 
