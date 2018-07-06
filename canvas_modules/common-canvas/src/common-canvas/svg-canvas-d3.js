@@ -1934,13 +1934,15 @@ class CanvasRenderer {
 	}
 
 	createSupernodeRenderer(d, supernodeD3Object) {
-		const superRenderer = new CanvasRenderer(
-			d.subflow_ref.pipeline_id_ref,
-			this.canvasDiv,
-			this.canvasController,
-			this.canvasInfo,
-			supernodeD3Object);
-		this.superRenderers.push(superRenderer);
+		if (d.subflow_ref && d.subflow_ref.pipeline_id_ref) {
+			const superRenderer = new CanvasRenderer(
+				d.subflow_ref.pipeline_id_ref,
+				this.canvasDiv,
+				this.canvasController,
+				this.canvasInfo,
+				supernodeD3Object);
+			this.superRenderers.push(superRenderer);
+		}
 	}
 
 	deleteSupernodeRenderer(d) {
