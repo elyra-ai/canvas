@@ -91,6 +91,7 @@ export default class SidePanel extends React.Component {
 				displayAdditionalComponents={this.props.propertiesConfig.displayAdditionalComponents}
 				useDisplayAdditionalComponents={this.props.propertiesConfig.useDisplayAdditionalComponents}
 				selectedPropertiesDropdownFile={this.props.propertiesConfig.selectedPropertiesDropdownFile}
+				selectedPropertiesFileCategory={this.props.propertiesConfig.selectedPropertiesFileCategory}
 				fileChooserVisible={this.props.propertiesConfig.fileChooserVisible}
 				setPropertiesDropdownSelect={this.props.propertiesConfig.setPropertiesDropdownSelect}
 			/>);
@@ -178,6 +179,7 @@ SidePanel.propTypes = {
 		displayAdditionalComponents: PropTypes.bool,
 		useDisplayAdditionalComponents: PropTypes.func,
 		selectedPropertiesDropdownFile: PropTypes.string,
+		selectedPropertiesFileCategory: PropTypes.string,
 		fileChooserVisible: PropTypes.bool,
 		setPropertiesDropdownSelect: PropTypes.func
 	}),

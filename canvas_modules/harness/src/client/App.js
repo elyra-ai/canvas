@@ -117,6 +117,7 @@ class App extends React.Component {
 			canvasPalette2: "",
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
+			selectedPropertiesFileCategory: "",
 			propertiesFileChooserVisible: false
 		};
 
@@ -319,7 +320,7 @@ class App extends React.Component {
 		}
 	}
 
-	setPropertiesDropdownSelect(selectedPropertiesDropdownFile, selectedFileCategory) {
+	setPropertiesDropdownSelect(selectedPropertiesDropdownFile, selectedPropertiesFileCategory) {
 		// close any existing properties before opening a new properties file
 		this.closePropertiesEditorDialog();
 
@@ -332,10 +333,11 @@ class App extends React.Component {
 			const that = this;
 			this.setState({
 				selectedPropertiesDropdownFile: selectedPropertiesDropdownFile,
+				selectedPropertiesFileCategory: selectedPropertiesFileCategory,
 				propertiesFileChooserVisible: false
 			}, function() {
 				that.log("Submit common properties file", that.state.selectedPropertiesDropdownFile);
-				if (selectedFileCategory === PARAMETER_DEFS) {
+				if (selectedPropertiesFileCategory === PARAMETER_DEFS) {
 					FormsService.getFileContent(PARAMETER_DEFS, that.state.selectedPropertiesDropdownFile)
 						.then(function(res) {
 							that.setPropertiesJSON(res);
@@ -1542,6 +1544,7 @@ class App extends React.Component {
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
+			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,
 			setPropertiesDropdownSelect: this.setPropertiesDropdownSelect
 		};

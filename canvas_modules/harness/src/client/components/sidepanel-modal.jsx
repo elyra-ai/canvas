@@ -85,10 +85,17 @@ export default class SidePanelModal extends React.Component {
 	getSelectedFile() {
 		const that = this;
 		this.props.log("Submit common properties file", this.props.selectedPropertiesDropdownFile);
-		FormsService.getFileContent("properties", this.props.selectedPropertiesDropdownFile)
-			.then(function(res) {
-				that.props.setPropertiesJSON(res);
-			});
+		if (this.props.selectedPropertiesFileCategory === PARAMETER_DEFS) {
+			FormsService.getFileContent(PARAMETER_DEFS, this.props.selectedPropertiesDropdownFile)
+				.then(function(res) {
+					that.props.setPropertiesJSON(res);
+				});
+		} else {
+			FormsService.getFileContent(FORMS, this.props.selectedPropertiesDropdownFile)
+				.then(function(res) {
+					that.props.setPropertiesJSON(res);
+				});
+		}
 	}
 
 	submitProperties() {
@@ -280,5 +287,6 @@ SidePanelModal.propTypes = {
 	useDisplayAdditionalComponents: PropTypes.func,
 	setPropertiesDropdownSelect: PropTypes.func,
 	selectedPropertiesDropdownFile: PropTypes.string,
+	selectedPropertiesFileCategory: PropTypes.string,
 	fileChooserVisible: PropTypes.bool
 };
