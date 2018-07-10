@@ -222,14 +222,16 @@
             "width": 10,
             "label": {
               "default": "Standard"
-            }
+            },
+		        "date_format": "M/D/YYYY"
           },
           {
             "parameter_ref": "datefield2",
             "width": 10,
             "label": {
               "default": "Additional"
-            }
+            },
+		        "date_format": "M/D/YYYY"
           },
           {
             "parameter_ref": "datefield_on_panel",
@@ -240,7 +242,8 @@
             "description": {
               "default": "datefield with `edit_style=on_panel`"
             },
-            "edit_style": "on_panel"
+            "edit_style": "on_panel",
+		        "date_format": "M/D/YYYY"
           },
           {
             "parameter_ref": "datefield_sub_panel",
@@ -251,7 +254,8 @@
             "description": {
               "default": "datefield with `edit_style=sub_panel`"
             },
-            "edit_style": "subpanel"
+            "edit_style": "subpanel",
+		        "date_format": "M/D/YYYY"
           }
         ]
       }

@@ -161,7 +161,7 @@ describe("error messages renders correctly for timefield controls", () => {
 		const timefieldErrorMessages = {
 			"validation_id": "Format_time_hms_594.9764123314005",
 			"type": "error",
-			"text": "Invalid time. Format should be H:m:s",
+			"text": "Invalid time. Format should be H:m:s.",
 		};
 		const actual = controller.getErrorMessage({ name: "time_hms" });
 		expect(timefieldErrorMessages).to.eql(actual);
@@ -187,7 +187,7 @@ describe("error messages renders correctly for timefield controls", () => {
 		const timefieldErrorMessages = {
 			"validation_id": "required_time_hms_594.9764123314005",
 			"type": "error",
-			"text": "Required parameter 'Required Time H:m:s' has no value",
+			"text": "Required parameter 'Required Time H:m:s' has no value.",
 		};
 		const actual = controller.getErrorMessage({ name: "time_hms" });
 

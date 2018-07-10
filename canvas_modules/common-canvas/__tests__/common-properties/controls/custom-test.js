@@ -30,7 +30,7 @@ describe("custom control renders correctly", () => {
 		const tableCustomToggles = wrapper.find("tr.table-row div.custom-toggle");
 		expect(tableCustomToggles).to.have.length(2);
 		// This summary text comes from the custom control
-		const cellText = wrapper.find("div.table-text div.text");
+		const cellText = wrapper.find("div.properties-table-cell-control div.text");
 		expect(cellText).to.have.length(2);
 		expect(cellText.at(0).text()).to.equal("20-low");
 		expect(cellText.at(1).text()).to.equal("50-high");

@@ -19,6 +19,9 @@
 		cursor: pointer;
 		border-style: none;
 		background: none;
+		padding-top: 4px;
+		padding-bottom: 4px;
+		padding-left: 0;
 		.icon {
 			padding-right: 2px;
 			width: 12px;
@@ -27,7 +30,6 @@
 		.text {
 			font-weight: 600;
 			color: $brand-01;
-			text-decoration: underline;
 		}
 		&:hover {
 			.text {
@@ -38,22 +40,21 @@
 	&[disabled] {
 		opacity: 0.5;
 		cursor: not-allowed;
+		pointer-events: none;
 	}
 	&.error {
-		.text {
-			text-decoration: none;
+		button {
 			border-bottom: 2px solid $support-01;
 		}
 	}
 	&.warning {
-		.text {
-			text-decoration: none;
+		button {
 			border-bottom: 2px solid $support-03;
 		}
 	}
 }
-.table-row {
-	.properties-toggletext {
-		padding: 8px 0;
+.properties-table-cell-control {
+	button {
+		padding-left: 0;
 	}
 }

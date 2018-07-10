@@ -7,7 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 $flexible-table-header-row-height: 32px;
-$flexible-table-first-column-left-padding: 15px;
 
 .properties-ft-search-container {
 	width: 50%;
@@ -71,7 +70,7 @@ $flexible-table-first-column-left-padding: 15px;
 			height: 100%;
 			display: inline-flex;
 			align-items: center;
-			padding: 8px 0;
+			padding: 8px 0 8px $table-column-left-padding;
 			vertical-align: middle;
 			font-weight: 600;
 
@@ -91,9 +90,6 @@ $flexible-table-first-column-left-padding: 15px;
 				cursor: pointer;
 			}
 		}
-		th:first-of-type {
-			padding-left: $flexible-table-first-column-left-padding;
-		}
 		.reactable-th-scrollbar {
 			padding: 0;
 		}
@@ -106,7 +102,10 @@ $flexible-table-first-column-left-padding: 15px;
 		display: flex; // address scrollbar with mouse issue
 		flex-direction: column; // address scrollbar with mouse issue
 		tr {
+			align-items: center;
+			display: flex;
 			border-bottom: 1px solid $ui-04;
+			min-height: 35px;
 		}
 		.properties-fp-data-rows td {
 			padding-top: 5px;
@@ -115,9 +114,6 @@ $flexible-table-first-column-left-padding: 15px;
 		td {
 			padding: 0 4px 0 0; // right padding so fields don't merge together
 			border-top: 0;
-		}
-		td:first-of-type {
-			padding-left: $flexible-table-first-column-left-padding;
 		}
 	}
 }
@@ -133,12 +129,12 @@ $flexible-table-first-column-left-padding: 15px;
 	padding-top: 8px;
 	padding-bottom: 8px;
 	width: inherit;
-	margin-left: -$flexible-table-first-column-left-padding; // this is needed so the content will not expand the column width
+	margin-left: -$table-first-column-left-padding; // this is needed so the content will not expand the column width
 	display: inline-flex;
 	span {
 		word-wrap: break-word;
 		width: inherit;
-		padding-left: $flexible-table-first-column-left-padding;
+		padding-left: $table-first-column-left-padding;
 	}
 }
 

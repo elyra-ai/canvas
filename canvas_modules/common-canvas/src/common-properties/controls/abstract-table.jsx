@@ -14,17 +14,17 @@ import IconButton from "./../components/icon-button";
 import Checkbox from "carbon-components-react/lib/components/Checkbox";
 import FlexibleTable from "./../components/flexible-table";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
+import ReadonlyControl from "./readonly";
 import Icon from "./../../icons/icon.jsx";
 import PropertyUtils from "./../util/property-utils";
 import { ControlType, EditStyle, Type, ParamRole } from "./../constants/form-constants";
 import Tooltip from "./../../tooltip/tooltip.jsx";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES,
-	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH, ELLIPSIS_STRING, DISPLAY_CHARS_DEFAULT } from "./../constants/constants";
+	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH } from "./../constants/constants";
 
 import findIndex from "lodash/findIndex";
 import sortBy from "lodash/sortBy";
 import { intlShape } from "react-intl";
-import classNames from "classnames";
 import uuid4 from "uuid/v4";
 
 /* eslint max-depth: ["error", 5] */
@@ -237,7 +237,6 @@ export default class AbstractTable extends React.Component {
 			row: rowIndex,
 			col: colIndex
 		};
-		const cellDisabled = this._getDisabledStatus(propertyId, tableState);
 		const tableInfo = { table: true };
 		// allows for custom contents in a cell
 		cellContent = controlValue[rowIndex][colIndex];
@@ -246,24 +245,28 @@ export default class AbstractTable extends React.Component {
 		} else if (PropertyUtils.toType(cellContent) === Type.OBJECT && columnDef.role === ParamRole.COLUMN) {
 			cellContent = PropertyUtils.stringifyFieldValue(cellContent, columnDef);
 		}
-		let cellClassName = "";
+		const cellClassName = "";
 		const ControlFactory = this.props.controller.getControlFactory();
 		if (columnDef.editStyle === EditStyle.SUBPANEL || columnDef.editStyle === EditStyle.ON_PANEL) {
-			const displayCharLimit = (typeof columnDef.displayChars !== "undefined") ? columnDef.displayChars : DISPLAY_CHARS_DEFAULT;
-			if (typeof cellContent === "string" && cellContent.length > displayCharLimit) {
-				cellContent = cellContent.substr(0, displayCharLimit - 1) + ELLIPSIS_STRING;
-			}
-			cellContent = (<div className="table-text">
-				<span>{this._getCustomCtrlContent(propertyId, columnDef, cellContent, tableInfo)}</span>
+			cellContent = (<div className="properties-table-cell-control">
+				<ReadonlyControl
+					control={this.props.control}
+					propertyId={propertyId}
+					controller={this.props.controller}
+					tableControl
+					columnDef={columnDef}
+				/>
 			</div>);
-			cellClassName = classNames("table-cell", { "disabled": cellDisabled });
 			if (columnDef.editStyle === EditStyle.ON_PANEL) {
 				// save the cell content in an object
 				this.onPanelContainer[rowIndex].push(<div key={colIndex}><br />{ControlFactory.createControlItem(columnDef, propertyId)}</div>);
 			}
 		} else { // defaults to inline control
 			tableInfo.editStyle = EditStyle.INLINE;
-			cellContent = ControlFactory.createControl(columnDef, propertyId, tableInfo);
+			cellContent = (<div className="properties-table-cell-control">
+				{ControlFactory.createControl(columnDef, propertyId, tableInfo)}
+			</div>);
+
 		}
 		return {
 			column: columnDef.name,

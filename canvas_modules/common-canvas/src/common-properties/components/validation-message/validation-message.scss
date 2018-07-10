@@ -12,7 +12,7 @@
 	display: flex;
 	align-items: center;
 	.icon {
-		margin-right: 5px;
+		margin: 0 2px;
 		svg {
 			height: 10px;
 			width: 10px;
@@ -33,5 +33,14 @@
 	}
 	&.hide {
 		display: none;
+	}
+	&.inTable {
+		padding-top: 0;
+		position: absolute;
+		top: 0;
+		.icon svg {
+			height: 8px;
+			width: 8px;
+		}
 	}
 }

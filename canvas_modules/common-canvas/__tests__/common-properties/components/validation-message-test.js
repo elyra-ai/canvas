@@ -96,14 +96,14 @@ describe("validation-message renders correctly", () => {
 		);
 		expect(wrapper.find("div.properties-validation-message.hide")).to.have.length(1);
 	});
-	it("validation-message doesn't display when in a table ", () => {
+	it("validation-message display when in a table ", () => {
 		const wrapper = mount(
 			<ValidationMessage
 				messageInfo={errorMessage}
 				inTable
 			/>
 		);
-		expect(wrapper.find("div.properties-validation-message.hide")).to.have.length(1);
+		expect(wrapper.find("div.properties-validation-message.inTable")).to.have.length(1);
 	});
 
 });

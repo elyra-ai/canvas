@@ -30,14 +30,15 @@
 
 .table-row  { // overrides when in a table cell
 	> td {
-		> .properties-input-control {
+		.properties-input-control {
+			padding-bottom: 5px;
 			input { //override styling from carbon
 				background: unset;
 				background-color: unset;
 				margin: 0;
 				padding: 0;
 				border-bottom: 2px solid $text-02;
-				height: 2rem;
+				height: 1.72rem;
 				&:focus {
 					border-top: 0;
 					border-right: 0;

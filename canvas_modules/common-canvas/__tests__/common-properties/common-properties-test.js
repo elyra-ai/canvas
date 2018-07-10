@@ -33,12 +33,12 @@ const localMessages = {
 const validationErrorMessages = {
 	"number_undefined": {
 		"type": "error",
-		"text": "Required parameter 'Undefined' has no value",
+		"text": "Required parameter 'Undefined' has no value.",
 		"validation_id": "required_number_undefined_272.9520234285945"
 	},
 	"number_null": {
 		"type": "error",
-		"text": "Required parameter 'Null' has no value",
+		"text": "Required parameter 'Null' has no value.",
 		"validation_id": "required_number_null_401.11526920064296"
 	},
 	"number_error": {

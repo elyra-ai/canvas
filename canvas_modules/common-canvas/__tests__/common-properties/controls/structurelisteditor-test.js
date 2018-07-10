@@ -216,7 +216,7 @@ describe("StructureListEditorControl renders correctly", () => {
 		const tableContent = wrapper.find("div.properties-ft-control-container");
 		expect(tableContent).to.have.length(1);
 		// checks to see of readonly controls are rendered
-		expect(tableContent.find("div.properties-readonly")).to.have.length(6);
+		expect(tableContent.find("div.properties-readonly")).to.have.length(18); // 6 rows * 3 columns ( 1 readonly + 2 subpanel that are rendered as readonly)
 	});
 
 
@@ -430,13 +430,13 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(errorMessage).to.eql(actual);
 
 		// set the toggle text error in the first row.
-		// the table error message is always the error from the lowest row.
+		// the table error message a summary of of all cells in error.
 		const toggleCell = summaryPanel.find("div.properties-toggletext button").at(0);
 		toggleCell.simulate("click");
 		errorMessage = {
-			"validation_id": "tableerrortest2",
+			"validation_id": "tableerrortest3",
 			"type": "error",
-			"text": "order cannot be descending",
+			"text": "There are 2 error cells. ",
 		};
 
 		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
@@ -452,9 +452,7 @@ describe("StructureListEditor render from paramdef", () => {
 			"3": { "3": { type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } },
 			"4": { "2": { type: "error", text: "order cannot be descending", validation_id: "tableerrortest2" } }
 		};
-		// console.log(messages.inlineEditingTableError);
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
-
 
 		// select the second from the last row and move it to the top and make sure the error messages stay aligned.
 		tableData = summaryPanel.find("tbody.reactable-data").children();

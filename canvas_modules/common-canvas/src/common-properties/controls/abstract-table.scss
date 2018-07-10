@@ -47,3 +47,20 @@
 		cursor: default;
 	}
 }
+
+.properties-table-cell-control {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	position: relative;
+	> div {
+		> :first-child {
+			margin-left: $table-column-left-padding;
+		}
+	}
+}
+.table-subcell {
+	display: flex;
+	align-items: center;
+	height: 100%;
+}

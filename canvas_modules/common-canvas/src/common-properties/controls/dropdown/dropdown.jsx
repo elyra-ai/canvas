@@ -114,7 +114,6 @@ export default class DropDown extends React.Component {
 		const state = this.props.controller.getControlState(this.props.propertyId);
 		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
 		const dropdownType = (this.props.tableControl) ? "inline" : "default";
-		const messageType = (messageInfo) ? messageInfo.type : "info";
 
 		let dropDown;
 		if (this.props.control.controlType === ControlType.SELECTSCHEMA) {
@@ -127,7 +126,7 @@ export default class DropDown extends React.Component {
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)}
-				className={classNames("properties-dropdown " + messageType, { "hide": state === STATES.HIDDEN })}
+				className={classNames("properties-dropdown", { "hide": state === STATES.HIDDEN }, messageInfo ? messageInfo.type : null)}
 			>
 				<Dropdown
 					disabled={state === STATES.DISABLED}

@@ -83,10 +83,9 @@ module.exports = function() {
 	});
 	this.Then(/^I select the row (\d+) in the table "([^"]*)"$/, function(rowNumber, tableControlId) {
 		const containingDiv = browser.$("div[data-id='properties-" + tableControlId + "']");
-		const rows = containingDiv.$(".properties-ft-control-container")
-			.$(".reactable-data")
+		const rows = containingDiv.$(".reactable-data")
 			.$$("tr");
-		rows[Number(rowNumber) - 1].$$("td")[0].click();
+		rows[Number(rowNumber) - 1].click();
 	});
 
 	this.Then(/^I verify the new title "([^"]*)"$/, function(newTitle) {

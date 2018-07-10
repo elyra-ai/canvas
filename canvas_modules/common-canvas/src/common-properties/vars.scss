@@ -7,14 +7,5 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-.properties-readonly {
-	&.hide {
-		display: none;
-	}
-	span {
-		line-height: 1.5;
-		&[disabled] {
-			opacity: 0.5;
-		}
-	}
-}
+$table-first-column-left-padding: 5px;
+$table-column-left-padding: 12px;

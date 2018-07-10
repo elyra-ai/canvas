@@ -95,7 +95,7 @@ class CommonProperties extends React.Component {
 		} catch (error) {
 			logger.error("Error generating form in common-properties: " + error);
 		}
-		this.propertiesController.setForm(formData);
+		this.propertiesController.setForm(formData, this.props.intl);
 		if (formData) {
 			this.originalTitle = formData.label;
 			this.propertiesController.setTitle(formData.label);

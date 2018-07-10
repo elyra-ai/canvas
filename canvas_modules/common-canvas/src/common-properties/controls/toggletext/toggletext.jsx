@@ -47,15 +47,21 @@ export default class ToggletextControl extends React.Component {
 		if (typeof this.iconsMap[renderValue] !== "undefined") {
 			icon = <img className="icon" src={this.iconsMap[renderValue]} onClick={this.onClick.bind(this)} />;
 		}
+		let button = <div />;
+		if (typeof rendered !== "undefined") {
+			button = (
+				<button type="button" onClick={this.onClick.bind(this)}>
+					{icon}
+					<span className="text">{rendered}</span>
+				</button>
+			);
+		}
 
 		const className = classNames("properties-toggletext", { "hide": state === STATES.HIDDEN }, messageInfo ? messageInfo.type : null);
 
 		return (
 			<div className={className} disabled={state === STATES.DISABLED} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<button type="button" onClick={this.onClick.bind(this)}>
-					{icon}
-					<span className="text">{rendered}</span>
-				</button>
+				{button}
 				<ValidationMessage inTable={this.props.tableControl} state={state} messageInfo={messageInfo} />
 			</div>
 		);

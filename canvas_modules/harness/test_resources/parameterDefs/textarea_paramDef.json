@@ -421,7 +421,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "string_error",
-            "op": "isNotEmpty"
+            "op": "notEquals",
+            "value": "error"
           }
         }
       }
@@ -438,7 +439,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "string_warning",
-            "op": "isNotEmpty"
+            "op": "notEquals",
+            "value": "warn"
           }
         }
       }
@@ -455,7 +457,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "string_table_cond[1]",
-            "op": "isNotEmpty"
+            "op": "notEquals",
+            "value": "warn"
           }
         }
       }
@@ -472,7 +475,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "string_table_cond[0]",
-            "op": "isNotEmpty"
+            "op": "notEquals",
+            "value": "error"
           }
         }
       }

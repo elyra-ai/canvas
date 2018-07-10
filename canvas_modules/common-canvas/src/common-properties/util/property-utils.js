@@ -37,10 +37,10 @@ function copy(obj) {
 	return obj;
 }
 
-function formatMessage(intl, key, defaultMessage) {
+function formatMessage(intl, key, defaultMessage, substituteObj) {
 	let formattedMessage;
 	if (typeof intl !== "undefined" && intl !== null) {
-		formattedMessage = intl.formatMessage({ id: key, defaultMessage: defaultMessage });
+		formattedMessage = intl.formatMessage({ id: key, defaultMessage: defaultMessage }, substituteObj);
 	} else {
 		formattedMessage = defaultMessage;
 	}

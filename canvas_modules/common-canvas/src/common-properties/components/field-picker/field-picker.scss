@@ -11,10 +11,14 @@
 	height: 100%;
 }
 
-// this can be removed after bootstrap.css is gone
-.properties-fp-table .properties-ft-container-wrapper .properties-fp-data-rows td {
-	border-top: 0;
-	vertical-align: middle;
+.properties-fp-table .properties-ft-container-wrapper .properties-fp-data-rows {
+	td {
+		border-top: 0;
+		vertical-align: middle;
+	}
+	td:first-of-type {
+		margin-left: $table-column-left-padding;
+	}
 }
 
 .properties-wf-modal .properties-fp-table .properties-ft-container-absolute {

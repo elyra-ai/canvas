@@ -41,7 +41,7 @@ Feature: ExpressionControl
 		Then I click on the "OK" button
 
 		Given I have toggled the app side common-properties panel
-
+		
 	Scenario: Test of expression editor control in a structure cell
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness

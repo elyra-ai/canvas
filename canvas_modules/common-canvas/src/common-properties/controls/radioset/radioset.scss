@@ -30,10 +30,10 @@
 	}
 	&.error {
 		padding: 3px;
-		border: 1px solid $support-01;
+		border-bottom: 2px solid $support-01;
 	}
 	&.warning {
 		padding: 3px;
-		border: 1px solid $support-03;
+		border-bottom: 2px solid $support-03;
 	}
 }

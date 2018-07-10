@@ -149,7 +149,6 @@ class StructureTableControl extends AbstractTable {
 		const tableState = this.props.controller.getControlState(this.props.propertyId);
 		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
 
-
 		const tableButtonConfig = {
 			fieldPickerCloseFunction: this.onFieldPickerClose
 		};

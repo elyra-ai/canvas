@@ -249,7 +249,7 @@ class FlexibleTable extends React.Component {
 		let searchLabel = "";
 		for (var j = 0; j < this.props.columns.length; j++) {
 			const columnDef = this.props.columns[j];
-			const columnStyle = { "width": columnWidths[j] };
+			const columnStyle = { "minWidth": columnWidths[j], "width": columnWidths[j] };
 			const tooltipId = uuid4() + "-tooltip-column-" + columnDef.key;
 			const className = "";
 			//   wrap the label in a tooltip in case it overflows
@@ -346,7 +346,7 @@ class FlexibleTable extends React.Component {
 			if (row.columns) {
 				for (let cidx = 0; cidx < row.columns.length; cidx++) {
 					const column = row.columns[cidx];
-					const colWidth = { width: columnWidths[cidx] };
+					const colWidth = { "minWidth": columnWidths[cidx], "width": columnWidths[cidx] };
 					const value = column.value ? { value: column.value } : {};
 
 					tableRowColumns.push(<Td

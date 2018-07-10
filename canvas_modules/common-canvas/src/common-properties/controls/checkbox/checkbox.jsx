@@ -32,6 +32,7 @@ export default class CheckboxControl extends React.Component {
 	render() {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const state = this.props.controller.getControlState(this.props.propertyId);
+		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
 
 		const label = this.props.control.label ? this.props.control.label.text : "";
 		const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
@@ -42,7 +43,9 @@ export default class CheckboxControl extends React.Component {
 			);
 		}
 		return (
-			<div className={classNames("properties-checkbox", { "hide": state === STATES.HIDDEN })} data-id={ControlUtils.getDataId(this.props.propertyId)} >
+			<div className={classNames("properties-checkbox", { "hide": state === STATES.HIDDEN }, messageInfo ? messageInfo.type : null)}
+				data-id={ControlUtils.getDataId(this.props.propertyId)}
+			>
 				<div className="properties-tooltips-container">
 					<Tooltip
 						id={tooltipId}

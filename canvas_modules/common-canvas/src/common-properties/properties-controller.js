@@ -77,8 +77,9 @@ export default class PropertiesController {
 	//
 	// Form and parsing Methods
 	//
-	setForm(form) {
+	setForm(form, intl) {
 		this.form = form;
+		this.reactIntl = intl;
 		// console.log(JSON.stringify(form, null, 2));
 		// set initial property values
 		if (this.form) {
@@ -93,7 +94,7 @@ export default class PropertiesController {
 			this.saveControls(controls); // saves controls without the subcontrols
 			this._parseSummaryControls(controls);
 			this.parsePanelTree();
-			conditionsUtil.injectDefaultValidations(this.controls, this.validationDefinitions);
+			conditionsUtil.injectDefaultValidations(this.controls, this.validationDefinitions, intl);
 			let datasetMetadata;
 			if (this.form.data) {
 				datasetMetadata = this.form.data.datasetMetadata;
@@ -851,7 +852,7 @@ export default class PropertiesController {
 			}
 		}
 
-		return this.propertiesStore.getErrorMessage(propertyId);
+		return this.propertiesStore.getErrorMessage(propertyId, this.reactIntl);
 	}
 
 	/**

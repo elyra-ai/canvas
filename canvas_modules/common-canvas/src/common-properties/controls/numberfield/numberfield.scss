@@ -28,26 +28,34 @@
 
 .table-row  { // overrides when in a table cell
 	> td {
-		> .properties-numberfield {
-			border-bottom: 2px solid $text-02;
+		.properties-numberfield {
+			> div:first-of-type {
+				border-bottom: 2px solid $text-02;
+			}
 			input { //override styling from carbon
 				background: unset;
 				background-color: unset;
 				padding-left: 0;
 				padding-right: 0;
-				height: 2rem;
+				height: 1.5rem;
 				&:focus {
 					outline: unset;
 				}
 			}
 			&.error {
-				border-bottom: 2px solid $support-01;
+				> div:first-of-type {
+					border-bottom: 2px solid $support-01;
+				}
 			}
 			&.warning {
-				border-bottom: 2px solid $support-03;
+				> div:first-of-type {
+					border-bottom: 2px solid $support-03;
+				}
 			}
 			&:focus {
-				border-bottom: 2px solid $text-01;
+				> div:first-of-type {
+					border-bottom: 2px solid $text-01;
+				}
 			}
 			.bx--number input[type="number"] {
 				min-width: 0;

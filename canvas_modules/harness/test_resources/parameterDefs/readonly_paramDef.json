@@ -14,11 +14,28 @@
     "disable": true,
     "readonly_disabled": "Shannon",
     "readonly_table": [
-      ["Hopper", "Turing", "Shannon", "Babbage"]
+      [
+        "Hopper",
+        "Turing",
+        "Shannon",
+        "Babbage"
+      ]
     ],
-    "table_cond": false,
     "readonly_table_cond": [
-      ["Hopper", "Turing", "Shannon", "Babbage"]
+      [
+        true,
+        "Hopper",
+        "Turing",
+        "Shannon",
+        "Babbage"
+      ],
+      [
+        false,
+        "Armstrong",
+        "Lemond",
+        "Merckx",
+        "Indurain"
+      ]
     ]
   },
   "parameters": [
@@ -73,17 +90,42 @@
     },
     {
       "id": "readonly_table_cond",
-      "type": "array[readonly]"
-    },
-    {
-      "id": "table_cond",
-      "type": "boolean"
+      "type": "array[readonly_table_cond]"
     }
   ],
   "complex_types": [
     {
       "id": "readonly",
       "parameters": [
+        {
+          "id": "readonly",
+          "type": "string"
+        },
+        {
+          "id": "readonly2",
+          "type": "string"
+        },
+        {
+          "id": "readonly_on_panel",
+          "type": "string"
+        },
+        {
+          "id": "readonly_sub_panel",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "id": "readonly_table_cond",
+      "parameters": [
+        {
+          "id": "checkbox",
+          "type": "boolean",
+          "enum": [
+            "Single Checkbox Label"
+          ],
+          "default": true
+        },
         {
           "id": "readonly",
           "type": "string"
@@ -217,18 +259,68 @@
         "label": {
           "default": "Readonly conditions in a table"
         }
-      },
-      {
-        "parameter_ref": "table_cond",
-        "label": {
-          "default": "Click to show table messages"
-        }
       }
     ],
     "complex_type_info": [
       {
         "complex_type_ref": "readonly",
         "parameters": [
+          {
+            "parameter_ref": "readonly",
+            "width": 10,
+            "label": {
+              "default": "Standard"
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "readonly2",
+            "width": 10,
+            "label": {
+              "default": "Additional"
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "readonly_on_panel",
+            "width": 10,
+            "label": {
+              "default": "on_panel"
+            },
+            "description": {
+              "default": "readonly with `edit_style=on_panel`"
+            },
+            "edit_style": "on_panel",
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "readonly_sub_panel",
+            "width": 10,
+            "label": {
+              "default": "sub_panel"
+            },
+            "description": {
+              "default": "readonly with `edit_style=sub_panel`"
+            },
+            "edit_style": "subpanel",
+            "control": "readonly"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "readonly_table_cond",
+        "parameters": [
+          {
+            "parameter_ref": "checkbox",
+            "width": 8,
+            "label": {
+              "default": "checkbox"
+            },
+            "description": {
+              "default": ""
+            },
+            "edit_style": "inline"
+          },
           {
             "parameter_ref": "readonly",
             "width": 10,
@@ -320,7 +412,6 @@
                 "id": "readonly-table-summary-ctrls",
                 "parameter_refs": [
                   "readonly_table",
-                  "table_cond",
                   "readonly_table_cond"
                 ]
               }
@@ -376,17 +467,28 @@
       "validation": {
         "fail_message": {
           "type": "warning",
-          "focus_parameter_ref": "readonly_table_cond[1]",
+          "focus_parameter_ref": "readonly_table_cond[2]",
           "message": {
             "default": "Readonly in a table warning testing"
           }
         },
         "evaluate": {
-          "condition": {
-            "parameter_ref": "table_cond",
-            "op": "equals",
-            "value": false
-          }
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "readonly_table_cond[0]",
+                "op": "equals",
+                "value": true
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "readonly_table_cond[2]",
+                "op": "notEquals",
+                "value": "Turing"
+              }
+            }
+          ]
         }
       }
     },
@@ -394,18 +496,29 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "readonly_table_cond[0]",
+          "focus_parameter_ref": "readonly_table_cond[1]",
           "message": {
             "default": "Readonly in a table error testing"
           }
         },
         "evaluate": {
-          "condition": {
-            "parameter_ref": "table_cond",
-            "op": "equals",
-            "value": false
-          }
-        }
+					"and": [
+            {
+              "condition": {
+                "parameter_ref": "readonly_table_cond[0]",
+                "op": "equals",
+                "value": true
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "readonly_table_cond[1]",
+                "op": "notEquals",
+                "value": "Turing"
+              }
+            }
+          ]
+				}
       }
     },
     {

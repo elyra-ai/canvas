@@ -164,7 +164,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		const datefieldErrorMessages = {
 			"validation_id": "Format_date_ymd_60.39173748626829",
 			"type": "error",
-			"text": "Invalid date. Format should be YYYY-M-D",
+			"text": "Invalid date. Format should be YYYY-M-D.",
 		};
 		const actual = controller.getErrorMessage({ name: "date_ymd" });
 		expect(datefieldErrorMessages).to.eql(actual);
@@ -194,7 +194,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		const datefieldErrorMessages = {
 			"validation_id": "Format_date_ymd_60.39173748626829",
 			"type": "error",
-			"text": "Invalid date. Format should be YYYY-M-D",
+			"text": "Invalid date. Format should be YYYY-M-D.",
 		};
 		const actual = controller.getErrorMessage({ name: "date_ymd" });
 
@@ -222,7 +222,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		const datefieldErrorMessages = {
 			"validation_id": "required_date_mdy_202.02932392909872",
 			"type": "error",
-			"text": "Required parameter 'Required Date M-D-Y' has no value",
+			"text": "Required parameter 'Required Date M-D-Y' has no value.",
 		};
 		const actual = controller.getErrorMessage({ name: "date_mdy" });
 

@@ -43,12 +43,13 @@ const expectedNode2Messages = [
 	{ "text": "Annotation is empty when there is a custom name", "type": "warning", "validation_id": "custom_name_test_2", "id_ref": "custom_name" },
 	{ "text": "Field cannot be empty nor contain \"quotes\"", "type": "error", "validation_id": "annotation", "id_ref": "annotation" }
 ];
+// In the last error message below, react intl message parameter substitution does not work in Jest.  THat is why the message has '{label}'.
 const expectedNode3Messages = [
 	{ "id_ref": "inlineEditingTableWarning", "validation_id": "tablewarningtest1", "type": "warning", "text": "table cannot be empty" },
-	{ "id_ref": "inlineEditingTableError", "validation_id": "tableerrortest2", "type": "error", "text": "order cannot be descending" },
+	{ "id_ref": "inlineEditingTableError", "validation_id": "tableerrortest3", "type": "error", "text": "There are {errorMsgCount} error cells. " },
 	{ "id_ref": "inlineEditingTableError2", "validation_id": "tableerror2test2", "type": "error", "text": "expression contains help" },
 	{ "id_ref": "structuretableErrors", "validation_id": "structuretableErrors", "type": "error", "text": "order cannot be descending" },
-	{ "id_ref": "fields_error", "validation_id": "required_fields_error_501.6009623394123", "type": "error", "text": "Required parameter 'Field Error' has no value" }
+	{ "id_ref": "fields_error", "validation_id": "required_fields_error_501.6009623394123", "type": "error", "text": "Required parameter '{label}' has no value." }
 ];
 const expectedFlowMessages = {
 	"formNode": expectedNode2Messages,

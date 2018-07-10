@@ -23,17 +23,25 @@
 	}
 	&.error {
 		.bx--list-box__field {
-			border: 1px solid $support-01;
+			border-bottom: 2px solid $support-01;
 		}
 	}
 	&.warning {
 		.bx--list-box__field {
-			border: 1px solid $support-03;
+			border-bottom: 2px solid $support-03;
 		}
 	}
 }
-.table-row .properties-dropdown {
+.properties-table-cell-control .properties-dropdown {
+	padding-top: 0;
+	padding-bottom: 5px;
 	.bx--list-box__menu {
 		width: 100%;
+	}
+	.bx--list-box__field {
+		padding-left: 0;
+	}
+	.bx--list-box--inline {
+		height: 1.75rem;
 	}
 }

@@ -24,7 +24,7 @@ import rowSelectionsReducer from "./reducers/row-selections";
 import componentMetadataReducer from "./reducers/component-metadata";
 import PropertyUtils from "./util/property-utils.js";
 import isEqual from "lodash/isEqual";
-import { CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
+import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants.js";
 
 /* eslint max-depth: ["error", 6] */
 
@@ -164,10 +164,9 @@ export default class PropertiesStore {
 
 	/*
 	* Returns the message for a propertyId.  Iterates over row and cell level messages
-	* and returns the first error message it finds to show for a table. If no error,
-	* returns the first warning message it finds
+	* and returns terror message summary for all cell level errors.
 	*/
-	getErrorMessage(propertyId) {
+	getErrorMessage(propertyId, intl) {
 		if (typeof propertyId === "undefined") {
 			return null;
 		}
@@ -182,42 +181,72 @@ export default class PropertiesStore {
 				return { validation_id: controlMsg.validation_id, type: controlMsg.type, text: controlMsg.text }; // return row message
 			}
 		}
-		if (controlMsg && controlMsg.text) {
-			return { validation_id: controlMsg.validation_id, type: controlMsg.type, text: controlMsg.text }; // return prop message
-		} else if (controlMsg) {
-			// search message for param and return first error message found, else first warning
-			let firstError = null;
-			for (const rowKey in controlMsg) {
-				if (!controlMsg.hasOwnProperty(rowKey)) {
-					continue;
-				}
-				const rowMessage = controlMsg[rowKey];
-				if (rowMessage && rowMessage.text) {
-					firstError = { validation_id: rowMessage.validation_id, type: rowMessage.type, text: rowMessage.text }; // return row message
-				} else if (rowMessage) { // table cell
-					for (const colKey in rowMessage) {
-						if (!rowMessage.hasOwnProperty(colKey)) {
-							continue;
-						}
-						const colMessage = rowMessage[colKey];
-						if (colMessage && colMessage.text) {
-							firstError = { validation_id: colMessage.validation_id, type: colMessage.type, text: colMessage.text }; // return row message
-						}
+		let controlMessage = null;
+		let returnMessage = null;
+		if (controlMsg && controlMsg.text) { // save the control level message
+			controlMessage = { validation_id: controlMsg.validation_id, type: controlMsg.type, text: controlMsg.text }; // return prop message
+		}
+		if (controlMsg) {
+			returnMessage = this._getTableCellErrors(controlMsg, intl);
+		}
+		if (controlMessage !== null && returnMessage !== null) {
+			controlMessage.text = controlMessage.text + " " + returnMessage.text;
+		} else if (controlMessage === null) {
+			controlMessage = returnMessage;
+		}
+		return controlMessage;
+	}
 
-						if (colMessage.type === CONDITION_MESSAGE_TYPE.ERROR) {
-							return firstError;
-						}
+	// get the table cell level error messages. if more than one cell is in error, return summary message;
+	_getTableCellErrors(controlMsg, intl) {
+		let returnMessage = null;
+		let errorMsgCount = 0;
+		let warningMsgCount = 0;
+		// search message for param and return first error message found, else first warning
+		for (const rowKey in controlMsg) {
+			if (!controlMsg.hasOwnProperty(rowKey)) {
+				continue;
+			}
+			if (rowKey === "text") {
+				continue;
+			}
+			const rowMessage = controlMsg[rowKey];
+			if (rowMessage && rowMessage.text) {
+				returnMessage = { validation_id: rowMessage.validation_id, type: rowMessage.type, text: rowMessage.text };
+				errorMsgCount += (rowMessage.type === CONDITION_MESSAGE_TYPE.ERROR) ? 1 : 0;
+				warningMsgCount += (rowMessage.type === CONDITION_MESSAGE_TYPE.WARNING) ? 1 : 0;
+			}
+			if (rowMessage) { // table cell
+				for (const colKey in rowMessage) {
+					if (!rowMessage.hasOwnProperty(colKey)) {
+						continue;
+					}
+					if (colKey === "text") {
+						continue;
+					}
+					const colMessage = rowMessage[colKey];
+					if (colMessage && colMessage.text) {
+						returnMessage = { validation_id: colMessage.validation_id, type: colMessage.type, text: colMessage.text };
+						errorMsgCount += (colMessage.type === CONDITION_MESSAGE_TYPE.ERROR) ? 1 : 0;
+						warningMsgCount += (colMessage.type === CONDITION_MESSAGE_TYPE.WARNING) ? 1 : 0;
 					}
 				}
-
-				if (rowMessage.type === CONDITION_MESSAGE_TYPE.ERROR) {
-					return firstError;
-				}
 			}
-			return firstError;
 		}
-		return null;
+		if ((errorMsgCount + warningMsgCount) !== 1 && returnMessage) {
+			returnMessage.type = (errorMsgCount > 0) ? CONDITION_MESSAGE_TYPE.ERROR : CONDITION_MESSAGE_TYPE.WARNING;
+			returnMessage.text = (errorMsgCount > 0)
+				? PropertyUtils.formatMessage(intl,
+					MESSAGE_KEYS.TABLE_SUMMARY_ERROR, MESSAGE_KEYS_DEFAULTS.TABLE_SUMMARY_ERROR, { errorMsgCount: errorMsgCount })
+				: "";
+			returnMessage.text += (warningMsgCount > 0)
+				? PropertyUtils.formatMessage(intl,
+					MESSAGE_KEYS.TABLE_SUMMARY_WARNING, MESSAGE_KEYS_DEFAULTS.TABLE_SUMMARY_WARNING, { warningMsgCount: warningMsgCount })
+				: "";
+		}
+		return returnMessage;
 	}
+
 	getErrorMessages() {
 		const state = this.store.getState();
 		return PropertyUtils.copy(state.errorMessagesReducer);

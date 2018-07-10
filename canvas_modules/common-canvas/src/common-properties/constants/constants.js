@@ -40,7 +40,12 @@ _defineConstant("MESSAGE_KEYS_DEFAULTS", {
 	TABLE_SEARCH_PLACEHOLDER: "Search in column",
 	LONG_TABLE_SUMMARY_PLACEHOLDER: "More than ten fields...",
 	ALERTS_TAB_TITLE: "Alerts",
-	TITLE_EDITOR_LABEL: "edit title"
+	TITLE_EDITOR_LABEL: "edit title",
+	TABLE_SUMMARY_ERROR: "There are {errorMsgCount} error cells. ",
+	TABLE_SUMMARY_WARNING: "There are {warningMsgCount} warning cells. ",
+	REQUIRED_ERROR: "Required parameter '{label}' has no value.",
+	DATETIME_FORMAT_ERROR: "Invalid {role}. Format should be {format}.",
+	INVALID_FIELD_ERROR: "Invalid {label}, field not found in schema."
 });
 
 _defineConstant("MESSAGE_KEYS", {
@@ -68,7 +73,12 @@ _defineConstant("MESSAGE_KEYS", {
 	TABLE_SEARCH_PLACEHOLDER: "table.search.placeholder",
 	LONG_TABLE_SUMMARY_PLACEHOLDER: "summary.longTable.placeholder",
 	ALERTS_TAB_TITLE: "alerts.tab.title",
-	TITLE_EDITOR_LABEL: "title.editor.label"
+	TITLE_EDITOR_LABEL: "title.editor.label",
+	TABLE_SUMMARY_ERROR: "table.summary.error",
+	TABLE_SUMMARY_WARNING: "table.summary.warning",
+	REQUIRED_ERROR: "required.error",
+	DATETIME_FORMAT_ERROR: "datetime.format.error",
+	INVALID_FIELD_ERROR: "invalid.field.error"
 });
 
 _defineConstant("CHARACTER_LIMITS", {

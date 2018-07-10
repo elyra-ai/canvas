@@ -18,8 +18,7 @@
     "disable": true,
     "checkbox_disabled": false,
     "hide": true,
-    "checkbox_hidden": false,
-    "table_cond": false
+    "checkbox_hidden": false
   },
   "parameters": [
     {
@@ -66,10 +65,6 @@
     },
     {
       "id": "hide",
-      "type": "boolean"
-    },
-    {
-      "id": "table_cond",
       "type": "boolean"
     },
     {
@@ -203,12 +198,6 @@
         "description": {
           "default": "checkbox that is hidden"
         }
-      },
-      {
-        "parameter_ref": "table_cond",
-        "label": {
-          "default": "Click to show table messages"
-        }
       }
     ],
     "complex_type_info": [
@@ -301,7 +290,6 @@
                 "id": "checkbox-table-summary-ctrls",
                 "parameter_refs": [
                   "checkbox_table",
-                  "table_cond",
                   "checkbox_table_cond"
                 ]
               }
@@ -359,7 +347,7 @@
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "table_cond",
+            "parameter_ref": "checkbox_table_cond[1]",
             "op": "equals",
             "value": false
           }
@@ -377,7 +365,7 @@
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "table_cond",
+            "parameter_ref": "checkbox_table_cond[0]",
             "op": "equals",
             "value": false
           }

@@ -10,10 +10,11 @@
 /* eslint complexity: ["error", 27] */
 
 import logger from "../../../utils/logger";
-import UiConditions from "../ui-conditions/ui-conditions.js";
-import { DEFAULT_VALIDATION_MESSAGE, STATES } from "../constants/constants.js";
-import { PANEL_TREE_ROOT, CONDITION_TYPE, CONDITION_DEFINITION_INDEX } from "../constants/constants.js";
-import { DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants.js";
+import UiConditions from "./ui-conditions";
+import PropertyUtils from "../util/property-utils";
+import { DEFAULT_VALIDATION_MESSAGE, STATES, PANEL_TREE_ROOT,
+	CONDITION_TYPE, CONDITION_DEFINITION_INDEX, MESSAGE_KEYS_DEFAULTS,
+	MESSAGE_KEYS, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
 import isEmpty from "lodash/isEmpty";
 import cloneDeep from "lodash/cloneDeep";
 import seedrandom from "seedrandom";
@@ -305,7 +306,7 @@ function getParamRefPropertyId(paramRef, controlPropertyId) {
 * @param {object} a list of validation definition objects. required.
 * @return {object} a modified validation defintion object with any injected definitions.
 */
-function injectDefaultValidations(controls, validationDefinitions) {
+function injectDefaultValidations(controls, validationDefinitions, intl) {
 	for (const keyName in controls) {
 		if (!controls.hasOwnProperty(keyName)) {
 			continue;
@@ -316,13 +317,13 @@ function injectDefaultValidations(controls, validationDefinitions) {
 		const controlValId = 1000 * rng();
 
 		if (control.required === true) {
-			_injectRequiredDefinition(control, validationDefinitions, keyName, controlValId);
+			_injectRequiredDefinition(control, validationDefinitions, keyName, controlValId, intl);
 		}
 		if (control.role === "date" || control.role === "time") {
-			_injectDateTimeDefinition(control, validationDefinitions, keyName, controlValId);
+			_injectDateTimeDefinition(control, validationDefinitions, keyName, controlValId, intl);
 		}
 		if (control.role === "column") {
-			_injectInvalidFieldDefinition(control, validationDefinitions, keyName, controlValId);
+			_injectInvalidFieldDefinition(control, validationDefinitions, keyName, controlValId, intl);
 		}
 
 		if (control.subControls) {
@@ -331,7 +332,7 @@ function injectDefaultValidations(controls, validationDefinitions) {
 				const subKeyName = keyName + "[" + idx + "]";
 				subControls[subKeyName] = control.subControls[idx];
 			}
-			injectDefaultValidations(subControls, validationDefinitions);
+			injectDefaultValidations(subControls, validationDefinitions, intl);
 		}
 	}
 }
@@ -705,9 +706,11 @@ function _getState(refState, propertyId) {
 	return null;
 }
 
-function _injectRequiredDefinition(control, valDefinitions, keyName, controlValId) {
+function _injectRequiredDefinition(control, valDefinitions, keyName, controlValId, intl) {
 	// inject required validation definition
 	const label = (control.label && control.label.text) ? control.label.text : keyName;
+	const errorMsg = PropertyUtils.formatMessage(intl,
+		MESSAGE_KEYS.REQUIRED_ERROR, MESSAGE_KEYS_DEFAULTS.REQUIRED_ERROR, { label: label });
 	const injectedDefinition = {
 		params: keyName,
 		definition: {
@@ -716,7 +719,7 @@ function _injectRequiredDefinition(control, valDefinitions, keyName, controlValI
 				fail_message: {
 					type: "error",
 					message: {
-						default: "Required parameter '" + label + "' has no value"
+						default: errorMsg
 					},
 					focus_parameter_ref: keyName
 				},
@@ -737,11 +740,13 @@ function _injectRequiredDefinition(control, valDefinitions, keyName, controlValI
 	}
 }
 
-function _injectDateTimeDefinition(control, valDefinitions, keyName, controlValId) {
+function _injectDateTimeDefinition(control, valDefinitions, keyName, controlValId, intl) {
 	// inject date format validation definition
 	const format = (control.dateFormat) ? control.dateFormat : control.timeFormat;
 	const defaultFormat = (control.dateFormat) ? DEFAULT_DATE_FORMAT : DEFAULT_TIME_FORMAT;
 	const dtFormat = (format) ? format : defaultFormat;
+	const errorMsg = PropertyUtils.formatMessage(intl,
+		MESSAGE_KEYS.DATETIME_FORMAT_ERROR, MESSAGE_KEYS_DEFAULTS.DATETIME_FORMAT_ERROR, { role: control.role, format: dtFormat });
 	const injectedDefinition = {
 		params: keyName,
 		definition: {
@@ -750,7 +755,7 @@ function _injectDateTimeDefinition(control, valDefinitions, keyName, controlValI
 				fail_message: {
 					type: "error",
 					message: {
-						default: "Invalid " + control.role + ". Format should be " + dtFormat
+						default: errorMsg
 					},
 					focus_parameter_ref: keyName
 				},
@@ -772,9 +777,11 @@ function _injectDateTimeDefinition(control, valDefinitions, keyName, controlValI
 	}
 }
 
-function _injectInvalidFieldDefinition(control, valDefinitions, keyName, controlValId) {
+function _injectInvalidFieldDefinition(control, valDefinitions, keyName, controlValId, intl) {
 	// inject invalid field validation definition
 	const label = (control.label && control.label.text) ? control.label.text : keyName;
+	const errorMsg = PropertyUtils.formatMessage(intl,
+		MESSAGE_KEYS.INVALID_FIELD_ERROR, MESSAGE_KEYS_DEFAULTS.INVALID_FIELD_ERROR, { label: label });
 	const injectedDefinition = {
 		params: keyName,
 		definition: {
@@ -783,7 +790,7 @@ function _injectInvalidFieldDefinition(control, valDefinitions, keyName, control
 				fail_message: {
 					type: "warning",
 					message: {
-						default: "Invalid " + label + ", field not found in schema"
+						default: errorMsg
 					},
 					focus_parameter_ref: keyName
 				},

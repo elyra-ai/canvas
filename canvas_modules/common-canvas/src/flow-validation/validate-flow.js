@@ -22,24 +22,27 @@ import isEqual from "lodash/isEqual";
 * @param {Function} callback function to store messages data for node. (optional)
 * @param includeMsgTypes (array[strings]) Return invalid only if messages are found of types contained in the array.
 * If not specified then any message type causes invalid return. (optional)
+* @param intl reactIntl object (optional)
 *
 * @return (boolean) If flow is valid returns true, otherwise returns false.
 */
-function validateFlow(canvasController, getParameterData, setMessagesCallback, includeMsgTypes) {
-	return validatePipelineFlow(canvasController, canvasController.getPrimaryPipelineId(), getParameterData, setMessagesCallback, includeMsgTypes);
+function validateFlow(canvasController, getParameterData, setMessagesCallback, includeMsgTypes, intl) {
+	return validatePipelineFlow(canvasController, canvasController.getPrimaryPipelineId(), getParameterData, setMessagesCallback, includeMsgTypes, intl);
 }
-function validatePipelineFlow(canvasController, pipelineId, getParameterData, setMessagesCallback, includeMsgTypes) {
+function validatePipelineFlow(canvasController, pipelineId, getParameterData, setMessagesCallback, includeMsgTypes, intl) {
 	let flowValid = true;
 	// get the nodes in the flow
 	const nodes = canvasController.getNodes(pipelineId);
 	// traverse the flow
 	// this will just visit all the nodes and not traverse it via DAG
 	for (const node of nodes) {
-		if (node.type === "super_node" && (node.sub_type || node.sub_type === "canvas")) {
-			flowValid = validatePipelineFlow(canvasController, node.subflow_ref.pipeline_id_ref, getParameterData, setMessagesCallback, includeMsgTypes);
+		if (node.type === "super_node" &&
+		(typeof node.sub_type === "undefined" || node.sub_type === "canvas")) {
+			flowValid = validatePipelineFlow(canvasController, node.subflow_ref.pipeline_id_ref,
+				getParameterData, setMessagesCallback, includeMsgTypes, intl);
 		} else if (node.type === "execution_node" || node.type === "binding") {
 			const formData = _getFormData(node.id, pipelineId, getParameterData, canvasController);
-			const propertiesController = _getPropertiesController(formData);
+			const propertiesController = _getPropertiesController(formData, intl);
 			propertiesController.validatePropertiesValues();
 			_setNodeMessages(node, pipelineId, propertiesController, canvasController, setMessagesCallback);
 		}
@@ -71,9 +74,9 @@ function _getFormData(nodeId, pipelineId, getParameterData, canvasController) {
 	return formData;
 }
 
-function _getPropertiesController(formData) {
+function _getPropertiesController(formData, intl) {
 	const propertiesController = new PropertiesController();
-	propertiesController.setForm(formData);
+	propertiesController.setForm(formData, intl);
 	return propertiesController;
 }
 
