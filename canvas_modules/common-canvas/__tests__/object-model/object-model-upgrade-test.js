@@ -14,6 +14,7 @@ import { expect } from "chai";
 import isEqual from "lodash/isEqual";
 import ObjectModel from "../../src/object-model/object-model.js";
 
+import supernodeWithoutSubPipelineCanvasV2 from "../test_resources/json/supernodeWithoutSubPipeline.json";
 import allNodesV2 from "../../../harness/test_resources/diagrams/allNodes.json";
 import allTypesCanvasV2 from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
 import bigCanvasV2 from "../../../harness/test_resources/diagrams/bigCanvas.json";
@@ -61,6 +62,10 @@ describe("ObjectModel files handling test", () => {
 	// --------------------------------------------------------------------------
 	it("should read in and write out the same file: allNodesV2", () => {
 		readWriteSameFile(allNodesV2);
+	});
+
+	it("should read in and write out the same file: supernodeWithoutSubPipelineCanvasV2", () => {
+		readWriteSameFile(supernodeWithoutSubPipelineCanvasV2);
 	});
 
 	it("should read in and write out the same file: allTypesCanvasV2", () => {

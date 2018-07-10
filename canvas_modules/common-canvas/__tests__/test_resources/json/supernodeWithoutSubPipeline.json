@@ -161,7 +161,7 @@
           "type": "super_node",
           "sub_type": "canvas",
           "subflow_ref": {
-            "pipeline_id_ref": "modeler-sub-pipeline"
+            "pipeline_id_ref": "no-sub-pipeline"
           },
           "app_data": {
             "my_data": {
@@ -432,16 +432,6 @@
           }
         ]
       }
-    },
-    {
-      "id": "modeler-sub-pipeline",
-      "nodes": [],
-      "app_data": {
-        "ui_data": {
-          "comments": []
-        }
-      },
-      "runtime_ref": "test_runtime"
     }
   ],
   "schemas": [
