@@ -528,6 +528,29 @@ describe("Create Supernode Action", () => {
 		canvasController.contextMenuActionHandler("redo");
 		expect(isEqual(JSON.stringify(test6ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 	});
+
+	it("Create supernode in top left corner of rect, not the node order in the DOM", () => {
+		const apiPipeline = objectModel.getAPIPipeline();
+		const selections = [
+			"nodeIDMultiPlotPE", // Multiplot
+			"7015d906-2eae-45c1-999e-fb888ed957e5", // Supernode
+			"id125TTEEIK7V", // Model Node
+			"id5KIRGGJ3FYT" // Binding (exit) node
+		];
+		canvasController.setSelections(selections);
+
+		// This node is closest to the top left corner of the selected nodes bounding rect.
+		const topLeftNode = apiPipeline.getNode("7015d906-2eae-45c1-999e-fb888ed957e5");
+
+		createSupernodeSourceObject1.selectedObjectIds = selections;
+		canvasController.contextMenuHandler(createSupernodeSourceObject1);
+		canvasController.contextMenuActionHandler("createSuperNode");
+
+		const supernodes = apiPipeline.getSupernodes();
+		expect(supernodes).to.have.length(1);
+		expect(supernodes[0].x_pos).to.equal(topLeftNode.x_pos);
+		expect(supernodes[0].y_pos).to.equal(topLeftNode.y_pos);
+	});
 });
 
 describe("Copy and Paste Supernode", () => {

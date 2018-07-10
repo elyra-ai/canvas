@@ -133,6 +133,11 @@ export default class CreateSuperNodeAction extends Action {
 			this.createSupernodePorts(node, link, supernodeOutputPorts, "exit");
 		});
 
+		// Determine position of where the supernode will be created.
+		// This should be the node closest to the top left corner of the selected nodes that will be in the supernode.
+		const subflowRect = this.apiPipeline.getBoundingRectForNodes(this.subflowNodes);
+		const topLeftNodePosition = this.getTopLeftNodePosition(subflowRect, this.subflowNodes);
+
 		// Supernode
 		const supernodeTemplate = {
 			description: "This supernode was created by common-canvas.",
@@ -149,8 +154,8 @@ export default class CreateSuperNodeAction extends Action {
 		const supernodeData = {
 			editType: "createNode",
 			nodeTemplate: supernodeTemplate,
-			offsetX: this.subflowNodes[0].x_pos,
-			offsetY: this.subflowNodes[0].y_pos
+			offsetX: topLeftNodePosition.xPos,
+			offsetY: topLeftNodePosition.yPos
 		};
 
 		this.supernode = this.apiPipeline.createNode(supernodeData);
@@ -191,7 +196,6 @@ export default class CreateSuperNodeAction extends Action {
 		this.supernodeExitBindingNodes = [];
 
 		// Determine relative position of the binding nodes in the subflow.
-		const subflowRect = this.apiPipeline.getBoundingRectForNodes(this.subflowNodes);
 		const boundingRectPadding = 80;
 		let entryBindingYPos = subflowRect.y - boundingRectPadding;
 		let exitBindingYPos = subflowRect.y - boundingRectPadding;
@@ -301,6 +305,31 @@ export default class CreateSuperNodeAction extends Action {
 		this.data.newLinks = this.newLinks;
 		this.data.subPipelineId = this.canvasInfoSubPipeline.id;
 		return this.data;
+	}
+
+	// Return the node position closest to the top left corner of the rectangle.
+	getTopLeftNodePosition(subflowRect, listOfNodes) {
+		let closestNode = listOfNodes[0];
+		let shortestDistance = this.getDistanceFromPosition(subflowRect.x, subflowRect.y, listOfNodes[0]);
+		listOfNodes.forEach((node) => {
+			const distance = this.getDistanceFromPosition(subflowRect.x, subflowRect.y, node);
+			if (distance < shortestDistance) {
+				shortestDistance = distance;
+				closestNode = node;
+			}
+		});
+
+		return {
+			xPos: closestNode.x_pos,
+			yPos: closestNode.y_pos
+		};
+	}
+
+	// Pythagorean Theorem.
+	getDistanceFromPosition(x, y, node) {
+		const a = node.x_pos - x;
+		const b = node.y_pos - y;
+		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
 	}
 
 	// Standard methods
