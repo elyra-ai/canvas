@@ -820,20 +820,15 @@ class CanvasRenderer {
 				.call(this.zoom);
 		}
 
-		// We need to intercept the mousemove, mouseup, doubleclick and
-		// contextmenu for both the top-level SVG area and the SVG areas for
-		// any in-place sub-flows.
 		canvasSVG
 			.on("mousemove.zoom", () => {
 				// this.logger.log("Zoom - mousemove - " + drawingNewLink = " + this.drawingNewLink);
-				stopPropagationAndPreventDefault();
 				if (this.drawingNewLink === true) {
 					this.drawNewLink();
 				}
 			})
 			.on("mouseup.zoom", () => {
 				this.logger.log("Zoom - mouseup");
-				stopPropagationAndPreventDefault();
 				if (this.drawingNewLink === true) {
 					this.stopDrawingNewLink();
 				}
@@ -847,7 +842,6 @@ class CanvasRenderer {
 			})
 			.on("dblclick.zoom", () => {
 				this.logger.log("Zoom - double click");
-				stopPropagationAndPreventDefault();
 				this.canvasController.clickActionHandler({
 					clickType: "DOUBLE_CLICK",
 					objectType: "canvas",
@@ -855,7 +849,6 @@ class CanvasRenderer {
 			})
 			.on("contextmenu.zoom", (d) => {
 				this.logger.log("Zoom - context menu");
-				stopPropagationAndPreventDefault();
 				if (this.isDisplayingSubFlowInPlace()) {
 					this.canvasController.clearSelections();
 				}
