@@ -30,8 +30,8 @@ Feature: Supernode
 		Then I right click the "Supernode" node in the subflow to display the context menu
 		Then I click option "Expand supernode" from the context menu
 
-		Then I verify pipeline 0 have 14 nodes
-		Then I verify pipeline 0 have 21 links
+		Then I verify pipeline 0 have 15 nodes
+		Then I verify pipeline 0 have 24 links
 		Then I verify pipeline 1 have 7 nodes
 		Then I verify pipeline 1 have 6 links
 		Then I verify pipeline 2 have 5 nodes
@@ -50,7 +50,7 @@ Feature: Supernode
 		Then I resize the window size to 1330 width and 660 height
 
 		Then I double click "Derive" node from the "Field Ops" category onto the canvas
-		Then I verify pipeline 0 have 15 nodes
+		Then I verify pipeline 0 have 16 nodes
 		Then I verify pipeline 1 have 8 nodes
 
 		Then I right click the "Supernode" node to display the context menu
@@ -60,7 +60,7 @@ Feature: Supernode
 		Then I click on the secondary toolbar cut button
 		Then I right click at position 440, 300 to display the context menu
 		Then I click option "Paste" from the context menu
-		Then I verify pipeline 0 have 14 nodes
+		Then I verify pipeline 0 have 15 nodes
 		Then I verify pipeline 1 have 9 nodes
 
 		# Without zooming in the browser.dragAndDrop() used by the link step does not
@@ -82,8 +82,8 @@ Feature: Supernode
 		Then I right click the "Supernode" node in the subflow to display the context menu
 		Then I click option "Expand supernode" from the context menu
 
-		Then I verify pipeline 0 have 14 nodes
-		Then I verify pipeline 0 have 21 links
+		Then I verify pipeline 0 have 15 nodes
+		Then I verify pipeline 0 have 24 links
 		Then I verify pipeline 1 have 8 nodes
 		Then I verify pipeline 1 have 7 links
 		Then I verify pipeline 2 have 4 nodes
@@ -94,11 +94,11 @@ Feature: Supernode
 		Then I click the supernode label with node id "7015d906-2eae-45c1-999e-fb888ed957e5" to select it
 		Then I click on the secondary toolbar delete button
 		Then I verify there are 1 pipelines
-		Then I verify pipeline 0 have 13 nodes
+		Then I verify pipeline 0 have 14 nodes
 
 		Then I click undo
-		Then I verify pipeline 0 have 14 nodes
-		Then I verify pipeline 0 have 21 links
+		Then I verify pipeline 0 have 15 nodes
+		Then I verify pipeline 0 have 24 links
 		Then I verify pipeline 1 have 8 nodes
 		Then I verify pipeline 1 have 7 links
 		Then I verify pipeline 2 have 4 nodes
@@ -122,7 +122,7 @@ Feature: Supernode
 		Then I click on the secondary toolbar cut button
 		Then I click on the extra canvas secondary toolbar paste button
 
-		Then I verify pipeline 0 have 13 nodes
+		Then I verify pipeline 0 have 14 nodes
 		Then I verify there are 1 pipelines
 		Then I verify extra canvas has a "Supernode" node
 
@@ -135,7 +135,7 @@ Feature: Supernode
 		Then I click on the secondary toolbar copy button
 		Then I click on the extra canvas secondary toolbar paste button
 
-		Then I verify pipeline 0 have 12 nodes
+		Then I verify pipeline 0 have 13 nodes
 		Then I verify there are 2 pipelines
 
 		Then I verify extra canvas has a "Supernode" node

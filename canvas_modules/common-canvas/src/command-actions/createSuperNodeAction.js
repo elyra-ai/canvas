@@ -6,6 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+
 import Action from "../command-stack/action.js";
 import SupernodeIcon from "../../assets/images/supernode.svg";
 import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
@@ -84,6 +85,7 @@ export default class CreateSuperNodeAction extends Action {
 		// Determine supernode input and output links.
 		this.supernodeInputLinks = [];
 		this.supernodeOutputLinks = [];
+		// This returns a list of links in random order.
 		const subflowNodeLinks = this.apiPipeline.getNodeLinks(this.subflowNodes);
 		subflowNodeLinks.forEach((link) => {
 			if ((!this.apiPipeline.isObjectIdInObjects(link.srcNodeId, this.subflowNodes)) &&
@@ -96,11 +98,15 @@ export default class CreateSuperNodeAction extends Action {
 			}
 		});
 
+		// Reorder the supernode input and output links to the correct order.
+		this.supernodeInputLinksModified = this.reorderSupernodeLinks(this.supernodeInputLinks, "input");
+		this.supernodeOutputLinksModified = this.reorderSupernodeLinks(this.supernodeOutputLinks, "output");
+
 		// Remove input/output links from edge nodes in sub-pipline.
-		this.supernodeInputLinks.forEach((inputLink) => {
+		this.supernodeInputLinksModified.forEach((inputLink) => {
 			this.subflowLinks = this.subflowLinks.filter((superLink) => superLink.id !== inputLink.id);
 		});
-		this.supernodeOutputLinks.forEach((outputLink) => {
+		this.supernodeOutputLinksModified.forEach((outputLink) => {
 			this.subflowLinks = this.subflowLinks.filter((superLink) => superLink.id !== outputLink.id);
 		});
 
@@ -120,7 +126,7 @@ export default class CreateSuperNodeAction extends Action {
 		// Determine which port from input link's target node should be a supernode input port
 		// and create a binding node for the port in the supernode.
 		const supernodeInputPorts = [];
-		this.supernodeInputLinks.forEach((link) => {
+		this.supernodeInputLinksModified.forEach((link) => {
 			const node = this.apiPipeline.getNode(link.trgNodeId);
 			this.createSupernodePorts(node, link, supernodeInputPorts, "entry");
 		});
@@ -128,7 +134,7 @@ export default class CreateSuperNodeAction extends Action {
 		// Determine which port from output link's source node should be a supernode output port
 		// and create a binding node for the port in the supernode.
 		const supernodeOutputPorts = [];
-		this.supernodeOutputLinks.forEach((link) => {
+		this.supernodeOutputLinksModified.forEach((link) => {
 			const node = this.apiPipeline.getNode(link.srcNodeId);
 			this.createSupernodePorts(node, link, supernodeOutputPorts, "exit");
 		});
@@ -163,7 +169,7 @@ export default class CreateSuperNodeAction extends Action {
 		// Links to and from supernode.
 		this.linkSrcDefs = [];
 		this.linkTrgDefs = [];
-		subflowNodeLinks.forEach((link) => {
+		this.supernodeInputLinksModified.forEach((link) => {
 			if (!this.apiPipeline.isObjectIdInObjects(link.srcNodeId, this.subflowNodes)) {
 				this.linkSrcDefs.push({
 					id: link.srcNodeId,
@@ -174,6 +180,8 @@ export default class CreateSuperNodeAction extends Action {
 					portId: link.trgNodePortId ? link.trgNodeId + "_" + link.trgNodePortId : link.trgNodePortId
 				});
 			}
+		});
+		this.supernodeOutputLinksModified.forEach((link) => {
 			if (!this.apiPipeline.isObjectIdInObjects(link.trgNodeId, this.subflowNodes)) {
 				this.linkSrcDefs.push({
 					id: this.supernode.id,
@@ -248,6 +256,54 @@ export default class CreateSuperNodeAction extends Action {
 				portId: link.srcNodePortId ? "input_" + link.srcNodeId + "_" + link.srcNodePortId : link.srcNodePortId
 			});
 		});
+	}
+
+	// Reorder the links in the same order the ports are defined in the binding nodes.
+	reorderSupernodeLinks(links, type) {
+		if (links.length > 1) {
+			const supernodeLinks = [...links];
+
+			const portType = type === "input" ? "input_ports" : "output_ports";
+			const linkNodeType = type === "input" ? "trgNodeId" : "srcNodeId";
+			const linkNodePortType = type === "input" ? "trgNodePortId" : "srcNodePortId";
+
+			const subBindingNodes = [];
+			supernodeLinks.forEach((link) => {
+				if (!subBindingNodes.find((subBindingNode) => (subBindingNode.id === link[linkNodeType]))) {
+					subBindingNodes.push(this.apiPipeline.getNode(link[linkNodeType]));
+				}
+			});
+
+			// Sort the nodes in the order they appear on the screen from top to bottom.
+			subBindingNodes.sort((a, b) => {
+				if (a.y_pos < b.y_pos) {
+					return -1;
+				}
+				if (a.y_pos > b.y_pos) {
+					return 1;
+				}
+				return 0;
+			});
+
+			let reorderedSupernodeLinks = [];
+			subBindingNodes.forEach((bindingNode) => {
+				const nodePorts = bindingNode[portType];
+				const firstPort = nodePorts[0];
+				nodePorts.forEach((port) => {
+					let correspondingLink = supernodeLinks.filter((link) =>
+						(link[linkNodePortType] === port.id || typeof link[linkNodePortType] === "undefined") && link[linkNodeType] === bindingNode.id);
+					// If any link has an undefined nodePortId, assign the first portId.
+					correspondingLink = correspondingLink.map((link) => {
+						const newLink = Object.assign({}, link);
+						newLink[linkNodePortType] = newLink[linkNodePortType] ? newLink[linkNodePortType] : firstPort.id;
+						return newLink;
+					});
+					reorderedSupernodeLinks = reorderedSupernodeLinks.concat(correspondingLink);
+				});
+			});
+			return reorderedSupernodeLinks;
+		}
+		return links;
 	}
 
 	createSupernodePorts(node, link, supernodePorts, type) {
