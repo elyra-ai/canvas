@@ -45,5 +45,6 @@ export default class SizeAndPositionObjectsAction extends Action {
 				};
 			}
 		});
+		return previousNodesInfo;
 	}
 }
