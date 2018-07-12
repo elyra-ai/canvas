@@ -29,6 +29,7 @@ import modelerCanvasV2 from "../../../harness/test_resources/diagrams/modelerCan
 import multiPortsCanvasV2 from "../../../harness/test_resources/diagrams/multiPortsCanvas.json";
 import pipelineFlowExampleV2 from "../../../harness/test_resources/diagrams/pipelineFlowExample.json";
 import portColorCanvasV2 from "../../../harness/test_resources/diagrams/portsColorCanvas.json";
+import uiParametersCanvasV2 from "../../../harness/test_resources/diagrams/uiParametersCanvas.json";
 
 import allNodesV1 from "../../../harness/test_resources/diagrams/v1-allNodes.json";
 import bigCanvasV1 from "../../../harness/test_resources/diagrams/v1-bigCanvas.json";
@@ -118,6 +119,10 @@ describe("ObjectModel files handling test", () => {
 
 	it("should read in and write out the same file: portColorCanvasV2", () => {
 		readWriteSameFile(portColorCanvasV2);
+	});
+
+	it("should read in and write out the same file: uiParametersCanvasV2", () => {
+		readWriteSameFile(uiParametersCanvasV2);
 	});
 
 	// --------------------------------------------------------------------------

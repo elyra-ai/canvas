@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint arrow-body-style: ["off"] */
-/* eslint complexity: ["error", 34] */
+/* eslint complexity: ["error", 35] */
 
 import { createStore, combineReducers } from "redux";
 import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
@@ -91,6 +91,16 @@ const nodes = (state = [], action) => {
 			if (action.data.nodeId === node.id) {
 				const newNode = Object.assign({}, node);
 				newNode.parameters = action.data.parameters;
+				return newNode;
+			}
+			return node;
+		});
+
+	case "SET_NODE_UI_PARAMETERS":
+		return state.map((node, index) => {
+			if (action.data.nodeId === node.id) {
+				const newNode = Object.assign({}, node);
+				newNode.uiParameters = action.data.uiParameters;
 				return newNode;
 			}
 			return node;
@@ -533,6 +543,7 @@ const canvasinfo = (state = [], action) => {
 	case "REPLACE_NODES":
 	case "SIZE_AND_POSITION_OBJECTS":
 	case "SET_NODE_PARAMETERS":
+	case "SET_NODE_UI_PARAMETERS":
 	case "SET_NODE_MESSAGE":
 	case "SET_NODE_MESSAGES":
 	case "ADD_NODE_ATTR":
@@ -1992,6 +2003,11 @@ export class APIPipeline {
 		return (node ? node.parameters : null);
 	}
 
+	getNodeUiParameters(nodeId) {
+		var node = this.getNode(nodeId);
+		return (node ? node.uiParameters : null);
+	}
+
 	setNodeLabel(nodeId, newLabel) {
 		this.store.dispatch({ type: "SET_NODE_LABEL", data: { nodeId: nodeId, label: newLabel }, pipelineId: this.pipelineId });
 	}
@@ -2018,6 +2034,10 @@ export class APIPipeline {
 
 	setNodeMessages(nodeId, messages) {
 		this.store.dispatch({ type: "SET_NODE_MESSAGES", data: { nodeId: nodeId, messages: messages }, pipelineId: this.pipelineId });
+	}
+
+	setNodeUiParameters(nodeId, uiParameters) {
+		this.store.dispatch({ type: "SET_NODE_UI_PARAMETERS", data: { nodeId: nodeId, uiParameters: uiParameters }, pipelineId: this.pipelineId });
 	}
 
 	setNodeParameters(nodeId, parameters) {

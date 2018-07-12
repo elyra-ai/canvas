@@ -1,0 +1,86 @@
+{
+  "doc_type": "pipeline",
+  "version": "2.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
+  "id": "blank-canvas-id",
+  "primary_pipeline": "empty-pipeline",
+  "pipelines": [
+    {
+      "id": "empty-pipeline",
+      "nodes": [
+        {
+          "id": "a9d5c402-2dba-4766-b854-37cbdcac8770",
+          "type": "execution_node",
+          "op": "Spark_SelectColumns_paramDef",
+          "app_data": {
+            "ui_data": {
+              "label": "Select Columns",
+              "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE4IC0xOC4yIDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxOCAtMTguMiA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMxRDM2NDk7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDR7b3BhY2l0eTowLjU7ZmlsbDpub25lO3N0cm9rZTojMUQzNjQ5O3N0cm9rZS13aWR0aDozO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q1e2ZpbGw6I0U3MUQzMjt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7IiB3aWR0aD0iNTQiIGhlaWdodD0iNDciIHhsaW5rOmhyZWY9IkJBOTI2N0EyRjgxNjk1QzIucG5nIiAgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxOCAtMTYpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjMyLjEsMjYgMjAuNCw1LjUgMzIuMSwtMTUgNTUuNiwtMTUgNjcuNCw1LjUgNTUuNiwyNiAJCSIvPg0KCTwvZz4NCjwvZz4NCjxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMjksMjAuNSAzMi4xLDI2IDU1LjYsMjYgNjcuNCw1LjUgNTguNiwtOS42ICIvPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7IiB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhsaW5rOmhyZWY9IkJBOTI2N0EyRjgxNjk1QzYucG5nIiAgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxNyAtMTcpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QyIiBwb2ludHM9IjMyLjEsMjYgMjAuNCw1LjUgMzIuMSwtMTUgNTUuNiwtMTUgNjcuNCw1LjUgNTUuNiwyNiAJCSIvPg0KCTwvZz4NCjwvZz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSI1My41IiB5MT0iLTIiIHgyPSI1My41IiB5Mj0iMTYiLz4NCjxsaW5lIGNsYXNzPSJzdDQiIHgxPSI0NC41IiB5MT0iLTIiIHgyPSI0NC41IiB5Mj0iMSIvPg0KPGxpbmUgY2xhc3M9InN0NCIgeDE9IjQ0LjUiIHkxPSItNiIgeDI9IjQ0LjUiIHkyPSItNCIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjM1LjUiIHkxPSItNiIgeDI9IjM1LjUiIHkyPSItNCIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjUzLjUiIHkxPSItNiIgeDI9IjUzLjUiIHkyPSItNCIvPg0KPGxpbmUgY2xhc3M9InN0NCIgeDE9IjQ0LjUiIHkxPSI5IiB4Mj0iNDQuNSIgeTI9IjE2Ii8+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iMzUuNSIgeTE9Ii0yIiB4Mj0iMzUuNSIgeTI9IjE2Ii8+DQo8cmVjdCB4PSI0My42IiB5PSIxLjQiIHRyYW5zZm9ybT0ibWF0cml4KC0wLjcwNzEgMC43MDcxIC0wLjcwNzEgLTAuNzA3MSA3OC44OTI4IC0yMy44MjU1KSIgY2xhc3M9InN0NSIgd2lkdGg9IjEuNSIgaGVpZ2h0PSI2Ii8+DQo8cmVjdCB4PSI0My43IiB5PSIxLjUiIHRyYW5zZm9ybT0ibWF0cml4KC0wLjcwNzEgLTAuNzA3MSAwLjcwNzEgLTAuNzA3MSA3Mi42OTcxIDM5LjA5MzgpIiBjbGFzcz0ic3Q1IiB3aWR0aD0iMS41IiBoZWlnaHQ9IjYiLz4NCjwvc3ZnPg0K",
+              "x_pos": 475.99998474121094,
+              "y_pos": 246.49998474121094,
+              "description": "Select or remove a subset of columns",
+              "messages": [
+                {
+                  "id_ref": "selected_fields",
+                  "validation_id": "selected_fields",
+                  "type": "error",
+                  "text": "The 'Columns' field cannot be empty when the mode is 'Include'"
+                }
+              ],
+              "ui_parameters": {
+                "uiOnlyField2": [
+                  "alpha",
+                  "beta",
+                  "gamma",
+                  "delta"
+                ],
+                "uiOnlyField3": 23
+              }
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        }
+      },
+      "runtime_ref": "scala-spark-2.0.1"
+    }
+  ],
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "scala-spark-2.0.1",
+      "name": "scala-spark-2.0.1"
+    }
+  ]
+}

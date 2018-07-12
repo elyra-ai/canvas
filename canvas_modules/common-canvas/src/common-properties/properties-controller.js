@@ -19,6 +19,8 @@ import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { ControlType, Type, ParamRole } from "./constants/form-constants";
 import cloneDeep from "lodash/cloneDeep";
+import assign from "lodash/assign";
+
 import ConditionOps from "./ui-conditions/condition-ops/condition-ops";
 
 export default class PropertiesController {
@@ -98,7 +100,9 @@ export default class PropertiesController {
 			let datasetMetadata;
 			if (this.form.data) {
 				datasetMetadata = this.form.data.datasetMetadata;
-				this.setPropertyValues(this.form.data.currentParameters);
+				const propertyValues = this.form.data.uiCurrentParameters ? assign({}, this.form.data.currentParameters, this.form.data.uiCurrentParameters)
+					: this.form.data.currentParameters;
+				this.setPropertyValues(propertyValues);
 			}
 			// Determine from the current control set whether or not there can be multiple input datasets
 			this.multipleSchemas = this._canHaveMultipleSchemas();

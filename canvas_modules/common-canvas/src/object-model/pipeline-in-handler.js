@@ -53,6 +53,7 @@ export default class PipelineInHandler {
 				"decorations": has(node, "app_data.ui_data.decorations") ? this.convertDecorations(node.app_data.ui_data.decorations) : [],
 				"parameters": has(node, "parameters") ? node.parameters : [],
 				"messages": has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
+				"uiParameters": has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.ui_parameters : [],
 				"app_data": has(node, "app_data") ? this.removeUiDataFromAppData(node.app_data) : [],
 				"subflow_ref": has(node, "subflow_ref") ? node.subflow_ref : {},
 				"model_ref": has(node, "model_ref") ? node.model_ref : "",

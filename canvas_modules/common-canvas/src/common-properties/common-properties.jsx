@@ -20,6 +20,9 @@ import logger from "../../utils/logger";
 import PropertyUtils from "./util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants";
 import isEqual from "lodash/isEqual";
+import omit from "lodash/omit";
+import pick from "lodash/pick";
+
 import TitleEditor from "./components/title-editor";
 import classNames from "classnames";
 
@@ -40,8 +43,9 @@ class CommonProperties extends React.Component {
 			propertyListener: props.callbacks.propertyListener,
 			actionHandler: props.callbacks.actionHandler
 		});
-		this.propertiesController.setPipelineErrorMessages(props.propertiesInfo.messages);
 		this.setForm(props.propertiesInfo);
+		// this has to be after setForm because setForm clears all error messages.
+		this.propertiesController.setPipelineErrorMessages(props.propertiesInfo.messages);
 		this.currentParameters = this.propertiesController.getPropertyValues();
 
 		this.propertiesController.subscribe(() => {
@@ -102,15 +106,43 @@ class CommonProperties extends React.Component {
 		}
 		// set initial values for undo
 		this.initialValueInfo = { additionalInfo: { messages: [] }, undoInfo: {} };
-		if (formData && formData.data && formData.data.currentParameters) {
-			this.initialValueInfo.properties = JSON.parse(JSON.stringify(formData.data.currentParameters));
-		}
+		this.uiParameterKeys = this._getUiOnlyKeys();
+		this.initialValueInfo = this._setValueInforProperties(this.initialValueInfo);
 		if (propertiesInfo.messages) {
 			this.initialValueInfo.additionalInfo.messages = JSON.parse(JSON.stringify(propertiesInfo.messages));
 		}
 		this.initialValueInfo.undoInfo.properties = this.propertiesController.getPropertyValues(); // used for undoing when node editor open
 		this.initialValueInfo.undoInfo.messages = this.propertiesController.getErrorMessages(); // used for undoing when node editor open
 		this.initialValueInfo.additionalInfo.title = this.propertiesController.getTitle();
+	}
+
+	_setValueInforProperties(valueInfo, filterHiddenDisabled) {
+		const properties = this.propertiesController.getPropertyValues(filterHiddenDisabled);
+		if (this.uiParameterKeys.length > 0) {
+			valueInfo.properties = omit(properties, this.uiParameterKeys);
+			valueInfo.uiProperties = pick(properties, this.uiParameterKeys);
+		} else {
+			valueInfo.properties = properties;
+		}
+		return valueInfo;
+	}
+
+	// this will return an array of control names that are ui only controls.
+	_getUiOnlyKeys() {
+		const uiOnlyKeys = [];
+		const controls = this.propertiesController.getControls();
+		if (Object.keys(controls).length > 0) {
+			for (const controlKey in controls) {
+				if (!controls.hasOwnProperty(controlKey)) {
+					continue;
+				}
+				const control = controls[controlKey];
+				if (control.uionly) {
+					uiOnlyKeys.push(controlKey);
+				}
+			}
+		}
+		return uiOnlyKeys;
 	}
 
 	applyPropertiesEditing(closeProperties) {
@@ -126,8 +158,8 @@ class CommonProperties extends React.Component {
 				(JSON.stringify(previousErrorMessages) !== JSON.stringify(newErrorMessages))) {
 
 			// set current values
-			const valueInfo = { additionalInfo: {}, undoInfo: {} };
-			valueInfo.properties = this.propertiesController.getPropertyValues(true);
+			let valueInfo = { additionalInfo: {}, undoInfo: {} };
+			valueInfo = this._setValueInforProperties(valueInfo, true);
 			valueInfo.undoInfo.properties = this.propertiesController.getPropertyValues();
 			const errorMessages = this.propertiesController.getErrorMessages(true, true);
 			if (errorMessages) {

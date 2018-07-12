@@ -762,12 +762,13 @@ class App extends React.Component {
 		this.log("applyDiagramEdit()", data.editType);
 	}
 
-	applyPropertyChanges(form, appData, additionalInfo, undoInfo) {
+	applyPropertyChanges(form, appData, additionalInfo, undoInfo, uiProperties) {
 		const data = {
 			form: form,
 			appData: appData,
 			messages: additionalInfo.messages,
-			title: additionalInfo.title
+			title: additionalInfo.title,
+			uiProperties: uiProperties
 		};
 		this.log("applyPropertyChanges()", data);
 
@@ -780,6 +781,8 @@ class App extends React.Component {
 			canvasController.setNodeParameters(appData.nodeId, form, appData.pipelineId);
 			canvasController.setNodeLabel(appData.nodeId, additionalInfo.title, appData.pipelineId);
 			canvasController.setNodeMessages(appData.nodeId, additionalInfo.messages, appData.pipelineId);
+			canvasController.setNodeUiParameters(appData.nodeId, uiProperties, appData.pipelineId);
+
 
 			// set notification message if errors/warnings
 			this.setFlowNotificationMessages(appData.pipelineId);
@@ -1098,10 +1101,16 @@ class App extends React.Component {
 					if (!isEmpty(node.parameters)) {
 						properties.data.formData.data.currentParameters = node.parameters;
 					}
+					if (!isEmpty(node.uiParameters)) {
+						properties.data.formData.data.uiCurrentParameters = node.uiParameters;
+					}
 					properties.data.formData.label = node.label;
 				} else {
 					if (!isEmpty(node.parameters)) {
 						properties.data.current_parameters = node.parameters;
+					}
+					if (!isEmpty(node.uiParameters)) {
+						properties.data.current_ui_parameters = node.uiParameters;
 					}
 					if (!properties.data.titleDefinition) {
 						properties.data.titleDefinition = {};

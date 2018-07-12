@@ -126,6 +126,9 @@ export class Control extends ControlDef {
 		if (typeof settings.header === "boolean") {
 			this.header = settings.header;
 		}
+		if (typeof settings.uionly === "boolean") {
+			this.uionly = settings.uionly;
+		}
 	}
 }
 

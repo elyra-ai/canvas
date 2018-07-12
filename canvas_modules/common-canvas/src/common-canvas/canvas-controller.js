@@ -304,6 +304,10 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeParameters(nodeId, parameters);
 	}
 
+	setNodeUiParameters(nodeId, uiParameters, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodeUiParameters(nodeId, uiParameters);
+	}
+
 	setNodeMessages(nodeId, messages, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeMessages(nodeId, messages);
 	}
@@ -325,6 +329,10 @@ export default class CanvasController {
 	}
 	getNode(nodeId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNode(nodeId);
+	}
+
+	getNodeUiParameters(nodeId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeUiParameters(nodeId);
 	}
 
 	getNodeMessages(nodeId, pipelineId) {

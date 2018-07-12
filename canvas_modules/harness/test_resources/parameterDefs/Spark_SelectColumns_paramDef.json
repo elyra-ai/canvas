@@ -26,7 +26,52 @@
   "uihints": {
     "id": "org.ibm.spark.ibm.transformers.selectcolumns",
     "icon": "./select.svg",
+    "ui_parameters": [
+      {
+        "id": "uiOnlyField1",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "id": "uiOnlyField2",
+        "type": "array[string]",
+        "default": [],
+        "required": true
+      },
+      {
+        "id": "uiOnlyField3",
+        "type": "integer",
+        "default": -1
+      }
+    ],
     "parameter_info": [
+      {
+        "parameter_ref": "uiOnlyField1",
+        "label": {
+          "default": "The first Ui field"
+        },
+        "description": {
+          "default": "Select a Ui field value."
+        }
+      },
+      {
+        "parameter_ref": "uiOnlyField2",
+        "label": {
+          "default": "The second Ui field"
+        },
+        "description": {
+          "default": "Select another Ui field value."
+        }
+      },
+      {
+        "parameter_ref": "uiOnlyField3",
+        "label": {
+          "default": "The third Ui field"
+        },
+        "description": {
+          "default": "Select the last Ui field value."
+        }
+      },
       {
         "parameter_ref": "mode",
         "label": {
@@ -72,10 +117,38 @@
             ]
           }
         ]
+      },
+      {
+        "id": "UIonlyParameters",
+        "label": {
+          "default": "Special Parameters"
+        },
+        "parameter_refs": [
+          "uiOnlyField1",
+          "uiOnlyField2",
+          "uiOnlyField3"
+        ]
       }
     ]
   },
   "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "uiOnlyField1",
+          "message": {
+            "resource_key": "uiOnlyField1_list_not_empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "uiOnlyField1",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
     {
       "validation": {
         "fail_message": {
@@ -117,76 +190,77 @@
     }
   ],
   "dataset_metadata": [
-		{
-	    "fields": [
-	      {
-	        "name": "Age",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Sex",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "BP",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Cholesterol",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Na",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "K",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Drug",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      }
-	    ]
-	  }
-	],
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
   "resources": {
     "org.ibm.spark.ibm.transformers.selectcolumns.label": "Select Columns",
+    "uiOnlyField1_list_not_empty": "This field cannot be empty.",
     "mode.label": "Mode",
     "mode.desc": "Include or discard columns",
     "mode.Include.label": "Include selected columns",

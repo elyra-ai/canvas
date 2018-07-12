@@ -297,6 +297,21 @@ describe("ObjectModel API handle model OK", () => {
 		shouldClearAllNodeMessages("id125TTEEIK7V");
 	});
 
+	it("should set UiParameters for a model node", () => {
+		const expectedParameters = { "uiParam1": "controlOne", "uiParam2": ["warning", "text"] };
+		shouldSaveNodeUiParameters("id125TTEEIK7V", expectedParameters);
+	});
+
+	it("should set empty UiParameters for a model node", () => {
+		const expectedParameters = {};
+		shouldSaveNodeUiParameters("id125TTEEIK7V", expectedParameters);
+	});
+
+	it("should set null UiParameters for a model node", () => {
+		const expectedParameters = null;
+		shouldSaveNodeUiParameters("id125TTEEIK7V", expectedParameters);
+	});
+
 	it("should add palette item into existing test category", () => {
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const nodeTypeObj = {
@@ -690,6 +705,16 @@ describe("ObjectModel API handle model OK", () => {
 		const node = objectModel.getPipelineFlow().pipelines[0].nodes.find((n) => n.id === nodeId);
 		expect(isEqual(subType, node.sub_type)).to.be.true;
 		expect(isEqual(pipelineIdRef, node.subflow_ref.pipeline_id_ref)).to.be.true;
+	}
+
+	function shouldSaveNodeUiParameters(nodeId, expectedParameters) {
+		deepFreeze(startPipelineFlow);
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.getAPIPipeline().setNodeUiParameters(nodeId, expectedParameters);
+
+		const actualParameters = objectModel.getAPIPipeline().getNodeUiParameters(nodeId);
+
+		expect(isEqual(expectedParameters, actualParameters)).to.be.true;
 	}
 
 	function shouldSaveNodeMessage(nodeId) {

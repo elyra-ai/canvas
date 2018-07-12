@@ -79,6 +79,10 @@ export default class PipelineOutHandler {
 			newNode.app_data.ui_data.messages = ciNode.messages;
 		}
 
+		if (ciNode.uiParameters && !isEmpty(ciNode.uiParameters)) {
+			newNode.app_data.ui_data.ui_parameters = ciNode.uiParameters;
+		}
+
 		if (ciNode.input_ports && ciNode.input_ports.length > 0) {
 			newNode.inputs = this.createInputs(ciNode, ciLinks);
 		}

@@ -47,7 +47,7 @@ describe("uiItemParamDef render correctly when the control label is hidden", () 
 
 	it("should have not displayed control label when labelVisible:false", () => {
 		const controllabels = wrapper.find("label.properties-control-label");
-		expect(controllabels).to.have.length(2);
+		expect(controllabels).to.have.length(5);
 	});
 });
 

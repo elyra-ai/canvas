@@ -482,6 +482,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	settings.rows = parameter.rows;
 	settings.displayChars = parameter.displayChars;
 	settings.header = header;
+	settings.uionly = parameter.uionly;
 	return new Control(settings);
 }
 

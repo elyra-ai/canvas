@@ -135,6 +135,9 @@ export class ParameterDef {
 		if (settings.displayChars) {
 			this.displayChars = settings.displayChars;
 		}
+		if (settings.uionly) {
+			this.uionly = settings.uionly;
+		}
 	}
 
 	isList() {
@@ -321,7 +324,8 @@ export class ParameterDef {
 				"customControlId": propertyOf(uihint)("custom_control_id"),
 				"data": propertyOf(uihint)("data"),
 				"rows": propertyOf(uihint)("rows"),
-				"displayChars": propertyOf(uihint)("display_chars")
+				"displayChars": propertyOf(uihint)("display_chars"),
+				"uionly": propertyOf(param)("uionly")
 			});
 		}
 		return null;

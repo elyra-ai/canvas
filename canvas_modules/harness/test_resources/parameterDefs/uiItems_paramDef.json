@@ -3,6 +3,16 @@
     "title": "UIItem Test"
   },
   "current_parameters": {},
+  "current_ui_parameters": {
+    "uiOnlyField1": "test",
+    "uiOnlyField2": [
+      "alpha",
+      "beta",
+      "gamma",
+      "delta"
+    ],
+    "uiOnlyField3": 23
+  },
   "parameters": [
     {
       "id": "radioset",
@@ -28,7 +38,52 @@
     "label": {
       "default": "UIItem Test"
     },
+    "ui_parameters": [
+      {
+        "id": "uiOnlyField1",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "id": "uiOnlyField2",
+        "type": "array[string]",
+        "default": [],
+        "required": true
+      },
+      {
+        "id": "uiOnlyField3",
+        "type": "integer",
+        "default": -1
+      }
+    ],
     "parameter_info": [
+      {
+        "parameter_ref": "uiOnlyField1",
+        "label": {
+          "default": "The first Ui field"
+        },
+        "description": {
+          "default": "Select a Ui field value."
+        }
+      },
+      {
+        "parameter_ref": "uiOnlyField2",
+        "label": {
+          "default": "The second Ui field"
+        },
+        "description": {
+          "default": "Select another Ui field value."
+        }
+      },
+      {
+        "parameter_ref": "uiOnlyField3",
+        "label": {
+          "default": "The third Ui field"
+        },
+        "description": {
+          "default": "Select the last Ui field value."
+        }
+      },
       {
         "parameter_ref": "radioset",
         "label": {
@@ -86,10 +141,41 @@
           "textfield",
           "numberfield"
         ]
+      },
+      {
+        "id": "UIonlyParameters",
+        "label": {
+          "default": "Special Parameters"
+        },
+        "parameter_refs": [
+          "uiOnlyField1",
+          "uiOnlyField2",
+          "uiOnlyField3"
+        ]
       }
     ]
   },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "uiOnlyField1",
+          "message": {
+            "resource_key": "uiOnlyField1_list_not_empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "uiOnlyField1",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    }
+  ],
   "resources": {
-    "textfield.text_after": "Hint: should not have the label"
+    "textfield.text_after": "Hint: should not have the label",
+    "uiOnlyField1_list_not_empty": "This field cannot be empty."
   }
 }
