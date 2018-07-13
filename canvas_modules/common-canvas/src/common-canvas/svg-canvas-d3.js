@@ -1309,6 +1309,7 @@ class CanvasRenderer {
 			this.endNodeSizing();
 
 		} else if (this.dragging) {
+			this.dragging = false; // Set to false before updating object model so main body of displayNodes is run. 
 			if (this.dragOffsetX !== 0 ||
 					this.dragOffsetY !== 0) {
 				this.canvasController.editActionHandler({
@@ -1318,7 +1319,6 @@ class CanvasRenderer {
 					offsetY: this.dragOffsetY,
 					pipelineId: this.activePipeline.id });
 			}
-			this.dragging = false;
 		}
 		this.logger.logEndTimer("dragEnd", true);
 	}
