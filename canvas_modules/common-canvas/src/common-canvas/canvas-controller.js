@@ -787,6 +787,7 @@ export default class CanvasController {
 			case "createSuperNode": {
 				const command = new CreateSuperNodeAction(this.contextMenuSource, this.objectModel);
 				this.commandStack.do(command);
+				this.contextMenuSource = command.getData();
 				break;
 			}
 			case "expandSuperNodeInPlace": {
