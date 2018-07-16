@@ -177,21 +177,6 @@ const nodes = (state = [], action) => {
 		});
 
 	case "SET_INPUT_PORT_LABEL":
-		return state.map((node, index) => {
-			if (action.data.nodeId === node.id) {
-				return Object.assign({}, node, { input_ports: ports(node.input_ports, action) });
-			}
-			return node;
-		});
-
-	case "SET_OUTPUT_PORT_LABEL":
-		return state.map((node, index) => {
-			if (action.data.nodeId === node.id) {
-				return Object.assign({}, node, { output_ports: ports(node.output_ports, action) });
-			}
-			return node;
-		});
-
 	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":
 		return state.map((node, index) => {
 			if (action.data.nodeId === node.id) {
@@ -200,6 +185,7 @@ const nodes = (state = [], action) => {
 			return node;
 		});
 
+	case "SET_OUTPUT_PORT_LABEL":
 	case "SET_OUTPUT_PORT_SUBFLOW_NODE_REF":
 		return state.map((node, index) => {
 			if (action.data.nodeId === node.id) {
