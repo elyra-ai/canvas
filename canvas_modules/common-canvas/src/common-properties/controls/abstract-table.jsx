@@ -111,7 +111,7 @@ export default class AbstractTable extends React.Component {
 			return (<div />);
 		}
 
-		return (<div>{this.onPanelContainer[selectedRows[0]]}</div>);
+		return (<div className="properties-onpanel-container">{this.onPanelContainer[selectedRows[0]]}</div>);
 	}
 
 	getRowClassName(rowIndex) {
@@ -583,7 +583,7 @@ export default class AbstractTable extends React.Component {
 		const subItemButton = this.props.buildUIItem(rowIndex, this.props.control.childItem, propertyId, this.indexOfColumn);
 		// Hack to decompose the button into our own in-table link
 		const subCell = (
-			<div className="table-subcell">
+			<div className="properties-table-subcell">
 				<SubPanelCell
 					label={subItemButton.props.label}
 					title={subItemButton.props.title}

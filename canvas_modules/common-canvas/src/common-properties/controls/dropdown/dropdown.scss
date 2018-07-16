@@ -15,9 +15,6 @@
 	.bx--list-box {
 		max-height: none;
 	}
-	.bx--list-box__menu {
-		position: sticky;
-	}
 	.bx--list-box__label {
 		padding: 5px 0;
 	}
@@ -36,12 +33,24 @@
 	padding-top: 0;
 	padding-bottom: 5px;
 	.bx--list-box__menu {
-		width: 100%;
+		position: sticky;
+		width: 7rem;
 	}
 	.bx--list-box__field {
 		padding-left: 0;
 	}
 	.bx--list-box--inline {
 		height: 1.75rem;
+	}
+}
+.properties-table-subcell, .properties-onpanel-container {
+	.properties-dropdown {
+		.bx--list-box__menu {
+			position: fixed;
+			top: unset;
+			right: unset;
+			left: unset;
+			width: 40.17rem;
+		}
 	}
 }
