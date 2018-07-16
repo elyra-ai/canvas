@@ -102,7 +102,7 @@ export default class CloneMultipleObjectsAction extends Action {
 		});
 
 		this.apiPipeline.addLinks(this.links);
-		this.objectModel.setSelections(addedObjectIds, this.apiPipeline.id);
+		this.objectModel.setSelections(addedObjectIds, this.apiPipeline.pipelineId);
 	}
 
 	undo() {

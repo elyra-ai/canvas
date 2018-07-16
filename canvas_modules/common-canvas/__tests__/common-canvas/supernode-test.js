@@ -929,6 +929,11 @@ describe("Copy and Paste Supernode", () => {
 		const originalSupernode = JSON.parse(JSON.stringify(supernodes[0]));
 		const clonedSupernode = JSON.parse(JSON.stringify(supernodes[1]));
 
+		// Ensure copied supernode is selected after paste
+		const objIds = canvasController.getSelectedObjectIds();
+		expect(isEqual(objIds.length, 1)).to.be.true;
+		expect(isEqual(objIds, [clonedSupernode.id])).to.be.true;
+
 		// Delete the unique ids before comparing.
 		deleteSupernodeUniqueIds(originalSupernode);
 		deleteSupernodeUniqueIds(clonedSupernode);
@@ -1010,6 +1015,11 @@ describe("Copy and Paste Supernode", () => {
 		const clonedNewSupernode2 = JSON.parse(JSON.stringify(supernodes[3]));
 
 		canvasInfo = objectModel.getPipelineFlow();
+
+		// Ensure copied supernodes are selected after paste
+		const objIds = canvasController.getSelectedObjectIds();
+		expect(isEqual(objIds.length, 2)).to.be.true;
+		expect(isEqual(objIds, [clonedOriginalSupernode.id, clonedNewSupernode2.id])).to.be.true;
 
 		// Delete the unique ids before comparing.
 		deleteSupernodeUniqueIds(originalSupernode);
