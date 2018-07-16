@@ -415,21 +415,23 @@ class CanvasRenderer {
 		this.logger.logEndTimer("setCanvasInfoRenderer");
 	}
 
-	// Removes any super renderers that no longer have a corresponding pipeline
-	// in the canvas info. This mismatch might happen when an expanded supernode
-	// and its corresponding pipeline has been deleted.
+	// Returns a subset of renderers, from the current set of super renderers,
+	// that correspond to the supernodes for the active pipeline. This will
+	// remove any renderers that do not have a corresponding supernode which
+	// might happen when a supernode is deleted directly, or removed through an
+	// undo action.
 	cleanUpSuperRenderers() {
 		const newSuperRenderers = [];
-		this.superRenderers.forEach((superRenderer) => {
-			if (this.isExistingPipeline(superRenderer.pipelineId)) {
-				newSuperRenderers.push(superRenderer);
-			} else {
-				superRenderer.clearCanvas();
+		const supernodes = this.getSupernodes(this.activePipeline);
+
+		supernodes.forEach((supernode) => {
+			const ren = this.findSuperRenderer(supernode);
+			if (ren) {
+				newSuperRenderers.push(ren);
 			}
 		});
 		return newSuperRenderers;
 	}
-
 
 	isExistingPipeline(pipelineId) {
 		return this.canvasInfo.pipelines.find((p) => p.id === pipelineId);
@@ -1309,7 +1311,7 @@ class CanvasRenderer {
 			this.endNodeSizing();
 
 		} else if (this.dragging) {
-			this.dragging = false; // Set to false before updating object model so main body of displayNodes is run. 
+			this.dragging = false; // Set to false before updating object model so main body of displayNodes is run.
 			if (this.dragOffsetX !== 0 ||
 					this.dragOffsetY !== 0) {
 				this.canvasController.editActionHandler({
@@ -1928,13 +1930,15 @@ class CanvasRenderer {
 
 	createSupernodeRenderer(d, supernodeD3Object) {
 		if (d.subflow_ref && d.subflow_ref.pipeline_id_ref) {
-			const superRenderer = new CanvasRenderer(
-				d.subflow_ref.pipeline_id_ref,
-				this.canvasDiv,
-				this.canvasController,
-				this.canvasInfo,
-				supernodeD3Object);
-			this.superRenderers.push(superRenderer);
+			if (!this.findSuperRenderer(d)) { // If a renderer exists from a previous run, no need to create new one.
+				const superRenderer = new CanvasRenderer(
+					d.subflow_ref.pipeline_id_ref,
+					this.canvasDiv,
+					this.canvasController,
+					this.canvasInfo,
+					supernodeD3Object);
+				this.superRenderers.push(superRenderer);
+			}
 		}
 	}
 
