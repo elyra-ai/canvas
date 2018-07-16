@@ -75,9 +75,7 @@ export default class CreateSuperNodeAction extends Action {
 			commentLinks.forEach((link) => {
 				if ((!this.apiPipeline.isObjectIdInObjects(link.trgNodeId, this.subflowNodes)) &&
 					(!this.apiPipeline.isObjectIdInObjects(link.id, this.linksToDelete))) {
-					this.linksToDelete.push(link);
-					// Remove the link from supernode.
-					this.subflowLinks = this.subflowLinks.filter((superLink) => superLink.id !== link.id);
+					this.removeLinkFromSubflow(link, true);
 				}
 			});
 		});
@@ -90,11 +88,19 @@ export default class CreateSuperNodeAction extends Action {
 		subflowNodeLinks.forEach((link) => {
 			if ((!this.apiPipeline.isObjectIdInObjects(link.srcNodeId, this.subflowNodes)) &&
 				(!this.supernodeInputLinks.find((supernodeInputLink) => (supernodeInputLink.id === link.trgNodeId)))) {
-				this.supernodeInputLinks.push(link);
+				if (link.type === "associationLink") { // Break off associationLink.
+					this.removeLinkFromSubflow(link, true);
+				} else {
+					this.supernodeInputLinks.push(link);
+				}
 			}
 			if ((!this.apiPipeline.isObjectIdInObjects(link.trgNodeId, this.subflowNodes)) &&
 				(!this.supernodeOutputLinks.find((supernodeOutputLink) => (supernodeOutputLink.id === link.srcNodeId)))) {
-				this.supernodeOutputLinks.push(link);
+				if (link.type === "associationLink") { // Break off associationLink.
+					this.removeLinkFromSubflow(link, true);
+				} else {
+					this.supernodeOutputLinks.push(link);
+				}
 			}
 		});
 
@@ -104,10 +110,10 @@ export default class CreateSuperNodeAction extends Action {
 
 		// Remove input/output links from edge nodes in sub-pipline.
 		this.supernodeInputLinksModified.forEach((inputLink) => {
-			this.subflowLinks = this.subflowLinks.filter((superLink) => superLink.id !== inputLink.id);
+			this.removeLinkFromSubflow(inputLink, false);
 		});
 		this.supernodeOutputLinksModified.forEach((outputLink) => {
-			this.subflowLinks = this.subflowLinks.filter((superLink) => superLink.id !== outputLink.id);
+			this.removeLinkFromSubflow(outputLink, false);
 		});
 
 		// Sub-Pipeline
@@ -353,6 +359,13 @@ export default class CreateSuperNodeAction extends Action {
 		};
 
 		return this.subPipeline.createNode(bindingNodeData);
+	}
+
+	removeLinkFromSubflow(link, deleteLink) {
+		this.subflowLinks = this.subflowLinks.filter((superLink) => superLink.id !== link.id);
+		if (deleteLink) {
+			this.linksToDelete.push(link);
+		}
 	}
 
 	// Return augmented command object which will be passed to the client app.

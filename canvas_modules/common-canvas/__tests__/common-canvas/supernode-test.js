@@ -16,6 +16,8 @@ import { expect } from "chai";
 import sinon from "sinon";
 
 import supernodeFlow from "../test_resources/json/supernodeCanvas.json";
+import associationLinkCanvas from "../test_resources/json/associationLinkCanvas.json";
+
 import test1ExpectedFlow from "../test_resources/json/supernode-test1-expected-flow.json";
 import test1ExpectedUndoFlow from "../test_resources/json/supernode-test1-expected-undo-flow.json";
 import test2ExpectedFlow from "../test_resources/json/supernode-test2-expected-flow.json";
@@ -32,6 +34,10 @@ import test7ExpectedFlow from "../test_resources/json/supernode-test7-expected-f
 import test7ExpectedUndoFlow from "../test_resources/json/supernode-test7-expected-undo-flow.json";
 import test8ExpectedFlow from "../test_resources/json/supernode-test8-expected-flow.json";
 import test8ExpectedUndoFlow from "../test_resources/json/supernode-test8-expected-undo-flow.json";
+import test9ExpectedFlow from "../test_resources/json/supernode-test9-expected-flow.json";
+import test9ExpectedUndoFlow from "../test_resources/json/supernode-test9-expected-undo-flow.json";
+import test10ExpectedFlow from "../test_resources/json/supernode-test10-expected-flow.json";
+import test10ExpectedUndoFlow from "../test_resources/json/supernode-test10-expected-undo-flow.json";
 
 const superNodeId = "7015d906-2eae-45c1-999e-fb888ed957e5";
 // Supernode.
@@ -300,6 +306,59 @@ const createSupernodeSourceObject3 = {
 	"mousePos": {
 		"x": 414,
 		"y": 543
+	},
+	"selectedObjectIds": [],
+	"zoom": 1
+};
+// Drug node.
+const createSupernodeSourceObject4 = {
+	"type": "node",
+	"targetObject": {
+		"id": "id5KIRGGJ3FYT",
+		"type": "binding",
+		"output_ports": [],
+		"input_ports": [
+			{
+				"id": "inPort",
+				"label": "Input Port",
+				"cardinality": {
+					"min": 0,
+					"max": 1
+				},
+				"app_data": {},
+				"cy": 29
+			}
+		],
+		"label": "Drug",
+		"description": "",
+		"image": "",
+		"x_pos": 623,
+		"y_pos": 304.99999237060547,
+		"class_name": "canvas-node",
+		"decorations": [],
+		"parameters": [],
+		"messages": [],
+		"uiParameters": [],
+		"app_data": {},
+		"subflow_ref": {},
+		"model_ref": "",
+		"is_expanded": false,
+		"expanded_width": 200,
+		"expanded_height": 200,
+		"inputPortsHeight": 20,
+		"outputPortsHeight": 0,
+		"height": 75,
+		"width": 70
+	},
+	"id": "id5KIRGGJ3FYT",
+	"pipelineId": "153651d6-9b88-423c-b01b-861f12d01489",
+	"cmPos": {
+		"x": 572,
+		"y": 350
+	},
+	"mousePos": {
+		"x": 655,
+		"y": 349
 	},
 	"selectedObjectIds": [],
 	"zoom": 1
@@ -676,6 +735,85 @@ describe("Create Supernode Action", () => {
 
 		canvasController.contextMenuActionHandler("redo");
 		expect(isEqual(JSON.stringify(test8ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
+	});
+
+	// Uses test9ExpectedFlow and test9ExpectedUndoFlow
+	it("Create supernode should break association link", () => {
+		canvasController.getObjectModel().setPipelineFlow(associationLinkCanvas);
+		const selections = [
+			"id5KIRGGJ3FYT", // Drug
+			"idGWRVT47XDV" // Define Types
+		];
+		canvasController.setSelections(selections);
+
+		createSupernodeSourceObject4.selectedObjectIds = selections;
+		canvasController.contextMenuHandler(createSupernodeSourceObject4);
+		canvasController.contextMenuActionHandler("createSuperNode");
+
+		// Delete the newly created supernode and links IDs before comparing
+		const pipelineFlow = objectModel.getPipelineFlow();
+		delete pipelineFlow.pipelines[0].nodes[0].inputs[0].links[0].node_id_ref; // Delete link node_id_ref.
+		delete pipelineFlow.pipelines[0].nodes[2].inputs[0].links[0].node_id_ref; // Delete link node_id_ref.
+		delete pipelineFlow.pipelines[0].nodes[5].inputs[0].links[0].node_id_ref; // Delete link node_id_ref.
+
+		delete pipelineFlow.pipelines[0].nodes[6].id; // Delete new supernode id.
+		delete pipelineFlow.pipelines[0].nodes[6].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
+
+		pipelineFlow.pipelines[0].nodes[6] = deleteSupernodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[6]);
+
+		delete pipelineFlow.pipelines[1].id; // Delete new subPipeline id.
+		delete pipelineFlow.pipelines[1].nodes[0].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
+		delete pipelineFlow.pipelines[1].nodes[2].id; // Delete new binding node id.
+		delete pipelineFlow.pipelines[1].nodes[3].id; // Delete new binding node id.
+
+		// console.log(JSON.stringify(pipelineFlow));
+		expect(isEqual(JSON.stringify(test9ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
+
+		canvasController.contextMenuActionHandler("undo");
+		expect(isEqual(JSON.stringify(test9ExpectedUndoFlow), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
+
+		canvasController.contextMenuActionHandler("redo");
+		expect(isEqual(JSON.stringify(test9ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
+	});
+
+	// Uses test10ExpectedFlow and test10ExpectedUndoFlow
+	it("Create supernode should bring in association link", () => {
+		canvasController.getObjectModel().setPipelineFlow(associationLinkCanvas);
+		const selections = [
+			"id5KIRGGJ3FYT", // Drug
+			"idGWRVT47XDV", // Define Types
+			"id125TTEEIK7V" // Drug Model
+		];
+		canvasController.setSelections(selections);
+
+		createSupernodeSourceObject4.selectedObjectIds = selections;
+		canvasController.contextMenuHandler(createSupernodeSourceObject4);
+		canvasController.contextMenuActionHandler("createSuperNode");
+
+		// Delete the newly created supernode and links IDs before comparing
+		const pipelineFlow = objectModel.getPipelineFlow();
+		delete pipelineFlow.pipelines[0].nodes[0].inputs[0].links[0].node_id_ref; // Delete link node_id_ref.
+		delete pipelineFlow.pipelines[0].nodes[1].inputs[0].links[0].node_id_ref; // Delete link node_id_ref.
+		delete pipelineFlow.pipelines[0].nodes[4].inputs[0].links[0].node_id_ref; // Delete link node_id_ref.
+
+		delete pipelineFlow.pipelines[0].nodes[5].id; // Delete new supernode id.
+		delete pipelineFlow.pipelines[0].nodes[5].subflow_ref.pipeline_id_ref; // Delete new supernode subflow_ref id.
+
+		pipelineFlow.pipelines[0].nodes[5] = deleteSupernodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[5]);
+
+		delete pipelineFlow.pipelines[1].id; // Delete new subPipeline id.
+		delete pipelineFlow.pipelines[1].nodes[0].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
+		delete pipelineFlow.pipelines[1].nodes[3].id; // Delete new binding node id.
+		delete pipelineFlow.pipelines[1].nodes[4].id; // Delete new binding node id.
+
+		// console.log(JSON.stringify(pipelineFlow));
+		expect(isEqual(JSON.stringify(test10ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
+
+		canvasController.contextMenuActionHandler("undo");
+		expect(isEqual(JSON.stringify(test10ExpectedUndoFlow), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
+
+		canvasController.contextMenuActionHandler("redo");
+		expect(isEqual(JSON.stringify(test10ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 	});
 
 	it("Create supernode in top left corner of rect, not the node order in the DOM", () => {

@@ -2492,7 +2492,7 @@ export class APIPipeline {
 		inNodes.forEach((node) => {
 			const allNodeLinks = this.getLinksContainingId(node.id);
 			allNodeLinks.forEach((link) => {
-				if (link.type === "nodeLink") {
+				if (link.type === "nodeLink" || link.type === "associationLink") {
 					nodeLinks.push(link);
 				}
 			});
