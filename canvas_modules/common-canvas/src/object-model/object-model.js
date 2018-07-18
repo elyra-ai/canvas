@@ -1719,7 +1719,7 @@ export class APIPipeline {
 		let node = {};
 		if (nodeTemplate !== null) {
 			node = Object.assign({}, nodeTemplate, {
-				"id": this.objectModel.getUniqueId(CREATE_NODE, { "nodeType": nodeTemplate }),
+				"id": this.objectModel.getUniqueId(CREATE_NODE, { nodeType: nodeTemplate, pipelineId: this.pipelineId }),
 				"x_pos": data.offsetX,
 				"y_pos": data.offsetY
 			});

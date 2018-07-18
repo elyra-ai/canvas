@@ -473,11 +473,14 @@ describe("ObjectModel API handle model OK", () => {
 
 	it("should create node with fixed node id", () => {
 		const uniqueNodeId = "myUniqueNodeId";
+		const expectedPipelinePassedIn = "empty-pipeline";
+		let actualPipelinePassedIn = "";
 
 		deepFreeze(startCanvas);
 
 		objectModel.clearPipelineFlow();
 		objectModel.setIdGeneratorHandler((action, data) => {
+			actualPipelinePassedIn = data.pipelineId;
 			if (action === CREATE_NODE) {
 				return uniqueNodeId;
 			}
@@ -488,6 +491,8 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const node = objectModel.getAPIPipeline().createNode(filterNode);
 		objectModel.getAPIPipeline().addNode(node);
+
+		expect(isEqual(actualPipelinePassedIn, expectedPipelinePassedIn)).to.be.true;
 
 		const expectedCanvas = addNodeVerticalLayoutCanvas;
 		expectedCanvas.nodes[3].id = uniqueNodeId;
