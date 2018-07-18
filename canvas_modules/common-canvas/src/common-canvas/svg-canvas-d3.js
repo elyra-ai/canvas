@@ -1376,6 +1376,12 @@ class CanvasRenderer {
 					.attr("class", that.layout.cssNodeSelectionHighlight);
 			});
 
+			this.superRenderers.forEach((renderer) => {
+				renderer.selecting = true;
+				renderer.displayNodes();
+				renderer.selecting = false;
+			});
+
 		} else {
 			// Handle new nodes
 			var newNodeGroups = nodeGroupSel.enter()
@@ -2706,6 +2712,12 @@ class CanvasRenderer {
 							imageObj.attr("data-is-cut", null); // TODO - This should be made generic
 						}
 					});
+			});
+
+			this.superRenderers.forEach((renderer) => {
+				renderer.selecting = true;
+				renderer.displayComments();
+				renderer.selecting = false;
 			});
 
 		} else {

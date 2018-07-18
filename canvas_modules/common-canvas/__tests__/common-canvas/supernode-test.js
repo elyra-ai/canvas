@@ -1133,7 +1133,53 @@ describe("Copy and Paste Supernode", () => {
 		canvasController.contextMenuActionHandler("redo");
 		expect(isEqual(JSON.stringify(canvasInfoBefore2), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
 	});
+
+	it("Select in sub-flow should cancel selection in parent flow", () => {
+		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+
+		const selections = [
+			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+			"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
+		];
+
+		canvasController.setSelections(selections, primaryPipelineId);
+
+		const subflowSelections = [
+			"7fadc642-9c03-473e-b4c5-308b1e4cbbb8"
+		];
+
+		canvasController.setSelections(subflowSelections, primaryPipelineId);
+
+		const selObjs = canvasController.getSelectedObjectIds();
+		expect(isEqual(selObjs.length, 1)).to.be.true;
+		expect(isEqual(selObjs, ["7fadc642-9c03-473e-b4c5-308b1e4cbbb8"])).to.be.true;
+	});
+
+	it("Select in parent flow should cancel selection in sub-flow", () => {
+		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+
+		const subflowSelections = [
+			"7fadc642-9c03-473e-b4c5-308b1e4cbbb8"
+		];
+
+		canvasController.setSelections(subflowSelections, primaryPipelineId);
+
+		const selections = [
+			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+			"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
+		];
+
+		canvasController.setSelections(selections, primaryPipelineId);
+
+		const selObjs = canvasController.getSelectedObjectIds();
+		expect(isEqual(selObjs.length, 2)).to.be.true;
+		expect(isEqual(selObjs, selections)).to.be.true;
+	});
+
 });
+
 
 function createCommonCanvas(config, canvasController) {
 	const contextMenuHandler = sinon.spy();

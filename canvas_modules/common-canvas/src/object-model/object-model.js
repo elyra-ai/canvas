@@ -1338,10 +1338,10 @@ export default class ObjectModel {
 					if (newRetval !== true) {
 						selection.pop();
 					}
-					// this handles the case where there are multiple outward paths.
-					// some of the outward paths coule be true and some false
-					// this will make sure that the node is in the selection list of one of the paths
-					// contains the end nodeId.
+					// This handles the case where there are multiple outward paths.
+					// Some of the outward paths could be true and some false. This
+					// will make sure that the node in the selection list of one of the
+					// paths contains the end nodeId.
 					retval = retval || newRetval;
 				}
 			}
@@ -1352,23 +1352,27 @@ export default class ObjectModel {
 
 	selectSubGraph(endNodeId, pipelineId) {
 		const selection = [];
-		const currentSelectedObjects = this.getSelectedObjectIds();
+		let selectedObjectIds = [endNodeId];
 
-		// get all the nodes in the path from a currently selected object to the end node
-		let foundPath = false;
-		for (const startNodeId of currentSelectedObjects) {
-			foundPath = foundPath || this.findNodesInSubGraph(startNodeId, endNodeId, selection, pipelineId);
-		}
-		if (!foundPath) {
-			// if no subgraph found which is also the case if current selection was empty, just select endNode
-			selection.push(endNodeId);
-		}
+		if (pipelineId === this.getSelectedPipelineId()) {
+			const currentSelectedObjects = this.getSelectedObjectIds();
 
-		// Do not put multiple copies of a nodeId in selected nodeId list.
-		const selectedObjectIds = this.getSelectedObjectIds().slice();
-		for (const selected of selection) {
-			if (!this.isSelected(selected, pipelineId)) {
-				selectedObjectIds.push(selected);
+			// Get all the nodes in the path from a currently selected object to the end node
+			let foundPath = false;
+			for (const startNodeId of currentSelectedObjects) {
+				foundPath = foundPath || this.findNodesInSubGraph(startNodeId, endNodeId, selection, pipelineId);
+			}
+			if (!foundPath) {
+				// If no subgraph found which is also the case if current selection was empty, just select endNode
+				selection.push(endNodeId);
+			}
+
+			// Do not put multiple copies of a nodeId in selected nodeId list.
+			selectedObjectIds = this.getSelectedObjectIds().slice();
+			for (const selected of selection) {
+				if (!this.isSelected(selected, pipelineId)) {
+					selectedObjectIds.push(selected);
+				}
 			}
 		}
 
