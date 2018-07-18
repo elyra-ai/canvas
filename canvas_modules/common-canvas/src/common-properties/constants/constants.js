@@ -45,7 +45,7 @@ _defineConstant("MESSAGE_KEYS_DEFAULTS", {
 	TABLE_SUMMARY_WARNING: "There are {warningMsgCount} warning cells. ",
 	REQUIRED_ERROR: "Required parameter '{label}' has no value.",
 	DATETIME_FORMAT_ERROR: "Invalid {role}. Format should be {format}.",
-	INVALID_FIELD_ERROR: "Invalid {label}, field not found in schema."
+	INVALID_FIELD_ERROR: "Invalid {label}, field not found in data set."
 });
 
 _defineConstant("MESSAGE_KEYS", {

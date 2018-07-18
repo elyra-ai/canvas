@@ -745,7 +745,7 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		const warningMessage = {
 			validation_id: "validField_fields_294.69762842919897",
 			type: "warning",
-			text: "Invalid Select Columns, field not found in schema."
+			text: "Invalid Select Columns, field not found in data set."
 		};
 
 		const actual = renderedController.getErrorMessage({ name: "fields" });

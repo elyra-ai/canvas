@@ -835,7 +835,9 @@ export default class PropertiesController {
 		this.setErrorMessages({});
 		if (Array.isArray(messages)) {
 			messages.forEach((message) => {
-				this.updateErrorMessage({ name: message.id_ref },
+				const propertyId = message.table_ref ? { name: message.id_ref, row: message.table_ref.row, col: message.table_ref.col }
+					: { name: message.id_ref };
+				this.updateErrorMessage(propertyId,
 					{ type: message.type, text: message.text, validation_id: message.validation_id });
 			});
 		}
@@ -874,30 +876,83 @@ export default class PropertiesController {
 	}
 
 	_filterMessages(messages, filteredPipeline, filterHiddenDisable) {
+		if (filteredPipeline) {
+			return this._filterPipelineMessages(messages, filterHiddenDisable);
+		}
 		const filteredMessages = {};
-		const pipelineMessages = [];
 		for (const paramKey in messages) {
 			if (!messages.hasOwnProperty(paramKey)) {
 				continue;
 			}
 			const paramMessage = this.getErrorMessage({ name: paramKey }, filterHiddenDisable);
 			if (paramMessage && paramMessage.text) {
-				if (filteredPipeline) {
-					pipelineMessages.push({
-						id_ref: paramKey,
-						validation_id: paramMessage.validation_id,
-						type: paramMessage.type,
-						text: paramMessage.text
-					});
-				} else {
-					filteredMessages[paramKey] = paramMessage;
+				filteredMessages[paramKey] = paramMessage;
+			}
+		}
+		return filteredMessages;
+	}
+
+	_filterPipelineMessages(messages, filterHiddenDisable) {
+		let pipelineMessages = [];
+		for (const paramKey in messages) {
+			if (!messages.hasOwnProperty(paramKey)) {
+				continue;
+			}
+			const controlMessages = messages[paramKey];
+			for (const rowKey in controlMessages) {
+				if (!controlMessages.hasOwnProperty(rowKey)) {
+					continue;
+				}
+				if (rowKey === "text") { // control level message
+					pipelineMessages = this._addToMessages(pipelineMessages, paramKey, null,
+						controlMessages, filterHiddenDisable);
+				} else if (rowKey !== "type" && rowKey !== "validation_id") {
+					const rowMessages = controlMessages[rowKey];
+					for (const colKey in rowMessages) {
+						if (!rowMessages.hasOwnProperty(colKey)) {
+							continue;
+						}
+						if (colKey === "text") { // row level message
+							pipelineMessages = this._addToMessages(pipelineMessages, paramKey, { row: rowKey },
+								rowMessages, filterHiddenDisable);
+						} else if (colKey !== "type" && colKey !== "validation_id") {
+							const colMessage = rowMessages[colKey]; // cell level messages
+							pipelineMessages = this._addToMessages(pipelineMessages, paramKey, { row: rowKey, col: colKey },
+								colMessage, filterHiddenDisable);
+						}
+					}
 				}
 			}
 		}
-		if (filteredPipeline) {
-			return pipelineMessages;
+		return pipelineMessages;
+	}
+
+	_addToMessages(messages, idRef, tableRef, message, filterHiddenDisable) {
+		const propertyId = tableRef ? { name: idRef, row: tableRef.row, col: tableRef.col }
+			: { name: idRef };
+		if (filterHiddenDisable) {
+			const controlState = this.getControlState(propertyId);
+			if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN) {
+				return messages;
+			}
 		}
-		return filteredMessages;
+		if (tableRef) {
+			messages.push({
+				id_ref: idRef,
+				table_ref: tableRef,
+				validation_id: message.validation_id,
+				type: message.type,
+				text: message.text
+			});
+		} else {
+			messages.push({
+				id_ref: idRef,
+				validation_id: message.validation_id,
+				type: message.type,
+				text: message.text
+			});
+		}
+		return messages;
 	}
 
 	updateErrorMessage(inPropertyId, message) {

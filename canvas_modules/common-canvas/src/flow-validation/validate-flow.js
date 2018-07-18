@@ -82,7 +82,7 @@ function _getPropertiesController(formData, intl) {
 
 function _setNodeMessages(node, pipelineId, propertiesController, canvasController, setMessagesCallback) {
 	const nodeMsgs = canvasController.getNodeMessages(node.id, pipelineId);
-	const errorMsgs = propertiesController.getErrorMessages(true);
+	const errorMsgs = propertiesController.getErrorMessages(true, true);
 	if ((!nodeMsgs && errorMsgs.length > 0) ||
 			(nodeMsgs && !isEqual(errorMsgs, nodeMsgs))) {
 		canvasController.setNodeMessages(node.id, errorMsgs, pipelineId);

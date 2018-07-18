@@ -34,10 +34,10 @@ function messages(state = {}, action) {
 				}
 				newState[action.message.propertyId.name][strRow][strCol] = action.message.value;
 			} else {
-				newState[action.message.propertyId.name][strRow] = action.message.value;
+				newState[action.message.propertyId.name][strRow] = Object.assign(newState[action.message.propertyId.name][strRow], action.message.value);
 			}
 		} else {
-			newState[action.message.propertyId.name] = action.message.value;
+			newState[action.message.propertyId.name] = Object.assign(newState[action.message.propertyId.name], action.message.value);
 		}
 		return Object.assign({}, state, newState);
 	}

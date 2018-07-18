@@ -631,6 +631,62 @@
             }
           }
         }
+      },
+			{
+        "validation": {
+          "id": "tableerror2test1",
+          "fail_message": {
+            "type": "error",
+            "focus_parameter_ref": "metadata",
+            "message": {
+              "default": "metadata table control error."
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "metadata",
+              "op": "isEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "id": "tableerror2test2",
+          "fail_message": {
+            "type": "error",
+            "focus_parameter_ref": "metadata[1]",
+            "message": {
+              "default": "measure contains Range"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "metadata[1]",
+              "op": "notContains",
+              "value": "Range"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "id": "tableerror2test3",
+          "fail_message": {
+            "type": "error",
+            "focus_parameter_ref": "metadata[7]",
+            "message": {
+              "default": "check contains Coerce"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "metadata[7]",
+              "op": "notContains",
+              "value": "Coerce"
+            }
+          }
+        }
       }
     ],
     "data": {
@@ -667,7 +723,7 @@
             ],
             [],
             1,
-            "None",
+            "Coerce",
             ""
           ],
           [

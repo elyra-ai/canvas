@@ -733,18 +733,21 @@ describe("Properties Controller property messages", () => {
 			},
 			{
 				id_ref: "param_str_array",
+				table_ref: { row: "2" },
 				validation_id: "param_str_array",
 				type: "error",
 				text: "Bad array value"
 			},
 			{
 				id_ref: "param_mix_table",
+				table_ref: { row: "0", col: "2" },
 				validation_id: "param_mix_table",
 				type: "warning",
 				text: "Bad table value"
 			},
 			{
 				id_ref: "param_complex",
+				table_ref: { row: "1" },
 				validation_id: "param_complex",
 				type: "error",
 				text: "Bad value in column"
@@ -815,6 +818,21 @@ describe("Properties Controller property messages", () => {
 
 		const actualValues = controller.getErrorMessages(null, true);
 		expect(expectedValue).to.eql(actualValues);
+	});
+	it("should consume and return node messages from backend", () => {
+		reset();
+		const messages = [
+			{ "id_ref": "metadata", "table_ref": { "row": "1", "col": "7" }, "validation_id": "tableerror2test3", "type": "error", "text": "check contains Coerce" },
+			{ "id_ref": "metadata", "table_ref": { "row": "2", "col": "0" }, "validation_id": "validField_metadata[0]_108.12905184830979", "type": "warning",
+				"text": "Invalid {label}, field not found in schema." },
+			{ "id_ref": "metadata", "table_ref": { "row": "3", "col": "1" }, "validation_id": "tableerror2test2", "type": "error", "text": "measure contains Range" },
+			{ "id_ref": "metadata", "table_ref": { "row": "6", "col": "1" }, "validation_id": "tableerror2test2", "type": "error", "text": "measure contains Range" },
+			{ "id_ref": "metadata", "validation_id": "tableerror2test1", "type": "error", "text": "metadata table control error." }
+		];
+		controller.setPipelineErrorMessages(messages);
+		const actualMessages = controller.getErrorMessages(true, true);
+		expect(messages).to.eql(actualMessages);
+
 	});
 });
 

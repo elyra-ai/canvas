@@ -457,6 +457,7 @@ describe("condition renders correctly with structure table control", () => {
 		// validate there are cell errors
 		const errorMessage = {
 			"id_ref": "structuretableErrors",
+			"table_ref": { "row": "0", "col": "2" },
 			"validation_id": "structuretableErrors",
 			"type": "error",
 			"text": "order cannot be descending"

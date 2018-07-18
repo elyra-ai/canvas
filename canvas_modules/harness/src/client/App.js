@@ -369,6 +369,31 @@ class App extends React.Component {
 			NodeToForm.setNodeForm(nodeId, canvasController.getNode(nodeId, pipelineId).operator_id_ref);
 			nodeForm = NodeToForm.getNodeForm(nodeId);
 		}
+		// set current parameterSet
+		// get the current parameters for the node from the internal ObjectModel
+		const node = canvasController.getNode(nodeId, pipelineId);
+		if (node) {
+			if (nodeForm.data.formData) {
+				if (!isEmpty(node.parameters)) {
+					nodeForm.data.formData.data.currentParameters = node.parameters;
+				}
+				if (!isEmpty(node.uiParameters)) {
+					nodeForm.data.formData.data.uiCurrentParameters = node.uiParameters;
+				}
+				nodeForm.data.formData.label = node.label;
+			} else {
+				if (!isEmpty(node.parameters)) {
+					nodeForm.data.current_parameters = node.parameters;
+				}
+				if (!isEmpty(node.uiParameters)) {
+					nodeForm.data.current_ui_parameters = node.uiParameters;
+				}
+				if (!nodeForm.data.titleDefinition) {
+					nodeForm.data.titleDefinition = {};
+				}
+				nodeForm.data.titleDefinition.title = node.label;
+			}
+		}
 		return nodeForm;
 	}
 
@@ -1093,31 +1118,6 @@ class App extends React.Component {
 			const appData = { nodeId: nodeId, inExtraCanvas: inExtraCanvas, pipelineId: activePipelineId };
 			const properties = this.getNodeForm(nodeId, activePipelineId, canvasController);
 
-			// set current parameterSet
-			// get the current parameters for the node from the internal ObjectModel
-			const node = canvasController.getNode(nodeId, activePipelineId);
-			if (node) {
-				if (properties.data.formData) {
-					if (!isEmpty(node.parameters)) {
-						properties.data.formData.data.currentParameters = node.parameters;
-					}
-					if (!isEmpty(node.uiParameters)) {
-						properties.data.formData.data.uiCurrentParameters = node.uiParameters;
-					}
-					properties.data.formData.label = node.label;
-				} else {
-					if (!isEmpty(node.parameters)) {
-						properties.data.current_parameters = node.parameters;
-					}
-					if (!isEmpty(node.uiParameters)) {
-						properties.data.current_ui_parameters = node.uiParameters;
-					}
-					if (!properties.data.titleDefinition) {
-						properties.data.titleDefinition = {};
-					}
-					properties.data.titleDefinition.title = node.label;
-				}
-			}
 			const messages = canvasController.getNodeMessages(nodeId, activePipelineId);
 			const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 			const propsInfo = {
