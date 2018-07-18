@@ -1372,7 +1372,7 @@ class CanvasRenderer {
 			nodeGroupSel.each(function(d) {
 				const nodeOutlineSelector = that.getSelectorForId("node_outline", d.id);
 				that.canvasGrp.selectAll(nodeOutlineSelector)
-					.attr("data-selected", that.objectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 					.attr("class", that.layout.cssNodeSelectionHighlight);
 			});
 
@@ -1406,7 +1406,7 @@ class CanvasRenderer {
 					this.logger.log("Node Group - mouse down");
 					this.selecting = true;
 					d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
-					if (!this.objectModel.isSelected(d.id)) {
+					if (!this.objectModel.isSelected(d.id, this.activePipeline.id)) {
 						if (d3Event.shiftKey) {
 							this.objectModel.selectSubGraph(d.id, this.activePipeline.id);
 						} else {
@@ -1592,7 +1592,7 @@ class CanvasRenderer {
 					// Node selection highlighting: set flexible properties
 					nodeGrp.select(that.getId("#node_outline", d.id))
 						.attr("d", (nd) => this.getNodeShapePathOutline(nd))
-						.attr("data-selected", function(nd) { return that.objectModel.isSelected(nd.id) ? "yes" : "no"; })
+						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 						.attr("class", this.layout.cssNodeSelectionHighlight)
 						.datum(node); // Set the __data__ to the updated data
 
@@ -2683,7 +2683,7 @@ class CanvasRenderer {
 				that.canvasGrp.selectAll(comOutlineSelector)
 					.attr("height", d.height + (2 * that.layout.highlightGap))
 					.attr("width", d.width + (2 * that.layout.highlightGap))
-					.attr("data-selected", that.objectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 					.attr("class", that.layout.cssCommentSelectionHighlight)
 					.datum(() => that.getComment(d.id)); // Set the __data__ to the updated data
 
@@ -2748,7 +2748,7 @@ class CanvasRenderer {
 					this.logger.log("Comment Group - mouse down");
 					this.selecting = true;
 					d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
-					if (!this.objectModel.isSelected(d.id)) {
+					if (!this.objectModel.isSelected(d.id, this.activePipeline.id)) {
 						if (d3Event.shiftKey) {
 							this.objectModel.selectSubGraph(d.id, this.activePipeline.id);
 						} else {
@@ -2952,7 +2952,7 @@ class CanvasRenderer {
 						.attr("y", -this.layout.highlightGap)
 						.attr("height", d.height + (2 * that.layout.highlightGap))
 						.attr("width", d.width + (2 * that.layout.highlightGap))
-						.attr("data-selected", that.objectModel.isSelected(d.id) ? "yes" : "no")
+						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 						.attr("class", that.layout.cssCommentSelectionHighlight)
 						.datum(comment); // Set the __data__ to the updated data
 

@@ -417,6 +417,63 @@ describe("Expand and Collapse Supernode Action", () => {
 	});
 });
 
+
+describe("Ensure no cross pipeline selection", () => {
+	let canvasController;
+	const primaryPipelineId = "153651d6-9b88-423c-b01b-861f12d01489";
+	beforeEach(() => {
+		canvasController = new CanvasController();
+		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
+		const config = { enableAutoLayout: "none", canvasController: canvasController, enableInternalObjectModel: true };
+		createCommonCanvas(config, canvasController);
+	});
+
+
+	it("Should cancel parent flow selection when sub-flow selection is made", () => {
+		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+
+		const selections = [
+			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+			"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
+		];
+
+		canvasController.setSelections(selections, primaryPipelineId);
+
+		const subflowSelections = [
+			"7fadc642-9c03-473e-b4c5-308b1e4cbbb8"
+		];
+
+		canvasController.setSelections(subflowSelections, primaryPipelineId);
+
+		const selObjs = canvasController.getSelectedObjectIds();
+		expect(isEqual(selObjs.length, 1)).to.be.true;
+		expect(isEqual(selObjs, ["7fadc642-9c03-473e-b4c5-308b1e4cbbb8"])).to.be.true;
+	});
+
+	it("Should cancel sub-flow selection when parent flow selection is made", () => {
+		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+
+		const subflowSelections = [
+			"7fadc642-9c03-473e-b4c5-308b1e4cbbb8"
+		];
+
+		canvasController.setSelections(subflowSelections, primaryPipelineId);
+
+		const selections = [
+			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+			"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
+		];
+
+		canvasController.setSelections(selections, primaryPipelineId);
+
+		const selObjs = canvasController.getSelectedObjectIds();
+		expect(isEqual(selObjs.length, 2)).to.be.true;
+		expect(isEqual(selObjs, selections)).to.be.true;
+	});
+});
+
 describe("Create Supernode Action", () => {
 	let canvasController;
 	let objectModel;

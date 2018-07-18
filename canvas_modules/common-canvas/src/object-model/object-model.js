@@ -1258,8 +1258,9 @@ export default class ObjectModel {
 		this.executeWithSelectionChange(this.store.dispatch, { type: "CLEAR_SELECTIONS" });
 	}
 
-	isSelected(objectId) {
-		return this.getSelectedObjectIds().indexOf(objectId) >= 0;
+	isSelected(objectId, pipelineId) {
+		return pipelineId === this.getSelectedPipelineId() &&
+			this.getSelectedObjectIds().indexOf(objectId) >= 0;
 	}
 
 	toggleSelection(objectId, toggleRequested, pipelineId) {
@@ -1268,7 +1269,7 @@ export default class ObjectModel {
 		if (pipelineId === this.getSelectedPipelineId() &&
 				toggleRequested) {
 			// If already selected then remove otherwise add
-			if (this.isSelected(objectId)) {
+			if (this.isSelected(objectId, pipelineId)) {
 				newSelections = this.getSelectedObjectIds().slice();
 				const index = newSelections.indexOf(objectId);
 				newSelections.splice(index, 1);
@@ -1290,14 +1291,15 @@ export default class ObjectModel {
 
 	selectAll(pipelineId) {
 		const selected = [];
-		const pipeline = this.getAPIPipeline(pipelineId);
+		const pipeId = pipelineId ? pipelineId : this.getAPIPipeline().pipelineId; // If no pipelineId is provided use the default pipelineId.
+		const pipeline = this.getAPIPipeline(pipeId);
 		for (const node of pipeline.getNodes()) {
 			selected.push(node.id);
 		}
 		for (const comment of pipeline.getComments()) {
 			selected.push(comment.id);
 		}
-		this.setSelections(selected, pipelineId);
+		this.setSelections(selected, pipeId);
 	}
 
 	selectInRegion(minX, minY, maxX, maxY, pipelineId) {
@@ -1362,10 +1364,10 @@ export default class ObjectModel {
 			selection.push(endNodeId);
 		}
 
-		// do not put multiple copies of a nodeId in selected nodeId list.
+		// Do not put multiple copies of a nodeId in selected nodeId list.
 		const selectedObjectIds = this.getSelectedObjectIds().slice();
 		for (const selected of selection) {
-			if (!this.isSelected(selected)) {
+			if (!this.isSelected(selected, pipelineId)) {
 				selectedObjectIds.push(selected);
 			}
 		}
