@@ -14,11 +14,14 @@ const FIRST_PALETTE_VERSION = 1;
 
 // The latest palette version - update as new versions are developed
 const LATEST_PALETTE_VERSION = 2;
+// Remove the line above and un-comment this when we move to v3
+// const LATEST_PALETTE_VERSION = 3;
 
 // Array of major version upgrade functions
 const updateFuncs = [
 	_update0to1,
-	_update1to2
+	_update1to2,
+	_update2to3
 ];
 
 // Private Methods ------------------------------------------------------------>
@@ -85,6 +88,67 @@ function _update1to2(palette) {
 	return palette;
 }
 
+// Version 3 methods ------------------------>
+
+
+/**
+ * Updates version 2 to version 3.
+ *
+ * @param {object} palette: A palette JSON object
+ *
+ * @return A palette object that has been upgraded to version 3
+ */
+function _update2to3(palette) {
+	palette.version = "3.0";
+	for (const category of palette.categories) {
+		category.id = category.category;
+		delete category.category;
+		category.label = category.label;
+		category.image = category.image;
+		category.description = "";
+		category.node_types = [];
+		for (let idx = 0; idx < category.nodetypes.length; idx++) {
+			const oldNode = category.nodetypes[idx];
+			const node = {};
+			node.id = "";
+			node.type = oldNode.type;
+			node.op = oldNode.operator_id_ref;
+			if (oldNode.input_ports && oldNode.input_ports.length > 0) {
+				node.inputs = _readPorts(oldNode.input_ports);
+			}
+			if (oldNode.output_ports && oldNode.output_ports.length > 0) {
+				node.outputs = _readPorts(oldNode.output_ports);
+			}
+			node.parameters = {};
+			node.app_data = {};
+			node.app_data.ui_data = {};
+			node.app_data.ui_data.label = oldNode.label;
+			node.app_data.ui_data.description = oldNode.description;
+			node.app_data.ui_data.image = oldNode.image;
+			node.app_data.ui_data.x_pos = 0;
+			node.app_data.ui_data.y_pos = 0;
+			category.node_types.push(node);
+		}
+		delete category.nodetypes;
+	}
+	return palette;
+}
+
+function _readPorts(portsArray) {
+	const retArray = [];
+	for (const port of portsArray) {
+		const newPort = {};
+		newPort.id = port.id;
+		newPort.app_data = {};
+		newPort.app_data.ui_data = {};
+		if (port.cardinality) {
+			newPort.app_data.ui_data.cardinality = port.cardinality;
+		}
+		newPort.app_data.ui_data.label = port.label;
+		retArray.push(newPort);
+	}
+	return retArray;
+}
 
 // Public Methods ------------------------------------------------------------->
 

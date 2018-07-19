@@ -902,9 +902,7 @@ export default class ObjectModel {
 	}
 
 	validateAndUpgradePalette(newPalette) {
-		// Clone the palette to ensure we don't modify the incoming parameter.
-		let pal = JSON.parse(JSON.stringify(newPalette));
-
+		let pal = newPalette;
 		const version = extractPaletteVersion(pal);
 
 		if (this.schemaValidation) {
