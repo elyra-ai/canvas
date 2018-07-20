@@ -81,9 +81,12 @@ $notification-left-border-color-width: 4px;
 		padding: 10px 8px;
 		display: inline-flex;
 		width: 100%;
+		background-color: $ui-01;
 		border-style: none;
 		border-left: $notification-left-border-color-width solid $ui-01;
 		cursor: default;
+		margin-top: 0; // Required for Safari
+		margin-bottom: 0; // Required for Safari
 
 		&.clickable {
 			cursor: pointer;
