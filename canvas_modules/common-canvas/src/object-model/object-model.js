@@ -691,6 +691,11 @@ const breadcrumbs = (state = [], action) => {
 	case "SET_TO_PREVIOUS_BREADCRUMB":
 		return state.length > 1 ? state.slice(0, state.length - 1) : state;
 
+	case "RESET_BREADCRUMB":
+		return [
+			{ pipelineId: action.data.pipelineId, pipelineFlowId: action.data.pipelineFlowId }
+		];
+
 	default:
 		return state;
 	}
@@ -1080,6 +1085,10 @@ export default class ObjectModel {
 		return primaryPipeline.isEmpty();
 	}
 
+	getPipelineFlowId() {
+		return this.getCanvasInfo().id;
+	}
+
 	getPrimaryPipelineId() {
 		return this.getCanvasInfo().primary_pipeline;
 	}
@@ -1113,16 +1122,24 @@ export default class ObjectModel {
 	// ---------------------------------------------------------------------------
 
 	// Adds a new breadcrumb, for the pipelineInfo passed in, to the array of
-	// breadcrumbs.
+	// breadcrumbs, or reset the breadcrumbs to the primary pipeline if navigating
+	// to the primary pipeline.
 	addNewBreadcrumb(pipelineInfo) {
-		if (pipelineInfo) {
+		if (pipelineInfo && pipelineInfo.pipelineId !== this.getPrimaryPipelineId()) {
 			this.store.dispatch({ type: "ADD_NEW_BREADCRUMB", data: pipelineInfo });
+		} else {
+			this.resetBreadcrumb();
 		}
 	}
 
 	// Sets the breadcrumbs to the previous breadcrumb in the breadcrumbs array.
 	setPreviousBreadcrumb() {
 		this.store.dispatch({ type: "SET_TO_PREVIOUS_BREADCRUMB" });
+	}
+
+	// Sets the breadcrumbs to the primary pipeline in the breadcrumbs array.
+	resetBreadcrumb() {
+		this.store.dispatch({ type: "RESET_BREADCRUMB", data: { pipelineId: this.getPrimaryPipelineId(), pipelineFlowId: this.getPipelineFlowId() } });
 	}
 
 	getBreadcrumbs() {

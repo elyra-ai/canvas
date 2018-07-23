@@ -18,6 +18,8 @@ import { IntlProvider, FormattedMessage, addLocaleData, injectIntl, intlShape } 
 import en from "react-intl/locale-data/en";
 var i18nData = require("../intl/en.js");
 import isEmpty from "lodash/isEmpty";
+import forIn from "lodash/forIn";
+import has from "lodash/has";
 
 import { CommonCanvas, CanvasController, CommonProperties, FlowValidation } from "common-canvas";
 
@@ -429,43 +431,36 @@ class App extends React.Component {
 		}
 	}
 
-	setFlowNotificationMessages(pipelineId) {
-		const notificationMessages = [];
-		const nodeMessages = this.canvasController.getFlowMessages(pipelineId);
-		for (const nodeId in nodeMessages) {
-			if (nodeMessages.hasOwnProperty(nodeId)) {
-				const node = nodeMessages[nodeId];
-				const errors = node.filter(function(message) {
-					return message.type === NOTIFICATION_MESSAGE_TYPE.ERROR;
-				});
+	setFlowNotificationMessages() {
+		let flowErrorMessages = [];
+		let flowWarningMessages = [];
 
-				const warnings = node.filter(function(message) {
-					return message.type === NOTIFICATION_MESSAGE_TYPE.WARNING;
-				});
+		// Generate notification messages for all the nodes within the current pipeline.
+		const currentPipelineId = this.canvasController.getCurrentBreadcrumb().pipelineId;
+		const nodeMessages = this.canvasController.getFlowMessages(currentPipelineId);
+		const nodeNotificationMessages = this.generateNodeNotificationMessages(nodeMessages, currentPipelineId);
 
-				const type = errors.length > 0 ? NOTIFICATION_MESSAGE_TYPE.ERROR : NOTIFICATION_MESSAGE_TYPE.WARNING;
-				let generatedMessage = this.canvasController.getNode(nodeId, pipelineId).label + " node has ";
-				if (errors.length > 0) {
-					generatedMessage += errors.length + " errors";
-					if (warnings.length > 0) {
-						generatedMessage += " and ";
-					}
-				}
-				if (warnings.length > 0) {
-					generatedMessage += warnings.length + " warnings";
-				}
+		const nodeErrorMessages = nodeNotificationMessages.errorMessages;
+		const nodeWarningMessages = nodeNotificationMessages.warningMessages;
 
-				const summarizedMessage = {
-					id: "notification-" + nodeId,
-					title: this.canvasController.getNode(nodeId, pipelineId).label,
-					type: type,
-					content: generatedMessage,
-					callback: this.notificationmessageCallback.bind(this, nodeId, pipelineId, false)
-				};
+		const currentFlowSupernodes = this.canvasController.getSupernodes(currentPipelineId);
+		currentFlowSupernodes.forEach((supernode) => {
+			const supernodeSubflowMessages = this.generateFlowNotificationMessages(supernode.subflow_ref.pipeline_id_ref, supernode.label, currentPipelineId);
+			flowErrorMessages = flowErrorMessages.concat(supernodeSubflowMessages.errorMessages);
+			flowWarningMessages = flowWarningMessages.concat(supernodeSubflowMessages.warningMessages);
+		});
 
-				notificationMessages.push(summarizedMessage);
-			}
-		}
+		// Generate notification messages for all the pipelines within the pipeline flow.
+		const primaryPipelineId = this.canvasController.getPrimaryPipelineId();
+		const flowNotificationMessages = this.generateFlowNotificationMessages(primaryPipelineId, "Primary", currentPipelineId);
+
+		flowErrorMessages = flowErrorMessages.concat(flowNotificationMessages.errorMessages);
+		flowWarningMessages = flowWarningMessages.concat(flowNotificationMessages.warningMessages);
+
+		const notificationMessages = nodeErrorMessages.concat(flowErrorMessages)
+			.concat(nodeWarningMessages)
+			.concat(flowWarningMessages);
+
 		this.flowNotificationMessages = notificationMessages;
 		this.setNotificationMessages(this.flowNotificationMessages.concat(this.harnessNotificationMessages));
 	}
@@ -506,7 +501,7 @@ class App extends React.Component {
 					title: this.canvasController2.getNode(nodeId, pipelineId).label,
 					type: type,
 					content: generatedMessage,
-					callback: this.notificationmessageCallback.bind(this, nodeId, pipelineId, true)
+					callback: this.nodeNotificationMessageCallback.bind(this, nodeId, pipelineId, true)
 				};
 
 				notificationMessages.push(summarizedMessage);
@@ -611,6 +606,125 @@ class App extends React.Component {
 		this.log("Set new port label", { nodeId: nodeId, portLabel: newLabel, portType: portType });
 	}
 
+	generateNodeNotificationMessages(nodeMessages, currentPipelineId) {
+		const nodeErrorMessages = [];
+		const nodeWarningMessages = [];
+
+		for (const nodeId in nodeMessages) {
+			if (nodeMessages.hasOwnProperty(nodeId)) {
+				const nodeMessage = nodeMessages[nodeId];
+				const errors = nodeMessage.filter(function(message) {
+					return message.type === NOTIFICATION_MESSAGE_TYPE.ERROR;
+				});
+
+				const warnings = nodeMessage.filter(function(message) {
+					return message.type === NOTIFICATION_MESSAGE_TYPE.WARNING;
+				});
+
+				const node = this.canvasController.getNode(nodeId, currentPipelineId);
+				let generatedMessage = node.label + " node has ";
+				if (errors.length > 0) {
+					generatedMessage += errors.length + " errors";
+					if (warnings.length > 0) {
+						generatedMessage += " and ";
+					}
+				}
+				if (warnings.length > 0) {
+					generatedMessage += warnings.length + " warnings";
+				}
+
+				const type = errors.length > 0 ? NOTIFICATION_MESSAGE_TYPE.ERROR : NOTIFICATION_MESSAGE_TYPE.WARNING;
+				const summarizedMessage = {
+					id: "notification-" + nodeId,
+					title: node.label,
+					type: type,
+					content: generatedMessage,
+					callback: this.nodeNotificationMessageCallback.bind(this, nodeId, currentPipelineId, false)
+				};
+
+				if (type === NOTIFICATION_MESSAGE_TYPE.ERROR) {
+					nodeErrorMessages.push(summarizedMessage);
+				} else {
+					nodeWarningMessages.push(summarizedMessage);
+				}
+			}
+		}
+
+		return {
+			errorMessages: nodeErrorMessages,
+			warningMessages: nodeWarningMessages
+		};
+	}
+
+	generateFlowNotificationMessages(pipelineId, flowLabel, currentPipelineId) {
+		let flowErrorMessages = [];
+		let flowWarningMessages = [];
+
+		if (pipelineId !== currentPipelineId) {
+			const nodesInFlow = this.canvasController.getNodes(pipelineId);
+			let flowErrorCount = 0;
+			let flowWarningCount = 0;
+			nodesInFlow.forEach((node) => {
+				if (has(node, "subflow_ref.pipeline_id_ref")) {
+					const subflowMessages = this.generateFlowNotificationMessages(node.subflow_ref.pipeline_id_ref, node.label, currentPipelineId);
+					flowErrorMessages = flowErrorMessages.concat(subflowMessages.errorMessages);
+					flowWarningMessages = flowWarningMessages.concat(subflowMessages.warningMessages);
+				}
+
+				const nodeMessages = this.canvasController.getNodeMessages(node.id, pipelineId);
+				if (nodeMessages && nodeMessages.length > 0) {
+					let errors = 0;
+					let warnings = 0;
+					forIn(nodeMessages, (nodeMessage) => {
+						if (nodeMessage.type === NOTIFICATION_MESSAGE_TYPE.ERROR) {
+							errors++;
+						} else if (nodeMessage.type === NOTIFICATION_MESSAGE_TYPE.WARNING) {
+							warnings++;
+						}
+					});
+					if (errors > 0) {
+						flowErrorCount++;
+					} else if (warnings > 0) {
+						flowWarningCount++;
+					}
+				}
+			});
+
+			if (flowErrorCount > 0 || flowWarningCount > 0) {
+				let generatedMessage = flowLabel + " flow has ";
+				if (flowErrorCount > 0) {
+					generatedMessage += flowErrorCount + " errors";
+					if (flowWarningCount > 0) {
+						generatedMessage += " and ";
+					}
+				}
+				if (flowWarningCount > 0) {
+					generatedMessage += flowWarningCount + " warnings";
+				}
+
+				const type = flowErrorCount > 0 ? NOTIFICATION_MESSAGE_TYPE.ERROR : NOTIFICATION_MESSAGE_TYPE.WARNING;
+				const summarizedMessage = {
+					id: "notification-flow-" + pipelineId,
+					title: flowLabel,
+					type: type,
+					content: generatedMessage,
+					callback: this.flowNotificationMessageCallback.bind(this, pipelineId)
+				};
+
+				if (type === NOTIFICATION_MESSAGE_TYPE.ERROR) {
+					flowErrorMessages.push(summarizedMessage);
+				} else {
+					flowWarningMessages.push(summarizedMessage);
+				}
+			}
+		}
+
+		return {
+			errorMessages: flowErrorMessages,
+			warningMessages: flowWarningMessages
+		};
+	}
+
 	schemaValidation(enabled) {
 		this.setState({ schemaValidationEnabled: enabled });
 		this.log("Schema validation enabled ", enabled);
@@ -635,7 +749,7 @@ class App extends React.Component {
 	}
 
 	// Open node editor on notification message click
-	notificationmessageCallback(nodeId, pipelineId, inExtraCanvas) {
+	nodeNotificationMessageCallback(nodeId, pipelineId, inExtraCanvas) {
 		if (inExtraCanvas) {
 			this.canvasController2.setSelections([nodeId], pipelineId);
 			this.canvasController2.closeNotificationPanel();
@@ -645,6 +759,12 @@ class App extends React.Component {
 			this.canvasController.closeNotificationPanel();
 			this.editNodeHandler(nodeId, pipelineId);
 		}
+	}
+
+	// Open the flow on notification message click
+	flowNotificationMessageCallback(pipelineId) {
+		this.canvasController.displaySubPipeline({ pipelineId: pipelineId });
+		this.canvasController.closeNotificationPanel();
 	}
 
 	sidePanelCanvas() {
@@ -810,7 +930,7 @@ class App extends React.Component {
 
 
 			// set notification message if errors/warnings
-			this.setFlowNotificationMessages(appData.pipelineId);
+			this.setFlowNotificationMessages();
 
 			// undo/redo was clicked so reapply settings
 			if (appData.nodeId === currentEditorNodeId) {
@@ -995,6 +1115,8 @@ class App extends React.Component {
 		}
 		if (data.editType === "createNode") {
 			NodeToForm.setNodeForm(data.nodeId, type);
+		} else if (data.editType === "displaySubPipeline" || data.editType === "displayPreviousPipeline") {
+			this.setFlowNotificationMessages();
 		}
 
 		this.log("editActionHandler() " + data.editType, type, data.label);

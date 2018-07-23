@@ -893,7 +893,7 @@ class CanvasRenderer {
 			})
 			.on("click", () => {
 				stopPropagationAndPreventDefault();
-				this.canvasController.displayParentPipeline();
+				this.canvasController.displayPreviousPipeline();
 			});
 
 		g.append("rect")
@@ -907,7 +907,7 @@ class CanvasRenderer {
 			.attr("x", 10)
 			.attr("y", 20)
 			.attr("class", "d3-back-to-previous-flow-text")
-			.text("⬅ Back to Parent Flow");
+			.text("⬅ Back to Previous Flow");
 	}
 
 	createDropShadow(defs) {

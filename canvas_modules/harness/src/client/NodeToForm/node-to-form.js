@@ -56,8 +56,7 @@ function getNodeForm(nodeId) {
 function setNodeForm(nodeId, nodeOp) {
 	if (!nodeToFormMap[nodeId]) {
 		// get the initial form information about this node type
-		let nodeType = nodeOp ? nodeOp : "default"; // if op not supplied then get the default
-		nodeType = nodeForms[nodeType] ? nodeType : "default"; // if op form file not found then get default
+		const nodeType = nodeForms[nodeOp] ? nodeOp : "default"; // if op form file not found then get default
 		// set the mapping of this specific node id to the initial form
 		const type = (nodeForms[nodeType].formData) ? "form" : "parameterDef";
 		nodeToFormMap[nodeId] = {
@@ -69,7 +68,9 @@ function setNodeForm(nodeId, nodeOp) {
 
 function setNodeForms(nodes) {
 	for (const node of nodes) {
-		setNodeForm(node.id, node.operator_id_ref);
+		let nodeOp = node.operator_id_ref ? node.operator_id_ref : "default"; // If op not supplied then get the default
+		nodeOp = node.type === "super_node" ? "Supernode_paramDef" : nodeOp;
+		setNodeForm(node.id, nodeOp);
 	}
 }
 

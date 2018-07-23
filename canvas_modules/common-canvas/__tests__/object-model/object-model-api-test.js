@@ -25,7 +25,7 @@ import moveNodeVerticalLayoutCanvas from "../test_resources/json/moveNodeVertica
 import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
 import pipelineFlowTest1Start from "../test_resources/json/pipelineFlowTest1Start.json";
 import pipelineFlowTest1Expected from "../test_resources/json/pipelineFlowTest1Expected.json";
-
+import supernodeNestedCanvas from "../test_resources/json/supernodeNestedCanvas.json";
 
 import ObjectModel from "../../src/object-model/object-model.js";
 import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
@@ -679,6 +679,83 @@ describe("ObjectModel API handle model OK", () => {
 		// console.info("Actual Canvas   = " + JSON.stringify(objectModel.getCanvasInfoPipeline(), null, 2));
 
 		expect(isEqual(objectModel.getCanvasInfoPipeline(), clonedCanvas)).to.be.true;
+	});
+
+	it("should reset the breadcrumbs when navigating back to primary pipeline", () => {
+		objectModel.setCanvasInfo(supernodeNestedCanvas);
+
+		const primaryPipelineId = supernodeNestedCanvas.primary_pipeline; // 153651d6-9b88-423c-b01b-861f12d01489
+		const Supernode1 = supernodeNestedCanvas.pipelines[3].id; // c140d854-c2a6-448c-b80d-9c9a0728dede
+		const Supernode2 = supernodeNestedCanvas.pipelines[2].id; // 8e671b0f-118c-4216-9cea-f522662410ec
+		const Supernode2A = supernodeNestedCanvas.pipelines[1].id; // babad275-1719-4224-8d65-b04d0804d95c
+		const Supernode2B = supernodeNestedCanvas.pipelines[6].id; // f02a9b8e-7275-426a-82cf-08be294d17a3
+		const Supernode2B1 = supernodeNestedCanvas.pipelines[7].id; // 17dc8485-33fd-4847-a45d-f799d6d0b948
+		const Supernode3 = supernodeNestedCanvas.pipelines[5].id; // b342ee77-da6e-459d-8d6b-da36549f4422
+		const Supernode3A = supernodeNestedCanvas.pipelines[4].id; // 1d1e550a-c8bc-4b55-872c-cfd449dacace
+		const Supernode3B = supernodeNestedCanvas.pipelines[8].id; // 238d0266-997b-49a4-94b2-acdad3494801
+
+		let primaryBreadCrumb = objectModel.getBreadcrumbs();
+		expect(primaryBreadCrumb).to.have.length(1);
+
+		objectModel.addNewBreadcrumb({ pipelineId: Supernode3 });
+		const supernode3BreadCrumbs = objectModel.getBreadcrumbs();
+		expect(supernode3BreadCrumbs).to.have.length(2);
+		expect(supernode3BreadCrumbs[0].pipelineId).to.equal(primaryPipelineId);
+		expect(supernode3BreadCrumbs[1].pipelineId).to.equal(Supernode3);
+
+		objectModel.addNewBreadcrumb({ pipelineId: Supernode3A });
+		const supernode3ABreadCrumbs = objectModel.getBreadcrumbs();
+		expect(supernode3ABreadCrumbs).to.have.length(3);
+		expect(supernode3ABreadCrumbs[0].pipelineId).to.equal(primaryPipelineId);
+		expect(supernode3ABreadCrumbs[1].pipelineId).to.equal(Supernode3);
+		expect(supernode3ABreadCrumbs[2].pipelineId).to.equal(Supernode3A);
+
+		objectModel.setPreviousBreadcrumb();
+		expect(JSON.stringify(objectModel.getBreadcrumbs())).to.equal(JSON.stringify(supernode3BreadCrumbs));
+
+		objectModel.addNewBreadcrumb({ pipelineId: Supernode3B });
+		const supernode3BBreadCrumbs = objectModel.getBreadcrumbs();
+		expect(supernode3ABreadCrumbs).to.have.length(3);
+		expect(supernode3BBreadCrumbs[0].pipelineId).to.equal(primaryPipelineId);
+		expect(supernode3BBreadCrumbs[1].pipelineId).to.equal(Supernode3);
+		expect(supernode3BBreadCrumbs[2].pipelineId).to.equal(Supernode3B);
+
+		objectModel.addNewBreadcrumb({ pipelineId: primaryPipelineId });
+		primaryBreadCrumb = objectModel.getBreadcrumbs();
+		expect(primaryBreadCrumb).to.have.length(1);
+		expect(primaryBreadCrumb[0].pipelineId).to.equal(primaryPipelineId);
+
+		objectModel.addNewBreadcrumb({ pipelineId: Supernode2B1 });
+
+		objectModel.setPreviousBreadcrumb();
+		primaryBreadCrumb = objectModel.getBreadcrumbs();
+		expect(primaryBreadCrumb).to.have.length(1);
+		expect(primaryBreadCrumb[0].pipelineId).to.equal(primaryPipelineId);
+
+		objectModel.addNewBreadcrumb({ pipelineId: Supernode2 });
+		objectModel.addNewBreadcrumb({ pipelineId: Supernode2A });
+		objectModel.addNewBreadcrumb({ pipelineId: Supernode2B });
+		let supernode2BreadCrumbs = objectModel.getBreadcrumbs();
+		expect(supernode2BreadCrumbs).to.have.length(4);
+		expect(supernode2BreadCrumbs[0].pipelineId).to.equal(primaryPipelineId);
+		expect(supernode2BreadCrumbs[1].pipelineId).to.equal(Supernode2);
+		expect(supernode2BreadCrumbs[2].pipelineId).to.equal(Supernode2A);
+		expect(supernode2BreadCrumbs[3].pipelineId).to.equal(Supernode2B);
+
+		objectModel.setPreviousBreadcrumb();
+		supernode2BreadCrumbs = objectModel.getBreadcrumbs();
+		expect(supernode2BreadCrumbs).to.have.length(3);
+		expect(supernode2BreadCrumbs[0].pipelineId).to.equal(primaryPipelineId);
+		expect(supernode2BreadCrumbs[1].pipelineId).to.equal(Supernode2);
+		expect(supernode2BreadCrumbs[2].pipelineId).to.equal(Supernode2A);
+
+		objectModel.addNewBreadcrumb({ pipelineId: Supernode1 });
+		expect(objectModel.getBreadcrumbs()).to.have.length(4);
+
+		objectModel.addNewBreadcrumb({ pipelineId: primaryPipelineId });
+		primaryBreadCrumb = objectModel.getBreadcrumbs();
+		expect(primaryBreadCrumb).to.have.length(1);
+		expect(primaryBreadCrumb[0].pipelineId).to.equal(primaryPipelineId);
 	});
 
 	function getNodeParametersFromStartFlow(nodeId) {

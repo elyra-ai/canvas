@@ -24,7 +24,7 @@ import CollapseSuperNodeInPlaceAction from "../command-actions/collapseSuperNode
 import DeleteLinkAction from "../command-actions/deleteLinkAction.js";
 import DeleteObjectsAction from "../command-actions/deleteObjectsAction.js";
 import DisconnectNodesAction from "../command-actions/disconnectNodesAction.js";
-import DisplayParentPipelineAction from "../command-actions/displayParentPipelineAction.js";
+import DisplayPreviousPipelineAction from "../command-actions/displayPreviousPipelineAction.js";
 import DisplaySubPipelineAction from "../command-actions/displaySubPipelineAction.js";
 import EditCommentAction from "../command-actions/editCommentAction.js";
 import ExpandSuperNodeInPlaceAction from "../command-actions/expandSuperNodeInPlaceAction.js";
@@ -333,6 +333,10 @@ export default class CanvasController {
 
 	getNodeUiParameters(nodeId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeUiParameters(nodeId);
+	}
+
+	getSupernodes(pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getSupernodes();
 	}
 
 	getNodeMessages(nodeId, pipelineId) {
@@ -753,8 +757,8 @@ export default class CanvasController {
 		this.editActionHandler(data);
 	}
 
-	displayParentPipeline() {
-		const data = { editType: "displayParentPipeline" };
+	displayPreviousPipeline() {
+		const data = { editType: "displayPreviousPipeline" };
 		this.editActionHandler(data);
 	}
 
@@ -821,8 +825,8 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
-			case "displayParentPipeline": {
-				const command = new DisplayParentPipelineAction({}, this.objectModel);
+			case "displayPreviousPipeline": {
+				const command = new DisplayPreviousPipelineAction({}, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
@@ -994,8 +998,8 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
-			case "displayParentPipeline": {
-				const command = new DisplayParentPipelineAction(data, this.objectModel);
+			case "displayPreviousPipeline": {
+				const command = new DisplayPreviousPipelineAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}

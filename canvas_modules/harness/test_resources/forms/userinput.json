@@ -283,15 +283,36 @@
         "url": ""
       }
     ],
+    "conditions": [
+      {
+        "validation": {
+          "id": "userinput_warning1",
+          "fail_message": {
+            "type": "warning",
+            "focus_parameter_ref": "data_mode",
+            "message": {
+              "default": "data_mode should not be in order"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "data_mode",
+              "op": "notEquals",
+              "value": "Ordered"
+            }
+          }
+        }
+      }
+    ],
     "data": {
       "currentParameters": {
-        "data_mode": "Combined",
+        "data_mode": "In order",
         "annotation": "",
         "use_custom_name": false,
         "definitions": [],
         "custom_name": ""
       },
-			"datasetMetadata": {
+      "datasetMetadata": {
         "fields": []
       }
     }

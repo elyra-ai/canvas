@@ -8,7 +8,7 @@
  *******************************************************************************/
 import Action from "../command-stack/action.js";
 
-export default class DisplayParentPipeline extends Action {
+export default class DisplayPreviousPipeline extends Action {
 	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
