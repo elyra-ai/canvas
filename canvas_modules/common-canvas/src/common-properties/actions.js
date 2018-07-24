@@ -15,6 +15,7 @@ export const SET_DATASET_METADATA = "SET_DATASET_METADATA";
 export const UPDATE_SELECTED_ROWS = "UPDATE_SELECTED_ROWS";
 export const CLEAR_SELECTED_ROWS = "CLEAR_SELECTED_ROWS";
 export const SET_TITLE = "SET_TITLE";
+export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
 
 /*
  * action creators
@@ -70,4 +71,8 @@ export function clearSelectedRows(info) {
 
 export function setTitle(title) {
 	return { type: SET_TITLE, title };
+}
+
+export function setActiveTab(activeTab) {
+	return { type: SET_ACTIVE_TAB, activeTab };
 }

@@ -14,7 +14,7 @@ import { setPanelStates, updatePanelState } from "./actions";
 import { clearSelectedRows, updateSelectedRows } from "./actions";
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
 import { setDatasetMetadata } from "./actions";
-import { setTitle } from "./actions";
+import { setTitle, setActiveTab } from "./actions";
 import propertiesReducer from "./reducers/properties";
 import controlStatesReducer from "./reducers/control-states";
 import panelStatesReducer from "./reducers/panel-states";
@@ -305,5 +305,14 @@ export default class PropertiesStore {
 	getTitle() {
 		const state = this.store.getState();
 		return state.componentMetadataReducer.title;
+	}
+
+	setActiveTab(activeTab) {
+		this.store.dispatch(setActiveTab(activeTab));
+	}
+
+	getActiveTab() {
+		const state = this.store.getState();
+		return state.componentMetadataReducer.activeTab;
 	}
 }

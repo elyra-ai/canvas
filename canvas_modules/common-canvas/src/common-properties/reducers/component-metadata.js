@@ -7,13 +7,18 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { SET_TITLE } from "../actions";
+import { SET_TITLE, SET_ACTIVE_TAB } from "../actions";
 
 function componentMetadata(state = [], action) {
 	switch (action.type) {
 	case SET_TITLE: {
 		const newState = state;
 		newState.title = action.title;
+		return Object.assign({}, state, newState);
+	}
+	case SET_ACTIVE_TAB: {
+		const newState = state;
+		newState.activeTab = action.activeTab;
 		return Object.assign({}, state, newState);
 	}
 	default:

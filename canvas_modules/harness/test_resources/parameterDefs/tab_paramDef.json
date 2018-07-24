@@ -1,0 +1,476 @@
+{
+  "titleDefinition": {
+    "title": "Tab and SubTab Test"
+  },
+  "current_parameters": {
+    "fromValue": 2,
+    "toValue": 1,
+    "fruit": "apple",
+    "other": "lemon",
+    "fields": [
+      "Age",
+      "Drug"
+    ],
+    "fromValue2": 2,
+    "toValue2": 1,
+    "fruit2": "apple",
+    "other2": "lemon",
+    "fields2": [
+      "Age",
+      "Drug"
+    ],
+    "fromValue_summary": 2,
+    "toValue_summary": 1,
+    "fruit_summary": "apple",
+    "other_summary": "lemon",
+    "fields_summary": [
+      "Age",
+      "Drug"
+    ]
+  },
+  "parameters": [
+    {
+      "id": "fromValue",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "toValue",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "other",
+      "type": "string"
+    },
+    {
+      "id": "fruit",
+      "type": "string",
+      "enum": [
+        "apple",
+        "orange",
+        "pear",
+        "blueberry"
+      ]
+    },
+    {
+      "id": "fields",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "fromValue2",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "toValue2",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "other2",
+      "type": "string"
+    },
+    {
+      "id": "fruit2",
+      "type": "string",
+      "enum": [
+        "apple",
+        "orange",
+        "pear",
+        "blueberry"
+      ]
+    },
+    {
+      "id": "fields2",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "fromValue_summary",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "toValue_summary",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "other_summary",
+      "type": "string"
+    },
+    {
+      "id": "fruit_summary",
+      "type": "string",
+      "enum": [
+        "apple",
+        "orange",
+        "pear",
+        "blueberry"
+      ]
+    },
+    {
+      "id": "fields_summary",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    }
+  ],
+  "uihints": {
+    "id": "Panel.test",
+    "label": {
+      "default": "Tab Test"
+    },
+    "description": {
+      "default": "Test Tab Panel"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "fromValue",
+        "label": {
+          "default": "From"
+        },
+        "description": {
+          "default": "Double value for From range"
+        }
+      },
+      {
+        "parameter_ref": "toValue",
+        "label": {
+          "default": "Step"
+        },
+        "description": {
+          "default": "Step value"
+        }
+      },
+      {
+        "parameter_ref": "fruit",
+        "label": {
+          "default": "Fruit"
+        }
+      },
+      {
+        "parameter_ref": "other",
+        "label": {
+          "default": "Other Fruit"
+        }
+      },
+      {
+        "parameter_ref": "fields",
+        "label": {
+          "default": "Fields"
+        },
+        "description": {
+          "default": "selectcolumns with parameter value set to 'age'"
+        },
+        "moveable_rows": true,
+        "summary": true
+      },
+      {
+        "parameter_ref": "fromValue2",
+        "label": {
+          "default": "From"
+        },
+        "description": {
+          "default": "Double value for From range"
+        }
+      },
+      {
+        "parameter_ref": "toValue2",
+        "label": {
+          "default": "Step"
+        },
+        "description": {
+          "default": "Step value"
+        }
+      },
+      {
+        "parameter_ref": "fruit2",
+        "label": {
+          "default": "Fruit"
+        }
+      },
+      {
+        "parameter_ref": "other2",
+        "label": {
+          "default": "Other Fruit"
+        }
+      },
+      {
+        "parameter_ref": "fields2",
+        "label": {
+          "default": "Fields"
+        },
+        "description": {
+          "default": "selectcolumns with parameter value set to 'age'"
+        },
+        "moveable_rows": true,
+        "summary": true
+      },
+      {
+        "parameter_ref": "fromValue_summary",
+        "label": {
+          "default": "From"
+        },
+        "description": {
+          "default": "Double value for From range"
+        }
+      },
+      {
+        "parameter_ref": "toValue_summary",
+        "label": {
+          "default": "Step"
+        },
+        "description": {
+          "default": "Step value"
+        }
+      },
+      {
+        "parameter_ref": "fruit_summary",
+        "label": {
+          "default": "Fruit"
+        }
+      },
+      {
+        "parameter_ref": "other_summary",
+        "label": {
+          "default": "Other Fruit"
+        }
+      },
+      {
+        "parameter_ref": "fields_summary",
+        "label": {
+          "default": "Fields"
+        },
+        "description": {
+          "default": "selectcolumns with parameter value set to 'age'"
+        },
+        "moveable_rows": true,
+        "summary": true
+      }
+    ],
+    "group_info": [
+      {
+        "id": "Primary",
+        "label": {
+          "default": "Tab Test"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "Subtabs",
+            "label": {
+              "default": "Automatic Reclassify"
+            },
+            "type": "subTabs",
+            "group_info": [
+              {
+                "id": "range-fields-subtab",
+                "type": "controls",
+                "label": {
+                  "default": "Range Fields"
+                },
+                "parameter_refs": [
+                  "fromValue",
+                  "toValue"
+                ]
+              },
+              {
+                "id": "table-subtab",
+                "label": {
+                  "default": "Table SubTab"
+                },
+                "type": "controls",
+                "parameter_refs": [
+                  "fields"
+                ]
+              },
+              {
+                "id": "fruit-subtab",
+                "label": {
+                  "default": "Fruit"
+                },
+                "type": "controls",
+                "parameter_refs": [
+                  "fruit",
+                  "other"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "summary-panel",
+            "label": {
+              "default": "Edit SubPanel"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "subtabs-summary",
+                "label": {
+                  "default": "Automatic Reclassify"
+                },
+                "type": "subTabs",
+                "group_info": [
+                  {
+                    "id": "range-fields-summary",
+                    "type": "controls",
+                    "label": {
+                      "default": "Range Fields"
+                    },
+                    "parameter_refs": [
+                      "fromValue_summary",
+                      "toValue_summary"
+                    ]
+                  },
+                  {
+                    "id": "table-subTab-summary",
+                    "label": {
+                      "default": "Table SubTab"
+                    },
+                    "type": "controls",
+                    "parameter_refs": [
+                      "fields_summary"
+                    ]
+                  },
+                  {
+                    "id": "fruit-summary",
+                    "label": {
+                      "default": "Fruit"
+                    },
+                    "type": "controls",
+                    "parameter_refs": [
+                      "fruit_summary",
+                      "other_summary"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Primary2",
+        "label": {
+          "default": "Tab Test2"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "Subtabs2",
+            "label": {
+              "default": "Automatic Reclassify"
+            },
+            "type": "subTabs",
+            "group_info": [
+              {
+                "id": "range-fields-subtab2",
+                "type": "controls",
+                "label": {
+                  "default": "Range Fields"
+                },
+                "parameter_refs": [
+                  "fromValue2",
+                  "toValue2"
+                ]
+              },
+              {
+                "id": "table-subtab2",
+                "label": {
+                  "default": "Table SubTab"
+                },
+                "type": "controls",
+                "parameter_refs": [
+                  "fields2"
+                ]
+              },
+              {
+                "id": "fruit-subtab2",
+                "label": {
+                  "default": "Fruit"
+                },
+                "type": "controls",
+                "parameter_refs": [
+                  "fruit2",
+                  "other2"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "dataset_metadata": {
+    "fields": [
+      {
+        "name": "Age",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Sex",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "BP",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Cholesterol",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Na",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "K",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      }
+    ]
+  }
+}

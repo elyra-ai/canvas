@@ -881,10 +881,7 @@ describe("Properties Controller controls", () => {
 			"summary": true,
 			"required": true,
 			"summaryPanelId": "summary-panel",
-			"parentCategoryId": {
-				"group": "Numberfield",
-				"text": "Numbers"
-			},
+			"parentCategoryId": "Numberfield",
 			"summaryLabel": "Maximum number of bins"
 		};
 		expect(expectedValue).to.eql(actualValue);
@@ -911,10 +908,7 @@ describe("Properties Controller controls", () => {
 			"width": 28,
 			"parameterName": "structuretableSortOrder",
 			"columnIndex": 0,
-			"parentCategoryId": {
-				"group": "Tables",
-				"text": "Tables"
-			}
+			"parentCategoryId": "Tables"
 		};
 		expect(expectedValue).to.eql(actualValue);
 	});

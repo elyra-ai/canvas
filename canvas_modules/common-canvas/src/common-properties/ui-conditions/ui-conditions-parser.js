@@ -154,9 +154,9 @@ function parseUiItem(controls, uiItem, panelId, parentCategoryId) {
 		if (uiItem.tabs) {
 			for (const tab of uiItem.tabs) {
 				parseUiItem(controls, tab.content, panelId,
-					uiItem.itemType === ItemType.PANEL_SELECTOR
+					uiItem.itemType === ItemType.PANEL_SELECTOR || uiItem.itemType === ItemType.SUB_TABS
 						? parentCategoryId
-						: { "group": tab.group, "text": tab.text });
+						: tab.group);
 			}
 		}
 		break;

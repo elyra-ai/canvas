@@ -42,7 +42,7 @@ class EditorForm extends React.Component {
 		super(props);
 		this.state = {
 			showFieldPicker: false,
-			activeTabId: ""
+			activeSubTabs: {} // map since there can be more than 1 subtab
 		};
 
 		this.genPanel = this.genPanel.bind(this);
@@ -53,19 +53,12 @@ class EditorForm extends React.Component {
 		this.openFieldPicker = this.openFieldPicker.bind(this);
 		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
 
-		this._showCategoryPanel = this._showCategoryPanel.bind(this);
-		this._handleMessageClick = this._handleMessageClick.bind(this);
-
 		this.messages = [];
 
 		// initialize ControlFactory with correct values
 		this.ControlFactory = props.controller.getControlFactory();
 		this.ControlFactory.setFunctions(this.openFieldPicker, this.genUIItem);
 		this.ControlFactory.setRightFlyout(props.rightFlyout);
-
-		// set initial tab to first tab
-		const tabs = props.controller.getUiItems()[0].tabs;
-		this.state.activeTabId = this._getTabId(tabs[0]);
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -89,7 +82,7 @@ class EditorForm extends React.Component {
 		let result = 0;
 		this.messages.forEach((msg) => {
 			const ctrl = this.props.controller.getControl({ "name": msg.id_ref });
-			if (ctrl && ctrl.parentCategoryId && ctrl.parentCategoryId.text === tab.text) {
+			if (ctrl && ctrl.parentCategoryId === tab.group) {
 				result++;
 			}
 		});
@@ -106,28 +99,30 @@ class EditorForm extends React.Component {
 	}
 
 	_getTabId(tab) {
-		return tab.text;
+		return tab.group;
 	}
 
-	_showCategoryPanel(panelid) {
-		let activeTab = panelid;
-		if (this.state.activeTabId === panelid) {
+	_showCategoryPanel(panelId) {
+		let activeTab = panelId;
+		if (this.props.controller.getActiveTab() === panelId) {
 			activeTab = "";
 		}
-		this.setState({ activeTabId: activeTab });
+		this.props.controller.setActiveTab(activeTab);
 	}
 
 	_handleMessageClick(controlId, ev) {
 		const control = this.props.controller.getControl(controlId);
-		if (this.props.rightFlyout) {
-			this._showCategoryPanel(this._getTabId(control.parentCategoryId));
-		} else {
-			this.setState({ activeTabId: this._getTabId(control.parentCategoryId) });
-		}
+		this.props.controller.setActiveTab(control.parentCategoryId);
 	}
 
-	_modalTabsOnClick(tabId, evt) {
-		this.setState({ activeTabId: tabId });
+	_modalTabsOnClick(tabId) {
+		this.props.controller.setActiveTab(tabId);
+	}
+
+	_subTabsOnClick(groupId, subTabId) {
+		const activeSubTabs = this.state.activeSubTabs;
+		activeSubTabs[groupId] = subTabId;
+		this.setState({ activeSubTabs: activeSubTabs });
 	}
 
 	genPrimaryTabs(key, tabs, propertyId, indexof) {
@@ -147,7 +142,7 @@ class EditorForm extends React.Component {
 			if (this.props.rightFlyout) {
 				let panelArrow = <Icon type="downCaret" />;
 				let categoryOpen = false;
-				if (this.state.activeTabId === tab.text) {
+				if (this.props.controller.getActiveTab() === tab.group) {
 					panelArrow = <Icon type="upCaret" />;
 					categoryOpen = true;
 				}
@@ -157,7 +152,7 @@ class EditorForm extends React.Component {
 
 				tabContent.push(
 					<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key} className="properties-category-container">
-						<button type="button" onClick={this._showCategoryPanel.bind(this, tab.text)}
+						<button type="button" onClick={this._showCategoryPanel.bind(this, tab.group)}
 							className="properties-category-title"
 						>
 							{tab.text.toUpperCase()}{this._getMessageCountForCategory(tab)}
@@ -168,16 +163,15 @@ class EditorForm extends React.Component {
 					</div>
 				);
 			} else {
-				if (this.state.activeTabId === tab.text) {
+				if (this.props.controller.getActiveTab() === tab.group) {
 					modalSelected = i;
 				}
 				tabContent.push(
 					<Tab
 						key={i}
-						id={this._getTabId(tab)}
 						tabIndex={i}
 						label={tab.text}
-						onClick={this._modalTabsOnClick.bind(this, tab.text)}
+						onClick={this._modalTabsOnClick.bind(this, tab.group)}
 					>
 						{panelItems}
 						{additionalComponent}
@@ -215,41 +209,32 @@ class EditorForm extends React.Component {
 	genSubTabs(key, tabs, propertyId, indexof) {
 		// logger.info("genSubTabs");
 		const subTabs = [];
+		let activeSubTab = 0;
+		// generate id for group of tabs
+		let tabGroupId = "subtab";
+		for (const tab of tabs) {
+			tabGroupId += "." + tab.group;
+		}
 		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
 			const subPanelItems = this.genUIItem(i, tab.content, propertyId, indexof);
-			if (this.props.rightFlyout) {
-				subTabs.push(
-					<div key={i + "-" + key} className="properties-sub-category-container">
-						<h3 className="properties-sub-category-title">{tab.text}</h3>
-						<div key={i + "-" + key} className="properties-sub-panel-content">
-							{subPanelItems}
-						</div>
-					</div>
-				);
-			} else {
-				subTabs.push(
-					<Tab
-						tabIndex={i}
-						label={tab.text}
-					>
-						{subPanelItems}
-					</Tab>
-				);
+			if (tab.content.panel.id === this.state.activeSubTabs[tabGroupId]) {
+				activeSubTab = i;
 			}
-		}
-
-		if (this.props.rightFlyout) {
-			return (
-				<div key={key} className="properties-sub-category-container">
-					{subTabs}
-				</div>
+			subTabs.push(
+				<Tab
+					key={"subtabs.tab." + key + "." + i}
+					tabIndex={i}
+					label={tab.text}
+					onClick={this._subTabsOnClick.bind(this, tabGroupId, tab.group)}
+				>
+					{subPanelItems}
+				</Tab>
 			);
 		}
-
 		return (
-			<div id={"sub-tab-container"}>
-				<Tabs >
+			<div key={"subtabs.div." + key} className={classNames("properties-sub-tab-container", { vertical: !this.props.rightFlyout })}>
+				<Tabs key={"subtabs.tabs." + key} className="properties-subtabs" selected={activeSubTab}>
 					{subTabs}
 				</Tabs>
 			</div>

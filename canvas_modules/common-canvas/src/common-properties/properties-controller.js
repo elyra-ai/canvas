@@ -117,6 +117,10 @@ export default class PropertiesController {
 			// default value set in the above loop.
 			this._addToControlValues(true);
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
+			// set initial tab to first tab
+			if (Array.isArray(this.uiItems) && Array.isArray(this.uiItems[0].tabs)) {
+				this.setActiveTab(this.uiItems[0].tabs[0].group);
+			}
 		}
 	}
 
@@ -431,6 +435,22 @@ export default class PropertiesController {
 	*/
 	setTitle(title) {
 		return this.propertiesStore.setTitle(title);
+	}
+
+	/**
+	* Returns activeTab
+	*	@return string
+	*/
+	getActiveTab() {
+		return this.propertiesStore.getActiveTab();
+	}
+
+	/**
+	* Sets active primary tab for common-properties
+	*	@param title string
+	*/
+	setActiveTab(activeTab) {
+		return this.propertiesStore.setActiveTab(activeTab);
 	}
 
 	/**
