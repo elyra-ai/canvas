@@ -16,10 +16,12 @@ import RadioButton from "carbon-components-react/lib/components/RadioButton";
 import classNames from "classnames";
 import { STATES } from "./../../constants/constants.js";
 import { ORIENTATIONS } from "./../../constants/form-constants.js";
+import uuid4 from "uuid/v4";
 
 export default class RadiosetControl extends React.Component {
 	constructor(props) {
 		super(props);
+		this.uuid = uuid4();
 		this.setEmptySelection = false;
 		this.handleChange = this.handleChange.bind(this);
 	}
@@ -90,7 +92,7 @@ export default class RadiosetControl extends React.Component {
 	}
 
 	render() {
-		var controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const state = this.props.controller.getControlState(this.props.propertyId);
 		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
 		const messageType = (messageInfo) ? messageInfo.type : "info";
@@ -99,19 +101,24 @@ export default class RadiosetControl extends React.Component {
 			this.props.control.values = [true, false];
 			this.props.control.valueLabels = ["true", "false"];
 		}
-		var buttons = [];
+		const buttons = [];
 		let wasChecked = false;
 		const valueSet = this.props.controller.getFilteredEnumItems(this.props.propertyId, this.props.control);
 		for (var i = 0; i < valueSet.values.length; i++) {
-			var checked = valueSet.values[i] === controlValue;
+			const checked = valueSet.values[i] === controlValue;
 			// RadioButton only accepts values of type string || number
-			var val = (this.props.control.valueDef.propType === "boolean") ? valueSet.values[i].toString() : valueSet.values[i];
+			const val = (this.props.control.valueDef.propType === "boolean") ? valueSet.values[i].toString() : valueSet.values[i];
 			wasChecked = wasChecked || checked;
-			var optionalPanel = this.getOptionalPanel(val);
+			const optionalPanel = this.getOptionalPanel(val);
+			const id = {
+				name: this.props.propertyId.name,
+				row: i
+			};
 			buttons.push(
 				<div key={i} className="properties-radioset-panel">
 					<RadioButton
 						key={i}
+						id={ControlUtils.getControlId(id, this.uuid)}
 						disabled={state === STATES.DISABLED}
 						labelText={valueSet.valueLabels[i]}
 						value={val}
