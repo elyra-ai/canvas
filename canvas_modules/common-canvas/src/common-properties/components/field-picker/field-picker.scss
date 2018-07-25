@@ -52,6 +52,7 @@
 	height: 32px;
 	margin-left: 10px;
 	cursor: default;
+
 }
 
 .properties-fp-filter-list-li {
@@ -63,6 +64,11 @@
 	border: 0;
 	background-color: inherit;
 	cursor: pointer;
+}
+
+.properties-fp-filter-list-li.properties-fp-filter-list-li svg {
+	height: 10px;
+	width: 10px;
 }
 
 .properties-fp-filter-list-li.properties-fp-filter:hover {
