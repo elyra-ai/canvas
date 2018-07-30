@@ -92,7 +92,7 @@ Feature: Supernode
 
 		# Delete supernode should remove nested subpipelines
 		Then I click the supernode label with node id "7015d906-2eae-45c1-999e-fb888ed957e5" to select it
-		Then I click on the secondary toolbar delete button
+		Then I delete all selected objects via the Delete key
 		Then I verify there are 1 pipelines
 		Then I verify pipeline 0 have 14 nodes
 

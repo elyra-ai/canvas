@@ -139,7 +139,11 @@ export default class CanvasD3Layout {
 					if (d3Event.keyCode === BACKSPACE_KEY ||
 							d3Event.keyCode === DELETE_KEY) {
 						stopPropagationAndPreventDefault(); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
-						this.canvasController.editActionHandler({ editType: "deleteSelectedObjects", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
+						this.canvasController.editActionHandler({
+							editType: "deleteSelectedObjects",
+							selectedObjectIds: this.objectModel.getSelectedObjectIds(),
+							pipelineId: this.objectModel.getCurrentBreadcrumb().pipelineId
+						});
 
 					} else if (isCmndCtrlPressed() && !d3Event.shiftKey && d3Event.keyCode === Z_KEY) {
 						stopPropagationAndPreventDefault();

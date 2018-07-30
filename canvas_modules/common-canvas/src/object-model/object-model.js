@@ -360,6 +360,7 @@ const comments = (state = [], action) => {
 
 const links = (state = [], action) => {
 	switch (action.type) {
+	case "DELETE_SUPERNODE":
 	case "DELETE_OBJECT":
 		return state.filter((link) => {
 			return (link.srcNodeId !== action.data.id && // If node being deleted is either source or target of link remove this link
@@ -516,7 +517,8 @@ const canvasinfo = (state = [], action) => {
 		canvasInfoPipelines = canvasInfoPipelines.map((pipeline) => {
 			if (pipeline.id === action.pipelineId) {
 				return Object.assign({}, pipeline, {
-					nodes: nodes(pipeline.nodes, action)
+					nodes: nodes(pipeline.nodes, action),
+					links: links(pipeline.links, action)
 				});
 			}
 			return pipeline;
