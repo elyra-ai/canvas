@@ -20,10 +20,11 @@ module.exports = {
 	context: __dirname,
 	devtool: "source-map",
 	entry: {
-		"common-canvas": "./src/index.js"
+		"lib/properties": "./src/common-properties/common-properties.jsx",
+		"lib/canvas": "./src/common-canvas/index.js",
+		"common-canvas": "./src/index.js" // needs to be last to create correct combined css output
 	},
 	output: {
-		library: "Common-Canvas",
 		libraryTarget: "commonjs2",
 		filename: "[name].js",
 		path: path.join(__dirname, "/dist")
