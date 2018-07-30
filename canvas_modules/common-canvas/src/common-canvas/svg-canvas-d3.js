@@ -1651,6 +1651,7 @@ class CanvasRenderer {
 					nodeGrp.select(that.getId("#node_error_marker", d.id))
 						.datum(node) // Set the __data__ to the updated data
 						.attr("cy", (nd) => this.getErrorPosY(nd))
+						.attr("cx", (nd) => this.getErrorPosX(nd, nodeGrp))
 						.attr("class", function(nd) { return "node-error-marker " + that.getMessageCircleClass(nd.messages); });
 
 					// Handle port related objects
@@ -2022,7 +2023,18 @@ class CanvasRenderer {
 		return this.layout.labelPosY;
 	}
 
+	getErrorPosX(data, nodeGrp) {
+		if (this.isExpandedSupernode(data)) {
+			const nodeText = nodeGrp.select(this.getId("#node_label", data.id)).node();
+			return nodeText.getComputedTextLength() + this.layout.supernodeLabelPosX + this.layout.errorRadius + this.layout.supernodeElementsPadding;
+		}
+		return this.layout.errorCenterX;
+	}
+
 	getErrorPosY(data) {
+		if (this.isExpandedSupernode(data)) {
+			return this.layout.supernodeSVGTopAreaHeight / 2;
+		} else
 		if (this.layout.labelAndIconVerticalJustification === "center") {
 			if (this.layout.nodeFormatType === "horizontal") {
 				return (data.height / 2) - (this.layout.imageHeight / 2);
