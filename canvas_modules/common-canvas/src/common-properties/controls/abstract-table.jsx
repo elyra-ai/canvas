@@ -17,7 +17,7 @@ import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import Icon from "./../../icons/icon.jsx";
 import PropertyUtils from "./../util/property-utils";
-import { ControlType, EditStyle, Type, ParamRole } from "./../constants/form-constants";
+import { ControlType, EditStyle } from "./../constants/form-constants";
 import Tooltip from "./../../tooltip/tooltip.jsx";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES,
 	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH } from "./../constants/constants";
@@ -231,22 +231,15 @@ export default class AbstractTable extends React.Component {
 	}
 
 	_makeCell(columnDef, controlValue, rowIndex, colIndex, tableState) {
-		let cellContent;
 		const propertyId = {
 			name: this.props.control.name,
 			row: rowIndex,
 			col: colIndex
 		};
 		const tableInfo = { table: true };
-		// allows for custom contents in a cell
-		cellContent = controlValue[rowIndex][colIndex];
-		if (Array.isArray(cellContent)) {
-			cellContent = cellContent.join(", ");
-		} else if (PropertyUtils.toType(cellContent) === Type.OBJECT && columnDef.role === ParamRole.COLUMN) {
-			cellContent = PropertyUtils.stringifyFieldValue(cellContent, columnDef);
-		}
 		const cellClassName = "";
 		const ControlFactory = this.props.controller.getControlFactory();
+		let cellContent;
 		if (columnDef.editStyle === EditStyle.SUBPANEL || columnDef.editStyle === EditStyle.ON_PANEL) {
 			cellContent = (<div className="properties-table-cell-control">
 				<ReadonlyControl
