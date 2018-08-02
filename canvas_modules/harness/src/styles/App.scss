@@ -7,6 +7,9 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+$harness-navbar-title-width: 120px;
+$harness-navbar-icon-width: 48px;
+
 #app-container {
 	height: 100vh;
 	overflow: hidden;
@@ -24,9 +27,9 @@
 
 .harness-title {
 	color: $text-01;
-	width: auto;
+	width: $harness-navbar-title-width;
 	font-size: 14px;
-	padding: 5px;
+	padding: 5px 10px;
 }
 
 /* Styles for elements displayed for empty canvas. */
@@ -103,6 +106,45 @@
 
 .nav-divider {
 	border-left: 2px solid $ui-04;
+}
+
+/* Navbar Breadcrumbs */
+.harness-pipeline-breadcrumbs-container {
+	max-width: calc(100% - #{$harness-navbar-title-width} - (#{$harness-navbar-icon-width} * 5));
+	display: inline-flex;
+	flex-wrap: wrap;
+	overflow-y: scroll;
+}
+.harness-pipeline-breadcrumbs {
+	height: 16px;
+	display: inline-flex;
+	align-items: center;
+	.harness-pipeline-breadcrumbs-label {
+		cursor: pointer;
+		display: inline;
+		border: 0;
+		background-color: transparent;
+		padding: 0 5px;
+		font-size: 12px;
+		color: $brand-01;
+
+		&:hover {
+			color: $text-01;
+			text-decoration-line: underline;
+		}
+		&.last-item {
+			cursor: default;
+			height: 10px;
+			&:hover {
+				color: $brand-01;
+				text-decoration-line: none;
+			}
+		}
+	}
+
+	.harness-pipeline-breadcrumbs-separator {
+		font-size: 13px;
+	}
 }
 
 /*Console*/

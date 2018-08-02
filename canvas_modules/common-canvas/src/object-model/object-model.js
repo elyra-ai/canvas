@@ -1058,17 +1058,53 @@ export default class ObjectModel {
 		return (typeof pipeline === "undefined") ? null : pipeline;
 	}
 
-	getNestedPipelineIds(pipelineId) {
+	getDescendentPipelineIds(pipelineId) {
 		let pipelineIds = [];
 		this.getAPIPipeline(pipelineId).getSupernodes()
 			.forEach((supernode) => {
 				const subPipelineId = this.getSupernodePipelineID(supernode);
 				if (subPipelineId) {
 					pipelineIds.push(subPipelineId);
-					pipelineIds = pipelineIds.concat(this.getNestedPipelineIds(subPipelineId));
+					pipelineIds = pipelineIds.concat(this.getDescendentPipelineIds(subPipelineId));
 				}
 			});
 		return pipelineIds;
+	}
+
+	// Returns a list of the given pipelineId ancestors, from "oldest" to "youngest".
+	// This is a list of objects containing the pipeline id and its corresponding supernode label.
+	// Includes itself.
+	getAncestorPipelineIds(pipelineId) {
+		const primaryPipelineId = this.getPrimaryPipelineId();
+		if (primaryPipelineId === pipelineId) {
+			return [{ pipelineId: primaryPipelineId }];
+		}
+		const ancestors = [{ pipelineId: primaryPipelineId }];
+		return ancestors.concat(this.getAncestorsBetween(primaryPipelineId, pipelineId));
+	}
+
+	getAncestorsBetween(upperPipelineId, lowerPipelineId) {
+		let ancestors = [];
+		this.getAPIPipeline(upperPipelineId).getSupernodes()
+			.forEach((supernode) => {
+				const subPipelineId = this.getSupernodePipelineID(supernode);
+				if (subPipelineId) {
+					if (this.isAncestorOfPipeline(subPipelineId, lowerPipelineId) || subPipelineId === lowerPipelineId) {
+						ancestors.push({ pipelineId: subPipelineId, label: supernode.label });
+					}
+					ancestors = ancestors.concat(this.getAncestorsBetween(subPipelineId, lowerPipelineId));
+				}
+			});
+		return ancestors;
+	}
+
+	// Returns true if ancestorId is an ancestor pipeline of pipelineId.
+	isAncestorOfPipeline(ancestorId, pipelineId) {
+		const decendents = this.getDescendentPipelineIds(ancestorId);
+		if (decendents.indexOf(pipelineId) > -1) {
+			return true;
+		}
+		return false;
 	}
 
 	getSupernodePipelineID(supernode) {
@@ -1922,7 +1958,7 @@ export class APIPipeline {
 		let pipelineIds = [];
 		if (has(supernode, "subflow_ref.pipeline_id_ref")) {
 			pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
-			pipelineIds = pipelineIds.concat(this.objectModel.getNestedPipelineIds(supernode.subflow_ref.pipeline_id_ref));
+			pipelineIds = pipelineIds.concat(this.objectModel.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
 		}
 		this.store.dispatch({
 			type: "DELETE_SUPERNODE",

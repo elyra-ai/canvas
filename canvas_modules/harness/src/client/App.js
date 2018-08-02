@@ -23,6 +23,7 @@ import has from "lodash/has";
 
 import { CommonCanvas, CanvasController, CommonProperties, FlowValidation } from "common-canvas";
 
+import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
 import TestService from "./services/TestService";
@@ -57,7 +58,8 @@ import {
 	OUTPUT_PORT,
 	NOTIFICATION_MESSAGE_TYPE,
 	FORMS,
-	PARAMETER_DEFS
+	PARAMETER_DEFS,
+	PRIMARY
 } from "./constants/constants.js";
 
 import listview32 from "../graphics/list-view_32.svg";
@@ -71,6 +73,7 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			breadcrumbsDef: [],
 			consoleout: [],
 			consoleOpened: false,
 			contextMenuInfo: {},
@@ -147,6 +150,7 @@ class App extends React.Component {
 		this.appendNotificationMessages = this.appendNotificationMessages.bind(this);
 		this.clearNotificationMessages = this.clearNotificationMessages.bind(this);
 
+		this.setBreadcrumbsDefinition = this.setBreadcrumbsDefinition.bind(this);
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
 		this.sidePanelModal = this.sidePanelModal.bind(this);
 		this.sidePanelAPI = this.sidePanelAPI.bind(this);
@@ -223,6 +227,9 @@ class App extends React.Component {
 
 	componentDidMount() {
 		addLocaleData(en);
+
+		this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
+
 		var sessionData = {
 			events: {},
 			canvas: this.canvasController.getCanvasInfo()
@@ -410,6 +417,7 @@ class App extends React.Component {
 			}
 			this.setFlowNotificationMessages();
 			TestService.postCanvas(canvasJson);
+			this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
 			this.log("Canvas diagram set");
 		} else {
 			this.log("Canvas diagram cleared");
@@ -513,6 +521,12 @@ class App extends React.Component {
 	setNotificationMessages2(messages) {
 		this.canvasController2.setNotificationMessages(messages);
 		this.log("Set Notification Message", "Canvas2 Set " + messages.length + " notification messages");
+	}
+
+	setBreadcrumbsDefinition(currentPipelineId) {
+		const breadcrumbs = this.canvasController.getAncestorPipelineIds(currentPipelineId);
+		breadcrumbs[0].label = PRIMARY;
+		this.setState({ breadcrumbsDef: breadcrumbs });
 	}
 
 	setPaletteJSON(paletteJson) {
@@ -764,6 +778,7 @@ class App extends React.Component {
 	// Open the flow on notification message click
 	flowNotificationMessageCallback(pipelineId) {
 		this.canvasController.displaySubPipeline({ pipelineId: pipelineId });
+		this.setBreadcrumbsDefinition(pipelineId);
 		this.canvasController.closeNotificationPanel();
 	}
 
@@ -1117,6 +1132,7 @@ class App extends React.Component {
 			NodeToForm.setNodeForm(data.nodeId, type);
 		} else if (data.editType === "displaySubPipeline" || data.editType === "displayPreviousPipeline") {
 			this.setFlowNotificationMessages();
+			this.setBreadcrumbsDefinition(data.pipelineInfo.pipelineId);
 		}
 
 		this.log("editActionHandler() " + data.editType, type, data.label);
@@ -1395,10 +1411,16 @@ class App extends React.Component {
 	}
 
 	render() {
-		var locale = "en";
-		var messages = i18nData.messages;
+		const locale = "en";
+		const messages = i18nData.messages;
+		const currentPipelineId = this.canvasController.getCurrentBreadcrumb().pipelineId;
+		const breadcrumbs = (<Breadcrumbs
+			canvasController={this.canvasController}
+			breadcrumbsDef={this.state.breadcrumbsDef}
+			currentPipelineId={currentPipelineId}
+		/>);
 
-		var navBar = (<div className="app-navbar">
+		const navBar = (<div className="app-navbar">
 			<ul className="app-navbar-items">
 				<li className="navbar-li">
 					<span className="harness-title">Canvas Testbed</span>
@@ -1416,6 +1438,9 @@ class App extends React.Component {
 							src={download32}
 						/>
 					</a>
+				</li>
+				<li className="navbar-li harness-pipeline-breadcrumbs-container">
+					{breadcrumbs}
 				</li>
 				<li className="navbar-li nav-divider action-bar-sidepanel"
 					id="action-bar-sidepanel-api"	data-tip="API"
@@ -1447,7 +1472,7 @@ class App extends React.Component {
 			</ul>
 		</div>);
 
-		var emptyCanvasDiv = (
+		const emptyCanvasDiv = (
 			<div>
 				<img src={BlankCanvasImage} className="empty-harness-image" />
 				<span className="empty-harness-text">Welcome to the Common Canvas test harness.<br />Your flow is empty!</span>
@@ -1456,7 +1481,7 @@ class App extends React.Component {
 				>Click here to take a tour</span>
 			</div>);
 
-		var commonCanvasConfig = {
+		const commonCanvasConfig = {
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
@@ -1468,7 +1493,7 @@ class App extends React.Component {
 			enableNarrowPalette: this.state.narrowPalette
 		};
 
-		var commonCanvasConfig2 = {
+		const commonCanvasConfig2 = {
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
@@ -1480,9 +1505,9 @@ class App extends React.Component {
 			enableNarrowPalette: this.state.narrowPalette
 		};
 
-		var layoutAction = this.state.selectedLayout === NONE;
+		const layoutAction = this.state.selectedLayout === NONE;
 
-		var toolbarConfig = [
+		const toolbarConfig = [
 			{ action: "palette", label: "Palette", enable: true },
 			{ divider: true },
 			{ action: "stop", label: "Stop Execution", enable: false },
@@ -1589,7 +1614,7 @@ class App extends React.Component {
 
 		const canvasContainerWidth = this.isSidePanelOpen() === false ? "100%" : "calc(100% - " + SIDE_PANEL.MAXIMIXED + ")";
 
-		var commonCanvas;
+		let commonCanvas;
 		if (this.state.extraCanvasDisplayed === true) {
 			commonCanvas = (
 				<div className="canvas-container double" style={{ width: canvasContainerWidth }}>

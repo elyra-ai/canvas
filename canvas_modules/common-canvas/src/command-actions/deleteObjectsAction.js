@@ -76,7 +76,7 @@ export default class DeleteObjectsAction extends Action {
 	}
 
 	deleteNestedPipelines(supernodeId, pipelineId) {
-		this.objectModel.getNestedPipelineIds(pipelineId).forEach((subPipelineId) => {
+		this.objectModel.getDescendentPipelineIds(pipelineId).forEach((subPipelineId) => {
 			const deletedPipeline = this.objectModel.getCanvasInfoPipeline(subPipelineId);
 			this.deletedSupernodePipelines[supernodeId].push(deletedPipeline);
 		});

@@ -146,6 +146,10 @@ export default class CanvasController {
 		return this.objectModel.getCanvasInfo();
 	}
 
+	getAncestorPipelineIds(pipelineId) {
+		return this.objectModel.getAncestorPipelineIds(pipelineId);
+	}
+
 	// ---------------------------------------------------------------------------
 	// Pipeline methods
 	// ---------------------------------------------------------------------------
@@ -558,7 +562,7 @@ export default class CanvasController {
 			supernodes.forEach((supernode) => {
 				if (has(supernode, "subflow_ref.pipeline_id_ref")) {
 					pipelines.push(this.objectModel.getCanvasInfoPipeline(supernode.subflow_ref.pipeline_id_ref));
-					const subPiplines = this.objectModel.getNestedPipelineIds(supernode.subflow_ref.pipeline_id_ref);
+					const subPiplines = this.objectModel.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref);
 					subPiplines.forEach((subPiplineId) => {
 						pipelines.push(this.objectModel.getCanvasInfoPipeline(subPiplineId));
 					});
@@ -758,7 +762,7 @@ export default class CanvasController {
 	}
 
 	displayPreviousPipeline() {
-		const data = { editType: "displayPreviousPipeline" };
+		const data = { editType: "displayPreviousPipeline", pipelineInfo: this.objectModel.getPreviousBreadcrumb() };
 		this.editActionHandler(data);
 	}
 
