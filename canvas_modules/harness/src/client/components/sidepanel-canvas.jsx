@@ -346,7 +346,7 @@ export default class SidePanelForms extends React.Component {
 			canvasFileChooserVisible = (<div className="sidepanel-file-uploader">
 				<FileUploader
 					small={"true"}
-					buttonLabel="Chose file"
+					buttonLabel="Choose file"
 					accept={[".json"]}
 					onChange={this.onCanvasFileSelect}
 				/>
@@ -367,7 +367,7 @@ export default class SidePanelForms extends React.Component {
 			paletteFileChooserVisible = (<div className="sidepanel-file-uploader">
 				<FileUploader
 					small={"true"}
-					buttonLabel="Chose file"
+					buttonLabel="Choose file"
 					accept={[".json"]}
 					onChange={this.onCanvasPaletteSelect}
 				/>
