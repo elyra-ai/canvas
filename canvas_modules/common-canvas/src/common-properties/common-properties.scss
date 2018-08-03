@@ -31,7 +31,41 @@ $common-properties-medium-flyout-width: 625px; // This is an arbitrary width for
 	&.properties-large {
 		width: $common-properties-medium-flyout-width;
 	}
+	&:hover {
+		.properties-btn-resize {
+			visibility: visible;
+			opacity: 1;
+		}
+	}
+	.properties-btn-resize {
+		transition: visibility 0.5s, opacity 0.5s;
+		opacity: 0;
+		visibility: hidden;
+		position: absolute;
+		top: 50%;
+		left: -13px;
+		cursor: pointer;
+		z-index: 1; // needs to sit on top of common-properties div
+		height: 25px;
+		border-radius: 5px;
+		background-color: $ui-01;
+		border: 2px $ui-04 solid;
+		&:hover {
+			background-color: $ui-04;
+		}
+		> div {
+			height: 100%;
+			width: 100%;
+			display: flex;
+			align-items: center;
+		}
+		svg {
+			fill: $brand-01;
+		}
+	}
 }
+
+
 
 .properties-right-flyout > .properties-custom-container {
 	height: calc(100% - 90px);

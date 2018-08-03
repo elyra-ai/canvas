@@ -19,9 +19,11 @@ import PropertiesController from "./properties-controller";
 import logger from "../../utils/logger";
 import PropertyUtils from "./util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants";
+import { Size } from "./constants/form-constants";
 import isEqual from "lodash/isEqual";
 import omit from "lodash/omit";
 import pick from "lodash/pick";
+import Icon from "carbon-components-react/lib/components/Icon";
 
 import TitleEditor from "./components/title-editor";
 import classNames from "classnames";
@@ -31,9 +33,6 @@ import { injectIntl, intlShape } from "react-intl";
 class CommonProperties extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			showPropertiesButtons: true
-		};
 		this.propertiesController = new PropertiesController();
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
@@ -47,10 +46,13 @@ class CommonProperties extends React.Component {
 		// this has to be after setForm because setForm clears all error messages.
 		this.propertiesController.setPipelineErrorMessages(props.propertiesInfo.messages);
 		this.currentParameters = this.propertiesController.getPropertyValues();
-
 		this.propertiesController.subscribe(() => {
 			this.forceUpdate();
 		});
+		this.state = {
+			showPropertiesButtons: true,
+			editorSize: this.propertiesController.getForm().editorSize
+		};
 
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
@@ -65,6 +67,9 @@ class CommonProperties extends React.Component {
 				(newProps.propertiesInfo.parameterDef && !isEqual(newProps.propertiesInfo.parameterDef, this.props.propertiesInfo.parameterDef)) ||
 				(newProps.propertiesInfo.appData && !isEqual(newProps.propertiesInfo.appData, this.props.propertiesInfo.appData))) {
 				this.setForm(newProps.propertiesInfo);
+				this.state = {
+					editorSize: this.propertiesController.getForm().editorSize
+				};
 				this.currentParameters = this.propertiesController.getPropertyValues();
 				this.propertiesController.setPipelineErrorMessages(newProps.propertiesInfo.messages);
 				this.propertiesController.setAppData(newProps.propertiesInfo.appData);
@@ -194,6 +199,18 @@ class CommonProperties extends React.Component {
 		this.setState({ showPropertiesButtons: state });
 	}
 
+	resize() {
+		if (this.state.editorSize === Size.SMALL) {
+			this.setState({
+				editorSize: Size.MEDIUM
+			});
+		} else {
+			this.setState({
+				editorSize: Size.SMALL
+			});
+		}
+	}
+
 	render() {
 		let cancelHandler = this.cancelHandler;
 		let applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
@@ -203,15 +220,13 @@ class CommonProperties extends React.Component {
 			cancelHandler = null;
 		}
 		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
-		const editorSize = this.propertiesController.getForm().editorSize;
+
 		const formData = this.propertiesController.getForm();
 		if (formData !== null) {
 			let propertiesDialog = [];
-
-			const size = formData.editorSize;
-
 			let propertiesTitle = <div />;
 			let buttonsContainer = <div />;
+			let resizeBtn = null;
 
 			if (this.props.propertiesConfig.rightFlyout) {
 				propertiesTitle = (<TitleEditor
@@ -227,6 +242,15 @@ class CommonProperties extends React.Component {
 					rejectLabel={rejectLabel}
 					showPropertiesButtons={this.state.showPropertiesButtons}
 				/>);
+				if (this.props.propertiesConfig.enableResize !== false) {
+					resizeBtn = (
+						<button className="properties-btn-resize" onClick={this.resize.bind(this)} >
+							<div>
+								<Icon name={`icon--chevron--${this.state.editorSize === Size.SMALL ? "left" : "right"}`} />
+							</div>
+						</button>
+					);
+				}
 			}
 
 			const editorForm = (<EditorForm
@@ -243,7 +267,7 @@ class CommonProperties extends React.Component {
 				propertiesDialog = (<PropertiesEditor
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
-					bsSize={size}
+					bsSize={this.state.editorSize}
 					title={this.propertiesController.getTitle()}
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
@@ -259,7 +283,7 @@ class CommonProperties extends React.Component {
 				propertiesDialog = (<PropertiesModal
 					onHide={this.props.callbacks.closePropertiesDialog}
 					title={this.propertiesController.getTitle()}
-					bsSize={size}
+					bsSize={this.state.editorSize}
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
 					showPropertiesButtons={this.state.showPropertiesButtons}
@@ -269,7 +293,7 @@ class CommonProperties extends React.Component {
 					{editorForm}
 				</PropertiesModal>);
 			}
-			const className = classNames("properties-wrapper", { "properties-right-flyout": this.props.propertiesConfig.rightFlyout }, `properties-${editorSize}`);
+			const className = classNames("properties-wrapper", { "properties-right-flyout": this.props.propertiesConfig.rightFlyout }, `properties-${this.state.editorSize}`);
 			return (
 				<div
 					ref={ (ref) => (this.commonProperties = ref) }
@@ -277,6 +301,7 @@ class CommonProperties extends React.Component {
 					tabIndex="0"
 					onBlur={this.onBlur}
 				>
+					{resizeBtn}
 					{propertiesTitle}
 					{propertiesDialog}
 					{buttonsContainer}
@@ -292,7 +317,8 @@ CommonProperties.propTypes = {
 	propertiesConfig: PropTypes.shape({
 		applyOnBlur: PropTypes.bool,
 		rightFlyout: PropTypes.bool,
-		containerType: PropTypes.string
+		containerType: PropTypes.string,
+		enableResize: PropTypes.bool
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
@@ -312,7 +338,8 @@ CommonProperties.defaultProps = {
 	propertiesConfig: {
 		containerType: "Custom",
 		rightFlyout: true,
-		applyOnBlur: false
+		applyOnBlur: false,
+		enableResize: true
 	},
 	callbacks: {
 	}

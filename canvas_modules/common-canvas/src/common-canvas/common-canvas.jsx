@@ -59,7 +59,6 @@ export default class CommonCanvas extends React.Component {
 
 		this.setToolbarWidth = this.setToolbarWidth.bind(this);
 		this.setPaletteWidth = this.setPaletteWidth.bind(this);
-		this.setRightFlyoutWidth = this.setRightFlyoutWidth.bind(this);
 
 		this.canvasController = this.props.canvasController;
 		this.initializeController(props);
@@ -130,21 +129,12 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	componentDidUpdate() {
-		this.setRightFlyoutWidth();
 		this.setPaletteWidth();
 	}
 
 	componentWillUnmount() {
 		this.unsubscribe();
 		document.removeEventListener("mousedown", this.hideTip, true);
-	}
-
-	setRightFlyoutWidth() {
-		if (this.props.showRightFlyout && this.flyoutContent && this.flyoutContent.offsetWidth !== this.state.rightFlyoutWidth) {
-			this.setState({ rightFlyoutWidth: this.flyoutContent.offsetWidth });
-		} else if (!this.props.showRightFlyout && this.state.rightFlyoutWidth !== 0) {
-			this.setState({ rightFlyoutWidth: 0 });
-		}
 	}
 
 	setPaletteWidth() {
@@ -400,7 +390,7 @@ export default class CommonCanvas extends React.Component {
 		if (typeof this.state.rightFlyoutContent !== "undefined" &&
 				this.state.rightFlyoutContent !== null &&
 				this.props.showRightFlyout) {
-			rightFlyout = (<div className="right-flyout-panel" ref={ (elem) => this.flyoutContent = elem} >
+			rightFlyout = (<div className="right-flyout-panel">
 				{this.state.rightFlyoutContent}
 			</div>);
 		}
@@ -440,14 +430,11 @@ export default class CommonCanvas extends React.Component {
 			/>);
 		}
 
-		const canvasRightItemsContainerWidth = "calc(100% -  " + this.state.paletteWidth + "px)";
-		const canvasItemsContainerWidth = "calc(100% -  " + this.state.rightFlyoutWidth + "px)";
-
 		return (
 			<div className="common-canvas">
 				{palette}
-				<div className="common-canvas-right-side-items" style={{ width: canvasRightItemsContainerWidth }}>
-					<div id={this.itemsContainerDivId} className="common-canvas-items-container" style={{ width: canvasItemsContainerWidth }}>
+				<div className="common-canvas-right-side-items">
+					<div id={this.itemsContainerDivId} className="common-canvas-items-container">
 						{canvas}
 						{emptyCanvas}
 						{canvasToolbar}

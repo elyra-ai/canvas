@@ -193,6 +193,30 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 	});
+	it("When enableResize=false resize button should not be rendered", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { enableResize: false });
+		wrapper = renderedObject.wrapper;
+		expect(wrapper.find("button.properties-btn-resize")).to.have.length(0);
+	});
+	it("When resize button should not be rendered", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef);
+		wrapper = renderedObject.wrapper;
+		expect(wrapper.find("button.properties-btn-resize")).to.have.length(1);
+	});
+	it("When resize button should not be rendered", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { enableResize: true });
+		wrapper = renderedObject.wrapper;
+		const resizeBtn = wrapper.find("button.properties-btn-resize");
+		expect(resizeBtn).to.have.length(1);
+		expect(wrapper.find("div.properties-small")).to.have.length(1);
+		expect(wrapper.find("div.properties-medium")).to.have.length(0);
+		resizeBtn.simulate("click");
+		expect(wrapper.find("div.properties-small")).to.have.length(0);
+		expect(wrapper.find("div.properties-medium")).to.have.length(1);
+		resizeBtn.simulate("click");
+		expect(wrapper.find("div.properties-small")).to.have.length(1);
+		expect(wrapper.find("div.properties-medium")).to.have.length(0);
+	});
 });
 
 
