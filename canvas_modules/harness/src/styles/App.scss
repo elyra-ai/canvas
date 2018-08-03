@@ -113,7 +113,7 @@ $harness-navbar-icon-width: 48px;
 	max-width: calc(100% - #{$harness-navbar-title-width} - (#{$harness-navbar-icon-width} * 5));
 	display: inline-flex;
 	flex-wrap: wrap;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 .harness-pipeline-breadcrumbs {
 	height: 16px;
