@@ -21,7 +21,7 @@ export default class CreateAutoNodeAction extends Action {
 			this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode);
 		}
 		this.newPipeline = null;
-		if (this.newNode && this.newNode.sub_type === "shaper") {
+		if (this.newNode && this.newNode.open_with_tool === "shaper") {
 			this.newPipeline = this.objectModel.createEmptyPipeline();
 			this.newNode.subflow_ref = {
 				pipeline_id_ref: this.newPipeline.id

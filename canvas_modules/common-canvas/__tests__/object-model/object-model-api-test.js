@@ -853,7 +853,7 @@ describe("ObjectModel API handle model OK", () => {
 		deepFreeze(startPipelineFlow);
 		objectModel.setPipelineFlow(startPipelineFlow);
 		const node = objectModel.getPipelineFlow().pipelines[0].nodes.find((n) => n.id === nodeId);
-		expect(isEqual(subType, node.sub_type)).to.be.true;
+		expect(isEqual(subType, node.open_with_tool)).to.be.true;
 		expect(isEqual(pipelineIdRef, node.subflow_ref.pipeline_id_ref)).to.be.true;
 	}
 

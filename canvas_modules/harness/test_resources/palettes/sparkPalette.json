@@ -173,7 +173,7 @@
           "description": "Data Shaper",
           "operator_id_ref": "ibm.Shaper",
           "type": "super_node",
-          "sub_type": "shaper",
+          "open_with_tool": "shaper",
           "image": "/images/palette-categories/operations_open.svg",
           "input_ports": [
             {

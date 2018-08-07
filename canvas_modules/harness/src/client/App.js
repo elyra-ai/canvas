@@ -1080,7 +1080,7 @@ class App extends React.Component {
 					menuDefinition = MULTI_SELECT_CONTEXT_MENU;
 				} else if (source.targetObject.containsModel === true) {
 					menuDefinition = APPLY_MODEL_NODE_CONTEXT_MENU;
-				} else if (source.targetObject.type === "super_node" && source.targetObject.sub_type !== "shaper") {
+				} else if (source.targetObject.type === "super_node" && source.targetObject.open_with_tool !== "shaper") {
 					menuDefinition = SUPER_NODE_CONTEXT_MENU;
 					if (this.canvasController.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
 						menuDefinition = menuDefinition.concat(COLLAPSE_SUPER_NODE_CONTEXT_MENU);

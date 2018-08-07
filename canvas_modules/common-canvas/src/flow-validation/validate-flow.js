@@ -37,7 +37,7 @@ function validatePipelineFlow(canvasController, pipelineId, getParameterData, se
 	// this will just visit all the nodes and not traverse it via DAG
 	for (const node of nodes) {
 		if (node.type === "super_node" &&
-		(typeof node.sub_type === "undefined" || node.sub_type === "canvas")) {
+		(typeof node.open_with_tool === "undefined" || node.open_with_tool === "canvas")) {
 			flowValid = validatePipelineFlow(canvasController, node.subflow_ref.pipeline_id_ref,
 				getParameterData, setMessagesCallback, includeMsgTypes, intl);
 		} else if (node.type === "execution_node" || node.type === "binding") {

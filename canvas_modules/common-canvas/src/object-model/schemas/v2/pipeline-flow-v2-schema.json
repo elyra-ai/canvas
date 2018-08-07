@@ -203,7 +203,7 @@
             "super_node"
           ]
         },
-        "sub_type": {
+        "open_with_tool": {
           "description": "Sub-flow editing type. The default is 'canvas'",
           "enum": [
             "canvas",

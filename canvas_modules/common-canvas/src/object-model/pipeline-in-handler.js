@@ -61,9 +61,9 @@ export default class PipelineInHandler {
 				"expanded_width": has(node, "app_data.ui_data.expanded_width") ? node.app_data.ui_data.expanded_width : layoutInfo.supernodeDefaultWidth,
 				"expanded_height": has(node, "app_data.ui_data.expanded_height") ? node.app_data.ui_data.expanded_height : layoutInfo.supernodeDefaultHeight
 			};
-			// Separate initialization needed to ensure that only valid enumeration values are used
-			if (has(node, "sub_type")) {
-				obj.sub_type = node.sub_type;
+			// Separate initialization needed to ensure field is only created when present.
+			if (has(node, "open_with_tool")) {
+				obj.open_with_tool = node.open_with_tool;
 			}
 			return obj;
 		});

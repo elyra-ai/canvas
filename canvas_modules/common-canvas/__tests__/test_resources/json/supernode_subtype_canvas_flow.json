@@ -53,7 +53,7 @@
         {
           "id": "29635258-7e44-49ef-a282-967f970e44f7",
           "type": "super_node",
-          "sub_type": "canvas",
+          "open_with_tool": "canvas",
           "subflow_ref": {
             "pipeline_id_ref": "26d24aad-9ff4-461d-b649-8d1659b622ae"
           },
