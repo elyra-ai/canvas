@@ -204,11 +204,8 @@
           ]
         },
         "open_with_tool": {
-          "description": "Sub-flow editing type. The default is 'canvas'",
-          "enum": [
-            "canvas",
-            "shaper"
-          ]
+          "description": "Name of the tool which can be used to view or edit the sub-flow for this supernode. The default is 'canvas'",
+          "type": "string"
         },
         "subflow_ref": {
           "description": "Refers to the sub-flow associated with this supernode",
