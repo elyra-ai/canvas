@@ -1,0 +1,12 @@
+{
+  "titleDefinition": {
+    "title": "Empty Definition"
+  },
+  "uihints": {
+    "id": "default",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Empty parameter definition"
+    }
+  }
+}

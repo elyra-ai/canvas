@@ -47,30 +47,26 @@ export class PropertyDef {
 
 
 	static makePropertyDef(titleDefinition, parameters, structures, uihints) {
-		if (parameters) {
-			// structures aren't in current spec
-			const structureMetadata = StructureMetadata.makeStructureMetadata(structures, propertyOf(uihints)("complex_type_info"));
-			const parameterMetadata = ParameterMetadata.makeParameterMetadata(parameters, propertyOf(uihints)("parameter_info"));
-			const actionMetadata = ActionMetadata.makeActionMetadata(propertyOf(uihints)("action_info"));
-			const groupMetadata = GroupMetadata.makeGroupMetadata(propertyOf(uihints)("group_info"));
+		const structureMetadata = StructureMetadata.makeStructureMetadata(structures, propertyOf(uihints)("complex_type_info"));
+		const parameterMetadata = ParameterMetadata.makeParameterMetadata(parameters, propertyOf(uihints)("parameter_info"));
+		const actionMetadata = ActionMetadata.makeActionMetadata(propertyOf(uihints)("action_info"));
+		const groupMetadata = GroupMetadata.makeGroupMetadata(propertyOf(uihints)("group_info"));
 
-			const label = titleDefinition && titleDefinition.title ? titleDefinition.title : "";
-			const labelEditable = titleDefinition && typeof titleDefinition.editable !== "undefined" ? titleDefinition.editable : DEFAULT_LABEL_EDITABLE;
+		const label = titleDefinition && titleDefinition.title ? titleDefinition.title : "";
+		const labelEditable = titleDefinition && typeof titleDefinition.editable !== "undefined" ? titleDefinition.editable : DEFAULT_LABEL_EDITABLE;
 
-			return new PropertyDef(
-				propertyOf(uihints)("id"),
-				propertyOf(uihints)("icon"),
-				propertyOf(uihints)("editor_size"),
-				label,
-				labelEditable,
-				propertyOf(uihints)("help"),
-				propertyOf(uihints)("description"),
-				structureMetadata,
-				parameterMetadata,
-				groupMetadata,
-				actionMetadata
-			);
-		}
-		return null;
+		return new PropertyDef(
+			propertyOf(uihints)("id"),
+			propertyOf(uihints)("icon"),
+			propertyOf(uihints)("editor_size"),
+			label,
+			labelEditable,
+			propertyOf(uihints)("help"),
+			propertyOf(uihints)("description"),
+			structureMetadata,
+			parameterMetadata,
+			groupMetadata,
+			actionMetadata
+		);
 	}
 }

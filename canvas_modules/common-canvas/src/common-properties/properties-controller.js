@@ -20,6 +20,7 @@ import ControlFactory from "./controls/control-factory";
 import { ControlType, Type, ParamRole } from "./constants/form-constants";
 import cloneDeep from "lodash/cloneDeep";
 import assign from "lodash/assign";
+import isEmpty from "lodash/isEmpty";
 
 import ConditionOps from "./ui-conditions/condition-ops/condition-ops";
 
@@ -81,8 +82,8 @@ export default class PropertiesController {
 	//
 	setForm(form, intl) {
 		this.form = form;
-		this.reactIntl = intl;
 		// console.log(JSON.stringify(form, null, 2));
+		this.reactIntl = intl;
 		// set initial property values
 		if (this.form) {
 			this.controls = {};
@@ -118,7 +119,7 @@ export default class PropertiesController {
 			this._addToControlValues(true);
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
 			// set initial tab to first tab
-			if (Array.isArray(this.uiItems) && Array.isArray(this.uiItems[0].tabs)) {
+			if (!isEmpty(this.uiItems) && !isEmpty(this.uiItems[0].tabs)) {
 				this.setActiveTab(this.uiItems[0].tabs[0].group);
 			}
 		}

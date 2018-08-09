@@ -17,6 +17,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 import numberfieldResource from "../test_resources/paramDefs/numberfield_paramDef.json";
+import emptyParamDef from "../test_resources/paramDefs/empty_paramDef.json";
 import { IntlProvider } from "react-intl";
 
 
@@ -131,6 +132,7 @@ describe("CommonProperties works correctly in flyout", () => {
 	afterEach(() => {
 		wrapper.unmount();
 	});
+
 	it("When applyOnBlur=true only the `Close` button should be rendered", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef); // default is applyOnBlur=true
 		wrapper = renderedObject.wrapper;
@@ -205,16 +207,19 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 	});
+
 	it("When enableResize=false resize button should not be rendered", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { enableResize: false });
 		wrapper = renderedObject.wrapper;
 		expect(wrapper.find("button.properties-btn-resize")).to.have.length(0);
 	});
+
 	it("When resize button should not be rendered", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef);
 		wrapper = renderedObject.wrapper;
 		expect(wrapper.find("button.properties-btn-resize")).to.have.length(1);
 	});
+
 	it("When resize button should not be rendered", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { enableResize: true });
 		wrapper = renderedObject.wrapper;
@@ -229,8 +234,16 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(wrapper.find("div.properties-small")).to.have.length(1);
 		expect(wrapper.find("div.properties-medium")).to.have.length(0);
 	});
-});
 
+	it("When no groups or parameters are defined the flyout should still render", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(emptyParamDef);
+		wrapper = renderedObject.wrapper;
+		expect(wrapper.find("div.properties-wrapper")).to.have.length(1);
+		expect(wrapper.find("div.properties-title-editor")).to.have.length(1);
+		expect(wrapper.find("div.properties-custom-container")).to.have.length(1);
+		expect(wrapper.find("div.properties-modal-buttons")).to.have.length(1);
+	});
+});
 
 describe("CommonProperties validates on close in flyout", () => {
 	let wrapper;
