@@ -107,6 +107,12 @@ module.exports = function() {
 		expect(errorMsg).toEqual(expMsg);
 	});
 
+	this.Then("I click on the validate link.", function() {
+		browser.$(".properties-expression-validate")
+			.$(".validateLink")
+			.click();
+	});
+
 	this.Then(/^I verify that the event log has a value of "([^"]*)" for the "([^"]*)" parameter$/, function(testValue, parameterName) {
 		var lastEventLog = testUtils.getLastEventLogData();
 		var found = false;
@@ -132,9 +138,74 @@ module.exports = function() {
 		expect(found).toBe(true);
 	});
 
+	this.Then(/^I click on the expression build button for the "([^"]*)" property$/, function(propertyName) {
+		browser.$("div[data-id='properties-ci-" + propertyName + "']")
+			.$(".properties-expression-button")
+			.$("button")
+			.click();
+
+	});
+
+	this.Then(/^I click on the validate link on the expression "([^"]*)" for the "([^"]*)" property\.$/, function(controlType, propertyName) {
+		const typeSelector = (controlType === "builder") ? ".properties-wf-content" : ".properties-expression-editor-wrapper .properties-editor-container";
+		const validateLink = browser.$("div[data-id='properties-ci-" + propertyName + "']")
+			.$(typeSelector)
+			.$(".properties-expression-validate")
+			.$(".validateLink");
+		browser.pause(3000);
+		validateLink.click();
+	});
+
+	this.Then(/^I validate the "([^"]*)" icon on the expression "([^"]*)" for the "([^"]*)" property\.$/, function(iconName, controlType, propertyName) {
+		const typeSelector = (controlType === "builder") ? ".properties-wf-content" : ".properties-expression-editor-wrapper .properties-editor-container";
+		const icon = browser.$("div[data-id='properties-ci-" + propertyName + "']")
+			.$(typeSelector)
+			.$(".properties-expression-validate")
+			.$$(".validateIcon");
+		if (icon.length === 0 && iconName === "none") {
+			return;
+		}
+		const iconClass = icon[0].$("svg").getAttribute("class");
+		const iconCheck = (iconName === "success") ? "info" : iconName;
+		expect(iconClass).toEqual(iconCheck);
+	});
+
+	this.Then(/^I select the "([^"]*)" tab for the "([^"]*)" property\.$/, function(tabName, propertyName) {
+		const tabs = browser.$("div[data-id='properties-ci-" + propertyName + "']")
+			.$(".properties-expression-selection-fieldOrFunction")
+			.$$("a");
+		tabs.forEach((tab) => {
+			if (tab.getText() === tabName) {
+				tab.click();
+			}
+		});
+
+	});
+
+	this.Then(/^I select "([^"]*)" from the "([^"]*)" table for the "([^"]*)" property\.$/, function(value, tableType, propertyName) {
+		const tableRows = browser.$("div[data-id='properties-ci-" + propertyName + "']")
+			.$(".properties-" + tableType + "-table-container")
+			.$$("tr");
+		const foundRow = getRowMatch(tableRows, value);
+		if (foundRow) {
+			foundRow.doubleClick();
+		}
+	});
+
+	function getRowMatch(tableRows, value) {
+		for (let idx = 0; idx < tableRows.length; idx++) {
+			const columns = tableRows[idx].$$("td");
+			for (let index = 0; index < columns.length; index++) {
+				if (columns[index].getText() === value) {
+					return tableRows[idx];
+				}
+			}
+		}
+		return null;
+	}
+
 	function getPropertiesApplyButton() {
 		const applyButtons = browser.$$(".properties-apply-button");
 		return applyButtons[applyButtons.length - 1];
 	}
-
 };

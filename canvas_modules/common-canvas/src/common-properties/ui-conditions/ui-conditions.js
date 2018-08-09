@@ -46,7 +46,11 @@ function validateInput(definition, propertyId, controller) {
  */
 function validation(data, propertyId, controller) {
 	if (data.fail_message && data.evaluate) {
-		return evaluate(data.evaluate, propertyId, controller) || failedMessage(data.fail_message);
+		const result = evaluate(data.evaluate, propertyId, controller);
+		if (typeof result === "object") {
+			return result;
+		}
+		return result || failedMessage(data.fail_message);
 	}
 	throw new Error("Invalid validation schema");
 }
@@ -288,7 +292,7 @@ function _handleDmModelingRole(inFields, roleValues) {
 
 /**
  *
- * @param {Object} failedMessage message object with "focus_parameter_ref" and "message"
+ * @param {Object}  failed message object with "focus_parameter_ref" and "message"
  * @return {String} failed message
  */
 function failedMessage(failedErrorMessage) {

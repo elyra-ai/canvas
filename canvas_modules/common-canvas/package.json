@@ -31,7 +31,7 @@
     "log4js": "0.6.38",
     "moment": "2.20.1",
     "prop-types": "15.5.10",
-    "react-codemirror2": "4.0.0",
+    "react-codemirror2": "5.0.4",
     "react-contextmenu": "2.6.5",
     "react-intl": "2.3.0",
     "react-observe-size": "0.1.3",

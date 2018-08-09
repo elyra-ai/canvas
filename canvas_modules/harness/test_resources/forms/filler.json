@@ -180,6 +180,25 @@
         "url": ""
       }
     ],
+    "conditions": [
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "message": {
+              "default": "Expression cannot contain help"
+            },
+            "focus_parameter_ref": "condition"
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "condition",
+              "op": "customSyntaxCheck"
+            }
+          }
+        }
+      }
+    ],
     "data": {
       "currentParameters": {
         "annotation": "",
@@ -187,57 +206,83 @@
         "replace_with": 0,
         "condition": "@BLANK(@FIELD)",
         "fields": [
-					"Sex",
-        	"BP"
-				],
+          "Sex",
+          "BP"
+        ],
         "use_custom_name": false,
         "custom_name": ""
       },
-			"datasetMetadata": {
+      "datasetMetadata": {
         "fields": [
           {
             "name": "Age",
             "type": "integer",
-						"metadata": {
-							"description": "",
-            	"measure": "range",
-            	"modeling_role": "input"
-						}
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input",
+              "range": {
+                "min": 21,
+                "max": 55
+              }
+            }
           },
           {
             "name": "Sex",
             "type": "string",
-						"metadata": {
-							"description": "",
-            	"measure": "discrete",
-            	"modeling_role": "input"
-						}
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input",
+              "values": [
+                "male",
+                "female",
+                "not specified"
+              ]
+            }
           },
           {
             "name": "BP",
             "type": "string",
-						"metadata": {
-							"description": "",
-            	"measure": "discrete",
-            	"modeling_role": "input"
-						}
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input",
+              "values": [
+                "very high",
+                "high",
+                "normal",
+                "low",
+                "very low"
+              ]
+            }
           },
           {
             "name": "Cholesterol",
             "type": "string",
-						"metadata": {
-							"description": "",
-            	"measure": "discrete",
-            	"modeling_role": "input"
-						}
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input",
+              "values": [
+                "hdl good",
+                "hdl bad",
+                "ldl good",
+                "ldl bad"
+              ]
+            }
           },
           {
             "name": "Na",
             "type": "double",
             "metadata": {
               "description": "",
-            	"measure": "range",
-            	"modeling_role": "input"
+              "measure": "range",
+              "modeling_role": "input",
+              "range": {
+                "min": -0.5,
+                "max": 1
+              }
             }
           },
           {
@@ -246,7 +291,11 @@
             "metadata": {
               "description": "",
               "measure": "range",
-              "modeling_role": "input"
+              "modeling_role": "input",
+              "range": {
+                "min": -1.5,
+                "max": 0.5
+              }
             }
           },
           {
@@ -255,7 +304,19 @@
             "metadata": {
               "description": "",
               "measure": "discrete",
-              "modeling_role": "input"
+              "modeling_role": "input",
+              "values": [
+                "Bumetanide",
+                "Chlorthalidone",
+                "Chlorothiazide",
+                "Ethacrynate",
+                "Furosemide",
+                "Hydrochlorothiazide",
+                "Indapamide",
+                "Methyclothiazide",
+                "Metolazone",
+                "Torsemide"
+              ]
             }
           }
         ]

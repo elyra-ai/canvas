@@ -48,6 +48,8 @@ export default class SidePanelModal extends React.Component {
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
+		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
+
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 	}
 
@@ -144,6 +146,10 @@ export default class SidePanelModal extends React.Component {
 
 	useApplyOnBlur(checked) {
 		this.props.useApplyOnBlur(checked);
+	}
+
+	useExpressionBuilder(checked) {
+		this.props.useExpressionBuilder(checked);
 	}
 
 	dropdownOptions() {
@@ -246,6 +252,16 @@ export default class SidePanelModal extends React.Component {
 				/>
 			</div>);
 
+		const expressionBuilder = (
+			<div className="sidepanel-children">
+				<div className="sidepanel-headers">Show Expression Builder</div>
+				<Toggle
+					id="sidepanel-expressionBuilder-toggle"
+					toggled={this.props.expressionBuilder}
+					onToggle={this.useExpressionBuilder}
+				/>
+			</div>);
+
 		const addtlCmpts = (
 			<div className="sidepanel-children" id="sidepanel-properties-additional-components">
 				<div className="sidepanel-headers">Display additional components</div>
@@ -266,6 +282,8 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{applyOnBlur}
 				{divider}
+				{expressionBuilder}
+				{divider}
 				{addtlCmpts}
 			</div>
 		);
@@ -283,6 +301,8 @@ SidePanelModal.propTypes = {
 	closeSidePanelModal: PropTypes.func,
 	applyOnBlur: PropTypes.bool,
 	useApplyOnBlur: PropTypes.func,
+	expressionBuilder: PropTypes.bool,
+	useExpressionBuilder: PropTypes.func,
 	displayAdditionalComponents: PropTypes.bool,
 	useDisplayAdditionalComponents: PropTypes.func,
 	setPropertiesDropdownSelect: PropTypes.func,

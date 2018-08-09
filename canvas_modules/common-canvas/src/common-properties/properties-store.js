@@ -12,6 +12,10 @@ import { setPropertyValues, updatePropertyValue } from "./actions";
 import { setControlStates, updateControlState } from "./actions";
 import { setPanelStates, updatePanelState } from "./actions";
 import { clearSelectedRows, updateSelectedRows } from "./actions";
+import { clearExpressionSelection, updateExpressionSelection } from "./actions";
+import { updateExpressionValidate } from "./actions";
+
+
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
 import { setDatasetMetadata } from "./actions";
 import { setTitle, setActiveTab } from "./actions";
@@ -297,6 +301,43 @@ export default class PropertiesStore {
 	clearSelectedRows(controlName) {
 		this.store.dispatch(clearSelectedRows({ name: controlName }));
 	}
+
+	/*
+	* Expression cursor/selection Methods
+	*/
+	getExpressionSelection(controlName) {
+		const state = this.store.getState();
+		if (typeof state.componentMetadataReducer[controlName] === "undefined" ||
+	typeof state.componentMetadataReducer[controlName].expressionSelection === "undefined") {
+			return [];
+		}
+		return state.componentMetadataReducer[controlName].expressionSelection;
+	}
+
+	updateExpressionSelection(controlName, selection) {
+		this.store.dispatch(updateExpressionSelection({ name: controlName, expressionSelection: selection }));
+	}
+
+	clearExpressionSelection(controlName) {
+		this.store.dispatch(clearExpressionSelection({ name: controlName }));
+	}
+
+	/*
+	* Expression validate Methods
+	*/
+	getExpressionValidate(controlName) {
+		const state = this.store.getState();
+		if (typeof state.componentMetadataReducer[controlName] === "undefined" ||
+	typeof state.componentMetadataReducer[controlName].expressionValidate === "undefined") {
+			return false;
+		}
+		return state.componentMetadataReducer[controlName].expressionValidate;
+	}
+
+	updateExpressionValidate(controlName, Validate) {
+		this.store.dispatch(updateExpressionValidate({ name: controlName, expressionValidate: Validate }));
+	}
+
 
 	setTitle(title) {
 		this.store.dispatch(setTitle(title));

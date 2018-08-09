@@ -88,6 +88,8 @@ export default class SidePanel extends React.Component {
 				closeSidePanelModal={this.props.propertiesConfig.closeSidePanelModal}
 				applyOnBlur={this.props.propertiesConfig.applyOnBlur}
 				useApplyOnBlur={this.props.propertiesConfig.useApplyOnBlur}
+				expressionBuilder={this.props.propertiesConfig.expressionBuilder}
+				useExpressionBuilder={this.props.propertiesConfig.useExpressionBuilder}
 				displayAdditionalComponents={this.props.propertiesConfig.displayAdditionalComponents}
 				useDisplayAdditionalComponents={this.props.propertiesConfig.useDisplayAdditionalComponents}
 				selectedPropertiesDropdownFile={this.props.propertiesConfig.selectedPropertiesDropdownFile}
@@ -176,6 +178,8 @@ SidePanel.propTypes = {
 		closeSidePanelModal: PropTypes.func,
 		applyOnBlur: PropTypes.bool,
 		useApplyOnBlur: PropTypes.func,
+		expressionBuilder: PropTypes.bool,
+		useExpressionBuilder: PropTypes.func,
 		displayAdditionalComponents: PropTypes.bool,
 		useDisplayAdditionalComponents: PropTypes.func,
 		selectedPropertiesDropdownFile: PropTypes.string,

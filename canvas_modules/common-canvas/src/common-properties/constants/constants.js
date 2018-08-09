@@ -45,7 +45,24 @@ _defineConstant("MESSAGE_KEYS_DEFAULTS", {
 	TABLE_SUMMARY_WARNING: "There are {warningMsgCount} warning cells. ",
 	REQUIRED_ERROR: "Required parameter '{label}' has no value.",
 	DATETIME_FORMAT_ERROR: "Invalid {role}. Format should be {format}.",
-	INVALID_FIELD_ERROR: "Invalid {label}, field not found in data set."
+	INVALID_FIELD_ERROR: "Invalid {label}, field not found in data set.",
+	EXPRESSION_OPERATORS_LABEL: "Operators",
+	EXPRESSION_VALIDATE_LABEL: "Validate",
+	EXPRESSION_BUILDER_TITLE: "Expression Builder",
+	EXPRESSION_BUILDER_LABEL: "Expression",
+	EXPRESSION_FIELDS_TITLE: "Fields",
+	EXPRESSION_VALUES_TITLE: "Values",
+	EXPRESSION_FIELD_COLUMN: "Field",
+	EXPRESSION_STORAGE_COLUMN: "Storage",
+	EXPRESSION_VALUE_COLUMN: "Value",
+	EXPRESSION_FUNCTION_COLUMN: "Function",
+	EXPRESSION_RETURN_COLUMN: "Return",
+	EXPRESSION_FIELD_TAB: "Fields and Values",
+	EXPRESSION_FUNCTIONS_TAB: "Functions",
+	EXPRESSION_RECENTLY_USED: "Recently Used",
+	EXPRESSION_MIN_LABEL: "Min",
+	EXPRESSION_MAX_LABEL: "Max",
+	EXPRESSION_NO_FUNCTIONS: "No functions found."
 });
 
 _defineConstant("MESSAGE_KEYS", {
@@ -78,7 +95,24 @@ _defineConstant("MESSAGE_KEYS", {
 	TABLE_SUMMARY_WARNING: "table.summary.warning",
 	REQUIRED_ERROR: "required.error",
 	DATETIME_FORMAT_ERROR: "datetime.format.error",
-	INVALID_FIELD_ERROR: "invalid.field.error"
+	INVALID_FIELD_ERROR: "invalid.field.error",
+	EXPRESSION_OPERATORS_LABEL: "expression.operators.label",
+	EXPRESSION_VALIDATE_LABEL: "expression.validate.label",
+	EXPRESSION_BUILDER_TITLE: "expression.builder.title",
+	EXPRESSION_BUILDER_LABEL: "expression.builder.label",
+	EXPRESSION_FIELDS_TITLE: "expression.fields.title",
+	EXPRESSION_VALUES_TITLE: "expression.values.title",
+	EXPRESSION_FIELD_COLUMN: "expression.field.column",
+	EXPRESSION_STORAGE_COLUMN: "expression.storage.column",
+	EXPRESSION_VALUE_COLUMN: "expression.value.column",
+	EXPRESSION_FUNCTION_COLUMN: "expression.function.column",
+	EXPRESSION_RETURN_COLUMN: "expression.return.column",
+	EXPRESSION_FIELD_TAB: "expression.field.tab",
+	EXPRESSION_FUNCTIONS_TAB: "expression.functions.tab",
+	EXPRESSION_RECENTLY_USED: "expression.recently.used",
+	EXPRESSION_MIN_LABEL: "expression.min.label",
+	EXPRESSION_MAX_LABEL: "expression.max.label",
+	EXPRESSION_NO_FUNCTIONS: "expression.no.functions"
 });
 
 _defineConstant("CHARACTER_LIMITS", {
@@ -99,7 +133,8 @@ _defineConstant("DEFAULT_VALIDATION_MESSAGE", {
 _defineConstant("CONDITION_MESSAGE_TYPE", {
 	INFO: "info",
 	ERROR: "error",
-	WARNING: "warning"
+	WARNING: "warning",
+	SUCCESS: "success"
 });
 
 _defineConstant("SPINNER", "spinner");
@@ -154,6 +189,8 @@ _defineConstant("ACTIONS", {
 _defineConstant("DEFAULT_LABEL_EDITABLE", true);
 
 _defineConstant("FP_CHECKBOX_WIDTH", "40px");
+
+_defineConstant("EXPRESSION_TABLE_ROWS", 6);
 
 _defineConstant("TABLE_SUBPANEL_BUTTON_WIDTH", "36px");
 

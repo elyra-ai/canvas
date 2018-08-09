@@ -11,7 +11,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Icon from "carbon-components-react/lib/components/Icon";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { STATES, TOOL_TIP_DELAY } from "./../../constants/constants.js";
+import { STATES, TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE } from "./../../constants/constants.js";
 import classNames from "classnames";
 import uuid4 from "uuid/v4";
 
@@ -21,11 +21,12 @@ export default class ValidationMessage extends React.Component {
 		if (!this.props.messageInfo) {
 			return null;
 		}
+		const iconType = (this.props.messageInfo.type === CONDITION_MESSAGE_TYPE.SUCCESS) ? "checkmark" : this.props.messageInfo.type;
 		const msgText = this.props.inTable ? null : <span>{this.props.messageInfo.text}</span>;
 		const icon = (<div className="icon">
 			<Icon className={this.props.messageInfo.type}
 				description=""
-				name={this.props.messageInfo.type + "--glyph"}
+				name={iconType + "--glyph"}
 			/>
 		</div>);
 		const msgIcon = this.props.inTable

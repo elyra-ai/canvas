@@ -14,7 +14,7 @@ import UiConditionsParser from "./ui-conditions/ui-conditions-parser.js";
 import UiGroupsParser from "./ui-conditions/ui-groups-parser.js";
 import conditionsUtil from "./ui-conditions/conditions-utils";
 import PropertyUtils from "./util/property-utils.js";
-import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT } from "./constants/constants.js";
+import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { ControlType, Type, ParamRole } from "./constants/form-constants";
@@ -50,6 +50,8 @@ export default class PropertiesController {
 		this.isSummaryPanel = false;
 		this.visibleSubPanelCounter = 0;
 		this.conditionOps = ConditionOps.getConditionOps();
+		this.expressionFunctionInfo = {};
+		this.expressionRecentlyUsed = [];
 	}
 
 	subscribe(callback) {
@@ -135,6 +137,46 @@ export default class PropertiesController {
 
 	getAppData() {
 		return this.appData;
+	}
+
+	setExpressionInfo(expressionInfo) {
+		if (expressionInfo) {
+			if (Array.isArray(expressionInfo.function_info)) {
+				const functionList = {};
+				const allFunctions = [];
+				expressionInfo.function_info.forEach((functionInfo) => {
+					for (let index = 0; index < functionInfo.categories.length; index++) {
+						if (typeof functionList[functionInfo.categories[index]] === "undefined") {
+							functionList[functionInfo.categories[index]] = [];
+						}
+						functionList[functionInfo.categories[index]].push(functionInfo);
+						if (allFunctions.indexOf(functionInfo) === -1) {
+							allFunctions.push(functionInfo);
+						}
+					}
+				});
+				this.expressionFunctionInfo = Object.assign(functionList, { "All Functions": allFunctions });
+			}
+		}
+	}
+
+	getExpressionInfo() {
+		return this.expressionFunctionInfo;
+	}
+
+
+	getExpressionRecentlyUsed() {
+		return this.expressionRecentlyUsed;
+	}
+
+	updateExpressionRecentlyUsed(functionInfo) {
+		if (this.expressionRecentlyUsed.indexOf(functionInfo) === -1) {
+			this.expressionRecentlyUsed.push(functionInfo);
+		}
+	}
+
+	clearExpressionRecentlyUsed() {
+		this.expressionRecentlyUsed = [];
 	}
 
 	_parseUiConditions() {
@@ -392,6 +434,10 @@ export default class PropertiesController {
 
 	getUiItems() {
 		return this.uiItems;
+	}
+
+	getReactIntl() {
+		return this.reactIntl;
 	}
 
 	addSharedControls(id, controlsNames) {
@@ -676,6 +722,32 @@ export default class PropertiesController {
 		this.propertiesStore.clearSelectedRows(controlName);
 	}
 
+	//
+	// Expression cursor/selection
+	//
+	getExpressionSelection(controlName) {
+		return this.propertiesStore.getExpressionSelection(controlName);
+	}
+
+	updateExpressionSelection(controlName, selection) {
+		this.propertiesStore.updateExpressionSelection(controlName, selection);
+	}
+
+	clearExpressionSelection(controlName) {
+		this.propertiesStore.clearExpressionSelection(controlName);
+	}
+
+	//
+	// Expression validation request
+	//
+	getExpressionValidate(controlName) {
+		return this.propertiesStore.getExpressionValidate(controlName);
+	}
+
+	updateExpressionValidate(controlName, validate) {
+		this.propertiesStore.updateExpressionValidate(controlName, validate);
+	}
+
 	/**
 	* Retrieve filtered enumeration items.
 	*
@@ -869,7 +941,7 @@ export default class PropertiesController {
 	* @param inPropertyId boolean
 	* @return error message object
 	*/
-	getErrorMessage(inPropertyId, filterHiddenDisable) {
+	getErrorMessage(inPropertyId, filterHiddenDisable, filterSuccess) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		// don't return hidden message
 		if (filterHiddenDisable) {
@@ -878,8 +950,13 @@ export default class PropertiesController {
 				return null;
 			}
 		}
-
-		return this.propertiesStore.getErrorMessage(propertyId, this.reactIntl);
+		const message = this.propertiesStore.getErrorMessage(propertyId, this.reactIntl);
+		if (filterSuccess) {
+			if (message.type === CONDITION_MESSAGE_TYPE.SUCCESS) {
+				return null;
+			}
+		}
+		return message;
 	}
 
 	/**
@@ -888,24 +965,24 @@ export default class PropertiesController {
 	* @param filteredPipeline boolean
 	* @return object when filteredPipeline=false or array when filteredPipeline=true
 	*/
-	getErrorMessages(filteredPipeline, filterHiddenDisable) {
+	getErrorMessages(filteredPipeline, filterHiddenDisable, filterSuccess) {
 		let messages = this.propertiesStore.getErrorMessages();
 		if (filteredPipeline || filterHiddenDisable) {
-			messages = this._filterMessages(messages, filteredPipeline, filterHiddenDisable);
+			messages = this._filterMessages(messages, filteredPipeline, filterHiddenDisable, filterSuccess);
 		}
 		return messages;
 	}
 
-	_filterMessages(messages, filteredPipeline, filterHiddenDisable) {
+	_filterMessages(messages, filteredPipeline, filterHiddenDisable, filterSuccess) {
 		if (filteredPipeline) {
-			return this._filterPipelineMessages(messages, filterHiddenDisable);
+			return this._filterPipelineMessages(messages, filterHiddenDisable, filterSuccess);
 		}
 		const filteredMessages = {};
 		for (const paramKey in messages) {
 			if (!messages.hasOwnProperty(paramKey)) {
 				continue;
 			}
-			const paramMessage = this.getErrorMessage({ name: paramKey }, filterHiddenDisable);
+			const paramMessage = this.getErrorMessage({ name: paramKey }, filterHiddenDisable, filterSuccess);
 			if (paramMessage && paramMessage.text) {
 				filteredMessages[paramKey] = paramMessage;
 			}
@@ -913,7 +990,7 @@ export default class PropertiesController {
 		return filteredMessages;
 	}
 
-	_filterPipelineMessages(messages, filterHiddenDisable) {
+	_filterPipelineMessages(messages, filterHiddenDisable, filterSuccess) {
 		let pipelineMessages = [];
 		for (const paramKey in messages) {
 			if (!messages.hasOwnProperty(paramKey)) {
@@ -926,7 +1003,7 @@ export default class PropertiesController {
 				}
 				if (rowKey === "text") { // control level message
 					pipelineMessages = this._addToMessages(pipelineMessages, paramKey, null,
-						controlMessages, filterHiddenDisable);
+						controlMessages, filterHiddenDisable, filterSuccess);
 				} else if (rowKey !== "type" && rowKey !== "validation_id") {
 					const rowMessages = controlMessages[rowKey];
 					for (const colKey in rowMessages) {
@@ -935,11 +1012,11 @@ export default class PropertiesController {
 						}
 						if (colKey === "text") { // row level message
 							pipelineMessages = this._addToMessages(pipelineMessages, paramKey, { row: rowKey },
-								rowMessages, filterHiddenDisable);
+								rowMessages, filterHiddenDisable, filterSuccess);
 						} else if (colKey !== "type" && colKey !== "validation_id") {
 							const colMessage = rowMessages[colKey]; // cell level messages
 							pipelineMessages = this._addToMessages(pipelineMessages, paramKey, { row: rowKey, col: colKey },
-								colMessage, filterHiddenDisable);
+								colMessage, filterHiddenDisable, filterSuccess);
 						}
 					}
 				}
@@ -948,7 +1025,7 @@ export default class PropertiesController {
 		return pipelineMessages;
 	}
 
-	_addToMessages(messages, idRef, tableRef, message, filterHiddenDisable) {
+	_addToMessages(messages, idRef, tableRef, message, filterHiddenDisable, filterSuccess) {
 		const propertyId = tableRef ? { name: idRef, row: tableRef.row, col: tableRef.col }
 			: { name: idRef };
 		if (filterHiddenDisable) {
@@ -956,6 +1033,9 @@ export default class PropertiesController {
 			if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN) {
 				return messages;
 			}
+		}
+		if (filterSuccess && message.type === CONDITION_MESSAGE_TYPE.SUCCESS) {
+			return messages;
 		}
 		if (tableRef) {
 			messages.push({

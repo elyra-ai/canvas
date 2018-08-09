@@ -1,0 +1,119 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+/* These are used in custom expression builder */
+$field-function-width: 85%;
+$operators-width: 15%;
+$fields-table-margin: 50%;
+$fields-table-width: 48%;
+$values-table-width: 48%;
+$functions-table-margin: 70%;
+$functions-table-width: 68%;
+$functions-help-width: 28%;
+$operator-width: 45%;
+$operator-margin: 50%;
+
+.properties-expression-selection-container, .properties-field-and-values-table-container,
+.properties-functions-table-container {
+	width: 100%;
+	tbody {
+		tr {
+			border-bottom: 0;
+		}
+	}
+}
+
+.properties-expression-selection-container {
+	margin-top: 2%;
+}
+
+.properties-expression-title {
+	line-height: 2rem;
+	font-weight: bold;
+}
+
+.properties-expression-selection-fieldOrFunction {
+	width: $field-function-width;
+	float: left;
+}
+
+.properties-expression-selection-operator {
+	width: $operators-width;
+	margin-left: $field-function-width;
+}
+
+.properties-field-table-container {
+	width: $fields-table-width;
+	float: left;
+	.properties-ft-search-container {
+		width: 100%;
+	}
+}
+
+.properties-value-table-container {
+	width: $values-table-width;
+	margin-left: $fields-table-margin;
+	.properties-ft-search-container {
+		width: 100%;
+	}
+}
+.properties-functions-table {
+	width: $functions-table-width;
+	float: left;
+}
+
+.properties-help-table-container {
+	width: $functions-help-width;
+	margin-left: $functions-table-margin;
+}
+
+.properties-function-help-command {
+	font-weight: 700;
+	text-decoration: underline;
+}
+
+.properties-function-help-text {
+	overflow-wrap: break-word;
+}
+
+.properties-operator-title {
+	padding-top: 1rem;
+	padding-bottom: 2rem;
+	width: 100%;
+	font-weight: bold;
+	text-align: center;
+}
+
+.properties-operator-button {
+	margin-bottom: 2px;
+	&.bx--btn--sm {
+		height: 20px;
+	}
+	&.first {
+		display: flex;
+		width: $operator-width;
+		float: left;
+	}
+	&.second {
+		display: flex;
+		width: $operator-width;
+		margin-left: $operator-margin;
+	}
+}
+
+.properties-expression-function-select {
+	width: 50%;
+	margin-bottom: 2px;
+}
+
+.table-row {
+	> :first-child {
+		margin-left: $table-column-left-padding;
+	}
+}

@@ -341,6 +341,7 @@ class FlexibleTable extends React.Component {
 			const row = this.props.data[ridx];
 			const tableRowColumns = [];
 			const onClickCallback = row.onClickCallback ? { onClick: row.onClickCallback } : null;
+			const onDblClickCallback = row.onDblClickCallback ? { onDoubleClick: row.onDblClickCallback } : null;
 			const rowClassName = row.className ? row.className : "";
 
 			if (row.columns) {
@@ -363,6 +364,7 @@ class FlexibleTable extends React.Component {
 			// need to assign width to table row so scrollbar from mouse will not push contents
 			tableRows.push(<Tr
 				{...onClickCallback}
+				{...onDblClickCallback}
 				key={this.props.scrollKey + "-row-" + ridx}
 				className={rowClassName}
 				style={{ width: tableWidth }}

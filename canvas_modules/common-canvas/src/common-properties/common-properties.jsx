@@ -37,6 +37,7 @@ class CommonProperties extends React.Component {
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
 		this.propertiesController.setAppData(props.propertiesInfo.appData);
+		this.propertiesController.setExpressionInfo(props.propertiesInfo.expressionInfo);
 		this.propertiesController.setHandlers({
 			controllerHandler: props.callbacks.controllerHandler,
 			propertyListener: props.callbacks.propertyListener,
@@ -166,7 +167,7 @@ class CommonProperties extends React.Component {
 			let valueInfo = { additionalInfo: {}, undoInfo: {} };
 			valueInfo = this._setValueInforProperties(valueInfo, true);
 			valueInfo.undoInfo.properties = this.propertiesController.getPropertyValues();
-			const errorMessages = this.propertiesController.getErrorMessages(true, true);
+			const errorMessages = this.propertiesController.getErrorMessages(true, true, true);
 			if (errorMessages) {
 				valueInfo.additionalInfo.messages = errorMessages;
 			}

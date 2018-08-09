@@ -8,6 +8,7 @@
  *******************************************************************************/
 /* eslint complexity: ["error", 16] */
 /* eslint max-len: ["error", 200] */
+/* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
 
 import React from "react";
@@ -39,6 +40,8 @@ import CustomTableControl from "./components/custom-controls/CustomTableControl"
 import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
 
 import CustomOpMax from "./custom/condition-ops/customMax";
+import CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
+
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
@@ -68,6 +71,8 @@ import justify32 from "../graphics/justify_32.svg";
 import api32 from "../graphics/api_32.svg";
 import template32 from "ibm-design-icons/dist/svg/object-based/template_32.svg";
 import FormsService from "./services/FormsService";
+
+import ExpressionInfo from "./constants/json/functionlist.json";
 
 class App extends React.Component {
 	constructor(props) {
@@ -105,6 +110,7 @@ class App extends React.Component {
 			extraCanvasDisplayed: false,
 			displayAdditionalComponents: false,
 			applyOnBlur: true,
+			expressionBuilder: true,
 			validateFlowOnOpen: true,
 			narrowPalette: true,
 			schemaValidationEnabled: true,
@@ -162,6 +168,7 @@ class App extends React.Component {
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
+		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.setNarrowPalette = this.setNarrowPalette.bind(this);
 		this.schemaValidation = this.schemaValidation.bind(this);
@@ -882,6 +889,12 @@ class App extends React.Component {
 		this.log("apply changes on blur", enabled);
 	}
 
+	useExpressionBuilder(enabled) {
+		this.setState({ expressionBuilder: enabled });
+		this.log("use expression builder", enabled);
+	}
+
+
 	useDisplayAdditionalComponents(enabled) {
 		this.setState({ displayAdditionalComponents: enabled });
 		this.log("additional components display", enabled);
@@ -1258,13 +1271,15 @@ class App extends React.Component {
 
 			const messages = canvasController.getNodeMessages(nodeId, activePipelineId);
 			const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
+			const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
 			const propsInfo = {
 				title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 				messages: messages,
 				formData: properties.data.formData,
 				parameterDef: properties.data,
 				appData: appData,
-				additionalComponents: additionalComponents
+				additionalComponents: additionalComponents,
+				expressionInfo: expressionInfo
 			};
 
 			if (inExtraCanvas) {
@@ -1329,12 +1344,15 @@ class App extends React.Component {
 	openPropertiesEditorDialog() {
 		var properties = this.state.propertiesJson;
 		const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
+		const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,
 			parameterDef: properties,
-			additionalComponents: additionalComponents
+			additionalComponents: additionalComponents,
+			expressionInfo: expressionInfo
 		};
+
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
 	}
 
@@ -1558,7 +1576,7 @@ class App extends React.Component {
 				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel, CustomDatasetsPanel]}
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl]}
-				customConditionOps={[CustomOpMax]}
+				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
 			/>);
 
 		const commonProperties2 = (
@@ -1571,7 +1589,7 @@ class App extends React.Component {
 				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel, CustomDatasetsPanel]}
 				callbacks={callbacks2}
 				customControls={[CustomToggleControl, CustomTableControl]}
-				customConditionOps={[CustomOpMax]}
+				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
 			/>);
 
 
@@ -1697,6 +1715,8 @@ class App extends React.Component {
 			closeSidePanelModal: this.closeSidePanelModal,
 			applyOnBlur: this.state.applyOnBlur,
 			useApplyOnBlur: this.useApplyOnBlur,
+			expressionBuilder: this.state.expressionBuilder,
+			useExpressionBuilder: this.useExpressionBuilder,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,

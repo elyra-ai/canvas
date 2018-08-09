@@ -176,7 +176,10 @@ export default class ControlFactory {
 		} else if (control.controlType === ControlType.TEXTAREA) {
 			return (<TextareaControl {...props} />);
 		} else if (control.controlType === ControlType.EXPRESSION) {
-			return (<ExpressionControl{...props} />);
+			return (<ExpressionControl
+				{...props}
+				rightFlyout={this.rightFlyout}
+			/>);
 		} else if (control.controlType === ControlType.TOGGLETEXT) {
 			return (<ToggletextControl
 				{...props}

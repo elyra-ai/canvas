@@ -37,11 +37,12 @@ Feature: ExpressionControl
 		Given I have uploaded JSON for common-properties "Javascript_FilterRows_paramDef.json"
 		Then I verify that the placeholder text is "Enter JavaScript text" in ExpressionEditor
 		Then I enter "i" in ExpressionEditor and press autocomplete and select "isFinite"
+		Then I click on the validate link.
 		Then I verify error "Cannot have value isFinite"
 		Then I click on the "OK" button
 
 		Given I have toggled the app side common-properties panel
-		
+
 	Scenario: Test of expression editor control in a structure cell
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
@@ -66,3 +67,34 @@ Feature: ExpressionControl
 		Then I verify that the summary list contains the value of "is_date" for the "Configure Derive Node" summary link in the "Structure List Table" category
 		Then I click on the "OK" button
 		Then I verify that the event log has a value of "is_date" for the "expressionCellTable" parameter
+
+		Given I have toggled the app side common-properties panel
+@watch
+	Scenario: Test of expression builder
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side common-properties panel
+		Then I have selected the "Flyout" properties container type
+		Given I have uploaded JSON for common-properties "expressionControl_paramDef.json"
+
+		Then I click on the expression build button for the "defaultExpr" property
+
+		# generate a success validate
+		Then I click on the validate link on the expression "builder" for the "defaultExpr" property.
+		Then I validate the "success" icon on the expression "builder" for the "defaultExpr" property.
+
+		# verify the icon goes away on the next input
+		Then I select "Age" from the "field" table for the "defaultExpr" property.
+		Then I validate the "none" icon on the expression "builder" for the "defaultExpr" property.
+
+		# generate a error
+		Then I select the "Functions" tab for the "defaultExpr" property.
+		Then I select "to_integer(Item)" from the "functions" table for the "defaultExpr" property.
+		Then I click on the validate link on the expression "builder" for the "defaultExpr" property.
+		Then I verify error "Expression cannot contain '?'"
+		Then I validate the "error" icon on the expression "builder" for the "defaultExpr" property.
+
+		# substitute a param char '?' (dependent on the test above)
+		Then I select the "Fields and Values" tab for the "defaultExpr" property.
+		Then I select "Age" from the "field" table for the "defaultExpr" property.
+		Then I validate the "none" icon on the expression "builder" for the "defaultExpr" property.
