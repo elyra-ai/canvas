@@ -49,7 +49,7 @@
 .properties-category-content {
 	height: 100%;
 	padding-left: 10px;
-	padding-right: 20px;
+	padding-right: 10px;
 	border-bottom: 2px solid $ui-04;
 	display: none;
 	&.show {
@@ -142,6 +142,7 @@
 .properties-static-text-container {
 	display: flex;
 	align-items: center;
+	padding: 4px 0;
 	.properties-static-text {
 		cursor: text;
 		font-size: 14px;
