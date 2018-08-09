@@ -48,12 +48,13 @@ class EditorForm extends React.Component {
 		this.genPanel = this.genPanel.bind(this);
 		this.genUIContent = this.genUIContent.bind(this);
 		this.genUIItem = this.genUIItem.bind(this);
+		this._getGroupedMessages = this._getGroupedMessages.bind(this);
 
 		this.closeFieldPicker = this.closeFieldPicker.bind(this);
 		this.openFieldPicker = this.openFieldPicker.bind(this);
 		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
 
-		this.messages = [];
+		this.messages = this._getGroupedMessages();
 
 		// initialize ControlFactory with correct values
 		this.ControlFactory = props.controller.getControlFactory();

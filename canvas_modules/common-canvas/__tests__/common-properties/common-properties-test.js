@@ -71,6 +71,14 @@ const propertiesInfo = {};
 propertiesInfo.parameterDef = editStyleResource.paramDef;
 propertiesInfo.appData = {};
 propertiesInfo.additionalComponents = {};
+propertiesInfo.messages = [
+	{
+		"id_ref": "samplingSize",
+		"validation_id": "samplingSize",
+		"type": "warning",
+		"text": "Incorrect sample size"
+	}
+];
 
 const callbacks = {
 	applyPropertyChanges: applyPropertyChanges,
@@ -112,6 +120,10 @@ describe("CommonProperties renders correctly", () => {
 		expect(tableButton.text()).to.equal("Add Some Stuff");
 	});
 
+	it("should set alert tab correctly on open", () => {
+		const wrapper = createCommonProperties("Custom");
+		expect(wrapper.find("div[data-id='properties-alerts-panel']")).to.have.length(1);
+	});
 });
 
 describe("CommonProperties works correctly in flyout", () => {
@@ -281,11 +293,15 @@ describe("CommonProperties validates on close in flyout", () => {
 });
 
 function createCommonProperties(container, messages) {
+	const propertiesConfig = { containerType: container };
+	if (container === "Custom") {
+		propertiesConfig.rightFlyout = true;
+	}
 	const	wrapper = mount(
 		<IntlProvider key="IntlProvider2" locale={ locale } messages={messages}>
 			<CommonProperties
 				propertiesInfo={propertiesInfo}
-				propertiesConfig={{ containerType: container }}
+				propertiesConfig={propertiesConfig}
 				callbacks={callbacks}
 			/>
 		</IntlProvider>
