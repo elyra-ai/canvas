@@ -88,6 +88,17 @@ module.exports = function() {
 		rows[Number(rowNumber) - 1].click();
 	});
 
+	this.Then(/^I select all the rows in the table "([^"]*)"$/, function(tableControlId) {
+		const containingDiv = browser.$("div[data-id='properties-" + tableControlId + "']");
+		const rows = containingDiv.$(".reactable-data")
+			.$$("tr");
+		browser.keys("Shift");
+		for (var index = 0; index < rows.length; index++) {
+			rows[index].click();
+		}
+		browser.keys("Shift");
+	});
+
 	this.Then(/^I verify the new title "([^"]*)"$/, function(newTitle) {
 		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
 		expect(newTitle).toEqual((lastEventLog.data.title).toString());

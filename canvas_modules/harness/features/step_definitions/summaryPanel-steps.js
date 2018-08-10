@@ -30,6 +30,29 @@ module.exports = function() {
 		browser.pause(250);
 	});
 
+	this.Then(/^I hover over the validation icon in the "([^"]*)" summary panel$/, function(summaryPanelId) {
+		// open the category
+		const summaryPanel = browser.$("div[data-id='properties-" + summaryPanelId + "']");
+		expect(summaryPanel).not.toBe(null);
+		// find the validation icon
+		const icon = summaryPanel.$(".tooltip-container");
+		icon.moveToObject();
+	});
+
+	this.Then(/^I verify the tip for the validation icon in the "([^"]*)" summary panel is visible$/, function(summaryPanelId) {
+		// open the category
+		const summaryPanel = browser.$("div[data-id='properties-" + summaryPanelId + "']");
+		expect(summaryPanel).not.toBe(null);
+		// find the validation icon
+		const icon = summaryPanel.$(".tooltip-container");
+		// verify tooltip
+		const tip = icon.$(".common-canvas-tooltip");
+		if (tip) {
+			expect(tip.getAttribute("aria-hidden") === "false").toEqual(true);
+		}
+	}
+	);
+
 	this.Then(/^I verify that the "([^"]*)" control is displayed$/, function(controlId) {
 		const control = browser.$("div[data-id='properties-ci-" + controlId + "']");
 		expect(control).not.toBe(null);
@@ -111,6 +134,7 @@ module.exports = function() {
 		}
 		return linkButton;
 	}
+
 
 	function findSummaryContainer(category, linkName) {
 		const summaryLinks = category.$$(".properties-summary-link-button");

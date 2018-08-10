@@ -156,3 +156,23 @@ Scenario: Sanity test tip location adjusted based on boundaries of browser
 		Then I move the mouse to coordinates 300, 100
 		Then I pause for 1 seconds
 		Then I verify the tip below the text "people in generation X" in summary "Values" is "hidden"
+
+Scenario: Test if tips show up for summary validation icon when there is an error or warning
+	Then I resize the window size to 1400 width and 800 height
+	Given I am on the test harness
+	Given I have toggled the app side common-properties panel
+	Then I have selected the "flyout" properties container type
+	Given I have uploaded JSON for common-properties "summaryPanel_paramDef.json"
+	# Select an existing row in the table and delete it's value.
+	Then I open the "Configure Derive Node" summary link in the "Structure List Table" category
+	Then I select the row 1 in the table "expressionCellTable"
+	Then I click the "Delete" button on the "expressionCellTable" table
+	Then I select the row 1 in the table "expressionCellTable"
+	Then I click the "Delete" button on the "expressionCellTable" table
+	# Select an existing row in the table below and delete it's value.
+	Then I select all the rows in the table "structurelisteditorTableInput"
+	Then I click the "Delete" button on the "structurelisteditorTableInput" table
+	Then I click on the "expressionCellTable-summary-panel" panel OK button
+	Then I hover over the validation icon in the "Derive-Node" summary panel
+	Then I pause for 3 seconds
+	Then I verify the tip for the validation icon in the "Derive-Node" summary panel is visible

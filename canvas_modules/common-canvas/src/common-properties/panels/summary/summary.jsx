@@ -17,7 +17,7 @@ import Icon from "carbon-components-react/lib/components/Icon";
 import { injectIntl, intlShape } from "react-intl";
 import isEmpty from "lodash/isEmpty";
 import PropertyUtils from "./../../util/property-utils";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import uuid4 from "uuid/v4";
 import { STATES } from "./../../constants/constants.js";
 import { Type, ParamRole } from "./../../constants/form-constants.js";
@@ -36,7 +36,6 @@ class SummaryPanel extends React.Component {
 		this.cancelWideFlyout = this.cancelWideFlyout.bind(this);
 		this._getSummaryTables = this._getSummaryTables.bind(this);
 	}
-
 	_onMouseMove(evt) {
 		this.setState({ mousePos: { x: evt.clientX, y: evt.clientY } });
 	}
@@ -210,14 +209,44 @@ class SummaryPanel extends React.Component {
 	_getSummaryIconState() {
 		const controls = this.props.controller.getSummaryPanelControls(this.props.panelId);
 		let msg = {};
+		let errorCount = 0;
+		let warningCount = 0;
 		controls.forEach((controlId) => {
 			const controlMsg = this.props.controller.getErrorMessage({ name: controlId }, true);
+			if (!isEmpty(controlMsg)) {
+				if (controlMsg.type === CONDITION_MESSAGE_TYPE.WARNING) {
+					warningCount += 1;
+				}
+				if (controlMsg.type === CONDITION_MESSAGE_TYPE.ERROR) {
+					errorCount += 1;
+				}
+			}
 			if (!isEmpty(controlMsg) && (!isEmpty(msg) || msg.type !== "error")) {
 				msg = controlMsg;
 			}
 		});
 		if (!isEmpty(msg)) {
-			return (<Icon className={msg.type} name={msg.type + "--glyph"} />);
+			let descriptionText = "";
+			if (errorCount > 0 && warningCount === 0) {
+				descriptionText = PropertyUtils.formatMessage(this.props.intl,
+					MESSAGE_KEYS.CONTROL_SUMMARY_ERROR, MESSAGE_KEYS_DEFAULTS.CONTROL_SUMMARY_ERROR, { errorMsgCount: errorCount });
+			} else if (errorCount > 0 && warningCount > 0) {
+				descriptionText = PropertyUtils.formatMessage(this.props.intl,
+					MESSAGE_KEYS.CONTROL_SUMMARY_ERROR_WARNING, MESSAGE_KEYS_DEFAULTS.CONTROL_SUMMARY_ERROR_WARNING,
+					{ errorMsgCount: errorCount, warningMsgCount: warningCount });
+			} else if (errorCount === 0 && warningCount > 0) {
+				descriptionText = PropertyUtils.formatMessage(this.props.intl,
+					MESSAGE_KEYS.CONTROL_SUMMARY_WARNING, MESSAGE_KEYS_DEFAULTS.CONTROL_SUMMARY_WARNING, { warningMsgCount: warningCount });
+			}
+			return (
+				<Tooltip
+					id= {uuid4() + "summary-icon"}
+					tip={descriptionText}
+					className="properties-tooltips"
+				>
+					<Icon className={msg.type} name={msg.type + "--glyph"} description="" />
+				</Tooltip>
+			);
 		}
 		return null;
 	}
@@ -237,7 +266,6 @@ class SummaryPanel extends React.Component {
 			</IconButton>
 			{icon}
 		</div>);
-
 		const applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
 		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
 		const flyout = (<WideFlyout
