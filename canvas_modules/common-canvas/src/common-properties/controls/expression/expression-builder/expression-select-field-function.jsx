@@ -282,12 +282,12 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				onClickCallback: this.onFunctionTableClick.bind(this, index, category), onDblClickCallback: this.onFunctionTableDblClick.bind(this, index) });
 			if (index === this.state.functionSelectedRow) {
 				table.helpContainer = (
-					(<div className="properties-function-help-text" >
+					<div className="properties-function-help-text" >
 						<span className="properties-function-help-command">{catFunction.label}:</span>
 						<br />
 						<br />
 						<span>{catFunction.help}</span>
-					</div>)
+					</div>
 				);
 			}
 		}
