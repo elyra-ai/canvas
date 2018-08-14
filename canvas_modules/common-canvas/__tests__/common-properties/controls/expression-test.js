@@ -106,7 +106,7 @@ function reset() {
 	controller.saveControls([control]);
 	controller.updatePropertyValue(propertyId, "");
 	controller.setDatasetMetadata(getCopy(dataModel));
-	controller.setExpressionInfo(ExpressionInfo);
+	controller.setExpressionInfo(getCopy(ExpressionInfo));
 }
 describe("expression-control renders correctly", () => {
 

@@ -288,3 +288,10 @@
 .properties-documentation-show-flyout-button {
 	margin: 5px 0;
 }
+
+.header__dropdown {
+	.bx--list-box__menu {
+		height: 210px;
+		max-height: 330px;
+	}
+}

@@ -63,6 +63,7 @@ _defineConstant("MESSAGE_KEYS_DEFAULTS", {
 	EXPRESSION_FIELD_TAB: "Fields and Values",
 	EXPRESSION_FUNCTIONS_TAB: "Functions",
 	EXPRESSION_RECENTLY_USED: "Recently Used",
+	EXPRESSION_ALL_FUNCTIONS: "All Functions",
 	EXPRESSION_MIN_LABEL: "Min",
 	EXPRESSION_MAX_LABEL: "Max",
 	EXPRESSION_NO_FUNCTIONS: "No functions found."
@@ -116,6 +117,7 @@ _defineConstant("MESSAGE_KEYS", {
 	EXPRESSION_FIELD_TAB: "expression.field.tab",
 	EXPRESSION_FUNCTIONS_TAB: "expression.functions.tab",
 	EXPRESSION_RECENTLY_USED: "expression.recently.used",
+	EXPRESSION_ALL_FUNCTIONS: "expression.all.functions",
 	EXPRESSION_MIN_LABEL: "expression.min.label",
 	EXPRESSION_MAX_LABEL: "expression.max.label",
 	EXPRESSION_NO_FUNCTIONS: "expression.no.functions"

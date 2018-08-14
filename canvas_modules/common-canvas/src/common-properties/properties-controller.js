@@ -14,7 +14,8 @@ import UiConditionsParser from "./ui-conditions/ui-conditions-parser.js";
 import UiGroupsParser from "./ui-conditions/ui-groups-parser.js";
 import conditionsUtil from "./ui-conditions/conditions-utils";
 import PropertyUtils from "./util/property-utils.js";
-import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
+import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE,
+	MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { ControlType, Type, ParamRole } from "./constants/form-constants";
@@ -141,23 +142,45 @@ export default class PropertiesController {
 
 	setExpressionInfo(expressionInfo) {
 		if (expressionInfo) {
-			if (Array.isArray(expressionInfo.function_info)) {
-				const functionList = {};
-				const allFunctions = [];
-				expressionInfo.function_info.forEach((functionInfo) => {
-					for (let index = 0; index < functionInfo.categories.length; index++) {
-						if (typeof functionList[functionInfo.categories[index]] === "undefined") {
-							functionList[functionInfo.categories[index]] = [];
-						}
-						functionList[functionInfo.categories[index]].push(functionInfo);
-						if (allFunctions.indexOf(functionInfo) === -1) {
-							allFunctions.push(functionInfo);
-						}
-					}
+			if (Array.isArray(expressionInfo.function_info) && Array.isArray(expressionInfo.function_categories)) {
+				this.expressionFunctionInfo = {};
+				const functionInfoList = this._genFunctionParameters(expressionInfo.function_info);
+				expressionInfo.function_categories.forEach((category) => {
+					this.expressionFunctionInfo[category.label] = [];
+					category.function_refs.forEach((functionId) => {
+						this.expressionFunctionInfo[category.label].push(this._getFunctionInfo(functionId, functionInfoList));
+					});
 				});
-				this.expressionFunctionInfo = Object.assign(functionList, { "All Functions": allFunctions });
+				const allFunctionsLabel = PropertyUtils.formatMessage(this.reactIntl,
+					MESSAGE_KEYS.EXPRESSION_ALL_FUNCTIONS, MESSAGE_KEYS_DEFAULTS.EXPRESSION_ALL_FUNCTIONS);
+				this.expressionFunctionInfo[allFunctionsLabel] = functionInfoList;
 			}
 		}
+	}
+
+
+	_genFunctionParameters(functionInfoList) {
+		return functionInfoList.map((functionInfo) => {
+			const newEntry = functionInfo;
+			newEntry.value = newEntry.label;
+			if (Array.isArray(functionInfo.parameters)) {
+				newEntry.value += "(";
+				newEntry.label += "(";
+				functionInfo.parameters.forEach((parameter, index) => {
+					const separator = (index > 0) ? ", " : "";
+					newEntry.label += separator + parameter.label;
+					newEntry.value += separator + "?";
+				});
+				newEntry.label += ")";
+				newEntry.value += ")";
+			}
+			return newEntry;
+		});
+
+	}
+
+	_getFunctionInfo(functionId, functionInfoList) {
+		return functionInfoList.find((functionInfo) => functionInfo.id === functionId);
 	}
 
 	getExpressionInfo() {

@@ -734,6 +734,16 @@ class CommonPropertiesComponents extends React.Component {
 						Languages supported are <span className="highlight">Spark SQL</span> and
 						<span className="highlight"> Modeler CLEM</span>. Press CTRL-SPACE to see the
 						text auto completion feature.</p>
+					<p>An expression builder is provided when the expression control is display in
+						the <span className="highlight"> Flyout</span>. The expression builder provides an easy to use interface for
+						building expressions.  It is enabled by passing in the <span className="highlight"> expressionInfo </span> field in the
+						<span className="highlight"> propertiesInfo </span> object for <span className="highlight"> CommonProperties </span>.
+							Press the <span className="highlight"> "View in Flyout" </span> to see the expression builder button.
+					</p>
+					<p>Validation of expression field is performed when the <span className="highlight"> Validate </span> link is clicked.
+						The user of the expression control can provide syntax checking of the expression by implementing
+						a custom condition operator that will get invoked when the <span className="highlight"> Validate </span> link is clicked.
+					</p>
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties

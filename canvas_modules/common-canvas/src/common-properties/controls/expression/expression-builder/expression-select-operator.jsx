@@ -30,7 +30,7 @@ export default class ExpressionSelectOperator extends React.Component {
 		if (this.props.operatorList) {
 			const operatorButtons = [];
 			this.props.operatorList.forEach((operator, index) => {
-				if (operator.display) {
+				if (operator.show_button) {
 					const tooltipId = uuid4() + "-tooltip-expression-operator";
 					const tooltip = (
 						<div className="properties-tooltips">
