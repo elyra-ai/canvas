@@ -1,0 +1,24 @@
+{
+	"type": "comment",
+	"targetObject": {
+		"id": "c9b039c9-b098-412f-a08a-e9b722eadafc",
+		"content": "This is connected to the select node",
+		"height": 52,
+		"width": 175,
+		"x_pos": 303,
+		"y_pos": 343,
+		"class_name": "d3-comment-rect"
+	},
+	"id": "c9b039c9-b098-412f-a08a-e9b722eadafc",
+	"pipelineId": "153651d6-9b88-423c-b01b-861f12d01489",
+	"cmPos": {
+		"x": 291,
+		"y": 313
+	},
+	"mousePos": {
+		"x": 419.5031433264073,
+		"y": 358.7560822540024
+	},
+	"selectedObjectIds": ["c9b039c9-b098-412f-a08a-e9b722eadafc"],
+	"zoom": 0.6426031687346889
+}

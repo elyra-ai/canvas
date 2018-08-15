@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint complexity: ["error", 22] */
+/* eslint complexity: ["error", 25] */
 
 import ArrangeLayoutAction from "../command-actions/arrangeLayoutAction.js";
 import CloneMultipleObjectsAction from "../command-actions/cloneMultipleObjectsAction.js";
@@ -34,8 +34,18 @@ import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import has from "lodash/has";
 
+
 // Global instance ID counter
 var commonCanvasControllerInstanceId = 0;
+const labelChoices = { canvas_addComment: "New comment",
+	canvas_selectAll: "Select All", edit_cutSelection: "Cut",
+	edit_copySelection: "Copy", edit_pasteSelection: "Paste",
+	canvas_undo: "Undo", canvas_redo: "Redo",
+	node_createSuperNode: "Create supernode",
+	node_expandSuperNodeInPlace: "Expand supernode",
+	node_collapseSuperNodeInPlace: "Collapse supernode", node_editNode: "Open",
+	canvas_deleteObject: "Delete", node_disconnectNode: "Disconnect", link_deleteLink: "Delete",
+	canvas_validateFlow: "Validate Flow", node_editMenu: "Edit" };
 
 export default class CanvasController {
 
@@ -766,13 +776,102 @@ export default class CanvasController {
 		this.editActionHandler(data);
 	}
 
+	getLabel(labelId, defaultLabel) {
+		if (labelChoices[labelId]) {
+			return labelChoices[labelId];
+		}
+		return defaultLabel;
+	}
+
+	createEditMenu(source) {
+		let editSubMenu = [
+			{ action: "cut", label: this.getLabel("edit_cutSelection", "Cut") },
+			{ action: "copy", label: this.getLabel("edit_copySelection", "Copy") }
+		];
+		if (source.type === "canvas") {
+			editSubMenu = editSubMenu.concat({ action: "paste", label: this.getLabel("edit_pasteSelection", "Paste") });
+		}
+		return editSubMenu;
+	}
+
+	createDefaultMenu(source) {
+		let menuDefinition = [];
+		// Select all & add comment: canvas only
+		if (source.type === "canvas") {
+			menuDefinition = menuDefinition.concat([{ action: "addComment", label: this.getLabel("canvas_addComment", "New comment") },
+				{ action: "selectAll", label: this.getLabel("canvas_selectAll", "Select All") },
+				{ divider: true }]);
+		}
+		// Disconnect node
+		if (source.type === "node" || source.type === "comment") {
+			const linksFound = this.objectModel.getAPIPipeline(source.pipelineId).getLinksContainingIds(source.selectedObjectIds);
+			if (linksFound.length > 0) {
+				menuDefinition = menuDefinition.concat({ action: "disconnectNode", label: this.getLabel("node_disconnectNode", "Disconnect") });
+				menuDefinition = menuDefinition.concat({ divider: true });
+			}
+		}
+		// Edit submenu (cut, copy, paste)
+		if (source.type === "node" || source.type === "comment" || source.type === "canvas") {
+			const editSubMenu = this.createEditMenu(source);
+			menuDefinition = menuDefinition.concat({ submenu: true, menu: editSubMenu, label: this.getLabel("node_editMenu", "Edit") });
+			menuDefinition = menuDefinition.concat({ divider: true });
+		}
+		// Undo and redo
+		if (source.type === "canvas") {
+			menuDefinition = menuDefinition.concat([{ action: "undo", label: this.getLabel("canvas_undo", "Undo") },
+				{ action: "redo", label: this.getLabel("canvas_redo", "Redo") },
+				{ divider: true }]);
+		}
+		// Delete objects
+		if (source.type === "node" || source.type === "comment") {
+			menuDefinition = menuDefinition.concat([{ action: "deleteObjects", label: this.getLabel("canvas_deleteObject", "Delete") }, { divider: true }]);
+		}
+		// Create supernode
+		if (source.type === "node" || source.type === "comment") {
+			if ((has(this, "canvasConfig.contextMenuConfig.enableCreateSupernodeNonContiguous") &&
+					this.canvasConfig.contextMenuConfig.enableCreateSupernodeNonContiguous) ||
+					this.areSelectedNodesContiguous()) {
+				menuDefinition = menuDefinition.concat([{ action: "createSuperNode", label: this.getLabel("node_createSuperNode", "Create supernode") }]);
+				menuDefinition = menuDefinition.concat([{ divider: true }]);
+			}
+		}
+		// Expand supernode
+		if (source.type === "node") {
+			if (source.selectedObjectIds.length === 1 && source.targetObject.type === "super_node") {
+				if (!this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
+					if (source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined") {
+						menuDefinition = menuDefinition.concat({ action: "expandSuperNodeInPlace",
+							label: this.getLabel("node_expandSuperNodeInPlace", "Expand supernode") }, { divider: true });
+					}
+				}
+			}
+		}
+		// Collapse supernode
+		if (source.type === "node") {
+			if (source.selectedObjectIds.length === 1 && source.targetObject.type === "super_node") {
+				if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
+					menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
+						label: this.getLabel("node_collapseSuperNodeInPlace", "Collapse supernode") }, { divider: true });
+				}
+			}
+		}
+		// Delete link
+		if (source.type === "link") {
+			menuDefinition = menuDefinition.concat([{ action: "deleteLink", label: this.getLabel("link_deleteLink", "Delete") }]);
+		}
+		return (menuDefinition);
+	}
+
 	contextMenuHandler(source) {
-		if (this.handlers.contextMenuHandler) {
+		const defMenu = this.createDefaultMenu(source);
+		if (typeof this.handlers.contextMenuHandler === "function") {
 			this.contextMenuSource = source;
-			const menuDef = this.handlers.contextMenuHandler(source);
+			const menuDef = this.handlers.contextMenuHandler(source, defMenu);
 			if (menuDef && menuDef.length > 0) {
 				this.openContextMenu(menuDef);
 			}
+		} else {
+			this.openContextMenu(defMenu);
 		}
 	}
 

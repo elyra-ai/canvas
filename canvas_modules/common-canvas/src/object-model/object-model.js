@@ -2531,6 +2531,18 @@ export class APIPipeline {
 		return returnLinks;
 	}
 
+	// Takes in an array of objects and returns an array of links to those objects.
+	getLinksContainingIds(idArray) {
+		let linksArray = [];
+		idArray.forEach((objId) => {
+			const linksForId = this.getLinksContainingId(objId);
+			if (linksForId.length > 0) {
+				linksArray = linksArray.concat(linksForId);
+			}
+		});
+		return linksArray;
+	}
+
 	// Returns an array of node links for the array of nodes passed in.
 	getNodeLinks(inNodes) {
 		const nodeLinks = [];

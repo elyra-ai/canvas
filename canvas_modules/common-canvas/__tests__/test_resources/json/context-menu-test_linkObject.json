@@ -1,0 +1,178 @@
+{
+	"type": "link",
+	"targetObject": {
+		"id": "4d39c613-a9a5-4cc5-a18e-19db7ea477b5",
+		"x1": 367,
+		"y1": 167.5,
+		"x2": 500,
+		"y2": 217.5,
+		"class_name": "d3-data-link",
+		"type": "nodeLink",
+		"src": {
+			"id": "idGWRVT47XDV",
+			"type": "execution_node",
+			"operator_id_ref": "dummy_operator",
+			"output_ports": [
+				{
+					"id": "outPort",
+					"label": "Output Port",
+					"cardinality": {
+						"min": 0,
+						"max": -1
+					},
+					"parameters": {
+						"props": [
+							{
+								"field1": "execution-node-port-param-val1"
+							}, {
+								"field2": "execution-node-port-param-val2"
+							}
+						]
+					},
+					"app_data": {
+						"my_data": {
+							"my_field": "Execution node -> Outputs -> My data -> My field -> My value"
+						}
+					},
+					"cy": 29
+				}
+			],
+			"input_ports": [
+				{
+					"id": "inPort",
+					"label": "Input Port",
+					"cardinality": {
+						"min": 0,
+						"max": 1
+					},
+					"app_data": {
+						"my_data": {
+							"my_field": "Execution node -> Inputs -> My data -> My field -> My value"
+						}
+					},
+					"cy": 29
+				}
+			],
+			"label": "Execution node",
+			"description": "Sorts the data",
+			"x_pos": 297,
+			"y_pos": 138.5,
+			"class_name": "",
+			"decorations": [],
+			"parameters": {
+				"props": [
+					{
+						"field1": "execution-node-param-val1"
+					}, {
+						"field2": "execution-node-param-val2"
+					}
+				]
+			},
+			"messages": [],
+			"uiParameters": [],
+			"app_data": {
+				"my_data": {
+					"value": "Execution node - data value"
+				}
+			},
+			"subflow_ref": {},
+			"model_ref": "",
+			"is_expanded": false,
+			"expanded_width": 200,
+			"expanded_height": 200,
+			"inputPortsHeight": 20,
+			"outputPortsHeight": 20,
+			"height": 75,
+			"width": 70
+		},
+		"srcPortId": "outPort",
+		"trg": {
+			"id": "nodeIDMultiPlotPE",
+			"type": "execution_node",
+			"operator_id_ref": "multiplot",
+			"output_ports": [
+				{
+					"id": "output1MultiPlotPE",
+					"label": "output1MultiPlotPE",
+					"app_data": {
+						"my_data": {
+							"my_field": "Execution node -> Outputs -> My data -> My field -> My value"
+						}
+					},
+					"cy": 29
+				}
+			],
+			"input_ports": [
+				{
+					"id": "input1MultiPlotPE",
+					"label": "input1MultiPlotPE",
+					"app_data": {
+						"my_data": {
+							"my_field": "Multiplot -> Inputs -> My data -> My field -> My value"
+						}
+					},
+					"cy": 27.5
+				}, {
+					"id": "input2MultiPlotPE",
+					"label": "input2MultiPlotPE",
+					"parameters": {
+						"props": [
+							{
+								"field1": "multiplot-port2-param-val1"
+							}, {
+								"field2": "multiplot-port2-param-val2"
+							}
+						]
+					},
+					"app_data": {},
+					"cy": 47.5
+				}
+			],
+			"label": "Multiplot",
+			"description": "Plots multiple Y values against an X value",
+			"x_pos": 500,
+			"y_pos": 170,
+			"class_name": "canvas-node",
+			"decorations": [],
+			"parameters": {
+				"props": [
+					{
+						"field1": "multiplot-param-val1"
+					}, {
+						"field2": "multiplot-param-val2"
+					}
+				]
+			},
+			"messages": [],
+			"uiParameters": [],
+			"app_data": {
+				"my_data": {
+					"value": "Multiplot - data value"
+				}
+			},
+			"subflow_ref": {},
+			"model_ref": "",
+			"is_expanded": false,
+			"expanded_width": 200,
+			"expanded_height": 200,
+			"inputPortsHeight": 40,
+			"outputPortsHeight": 20,
+			"height": 75,
+			"width": 70
+		},
+		"trgPortId": "input2MultiPlotPE",
+		"path": "M 367 167.5C 433.5 167.5 433.5 217.5 500 217.5 "
+	},
+	"id": "4d39c613-a9a5-4cc5-a18e-19db7ea477b5",
+	"pipelineId": "153651d6-9b88-423c-b01b-861f12d01489",
+	"cmPos": {
+		"x": 437,
+		"y": 213
+	},
+	"mousePos": {
+		"x": 423.5532942966989,
+		"y": 185.91242680631038
+	},
+	"selectedObjectIds": [],
+	"zoom": 0.8925469714729766
+}

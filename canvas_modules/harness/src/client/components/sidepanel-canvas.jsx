@@ -67,6 +67,7 @@ export default class SidePanelForms extends React.Component {
 
 		this.layoutDirectionOptionChange = this.layoutDirectionOptionChange.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
+		this.useEnableCreateSupernodeNonContiguous = this.useEnableCreateSupernodeNonContiguous.bind(this);
 		this.connectionTypeOptionChange = this.connectionTypeOptionChange.bind(this);
 		this.nodeFormatTypeOptionChange = this.nodeFormatTypeOptionChange.bind(this);
 		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
@@ -273,6 +274,10 @@ export default class SidePanelForms extends React.Component {
 
 	useInternalObjectModel(checked) {
 		this.props.useInternalObjectModel(checked);
+	}
+
+	useEnableCreateSupernodeNonContiguous(checked) {
+		this.props.useEnableCreateSupernodeNonContiguous(checked);
 	}
 
 	connectionTypeOptionChange(value) {
@@ -527,6 +532,19 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
+		var enableCreateSupernodeNonContiguous = (<div className="sidepanel-children" id="sidepanel-create-supernode">
+			<form>
+				<div className="sidepanel-headers">Enable Create Supernode for Noncontiguous Nodes</div>
+				<div>
+					<Toggle
+						id="sidepanel-enable-create-supernode-toggle"
+						toggled={this.props.enableCreateSupernodeNonContiguous}
+						onToggle={this.useEnableCreateSupernodeNonContiguous}
+					/>
+				</div>
+			</form>
+		</div>);
+
 		var connectionType = (<div className="sidepanel-children" id="sidepanel-connection-type">
 			<div className="sidepanel-headers">Connection Type</div>
 			<RadioButtonGroup
@@ -705,6 +723,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{enableObjectModel}
 				{divider}
+				{enableCreateSupernodeNonContiguous}
+				{divider}
 				{connectionType}
 				{divider}
 				{nodeFormatType}
@@ -733,6 +753,7 @@ SidePanelForms.propTypes = {
 	commonCanvasConfig: PropTypes.object,
 	enableNavPalette: PropTypes.func,
 	internalObjectModel: PropTypes.bool,
+	enableCreateSupernodeNonContiguous: PropTypes.bool,
 	setDiagramJSON: PropTypes.func,
 	setPaletteJSON: PropTypes.func,
 	setDiagramJSON2: PropTypes.func,
@@ -752,6 +773,7 @@ SidePanelForms.propTypes = {
 	setLayoutDirection: PropTypes.func,
 	selectedLayout: PropTypes.string,
 	useInternalObjectModel: PropTypes.func,
+	useEnableCreateSupernodeNonContiguous: PropTypes.func,
 	setConnectionType: PropTypes.func,
 	selectedConnectionType: PropTypes.string,
 	setNodeFormatType: PropTypes.func,

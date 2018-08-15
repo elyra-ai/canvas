@@ -1,0 +1,65 @@
+{
+	"type": "node",
+	"targetObject": {
+		"id": "6f704d84-85be-4520-9d76-57fe2295b310",
+		"type": "execution_node",
+		"operator_id_ref": "select",
+		"output_ports": [
+			{
+				"id": "outPort",
+				"label": "Output Port",
+				"cardinality": {
+					"min": 0,
+					"max": -1
+				},
+				"app_data": {},
+				"cy": 29
+			}
+		],
+		"input_ports": [
+			{
+				"id": "inPort",
+				"label": "Input Port",
+				"cardinality": {
+					"min": 0,
+					"max": 1
+				},
+				"app_data": {},
+				"cy": 29
+			}
+		],
+		"label": "Select",
+		"description": "Selects a subset of records based on an expression",
+		"x_pos": 136.1826171875,
+		"y_pos": 304.5,
+		"class_name": "",
+		"decorations": [],
+		"parameters": [],
+		"messages": [],
+		"uiParameters": [],
+		"app_data": {},
+		"subflow_ref": {},
+		"model_ref": "",
+		"is_expanded": false,
+		"expanded_width": 200,
+		"expanded_height": 200,
+		"inputPortsHeight": 20,
+		"outputPortsHeight": 20,
+		"height": 75,
+		"width": 70
+	},
+	"id": "6f704d84-85be-4520-9d76-57fe2295b310",
+	"pipelineId": "153651d6-9b88-423c-b01b-861f12d01489",
+	"cmPos": {
+		"x": 214,
+		"y": 304
+	},
+	"mousePos": {
+		"x": 178.20432395214806,
+		"y": 338.1843036243708
+	},
+	"selectedObjectIds": [
+		"6f704d84-85be-4520-9d76-57fe2295b310", "c9b039c9-b098-412f-a08a-e9b722eadafc"
+	],
+	"zoom": 0.8455722873775167
+}

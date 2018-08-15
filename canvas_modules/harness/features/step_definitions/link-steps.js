@@ -32,7 +32,6 @@ module.exports = function() {
 				var destNodeNumber = destNodeIndex - 1;
 
 				var linkCount = Number(canvasLinks);
-
 				browser.execute(simulateD3LinkCreation, ".d3-node-halo", orgNodeNumber, ".node-group", destNodeNumber, 1, 1);
 				var links = browser.$$(".d3-selectable-link").length / 2; // Divide by 2 because the line and arrow head use this class
 				expect(links).toEqual(linkCount);

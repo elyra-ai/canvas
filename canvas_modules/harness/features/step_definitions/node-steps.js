@@ -679,7 +679,7 @@ module.exports = function() {
 	this.Then(/^I disconnect links for node (\d+) a "([^"]*)" on the canvas$/, function(nodeIndex, nodeName) {
 		var nodeNumber = nodeIndex - 1;
 		browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].rightClick();
-		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[1].click();
+		browser.$(".context-menu-popover").$$(".react-contextmenu-item");
 
 
 		// verify that the link is Not in the internal object model
@@ -701,12 +701,9 @@ module.exports = function() {
 		// console.log("test " + contextMenu.length);
 		var menuItemDelete;
 		for (var menuIdx = 0; menuIdx < contextMenu.length; menuIdx++) {
-			if (contextMenu[menuIdx].isExisting("span")) {
-				var menuLabel = contextMenu[menuIdx].getText("span");
-				if (menuLabel === "Delete") {
-					// console.log("test span content " + contextMenu[menuIdx].getText("span"));
-					menuItemDelete = contextMenu[menuIdx];
-				}
+			var menuLabel = contextMenu[menuIdx].getText();
+			if (menuLabel === "Delete") {
+				menuItemDelete = contextMenu[menuIdx];
 			}
 		}
 		// console.log("test Menu item delete? " + JSON.stringify(menuItemDelete));
@@ -830,7 +827,16 @@ module.exports = function() {
 		var nodeNumber = nodeIndex - 1;
 		var nodeSelector = ".node-group";
 		browser.$("#canvas-div-0").$$(nodeSelector)[nodeNumber].rightClick();
-		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[7].click();
+		const contextMenu = browser.$(".context-menu-popover").$$(".react-contextmenu-item");
+		var menuItemDelete;
+		for (var menuIdx = 0; menuIdx < contextMenu.length; menuIdx++) {
+			var menuLabel = contextMenu[menuIdx].getText();
+			if (menuLabel === "Delete") {
+				menuItemDelete = contextMenu[menuIdx];
+			}
+		}
+		// console.log("test Menu item delete? " + JSON.stringify(menuItemDelete));
+		menuItemDelete.click();
 
 		// verify node is not the canvas DOM
 		var count = 0;

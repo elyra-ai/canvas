@@ -1,0 +1,80 @@
+{
+	"type": "node",
+	"targetObject": {
+		"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
+		"type": "super_node",
+		"output_ports": [
+			{
+				"id": "7d1ac5ee-a599-451a-9036-dd2bafb53dd2_outPort",
+				"label": "Output Port",
+				"subflow_node_ref": "813ddbfd-cabb-4037-833d-bc839e13e264",
+				"cardinality": {
+					"min": 0,
+					"max": -1
+				},
+				"app_data": {},
+				"cy": 29
+			}
+		],
+		"input_ports": [
+			{
+				"id": "691e065f-8359-4b46-aad2-531702ef2a8e_inPort",
+				"label": "Input Port",
+				"subflow_node_ref": "d585f3c8-29d7-4daf-b808-f80a64634343",
+				"cardinality": {
+					"min": 0,
+					"max": 1
+				},
+				"app_data": {
+					"my_data": {
+						"my_field": "Execution node -> Inputs -> My data -> My field -> My value"
+					}
+				},
+				"cy": 27.5
+			}, {
+				"id": "ba83fcf4-d7d7-4862-b7c9-f2e611f912df_inPort",
+				"label": "Input Port",
+				"subflow_node_ref": "b82bb50c-edd4-44b5-9e14-f5db5eedddb8",
+				"cardinality": {
+					"min": 0,
+					"max": 1
+				},
+				"app_data": {},
+				"cy": 47.5
+			}
+		],
+		"label": "Supernode",
+		"description": "supernode",
+		"x_pos": 297,
+		"y_pos": 235,
+		"class_name": "",
+		"decorations": [],
+		"parameters": [],
+		"messages": [],
+		"uiParameters": [],
+		"app_data": {},
+		"subflow_ref": {
+			"pipeline_id_ref": "babad275-1719-4224-8d65-b04d0804d95c"
+		},
+		"model_ref": "",
+		"is_expanded": false,
+		"expanded_width": 200,
+		"expanded_height": 200,
+		"inputPortsHeight": 40,
+		"outputPortsHeight": 20,
+		"height": 75,
+		"width": 70
+	},
+	"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
+	"pipelineId": "153651d6-9b88-423c-b01b-861f12d01489",
+	"cmPos": {
+		"x": 178,
+		"y": 225
+	},
+	"mousePos": {
+		"x": 357.17799159582347,
+		"y": 246.34206167979448
+	},
+	"selectedObjectIds": ["7015d906-2eae-45c1-999e-fb888ed957e5"],
+	"zoom": 1.005560580398472
+}

@@ -5,10 +5,10 @@ Feature: Supernode
   As a human
   I want to create a supernode
 
-  Scenario: Sanity test supernode expanded to correct size
+	Scenario: Sanity test supernode expanded to correct size
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
-    Given I have toggled the app side panel
+		Given I have toggled the app side panel
 		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
 		Given I have toggled the app side panel
 
@@ -40,7 +40,7 @@ Feature: Supernode
 	Scenario: Sanity test create supernode within a supernode with a new node from palette
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
-    Given I have toggled the app side panel
+		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
 		Given I have selected the "Ports" connection type
 		Given I have uploaded predefined palette "modelerPalette.json"
@@ -59,7 +59,7 @@ Feature: Supernode
 		Then I click the "Derive" node to select it
 		Then I click on the secondary toolbar cut button
 		Then I right click at position 440, 300 to display the context menu
-		Then I click option "Paste" from the context menu
+		Then I click option "Paste" from the "Edit" submenu
 		Then I verify pipeline 0 have 15 nodes
 		Then I verify pipeline 1 have 9 nodes
 

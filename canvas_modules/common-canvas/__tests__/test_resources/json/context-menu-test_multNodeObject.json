@@ -1,0 +1,74 @@
+{
+	"type": "node",
+	"targetObject": {
+		"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+		"type": "execution_node",
+		"operator_id_ref": "filler",
+		"output_ports": [
+			{
+				"id": "outPort1",
+				"label": "Output Port 1",
+				"cardinality": {
+					"min": 0,
+					"max": -1
+				},
+				"app_data": {},
+				"cy": 27.5
+			}, {
+				"id": "outPort2",
+				"label": "Output Port 2",
+				"cardinality": {
+					"min": 0,
+					"max": -1
+				},
+				"app_data": {},
+				"cy": 47.5
+			}
+		],
+		"input_ports": [
+			{
+				"id": "inPort",
+				"label": "Input Port",
+				"cardinality": {
+					"min": 0,
+					"max": 1
+				},
+				"app_data": {},
+				"cy": 29
+			}
+		],
+		"label": "Filler",
+		"description": "Fills in missing values",
+		"x_pos": 235,
+		"y_pos": 371.5,
+		"class_name": "",
+		"decorations": [],
+		"parameters": [],
+		"messages": [],
+		"uiParameters": [],
+		"app_data": {},
+		"subflow_ref": {},
+		"model_ref": "",
+		"is_expanded": false,
+		"expanded_width": 200,
+		"expanded_height": 200,
+		"inputPortsHeight": 20,
+		"outputPortsHeight": 40,
+		"height": 75,
+		"width": 70
+	},
+	"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+	"pipelineId": "153651d6-9b88-423c-b01b-861f12d01489",
+	"cmPos": {
+		"x": 387,
+		"y": 376
+	},
+	"mousePos": {
+		"x": 296,
+		"y": 384
+	},
+	"selectedObjectIds": [
+		"5db667dc-b2a9-4c35-bff0-136c4e7b6d26", "ac584be2-8a3c-474f-a046-e10a3665b875"
+	],
+	"zoom": 1
+}

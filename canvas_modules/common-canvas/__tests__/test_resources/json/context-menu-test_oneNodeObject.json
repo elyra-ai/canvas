@@ -1,0 +1,77 @@
+{
+	"type": "node",
+	"targetObject": {
+		"id": "id8I6RH2V91XW",
+		"type": "binding",
+		"operator_id_ref": "variablefile",
+		"output_ports": [
+			{
+				"id": "outPort",
+				"label": "Output Port",
+				"cardinality": {
+					"min": 0,
+					"max": -1
+				},
+				"parameters": {
+					"props": [
+						{
+							"field1": "binding-node-port-param-val1"
+						}, {
+							"field2": "binding-node-port-param-val2"
+						}
+					]
+				},
+				"app_data": {
+					"my_data": {
+						"my_field": "Binding node -> Outputs -> My data -> My field -> My value"
+					}
+				},
+				"cy": 29
+			}
+		],
+		"input_ports": [],
+		"label": "Binding (entry) node",
+		"description": "Imports data from a comma-delimited file",
+		"x_pos": 88,
+		"y_pos": 99.5,
+		"class_name": "",
+		"decorations": [],
+		"parameters": {
+			"props": [
+				{
+					"field1": "binding-node-param-val1"
+				}, {
+					"field2": "binding-node-param-val2"
+				}
+			]
+		},
+		"messages": [],
+		"uiParameters": [],
+		"app_data": {
+			"my_data": {
+				"value": "Binding node - data value"
+			}
+		},
+		"subflow_ref": {},
+		"model_ref": "",
+		"is_expanded": false,
+		"expanded_width": 200,
+		"expanded_height": 200,
+		"inputPortsHeight": 0,
+		"outputPortsHeight": 20,
+		"height": 75,
+		"width": 70
+	},
+	"id": "id8I6RH2V91XW",
+	"pipelineId": "153651d6-9b88-423c-b01b-861f12d01489",
+	"cmPos": {
+		"x": 239,
+		"y": 99
+	},
+	"mousePos": {
+		"x": 147,
+		"y": 107
+	},
+	"selectedObjectIds": ["id8I6RH2V91XW"],
+	"zoom": 1
+}

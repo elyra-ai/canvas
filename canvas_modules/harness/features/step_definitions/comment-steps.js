@@ -76,7 +76,6 @@ module.exports = function() {
 			var index = getCommentIndexFromCanvasUsingText(commentText);
 			browser.$("#common-canvas-items-container-0").$$(".comment-group")[index].rightClick();
 			browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click();
-
 			// Start Validation
 			browser.pause(500);
 			// verify comment is not in the canvas DOM

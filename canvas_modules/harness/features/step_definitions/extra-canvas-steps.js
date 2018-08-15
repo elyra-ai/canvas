@@ -72,15 +72,13 @@ module.exports = function() {
 		const contextMenu = browser.$(".context-menu-popover").$$(".react-contextmenu-item");
 		var menuItemDelete;
 		for (var menuIdx = 0; menuIdx < contextMenu.length; menuIdx++) {
-			if (contextMenu[menuIdx].isExisting("span")) {
-				var menuLabel = contextMenu[menuIdx].getText("span");
-				if (menuLabel === "Delete") {
-					menuItemDelete = contextMenu[menuIdx];
-				}
+			var menuLabel = contextMenu[menuIdx].getText();
+			if (menuLabel === "Delete") {
+				menuItemDelete = contextMenu[menuIdx];
 			}
 		}
+		// console.log("test Menu item delete? " + JSON.stringify(menuItemDelete));
 		menuItemDelete.click();
-
 	});
 
 	this.Then(/^I select node (\d+) the "([^"]*)" node from extra canvas$/, function(nodeIndex, nodeName) {

@@ -7,6 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint no-console: "off" */
+/* eslint max-depth: ["error", 5] */
 
 import { clickSVGAreaAt, findCategoryElement, findNodeIndexInPalette,
 	getNodeIdForLabel, getNumberOfSelectedComments, getNumberOfSelectedNodes } from "./utilities/validate-utils.js";
@@ -81,18 +82,35 @@ module.exports = function() {
 		expect(selected).toEqual(Number(numberOfSelectedObjects));
 	});
 
+	this.Then(/^I click option "([^"]*)" from the "([^"]*)" submenu$/, function(itemText, submenuName) {
+		var items = browser.$(".context-menu-popover").$$(".react-contextmenu-item:not(.contextmenu-divider)");
+		let menuItemFound = false;
+		for (let idx = 0; idx < items.length; idx++) {
+			if (items[idx].getText() === submenuName) {
+				items[idx].click();
+				const subMenu = browser.$(".contextmenu-submenu").$$(".react-contextmenu-item");
+				browser.pause(500);
+				for (let indx = 0; indx < subMenu.length; indx++) {
+					if (subMenu[indx].getText() === itemText) {
+						subMenu[indx].click();
+						menuItemFound = true;
+						break;
+					}
+				}
+				break;
+			}
+		}
+		expect(menuItemFound).toBe(true);
+	});
 
 	this.Then(/^I click option "([^"]*)" from the context menu$/, function(itemText) {
 		var items = browser.$(".context-menu-popover").$$(".react-contextmenu-item:not(.contextmenu-divider)");
 		let menuItemFound = false;
 		for (let idx = 0; idx < items.length; idx++) {
-			if (items[idx].$("span").type !== "NoSuchElement") { // This will skip sub-menu items that don't have a span
-				if (items[idx].$("span").getText() === itemText) {
-					// console.log("Context menu item clicked = " + items[idx].$("span").getText());
-					items[idx].click();
-					menuItemFound = true;
-					break;
-				}
+			if (items[idx].getText() === itemText) {
+				items[idx].click();
+				menuItemFound = true;
+				break;
 			}
 		}
 		expect(menuItemFound).toBe(true);

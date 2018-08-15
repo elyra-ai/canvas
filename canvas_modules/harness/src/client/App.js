@@ -109,6 +109,7 @@ class App extends React.Component {
 			},
 			extraCanvasDisplayed: false,
 			displayAdditionalComponents: false,
+			enableCreateSupernodeNonContiguous: false,
 			applyOnBlur: true,
 			expressionBuilder: true,
 			validateFlowOnOpen: true,
@@ -170,6 +171,7 @@ class App extends React.Component {
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
+		this.useEnableCreateSupernodeNonContiguous = this.useEnableCreateSupernodeNonContiguous.bind(this);
 		this.setNarrowPalette = this.setNarrowPalette.bind(this);
 		this.schemaValidation = this.schemaValidation.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -368,15 +370,12 @@ class App extends React.Component {
 			});
 		}
 	}
-
-	getLabelString(labelId, defaultLabel) {
-		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultLabel });
-	}
-
 	getLabel(labelId, defaultLabel) {
 		return (<FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />);
 	}
-
+	getLabelString(labelId, defaultLabel) {
+		return this.intl.formatMessage({ id: labelId, defaultMessage: defaultLabel });
+	}
 	getNodeForm(nodeId, pipelineId, canvasController) {
 		// if pipelineId is not passed in it will default to the main pipeline being viewed.
 		let nodeForm = NodeToForm.getNodeForm(nodeId);
@@ -900,6 +899,11 @@ class App extends React.Component {
 		this.log("additional components display", enabled);
 	}
 
+	useEnableCreateSupernodeNonContiguous(enabled) {
+		this.setState({ enableCreateSupernodeNonContiguous: enabled });
+		this.log("noncontiguous nodes supernode creation", enabled);
+	}
+
 	showExtraCanvas(enabled) {
 		this.setState({ extraCanvasDisplayed: enabled });
 		this.log("show extra canvas", enabled);
@@ -978,148 +982,21 @@ class App extends React.Component {
 		this.setFlowNotificationMessages();
 	}
 
-	contextMenuHandler(source) {
-		const EDIT_SUB_MENU = [
-			{ action: "cut", label: this.getLabel("edit-context.cutSelection", "Cut") },
-			{ action: "copy", label: this.getLabel("edit-context.copySelection", "Copy") }
-		];
-
-		const NODE_CONTEXT_MENU = [
-			{ action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
-			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
-			{ action: "previewNode", label: this.getLabel("node-context.previewNode", "Preview") },
-			{ divider: true },
-			{ submenu: true, label: this.getLabelString("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
-			{ divider: true },
-			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
-			{ divider: true },
-			{ action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
-		];
-
-		const APPLY_MODEL_NODE_CONTEXT_MENU = [
-			{ action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
-			{ action: "viewModel", label: this.getLabel("node-context.viewModel", "View Model") },
-			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
-			{ action: "previewNode", label: this.getLabel("node-context.previewNode", "Preview") },
-			{ divider: true },
-			{ submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
-			{ divider: true },
-			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
-			{ divider: true },
-			{ action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
-		];
-
-		const SUPER_NODE_CONTEXT_MENU = [
-			{ action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
-			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
-			{ divider: true },
-			{ submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
-			{ divider: true },
-			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
-			{ divider: true },
-			{ action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
-		];
-
-		const EXPAND_SUPER_NODE_CONTEXT_MENU = [
-			{ divider: true },
-			{ action: "expandSuperNodeInPlace", label: this.getLabel("node-context.expandSuperNodeInPlace", "Expand supernode") }
-		];
-
-		const COLLAPSE_SUPER_NODE_CONTEXT_MENU = [
-			{ divider: true },
-			{ action: "collapseSuperNodeInPlace", label: this.getLabel("node-context.collapseSuperNodeInPlace", "Collapse supernode") }
-		];
-
-		const MULTI_SELECT_CONTEXT_MENU = [
-			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
-			{ divider: true },
-			{ submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
-			{ divider: true },
-			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") }
-		];
-
-		const EMPTY_CLIPBOARD_CANVAS_CONTEXT_MENU = [
-			{ action: "addComment", label: this.getLabel("canvas-context.addComment", "New comment") },
-			{ action: "selectAll", label: this.getLabel("canvas-context.selectAll", "Select All") },
-			{ divider: true },
-			{ action: "cut", label: this.getLabel("edit-context.cutSelection", "Cut") },
-			{ action: "copy", label: this.getLabel("edit-context.copySelection", "Copy") },
-			{ action: "paste", label: this.getLabel("edit-context.pasteSelection", "Paste") },
-			{ divider: true },
-			{ action: "undo", label: this.getLabel("canvas-context.undo", "Undo") },
-			{ action: "redo", label: this.getLabel("canvas-context.redo", "Redo") },
-			{ divider: true },
-			{ action: "validateFlow", label: this.getLabel("canvas-context.validateFlow", "Validate Flow") },
-			{ action: "streamProperties", label: this.getLabel("canvas-context.streamProperties", "Options") }
-		];
-
-		const LINK_CONTEXT_MENU = [
-			{ action: "deleteLink", label: this.getLabel("link-context.deleteLink", "Delete") }
-		];
-
-		const COMMENT_CONTEXT_MENU = [
-			{ action: "deleteObjects", label: this.getLabel("comment-context.deleteComment", "Delete") }
-		];
-
-		const DEPLOY_CONTEXT_MENU = [
-			{ action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
-			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
-			{ action: "previewNode", label: this.getLabel("node-context.previewNode", "Preview") },
-			{ divider: true },
-			{ submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
-			{ divider: true },
-			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
-			{ divider: true },
-			{ action: "deploy", label: this.getLabel("node-context.deploy", "Deploy") },
-			{ divider: true },
-			{ action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
-		];
-
-		const CREATE_SUPERNODE_MENU = [
-			{ divider: true },
-			{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") }
-		];
-
-		let menuDefinition = null;
-		if (source.type === "canvas") {
-			menuDefinition = EMPTY_CLIPBOARD_CANVAS_CONTEXT_MENU;
-		} else if (source.type === "link") {
-			if (!source.targetObject || source.targetObject.type !== "associationLink") {
-				menuDefinition = LINK_CONTEXT_MENU;
-			}
-		} else if (source.type === "node") {
-			if (source.selectedObjectIds) {
-				if (source.selectedObjectIds.length > 1) {
-					menuDefinition = MULTI_SELECT_CONTEXT_MENU;
-				} else if (source.targetObject.containsModel === true) {
-					menuDefinition = APPLY_MODEL_NODE_CONTEXT_MENU;
-				} else if (source.targetObject.type === "super_node" && source.targetObject.open_with_tool !== "shaper") {
-					menuDefinition = SUPER_NODE_CONTEXT_MENU;
-					if (this.canvasController.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
-						menuDefinition = menuDefinition.concat(COLLAPSE_SUPER_NODE_CONTEXT_MENU);
-					} else {
-						menuDefinition = menuDefinition.concat(EXPAND_SUPER_NODE_CONTEXT_MENU);
-					}
-				} else if (source.targetObject &&
-					source.targetObject.userData &&
-					source.targetObject.userData.deployable &&
-					(source.targetObject.userData.deployable === true)) {
-					menuDefinition = DEPLOY_CONTEXT_MENU;
-				} else {
-					menuDefinition = NODE_CONTEXT_MENU;
-				}
-
-				if (this.canvasController.areSelectedNodesContiguous()) {
-					menuDefinition = menuDefinition.concat(CREATE_SUPERNODE_MENU);
-				}
-			}
-		} else if (source.type === "comment") {
-			if (source.selectedObjectIds) {
-				menuDefinition = COMMENT_CONTEXT_MENU;
-			}
+	contextMenuHandler(source, defaultMenu) {
+		let defMenu = defaultMenu;
+		// Add custom menu items at proper positions: open, preview & execute
+		if (source.type === "node" && source.selectedObjectIds.length === 1) {
+			defMenu.unshift({ action: "editNode", label: this.getLabel("node_editNode", "CMI: Open") });
+			defMenu.splice(2, 0, { action: "previewNode", label: this.getLabel("node_previewNode", "CMI: Preview") });
+			defMenu.splice(8, 0, { action: "executeNode", label: this.getLabel("node_executeNode", "CMI: Execute") });
+			defMenu.splice(9, 0, { divider: true });
 		}
-
-		return menuDefinition;
+		// Add custom menu items validate flow and stream properties if source is canvas
+		if (source.type === "canvas") {
+			defMenu = defMenu.concat({ action: "validateFlow", label: this.getLabel("canvas_validateFlow", "CMI: Validate Flow") });
+			defMenu = defMenu.concat([{ action: "streamProperties", label: this.getLabel("canvas_streamProperties", "CMI: Options") }]);
+		}
+		return defMenu;
 	}
 
 	editActionHandler(data) {
@@ -1544,11 +1421,12 @@ class App extends React.Component {
 
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications" };
 		const notificationConfig2 = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications Canvas 2" };
+		const contextMenuConfig = { enableCreateSupernodeNonContiguous: this.state.enableCreateSupernodeNonContiguous };
 
 		const propertiesConfig = {
 			containerType: this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === FLYOUT,
-			applyOnBlur: this.state.applyOnBlur,
+			applyOnBlur: this.state.applyOnBlur
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
@@ -1623,6 +1501,7 @@ class App extends React.Component {
 				tipHandler={this.tipHandler}
 				toolbarConfig={toolbarConfig}
 				notificationConfig={notificationConfig}
+				contextMenuConfig={contextMenuConfig}
 				toolbarMenuActionHandler={this.toolbarMenuActionHandler}
 				rightFlyoutContent={rightFlyoutContent}
 				showRightFlyout={showRightFlyoutProperties}
@@ -1702,7 +1581,9 @@ class App extends React.Component {
 			schemaValidation: this.schemaValidation,
 			schemaValidationEnabled: this.state.schemaValidationEnabled,
 			validateFlowOnOpen: this.state.validateFlowOnOpen,
-			changeValidateFlowOnOpen: this.validateFlowOnOpen
+			changeValidateFlowOnOpen: this.validateFlowOnOpen,
+			enableCreateSupernodeNonContiguous: this.state.enableCreateSupernodeNonContiguous,
+			useEnableCreateSupernodeNonContiguous: this.useEnableCreateSupernodeNonContiguous
 		};
 
 		const sidePanelPropertiesConfig = {

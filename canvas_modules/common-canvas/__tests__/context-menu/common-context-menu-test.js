@@ -14,6 +14,22 @@ import { expect } from "chai";
 import sinon from "sinon";
 import { MenuItem, SubMenu } from "react-contextmenu";
 import isEqual from "lodash/isEqual";
+import CanvasController from "../../src/common-canvas/canvas-controller";
+import CommonCanvas from "../../src/common-canvas/common-canvas.jsx";
+import supernodeFlow from "../test_resources/json/supernodeCanvas.json";
+import canvasObj from "../test_resources/json/context-menu-test_canvasObject.json";
+import oneNodeObj from "../test_resources/json/context-menu-test_oneNodeObject.json";
+import multNodeObj from "../test_resources/json/context-menu-test_multNodeObject.json";
+import supernodeCollObj from "../test_resources/json/context-menu-test_supernodeCollObject.json";
+import supernodeExpObj from "../test_resources/json/context-menu-test_supernodeExpObject.json";
+import commentObj from "../test_resources/json/context-menu-test_commentObject.json";
+import multipleCommentsObj from "../test_resources/json/context-menu-test_multipleCommentsObject.json";
+import linkObj from "../test_resources/json/context-menu-test_linkObject.json";
+import commentPlusNodeObj from "../test_resources/json/context-menu-test_commentPlusNodeObject1.json";
+import manyNodesCommentsObj from "../test_resources/json/context-menu-test_manyNodesCommentsObject.json";
+import expSupernodeCommentObj from "../test_resources/json/context-menu-test_expSupernodePlusCommentObject.json";
+import collSupernodeCommentObj from "../test_resources/json/context-menu-test_collSupernodePlusCommentObject.json";
+import nonContiguousSelection from "../test_resources/json/context-menu-test_noncontiguous-selection.json";
 
 describe("CommonContextMenu renders correctly", () => {
 
@@ -51,43 +67,327 @@ describe("CommonContextMenu renders correctly", () => {
 	it("correctly positions submenus that are near the right viewport edge", () => {
 		const _contextHandler = sinon.spy();
 		const _menuDefinition = getNestedMenuDefinition();
-		const _menuRect = { left: 950, top: 100, width: 160, height: 300 };
-		const _canvasRect = { left: 0, top: 0, width: 1000, height: 1000 };
-		const wrapper = mount(<CommonContextMenu contextHandler={_contextHandler}
-			menuDefinition={_menuDefinition} menuRect={_menuRect} canvasRect={_canvasRect}
-		/>);
+		const _menuRect = {
+			left: 950,
+			top: 100,
+			width: 160,
+			height: 300
+		};
+		const _canvasRect = {
+			left: 0,
+			top: 0,
+			width: 1000,
+			height: 1000
+		};
+		const wrapper = mount(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} menuRect={_menuRect} canvasRect={_canvasRect} />);
 		expect(wrapper.prop("contextHandler")).to.equal(_contextHandler);
 		expect(wrapper.prop("menuDefinition")).to.equal(_menuDefinition);
 		const subMenuItem = wrapper.find(SubMenu);
 		expect(isEqual(subMenuItem.props().rtl, true)).to.be.true;
 	});
+});
 
+describe("DefaultMenu renders correctly", () => {
+	let canvasController;
+	beforeEach(() => {
+		canvasController = new CanvasController();
+		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
+		const config = {
+			enableAutoLayout: "none",
+			canvasController: canvasController,
+			enableInternalObjectModel: true
+		};
+		createCommonCanvas(config, canvasController);
+	});
+	it("correctly displays canvas menu when canvas is selected", () => {
+		const defMenu = [
+			{ "action": "addComment", "label": "New comment" },
+			{ "action": "selectAll", "label": "Select All" },
+			{ "divider": true },
+			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }, { "action": "paste", "label": "Paste" }], "label": "Edit" },
+			{ "divider": true },
+			{ "action": "undo", "label": "Undo" },
+			{ "action": "redo", "label": "Redo" },
+			{ "divider": true }
+		];
+		const menuDef = canvasController.createDefaultMenu(canvasObj);
+		expect(menuDef, defMenu).to.be.equal;
+	});
+	it("correctly displays one node menu when only one node is selected", () => {
+		const defMenu = [
+			{ "action": "disconnectNode", "label": "Disconnect" },
+			{ "divider": true },
+			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
+			{ "divider": true },
+			{ "action": "deleteObjects", "label": "Delete" },
+			{ "divider": true }
+		];
+		const menuDef = canvasController.createDefaultMenu(oneNodeObj);
+		expect(menuDef, defMenu).to.be.equal;
+	});
+	it("correctly displays multiple node menu when multiple nodes are selected", () => {
+		const defMenu = [
+			{ "action": "disconnectNode", "label": "Disconnect" },
+			{ "divider": true },
+			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
+			{ "divider": true },
+			{ "action": "deleteObjects", "label": "Delete" },
+			{ "divider": true }
+		];
+		const menuDef = canvasController.createDefaultMenu(multNodeObj);
+		expect(menuDef, defMenu).to.be.equal;
+	});
+	it("correctly displays single, collapsed supernode menu when a single, collapsed supernode is selected", () => {
+		const defMenu = [
+			{ "action": "disconnectNode", "label": "Disconnect" },
+			{ "divider": true },
+			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
+			{ "divider": true },
+			{ "action": "deleteObjects", "label": "Delete" },
+			{ "divider": true },
+			{ "action": "expandSuperNodeInPlace", "label": "Expand supernode" },
+			{ "divider": true }
+		];
+		const menuDef = canvasController.createDefaultMenu(supernodeCollObj);
+		expect(menuDef, defMenu).to.be.equal;
+	});
+
+	it("correctly displays single, expanded supernode menu when a single, expanded supernode is selected", () => {
+		const defMenu = [
+			{ "action": "disconnectNode", "label": "Disconnect" },
+			{ "divider": true },
+			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
+			{ "divider": true },
+			{ "action": "deleteObjects", "label": "Delete" },
+			{ "divider": true },
+			{ "action": "collapseSuperNodeInPlace", "label": "Collapse supernode" },
+			{ "divider": true }
+		];
+		const menuDef = canvasController.createDefaultMenu(supernodeExpObj);
+		expect(menuDef, defMenu).to.be.equal;
+	});
+	it("correctly displays comment menu when a single comment is selected", () => {
+		const defMenu = [
+			{ "action": "disconnectNode", "label": "Disconnect" },
+			{ "divider": true },
+			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
+			{ "divider": true },
+			{ "action": "deleteObjects", "label": "Delete" },
+			{ "divider": true }
+		];
+		const menuDef = canvasController.createDefaultMenu(commentObj);
+		expect(menuDef, defMenu).to.be.equal;
+	});
+	it("correctly displays comment menu when multiple comments are selected", () => {
+		const defMenu = [
+			{ "action": "disconnectNode", "label": "Disconnect" },
+			{ "divider": true },
+			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
+			{ "divider": true },
+			{ "action": "deleteObjects", "label": "Delete" },
+			{ "divider": true }
+		];
+		const menuDef = canvasController.createDefaultMenu(multipleCommentsObj);
+		expect(menuDef, defMenu).to.be.equal;
+	});
+	it("correctly displays delete link when a single link is selected", () => {
+		const defMenu = [
+			{ "action": "deleteLink", "label": "Delete" }
+		];
+		const menuDef = canvasController.createDefaultMenu(linkObj);
+		expect(menuDef, defMenu).to.be.equal;
+	});
+	it("correctly displays comment + node menu when a comment and a node are selected", () => {
+		const defMenu = [
+			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
+			{ "divider": true	},
+			{ "action": "createSuperNode", "label": "Create supernode" },
+			{ "divider": true },
+			{ "action": "disconnectNode", "label": "Disconnect" },
+			{ "action": "deleteObjects", "label": "Delete"	},
+			{ "divider": true }
+		];
+		const menuDef = canvasController.createDefaultMenu(commentPlusNodeObj);
+		expect(menuDef, defMenu).to.be.equal;
+	});
+	it("correctly displays comment + node menu when multiple comments and nodes are selected", () => {
+		const defMenu = [
+			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
+			{ "divider": true },
+			{ "action": "createSuperNode", "label": "Create supernode" },
+			{ "divider": true },
+			{ "action": "disconnectNode", "label": "Disconnect" },
+			{ "action": "deleteObjects", "label": "Delete" },
+			{ "divider": true }
+		];
+		const menuDef = canvasController.createDefaultMenu(manyNodesCommentsObj);
+		expect(menuDef, defMenu).to.be.equal;
+	});
+	it("correctly displays comment + node menu when an expanded supernode and a comment are selected", () => {
+		const defMenu = [
+			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
+			{ "divider": true },
+			{ "action": "createSuperNode", "label": "Create supernode" },
+			{ "divider": true },
+			{ "action": "disconnectNode", "label": "Disconnect" },
+			{ "action": "deleteObjects", "label": "Delete" },
+			{ "divider": true }
+		];
+		const menuDef = canvasController.createDefaultMenu(expSupernodeCommentObj);
+		expect(menuDef, defMenu).to.be.equal;
+	});
+	it("correctly displays comment + node menu when a collapsed supernode and a comment are selected", () => {
+		const defMenu = [
+			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
+			{ "divider": true },
+			{ "action": "createSuperNode", "label": "Create supernode" },
+			{ "divider": true },
+			{ "action": "disconnectNode", "label": "Disconnect" },
+			{ "action": "deleteObjects", "label": "Delete" },
+			{ "divider": true }
+		];
+		const menuDef = canvasController.createDefaultMenu(collSupernodeCommentObj);
+		expect(menuDef, defMenu).to.be.equal;
+	});
+});
+
+describe("create supernode renders correctly", () => {
+	let canvasController;
+	it("correctly does not display 'create supernode' for non-contiguous nodes when enableCreateSupernodeNonContiguous is false", () => {
+		canvasController = new CanvasController();
+		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
+		const config = {
+			enableAutoLayout: "none",
+			canvasController: canvasController,
+			enableInternalObjectModel: true,
+			contextMenuConfig: {
+				enableCreateSupernodeNonContiguous: false
+			}
+		};
+		createCommonCanvas(config, canvasController);
+		const menuDef = canvasController.createDefaultMenu(nonContiguousSelection);
+		const defMenu = [
+			{ "action": "disconnectNode", "label": "Disconnect" },
+			{ "divider": true },
+			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
+			{ "divider": true },
+			{ "action": "deleteObjects", "label": "Delete" },
+			{ "divider": true }
+		];
+		expect(menuDef, defMenu).to.be.equal;
+	});
+	it("correctly displays 'create supernode' for non-contiguous nodes when enableCreateSupernodeNonContiguous is true", () => {
+		canvasController = new CanvasController();
+		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
+		const config = {
+			enableAutoLayout: "none",
+			canvasController: canvasController,
+			enableInternalObjectModel: true,
+			contextMenuConfig: {
+				enableCreateSupernodeNonContiguous: false
+			}
+		};
+		createCommonCanvas(config, canvasController);
+		const menuDef = canvasController.createDefaultMenu(nonContiguousSelection);
+		const defMenu = [
+			{ "action": "disconnectNode", "label": "Disconnect" },
+			{ "divider": true },
+			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
+			{ "divider": true },
+			{ "action": "deleteObjects", "label": "Delete" },
+			{ "divider": true },
+			{ "action": "createSuperNode", "label": "Create supernode" },
+			{ "divider": true }
+		];
+		expect(menuDef, defMenu).to.be.equal;
+	});
 });
 
 function getMenuDefinition() {
 	return [
-		{ action: "dosomething", label: "Do something" },
-		{ divider: true },
-		{ action: "dosomethingelse", label: "Do something else" }
+		{
+			action: "dosomething",
+			label: "Do something"
+		}, {
+			divider: true
+		}, {
+			action: "dosomethingelse",
+			label: "Do something else"
+		}
 	];
 }
 
 function getNestedMenuDefinition() {
 	const EDIT_SUB_MENU = [
-		{ action: "cut", label: "Cut" },
-		{ action: "copy", label: "Copy" }
+		{
+			action: "cut",
+			label: "Cut"
+		}, {
+			action: "copy",
+			label: "Copy"
+		}
 	];
 	return [
-		{ action: "editNode", label: "Open" },
-		{ action: "disconnectNode", label: "Disconnect" },
-		{ action: "previewNode", label: "Preview" },
-		{ divider: true },
-		{ action: "createSuperNode", label: "Create supernode" },
-		{ divider: true },
-		{ submenu: true, label: "Edit", menu: EDIT_SUB_MENU },
-		{ divider: true },
-		{ action: "deleteObjects", label: "Delete" },
-		{ divider: true },
-		{ action: "executeNode", label: "Execute" }
+		{
+			action: "editNode",
+			label: "Open"
+		}, {
+			action: "disconnectNode",
+			label: "Disconnect"
+		}, {
+			action: "previewNode",
+			label: "Preview"
+		}, {
+			divider: true
+		}, {
+			action: "createSuperNode",
+			label: "Create supernode"
+		}, {
+			divider: true
+		}, {
+			submenu: true,
+			label: "Edit",
+			menu: EDIT_SUB_MENU
+		}, {
+			divider: true
+		}, {
+			action: "deleteObjects",
+			label: "Delete"
+		}, {
+			divider: true
+		}, {
+			action: "executeNode",
+			label: "Execute"
+		}
 	];
+}
+
+function createCommonCanvas(config, canvasController) {
+	const contextMenuHandler = sinon.spy();
+	const contextMenuActionHandler = sinon.spy();
+	const editActionHandler = sinon.spy();
+	const clickActionHandler = sinon.spy();
+	const decorationActionHandler = sinon.spy();
+	const selectionChangeHandler = sinon.spy();
+	const tipHandler = sinon.spy();
+	const toolbarMenuActionHandler = sinon.spy();
+	const toolbarConfig = [
+		{
+			action: "palette",
+			label: "Palette",
+			enable: true
+		}
+	];
+	const notificationConfig = {
+		action: "notification",
+		label: "Notifications",
+		enable: true
+	};
+
+	const wrapper = mount(<CommonCanvas config={config} contextMenuHandler={contextMenuHandler} contextMenuActionHandler={contextMenuActionHandler}
+		editActionHandler={editActionHandler} clickActionHandler={clickActionHandler} decorationActionHandler={decorationActionHandler}
+		selectionChangeHandler={selectionChangeHandler} tipHandler={tipHandler} toolbarConfig={toolbarConfig} notificationConfig={notificationConfig}
+		showRightFlyout={false} toolbarMenuActionHandler={toolbarMenuActionHandler} canvasController={canvasController}
+	/>);
+	return wrapper;
 }

@@ -42,7 +42,8 @@ Feature: UndoRedo
 		Then I click redo
 		Then I verify the number of comments are 1
 
-		Then I disconnect links for node 1 a "Var. File" on the canvas
+		Then I right click the "Var. File" node to display the context menu
+		Then I click option "Disconnect" from the context menu
 		Then I click undo
 		Then I verify the number of data links are 1
 		Then I press Ctrl/Cmnd+Y to Redo
@@ -72,7 +73,10 @@ Feature: UndoRedo
 		Then I click redo
 		Then I verify the number of nodes are 1
 
-		Then I delete comment 1 linked to the "Select" node with the comment text "This comment box should be edited."
+		Then I click the comment with text "This comment box should be edited." to select it
+		Then I right click at position 350, 250 to display the context menu
+		Then I click option "Delete" from the context menu
+		#Then I delete comment 1 linked to the "Select" node with the comment text "This comment box should be edited."
 		Then I click undo
 		Then I verify the number of comments are 1
 		Then I click redo
@@ -163,7 +167,7 @@ Feature: UndoRedo
 		Then I verify the number of comment links are 3
 
 		Then I right click at position 300, 10 to display the context menu
-		Then I click option "Select all" from the context menu
+		Then I click option "Select All" from the context menu
 		Then I delete node 1 the "Type" node by selecting more than 1 node
 		Then I expect the canvas to be empty
 		Then I expect the object model to be empty
@@ -188,7 +192,7 @@ Feature: UndoRedo
 		Then I verify the number of comments are 3
 
 		Then I right click at position 300, 10 to display the context menu
-		Then I click option "Select all" from the context menu
+		Then I click option "Select All" from the context menu
 		Then I delete all selected objects via the Delete key
 		Then I expect the canvas to be empty
 		Then I expect the object model to be empty
@@ -224,7 +228,8 @@ Feature: UndoRedo
 		Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 300, 450
 		Then I add node 8 a "Sort" node from the "Record Ops" category onto the canvas at 300, 450
 		Then I close the palette
-		Then I disconnect links for node 4 a "Neural Net" on the canvas
+		Then I right click the "Neural Net" node to display the context menu
+		Then I click option "Disconnect" from the context menu
 		Then I delete node 4 the "Neural Net" node
 		Then I verify the number of nodes are 7
 		Then I verify the number of data links are 4
@@ -267,7 +272,8 @@ Feature: UndoRedo
 		Then I click undo
 		Then I click undo
 		Then I verify the number of comments are 0
-		Then I disconnect links for node 2 a "Var. File" on the canvas
+		Then I right click the "DRUG1n" node to display the context menu
+		Then I click option "Disconnect" from the context menu
 		Then I verify the number of data links are 0
 		Then I click undo
 		Then I verify the number of data links are 20
@@ -294,7 +300,9 @@ Feature: UndoRedo
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 		Given I have selected the "Halo" connection type
 		Given I have toggled the app side panel
+
 		Then I resize the window size to 1330 width and 660 height
+
 		Then I click on the secondary toolbar horizontal layout button
 		Then I verify the node 1 position is "translate(470, 123)"
 		Then I verify the node 2 position is "translate(190, 123)"
@@ -302,6 +310,7 @@ Feature: UndoRedo
 		Then I verify the node 4 position is "translate(610, 196)"
 		Then I verify the node 5 position is "translate(50, 123)"
 		Then I verify the node 6 position is "translate(330, 123)"
+
 		Then I click on the secondary toolbar vertical layout button
 		Then I verify the node 1 position is "translate(120, 488)"
 		Then I verify the node 2 position is "translate(120, 196)"
@@ -309,28 +318,36 @@ Feature: UndoRedo
 		Then I verify the node 4 position is "translate(190, 634)"
 		Then I verify the node 5 position is "translate(120, 50)"
 		Then I verify the node 6 position is "translate(120, 342)"
+
 		Then I click undo
+
 		Then I verify the node 1 position is "translate(470, 123)"
 		Then I verify the node 2 position is "translate(190, 123)"
 		Then I verify the node 3 position is "translate(610, 50)"
 		Then I verify the node 4 position is "translate(610, 196)"
 		Then I verify the node 5 position is "translate(50, 123)"
 		Then I verify the node 6 position is "translate(330, 123)"
+
 		Then I click undo
+
 		Then I verify the node 1 position is "translate(445, 219)"
 		Then I verify the node 2 position is "translate(218, 219)"
 		Then I verify the node 3 position is "translate(611, 151)"
 		Then I verify the node 4 position is "translate(606, 310)"
 		Then I verify the node 5 position is "translate(96, 219)"
 		Then I verify the node 6 position is "translate(328, 219)"
+
 		Then I click redo
+
 		Then I verify the node 1 position is "translate(470, 123)"
 		Then I verify the node 2 position is "translate(190, 123)"
 		Then I verify the node 3 position is "translate(610, 50)"
 		Then I verify the node 4 position is "translate(610, 196)"
 		Then I verify the node 5 position is "translate(50, 123)"
 		Then I verify the node 6 position is "translate(330, 123)"
+
 		Then I click redo
+
 		Then I verify the node 1 position is "translate(120, 488)"
 		Then I verify the node 2 position is "translate(120, 196)"
 		Then I verify the node 3 position is "translate(50, 634)"

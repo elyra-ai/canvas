@@ -35,5 +35,5 @@ Feature: FlowValidation
 		Then I add node 1 a "Add Column" node from the "Transformations" category onto the canvas at 450, 200
 		Then I close the palette
 		Then I right click at position 200, 200 to display the context menu
-		Then I click option "Validate Flow" from the context menu
+		Then I click option "CMI: Validate Flow" from the context menu
 		Then I verify that there are 1 nodes with a "error" indicator
