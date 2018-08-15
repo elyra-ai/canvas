@@ -28,6 +28,10 @@
     "fields_disabled": [
       "age"
     ],
+    "fields_bad_field": [
+      "bad field",
+      "bad age"
+    ],
     "fields_filter_measurement": [],
     "fields_filter_type": [],
     "fields_filter_roles": [],
@@ -108,6 +112,12 @@
     },
     {
       "id": "fields_disabled",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "fields_bad_field",
       "type": "array[string]",
       "role": "column",
       "required": true
@@ -261,6 +271,15 @@
         "moveable_rows": true
       },
       {
+        "parameter_ref": "fields_bad_field",
+        "label": {
+          "default": "Bad Field"
+        },
+        "description": {
+          "default": "Has 2 columns that aren't part of the schema.  Both fields should show warning."
+        }
+      },
+      {
         "parameter_ref": "fields_filter_measurement",
         "label": {
           "default": "Filter by Measurement"
@@ -368,6 +387,7 @@
         "parameter_refs": [
           "fields_error",
           "fields_warning",
+          "fields_bad_field",
           "hide",
           "fields_hidden",
           "disable",
@@ -422,7 +442,9 @@
           "condition": {
             "parameter_ref": "fields_warning",
             "op": "notEquals",
-            "value": ["age"]
+            "value": [
+              "age"
+            ]
           }
         }
       }

@@ -134,17 +134,27 @@ function validateInput(inPropertyId, controller) {
 	}
 	const propertyId = cloneDeep(inPropertyId);
 	const controlValue = controller.getPropertyValue(propertyId);
-	if (Array.isArray(controlValue) && control.subControls) {
+	if (Array.isArray(controlValue)) {
 	// validate the table as a whole
 		_validateInput(propertyId, controller, control);
 		// validate each cell
-		for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
-			for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
+		if (control.subControls) {
+			for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+				for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
+					propertyId.row = rowIndex;
+					propertyId.col = colIndex;
+					_validateInput(propertyId, controller, control.subControls[colIndex]);
+				}
+			}
+		} else {
+			// validate each row in array.
+			for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				propertyId.row = rowIndex;
-				propertyId.col = colIndex;
+				propertyId.col = 0;
 				_validateInput(propertyId, controller, control);
 			}
 		}
+
 	} else {
 		_validateInput(propertyId, controller, control);
 	}
@@ -323,7 +333,12 @@ function injectDefaultValidations(controls, validationDefinitions, intl) {
 			_injectDateTimeDefinition(control, validationDefinitions, keyName, controlValId, intl);
 		}
 		if (control.role === "column") {
-			_injectInvalidFieldDefinition(control, validationDefinitions, keyName, controlValId, intl);
+			// used for selectcolumns control
+			let locKeyName = keyName;
+			if (control.valueDef.isList) {
+				locKeyName += "[0]";
+			}
+			_injectInvalidFieldDefinition(control, validationDefinitions, locKeyName, controlValId, intl);
 		}
 
 		if (control.subControls) {
@@ -419,6 +434,10 @@ function _validateInput(propertyId, controller, control) {
 					validation.definition.validation.fail_message &&
 					validation.definition.validation.fail_message.focus_parameter_ref) {
 					msgPropertyId = getParamRefPropertyId(validation.definition.validation.fail_message.focus_parameter_ref, msgPropertyId);
+				}
+				// don't set column if not a subcontrol
+				if (typeof msgPropertyId.col !== "undefined" && typeof control.columnIndex === "undefined") {
+					delete msgPropertyId.col;
 				}
 				errorMessage.validation_id = msgPropertyId.name;
 				if (validation.definition.validation &&

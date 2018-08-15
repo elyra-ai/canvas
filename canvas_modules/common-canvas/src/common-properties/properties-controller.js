@@ -18,7 +18,7 @@ import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYP
 	MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
-import { ControlType, Type, ParamRole } from "./constants/form-constants";
+import { Type, ParamRole } from "./constants/form-constants";
 import cloneDeep from "lodash/cloneDeep";
 import assign from "lodash/assign";
 import isEmpty from "lodash/isEmpty";
@@ -1149,10 +1149,13 @@ export default class PropertiesController {
 	}
 
 	getControl(propertyId) {
-		let control = this.controls[propertyId.name];
-		// custom control doesn't have any subcontrols so default to parent
-		if (typeof propertyId.col !== "undefined" && control && control.controlType !== ControlType.CUSTOM) {
-			control = this.controls[propertyId.name][propertyId.col.toString()];
+		const control = this.controls[propertyId.name];
+		// if no subcontrol return parent control
+		if (typeof propertyId.col !== "undefined" && control) {
+			const subControl = this.controls[propertyId.name][propertyId.col.toString()];
+			if (subControl) {
+				return subControl;
+			}
 		}
 		return control;
 	}

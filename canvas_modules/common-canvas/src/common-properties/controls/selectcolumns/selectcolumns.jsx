@@ -13,11 +13,11 @@ import FlexibleTable from "./../../components/flexible-table";
 import MoveableTableRows from "./../../components/moveable-table-rows";
 import AbstractTable from "./../abstract-table.jsx";
 import ValidationMessage from "./../../components/validation-message";
-import classNames from "classnames";
 import { injectIntl, intlShape } from "react-intl";
 import ControlUtils from "./../../util/control-utils";
-import PropertyUtils from "./../../util/property-utils";
 import { TABLE_SCROLLBAR_WIDTH, STATES } from "./../../constants/constants";
+
+import ReadonlyControl from "./../readonly";
 
 class SelectColumns extends AbstractTable {
 
@@ -34,8 +34,20 @@ class SelectColumns extends AbstractTable {
 		if (controlValue) {
 			for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				const columns = [];
-				const cellContent = PropertyUtils.stringifyFieldValue(controlValue[rowIndex], this.props.control);
-				const rowClassName = classNames(this.getRowClassName(rowIndex), { "disabled": tableState === STATES.DISABLED });
+				const propertyId = {
+					name: this.props.propertyId.name,
+					row: rowIndex
+				};
+				const cellContent = (
+					<div className="properties-table-cell-control">
+						<ReadonlyControl
+							control={this.props.control}
+							propertyId={propertyId}
+							controller={this.props.controller}
+							tableControl
+						/>
+					</div>
+				);
 				columns.push({
 					key: rowIndex + "-0-field",
 					column: "name",
@@ -51,7 +63,7 @@ class SelectColumns extends AbstractTable {
 					key: rowIndex,
 					onClickCallback: this.handleRowClick.bind(this, rowIndex),
 					columns: columns,
-					className: rowClassName
+					className: this.getRowClassName(rowIndex)
 				});
 			}
 		}

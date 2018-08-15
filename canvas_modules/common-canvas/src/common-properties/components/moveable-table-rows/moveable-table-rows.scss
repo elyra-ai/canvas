@@ -49,6 +49,7 @@
 			width: 100%;
 			display: flex;
 			&.disabled {
+				pointer-events: none;
 				opacity: 0.5;
 			}
 			& > td:first-of-type {

@@ -50,7 +50,7 @@ export default class PropertiesStore {
 		const propValue = state.propertiesReducer[propertyId.name];
 		if (typeof propertyId.row !== "undefined" && (typeof propValue !== "undefined" && propValue !== null)) {
 			const rowValue = propValue[propertyId.row];
-			if (typeof propertyId.col !== "undefined" && (typeof rowValue !== "undefined" && rowValue !== null)) {
+			if (typeof propertyId.col !== "undefined" && (typeof rowValue !== "undefined" && rowValue !== null) && Array.isArray(rowValue)) {
 				return rowValue[propertyId.col];
 			}
 			return rowValue;

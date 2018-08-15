@@ -13,7 +13,6 @@ import Controller from "./../../../src/common-properties/properties-controller";
 import propertyUtils from "./../../_utils_/property-utils";
 import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
-import isEqual from "lodash/isEqual";
 
 import fieldPickerParamDef from "./../../test_resources/paramDefs/fieldpicker_paramDef.json";
 
@@ -743,14 +742,22 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		expect(selectRows2.length).to.equal(5);
 
 		const warningMessage = {
-			validation_id: "validField_fields_294.69762842919897",
-			type: "warning",
-			text: "Invalid Select Columns, field not found in data set."
+			fields: {
+				"1": {
+					"type": "warning",
+					"text": "Invalid Select Columns, field not found in data set.",
+					"validation_id": "validField_fields[0]_294.69762842919897"
+				},
+				"2": {
+					"type": "warning",
+					"text": "Invalid Select Columns, field not found in data set.",
+					"validation_id": "validField_fields[0]_294.69762842919897"
+				}
+			}
 		};
 
-		const actual = renderedController.getErrorMessage({ name: "fields" });
-		expect(isEqual(JSON.parse(JSON.stringify(warningMessage)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		const actual = renderedController.getErrorMessages();
+		expect(warningMessage).to.eql(actual);
 	});
 
 	it("selectcolumns control will have updated options by the controller", () => {
