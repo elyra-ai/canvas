@@ -678,8 +678,19 @@ const selectioninfo = (state = [], action) => {
 
 const breadcrumbs = (state = [], action) => {
 	switch (action.type) {
-	case "SET_PIPELINE_FLOW":
-		return [{ pipelineId: action.data.primary_pipeline, pipelineFlowId: action.data.id }];
+	case "SET_PIPELINE_FLOW": {
+		// In some instances, with an external object model, the same canvas may
+		// be set multiple times. Consequently, we only reset the breadcrumbs if
+		// we're given a completely new canvas or the current breadcrumb does not
+		// reference a pipeline Id in the incoming pipelineFlow, which might happen
+		// if the pipeline has been removed.
+		if ((action.data && action.currentCanvasInfo &&
+					action.data.id !== action.currentCanvasInfo.id) ||
+				!isCurrentBreadcrumbInPipelineFlow(state, action.data)) {
+			return [{ pipelineId: action.data.primary_pipeline, pipelineFlowId: action.data.id }];
+		}
+		return state;
+	}
 
 	case "SET_CANVAS_INFO":
 		return [{ pipelineId: action.data.primary_pipeline, pipelineFlowId: action.data.id }];
@@ -755,6 +766,21 @@ const setNodeDimensions = (node, layoutInfo) => {
 	}
 
 	return newNode;
+};
+
+// Returns true if the 'current' breadcrumb from the breadcrumbs
+// passed in is in the pipelineFlow's set of pipelines.
+const isCurrentBreadcrumbInPipelineFlow = (brdcrumbs, pipelineFlow) => {
+	if (pipelineFlow &&
+			pipelineFlow.pipelines &&
+			Array.isArray(brdcrumbs) &&
+			brdcrumbs.length > 0 &&
+			brdcrumbs[brdcrumbs.length - 1].pipelineId) {
+		const piId = brdcrumbs[brdcrumbs.length - 1].pipelineId;
+		const idx = pipelineFlow.pipelines.findIndex((pipeline) => pipeline.id === piId);
+		return idx > -1;
+	}
+	return false;
 };
 
 

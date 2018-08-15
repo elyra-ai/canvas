@@ -1,4 +1,5 @@
 {
+  "version": "2.0",
   "primary_pipeline": "empty-pipeline",
   "pipelines": [
     {

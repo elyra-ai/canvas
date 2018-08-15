@@ -826,6 +826,34 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(JSON.stringify(supernode3BAncestorsExpected), JSON.stringify(supernode3BAncestors))).to.be.true;
 	});
 
+	it("should ensure setPipelineFlow doesn't reset breadcrumbs with same flow", () => {
+		objectModel.setPipelineFlow(supernodeNestedCanvas);
+
+		// Add new breadcrumb for the sub-flow, to simulate the user viewing sub-flow full-screen
+		objectModel.addNewBreadcrumb({ pipelineId: "8e671b0f-118c-4216-9cea-f522662410ec", pipelineFlowId: "153651d6-9b88-423c-b01b-861f12d01489" });
+
+		// Pass in the same pipeline flow to simulate the host app setting some property and giving us the same flow.
+		objectModel.setPipelineFlow(supernodeNestedCanvas);
+
+		// Check to make sure the current breadcrumb is set to the same pipeline ID.
+		expect(isEqual(objectModel.getCurrentBreadcrumb().pipelineId, "8e671b0f-118c-4216-9cea-f522662410ec")).to.be.true;
+
+	});
+
+	it("should ensure setPipelineFlow does reset breadcrumbs with different flow", () => {
+		objectModel.setPipelineFlow(supernodeNestedCanvas);
+
+		// Add new breadcrumb for the sub-flow, to simulate the user viewing sub-flow full-screen
+		objectModel.addNewBreadcrumb({ pipelineId: "8e671b0f-118c-4216-9cea-f522662410ec", pipelineFlowId: "153651d6-9b88-423c-b01b-861f12d01489" });
+
+		// Pass in the different pipeline flow to simulate the host app giving us a new flow.
+		objectModel.setPipelineFlow(startCanvas);
+
+		// Check to make sure the current breadcrumb is set to the new pipeline ID.
+		expect(isEqual(objectModel.getCurrentBreadcrumb().pipelineId, "empty-pipeline")).to.be.true;
+	});
+
+
 	function getNodeParametersFromStartFlow(nodeId) {
 		deepFreeze(startPipelineFlow);
 		objectModel.setPipelineFlow(startPipelineFlow);
