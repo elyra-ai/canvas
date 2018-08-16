@@ -6,6 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+/* eslint no-console: "off" */
 
 import React from "react";
 import isEqual from "lodash/isEqual";

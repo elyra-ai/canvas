@@ -1032,7 +1032,9 @@ class CanvasRenderer {
 			y -= newScale * canvasDimensions.top;
 
 			this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(newScale);
+			this.zoomingToFitForScale = true;
 			this.canvasSVG.call(this.zoom.transform, this.zoomTransform);
+			this.zoomingToFitForScale = false;
 		}
 	}
 
@@ -1078,7 +1080,9 @@ class CanvasRenderer {
 	zoomStart() {
 		this.logger.log("zoomStart - " + JSON.stringify(d3Event.transform));
 
-		if (d3Event.sourceEvent && d3Event.sourceEvent.shiftKey) {
+		// this.zoomingToFitForScale flag is used to avoid redo actions initialized by
+		// Cmd+Shirt+Z (where the shift key has been pressed) causing a region selection to start.
+		if (d3Event.sourceEvent && d3Event.sourceEvent.shiftKey && !this.zoomingToFitForScale) {
 			this.regionSelect = true;
 			this.regionStartTransformX = d3Event.transform.x;
 			this.regionStartTransformY = d3Event.transform.y;

@@ -399,3 +399,115 @@ Feature: UndoRedo
 		Then I verify there are 2 pipelines
 		Then I verify pipeline 0 have 1 nodes
 		Then I verify pipeline 1 have 0 nodes
+
+	Scenario: Test undo/redo of supernode creation and deletion
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Flyout" palette layout
+		Given I have uploaded predefined palette "modelerPalette.json"
+		Given I have toggled the app side panel
+
+		Then I open the palette
+		Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 300, 200
+		Then I add node 2 a "Derive" node from the "Field Ops" category onto the canvas at 400, 200
+		Then I link node "Var. File" output port "outPort" to node "Derive" input port "inPort"
+		Then I close the palette
+		Then I right click at position 300, 10 to display the context menu
+		Then I click option "Select All" from the context menu
+		Then I right click the "Derive" node to display the context menu
+		Then I click option "Create supernode" from the context menu
+
+		# Verify Supernode created OK
+		Then I verify pipeline 0 have 1 nodes
+		Then I verify pipeline 0 have 0 links
+		Then I verify pipeline 1 have 2 nodes
+		Then I verify pipeline 1 have 1 links
+
+		# Now delete the Supernode
+		Then I right click the "Supernode" node to display the context menu
+		Then I click option "Delete" from the context menu
+
+		# Verify Supernode deleted OK
+		Then I verify pipeline 0 have 0 nodes
+		Then I verify pipeline 0 have 0 links
+
+		# Test Undo (using toolbar) of deletion of Supernode
+		Then I click undo
+		Then I verify pipeline 0 have 1 nodes
+		Then I verify pipeline 0 have 0 links
+		Then I verify pipeline 1 have 2 nodes
+		Then I verify pipeline 1 have 1 links
+
+		# Test Undo (using toolbar) of creation of Supernode
+		Then I click undo
+		Then I verify pipeline 0 have 2 nodes
+		Then I verify pipeline 0 have 1 links
+
+		# Test Redo (using toolbar) of creation Supernode
+		Then I click redo
+		Then I verify pipeline 0 have 1 nodes
+		Then I verify pipeline 0 have 0 links
+		Then I verify pipeline 1 have 2 nodes
+		Then I verify pipeline 1 have 1 links
+
+		# Test Redo (using toolbar) of deletion of Supernode
+		Then I click redo
+		Then I verify pipeline 0 have 0 nodes
+		Then I verify pipeline 0 have 0 links
+
+		## Now try same set of undo/redo using the keyboard
+
+		# Test Undo (using the keyboard) of deletion of Supernode
+		Then I press Ctrl/Cmnd+Z to Undo
+		Then I verify pipeline 0 have 1 nodes
+		Then I verify pipeline 0 have 0 links
+		Then I verify pipeline 1 have 2 nodes
+		Then I verify pipeline 1 have 1 links
+
+		# Test Undo (using the keyboard) of creation of Supernode
+		Then I press Ctrl/Cmnd+Z to Undo
+		Then I verify pipeline 0 have 2 nodes
+		Then I verify pipeline 0 have 1 links
+
+		# Test Redo (using the keyboard) of creation Supernode
+		Then I press Ctrl/Cmnd+Shift+Z to Redo
+		Then I verify pipeline 0 have 1 nodes
+		Then I verify pipeline 0 have 0 links
+		Then I verify pipeline 1 have 2 nodes
+		Then I verify pipeline 1 have 1 links
+
+		# Test Redo (using the keyboard) of deletion of Supernode
+		Then I press Ctrl/Cmnd+Shift+Z to Redo
+		Then I verify pipeline 0 have 0 nodes
+		Then I verify pipeline 0 have 0 links
+
+		## Now try same set of undo/redo using the context menu
+
+		# Test Undo (using the context menu) of deletion of Supernode
+		Then I right click at position 300, 10 to display the context menu
+		Then I click option "Undo" from the context menu
+		Then I verify pipeline 0 have 1 nodes
+		Then I verify pipeline 0 have 0 links
+		Then I verify pipeline 1 have 2 nodes
+		Then I verify pipeline 1 have 1 links
+
+		# Test Undo (using the context menu) of creation of Supernode
+		Then I right click at position 300, 10 to display the context menu
+		Then I click option "Undo" from the context menu
+		Then I verify pipeline 0 have 2 nodes
+		Then I verify pipeline 0 have 1 links
+
+		# Test Redo (using the context menu) of creation Supernode
+		Then I right click at position 300, 10 to display the context menu
+		Then I click option "Redo" from the context menu
+		Then I verify pipeline 0 have 1 nodes
+		Then I verify pipeline 0 have 0 links
+		Then I verify pipeline 1 have 2 nodes
+		Then I verify pipeline 1 have 1 links
+
+		# Test Redo (using the context menu) of deletion of Supernode
+		Then I right click at position 300, 10 to display the context menu
+		Then I click option "Redo" from the context menu
+		Then I verify pipeline 0 have 0 nodes
+		Then I verify pipeline 0 have 0 links

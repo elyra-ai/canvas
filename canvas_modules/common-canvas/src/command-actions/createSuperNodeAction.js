@@ -447,12 +447,7 @@ export default class CreateSuperNodeAction extends Action {
 	}
 
 	undo() {
-		this.objectModel.deletePipeline(this.canvasInfoSubPipeline.id);
-		this.apiPipeline.deleteNode(this.supernode.id);
-
-		if (this.newLinks) {
-			this.apiPipeline.deleteLinks(this.newLinks);
-		}
+		this.apiPipeline.deleteSupernode(this.supernode, false);
 
 		this.subflowNodes.forEach((node) => {
 			this.apiPipeline.addNode(node);

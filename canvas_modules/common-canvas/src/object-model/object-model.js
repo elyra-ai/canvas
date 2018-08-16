@@ -1980,11 +1980,14 @@ export class APIPipeline {
 		}
 	}
 
-	deleteSupernode(supernode) {
+	deleteSupernode(supernode, deleteDescendantPipelines) {
 		let pipelineIds = [];
+		const delDescendentPipelines = typeof deleteDescendantPipelines === "undefined" ? true : deleteDescendantPipelines;
 		if (has(supernode, "subflow_ref.pipeline_id_ref")) {
 			pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
-			pipelineIds = pipelineIds.concat(this.objectModel.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
+			if (delDescendentPipelines) {
+				pipelineIds = pipelineIds.concat(this.objectModel.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
+			}
 		}
 		this.store.dispatch({
 			type: "DELETE_SUPERNODE",
