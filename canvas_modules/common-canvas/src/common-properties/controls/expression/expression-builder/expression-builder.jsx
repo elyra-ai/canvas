@@ -19,10 +19,15 @@ import PropertyUtils from "./../../../util/property-utils";
 export default class ExpressionBuilder extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.selection = [];
 		this.functionList = this.props.controller.getExpressionInfo();
 		this.operatorList = this.functionList.Operators;
+
 		this.editorDidMount = this.editorDidMount.bind(this);
 		this.onChange = this.onChange.bind(this);
+		this.onBlur = this.onBlur.bind(this);
+		this.onSelectionChange = this.onSelectionChange.bind(this);
 	}
 
 	onChange(newValue) {
@@ -36,6 +41,18 @@ export default class ExpressionBuilder extends React.Component {
 			this.editor.replaceSelection(" " + value);
 		}
 		this._setSelection(value, cursor, selectionOffset);
+		// This is needed to generate a render so that the selection will appear.
+		const exprValue = this.editor.getValue();
+		this.props.controller.updatePropertyValue(this.props.propertyId, exprValue, true);
+	}
+
+	onSelectionChange(selection) {
+		this.selection = selection;
+	}
+
+	onBlur(editor, evt) {
+		const newValue = this.editor.getValue();
+		this.props.controller.updatePropertyValue(this.props.propertyId, newValue, true);
 	}
 
 	editorDidMount(editor, next) {
@@ -44,14 +61,13 @@ export default class ExpressionBuilder extends React.Component {
 
 
 	_setSelection(value, cursor, selectionOffset) {
-		this.props.controller.clearExpressionSelection(this.props.propertyId.name);
 		// first set the selection to the first param holder of new value
 		if (typeof value === "string") {
 			const firstParam = value.indexOf("?");
 			if (firstParam !== -1) {
 				const selection = { anchor: { line: cursor.line, ch: cursor.ch + firstParam + selectionOffset + 1 },
 					head: { line: cursor.line, ch: cursor.ch + firstParam + selectionOffset } };
-				this.props.controller.updateExpressionSelection(this.props.propertyId.name, [selection]);
+				this.onSelectionChange([selection]);
 				return;
 			}
 		}
@@ -64,15 +80,14 @@ export default class ExpressionBuilder extends React.Component {
 			if (paramOffset !== -1) {
 				const selection = { anchor: { line: index, ch: paramOffset + 1 },
 					head: { line: index, ch: paramOffset } };
-				this.props.controller.updateExpressionSelection(this.props.propertyId.name, [selection]);
+				this.onSelectionChange([selection]);
 				return;
 			}
 		}
 		// if no parameter holders found then set it to end of insert string
 		const insertSelection = { anchor: { line: cursor.line, ch: cursor.ch + value.length + selectionOffset },
 			head: { line: cursor.line, ch: cursor.ch + value.length + selectionOffset } };
-		this.props.controller.updateExpressionSelection(this.props.propertyId.name, [insertSelection]);
-
+		this.onSelectionChange([insertSelection]);
 		return;
 	}
 
@@ -88,8 +103,10 @@ export default class ExpressionBuilder extends React.Component {
 					propertyId={this.props.propertyId}
 					controller={this.props.controller}
 					builder={false}
-					validate
 					editorDidMount={this.editorDidMount}
+					selectionRange={this.selection}
+					onSelectionChange={this.onSelectionChange}
+					onBlur={this.onBlur}
 					height={275}
 				/>
 				<ExpressionSelectionPanel

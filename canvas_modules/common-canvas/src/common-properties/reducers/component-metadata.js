@@ -7,8 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { SET_TITLE, SET_ACTIVE_TAB,
-	UPDATE_EXPRESSION_SELECTION, CLEAR_EXPRESSION_SELECTION, UPDATE_EXPRESSION_VALIDATE } from "../actions";
+import { SET_TITLE, SET_ACTIVE_TAB, UPDATE_EXPRESSION_VALIDATE } from "../actions";
 
 
 function componentMetadata(state = [], action) {
@@ -21,23 +20,6 @@ function componentMetadata(state = [], action) {
 	case SET_ACTIVE_TAB: {
 		const newState = state;
 		newState.activeTab = action.activeTab;
-		return Object.assign({}, state, newState);
-	}
-	case UPDATE_EXPRESSION_SELECTION: {
-		const newState = state;
-		if (typeof newState[action.info.name] === "undefined") {
-			newState[action.info.name] = { expressionSelection: action.info.expressionSelection };
-		} else {
-			newState[action.info.name].expressionSelection = action.info.expressionSelection;
-		}
-		return Object.assign({}, state, newState);
-	}
-	case CLEAR_EXPRESSION_SELECTION: {
-		const newState = state;
-		if (action.info.name && typeof newState[action.info.name] !== "undefined" &&
-	typeof newState[action.info.name].expressionSelection !== "undefined") {
-			delete newState[action.info.name].expressionSelection;
-		}
 		return Object.assign({}, state, newState);
 	}
 	case UPDATE_EXPRESSION_VALIDATE: {

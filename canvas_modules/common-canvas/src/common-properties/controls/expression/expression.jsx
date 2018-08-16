@@ -50,30 +50,29 @@ export default class ExpressionControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showExpressionBuilder: false
+			showExpressionBuilder: false,
 		};
 
 		this.origHint = "";
-		this.handleSelectionChange = this.handleSelectionChange.bind(this);
+
 		this.handleValidate = this.handleValidate.bind(this);
 		this.cancelExpressionBuilder = this.cancelExpressionBuilder.bind(this);
 		this.hideExpressionBuilder = this.hideExpressionBuilder.bind(this);
 		this.showExpressionBuilder = this.showExpressionBuilder.bind(this);
-
 		this.editorDidMount = this.editorDidMount.bind(this);
 		this.addonHints = this.addonHints.bind(this);
 		this.getDatasetFields = this.getDatasetFields.bind(this);
+		this.handleBlur = this.handleBlur.bind(this);
+		this.handleKeyDown = this.handleKeyDown.bind(this);
 
 		this.handleChange = (editor, data, newValue) => {
-			// only validate input on exit and when explicitly asked via validate link.
-			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, true);
 			// this is needed when characters are added into the expression builder because
 			// entering chars does not go through onChange() in expression builder.
 			// This is needed to adjust the selection position in code mirror.
-			if (Array.isArray(data.text) && data.text.length === 1 && data.text[0].length === 1) {
+			if (Array.isArray(data.text) && data.text.length === 1 && data.text[0].length === 1 && this.props.onSelectionChange) {
 				// if a string was replaced, need to calc newPos from the 'data.from' otherwise use 'data.to'
 				const newPos = (data.removed[0].length > 0) ? { line: data.from.line, ch: data.from.ch + 1 } : { line: data.to.line, ch: data.to.ch + 1 };
-				this.props.controller.updateExpressionSelection(this.props.propertyId.name, [{ anchor: newPos, head: newPos }]);
+				this.props.onSelectionChange([{ anchor: newPos, head: newPos }]);
 			}
 			// change the validate icon because something has been entered.
 			if (this.props.controller.getExpressionValidate(this.props.propertyId.name)) {
@@ -83,6 +82,15 @@ export default class ExpressionControl extends React.Component {
 		};
 	}
 
+	// this is needed to ensure expression builder selection works.
+	componentDidUpdate() {
+		if (this.props.selectionRange && this.props.selectionRange.length > 0 && this.editor) {
+			this.props.selectionRange.forEach((selected) => {
+				this.editor.setSelection(selected.anchor, selected.head);
+			});
+			this.editor.focus();
+		}
+	}
 
 	// reset to the original autocomplete handler
 	componentWillUnmount() {
@@ -149,14 +157,6 @@ export default class ExpressionControl extends React.Component {
 			cm.registerHelper("hint", language, this.addonHints);
 		}
 
-		// selection is only set by expression builder to highlight param substitution char ('?').
-		const selection = this.props.controller.getExpressionSelection(this.props.propertyId.name);
-		if (selection.length > 0 && this.editor) {
-			selection.forEach((selected) => {
-				this.editor.setSelection(selected.anchor, selected.head);
-			});
-		}
-
 		if (this.props.editorDidMount) {
 			this.props.editorDidMount(editor, next);
 		}
@@ -182,31 +182,28 @@ export default class ExpressionControl extends React.Component {
 		this.hideExpressionBuilder();
 	}
 
-	handleSelectionChange(editor, data) {
-		// expression builder selection is handled in the expressionBuilder
-		// this is needed so that any selection or cursor movement outside the Builder
-		// is handled codeMirror
-		if (data.origin === "*mouse") {
-			const selection = this.props.controller.getExpressionSelection(this.props.propertyId.name);
-			if (selection.length > 0) {
-				// remove expressionBuilder managed selection.
-				this.props.controller.clearExpressionSelection(this.props.propertyId.name);
-			}
-		}
-	}
-
 	handleValidate() {
 		this.props.controller.updateExpressionValidate(this.props.propertyId.name, true);
 		this.props.controller.validateInput(this.props.propertyId);
 	}
 
 	handleKeyDown(editor, evt) {
+		// this is needed to move the cursor to the new line if selection is being used in the expression builder.
 		if (evt.code === "Enter") {
-			const selection = this.props.controller.getExpressionSelection(this.props.propertyId.name);
-			if (selection.length > 0) {
-				const newPos = { line: selection[0].anchor.line + 1, ch: 0 };
-				this.props.controller.updateExpressionSelection(this.props.propertyId.name, [{ anchor: newPos, head: newPos }]);
+			if (this.props.selectionRange && this.props.selectionRange.length > 0 && this.props.onSelectionChange) {
+				const newPos = { line: this.props.selectionRange[0].anchor.line + 1, ch: 0 };
+				this.props.onSelectionChange([{ anchor: newPos, head: newPos }]);
 			}
+		}
+	}
+
+	handleBlur(editor, evt) {
+		if (this.props.onBlur) {
+			// this will ensure the expression builder can save values onBlur
+			this.props.onBlur(editor, evt);
+		} else {
+			const newValue = this.editor.getValue();
+			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, true);
 		}
 	}
 
@@ -228,15 +225,6 @@ export default class ExpressionControl extends React.Component {
 
 		const theme = (state === STATES.DISABLED) ? "disabled" : messageType;
 		const reactIntl = this.props.controller.getReactIntl();
-
-		// selection is only set by expression builder to highlight param substitution char ('?').
-		const selection = this.props.controller.getExpressionSelection(this.props.propertyId.name);
-		if (selection.length > 0 && this.editor) {
-			selection.forEach((selected) => {
-				this.editor.setSelection(selected.anchor, selected.head);
-			});
-			this.editor.focus();
-		}
 
 		const button = this._showBuilderButton() ? (
 			<div className="properties-expression-button" disabled={state === STATES.DISABLED}>
@@ -314,8 +302,8 @@ export default class ExpressionControl extends React.Component {
 							ref= { (ref) => (this.codeMirror = ref)}
 							options={mirrorOptions}
 							onChange={this.handleChange}
-							onSelection={this.handleSelectionChange}
-							onKeyDown={this.handleKeyDown.bind(this)}
+							onKeyDown={this.handleKeyDown}
+							onBlur={this.handleBlur}
 							editorDidMount={this.editorDidMount}
 							value={controlValue}
 						/>
@@ -335,6 +323,9 @@ ExpressionControl.propTypes = {
 	editorDidMount: PropTypes.func,
 	builder: PropTypes.bool,
 	rightFlyout: PropTypes.bool,
+	selectionRange: PropTypes.array,
+	onSelectionChange: PropTypes.func,
+	onBlur: PropTypes.func,
 	height: PropTypes.number // height in px
 };
 

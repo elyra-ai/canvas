@@ -1264,13 +1264,7 @@ class App extends React.Component {
 	}
 
 	propertyListener(data) {
-		if (data.property) {
-			this.log("propertyListener() " + data.action + ", propertyId: {name: \"" +
-				data.property.name + "\", row: \"" + data.property.row + "\", col: \"" +
-				data.property.col + "\"}, value: " + data.value);
-		} else {
-			this.log("propertyListener() " + data.action);
-		}
+		// This is an empty callback.  Logging creates a performance issue.
 	}
 
 	propertyActionHandler(actionId, appData, data) {

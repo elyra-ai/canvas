@@ -746,21 +746,6 @@ export default class PropertiesController {
 	}
 
 	//
-	// Expression cursor/selection
-	//
-	getExpressionSelection(controlName) {
-		return this.propertiesStore.getExpressionSelection(controlName);
-	}
-
-	updateExpressionSelection(controlName, selection) {
-		this.propertiesStore.updateExpressionSelection(controlName, selection);
-	}
-
-	clearExpressionSelection(controlName) {
-		this.propertiesStore.clearExpressionSelection(controlName);
-	}
-
-	//
 	// Expression validation request
 	//
 	getExpressionValidate(controlName) {
