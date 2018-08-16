@@ -493,6 +493,13 @@ export default class CanvasController {
 		}
 	}
 
+	isPaletteOpen() {
+		if (this.commonCanvas) {
+			return this.commonCanvas.isPaletteOpen();
+		}
+		return false;
+	}
+
 	openContextMenu(menuDef) {
 		if (this.commonCanvas) {
 			this.commonCanvas.openContextMenu(menuDef);

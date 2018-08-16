@@ -198,6 +198,10 @@ export default class CommonCanvas extends React.Component {
 		this.setPaletteWidth();
 	}
 
+	isPaletteOpen() {
+		return this.state.isPaletteOpen;
+	}
+
 	openContextMenu(menuDef) {
 		this.setState({ showContextMenu: true, contextMenuDef: menuDef });
 	}

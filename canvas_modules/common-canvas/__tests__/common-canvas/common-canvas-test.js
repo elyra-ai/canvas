@@ -75,6 +75,50 @@ describe("CommonCanvas renders correctly", () => {
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 		expect(wrapper.find(NotificationPanel)).to.have.length(1);
 	});
+
+
+	it("canvas controller isPaletteOpen() should return true when paletteInitialState is true", () => {
+		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
+		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
+		const config = { enableAutoLayout: "none", paletteInitialState: true, canvasController: canvasController };
+		createCommonCanvas(config, toolbarConfig, notificationConfig);
+
+		// The paletteInitialState config parameter is true
+		// therefore the palette should be open initially.
+		expect(canvasController.isPaletteOpen() === true).to.be.true;
+	});
+
+	it("canvas controller isPaletteOpen() should return false when paletteInitialState is false", () => {
+		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
+		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
+		const config = { enableAutoLayout: "none", paletteInitialState: false, canvasController: canvasController };
+		createCommonCanvas(config, toolbarConfig, notificationConfig);
+
+		// The paletteInitialState config parameter is false
+		// therefore the palette should be closed initially.
+		expect(canvasController.isPaletteOpen() === false).to.be.true;
+	});
+
+
+	it("canvas controller isPaletteOpen() should return appropriate boolean based on palette state", () => {
+		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
+		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
+		const config = { enableAutoLayout: "none", canvasController: canvasController };
+		createCommonCanvas(config, toolbarConfig, notificationConfig);
+
+		// The paletteInitialState config parameter is not provided when CommonCanvas
+		// is created therefore the palette should be closed initially.
+		expect(canvasController.isPaletteOpen() === false).to.be.true;
+
+		// After opening the palette the palette should be open.
+		canvasController.openPalette();
+		expect(canvasController.isPaletteOpen() === true).to.be.true;
+
+		// After closeing the palette the palette should be closed.
+		canvasController.closePalette();
+		expect(canvasController.isPaletteOpen() === false).to.be.true;
+	});
+
 });
 
 function createCommonCanvas(config, toolbarConfig, notificationConfig) {
