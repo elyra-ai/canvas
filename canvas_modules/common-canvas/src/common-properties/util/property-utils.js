@@ -184,7 +184,7 @@ function convertType(storage) {
 function getFieldsFromControlValues(control, controlValues, fields) {
 	const dataColumnIndex = getTableFieldIndex(control);
 	const outputList = [];
-	if (controlValues) {
+	if (controlValues && dataColumnIndex !== -1) {
 		for (const controlValue of controlValues) {
 			let fieldName = controlValue;
 			if (Array.isArray(controlValue)) {

@@ -390,7 +390,6 @@
     {
       "id": "expressionCellTable",
       "type": "array[expressionCellTable]",
-      "role": "column",
       "default": []
     },
     {
