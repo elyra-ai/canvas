@@ -46,10 +46,9 @@ const expectedNode2Messages = [
 // In the last error message below, react intl message parameter substitution does not work in Jest.  THat is why the message has '{label}'.
 const expectedNode3Messages = [
 	{ "id_ref": "inlineEditingTableWarning", "validation_id": "tablewarningtest1", "type": "warning", "text": "table cannot be empty" },
-	{ "id_ref": "inlineEditingTableError", "table_ref": { "row": "1", "col": "2" }, "validation_id": "tableerrortest2", "type": "error", "text": "order cannot be descending" },
-	{ "id_ref": "inlineEditingTableError", "table_ref": { "row": "2", "col": "3" }, "validation_id": "tableerrortest3", "type": "error", "text": "checkbox cannot be off" },
-	{ "id_ref": "inlineEditingTableError2", "table_ref": { "row": "1", "col": "2" }, "validation_id": "tableerror2test2", "type": "error", "text": "expression contains help" },
-	{ "id_ref": "structuretableErrors", "table_ref": { "row": "1", "col": "2" }, "validation_id": "structuretableErrors", "type": "error", "text": "order cannot be descending" },
+	{ "id_ref": "inlineEditingTableError", "validation_id": "tableerrortest3", "type": "error", "text": "There are {errorMsgCount} error cells. " },
+	{ "id_ref": "inlineEditingTableError2", "validation_id": "tableerror2test2", "type": "error", "text": "expression contains help" },
+	{ "id_ref": "structuretableErrors", "validation_id": "structuretableErrors", "type": "error", "text": "order cannot be descending" },
 	{ "id_ref": "fields_error", "validation_id": "required_fields_error_501.6009623394123", "type": "error", "text": "Required parameter '{label}' has no value." }
 ];
 const expectedFlowMessages = {

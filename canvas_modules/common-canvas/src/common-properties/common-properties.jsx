@@ -45,7 +45,9 @@ class CommonProperties extends React.Component {
 		});
 		this.setForm(props.propertiesInfo);
 		// this has to be after setForm because setForm clears all error messages.
-		this.propertiesController.setPipelineErrorMessages(props.propertiesInfo.messages);
+		if (props.propertiesInfo.messages) {
+			this.propertiesController.validatePropertiesValues();
+		}
 		this.currentParameters = this.propertiesController.getPropertyValues();
 		this.propertiesController.subscribe(() => {
 			this.forceUpdate();
@@ -72,10 +74,13 @@ class CommonProperties extends React.Component {
 					editorSize: this.propertiesController.getForm().editorSize
 				};
 				this.currentParameters = this.propertiesController.getPropertyValues();
-				this.propertiesController.setPipelineErrorMessages(newProps.propertiesInfo.messages);
 				this.propertiesController.setAppData(newProps.propertiesInfo.appData);
 				this.propertiesController.setCustomControls(newProps.customControls);
 				this.propertiesController.setConditionOps(newProps.customConditionOps);
+				if (newProps.propertiesInfo.messages) {
+					this.propertiesController.validatePropertiesValues();
+				}
+
 			}
 		}
 	}

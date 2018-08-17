@@ -16,6 +16,8 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
+import conditionTestResource from "../test_resources/json/form-test-condition.json";
+
 import numberfieldResource from "../test_resources/paramDefs/numberfield_paramDef.json";
 import emptyParamDef from "../test_resources/paramDefs/empty_paramDef.json";
 import { IntlProvider } from "react-intl";
@@ -119,11 +121,6 @@ describe("CommonProperties renders correctly", () => {
 		const wrapper = createCommonProperties("Editing", localMessages);
 		const tableButton = wrapper.find("div.properties-column-structure").find("span.properties-icon-button-label");
 		expect(tableButton.text()).to.equal("Add Some Stuff");
-	});
-
-	it("should set alert tab correctly on open", () => {
-		const wrapper = createCommonProperties("Custom");
-		expect(wrapper.find("div[data-id='properties-alerts-panel']")).to.have.length(1);
 	});
 });
 
@@ -303,6 +300,26 @@ describe("CommonProperties validates on close in flyout", () => {
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
 	});
 
+});
+
+describe("CommonProperties validates on open correctly", () => {
+	let wrapper;
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("If messages are passed in then validate (generate errors)", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(conditionTestResource.paramDef, null, null, { messages: propertiesInfo.messages });
+		wrapper = renderedObject.wrapper;
+		expect(wrapper.find("div[data-id='properties-alerts-panel']")).to.have.length(1);
+	});
+
+	it("If messages are not passed in then no validation", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(conditionTestResource.paramDef);
+		wrapper = renderedObject.wrapper;
+		expect(wrapper.find("div[data-id='properties-alerts-panel']")).to.have.length(0);
+
+	});
 });
 
 function createCommonProperties(container, messages) {

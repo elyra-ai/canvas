@@ -12,7 +12,6 @@
       {
         "id": "exp_param",
         "type": "string",
-        "default": "",
         "role": "expression"
       }
     ],
@@ -120,8 +119,7 @@
                       "valueDef": {
                         "propType": "string",
                         "isList": false,
-                        "isMap": false,
-                        "defaultValue": ""
+                        "isMap": false
                       }
                     }
                   }
