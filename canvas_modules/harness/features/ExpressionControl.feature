@@ -69,7 +69,7 @@ Feature: ExpressionControl
 		Then I verify that the event log has a value of "is_date" for the "expressionCellTable" parameter
 
 		Given I have toggled the app side common-properties panel
-@watch
+
 	Scenario: Test of expression builder
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness

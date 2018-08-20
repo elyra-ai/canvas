@@ -13,6 +13,7 @@ import deepFreeze from "deep-freeze";
 import Controller from "../../src/common-properties/properties-controller";
 import conditionForm from "../test_resources/json/conditions-summary-form.json";
 import datasetMetadata from "../test_resources/json/datasetMetadata.json";
+import ExpressionInfo from "../test_resources/json/expression-function-list.json";
 import testUtils from "../_utils_/property-utils";
 
 import EqualsOverride from "../_utils_/custom-condition-ops/equals-override";
@@ -815,6 +816,20 @@ describe("Properties Controller property messages", () => {
 
 		const actualValues = controller.getErrorMessages(null, true);
 		expect(expectedValue).to.eql(actualValues);
+	});
+});
+
+describe("Properties Controller expression information", () => {
+	it("should set expression info correctly", () => {
+		reset();
+		controller.setExpressionInfo(ExpressionInfo.input);
+		let actualValue = controller.getExpressionInfo();
+		expect(ExpressionInfo.actual).to.eql(actualValue);
+		// call set again and make sure only one parameter list is generated
+		controller.setExpressionInfo(ExpressionInfo.input);
+		actualValue = controller.getExpressionInfo();
+		expect(ExpressionInfo.actual).to.eql(actualValue);
+
 	});
 });
 

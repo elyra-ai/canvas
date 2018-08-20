@@ -1,369 +1,1256 @@
 {
-  "function_categories": [
-    {
-      "label": "General Functions",
-      "function_refs": [
-        "to_integer",
-        "count_equal"
-      ]
-    },
-    {
-      "label": "Information",
-      "function_refs": [
-        "to_integer",
-        "@BLANK",
-        "datetime_date"
-      ]
-    },
-    {
-      "label": "Date and Time",
-      "function_refs": [
-        "datetime_date",
-        "datetime_time",
-        "datetime_timestamp"
-      ]
-    },
-    {
-      "label": "Operators",
-      "function_refs": [
-        "+",
-        "**",
-        "-",
-        "div",
-        "*",
-        "rem",
-        "/",
-        "mod",
-        ">",
-        ">=",
-        "<",
-        "<=",
-        "=",
-        "/=",
-        "and",
-        "or",
-        "not",
-        "><",
-        "&&~~"
-      ]
-    },
-    {
-      "label": "@ Functions",
-      "function_refs": [
-        "@BLANK",
-        "@DIFF1"
-      ]
-    },
-    {
-      "label": "Conversion",
-      "function_refs": [
-        "to_integer"
-      ]
-    },
-    {
-      "label": "String",
-      "function_refs": [
-        "><"
-      ]
-    },
-    {
-      "label": "Numeric",
-      "function_refs": [
-        "+",
-        "**",
-        "-",
-        "div",
-        "*",
-        "rem",
-        "/",
-        "mod",
-        "&&~~"
-      ]
-    },
-    {
-      "label": "Bitwise",
-      "function_refs": [
-        ">",
-        ">=",
-        "<",
-        "<=",
-        "=",
-        "/=",
-        "&&~~"
-      ]
-    },
-    {
-      "label": "Logical",
-      "function_refs": [
-        "and",
-        "or",
-        "not"
-      ]
-    },
-    {
-      "label": "Comparison",
-      "function_refs": [
-        "count_equal",
-        ">",
-        ">=",
-        "<",
-        "<=",
-        "=",
-        "/=",
-        "and",
-        "or",
-        "not"
-      ]
-    }
-  ],
-  "function_info": [
-    {
-      "label": "to_integer",
-      "return_type": "Integer",
-      "id": "to_integer",
-      "parameters": [
-        {
-          "label": "Item"
-        }
-      ],
-      "help": "Converts ITEM to an integer. ITEM must be a string, or a number."
-    },
-    {
-      "label": "count_equal",
-      "return_type": "Integer",
-      "id": "count_equal",
-      "parameters": [
-        {
-          "label": "Item"
-        },
-        {
-          "label": "List"
-        }
-      ],
-      "help": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL."
-    },
-    {
-      "label": "@BLANK",
-      "return_type": "Boolean",
-      "id": "@BLANK",
-      "parameters": [
-        {
-          "label": "Item"
-        }
-      ],
-      "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node."
-    },
-    {
-      "label": "@DIFF1",
-      "return_type": "Real",
-      "id": "@DIFF1",
-      "parameters": [
-        {
-          "label": "Field1"
-        },
-        {
-          "label": "Field2"
-        }
-      ],
-      "help": "Returns the first differential of FIELD1 or the first differential of FIELD1 with respect to FIELD2."
-    },
-    {
-      "label": "datetime_date",
-      "return_type": "Date",
-      "id": "datetime_date",
-      "parameters": [
-        {
-          "label": "Year"
-        },
-        {
-          "label": "Month"
-        },
-        {
-          "label": "Day"
-        }
-      ],
-      "help": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers."
-    },
-    {
-      "label": "datetime_time",
-      "return_type": "Time",
-      "id": "datetime_time",
-      "parameters": [
-        {
-          "label": "Hour"
-        },
-        {
-          "label": "Minute"
-        },
-        {
-          "label": "Second"
-        }
-      ],
-      "help": "Returns the time value for the specified HOUR, MINUTE, and SECOND. The arguments must be integers."
-    },
-    {
-      "label": "datetime_timestamp",
-      "return_type": "Timestamp",
-      "id": "datetime_timestamp",
-      "parameters": [
-        {
-          "label": "Year"
-        },
-        {
-          "label": "Month"
-        },
-        {
-          "label": "Day"
-        },
-        {
-          "label": "Hour"
-        },
-        {
-          "label": "Minute"
-        },
-        {
-          "label": "Second"
-        }
-      ],
-      "help": "Returns the timestamp value for the given YEAR, MONTH, DAY, HOUR, MINUTE, and SECOND."
-    },
-    {
-      "label": "+",
-      "return_type": "Number",
-      "id": "+",
-      "help": "Add two numbers. X + Y.",
-      "show_button": true
-    },
-    {
-      "label": "**",
-      "return_type": "Number",
-      "id": "**",
-      "help": "X to the power of Y. X ** Y.",
-      "show_button": true
-    },
-    {
-      "label": "-",
-      "return_type": "Number",
-      "id": "-",
-      "help": "Subtract two numbers. X - Y.",
-      "show_button": true
-    },
-    {
-      "label": "div",
-      "return_type": "Number",
-      "id": "div",
-      "help": "Quotient of dividing two numbers. X div Y.",
-      "show_button": true
-    },
-    {
-      "label": "*",
-      "return_type": "Number",
-      "id": "*",
-      "help": "Multiply two number.  X * Y.",
-      "show_button": true
-    },
-    {
-      "label": "rem",
-      "return_type": "Number",
-      "id": "rem",
-      "help": "Remainder of dividing two numbers. X rem Y.",
-      "show_button": true
-    },
-    {
-      "label": "/",
-      "return_type": "Number",
-      "id": "/",
-      "help": "Divide two numbers. X / Y.",
-      "show_button": true
-    },
-    {
-      "label": "mod",
-      "return_type": "Number",
-      "id": "mod",
-      "help": "Modulo of dividing two numbers. X mod Y.",
-      "show_button": true
-    },
-    {
-      "label": ">",
-      "return_type": "Boolean",
-      "id": ">",
-      "help": "X is greater than Y.",
-      "show_button": true
-    },
-    {
-      "label": ">=",
-      "return_type": "Boolean",
-      "id": ">=",
-      "help": "X is greater than or equal to Y.",
-      "show_button": true
-    },
-    {
-      "label": "<",
-      "return_type": "Boolean",
-      "id": "<",
-      "help": "X is less than Y.",
-      "show_button": true
-    },
-    {
-      "label": "<=",
-      "return_type": "Boolean",
-      "id": "<=",
-      "help": "X is less than or equal to Y.",
-      "show_button": true
-    },
-    {
-      "label": "=",
-      "return_type": "Boolean",
-      "id": "=",
-      "help": "X is equal to Y.",
-      "show_button": true
-    },
-    {
-      "label": "/=",
-      "return_type": "Boolean",
-      "id": "/=",
-      "help": "X is not equal to Y.",
-      "show_button": true
-    },
-    {
-      "label": "and",
-      "return_type": "Boolean",
-      "id": "and",
-      "help": "Expression1 is true and Expression2 is true.  Expr1 and Expr2.",
-      "show_button": true
-    },
-    {
-      "label": "or",
-      "return_type": "Boolean",
-      "id": "or",
-      "help": "Expression1 is true or Expression2 is true.  Expr1 and Expr2.",
-      "show_button": true
-    },
-    {
-      "label": "not",
-      "return_type": "Boolean",
-      "id": "not",
-      "parameters": [
-        {
-          "label": ""
-        }
-      ],
-      "help": "Expression is not true.  not(Expr).",
-      "show_button": true
-    },
-    {
-      "label": "><",
-      "return_type": "String",
-      "id": "><",
-      "help": "Concatenate two strings. String1 >< String2.",
-      "show_button": true
-    },
-    {
-      "label": "&&~~",
-      "return_type": "Integer",
-      "id": "&&~~",
-      "help": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2.",
-      "show_button": false
-    }
-  ]
+  "input": {
+    "function_categories": [
+      {
+        "label": "General Functions",
+        "function_refs": [
+          "to_integer",
+          "count_equal"
+        ]
+      },
+      {
+        "label": "Information",
+        "function_refs": [
+          "to_integer",
+          "@BLANK",
+          "datetime_date"
+        ]
+      },
+      {
+        "label": "Date and Time",
+        "function_refs": [
+          "datetime_date",
+          "datetime_time",
+          "datetime_timestamp"
+        ]
+      },
+      {
+        "label": "Operators",
+        "function_refs": [
+          "+",
+          "**",
+          "-",
+          "div",
+          "*",
+          "rem",
+          "/",
+          "mod",
+          ">",
+          ">=",
+          "<",
+          "<=",
+          "=",
+          "/=",
+          "and",
+          "or",
+          "not",
+          "><",
+          "&&~~"
+        ]
+      },
+      {
+        "label": "@ Functions",
+        "function_refs": [
+          "@BLANK",
+          "@DIFF1"
+        ]
+      },
+      {
+        "label": "Conversion",
+        "function_refs": [
+          "to_integer"
+        ]
+      },
+      {
+        "label": "String",
+        "function_refs": [
+          "><"
+        ]
+      },
+      {
+        "label": "Numeric",
+        "function_refs": [
+          "+",
+          "**",
+          "-",
+          "div",
+          "*",
+          "rem",
+          "/",
+          "mod",
+          "&&~~"
+        ]
+      },
+      {
+        "label": "Bitwise",
+        "function_refs": [
+          ">",
+          ">=",
+          "<",
+          "<=",
+          "=",
+          "/=",
+          "&&~~"
+        ]
+      },
+      {
+        "label": "Logical",
+        "function_refs": [
+          "and",
+          "or",
+          "not"
+        ]
+      },
+      {
+        "label": "Comparison",
+        "function_refs": [
+          "count_equal",
+          ">",
+          ">=",
+          "<",
+          "<=",
+          "=",
+          "/=",
+          "and",
+          "or",
+          "not"
+        ]
+      }
+    ],
+    "function_info": [
+      {
+        "label": "to_integer",
+        "return_type": "Integer",
+        "id": "to_integer",
+        "parameters": [
+          {
+            "label": "Item"
+          }
+        ],
+        "help": "Converts ITEM to an integer. ITEM must be a string, or a number."
+      },
+      {
+        "label": "count_equal",
+        "return_type": "Integer",
+        "id": "count_equal",
+        "parameters": [
+          {
+            "label": "Item"
+          },
+          {
+            "label": "List"
+          }
+        ],
+        "help": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL."
+      },
+      {
+        "label": "@BLANK",
+        "return_type": "Boolean",
+        "id": "@BLANK",
+        "parameters": [
+          {
+            "label": "Item"
+          }
+        ],
+        "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node."
+      },
+      {
+        "label": "@DIFF1",
+        "return_type": "Real",
+        "id": "@DIFF1",
+        "parameters": [
+          {
+            "label": "Field1"
+          },
+          {
+            "label": "Field2"
+          }
+        ],
+        "help": "Returns the first differential of FIELD1 or the first differential of FIELD1 with respect to FIELD2."
+      },
+      {
+        "label": "datetime_date",
+        "return_type": "Date",
+        "id": "datetime_date",
+        "parameters": [
+          {
+            "label": "Year"
+          },
+          {
+            "label": "Month"
+          },
+          {
+            "label": "Day"
+          }
+        ],
+        "help": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers."
+      },
+      {
+        "label": "datetime_time",
+        "return_type": "Time",
+        "id": "datetime_time",
+        "parameters": [
+          {
+            "label": "Hour"
+          },
+          {
+            "label": "Minute"
+          },
+          {
+            "label": "Second"
+          }
+        ],
+        "help": "Returns the time value for the specified HOUR, MINUTE, and SECOND. The arguments must be integers."
+      },
+      {
+        "label": "datetime_timestamp",
+        "return_type": "Timestamp",
+        "id": "datetime_timestamp",
+        "parameters": [
+          {
+            "label": "Year"
+          },
+          {
+            "label": "Month"
+          },
+          {
+            "label": "Day"
+          },
+          {
+            "label": "Hour"
+          },
+          {
+            "label": "Minute"
+          },
+          {
+            "label": "Second"
+          }
+        ],
+        "help": "Returns the timestamp value for the given YEAR, MONTH, DAY, HOUR, MINUTE, and SECOND."
+      },
+      {
+        "label": "+",
+        "return_type": "Number",
+        "id": "+",
+        "help": "Add two numbers. X + Y.",
+        "show_button": true
+      },
+      {
+        "label": "**",
+        "return_type": "Number",
+        "id": "**",
+        "help": "X to the power of Y. X ** Y.",
+        "show_button": true
+      },
+      {
+        "label": "-",
+        "return_type": "Number",
+        "id": "-",
+        "help": "Subtract two numbers. X - Y.",
+        "show_button": true
+      },
+      {
+        "label": "div",
+        "return_type": "Number",
+        "id": "div",
+        "help": "Quotient of dividing two numbers. X div Y.",
+        "show_button": true
+      },
+      {
+        "label": "*",
+        "return_type": "Number",
+        "id": "*",
+        "help": "Multiply two number.  X * Y.",
+        "show_button": true
+      },
+      {
+        "label": "rem",
+        "return_type": "Number",
+        "id": "rem",
+        "help": "Remainder of dividing two numbers. X rem Y.",
+        "show_button": true
+      },
+      {
+        "label": "/",
+        "return_type": "Number",
+        "id": "/",
+        "help": "Divide two numbers. X / Y.",
+        "show_button": true
+      },
+      {
+        "label": "mod",
+        "return_type": "Number",
+        "id": "mod",
+        "help": "Modulo of dividing two numbers. X mod Y.",
+        "show_button": true
+      },
+      {
+        "label": ">",
+        "return_type": "Boolean",
+        "id": ">",
+        "help": "X is greater than Y.",
+        "show_button": true
+      },
+      {
+        "label": ">=",
+        "return_type": "Boolean",
+        "id": ">=",
+        "help": "X is greater than or equal to Y.",
+        "show_button": true
+      },
+      {
+        "label": "<",
+        "return_type": "Boolean",
+        "id": "<",
+        "help": "X is less than Y.",
+        "show_button": true
+      },
+      {
+        "label": "<=",
+        "return_type": "Boolean",
+        "id": "<=",
+        "help": "X is less than or equal to Y.",
+        "show_button": true
+      },
+      {
+        "label": "=",
+        "return_type": "Boolean",
+        "id": "=",
+        "help": "X is equal to Y.",
+        "show_button": true
+      },
+      {
+        "label": "/=",
+        "return_type": "Boolean",
+        "id": "/=",
+        "help": "X is not equal to Y.",
+        "show_button": true
+      },
+      {
+        "label": "and",
+        "return_type": "Boolean",
+        "id": "and",
+        "help": "Expression1 is true and Expression2 is true.  Expr1 and Expr2.",
+        "show_button": true
+      },
+      {
+        "label": "or",
+        "return_type": "Boolean",
+        "id": "or",
+        "help": "Expression1 is true or Expression2 is true.  Expr1 and Expr2.",
+        "show_button": true
+      },
+      {
+        "label": "not",
+        "return_type": "Boolean",
+        "id": "not",
+        "parameters": [
+          {
+            "label": ""
+          }
+        ],
+        "help": "Expression is not true.  not(Expr).",
+        "show_button": true
+      },
+      {
+        "label": "><",
+        "return_type": "String",
+        "id": "><",
+        "help": "Concatenate two strings. String1 >< String2.",
+        "show_button": true
+      },
+      {
+        "label": "&&~~",
+        "return_type": "Integer",
+        "id": "&&~~",
+        "help": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2.",
+        "show_button": false
+      }
+    ]
+  },
+  "actual": {
+    "General Functions": [
+      {
+        "label": "to_integer(Item)",
+        "return_type": "Integer",
+        "id": "to_integer",
+        "parameters": [
+          {
+            "label": "Item"
+          }
+        ],
+        "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
+        "value": "to_integer(?)"
+      },
+      {
+        "label": "count_equal(Item, List)",
+        "return_type": "Integer",
+        "id": "count_equal",
+        "parameters": [
+          {
+            "label": "Item"
+          },
+          {
+            "label": "List"
+          }
+        ],
+        "help": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL.",
+        "value": "count_equal(?, ?)"
+      }
+    ],
+    "Information": [
+      {
+        "label": "to_integer(Item)",
+        "return_type": "Integer",
+        "id": "to_integer",
+        "parameters": [
+          {
+            "label": "Item"
+          }
+        ],
+        "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
+        "value": "to_integer(?)"
+      },
+      {
+        "label": "@BLANK(Item)",
+        "return_type": "Boolean",
+        "id": "@BLANK",
+        "parameters": [
+          {
+            "label": "Item"
+          }
+        ],
+        "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node.",
+        "value": "@BLANK(?)"
+      },
+      {
+        "label": "datetime_date(Year, Month, Day)",
+        "return_type": "Date",
+        "id": "datetime_date",
+        "parameters": [
+          {
+            "label": "Year"
+          },
+          {
+            "label": "Month"
+          },
+          {
+            "label": "Day"
+          }
+        ],
+        "help": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers.",
+        "value": "datetime_date(?, ?, ?)"
+      }
+    ],
+    "Date and Time": [
+      {
+        "label": "datetime_date(Year, Month, Day)",
+        "return_type": "Date",
+        "id": "datetime_date",
+        "parameters": [
+          {
+            "label": "Year"
+          },
+          {
+            "label": "Month"
+          },
+          {
+            "label": "Day"
+          }
+        ],
+        "help": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers.",
+        "value": "datetime_date(?, ?, ?)"
+      },
+      {
+        "label": "datetime_time(Hour, Minute, Second)",
+        "return_type": "Time",
+        "id": "datetime_time",
+        "parameters": [
+          {
+            "label": "Hour"
+          },
+          {
+            "label": "Minute"
+          },
+          {
+            "label": "Second"
+          }
+        ],
+        "help": "Returns the time value for the specified HOUR, MINUTE, and SECOND. The arguments must be integers.",
+        "value": "datetime_time(?, ?, ?)"
+      },
+      {
+        "label": "datetime_timestamp(Year, Month, Day, Hour, Minute, Second)",
+        "return_type": "Timestamp",
+        "id": "datetime_timestamp",
+        "parameters": [
+          {
+            "label": "Year"
+          },
+          {
+            "label": "Month"
+          },
+          {
+            "label": "Day"
+          },
+          {
+            "label": "Hour"
+          },
+          {
+            "label": "Minute"
+          },
+          {
+            "label": "Second"
+          }
+        ],
+        "help": "Returns the timestamp value for the given YEAR, MONTH, DAY, HOUR, MINUTE, and SECOND.",
+        "value": "datetime_timestamp(?, ?, ?, ?, ?, ?)"
+      }
+    ],
+    "Operators": [
+      {
+        "label": "+",
+        "return_type": "Number",
+        "id": "+",
+        "help": "Add two numbers. X + Y.",
+        "show_button": true,
+        "value": "+"
+      },
+      {
+        "label": "**",
+        "return_type": "Number",
+        "id": "**",
+        "help": "X to the power of Y. X ** Y.",
+        "show_button": true,
+        "value": "**"
+      },
+      {
+        "label": "-",
+        "return_type": "Number",
+        "id": "-",
+        "help": "Subtract two numbers. X - Y.",
+        "show_button": true,
+        "value": "-"
+      },
+      {
+        "label": "div",
+        "return_type": "Number",
+        "id": "div",
+        "help": "Quotient of dividing two numbers. X div Y.",
+        "show_button": true,
+        "value": "div"
+      },
+      {
+        "label": "*",
+        "return_type": "Number",
+        "id": "*",
+        "help": "Multiply two number.  X * Y.",
+        "show_button": true,
+        "value": "*"
+      },
+      {
+        "label": "rem",
+        "return_type": "Number",
+        "id": "rem",
+        "help": "Remainder of dividing two numbers. X rem Y.",
+        "show_button": true,
+        "value": "rem"
+      },
+      {
+        "label": "/",
+        "return_type": "Number",
+        "id": "/",
+        "help": "Divide two numbers. X / Y.",
+        "show_button": true,
+        "value": "/"
+      },
+      {
+        "label": "mod",
+        "return_type": "Number",
+        "id": "mod",
+        "help": "Modulo of dividing two numbers. X mod Y.",
+        "show_button": true,
+        "value": "mod"
+      },
+      {
+        "label": ">",
+        "return_type": "Boolean",
+        "id": ">",
+        "help": "X is greater than Y.",
+        "show_button": true,
+        "value": ">"
+      },
+      {
+        "label": ">=",
+        "return_type": "Boolean",
+        "id": ">=",
+        "help": "X is greater than or equal to Y.",
+        "show_button": true,
+        "value": ">="
+      },
+      {
+        "label": "<",
+        "return_type": "Boolean",
+        "id": "<",
+        "help": "X is less than Y.",
+        "show_button": true,
+        "value": "<"
+      },
+      {
+        "label": "<=",
+        "return_type": "Boolean",
+        "id": "<=",
+        "help": "X is less than or equal to Y.",
+        "show_button": true,
+        "value": "<="
+      },
+      {
+        "label": "=",
+        "return_type": "Boolean",
+        "id": "=",
+        "help": "X is equal to Y.",
+        "show_button": true,
+        "value": "="
+      },
+      {
+        "label": "/=",
+        "return_type": "Boolean",
+        "id": "/=",
+        "help": "X is not equal to Y.",
+        "show_button": true,
+        "value": "/="
+      },
+      {
+        "label": "and",
+        "return_type": "Boolean",
+        "id": "and",
+        "help": "Expression1 is true and Expression2 is true.  Expr1 and Expr2.",
+        "show_button": true,
+        "value": "and"
+      },
+      {
+        "label": "or",
+        "return_type": "Boolean",
+        "id": "or",
+        "help": "Expression1 is true or Expression2 is true.  Expr1 and Expr2.",
+        "show_button": true,
+        "value": "or"
+      },
+      {
+        "label": "not()",
+        "return_type": "Boolean",
+        "id": "not",
+        "parameters": [
+          {
+            "label": ""
+          }
+        ],
+        "help": "Expression is not true.  not(Expr).",
+        "show_button": true,
+        "value": "not(?)"
+      },
+      {
+        "label": "><",
+        "return_type": "String",
+        "id": "><",
+        "help": "Concatenate two strings. String1 >< String2.",
+        "show_button": true,
+        "value": "><"
+      },
+      {
+        "label": "&&~~",
+        "return_type": "Integer",
+        "id": "&&~~",
+        "help": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2.",
+        "show_button": false,
+        "value": "&&~~"
+      }
+    ],
+    "@ Functions": [
+      {
+        "label": "@BLANK(Item)",
+        "return_type": "Boolean",
+        "id": "@BLANK",
+        "parameters": [
+          {
+            "label": "Item"
+          }
+        ],
+        "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node.",
+        "value": "@BLANK(?)"
+      },
+      {
+        "label": "@DIFF1(Field1, Field2)",
+        "return_type": "Real",
+        "id": "@DIFF1",
+        "parameters": [
+          {
+            "label": "Field1"
+          },
+          {
+            "label": "Field2"
+          }
+        ],
+        "help": "Returns the first differential of FIELD1 or the first differential of FIELD1 with respect to FIELD2.",
+        "value": "@DIFF1(?, ?)"
+      }
+    ],
+    "Conversion": [
+      {
+        "label": "to_integer(Item)",
+        "return_type": "Integer",
+        "id": "to_integer",
+        "parameters": [
+          {
+            "label": "Item"
+          }
+        ],
+        "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
+        "value": "to_integer(?)"
+      }
+    ],
+    "String": [
+      {
+        "label": "><",
+        "return_type": "String",
+        "id": "><",
+        "help": "Concatenate two strings. String1 >< String2.",
+        "show_button": true,
+        "value": "><"
+      }
+    ],
+    "Numeric": [
+      {
+        "label": "+",
+        "return_type": "Number",
+        "id": "+",
+        "help": "Add two numbers. X + Y.",
+        "show_button": true,
+        "value": "+"
+      },
+      {
+        "label": "**",
+        "return_type": "Number",
+        "id": "**",
+        "help": "X to the power of Y. X ** Y.",
+        "show_button": true,
+        "value": "**"
+      },
+      {
+        "label": "-",
+        "return_type": "Number",
+        "id": "-",
+        "help": "Subtract two numbers. X - Y.",
+        "show_button": true,
+        "value": "-"
+      },
+      {
+        "label": "div",
+        "return_type": "Number",
+        "id": "div",
+        "help": "Quotient of dividing two numbers. X div Y.",
+        "show_button": true,
+        "value": "div"
+      },
+      {
+        "label": "*",
+        "return_type": "Number",
+        "id": "*",
+        "help": "Multiply two number.  X * Y.",
+        "show_button": true,
+        "value": "*"
+      },
+      {
+        "label": "rem",
+        "return_type": "Number",
+        "id": "rem",
+        "help": "Remainder of dividing two numbers. X rem Y.",
+        "show_button": true,
+        "value": "rem"
+      },
+      {
+        "label": "/",
+        "return_type": "Number",
+        "id": "/",
+        "help": "Divide two numbers. X / Y.",
+        "show_button": true,
+        "value": "/"
+      },
+      {
+        "label": "mod",
+        "return_type": "Number",
+        "id": "mod",
+        "help": "Modulo of dividing two numbers. X mod Y.",
+        "show_button": true,
+        "value": "mod"
+      },
+      {
+        "label": "&&~~",
+        "return_type": "Integer",
+        "id": "&&~~",
+        "help": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2.",
+        "show_button": false,
+        "value": "&&~~"
+      }
+    ],
+    "Bitwise": [
+      {
+        "label": ">",
+        "return_type": "Boolean",
+        "id": ">",
+        "help": "X is greater than Y.",
+        "show_button": true,
+        "value": ">"
+      },
+      {
+        "label": ">=",
+        "return_type": "Boolean",
+        "id": ">=",
+        "help": "X is greater than or equal to Y.",
+        "show_button": true,
+        "value": ">="
+      },
+      {
+        "label": "<",
+        "return_type": "Boolean",
+        "id": "<",
+        "help": "X is less than Y.",
+        "show_button": true,
+        "value": "<"
+      },
+      {
+        "label": "<=",
+        "return_type": "Boolean",
+        "id": "<=",
+        "help": "X is less than or equal to Y.",
+        "show_button": true,
+        "value": "<="
+      },
+      {
+        "label": "=",
+        "return_type": "Boolean",
+        "id": "=",
+        "help": "X is equal to Y.",
+        "show_button": true,
+        "value": "="
+      },
+      {
+        "label": "/=",
+        "return_type": "Boolean",
+        "id": "/=",
+        "help": "X is not equal to Y.",
+        "show_button": true,
+        "value": "/="
+      },
+      {
+        "label": "&&~~",
+        "return_type": "Integer",
+        "id": "&&~~",
+        "help": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2.",
+        "show_button": false,
+        "value": "&&~~"
+      }
+    ],
+    "Logical": [
+      {
+        "label": "and",
+        "return_type": "Boolean",
+        "id": "and",
+        "help": "Expression1 is true and Expression2 is true.  Expr1 and Expr2.",
+        "show_button": true,
+        "value": "and"
+      },
+      {
+        "label": "or",
+        "return_type": "Boolean",
+        "id": "or",
+        "help": "Expression1 is true or Expression2 is true.  Expr1 and Expr2.",
+        "show_button": true,
+        "value": "or"
+      },
+      {
+        "label": "not()",
+        "return_type": "Boolean",
+        "id": "not",
+        "parameters": [
+          {
+            "label": ""
+          }
+        ],
+        "help": "Expression is not true.  not(Expr).",
+        "show_button": true,
+        "value": "not(?)"
+      }
+    ],
+    "Comparison": [
+      {
+        "label": "count_equal(Item, List)",
+        "return_type": "Integer",
+        "id": "count_equal",
+        "parameters": [
+          {
+            "label": "Item"
+          },
+          {
+            "label": "List"
+          }
+        ],
+        "help": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL.",
+        "value": "count_equal(?, ?)"
+      },
+      {
+        "label": ">",
+        "return_type": "Boolean",
+        "id": ">",
+        "help": "X is greater than Y.",
+        "show_button": true,
+        "value": ">"
+      },
+      {
+        "label": ">=",
+        "return_type": "Boolean",
+        "id": ">=",
+        "help": "X is greater than or equal to Y.",
+        "show_button": true,
+        "value": ">="
+      },
+      {
+        "label": "<",
+        "return_type": "Boolean",
+        "id": "<",
+        "help": "X is less than Y.",
+        "show_button": true,
+        "value": "<"
+      },
+      {
+        "label": "<=",
+        "return_type": "Boolean",
+        "id": "<=",
+        "help": "X is less than or equal to Y.",
+        "show_button": true,
+        "value": "<="
+      },
+      {
+        "label": "=",
+        "return_type": "Boolean",
+        "id": "=",
+        "help": "X is equal to Y.",
+        "show_button": true,
+        "value": "="
+      },
+      {
+        "label": "/=",
+        "return_type": "Boolean",
+        "id": "/=",
+        "help": "X is not equal to Y.",
+        "show_button": true,
+        "value": "/="
+      },
+      {
+        "label": "and",
+        "return_type": "Boolean",
+        "id": "and",
+        "help": "Expression1 is true and Expression2 is true.  Expr1 and Expr2.",
+        "show_button": true,
+        "value": "and"
+      },
+      {
+        "label": "or",
+        "return_type": "Boolean",
+        "id": "or",
+        "help": "Expression1 is true or Expression2 is true.  Expr1 and Expr2.",
+        "show_button": true,
+        "value": "or"
+      },
+      {
+        "label": "not()",
+        "return_type": "Boolean",
+        "id": "not",
+        "parameters": [
+          {
+            "label": ""
+          }
+        ],
+        "help": "Expression is not true.  not(Expr).",
+        "show_button": true,
+        "value": "not(?)"
+      }
+    ],
+    "All Functions": [
+      {
+        "label": "to_integer(Item)",
+        "return_type": "Integer",
+        "id": "to_integer",
+        "parameters": [
+          {
+            "label": "Item"
+          }
+        ],
+        "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
+        "value": "to_integer(?)"
+      },
+      {
+        "label": "count_equal(Item, List)",
+        "return_type": "Integer",
+        "id": "count_equal",
+        "parameters": [
+          {
+            "label": "Item"
+          },
+          {
+            "label": "List"
+          }
+        ],
+        "help": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL.",
+        "value": "count_equal(?, ?)"
+      },
+      {
+        "label": "@BLANK(Item)",
+        "return_type": "Boolean",
+        "id": "@BLANK",
+        "parameters": [
+          {
+            "label": "Item"
+          }
+        ],
+        "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node.",
+        "value": "@BLANK(?)"
+      },
+      {
+        "label": "@DIFF1(Field1, Field2)",
+        "return_type": "Real",
+        "id": "@DIFF1",
+        "parameters": [
+          {
+            "label": "Field1"
+          },
+          {
+            "label": "Field2"
+          }
+        ],
+        "help": "Returns the first differential of FIELD1 or the first differential of FIELD1 with respect to FIELD2.",
+        "value": "@DIFF1(?, ?)"
+      },
+      {
+        "label": "datetime_date(Year, Month, Day)",
+        "return_type": "Date",
+        "id": "datetime_date",
+        "parameters": [
+          {
+            "label": "Year"
+          },
+          {
+            "label": "Month"
+          },
+          {
+            "label": "Day"
+          }
+        ],
+        "help": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers.",
+        "value": "datetime_date(?, ?, ?)"
+      },
+      {
+        "label": "datetime_time(Hour, Minute, Second)",
+        "return_type": "Time",
+        "id": "datetime_time",
+        "parameters": [
+          {
+            "label": "Hour"
+          },
+          {
+            "label": "Minute"
+          },
+          {
+            "label": "Second"
+          }
+        ],
+        "help": "Returns the time value for the specified HOUR, MINUTE, and SECOND. The arguments must be integers.",
+        "value": "datetime_time(?, ?, ?)"
+      },
+      {
+        "label": "datetime_timestamp(Year, Month, Day, Hour, Minute, Second)",
+        "return_type": "Timestamp",
+        "id": "datetime_timestamp",
+        "parameters": [
+          {
+            "label": "Year"
+          },
+          {
+            "label": "Month"
+          },
+          {
+            "label": "Day"
+          },
+          {
+            "label": "Hour"
+          },
+          {
+            "label": "Minute"
+          },
+          {
+            "label": "Second"
+          }
+        ],
+        "help": "Returns the timestamp value for the given YEAR, MONTH, DAY, HOUR, MINUTE, and SECOND.",
+        "value": "datetime_timestamp(?, ?, ?, ?, ?, ?)"
+      },
+      {
+        "label": "+",
+        "return_type": "Number",
+        "id": "+",
+        "help": "Add two numbers. X + Y.",
+        "show_button": true,
+        "value": "+"
+      },
+      {
+        "label": "**",
+        "return_type": "Number",
+        "id": "**",
+        "help": "X to the power of Y. X ** Y.",
+        "show_button": true,
+        "value": "**"
+      },
+      {
+        "label": "-",
+        "return_type": "Number",
+        "id": "-",
+        "help": "Subtract two numbers. X - Y.",
+        "show_button": true,
+        "value": "-"
+      },
+      {
+        "label": "div",
+        "return_type": "Number",
+        "id": "div",
+        "help": "Quotient of dividing two numbers. X div Y.",
+        "show_button": true,
+        "value": "div"
+      },
+      {
+        "label": "*",
+        "return_type": "Number",
+        "id": "*",
+        "help": "Multiply two number.  X * Y.",
+        "show_button": true,
+        "value": "*"
+      },
+      {
+        "label": "rem",
+        "return_type": "Number",
+        "id": "rem",
+        "help": "Remainder of dividing two numbers. X rem Y.",
+        "show_button": true,
+        "value": "rem"
+      },
+      {
+        "label": "/",
+        "return_type": "Number",
+        "id": "/",
+        "help": "Divide two numbers. X / Y.",
+        "show_button": true,
+        "value": "/"
+      },
+      {
+        "label": "mod",
+        "return_type": "Number",
+        "id": "mod",
+        "help": "Modulo of dividing two numbers. X mod Y.",
+        "show_button": true,
+        "value": "mod"
+      },
+      {
+        "label": ">",
+        "return_type": "Boolean",
+        "id": ">",
+        "help": "X is greater than Y.",
+        "show_button": true,
+        "value": ">"
+      },
+      {
+        "label": ">=",
+        "return_type": "Boolean",
+        "id": ">=",
+        "help": "X is greater than or equal to Y.",
+        "show_button": true,
+        "value": ">="
+      },
+      {
+        "label": "<",
+        "return_type": "Boolean",
+        "id": "<",
+        "help": "X is less than Y.",
+        "show_button": true,
+        "value": "<"
+      },
+      {
+        "label": "<=",
+        "return_type": "Boolean",
+        "id": "<=",
+        "help": "X is less than or equal to Y.",
+        "show_button": true,
+        "value": "<="
+      },
+      {
+        "label": "=",
+        "return_type": "Boolean",
+        "id": "=",
+        "help": "X is equal to Y.",
+        "show_button": true,
+        "value": "="
+      },
+      {
+        "label": "/=",
+        "return_type": "Boolean",
+        "id": "/=",
+        "help": "X is not equal to Y.",
+        "show_button": true,
+        "value": "/="
+      },
+      {
+        "label": "and",
+        "return_type": "Boolean",
+        "id": "and",
+        "help": "Expression1 is true and Expression2 is true.  Expr1 and Expr2.",
+        "show_button": true,
+        "value": "and"
+      },
+      {
+        "label": "or",
+        "return_type": "Boolean",
+        "id": "or",
+        "help": "Expression1 is true or Expression2 is true.  Expr1 and Expr2.",
+        "show_button": true,
+        "value": "or"
+      },
+      {
+        "label": "not()",
+        "return_type": "Boolean",
+        "id": "not",
+        "parameters": [
+          {
+            "label": ""
+          }
+        ],
+        "help": "Expression is not true.  not(Expr).",
+        "show_button": true,
+        "value": "not(?)"
+      },
+      {
+        "label": "><",
+        "return_type": "String",
+        "id": "><",
+        "help": "Concatenate two strings. String1 >< String2.",
+        "show_button": true,
+        "value": "><"
+      },
+      {
+        "label": "&&~~",
+        "return_type": "Integer",
+        "id": "&&~~",
+        "help": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2.",
+        "show_button": false,
+        "value": "&&~~"
+      }
+    ]
+  }
 }

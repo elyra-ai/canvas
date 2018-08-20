@@ -144,7 +144,8 @@ export default class PropertiesController {
 		if (expressionInfo) {
 			if (Array.isArray(expressionInfo.function_info) && Array.isArray(expressionInfo.function_categories)) {
 				this.expressionFunctionInfo = {};
-				const functionInfoList = this._genFunctionParameters(expressionInfo.function_info);
+				const functionInfoList = expressionInfo.parmsSet ? expressionInfo.function_info : this._genFunctionParameters(expressionInfo.function_info);
+				expressionInfo.parmsSet = true;
 				expressionInfo.function_categories.forEach((category) => {
 					this.expressionFunctionInfo[category.label] = [];
 					category.function_refs.forEach((functionId) => {
