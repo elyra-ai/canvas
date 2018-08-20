@@ -1065,6 +1065,16 @@ export default class ObjectModel {
 		return pipelineFlow;
 	}
 
+	// Returns an array of pipelines based on the array of pipeline IDs
+	// passed in.
+	getPipelines(pipelineIds) {
+		const pipelines = [];
+		pipelineIds.forEach((pipelineId) => {
+			pipelines.push(this.getCanvasInfoPipeline(pipelineId));
+		});
+		return pipelines;
+	}
+
 	// Returns the pipeline for the ID passed or the primary pipeline if no
 	// pipeline ID was provided otherwise null.
 	getCanvasInfoPipeline(pipelineId) {
@@ -1082,6 +1092,21 @@ export default class ObjectModel {
 		});
 
 		return (typeof pipeline === "undefined") ? null : pipeline;
+	}
+
+	// Returns an associative array (indexed by the node ID) of pipeline arrays.
+	// The pipeline arrays are any descendent pipelines of the supernode being
+	// processed from the array of supernodes passed in.
+	getReferencedPipelines(supernodes) {
+		const pipelines = {};
+		supernodes.forEach((supernode) => {
+			if (has(supernode, "subflow_ref.pipeline_id_ref")) {
+				let pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
+				pipelineIds = pipelineIds.concat(this.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
+				pipelines[supernode.id] = this.getPipelines(pipelineIds);
+			}
+		});
+		return pipelines;
 	}
 
 	getDescendentPipelineIds(pipelineId) {
@@ -1980,14 +2005,11 @@ export class APIPipeline {
 		}
 	}
 
-	deleteSupernode(supernode, deleteDescendantPipelines) {
+	deleteSupernode(supernode) {
 		let pipelineIds = [];
-		const delDescendentPipelines = typeof deleteDescendantPipelines === "undefined" ? true : deleteDescendantPipelines;
 		if (has(supernode, "subflow_ref.pipeline_id_ref")) {
 			pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
-			if (delDescendentPipelines) {
-				pipelineIds = pipelineIds.concat(this.objectModel.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
-			}
+			pipelineIds = pipelineIds.concat(this.objectModel.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
 		}
 		this.store.dispatch({
 			type: "DELETE_SUPERNODE",

@@ -20,6 +20,8 @@ export default class CreateSuperNodeAction extends Action {
 
 		this.subflowNodes = this.objectModel.getSelectedNodes();
 		this.subflowComments = this.objectModel.getSelectedComments();
+		const supernodes = this.subflowNodes.filter((node) => node.type === "super_node");
+		this.subflowPipelines = this.objectModel.getReferencedPipelines(supernodes);
 
 		this.subflowLinks = [];
 		this.linksToDelete = [];
@@ -447,10 +449,14 @@ export default class CreateSuperNodeAction extends Action {
 	}
 
 	undo() {
-		this.apiPipeline.deleteSupernode(this.supernode, false);
+		this.apiPipeline.deleteSupernode(this.supernode);
 
 		this.subflowNodes.forEach((node) => {
-			this.apiPipeline.addNode(node);
+			if (node.type === "super_node") {
+				this.apiPipeline.addSupernode(node, this.subflowPipelines[node.id]);
+			} else {
+				this.apiPipeline.addNode(node);
+			}
 		});
 
 		this.subflowComments.forEach((comment) => {
