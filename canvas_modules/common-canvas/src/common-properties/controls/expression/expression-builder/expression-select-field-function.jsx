@@ -104,6 +104,18 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		}
 	}
 
+	createContentObject(label) {
+		return (
+			<div className="properties-table-cell-control">
+				<div className="properties-expr-table-cell">
+					<span>
+						{label}
+					</span>
+				</div>
+			</div>
+		);
+	}
+
 	_makeFieldAndValuesContent() {
 		// Make field and value tables headers.
 		const fieldHeaders = [];
@@ -135,8 +147,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			// only include rows that meet the filter tex
 			if (!this.state.fieldFilterText || this.state.fieldFilterText.length === 0 ||
 					(field.name.toLowerCase().indexOf(this.state.fieldFilterText.toLowerCase()) > -1)) {
-				fieldColumns.push({ column: "fieldName", content: field.name });
-				fieldColumns.push({ column: "storage", content: field.type });
+				fieldColumns.push({ column: "fieldName", content: this.createContentObject(field.name) });
+				fieldColumns.push({ column: "storage", content: this.createContentObject(field.type) });
 				fieldTableData.push({ className: rowClass, columns: fieldColumns,
 					onClickCallback: this.onFieldTableClick.bind(this, index), onDblClickCallback: this.onFieldTableDblClick.bind(this, index) });
 				// Make the content of the values table the values of the field selected.
@@ -199,7 +211,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			: "table-row";
 		if (!this.state.valueFilterText || this.state.valueFilterText.length === 0 ||
 					(content.toLowerCase().indexOf(this.state.valueFilterText.toLowerCase()) > -1)) {
-			const valueColumns = [{ column: "values", content: content }];
+			const valueColumns = [{ column: "values", content: this.createContentObject(content) }];
 			valuesTableData.push({ className: valueRowClass, columns: valueColumns,
 				onClickCallback: this.onValueTableClick.bind(this, index), onDblClickCallback: this.onValueTableDblClick.bind(this, index) });
 		}
@@ -276,8 +288,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				? "table-row table-selected-row"
 				: "table-row";
 
-			columns.push({ column: "function", content: catFunction.label });
-			columns.push({ column: "return", content: catFunction.return_type });
+			columns.push({ column: "function", content: this.createContentObject(catFunction.label) });
+			columns.push({ column: "return", content: this.createContentObject(catFunction.return_type) });
 			table.rows.push({ className: rowClass, columns: columns,
 				onClickCallback: this.onFunctionTableClick.bind(this, index, category), onDblClickCallback: this.onFunctionTableDblClick.bind(this, index) });
 			if (index === this.state.functionSelectedRow) {

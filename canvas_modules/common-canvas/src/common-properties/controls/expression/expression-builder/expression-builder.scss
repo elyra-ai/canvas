@@ -111,9 +111,3 @@ $operator-margin: 50%;
 	width: 50%;
 	margin-bottom: 2px;
 }
-
-.table-row {
-	> :first-child {
-		margin-left: $table-column-left-padding;
-	}
-}
