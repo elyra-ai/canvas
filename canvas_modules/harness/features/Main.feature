@@ -41,20 +41,17 @@ Feature: Main
 	  # Now delete everything and go back to empty canvas
 		Then I pause for 1 seconds
 
-	  Then I delete node 1 the "Var. File" node
-	  Then I delete node 1 the "Derive" node by pressing Delete
-		Then I click the comment with text "This comment box should be linked to the derive node." to select it
-		Then I right click at position 300, 250 to display the context menu
+		Then I delete node 1 the "Var. File" node
+		Then I delete node 1 the "Derive" node by pressing Delete
+		Then I right click the comment with text "This comment box should be linked to the derive node." to open the context menu
 		Then I click option "Delete" from the context menu
-	  Then I delete node 1 the "Filter" node
-		Then I click the comment with text "this comment box should be linked to the type node" to select it
-		Then I right click at position 550, 350 to display the context menu
+		Then I delete node 1 the "Filter" node
+		Then I right click the comment with text "this comment box should be linked to the type node" to open the context menu
 		Then I click option "Delete" from the context menu
 		Then I delete node 1 the "Type" node
-	  Then I delete node 1 the "C5.0" node
-	  Then I delete node 1 the "Neural Net" node
-		Then I click the comment with text "This is the functional test canvas that we build through automated test cases.  This comment is meant to simulate a typical comment for annotating the entire canvas." to select it
-		Then I right click at position 750, 50 to display the context menu
+		Then I delete node 1 the "C5.0" node
+		Then I delete node 1 the "Neural Net" node
+		Then I right click the comment with text "This is the functional test canvas that we build through automated test cases.  This comment is meant to simulate a typical comment for annotating the entire canvas." to open the context menu
 		Then I click option "Delete" from the context menu
 
 	  # Verify that the diagram.json has no content.

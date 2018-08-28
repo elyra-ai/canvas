@@ -73,8 +73,7 @@ Feature: UndoRedo
 		Then I click redo
 		Then I verify the number of nodes are 1
 
-		Then I click the comment with text "This comment box should be edited." to select it
-		Then I right click at position 350, 250 to display the context menu
+		Then I right click the comment with text "This comment box should be edited." to open the context menu
 		Then I click option "Delete" from the context menu
 		#Then I delete comment 1 linked to the "Select" node with the comment text "This comment box should be edited."
 		Then I click undo

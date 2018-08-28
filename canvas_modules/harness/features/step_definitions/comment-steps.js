@@ -179,6 +179,12 @@ module.exports = function() {
 		browser.$(cmntSelector).click();
 	});
 
+	this.Then(/^I right click the comment with text "([^"]*)" to open the context menu$/, function(commentText) {
+		const comIndex = getCommentIndexFromCanvasUsingText(commentText);
+		const commentId = browser.$("#common-canvas-items-container-0").$$(".comment-group")[comIndex].getAttribute("id");
+		var cmntSelector = "#" + commentId;
+		browser.$(cmntSelector).rightClick();
+	});
 
 	this.Then(/^I verify comment (\d+) with the comment text "([^"]*)"$/, function(commentNumber, commentText) {
 		try {

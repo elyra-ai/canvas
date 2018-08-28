@@ -23,8 +23,7 @@ Feature: AutoLayout
 		Then I add node 7 a "Select" node from the "Record Ops" category onto the canvas at 100, 400
 		Then I close the palette
 		Then I delete node 7 the "Select" node
-		Then I click the comment with text " comment 2" to select it
-		Then I right click at position 350, 375 to display the context menu
+		Then I right click the comment with text " comment 2" to open the context menu
 		Then I click option "Delete" from the context menu
 		Then I delete comment 1 linked to the "C5.0" node with the comment text " comment 2"
 		Then I right click the "DRUG1n" node to display the context menu
@@ -57,8 +56,7 @@ Feature: AutoLayout
 		Then I add node 7 a "Select" node from the "Record Ops" category onto the canvas at 100, 400
 		Then I close the palette
 		Then I delete node 4 the "Neural Net" node
-		Then I click the comment with text " comment 2" to select it
-		Then I right click at position 400, 400 to display the context menu
+		Then I right click the comment with text " comment 2" to open the context menu
 		Then I click option "Delete" from the context menu
 		Then I delete comment 1 linked to the "C5.0" node with the comment text " comment 2"
 		Then I right click the "Discard Fields" node to display the context menu
@@ -90,11 +88,9 @@ Feature: AutoLayout
 		Then I add node 7 a "Select" node from the "Record Ops" category onto the canvas at 350, 445
 		Then I close the palette
 		Then I delete node 4 the "Neural Net" node
-		Then I click the comment with text " comment 3 sample comment text" to select it
-		Then I right click at position 663, 248 to display the context menu
+		Then I right click the comment with text " comment 3 sample comment text" to open the context menu
 		Then I click option "Delete" from the context menu
-		Then I click the comment with text " comment 2" to select it
-		Then I right click at position 400, 400 to display the context menu
+		Then I right click the comment with text " comment 2" to open the context menu
 		Then I click option "Delete" from the context menu
 		Then I right click the "Define Types" node to display the context menu
 		Then I click option "Disconnect" from the context menu
