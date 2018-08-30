@@ -1942,10 +1942,8 @@ class CanvasRenderer {
 			this.canvasGrp.selectAll(this.getId("#node_ellipsis_background", d.id)).remove();
 		}
 
-		if (this.isExpandedSupernode(d)) {
-			this.canvasGrp.selectAll(this.getId("#node_exp_icon", d.id)).remove();
-			this.canvasGrp.selectAll(this.getId("#node_exp_back", d.id)).remove();
-		}
+		this.canvasGrp.selectAll(this.getId("#node_exp_icon", d.id)).remove();
+		this.canvasGrp.selectAll(this.getId("#node_exp_back", d.id)).remove();
 	}
 
 	createSupernodeRenderer(d, supernodeD3Object) {
