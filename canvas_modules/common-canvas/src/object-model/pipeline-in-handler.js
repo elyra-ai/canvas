@@ -127,7 +127,7 @@ export default class PipelineInHandler {
 					position: decoration.position,
 					class_name: decoration.class_name,
 					hotspot: decoration.hotspot,
-					id: decoration.id,
+					id: decoration.id || this.getUUID(),
 					image: decoration.image
 				};
 				newDecorations.push(newDecoration);

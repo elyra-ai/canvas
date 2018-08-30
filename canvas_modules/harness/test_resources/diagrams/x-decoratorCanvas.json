@@ -42,7 +42,8 @@
         "decorations": [
           {
             "position": "topLeft",
-            "className": "leftDecoration"
+            "className": "leftDecoration",
+            "id": "topLeftDecoration"
           }
         ]
       },
@@ -76,7 +77,7 @@
             "position": "topRight",
             "className": "rightDecoration",
             "hotspot": true,
-            "id": "topRightDecorator"
+            "id": "topRightDecoration"
           }
         ]
       },
@@ -108,7 +109,8 @@
         "decorations": [
           {
             "position": "bottomLeft",
-            "className": "leftDecoration"
+            "className": "leftDecoration",
+            "id": "bottomLeftDecoration"
           }
         ]
       },
@@ -142,7 +144,7 @@
             "position": "bottomRight",
             "className": "rightDecoration",
             "hotspot": true,
-            "id": "bottomRightDecorator"
+            "id": "bottomRightDecoration"
           }
         ]
       },
@@ -204,7 +206,7 @@
             "className": "zoom-in-decoration",
             "image": "/images/decorators/zoom-in_32.svg",
             "hotspot": true,
-            "id": "zoomInDecorator"
+            "id": "zoomInDecoration"
           }
         ]
       }

@@ -111,6 +111,7 @@ export default class SidePanel extends React.Component {
 				addNodeTypeToPalette={this.props.apiConfig.addNodeTypeToPalette}
 				setNodeLabel={this.props.apiConfig.setNodeLabel}
 				setPortLabel={this.props.apiConfig.setPortLabel}
+				setNodeDecorations={this.props.apiConfig.setNodeDecorations}
 				appendNotificationMessages={this.props.apiConfig.appendNotificationMessages}
 				clearNotificationMessages={this.props.apiConfig.clearNotificationMessages}
 			/>);
@@ -200,6 +201,7 @@ SidePanel.propTypes = {
 		addNodeTypeToPalette: PropTypes.func,
 		setNodeLabel: PropTypes.func,
 		setPortLabel: PropTypes.func,
+		setNodeDecorations: PropTypes.func,
 		appendNotificationMessages: PropTypes.func,
 		clearNotificationMessages: PropTypes.func
 	}),

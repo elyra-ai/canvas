@@ -62,6 +62,13 @@ module.exports = function() {
 
 	});
 
+	// Double up the double quotes in this step to allow JSON containing double quotes
+	// to be specified in the feature file.
+	this.Then(/^I update the decorations text area with ""([^']*)""$/, function(decoratorsJSON) {
+		const textField = browser.$("#sidepanel-api-decorations").$("textarea");
+		textField.setValue(decoratorsJSON);
+	});
+
 	this.When(/^I update the pipelineflow to add input and output ports to node "([^"]*)"$/, function(nodeName) {
 		const textField = browser.$("#sidepanel-api-pipelineFlow").$("textarea");
 		const pipelineFlow = JSON.parse(textField.getText());

@@ -247,10 +247,6 @@ $link-hightlight-color: $brand-01;
 	stroke-width: 1;
 }
 
-.d3-decorator-image {
-	pointer-events: none; /* Allows mouse events (eg. hover) to go through to decorator rectangle */
-}
-
 .d3-node-halo {
 	fill: none;
 	stroke: transparent;

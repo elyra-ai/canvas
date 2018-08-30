@@ -334,6 +334,10 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeLabel(nodeId, newLabel);
 	}
 
+	setNodeDecorations(nodeId, newDecorations, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodeDecorations(nodeId, newDecorations);
+	}
+
 	setInputPortLabel(nodeId, portId, newLabel, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setInputPortLabel(nodeId, portId, newLabel);
 	}
@@ -341,6 +345,7 @@ export default class CanvasController {
 	setOutputPortLabel(nodeId, portId, newLabel, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setOutputPortLabel(nodeId, portId, newLabel);
 	}
+
 	getNode(nodeId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNode(nodeId);
 	}
@@ -359,6 +364,10 @@ export default class CanvasController {
 
 	getNodeMessage(nodeId, controlName, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeMessage(nodeId, controlName);
+	}
+
+	getNodeDecorations(nodeId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeDecorations(nodeId);
 	}
 
 	addCustomAttrToNodes(nodeIds, attrName, pipelineId) {

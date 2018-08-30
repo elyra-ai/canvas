@@ -1589,13 +1589,6 @@ class CanvasRenderer {
 				.attr("cx", this.layout.errorCenterX)
 				.attr("r", this.layout.errorRadius);
 
-			// Decorators
-			this.addDecorator(newNodeGroups, "topLeft", this.layout.decoratorLeftX, this.layout.decoratorTopY);
-			this.addDecorator(newNodeGroups, "topRight", this.layout.decoratorRightX, this.layout.decoratorTopY);
-			this.addDecorator(newNodeGroups, "bottomLeft", this.layout.decoratorLeftX, this.layout.decoratorBottomY);
-			this.addDecorator(newNodeGroups, "bottomRight", this.layout.decoratorRightX, this.layout.decoratorBottomY);
-
-
 			const newAndExistingNodeGrps =
 				nodeGroupSel.enter().merge(nodeGroupSel);
 
@@ -1816,6 +1809,54 @@ class CanvasRenderer {
 
 							outputPortSelection.exit().remove();
 						}
+					}
+
+					// Display decorators
+					if (!this.isSuperBindingNode(d)) {
+						const decOutlnSelector = this.getSelectorForClass("d3-decorator-outline");
+
+						const decoratorOutlnsSelection = nodeGrp.selectAll(decOutlnSelector)
+							.data(d.decorations || [], function(dec) { return dec.id; });
+
+						decoratorOutlnsSelection.enter()
+							.append("rect")
+							.attr("id", (dec) => this.getId("node_dec_outln", dec.id))
+							.attr("data-pipeline-id", this.getNonNumericPipelineId())
+							.attr("width", this.layout.decoratorWidth + 2)
+							.attr("height", this.layout.decoratorHeight + 2)
+							.merge(decoratorOutlnsSelection)
+							.attr("x", (dec) => this.getDecoratorX(dec))
+							.attr("y", (dec) => this.getDecoratorY(dec))
+							.attr("class", (dec) => this.getDecoratorClass(dec))
+							.datum((dec) => this.getDecorator(dec.id, node))
+							.filter((dec) => dec.hotspot)
+							.on("mousedown", (dec) => this.callDecoratorCallback(node, dec));
+
+						decoratorOutlnsSelection.exit().remove();
+
+						const decImgSelector = this.getSelectorForClass("d3-decorator-image");
+
+						var decoratorImgsSelection = nodeGrp.selectAll(decImgSelector)
+							.data(d.decorations || [], function(dec) { return dec.id + dec.image; });
+
+						decoratorImgsSelection.enter()
+							.filter((dec) => dec.image)
+							.append("image")
+							.attr("id", (dec) => this.getId("node_dec_img", dec.id))
+							.attr("data-pipeline-id", this.getNonNumericPipelineId())
+							.attr("width", this.layout.decoratorWidth)
+							.attr("height", this.layout.decoratorHeight)
+							.attr("class", "d3-decorator-image")
+							.merge(decoratorImgsSelection)
+							.filter((dec) => dec.image)
+							.attr("x", (dec) => this.getDecoratorX(dec))
+							.attr("y", (dec) => this.getDecoratorY(dec))
+							.attr("xlink:href", (dec) => this.getDecoratorImage(dec))
+							.datum((dec) => this.getDecorator(dec.id, node))
+							.filter((dec) => dec.hotspot)
+							.on("mousedown", (dec) => this.callDecoratorCallback(node, dec));
+
+						decoratorImgsSelection.exit().remove();
 					}
 				});
 
@@ -2130,91 +2171,61 @@ class CanvasRenderer {
 		this.canvasGrp.selectAll(srcPrtSelector).attr("connected", newStatus);
 	}
 
-	// Adds a decorator to the nodeGroup passed in of the type passed in at the
-	// x and y position provided.
-	addDecorator(nodeGroup, type, x, y) {
-		var decGrp = nodeGroup
-			.filter((d) => !this.isSuperBindingNode(d))
-			.filter((d) => this.isDecoration(d, type));
-
-		decGrp.append("rect")
-			.attr("width", this.layout.decoratorWidth + 2)
-			.attr("height", this.layout.decoratorHeight + 2)
-			.attr("x", x)
-			.attr("y", y)
-			.attr("class", (d) => this.getDecoratorClass(d, type))
-			.filter((d) => this.isDecoratorHotSpot(d, type))
-			.on("mousedown", (d) => this.getDecoratorCallback(d, type));
-
-		decGrp.append("image")
-			.attr("width", this.layout.decoratorWidth)
-			.attr("height", this.layout.decoratorHeight)
-			.attr("x", x)
-			.attr("y", y)
-			.attr("xlink:href", (d) => this.getDecoratorImage(d, type))
-			.attr("class", "d3-decorator-image")
-			.filter((d) => this.isDecoratorHotSpot(d, type))
-			.on("mousedown", (d) => this.getDecoratorCallback(d, type));
-	}
-
-	// Returns true if the datum passed in has a decoration for the decoration
-	// type passed in which can be topLeft, topRight, bottomLeft or bottomRight.
-	isDecoration(d, type) {
-		if (d.decorations) {
-			return d.decorations.find((dc) => dc.position === type);
+	getDecorator(id, node) {
+		if (node && node.decorations) {
+			const dec = node.decorations.find((nd) => nd.id === id);
+			return dec;
 		}
-		return false;
+		return null;
 	}
 
-	getDecoratorClass(d, type) {
-		if (d.decorations) {
-			var dec = d.decorations.find((dc) => dc.position === type);
-			if (dec && dec.class_name) {
-				return dec.class_name;
-			}
+	getDecoratorX(dec) {
+		let x = 0;
+		if (dec.x_pos) {
+			x = dec.x_pos;
+		} else if (dec.position === "topLeft" || dec.position === "bottomLeft") {
+			x = this.layout.decoratorLeftX;
+		} else if (dec.position === "topRight" || dec.position === "bottomRight") {
+			x = this.layout.decoratorRightX;
 		}
-		return "d3-decorator-outline";
+		return x;
 	}
 
-	getDecoratorImage(d, type) {
-		if (d.decorations) {
-			var dec = d.decorations.find((dc) => dc.position === type);
-			if (dec) {
-				if (dec.class_name === "node-zoom") { // TODO - Remove this if when WML external model supports decorator image field.
-					return "/images/decorators/zoom-in_32.svg";
-				}
-				return dec.image;
+	getDecoratorY(dec) {
+		let y = 0;
+		if (dec.y_pos) {
+			y = dec.y_pos;
+		} else if (dec.position === "topLeft" || dec.position === "topRight") {
+			y = this.layout.decoratorTopY;
+		} else if (dec.position === "bottomLeft" || dec.position === "bottomRight") {
+			y = this.layout.decoratorBottomY;
+		}
+		return y;
+	}
+
+	getDecoratorClass(dec) {
+		let className = "d3-decorator-outline";
+		if (dec && dec.class_name) {
+			className += " " + dec.class_name;
+		}
+		return className;
+	}
+
+	getDecoratorImage(dec) {
+		if (dec) {
+			if (dec.class_name === "node-zoom") { // TODO - Remove this if when WML external model supports decorator image field.
+				return "/images/decorators/zoom-in_32.svg";
 			}
+			return dec.image;
 		}
 		return "";
 	}
 
-	isDecoratorHotSpot(d, type) {
-		if (d.decorations) {
-			var dec = d.decorations.find((dc) => dc.position === type);
-			if (dec) {
-				return dec.hotspot;
-			}
-		}
-		return false;
-	}
-
-	getDecoratorCallback(d, type) {
+	callDecoratorCallback(node, dec) {
 		d3Event.stopPropagation();
 		if (this.canvasController.decorationActionHandler) {
-			var id = this.getDecoratorId(d, type);
-			this.canvasController.decorationActionHandler(d, id);
+			this.canvasController.decorationActionHandler(node, dec.id);
 		}
-	}
-
-	getDecoratorId(d, type) {
-		if (d.decorations) {
-			var dec = d.decorations.find((dc) => dc.position === type);
-			if (dec) {
-				return dec.id;
-			}
-		}
-		return null;
 	}
 
 	drawNewLink() {

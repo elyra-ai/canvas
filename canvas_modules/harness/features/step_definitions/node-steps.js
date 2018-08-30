@@ -12,7 +12,7 @@ import { deleteLinkInObjectModel, findCategoryElement, findNodeIndexInPalette, g
 	getNodeFromObjectModel, getNodeIdForLabel, getNodeIdForLabelInSubFlow, getNodeIdFromObjectModel,
 	getObjectModelCount, isObjectModelEmpty
 } from "./utilities/validate-utils.js";
-import { getCanvasData, getEventLogData } from "./utilities/test-utils.js";
+import { getCanvasData, getEventLogData, getLastEventLogData } from "./utilities/test-utils.js";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
 
 /* global browser */
@@ -927,4 +927,64 @@ module.exports = function() {
 		expect(Number(node.width)).toEqual(Number(width));
 		expect(Number(node.height)).toEqual(Number(height));
 	});
+
+	this.Then(/^I click on the hotspot for decorator "([^"]*)" on the "([^"]*)" node$/, function(decoratorId, nodeName) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const node = browser.$("#node_grp_" + nodeId);
+		const decoratorImage = node.$(".d3-decorator-image[id=node_dec_img_0_" + decoratorId + "]");
+		decoratorImage.click();
+	});
+
+	this.Then(/^I verify an entry in the console was made for the decorationHandler on decorator "([^"]*)"$/, function(decoratorId) {
+		var lastEventLog = getLastEventLogData();
+		expect(lastEventLog.event).toEqual("decorationHandler()");
+		expect(lastEventLog.data).toEqual(decoratorId);
+	});
+
+	this.Then(/^I verify node "([^"]*)" has (\d+) decorators$/, function(nodeName, decoratorCount) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const node = browser.$("#node_grp_" + nodeId);
+		const decorators = node.$$(".d3-decorator-outline");
+		expect(String(decorators.length)).toEqual(decoratorCount);
+	});
+
+	this.Then(/^I verify node "([^"]*)" has a decorator with id "([^"]*)" at position x (-?\d+) y (-?\d+)$/, function(nodeName, decoratorId, xPos, yPos) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const node = browser.$("#node_grp_" + nodeId);
+		const decorators = node.$$(".d3-decorator-outline");
+		let found = false;
+		let xx = 0;
+		let yy = 0;
+		for (const decorator of decorators) {
+			var id = decorator.getAttribute("id");
+			if (id === "node_dec_outln_0_" + decoratorId) {
+				found = true;
+				xx = decorator.getAttribute("x");
+				yy = decorator.getAttribute("y");
+			}
+		}
+
+		expect(found).toEqual(true);
+		expect(xx).toEqual(xPos);
+		expect(yy).toEqual(yPos);
+	});
+
+	this.Then(/^I verify node "([^"]*)" has a decorator with id "([^"]*)" which has an image "([^"]*)"$/, function(nodeName, decoratorId, decoratorImage) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const node = browser.$("#node_grp_" + nodeId);
+		const decoratorImages = node.$$(".d3-decorator-image");
+		let found = false;
+		let img = "";
+		for (const decImage of decoratorImages) {
+			var id = decImage.getAttribute("id");
+			if (id === "node_dec_img_0_" + decoratorId) {
+				found = true;
+				img = decImage.getAttribute("href");
+			}
+		}
+
+		expect(found).toEqual(true);
+		expect(img).toEqual(decoratorImage);
+	});
+
 };

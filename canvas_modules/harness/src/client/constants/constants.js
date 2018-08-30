@@ -60,6 +60,7 @@ _defineConstant("API_ADD_PALETTE_ITEM", "Add PaletteItem");
 _defineConstant("API_SET_NODE_LABEL", "Set Node Label");
 _defineConstant("API_SET_INPUT_PORT_LABEL", "Set Input Port Label");
 _defineConstant("API_SET_OUTPUT_PORT_LABEL", "Set Output Port Label");
+_defineConstant("API_SET_NODE_DECORATIONS", "Set Node Decorations");
 _defineConstant("API_ADD_NOTIFICATION_MESSAGE", "Add Notification Message");
 _defineConstant("INPUT_PORT", "inputPort");
 _defineConstant("OUTPUT_PORT", "outputPort");

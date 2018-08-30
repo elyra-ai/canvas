@@ -312,6 +312,23 @@ describe("ObjectModel API handle model OK", () => {
 		shouldSaveNodeUiParameters("id125TTEEIK7V", expectedParameters);
 	});
 
+	it("should save a decoration for an execution node", () => {
+		shouldSaveNodeDecoration("idGWRVT47XDV");
+	});
+
+	it("should save a decoration for a binding node", () => {
+		shouldSaveNodeDecoration("id8I6RH2V91XW");
+	});
+
+	it("should save a decoration for a supernode", () => {
+		shouldSaveNodeDecoration("nodeIDSuperNodePE");
+	});
+
+	it("should save a decoration for a model node", () => {
+		shouldSaveNodeDecoration("id125TTEEIK7V");
+	});
+
+
 	it("should add palette item into existing test category", () => {
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const nodeTypeObj = {
@@ -982,6 +999,36 @@ describe("ObjectModel API handle model OK", () => {
 		// console.info("Actual messages   = " + JSON.stringify(actualClearedMessages, null, 4));
 
 		expect(isEqual(expectedClearedMessages, actualClearedMessages)).to.be.true;
+	}
+
+	function shouldSaveNodeDecoration(nodeId) {
+		deepFreeze(startPipelineFlow);
+		const expectedDecorations =
+			[{ "id": "dec1", "position": "topRight", "class_name": "dec-class", "hotspot": true, "image": "dec-image" },
+				{ "id": "dec2", "position": "bottomLeft", "class_name": "dec-class2", "image": "dec-image2" }
+			];
+
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.getAPIPipeline().setNodeDecorations(nodeId, expectedDecorations);
+
+		// Make sure decorations are returned by the API
+		let actualDecorations = objectModel.getAPIPipeline().getNodeDecorations(nodeId);
+		expect(isEqual(expectedDecorations, actualDecorations)).to.be.true;
+
+		// Make sure the decorations was saved in the pipeline flow
+		let pFlow = objectModel.getPipelineFlow();
+		let node = pFlow.pipelines[0].nodes.find((nd) => nd.id === nodeId);
+		expect(isEqual(expectedDecorations, node.app_data.ui_data.decorations)).to.be.true;
+
+		// Make sure, when null decorations are set, that null is returned by the API.
+		objectModel.getAPIPipeline().setNodeDecorations(nodeId, null);
+		actualDecorations = objectModel.getAPIPipeline().getNodeDecorations(nodeId);
+		expect(isEqual(null, actualDecorations)).to.be.true;
+
+		// Make sure, when null decorations are set, that nothing is returned in the pipeline flow
+		pFlow = objectModel.getPipelineFlow();
+		node = pFlow.pipelines[0].nodes.find((nd) => nd.id === nodeId);
+		expect(typeof node.app_data.ui_data.decorations === "undefined").to.be.true;
 	}
 
 	function shouldReturnCustomAppDataAndUiDataForLinks(targetNodeId, targetPortId) {

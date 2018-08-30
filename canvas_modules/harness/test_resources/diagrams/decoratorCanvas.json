@@ -22,7 +22,8 @@
               "decorations": [
                 {
                   "position": "topLeft",
-                  "class_name": "leftDecoration"
+                  "class_name": "leftDecoration",
+                  "id": "topLeftDecoration"
                 }
               ]
             }
@@ -72,7 +73,7 @@
                   "position": "topRight",
                   "class_name": "rightDecoration",
                   "hotspot": true,
-                  "id": "topRightDecorator"
+                  "id": "topRightDecoration"
                 }
               ]
             }
@@ -120,7 +121,8 @@
               "decorations": [
                 {
                   "position": "bottomLeft",
-                  "class_name": "leftDecoration"
+                  "class_name": "leftDecoration",
+                  "id": "bottomLeftDecoration"
                 }
               ]
             }
@@ -170,7 +172,7 @@
                   "position": "bottomRight",
                   "class_name": "rightDecoration",
                   "hotspot": true,
-                  "id": "bottomRightDecorator"
+                  "id": "bottomRightDecoration"
                 }
               ]
             }
@@ -262,7 +264,7 @@
                   "position": "topRight",
                   "class_name": "zoom-in-decoration",
                   "hotspot": true,
-                  "id": "zoomInDecorator",
+                  "id": "zoomInDecoration",
                   "image": "/images/decorators/zoom-in_32.svg"
                 }
               ]

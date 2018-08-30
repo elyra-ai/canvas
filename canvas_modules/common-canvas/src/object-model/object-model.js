@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint arrow-body-style: ["off"] */
-/* eslint complexity: ["error", 35] */
+/* eslint complexity: ["error", 36] */
 
 import { createStore, combineReducers } from "redux";
 import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
@@ -171,6 +171,16 @@ const nodes = (state = [], action) => {
 			if (action.data.nodeId === node.id) {
 				const newNode = Object.assign({}, node);
 				newNode.label = action.data.label;
+				return newNode;
+			}
+			return node;
+		});
+
+	case "SET_NODE_DECORATIONS":
+		return state.map((node, index) => {
+			if (action.data.nodeId === node.id) {
+				const newNode = Object.assign({}, node);
+				newNode.decorations = action.data.decorations;
 				return newNode;
 			}
 			return node;
@@ -534,6 +544,7 @@ const canvasinfo = (state = [], action) => {
 	case "SET_NODE_UI_PARAMETERS":
 	case "SET_NODE_MESSAGE":
 	case "SET_NODE_MESSAGES":
+	case "SET_NODE_DECORATIONS":
 	case "ADD_NODE_ATTR":
 	case "REMOVE_NODE_ATTR":
 	case "SET_NODE_LABEL":
@@ -2108,6 +2119,10 @@ export class APIPipeline {
 		this.store.dispatch({ type: "SET_NODE_LABEL", data: { nodeId: nodeId, label: newLabel }, pipelineId: this.pipelineId });
 	}
 
+	setNodeDecorations(nodeId, newDecorations) {
+		this.store.dispatch({ type: "SET_NODE_DECORATIONS", data: { nodeId: nodeId, decorations: this.ensureDecorationsHaveIds(newDecorations) }, pipelineId: this.pipelineId });
+	}
+
 	setInputPortLabel(nodeId, portId, newLabel) {
 		this.store.dispatch({ type: "SET_INPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel }, pipelineId: this.pipelineId });
 	}
@@ -2146,6 +2161,11 @@ export class APIPipeline {
 
 	removeCustomAttrFromNodes(nodeIds, attrName, attrValue) {
 		this.store.dispatch({ type: "REMOVE_NODE_ATTR", data: { objIds: nodeIds, attrName: attrName }, pipelineId: this.pipelineId });
+	}
+
+	getNodeDecorations(nodeId) {
+		var node = this.getNode(nodeId);
+		return (node ? node.decorations : null);
 	}
 
 	getNodeMessages(nodeId) {
@@ -2321,6 +2341,13 @@ export class APIPipeline {
 			width: xRight - xLeft,
 			height: yBot - yTop
 		};
+	}
+
+	ensureDecorationsHaveIds(newDecorations) {
+		if (newDecorations) {
+			return newDecorations.map((dec) => Object.assign({}, dec, { id: dec.id || this.objectModel.getUUID() }));
+		}
+		return newDecorations;
 	}
 
 	// ---------------------------------------------------------------------------

@@ -188,6 +188,7 @@ class App extends React.Component {
 		this.getCanvasInfo = this.getCanvasInfo.bind(this);
 		this.setNodeLabel = this.setNodeLabel.bind(this);
 		this.setPortLabel = this.setPortLabel.bind(this);
+		this.setNodeDecorations = this.setNodeDecorations.bind(this);
 
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
@@ -624,6 +625,15 @@ class App extends React.Component {
 			this.canvasController.setOutputPortLabel(nodeId, portId, newLabel);
 		}
 		this.log("Set new port label", { nodeId: nodeId, portLabel: newLabel, portType: portType });
+	}
+
+	setNodeDecorations(nodeId, newDecorations) {
+		let newDecs = JSON.parse(newDecorations);
+		if (isEmpty(newDecs)) {
+			newDecs = null;
+		}
+		this.canvasController.setNodeDecorations(nodeId, newDecs);
+		this.log("Set new node decorations", { nodeId: nodeId, newDecorations: newDecs });
 	}
 
 	generateNodeNotificationMessages(nodeMessages, currentPipelineId) {
@@ -1608,6 +1618,7 @@ class App extends React.Component {
 			addNodeTypeToPalette: this.addNodeTypeToPalette,
 			setNodeLabel: this.setNodeLabel,
 			setPortLabel: this.setPortLabel,
+			setNodeDecorations: this.setNodeDecorations,
 			appendNotificationMessages: this.appendNotificationMessages,
 			clearNotificationMessages: this.clearNotificationMessages,
 			selectedOperation: this.state.apiSelectedOperation
