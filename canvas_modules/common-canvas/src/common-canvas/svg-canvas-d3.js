@@ -133,6 +133,11 @@ export default class CanvasD3Layout {
 		// canvas div must have tabindex set and the focus set on the div.
 		const canvasDiv = d3.select(canvasDivSelector)
 			.on("keydown", () => {
+				// Make sure no tip is displayed, because having one displayed
+				// will interfere with drawing of the canvas as the result of any
+				// keyboard action.
+				this.canvasController.hideTip();
+
 				// Only catch key pressses when NOT editing because, while editing,
 				// the test area needs to receive key presses for undo, redo, delete etc.
 				if (!this.renderer.isEditingComment()) {
