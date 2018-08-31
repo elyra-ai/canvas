@@ -1,19 +1,20 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint arrow-body-style: ["off"] */
-/* eslint complexity: ["error", 36] */
+/* eslint complexity: ["error", 41] */
 
 import { createStore, combineReducers } from "redux";
 import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
 	CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
 	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK, CREATE_PIPELINE,
-	CLONE_PIPELINE, SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
+	CLONE_PIPELINE, SUPER_NODE, HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM,
+	HIGHLIGHT_DOWNSTREAM } from "../common-canvas/constants/canvas-constants.js";
 import dagre from "dagre/dist/dagre.min.js";
 import LayoutDimensions from "./layout-dimensions.js";
 import CanvasInHandler from "./canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
@@ -23,6 +24,8 @@ import PipelineOutHandler from "./pipeline-out-handler.js";
 import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
 import has from "lodash/has";
+import union from "lodash/union";
+import mergeWith from "lodash/mergeWith";
 import uuid4 from "uuid/v4";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
 import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@wdp/pipeline-schemas";
@@ -47,9 +50,7 @@ const nodes = (state = [], action) => {
 		// action.data.nodes contains an array of node and comment Ids
 		if (action.data.nodes) {
 			return state.map((node, index) => {
-				if (action.data.nodes.findIndex((actionNodeId) => {
-					return (actionNodeId === node.id);
-				}) > -1) {
+				if (action.data.nodes.indexOf(node.id) > -1) {
 					const xPos = node.x_pos + action.data.offsetX;
 					const yPos = node.y_pos + action.data.offsetY;
 					return Object.assign({}, node, { x_pos: xPos, y_pos: yPos });
@@ -139,9 +140,7 @@ const nodes = (state = [], action) => {
 
 	case "ADD_NODE_ATTR":
 		return state.map((node, index) => {
-			if (action.data.objIds.findIndex((actionId) => {
-				return (actionId === node.id);
-			}) > -1) {
+			if (action.data.objIds.indexOf(node.id) > -1) {
 				const newNode = Object.assign({}, node);
 				newNode.customAttrs = newNode.customAttrs || [];
 				newNode.customAttrs.push(action.data.attrName);
@@ -152,9 +151,7 @@ const nodes = (state = [], action) => {
 
 	case "REMOVE_NODE_ATTR":
 		return state.map((node, index) => {
-			if (action.data.objIds.findIndex((actionId) => {
-				return (actionId === node.id);
-			}) > -1) {
+			if (action.data.objIds.indexOf(node.id) > -1) {
 				const newNode = Object.assign({}, node);
 				if (newNode.customAttrs) {
 					newNode.customAttrs = newNode.customAttrs.filter((a) => {
@@ -181,6 +178,36 @@ const nodes = (state = [], action) => {
 			if (action.data.nodeId === node.id) {
 				const newNode = Object.assign({}, node);
 				newNode.decorations = action.data.decorations;
+				return newNode;
+			}
+			return node;
+		});
+
+	case "SET_OBJECTS_STYLE":
+		return state.map((node) => {
+			const idx = action.data.objIds.indexOf(node.id);
+			if (idx > -1) {
+				const newNode = Object.assign({}, node);
+				const style = Array.isArray(action.data.newStyle) ? (action.data.newStyle[idx] || null) : action.data.newStyle;
+				if (action.data.temporary) {
+					newNode.style_temp = style;
+				} else {
+					newNode.style = style;
+				}
+				return newNode;
+			}
+			return node;
+		});
+
+	case "REMOVE_ALL_STYLES":
+		return state.map((node) => {
+			if (action.data.temporary && node.style_temp) {
+				const newNode = Object.assign({}, node);
+				delete newNode.style_temp;
+				return newNode;
+			} else if (!action.data.temporary && node.style) {
+				const newNode = Object.assign({}, node);
+				delete newNode.style;
 				return newNode;
 			}
 			return node;
@@ -269,9 +296,7 @@ const comments = (state = [], action) => {
 		// action.data.nodes contains an array of node and comment Ids
 		if (action.data.nodes) {
 			return state.map((comment, index) => {
-				if (action.data.nodes.findIndex((actionNodeId) => {
-					return (actionNodeId === comment.id);
-				}) > -1) {
+				if (action.data.nodes.indexOf(comment.id) > -1) {
 					const xPos = comment.x_pos + action.data.offsetX;
 					const yPos = comment.y_pos + action.data.offsetY;
 					return Object.assign({}, comment, { x_pos: xPos, y_pos: yPos });
@@ -335,9 +360,7 @@ const comments = (state = [], action) => {
 
 	case "ADD_COMMENT_ATTR":
 		return state.map((comment, index) => {
-			if (action.data.objIds.findIndex((actionId) => {
-				return (actionId === comment.id);
-			}) > -1) {
+			if (action.data.objIds.indexOf(comment.id) > -1) {
 				const newComment = Object.assign({}, comment);
 				newComment.customAttrs = newComment.customAttrs || [];
 				newComment.customAttrs.push(action.data.attrName);
@@ -348,9 +371,7 @@ const comments = (state = [], action) => {
 
 	case "REMOVE_COMMENT_ATTR":
 		return state.map((comment, index) => {
-			if (action.data.objIds.findIndex((actionId) => {
-				return (actionId === comment.id);
-			}) > -1) {
+			if (action.data.objIds.indexOf(comment.id) > -1) {
 				const newComment = Object.assign({}, comment);
 				if (newComment.customAttrs) {
 					newComment.customAttrs = newComment.customAttrs.filter((a) => {
@@ -361,6 +382,49 @@ const comments = (state = [], action) => {
 			}
 			return comment;
 		});
+
+	case "SET_OBJECTS_CLASS_NAME":
+		return state.map((comment) => {
+			const idx = action.data.objIds.indexOf(comment.id);
+			if (idx > -1) {
+				const newComment = Object.assign({}, comment);
+				newComment.style =
+					Array.isArray(action.data.newClassName) ? (action.data.newClassName[idx] || null) : action.data.newClassName;
+				return newComment;
+			}
+			return comment;
+		});
+
+	case "SET_OBJECTS_STYLE":
+		return state.map((comment) => {
+			const idx = action.data.objIds.indexOf(comment.id);
+			if (idx > -1) {
+				const newComment = Object.assign({}, comment);
+				const style = Array.isArray(action.data.newStyle) ? (action.data.newStyle[idx] || null) : action.data.newStyle;
+				if (action.data.temporary) {
+					newComment.style_temp = style;
+				} else {
+					newComment.style = style;
+				}
+				return newComment;
+			}
+			return comment;
+		});
+
+	case "REMOVE_ALL_STYLES":
+		return state.map((comment) => {
+			if (action.data.temporary && comment.style_temp) {
+				const newComment = Object.assign({}, comment);
+				delete newComment.style_temp;
+				return newComment;
+			} else if (!action.data.temporary && comment.style) {
+				const newComment = Object.assign({}, comment);
+				delete newComment.style;
+				return newComment;
+			}
+			return comment;
+		});
+
 
 	default:
 		return state;
@@ -412,6 +476,49 @@ const links = (state = [], action) => {
 		});
 		return newLinks;
 	}
+
+	case "SET_LINKS_CLASS_NAME":
+		return state.map((link) => {
+			const idx = action.data.linkIds.indexOf(link.id);
+			if (idx > -1) {
+				const newLink = Object.assign({}, link);
+				newLink.style =
+					Array.isArray(action.data.newClassName) ? action.data.newClassName[idx] : action.data.newClassName;
+				return newLink;
+			}
+			return link;
+		});
+
+	case "SET_LINKS_STYLE":
+		return state.map((link) => {
+			const idx = action.data.objIds.indexOf(link.id);
+			if (idx > -1) {
+				const newLink = Object.assign({}, link);
+				const style = Array.isArray(action.data.newStyle) ? action.data.newStyle[idx] : action.data.newStyle;
+				if (action.data.temporary) {
+					newLink.style_temp = style;
+				} else {
+					newLink.style = style;
+				}
+				return newLink;
+			}
+			return link;
+		});
+
+	case "REMOVE_ALL_STYLES":
+		return state.map((link) => {
+			if (action.data.temporary && link.style_temp) {
+				const newLink = Object.assign({}, link);
+				delete newLink.style_temp;
+				return newLink;
+			} else if (!action.data.temporary && link.style) {
+				const newLink = Object.assign({}, link);
+				delete newLink.style;
+				return newLink;
+			}
+			return link;
+		});
+
 
 	// When a comment is added, links have to be created from the comment
 	// to each of the selected nodes.
@@ -536,6 +643,9 @@ const canvasinfo = (state = [], action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
+	case "SET_SUBDUE_STYLE":
+		return Object.assign({}, state, { subdueStyle: action.data.subdueStyle });
+
 	case "ADD_NODE":
 	case "ADD_AUTO_NODE":
 	case "REPLACE_NODES":
@@ -548,6 +658,7 @@ const canvasinfo = (state = [], action) => {
 	case "ADD_NODE_ATTR":
 	case "REMOVE_NODE_ATTR":
 	case "SET_NODE_LABEL":
+	case "SET_OBJECTS_CLASS_NAME":
 	case "SET_INPUT_PORT_LABEL":
 	case "SET_OUTPUT_PORT_LABEL":
 	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":
@@ -574,7 +685,30 @@ const canvasinfo = (state = [], action) => {
 		});
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
-
+	case "SET_OBJECTS_STYLE":
+	case "SET_LINKS_STYLE": {
+		const pipelineIds = Object.keys(action.data.pipelineObjIds);
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
+			if (pipelineIds.indexOf(pipeline.id) > -1) {
+				action.data.objIds = action.data.pipelineObjIds[pipeline.id];
+				return Object.assign({}, pipeline, {
+					nodes: nodes(pipeline.nodes, action),
+					comments: comments(pipeline.comments, action),
+					links: links(pipeline.links, action) });
+			}
+			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+	case "REMOVE_ALL_STYLES": {
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
+			return Object.assign({}, pipeline, {
+				nodes: nodes(pipeline.nodes, action),
+				comments: comments(pipeline.comments, action),
+				links: links(pipeline.links, action) });
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
 	default:
 		return state;
 	}
@@ -1134,7 +1268,7 @@ export default class ObjectModel {
 	}
 
 	// Returns a list of the given pipelineId ancestors, from "oldest" to "youngest".
-	// This is a list of objects containing the pipeline id and its corresponding supernode label.
+	// This is a list of objects containing the pipeline id and its corresponding supernode label and id.
 	// Includes itself.
 	getAncestorPipelineIds(pipelineId) {
 		const primaryPipelineId = this.getPrimaryPipelineId();
@@ -1152,7 +1286,7 @@ export default class ObjectModel {
 				const subPipelineId = this.getSupernodePipelineID(supernode);
 				if (subPipelineId) {
 					if (this.isAncestorOfPipeline(subPipelineId, lowerPipelineId) || subPipelineId === lowerPipelineId) {
-						ancestors.push({ pipelineId: subPipelineId, label: supernode.label });
+						ancestors.push({ pipelineId: subPipelineId, label: supernode.label, supernodeId: supernode.id, parentPipelineId: upperPipelineId });
 					}
 					ancestors = ancestors.concat(this.getAncestorsBetween(subPipelineId, lowerPipelineId));
 				}
@@ -1174,6 +1308,29 @@ export default class ObjectModel {
 			return supernode.subflow_ref.pipeline_id_ref;
 		}
 		return null;
+	}
+
+	// Return the supernode object that has a subflow_ref to the given pipelineId.
+	// There should only be one supernode referencing the pipeline.
+	getSupernodeObjReferencing(pipelineId) {
+		let supernodeRef;
+		if (pipelineId === this.getPrimaryPipelineId()) {
+			const supernodes = this.getAPIPipeline(pipelineId).getSupernodes();
+			supernodeRef = supernodes.find((supernode) => has(supernode, "subflow_ref.pipeline_id_ref") && supernode.subflow_ref.pipeline_id_ref === pipelineId).id;
+		} else {
+			const ancestorPipelines = this.getAncestorPipelineIds(pipelineId);
+			const supernodePipelineObj = ancestorPipelines.find((pipelineObj) => pipelineObj.pipelineId === pipelineId && has(pipelineObj, "supernodeId"));
+			supernodeRef = supernodePipelineObj;
+		}
+		return supernodeRef;
+	}
+
+	// Returns true if nodeId is a supernode binding node.
+	isSupernodeBindingNode(nodeId, pipelineId) {
+		if (pipelineId !== this.getPrimaryPipelineId() && this.getAPIPipeline(pipelineId).getNode(nodeId).type === "binding") {
+			return true;
+		}
+		return false;
 	}
 
 	setCanvasInfo(canvasInfo) {
@@ -1215,6 +1372,14 @@ export default class ObjectModel {
 
 	getCanvasInfo() {
 		return this.store.getState().canvasinfo;
+	}
+
+	setSubdueStyle(newStyle) {
+		this.store.dispatch({ type: "SET_SUBDUE_STYLE", data: { subdueStyle: newStyle } });
+	}
+
+	removeAllStyles(temporary) {
+		this.store.dispatch({ type: "REMOVE_ALL_STYLES", data: { temporary: temporary } });
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1684,6 +1849,284 @@ export default class ObjectModel {
 		return node ? node.messages : null;
 	}
 
+	// ---------------------------------------------------------------------------
+	// Highlighting methods
+	// ---------------------------------------------------------------------------
+
+	getHighlightObjectIds(pipelineId, nodeIds, operator) {
+		let highlightNodes = [];
+		let highlightLinks = [];
+
+		switch (operator) {
+		case HIGHLIGHT_BRANCH:
+			nodeIds.forEach((nodeId) => {
+				const branchNodeIds = this.getNodeIdsInBranchContaining(nodeId, pipelineId);
+				highlightNodes = mergeWith(highlightNodes, branchNodeIds, this.mergeWithUnion);
+				const branchLinkIds = this.getLinkIdsInBranchContaining(nodeId, pipelineId);
+				highlightLinks = mergeWith(highlightLinks, branchLinkIds, this.mergeWithUnion);
+			});
+			break;
+		case HIGHLIGHT_UPSTREAM:
+			nodeIds.forEach((nodeId) => {
+				const upstreamNodeIds = this.getUpstreamNodeIdsFrom(nodeId, pipelineId);
+				upstreamNodeIds[pipelineId].push(nodeId);
+				highlightNodes = mergeWith(highlightNodes, upstreamNodeIds, this.mergeWithUnion);
+				const upstreamLinkIds = this.getUpstreamLinkIdsFrom(nodeId, pipelineId);
+				highlightLinks = mergeWith(highlightLinks, upstreamLinkIds, this.mergeWithUnion);
+			});
+			break;
+		case HIGHLIGHT_DOWNSTREAM:
+			nodeIds.forEach((nodeId) => {
+				const downstreamNodeIds = this.getDownstreamNodeIdsFrom(nodeId, pipelineId);
+				downstreamNodeIds[pipelineId].push(nodeId);
+				highlightNodes = mergeWith(highlightNodes, downstreamNodeIds, this.mergeWithUnion);
+				const downstreamLinkIds = this.getDownstreamLinkIdsFrom(nodeId, pipelineId);
+				highlightLinks = mergeWith(highlightLinks, downstreamLinkIds, this.mergeWithUnion);
+			});
+			break;
+		default:
+		}
+
+		return {
+			nodes: highlightNodes,
+			links: highlightLinks
+		};
+	}
+
+	getNodeIdsInBranchContaining(nodeId, pipelineId) {
+		const upstreamNodes = this.getUpstreamNodeIdsFrom(nodeId, pipelineId);
+		upstreamNodes[pipelineId].push(nodeId);
+		const downstreamNodes = this.getDownstreamNodeIdsFrom(nodeId, pipelineId);
+		return mergeWith(upstreamNodes, downstreamNodes, this.mergeWithUnion);
+	}
+
+	getLinkIdsInBranchContaining(nodeId, pipelineId) {
+		const upstreamLinks = this.getUpstreamLinkIdsFrom(nodeId, pipelineId);
+		const downstreamLinks = this.getDownstreamLinkIdsFrom(nodeId, pipelineId);
+		return mergeWith(upstreamLinks, downstreamLinks, this.mergeWithUnion);
+	}
+
+	getUpstreamNodeIdsFrom(nodeId, pipelineId) {
+		return this.getUpstreamObjIdsFrom(nodeId, pipelineId, "nodes");
+	}
+
+	getUpstreamLinkIdsFrom(nodeId, pipelineId) {
+		return this.getUpstreamObjIdsFrom(nodeId, pipelineId, "links");
+	}
+
+	getUpstreamObjIdsFrom(nodeId, pipelineId, objectType) {
+		let upstreamObjIds = [];
+		if (typeof upstreamObjIds[pipelineId] === "undefined") {
+			upstreamObjIds[pipelineId] = [];
+		}
+		const currentPipeline = this.getAPIPipeline(pipelineId);
+		const nodeLinks = currentPipeline.getLinksContainingTargetId(nodeId);
+		if (nodeLinks.length > 0) {
+			nodeLinks.forEach((link) => {
+				if (link.type === "nodeLink") {
+					if (objectType === "nodes") {
+						upstreamObjIds[pipelineId] = union(upstreamObjIds[pipelineId], [link.srcNodeId]);
+					} else if (objectType === "links") {
+						upstreamObjIds[pipelineId].push(link.id);
+					}
+
+					const srcNode = currentPipeline.getNode(link.srcNodeId);
+					const srcNodeOutputPort = this.getSupernodeOutputPortForLink(srcNode, link);
+					if (srcNodeOutputPort) {
+						const subflowRef = srcNode.subflow_ref.pipeline_id_ref;
+						if (typeof upstreamObjIds[subflowRef] === "undefined") {
+							upstreamObjIds[subflowRef] = [];
+						}
+						const bindingNode = this.getAPIPipeline(subflowRef).getNode(srcNodeOutputPort.subflow_node_ref);
+						if (objectType === "nodes") {
+							upstreamObjIds[subflowRef] = union(upstreamObjIds[subflowRef], [bindingNode.id]);
+						}
+						const subUpstreamObjs = this.getUpstreamObjIdsFrom(bindingNode.id, subflowRef, objectType);
+						upstreamObjIds = mergeWith(upstreamObjIds, subUpstreamObjs, this.mergeWithUnion);
+					}
+
+					const upstreamIds = this.getUpstreamObjIdsFrom(link.srcNodeId, pipelineId, objectType);
+					upstreamObjIds = mergeWith(upstreamObjIds, upstreamIds, this.mergeWithUnion);
+				}
+			});
+		} else if (currentPipeline.isEntryBindingNode(currentPipeline.getNode(nodeId))) {
+			if (this.isSupernodeBindingNode(nodeId, pipelineId)) {
+				// Check if this is a binding node within a supernode.
+				const supernodeObj = this.getSupernodeObjReferencing(pipelineId);
+				const parentPipelineId = supernodeObj.parentPipelineId;
+				const parentPipeline = this.getAPIPipeline(parentPipelineId);
+				const supernode = parentPipeline.getNode(supernodeObj.supernodeId);
+				supernode.input_ports.forEach((inputPort) => {
+					if (inputPort.subflow_node_ref === nodeId) {
+						const supernodeLinks = parentPipeline.getLinksContainingTargetId(supernode.id);
+						supernodeLinks.forEach((supernodeLink) => {
+							if (supernodeLink.trgNodePortId === inputPort.id) {
+								if (typeof upstreamObjIds[parentPipelineId] === "undefined") {
+									upstreamObjIds[parentPipelineId] = [];
+								}
+								if (objectType === "nodes") {
+									upstreamObjIds[parentPipelineId] = union(upstreamObjIds[parentPipelineId], [supernodeLink.srcNodeId]);
+								} else if (objectType === "links") {
+									upstreamObjIds[parentPipelineId] = union(upstreamObjIds[parentPipelineId], [supernodeLink.id]);
+								}
+								// If srcNodeId is supernode, need to find the corresponding exit binding node.
+								let upstreamIds = {};
+								if (parentPipeline.isSupernode(supernodeLink.srcNodeId)) {
+									if (objectType === "nodes") {
+										upstreamObjIds[parentPipelineId] = union(upstreamObjIds[parentPipelineId], [supernodeLink.srcNodeId]);
+									} else if (objectType === "links") {
+										upstreamObjIds[parentPipelineId] = union(upstreamObjIds[parentPipelineId], [supernodeLink.id]);
+									}
+									const upstreamSupernode = parentPipeline.getNode(supernodeLink.srcNodeId);
+									const upstreamSupernodeOutputPort = this.getSupernodeOutputPortForLink(upstreamSupernode, supernodeLink);
+									if (upstreamSupernodeOutputPort) {
+										const upstreamBindingNodeId = upstreamSupernodeOutputPort.subflow_node_ref;
+										upstreamIds = this.getUpstreamObjIdsFrom(upstreamBindingNodeId, upstreamSupernode.subflow_ref.pipeline_id_ref, objectType);
+									}
+								} else {
+									upstreamIds = this.getUpstreamObjIdsFrom(supernodeLink.srcNodeId, parentPipelineId, objectType);
+								}
+								upstreamObjIds = mergeWith(upstreamObjIds, upstreamIds, this.mergeWithUnion);
+							}
+						});
+					}
+				});
+			} else if (objectType === "nodes") {
+				upstreamObjIds[pipelineId] = union(upstreamObjIds[pipelineId], [nodeId]);
+			}
+		}
+		return upstreamObjIds;
+	}
+
+	getDownstreamNodeIdsFrom(nodeId, pipelineId) {
+		return this.getDownstreamObjIdsFrom(nodeId, pipelineId, "nodes");
+	}
+
+	getDownstreamLinkIdsFrom(nodeId, pipelineId) {
+		return this.getDownstreamObjIdsFrom(nodeId, pipelineId, "links");
+	}
+
+	getDownstreamObjIdsFrom(nodeId, pipelineId, objectType) {
+		let downstreamObjIds = [];
+		if (typeof downstreamObjIds[pipelineId] === "undefined") {
+			downstreamObjIds[pipelineId] = [];
+		}
+		const currentPipeline = this.getAPIPipeline(pipelineId);
+		const nodeLinks = currentPipeline.getLinksContainingSourceId(nodeId);
+		if (nodeLinks.length > 0) {
+			nodeLinks.forEach((link) => {
+				if (link.type === "nodeLink") {
+					if (objectType === "nodes") {
+						downstreamObjIds[pipelineId] = union(downstreamObjIds[pipelineId], [link.trgNodeId]);
+					} else if (objectType === "links") {
+						downstreamObjIds[pipelineId].push(link.id);
+					}
+
+					const trgNode = currentPipeline.getNode(link.trgNodeId);
+					const trgNodeInputPort = this.getSupernodeInputPortForLink(trgNode, link);
+					if (trgNodeInputPort) {
+						const subflowRef = trgNode.subflow_ref.pipeline_id_ref;
+						if (typeof downstreamObjIds[subflowRef] === "undefined") {
+							downstreamObjIds[subflowRef] = [];
+						}
+						const bindingNode = this.getAPIPipeline(subflowRef).getNode(trgNodeInputPort.subflow_node_ref);
+						if (objectType === "nodes") {
+							downstreamObjIds[subflowRef] = union(downstreamObjIds[subflowRef], [bindingNode.id]);
+						}
+						const subDownstreamObjs = this.getDownstreamObjIdsFrom(bindingNode.id, subflowRef, objectType);
+						downstreamObjIds = mergeWith(downstreamObjIds, subDownstreamObjs, this.mergeWithUnion);
+					}
+
+					const downstreamIds = this.getDownstreamObjIdsFrom(link.trgNodeId, pipelineId, objectType);
+					downstreamObjIds = mergeWith(downstreamObjIds, downstreamIds, this.mergeWithUnion);
+				}
+			});
+		} else if (currentPipeline.isExitBindingNode(currentPipeline.getNode(nodeId))) {
+			if (this.isSupernodeBindingNode(nodeId, pipelineId)) {
+				const supernodeObj = this.getSupernodeObjReferencing(pipelineId);
+				const parentPipelineId = supernodeObj.parentPipelineId;
+				const parentPipeline = this.getAPIPipeline(parentPipelineId);
+				const supernode = parentPipeline.getNode(supernodeObj.supernodeId);
+
+				supernode.output_ports.forEach((outputPort) => {
+					if (outputPort.subflow_node_ref === nodeId) {
+						const supernodeLinks = parentPipeline.getLinksContainingSourceId(supernode.id);
+						supernodeLinks.forEach((supernodeLink) => {
+							if (supernodeLink.srcNodePortId === outputPort.id) {
+								if (typeof downstreamObjIds[parentPipelineId] === "undefined") {
+									downstreamObjIds[parentPipelineId] = [];
+								}
+								if (objectType === "nodes") {
+									downstreamObjIds[parentPipelineId] = union(downstreamObjIds[parentPipelineId], [supernodeLink.trgNodeId]);
+								} else if (objectType === "links") {
+									downstreamObjIds[parentPipelineId] = union(downstreamObjIds[parentPipelineId], [supernodeLink.id]);
+								}
+
+								let downstreamIds = {};
+								if (parentPipeline.isSupernode(supernodeLink.trgNodeId)) {
+									if (objectType === "nodes") {
+										downstreamIds[parentPipelineId] = union(downstreamIds[parentPipelineId], [supernodeLink.trgNodeId]);
+									} else if (objectType === "links") {
+										downstreamIds[parentPipelineId] = union(downstreamIds[parentPipelineId], [supernodeLink.id]);
+									}
+									const downstreamSupernode = parentPipeline.getNode(supernodeLink.trgNodeId);
+									const downstreamSupernodeInputPort = this.getSupernodeInputPortForLink(downstreamSupernode, supernodeLink);
+									if (downstreamSupernodeInputPort) {
+										const downstreamBindingNodeId = downstreamSupernodeInputPort.subflow_node_ref;
+										downstreamIds = this.getDownstreamObjIdsFrom(downstreamBindingNodeId, downstreamSupernode.subflow_ref.pipeline_id_ref, objectType);
+									}
+								} else {
+									downstreamIds = this.getDownstreamObjIdsFrom(supernodeLink.trgNodeId, parentPipelineId, objectType);
+								}
+								downstreamObjIds = mergeWith(downstreamObjIds, downstreamIds, this.mergeWithUnion);
+							}
+						});
+					}
+				});
+			} else if (objectType === "nodes") {
+				downstreamObjIds[pipelineId] = union(downstreamObjIds[pipelineId], [nodeId]);
+			}
+		}
+		return downstreamObjIds;
+	}
+
+	// Returns an input port from the node passed in (provided it is a supernode) which is
+	// referenced by the link passed in. Returns null if the node is not a supernode or the link
+	// does not have a reference to one of the node's input ports.
+	getSupernodeInputPortForLink(trgNode, link) {
+		let port = null;
+		if (has(trgNode, "subflow_ref.pipeline_id_ref") && link.trgNodePortId) {
+			trgNode.input_ports.forEach((inputPort) => {
+				if (inputPort.id === link.trgNodePortId) {
+					port = inputPort;
+					return;
+				}
+			});
+		}
+		return port;
+	}
+
+	// Returns an output port from the node passed in (provided it is a supernode) which is
+	// referenced by the link passed in. Returns null if the node is not a supernode or the link
+	// does not have a reference to one of the node's output ports.
+	getSupernodeOutputPortForLink(srcNode, link) {
+		let port = null;
+		if (has(srcNode, "subflow_ref.pipeline_id_ref") && link.srcNodePortId) {
+			srcNode.output_ports.forEach((outputPort) => {
+				if (outputPort.id === link.srcNodePortId) {
+					port = outputPort;
+					return;
+				}
+			});
+		}
+		return port;
+	}
+
+	// Lodash mergeWith() Customizer function. Merge objects of arrays by taking the union.
+	// ex: mergeWith({ a: [1, 2] }, {a: [2, 3], b: [1, 4] }) => { a: [1, 2, 3], b: [1, 4]}
+	mergeWithUnion(objValue, srcValue) {
+		return union(objValue, srcValue);
+	}
 }
 
 // ---------------------------------------------------------------------------
@@ -1732,6 +2175,22 @@ export class APIPipeline {
 		if (this.objectModel.fixedLayout !== NONE) {
 			this.autoLayout(this.objectModel.fixedLayout);
 		}
+	}
+
+	getObjectStyle(objId, temporary) {
+		const obj = this.getObject(objId);
+		if (temporary) {
+			return (obj && obj.style_temp ? obj.style_temp : null);
+		}
+		return (obj && obj.style ? obj.style : null);
+	}
+
+	setObjectsClassName(objectIds, newClassName) {
+		this.store.dispatch({ type: "SET_OBJECTS_CLASS_NAME", data: { objIds: objectIds, label: newClassName }, pipelineId: this.pipelineId });
+	}
+
+	setObjectsStyle(pipelineObjIds, newStyle, temporary) {
+		this.store.dispatch({ type: "SET_OBJECTS_STYLE", data: { pipelineObjIds: pipelineObjIds, newStyle: newStyle, temporary: temporary }, pipelineId: this.pipelineId });
 	}
 
 	disconnectNodes(source) {
@@ -1968,6 +2427,13 @@ export class APIPipeline {
 		return true;
 	}
 
+	isExitBindingNode(node) {
+		if (node.output_ports && node.output_ports.length > 0) {
+			return false;
+		}
+		return true;
+	}
+
 	isNodeOverlappingOthers(node) {
 		var index = this.getNodes().findIndex((arrayNode) => {
 			return this.isSourceOverlappingTarget(arrayNode, node);
@@ -2062,14 +2528,14 @@ export class APIPipeline {
 	}
 
 	getSupernodes(inNodes) {
-		const superNodes = [];
+		const supernodes = [];
 		const listOfNodes = inNodes ? inNodes : this.getNodes();
 		listOfNodes.forEach((node) => {
 			if (node.type === SUPER_NODE) {
-				superNodes.push(node);
+				supernodes.push(node);
 			}
 		});
-		return superNodes;
+		return supernodes;
 	}
 
 	isDataNode(objId) {
@@ -2099,6 +2565,10 @@ export class APIPipeline {
 
 	isSuperNodeExpandedInPlace(nodeId) {
 		return this.getNode(nodeId).is_expanded === true;
+	}
+
+	isSupernode(nodeId) {
+		return this.getNode(nodeId).type === "super_node";
 	}
 
 	doesNodeHavePorts(node) {
@@ -2621,6 +3091,18 @@ export class APIPipeline {
 		return linksArray;
 	}
 
+	getLinksContainingSourceId(id) {
+		return this.getLinks().filter((link) => {
+			return (link.srcNodeId === id);
+		});
+	}
+
+	getLinksContainingTargetId(id) {
+		return this.getLinks().filter((link) => {
+			return (link.trgNodeId === id);
+		});
+	}
+
 	// Returns an array of node links for the array of nodes passed in.
 	getNodeLinks(inNodes) {
 		const nodeLinks = [];
@@ -2639,6 +3121,22 @@ export class APIPipeline {
 		return this.getLinks().find((link) => {
 			return (link.id === linkId);
 		});
+	}
+
+	getLinkStyle(linkId, temporary) {
+		const obj = this.getLink(linkId);
+		if (temporary) {
+			return (obj && obj.style_temp ? obj.style_temp : null);
+		}
+		return (obj && obj.style ? obj.style : null);
+	}
+
+	setLinksClassName(linkIds, newClassName) {
+		this.store.dispatch({ type: "SET_LINKS_CLASS_NAME", data: { linkIds: linkIds, label: newClassName }, pipelineId: this.pipelineId });
+	}
+
+	setLinksStyle(pipelineLinkIds, newStyle, temporary) {
+		this.store.dispatch({ type: "SET_LINKS_STYLE", data: { pipelineObjIds: pipelineLinkIds, newStyle: newStyle, temporary: temporary }, pipelineId: this.pipelineId });
 	}
 
 	isConnectionAllowed(srcNodeInfo, trgNodeInfo) {

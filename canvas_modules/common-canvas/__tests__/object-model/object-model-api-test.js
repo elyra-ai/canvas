@@ -780,65 +780,73 @@ describe("ObjectModel API handle model OK", () => {
 
 		const primaryPipelineId = supernodeNestedCanvas.primary_pipeline; // 153651d6-9b88-423c-b01b-861f12d01489
 		const supernode1 = supernodeNestedCanvas.pipelines[3].id; // c140d854-c2a6-448c-b80d-9c9a0728dede
+		const supernode1Id = "571c2e64-069a-4269-916a-3130044f0b54";
 		const supernode1Label = "Supernode1";
 		const supernode2 = supernodeNestedCanvas.pipelines[2].id; // 8e671b0f-118c-4216-9cea-f522662410ec
+		const supernode2Id = "fb20249f-3f3f-46a2-be68-c4f6273adbcb";
 		const supernode2Label = "Supernode2";
 		const supernode2A = supernodeNestedCanvas.pipelines[1].id; // babad275-1719-4224-8d65-b04d0804d95c
+		const supernode2AId = "7015d906-2eae-45c1-999e-fb888ed957e5";
 		const supernode2ALabel = "Supernode2A";
 		const supernode2B = supernodeNestedCanvas.pipelines[6].id; // f02a9b8e-7275-426a-82cf-08be294d17a3
+		const supernode2BId = "3d400861-3f71-49aa-b724-24e3815c6988";
 		const supernode2BLabel = "Supernode2B";
 		const supernode2B1 = supernodeNestedCanvas.pipelines[7].id; // 17dc8485-33fd-4847-a45d-f799d6d0b948
+		const supernode2B1Id = "13f10aa2-a40c-416d-b5cc-d7cee6d0bed6";
 		const supernode2B1Label = "Supernode2B-1";
 		const supernode3 = supernodeNestedCanvas.pipelines[5].id; // b342ee77-da6e-459d-8d6b-da36549f4422
+		const supernode3Id = "39a382b0-8bd5-4153-b1ff-694defeabada";
 		const supernode3Label = "Supernode3";
 		const supernode3A = supernodeNestedCanvas.pipelines[4].id; // 1d1e550a-c8bc-4b55-872c-cfd449dacace
+		const supernode3AId = "b3acb1f8-89a8-4080-9611-2fb03dee3d73";
 		const supernode3ALabel = "Supernode3A";
 		const supernode3B = supernodeNestedCanvas.pipelines[8].id; // 238d0266-997b-49a4-94b2-acdad3494801
+		const supernode3BId = "68dee122-e103-491f-99a7-74345bd1cf5e";
 		const supernode3BLabel = "Supernode3B";
 
 		const supernode1AncestorsExpected = [{ "pipelineId": primaryPipelineId },
-			{ "pipelineId": supernode1, "label": supernode1Label }];
+			{ "pipelineId": supernode1, "label": supernode1Label, "supernodeId": supernode1Id, "parentPipelineId": primaryPipelineId }];
 		const supernode1Ancestors = objectModel.getAncestorPipelineIds(supernode1);
 		expect(isEqual(JSON.stringify(supernode1AncestorsExpected), JSON.stringify(supernode1Ancestors))).to.be.true;
 
 		const supernode2AncestorsExpected = [{ "pipelineId": primaryPipelineId },
-			{ "pipelineId": supernode2, "label": supernode2Label }];
+			{ "pipelineId": supernode2, "label": supernode2Label, "supernodeId": supernode2Id, "parentPipelineId": primaryPipelineId }];
 		const supernode2Ancestors = objectModel.getAncestorPipelineIds(supernode2);
 		expect(isEqual(JSON.stringify(supernode2AncestorsExpected), JSON.stringify(supernode2Ancestors))).to.be.true;
 
 		const supernode2AAncestorsExpected = [{ "pipelineId": primaryPipelineId },
-			{ "pipelineId": supernode2, "label": supernode2Label },
-			{ "pipelineId": supernode2A, "label": supernode2ALabel }];
+			{ "pipelineId": supernode2, "label": supernode2Label, "supernodeId": supernode2Id, "parentPipelineId": primaryPipelineId },
+			{ "pipelineId": supernode2A, "label": supernode2ALabel, "supernodeId": supernode2AId, "parentPipelineId": supernode2 }];
 		const supernode2AAncestors = objectModel.getAncestorPipelineIds(supernode2A);
 		expect(isEqual(JSON.stringify(supernode2AAncestorsExpected), JSON.stringify(supernode2AAncestors))).to.be.true;
 
 		const supernode2BAncestorsExpected = [{ "pipelineId": primaryPipelineId },
-			{ "pipelineId": supernode2, "label": supernode2Label },
-			{ "pipelineId": supernode2B, "label": supernode2BLabel }];
+			{ "pipelineId": supernode2, "label": supernode2Label, "supernodeId": supernode2Id, "parentPipelineId": primaryPipelineId },
+			{ "pipelineId": supernode2B, "label": supernode2BLabel, "supernodeId": supernode2BId, "parentPipelineId": supernode2 }];
 		const supernode2BAncestors = objectModel.getAncestorPipelineIds(supernode2B);
 		expect(isEqual(JSON.stringify(supernode2BAncestorsExpected), JSON.stringify(supernode2BAncestors))).to.be.true;
 
 		const supernode2B1AncestorsExpected = [{ "pipelineId": primaryPipelineId },
-			{ "pipelineId": supernode2, "label": supernode2Label },
-			{ "pipelineId": supernode2B, "label": supernode2BLabel },
-			{ "pipelineId": supernode2B1, "label": supernode2B1Label }];
+			{ "pipelineId": supernode2, "label": supernode2Label, "supernodeId": supernode2Id, "parentPipelineId": primaryPipelineId },
+			{ "pipelineId": supernode2B, "label": supernode2BLabel, "supernodeId": supernode2BId, "parentPipelineId": supernode2 },
+			{ "pipelineId": supernode2B1, "label": supernode2B1Label, "supernodeId": supernode2B1Id, "parentPipelineId": supernode2B }];
 		const supernode2B1Ancestors = objectModel.getAncestorPipelineIds(supernode2B1);
 		expect(isEqual(JSON.stringify(supernode2B1AncestorsExpected), JSON.stringify(supernode2B1Ancestors))).to.be.true;
 
 		const supernode3AncestorsExpected = [{ "pipelineId": primaryPipelineId },
-			{ "pipelineId": supernode3, "label": supernode3Label }];
+			{ "pipelineId": supernode3, "label": supernode3Label, "supernodeId": supernode3Id, "parentPipelineId": primaryPipelineId }];
 		const supernode3Ancestors = objectModel.getAncestorPipelineIds(supernode3);
 		expect(isEqual(JSON.stringify(supernode3AncestorsExpected), JSON.stringify(supernode3Ancestors))).to.be.true;
 
 		const supernode3AAncestorsExpected = [{ "pipelineId": primaryPipelineId },
-			{ "pipelineId": supernode3, "label": supernode3Label },
-			{ "pipelineId": supernode3A, "label": supernode3ALabel }];
+			{ "pipelineId": supernode3, "label": supernode3Label, "supernodeId": supernode3Id, "parentPipelineId": primaryPipelineId },
+			{ "pipelineId": supernode3A, "label": supernode3ALabel, "supernodeId": supernode3AId, "parentPipelineId": supernode3 }];
 		const supernode3AAncestors = objectModel.getAncestorPipelineIds(supernode3A);
 		expect(isEqual(JSON.stringify(supernode3AAncestorsExpected), JSON.stringify(supernode3AAncestors))).to.be.true;
 
 		const supernode3BAncestorsExpected = [{ "pipelineId": primaryPipelineId },
-			{ "pipelineId": supernode3, "label": supernode3Label },
-			{ "pipelineId": supernode3B, "label": supernode3BLabel }];
+			{ "pipelineId": supernode3, "label": supernode3Label, "supernodeId": supernode3Id, "parentPipelineId": primaryPipelineId },
+			{ "pipelineId": supernode3B, "label": supernode3BLabel, "supernodeId": supernode3BId, "parentPipelineId": supernode3 }];
 		const supernode3BAncestors = objectModel.getAncestorPipelineIds(supernode3B);
 		expect(isEqual(JSON.stringify(supernode3BAncestorsExpected), JSON.stringify(supernode3BAncestors))).to.be.true;
 	});

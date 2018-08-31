@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -29,11 +29,14 @@ import DisplaySubPipelineAction from "../command-actions/displaySubPipelineActio
 import EditCommentAction from "../command-actions/editCommentAction.js";
 import ExpandSuperNodeInPlaceAction from "../command-actions/expandSuperNodeInPlaceAction.js";
 import MoveObjectsAction from "../command-actions/moveObjectsAction.js";
+import SetObjectsStyleAction from "../command-actions/setObjectsStyleAction.js";
+import SetLinksStyleAction from "../command-actions/setLinksStyleAction.js";
 import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import has from "lodash/has";
 
+import { HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM, HIGHLIGHT_DOWNSTREAM } from "./constants/canvas-constants.js";
 
 // Global instance ID counter
 var commonCanvasControllerInstanceId = 0;
@@ -88,6 +91,8 @@ export default class CanvasController {
 		// Increment the global instance ID by 1 each time a new
 		// canvas controller is created.
 		this.instanceId = commonCanvasControllerInstanceId++;
+
+		this.highlight = false;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -158,6 +163,14 @@ export default class CanvasController {
 
 	getAncestorPipelineIds(pipelineId) {
 		return this.objectModel.getAncestorPipelineIds(pipelineId);
+	}
+
+	removeAllStyles(temporary) {
+		this.objectModel.removeAllStyles(temporary);
+	}
+
+	setSubdueStyle(newStyle) {
+		this.objectModel.setSubdueStyle(newStyle);
 	}
 
 	// ---------------------------------------------------------------------------
@@ -290,6 +303,19 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).deleteObject(id);
 	}
 
+	setObjectsClassName(objectId, newClassName, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setObjectsClassName(objectId, newClassName);
+	}
+
+	setObjectsStyle(pipelineObjectIds, newStyle, pipelineId, temporary, addToCommandStack) {
+		if (addToCommandStack) {
+			const data = { editType: "setObjectsStyle", pipelineObjectIds: pipelineObjectIds, style: newStyle, pipelineId: pipelineId, temporary: temporary };
+			this.editActionHandler(data);
+		} else {
+			this.objectModel.getAPIPipeline(pipelineId).setObjectsStyle(pipelineObjectIds, newStyle, temporary);
+		}
+	}
+
 	// ---------------------------------------------------------------------------
 	// Node methods
 	// ---------------------------------------------------------------------------
@@ -356,6 +382,11 @@ export default class CanvasController {
 
 	getSupernodes(pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getSupernodes();
+	}
+
+	// Returns supernode id that have a subflow_ref to the given pipelineId.
+	getSupernodeObjReferencing(pipelineId) {
+		return this.objectModel.getSupernodeObjReferencing(pipelineId);
 	}
 
 	getNodeMessages(nodeId, pipelineId) {
@@ -446,6 +477,19 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).createCommentLinks(data);
 	}
 
+	setLinksClassName(linkIds, newClassName, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setLinksClassName(linkIds, newClassName);
+	}
+
+	setLinksStyle(pipelineLinkIds, newStyle, pipelineId, temporary, addToCommandStack) {
+		if (addToCommandStack) {
+			const data = { editType: "setLinksStyle", pipelineLinkIds: pipelineLinkIds, style: newStyle, pipelineId: pipelineId, temporary: temporary };
+			this.editActionHandler(data);
+		} else {
+			this.objectModel.getAPIPipeline(pipelineId).setLinksStyle(pipelineLinkIds, newStyle, temporary);
+		}
+	}
+
 	// ---------------------------------------------------------------------------
 	// Command stack methods
 	// ---------------------------------------------------------------------------
@@ -484,6 +528,39 @@ export default class CanvasController {
 
 	getCurrentBreadcrumb() {
 		return this.objectModel.getCurrentBreadcrumb();
+	}
+
+	// ---------------------------------------------------------------------------
+	// Highlight methods
+	// ---------------------------------------------------------------------------
+
+	setHighlightStyle(highlightObjectIds, pipelineId) {
+		this.removeAllStyles(true);
+		const objectStyle = {
+			body: { default: "fill:#bad8ff;stroke:#152935;", hover: "fill:#a0c8fe;" }
+		};
+		const linkStyle = { default: "stroke:#152935;", hover: "stroke-width:3px" };
+		this.setObjectsStyle(highlightObjectIds.nodes, objectStyle, pipelineId, true, false);
+		this.setLinksStyle(highlightObjectIds.links, linkStyle, pipelineId, true, false);
+		this.highlight = true;
+	}
+
+	highlightBranch(pipelineId, nodeIds) {
+		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, HIGHLIGHT_BRANCH);
+		this.setHighlightStyle(highlightObjectIds, pipelineId);
+		return highlightObjectIds;
+	}
+
+	highlightUpstream(pipelineId, nodeIds) {
+		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, HIGHLIGHT_UPSTREAM);
+		this.setHighlightStyle(highlightObjectIds, pipelineId);
+		return highlightObjectIds;
+	}
+
+	highlightDownstream(pipelineId, nodeIds) {
+		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, HIGHLIGHT_DOWNSTREAM);
+		this.setHighlightStyle(highlightObjectIds, pipelineId);
+		return highlightObjectIds;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -810,6 +887,23 @@ export default class CanvasController {
 		return editSubMenu;
 	}
 
+	createHighlightMenu(source) {
+		const highlightSubMenu = [
+			{ action: "highlightBranch", label: "Highlight Branch" },
+			{ action: "highlightUpstream", label: "Highlight Upstream" },
+			{ action: "highlightDownstream", label: "Highlight Downstream" }
+		];
+		return highlightSubMenu;
+	}
+
+	// This should only appear in menu if highlight is true.
+	createUnhighlightMenu(source) {
+		const unhighlightSubMenu = [
+			{ action: "unhighlight", label: "Unhighlight" }
+		];
+		return unhighlightSubMenu;
+	}
+
 	createDefaultMenu(source) {
 		let menuDefinition = [];
 		// Select all & add comment: canvas only
@@ -851,29 +945,34 @@ export default class CanvasController {
 				menuDefinition = menuDefinition.concat([{ divider: true }]);
 			}
 		}
-		// Expand supernode
-		if (source.type === "node") {
-			if (source.selectedObjectIds.length === 1 && source.targetObject.type === "super_node") {
-				if (!this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
-					if (source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined") {
-						menuDefinition = menuDefinition.concat({ action: "expandSuperNodeInPlace",
-							label: this.getLabel("node_expandSuperNodeInPlace", "Expand supernode") }, { divider: true });
-					}
-				}
+		// Expand and Collapse supernode
+		if ((source.type === "node") && (source.selectedObjectIds.length === 1 && source.targetObject.type === "super_node")) {
+			// Expand
+			if ((!this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) &&
+				(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
+				menuDefinition = menuDefinition.concat({ action: "expandSuperNodeInPlace",
+					label: this.getLabel("node_expandSuperNodeInPlace", "Expand supernode") }, { divider: true });
 			}
-		}
-		// Collapse supernode
-		if (source.type === "node") {
-			if (source.selectedObjectIds.length === 1 && source.targetObject.type === "super_node") {
-				if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
-					menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
-						label: this.getLabel("node_collapseSuperNodeInPlace", "Collapse supernode") }, { divider: true });
-				}
+			// Collapse
+			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
+				menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
+					label: this.getLabel("node_collapseSuperNodeInPlace", "Collapse supernode") }, { divider: true });
 			}
 		}
 		// Delete link
 		if (source.type === "link") {
 			menuDefinition = menuDefinition.concat([{ action: "deleteLink", label: this.getLabel("link_deleteLink", "Delete") }]);
+		}
+		// Highlight submenu (Highlight Branch | Upstream | Downstream, Unhighlight)
+		if (source.type === "node") {
+			let highlightSubMenuDef = this.createHighlightMenu(source);
+			highlightSubMenuDef.push({ divider: true });
+			highlightSubMenuDef = highlightSubMenuDef.concat(this.createUnhighlightMenu(source));
+			menuDefinition = menuDefinition.concat({ submenu: true, menu: highlightSubMenuDef, label: this.getLabel("node_highlightMenu", "Highlight") });
+		}
+		if (source.type === "canvas") {
+			const unhighlightSubMenuDef = this.createUnhighlightMenu(source);
+			menuDefinition = menuDefinition.concat({ submenu: true, menu: unhighlightSubMenuDef, label: this.getLabel("node_highlightMenu", "Highlight") });
 		}
 		return (menuDefinition);
 	}
@@ -963,6 +1062,20 @@ export default class CanvasController {
 				break;
 			case "paste":
 				this.pasteFromClipboard(this.contextMenuSource.pipelineId);
+				break;
+			case "highlightBranch":
+				this.contextMenuSource.highlightedObjectIds = this.highlightBranch(this.contextMenuSource.pipelineId, this.objectModel.getSelectedNodesIds());
+				break;
+			case "highlightDownstream":
+				this.contextMenuSource.highlightedObjectIds = this.highlightDownstream(this.contextMenuSource.pipelineId, this.objectModel.getSelectedNodesIds());
+				break;
+			case "highlightUpstream":
+				this.contextMenuSource.highlightedObjectIds = this.highlightUpstream(this.contextMenuSource.pipelineId, this.objectModel.getSelectedNodesIds());
+				break;
+			case "unhighlight":
+				// this.setSubdueStyle(null);
+				this.removeAllStyles(true);
+				this.highlight = false; // TODO: use this for context menu when to show unhighlight option.
 				break;
 			default:
 			}
@@ -1086,6 +1199,16 @@ export default class CanvasController {
 			}
 			case "resizeObjects": {
 				const command = new SizeAndPositionObjectsAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "setObjectsStyle": {
+				const command = new SetObjectsStyleAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "setLinksStyle": {
+				const command = new SetLinksStyleAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}

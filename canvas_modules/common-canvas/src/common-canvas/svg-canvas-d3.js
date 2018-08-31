@@ -17,6 +17,7 @@ var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-s
 import { event as d3Event } from "d3-selection";
 import union from "lodash/union";
 import forIn from "lodash/forIn";
+import get from "lodash/get";
 import { NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "./constants/canvas-constants";
 import Logger from "../logging/canvas-logger.js";
 
@@ -1387,6 +1388,7 @@ class CanvasRenderer {
 				that.canvasGrp.selectAll(nodeOutlineSelector)
 					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 					.attr("class", that.layout.cssNodeSelectionHighlight);
+				that.setNodeStyles(d, "default");
 			});
 
 			this.superRenderers.forEach((renderer) => {
@@ -1404,6 +1406,7 @@ class CanvasRenderer {
 				.attr("class", "obj-group node-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+					that.setNodeStyles(d, "hover");
 					that.addDynamicNodeIcons(d, this);
 					if (that.canShowTip(TIP_TYPE_NODE)) {
 						that.canvasController.showTip({
@@ -1416,6 +1419,7 @@ class CanvasRenderer {
 					}
 				})
 				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+					that.setNodeStyles(d, "default");
 					that.canvasGrp.selectAll(that.getId("#node_body", d.id)).attr("hover", "no");
 					that.removeDynamicNodeIcons(d);
 					that.canvasController.hideTip();
@@ -1503,9 +1507,7 @@ class CanvasRenderer {
 
 			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
 				.append("path")
-				.attr("id", (d) => this.getId("node_body", d.id))
-				.filter(() => this.layout.nodeShape === "port-arcs") // Only the "port-arcs" nodes have a drop-shadow.
-				.style("filter", `url(${this.getId("#node_drop_shadow")})`);
+				.attr("id", (d) => this.getId("node_body", d.id));
 
 			// Image outline - this code used for debugging purposes
 			// newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
@@ -1599,14 +1601,18 @@ class CanvasRenderer {
 
 					nodeGrp
 						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
+						.attr("style", that.getNodeGrpStyle(d))
 						.datum(node); // Set the __data__ to the updated data
 
-					// Node selection highlighting: set flexible properties
+					// Node selection highlighting
 					nodeGrp.select(that.getId("#node_outline", d.id))
 						.attr("d", (nd) => this.getNodeShapePathOutline(nd))
 						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 						.attr("class", this.layout.cssNodeSelectionHighlight)
 						.datum(node); // Set the __data__ to the updated data
+
+					// Node styles
+					this.setNodeStyles(d, "default");
 
 					// This code will remove custom attributes from a node. This might happen when
 					// the user clicks the canvas background to remove the greyed out appearance of
@@ -1864,6 +1870,46 @@ class CanvasRenderer {
 			nodeGroupSel.exit().remove();
 		}
 		this.logger.logEndTimer("displayNodes " + this.getFlags());
+	}
+
+	setNodeStyles(d, type) {
+		this.setNodeBodyStyles(d, type);
+		this.setNodeSelectionOutlineStyles(d, type);
+	}
+
+	setNodeBodyStyles(d, type) {
+		let style = this.getObjectBodyStyles(d, type);
+		// For port-arcs display we reapply the drop shadow if no styles is provided
+		if (style === null && this.layout.nodeShape === "port-arcs") {
+			style = `filter:url(${this.getId("#node_drop_shadow")})`;
+		}
+		d3.select(this.getId("#node_body", d.id)).attr("style", style);
+	}
+
+	setNodeSelectionOutlineStyles(d, type) {
+		const style = this.getObjectSelectionOutlineStyles(d, type);
+		d3.select(this.getId("#node_outline", d.id)).attr("style", style);
+	}
+
+	getNodeGrpStyle(d) {
+		return !d.style_temp && !d.style && this.canvasInfo.subdueStyle && !this.doesExpandedSupernodeHaveStyledNodes(d) ? this.canvasInfo.subdueStyle : null;
+	}
+
+	doesExpandedSupernodeHaveStyledNodes(d) {
+		let expandedSupernodeHaveStyledNodes = false;
+		if (this.isExpandedSupernode(d) && d.subflow_ref && d.subflow_ref.pipeline_id_ref) {
+			const subflow = this.getPipeline(d.subflow_ref.pipeline_id_ref);
+			const nodeGrp = subflow.nodes;
+			nodeGrp.forEach((node) => {
+				if (node.style || node.style_temp) {
+					expandedSupernodeHaveStyledNodes = true;
+					return;
+				} else if (!expandedSupernodeHaveStyledNodes && this.isExpandedSupernode(node)) {
+					expandedSupernodeHaveStyledNodes = this.doesExpandedSupernodeHaveStyledNodes(node);
+				}
+			});
+		}
+		return expandedSupernodeHaveStyledNodes;
 	}
 
 	getPortRadius(d) {
@@ -3000,6 +3046,7 @@ class CanvasRenderer {
 						.attr("width", d.width + (2 * that.layout.highlightGap))
 						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 						.attr("class", that.layout.cssCommentSelectionHighlight)
+						.attr("style", (cd) => that.getObjectSelectionOutlineStyles(d, "default"))
 						.datum(comment); // Set the __data__ to the updated data
 
 					// Clip path for text
@@ -3017,6 +3064,7 @@ class CanvasRenderer {
 						.attr("height", d.height)
 						.attr("width", d.width)
 						.attr("class", (cd) => that.getCommentRectClass(cd))
+						.attr("style", (cd) => that.getObjectBodyStyles(d, "default"))
 						.datum(comment) // Set the __data__ to the updated data
 						.each(function(cd) {
 							if (cd.customAttrs) {
@@ -3052,6 +3100,40 @@ class CanvasRenderer {
 			commentGroupSel.exit().remove();
 		}
 		this.logger.logEndTimer("displayComments " + this.getFlags());
+	}
+
+	getObjectBodyStyles(d, type) {
+		let style = null;
+
+		if (type === "hover") {
+			style = this.getObjectStyle(d, "body", "default") + this.getObjectStyle(d, "body", "hover");
+
+		} else if (type === "default") {
+			style = this.getObjectStyle(d, "body", "default");
+		}
+		return style;
+	}
+
+	getObjectSelectionOutlineStyles(d, type) {
+		let style = null;
+
+		if (this.objectModel.isSelected(d.id, this.activePipeline.id)) {
+			if (type === "hover") {
+				style = this.getObjectStyle(d, "selection_outline", "default") + this.getObjectStyle(d, "selection_outline", "hover");
+
+			} else if (type === "default") {
+				style = this.getObjectStyle(d, "selection_outline", "default");
+			}
+		}
+		return style;
+	}
+
+	getObjectStyle(d, part, type) {
+		const style = get(d, `style_temp.${part}.${type}`, null);
+		if (style !== null) {
+			return style;
+		}
+		return get(d, `style.${part}.${type}`, null);
 	}
 
 	autoSizeTextArea(textArea, datum) {
@@ -3636,6 +3718,7 @@ class CanvasRenderer {
 			.attr("id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.getNonNumericPipelineId())
 			.attr("class", "link-group")
+			.attr("style", function(d) { return !d.style_temp && !d.style && that.canvasInfo.subdueStyle ? that.canvasInfo.subdueStyle : null; })
 			.attr("src", (d) => d.src)
 			.attr("trg", (d) => d.trg)
 			.on("mousedown", () => {
@@ -3669,11 +3752,18 @@ class CanvasRenderer {
 		// Link selection area
 		linkGroup.append("path")
 			.attr("d", (d) => d.path)
-			.attr("class", "d3-link-selection-area");
+			.attr("class", "d3-link-selection-area")
+			.on("mouseenter", function(link) {
+				d3.select("#" + that.getId("link_line", link.id)).attr("style", that.getLinkStyleHover(link));
+			})
+			.on("mouseleave", function(link) {
+				d3.select("#" + that.getId("link_line", link.id)).attr("style", that.getLinkStyleDefault(link));
+			});
 
 		// Link line
 		linkGroup.append("path")
 			.attr("d", (d) => d.path)
+			.attr("id", (d) => this.getId("link_line", d.id))
 			.attr("class", (d) => {
 				var classStr;
 
@@ -3685,7 +3775,15 @@ class CanvasRenderer {
 					classStr = "d3-selectable-link " + this.getDataLinkClass(d);
 				}
 				return classStr;
+			})
+			.attr("style", (d) => that.getLinkStyleDefault(d))
+			.on("mouseenter", function(link) {
+				d3.select(this).attr("style", that.getLinkStyleHover(link));
+			})
+			.on("mouseleave", function(link) {
+				d3.select(this).attr("style", that.getLinkStyleDefault(link));
 			});
+
 
 		// Arrow head
 		linkGroup.filter((d) => (this.layout.connectionType === "halo" && d.type === "nodeLink") ||
@@ -3728,6 +3826,28 @@ class CanvasRenderer {
 			" B " + (afterLineArray - timeAfterDelete) + " D " + (endTimeDrawingLines - afterLineArray));
 		}
 		this.logger.logEndTimer("displayLinks " + this.getFlags());
+	}
+
+	getLinkStyleHover(link) {
+		if (link.style_temp && link.style_temp.hover) {
+			return link.style_temp.hover;
+
+		} else if (link.style && link.style.hover) {
+			return link.style.hover;
+
+		}
+		return null;
+	}
+
+	getLinkStyleDefault(link) {
+		if (link.style_temp && link.style_temp.default) {
+			return link.style_temp.default;
+
+		} else if (link.style && link.style.default) {
+			return link.style.default;
+
+		}
+		return null;
 	}
 
 	// Adds the binding nodes, which map to the containing supernode's ports, to
@@ -3857,6 +3977,8 @@ class CanvasRenderer {
 					lineArray.push({ "id": link.id,
 						"x1": coords.x1, "y1": coords.y1, "x2": coords.x2, "y2": coords.y2,
 						"class_name": link.class_name,
+						"style": link.style,
+						"style_temp": link.style_temp,
 						"type": link.type,
 						"src": srcObj,
 						"srcPortId": srcPortId,

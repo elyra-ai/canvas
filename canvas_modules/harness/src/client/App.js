@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 16] */
+/* eslint complexity: ["error", 19] */
 /* eslint max-len: ["error", 200] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
@@ -1083,6 +1083,12 @@ class App extends React.Component {
 			this.log("action: deploy", source.targetObject.id);
 		} else if (action === "validateFlow") {
 			this.validateFlow(source);
+		} else if (action === "highlightBranch" || action === "highlightDownstream" || action === "highlightUpstream") {
+			this.log("action: " + action);
+			// this.canvasController.setSubdueStyle("opacity:0.4");
+		} else if (action === "unhighlight") {
+			this.log("action: unhighlight");
+			// this.canvasController.setSubdueStyle(null);
 		}
 	}
 

@@ -15,6 +15,7 @@ export default class PipelineOutHandler {
 	// in the canvasInfo are the same as those for the pipelineFlow.
 	static createPipelineFlow(canvasInfo) {
 		const copyCanvasInfo = JSON.parse(JSON.stringify(canvasInfo));
+		delete copyCanvasInfo.subdueStyle;
 		const pipelineFlow = Object.assign({}, copyCanvasInfo,
 			{
 				"pipelines": this.createPipelinesFromCanvasInfo(copyCanvasInfo)
@@ -114,8 +115,13 @@ export default class PipelineOutHandler {
 			x_pos: ciNode.x_pos,
 			y_pos: ciNode.y_pos
 		};
+
 		if (ciNode.class_name) {
 			uiData.class_name = ciNode.class_name;
+		}
+
+		if (ciNode.style) {
+			uiData.style = ciNode.style;
 		}
 
 		if (ciNode.description) {
@@ -250,12 +256,14 @@ export default class PipelineOutHandler {
 			node_id_ref: link.srcNodeId
 		};
 
-		let uiData = {};
+		const uiData = {};
 
 		if (link.class_name) {
-			uiData = {
-				class_name: link.class_name
-			};
+			uiData.class_name = link.class_name;
+		}
+
+		if (link.style) {
+			uiData.style = link.style;
 		}
 
 		const appData = Object.assign({}, link.app_data, { ui_data: uiData });
@@ -297,6 +305,7 @@ export default class PipelineOutHandler {
 				width: comment.width,
 				height: comment.height,
 				class_name: comment.class_name,
+				style: comment.style,
 				content: comment.content,
 				associated_id_refs: this.createCommentLinks(canvasInfoLinks, comment.id)
 			})
@@ -308,7 +317,7 @@ export default class PipelineOutHandler {
 		canvasInfoLinks.forEach((link) => {
 			if (link.type === "commentLink" &&
 					link.srcNodeId === commentId) {
-				newLinks.push({ node_ref: link.trgNodeId, class_name: link.class_name });
+				newLinks.push({ node_ref: link.trgNodeId, class_name: link.class_name, style: link.style });
 			}
 		});
 		return newLinks;

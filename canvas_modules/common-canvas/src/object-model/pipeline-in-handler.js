@@ -50,6 +50,7 @@ export default class PipelineInHandler {
 				"x_pos": has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
 				"y_pos": has(node, "app_data.ui_data.y_pos") ? node.app_data.ui_data.y_pos : 10,
 				"class_name": has(node, "app_data.ui_data.class_name") ? node.app_data.ui_data.class_name : "",
+				"style": has(node, "app_data.ui_data.style") ? node.app_data.ui_data.style : "",
 				"decorations": has(node, "app_data.ui_data.decorations") ? this.convertDecorations(node.app_data.ui_data.decorations) : [],
 				"parameters": has(node, "parameters") ? node.parameters : [],
 				"messages": has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
@@ -137,8 +138,8 @@ export default class PipelineInHandler {
 	}
 
 	static convertComments(comments) {
-		return comments.map((comment) =>
-			({
+		return comments.map((comment) => {
+			const newComment = {
 				"id": comment.id,
 				"content": comment.content,
 				"height": comment.height,
@@ -147,9 +148,14 @@ export default class PipelineInHandler {
 				"y_pos": comment.y_pos,
 				"class_name":
 					has(comment, "class_name")
-						? comment.class_name : "d3-comment-rect",
-			})
-		);
+						? comment.class_name : "d3-comment-rect"
+			};
+
+			if (has(comment, "style")) {
+				newComment.style = comment.style;
+			}
+			return newComment;
+		});
 	}
 
 	static convertLinks(nodes, comments) {
@@ -173,6 +179,9 @@ export default class PipelineInHandler {
 									"trgNodePortId": input.id,
 									"type": "nodeLink"
 								};
+								if (has(link, "app_data.ui_data.style")) {
+									newLink.style = link.app_data.ui_data.style;
+								}
 								if (link.app_data) {
 									newLink.app_data = this.removeUiDataFromAppData(link.app_data);
 								}
@@ -220,6 +229,10 @@ export default class PipelineInHandler {
 							"trgNodeId": assocRef.node_ref,
 							"type": "commentLink"
 						};
+						if (assocRef.style) {
+							newLink.style = assocRef.style;
+						}
+
 						links.push(newLink);
 					}
 				});

@@ -59,6 +59,10 @@ _defineConstant("CLONE_COMMENT_LINK", "clone_comment_link");
 _defineConstant("CREATE_PIPELINE", "create_pipeline");
 _defineConstant("CLONE_PIPELINE", "clone_pipeline");
 
+_defineConstant("HIGHLIGHT_BRANCH", "branch");
+_defineConstant("HIGHLIGHT_UPSTREAM", "upstream");
+_defineConstant("HIGHLIGHT_DOWNSTREAM", "downstream");
+
 _defineConstant("PALETTE", {
 	OPEN_WIDTH: 250,
 	CLOSED_WIDTH: 0,

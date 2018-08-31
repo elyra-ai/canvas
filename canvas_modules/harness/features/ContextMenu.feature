@@ -25,12 +25,12 @@ Feature: ContextMenu
 		Then I verify the context menu has a "Undo" item
 
 		# Test the context menu is pushed to the left when user clicks near right side of the page
-		Then I right click at position 1070, 400 to display the context menu
-		Then I verify the context menu is at 1070, 400
+		Then I right click at position 1070, 300 to display the context menu
+		Then I verify the context menu is at 1070, 300
 
 		# Test the context menu is pushed upwards when user clicks near bottom of the page
 		Then I right click at position 1000, 500 to display the context menu
-		Then I verify the context menu is at 1000, 485
+		Then I verify the context menu is at 1000, 455
 
 		# Test the context menu is pushed to the left correctly even when the palette is open
 		Then I click the canvas background at 1, 1 to close the context menu or clear selections
