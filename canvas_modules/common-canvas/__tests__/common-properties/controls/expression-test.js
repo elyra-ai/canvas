@@ -186,7 +186,7 @@ describe("expression-builder select from tables correctly", () => {
 		);
 		const opButtons = wrapper.find("div.properties-operator-container").find("button");
 		opButtons.at(0).simulate("click");
-		expect(controller.getPropertyValue(propertyId)).to.equal(" +");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" =");
 	});
 
 	it("expression builder select a field", () => {

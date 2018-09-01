@@ -13,7 +13,7 @@ import { ParameterMetadata } from "./ParameterInfo";
 import { StructureMetadata } from "./StructureInfo";
 import { DEFAULT_LABEL_EDITABLE } from "../constants/constants";
 import { Size } from "../constants/form-constants";
-import { ResourceDef } from "./L10nProvider";
+import { ResourceDef } from "../util/L10nProvider";
 import propertyOf from "lodash/propertyOf";
 
 export class PropertyDef {

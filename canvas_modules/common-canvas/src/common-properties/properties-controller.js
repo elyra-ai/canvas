@@ -14,8 +14,10 @@ import UiConditionsParser from "./ui-conditions/ui-conditions-parser.js";
 import UiGroupsParser from "./ui-conditions/ui-groups-parser.js";
 import conditionsUtil from "./ui-conditions/conditions-utils";
 import PropertyUtils from "./util/property-utils.js";
-import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE,
-	MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants.js";
+import { L10nProvider } from "./util/L10nProvider";
+import propertyOf from "lodash/propertyOf";
+
+import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole } from "./constants/form-constants";
@@ -140,48 +142,71 @@ export default class PropertiesController {
 		return this.appData;
 	}
 
-	setExpressionInfo(expressionInfo) {
-		if (expressionInfo) {
+	setExpressionInfo(inExpressionInfo) {
+		if (inExpressionInfo) {
+			const l10nProvider = new L10nProvider(propertyOf(inExpressionInfo)("resources"));
+			const expressionInfo = inExpressionInfo.functions;
 			if (Array.isArray(expressionInfo.function_info) && Array.isArray(expressionInfo.function_categories)) {
 				this.expressionFunctionInfo = {};
-				const functionInfoList = expressionInfo.parmsSet ? expressionInfo.function_info : this._genFunctionParameters(expressionInfo.function_info);
+				const functionInfoList = expressionInfo.parmsSet ? expressionInfo.function_info : this._genFunctionParameters(expressionInfo.function_info, l10nProvider);
 				expressionInfo.parmsSet = true;
+				this.expressionFunctionInfo.functionCategories = {};
 				expressionInfo.function_categories.forEach((category) => {
-					this.expressionFunctionInfo[category.label] = [];
+					const catLabel = l10nProvider.l10nResource(category.label);
+					this.expressionFunctionInfo.functionCategories[catLabel] = [];
 					category.function_refs.forEach((functionId) => {
-						this.expressionFunctionInfo[category.label].push(this._getFunctionInfo(functionId, functionInfoList));
+						this.expressionFunctionInfo.functionCategories[catLabel].push(this._getFunctionInfo(functionId, functionInfoList, l10nProvider));
 					});
 				});
-				const allFunctionsLabel = PropertyUtils.formatMessage(this.reactIntl,
-					MESSAGE_KEYS.EXPRESSION_ALL_FUNCTIONS, MESSAGE_KEYS_DEFAULTS.EXPRESSION_ALL_FUNCTIONS);
-				this.expressionFunctionInfo[allFunctionsLabel] = functionInfoList;
+				this.expressionFunctionInfo.operators = [];
+				if (expressionInfo.operator_refs) {
+					expressionInfo.operator_refs.forEach((functionId) => {
+						this.expressionFunctionInfo.operators.push(this._getFunctionInfo(functionId, functionInfoList, l10nProvider));
+					});
+				}
 			}
 		}
 	}
 
 
-	_genFunctionParameters(functionInfoList) {
+	_genFunctionParameters(functionInfoList, l10nProvider) {
 		return functionInfoList.map((functionInfo) => {
 			const newEntry = functionInfo;
-			newEntry.value = newEntry.label;
+			newEntry.locLabel = l10nProvider.l10nResource(newEntry.label);
+			newEntry.help = l10nProvider.l10nResource(newEntry.description);
+			newEntry.value = newEntry.locLabel;
 			if (Array.isArray(functionInfo.parameters)) {
-				newEntry.value += "(";
-				newEntry.label += "(";
-				functionInfo.parameters.forEach((parameter, index) => {
-					const separator = (index > 0) ? ", " : "";
-					newEntry.label += separator + parameter.label;
-					newEntry.value += separator + "?";
-				});
-				newEntry.label += ")";
-				newEntry.value += ")";
+				if (newEntry.locLabel && newEntry.locLabel.indexOf("?") !== -1) {
+					functionInfo.parameters.forEach((parameter) => {
+						const paramIndex = newEntry.locLabel.indexOf("?");
+						if (paramIndex !== -1) {
+							newEntry.locLabel = newEntry.locLabel.replace("?", l10nProvider.l10nResource(parameter.label));
+						}
+					});
+				} else {
+					newEntry.value += "(";
+					newEntry.locLabel += "(";
+					functionInfo.parameters.forEach((parameter, index) => {
+						const separator = (index > 0) ? ", " : "";
+						newEntry.locLabel += separator + l10nProvider.l10nResource(parameter.label);
+						newEntry.value += separator + "?";
+					});
+					newEntry.locLabel += ")";
+					newEntry.value += ")";
+				}
 			}
 			return newEntry;
 		});
 
 	}
 
-	_getFunctionInfo(functionId, functionInfoList) {
-		return functionInfoList.find((functionInfo) => functionInfo.id === functionId);
+	_getFunctionInfo(functionId, functionInfoList, l10nProvider) {
+		const functionInfo = functionInfoList.find((functionElem) => functionElem.id === functionId);
+		if (!functionInfo) {
+			logger.warn("Expression function information list, no information found for " + functionId);
+			return null;
+		}
+		return functionInfo;
 	}
 
 	getExpressionInfo() {

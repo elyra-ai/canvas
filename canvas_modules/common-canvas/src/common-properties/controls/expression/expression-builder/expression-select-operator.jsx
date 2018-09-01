@@ -30,38 +30,36 @@ export default class ExpressionSelectOperator extends React.Component {
 		if (this.props.operatorList) {
 			const operatorButtons = [];
 			this.props.operatorList.forEach((operator, index) => {
-				if (operator.show_button) {
-					const tooltipId = uuid4() + "-tooltip-expression-operator";
-					const tooltip = (
-						<div className="properties-tooltips">
-							{operator.help}
-						</div>
-					);
-					operatorButtons.push(
-						<div key={"expression-operator-" + index}>
-							<Tooltip
-								id={tooltipId}
-								tip={tooltip}
-								direction="left"
-								delay={TOOL_TIP_DELAY}
-								className="properties-tooltips"
-							>
-								<div >
-									<Button
-										className={classNames("properties-operator-button", { "first": (index % 2 === 0),
-											"second": !(index % 2 === 0) })}
-										type="button"
-										small
-										kind="secondary"
-										onClick={this.onOperatorClick.bind(this, operator.value)}
-									>
-										{operator.label}
-									</Button>
-								</div>
-							</Tooltip>
-						</div>
-					);
-				}
+				const tooltipId = uuid4() + "-tooltip-expression-operator";
+				const tooltip = (
+					<div className="properties-tooltips">
+						{operator.help}
+					</div>
+				);
+				operatorButtons.push(
+					<div key={"expression-operator-" + index}>
+						<Tooltip
+							id={tooltipId}
+							tip={tooltip}
+							direction="left"
+							delay={TOOL_TIP_DELAY}
+							className="properties-tooltips"
+						>
+							<div >
+								<Button
+									className={classNames("properties-operator-button", { "first": (index % 2 === 0),
+										"second": !(index % 2 === 0) })}
+									type="button"
+									small
+									kind="secondary"
+									onClick={this.onOperatorClick.bind(this, operator.value)}
+								>
+									{operator.locLabel}
+								</Button>
+							</div>
+						</Tooltip>
+					</div>
+				);
 			});
 
 			const operatorTitle = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),

@@ -21,9 +21,7 @@ export default class ExpressionBuilder extends React.Component {
 		super(props);
 
 		this.selection = [];
-		this.functionList = this.props.controller.getExpressionInfo();
-		this.operatorList = this.functionList.Operators;
-
+		this.expressionInfo = this.props.controller.getExpressionInfo();
 		this.editorDidMount = this.editorDidMount.bind(this);
 		this.onChange = this.onChange.bind(this);
 		this.onBlur = this.onBlur.bind(this);
@@ -112,8 +110,8 @@ export default class ExpressionBuilder extends React.Component {
 				<ExpressionSelectionPanel
 					controller={this.props.controller}
 					onChange={this.onChange}
-					functionList={this.functionList}
-					operatorList={this.operatorList}
+					functionList={this.expressionInfo.functionCategories}
+					operatorList={this.expressionInfo.operators}
 				/>
 			</div>
 		);

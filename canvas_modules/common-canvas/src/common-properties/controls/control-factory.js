@@ -14,7 +14,7 @@ import { Type, ControlType } from "./../constants/form-constants";
 import { STATES } from "./../constants/constants.js";
 import { PropertyDef } from "./../form/PropertyDef";
 import { makeControl } from "./../form/EditorForm";
-import { L10nProvider } from "./../form/L10nProvider";
+import { L10nProvider } from "./../util/L10nProvider";
 
 import TextfieldControl from "./textfield";
 import ReadonlyControl from "./readonly";

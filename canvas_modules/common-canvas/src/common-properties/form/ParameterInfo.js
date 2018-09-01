@@ -9,7 +9,7 @@
 
 import { Separator } from "../constants/form-constants";
 import { Type, ParamRole, EditStyle } from "../constants/form-constants";
-import { ResourceDef } from "./L10nProvider";
+import { ResourceDef } from "../util/L10nProvider";
 import propertyOf from "lodash/propertyOf";
 import PropertyUtil from "../util/property-utils";
 

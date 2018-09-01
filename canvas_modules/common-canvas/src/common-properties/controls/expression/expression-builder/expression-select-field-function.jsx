@@ -288,14 +288,14 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				? "table-row table-selected-row"
 				: "table-row";
 
-			columns.push({ column: "function", content: this.createContentObject(catFunction.label) });
+			columns.push({ column: "function", content: this.createContentObject(catFunction.locLabel) });
 			columns.push({ column: "return", content: this.createContentObject(catFunction.return_type) });
 			table.rows.push({ className: rowClass, columns: columns,
 				onClickCallback: this.onFunctionTableClick.bind(this, index, category), onDblClickCallback: this.onFunctionTableDblClick.bind(this, index) });
 			if (index === this.state.functionSelectedRow) {
 				table.helpContainer = (
 					<div className="properties-function-help-text" >
-						<span className="properties-function-help-command">{catFunction.label}:</span>
+						<span className="properties-function-help-command">{catFunction.locLabel}:</span>
 						<br />
 						<br />
 						<span>{catFunction.help}</span>

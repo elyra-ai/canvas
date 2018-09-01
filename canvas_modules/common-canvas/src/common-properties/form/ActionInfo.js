@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 
-import { ResourceDef } from "./L10nProvider";
+import { ResourceDef } from "../util/L10nProvider";
 
 export class Action {
 	constructor(actionName, label, description, control, data) {

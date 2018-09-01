@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import { GroupType } from "../constants/form-constants";
-import { ResourceDef } from "./L10nProvider";
+import { ResourceDef } from "../util/L10nProvider";
 import propertyOf from "lodash/propertyOf";
 import has from "lodash/has";
 

@@ -9,7 +9,7 @@
 
 import { ParameterDef, ParameterMetadata } from "./ParameterInfo";
 import propertyOf from "lodash/propertyOf";
-import { ResourceDef } from "./L10nProvider";
+import { ResourceDef } from "../util/L10nProvider";
 
 export class StructureDef {
 	constructor(cname, keyDefinition, parameterMetadata, moveableRows, label, rowSelection, addRemoveRows, header) {
