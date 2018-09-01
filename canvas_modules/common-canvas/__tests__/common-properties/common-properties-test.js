@@ -322,6 +322,25 @@ describe("CommonProperties validates on open correctly", () => {
 	});
 });
 
+describe("applyPropertiesEditing through an instance outside Common Properties", () => {
+	it("If true is passed in, applyPropertiesEditing should trigger a applyPropertiesDialog and closePropertiesDialog callback", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+		renderedObject.wrapper.instance().refs.wrappedInstance.applyPropertiesEditing(true);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 1);
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
+	});
+	it("If false is passed in, applyPropertiesEditing should trigger a applyPropertiesDialog and closePropertiesDialog callback", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+		renderedObject.wrapper.instance().refs.wrappedInstance.applyPropertiesEditing(false);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
+	});
+});
+
 function createCommonProperties(container, messages) {
 	const propertiesConfig = { containerType: container };
 	if (container === "Custom") {
