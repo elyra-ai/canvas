@@ -196,7 +196,7 @@ class CommonPropertiesComponents extends React.Component {
 		const dropMenu = (<div id="conditions-documentation-menu" className="header__dropdown">
 			<Dropdown
 				label="Navigation"
-				options={this.dropdownOptions([
+				items={this.dropdownOptions([
 					"Conditions",
 					"SingleConditions",
 					"--textfield",

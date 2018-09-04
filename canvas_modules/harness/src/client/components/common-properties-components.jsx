@@ -13,6 +13,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Dropdown from "carbon-components-react/lib/components/DropdownV2";
 import Button from "carbon-components-react/lib/components/Button";
+import FunctionList from "../constants/json/functionlist.json";
 import {
 	CONTAINERS_RIGHT_FLYOUT_PROPERTIES,
 	CONTAINERS_RIGHT_FLYOUT_CANVAS,
@@ -270,6 +271,8 @@ class CommonPropertiesComponents extends React.Component {
 	}
 
 	render() {
+		const expressioInfoProps = EXPRESSION_PROPS_INFO;
+		expressioInfoProps.expressionInfo = FunctionList;
 		const dropMenu = (<div id="properties-documentation-menu" className="header__dropdown">
 			<Dropdown
 				label="Navigation"
@@ -747,14 +750,14 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								propertiesInfo={EXPRESSION_PROPS_INFO}
+								propertiesInfo={expressioInfoProps}
 								propertiesConfig={this.propertiesConfig}
 							/>
-							{this.renderRightFlyoutButton(EXPRESSION_PROPS_INFO)}
+							{this.renderRightFlyoutButton(expressioInfoProps)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
-								{this.jsonReplacer(EXPRESSION_PROPS_INFO.parameterDef, "control")}
+								{this.jsonReplacer(expressioInfoProps.parameterDef, "control")}
 							</pre>
 						</div>
 					</div>
