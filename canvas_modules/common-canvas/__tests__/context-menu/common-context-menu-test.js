@@ -260,46 +260,31 @@ describe("create supernode renders correctly", () => {
 			enableAutoLayout: "none",
 			canvasController: canvasController,
 			enableInternalObjectModel: true,
-			contextMenuConfig: {
-				enableCreateSupernodeNonContiguous: false
-			}
 		};
-		createCommonCanvas(config, canvasController);
+		const contextMenuConfig = {
+			enableCreateSupernodeNonContiguous: false
+		};
+		createCommonCanvas(config, canvasController, contextMenuConfig);
 		const menuDef = canvasController.createDefaultMenu(nonContiguousSelection);
-		const defMenu = [
-			{ "action": "disconnectNode", "label": "Disconnect" },
-			{ "divider": true },
-			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
-			{ "divider": true },
-			{ "action": "deleteObjects", "label": "Delete" },
-			{ "divider": true }
-		];
-		expect(menuDef, defMenu).to.be.equal;
+		const isCreateSupernode = isCreateSupernodeThere(menuDef);
+		expect(isCreateSupernode).to.be.false;
 	});
-	it("correctly displays 'create supernode' for non-contiguous nodes when enableCreateSupernodeNonContiguous is true", () => {
+
+	it.only("correctly displays 'create supernode' for non-contiguous nodes when enableCreateSupernodeNonContiguous is true", () => {
 		canvasController = new CanvasController();
 		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
 		const config = {
 			enableAutoLayout: "none",
 			canvasController: canvasController,
 			enableInternalObjectModel: true,
-			contextMenuConfig: {
-				enableCreateSupernodeNonContiguous: false
-			}
 		};
-		createCommonCanvas(config, canvasController);
+		const contextMenuConfig = {
+			enableCreateSupernodeNonContiguous: true
+		};
+		createCommonCanvas(config, canvasController, contextMenuConfig);
 		const menuDef = canvasController.createDefaultMenu(nonContiguousSelection);
-		const defMenu = [
-			{ "action": "disconnectNode", "label": "Disconnect" },
-			{ "divider": true },
-			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }], "label": "Edit" },
-			{ "divider": true },
-			{ "action": "deleteObjects", "label": "Delete" },
-			{ "divider": true },
-			{ "action": "createSuperNode", "label": "Create supernode" },
-			{ "divider": true }
-		];
-		expect(menuDef, defMenu).to.be.equal;
+		const isCreateSupernode = isCreateSupernodeThere(menuDef);
+		expect(isCreateSupernode).to.be.true;
 	});
 });
 
@@ -362,7 +347,7 @@ function getNestedMenuDefinition() {
 	];
 }
 
-function createCommonCanvas(config, canvasController) {
+function createCommonCanvas(config, canvasController, contextMenuConfig) {
 	const contextMenuHandler = sinon.spy();
 	const contextMenuActionHandler = sinon.spy();
 	const editActionHandler = sinon.spy();
@@ -384,10 +369,31 @@ function createCommonCanvas(config, canvasController) {
 		enable: true
 	};
 
-	const wrapper = mount(<CommonCanvas config={config} contextMenuHandler={contextMenuHandler} contextMenuActionHandler={contextMenuActionHandler}
-		editActionHandler={editActionHandler} clickActionHandler={clickActionHandler} decorationActionHandler={decorationActionHandler}
-		selectionChangeHandler={selectionChangeHandler} tipHandler={tipHandler} toolbarConfig={toolbarConfig} notificationConfig={notificationConfig}
-		showRightFlyout={false} toolbarMenuActionHandler={toolbarMenuActionHandler} canvasController={canvasController}
-	/>);
+	const wrapper = mount(
+		<CommonCanvas
+			config={config}
+			contextMenuHandler={contextMenuHandler}
+			contextMenuActionHandler={contextMenuActionHandler}
+			editActionHandler={editActionHandler}
+			clickActionHandler={clickActionHandler}
+			decorationActionHandler={decorationActionHandler}
+			selectionChangeHandler={selectionChangeHandler}
+			tipHandler={tipHandler} toolbarConfig={toolbarConfig}
+			notificationConfig={notificationConfig}
+			showRightFlyout={false}
+			toolbarMenuActionHandler={toolbarMenuActionHandler}
+			canvasController={canvasController}
+			contextMenuConfig={contextMenuConfig}
+		/>);
 	return wrapper;
+}
+
+function isCreateSupernodeThere(defaultMenu) {
+	let isCreateSupernode = false;
+	defaultMenu.forEach(function(entry) {
+		if (entry.action === "createSuperNode") {
+			isCreateSupernode = true;
+		}
+	});
+	return isCreateSupernode;
 }
