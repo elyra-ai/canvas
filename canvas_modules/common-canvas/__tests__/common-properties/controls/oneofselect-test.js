@@ -14,43 +14,45 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 
-const controller = new Controller();
+import oneofselectParamDef from "../../test_resources/paramDefs/oneofselect_paramDef.json";
+
 
 const emptyValueIndicator = "...";
 
-const control = {
-	"name": "test-oneofselect",
-	"label": {
-		"text": "oneofselect"
-	},
-	"description": {
-		"text": "oneofselect description"
-	},
-	"controlType": "oneofselect",
-	"valueDef": {
-		"propType": "string",
-		"isList": false,
-		"isMap": false
-	},
-	"values": [
-		"Order",
-		"Keys",
-		"Condition",
-		"Gtt"
-	],
-	"valueLabels": [
-		"Order",
-		"Keys",
-		"Condition",
-		"Ranked condition"
-	]
-};
 const propertyName = "test-oneofselect";
 const propertyId = { name: propertyName };
 
-propertyUtils.setControls(controller, [control]);
 
 describe("oneofselect renders correctly", () => {
+	const controller = new Controller();
+	const control = {
+		"name": "test-oneofselect",
+		"label": {
+			"text": "oneofselect"
+		},
+		"description": {
+			"text": "oneofselect description"
+		},
+		"controlType": "oneofselect",
+		"valueDef": {
+			"propType": "string",
+			"isList": false,
+			"isMap": false
+		},
+		"values": [
+			"Order",
+			"Keys",
+			"Condition",
+			"Gtt"
+		],
+		"valueLabels": [
+			"Order",
+			"Keys",
+			"Condition",
+			"Ranked condition"
+		]
+	};
+	propertyUtils.setControls(controller, [control]);
 	afterEach(() => {
 		controller.setErrorMessages({});
 		controller.setControlStates({});
@@ -203,4 +205,32 @@ describe("oneofselect renders correctly", () => {
 		const messageWrapper = dropdownWrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
 	});
+});
+
+describe("oneofselect allows enum label different from enum value", () => {
+	const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef);
+	const wrapper = renderedObject.wrapper;
+	let dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+	const dropdownButton = dropdownWrapper.find("div[role='button']");
+	dropdownButton.simulate("click");
+	dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+	const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+	// In oneofselect_paramDef.json, enum value "gold" is assigned a label "Goldilocks"
+	expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.gold.label"]).to.equal("Goldilocks");
+	// Enum label "Goldilocks" has been rendered for enum value "gold".
+	expect(dropdownList.at(9).text()).to.equal("Goldilocks");
+});
+
+describe("oneofselect allows enum label to be created for an enum value with space", () => {
+	const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef);
+	const wrapper = renderedObject.wrapper;
+	let dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+	const dropdownButton = dropdownWrapper.find("div[role='button']");
+	dropdownButton.simulate("click");
+	dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+	const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+	// In our paramDef, enum value has a space in it "blue green" and is assigned a label "Blue Green"
+	expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.blue green.label"]).to.equal("Blue Green");
+	// Enum value with a space can be assigned a label and renders as expected.
+	expect(dropdownList.at(8).text()).to.equal("Blue Green");
 });

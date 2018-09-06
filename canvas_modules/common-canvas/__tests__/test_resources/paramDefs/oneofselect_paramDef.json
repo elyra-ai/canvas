@@ -95,7 +95,9 @@
         "yellow",
         "green",
         "blue",
-        "purple"
+        "purple",
+        "blue green",
+        "gold"
       ]
     },
     {
@@ -653,6 +655,8 @@
     "oneofselect_null_empty_enum.green.label": "Green",
     "oneofselect_null_empty_enum.purple.label": "Purple",
     "oneofselect_null_empty_enum.blue.label": "Blue",
+    "oneofselect_null_empty_enum.blue green.label": "Blue Green",
+    "oneofselect_null_empty_enum.gold.label": "Goldilocks",
     "oneofselect_filtered.red.label": "Red",
     "oneofselect_filtered.orange.label": "Orange",
     "oneofselect_filtered.yellow.label": "Yellow",
