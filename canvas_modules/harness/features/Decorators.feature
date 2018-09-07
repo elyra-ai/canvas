@@ -1,15 +1,15 @@
 Feature: Decorators
 
-  ** Make sure the test harness is running and listening to http://localhost:3001 ***
+	** Make sure the test harness is running and listening to http://localhost:3001 ***
 
-  As a human
-  I want to create a canvas
-  So I can build a graph
-@watch
+	As a human
+	I want to create a canvas
+	So I can build a graph
+
 	Scenario: Test for adding a decorator to a node
 		Then I resize the window size to 1200 width and 800 height
 		Given I am on the test harness
-	  Given I have toggled the app side panel
+		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/decoratorCanvas.json"

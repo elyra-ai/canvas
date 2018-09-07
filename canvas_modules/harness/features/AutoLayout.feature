@@ -1,10 +1,10 @@
 Feature: AutoLayout
 
-  ** Make sure the test harness is running and listening to http://localhost:3001 ***
+	** Make sure the test harness is running and listening to http://localhost:3001 ***
 
-  As a human
-  I want to load a canvas
-  So I can test autoLayout operations to the canvas
+	As a human
+	I want to load a canvas
+	So I can test autoLayout operations to the canvas
 
 	Scenario: Sanity test for autoLayout operations in Vertical Fixed Layout
 		Then I resize the window size to 1400 width and 800 height

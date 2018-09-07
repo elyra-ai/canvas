@@ -1,9 +1,9 @@
 Feature: Supernode
 
-  ** Make sure the test harness is running and listening to http://localhost:3001 ***
+	** Make sure the test harness is running and listening to http://localhost:3001 ***
 
-  As a human
-  I want to create a supernode
+	As a human
+	I want to create a supernode
 
 	Scenario: Sanity test supernode expanded to correct size
 		Then I resize the window size to 1400 width and 800 height

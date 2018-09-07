@@ -14,7 +14,7 @@ Feature: Ports
 		Given I have selected the "Ports" connection type
 		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas.json"
-	  Given I have toggled the app side panel
+		Given I have toggled the app side panel
 
 		Then I open the palette
 		Then I add node 7 a "Filler" node from the "Field Ops" category onto the canvas at 380, 580
@@ -108,7 +108,7 @@ Feature: Ports
 		Then I verify the number of port data links are 16
 		Then I verify 0 link between source node "Select3" source port "outPort8" to target node "Neural Net" target port "inPort2"
 
-		# Node "Select4" node "outPort" has a maximum cardinality of 4.  That node already has 4 links
+		# Node "Select4" node "outPort" has a maximum cardinality of 4. That node already has 4 links
 		# coming from it so this next connection should fail.
 		Then I link node "Select4" output port "outPort" to node "Merge2" input port "inPort"
 		Then I verify the number of port data links are 16
