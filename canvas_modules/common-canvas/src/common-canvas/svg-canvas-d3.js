@@ -851,12 +851,16 @@ class CanvasRenderer {
 					this.stopDrawingNewLink();
 				}
 			})
-			.on("click.zoom", () => {
-				this.logger.log("Zoom - click");
-				this.selecting = true;
-				this.canvasController.clearSelections(); // Controller will make sure selections are not cleared when context menu is displayed
-				this.canvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
-				this.selecting = false;
+			// Use mousedown.zoom here instead of click.zoom so this get called before the handleClickOutside function for the context-menu-wrapper
+			.on("mousedown.zoom", () => {
+				// Make sure this is just a left mouse button click - we don't want context menu click causing selections to be cleared
+				if (d3Event.button === 0) {
+					this.logger.log("Zoom - click");
+					this.selecting = true;
+					this.canvasController.clearSelections(); // Controller will make sure selections are not cleared when context menu is displayed
+					this.canvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
+					this.selecting = false;
+				}
 			})
 			.on("dblclick.zoom", () => {
 				this.logger.log("Zoom - double click");
@@ -1471,7 +1475,7 @@ class CanvasRenderer {
 				})
 				.on("click", (d) => {
 					this.logger.log("Node Group - click");
-					d3Event.stopPropagation(); // Prevent click going through to zoom.click attached to SVG which would cancel this node selection
+					d3Event.stopPropagation();
 				})
 				.on("dblclick", (d) => {
 					this.logger.log("Node Group - double click");
@@ -2875,7 +2879,7 @@ class CanvasRenderer {
 				})
 				.on("click", (d) => {
 					this.logger.log("Comment Group - click");
-					d3Event.stopPropagation(); // Prevent click going through to zoom.click attached to SVG which would cancel this comment selection
+					d3Event.stopPropagation();
 				})
 				.on("dblclick", function(d) { // Use function keyword so 'this' pointer references the DOM text object
 					that.logger.log("Comment Group - double click");

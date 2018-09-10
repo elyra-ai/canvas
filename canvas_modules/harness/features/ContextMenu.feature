@@ -53,3 +53,18 @@ Feature: ContextMenu
 		Then I verify that 3 objects are selected
 		Then I right click at position 1000, 300 to display the context menu
 		Then I verify that 3 objects are selected
+
+	Scenario: Test the selections remain after removing the context menu by clicking canvas
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Flyout" palette layout
+		Given I have uploaded predefined palette "modelerPalette.json"
+		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
+		Given I have selected the "Ports" connection type
+		Given I have toggled the app side panel
+
+		Then I click the "C5.0" node to select it
+		Then I right click the "C5.0" node to display the context menu
+		Then I click the canvas background at 1, 1 to close the context menu or clear selections
+		Then I verify that 1 objects are selected

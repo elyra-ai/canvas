@@ -245,7 +245,7 @@ function getLabel(nodeText, selector) {
 }
 
 function clickSVGAreaAt(xCoord, yCoord) {
-	browser.click(".svg-area", Number(xCoord), Number(yCoord));
+	browser.leftClick(".svg-area", Number(xCoord), Number(yCoord));
 }
 
 function findNodeIndexInPalette(nodeType) {
