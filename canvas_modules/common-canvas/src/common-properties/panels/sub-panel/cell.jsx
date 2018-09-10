@@ -14,6 +14,7 @@ import { injectIntl, intlShape } from "react-intl";
 import uuid4 from "uuid/v4";
 import PropertyUtils from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
+import Icon from "./../../../icons/icon.jsx";
 
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
 import { TOOL_TIP_DELAY } from "./../../constants/constants.js";
@@ -53,7 +54,7 @@ class SubPanelCell extends React.Component {
 			MESSAGE_KEYS.SUBPANEL_BUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.SUBPANEL_BUTTON_TOOLTIP);
 		const applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
 		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
-
+		const innerObject = this.props.iconName ? (<Icon type={this.props.iconName} />) : this.props.label;
 		return (
 
 			<SubPanelInvoker ref="invoker"
@@ -78,7 +79,7 @@ class SubPanelCell extends React.Component {
 							onClick={this.showSubPanel}
 							disabled={disabled}
 						>
-							{this.props.label}
+							{innerObject}
 						</Button>
 					</Tooltip>
 				</div>
@@ -95,7 +96,8 @@ SubPanelCell.propTypes = {
 	controller: PropTypes.object,
 	propertyId: PropTypes.object,
 	intl: intlShape,
-	rightFlyout: PropTypes.bool
+	rightFlyout: PropTypes.bool,
+	iconName: PropTypes.string
 };
 
 export default injectIntl(SubPanelCell);

@@ -581,6 +581,7 @@ export default class AbstractTable extends React.Component {
 					label={subItemButton.props.label}
 					title={subItemButton.props.title}
 					panel={subItemButton.props.panel}
+					iconName="gear"
 					disabled={tableState === STATES.DISABLED}
 					controller={this.props.controller}
 					propertyId={this.props.propertyId}
