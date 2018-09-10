@@ -177,3 +177,39 @@ Scenario: Sanity test changing input port name to update port tip
 		Then I hover over the validation icon in the "Derive-Node" summary panel
 		Then I pause for 3 seconds
 		Then I verify the tip for the validation icon in the "Derive-Node" summary panel is visible
+
+	Scenario: Sanity test to check if tips show up for a supernode and nodes inside the subflow
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Ports" connection type
+		Given I have selected the "Flyout" palette layout
+		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
+		Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas.json"
+		Given I have toggled the app side panel
+
+		# Create a supernode
+		Then I click the "Discard Fields" node to select it
+		Then I Cmd+click the "Define Types" node to add it to the selections
+		Then I right click the "Define Types" node to display the context menu
+		Then I click option "Create supernode" from the context menu
+
+		# Check the collapsed supernode shows a tip
+		Then I hover over the node "Supernode"
+		And I verify the tip shows "below" the node "Supernode"
+
+		# Expand the supernode
+		Then I right click the "Supernode" node to display the context menu
+		Then I click option "Expand supernode" from the context menu
+
+		# Check the expanded supernode shows a tip
+		Then I hover over the node "Supernode"
+		And I verify the tip shows "below" the node "Supernode"
+
+		# Check one of the nodes in the subflow shows a tip
+		Then I hover over the node "Discard Fields" in the subflow
+		And I verify the tip shows "below" the node "Discard Fields"
+
+		# Check the other node in the subflow shows a tip
+		Then I hover over the node "Define Types" in the subflow
+		And I verify the tip shows "below" the node "Define Types"

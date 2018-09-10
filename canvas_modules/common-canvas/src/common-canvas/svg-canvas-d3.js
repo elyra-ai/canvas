@@ -505,6 +505,12 @@ class CanvasRenderer {
 		this.canvasSVG.attr("height", supernodeDims.height);
 		this.canvasSVG.attr("x", supernodeDims.x);
 		this.canvasSVG.attr("y", supernodeDims.y);
+
+		// Keep the background rectangle the same size as the SVG area.
+		const background = this.canvasSVG.selectAll(this.getSelectorForClass("d3-subflow-background"));
+		background.attr("width", supernodeDims.width);
+		background.attr("height", supernodeDims.height);
+
 		this.zoomToFitForInPlaceSubFlow();
 		this.displayBindingNodesToFitSVG();
 	}
@@ -876,10 +882,11 @@ class CanvasRenderer {
 		if (this.isDisplayingSubFlowInPlace()) {
 			canvasSVG
 				.append("rect")
-				.attr("x", -5000)
-				.attr("y", -5000)
-				.attr("width", 10000)
-				.attr("height", 10000)
+				.attr("x", 0)
+				.attr("y", 0)
+				.attr("width", dims.width)
+				.attr("height", dims.height)
+				.attr("data-pipeline-id", this.getNonNumericPipelineId())
 				.attr("class", "d3-subflow-background");
 		}
 
@@ -1409,6 +1416,7 @@ class CanvasRenderer {
 					that.setNodeStyles(d, "hover");
 					that.addDynamicNodeIcons(d, this);
 					if (that.canShowTip(TIP_TYPE_NODE)) {
+						that.canvasController.hideTip(); // Ensure existing tip is removed when moving pointer within an in-place supernode
 						that.canvasController.showTip({
 							id: that.getId("node_tip", d.id),
 							type: TIP_TYPE_NODE,

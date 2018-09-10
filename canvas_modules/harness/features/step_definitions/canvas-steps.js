@@ -10,7 +10,8 @@
 /* eslint max-depth: ["error", 5] */
 
 import { clickSVGAreaAt, findCategoryElement, findNodeIndexInPalette,
-	getNodeIdForLabel, getNumberOfSelectedComments, getNumberOfSelectedNodes } from "./utilities/validate-utils.js";
+	getNodeIdForLabel, getNodeIdForLabelInSubFlow, getNumberOfSelectedComments,
+	getNumberOfSelectedNodes } from "./utilities/validate-utils.js";
 import { getCanvas, isSchemaValidationError } from "./utilities/test-utils.js";
 
 /* global browser */
@@ -164,6 +165,14 @@ module.exports = function() {
 		browser.$(nodeSelector).moveToObject();
 		browser.pause(1000); // Wait for the tooltip to be displayed
 	});
+
+	this.Then(/^I hover over the node "([^"]*)" in the subflow$/, function(nodeName) {
+		const nodeId = getNodeIdForLabelInSubFlow(nodeName);
+		const nodeSelector = "#node_grp_" + nodeId;
+		browser.$(nodeSelector).moveToObject();
+		browser.pause(1000); // Wait for the tooltip to be displayed
+	});
+
 
 	this.Then(/^I verify the node with name "([^"]*)" shows in the canvas$/, function(nodeName) {
 		const nodeId = getNodeIdForLabel(nodeName);
