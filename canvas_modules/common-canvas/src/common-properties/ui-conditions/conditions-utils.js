@@ -121,7 +121,7 @@ function validatePropertiesListConditions(controller, controls, newStates) {
 
 /**
 * This function will validate a single properties value.
-* If the proeprtyId is a table it will also validate each cell in the table
+* If the propertyId is a table it will also validate each cell in the table
 *
 * @param {object} propertyId. required
 * @param {object} properties controller. required
@@ -129,7 +129,7 @@ function validatePropertiesListConditions(controller, controls, newStates) {
 function validateInput(inPropertyId, controller) {
 	const control = controller.getControl(inPropertyId);
 	if (!control) {
-		logger.warn("Control not found for " + inPropertyId.name);
+		// logger.warn("Control not found for " + inPropertyId.name);
 		return;
 	}
 	const propertyId = cloneDeep(inPropertyId);
@@ -170,7 +170,7 @@ function validateInput(inPropertyId, controller) {
 function validateConditions(inPropertyId, controller) {
 	const control = controller.getControl(inPropertyId);
 	if (!control) {
-		logger.warn("Control not found for " + inPropertyId.name);
+		// logger.warn("Control not found for " + inPropertyId.name);
 		return;
 	}
 	const newStates = {
@@ -196,6 +196,35 @@ function validateConditions(inPropertyId, controller) {
 	}
 	controller.setControlStates(newStates.controls);
 	controller.setPanelStates(newStates.panels);
+}
+
+/**
+* This function will validate a single properties for allow_change.
+*
+* @param {object} propertyId. required
+* @param {object} properties controller. required
+*/
+function allowConditions(inPropertyId, controller) {
+	let result = true;
+	const control = controller.getControl(inPropertyId);
+	if (!control) {
+		// logger.warn("Control not found for " + inPropertyId.name);
+		return result;
+	}
+	const allowValidations = controller.getDefinitions(inPropertyId, CONDITION_TYPE.ALLOWCHANGE, CONDITION_DEFINITION_INDEX.CONTROLS);
+	if (allowValidations.length > 0) {
+		try {
+			for (const validation of allowValidations) {
+				result = UiConditions.validateInput(validation.definition, inPropertyId, controller);
+				if (!result) {
+					return result;
+				}
+			}
+		} catch (error) {
+			logger.warn("Error thrown in validation: " + error);
+		}
+	}
+	return result;
 }
 
 /**
@@ -836,6 +865,7 @@ module.exports.validateConditions = validateConditions;
 module.exports.validatePropertiesConditions = validatePropertiesConditions;
 module.exports.validateInput = validateInput;
 module.exports.filterConditions = filterConditions;
+module.exports.allowConditions = allowConditions;
 module.exports.updateState = updateState;
 module.exports.getParamRefPropertyId = getParamRefPropertyId;
 module.exports.injectDefaultValidations = injectDefaultValidations;

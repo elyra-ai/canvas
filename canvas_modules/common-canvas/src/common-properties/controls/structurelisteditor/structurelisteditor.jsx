@@ -25,22 +25,10 @@ class StructurelisteditorControl extends AbstractTable {
 	}
 
 	addRow() {
-		const newRow = this._getDefaultRow();
+		const newRow = this.getDefaultRow();
 		const rows = this.props.controller.getPropertyValue(this.props.propertyId);
 		rows.push(newRow);
 		this.setCurrentControlValueSelected(rows);
-	}
-
-	_getDefaultRow() {
-		const row = [];
-		for (const colValue of this.props.control.defaultRow) {
-			if (typeof colValue !== "undefined" && colValue !== null && colValue.parameterRef) {
-				row.push(this.props.controller.getPropertyValue({ name: colValue.parameterRef }));
-			} else {
-				row.push(colValue);
-			}
-		}
-		return row;
 	}
 
 	render() {

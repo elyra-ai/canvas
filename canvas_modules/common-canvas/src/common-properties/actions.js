@@ -4,6 +4,7 @@
 
 export const SET_PROPERTY_VALUES = "SET_PROPERTY_VALUES";
 export const UPDATE_PROPERTY_VALUE = "UPDATE_PROPERTY_VALUE";
+export const REMOVE_PROPERTY_VALUE = "REMOVE_PROPERTY_VALUE";
 export const SET_CONTROL_STATES = "SET_CONTROL_STATES";
 export const UPDATE_CONTROL_STATE = "UPDATE_CONTROL_STATE";
 export const SET_PANEL_STATES = "SET_PANEL_STATES";
@@ -29,6 +30,11 @@ export function setPropertyValues(properties) {
 export function updatePropertyValue(property) {
 	return { type: UPDATE_PROPERTY_VALUE, property };
 }
+
+export function removePropertyValue(property) {
+	return { type: REMOVE_PROPERTY_VALUE, property };
+}
+
 
 export function setControlStates(states) {
 	return { type: SET_CONTROL_STATES, states };

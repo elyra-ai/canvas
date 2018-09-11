@@ -104,6 +104,32 @@
         true,
         "some long text description"
       ]
+    ],
+    "ST_mse_table": [
+      [
+        "Age",
+        true,
+        "Soccer",
+        "Don't show",
+        false,
+        "European"
+      ],
+      [
+        "BP",
+        false,
+        "Football",
+        "Don't show",
+        false,
+        "American"
+      ],
+      [
+        "K",
+        false,
+        "Soccer",
+        "Don't show",
+        true,
+        "Canadian"
+      ]
     ]
   },
   "parameters": [
@@ -170,6 +196,12 @@
     {
       "id": "dummy_types",
       "type": "map[string,DummyEntry]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "ST_mse_table",
+      "type": "map[string,ST_mse_table]",
       "role": "column",
       "default": []
     }
@@ -440,6 +472,44 @@
           "default": "Type something here..."
         }
       ]
+    },
+    {
+      "id": "ST_mse_table",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column"
+      },
+      "parameters": [
+        {
+          "id": "override",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "id": "dummy_entry_sport_name",
+          "enum": [
+            "Football",
+            "Soccer"
+          ],
+          "default": "Soccer"
+        },
+        {
+          "id": "dummy_entry_invisble",
+          "type": "string",
+          "default": "Don't show"
+        },
+        {
+          "id": "checkit",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "id": "sometext",
+          "type": "string",
+          "default": "Type something here..."
+        }
+      ]
     }
   ],
   "uihints": {
@@ -568,6 +638,56 @@
         },
         "control": "structuretable",
         "rows": 12
+      },
+      {
+        "parameter_ref": "ST_mse_table",
+        "label": {
+          "default": "Test Muilt-select Edit in a structure table control"
+        },
+        "control": "structuretable",
+        "description": {
+          "default": "If 'Text' field is 'European' then 'Sport' will not be allowed to change to 'Football'.",
+          "placement": "on_panel"
+        },
+        "rows": 12
+      },
+      {
+        "id": "ST_mse_table",
+        "key_definition": {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        },
+        "parameters": [
+          {
+            "id": "override",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "id": "dummy_entry_sport_name",
+            "enum": [
+              "Football",
+              "Soccer"
+            ],
+            "default": "Soccer"
+          },
+          {
+            "id": "dummy_entry_invisble",
+            "type": "string",
+            "default": "Don't show"
+          },
+          {
+            "id": "checkit",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "id": "sometext",
+            "type": "string",
+            "default": "Type something here..."
+          }
+        ]
       }
     ],
     "complex_type_info": [
@@ -1027,6 +1147,68 @@
             "summary": true
           }
         ]
+      },
+      {
+        "complex_type_ref": "ST_mse_table",
+        "row_selection": "multiple-edit",
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 10,
+          "label": {
+            "resource_key": "ST_mse_table.field.label"
+          },
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "override",
+            "label": {
+              "resource_key": "ST_mse_table.override.label"
+            },
+            "width": 6,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "dummy_entry_sport_name",
+            "label": {
+              "resource_key": "ST_mse_table.dummy_entry_sport_name.label"
+            },
+            "control": "toggletext",
+            "width": 8,
+            "edit_style": "inline",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ],
+            "summary": true
+          },
+          {
+            "parameter_ref": "dummy_entry_invisble",
+            "label": {
+              "default": "Invisible Field"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "visible": false
+          },
+          {
+            "parameter_ref": "checkit",
+            "label": {
+              "resource_key": "ST_mse_table.checkit.label"
+            },
+            "width": 5,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "sometext",
+            "label": {
+              "resource_key": "ST_mse_table.sometext.label"
+            },
+            "width": 12,
+            "edit_style": "inline",
+            "summary": true
+          }
+        ]
       }
     ],
     "group_info": [
@@ -1125,6 +1307,25 @@
                 "type": "columnSelection",
                 "parameter_refs": [
                   "structuretableSortableColumns"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "ST_mse_table-summary-panel",
+            "label": {
+              "default": "MSE Structure Table"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "ST_mse_table_id",
+                "type": "columnSelection",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "ST_mse_table"
                 ]
               }
             ]
@@ -1310,7 +1511,7 @@
         }
       }
     },
-		{
+    {
       "validation": {
         "fail_message": {
           "type": "error",
@@ -1328,7 +1529,7 @@
         }
       }
     },
-		{
+    {
       "validation": {
         "fail_message": {
           "type": "error",
@@ -1345,8 +1546,8 @@
           }
         }
       }
-		},
-		{
+    },
+    {
       "validation": {
         "fail_message": {
           "type": "error",
@@ -1420,7 +1621,7 @@
         }
       }
     },
-		{
+    {
       "visible": {
         "parameter_refs": [
           "dummy_types[2]"
@@ -1453,6 +1654,31 @@
                 "parameter_ref": "dummy_types[4]",
                 "op": "equals",
                 "value": true
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "allow_change": {
+        "parameter_refs": [
+          "ST_mse_table[2]"
+        ],
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "ST_mse_table[2]",
+                "op": "notEquals",
+                "value": "Football"
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "ST_mse_table[5]",
+                "op": "notEquals",
+                "value": "European"
               }
             }
           ]
@@ -1585,6 +1811,13 @@
     "DummyEntry.checkit.label": "Check",
     "DummyEntry.sometext.label": "Text",
     "DummyEntry.dummy_entry_sport_name.Football.label": "Football",
-    "DummyEntry.dummy_entry_sport_name.Soccer.label": "Soccer"
+    "DummyEntry.dummy_entry_sport_name.Soccer.label": "Soccer",
+    "ST_mse_table.field.label": "Field",
+    "ST_mse_table.override.label": "Override",
+    "ST_mse_table.dummy_entry_sport_name.label": "Sport",
+    "ST_mse_table.checkit.label": "Check",
+    "ST_mse_table.sometext.label": "Text",
+    "ST_mse_table.dummy_entry_sport_name.Football.label": "Football",
+    "ST_mse_table.dummy_entry_sport_name.Soccer.label": "Soccer"
   }
 }

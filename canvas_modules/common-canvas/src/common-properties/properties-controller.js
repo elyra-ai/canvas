@@ -41,6 +41,7 @@ export default class PropertiesController {
 		this.validationDefinitions = {};
 		this.filterDefinitions = {};
 		this.filteredEnumDefinitions = {};
+		this.allowChangeDefinitions = {};
 		this.panelTree = {};
 		this.controls = {};
 		this.customControls = [];
@@ -234,6 +235,8 @@ export default class PropertiesController {
 		this.validationDefinitions = { controls: {}, refs: {} };
 		this.filterDefinitions = { controls: {}, refs: {} };
 		this.filteredEnumDefinitions = { controls: {}, refs: {} };
+		this.allowChangeDefinitions = { controls: {}, refs: {} };
+
 		if (this.form.conditions) {
 			for (const condition of this.form.conditions) {
 				if (condition.visible) {
@@ -246,6 +249,8 @@ export default class PropertiesController {
 					UiConditionsParser.parseConditions(this.filterDefinitions, condition, CONDITION_TYPE.FILTER);
 				} else if (condition.enum_filter) {
 					UiConditionsParser.parseConditions(this.filteredEnumDefinitions, condition, CONDITION_TYPE.FILTEREDENUM);
+				} else if (condition.allow_change) {
+					UiConditionsParser.parseConditions(this.allowChangeDefinitions, condition, CONDITION_TYPE.ALLOWCHANGE);
 				} else { // invalid
 					logger.info("Invalid definition: " + JSON.stringify(condition));
 				}
@@ -272,6 +277,9 @@ export default class PropertiesController {
 			break;
 		case CONDITION_TYPE.FILTEREDENUM:
 			conditionDefinitions = this.filteredEnumDefinitions[dfnIndex];
+			break;
+		case CONDITION_TYPE.ALLOWCHANGE:
+			conditionDefinitions = this.allowChangeDefinitions[dfnIndex];
 			break;
 		case CONDITION_TYPE.VALIDATION:
 			conditionDefinitions = this.validationDefinitions[dfnIndex];
@@ -816,7 +824,12 @@ export default class PropertiesController {
 	*/
 	updatePropertyValue(inPropertyId, value, skipValidateInput) {
 		const propertyId = this.convertPropertyId(inPropertyId);
+		const initialValue = this.getPropertyValue(propertyId);
 		this.propertiesStore.updatePropertyValue(propertyId, value);
+		if (!conditionsUtil.allowConditions(inPropertyId, this)) {
+			this.propertiesStore.updatePropertyValue(propertyId, initialValue);
+			return;
+		}
 		conditionsUtil.validateConditions(inPropertyId, this);
 		if (!skipValidateInput) {
 			conditionsUtil.validateInput(inPropertyId, this);
@@ -866,6 +879,11 @@ export default class PropertiesController {
 			return filteredValue;
 		}
 		return propertyValue;
+	}
+
+	removePropertyValue(inPropertyId) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		this.propertiesStore.removePropertyValue(propertyId);
 	}
 
 	getPropertyValues(filterHiddenDisabled) {

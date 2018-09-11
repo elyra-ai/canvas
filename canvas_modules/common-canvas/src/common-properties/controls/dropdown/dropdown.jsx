@@ -100,9 +100,8 @@ export default class DropDown extends React.Component {
 		};
 	}
 
-
 	handleChange(evt) {
-		let value = evt.selectedItem.value;
+		let value = this.props.tableControl ? evt.target.value : evt.selectedItem.value;
 		if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
 			value = PropertyUtils.fieldStringToValue(value, this.props.control, this.props.controller);
 		}
@@ -124,18 +123,37 @@ export default class DropDown extends React.Component {
 			dropDown = this.genSelectOptions(controlValue);
 		}
 
+		let ourDropDown = (<Dropdown
+			disabled={state === STATES.DISABLED}
+			type={dropdownType}
+			items={dropDown.options}
+			onChange={this.handleChange}
+			selectedItem={dropDown.selectedOption}
+			label={this.emptyLabel}
+		/>);
+
+		if (this.props.tableControl) {
+			const options = [];
+			const selection = dropDown.selectedOption && dropDown.selectedOption.value ? dropDown.selectedOption.value : "";
+			for (const option of dropDown.options) {
+				options.push(<option className="bx--select-option" value={option.value} key={option.value}>{option.label}</option>);
+			}
+			ourDropDown =
+			(<div className="bx--select">
+				<select className="bx--select-input properties-table-dropdown" onChange={this.handleChange} value={selection}>
+					{options}
+				</select>
+				<svg className="bx--select__arrow" width="10" height="5" viewBox="0 0 10 5">
+					<path d="M0 0l5 4.998L10 0z" fillRule="evenodd" />
+				</svg>
+			</div>);
+		}
+
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)}
 				className={classNames("properties-dropdown", { "hide": state === STATES.HIDDEN }, messageInfo ? messageInfo.type : null)}
 			>
-				<Dropdown
-					disabled={state === STATES.DISABLED}
-					type={dropdownType}
-					items={dropDown.options}
-					onChange={this.handleChange}
-					selectedItem={dropDown.selectedOption}
-					label={this.emptyLabel}
-				/>
+				{ourDropDown}
 				<ValidationMessage state={state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 			</div>
 		);

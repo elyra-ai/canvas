@@ -374,8 +374,7 @@ class FlexibleTable extends React.Component {
 	}
 
 	render() {
-		const renderHeader = this.props.columns.length > 0; // some controls do not want a header
-		const hideTableHeader = renderHeader ? {} : { "hideTableHeader": true };
+		const hideTableHeader = this.props.showHeader ? {} : { "hideTableHeader": true };
 
 		const tableWidth = this.state.tableWidth;
 		const tableHeight = this.state.tableHeight - 2; // subtract 2 px for the borders
@@ -409,7 +408,7 @@ class FlexibleTable extends React.Component {
 
 			);
 
-			if (renderHeader) {
+			if (this.props.showHeader) {
 				filterProps = {
 					filterable: this.props.filterable,
 					hideFilterInput: true,
@@ -431,8 +430,8 @@ class FlexibleTable extends React.Component {
 		}
 
 		const heightStyle = this.props.noAutoSize ? {} : { height: tableHeight + "px" };
-		const containerId = renderHeader ? "properties-ft-container" : "properties-ft-container-noheader";
-		const containerClass = renderHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
+		const containerId = this.props.showHeader ? "properties-ft-container" : "properties-ft-container-noheader";
+		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass + this.props.messageInfo.type;
 		renderTable = (
 			<div>
@@ -443,6 +442,7 @@ class FlexibleTable extends React.Component {
 						<div className="properties-ft-container-wrapper" style={ heightStyle }>
 							<div className={messageClass}>
 								<div ref={ (ref) => (this.flexibleTableDiv = ref) } className={containerId} style={{ width: tableWidth }}>
+									{this.props.selectedEditRow}
 									<Table {...filterProps}
 										className={"table properties-ft"}
 										ref="table"
@@ -471,6 +471,10 @@ class FlexibleTable extends React.Component {
 	}
 }
 
+FlexibleTable.defaultProps = {
+	showHeader: true
+};
+
 FlexibleTable.propTypes = {
 	sortable: PropTypes.array,
 	columns: PropTypes.array.isRequired,
@@ -483,6 +487,8 @@ FlexibleTable.propTypes = {
 	onSort: PropTypes.func,
 	onFilter: PropTypes.func,
 	alignTop: PropTypes.bool,
+	showHeader: PropTypes.bool,
+	selectedEditRow: PropTypes.object,
 	topRightPanel: PropTypes.object,
 	scrollKey: PropTypes.string,
 	intl: intlShape,

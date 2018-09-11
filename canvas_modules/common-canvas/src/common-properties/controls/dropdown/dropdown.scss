@@ -18,6 +18,9 @@
 	.bx--list-box__label {
 		padding: 5px 0;
 	}
+	.bx--select__arrow {
+		right: 0.5rem;
+	}
 	&.error {
 		.bx--list-box__field {
 			border-bottom: 2px solid $support-01;
@@ -32,25 +35,23 @@
 .properties-table-cell-control .properties-dropdown {
 	padding-top: 0;
 	padding-bottom: 5px;
-	.bx--list-box__menu {
-		position: sticky;
-		width: 7rem;
-	}
-	.bx--list-box__field {
-		padding-left: 0;
-	}
-	.bx--list-box--inline {
-		height: 1.75rem;
-	}
+	width: 100%;
 }
 .properties-table-subcell, .properties-onpanel-container {
 	.properties-dropdown {
+		min-height: 200px;
 		.bx--list-box__menu {
-			position: fixed;
-			top: unset;
-			right: unset;
-			left: unset;
-			width: 40.17rem;
+			position: absolute;
+			width: 100%;
 		}
+	}
+}
+select.properties-table-dropdown {
+	background-color: inherit;
+	font-weight: 600;
+	color: $brand-01;
+	padding: 0.35rem 0 0;
+	&:hover {
+		color: $brand-02;
 	}
 }

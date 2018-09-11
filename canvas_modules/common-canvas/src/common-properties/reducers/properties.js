@@ -7,11 +7,11 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { UPDATE_PROPERTY_VALUE, SET_PROPERTY_VALUES } from "../actions";
+import { UPDATE_PROPERTY_VALUE, SET_PROPERTY_VALUES, REMOVE_PROPERTY_VALUE } from "../actions";
 
 function properties(state = {}, action) {
 	switch (action.type) {
-	case UPDATE_PROPERTY_VALUE:
+	case UPDATE_PROPERTY_VALUE: {
 		var newState = state;
 		if (typeof action.property.propertyId.row !== "undefined") {
 			if (typeof action.property.propertyId.col !== "undefined") {
@@ -23,8 +23,17 @@ function properties(state = {}, action) {
 			newState[action.property.propertyId.name] = action.property.value;
 		}
 		return Object.assign({}, state, newState);
-	case SET_PROPERTY_VALUES:
+	}
+	case SET_PROPERTY_VALUES: {
 		return Object.assign({}, action.properties);
+	}
+	case REMOVE_PROPERTY_VALUE: {
+		const nextState = state;
+		if (typeof action.property.propertyId.name !== "undefined") {
+			delete nextState[action.property.propertyId.name];
+		}
+		return Object.assign({}, state, nextState);
+	}
 	default:
 		return state;
 	}

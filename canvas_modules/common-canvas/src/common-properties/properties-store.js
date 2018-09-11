@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import { createStore, combineReducers } from "redux";
-import { setPropertyValues, updatePropertyValue } from "./actions";
+import { setPropertyValues, updatePropertyValue, removePropertyValue } from "./actions";
 import { setControlStates, updateControlState } from "./actions";
 import { setPanelStates, updatePanelState } from "./actions";
 import { clearSelectedRows, updateSelectedRows } from "./actions";
@@ -66,6 +66,10 @@ export default class PropertiesStore {
 
 	updatePropertyValue(propertyId, value) {
 		this.store.dispatch(updatePropertyValue({ propertyId: propertyId, value: value }));
+	}
+
+	removePropertyValue(propertyId) {
+		this.store.dispatch(removePropertyValue({ propertyId: propertyId }));
 	}
 
 	getControlState(propertyId) {

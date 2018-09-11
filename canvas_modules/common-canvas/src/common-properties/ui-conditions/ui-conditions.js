@@ -33,6 +33,9 @@ function validateInput(definition, propertyId, controller) {
 		return visible(data.visible, propertyId, controller);
 	} else if (data.enum_filter) {
 		return filteredEnum(data.enum_filter, propertyId, controller);
+	} else if (data.allow_change) {
+		return allowChange(data.allow_change, propertyId, controller);
+
 	}
 	throw new Error("Invalid user input validation definition schema");
 }
@@ -91,6 +94,13 @@ function filteredEnum(data, propertyId, controller) {
 		return evaluate(data.evaluate, propertyId, controller);
 	}
 	throw new Error("Invalid filteredEnum schema");
+}
+
+function allowChange(data, propertyId, controller) {
+	if ((data.parameter_refs || data.group_refs) && data.evaluate) {
+		return evaluate(data.evaluate, propertyId, controller);
+	}
+	throw new Error("Invalid allow change schema");
 }
 
 /**

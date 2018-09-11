@@ -153,14 +153,14 @@ describe("condition messages should add alerts tab for tables", () => {
 
 		// set the error condition in the table
 		let cellDropdown = wrapper.find("div[data-id='properties-structuretableRenameFields_0_3']");
-		const cellButton = cellDropdown.find("div[type='button']");
-		cellButton.simulate("click");
-		// select the first item
-		const dropdownWrapper = wrapper.find("div[data-id='properties-structuretableRenameFields_0_3']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
-		expect(dropdownList).to.be.length(5);
-		dropdownList.at(1).simulate("click");
-		expect(cellButton.find("span").text()).to.equal("number");
+
+		let dropdown = cellDropdown.find("select");
+		dropdown.simulate("change", { target: { value: "number" } });
+		wrapper.update();
+
+		cellDropdown = wrapper.find("div[data-id='properties-structuretableRenameFields_0_3']");
+		dropdown = cellDropdown.find("select");
+
 		// validate there is an error
 		cellDropdown = wrapper.find("div[data-id='properties-structuretableRenameFields_0_3']");
 		const messageWrapper = cellDropdown.find("div.properties-validation-message");

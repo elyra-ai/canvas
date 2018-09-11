@@ -61,7 +61,7 @@ class SelectColumns extends AbstractTable {
 				});
 				rows.push({
 					key: rowIndex,
-					onClickCallback: this.handleRowClick.bind(this, rowIndex),
+					onClickCallback: this.handleRowClick.bind(this, rowIndex, false),
 					columns: columns,
 					className: this.getRowClassName(rowIndex)
 				});
@@ -103,6 +103,7 @@ class SelectColumns extends AbstractTable {
 				filterable={filterFields}
 				columns={headers}
 				data={rows}
+				showHeader={false}
 				scrollToRow={this.scrollToRow}
 				alignTop={this.alignTop}
 				onFilter={this.onFilter}

@@ -66,7 +66,9 @@ _defineConstant("MESSAGE_KEYS_DEFAULTS", {
 	EXPRESSION_ALL_FUNCTIONS: "All Functions",
 	EXPRESSION_MIN_LABEL: "Min",
 	EXPRESSION_MAX_LABEL: "Max",
-	EXPRESSION_NO_FUNCTIONS: "No functions found."
+	EXPRESSION_NO_FUNCTIONS: "No functions found.",
+	MULTI_SELECTED_ROW_LABEL: "rows selected.",
+	MULTI_SELECTED_ROW_ACTION: "Changing a value in this row will change the value in all allowed selected rows."
 });
 
 _defineConstant("MESSAGE_KEYS", {
@@ -120,7 +122,9 @@ _defineConstant("MESSAGE_KEYS", {
 	EXPRESSION_ALL_FUNCTIONS: "expression.all.functions",
 	EXPRESSION_MIN_LABEL: "expression.min.label",
 	EXPRESSION_MAX_LABEL: "expression.max.label",
-	EXPRESSION_NO_FUNCTIONS: "expression.no.functions"
+	EXPRESSION_NO_FUNCTIONS: "expression.no.functions",
+	MULTI_SELECTED_ROW_LABEL: "multi.selected.row.label",
+	MULTI_SELECTED_ROW_ACTION: "multi.selected.row.action"
 });
 
 _defineConstant("CHARACTER_LIMITS", {
@@ -180,6 +184,7 @@ _defineConstant("CONDITION_TYPE", {
 	VISIBLE: "visible",
 	ENABLED: "enabled",
 	FILTEREDENUM: "enum_filter",
+	ALLOWCHANGE: "allow_change",
 	FILTER: "filter",
 	VALIDATION: "validation"
 });

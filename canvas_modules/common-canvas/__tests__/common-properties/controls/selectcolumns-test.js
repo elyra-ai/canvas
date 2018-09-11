@@ -154,6 +154,7 @@ describe("selectcolumns renders correctly", () => {
 		const tableData = wrapper.find("tr.column-select-table-row");
 		expect(tableData).to.have.length(3);
 		tableData.at(1).simulate("click");
+
 		// ensure removed button is enabled and select it
 		const enabledRemoveColumnButton = wrapper.find("button.properties-remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);

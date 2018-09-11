@@ -136,6 +136,80 @@ const control = {
 	"required": true
 };
 
+const mseControl = {
+	"name": "keys",
+	"label": {
+		"text": "structurelisteditorList"
+	},
+	"controlType": "structurelisteditor",
+	"valueDef": {
+		"propType": "structure",
+		"isList": true,
+		"isMap": false,
+		"defaultValue": []
+	},
+	"addRemoveRows": true,
+	"subControls": [
+		{
+			"name": "name",
+			"label": {
+				"text": "Name"
+			},
+			"controlType": "textfield",
+			"valueDef": {
+				"propType": "string",
+				"isList": false,
+				"isMap": false
+			},
+			"filterable": true,
+			"visible": true,
+			"width": 20,
+			"editStyle": "inline"
+		},
+		{
+			"name": "description",
+			"label": {
+				"text": "Description"
+			},
+			"controlType": "textfield",
+			"valueDef": {
+				"propType": "string",
+				"isList": false,
+				"isMap": false
+			},
+			"sortable": true,
+			"visible": true,
+			"width": 20,
+			"editStyle": "inline"
+		},
+		{
+			"name": "readonly",
+			"label": {
+				"text": "ReadOnly"
+			},
+			"controlType": "readonly",
+			"valueDef": {
+				"propType": "string",
+				"isList": false,
+				"isMap": false
+			},
+			"visible": true,
+			"width": 20,
+			"editStyle": "inline"
+		}
+	],
+	"keyIndex": -1,
+	"defaultRow": [
+		"name",
+		"text",
+		"address"
+	],
+	"moveableRows": true,
+	"rowSelection": "multiple-edit",
+	"required": true
+};
+
+
 const propertyId = { name: "keys" };
 
 propertyUtils.setControls(controller, [control]);
@@ -274,6 +348,36 @@ describe("StructureListEditorControl renders correctly", () => {
 		expect(tableRows).to.have.length(5);
 		expect(tableRows[0][0]).to.equal("one");
 	});
+
+	it("should select multiple rows and see the select summary row", () => {
+		setPropertyValue();
+		const wrapper = mountWithIntl(
+			<StructureListEditorControl
+				control={mseControl}
+				controller={controller}
+				propertyId={propertyId}
+				buildUIItem={genUIItem}
+				rightFlyout
+			/>
+		);
+
+		// select the first row in the table
+		const tableData = wrapper.find("tbody.reactable-data").children();
+		expect(tableData).to.have.length(6);
+		tableData.at(0).simulate("click");
+
+		// verify that the select summary row is not present
+		let selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
+		expect(selectedEditRow).to.have.length(0);
+
+		// multiple select the four row in the table
+		tableData.at(3).simulate("click", { ctrlKey: true });
+
+		// verify that the select summary row is present
+		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
+		expect(selectedEditRow).to.have.length(1);
+	});
+
 });
 
 
@@ -470,4 +574,46 @@ describe("StructureListEditor render from paramdef", () => {
 		// console.log(messages.inlineEditingTableError);
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 	});
+
+	it("Multiple select edit should change values of selected rows", () => {
+		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
+
+		// select the first row in the table
+		let tableRows = summaryPanel.find("tbody.reactable-data tr");
+		expect(tableRows).to.have.length(4);
+		tableRows.at(0).simulate("click");
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
+
+		// verify that the select summary row is not present
+		let selectedEditRow = summaryPanel.find("div.properties-at-selectedEditRows");
+		expect(selectedEditRow).to.have.length(0);
+
+		// multiple select the four row in the table
+		tableRows.at(3).simulate("click", { ctrlKey: true });
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
+
+		// verify that the select summary row is present
+		selectedEditRow = summaryPanel.find("div.properties-at-selectedEditRows");
+		expect(selectedEditRow).to.have.length(1);
+
+		// change a value in the select summary row.
+		const selectedEditCells = selectedEditRow.find("td");
+		expect(selectedEditCells).to.have.length(7);
+		const integerNumber = selectedEditCells.at(0).find("input");
+		integerNumber.simulate("change", { target: { value: "44" } });
+
+		// verify that the values have changed in the selected rows.
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
+		tableRows = summaryPanel.find("tbody.reactable-data tr");
+		// need to add one to the row count because multiple rows are still selected
+		// and the selectedSummaryRow is still rendered as the first row, so the tableRows
+		// contains the selectedSummaryRow and the table data rows are indexed +1.
+		expect(tableRows.at(1).find("input")
+			.prop("value")).to.equal(44);
+		expect(tableRows.at(4).find("input")
+			.prop("value")).to.equal(44);
+
+
+	});
+
 });

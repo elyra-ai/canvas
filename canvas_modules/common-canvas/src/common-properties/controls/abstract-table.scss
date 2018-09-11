@@ -59,8 +59,25 @@
 		}
 	}
 }
+
 .properties-table-subcell {
 	display: flex;
 	align-items: center;
 	height: 100%;
+}
+
+.properties-at-selectedEditRows {
+	background-color: $brand-02;
+	.properties-selectedEditRows-title {
+		padding-top: 10px;
+		padding-bottom: 10px;
+		padding-left: 12px;
+		color: $ui-01;
+	}
+	.table-row {
+		background-color: rgba($brand-01, 0.3);
+	}
+	tbody, .properties-ft-container-absolute-noheader {
+		overflow-y: hidden;
+	}
 }

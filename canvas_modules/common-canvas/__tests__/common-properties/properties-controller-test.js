@@ -336,6 +336,18 @@ describe("Properties Controller property values", () => {
 		expectedValues.param_mix_table[2][3] = 10;
 		expect(expectedValues).to.eql(actualValues);
 	});
+	it("should remove a property value correctly", () => {
+		reset();
+		controller.updatePropertyValue({ name: "param_removed" }, 10);
+		let actualValues = controller.getPropertyValues();
+		let expectedValues = getCopy(propValues);
+		expectedValues.param_removed = 10;
+		expect(expectedValues).to.eql(actualValues);
+		controller.removePropertyValue({ name: "param_removed" });
+		actualValues = controller.getPropertyValues();
+		expectedValues = getCopy(propValues);
+		expect(expectedValues).to.eql(actualValues);
+	});
 	it("should get a simple property value correctly", () => {
 		reset();
 		const actualValue = controller.getPropertyValue({ name: "param_str" });

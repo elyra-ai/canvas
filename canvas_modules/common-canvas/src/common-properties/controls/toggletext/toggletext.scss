@@ -36,6 +36,9 @@
 				color: $brand-02;
 			}
 		}
+		&:focus {
+			outline: 1px solid $brand-02;
+		}
 	}
 	&[disabled] {
 		opacity: 0.5;
