@@ -818,5 +818,11 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 				"Na", "drug", "drug2", "drug3", "Age", "BP", "Na", "drug", "drugs"]
 		);
 	});
+	it("fieldpicker will receive updated props from selectcolumns control ", () => {
+		renderedController.updatePropertyValue({ name: "fields" }, []);
+		wrapper.update();
+		const selectRows = wrapper.find("tr.column-select-table-row");
+		expect(selectRows.length).to.equal(0);
+	});
 
 });

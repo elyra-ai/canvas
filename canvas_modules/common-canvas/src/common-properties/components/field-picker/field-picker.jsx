@@ -69,11 +69,12 @@ class FieldPicker extends React.Component {
 		}
 		if (newProps.currentFields) {
 			if (!isEqual(Object.keys(newProps.currentFields), Object.keys(this.state.selectedFields))) {
-				selectedFields = newProps.fcurrentFields;
+				selectedFields = newProps.currentFields;
 			}
 		}
 		this.setState({ fields: fields, selectedFields: selectedFields });
 	}
+
 	onFilter(filterString) {
 		this.setState({ filterText: filterString });
 	}
