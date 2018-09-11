@@ -28,33 +28,31 @@
 	}
 }
 
-.table-row  { // overrides when in a table cell
-	> td {
-		.properties-input-control {
-			padding-bottom: 5px;
-			input { //override styling from carbon
-				background: unset;
-				background-color: unset;
-				margin: 0;
-				padding: 0;
-				border-bottom: 2px solid $text-02;
-				height: 1.72rem;
-				&:focus {
-					border-top: 0;
-					border-right: 0;
-					border-left: 0;
-					border-bottom: 2px solid $text-01;
-				}
+.properties-table-cell-control { // overrides when in a table cell
+	.properties-input-control {
+		padding-bottom: 5px;
+		input { //override styling from carbon
+			background: unset;
+			background-color: unset;
+			margin: 0;
+			padding: 0;
+			border-bottom: 2px solid $text-02;
+			height: 1.72rem;
+			&:focus {
+				border-top: 0;
+				border-right: 0;
+				border-left: 0;
+				border-bottom: 2px solid $text-01;
 			}
-			&.error {
-				input {
-					border-bottom: 2px solid $support-01;
-				}
+		}
+		&.error {
+			input {
+				border-bottom: 2px solid $support-01;
 			}
-			&.warning {
-				input {
-					border-bottom: 2px solid $support-03;
-				}
+		}
+		&.warning {
+			input {
+				border-bottom: 2px solid $support-03;
 			}
 		}
 	}
