@@ -17,7 +17,6 @@ import PropertyUtils from "./../../util/property-utils";
 
 import Button from "carbon-components-react/lib/components/Button";
 import Checkbox from "carbon-components-react/lib/components/Checkbox";
-import { injectIntl, intlShape } from "react-intl";
 
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, DATA_TYPES, TOOL_TIP_DELAY, FP_CHECKBOX_WIDTH } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
@@ -30,7 +29,7 @@ import Tooltip from "./../../../tooltip/tooltip.jsx";
 
 import uuid4 from "uuid/v4";
 
-class FieldPicker extends React.Component {
+export default class FieldPicker extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -306,8 +305,8 @@ class FieldPicker extends React.Component {
 
 	_genBackButton() {
 		if (this.props.rightFlyout) {
-			const applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
-			const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
+			const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
+			const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
 
 			return (<PropertiesButtons
 				okHandler={this.handleSave}
@@ -318,7 +317,7 @@ class FieldPicker extends React.Component {
 			/>);
 		}
 
-		const saveTooltip = PropertyUtils.formatMessage(this.props.intl,
+		const saveTooltip = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SAVEBUTTON_TOOLTIP);
 		const tooltipId = uuid4() + "-tooltip-fp";
 		const tooltip = (
@@ -353,9 +352,9 @@ class FieldPicker extends React.Component {
 	}
 
 	_genResetButton() {
-		const resetLabel = PropertyUtils.formatMessage(this.props.intl,
+		const resetLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_RESETBUTTON_LABEL);
-		const resetTooltip = PropertyUtils.formatMessage(this.props.intl,
+		const resetTooltip = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_RESETBUTTON_TOOLTIP);
 		const tooltipId = uuid4() + "-tooltip-fp";
 		const tooltip = (
@@ -389,7 +388,7 @@ class FieldPicker extends React.Component {
 
 	_genFilterTypes() {
 		const that = this;
-		const filterLabel = PropertyUtils.formatMessage(this.props.intl,
+		const filterLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_FILTER_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_FILTER_LABEL);
 		const filters = this.filterList.map(function(filter, ind) {
 			let enabled = true;
@@ -458,12 +457,12 @@ class FieldPicker extends React.Component {
 		});
 		checkedAll = sameData.length === visibleData.length;
 
-		const fieldColumnLabel = PropertyUtils.formatMessage(this.props.intl,
+		const fieldColumnLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_FIELDCOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_FIELDCOLUMN_LABEL);
 		// TODO: debug why resource key not used
-		const schemaColumnLabel = PropertyUtils.formatMessage(this.props.intl,
+		const schemaColumnLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_SCHEMACOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SCHEMACOLUMN_LABEL);
-		const dataTypeColumnLabel = PropertyUtils.formatMessage(this.props.intl,
+		const dataTypeColumnLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_DATATYPECOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_DATATYPECOLUMN_LABEL);
 		// TODO get label from resource and make id unique
 		const headers = [];
@@ -494,6 +493,7 @@ class FieldPicker extends React.Component {
 				filterKeyword={this.state.filterText}
 				scrollKey="field-picker"
 				noAutoSize
+				controller={this.props.controller}
 			/>
 		);
 	}
@@ -533,7 +533,4 @@ FieldPicker.propTypes = {
 	title: PropTypes.string,
 	controller: PropTypes.object.isRequired,
 	rightFlyout: PropTypes.bool,
-	intl: intlShape
 };
-
-export default injectIntl(FieldPicker);

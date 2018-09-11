@@ -30,13 +30,11 @@ import FieldPicker from "./../field-picker";
 
 import ButtonAction from "./../../actions/button";
 
-import { injectIntl, intlShape } from "react-intl";
-
 import Icon from "./../../../icons/icon.jsx";
 
 const ALERT_TAB_GROUP = "alertMsgs";
 
-class EditorForm extends React.Component {
+export default class EditorForm extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -548,7 +546,7 @@ class EditorForm extends React.Component {
 
 		return {
 			"text": PropertyUtil.formatMessage(
-				this.props.intl,
+				this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.ALERTS_TAB_TITLE,
 				MESSAGE_KEYS_DEFAULTS.ALERTS_TAB_TITLE),
 			"group": ALERT_TAB_GROUP,
@@ -575,7 +573,7 @@ class EditorForm extends React.Component {
 		let wideFly = <div />;
 
 		const form = this.props.controller.getForm();
-		const title = PropertyUtil.formatMessage(this.props.intl,
+		const title = PropertyUtil.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SAVEBUTTON_LABEL) + " " + form.label;
 
 		if (this.props.rightFlyout) {
@@ -606,7 +604,4 @@ EditorForm.propTypes = {
 	showPropertiesButtons: PropTypes.func,
 	customPanels: PropTypes.array,
 	rightFlyout: PropTypes.bool,
-	intl: intlShape
 };
-
-export default injectIntl(EditorForm);

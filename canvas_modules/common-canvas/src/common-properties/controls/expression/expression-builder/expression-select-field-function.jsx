@@ -186,6 +186,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						filterable={["fieldName"]}
 						onFilter={this.onFieldFilter}
 						rows={EXPRESSION_TABLE_ROWS}
+						controller={this.props.controller}
 					/>
 				</div>
 				<div className="properties-value-table-container" >
@@ -199,6 +200,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						filterable={["values"]}
 						onFilter={this.onValueFilter}
 						rows={EXPRESSION_TABLE_ROWS}
+						controller={this.props.controller}
 					/>
 				</div>
 			</div>
@@ -270,6 +272,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						columns={headers}
 						data={table.rows}
 						rows={EXPRESSION_TABLE_ROWS}
+						controller={this.props.controller}
 					/>
 				</div>
 				<div className="properties-help-table-container" >

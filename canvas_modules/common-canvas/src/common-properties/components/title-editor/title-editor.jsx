@@ -15,15 +15,13 @@ import TextInput from "carbon-components-react/lib/components/TextInput";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
 import PropertyUtils from "./../../util/property-utils";
 
-import { injectIntl, intlShape } from "react-intl";
-
-class TitleEditor extends Component {
+export default class TitleEditor extends Component {
 	constructor(props) {
 		super(props);
 		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.id = PropertyUtils.generateId();
-		this.labelText = PropertyUtils.formatMessage(props.intl,
+		this.labelText = PropertyUtils.formatMessage(props.controller.getReactIntl(),
 			MESSAGE_KEYS.TITLE_EDITOR_LABEL, MESSAGE_KEYS_DEFAULTS.TITLE_EDITOR_LABEL);
 	}
 
@@ -85,7 +83,4 @@ TitleEditor.propTypes = {
 	controller: PropTypes.object,
 	labelEditable: PropTypes.bool,
 	help: PropTypes.object,
-	intl: intlShape
 };
-
-export default injectIntl(TitleEditor);

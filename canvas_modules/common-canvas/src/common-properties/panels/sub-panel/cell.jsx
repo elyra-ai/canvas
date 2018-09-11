@@ -10,7 +10,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Button from "carbon-components-react/lib/components/Button";
-import { injectIntl, intlShape } from "react-intl";
 import uuid4 from "uuid/v4";
 import PropertyUtils from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
@@ -22,7 +21,7 @@ import { TOOL_TIP_DELAY } from "./../../constants/constants.js";
 
 import SubPanelInvoker from "./invoker.jsx";
 
-class SubPanelCell extends React.Component {
+export default class SubPanelCell extends React.Component {
 	constructor(props) {
 		super(props);
 		this.showSubPanel = this.showSubPanel.bind(this);
@@ -50,10 +49,10 @@ class SubPanelCell extends React.Component {
 	render() {
 		const tooltipId = "tooltip-subpanel-cell";
 		const disabled = typeof this.props.disabled !== "undefined" ? this.props.disabled : false;
-		const subPanelToolTip = PropertyUtils.formatMessage(this.props.intl,
+		const subPanelToolTip = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.SUBPANEL_BUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.SUBPANEL_BUTTON_TOOLTIP);
-		const applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
-		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
+		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
+		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
 		const innerObject = this.props.iconName ? (<Icon type={this.props.iconName} />) : this.props.label;
 		return (
 
@@ -95,9 +94,6 @@ SubPanelCell.propTypes = {
 	disabled: PropTypes.bool,
 	controller: PropTypes.object,
 	propertyId: PropTypes.object,
-	intl: intlShape,
 	rightFlyout: PropTypes.bool,
 	iconName: PropTypes.string
 };
-
-export default injectIntl(SubPanelCell);

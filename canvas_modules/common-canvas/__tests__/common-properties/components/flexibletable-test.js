@@ -9,6 +9,8 @@
 
 import React from "react";
 import FlexibleTable from "../../../src/common-properties/components/flexible-table";
+import Controller from "../../../src/common-properties/properties-controller";
+
 import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
 import chai from "chai";
@@ -19,6 +21,8 @@ import propertyUtils from "../../_utils_/property-utils";
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 
 chai.use(chaiEnzyme()); // Note the invocation at the end
+
+const controller = new Controller();
 
 const handleRowClick = sinon.spy();
 
@@ -120,6 +124,7 @@ describe("FlexibleTable renders correctly", () => {
 				alignTop={alignTop}
 				onFilter={onFilter}
 				onSort={onSort}
+				controller={controller}
 			/>
 		);
 
@@ -144,6 +149,7 @@ describe("FlexibleTable renders correctly", () => {
 				alignTop={alignTop}
 				onFilter={onFilter}
 				onSort={onSort}
+				controller={controller}
 			/>
 		);
 		const table = wrapper.find("div.properties-ft-control-container");
@@ -165,6 +171,7 @@ describe("FlexibleTable renders correctly", () => {
 				alignTop={alignTop}
 				onFilter={onFilter}
 				onSort={onSort}
+				controller={controller}
 			/>
 		);
 
@@ -185,6 +192,7 @@ describe("FlexibleTable renders correctly", () => {
 				alignTop={alignTop}
 				onFilter={onFilter}
 				onSort={onSort}
+				controller={controller}
 			/>
 		);
 		const input = wrapper.find("div.properties-ft-column");
@@ -204,6 +212,7 @@ describe("FlexibleTable renders correctly", () => {
 				alignTop={alignTop}
 				onFilter={onFilter}
 				onSort={onSort}
+				controller={controller}
 			/>
 		);
 		const tableBody = wrapper.find("div.properties-ft-control-container");

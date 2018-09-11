@@ -14,12 +14,10 @@ import Button from "carbon-components-react/lib/components/Button";
 import PropertyUtils from "./../../util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
 
-import { injectIntl, intlShape } from "react-intl";
-
 
 import SubPanelInvoker from "./invoker.jsx";
 
-class SubPanelButton extends React.Component {
+export default class SubPanelButton extends React.Component {
 	constructor(props) {
 		super(props);
 		this.showSubPanel = this.showSubPanel.bind(this);
@@ -45,8 +43,8 @@ class SubPanelButton extends React.Component {
 	}
 
 	render() {
-		const applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
-		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
+		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
+		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
 
 		const button = (<Button
 			className="properties-subpanel-button"
@@ -78,7 +76,4 @@ SubPanelButton.propTypes = {
 	notifyStartEditing: PropTypes.func,
 	notifyFinishedEditing: PropTypes.func,
 	rightFlyout: PropTypes.bool,
-	intl: intlShape
 };
-
-export default injectIntl(SubPanelButton);

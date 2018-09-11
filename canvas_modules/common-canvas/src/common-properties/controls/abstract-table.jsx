@@ -24,7 +24,6 @@ import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES,
 
 import findIndex from "lodash/findIndex";
 import sortBy from "lodash/sortBy";
-import { intlShape } from "react-intl";
 import uuid4 from "uuid/v4";
 
 /* eslint max-depth: ["error", 5] */
@@ -406,9 +405,9 @@ export default class AbstractTable extends React.Component {
 
 	makeSelectedEditRow(selectedRows) {
 		if (selectedRows && Array.isArray(selectedRows) && selectedRows.length > 1) {
-			const rowsSelectedLabel = PropertyUtils.formatMessage(this.props.intl,
+			const rowsSelectedLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL, MESSAGE_KEYS_DEFAULTS.MULTI_SELECTED_ROW_LABEL);
-			const rowsSelectedAction = PropertyUtils.formatMessage(this.props.intl,
+			const rowsSelectedAction = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.MULTI_SELECTED_ROW_ACTION, MESSAGE_KEYS_DEFAULTS.MULTI_SELECTED_ROW_ACTION);
 			const title = selectedRows.length + " " + rowsSelectedLabel + " " + rowsSelectedAction;
 			const rows = [];
@@ -428,6 +427,7 @@ export default class AbstractTable extends React.Component {
 					data={rows}
 					rows={1}
 					scrollKey={this.selectSummaryPropertyName}
+					controller={this.props.controller}
 				/>
 			</div>);
 		}
@@ -444,7 +444,7 @@ export default class AbstractTable extends React.Component {
 			? tableButtonConfig.removeButtonFunction
 			: this.removeSelected;
 		const disabled = !this.state.enableRemoveIcon || tableState === STATES.DISABLED;
-		const removeButtonLabel = PropertyUtils.formatMessage(this.props.intl,
+		const removeButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
 		const removeButton = (<button type="button" className="properties-remove-fields-button"
 			onClick={removeOnClick}
@@ -459,7 +459,7 @@ export default class AbstractTable extends React.Component {
 			? tableButtonConfig.addButtonFunction
 			: this.props.openFieldPicker;
 		const addButtonLabel = (tableButtonConfig && tableButtonConfig.addButtonLabel) ? tableButtonConfig.addButtonLabel
-			: PropertyUtils.formatMessage(this.props.intl,
+			: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_ADDBUTTON_LABEL);
 		if (tableState === STATES.DISABLED) {
 			addButtonDisabled = true;
@@ -479,14 +479,14 @@ export default class AbstractTable extends React.Component {
 		const addToolTip = (
 			<div className="properties-tooltips">
 				{(tableButtonConfig && tableButtonConfig.addButtonTooltip) ? tableButtonConfig.addButtonTooltip
-					: PropertyUtils.formatMessage(this.props.intl,
+					: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 						MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_ADDBUTTON_TOOLTIP)}
 			</div>
 		);
 		const removeToolTip = (
 			<div className="properties-tooltips">
 				{(tableButtonConfig && tableButtonConfig.removeButtonTooltip) ? tableButtonConfig.removeButtonTooltip
-					: PropertyUtils.formatMessage(this.props.intl,
+					: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 						MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP)}
 			</div>
 		);
@@ -591,6 +591,7 @@ export default class AbstractTable extends React.Component {
 				tableState={tableState}
 				messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)}
 				rows={this.props.control.rows}
+				controller={this.props.controller}
 			/>);
 		setTimeout(function() {
 			that.scrollToRow = null;
@@ -718,5 +719,4 @@ AbstractTable.propTypes = {
 	controller: PropTypes.object.isRequired,
 	openFieldPicker: PropTypes.func.isRequired,
 	rightFlyout: PropTypes.bool,
-	intl: intlShape,
 };

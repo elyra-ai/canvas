@@ -17,12 +17,11 @@ import { ParamRole } from "./../../constants/form-constants";
 import { STATES } from "./../../constants/constants";
 
 import ValidationMessage from "./../../components/validation-message";
-import { injectIntl, intlShape } from "react-intl";
 import findIndex from "lodash/findIndex";
 import reject from "lodash/reject";
 import ControlUtils from "./../../util/control-utils";
 
-class StructureTableControl extends AbstractTable {
+export default class StructureTableControl extends AbstractTable {
 	constructor(props) {
 		super(props);
 		this.addColumns = this.addColumns.bind(this);
@@ -191,8 +190,5 @@ StructureTableControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	openFieldPicker: PropTypes.func.isRequired,
-	intl: intlShape,
 	rightFlyout: PropTypes.bool
 };
-
-export default injectIntl(StructureTableControl);

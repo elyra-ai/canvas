@@ -120,6 +120,7 @@ export default class SomeofselectControl extends React.Component {
 					rows={rows}
 					data={options}
 					scrollKey={this.props.control.name}
+					controller={this.props.controller}
 				/>
 				<ValidationMessage state={state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 			</div>

@@ -14,10 +14,9 @@ import MoveableTableRows from "./../../components/moveable-table-rows";
 import PropertyUtils from "./../../util/property-utils";
 import ValidationMessage from "./../../components/validation-message";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, STATES } from "./../../constants/constants";
-import { injectIntl, intlShape } from "react-intl";
 import ControlUtils from "./../../util/control-utils";
 
-class StructurelisteditorControl extends AbstractTable {
+export default class StructurelisteditorControl extends AbstractTable {
 
 	constructor(props) {
 		super(props);
@@ -36,11 +35,11 @@ class StructurelisteditorControl extends AbstractTable {
 		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
 
 		const tableButtonConfig = {
-			addButtonLabel: PropertyUtils.formatMessage(this.props.intl,
+			addButtonLabel: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.STRUCTURELISTEDITOR_ADDBUTTON_LABEL),
-			removeButtonTooltip: PropertyUtils.formatMessage(this.props.intl,
+			removeButtonTooltip: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_REMOVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURELISTEDITOR_REMOVEBUTTON_TOOLTIP),
-			addButtonTooltip: PropertyUtils.formatMessage(this.props.intl,
+			addButtonTooltip: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURELISTEDITOR_ADDBUTTON_TOOLTIP),
 			addButtonFunction: this.addRow
 		};
@@ -85,8 +84,5 @@ StructurelisteditorControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	intl: intlShape,
 	rightFlyout: PropTypes.bool
 };
-
-export default injectIntl(StructurelisteditorControl);

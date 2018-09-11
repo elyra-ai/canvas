@@ -13,13 +13,12 @@ import FlexibleTable from "./../../components/flexible-table";
 import MoveableTableRows from "./../../components/moveable-table-rows";
 import AbstractTable from "./../abstract-table.jsx";
 import ValidationMessage from "./../../components/validation-message";
-import { injectIntl, intlShape } from "react-intl";
 import ControlUtils from "./../../util/control-utils";
 import { TABLE_SCROLLBAR_WIDTH, STATES } from "./../../constants/constants";
 
 import ReadonlyControl from "./../readonly";
 
-class SelectColumns extends AbstractTable {
+export default class SelectColumns extends AbstractTable {
 
 	getRowClassName(rowIndex) {
 		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
@@ -113,6 +112,7 @@ class SelectColumns extends AbstractTable {
 				tableState={tableState}
 				messageInfo={messageInfo}
 				rows={this.props.control.rows}
+				controller={this.props.controller}
 			/>);
 
 		var content = (
@@ -145,7 +145,4 @@ SelectColumns.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	openFieldPicker: PropTypes.func.isRequired,
-	intl: intlShape
 };
-
-export default injectIntl(SelectColumns);

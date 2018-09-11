@@ -12,7 +12,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import { injectIntl, intlShape } from "react-intl";
 import { Table, Thead, Th, Tr, Td } from "reactable";
 import Search from "carbon-components-react/lib/components/Search";
 
@@ -30,7 +29,7 @@ const sortDir = {
 	DESC: "DESC"
 };
 
-class FlexibleTable extends React.Component {
+export default class FlexibleTable extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -391,7 +390,7 @@ class FlexibleTable extends React.Component {
 		let filterProps = {};
 
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
-			const placeHolder = PropertyUtils.formatMessage(this.props.intl,
+			const placeHolder = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.TABLE_SEARCH_PLACEHOLDER, MESSAGE_KEYS_DEFAULTS.TABLE_SEARCH_PLACEHOLDER) + " " + searchLabel;
 
 			searchBar = (
@@ -491,11 +490,9 @@ FlexibleTable.propTypes = {
 	selectedEditRow: PropTypes.object,
 	topRightPanel: PropTypes.object,
 	scrollKey: PropTypes.string,
-	intl: intlShape,
+	controller: PropTypes.object,
 	rows: PropTypes.number,
 	noAutoSize: PropTypes.bool,
 	tableState: PropTypes.string,
 	messageInfo: PropTypes.object
 };
-
-export default injectIntl(FlexibleTable);

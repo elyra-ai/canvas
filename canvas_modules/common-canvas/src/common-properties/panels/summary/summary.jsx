@@ -14,7 +14,6 @@ import PropTypes from "prop-types";
 import IconButton from "../../components/icon-button";
 import WideFlyout from "./../../components/wide-flyout";
 import Icon from "carbon-components-react/lib/components/Icon";
-import { injectIntl, intlShape } from "react-intl";
 import isEmpty from "lodash/isEmpty";
 import PropertyUtils from "./../../util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
@@ -25,7 +24,7 @@ import classNames from "classnames";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 
-class SummaryPanel extends React.Component {
+export default class SummaryPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -169,7 +168,7 @@ class SummaryPanel extends React.Component {
 					</tbody>
 				</table>);
 				if (summaryValues.length > 10) {
-					const largeTableLabel = PropertyUtils.formatMessage(this.props.intl,
+					const largeTableLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 						MESSAGE_KEYS.LONG_TABLE_SUMMARY_PLACEHOLDER,
 						MESSAGE_KEYS_DEFAULTS.LONG_TABLE_SUMMARY_PLACEHOLDER);
 					summaryBody = (<div className={"properties-summary-table"}><span>{largeTableLabel}</span></div>);
@@ -228,14 +227,14 @@ class SummaryPanel extends React.Component {
 		if (!isEmpty(msg)) {
 			let descriptionText = "";
 			if (errorCount > 0 && warningCount === 0) {
-				descriptionText = PropertyUtils.formatMessage(this.props.intl,
+				descriptionText = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 					MESSAGE_KEYS.CONTROL_SUMMARY_ERROR, MESSAGE_KEYS_DEFAULTS.CONTROL_SUMMARY_ERROR, { errorMsgCount: errorCount });
 			} else if (errorCount > 0 && warningCount > 0) {
-				descriptionText = PropertyUtils.formatMessage(this.props.intl,
+				descriptionText = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 					MESSAGE_KEYS.CONTROL_SUMMARY_ERROR_WARNING, MESSAGE_KEYS_DEFAULTS.CONTROL_SUMMARY_ERROR_WARNING,
 					{ errorMsgCount: errorCount, warningMsgCount: warningCount });
 			} else if (errorCount === 0 && warningCount > 0) {
-				descriptionText = PropertyUtils.formatMessage(this.props.intl,
+				descriptionText = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 					MESSAGE_KEYS.CONTROL_SUMMARY_WARNING, MESSAGE_KEYS_DEFAULTS.CONTROL_SUMMARY_WARNING, { warningMsgCount: warningCount });
 			}
 			return (
@@ -266,8 +265,8 @@ class SummaryPanel extends React.Component {
 			</IconButton>
 			{icon}
 		</div>);
-		const applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
-		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
+		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
+		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
 		const flyout = (<WideFlyout
 			cancelHandler={this.cancelWideFlyout}
 			okHandler={this.hideWideFlyout}
@@ -296,7 +295,4 @@ SummaryPanel.propTypes = {
 	controller: PropTypes.object.isRequired,
 	children: PropTypes.array,
 	panelId: PropTypes.string.isRequired,
-	intl: intlShape
 };
-
-export default injectIntl(SummaryPanel);

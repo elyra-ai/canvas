@@ -9,7 +9,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { injectIntl, intlShape } from "react-intl";
 import classNames from "classnames";
 import Accordion from "carbon-components-react/lib/components/Accordion";
 import AccordionItem from "carbon-components-react/lib/components/AccordionItem";
@@ -17,7 +16,7 @@ import ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 
 
-class TwistyPanel extends React.Component {
+export default class TwistyPanel extends React.Component {
 
 	render() {
 		const propertyId = { name: this.props.panelId };
@@ -42,7 +41,4 @@ TwistyPanel.propTypes = {
 	controller: PropTypes.object.isRequired,
 	children: PropTypes.array,
 	panelId: PropTypes.string.isRequired,
-	intl: intlShape
 };
-
-export default injectIntl(TwistyPanel);

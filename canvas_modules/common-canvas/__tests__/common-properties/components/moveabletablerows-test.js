@@ -151,6 +151,7 @@ const content = (<div>
 	<FlexibleTable
 		columns={headers}
 		data={rows}
+		controller={controller}
 	/>
 </div>
 );
