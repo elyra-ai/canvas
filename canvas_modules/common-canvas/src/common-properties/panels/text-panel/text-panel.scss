@@ -7,19 +7,18 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-@import "./summary/summary";
-@import "./sub-panel/sub-panel";
-@import "./twisty/twisty";
-@import "./text-panel/text-panel";
-@import "./action-panel/action-panel";
-
-.properties-control-panel {
-	display: block;
-	padding: 0 0 0 8px;
-}
-
-.properties-category-content {
-	> .properties-control-panel { // only add top & bottom padding to first control panel
-		padding: 8px 0;
+.properties-text-panel {
+	cursor: text;
+	padding: 4px 0;
+	line-height: 1.5;
+	.panel-label {
+		font-weight: 600;
+	}
+	&[disabled] {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+	&.hide {
+		display: none;
 	}
 }

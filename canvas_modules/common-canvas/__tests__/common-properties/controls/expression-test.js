@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import { Provider } from "react-redux";
 import deepFreeze from "deep-freeze";
 import Expression from "../../../src/common-properties/controls/expression";
 import ExpressionBuilder from "../../../src/common-properties/controls/expression/expression-builder/expression-builder";
@@ -113,6 +114,7 @@ describe("expression-control renders correctly", () => {
 	it("props should have been defined", () => {
 		const wrapper = mountWithIntl(
 			<Expression
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -126,6 +128,7 @@ describe("expression-control renders correctly", () => {
 	it("should render a `Expression`", () => {
 		const wrapper = mountWithIntl(
 			<Expression
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -142,25 +145,30 @@ describe("expression-builder renders correctly", () => {
 	it("expression builder props should have been defined", () => {
 		reset();
 		const wrapper = mountWithIntl(
-			<ExpressionBuilder
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
-		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("controller")).to.equal(controller);
-		expect(wrapper.prop("propertyId")).to.equal(propertyId);
+		const expBuilder = wrapper.find(ExpressionBuilder);
+		expect(expBuilder.prop("control")).to.equal(control);
+		expect(expBuilder.prop("controller")).to.equal(controller);
+		expect(expBuilder.prop("propertyId")).to.equal(propertyId);
 	});
 
 	it("should render a `ExpressionBuilder`", () => {
 		reset();
 		const wrapper = mountWithIntl(
-			<ExpressionBuilder
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		// ensure all the container components rendered
 		expect(wrapper.find("div.properties-expression-editor-wrapper")).to.have.length(1);
@@ -178,11 +186,13 @@ describe("expression-builder select from tables correctly", () => {
 	it("expression builder select an operator", () => {
 		reset();
 		const wrapper = mountWithIntl(
-			<ExpressionBuilder
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const opButtons = wrapper.find("div.properties-operator-container").find("button");
 		opButtons.at(0).simulate("click");
@@ -192,11 +202,13 @@ describe("expression-builder select from tables correctly", () => {
 	it("expression builder select a field", () => {
 		reset();
 		const wrapper = mountWithIntl(
-			<ExpressionBuilder
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
 		fieldRows.at(0).simulate("dblclick");
@@ -206,11 +218,13 @@ describe("expression-builder select from tables correctly", () => {
 	it("expression builder select a field value", () => {
 		reset();
 		const wrapper = mountWithIntl(
-			<ExpressionBuilder
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const fieldRows = wrapper.find("div.properties-value-table-container .reactable-data tr");
 		fieldRows.at(0).simulate("dblclick");
@@ -220,11 +234,13 @@ describe("expression-builder select from tables correctly", () => {
 	it("expression builder select a function", () => {
 		reset();
 		const wrapper = mountWithIntl(
-			<ExpressionBuilder
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const fieldRows = wrapper.find("div.properties-functions-table-container .reactable-data tr");
 		fieldRows.at(0).simulate("dblclick");

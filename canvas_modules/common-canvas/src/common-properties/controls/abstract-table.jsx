@@ -55,15 +55,14 @@ export default class AbstractTable extends React.Component {
 		this.checkedAll = this.checkedAll.bind(this);
 		this.addOnClick = this.addOnClick.bind(this);
 
-		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
-		if (selectedRows && selectedRows.length > 0) {
-			this.scrollToRow = selectedRows[selectedRows.length - 1];
+		if (props.selectedRows && props.selectedRows.length > 0) {
+			this.scrollToRow = props.selectedRows[props.selectedRows.length - 1];
 			this.alignTop = true;
 		}
 
-		this.selectSummaryPropertyName = "table-multi-select-edit-property-" + this.props.control.name;
-		this.props.controller.saveControls([{ name: this.selectSummaryPropertyName }]);
-		this.setSelectedSummaryRowValue(selectedRows);
+		this.selectSummaryPropertyName = "table-multi-select-edit-property-" + props.control.name;
+		props.controller.saveControls([{ name: this.selectSummaryPropertyName }]);
+		this.setSelectedSummaryRowValue(props.selectedRows);
 	}
 
 	componentDidMount() {
@@ -74,14 +73,11 @@ export default class AbstractTable extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
-		this.setState({ enableRemoveIcon: (selectedRows.length !== 0) });
-
+		this.setState({ enableRemoveIcon: (nextProps.selectedRows.length !== 0) });
 	}
 
 	componentDidUpdate() {
-		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
-		if (this.isSelectSummaryEdit(selectedRows)) {
+		if (this.isSelectSummaryEdit(this.props.selectedRows)) {
 			this.updateSelectedRowsValues([]);
 		}
 	}
@@ -95,7 +91,7 @@ export default class AbstractTable extends React.Component {
 	}
 
 	onSort(spec) {
-		let controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		let controlValue = this.props.value;
 		let col = -1;
 		for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
 			if (this.props.control.subControls[colIndex].name === spec.column) {
@@ -125,7 +121,7 @@ export default class AbstractTable extends React.Component {
 	}
 
 	getRowClassName(rowIndex, selectSummaryRow) {
-		return this.props.controller.getSelectedRows(this.props.control.name).indexOf(rowIndex) >= 0 && !selectSummaryRow
+		return this.props.selectedRows.indexOf(rowIndex) >= 0 && !selectSummaryRow
 			? "table-row table-selected-row "
 			: "table-row";
 	}
@@ -179,7 +175,7 @@ export default class AbstractTable extends React.Component {
 	}
 
 	setReadOnlyColumnValue(controlValue) {
-		const controlValues = controlValue ? controlValue : this.props.controller.getPropertyValue(this.props.propertyId);
+		const controlValues = controlValue ? controlValue : this.props.value;
 		if (!Array.isArray(controlValues)) {
 			return controlValues;
 		}
@@ -198,13 +194,13 @@ export default class AbstractTable extends React.Component {
 	// This will set the select summary row values either from the property value or the default values.
 	setSelectedSummaryRowValue(selection) {
 		if (this.isSelectSummaryEdit(selection)) {
-			const propertyId = {
+			const summaryPropertyId = {
 				name: this.selectSummaryPropertyName
 			};
-			let value = this.props.controller.getPropertyValue(propertyId);
+			let value = this.props.controller.getPropertyValue(summaryPropertyId);
 			if (!value) {
 				value = [this.getDefaultRow()];
-				this.props.controller.updatePropertyValue(propertyId, value, true);
+				this.props.controller.updatePropertyValue(summaryPropertyId, value, true);
 			}
 			this.selectedSummaryRowValue = JSON.parse(JSON.stringify(value));
 		}
@@ -224,7 +220,7 @@ export default class AbstractTable extends React.Component {
 		if (selectSummaryRow) {
 			return;
 		}
-		let selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
+		let selectedRows = this.props.selectedRows;
 		if (this.props.control.rowSelection === "single") {
 			selectedRows = [rowIndex];
 		} else if (evt.metaKey === true || evt.ctrlKey === true) {
@@ -253,18 +249,17 @@ export default class AbstractTable extends React.Component {
 	// this will got through all selected rows and update any column value in the row with the
 	// column value in the selected summary row that has changed.
 	updateSelectedRowsValues() {
-		const propertyId = {
+		const summaryPropertyId = {
 			name: this.selectSummaryPropertyName
 		};
-		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
-		const newSelectedSummaryRow = this.props.controller.getPropertyValue(propertyId);
+		const newSelectedSummaryRow = this.props.controller.getPropertyValue(summaryPropertyId);
 		if (newSelectedSummaryRow && Array.isArray(newSelectedSummaryRow)) {
 			newSelectedSummaryRow[0].forEach((cellValue, colIndex) => {
 				// if a column does not have a value, the default value is null and the value returned
 				// from getPropertyValue is undefined causing unneccessary updates and an infinite loop during intialization
 				const testCell = (typeof cellValue === "undefined") ? null : cellValue;
 				if (testCell !== this.selectedSummaryRowValue[0][colIndex]) {
-					selectedRows.forEach((rowIndex) => {
+					this.props.selectedRows.forEach((rowIndex) => {
 						// TODO check if the change to the field is allowed.
 						this.props.controller.updatePropertyValue({ name: this.props.control.name, row: rowIndex, col: colIndex }, testCell, true);
 					});
@@ -285,10 +280,10 @@ export default class AbstractTable extends React.Component {
 
 
 	removeSelected() {
-		const rows = this.props.controller.getPropertyValue(this.props.propertyId);
+		const rows = this.props.value;
 		// Sort descending to ensure lower indices don"t get
 		// changed when values are deleted
-		const selected = this.props.controller.getSelectedRows(this.props.control.name).sort(function(a, b) {
+		const selected = this.props.selectedRows.sort(function(a, b) {
 			return b - a;
 		});
 		for (let i = 0; i < selected.length; i++) {
@@ -369,7 +364,7 @@ export default class AbstractTable extends React.Component {
 		if (!this.state.filterText || this.state.filterText.length === 0) {
 			return true;
 		}
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		const controlValue = this.props.value;
 		for (let i = 0; i < this.filterFields.length; i++) {
 			for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
 				const columnDef = this.props.control.subControls[colIndex];
@@ -521,7 +516,7 @@ export default class AbstractTable extends React.Component {
 	}
 
 	checkedAllValue(colIndex, checked) {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		const controlValue = this.props.value;
 		for (let i = 0; i < controlValue.length; i++) {
 			const propertyId = {
 				name: this.props.control.name,
@@ -534,7 +529,7 @@ export default class AbstractTable extends React.Component {
 	}
 
 	checkedAll(colIndex) {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		const controlValue = this.props.value;
 		if (Array.isArray(controlValue)) {
 			if (controlValue.length === 0) {
 				return false;
@@ -560,7 +555,7 @@ export default class AbstractTable extends React.Component {
 		const headers = (this.props.control.header === false) ? [] : this.makeHeader(sortFields, filterFields);
 		const showHeader = this.props.control.header !== false;
 
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		const controlValue = this.props.value;
 		this.makeCells(rows, controlValue, tableState);
 
 		if (this.props.rightFlyout) {
@@ -568,7 +563,7 @@ export default class AbstractTable extends React.Component {
 		}
 
 		const selectedEditRow = this.props.control.rowSelection === "multiple-edit"
-			? this.makeSelectedEditRow(this.props.controller.getSelectedRows(this.props.control.name))
+			? this.makeSelectedEditRow(this.props.selectedRows)
 			: <div />;
 
 		const topRightPanel = (typeof this.props.control.addRemoveRows === "undefined" || this.props.control.addRemoveRows) // default to true.
@@ -720,4 +715,6 @@ AbstractTable.propTypes = {
 	controller: PropTypes.object.isRequired,
 	openFieldPicker: PropTypes.func.isRequired,
 	rightFlyout: PropTypes.bool,
+	value: PropTypes.array, // pass in by redux
+	selectedRows: PropTypes.array // set by redux
 };

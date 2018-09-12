@@ -60,6 +60,7 @@ describe("oneofselect renders correctly", () => {
 	it("props should have been defined", () => {
 		const wrapper = mount(
 			<OneofselectControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -73,6 +74,7 @@ describe("oneofselect renders correctly", () => {
 	it("should render a oneofselect with empty value label", () => {
 		const wrapper = mount(
 			<OneofselectControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -88,6 +90,7 @@ describe("oneofselect renders correctly", () => {
 		);
 		const wrapper = mount(
 			<OneofselectControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -111,6 +114,7 @@ describe("oneofselect renders correctly", () => {
 		);
 		const wrapper = mount(
 			<OneofselectControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -135,6 +139,7 @@ describe("oneofselect renders correctly", () => {
 		);
 		const wrapper = mount(
 			<OneofselectControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -147,6 +152,7 @@ describe("oneofselect renders correctly", () => {
 		controller.updateControlState(propertyId, "disabled");
 		const wrapper = mount(
 			<OneofselectControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -159,6 +165,7 @@ describe("oneofselect renders correctly", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = mount(
 			<OneofselectControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -171,6 +178,7 @@ describe("oneofselect renders correctly", () => {
 		controller.setControlStates({ "test-oneofselect": { "enumFilter": ["order", "gtt"] } });
 		const wrapper = mount(
 			<OneofselectControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -186,7 +194,7 @@ describe("oneofselect renders correctly", () => {
 		expect(dropdownList).to.be.length(2);
 	});
 	it("dropdown renders correctly in a table", () => {
-		// TODO:  Need to ad this test case
+		// TODO:  Need to add this test case
 	});
 	it("dropdown renders messages correctly", () => {
 		controller.updateErrorMessage(propertyId, {
@@ -196,6 +204,7 @@ describe("oneofselect renders correctly", () => {
 		});
 		const wrapper = mount(
 			<OneofselectControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}

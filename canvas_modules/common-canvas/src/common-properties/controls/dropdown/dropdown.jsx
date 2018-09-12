@@ -9,6 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import Dropdown from "carbon-components-react/lib/components/DropdownV2";
 import ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
@@ -18,7 +19,7 @@ import { ControlType } from "./../../constants/form-constants";
 import { STATES } from "./../../constants/constants.js";
 
 
-export default class DropDown extends React.Component {
+class DropDown extends React.Component {
 	constructor(props) {
 		super(props);
 		this.emptyLabel = "...";
@@ -41,15 +42,14 @@ export default class DropDown extends React.Component {
 	}
 
 	genSchemaSelectOptions(selectedValue) {
-		const schemaNames = this.props.controller.getDatasetMetadataSchemas();
 		const options = [];
 		// allow for user to not select a schema
 		options.push({
 			value: "",
 			label: this.emptyLabel
 		});
-		if (Array.isArray(schemaNames)) {
-			for (const schemaName of schemaNames) {
+		if (Array.isArray(this.props.controlOpts)) {
+			for (const schemaName of this.props.controlOpts) {
 				options.push({
 					value: schemaName,
 					label: schemaName
@@ -70,7 +70,7 @@ export default class DropDown extends React.Component {
 			value: "",
 			label: this.emptyLabel
 		});
-		for (const field of this.props.fields) {
+		for (const field of this.props.controlOpts) {
 			options.push({
 				value: field.name,
 				label: field.name
@@ -86,11 +86,10 @@ export default class DropDown extends React.Component {
 	genSelectOptions(selectedValue) {
 		const options = [];
 		// Allow for enumeration replacement
-		const controlOpts = this.props.controller.getFilteredEnumItems(this.props.propertyId, this.props.control);
-		for (let j = 0; j < controlOpts.values.length; j++) {
+		for (let j = 0; j < this.props.controlOpts.values.length; j++) {
 			options.push({
-				value: controlOpts.values[j],
-				label: controlOpts.valueLabels[j]
+				value: this.props.controlOpts.values[j],
+				label: this.props.controlOpts.valueLabels[j]
 			});
 		}
 		const selectedOption = this.getSelectedOption(options, selectedValue);
@@ -109,22 +108,19 @@ export default class DropDown extends React.Component {
 	}
 
 	render() {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const state = this.props.controller.getControlState(this.props.propertyId);
-		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
 		const dropdownType = (this.props.tableControl) ? "inline" : "default";
 
 		let dropDown;
 		if (this.props.control.controlType === ControlType.SELECTSCHEMA) {
-			dropDown = this.genSchemaSelectOptions(controlValue);
+			dropDown = this.genSchemaSelectOptions(this.props.value);
 		} else if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
-			dropDown = this.genFieldSelectOptions(controlValue);
+			dropDown = this.genFieldSelectOptions(this.props.value);
 		} else {
-			dropDown = this.genSelectOptions(controlValue);
+			dropDown = this.genSelectOptions(this.props.value);
 		}
 
 		let ourDropDown = (<Dropdown
-			disabled={state === STATES.DISABLED}
+			disabled={this.props.state === STATES.DISABLED}
 			type={dropdownType}
 			items={dropDown.options}
 			onChange={this.handleChange}
@@ -151,10 +147,10 @@ export default class DropDown extends React.Component {
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)}
-				className={classNames("properties-dropdown", { "hide": state === STATES.HIDDEN }, messageInfo ? messageInfo.type : null)}
+				className={classNames("properties-dropdown", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}
 			>
 				{ourDropDown}
-				<ValidationMessage state={state} messageInfo={messageInfo} inTable={this.props.tableControl} />
+				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>
 		);
 	}
@@ -165,5 +161,32 @@ DropDown.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	tableControl: PropTypes.bool,
-	fields: PropTypes.array
+	controlOpts: PropTypes.oneOfType([
+		PropTypes.object,
+		PropTypes.array
+	]), // pass in by redux
+	state: PropTypes.string, // pass in by redux
+	value: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.object
+	]), // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
+
+const mapStateToProps = (state, ownProps) => {
+	const props = {
+		value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+		state: ownProps.controller.getControlState(ownProps.propertyId),
+		messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId),
+	};
+	if (ownProps.control.controlType === ControlType.SELECTSCHEMA) {
+		props.controlOpts = ownProps.controller.getDatasetMetadataSchemas();
+	} else if (ownProps.control.controlType === ControlType.SELECTCOLUMN) {
+		props.controlOpts = ownProps.controller.getFilteredDatasetMetadata(ownProps.propertyId);
+	} else {
+		props.controlOpts = ownProps.controller.getFilteredEnumItems(ownProps.propertyId, ownProps.control);
+	}
+	return props;
+};
+
+export default connect(mapStateToProps, null)(DropDown);

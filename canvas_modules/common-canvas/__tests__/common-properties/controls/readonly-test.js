@@ -32,6 +32,7 @@ describe("textfield-control renders correctly", () => {
 	it("readonly props should have been defined", () => {
 		const wrapper = mount(
 			<Readonly
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -45,6 +46,7 @@ describe("textfield-control renders correctly", () => {
 	it("readonly should render correctly", () => {
 		const wrapper = mount(
 			<Readonly
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -61,6 +63,7 @@ describe("textfield-control renders correctly", () => {
 		);
 		const wrapper = mount(
 			<Readonly
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -76,6 +79,7 @@ describe("textfield-control renders correctly", () => {
 		);
 		const wrapper = mount(
 			<Readonly
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -89,6 +93,7 @@ describe("textfield-control renders correctly", () => {
 		controller.updateControlState(propertyId, "disabled");
 		const wrapper = mount(
 			<Readonly
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -101,6 +106,7 @@ describe("textfield-control renders correctly", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = mount(
 			<Readonly
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -117,6 +123,7 @@ describe("textfield-control renders correctly", () => {
 		});
 		const wrapper = mount(
 			<Readonly
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}

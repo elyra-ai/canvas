@@ -119,7 +119,6 @@ describe("condition messages should add alerts tab", () => {
 		// hide the number field
 		checkbox.getDOMNode().checked = true;
 		checkbox.simulate("change");
-		wrapper.update();
 
 		// there should be no alerts for the hidden field
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category

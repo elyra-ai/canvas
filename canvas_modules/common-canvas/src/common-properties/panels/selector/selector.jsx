@@ -9,11 +9,12 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-export default class SelectorPanel extends React.Component {
+class SelectorPanel extends React.Component {
 
 	render() {
-		let panel = this.props.panels[this.props.controller.getPropertyValue({ name: this.props.dependsOn })];
+		let panel = this.props.panel;
 		if (typeof panel === "undefined") {
 			panel = <div className="properties-control-panel" />;
 		}
@@ -25,4 +26,11 @@ SelectorPanel.propTypes = {
 	panels: PropTypes.object,
 	dependsOn: PropTypes.string,
 	controller: PropTypes.object.isRequired,
+	panel: PropTypes.object // set by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	panel: ownProps.panels[ownProps.controller.getPropertyValue({ name: ownProps.dependsOn })]
+});
+
+export default connect(mapStateToProps, null)(SelectorPanel);

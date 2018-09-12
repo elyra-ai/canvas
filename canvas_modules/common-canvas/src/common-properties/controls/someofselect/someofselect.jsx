@@ -9,16 +9,17 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import FlexibleTable from "../../components/flexible-table";
 import Checkbox from "carbon-components-react/lib/components/Checkbox";
 import ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
 
-import { TABLE_SCROLLBAR_WIDTH, STATES, CONDITION_MESSAGE_TYPE } from "../../constants/constants";
+import { TABLE_SCROLLBAR_WIDTH, STATES } from "../../constants/constants";
 
 
-export default class SomeofselectControl extends React.Component {
+class SomeofselectControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.newSelection = null;
@@ -98,22 +99,18 @@ export default class SomeofselectControl extends React.Component {
 	}
 
 	render() {
-		let controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const state = this.props.controller.getControlState(this.props.propertyId);
-		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
-		const messageType = (messageInfo) ? messageInfo.type : CONDITION_MESSAGE_TYPE.INFO;
-
+		let controlValue = this.props.value;
 		if (typeof controlValue === "undefined" || controlValue === null) {
 			controlValue = [];
 		}
 
-		const options = this.genSelectOptions(controlValue, state);
+		const options = this.genSelectOptions(controlValue, this.props.state);
 		const rows = this.props.control.rows ? this.props.control.rows : 4;
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
-				className={classNames("properties-someofselect ", { "hide": state === STATES.HIDDEN,
-					"error": messageType === CONDITION_MESSAGE_TYPE.ERROR, "warning": messageType === CONDITION_MESSAGE_TYPE.WARNING })}
+				className={classNames("properties-someofselect ", { "hide": this.props.state === STATES.HIDDEN },
+					this.props.messageInfo ? this.props.messageInfo.type : null)}
 			>
 				<FlexibleTable
 					columns={[]}
@@ -122,7 +119,7 @@ export default class SomeofselectControl extends React.Component {
 					scrollKey={this.props.control.name}
 					controller={this.props.controller}
 				/>
-				<ValidationMessage state={state} messageInfo={messageInfo} inTable={this.props.tableControl} />
+				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>
 
 		);
@@ -133,5 +130,16 @@ SomeofselectControl.propTypes = {
 	control: PropTypes.object,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	tableControl: PropTypes.bool
+	tableControl: PropTypes.bool,
+	state: PropTypes.string, // pass in by redux
+	value: PropTypes.array, // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	state: ownProps.controller.getControlState(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+});
+
+export default connect(mapStateToProps, null)(SomeofselectControl);

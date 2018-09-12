@@ -9,13 +9,15 @@
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import ReactDOM from "react-dom";
+import { setTitle } from "./../../actions";
 import Icon from "./../../../icons/icon.jsx";
 import TextInput from "carbon-components-react/lib/components/TextInput";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
 import PropertyUtils from "./../../util/property-utils";
 
-export default class TitleEditor extends Component {
+class TitleEditor extends Component {
 	constructor(props) {
 		super(props);
 		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
@@ -63,8 +65,8 @@ export default class TitleEditor extends Component {
 				<div className="properties-title-editor-input">
 					<TextInput
 						id={this.id}
-						value={this.props.controller.getTitle()}
-						onChange={(e) => this.props.controller.setTitle(e.target.value)}
+						value={this.props.title}
+						onChange={(e) => this.props.setTitle(e.target.value)}
 						onKeyPress={(e) => this._handleKeyPress(e)}
 						readOnly={this.props.labelEditable === false}
 						labelText={this.labelText}
@@ -80,7 +82,21 @@ export default class TitleEditor extends Component {
 
 TitleEditor.propTypes = {
 	helpClickHandler: PropTypes.func,
-	controller: PropTypes.object,
+	controller: PropTypes.object.isRequired,
 	labelEditable: PropTypes.bool,
 	help: PropTypes.object,
+	title: PropTypes.string, // set by redux
+	setTitle: PropTypes.func // set by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	title: state.componentMetadataReducer.title
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+	setTitle: (title) => {
+		dispatch(setTitle(title));
+	}
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TitleEditor);

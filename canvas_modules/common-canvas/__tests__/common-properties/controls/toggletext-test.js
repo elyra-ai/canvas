@@ -59,6 +59,7 @@ describe("Toggletext renders correctly", () => {
 	it("Toggletext props should have been defined", () => {
 		const wrapper = mount(
 			<Toggletext
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -72,6 +73,7 @@ describe("Toggletext renders correctly", () => {
 	it("Toggletext should render correctly", () => {
 		const wrapper = mount(
 			<Toggletext
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -90,6 +92,7 @@ describe("Toggletext renders correctly", () => {
 	it("Toggletext should render without icons", () => {
 		const wrapper = mount(
 			<Toggletext
+				store={controller.getStore()}
 				control={controlNoIcons}
 				controller={controller}
 				propertyId={propertyId}
@@ -108,6 +111,7 @@ describe("Toggletext renders correctly", () => {
 	it("toggletext should set correct value", () => {
 		const wrapper = mount(
 			<Toggletext
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -123,6 +127,7 @@ describe("Toggletext renders correctly", () => {
 		controller.updateControlState(propertyId, "disabled");
 		const wrapper = mount(
 			<Toggletext
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -136,6 +141,7 @@ describe("Toggletext renders correctly", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = mount(
 			<Toggletext
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -153,6 +159,7 @@ describe("Toggletext renders correctly", () => {
 		});
 		const wrapper = mount(
 			<Toggletext
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}

@@ -51,7 +51,6 @@ describe("'panel selector insert' renders correctly", () => {
 
 		const radioBlue = radios.find("input[value='blue2']");
 		radioBlue.simulate("change", { target: { checked: true, value: "blue2" } });
-		wrapper.update();
 
 		// Check that the blue (1) text panel is enabled and red (0) and yellow (2)
 		// text panels are disabled.
@@ -80,7 +79,6 @@ describe("'panel selector insert' renders correctly", () => {
 		const node = disabledCheckbox.getDOMNode();
 		node.checked = false;
 		disabledCheckbox.simulate("change");
-		wrapper.update();
 
 		expect(controller.getControlState({ name: "fruit-color11" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "number" })).to.equal("enabled");
@@ -102,7 +100,6 @@ describe("'panel selector insert' renders correctly", () => {
 		// visible
 		hiddenCheckbox.getDOMNode().checked = false;
 		hiddenCheckbox.simulate("change");
-		wrapper.update();
 
 		expect(controller.getControlState({ name: "fruit-color21" })).to.equal("visible");
 		expect(controller.getPanelState({ name: "panel-selector-fields21" })).to.equal("visible");
@@ -129,7 +126,6 @@ describe("'panel selector insert' renders correctly", () => {
 
 		const radioBlue = radios.find("input[value='blue3']");
 		radioBlue.simulate("change", { target: { checked: true, value: "blue3" } });
-		wrapper.update();
 
 		expect(controller.getPropertyValue({ name: "fruit-color3" })).to.equal("blue3");
 		expect(controller.getPanelState({ name: "red3" })).to.equal("disabled");
@@ -145,7 +141,6 @@ describe("'panel selector insert' renders correctly", () => {
 		// change selection
 		const radioYellow = radios.find("input[value='yellow3']");
 		radioYellow.simulate("change", { target: { checked: true, value: "yellow3" } });
-		wrapper.update();
 
 		expect(controller.getPropertyValue({ name: "fruit-color3" })).to.equal("yellow3");
 		expect(controller.getPanelState({ name: "red3" })).to.equal("disabled");

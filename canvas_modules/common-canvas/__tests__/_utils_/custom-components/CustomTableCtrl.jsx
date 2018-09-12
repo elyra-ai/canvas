@@ -10,37 +10,33 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Table } from "reactable";
+import { connect } from "react-redux";
 
-export default class CustomTableCtrl extends React.Component {
+class CustomTableCtrl extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-		};
 		this.getValues = this.getValues.bind(this);
 	}
 	getValues() {
 		const values = [];
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		if (Array.isArray(controlValue)) {
+		if (Array.isArray(this.props.controlValue)) {
 			values.push(
 				{
-					Age: controlValue[0],
-					Value: controlValue[1]
+					Age: this.props.controlValue[0],
+					Value: this.props.controlValue[1]
 				}
 			);
 		}
 		return values;
 	}
 	render() {
-		const state = this.props.controller.getControlState(this.props.propertyId);
 		let visibility;
-		if (state === "hidden") {
+		if (this.props.state === "hidden") {
 			visibility = { visibility: "hidden" };
 		}
-
-		let content = this.props.controller.getPropertyValue(this.props.propertyId);
-		if (Array.isArray(content)) {
-			content = (<div className="text">{content.join("-")}</div>);
+		let content = null;
+		if (Array.isArray(this.props.controlValue)) {
+			content = (<div className="text">{this.props.controlValue.join("-")}</div>);
 		}
 		if (this.props.editStyle !== "summary") {
 			content = (
@@ -60,5 +56,14 @@ export default class CustomTableCtrl extends React.Component {
 CustomTableCtrl.propTypes = {
 	controller: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
-	editStyle: PropTypes.string
+	editStyle: PropTypes.string,
+	state: PropTypes.string, // pass in by redux
+	controlValue: PropTypes.array // pass in by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	controlValue: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	state: ownProps.controller.getControlState(ownProps.propertyId)
+});
+
+export default connect(mapStateToProps, null)(CustomTableCtrl);

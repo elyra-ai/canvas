@@ -39,6 +39,7 @@ describe("timefield-control renders correctly", () => {
 	it("props should have been defined", () => {
 		const wrapper = mount(
 			<TimefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -52,6 +53,7 @@ describe("timefield-control renders correctly", () => {
 	it("should render a `TimefieldControl`", () => {
 		const wrapper = mount(
 			<TimefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -65,6 +67,7 @@ describe("timefield-control renders correctly", () => {
 	it("should allow a valid time to be entered in `TimefieldControl`", () => {
 		const wrapper = mount(
 			<TimefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -79,6 +82,7 @@ describe("timefield-control renders correctly", () => {
 	it("should allow invalid format date to be entered in `TimefieldControl`", () => {
 		const wrapper = mount(
 			<TimefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -99,6 +103,7 @@ describe("timefield-control renders correctly", () => {
 	it("should set correct state null in `TimefieldControl`", () => {
 		const wrapper = mount(
 			<TimefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -113,6 +118,7 @@ describe("timefield-control renders correctly", () => {
 	it("should set correct control type in `TimefieldControl`", () => {
 		const wrapper = mount(
 			<TimefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -126,6 +132,7 @@ describe("timefield-control renders correctly", () => {
 	it("should set placeholder text in `TimefieldControl`", () => {
 		const wrapper = mount(
 			<TimefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}

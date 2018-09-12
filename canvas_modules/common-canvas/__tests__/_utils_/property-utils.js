@@ -9,9 +9,8 @@
 
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
-import EditorForm from "../../src/common-properties/components/editor-form";
 import UiConditionsParser from "../../src/common-properties/ui-conditions/ui-conditions-parser.js";
-import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
+import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
 import cloneDeep from "lodash/cloneDeep";
 
@@ -65,28 +64,6 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 	);
 
 	return { wrapper: wrapper, controller: renderedController, callbacks: callbacks };
-}
-
-function createEditorForm(state, formData, controller) {
-	const additionalComponents = null;
-	const showPropertiesButtons = sinon.spy();
-
-	controller.setForm(formData);
-
-	let wrapper;
-	const editorForm = (<EditorForm
-		ref="editorForm"
-		key="editor-form-key"
-		controller={controller}
-		additionalComponents={additionalComponents}
-		showPropertiesButtons={showPropertiesButtons}
-	/>);
-	if (state === "shallow") {
-		wrapper = shallowWithIntl(editorForm);
-	} else {
-		wrapper = mountWithIntl(editorForm);
-	}
-	return wrapper;
 }
 
 // expectedFields is optional
@@ -163,7 +140,6 @@ function openFieldPicker(wrapper, dataIdName) {
 
 module.exports = {
 	flyoutEditorForm: flyoutEditorForm,
-	createEditorForm: createEditorForm,
 	fieldPicker: fieldPicker,
 	selectCheckbox: selectCheckbox,
 	setControls: setControls,

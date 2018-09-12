@@ -40,6 +40,7 @@ describe("numberfield-control renders correctly", () => {
 	it("numberfield props should have been defined", () => {
 		const wrapper = mount(
 			<NumberfieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -53,6 +54,7 @@ describe("numberfield-control renders correctly", () => {
 	it("numberfield should render", () => {
 		const wrapper = mount(
 			<NumberfieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -65,6 +67,7 @@ describe("numberfield-control renders correctly", () => {
 	it("numberfield should set placeholder text", () => {
 		const wrapper = mount(
 			<NumberfieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -78,6 +81,7 @@ describe("numberfield-control renders correctly", () => {
 		controller.updateControlState(propertyId, "disabled");
 		const wrapper = mount(
 			<NumberfieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -91,6 +95,7 @@ describe("numberfield-control renders correctly", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = mount(
 			<NumberfieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -108,6 +113,7 @@ describe("numberfield-control renders correctly", () => {
 		});
 		const wrapper = mount(
 			<NumberfieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}

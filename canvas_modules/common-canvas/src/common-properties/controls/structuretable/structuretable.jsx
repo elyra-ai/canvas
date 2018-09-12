@@ -10,6 +10,7 @@
 // CONTROL structuretable
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import AbstractTable from "./../abstract-table.jsx";
 import MoveableTableRows from "./../../components/moveable-table-rows";
 import PropertyUtils from "./../../util/property-utils";
@@ -21,7 +22,7 @@ import findIndex from "lodash/findIndex";
 import reject from "lodash/reject";
 import ControlUtils from "./../../util/control-utils";
 
-export default class StructureTableControl extends AbstractTable {
+class StructureTableControl extends AbstractTable {
 	constructor(props) {
 		super(props);
 		this.addColumns = this.addColumns.bind(this);
@@ -83,14 +84,13 @@ export default class StructureTableControl extends AbstractTable {
 	getDefaultRow(field) {
 		const row = [];
 		// if value is already in propertyValues, return that row
-		const currentControlValues = this.props.controller.getPropertyValue(this.props.propertyId);
-		if (currentControlValues && field) {
+		if (this.props.value && field) {
 			const dataColumnIndex = PropertyUtils.getTableFieldIndex(this.props.control);
-			for (let i = 0; i < currentControlValues.length; i++) {
-				const fieldValue = currentControlValues[i][dataColumnIndex];
+			for (let i = 0; i < this.props.value.length; i++) {
+				const fieldValue = this.props.value[i][dataColumnIndex];
 				if ((this.props.control.defaultRow && fieldValue === field) ||
-						(currentControlValues[i] === field)) {
-					return currentControlValues[i];
+						(this.props.value[i] === field)) {
+					return this.props.value[i];
 				}
 			}
 		}
@@ -144,23 +144,20 @@ export default class StructureTableControl extends AbstractTable {
 	}
 
 	render() {
-
-		const tableState = this.props.controller.getControlState(this.props.propertyId);
-		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
 		const tableButtonConfig = {
 			fieldPickerCloseFunction: this.onFieldPickerClose
 		};
 
-		const table = this.createTable(tableState, tableButtonConfig);
+		const table = this.createTable(this.props.state, tableButtonConfig);
 		const content = (
 			<div>
 				<div className="properties-st properties-st-buttons">
 					{table}
 				</div>
-				<ValidationMessage state={tableState} messageInfo={messageInfo} />
+				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>);
 
-		const onPanelContainer = this.getOnPanelContainer(this.props.controller.getSelectedRows(this.props.control.name));
+		const onPanelContainer = this.getOnPanelContainer(this.props.selectedRows);
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 				className="properties-column-structure-wrapper"
@@ -173,7 +170,7 @@ export default class StructureTableControl extends AbstractTable {
 						propertyId={this.props.propertyId}
 						setScrollToRow={this.setScrollToRow}
 						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-						disabled={tableState === STATES.DISABLED}
+						disabled={this.props.state === STATES.DISABLED}
 					/>
 				</div>
 				<div>
@@ -190,5 +187,19 @@ StructureTableControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	openFieldPicker: PropTypes.func.isRequired,
-	rightFlyout: PropTypes.bool
+	rightFlyout: PropTypes.bool,
+	selectedRows: PropTypes.array, // set by redux
+	state: PropTypes.string, // pass in by redux
+	value: PropTypes.array, // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
+
+
+const mapStateToProps = (state, ownProps) => ({
+	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	state: ownProps.controller.getControlState(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId),
+	selectedRows: ownProps.controller.getSelectedRows(ownProps.control.name)
+});
+
+export default connect(mapStateToProps, null)(StructureTableControl);

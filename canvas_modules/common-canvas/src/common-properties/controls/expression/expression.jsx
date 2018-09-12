@@ -11,6 +11,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { UnControlled as CodeMirror } from "react-codemirror2";
 import Icon from "./../../../icons/icon.jsx";
 import CarbonIcon from "carbon-components-react/lib/components/Icon";
@@ -46,7 +47,7 @@ const defaultCharPerLine = 30;
 const maxLineHeight = 15 * pxPerLine; // 20 lines
 const minLineHeight = 4 * pxPerLine; // 4 lines
 
-export default class ExpressionControl extends React.Component {
+class ExpressionControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -215,21 +216,19 @@ export default class ExpressionControl extends React.Component {
 	}
 
 	render() {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const state = this.props.controller.getControlState(this.props.propertyId);
-		let messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
+		let messageInfo = this.props.messageInfo;
 		const messageType = (messageInfo) ? messageInfo.type : CONDITION_MESSAGE_TYPE.INFO;
 		if (messageType === CONDITION_MESSAGE_TYPE.SUCCESS) {
 			messageInfo = null;
 		}
 
-		const theme = (state === STATES.DISABLED) ? "disabled" : messageType;
+		const theme = (this.props.state === STATES.DISABLED) ? "disabled" : messageType;
 		const reactIntl = this.props.controller.getReactIntl();
 
 		const button = this._showBuilderButton() ? (
-			<div className="properties-expression-button" disabled={state === STATES.DISABLED}>
-				<button type="button" disabled={state === STATES.DISABLED} onClick={this.showExpressionBuilder} >
-					<Icon disabled={state === STATES.DISABLED} type="builder" />
+			<div className="properties-expression-button" disabled={this.props.state === STATES.DISABLED}>
+				<button type="button" disabled={this.props.state === STATES.DISABLED} onClick={this.showExpressionBuilder} >
+					<Icon disabled={this.props.state === STATES.DISABLED} type="builder" />
 				</button>
 			</div>)
 			: <div />;
@@ -248,7 +247,7 @@ export default class ExpressionControl extends React.Component {
 
 		const validateLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_VALIDATE_LABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSION_VALIDATE_LABEL);
 		const validateLink = (
-			<div className="properties-expression-validate" disabled={state === STATES.DISABLED}>
+			<div className="properties-expression-validate" disabled={this.props.state === STATES.DISABLED}>
 				{validateIcon}
 				<div className="validateLink">
 					<Link onClick={this.handleValidate}>
@@ -261,7 +260,7 @@ export default class ExpressionControl extends React.Component {
 			mode: this.props.control.language,
 			placeholder: this.props.control.additionalText,
 			theme: theme + " default",
-			readOnly: (state === STATES.DISABLED) ? "nocursor" : false,
+			readOnly: (this.props.state === STATES.DISABLED) ? "nocursor" : false,
 			extraKeys: { "Ctrl-Space": "autocomplete" },
 			autoRefresh: true
 		};
@@ -305,9 +304,9 @@ export default class ExpressionControl extends React.Component {
 							onKeyDown={this.handleKeyDown}
 							onBlur={this.handleBlur}
 							editorDidMount={this.editorDidMount}
-							value={controlValue}
+							value={this.props.value}
 						/>
-						<ValidationMessage state={state} messageInfo={messageInfo} inTable={this.props.tableControl} />
+						<ValidationMessage state={this.props.state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 					</div>
 				</div>
 			</div>
@@ -326,9 +325,20 @@ ExpressionControl.propTypes = {
 	selectionRange: PropTypes.array,
 	onSelectionChange: PropTypes.func,
 	onBlur: PropTypes.func,
-	height: PropTypes.number // height in px
+	height: PropTypes.number, // height in px
+	state: PropTypes.string, // pass in by redux
+	value: PropTypes.string, // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
 
 ExpressionControl.defaultProps = {
 	builder: true
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	state: ownProps.controller.getControlState(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+});
+
+export default connect(mapStateToProps, null)(ExpressionControl);

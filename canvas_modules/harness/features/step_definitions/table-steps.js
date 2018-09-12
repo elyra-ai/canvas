@@ -7,19 +7,12 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-@import "./summary/summary";
-@import "./sub-panel/sub-panel";
-@import "./twisty/twisty";
-@import "./text-panel/text-panel";
-@import "./action-panel/action-panel";
+/* global browser */
 
-.properties-control-panel {
-	display: block;
-	padding: 0 0 0 8px;
-}
-
-.properties-category-content {
-	> .properties-control-panel { // only add top & bottom padding to first control panel
-		padding: 8px 0;
-	}
-}
+module.exports = function() {
+	this.Then(/^I click the subpanel button in control "([^"]*)" in row "([^"]*)"$/, function(controlId, row) {
+		var table = browser.$("div[data-id='properties-" + controlId + "']");
+		table.$$(".properties-subpanel-button")[row].click();
+		browser.pause(500);
+	});
+};

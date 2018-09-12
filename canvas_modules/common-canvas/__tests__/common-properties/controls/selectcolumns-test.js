@@ -9,7 +9,8 @@
 
 import React from "react";
 import SelectColumns from "../../../src/common-properties/controls/selectcolumns";
-import { mountWithIntl } from "enzyme-react-intl";
+import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
+import { Provider } from "react-redux";
 import { expect } from "chai";
 import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
@@ -68,50 +69,37 @@ function setPropertyValue() {
 	);
 }
 
-
-var selectedRows = [];
-function getSelectedRows() {
-	return selectedRows;
-}
-
-function updateSelectedRows(row) {
-	return selectedRows[row];
-}
-
 const openFieldPickerSpy = sinon.spy();
 
 describe("selectcolumns renders correctly", () => {
 	setPropertyValue();
 	it("props should have been defined", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = shallowWithIntl(
 			<SelectColumns
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
 				openFieldPicker={openFieldPickerSpy}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={selectedRows}
 			/>
 		);
 
 		expect(wrapper.prop("control")).to.equal(control);
 		expect(wrapper.prop("controller")).to.equal(controller);
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
-		expect(wrapper.prop("updateSelectedRows")).to.equal(updateSelectedRows);
 		expect(wrapper.prop("openFieldPicker")).to.equal(openFieldPickerSpy);
-		expect(wrapper.prop("selectedRows")).to.equal(selectedRows);
 	});
 
 	it("should render a `selectcolumns` control", () => {
 		const wrapper = mountWithIntl(
-			<SelectColumns
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				openFieldPicker={openFieldPickerSpy}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRows()}
-			/>
+			<Provider store={controller.getStore()}>
+				<SelectColumns
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					openFieldPicker={openFieldPickerSpy}
+				/>
+			</Provider>
 		);
 		expect(wrapper.find("button.properties-add-fields-button")).to.have.length(1);
 		expect(wrapper.find("button.properties-remove-fields-button")).to.have.length(1);
@@ -120,14 +108,14 @@ describe("selectcolumns renders correctly", () => {
 
 	it("should select add columns button and openFieldPicker should be invoked", () => {
 		const wrapper = mountWithIntl(
-			<SelectColumns
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				openFieldPicker={openFieldPickerSpy}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRows()}
-			/>
+			<Provider store={controller.getStore()}>
+				<SelectColumns
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					openFieldPicker={openFieldPickerSpy}
+				/>
+			</Provider>
 		);
 
 		// select the add column button
@@ -142,13 +130,15 @@ describe("selectcolumns renders correctly", () => {
 	it("should select row and remove button row should be removed", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<SelectColumns
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				openFieldPicker={openFieldPickerSpy}
-				rightFlyout
-			/>
+			<Provider store={controller.getStore()}>
+				<SelectColumns
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					openFieldPicker={openFieldPickerSpy}
+					rightFlyout
+				/>
+			</Provider>
 		);
 		// select the second row in the table
 		const tableData = wrapper.find("tr.column-select-table-row");
@@ -170,13 +160,15 @@ describe("selectcolumns renders correctly", () => {
 			text: "bad selectColumns value"
 		});
 		const wrapper = mountWithIntl(
-			<SelectColumns
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				openFieldPicker={openFieldPickerSpy}
-				rightFlyout
-			/>
+			<Provider store={controller.getStore()}>
+				<SelectColumns
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					openFieldPicker={openFieldPickerSpy}
+					rightFlyout
+				/>
+			</Provider>
 		);
 		const selectColumnsWrapper = wrapper.find("div[data-id='properties-test-columnSelect']");
 		const messageWrapper = selectColumnsWrapper.find("div.properties-validation-message");

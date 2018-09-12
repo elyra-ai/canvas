@@ -71,8 +71,12 @@ describe("selectcolumn control renders correctly", () => {
 	];
 	const propertyId = { name: control.name };
 	const controller = new Controller();
+
 	propertyUtils.setControls(controller, [control]);
 
+	beforeEach(() => {
+		controller.setDatasetMetadata({ fields: fields });
+	});
 	afterEach(() => {
 		controller.setErrorMessages({});
 		controller.setControlStates({});
@@ -80,15 +84,14 @@ describe("selectcolumn control renders correctly", () => {
 	it("props should have been defined", () => {
 		const wrapper = mount(
 			<SelectColumn
+				store={controller.getStore()}
 				control={control}
-				fields={fields}
 				propertyId={propertyId}
 				controller = {controller}
 			/>
 		);
 
 		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("fields")).to.equal(fields);
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 		expect(wrapper.prop("controller")).to.equal(controller);
 	});
@@ -104,8 +107,8 @@ describe("selectcolumn control renders correctly", () => {
 		});
 		const wrapper = mount(
 			<SelectColumn
+				store={controller.getStore()}
 				control={control}
-				fields={fields}
 				propertyId={propertyId}
 				controller = {controller}
 			/>
@@ -121,8 +124,8 @@ describe("selectcolumn control renders correctly", () => {
 		);
 		const wrapper = mount(
 			<SelectColumn
+				store={controller.getStore()}
 				control={control}
-				fields={fields}
 				propertyId={propertyId}
 				controller = {controller}
 			/>
@@ -139,13 +142,14 @@ describe("selectcolumn control renders correctly", () => {
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
 	it("should have '...' as first selected option when fields is empty", () => {
+		controller.setDatasetMetadata([]);
 		controller.setPropertyValues(
 			{ "targetField": null }
 		);
 		const wrapper = mount(
 			<SelectColumn
+				store={controller.getStore()}
 				control={control}
-				fields={[]}
 				propertyId={propertyId}
 				controller = {controller}
 			/>
@@ -168,8 +172,8 @@ describe("selectcolumn control renders correctly", () => {
 		);
 		const wrapper = mount(
 			<SelectColumn
+				store={controller.getStore()}
 				control={control}
-				fields={fields}
 				propertyId={propertyId}
 				controller = {controller}
 			/>

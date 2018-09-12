@@ -11,17 +11,16 @@ import React from "react";
 import PropTypes from "prop-types";
 import Slider from "carbon-components-react/lib/components/Slider";
 import Icon from "carbon-components-react/lib/components/Icon";
+import { connect } from "react-redux";
 
-export default class CustomSliderCtrl extends React.Component {
+class CustomSliderCtrl extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-		};
 		this.handleChange = this.handleChange.bind(this);
 	}
 
 	handleChange(evt) {
-		var message;
+		let message;
 		if (evt.value > 60 && evt.value <= 90) {
 			message = { type: "warning", text: "Slider greater than 60" };
 			this.props.controller.updateErrorMessage(this.props.propertyId, message);
@@ -34,15 +33,13 @@ export default class CustomSliderCtrl extends React.Component {
 		this.props.controller.updatePropertyValue(this.props.propertyId, evt.value);
 	}
 	render() {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const message = this.props.controller.getErrorMessage(this.props.propertyId);
-		var messageText;
-		var icon;
-		if (message && message.text) {
-			messageText = message.text;
-			if (message.type === "warning") {
+		let messageText;
+		let icon;
+		if (this.props.messageInfo && this.props.messageInfo.text) {
+			messageText = this.props.messageInfo.text;
+			if (this.props.messageInfo.type === "warning") {
 				icon = (<Icon className="warning" name="warning--glyph" />);
-			} else if (message.type === "error") {
+			} else if (this.props.messageInfo.type === "error") {
 				icon = (<Icon className="error" name="error--glyph" />);
 			}
 		}
@@ -52,7 +49,7 @@ export default class CustomSliderCtrl extends React.Component {
 					<div className="slider">
 						<Slider
 							onChange={this.handleChange}
-							value={controlValue}
+							value={this.props.controlValue}
 							min={0}
 							max={100}
 							step={1}
@@ -71,5 +68,14 @@ export default class CustomSliderCtrl extends React.Component {
 
 CustomSliderCtrl.propTypes = {
 	controller: PropTypes.object.isRequired,
-	propertyId: PropTypes.object.isRequired
+	propertyId: PropTypes.object.isRequired,
+	controlValue: PropTypes.number, // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	controlValue: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+});
+
+export default connect(mapStateToProps, null)(CustomSliderCtrl);

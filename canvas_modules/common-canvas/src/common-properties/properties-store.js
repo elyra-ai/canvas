@@ -41,9 +41,14 @@ export default class PropertiesStore {
 	dispatch(action) {
 		this.store.dispatch(action);
 	}
+
+	getStore() {
+		return this.store;
+	}
 	subscribe(callback) {
 		this.store.subscribe(callback);
 	}
+
 	getPropertyValue(propertyId) {
 		const state = this.store.getState();
 		const propValue = state.propertiesReducer[propertyId.name];

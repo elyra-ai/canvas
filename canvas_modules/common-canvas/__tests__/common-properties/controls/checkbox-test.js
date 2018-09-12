@@ -33,6 +33,7 @@ describe("checkbox control tests", () => {
 	it("checkbox props should have been defined", () => {
 		const wrapper = mount(
 			<Checkbox
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -55,6 +56,7 @@ describe("checkbox control tests", () => {
 		};
 		const wrapper = mount(
 			<Checkbox
+				store={controller.getStore()}
 				control={controlWithLabel}
 				controller={controller}
 				propertyId={{ name: "test-checkboxLabel" }}
@@ -70,6 +72,7 @@ describe("checkbox control tests", () => {
 		);
 		const wrapper = mount(
 			<Checkbox
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -88,6 +91,7 @@ describe("checkbox control tests", () => {
 		);
 		const wrapper = mount(
 			<Checkbox
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -106,6 +110,7 @@ describe("checkbox control tests", () => {
 		);
 		const wrapper = mount(
 			<Checkbox
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -122,6 +127,7 @@ describe("checkbox control tests", () => {
 		controller.updateControlState(propertyId, "disabled");
 		const wrapper = mount(
 			<Checkbox
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -134,6 +140,7 @@ describe("checkbox control tests", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = mount(
 			<Checkbox
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -154,6 +161,7 @@ describe("checkbox control tests", () => {
 		};
 		const wrapper = mount(
 			<Checkbox
+				store={controller.getStore()}
 				control={controlWithLabel}
 				controller={controller}
 				propertyId={{ name: "test-checkboxLabel" }}
@@ -173,6 +181,7 @@ describe("checkbox control tests", () => {
 		});
 		const wrapper = mount(
 			<Checkbox
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}

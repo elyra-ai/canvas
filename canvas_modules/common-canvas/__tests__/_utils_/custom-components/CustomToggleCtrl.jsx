@@ -11,12 +11,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import Icon from "carbon-components-react/lib/components/Icon";
 import Toggle from "carbon-components-react/lib/components/Toggle";
+import ToggleSmall from "carbon-components-react/lib/components/ToggleSmall";
+import { connect } from "react-redux";
 
-export default class CustomToggleCtrl extends React.Component {
+class CustomToggleCtrl extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-		};
 		this.handleChange = this.handleChange.bind(this);
 	}
 
@@ -24,24 +24,21 @@ export default class CustomToggleCtrl extends React.Component {
 		this.props.controller.updatePropertyValue(this.props.propertyId, checked);
 	}
 	render() {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const message = this.props.controller.getErrorMessage(this.props.propertyId);
 		let messageText;
 		let icon;
-		if (message && message.text && !this.props.table) {
-			messageText = message.text;
-			if (message.type === "warning") {
+		if (this.props.messageInfo && this.props.messageInfo.text && !this.props.table) {
+			messageText = this.props.messageInfo.text;
+			if (this.props.messageInfo.type === "warning") {
 				icon = (<Icon className="warning" name="warning--glyph" />);
-			} else if (message.type === "error") {
+			} else if (this.props.messageInfo.type === "error") {
 				icon = (<Icon className="error" name="error--glyph" />);
 			}
 		}
-		const state = this.props.controller.getControlState(this.props.propertyId);
-		var visibility;
-		var disabled = false;
-		if (state === "hidden") {
+		let visibility;
+		let disabled = false;
+		if (this.props.state === "hidden") {
 			visibility = { visibility: "hidden" };
-		} else if (state === "disabled") {
+		} else if (this.props.state === "disabled") {
 			disabled = true;
 		}
 		let id = this.props.propertyId.name;
@@ -51,15 +48,27 @@ export default class CustomToggleCtrl extends React.Component {
 				id += "_" + this.props.propertyId.col;
 			}
 		}
+		let toggle = (
+			<Toggle
+				disabled={disabled}
+				id={id}
+				toggled={this.props.controlValue}
+				onToggle={this.handleChange}
+			/>
+		);
+		if (this.props.table) {
+			toggle = (<ToggleSmall
+				disabled={disabled}
+				id={id}
+				toggled={this.props.controlValue}
+				onToggle={this.handleChange}
+				ariaLabel={"toggle"}
+			/>);
+		}
 		return (
 			<div style={visibility}>
 				<div className="custom-toggle" >
-					<Toggle
-						disabled={disabled}
-						id={id}
-						toggled={controlValue}
-						onToggle={this.handleChange}
-					/>
+					{toggle}
 				</div>
 				<div className="condition">
 					<div className="icon">{icon}</div>
@@ -73,5 +82,16 @@ export default class CustomToggleCtrl extends React.Component {
 CustomToggleCtrl.propTypes = {
 	controller: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
-	table: PropTypes.bool
+	table: PropTypes.bool,
+	state: PropTypes.string, // pass in by redux
+	controlValue: PropTypes.bool, // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	controlValue: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	state: ownProps.controller.getControlState(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+});
+
+export default connect(mapStateToProps, null)(CustomToggleCtrl);

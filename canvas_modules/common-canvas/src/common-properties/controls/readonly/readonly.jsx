@@ -9,6 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import { STATES, DISPLAY_CHARS_DEFAULT, ELLIPSIS_STRING } from "./../../constants/constants.js";
@@ -17,9 +18,9 @@ import { ControlType } from "./../../constants/form-constants";
 import classNames from "classnames";
 import PropertyUtils from "./../../util/property-utils";
 
-export default class ReadonlyControl extends React.Component {
+class ReadonlyControl extends React.Component {
 	render() {
-		let controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		let controlValue = this.props.value;
 		if (typeof controlValue === "undefined" || controlValue === null) {
 			controlValue = "";
 		} else if (typeof controlValue === "object" && controlValue.link_ref) {
@@ -41,17 +42,15 @@ export default class ReadonlyControl extends React.Component {
 			}
 		}
 
-		const state = this.props.controller.getControlState(this.props.propertyId);
-
 		return (
 			<div
-				className={classNames("properties-readonly", { "hide": state === STATES.HIDDEN })}
+				className={classNames("properties-readonly", { "hide": this.props.state === STATES.HIDDEN })}
 				data-id={ControlUtils.getDataId(this.props.propertyId)}
 			>
-				<span disabled={state === STATES.DISABLED}>
+				<span disabled={this.props.state === STATES.DISABLED}>
 					{controlValue}
 				</span>
-				<ValidationMessage inTable={this.props.tableControl} state={state} messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)} />
+				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);
 	}
@@ -62,5 +61,16 @@ ReadonlyControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	tableControl: PropTypes.bool,
-	columnDef: PropTypes.object
+	columnDef: PropTypes.object,
+	state: PropTypes.string, // pass in by redux
+	value: PropTypes.any, // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	state: ownProps.controller.getControlState(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+});
+
+export default connect(mapStateToProps, null)(ReadonlyControl);

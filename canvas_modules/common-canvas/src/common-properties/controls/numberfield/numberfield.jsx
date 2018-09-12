@@ -9,13 +9,14 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import NumberInput from "carbon-components-react/lib/components/NumberInput";
 import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
 
-export default class NumberfieldControl extends React.Component {
+class NumberfieldControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.onDirection = this.onDirection.bind(this);
@@ -63,14 +64,11 @@ export default class NumberfieldControl extends React.Component {
 	}
 
 	render() {
-		let controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		let controlValue = this.props.value;
 		if (typeof controlValue === "undefined" || controlValue === null) {
 			controlValue = ""; // default to ""
 		}
-		const state = this.props.controller.getControlState(this.props.propertyId);
-		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
-
-		const className = classNames("properties-numberfield", { "hide": state === STATES.HIDDEN }, messageInfo ? messageInfo.type : null);
+		const className = classNames("properties-numberfield", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
 
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
@@ -78,12 +76,12 @@ export default class NumberfieldControl extends React.Component {
 					ref= { (ref) => (this.numberInput = ref)}
 					id={this.id}
 					onChange={this.handleChange.bind(this)}
-					disabled={state === STATES.DISABLED}
+					disabled={this.props.state === STATES.DISABLED}
 					step={this.props.control.increment}
 					value={controlValue}
 					placeholder={this.props.control.additionalText}
 				/>
-				<ValidationMessage inTable={this.props.tableControl} state={state} messageInfo={messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);
 	}
@@ -93,5 +91,16 @@ NumberfieldControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	tableControl: PropTypes.bool
+	tableControl: PropTypes.bool,
+	state: PropTypes.string, // pass in by redux
+	value: PropTypes.number, // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	state: ownProps.controller.getControlState(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+});
+
+export default connect(mapStateToProps, null)(NumberfieldControl);

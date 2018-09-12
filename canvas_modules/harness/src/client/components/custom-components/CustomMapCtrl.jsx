@@ -12,19 +12,16 @@ import PropTypes from "prop-types";
 import Icon from "carbon-components-react/lib/components/Icon";
 import CustomMapSummary from "./CustomMapSummary";
 import Button from "carbon-components-react/lib/components/Button";
+import { connect } from "react-redux";
 
 
-export default class CustomMapCtrl extends React.Component {
+class CustomMapCtrl extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-		};
-		const controlValue = props.controller.getPropertyValue(this.props.propertyId);
-
-		if (controlValue && controlValue.length >= 3) {
-			this.lat = controlValue[0];
-			this.lng = controlValue[1];
-			this.zoom = controlValue[2];
+		if (props.controlValue && props.controlValue.length >= 3) {
+			this.lat = props.controlValue[0];
+			this.lng = props.controlValue[1];
+			this.zoom = props.controlValue[2];
 		} else {
 			this.lat = 37.5;
 			this.lng = 238;
@@ -152,20 +149,18 @@ export default class CustomMapCtrl extends React.Component {
 			google.maps.event.trigger(this.map, "resize"); // eslint-disable-line no-undef
 			this.resized = true;
 		}
-		const message = this.props.controller.getErrorMessage(this.props.propertyId);
 		let messageText;
 		let icon;
-		if (message && message.text) {
-			messageText = message.text;
-			if (message.type === "warning") {
+		if (this.props.messageInfo && this.props.messageInfo.text) {
+			messageText = this.props.messageInfo.text;
+			if (this.props.messageInfo.type === "warning") {
 				icon = (<Icon className="warning" name="warning--glyph" />);
-			} else if (message.type === "error") {
+			} else if (this.props.messageInfo.type === "error") {
 				icon = (<Icon className="error" name="error--glyph" />);
 			}
 		}
-		const state = this.props.controller.getControlState(this.props.propertyId);
 		let visibility;
-		if (state === "hidden") {
+		if (this.props.state === "hidden") {
 			visibility = { visibility: "hidden" };
 		}
 		return (
@@ -201,5 +196,16 @@ function loadJS(src) {
 CustomMapCtrl.propTypes = {
 	controller: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
-	data: PropTypes.object.isRequired
+	data: PropTypes.object.isRequired,
+	state: PropTypes.string, // pass in by redux
+	controlValue: PropTypes.array, // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	controlValue: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	state: ownProps.controller.getControlState(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+});
+
+export default connect(mapStateToProps, null)(CustomMapCtrl);

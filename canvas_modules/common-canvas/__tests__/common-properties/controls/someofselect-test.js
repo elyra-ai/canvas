@@ -9,7 +9,8 @@
 
 import React from "react";
 import SomeOfSelectControl from "../../../src/common-properties/controls/someofselect";
-import { mountWithIntl } from "enzyme-react-intl";
+import { Provider } from "react-redux";
+import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
@@ -47,8 +48,9 @@ const propertyId = { name: "test-someofselect" };
 describe("SomeOfSelectControl renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = shallowWithIntl(
 			<SomeOfSelectControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -61,11 +63,13 @@ describe("SomeOfSelectControl renders correctly", () => {
 
 	it("should render a SomeOfSelectControl", () => {
 		const wrapper = mountWithIntl(
-			<SomeOfSelectControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<SomeOfSelectControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
 		const someofselectCheckbox = someofselectWrapper.find("input");
@@ -76,11 +80,13 @@ describe("SomeOfSelectControl renders correctly", () => {
 			{ "test-someofselect": ["Order"] }
 		);
 		const wrapper = mountWithIntl(
-			<SomeOfSelectControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<SomeOfSelectControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
 		const someofselectCheckbox = someofselectWrapper.find("input");
@@ -96,11 +102,13 @@ describe("SomeOfSelectControl renders correctly", () => {
 			{ "test-someofselect": null }
 		);
 		const wrapper = mountWithIntl(
-			<SomeOfSelectControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<SomeOfSelectControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
 		const someofselectCheckbox = someofselectWrapper.find("input");
@@ -120,11 +128,13 @@ describe("SomeOfSelectControl renders correctly", () => {
 			{ }
 		);
 		const wrapper = mountWithIntl(
-			<SomeOfSelectControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<SomeOfSelectControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
 		const someofselectCheckbox = someofselectWrapper.find("input");
@@ -142,11 +152,13 @@ describe("SomeOfSelectControl renders correctly", () => {
 	it("SomeOfSelectControl renders when disabled", () => {
 		controller.updateControlState(propertyId, "disabled");
 		const wrapper = mountWithIntl(
-			<SomeOfSelectControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<SomeOfSelectControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
 		const someofselectCheckbox = someofselectWrapper.find("input");
@@ -159,11 +171,13 @@ describe("SomeOfSelectControl renders correctly", () => {
 	it("SomeOfSelectControlrenders when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = mountWithIntl(
-			<SomeOfSelectControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<SomeOfSelectControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
 		expect(someofselectWrapper.hasClass("hide")).to.equal(true);
@@ -175,11 +189,13 @@ describe("SomeOfSelectControl renders correctly", () => {
 			text: "bad someofselect value"
 		});
 		const wrapper = mountWithIntl(
-			<SomeOfSelectControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<SomeOfSelectControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
 		const messageWrapper = someofselectWrapper.find("div.properties-validation-message");

@@ -62,6 +62,7 @@ describe("checkboxset control tests", () => {
 	it("checkboxset props should have been defined", () => {
 		const wrapper = mount(
 			<Checkboxset
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -77,6 +78,7 @@ describe("checkboxset control tests", () => {
 	it("checkboxset labels are displayed", () => {
 		const wrapper = mount(
 			<Checkboxset
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -93,6 +95,7 @@ describe("checkboxset control tests", () => {
 		const propertyIdNumber = { name: "test-checkboxset-number" };
 		const wrapper = mount(
 			<Checkboxset
+				store={controller.getStore()}
 				control={controlNumber}
 				controller={controller}
 				propertyId={propertyIdNumber}
@@ -108,6 +111,7 @@ describe("checkboxset control tests", () => {
 	it("checkboxset handles updates values correctly", () => {
 		const wrapper = mount(
 			<Checkboxset
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -145,6 +149,7 @@ describe("checkboxset control tests", () => {
 		const propertyIdNumber = { name: "test-checkboxset-number" };
 		const wrapper = mount(
 			<Checkboxset
+				store={controller.getStore()}
 				control={controlNumber}
 				controller={controller}
 				propertyId={propertyIdNumber}
@@ -173,6 +178,7 @@ describe("checkboxset control tests", () => {
 		const propertyIdInvalid = { name: "test-checkboxset-invalid" };
 		const wrapper = mount(
 			<Checkboxset
+				store={controller.getStore()}
 				control={controlInvalid}
 				controller={controller}
 				propertyId={propertyIdInvalid}
@@ -194,6 +200,7 @@ describe("checkboxset control tests", () => {
 		const propertyIdNull = { name: "test-checkboxset-null" };
 		const wrapper = mount(
 			<Checkboxset
+				store={controller.getStore()}
 				control={controlNull}
 				controller={controller}
 				propertyId={propertyIdNull}
@@ -215,6 +222,7 @@ describe("checkboxset control tests", () => {
 		const propertyIdUndefined = { name: "test-checkboxset-undefined" };
 		const wrapper = mount(
 			<Checkboxset
+				store={controller.getStore()}
 				control={controlUndefined}
 				controller={controller}
 				propertyId={propertyIdUndefined}
@@ -236,6 +244,7 @@ describe("checkboxset control tests", () => {
 		controller.updateControlState(propertyId, "disabled");
 		const wrapper = mount(
 			<Checkboxset
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -252,6 +261,7 @@ describe("checkboxset control tests", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = mount(
 			<Checkboxset
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -268,6 +278,7 @@ describe("checkboxset control tests", () => {
 		});
 		const wrapper = mount(
 			<Checkboxset
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}

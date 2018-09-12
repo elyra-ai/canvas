@@ -9,6 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import TextInput from "carbon-components-react/lib/components/TextInput";
 import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
@@ -16,7 +17,7 @@ import moment from "moment";
 import { DEFAULT_DATE_FORMAT, STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
 
-export default class DatefieldControl extends React.Component {
+class DatefieldControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.id = ControlUtils.getControlId(this.props.propertyId);
@@ -43,14 +44,10 @@ export default class DatefieldControl extends React.Component {
 	}
 
 	render() {
-		const stringValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const state = this.props.controller.getControlState(this.props.propertyId);
-		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
-
 		let displayValue = "";
-		if (stringValue) {
+		if (this.props.value) {
 			const format = this.props.control.dateFormat || DEFAULT_DATE_FORMAT;
-			const mom = moment.utc(stringValue, moment.ISO_8601, true);
+			const mom = moment.utc(this.props.value, moment.ISO_8601, true);
 
 			if (mom.isValid()) {
 				try {
@@ -59,23 +56,24 @@ export default class DatefieldControl extends React.Component {
 					displayValue = "Invalid format object provided. Check input definitions.";
 				}
 			} else {
-				displayValue = stringValue;
+				displayValue = this.props.value;
 			}
 		}
-		const className = classNames("properties-datefield", "properties-input-control", { "hide": state === STATES.HIDDEN }, messageInfo ? messageInfo.type : null);
+		const className = classNames("properties-datefield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
+			this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<TextInput
 					autoComplete="off"
 					id={this.id}
-					disabled={state === STATES.DISABLED}
+					disabled={this.props.state === STATES.DISABLED}
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange.bind(this)}
 					value={displayValue}
 					labelText={this.props.control.label ? this.props.control.label.text : ""}
 					hideLabel
 				/>
-				<ValidationMessage inTable={this.props.tableControl} state={state} messageInfo={messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);
 	}
@@ -85,5 +83,16 @@ DatefieldControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	tableControl: PropTypes.bool
+	tableControl: PropTypes.bool,
+	state: PropTypes.string, // pass in by redux
+	value: PropTypes.string, // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	state: ownProps.controller.getControlState(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+});
+
+export default connect(mapStateToProps, null)(DatefieldControl);

@@ -186,7 +186,6 @@ describe("field-picker-control renders correctly", () => {
 				controller={controller}
 			/>
 		);
-		wrapper.update();
 		expect(wrapper.find("button.properties-fp-reset-button-container")).to.have.length(1);
 		expect(wrapper.find("ul.properties-fp-filter-list")).to.have.length(1);
 		expect(wrapper.find("div.properties-ft-control-container")).to.have.length(1);
@@ -809,7 +808,6 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		datasetMetadata[0].fields.push(newField4);
 
 		renderedController.setDatasetMetadata(datasetMetadata);
-		wrapper.update();
 		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields");
 		propertyUtils.fieldPicker(fieldPicker, [],
 			["Age", "age", "Sex", "BP", "Cholesterol", "Time", "age5", "BP5", "Na5", "drug5",

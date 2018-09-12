@@ -47,6 +47,7 @@ describe("selectschema renders correctly", () => {
 	it("props should have been defined", () => {
 		const wrapper = mount(
 			<SelectSchemaControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -62,6 +63,7 @@ describe("selectschema renders correctly", () => {
 		);
 		const wrapper = mount(
 			<SelectSchemaControl
+				store={controller.getStore()}
 				control={control}
 				propertyId={propertyId}
 				controller = {controller}

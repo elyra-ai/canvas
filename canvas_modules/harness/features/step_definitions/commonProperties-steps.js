@@ -123,6 +123,17 @@ module.exports = function() {
 		clickApplyButton(panel);
 	});
 
+	this.Then(/^I click the subpanel button "([^"]*)" button in control "([^"]*)" in row "([^"]*)"$/, function(buttonName, controlId, row) {
+		var table = browser.$("div[data-id='properties-" + controlId + "']");
+		var subcell = table.$$(".properties-table-subcell")[row];
+		expect(subcell).not.toBe(null);
+		if (buttonName === "OK") {
+			clickApplyButton(subcell);
+		} else {
+			clickCancelButton(subcell);
+		}
+	});
+
 
 	this.Then(/^I click on the "([^"]*)" button$/, function(buttonName) {
 		if (buttonName === "OK" || buttonName === "Save") {
@@ -211,6 +222,11 @@ module.exports = function() {
 	});
 	this.Then(/^I verify that readonly value is "([^"]*)"$/, function(value) {
 		const text = browser.$$(".properties-readonly span")[0];
+		expect(value).toEqual(text.getText());
+	});
+
+	this.Then(/^I verify readonly control "([^"]*)" value is "([^"]*)"$/, function(controlId, value) {
+		const text = browser.$("div[data-id='properties-" + controlId + "'] span");
 		expect(value).toEqual(text.getText());
 	});
 

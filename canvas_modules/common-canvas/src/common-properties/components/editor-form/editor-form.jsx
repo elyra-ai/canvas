@@ -11,10 +11,12 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { setActiveTab } from "./../../actions";
 import Tabs from "carbon-components-react/lib/components/Tabs";
 import Tab from "carbon-components-react/lib/components/Tab";
 import PropertyUtil from "./../../util/property-utils.js";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, STATES } from "./../../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
 import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
 import logger from "./../../../../utils/logger";
@@ -27,6 +29,8 @@ import SubPanelButton from "./../../panels/sub-panel/button.jsx";
 
 import WideFlyout from "./../wide-flyout";
 import FieldPicker from "./../field-picker";
+import TextPanel from "./../../panels/text-panel";
+import ActionPanel from "./../../panels/action-panel";
 
 import ButtonAction from "./../../actions/button";
 
@@ -34,7 +38,7 @@ import Icon from "./../../../icons/icon.jsx";
 
 const ALERT_TAB_GROUP = "alertMsgs";
 
-export default class EditorForm extends React.Component {
+class EditorForm extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -52,7 +56,7 @@ export default class EditorForm extends React.Component {
 		this.openFieldPicker = this.openFieldPicker.bind(this);
 		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
 
-		this.messages = this._getGroupedMessages();
+		this.messages = this._getGroupedMessages(props.messages);
 
 		// initialize ControlFactory with correct values
 		this.ControlFactory = props.controller.getControlFactory();
@@ -65,13 +69,9 @@ export default class EditorForm extends React.Component {
 			// only update list of error messages when no summary panel or sub-panel is shown,
 			// otherwise changes in the summary/sub panel might trigger a re-render and the
 			// summary/sub panel to disappear because the alerts tab is added/removed
-			this.messages = this._getGroupedMessages();
+			this.messages = this._getGroupedMessages(nextProps.messages);
 		}
 		return true;
-	}
-
-	getControl(propertyName) {
-		return this.refs[propertyName];
 	}
 
 	_getMessageCountForCategory(tab) {
@@ -88,9 +88,8 @@ export default class EditorForm extends React.Component {
 		return result > 0 ? " (" + result + ")" : null;
 	}
 
-	_getGroupedMessages() {
+	_getGroupedMessages(messages) {
 		// returns messages grouped by type, first errors, then warnings
-		const messages = this.props.controller.getErrorMessages(true, true, true);
 		if (!isEmpty(messages)) {
 			return sortBy(messages, ["type"]);
 		}
@@ -103,19 +102,19 @@ export default class EditorForm extends React.Component {
 
 	_showCategoryPanel(panelId) {
 		let activeTab = panelId;
-		if (this.props.controller.getActiveTab() === panelId) {
+		if (this.props.activeTab === panelId) {
 			activeTab = "";
 		}
-		this.props.controller.setActiveTab(activeTab);
+		this.props.setActiveTab(activeTab);
 	}
 
 	_handleMessageClick(controlId, ev) {
 		const control = this.props.controller.getControl(controlId);
-		this.props.controller.setActiveTab(control.parentCategoryId);
+		this.props.setActiveTab(control.parentCategoryId);
 	}
 
 	_modalTabsOnClick(tabId) {
-		this.props.controller.setActiveTab(tabId);
+		this.props.setActiveTab(tabId);
 	}
 
 	_subTabsOnClick(groupId, subTabId) {
@@ -141,7 +140,7 @@ export default class EditorForm extends React.Component {
 			if (this.props.rightFlyout) {
 				let panelArrow = <Icon type="downCaret" />;
 				let categoryOpen = false;
-				if (this.props.controller.getActiveTab() === tab.group) {
+				if (this.props.activeTab === tab.group) {
 					panelArrow = <Icon type="upCaret" />;
 					categoryOpen = true;
 				}
@@ -162,7 +161,7 @@ export default class EditorForm extends React.Component {
 					</div>
 				);
 			} else {
-				if (this.props.controller.getActiveTab() === tab.group) {
+				if (this.props.activeTab === tab.group) {
 					modalSelected = i;
 				}
 				tabContent.push(
@@ -345,25 +344,9 @@ export default class EditorForm extends React.Component {
 		} else if (uiItem.itemType === "action") {
 			return this.generateAction(key, uiItem.action);
 		} else if (uiItem.itemType === "textPanel" && uiItem.panel) {
-			return this.generateTextPanel(key, uiItem.panel);
+			return (<TextPanel key={"text-panel-" + key} panel={uiItem.panel} controller={this.props.controller} />);
 		}
 		return <div key={"unknown." + key}>Unknown: {uiItem.itemType}</div>;
-	}
-
-	generateTextPanel(key, panel) {
-		const panelState = this.props.controller.getPanelState({ name: panel.id });
-		const label = panel.label ? (<div className="panel-label">{panel.label.text}</div>) : null;
-		const description = panel.description
-			? (<div className="panel-description">{PropertyUtil.evaluateText(panel.description.text, this.props.controller)}</div>)
-			: null;
-		return (
-			<div className={classNames("properties-text-panel", { "hide": panelState === STATES.HIDDEN })}
-				disabled={panelState === STATES.DISABLED}
-				key={"text-panel-" + key}
-			>
-				{label}
-				{description}
-			</div>);
 	}
 
 	generateAction(key, action) {
@@ -379,7 +362,6 @@ export default class EditorForm extends React.Component {
 			}
 		}
 		return null;
-
 	}
 
 	generateCustomPanel(key, panel) {
@@ -438,33 +420,24 @@ export default class EditorForm extends React.Component {
 			if (this.props.rightFlyout) {
 				uiObject = (
 					<SummaryPanel
-						key={id}
-						ref={panel.id}
+						key={"summary-panel-" + id}
 						controller={this.props.controller}
-						label={panel.label}
-						panelId={panel.id}
+						panel={panel}
 					>
 						{content}
 					</SummaryPanel>);
 			}
 		} else if (panel.panelType === "actionPanel") {
-			const panelState = this.props.controller.getPanelState({ name: panel.id });
 			uiObject = (
-				<div className={classNames("properties-action-panel", { "hide": panelState === STATES.HIDDEN })}
-					key={"action-panel-" + key}
-					data-id={"properties-" + panel.id}
-					disabled={panelState === STATES.DISABLED}
-				>
+				<ActionPanel key={"action-panel-" + key} controller={this.props.controller} panel={panel}>
 					{content}
-				</div>);
+				</ActionPanel>);
 		} else if (panel.panelType === "twisty") {
 			uiObject = (
 				<TwistyPanel
 					key={id}
-					ref={panel.id}
 					controller={this.props.controller}
-					label={panel.label}
-					panelId={panel.id}
+					panel={panel}
 				>
 					{content}
 				</TwistyPanel>);
@@ -604,4 +577,20 @@ EditorForm.propTypes = {
 	showPropertiesButtons: PropTypes.func,
 	customPanels: PropTypes.array,
 	rightFlyout: PropTypes.bool,
+	activeTab: PropTypes.string, // set by redux
+	setActiveTab: PropTypes.func, // set by redux
+	messages: PropTypes.array // set by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	activeTab: state.componentMetadataReducer.activeTab,
+	messages: ownProps.controller.getErrorMessages(true, true, true)
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+	setActiveTab: (tabId) => {
+		dispatch(setActiveTab(tabId));
+	}
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditorForm);

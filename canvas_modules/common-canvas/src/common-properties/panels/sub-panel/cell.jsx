@@ -37,13 +37,12 @@ export default class SubPanelCell extends React.Component {
 		}
 	}
 
-
 	showSubPanel() {
 		// sets the current value for parameter.  Used on cancel
 		this.initialControlValue = JSON.parse(JSON.stringify(this.props.controller.getPropertyValue(this.props.propertyId)));
 		this.initialMessages = this.props.controller.getErrorMessages();
 		this.initialStates = this.props.controller.getControlStates();
-		this.refs.invoker.showSubDialog(this.props.title, this.props.panel, this.onSubPanelHidden);
+		this.subPanelInvoker.showSubDialog(this.props.title, this.props.panel, this.onSubPanelHidden);
 	}
 
 	render() {
@@ -56,7 +55,7 @@ export default class SubPanelCell extends React.Component {
 		const innerObject = this.props.iconName ? (<Icon type={this.props.iconName} />) : this.props.label;
 		return (
 
-			<SubPanelInvoker ref="invoker"
+			<SubPanelInvoker ref={ (ref) => (this.subPanelInvoker = ref) }
 				rightFlyout={this.props.rightFlyout}
 				applyLabel={applyLabel}
 				rejectLabel={rejectLabel}
@@ -92,7 +91,7 @@ SubPanelCell.propTypes = {
 	title: PropTypes.string,
 	panel: PropTypes.object.isRequired,
 	disabled: PropTypes.bool,
-	controller: PropTypes.object,
+	controller: PropTypes.object.isRequired,
 	propertyId: PropTypes.object,
 	rightFlyout: PropTypes.bool,
 	iconName: PropTypes.string

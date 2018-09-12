@@ -10,7 +10,8 @@
 import React from "react";
 import StructureListEditorControl from "../../../src/common-properties/controls/structurelisteditor";
 import SubPanelButton from "../../../src/common-properties/panels/sub-panel/button.jsx";
-import { mountWithIntl } from "enzyme-react-intl";
+import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
+import { Provider } from "react-redux";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
@@ -257,8 +258,9 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("props should have been defined", () => {
 		setPropertyValue();
-		const wrapper = mountWithIntl(
+		const wrapper = shallowWithIntl(
 			<StructureListEditorControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -266,7 +268,6 @@ describe("StructureListEditorControl renders correctly", () => {
 				rightFlyout
 			/>
 		);
-
 		expect(wrapper.prop("control")).to.equal(control);
 		expect(wrapper.prop("controller")).to.equal(controller);
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
@@ -276,13 +277,15 @@ describe("StructureListEditorControl renders correctly", () => {
 	it("should render a `StructureListEditorControl`", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<StructureListEditorControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				rightFlyout
-			/>
+			<Provider store={controller.getStore()}>
+				<StructureListEditorControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					buildUIItem={genUIItem}
+					rightFlyout
+				/>
+			</Provider>
 		);
 		expect(wrapper.find("div.properties-sle-wrapper")).to.have.length(1);
 		const buttons = wrapper.find("div.properties-sle");
@@ -297,13 +300,15 @@ describe("StructureListEditorControl renders correctly", () => {
 	it("should select add row button and new row should display", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<StructureListEditorControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				rightFlyout
-			/>
+			<Provider store={controller.getStore()}>
+				<StructureListEditorControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					buildUIItem={genUIItem}
+					rightFlyout
+				/>
+			</Provider>
 		);
 
 		// select the add column button
@@ -320,13 +325,15 @@ describe("StructureListEditorControl renders correctly", () => {
 	it("should select row and remove button row should be removed", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<StructureListEditorControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				rightFlyout
-			/>
+			<Provider store={controller.getStore()}>
+				<StructureListEditorControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					buildUIItem={genUIItem}
+					rightFlyout
+				/>
+			</Provider>
 		);
 
 		// ensure the remove column button is disabled
@@ -352,13 +359,15 @@ describe("StructureListEditorControl renders correctly", () => {
 	it("should select multiple rows and see the select summary row", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<StructureListEditorControl
-				control={mseControl}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				rightFlyout
-			/>
+			<Provider store={controller.getStore()}>
+				<StructureListEditorControl
+					control={mseControl}
+					controller={controller}
+					propertyId={propertyId}
+					buildUIItem={genUIItem}
+					rightFlyout
+				/>
+			</Provider>
 		);
 
 		// select the first row in the table

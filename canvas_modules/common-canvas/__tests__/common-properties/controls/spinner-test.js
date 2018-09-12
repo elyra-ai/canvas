@@ -81,6 +81,7 @@ describe("spinner-control renders correctly", () => {
 	it("props should have been defined", () => {
 		const wrapper = mount(
 			<SpinnerControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -94,6 +95,7 @@ describe("spinner-control renders correctly", () => {
 	it("should set correct state value when integer increment in `SpinnerControl`", () => {
 		const wrapper = mount(
 			<SpinnerControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -113,6 +115,7 @@ describe("spinner-control renders correctly", () => {
 	it("should set correct state value when integer decrement in `SpinnerControl`", () => {
 		const wrapper = mount(
 			<SpinnerControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -131,6 +134,7 @@ describe("spinner-control renders correctly", () => {
 	it("should set correct state value when double increment in `SpinnerControl`", () => {
 		const wrapper = mount(
 			<SpinnerControl
+				store={controller.getStore()}
 				control={control2}
 				controller={controller}
 				propertyId={propertyId2}
@@ -149,6 +153,7 @@ describe("spinner-control renders correctly", () => {
 	it("should set correct state value when double decrement in `SpinnerControl`", () => {
 		const wrapper = mount(
 			<SpinnerControl
+				store={controller.getStore()}
 				control={control2}
 				controller={controller}
 				propertyId={propertyId2}
@@ -168,6 +173,7 @@ describe("spinner-control renders correctly", () => {
 		control2.increment = 0.0022;
 		const wrapper = mount(
 			<SpinnerControl
+				store={controller.getStore()}
 				control={control2}
 				controller={controller}
 				propertyId={propertyId2}
@@ -187,6 +193,7 @@ describe("spinner-control renders correctly", () => {
 		control2.increment = 0.0022;
 		const wrapper = mount(
 			<SpinnerControl
+				store={controller.getStore()}
 				control={control2}
 				controller={controller}
 				propertyId={propertyId2}
@@ -199,21 +206,17 @@ describe("spinner-control renders correctly", () => {
 		const inputDecrement = wrapper.find("button").at(1);
 		expect(inputDecrement).to.have.length(1);
 		inputDecrement.simulate("click");
-		wrapper.update();
 		inputDecrement.simulate("click");
-		wrapper.update();
 		inputDecrement.simulate("click");
-		wrapper.update();
 		inputDecrement.simulate("click");
-		wrapper.update();
 		inputDecrement.simulate("click");
-		wrapper.update();
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.6556);
 	});
 
 	it("should set correct state value for default spinner with default increment in `SpinnerControl`", () => {
 		const wrapper = mount(
 			<SpinnerControl
+				store={controller.getStore()}
 				control={control3}
 				controller={controller}
 				propertyId={propertyId3}

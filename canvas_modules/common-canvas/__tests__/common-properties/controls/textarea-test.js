@@ -59,6 +59,7 @@ describe("textarea control renders correctly", () => {
 	it("textarea props should have been defined", () => {
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -72,6 +73,7 @@ describe("textarea control renders correctly", () => {
 	it("textarea should render", () => {
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -85,6 +87,7 @@ describe("textarea control renders correctly", () => {
 	it("textarea should set correct value", () => {
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -99,6 +102,7 @@ describe("textarea control renders correctly", () => {
 	it("textarea should set correct list value", () => {
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={controlList}
 				controller={controller}
 				propertyId={propertyIdList}
@@ -113,6 +117,7 @@ describe("textarea control renders correctly", () => {
 	it("textarea should not go over max chars", () => {
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -128,6 +133,7 @@ describe("textarea control renders correctly", () => {
 	it("textarea should set maxLength correctly without charLimit", () => {
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={controlList}
 				controller={controller}
 				propertyId={propertyIdList}
@@ -143,6 +149,7 @@ describe("textarea control renders correctly", () => {
 	it("textarea should not have a text limit when charList set to -1", () => {
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={controlNoLimit}
 				controller={controller}
 				propertyId={propertyIdList}
@@ -158,6 +165,7 @@ describe("textarea control renders correctly", () => {
 	it("textarea should set correct control type`", () => {
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -171,6 +179,7 @@ describe("textarea control renders correctly", () => {
 	it("textarea should set placeholder text", () => {
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -187,6 +196,7 @@ describe("textarea control renders correctly", () => {
 		);
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -204,6 +214,7 @@ describe("textarea control renders correctly", () => {
 		);
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -219,6 +230,7 @@ describe("textarea control renders correctly", () => {
 		controller.updateControlState(propertyId, "disabled");
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -232,6 +244,7 @@ describe("textarea control renders correctly", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -249,6 +262,7 @@ describe("textarea control renders correctly", () => {
 		});
 		const wrapper = mount(
 			<TextArea
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}

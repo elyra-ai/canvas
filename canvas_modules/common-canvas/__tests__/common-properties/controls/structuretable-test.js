@@ -9,8 +9,8 @@
 
 import React from "react";
 import StructureTableControl from "../../../src/common-properties/controls/structuretable";
-import { mountWithIntl } from "enzyme-react-intl";
-
+import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
+import { Provider } from "react-redux";
 import { expect } from "chai";
 import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
@@ -311,8 +311,9 @@ setPropertyValue();
 describe("structuretable control renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = shallowWithIntl(
 			<StructureTableControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -330,14 +331,16 @@ describe("structuretable control renders correctly", () => {
 
 	it("should render a `structuretable` control", () => {
 		const wrapper = mountWithIntl(
-			<StructureTableControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				openFieldPicker={openFieldPicker}
-				rightFlyout
-			/>
+			<Provider store={controller.getStore()}>
+				<StructureTableControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					buildUIItem={genUIItem}
+					openFieldPicker={openFieldPicker}
+					rightFlyout
+				/>
+			</Provider>
 		);
 
 		expect(wrapper.find("div[data-id='properties-keys']")).to.have.length(1);
@@ -359,14 +362,16 @@ describe("structuretable control renders correctly", () => {
 	it("should select add columns button and field picker should display", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<StructureTableControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				openFieldPicker={openFieldPicker}
-				rightFlyout
-			/>
+			<Provider store={controller.getStore()}>
+				<StructureTableControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					buildUIItem={genUIItem}
+					openFieldPicker={openFieldPicker}
+					rightFlyout
+				/>
+			</Provider>
 		);
 
 		// select the add column button
@@ -381,14 +386,16 @@ describe("structuretable control renders correctly", () => {
 	it("should select row and remove button row should be removed", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<StructureTableControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				openFieldPicker={openFieldPicker}
-				rightFlyout
-			/>
+			<Provider store={controller.getStore()}>
+				<StructureTableControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					buildUIItem={genUIItem}
+					openFieldPicker={openFieldPicker}
+					rightFlyout
+				/>
+			</Provider>
 		);
 
 		// ensure the remove column button is disabled
@@ -526,14 +533,16 @@ describe("structuretable control with readonly numbered column renders correctly
 	});
 	it("should have displayed the correct generatedValues with default index values", () => {
 		const wrapper = mountWithIntl(
-			<StructureTableControl
-				control={readonlyControlDefault}
-				controller={controller}
-				propertyId={propertyIdReadonlyControl}
-				buildUIItem={genUIItem}
-				openFieldPicker={openFieldPicker}
-				rightFlyout
-			/>
+			<Provider store={controller.getStore()}>
+				<StructureTableControl
+					control={readonlyControlDefault}
+					controller={controller}
+					propertyId={propertyIdReadonlyControl}
+					buildUIItem={genUIItem}
+					openFieldPicker={openFieldPicker}
+					rightFlyout
+				/>
+			</Provider>
 		);
 
 		const rows = wrapper.find("tr.table-row");
@@ -546,14 +555,16 @@ describe("structuretable control with readonly numbered column renders correctly
 
 	it("should have displayed the correct generatedValues with startValue", () => {
 		const wrapper = mountWithIntl(
-			<StructureTableControl
-				control={readonlyControlStartValue}
-				controller={controller}
-				propertyId={propertyIdReadonlyControlStartValue}
-				buildUIItem={genUIItem}
-				openFieldPicker={openFieldPicker}
-				rightFlyout
-			/>
+			<Provider store={controller.getStore()}>
+				<StructureTableControl
+					control={readonlyControlStartValue}
+					controller={controller}
+					propertyId={propertyIdReadonlyControlStartValue}
+					buildUIItem={genUIItem}
+					openFieldPicker={openFieldPicker}
+					rightFlyout
+				/>
+			</Provider>
 		);
 
 		const rows = wrapper.find("tr.table-row");

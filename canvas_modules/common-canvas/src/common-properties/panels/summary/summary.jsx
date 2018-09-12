@@ -11,11 +11,13 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import IconButton from "../../components/icon-button";
 import WideFlyout from "./../../components/wide-flyout";
 import Icon from "carbon-components-react/lib/components/Icon";
 import isEmpty from "lodash/isEmpty";
 import PropertyUtils from "./../../util/property-utils";
+import ControlUtils from "./../../util/control-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import uuid4 from "uuid/v4";
 import { STATES } from "./../../constants/constants.js";
@@ -24,7 +26,7 @@ import classNames from "classnames";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 
-export default class SummaryPanel extends React.Component {
+class SummaryPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -69,7 +71,7 @@ export default class SummaryPanel extends React.Component {
 	*/
 	_getSummaryTables() {
 		const summaryTables = [];
-		const summaryControls = this.props.controller.getSummaryPanelControls(this.props.panelId);
+		const summaryControls = this.props.controller.getSummaryPanelControls(this.props.panel.id);
 		// no controls in summary panel
 		if (!Array.isArray(summaryControls)) {
 			return summaryTables;
@@ -206,7 +208,7 @@ export default class SummaryPanel extends React.Component {
 	}
 
 	_getSummaryIconState() {
-		const controls = this.props.controller.getSummaryPanelControls(this.props.panelId);
+		const controls = this.props.controller.getSummaryPanelControls(this.props.panel.id);
 		let msg = {};
 		let errorCount = 0;
 		let warningCount = 0;
@@ -251,9 +253,6 @@ export default class SummaryPanel extends React.Component {
 	}
 
 	render() {
-		const propertyId = { name: this.props.panelId };
-		const panelState = this.props.controller.getPanelState(propertyId);
-
 		const icon = this._getSummaryIconState();
 		const link = (<div className="properties-summary-link-container">
 			<IconButton
@@ -261,7 +260,7 @@ export default class SummaryPanel extends React.Component {
 				icon="add--outline"
 				onClick={this.handleLinkClicked}
 			>
-				{this.props.label}
+				{this.props.panel.label}
 			</IconButton>
 			{icon}
 		</div>);
@@ -273,15 +272,15 @@ export default class SummaryPanel extends React.Component {
 			show={this.state.showWideFlyout}
 			applyLabel={applyLabel}
 			rejectLabel={rejectLabel}
-			title={this.props.label}
+			title={this.props.panel.label}
 		>
 			<div>
 				{this.props.children}
 			</div>
 		</WideFlyout>);
-		const className = classNames("properties-summary-panel", "properties-control-panel", { "hide": panelState === STATES.HIDDEN });
+		const className = classNames("properties-summary-panel", "properties-control-panel", { "hide": this.props.panelState === STATES.HIDDEN });
 		return (
-			<div className={className} disabled={panelState === STATES.DISABLED} data-id={"properties-" + this.props.panelId}>
+			<div className={className} disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}>
 				{flyout}
 				{link}
 				{this._getSummaryTables()}
@@ -291,8 +290,14 @@ export default class SummaryPanel extends React.Component {
 }
 
 SummaryPanel.propTypes = {
-	label: PropTypes.string.isRequired,
 	controller: PropTypes.object.isRequired,
 	children: PropTypes.array,
-	panelId: PropTypes.string.isRequired,
+	panel: PropTypes.object.isRequired,
+	panelState: PropTypes.string // set by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	panelState: ownProps.controller.getPanelState({ name: ownProps.panel.id })
+});
+
+export default connect(mapStateToProps, null)(SummaryPanel);

@@ -9,6 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import FlexibleTable from "./../../components/flexible-table";
 import MoveableTableRows from "./../../components/moveable-table-rows";
 import AbstractTable from "./../abstract-table.jsx";
@@ -18,10 +19,10 @@ import { TABLE_SCROLLBAR_WIDTH, STATES } from "./../../constants/constants";
 
 import ReadonlyControl from "./../readonly";
 
-export default class SelectColumns extends AbstractTable {
+class SelectColumns extends AbstractTable {
 
 	getRowClassName(rowIndex) {
-		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
+		const selectedRows = this.props.selectedRows;
 		return selectedRows.indexOf(rowIndex) >= 0
 			? "column-select-table-row column-select-table-selected-row "
 			: "column-select-table-row";
@@ -81,10 +82,6 @@ export default class SelectColumns extends AbstractTable {
 	}
 
 	render() {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const tableState = this.props.controller.getControlState(this.props.propertyId);
-		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
-
 		const sortFields = [];
 		const headers = [];
 		const filterFields = [];
@@ -93,8 +90,8 @@ export default class SelectColumns extends AbstractTable {
 			fieldPickerCloseFunction: this.onFieldPickerClose
 		};
 
-		const rows = this.makeRows(controlValue, tableState);
-		const topRightPanel = this.makeAddRemoveButtonPanel(tableState, tableButtonConfig);
+		const rows = this.makeRows(this.props.value, this.props.state);
+		const topRightPanel = this.makeAddRemoveButtonPanel(this.props.state, tableButtonConfig);
 
 		const table =	(
 			<FlexibleTable
@@ -109,8 +106,8 @@ export default class SelectColumns extends AbstractTable {
 				onSort={this.onSort}
 				topRightPanel={topRightPanel}
 				scrollKey={this.props.control.name}
-				tableState={tableState}
-				messageInfo={messageInfo}
+				tableState={this.props.state}
+				messageInfo={this.props.messageInfo}
 				rows={this.props.control.rows}
 				controller={this.props.controller}
 			/>);
@@ -120,7 +117,7 @@ export default class SelectColumns extends AbstractTable {
 				<div className="properties-column-select-table">
 					{table}
 				</div>
-				<ValidationMessage state={tableState} messageInfo={messageInfo} />
+				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);
 
@@ -133,7 +130,7 @@ export default class SelectColumns extends AbstractTable {
 					propertyId={this.props.propertyId}
 					setScrollToRow={this.setScrollToRow}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-					disabled={tableState === STATES.DISABLED}
+					disabled={this.props.state === STATES.DISABLED}
 				/>
 			</div>
 		);
@@ -145,4 +142,18 @@ SelectColumns.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	openFieldPicker: PropTypes.func.isRequired,
+	selectedRows: PropTypes.array, // set by redux
+	state: PropTypes.string, // pass in by redux
+	value: PropTypes.array, // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
+
+
+const mapStateToProps = (state, ownProps) => ({
+	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	state: ownProps.controller.getControlState(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId),
+	selectedRows: ownProps.controller.getSelectedRows(ownProps.control.name)
+});
+
+export default connect(mapStateToProps, null)(SelectColumns);

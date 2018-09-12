@@ -9,6 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import ControlUtils from "./../../util/control-utils";
 import ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
 import ValidationMessage from "./../../components/validation-message";
@@ -18,7 +19,7 @@ import { STATES } from "./../../constants/constants.js";
 import { ORIENTATIONS } from "./../../constants/form-constants.js";
 import uuid4 from "uuid/v4";
 
-export default class RadiosetControl extends React.Component {
+class RadiosetControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.uuid = uuid4();
@@ -92,10 +93,6 @@ export default class RadiosetControl extends React.Component {
 	}
 
 	render() {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const state = this.props.controller.getControlState(this.props.propertyId);
-		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
-		const messageType = (messageInfo) ? messageInfo.type : "info";
 
 		if (!this.props.control.values && this.props.control.controlType === "radioset") {
 			this.props.control.values = [true, false];
@@ -105,7 +102,7 @@ export default class RadiosetControl extends React.Component {
 		let wasChecked = false;
 		const valueSet = this.props.controller.getFilteredEnumItems(this.props.propertyId, this.props.control);
 		for (var i = 0; i < valueSet.values.length; i++) {
-			const checked = valueSet.values[i] === controlValue;
+			const checked = valueSet.values[i] === this.props.value;
 			// RadioButton only accepts values of type string || number
 			const val = (this.props.control.valueDef.propType === "boolean") ? valueSet.values[i].toString() : valueSet.values[i];
 			wasChecked = wasChecked || checked;
@@ -119,7 +116,7 @@ export default class RadiosetControl extends React.Component {
 					<RadioButton
 						key={i}
 						id={ControlUtils.getControlId(id, this.uuid)}
-						disabled={state === STATES.DISABLED}
+						disabled={this.props.state === STATES.DISABLED}
 						labelText={valueSet.valueLabels[i]}
 						value={val}
 						onChange={this.handleChange}
@@ -129,21 +126,21 @@ export default class RadiosetControl extends React.Component {
 				</div>
 			);
 		}
-		if (controlValue && controlValue.length > 0 && !wasChecked) {
+		if (this.props.value && this.props.value.length > 0 && !wasChecked) {
 			this.setEmptySelection = true;
 		}
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
-				className={classNames("properties-radioset ", { "hide": state === STATES.HIDDEN })}
+				className={classNames("properties-radioset ", { "hide": this.props.state === STATES.HIDDEN })}
 			>
 				<div
-					className={classNames("properties-radio-button-group " + messageType,
+					className={classNames("properties-radio-button-group", this.props.messageInfo ? this.props.messageInfo.type : null,
 						{ "horizontal": this.props.control.orientation !== ORIENTATIONS.VERTICAL })}
 				>
 					{buttons}
 				</div>
-				<ValidationMessage state={state} messageInfo={messageInfo} inTable={this.props.tableControl} />
+				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>
 		);
 	}
@@ -153,5 +150,20 @@ RadiosetControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	control: PropTypes.object.isRequired,
-	tableControl: PropTypes.bool
+	tableControl: PropTypes.bool,
+	state: PropTypes.string, // pass in by redux
+	value: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.number,
+		PropTypes.bool
+	]), // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	state: ownProps.controller.getControlState(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+});
+
+export default connect(mapStateToProps, null)(RadiosetControl);

@@ -125,7 +125,6 @@ describe("radio renders and works correctly with different enum types", () => {
 		// checked the disable box
 		checkbox.getDOMNode().checked = true;
 		checkbox.simulate("change");
-		wrapper.update();
 		expect(renderedController.getPropertyValue({ name: "radioDisable" })).to.equal("gini");
 		const radioGroup = wrapper.find("div[data-id='properties-radioDisable']");
 		const radioDisable = radioGroup.find("input[value='entropy']");
@@ -140,7 +139,6 @@ describe("radio renders and works correctly with different enum types", () => {
 		// checked the hidden box
 		checkbox.getDOMNode().checked = true;
 		checkbox.simulate("change");
-		wrapper.update();
 		expect(renderedController.getPropertyValue({ name: "radioHidden" })).to.equal("gini");
 		const radioGroup = wrapper.find("div[data-id='properties-radioHidden']");
 		const radioHidden = radioGroup.find("input[value='entropy']");
@@ -154,7 +152,6 @@ describe("radio renders and works correctly with different enum types", () => {
 		// checked the filter box
 		checkbox.getDOMNode().checked = true;
 		checkbox.simulate("change");
-		wrapper.update();
 		const radioGroup = wrapper.find("div[data-id='properties-radioFilter']");
 		const options = radioGroup.find("label");
 		expect(options).to.have.length(2);

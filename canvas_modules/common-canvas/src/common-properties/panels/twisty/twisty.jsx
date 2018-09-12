@@ -9,6 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import classNames from "classnames";
 import Accordion from "carbon-components-react/lib/components/Accordion";
 import AccordionItem from "carbon-components-react/lib/components/AccordionItem";
@@ -16,18 +17,15 @@ import ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 
 
-export default class TwistyPanel extends React.Component {
+class TwistyPanel extends React.Component {
 
 	render() {
-		const propertyId = { name: this.props.panelId };
-		const state = this.props.controller.getPanelState(propertyId);
-
 		return (
-			<div className={classNames("properties-twisty-panel", { "hide": state === STATES.HIDDEN })}
-				disabled={state === STATES.DISABLED} data-id={ControlUtils.getDataId(propertyId)}
+			<div className={classNames("properties-twisty-panel", { "hide": this.props.panelState === STATES.HIDDEN })}
+				disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
 			>
 				<Accordion>
-					<AccordionItem title={this.props.label}>
+					<AccordionItem title={this.props.panel.label}>
 						{this.props.children}
 					</AccordionItem>
 				</Accordion>
@@ -37,8 +35,14 @@ export default class TwistyPanel extends React.Component {
 }
 
 TwistyPanel.propTypes = {
-	label: PropTypes.string.isRequired,
+	panel: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	children: PropTypes.array,
-	panelId: PropTypes.string.isRequired,
+	panelState: PropTypes.string // set by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	panelState: ownProps.controller.getPanelState({ name: ownProps.panel.id })
+});
+
+export default connect(mapStateToProps, null)(TwistyPanel);

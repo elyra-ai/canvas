@@ -24,6 +24,7 @@ import isEqual from "lodash/isEqual";
 import omit from "lodash/omit";
 import pick from "lodash/pick";
 import Icon from "carbon-components-react/lib/components/Icon";
+import { Provider } from "react-redux";
 
 import TitleEditor from "./components/title-editor";
 import classNames from "classnames";
@@ -80,7 +81,6 @@ class CommonProperties extends React.Component {
 				if (newProps.propertiesInfo.messages) {
 					this.propertiesController.validatePropertiesValues();
 				}
-
 			}
 		}
 	}
@@ -260,7 +260,6 @@ class CommonProperties extends React.Component {
 			}
 
 			const editorForm = (<EditorForm
-				ref="editorForm"
 				key="editor-form-key"
 				controller={this.propertiesController}
 				additionalComponents={this.props.propertiesInfo.additionalComponents}
@@ -301,17 +300,19 @@ class CommonProperties extends React.Component {
 			}
 			const className = classNames("properties-wrapper", { "properties-right-flyout": this.props.propertiesConfig.rightFlyout }, `properties-${this.state.editorSize}`);
 			return (
-				<div
-					ref={ (ref) => (this.commonProperties = ref) }
-					className={className}
-					tabIndex="0"
-					onBlur={this.onBlur}
-				>
-					{resizeBtn}
-					{propertiesTitle}
-					{propertiesDialog}
-					{buttonsContainer}
-				</div>
+				<Provider store={this.propertiesController.getStore()}>
+					<div
+						ref={ (ref) => (this.commonProperties = ref) }
+						className={className}
+						tabIndex="0"
+						onBlur={this.onBlur}
+					>
+						{resizeBtn}
+						{propertiesTitle}
+						{propertiesDialog}
+						{buttonsContainer}
+					</div>
+				</Provider>
 			);
 		}
 		return <div />;

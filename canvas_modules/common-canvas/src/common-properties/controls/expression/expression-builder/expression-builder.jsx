@@ -7,8 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint global-require: 0 */
-
 import React from "react";
 import PropTypes from "prop-types";
 import ExpressionControl from "./../expression.jsx";

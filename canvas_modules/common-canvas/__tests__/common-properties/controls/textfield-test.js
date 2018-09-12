@@ -46,6 +46,7 @@ describe("textfield renders correctly", () => {
 	it("textfield props should have been defined", () => {
 		const wrapper = mount(
 			<Textfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -59,6 +60,7 @@ describe("textfield renders correctly", () => {
 	it("textfield should update text value", () => {
 		const wrapper = mount(
 			<Textfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -73,6 +75,7 @@ describe("textfield renders correctly", () => {
 	it("textfield should not go over max chars", () => {
 		const wrapper = mount(
 			<Textfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -89,6 +92,7 @@ describe("textfield renders correctly", () => {
 		const propertyId2 = { name: "test-text2" };
 		const wrapper = mount(
 			<Textfield
+				store={controller.getStore()}
 				control={control2}
 				controller={controller}
 				propertyId={propertyId2}
@@ -104,6 +108,7 @@ describe("textfield renders correctly", () => {
 	it("textfield should set placeholder text", () => {
 		const wrapper = mount(
 			<Textfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -120,6 +125,7 @@ describe("textfield renders correctly", () => {
 		);
 		const wrapper = mount(
 			<Textfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -137,6 +143,7 @@ describe("textfield renders correctly", () => {
 		);
 		const wrapper = mount(
 			<Textfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -152,6 +159,7 @@ describe("textfield renders correctly", () => {
 		controller.updateControlState(propertyId, "disabled");
 		const wrapper = mount(
 			<Textfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -165,6 +173,7 @@ describe("textfield renders correctly", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = mount(
 			<Textfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -182,6 +191,7 @@ describe("textfield renders correctly", () => {
 		});
 		const wrapper = mount(
 			<Textfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}

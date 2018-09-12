@@ -88,7 +88,7 @@ SubPanelInvoker.propTypes = {
 	applyLabel: PropTypes.string,
 	rejectLabel: PropTypes.string,
 	rightFlyout: PropTypes.bool,
-	controller: PropTypes.object
+	controller: PropTypes.object.isRequired
 };
 
 SubPanelInvoker.defaultProps = {

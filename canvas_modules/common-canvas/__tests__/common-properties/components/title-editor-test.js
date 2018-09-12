@@ -33,6 +33,7 @@ describe("title-editor renders correctly", () => {
 	it("props should have been defined", () => {
 		const wrapper = mountWithIntl(
 			<TitleEditor
+				store={controller.getStore()}
 				controller={controller}
 				helpClickHandler={helpClickHandler}
 				labelEditable
@@ -53,6 +54,7 @@ describe("title-editor renders correctly", () => {
 		}
 		const wrapper = mountWithIntl(
 			<TitleEditor
+				store={controller.getStore()}
 				controller={controller}
 				helpClickHandler={callback}
 				labelEditable
@@ -66,6 +68,7 @@ describe("title-editor renders correctly", () => {
 	it("test with no help", () => {
 		const wrapper = mountWithIntl(
 			<TitleEditor
+				store={controller.getStore()}
 				controller={controller}
 				helpClickHandler={helpClickHandler}
 				labelEditable
@@ -77,6 +80,7 @@ describe("title-editor renders correctly", () => {
 		helpClickHandler.reset();
 		const wrapper = mountWithIntl(
 			<TitleEditor
+				store={controller.getStore()}
 				controller={controller}
 				labelEditable
 				help={help}
@@ -89,6 +93,7 @@ describe("title-editor renders correctly", () => {
 		helpClickHandler.reset();
 		const wrapper = mountWithIntl(
 			<TitleEditor
+				store={controller.getStore()}
 				controller={controller}
 				labelEditable
 				help={help}
@@ -103,6 +108,7 @@ describe("title-editor renders correctly", () => {
 		helpClickHandler.reset();
 		const wrapper = mountWithIntl(
 			<TitleEditor
+				store={controller.getStore()}
 				controller={controller}
 				labelEditable
 			/>
@@ -115,6 +121,7 @@ describe("title-editor renders correctly", () => {
 		helpClickHandler.reset();
 		const wrapper = mountWithIntl(
 			<TitleEditor
+				store={controller.getStore()}
 				controller={controller}
 				labelEditable={false}
 			/>

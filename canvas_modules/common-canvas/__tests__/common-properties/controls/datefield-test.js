@@ -41,6 +41,7 @@ describe("datefield-control renders correctly", () => {
 	it("props should have been defined", () => {
 		const wrapper = mount(
 			<DatefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -54,6 +55,7 @@ describe("datefield-control renders correctly", () => {
 	it("should render a `DatefieldControl`", () => {
 		const wrapper = mount(
 			<DatefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -67,6 +69,7 @@ describe("datefield-control renders correctly", () => {
 	it("should allow a valid date to be entered in `DatefieldControl`", () => {
 		const wrapper = mount(
 			<DatefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -81,6 +84,7 @@ describe("datefield-control renders correctly", () => {
 	it("should allow invalid format date to be entered in `DatefieldControl`", () => {
 		const wrapper = mount(
 			<DatefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -102,6 +106,7 @@ describe("datefield-control renders correctly", () => {
 	it("should set correct state null in `DatefieldControl`", () => {
 		const wrapper = mount(
 			<DatefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -116,6 +121,7 @@ describe("datefield-control renders correctly", () => {
 	it("should set correct control type in `DatefieldControl`", () => {
 		const wrapper = mount(
 			<DatefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -129,6 +135,7 @@ describe("datefield-control renders correctly", () => {
 	it("should set placeholder text in `DatefieldControl`", () => {
 		const wrapper = mount(
 			<DatefieldControl
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}

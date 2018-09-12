@@ -237,7 +237,7 @@ function allowConditions(inPropertyId, controller) {
 */
 function filterConditions(propertyId, filterDefinitions, controller, fields) {
 	// filters only have 1 definition
-	if (filterDefinitions[propertyId.name] && filterDefinitions[propertyId.name][0]) {
+	if (filterDefinitions && filterDefinitions[propertyId.name] && filterDefinitions[propertyId.name][0]) {
 		try {
 			return UiConditions.filter(filterDefinitions[propertyId.name][0].definition, controller, fields);
 		} catch (error) {

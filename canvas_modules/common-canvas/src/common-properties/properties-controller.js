@@ -58,6 +58,10 @@ export default class PropertiesController {
 		this.expressionRecentlyUsed = [];
 	}
 
+	getStore() {
+		return this.propertiesStore.getStore();
+	}
+
 	subscribe(callback) {
 		this.propertiesStore.subscribe(callback);
 	}
@@ -126,7 +130,7 @@ export default class PropertiesController {
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
 			// set initial tab to first tab
 			if (!isEmpty(this.uiItems) && !isEmpty(this.uiItems[0].tabs)) {
-				this.setActiveTab(this.uiItems[0].tabs[0].group);
+				this.propertiesStore.setActiveTab(this.uiItems[0].tabs[0].group);
 			}
 		}
 	}
@@ -539,22 +543,6 @@ export default class PropertiesController {
 	*/
 	setTitle(title) {
 		return this.propertiesStore.setTitle(title);
-	}
-
-	/**
-	* Returns activeTab
-	*	@return string
-	*/
-	getActiveTab() {
-		return this.propertiesStore.getActiveTab();
-	}
-
-	/**
-	* Sets active primary tab for common-properties
-	*	@param title string
-	*/
-	setActiveTab(activeTab) {
-		return this.propertiesStore.setActiveTab(activeTab);
 	}
 
 	/**
@@ -987,7 +975,7 @@ export default class PropertiesController {
 			}
 		}
 		const message = this.propertiesStore.getErrorMessage(propertyId, this.reactIntl);
-		if (filterSuccess) {
+		if (filterSuccess && message) {
 			if (message.type === CONDITION_MESSAGE_TYPE.SUCCESS) {
 				return null;
 			}

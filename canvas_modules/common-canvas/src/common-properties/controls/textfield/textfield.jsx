@@ -9,6 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import TextInput from "carbon-components-react/lib/components/TextInput";
 import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
@@ -16,7 +17,7 @@ import { STATES } from "./../../constants/constants.js";
 import { CHARACTER_LIMITS } from "./../../constants/constants.js";
 import classNames from "classnames";
 
-export default class TextfieldControl extends React.Component {
+class TextfieldControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.charLimit = ControlUtils.getCharLimit(props.control, CHARACTER_LIMITS.TEXT_FIELD);
@@ -32,25 +33,22 @@ export default class TextfieldControl extends React.Component {
 	}
 
 	render() {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const value = controlValue ? controlValue : "";
-		const state = this.props.controller.getControlState(this.props.propertyId);
-		const messageInfo = this.props.controller.getErrorMessage(this.props.propertyId);
-
-		const className = classNames("properties-textfield", "properties-input-control", { "hide": state === STATES.HIDDEN }, messageInfo ? messageInfo.type : null);
+		const value = this.props.value ? this.props.value : "";
+		const className = classNames("properties-textfield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
+			this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<TextInput
 					autoComplete={this.props.tableControl === true ? "off" : "on"}
 					id={this.id}
-					disabled={state === STATES.DISABLED}
+					disabled={ this.props.state === STATES.DISABLED}
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange.bind(this)}
 					value={value}
 					labelText={this.props.control.label ? this.props.control.label.text : ""}
 					hideLabel
 				/>
-				<ValidationMessage inTable={this.props.tableControl} state={state} messageInfo={messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} state={ this.props.state} messageInfo={ this.props.messageInfo} />
 			</div>
 		);
 	}
@@ -60,5 +58,17 @@ TextfieldControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	tableControl: PropTypes.bool
+	tableControl: PropTypes.bool,
+	state: PropTypes.string, // pass in by redux
+	value: PropTypes.string, // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
+
+
+const mapStateToProps = (state, ownProps) => ({
+	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	state: ownProps.controller.getControlState(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+});
+
+export default connect(mapStateToProps, null)(TextfieldControl);

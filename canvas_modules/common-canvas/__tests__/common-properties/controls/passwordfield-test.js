@@ -39,6 +39,7 @@ describe("Passwordfield renders correctly", () => {
 	it("Passwordfield props should have been defined", () => {
 		const wrapper = mount(
 			<Passwordfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -51,6 +52,7 @@ describe("Passwordfield renders correctly", () => {
 	it("Passwordfield type set correctly", () => {
 		const wrapper = mount(
 			<Passwordfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -63,6 +65,7 @@ describe("Passwordfield renders correctly", () => {
 	it("Passwordfield should update value", () => {
 		const wrapper = mount(
 			<Passwordfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -76,6 +79,7 @@ describe("Passwordfield renders correctly", () => {
 	it("Passwordfield should set placeholder", () => {
 		const wrapper = mount(
 			<Passwordfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -91,6 +95,7 @@ describe("Passwordfield renders correctly", () => {
 		);
 		const wrapper = mount(
 			<Passwordfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -107,6 +112,7 @@ describe("Passwordfield renders correctly", () => {
 		);
 		const wrapper = mount(
 			<Passwordfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -121,6 +127,7 @@ describe("Passwordfield renders correctly", () => {
 		controller.updateControlState(propertyId, "disabled");
 		const wrapper = mount(
 			<Passwordfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -133,6 +140,7 @@ describe("Passwordfield renders correctly", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = mount(
 			<Passwordfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -149,6 +157,7 @@ describe("Passwordfield renders correctly", () => {
 		});
 		const wrapper = mount(
 			<Passwordfield
+				store={controller.getStore()}
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
