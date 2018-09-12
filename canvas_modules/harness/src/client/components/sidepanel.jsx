@@ -75,6 +75,8 @@ export default class SidePanel extends React.Component {
 				changeValidateFlowOnOpen={this.props.canvasConfig.changeValidateFlowOnOpen}
 				enableCreateSupernodeNonContiguous={this.props.canvasConfig.enableCreateSupernodeNonContiguous}
 				useEnableCreateSupernodeNonContiguous={this.props.canvasConfig.useEnableCreateSupernodeNonContiguous}
+				enableMoveNodesOnSupernodeResize={this.props.canvasConfig.enableMoveNodesOnSupernodeResize}
+				setEnableMoveNodesOnSupernodeResize={this.props.canvasConfig.setEnableMoveNodesOnSupernodeResize}
 				log={this.props.log}
 			/>);
 			break;
@@ -171,7 +173,9 @@ SidePanel.propTypes = {
 		schemaValidation: PropTypes.func,
 		schemaValidationEnabled: PropTypes.bool,
 		validateFlowOnOpen: PropTypes.bool,
-		changeValidateFlowOnOpen: PropTypes.func
+		changeValidateFlowOnOpen: PropTypes.func,
+		enableMoveNodesOnSupernodeResize: PropTypes.bool,
+		setEnableMoveNodesOnSupernodeResize: PropTypes.func
 	}),
 	propertiesConfig: PropTypes.shape({
 		closePropertiesEditorDialog: PropTypes.func,

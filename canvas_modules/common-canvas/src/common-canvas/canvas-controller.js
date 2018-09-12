@@ -1013,7 +1013,7 @@ export default class CanvasController {
 				break;
 			}
 			case "expandSuperNodeInPlace": {
-				const command = new ExpandSuperNodeInPlaceAction(this.contextMenuSource, this.objectModel);
+				const command = new ExpandSuperNodeInPlaceAction(this.contextMenuSource, this.objectModel, this.canvasConfig.enableMoveNodesOnSupernodeResize);
 				this.commandStack.do(command);
 				break;
 			}

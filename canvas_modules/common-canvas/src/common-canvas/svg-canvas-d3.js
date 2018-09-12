@@ -66,7 +66,8 @@ export default class CanvasD3Layout {
 			this.canvasInfo.primary_pipeline,
 			this.canvasDiv,
 			this.canvasController,
-			this.canvasInfo);
+			this.canvasInfo,
+			this.config);
 
 		this.logger.logEndTimer("Constructor", true);
 	}
@@ -76,7 +77,8 @@ export default class CanvasD3Layout {
 				(this.renderer && this.renderer.pipelineId !== this.canvasController.getCurrentBreadcrumb().pipelineId) ||
 				this.config.enableConnectionType !== config.enableConnectionType ||
 				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
-				this.config.enableLinkType !== config.enableLinkType) {
+				this.config.enableLinkType !== config.enableLinkType ||
+				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize) {
 			this.logger.logStartTimer("Initializing Canvas");
 
 			// The canvasInfo does not need to be cloned here because the two
@@ -84,7 +86,6 @@ export default class CanvasD3Layout {
 			// cause this method to be called again and the else clasue of this if
 			// will be executed which will clone the canvasInfo.
 			this.canvasInfo = canvasInfo;
-
 			// Save the config
 			this.config = config;
 
@@ -111,7 +112,8 @@ export default class CanvasD3Layout {
 					this.canvasController.getCurrentBreadcrumb().pipelineId,
 					this.canvasDiv,
 					this.canvasController,
-					this.canvasInfo);
+					this.canvasInfo,
+					config);
 			}
 
 			this.logger.logEndTimer("Set Canvas Info", true);
@@ -224,12 +226,13 @@ export default class CanvasD3Layout {
 }
 
 class CanvasRenderer {
-	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, parentSupernodeD3Selection) {
+	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, config, parentSupernodeD3Selection) {
 		this.logger = new Logger(["CanvasRenderer", "PipeId", pipelineId]);
 		this.logger.logStartTimer("Constructor");
 		this.pipelineId = pipelineId;
 		this.canvasDiv = canvasDiv;
 		this.canvasInfo = canvasInfo;
+		this.config = config;
 		this.canvasController = canvasController;
 		this.objectModel = this.canvasController.getObjectModel();
 		this.parentSupernodeD3Selection = parentSupernodeD3Selection; // Optional parameter, only provided with sub-flow in-place display.
@@ -1502,6 +1505,7 @@ class CanvasRenderer {
 				.on("mousedown", (d) => {
 					if (this.isExpandedSupernode(d)) {
 						this.nodeSizing = true;
+						this.nodeSizingInitialSize = { width: d.width, height: d.height };
 						this.nodeSizingId = d.id;
 						// Note - node resizing and finalization of size is handled by drag functions.
 					}
@@ -2049,6 +2053,7 @@ class CanvasRenderer {
 					this.canvasDiv,
 					this.canvasController,
 					this.canvasInfo,
+					this.config,
 					supernodeD3Object);
 				this.superRenderers.push(superRenderer);
 			}
@@ -3292,7 +3297,9 @@ class CanvasRenderer {
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
 			this.addToNodeSizingArray(nodeObj);
-			this.moveSurroundingNodes(nodeObj, delta);
+			if (this.config.enableMoveNodesOnSupernodeResize) {
+				this.moveSurroundingNodes(nodeObj, delta);
+			}
 			this.displayNodes();
 			this.displayLinks();
 			if (this.isDisplayingSubFlow()) {
@@ -3319,29 +3326,30 @@ class CanvasRenderer {
 			if (node.id === nodeObj.id) {
 				return; // Ignore the supernode
 			}
+
 			xDelta = 0;
 			yDelta = 0;
 
 			if (this.nodeSizingDirection.indexOf("n") > -1 &&
-			nodeObj.y_pos + nodeObj.height > node.y_pos + node.height && // check node is above supernode bottom border
-			this.isNodePositionedWithinSupernodeXBoundary(node, nodeObj)) {
+				node.y_pos + node.height < nodeObj.y_pos && // check node is above supernode bottom border
+				nodeObj.height > this.nodeSizingInitialSize.height) {
 				node.y_pos -= delta.height;
 				yDelta = delta.height;
 			} else if (this.nodeSizingDirection.indexOf("s") > -1 &&
-			node.y_pos > nodeObj.y_pos && // check node is below supernode top right corner
-			this.isNodePositionedWithinSupernodeXBoundary(node, nodeObj)) {
+			node.y_pos > nodeObj.y_pos + nodeObj.height && // check node is below supernode top right corner
+			nodeObj.height > this.nodeSizingInitialSize.height) {
 				node.y_pos += delta.height;
 				yDelta = delta.height;
 			}
 
 			if (this.nodeSizingDirection.indexOf("w") > -1 &&
-			nodeObj.x_pos + nodeObj.width > node.x_pos + node.width && // check node is left of supernode right border
-			this.isNodePositionedWithinSupernodeYBoundary(node, nodeObj)) {
+			node.x_pos + node.width < nodeObj.x_pos && // check node is left of supernode right border
+			nodeObj.width > this.nodeSizingInitialSize.width) {
 				node.x_pos -= delta.width;
 				xDelta = delta.width;
 			} else if (this.nodeSizingDirection.indexOf("e") > -1 &&
-			nodeObj.x_pos < node.x_pos && // check node is right of supernode left border
-			this.isNodePositionedWithinSupernodeYBoundary(node, nodeObj)) {
+			node.x_pos > nodeObj.x_pos + nodeObj.width && // check node is right of supernode left border
+			nodeObj.width > this.nodeSizingInitialSize.width) {
 				node.x_pos += delta.width;
 				xDelta = delta.width;
 			}
@@ -3350,16 +3358,6 @@ class CanvasRenderer {
 				this.addToNodeSizingArray(node);
 			}
 		});
-	}
-
-	isNodePositionedWithinSupernodeXBoundary(node, supernode) {
-		return (node.x_pos >= supernode.x_pos && node.x_pos < supernode.x_pos + supernode.width) || // check node top border is within supernode
-			(node.x_pos + node.width <= supernode.x_pos + supernode.width && node.x_pos + node.width >= supernode.x_pos); // check node bottom border is within supernode
-	}
-
-	isNodePositionedWithinSupernodeYBoundary(node, supernode) {
-		return (node.y_pos >= supernode.y_pos && node.y_pos < supernode.y_pos + supernode.height) || // check node top border is within supernode
-			(node.y_pos + node.height <= supernode.y_pos + supernode.height && node.y_pos + node.height >= supernode.y_pos); // check node bottom border is within supernode
 	}
 
 	// Sets the size and position of the comment in the canvasInfo.comments
@@ -3436,6 +3434,7 @@ class CanvasRenderer {
 		}
 		this.nodeSizingMovedNodes = [];
 		this.nodeSizing = false;
+		this.nodeSizingInitialSize = {};
 	}
 
 	// Finalises the sizing of a comment by calling editActionHandler

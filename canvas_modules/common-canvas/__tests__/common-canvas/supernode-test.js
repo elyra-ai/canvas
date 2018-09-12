@@ -16,7 +16,7 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 
-import supernodeFlow from "../test_resources/json/supernodeCanvas.json";
+import supernodeCanvas from "../test_resources/json/supernodeCanvas.json";
 import associationLinkCanvas from "../test_resources/json/associationLinkCanvas.json";
 
 import test1ExpectedFlow from "../test_resources/json/supernode-test1-expected-flow.json";
@@ -40,6 +40,7 @@ import test9ExpectedUndoFlow from "../test_resources/json/supernode-test9-expect
 import test10ExpectedFlow from "../test_resources/json/supernode-test10-expected-flow.json";
 import test10ExpectedUndoFlow from "../test_resources/json/supernode-test10-expected-undo-flow.json";
 
+const primaryPipelineId = "153651d6-9b88-423c-b01b-861f12d01489";
 const superNodeId = "7015d906-2eae-45c1-999e-fb888ed957e5";
 // Supernode.
 const expandCollapseSupenodeSourceObject = {
@@ -370,7 +371,7 @@ describe("Expand and Collapse Supernode Action", () => {
 	let objectModel;
 	beforeEach(() => {
 		canvasController = new CanvasController();
-		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
+		canvasController.getObjectModel().setPipelineFlow(supernodeCanvas);
 		const config = { enableAutoLayout: "none", canvasController: canvasController, enableInternalObjectModel: true };
 		createCommonCanvas(config, canvasController);
 
@@ -416,15 +417,445 @@ describe("Expand and Collapse Supernode Action", () => {
 		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.expanded_height).to.equal(200);
 		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.is_expanded).to.be.false;
 	});
+
+	it("Should not move the surrounding nodes when supernode is expanded if no overlap", () => {
+		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
+
+		const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": 45, "offsetY": 45, "pipelineId": primaryPipelineId	};
+		objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
+
+		const originalNodePositions = objectModel.getAPIPipeline().getNodes();
+		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
+
+		compareNodePositions(originalNodePositions, objectModel);
+	});
+
+	it("Should move the surrounding nodes south when supernode is expanded and overlaps nodes", () => {
+		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
+		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
+
+		// Sample, Aggregate, Filler nodes moved.
+		const expectedNodePositions = [
+			{
+				"id": "id8I6RH2V91XW",
+				"label": "Binding (entry) node",
+				"x_pos": 89,
+				"y_pos": 99.5
+			},
+			{
+				"id": "idGWRVT47XDV",
+				"label": "Execution node",
+				"x_pos": 297,
+				"y_pos": 138.5
+			},
+			{
+				"id": "nodeIDMultiPlotPE",
+				"label": "Multiplot",
+				"x_pos": 500,
+				"y_pos": 170
+			},
+			{
+				"id": "id125TTEEIK7V",
+				"label": "Model Node",
+				"x_pos": 760,
+				"y_pos": 230.99999237060547
+			},
+			{
+				"id": "id5KIRGGJ3FYT",
+				"label": "Binding (exit) node",
+				"x_pos": 642,
+				"y_pos": 375.99999237060547
+			},
+			{
+				"id": "6f704d84-85be-4520-9d76-57fe2295b310",
+				"label": "Select",
+				"x_pos": 135,
+				"y_pos": 304.5
+			},
+			{
+				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
+				"label": "Database",
+				"x_pos": 97,
+				"y_pos": 517.5
+			},
+			{
+				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+				"label": "Sample",
+				"x_pos": 234,
+				"y_pos": 594.5
+			},
+			{
+				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
+				"label": "Aggregate",
+				"x_pos": 235,
+				"y_pos": 690.5
+			},
+			{
+				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
+				"label": "Merge",
+				"x_pos": 380,
+				"y_pos": 518.5
+			},
+			{
+				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
+				"label": "Table",
+				"x_pos": 530.7247240471117,
+				"y_pos": 519.1793095752446
+			},
+			{
+				"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
+				"label": "C5.0",
+				"x_pos": 675.6818052349669,
+				"y_pos": 471.5656356040878
+			},
+			{
+				"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
+				"label": "Neural Net",
+				"x_pos": 676.7398404208096,
+				"y_pos": 567.8509946880919
+			},
+			{
+				"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
+				"label": "Supernode",
+				"x_pos": 297,
+				"y_pos": 235
+			},
+			{
+				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+				"label": "Filler",
+				"x_pos": 235,
+				"y_pos": 496.5
+			}];
+
+		compareNodePositions(expectedNodePositions, objectModel);
+	});
+
+	it("Should move the surrounding nodes east when supernode is expanded and overlaps nodes", () => {
+		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
+		const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": -85, "offsetY": -90, "pipelineId": primaryPipelineId	};
+		objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
+
+		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
+
+		// Execution and Multiplot nodes moved.
+		const expectedNodePositions = [
+			{
+				"id": "id8I6RH2V91XW",
+				"label": "Binding (entry) node",
+				"x_pos": 89,
+				"y_pos": 99.5
+			},
+			{
+				"id": "idGWRVT47XDV",
+				"label": "Execution node",
+				"x_pos": 427,
+				"y_pos": 138.5
+			},
+			{
+				"id": "nodeIDMultiPlotPE",
+				"label": "Multiplot",
+				"x_pos": 630,
+				"y_pos": 170
+			},
+			{
+				"id": "id125TTEEIK7V",
+				"label": "Model Node",
+				"x_pos": 760,
+				"y_pos": 230.99999237060547
+			},
+			{
+				"id": "id5KIRGGJ3FYT",
+				"label": "Binding (exit) node",
+				"x_pos": 642,
+				"y_pos": 375.99999237060547
+			},
+			{
+				"id": "6f704d84-85be-4520-9d76-57fe2295b310",
+				"label": "Select",
+				"x_pos": 135,
+				"y_pos": 304.5
+			},
+			{
+				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
+				"label": "Database",
+				"x_pos": 97,
+				"y_pos": 517.5
+			},
+			{
+				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+				"label": "Sample",
+				"x_pos": 234,
+				"y_pos": 469.5
+			},
+			{
+				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
+				"label": "Aggregate",
+				"x_pos": 235,
+				"y_pos": 565.5
+			},
+			{
+				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
+				"label": "Merge",
+				"x_pos": 380,
+				"y_pos": 518.5
+			},
+			{
+				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
+				"label": "Table",
+				"x_pos": 530.7247240471117,
+				"y_pos": 519.1793095752446
+			},
+			{
+				"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
+				"label": "C5.0",
+				"x_pos": 675.6818052349669,
+				"y_pos": 471.5656356040878
+			},
+			{
+				"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
+				"label": "Neural Net",
+				"x_pos": 676.7398404208096,
+				"y_pos": 567.8509946880919
+			},
+			{
+				"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
+				"label": "Supernode",
+				"x_pos": 212,
+				"y_pos": 145
+			},
+			{
+				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+				"label": "Filler",
+				"x_pos": 235,
+				"y_pos": 371.5
+			}];
+
+		compareNodePositions(expectedNodePositions, objectModel);
+	});
+
+	it("Should move the surrounding nodes southeast when supernode is expanded and overlaps nodes", () => {
+		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
+		const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": 263, "offsetY": 145, "pipelineId": primaryPipelineId	};
+		objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
+
+		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
+
+		// Binding (exit), C5, Table, and Neural Net nodes moved.
+		const expectedNodePositions = [
+			{
+				"id": "id8I6RH2V91XW",
+				"label": "Binding (entry) node",
+				"x_pos": 89,
+				"y_pos": 99.5
+			},
+			{
+				"id": "idGWRVT47XDV",
+				"label": "Execution node",
+				"x_pos": 297,
+				"y_pos": 138.5
+			},
+			{
+				"id": "nodeIDMultiPlotPE",
+				"label": "Multiplot",
+				"x_pos": 500,
+				"y_pos": 170
+			},
+			{
+				"id": "id125TTEEIK7V",
+				"label": "Model Node",
+				"x_pos": 760,
+				"y_pos": 230.99999237060547
+			},
+			{
+				"id": "id5KIRGGJ3FYT",
+				"label": "Binding (exit) node",
+				"x_pos": 772,
+				"y_pos": 375.99999237060547
+			},
+			{
+				"id": "6f704d84-85be-4520-9d76-57fe2295b310",
+				"label": "Select",
+				"x_pos": 135,
+				"y_pos": 304.5
+			},
+			{
+				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
+				"label": "Database",
+				"x_pos": 97,
+				"y_pos": 517.5
+			},
+			{
+				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+				"label": "Sample",
+				"x_pos": 234,
+				"y_pos": 469.5
+			},
+			{
+				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
+				"label": "Aggregate",
+				"x_pos": 235,
+				"y_pos": 565.5
+			},
+			{
+				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
+				"label": "Merge",
+				"x_pos": 380,
+				"y_pos": 518.5
+			},
+			{
+				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
+				"label": "Table",
+				"x_pos": 530.7247240471117,
+				"y_pos": 644.1793095752446
+			},
+			{
+				"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
+				"label": "C5.0",
+				"x_pos": 805.6818052349669,
+				"y_pos": 596.5656356040878
+			},
+			{
+				"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
+				"label": "Neural Net",
+				"x_pos": 806.7398404208096,
+				"y_pos": 692.8509946880919
+			},
+			{
+				"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
+				"label": "Supernode",
+				"x_pos": 560,
+				"y_pos": 380
+			},
+			{
+				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+				"label": "Filler",
+				"x_pos": 235,
+				"y_pos": 371.5
+			}];
+
+		compareNodePositions(expectedNodePositions, objectModel);
+	});
+
+	it("Should not move the surrounding nodes when enableMoveNodesOnSupernodeResize is false", () => {
+		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: false });
+		const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": 263, "offsetY": 145, "pipelineId": primaryPipelineId	};
+		objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
+
+		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
+
+		const expectedNodePositions = [
+			{
+				"id": "id8I6RH2V91XW",
+				"label": "Binding (entry) node",
+				"x_pos": 89,
+				"y_pos": 99.5
+			},
+			{
+				"id": "idGWRVT47XDV",
+				"label": "Execution node",
+				"x_pos": 297,
+				"y_pos": 138.5
+			},
+			{
+				"id": "nodeIDMultiPlotPE",
+				"label": "Multiplot",
+				"x_pos": 500,
+				"y_pos": 170
+			},
+			{
+				"id": "id125TTEEIK7V",
+				"label": "Model Node",
+				"x_pos": 760,
+				"y_pos": 230.99999237060547
+			},
+			{
+				"id": "id5KIRGGJ3FYT",
+				"label": "Binding (exit) node",
+				"x_pos": 642,
+				"y_pos": 375.99999237060547
+			},
+			{
+				"id": "6f704d84-85be-4520-9d76-57fe2295b310",
+				"label": "Select",
+				"x_pos": 135,
+				"y_pos": 304.5
+			},
+			{
+				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
+				"label": "Database",
+				"x_pos": 97,
+				"y_pos": 517.5
+			},
+			{
+				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+				"label": "Sample",
+				"x_pos": 234,
+				"y_pos": 469.5
+			},
+			{
+				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
+				"label": "Aggregate",
+				"x_pos": 235,
+				"y_pos": 565.5
+			},
+			{
+				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
+				"label": "Merge",
+				"x_pos": 380,
+				"y_pos": 518.5
+			},
+			{
+				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
+				"label": "Table",
+				"x_pos": 530.7247240471117,
+				"y_pos": 519.1793095752446
+			},
+			{
+				"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
+				"label": "C5.0",
+				"x_pos": 675.6818052349669,
+				"y_pos": 471.5656356040878
+			},
+			{
+				"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
+				"label": "Neural Net",
+				"x_pos": 676.7398404208096,
+				"y_pos": 567.8509946880919
+			},
+			{
+				"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
+				"label": "Supernode",
+				"x_pos": 560,
+				"y_pos": 380
+			},
+			{
+				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+				"label": "Filler",
+				"x_pos": 235,
+				"y_pos": 371.5
+			}];
+
+		compareNodePositions(expectedNodePositions, objectModel);
+	});
+
 });
 
 
 describe("Ensure no cross pipeline selection", () => {
 	let canvasController;
-	const primaryPipelineId = "153651d6-9b88-423c-b01b-861f12d01489";
 	beforeEach(() => {
 		canvasController = new CanvasController();
-		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
+		canvasController.getObjectModel().setPipelineFlow(supernodeCanvas);
 		const config = { enableAutoLayout: "none", canvasController: canvasController, enableInternalObjectModel: true };
 		createCommonCanvas(config, canvasController);
 	});
@@ -480,7 +911,7 @@ describe("Create Supernode Action", () => {
 	let objectModel;
 	beforeEach(() => {
 		canvasController = new CanvasController();
-		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
+		canvasController.getObjectModel().setPipelineFlow(supernodeCanvas);
 		const config = { enableAutoLayout: "none", canvasController: canvasController, enableInternalObjectModel: true };
 		createCommonCanvas(config, canvasController);
 
@@ -903,11 +1334,9 @@ describe("Copy and Paste Supernode", () => {
 	let objectModel;
 	let apiPipeline;
 
-	const primaryPipelineId = "153651d6-9b88-423c-b01b-861f12d01489";
-
 	beforeEach(() => {
 		canvasController = new CanvasController();
-		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
+		canvasController.getObjectModel().setPipelineFlow(supernodeCanvas);
 		const config = { enableAutoLayout: "none", canvasController: canvasController, enableInternalObjectModel: true };
 		createCommonCanvas(config, canvasController);
 
@@ -1244,4 +1673,15 @@ function deletePipelineUniqueIds(pipeline, supernodePosition) {
 	if (typeof supernodePosition !== "undefined") {
 		delete pipeline.nodes[supernodePosition].subflow_ref.pipeline_id_ref;
 	}
+}
+
+function compareNodePositions(expectedNodes, objectModel) {
+	expect(isEqual(expectedNodes.length, objectModel.getAPIPipeline().getNodes().length)).to.be.true;
+
+	expectedNodes.forEach((expectedNode) => {
+		const omNode = objectModel.getAPIPipeline().getNode(expectedNode.id);
+		console.log("node " + expectedNode.label);
+		expect(isEqual(expectedNode.x_pos, omNode.x_pos)).to.be.true;
+		expect(isEqual(expectedNode.y_pos, omNode.y_pos)).to.be.true;
+	});
 }

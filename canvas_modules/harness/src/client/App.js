@@ -110,6 +110,7 @@ class App extends React.Component {
 			extraCanvasDisplayed: false,
 			displayAdditionalComponents: false,
 			enableCreateSupernodeNonContiguous: false,
+			enableMoveNodesOnSupernodeResize: true,
 			applyOnBlur: true,
 			expressionBuilder: true,
 			validateFlowOnOpen: true,
@@ -166,12 +167,14 @@ class App extends React.Component {
 		this.setCanvasDropdownFile2 = this.setCanvasDropdownFile2.bind(this);
 		this.setPaletteDropdownSelect = this.setPaletteDropdownSelect.bind(this);
 		this.setPaletteDropdownSelect2 = this.setPaletteDropdownSelect2.bind(this);
+
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useEnableCreateSupernodeNonContiguous = this.useEnableCreateSupernodeNonContiguous.bind(this);
+		this.setEnableMoveNodesOnSupernodeResize = this.setEnableMoveNodesOnSupernodeResize.bind(this);
 		this.setNarrowPalette = this.setNarrowPalette.bind(this);
 		this.schemaValidation = this.schemaValidation.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -592,6 +595,11 @@ class App extends React.Component {
 	setApiSelectedOperation(operation) {
 		this.setState({ apiSelectedOperation: operation });
 		this.log("API Operation Selected");
+	}
+
+	setEnableMoveNodesOnSupernodeResize(enabled) {
+		this.setState({ enableMoveNodesOnSupernodeResize: enabled });
+		this.log("enable move nodes on supernode resize", enabled);
 	}
 
 	getPipelineFlow(canvController) {
@@ -1393,6 +1401,7 @@ class App extends React.Component {
 			enableInternalObjectModel: this.state.internalObjectModel,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
+			enableMoveNodesOnSupernodeResize: this.state.enableMoveNodesOnSupernodeResize,
 			tipConfig: this.state.tipConfig,
 			schemaValidation: this.state.schemaValidationEnabled,
 			enableNarrowPalette: this.state.narrowPalette
@@ -1405,6 +1414,7 @@ class App extends React.Component {
 			enableInternalObjectModel: this.state.internalObjectModel,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
+			enableMoveNodesOnSupernodeResize: true,
 			tipConfig: this.state.tipConfig,
 			schemaValidation: this.state.schemaValidationEnabled,
 			enableNarrowPalette: this.state.narrowPalette
@@ -1593,7 +1603,9 @@ class App extends React.Component {
 			validateFlowOnOpen: this.state.validateFlowOnOpen,
 			changeValidateFlowOnOpen: this.validateFlowOnOpen,
 			enableCreateSupernodeNonContiguous: this.state.enableCreateSupernodeNonContiguous,
-			useEnableCreateSupernodeNonContiguous: this.useEnableCreateSupernodeNonContiguous
+			useEnableCreateSupernodeNonContiguous: this.useEnableCreateSupernodeNonContiguous,
+			enableMoveNodesOnSupernodeResize: this.state.enableMoveNodesOnSupernodeResize,
+			setEnableMoveNodesOnSupernodeResize: this.setEnableMoveNodesOnSupernodeResize
 		};
 
 		const sidePanelPropertiesConfig = {

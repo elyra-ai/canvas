@@ -239,6 +239,11 @@ const nodes = (state = [], action) => {
 				newNode = setNodeDimensions(newNode, action.layoutinfo);
 				return newNode;
 			}
+
+			if (action.data.nodePositions && typeof action.data.nodePositions[node.id] !== "undefined") {
+				const newPosition = action.data.nodePositions[node.id];
+				return Object.assign({}, node, { x_pos: newPosition.x_pos, y_pos: newPosition.y_pos });
+			}
 			return node;
 		});
 
@@ -2127,6 +2132,13 @@ export default class ObjectModel {
 	mergeWithUnion(objValue, srcValue) {
 		return union(objValue, srcValue);
 	}
+
+	// Pythagorean Theorem.
+	getDistanceFromPosition(x, y, node) {
+		const a = node.x_pos - x;
+		const b = node.y_pos - y;
+		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+	}
 }
 
 // ---------------------------------------------------------------------------
@@ -2258,6 +2270,34 @@ export class APIPipeline {
 		this.getNodes().forEach((canvasNode) => {
 			if (canvasNode.x_pos === nodeDef.x_pos &&
 					canvasNode.y_pos === nodeDef.y_pos) {
+				overlap = true;
+			}
+		});
+		return overlap;
+	}
+
+	// Returns true if any corner of the node passed in overlaps any inNodes.
+	// If list of inNodes is not passed in, return true if the node passed in is
+	// on top of any existing nodes.
+	overlapsNodes(node, inNodes) {
+		let overlap = false;
+		const surroundingNodes = inNodes ? inNodes : this.getNodes();
+		surroundingNodes.forEach((canvasNode) => {
+			const canvasNodeWidthX = canvasNode.x_pos + canvasNode.width;
+			const canvasNodeHeightY = canvasNode.y_pos + canvasNode.height;
+			if (node.id !== canvasNode.id &&
+				(
+					(node.x_pos === canvasNode.x_pos && node.y_pos === canvasNode.y_pos) || // Exactly overlaps.
+					(node.x_pos >= canvasNode.x_pos && node.x_pos <= canvasNodeWidthX && // Top left corner of node.
+						node.y_pos >= canvasNode.y_pos && node.y_pos <= canvasNodeHeightY) ||
+					(node.x_pos + node.width > canvasNode.x_pos && node.x_pos + node.width < canvasNodeWidthX && // Top right corner of node
+						node.y_pos > canvasNode.y_pos && node.y_pos < canvasNodeHeightY) ||
+					(node.x_pos > canvasNode.x_pos && node.x_pos < canvasNodeWidthX && // Bottom left corner of node.
+						node.y_pos + node.height > canvasNode.y_pos && node.y_pos + node.height < canvasNodeHeightY) ||
+					(node.x_pos + node.width > canvasNode.x_pos && node.x_pos + node.width < canvasNodeWidthX && // Bottom right corner of node
+						node.y_pos + node.height > canvasNode.y_pos && node.y_pos + node.height < canvasNodeHeightY)
+				)
+			) {
 				overlap = true;
 			}
 		});
@@ -2555,12 +2595,30 @@ export class APIPipeline {
 		});
 	}
 
-	expandSuperNodeInPlace(nodeId) {
-		this.store.dispatch({ type: "SET_SUPERNODE_FLAG", data: { nodeId: nodeId, isExpanded: true }, pipelineId: this.pipelineId, layoutinfo: this.objectModel.getLayout() });
+	expandSuperNodeInPlace(nodeId, nodePositions) {
+		this.store.dispatch({
+			type: "SET_SUPERNODE_FLAG",
+			data: {
+				nodeId: nodeId,
+				isExpanded: true,
+				nodePositions: nodePositions
+			},
+			pipelineId: this.pipelineId,
+			layoutinfo: this.objectModel.getLayout()
+		});
 	}
 
-	collapseSuperNodeInPlace(nodeId) {
-		this.store.dispatch({ type: "SET_SUPERNODE_FLAG", data: { nodeId: nodeId, isExpanded: false }, pipelineId: this.pipelineId, layoutinfo: this.objectModel.getLayout() });
+	collapseSuperNodeInPlace(nodeId, nodePositions) {
+		this.store.dispatch({
+			type: "SET_SUPERNODE_FLAG",
+			data: {
+				nodeId: nodeId,
+				isExpanded: false,
+				nodePositions: nodePositions
+			},
+			pipelineId: this.pipelineId,
+			layoutinfo: this.objectModel.getLayout()
+		});
 	}
 
 	isSuperNodeExpandedInPlace(nodeId) {

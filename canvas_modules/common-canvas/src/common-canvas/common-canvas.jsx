@@ -163,6 +163,7 @@ export default class CommonCanvas extends React.Component {
 			enableLinkType: props.config.enableLinkType,
 			enableInternalObjectModel: props.config.enableInternalObjectModel,
 			enablePaletteLayout: props.config.enablePaletteLayout,
+			enableMoveNodesOnSupernodeResize: props.config.enableMoveNodesOnSupernodeResize,
 			emptyCanvasContent: props.config.emptyCanvasContent,
 			toolbarConfig: props.toolbarConfig,
 			contextMenuConfig: props.contextMenuConfig,

@@ -66,9 +66,7 @@ Feature: Supernode
 		# Without zooming in the browser.dragAndDrop() used by the link step does not
 		# work, presumably because the screen is zoomed out too much.
 		Then I click zoom in
-		Then I click zoom in
 		Then I link node "Distribution" output port "outPort" to node "Derive" input port "inPort" on the subflow
-		Then I click zoom out
 		Then I click zoom out
 
 		Then I click the "Distribution" node in the subflow to select it

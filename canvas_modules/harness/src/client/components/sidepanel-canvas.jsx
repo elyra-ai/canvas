@@ -68,6 +68,7 @@ export default class SidePanelForms extends React.Component {
 		this.layoutDirectionOptionChange = this.layoutDirectionOptionChange.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useEnableCreateSupernodeNonContiguous = this.useEnableCreateSupernodeNonContiguous.bind(this);
+		this.onEnableMoveNodesOnSupernodeResizeToggle = this.onEnableMoveNodesOnSupernodeResizeToggle.bind(this);
 		this.connectionTypeOptionChange = this.connectionTypeOptionChange.bind(this);
 		this.nodeFormatTypeOptionChange = this.nodeFormatTypeOptionChange.bind(this);
 		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
@@ -167,6 +168,10 @@ export default class SidePanelForms extends React.Component {
 
 	onPaletteDropdownSelect2(evt) {
 		this.props.setPaletteDropdownSelect2(evt.value);
+	}
+
+	onEnableMoveNodesOnSupernodeResizeToggle(checked) {
+		this.props.setEnableMoveNodesOnSupernodeResize(checked);
 	}
 
 	onDragStart(ev) {
@@ -545,6 +550,21 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
+		var enableMoveNodesOnSupernodeResize = (<div className="sidepanel-children"
+			id="sidepanel-move-surrounding-nodes"
+		>
+			<form>
+				<div className="sidepanel-headers">Enable move surrounding nodes when resizing a supernode.</div>
+				<div>
+					<Toggle
+						id="sidepanel-enable-move-surrounding-nodes-toggle"
+						toggled={this.props.enableMoveNodesOnSupernodeResize}
+						onToggle={this.onEnableMoveNodesOnSupernodeResizeToggle}
+					/>
+				</div>
+			</form>
+		</div>);
+
 		var connectionType = (<div className="sidepanel-children" id="sidepanel-connection-type">
 			<div className="sidepanel-headers">Connection Type</div>
 			<RadioButtonGroup
@@ -725,6 +745,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{enableCreateSupernodeNonContiguous}
 				{divider}
+				{enableMoveNodesOnSupernodeResize}
+				{divider}
 				{connectionType}
 				{divider}
 				{nodeFormatType}
@@ -791,5 +813,7 @@ SidePanelForms.propTypes = {
 	narrowPalette: PropTypes.bool,
 	setNarrowPalette: PropTypes.func,
 	validateFlowOnOpen: PropTypes.bool,
-	changeValidateFlowOnOpen: PropTypes.func
+	changeValidateFlowOnOpen: PropTypes.func,
+	enableMoveNodesOnSupernodeResize: PropTypes.bool,
+	setEnableMoveNodesOnSupernodeResize: PropTypes.func
 };

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -878,6 +878,31 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(objectModel.getCurrentBreadcrumb().pipelineId, "empty-pipeline")).to.be.true;
 	});
 
+	it("should determine if node overlaps nodes", () => {
+		const nodeWidth = 70;
+		const nodeHeight = 75;
+
+		const noOverlap = { id: "node1", x_pos: 0, y_pos: 0, width: nodeWidth, height: nodeHeight };
+		const exactlyOverlap = { id: "node2", x_pos: 100, y_pos: 100, width: nodeWidth, height: nodeHeight };
+		const exactlyOverlapNegative = { id: "node2A", x_pos: -100, y_pos: -100, width: nodeWidth, height: nodeHeight };
+		const overlapTopLeftCorner = { id: "node3", x_pos: 120, y_pos: 120, width: nodeWidth, height: nodeHeight };
+		const overlapTopRightCorner = { id: "node4", x_pos: 80, y_pos: 120, width: nodeWidth, height: nodeHeight };
+		const overlapBottomLeftCorner = { id: "node5", x_pos: 120, y_pos: 80, width: nodeWidth, height: nodeHeight };
+		const overlapBottomRightCorner = { id: "node6", x_pos: 80, y_pos: 80, width: nodeWidth, height: nodeHeight };
+
+		const listOfNodes = [
+			{ id: "listnode1", x_pos: 100, y_pos: 100, width: nodeWidth, height: nodeHeight },
+			{ id: "listnode4", x_pos: -100, y_pos: -100, width: nodeWidth, height: nodeHeight }
+		];
+
+		expect(objectModel.getAPIPipeline().overlapsNodes(noOverlap, listOfNodes)).to.be.false;
+		expect(objectModel.getAPIPipeline().overlapsNodes(exactlyOverlap, listOfNodes)).to.be.true;
+		expect(objectModel.getAPIPipeline().overlapsNodes(exactlyOverlapNegative, listOfNodes)).to.be.true;
+		expect(objectModel.getAPIPipeline().overlapsNodes(overlapTopLeftCorner, listOfNodes)).to.be.true;
+		expect(objectModel.getAPIPipeline().overlapsNodes(overlapTopRightCorner, listOfNodes)).to.be.true;
+		expect(objectModel.getAPIPipeline().overlapsNodes(overlapBottomLeftCorner, listOfNodes)).to.be.true;
+		expect(objectModel.getAPIPipeline().overlapsNodes(overlapBottomRightCorner, listOfNodes)).to.be.true;
+	});
 
 	function getNodeParametersFromStartFlow(nodeId) {
 		deepFreeze(startPipelineFlow);

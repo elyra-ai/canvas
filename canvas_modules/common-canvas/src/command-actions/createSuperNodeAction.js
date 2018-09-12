@@ -381,9 +381,9 @@ export default class CreateSuperNodeAction extends Action {
 	// Return the node position closest to the top left corner of the rectangle.
 	getTopLeftNodePosition(subflowRect, listOfNodes) {
 		let closestNode = listOfNodes[0];
-		let shortestDistance = this.getDistanceFromPosition(subflowRect.x, subflowRect.y, listOfNodes[0]);
+		let shortestDistance = this.objectModel.getDistanceFromPosition(subflowRect.x, subflowRect.y, listOfNodes[0]);
 		listOfNodes.forEach((node) => {
-			const distance = this.getDistanceFromPosition(subflowRect.x, subflowRect.y, node);
+			const distance = this.objectModel.getDistanceFromPosition(subflowRect.x, subflowRect.y, node);
 			if (distance < shortestDistance) {
 				shortestDistance = distance;
 				closestNode = node;
@@ -394,13 +394,6 @@ export default class CreateSuperNodeAction extends Action {
 			xPos: closestNode.x_pos,
 			yPos: closestNode.y_pos
 		};
-	}
-
-	// Pythagorean Theorem.
-	getDistanceFromPosition(x, y, node) {
-		const a = node.x_pos - x;
-		const b = node.y_pos - y;
-		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
 	}
 
 	// Standard methods
