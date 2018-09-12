@@ -14,6 +14,7 @@ import Controller from "../../src/common-properties/properties-controller";
 import conditionForm from "../test_resources/json/conditions-summary-form.json";
 import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
+
 import testUtils from "../_utils_/property-utils";
 
 import EqualsOverride from "../_utils_/custom-condition-ops/equals-override";
@@ -1046,5 +1047,16 @@ describe("Properties Controller operators", () => {
 		reset();
 		controller.setConditionOps(CustomMax);
 		expect(standardOpCount).to.equal(Object.keys(controller.getConditionOps()).length);
+	});
+});
+
+describe("getErrorMessage should able to handle a null message object", () => {
+	controller.setForm(conditionForm);
+	it("should return a null message", () => {
+		const propertyId = { name: "numberfieldCheckpointInterval" };
+		const filterSuccess = true;
+		const filterHiddenDisable = false;
+		const shouldBeNull = controller.getErrorMessage(propertyId, filterHiddenDisable, filterSuccess);
+		expect(shouldBeNull).to.equal(null);
 	});
 });

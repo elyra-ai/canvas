@@ -975,8 +975,8 @@ export default class PropertiesController {
 			}
 		}
 		const message = this.propertiesStore.getErrorMessage(propertyId, this.reactIntl);
-		if (filterSuccess && message) {
-			if (message.type === CONDITION_MESSAGE_TYPE.SUCCESS) {
+		if (filterSuccess) {
+			if (message && message.type === CONDITION_MESSAGE_TYPE.SUCCESS) {
 				return null;
 			}
 		}
