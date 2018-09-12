@@ -851,16 +851,12 @@ class CanvasRenderer {
 					this.stopDrawingNewLink();
 				}
 			})
-			// Use mousedown.zoom here instead of click.zoom so this get called before the handleClickOutside function for the context-menu-wrapper
-			.on("mousedown.zoom", () => {
-				// Make sure this is just a left mouse button click - we don't want context menu click causing selections to be cleared
-				if (d3Event.button === 0) {
-					this.logger.log("Zoom - click");
-					this.selecting = true;
-					this.canvasController.clearSelections(); // Controller will make sure selections are not cleared when context menu is displayed
-					this.canvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
-					this.selecting = false;
-				}
+			.on("click.zoom", () => {
+				this.logger.log("Zoom - click");
+				this.selecting = true;
+				this.canvasController.clearSelections(); // Controller will make sure selections are not cleared when context menu is displayed
+				this.canvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
+				this.selecting = false;
 			})
 			.on("dblclick.zoom", () => {
 				this.logger.log("Zoom - double click");
