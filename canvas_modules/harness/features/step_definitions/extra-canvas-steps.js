@@ -21,15 +21,12 @@ module.exports = function() {
 
 	// Then I verify the extra canvas have a "Derive" node.
 	this.Then(/^I verify extra canvas has a "([^"]*)" node$/, function(nodeName) {
-		const extraCanvas = browser.$("#canvas-div-1");
-		const extraCanvasNodes = extraCanvas.$$(".node-group");
-		let nodeFound = false;
-		extraCanvasNodes.forEach((node) => {
-			if (node.getText() === nodeName) {
-				nodeFound = true;
-			}
-		});
-		expect(nodeFound).toEqual(true);
+		const nodeId = getNodeIdForLabel(nodeName, true);
+		const node = browser.$("#node_label_" + nodeId);
+		// Use getHTML() here instead of getText() incase the node is 'inactive' i.e. partly or fully off the screen
+		// Also, take first 7substring the name were given (which is the full node name) because then
+		// text in the DOM might be truncated.
+		expect(node.getHTML().includes(nodeName.substring(0, 7))).toBe(true);
 	});
 
 	this.Then(/^I verify the number of nodes in extra canvas are (\d+)$/, function(nodes) {

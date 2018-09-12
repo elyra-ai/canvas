@@ -176,9 +176,11 @@ module.exports = function() {
 
 	this.Then(/^I verify the node with name "([^"]*)" shows in the canvas$/, function(nodeName) {
 		const nodeId = getNodeIdForLabel(nodeName);
-		const node = browser.$("#node_grp_" + nodeId);
-
-		expect(node.getText()).toEqual(nodeName);
+		const node = browser.$("#node_label_" + nodeId);
+		// Use getHTML() here instead of getText() incase the node is 'inactive' i.e. partly or fully off the screen
+		// Also, take first 7substring the name were given (which is the full node name) because then
+		// text in the DOM might be truncated.
+		expect(node.getHTML().includes(nodeName.substring(0, 7))).toBe(true);
 	});
 
 	this.Then(/^I verify the tip shows "([^"]*)" the node "([^"]*)"$/, function(location, nodeName) {
