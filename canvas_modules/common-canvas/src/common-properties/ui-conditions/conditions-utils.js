@@ -129,7 +129,7 @@ function validatePropertiesListConditions(controller, controls, newStates) {
 function validateInput(inPropertyId, controller) {
 	const control = controller.getControl(inPropertyId);
 	if (!control) {
-		// logger.warn("Control not found for " + inPropertyId.name);
+		logger.warn("Control not found for " + inPropertyId.name);
 		return;
 	}
 	const propertyId = cloneDeep(inPropertyId);
@@ -170,7 +170,7 @@ function validateInput(inPropertyId, controller) {
 function validateConditions(inPropertyId, controller) {
 	const control = controller.getControl(inPropertyId);
 	if (!control) {
-		// logger.warn("Control not found for " + inPropertyId.name);
+		logger.warn("Control not found for " + inPropertyId.name);
 		return;
 	}
 	const newStates = {
@@ -208,7 +208,7 @@ function allowConditions(inPropertyId, controller) {
 	let result = true;
 	const control = controller.getControl(inPropertyId);
 	if (!control) {
-		// logger.warn("Control not found for " + inPropertyId.name);
+		logger.warn("Control not found for " + inPropertyId.name);
 		return result;
 	}
 	const allowValidations = controller.getDefinitions(inPropertyId, CONDITION_TYPE.ALLOWCHANGE, CONDITION_DEFINITION_INDEX.CONTROLS);

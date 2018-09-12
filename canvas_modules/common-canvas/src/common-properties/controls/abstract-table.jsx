@@ -62,6 +62,7 @@ export default class AbstractTable extends React.Component {
 		}
 
 		this.selectSummaryPropertyName = "table-multi-select-edit-property-" + this.props.control.name;
+		this.props.controller.saveControls([{ name: this.selectSummaryPropertyName }]);
 		this.setSelectedSummaryRowValue(selectedRows);
 	}
 
