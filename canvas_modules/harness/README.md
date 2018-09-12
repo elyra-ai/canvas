@@ -44,3 +44,4 @@ The Firefox version that will be used is located in the default folder.  On Mac 
 cd <base dir>/canvas_modules/harness
 npm test -- --browser=firefox
 ```
+
