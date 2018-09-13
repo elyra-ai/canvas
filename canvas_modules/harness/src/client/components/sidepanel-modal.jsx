@@ -212,7 +212,6 @@ export default class SidePanelModal extends React.Component {
 				>
 					{this.dropdownOptions()}
 				</Select>
-				{space}
 				{fileChooser}
 				<Button small
 					disabled={!this.isReadyToSubmitProperties()}
