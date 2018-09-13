@@ -27,6 +27,15 @@ Feature: Supernode
 		Then I click option "Create supernode" from the context menu
 		Then I verify there are 3 pipelines
 
+		# Delete nested supernode within supernode from primary pipeline
+		Then I click the "Supernode" node in the subflow to select it
+		Then I delete all selected objects via the Delete key
+		Then I verify pipeline 1 have 6 nodes
+		Then I verify pipeline 1 have 3 links
+		Then I press Ctrl/Cmnd+Z to Undo
+		Then I verify pipeline 1 have 7 nodes
+		Then I verify pipeline 1 have 6 links
+
 		Then I right click the "Supernode" node in the subflow to display the context menu
 		Then I click option "Expand supernode" from the context menu
 

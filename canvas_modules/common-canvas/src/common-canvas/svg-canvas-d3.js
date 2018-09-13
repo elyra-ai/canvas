@@ -150,7 +150,7 @@ export default class CanvasD3Layout {
 						this.canvasController.editActionHandler({
 							editType: "deleteSelectedObjects",
 							selectedObjectIds: this.objectModel.getSelectedObjectIds(),
-							pipelineId: this.objectModel.getCurrentBreadcrumb().pipelineId
+							pipelineId: this.objectModel.getSelectedPipelineId()
 						});
 
 					} else if (isCmndCtrlPressed() && !d3Event.shiftKey && d3Event.keyCode === Z_KEY) {
