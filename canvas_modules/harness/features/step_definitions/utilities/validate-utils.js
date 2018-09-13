@@ -217,19 +217,19 @@ function isObjectModelEmpty(objectModel) {
 function getNodeIdForLabel(nodeText, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
 	const selector = `div > svg > g > g > text[id^=node_label_${inst}]`;
-	return getLabel(nodeText, selector);
+	return getNodeId(nodeText, selector);
 }
 
 function getNodeIdForLabelInSubFlow(nodeText, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
 	const selector = `div > svg > g > g > svg > g > g > text[id^=node_label_${inst}]`;
-	return getLabel(nodeText, selector);
+	return getNodeId(nodeText, selector);
 }
 
-function getLabel(nodeText, selector) {
-	var nodeId = null;
+function getNodeId(nodeText, selector) {
 	var result = browser.execute(function(labelText, inSelector) {
 		/* global document */
+		var nodeId = null;
 		var domLabels = document.querySelectorAll(inSelector);
 		for (let idx = 0; idx < domLabels.length; idx++) {
 			if (domLabels.item(idx).__data__.label === labelText) {
@@ -241,7 +241,26 @@ function getLabel(nodeText, selector) {
 		return nodeId;
 	}, nodeText, selector);
 
-	return result.value.substr(11);
+	if (result && result.value) {
+		return result.value.substr(11);
+	}
+	return null;
+}
+
+function doesTipExist(nodeId, nodeName, location) {
+	const tip = browser.$("#node_tip_" + nodeId);
+	expect(tip.value).not.toEqual(null);
+
+	const node = browser.$("#node_grp_" + nodeId);
+	const tipTop = tip.getLocation().y;
+	if (location === "below") {
+		expect(tipTop).toBeGreaterThan(node.getLocation().y + node.getElementSize().height);
+	} else if (location === "above") {
+		expect(tipTop).toBeLessThan(node.getLocation().y);
+	}
+
+	const tipLabel = tip.$(".tip-node-label").getText();
+	expect(tipLabel).toEqual(nodeName);
 }
 
 function clickSVGAreaAt(xCoord, yCoord) {
@@ -340,5 +359,6 @@ module.exports = {
 	getSummaryFromName: getSummaryFromName,
 	getControlContainerFromName: getControlContainerFromName,
 	getNumberOfSelectedNodes: getNumberOfSelectedNodes,
-	getNumberOfSelectedComments: getNumberOfSelectedComments
+	getNumberOfSelectedComments: getNumberOfSelectedComments,
+	doesTipExist: doesTipExist
 };

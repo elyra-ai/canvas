@@ -9,7 +9,7 @@
 /* eslint no-console: "off" */
 /* eslint max-depth: ["error", 5] */
 
-import { clickSVGAreaAt, findCategoryElement, findNodeIndexInPalette,
+import { clickSVGAreaAt, doesTipExist, findCategoryElement, findNodeIndexInPalette,
 	getNodeIdForLabel, getNodeIdForLabelInSubFlow, getNumberOfSelectedComments,
 	getNumberOfSelectedNodes } from "./utilities/validate-utils.js";
 import { getCanvas, isSchemaValidationError } from "./utilities/test-utils.js";
@@ -185,20 +185,14 @@ module.exports = function() {
 
 	this.Then(/^I verify the tip shows "([^"]*)" the node "([^"]*)"$/, function(location, nodeName) {
 		const nodeId = getNodeIdForLabel(nodeName);
-		const tip = browser.$("#node_tip_" + nodeId);
-		expect(tip.value).not.toEqual(null);
-
-		const node = browser.$("#node_grp_" + nodeId);
-		const tipTop = tip.getLocation().y;
-		if (location === "below") {
-			expect(tipTop).toBeGreaterThan(node.getLocation().y + node.getElementSize().height);
-		} else if (location === "above") {
-			expect(tipTop).toBeLessThan(node.getLocation().y);
-		}
-
-		const tipLabel = tip.$(".tip-node-label").getText();
-		expect(tipLabel).toEqual(nodeName);
+		doesTipExist(nodeId, nodeName, location);
 	});
+
+	this.Then(/^I verify the tip shows "([^"]*)" the node "([^"]*)" in the subflow$/, function(location, nodeName) {
+		const nodeId = getNodeIdForLabelInSubFlow(nodeName);
+		doesTipExist(nodeId, nodeName, location);
+	});
+
 
 	this.Then(/^I hover over the input port "([^"]*)" of node "([^"]*)"$/, function(portId, nodeName) {
 		const nodeId = getNodeIdForLabel(nodeName);

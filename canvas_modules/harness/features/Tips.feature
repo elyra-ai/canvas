@@ -208,8 +208,8 @@ Scenario: Sanity test changing input port name to update port tip
 
 		# Check one of the nodes in the subflow shows a tip
 		Then I hover over the node "Discard Fields" in the subflow
-		And I verify the tip shows "below" the node "Discard Fields"
+		And I verify the tip shows "below" the node "Discard Fields" in the subflow
 
 		# Check the other node in the subflow shows a tip
 		Then I hover over the node "Define Types" in the subflow
-		And I verify the tip shows "below" the node "Define Types"
+		And I verify the tip shows "below" the node "Define Types" in the subflow
