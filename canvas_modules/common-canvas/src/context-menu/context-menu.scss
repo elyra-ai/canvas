@@ -60,6 +60,11 @@
 	align-items: center;
 }
 
+.react-contextmenu-item.react-contextmenu-item--disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
 .react-contextmenu-item:active,
 .react-contextmenu-item:focus,
 .react-contextmenu-item:hover {

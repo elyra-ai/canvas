@@ -270,7 +270,7 @@ describe("create supernode renders correctly", () => {
 		expect(isCreateSupernode).to.be.false;
 	});
 
-	it.only("correctly displays 'create supernode' for non-contiguous nodes when enableCreateSupernodeNonContiguous is true", () => {
+	it("correctly displays 'create supernode' for non-contiguous nodes when enableCreateSupernodeNonContiguous is true", () => {
 		canvasController = new CanvasController();
 		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
 		const config = {

@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint complexity: ["error", 25] */
+/* eslint complexity: ["error", 30] */
 
 import ArrangeLayoutAction from "../command-actions/arrangeLayoutAction.js";
 import CloneMultipleObjectsAction from "../command-actions/cloneMultipleObjectsAction.js";
@@ -877,13 +877,10 @@ export default class CanvasController {
 	}
 
 	createEditMenu(source) {
-		let editSubMenu = [
-			{ action: "cut", label: this.getLabel("edit_cutSelection", "Cut") },
-			{ action: "copy", label: this.getLabel("edit_copySelection", "Copy") }
-		];
-		if (source.type === "canvas") {
-			editSubMenu = editSubMenu.concat({ action: "paste", label: this.getLabel("edit_pasteSelection", "Paste") });
-		}
+		let editSubMenu = [];
+		editSubMenu = editSubMenu.concat({ action: "cut", label: this.getLabel("edit_cutSelection", "Cut"), enable: source.selectedObjectIds.length > 0 },
+			{ action: "copy", label: this.getLabel("edit_copySelection", "Copy"), enable: source.selectedObjectIds.length > 0 },
+			{ action: "paste", label: this.getLabel("edit_pasteSelection", "Paste"), enable: !this.isClipboardEmpty() });
 		return editSubMenu;
 	}
 
@@ -899,7 +896,7 @@ export default class CanvasController {
 	// This should only appear in menu if highlight is true.
 	createUnhighlightMenu(source) {
 		const unhighlightSubMenu = [
-			{ action: "unhighlight", label: "Unhighlight" }
+			{ action: "unhighlight", label: "Unhighlight", enable: this.highlight }
 		];
 		return unhighlightSubMenu;
 	}
@@ -928,8 +925,8 @@ export default class CanvasController {
 		}
 		// Undo and redo
 		if (source.type === "canvas") {
-			menuDefinition = menuDefinition.concat([{ action: "undo", label: this.getLabel("canvas_undo", "Undo") },
-				{ action: "redo", label: this.getLabel("canvas_redo", "Redo") },
+			menuDefinition = menuDefinition.concat([{ action: "undo", label: this.getLabel("canvas_undo", "Undo"), enable: this.canUndo() },
+				{ action: "redo", label: this.getLabel("canvas_redo", "Redo"), enable: this.canRedo() },
 				{ divider: true }]);
 		}
 		// Delete objects

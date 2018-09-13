@@ -11,6 +11,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { MenuItem, SubMenu } from "react-contextmenu";
+import classNames from "classnames";
 
 class CommonContextMenu extends React.Component {
 	constructor(props) {
@@ -52,14 +53,23 @@ class CommonContextMenu extends React.Component {
 				menuItems.push(<MenuItem attributes={customDivider} key={i + 1} onClick={() => {}} divider />);
 			} else if (submenu) {
 				const submenuItems = this.buildMenu(menuDefinition[i].menu);
+				let disabledCount = 0;
+				submenuItems.forEach(function(entry) {
+					if (entry.props.disabled === true) {
+						disabledCount++;
+					}
+				});
+				const disabled = { disabled: disabledCount === submenuItems.length };
+				const classNameValue = classNames("contextmenu-submenu", { "disabled": disabled });
 				menuItems.push(
-					<SubMenu title={menuDefinition[i].label} key={i + 1} className="contextmenu-submenu" rtl={rtl}>
+					<SubMenu title={menuDefinition[i].label} key={i + 1} className={classNameValue} rtl={rtl} {...disabled}>
 						{submenuItems}
 					</SubMenu>
 				);
 			} else {
+				const disabled = { disabled: menuDefinition[i].enable === false };
 				menuItems.push(
-					<MenuItem onClick={this.itemSelected.bind(null, menuDefinition[i].action)} key={i + 1}>
+					<MenuItem onClick={this.itemSelected.bind(null, menuDefinition[i].action)} key={i + 1} {...disabled}>
 						{menuDefinition[i].label}
 					</MenuItem>
 				);
