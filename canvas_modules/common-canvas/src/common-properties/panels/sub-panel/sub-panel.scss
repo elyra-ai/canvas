@@ -31,8 +31,7 @@ button.properties-subpanel-button {
 	&[disabled] {
 		cursor: default;
 	}
-}
-
-button.bx--btn--secondary:focus, button.bx--btn--secondary:hover {
-	background-color: transparent;
+	&:focus, &:hover  {
+		background-color: transparent;
+	}
 }

@@ -27,19 +27,10 @@ export default class SubPanelButton extends React.Component {
 
 	onSubPanelHidden(applyChanges) {
 		logger.info("onSubPanelHidden(): applyChanges=" + applyChanges);
-
-		if (typeof this.props.notifyFinishedEditing !== "undefined") {
-			this.props.notifyFinishedEditing(applyChanges);
-		}
 	}
 
 	showSubPanel() {
-		logger.info("Button.showSubPanel()");
-		if (typeof this.props.notifyStartEditing !== "undefined") {
-			this.props.notifyStartEditing();
-		}
-
-		this.refs.invoker.showSubDialog(this.props.title, this.props.panel, this.onSubPanelHidden);
+		this.subPanelInvoker.showSubDialog(this.props.title, this.props.panel, this.onSubPanelHidden);
 	}
 
 	render() {
@@ -56,7 +47,7 @@ export default class SubPanelButton extends React.Component {
 			{this.props.label}
 		</Button>);
 		return (
-			<SubPanelInvoker ref="invoker"
+			<SubPanelInvoker ref={ (ref) => (this.subPanelInvoker = ref) }
 				rightFlyout={this.props.rightFlyout}
 				applyLabel={applyLabel}
 				rejectLabel={rejectLabel}
@@ -73,7 +64,5 @@ SubPanelButton.propTypes = {
 	title: PropTypes.string.isRequired,
 	panel: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	notifyStartEditing: PropTypes.func,
-	notifyFinishedEditing: PropTypes.func,
 	rightFlyout: PropTypes.bool,
 };
