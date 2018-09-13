@@ -732,8 +732,8 @@ export default class CanvasController {
 		});
 	}
 
-	showTip(tipConfig) {
-		if (this.commonCanvas && !this.isTipShowing() && this.isTipEnabled(tipConfig.type)) {
+	openTip(tipConfig) {
+		if (this.commonCanvas && !this.isTipOpen() && this.isTipEnabled(tipConfig.type)) {
 			if (this.handlers.tipHandler) {
 				const data = {};
 				// Copy only required fields from tipConfig to data object - ignore other fields in tipConfig
@@ -763,18 +763,26 @@ export default class CanvasController {
 				tipConfig.customContent = this.handlers.tipHandler(tipConfig.type, data);
 			}
 
-			this.commonCanvas.showTip(tipConfig);
+			this.commonCanvas.openTip(tipConfig);
 		}
 	}
 
-	isTipShowing() {
-		return this.commonCanvas.isTipShowing();
-	}
-
-	hideTip() {
+	closeTip() {
 		if (this.commonCanvas) {
-			this.commonCanvas.hideTip();
+			this.commonCanvas.closeTip();
 		}
+	}
+
+	isTipOpen() {
+		return this.commonCanvas.isTipOpen();
+	}
+
+	isTipOpening() {
+		return this.commonCanvas.isTipOpening();
+	}
+
+	isTipClosing() {
+		return this.commonCanvas.isTipClosing();
 	}
 
 	isTipEnabled(tipType) {

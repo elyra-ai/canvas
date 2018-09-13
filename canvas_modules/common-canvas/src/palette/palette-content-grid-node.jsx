@@ -39,7 +39,7 @@ class PaletteContentNode extends React.Component {
 	}
 
 	onMouseOver(ev) {
-		this.props.canvasController.showTip({
+		this.props.canvasController.openTip({
 			id: "paletteTip_" + this.props.nodeTemplate.operator_id_ref,
 			type: TIP_TYPE_PALETTE_ITEM,
 			targetObj: ev.currentTarget,
@@ -48,7 +48,7 @@ class PaletteContentNode extends React.Component {
 	}
 
 	onMouseLeave() {
-		this.props.canvasController.hideTip();
+		this.props.canvasController.closeTip();
 	}
 
 	render() {

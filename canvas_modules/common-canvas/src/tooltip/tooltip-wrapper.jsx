@@ -31,7 +31,7 @@ export default class TooltipWrapper extends React.Component {
 	}
 
 	handleClick(e) {
-		this.props.canvasController.hideTip();
+		this.props.canvasController.closeTip();
 	}
 
 	render() {

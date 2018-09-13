@@ -139,7 +139,7 @@ export default class CanvasD3Layout {
 				// Make sure no tip is displayed, because having one displayed
 				// will interfere with drawing of the canvas as the result of any
 				// keyboard action.
-				this.canvasController.hideTip();
+				this.canvasController.closeTip();
 
 				// Only catch key pressses when NOT editing because, while editing,
 				// the test area needs to receive key presses for undo, redo, delete etc.
@@ -419,7 +419,8 @@ class CanvasRenderer {
 		// object model we need to make sure the renderer is removed.
 		this.superRenderers = this.cleanUpSuperRenderers();
 
-		if (!this.canvasController.isTipShowing()) { // No need to render if just displaying a tip
+		if (!this.canvasController.isTipOpening() && // No need to render if opening
+				!this.canvasController.isTipClosing()) { // or closing a tip
 			this.superRenderers.forEach((superRenderer) => {
 				superRenderer.setCanvasInfoRenderer(canvasInfo);
 			});
@@ -1110,7 +1111,7 @@ class CanvasRenderer {
 				height: 0
 			};
 		} else {
-			this.canvasController.hideTip();
+			this.canvasController.closeTip();
 			this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
 		}
 	}
@@ -1370,7 +1371,7 @@ class CanvasRenderer {
 			.data(this.activePipeline.nodes, function(d) { return d.id; });
 
 		// For any of these activities we don't need to do anything to the nodes.
-		if (this.canvasController.isTipShowing() || this.commentSizing) {
+		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing() || this.commentSizing) {
 			this.logger.logEndTimer("displayNodes " + this.getFlags());
 			return;
 
@@ -1418,9 +1419,9 @@ class CanvasRenderer {
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
 					that.setNodeStyles(d, "hover");
 					that.addDynamicNodeIcons(d, this);
-					if (that.canShowTip(TIP_TYPE_NODE)) {
-						that.canvasController.hideTip(); // Ensure existing tip is removed when moving pointer within an in-place supernode
-						that.canvasController.showTip({
+					if (that.canOpenTip(TIP_TYPE_NODE)) {
+						that.canvasController.closeTip(); // Ensure existing tip is removed when moving pointer within an in-place supernode
+						that.canvasController.openTip({
 							id: that.getId("node_tip", d.id),
 							type: TIP_TYPE_NODE,
 							targetObj: this,
@@ -1433,7 +1434,7 @@ class CanvasRenderer {
 					that.setNodeStyles(d, "default");
 					that.canvasGrp.selectAll(that.getId("#node_body", d.id)).attr("hover", "no");
 					that.removeDynamicNodeIcons(d);
-					that.canvasController.hideTip();
+					that.canvasController.closeTip();
 				})
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d) => {
@@ -1663,6 +1664,7 @@ class CanvasRenderer {
 					if (this.isSupernode(d)) {
 						const ren = this.findSuperRenderer(d);
 						if (ren) {
+							this.removeDynamicNodeIcons(d);
 							if (this.isExpanded(d)) {
 								ren.displayCanvas();
 							} else {
@@ -1710,9 +1712,9 @@ class CanvasRenderer {
 								.attr("isSupernodeBinding", this.isSuperBindingNode(d) ? "yes" : "no")
 								.on("mouseenter", function(port) {
 									stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
-									if (that.canShowTip(TIP_TYPE_PORT)) {
-										that.canvasController.hideTip();
-										that.canvasController.showTip({
+									if (that.canOpenTip(TIP_TYPE_PORT)) {
+										that.canvasController.closeTip();
+										that.canvasController.openTip({
 											id: that.getId("node_port_tip", port.id),
 											type: TIP_TYPE_PORT,
 											targetObj: this,
@@ -1723,7 +1725,7 @@ class CanvasRenderer {
 									}
 								})
 								.on("mouseleave", (port) => {
-									this.canvasController.hideTip();
+									this.canvasController.closeTip();
 								})
 								.merge(inputPortSelection)
 								.attr("r", () => this.getPortRadius(d))
@@ -1750,8 +1752,8 @@ class CanvasRenderer {
 								.attr("isSupernodeBinding", this.isSuperBindingNode(d) ? "yes" : "no")
 								.on("mouseenter", function(port) {
 									stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
-									if (that.canShowTip(TIP_TYPE_PORT)) {
-										that.canvasController.showTip({
+									if (that.canOpenTip(TIP_TYPE_PORT)) {
+										that.canvasController.openTip({
 											id: that.getId("node_port_tip", port.id),
 											type: TIP_TYPE_PORT,
 											targetObj: this,
@@ -1762,7 +1764,7 @@ class CanvasRenderer {
 									}
 								})
 								.on("mouseleave", (port) => {
-									this.canvasController.hideTip();
+									this.canvasController.closeTip();
 								})
 								.merge(inputPortArrowSelection)
 								.attr("d", (port) => this.getArrowShapePath(port.cy, d, this.zoomTransform.k))
@@ -1803,9 +1805,9 @@ class CanvasRenderer {
 								})
 								.on("mouseenter", function(port) {
 									stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
-									if (that.canShowTip(TIP_TYPE_PORT)) {
-										that.canvasController.hideTip();
-										that.canvasController.showTip({
+									if (that.canOpenTip(TIP_TYPE_PORT)) {
+										that.canvasController.closeTip();
+										that.canvasController.openTip({
 											id: that.getId("node_port_tip", port.id),
 											type: TIP_TYPE_PORT,
 											targetObj: this,
@@ -1816,7 +1818,7 @@ class CanvasRenderer {
 									}
 								})
 								.on("mouseleave", (port) => {
-									this.canvasController.hideTip();
+									this.canvasController.closeTip();
 								})
 								.merge(outputPortSelection)
 								.attr("r", () => this.getPortRadius(d))
@@ -2767,7 +2769,7 @@ class CanvasRenderer {
 			.selectAll(comSelector)
 			.data(this.activePipeline.comments, function(d) { return d.id; });
 
-		if (this.canvasController.isTipShowing() || this.nodeSizing) {
+		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing() || this.nodeSizing) {
 			this.logger.logEndTimer("displayComments " + this.getFlags());
 			return;
 
@@ -3683,7 +3685,7 @@ class CanvasRenderer {
 		const that = this;
 		const linkSelector = this.getSelectorForClass("link-group");
 
-		if (this.selecting || this.regionSelect || this.canvasController.isTipShowing()) {
+		if (this.selecting || this.regionSelect || this.canvasController.isTipOpening() || this.canvasController.isTipClosing()) {
 			// no lines update needed when selecting objects/region
 			this.logger.logEndTimer("displayLinks " + this.getFlags());
 			return;
@@ -3741,8 +3743,8 @@ class CanvasRenderer {
 				this.openContextMenu("link", d);
 			})
 			.on("mouseenter", function(link) {
-				if (that.canShowTip(TIP_TYPE_LINK)) {
-					that.canvasController.showTip({
+				if (that.canOpenTip(TIP_TYPE_LINK)) {
+					that.canvasController.openTip({
 						id: that.getId("link_tip", link.id),
 						type: TIP_TYPE_LINK,
 						targetObj: this,
@@ -3753,7 +3755,7 @@ class CanvasRenderer {
 				}
 			})
 			.on("mouseleave", (d) => {
-				this.canvasController.hideTip();
+				this.canvasController.closeTip();
 			});
 
 		// Link selection area
@@ -4434,7 +4436,7 @@ class CanvasRenderer {
 		return objs;
 	}
 
-	canShowTip(tipType) {
+	canOpenTip(tipType) {
 		return this.canvasController.isTipEnabled(tipType) &&
 			!this.selecting && !this.regionSelect && !this.dragging &&
 			!this.commentSizing && !this.nodeSizing && !this.drawingNewLink;
@@ -4465,8 +4467,11 @@ class CanvasRenderer {
 	// Returns a string that explains which flags are set to true.
 	getFlags() {
 		let str = "Flags:";
-		if (this.canvasController.isTipShowing()) {
-			str += " tipShowing = true";
+		if (this.canvasController.isTipOpening()) {
+			str += " tipOpening = true";
+		}
+		if (this.canvasController.isTipClosing()) {
+			str += " tipClosing = true";
 		}
 		if (this.dragging) {
 			str += " dragging = true";

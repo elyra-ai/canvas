@@ -47,12 +47,15 @@ export default class CommonCanvas extends React.Component {
 		this.closeContextMenu = this.closeContextMenu.bind(this);
 		this.isContextMenuDisplayed = this.isContextMenuDisplayed.bind(this);
 
-		this.showTip = this.showTip.bind(this);
-		this.hideTip = this.hideTip.bind(this);
-		this.isTipShowing = this.isTipShowing.bind(this);
+		this.openTip = this.openTip.bind(this);
+		this.closeTip = this.closeTip.bind(this);
+		this.isTipOpen = this.isTipOpen.bind(this);
+		this.isTipOpening = this.isTipOpening.bind(this);
+		this.isTipClosing = this.isTipClosing.bind(this);
 
 		this.openPalette = this.openPalette.bind(this);
 		this.closePalette = this.closePalette.bind(this);
+
 		this.openNotificationPanel = this.openNotificationPanel.bind(this);
 		this.closeNotificationPanel = this.closeNotificationPanel.bind(this);
 
@@ -75,10 +78,12 @@ export default class CommonCanvas extends React.Component {
 		});
 
 		this.pendingTooltip = null;
+		this.tipOpening = false;
+		this.tipClosing = false;
 	}
 
 	componentDidMount() {
-		document.addEventListener("mousedown", this.hideTip, true);
+		document.addEventListener("mousedown", this.canvasController.closeTip, true);
 		this.setPaletteWidth();
 	}
 
@@ -135,7 +140,7 @@ export default class CommonCanvas extends React.Component {
 
 	componentWillUnmount() {
 		this.unsubscribe();
-		document.removeEventListener("mousedown", this.hideTip, true);
+		document.removeEventListener("mousedown", this.canvasController.closeTip, true);
 	}
 
 	setPaletteWidth() {
@@ -223,28 +228,40 @@ export default class CommonCanvas extends React.Component {
 		this.setState({ isNotificationOpen: false });
 	}
 
-	showTip(tipDef) {
+	openTip(tipDef) {
 		const that = this;
 		if (this.pendingTooltip) {
 			clearTimeout(this.pendingTooltip);
 		}
 
 		this.pendingTooltip = setTimeout(function() {
+			that.tipOpening = true;
 			that.setState({ tipDef: tipDef });
+			that.tipOpening = false;
 		}, tipDef.delay ? tipDef.delay : 750);
 	}
 
-	hideTip() {
+	closeTip() {
 		if (this.pendingTooltip) {
 			clearTimeout(this.pendingTooltip);
 		}
-		if (this.isTipShowing()) {
+		if (this.isTipOpen()) {
+			this.tipClosing = true;
 			this.setState({ tipDef: {} });
+			this.tipClosing = false;
 		}
 	}
 
-	isTipShowing() {
+	isTipOpen() {
 		return !isEmpty(this.state.tipDef);
+	}
+
+	isTipOpening() {
+		return this.tipOpening;
+	}
+
+	isTipClosing() {
+		return this.tipClosing;
 	}
 
 	zoomIn() {

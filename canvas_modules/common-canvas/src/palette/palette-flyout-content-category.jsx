@@ -22,7 +22,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	onMouseOver(ev) {
-		this.props.canvasController.showTip({
+		this.props.canvasController.openTip({
 			id: "paletteTip_" + this.props.category.category, // category field of the category object
 			type: TIP_TYPE_PALETTE_CATEGORY,
 			targetObj: ev.currentTarget,
@@ -31,7 +31,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	onMouseLeave() {
-		this.props.canvasController.hideTip();
+		this.props.canvasController.closeTip();
 	}
 
 	getDisplayLabel() {
