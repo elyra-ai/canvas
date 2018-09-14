@@ -57,6 +57,7 @@ export default class CanvasInHandler {
 			}
 			if (nodeType === "super_node") {
 				newNode.subflow_ref = { pipeline_id_ref: canvasNode.subDiagramId, url: "app_defined" };
+				newNode.is_expanded = false;
 			}
 
 			if (nodeType === "model_node") {

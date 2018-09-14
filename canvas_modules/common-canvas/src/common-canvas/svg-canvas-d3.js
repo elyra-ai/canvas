@@ -385,7 +385,7 @@ class CanvasRenderer {
 	}
 
 	getSupernodes(pipeline) {
-		return pipeline.nodes.filter((node) => node.type === "super_node");
+		return pipeline.nodes.filter((node) => this.isSupernode(node));
 	}
 
 	initializeZoomVariables() {
@@ -402,7 +402,11 @@ class CanvasRenderer {
 	}
 
 	getPipeline(pipelineId) {
-		return this.canvasInfo.pipelines.find((p) => p.id === pipelineId);
+		const pipeline = this.canvasInfo.pipelines.find((p) => p.id === pipelineId);
+		if (pipeline) {
+			return pipeline;
+		}
+		return { id: pipelineId, nodes: [], comments: [], links: [] };
 	}
 
 	setCanvasInfoRenderer(canvasInfo) {
