@@ -83,7 +83,7 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	componentDidMount() {
-		document.addEventListener("mousedown", this.canvasController.closeTip, true);
+		document.addEventListener("mousedown", this.canvasController.closeTip.bind(this.canvasController), true);
 		this.setPaletteWidth();
 	}
 
