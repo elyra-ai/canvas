@@ -137,7 +137,7 @@
         {
           "id": "b43522c8-2979-4ddb-ab08-b907f8f43f24",
           "type": "super_node",
-          "sub_type": "shaper",
+          "open_with_tool": "shaper",
           "subflow_ref": {
             "pipeline_id_ref": "487e089d-1cdd-4889-a5e4-8721d130076a"
           },
@@ -180,7 +180,7 @@
         {
           "id": "31024d6a-1e42-4f55-883e-23544682b4d2",
           "type": "super_node",
-          "sub_type": "canvas",
+          "open_with_tool": "canvas",
           "subflow_ref": {
             "pipeline_id_ref": "5fb6d5e2-26df-4534-bf53-bf3cdfc6e3b7"
           },
