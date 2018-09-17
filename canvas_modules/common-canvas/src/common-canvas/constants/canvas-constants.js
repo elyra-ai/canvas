@@ -63,6 +63,11 @@ _defineConstant("HIGHLIGHT_BRANCH", "branch");
 _defineConstant("HIGHLIGHT_UPSTREAM", "upstream");
 _defineConstant("HIGHLIGHT_DOWNSTREAM", "downstream");
 
+_defineConstant("HIGHLIGHT_FILL", "#bad8ff");
+_defineConstant("HIGHLIGHT_HOVER_FILL", "#a0c8fe");
+_defineConstant("HIGHLIGHT_STROKE", "#152935");
+_defineConstant("HIGHLIGHT_STROKE_WIDTH", "3px");
+
 _defineConstant("PALETTE", {
 	OPEN_WIDTH: 250,
 	CLOSED_WIDTH: 0,

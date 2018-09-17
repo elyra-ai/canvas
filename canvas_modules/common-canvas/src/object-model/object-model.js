@@ -1859,43 +1859,66 @@ export default class ObjectModel {
 	// ---------------------------------------------------------------------------
 
 	getHighlightObjectIds(pipelineId, nodeIds, operator) {
-		let highlightNodes = [];
-		let highlightLinks = [];
+		let highlightNodeIds = [];
+		let highlightLinkIds = [];
 
-		switch (operator) {
-		case HIGHLIGHT_BRANCH:
-			nodeIds.forEach((nodeId) => {
-				const branchNodeIds = this.getNodeIdsInBranchContaining(nodeId, pipelineId);
-				highlightNodes = mergeWith(highlightNodes, branchNodeIds, this.mergeWithUnion);
-				const branchLinkIds = this.getLinkIdsInBranchContaining(nodeId, pipelineId);
-				highlightLinks = mergeWith(highlightLinks, branchLinkIds, this.mergeWithUnion);
-			});
-			break;
-		case HIGHLIGHT_UPSTREAM:
-			nodeIds.forEach((nodeId) => {
-				const upstreamNodeIds = this.getUpstreamNodeIdsFrom(nodeId, pipelineId);
-				upstreamNodeIds[pipelineId].push(nodeId);
-				highlightNodes = mergeWith(highlightNodes, upstreamNodeIds, this.mergeWithUnion);
-				const upstreamLinkIds = this.getUpstreamLinkIdsFrom(nodeId, pipelineId);
-				highlightLinks = mergeWith(highlightLinks, upstreamLinkIds, this.mergeWithUnion);
-			});
-			break;
-		case HIGHLIGHT_DOWNSTREAM:
-			nodeIds.forEach((nodeId) => {
-				const downstreamNodeIds = this.getDownstreamNodeIdsFrom(nodeId, pipelineId);
-				downstreamNodeIds[pipelineId].push(nodeId);
-				highlightNodes = mergeWith(highlightNodes, downstreamNodeIds, this.mergeWithUnion);
-				const downstreamLinkIds = this.getDownstreamLinkIdsFrom(nodeId, pipelineId);
-				highlightLinks = mergeWith(highlightLinks, downstreamLinkIds, this.mergeWithUnion);
-			});
-			break;
-		default:
-		}
+		nodeIds.forEach((nodeId) => {
+			if (this.getAPIPipeline(pipelineId).isSupernode(nodeId)) {
+				highlightNodeIds = mergeWith(highlightNodeIds, this.getSupernodeNodeIds(nodeId, pipelineId), this.mergeWithUnion);
+				highlightLinkIds = mergeWith(highlightLinkIds, this.getSupernodeLinkIds(nodeId, pipelineId), this.mergeWithUnion);
+			}
+
+			switch (operator) {
+			case HIGHLIGHT_BRANCH:
+				highlightNodeIds = mergeWith(highlightNodeIds, this.getNodeIdsInBranchContaining(nodeId, pipelineId), this.mergeWithUnion);
+				highlightLinkIds = mergeWith(highlightLinkIds, this.getLinkIdsInBranchContaining(nodeId, pipelineId), this.mergeWithUnion);
+				break;
+			case HIGHLIGHT_UPSTREAM:
+				highlightNodeIds = mergeWith(highlightNodeIds, this.getUpstreamNodeIdsFrom(nodeId, pipelineId), this.mergeWithUnion);
+				highlightNodeIds[pipelineId] = union(highlightNodeIds[pipelineId], [nodeId]);
+				highlightLinkIds = mergeWith(highlightLinkIds, this.getUpstreamLinkIdsFrom(nodeId, pipelineId), this.mergeWithUnion);
+				break;
+			case HIGHLIGHT_DOWNSTREAM:
+				highlightNodeIds = mergeWith(highlightNodeIds, this.getDownstreamNodeIdsFrom(nodeId, pipelineId), this.mergeWithUnion);
+				highlightNodeIds[pipelineId] = union(highlightNodeIds[pipelineId], [nodeId]);
+				highlightLinkIds = mergeWith(highlightLinkIds, this.getDownstreamLinkIdsFrom(nodeId, pipelineId), this.mergeWithUnion);
+				break;
+			default:
+			}
+		});
 
 		return {
-			nodes: highlightNodes,
-			links: highlightLinks
+			nodes: highlightNodeIds,
+			links: highlightLinkIds
 		};
+	}
+
+	// Returns an associative array of the supernode's subpipeline IDs to its node IDs.
+	getSupernodeNodeIds(nodeId, pipelineId) {
+		const supernodeNodeIds = [];
+		const supernode = this.getAPIPipeline(pipelineId).getNode(nodeId);
+		const supernodePipelineRef = this.getSupernodePipelineID(supernode);
+		supernodeNodeIds[supernodePipelineRef] = this.getAPIPipeline(supernodePipelineRef).getNodeIds();
+
+		const subPipelineIds = this.getDescendentPipelineIds(supernodePipelineRef);
+		subPipelineIds.forEach((subPipelineId) => {
+			supernodeNodeIds[subPipelineId] = this.getAPIPipeline(subPipelineId).getNodeIds();
+		});
+		return supernodeNodeIds;
+	}
+
+	// Returns an associative array of the supernode's subpipeline IDs to its link IDs.
+	getSupernodeLinkIds(nodeId, pipelineId) {
+		const getSupernodeLinkIds = [];
+		const supernode = this.getAPIPipeline(pipelineId).getNode(nodeId);
+		const supernodePipelineRef = this.getSupernodePipelineID(supernode);
+		getSupernodeLinkIds[supernodePipelineRef] = this.getAPIPipeline(supernodePipelineRef).getLinkIds();
+
+		const subPipelineIds = this.getDescendentPipelineIds(supernodePipelineRef);
+		subPipelineIds.forEach((subPipelineId) => {
+			getSupernodeLinkIds[subPipelineId] = this.getAPIPipeline(subPipelineId).getLinkIds();
+		});
+		return getSupernodeLinkIds;
 	}
 
 	getNodeIdsInBranchContaining(nodeId, pipelineId) {
@@ -2561,6 +2584,15 @@ export class APIPipeline {
 		return [];
 	}
 
+	// Returns the IDs of all nodes in the pipeline.
+	getNodeIds() {
+		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
+		if (pipeline) {
+			return pipeline.nodes.map((node) => node.id);
+		}
+		return [];
+	}
+
 	getNode(nodeId) {
 		return this.getNodes().find((node) => {
 			return (node.id === nodeId);
@@ -3088,6 +3120,15 @@ export class APIPipeline {
 		}
 		return [];
 
+	}
+
+	// Returns the IDs of all links in the pipeline.
+	getLinkIds() {
+		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
+		if (pipeline) {
+			return pipeline.links.map((link) => link.id);
+		}
+		return [];
 	}
 
 	canNodeBeDroppedOnLink(nodeType) {

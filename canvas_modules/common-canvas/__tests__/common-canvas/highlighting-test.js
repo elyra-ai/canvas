@@ -146,6 +146,27 @@ describe("Highlight branch", () => {
 		expect(isEqual(JSON.stringify(expected.primaryPipelineId), JSON.stringify(branchObjects.nodes[primaryPipelineId]))).to.be.true;
 		expect(branchObjects.links[primaryPipelineId]).to.have.length(0);
 	});
+
+	it("should get highlight branch object ids from supernode node including its subflow objects", () => {
+		const branchObjects = objectModel.getHighlightObjectIds(primaryPipelineId, [supernode2], HIGHLIGHT_BRANCH);
+		const expected = {
+			primaryPipelineId: [executionNode, supernode1, supernode2, model, bindingExit],
+			supernode2PipelineId: [supernode2A, entryBinding2x1, entryBinding2x2, entryBinding2x3, exitBinding2x1, supernode2B],
+			supernode2APipelineId: [execution, type, partition, distribution, balance, entryBinding2Ax1, entryBinding2Ax2, exitBinding2Ax1],
+			supernode2BPipelineId: [multiplot2B1, entryBinding2Bx1, exitBinding2Bx1, supernode2B1],
+			supernode2B1PipelineId: [analysis, featureSelection, entryBindingNode2B1x1, userInput]
+		};
+		expect(isEqual(JSON.stringify(expected.primaryPipelineId), JSON.stringify(branchObjects.nodes[primaryPipelineId]))).to.be.true;
+		expect(isEqual(JSON.stringify(expected.supernode2PipelineId), JSON.stringify(branchObjects.nodes[supernode2PipelineId]))).to.be.true;
+		expect(isEqual(JSON.stringify(expected.supernode2APipelineId), JSON.stringify(branchObjects.nodes[supernode2APipelineId]))).to.be.true;
+		expect(isEqual(JSON.stringify(expected.supernode2BPipelineId), JSON.stringify(branchObjects.nodes[supernode2BPipelineId]))).to.be.true;
+		expect(isEqual(JSON.stringify(expected.supernode2B1PipelineId), JSON.stringify(branchObjects.nodes[supernode2B1PipelineId]))).to.be.true;
+		expect(branchObjects.links[primaryPipelineId]).to.have.length(6);
+		expect(branchObjects.links[supernode2PipelineId]).to.have.length(5);
+		expect(branchObjects.links[supernode2APipelineId]).to.have.length(7);
+		expect(branchObjects.links[supernode2BPipelineId]).to.have.length(3);
+		expect(branchObjects.links[supernode2B1PipelineId]).to.have.length(3);
+	});
 });
 
 describe("Highlight upstream", () => {
@@ -203,6 +224,18 @@ describe("Highlight upstream", () => {
 		const expected = { primaryPipelineId: [dataAudit] };
 		expect(isEqual(JSON.stringify(expected.primaryPipelineId), JSON.stringify(branchObjects.nodes[primaryPipelineId]))).to.be.true;
 		expect(branchObjects.links[primaryPipelineId]).to.have.length(0);
+	});
+
+	it("should get highlight upstream object ids from supernode node", () => {
+		const branchObjects = objectModel.getHighlightObjectIds(primaryPipelineId, [supernode1], HIGHLIGHT_UPSTREAM);
+		const expected = {
+			primaryPipelineId: [supernode1],
+			supernode1PipelineId: [bindingNode, select, exitBinding1x1]
+		};
+		expect(isEqual(JSON.stringify(expected.primaryPipelineId), JSON.stringify(branchObjects.nodes[primaryPipelineId]))).to.be.true;
+		expect(isEqual(JSON.stringify(expected.supernode1PipelineId), JSON.stringify(branchObjects.nodes[supernode1PipelineId]))).to.be.true;
+		expect(branchObjects.links[primaryPipelineId]).to.have.length(0);
+		expect(branchObjects.links[supernode1PipelineId]).to.have.length(3); // Including comment link.
 	});
 });
 

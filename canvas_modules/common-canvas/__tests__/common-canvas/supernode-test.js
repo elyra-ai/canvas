@@ -1680,7 +1680,7 @@ function compareNodePositions(expectedNodes, objectModel) {
 
 	expectedNodes.forEach((expectedNode) => {
 		const omNode = objectModel.getAPIPipeline().getNode(expectedNode.id);
-		console.log("node " + expectedNode.label);
+		// console.log("node " + expectedNode.label);
 		expect(isEqual(expectedNode.x_pos, omNode.x_pos)).to.be.true;
 		expect(isEqual(expectedNode.y_pos, omNode.y_pos)).to.be.true;
 	});

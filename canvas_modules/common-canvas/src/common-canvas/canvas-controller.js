@@ -36,8 +36,6 @@ import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import has from "lodash/has";
 
-import { HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM, HIGHLIGHT_DOWNSTREAM } from "./constants/canvas-constants.js";
-
 // Global instance ID counter
 var commonCanvasControllerInstanceId = 0;
 const labelChoices = { canvas_addComment: "New comment",
@@ -537,28 +535,33 @@ export default class CanvasController {
 	setHighlightStyle(highlightObjectIds, pipelineId) {
 		this.removeAllStyles(true);
 		const objectStyle = {
-			body: { default: "fill:#bad8ff;stroke:#152935;", hover: "fill:#a0c8fe;" }
+			body: {
+				default: `fill: ${constants.HIGHLIGHT_FILL} ;stroke: ${constants.HIGHLIGHT_STROKE};`,
+				hover: `fill: ${constants.HIGHLIGHT_HOVER_FILL};`
+			}
 		};
-		const linkStyle = { default: "stroke:#152935;", hover: "stroke-width:3px" };
+		const linkStyle = {
+			default: `stroke: ${constants.HIGHLIGHT_STROKE};, hover: stroke-width: ${constants.HIGHLIGHT_STROKE_WIDTH}`
+		};
 		this.setObjectsStyle(highlightObjectIds.nodes, objectStyle, pipelineId, true, false);
 		this.setLinksStyle(highlightObjectIds.links, linkStyle, pipelineId, true, false);
 		this.highlight = true;
 	}
 
 	highlightBranch(pipelineId, nodeIds) {
-		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, HIGHLIGHT_BRANCH);
+		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_BRANCH);
 		this.setHighlightStyle(highlightObjectIds, pipelineId);
 		return highlightObjectIds;
 	}
 
 	highlightUpstream(pipelineId, nodeIds) {
-		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, HIGHLIGHT_UPSTREAM);
+		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_UPSTREAM);
 		this.setHighlightStyle(highlightObjectIds, pipelineId);
 		return highlightObjectIds;
 	}
 
 	highlightDownstream(pipelineId, nodeIds) {
-		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, HIGHLIGHT_DOWNSTREAM);
+		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_DOWNSTREAM);
 		this.setHighlightStyle(highlightObjectIds, pipelineId);
 		return highlightObjectIds;
 	}
