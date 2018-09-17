@@ -840,10 +840,14 @@ class CanvasRenderer {
 			.attr("x", dims.x)
 			.attr("y", dims.y);
 
-		// Only attach the zoom behaviour to the top most SVG area
+		// Only attach the zoom behaviour and 'defs' to the top most SVG area
 		if (!this.isDisplayingSubFlowInPlace()) {
 			canvasSVG
 				.call(this.zoom);
+
+			// Add defs element to allow a filter for the drop shadow
+			var defs = canvasSVG.append("defs");
+			this.createDropShadow(defs);
 		}
 
 		canvasSVG
@@ -880,10 +884,6 @@ class CanvasRenderer {
 				}
 				this.openContextMenu("canvas");
 			});
-
-		// Add defs element to allow a filter
-		var defs = canvasSVG.append("defs");
-		this.createDropShadow(defs);
 
 		// If we're displaying a sub-flow inside a supernode we need a
 		// background rectangle to catch zoom event etc.
