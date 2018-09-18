@@ -19,7 +19,7 @@ class NotificationPanel extends React.Component {
 	}
 
 	componentDidMount() {
-		document.addEventListener("mousedown", this.handleNotificationPanelClickOutside, true);
+		document.addEventListener("click", this.handleNotificationPanelClickOutside, true);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -27,7 +27,7 @@ class NotificationPanel extends React.Component {
 	}
 
 	componentWillUnmount() {
-		document.removeEventListener("mousedown", this.handleNotificationPanelClickOutside, true);
+		document.removeEventListener("click", this.handleNotificationPanelClickOutside, true);
 	}
 
 	getNotifications() {
@@ -82,6 +82,7 @@ class NotificationPanel extends React.Component {
 
 		if (this.props.isNotificationOpen && bellIcon && !bellIcon.contains(e.target) && domNode && !domNode.contains(e.target)) {
 			this.props.canvasController.closeNotificationPanel();
+			e.stopPropagation(); // Prevent D3 canvas code from clearing the selections.
 		}
 	}
 

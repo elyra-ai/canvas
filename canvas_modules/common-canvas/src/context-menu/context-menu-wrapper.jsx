@@ -28,30 +28,31 @@ export default class ContextMenuWrapper extends React.Component {
 	}
 
 	componentDidMount() {
-		// On Firefox, the context menu gesture emits a 'click' event which causes the
-		// context menu to disappear imediately after it is displayed if clicks are
-		// captured, so we look for 'mousedown' events instead.
-		document.addEventListener("mousedown", this.handleClickOutside, true);
+		document.addEventListener("click", this.handleClickOutside, true);
 	}
 
 	componentWillUnmount() {
-		document.removeEventListener("mousedown", this.handleClickOutside, true);
+		document.removeEventListener("click", this.handleClickOutside, true);
 	}
 
 	handleClickOutside(e) {
+		// On Firefox, the context menu gesture emits both a 'context menu' event
+		// and a 'click' event. If the click is processed it causes the
+		// context menu to disappear imediately after it has displayed.
+		// Consequently, when this method is called with the context menu button set
+		// (which indicates one of the additional clicks from Firefox) we just
+		// stop propogation and return. On other browsers we don't get this extra
+		// events.
+		if (e.button === CONTEXT_MENU_BUTTON) {
+			e.stopPropagation();
+			return;
+		}
+
+		// If the click was anywhere outside the context menu we just close the menu.
 		const domNode = document.getElementById("context-menu-popover");
 		if (domNode && !domNode.contains(e.target)) {
 			this.props.canvasController.closeContextMenu();
-
-			// This stops the canvasClicked function from being fired which would
-			// clear any current selections. The event here is a real event not a
-			// synthetic react mouse event so we need to use the 'stopPropagation' method.
-			// We only stop propogation if it is NOT a context menu gesture because
-			// when a context menu is requested we need to let the gesture go through
-			// to the canvas objects.
-			if (e.button !== CONTEXT_MENU_BUTTON) {
-				e.stopPropagation();
-			}
+			e.stopPropagation();
 		}
 	}
 

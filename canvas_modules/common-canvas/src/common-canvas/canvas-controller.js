@@ -236,9 +236,7 @@ export default class CanvasController {
 	}
 
 	clearSelections() {
-		if (!this.commonCanvas.isContextMenuDisplayed()) {
-			this.objectModel.clearSelections();
-		}
+		this.objectModel.clearSelections();
 	}
 
 	selectAll() {

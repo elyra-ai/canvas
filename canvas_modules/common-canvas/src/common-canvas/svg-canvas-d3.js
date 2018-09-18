@@ -866,7 +866,7 @@ class CanvasRenderer {
 			.on("click.zoom", () => {
 				this.logger.log("Zoom - click");
 				this.selecting = true;
-				this.canvasController.clearSelections(); // Controller will make sure selections are not cleared when context menu is displayed
+				this.canvasController.clearSelections();
 				this.canvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
 				this.selecting = false;
 			})
