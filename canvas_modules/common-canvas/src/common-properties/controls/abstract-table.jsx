@@ -334,7 +334,8 @@ export default class AbstractTable extends React.Component {
 			column: columnDef.name,
 			width: columnDef.width,
 			content: cellContent,
-			className: cellClassName
+			className: cellClassName,
+			value: this.props.controller.getPropertyValue(propertyId)
 		};
 	}
 	_getCustomCtrlContent(propertyId, columnDef, defaultContent, tableInfo) {

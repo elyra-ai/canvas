@@ -10,14 +10,17 @@
 import React from "react";
 import { Provider } from "react-redux";
 import deepFreeze from "deep-freeze";
+
 import Expression from "../../../src/common-properties/controls/expression";
 import ExpressionBuilder from "../../../src/common-properties/controls/expression/expression-builder/expression-builder";
-import ExpressionInfo from "../../test_resources/json/expression-function-list.json";
+import Controller from "../../../src/common-properties/properties-controller";
+import PropertyUtils from "../../_utils_/property-utils";
 
 import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
-import Controller from "../../../src/common-properties/properties-controller";
 
+import ExpressionInfo from "../../test_resources/json/expression-function-list.json";
+import editStyleResource from "../../test_resources/json/form-editstyle-test.json";
 
 const control = {
 	name: "test-expression",
@@ -109,6 +112,13 @@ function reset() {
 	controller.setDatasetMetadata(getCopy(dataModel));
 	controller.setExpressionInfo(getCopy(ExpressionInfo.input));
 }
+
+const propertiesConfig = { containerType: "Custom", rightFLyout: true };
+const propertiesInfo = {
+	parameterDef: editStyleResource.paramDef,
+	appData: {},
+	additionalComponents: {},
+};
 describe("expression-control renders correctly", () => {
 
 	it("props should have been defined", () => {
@@ -245,6 +255,62 @@ describe("expression-builder select from tables correctly", () => {
 		const fieldRows = wrapper.find("div.properties-functions-table-container .reactable-data tr");
 		fieldRows.at(0).simulate("dblclick");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" to_integer(?)");
+	});
+
+});
+
+describe("expression handles no expression builder resources correctly", () => {
+
+	it("expression with no function list json provided does not render an expression builder", () => {
+		controller = new Controller();
+		controller.saveControls([control]);
+		controller.updatePropertyValue(propertyId, "");
+		controller.setDatasetMetadata(getCopy(dataModel));
+
+		const wrapper = mountWithIntl(
+			<Expression
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				rightFlyout
+			/>
+		);
+		const input = wrapper.find("div.properties-expression-button");
+		expect(input).to.have.length(0);
+	});
+
+	it("expression builder with a function list json provided renders an expression builder", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Expression
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				rightFlyout
+			/>
+		);
+		const input = wrapper.find("div.properties-expression-button");
+		expect(input).to.have.length(1);
+	});
+
+	it("CommonProperties renders with no expressionInfo values ", () => {
+		propertiesInfo.expressionInfo = { functions: {}, resources: {} };
+		const wrapper = PropertyUtils.flyoutEditorForm(editStyleResource.paramDef, propertiesConfig, null, propertiesInfo);
+		expect(wrapper.wrapper.find("CommonProperties")).to.have.length(1);
+	});
+
+	it("CommonProperties renders with no expressionInfo resources ", () => {
+		propertiesInfo.expressionInfo = { functions: {} };
+		const wrapper = PropertyUtils.flyoutEditorForm(editStyleResource.paramDef, propertiesConfig, null, propertiesInfo);
+		expect(wrapper.wrapper.find("CommonProperties")).to.have.length(1);
+	});
+
+	it("CommonProperties renders with no expressionInfo functions ", () => {
+		propertiesInfo.expressionInfo = {};
+		const wrapper = PropertyUtils.flyoutEditorForm(editStyleResource.paramDef, propertiesConfig, null, propertiesInfo);
+		expect(wrapper.wrapper.find("CommonProperties")).to.have.length(1);
 	});
 
 });

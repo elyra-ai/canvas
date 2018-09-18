@@ -89,7 +89,7 @@ Feature: ExpressionControl
 
 		# generate a error
 		Then I select the "Functions" tab for the "defaultExpr" property.
-		Then I select "to_integer(Item)" from the "functions" table for the "defaultExpr" property.
+		Then I select "to_integer(ITEM)" from the "functions" table for the "defaultExpr" property.
 		Then I click on the validate link on the expression "builder" for the "defaultExpr" property.
 		Then I verify error "Expression cannot contain '?'"
 		Then I validate the "error" icon on the expression "builder" for the "defaultExpr" property.

@@ -1172,7 +1172,7 @@ class App extends React.Component {
 
 			const messages = canvasController.getNodeMessages(nodeId, activePipelineId);
 			const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
-			const expressionInfo = this.state.expressionBuilder ? JSON.parse(JSON.stringify(ExpressionInfo)) : null;
+			const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
 			const propsInfo = {
 				title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 				messages: messages,
@@ -1245,7 +1245,7 @@ class App extends React.Component {
 	openPropertiesEditorDialog() {
 		var properties = this.state.propertiesJson;
 		const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
-		const expressionInfo = this.state.expressionBuilder ? JSON.parse(JSON.stringify(ExpressionInfo)) : null;
+		const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,

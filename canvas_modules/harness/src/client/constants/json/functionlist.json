@@ -2,46 +2,280 @@
   "functions": {
     "function_categories": [
       {
-        "id": "General Functions",
+        "id": "generalfunctions",
         "label": {
-          "default": "General Functions Default",
-          "resource_key": "group.GeneralFunctions.label"
+          "default": "General Functions"
         },
         "function_refs": [
-          "to_integer",
-          "count_equal",
+          "is_integer_1",
+          "is_real_1",
+          "is_number_1",
+          "is_string_1",
+          "is_date_1",
+          "is_time_1",
+          "is_timestamp_1",
+          "is_datetime_1",
+          "to_integer_1",
+          "to_real_1",
+          "to_number_1",
+          "to_string_1",
+          "to_date_1",
+          "to_time_1",
+          "to_timestamp_1",
+          "to_datetime_1",
+          "stb_centroid_latitude_1",
+          "stb_centroid_longitude_1",
+          "to_geohash_3",
+          "count_equal_2",
+          "count_greater_than_2",
+          "count_less_than_2",
+          "count_not_equal_2",
+          "count_nulls_1",
+          "count_non_nulls_1",
+          "min_2",
+          "min_n_1",
+          "max_2",
+          "max_n_1",
+          "member_2",
+          "date_before_2",
+          "time_before_2",
+          "first_non_null_1",
+          "last_non_null_1",
+          "first_index_2",
+          "last_index_2",
+          "min_index_1",
+          "max_index_1",
+          "first_non_null_index_1",
+          "last_non_null_index_1",
+          "value_at_2",
+          "and_0",
+          "or_0",
+          "not_1",
           "if?then?else?endif_3",
-          "if?then?elseif?then?else?endif_5"
+          "if?then?elseif?then?else?endif_5",
+          "abs_1",
+          "exp_1",
+          "fracof_1",
+          "intof_1",
+          "log_1",
+          "log10_1",
+          "negate_1",
+          "round_1",
+          "sign_1",
+          "sqrt_1",
+          "sum_n_1",
+          "mean_n_1",
+          "sdev_n_1",
+          "arccos_1",
+          "arccosh_1",
+          "arcsin_1",
+          "arcsinh_1",
+          "arctan_1",
+          "arctan2_2",
+          "arctanh_1",
+          "cos_1",
+          "cosh_1",
+          "pi_0",
+          "sin_1",
+          "sinh_1",
+          "tan_1",
+          "tanh_1",
+          "cdf_chisq_2",
+          "cdf_f_3",
+          "cdf_normal_3",
+          "cdf_t_2",
+          "integer_bitcount_1",
+          "integer_leastbit_1",
+          "integer_length_1",
+          "testbit_2",
+          "oneof_1",
+          "random_1",
+          "random0_1",
+          "norm_random_0",
+          "norm_random_1",
+          "norm_random_2",
+          "allbutfirst_2",
+          "allbutlast_2",
+          "alphabefore_2",
+          "count_substring_2",
+          "endstring_2",
+          "hasendstring_2",
+          "hasmidstring_2",
+          "hasstartstring_2",
+          "hassubstring_2",
+          "hassubstring_3",
+          "isalphacode_1",
+          "isendstring_2",
+          "islowercode_1",
+          "ismidstring_2",
+          "isnumbercode_1",
+          "isstartstring_2",
+          "issubstring_2",
+          "issubstring_3",
+          "issubstring_count_3",
+          "issubstring_lim_5",
+          "isuppercode_1",
+          "last_1",
+          "length_1",
+          "locchar_3",
+          "locchar_back_3",
+          "lowertoupper_1",
+          "replace_3",
+          "replicate_2",
+          "skipchar_3",
+          "skipchar_back_3",
+          "soundex_1",
+          "soundex_difference_2",
+          "startstring_2",
+          "stripchar_2",
+          "stripctrlchars_1",
+          "strmember_2",
+          "subscrs_2",
+          "substring_3",
+          "substring_between_3",
+          "trim_1",
+          "trimend_1",
+          "trimstart_1",
+          "unicode_char_1",
+          "unicode_value_1",
+          "uppertolower_1",
+          "textsplit_3",
+          "datetime_date_3",
+          "datetime_date_1",
+          "datetime_time_3",
+          "datetime_time_1",
+          "datetime_timestamp_6",
+          "datetime_timestamp_2",
+          "datetime_timestamp_1",
+          "datetime_year_1",
+          "datetime_month_1",
+          "datetime_day_1",
+          "datetime_weekday_1",
+          "datetime_hour_1",
+          "datetime_minute_1",
+          "datetime_second_1",
+          "datetime_month_name_1",
+          "datetime_month_short_name_1",
+          "datetime_day_name_1",
+          "datetime_day_short_name_1",
+          "datetime_now_0",
+          "datetime_in_seconds_1",
+          "date_in_days_1",
+          "date_in_weeks_1",
+          "date_in_months_1",
+          "date_in_years_1",
+          "date_days_difference_2",
+          "date_weeks_difference_2",
+          "date_months_difference_2",
+          "date_years_difference_2",
+          "date_iso_day_1",
+          "date_iso_week_1",
+          "date_iso_year_1",
+          "date_from_ywd_3",
+          "time_in_hours_1",
+          "time_in_mins_1",
+          "time_in_secs_1",
+          "time_hours_difference_2",
+          "time_mins_difference_2",
+          "time_secs_difference_2",
+          "undef_0",
+          "close_to_3",
+          "crosses_2",
+          "overlap_2",
+          "within_2",
+          "num_points_2",
+          "area_1",
+          "distance_2",
+          "SUM_1",
+          "MEAN_1",
+          "MIN_1",
+          "MIN_1",
+          "MIN_1",
+          "MIN_1",
+          "MIN_1",
+          "MAX_1",
+          "MAX_1",
+          "MAX_1",
+          "MAX_1",
+          "MAX_1",
+          "SDEV_1",
+          "MEDIAN_1",
+          "COUNT_0",
+          "COUNT_1",
+          "VAR_1",
+          "FIRST_QUARTILE_1",
+          "THIRD_QUARTILE_1"
         ]
       },
       {
-        "id": "Information",
+        "id": "@functions",
         "label": {
-          "default": "Information"
+          "default": "@ Functions"
         },
         "function_refs": [
-          "to_integer",
-          "@BLANK",
-          "datetime_date"
+          "@BLANK_1",
+          "@NULL_1",
+          "@TODAY_0",
+          "@DIFF1_1",
+          "@DIFF1_2",
+          "@DIFF2_1",
+          "@DIFF2_2",
+          "@INDEX_0",
+          "@LAST_NON_BLANK_1",
+          "@MAX_1",
+          "@MAX_2",
+          "@MAX_3",
+          "@MEAN_1",
+          "@MEAN_2",
+          "@MEAN_3",
+          "@MIN_1",
+          "@MIN_2",
+          "@MIN_3",
+          "@OFFSET_2",
+          "@OFFSET_3",
+          "@SDEV_1",
+          "@SDEV_2",
+          "@SDEV_3",
+          "@SINCE_1",
+          "@SINCE_2",
+          "@SINCE0_1",
+          "@SINCE0_2",
+          "@SUM_1",
+          "@SUM_2",
+          "@SUM_3",
+          "@THIS_1",
+          "@GLOBAL_MAX_1",
+          "@GLOBAL_MEAN_1",
+          "@GLOBAL_MIN_1",
+          "@GLOBAL_SDEV_1",
+          "@GLOBAL_SUM_1",
+          "@NULL_1",
+          "@FIELD_0",
+          "@FIELDS_BETWEEN_2",
+          "@FIELDS_MATCHING_1",
+          "@MULTI_RESPONSE_SET_1",
+          "@TARGET_0",
+          "@PREDICTED_0",
+          "@PARTITION_FIELD_0",
+          "@TRAINING_PARTITION_0",
+          "@TESTING_PARTITION_0",
+          "@VALIDATION_PARTITION_0"
         ]
       },
       {
-        "id": "Date and Time",
-        "label": {
-          "default": "Date and Time"
-        },
-        "function_refs": [
-          "datetime_date",
-          "datetime_time",
-          "datetime_timestamp"
-        ]
-      },
-      {
-        "id": "Operators",
+        "id": "operators",
         "label": {
           "default": "Operators"
         },
         "function_refs": [
+          "+_0",
+          "-_0",
+          "*_0",
+          "/_0",
+          "**_0",
+          "div_0",
+          "mod_0",
+          "rem_0",
           "=_0",
           "/=_0",
           "<_0",
@@ -51,14 +285,7 @@
           "and_0",
           "or_0",
           "not_1",
-          "-_0",
-          "+_0",
-          "*_0",
-          "/_0",
-          "div_0",
-          "mod_0",
-          "rem_0",
-          "**_0",
+          "><_0",
           "~~_0",
           "||_0",
           "||/&_0",
@@ -68,102 +295,702 @@
           ">>_2",
           "&&=_0_0",
           "&&/=_0_0",
-          "><_0",
           "matches_2"
         ]
       },
       {
-        "id": "@ Functions",
+        "id": "information",
         "label": {
-          "default": "@ Functions"
+          "default": "Information"
         },
         "function_refs": [
-          "@BLANK",
-          "@DIFF1"
+          "@BLANK_1",
+          "@NULL_1",
+          "is_integer_1",
+          "is_real_1",
+          "is_number_1",
+          "is_string_1",
+          "is_date_1",
+          "is_time_1",
+          "is_timestamp_1",
+          "is_datetime_1",
+          "hasendstring_2",
+          "hasmidstring_2",
+          "hasstartstring_2",
+          "hassubstring_2",
+          "hassubstring_3",
+          "isalphacode_1",
+          "isendstring_2",
+          "islowercode_1",
+          "ismidstring_2",
+          "isnumbercode_1",
+          "isstartstring_2",
+          "issubstring_2",
+          "issubstring_3",
+          "issubstring_count_3",
+          "issubstring_lim_5",
+          "isuppercode_1"
         ]
       },
       {
-        "id": "Conversion",
+        "id": "conversion",
         "label": {
           "default": "Conversion"
         },
         "function_refs": [
-          "to_integer"
+          "to_integer_1",
+          "to_real_1",
+          "to_number_1",
+          "to_string_1",
+          "to_date_1",
+          "to_time_1",
+          "to_timestamp_1",
+          "to_datetime_1",
+          "stb_centroid_latitude_1",
+          "stb_centroid_longitude_1",
+          "to_geohash_3"
         ]
       },
       {
-        "id": "String",
-        "label": {
-          "default": "String"
-        },
-        "function_refs": [
-          "><"
-        ]
-      },
-      {
-        "id": "Numeric",
-        "label": {
-          "default": "Numeric"
-        },
-        "function_refs": [
-          "+",
-          "**",
-          "-",
-          "div",
-          "*",
-          "rem",
-          "/",
-          "mod",
-          "&&~~"
-        ]
-      },
-      {
-        "id": "Bitwise",
-        "label": {
-          "default": "Bitwise"
-        },
-        "function_refs": [
-          ">",
-          ">=",
-          "<",
-          "<=",
-          "=",
-          "/=",
-          "&&~~"
-        ]
-      },
-      {
-        "id": "Logical",
-        "label": {
-          "default": "Logical"
-        },
-        "function_refs": [
-          "and",
-          "or",
-          "not"
-        ]
-      },
-      {
-        "id": "Comparison",
+        "id": "comparison",
         "label": {
           "default": "Comparison"
         },
         "function_refs": [
-          "count_equal",
-          ">",
-          ">=",
-          "<",
-          "<=",
-          "=",
-          "/=",
-          "and",
-          "or",
-          "not"
+          "=_0",
+          "/=_0",
+          "<_0",
+          "<=_0",
+          ">_0",
+          ">=_0",
+          "count_equal_2",
+          "count_greater_than_2",
+          "count_less_than_2",
+          "count_not_equal_2",
+          "count_nulls_1",
+          "count_non_nulls_1",
+          "min_2",
+          "min_n_1",
+          "max_2",
+          "max_n_1",
+          "member_2",
+          "date_before_2",
+          "time_before_2",
+          "first_non_null_1",
+          "last_non_null_1",
+          "first_index_2",
+          "last_index_2",
+          "min_index_1",
+          "max_index_1",
+          "first_non_null_index_1",
+          "last_non_null_index_1",
+          "value_at_2"
+        ]
+      },
+      {
+        "id": "logical",
+        "label": {
+          "default": "Logical"
+        },
+        "function_refs": [
+          "and_0",
+          "or_0",
+          "not_1",
+          "if?then?else?endif_3",
+          "if?then?elseif?then?else?endif_5"
+        ]
+      },
+      {
+        "id": "numeric",
+        "label": {
+          "default": "Numeric"
+        },
+        "function_refs": [
+          "-_0",
+          "+_0",
+          "*_0",
+          "/_0",
+          "div_0",
+          "mod_0",
+          "rem_0",
+          "**_0",
+          "abs_1",
+          "exp_1",
+          "fracof_1",
+          "intof_1",
+          "log_1",
+          "log10_1",
+          "negate_1",
+          "round_1",
+          "sign_1",
+          "sqrt_1",
+          "sum_n_1",
+          "mean_n_1",
+          "sdev_n_1"
+        ]
+      },
+      {
+        "id": "trigonometric",
+        "label": {
+          "default": "Trigonometric"
+        },
+        "function_refs": [
+          "arccos_1",
+          "arccosh_1",
+          "arcsin_1",
+          "arcsinh_1",
+          "arctan_1",
+          "arctan2_2",
+          "arctanh_1",
+          "cos_1",
+          "cosh_1",
+          "pi_0",
+          "sin_1",
+          "sinh_1",
+          "tan_1",
+          "tanh_1"
+        ]
+      },
+      {
+        "id": "probability",
+        "label": {
+          "default": "Probability"
+        },
+        "function_refs": [
+          "cdf_chisq_2",
+          "cdf_f_3",
+          "cdf_normal_3",
+          "cdf_t_2"
+        ]
+      },
+      {
+        "id": "spatialfunctions",
+        "label": {
+          "default": "Spatial Functions"
+        },
+        "function_refs": [
+          "close_to_3",
+          "crosses_2",
+          "overlap_2",
+          "within_2",
+          "num_points_2",
+          "area_1",
+          "distance_2"
+        ]
+      },
+      {
+        "id": "bitwise",
+        "label": {
+          "default": "Bitwise"
+        },
+        "function_refs": [
+          "~~_0",
+          "||_0",
+          "||/&_0",
+          "&&_0",
+          "&&~~_0",
+          "<<_2",
+          ">>_2",
+          "&&=_0_0",
+          "&&/=_0_0",
+          "integer_bitcount_1",
+          "integer_leastbit_1",
+          "integer_length_1",
+          "testbit_2"
+        ]
+      },
+      {
+        "id": "random",
+        "label": {
+          "default": "Random"
+        },
+        "function_refs": [
+          "oneof_1",
+          "random_1",
+          "random0_1",
+          "norm_random_0",
+          "norm_random_1",
+          "norm_random_2"
+        ]
+      },
+      {
+        "id": "string",
+        "label": {
+          "default": "String"
+        },
+        "function_refs": [
+          "><_0",
+          "allbutfirst_2",
+          "allbutlast_2",
+          "alphabefore_2",
+          "count_substring_2",
+          "endstring_2",
+          "hasendstring_2",
+          "hasmidstring_2",
+          "hasstartstring_2",
+          "hassubstring_2",
+          "hassubstring_3",
+          "isalphacode_1",
+          "isendstring_2",
+          "islowercode_1",
+          "ismidstring_2",
+          "isnumbercode_1",
+          "isstartstring_2",
+          "issubstring_2",
+          "issubstring_3",
+          "issubstring_count_3",
+          "issubstring_lim_5",
+          "isuppercode_1",
+          "last_1",
+          "length_1",
+          "locchar_3",
+          "locchar_back_3",
+          "lowertoupper_1",
+          "matches_2",
+          "replace_3",
+          "replicate_2",
+          "skipchar_3",
+          "skipchar_back_3",
+          "soundex_1",
+          "soundex_difference_2",
+          "startstring_2",
+          "stripchar_2",
+          "stripctrlchars_1",
+          "strmember_2",
+          "subscrs_2",
+          "substring_3",
+          "substring_between_3",
+          "trim_1",
+          "trimend_1",
+          "trimstart_1",
+          "unicode_char_1",
+          "unicode_value_1",
+          "uppertolower_1",
+          "textsplit_3"
+        ]
+      },
+      {
+        "id": "dateandtime",
+        "label": {
+          "default": "Date and Time"
+        },
+        "function_refs": [
+          "@TODAY_0",
+          "datetime_date_3",
+          "datetime_date_1",
+          "datetime_time_3",
+          "datetime_time_1",
+          "datetime_timestamp_6",
+          "datetime_timestamp_2",
+          "datetime_timestamp_1",
+          "datetime_year_1",
+          "datetime_month_1",
+          "datetime_day_1",
+          "datetime_weekday_1",
+          "datetime_hour_1",
+          "datetime_minute_1",
+          "datetime_second_1",
+          "datetime_month_name_1",
+          "datetime_month_short_name_1",
+          "datetime_day_name_1",
+          "datetime_day_short_name_1",
+          "datetime_now_0",
+          "datetime_in_seconds_1",
+          "date_in_days_1",
+          "date_in_weeks_1",
+          "date_in_months_1",
+          "date_in_years_1",
+          "date_days_difference_2",
+          "date_weeks_difference_2",
+          "date_months_difference_2",
+          "date_years_difference_2",
+          "date_iso_day_1",
+          "date_iso_week_1",
+          "date_iso_year_1",
+          "date_from_ywd_3",
+          "date_before_2",
+          "time_before_2",
+          "time_in_hours_1",
+          "time_in_mins_1",
+          "time_in_secs_1",
+          "time_hours_difference_2",
+          "time_mins_difference_2",
+          "time_secs_difference_2"
+        ]
+      },
+      {
+        "id": "sequence",
+        "label": {
+          "default": "Sequence"
+        },
+        "function_refs": [
+          "@DIFF1_1",
+          "@DIFF1_2",
+          "@DIFF2_1",
+          "@DIFF2_2",
+          "@INDEX_0",
+          "@LAST_NON_BLANK_1",
+          "@MAX_1",
+          "@MAX_2",
+          "@MAX_3",
+          "@MEAN_1",
+          "@MEAN_2",
+          "@MEAN_3",
+          "@MIN_1",
+          "@MIN_2",
+          "@MIN_3",
+          "@OFFSET_2",
+          "@OFFSET_3",
+          "@SDEV_1",
+          "@SDEV_2",
+          "@SDEV_3",
+          "@SINCE_1",
+          "@SINCE_2",
+          "@SINCE0_1",
+          "@SINCE0_2",
+          "@SUM_1",
+          "@SUM_2",
+          "@SUM_3",
+          "@THIS_1"
+        ]
+      },
+      {
+        "id": "global",
+        "label": {
+          "default": "Global"
+        },
+        "function_refs": [
+          "@GLOBAL_MAX_1",
+          "@GLOBAL_MEAN_1",
+          "@GLOBAL_MIN_1",
+          "@GLOBAL_SDEV_1",
+          "@GLOBAL_SUM_1"
+        ]
+      },
+      {
+        "id": "blanksandnull",
+        "label": {
+          "default": "Blanks and Null"
+        },
+        "function_refs": [
+          "@BLANK_1",
+          "@LAST_NON_BLANK_1",
+          "@NULL_1",
+          "undef_0"
+        ]
+      },
+      {
+        "id": "specialfields",
+        "label": {
+          "default": "Special Fields"
+        },
+        "function_refs": [
+          "@FIELD_0",
+          "@FIELDS_BETWEEN_2",
+          "@FIELDS_MATCHING_1",
+          "@MULTI_RESPONSE_SET_1",
+          "@TARGET_0",
+          "@PREDICTED_0",
+          "@PARTITION_FIELD_0",
+          "@TRAINING_PARTITION_0",
+          "@TESTING_PARTITION_0",
+          "@VALIDATION_PARTITION_0"
+        ]
+      },
+      {
+        "id": "allfunctions",
+        "label": {
+          "default": "All Functions"
+        },
+        "function_refs": [
+          "@BLANK_1",
+          "@NULL_1",
+          "is_integer_1",
+          "is_real_1",
+          "is_number_1",
+          "is_string_1",
+          "is_date_1",
+          "is_time_1",
+          "is_timestamp_1",
+          "is_datetime_1",
+          "to_integer_1",
+          "to_real_1",
+          "to_number_1",
+          "to_string_1",
+          "to_date_1",
+          "to_time_1",
+          "to_timestamp_1",
+          "to_datetime_1",
+          "stb_centroid_latitude_1",
+          "stb_centroid_longitude_1",
+          "to_geohash_3",
+          "=_0",
+          "/=_0",
+          "<_0",
+          "<=_0",
+          ">_0",
+          ">=_0",
+          "count_equal_2",
+          "count_greater_than_2",
+          "count_less_than_2",
+          "count_not_equal_2",
+          "count_nulls_1",
+          "count_non_nulls_1",
+          "min_2",
+          "min_n_1",
+          "max_2",
+          "max_n_1",
+          "member_2",
+          "date_before_2",
+          "time_before_2",
+          "first_non_null_1",
+          "last_non_null_1",
+          "first_index_2",
+          "last_index_2",
+          "min_index_1",
+          "max_index_1",
+          "first_non_null_index_1",
+          "last_non_null_index_1",
+          "value_at_2",
+          "and_0",
+          "or_0",
+          "not_1",
+          "if?then?else?endif_3",
+          "if?then?elseif?then?else?endif_5",
+          "-_0",
+          "+_0",
+          "*_0",
+          "/_0",
+          "div_0",
+          "mod_0",
+          "rem_0",
+          "**_0",
+          "abs_1",
+          "exp_1",
+          "fracof_1",
+          "intof_1",
+          "log_1",
+          "log10_1",
+          "negate_1",
+          "round_1",
+          "sign_1",
+          "sqrt_1",
+          "sum_n_1",
+          "mean_n_1",
+          "sdev_n_1",
+          "arccos_1",
+          "arccosh_1",
+          "arcsin_1",
+          "arcsinh_1",
+          "arctan_1",
+          "arctan2_2",
+          "arctanh_1",
+          "cos_1",
+          "cosh_1",
+          "pi_0",
+          "sin_1",
+          "sinh_1",
+          "tan_1",
+          "tanh_1",
+          "cdf_chisq_2",
+          "cdf_f_3",
+          "cdf_normal_3",
+          "cdf_t_2",
+          "~~_0",
+          "||_0",
+          "||/&_0",
+          "&&_0",
+          "&&~~_0",
+          "<<_2",
+          ">>_2",
+          "&&=_0_0",
+          "&&/=_0_0",
+          "integer_bitcount_1",
+          "integer_leastbit_1",
+          "integer_length_1",
+          "testbit_2",
+          "oneof_1",
+          "random_1",
+          "random0_1",
+          "norm_random_0",
+          "norm_random_1",
+          "norm_random_2",
+          "><_0",
+          "allbutfirst_2",
+          "allbutlast_2",
+          "alphabefore_2",
+          "count_substring_2",
+          "endstring_2",
+          "hasendstring_2",
+          "hasmidstring_2",
+          "hasstartstring_2",
+          "hassubstring_2",
+          "hassubstring_3",
+          "isalphacode_1",
+          "isendstring_2",
+          "islowercode_1",
+          "ismidstring_2",
+          "isnumbercode_1",
+          "isstartstring_2",
+          "issubstring_2",
+          "issubstring_3",
+          "issubstring_count_3",
+          "issubstring_lim_5",
+          "isuppercode_1",
+          "last_1",
+          "length_1",
+          "locchar_3",
+          "locchar_back_3",
+          "lowertoupper_1",
+          "matches_2",
+          "replace_3",
+          "replicate_2",
+          "skipchar_3",
+          "skipchar_back_3",
+          "soundex_1",
+          "soundex_difference_2",
+          "startstring_2",
+          "stripchar_2",
+          "stripctrlchars_1",
+          "strmember_2",
+          "subscrs_2",
+          "substring_3",
+          "substring_between_3",
+          "trim_1",
+          "trimend_1",
+          "trimstart_1",
+          "unicode_char_1",
+          "unicode_value_1",
+          "uppertolower_1",
+          "textsplit_3",
+          "@TODAY_0",
+          "datetime_date_3",
+          "datetime_date_1",
+          "datetime_time_3",
+          "datetime_time_1",
+          "datetime_timestamp_6",
+          "datetime_timestamp_2",
+          "datetime_timestamp_1",
+          "datetime_year_1",
+          "datetime_month_1",
+          "datetime_day_1",
+          "datetime_weekday_1",
+          "datetime_hour_1",
+          "datetime_minute_1",
+          "datetime_second_1",
+          "datetime_month_name_1",
+          "datetime_month_short_name_1",
+          "datetime_day_name_1",
+          "datetime_day_short_name_1",
+          "datetime_now_0",
+          "datetime_in_seconds_1",
+          "date_in_days_1",
+          "date_in_weeks_1",
+          "date_in_months_1",
+          "date_in_years_1",
+          "date_days_difference_2",
+          "date_weeks_difference_2",
+          "date_months_difference_2",
+          "date_years_difference_2",
+          "date_iso_day_1",
+          "date_iso_week_1",
+          "date_iso_year_1",
+          "date_from_ywd_3",
+          "time_in_hours_1",
+          "time_in_mins_1",
+          "time_in_secs_1",
+          "time_hours_difference_2",
+          "time_mins_difference_2",
+          "time_secs_difference_2",
+          "@DIFF1_1",
+          "@DIFF1_2",
+          "@DIFF2_1",
+          "@DIFF2_2",
+          "@INDEX_0",
+          "@LAST_NON_BLANK_1",
+          "@MAX_1",
+          "@MAX_2",
+          "@MAX_3",
+          "@MEAN_1",
+          "@MEAN_2",
+          "@MEAN_3",
+          "@MIN_1",
+          "@MIN_2",
+          "@MIN_3",
+          "@OFFSET_2",
+          "@OFFSET_3",
+          "@SDEV_1",
+          "@SDEV_2",
+          "@SDEV_3",
+          "@SINCE_1",
+          "@SINCE_2",
+          "@SINCE0_1",
+          "@SINCE0_2",
+          "@SUM_1",
+          "@SUM_2",
+          "@SUM_3",
+          "@THIS_1",
+          "@GLOBAL_MAX_1",
+          "@GLOBAL_MEAN_1",
+          "@GLOBAL_MIN_1",
+          "@GLOBAL_SDEV_1",
+          "@GLOBAL_SUM_1",
+          "@NULL_1",
+          "undef_0",
+          "@FIELD_0",
+          "@FIELDS_BETWEEN_2",
+          "@FIELDS_MATCHING_1",
+          "@MULTI_RESPONSE_SET_1",
+          "@TARGET_0",
+          "@PREDICTED_0",
+          "@PARTITION_FIELD_0",
+          "@TRAINING_PARTITION_0",
+          "@TESTING_PARTITION_0",
+          "@VALIDATION_PARTITION_0",
+          "close_to_3",
+          "crosses_2",
+          "overlap_2",
+          "within_2",
+          "num_points_2",
+          "area_1",
+          "distance_2",
+          "SUM_1",
+          "MEAN_1",
+          "MIN_1",
+          "MIN_1",
+          "MIN_1",
+          "MIN_1",
+          "MIN_1",
+          "MAX_1",
+          "MAX_1",
+          "MAX_1",
+          "MAX_1",
+          "MAX_1",
+          "SDEV_1",
+          "MEDIAN_1",
+          "COUNT_0",
+          "COUNT_1",
+          "VAR_1",
+          "FIRST_QUARTILE_1",
+          "THIRD_QUARTILE_1"
+        ]
+      },
+      {
+        "id": "BADD",
+        "label": {
+          "default": "BAD Functions"
+        },
+        "function_refs": [
+          "not_exist",
+          "no_parameter",
+          "no_description",
+          "no_parameter_type"
         ]
       }
     ],
     "operator_refs": [
       "=_0",
+      "/=_0",
       "<_0",
       "<=_0",
       ">_0",
@@ -179,58 +1006,56 @@
     ],
     "function_info": [
       {
+        "id": "no_parameter",
         "label": {
-          "default": "to_integer_default",
-          "resource_key": "to_integer.label"
+          "default": "No Parameters"
         },
-        "return_type": "Integer",
-        "id": "to_integer",
-        "parameters": [
-          {
-            "label": {
-              "default": "Item_default",
-              "resource_key": "to_integer.item.param"
-            }
-          }
-        ],
+        "return_type": "Boolean",
         "description": {
-          "default": "Converts ITEM to an integer. ITEM must be a string, or a number default.",
-          "resource_key": "to_integer.item.help"
+          "default": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node."
         }
       },
       {
+        "id": "no_description",
         "label": {
-          "default": "count_equal"
+          "default": "NoDescription"
         },
-        "return_type": "Integer",
-        "id": "count_equal",
+        "return_type": "Boolean",
         "parameters": [
           {
             "label": {
-              "default": "Item"
-            }
-          },
-          {
-            "label": {
-              "default": "List"
-            }
+              "default": "FIELD"
+            },
+            "type": "Field"
           }
-        ],
-        "description": {
-          "default": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL."
-        }
+        ]
       },
       {
+        "id": "no_parameter_type",
+        "label": {
+          "default": "no_parameter_type"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            }
+          }
+        ]
+      },
+      {
+        "id": "@BLANK_1",
         "label": {
           "default": "@BLANK"
         },
         "return_type": "Boolean",
-        "id": "@BLANK",
         "parameters": [
           {
             "label": {
-              "default": "Item"
-            }
+              "default": "FIELD"
+            },
+            "type": "Field"
           }
         ],
         "description": {
@@ -238,428 +1063,375 @@
         }
       },
       {
+        "id": "@NULL_1",
         "label": {
-          "default": "@DIFF1"
+          "default": "@NULL"
         },
-        "return_type": "Real",
-        "id": "@DIFF1",
+        "return_type": "Boolean",
         "parameters": [
           {
             "label": {
-              "default": "Field1"
-            }
-          },
-          {
-            "label": {
-              "default": "Field2"
-            }
+              "default": "FIELD"
+            },
+            "type": "Field"
           }
         ],
         "description": {
-          "default": "Returns the first differential of FIELD1 or the first differential of FIELD1 with respect to FIELD2."
+          "default": "None"
         }
       },
       {
+        "id": "is_integer_1",
         "label": {
-          "default": "datetime_date"
+          "default": "is_integer"
         },
-        "return_type": "Date",
-        "id": "datetime_date",
+        "return_type": "Boolean",
         "parameters": [
           {
             "label": {
-              "default": "Year"
-            }
-          },
-          {
-            "label": {
-              "default": "Month"
-            }
-          },
-          {
-            "label": {
-              "default": "Day"
-            }
+              "default": "ITEM"
+            },
+            "type": "Any"
           }
         ],
         "description": {
-          "default": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers."
+          "default": "Returns a value of true if ITEM type is an integer. Otherwise, returns a value of false."
         }
       },
       {
+        "id": "is_real_1",
         "label": {
-          "default": "datetime_time"
+          "default": "is_real"
         },
-        "return_type": "Time",
-        "id": "datetime_time",
+        "return_type": "Boolean",
         "parameters": [
           {
             "label": {
-              "default": "Hour"
-            }
-          },
-          {
-            "label": {
-              "default": "Minute"
-            }
-          },
-          {
-            "label": {
-              "default": "Second"
-            }
+              "default": "ITEM"
+            },
+            "type": "Any"
           }
         ],
         "description": {
-          "default": "Returns the time value for the specified HOUR, MINUTE, and SECOND. The arguments must be integers."
+          "default": "Returns a value of true if ITEM type is a real number. Otherwise, returns a value of false."
         }
       },
       {
+        "id": "is_number_1",
         "label": {
-          "default": "datetime_timestamp"
+          "default": "is_number"
         },
-        "return_type": "Timestamp",
-        "id": "datetime_timestamp",
+        "return_type": "Boolean",
         "parameters": [
           {
             "label": {
-              "default": "Year"
-            }
-          },
-          {
-            "label": {
-              "default": "Month"
-            }
-          },
-          {
-            "label": {
-              "default": "Day"
-            }
-          },
-          {
-            "label": {
-              "default": "Hour"
-            }
-          },
-          {
-            "label": {
-              "default": "Minute"
-            }
-          },
-          {
-            "label": {
-              "default": "Second"
-            }
+              "default": "ITEM"
+            },
+            "type": "Any"
           }
         ],
         "description": {
-          "default": "Returns the timestamp value for the given YEAR, MONTH, DAY, HOUR, MINUTE, and SECOND."
+          "default": "Returns a value of true if ITEM type is a number. Otherwise, returns a value of false."
         }
       },
       {
+        "id": "is_string_1",
         "label": {
-          "default": "+"
-        },
-        "return_type": "Number",
-        "id": "+",
-        "description": {
-          "default": "Add two numbers. X + Y."
-        }
-      },
-      {
-        "label": {
-          "default": "**"
-        },
-        "return_type": "Number",
-        "id": "**",
-        "description": {
-          "default": "X to the power of Y. X ** Y."
-        }
-      },
-      {
-        "label": {
-          "default": "-"
-        },
-        "return_type": "Number",
-        "id": "-",
-        "description": {
-          "default": "Subtract two numbers. X - Y."
-        }
-      },
-      {
-        "label": {
-          "default": "div"
-        },
-        "return_type": "Number",
-        "id": "div",
-        "description": {
-          "default": "Quotient of dividing two numbers. X div Y."
-        }
-      },
-      {
-        "label": {
-          "default": "*"
-        },
-        "return_type": "Number",
-        "id": "*",
-        "description": {
-          "default": "Multiply two number.  X * Y."
-        }
-      },
-      {
-        "label": {
-          "default": "rem"
-        },
-        "return_type": "Number",
-        "id": "rem",
-        "description": {
-          "default": "Remainder of dividing two numbers. X rem Y."
-        }
-      },
-      {
-        "label": {
-          "default": "/"
-        },
-        "return_type": "Number",
-        "id": "/",
-        "description": {
-          "default": "Divide two numbers. X / Y."
-        }
-      },
-      {
-        "label": {
-          "default": "mod"
-        },
-        "return_type": "Number",
-        "id": "mod",
-        "description": {
-          "default": "Modulo of dividing two numbers. X mod Y."
-        }
-      },
-      {
-        "label": {
-          "default": ">"
+          "default": "is_string"
         },
         "return_type": "Boolean",
-        "id": ">",
-        "description": {
-          "default": "X is greater than Y."
-        }
-      },
-      {
-        "label": {
-          "default": ">="
-        },
-        "return_type": "Boolean",
-        "id": ">=",
-        "description": {
-          "default": "X is greater than or equal to Y."
-        }
-      },
-      {
-        "label": {
-          "default": "<"
-        },
-        "return_type": "Boolean",
-        "id": "<",
-        "description": {
-          "default": "X is less than Y."
-        }
-      },
-      {
-        "label": {
-          "default": "<="
-        },
-        "return_type": "Boolean",
-        "id": "<=",
-        "description": {
-          "default": "X is less than or equal to Y."
-        }
-      },
-      {
-        "label": {
-          "default": "="
-        },
-        "return_type": "Boolean",
-        "id": "=",
-        "description": {
-          "default": "X is equal to Y."
-        }
-      },
-      {
-        "label": {
-          "default": "/="
-        },
-        "return_type": "Boolean",
-        "id": "/=",
-        "description": {
-          "default": "X is not equal to Y."
-        }
-      },
-      {
-        "label": {
-          "default": "and"
-        },
-        "return_type": "Boolean",
-        "id": "and",
-        "description": {
-          "default": "Expression1 is true and Expression2 is true.  Expr1 and Expr2."
-        }
-      },
-      {
-        "label": {
-          "default": "or"
-        },
-        "return_type": "Boolean",
-        "id": "or",
-        "description": {
-          "default": "Expression1 is true or Expression2 is true.  Expr1 and Expr2."
-        }
-      },
-      {
-        "label": {
-          "default": "not"
-        },
-        "return_type": "Boolean",
-        "id": "not",
         "parameters": [
           {
             "label": {
-              "default": ""
-            }
+              "default": "ITEM"
+            },
+            "type": "Any"
           }
         ],
         "description": {
-          "default": "Expression is not true.  not(Expr)."
+          "default": "Returns a value of true if ITEM type is a string. Otherwise, returns a value of false."
         }
       },
       {
+        "id": "is_date_1",
         "label": {
-          "default": "><"
+          "default": "is_date"
         },
-        "return_type": "String",
-        "id": "><",
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          }
+        ],
         "description": {
-          "default": "Concatenate two strings. String1 >< String2."
+          "default": "Returns a value of true if ITEM type is a date. Otherwise, returns a value of false."
         }
       },
       {
+        "id": "is_time_1",
         "label": {
-          "default": "&&~~"
+          "default": "is_time"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns a value of true if ITEM type is a time. Otherwise, returns a value of false."
+        }
+      },
+      {
+        "id": "is_timestamp_1",
+        "label": {
+          "default": "is_timestamp"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns a value of true if ITEM type is a timestamp. Otherwise, returns a value of false."
+        }
+      },
+      {
+        "id": "is_datetime_1",
+        "label": {
+          "default": "is_datetime"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns a value of true if ITEM type is a datetime (date, time, or timestamp). Otherwise, returns a value of false."
+        }
+      },
+      {
+        "id": "to_integer_1",
+        "label": {
+          "default": "to_integer"
         },
         "return_type": "Integer",
-        "id": "&&~~",
-        "description": {
-          "default": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2."
-        }
-      },
-      {
-        "id": "and_0",
-        "label": {
-          "default": "and"
-        },
-        "return_type": "Boolean",
-        "description": {
-          "default": "Used in between two CLEM expressions. Returns a value of true if both EXPR1 and EXPR2 are true."
-        }
-      },
-      {
-        "id": "or_0",
-        "label": {
-          "default": "or"
-        },
-        "return_type": "Boolean",
-        "description": {
-          "default": "Used in between two CLEM expressions. Returns a value of true if either EXPR1 or EXPR2 is true, or if both are true."
-        }
-      },
-      {
-        "id": "not_1",
-        "label": {
-          "default": "not"
-        },
-        "return_type": "Boolean",
         "parameters": [
           {
             "label": {
-              "default": "COND"
+              "default": "ITEM"
             },
-            "type": "Expression"
+            "type": "Any"
           }
         ],
         "description": {
-          "default": "Returns a value of true if COND is false. Otherwise, returns a value of 0."
+          "default": "Converts ITEM to an integer. ITEM must be a string, or a number."
         }
       },
       {
-        "id": "if?then?else?endif_3",
+        "id": "to_real_1",
         "label": {
-          "default": "if ? then ? else ? endif"
+          "default": "to_real"
         },
-        "return_type": "Any",
+        "return_type": "Real",
         "parameters": [
           {
             "label": {
-              "default": "COND1"
+              "default": "ITEM"
             },
-            "type": "Expression"
-          },
-          {
-            "label": {
-              "default": "EXPR1"
-            },
-            "type": "Expression"
-          },
-          {
-            "label": {
-              "default": "EXPR2"
-            },
-            "type": "Expression"
+            "type": "Any"
           }
         ],
         "description": {
-          "default": "If COND is true, returns the result of evaluating EXPR1. Otherwise, returns the result of evaluating EXPR2."
+          "default": "Converts ITEM to a real number. ITEM must be a string, or a number."
         }
       },
       {
-        "id": "if?then?elseif?then?else?endif_5",
+        "id": "to_number_1",
         "label": {
-          "default": "if ? then ? elseif ? then ? else ? endif"
+          "default": "to_number"
         },
-        "return_type": "Any",
+        "return_type": "Number",
         "parameters": [
           {
             "label": {
-              "default": "COND1"
+              "default": "ITEM"
             },
-            "type": "Expression"
-          },
-          {
-            "label": {
-              "default": "EXPR1"
-            },
-            "type": "Expression"
-          },
-          {
-            "label": {
-              "default": "COND2"
-            },
-            "type": "Expression"
-          },
-          {
-            "label": {
-              "default": "EXPR2"
-            },
-            "type": "Expression"
-          },
-          {
-            "label": {
-              "default": "EXPR_N"
-            },
-            "type": "Expression"
+            "type": "Any"
           }
         ],
         "description": {
-          "default": "If COND1 is true, returns the result of EXPR1. If COND2 is true, the result of EXPR2. Otherwise, EXPRN."
+          "default": "Converts ITEM to a number. ITEM must be a string, or a number."
+        }
+      },
+      {
+        "id": "to_string_1",
+        "label": {
+          "default": "to_string"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Converts ITEM to a string."
+        }
+      },
+      {
+        "id": "to_date_1",
+        "label": {
+          "default": "to_date"
+        },
+        "return_type": "Date",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Converts ITEM to a date. ITEM must be a string, a timestamp, or a date."
+        }
+      },
+      {
+        "id": "to_time_1",
+        "label": {
+          "default": "to_time"
+        },
+        "return_type": "Time",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Converts ITEM to a time. ITEM must be a string, a timestamp, or a time."
+        }
+      },
+      {
+        "id": "to_timestamp_1",
+        "label": {
+          "default": "to_timestamp"
+        },
+        "return_type": "Timestamp",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Converts ITEM to a timestamp. ITEM must be a string, or any datetime value."
+        }
+      },
+      {
+        "id": "to_datetime_1",
+        "label": {
+          "default": "to_datetime"
+        },
+        "return_type": "Datetime",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Converts ITEM to a datetime value. ITEM must be a string, or a datetime value."
+        }
+      },
+      {
+        "id": "stb_centroid_latitude_1",
+        "label": {
+          "default": "stb_centroid_latitude"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns an integer value for latitude corresponding to centroid of the geohash argument."
+        }
+      },
+      {
+        "id": "stb_centroid_longitude_1",
+        "label": {
+          "default": "stb_centroid_longitude"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns an integer value for longitude corresponding to centroid of the geohash argument."
+        }
+      },
+      {
+        "id": "to_geohash_3",
+        "label": {
+          "default": "to_geohash"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "LATITUDE"
+            },
+            "type": "Number"
+          },
+          {
+            "label": {
+              "default": "LONGITUDE"
+            },
+            "type": "Number"
+          },
+          {
+            "label": {
+              "default": "BITS"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the geohashed string corresponding to the LATITUDE and LONGITUDE using the specified number of BITS for the density."
         }
       },
       {
@@ -720,6 +1492,584 @@
         "return_type": "Boolean",
         "description": {
           "default": "Used between any two comparable items. Returns true if ITEM1 is greater than or equal to ITEM2."
+        }
+      },
+      {
+        "id": "count_equal_2",
+        "label": {
+          "default": "count_equal"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL."
+        }
+      },
+      {
+        "id": "count_greater_than_2",
+        "label": {
+          "default": "count_greater_than"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the number of values from a LIST of fields that are greater than ITEM1, or NULL if ITEM1 is NULL."
+        }
+      },
+      {
+        "id": "count_less_than_2",
+        "label": {
+          "default": "count_less_than"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the number of values from a LIST of fields that are less than ITEM1, or NULL if ITEM1 is NULL."
+        }
+      },
+      {
+        "id": "count_not_equal_2",
+        "label": {
+          "default": "count_not_equal"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the number of values from a LIST of fields that are not equal to ITEM1, or NULL if ITEM1 is NULL."
+        }
+      },
+      {
+        "id": "count_nulls_1",
+        "label": {
+          "default": "count_nulls"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the number of NULL values from a LIST of fields."
+        }
+      },
+      {
+        "id": "count_non_nulls_1",
+        "label": {
+          "default": "count_non_nulls"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the number of non-NULL values from a LIST of fields."
+        }
+      },
+      {
+        "id": "min_2",
+        "label": {
+          "default": "min"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "ITEM2"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns the lesser of ITEM1 and ITEM2."
+        }
+      },
+      {
+        "id": "min_n_1",
+        "label": {
+          "default": "min_n"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the minimum value from a LIST of numeric fields, or NULL if there are no non-NULL values."
+        }
+      },
+      {
+        "id": "max_2",
+        "label": {
+          "default": "max"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "ITEM2"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns the greater of ITEM1 and ITEM2."
+        }
+      },
+      {
+        "id": "max_n_1",
+        "label": {
+          "default": "max_n"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the maximum value from a LIST of numeric fields, or NULL if there are no non-NULL values."
+        }
+      },
+      {
+        "id": "member_2",
+        "label": {
+          "default": "member"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns a value of true if ITEM is an element of the specified list. Otherwise, returns a value of false."
+        }
+      },
+      {
+        "id": "date_before_2",
+        "label": {
+          "default": "date_before"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "ITEM2"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns a value of true if the DATE or timestamp ITEM1 is prior to the DATE or Timestamp ITEM2."
+        }
+      },
+      {
+        "id": "time_before_2",
+        "label": {
+          "default": "time_before"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "ITEM2"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns a value of true if the TIME or timestamp ITEM1 is prior to the TIME or timestamp ITEM2."
+        }
+      },
+      {
+        "id": "first_non_null_1",
+        "label": {
+          "default": "first_non_null"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the first non-NULL value in a LIST of fields, or NULL if all values are NULL."
+        }
+      },
+      {
+        "id": "last_non_null_1",
+        "label": {
+          "default": "last_non_null"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the last non-NULL value in a LIST of fields, or NULL if all values are NULL."
+        }
+      },
+      {
+        "id": "first_index_2",
+        "label": {
+          "default": "first_index"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the index of the first field containing ITEM from a LIST of fields, or 0 if the value is not found."
+        }
+      },
+      {
+        "id": "last_index_2",
+        "label": {
+          "default": "last_index"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the index of the last field containing ITEM from a LIST of fields, or 0 if the value is not found."
+        }
+      },
+      {
+        "id": "min_index_1",
+        "label": {
+          "default": "min_index"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the index of the field containing the minimum value from a LIST of numeric fields, or 0 if all values are NULL."
+        }
+      },
+      {
+        "id": "max_index_1",
+        "label": {
+          "default": "max_index"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the index of the field containing the maximum value from a LIST of numeric fields, or 0 if all values are NULL."
+        }
+      },
+      {
+        "id": "first_non_null_index_1",
+        "label": {
+          "default": "first_non_null_index"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the index of the first field containing a non-NULL value in a LIST of fields, or 0 if all values are NULL."
+        }
+      },
+      {
+        "id": "last_non_null_index_1",
+        "label": {
+          "default": "last_non_null_index"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the index of the last field containing a non-NULL value in a LIST of fields, or 0 if all values are NULL."
+        }
+      },
+      {
+        "id": "value_at_2",
+        "label": {
+          "default": "value_at"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "INT"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the value of the field at offset INT in a LIST of fields."
+        }
+      },
+      {
+        "id": "and_0",
+        "label": {
+          "default": "and"
+        },
+        "return_type": "Boolean",
+        "description": {
+          "default": "Used in between two CLEM expressions. Returns a value of true if both EXPR1 and EXPR2 are true."
+        }
+      },
+      {
+        "id": "or_0",
+        "label": {
+          "default": "or"
+        },
+        "return_type": "Boolean",
+        "description": {
+          "default": "Used in between two CLEM expressions. Returns a value of true if either EXPR1 or EXPR2 is true, or if both are true."
+        }
+      },
+      {
+        "id": "not_1",
+        "label": {
+          "default": "not"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "COND"
+            },
+            "type": "Expression"
+          }
+        ],
+        "description": {
+          "default": "Returns a value of true if COND is false. Otherwise, returns a value of 0."
+        }
+      },
+      {
+        "id": "if?then?else?endif_3",
+        "label": {
+          "default": "if?then?else?endif"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "COND1"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "EXPR1"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "EXPR2"
+            },
+            "type": "Expression"
+          }
+        ],
+        "description": {
+          "default": "If COND is true, returns the result of evaluating EXPR1. Otherwise, returns the result of evaluating EXPR2."
+        }
+      },
+      {
+        "id": "if?then?elseif?then?else?endif_5",
+        "label": {
+          "default": "if?then?elseif?then?else?endif"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "COND1"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "EXPR1"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "COND2"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "EXPR2"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "EXPR_N"
+            },
+            "type": "Expression"
+          }
+        ],
+        "description": {
+          "default": "If COND1 is true, returns the result of EXPR1. If COND2 is true, the result of EXPR2. Otherwise, EXPRN."
         }
       },
       {
@@ -800,6 +2150,599 @@
         "return_type": "Number",
         "description": {
           "default": "Used between two numbers: BASE ** POWER. Returns BASE raised to the power POWER."
+        }
+      },
+      {
+        "id": "abs_1",
+        "label": {
+          "default": "abs"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the absolute value of NUM, which is always a number of the same type."
+        }
+      },
+      {
+        "id": "exp_1",
+        "label": {
+          "default": "exp"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns e raised to the power NUM, where e is the base of natural logarithms."
+        }
+      },
+      {
+        "id": "fracof_1",
+        "label": {
+          "default": "fracof"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the fractional part of NUM, defined as NUM - intof(NUM)."
+        }
+      },
+      {
+        "id": "intof_1",
+        "label": {
+          "default": "intof"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the integer of the same sign as NUM and with the largest magnitude such that abs(INT) <= abs(NUM)."
+        }
+      },
+      {
+        "id": "log_1",
+        "label": {
+          "default": "log"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the natural (base e) logarithm of NUM, which must not be a zero of any kind."
+        }
+      },
+      {
+        "id": "log10_1",
+        "label": {
+          "default": "log10"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the base 10 logarithm of NUM, which must not be a zero of any kind. This function is defined as log(NUM)/log(10)."
+        }
+      },
+      {
+        "id": "negate_1",
+        "label": {
+          "default": "negate"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the negation of NUM - that is, it returns the corresponding number with the opposite sign."
+        }
+      },
+      {
+        "id": "round_1",
+        "label": {
+          "default": "round"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Rounds NUM to an integer by taking intof(NUM+0.5) if NUM is positive, or intof(NUM-0.5) if NUM is negative."
+        }
+      },
+      {
+        "id": "sign_1",
+        "label": {
+          "default": "sign"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns -1, 0/0.0, or 1 if NUM, depending on whether NUM is negative, zero, or positive."
+        }
+      },
+      {
+        "id": "sqrt_1",
+        "label": {
+          "default": "sqrt"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the square root of NUM. NUM must be positive."
+        }
+      },
+      {
+        "id": "sum_n_1",
+        "label": {
+          "default": "sum_n"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the sum of the values from a LIST of numeric fields, or NULL if there are no non-NULL values."
+        }
+      },
+      {
+        "id": "mean_n_1",
+        "label": {
+          "default": "mean_n"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the mean of the values from a LIST of numeric fields, or NULL if there are no non-NULL values."
+        }
+      },
+      {
+        "id": "sdev_n_1",
+        "label": {
+          "default": "sdev_n"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns the standard deviation of the values from a LIST of numeric fields, or NULL if there are fewer than two non-NULL values."
+        }
+      },
+      {
+        "id": "arccos_1",
+        "label": {
+          "default": "arccos"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Computes the arccosine of NUM."
+        }
+      },
+      {
+        "id": "arccosh_1",
+        "label": {
+          "default": "arccosh"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Computes the hyperbolic arccosine of NUM."
+        }
+      },
+      {
+        "id": "arcsin_1",
+        "label": {
+          "default": "arcsin"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Computes the arcsine of NUM."
+        }
+      },
+      {
+        "id": "arcsinh_1",
+        "label": {
+          "default": "arcsinh"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Computes the hyperbolic arcsine of NUM."
+        }
+      },
+      {
+        "id": "arctan_1",
+        "label": {
+          "default": "arctan"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Computes the arctangent of NUM."
+        }
+      },
+      {
+        "id": "arctan2_2",
+        "label": {
+          "default": "arctan2"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM_Y"
+            },
+            "type": "Number"
+          },
+          {
+            "label": {
+              "default": "NUM_X"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Computes the arctangent of NUM_Y/NUM_X. Uses signs of two numbers to derive quadrant information."
+        }
+      },
+      {
+        "id": "arctanh_1",
+        "label": {
+          "default": "arctanh"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Computes the hyperbolic arctangent of NUM."
+        }
+      },
+      {
+        "id": "cos_1",
+        "label": {
+          "default": "cos"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Computes the cosine of angle NUM."
+        }
+      },
+      {
+        "id": "cosh_1",
+        "label": {
+          "default": "cosh"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Computes the hyperbolic cosine of angle NUM."
+        }
+      },
+      {
+        "id": "pi_0",
+        "label": {
+          "default": "pi"
+        },
+        "return_type": "Real",
+        "parameters": [],
+        "description": {
+          "default": "This constant is the best real approximation to pi."
+        }
+      },
+      {
+        "id": "sin_1",
+        "label": {
+          "default": "sin"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Computes the sine of angle NUM."
+        }
+      },
+      {
+        "id": "sinh_1",
+        "label": {
+          "default": "sinh"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Computes the hyperbolic sine of angle NUM."
+        }
+      },
+      {
+        "id": "tan_1",
+        "label": {
+          "default": "tan"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Computes the tangent of angle NUM."
+        }
+      },
+      {
+        "id": "tanh_1",
+        "label": {
+          "default": "tanh"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Computes the hyperbolic tangent of angle NUM."
+        }
+      },
+      {
+        "id": "cdf_chisq_2",
+        "label": {
+          "default": "cdf_chisq"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          },
+          {
+            "label": {
+              "default": "DF"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the probability that a value from the chi-square distribution with DF degrees of freedom will be less than NUM."
+        }
+      },
+      {
+        "id": "cdf_f_3",
+        "label": {
+          "default": "cdf_f"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          },
+          {
+            "label": {
+              "default": "DF1"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "DF2"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the probability that a value from the F distribution, with degrees of freedom DF1 and DF2, will be less than NUM."
+        }
+      },
+      {
+        "id": "cdf_normal_3",
+        "label": {
+          "default": "cdf_normal"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          },
+          {
+            "label": {
+              "default": "MEAN"
+            },
+            "type": "Number"
+          },
+          {
+            "label": {
+              "default": "STDDEV"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the probability that a value from the normal distribution with the specified MEAN and standard deviation will be less than NUM."
+        }
+      },
+      {
+        "id": "cdf_t_2",
+        "label": {
+          "default": "cdf_t"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          },
+          {
+            "label": {
+              "default": "DF"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the probability that a value from Student's t distribution with DF degrees of freedom will be less than NUM."
         }
       },
       {
@@ -893,6 +2836,191 @@
         }
       },
       {
+        "id": "integer_bitcount_1",
+        "label": {
+          "default": "integer_bitcount"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "INT"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Counts the number of 1 or 0 bits in the two's-complement representation of INT."
+        }
+      },
+      {
+        "id": "integer_leastbit_1",
+        "label": {
+          "default": "integer_leastbit"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "INT"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the bit position N of the least-significant bit set in the integer INT."
+        }
+      },
+      {
+        "id": "integer_length_1",
+        "label": {
+          "default": "integer_length"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "INT"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the length in bits of INT as a two's-complement integer."
+        }
+      },
+      {
+        "id": "testbit_2",
+        "label": {
+          "default": "testbit"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "INT"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Tests the bit at position N in the integer INT and returns the state of bit N as a boolean value."
+        }
+      },
+      {
+        "id": "oneof_1",
+        "label": {
+          "default": "oneof"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "LIST"
+            },
+            "type": "List"
+          }
+        ],
+        "description": {
+          "default": "Returns a randomly chosen element of LIST. List items should be entered as follows: [ITEM1,ITEM2,...ITEMn."
+        }
+      },
+      {
+        "id": "random_1",
+        "label": {
+          "default": "random"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Generates a uniformly distributed random number of the same type as NUM in the range 0 < ... <= NUM."
+        }
+      },
+      {
+        "id": "random0_1",
+        "label": {
+          "default": "random0"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Generates a uniformly distributed random number of the same type as NUM in the range 0 <= ... < NUM."
+        }
+      },
+      {
+        "id": "norm_random_0",
+        "label": {
+          "default": "norm_random"
+        },
+        "return_type": "Real",
+        "parameters": [],
+        "description": {
+          "default": "Generates a normally distributed random number with a mean of 0.0 and standard deviation of 1.0."
+        }
+      },
+      {
+        "id": "norm_random_1",
+        "label": {
+          "default": "norm_random"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Generates a normally distributed random number with a mean of NUM and standard deviation of 1.0."
+        }
+      },
+      {
+        "id": "norm_random_2",
+        "label": {
+          "default": "norm_random"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM1"
+            },
+            "type": "NUM1"
+          },
+          {
+            "label": {
+              "default": "NUM2"
+            },
+            "type": "NUM2"
+          }
+        ],
+        "description": {
+          "default": "Generates a normally distributed random number with a mean of NUM1 and standard deviation of NUM2."
+        }
+      },
+      {
         "id": "><_0",
         "label": {
           "default": "><"
@@ -900,6 +3028,636 @@
         "return_type": "String",
         "description": {
           "default": "Used between two strings. Concatenates all of the characters of STRING1with all of the characters of STRING2."
+        }
+      },
+      {
+        "id": "allbutfirst_2",
+        "label": {
+          "default": "allbutfirst"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Return a string, which is STRING with the first N characters removed."
+        }
+      },
+      {
+        "id": "allbutlast_2",
+        "label": {
+          "default": "allbutlast"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Return a string, which is STRING with the last N characters removed."
+        }
+      },
+      {
+        "id": "alphabefore_2",
+        "label": {
+          "default": "alphabefore"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING1"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "STRING2"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns 1 if  STRING1 is alphabetically before STRING2 or 0 if STRING1 is after STRING2; returns 1 if equal."
+        }
+      },
+      {
+        "id": "count_substring_2",
+        "label": {
+          "default": "count_substring"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "SUBSTRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns the number of instances of SUBSTRING that can be found in STRING"
+        }
+      },
+      {
+        "id": "endstring_2",
+        "label": {
+          "default": "endstring"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns a string consisting of the last N characters of STRING."
+        }
+      },
+      {
+        "id": "hasendstring_2",
+        "label": {
+          "default": "hasendstring"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "SUBSTRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Same as isendstring(SUBSTRING,STRING)."
+        }
+      },
+      {
+        "id": "hasmidstring_2",
+        "label": {
+          "default": "hasmidstring"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "SUBSTRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Same as ismidstring(SUBSTRING,STRING)."
+        }
+      },
+      {
+        "id": "hasstartstring_2",
+        "label": {
+          "default": "hasstartstring"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "SUBSTRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Same as isstartstring(SUBSTRING,STRING)."
+        }
+      },
+      {
+        "id": "hassubstring_2",
+        "label": {
+          "default": "hassubstring"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "SUBSTRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Same as issubstring(SUBSTRING,1,STRING)."
+        }
+      },
+      {
+        "id": "hassubstring_3",
+        "label": {
+          "default": "hassubstring"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "SUBSTRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Same as issubstring(SUBSTRING,N,STRING)."
+        }
+      },
+      {
+        "id": "isalphacode_1",
+        "label": {
+          "default": "isalphacode"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          }
+        ],
+        "description": {
+          "default": "Returns a value of true if CHAR is a character whose character code is a letter. Otherwise, returns 0."
+        }
+      },
+      {
+        "id": "isendstring_2",
+        "label": {
+          "default": "isendstring"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "SUBSTRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "If STRING ends with SUBSTRING, then returns the subscript of SUBSTRING in STRING. Otherwise, returns 0."
+        }
+      },
+      {
+        "id": "islowercode_1",
+        "label": {
+          "default": "islowercode"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          }
+        ],
+        "description": {
+          "default": "Returns a value of true if CHAR is a lowercase letter character. Otherwise, returns 0."
+        }
+      },
+      {
+        "id": "ismidstring_2",
+        "label": {
+          "default": "ismidstring"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "SUBSTRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns SUBSTRING start position in STRING if SUBSTRING is a substring of STRING but does not start on the first character of STRING or end on the last. Otherwise, returns 0."
+        }
+      },
+      {
+        "id": "isnumbercode_1",
+        "label": {
+          "default": "isnumbercode"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          }
+        ],
+        "description": {
+          "default": "Returns a value of true if CHAR is a character whose character code is a digit. Otherwise, returns 0."
+        }
+      },
+      {
+        "id": "isstartstring_2",
+        "label": {
+          "default": "isstartstring"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "SUBSTRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "If STRING starts with SUBSTRING, returns 1. Otherwise, returns 0."
+        }
+      },
+      {
+        "id": "issubstring_2",
+        "label": {
+          "default": "issubstring"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "SUBSTRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Searches STRING for SUBSTRING. If found, returns the starting subscript. Otherwise, returns 0."
+        }
+      },
+      {
+        "id": "issubstring_3",
+        "label": {
+          "default": "issubstring"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "SUBSTRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Searches STRING, starting from its Nth character, for SUBSTRING. If found, returns the starting subscript."
+        }
+      },
+      {
+        "id": "issubstring_count_3",
+        "label": {
+          "default": "issubstring_count"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "SUBSTRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Searches STRING for the Nth occurrence of SUBSTRING. If found, returns the starting subscript. Otherwise, returns 0."
+        }
+      },
+      {
+        "id": "issubstring_lim_5",
+        "label": {
+          "default": "issubstring_lim"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "SUBSTRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STARTLIM"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "ENDLIM"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Same as issubstring(), but the match is constrained to start on or before STARTLIM and to end on or before ENDLIM."
+        }
+      },
+      {
+        "id": "isuppercode_1",
+        "label": {
+          "default": "isuppercode"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          }
+        ],
+        "description": {
+          "default": "Returns a value of true if ITEM is an uppercase letter character. Otherwise, returns 0."
+        }
+      },
+      {
+        "id": "last_1",
+        "label": {
+          "default": "last"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns the last character of STRING (which must be at least one character long)."
+        }
+      },
+      {
+        "id": "length_1",
+        "label": {
+          "default": "length"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns the length of STRING or the number of characters in it."
+        }
+      },
+      {
+        "id": "locchar_3",
+        "label": {
+          "default": "locchar"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          },
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns the subscript at which CHAR is found in STRING. Searches from Nth character of STRING forward."
+        }
+      },
+      {
+        "id": "locchar_back_3",
+        "label": {
+          "default": "locchar_back"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          },
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns the subscript at which CHAR is found in STRING. Searches from Nth character of STRING backwards."
+        }
+      },
+      {
+        "id": "lowertoupper_1",
+        "label": {
+          "default": "lowertoupper"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          }
+        ],
+        "description": {
+          "default": "Converts any lowercase characters in ITEM to uppercase.  If ITEM is not a string or character, returns ITEM."
         }
       },
       {
@@ -911,13 +3669,2665 @@
         "description": {
           "default": "Returns a value of true if STRING1 matches the pattern defined by STRING2. \"?\" matches 1 character, \"*\" matches 0 or more characters, and \"\\\" escapes these characters."
         }
+      },
+      {
+        "id": "replace_3",
+        "label": {
+          "default": "replace"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "SUBSTRING1"
+            },
+            "type": "SUBSTRING1"
+          },
+          {
+            "label": {
+              "default": "SUBSTRING2"
+            },
+            "type": "SUBSTRING2"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Replaces all occurrences of SUBSTRING1 with SUBSTRING2 in STRING."
+        }
+      },
+      {
+        "id": "replicate_2",
+        "label": {
+          "default": "replicate"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns a string consisting of the N copies of STRING."
+        }
+      },
+      {
+        "id": "skipchar_3",
+        "label": {
+          "default": "skipchar"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          },
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns the subscript at which character other than CHAR is found in STRING. Searches from Nth character of STRING forward."
+        }
+      },
+      {
+        "id": "skipchar_back_3",
+        "label": {
+          "default": "skipchar_back"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          },
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Similar to skipchar, except that the search is performed backward, starting from the Nth character."
+        }
+      },
+      {
+        "id": "soundex_1",
+        "label": {
+          "default": "soundex"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns the 4-character SoundEx code for STRING."
+        }
+      },
+      {
+        "id": "soundex_difference_2",
+        "label": {
+          "default": "soundex_difference"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns the number of matching characters in the SoundEx code for two strings as an integer between 0 and 4."
+        }
+      },
+      {
+        "id": "startstring_2",
+        "label": {
+          "default": "startstring"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns a string consisting of the first N characters of STRING."
+        }
+      },
+      {
+        "id": "stripchar_2",
+        "label": {
+          "default": "stripchar"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Removes all occurrences of CHAR from STRING."
+        }
+      },
+      {
+        "id": "stripctrlchars_1",
+        "label": {
+          "default": "stripctrlchars"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Removes all occurrences of any ascii control characters from STRING."
+        }
+      },
+      {
+        "id": "strmember_2",
+        "label": {
+          "default": "strmember"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Equivalent to locchar(CHAR,1,STRING). Returns the subscript at which CHAR first occurs, or 0."
+        }
+      },
+      {
+        "id": "subscrs_2",
+        "label": {
+          "default": "subscrs"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns the Nth character of the string STRING. Can also be written in a shorthand form - STRING(N)."
+        }
+      },
+      {
+        "id": "substring_3",
+        "label": {
+          "default": "substring"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "LEN"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns a string, which consists of LEN characters of STRING, starting from the character at N."
+        }
+      },
+      {
+        "id": "substring_between_3",
+        "label": {
+          "default": "substring_between"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "N1"
+            },
+            "type": "N1"
+          },
+          {
+            "label": {
+              "default": "N2"
+            },
+            "type": "N2"
+          },
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns the substring of STRING, which begins at subscript N1 and ends at subscript N2"
+        }
+      },
+      {
+        "id": "trim_1",
+        "label": {
+          "default": "trim"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Removes all space characters from the start and end of STRING."
+        }
+      },
+      {
+        "id": "trimend_1",
+        "label": {
+          "default": "trimend"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Removes all space characters from the end of STRING."
+        }
+      },
+      {
+        "id": "trimstart_1",
+        "label": {
+          "default": "trimstart"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Removes all space characters from the start of STRING."
+        }
+      },
+      {
+        "id": "unicode_char_1",
+        "label": {
+          "default": "unicode_char"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the character with Unicode value N."
+        }
+      },
+      {
+        "id": "unicode_value_1",
+        "label": {
+          "default": "unicode_value"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          }
+        ],
+        "description": {
+          "default": "Returns the Unicode value of CHAR."
+        }
+      },
+      {
+        "id": "uppertolower_1",
+        "label": {
+          "default": "uppertolower"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          }
+        ],
+        "description": {
+          "default": "Converts any uppercase characters in ITEM to lowercase.  If ITEM is not a string or character, returns ITEM."
+        }
+      },
+      {
+        "id": "textsplit_3",
+        "label": {
+          "default": "textsplit"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          },
+          {
+            "label": {
+              "default": "N"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "CHAR"
+            },
+            "type": "Character"
+          }
+        ],
+        "description": {
+          "default": "Returns a string consisting of the substring the Nth position according to the delimiter character."
+        }
+      },
+      {
+        "id": "@TODAY_0",
+        "label": {
+          "default": "@TODAY"
+        },
+        "return_type": "String",
+        "parameters": [],
+        "description": {
+          "default": "Returns the current date, as a string, in the current date format."
+        }
+      },
+      {
+        "id": "datetime_date_3",
+        "label": {
+          "default": "datetime_date"
+        },
+        "return_type": "Date",
+        "parameters": [
+          {
+            "label": {
+              "default": "YEAR"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "MONTH"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "DAY"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers."
+        }
+      },
+      {
+        "id": "datetime_date_1",
+        "label": {
+          "default": "datetime_date"
+        },
+        "return_type": "Date",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns the date value for a number, string, or timestamp."
+        }
+      },
+      {
+        "id": "datetime_time_3",
+        "label": {
+          "default": "datetime_time"
+        },
+        "return_type": "Time",
+        "parameters": [
+          {
+            "label": {
+              "default": "HOUR"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "MINUTE"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "SECOND"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the time value for the specified HOUR, MINUTE, and SECOND. The arguments must be integers."
+        }
+      },
+      {
+        "id": "datetime_time_1",
+        "label": {
+          "default": "datetime_time"
+        },
+        "return_type": "Time",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns the time value of the given ITEM."
+        }
+      },
+      {
+        "id": "datetime_timestamp_6",
+        "label": {
+          "default": "datetime_timestamp"
+        },
+        "return_type": "Timestamp",
+        "parameters": [
+          {
+            "label": {
+              "default": "YEAR"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "MONTH"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "DAY"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "HOUR"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "MINUTE"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "SECOND"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the timestamp value for the given YEAR, MONTH, DAY, HOUR, MINUTE, and SECOND."
+        }
+      },
+      {
+        "id": "datetime_timestamp_2",
+        "label": {
+          "default": "datetime_timestamp"
+        },
+        "return_type": "Timestamp",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          },
+          {
+            "label": {
+              "default": "TIME"
+            },
+            "type": "Time"
+          }
+        ],
+        "description": {
+          "default": "Returns the timestamp value for the given DATE and TIME."
+        }
+      },
+      {
+        "id": "datetime_timestamp_1",
+        "label": {
+          "default": "datetime_timestamp"
+        },
+        "return_type": "Timestamp",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the timestamp value of the given NUMBER of seconds."
+        }
+      },
+      {
+        "id": "datetime_year_1",
+        "label": {
+          "default": "datetime_year"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          }
+        ],
+        "description": {
+          "default": "Returns the year from a DATE or timestamp. The result is an integer such as 2001."
+        }
+      },
+      {
+        "id": "datetime_month_1",
+        "label": {
+          "default": "datetime_month"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          }
+        ],
+        "description": {
+          "default": "Returns the month from a DATE or timestamp. The result is an integer in the range 1 to 12."
+        }
+      },
+      {
+        "id": "datetime_day_1",
+        "label": {
+          "default": "datetime_day"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          }
+        ],
+        "description": {
+          "default": "Returns the day of the month from a DATE or timestamp. The result is an integer in the range 1 to 31."
+        }
+      },
+      {
+        "id": "datetime_weekday_1",
+        "label": {
+          "default": "datetime_weekday"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          }
+        ],
+        "description": {
+          "default": "Returns the day of the week from a DATE or timestamp. The result is an integer in the range 1 (Sunday) to 7."
+        }
+      },
+      {
+        "id": "datetime_hour_1",
+        "label": {
+          "default": "datetime_hour"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "TIME"
+            },
+            "type": "Time"
+          }
+        ],
+        "description": {
+          "default": "Returns the hour from a TIME or timestamp. The result is an integer in the range 0 to 23."
+        }
+      },
+      {
+        "id": "datetime_minute_1",
+        "label": {
+          "default": "datetime_minute"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "TIME"
+            },
+            "type": "Time"
+          }
+        ],
+        "description": {
+          "default": "Returns the minute from a TIME or timestamp. The result is an integer in the range 0 to 59."
+        }
+      },
+      {
+        "id": "datetime_second_1",
+        "label": {
+          "default": "datetime_second"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "TIME"
+            },
+            "type": "Time"
+          }
+        ],
+        "description": {
+          "default": "Returns the second from a TIME or timestamp. The result is an integer in the range 0 to 59."
+        }
+      },
+      {
+        "id": "datetime_month_name_1",
+        "label": {
+          "default": "datetime_month_name"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "MONTH"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the full name of the given MONTH. The argument must be an integer in the range 1 to 12."
+        }
+      },
+      {
+        "id": "datetime_month_short_name_1",
+        "label": {
+          "default": "datetime_month_short_name"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "MONTH"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the abbreviated name of the given MONTH. The argument must be an integer in the range 1 to 12."
+        }
+      },
+      {
+        "id": "datetime_day_name_1",
+        "label": {
+          "default": "datetime_day_name"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "DAY"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the full name of the given DAY. The argument must be an integer in the range 1 (Sunday) to 7."
+        }
+      },
+      {
+        "id": "datetime_day_short_name_1",
+        "label": {
+          "default": "datetime_day_short_name"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "DAY"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the abbreviated name of the given DAY. The argument must be an integer in the range 1 (Sunday) to 7."
+        }
+      },
+      {
+        "id": "datetime_now_0",
+        "label": {
+          "default": "datetime_now"
+        },
+        "return_type": "Timestamp",
+        "parameters": [],
+        "description": {
+          "default": "Returns the current time as a timestamp."
+        }
+      },
+      {
+        "id": "datetime_in_seconds_1",
+        "label": {
+          "default": "datetime_in_seconds"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATETIME"
+            },
+            "type": "Datetime"
+          }
+        ],
+        "description": {
+          "default": "Returns the number of seconds in a DATETIME or timestamp."
+        }
+      },
+      {
+        "id": "date_in_days_1",
+        "label": {
+          "default": "date_in_days"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          }
+        ],
+        "description": {
+          "default": "Returns the time in days from the baseline date to the given DATE or timestamp, as an integer."
+        }
+      },
+      {
+        "id": "date_in_weeks_1",
+        "label": {
+          "default": "date_in_weeks"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          }
+        ],
+        "description": {
+          "default": "Returns the time in weeks from the baseline date to the given DATE or timestamp, as a real number."
+        }
+      },
+      {
+        "id": "date_in_months_1",
+        "label": {
+          "default": "date_in_months"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          }
+        ],
+        "description": {
+          "default": "Returns the time in months from the baseline date to the given DATE or timestamp, as a real number."
+        }
+      },
+      {
+        "id": "date_in_years_1",
+        "label": {
+          "default": "date_in_years"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          }
+        ],
+        "description": {
+          "default": "Returns the time in years from the baseline date to the given DATE or timestamp, as a real number."
+        }
+      },
+      {
+        "id": "date_days_difference_2",
+        "label": {
+          "default": "date_days_difference"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "ITEM2"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns the time in days from the DATE or timestamp ITEM1 to the DATE or timestamp ITEM2, as an integer."
+        }
+      },
+      {
+        "id": "date_weeks_difference_2",
+        "label": {
+          "default": "date_weeks_difference"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "ITEM2"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns the time in weeks from the DATE or timestamp ITEM1 to the DATE or timestamp ITEM2, as a real number."
+        }
+      },
+      {
+        "id": "date_months_difference_2",
+        "label": {
+          "default": "date_months_difference"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "ITEM2"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns the time in months from the DATE or timestamp ITEM1 to the DATE or timestamp ITEM2, as a real number."
+        }
+      },
+      {
+        "id": "date_years_difference_2",
+        "label": {
+          "default": "date_years_difference"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "ITEM2"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns the time in years from the DATE or timestamp ITEM1 to the DATE or timestamp ITEM2, as a real number."
+        }
+      },
+      {
+        "id": "date_iso_day_1",
+        "label": {
+          "default": "date_iso_day"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          }
+        ],
+        "description": {
+          "default": "Returns the day in the week from the DATE using the ISO 8601 standard."
+        }
+      },
+      {
+        "id": "date_iso_week_1",
+        "label": {
+          "default": "date_iso_week"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          }
+        ],
+        "description": {
+          "default": "Returns the week in the year from the DATE using the ISO 8601 standard."
+        }
+      },
+      {
+        "id": "date_iso_year_1",
+        "label": {
+          "default": "date_iso_year"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          }
+        ],
+        "description": {
+          "default": "Returns the year from the DATE using the ISO 8601 standard."
+        }
+      },
+      {
+        "id": "date_from_ywd_3",
+        "label": {
+          "default": "date_from_ywd"
+        },
+        "return_type": "Date",
+        "parameters": [
+          {
+            "label": {
+              "default": "YEAR"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "WEEK"
+            },
+            "type": "Integer"
+          },
+          {
+            "label": {
+              "default": "DAY"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Converts the year, week in year and day in week to a date using the ISO 8601 standard."
+        }
+      },
+      {
+        "id": "time_in_hours_1",
+        "label": {
+          "default": "time_in_hours"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "TIME"
+            },
+            "type": "Time"
+          }
+        ],
+        "description": {
+          "default": "Returns the time in hours from midnight to the given TIME or timestamp, as a real number."
+        }
+      },
+      {
+        "id": "time_in_mins_1",
+        "label": {
+          "default": "time_in_mins"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "TIME"
+            },
+            "type": "Time"
+          }
+        ],
+        "description": {
+          "default": "Returns the time in minutes from midnight to the given TIME or timestamp, as a real number. "
+        }
+      },
+      {
+        "id": "time_in_secs_1",
+        "label": {
+          "default": "time_in_secs"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "TIME"
+            },
+            "type": "Time"
+          }
+        ],
+        "description": {
+          "default": "Returns the time in seconds from midnight to the given TIME or timestamp, as an integer."
+        }
+      },
+      {
+        "id": "time_hours_difference_2",
+        "label": {
+          "default": "time_hours_difference"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "ITEM2"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns the time difference in hours between the TIME or timestamp ITEM1 and ITEM2, as a real number."
+        }
+      },
+      {
+        "id": "time_mins_difference_2",
+        "label": {
+          "default": "time_mins_difference"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "ITEM2"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns the time difference in minutes between the TIME or timestamp ITEM1 and ITEM2, as a real number."
+        }
+      },
+      {
+        "id": "time_secs_difference_2",
+        "label": {
+          "default": "time_secs_difference"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM1"
+            },
+            "type": "Any"
+          },
+          {
+            "label": {
+              "default": "ITEM2"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "Returns the time difference in seconds between the TIME or timestamp ITEM1 and ITEM2, as an integer."
+        }
+      },
+      {
+        "id": "@DIFF1_1",
+        "label": {
+          "default": "@DIFF1"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the difference between the current value and the previous value of the FIELD."
+        }
+      },
+      {
+        "id": "@DIFF1_2",
+        "label": {
+          "default": "@DIFF1"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD1"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "FIELD2"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the first differential of FIELD1 or the first differential of FIELD1 with respect to FIELD2."
+        }
+      },
+      {
+        "id": "@DIFF2_1",
+        "label": {
+          "default": "@DIFF2"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the difference between the first differential for the current record and that of the previous record."
+        }
+      },
+      {
+        "id": "@DIFF2_2",
+        "label": {
+          "default": "@DIFF2"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD1"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "FIELD2"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the second differential of FIELD1 or the second differential of FIELD1 with respect to FIELD2."
+        }
+      },
+      {
+        "id": "@INDEX_0",
+        "label": {
+          "default": "@INDEX"
+        },
+        "return_type": "Integer",
+        "parameters": [],
+        "description": {
+          "default": "Returns the index of the current record. Indices are allocated to records as they arrive at the current node."
+        }
+      },
+      {
+        "id": "@LAST_NON_BLANK_1",
+        "label": {
+          "default": "@LAST_NON_BLANK"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the last value for FIELD that was not blank, according to any blank definition for FIELD."
+        }
+      },
+      {
+        "id": "@MAX_1",
+        "label": {
+          "default": "@MAX"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the maximum value for FIELD over records received so far, including the current record."
+        }
+      },
+      {
+        "id": "@MAX_2",
+        "label": {
+          "default": "@MAX"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          }
+        ],
+        "description": {
+          "default": "Returns the maximum value for FIELD over the last EXPR records received so far."
+        }
+      },
+      {
+        "id": "@MAX_3",
+        "label": {
+          "default": "@MAX"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "INT"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the maximum value for FIELD over the last EXPR records looking back maximum INT values."
+        }
+      },
+      {
+        "id": "@MEAN_1",
+        "label": {
+          "default": "@MEAN"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the mean average of values for FIELD over the records received by the current node."
+        }
+      },
+      {
+        "id": "@MEAN_2",
+        "label": {
+          "default": "@MEAN"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          }
+        ],
+        "description": {
+          "default": "Returns the mean average of values for FIELD over the last EXPR records received by the current node"
+        }
+      },
+      {
+        "id": "@MEAN_3",
+        "label": {
+          "default": "@MEAN"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "INT"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the mean average of values for FIELD over the last EXPR records, looking back maximum INT values."
+        }
+      },
+      {
+        "id": "@MIN_1",
+        "label": {
+          "default": "@MIN"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the minimum value for FIELD over records received so far, including the current record."
+        }
+      },
+      {
+        "id": "@MIN_2",
+        "label": {
+          "default": "@MIN"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          }
+        ],
+        "description": {
+          "default": "Returns the minimum value for FIELD over the last EXPR records received so far"
+        }
+      },
+      {
+        "id": "@MIN_3",
+        "label": {
+          "default": "@MIN"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "INT"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the minimum value for FIELD over the last EXPR records looking back maximum INT values."
+        }
+      },
+      {
+        "id": "@OFFSET_2",
+        "label": {
+          "default": "@OFFSET"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          }
+        ],
+        "description": {
+          "default": "Returns the value of FIELD in the record offset from the current record by the value of EXPR."
+        }
+      },
+      {
+        "id": "@OFFSET_3",
+        "label": {
+          "default": "@OFFSET"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "INT"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the value of FIELD offset from the current record by the value of EXPR looking back max INT values."
+        }
+      },
+      {
+        "id": "@SDEV_1",
+        "label": {
+          "default": "@SDEV"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the standard deviation of values for FIELD over records received by the current node."
+        }
+      },
+      {
+        "id": "@SDEV_2",
+        "label": {
+          "default": "@SDEV"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          }
+        ],
+        "description": {
+          "default": "Returns the standard deviation of values for FIELD over the last EXPR records."
+        }
+      },
+      {
+        "id": "@SDEV_3",
+        "label": {
+          "default": "@SDEV"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "INT"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the standard deviation of values for FIELD over the last EXPR records looking back max INT values."
+        }
+      },
+      {
+        "id": "@SINCE_1",
+        "label": {
+          "default": "@SINCE"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          }
+        ],
+        "description": {
+          "default": "Returns the number of records that have passed since EXPR was true, or @INDEX+1 if it has never been true. Does not consider current record."
+        }
+      },
+      {
+        "id": "@SINCE_2",
+        "label": {
+          "default": "@SINCE"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "INT"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the number of records that have passed since EXPR was true looking back max INT values, or @INDEX+1 if it has never been true."
+        }
+      },
+      {
+        "id": "@SINCE0_1",
+        "label": {
+          "default": "@SINCE0"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          }
+        ],
+        "description": {
+          "default": "Returns the number of records that have passed since EXPR was true, or @INDEX+1 if it has never been true. Considers current record."
+        }
+      },
+      {
+        "id": "@SINCE0_2",
+        "label": {
+          "default": "@SINCE0"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "INT"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the number of records that have passed since EXPR was true looking back max INT values, or @INDEX+1 if it has never been true."
+        }
+      },
+      {
+        "id": "@SUM_1",
+        "label": {
+          "default": "@SUM"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the sum of values for FIELD over records, including the current record."
+        }
+      },
+      {
+        "id": "@SUM_2",
+        "label": {
+          "default": "@SUM"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          }
+        ],
+        "description": {
+          "default": "Returns the sum of values for FIELD over the last EXPR records, including the current record."
+        }
+      },
+      {
+        "id": "@SUM_3",
+        "label": {
+          "default": "@SUM"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "EXPR"
+            },
+            "type": "Expression"
+          },
+          {
+            "label": {
+              "default": "INT"
+            },
+            "type": "Integer"
+          }
+        ],
+        "description": {
+          "default": "Returns the sum of values for FIELD over the last EXPR records, including the current record, looking back max INT values."
+        }
+      },
+      {
+        "id": "@THIS_1",
+        "label": {
+          "default": "@THIS"
+        },
+        "return_type": "Any",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the value of the field named FIELD in the current record. This is relevant only in @SINCE expressions."
+        }
+      },
+      {
+        "id": "@GLOBAL_MAX_1",
+        "label": {
+          "default": "@GLOBAL_MAX"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the maximum value for FIELD over the whole data set, as previously generated by a Set Globals node."
+        }
+      },
+      {
+        "id": "@GLOBAL_MEAN_1",
+        "label": {
+          "default": "@GLOBAL_MEAN"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the mean average of values for FIELD over the whole data set, as previously generated by a Set Globals node."
+        }
+      },
+      {
+        "id": "@GLOBAL_MIN_1",
+        "label": {
+          "default": "@GLOBAL_MIN"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the minimum value for FIELD over the whole data set, as previously generated by a Set Globals node."
+        }
+      },
+      {
+        "id": "@GLOBAL_SDEV_1",
+        "label": {
+          "default": "@GLOBAL_SDEV"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the standard deviation of values for FIELD over the whole data set, as previously generated by a Set Globals node."
+        }
+      },
+      {
+        "id": "@GLOBAL_SUM_1",
+        "label": {
+          "default": "@GLOBAL_SUM"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the sum of values for FIELD over the whole data set, as previously generated by a Set Globals node."
+        }
+      },
+      {
+        "id": "@NULL_1",
+        "label": {
+          "default": "@NULL"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "ITEM"
+            },
+            "type": "Any"
+          }
+        ],
+        "description": {
+          "default": "None"
+        }
+      },
+      {
+        "id": "undef_0",
+        "label": {
+          "default": "undef"
+        },
+        "return_type": "Any",
+        "parameters": [],
+        "description": {
+          "default": "Used generally in CLEM expressions to enter a NULL value."
+        }
+      },
+      {
+        "id": "@FIELD_0",
+        "label": {
+          "default": "@FIELD"
+        },
+        "return_type": "Any",
+        "parameters": [],
+        "description": {
+          "default": "When a CLEM expression is to be applied to multiple fields, @FIELD represents each field in turn."
+        }
+      },
+      {
+        "id": "@FIELDS_BETWEEN_2",
+        "label": {
+          "default": "@FIELDS_BETWEEN"
+        },
+        "return_type": "List",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD1"
+            },
+            "type": "Field"
+          },
+          {
+            "label": {
+              "default": "FIELD2"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "@FIELDS_BETWEEN represents a list containing FIELD1, FIELD2 and all fields between them."
+        }
+      },
+      {
+        "id": "@FIELDS_MATCHING_1",
+        "label": {
+          "default": "@FIELDS_MATCHING"
+        },
+        "return_type": "List",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "@FIELDS_MATCHING represents a list of fields whose name match the supplied pattern STRING. \"?\" matches 1 character, \"*\" matches 0 or more characters, and \"\\\" escapes these characters."
+        }
+      },
+      {
+        "id": "@MULTI_RESPONSE_SET_1",
+        "label": {
+          "default": "@MULTI_RESPONSE_SET"
+        },
+        "return_type": "List",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "@MULTI_RESPONSE_SET represents the list of fields in the named field group."
+        }
+      },
+      {
+        "id": "@TARGET_0",
+        "label": {
+          "default": "@TARGET"
+        },
+        "return_type": "Any",
+        "parameters": [],
+        "description": {
+          "default": "@TARGET represents the target field or 'correct value' for the target/predicted pair. @TARGET can be used only with an Analysis node."
+        }
+      },
+      {
+        "id": "@PREDICTED_0",
+        "label": {
+          "default": "@PREDICTED"
+        },
+        "return_type": "Any",
+        "parameters": [],
+        "description": {
+          "default": "@PREDICTED represents the predicted value for the target/predicted pair. @PREDICTED can be used only with an Analysis node."
+        }
+      },
+      {
+        "id": "@PARTITION_FIELD_0",
+        "label": {
+          "default": "@PARTITION_FIELD"
+        },
+        "return_type": "Any",
+        "parameters": [],
+        "description": {
+          "default": "@PARTITION_FIELD represents the current partition field. @PARTITION_FIELD can be used in any CLEM expression with a defined partition field."
+        }
+      },
+      {
+        "id": "@TRAINING_PARTITION_0",
+        "label": {
+          "default": "@TRAINING_PARTITION"
+        },
+        "return_type": "Any",
+        "parameters": [],
+        "description": {
+          "default": "@TRAINING_PARTITION represents the value of the training partition. @TRAINING_PARTITION can be used in any CLEM expression with a defined partition field."
+        }
+      },
+      {
+        "id": "@TESTING_PARTITION_0",
+        "label": {
+          "default": "@TESTING_PARTITION"
+        },
+        "return_type": "Any",
+        "parameters": [],
+        "description": {
+          "default": "@TESTING_PARTITION represents the value of the testing partition. @TESTING_PARTITION can be used in any CLEM expression with a defined partition field."
+        }
+      },
+      {
+        "id": "@VALIDATION_PARTITION_0",
+        "label": {
+          "default": "@VALIDATION_PARTITION"
+        },
+        "return_type": "Any",
+        "parameters": [],
+        "description": {
+          "default": "@VALIDATION_PARTITION represents the value of the validation partition. @VALIDATION_PARTITION can be used in any CLEM expression with a defined partition field."
+        }
+      },
+      {
+        "id": "close_to_3",
+        "label": {
+          "default": "close_to"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "SHAPE1"
+            },
+            "type": "Shape"
+          },
+          {
+            "label": {
+              "default": "SHAPE2"
+            },
+            "type": "Shape"
+          },
+          {
+            "label": {
+              "default": "DISTANCE"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Tests whether two shapes are within a certain DISTANCE of each other. If a projected coordinate system is used, DISTANCE is in meters."
+        }
+      },
+      {
+        "id": "crosses_2",
+        "label": {
+          "default": "crosses"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "SHAPE1"
+            },
+            "type": "Shape"
+          },
+          {
+            "label": {
+              "default": "SHAPE2"
+            },
+            "type": "Shape"
+          }
+        ],
+        "description": {
+          "default": "Tests whether two shapes cross each other. Suitable for two linestring shapes, or one linestring and one polygon."
+        }
+      },
+      {
+        "id": "overlap_2",
+        "label": {
+          "default": "overlap"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "POLYGON1"
+            },
+            "type": "POLYGON1"
+          },
+          {
+            "label": {
+              "default": "POLYGON2"
+            },
+            "type": "POLYGON2"
+          }
+        ],
+        "description": {
+          "default": "Tests whether there is an intersection between two polygons and that the intersection is interior to both shapes."
+        }
+      },
+      {
+        "id": "within_2",
+        "label": {
+          "default": "within"
+        },
+        "return_type": "Boolean",
+        "parameters": [
+          {
+            "label": {
+              "default": "SHAPE1"
+            },
+            "type": "Shape"
+          },
+          {
+            "label": {
+              "default": "POLYGON"
+            },
+            "type": "Polygon"
+          }
+        ],
+        "description": {
+          "default": "Tests whether the entirety of SHAPE1 is contained within a POLYGON"
+        }
+      },
+      {
+        "id": "num_points_2",
+        "label": {
+          "default": "num_points"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "POLYGON"
+            },
+            "type": "Polygon"
+          },
+          {
+            "label": {
+              "default": "MULTIPOINT"
+            },
+            "type": "MULTIPOINT"
+          }
+        ],
+        "description": {
+          "default": "This function returns the number of points from a point field (MULTIPOINT) which are contained within the bounds of a POLYGON"
+        }
+      },
+      {
+        "id": "area_1",
+        "label": {
+          "default": "area"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "POLYGON"
+            },
+            "type": "Polygon"
+          }
+        ],
+        "description": {
+          "default": "Returns the area of the specified POLYGON. If a projected system is used function returns meters squared."
+        }
+      },
+      {
+        "id": "distance_2",
+        "label": {
+          "default": "distance"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "SHAPE1"
+            },
+            "type": "Shape"
+          },
+          {
+            "label": {
+              "default": "SHAPE2"
+            },
+            "type": "Shape"
+          }
+        ],
+        "description": {
+          "default": "Returns the distance between SHAPE1 and SHAPE2. If a projected coordinate system is used function returns meters."
+        }
+      },
+      {
+        "id": "SUM_1",
+        "label": {
+          "default": "SUM"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the sum of values for each key field combination."
+        }
+      },
+      {
+        "id": "MEAN_1",
+        "label": {
+          "default": "MEAN"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the mean values for each key field combination."
+        }
+      },
+      {
+        "id": "MIN_1",
+        "label": {
+          "default": "MIN"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the minimum values for each key field combination."
+        }
+      },
+      {
+        "id": "MIN_1",
+        "label": {
+          "default": "MIN"
+        },
+        "return_type": "Date",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          }
+        ],
+        "description": {
+          "default": "Returns the minimum values for each key field combination."
+        }
+      },
+      {
+        "id": "MIN_1",
+        "label": {
+          "default": "MIN"
+        },
+        "return_type": "Time",
+        "parameters": [
+          {
+            "label": {
+              "default": "TIME"
+            },
+            "type": "Time"
+          }
+        ],
+        "description": {
+          "default": "Returns the minimum values for each key field combination."
+        }
+      },
+      {
+        "id": "MIN_1",
+        "label": {
+          "default": "MIN"
+        },
+        "return_type": "Timestamp",
+        "parameters": [
+          {
+            "label": {
+              "default": "TIMESTAMP"
+            },
+            "type": "Timestamp"
+          }
+        ],
+        "description": {
+          "default": "Returns the minimum values for each key field combination."
+        }
+      },
+      {
+        "id": "MIN_1",
+        "label": {
+          "default": "MIN"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns the minimum values for each key field combination."
+        }
+      },
+      {
+        "id": "MAX_1",
+        "label": {
+          "default": "MAX"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the maximum values for each key field combination."
+        }
+      },
+      {
+        "id": "MAX_1",
+        "label": {
+          "default": "MAX"
+        },
+        "return_type": "Date",
+        "parameters": [
+          {
+            "label": {
+              "default": "DATE"
+            },
+            "type": "Date"
+          }
+        ],
+        "description": {
+          "default": "Returns the maximum values for each key field combination."
+        }
+      },
+      {
+        "id": "MAX_1",
+        "label": {
+          "default": "MAX"
+        },
+        "return_type": "Time",
+        "parameters": [
+          {
+            "label": {
+              "default": "TIME"
+            },
+            "type": "Time"
+          }
+        ],
+        "description": {
+          "default": "Returns the maximum values for each key field combination."
+        }
+      },
+      {
+        "id": "MAX_1",
+        "label": {
+          "default": "MAX"
+        },
+        "return_type": "Timestamp",
+        "parameters": [
+          {
+            "label": {
+              "default": "TIMESTAMP"
+            },
+            "type": "Timestamp"
+          }
+        ],
+        "description": {
+          "default": "Returns the maximum values for each key field combination."
+        }
+      },
+      {
+        "id": "MAX_1",
+        "label": {
+          "default": "MAX"
+        },
+        "return_type": "String",
+        "parameters": [
+          {
+            "label": {
+              "default": "STRING"
+            },
+            "type": "String"
+          }
+        ],
+        "description": {
+          "default": "Returns the maximum values for each key field combination."
+        }
+      },
+      {
+        "id": "SDEV_1",
+        "label": {
+          "default": "SDEV"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the standard deviation for each key field combination."
+        }
+      },
+      {
+        "id": "MEDIAN_1",
+        "label": {
+          "default": "MEDIAN"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the median values for each key field combination."
+        }
+      },
+      {
+        "id": "COUNT_0",
+        "label": {
+          "default": "COUNT"
+        },
+        "return_type": "Integer",
+        "parameters": [],
+        "description": {
+          "default": "Returns the count of non-null values for each key field combination."
+        }
+      },
+      {
+        "id": "COUNT_1",
+        "label": {
+          "default": "COUNT"
+        },
+        "return_type": "Integer",
+        "parameters": [
+          {
+            "label": {
+              "default": "FIELD"
+            },
+            "type": "Field"
+          }
+        ],
+        "description": {
+          "default": "Returns the count of non-null values for each key field combination for a selected field."
+        }
+      },
+      {
+        "id": "VAR_1",
+        "label": {
+          "default": "VAR"
+        },
+        "return_type": "Real",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the variance values for each key field combination."
+        }
+      },
+      {
+        "id": "FIRST_QUARTILE_1",
+        "label": {
+          "default": "FIRST_QUARTILE"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the 1st quartile (25th percentile) values for each key field combination."
+        }
+      },
+      {
+        "id": "THIRD_QUARTILE_1",
+        "label": {
+          "default": "THIRD_QUARTILE"
+        },
+        "return_type": "Number",
+        "parameters": [
+          {
+            "label": {
+              "default": "NUM"
+            },
+            "type": "Number"
+          }
+        ],
+        "description": {
+          "default": "Returns the 3rd quartile (75th percentile) values for each key field combination."
+        }
       }
     ]
-  },
-  "resources": {
-    "group.GeneralFunctions.label": "General Functions",
-    "to_integer.label": "to_integer",
-    "to_integer.item.param": "Item",
-    "to_integer.item.help": "Converts ITEM to an integer. ITEM must be a string, or a number."
   }
 }

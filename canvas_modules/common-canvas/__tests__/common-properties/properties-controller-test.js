@@ -832,16 +832,29 @@ describe("Properties Controller property messages", () => {
 	});
 });
 
+function validateExpressionInfo(actualValue) {
+	// validate the operators part of the object
+	expect(ExpressionInfo.actual.operators).to.eql(actualValue.operators);
+
+	// validate the functionCategories array of objects.
+	const keys = Object.keys(ExpressionInfo.actual.functionCategories);
+	keys.forEach((category) => {
+		expect(JSON.stringify(ExpressionInfo.actual.functionCategories[category])).to
+			.equal(JSON.stringify(actualValue.functionCategories[category]));
+	});
+}
+
 describe("Properties Controller expression information", () => {
 	it("should set expression info correctly", () => {
 		reset();
 		controller.setExpressionInfo(ExpressionInfo.input);
 		let actualValue = controller.getExpressionInfo();
-		expect(ExpressionInfo.actual).to.eql(actualValue);
+		expect(ExpressionInfo.actual.operators).to.eql(actualValue.operators);
+		validateExpressionInfo(actualValue);
 		// call set again and make sure only one parameter list is generated
 		controller.setExpressionInfo(ExpressionInfo.input);
 		actualValue = controller.getExpressionInfo();
-		expect(ExpressionInfo.actual).to.eql(actualValue);
+		validateExpressionInfo(actualValue);
 
 	});
 });

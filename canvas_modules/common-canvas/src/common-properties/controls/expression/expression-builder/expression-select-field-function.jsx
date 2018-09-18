@@ -16,21 +16,20 @@ import FlexibleTable from "./../../../components/flexible-table/flexible-table.j
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, EXPRESSION_TABLE_ROWS } from "./../../../constants/constants";
 import PropertyUtils from "./../../../util/property-utils";
 
-/* eslint max-depth: ["error", 5] */
-
 export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	constructor(props) {
 		super(props);
+		this.inCategories = Object.keys(props.functionList);
 		this.state = {
 			fieldSelectedRow: 0,
 			valueSelectedRow: 0,
 			functionSelectedRow: 0,
-			functionCategory: "General Functions"
+			functionCategory: this.inCategories[0] // set the initial function category to the first one in the list.
 		};
 		this.selectedTab = 0;
-		this.reactIntl = this.props.controller.getReactIntl();
-		this.datasetFields = this.props.controller.getDatasetMetadataFields();
+		this.reactIntl = props.controller.getReactIntl();
+		this.datasetFields = props.controller.getDatasetMetadataFields();
 		this.onFunctionCatChange = this.onFunctionCatChange.bind(this);
 		this.onFieldFilter = this.onFieldFilter.bind(this);
 		this.onValueFilter = this.onValueFilter.bind(this);
@@ -38,7 +37,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			MESSAGE_KEYS.EXPRESSION_RECENTLY_USED, MESSAGE_KEYS_DEFAULTS.EXPRESSION_RECENTLY_USED);
 
 	}
-
 
 	onTabClick(tabidx, evt) {
 		this.selectedTab = tabidx;
@@ -98,9 +96,17 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	}
 
 	onFunctionTableDblClick(row, evt) {
-		this.props.controller.updateExpressionRecentlyUsed(this.props.functionList[this.state.functionCategory][row]);
+		let value;
+		if (this.state.functionCategory === this.recentUseCat) {
+			const recentlyUsedList = this.props.controller.getExpressionRecentlyUsed();
+			value = recentlyUsedList[row].value;
+		} else {
+			const rowSelected = this.props.functionList[this.state.functionCategory].functionList[row];
+			this.props.controller.updateExpressionRecentlyUsed(rowSelected);
+			value = rowSelected.value;
+		}
 		if (this.props.onChange) {
-			this.props.onChange(this.props.functionList[this.state.functionCategory][row].value);
+			this.props.onChange(value);
 		}
 	}
 
@@ -125,10 +131,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			MESSAGE_KEYS.EXPRESSION_STORAGE_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_STORAGE_COLUMN);
 		const valueColumn = PropertyUtils.formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_VALUE_COLUMN);
-		const minLabel = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_MIN_LABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSION_MIN_LABEL);
-		const maxLabel = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_MAX_LABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSION_MAX_LABEL);
 
 
 		fieldHeaders.push({ key: "fieldName", label: fieldColumn });
@@ -137,7 +139,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 		// go through the data set and make the fields and the values tables.
 		const fieldTableData = [];
-		const valuesTableData = [];
+		let valuesTableData = [];
 		for (let index = 0; index < this.datasetFields.length; index++) {
 			const field = this.datasetFields[index];
 			const fieldColumns = [];
@@ -147,24 +149,13 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			// only include rows that meet the filter tex
 			if (!this.state.fieldFilterText || this.state.fieldFilterText.length === 0 ||
 					(field.name.toLowerCase().indexOf(this.state.fieldFilterText.toLowerCase()) > -1)) {
-				fieldColumns.push({ column: "fieldName", content: this.createContentObject(field.name) });
-				fieldColumns.push({ column: "storage", content: this.createContentObject(field.type) });
+				fieldColumns.push({ column: "fieldName", content: this.createContentObject(field.name), value: field.name });
+				fieldColumns.push({ column: "storage", content: this.createContentObject(field.type), value: field.type });
 				fieldTableData.push({ className: rowClass, columns: fieldColumns,
 					onClickCallback: this.onFieldTableClick.bind(this, index), onDblClickCallback: this.onFieldTableDblClick.bind(this, index) });
 				// Make the content of the values table the values of the field selected.
 				if (index === this.state.fieldSelectedRow) {
-					if (field.metadata.values) {
-						for (let idx = 0; idx < field.metadata.values.length; idx++) {
-							this._addValueRow(field.metadata.values[idx], idx, valuesTableData);
-						}
-					} else if (field.metadata.range) {
-						if (field.metadata.range.min) {
-							this._addValueRow(minLabel + ": " + field.metadata.range.min, 0, valuesTableData);
-						}
-						if (field.metadata.range.max) {
-							this._addValueRow(maxLabel + ": " + field.metadata.range.max, 1, valuesTableData);
-						}
-					}
+					valuesTableData = this._makeValuesContent(field, valuesTableData);
 				}
 			}
 		}
@@ -207,17 +198,39 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		);
 	}
 
+	_makeValuesContent(field, valuesTableData) {
+		const minLabel = PropertyUtils.formatMessage(this.reactIntl,
+			MESSAGE_KEYS.EXPRESSION_MIN_LABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSION_MIN_LABEL);
+		const maxLabel = PropertyUtils.formatMessage(this.reactIntl,
+			MESSAGE_KEYS.EXPRESSION_MAX_LABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSION_MAX_LABEL);
+
+		if (field.metadata.values) {
+			for (let idx = 0; idx < field.metadata.values.length; idx++) {
+				this._addValueRow(field.metadata.values[idx], idx, valuesTableData);
+			}
+		} else if (field.metadata.range) {
+			if (field.metadata.range.min) {
+				this._addValueRow(minLabel + ": " + field.metadata.range.min, 0, valuesTableData);
+			}
+			if (field.metadata.range.max) {
+				this._addValueRow(maxLabel + ": " + field.metadata.range.max, 1, valuesTableData);
+			}
+		}
+		return valuesTableData;
+	}
+
 	_addValueRow(content, index, valuesTableData) {
 		const valueRowClass = (this.state.valueSelectedRow === index)
 			? "table-row table-selected-row"
 			: "table-row";
 		if (!this.state.valueFilterText || this.state.valueFilterText.length === 0 ||
 					(content.toLowerCase().indexOf(this.state.valueFilterText.toLowerCase()) > -1)) {
-			const valueColumns = [{ column: "values", content: this.createContentObject(content) }];
+			const valueColumns = [{ column: "values", content: this.createContentObject(content), value: content }];
 			valuesTableData.push({ className: valueRowClass, columns: valueColumns,
 				onClickCallback: this.onValueTableClick.bind(this, index), onDblClickCallback: this.onValueTableDblClick.bind(this, index) });
 		}
 	}
+
 
 	_makeFunctionsContent() {
 		if (this.props.functionList) {
@@ -237,16 +250,17 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	}
 
 	_makeSelect(categories) {
-		let items = categories.map((val, index) => ({ value: val, label: val }));
+		let items = categories.map((val, index) => ({ value: val, label: this.props.functionList[val].locLabel }));
 		// Add "Recently Used" category as second category
 		const first = items.slice(0, 1);
 		const last = items.slice(1);
 		items = first.concat({ value: this.recentUseCat, label: this.recentUseCat }, last);
+		const label = (this.state.functionCategory === this.recentUseCat) ? this.recentUseCat : this.props.functionList[this.state.functionCategory].locLabel;
 		return (
 			<div className="properties-expression-function-select">
 				<Dropdown
 					light
-					label={this.state.functionCategory}
+					label={label}
 					items={items}
 					onChange={this.onFunctionCatChange}
 				/>
@@ -263,8 +277,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 		headers.push({ key: "function", label: functionColumn, width: 73 });
 		headers.push({ key: "return", label: returnColumn, width: 27 });
-		let table = { rows: [], helpContainer: (<div />) };
-		table = this._buildFunctionTable(this.state.functionCategory, table);
+		const table = this._buildFunctionTable(this.state.functionCategory);
 		return (
 			<div className="properties-functions-table-container" >
 				<div className="properties-functions-table" >
@@ -282,28 +295,31 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		);
 	}
 
-	_buildFunctionTable(category, table) {
-		const categoryFunctions = (category === this.recentUseCat) ? this.props.controller.getExpressionRecentlyUsed() : this.props.functionList[category];
-		for (let index = 0; index < categoryFunctions.length; index++) {
-			const catFunction = categoryFunctions[index];
-			const columns = [];
-			const rowClass = (index === this.state.functionSelectedRow)
-				? "table-row table-selected-row"
-				: "table-row";
+	_buildFunctionTable(category) {
+		const table = { rows: [], helpContainer: (<div />) };
+		const categoryFunctions = (category === this.recentUseCat) ? this.props.controller.getExpressionRecentlyUsed() : this.props.functionList[category].functionList;
+		if (categoryFunctions) {
+			for (let index = 0; index < categoryFunctions.length; index++) {
+				const catFunction = categoryFunctions[index];
+				const columns = [];
+				const rowClass = (index === this.state.functionSelectedRow)
+					? "table-row table-selected-row"
+					: "table-row";
 
-			columns.push({ column: "function", content: this.createContentObject(catFunction.locLabel) });
-			columns.push({ column: "return", content: this.createContentObject(catFunction.return_type) });
-			table.rows.push({ className: rowClass, columns: columns,
-				onClickCallback: this.onFunctionTableClick.bind(this, index, category), onDblClickCallback: this.onFunctionTableDblClick.bind(this, index) });
-			if (index === this.state.functionSelectedRow) {
-				table.helpContainer = (
-					<div className="properties-function-help-text" >
-						<span className="properties-function-help-command">{catFunction.locLabel}:</span>
-						<br />
-						<br />
-						<span>{catFunction.help}</span>
-					</div>
-				);
+				columns.push({ column: "function", content: this.createContentObject(catFunction.locLabel) });
+				columns.push({ column: "return", content: this.createContentObject(catFunction.return_type) });
+				table.rows.push({ className: rowClass, columns: columns,
+					onClickCallback: this.onFunctionTableClick.bind(this, index), onDblClickCallback: this.onFunctionTableDblClick.bind(this, index) });
+				if (index === this.state.functionSelectedRow) {
+					table.helpContainer = (
+						<div className="properties-function-help-text" >
+							<span className="properties-function-help-command">{catFunction.locLabel}:</span>
+							<br />
+							<br />
+							<span>{catFunction.help}</span>
+						</div>
+					);
+				}
 			}
 		}
 		return table;
@@ -356,5 +372,5 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 ExpressionSelectFieldOrFunction.propTypes = {
 	controller: PropTypes.object.isRequired,
 	onChange: PropTypes.func,
-	functionList: PropTypes.object
+	functionList: PropTypes.array
 };

@@ -11,11 +11,11 @@
 import PropertiesStore from "./properties-store.js";
 import logger from "../../utils/logger";
 import UiConditionsParser from "./ui-conditions/ui-conditions-parser.js";
+import ExpressionInfoParser from "./controls/expression/expressionInfo-parser.js";
+
 import UiGroupsParser from "./ui-conditions/ui-groups-parser.js";
 import conditionsUtil from "./ui-conditions/conditions-utils";
 import PropertyUtils from "./util/property-utils.js";
-import { L10nProvider } from "./util/L10nProvider";
-import propertyOf from "lodash/propertyOf";
 
 import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
@@ -145,92 +145,6 @@ export default class PropertiesController {
 
 	getAppData() {
 		return this.appData;
-	}
-
-	setExpressionInfo(inExpressionInfo) {
-		if (inExpressionInfo) {
-			const l10nProvider = new L10nProvider(propertyOf(inExpressionInfo)("resources"));
-			const expressionInfo = inExpressionInfo.functions;
-			if (Array.isArray(expressionInfo.function_info) && Array.isArray(expressionInfo.function_categories)) {
-				this.expressionFunctionInfo = {};
-				const functionInfoList = expressionInfo.parmsSet ? expressionInfo.function_info : this._genFunctionParameters(expressionInfo.function_info, l10nProvider);
-				expressionInfo.parmsSet = true;
-				this.expressionFunctionInfo.functionCategories = {};
-				expressionInfo.function_categories.forEach((category) => {
-					const catLabel = l10nProvider.l10nResource(category.label);
-					this.expressionFunctionInfo.functionCategories[catLabel] = [];
-					category.function_refs.forEach((functionId) => {
-						this.expressionFunctionInfo.functionCategories[catLabel].push(this._getFunctionInfo(functionId, functionInfoList, l10nProvider));
-					});
-				});
-				this.expressionFunctionInfo.operators = [];
-				if (expressionInfo.operator_refs) {
-					expressionInfo.operator_refs.forEach((functionId) => {
-						this.expressionFunctionInfo.operators.push(this._getFunctionInfo(functionId, functionInfoList, l10nProvider));
-					});
-				}
-			}
-		}
-	}
-
-
-	_genFunctionParameters(functionInfoList, l10nProvider) {
-		return functionInfoList.map((functionInfo) => {
-			const newEntry = functionInfo;
-			newEntry.locLabel = l10nProvider.l10nResource(newEntry.label);
-			newEntry.help = l10nProvider.l10nResource(newEntry.description);
-			newEntry.value = newEntry.locLabel;
-			if (Array.isArray(functionInfo.parameters)) {
-				if (newEntry.locLabel && newEntry.locLabel.indexOf("?") !== -1) {
-					functionInfo.parameters.forEach((parameter) => {
-						const paramIndex = newEntry.locLabel.indexOf("?");
-						if (paramIndex !== -1) {
-							newEntry.locLabel = newEntry.locLabel.replace("?", l10nProvider.l10nResource(parameter.label));
-						}
-					});
-				} else {
-					newEntry.value += "(";
-					newEntry.locLabel += "(";
-					functionInfo.parameters.forEach((parameter, index) => {
-						const separator = (index > 0) ? ", " : "";
-						newEntry.locLabel += separator + l10nProvider.l10nResource(parameter.label);
-						newEntry.value += separator + "?";
-					});
-					newEntry.locLabel += ")";
-					newEntry.value += ")";
-				}
-			}
-			return newEntry;
-		});
-
-	}
-
-	_getFunctionInfo(functionId, functionInfoList, l10nProvider) {
-		const functionInfo = functionInfoList.find((functionElem) => functionElem.id === functionId);
-		if (!functionInfo) {
-			logger.warn("Expression function information list, no information found for " + functionId);
-			return null;
-		}
-		return functionInfo;
-	}
-
-	getExpressionInfo() {
-		return this.expressionFunctionInfo;
-	}
-
-
-	getExpressionRecentlyUsed() {
-		return this.expressionRecentlyUsed;
-	}
-
-	updateExpressionRecentlyUsed(functionInfo) {
-		if (this.expressionRecentlyUsed.indexOf(functionInfo) === -1) {
-			this.expressionRecentlyUsed.push(functionInfo);
-		}
-	}
-
-	clearExpressionRecentlyUsed() {
-		this.expressionRecentlyUsed = [];
 	}
 
 	_parseUiConditions() {
@@ -768,8 +682,32 @@ export default class PropertiesController {
 	}
 
 	//
-	// Expression validation request
+	// A set of APIs for Expression Builder
 	//
+
+	setExpressionInfo(expressionInfo) {
+		this.expressionFunctionInfo = ExpressionInfoParser.setExpressionInfo(expressionInfo);
+	}
+
+	getExpressionInfo() {
+		return this.expressionFunctionInfo;
+	}
+
+
+	getExpressionRecentlyUsed() {
+		return this.expressionRecentlyUsed;
+	}
+
+	updateExpressionRecentlyUsed(functionInfo) {
+		if (this.expressionRecentlyUsed.indexOf(functionInfo) === -1) {
+			this.expressionRecentlyUsed.splice(0, 0, functionInfo);
+		}
+	}
+
+	clearExpressionRecentlyUsed() {
+		this.expressionRecentlyUsed = [];
+	}
+
 	getExpressionValidate(controlName) {
 		return this.propertiesStore.getExpressionValidate(controlName);
 	}

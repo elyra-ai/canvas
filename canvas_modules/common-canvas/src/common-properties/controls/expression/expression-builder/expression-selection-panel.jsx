@@ -42,6 +42,6 @@ export default class ExpressionSelectionPanel extends React.Component {
 ExpressionSelectionPanel.propTypes = {
 	controller: PropTypes.object.isRequired,
 	onChange: PropTypes.func.isRequired,
-	functionList: PropTypes.object.isRequired,
+	functionList: PropTypes.array.isRequired,
 	operatorList: PropTypes.array.isRequired
 };

@@ -19,7 +19,7 @@ export default class ExpressionBuilder extends React.Component {
 		super(props);
 
 		this.selection = [];
-		this.expressionInfo = this.props.controller.getExpressionInfo();
+		this.expressionInfo = props.controller.getExpressionInfo();
 		this.editorDidMount = this.editorDidMount.bind(this);
 		this.onChange = this.onChange.bind(this);
 		this.onBlur = this.onBlur.bind(this);

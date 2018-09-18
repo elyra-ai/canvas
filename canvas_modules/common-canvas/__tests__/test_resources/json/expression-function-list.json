@@ -161,6 +161,17 @@
             "or",
             "not"
           ]
+        },
+        {
+          "id": "BADD",
+          "label": {
+            "default": "BAD Functions"
+          },
+          "function_refs": [
+            "no_parameter",
+            "no_description",
+            "no_parameter_type"
+          ]
         }
       ],
       "operator_refs": [
@@ -179,6 +190,45 @@
         "**_0"
       ],
       "function_info": [
+        {
+          "id": "no_parameter",
+          "label": {
+            "default": "No Parameters"
+          },
+          "return_type": "Boolean",
+          "description": {
+            "default": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node."
+          }
+        },
+        {
+          "id": "no_description",
+          "label": {
+            "default": "NoDescription"
+          },
+          "return_type": "Boolean",
+          "parameters": [
+            {
+              "label": {
+                "default": "FIELD"
+              },
+              "type": "Field"
+            }
+          ]
+        },
+        {
+          "id": "no_parameter_type",
+          "label": {
+            "default": "no_parameter_type"
+          },
+          "return_type": "Boolean",
+          "parameters": [
+            {
+              "label": {
+                "default": "FIELD"
+              }
+            }
+          ]
+        },
         {
           "label": {
             "default": "to_integer_default",
@@ -924,1188 +974,1274 @@
   },
   "actual": {
     "functionCategories": {
-      "General Functions": [
-        {
-          "label": {
-            "default": "to_integer_default",
-            "resource_key": "to_integer.label"
-          },
-          "return_type": "Integer",
-          "id": "to_integer",
-          "parameters": [
-            {
-              "label": {
-                "default": "Item_default",
-                "resource_key": "to_integer.item.param"
-              }
-            }
-          ],
-          "description": {
-            "default": "Converts ITEM to an integer. ITEM must be a string, or a number default.",
-            "resource_key": "to_integer.item.help"
-          },
-          "locLabel": "to_integer(Item)",
-          "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
-          "value": "to_integer(?)"
-        },
-        {
-          "label": {
-            "default": "count_equal"
-          },
-          "return_type": "Integer",
-          "id": "count_equal",
-          "parameters": [
-            {
-              "label": {
-                "default": "Item"
-              }
+      "General Functions": {
+        "locLabel": "General Functions",
+        "functionList": [
+          {
+            "label": {
+              "default": "to_integer_default",
+              "resource_key": "to_integer.label"
             },
-            {
-              "label": {
-                "default": "List"
+            "return_type": "Integer",
+            "id": "to_integer",
+            "parameters": [
+              {
+                "label": {
+                  "default": "Item_default",
+                  "resource_key": "to_integer.item.param"
+                }
               }
-            }
-          ],
-          "description": {
-            "default": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL."
+            ],
+            "description": {
+              "default": "Converts ITEM to an integer. ITEM must be a string, or a number default.",
+              "resource_key": "to_integer.item.help"
+            },
+            "locLabel": "to_integer(Item)",
+            "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
+            "value": "to_integer(?)"
           },
-          "locLabel": "count_equal(Item, List)",
-          "help": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL.",
-          "value": "count_equal(?, ?)"
-        },
-        {
-          "id": "if?then?else?endif_3",
-          "label": {
-            "default": "if ? then ? else ? endif"
-          },
-          "return_type": "Any",
-          "parameters": [
-            {
-              "label": {
-                "default": "COND1"
+          {
+            "label": {
+              "default": "count_equal"
+            },
+            "return_type": "Integer",
+            "id": "count_equal",
+            "parameters": [
+              {
+                "label": {
+                  "default": "Item"
+                }
               },
-              "type": "Expression"
+              {
+                "label": {
+                  "default": "List"
+                }
+              }
+            ],
+            "description": {
+              "default": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL."
             },
-            {
-              "label": {
-                "default": "EXPR1"
+            "locLabel": "count_equal(Item, List)",
+            "help": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL.",
+            "value": "count_equal(?, ?)"
+          },
+          {
+            "id": "if?then?else?endif_3",
+            "label": {
+              "default": "if ? then ? else ? endif"
+            },
+            "return_type": "Any",
+            "parameters": [
+              {
+                "label": {
+                  "default": "COND1"
+                },
+                "type": "Expression"
               },
-              "type": "Expression"
-            },
-            {
-              "label": {
-                "default": "EXPR2"
+              {
+                "label": {
+                  "default": "EXPR1"
+                },
+                "type": "Expression"
               },
-              "type": "Expression"
-            }
-          ],
-          "description": {
-            "default": "If COND is true, returns the result of evaluating EXPR1. Otherwise, returns the result of evaluating EXPR2."
+              {
+                "label": {
+                  "default": "EXPR2"
+                },
+                "type": "Expression"
+              }
+            ],
+            "description": {
+              "default": "If COND is true, returns the result of evaluating EXPR1. Otherwise, returns the result of evaluating EXPR2."
+            },
+            "locLabel": "if  COND1  then  EXPR1  else  EXPR2  endif",
+            "help": "If COND is true, returns the result of evaluating EXPR1. Otherwise, returns the result of evaluating EXPR2.",
+            "value": "if ? then ? else ? endif"
           },
-          "locLabel": "if COND1 then EXPR1 else EXPR2 endif",
-          "help": "If COND is true, returns the result of evaluating EXPR1. Otherwise, returns the result of evaluating EXPR2.",
-          "value": "if ? then ? else ? endif"
-        },
-        {
-          "id": "if?then?elseif?then?else?endif_5",
-          "label": {
-            "default": "if ? then ? elseif ? then ? else ? endif"
-          },
-          "return_type": "Any",
-          "parameters": [
-            {
-              "label": {
-                "default": "COND1"
+          {
+            "id": "if?then?elseif?then?else?endif_5",
+            "label": {
+              "default": "if ? then ? elseif ? then ? else ? endif"
+            },
+            "return_type": "Any",
+            "parameters": [
+              {
+                "label": {
+                  "default": "COND1"
+                },
+                "type": "Expression"
               },
-              "type": "Expression"
-            },
-            {
-              "label": {
-                "default": "EXPR1"
+              {
+                "label": {
+                  "default": "EXPR1"
+                },
+                "type": "Expression"
               },
-              "type": "Expression"
-            },
-            {
-              "label": {
-                "default": "COND2"
+              {
+                "label": {
+                  "default": "COND2"
+                },
+                "type": "Expression"
               },
-              "type": "Expression"
-            },
-            {
-              "label": {
-                "default": "EXPR2"
+              {
+                "label": {
+                  "default": "EXPR2"
+                },
+                "type": "Expression"
               },
-              "type": "Expression"
+              {
+                "label": {
+                  "default": "EXPR_N"
+                },
+                "type": "Expression"
+              }
+            ],
+            "description": {
+              "default": "If COND1 is true, returns the result of EXPR1. If COND2 is true, the result of EXPR2. Otherwise, EXPRN."
             },
-            {
-              "label": {
-                "default": "EXPR_N"
+            "locLabel": "if  COND1  then  EXPR1  elseif  COND2  then  EXPR2  else  EXPR_N  endif",
+            "help": "If COND1 is true, returns the result of EXPR1. If COND2 is true, the result of EXPR2. Otherwise, EXPRN.",
+            "value": "if ? then ? elseif ? then ? else ? endif"
+          }
+        ]
+      },
+      "Information": {
+        "locLabel": "Information",
+        "functionList": [
+          {
+            "label": {
+              "default": "to_integer_default",
+              "resource_key": "to_integer.label"
+            },
+            "return_type": "Integer",
+            "id": "to_integer",
+            "parameters": [
+              {
+                "label": {
+                  "default": "Item_default",
+                  "resource_key": "to_integer.item.param"
+                }
+              }
+            ],
+            "description": {
+              "default": "Converts ITEM to an integer. ITEM must be a string, or a number default.",
+              "resource_key": "to_integer.item.help"
+            },
+            "locLabel": "to_integer(Item)",
+            "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
+            "value": "to_integer(?)"
+          },
+          {
+            "label": {
+              "default": "@BLANK"
+            },
+            "return_type": "Boolean",
+            "id": "@BLANK",
+            "parameters": [
+              {
+                "label": {
+                  "default": "Item"
+                }
+              }
+            ],
+            "description": {
+              "default": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node."
+            },
+            "locLabel": "@BLANK(Item)",
+            "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node.",
+            "value": "@BLANK(?)"
+          },
+          {
+            "label": {
+              "default": "datetime_date"
+            },
+            "return_type": "Date",
+            "id": "datetime_date",
+            "parameters": [
+              {
+                "label": {
+                  "default": "Year"
+                }
               },
-              "type": "Expression"
-            }
-          ],
-          "description": {
-            "default": "If COND1 is true, returns the result of EXPR1. If COND2 is true, the result of EXPR2. Otherwise, EXPRN."
-          },
-          "locLabel": "if COND1 then EXPR1 elseif COND2 then EXPR2 else EXPR_N endif",
-          "help": "If COND1 is true, returns the result of EXPR1. If COND2 is true, the result of EXPR2. Otherwise, EXPRN.",
-          "value": "if ? then ? elseif ? then ? else ? endif"
-        }
-      ],
-      "Information": [
-        {
-          "label": {
-            "default": "to_integer_default",
-            "resource_key": "to_integer.label"
-          },
-          "return_type": "Integer",
-          "id": "to_integer",
-          "parameters": [
-            {
-              "label": {
-                "default": "Item_default",
-                "resource_key": "to_integer.item.param"
-              }
-            }
-          ],
-          "description": {
-            "default": "Converts ITEM to an integer. ITEM must be a string, or a number default.",
-            "resource_key": "to_integer.item.help"
-          },
-          "locLabel": "to_integer(Item)",
-          "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
-          "value": "to_integer(?)"
-        },
-        {
-          "label": {
-            "default": "@BLANK"
-          },
-          "return_type": "Boolean",
-          "id": "@BLANK",
-          "parameters": [
-            {
-              "label": {
-                "default": "Item"
-              }
-            }
-          ],
-          "description": {
-            "default": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node."
-          },
-          "locLabel": "@BLANK(Item)",
-          "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node.",
-          "value": "@BLANK(?)"
-        },
-        {
-          "label": {
-            "default": "datetime_date"
-          },
-          "return_type": "Date",
-          "id": "datetime_date",
-          "parameters": [
-            {
-              "label": {
-                "default": "Year"
-              }
-            },
-            {
-              "label": {
-                "default": "Month"
-              }
-            },
-            {
-              "label": {
-                "default": "Day"
-              }
-            }
-          ],
-          "description": {
-            "default": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers."
-          },
-          "locLabel": "datetime_date(Year, Month, Day)",
-          "help": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers.",
-          "value": "datetime_date(?, ?, ?)"
-        }
-      ],
-      "Date and Time": [
-        {
-          "label": {
-            "default": "datetime_date"
-          },
-          "return_type": "Date",
-          "id": "datetime_date",
-          "parameters": [
-            {
-              "label": {
-                "default": "Year"
-              }
-            },
-            {
-              "label": {
-                "default": "Month"
-              }
-            },
-            {
-              "label": {
-                "default": "Day"
-              }
-            }
-          ],
-          "description": {
-            "default": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers."
-          },
-          "locLabel": "datetime_date(Year, Month, Day)",
-          "help": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers.",
-          "value": "datetime_date(?, ?, ?)"
-        },
-        {
-          "label": {
-            "default": "datetime_time"
-          },
-          "return_type": "Time",
-          "id": "datetime_time",
-          "parameters": [
-            {
-              "label": {
-                "default": "Hour"
-              }
-            },
-            {
-              "label": {
-                "default": "Minute"
-              }
-            },
-            {
-              "label": {
-                "default": "Second"
-              }
-            }
-          ],
-          "description": {
-            "default": "Returns the time value for the specified HOUR, MINUTE, and SECOND. The arguments must be integers."
-          },
-          "locLabel": "datetime_time(Hour, Minute, Second)",
-          "help": "Returns the time value for the specified HOUR, MINUTE, and SECOND. The arguments must be integers.",
-          "value": "datetime_time(?, ?, ?)"
-        },
-        {
-          "label": {
-            "default": "datetime_timestamp"
-          },
-          "return_type": "Timestamp",
-          "id": "datetime_timestamp",
-          "parameters": [
-            {
-              "label": {
-                "default": "Year"
-              }
-            },
-            {
-              "label": {
-                "default": "Month"
-              }
-            },
-            {
-              "label": {
-                "default": "Day"
-              }
-            },
-            {
-              "label": {
-                "default": "Hour"
-              }
-            },
-            {
-              "label": {
-                "default": "Minute"
-              }
-            },
-            {
-              "label": {
-                "default": "Second"
-              }
-            }
-          ],
-          "description": {
-            "default": "Returns the timestamp value for the given YEAR, MONTH, DAY, HOUR, MINUTE, and SECOND."
-          },
-          "locLabel": "datetime_timestamp(Year, Month, Day, Hour, Minute, Second)",
-          "help": "Returns the timestamp value for the given YEAR, MONTH, DAY, HOUR, MINUTE, and SECOND.",
-          "value": "datetime_timestamp(?, ?, ?, ?, ?, ?)"
-        }
-      ],
-      "Operators": [
-        {
-          "id": "=_0",
-          "label": {
-            "default": "="
-          },
-          "return_type": "Boolean",
-          "description": {
-            "default": "Used between any two comparable items. Returns true if ITEM1 is equal to ITEM2."
-          },
-          "locLabel": "=",
-          "help": "Used between any two comparable items. Returns true if ITEM1 is equal to ITEM2.",
-          "value": "="
-        },
-        {
-          "id": "/=_0",
-          "label": {
-            "default": "/="
-          },
-          "return_type": "Boolean",
-          "description": {
-            "default": "Used between any two comparable items. Returns true if ITEM1 is NOT equal to ITEM2."
-          },
-          "locLabel": "/=",
-          "help": "Used between any two comparable items. Returns true if ITEM1 is NOT equal to ITEM2.",
-          "value": "/="
-        },
-        {
-          "id": "<_0",
-          "label": {
-            "default": "<"
-          },
-          "return_type": "Boolean",
-          "description": {
-            "default": "Used between any two comparable items. Returns true if ITEM1 is strictly less than ITEM2."
-          },
-          "locLabel": "<",
-          "help": "Used between any two comparable items. Returns true if ITEM1 is strictly less than ITEM2.",
-          "value": "<"
-        },
-        {
-          "id": "<=_0",
-          "label": {
-            "default": "<="
-          },
-          "return_type": "Boolean",
-          "description": {
-            "default": "Used between any two comparable items. Returns true if ITEM1 is less than or equal to ITEM2."
-          },
-          "locLabel": "<=",
-          "help": "Used between any two comparable items. Returns true if ITEM1 is less than or equal to ITEM2.",
-          "value": "<="
-        },
-        {
-          "id": ">_0",
-          "label": {
-            "default": ">"
-          },
-          "return_type": "Boolean",
-          "description": {
-            "default": "Used between any two comparable items. Returns true if ITEM1 is strictly greater than ITEM2."
-          },
-          "locLabel": ">",
-          "help": "Used between any two comparable items. Returns true if ITEM1 is strictly greater than ITEM2.",
-          "value": ">"
-        },
-        {
-          "id": ">=_0",
-          "label": {
-            "default": ">="
-          },
-          "return_type": "Boolean",
-          "description": {
-            "default": "Used between any two comparable items. Returns true if ITEM1 is greater than or equal to ITEM2."
-          },
-          "locLabel": ">=",
-          "help": "Used between any two comparable items. Returns true if ITEM1 is greater than or equal to ITEM2.",
-          "value": ">="
-        },
-        {
-          "id": "and_0",
-          "label": {
-            "default": "and"
-          },
-          "return_type": "Boolean",
-          "description": {
-            "default": "Used in between two CLEM expressions. Returns a value of true if both EXPR1 and EXPR2 are true."
-          },
-          "locLabel": "and",
-          "help": "Used in between two CLEM expressions. Returns a value of true if both EXPR1 and EXPR2 are true.",
-          "value": "and"
-        },
-        {
-          "id": "or_0",
-          "label": {
-            "default": "or"
-          },
-          "return_type": "Boolean",
-          "description": {
-            "default": "Used in between two CLEM expressions. Returns a value of true if either EXPR1 or EXPR2 is true, or if both are true."
-          },
-          "locLabel": "or",
-          "help": "Used in between two CLEM expressions. Returns a value of true if either EXPR1 or EXPR2 is true, or if both are true.",
-          "value": "or"
-        },
-        {
-          "id": "not_1",
-          "label": {
-            "default": "not"
-          },
-          "return_type": "Boolean",
-          "parameters": [
-            {
-              "label": {
-                "default": "COND"
+              {
+                "label": {
+                  "default": "Month"
+                }
               },
-              "type": "Expression"
-            }
-          ],
-          "description": {
-            "default": "Returns a value of true if COND is false. Otherwise, returns a value of 0."
-          },
-          "locLabel": "not(COND)",
-          "help": "Returns a value of true if COND is false. Otherwise, returns a value of 0.",
-          "value": "not(?)"
-        },
-        {
-          "id": "-_0",
-          "label": {
-            "default": "-"
-          },
-          "return_type": "Number",
-          "description": {
-            "default": "Used between two numbers: NUM1 - NUM2 (subtracts NUM2 from NUM1) or in front of a number: - NUM."
-          },
-          "locLabel": "-",
-          "help": "Used between two numbers: NUM1 - NUM2 (subtracts NUM2 from NUM1) or in front of a number: - NUM.",
-          "value": "-"
-        },
-        {
-          "id": "+_0",
-          "label": {
-            "default": "+"
-          },
-          "return_type": "Number",
-          "description": {
-            "default": "Used between two numbers: NUM1 + NUM2. Adds NUM1 to NUM2."
-          },
-          "locLabel": "+",
-          "help": "Used between two numbers: NUM1 + NUM2. Adds NUM1 to NUM2.",
-          "value": "+"
-        },
-        {
-          "id": "*_0",
-          "label": {
-            "default": "*"
-          },
-          "return_type": "Number",
-          "description": {
-            "default": "Used between two numbers: NUM1 * NUM2. Multiplies NUM1 by NUM2."
-          },
-          "locLabel": "*",
-          "help": "Used between two numbers: NUM1 * NUM2. Multiplies NUM1 by NUM2.",
-          "value": "*"
-        },
-        {
-          "id": "/_0",
-          "label": {
-            "default": "/"
-          },
-          "return_type": "Number",
-          "description": {
-            "default": "Used between two numbers: NUM1 / NUM2. Divides NUM1 by NUM2."
-          },
-          "locLabel": "/",
-          "help": "Used between two numbers: NUM1 / NUM2. Divides NUM1 by NUM2.",
-          "value": "/"
-        },
-        {
-          "id": "div_0",
-          "label": {
-            "default": "div"
-          },
-          "return_type": "Number",
-          "description": {
-            "default": "Used between two integers: INT1 div INT2. Performs integer division."
-          },
-          "locLabel": "div",
-          "help": "Used between two integers: INT1 div INT2. Performs integer division.",
-          "value": "div"
-        },
-        {
-          "id": "mod_0",
-          "label": {
-            "default": "mod"
-          },
-          "return_type": "Number",
-          "description": {
-            "default": "Used between two integers: INT1 mod INT2. Returns INT1 modulo INT2."
-          },
-          "locLabel": "mod",
-          "help": "Used between two integers: INT1 mod INT2. Returns INT1 modulo INT2.",
-          "value": "mod"
-        },
-        {
-          "id": "rem_0",
-          "label": {
-            "default": "rem"
-          },
-          "return_type": "Number",
-          "description": {
-            "default": "Used between two integers: INT1 rem INT2. Returns the remainder, INT1 - (INT1 div INT2) * INT2."
-          },
-          "locLabel": "rem",
-          "help": "Used between two integers: INT1 rem INT2. Returns the remainder, INT1 - (INT1 div INT2) * INT2.",
-          "value": "rem"
-        },
-        {
-          "id": "**_0",
-          "label": {
-            "default": "**"
-          },
-          "return_type": "Number",
-          "description": {
-            "default": "Used between two numbers: BASE ** POWER. Returns BASE raised to the power POWER."
-          },
-          "locLabel": "**",
-          "help": "Used between two numbers: BASE ** POWER. Returns BASE raised to the power POWER.",
-          "value": "**"
-        },
-        {
-          "id": "~~_0",
-          "label": {
-            "default": "~~"
-          },
-          "return_type": "Integer",
-          "description": {
-            "default": "Used in front of an integer. Produces the bitwise complement of INT."
-          },
-          "locLabel": "~~",
-          "help": "Used in front of an integer. Produces the bitwise complement of INT.",
-          "value": "~~"
-        },
-        {
-          "id": "||_0",
-          "label": {
-            "default": "||"
-          },
-          "return_type": "Integer",
-          "description": {
-            "default": "Used between two integers. The result is the bitwise 'inclusive or' of INT1 and INT2."
-          },
-          "locLabel": "||",
-          "help": "Used between two integers. The result is the bitwise 'inclusive or' of INT1 and INT2.",
-          "value": "||"
-        },
-        {
-          "id": "||/&_0",
-          "label": {
-            "default": "||/&"
-          },
-          "return_type": "Integer",
-          "description": {
-            "default": "Used between two integers. The result is the bitwise 'exclusive or' of INT1 and INT2."
-          },
-          "locLabel": "||/&",
-          "help": "Used between two integers. The result is the bitwise 'exclusive or' of INT1 and INT2.",
-          "value": "||/&"
-        },
-        {
-          "id": "&&_0",
-          "label": {
-            "default": "&&"
-          },
-          "return_type": "Integer",
-          "description": {
-            "default": "Used between two integers. The result is the bitwise 'and' of the integers INT1 and INT2."
-          },
-          "locLabel": "&&",
-          "help": "Used between two integers. The result is the bitwise 'and' of the integers INT1 and INT2.",
-          "value": "&&"
-        },
-        {
-          "id": "&&~~_0",
-          "label": {
-            "default": "&&~~"
-          },
-          "return_type": "Integer",
-          "description": {
-            "default": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2."
-          },
-          "locLabel": "&&~~",
-          "help": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2.",
-          "value": "&&~~"
-        },
-        {
-          "id": "<<_2",
-          "label": {
-            "default": "<<"
-          },
-          "return_type": "Integer",
-          "description": {
-            "default": "Used between two integers. Produces the bit pattern of INT shifted left by N positions."
-          },
-          "locLabel": "<<",
-          "help": "Used between two integers. Produces the bit pattern of INT shifted left by N positions.",
-          "value": "<<"
-        },
-        {
-          "id": ">>_2",
-          "label": {
-            "default": ">>"
-          },
-          "return_type": "Integer",
-          "description": {
-            "default": "Used between two integers. Produces the bit pattern of INT shifted right by N positions."
-          },
-          "locLabel": ">>",
-          "help": "Used between two integers. Produces the bit pattern of INT shifted right by N positions.",
-          "value": ">>"
-        },
-        {
-          "id": "&&=_0_0",
-          "label": {
-            "default": "&&=_0"
-          },
-          "return_type": "Boolean",
-          "description": {
-            "default": "Used between two integers. Equivalent to the boolean expression INT1 && INT2 = 0."
-          },
-          "locLabel": "&&=_0",
-          "help": "Used between two integers. Equivalent to the boolean expression INT1 && INT2 = 0.",
-          "value": "&&=_0"
-        },
-        {
-          "id": "&&/=_0_0",
-          "label": {
-            "default": "&&/=_0"
-          },
-          "return_type": "Boolean",
-          "description": {
-            "default": "Used between two integers. Equivalent to the boolean expression INT1 && INT2 /= 0."
-          },
-          "locLabel": "&&/=_0",
-          "help": "Used between two integers. Equivalent to the boolean expression INT1 && INT2 /= 0.",
-          "value": "&&/=_0"
-        },
-        {
-          "id": "><_0",
-          "label": {
-            "default": "><"
-          },
-          "return_type": "String",
-          "description": {
-            "default": "Used between two strings. Concatenates all of the characters of STRING1with all of the characters of STRING2."
-          },
-          "locLabel": "><",
-          "help": "Used between two strings. Concatenates all of the characters of STRING1with all of the characters of STRING2.",
-          "value": "><"
-        },
-        {
-          "id": "matches_2",
-          "label": {
-            "default": "matches"
-          },
-          "return_type": "Boolean",
-          "description": {
-            "default": "Returns a value of true if STRING1 matches the pattern defined by STRING2. \"?\" matches 1 character, \"*\" matches 0 or more characters, and \"\\\" escapes these characters."
-          },
-          "locLabel": "matches",
-          "help": "Returns a value of true if STRING1 matches the pattern defined by STRING2. \"?\" matches 1 character, \"*\" matches 0 or more characters, and \"\\\" escapes these characters.",
-          "value": "matches"
-        }
-      ],
-      "@ Functions": [
-        {
-          "label": {
-            "default": "@BLANK"
-          },
-          "return_type": "Boolean",
-          "id": "@BLANK",
-          "parameters": [
-            {
-              "label": {
-                "default": "Item"
+              {
+                "label": {
+                  "default": "Day"
+                }
               }
-            }
-          ],
-          "description": {
-            "default": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node."
-          },
-          "locLabel": "@BLANK(Item)",
-          "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node.",
-          "value": "@BLANK(?)"
-        },
-        {
-          "label": {
-            "default": "@DIFF1"
-          },
-          "return_type": "Real",
-          "id": "@DIFF1",
-          "parameters": [
-            {
-              "label": {
-                "default": "Field1"
-              }
+            ],
+            "description": {
+              "default": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers."
             },
-            {
-              "label": {
-                "default": "Field2"
-              }
-            }
-          ],
-          "description": {
-            "default": "Returns the first differential of FIELD1 or the first differential of FIELD1 with respect to FIELD2."
-          },
-          "locLabel": "@DIFF1(Field1, Field2)",
-          "help": "Returns the first differential of FIELD1 or the first differential of FIELD1 with respect to FIELD2.",
-          "value": "@DIFF1(?, ?)"
-        }
-      ],
-      "Conversion": [
-        {
-          "label": {
-            "default": "to_integer_default",
-            "resource_key": "to_integer.label"
-          },
-          "return_type": "Integer",
-          "id": "to_integer",
-          "parameters": [
-            {
-              "label": {
-                "default": "Item_default",
-                "resource_key": "to_integer.item.param"
-              }
-            }
-          ],
-          "description": {
-            "default": "Converts ITEM to an integer. ITEM must be a string, or a number default.",
-            "resource_key": "to_integer.item.help"
-          },
-          "locLabel": "to_integer(Item)",
-          "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
-          "value": "to_integer(?)"
-        }
-      ],
-      "String": [
-        {
-          "label": {
-            "default": "><"
-          },
-          "return_type": "String",
-          "id": "><",
-          "description": {
-            "default": "Concatenate two strings. String1 >< String2."
-          },
-          "locLabel": "><",
-          "help": "Concatenate two strings. String1 >< String2.",
-          "value": "><"
-        }
-      ],
-      "Numeric": [
-        {
-          "label": {
-            "default": "+"
-          },
-          "return_type": "Number",
-          "id": "+",
-          "description": {
-            "default": "Add two numbers. X + Y."
-          },
-          "locLabel": "+",
-          "help": "Add two numbers. X + Y.",
-          "value": "+"
-        },
-        {
-          "label": {
-            "default": "**"
-          },
-          "return_type": "Number",
-          "id": "**",
-          "description": {
-            "default": "X to the power of Y. X ** Y."
-          },
-          "locLabel": "**",
-          "help": "X to the power of Y. X ** Y.",
-          "value": "**"
-        },
-        {
-          "label": {
-            "default": "-"
-          },
-          "return_type": "Number",
-          "id": "-",
-          "description": {
-            "default": "Subtract two numbers. X - Y."
-          },
-          "locLabel": "-",
-          "help": "Subtract two numbers. X - Y.",
-          "value": "-"
-        },
-        {
-          "label": {
-            "default": "div"
-          },
-          "return_type": "Number",
-          "id": "div",
-          "description": {
-            "default": "Quotient of dividing two numbers. X div Y."
-          },
-          "locLabel": "div",
-          "help": "Quotient of dividing two numbers. X div Y.",
-          "value": "div"
-        },
-        {
-          "label": {
-            "default": "*"
-          },
-          "return_type": "Number",
-          "id": "*",
-          "description": {
-            "default": "Multiply two number.  X * Y."
-          },
-          "locLabel": "*",
-          "help": "Multiply two number.  X * Y.",
-          "value": "*"
-        },
-        {
-          "label": {
-            "default": "rem"
-          },
-          "return_type": "Number",
-          "id": "rem",
-          "description": {
-            "default": "Remainder of dividing two numbers. X rem Y."
-          },
-          "locLabel": "rem",
-          "help": "Remainder of dividing two numbers. X rem Y.",
-          "value": "rem"
-        },
-        {
-          "label": {
-            "default": "/"
-          },
-          "return_type": "Number",
-          "id": "/",
-          "description": {
-            "default": "Divide two numbers. X / Y."
-          },
-          "locLabel": "/",
-          "help": "Divide two numbers. X / Y.",
-          "value": "/"
-        },
-        {
-          "label": {
-            "default": "mod"
-          },
-          "return_type": "Number",
-          "id": "mod",
-          "description": {
-            "default": "Modulo of dividing two numbers. X mod Y."
-          },
-          "locLabel": "mod",
-          "help": "Modulo of dividing two numbers. X mod Y.",
-          "value": "mod"
-        },
-        {
-          "label": {
-            "default": "&&~~"
-          },
-          "return_type": "Integer",
-          "id": "&&~~",
-          "description": {
-            "default": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2."
-          },
-          "locLabel": "&&~~",
-          "help": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2.",
-          "value": "&&~~"
-        }
-      ],
-      "Bitwise": [
-        {
-          "label": {
-            "default": ">"
-          },
-          "return_type": "Boolean",
-          "id": ">",
-          "description": {
-            "default": "X is greater than Y."
-          },
-          "locLabel": ">",
-          "help": "X is greater than Y.",
-          "value": ">"
-        },
-        {
-          "label": {
-            "default": ">="
-          },
-          "return_type": "Boolean",
-          "id": ">=",
-          "description": {
-            "default": "X is greater than or equal to Y."
-          },
-          "locLabel": ">=",
-          "help": "X is greater than or equal to Y.",
-          "value": ">="
-        },
-        {
-          "label": {
-            "default": "<"
-          },
-          "return_type": "Boolean",
-          "id": "<",
-          "description": {
-            "default": "X is less than Y."
-          },
-          "locLabel": "<",
-          "help": "X is less than Y.",
-          "value": "<"
-        },
-        {
-          "label": {
-            "default": "<="
-          },
-          "return_type": "Boolean",
-          "id": "<=",
-          "description": {
-            "default": "X is less than or equal to Y."
-          },
-          "locLabel": "<=",
-          "help": "X is less than or equal to Y.",
-          "value": "<="
-        },
-        {
-          "label": {
-            "default": "="
-          },
-          "return_type": "Boolean",
-          "id": "=",
-          "description": {
-            "default": "X is equal to Y."
-          },
-          "locLabel": "=",
-          "help": "X is equal to Y.",
-          "value": "="
-        },
-        {
-          "label": {
-            "default": "/="
-          },
-          "return_type": "Boolean",
-          "id": "/=",
-          "description": {
-            "default": "X is not equal to Y."
-          },
-          "locLabel": "/=",
-          "help": "X is not equal to Y.",
-          "value": "/="
-        },
-        {
-          "label": {
-            "default": "&&~~"
-          },
-          "return_type": "Integer",
-          "id": "&&~~",
-          "description": {
-            "default": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2."
-          },
-          "locLabel": "&&~~",
-          "help": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2.",
-          "value": "&&~~"
-        }
-      ],
-      "Logical": [
-        {
-          "label": {
-            "default": "and"
-          },
-          "return_type": "Boolean",
-          "id": "and",
-          "description": {
-            "default": "Expression1 is true and Expression2 is true.  Expr1 and Expr2."
-          },
-          "locLabel": "and",
-          "help": "Expression1 is true and Expression2 is true.  Expr1 and Expr2.",
-          "value": "and"
-        },
-        {
-          "label": {
-            "default": "or"
-          },
-          "return_type": "Boolean",
-          "id": "or",
-          "description": {
-            "default": "Expression1 is true or Expression2 is true.  Expr1 and Expr2."
-          },
-          "locLabel": "or",
-          "help": "Expression1 is true or Expression2 is true.  Expr1 and Expr2.",
-          "value": "or"
-        },
-        {
-          "label": {
-            "default": "not"
-          },
-          "return_type": "Boolean",
-          "id": "not",
-          "parameters": [
-            {
-              "label": {
-                "default": ""
-              }
-            }
-          ],
-          "description": {
-            "default": "Expression is not true.  not(Expr)."
-          },
-          "locLabel": "not(undefined)",
-          "help": "Expression is not true.  not(Expr).",
-          "value": "not(?)"
-        }
-      ],
-      "Comparison": [
-        {
-          "label": {
-            "default": "count_equal"
-          },
-          "return_type": "Integer",
-          "id": "count_equal",
-          "parameters": [
-            {
-              "label": {
-                "default": "Item"
-              }
+            "locLabel": "datetime_date(Year, Month, Day)",
+            "help": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers.",
+            "value": "datetime_date(?, ?, ?)"
+          }
+        ]
+      },
+      "Date and Time": {
+        "locLabel": "Date and Time",
+        "functionList": [
+          {
+            "label": {
+              "default": "datetime_date"
             },
-            {
-              "label": {
-                "default": "List"
+            "return_type": "Date",
+            "id": "datetime_date",
+            "parameters": [
+              {
+                "label": {
+                  "default": "Year"
+                }
+              },
+              {
+                "label": {
+                  "default": "Month"
+                }
+              },
+              {
+                "label": {
+                  "default": "Day"
+                }
               }
-            }
-          ],
-          "description": {
-            "default": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL."
+            ],
+            "description": {
+              "default": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers."
+            },
+            "locLabel": "datetime_date(Year, Month, Day)",
+            "help": "Returns the date value for the given YEAR, MONTH, and DAY. The arguments must be integers.",
+            "value": "datetime_date(?, ?, ?)"
           },
-          "locLabel": "count_equal(Item, List)",
-          "help": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL.",
-          "value": "count_equal(?, ?)"
-        },
-        {
-          "label": {
-            "default": ">"
-          },
-          "return_type": "Boolean",
-          "id": ">",
-          "description": {
-            "default": "X is greater than Y."
-          },
-          "locLabel": ">",
-          "help": "X is greater than Y.",
-          "value": ">"
-        },
-        {
-          "label": {
-            "default": ">="
-          },
-          "return_type": "Boolean",
-          "id": ">=",
-          "description": {
-            "default": "X is greater than or equal to Y."
-          },
-          "locLabel": ">=",
-          "help": "X is greater than or equal to Y.",
-          "value": ">="
-        },
-        {
-          "label": {
-            "default": "<"
-          },
-          "return_type": "Boolean",
-          "id": "<",
-          "description": {
-            "default": "X is less than Y."
-          },
-          "locLabel": "<",
-          "help": "X is less than Y.",
-          "value": "<"
-        },
-        {
-          "label": {
-            "default": "<="
-          },
-          "return_type": "Boolean",
-          "id": "<=",
-          "description": {
-            "default": "X is less than or equal to Y."
-          },
-          "locLabel": "<=",
-          "help": "X is less than or equal to Y.",
-          "value": "<="
-        },
-        {
-          "label": {
-            "default": "="
-          },
-          "return_type": "Boolean",
-          "id": "=",
-          "description": {
-            "default": "X is equal to Y."
-          },
-          "locLabel": "=",
-          "help": "X is equal to Y.",
-          "value": "="
-        },
-        {
-          "label": {
-            "default": "/="
-          },
-          "return_type": "Boolean",
-          "id": "/=",
-          "description": {
-            "default": "X is not equal to Y."
-          },
-          "locLabel": "/=",
-          "help": "X is not equal to Y.",
-          "value": "/="
-        },
-        {
-          "label": {
-            "default": "and"
-          },
-          "return_type": "Boolean",
-          "id": "and",
-          "description": {
-            "default": "Expression1 is true and Expression2 is true.  Expr1 and Expr2."
-          },
-          "locLabel": "and",
-          "help": "Expression1 is true and Expression2 is true.  Expr1 and Expr2.",
-          "value": "and"
-        },
-        {
-          "label": {
-            "default": "or"
-          },
-          "return_type": "Boolean",
-          "id": "or",
-          "description": {
-            "default": "Expression1 is true or Expression2 is true.  Expr1 and Expr2."
-          },
-          "locLabel": "or",
-          "help": "Expression1 is true or Expression2 is true.  Expr1 and Expr2.",
-          "value": "or"
-        },
-        {
-          "label": {
-            "default": "not"
-          },
-          "return_type": "Boolean",
-          "id": "not",
-          "parameters": [
-            {
-              "label": {
-                "default": ""
+          {
+            "label": {
+              "default": "datetime_time"
+            },
+            "return_type": "Time",
+            "id": "datetime_time",
+            "parameters": [
+              {
+                "label": {
+                  "default": "Hour"
+                }
+              },
+              {
+                "label": {
+                  "default": "Minute"
+                }
+              },
+              {
+                "label": {
+                  "default": "Second"
+                }
               }
-            }
-          ],
-          "description": {
-            "default": "Expression is not true.  not(Expr)."
+            ],
+            "description": {
+              "default": "Returns the time value for the specified HOUR, MINUTE, and SECOND. The arguments must be integers."
+            },
+            "locLabel": "datetime_time(Hour, Minute, Second)",
+            "help": "Returns the time value for the specified HOUR, MINUTE, and SECOND. The arguments must be integers.",
+            "value": "datetime_time(?, ?, ?)"
           },
-          "locLabel": "not(undefined)",
-          "help": "Expression is not true.  not(Expr).",
-          "value": "not(?)"
-        }
-      ]
+          {
+            "label": {
+              "default": "datetime_timestamp"
+            },
+            "return_type": "Timestamp",
+            "id": "datetime_timestamp",
+            "parameters": [
+              {
+                "label": {
+                  "default": "Year"
+                }
+              },
+              {
+                "label": {
+                  "default": "Month"
+                }
+              },
+              {
+                "label": {
+                  "default": "Day"
+                }
+              },
+              {
+                "label": {
+                  "default": "Hour"
+                }
+              },
+              {
+                "label": {
+                  "default": "Minute"
+                }
+              },
+              {
+                "label": {
+                  "default": "Second"
+                }
+              }
+            ],
+            "description": {
+              "default": "Returns the timestamp value for the given YEAR, MONTH, DAY, HOUR, MINUTE, and SECOND."
+            },
+            "locLabel": "datetime_timestamp(Year, Month, Day, Hour, Minute, Second)",
+            "help": "Returns the timestamp value for the given YEAR, MONTH, DAY, HOUR, MINUTE, and SECOND.",
+            "value": "datetime_timestamp(?, ?, ?, ?, ?, ?)"
+          }
+        ]
+      },
+      "Operators": {
+        "locLabel": "Operators",
+        "functionList": [
+          {
+            "id": "=_0",
+            "label": {
+              "default": "="
+            },
+            "return_type": "Boolean",
+            "description": {
+              "default": "Used between any two comparable items. Returns true if ITEM1 is equal to ITEM2."
+            },
+            "locLabel": "=",
+            "help": "Used between any two comparable items. Returns true if ITEM1 is equal to ITEM2.",
+            "value": "="
+          },
+          {
+            "id": "/=_0",
+            "label": {
+              "default": "/="
+            },
+            "return_type": "Boolean",
+            "description": {
+              "default": "Used between any two comparable items. Returns true if ITEM1 is NOT equal to ITEM2."
+            },
+            "locLabel": "/=",
+            "help": "Used between any two comparable items. Returns true if ITEM1 is NOT equal to ITEM2.",
+            "value": "/="
+          },
+          {
+            "id": "<_0",
+            "label": {
+              "default": "<"
+            },
+            "return_type": "Boolean",
+            "description": {
+              "default": "Used between any two comparable items. Returns true if ITEM1 is strictly less than ITEM2."
+            },
+            "locLabel": "<",
+            "help": "Used between any two comparable items. Returns true if ITEM1 is strictly less than ITEM2.",
+            "value": "<"
+          },
+          {
+            "id": "<=_0",
+            "label": {
+              "default": "<="
+            },
+            "return_type": "Boolean",
+            "description": {
+              "default": "Used between any two comparable items. Returns true if ITEM1 is less than or equal to ITEM2."
+            },
+            "locLabel": "<=",
+            "help": "Used between any two comparable items. Returns true if ITEM1 is less than or equal to ITEM2.",
+            "value": "<="
+          },
+          {
+            "id": ">_0",
+            "label": {
+              "default": ">"
+            },
+            "return_type": "Boolean",
+            "description": {
+              "default": "Used between any two comparable items. Returns true if ITEM1 is strictly greater than ITEM2."
+            },
+            "locLabel": ">",
+            "help": "Used between any two comparable items. Returns true if ITEM1 is strictly greater than ITEM2.",
+            "value": ">"
+          },
+          {
+            "id": ">=_0",
+            "label": {
+              "default": ">="
+            },
+            "return_type": "Boolean",
+            "description": {
+              "default": "Used between any two comparable items. Returns true if ITEM1 is greater than or equal to ITEM2."
+            },
+            "locLabel": ">=",
+            "help": "Used between any two comparable items. Returns true if ITEM1 is greater than or equal to ITEM2.",
+            "value": ">="
+          },
+          {
+            "id": "and_0",
+            "label": {
+              "default": "and"
+            },
+            "return_type": "Boolean",
+            "description": {
+              "default": "Used in between two CLEM expressions. Returns a value of true if both EXPR1 and EXPR2 are true."
+            },
+            "locLabel": "and",
+            "help": "Used in between two CLEM expressions. Returns a value of true if both EXPR1 and EXPR2 are true.",
+            "value": "and"
+          },
+          {
+            "id": "or_0",
+            "label": {
+              "default": "or"
+            },
+            "return_type": "Boolean",
+            "description": {
+              "default": "Used in between two CLEM expressions. Returns a value of true if either EXPR1 or EXPR2 is true, or if both are true."
+            },
+            "locLabel": "or",
+            "help": "Used in between two CLEM expressions. Returns a value of true if either EXPR1 or EXPR2 is true, or if both are true.",
+            "value": "or"
+          },
+          {
+            "id": "not_1",
+            "label": {
+              "default": "not"
+            },
+            "return_type": "Boolean",
+            "parameters": [
+              {
+                "label": {
+                  "default": "COND"
+                },
+                "type": "Expression"
+              }
+            ],
+            "description": {
+              "default": "Returns a value of true if COND is false. Otherwise, returns a value of 0."
+            },
+            "locLabel": "not(COND)",
+            "help": "Returns a value of true if COND is false. Otherwise, returns a value of 0.",
+            "value": "not(?)"
+          },
+          {
+            "id": "-_0",
+            "label": {
+              "default": "-"
+            },
+            "return_type": "Number",
+            "description": {
+              "default": "Used between two numbers: NUM1 - NUM2 (subtracts NUM2 from NUM1) or in front of a number: - NUM."
+            },
+            "locLabel": "-",
+            "help": "Used between two numbers: NUM1 - NUM2 (subtracts NUM2 from NUM1) or in front of a number: - NUM.",
+            "value": "-"
+          },
+          {
+            "id": "+_0",
+            "label": {
+              "default": "+"
+            },
+            "return_type": "Number",
+            "description": {
+              "default": "Used between two numbers: NUM1 + NUM2. Adds NUM1 to NUM2."
+            },
+            "locLabel": "+",
+            "help": "Used between two numbers: NUM1 + NUM2. Adds NUM1 to NUM2.",
+            "value": "+"
+          },
+          {
+            "id": "*_0",
+            "label": {
+              "default": "*"
+            },
+            "return_type": "Number",
+            "description": {
+              "default": "Used between two numbers: NUM1 * NUM2. Multiplies NUM1 by NUM2."
+            },
+            "locLabel": "*",
+            "help": "Used between two numbers: NUM1 * NUM2. Multiplies NUM1 by NUM2.",
+            "value": "*"
+          },
+          {
+            "id": "/_0",
+            "label": {
+              "default": "/"
+            },
+            "return_type": "Number",
+            "description": {
+              "default": "Used between two numbers: NUM1 / NUM2. Divides NUM1 by NUM2."
+            },
+            "locLabel": "/",
+            "help": "Used between two numbers: NUM1 / NUM2. Divides NUM1 by NUM2.",
+            "value": "/"
+          },
+          {
+            "id": "div_0",
+            "label": {
+              "default": "div"
+            },
+            "return_type": "Number",
+            "description": {
+              "default": "Used between two integers: INT1 div INT2. Performs integer division."
+            },
+            "locLabel": "div",
+            "help": "Used between two integers: INT1 div INT2. Performs integer division.",
+            "value": "div"
+          },
+          {
+            "id": "mod_0",
+            "label": {
+              "default": "mod"
+            },
+            "return_type": "Number",
+            "description": {
+              "default": "Used between two integers: INT1 mod INT2. Returns INT1 modulo INT2."
+            },
+            "locLabel": "mod",
+            "help": "Used between two integers: INT1 mod INT2. Returns INT1 modulo INT2.",
+            "value": "mod"
+          },
+          {
+            "id": "rem_0",
+            "label": {
+              "default": "rem"
+            },
+            "return_type": "Number",
+            "description": {
+              "default": "Used between two integers: INT1 rem INT2. Returns the remainder, INT1 - (INT1 div INT2) * INT2."
+            },
+            "locLabel": "rem",
+            "help": "Used between two integers: INT1 rem INT2. Returns the remainder, INT1 - (INT1 div INT2) * INT2.",
+            "value": "rem"
+          },
+          {
+            "id": "**_0",
+            "label": {
+              "default": "**"
+            },
+            "return_type": "Number",
+            "description": {
+              "default": "Used between two numbers: BASE ** POWER. Returns BASE raised to the power POWER."
+            },
+            "locLabel": "**",
+            "help": "Used between two numbers: BASE ** POWER. Returns BASE raised to the power POWER.",
+            "value": "**"
+          },
+          {
+            "id": "~~_0",
+            "label": {
+              "default": "~~"
+            },
+            "return_type": "Integer",
+            "description": {
+              "default": "Used in front of an integer. Produces the bitwise complement of INT."
+            },
+            "locLabel": "~~",
+            "help": "Used in front of an integer. Produces the bitwise complement of INT.",
+            "value": "~~"
+          },
+          {
+            "id": "||_0",
+            "label": {
+              "default": "||"
+            },
+            "return_type": "Integer",
+            "description": {
+              "default": "Used between two integers. The result is the bitwise 'inclusive or' of INT1 and INT2."
+            },
+            "locLabel": "||",
+            "help": "Used between two integers. The result is the bitwise 'inclusive or' of INT1 and INT2.",
+            "value": "||"
+          },
+          {
+            "id": "||/&_0",
+            "label": {
+              "default": "||/&"
+            },
+            "return_type": "Integer",
+            "description": {
+              "default": "Used between two integers. The result is the bitwise 'exclusive or' of INT1 and INT2."
+            },
+            "locLabel": "||/&",
+            "help": "Used between two integers. The result is the bitwise 'exclusive or' of INT1 and INT2.",
+            "value": "||/&"
+          },
+          {
+            "id": "&&_0",
+            "label": {
+              "default": "&&"
+            },
+            "return_type": "Integer",
+            "description": {
+              "default": "Used between two integers. The result is the bitwise 'and' of the integers INT1 and INT2."
+            },
+            "locLabel": "&&",
+            "help": "Used between two integers. The result is the bitwise 'and' of the integers INT1 and INT2.",
+            "value": "&&"
+          },
+          {
+            "id": "&&~~_0",
+            "label": {
+              "default": "&&~~"
+            },
+            "return_type": "Integer",
+            "description": {
+              "default": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2."
+            },
+            "locLabel": "&&~~",
+            "help": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2.",
+            "value": "&&~~"
+          },
+          {
+            "id": "<<_2",
+            "label": {
+              "default": "<<"
+            },
+            "return_type": "Integer",
+            "description": {
+              "default": "Used between two integers. Produces the bit pattern of INT shifted left by N positions."
+            },
+            "locLabel": "<<",
+            "help": "Used between two integers. Produces the bit pattern of INT shifted left by N positions.",
+            "value": "<<"
+          },
+          {
+            "id": ">>_2",
+            "label": {
+              "default": ">>"
+            },
+            "return_type": "Integer",
+            "description": {
+              "default": "Used between two integers. Produces the bit pattern of INT shifted right by N positions."
+            },
+            "locLabel": ">>",
+            "help": "Used between two integers. Produces the bit pattern of INT shifted right by N positions.",
+            "value": ">>"
+          },
+          {
+            "id": "&&=_0_0",
+            "label": {
+              "default": "&&=_0"
+            },
+            "return_type": "Boolean",
+            "description": {
+              "default": "Used between two integers. Equivalent to the boolean expression INT1 && INT2 = 0."
+            },
+            "locLabel": "&&=_0",
+            "help": "Used between two integers. Equivalent to the boolean expression INT1 && INT2 = 0.",
+            "value": "&&=_0"
+          },
+          {
+            "id": "&&/=_0_0",
+            "label": {
+              "default": "&&/=_0"
+            },
+            "return_type": "Boolean",
+            "description": {
+              "default": "Used between two integers. Equivalent to the boolean expression INT1 && INT2 /= 0."
+            },
+            "locLabel": "&&/=_0",
+            "help": "Used between two integers. Equivalent to the boolean expression INT1 && INT2 /= 0.",
+            "value": "&&/=_0"
+          },
+          {
+            "id": "><_0",
+            "label": {
+              "default": "><"
+            },
+            "return_type": "String",
+            "description": {
+              "default": "Used between two strings. Concatenates all of the characters of STRING1with all of the characters of STRING2."
+            },
+            "locLabel": "><",
+            "help": "Used between two strings. Concatenates all of the characters of STRING1with all of the characters of STRING2.",
+            "value": "><"
+          },
+          {
+            "id": "matches_2",
+            "label": {
+              "default": "matches"
+            },
+            "return_type": "Boolean",
+            "description": {
+              "default": "Returns a value of true if STRING1 matches the pattern defined by STRING2. \"?\" matches 1 character, \"*\" matches 0 or more characters, and \"\\\" escapes these characters."
+            },
+            "locLabel": "matches",
+            "help": "Returns a value of true if STRING1 matches the pattern defined by STRING2. \"?\" matches 1 character, \"*\" matches 0 or more characters, and \"\\\" escapes these characters.",
+            "value": "matches"
+          }
+        ]
+      },
+      "@ Functions": {
+        "locLabel": "@ Functions",
+        "functionList": [
+          {
+            "label": {
+              "default": "@BLANK"
+            },
+            "return_type": "Boolean",
+            "id": "@BLANK",
+            "parameters": [
+              {
+                "label": {
+                  "default": "Item"
+                }
+              }
+            ],
+            "description": {
+              "default": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node."
+            },
+            "locLabel": "@BLANK(Item)",
+            "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node.",
+            "value": "@BLANK(?)"
+          },
+          {
+            "label": {
+              "default": "@DIFF1"
+            },
+            "return_type": "Real",
+            "id": "@DIFF1",
+            "parameters": [
+              {
+                "label": {
+                  "default": "Field1"
+                }
+              },
+              {
+                "label": {
+                  "default": "Field2"
+                }
+              }
+            ],
+            "description": {
+              "default": "Returns the first differential of FIELD1 or the first differential of FIELD1 with respect to FIELD2."
+            },
+            "locLabel": "@DIFF1(Field1, Field2)",
+            "help": "Returns the first differential of FIELD1 or the first differential of FIELD1 with respect to FIELD2.",
+            "value": "@DIFF1(?, ?)"
+          }
+        ]
+      },
+      "Conversion": {
+        "locLabel": "Conversion",
+        "functionList": [
+          {
+            "label": {
+              "default": "to_integer_default",
+              "resource_key": "to_integer.label"
+            },
+            "return_type": "Integer",
+            "id": "to_integer",
+            "parameters": [
+              {
+                "label": {
+                  "default": "Item_default",
+                  "resource_key": "to_integer.item.param"
+                }
+              }
+            ],
+            "description": {
+              "default": "Converts ITEM to an integer. ITEM must be a string, or a number default.",
+              "resource_key": "to_integer.item.help"
+            },
+            "locLabel": "to_integer(Item)",
+            "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
+            "value": "to_integer(?)"
+          }
+        ]
+      },
+      "String": {
+        "locLabel": "String",
+        "functionList": [
+          {
+            "label": {
+              "default": "><"
+            },
+            "return_type": "String",
+            "id": "><",
+            "description": {
+              "default": "Concatenate two strings. String1 >< String2."
+            },
+            "locLabel": "><",
+            "help": "Concatenate two strings. String1 >< String2.",
+            "value": "><"
+          }
+        ]
+      },
+      "Numeric": {
+        "locLabel": "Numeric",
+        "functionList": [
+          {
+            "label": {
+              "default": "+"
+            },
+            "return_type": "Number",
+            "id": "+",
+            "description": {
+              "default": "Add two numbers. X + Y."
+            },
+            "locLabel": "+",
+            "help": "Add two numbers. X + Y.",
+            "value": "+"
+          },
+          {
+            "label": {
+              "default": "**"
+            },
+            "return_type": "Number",
+            "id": "**",
+            "description": {
+              "default": "X to the power of Y. X ** Y."
+            },
+            "locLabel": "**",
+            "help": "X to the power of Y. X ** Y.",
+            "value": "**"
+          },
+          {
+            "label": {
+              "default": "-"
+            },
+            "return_type": "Number",
+            "id": "-",
+            "description": {
+              "default": "Subtract two numbers. X - Y."
+            },
+            "locLabel": "-",
+            "help": "Subtract two numbers. X - Y.",
+            "value": "-"
+          },
+          {
+            "label": {
+              "default": "div"
+            },
+            "return_type": "Number",
+            "id": "div",
+            "description": {
+              "default": "Quotient of dividing two numbers. X div Y."
+            },
+            "locLabel": "div",
+            "help": "Quotient of dividing two numbers. X div Y.",
+            "value": "div"
+          },
+          {
+            "label": {
+              "default": "*"
+            },
+            "return_type": "Number",
+            "id": "*",
+            "description": {
+              "default": "Multiply two number.  X * Y."
+            },
+            "locLabel": "*",
+            "help": "Multiply two number.  X * Y.",
+            "value": "*"
+          },
+          {
+            "label": {
+              "default": "rem"
+            },
+            "return_type": "Number",
+            "id": "rem",
+            "description": {
+              "default": "Remainder of dividing two numbers. X rem Y."
+            },
+            "locLabel": "rem",
+            "help": "Remainder of dividing two numbers. X rem Y.",
+            "value": "rem"
+          },
+          {
+            "label": {
+              "default": "/"
+            },
+            "return_type": "Number",
+            "id": "/",
+            "description": {
+              "default": "Divide two numbers. X / Y."
+            },
+            "locLabel": "/",
+            "help": "Divide two numbers. X / Y.",
+            "value": "/"
+          },
+          {
+            "label": {
+              "default": "mod"
+            },
+            "return_type": "Number",
+            "id": "mod",
+            "description": {
+              "default": "Modulo of dividing two numbers. X mod Y."
+            },
+            "locLabel": "mod",
+            "help": "Modulo of dividing two numbers. X mod Y.",
+            "value": "mod"
+          },
+          {
+            "label": {
+              "default": "&&~~"
+            },
+            "return_type": "Integer",
+            "id": "&&~~",
+            "description": {
+              "default": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2."
+            },
+            "locLabel": "&&~~",
+            "help": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2.",
+            "value": "&&~~"
+          }
+        ]
+      },
+      "Bitwise": {
+        "locLabel": "Bitwise",
+        "functionList": [
+          {
+            "label": {
+              "default": ">"
+            },
+            "return_type": "Boolean",
+            "id": ">",
+            "description": {
+              "default": "X is greater than Y."
+            },
+            "locLabel": ">",
+            "help": "X is greater than Y.",
+            "value": ">"
+          },
+          {
+            "label": {
+              "default": ">="
+            },
+            "return_type": "Boolean",
+            "id": ">=",
+            "description": {
+              "default": "X is greater than or equal to Y."
+            },
+            "locLabel": ">=",
+            "help": "X is greater than or equal to Y.",
+            "value": ">="
+          },
+          {
+            "label": {
+              "default": "<"
+            },
+            "return_type": "Boolean",
+            "id": "<",
+            "description": {
+              "default": "X is less than Y."
+            },
+            "locLabel": "<",
+            "help": "X is less than Y.",
+            "value": "<"
+          },
+          {
+            "label": {
+              "default": "<="
+            },
+            "return_type": "Boolean",
+            "id": "<=",
+            "description": {
+              "default": "X is less than or equal to Y."
+            },
+            "locLabel": "<=",
+            "help": "X is less than or equal to Y.",
+            "value": "<="
+          },
+          {
+            "label": {
+              "default": "="
+            },
+            "return_type": "Boolean",
+            "id": "=",
+            "description": {
+              "default": "X is equal to Y."
+            },
+            "locLabel": "=",
+            "help": "X is equal to Y.",
+            "value": "="
+          },
+          {
+            "label": {
+              "default": "/="
+            },
+            "return_type": "Boolean",
+            "id": "/=",
+            "description": {
+              "default": "X is not equal to Y."
+            },
+            "locLabel": "/=",
+            "help": "X is not equal to Y.",
+            "value": "/="
+          },
+          {
+            "label": {
+              "default": "&&~~"
+            },
+            "return_type": "Integer",
+            "id": "&&~~",
+            "description": {
+              "default": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2."
+            },
+            "locLabel": "&&~~",
+            "help": "Used between two integers. The result is the bitwise 'and' of INT1 and the bitwise complement of INT2.",
+            "value": "&&~~"
+          }
+        ]
+      },
+      "Logical": {
+        "locLabel": "Logical",
+        "functionList": [
+          {
+            "label": {
+              "default": "and"
+            },
+            "return_type": "Boolean",
+            "id": "and",
+            "description": {
+              "default": "Expression1 is true and Expression2 is true.  Expr1 and Expr2."
+            },
+            "locLabel": "and",
+            "help": "Expression1 is true and Expression2 is true.  Expr1 and Expr2.",
+            "value": "and"
+          },
+          {
+            "label": {
+              "default": "or"
+            },
+            "return_type": "Boolean",
+            "id": "or",
+            "description": {
+              "default": "Expression1 is true or Expression2 is true.  Expr1 and Expr2."
+            },
+            "locLabel": "or",
+            "help": "Expression1 is true or Expression2 is true.  Expr1 and Expr2.",
+            "value": "or"
+          },
+          {
+            "label": {
+              "default": "not"
+            },
+            "return_type": "Boolean",
+            "id": "not",
+            "parameters": [
+              {
+                "label": {
+                  "default": ""
+                }
+              }
+            ],
+            "description": {
+              "default": "Expression is not true.  not(Expr)."
+            },
+            "locLabel": "not(undefined.label)",
+            "help": "Expression is not true.  not(Expr).",
+            "value": "not(?)"
+          }
+        ]
+      },
+      "Comparison": {
+        "locLabel": "Comparison",
+        "functionList": [
+          {
+            "label": {
+              "default": "count_equal"
+            },
+            "return_type": "Integer",
+            "id": "count_equal",
+            "parameters": [
+              {
+                "label": {
+                  "default": "Item"
+                }
+              },
+              {
+                "label": {
+                  "default": "List"
+                }
+              }
+            ],
+            "description": {
+              "default": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL."
+            },
+            "locLabel": "count_equal(Item, List)",
+            "help": "Returns the number of values from a LIST of fields that are equal to ITEM1, or NULL if ITEM1 is NULL.",
+            "value": "count_equal(?, ?)"
+          },
+          {
+            "label": {
+              "default": ">"
+            },
+            "return_type": "Boolean",
+            "id": ">",
+            "description": {
+              "default": "X is greater than Y."
+            },
+            "locLabel": ">",
+            "help": "X is greater than Y.",
+            "value": ">"
+          },
+          {
+            "label": {
+              "default": ">="
+            },
+            "return_type": "Boolean",
+            "id": ">=",
+            "description": {
+              "default": "X is greater than or equal to Y."
+            },
+            "locLabel": ">=",
+            "help": "X is greater than or equal to Y.",
+            "value": ">="
+          },
+          {
+            "label": {
+              "default": "<"
+            },
+            "return_type": "Boolean",
+            "id": "<",
+            "description": {
+              "default": "X is less than Y."
+            },
+            "locLabel": "<",
+            "help": "X is less than Y.",
+            "value": "<"
+          },
+          {
+            "label": {
+              "default": "<="
+            },
+            "return_type": "Boolean",
+            "id": "<=",
+            "description": {
+              "default": "X is less than or equal to Y."
+            },
+            "locLabel": "<=",
+            "help": "X is less than or equal to Y.",
+            "value": "<="
+          },
+          {
+            "label": {
+              "default": "="
+            },
+            "return_type": "Boolean",
+            "id": "=",
+            "description": {
+              "default": "X is equal to Y."
+            },
+            "locLabel": "=",
+            "help": "X is equal to Y.",
+            "value": "="
+          },
+          {
+            "label": {
+              "default": "/="
+            },
+            "return_type": "Boolean",
+            "id": "/=",
+            "description": {
+              "default": "X is not equal to Y."
+            },
+            "locLabel": "/=",
+            "help": "X is not equal to Y.",
+            "value": "/="
+          },
+          {
+            "label": {
+              "default": "and"
+            },
+            "return_type": "Boolean",
+            "id": "and",
+            "description": {
+              "default": "Expression1 is true and Expression2 is true.  Expr1 and Expr2."
+            },
+            "locLabel": "and",
+            "help": "Expression1 is true and Expression2 is true.  Expr1 and Expr2.",
+            "value": "and"
+          },
+          {
+            "label": {
+              "default": "or"
+            },
+            "return_type": "Boolean",
+            "id": "or",
+            "description": {
+              "default": "Expression1 is true or Expression2 is true.  Expr1 and Expr2."
+            },
+            "locLabel": "or",
+            "help": "Expression1 is true or Expression2 is true.  Expr1 and Expr2.",
+            "value": "or"
+          },
+          {
+            "label": {
+              "default": "not"
+            },
+            "return_type": "Boolean",
+            "id": "not",
+            "parameters": [
+              {
+                "label": {
+                  "default": ""
+                }
+              }
+            ],
+            "description": {
+              "default": "Expression is not true.  not(Expr)."
+            },
+            "locLabel": "not(undefined.label)",
+            "help": "Expression is not true.  not(Expr).",
+            "value": "not(?)"
+          }
+        ]
+      },
+      "BADD": {
+        "locLabel": "BAD Functions",
+        "functionList": [
+          {
+            "id": "no_parameter",
+            "label": {
+              "default": "No Parameters"
+            },
+            "return_type": "Boolean",
+            "description": {
+              "default": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node."
+            },
+            "locLabel": "No Parameters",
+            "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node.",
+            "value": "No Parameters"
+          },
+          {
+            "id": "no_description",
+            "label": {
+              "default": "NoDescription"
+            },
+            "return_type": "Boolean",
+            "parameters": [
+              {
+                "label": {
+                  "default": "FIELD"
+                },
+                "type": "Field"
+              }
+            ],
+            "locLabel": "NoDescription(FIELD)",
+            "help": "NoDescription",
+            "value": "NoDescription(?)"
+          },
+          {
+            "id": "no_parameter_type",
+            "label": {
+              "default": "no_parameter_type"
+            },
+            "return_type": "Boolean",
+            "parameters": [
+              {
+                "label": {
+                  "default": "FIELD"
+                }
+              }
+            ],
+            "locLabel": "no_parameter_type(FIELD)",
+            "help": "no_parameter_type",
+            "value": "no_parameter_type(?)"
+          }
+        ]
+      }
     },
     "operators": [
       {
