@@ -113,12 +113,8 @@ export default class ControlFactory {
 			return (<CheckboxsetControl {...props} />);
 		} else if (control.controlType === ControlType.RADIOSET) {
 			return (<RadiosetControl {...props} />);
-		} else if (control.controlType === ControlType.ONEOFSELECT || control.controlType === ControlType.SELECTSCHEMA) {
-			return (<Dropdown
-				{...props}
-				rightFlyout={this.rightFlyout}
-			/>);
-		} else if (control.controlType === ControlType.SELECTCOLUMN && !tableInfo) {
+		} else if (control.controlType === ControlType.ONEOFSELECT || (control.controlType === ControlType.SELECTSCHEMA) ||
+				(control.controlType === ControlType.SELECTCOLUMN && !tableInfo)) {
 			return (<Dropdown
 				{...props}
 				rightFlyout={this.rightFlyout}
