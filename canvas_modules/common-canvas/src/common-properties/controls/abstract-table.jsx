@@ -78,7 +78,7 @@ export default class AbstractTable extends React.Component {
 
 	componentDidUpdate() {
 		if (this.isSelectSummaryEdit(this.props.selectedRows)) {
-			this.updateSelectedRowsValues([]);
+			this.updateSelectedRowsValues();
 		}
 	}
 
@@ -260,7 +260,6 @@ export default class AbstractTable extends React.Component {
 				const testCell = (typeof cellValue === "undefined") ? null : cellValue;
 				if (testCell !== this.selectedSummaryRowValue[0][colIndex]) {
 					this.props.selectedRows.forEach((rowIndex) => {
-						// TODO check if the change to the field is allowed.
 						this.props.controller.updatePropertyValue({ name: this.props.control.name, row: rowIndex, col: colIndex }, testCell, true);
 					});
 				}
