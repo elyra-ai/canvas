@@ -977,8 +977,7 @@ export default class CanvasController {
 			menuDefinition = menuDefinition.concat({ submenu: true, menu: highlightSubMenuDef, label: this.getLabel("node_highlightMenu", "Highlight") });
 		}
 		if (source.type === "canvas") {
-			const unhighlightSubMenuDef = this.createUnhighlightMenu(source);
-			menuDefinition = menuDefinition.concat({ submenu: true, menu: unhighlightSubMenuDef, label: this.getLabel("node_highlightMenu", "Highlight") });
+			menuDefinition = menuDefinition.concat({ action: "unhighlight", label: "Unhighlight", enable: this.highlight });
 		}
 		return (menuDefinition);
 	}
