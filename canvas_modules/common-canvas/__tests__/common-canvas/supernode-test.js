@@ -12,12 +12,14 @@ import React from "react";
 import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import CommonCanvas from "../../src/common-canvas/common-canvas.jsx";
+import deepFreeze from "deep-freeze";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 
-import supernodeCanvas from "../test_resources/json/supernodeCanvas.json";
+import supernodeCanvas from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
 import associationLinkCanvas from "../test_resources/json/associationLinkCanvas.json";
+import supernodeNestedCanvas from "../../../harness/test_resources/diagrams/supernodeNestedCanvas.json";
 
 import test1ExpectedFlow from "../test_resources/json/supernode-test1-expected-flow.json";
 import test1ExpectedUndoFlow from "../test_resources/json/supernode-test1-expected-undo-flow.json";
@@ -1608,6 +1610,16 @@ describe("Copy and Paste Supernode", () => {
 		expect(isEqual(selObjs, selections)).to.be.true;
 	});
 
+});
+
+describe("Subtypes enumerated for supernodes OK", () => {
+	const canvasController = new CanvasController();
+	canvasController.getObjectModel().setPipelineFlow(supernodeNestedCanvas);
+	it("should contain shaper, canvas, and non-enumerated subtype", () => {
+		deepFreeze(supernodeNestedCanvas);
+		canvasController.setPipelineFlow(supernodeNestedCanvas);
+		expect(isEqual(JSON.stringify(supernodeNestedCanvas), JSON.stringify(canvasController.getPipelineFlow())));
+	});
 });
 
 

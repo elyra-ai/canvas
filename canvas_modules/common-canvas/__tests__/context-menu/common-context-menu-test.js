@@ -16,7 +16,7 @@ import { MenuItem, SubMenu } from "react-contextmenu";
 import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import CommonCanvas from "../../src/common-canvas/common-canvas.jsx";
-import supernodeFlow from "../test_resources/json/supernodeCanvas.json";
+import supernodeFlow from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
 import canvasObj from "../test_resources/json/context-menu-test_canvasObject.json";
 import oneNodeObj from "../test_resources/json/context-menu-test_oneNodeObject.json";
 import multNodeObj from "../test_resources/json/context-menu-test_multNodeObject.json";

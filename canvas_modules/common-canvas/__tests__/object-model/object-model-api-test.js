@@ -25,7 +25,7 @@ import moveNodeVerticalLayoutCanvas from "../test_resources/json/moveNodeVertica
 import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
 import pipelineFlowTest1Start from "../test_resources/json/pipelineFlowTest1Start.json";
 import pipelineFlowTest1Expected from "../test_resources/json/pipelineFlowTest1Expected.json";
-import supernodeNestedCanvas from "../test_resources/json/supernodeNestedCanvas.json";
+import supernodeNestedCanvas from "../../../harness/test_resources/diagrams/supernodeNestedCanvas.json";
 
 import ObjectModel from "../../src/object-model/object-model.js";
 import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,

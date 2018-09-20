@@ -12,7 +12,7 @@ import { expect } from "chai";
 import { HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM, HIGHLIGHT_DOWNSTREAM } from "../../src/common-canvas/constants/canvas-constants.js";
 
 import ObjectModel from "../../src/object-model/object-model.js";
-import supernodeNestedCanvas from "../test_resources/json/supernodeNestedCanvas.json";
+import supernodeNestedCanvas from "../../../harness/test_resources/diagrams/supernodeNestedCanvas.json";
 
 const objectModel = new ObjectModel();
 

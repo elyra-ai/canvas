@@ -15,7 +15,7 @@ import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
 import CanvasController from "../../src/common-canvas/canvas-controller";
-import supernodeFlow from "../test_resources/json/supernodeCanvas.json";
+import supernodeFlow from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
 
 // import log4js from "log4js";
 
