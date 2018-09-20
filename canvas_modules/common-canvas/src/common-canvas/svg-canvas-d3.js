@@ -18,7 +18,8 @@ import { event as d3Event } from "d3-selection";
 import union from "lodash/union";
 import forIn from "lodash/forIn";
 import get from "lodash/get";
-import { NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "./constants/canvas-constants";
+import { NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
+	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "./constants/canvas-constants";
 import Logger from "../logging/canvas-logger.js";
 
 const BACKSPACE_KEY = 8;
@@ -999,7 +1000,7 @@ class CanvasRenderer {
 		return labelClass;
 	}
 
-	getMessageCircleClass(messages) {
+	getErrorMarkerClass(messages) {
 		const messageLevel = this.getMessageLevel(messages);
 		let labelClass = "d3-error-circle-off";
 		switch (messageLevel) {
@@ -1602,11 +1603,8 @@ class CanvasRenderer {
 			}
 
 			// Error indicator
-			newNodeGroups.filter((d) => !this.isSuperBindingNode(d)).append("circle")
-				.attr("id", (d) => that.getId("node_error_marker", d.id))
-				.attr("class", (d) => "node-error-marker " + that.getMessageCircleClass(d.messages))
-				.attr("cx", this.layout.errorCenterX)
-				.attr("r", this.layout.errorRadius);
+			newNodeGroups.filter((d) => !this.isSuperBindingNode(d)).append("svg")
+				.attr("id", (d) => that.getId("node_error_marker", d.id));
 
 			const newAndExistingNodeGrps =
 				nodeGroupSel.enter().merge(nodeGroupSel);
@@ -1677,12 +1675,15 @@ class CanvasRenderer {
 						}
 					}
 
-					// Set cy for error circle in new and existing nodes
+					// Set position for error circle in new and existing nodes
 					nodeGrp.select(that.getId("#node_error_marker", d.id))
 						.datum(node) // Set the __data__ to the updated data
-						.attr("cy", (nd) => this.getErrorPosY(nd))
-						.attr("cx", (nd) => this.getErrorPosX(nd, nodeGrp))
-						.attr("class", function(nd) { return "node-error-marker " + that.getMessageCircleClass(nd.messages); });
+						.attr("class", (nd) => "node-error-marker " + that.getErrorMarkerClass(nd.messages))
+						.html((nd) => that.getErrorMarkerIcon(nd))
+						.attr("width", that.layout.errorWidth)
+						.attr("height", that.layout.errorHeight)
+						.attr("x", (nd) => that.getErrorPosX(nd, nodeGrp))
+						.attr("y", (nd) => that.getErrorPosY(nd, nodeGrp));
 
 					// Handle port related objects
 					if (this.layout.connectionType === "ports") {
@@ -2113,6 +2114,11 @@ class CanvasRenderer {
 			labelWidth = this.layout.supernodeLabelWidth;
 		}
 
+		// Reduce the available space for the label by the error icon width.
+		if (this.getMessageLevel(data.messages) !== "") {
+			labelWidth -= this.layout.errorWidth;
+		}
+
 		return this.trimLabelToWidth(data.label, labelWidth, this.layout.cssNodeLabel, textObj);
 	}
 
@@ -2143,14 +2149,14 @@ class CanvasRenderer {
 	getErrorPosX(data, nodeGrp) {
 		if (this.isExpandedSupernode(data)) {
 			const nodeText = nodeGrp.select(this.getId("#node_label", data.id)).node();
-			return nodeText.getComputedTextLength() + this.layout.supernodeLabelPosX + this.layout.errorRadius + this.layout.supernodeElementsPadding;
+			return nodeText.getComputedTextLength() + this.layout.supernodeLabelPosX + this.layout.supernodeElementsPadding;
 		}
-		return this.layout.errorCenterX;
+		return this.layout.errorXPos;
 	}
 
 	getErrorPosY(data) {
 		if (this.isExpandedSupernode(data)) {
-			return this.layout.supernodeSVGTopAreaHeight / 2;
+			return (this.layout.supernodeSVGTopAreaHeight / 2) - (this.layout.errorHeight / 2);
 		} else
 		if (this.layout.labelAndIconVerticalJustification === "center") {
 			if (this.layout.nodeFormatType === "horizontal") {
@@ -2161,7 +2167,7 @@ class CanvasRenderer {
 				return (data.height / 2) - ((this.layout.imageHeight + this.layout.labelHeight + imageLabelGap) / 2);
 			}
 		}
-		return this.layout.errorCenterY;
+		return this.layout.errorYPos;
 	}
 
 	getEllipsisPosX(data) {
@@ -4400,6 +4406,22 @@ class CanvasRenderer {
 		path += "L " + data.x2 + " " + data.y2;
 
 		return path;
+	}
+
+	getErrorMarkerIcon(data) {
+		const messageLevel = this.getMessageLevel(data.messages);
+		let iconPath = "";
+		switch (messageLevel) {
+		case "error":
+			iconPath = NODE_ERROR_ICON;
+			break;
+		case "warning":
+			iconPath = NODE_WARNING_ICON;
+			break;
+		default:
+			break;
+		}
+		return iconPath;
 	}
 
 	getConnectedLinks(selectedObjects) {

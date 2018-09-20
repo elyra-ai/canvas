@@ -71,7 +71,7 @@ _defineConstant("TIP_PORTS", "Ports");
 _defineConstant("TIP_LINKS", "Links");
 
 _defineConstant("NOTIFICATION_MESSAGE_TYPE", {
-	INFORMATIONAL: "informational",
+	INFO: "info",
 	WARNING: "warning",
 	ERROR: "error",
 	SUCCESS: "success",

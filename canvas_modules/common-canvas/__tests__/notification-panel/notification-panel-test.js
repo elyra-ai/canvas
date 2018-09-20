@@ -37,7 +37,7 @@ const notificationMessageCallback = sinon.spy();
 const notificationMessage0 = {
 	id: "notification-0",
 	title: "Notification Message 0",
-	type: "informational"
+	type: "info"
 };
 const notificationMessage1 = {
 	id: "notification-1",
@@ -136,7 +136,7 @@ describe("notification panel renders correctly", () => {
 		expect(messages).to.have.length(4);
 
 		const message0 = messages.at(0);
-		expect(message0.find(".notifications.informational")).to.have.length(1);
+		expect(message0.find(".notifications.info")).to.have.length(1);
 		expect(message0.find(".notification-message-content").text()).to.equal("");
 		expect(message0.find(".notification-message-timestamp")).to.have.length(0);
 
@@ -175,7 +175,7 @@ describe("canvas controller APIs for notification panel work correctly", () => {
 	it("get messages correctly in canvasController", () => {
 		canvasController.setNotificationMessages(notificationMessages);
 
-		expect(isEqual(canvasController.getNotificationMessages("informational"), [notificationMessage0])).to.be.true;
+		expect(isEqual(canvasController.getNotificationMessages("info"), [notificationMessage0])).to.be.true;
 		expect(isEqual(canvasController.getNotificationMessages("success"), [notificationMessage1])).to.be.true;
 		expect(isEqual(canvasController.getNotificationMessages("warning"), [notificationMessage2])).to.be.true;
 		expect(isEqual(canvasController.getNotificationMessages("error"), [notificationMessage3])).to.be.true;

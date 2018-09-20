@@ -84,9 +84,10 @@ const haloLayout = {
 	drawLinkLineTo: "image_center",
 
 	// Error indicator dimensions
-	errorCenterX: 54,
-	errorCenterY: 0,
-	errorRadius: 7,
+	errorXPos: 52,
+	errorYPos: 0,
+	errorWidth: 10.5,
+	errorHeight: 10.5,
 
 	// The gap between node or comment and the link line.
 	linkGap: 7,
@@ -224,9 +225,10 @@ const portsHorizontal = {
 	drawLinkLineTo: "node_center",
 
 	// Error indicator dimensions
-	errorCenterX: 30,
-	errorCenterY: 10,
-	errorRadius: 5,
+	errorXPos: 24,
+	errorYPos: 10,
+	errorWidth: 10.5,
+	errorHeight: 10.5,
 
 	// The gap between node or comment and the link line.
 	linkGap: 7,
@@ -383,9 +385,10 @@ const portsVertical = {
 	drawLinkLineTo: "node_center",
 
 	// Error indicator dimensions
-	errorCenterX: 48,
-	errorCenterY: 0,
-	errorRadius: 5,
+	errorXPos: 45,
+	errorYPos: 0,
+	errorWidth: 10.5,
+	errorHeight: 10.5,
 
 	// The gap between node or comment and the link line.
 	linkGap: 7,

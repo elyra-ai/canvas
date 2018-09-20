@@ -34,7 +34,8 @@ import ActionPanel from "./../../panels/action-panel";
 
 import ButtonAction from "./../../actions/button";
 
-import Icon from "./../../../icons/icon.jsx";
+import CanvasIcon from "./../../../icons/icon.jsx";
+import Icon from "carbon-components-react/lib/components/Icon";
 
 const ALERT_TAB_GROUP = "alertMsgs";
 
@@ -138,10 +139,10 @@ class EditorForm extends React.Component {
 				additionalComponent = this.props.additionalComponents[tab.group];
 			}
 			if (this.props.rightFlyout) {
-				let panelArrow = <Icon type="downCaret" />;
+				let panelArrow = <CanvasIcon type="downCaret" />;
 				let categoryOpen = false;
 				if (this.props.activeTab === tab.group) {
-					panelArrow = <Icon type="upCaret" />;
+					panelArrow = <CanvasIcon type="upCaret" />;
 					categoryOpen = true;
 				}
 				const panelItemsContainer = (<div className={classNames("properties-category-content", { "show": categoryOpen }) }>
@@ -312,14 +313,17 @@ class EditorForm extends React.Component {
 			/>);
 		} else if (uiItem.itemType === "staticText") {
 			const textClass = classNames("properties-static-text", uiItem.textType);
-			const icon = uiItem.textType === "info" ? <div><Icon type="info" /></div> : null;
+			const icon = uiItem.textType === "info" ? <div><CanvasIcon type="info" /></div> : null;
 			const text = <div className={textClass}>{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}</div>;
 			return <div key={"static-text." + key} className="properties-static-text-container">{icon}{text}</div>;
 		} else if (uiItem.itemType === "linkText") { // linkText used for Alerts tab. Only used internally
 			const textClass = classNames("properties-link-text-container", uiItem.textType);
 			let icon = null;
 			if (uiItem.textType === "warning" || uiItem.textType === "error") {
-				icon = <div><Icon type="circle" /></div>;
+				icon = (<div><Icon className="info"
+					description=""
+					name={uiItem.textType + "--glyph"}
+				/></div>);
 			}
 			const text = (
 				<a className="properties-link-text" onClick={this._handleMessageClick.bind(this, uiItem.controlId)}>

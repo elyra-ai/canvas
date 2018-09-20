@@ -77,7 +77,7 @@ class Toolbar extends React.Component {
 			} else if (successMessages.length > 0) {
 				className = bellIconClassName + constants.SUCCESS;
 			} else {
-				className = bellIconClassName + constants.INFORMATION;
+				className = bellIconClassName + constants.INFO;
 			}
 		}
 		return {

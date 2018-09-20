@@ -294,31 +294,6 @@ export default class Icon extends React.Component {
 						16 2zm0 26C9.383 28 4 22.617 4 16S9.383 4 16 4s12 5.383 12 12-5.383 12-12 12z"
 					/>
 				</svg>,
-			error:
-				<svg xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 1024 1024" fill="#e71d32" type="error-o"
-					className={CLASS_NAME}
-					{...this.props}
-				>
-					<path fill="#E71D32" d="M455.68 225.28v117.76l25.6 286.72h56.32l30.72-286.72v-117.76h-112.64z" />
-					<path fill="#E71D32" d="M568.32 742.4c0 31.105-25.215 56.32-56.32 56.32s-56.32-25.215-56.32-56.32c0-31.105
-						25.215-56.32 56.32-56.32s56.32 25.215 56.32 56.32z"
-					/>
-					<path fill="#E71D32" d="M512 71.68c240.64 0 440.32 199.68 440.32 440.32s-199.68 440.32-440.32
-						440.32-440.32-194.56-440.32-440.32 199.68-440.32 440.32-440.32zM512 0c-281.6 0-512 230.4-512
-						512s230.4 512 512 512 512-230.4 512-512-230.4-512-512-512z"
-					/>
-				</svg>,
-			warning:
-				<svg xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 32 32"
-					className={CLASS_NAME}
-					{...this.props}
-				>
-					<path fill="#EFC100" d="M16 3L1 29h30L16 3zm0 4.002L27.537 27H4.463L16 7.002z" />
-					<path fill="#FDD600" d="M15 14v2l.5 5h1l.5-5v-2z" />
-					<circle fill="#FDD600" cx="16" cy="23" r="1" />
-				</svg>,
 			info:
 				<svg xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 16 16"
@@ -328,37 +303,6 @@ export default class Icon extends React.Component {
 					<path d="M10,12H6v-1h1V8H6V7h3v4h1V12z M8,4c0.6,0,1,0.4,1,1S8.6,6,8,6S7,5.6,7,5S7.4,4,8,4z M8,0C3.6,0,0,3.6,0,8
 						s3.6,8,8,8s8-3.6,8-8c0-2.1-0.8-4.2-2.3-5.7C12.2,0.8,10.1,0,8,0z"
 					/>
-				</svg>,
-			infoHollow:
-				<svg xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 16 16"
-					className={CLASS_NAME + " fill"}
-					{...this.props}
-				>
-					<polygon fill="#5596E6" points="8.5,11.5 8.5,6.3 6.3,6.3 6.3,7.5 7.4,7.5 7.4,11.5 5.7,11.5 5.7,12.6 10.3,12.6 10.3,11.5 " />
-					<path fill="#5596E6" d="M8,2.9c-0.5,0-0.9,0.4-0.9,0.9S7.5,4.6,8,4.6c0.5,0,0.9-0.4,0.9-0.9S8.4,2.9,8,2.9z" />
-					<path fill="#5596E6" d="M8,16c-4.4,0-8-3.6-8-8s3.6-8,8-8s8,3.6,8,8S12.4,16,8,16z M8,1.2C4.2,1.2,1.1,4.3,1.1,8s3.1,6.9,6.9,6.9
-						s6.9-3.1,6.9-6.9S11.8,1.2,8,1.2z"
-					/>
-				</svg>,
-			success:
-				<svg xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 16 16"
-					className={CLASS_NAME}
-					{...this.props}
-				>
-					<path fill="#5AA700" d="M8,0C3.6,0,0,3.6,0,8s3.6,8,8,8s8-3.6,8-8S12.4,0,8,0z M8,14.9c-3.8,0-6.9-3.1-6.9-6.9S4.2,1.2,8,1.2
-						s6.9,3.1,6.9,6.9S11.8,14.9,8,14.9z"
-					/>
-					<polygon fill="#5AA700" points="6.9,11.2 4,8.3 4.9,7.4 6.9,9.4 11.1,5.2 12,6.1 " />
-				</svg>,
-			circle:
-				<svg xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 32 32"
-					className={CLASS_NAME}
-					{...this.props}
-				>
-					<circle cx="16" cy="16" r="8" />
 				</svg>,
 			moveTop:
 				<svg xmlns="http://www.w3.org/2000/svg"

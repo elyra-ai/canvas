@@ -32,8 +32,9 @@ _defineConstant("DEFAULT_NOTIFICATION_HEADER", "Notifications");
 
 _defineConstant("ERROR", "error");
 _defineConstant("WARNING", "warning");
-_defineConstant("INFORMATION", "info");
+_defineConstant("INFO", "info");
 _defineConstant("SUCCESS", "success");
+_defineConstant("CARBON_SUCCESS", "checkmark");
 
 _defineConstant("NONE", "none");
 _defineConstant("HORIZONTAL", "horizonal");
@@ -89,4 +90,18 @@ _defineConstant("SUPER_NODE_EXPAND_ICON",
 	"0-.1-.1-.1h-5.4c-.8 0-1.5.7-1.5 1.4v12c0 .8.7 1.5 1.5 1.5h12.1c.8 0 1.5-.7 1.5-1.4v-5.4c-.1-.1-.2-.1-.2-.1\"/>" +
 	"<path d=\"m10.4 0v1.4h3.2l-5.1 5v.1l1.1 1 4.9-5.1v3.3h1.5v-5.7z\"/>" +
 	"</g>" +
+	"</svg>");
+
+_defineConstant("NODE_ERROR_ICON",
+	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\">" +
+	"<path d=\"M8 16 A8 8 0 1 1 8 0 a 8 8 0 0 1 0 16 z" + // Circle.
+	" M 11.5 4.3 l -7 7z\"/>" + // Slash.
+	"</svg>");
+
+_defineConstant("NODE_WARNING_ICON",
+	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\">" +
+	"<path d=\"M.75 16 a.75.75 0 0 1 -.67 -1.085 L 7.33 .415 a .75 .75 0 0 1 1.34 0 l 7.25 14.5 A .75 .75 0 0 1 15.25 16 H .75 z" + // Triangle.
+	" m 7.25 -10.5 v 5" + // Exclamation mark line.
+	" M 8 13.25 A .25 .25 0 1 0 8 12.25 a .25 .25 0 0 0 0 1 z" + // Exclamation mark dot.
+	" M 8 12 l 0.5 1.25\"/>" + // Draw a line through the exclamation circle to fill it.
 	"</svg>");

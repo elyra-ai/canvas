@@ -82,7 +82,7 @@ export default class SidePanelAPI extends React.Component {
 			appendLink: false,
 			notificationTitle: "",
 			notificationMessage: "",
-			notificationType: NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL
+			notificationType: NOTIFICATION_MESSAGE_TYPE.INFO
 		};
 
 		this.messageCounter = 0;
@@ -560,11 +560,11 @@ export default class SidePanelAPI extends React.Component {
 						className="sidepanel-radio-group"
 						name="notification_message_type"
 						onChange={this.onNotificationMessageTypeChange.bind(this)}
-						defaultSelected={NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL}
+						defaultSelected={NOTIFICATION_MESSAGE_TYPE.INFO}
 					>
 						<RadioButton
-							value={NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL}
-							labelText={NOTIFICATION_MESSAGE_TYPE.INFORMATIONAL}
+							value={NOTIFICATION_MESSAGE_TYPE.INFO}
+							labelText={NOTIFICATION_MESSAGE_TYPE.INFO}
 						/>
 						<RadioButton
 							value={NOTIFICATION_MESSAGE_TYPE.SUCCESS}

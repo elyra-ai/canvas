@@ -9,8 +9,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Icon from "../icons/icon.jsx";
-import { INFORMATION } from "../common-canvas/constants/canvas-constants";
+import CanvasIcon from "./../icons/icon.jsx";
+import Icon from "carbon-components-react/lib/components/Icon";
+import { SUCCESS, CARBON_SUCCESS } from "../common-canvas/constants/canvas-constants";
 
 class NotificationPanel extends React.Component {
 	constructor(props) {
@@ -38,15 +39,19 @@ class NotificationPanel extends React.Component {
 		for (let index = 0; index < this.props.messages.length; index++) {
 			const message = this.props.messages[index];
 			const className = message.callback ? " clickable " : "";
-			const iconType = message.type.startsWith(INFORMATION) ? INFORMATION + "Hollow" : message.type;
+			const iconType = message.type.startsWith(SUCCESS) ? CARBON_SUCCESS : message.type;
+
 			const type = (<div className="notification-message-type">
-				<Icon type={iconType} />
+				<Icon className={iconType}
+					description=""
+					name={iconType + "--glyph"}
+				/>
 			</div>);
 
 			const timestamp = message.timestamp
 				? (<div className="notification-message-timestamp">
 					<div className="notification-message-timestamp-icon">
-						<Icon type="time" />
+						<CanvasIcon type="time" />
 					</div>
 					<div className="notification-message-string">
 						{message.timestamp}
