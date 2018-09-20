@@ -4308,35 +4308,94 @@ class CanvasRenderer {
 	getCurvePath(data) {
 		const xDiff = data.x2 - data.x1;
 
+		// When dragging out a new link we will not have src nor trg nodes
+		let topSrc = data.y1;
+		let topTrg = data.y2;
+		let bottomSrc = data.y1;
+		let bottomTrg = data.y2;
+
+		// When drawing a link from node to node we will have src and trg nodes.
+		if (data.src && data.trg) {
+			topSrc = data.src.y_pos;
+			topTrg = data.trg.y_pos;
+			bottomSrc = data.src.y_pos + data.src.height;
+			bottomTrg = data.trg.y_pos + data.trg.height;
+		}
+
 		let path = "M " + data.x1 + " " + data.y1;
 
-		if (xDiff >= 50) {
+		if (xDiff >= this.layout.minInitialLine ||
+				(bottomTrg > topSrc - this.layout.wrapAroundNodePadding &&
+					topTrg < bottomSrc + this.layout.wrapAroundNodePadding &&
+					data.x2 > data.x1)) {
 			const corner1X = data.x1 + (data.x2 - data.x1) / 2;
 			const corner1Y = data.y1;
 			const corner2X = corner1X;
 			const corner2Y = data.y2;
 
-			path += "C " + corner1X + " " + corner1Y + " " + corner2X + " " + corner2Y + " " + data.x2 + " " + data.y2 + " ";
+			path += " C " + corner1X + " " + corner1Y + " " + corner2X + " " + corner2Y + " " + data.x2 + " " + data.y2;
 
 		} else {
-			const yDiff = data.y2 - data.y1;
+			let yDiff = data.y2 - data.y1;
+
+			let midY = 0;
+			if (topTrg >= bottomSrc + this.layout.wrapAroundNodePadding) {
+				midY = bottomSrc + ((topTrg - bottomSrc) / 2);
+			} else if (bottomTrg <= topSrc - this.layout.wrapAroundNodePadding) {
+				midY = bottomTrg + ((topSrc - bottomTrg) / 2);
+				yDiff = -yDiff;
+			} else {
+				if (data.y1 > data.y2) {
+					midY = Math.min(topSrc, topTrg) - this.layout.wrapAroundSpacing;
+					yDiff = -yDiff;
+				} else {
+					midY = Math.max(bottomSrc, bottomTrg) + this.layout.wrapAroundSpacing;
+				}
+			}
+
+			// Calculate an offset for the start points of the straight line. This
+			// will be relative to the start and end point of the curve. This needs
+			// to be based on the X gap between the source and target nodes but also
+			// dependent on the Y gap between those nodes because, as the Y gap
+			// increases, we want the straight line to decrease in size.
+			const offsetForStraightLine = Math.min((yDiff / 2), -(xDiff - this.layout.minInitialLine / 2));
+
 			const corner1X = data.x1 + this.layout.minInitialLine;
 			const corner1Y = data.y1;
 
 			const corner2X = corner1X;
-			const corner2Y = data.y1 + (yDiff / 4);
+			const corner2Y = data.y1 + ((midY - data.y1) / 2);
 
-			const corner4X = data.x1 + (xDiff / 2);
-			const corner4Y = data.y1 + (yDiff / 2);
+			const corner4X = data.x1 + ((data.x2 - data.x1) / 2);
+			const corner4Y = midY;
 
-			const corner6X = data.x2 - this.layout.minInitialLine;
-			const corner6Y = data.y2 - (yDiff / 4);
+			const corner4aX = data.x1 - offsetForStraightLine;
+			const corner4aY = midY;
 
-			path += " Q " + corner1X + " " + corner1Y + " " +
-											corner2X + " " + corner2Y + " " +
-							" T " + corner4X + " " + corner4Y + " " +
-							" T " + corner6X + " " + corner6Y + " " +
-							" T " + data.x2 + " " + data.y2;
+			const corner4bX = data.x2 + offsetForStraightLine;
+			const corner4bY = midY;
+
+			const corner5X = data.x2 - this.layout.minInitialLine;
+			const corner5Y = midY;
+
+			const corner6X = corner5X;
+			const corner6Y = midY + ((data.y2 - midY) / 2);
+
+			// There is enough space we draw a straight line to join one end of the
+			// curve to another. Otherwise we just draw a continuous curve with no
+			// straight line.
+			if (corner4aX > corner4bX) {
+				path += " Q " + corner1X + " " + corner1Y + " " + corner2X + " " + corner2Y +
+								" T " + corner4aX + " " + corner4aY;
+				path += " L " + corner4bX + " " + corner4bY;
+				path += " Q " + corner5X + " " + corner5Y + " " + corner6X + " " + corner6Y +
+								" T " + data.x2 + " " + data.y2;
+			} else {
+				path += " Q " + corner1X + " " + corner1Y + " " + corner2X + " " + corner2Y +
+								" T " + corner4X + " " + corner4Y;
+				path += " Q " + corner5X + " " + corner5Y + " " + corner6X + " " + corner6Y +
+								" T " + data.x2 + " " + data.y2;
+			}
 		}
 
 		return path;

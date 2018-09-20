@@ -104,10 +104,13 @@ const haloLayout = {
 	commentLinkArrowHead: true,
 
 	// Initialize values for drawing connectors. minInitialLine is the
-	// size of the vertical line protruding from the source or target handles
-	// when such a line is required for drawing connectors.
+	// size of the horizontal line protruding from the source or target handles
+	// when such a line is required for drawing connectors. wrapAroundSpacing
+	// the spacing for wraparound curved connectors.:
 	elbowSize: 10,
 	minInitialLine: 30,
+	wrapAroundSpacing: 20,
+	wrapAroundNodePadding: 10,
 
 	// Values for AutoLayout and AutoNode function
 	autoLayoutInitialMarginX: 50,
@@ -245,10 +248,13 @@ const portsHorizontal = {
 	commentLinkArrowHead: false,
 
 	// Initialize values for drawing connectors. minInitialLine is the
-	// size of the vertical line protruding from the source or target handles
-	// when such a line is required for drawing connectors.
+	// size of the horizontal line protruding from the source or target handles
+	// when such a line is required for drawing connectors. wrapAroundSpacing
+	// the spacing for wraparound curved connectors.:
 	elbowSize: 10,
 	minInitialLine: 30,
+	wrapAroundSpacing: 20,
+	wrapAroundNodePadding: 10,
 
 	// Values for AutoLayout and AutoNode function
 	autoLayoutInitialMarginX: 50,
@@ -405,10 +411,13 @@ const portsVertical = {
 	commentLinkArrowHead: false,
 
 	// Initialize values for drawing connectors. minInitialLine is the
-	// size of the vertical line protruding from the source or target handles
-	// when such a line is required for drawing connectors.
+	// size of the horizontal line protruding from the source or target handles
+	// when such a line is required for drawing connectors. wrapAroundSpacing
+	// the spacing for wraparound curved connectors.:
 	elbowSize: 10,
 	minInitialLine: 30,
+	wrapAroundSpacing: 20,
+	wrapAroundNodePadding: 10,
 
 	// Values for AutoLayout and AutoNode function
 	autoLayoutInitialMarginX: 50,
