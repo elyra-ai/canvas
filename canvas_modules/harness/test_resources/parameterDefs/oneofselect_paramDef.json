@@ -19,7 +19,9 @@
     "oneofselect_table_error": [
       [
         "cat",
-        "pear"
+        "pear",
+        "blue",
+        "Lemond"
       ]
     ]
   },
@@ -223,6 +225,18 @@
             "brown"
           ],
           "default": "red"
+        },
+        {
+          "id": "cyclist",
+          "enum": [
+            "Lemond",
+            "Mercyk",
+            "Indurain",
+            "Wiggins",
+            "Froome",
+            "Thomas"
+          ],
+          "default": "Lemond"
         }
       ]
     }
@@ -409,6 +423,17 @@
             },
             "description": {
               "default": "color subpanel"
+            },
+            "width": 10,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "cyclist",
+            "label": {
+              "default": "Bicyclist"
+            },
+            "description": {
+              "default": "cyclist subpanel"
             },
             "width": 10,
             "edit_style": "subpanel"
