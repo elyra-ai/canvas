@@ -1683,7 +1683,7 @@ class CanvasRenderer {
 						.attr("width", that.layout.errorWidth)
 						.attr("height", that.layout.errorHeight)
 						.attr("x", (nd) => that.getErrorPosX(nd, nodeGrp))
-						.attr("y", (nd) => that.getErrorPosY(nd, nodeGrp));
+						.attr("y", (nd) => that.getErrorPosY(nd));
 
 					// Handle port related objects
 					if (this.layout.connectionType === "ports") {
