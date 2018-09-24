@@ -208,7 +208,7 @@ const portsHorizontal = {
 	decoratorWidth: 12,
 
 	decoratorTopY: 0,
-	decoratorBottomY: 28,
+	decoratorBottomY: 26,
 
 	decoratorLeftX: 2,
 	decoratorRightX: 144,
