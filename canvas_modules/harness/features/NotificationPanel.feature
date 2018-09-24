@@ -14,7 +14,7 @@ Feature: NotificationPanel
 		Given I have selected the "Flyout" palette layout
 		Given I have toggled the app side panel
 
-		Then I verify the action "bell-action" in the toolbar is "disabled"
+		Then I verify the action "notification-action" in the toolbar is "disabled"
 		Then I pause for 1 seconds
 		Then I open the palette
 		Then I add node 1 a "Add Column" node from the "Transformations" category onto the canvas at 450, 200

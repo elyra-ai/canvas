@@ -53,6 +53,16 @@ describe("Toolbar renders correctly", () => {
 
 		expect(wrapper.find(".list-item.list-item-disabled").length).to.equal(1); // Palette is never disabled
 	});
+
+	it("should render one <Toolbar/> component with no icons on the left side of the toolbar", () => {
+		const toolbarConfig = [];
+		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
+		wrapper = createToolbar(toolbarConfig, notificationConfig);
+		expect(wrapper.find(Toolbar)).to.have.length(1);
+
+		const actions = wrapper.find(".list-item-containers");
+		expect(actions.length).to.equal(4);
+	});
 });
 
 function createToolbar(toolbarConfig, notificationConfig) {

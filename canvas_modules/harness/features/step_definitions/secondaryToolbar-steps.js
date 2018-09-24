@@ -88,10 +88,10 @@ module.exports = function() {
 			if (action.getAttribute("id") === actionId) {
 				actionFound = true;
 				if (iconState === "disabled") {
-					expect(action.$("a").getAttribute("class")).toEqual("list-item list-item-disabled ");
+					expect(action.$("a").getAttribute("class")).toEqual("list-item list-item-disabled");
 					break;
 				}
-				expect(action.$("a").getAttribute("class")).toEqual("list-item ");
+				expect(action.$("a").getAttribute("class")).toEqual("list-item");
 				break;
 			}
 		}

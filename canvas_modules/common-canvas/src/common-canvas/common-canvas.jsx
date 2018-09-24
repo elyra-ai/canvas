@@ -61,7 +61,6 @@ export default class CommonCanvas extends React.Component {
 
 		this.initializeController = this.initializeController.bind(this);
 
-		this.setToolbarWidth = this.setToolbarWidth.bind(this);
 		this.setPaletteWidth = this.setPaletteWidth.bind(this);
 
 		this.canvasController = this.props.canvasController;
@@ -151,10 +150,6 @@ export default class CommonCanvas extends React.Component {
 		if (paletteWidth !== this.state.paletteWidth) {
 			this.setState({ paletteWidth: paletteWidth });
 		}
-	}
-
-	setToolbarWidth(newToolbarWidth) {
-		this.setState({ toolbarWidth: newToolbarWidth });
 	}
 
 	getSvgViewportOffset() {
@@ -364,9 +359,7 @@ export default class CommonCanvas extends React.Component {
 					config={this.props.config}
 					canvasController={this.canvasController}
 				>
-					<div>
-						{contextMenuWrapper}
-					</div>
+					{contextMenuWrapper}
 				</DiagramCanvasD3>);
 
 			if (this.objectModel.getPaletteData()) {
@@ -405,8 +398,6 @@ export default class CommonCanvas extends React.Component {
 					isPaletteOpen={this.state.isPaletteOpen}
 					isNotificationOpen={this.state.isNotificationOpen}
 					canvasController={this.canvasController}
-					toolbarWidth={this.state.toolbarWidth}
-					setToolbarWidth={this.setToolbarWidth}
 				/>);
 			}
 		}

@@ -9,8 +9,6 @@
 
 @import "carbon-components/scss/globals/scss/vars";
 
-$transition-speed: 0.2s;
-
 /* right flyout panel */
 
 .right-flyout-panel {
@@ -40,8 +38,6 @@ $transition-speed: 0.2s;
 
 .common-canvas-right-side-items {
 	width: 100%;
-	-webkit-transition: $transition-speed;
-	transition: $transition-speed;
 	display: flex;
 }
 

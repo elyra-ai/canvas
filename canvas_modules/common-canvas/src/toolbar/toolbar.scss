@@ -25,14 +25,12 @@ $toolbar-default-icons-count: 5;
 
 #canvas-toolbar {
 	height: 45px;
-	min-width: $toolbar-button-width * $toolbar-default-icons-count;
+	min-width: ($toolbar-button-width * $toolbar-default-icons-count) + $toolbar-divider-width;
 	width: 100%;
 	background-color: $ui-02;
 	border-bottom: 2px solid $ui-04;
 	box-sizing: content-box;
 	position: relative;
-	-webkit-transition: 0.2s;
-	transition: 0.2s;
 }
 
 .toolbar-fixed-location {
@@ -54,7 +52,9 @@ $toolbar-default-icons-count: 5;
 }
 
 #zoom-actions-container {
-	margin-left: auto;
+	position: absolute;
+	right: 0;
+	background-color: $ui-02;
 }
 
 .list-item-containers .list-item {
@@ -67,16 +67,8 @@ $toolbar-default-icons-count: 5;
 	user-select: none;
 
 	&.toolbar-divider {
-		width: 62px;
+		box-sizing: border-box;
 	}
-}
-
-.list-item-containers .list-item.overflow {
-	height: auto;
-	width: 200px;
-}
-
-.list-item {
 	&:hover {
 		background-color: $ui-04;
 	}
@@ -85,11 +77,13 @@ $toolbar-default-icons-count: 5;
 	}
 }
 
-.list-item-containers .list-item-disabled {
-	cursor: default;
+.list-item-containers .list-item.overflow {
+	height: auto;
+	width: 200px;
 }
 
-.list-item-disabled {
+.list-item-containers .list-item-disabled {
+	cursor: default;
 	&:hover, &:active {
 		background-color: transparent;
 	}
@@ -113,16 +107,16 @@ $toolbar-default-icons-count: 5;
 	margin: auto;
 	display: flex;
 	justify-content: center;
-}
 
-.toolbar-item.overflow {
-	height: auto;
-	width: inherit;
-	margin: 0;
-	display: flex;
-	justify-content: flex-start;
-	padding-top: 8px;
-	padding-bottom: 8px;
+	&.overflow {
+		height: auto;
+		width: inherit;
+		margin: 0;
+		display: flex;
+		justify-content: flex-start;
+		padding-top: 8px;
+		padding-bottom: 8px;
+	}
 }
 
 .toolbar-icons, .toolbar-item > svg {
@@ -140,7 +134,7 @@ $toolbar-default-icons-count: 5;
 }
 
 .overflow-action-list-item {
-	position: absolute;
+	position: relative;
 }
 
 .overflow-toolbar-icon-label {
@@ -150,10 +144,10 @@ $toolbar-default-icons-count: 5;
 	width: calc(100% - #{$toolbar-icon-width});
 	word-break: break-word;
 	hyphens: auto;
-}
 
-.overflow-toolbar-icon-label.disabled {
-	opacity: 0.5;
+	&.disabled {
+		opacity: 0.5;
+	}
 }
 
 .toolbar-popover-list {

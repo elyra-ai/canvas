@@ -13,12 +13,11 @@ import Tooltip from "../tooltip/tooltip.jsx";
 import ObserveSize from "react-observe-size";
 import Icon from "../icons/icon.jsx";
 import constants from "../common-canvas/constants/canvas-constants";
+import classNames from "classnames";
 
 import styles from "./toolbar.scss";
 
 // eslint override
-/* global window document */
-/* eslint max-depth: ["error", 5] */
 /* eslint no-return-assign: "off" */
 
 class Toolbar extends React.Component {
@@ -28,14 +27,15 @@ class Toolbar extends React.Component {
 		this.toolbarIconWidth = parseInt(styles.toolbarButtonWidth, 10); // ParseInt to remove "px"
 		this.dividerWidth = parseInt(styles.toolbarDividerWidth, 10); // ParseInt to remove "px"
 
+		const numDefaultIcons = this.props.notificationConfig ? 5 : 4;
+		this.defaultToolbarWidth = this.toolbarIconWidth * numDefaultIcons; // Width of toolbar with palette, zoom, and notification icons
+		this.maxToolbarWidth = 0; // Width of toolbar if displaying all icons and dividers
+
 		this.state = {
-			defaultToolbarWidth: this.toolbarIconWidth * 5, // Width of toolbar with palette, zoom, and notification icons
-			maxToolbarWidth: 0, // Width of toolbar if displaying all icons and dividers
-			dividerCount: 0,
 			showExtendedMenu: false
 		};
 
-		this.setToolbarWidth = this.setToolbarWidth.bind(this);
+		this.setToolbarDisplayItemsCount = this.setToolbarDisplayItemsCount.bind(this);
 		this.generatePaletteIcon = this.generatePaletteIcon.bind(this);
 		this.generateNotificationIcon = this.generateNotificationIcon.bind(this);
 		this.toggleShowExtendedMenu = this.toggleShowExtendedMenu.bind(this);
@@ -46,12 +46,13 @@ class Toolbar extends React.Component {
 		if (this.props.config) {
 			this.calculateMaxToolbarWidth(this.props.config);
 		}
-		this.setToolbarWidth();
+		this.setToolbarDisplayItemsCount();
 	}
 
-	setToolbarWidth() {
-		if (this.toolbar && this.toolbar.offsetWidth !== this.props.toolbarWidth) {
-			this.props.setToolbarWidth(this.toolbar.offsetWidth);
+	setToolbarDisplayItemsCount() {
+		const displayItemsCount = this.calculateDisplayItems(this.toolbar.offsetWidth);
+		if (displayItemsCount !== this.state.displayItemsCount) {
+			this.setState({ displayItemsCount: displayItemsCount });
 		}
 	}
 
@@ -67,7 +68,7 @@ class Toolbar extends React.Component {
 		const warningMessages = this.props.canvasController.getNotificationMessages(constants.WARNING);
 		const successMessages = this.props.canvasController.getNotificationMessages(constants.SUCCESS);
 
-		let className = "canvas-icon fill " + constants.NOTIFICATION_BELL_ICON.DEFAULT + " " + constants.INFORMATION;
+		let className = "canvas-icon fill " + constants.NOTIFICATION_BELL_ICON.DEFAULT + " " + constants.INFO;
 		if (isIconEnabled) {
 			const bellIconClassName = "canvas-icon fill " + constants.NOTIFICATION_BELL_ICON.DOT + " ";
 			if (errorMessages.length > 0) {
@@ -87,28 +88,23 @@ class Toolbar extends React.Component {
 	}
 
 	calculateMaxToolbarWidth(list) {
-		let dividerCount = 0;
-		let totalWidthSize = this.state.defaultToolbarWidth;
+		let totalWidthSize = this.defaultToolbarWidth;
 		for (let i = 0; i < list.length; i++) {
 			if (list[i].action) {
 				totalWidthSize += this.toolbarIconWidth;
 			} else if (list[i].divider) {
 				totalWidthSize += this.dividerWidth;
-				dividerCount++;
 			}
 		}
 
-		this.setState({
-			dividerCount: dividerCount,
-			maxToolbarWidth: totalWidthSize
-		});
+		this.maxToolbarWidth = totalWidthSize;
 	}
 
-	calculateDisplayItems() {
+	calculateDisplayItems(toolbarWidth) {
 		const numObjects = this.props.config.length;
-		if (this.state.maxToolbarWidth >= this.props.toolbarWidth) { // need to minimize
+		if (this.maxToolbarWidth >= toolbarWidth) { // need to minimize
 			const definition = this.props.config;
-			let availableWidth = this.props.toolbarWidth - this.state.defaultToolbarWidth + this.toolbarIconWidth;
+			let availableWidth = toolbarWidth - this.defaultToolbarWidth + this.toolbarIconWidth;
 
 			if (availableWidth < this.toolbarIconWidth) {
 				return 0;
@@ -134,80 +130,62 @@ class Toolbar extends React.Component {
 		return numObjects;
 	}
 
-	generateActionItems(definition, displayItems, actionsHandler, overflow) {
-		const that = this;
-		let utilityActions = [];
-		let dividerClassName = "toolbar-divider";
-		if (overflow) {
-			dividerClassName = "overflow-toolbar-divider";
-		}
-		if (definition.length === displayItems ||
-			(definition.length - 1 === displayItems && definition[displayItems].divider)) { // dont show overflow icon if last item is divider
-			utilityActions = definition.map(function(actionObj, actionObjNum) {
-				if (actionObj.action) {
-					const actionId = actionObj.action + "-action";
-					if (actionObj.action.startsWith("notification") || actionObj.action.startsWith(constants.NOTIFICATION_BELL_ICON.DEFAULT)) {
-						return that.generateNotificationIcon(actionObj, actionId, overflow);
-					} else if (actionObj.enable === true) {
-						if (actionObj.action.startsWith("palette")) {
-							return that.generatePaletteIcon(actionObj, overflow);
-						}
-						return that.generateEnabledActionIcon(actionObj, actionId, actionsHandler, overflow);
-					}
-					// disable
-					return that.generateDisabledActionIcon(actionObj, actionId, overflow);
+	generateActionItems(definition, displayItemsCount, actionsHandler, overflow) {
+		const utilityActions = [];
+		const dividerClassName = overflow ? "overflow-toolbar-divider" : "toolbar-divider";
+		for (let i = 0; i < displayItemsCount; i++) {
+			const actionObj = definition[i];
+			if (actionObj.action) {
+				const actionId = actionObj.action + "-action";
+				if (actionObj.action.startsWith("notification") || actionObj.action.startsWith(constants.NOTIFICATION_BELL_ICON.DEFAULT)) {
+					utilityActions[i] = this.generateNotificationIcon(actionObj, actionId, overflow);
+				} else if (actionObj.action.startsWith("palette")) {
+					actionObj.enable = true;
+					utilityActions[i] = this.generatePaletteIcon(actionObj, overflow);
+				} else if (actionObj.enable === true) {
+					utilityActions[i] = this.generateActionIcon(actionObj, actionId, actionsHandler, overflow);
+				} else { // disable
+					utilityActions[i] = this.generateActionIcon(actionObj, actionId, null, overflow);
 				}
-				return (<div key={"toolbar-divider-" + actionObjNum} className={dividerClassName} />);
-			});
-		} else {
-			for (let i = 0; i < displayItems; i++) {
-				const actionObj = definition[i];
-				if (actionObj.action) {
-					const actionId = actionObj.action + "-action";
-					if (actionObj.enable === true) {
-						if (actionObj.action.startsWith("palette")) {
-							utilityActions[i] = this.generatePaletteIcon(actionObj, overflow);
-						} else {
-							utilityActions[i] = this.generateEnabledActionIcon(actionObj, actionId, actionsHandler, overflow);
-						}
-					} else { // disable
-						utilityActions[i] = this.generateDisabledActionIcon(actionObj, actionId, overflow);
-					}
-				} else {
-					utilityActions[i] = (<div key={"toolbar-divider-" + i} className={dividerClassName} />);
-				}
+			} else {
+				utilityActions[i] = (<div key={"toolbar-divider-" + i} className={dividerClassName} />);
 			}
-			utilityActions[displayItems] = this.generatedExtendedMenu(definition, displayItems, actionsHandler);
 		}
+
+		if (definition.length !== displayItemsCount &&
+			!(definition.length - 1 === displayItemsCount && definition[displayItemsCount].divider)) { // Don't show overflow icon if last item is divider.
+			utilityActions[displayItemsCount] = this.generatedExtendedMenu(definition, displayItemsCount, actionsHandler);
+		}
+
 		return utilityActions;
 	}
-	// TODO should be able to merge this method with generateDisabledActionIcon
-	generateEnabledActionIcon(actionObj, actionId, actionsHandler, overflow) {
+
+	generateActionIcon(actionObj, actionId, actionsHandler, overflow) {
 		const overflowClassName = overflow ? "overflow" : "";
 		let actionClickHandler = actionObj.callback;
 		if (typeof actionsHandler === "function") {
 			actionClickHandler = () => actionsHandler(actionObj.action);
 		}
-		let icon = <Icon type={actionObj.action} />;
 
-		if (actionObj.className) {
-			icon = <Icon type={actionObj.action} className={actionObj.className} />;
-		}
+		const iconClassname = actionObj.className ? { className: actionObj.className } : {};
+		let icon = <Icon type={actionObj.action} disabled={!actionObj.enable} {...iconClassname} />;
 
-		if (actionObj.iconEnabled) {
-			icon = (<img id={"toolbar-icon-" + actionObj.action} className={"toolbar-icons " + overflowClassName}
-				src={actionObj.iconEnabled}
+		// Customer provided icon.
+		if (actionObj.iconEnabled && actionObj.iconDisabled) {
+			const customIcon = actionObj.enable ? actionObj.iconEnabled : actionObj.iconDisabled;
+			icon = (<img id={"toolbar-icon-" + actionObj.action} className={"toolbar-icons " + overflowClassName} disabled={!actionObj.enable}
+				src={customIcon}
 			/>);
 		}
+
 		const tooltipId = actionId + "-" + this.props.canvasController.getInstanceId() + "-tooltip";
-		let disableTooltip = false;
-		if (overflow) {
-			disableTooltip = true;
-		}
+		const iconButtonClassname = classNames("list-item", overflowClassName, { "list-item-disabled": !actionObj.enable });
+		const itemContainersClassname = classNames("list-item-containers", overflowClassName, this.getActionClassName(actionObj.action));
+
 		return (
-			<li id={actionId} key={actionId} className={"list-item-containers " + overflowClassName + " " + this.getActionClassName(actionObj.action)}>
-				<Tooltip id={tooltipId} tip={actionObj.label} disable={disableTooltip}>
-					<a onClick={actionClickHandler} className={"list-item " + overflowClassName} >
+			<li id={actionId} key={actionId} className={itemContainersClassname}>
+				<Tooltip id={tooltipId} tip={actionObj.label} disable={overflow}>
+					<a onClick={actionClickHandler} className={iconButtonClassname} >
 						<div className={"toolbar-item " + overflowClassName}>
 							{icon}
 							{this.generateLabel(false, overflow, actionObj.label)}
@@ -218,43 +196,15 @@ class Toolbar extends React.Component {
 		);
 	}
 
-	generateDisabledActionIcon(actionObj, actionId, overflow) {
-		const overflowClassName = overflow ? "overflow" : "";
-		let icon = <Icon type={actionObj.action} disabled />;
-		if (actionObj.iconDisabled) {
-			icon = (<img id={"toolbar-icon-" + actionObj.action} className={"toolbar-icons " + overflowClassName}
-				src={actionObj.iconDisabled}
-			/>);
-		}
-
-		const tooltipId = actionId + "-" + this.props.canvasController.getInstanceId() + "-tooltip";
-		let disableTooltip = false;
-		if (overflow) {
-			disableTooltip = true;
-		}
-		return (
-			<li id={actionId} key={actionId} className={"list-item-containers " + overflowClassName + " " + this.getActionClassName(actionObj.action)}>
-				<Tooltip id={tooltipId} tip={actionObj.label} disable={disableTooltip}>
-					<a className={"list-item list-item-disabled " + overflowClassName} >
-						<div className={"toolbar-item " + overflowClassName}>
-							{icon}
-							{this.generateLabel(true, overflow, actionObj.label)}
-						</div>
-					</a>
-				</Tooltip>
-			</li>
-		);
-	}
-
 	generatePaletteIcon(actionObj, overflow) {
 		actionObj.action = "paletteOpen";
 		actionObj.callback = this.props.canvasController.openPalette.bind(this.props.canvasController);
-		let palette = this.generateEnabledActionIcon(actionObj, "palette-open-action", null, overflow);
+		let palette = this.generateActionIcon(actionObj, "palette-open-action", null, overflow);
 
 		if (this.props.isPaletteOpen) {
 			actionObj.action = "paletteClose";
 			actionObj.callback = this.props.canvasController.closePalette.bind(this.props.canvasController);
-			palette = this.generateEnabledActionIcon(actionObj, "palette-close-action", null, overflow);
+			palette = this.generateActionIcon(actionObj, "palette-close-action", null, overflow);
 		}
 		return palette;
 	}
@@ -268,21 +218,21 @@ class Toolbar extends React.Component {
 		let notification;
 		if (actionObj.enable) {
 			actionObj.action = constants.NOTIFICATION_BELL_ICON.DOT;
-			notification = this.generateEnabledActionIcon(actionObj, "notification-open-action", null, overflow);
+			notification = this.generateActionIcon(actionObj, "notification-open-action", null, overflow);
 		} else {
 			actionObj.action = constants.NOTIFICATION_BELL_ICON.DEFAULT;
-			notification = this.generateDisabledActionIcon(actionObj, actionId, overflow);
+			notification = this.generateActionIcon(actionObj, actionId, null, overflow);
 		}
 
 		if (this.props.isNotificationOpen) {
 			actionObj.callback = this.props.canvasController.closeNotificationPanel.bind(this.props.canvasController);
-			notification = this.generateEnabledActionIcon(actionObj, "notification-close-action", null, overflow);
+			notification = this.generateActionIcon(actionObj, "notification-close-action", null, overflow);
 		}
 		return notification;
 	}
 
-	generatedExtendedMenu(actions, displayItems, actionsHandler) {
-		const subActionsList = actions.slice(displayItems, actions.length);
+	generatedExtendedMenu(actions, displayItemsCount, actionsHandler) {
+		const subActionsList = actions.slice(displayItemsCount, actions.length);
 		const subActionsListItems = this.generateActionItems(subActionsList, subActionsList.length, actionsHandler, true);
 		const subMenuClassName = this.state.showExtendedMenu === true ? "" : "toolbar-popover-list-hide";
 		return (
@@ -319,13 +269,7 @@ class Toolbar extends React.Component {
 		const that = this;
 		let actionContainer = <div />;
 		if (this.props.config && this.props.config.length > 0) {
-			const displayItems = this.calculateDisplayItems();
-			const actions = that.generateActionItems(
-				that.props.config,
-				displayItems,
-				this.toolbarMenuActionHandler,
-				""
-			);
+			const actions = that.generateActionItems(that.props.config, this.state.displayItemsCount, this.toolbarMenuActionHandler, false);
 			actionContainer = (<div key={"actions-container"} id={"actions-container"} className="toolbar-items-container">
 				{actions}
 			</div>);
@@ -347,14 +291,14 @@ class Toolbar extends React.Component {
 			rightAlignedActionItems = rightAlignedActionItems.concat(notificationBell);
 		}
 
-		const rightAlignedContainerItems = this.generateActionItems(rightAlignedActionItems, rightAlignedActionItems.length, null, "");
+		const rightAlignedContainerItems = this.generateActionItems(rightAlignedActionItems, rightAlignedActionItems.length, null, false);
 		const rightAlignedContainer = (<div id="zoom-actions-container" className="toolbar-items-container">
 			{rightAlignedContainerItems}
 		</div>);
 
 		const canvasToolbar = (
 			<div id="canvas-toolbar" ref={ (elem) => this.toolbar = elem}>
-				<ObserveSize observerFn={(element) => this.setToolbarWidth()}>
+				<ObserveSize observerFn={(element) => this.setToolbarDisplayItemsCount()}>
 					<ul id="toolbar-items">
 						{actionContainer}
 						{rightAlignedContainer}
@@ -371,9 +315,7 @@ Toolbar.propTypes = {
 	isPaletteOpen: PropTypes.bool,
 	isNotificationOpen: PropTypes.bool,
 	notificationConfig: PropTypes.object,
-	canvasController: PropTypes.object.isRequired,
-	toolbarWidth: PropTypes.number,
-	setToolbarWidth: PropTypes.func
+	canvasController: PropTypes.object.isRequired
 };
 
 export default Toolbar;
