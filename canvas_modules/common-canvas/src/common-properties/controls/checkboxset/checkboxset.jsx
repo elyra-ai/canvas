@@ -37,7 +37,8 @@ class CheckboxsetControl extends React.Component {
 			// Remove from values
 			values.splice(index, 1);
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, values);
+		const newValues = values.concat();
+		this.props.controller.updatePropertyValue(this.props.propertyId, newValues);
 	}
 
 	render() {

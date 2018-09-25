@@ -23,7 +23,21 @@
     "hide": true,
     "checkbox_hidden": [
       "pear"
-    ]
+    ],
+    "checkboxset_table": [
+        [
+          [
+            "banana",
+            "orange",
+            "pear"
+          ],
+          [
+            8,
+            5
+          ]
+        ],
+        []
+      ]
   },
   "parameters": [
     {
@@ -116,6 +130,29 @@
         "apple",
         "orange",
         "pear"
+      ]
+    },
+    {
+      "id": "checkboxset_table",
+      "type": "array[checkboxsetTableDef]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "checkboxsetTableDef",
+      "parameters": [
+        {
+          "id": "fruit",
+          "type": "array[string]",
+          "enum":[
+            "apple", "banana", "orange", "pear"
+          ]
+        },
+        {
+          "id": "number",
+          "type": "array[integer]",
+          "enum": [8, 3, 5, 7]
+        }
       ]
     }
   ],
@@ -225,6 +262,43 @@
         "description": {
           "default": "checkboxset that is hidden"
         }
+      },
+      {
+        "parameter_ref": "checkboxset_table",
+        "label": {
+          "default": "checkboxsets in a table"
+        },
+        "description": {
+          "default": "This is to test checkbox sets within a table"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "checkboxsetTableDef",
+        "parameters": [
+          {
+            "parameter_ref": "fruit",
+            "label": {
+              "default" : "fruit"
+            },
+            "description": {
+              "default" : "checkboxset in sub panel"
+            },
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "number",
+            "label": {
+              "default" : "number"
+            },
+            "description": {
+              "default" : "checkboxset on panel"
+            },
+            "edit_style": "on_panel",
+            "control": "checkboxset"
+          }
+        ]
       }
     ],
     "group_info": [
@@ -256,6 +330,29 @@
           "checkboxset_disable",
           "hide",
           "checkboxset_hidden"
+        ]
+      },
+      {
+        "id": "checkboxset-table-panels",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "checkboxset-table-summary",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Edit checkbox table"
+            },
+            "group_info": [
+              {
+                "id": "checkboxset-table-summary-ctrls",
+                "parameter_refs": [
+                  "checkboxset_table"                ]
+              }
+            ]
+          }
         ]
       }
     ]
