@@ -1160,10 +1160,10 @@ export default class CanvasController {
 		}
 	}
 
-	decorationActionHandler(node, id) {
+	decorationActionHandler(node, id, pipelineId) {
 		this.logger.log("decorationActionHandler - node: " + node.id + " id: " + id);
 		if (this.handlers.decorationActionHandler) {
-			this.handlers.decorationActionHandler(node, id);
+			this.handlers.decorationActionHandler(node, id, pipelineId);
 		}
 	}
 

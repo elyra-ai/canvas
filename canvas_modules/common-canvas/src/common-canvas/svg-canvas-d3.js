@@ -2295,7 +2295,7 @@ class CanvasRenderer {
 	callDecoratorCallback(node, dec) {
 		d3Event.stopPropagation();
 		if (this.canvasController.decorationActionHandler) {
-			this.canvasController.decorationActionHandler(node, dec.id);
+			this.canvasController.decorationActionHandler(node, dec.id, this.activePipeline.id);
 		}
 	}
 
