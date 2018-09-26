@@ -13,6 +13,13 @@ import PropTypes from "prop-types";
 import { MenuItem, SubMenu } from "react-contextmenu";
 import classNames from "classnames";
 
+// context-menu sizing
+const CONTEXT_MENU_WIDTH = 160; // see context-menu.css .react-context-menu margin
+const CONTEXT_MENU_LINK_HEIGHT = 30; // see context-menu.css .react-context-menu-item height
+const CONTEXT_MENU_DIVIDER_HEIGHT = 1; // see context-menu.css .react-context-menu-item height
+const EXTRA_OFFSET = 5; // Extra offset for vertical menu positioning
+
+
 class CommonContextMenu extends React.Component {
 	constructor(props) {
 		super(props);
@@ -26,46 +33,111 @@ class CommonContextMenu extends React.Component {
 		// clear any current selections.
 		if (selectedEvent) {
 			selectedEvent.stopPropagation();
-			selectedEvent.nativeEvent.stopImmediatePropagation();
 		}
 	}
 
-	buildMenu(menuDefinition) {
+	calculateMenuSize(menu) {
+		var numDividers = 0;
+		for (let i = 0; i < menu.length; ++i) {
+			const divider = menu[i].divider;
+			if (divider) {
+				numDividers++;
+			}
+		}
+
+		var menuSize = {
+			height: ((menu.length - numDividers) * CONTEXT_MENU_LINK_HEIGHT) + (numDividers * CONTEXT_MENU_DIVIDER_HEIGHT),
+			width: CONTEXT_MENU_WIDTH
+		};
+
+		return menuSize;
+	}
+
+	// Returns a new position and the canvas rectangle for the context menu based on the current
+	// mouse position and whether the menu would appear outside the edges of the page.
+	calculateMenuPos(mousePos, menuSize, canvasRect) {
+		const menuPos = { x: mousePos.x, y: mousePos.y };
+
+		// Reposition contextMenu if it will show off the bottom of the page
+		if (mousePos.y + menuSize.height > canvasRect.height) {
+			menuPos.y = canvasRect.height - menuSize.height - EXTRA_OFFSET; // Move up by extra offset so it looks nice
+
+			// If repositioning the menu would push it off the top of the page
+			// (in very short browser windows) position it at the top.
+			if (menuPos.y < 0) {
+				menuPos.y = 0;
+			}
+		}
+
+		// Reposition contextMenu if it will show off the right of the page
+		if (mousePos.x + menuSize.width > canvasRect.width) {
+			menuPos.x -= menuSize.width;
+		}
+
+		return menuPos;
+	}
+
+	areAllSubmenuItemsDisabled(submenuItems) {
+		let disabledCount = 0;
+		submenuItems.forEach(function(entry) {
+			if (entry.props.disabled === true) {
+				disabledCount++;
+			}
+		});
+		return disabledCount === submenuItems.length;
+	}
+
+	buildMenu(menuDefinition, mousePos, menuSize, menuPos, canvasRect) {
 		const customDivider = {
 			className: "contextmenu-divider"
 		};
 
-		let rtl = false;
-		if (this.props.canvasRect && this.props.menuRect) {
-			const rightBound = this.props.canvasRect.width;
-			const rect = this.props.menuRect;
-			// Here we make sure that the combined menu position, plus the menu width,
-			//  plus the submenu width, does not exceed the viewport bounds.
-			if (rect.left + rect.width + rect.width > rightBound) {
-				rtl = true;
-			}
-		}
 		const menuItems = [];
+
+		let runningYPos = 0;
+
 		for (let i = 0; i < menuDefinition.length; ++i) {
 			const divider = menuDefinition[i].divider;
 			const submenu = menuDefinition[i].submenu;
+
 			if (divider) {
 				menuItems.push(<MenuItem attributes={customDivider} key={i + 1} onClick={() => {}} divider />);
+				runningYPos += CONTEXT_MENU_DIVIDER_HEIGHT;
+
 			} else if (submenu) {
-				const submenuItems = this.buildMenu(menuDefinition[i].menu);
-				let disabledCount = 0;
-				submenuItems.forEach(function(entry) {
-					if (entry.props.disabled === true) {
-						disabledCount++;
-					}
-				});
-				const disabled = { disabled: disabledCount === submenuItems.length };
+				const submenuItems = this.buildMenu(menuDefinition[i].menu, mousePos, menuSize, menuPos, canvasRect);
+				const disabled = { disabled: this.areAllSubmenuItemsDisabled(submenuItems) };
+				const submenuSize = this.calculateMenuSize(menuDefinition[i].menu);
+				let rtl = false;
+
+				// Ensure that the combined menu position, plus the menu width,
+				//  plus the submenu width, does not exceed the viewport bounds.
+				if (mousePos.x + menuSize.width + submenuSize.width > canvasRect.right) {
+					rtl = true;
+				}
+
+				// Does the submenu go below the bottom of the viewport?
+				const y = canvasRect.bottom - (menuPos.y + runningYPos + submenuSize.height);
+
+				// If submenu is not below the viewport bottom set offset to 0 so the
+				// submenu will not be moved. Otherwise, y will be used to move the
+				// submenu up fully into the view port.
+				const offset = (y > 0) ? 0 : y - EXTRA_OFFSET;
+
+				const subMenuPosStyle = {
+					top: offset + "px" // Use negative to push the menu up
+				};
+
 				const classNameValue = classNames("contextmenu-submenu", { "disabled": disabled });
 				menuItems.push(
 					<SubMenu title={menuDefinition[i].label} key={i + 1} className={classNameValue} rtl={rtl} {...disabled}>
-						{submenuItems}
+						<div key={i + 1} style={subMenuPosStyle} className="context-menu-popover">
+							{submenuItems}
+						</div>
 					</SubMenu>
 				);
+				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
+
 			} else {
 				const disabled = { disabled: menuDefinition[i].enable === false };
 				menuItems.push(
@@ -73,16 +145,25 @@ class CommonContextMenu extends React.Component {
 						{menuDefinition[i].label}
 					</MenuItem>
 				);
+				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
 			}
 		}
 		return menuItems;
 	}
 
 	render() {
-		const menuItems = this.buildMenu(this.props.menuDefinition);
+		// Reposition contextMenu so that it does not show off the screen
+		const menuSize = this.calculateMenuSize(this.props.menuDefinition);
+		const menuPos = this.calculateMenuPos(this.props.mousePos, menuSize, this.props.canvasRect);
+		const posStyle = {
+			left: menuPos.x + "px",
+			top: menuPos.y + "px"
+		};
+
+		const menuItems = this.buildMenu(this.props.menuDefinition, this.props.mousePos, menuSize, menuPos, this.props.canvasRect);
 
 		return (
-			<div>
+			<div id="context-menu-popover" className="context-menu-popover" style={posStyle}>
 				{menuItems}
 			</div>
 		);
@@ -90,10 +171,10 @@ class CommonContextMenu extends React.Component {
 }
 
 CommonContextMenu.propTypes = {
-	contextHandler: PropTypes.func,
-	menuDefinition: PropTypes.array,
-	menuRect: PropTypes.object,
-	canvasRect: PropTypes.object
+	contextHandler: PropTypes.func.isRequired,
+	menuDefinition: PropTypes.array.isRequired,
+	canvasRect: PropTypes.object.isRequired,
+	mousePos: PropTypes.object.isRequired
 };
 
 export default CommonContextMenu;

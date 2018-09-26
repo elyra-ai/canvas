@@ -7,7 +7,7 @@ Feature: ContextMenu
 	So I can build a graph
 
 	Scenario: Sanity test context menu options
-		Then I resize the window size to 1400 width and 800 height
+		Then I resize the window size to 1400 width and 650 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
@@ -25,12 +25,12 @@ Feature: ContextMenu
 		Then I verify the context menu has a "Undo" item
 
 		# Test the context menu is pushed to the left when user clicks near right side of the page
-		Then I right click at position 1070, 300 to display the context menu
-		Then I verify the context menu is at 1070, 300
+		Then I right click at position 1300, 100 to display the context menu
+		Then I verify the context menu is at 1140, 100
 
 		# Test the context menu is pushed upwards when user clicks near bottom of the page
 		Then I right click at position 1000, 500 to display the context menu
-		Then I verify the context menu is at 1000, 455
+		Then I verify the context menu is at 1000, 305
 
 		# Test the context menu is pushed to the left correctly even when the palette is open
 		Then I click the canvas background at 1, 1 to close the context menu or clear selections
@@ -44,8 +44,14 @@ Feature: ContextMenu
 		Then I right click at position 640, 300 to display the context menu
 		Then I verify the context menu is at 640, 300
 
+		# Test the context menu's 'Highlight' submenu is pushed up in a situation where it would appear off the bottom of the screen
+		# To do this, use zoom to fit to get a node near the bottom of the screen
+		Then I click zoom to fit
+		Then I right click the "Neural Net" node to display the context menu
+		Then I click option "Highlight" from the context menu
+		Then I verify the submenu is pushed up by 91 pixels
+
 		# Test that, when a set of objects are selected, a click opening the context menu will not clear the selections
-		Then I have closed the common properties dialog by clicking on close button
 		Then I click the canvas background at 1, 1 to close the context menu or clear selections
 		Then I click the "C5.0" node to select it
 		Then I Cmd+click the "Neural Net" node to add it to the selections
@@ -53,3 +59,7 @@ Feature: ContextMenu
 		Then I verify that 3 objects are selected
 		Then I right click at position 1000, 300 to display the context menu
 		Then I verify that 3 objects are selected
+		Then I click the canvas background at 1, 1 to close the context menu or clear selections
+		Then I verify that 3 objects are selected
+		Then I click the canvas background at 1, 1 to close the context menu or clear selections
+		Then I verify that 0 objects are selected

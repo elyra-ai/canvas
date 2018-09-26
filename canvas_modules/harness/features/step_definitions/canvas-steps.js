@@ -61,9 +61,15 @@ module.exports = function() {
 	this.Then(/^I verify the context menu is at (\d+), (\d+)$/, function(xCoord, yCoord) {
 		var left = browser.getCssProperty(".context-menu-popover", "left");
 		var top = browser.getCssProperty(".context-menu-popover", "top");
-		expect(left.value).toEqual(xCoord + "px");
-		expect(top.value).toEqual(yCoord + "px");
+		expect(left[0].value).toEqual(xCoord + "px");
+		expect(top[0].value).toEqual(yCoord + "px");
 	});
+
+	this.Then(/^I verify the submenu is pushed up by (\d+) pixels$/, function(pushupValue) {
+		var top = browser.getCssProperty(".context-menu-popover", "top");
+		expect(top[2].value).toEqual(-pushupValue + "px");
+	});
+
 
 	this.Then(/^I verify the context menu has a "([^"]*)" item$/, function(itemText) {
 		var items = browser.$$(".react-contextmenu-item");
