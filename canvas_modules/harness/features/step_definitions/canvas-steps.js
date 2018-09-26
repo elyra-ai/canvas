@@ -138,6 +138,12 @@ module.exports = function() {
 		browser.pause(1000);
 	});
 
+	this.Then(/^I hover over category "([^"]*)"$/, function(category) {
+		const categoryElem = findCategoryElement(category);
+		categoryElem.moveToObject();
+		browser.pause(1000); // Wait for the tooltip to be displayed
+	});
+
 	this.Then(/^I hover over node type "([^"]*)" in category "([^"]*)"$/, function(nodeType, category) {
 		const categoryElem = findCategoryElement(category);
 		categoryElem.click();
@@ -145,6 +151,17 @@ module.exports = function() {
 
 		browser.$$(".palette-list-item")[nodeIndex].moveToObject();
 		browser.pause(1000); // Wait for the tooltip to be displayed
+	});
+
+	this.Then(/^I verify the tip shows next to category "([^"]*)"$/, function(category) {
+		const tip = browser.$(".tip-palette-item");
+		expect(tip.value).not.toEqual(null);
+
+		const tipCategoryLabel = tip.$(".tip-palette-label").getText();
+		expect(tipCategoryLabel).toEqual(category);
+
+		const tipLabel = tip.$(".tip-palette-desc").getText();
+		expect(tipLabel).toEqual("Description for " + category);
 	});
 
 	this.Then(/^I verify the tip shows next to the node type "([^"]*)" in category "([^"]*)"$/, function(nodeType, category) {

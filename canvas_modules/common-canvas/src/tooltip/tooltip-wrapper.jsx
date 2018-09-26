@@ -72,7 +72,12 @@ export default class TooltipWrapper extends React.Component {
 			case TIP_TYPE_PALETTE_CATEGORY:
 				content = (
 					<div className="tip-palette-item">
+						<hr className="tip-palette-line" />
 						<div className="tip-palette-label">{this.props.category.label}</div>
+						{this.props.category.description
+							? (<div className="tip-palette-desc">{this.props.category.description}</div>)
+							: ("")
+						}
 					</div>
 				);
 				break;

@@ -1,10 +1,11 @@
 {
-  "version": "2.0",
   "categories": [
     {
       "category": "import",
       "label": "Import",
+      "description": "Description for Import",
       "image":  "/images/palette-categories/sources_open.svg",
+      "version": "2.0",
       "nodetypes": [
         {
           "label": "Var. File",
@@ -62,6 +63,7 @@
     {
       "category": "recordOp",
       "label": "Record Ops",
+      "description": "Description for RecordOps",
       "image":  "/images/palette-categories/operations_open.svg",
       "nodetypes": [
         {
@@ -426,6 +428,7 @@
     {
       "category": "graph",
       "label": "Graphs",
+      "description": "Description for Graphs",
       "image": "/images/palette-categories/sources_open.svg",
       "nodetypes": [
         {

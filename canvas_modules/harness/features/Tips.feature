@@ -17,6 +17,10 @@ Feature: Tips
 		Given I have toggled the app side panel
 
 		Then I open the palette
+
+		Then I hover over category "Import"
+		Then I verify the tip shows next to category "Import"
+
 		Then I hover over node type "Var. File" in category "Import"
 		Then I verify the tip shows next to the node type "Var. File" in category "Import"
 
