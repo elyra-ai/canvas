@@ -19,6 +19,7 @@ import PropertyUtil from "./../../util/property-utils.js";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
 import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
+import cloneDeep from "lodash/cloneDeep";
 import logger from "./../../../../utils/logger";
 import classNames from "classnames";
 
@@ -542,7 +543,7 @@ class EditorForm extends React.Component {
 		let uiItems = this.props.controller.getUiItems();
 		if (!isEmpty(this.messages) && uiItems[0].itemType === "primaryTabs") {
 			// create a new copy for uiItems object so that alerts are not added multiple times
-			uiItems = JSON.parse(JSON.stringify(this.props.controller.getUiItems()));
+			uiItems = cloneDeep(uiItems);
 			uiItems[0].tabs.unshift(this.genAlertsTab(this.messages)); // add alerts tab to the beginning of the tabs array
 		}
 

@@ -28,6 +28,7 @@ import { Provider } from "react-redux";
 
 import TitleEditor from "./components/title-editor";
 import classNames from "classnames";
+import cloneDeep from "lodash/cloneDeep";
 
 import { injectIntl, intlShape } from "react-intl";
 
@@ -120,7 +121,7 @@ class CommonProperties extends React.Component {
 		this.uiParameterKeys = this._getUiOnlyKeys();
 		this.initialValueInfo = this._setValueInforProperties(this.initialValueInfo);
 		if (propertiesInfo.messages) {
-			this.initialValueInfo.additionalInfo.messages = JSON.parse(JSON.stringify(propertiesInfo.messages));
+			this.initialValueInfo.additionalInfo.messages = cloneDeep(propertiesInfo.messages);
 		}
 		this.initialValueInfo.undoInfo.properties = this.propertiesController.getPropertyValues(); // used for undoing when node editor open
 		this.initialValueInfo.undoInfo.messages = this.propertiesController.getErrorMessages(); // used for undoing when node editor open
@@ -188,7 +189,7 @@ class CommonProperties extends React.Component {
 			// so we don't save again unnecessarily when clicking save but no additional changes happened
 			this.currentParameters = this.propertiesController.getPropertyValues();
 			// reset undo values
-			this.initialValueInfo = JSON.parse(JSON.stringify(valueInfo));
+			this.initialValueInfo = cloneDeep(valueInfo);
 		}
 		if (closeProperties) {
 			this.cancelHandler(); // close property editor

@@ -9,6 +9,7 @@
 
 import logger from "../../../utils/logger";
 import { ParamRole } from "../constants/form-constants";
+import cloneDeep from "lodash/cloneDeep";
 import uuid4 from "uuid/v4";
 
 /**
@@ -32,7 +33,7 @@ function toType(obj) {
 
 function copy(obj) {
 	if (typeof obj !== "undefined") {
-		return JSON.parse(JSON.stringify(obj));
+		return cloneDeep(obj);
 	}
 	return obj;
 }

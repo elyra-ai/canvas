@@ -61,7 +61,7 @@ class SummaryPanel extends React.Component {
 			this.setState({ showWideFlyout: true });
 		}
 		// sets the current value for parameter.  Used on cancel
-		this.initialControlValues = JSON.parse(JSON.stringify(this.props.controller.getPropertyValues()));
+		this.initialControlValues = this.props.controller.getPropertyValues();
 		this.initialMessages = this.props.controller.getErrorMessages();
 		this.initialStates = this.props.controller.getControlStates();
 	}
@@ -121,8 +121,9 @@ class SummaryPanel extends React.Component {
 							if (this.props.controller.isSummary(colPropertyId) || showCustom) {
 								// This allows array cell content to look acceptable
 								const displayValue = this._getSummaryDisplayValue(rowValue[colIdx], colPropertyId);
-								const contentValue = JSON.stringify(displayValue).replace("\"", "")
-									.replace(new RegExp("\"", "g"), "") + " ";
+								const contentValue = typeof displayValue === "undefined" ? ""
+									: JSON.stringify(displayValue).replace("\"", "")
+										.replace(new RegExp("\"", "g"), "") + " ";
 								rowData.push(
 									<td key={"summary-table-data-" + colIdx}
 										className={"properties-summary-row-data "}

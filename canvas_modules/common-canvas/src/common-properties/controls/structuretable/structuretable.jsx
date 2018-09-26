@@ -21,6 +21,7 @@ import ValidationMessage from "./../../components/validation-message";
 import findIndex from "lodash/findIndex";
 import reject from "lodash/reject";
 import ControlUtils from "./../../util/control-utils";
+import cloneDeep from "lodash/cloneDeep";
 
 class StructureTableControl extends AbstractTable {
 	constructor(props) {
@@ -47,8 +48,7 @@ class StructureTableControl extends AbstractTable {
 			// Sometimes the source list selection hasn"t changed so do an
 			// explicit check for whether an entry for this column exists
 			if (this.indexOfRow(columnName) < 0) {
-				// Must be a better way of cloning the array but this will do for now
-				const newRow = JSON.parse(JSON.stringify(this.props.control.defaultRow));
+				const newRow = cloneDeep(this.props.control.defaultRow);
 
 				// Set the column name.
 				if (isMap) {

@@ -14,6 +14,7 @@ import uuid4 from "uuid/v4";
 import PropertyUtils from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import Icon from "./../../../icons/icon.jsx";
+import cloneDeep from "lodash/cloneDeep";
 
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
 import { TOOL_TIP_DELAY } from "./../../constants/constants.js";
@@ -39,7 +40,7 @@ export default class SubPanelCell extends React.Component {
 
 	showSubPanel() {
 		// sets the current value for parameter.  Used on cancel
-		this.initialControlValue = JSON.parse(JSON.stringify(this.props.controller.getPropertyValue(this.props.propertyId)));
+		this.initialControlValue = cloneDeep(this.props.controller.getPropertyValue(this.props.propertyId));
 		this.initialMessages = this.props.controller.getErrorMessages();
 		this.initialStates = this.props.controller.getControlStates();
 		this.subPanelInvoker.showSubDialog(this.props.title, this.props.panel, this.onSubPanelHidden);

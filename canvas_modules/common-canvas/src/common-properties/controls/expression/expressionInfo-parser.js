@@ -12,13 +12,13 @@
 import logger from "../../../../utils/logger";
 import { L10nProvider } from "../../util/L10nProvider";
 import propertyOf from "lodash/propertyOf";
-
+import cloneDeep from "lodash/cloneDeep";
 
 function setExpressionInfo(inExpressionInfo) {
 	const expressionFunctionInfo = {};
 	if (inExpressionInfo && inExpressionInfo.functions) {
 		const l10nProvider = new L10nProvider(propertyOf(inExpressionInfo)("resources"));
-		const expressionInfo = JSON.parse(JSON.stringify(inExpressionInfo.functions));
+		const expressionInfo = cloneDeep(inExpressionInfo.functions);
 		if (Array.isArray(expressionInfo.function_info) && Array.isArray(expressionInfo.function_categories)) {
 			// build up the visible function labels from the input label and the parameter information.
 			const functionInfoList = expressionInfo.parmsSet ? expressionInfo.function_info : _genFunctionParameters(expressionInfo.function_info, l10nProvider);

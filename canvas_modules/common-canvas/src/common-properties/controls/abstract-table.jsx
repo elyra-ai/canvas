@@ -24,6 +24,7 @@ import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES,
 
 import findIndex from "lodash/findIndex";
 import sortBy from "lodash/sortBy";
+import cloneDeep from "lodash/cloneDeep";
 import uuid4 from "uuid/v4";
 
 /* eslint max-depth: ["error", 5] */
@@ -202,7 +203,7 @@ export default class AbstractTable extends React.Component {
 				value = [this.getDefaultRow()];
 				this.props.controller.updatePropertyValue(summaryPropertyId, value, true);
 			}
-			this.selectedSummaryRowValue = JSON.parse(JSON.stringify(value));
+			this.selectedSummaryRowValue = cloneDeep(value);
 		}
 	}
 
@@ -264,7 +265,7 @@ export default class AbstractTable extends React.Component {
 					});
 				}
 			});
-			this.selectedSummaryRowValue = JSON.parse(JSON.stringify(newSelectedSummaryRow));
+			this.selectedSummaryRowValue = cloneDeep(newSelectedSummaryRow);
 		}
 	}
 
