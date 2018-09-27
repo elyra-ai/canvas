@@ -113,6 +113,7 @@ class App extends React.Component {
 			enableMoveNodesOnSupernodeResize: true,
 			applyOnBlur: true,
 			expressionBuilder: true,
+			expressionValidate: true,
 			validateFlowOnOpen: true,
 			narrowPalette: true,
 			schemaValidationEnabled: true,
@@ -172,6 +173,7 @@ class App extends React.Component {
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
+		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useEnableCreateSupernodeNonContiguous = this.useEnableCreateSupernodeNonContiguous.bind(this);
 		this.setEnableMoveNodesOnSupernodeResize = this.setEnableMoveNodesOnSupernodeResize.bind(this);
@@ -911,6 +913,11 @@ class App extends React.Component {
 		this.log("use expression builder", enabled);
 	}
 
+	useExpressionValidate(enabled) {
+		this.setState({ expressionValidate: enabled });
+		this.log("use expression validate link", enabled);
+	}
+
 
 	useDisplayAdditionalComponents(enabled) {
 		this.setState({ displayAdditionalComponents: enabled });
@@ -1173,6 +1180,9 @@ class App extends React.Component {
 			const messages = canvasController.getNodeMessages(nodeId, activePipelineId);
 			const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 			const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
+			if (expressionInfo !== null) {
+				expressionInfo.validateLink = this.state.expressionValidate;
+			}
 			const propsInfo = {
 				title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 				messages: messages,
@@ -1246,6 +1256,9 @@ class App extends React.Component {
 		var properties = this.state.propertiesJson;
 		const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 		const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
+		if (expressionInfo !== null) {
+			expressionInfo.validateLink = this.state.expressionValidate;
+		}
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,
@@ -1620,6 +1633,8 @@ class App extends React.Component {
 			useApplyOnBlur: this.useApplyOnBlur,
 			expressionBuilder: this.state.expressionBuilder,
 			useExpressionBuilder: this.useExpressionBuilder,
+			expressionValidate: this.state.expressionValidate,
+			useExpressionValidate: this.useExpressionValidate,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,

@@ -49,7 +49,7 @@ export default class SidePanelModal extends React.Component {
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
-
+		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 	}
 
@@ -150,6 +150,10 @@ export default class SidePanelModal extends React.Component {
 
 	useExpressionBuilder(checked) {
 		this.props.useExpressionBuilder(checked);
+	}
+
+	useExpressionValidate(checked) {
+		this.props.useExpressionValidate(checked);
 	}
 
 	dropdownOptions() {
@@ -261,6 +265,16 @@ export default class SidePanelModal extends React.Component {
 				/>
 			</div>);
 
+		const expressionValidate = (
+			<div className="sidepanel-children">
+				<div className="sidepanel-headers">Show Expression Validate Link</div>
+				<Toggle
+					id="sidepanel-expressionValidate-toggle"
+					toggled={this.props.expressionValidate}
+					onToggle={this.useExpressionValidate}
+				/>
+			</div>);
+
 		const addtlCmpts = (
 			<div className="sidepanel-children" id="sidepanel-properties-additional-components">
 				<div className="sidepanel-headers">Display additional components</div>
@@ -283,6 +297,8 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{expressionBuilder}
 				{divider}
+				{expressionValidate}
+				{divider}
 				{addtlCmpts}
 			</div>
 		);
@@ -302,6 +318,8 @@ SidePanelModal.propTypes = {
 	useApplyOnBlur: PropTypes.func,
 	expressionBuilder: PropTypes.bool,
 	useExpressionBuilder: PropTypes.func,
+	expressionValidate: PropTypes.bool,
+	useExpressionValidate: PropTypes.func,
 	displayAdditionalComponents: PropTypes.bool,
 	useDisplayAdditionalComponents: PropTypes.func,
 	setPropertiesDropdownSelect: PropTypes.func,

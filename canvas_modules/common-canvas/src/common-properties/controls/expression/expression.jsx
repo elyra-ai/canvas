@@ -55,6 +55,7 @@ class ExpressionControl extends React.Component {
 		};
 
 		this.origHint = "";
+		this.expressionInfo = this.props.controller.getExpressionInfo();
 
 		this.handleValidate = this.handleValidate.bind(this);
 		this.cancelExpressionBuilder = this.cancelExpressionBuilder.bind(this);
@@ -204,15 +205,14 @@ class ExpressionControl extends React.Component {
 			this.props.onBlur(editor, evt);
 		} else {
 			const newValue = this.editor.getValue();
-			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, true);
+			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, this.expressionInfo.validateLink);
 		}
 	}
 
 	_showBuilderButton() {
 		// only show the button if there are function lists available and
 		// not explicitly told not to by the this.props.builder
-		const expressionInfo = this.props.controller.getExpressionInfo();
-		return this.props.builder && this.props.rightFlyout && Object.keys(expressionInfo).length > 0;
+		return this.props.builder && this.props.rightFlyout && this.expressionInfo.functionCategories && Object.keys(this.expressionInfo.functionCategories).length > 0;
 	}
 
 	render() {
@@ -246,7 +246,7 @@ class ExpressionControl extends React.Component {
 		}
 
 		const validateLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_VALIDATE_LABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSION_VALIDATE_LABEL);
-		const validateLink = (
+		const validateLink = this.expressionInfo.validateLink ? (
 			<div className="properties-expression-validate" disabled={this.props.state === STATES.DISABLED}>
 				{validateIcon}
 				<div className="validateLink">
@@ -254,7 +254,8 @@ class ExpressionControl extends React.Component {
 						{validateLabel}
 					</Link>
 				</div>
-			</div>);
+			</div>)
+			: <div />;
 
 		const mirrorOptions = {
 			mode: this.props.control.language,

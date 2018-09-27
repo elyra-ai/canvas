@@ -48,7 +48,7 @@ export default class ExpressionBuilder extends React.Component {
 
 	onBlur(editor, evt) {
 		const newValue = this.editor.getValue();
-		this.props.controller.updatePropertyValue(this.props.propertyId, newValue, true);
+		this.props.controller.updatePropertyValue(this.props.propertyId, newValue, this.expressionInfo.validateLink);
 	}
 
 	editorDidMount(editor, next) {

@@ -19,6 +19,7 @@ function setExpressionInfo(inExpressionInfo) {
 	if (inExpressionInfo && inExpressionInfo.functions) {
 		const l10nProvider = new L10nProvider(propertyOf(inExpressionInfo)("resources"));
 		const expressionInfo = cloneDeep(inExpressionInfo.functions);
+		expressionFunctionInfo.validateLink = (typeof inExpressionInfo.validateLink === "undefined") ? false : inExpressionInfo.validateLink;
 		if (Array.isArray(expressionInfo.function_info) && Array.isArray(expressionInfo.function_categories)) {
 			// build up the visible function labels from the input label and the parameter information.
 			const functionInfoList = expressionInfo.parmsSet ? expressionInfo.function_info : _genFunctionParameters(expressionInfo.function_info, l10nProvider);

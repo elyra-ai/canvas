@@ -20,7 +20,7 @@ import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
 
 import ExpressionInfo from "../../test_resources/json/expression-function-list.json";
-import editStyleResource from "../../test_resources/json/form-editstyle-test.json";
+import ExpressionParamdef from "../../test_resources/paramDefs/expressionControl_paramDef.json";
 
 const control = {
 	name: "test-expression",
@@ -115,7 +115,6 @@ function reset() {
 
 const propertiesConfig = { containerType: "Custom", rightFLyout: true };
 const propertiesInfo = {
-	parameterDef: editStyleResource.paramDef,
 	appData: {},
 	additionalComponents: {},
 };
@@ -297,20 +296,41 @@ describe("expression handles no expression builder resources correctly", () => {
 
 	it("CommonProperties renders with no expressionInfo values ", () => {
 		propertiesInfo.expressionInfo = { functions: {}, resources: {} };
-		const wrapper = PropertyUtils.flyoutEditorForm(editStyleResource.paramDef, propertiesConfig, null, propertiesInfo);
-		expect(wrapper.wrapper.find("CommonProperties")).to.have.length(1);
+		const renderedObject = PropertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, null, propertiesInfo);
+		expect(renderedObject.wrapper.find("CommonProperties")).to.have.length(1);
 	});
 
 	it("CommonProperties renders with no expressionInfo resources ", () => {
 		propertiesInfo.expressionInfo = { functions: {} };
-		const wrapper = PropertyUtils.flyoutEditorForm(editStyleResource.paramDef, propertiesConfig, null, propertiesInfo);
-		expect(wrapper.wrapper.find("CommonProperties")).to.have.length(1);
+		const renderedObject = PropertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, null, propertiesInfo);
+		expect(renderedObject.wrapper.find("CommonProperties")).to.have.length(1);
 	});
 
 	it("CommonProperties renders with no expressionInfo functions ", () => {
 		propertiesInfo.expressionInfo = {};
-		const wrapper = PropertyUtils.flyoutEditorForm(editStyleResource.paramDef, propertiesConfig, null, propertiesInfo);
-		expect(wrapper.wrapper.find("CommonProperties")).to.have.length(1);
+		const renderedObject = PropertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, null, propertiesInfo);
+		expect(renderedObject.wrapper.find("CommonProperties")).to.have.length(1);
 	});
+
+	it("CommonProperties renders with no validateLink set ", () => {
+		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
+		const renderedObject = PropertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, null, propertiesInfo);
+		expect(renderedObject.wrapper.find(".validateLink")).to.have.length(0);
+	});
+
+	it("CommonProperties renders with validateLink set false", () => {
+		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
+		propertiesInfo.expressionInfo.validateLink = false;
+		const renderedObject = PropertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, null, propertiesInfo);
+		expect(renderedObject.wrapper.find(".validateLink")).to.have.length(0);
+	});
+
+	it("CommonProperties renders with validateLink set true", () => {
+		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
+		propertiesInfo.expressionInfo.validateLink = true;
+		const renderedObject = PropertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, null, propertiesInfo);
+		expect(renderedObject.wrapper.find(".validateLink")).to.have.length(8); // there are 8 expressions in this paramdef
+	});
+
 
 });
