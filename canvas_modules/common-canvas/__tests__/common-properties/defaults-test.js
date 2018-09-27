@@ -88,11 +88,9 @@ describe("add rows in tables with correct default values", () => {
 	it("should render datamodel table with new rows with correct default values", () => {
 		const wideflyout = propertyUtils.openSummaryPanel(wrapper, "summary-panel");
 		const tableRows = wideflyout.find("tr.table-row");
-		expect(tableRows).to.have.length(4);
+		expect(tableRows).to.have.length(2);
 		expect(wideflyout.find("div[data-id='properties-field_types_0_2'] select").instance().selectedIndex).to.equal(1);
 		expect(wideflyout.find("div[data-id='properties-field_types_1_2'] select").instance().selectedIndex).to.equal(0);
-		expect(wideflyout.find("div[data-id='properties-field_types_2_2'] select").instance().selectedIndex).to.equal(6);
-		expect(wideflyout.find("div[data-id='properties-field_types_3_2'] select").instance().selectedIndex).to.equal(6);
 	});
 
 	it("should render structure list editor table with new rows with correct default values", () => {
