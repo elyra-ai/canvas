@@ -211,7 +211,7 @@ const portsHorizontal = {
 	decoratorBottomY: 26,
 
 	decoratorLeftX: 2,
-	decoratorRightX: 144,
+	decoratorRightX: 130,
 
 	// Draw node as a rectangle with port arcs around the ports
 	nodeShape: "port-arcs",
@@ -312,7 +312,8 @@ const portsHorizontal = {
 	ellipsisWidth: 4,
 	ellipsisHeight: 16,
 	ellipsisPosX: 148,
-	ellipsisPosY: 12
+	ellipsisPosY: 12,
+	ellipsisHoverAreaPadding: 3
 };
 
 const portsVertical = {
@@ -475,7 +476,8 @@ const portsVertical = {
 	ellipsisWidth: 5,
 	ellipsisHeight: 15,
 	ellipsisPosX: 60,
-	ellipsisPosY: 7
+	ellipsisPosY: 7,
+	ellipsisHoverAreaPadding: 3
 };
 
 

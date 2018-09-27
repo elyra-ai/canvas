@@ -1948,10 +1948,10 @@ class CanvasRenderer {
 					.append("rect")
 					.attr("id", () => this.getId("node_ellipsis_background", d.id))
 					.attr("class", "d3-node-ellipsis-background")
-					.attr("width", this.layout.ellipsisWidth)
-					.attr("height", this.layout.ellipsisHeight)
-					.attr("x", (nd) => this.getEllipsisPosX(nd))
-					.attr("y", (nd) => this.getEllipsisPosY(nd))
+					.attr("width", this.layout.ellipsisWidth + (2 * this.layout.ellipsisHoverAreaPadding))
+					.attr("height", this.layout.ellipsisHeight + (2 * this.layout.ellipsisHoverAreaPadding))
+					.attr("x", (nd) => this.getEllipsisPosX(nd) - this.layout.ellipsisHoverAreaPadding)
+					.attr("y", (nd) => this.getEllipsisPosY(nd) - this.layout.ellipsisHoverAreaPadding)
 					.on("click", () => {
 						stopPropagationAndPreventDefault();
 						this.openContextMenu("node", d);
