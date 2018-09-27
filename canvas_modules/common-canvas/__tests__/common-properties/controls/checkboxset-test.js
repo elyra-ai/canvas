@@ -14,6 +14,9 @@ import Checkboxset from "./../../../src/common-properties/controls/checkboxset";
 import { mount } from "enzyme";
 import propertyUtils from "../../_utils_/property-utils";
 
+import checkboxSetParamDef from "../../test_resources/paramDefs/checkboxset_paramDef.json";
+
+
 const controller = new Controller();
 
 const control = {
@@ -287,5 +290,61 @@ describe("checkboxset control tests", () => {
 		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkboxset']");
 		const messageWrapper = checkboxWrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
+	});
+});
+
+describe("checkboxset works as expected in table control", () => {
+	var wrapper;
+	var renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(checkboxSetParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+	it("checkboxset works as expected in table control onpanel", () => {
+		const summaryPanelTable = propertyUtils.openSummaryPanel(wrapper, "checkboxset-table-summary");
+		const propId = { name: "checkboxset_table", row: 0, col: 1 };
+		const tableRows = summaryPanelTable.find("tbody.reactable-data tr");
+		expect(tableRows).to.have.length(2);
+		expect(renderedController.getPropertyValue(propId)).to.eql([8, 5]);
+		tableRows.at(0).simulate("click");
+		wrapper.update();
+		const checkboxsetWrapper =
+		wrapper.find("div[data-id='properties-checkboxset_table_0_1']");
+		const checkboxes = checkboxsetWrapper.find("input");
+		checkboxes.at(0).getDOMNode().checked = false;
+		checkboxes.at(0).simulate("change");
+		checkboxes.at(2).getDOMNode().checked = false;
+		checkboxes.at(2).simulate("change");
+		expect(renderedController.getPropertyValue(propId)).to.eql([]);
+	});
+	it("checkboxset works as expected in table control subpanel", () => {
+		const summaryPanelTable = propertyUtils.openSummaryPanel(wrapper, "checkboxset-table-summary");
+		const propId = { name: "checkboxset_table", row: 0, col: 0 };
+		const tableRows = summaryPanelTable.find("tbody.reactable-data tr");
+		expect(tableRows).to.have.length(2);
+		expect(renderedController.getPropertyValue(propId)).to.eql(["banana", "orange", "pear"]);
+		const rowWrapper = tableRows.at(0);
+		const subpanelButton = rowWrapper.find("td[data-label='subpanel'] button.properties-subpanel-button");
+		expect(subpanelButton).to.have.length(1);
+		subpanelButton.simulate("click");
+		wrapper.update();
+		const wideFlyoutPanel = wrapper.find("div.properties-wf-content.show");
+		const checkboxsetWrapper =
+		wideFlyoutPanel.at(0).find("div[data-id='properties-checkboxset_table_0_0']")
+			.at(1);
+		const checkboxes = checkboxsetWrapper.find("input");
+		expect(checkboxes.at(0).getDOMNode().checked).to.equal(false);
+		expect(checkboxes.at(1).getDOMNode().checked).to.equal(true);
+		expect(checkboxes.at(1).getDOMNode().checked).to.equal(true);
+		expect(checkboxes.at(1).getDOMNode().checked).to.equal(true);
+		checkboxes.at(1).getDOMNode().checked = false;
+		checkboxes.at(1).simulate("change");
+		checkboxes.at(2).getDOMNode().checked = false;
+		checkboxes.at(2).simulate("change");
+		expect(renderedController.getPropertyValue(propId)).to.eql(["pear"]);
 	});
 });
