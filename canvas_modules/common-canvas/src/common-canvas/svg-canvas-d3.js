@@ -4360,7 +4360,12 @@ class CanvasRenderer {
 			// increases, we want the straight line to decrease in size.
 			const offsetForStraightLine = Math.min((yDiff / 2), -(xDiff - this.layout.minInitialLine / 2));
 
-			const corner1X = data.x1 + this.layout.minInitialLine;
+			// Calculate an offset for the first and last corners. This allows the
+			// curve to 'grow' slowly out from a straight line to a point where the
+			// initial corners of the curve are a maximum of minInitialLine.
+			const offsetForFirstCorner = this.layout.minInitialLine - Math.max((xDiff / 2), 0);
+
+			const corner1X = data.x1 + offsetForFirstCorner;
 			const corner1Y = data.y1;
 
 			const corner2X = corner1X;
@@ -4375,7 +4380,7 @@ class CanvasRenderer {
 			const corner4bX = data.x2 + offsetForStraightLine;
 			const corner4bY = midY;
 
-			const corner5X = data.x2 - this.layout.minInitialLine;
+			const corner5X = data.x2 - offsetForFirstCorner;
 			const corner5Y = midY;
 
 			const corner6X = corner5X;
