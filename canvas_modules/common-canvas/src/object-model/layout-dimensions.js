@@ -86,8 +86,8 @@ const haloLayout = {
 	// Error indicator dimensions
 	errorXPos: 52,
 	errorYPos: 0,
-	errorWidth: 10.5,
-	errorHeight: 10.5,
+	errorWidth: 14,
+	errorHeight: 14,
 
 	// The gap between node or comment and the link line.
 	linkGap: 7,
@@ -393,8 +393,8 @@ const portsVertical = {
 	// Error indicator dimensions
 	errorXPos: 45,
 	errorYPos: 0,
-	errorWidth: 10.5,
-	errorHeight: 10.5,
+	errorWidth: 14,
+	errorHeight: 14,
 
 	// The gap between node or comment and the link line.
 	linkGap: 7,
