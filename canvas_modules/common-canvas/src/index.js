@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import { CommonCanvas, CanvasController } from "./common-canvas/index";
-import CommonProperties from "./common-properties/common-properties.jsx";
+import CommonProperties from "./common-properties/index"; // index.js
 import CommandStack from "./command-stack/command-stack";
 import FlowValidation from "./flow-validation/validate-flow";
 import "./index.scss";
