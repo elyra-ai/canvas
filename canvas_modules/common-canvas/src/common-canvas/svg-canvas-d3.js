@@ -2884,83 +2884,21 @@ class CanvasRenderer {
 					this.logger.log("Comment Group - click");
 					d3Event.stopPropagation();
 				})
-				.on("dblclick", function(d) { // Use function keyword so 'this' pointer references the DOM text object
+				.on("dblclick", (d) => {
 					that.logger.log("Comment Group - double click");
 					stopPropagationAndPreventDefault();
 
 					// TODO - Enable editing for comments inside sub-flow
 					if (!that.isDisplayingSubFlowInPlace()) {
-						that.canvasGrp.selectAll(that.getId("#comment_text", d.id)) // Make SVG text invisible when in edit mode.
-							.attr("beingedited", "yes");
-
-						var datum = d;
-						var id = d.id;
-						var width = d.width;
-						var height = d.height;
-						var xPos = d.x_pos;
-						var yPos = d.y_pos;
-						var content = d.content;
-
-						that.textAreaHeight = 0; // Save for comparison during auto-resize
-						that.editingComment = true;
-						that.editingCommentId = id;
-
-						that.zoomTextAreaCenterX = d.x_pos + (d.width / 2);
-						that.zoomTextAreaCenterY = d.y_pos + (d.height / 2);
-
-						// TODO - Need to calculate correct transform for text area when opened for comment in sub-flow
-						// if (that.isDisplayingSubFlowInPlace()) {
-						// 	const dims = that.getSupernodeDimensions();
-						// 	const superDatum = that.parentSupernode.datum();
-						// 	that.zoomTextAreaCenterX += superDatum.x_pos;
-						// 	that.zoomTextAreaCenterY += superDatum.y_pos;
-						// 	xPos += dims.x_pos;
-						// 	yPos += dims.y_pos;
-						// }
-
-						that.canvasDiv
-							.append("textarea")
-							.attr("id",	that.getId("comment_text_area", id))
-							.attr("data-nodeId", id)
-							.attr("data-pipeline-id", that.activePipeline.id)
-							.attr("class", "d3-comment-entry")
-							.text(content)
-							.style("width", width + "px")
-							.style("height", height + "px")
-							.style("left", xPos + "px")
-							.style("top", yPos + "px")
-							.style("transform", that.getTextAreaTransform())
-							.on("keyup", function() {
-								that.editingCommentChangesPending = true;
-								that.autoSizeTextArea(this, datum);
-							})
-							.on("paste", function() {
-								that.logger.log("Text area - Paste - Scroll Ht = " + this.scrollHeight);
-								that.editingCommentChangesPending = true;
-								// Allow some time for pasted text (from context menu) to be
-								// loaded into the text area. Otherwise the text is not there
-								// and the auto size does not increase the height correctly.
-								setTimeout(that.autoSizeTextArea.bind(that), 500, this, datum);
-							})
-							.on("blur", function() {
-								that.logger.log("Text area - blur");
-								var commentObj = that.getComment(id);
-								commentObj.content = this.value;
-								that.saveCommentChanges(this);
-								that.closeCommentTextArea();
-								that.displayComments();
-							});
-
-						// Note: Couldn't get focus to work through d3, so used dom instead.
-						document.getElementById(that.getId("comment_text_area", id)).focus();
-
-						that.canvasController.clickActionHandler({
-							clickType: "DOUBLE_CLICK",
-							objectType: "comment",
-							id: d.id,
-							selectedObjectIds: that.objectModel.getSelectedObjectIds(),
-							pipelineId: that.activePipeline.id });
+						that.displayTextArea(d);
 					}
+
+					that.canvasController.clickActionHandler({
+						clickType: "DOUBLE_CLICK",
+						objectType: "comment",
+						id: d.id,
+						selectedObjectIds: that.objectModel.getSelectedObjectIds(),
+						pipelineId: that.activePipeline.id });
 				})
 				.on("contextmenu", (d) => {
 					this.logger.log("Comment Group - context menu");
@@ -3191,6 +3129,65 @@ class CanvasRenderer {
 			};
 			this.canvasController.editActionHandler(data);
 		}
+	}
+
+	displayTextArea(d) {
+		// Make SVG text invisible when in edit mode. This will be reversed when
+		// leaving edit mode.
+		this.canvasGrp.selectAll(this.getId("#comment_text", d.id))
+			.attr("beingedited", "yes");
+
+		const that = this;
+		const datum = d;
+		const id = d.id;
+		const width = d.width;
+		const height = d.height;
+		const content = d.content;
+		const xPos = d.x_pos;
+		const yPos = d.y_pos;
+
+		this.textAreaHeight = 0; // Save for comparison during auto-resize
+		this.editingComment = true;
+		this.editingCommentId = id;
+
+		this.zoomTextAreaCenterX = d.x_pos + (d.width / 2);
+		this.zoomTextAreaCenterY = d.y_pos + (d.height / 2);
+
+		this.canvasDiv
+			.append("textarea")
+			.attr("id",	this.getId("comment_text_area", id))
+			.attr("data-nodeId", id)
+			.attr("data-pipeline-id", that.activePipeline.id)
+			.attr("class", "d3-comment-entry")
+			.text(content)
+			.style("width", width + "px")
+			.style("height", height + "px")
+			.style("left", xPos + "px")
+			.style("top", yPos + "px")
+			.style("transform", this.getTextAreaTransform())
+			.on("keyup", function() {
+				that.editingCommentChangesPending = true;
+				that.autoSizeTextArea(this, datum);
+			})
+			.on("paste", function() {
+				that.logger.log("Text area - Paste - Scroll Ht = " + this.scrollHeight);
+				that.editingCommentChangesPending = true;
+				// Allow some time for pasted text (from context menu) to be
+				// loaded into the text area. Otherwise the text is not there
+				// and the auto size does not increase the height correctly.
+				setTimeout(that.autoSizeTextArea.bind(that), 500, that, datum);
+			})
+			.on("blur", function() {
+				that.logger.log("Text area - blur");
+				var commentObj = that.getComment(id);
+				commentObj.content = this.value;
+				that.saveCommentChanges(this);
+				that.closeCommentTextArea();
+				that.displayComments();
+			});
+
+		// Note: Couldn't get focus to work through d3, so used dom instead.
+		document.getElementById(this.getId("comment_text_area", id)).focus();
 	}
 
 	// Returns the transform amount for the text area control that positions the
