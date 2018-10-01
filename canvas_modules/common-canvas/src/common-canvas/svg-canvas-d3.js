@@ -642,14 +642,6 @@ class CanvasRenderer {
 		return this.editingComment;
 	}
 
-	// Returns a modified pipeline ID for use with the data-pipeline-id DOM
-	// attribute. We put an "x" on the front of the ID because some pipeline IDs
-	// begin with a number which CSS doesn't like when selecting on that attribute
-	// value. See getSelector() method.
-	getNonNumericPipelineId() {
-		return "x" + this.activePipeline.id;
-	}
-
 	// Returns a selector for the ID information passed in which includes a
 	// condition for selecting on the current pipelineId. See getId() for
 	// explanation of parameters.
@@ -665,11 +657,9 @@ class CanvasRenderer {
 	}
 
 	// Returns a new selector based on the selector passed in which includes
-	// a condition for the current pipeline Id. Note: we add an 'x' to the
-	// front of the pipelineId because CSS doesn't like value afetr the '='
-	// beginning with a number (and some pipelineIds start with numbers).
+	// a condition for the current pipeline Id.
 	getSelector(selector) {
-		return selector + `[data-pipeline-id=x${this.activePipeline.id}]`;
+		return selector + `[data-pipeline-id='${this.activePipeline.id}']`;
 	}
 
 	// Returns an ID string like one of the following:
@@ -895,7 +885,7 @@ class CanvasRenderer {
 				.attr("y", 0)
 				.attr("width", dims.width)
 				.attr("height", dims.height)
-				.attr("data-pipeline-id", this.getNonNumericPipelineId())
+				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("class", "d3-subflow-background");
 		}
 
@@ -1418,7 +1408,7 @@ class CanvasRenderer {
 			var newNodeGroups = nodeGroupSel.enter()
 				.append("g")
 				.attr("id", (d) => that.getId("node_grp", d.id))
-				.attr("data-pipeline-id", this.getNonNumericPipelineId()) // Values cannot begin with a number so add x!
+				.attr("data-pipeline-id", this.activePipeline.id) // Values cannot begin with a number so add x!
 				.attr("class", "obj-group node-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
@@ -1507,7 +1497,7 @@ class CanvasRenderer {
 			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
 				.append("path")
 				.attr("id", (d) => this.getId("node_outline", d.id))
-				.attr("data-pipeline-id", this.getNonNumericPipelineId())
+				.attr("data-pipeline-id", this.activePipeline.id)
 				.on("mousedown", (d) => {
 					if (this.isExpandedSupernode(d)) {
 						this.nodeSizing = true;
@@ -1710,7 +1700,7 @@ class CanvasRenderer {
 							inputPortSelection.enter()
 								.append("circle")
 								.attr("id", (port) => this.getId("node_trg_port", d.id, port.id))
-								.attr("data-pipeline-id", this.getNonNumericPipelineId())
+								.attr("data-pipeline-id", this.activePipeline.id)
 								.attr("portId", (port) => port.id) // This is needed by getNodeInputPortAtMousePos
 								.attr("cx", 0)
 								.attr("connected", "no")
@@ -1751,7 +1741,7 @@ class CanvasRenderer {
 							inputPortArrowSelection.enter()
 								.append("path")
 								.attr("id", (port) => this.getId("node_trg_port_arrow", d.id, port.id))
-								.attr("data-pipeline-id", this.getNonNumericPipelineId())
+								.attr("data-pipeline-id", this.activePipeline.id)
 								.attr("class", this.layout.cssNodePortInputArrow)
 								.attr("connected", "no")
 								.attr("isSupernodeBinding", this.isSuperBindingNode(d) ? "yes" : "no")
@@ -1793,7 +1783,7 @@ class CanvasRenderer {
 							outputPortSelection.enter()
 								.append("circle")
 								.attr("id", (port) => this.getId("node_src_port", d.id, port.id))
-								.attr("data-pipeline-id", this.getNonNumericPipelineId())
+								.attr("data-pipeline-id", this.activePipeline.id)
 								.on("mousedown", (port) => {
 									// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 									if (d3Event.button === 0) {
@@ -1846,7 +1836,7 @@ class CanvasRenderer {
 						decoratorOutlnsSelection.enter()
 							.append("rect")
 							.attr("id", (dec) => this.getId("node_dec_outln", dec.id))
-							.attr("data-pipeline-id", this.getNonNumericPipelineId())
+							.attr("data-pipeline-id", this.activePipeline.id)
 							.attr("width", this.layout.decoratorWidth + 2)
 							.attr("height", this.layout.decoratorHeight + 2)
 							.merge(decoratorOutlnsSelection)
@@ -1868,7 +1858,7 @@ class CanvasRenderer {
 							.filter((dec) => dec.image)
 							.append("image")
 							.attr("id", (dec) => this.getId("node_dec_img", dec.id))
-							.attr("data-pipeline-id", this.getNonNumericPipelineId())
+							.attr("data-pipeline-id", this.activePipeline.id)
 							.attr("width", this.layout.decoratorWidth)
 							.attr("height", this.layout.decoratorHeight)
 							.attr("class", "d3-decorator-image")
@@ -2830,7 +2820,7 @@ class CanvasRenderer {
 			var newCommentGroups = commentGroupSel.enter()
 				.append("g")
 				.attr("id", (d) => this.getId("comment_grp", d.id))
-				.attr("data-pipeline-id", this.getNonNumericPipelineId())
+				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("class", "obj-group comment-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				// Use mouse down instead of click because it gets called before drag start.
@@ -2932,7 +2922,7 @@ class CanvasRenderer {
 							.append("textarea")
 							.attr("id",	that.getId("comment_text_area", id))
 							.attr("data-nodeId", id)
-							.attr("data-pipeline-id", that.getNonNumericPipelineId())
+							.attr("data-pipeline-id", that.activePipeline.id)
 							.attr("class", "d3-comment-entry")
 							.text(content)
 							.style("width", width + "px")
@@ -2981,7 +2971,7 @@ class CanvasRenderer {
 			// Comment selection highlighting and sizing outline
 			newCommentGroups.append("rect")
 				.attr("id", (d) => this.getId("comment_outline", d.id))
-				.attr("data-pipeline-id", this.getNonNumericPipelineId())
+				.attr("data-pipeline-id", this.activePipeline.id)
 				.on("mousedown", (d) => {
 					this.commentSizing = true;
 					this.commentSizingId = d.id;
@@ -2995,7 +2985,7 @@ class CanvasRenderer {
 			// Background rectangle for comment
 			newCommentGroups.append("rect")
 				.attr("id", (d) => this.getId("comment_body", d.id))
-				.attr("data-pipeline-id", this.getNonNumericPipelineId())
+				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("width", (d) => d.width)
 				.attr("height", (d) => d.height)
 				.attr("x", 0)
@@ -3735,7 +3725,7 @@ class CanvasRenderer {
 			.enter()
 			.append("g")
 			.attr("id", (d) => this.getId("link_grp", d.id))
-			.attr("data-pipeline-id", this.getNonNumericPipelineId())
+			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", "link-group")
 			.attr("style", function(d) { return !d.style_temp && !d.style && that.canvasInfo.subdueStyle ? that.canvasInfo.subdueStyle : null; })
 			.attr("src", (d) => d.src)
