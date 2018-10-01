@@ -803,7 +803,8 @@ export default class CanvasController {
 	}
 
 	createAutoNode(nodeTemplate) {
-		const apiPipeline = this.objectModel.getAPIPipeline();
+		const selApiPipeline = this.objectModel.getSelectionAPIPipeline();
+		const apiPipeline = selApiPipeline ? selApiPipeline : this.objectModel.getAPIPipeline();
 		var data = {
 			editType: "createAutoNode",
 			nodeTemplate: nodeTemplate,

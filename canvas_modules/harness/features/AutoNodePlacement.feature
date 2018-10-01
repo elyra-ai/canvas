@@ -7,7 +7,7 @@ Feature: AutoNodePlacement
 	So I can build a graph
 
 	Scenario: Sanity test auto layout variations
-		Then I resize the window size to 1400 width and 800 height
+		Then I resize the window size to 1330 width and 660 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
@@ -16,8 +16,6 @@ Feature: AutoNodePlacement
 		Given I have toggled the app side panel
 
 		Then I open the palette
-
-		Then I resize the window size to 1330 width and 660 height
 
 		Then I double click "C5.0" node from the "Modeling" category onto the canvas
 		Then I verify the node 1 position is "translate(50, 50)"
@@ -125,3 +123,26 @@ Feature: AutoNodePlacement
 		Then I click redo
 		Then I verify the number of nodes are 11
 		Then I verify the number of port data links are 8
+
+Scenario: Test that auto-nodes are added to a in-place expanded supernode
+		Then I resize the window size to 1330 width and 660 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
+		Given I have uploaded predefined palette "modelerPalette.json"
+		Given I have toggled the app side panel
+		Then I verify pipeline 1 have 8 nodes
+		Then I verify pipeline 1 have 7 links
+
+		# Test that a auto node is added to the sub-flow
+		Then I right click the "Supernode" node to display the context menu
+		Then I click option "Expand supernode" from the context menu
+		Then I click the "Type" node in the subflow to select it
+		Then I double click "Filter" node from the "Field Ops" category onto the canvas
+		Then I verify pipeline 1 have 9 nodes
+		Then I verify pipeline 1 have 8 links
+
+		# Test that a second auto node is added to the sub-flow
+		Then I double click "Derive" node from the "Field Ops" category onto the canvas
+		Then I verify pipeline 1 have 10 nodes
+		Then I verify pipeline 1 have 9 links
