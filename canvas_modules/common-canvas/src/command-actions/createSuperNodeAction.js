@@ -298,15 +298,21 @@ export default class CreateSuperNodeAction extends Action {
 				const nodePorts = bindingNode[portType];
 				const firstPort = nodePorts[0];
 				nodePorts.forEach((port) => {
-					let correspondingLink = supernodeLinks.filter((link) =>
-						(link[linkNodePortType] === port.id || typeof link[linkNodePortType] === "undefined") && link[linkNodeType] === bindingNode.id);
+					let correspondingLinks = supernodeLinks.filter((link) =>
+						(link[linkNodePortType] === port.id || typeof link[linkNodePortType] === "undefined" || link[linkNodePortType] === null) &&
+							link[linkNodeType] === bindingNode.id);
 					// If any link has an undefined nodePortId, assign the first portId.
-					correspondingLink = correspondingLink.map((link) => {
+					correspondingLinks = correspondingLinks.map((link) => {
 						const newLink = Object.assign({}, link);
 						newLink[linkNodePortType] = newLink[linkNodePortType] ? newLink[linkNodePortType] : firstPort.id;
 						return newLink;
 					});
-					reorderedSupernodeLinks = reorderedSupernodeLinks.concat(correspondingLink);
+
+					correspondingLinks.forEach((correspondingLink) => {
+						if (!reorderedSupernodeLinks.find((reorderedSupernodeLink) => (reorderedSupernodeLink.id === correspondingLink.id))) {
+							reorderedSupernodeLinks = reorderedSupernodeLinks.concat(correspondingLink);
+						}
+					});
 				});
 			});
 			return reorderedSupernodeLinks;

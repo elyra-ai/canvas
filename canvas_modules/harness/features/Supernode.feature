@@ -159,12 +159,17 @@ Feature: Supernode
 
 		Then I resize the window size to 1330 width and 660 height
 
-		Then I double click "Filler" node from the "Field Ops" category onto the canvas
-		Then I double click "Type" node from the "Field Ops" category onto the canvas
-		Then I link node 1 the "Filler" node to node 2 the "Type" node for link 1 on the canvas
+		Then I open the palette
+		Then I add node 1 a "Filler" node from the "Field Ops" category onto the canvas at 400, 200
+		Then I add node 2 a "Type" node from the "Field Ops" category onto the canvas at 700, 200
+		Then I add node 3 a "Filter" node from the "Field Ops" category onto the canvas at 700, 400
+		Then I close the palette
 
-		Then I verify pipeline 0 have 2 nodes
-		Then I verify pipeline 0 have 1 links
+		Then I link node 1 the "Filler" node to node 2 the "Type" node for link 1 on the canvas
+		Then I link node 1 the "Filler" node to node 3 the "Filter" node for link 2 on the canvas
+
+		Then I verify pipeline 0 have 3 nodes
+		Then I verify pipeline 0 have 2 links
 
 		Then I right click the "Filler" node to display the context menu
 		Then I click option "Create supernode" from the context menu
