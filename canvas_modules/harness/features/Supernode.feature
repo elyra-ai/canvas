@@ -148,3 +148,34 @@ Feature: Supernode
 		Then I verify extra canvas has a "Supernode" node
 		Then I verify the extra canvas pipeline 0 have 2 nodes
 		Then I verify the extra canvas have 3 pipelines
+
+	Scenario: Sanity test create supernode with link that does not have port info
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Flyout" palette layout
+		Given I have selected the "Halo" connection type
+		Given I have uploaded predefined palette "modelerPalette.json"
+
+		Then I resize the window size to 1330 width and 660 height
+
+		Then I double click "Filler" node from the "Field Ops" category onto the canvas
+		Then I double click "Type" node from the "Field Ops" category onto the canvas
+		Then I link node 1 the "Filler" node to node 2 the "Type" node for link 1 on the canvas
+
+		Then I verify pipeline 0 have 2 nodes
+		Then I verify pipeline 0 have 1 links
+
+		Then I right click the "Filler" node to display the context menu
+		Then I click option "Create supernode" from the context menu
+
+		Given I have selected the "Ports" connection type
+		Then I right click the "Supernode" node to display the context menu
+		Then I click option "Expand supernode" from the context menu
+
+		#Includes supernode binding node.
+		Then I verify pipeline 1 have 2 nodes
+		Then I verify pipeline 1 have 1 links
+
+		#Includes two output ports from its subflow.
+		Then I verify the "Supernode" node has 3 "output" ports

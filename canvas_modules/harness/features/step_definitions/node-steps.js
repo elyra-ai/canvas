@@ -987,4 +987,11 @@ module.exports = function() {
 		expect(img).toEqual(decoratorImage);
 	});
 
+	// Then I verify the "Supernode" node has 1 "output" ports
+	this.Then(/^I verify the "([^"]*)" node has (\d+) "([^"]*)" ports$/, function(nodeName, numPorts, portType) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const nodeSelector = "#node_grp_" + nodeId;
+		const nodePorts = browser.$(nodeSelector).$$(".d3-node-port-" + portType);
+		expect(nodePorts.length).toEqual(Number(numPorts));
+	});
 };

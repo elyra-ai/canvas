@@ -318,7 +318,7 @@ export default class CreateSuperNodeAction extends Action {
 		const portType = type === "entry" ? "input_ports" : "output_ports";
 		const linkNodePortType = type === "entry" ? "trgNodePortId" : "srcNodePortId";
 
-		if (typeof link[linkNodePortType] !== "undefined") {
+		if (typeof link[linkNodePortType] !== "undefined" && link[linkNodePortType] !== null) {
 			node[portType].forEach((port) => {
 				if (link[linkNodePortType] === port.id) {
 					const newPort = Object.assign({}, port);
@@ -330,6 +330,7 @@ export default class CreateSuperNodeAction extends Action {
 		} else { // Add the first port.
 			const newPort = Object.assign({}, node[portType][0]);
 			newPort.id = newPort.id ? node.id + "_" + newPort.id : newPort.id;
+			newPort.label = "Binding port for supernode";
 			this.addToCreateBindingNodeData(node.id, newPort, link, supernodePorts, type);
 		}
 	}
