@@ -44,6 +44,7 @@ const control = {
 			},
 			"visible": true,
 			"width": 28,
+			"sortable": true,
 			"controlType": "selectcolumn",
 			"valueDef": {
 				"propType": "string",
@@ -702,5 +703,45 @@ describe("structuretable control displays with checkbox header", () => {
 		expect(columnValues[1][2]).to.be.equal(false);
 		expect(columnValues[2][2]).to.be.equal(false);
 	});
+});
 
+describe("structuretable columns sort correctly", () => {
+	setPropertyValue();
+	const wrapper = mountWithIntl(
+		<Provider store={controller.getStore()}>
+			<StructureTableControl
+				control={control} // where setting is for what column(s) has sortable attribute
+				controller={controller}
+				propertyId={propertyId}
+				buildUIItem={genUIItem}
+				openFieldPicker={openFieldPicker}
+				rightFlyout
+			/>
+		</Provider>
+	);
+
+	// check that table starts with right number of values
+	const tableWrapper = wrapper.find("div[data-id='properties-keys']");
+	const tableData = tableWrapper.find("tbody.reactable-data").children();
+
+	const tableHeader = tableWrapper.find("th.reactable-th-field");
+	let tableRows = controller.getPropertyValue(propertyId);
+	it("should instantiate structuretable in correct order and state", () => {
+		// check that starting table is in original order
+		expect(tableData).to.have.length(6);
+		expect(tableRows[0][0]).to.equal("Na");
+		expect(tableRows[5][0]).to.equal("Cholesterol");
+	});
+	it("should sort column alphabetically ascending and descending", () => {
+		// click on the column header to trigger the onClick sort
+		tableHeader.simulate("click");
+		tableRows = controller.getPropertyValue(propertyId);
+		expect(tableRows[0][0]).to.equal("Sex");
+		expect(tableRows[5][0]).to.equal("Age");
+		tableHeader.simulate("click");
+		tableRows = controller.getPropertyValue(propertyId);
+		expect(tableRows[0][0]).to.equal("Age");
+		expect(tableRows[5][0]).to.equal("Sex");
+
+	});
 });
