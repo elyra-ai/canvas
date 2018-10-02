@@ -2,8 +2,8 @@
   "doc_type": "pipeline",
   "version": "2.0",
   "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
-  "id": "153651d6-9b88-423c-b01b-861f12d01489",
-  "primary_pipeline": "153651d6-9b88-423c-b01b-861f12d01489",
+  "id": "62685555-bb4b-4010-82c3-003beff3739a",
+  "primary_pipeline": "62685555-bb4b-4010-82c3-003beff3739a",
   "parameters": {
     "props": [
       {
@@ -16,7 +16,7 @@
   },
   "pipelines": [
     {
-      "id": "153651d6-9b88-423c-b01b-861f12d01489",
+      "id": "62685555-bb4b-4010-82c3-003beff3739a",
       "nodes": [
         {
           "id": "idGWRVT47XDV",

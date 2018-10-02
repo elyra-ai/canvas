@@ -17,7 +17,7 @@ import supernodeNestedCanvas from "../../../harness/test_resources/diagrams/supe
 const objectModel = new ObjectModel();
 
 // Pipeline Ids
-const primaryPipelineId = supernodeNestedCanvas.primary_pipeline; // 153651d6-9b88-423c-b01b-861f12d01489
+const primaryPipelineId = supernodeNestedCanvas.primary_pipeline; // 62685555-bb4b-4010-82c3-003beff3739a
 const supernode1PipelineId = supernodeNestedCanvas.pipelines[3].id; // c140d854-c2a6-448c-b80d-9c9a0728dede
 const supernode2PipelineId = supernodeNestedCanvas.pipelines[2].id; // 8e671b0f-118c-4216-9cea-f522662410ec
 const supernode2APipelineId = supernodeNestedCanvas.pipelines[1].id; // babad275-1719-4224-8d65-b04d0804d95c
