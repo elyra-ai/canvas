@@ -81,15 +81,20 @@
 
 .properties-expression-button {
 	float: left;
-
 	button {
 		cursor: pointer;
 		border: 0;
+		background: none;
 	}
 	svg {
 		height: 20px;
 		width: 20px;
 		fill: $brand-01;
+	}
+	&:hover:not([disabled]) {
+		> button > svg path {
+			fill: $brand-02;
+		}
 	}
 	&[disabled] {
 		opacity: 0.5;
