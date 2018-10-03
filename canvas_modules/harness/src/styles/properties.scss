@@ -6,49 +6,38 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-#properties-documentation-container {
-	position: relative;
-}
 
-#properties-documentation-main-content {
-	position: relative;
-}
-
-#properties-documentation-container > .right-flyout-panel,
-#conditions-documentation-container > .right-flyout-panel {
+.harness-properties-documentation-container > .right-flyout-panel,
+.harness-conditions-documentation-container > .right-flyout-panel {
 	top: 0;
 	padding-top: 50px;
 	box-shadow: none;
 	position: fixed;
 }
 
-#properties-documentation-container > .right-flyout-panel >
-#common-properties-right-flyout-panel > .modal__buttons,
-#conditions-documentation-container > .right-flyout-panel >
-#common-properties-right-flyout-panel > .modal__buttons {
+.harness-properties-documentation-container > .right-flyout-panel >
+.properties-right-flyout > .properties-modal-buttons,
+.harness-conditions-documentation-container > .right-flyout-panel >
+.properties-right-flyout > .properties-modal-buttons {
 	display: none;
 }
 
-#properties-documentation-container-main-content,
-#conditions-documentation-container-main-content {
+.harness-properties-documentation-container-main-content,
+.harness-conditions-documentation-container-main-content {
 	-webkit-transition: 0.2s ease-out;
 	transition: 0.2s ease-out;
 	position: fixed;
 	top: 50px;
 	height: calc(100% - 50px);
 	overflow-x: scroll;
+	font-size: 14px;
 	p {
 		font-weight: 200;
 	}
 }
 
-#conditions-documentation-container,
-#conditions-documentation-content {
-	width: 100%;
-}
-
 /* Properties Navbar */
-.properties-documentation-navbar-items {
+.harness-properties-documentation-navbar-items {
 	position: fixed;
 	width: 100%;
 	height: 50px;
@@ -56,63 +45,77 @@
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-	background-color: $ui-03;
+	background-color: $text-01;
 	z-index: 4;
 }
 
-#properties-documentation-title,
-#conditions-documentation-title {
-	color: $text-01;
+#harness-properties-documentation-title,
+#harness-conditions-documentation-title {
+	color: $inverse-01;
 	padding: 14px;
 	font-size: 14px;
+
+	&:hover {
+		cursor: default;
+		background-color: $text-01;
+		color: $inverse-01;
+	}
 }
 
-#properties-documentation-menu,
-#conditions-documentation-menu {
+.harness-properties-documentation-menu,
+.harness-conditions-documentation-menu {
 	width: 200px;
-	height: 45px;
+	height: 50px;
 	position: fixed;
 	right: 0;
 	z-index: 5;
-	margin-top: 5px;
 	margin-right: 10px;
-	padding-left: 10px;
-	background: $ui-03;
+	padding: 10px 0 0 10px;
+	background: $text-01;
+
+	.bx--list-box__menu {
+		height: 210px;
+		max-height: 330px;
+	}
+
+	.bx--list-box__label {
+		color: $inverse-01;
+
+		&:hover {
+			color: $support-04;
+		}
+	}
 }
 
-.properties-documentation-navbar-li {
+.harness-properties-documentation-navbar-li {
 	float: left;
 	height: 50px;
 	display: flex;
 	align-items: center;
-}
 
-.properties-documentation-navbar-li::after {
-	clear: both;
-}
+	&::after {
+		clear: both;
+	}
 
-.properties-documentation-navbar-li a,
-.properties-documentation-navbar-fill a {
-	display: block;
-	text-align: center;
-	padding: 14px 12px;
-	color: $text-01;
-	fill: $brand-01;
-	box-sizing: content-box;
-	font-size: 16px;
-	background-color: $ui-03;
-	height: 22px;
-	cursor: pointer;
-}
+	a {
+		display: block;
+		text-align: center;
+		padding: 14px 12px;
+		color: $inverse-01;
+		fill: $brand-01;
+		font-size: 16px;
+		background-color: $text-01;
+		cursor: pointer;
 
-.properties-documentation-navbar-li a:hover {
-	color: $brand-02;
-	border-bottom: 4px solid $brand-02;
-	height: 18px;
+		&:hover {
+			background-color: #2D3F49;
+			color: $support-04;
+		}
+	}
 }
 
 /* Header section */
-.properties-documentation-section-header {
+.harness-properties-documentation-section-header {
 	background: $ui-02;
 	padding: 4.5em 4em 2em;
 	position: relative;
@@ -122,7 +125,7 @@
 	}
 }
 
-.properties-documentation-page-link {
+.harness-properties-documentation-page-link {
 	text-align: center;
 	display: block;
 	margin: 1.5em 0 0;
@@ -130,54 +133,45 @@
 	font-size: 1em;
 	vertical-align: middle;
 	text-decoration: none;
+
+	&:hover {
+		color: $text-01;
+		text-decoration: underline;
+	}
 }
 
-.properties-documentation-page-link:hover {
-	color: $text-01;
-	text-decoration: underline;
-}
-
-.properties-documentation-page-intro-link:hover {
+.harness-properties-documentation-page-intro-link:hover {
 	text-decoration: underline;
 }
 
 /* Properties Content */
-#properties-documentation-content,
-#conditions-documentation-content {
+.harness-properties-documentation-content,
+.harness-conditions-documentation-content {
 	padding: 1em;
 	background-color: $ui-01;
 }
 
-.conditions-documentation-panels-controls-component,
-.properties-documentation-panels-controls-component {
+.harness-conditions-documentation-panels-controls-component,
+.harness-properties-documentation-panels-controls-component {
 	position: relative;
 	padding-bottom: 5px;
+
+	.well {
+		margin-bottom: 5px;
+	}
 }
 
-.properties-documentation-panels-controls-component .well,
-.conditions-documentation-panels-controls-component .well {
-	margin-bottom: 5px;
-}
-
-.section-subtitle {
+.harness-section-subtitle {
 	margin-top: 15px;
 	font-weight: 400;
 }
 
-.properties-documentation-section-title {
+.harness-properties-documentation-section-title {
 	border-bottom: 1px solid;
 	margin-bottom: 0.5em;
 }
 
-.section-description-link {
-	margin-right: 5px;
-}
-
-.section-description-link:hover {
-	text-decoration: underline;
-}
-
-.section-description {
+.harness-section-description {
 	& p {
 		margin-bottom: 10px;
 	}
@@ -191,18 +185,18 @@
 	}
 }
 
-.section-row {
+.harness-section-row {
 	width: 100%;
 	display: inline-flex;
 	flex-wrap: wrap;
 	justify-content: space-around;
 }
 
-.section-row-title {
+.harness-section-row-title {
 	font-size: 1.282rem;
 }
 
-.section-column {
+.harness-section-column {
 	width: 50%;
 	flex-grow: 1;
 	flex-shrink: 0;
@@ -215,36 +209,35 @@
 	}
 }
 
-.section-column-code {
+.harness-section-column-code {
 	padding-right: 0;
 }
 
-.json-block {
+.harness-json-block {
 	font-size: 12px;
 	line-height: 1.5;
 	max-height: 565px;
 	background-color: $ui-02;
 	border: 1px solid $ui-04;
 	padding: 5px;
-	margin: 5px 0;
 	overflow: auto;
 }
 
-#expression-section-column-code > .json-block {
+#harness-expression-section-column-code > .harness-json-block {
 	max-height: 616px;
 }
 
-#summary-section-column-code > .json-block {
+#harness-summary-section-column-code > .harness-json-block {
 	max-height: 849px;
 }
 
-.highlight {
+.harness-highlight {
 	background-color: $ui-04;
 	font-weight: 400;
 	border-radius: 4px;
 }
 
-.conditions-documentation-control-table-container {
+.harness-conditions-documentation-control-table-container {
 	width: 100%;
 	overflow-x: scroll;
 	.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
@@ -255,7 +248,7 @@
 	}
 }
 
-.conditions-documentation-control-table {
+.harness-conditions-documentation-control-table {
 	width: 100%;
 	height: 100%;
 	& tr.reactable-column-header {
@@ -274,24 +267,10 @@
 	}
 }
 
-.properties-documentation-list-indent {
+.harness-properties-documentation-list-indent {
 	margin-left: 10px;
 }
 
-/* min width less than then set width to 100% and flow to next line */
-
-/* Override common-properties */
-#removeFieldTip, #addFieldTip {
-	position: absolute;
-}
-
-.properties-documentation-show-flyout-button {
+.harness-properties-documentation-show-flyout-button {
 	margin: 5px 0;
-}
-
-.header__dropdown {
-	.bx--list-box__menu {
-		height: 210px;
-		max-height: 330px;
-	}
 }

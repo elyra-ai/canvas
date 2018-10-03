@@ -13,7 +13,7 @@ import paramDef from "./json/standardControls_paramDef.json";
 
 class CustomTogglePanel {
 	static id() {
-		return "custom-toggle-panel";
+		return "harness-custom-toggle-panel";
 	}
 	constructor(parameters, controller) {
 		this.parameters = parameters;

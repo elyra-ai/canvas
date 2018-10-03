@@ -123,7 +123,7 @@ export default class SidePanel extends React.Component {
 		default:
 		}
 
-		var sidePanel = (<div id="app-sidepanel" style={ { width: panelSize } } >
+		const sidePanel = (<div className="harness-app-sidepanel" style={ { width: panelSize } } >
 			{view}
 		</div>);
 

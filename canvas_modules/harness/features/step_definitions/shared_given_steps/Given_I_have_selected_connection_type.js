@@ -16,12 +16,12 @@ module.exports = function() {
 
 		try {
 			if (connectionType === "Ports") {
-				var portsLabel = browser.$("#sidepanel-connection-type").$$("div")[2].$("label");
+				var portsLabel = browser.$("#harness-sidepanel-connection-type").$$("div")[2].$("label");
 				portsLabel.scroll();
 				browser.pause(500);
 				portsLabel.click();
 			} else if (connectionType === "Halo") {
-				var haloLabel = browser.$("#sidepanel-connection-type").$$("div")[4].$("label");
+				var haloLabel = browser.$("#harness-sidepanel-connection-type").$$("div")[4].$("label");
 				haloLabel.scroll();
 				browser.pause(500);
 				haloLabel.click();

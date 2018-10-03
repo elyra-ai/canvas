@@ -82,7 +82,7 @@ Feature: Tips
 		Given I have toggled the app side api panel
 		Given I have selected the "Set Node Label" API
 
-		When I select node "Na_to_K" in the node drop-down list
+		When I select node "Na_to_K" in the node label drop-down list
 		And I enter "New Node Label" into the new label field
 		And I call the API by clicking on the Submit button
 		Then I hover over the node "New Node Label"
@@ -98,7 +98,7 @@ Scenario: Sanity test changing input port name to update port tip
 		Given I have toggled the app side api panel
 		Given I have selected the "Set Input Port Label" API
 
-		When I select node "Na_to_K" in the node drop-down list
+		When I select node "Na_to_K" in the node label drop-down list
 		When I select port "Input Port2" in the port drop-down list
 		And I enter "New Port Label" into the new label field
 		And I call the API by clicking on the Submit button
@@ -115,7 +115,7 @@ Scenario: Sanity test changing input port name to update port tip
 		Given I have toggled the app side api panel
 		Given I have selected the "Set Output Port Label" API
 
-		When I select node "Discard Fields" in the node drop-down list
+		When I select node "Discard Fields" in the node label drop-down list
 		When I select port "Output Port Two" in the port drop-down list
 		And I enter "New Port Label" into the new label field
 		And I call the API by clicking on the Submit button

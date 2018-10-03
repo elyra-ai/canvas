@@ -11,6 +11,8 @@ $common-properties-small-flyout-width: 320px; // This aligns the right-flyout wi
 $common-properties-medium-flyout-width: 625px; // This is an arbitrary width for wider-flyout panels
 
 .properties-right-flyout {
+	// Set the font explicitly to 14px to shrink them across the entire properties editor
+	font-size: 14px;
 	width: 0;
 	height: 100%;
 	background-color: $ui-01;

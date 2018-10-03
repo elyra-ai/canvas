@@ -234,7 +234,7 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "custom-button-panel",
+            "id": "harness-custom-button-panel",
             "type": "customPanel",
             "parameter_refs": [
               "actual_value",
@@ -269,7 +269,7 @@
             "type": "summaryPanel",
             "group_info": [
               {
-                "id": "custom-table-panel",
+                "id": "harness-custom-table-panel",
                 "type": "customPanel",
                 "parameter_refs": []
               },

@@ -45,8 +45,8 @@ class CustomSliderCtrl extends React.Component {
 		}
 		return (
 			<div>
-				<div className="custom-slider">
-					<div className="slider">
+				<div className="harness-custom-control-custom-slider">
+					<div className="harness-custom-control-slider">
 						<Slider
 							onChange={this.handleChange}
 							value={this.props.controlValue}
@@ -57,7 +57,7 @@ class CustomSliderCtrl extends React.Component {
 						/>
 					</div>
 				</div>
-				<div className="condition">
+				<div className="harness-custom-control-condition">
 					<div className="icon">{icon}</div>
 					<div>{messageText}</div>
 				</div>

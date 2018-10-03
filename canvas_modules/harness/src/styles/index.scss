@@ -14,9 +14,3 @@ $font-path: "/fonts";
 @import "./properties.scss";
 @import "./custom-datasets-table.scss";
 @import "./custom-controls.scss";
-
-// carbon styles includes most defaults needed
-body {
-	// Set the body font explicitly to 14px to shrink them across the entire app
-	font-size: 14px;
-}

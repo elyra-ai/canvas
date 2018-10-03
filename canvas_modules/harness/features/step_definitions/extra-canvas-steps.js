@@ -91,7 +91,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I drag the Derive Node from side panel to extra canvas at (\d+), (\d+)$/, function(xPos, yPos) {
-		browser.execute(simulateDragDrop, "#sidePanelNodeDraggable", 0, "#canvas-div-1", 0, xPos, yPos);
+		browser.execute(simulateDragDrop, "#harness-sidePanelNodeDraggable", 0, "#canvas-div-1", 0, xPos, yPos);
 	});
 
 	this.Then(/^I verify the extra canvas have (\d+) pipelines$/, function(numPipelines) {

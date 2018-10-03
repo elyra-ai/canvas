@@ -15,7 +15,7 @@ import paramDef from "./json/standardControls_paramDef.json";
 
 class CustomSliderPanel {
 	static id() {
-		return "custom-slider-panel";
+		return "harness-custom-slider-panel";
 	}
 	constructor(parameters, controller) {
 		this.parameters = parameters;

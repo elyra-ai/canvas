@@ -26,37 +26,37 @@ export default class AddtlCmptsTest extends React.Component {
 
 	render() {
 		return (
-			<div className="container" key="additional-component-0">
+			<div className="harness-custom-control-container" key="additional-component-0">
 				<div className="row">
-					<div className="col-sm-12 additional-components-radio-options">
-						<div className="radio">
-							<label className="control control-radio-block">
+					<div className="col-sm-12 harness-custom-control-additional-components-radio-options">
+						<div className="harness-custom-control-radio">
+							<label className="harness-custom-control-control-radio-block">
 								<input type="radio" value="option1"
 									checked={this.state.selectedOption === "option1"}
 									onChange= {this.handleChecked}
 								/>
 								Option 1
-								<div className = "control__indicator" />
+								<div className = "harness-custom-control-indicator" />
 							</label>
 						</div>
-						<div className="radio">
-							<label className="control control-radio-block">
+						<div className="harness-custom-control-radio">
+							<label className="harness-custom-control-control-radio-block">
 								<input type="radio" value="option2"
 									checked={this.state.selectedOption === "option2"}
 									onChange= {this.handleChecked}
 								/>
 								Option 2
-								<div className = "control__indicator" />
+								<div className = "harness-custom-control-indicator" />
 							</label>
 						</div>
-						<div className="radio">
-							<label className="control control-radio-block">
+						<div className="harness-custom-control-radio">
+							<label className="harness-custom-control-control-radio-block">
 								<input type="radio" value="option3"
 									checked={this.state.selectedOption === "option3"}
 									onChange= {this.handleChecked}
 								/>
 								Option 3
-								<div className = "control__indicator" />
+								<div className = "harness-custom-control-indicator" />
 							</label>
 						</div>
 					</div>

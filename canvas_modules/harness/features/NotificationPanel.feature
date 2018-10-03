@@ -40,8 +40,8 @@ Feature: NotificationPanel
 
 		Then I have selected the "warning" message type in the api sidepanel
 		When I enter "Test warning message in notification panel" into the message details field
-		Then I click on the toggle with label "sidepanel-api-notification-timestamp" in the api sidepanel
-		Then I click on the toggle with label "sidepanel-api-notification-callback" in the api sidepanel
+		Then I click on the toggle with label "harness-sidepanel-api-notification-timestamp" in the api sidepanel
+		Then I click on the toggle with label "harness-sidepanel-api-notification-callback" in the api sidepanel
 		And I call the API by clicking on the Submit button
 		Then I click on the secondary toolbar open notification button
 		Then I verify the action "notification-close-action" in the toolbar has svg of type "bellDot"
@@ -55,7 +55,7 @@ Feature: NotificationPanel
 
 		Then I have selected the "error" message type in the api sidepanel
 		When I enter "Test error message in notification panel" into the message details field
-		Then I click on the toggle with label "sidepanel-api-notification-link" in the api sidepanel
+		Then I click on the toggle with label "harness-sidepanel-api-notification-link" in the api sidepanel
 		And I call the API by clicking on the Submit button
 		Then I click on the secondary toolbar open notification button
 		Then I verify the action "notification-close-action" in the toolbar has svg of type "bellDot"

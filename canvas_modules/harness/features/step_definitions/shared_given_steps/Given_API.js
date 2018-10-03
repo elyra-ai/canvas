@@ -13,7 +13,7 @@ module.exports = function() {
 /* global browser */
 
 	this.Given(/^I have selected the "([^"]*)" API$/, function(api) {
-		dropdownSelect(browser.$("#sidepanel-api-list"), api);
+		dropdownSelect(browser.$("#harness-sidepanel-api-list"), api);
 	});
 
 };

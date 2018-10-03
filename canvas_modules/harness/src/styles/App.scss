@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -10,18 +10,18 @@
 $harness-navbar-title-width: 120px;
 $harness-navbar-icon-width: 48px;
 
-#app-container {
+#harness-app-container {
 	height: 100vh;
 	overflow: hidden;
 }
 
-.canvas-container,
-.canvas-container.double {
+.harness-canvas-container,
+.harness-canvas-container.double {
 	height: calc(100% - 52px);
 	transition: width 0.5s;
 }
 
-.canvas-single {
+.harness-canvas-single {
 	height: 50%;
 }
 
@@ -33,8 +33,7 @@ $harness-navbar-icon-width: 48px;
 }
 
 /* Styles for elements displayed for empty canvas. */
-
-.empty-harness-image {
+.harness-empty-image {
 	margin-left: auto;
 	margin-right: auto;
 	display: block;
@@ -42,7 +41,7 @@ $harness-navbar-icon-width: 48px;
 	height: 121px;
 }
 
-.empty-harness-link {
+.harness-empty-link {
 	display: block;
 	color: $text-01;
 	opacity: 0.2;
@@ -53,7 +52,7 @@ $harness-navbar-icon-width: 48px;
 	pointer-events: all;
 }
 
-.empty-harness-text {
+.harness-empty-text {
 	display: block;
 	color: $text-01;
 	opacity: 0.2;
@@ -61,13 +60,12 @@ $harness-navbar-icon-width: 48px;
 	text-align: center;
 }
 
-
 /*Navbar*/
-.app-navbar {
+.harness-app-navbar {
 	height: 50px;
 }
 
-.app-navbar-items {
+.harness-app-navbar-items {
 	position: fixed;
 	width: 100%;
 	height: 50px;
@@ -79,32 +77,32 @@ $harness-navbar-icon-width: 48px;
 	border-bottom: 2px solid $ui-04;
 }
 
-.navbar-li {
+.harness-navbar-li {
 	float: left;
 	height: 100%;
 	display: flex;
 	align-items: center;
+
+	a {
+		display: block;
+		text-align: center;
+		padding: 14px;
+		width: 18px;
+		fill: $brand-01;
+		box-sizing: content-box;
+		cursor: pointer;
+
+		&:hover {
+			background-color: $ui-04;
+		}
+	}
 }
 
-.navbar-li a {
-	display: block;
-	text-align: center;
-	padding: 14px;
-	width: 18px;
-	fill: $brand-01;
-	box-sizing: content-box;
-	cursor: pointer;
-}
-
-.navbar-li a:hover {
-	background-color: $ui-04;
-}
-
-.action-bar-sidepanel {
+.harness-action-bar-sidepanel {
 	float: right;
 }
 
-.nav-divider {
+.harness-nav-divider {
 	border-left: 2px solid $ui-04;
 }
 
@@ -115,6 +113,7 @@ $harness-navbar-icon-width: 48px;
 	flex-wrap: wrap;
 	overflow-y: auto;
 }
+
 .harness-pipeline-breadcrumbs {
 	height: 16px;
 	display: inline-flex;
@@ -148,7 +147,7 @@ $harness-navbar-icon-width: 48px;
 }
 
 /*Console*/
-#app-console {
+.harness-app-console {
 	font-size: small;
 	border-top: 1px solid $text-01;
 	background-color: $ui-03;
@@ -163,31 +162,28 @@ $harness-navbar-icon-width: 48px;
 	word-wrap: break-word;
 }
 
-.console-pretty-json {
+.harness-console-pretty-json {
 	margin: 0 10px 10px 0;
 	border: 0;
 	border-bottom: 1px dashed $ui-05;
 }
 
-.console-entry {
+.harness-console-entry {
 	list-style: none;
+
+	&::before {
+		content: "• ";
+		padding-right: 10px;
+	}
+	&:hover {
+		background-color: $ui-04;
+		cursor: pointer;
+	}
+	&:hover::before {
+		content: "+";
+		padding-right: 12px;
+	}
 }
-
-.console-entry::before {
-	content: "• ";
-	padding-right: 10px;
-}
-
-.console-entry:hover {
-	background-color: $ui-04;
-}
-
-.console-entry:hover::before {
-	content: "+";
-	padding-right: 12px;
-}
-
-
 
 /* This styles are used in the decoratorCanvas.json canvas file. */
 
@@ -335,24 +331,4 @@ $harness-navbar-icon-width: 48px;
 
 .main-comment-box {
 	fill: #2BE2CA;
-}
-
-/* These are used for customizaing messages in the notification panel */
-.sidepanel-notification-timestamp {
-	img {
-		width: 10px;
-		height: 10px;
-		margin-top: -3px;
-		margin-right: 5px;
-	}
-}
-
-.sidepanel-file-uploader {
-	.bx--label-description,
-	.bx--form-item {
-		margin-bottom: 0;
-	}
-	.bx--file-container {
-		margin-top: 5px;
-	}
 }

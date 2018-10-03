@@ -14,7 +14,7 @@ import testUtils from "./utilities/test-utils.js";
 module.exports = function() {
 
 	this.Then(/^I click on toggle (\d+)$/, function(toggle) {
-		const toggleBtn = browser.$$(".custom-toggle")[toggle].$$("div")[0];
+		const toggleBtn = browser.$$(".harness-custom-control-custom-toggle")[toggle].$$("div")[0];
 		toggleBtn.click();
 	});
 
@@ -42,7 +42,7 @@ module.exports = function() {
 		const dataRows = browser.$$(".properties-summary-values");
 		expect(dataRows.length).toEqual(3);
 		// check the custom react object is render correctly
-		const customMap = browser.$(".custom-map-summary").$$(".span-text");
+		const customMap = browser.$(".harness-custom-control-custom-map-summary").$$(".span-text");
 		expect(customMap.length).toEqual(3);
 	});
 
@@ -73,7 +73,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I validate map has error$/, function() {
-		const icon = browser.$$(".custom-map .icon svg");
+		const icon = browser.$$(".harness-custom-control-custom-map .icon svg");
 		expect(icon.length).toEqual(1);
 	});
 };

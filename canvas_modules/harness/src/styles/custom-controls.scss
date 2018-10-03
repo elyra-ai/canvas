@@ -10,7 +10,7 @@
 /* These are used in custom common-properties */
 
 
-.custom-map-summary {
+.harness-custom-control-custom-map-summary {
 	span {
 		display: flex;
 		span {
@@ -21,7 +21,7 @@
 	}
 }
 
-.condition {
+.harness-custom-control-condition {
 	display: flex;
 	align-items: center;
 	padding: 5px 0;
@@ -36,12 +36,12 @@
 	}
 }
 
-.custom-map {
+.harness-custom-control-custom-map {
 	button {
 		margin-right: 5px;
 	}
 }
-.custom-table {
+.harness-custom-control-custom-table {
 	th {
 		font-weight: 600;
 		text-align: left;

@@ -14,7 +14,7 @@ export default class CustomToggleCtrl extends React.Component {
 
 	render() {
 		return (
-			<div className="custom-map-summary" >
+			<div className="harness-custom-control-custom-map-summary" >
 				<span key="lat" className="span-text">Latitude: <span>{this.props.lat}</span></span>
 				<span key="long" className="span-text">Longitude: <span>{this.props.lng}</span></span>
 				<span key="zoom" className="span-text">Zoom: <span>{this.props.zoom}</span></span>

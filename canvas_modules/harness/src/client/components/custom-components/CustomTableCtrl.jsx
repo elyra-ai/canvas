@@ -36,11 +36,11 @@ class CustomTableCtrl extends React.Component {
 		}
 		let content = null;
 		if (Array.isArray(this.props.controlValue)) {
-			content = (<div className="text">{this.props.controlValue.join("-")}</div>);
+			content = (<div className="harness-custom-control-text">{this.props.controlValue.join("-")}</div>);
 		}
 		if (this.props.editStyle !== "summary") {
 			content = (
-				<div className="custom-table" >
+				<div className="harness-custom-control-custom-table" >
 					<Table className="table" data={this.getValues()} />
 				</div>
 			);

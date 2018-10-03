@@ -13,19 +13,19 @@ module.exports = function() {
 
 	/* global browser */
 	this.Then(/^I have uploaded predefined diagram "([^"]*)"$/, function(diagramFile) {
-		dropdownSelect(browser.$("#sidepanel-canvas-input"), diagramFile);
+		dropdownSelect(browser.$("#harness-sidepanel-canvas-input"), diagramFile);
 	});
 
 	this.Then(/^I have uploaded diagram "([^"]*)"$/, function(diagramFile) {
-		loadUnknownFile(browser.$("#sidepanel-canvas-input"), diagramFile);
+		loadUnknownFile(browser.$("#harness-sidepanel-canvas-input"), diagramFile);
 	});
 
 	this.Then(/^I have uploaded diagram for extra canvas "([^"]*)"$/, function(diagramFile) {
-		loadUnknownFile(browser.$("#sidepanel-canvas-input2"), diagramFile);
+		loadUnknownFile(browser.$("#harness-sidepanel-canvas-input2"), diagramFile);
 	});
 
 	this.Then(/^I have uploaded JSON for common-properties "([^"]*)"$/, function(propertiesFile) {
-		selectSelect(browser.$("#sidepanel-input"), propertiesFile);
+		selectSelect(browser.$("#harness-sidepanel-input"), propertiesFile);
 	});
 
 };

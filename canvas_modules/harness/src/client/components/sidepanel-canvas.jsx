@@ -348,12 +348,12 @@ export default class SidePanelForms extends React.Component {
 	}
 
 	render() {
-		var divider = (<div className="sidepanel-children sidepanel-divider" />);
-		var space = (<div className="sidepanel-spacer" />);
+		var divider = (<div className="harness-sidepanel-children harness-sidepanel-divider" />);
+		var space = (<div className="harness-sidepanel-spacer" />);
 
 		var canvasFileChooserVisible = <div />;
 		if (this.props.canvasFileChooserVisible) {
-			canvasFileChooserVisible = (<div className="sidepanel-file-uploader">
+			canvasFileChooserVisible = (<div className="harness-sidepanel-file-uploader">
 				<FileUploader
 					small={"true"}
 					buttonLabel="Choose file"
@@ -361,7 +361,7 @@ export default class SidePanelForms extends React.Component {
 					onChange={this.onCanvasFileSelect}
 				/>
 				{space}
-				<div className="sidepanel-file-upload-submit">
+				<div className="harness-sidepanel-file-upload-submit">
 					<Button small
 						disabled={!this.isReadyToSubmitCanvasData()}
 						onClick={this.submitCanvas.bind(this)}
@@ -374,7 +374,7 @@ export default class SidePanelForms extends React.Component {
 
 		var paletteFileChooserVisible = <div />;
 		if (this.props.paletteFileChooserVisible) {
-			paletteFileChooserVisible = (<div className="sidepanel-file-uploader">
+			paletteFileChooserVisible = (<div className="harness-sidepanel-file-uploader">
 				<FileUploader
 					small={"true"}
 					buttonLabel="Choose file"
@@ -382,7 +382,7 @@ export default class SidePanelForms extends React.Component {
 					onChange={this.onCanvasPaletteSelect}
 				/>
 				{space}
-				<div className="sidepanel-file-upload-submit">
+				<div className="harness-sidepanel-file-upload-submit">
 					<Button small
 						disabled={!this.isReadyToSubmitPaletteData()}
 						onClick={this.submitPalette.bind(this)}
@@ -394,39 +394,35 @@ export default class SidePanelForms extends React.Component {
 			</div>);
 		}
 
-		var canvasInput = (<div className="sidepanel-children" id="sidepanel-canvas-input">
-			<div className="filePicker">
-				<div className="sidepanel-headers">Canvas Diagram</div>
-				<Dropdown
-					defaultText="Canvas"
-					ariaLabel="Canvas"
-					onChange={this.onCanvasDropdownSelect.bind(this)}
-					value={this.props.selectedCanvasDropdownFile}
-				>
-					{this.dropdownOptions(this.state.canvasFiles)}
-				</Dropdown>
-				{canvasFileChooserVisible}
-			</div>
+		var canvasInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-input">
+			<div className="harness-sidepanel-headers">Canvas Diagram</div>
+			<Dropdown
+				defaultText="Canvas"
+				ariaLabel="Canvas"
+				onChange={this.onCanvasDropdownSelect.bind(this)}
+				value={this.props.selectedCanvasDropdownFile}
+			>
+				{this.dropdownOptions(this.state.canvasFiles)}
+			</Dropdown>
+			{canvasFileChooserVisible}
 		</div>);
 
-		var paletteInput = (<div className="sidepanel-children" id="sidepanel-palette-input">
-			<div className="filePicker">
-				<div className="sidepanel-headers">Canvas Palette</div>
-				<Dropdown
-					defaultText="Palette"
-					ariaLabel="Palette"
-					onChange={this.onPaletteDropdownSelect.bind(this)}
-					value={this.props.selectedPaletteDropdownFile}
-				>
-					{this.dropdownOptions(this.state.paletteFiles)}
-				</Dropdown>
-				{paletteFileChooserVisible}
-			</div>
+		var paletteInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-input">
+			<div className="harness-sidepanel-headers">Canvas Palette</div>
+			<Dropdown
+				defaultText="Palette"
+				ariaLabel="Palette"
+				onChange={this.onPaletteDropdownSelect.bind(this)}
+				value={this.props.selectedPaletteDropdownFile}
+			>
+				{this.dropdownOptions(this.state.paletteFiles)}
+			</Dropdown>
+			{paletteFileChooserVisible}
 		</div>);
 
 		var canvasFileChooserVisible2 = <div />;
 		if (this.props.canvasFileChooserVisible2) {
-			canvasFileChooserVisible2 = (<div className="sidepanel-file-uploader">
+			canvasFileChooserVisible2 = (<div className="harness-sidepanel-file-uploader">
 				{space}
 				<FileUploader
 					small={"true"}
@@ -435,7 +431,7 @@ export default class SidePanelForms extends React.Component {
 					onChange={this.onCanvasFileSelect2}
 				/>
 				{space}
-				<div className="sidepanel-file-upload-submit">
+				<div className="harness-sidepanel-file-upload-submit">
 					<Button small
 						disabled={!this.isReadyToSubmitCanvasData2()}
 						onClick={this.submitCanvas2.bind(this)}
@@ -448,7 +444,7 @@ export default class SidePanelForms extends React.Component {
 
 		var paletteFileChooserVisible2 = <div />;
 		if (this.props.paletteFileChooserVisible2) {
-			paletteFileChooserVisible2 = (<div className="sidepanel-file-uploader">
+			paletteFileChooserVisible2 = (<div className="harness-sidepanel-file-uploader">
 				{space}
 				<FileUploader
 					small={"true"}
@@ -457,7 +453,7 @@ export default class SidePanelForms extends React.Component {
 					onChange={this.onCanvasPaletteSelect2}
 				/>
 				{space}
-				<div className="sidepanel-file-upload-submit">
+				<div className="harness-sidepanel-file-upload-submit">
 					<Button small
 						disabled={!this.isReadyToSubmitPaletteData2()}
 						onClick={this.submitPalette2.bind(this)}
@@ -469,42 +465,38 @@ export default class SidePanelForms extends React.Component {
 			</div>);
 		}
 
-		var canvasInput2 = (<div className="sidepanel-children" id="sidepanel-canvas-input2">
-			<div className="filePicker">
-				<div className="sidepanel-headers">Canvas Diagram</div>
-				<Dropdown
-					disabled={!this.props.extraCanvasDisplayed}
-					defaultText="Canvas"
-					ariaLabel="Canvas"
-					onChange={this.onCanvasDropdownSelect2.bind(this)}
-					value={this.props.selectedCanvasDropdownFile2}
-				>
-					{this.dropdownOptions(this.state.canvasFiles)}
-				</Dropdown>
-				{canvasFileChooserVisible2}
-			</div>
+		var canvasInput2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-input2">
+			<div className="harness-sidepanel-headers">Canvas Diagram</div>
+			<Dropdown
+				disabled={!this.props.extraCanvasDisplayed}
+				defaultText="Canvas"
+				ariaLabel="Canvas"
+				onChange={this.onCanvasDropdownSelect2.bind(this)}
+				value={this.props.selectedCanvasDropdownFile2}
+			>
+				{this.dropdownOptions(this.state.canvasFiles)}
+			</Dropdown>
+			{canvasFileChooserVisible2}
 		</div>);
 
-		var paletteInput2 = (<div className="sidepanel-children" id="sidepanel-palette-input2">
-			<div className="filePicker">
-				<div className="sidepanel-headers">Canvas Palette</div>
-				<Dropdown
-					disabled={!this.props.extraCanvasDisplayed}
-					defaultText="Palette"
-					ariaLabel="Palette"
-					onChange={this.onPaletteDropdownSelect2.bind(this)}
-					value={this.props.selectedPaletteDropdownFile2}
-				>
-					{this.dropdownOptions(this.state.paletteFiles)}
-				</Dropdown>
-				{paletteFileChooserVisible2}
-			</div>
+		var paletteInput2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-input2">
+			<div className="harness-sidepanel-headers">Canvas Palette</div>
+			<Dropdown
+				disabled={!this.props.extraCanvasDisplayed}
+				defaultText="Palette"
+				ariaLabel="Palette"
+				onChange={this.onPaletteDropdownSelect2.bind(this)}
+				value={this.props.selectedPaletteDropdownFile2}
+			>
+				{this.dropdownOptions(this.state.paletteFiles)}
+			</Dropdown>
+			{paletteFileChooserVisible2}
 		</div>);
 
-		var layoutDirection = (<div className="sidepanel-children" id="sidepanel-layout-direction">
-			<div className="sidepanel-headers">Fixed Layout</div>
+		var layoutDirection = (<div className="harness-sidepanel-children" id="harness-sidepanel-layout-direction">
+			<div className="harness-sidepanel-headers">Fixed Layout</div>
 			<RadioButtonGroup
-				className="sidepanel-radio-group"
+				className="harness-sidepanel-radio-group"
 				name="layout_direction_radio"
 				onChange={this.layoutDirectionOptionChange}
 				defaultSelected={this.props.selectedLayout}
@@ -524,12 +516,12 @@ export default class SidePanelForms extends React.Component {
 			</RadioButtonGroup>
 		</div>);
 
-		var enableObjectModel = (<div className="sidepanel-children" id="sidepanel-object-model">
+		var enableObjectModel = (<div className="harness-sidepanel-children">
 			<form>
-				<div className="sidepanel-headers">Use Object Model</div>
+				<div className="harness-sidepanel-headers">Use Object Model</div>
 				<div>
 					<Toggle
-						id="sidepanel-object-model-toggle"
+						id="harness-sidepanel-object-model-toggle"
 						toggled={this.props.internalObjectModel}
 						onToggle={this.useInternalObjectModel}
 					/>
@@ -537,12 +529,12 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
-		var enableCreateSupernodeNonContiguous = (<div className="sidepanel-children" id="sidepanel-create-supernode">
+		var enableCreateSupernodeNonContiguous = (<div className="harness-sidepanel-children">
 			<form>
-				<div className="sidepanel-headers">Enable Create Supernode for Noncontiguous Nodes</div>
+				<div className="harness-sidepanel-headers">Enable Create Supernode for Noncontiguous Nodes</div>
 				<div>
 					<Toggle
-						id="sidepanel-enable-create-supernode-toggle"
+						id="harness-sidepanel-enable-create-supernode-toggle"
 						toggled={this.props.enableCreateSupernodeNonContiguous}
 						onToggle={this.useEnableCreateSupernodeNonContiguous}
 					/>
@@ -550,14 +542,13 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
-		var enableMoveNodesOnSupernodeResize = (<div className="sidepanel-children"
-			id="sidepanel-move-surrounding-nodes"
-		>
+		var enableMoveNodesOnSupernodeResize = (<div className="harness-sidepanel-children">
 			<form>
-				<div className="sidepanel-headers">Enable move surrounding nodes when resizing a supernode.</div>
+				<div className="harness-sidepanel-headers">
+					Enable move surrounding nodes when resizing a supernode.</div>
 				<div>
 					<Toggle
-						id="sidepanel-enable-move-surrounding-nodes-toggle"
+						id="harness-sidepanel-enable-move-surrounding-nodes-toggle"
 						toggled={this.props.enableMoveNodesOnSupernodeResize}
 						onToggle={this.onEnableMoveNodesOnSupernodeResizeToggle}
 					/>
@@ -565,10 +556,10 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
-		var connectionType = (<div className="sidepanel-children" id="sidepanel-connection-type">
-			<div className="sidepanel-headers">Connection Type</div>
+		var connectionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-connection-type">
+			<div className="harness-sidepanel-headers">Connection Type</div>
 			<RadioButtonGroup
-				className="sidepanel-radio-group"
+				className="harness-sidepanel-radio-group"
 				name="connection_type_radio"
 				onChange={this.connectionTypeOptionChange}
 				defaultSelected={this.props.selectedConnectionType}
@@ -584,10 +575,10 @@ export default class SidePanelForms extends React.Component {
 			</RadioButtonGroup>
 		</div>);
 
-		var nodeFormatType = (<div className="sidepanel-children" id="sidepanel-node-format-type">
-			<div className="sidepanel-headers">Node Format Type (for 'Ports')</div>
+		var nodeFormatType = (<div className="harness-sidepanel-children">
+			<div className="harness-sidepanel-headers">Node Format Type (for 'Ports')</div>
 			<RadioButtonGroup
-				className="sidepanel-radio-group"
+				className="harness-sidepanel-radio-group"
 				name="node_format_type_radio"
 				onChange={this.nodeFormatTypeOptionChange}
 				defaultSelected={this.props.selectedNodeFormat}
@@ -603,10 +594,10 @@ export default class SidePanelForms extends React.Component {
 			</RadioButtonGroup>
 		</div>);
 
-		var linkType = (<div className="sidepanel-children" id="sidepanel-link-type">
-			<div className="sidepanel-headers">Link Type (for 'Ports')</div>
+		var linkType = (<div className="harness-sidepanel-children">
+			<div className="harness-sidepanel-headers">Link Type (for 'Ports')</div>
 			<RadioButtonGroup
-				className="sidepanel-radio-group"
+				className="harness-sidepanel-radio-group"
 				name="link_type_radio"
 				onChange={this.linkTypeOptionChange}
 				defaultSelected={this.props.selectedLinkType}
@@ -626,11 +617,11 @@ export default class SidePanelForms extends React.Component {
 			</RadioButtonGroup>
 		</div>);
 
-		var paletteLayout = (<div className="sidepanel-children" id="sidepanel-palette-layout">
-			<div className="sidepanel-headers">Palette Layout</div>
+		var paletteLayout = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-layout">
+			<div className="harness-sidepanel-headers">Palette Layout</div>
 			<RadioButtonGroup
 				name="palette_layout_radio"
-				className="sidepanel-radio-group"
+				className="harness-sidepanel-radio-group"
 				onChange={this.paletteLayoutOptionChange}
 				defaultSelected={this.props.selectedPaletteLayout}
 			>
@@ -643,18 +634,18 @@ export default class SidePanelForms extends React.Component {
 					labelText={MODAL}
 				/>
 			</RadioButtonGroup>
-			<div className="sidepanel-headers">Show Narrow Palette</div>
+			<div className="harness-sidepanel-headers">Show Narrow Palette</div>
 			<div>
 				<Toggle
-					id="sidepanel-narrow-flyout"
+					id="harness-sidepanel-narrow-flyout"
 					toggled={this.props.narrowPalette}
 					onToggle={this.narrowPalette}
 				/>
 			</div>
 		</div>);
 
-		var tipConfig = (<div className="sidepanel-children" id="sidepanel-tip-config">
-			<div className="sidepanel-headers">Tips</div>
+		var tipConfig = (<div className="harness-sidepanel-children" id="harness-sidepanel-tip-config">
+			<div className="harness-sidepanel-headers">Tips</div>
 			<Checkbox
 				id="tip_palette"
 				labelText={TIP_PALETTE}
@@ -681,12 +672,12 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
-		var extraCanvas = (<div className="sidepanel-children" id="sidepanel-extra-canvas">
+		var extraCanvas = (<div className="harness-sidepanel-children" id="harness-sidepanel-extra-canvas">
 			<form>
-				<div className="sidepanel-headers">Extra canvas</div>
+				<div className="harness-sidepanel-headers">Extra canvas</div>
 				<div>
 					<Toggle
-						id="sidepanel-object-extra-canvas"
+						id="harness-sidepanel-object-extra-canvas"
 						toggled={this.props.extraCanvasDisplayed}
 						onToggle={this.extraCanvasChange}
 					/>
@@ -694,28 +685,30 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
-		var nodeDraggable = (<div className="sidepanel-children" id="sidepanel-nodeDraggable">
+		var nodeDraggable = (<div className="harness-sidepanel-children">
 			<form>
-				<div className="sidepanel-headers">Draggable Node (Requires modelerPalette.json to be set.)</div>
-				<div id="sidePanelNodeDraggable" draggable="true"
+				<div className="harness-sidepanel-headers">
+					Draggable Node (Requires modelerPalette.json to be set.)
+				</div>
+				<div id="harness-sidePanelNodeDraggable" draggable="true"
 					onDragStart={this.onDragStart} onDragOver={this.onDragOver}
 				>
-					<div className="sidepanel-list-item-icon">
+					<div className="harness-sidepanel-list-item-icon">
 						<img draggable="false" src="/images/nodes/derive.svg" />
 					</div>
 					<div>
-						<span className="sidepanel-list-item-text">Derive</span>
+						<span className="harness-sidepanel-list-item-text">Derive</span>
 					</div>
 				</div>
 			</form>
 		</div>);
 
-		var schemaValidation = (<div className="sidepanel-children" id="sidepanel-schemaValidation">
+		var schemaValidation = (<div className="harness-sidepanel-children">
 			<form>
-				<div className="sidepanel-headers">Schema Validation</div>
+				<div className="harness-sidepanel-headers">Schema Validation</div>
 				<div>
 					<Toggle
-						id="sidepanel-schema-validation"
+						id="harness-sidepanel-schema-validation"
 						toggled={this.props.schemaValidationEnabled}
 						onToggle={this.schemaValidationChange}
 					/>
@@ -724,10 +717,10 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		const validateFlowOnOpen = (
-			<div className="sidepanel-children">
-				<div className="sidepanel-headers">Validate flow on open</div>
+			<div className="harness-sidepanel-children">
+				<div className="harness-sidepanel-headers">Validate flow on open</div>
 				<Toggle
-					id="sidepanel-validateFlowOnOpen-toggle"
+					id="harness-sidepanel-validateFlowOnOpen-toggle"
 					toggled={this.props.validateFlowOnOpen}
 					onToggle={this.changeValidateFlowOnOpen}
 				/>

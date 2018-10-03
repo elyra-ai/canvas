@@ -145,7 +145,7 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "custom-toggle-panel",
+            "id": "harness-custom-toggle-panel",
             "type": "customPanel",
             "parameter_refs": [
               "custom_toggle",
@@ -153,7 +153,7 @@
             ]
           },
           {
-            "id": "custom-toggle-panel",
+            "id": "harness-custom-toggle-panel",
             "type": "customPanel",
             "parameter_refs": [
               "custom_toggle2"
@@ -184,7 +184,7 @@
                 ]
               },
               {
-                "id": "custom-map-panel",
+                "id": "harness-custom-map-panel",
                 "type": "customPanel",
                 "parameter_refs": [
                   "custom_map_info"
@@ -203,7 +203,7 @@
             "type": "summaryPanel",
             "group_info": [
               {
-                "id": "custom-slider-panel",
+                "id": "harness-custom-slider-panel",
                 "type": "customPanel",
                 "parameter_refs": [
                   "custom_slider",

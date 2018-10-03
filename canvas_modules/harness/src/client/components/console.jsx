@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -15,11 +15,11 @@ import {
 
 export default class Console extends React.Component {
 	showDetails(event) {
-		if (event.target.children.console_pretty_json_container) {
-			if (event.target.children.console_pretty_json_container.style.display === "none") {
-				event.target.children.console_pretty_json_container.style.display = "initial";
+		if (event.target.children.harness_console_pretty_json_container) {
+			if (event.target.children.harness_console_pretty_json_container.style.display === "none") {
+				event.target.children.harness_console_pretty_json_container.style.display = "initial";
 			} else {
-				event.target.children.console_pretty_json_container.style.display = "none";
+				event.target.children.harness_console_pretty_json_container.style.display = "none";
 			}
 		}
 	}
@@ -36,17 +36,17 @@ export default class Console extends React.Component {
 			var entry = log.timestamp + ": " + log.event;
 
 			return (
-				<li className="console-entry" key={ind} onClick={that.showDetails.bind(that) }>
+				<li className="harness-console-entry" key={ind} onClick={that.showDetails.bind(that) }>
 					{entry}
-					<div id="console_pretty_json_container" style={ { display: "none" } }>
-						<pre className="console-pretty-json">{formatted}</pre>
+					<div id="harness_console_pretty_json_container" style={ { display: "none" } }>
+						<pre className="harness-console-pretty-json">{formatted}</pre>
 					</div>
 				</li>
 			);
 		});
 
 		var consoleWindow = (
-			<div id="app-console"
+			<div className="harness-app-console"
 				style={{ height: consoleHeight }}
 			>
 				<ul>{logs}</ul>

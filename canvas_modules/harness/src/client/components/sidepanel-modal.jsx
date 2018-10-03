@@ -186,10 +186,10 @@ export default class SidePanelModal extends React.Component {
 	}
 
 	render() {
-		const space = (<div className="sidepanel-spacer" />);
+		const space = (<div className="harness-sidepanel-spacer" />);
 		let fileChooser = <div />;
 		if (this.props.fileChooserVisible) {
-			fileChooser = (<div className="sidepanel-file-uploader">
+			fileChooser = (<div className="harness-sidepanel-file-uploader">
 				<FileUploader
 					small={"true"}
 					buttonLabel="Choose file"
@@ -200,9 +200,9 @@ export default class SidePanelModal extends React.Component {
 			</div>);
 		}
 
-		const propertiesInput = (<div className="sidepanel-children" id="sidepanel-input">
+		const propertiesInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-input">
 			<div className="filePicker">
-				<div className="sidepanel-headers">
+				<div className="harness-sidepanel-headers">
 					<span>Common Properties</span>
 					<Link to="/properties" target="_blank">documentation</Link>
 				</div>
@@ -226,10 +226,12 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		</div>);
 
-		const containerType = (<div className="sidepanel-children" id="sidepanel-properties-container-type">
-			<div className="sidepanel-headers">Container Type</div>
+		const containerType = (<div className="harness-sidepanel-children"
+			id="harness-sidepanel-properties-container-type"
+		>
+			<div className="harness-sidepanel-headers">Container Type</div>
 			<RadioButtonGroup
-				className="sidepanel-radio-group"
+				className="harness-sidepanel-radio-group"
 				name="properties-container_type_radio"
 				onChange={this.usePropertiesContainerType}
 				valueSelected={this.props.propertiesContainerType}
@@ -246,20 +248,20 @@ export default class SidePanelModal extends React.Component {
 		</div>);
 
 		const applyOnBlur = (
-			<div className="sidepanel-children">
-				<div className="sidepanel-headers">Apply changes on blur</div>
+			<div className="harness-sidepanel-children">
+				<div className="harness-sidepanel-headers">Apply changes on blur</div>
 				<Toggle
-					id="sidepanel-applyOnBlur-toggle"
+					id="harness-sidepanel-applyOnBlur-toggle"
 					toggled={this.props.applyOnBlur}
 					onToggle={this.useApplyOnBlur}
 				/>
 			</div>);
 
 		const expressionBuilder = (
-			<div className="sidepanel-children">
-				<div className="sidepanel-headers">Show Expression Builder</div>
+			<div className="harness-sidepanel-children">
+				<div className="harness-sidepanel-headers">Show Expression Builder</div>
 				<Toggle
-					id="sidepanel-expressionBuilder-toggle"
+					id="harness-sidepanel-expressionBuilder-toggle"
 					toggled={this.props.expressionBuilder}
 					onToggle={this.useExpressionBuilder}
 				/>
@@ -276,17 +278,17 @@ export default class SidePanelModal extends React.Component {
 			</div>);
 
 		const addtlCmpts = (
-			<div className="sidepanel-children" id="sidepanel-properties-additional-components">
-				<div className="sidepanel-headers">Display additional components</div>
+			<div className="harness-sidepanel-children" id="sidepanel-properties-additional-components">
+				<div className="harness-sidepanel-headers">Display additional components</div>
 				<Toggle
-					id="sidepanel-additionalComponents-toggle"
+					id="harness-sidepanel-additionalComponents-toggle"
 					toggled={ this.props.displayAdditionalComponents }
 					onToggle={ this.useDisplayAdditionalComponents }
 				/>
 			</div>
 		);
 
-		const divider = (<div className="sidepanel-children sidepanel-divider" />);
+		const divider = (<div className="harness-sidepanel-children harness-sidepanel-divider" />);
 		return (
 			<div>
 				{propertiesInput}

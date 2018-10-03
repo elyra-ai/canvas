@@ -16,13 +16,13 @@ module.exports = function() {
 
 	this.Given(/^I have selected the "([^"]*)" palette layout$/, function(layout) {
 		if (layout === "Modal") {
-			const modalLabel = browser.$("#sidepanel-palette-layout").$$("div")[4].$("label");
+			const modalLabel = browser.$("#harness-sidepanel-palette-layout").$$("div")[4].$("label");
 			modalLabel.scroll();
 			browser.pause(500);
 			modalLabel.click();
 			nconf.set("paletteLayout", "Modal");
 		} else {
-			const flyoutLabel = browser.$("#sidepanel-palette-layout").$$("div")[2].$("label");
+			const flyoutLabel = browser.$("#harness-sidepanel-palette-layout").$$("div")[2].$("label");
 			flyoutLabel.scroll();
 			browser.pause(500);
 			flyoutLabel.click();
@@ -58,17 +58,17 @@ module.exports = function() {
 	});
 
 	this.Then(/^I have uploaded predefined palette "([^"]*)"$/, function(paletteFile) {
-		dropdownSelect(browser.$("#sidepanel-palette-input"), paletteFile);
+		dropdownSelect(browser.$("#harness-sidepanel-palette-input"), paletteFile);
 		browser.pause(500);
 	});
 
 	this.Then(/^I have uploaded palette "([^"]*)"$/, function(paletteFile) {
-		loadUnknownFile(browser.$("#sidepanel-palette-input"), paletteFile);
+		loadUnknownFile(browser.$("#harness-sidepanel-palette-input"), paletteFile);
 		browser.pause(500);
 	});
 
 	this.Then(/^I have uploaded palette for extra canvas "([^"]*)"$/, function(paletteFile) {
-		loadUnknownFile(browser.$("#sidepanel-palette-input2"), paletteFile);
+		loadUnknownFile(browser.$("#harness-sidepanel-palette-input2"), paletteFile);
 		browser.pause(500);
 	});
 

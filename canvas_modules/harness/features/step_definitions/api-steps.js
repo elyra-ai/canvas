@@ -15,17 +15,17 @@ var nconf = require("nconf");
 module.exports = function() {
 
 	this.When(/^I enter "([^"]*)" into the Category id field$/, function(textboxValue) {
-		var textbox = browser.$("#categoryId");
+		var textbox = browser.$("#harness-categoryId");
 		textbox.setValue("", textboxValue);
 	});
 
 	this.When(/^I enter "([^"]*)" into the Category name field$/, function(textboxValue) {
-		var textbox = browser.$("#categoryName");
+		var textbox = browser.$("#harness-categoryName");
 		textbox.setValue("", textboxValue);
 	});
 
 	this.When(/^I enter "([^"]*)" into the new label field$/, function(textboxValue) {
-		var textbox = browser.$("#newLabel");
+		var textbox = browser.$("#harness-newLabel");
 		textbox.setValue("", textboxValue);
 	});
 
@@ -34,12 +34,16 @@ module.exports = function() {
 		submitButton.click();
 	});
 
+	this.Then(/^I select node "([^"]*)" in the node label drop-down list$/, function(nodeName) {
+		dropdownSelect(browser.$("#harness-sidepanel-api-nodePortSelection"), nodeName);
+	});
+
 	this.Then(/^I select node "([^"]*)" in the node drop-down list$/, function(nodeName) {
-		dropdownSelect(browser.$("#sidepanel-api-nodeSelection"), nodeName);
+		dropdownSelect(browser.$("#harness-sidepanel-api-nodeSelection"), nodeName);
 	});
 
 	this.Then(/^I select port "([^"]*)" in the port drop-down list$/, function(portName) {
-		dropdownSelect(browser.$("#sidepanel-api-portSelection"), portName);
+		dropdownSelect(browser.$("#harness-sidepanel-api-portSelection"), portName);
 	});
 
 	this.Then(/^I verify that "([^"]*)" was added in palette category "([^"]*)"$/, function(nodeTypeName, categoryName) {
@@ -65,12 +69,12 @@ module.exports = function() {
 	// Double up the double quotes in this step to allow JSON containing double quotes
 	// to be specified in the feature file.
 	this.Then(/^I update the decorations text area with ""([^']*)""$/, function(decoratorsJSON) {
-		const textField = browser.$("#sidepanel-api-decorations").$("textarea");
+		const textField = browser.$("#harness-sidepanel-api-decorations").$("textarea");
 		textField.setValue(decoratorsJSON);
 	});
 
 	this.When(/^I update the pipelineflow to add input and output ports to node "([^"]*)"$/, function(nodeName) {
-		const textField = browser.$("#sidepanel-api-pipelineFlow").$("textarea");
+		const textField = browser.$("#harness-sidepanel-api-pipelineFlow").$("textarea");
 		const pipelineFlow = JSON.parse(textField.getText());
 		const nodeList = pipelineFlow.pipelines[0].nodes;
 		const node = nodeList.find((nd) => nd.app_data.ui_data.label === nodeName);
@@ -107,7 +111,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I click on the toggle with label "([^"]*)" in the api sidepanel$/, function(toggleLabel) {
-		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
+		const apiSidePanel = browser.$("#harness-sidepanel-api-notificationMessages");
 		const labels = apiSidePanel.$$("label");
 		let toggleFound = false;
 		for (const label of labels) {
@@ -121,7 +125,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I have selected the "([^"]*)" message type in the api sidepanel$/, function(messageType) {
-		const apiSidePanel = browser.$("#sidepanel-api-nm-types");
+		const apiSidePanel = browser.$("#harness-sidepanel-api-nm-types");
 		const radioOptions = apiSidePanel.$$(".radioButtonWrapper");
 		try {
 			if (messageType === "informational") {
@@ -152,13 +156,13 @@ module.exports = function() {
 	});
 
 	this.When(/^I enter "([^"]*)" into the message details field$/, function(textboxValue) {
-		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
-		const textbox = apiSidePanel.$("#sidepanel-api-nm-content textarea");
+		const apiSidePanel = browser.$("#harness-sidepanel-api-notificationMessages");
+		const textbox = apiSidePanel.$("#harness-sidepanel-api-nm-content textarea");
 		textbox.setValue("", textboxValue);
 	});
 
 	function getAPISubmitButton() {
-		return browser.$("#sidepanel-api-submit").$("button");
+		return browser.$("#harness-sidepanel-api-submit").$("button");
 	}
 
 	function findNodeIndexModal(nodeType) {

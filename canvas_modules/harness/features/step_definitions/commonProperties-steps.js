@@ -259,7 +259,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I enter "([^"]*)" in the "([^"]*)" field in "([^"]*)" canvas$/, function(value, fieldName, canvas) {
-		const startElement = (canvas === "top") ? browser.$$(".canvas-single")[0] : browser.$$(".canvas-single")[1];
+		const startElement = (canvas === "top") ? browser.$$(".harness-canvas-single")[0] : browser.$$(".harness-canvas-single")[1];
 		const inputField = startElement.$("div[data-id='properties-" + fieldName + "'] input");
 		inputField.setValue("", Number(value));
 		clickApplyButton(startElement);

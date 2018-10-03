@@ -16,7 +16,7 @@ import paramDef from "./json/misclassification_paramDef.json";
 
 class CustomButtonPanel {
 	static id() {
-		return "custom-button-panel";
+		return "harness-custom-button-panel";
 	}
 
 	constructor(parameters, controller, data) {

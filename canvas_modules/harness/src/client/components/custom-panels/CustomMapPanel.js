@@ -14,7 +14,7 @@ import CustomMapSummary from "../custom-components/CustomMapSummary";
 
 class CustomMapPanel {
 	static id() {
-		return "custom-map-panel";
+		return "harness-custom-map-panel";
 	}
 
 	constructor(parameters, controller, data) {

@@ -87,11 +87,11 @@ function isSchemaValidationError() {
 
 function loadUnknownFile(dropdownElement, fileName) {
 	dropdownSelect(dropdownElement, "Choose from location...");
-	const fileInput = dropdownElement.$(".sidepanel-file-uploader")
+	const fileInput = dropdownElement.$(".harness-sidepanel-file-uploader")
 		.$("input");
 	// this will not work with relative paths
 	fileInput.setValue(getBaseDir() + fileName);
-	dropdownElement.$(".sidepanel-file-upload-submit")
+	dropdownElement.$(".harness-sidepanel-file-upload-submit")
 		.click("button");
 	browser.pause(600);
 }

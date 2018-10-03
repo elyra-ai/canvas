@@ -165,14 +165,14 @@ class CustomMapCtrl extends React.Component {
 		}
 		return (
 			<div>
-				<div className="custom-map" style={visibility}>
+				<div className="harness-custom-control-custom-map" style={visibility}>
 					<span>{this.coords.latitude}</span>
 					<br />
 					<span>{this.coords.longitude}</span>
 					<div id="map" ref="map" style={{ width: 265, height: 265, border: "1px solid black" }}>
 						I should be a map!
 					</div>
-					<div className="condition">
+					<div className="harness-custom-control-condition">
 						<div className="icon">{icon}</div>
 						<div>{messageText}</div>
 					</div>

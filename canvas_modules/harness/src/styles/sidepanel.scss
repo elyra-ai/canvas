@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 /*SidePanel*/
-#app-sidepanel {
+.harness-app-sidepanel {
 	background-color: $ui-03;
 	top: 50px;
 	position: fixed;
@@ -26,55 +26,54 @@
 	padding-bottom: 10px;
 }
 
-.sidepanel-headers {
+.harness-sidepanel-headers {
 	padding-bottom: 5px;
 	span {
 		padding-right: 5px;
 	}
 }
 
-.sidepanel-children {
+.harness-sidepanel-children {
 	padding-left: 10px;
 	padding-right: 10px;
 }
 
-.sidepanel-divider {
+.harness-sidepanel-divider {
 	width: 100%;
 	margin: 0 0 5px;
 	border-bottom: 2px solid $ui-04;
 	padding: 5px 0;
 }
 
-.sidepanel-spacer {
+.harness-sidepanel-spacer {
 	width: 100%;
 	padding: 6px 0 0;
 }
 
-.sidepanel-list-item-icon {
+.harness-sidepanel-list-item-icon {
 	height: 40px;
 	width: 40px;
 	min-width: 32px;
 	float: left;
 }
 
-.sidepanel-list-item-text {
+.harness-sidepanel-list-item-text {
 	line-height: 30px;
 	margin-left: 15px;
 }
 
-.sidepanel-api-delete-notification-message-submit {
-	position: relative;
-	display: flex;
-	flex-flow: row-reverse;
-}
-
-.sidepanel-radio-group {
+.harness-sidepanel-radio-group {
 	.radioButtonWrapper {
 		padding-top: 3px;
 	}
 }
 
-#buttonOneTimeLayoutHorizontal , #buttonOneTimeLayoutVertical {
-	width: 100%;
-	text-align: center;
+.harness-sidepanel-file-uploader {
+	.bx--label-description,
+	.bx--form-item {
+		margin-bottom: 0;
+	}
+	.bx--file-container {
+		margin-top: 5px;
+	}
 }

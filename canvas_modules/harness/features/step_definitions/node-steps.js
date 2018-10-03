@@ -901,7 +901,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I drag the Derive Node from side panel to common canvas at (\d+), (\d+)$/, function(xPos, yPos) {
-		browser.execute(simulateDragDrop, "#sidePanelNodeDraggable", 0, "#canvas-div-0", 0, xPos, yPos);
+		browser.execute(simulateDragDrop, "#harness-sidePanelNodeDraggable", 0, "#canvas-div-0", 0, xPos, yPos);
 	});
 
 	this.Then("I verify the node move was not done", function() {

@@ -849,18 +849,18 @@ class App extends React.Component {
 	}
 
 	log(evt, data, content) {
-		var event = {
+		const event = {
 			"timestamp": new Date().toLocaleString(),
 			"event": evt,
 			"data": data,
 			"content": content
 		};
-		var that = this;
+		const that = this;
 		this.setState((state) => {
 			state.consoleout = state.consoleout.concat(event);
 			return state;
 		}, function() {
-			var sessionData = {
+			const sessionData = {
 				events: that.state.consoleout,
 				canvas: that.canvasController.getCanvasInfo()
 			};
@@ -869,7 +869,7 @@ class App extends React.Component {
 			}
 			TestService.postSessionData(sessionData);
 		});
-		var objDiv = document.getElementById("app-console");
+		const objDiv = document.getElementsByClassName("harness-app-console")[0];
 		objDiv.scrollTop = objDiv.scrollHeight;
 	}
 
@@ -1346,53 +1346,37 @@ class App extends React.Component {
 			currentPipelineId={currentPipelineId}
 		/>);
 
-		const navBar = (<div className="app-navbar">
-			<ul className="app-navbar-items">
-				<li className="navbar-li">
+		const navBar = (<div className="harness-app-navbar">
+			<ul className="harness-app-navbar-items">
+				<li className="harness-navbar-li">
 					<span className="harness-title">Canvas Testbed</span>
 				</li>
-				<li className="navbar-li nav-divider" data-tip="console">
+				<li className="harness-navbar-li harness-nav-divider" data-tip="console">
 					<a onClick={this.openConsole.bind(this) }>
-						<Isvg id="action-bar-console"
-							src={listview32}
-						/>
+						<Isvg src={listview32} />
 					</a>
 				</li>
-				<li className="navbar-li" data-tip="download">
+				<li className="harness-navbar-li" data-tip="download">
 					<a onClick={this.download.bind(this) }>
-						<Isvg id="action-bar-download"
-							src={download32}
-						/>
+						<Isvg src={download32} />
 					</a>
 				</li>
-				<li className="navbar-li harness-pipeline-breadcrumbs-container">
+				<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
 					{breadcrumbs}
 				</li>
-				<li className="navbar-li nav-divider action-bar-sidepanel"
-					id="action-bar-sidepanel-api"	data-tip="API"
-				>
+				<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="API">
 					<a onClick={this.sidePanelAPI.bind(this) }>
-						<Isvg id="action-bar-panel-api"
-							src={api32}
-						/>
+						<Isvg src={api32} />
 					</a>
 				</li>
-				<li className="navbar-li action-bar-sidepanel"
-					id="action-bar-sidepanel-modal" data-tip="Common Properties Modal"
-				>
+				<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip="Common Properties Modal">
 					<a onClick={this.sidePanelModal.bind(this) }>
-						<Isvg id="action-bar-panel-modal"
-							src={template32}
-						/>
+						<Isvg src={template32} />
 					</a>
 				</li>
-				<li className="navbar-li nav-divider action-bar-sidepanel"
-					id="action-bar-sidepanel-canvas"	data-tip="Common Canvas"
-				>
+				<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="Common Canvas">
 					<a onClick={this.sidePanelCanvas.bind(this) }>
-						<Isvg id="action-bar-panel"
-							src={justify32}
-						/>
+						<Isvg src={justify32} />
 					</a>
 				</li>
 			</ul>
@@ -1400,9 +1384,9 @@ class App extends React.Component {
 
 		const emptyCanvasDiv = (
 			<div>
-				<img src={BlankCanvasImage} className="empty-harness-image" />
-				<span className="empty-harness-text">Welcome to the Common Canvas test harness.<br />Your flow is empty!</span>
-				<span className="empty-harness-link"
+				<img src={BlankCanvasImage} className="harness-empty-image" />
+				<span className="harness-empty-text">Welcome to the Common Canvas test harness.<br />Your flow is empty!</span>
+				<span className="harness-empty-link"
 					onClick={this.handleEmptyCanvasLinkClick}
 				>Click here to take a tour</span>
 			</div>);
@@ -1516,7 +1500,7 @@ class App extends React.Component {
 			showRightFlyoutProperties2 = this.state.showPropertiesDialog2 && this.state.propertiesContainerType === FLYOUT;
 		} else {
 			commonPropertiesContainer = (<IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>
-				<div id="common-properties">
+				<div className="harness-common-properties">
 					{commonProperties}
 				</div>
 			</IntlProvider>);
@@ -1547,11 +1531,11 @@ class App extends React.Component {
 		let commonCanvas;
 		if (this.state.extraCanvasDisplayed === true) {
 			commonCanvas = (
-				<div className="canvas-container double" style={{ width: canvasContainerWidth }}>
-					<div className="canvas-single">
+				<div className="harness-canvas-container double" style={{ width: canvasContainerWidth }}>
+					<div className="harness-canvas-single">
 						{firstCanvas}
 					</div>
-					<div className="canvas-single">
+					<div className="harness-canvas-single">
 						<CommonCanvas
 							config={commonCanvasConfig2}
 							contextMenuHandler={this.contextMenuHandler}
@@ -1570,7 +1554,7 @@ class App extends React.Component {
 				</div>);
 		} else {
 			commonCanvas = (
-				<div className="canvas-container" style={{ width: canvasContainerWidth }}>
+				<div className="harness-canvas-container" style={{ width: canvasContainerWidth }}>
 					{firstCanvas}
 				</div>);
 		}
@@ -1657,7 +1641,7 @@ class App extends React.Component {
 			selectedOperation: this.state.apiSelectedOperation
 		};
 
-		const mainView = (<div id="app-container">
+		const mainView = (<div id="harness-app-container">
 			{navBar}
 			<SidePanel
 				canvasConfig={sidePanelCanvasConfig}

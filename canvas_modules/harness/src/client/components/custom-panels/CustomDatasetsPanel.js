@@ -31,11 +31,11 @@ import timestampDisabledIcon from "./images/timestamp-disabled-icon.svg";
 
 class CustomDatasetsPanel {
 	static id() {
-		return "custom-table-panel";
+		return "harness-custom-table-panel";
 	}
 
 	static controlName() {
-		return "append-datasets-summary";
+		return "harness-append-datasets-summary";
 	}
 
 	static calculateColumnWidths(columns, elementId, parentTableWidth) {

@@ -28,6 +28,8 @@
 	position: relative;
 	overflow-x: auto;
 	overflow-y: hidden;
+	// Set the font explicitly to 14px to shrink them across the entire canvas
+	font-size: 14px;
 }
 
 .common-canvas-items-container {

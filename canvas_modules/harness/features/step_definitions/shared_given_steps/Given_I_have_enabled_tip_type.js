@@ -18,16 +18,16 @@ module.exports = function() {
 			let label;
 			switch (tipType) {
 			case "Palette":
-				label = browser.$("#sidepanel-tip-config").$$("div")[1].$("label");
+				label = browser.$("#harness-sidepanel-tip-config").$$("div")[1].$("label");
 				break;
 			case "Nodes":
-				label = browser.$("#sidepanel-tip-config").$$("div")[2].$("label");
+				label = browser.$("#harness-sidepanel-tip-config").$$("div")[2].$("label");
 				break;
 			case "Ports":
-				label = browser.$("#sidepanel-tip-config").$$("div")[3].$("label");
+				label = browser.$("#harness-sidepanel-tip-config").$$("div")[3].$("label");
 				break;
 			case "Links":
-				label = browser.$("#sidepanel-tip-config").$$("div")[4].$("label");
+				label = browser.$("#harness-sidepanel-tip-config").$$("div")[4].$("label");
 				break;
 			default:
 			}

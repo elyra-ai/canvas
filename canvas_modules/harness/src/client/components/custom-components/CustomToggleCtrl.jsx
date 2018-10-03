@@ -67,10 +67,10 @@ class CustomToggleCtrl extends React.Component {
 		}
 		return (
 			<div style={visibility}>
-				<div className="custom-toggle" >
+				<div className="harness-custom-control-custom-toggle" >
 					{toggle}
 				</div>
-				<div className="condition">
+				<div className="harness-custom-control-condition">
 					<div className="icon">{icon}</div>
 					<div>{messageText}</div>
 				</div>

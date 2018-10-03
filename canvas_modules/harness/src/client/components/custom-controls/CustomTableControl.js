@@ -12,7 +12,7 @@ import CustomTableCtrl from "../custom-components/CustomTableCtrl";
 
 class CustomTableControl {
 	static id() {
-		return "custom-table-control";
+		return "harness-custom-table-control";
 	}
 	constructor(propertyId, controller, data, tableInfo) {
 		this.propertyId = propertyId;

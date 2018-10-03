@@ -16,17 +16,17 @@ module.exports = function() {
 
 		try {
 			if (fixedLayout === "none") {
-				var noneLabel = browser.$("#sidepanel-layout-direction").$$(".radioButtonWrapper")[0].$("label");
+				var noneLabel = browser.$("#harness-sidepanel-layout-direction").$$(".radioButtonWrapper")[0].$("label");
 				noneLabel.scroll();
 				browser.pause(500);
 				noneLabel.click();
 			} else if (fixedLayout === "horizontal") {
-				var horizontalLabel = browser.$("#sidepanel-layout-direction").$$(".radioButtonWrapper")[1].$("label");
+				var horizontalLabel = browser.$("#harness-sidepanel-layout-direction").$$(".radioButtonWrapper")[1].$("label");
 				horizontalLabel.scroll();
 				browser.pause(500);
 				horizontalLabel.click();
 			} else if (fixedLayout === "vertical") {
-				var verticalLabel = browser.$("#sidepanel-layout-direction").$$(".radioButtonWrapper")[2].$("label");
+				var verticalLabel = browser.$("#harness-sidepanel-layout-direction").$$(".radioButtonWrapper")[2].$("label");
 				verticalLabel.scroll();
 				browser.pause(500);
 				verticalLabel.click();
@@ -42,12 +42,12 @@ module.exports = function() {
 
 		try {
 			if (containerType === "Custom" || containerType === "Flyout") {
-				var customContainer = browser.$("#sidepanel-properties-container-type").$$(".radioButtonWrapper")[0].$("label");
+				var customContainer = browser.$("#harness-sidepanel-properties-container-type").$$(".radioButtonWrapper")[0].$("label");
 				customContainer.scroll();
 				browser.pause(500);
 				customContainer.click();
 			} else if (containerType === "Modal") {
-				var modalContainer = browser.$("#sidepanel-properties-container-type").$$(".radioButtonWrapper")[1].$("label");
+				var modalContainer = browser.$("#harness-sidepanel-properties-container-type").$$(".radioButtonWrapper")[1].$("label");
 				modalContainer.scroll();
 				browser.pause(500);
 				modalContainer.click();
