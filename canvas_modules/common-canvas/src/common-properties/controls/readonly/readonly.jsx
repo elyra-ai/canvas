@@ -12,7 +12,11 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
-import { STATES, DISPLAY_CHARS_DEFAULT, ELLIPSIS_STRING } from "./../../constants/constants.js";
+import { STATES, TOOL_TIP_DELAY } from "./../../constants/constants.js";
+import isEmpty from "lodash/isEmpty";
+import Tooltip from "./../../../tooltip/tooltip.jsx";
+import uuid4 from "uuid/v4";
+
 import { ControlType } from "./../../constants/form-constants";
 
 import classNames from "classnames";
@@ -32,24 +36,36 @@ class ReadonlyControl extends React.Component {
 			controlValue = controlValue.toString();
 		}
 		if (this.props.columnDef) {
-			const displayCharLimit = (typeof this.props.columnDef.displayChars !== "undefined")
-				? this.props.columnDef.displayChars : DISPLAY_CHARS_DEFAULT;
-			if (controlValue.length > displayCharLimit) {
-				controlValue = controlValue.substr(0, displayCharLimit - 1) + ELLIPSIS_STRING;
-			}
 			if (this.props.columnDef.controlType === ControlType.CUSTOM) {
 				controlValue = this.props.controller.getCustomControl(this.props.propertyId, this.props.columnDef, { table: true, editStyle: "summary" });
 			}
 		}
-
+		const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
+		let tooltip;
+		if (controlValue && this.props.tableControl === true) {
+			tooltip = (
+				<div className="properties-tooltips">
+					{controlValue.toString()}
+				</div>
+			);
+		}
 		return (
 			<div
 				className={classNames("properties-readonly", { "hide": this.props.state === STATES.HIDDEN })}
 				data-id={ControlUtils.getDataId(this.props.propertyId)}
 			>
-				<span disabled={this.props.state === STATES.DISABLED}>
-					{controlValue}
-				</span>
+				{ isEmpty(tooltip)
+					? <span disabled={this.props.state === STATES.DISABLED}>{controlValue}</span>
+					: <Tooltip
+						id={tooltipId}
+						tip={tooltip}
+						direction="top"
+						delay={TOOL_TIP_DELAY}
+						className="properties-tooltips"
+					>
+						<span disabled={this.props.state === STATES.DISABLED}>{controlValue}</span>
+					</Tooltip>
+				}
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);

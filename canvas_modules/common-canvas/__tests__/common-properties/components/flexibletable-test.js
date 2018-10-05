@@ -235,24 +235,13 @@ describe("text cells should display limited text", () => {
 	afterEach(() => {
 		wrapper.unmount();
 	});
-	it("Cell text field display default limited amount", () => {
+	it("Cell text field should activate ellipsis when text overflows", () => {
 		let tableSummary = wrapper.find("div[data-id='properties-structuretableReadonlyColumnDefaultIndex-summary-panel']"); // Configure Rename fields
 		tableSummary.find("button").simulate("click"); // open the summary panel (modal)
 		tableSummary = wrapper.find("div[data-id='properties-structuretableReadonlyColumnDefaultIndex-summary-panel']"); // Configure Rename fields
-		// verify the display value is the default limit
 		const labelCells = tableSummary.find("td[data-label='new_label']");
 		expect(labelCells).to.have.length(2);
-		expect(labelCells.at(1).text()).to.equal("blood pressure plus additional characters to test display_chars...");
+		var bloodPressureText = labelCells.at(1);
+		expect(bloodPressureText.offsetWidth !== bloodPressureText.scrollWidth); // Overflow text is truncated and ellipsis has been activated (through CSS styling)
 	});
-	it("Cell text field display specified limited amount", () => {
-		let tableSummary = wrapper.find("div[data-id='properties-structuretableSortableColumns-summary-panel']"); // Configure Sortable Columns
-		tableSummary.find("button").simulate("click"); // open the summary panel (modal)
-
-		tableSummary = wrapper.find("div[data-id='properties-structuretableSortableColumns-summary-panel']"); // Configure Sortable Columns
-		// verify the display value is the default limit
-		const labelCells = tableSummary.find("td[data-label='new_label']");
-		expect(labelCells).to.have.length(2);
-		expect(labelCells.at(1).text()).to.equal("blood pre...");
-	});
-
 });

@@ -245,7 +245,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 
 		const table2Initial = ["0.Age", "0.Drug", "2.Age"];
 		for (let idx = 0; idx < table2Rows.length; idx++) {
-			expect(table2Rows.at(idx).find("td")
+			expect(table2Rows.at(idx).find("td span")
 				.at(0)
 				.text()).to.equal(table2Initial[idx]);
 		}

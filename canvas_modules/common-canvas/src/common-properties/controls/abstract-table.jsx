@@ -73,7 +73,10 @@ export default class AbstractTable extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		this.setState({ enableRemoveIcon: (nextProps.selectedRows.length !== 0) });
+		const enableRemoveIcon = (nextProps.selectedRows.length !== 0);
+		if (this.state.enableRemoveIcon !== enableRemoveIcon) {
+			this.setState({ enableRemoveIcon: enableRemoveIcon });
+		}
 	}
 
 	componentDidUpdate() {

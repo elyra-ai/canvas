@@ -8,13 +8,35 @@
  *******************************************************************************/
 
 .properties-readonly {
+	width: inherit;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	&.hide {
 		display: none;
+	}
+	.properties-tooltips {
+		white-space: normal;
+		overflow: visible;
+		word-break: break-word;
+		text-overflow: clip;
 	}
 	span {
 		line-height: 1.5;
 		&[disabled] {
 			opacity: 0.5;
+		}
+	}
+	.tooltip-trigger {
+		width: inherit;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		span {
+			line-height: 1.5;
+			&[disabled] {
+				opacity: 0.5;
+			}
 		}
 	}
 }

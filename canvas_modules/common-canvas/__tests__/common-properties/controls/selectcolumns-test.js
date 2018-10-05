@@ -370,7 +370,7 @@ describe("selectcolumns control displays the proper number of rows", () => {
 		const heightDiv = columnSelect.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.at(0).prop("style");
 		// console.log("STYLE: " + JSON.stringify(heightStyle));
-		expect(heightStyle).to.eql({ "height": "106px" });
+		expect(heightStyle).to.eql({ "height": "9em" });
 	});
 
 	it("should display 5 rows in select columns in subpanel", () => {
@@ -390,6 +390,6 @@ describe("selectcolumns control displays the proper number of rows", () => {
 		const heightDiv = selectColumnsWrapper.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.prop("style");
 		// console.log("STYLE: " + JSON.stringify(heightStyle));
-		expect(heightStyle).to.eql({ "height": "178px" });
+		expect(heightStyle).to.eql({ "height": "15em" });
 	});
 });

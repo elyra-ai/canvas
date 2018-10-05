@@ -159,7 +159,7 @@ describe("add rows in tables with correct default values", () => {
 		];
 
 		for (let idx = 0; idx < tableRows.length; idx++) {
-			const tableCell = tableRows.at(idx).find("td");
+			const tableCell = tableRows.at(idx).find("td span");
 			expect(tableCell.at(0).text()).to.equal(expectedRows[idx][0]);
 			expect(tableCell.at(1).text()).to.equal(expectedRows[idx][1]);
 		}

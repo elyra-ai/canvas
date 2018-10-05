@@ -25,9 +25,9 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			fieldSelectedRow: 0,
 			valueSelectedRow: 0,
 			functionSelectedRow: 0,
-			functionCategory: this.inCategories[0] // set the initial function category to the first one in the list.
+			functionCategory: this.inCategories[0], // set the initial function category to the first one in the list.
+			selectedTab: 0
 		};
-		this.selectedTab = 0;
 		this.reactIntl = props.controller.getReactIntl();
 		this.datasetFields = props.controller.getDatasetMetadataFields();
 		this.onFunctionCatChange = this.onFunctionCatChange.bind(this);
@@ -39,7 +39,9 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	}
 
 	onTabClick(tabidx, evt) {
-		this.selectedTab = tabidx;
+		this.setState({
+			selectedTab: tabidx
+		});
 	}
 
 	onFunctionCatChange(evt) {
@@ -361,7 +363,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 		return (
 			<div className="properties-expression-selection-fieldOrFunction" >
-				<Tabs key={"tab.1"} className="properties-primaryTabs" selected={this.selectedTab}>
+				<Tabs key={"tab.1"} className="properties-primaryTabs" selected={this.state.selectedTab}>
 					{tabContent}
 				</Tabs>
 			</div>

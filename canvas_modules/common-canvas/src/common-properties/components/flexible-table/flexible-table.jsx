@@ -56,15 +56,19 @@ export default class FlexibleTable extends React.Component {
 	}
 
 	componentDidMount() {
+		this._setHeaderElement();
 		this._adjustTableHeight();
 		window.addEventListener("resize", this._adjustTableHeight);
-		this._setHeaderElement();
 		this.tableNode = ReactDOM.findDOMNode(this.refs.table);
 	}
 
-	componentDidUpdate() {
-		this._adjustTableHeight();
-		this._setHeaderElement();
+	componentDidUpdate(prevProps) {
+		if (prevProps.rows !== this.props.rows ||
+			prevProps.columns !== this.props.columns ||
+			prevProps.noAutoSize !== this.props.noAutoSize) {
+			this._setHeaderElement();
+			this._adjustTableHeight();
+		}
 		this.tableNode = ReactDOM.findDOMNode(this.refs.table);
 	}
 
@@ -163,22 +167,12 @@ export default class FlexibleTable extends React.Component {
 		if (this.props.noAutoSize) {
 			return;
 		}
-		const table = ReactDOM.findDOMNode(this.refs.table);
-		let rowHeight = 0;
-		if (table) {
-			const rowDivs = table.getElementsByClassName("table-row");
-			if (rowDivs.length > 0) {
-				rowHeight = rowDivs[0].offsetHeight + 1;
-			}
-		}
-		if (!rowHeight) {
-			rowHeight = 36;
-		}
+		const rowHeight = 3; // in em
 		const rows = this.props.rows ? this.props.rows : 4;
 		// Allow for the table header
 		let headerHeight = 0;
-		if (this.props.columns.length > 0 && this.theadNode) { // if there is a header
-			headerHeight = this.theadNode.clientHeight;
+		if (this.theadNode) {
+			headerHeight = 2.5; // in em
 		}
 		const newHeight = (rowHeight * rows + headerHeight);
 		if (newHeight !== this.state.tableHeight) {
@@ -200,7 +194,6 @@ export default class FlexibleTable extends React.Component {
 		if (theadNodes.length > 0) {
 			this.theadNode = theadNodes[0];
 		}
-
 	}
 
 	sortHeaderClick(columnName, evt) {
@@ -252,12 +245,32 @@ export default class FlexibleTable extends React.Component {
 			const tooltipId = uuid4() + "-tooltip-column-" + columnDef.key;
 			const className = "";
 			//   wrap the label in a tooltip in case it overflows
-			const tooltipText = columnDef.description;
+			let headerLabel;
+			if (typeof (columnDef.label) === "object") {
+				headerLabel = columnDef.label.props.labelText;
+			} else if (typeof (columnDef.label) === "string") {
+				headerLabel = columnDef.label;
+			}
+			const description = columnDef.description;
 			let tooltip;
-			if (tooltipText) {
+			if (description && headerLabel) {
 				tooltip = (
 					<div className="properties-tooltips">
-						{tooltipText}
+						<span style= {{ fontWeight: "bold" }}>{headerLabel}</span>
+						<br />
+						{description}
+					</div>
+				);
+			} else if (description) {
+				tooltip = (
+					<div className="properties-tooltips">
+						{description}
+					</div>
+				);
+			} else if (headerLabel) {
+				tooltip = (
+					<div className="properties-tooltips">
+						<span style= {{ fontWeight: "bold" }}>{headerLabel}</span>
 					</div>
 				);
 			}
@@ -342,13 +355,11 @@ export default class FlexibleTable extends React.Component {
 			const onClickCallback = row.onClickCallback ? { onClick: row.onClickCallback } : null;
 			const onDblClickCallback = row.onDblClickCallback ? { onDoubleClick: row.onDblClickCallback } : null;
 			const rowClassName = row.className ? row.className : "";
-
 			if (row.columns) {
 				for (let cidx = 0; cidx < row.columns.length; cidx++) {
 					const column = row.columns[cidx];
 					const colWidth = { "minWidth": columnWidths[cidx], "width": columnWidths[cidx] };
 					const value = column.value ? { value: column.value } : {};
-
 					tableRowColumns.push(<Td
 						key={this.props.scrollKey + "-row-" + ridx + "-col-" + cidx}
 						column={column.column}
@@ -356,10 +367,11 @@ export default class FlexibleTable extends React.Component {
 						style={colWidth}
 						className={column.className ? column.className : ""}
 						{...value}
-					>{column.content}</Td>);
+					>
+						{column.content}
+					</Td>);
 				}
 			}
-
 			// need to assign width to table row so scrollbar from mouse will not push contents
 			tableRows.push(<Tr
 				{...onClickCallback}
@@ -376,7 +388,7 @@ export default class FlexibleTable extends React.Component {
 		const hideTableHeader = this.props.showHeader ? {} : { "hideTableHeader": true };
 
 		const tableWidth = this.state.tableWidth;
-		const tableHeight = this.state.tableHeight - 2; // subtract 2 px for the borders
+		const tableHeight = this.state.tableHeight; // subtract 2 px for the borders
 		const columnWidths = this.calculateColumnWidths(this.props.columns, tableWidth);
 		const headerInfo = this.generateTableHeaderRow(columnWidths);
 
@@ -421,14 +433,16 @@ export default class FlexibleTable extends React.Component {
 		}
 
 
-		// adjust the height of the body so it can scroll correctly
+		// adjust the height of the body so it can scroll correctly, in em
 		if (this.tbodyNode) {
-			// subtract additional 1px to unblock bottom border
-			this.tbodyNode.style.height = (this.theadNode) ? (this.flexibleTableDiv.clientHeight - this.theadNode.clientHeight - 1) + "px"
-				: "auto";
+			let clientHeightEm;
+			if (this.flexibleTableDiv.clientHeight) {
+				clientHeightEm = this.flexibleTableDiv.clientHeight / parseFloat(getComputedStyle(document.querySelector("table"))["font-size"]);
+			}
+			this.tbodyNode.style.height = (this.theadNode) ? (clientHeightEm - 2.5) + "em" : "auto";
 		}
 
-		const heightStyle = this.props.noAutoSize ? {} : { height: tableHeight + "px" };
+		const heightStyle = this.props.noAutoSize ? {} : { height: tableHeight + "em" };
 		const containerId = this.props.showHeader ? "properties-ft-container" : "properties-ft-container-noheader";
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass + this.props.messageInfo.type;
