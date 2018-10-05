@@ -8,7 +8,6 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-// import log4js from "log4js";
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
@@ -30,6 +29,7 @@ import multiPortsCanvasV2 from "../../../harness/test_resources/diagrams/multiPo
 import pipelineFlowExampleV2 from "../../../harness/test_resources/diagrams/pipelineFlowExample.json";
 import portColorCanvasV2 from "../../../harness/test_resources/diagrams/portsColorCanvas.json";
 import uiParametersCanvasV2 from "../../../harness/test_resources/diagrams/uiParametersCanvas.json";
+import robWoodsCanvasV2 from "../../../harness/test_resources/diagrams/robWoodsCanvas.json";
 
 import allNodesV1 from "../../../harness/test_resources/diagrams/v1-allNodes.json";
 import bigCanvasV1 from "../../../harness/test_resources/diagrams/v1-bigCanvas.json";
@@ -51,8 +51,8 @@ import decoratorCanvasV0 from "../../../harness/test_resources/diagrams/x-decora
 import linkColorCanvasV0 from "../../../harness/test_resources/diagrams/x-linkColorCanvas.json";
 import modelerCanvasV0 from "../../../harness/test_resources/diagrams/x-modelerCanvas.json";
 import multiPortsCanvasV0 from "../../../harness/test_resources/diagrams/x-multiPortsCanvas.json";
+import robWoodsCanvasV0 from "../../../harness/test_resources/diagrams/x-robWoodsCanvas.json";
 
-// const logger = log4js.getLogger("object-model-test");
 const objectModel = new ObjectModel();
 objectModel.setSchemaValidation(true); // Ensure we validate against the schemas as we upgrade
 
@@ -123,6 +123,10 @@ describe("ObjectModel files handling test", () => {
 
 	it("should read in and write out the same file: uiParametersCanvasV2", () => {
 		readWriteSameFile(uiParametersCanvasV2);
+	});
+
+	it("should read in and write out the same file: robWoodsCanvasV2", () => {
+		readWriteSameFile(robWoodsCanvasV2);
 	});
 
 	// --------------------------------------------------------------------------
@@ -207,6 +211,11 @@ describe("ObjectModel files handling test", () => {
 		upgradeV0ToV2(multiPortsCanvasV0, multiPortsCanvasV2);
 	});
 
+	it("should upgrade a pipelineFlow from v0 to v2 for robWoodsV0", () => {
+		upgradeV0ToV2(robWoodsCanvasV0, robWoodsCanvasV2);
+	});
+
+
 	function readWriteSameFile(file) {
 		deepFreeze(file);
 
@@ -215,8 +224,8 @@ describe("ObjectModel files handling test", () => {
 		const expectedCanvas = file;
 		const actualCanvas = objectModel.getPipelineFlow();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
 		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
 	}
@@ -229,8 +238,8 @@ describe("ObjectModel files handling test", () => {
 		const expectedCanvas = v2PipelineFlow;
 		const actualCanvas = objectModel.getPipelineFlow();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
 		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
 	}
@@ -252,8 +261,8 @@ describe("ObjectModel files handling test", () => {
 		delete expectedCanvas.schemas;
 		delete expectedCanvas.runtimes;
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
+		// console.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// console.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
 		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
 	}

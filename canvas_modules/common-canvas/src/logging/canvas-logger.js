@@ -63,15 +63,13 @@ export default class Logger {
 	}
 
 	warn(msg) {
-		if (this.active) {
-			console.warn(this.getMessage("WARNING", msg));
-		}
+		// Always write warnings to the console regardless of whether this.active is true or not
+		console.warn(this.getMessage("WARNING", msg));
 	}
 
 	error(msg) {
-		if (this.active) {
-			console.error(this.getMessage("ERROR", msg));
-		}
+		// Always write errors to the console regardless of whether this.active is true or not
+		console.error(this.getMessage("ERROR", msg));
 	}
 
 	getStartMessage(type, msg) {

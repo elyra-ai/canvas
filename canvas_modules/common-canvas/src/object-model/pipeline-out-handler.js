@@ -128,8 +128,6 @@ export default class PipelineOutHandler {
 			uiData.description = ciNode.description;
 		}
 
-		// Only save the width, height, and isExpanded fields if the node is a
-		// supernode that is expanded in-place.
 		if (ciNode.type === "super_node") {
 			uiData.is_expanded = ciNode.is_expanded;
 			uiData.expanded_width = ciNode.expanded_width;

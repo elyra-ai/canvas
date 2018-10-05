@@ -3954,11 +3954,15 @@ class CanvasRenderer {
 			}
 
 			if (srcObj === null) {
-				this.error("Error drawing a link. A link was specified for source " + link.srcNodeId + " in the Canvas data that does not have a valid source node/comment.");
+				this.logger.error(
+					"Common Canvas error trying to draw a link. A link was specified for source " + link.srcNodeId +
+					" in the Canvas data that does not have a valid source node/comment.");
 			}
 
 			if (trgNode === null) {
-				this.error("Error drawing a link. A link was specified for target " + link.trgNodeId + " in the Canvas data that does not have a valid target node.");
+				this.logger.error(
+					"Common Canvas error trying to draw a link. A link was specified for target " + link.trgNodeId +
+					" in the Canvas data that does not have a valid target node.");
 			}
 
 			// Only proceed if we have a source and a target node/comment.

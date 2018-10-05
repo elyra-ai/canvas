@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import has from "lodash/has";
+import LayoutDimensions from "./layout-dimensions.js";
 
 export default class CanvasInHandler {
 
@@ -18,7 +19,7 @@ export default class CanvasInHandler {
 			id: canvas.diagram.id,
 			nodes: this.getNodes(canvas.diagram.nodes),
 			comments: this.getComments(canvas.diagram.comments),
-			links: this.getLinks(canvas.diagram.links),
+			links: this.getLinks(canvas.diagram.links, canvas.diagram.nodes, canvas.diagram.comments),
 			runtime_ref: ""
 		};
 		return {
@@ -37,8 +38,8 @@ export default class CanvasInHandler {
 			var newNode = {
 				id: canvasNode.id,
 				image: canvasNode.image,
-				x_pos: canvasNode.x_pos,
-				y_pos: canvasNode.y_pos,
+				x_pos: canvasNode.x_pos ? canvasNode.x_pos : canvasNode.xPos, // Handle old field name xPos
+				y_pos: canvasNode.y_pos ? canvasNode.y_pos : canvasNode.yPos, // Handle old field name yPos
 				class_name: canvasNode.className,
 				label: canvasNode.objectData.label,
 				type: nodeType
@@ -56,8 +57,12 @@ export default class CanvasInHandler {
 				newNode.decorations = this.getDecorations(canvasNode.decorations);
 			}
 			if (nodeType === "super_node") {
+				// Assume WML Canvas will always use vertical format.
+				const layout = LayoutDimensions.getLayout("ports-vertical");
 				newNode.subflow_ref = { pipeline_id_ref: canvasNode.subDiagramId, url: "app_defined" };
 				newNode.is_expanded = false;
+				newNode.expanded_width = layout.supernodeDefaultWidth;
+				newNode.expanded_height = layout.supernodeDefaultHeight;
 			}
 
 			if (nodeType === "model_node") {
@@ -146,31 +151,53 @@ export default class CanvasInHandler {
 				id: canvasComment.id,
 				class_name: canvasComment.className,
 				content: canvasComment.content,
-				x_pos: canvasComment.x_pos,
-				y_pos: canvasComment.y_pos,
+				x_pos: canvasComment.x_pos ? canvasComment.x_pos : canvasComment.xPos, // Handle old field name xPos
+				y_pos: canvasComment.y_pos ? canvasComment.y_pos : canvasComment.yPos, // Handle old field name yPos
 				height: canvasComment.height,
 				width: canvasComment.width
 			})
 		);
 	}
 
-	static getLinks(canvasLinks) {
-		return canvasLinks.map((canvasLink) => {
-			var newLink = {
-				id: canvasLink.id,
-				class_name: canvasLink.className,
-				srcNodeId: canvasLink.source,
-				trgNodeId: canvasLink.target,
-				type: this.getLinkType(canvasLink)
-			};
-			if (canvasLink.sourcePort) {
-				newLink.srcNodePortId = canvasLink.sourcePort;
+	static getLinks(canvasLinks, nodes, comments) {
+		const newLinks = [];
+		canvasLinks.forEach((canvasLink) => {
+			if (this.isValidLink(canvasLink, nodes, comments)) {
+				var newLink = {
+					id: canvasLink.id,
+					class_name: canvasLink.className,
+					srcNodeId: canvasLink.source,
+					trgNodeId: canvasLink.target,
+					type: this.getLinkType(canvasLink)
+				};
+				if (canvasLink.sourcePort) {
+					newLink.srcNodePortId = canvasLink.sourcePort;
+				}
+				if (canvasLink.targetPort) {
+					newLink.trgNodePortId = canvasLink.targetPort;
+				}
+				newLinks.push(newLink);
 			}
-			if (canvasLink.targetPort) {
-				newLink.trgNodePortId = canvasLink.targetPort;
-			}
-			return newLink;
 		});
+		return newLinks;
+	}
+
+	static isValidLink(canvasLink, nodes, comments) {
+		let isValid = false;
+
+		if ((this.getLinkType(canvasLink) === "nodeLink" || this.getLinkType(canvasLink) === "associationLink") &&
+				(nodes.findIndex((node) => node.id === canvasLink.source) > -1) &&
+				(nodes.findIndex((node) => node.id === canvasLink.target) > -1)) {
+			isValid = true;
+		}
+
+		if (this.getLinkType(canvasLink) === "commentLink" &&
+				(comments.findIndex((comment) => comment.id === canvasLink.source) > -1) &&
+				(nodes.findIndex((node) => node.id === canvasLink.target) > -1)) {
+			isValid = true;
+		}
+
+		return isValid;
 	}
 
 	static getLinkType(canvasLink) {
