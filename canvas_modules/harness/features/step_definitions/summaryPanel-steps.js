@@ -15,7 +15,7 @@ module.exports = function() {
 		// open the catergory
 		const category = findCategory(categoryName);
 		expect(category).not.toBe(null);
-		category.$(".category-title-right-flyout-panel").click();
+		category.$(".properties-category-title").click();
 	});
 
 	this.Then(/^I open the "([^"]*)" summary link in the "([^"]*)" category$/, function(linkName, categoryName) {

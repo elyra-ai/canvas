@@ -55,6 +55,9 @@ export default class PropertiesStore {
 		if (typeof propertyId.row !== "undefined" && (typeof propValue !== "undefined" && propValue !== null)) {
 			const rowValue = propValue[propertyId.row];
 			if (typeof propertyId.col !== "undefined" && (typeof rowValue !== "undefined" && rowValue !== null) && Array.isArray(rowValue)) {
+				if (typeof propertyId.index !== "undefined") {
+					return rowValue[propertyId.col][propertyId.index];
+				}
 				return rowValue[propertyId.col];
 			}
 			return rowValue;

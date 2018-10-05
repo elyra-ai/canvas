@@ -111,11 +111,6 @@ module.exports = function() {
 		expect(values).toEqual((String(lastEventLog.data.form[parameterName])));
 	});
 
-
-	this.Then("I click on modal OK button", function() {
-		clickApplyButton();
-	});
-
 	this.Then(/^I click on the "([^"]*)" panel OK button$/, function(panelName) {
 		const panel = browser.$("div[data-id='properties-" + panelName + "']");
 		expect(panel).not.toBe(null);
@@ -267,7 +262,6 @@ module.exports = function() {
 		var lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
 		expect(value).toEqual((lastEventLog.data.form[fieldName]).toString());
 	});
-
 
 	function clickApplyButton(startElement) {
 		const start = (startElement) ? startElement : browser;

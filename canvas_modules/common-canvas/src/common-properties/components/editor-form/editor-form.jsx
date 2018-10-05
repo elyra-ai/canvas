@@ -465,7 +465,7 @@ class EditorForm extends React.Component {
 			this.closeFieldPickerCallback = null;
 		}
 		this.props.showPropertiesButtons(true);
-		this.fieldPickerControl = null;
+		this.fieldPickerPropertyId = null;
 		this.setState({
 			showFieldPicker: false
 		});
@@ -473,12 +473,12 @@ class EditorForm extends React.Component {
 
 	/**
 	* Opens the field picker
-	* @param control the control opening the field picker
+	* @param propertyId of the control opening the field picker
 	* @param callback function to invoke when closing the field picker
 	*/
-	openFieldPicker(control, callback) {
+	openFieldPicker(propertyId, callback) {
 		this.props.showPropertiesButtons(false);
-		this.fieldPickerControl = control;
+		this.fieldPickerPropertyId = propertyId;
 		this.closeFieldPickerCallback = callback;
 		this.setState({
 			showFieldPicker: true
@@ -490,13 +490,14 @@ class EditorForm extends React.Component {
 	* @param title string to display as the field picker's title
 	*/
 	fieldPicker(title) {
-		if (this.fieldPickerControl && this.fieldPickerControl.name) {
-			const controlName = this.fieldPickerControl.name;
-			const currentControlValues = this.props.controller.getPropertyValue({ name: controlName });
+		if (this.fieldPickerPropertyId && this.fieldPickerPropertyId.name) {
+			const currentControlValues = this.props.controller.getPropertyValue(this.fieldPickerPropertyId);
 			// if in columnSelectionPanel, filter out fields that are in the other controls
-			const fields = this.props.controller.getFilteredDatasetMetadata({ name: controlName });
+			const fields = this.props.controller.getFilteredDatasetMetadata(this.fieldPickerPropertyId);
+
 			// create a list of field names to be passed into the field picker
-			const formattedFieldsList = PropertyUtil.getFieldsFromControlValues(this.fieldPickerControl, currentControlValues, fields);
+			const control = this.props.controller.getControl(this.fieldPickerPropertyId);
+			const formattedFieldsList = PropertyUtil.getFieldsFromControlValues(control, currentControlValues, fields);
 
 			return (<div className="properties-fp-table">
 				<FieldPicker

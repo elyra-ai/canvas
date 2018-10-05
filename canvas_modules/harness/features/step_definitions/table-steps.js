@@ -15,4 +15,22 @@ module.exports = function() {
 		table.$$(".properties-subpanel-button")[row].click();
 		browser.pause(500);
 	});
+
+	/*
+	* selectColumns steps
+ 	*/
+	this.Then(/^I verify the selectColumns table "([^"]*)" contains "([^"]*)" at index (\d+)$/, function(tableId, fieldName, index) {
+		const table = browser.$("div[data-id='properties-ft-" + tableId + "']");
+		const data = table.$$(".column-select-table-row")[index].getText();
+		expect(data).toEqual(fieldName);
+	});
+
+	/*
+	* StructureListEditor steps
+	*/
+	this.Then(/^I verify the StructureListEditor table "([^"]*)" contains "([^"]*)" at row (\d+) col (\d+)$/, function(tableId, text, row, col) {
+		const table = browser.$("div[data-id='properties-ft-" + tableId + "']");
+		const data = table.$("div[data-id='properties-structurelist_sub_panel_" + row + "_" + col + "']").getText();
+		expect(data).toEqual(text);
+	});
 };

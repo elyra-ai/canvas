@@ -54,7 +54,6 @@ export default class AbstractTable extends React.Component {
 		this.buildChildItem = this.buildChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
 		this.checkedAll = this.checkedAll.bind(this);
-		this.addOnClick = this.addOnClick.bind(this);
 
 		if (props.selectedRows && props.selectedRows.length > 0) {
 			this.scrollToRow = props.selectedRows[props.selectedRows.length - 1];
@@ -394,9 +393,9 @@ export default class AbstractTable extends React.Component {
 		return hasFilter;
 	}
 
-	addOnClick(control) {
+	addOnClick(propertyId) {
 		if (this.addOnClickCallback) {
-			this.addOnClickCallback(control, this.onFieldPickerCloseCallback);
+			this.addOnClickCallback(propertyId, this.onFieldPickerCloseCallback);
 		}
 	}
 
@@ -466,7 +465,7 @@ export default class AbstractTable extends React.Component {
 			<IconButton
 				className="properties-add-fields-button"
 				icon="add--outline"
-				onClick={this.addOnClick.bind(this, this.props.control)}
+				onClick={this.addOnClick.bind(this, this.props.propertyId)}
 				disabled={addButtonDisabled}
 			>
 				{addButtonLabel}

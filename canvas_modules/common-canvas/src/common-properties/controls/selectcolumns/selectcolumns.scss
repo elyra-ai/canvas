@@ -29,3 +29,8 @@
 .properties-column-select .properties-ft-container-wrapper {
 	height: 150px;
 }
+
+// selectcolumn control within a wide flyout
+.properties-wf-children .properties-column-select-table {
+	width: 97%;
+}

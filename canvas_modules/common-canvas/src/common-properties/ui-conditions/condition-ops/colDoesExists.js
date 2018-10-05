@@ -24,6 +24,16 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	switch (controlType) {
 	case "selectcolumns":
 	case "selectcolumn": {
+		if (Array.isArray(paramInfo.value) && typeof paramInfo.control.editStyle !== "undefined") { // Control is inside a table.
+			if (paramInfo.value.length > 0) {
+				let allValid = false;
+				paramInfo.value.forEach((paramValue) => {
+					allValid = typeof valueInDataset(dataModelFields, paramValue) !== "undefined";
+				});
+				return allValid;
+			}
+			return true;
+		}
 		return typeof valueInDataset(dataModelFields, paramInfo.value) !== "undefined";
 	}
 	default:

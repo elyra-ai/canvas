@@ -34,10 +34,14 @@ class SelectColumns extends AbstractTable {
 		if (controlValue) {
 			for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				const columns = [];
-				const propertyId = {
-					name: this.props.propertyId.name,
-					row: rowIndex
-				};
+
+				// If the propertyId contains 'row' then this selectcolumns control is part of a table.
+				// Need to add an additional 'index' to retireve the correct value from the control within a table.
+				const row = typeof this.props.propertyId.row !== "undefined"
+					? { row: this.props.propertyId.row, index: rowIndex }
+					: { row: rowIndex };
+				const propertyId = Object.assign({}, this.props.propertyId, row);
+
 				const cellContent = (
 					<div className="properties-table-cell-control">
 						<ReadonlyControl

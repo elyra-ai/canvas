@@ -28,11 +28,17 @@
     "fields_disabled": [
       "age"
     ],
+    "fields_bad_field": [
+      "bad field",
+      "bad age"
+    ],
     "fields_filter_measurement": [],
     "fields_filter_type": [],
     "fields_filter_roles": [],
     "fields_filter_and": [],
-    "fields_filter_or": []
+    "fields_filter_or": [],
+    "structurelist_on_panel": [],
+    "structurelist_sub_panel": []
   },
   "parameters": [
     {
@@ -113,6 +119,12 @@
       "required": true
     },
     {
+      "id": "fields_bad_field",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    },
+    {
       "id": "fields_filter_measurement",
       "type": "array[string]",
       "role": "column"
@@ -136,6 +148,50 @@
       "id": "fields_filter_or",
       "type": "array[string]",
       "role": "column"
+    },
+    {
+      "id": "structurelist_on_panel",
+      "type": "array[structurelist_on_panel_info]"
+    },
+    {
+      "id": "structurelist_sub_panel",
+      "type": "array[structurelist_sub_panel_info]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "structurelist_on_panel_info",
+      "parameters": [
+        {
+          "id": "note",
+          "type": "string"
+        },
+        {
+          "id": "fields",
+          "type": "array[string]",
+          "default": [],
+          "role": "column",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "structurelist_sub_panel_info",
+      "parameters": [
+        {
+          "id": "fields2",
+          "type": "array[string]",
+          "default": [
+            "BP"
+          ],
+          "role": "column",
+          "required": true
+        },
+        {
+          "id": "note2",
+          "type": "string"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -261,6 +317,15 @@
         "moveable_rows": true
       },
       {
+        "parameter_ref": "fields_bad_field",
+        "label": {
+          "default": "Bad Field"
+        },
+        "description": {
+          "default": "Has 2 columns that aren't part of the schema.  Both fields should show warning."
+        }
+      },
+      {
         "parameter_ref": "fields_filter_measurement",
         "label": {
           "default": "Filter by Measurement"
@@ -304,6 +369,73 @@
         "description": {
           "default": "Filters out all fields without a 'type' of 'integer' or 'measurement' of 'set'.  Should be all 'drug*' and 'age*' fields."
         }
+      },
+      {
+        "parameter_ref": "structurelist_on_panel",
+        "label": {
+          "default": "Embedded Column Select"
+        },
+        "description": {
+          "default": "Complex table control list editor with embedded column select control"
+        }
+      },
+      {
+        "parameter_ref": "structurelist_sub_panel",
+        "label": {
+          "default": "Sub-panel Column Select"
+        },
+        "description": {
+          "default": "Complex table control list editor with sub-panel column select control"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "structurelist_on_panel_info",
+        "parameters": [
+          {
+            "parameter_ref": "note",
+            "label": {
+              "default": "Short note"
+            },
+            "width": 20,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "fields",
+            "sortable": true,
+            "label": {
+              "default": "Fields"
+            },
+            "width": 30,
+            "edit_style": "on_panel",
+            "rows": 3,
+            "summary": true
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structurelist_sub_panel_info",
+        "parameters": [
+          {
+            "parameter_ref": "fields2",
+            "sortable": true,
+            "label": {
+              "default": "Fields"
+            },
+            "edit_style": "subpanel",
+            "summary": true
+          },
+          {
+            "parameter_ref": "note2",
+            "label": {
+              "default": "Short note"
+            },
+            "edit_style": "subpanel",
+            "summary": true
+          }
+        ]
       }
     ],
     "group_info": [
@@ -368,6 +500,7 @@
         "parameter_refs": [
           "fields_error",
           "fields_warning",
+          "fields_bad_field",
           "hide",
           "fields_hidden",
           "disable",
@@ -386,6 +519,44 @@
           "fields_filter_roles",
           "fields_filter_and",
           "fields_filter_or"
+        ]
+      },
+      {
+        "id": "selectcolumns-tables",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "selectcolumns-tables-structurelist-onpanel",
+            "label": {
+              "default": "Configure Fields in On-Panel"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "structurelist_on_panel"
+            ]
+          },
+          {
+            "id": "selectcolumns-tables-structurelist-summary",
+            "label": {
+              "default": "Configure Fields in Sub-panel"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "selectcolumns-tables-structurelist-subpanel",
+                "type": "controls",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "structurelist_sub_panel"
+                ]
+              }
+            ]
+          }
         ]
       }
     ]
@@ -422,7 +593,9 @@
           "condition": {
             "parameter_ref": "fields_warning",
             "op": "notEquals",
-            "value": ["age"]
+            "value": [
+              "age"
+            ]
           }
         }
       }
