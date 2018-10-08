@@ -16,7 +16,7 @@
     "express": "4.15.3",
     "express-session": "1.15.4",
     "isomorphic-fetch": "2.2.1",
-    "log4js": "2.3.3",
+    "log4js": "0.6.32",
     "nconf": "0.8.4"
   },
   "devDependencies": {

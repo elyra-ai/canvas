@@ -11,7 +11,7 @@ const log4js = require("log4js");
 const fs = require("fs");
 const path = require("path");
 
-const logger = log4js.getLogger("v1-get-properties-list-controller");
+const logger = log4js.getLogger("v1-get-forms-list-controller");
 const constants = require("../lib/constants");
 
 // var dirPath = "/Users/caritaou/ngp-git/wdp-abstract-canvas/canvas_modules/harness/test_resources/properties/";
