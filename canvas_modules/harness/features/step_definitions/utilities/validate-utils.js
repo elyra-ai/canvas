@@ -247,6 +247,65 @@ function getNodeId(nodeText, selector) {
 	return null;
 }
 
+function getCommentIdForText(commentText, extraCanvas) {
+	const inst = extraCanvas === true ? "1" : "0";
+	const selector = `div > svg > g > g[id^=comment_grp_${inst}]`;
+	return getCommentId(commentText, selector);
+}
+
+function getCommentIdForTextInSubFlow(commentText, extraCanvas) {
+	const inst = extraCanvas === true ? "1" : "0";
+	const selector = `div > svg > g > g > svg > g > g[id^=comment_grp_${inst}]`;
+	return getCommentId(commentText, selector);
+}
+
+function getCommentIdForTextInSubFlowInSubFlow(commentText, extraCanvas) {
+	const inst = extraCanvas === true ? "1" : "0";
+	const selector = `div > svg > g > g > svg > g > g > svg > g > g[id^=comment_grp_${inst}]`;
+	return getCommentId(commentText, selector);
+}
+
+function addTextForComment(comId, newCommentText) {
+	var selector = "#comment_grp_" + comId;
+	var comment = browser.$(selector);
+	comment.click();
+	comment.doubleClick();
+
+	// workaround since setValue isn't working with comments.
+	// keys is deprecated and might not work in latest version of firefox
+	for (let indx = 0; indx < 60; ++indx) {
+		comment.$("textarea").keys("Backspace");
+	}
+	comment.$("textarea").keys(newCommentText);
+
+	// Wait a moment for the keys commands above to execute
+	browser.pause(1000);
+	// Click somewhere on the canvas (hopefully nothing is there) to go out of edit mode.
+	browser.leftClick("#common-canvas-items-container-0", 400, 1);
+}
+
+
+function getCommentId(commentText, selector) {
+	var result = browser.execute(function(comText, inSelector) {
+		/* global document */
+		var commentId = null;
+		var domComments = document.querySelectorAll(inSelector);
+		for (let idx = 0; idx < domComments.length; idx++) {
+			if (domComments.item(idx).__data__.content === comText) {
+				commentId = domComments.item(idx).id;
+				break;
+			}
+		}
+
+		return commentId;
+	}, commentText, selector);
+
+	if (result) {
+		return result.value.substr(12);
+	}
+	return null;
+}
+
 function doesTipExist(nodeId, nodeName, location) {
 	const tip = browser.$("#node_tip_" + nodeId);
 	expect(tip.value).not.toEqual(null);
@@ -353,6 +412,10 @@ module.exports = {
 	isObjectModelEmpty: isObjectModelEmpty,
 	getNodeIdForLabel: getNodeIdForLabel,
 	getNodeIdForLabelInSubFlow: getNodeIdForLabelInSubFlow,
+	addTextForComment: addTextForComment,
+	getCommentIdForText: getCommentIdForText,
+	getCommentIdForTextInSubFlow: getCommentIdForTextInSubFlow,
+	getCommentIdForTextInSubFlowInSubFlow: getCommentIdForTextInSubFlowInSubFlow,
 	clickSVGAreaAt: clickSVGAreaAt,
 	findNodeIndexInPalette: findNodeIndexInPalette,
 	findCategoryElement: findCategoryElement,

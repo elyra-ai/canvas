@@ -8,6 +8,8 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
+var nconf = require("nconf");
+
 module.exports = function() {
 
 	/* global browser */
@@ -20,11 +22,13 @@ module.exports = function() {
 				portsLabel.scroll();
 				browser.pause(500);
 				portsLabel.click();
+				nconf.set("connectionType", "Ports");
 			} else if (connectionType === "Halo") {
 				var haloLabel = browser.$("#harness-sidepanel-connection-type").$$("div")[4].$("label");
 				haloLabel.scroll();
 				browser.pause(500);
 				haloLabel.click();
+				nconf.set("connectionType", "Halo");
 			}
 		} catch (err) {
 			console.log("Err = " + err);

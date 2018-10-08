@@ -15,6 +15,7 @@ import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel
 import { getCanvasData, getEventLogData } from "./utilities/test-utils.js";
 import { simulateD3LinkCreation } from "./utilities/dragAndDrop-utils.js";
 
+var nconf = require("nconf");
 
 /* global browser */
 
@@ -150,7 +151,10 @@ module.exports = function() {
 
 	this.Then(/^I verify the number of data links are (\d+)$/, function(dataLinks) {
 		try {
-			var dataLinksOnCanvas = browser.$$(".d3-data-link").length / 2; // Divide by 2 because the line and arrow head use this class
+			var dataLinksOnCanvas = browser.$$(".d3-data-link").length;
+			if (nconf.get("connectionType") === "Halo") {
+				dataLinksOnCanvas /= 2; // Divide by 2 because the line and arrow head use this class with Halo
+			}
 			expect(Number(dataLinks)).toEqual(dataLinksOnCanvas);
 
 			// verify the number of data-links is in the internal object model
@@ -166,10 +170,13 @@ module.exports = function() {
 
 	this.Then(/^I verify the number of comment links are (\d+)$/, function(commentLinks) {
 		try {
-			var commentLinksOnCanvas = browser.$$(".d3-comment-link").length / 2;
+			var commentLinksOnCanvas = browser.$$(".d3-comment-link").length;
+			if (nconf.get("connectionType") === "Halo") {
+				commentLinksOnCanvas /= 2; // Divide by 2 because the line and arrow head use this class with Halo
+			}
 			expect(Number(commentLinks)).toEqual(commentLinksOnCanvas);
 
-			// verify the number of data-links is in the internal object model
+			// verify the number of comment-links is in the internal object model
 			var objectModel = getCanvasData();
 			var returnVal = browser.execute(getObjectModelCount, objectModel, "commentLinks", "");
 			expect(returnVal.value).toBe(Number(commentLinks));

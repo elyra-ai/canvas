@@ -7,9 +7,12 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint no-console: "off" */
+/* eslint sort-imports: "off" */
 
 import { getCanvasData, getEventLogData } from "./utilities/test-utils.js";
-import { getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
+import { addTextForComment, getCommentIdForText, getCommentIdForTextInSubFlow,
+	getCommentIdForTextInSubFlowInSubFlow,
+	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
 	getEventLogCount, getObjectModelCount } from "./utilities/validate-utils.js";
 import isEqual from "lodash/isEqual";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
@@ -144,6 +147,48 @@ module.exports = function() {
 				throw err;
 			}
 
+		});
+
+	// Then I edit the comment with text "abc" with text "def"
+	//
+	this.Then(/^I edit the comment "([^"]*)" with text "([^"]*)"$/,
+		function(originalComment, newCommentText) {
+			try {
+				const comId = getCommentIdForText(originalComment);
+				addTextForComment(comId, newCommentText);
+
+			} catch (err) {
+				console.log("Error = " + err);
+				throw err;
+			}
+		});
+
+	// Then I edit the comment with text "abc" in the subflow with text "def"
+	//
+	this.Then(/^I edit the comment "([^"]*)" in the subflow with text "([^"]*)"$/,
+		function(originalComment, newCommentText) {
+			try {
+				const comId = getCommentIdForTextInSubFlow(originalComment);
+				addTextForComment(comId, newCommentText);
+
+			} catch (err) {
+				console.log("Error = " + err);
+				throw err;
+			}
+		});
+
+	// Then I edit the comment with text "abc" in the subflow in the subflow with text "def"
+	//
+	this.Then(/^I edit the comment "([^"]*)" in the subflow in the subflow with text "([^"]*)"$/,
+		function(originalComment, newCommentText) {
+			try {
+				const comId = getCommentIdForTextInSubFlowInSubFlow(originalComment);
+				addTextForComment(comId, newCommentText);
+
+			} catch (err) {
+				console.log("Error = " + err);
+				throw err;
+			}
 		});
 
 	this.Then(/^I verify the number of comments are (\d+)$/, function(comments) {

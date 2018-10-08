@@ -525,8 +525,45 @@ module.exports = function() {
 	//   Test Cases
 	// -------------------------------------
 
-	// Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 100, 200
+	// Then I open the "Import" palette category
+	this.Then(/^I open the "([^"]*)" palette category$/,
+		function(nodeCategory) {
+			try {
+				if (nconf.get("paletteLayout") === "Modal") {
+					// select import categories
+					const categoryIndex = categoryPosition[nodeCategory];
+					browser.$(".palette-content").$("div")
+						.$$("div")[categoryIndex].click();
+				} else {
+					var categoryElem = findCategoryElement(nodeCategory);
+					categoryElem.click();
+				}
+			} catch (err) {
+				console.log("Error = " + err);
+				throw err;
+			}
+		});
+
+	// Then I add a node of type "Var. File" from the "Import" category onto the canvas at 100, 200
 	//
+	this.Then(/^I add a node of type "([^"]*)" from the "([^"]*)" category onto the canvas at (\d+), (\d+)$/,
+		function(nodeType, nodeCategory, canvasX, canvasY) {
+			try {
+				if (nconf.get("paletteLayout") === "Modal") {
+					// drag the var file node to the canvas
+					const nodeIndex = nodePosition[nodeType];
+					browser.execute(simulateDragDrop, ".palette-grid-node-outer", nodeIndex, "#canvas-div-0", 0, canvasX, canvasY);
+				} else {
+					// drag the var file node to the canvas
+					const nodeIndex = findNodeIndexInPalette(nodeType);
+					browser.execute(simulateDragDrop, ".palette-list-item", nodeIndex, "#canvas-div-0", 0, canvasX, canvasY);
+				}
+			} catch (err) {
+				console.log("Error = " + err);
+				throw err;
+			}
+		});
+
 	this.Then(/^I add node (\d+) a "([^"]*)" node from the "([^"]*)" category onto the canvas at (\d+), (\d+)$/,
 		function(inNodeIndex, nodeType, nodeCategory, canvasX, canvasY) {
 			try {
@@ -572,6 +609,7 @@ module.exports = function() {
 				throw err;
 			}
 		});
+
 
 	// Then I double click "Var. File" node from the "Import" category onto the canvas
 	//

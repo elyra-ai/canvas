@@ -74,6 +74,7 @@ export default class CanvasD3Layout {
 	}
 
 	setCanvasInfo(canvasInfo, config) {
+		this.logger = new Logger(["CanvasD3Layout", "FlowId", canvasInfo.id]);
 		if (canvasInfo.id !== this.canvasInfo.id ||
 				(this.renderer && this.renderer.pipelineId !== this.canvasController.getCurrentBreadcrumb().pipelineId) ||
 				this.config.enableConnectionType !== config.enableConnectionType ||
@@ -227,7 +228,7 @@ export default class CanvasD3Layout {
 }
 
 class CanvasRenderer {
-	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, config, parentSupernodeD3Selection) {
+	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, config, parentRenderer, parentSupernodeD3Selection) {
 		this.logger = new Logger(["CanvasRenderer", "PipeId", pipelineId]);
 		this.logger.logStartTimer("Constructor");
 		this.pipelineId = pipelineId;
@@ -236,6 +237,7 @@ class CanvasRenderer {
 		this.config = config;
 		this.canvasController = canvasController;
 		this.objectModel = this.canvasController.getObjectModel();
+		this.parentRenderer = parentRenderer; // Optional parameter, only provided with sub-flow in-place display.
 		this.parentSupernodeD3Selection = parentSupernodeD3Selection; // Optional parameter, only provided with sub-flow in-place display.
 		this.activePipeline = this.getPipeline(pipelineId); // Must come after line setting this.canvasInfo
 		this.setDisplayState();
@@ -367,8 +369,16 @@ class CanvasRenderer {
 		return this.displayState === "sub-flow-full-page";
 	}
 
+	isDisplayingFullPage() {
+		return this.displayState === "primary-flow-full-page" || this.displayState === "sub-flow-full-page";
+	}
+
 	getParentSupernodeDatum() {
 		return this.getSupernodeReferencing(this.activePipeline.id);
+	}
+
+	getParentRenderer() {
+		return this.parentRenderer;
 	}
 
 	getSupernodeReferencing(targetPipelineId) {
@@ -389,17 +399,16 @@ class CanvasRenderer {
 		return pipeline.nodes.filter((node) => this.isSupernode(node));
 	}
 
+	getZoomTransform() {
+		return this.zoomTransform;
+	}
+
 	initializeZoomVariables() {
 		// Allows us to record the current zoom amounts.
 		this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1);
 
 		// Allows us to record the start point of the current zoom.
 		this.zoomStartPoint = { x: 0, y: 0, k: 0 };
-
-		// Center position of text area used for editing comments. These are used
-		// when zooming a text area.
-		this.zoomTextAreaCenterX = 0;
-		this.zoomTextAreaCenterY = 0;
 	}
 
 	getPipeline(pipelineId) {
@@ -444,7 +453,7 @@ class CanvasRenderer {
 		const supernodes = this.getSupernodes(this.activePipeline);
 
 		supernodes.forEach((supernode) => {
-			const ren = this.findSuperRenderer(supernode);
+			const ren = this.getRendererForSupernode(supernode);
 			if (ren) {
 				newSuperRenderers.push(ren);
 			}
@@ -509,16 +518,16 @@ class CanvasRenderer {
 
 	// Called during a resize.
 	displaySVGToFitSupernode() {
-		const supernodeDims = this.getSupernodeDimensions();
-		this.canvasSVG.attr("width", supernodeDims.width);
-		this.canvasSVG.attr("height", supernodeDims.height);
-		this.canvasSVG.attr("x", supernodeDims.x);
-		this.canvasSVG.attr("y", supernodeDims.y);
+		const dims = this.getParentSupernodeSVGDimensions();
+		this.canvasSVG.attr("width", dims.width);
+		this.canvasSVG.attr("height", dims.height);
+		this.canvasSVG.attr("x", dims.x);
+		this.canvasSVG.attr("y", dims.y);
 
 		// Keep the background rectangle the same size as the SVG area.
 		const background = this.canvasSVG.selectAll(this.getSelectorForClass("d3-subflow-background"));
-		background.attr("width", supernodeDims.width);
-		background.attr("height", supernodeDims.height);
+		background.attr("width", dims.width);
+		background.attr("height", dims.height);
 
 		this.zoomToFitForInPlaceSubFlow();
 		this.displayBindingNodesToFitSVG();
@@ -533,8 +542,17 @@ class CanvasRenderer {
 		this.movingBindingNodes = false;
 	}
 
-	getSupernodeDimensions() {
+	getSupernodeSVGDimensionsFor(pipelineId) {
+		const datum = this.getSupernodeReferencing(pipelineId);
+		return this.getSupernodeSVGDimensions(datum);
+	}
+
+	getParentSupernodeSVGDimensions() {
 		const datum = this.getParentSupernodeDatum();
+		return this.getSupernodeSVGDimensions(datum);
+	}
+
+	getSupernodeSVGDimensions(datum) {
 		return {
 			width: datum.width - (2 * this.layout.supernodeSVGAreaPadding),
 			height: datum.height - this.layout.supernodeSVGTopAreaHeight - this.layout.supernodeSVGAreaPadding,
@@ -638,8 +656,16 @@ class CanvasRenderer {
 	}
 
 	isEditingComment() {
-		// TODO - check sub-flow renderers for their editingComment statuses
-		return this.editingComment;
+		if (this.editingComment) {
+			return true;
+		}
+		let state = false;
+		this.superRenderers.forEach((superRen) => {
+			if (!state) {
+				state = superRen.isEditingComment();
+			}
+		});
+		return state;
 	}
 
 	// Returns a selector for the ID information passed in which includes a
@@ -820,7 +846,7 @@ class CanvasRenderer {
 		// parent for the svg object.
 		if (this.isDisplayingSubFlowInPlace()) {
 			parentObject = this.parentSupernodeD3Selection;
-			dims = this.getSupernodeDimensions();
+			dims = this.getParentSupernodeSVGDimensions();
 		}
 
 		const canvasSVG = parentObject
@@ -1079,7 +1105,7 @@ class CanvasRenderer {
 		let viewPortDimensions = {};
 
 		if (this.isDisplayingSubFlowInPlace()) {
-			const dims = this.getSupernodeDimensions();
+			const dims = this.getParentSupernodeSVGDimensions();
 			viewPortDimensions.width = dims.width;
 			viewPortDimensions.height = dims.height;
 
@@ -1150,10 +1176,16 @@ class CanvasRenderer {
 			this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(k);
 			this.canvasGrp.attr("transform", this.zoomTransform);
 
-			const selector = this.getSelectorForClass("d3-comment-entry");
-			const ta = this.canvasDiv.select(selector);
-			if (!ta.empty()) {
-				ta.style("transform", this.getTextAreaTransform());
+			// If this zoom is for a full page display (for either primary pipelines
+			// or sub-pipeline) and there is a textarea (for comment entry) open,
+			// apply the zoom transform to it.
+			if (this.isDisplayingFullPage()) {
+				const ta = this.canvasDiv.select(".d3-comment-entry");
+				if (!ta.empty()) {
+					const pipelineId = ta.attr("data-pipeline-id");
+					const ren = this.getRendererForPipelineIdRecursively(pipelineId);
+					ta.style("transform", ren.getTextAreaTransform(ta.datum()));
+				}
 			}
 
 			if (this.isDisplayingSubFlowFullPage()) {
@@ -1654,7 +1686,7 @@ class CanvasRenderer {
 
 					// Supernode sub-flow display
 					if (this.isSupernode(d)) {
-						const ren = this.findSuperRenderer(d);
+						const ren = this.getRendererForSupernode(d);
 						if (ren) {
 							this.removeDynamicNodeIcons(d);
 							if (this.isExpanded(d)) {
@@ -2044,13 +2076,14 @@ class CanvasRenderer {
 
 	createSupernodeRenderer(d, supernodeD3Object) {
 		if (d.subflow_ref && d.subflow_ref.pipeline_id_ref) {
-			if (!this.findSuperRenderer(d)) { // If a renderer exists from a previous run, no need to create new one.
+			if (!this.getRendererForSupernode(d)) { // If a renderer exists from a previous run, no need to create new one.
 				const superRenderer = new CanvasRenderer(
 					d.subflow_ref.pipeline_id_ref,
 					this.canvasDiv,
 					this.canvasController,
 					this.canvasInfo,
 					this.config,
+					this,
 					supernodeD3Object);
 				this.superRenderers.push(superRenderer);
 			}
@@ -2067,18 +2100,52 @@ class CanvasRenderer {
 		}
 	}
 
-	findSuperRenderer(d) {
-		const idx = this.indexOfSuperRenderer(d);
+	getRendererForSupernode(d) {
+		const idx = this.indexOfRendererForSupernode(d);
 		if (idx > -1) {
 			return this.superRenderers[idx];
 		}
 		return null;
 	}
 
-	indexOfSuperRenderer(d) {
-		// TODO - using pipelineId as unique identifier for renderer may be
-		// a problem if two super nodes are displayed for the same sub-flow pipeline
+	// Returns a renderer for the pipelineId passed in by first checking its own
+	// pipelineId and then searching this renderer's child supernode renderers
+	// and then searching down through those renderers. Returns null if no render
+	// can be found.
+	getRendererForPipelineIdRecursively(pipelineId) {
+		if (this.pipelineId === pipelineId) {
+			return this;
+		}
+		let ren = this.getRendererForPipelineId(pipelineId);
+
+		if (!ren) {
+			this.superRenderers.forEach((superRen) => {
+				if (!ren) {
+					ren = superRen.getRendererForPipelineIdRecursively(pipelineId);
+				}
+			});
+		}
+		return ren;
+	}
+
+	// Returns a renderer for the pipelineId passed in by searching this
+	// renderer's child supernode renderers. Returns null if no render can be found.
+	getRendererForPipelineId(pipelineId) {
+		const idx = this.indexOfRendererForPipelineId(pipelineId);
+		if (idx > -1) {
+			return this.superRenderers[idx];
+		}
+		return null;
+	}
+
+	indexOfRendererForSupernode(d) {
+		// We assume that there cannot be more than one renderer for the
+		// same sub-flow pipeline
 		return this.superRenderers.findIndex((sr) => sr.pipelineId === d.subflow_ref.pipeline_id_ref);
+	}
+
+	indexOfRendererForPipelineId(pipelineId) {
+		return this.superRenderers.findIndex((sr) => sr.pipelineId === pipelineId);
 	}
 
 	displaySupernodeFullPage(d) {
@@ -2888,10 +2955,7 @@ class CanvasRenderer {
 					that.logger.log("Comment Group - double click");
 					stopPropagationAndPreventDefault();
 
-					// TODO - Enable editing for comments inside sub-flow
-					if (!that.isDisplayingSubFlowInPlace()) {
-						that.displayTextArea(d);
-					}
+					that.displayTextArea(d);
 
 					that.canvasController.clickActionHandler({
 						clickType: "DOUBLE_CLICK",
@@ -3093,12 +3157,12 @@ class CanvasRenderer {
 		this.logger.log("autoSizeTextArea - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 		if (this.textAreaHeight < textArea.scrollHeight) {
 			this.textAreaHeight = textArea.scrollHeight;
-			this.zoomTextAreaCenterY = datum.y_pos + (this.textAreaHeight / 2);
 			var comment = this.getComment(datum.id);
 			comment.height = this.textAreaHeight;
+			datum.height = this.textAreaHeight;
 			this.canvasDiv.select(this.getId("#comment_text_area", datum.id))
 				.style("height", this.textAreaHeight + "px")
-				.style("transform", this.getTextAreaTransform()); // Since the height has changed the translation needs to be reapplied.
+				.style("transform", this.getTextAreaTransform(datum)); // Since the height has changed the translation needs to be reapplied.
 			this.displayComments();
 			this.displayLinks();
 		}
@@ -3124,8 +3188,7 @@ class CanvasRenderer {
 				content: textArea.value,
 				width: this.removePx(textArea.style.width),
 				height: this.removePx(textArea.style.height),
-				x_pos: this.removePx(textArea.style.left),
-				y_pos: this.removePx(textArea.style.top)
+				pipelineId: this.activePipeline.id
 			};
 			this.canvasController.editActionHandler(data);
 		}
@@ -3143,15 +3206,10 @@ class CanvasRenderer {
 		const width = d.width;
 		const height = d.height;
 		const content = d.content;
-		const xPos = d.x_pos;
-		const yPos = d.y_pos;
 
 		this.textAreaHeight = 0; // Save for comparison during auto-resize
 		this.editingComment = true;
 		this.editingCommentId = id;
-
-		this.zoomTextAreaCenterX = d.x_pos + (d.width / 2);
-		this.zoomTextAreaCenterY = d.y_pos + (d.height / 2);
 
 		this.canvasDiv
 			.append("textarea")
@@ -3162,9 +3220,10 @@ class CanvasRenderer {
 			.text(content)
 			.style("width", width + "px")
 			.style("height", height + "px")
-			.style("left", xPos + "px")
-			.style("top", yPos + "px")
-			.style("transform", this.getTextAreaTransform())
+			.style("left", "0px") // Open text area at 0,0 and use
+			.style("top", "0px") //  transform to move into place
+			.style("transform", this.getTextAreaTransform(datum))
+			.datum(datum)
 			.on("keyup", function() {
 				that.editingCommentChangesPending = true;
 				that.autoSizeTextArea(this, datum);
@@ -3192,28 +3251,43 @@ class CanvasRenderer {
 
 	// Returns the transform amount for the text area control that positions the
 	// text area based on the current zoom (translate and scale) amount.
-	getTextAreaTransform() {
-		let x;
-		let y;
-		let k;
+	getTextAreaTransform(d) {
+		let transform = { x: 0, y: 0, k: 1 };
 
-		// TODO - Need to calculate correct transform for text area when opened for comment in sub-flow
-		if (this.isDisplayingSubFlowInPlace()) {
-			// const dims = this.getSupernodeDimensions();
-			const topLevelSVG = this.canvasDiv.selectAll("svg");
-			const topLevelTransform = d3.zoomTransform(topLevelSVG.node());
-			// const superDatum = this.getParentSupernodeDatum();
-			k = this.zoomTransform.k + topLevelTransform.k;
-			x += topLevelTransform.x + this.zoomTransform.x - (this.zoomTextAreaCenterX * (1 - k));
-			y += topLevelTransform.y + this.zoomTransform.y - (this.zoomTextAreaCenterY * (1 - k));
+		transform = {
+			x: this.zoomTransform.x + (d.x_pos * this.zoomTransform.k),
+			y: this.zoomTransform.y + (d.y_pos * this.zoomTransform.k),
+			k: this.zoomTransform.k
+		};
 
-
-		} else {
-			k = this.zoomTransform.k;
-			x = this.zoomTransform.x - (this.zoomTextAreaCenterX * (1 - k));
-			y = this.zoomTransform.y - (this.zoomTextAreaCenterY * (1 - k));
+		const parentRenderer = this.getParentRenderer();
+		if (parentRenderer) {
+			transform = parentRenderer.getSupernodeTransformAmount(this.activePipeline.id, transform);
 		}
-		return `translate(${x}px, ${y}px) scale(${k})`;
+
+		// Adjust the position of the text area to be over the comment group object
+		transform.x -= (d.width - (d.width * transform.k)) / 2;
+		transform.y -= (d.height - (d.height * transform.k)) / 2;
+
+		return `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`;
+	}
+
+	// Returns a transform based on the transform passed in which includes the
+	// cumulative offset and scale amount for the pipeline identified by the
+	// pipeline Id passed in for the current renderer.
+	getSupernodeTransformAmount(pipelineId, transform) {
+		const dimensions = this.getSupernodeSVGDimensionsFor(pipelineId);
+
+		transform.k *= this.zoomTransform.k;
+		transform.x = this.zoomTransform.x + ((transform.x + dimensions.x_pos) * this.zoomTransform.k);
+		transform.y = this.zoomTransform.y + ((transform.y + dimensions.y_pos) * this.zoomTransform.k);
+
+		const parentRenderer = this.getParentRenderer();
+		if (parentRenderer) {
+			return parentRenderer.getSupernodeTransformAmount(this.activePipeline.id, transform);
+		}
+
+		return transform;
 	}
 
 	// Closes the text area and switched off all flags connected with text editing.

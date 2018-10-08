@@ -339,8 +339,8 @@ const comments = (state = [], action) => {
 					content: action.data.content,
 					height: action.data.height,
 					width: action.data.width,
-					x_pos: action.data.x_pos,
-					y_pos: action.data.y_pos
+					x_pos: action.data.x_pos ? action.data.x_pos : comment.x_pos,
+					y_pos: action.data.y_pos ? action.data.y_pos : comment.y_pos
 				});
 				return newComment;
 			}
