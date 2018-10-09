@@ -77,7 +77,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		if (this.props.onChange) {
 			const field = this.datasetFields[this.state.fieldSelectedRow];
 			if (field.metadata.values) {
-				this.props.onChange(field.metadata.values[row]);
+				const fieldValue = (field.type === "string") ? "'" + field.metadata.values[row] + "'" : field.metadata.values[row];
+				this.props.onChange(fieldValue);
 			} else if (field.metadata.range) {
 				this.props.onChange(row === 0 ? field.metadata.range.min : field.metadata.range.max);
 			}

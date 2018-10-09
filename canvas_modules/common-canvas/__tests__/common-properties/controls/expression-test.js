@@ -235,10 +235,31 @@ describe("expression-builder select from tables correctly", () => {
 				/>
 			</Provider>
 		);
-		const fieldRows = wrapper.find("div.properties-value-table-container .reactable-data tr");
-		fieldRows.at(0).simulate("dblclick");
+		const valuesRows = wrapper.find("div.properties-value-table-container .reactable-data tr");
+		valuesRows.at(0).simulate("dblclick");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" 21");
 	});
+
+	it("expression builder select a field value of type string", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		// select a field with string values
+		const fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
+		fieldRows.at(1).simulate("click");
+		// select a string value from value table.
+		const valueRows = wrapper.find("div.properties-value-table-container .reactable-data tr");
+		valueRows.at(1).simulate("dblclick");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" 'female'");
+	});
+
 
 	it("expression builder select a function", () => {
 		reset();
@@ -251,8 +272,8 @@ describe("expression-builder select from tables correctly", () => {
 				/>
 			</Provider>
 		);
-		const fieldRows = wrapper.find("div.properties-functions-table-container .reactable-data tr");
-		fieldRows.at(0).simulate("dblclick");
+		const functionRows = wrapper.find("div.properties-functions-table-container .reactable-data tr");
+		functionRows.at(0).simulate("dblclick");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" to_integer(?)");
 	});
 
