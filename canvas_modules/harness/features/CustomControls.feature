@@ -32,5 +32,5 @@ Feature: CustomControls
 		Then I click on the "slider-summary-panel" panel OK button
 		Then I pause for 1 seconds
 		Then I verify custom summary panel
-		Then I click on modal "OK" button
+		Then I click on the "OK" button
 		Then I verify custom panel

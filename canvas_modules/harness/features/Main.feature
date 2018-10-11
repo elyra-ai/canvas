@@ -102,7 +102,7 @@ Feature: Main
 		Then I see common properties flyout title "Var. File"
 		Then I click on title edit icon
 		Then I enter new title "Var File2"
-		Then I click on modal "OK" button
+		Then I click on the "OK" button
 		Then I verify the new title "Var File2"
 
 		Then I double click the "Var File2" node to open its properties
