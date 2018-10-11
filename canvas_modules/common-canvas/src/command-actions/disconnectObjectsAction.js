@@ -8,7 +8,7 @@
  *******************************************************************************/
 import Action from "../command-stack/action.js";
 
-export default class DisconnectNodesAction extends Action {
+export default class DisconnectObjectsAction extends Action {
 	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
@@ -19,16 +19,7 @@ export default class DisconnectNodesAction extends Action {
 
 	// Standard methods
 	do() {
-		this.data.selectedObjectIds.forEach((id) => {
-			// save all the links associated with each node, but don't store duplicate links
-			const objectLinks = this.apiPipeline.getLinksContainingId(id);
-			objectLinks.forEach((objectLink) => {
-				if (this.links.filter((link) => (link.id === objectLink.id)).length === 0) {
-					this.links.push(objectLink);
-				}
-			});
-		});
-		this.apiPipeline.disconnectNodes(this.data);
+		this.links = this.apiPipeline.disconnectObjects(this.data);
 	}
 
 	undo() {
@@ -36,7 +27,7 @@ export default class DisconnectNodesAction extends Action {
 	}
 
 	redo() {
-		this.apiPipeline.disconnectNodes(this.data);
+		this.do();
 	}
 
 }

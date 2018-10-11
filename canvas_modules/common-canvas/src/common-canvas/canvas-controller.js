@@ -23,7 +23,7 @@ import CreateSuperNodeAction from "../command-actions/createSuperNodeAction.js";
 import CollapseSuperNodeInPlaceAction from "../command-actions/collapseSuperNodeInPlaceAction.js";
 import DeleteLinkAction from "../command-actions/deleteLinkAction.js";
 import DeleteObjectsAction from "../command-actions/deleteObjectsAction.js";
-import DisconnectNodesAction from "../command-actions/disconnectNodesAction.js";
+import DisconnectObjectsAction from "../command-actions/disconnectObjectsAction.js";
 import DisplayPreviousPipelineAction from "../command-actions/displayPreviousPipelineAction.js";
 import DisplaySubPipelineAction from "../command-actions/displaySubPipelineAction.js";
 import EditCommentAction from "../command-actions/editCommentAction.js";
@@ -332,8 +332,8 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).deleteNode(nodeId);
 	}
 
-	disconnectNodes(source, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).disconnectNodes(source);
+	disconnectObjects(source, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).disconnectObjects(source);
 	}
 
 	setNodeParameters(nodeId, parameters, pipelineId) {
@@ -1045,7 +1045,7 @@ export default class CanvasController {
 				break;
 			}
 			case "disconnectNode": {
-				const command = new DisconnectNodesAction(this.contextMenuSource, this.objectModel);
+				const command = new DisconnectObjectsAction(this.contextMenuSource, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}

@@ -474,9 +474,9 @@ const links = (state = [], action) => {
 
 	case "DELETE_LINKS": {
 		let newLinks = [...state];
-		action.data.forEach((linkToDelete) => {
+		action.data.linkIds.forEach((linkIdToDelete) => {
 			newLinks = newLinks.filter((link) => {
-				return link.id !== action.data.id;
+				return link.id !== linkIdToDelete;
 			});
 		});
 		return newLinks;
@@ -550,16 +550,6 @@ const links = (state = [], action) => {
 			action.data.newLink
 		];
 	}
-
-
-	case "DISCONNECT_NODES":
-		return state.filter((link) => {
-			const index = action.data.selectedNodeIds.findIndex((selId) => {
-				return (selId === link.srcNodeId ||
-								selId === link.trgNodeId);
-			});
-			return index === -1;
-		});
 
 	default:
 		return state;
@@ -674,7 +664,6 @@ const canvasinfo = (state = [], action) => {
 	case "ADD_LINK":
 	case "DELETE_LINK":
 	case "DELETE_LINKS":
-	case "DISCONNECT_NODES":
 	case "ADD_COMMENT":
 	case "EDIT_COMMENT":
 	case "ADD_COMMENT_ATTR":
@@ -2228,15 +2217,21 @@ export class APIPipeline {
 		this.store.dispatch({ type: "SET_OBJECTS_STYLE", data: { pipelineObjIds: pipelineObjIds, newStyle: newStyle, temporary: temporary }, pipelineId: this.pipelineId });
 	}
 
-	disconnectNodes(source) {
-		// We only disconnect links to data nodes (not links to comments).
-		const selectedNodeIds = this.filterDataNodes(source.selectedObjectIds);
-		const newSource = Object.assign({}, source, { selectedNodeIds: selectedNodeIds });
-
-		this.store.dispatch({ type: "DISCONNECT_NODES", data: newSource, pipelineId: this.pipelineId });
+	disconnectObjects(source) {
+		let linksToDelete = [];
+		source.selectedObjectIds.forEach((id) => {
+			// save all the links associated with each node, but don't store duplicate links
+			const objectLinks = this.getLinksContainingId(id);
+			objectLinks.forEach((objectLink) => {
+				linksToDelete = this.pushUniqueLinks(objectLink, linksToDelete);
+			});
+		});
+		const linkIdsToDelete = linksToDelete.map((link) => link.id);
+		this.store.dispatch({ type: "DELETE_LINKS", data: { linkIds: linkIdsToDelete }, pipelineId: this.pipelineId });
 		if (this.objectModel.fixedLayout !== NONE) {
 			this.autoLayout(this.objectModel.fixedLayout);
 		}
+		return linksToDelete;
 	}
 
 	isEmpty() {
@@ -3026,7 +3021,7 @@ export class APIPipeline {
 	}
 
 	deleteLinks(linksToDelete) {
-		this.store.dispatch({ type: "DELETE_LINKS", data: linksToDelete, pipelineId: this.pipelineId });
+		this.store.dispatch({ type: "DELETE_LINKS", data: { linkIds: linksToDelete }, pipelineId: this.pipelineId });
 		if (this.objectModel.fixedLayout !== NONE) {
 			this.autoLayout(this.objectModel.fixedLayout);
 		}
@@ -3107,7 +3102,6 @@ export class APIPipeline {
 		linkList.forEach((link) => {
 			this.store.dispatch({ type: "ADD_LINK", data: link, pipelineId: this.pipelineId });
 		});
-
 		if (this.objectModel.fixedLayout !== NONE) {
 			this.autoLayout(this.objectModel.fixedLayout);
 		}
@@ -3373,5 +3367,12 @@ export class APIPipeline {
 			return portArray[index];
 		}
 		return null;
+	}
+
+	pushUniqueLinks(objectLink, linksToDelete) {
+		if (linksToDelete.findIndex((linkToDelete) => linkToDelete.id === objectLink.id) === -1) {
+			linksToDelete.push(objectLink);
+		}
+		return linksToDelete;
 	}
 }

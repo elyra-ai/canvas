@@ -68,42 +68,6 @@ module.exports = function() {
 			expect(returnVal.value).toBe(1);
 		});
 
-	// Then I delete comment 1 linked to the "Derive" node with the comment text "This comment box should be linked to the derive node."
-	//
-	this.Then(/^I delete comment (\d+) linked to the "([^"]*)" node with the comment text "([^"]*)"$/,
-		function(commentIndex, nodeName, commentText) {
-			var commentNumber = commentIndex - 1;
-			// We cannot rely on index position of comments because they get messed up
-			// when pushing comments to be underneath nodes and links. Therefore we look for the
-			// text of the comment being deleted.
-			var index = getCommentIndexFromCanvasUsingText(commentText);
-			browser.$("#common-canvas-items-container-0").$$(".comment-group")[index].rightClick();
-			browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click();
-			// Start Validation
-			browser.pause(500);
-			// verify comment is not in the canvas DOM
-			var count = 0;
-			var commentElements;
-			commentElements = browser.$("#common-canvas-items-container-0").$$(".comment-group");
-			for (let idx = 0; idx < commentElements.length; idx++) {
-				if (commentElements[idx].getAttribute("textContent") === commentText) {
-					count++;
-				}
-			}
-
-			expect(count).toEqual(commentNumber);
-
-			// verify that the comment is in the internal object model
-			var objectModel = getCanvasData();
-			var returnVal = browser.execute(getObjectModelCount, objectModel, "comments", commentText);
-			expect(returnVal.value).toBe(0);
-
-			// verify that an event for a deleted comment is in the external object model event log
-			var eventLog = getEventLogData();
-			returnVal = browser.execute(getEventLogCount, eventLog, "action: deleteObjects", 	commentText);
-			expect(returnVal.value).toBe(1);
-		});
-
 	// Then I move comment 1 onto the canvas by 50, 50
 	// this moves the comment a delta of x +50px and y +50px
 	//

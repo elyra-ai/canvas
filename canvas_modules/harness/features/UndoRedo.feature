@@ -75,7 +75,6 @@ Feature: UndoRedo
 
 		Then I right click the comment with text "This comment box should be edited." to open the context menu
 		Then I click option "Delete" from the context menu
-		#Then I delete comment 1 linked to the "Select" node with the comment text "This comment box should be edited."
 		Then I click undo
 		Then I verify the number of comments are 1
 		Then I click redo
@@ -155,6 +154,8 @@ Feature: UndoRedo
 		Then I select all the nodes in the canvas
 		Then I select all the comments in the canvas
 		Then I disconnect links for node 1 a "Var. File" on the canvas by selecting more than 1 node
+		Then I verify the number of data links are 0
+		Then I verify the number of comment links are 0
 		Then I click undo
 		Then I verify the number of data links are 5
 		Then I verify the number of comment links are 3

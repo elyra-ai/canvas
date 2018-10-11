@@ -259,8 +259,8 @@ describe("ObjectModel handle model OK", () => {
 		setupStartCanvasInfo("123", startPipeline, objectModel);
 
 		objectModel.dispatch({
-			type: "DISCONNECT_NODES",
-			data: { selectedNodeIds: ["node1"] },
+			type: "DELETE_LINKS",
+			data: { linkIds: ["link1"] },
 			pipelineId: "123"
 		});
 

@@ -25,10 +25,9 @@ Feature: AutoLayout
 		Then I delete node 7 the "Select" node
 		Then I right click the comment with text " comment 2" to open the context menu
 		Then I click option "Delete" from the context menu
-		Then I delete comment 1 linked to the "C5.0" node with the comment text " comment 2"
 		Then I right click the "DRUG1n" node to display the context menu
 		Then I click option "Disconnect" from the context menu
-		Then I link node 5 the "Var. File" node to node 2 the "Derive" node for link 6 on the canvas
+		Then I link node 5 the "DRUG1n" node to node 2 the "Derive" node for link 6 on the canvas
 		Then I verify the node 1 position is "translate(120, 488)"
 		Then I verify the node 2 position is "translate(120, 196)"
 		Then I verify the node 3 position is "translate(50, 634)"
@@ -37,7 +36,6 @@ Feature: AutoLayout
 		Then I verify the node 6 position is "translate(120, 342)"
 		Then I verify the comment 1 position is "translate(132, 103)"
 		Then I verify the comment 2 position is "translate(663, 248)"
-
 
 	Scenario: Sanity test for autoLayout operations in Horizontal Fixed Layout
 		Then I resize the window size to 1400 width and 800 height
@@ -58,7 +56,6 @@ Feature: AutoLayout
 		Then I delete node 4 the "Neural Net" node
 		Then I right click the comment with text " comment 2" to open the context menu
 		Then I click option "Delete" from the context menu
-		Then I delete comment 1 linked to the "C5.0" node with the comment text " comment 2"
 		Then I right click the "Discard Fields" node to display the context menu
 		Then I click option "Disconnect" from the context menu
 		Then I link node 6 the "Select" node to node 5 the "Filter" node for link 4 on the canvas
