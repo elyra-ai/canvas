@@ -1,0 +1,534 @@
+{
+  "titleDefinition": {
+    "title": "Expression Tests"
+  },
+  "current_parameters": {
+    "expression": "Age >= 55",
+    "enableExpression": false,
+    "expr": "ab\ncd\nef",
+    "visibleExpression": false,
+    "hiddenExpr": "This is hidden by default"
+  },
+  "parameters": [
+    {
+      "id": "expression",
+      "type": "string",
+      "role": "expression"
+    },
+    {
+      "id": "defaultExpr",
+      "type": "string",
+      "default": "is_real(salbegin)  and  gender  = \"F\" or BP = 120\n",
+      "role": "expression",
+      "required": true
+    },
+    {
+      "id": "placeHolderExpr",
+      "type": "string",
+      "role": "expression",
+      "required": true
+    },
+    {
+      "id": "enableExpression",
+      "type": "boolean",
+      "default": ""
+    },
+    {
+      "id": "expr",
+      "type": "string",
+      "default": "",
+      "role": "expression"
+    },
+    {
+      "id": "visibleExpression",
+      "type": "boolean",
+      "default": ""
+    },
+    {
+      "id": "hiddenExpr",
+      "type": "string",
+      "default": "",
+      "role": "expression"
+    },
+    {
+      "id": "requiredExpr",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "role": "expression"
+    },
+    {
+      "id": "warningExpr",
+      "type": "string",
+      "default": "",
+      "role": "expression"
+    },
+    {
+      "id": "errorExpr",
+      "type": "string",
+      "default": "",
+      "role": "expression"
+    }
+  ],
+  "complex_types": [],
+  "uihints": {
+    "id": "Expressions.test",
+    "icon": "images/modelbuildspark.svg",
+    "label": {
+      "default": "Expressions Test"
+    },
+    "description": {
+      "default": "Test expression controls"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "expression",
+        "language": "CLEM",
+        "label": {
+          "default": "Expression"
+        },
+        "description": {
+          "default": "Enter a Clem expression"
+        },
+        "text_before": {
+          "default": "Press ctrl-space to autocomplete, enter a '?' for validate to fail."
+        }
+      },
+      {
+        "parameter_ref": "defaultExpr",
+        "language": "CLEM",
+        "label": {
+          "default": "Default Expression value"
+        },
+        "description": {
+          "default": "Enter a boolean expression to use for filtering rows"
+        }
+      },
+      {
+        "parameter_ref": "placeHolderExpr",
+        "language": "text/x-hive",
+        "label": {
+          "default": "Place holder expression value"
+        },
+        "description": {
+          "default": "Enter a boolean expression"
+        },
+        "place_holder_text": {
+          "default": "Enter an SQL expression"
+        }
+      },
+      {
+        "parameter_ref": "enableExpression",
+        "label": {
+          "default": "enable"
+        },
+        "description": {
+          "default": "Enable expression"
+        }
+      },
+      {
+        "parameter_ref": "expr",
+        "label": {
+          "default": "Expression"
+        },
+        "description": {
+          "default": "Expression box"
+        }
+      },
+      {
+        "parameter_ref": "visibleExpression",
+        "label": {
+          "default": "Visible"
+        },
+        "description": {
+          "default": "Visible expression"
+        }
+      },
+      {
+        "parameter_ref": "hiddenExpr",
+        "label": {
+          "default": "Visible"
+        },
+        "description": {
+          "default": "Expression box"
+        }
+      },
+      {
+        "parameter_ref": "requiredExpr",
+        "label": {
+          "default": "Required"
+        },
+        "description": {
+          "default": "Expression box"
+        }
+      },
+      {
+        "parameter_ref": "errorExpr",
+        "label": {
+          "default": "Error Message"
+        },
+        "description": {
+          "default": "Expression box"
+        },
+        "text_before": {
+          "default": "Enter test to generate an error message"
+        }
+      },
+      {
+        "parameter_ref": "warningExpr",
+        "label": {
+          "default": "Warning Message"
+        },
+        "description": {
+          "default": "Expression box"
+        },
+        "text_before": {
+          "default": "Enter help to generate a warning message"
+        }
+      }
+    ],
+    "complex_type_info": [],
+    "group_info": [
+      {
+        "id": "Conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "parameter_refs": [
+          "enableExpression",
+          "expr",
+          "visibleExpression",
+          "hiddenExpr",
+          "requiredExpr",
+          "warningExpr",
+          "errorExpr"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "message": {
+            "default": "Expression cannot contain help"
+          },
+          "focus_parameter_ref": "expression"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "expression",
+            "op": "customSyntaxCheck"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "message": {
+            "default": "Expression cannot contain '?'"
+          },
+          "focus_parameter_ref": "defaultExpr"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "defaultExpr",
+            "op": "notContains",
+            "value": "?"
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "expr"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "enableExpression",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "hiddenExpr"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "visibleExpression",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "message": {
+            "default": "Expression cannot contain help"
+          },
+          "focus_parameter_ref": "warningExpr"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "warningExpr",
+            "op": "notContains",
+            "value": "help"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "message": {
+            "default": "Expression cannot contain test"
+          },
+          "focus_parameter_ref": "errorExpr"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "errorExpr",
+            "op": "notContains",
+            "value": "test"
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input",
+            "range": {
+              "min": 21,
+              "max": 55
+            }
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input",
+            "values": [
+              "male",
+              "female",
+              "not specified"
+            ]
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input",
+            "values": [
+              "very high",
+              "high",
+              "normal",
+              "low",
+              "very low"
+            ]
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input",
+            "values": [
+              "hdl good",
+              "hdl bad",
+              "ldl good",
+              "ldl bad"
+            ]
+          }
+        },
+        {
+          "name": "Ag",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input",
+            "range": {
+              "min": 18,
+              "max": 35
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "data",
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input",
+            "range": {
+              "min": 10,
+              "max": 20
+            }
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input",
+            "values": [
+              "aaa",
+              "bbb",
+              "ccc",
+              "ddd",
+              "eee"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input",
+            "range": {
+              "min": 24,
+              "max": 85
+            }
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input",
+            "values": [
+              "very high",
+              "high",
+              "normal",
+              "low",
+              "very low"
+            ]
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input",
+            "range": {
+              "min": -2,
+              "max": 1.5
+            }
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input",
+            "values": [
+              "xxx",
+              "vvv",
+              "yyy",
+              "zzz",
+              "ssss"
+            ]
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input",
+            "values": [
+              "xxx",
+              "vvv",
+              "yyy",
+              "zzz",
+              "ssss"
+            ]
+          }
+        },
+        {
+          "name": "drug3",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input",
+            "values": [
+              "xxx",
+              "vvv",
+              "yyy",
+              "zzz",
+              "ssss"
+            ]
+          }
+        },
+        {
+          "name": "drug4",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input",
+            "values": [
+              "xxx",
+              "vvv",
+              "yyy",
+              "zzz",
+              "ssss"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "expression_box_not_valid": "Expression cannot contain /, double or single \"quotes\""
+  }
+}

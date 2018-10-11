@@ -17,6 +17,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 import conditionTestResource from "../test_resources/json/form-test-condition.json";
+import expressionTestResource from "../test_resources/json/expression-one-category.json";
 
 import numberfieldResource from "../test_resources/paramDefs/numberfield_paramDef.json";
 import emptyParamDef from "../test_resources/paramDefs/empty_paramDef.json";
@@ -337,6 +338,29 @@ describe("applyPropertiesEditing through an instance outside Common Properties",
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		renderedObject.wrapper.instance().refs.wrappedInstance.applyPropertiesEditing(false);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
+	});
+});
+
+describe("New error messages of a control should be detected and applyPropertyChanges() should be called onBlur and on close", () => {
+	it("An error message in expression control should trigger a applyPropertyChanges callback when editor is closed", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(expressionTestResource); // default is applyOnBlur=true
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+		renderedObject.wrapper.find("button[data-id='properties-apply-button']")
+			.at(0)
+			.simulate("click");
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 1);
+	});
+	it("An error message in expression control should trigger a applyPropertyChanges callback on blur", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(expressionTestResource); // default is applyOnBlur=true
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+		renderedObject.wrapper.find("div.properties-title-editor")
+			.at(0)
+			.simulate("click"); // Focus on the editor
+		renderedObject.wrapper.find("div.properties-right-flyout").simulate("blur"); // On blur
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 	});
 });

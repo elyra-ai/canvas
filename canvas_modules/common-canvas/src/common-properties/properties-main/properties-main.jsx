@@ -46,9 +46,11 @@ class PropertiesMain extends React.Component {
 			actionHandler: props.callbacks.actionHandler
 		});
 		this.setForm(props.propertiesInfo);
+		this.previousErrorMessages = {};
 		// this has to be after setForm because setForm clears all error messages.
 		if (props.propertiesInfo.messages) {
 			this.propertiesController.validatePropertiesValues();
+			this.previousErrorMessages = this.propertiesController.getErrorMessages();
 		}
 		this.currentParameters = this.propertiesController.getPropertyValues();
 		this.propertiesController.subscribe(() => {
@@ -58,7 +60,6 @@ class PropertiesMain extends React.Component {
 			showPropertiesButtons: true,
 			editorSize: this.propertiesController.getForm().editorSize
 		};
-
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
@@ -83,8 +84,10 @@ class PropertiesMain extends React.Component {
 				this.propertiesController.setAppData(newProps.propertiesInfo.appData);
 				this.propertiesController.setCustomControls(newProps.customControls);
 				this.propertiesController.setConditionOps(newProps.customConditionOps);
+				this.previousErrorMessages = {};
 				if (newProps.propertiesInfo.messages) {
 					this.propertiesController.validatePropertiesValues();
+					this.previousErrorMessages = this.propertiesController.getErrorMessages();
 				}
 			}
 		}
@@ -169,7 +172,6 @@ class PropertiesMain extends React.Component {
 
 	applyPropertiesEditing(closeProperties) {
 		// validate all the input values.
-		const previousErrorMessages = this.propertiesController.getErrorMessages();
 		this.propertiesController.validatePropertiesValues();
 		const newErrorMessages = this.propertiesController.getErrorMessages();
 
@@ -177,7 +179,7 @@ class PropertiesMain extends React.Component {
 		if (this.originalTitle !== this.propertiesController.getTitle() ||
 				(this.currentParameters && JSON.stringify(this.currentParameters) !==
 				JSON.stringify(this.propertiesController.getPropertyValues(false))) ||
-				(JSON.stringify(previousErrorMessages) !== JSON.stringify(newErrorMessages))) {
+				(JSON.stringify(this.previousErrorMessages) !== JSON.stringify(newErrorMessages))) {
 
 			// set current values
 			let valueInfo = { additionalInfo: {}, undoInfo: {} };
@@ -200,6 +202,7 @@ class PropertiesMain extends React.Component {
 			this.currentParameters = this.propertiesController.getPropertyValues();
 			// reset undo values
 			this.initialValueInfo = cloneDeep(valueInfo);
+			this.previousErrorMessages = this.propertiesController.getErrorMessages();
 		}
 		if (closeProperties) {
 			this.cancelHandler(); // close property editor
