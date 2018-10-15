@@ -2169,11 +2169,11 @@ class CanvasRenderer {
 		let labelWidth = this.layout.labelWidth;
 		if (this.isExpandedSupernode(data)) {
 			labelWidth = this.layout.supernodeLabelWidth;
-		}
 
-		// Reduce the available space for the label by the error icon width.
-		if (this.getMessageLevel(data.messages) !== "") {
-			labelWidth -= this.layout.errorWidth;
+			// Reduce the available space for the label by the error icon width.
+			if (this.getMessageLevel(data.messages) !== "") {
+				labelWidth -= this.layout.errorWidth;
+			}
 		}
 
 		return this.trimLabelToWidth(data.label, labelWidth, this.layout.cssNodeLabel, textObj);
