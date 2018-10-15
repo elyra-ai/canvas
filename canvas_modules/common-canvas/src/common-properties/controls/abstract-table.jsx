@@ -260,10 +260,9 @@ export default class AbstractTable extends React.Component {
 			newSelectedSummaryRow[0].forEach((cellValue, colIndex) => {
 				// if a column does not have a value, the default value is null and the value returned
 				// from getPropertyValue is undefined causing unneccessary updates and an infinite loop during intialization
-				const testCell = (typeof cellValue === "undefined") ? null : cellValue;
-				if (testCell !== this.selectedSummaryRowValue[0][colIndex]) {
+				if (cellValue !== this.selectedSummaryRowValue[0][colIndex]) {
 					this.props.selectedRows.forEach((rowIndex) => {
-						this.props.controller.updatePropertyValue({ name: this.props.control.name, row: rowIndex, col: colIndex }, testCell, true);
+						this.props.controller.updatePropertyValue({ name: this.props.control.name, row: rowIndex, col: colIndex }, cellValue, true);
 					});
 				}
 			});

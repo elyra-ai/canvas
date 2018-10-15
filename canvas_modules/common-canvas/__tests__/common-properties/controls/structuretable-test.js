@@ -650,6 +650,41 @@ describe("structuretable control displays with no header and no button", () => {
 	});
 });
 
+describe("structuretable multiselect edit works", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+	it("mse table should render", () => {
+		// Open mse Summary Panel in structuretableParamDef
+		const table = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
+		const container = table.find("div.properties-ft-container-panel");
+		// Open field picker
+		const addColumnsButton = container.find("button.properties-add-fields-button");
+		addColumnsButton.simulate("click");
+		const fieldPickerTable = wrapper.find("div.properties-fp-table");
+		// Select header checkbox to select all fields in column override
+		const tableCheckboxHeader = fieldPickerTable.find("input[type='checkbox']").at(0); // find the table header checkbox
+		tableCheckboxHeader.getDOMNode().checked = true;
+		tableCheckboxHeader.simulate("change");
+		// Select Ok to close field picker table.
+		const okButton = fieldPickerTable.find("button[data-id='properties-apply-button']");
+		okButton.simulate("click");
+		wrapper.render();
+		// Newly added fields should be selected.
+		const mseTable = wrapper.find("div[data-id='properties-ST_mse_table-summary-panel']");
+		const wideFlyout = mseTable.find("div.properties-wf-content.show");
+		const selectedRows = wideFlyout.find("tr.table-selected-row");
+		expect(selectedRows).to.have.length(5);
+	});
+
+
+});
+
 describe("structuretable control displays with checkbox header", () => {
 	let wrapper;
 	let renderedController;
