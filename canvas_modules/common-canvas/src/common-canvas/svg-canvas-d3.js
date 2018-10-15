@@ -3016,14 +3016,10 @@ class CanvasRenderer {
 			newCommentGroups.append("text")
 				.attr("id", (d) => that.getId("comment_text", d.id))
 				.attr("class", "d3-comment-text")
-				.each(function(d) {
-					var textObj = d3.select(this);
-					that.displayWordWrappedText(textObj, d.content, d.width - (2 * that.layout.commentWidthPadding));
-				})
 				.attr("clip-path", (d) => "url(" + that.getId("#comment_clip_path", d.id) + ")")
 				.attr("xml:space", "preserve")
-				.attr("x", 0 + that.layout.commentWidthPadding)
-				.attr("y", 0 + that.layout.commentHeightPadding);
+				.attr("x", 0) // Text position is controlled by x and y
+				.attr("y", 0); // of the tspan objects inside this text object.
 
 			// Halo
 			if (this.layout.connectionType === "halo") {
