@@ -40,6 +40,9 @@ $flexible-table-header-row-height: 32px;
 		border-bottom: 1px solid $ui-04;
 		height: 3em;
 	}
+	td {
+		vertical-align: middle;
+	}
 	&.error {
 		border: 1px solid $support-01;
 	}
@@ -128,7 +131,6 @@ $flexible-table-header-row-height: 32px;
 	}
 	tbody {
 		width: 100%;
-		position: absolute;
 		overflow-y: auto;
 		overflow-x: hidden; // address scrollbar with mouse issue
 		display: flex; // address scrollbar with mouse issue
