@@ -6,7 +6,6 @@ Feature: ExpressionControl
 	I want to test a common-properties expression control
 	So I can test the expression controls in common-properties
 
-
 	Scenario: Test of expression editor control
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
@@ -98,3 +97,56 @@ Feature: ExpressionControl
 		Then I select the "Fields and Values" tab for the "defaultExpr" property.
 		Then I select "Age" from the "field" table for the "defaultExpr" property.
 		Then I validate the "none" icon on the expression "builder" for the "defaultExpr" property.
+
+	Scenario: Test of Python and R expression controls
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side common-properties panel
+		Then I have selected the "Flyout" properties container type
+		Given I have uploaded JSON for common-properties "Python_ExpressionControl_paramDef.json"
+
+		# test Python autocomplete and syntax highlighting
+		Then I verify "foo" is a "def" in ExpressionEditor
+		Then I verify "testVar" is a "variable" in ExpressionEditor
+		Then I verify "property" is a "property" in ExpressionEditor
+		Then I verify "# comment" is a "comment" in ExpressionEditor
+		Then I verify "1" is a "number" in ExpressionEditor
+		Then I verify "<" is a "operator" in ExpressionEditor
+		Then I verify "if" is a "keyword" in ExpressionEditor
+		Then I verify "abs" is a "builtin" in ExpressionEditor
+		Then I enter "is" in ExpressionEditor and press autocomplete and verify that 3 autocomplete hints are displayed
+		Then I enter "a" in ExpressionEditor and press autocomplete and select "age" a "variable"
+		Then I enter "and" in ExpressionEditor and verify it is a "keyword"
+		Then I enter "age" in ExpressionEditor and verify it is a "variable"
+		Then I enter "=" in ExpressionEditor and verify it is a "operator"
+		Then I enter "120" in ExpressionEditor and verify it is a "number"
+		Then I enter "this is a string" in ExpressionEditor and verify it is a "string"
+
+		# placeholder text and validation
+		Given I have toggled the app side common-properties panel
+		Given I have uploaded JSON for common-properties "R_ExpressionControl_paramDef.json"
+
+		# test R autocomplete and syntax highlighting
+		Then I verify "# syntax testing" is a "comment" in ExpressionEditor
+		Then I verify "1" is a "number" in ExpressionEditor
+		Then I verify "text" is a "string" in ExpressionEditor
+		Then I verify "\n" is a "string-2" in ExpressionEditor
+		Then I verify "`x`" is a "variable-3" in ExpressionEditor
+		Then I verify "=" is a "operator" in ExpressionEditor
+		Then I verify "`x`" is a "variable-3" in ExpressionEditor
+		Then I verify "function" is a "keyword" in ExpressionEditor
+		Then I verify "Inf" is a "atom" in ExpressionEditor
+		Then I verify "return" is a "builtin" in ExpressionEditor
+		Then I verify "%var-2%" is a "variable-2" in ExpressionEditor
+		Then I verify "<-" is a "arrow" in ExpressionEditor
+		Then I verify "=" is a "arg-is" in ExpressionEditor
+		Then I verify ";" is a "semi" in ExpressionEditor
+		Then I enter "br" in ExpressionEditor and press autocomplete and verify that 5 autocomplete hints are displayed
+		Then I enter "li" in ExpressionEditor and press autocomplete and verify that 6 autocomplete hints are displayed
+		Then I enter "a" in ExpressionEditor and press autocomplete and select "age" a "variable"
+		Then I enter "if" in ExpressionEditor and verify it is a "keyword"
+		Then I enter "age" in ExpressionEditor and verify it is a "variable"
+		Then I enter "=" in ExpressionEditor and verify it is a "operator"
+		Then I enter "120" in ExpressionEditor and verify it is a "number"
+		Then I enter "this is a string" in ExpressionEditor and verify it is a "string"
+		Given I have toggled the app side common-properties panel

@@ -37,6 +37,10 @@ if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
 	require("codemirror/addon/hint/javascript-hint");
 	require("codemirror/addon/hint/sql-hint");
 	require("codemirror/mode/sql/sql");
+	require("codemirror/mode/python/python");
+	require("codemirror/mode/r/r");
+	require("./languages/python-hint");
+	require("./languages/r-hint");
 	require("./languages/CLEM");
 	require("./languages/CLEM-hint");
 }
@@ -56,7 +60,6 @@ class ExpressionControl extends React.Component {
 
 		this.origHint = "";
 		this.expressionInfo = this.props.controller.getExpressionInfo();
-
 		this.handleValidate = this.handleValidate.bind(this);
 		this.cancelExpressionBuilder = this.cancelExpressionBuilder.bind(this);
 		this.hideExpressionBuilder = this.hideExpressionBuilder.bind(this);
@@ -154,7 +157,20 @@ class ExpressionControl extends React.Component {
 		// we need to register with Codemirror the language as the value of "text/x-hive". When Codemirror
 		// registers the autocomplete addon it registers is as "sql" not the subset "text/x-hive"
 		// This hack allows use to capture the "sql" autocomplete handler and subsitute our custom handler
-		const language = (this.props.control.language === "text/x-hive") ? "sql" : this.props.control.language;
+		// Same has been done for Python and R
+		let language = this.props.control.language;
+		switch (this.props.control.language) {
+		case "text/x-hive":
+			language = "sql";
+			break;
+		case "text/x-python":
+			language = "python";
+			break;
+		case "text/x-rsrc":
+			language = "r";
+			break;
+		default:
+		}
 		if (cm) {
 			cm.registerHelper("hint", language, this.addonHints);
 		}
