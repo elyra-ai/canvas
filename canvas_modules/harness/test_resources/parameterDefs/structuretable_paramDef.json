@@ -112,7 +112,8 @@
         "Soccer",
         "Don't show",
         false,
-        "European"
+        "European",
+        ["a", "b", "c"]
       ],
       [
         "BP",
@@ -120,11 +121,21 @@
         "Football",
         "Don't show",
         false,
-        "American"
+        "American",
+        []
       ],
       [
         "K",
         false,
+        "Soccer",
+        "Don't show",
+        true,
+        "Canadian",
+        ["1"]
+      ],
+      [
+        "K",
+        true,
         "Soccer",
         "Don't show",
         true,
@@ -501,13 +512,17 @@
         },
         {
           "id": "checkit",
-          "type": "boolean",
-          "default": false
+          "type": "boolean"
         },
         {
           "id": "sometext",
           "type": "string",
           "default": "Type something here..."
+        },
+        {
+          "id": "anArray",
+          "type": "array[string]",
+          "default": ["One", "Two"]
         }
       ]
     }
@@ -686,6 +701,11 @@
             "id": "sometext",
             "type": "string",
             "default": "Type something here..."
+          },
+          {
+            "id": "anArray",
+            "type": "array[string]",
+            "default": ["One", "Two"]
           }
         ]
       }
@@ -1203,6 +1223,15 @@
             "parameter_ref": "sometext",
             "label": {
               "resource_key": "ST_mse_table.sometext.label"
+            },
+            "width": 12,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "anArray",
+            "label": {
+              "default": "String Array"
             },
             "width": 12,
             "edit_style": "inline",

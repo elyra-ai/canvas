@@ -30,7 +30,7 @@ describe("Condition allow_change test cases", () => {
 
 		// select the first row in the table
 		const tableRows = summaryPanel.find("tbody.reactable-data tr");
-		expect(tableRows).to.have.length(3);
+		expect(tableRows).to.have.length(4);
 		tableRows.at(0).simulate("click");
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
 
@@ -59,7 +59,7 @@ describe("Condition allow_change test cases", () => {
 
 		// select the first row in the table
 		const tableRows = summaryPanel.find("tbody.reactable-data tr");
-		expect(tableRows).to.have.length(3);
+		expect(tableRows).to.have.length(4);
 		tableRows.at(0).simulate("click");
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
 

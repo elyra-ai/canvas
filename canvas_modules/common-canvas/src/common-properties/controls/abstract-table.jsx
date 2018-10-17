@@ -25,6 +25,7 @@ import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES,
 import findIndex from "lodash/findIndex";
 import sortBy from "lodash/sortBy";
 import cloneDeep from "lodash/cloneDeep";
+import isEqual from "lodash/isEqual";
 import uuid4 from "uuid/v4";
 
 /* eslint max-depth: ["error", 5] */
@@ -258,11 +259,12 @@ export default class AbstractTable extends React.Component {
 		const newSelectedSummaryRow = this.props.controller.getPropertyValue(summaryPropertyId);
 		if (newSelectedSummaryRow && Array.isArray(newSelectedSummaryRow)) {
 			newSelectedSummaryRow[0].forEach((cellValue, colIndex) => {
-				// if a column does not have a value, the default value is null and the value returned
-				// from getPropertyValue is undefined causing unneccessary updates and an infinite loop during intialization
-				if (cellValue !== this.selectedSummaryRowValue[0][colIndex]) {
+				if (!isEqual(cellValue, this.selectedSummaryRowValue[0][colIndex])) {
+					// if a column does not have a value, the default value is null and the value returned
+					// from getPropertyValue is undefined causing unneccessary updates and an infinite loop during intialization
+					const testCell = (typeof cellValue === "undefined") ? null : cellValue;
 					this.props.selectedRows.forEach((rowIndex) => {
-						this.props.controller.updatePropertyValue({ name: this.props.control.name, row: rowIndex, col: colIndex }, cellValue, true);
+						this.props.controller.updatePropertyValue({ name: this.props.control.name, row: rowIndex, col: colIndex }, testCell, true);
 					});
 				}
 			});
@@ -278,7 +280,6 @@ export default class AbstractTable extends React.Component {
 		}
 		this.setSelectedSummaryRowValue(selection);
 	}
-
 
 	removeSelected() {
 		const rows = this.props.value;

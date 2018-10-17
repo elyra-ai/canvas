@@ -681,8 +681,24 @@ describe("structuretable multiselect edit works", () => {
 		const selectedRows = wideFlyout.find("tr.table-selected-row");
 		expect(selectedRows).to.have.length(5);
 	});
+	it("mse table should allow multiple selections", () => {
+		propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
+		// select the first row in the table
+		const tableData = wrapper.find("tbody.reactable-data").children();
+		expect(tableData).to.have.length(4);
+		tableData.at(0).simulate("click");
 
+		// verify that the select summary row is not present
+		let selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
+		expect(selectedEditRow).to.have.length(0);
 
+		// multiple select the four row in the table
+		tableData.at(2).simulate("click", { metaKey: true, ctrlKey: true });
+
+		// verify that the select summary row is present
+		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
+		expect(selectedEditRow).to.have.length(1);
+	});
 });
 
 describe("structuretable control displays with checkbox header", () => {
