@@ -303,12 +303,12 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setObjectsClassName(objectId, newClassName);
 	}
 
-	setObjectsStyle(pipelineObjectIds, newStyle, pipelineId, temporary, addToCommandStack) {
+	setObjectsStyle(pipelineObjectIds, newStyle, temporary, addToCommandStack) {
 		if (addToCommandStack) {
-			const data = { editType: "setObjectsStyle", pipelineObjectIds: pipelineObjectIds, style: newStyle, pipelineId: pipelineId, temporary: temporary };
+			const data = { editType: "setObjectsStyle", pipelineObjectIds: pipelineObjectIds, style: newStyle, temporary: temporary };
 			this.editActionHandler(data);
 		} else {
-			this.objectModel.getAPIPipeline(pipelineId).setObjectsStyle(pipelineObjectIds, newStyle, temporary);
+			this.objectModel.setObjectsStyle(pipelineObjectIds, newStyle, temporary);
 		}
 	}
 
@@ -477,12 +477,12 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setLinksClassName(linkIds, newClassName);
 	}
 
-	setLinksStyle(pipelineLinkIds, newStyle, pipelineId, temporary, addToCommandStack) {
+	setLinksStyle(pipelineLinkIds, newStyle, temporary, addToCommandStack) {
 		if (addToCommandStack) {
-			const data = { editType: "setLinksStyle", pipelineLinkIds: pipelineLinkIds, style: newStyle, pipelineId: pipelineId, temporary: temporary };
+			const data = { editType: "setLinksStyle", pipelineLinkIds: pipelineLinkIds, style: newStyle, temporary: temporary };
 			this.editActionHandler(data);
 		} else {
-			this.objectModel.getAPIPipeline(pipelineId).setLinksStyle(pipelineLinkIds, newStyle, temporary);
+			this.objectModel.setLinksStyle(pipelineLinkIds, newStyle, temporary);
 		}
 	}
 
@@ -541,8 +541,8 @@ export default class CanvasController {
 		const linkStyle = {
 			default: `stroke: ${constants.HIGHLIGHT_STROKE};, hover: stroke-width: ${constants.HIGHLIGHT_STROKE_WIDTH}`
 		};
-		this.setObjectsStyle(highlightObjectIds.nodes, objectStyle, pipelineId, true, false);
-		this.setLinksStyle(highlightObjectIds.links, linkStyle, pipelineId, true, false);
+		this.setObjectsStyle(highlightObjectIds.nodes, objectStyle, true, false);
+		this.setLinksStyle(highlightObjectIds.links, linkStyle, true, false);
 		this.highlight = true;
 	}
 

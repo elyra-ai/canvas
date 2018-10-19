@@ -1844,6 +1844,18 @@ export default class ObjectModel {
 	}
 
 	// ---------------------------------------------------------------------------
+	// Styling methods
+	// ---------------------------------------------------------------------------
+
+	setObjectsStyle(pipelineObjIds, newStyle, temporary) {
+		this.store.dispatch({ type: "SET_OBJECTS_STYLE", data: { pipelineObjIds: pipelineObjIds, newStyle: newStyle, temporary: temporary } });
+	}
+
+	setLinksStyle(pipelineLinkIds, newStyle, temporary) {
+		this.store.dispatch({ type: "SET_LINKS_STYLE", data: { pipelineObjIds: pipelineLinkIds, newStyle: newStyle, temporary: temporary } });
+	}
+
+	// ---------------------------------------------------------------------------
 	// Highlighting methods
 	// ---------------------------------------------------------------------------
 
@@ -2211,10 +2223,6 @@ export class APIPipeline {
 
 	setObjectsClassName(objectIds, newClassName) {
 		this.store.dispatch({ type: "SET_OBJECTS_CLASS_NAME", data: { objIds: objectIds, label: newClassName }, pipelineId: this.pipelineId });
-	}
-
-	setObjectsStyle(pipelineObjIds, newStyle, temporary) {
-		this.store.dispatch({ type: "SET_OBJECTS_STYLE", data: { pipelineObjIds: pipelineObjIds, newStyle: newStyle, temporary: temporary }, pipelineId: this.pipelineId });
 	}
 
 	disconnectObjects(source) {
@@ -3226,10 +3234,6 @@ export class APIPipeline {
 
 	setLinksClassName(linkIds, newClassName) {
 		this.store.dispatch({ type: "SET_LINKS_CLASS_NAME", data: { linkIds: linkIds, label: newClassName }, pipelineId: this.pipelineId });
-	}
-
-	setLinksStyle(pipelineLinkIds, newStyle, temporary) {
-		this.store.dispatch({ type: "SET_LINKS_STYLE", data: { pipelineObjIds: pipelineLinkIds, newStyle: newStyle, temporary: temporary }, pipelineId: this.pipelineId });
 	}
 
 	isConnectionAllowed(srcNodeInfo, trgNodeInfo) {

@@ -14,23 +14,23 @@ export default class SetObjectsStyleAction extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
-		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.oldStyles = [];
 		forIn(this.data.pipelineObjectIds, (objectIds, pipelineId) => {
+			const apiPipeline = this.objectModel.getAPIPipeline(pipelineId);
 			this.oldStyles[pipelineId] = [];
 			objectIds.forEach((objId) => {
-				this.oldStyles[pipelineId].push(this.apiPipeline.getObjectStyle(objId, this.data.temporary));
+				this.oldStyles[pipelineId].push(apiPipeline.getObjectStyle(objId, this.data.temporary));
 			});
 		});
 	}
 
 	// Standard methods
 	do() {
-		this.apiPipeline.setObjectsStyle(this.data.pipelineObjectIds, this.data.style, this.data.temporary);
+		this.objectModel.setObjectsStyle(this.data.pipelineObjectIds, this.data.style, this.data.temporary);
 	}
 
 	undo() {
-		this.apiPipeline.setObjectsStyle(this.data.pipelineObjectIds, this.oldStyles, this.data.temporary);
+		this.objectModel.setObjectsStyle(this.data.pipelineObjectIds, this.oldStyles, this.data.temporary);
 	}
 
 	redo() {

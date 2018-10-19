@@ -14,23 +14,23 @@ export default class SetLinksStyleAction extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
-		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.oldStyles = [];
 		forIn(this.data.pipelineLinkIds, (linkIds, pipelineId) => {
+			const apiPipeline = this.objectModel.getAPIPipeline(pipelineId);
 			this.oldStyles[pipelineId] = [];
 			linkIds.forEach((linkId) => {
-				this.oldStyles[pipelineId].push(this.apiPipeline.getLinkStyle(linkId, this.data.temporary));
+				this.oldStyles[pipelineId].push(apiPipeline.getLinkStyle(linkId, this.data.temporary));
 			});
 		});
 	}
 
 	// Standard methods
 	do() {
-		this.apiPipeline.setLinksStyle(this.data.pipelineLinkIds, this.data.style, this.data.temporary);
+		this.objectModel.setLinksStyle(this.data.pipelineLinkIds, this.data.style, this.data.temporary);
 	}
 
 	undo() {
-		this.apiPipeline.setLinksStyle(this.data.pipelineLinkIds, this.oldStyles, this.data.temporary);
+		this.objectModel.setLinksStyle(this.data.pipelineLinkIds, this.oldStyles, this.data.temporary);
 	}
 
 	redo() {

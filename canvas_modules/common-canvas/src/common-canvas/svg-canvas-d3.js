@@ -1916,6 +1916,8 @@ class CanvasRenderer {
 	setNodeStyles(d, type) {
 		this.setNodeBodyStyles(d, type);
 		this.setNodeSelectionOutlineStyles(d, type);
+		this.setNodeImageStyles(d, type);
+		this.setNodeLabelStyles(d, type);
 	}
 
 	setNodeBodyStyles(d, type) {
@@ -1930,6 +1932,16 @@ class CanvasRenderer {
 	setNodeSelectionOutlineStyles(d, type) {
 		const style = this.getObjectSelectionOutlineStyles(d, type);
 		d3.select(this.getId("#node_outline", d.id)).attr("style", style);
+	}
+
+	setNodeImageStyles(d, type) {
+		const style = this.getNodeImageStyles(d, type);
+		d3.select(this.getId("#node_image", d.id)).attr("style", style);
+	}
+
+	setNodeLabelStyles(d, type) {
+		const style = this.getNodeLabelStyles(d, type);
+		d3.select(this.getId("#node_label", d.id)).attr("style", style);
 	}
 
 	getNodeGrpStyle(d) {
@@ -3092,6 +3104,7 @@ class CanvasRenderer {
 					commentGrp.select(that.getId("#comment_text", d.id))
 						.datum(comment) // Set the __data__ to the updated data
 						.attr("beingedited", that.editingCommentId === d.id ? "yes" : "no") // Use the beingedited css style to make text transparent
+						.attr("style", (cd) => that.getCommentTextStyles(d, "default"))
 						.each(function(cd) {
 							var textObj = d3.select(this);
 							textObj.selectAll("tspan").remove();
@@ -3137,6 +3150,42 @@ class CanvasRenderer {
 			} else if (type === "default") {
 				style = this.getObjectStyle(d, "selection_outline", "default");
 			}
+		}
+		return style;
+	}
+
+	getNodeImageStyles(d, type) {
+		let style = null;
+
+		if (type === "hover") {
+			style = this.getObjectStyle(d, "image", "default") + this.getObjectStyle(d, "image", "hover");
+
+		} else if (type === "default") {
+			style = this.getObjectStyle(d, "image", "default");
+		}
+		return style;
+	}
+
+	getNodeLabelStyles(d, type) {
+		let style = null;
+
+		if (type === "hover") {
+			style = this.getObjectStyle(d, "label", "default") + this.getObjectStyle(d, "label", "hover");
+
+		} else if (type === "default") {
+			style = this.getObjectStyle(d, "label", "default");
+		}
+		return style;
+	}
+
+	getCommentTextStyles(d, type) {
+		let style = null;
+
+		if (type === "hover") {
+			style = this.getObjectStyle(d, "text", "default") + this.getObjectStyle(d, "text", "hover");
+
+		} else if (type === "default") {
+			style = this.getObjectStyle(d, "text", "default");
 		}
 		return style;
 	}
