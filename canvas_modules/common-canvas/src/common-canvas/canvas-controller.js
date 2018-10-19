@@ -215,7 +215,7 @@ export default class CanvasController {
 		this.objectModel.clearPaletteData();
 	}
 
-	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel, pipelineId) {
+	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
 		this.objectModel.addNodeTypeToPalette(nodeTypeObj, category, categoryLabel);
 	}
 
@@ -402,7 +402,7 @@ export default class CanvasController {
 	}
 
 	removeCustomAttrFromNodes(nodeIds, attrName, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).removeCustomAttrToNodes(nodeIds, attrName);
+		this.objectModel.getAPIPipeline(pipelineId).removeCustomAttrFromNodes(nodeIds, attrName);
 	}
 
 	canNodeBeDroppedOnLink(operatorIdRef, pipelineId) {
@@ -446,7 +446,7 @@ export default class CanvasController {
 	}
 
 	removeCustomAttrFromComments(comIds, attrName, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).removeCustomAttrToComments(comIds, attrName);
+		this.objectModel.getAPIPipeline(pipelineId).removeCustomAttrFromComments(comIds, attrName);
 	}
 
 	// ---------------------------------------------------------------------------
