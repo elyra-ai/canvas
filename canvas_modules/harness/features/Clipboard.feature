@@ -20,9 +20,9 @@ Feature: Clipboard
 		# Test cutting some nodes and a comment and paste to canvas
 		Then I validate there are 8 links on the canvas with port style
 		Then I click the comment with text " comment 1" to select it
-		Then I Cmd+click the "DRUG1n" node to add it to the selections
-		Then I Cmd+click the "Na_to_K" node to add it to the selections
-		Then I Cmd+click the "Discard Fields" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "DRUG1n" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Na_to_K" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Discard Fields" node to add it to the selections
 		Then I press Ctrl/Cmnd+X to Cut
 		Then I press Ctrl/Cmnd+V to Paste
 		Then I verify the number of nodes are 6
@@ -42,9 +42,9 @@ Feature: Clipboard
 		# Test copying some nodes and a comment and paste to canvas
 		Then I validate there are 8 links on the canvas with port style
 		Then I click the comment with text " comment 2" to select it
-		Then I Cmd+click the "Define Types" node to add it to the selections
-		Then I Cmd+click the "C5.0" node to add it to the selections
-		Then I Cmd+click the "Neural Net" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Define Types" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "C5.0" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Neural Net" node to add it to the selections
 		Then I press Ctrl/Cmnd+C to Copy
 		Then I press Ctrl/Cmnd+V to Paste
 		Then I verify the number of nodes are 9
@@ -64,9 +64,9 @@ Feature: Clipboard
 		# Test cutting some nodes and a comment and paste to canvas
 		Then I validate there are 8 links on the canvas with port style
 		Then I click the comment with text " comment 1" to select it
-		Then I Cmd+click the "DRUG1n" node to add it to the selections
-		Then I Cmd+click the "Na_to_K" node to add it to the selections
-		Then I Cmd+click the "Discard Fields" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "DRUG1n" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Na_to_K" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Discard Fields" node to add it to the selections
 		Then I right click at position 300, 10 to display the context menu
 		Then I click option "Cut" from the "Edit" submenu
 		Then I right click at position 300, 10 to display the context menu
@@ -88,9 +88,9 @@ Feature: Clipboard
 		# Test copying some nodes and a comment and paste to canvas
 		Then I validate there are 8 links on the canvas with port style
 		Then I click the comment with text " comment 2" to select it
-		Then I Cmd+click the "Define Types" node to add it to the selections
-		Then I Cmd+click the "C5.0" node to add it to the selections
-		Then I Cmd+click the "Neural Net" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Define Types" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "C5.0" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Neural Net" node to add it to the selections
 		Then I right click at position 300, 10 to display the context menu
 		Then I click option "Copy" from the "Edit" submenu
 		Then I right click at position 300, 10 to display the context menu

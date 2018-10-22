@@ -18,9 +18,9 @@ Feature: Toolbar
 		# Test cutting some nodes and a comment and paste to canvas
 		Then I validate there are 8 links on the canvas with port style
 		Then I click the comment with text " comment 1" to select it
-		Then I Cmd+click the "DRUG1n" node to add it to the selections
-		Then I Cmd+click the "Na_to_K" node to add it to the selections
-		Then I Cmd+click the "Discard Fields" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "DRUG1n" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Na_to_K" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Discard Fields" node to add it to the selections
 		Then I click on the secondary toolbar cut button
 		Then I click on the secondary toolbar paste button
 		Then I verify the number of nodes are 6
@@ -40,9 +40,9 @@ Feature: Toolbar
 		# Test copying some nodes and a comment and paste to canvas
 		Then I validate there are 8 links on the canvas with port style
 		Then I click the comment with text " comment 2" to select it
-		Then I Cmd+click the "Define Types" node to add it to the selections
-		Then I Cmd+click the "C5.0" node to add it to the selections
-		Then I Cmd+click the "Neural Net" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Define Types" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "C5.0" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Neural Net" node to add it to the selections
 		Then I click on the secondary toolbar copy button
 		Then I click on the secondary toolbar paste button
 		Then I verify the number of nodes are 9

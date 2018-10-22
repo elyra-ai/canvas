@@ -12,7 +12,7 @@ import { deleteLinkInObjectModel, findCategoryElement, findNodeIndexInPalette, g
 	getNodeFromObjectModel, getNodeIdForLabel, getNodeIdForLabelInSubFlow, getNodeIdFromObjectModel,
 	getObjectModelCount, isObjectModelEmpty
 } from "./utilities/validate-utils.js";
-import { getCanvasData, getEventLogData, getLastEventLogData } from "./utilities/test-utils.js";
+import { getCanvasData, getEventLogData, getLastEventLogData, useCmdOrCtrl } from "./utilities/test-utils.js";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
 
 /* global browser */
@@ -673,20 +673,22 @@ module.exports = function() {
 		browser.$(nodeSelector).click();
 	});
 
-	this.Then(/^I Cmd\+click the "([^"]*)" node to add it to the selections$/, function(nodeName) {
-		browser.keys(["Meta"]);
+	this.Then(/^I Ctrl\/Cmnd\+click the "([^"]*)" node to add it to the selections$/, function(nodeName) {
+		const useKey = useCmdOrCtrl();
+		browser.keys([useKey]);
 		var nodeId = getNodeIdForLabel(nodeName);
 		var nodeSelector = "#node_grp_" + nodeId;
 		browser.$(nodeSelector).click();
-		browser.keys(["Meta"]);
+		browser.keys([useKey]);
 	});
 
-	this.Then(/^I Cmd\+click the "([^"]*)" node in the subflow to add it to the selections$/, function(nodeName) {
-		browser.keys(["Meta"]);
+	this.Then(/^I Ctrl\/Cmnd\+click the "([^"]*)" node in the subflow to add it to the selections$/, function(nodeName) {
+		const useKey = useCmdOrCtrl();
+		browser.keys([useKey]);
 		var nodeId = getNodeIdForLabelInSubFlow(nodeName);
 		var nodeSelector = "#node_grp_" + nodeId;
 		browser.$(nodeSelector).click();
-		browser.keys(["Meta"]);
+		browser.keys([useKey]);
 	});
 
 

@@ -4699,12 +4699,18 @@ class CanvasRenderer {
 }
 
 
-// Returns true if either the Command Key (Mac) or Control key (Windows)
-// is pressed. This means the Control key on the Mac also works for key
-// augmentation. Also since metaKey is true when the Windows key on Windows
-// is pressed that will also act as an augmentation key.
+// Returns true if either the Command Key on Mac or Control key on Windows
+// is pressed.
 function isCmndCtrlPressed() {
-	return d3Event.metaKey || d3Event.ctrlKey;
+	if (isMacintosh()) {
+		return d3Event.metaKey;
+	}
+	return d3Event.ctrlKey;
+}
+
+// Returns whether user platform is Mac.
+function isMacintosh() {
+	return navigator.platform.indexOf("Mac") > -1;
 }
 
 function stopPropagationAndPreventDefault() {

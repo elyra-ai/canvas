@@ -12,37 +12,43 @@
 import { clickSVGAreaAt, doesTipExist, findCategoryElement, findNodeIndexInPalette,
 	getNodeIdForLabel, getNodeIdForLabelInSubFlow, getNumberOfSelectedComments,
 	getNumberOfSelectedNodes } from "./utilities/validate-utils.js";
-import { getCanvas, isSchemaValidationError } from "./utilities/test-utils.js";
+import { getCanvas, isSchemaValidationError, useCmdOrCtrl } from "./utilities/test-utils.js";
 
 /* global browser */
 
 module.exports = function() {
 
 	this.Then("I press Ctrl/Cmnd+X to Cut", function() {
-		browser.keys(["Control", "x", "Control", "x"]);
+		const useKey = useCmdOrCtrl();
+		browser.keys([useKey, "x", useKey, "x"]);
 	});
 
 	this.Then("I press Ctrl/Cmnd+C to Copy", function() {
-		browser.keys(["Control", "c", "Control", "c"]);
+		const useKey = useCmdOrCtrl();
+		browser.keys([useKey, "c", useKey, "c"]);
 	});
 
 	this.Then("I press Ctrl/Cmnd+V to Paste", function() {
-		browser.keys(["Control", "v", "Control", "v"]);
+		const useKey = useCmdOrCtrl();
+		browser.keys([useKey, "v", useKey, "v"]);
 	});
 
 	this.Then("I press Ctrl/Cmnd+Z to Undo", function() {
 		clickSVGAreaAt(1, 1); // Put foucs on the SVG area, ready for key press
-		browser.keys(["Control", "z", "Control", "z"]);
+		const useKey = useCmdOrCtrl();
+		browser.keys([useKey, "z", useKey, "z"]);
 	});
 
 	this.Then("I press Ctrl/Cmnd+Shift+Z to Redo", function() {
 		clickSVGAreaAt(1, 1); // Put foucs on the SVG area, ready for key press
-		browser.keys(["Control", "Shift", "z", "Control", "Shift", "z"]);
+		const useKey = useCmdOrCtrl();
+		browser.keys([useKey, "Shift", "z", useKey, "Shift", "z"]);
 	});
 
 	this.Then("I press Ctrl/Cmnd+Y to Redo", function() {
 		clickSVGAreaAt(1, 1); // Put foucs on the SVG area, ready for key press
-		browser.keys(["Control", "y", "Control", "y"]);
+		const useKey = useCmdOrCtrl();
+		browser.keys([useKey, "y", useKey, "y"]);
 	});
 
 	this.Then(/^I click the canvas background at (\d+), (\d+) to close the context menu or clear selections$/, function(xCoord, yCoord) {
@@ -123,14 +129,10 @@ module.exports = function() {
 		expect(menuItemFound).toBe(true);
 	});
 
-	this.Then("I select all objects in the canvas via Ctrl+A", function() {
+	this.Then("I select all objects in the canvas via Ctrl/Cmnd+A", function() {
 		browser.click(".svg-area", Number(10), Number(10));
-		browser.keys(["Control", "A", "A", "Control"]);
-	});
-
-	this.Then("I select all objects in the canvas via Cmd+A", function() {
-		browser.click(".svg-area", Number(10), Number(10));
-		browser.keys(["Meta", "A", "A", "Meta"]);
+		const useKey = useCmdOrCtrl();
+		browser.keys([useKey, "A", "A", useKey]);
 	});
 
 	this.Then("I delete all selected objects via the Delete key", function() {

@@ -175,7 +175,7 @@ Feature: UndoRedo
 		Then I verify the number of nodes are 8
 		Then I verify the number of comments are 3
 
-		Then I select all objects in the canvas via Ctrl+A
+		Then I select all objects in the canvas via Ctrl/Cmnd+A
 		Then I delete all selected objects via the Delete key
 		Then I expect the canvas to be empty
 		Then I expect the object model to be empty
@@ -183,7 +183,7 @@ Feature: UndoRedo
 		Then I verify the number of nodes are 8
 		Then I verify the number of comments are 3
 
-		Then I select all objects in the canvas via Cmd+A
+		Then I select all objects in the canvas via Ctrl/Cmnd+A
 		Then I delete node 1 the "Type" node by selecting more than 1 node
 		Then I expect the canvas to be empty
 		Then I expect the object model to be empty

@@ -194,7 +194,7 @@ Scenario: Sanity test changing input port name to update port tip
 
 		# Create a supernode
 		Then I click the "Discard Fields" node to select it
-		Then I Cmd+click the "Define Types" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Define Types" node to add it to the selections
 		Then I right click the "Define Types" node to display the context menu
 		Then I click option "Create supernode" from the context menu
 

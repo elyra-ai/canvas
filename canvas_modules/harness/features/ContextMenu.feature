@@ -54,8 +54,8 @@ Feature: ContextMenu
 		# Test that, when a set of objects are selected, a click opening the context menu will not clear the selections
 		Then I click the canvas background at 1, 1 to close the context menu or clear selections
 		Then I click the "C5.0" node to select it
-		Then I Cmd+click the "Neural Net" node to add it to the selections
-		Then I Cmd+click the "Define Types" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Neural Net" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Define Types" node to add it to the selections
 		Then I verify that 3 objects are selected
 		Then I right click at position 1000, 300 to display the context menu
 		Then I verify that 3 objects are selected

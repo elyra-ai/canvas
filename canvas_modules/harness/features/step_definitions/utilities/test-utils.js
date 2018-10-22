@@ -127,6 +127,15 @@ function selectSelect(selectElement, selectedItemName) {
 	browser.pause(600);
 }
 
+function useCmdOrCtrl() {
+	const status = browser.status();
+	const platform = status.value.os.name;
+	if (platform.indexOf("Mac") > -1) {
+		return "Meta";
+	}
+	return "Control";
+}
+
 module.exports = {
 	getCanvas: getCanvas,
 	getCanvasData: getCanvasData,
@@ -138,5 +147,6 @@ module.exports = {
 	isSchemaValidationError: isSchemaValidationError,
 	dropdownSelect: dropdownSelect,
 	loadUnknownFile: loadUnknownFile,
-	selectSelect: selectSelect
+	selectSelect: selectSelect,
+	useCmdOrCtrl: useCmdOrCtrl
 };

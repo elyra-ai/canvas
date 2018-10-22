@@ -19,7 +19,7 @@ Feature: Supernode
 		Then I verify the node id "7015d906-2eae-45c1-999e-fb888ed957e5" has width 200 and height 200
 
 		Then I click the "Partition" node in the subflow to select it
-		Then I Cmd+click the "Distribution" node in the subflow to add it to the selections
+		Then I Ctrl/Cmnd+click the "Distribution" node in the subflow to add it to the selections
 		Then I verify that 2 objects are selected
 
 		# Right-click the Distribution node and create supernode.
@@ -79,7 +79,7 @@ Feature: Supernode
 		Then I click zoom out
 
 		Then I click the "Distribution" node in the subflow to select it
-		Then I Cmd+click the "Derive" node in the subflow to add it to the selections
+		Then I Ctrl/Cmnd+click the "Derive" node in the subflow to add it to the selections
 		Then I verify that 2 objects are selected
 
 		# Right-click the Distribution node and create supernode.
@@ -134,7 +134,7 @@ Feature: Supernode
 		Then I verify extra canvas has a "Supernode" node
 
 		Then I click the "Multiplot" node to select it
-		Then I Cmd+click the "Execution node" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Execution node" node to add it to the selections
 		Then I right click the "Multiplot" node to display the context menu
 		Then I click option "Create supernode" from the context menu
 

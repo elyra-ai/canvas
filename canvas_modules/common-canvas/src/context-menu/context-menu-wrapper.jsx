@@ -57,7 +57,9 @@ export default class ContextMenuWrapper extends React.Component {
 		// (which indicates one of the additional clicks from Firefox) we just
 		// stop propogation and return. On other browsers we don't get this extra
 		// events.
-		if (e.button === CONTEXT_MENU_BUTTON) {
+		// Also, on Safari, when a user is displaying the context menu with a ctrl-click,
+		// the click is received with a ctrlKey field enabled. So we also ignore that.
+		if (e.button === CONTEXT_MENU_BUTTON || e.ctrlKey) {
 			e.stopPropagation();
 			return;
 		}

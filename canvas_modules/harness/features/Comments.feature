@@ -30,7 +30,7 @@ Feature: Comments
 
 		# Add the node and comment to a super node
 		Then I click the comment with text "Inner node" to select it
-		Then I Cmd+click the "Var. File" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Var. File" node to add it to the selections
 		Then I right click the "Var. File" node to display the context menu
 		Then I click option "Create supernode" from the context menu
 
@@ -41,7 +41,7 @@ Feature: Comments
 
 		# Create a supernode to contain the supernode and its comment
 		Then I click the comment with text "Inner Supernode" to select it
-		Then I Cmd+click the "Supernode" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Supernode" node to add it to the selections
 		Then I right click the "Supernode" node to display the context menu
 		Then I click option "Create supernode" from the context menu
 
