@@ -14,12 +14,12 @@ export default class SetObjectsStyleAction extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
-		this.oldStyles = [];
+		this.oldPipelineObjStyles = [];
 		forIn(this.data.pipelineObjectIds, (objectIds, pipelineId) => {
 			const apiPipeline = this.objectModel.getAPIPipeline(pipelineId);
-			this.oldStyles[pipelineId] = [];
+			this.oldPipelineObjStyles = [];
 			objectIds.forEach((objId) => {
-				this.oldStyles[pipelineId].push(apiPipeline.getObjectStyle(objId, this.data.temporary));
+				this.oldPipelineObjStyles.push({ pipelineId: pipelineId, objId: objId, style: apiPipeline.getObjectStyle(objId, this.data.temporary) });
 			});
 		});
 	}
@@ -30,7 +30,7 @@ export default class SetObjectsStyleAction extends Action {
 	}
 
 	undo() {
-		this.objectModel.setObjectsStyle(this.data.pipelineObjectIds, this.oldStyles, this.data.temporary);
+		this.objectModel.setObjectsMultiStyle(this.oldPipelineObjStyles, this.data.temporary);
 	}
 
 	redo() {

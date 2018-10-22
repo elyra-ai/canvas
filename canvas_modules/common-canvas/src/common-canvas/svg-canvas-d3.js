@@ -1921,7 +1921,7 @@ class CanvasRenderer {
 	}
 
 	setNodeBodyStyles(d, type) {
-		let style = this.getObjectBodyStyles(d, type);
+		let style = this.getObjectStyle(d, "body", type);
 		// For port-arcs display we reapply the drop shadow if no styles is provided
 		if (style === null && this.layout.nodeShape === "port-arcs") {
 			style = `filter:url(${this.getId("#node_drop_shadow")})`;
@@ -1930,19 +1930,20 @@ class CanvasRenderer {
 	}
 
 	setNodeSelectionOutlineStyles(d, type) {
-		const style = this.getObjectSelectionOutlineStyles(d, type);
+		const style = this.getObjectStyle(d, "selection_outline", type);
 		d3.select(this.getId("#node_outline", d.id)).attr("style", style);
 	}
 
 	setNodeImageStyles(d, type) {
-		const style = this.getNodeImageStyles(d, type);
+		const style = this.getObjectStyle(d, "image", type);
 		d3.select(this.getId("#node_image", d.id)).attr("style", style);
 	}
 
 	setNodeLabelStyles(d, type) {
-		const style = this.getNodeLabelStyles(d, type);
+		const style = this.getObjectStyle(d, "label", type);
 		d3.select(this.getId("#node_label", d.id)).attr("style", style);
 	}
+
 
 	getNodeGrpStyle(d) {
 		return !d.style_temp && !d.style && this.canvasInfo.subdueStyle && !this.doesExpandedSupernodeHaveStyledNodes(d) ? this.canvasInfo.subdueStyle : null;
@@ -2886,6 +2887,7 @@ class CanvasRenderer {
 							imageObj.attr("data-is-cut", null); // TODO - This should be made generic
 						}
 					});
+				that.setCommentStyles(d, "default");
 			});
 
 			this.superRenderers.forEach((renderer) => {
@@ -2904,6 +2906,7 @@ class CanvasRenderer {
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+					that.setCommentStyles(d, "hover");
 					if (that.layout.connectionType === "ports") {
 						d3.select(this)
 							.append("circle")
@@ -2925,6 +2928,7 @@ class CanvasRenderer {
 					}
 				})
 				.on("mouseleave", (d) => {
+					that.setCommentStyles(d, "default");
 					if (that.layout.connectionType === "ports") {
 						that.canvasGrp.selectAll(that.getId("#comment_port")).remove();
 					}
@@ -3071,8 +3075,10 @@ class CanvasRenderer {
 						.attr("width", d.width + (2 * that.layout.highlightGap))
 						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 						.attr("class", that.layout.cssCommentSelectionHighlight)
-						.attr("style", (cd) => that.getObjectSelectionOutlineStyles(d, "default"))
 						.datum(comment); // Set the __data__ to the updated data
+
+					// Set comments styles
+					this.setCommentStyles(d, "default");
 
 					// Clip path for text
 					commentGrp.select(`#comment_clip__path_${d.id}`)
@@ -3089,7 +3095,6 @@ class CanvasRenderer {
 						.attr("height", d.height)
 						.attr("width", d.width)
 						.attr("class", (cd) => that.getCommentRectClass(cd))
-						.attr("style", (cd) => that.getObjectBodyStyles(d, "default"))
 						.datum(comment) // Set the __data__ to the updated data
 						.each(function(cd) {
 							if (cd.customAttrs) {
@@ -3104,7 +3109,6 @@ class CanvasRenderer {
 					commentGrp.select(that.getId("#comment_text", d.id))
 						.datum(comment) // Set the __data__ to the updated data
 						.attr("beingedited", that.editingCommentId === d.id ? "yes" : "no") // Use the beingedited css style to make text transparent
-						.attr("style", (cd) => that.getCommentTextStyles(d, "default"))
 						.each(function(cd) {
 							var textObj = d3.select(this);
 							textObj.selectAll("tspan").remove();
@@ -3128,69 +3132,40 @@ class CanvasRenderer {
 		this.logger.logEndTimer("displayComments " + this.getFlags());
 	}
 
-	getObjectBodyStyles(d, type) {
-		let style = null;
-
-		if (type === "hover") {
-			style = this.getObjectStyle(d, "body", "default") + this.getObjectStyle(d, "body", "hover");
-
-		} else if (type === "default") {
-			style = this.getObjectStyle(d, "body", "default");
-		}
-		return style;
+	setCommentStyles(d, type) {
+		this.setCommentBodyStyles(d, type);
+		this.setNodeSelectionOutlineStyles(d, type);
+		this.setCommentTextStyles(d, type);
 	}
 
-	getObjectSelectionOutlineStyles(d, type) {
-		let style = null;
-
-		if (this.objectModel.isSelected(d.id, this.activePipeline.id)) {
-			if (type === "hover") {
-				style = this.getObjectStyle(d, "selection_outline", "default") + this.getObjectStyle(d, "selection_outline", "hover");
-
-			} else if (type === "default") {
-				style = this.getObjectStyle(d, "selection_outline", "default");
-			}
-		}
-		return style;
+	setCommentBodyStyles(d, type) {
+		const style = this.getObjectStyle(d, "body", type);
+		d3.select(this.getId("#comment_body", d.id)).attr("style", style);
 	}
 
-	getNodeImageStyles(d, type) {
-		let style = null;
-
-		if (type === "hover") {
-			style = this.getObjectStyle(d, "image", "default") + this.getObjectStyle(d, "image", "hover");
-
-		} else if (type === "default") {
-			style = this.getObjectStyle(d, "image", "default");
-		}
-		return style;
+	setCommentSelectionOutlineStyles(d, type) {
+		const style = this.getObjectStyle(d, "selection_outline", type);
+		d3.select(this.getId("#comment_outline", d.id)).attr("style", style);
 	}
 
-	getNodeLabelStyles(d, type) {
-		let style = null;
-
-		if (type === "hover") {
-			style = this.getObjectStyle(d, "label", "default") + this.getObjectStyle(d, "label", "hover");
-
-		} else if (type === "default") {
-			style = this.getObjectStyle(d, "label", "default");
-		}
-		return style;
-	}
-
-	getCommentTextStyles(d, type) {
-		let style = null;
-
-		if (type === "hover") {
-			style = this.getObjectStyle(d, "text", "default") + this.getObjectStyle(d, "text", "hover");
-
-		} else if (type === "default") {
-			style = this.getObjectStyle(d, "text", "default");
-		}
-		return style;
+	setCommentTextStyles(d, type) {
+		const style = this.getObjectStyle(d, "text", type);
+		d3.select(this.getId("#comment_text", d.id)).attr("style", style);
 	}
 
 	getObjectStyle(d, part, type) {
+		let style = null;
+
+		if (type === "hover") {
+			style = this.getStyleValue(d, part, "default") + this.getStyleValue(d, part, "hover");
+
+		} else if (type === "default") {
+			style = this.getStyleValue(d, part, "default");
+		}
+		return style;
+	}
+
+	getStyleValue(d, part, type) {
 		const style = get(d, `style_temp.${part}.${type}`, null);
 		if (style !== null) {
 			return style;
@@ -3879,10 +3854,10 @@ class CanvasRenderer {
 			.attr("d", (d) => d.path)
 			.attr("class", "d3-link-selection-area")
 			.on("mouseenter", function(link) {
-				d3.select("#" + that.getId("link_line", link.id)).attr("style", that.getLinkStyleHover(link));
+				that.setLinkLineStyles(link, "hover");
 			})
 			.on("mouseleave", function(link) {
-				d3.select("#" + that.getId("link_line", link.id)).attr("style", that.getLinkStyleDefault(link));
+				that.setLinkLineStyles(link, "default");
 			});
 
 		// Link line
@@ -3901,12 +3876,12 @@ class CanvasRenderer {
 				}
 				return classStr;
 			})
-			.attr("style", (d) => that.getLinkStyleDefault(d))
-			.on("mouseenter", function(link) {
-				d3.select(this).attr("style", that.getLinkStyleHover(link));
+			.attr("style", (d) => that.getObjectStyle(d, "line", "default"))
+			.on("mouseenter", function(d) {
+				that.setLinkLineStyles(d, "hover");
 			})
-			.on("mouseleave", function(link) {
-				d3.select(this).attr("style", that.getLinkStyleDefault(link));
+			.on("mouseleave", function(d) {
+				that.setLinkLineStyles(d, "default");
 			});
 
 
@@ -3953,26 +3928,9 @@ class CanvasRenderer {
 		this.logger.logEndTimer("displayLinks " + this.getFlags());
 	}
 
-	getLinkStyleHover(link) {
-		if (link.style_temp && link.style_temp.hover) {
-			return link.style_temp.hover;
-
-		} else if (link.style && link.style.hover) {
-			return link.style.hover;
-
-		}
-		return null;
-	}
-
-	getLinkStyleDefault(link) {
-		if (link.style_temp && link.style_temp.default) {
-			return link.style_temp.default;
-
-		} else if (link.style && link.style.default) {
-			return link.style.default;
-
-		}
-		return null;
+	setLinkLineStyles(link, type) {
+		const style = this.getObjectStyle(link, "line", type);
+		d3.select(this.getId("#link_line", link.id)).attr("style", style);
 	}
 
 	// Adds the binding nodes, which map to the containing supernode's ports, to

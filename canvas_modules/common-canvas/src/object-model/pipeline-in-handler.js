@@ -49,8 +49,6 @@ export default class PipelineInHandler {
 				"image": has(node, "app_data.ui_data.image") ? node.app_data.ui_data.image : "",
 				"x_pos": has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
 				"y_pos": has(node, "app_data.ui_data.y_pos") ? node.app_data.ui_data.y_pos : 10,
-				"class_name": has(node, "app_data.ui_data.class_name") ? node.app_data.ui_data.class_name : "",
-				"style": has(node, "app_data.ui_data.style") ? node.app_data.ui_data.style : "",
 				"decorations": has(node, "app_data.ui_data.decorations") ? this.convertDecorations(node.app_data.ui_data.decorations) : [],
 				"parameters": has(node, "parameters") ? node.parameters : [],
 				"messages": has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
@@ -65,6 +63,12 @@ export default class PipelineInHandler {
 			// Separate initialization needed to ensure field is only created when present.
 			if (has(node, "open_with_tool")) {
 				obj.open_with_tool = node.open_with_tool;
+			}
+			if (has(node, "app_data.ui_data.class_name")) {
+				obj.class_name = node.app_data.ui_data.class_name;
+			}
+			if (has(node, "app_data.ui_data.style")) {
+				obj.style = node.app_data.ui_data.style;
 			}
 			return obj;
 		});

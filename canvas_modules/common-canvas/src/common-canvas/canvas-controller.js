@@ -303,13 +303,12 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setObjectsClassName(objectId, newClassName);
 	}
 
-	setObjectsStyle(pipelineObjectIds, newStyle, temporary, addToCommandStack) {
-		if (addToCommandStack) {
-			const data = { editType: "setObjectsStyle", pipelineObjectIds: pipelineObjectIds, style: newStyle, temporary: temporary };
-			this.editActionHandler(data);
-		} else {
-			this.objectModel.setObjectsStyle(pipelineObjectIds, newStyle, temporary);
-		}
+	setObjectsStyle(pipelineObjectIds, newStyle, temporary) {
+		this.objectModel.setObjectsStyle(pipelineObjectIds, newStyle, temporary);
+	}
+
+	setObjectsMultiStyle(pipelineObjStyles, temporary) {
+		this.objectModel.setObjectsMultiStyle(pipelineObjStyles, temporary);
 	}
 
 	// ---------------------------------------------------------------------------
@@ -397,6 +396,10 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeDecorations(nodeId);
 	}
 
+	getNodeStyle(nodeId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeStyle(nodeId);
+	}
+
 	addCustomAttrToNodes(nodeIds, attrName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).addCustomAttrToNodes(nodeIds, attrName);
 	}
@@ -449,12 +452,28 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).removeCustomAttrFromComments(comIds, attrName);
 	}
 
+	getCommentStyle(commentId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getCommentStyle(commentId);
+	}
+
 	// ---------------------------------------------------------------------------
 	// Links methods
 	// ---------------------------------------------------------------------------
 
 	getLink(linkId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getLink(linkId);
+	}
+
+	getNodeDataLinkFromInfo(srcNodeId, srcNodePortId, trgNodeId, trgNodePortId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeDataLinkFromInfo(srcNodeId, srcNodePortId, trgNodeId, trgNodePortId);
+	}
+
+	getCommentLinkFromInfo(id1, id2, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeDataLinkFromInfo(id1, id2);
+	}
+
+	getNodeAssocLinkFromInfo(id1, id2, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeAssocLinkFromInfo(id1, id2);
 	}
 
 	addLinks(linkList, pipelineId) {
@@ -477,14 +496,18 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setLinksClassName(linkIds, newClassName);
 	}
 
-	setLinksStyle(pipelineLinkIds, newStyle, temporary, addToCommandStack) {
-		if (addToCommandStack) {
-			const data = { editType: "setLinksStyle", pipelineLinkIds: pipelineLinkIds, style: newStyle, temporary: temporary };
-			this.editActionHandler(data);
-		} else {
-			this.objectModel.setLinksStyle(pipelineLinkIds, newStyle, temporary);
-		}
+	setLinksStyle(pipelineLinkIds, newStyle, temporary) {
+		this.objectModel.setLinksStyle(pipelineLinkIds, newStyle, temporary);
 	}
+
+	setLinksMultiStyle(pipelineObjStyles, temporary) {
+		this.objectModel.setLinksMultiStyle(pipelineObjStyles, temporary);
+	}
+
+	getLinkStyle(linkId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getLinkStyle(linkId);
+	}
+
 
 	// ---------------------------------------------------------------------------
 	// Command stack methods
@@ -539,7 +562,10 @@ export default class CanvasController {
 			}
 		};
 		const linkStyle = {
-			default: `stroke: ${constants.HIGHLIGHT_STROKE};, hover: stroke-width: ${constants.HIGHLIGHT_STROKE_WIDTH}`
+			line: {
+				default: `stroke: ${constants.HIGHLIGHT_STROKE};`,
+				hover: `stroke-width: ${constants.HIGHLIGHT_STROKE_WIDTH}`
+			}
 		};
 		this.setObjectsStyle(highlightObjectIds.nodes, objectStyle, true, false);
 		this.setLinksStyle(highlightObjectIds.links, linkStyle, true, false);

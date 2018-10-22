@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint arrow-body-style: ["off"] */
-/* eslint complexity: ["error", 41] */
+/* eslint complexity: ["error", 42] */
 
 import { createStore, combineReducers } from "redux";
 import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
@@ -185,10 +185,25 @@ const nodes = (state = [], action) => {
 
 	case "SET_OBJECTS_STYLE":
 		return state.map((node) => {
-			const idx = action.data.objIds.indexOf(node.id);
-			if (idx > -1) {
+			if (action.data.objIds.indexOf(node.id) > -1) {
 				const newNode = Object.assign({}, node);
-				const style = Array.isArray(action.data.newStyle) ? (action.data.newStyle[idx] || null) : action.data.newStyle;
+				if (action.data.temporary) {
+					newNode.style_temp = action.data.newStyle;
+				} else {
+					newNode.style = action.data.newStyle;
+				}
+				return newNode;
+			}
+			return node;
+		});
+
+	case "SET_OBJECTS_MULTI_STYLE":
+		return state.map((node) => {
+			const pipelineObjStyle =
+				action.data.pipelineObjStyles.find((entry) => entry.pipelineId === action.data.pipelineId && entry.objId === node.id);
+			if (pipelineObjStyle) {
+				const newNode = Object.assign({}, node);
+				const style = pipelineObjStyle && pipelineObjStyle.style ? pipelineObjStyle.style : null;
 				if (action.data.temporary) {
 					newNode.style_temp = style;
 				} else {
@@ -402,10 +417,25 @@ const comments = (state = [], action) => {
 
 	case "SET_OBJECTS_STYLE":
 		return state.map((comment) => {
-			const idx = action.data.objIds.indexOf(comment.id);
-			if (idx > -1) {
+			if (action.data.objIds.indexOf(comment.id) > -1) {
 				const newComment = Object.assign({}, comment);
-				const style = Array.isArray(action.data.newStyle) ? (action.data.newStyle[idx] || null) : action.data.newStyle;
+				if (action.data.temporary) {
+					newComment.style_temp = action.data.newStyle;
+				} else {
+					newComment.style = action.data.newStyle;
+				}
+				return newComment;
+			}
+			return comment;
+		});
+
+	case "SET_OBJECTS_MULTI_STYLE":
+		return state.map((comment) => {
+			const pipelineObjStyle =
+				action.data.pipelineObjStyles.find((entry) => entry.pipelineId === action.data.pipelineId && entry.objId === comment.id);
+			if (pipelineObjStyle) {
+				const newComment = Object.assign({}, comment);
+				const style = pipelineObjStyle && pipelineObjStyle.style ? pipelineObjStyle.style : null;
 				if (action.data.temporary) {
 					newComment.style_temp = style;
 				} else {
@@ -496,10 +526,25 @@ const links = (state = [], action) => {
 
 	case "SET_LINKS_STYLE":
 		return state.map((link) => {
-			const idx = action.data.objIds.indexOf(link.id);
-			if (idx > -1) {
+			if (action.data.objIds.indexOf(link.id) > -1) {
 				const newLink = Object.assign({}, link);
-				const style = Array.isArray(action.data.newStyle) ? action.data.newStyle[idx] : action.data.newStyle;
+				if (action.data.temporary) {
+					newLink.style_temp = action.data.newStyle;
+				} else {
+					newLink.style = action.data.newStyle;
+				}
+				return newLink;
+			}
+			return link;
+		});
+
+	case "SET_LINKS_MULTI_STYLE":
+		return state.map((link) => {
+			const pipelineObjStyle =
+				action.data.pipelineObjStyles.find((entry) => entry.pipelineId === action.data.pipelineId && entry.objId === link.id);
+			if (pipelineObjStyle) {
+				const newLink = Object.assign({}, link);
+				const style = pipelineObjStyle && pipelineObjStyle.style ? pipelineObjStyle.style : null;
 				if (action.data.temporary) {
 					newLink.style_temp = style;
 				} else {
@@ -685,6 +730,7 @@ const canvasinfo = (state = [], action) => {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
 			if (pipelineIds.indexOf(pipeline.id) > -1) {
 				action.data.objIds = action.data.pipelineObjIds[pipeline.id];
+				action.data.pipelineId = pipeline.id;
 				return Object.assign({}, pipeline, {
 					nodes: nodes(pipeline.nodes, action),
 					comments: comments(pipeline.comments, action),
@@ -693,6 +739,21 @@ const canvasinfo = (state = [], action) => {
 			return pipeline;
 		});
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+	case "SET_OBJECTS_MULTI_STYLE":
+	case "SET_LINKS_MULTI_STYLE": {
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
+			if (action.data.pipelineObjStyles.findIndex((entry) => entry.pipelineId === pipeline.id) > -1) {
+				action.data.pipelineId = pipeline.id;
+				return Object.assign({}, pipeline, {
+					nodes: nodes(pipeline.nodes, action),
+					comments: comments(pipeline.comments, action),
+					links: links(pipeline.links, action) });
+			}
+			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+
 	}
 	case "REMOVE_ALL_STYLES": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
@@ -1851,8 +1912,24 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "SET_OBJECTS_STYLE", data: { pipelineObjIds: pipelineObjIds, newStyle: newStyle, temporary: temporary } });
 	}
 
+	setObjectsMultiStyle(pipelineObjStyles, temporary) {
+		this.store.dispatch({ type: "SET_OBJECTS_MULTI_STYLE", data: { pipelineObjStyles: pipelineObjStyles, temporary: temporary } });
+	}
+
 	setLinksStyle(pipelineLinkIds, newStyle, temporary) {
 		this.store.dispatch({ type: "SET_LINKS_STYLE", data: { pipelineObjIds: pipelineLinkIds, newStyle: newStyle, temporary: temporary } });
+	}
+
+	setLinksMultiStyle(pipelineLinkStyles, temporary) {
+		this.store.dispatch({ type: "SET_LINKS_MULTI_STYLE", data: { pipelineObjStyles: pipelineLinkStyles, temporary: temporary } });
+	}
+
+	getObjectStyle(objectId, temporary) {
+		const obj = this.getObject(objectId);
+		if (temporary) {
+			return (obj && obj.style_temp ? obj.style_temp : null);
+		}
+		return (obj && obj.style ? obj.style : null);
 	}
 
 	// ---------------------------------------------------------------------------
@@ -2748,6 +2825,14 @@ export class APIPipeline {
 		return null;
 	}
 
+	getNodeStyle(nodeId, temporary) {
+		const node = this.getNode(nodeId);
+		if (temporary) {
+			return (node ? node.style_temp : null);
+		}
+		return (node ? node.style : null);
+	}
+
 	hasErrorMessage(nodeId) {
 		var node = this.getNode(nodeId);
 		return this.objectModel.hasErrorMessage(node);
@@ -2997,6 +3082,14 @@ export class APIPipeline {
 		this.store.dispatch({ type: "REMOVE_COMMENT_ATTR", data: { objIds: comIds, attrName: attrName }, pipelineId: this.pipelineId });
 	}
 
+	getCommentStyle(commentId, temporary) {
+		const comment = this.getComment(commentId);
+		if (temporary) {
+			return (comment ? comment.style_temp : null);
+		}
+		return (comment ? comment.style : null);
+	}
+
 	// ---------------------------------------------------------------------------
 	// Link methods
 	// ---------------------------------------------------------------------------
@@ -3217,6 +3310,45 @@ export class APIPipeline {
 		});
 		return nodeLinks;
 	}
+
+	getNodeDataLinkFromInfo(srcNodeId, srcNodePortId, trgNodeId, trgNodePortId) {
+		return this.getLinks().find((link) => {
+			if (link.type === "nodeLink") {
+				return (link.srcNodeId === srcNodeId &&
+								link.srcNodePortId === srcNodePortId &&
+								link.trgNodeId === trgNodeId &&
+								link.trgNodePortId === trgNodePortId);
+			}
+			return false;
+		});
+	}
+
+	getCommentLinkFromInfo(id1, id2) {
+		return this.getLinks().find((link) => {
+			if (link.type === "commentLink") {
+				return (link.srcNodeId === id1 &&
+								link.trgNodeId === id2) ||
+								(link.srcNodeId === id2 &&
+								link.trgNodeId === id1);
+
+			}
+			return false;
+		});
+	}
+
+	getNodeAssocLinkFromInfo(id1, id2) {
+		return this.getLinks().find((link) => {
+			if (link.type === "associationLink") {
+				return (link.srcNodeId === id1 &&
+								link.trgNodeId === id2) ||
+								(link.srcNodeId === id2 &&
+								link.trgNodeId === id1);
+
+			}
+			return false;
+		});
+	}
+
 
 	getLink(linkId) {
 		return this.getLinks().find((link) => {

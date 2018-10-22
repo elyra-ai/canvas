@@ -295,19 +295,22 @@ export default class PipelineOutHandler {
 	}
 
 	static createComments(canvasInfoComments, canvasInfoLinks) {
-		return canvasInfoComments.map((comment) =>
-			({
+		return canvasInfoComments.map((comment) => {
+			const newCom = {
 				id: comment.id,
 				x_pos: comment.x_pos,
 				y_pos: comment.y_pos,
 				width: comment.width,
 				height: comment.height,
 				class_name: comment.class_name,
-				style: comment.style,
 				content: comment.content,
 				associated_id_refs: this.createCommentLinks(canvasInfoLinks, comment.id)
-			})
-		);
+			};
+			if (comment.style) {
+				newCom.style = comment.style;
+			}
+			return newCom;
+		});
 	}
 
 	static createCommentLinks(canvasInfoLinks, commentId) {
@@ -326,11 +329,17 @@ export default class PipelineOutHandler {
 		ciLinks.forEach((link) => {
 			if (link.type === "associationLink" &&
 					link.srcNodeId === ciNode.id) {
-				associationsLinks.push({
+				const assoc = {
 					id: link.id,
-					node_ref: link.trgNodeId,
-					class_name: link.class_name
-				});
+					node_ref: link.trgNodeId
+				};
+				if (link.class_name) {
+					assoc.class_name = link.class_name;
+				}
+				if (link.style) {
+					assoc.style = link.style;
+				}
+				associationsLinks.push(assoc);
 			}
 		});
 		return associationsLinks;

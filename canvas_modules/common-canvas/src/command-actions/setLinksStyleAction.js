@@ -14,12 +14,12 @@ export default class SetLinksStyleAction extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
-		this.oldStyles = [];
+		this.oldPipelineLinkStyles = [];
 		forIn(this.data.pipelineLinkIds, (linkIds, pipelineId) => {
 			const apiPipeline = this.objectModel.getAPIPipeline(pipelineId);
-			this.oldStyles[pipelineId] = [];
+			this.oldPipelineLinkStyles = [];
 			linkIds.forEach((linkId) => {
-				this.oldStyles[pipelineId].push(apiPipeline.getLinkStyle(linkId, this.data.temporary));
+				this.oldPipelineLinkStyles.push({ pipelineId: pipelineId, objId: linkId, style: apiPipeline.getLinkStyle(linkId, this.data.temporary) });
 			});
 		});
 	}
@@ -30,7 +30,7 @@ export default class SetLinksStyleAction extends Action {
 	}
 
 	undo() {
-		this.objectModel.setLinksStyle(this.data.pipelineLinkIds, this.oldStyles, this.data.temporary);
+		this.objectModel.setLinksMultiStyle(this.oldPipelineLinkStyles, this.data.temporary);
 	}
 
 	redo() {

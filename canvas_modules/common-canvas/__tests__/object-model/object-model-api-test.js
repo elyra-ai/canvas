@@ -328,6 +328,21 @@ describe("ObjectModel API handle model OK", () => {
 		shouldSaveNodeDecoration("id125TTEEIK7V");
 	});
 
+	it("should save temporary node/comment styles", () => {
+		shouldSetNodeCommentStyle(true); // Pass true to indicate styles should be temporary
+	});
+
+	it("should save permanent node/comment styles", () => {
+		shouldSetNodeCommentStyle(false); // Pass false to indicate styles should be permanent
+	});
+
+	it("should save temporary link styles", () => {
+		shouldSetLinkStyle(true); // Pass true to indicate styles should be temporary
+	});
+
+	it("should save permanent link styles", () => {
+		shouldSetLinkStyle(false); // Pass false to indicate styles should be permanent
+	});
 
 	it("should add palette item into existing test category", () => {
 		objectModel.setPipelineFlowPalette(paletteJson);
@@ -1062,6 +1077,144 @@ describe("ObjectModel API handle model OK", () => {
 		pFlow = objectModel.getPipelineFlow();
 		node = pFlow.pipelines[0].nodes.find((nd) => nd.id === nodeId);
 		expect(typeof node.app_data.ui_data.decorations === "undefined").to.be.true;
+	}
+
+	function shouldSetNodeCommentStyle(temporary) {
+		deepFreeze(startPipelineFlow);
+		objectModel.setPipelineFlow(startPipelineFlow);
+
+		const pipelineObjIds = {
+			"153651d6-9b88-423c-b01b-861f12d01489": [
+				"id8I6RH2V91XW", // Binding node
+				"idGWRVT47XDV", // Execution node
+				"nodeIDSuperNodePE", // Supernode
+				"id125TTEEIK7V", // Model node
+				"id42ESQA3VPXB" // Comment
+			]
+		};
+
+		const style = "fill: red; stroke: blue;";
+		const hoverStyle = "fill: orange;";
+		const newStyleSpec = {
+			body: { default: style, hover: hoverStyle },
+			image: { default: style, hover: hoverStyle },
+			label: { default: style, hover: hoverStyle },
+			text: { default: style, hover: hoverStyle },
+		};
+
+		// This sets the style on each of the node/comments specified in pipelineObjIds
+		objectModel.setObjectsStyle(pipelineObjIds, newStyleSpec, temporary);
+
+		// Check the style in memory (either temporary or permanent) is as expected.
+		let actualStyleSpec = objectModel.getAPIPipeline().getNodeStyle("id8I6RH2V91XW", temporary);
+		expect(isEqual(newStyleSpec, actualStyleSpec)).to.be.true;
+
+		actualStyleSpec = objectModel.getAPIPipeline().getNodeStyle("idGWRVT47XDV", temporary);
+		expect(isEqual(newStyleSpec, actualStyleSpec)).to.be.true;
+
+		actualStyleSpec = objectModel.getAPIPipeline().getNodeStyle("nodeIDSuperNodePE", temporary);
+		expect(isEqual(newStyleSpec, actualStyleSpec)).to.be.true;
+
+		actualStyleSpec = objectModel.getAPIPipeline().getNodeStyle("id125TTEEIK7V", temporary);
+		expect(isEqual(newStyleSpec, actualStyleSpec)).to.be.true;
+
+		actualStyleSpec = objectModel.getAPIPipeline().getCommentStyle("id42ESQA3VPXB", temporary);
+		expect(isEqual(newStyleSpec, actualStyleSpec)).to.be.true;
+
+		if (temporary) {
+			// Because we have saved temporary styles the actual pipeline flow should
+			// not have been changed
+			const actualPipelineFlow = objectModel.getPipelineFlow();
+
+			// console.info("Expected PipelineFlow = " + JSON.stringify(startPipelineFlow, null, 2));
+			// console.info("Actual PipelineFlow   = " + JSON.stringify(actualPipelineFlow, null, 2));
+			expect(isEqual(JSON.stringify(startPipelineFlow, null, 2), JSON.stringify(actualPipelineFlow, null, 2))).to.be.true;
+		} else {
+			// Because we have saved permanent styles the actual pipeline flow should
+			// contain those styles
+			const actualPipelineFlow = objectModel.getPipelineFlow();
+
+			let node = actualPipelineFlow.pipelines[0].nodes.find((n) => n.id === "id8I6RH2V91XW");
+			expect(isEqual(node.app_data.ui_data.style, newStyleSpec)).to.be.true;
+
+			node = actualPipelineFlow.pipelines[0].nodes.find((n) => n.id === "idGWRVT47XDV");
+			expect(isEqual(node.app_data.ui_data.style, newStyleSpec)).to.be.true;
+
+			node = actualPipelineFlow.pipelines[0].nodes.find((n) => n.id === "nodeIDSuperNodePE");
+			expect(isEqual(node.app_data.ui_data.style, newStyleSpec)).to.be.true;
+
+			node = actualPipelineFlow.pipelines[0].nodes.find((n) => n.id === "id125TTEEIK7V");
+			expect(isEqual(node.app_data.ui_data.style, newStyleSpec)).to.be.true;
+
+			const comment = actualPipelineFlow.pipelines[0].app_data.ui_data.comments.find((c) => c.id === "id42ESQA3VPXB");
+			expect(isEqual(comment.style, newStyleSpec)).to.be.true;
+		}
+	}
+
+	function shouldSetLinkStyle(temporary) {
+		deepFreeze(startPipelineFlow);
+		objectModel.setPipelineFlow(startPipelineFlow);
+
+		const nodeNodeLink = objectModel.getAPIPipeline().getNodeDataLinkFromInfo("id8I6RH2V91XW", "outPort", "idGWRVT47XDV", "inPort");
+		const commentNodeLink = objectModel.getAPIPipeline().getCommentLinkFromInfo("id42ESQA31234", "id8I6RH2V91XW");
+		const assocNodeLink = objectModel.getAPIPipeline().getNodeAssocLinkFromInfo("id5KIRGGJ3FYT", "id125TTEEIK7V");
+
+		const pipelineObjIds = {
+			"153651d6-9b88-423c-b01b-861f12d01489": [
+				nodeNodeLink.id,
+				commentNodeLink.id,
+				assocNodeLink.id
+			]
+		};
+
+		const style = "fill: red; stroke: blue;";
+		const hoverStyle = "fill: orange;";
+		const newStyleSpec = {
+			line: { default: style, hover: hoverStyle }
+		};
+
+		// This sets the style on each of the links specified in pipelineObjIds
+		objectModel.setLinksStyle(pipelineObjIds, newStyleSpec, temporary);
+
+		// Check the style in memory (either temporary or permanent) is as expected.
+		let actualStyleSpec = objectModel.getAPIPipeline().getLinkStyle(nodeNodeLink.id, temporary);
+		expect(isEqual(newStyleSpec, actualStyleSpec)).to.be.true;
+
+		actualStyleSpec = objectModel.getAPIPipeline().getLinkStyle(commentNodeLink.id, temporary);
+		expect(isEqual(newStyleSpec, actualStyleSpec)).to.be.true;
+
+		actualStyleSpec = objectModel.getAPIPipeline().getLinkStyle(assocNodeLink.id, temporary);
+		expect(isEqual(newStyleSpec, actualStyleSpec)).to.be.true;
+
+		if (temporary) {
+			// Because we have saved temporary styles the actual pipeline flow should
+			// not have been changed
+			const actualPipelineFlow = objectModel.getPipelineFlow();
+
+			// console.info("Expected PipelineFlow = " + JSON.stringify(startPipelineFlow, null, 2));
+			// console.info("Actual PipelineFlow   = " + JSON.stringify(actualPipelineFlow, null, 2));
+			expect(isEqual(JSON.stringify(startPipelineFlow, null, 2), JSON.stringify(actualPipelineFlow, null, 2))).to.be.true;
+		} else {
+			// Because we have saved permanent styles the actual pipeline flow should
+			// contain those styles
+			const actualPipelineFlow = objectModel.getPipelineFlow();
+
+			// Check node - node data link
+			const node = actualPipelineFlow.pipelines[0].nodes.find((n) => n.id === "idGWRVT47XDV");
+			const input = node.inputs.find((inp) => inp.id === "inPort");
+			const link = input.links.find((lnk) => lnk.node_id_ref === "id8I6RH2V91XW" && lnk.port_id_ref === "outPort");
+			expect(isEqual(link.app_data.ui_data.style, newStyleSpec)).to.be.true;
+
+			// Check comment - node link
+			const comment = actualPipelineFlow.pipelines[0].app_data.ui_data.comments.find((c) => c.id === "id42ESQA31234");
+			const comLink = comment.associated_id_refs.find((air) => air.node_ref === "id8I6RH2V91XW");
+			expect(isEqual(comLink.style, newStyleSpec)).to.be.true;
+
+			// Check node - node association link
+			const trgNode = actualPipelineFlow.pipelines[0].nodes.find((n) => n.id === "id5KIRGGJ3FYT");
+			const assocLink = trgNode.app_data.ui_data.associations.find((a) => a.node_ref === "id125TTEEIK7V");
+			expect(isEqual(assocLink.style, newStyleSpec)).to.be.true;
+		}
 	}
 
 	function shouldReturnCustomAppDataAndUiDataForLinks(targetNodeId, targetPortId) {
