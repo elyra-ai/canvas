@@ -3188,26 +3188,19 @@ class CanvasRenderer {
 		}
 	}
 
-	savePendingCommentChanges() {
-		if (this.editingComment === true &&
-				this.editingCommentChangesPending === true) {
-			var textAreaSelect = this.canvasDiv.select("textarea");
-			if (!textAreaSelect.empty()) {
-				this.saveCommentChanges(textAreaSelect.node());
-			}
-		}
-	}
-
 	saveCommentChanges(textArea) {
 		if (this.editingComment === true &&
 				this.editingCommentChangesPending === true) {
 			this.editingCommentChangesPending = false;
+			const commentDatum = d3.select(textArea).datum();
 			const data = {
 				editType: "editComment",
-				id: textArea.getAttribute("data-nodeId"),
+				id: commentDatum.id,
 				content: textArea.value,
-				width: this.removePx(textArea.style.width),
-				height: this.removePx(textArea.style.height),
+				width: commentDatum.width,
+				height: commentDatum.height,
+				x_pos: commentDatum.x_pos,
+				y_pos: commentDatum.y_pos,
 				pipelineId: this.activePipeline.id
 			};
 			this.canvasController.editActionHandler(data);
@@ -3222,24 +3215,19 @@ class CanvasRenderer {
 
 		const that = this;
 		const datum = d;
-		const id = d.id;
-		const width = d.width;
-		const height = d.height;
-		const content = d.content;
 
 		this.textAreaHeight = 0; // Save for comparison during auto-resize
 		this.editingComment = true;
-		this.editingCommentId = id;
+		this.editingCommentId = datum.id;
 
 		this.canvasDiv
 			.append("textarea")
-			.attr("id",	this.getId("comment_text_area", id))
-			.attr("data-nodeId", id)
+			.attr("id",	this.getId("comment_text_area", datum.id))
 			.attr("data-pipeline-id", that.activePipeline.id)
 			.attr("class", "d3-comment-entry")
-			.text(content)
-			.style("width", width + "px")
-			.style("height", height + "px")
+			.text(datum.content)
+			.style("width", datum.width + "px")
+			.style("height", datum.height + "px")
 			.style("left", "0px") // Open text area at 0,0 and use
 			.style("top", "0px") //  transform to move into place
 			.style("transform", this.getTextAreaTransform(datum))
@@ -3254,11 +3242,11 @@ class CanvasRenderer {
 				// Allow some time for pasted text (from context menu) to be
 				// loaded into the text area. Otherwise the text is not there
 				// and the auto size does not increase the height correctly.
-				setTimeout(that.autoSizeTextArea.bind(that), 500, that, datum);
+				setTimeout(that.autoSizeTextArea.bind(that), 500, this, datum);
 			})
 			.on("blur", function() {
 				that.logger.log("Text area - blur");
-				var commentObj = that.getComment(id);
+				var commentObj = that.getComment(datum.id);
 				commentObj.content = this.value;
 				that.saveCommentChanges(this);
 				that.closeCommentTextArea();
@@ -3266,7 +3254,7 @@ class CanvasRenderer {
 			});
 
 		// Note: Couldn't get focus to work through d3, so used dom instead.
-		document.getElementById(this.getId("comment_text_area", id)).focus();
+		document.getElementById(this.getId("comment_text_area", datum.id)).focus();
 	}
 
 	// Returns the transform amount for the text area control that positions the
@@ -3754,16 +3742,6 @@ class CanvasRenderer {
 			.attr("dy", dy + "em")
 			.attr("xml:space", "preserve") // Preserves the white
 			.text(text);
-	}
-
-	// Removes the px from the end of the input string, if it is there, and
-	// returns an integer of the string.
-	removePx(str) {
-		let s = str;
-		if (s.endsWith("px")) {
-			s = s.slice(0, -2);
-		}
-		return parseInt(s, 10);
 	}
 
 	displayLinks() {
