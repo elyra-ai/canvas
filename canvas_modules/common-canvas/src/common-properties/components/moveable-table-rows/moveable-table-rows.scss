@@ -10,7 +10,7 @@
 // vertical align row reorder buttons in moveable tables
 .properties-mr-button-container {
 	width: 16px;
-	padding-left: 5px;
+	padding-left: 1px;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
@@ -45,6 +45,7 @@
 	> tbody {
 		width: 100%;
 		display: inline-block;
+		padding-right: 4px;
 		.properties-mr-table-content {
 			width: 100%;
 			display: flex;
