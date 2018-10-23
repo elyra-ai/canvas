@@ -3311,13 +3311,21 @@ export class APIPipeline {
 		return nodeLinks;
 	}
 
-	getNodeDataLinkFromInfo(srcNodeId, srcNodePortId, trgNodeId, trgNodePortId) {
+	getNodeDataLinkFromInfo(srcNodeId, srcPortId, trgNodeId, trgPortId) {
+		const srcNodePortId = this.getDefaultSrcPortId(srcNodeId, srcPortId);
+		const trgNodePortId = this.getDefaultTrgPortId(trgNodeId, trgPortId);
+		if (!srcNodePortId || !trgNodePortId) {
+			return null;
+		}
+
 		return this.getLinks().find((link) => {
 			if (link.type === "nodeLink") {
+				const linkSrcNodePortId = this.getDefaultSrcPortId(link.srcNodeId, link.srcNodePortId);
+				const linkTrgNodePortId = this.getDefaultTrgPortId(link.trgNodeId, link.trgNodePortId);
 				return (link.srcNodeId === srcNodeId &&
-								link.srcNodePortId === srcNodePortId &&
+								linkSrcNodePortId === srcNodePortId &&
 								link.trgNodeId === trgNodeId &&
-								link.trgNodePortId === trgNodePortId);
+								linkTrgNodePortId === trgNodePortId);
 			}
 			return false;
 		});
@@ -3349,6 +3357,27 @@ export class APIPipeline {
 		});
 	}
 
+	// Returns the source port ID for the source node passed in.
+	getDefaultSrcPortId(srcNodeId, srcNodePortId) {
+		if (!srcNodePortId) {
+			const srcNode = this.getNode(srcNodeId);
+			if (srcNode && srcNode.output_ports && srcNode.output_ports.length > 0) {
+				return srcNode.output_ports[0].id;
+			}
+		}
+		return srcNodePortId;
+	}
+
+	// Returns the target port ID for the target node passed in.
+	getDefaultTrgPortId(trgNodeId, trgNodePortId) {
+		if (!trgNodePortId) {
+			const trgNode = this.getNode(trgNodeId);
+			if (trgNode && trgNode.input_ports && trgNode.input_ports.length > 0) {
+				return trgNode.input_ports[0].id;
+			}
+		}
+		return trgNodePortId;
+	}
 
 	getLink(linkId) {
 		return this.getLinks().find((link) => {
