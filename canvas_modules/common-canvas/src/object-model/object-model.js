@@ -3226,14 +3226,6 @@ export class APIPipeline {
 		return [];
 	}
 
-	canNodeBeDroppedOnLink(nodeType) {
-		if (nodeType.input_ports && nodeType.input_ports.length > 0 &&
-				nodeType.output_ports && nodeType.output_ports.length > 0) {
-			return true;
-		}
-		return false;
-	}
-
 	// Returns an array of links from canvas info links which link
 	// any of the nodes or comments passed in.
 	getLinksBetween(inNodes, inComments) {

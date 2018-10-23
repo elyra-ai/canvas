@@ -139,34 +139,53 @@ export default class CanvasController {
 	// Pipeline flow methods
 	// ---------------------------------------------------------------------------
 
+	// Loads the pipelineFlow document provided into common-canvas and displays it.
+	// The document must conform to the pipelineFlow schema as documented in the
+	// wdp-pipeline-schemas repo. Documents conforming to older versions may be
+	// provided but they will be upgraded to the most recent version.
 	setPipelineFlow(flow) {
 		this.objectModel.setPipelineFlow(flow);
 	}
 
+	// Clears the pipleine flow and displays an empty canvas.
 	clearPipelineFlow() {
 		this.objectModel.clearPipelineFlow();
 	}
 
+	// Returns the current pipelineFlow document in the latest version of the
+	// pipelineFlow schema as documented in the wdp-pipeline-schemas repo.
 	getPipelineFlow() {
 		return this.objectModel.getPipelineFlow();
 	}
 
+	// Returns the ID of the primary pipeline from the pipelineFlow.
 	getPrimaryPipelineId() {
 		return this.objectModel.getPrimaryPipelineId();
 	}
 
+	// Returns the internal format of all canvas data stored in memory by
+	// common-canvas. Nodes, comments and links are returned in the internal
+	// format.
 	getCanvasInfo() {
 		return this.objectModel.getCanvasInfo();
 	}
 
+	// Returns the IDs of the ancestor pipleline of the pipeline ID passed in.
 	getAncestorPipelineIds(pipelineId) {
 		return this.objectModel.getAncestorPipelineIds(pipelineId);
 	}
 
+	// Removes all styles from nodes, comments and links. See the setObjectsStyle
+	// and setLinkStyle methods for details on setting styles.
+	// temporary - is a boolean that indicates whether temporary or permanent
+	// styles should be removed.
 	removeAllStyles(temporary) {
 		this.objectModel.removeAllStyles(temporary);
 	}
 
+	// Specifies the new styles for objects that are not highlighted during
+	// branch highlighting.
+	// newStyle - is a style specification object. See wiki for details.
 	setSubdueStyle(newStyle) {
 		this.objectModel.setSubdueStyle(newStyle);
 	}
@@ -175,14 +194,21 @@ export default class CanvasController {
 	// Pipeline methods
 	// ---------------------------------------------------------------------------
 
+	// Returns the flow validation messages for the pipeline ID passed in.
 	getFlowMessages(pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getFlowMessages();
 	}
 
+	// Returns a boolean to indicate whether there are any messages of
+	// includeMsgsType in the pipeline identified by the pipeline ID passed in.
+	// includeMsgsType - can be either "error" or "warning"
 	isFlowValid(includeMsgTypes, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).isFlowValid(includeMsgTypes);
 	}
 
+	// Rearranges the nodes in the canvas in the direction specified for the
+	// pipeline ID passed in.
+	// layoutDirection - can be "horizontal" or "vertical"
 	autoLayout(layoutDirection, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).autoLayout(layoutDirection);
 	}
@@ -191,14 +217,19 @@ export default class CanvasController {
 	// Deprecated methods
 	// ---------------------------------------------------------------------------
 
+	// Loads a canvas document (in the format used by WML Canvas) into
+	// common-canvas and displays it.
 	setCanvas(canvas) {
 		this.objectModel.setCanvas(canvas); // TODO - Remove this method when WML Canvas moves to pipeline flow
 	}
 
+	// Loads a canvas palette document (in the format used by WML Canvas) into
+	// common-canvas and displays it in the palette.
 	setPaletteData(paletteData) {
 		this.objectModel.setPaletteData(paletteData); // TODO - Remove this method when WML Canvas moves to pipeline flow
 	}
 
+	// Returns a canvas document (in the format used by WML Canvas).
 	getCanvas() {
 		return this.objectModel.getCanvas(); // TODO - Remove this method when WML Canvas moves to pipeline flow
 	}
@@ -207,22 +238,39 @@ export default class CanvasController {
 	// Palette methods
 	// ---------------------------------------------------------------------------
 
+	// Loads the palette data as descibed in the palette schema in
+	// wdp-pipeline-schemas repo. Any version can be loaded and it will be
+	// upgraded to the latest version.
 	setPipelineFlowPalette(palette) {
 		this.objectModel.setPipelineFlowPalette(palette);
 	}
 
+	// Clears the palette data from common-canvas.
 	clearPaletteData() {
 		this.objectModel.clearPaletteData();
 	}
 
+	// Adds a new node into the palette:
+	// nodeTypeObj - must conform to the style of node used by the palette as
+	// described in the palette schema. It must include at least a label, image
+	// and operator_id_ref (see objects in nodeTypes array in the
+	// palette-v2-schema:
+	//  https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-canvas/palette/palette-v2-schema.json)
+	// category - is the name of the palette category where the node will be
+	// added. If the category doesn't exist it will be created.
+	// categoryLabel - is an optional param. If a new category is created it will
+	// be displayed with this label.
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
 		this.objectModel.addNodeTypeToPalette(nodeTypeObj, category, categoryLabel);
 	}
 
+	// Returns the palette data document which will conform to the latest version
+	// of the palette schema.
 	getPaletteData() {
 		return this.objectModel.getPaletteData();
 	}
 
+	// Returns the palette node identified by the operator ID passed in.
 	getPaletteNode(operatorId) {
 		return this.objectModel.getPaletteNode(operatorId);
 	}
@@ -231,38 +279,52 @@ export default class CanvasController {
 	// Selections methods
 	// ---------------------------------------------------------------------------
 
+	// Sets the currently selected objects.
+	// newSelection - An array of object IDs for nodes and/or comments
+	// pipelineId - The ID of the pipeline where the objects exist. Selected
+	// objects can only be in one pipeline.
 	setSelections(newSelection, pipelineId) {
 		this.objectModel.setSelections(newSelection, pipelineId);
 	}
 
+	// Clears all the current selections from the canvas.
 	clearSelections() {
 		this.objectModel.clearSelections();
 	}
 
+	// Selects all the objects on the canvas.
 	selectAll() {
 		this.objectModel.selectAll();
 	}
 
+	// Returns an array of the IDs of the currently selected objects.
 	getSelectedObjectIds() {
 		return this.objectModel.getSelectedObjectIds();
 	}
 
+	// Returns the currently selected Nodes.
 	getSelectedNodes() {
 		return this.objectModel.getSelectedNodes();
 	}
 
+	// Returns the currently selected Comments.
 	getSelectedComments() {
 		return this.objectModel.getSelectedComments();
 	}
 
+	// Returns the ID of the pipeline in which the currently selected objects
+	// exist. Only one pipeline may contain selected objects.
 	getSelectedPipelineId() {
 		return this.objectModel.getSelectedPipelineId();
 	}
 
+	// Deletes all currently selected objects.
 	deleteSelectedObjects() {
 		this.objectModel.deleteSelectedObjects();
 	}
 
+	// Returns true if the currently selected objects are all linked together.
+	// This is used when deciding to creating a supernode.
 	areSelectedNodesContiguous() {
 		return this.objectModel.areSelectedNodesContiguous();
 	}
@@ -271,14 +333,29 @@ export default class CanvasController {
 	// Notification messages methods
 	// ---------------------------------------------------------------------------
 
+	// Overwrites the array of notification messages shown in the notification
+	// panel.
+	// newMessage - An array of messages (see getNotificationMessages)
 	setNotificationMessages(newMessages) {
 		this.objectModel.setNotificationMessages(newMessages);
 	}
 
+	// Deletes all notification messages shown in the notification panel.
 	clearNotificationMessages() {
 		this.objectModel.clearNotificationMessages();
 	}
 
+	// Returns the array of currently displayed notification messages shown in
+	// the notification panel. The format of a notification message is an object
+	// with these fields:
+	// {
+	//   "id": string (Required),
+	//   "type" : enum, oneOf ["informational", "success", "warning", "error"] (Required),
+	//   "title": string (Optional)
+	//   "content": string, html, JSX Object (Optional),
+	//   "timestamp": string (Optional)
+	//   "callback": function, the callback function when a message is clicked (Required)
+	// }
 	getNotificationMessages(messageType) {
 		return this.objectModel.getNotificationMessages(messageType);
 	}
@@ -287,26 +364,76 @@ export default class CanvasController {
 	// Objects (nodes and comments) methods
 	// ---------------------------------------------------------------------------
 
+	// Moves the objects identified in the data object which must be in the
+	// pipeline identified by the pipeline ID.
+	// data - A javascript object like this:
+	// {
+	//   nodes: []       // An array of node and comment IDs
+	//   offsetX: number // Offset in pixels the objects will move in the X dir
+	//   offsetY: number // Offset in pixels the objects will move in the Y dir
+	// }
 	moveObjects(data, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).moveObjects(data);
 	}
 
+	// Delete the objects specified in source in the pipleine specified by
+	// pipeline ID.
+	// source - A javascript object like this:
+	// {
+	//   selectedObjectIds: []  // An array of node and comment IDs
+	// }
 	deleteObjects(source, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).deleteObjects(source);
 	}
 
+	// Removes the links to and from the objects specified in the source object.
+	disconnectObjects(source, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).disconnectObjects(source);
+	}
+
+	// Deletes the object specified by the id in the pipleine specified by
+	// pipeline ID.
 	deleteObject(id, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).deleteObject(id);
 	}
 
+	// Sets the class name to newClassName of the object identified by objectId
+	// in the pipleine specified by pipeline ID.
 	setObjectsClassName(objectId, newClassName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setObjectsClassName(objectId, newClassName);
 	}
 
+	// Sets the style of the objects specified by pipelineObjectIds to be
+	// the newStyle which will be either temporary or permanent.
+	// pipelineObjectIds: This identified the objects to be styles. It is a
+	// javascript object like this:
+	//   {
+	//     <pipelineID_1>: [
+	//       <objectID_1_1>,
+	//       <objectID_1_2
+	//     ],
+	//     <pipelineID_2>: [
+	//         <objectID_2_1>,
+	//         <objectID_2_2
+	//     ]
+	//   }
+	// newStyles - This is a style specification. See the wiki for details.
+	// temporary - A boolean to indicate if the style is serialized when
+	//             getPipelineFlow() method is called or not.
 	setObjectsStyle(pipelineObjectIds, newStyle, temporary) {
 		this.objectModel.setObjectsStyle(pipelineObjectIds, newStyle, temporary);
 	}
 
+	// Sets the styles of multiple objects at once.
+	// pipelineObjStyles - Specified the objects and the styles each should be
+	// set to. It is a javascript array like this:
+	//   [
+	//     { pipelineId: <pipelineId>, objId: <objectId>, style: <style_spec>},
+	//     { pipelineId: <pipelineId>, objId: <objectId>, style: <style_spec>},
+	//     { pipelineId: <pipelineId>, objId: <objectId>, style: <style_spec>}
+	//   ]
+	// temporary - A boolean to indicate if the styles are serialized when
+	//             getPipelineFlow() method is called or not.
 	setObjectsMultiStyle(pipelineObjStyles, temporary) {
 		this.objectModel.setObjectsMultiStyle(pipelineObjStyles, temporary);
 	}
@@ -315,103 +442,164 @@ export default class CanvasController {
 	// Node methods
 	// ---------------------------------------------------------------------------
 
+	// Retuns an array of nodes for the pipeline specified by the pipelineId.
 	getNodes(pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodes();
 	}
 
+	// Adds a new node into the pipeline specified by the pipelineId.
 	addNode(node, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).addNode(node);
 	}
 
+	// Creates a new node from the data for the pipeline specified by the
+	// pipelineId.
 	createNode(data, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).createNode(data);
 	}
 
+	// Deletes the node specified.
+	// nodeId - The ID of the node
+	// pipelineId - The ID of the pipeline
 	deleteNode(nodeId, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).deleteNode(nodeId);
 	}
 
-	disconnectObjects(source, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).disconnectObjects(source);
-	}
-
+	// Sets the node parameters
+	// nodeId - The ID of the node
+	// parameters - An array of parameters
+	// pipelineId - The ID of the pipeline
 	setNodeParameters(nodeId, parameters, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeParameters(nodeId, parameters);
 	}
 
+	// Sets the node UI parameters
+	// nodeId - The ID of the node
+	// parameters - An array of UI parameters
+	// pipelineId - The ID of the pipeline
 	setNodeUiParameters(nodeId, uiParameters, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeUiParameters(nodeId, uiParameters);
 	}
 
+	// Sets the node messages
+	// nodeId - The ID of the node
+	// messages - An array of messages
+	// pipelineId - The ID of the pipeline
 	setNodeMessages(nodeId, messages, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeMessages(nodeId, messages);
 	}
 
+	// Sets a single message on a node
+	// nodeId - The ID of the node
+	// message - A message
+	// pipelineId - The ID of the pipeline
 	setNodeMessage(nodeId, message, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeMessage(nodeId, message);
 	}
 
+	// Sets the lable for a node
+	// nodeId - The ID of the node
+	// ndeLabel - The label
+	// pipelineId - The ID of the pipeline
 	setNodeLabel(nodeId, newLabel, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeLabel(nodeId, newLabel);
 	}
 
+	// Sets the decorations on a node
+	// nodeId - The ID of the node
+	// newDecorations - An array of decorations. See Wiki for details.
+	// pipelineId - The ID of the pipeline
 	setNodeDecorations(nodeId, newDecorations, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeDecorations(nodeId, newDecorations);
 	}
 
+	// Sets the input port label on a node
+	// nodeId - The ID of the node
+	// portId - The ID of the input port
+	// newLabel - The label
+	// pipelineId - The ID of the pipeline
 	setInputPortLabel(nodeId, portId, newLabel, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setInputPortLabel(nodeId, portId, newLabel);
 	}
 
+	// Sets the output port label on a node
+	// nodeId - The ID of the node
+	// portId - The ID of the output port
+	// newLabel - The label
+	// pipelineId - The ID of the pipeline
 	setOutputPortLabel(nodeId, portId, newLabel, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setOutputPortLabel(nodeId, portId, newLabel);
 	}
 
+	// Gets a node
+	// nodeId - The ID of the node
+	// pipelineId - The ID of the pipeline
 	getNode(nodeId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNode(nodeId);
 	}
 
+	// Gets the UI parameters for a node
+	// nodeId - The ID of the node
+	// pipelineId - The ID of the pipeline
 	getNodeUiParameters(nodeId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeUiParameters(nodeId);
 	}
 
+	// Gets the supernodes for a pipeline.
+	// pipelineId - The ID of the pipeline
 	getSupernodes(pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getSupernodes();
 	}
 
-	// Returns supernode id that have a subflow_ref to the given pipelineId.
+	// Returns supernode ID that has a subflow_ref to the given pipelineId.
 	getSupernodeObjReferencing(pipelineId) {
 		return this.objectModel.getSupernodeObjReferencing(pipelineId);
 	}
 
+	// Gets the messages for a node
+	// nodeId - The ID of the node
+	// pipelineId - The ID of the pipeline
 	getNodeMessages(nodeId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeMessages(nodeId);
 	}
 
+	// Gets a message for a specific control for a node
+	// nodeId - The ID of the node
+	// controlName - The control name
+	// pipelineId - The ID of the pipeline
 	getNodeMessage(nodeId, controlName, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeMessage(nodeId, controlName);
 	}
 
+	// Gets an array of decorations for a node
+	// nodeId - The ID of the node
+	// pipelineId - The ID of the pipeline
 	getNodeDecorations(nodeId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeDecorations(nodeId);
 	}
 
+	// Gets the style spcification (see Wiki) for a node
+	// nodeId - The ID of the node
+	// pipelineId - The ID of the pipeline
 	getNodeStyle(nodeId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeStyle(nodeId);
 	}
 
+	// Adds a custom attribute to the nodes.
+	// @Deprecated.
 	addCustomAttrToNodes(nodeIds, attrName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).addCustomAttrToNodes(nodeIds, attrName);
 	}
 
+	// Removes a custom attribute from the nodes.
+	// @Deprecated.
 	removeCustomAttrFromNodes(nodeIds, attrName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).removeCustomAttrFromNodes(nodeIds, attrName);
 	}
 
-	canNodeBeDroppedOnLink(operatorIdRef, pipelineId) {
-		return this.objectModel.getAPIPipeline(pipelineId).canNodeBeDroppedOnLink(operatorIdRef);
-	}
-
+	// Returns a boolean to indicate whether the supernode is expanded in place.
+	// nodeId - The ID of the node
+	// pipelineId - The ID of the pipeline
 	isSuperNodeExpandedInPlace(nodeId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).isSuperNodeExpandedInPlace(nodeId);
 	}
@@ -420,38 +608,62 @@ export default class CanvasController {
 	// Comments methods
 	// ---------------------------------------------------------------------------
 
+	// Returns the comments from the pipeline.
+	// pipelineId - The ID of the pipeline
 	getComments(pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getComments();
 	}
 
+	// Returns a comment from the pipeline.
+	// comId - The ID of the comment
+	// pipelineId - The ID of the pipeline
 	getComment(comId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getComment(comId);
 	}
 
+	// Creates a comment for the pipeline.
+	// source - Input data
+	// pipelineId - The ID of the pipeline
 	createComment(source, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).createComment(source);
 	}
 
-	addComment(info, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).addComment(info);
+	// Adds a comment to the pipeline.
+	// data - the data describing the comment
+	// pipelineId - The ID of the pipeline
+	addComment(data, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).addComment(data);
 	}
 
+	// Edits a comment with the data.
+	// data - the comment
+	// pipelineId - The ID of the pipeline
 	editComment(data, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).editComment(data);
 	}
 
-	deleteComment(id, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).deleteComment(id);
+	// Deletes a comment
+	// comId - The ID of the comment
+	// pipelineId - The ID of the pipeline
+	deleteComment(comId, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).deleteComment(comId);
 	}
 
+	// Adds cutom attributes to a comment
+	// @Deprecated
 	addCustomAttrToComments(comIds, attrName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).addCustomAttrToComments(comIds, attrName);
 	}
 
+	// Removes cutom attributes from a comment
+	// @Deprecated
 	removeCustomAttrFromComments(comIds, attrName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).removeCustomAttrFromComments(comIds, attrName);
 	}
 
+	// Gets the style spcification (see Wiki) for a comment
+	// commentId - The ID of the node
+	// pipelineId - The ID of the pipeline
 	getCommentStyle(commentId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getCommentStyle(commentId);
 	}
@@ -460,50 +672,113 @@ export default class CanvasController {
 	// Links methods
 	// ---------------------------------------------------------------------------
 
+	// Gets a link
+	// linkId - The ID of the link
+	// pipelineId - The ID of the pipeline
 	getLink(linkId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getLink(linkId);
 	}
 
+	// Gets a node to node data link
+	// srcNodeId - The ID of the source node
+	// srcNodePortId - The ID of the source node port
+	// trgNodeId - The ID of the target node
+	// trgNodePortId - The ID of the target node port
+	// pipelineId - The ID of the pipeline
 	getNodeDataLinkFromInfo(srcNodeId, srcNodePortId, trgNodeId, trgNodePortId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeDataLinkFromInfo(srcNodeId, srcNodePortId, trgNodeId, trgNodePortId);
 	}
 
+	// Gets a comment to node link
+	// id1 - The ID of the comment
+	// id2 - The ID of the node
+	// pipelineId - The ID of the pipeline
 	getCommentLinkFromInfo(id1, id2, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeDataLinkFromInfo(id1, id2);
 	}
 
+	// Gets a node to node association link
+	// id1 - The ID of one of the node
+	// id2 - The ID of one of the node
+	// pipelineId - The ID of the pipeline
 	getNodeAssocLinkFromInfo(id1, id2, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeAssocLinkFromInfo(id1, id2);
 	}
 
+	// Adds links to a pipeline
+	// linkList - An array of links
+	// pipelineId - The ID of the pipeline
 	addLinks(linkList, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).addLinks(linkList);
 	}
 
-	deleteLink(source, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).deleteLink(source);
+	// Deletes a link
+	// source - An array of links
+	// pipelineId - The ID of the pipeline
+	deleteLink(link, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).deleteLink(link);
 	}
 
+	// Creates node to node links
+	// data - Data describing the links
+	// pipelineId - The ID of the pipeline
 	createNodeLinks(data, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).createNodeLinks(data);
 	}
 
+	// Creates comment links
+	// data - Data describing the links
+	// pipelineId - The ID of the pipeline
 	createCommentLinks(data, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).createCommentLinks(data);
 	}
 
+	// Sets the class name on links
+	// linkIds - An array of links
+	// newClassName - The class name
+	// pipelineId - The ID of the pipeline
 	setLinksClassName(linkIds, newClassName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setLinksClassName(linkIds, newClassName);
 	}
 
+	// Sets the style of the links specified by pipelineLinkIds to be
+	// the newStyle which will be either temporary or permanent.
+	// pipelineLinkIds - This identifies the objects to be styles. It is a
+	// javascript object like this:
+	//   {
+	//     <pipelineID_1>: [
+	//       <linkID_1_1>,
+	//       <linkID_1_2
+	//     ],
+	//     <pipelineID_2>: [
+	//         <linkID_2_1>,
+	//         <linkID_2_2
+	//     ]
+	//   }
+	// newStyle - This is a style specification. See the wiki for details.
+	// temporary - A boolean to indicate if the style is serialized when
+	//             getPipelineFlow() method is called or not.
 	setLinksStyle(pipelineLinkIds, newStyle, temporary) {
 		this.objectModel.setLinksStyle(pipelineLinkIds, newStyle, temporary);
 	}
 
+	// Sets the styles of multiple links at once.
+	// pipelineObjStyles - Specified the links and the styles each should be
+	// set to. It is a javascript array like this:
+	//   [
+	//     { pipelineId: <pipelineId>, objId: <linkId>, style: <style_spec>},
+	//     { pipelineId: <pipelineId>, objId: <linkId>, style: <style_spec>},
+	//     { pipelineId: <pipelineId>, objId: <linkId>, style: <style_spec>}
+	//   ]
+	// temporary - A boolean to indicate if the styles are serialized when
+	//             getPipelineFlow() method is called or not.
 	setLinksMultiStyle(pipelineObjStyles, temporary) {
 		this.objectModel.setLinksMultiStyle(pipelineObjStyles, temporary);
 	}
 
+	// Returns the style specification for a link.
+	// linkIds - An array of links
+	// pipelineId - The ID of the pipeline
 	getLinkStyle(linkId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getLinkStyle(linkId);
 	}
@@ -553,6 +828,7 @@ export default class CanvasController {
 	// Highlight methods
 	// ---------------------------------------------------------------------------
 
+	//
 	setHighlightStyle(highlightObjectIds, pipelineId) {
 		this.removeAllStyles(true);
 		const objectStyle = {
@@ -572,18 +848,28 @@ export default class CanvasController {
 		this.highlight = true;
 	}
 
+	// Highlights the branch(s) (both upstream and downstream) from the node
+	// IDs passed in.
+	// pipelineId - The ID of the pipeline
+	// nodeIds - An array of node Ids
 	highlightBranch(pipelineId, nodeIds) {
 		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_BRANCH);
 		this.setHighlightStyle(highlightObjectIds, pipelineId);
 		return highlightObjectIds;
 	}
 
+	// Highlights the upstream nodes from the node IDs passed in.
+	// pipelineId - The ID of the pipeline
+	// nodeIds - An array of node Ids
 	highlightUpstream(pipelineId, nodeIds) {
 		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_UPSTREAM);
 		this.setHighlightStyle(highlightObjectIds, pipelineId);
 		return highlightObjectIds;
 	}
 
+	// Highlights the downstream nodes from the node IDs passed in.
+	// pipelineId - The ID of the pipeline
+	// nodeIds - An array of node Ids
 	highlightDownstream(pipelineId, nodeIds) {
 		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_DOWNSTREAM);
 		this.setHighlightStyle(highlightObjectIds, pipelineId);
@@ -893,6 +1179,14 @@ export default class CanvasController {
 		data.pipelineId = pipelineId;
 
 		this.editActionHandler(data);
+	}
+
+	canNodeBeDroppedOnLink(nodeType, pipelineId) {
+		if (nodeType.input_ports && nodeType.input_ports.length > 0 &&
+				nodeType.output_ports && nodeType.output_ports.length > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	displaySubPipeline(pipelineInfo) {
