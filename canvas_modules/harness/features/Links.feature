@@ -71,7 +71,7 @@ Feature: Links
 		Then I verify the number of comment links are 3
 		Then I verify the number of data links are 5
 		Then I click the comment with text " comment 2" to select it
-		Then I Cmd+click the "Discard Fields" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Discard Fields" node to add it to the selections
 		Then I right click the "Discard Fields" node to display the context menu
 		Then I click option "Disconnect" from the context menu
 		Then I verify the number of comment links are 1
