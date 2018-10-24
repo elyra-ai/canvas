@@ -188,7 +188,16 @@
                 "min": 0,
                 "max": 1
               }
-
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
             }
           ]
         },
@@ -205,6 +214,16 @@
               "cardinality": {
                 "min": 0,
                 "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
               }
             }
           ]
@@ -224,6 +243,16 @@
                 "max": 1
               }
             }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
           ]
         },
         {
@@ -239,6 +268,16 @@
               "cardinality": {
                 "min": 0,
                 "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
               }
             }
           ]

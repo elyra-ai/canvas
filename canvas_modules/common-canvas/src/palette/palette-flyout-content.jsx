@@ -9,6 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import has from "lodash/has";
 import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx";
 import PaletteFlyoutContentSearch from "./palette-flyout-content-search.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
@@ -50,12 +51,12 @@ class PaletteFlyoutContent extends React.Component {
 		return out;
 	}
 
-	getNodeTypesForCategory(categories, catLabel) {
+	getNodeTypesForCategory(categories, id) {
 		var out = [];
 		if (categories) {
 			for (const category of categories) {
-				if (category.label === catLabel) {
-					out = category.nodetypes;
+				if (category.id === id) {
+					out = category.node_types;
 				}
 			}
 		}
@@ -74,8 +75,10 @@ class PaletteFlyoutContent extends React.Component {
 	filterNodeTypes(nodeTypes) {
 		var filteredNodeTypes = [];
 		if (nodeTypes) {
+			const lowercaseFilteredKeyword = this.state.filterKeyword.toLowerCase();
 			for (const nodeType of nodeTypes) {
-				if (nodeType.label.toLowerCase().indexOf(this.state.filterKeyword.toLowerCase()) > -1) {
+				if (has(nodeType, "app_data.ui_data.label") &&
+						nodeType.app_data.ui_data.label.toLowerCase().indexOf(lowercaseFilteredKeyword) > -1) {
 					filteredNodeTypes.push(nodeType);
 				}
 			}
@@ -97,9 +100,9 @@ class PaletteFlyoutContent extends React.Component {
 				style = { "borderBottom": "none" };
 			}
 			var content = null;
-			const nodeTypes = this.getNodeTypesForCategory(this.props.paletteJSON.categories, category.label);
+			const nodeTypes = this.getNodeTypesForCategory(this.props.paletteJSON.categories, category.id);
 			const filteredNodeTypes = this.filterNodeTypes(nodeTypes);
-			if (this.state.selectedCategoryId === category.category && filteredNodeTypes.length > 0) {
+			if (this.state.selectedCategoryId === category.id && filteredNodeTypes.length > 0) {
 				content = (
 					<PaletteContentList
 						style={style}
@@ -117,7 +120,7 @@ class PaletteFlyoutContent extends React.Component {
 			contentDivs.push(
 				<div key={category.label + "-container"}>
 					<PaletteFlyoutContentCategory
-						key={category.category}
+						key={category.id}
 						category={category}
 						selectedCategoryId={this.state.selectedCategoryId}
 						categorySelectedMethod={this.categorySelected}

@@ -18,39 +18,37 @@ import pipelineFlowUIV2Schema from "@wdp/pipeline-schemas/common-pipeline/pipeli
 import pipelineConnectionV2Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-connection/pipeline-connection-v2-schema.json";
 import dataRecordMetadataV2Schema from "@wdp/pipeline-schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v2-schema.json";
 import paletteV2Schema from "../schemas/v2/palette-v2-schema.json";
+
+import pipelineFlowV3Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema_draft.json";
+import pipelineFlowUIV3Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v3-schema_draft.json";
+import pipelineConnectionV3Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-connection/pipeline-connection-v3-schema_draft.json";
+import dataRecordMetadataV3Schema from "@wdp/pipeline-schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v3-schema_draft.json";
+import paletteV3Schema from "@wdp/pipeline-schemas/common-canvas/palette/palette-v3-schema_draft.json";
+
 import Logger from "../../logging/canvas-logger.js";
 
 const logger = new Logger("SchemaValidator");
 
 var SchemaValidator = require("jsonschema").Validator;
-var validator1 = new SchemaValidator();
-validator1.addSchema(pipelineFlowUIV1Schema, "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/pipeline_overview");
-validator1.addSchema(pipelineFlowUIV1Schema, "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/pipeline_def");
-validator1.addSchema(pipelineFlowUIV1Schema, "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/port_info_def");
-validator1.addSchema(pipelineFlowUIV1Schema, "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/node_info_def");
-validator1.addSchema(pipelineConnectionV1Schema, "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_connection_def");
-validator1.addSchema(pipelineConnectionV1Schema, "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_data_asset_def");
-validator1.addSchema(dataRecordMetadataV1Schema, "http://www.ibm.com/ibm/wml/datarecord-metadata/v1.0/datarecord-metadata-v1-schema.json#/definitions/record_schema");
-
-var validator2 = new SchemaValidator();
-const prefix = "http://api.dataplatform.ibm.com/schemas/common-pipeline/";
-validator2.addSchema(pipelineFlowUIV2Schema, prefix + "pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_overview");
-validator2.addSchema(pipelineFlowUIV2Schema, prefix + "pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_def");
-validator2.addSchema(pipelineFlowUIV2Schema, prefix + "pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/port_info_def");
-validator2.addSchema(pipelineFlowUIV2Schema, prefix + "pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/node_info_def");
-validator2.addSchema(pipelineFlowUIV2Schema, prefix + "pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/runtime_info_def");
-validator2.addSchema(pipelineConnectionV2Schema, prefix + "pipeline-connection/pipeline-connection-v2-schema.json#/definitions/common_pipeline_connection_def");
-validator2.addSchema(pipelineConnectionV2Schema, prefix + "pipeline-connection/pipeline-connection-v2-schema.json#/definitions/common_pipeline_data_asset_def");
-validator2.addSchema(dataRecordMetadataV2Schema, prefix + "datarecord-metadata/datarecord-metadata-v2-schema.json#/definitions/record_schema");
 
 function validatePipelineFlowAgainstSchema(pipelineFlow, version) {
 	switch (version) {
-	case 1:
+	case 1: {
+		const validator1 = getV1Validator();
 		validateAgainstSchema(pipelineFlow, pipelineFlowV1Schema, "pipelineFlow", validator1);
 		break;
-	case 2:
-	default:
+	}
+	case 2: {
+		const validator2 = getV2Validator();
 		validateAgainstSchema(pipelineFlow, pipelineFlowV2Schema, "pipelineFlow", validator2);
+		break;
+	}
+
+	case 3:
+	default: {
+		const validator3 = getV3Validator();
+		validateAgainstSchema(pipelineFlow, pipelineFlowV3Schema, "pipelineFlow", validator3);
+	}
 	}
 }
 
@@ -60,10 +58,14 @@ function validatePaletteAgainstSchema(paletteData, version) {
 		validateAgainstSchema(paletteData, paletteV1Schema, "palette", new SchemaValidator());
 		break;
 	case 2:
-	default:
 		validateAgainstSchema(paletteData, paletteV2Schema, "palette", new SchemaValidator());
+		break;
+	case 3:
+	default: {
+		const validator3 = getV3Validator();
+		validateAgainstSchema(paletteData, paletteV3Schema, "palette", validator3);
 	}
-
+	}
 }
 
 // Validates the data provided, against the schema provided, using the validator
@@ -79,6 +81,39 @@ function validateAgainstSchema(data, schema, type, validator) {
 		logger.error(valResult);
 		throw valResult;
 	}
+}
+
+function getV1Validator() {
+	const validator1 = new SchemaValidator();
+	const prefix = "http://www.ibm.com/ibm/";
+	validator1.addSchema(pipelineFlowUIV1Schema, prefix + "wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/pipeline_overview_def");
+	validator1.addSchema(pipelineFlowUIV1Schema, prefix + "wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/pipeline_def");
+	validator1.addSchema(pipelineFlowUIV1Schema, prefix + "wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/port_info_def");
+	validator1.addSchema(pipelineFlowUIV1Schema, prefix + "wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/node_info_def");
+	validator1.addSchema(pipelineConnectionV1Schema, prefix + "wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_connection_def");
+	validator1.addSchema(pipelineConnectionV1Schema, prefix + "wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_data_asset_def");
+	validator1.addSchema(dataRecordMetadataV1Schema, prefix + "wml/datarecord-metadata/v1.0/datarecord-metadata-v1-schema.json#/definitions/record_schema");
+	return validator1;
+}
+
+function getV2Validator() {
+	const validator2 = new SchemaValidator();
+	const prefix = "http://api.dataplatform.ibm.com/schemas/common-pipeline/";
+	validator2.addSchema(pipelineFlowV2Schema, prefix + "pipeline-flow/pipeline-flow-v2-schema.json");
+	validator2.addSchema(pipelineFlowUIV2Schema, prefix + "pipeline-flow/pipeline-flow-ui-v2-schema.json");
+	validator2.addSchema(pipelineConnectionV2Schema, prefix + "pipeline-connection/pipeline-connection-v2-schema.json");
+	validator2.addSchema(dataRecordMetadataV2Schema, prefix + "datarecord-metadata/datarecord-metadata-v2-schema.json");
+	return validator2;
+}
+
+function getV3Validator() {
+	const validator3 = new SchemaValidator();
+	const prefix = "http://api.dataplatform.ibm.com/schemas/common-pipeline/";
+	validator3.addSchema(pipelineFlowV3Schema, prefix + "pipeline-flow/pipeline-flow-v3-schema.json");
+	validator3.addSchema(pipelineFlowUIV3Schema, prefix + "pipeline-flow/pipeline-flow-ui-v3-schema.json");
+	validator3.addSchema(pipelineConnectionV3Schema, prefix + "pipeline-connection/pipeline-connection-v3-schema.json");
+	validator3.addSchema(dataRecordMetadataV3Schema, prefix + "datarecord-metadata/datarecord-metadata-v3-schema.json");
+	return validator3;
 }
 
 module.exports = {

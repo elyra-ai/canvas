@@ -2,11 +2,11 @@
     "editType": "createNode",
     "nodeTemplate": {
 			"label": "Filter",
-			"type": "execution_node",
-			"operator_id_ref": "filter",
 			"image": "/images/filter.svg",
 			"class_name": "d3-node-body",
-			"input_ports": [
+			"type": "execution_node",
+			"op": "filter",
+			"inputs": [
 				{
 					"id": "inPort",
 					"label": "Input Port",
@@ -16,7 +16,7 @@
 					}
 				}
 			],
-			"output_ports": [
+			"outputs": [
 				{
 					"id": "outPort",
 					"label": "Output Port",
@@ -35,7 +35,6 @@
 				}
 			]
 		},
-    "label": "Filter",
     "offsetX": 319,
     "offsetY": 152
 }

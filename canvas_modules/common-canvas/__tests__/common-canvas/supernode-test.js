@@ -915,6 +915,10 @@ describe("Create Supernode Action", () => {
 		canvasController = new CanvasController();
 		canvasController.getObjectModel().setPipelineFlow(supernodeCanvas);
 		const config = { enableAutoLayout: "none", canvasController: canvasController, enableInternalObjectModel: true };
+
+		// TODO - Remove this call when we transition to V3 schemas permanently
+		canvasController.setReturnPipelineFlowDraftVersion(true);
+
 		createCommonCanvas(config, canvasController);
 
 		objectModel = canvasController.getObjectModel();
@@ -950,7 +954,7 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
 
-		// console.log(JSON.stringify(pipelineFlow));
+		// console.log(JSON.stringify(pipelineFlow, null, 2));
 		expect(isEqual(JSON.stringify(test1ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");

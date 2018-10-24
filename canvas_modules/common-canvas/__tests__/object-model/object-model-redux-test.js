@@ -61,7 +61,7 @@ describe("ObjectModel handle model OK", () => {
 		objectModel.clearPipelineFlow();
 
 		const expectedPipeline = {
-			"runtime_ref": "empty_runtime",
+			"runtime_ref": "",
 			"nodes": [],
 			"comments": [],
 			"links": []

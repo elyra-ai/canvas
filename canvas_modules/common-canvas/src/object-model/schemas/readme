@@ -1,0 +1,10 @@
+This directory contains some schema files which are slightly different to the
+schema files in the @wdp/pipeline-schemas module (which is built from the
+wdp-pipeline-schemas repo). The reason they are different is that the
+runtime validation code needs them to be different so that validation
+works successfully. They contain syntactical changes rather than semantic
+changes.
+
+These files, referred to by the schema-validator.js program, should be
+left in-place until such time as we know that no customer is ever going
+to want to upgrade from a v1 or v2 pipelineFlow to the latest version.

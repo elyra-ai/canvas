@@ -1,0 +1,829 @@
+{
+  "doc_type": "pipeline",
+  "version": "2.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
+  "id": "24cc9881-f83a-4d38-b15b-8bf541e100fa",
+  "app_data": {
+    "ui_data": {
+      "name": "Pipeline Flow Example",
+      "description": "An example pipeline flow document with a sub-pipeline",
+      "class_name": "pipeline-flow-overall"
+    },
+    "wml_data": {
+      "typeId": "stream"
+    }
+  },
+  "primary_pipeline": "primary-pipeline",
+  "pipelines": [
+    {
+      "id": "primary-pipeline",
+      "nodes": [
+        {
+          "id": "entryID1PE",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "entryID1PE",
+              "image": "/images/nodes/varfile.svg",
+              "x_pos": 100,
+              "y_pos": 170,
+              "class_name": "canvas-node",
+              "description": "EntryID1PE"
+            }
+          },
+          "outputs": [
+            {
+              "id": "entryPort1PE",
+              "schema_ref": "schema1",
+              "app_data": {
+                "ui_data": {
+                  "label": "entryID1PE"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "entryID2PE",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "entryID2PE",
+              "image": "/images/nodes/varfile.svg",
+              "x_pos": 100,
+              "y_pos": 270,
+              "class_name": "canvas-node",
+              "description": "entryID2PE"
+            }
+          },
+          "outputs": [
+            {
+              "id": "entryPort2PE",
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "label": "entryPort2PE"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "entryID3PE",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "entryID3PE",
+              "image": "/images/nodes/varfile.svg",
+              "x_pos": 100,
+              "y_pos": 370,
+              "class_name": "canvas-node",
+              "description": "entryID3PE"
+            }
+          },
+          "outputs": [
+            {
+              "id": "entryPort3PE",
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "label": "entryPort3PE"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "nodeID1PE",
+          "type": "execution_node",
+          "op": "org.apache.spark.ml.ibm.transformers.Join",
+          "app_data": {
+            "wml_data": {
+              "typeId": "Join"
+            },
+            "ui_data": {
+              "label": "nodeID1PE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 250,
+              "y_pos": 170,
+              "class_name": "canvas-node",
+              "description": "nodeID1PE - Join two or more datasets"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input1NodeID1PE",
+              "schema_ref": "schema1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": 1
+                  },
+                  "label": "input1NodeID1PE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "entryID1PE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "input2NodeID1PE",
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": 1
+                  },
+                  "label": "input2NodeID1PE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "entryID2PE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1NodeID1PE",
+              "schema_ref": "schema3",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": -1
+                  },
+                  "label": "output1NodeID1PE"
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "join-type": "inner",
+            "key1": "inputDS1.NAME",
+            "key2": "inputDS2.name"
+          }
+        },
+        {
+          "id": "nodeIDSuperNodePE",
+          "type": "super_node",
+          "subflow_ref": {
+            "pipeline_id_ref": "modeler-sub-pipeline"
+          },
+          "app_data": {
+            "ui_data": {
+              "label": "nodeIDSuperNodePE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 400,
+              "y_pos": 170,
+              "class_name": "canvas-node",
+              "description": "nodeIDSuperNodePE",
+              "is_expanded": false,
+              "expanded_width": 200,
+              "expanded_height": 200
+            }
+          },
+          "inputs": [
+            {
+              "id": "input1SuperNodePE",
+              "subflow_node_ref": "entryID1SE",
+              "schema_ref": "schema3",
+              "app_data": {
+                "ui_data": {
+                  "label": "input1SuperNodePE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeID1PE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "input2SuperNodePE",
+              "subflow_node_ref": "entryID2SE",
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "label": "input2SuperNodePE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "entryID3PE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1SuperNodePE",
+              "subflow_node_ref": "exitID1SE",
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "label": "output1SuperNodePE"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "nodeID2PE",
+          "type": "execution_node",
+          "op": "org.apache.spark.ml.ibm.transformers.Filter",
+          "app_data": {
+            "wml_data": {
+              "typeId": "filter-records"
+            },
+            "ui_data": {
+              "label": "nodeID2PE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 700,
+              "y_pos": 170,
+              "class_name": "canvas-node",
+              "description": "nodeID2PE - Filter record data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input1NodeID2PE",
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": 1
+                  },
+                  "label": "input1NodeID2PE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeIDSuperNodePE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  },
+                  "port_id_ref": "output1SuperNodePE"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1NodeID2PE",
+              "schema_ref": "schema3",
+              "app_data": {
+                "ui_data": {
+                  "label": "output1NodeID2PE"
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "conditionExpr": "Age > 20"
+          }
+        },
+        {
+          "id": "nodeID3PE",
+          "type": "execution_node",
+          "op": "org.apache.spark.ml.ibm.transformers.Filter",
+          "app_data": {
+            "wml_data": {
+              "typeId": "filter-records"
+            },
+            "ui_data": {
+              "label": "nodeID3PE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 700,
+              "y_pos": 270,
+              "class_name": "canvas-node",
+              "description": "nodeID3PE - Filter record data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input1NodeID3PE",
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": -1
+                  },
+                  "label": "input1NodeID3PE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeIDSuperNodePE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1NodeID3PE",
+              "schema_ref": "schema3",
+              "app_data": {
+                "ui_data": {
+                  "label": "output1NodeID3PE"
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "conditionExpr": "Age > ${age}"
+          }
+        },
+        {
+          "id": "exitID1PE",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "exitID1PE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 800,
+              "y_pos": 170,
+              "class_name": "canvas-node",
+              "description": "exitID1PE"
+            }
+          },
+          "inputs": [
+            {
+              "id": "exitPort1PE",
+             	"schema_ref": "schema3",
+              "app_data": {
+                "ui_data": {
+                  "label": ""
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeID2PE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "exitID2PE",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "exitID2PE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 800,
+              "y_pos": 270,
+              "class_name": "canvas-node",
+              "description": "exitID2PE"
+            }
+          },
+          "inputs": [
+            {
+              "id": "exitPort2PE",
+              "schema_ref": "schema3",
+              "app_data": {
+                "ui_data": {
+                  "label": "exitPort2PE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeID3PE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "zoom": 100,
+          "comments": [
+            {
+              "id": "4e32ba0a-b234-3e33-b321-d693bf8f8452",
+              "x_pos": 50,
+              "y_pos": 50,
+              "width": 250,
+              "height": 80,
+              "class_name": "canvas-comment",
+              "content": "This is a comment about the comments array. The text should wrap within a bounded rectangle.",
+              "associated_id_refs": []
+            },
+            {
+              "id": "4e32ba0a-b234-3e33-b321-d123456789abc",
+              "x_pos": 520,
+              "y_pos": 50,
+              "width": 250,
+              "height": 80,
+              "class_name": "canvas-comment",
+              "content": "This is sample comment should be linked to two nodes.",
+              "associated_id_refs": [
+                {
+                  "node_ref": "nodeID2PE",
+                  "class_name": "canvas-comment-link"
+                },
+                {
+                  "node_ref": "nodeID3PE",
+                  "class_name": "canvas-comment-link"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "runtime_ref": "scala-spark-2.0.1"
+    },
+    {
+      "id": "modeler-sub-pipeline",
+      "nodes": [
+        {
+          "id": "entryID1SE",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Entry ID1SE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 71,
+              "y_pos": 77
+            }
+          },
+          "outputs": [
+            {
+              "id": "entryPort1SE",
+              "app_data": {
+                "ui_data": {
+                  "label": "Entry Port1SE"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "entryID2SE",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Entry ID2SE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 73,
+              "y_pos": 281
+            }
+          },
+          "outputs": [
+            {
+              "id": "entryPort2SE",
+              "app_data": {
+                "ui_data": {
+                  "label": "Entry Port2SE"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "nodeID1SE",
+          "type": "execution_node",
+          "op": "org.apache.spark.ml.ibm.transformers.Filter",
+          "app_data": {
+            "wml_data": {
+              "typeId": "filter-records"
+            },
+            "ui_data": {
+              "label": "Node ID1SE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 237,
+              "y_pos": 102,
+              "description": "Filter record data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input1nodeID1SE",
+              "schema_ref": "schema3",
+              "app_data": {
+                "ui_data": {
+                  "label": "input1nodeID1SE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "entryID1SE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1nodeID1SE",
+              "schema_ref": "schema3",
+              "app_data": {
+                "ui_data": {
+                  "label": "output1nodeID1SE"
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "conditionExpr": "Age > ${age}"
+          }
+        },
+        {
+          "id": "nodeID2SE",
+          "type": "execution_node",
+          "op": "org.apache.spark.ml.ibm.transformers.Join",
+          "app_data": {
+            "wml_data": {
+              "typeId": "Join"
+            },
+            "ui_data": {
+              "label": "Node ID2SE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 405,
+              "y_pos": 181,
+              "description": "nodeID2SE Join two or more datasets"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input1NodeID2SE",
+              "schema_ref": "schema3",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": 1
+                  },
+                  "label": "Input 1NodeID2SE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeID1SE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "input2NodeID2SE",
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": 1
+                  },
+                  "label": "input2NodeID2SE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "entryID2SE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1NodeID2SE",
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "label": "output1NodeID2SE"
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "join-type": "inner",
+            "key1": "inputDS1.NAME",
+            "key2": "inputDS2.name"
+          }
+        },
+        {
+          "id": "exitID1SE",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Exit ID1SE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 587,
+              "y_pos": 216,
+              "description": "exitID1SE"
+            }
+          },
+          "inputs": [
+            {
+              "id": "exitPort1SE",
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "label": "exitPort1SE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeID2SE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "1234ba0a-b234-3e33-b321-d693bf8f8888",
+              "x_pos": 299,
+              "y_pos": 330,
+              "width": 100,
+              "height": 60,
+              "class_name": "canvas-comment",
+              "content": "This is a comment in the sub-flow.",
+              "associated_id_refs": []
+            }
+          ]
+        }
+      },
+      "runtime_ref": "SPSS-Modeler"
+    }
+  ],
+  "schemas": [
+    {
+      "id": "schema1",
+      "fields": [
+        {
+          "name": "integer2",
+          "type": "integer",
+          "nullable": false,
+          "metadata": {
+            "description": "Field integer2 is an integer field",
+            "measure": "range",
+            "modeling_role": "input",
+            "range": {
+              "min": -1,
+              "max": 400
+            }
+          }
+        },
+        {
+          "name": "double4",
+          "type": "double",
+          "nullable": false,
+          "metadata": {
+            "description": "Field double4 is a double field",
+            "measure": "range",
+            "modeling_role": "input",
+            "range": {
+              "min": 0.101,
+              "max": 100.211
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "schema2",
+      "fields": [
+        {
+          "name": "string1",
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "Field string1 is a string field",
+            "measure": "set",
+            "modeling_role": "input",
+            "max_length": 24,
+            "values": [
+              "One",
+              "Two",
+              "Three"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "schema3",
+      "fields": [
+        {
+          "name": "integer2",
+          "type": "integer",
+          "nullable": false,
+          "metadata": {
+            "description": "Field integer2 is an integer field",
+            "measure": "range",
+            "modeling_role": "input",
+            "range": {
+              "min": -1,
+              "max": 400
+            }
+          }
+        },
+        {
+          "name": "double4",
+          "type": "double",
+          "nullable": false,
+          "metadata": {
+            "description": "Field double4 is a double field",
+            "measure": "range",
+            "modeling_role": "input",
+            "range": {
+              "min": 0.101,
+              "max": 100.211
+            }
+          }
+        },
+        {
+          "name": "string1",
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "Field string1 is a string field",
+            "measure": "set",
+            "modeling_role": "input",
+            "max_length": 24,
+            "values": [
+              "One",
+              "Two",
+              "Three"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "runtimes": [
+    {
+      "id": "scala-spark-2.0.1",
+      "name": "scala-spark-2.0.1"
+    },
+    {
+      "id": "SPSS-Modeler",
+      "name": "SPSS-Modeler"
+    }
+  ]
+}

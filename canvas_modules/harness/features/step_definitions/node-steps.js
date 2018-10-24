@@ -517,7 +517,7 @@ module.exports = function() {
 		"Analysis": "",
 		"Export Object Store": "",
 		"Add Column": "spark.AddColumn",
-		"Data Shaper": "ibm.Shaper"
+		"Data Shaper": "Data Shaper"
 	};
 
 

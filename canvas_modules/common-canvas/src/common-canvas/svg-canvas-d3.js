@@ -584,13 +584,13 @@ class CanvasRenderer {
 		this.canvasGrp.selectAll(nodeSelector).each(function(d) {
 			if (d.isSupernodeInputBinding) {
 				d.x_pos = transformedSVGRect.x - d.width;
-				const y = that.getSupernodePortYOffset(d.id, supernodeDatum.input_ports);
-				d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.output_ports[0].cy;
+				const y = that.getSupernodePortYOffset(d.id, supernodeDatum.inputs);
+				d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.outputs[0].cy;
 			}
 			if (d.isSupernodeOutputBinding) {
 				d.x_pos = transformedSVGRect.x + transformedSVGRect.width;
-				const y = that.getSupernodePortYOffset(d.id, supernodeDatum.output_ports);
-				d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.input_ports[0].cy;
+				const y = that.getSupernodePortYOffset(d.id, supernodeDatum.outputs);
+				d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.inputs[0].cy;
 			}
 		});
 	}
@@ -761,21 +761,7 @@ class CanvasRenderer {
 		const link = this.getNodeLinkForElement(element);
 
 		if (dropData !== null) {
-			if (dropData.operation === "createFromTemplate") {
-				if (link &&
-						this.canvasController.canNodeBeDroppedOnLink(dropData.nodeTemplate, this.pipelineId) &&
-						this.canvasController.isInternalObjectModelEnabled()) {
-					this.canvasController.createNodeFromTemplateOnLinkAt(dropData.nodeTemplate, link, transPos.x, transPos.y, this.pipelineId);
-				} else {
-					this.canvasController.createNodeFromTemplateAt(dropData.nodeTemplate, transPos.x, transPos.y, this.pipelineId);
-				}
-
-			} else if (dropData.operation === "createFromObject") {
-				this.canvasController.createNodeFromObjectAt(dropData.sourceId, dropData.sourceObjectTypeId, dropData.label, transPos.x, transPos.y, this.pipelineId);
-
-			} else if (dropData.operation === "addToCanvas" || dropData.operation === "addTableFromConnection") {
-				this.canvasController.createNodeFromDataAt(transPos.x, transPos.y, dropData.data, this.pipelineId);
-			}
+			this.canvasController.createDroppedNode(dropData, link, transPos, this.pipelineId);
 		}
 	}
 
@@ -805,9 +791,9 @@ class CanvasRenderer {
 		if (node) {
 			let ports;
 			if (type === "input") {
-				ports = node.input_ports;
+				ports = node.inputs;
 			} else {
-				ports = node.output_ports;
+				ports = node.outputs;
 			}
 			const port = ports.find((p) => p.id === portId);
 			return (typeof port === "undefined") ? null : port;
@@ -1716,7 +1702,7 @@ class CanvasRenderer {
 							.attr("class", (cd) => this.getNodeBodyClass(cd));
 
 						// Input ports
-						if (d.input_ports && d.input_ports.length > 0) {
+						if (d.inputs && d.inputs.length > 0) {
 							// This selector will select all input ports which are for the currently
 							// active pipeline. It is necessary to select them by the active pipeline
 							// because an expanded super node will include its own input ports as well
@@ -1726,7 +1712,7 @@ class CanvasRenderer {
 
 							var inputPortSelection =
 								nodeGrp.selectAll(inSelector)
-									.data(d.input_ports, function(p) { return p.id; });
+									.data(d.inputs, function(p) { return p.id; });
 
 							// Input port circle
 							inputPortSelection.enter()
@@ -1767,7 +1753,7 @@ class CanvasRenderer {
 
 							var inputPortArrowSelection =
 								nodeGrp.selectAll(inArrSelector)
-									.data(d.input_ports, function(p) { return p.id; });
+									.data(d.inputs, function(p) { return p.id; });
 
 							// Input port arrow in circle
 							inputPortArrowSelection.enter()
@@ -1801,7 +1787,7 @@ class CanvasRenderer {
 						}
 
 						// Output ports
-						if (d.output_ports && d.output_ports.length > 0) {
+						if (d.outputs && d.outputs.length > 0) {
 							// This selector will select all output ports which are for the currently
 							// active pipeline. It is necessary to select them by the active pipeline
 							// because an expanded super node will include its own output ports as well
@@ -1810,7 +1796,7 @@ class CanvasRenderer {
 							const outSelector = this.getSelectorForClass(this.layout.cssNodePortOutput);
 
 							var outputPortSelection = nodeGrp.selectAll(outSelector)
-								.data(d.output_ports, function(p) { return p.id; });
+								.data(d.outputs, function(p) { return p.id; });
 
 							outputPortSelection.enter()
 								.append("circle")
@@ -2042,13 +2028,13 @@ class CanvasRenderer {
 	setSupernodesBindingStatus() {
 		const supernodeDatum = this.getParentSupernodeDatum();
 		this.activePipeline.nodes.forEach((node) => {
-			if (supernodeDatum.input_ports && this.isEntryBindingNode(node)) {
-				supernodeDatum.input_ports.forEach((supernodeInputPort) => {
+			if (supernodeDatum.inputs && this.isEntryBindingNode(node)) {
+				supernodeDatum.inputs.forEach((supernodeInputPort) => {
 					node.isSupernodeInputBinding = (supernodeInputPort.subflow_node_ref === node.id) ? true : node.isSupernodeInputBinding;
 				});
 			}
-			if (supernodeDatum.output_ports && this.isExitBindingNode(node)) {
-				supernodeDatum.output_ports.forEach((supernodeOutputPort) => {
+			if (supernodeDatum.outputs && this.isExitBindingNode(node)) {
+				supernodeDatum.outputs.forEach((supernodeOutputPort) => {
 					node.isSupernodeOutputBinding = (supernodeOutputPort.subflow_node_ref === node.id) ? true : node.isSupernodeOutputBinding;
 				});
 			}
@@ -2070,11 +2056,11 @@ class CanvasRenderer {
 	}
 
 	isEntryBindingNode(node) {
-		return node.type === "binding" && node.output_ports && node.output_ports.length > 0;
+		return node.type === "binding" && node.outputs && node.outputs.length > 0;
 	}
 
 	isExitBindingNode(node) {
-		return node.type === "binding" && node.input_ports && node.input_ports.length > 0;
+		return node.type === "binding" && node.inputs && node.inputs.length > 0;
 	}
 
 	removeDynamicNodeIcons(d) {
@@ -2524,7 +2510,7 @@ class CanvasRenderer {
 		if (trgNode !== null) {
 			if (this.drawingNewLinkAction === "node-node") {
 				var trgPortId = this.getNodeInputPortAtMousePos();
-				trgPortId = trgPortId || (trgNode.input_ports && trgNode.input_ports.length > 0 ? trgNode.input_ports[0].id : null);
+				trgPortId = trgPortId || (trgNode.inputs && trgNode.inputs.length > 0 ? trgNode.inputs[0].id : null);
 				this.canvasController.editActionHandler({
 					editType: "linkNodes",
 					nodes: [{ "id": this.drawingNewLinkSrcId, "portId": this.drawingNewLinkSrcPortId }],
@@ -2735,12 +2721,12 @@ class CanvasRenderer {
 	getPortArcsNodeShapePath(data) {
 		let path = "M 0 0 L " + data.width + " 0 "; // Draw line across the top of the node
 
-		if (data.output_ports && data.output_ports.length > 0) {
+		if (data.outputs && data.outputs.length > 0) {
 			let endPoint = 0;
 
 			// Draw straight segment down to ports (if needed)
 			if (data.outputPortsHeight < data.height) {
-				if (data.output_ports.length === 1 &&
+				if (data.outputs.length === 1 &&
 						data.height <= this.layout.defaultNodeHeight) {
 					endPoint = this.layout.portPosY - this.layout.portArcRadius;
 				} else {
@@ -2750,10 +2736,10 @@ class CanvasRenderer {
 			}
 
 			// Draw port arcs
-			data.output_ports.forEach((port, index) => {
+			data.outputs.forEach((port, index) => {
 				endPoint += (this.layout.portArcRadius * 2);
 				path += " A " + this.layout.portArcRadius + " " + this.layout.portArcRadius + " 180 0 1 " + data.width + " " + endPoint;
-				if (index < data.output_ports.length - 1) {
+				if (index < data.outputs.length - 1) {
 					endPoint += this.layout.portArcSpacing;
 					path += " L " + data.width + " " + endPoint;
 				}
@@ -2771,11 +2757,11 @@ class CanvasRenderer {
 
 		path += " L 0 " + data.height; // Draw line across the bottom of the node
 
-		if (data.input_ports && data.input_ports.length > 0) {
+		if (data.inputs && data.inputs.length > 0) {
 			let endPoint = data.height;
 
 			if (data.inputPortsHeight < data.height) {
-				if (data.input_ports.length === 1 &&
+				if (data.inputs.length === 1 &&
 						data.height <= this.layout.defaultNodeHeight) {
 					endPoint = this.layout.portPosY + this.layout.portArcRadius;
 				} else {
@@ -2784,10 +2770,10 @@ class CanvasRenderer {
 				path += " L 0 " + endPoint;
 			}
 
-			data.input_ports.forEach((port, index) => {
+			data.inputs.forEach((port, index) => {
 				endPoint -= (this.layout.portArcRadius * 2);
 				path += " A " + this.layout.portArcRadius + " " + this.layout.portArcRadius + " 180 0 1 0 " + endPoint;
-				if (index < data.input_ports.length - 1) {
+				if (index < data.inputs.length - 1) {
 					endPoint -= this.layout.portArcSpacing;
 					path += " L 0 " + endPoint;
 				}
@@ -2810,8 +2796,8 @@ class CanvasRenderer {
 	}
 
 	setPortPositionsForNode(node) {
-		this.setPortPositionsByInfo(node, node.input_ports, node.inputPortsHeight);
-		this.setPortPositionsByInfo(node, node.output_ports, node.outputPortsHeight);
+		this.setPortPositionsByInfo(node, node.inputs, node.inputPortsHeight);
+		this.setPortPositionsByInfo(node, node.outputs, node.outputPortsHeight);
 	}
 
 	setPortPositionsByInfo(data, ports, portsHeight) {
@@ -4062,8 +4048,8 @@ class CanvasRenderer {
 		var srcPortId;
 		if (link.srcNodePortId) {
 			srcPortId = link.srcNodePortId;
-		} else if (srcNode.output_ports && srcNode.output_ports.length > 0) {
-			srcPortId = srcNode.output_ports[0].id;
+		} else if (srcNode.outputs && srcNode.outputs.length > 0) {
+			srcPortId = srcNode.outputs[0].id;
 		} else {
 			srcPortId = null;
 		}
@@ -4076,8 +4062,8 @@ class CanvasRenderer {
 		var trgPortId;
 		if (link.trgNodePortId) {
 			trgPortId = link.trgNodePortId;
-		} else if (trgNode.input_ports && trgNode.input_ports.length > 0) {
-			trgPortId = trgNode.input_ports[0].id;
+		} else if (trgNode.inputs && trgNode.inputs.length > 0) {
+			trgPortId = trgNode.inputs[0].id;
 		} else {
 			trgPortId = null;
 		}
@@ -4110,13 +4096,13 @@ class CanvasRenderer {
 		let srcY = this.layout.portPosY;
 		let trgY = this.layout.portPosY;
 
-		if (srcNode.output_ports && srcNode.output_ports.length > 0) {
-			const port = srcNode.output_ports.find((srcPort) => srcPort.id === srcPortId);
+		if (srcNode.outputs && srcNode.outputs.length > 0) {
+			const port = srcNode.outputs.find((srcPort) => srcPort.id === srcPortId);
 			srcY = port ? port.cy : srcY;
 		}
 
-		if (trgNode.input_ports && trgNode.input_ports.length > 0) {
-			const port = trgNode.input_ports.find((trgPort) => trgPort.id === trgPortId);
+		if (trgNode.inputs && trgNode.inputs.length > 0) {
+			const port = trgNode.inputs.find((trgPort) => trgPort.id === trgPortId);
 			trgY = port ? port.cy : trgY;
 		}
 

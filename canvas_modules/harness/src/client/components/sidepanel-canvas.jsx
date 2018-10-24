@@ -183,7 +183,7 @@ export default class SidePanelForms extends React.Component {
 				offsetY: 100,
 				data: {
 					editType: "createNode",
-					operator_id_ref: "derive",
+					op: "derive",
 					nodeTypeId: "derive"
 				}
 			}));

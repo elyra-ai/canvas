@@ -1,5 +1,5 @@
 {
-  "version": "2.0",
+  "version": "3.0",
   "primary_pipeline": "empty-pipeline",
   "pipelines": [
     {
@@ -9,7 +9,7 @@
           "id": "2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
           "class_name": "canvas-node",
           "image": "/images/filter.svg",
-          "output_ports": [
+          "outputs": [
             {
               "id": "outPort",
               "label": "Output Port",
@@ -19,7 +19,7 @@
               }
             }
           ],
-          "input_ports": [],
+          "inputs": [],
           "x_pos": 154,
           "y_pos": 97,
           "label": "Var. File"
@@ -28,7 +28,7 @@
           "id": "b4f90b52-d198-42f0-85cc-31af3914dd4f",
           "class_name": "canvas-node",
           "image": "/images/filter.svg",
-          "output_ports": [
+          "outputs": [
             {
               "id": "outPort",
               "label": "Output Port",
@@ -38,7 +38,7 @@
               }
             }
           ],
-          "input_ports": [
+          "inputs": [
             {
               "id": "inPort",
               "label": "Input Port",
@@ -56,7 +56,7 @@
           "id": "64505c88-132a-4753-8b39-81adf1e8599d",
           "class_name": "canvas-node",
           "image": "/images/filter.svg",
-          "output_ports": [
+          "outputs": [
             {
               "id": "outPort",
               "label": "Output Port",
@@ -66,7 +66,7 @@
               }
             }
           ],
-          "input_ports": [
+          "inputs": [
             {
               "id": "inPort",
               "label": "Input Port",

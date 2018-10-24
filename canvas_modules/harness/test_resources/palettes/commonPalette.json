@@ -1,315 +1,473 @@
 {
-		"version": "2.0",
-		"categories": [
-		{
-			"category": "canvas-models",
-			"label": "MODELS",
-			"image":  "/images/palette-categories/models_open.svg",
-			"nodetypes": [
-				{
-					"label": "C50",
-					"description": "C50 Model",
-					"operator_id_ref": "com.ibm.commonicons.models.c50",
-					"type": "model_node",
-					"image": "/images/common_node_icons/models/model_c50.svg",
-					"input_ports": [
-						{
-							"id": "inPort",
-							"label": "Input Port",
-							"cardinality": {
-								"min": 0,
-								"max": 1
-							}
-						}
-					],
-					"output_ports": [
-					]
-				},
-				{
-					"label": "Cart Build",
-					"description": "Cart Build Model",
-					"operator_id_ref": "com.ibm.commonicons.models.cartbuild",
-					"type": "model_node",
-					"image": "/images/common_node_icons/models/model_cart_build.svg",
-					"input_ports": [
-						{
-							"id": "inPort",
-							"label": "Input Port",
-							"cardinality": {
-								"min": 0,
-								"max": 1
-							}
-						}
-					],
-					"output_ports": [
-					]
-				},
-				{
-					"label": "Feature Selection",
-					"description": "Feature Selection Model",
-					"operator_id_ref": "com.ibm.commonicons.models.featureselection",
-					"type": "model_node",
-					"image": "/images/common_node_icons/models/model_feature_selection.svg",
-					"input_ports": [
-						{
-							"id": "inPort",
-							"label": "Input Port",
-							"cardinality": {
-								"min": 0,
-								"max": 1
-							}
-						}
-					],
-					"output_ports": [
-					]
-				},
-				{
-					"label": "Linear Regression",
-					"description": "Linear Regression Model",
-					"operator_id_ref": "com.ibm.commonicons.models.linerregression",
-					"type": "model_node",
-					"image": "/images/common_node_icons/models/model_linear_regression.svg",
-					"input_ports": [
-						{
-							"id": "inPort",
-							"label": "Input Port",
-							"cardinality": {
-								"min": 0,
-								"max": 1
-							}
-						}
-					],
-					"output_ports": [
-					]
-				},
-				{
-					"label": "Logistic Regression",
-					"description": "Logistic Regression Model",
-					"operator_id_ref": "com.ibm.commonicons.models.logisticregression",
-					"type": "model_node",
-					"image": "/images/common_node_icons/models/model_logistic_regression.svg",
-					"input_ports": [
-						{
-							"id": "inPort",
-							"label": "Input Port",
-							"cardinality": {
-								"min": 0,
-								"max": 1
-							}
-						}
-					],
-					"output_ports": [
-					]
-				},
-				{
-					"label": "Neural Network",
-					"description": "Neural Network Model",
-					"operator_id_ref": "com.ibm.commonicons.models.neuralnetwork",
-					"type": "model_node",
-					"image": "/images/common_node_icons/models/model_neural_network.svg",
-					"input_ports": [
-						{
-							"id": "inPort",
-							"label": "Input Port",
-							"cardinality": {
-								"min": 0,
-								"max": 1
-							}
-						}
-					],
-					"output_ports": [
-					]
-				},
-				{
-					"label": "Random Forest",
-					"description": "Random Forest Model",
-					"operator_id_ref": "com.ibm.commonicons.models.randomforest",
-					"type": "model_node",
-					"image": "/images/common_node_icons/models/model_random_forest.svg",
-					"input_ports": [
-						{
-							"id": "inPort",
-							"label": "Input Port",
-							"cardinality": {
-								"min": 0,
-								"max": 1
-							}
-						}
-					],
-					"output_ports": [
-					]
-				}
-			]
-		},
-		{
-			"category": "canvas-operations",
-			"label": "OPERATIONS",
-			"image":  "/images/palette-categories/operations_open.svg",
-			"nodetypes": [
-				{
-					"label": "Aggregate",
-					"description": "Aggregate data",
-					"operator_id_ref": "com.ibm.commonicons.operations.aggregate",
-					"type": "execution_node",
-					"image": "/images/common_node_icons/operations/operation_aggregate.svg",
-					"input_ports": [
-						{
-							"id": "inPort",
-							"label": "Input Port",
-							"cardinality": {
-								"min": 0,
-								"max": 1
-							}
-						}
-					],
-					"output_ports": [
-						{
-							"id": "outPort",
-							"label": "Output Port",
-							"cardinality": {
-								"min": 0,
-								"max": -1
-							}
-						}
-					]
-				},
-				{
-					"label": "Append",
-					"description": "Append data",
-					"operator_id_ref": "com.ibm.commonicons.operations.append",
-					"type": "execution_node",
-					"image": "/images/common_node_icons/operations/operation_append.svg",
-					"input_ports": [
-						{
-							"id": "inPort",
-							"label": "Input Port",
-							"cardinality": {
-								"min": 0,
-								"max": 1
-							}
-						}
-					],
-					"output_ports": [
-						{
-							"id": "outPort",
-							"label": "Output Port",
-							"cardinality": {
-								"min": 0,
-								"max": -1
-							}
-						}
-					]
-				},
-				{
-					"label": "Balance",
-					"description": "Balance data",
-					"operator_id_ref": "com.ibm.commonicons.operations.balance",
-					"type": "execution_node",
-					"image": "/images/common_node_icons/operations/operation_balance.svg",
-					"input_ports": [
-						{
-							"id": "inPort",
-							"label": "Input Port",
-							"cardinality": {
-								"min": 0,
-								"max": 1
-							}
-						}
-					],
-					"output_ports": [
-						{
-							"id": "outPort",
-							"label": "Output Port",
-							"cardinality": {
-								"min": 0,
-								"max": -1
-							}
-						}
-					]
-				},
-				{
-					"label": "Binning",
-					"description": "Binning data",
-					"operator_id_ref": "com.ibm.commonicons.operations.binning",
-					"type": "execution_node",
-					"image": "/images/common_node_icons/operations/operation_binning.svg",
-					"input_ports": [
-						{
-							"id": "inPort",
-							"label": "Input Port",
-							"cardinality": {
-								"min": 0,
-								"max": 1
-							}
-						}
-					],
-					"output_ports": [
-						{
-							"id": "outPort",
-							"label": "Output Port",
-							"cardinality": {
-								"min": 0,
-								"max": -1
-							}
-						}
-					]
-				},
-				{
-					"label": "Derive",
-					"description": "Derive data",
-					"operator_id_ref": "com.ibm.commonicons.operations.derive",
-					"type": "execution_node",
-					"image": "/images/common_node_icons/operations/operation_derive.svg",
-					"input_ports": [
-						{
-							"id": "inPort",
-							"label": "Input Port",
-							"cardinality": {
-								"min": 0,
-								"max": 1
-							}
-						}
-					],
-					"output_ports": [
-						{
-							"id": "outPort",
-							"label": "Output Port",
-							"cardinality": {
-								"min": 0,
-								"max": -1
-							}
-						}
-					]
-				},
-				{
-					"label": "Distinct",
-					"description": "Distinct data",
-					"operator_id_ref": "com.ibm.commonicons.operations.distinct",
-					"type": "execution_node",
-					"image": "/images/common_node_icons/operations/operation_distinct.svg",
-					"input_ports": [
-						{
-							"id": "inPort",
-							"label": "Input Port",
-							"cardinality": {
-								"min": 0,
-								"max": 1
-							}
-						}
-					],
-					"output_ports": [
-						{
-							"id": "outPort",
-							"label": "Output Port",
-							"cardinality": {
-								"min": 0,
-								"max": -1
-							}
-						}
-					]
-				}
-			]
-		}
-
-	]
-}
+      "version": "3.0",
+      "categories": [
+        {
+          "label": "MODELS",
+          "image": "/images/palette-categories/models_open.svg",
+          "id": "canvas-models",
+          "node_types": [
+            {
+              "id": "",
+              "type": "model_node",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "C50",
+                  "description": "C50 Model",
+                  "image": "/images/common_node_icons/models/model_c50.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            },
+            {
+              "id": "",
+              "type": "model_node",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Cart Build",
+                  "description": "Cart Build Model",
+                  "image": "/images/common_node_icons/models/model_cart_build.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            },
+            {
+              "id": "",
+              "type": "model_node",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Feature Selection",
+                  "description": "Feature Selection Model",
+                  "image": "/images/common_node_icons/models/model_feature_selection.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            },
+            {
+              "id": "",
+              "type": "model_node",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Linear Regression",
+                  "description": "Linear Regression Model",
+                  "image": "/images/common_node_icons/models/model_linear_regression.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            },
+            {
+              "id": "",
+              "type": "model_node",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Logistic Regression",
+                  "description": "Logistic Regression Model",
+                  "image": "/images/common_node_icons/models/model_logistic_regression.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            },
+            {
+              "id": "",
+              "type": "model_node",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Neural Network",
+                  "description": "Neural Network Model",
+                  "image": "/images/common_node_icons/models/model_neural_network.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            },
+            {
+              "id": "",
+              "type": "model_node",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Random Forest",
+                  "description": "Random Forest Model",
+                  "image": "/images/common_node_icons/models/model_random_forest.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "label": "OPERATIONS",
+          "image": "/images/palette-categories/operations_open.svg",
+          "id": "canvas-operations",
+          "node_types": [
+            {
+              "id": "",
+              "type": "execution_node",
+              "op": "com.ibm.commonicons.operations.aggregate",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "outputs": [
+                {
+                  "id": "outPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": -1
+                      },
+                      "label": "Output Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Aggregate",
+                  "description": "Aggregate data",
+                  "image": "/images/common_node_icons/operations/operation_aggregate.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            },
+            {
+              "id": "",
+              "type": "execution_node",
+              "op": "com.ibm.commonicons.operations.append",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "outputs": [
+                {
+                  "id": "outPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": -1
+                      },
+                      "label": "Output Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Append",
+                  "description": "Append data",
+                  "image": "/images/common_node_icons/operations/operation_append.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            },
+            {
+              "id": "",
+              "type": "execution_node",
+              "op": "com.ibm.commonicons.operations.balance",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "outputs": [
+                {
+                  "id": "outPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": -1
+                      },
+                      "label": "Output Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Balance",
+                  "description": "Balance data",
+                  "image": "/images/common_node_icons/operations/operation_balance.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            },
+            {
+              "id": "",
+              "type": "execution_node",
+              "op": "com.ibm.commonicons.operations.binning",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "outputs": [
+                {
+                  "id": "outPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": -1
+                      },
+                      "label": "Output Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Binning",
+                  "description": "Binning data",
+                  "image": "/images/common_node_icons/operations/operation_binning.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            },
+            {
+              "id": "",
+              "type": "execution_node",
+              "op": "com.ibm.commonicons.operations.derive",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "outputs": [
+                {
+                  "id": "outPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": -1
+                      },
+                      "label": "Output Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Derive",
+                  "description": "Derive data",
+                  "image": "/images/common_node_icons/operations/operation_derive.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            },
+            {
+              "id": "",
+              "type": "execution_node",
+              "op": "com.ibm.commonicons.operations.distinct",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "outputs": [
+                {
+                  "id": "outPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": -1
+                      },
+                      "label": "Output Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Distinct",
+                  "description": "Distinct data",
+                  "image": "/images/common_node_icons/operations/operation_distinct.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }

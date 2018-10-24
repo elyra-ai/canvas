@@ -17,7 +17,9 @@ import PaletteFlyoutContentListItem from "../../src/palette/palette-content-list
 import { expect } from "chai";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 
-import testPalette from "../test_resources/palettes/image-test-palette.json";
+import imageTestPalette from "../test_resources/palettes/image-test-palette.json";
+import testPalette2 from "../test_resources/palettes/test-palette2.json";
+
 
 const canvasController = new CanvasController();
 
@@ -31,7 +33,7 @@ describe("Palette renders correctly", () => {
 
 	it("should have properties defined", () => {
 		const flyoutPalette = createMountedPalette();
-		expect(flyoutPalette.prop("paletteJSON")).to.equal(paletteSpec);
+		expect(flyoutPalette.prop("paletteJSON")).to.equal(testPalette2);
 	});
 
 	it("should render 1 <PaletteFlyoutContent/> component", () => {
@@ -95,7 +97,7 @@ describe("Palette renders correctly", () => {
 	it("open palette should show correct values for category and node with and without an image", () => {
 		const config = {
 			showPalette: true,
-			palette: testPalette,
+			palette: imageTestPalette,
 			paletteWidth: 250
 		};
 		const palette = createMountedPalette(config);
@@ -110,7 +112,7 @@ describe("Palette renders correctly", () => {
 	it("narrow palette should show correct values for category and node with and without an image", () => {
 		const config = {
 			showPalette: false,
-			palette: testPalette,
+			palette: imageTestPalette,
 			paletteWidth: 64
 		};
 		const palette = createMountedPalette(config);
@@ -129,96 +131,10 @@ describe("Palette renders correctly", () => {
 	});
 });
 
-const paletteSpec = {
-	"categories": [
-		{
-			"category": "import",
-			"label": "Import",
-			"nodetypes": [{
-				"label": "Var. File",
-				"description": "Imports data from a comma-delimited file",
-				"typeId": "variablefile",
-				"image": "data:image/svg+xml;base64,..",
-				"outputPorts": [{
-					"name": "out-data",
-					"label": "Output data",
-					"cardinality": "1:N"
-				}]
-			}, {
-				"label": "User Input",
-				"description": "Allows a user to generate literal data",
-				"typeId": "userinput",
-				"image": "data:image/svg+xml;base64,..",
-				"outputPorts": [{
-					"name": "out-data",
-					"label": "Output data",
-					"cardinality": "1:N"
-				}]
-			}, {
-				"label": "Object Store",
-				"description": "Imports data from the Object Store",
-				"typeId": "object_storage_import",
-				"image": "data:image/svg+xml;base64,..",
-				"outputPorts": [{
-					"name": "out-data",
-					"label": "Output data",
-					"cardinality": "1:N"
-				}]
-			}]
-		},
-		{
-			"category": "output",
-			"label": "Outputs",
-			"nodetypes": [
-				{
-					"label": "Table",
-					"description": "Displays results in a table",
-					"typeId": "table",
-					"image": "data:image/svg+xml;base64,...",
-					"inputPorts": [
-						{
-							"name": "inPort",
-							"label": "Input Port",
-							"cardinality": "0:1"
-						}
-					],
-					"outputPorts": [
-						{
-							"name": "outPort",
-							"label": "Output Port",
-							"cardinality": "0:1"
-						}
-					]
-				},
-				{
-					"label": "Data Audit",
-					"description": "Audits the quality of a data set",
-					"typeId": "dataaudit",
-					"image": "data:image/svg+xml;base64,...",
-					"inputPorts": [
-						{
-							"name": "inPort",
-							"label": "Input Port",
-							"cardinality": "0:1"
-						}
-					],
-					"outputPorts": [
-						{
-							"name": "outPort",
-							"label": "Output Port",
-							"cardinality": "0:1"
-						}
-					]
-				}
-			]
-		}
-	]
-};
-
 function createPalette() {
 	const popupPalette = shallow(
 		<PaletteFlyout
-			paletteJSON={paletteSpec}
+			paletteJSON={testPalette2}
 			showPalette
 			canvasController={canvasController}
 			paletteWidth={64}
@@ -226,10 +142,11 @@ function createPalette() {
 	);
 	return popupPalette;
 }
+
 function createMountedPalette(config) {
 	const showPalette = config ? config.showPalette : true;
 	const paletteWidth = config ? config.paletteWidth : 64;
-	const palette = (config && config.palette) ? config.palette : paletteSpec;
+	const palette = (config && config.palette) ? config.palette : testPalette2;
 	const wrapper = mount(
 		<PaletteFlyout
 			paletteJSON={palette}
@@ -240,7 +157,6 @@ function createMountedPalette(config) {
 	);
 	return wrapper;
 }
-
 
 function findCategoryElement(flyoutPaletteContent, categoryName) {
 	var categories = flyoutPaletteContent.find(".palette-flyout-category");

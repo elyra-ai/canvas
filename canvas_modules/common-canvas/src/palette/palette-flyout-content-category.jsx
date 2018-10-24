@@ -23,7 +23,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 	onMouseOver(ev) {
 		this.props.canvasController.openTip({
-			id: "paletteTip_" + this.props.category.category, // category field of the category object
+			id: "paletteTip_" + this.props.category.id,
 			type: TIP_TYPE_PALETTE_CATEGORY,
 			targetObj: ev.currentTarget,
 			category: this.props.category
@@ -48,7 +48,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	categorySelected() {
-		this.props.categorySelectedMethod(this.props.category.category); // category field is the ID of category object
+		this.props.categorySelectedMethod(this.props.category.id);
 	}
 
 	render() {
@@ -60,7 +60,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 		let caretImage = null;
 		if (this.props.itemCount > 0) {
 			caretImage = <svg className={caretClassName}><Icon type="downCaret" /></svg>;
-			if (this.props.selectedCategoryId === this.props.category.category) {
+			if (this.props.selectedCategoryId === this.props.category.id) {
 				caretImage = <svg className={caretClassName}><Icon type="upCaret" /></svg>;
 			}
 		}

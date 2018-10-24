@@ -157,8 +157,8 @@ export default class CreateSuperNodeAction extends Action {
 			description: "This supernode was created by common-canvas.",
 			image: SupernodeIcon,
 			label: "Supernode",
-			input_ports: supernodeInputPorts,
-			output_ports: supernodeOutputPorts,
+			inputs: supernodeInputPorts,
+			outputs: supernodeOutputPorts,
 			type: SUPER_NODE,
 			subflow_ref: {
 				pipeline_id_ref: this.canvasInfoSubPipeline.id
@@ -221,7 +221,7 @@ export default class CreateSuperNodeAction extends Action {
 			if (bindingNodeData.type === "entry") {
 				const pos = { x: subflowRect.x - (boundingRectPadding * 2), y: entryBindingYPos += boundingRectPadding };
 				bindingNodePort.id = bindingNodePort.id ? "output_" + bindingNodePort.id : bindingNodePort.id;
-				const inputBindingNode = this.createBindingNode(bindingNodeData.link, { output_ports: [bindingNodePort] }, pos);
+				const inputBindingNode = this.createBindingNode(bindingNodeData.link, { outputs: [bindingNodePort] }, pos);
 				this.supernodeBindingNodesMappedToParentFlowData[inputBindingNode.id] = {
 					portId: bindingNodeData.port.id,
 					link: bindingNodeData.link
@@ -230,7 +230,7 @@ export default class CreateSuperNodeAction extends Action {
 			} else {
 				const pos = { x: subflowRect.x + subflowRect.width + boundingRectPadding, y: exitBindingYPos += boundingRectPadding };
 				bindingNodePort.id = bindingNodePort.id ? "input_" + bindingNodePort.id : bindingNodePort.id;
-				const outputBindingNode = this.createBindingNode(bindingNodeData.link, { input_ports: [bindingNodePort] }, pos);
+				const outputBindingNode = this.createBindingNode(bindingNodeData.link, { inputs: [bindingNodePort] }, pos);
 				this.supernodeBindingNodesMappedToParentFlowData[outputBindingNode.id] = {
 					portId: bindingNodeData.port.id,
 					link: bindingNodeData.link
@@ -271,7 +271,7 @@ export default class CreateSuperNodeAction extends Action {
 		if (links.length > 1) {
 			const supernodeLinks = [...links];
 
-			const portType = type === "input" ? "input_ports" : "output_ports";
+			const portType = type === "input" ? "inputs" : "outputs";
 			const linkNodeType = type === "input" ? "trgNodeId" : "srcNodeId";
 			const linkNodePortType = type === "input" ? "trgNodePortId" : "srcNodePortId";
 
@@ -321,7 +321,7 @@ export default class CreateSuperNodeAction extends Action {
 	}
 
 	createSupernodePorts(node, link, supernodePorts, type) {
-		const portType = type === "entry" ? "input_ports" : "output_ports";
+		const portType = type === "entry" ? "inputs" : "outputs";
 		const linkNodePortType = type === "entry" ? "trgNodePortId" : "srcNodePortId";
 
 		if (typeof link[linkNodePortType] !== "undefined" && link[linkNodePortType] !== null) {

@@ -18,7 +18,7 @@
     "debug": "NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
-    "@wdp/pipeline-schemas": "^2.0.22",
+    "@wdp/pipeline-schemas": "^2.0.15",
     "carbon-components": "8.20.3",
     "carbon-components-react": "5.48.1",
     "carbon-icons": "6.3.2",

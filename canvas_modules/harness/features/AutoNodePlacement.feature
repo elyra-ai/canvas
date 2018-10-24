@@ -17,12 +17,12 @@ Feature: AutoNodePlacement
 
 		Then I open the palette
 
-		Then I double click "C5.0" node from the "Modeling" category onto the canvas
+		Then I double click "Export Object Store" node from the "Export" category onto the canvas
 		Then I verify the node 1 position is "translate(50, 50)"
 		Then I verify the number of nodes are 1
 		Then I verify the number of port data links are 0
 
-		Then I double click "C5.0" node from the "Modeling" category onto the canvas
+		Then I double click "Export Object Store" node from the "Export" category onto the canvas
 		Then I verify the node 2 position is "translate(200, 50)"
 		Then I verify the number of nodes are 2
 		Then I verify the number of port data links are 0
@@ -88,14 +88,14 @@ Feature: AutoNodePlacement
 
 		Then I select node 9 the "Select" node
 
-		Then I double click "C5.0" node from the "Modeling" category onto the canvas
+		Then I double click "Export Object Store" node from the "Export" category onto the canvas
 		Then I verify the node 10 position is "translate(350, 360)"
 		Then I verify the number of nodes are 10
 		Then I verify the number of port data links are 8
 
-		Then I select node 10 the "C5.0" node
+		Then I select node 10 the "Export Object Store" node
 
-		Then I double click "C5.0" node from the "Modeling" category onto the canvas
+		Then I double click "Export Object Store" node from the "Export" category onto the canvas
 		Then I verify the node 11 position is "translate(500, 360)"
 		Then I verify the number of nodes are 11
 		Then I verify the number of port data links are 8

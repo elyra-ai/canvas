@@ -68,9 +68,7 @@ function setNodeForm(nodeId, nodeOp) {
 
 function setNodeForms(nodes) {
 	for (const node of nodes) {
-		let nodeOp = node.operator_id_ref ? node.operator_id_ref : "default"; // If op not supplied then get the default
-		nodeOp = node.type === "super_node" ? "Supernode_paramDef" : nodeOp;
-		setNodeForm(node.id, nodeOp);
+		setNodeForm(node.id, node.op);
 	}
 }
 

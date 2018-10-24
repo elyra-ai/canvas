@@ -387,7 +387,7 @@ class App extends React.Component {
 		let nodeForm = NodeToForm.getNodeForm(nodeId);
 		// if form for node is not loaded then load it and get it.
 		if (!nodeForm) {
-			NodeToForm.setNodeForm(nodeId, canvasController.getNode(nodeId, pipelineId).operator_id_ref);
+			NodeToForm.setNodeForm(nodeId, canvasController.getNode(nodeId, pipelineId).op);
 			nodeForm = NodeToForm.getNodeForm(nodeId);
 		}
 		// set current parameterSet
@@ -1026,8 +1026,8 @@ class App extends React.Component {
 
 	editActionHandler(data) {
 		var type = "";
-		if (data.operator_id_ref) {
-			type = data.operator_id_ref;
+		if (data.newNode && data.newNode.op) {
+			type = data.newNode.op;
 		} else if (data.nodes) {
 			if (data.nodes[0].id) {
 				type = data.nodes[0].id; // Node link
@@ -1230,14 +1230,14 @@ class App extends React.Component {
 	tipHandler(tipType, data) {
 		if (tipType === "tipTypeLink") {
 			let sourceString = "comment";
-			if (data.link.src.output_ports) {
-				const srcPort = !data.link.src.output_ports ? null : data.link.src.output_ports.find(function(port) {
+			if (data.link.src.outputs) {
+				const srcPort = !data.link.src.outputs ? null : data.link.src.outputs.find(function(port) {
 					return port.id === data.link.srcPortId;
 				});
 				sourceString = `'${data.link.src.label}'` + (srcPort && srcPort.label ? `, port '${srcPort.label}'` : "");
 			}
 
-			const trgPort = data.link.trg.input_ports.find(function(port) {
+			const trgPort = data.link.trg.inputs.find(function(port) {
 				return port.id === data.link.trgPortId;
 			});
 			const targetString = `'${data.link.trg.label}'` + (trgPort && trgPort.label ? `, port '${trgPort.label}'` : "");

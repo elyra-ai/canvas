@@ -32,11 +32,11 @@ export default class CanvasOutHandler {
 			var newNode = {
 				id: canvasnode.id
 			};
-			if (canvasnode.input_ports) {
-				newNode.inputPorts = this.getCanvasPorts(canvasnode.input_ports);
+			if (canvasnode.inputs) {
+				newNode.inputPorts = this.getCanvasPorts(canvasnode.inputs);
 			}
-			if (canvasnode.output_ports) {
-				newNode.outputPorts = this.getCanvasPorts(canvasnode.output_ports);
+			if (canvasnode.outputs) {
+				newNode.outputPorts = this.getCanvasPorts(canvasnode.outputs);
 			}
 			newNode.image = canvasnode.image;
 			newNode.x_pos = canvasnode.x_pos;

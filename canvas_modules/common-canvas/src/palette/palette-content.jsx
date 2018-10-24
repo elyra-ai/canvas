@@ -56,7 +56,7 @@ class PaletteContent extends React.Component {
 		if (categories) {
 			for (var idx = 0; idx < categories.length; idx++) {
 				if (categories[idx].label === this.state.selectedCategory) {
-					out = categories[idx].nodetypes;
+					out = categories[idx].node_types;
 				}
 			}
 		}

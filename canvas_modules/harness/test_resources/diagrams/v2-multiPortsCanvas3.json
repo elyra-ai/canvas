@@ -1,0 +1,229 @@
+{
+  "doc_type": "pipeline",
+  "version": "2.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
+  "id": "24cc9881-f83a-4d38-b15b-8bf541e100fa",
+  "primary_pipeline": "empty-pipeline",
+  "pipelines": [
+    {
+      "id": "empty-pipeline",
+      "nodes": [
+        {
+          "id": "a34ae440-0c3d-4f0e-b5a7-ddf9e45db746",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Var. File",
+              "image": "/images/common_node_icons/sources/source_var_import.svg",
+              "x_pos": 32,
+              "y_pos": 62.5
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "c079dc28-f325-4caa-99f4-8c3d04987503",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "ui_data": {
+              "label": "Select2",
+              "image": "/images/common_node_icons/operations/operation_select.svg",
+              "x_pos": 575,
+              "y_pos": 70.5
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "b16deb33-4e84-45f1-a7d2-6a2e5d8d2618",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "ui_data": {
+              "label": "Select3",
+              "image": "/images/common_node_icons/operations/operation_select.svg",
+              "x_pos": 38,
+              "y_pos": 333.5
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port One"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port Two"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "f43f5f8f-7fc2-4979-8c3e-461df32db739",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "ui_data": {
+              "label": "Select1",
+              "image": "/images/common_node_icons/operations/operation_select.svg",
+              "x_pos": 298,
+              "y_pos": 63.5
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "aae22a0a-d7e5-4162-902b-450a0147ed26",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "ui_data": {
+              "label": "Table",
+              "image": "/images/common_node_icons/output/output_table.svg",
+              "x_pos": 837,
+              "y_pos": 69.5
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 4
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        }
+      },
+      "runtime_ref": "scala-spark-2.0.1"
+    }
+  ],
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "scala-spark-2.0.1",
+      "name": "scala-spark-2.0.1"
+    }
+  ]
+}

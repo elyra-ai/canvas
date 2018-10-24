@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-
+/* eslint complexity: ["error", 21] */
 import React from "react";
 import PropTypes from "prop-types";
 import Tooltip from "./tooltip.jsx";
@@ -55,14 +55,14 @@ export default class TooltipWrapper extends React.Component {
 			switch (this.props.type) {
 			case TIP_TYPE_PALETTE_ITEM:
 				{
-					const category = this.props.canvasController.getObjectModel().getCategoryForNode(this.props.nodeTemplate.operator_id_ref);
+					const category = this.props.canvasController.getObjectModel().getCategoryForNode(this.props.nodeTemplate.op);
 					content = (
 						<div className="tip-palette-item">
 							<hr className="tip-palette-line" />
 							<div className="tip-palette-category">{category.label}</div>
-							<div className="tip-palette-label">{this.props.nodeTemplate.label}</div>
-							{this.props.nodeTemplate.description
-								? (<div className="tip-palette-desc">{this.props.nodeTemplate.description}</div>)
+							<div className="tip-palette-label">{this.props.nodeTemplate.app_data.ui_data.label}</div>
+							{this.props.nodeTemplate.app_data.ui_data.description
+								? (<div className="tip-palette-desc">{this.props.nodeTemplate.app_data.ui_data.description}</div>)
 								: ("")
 							}
 						</div>
@@ -89,10 +89,11 @@ export default class TooltipWrapper extends React.Component {
 					} else if (this.props.canvasController.getObjectModel().hasWarningMessage(this.props.node.id)) {
 						icon = (<Icon className="tip-node-status warning" name="warning--glyph" />);
 					}
-					const nodeType = this.props.canvasController.getObjectModel().getPaletteNode(this.props.node.operator_id_ref);
+					const nodeType = this.props.canvasController.getObjectModel().getPaletteNode(this.props.node.op);
 					let nodeLabel = this.props.node.label;
-					if (nodeType && nodeLabel !== nodeType.label) {
-						nodeLabel += ` (${nodeType.label})`;
+					const nodeTypeLabel = nodeType && nodeType.app_data && nodeType.app_data.ui_data ? nodeType.app_data.ui_data.label : nodeLabel;
+					if (nodeLabel !== nodeTypeLabel) {
+						nodeLabel += ` (${nodeTypeLabel})`;
 					}
 
 					content = (

@@ -9,6 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import has from "lodash/has";
 import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../common-canvas/constants/canvas-constants.js";
 
 class PaletteContentNode extends React.Component {
@@ -40,7 +41,7 @@ class PaletteContentNode extends React.Component {
 
 	onMouseOver(ev) {
 		this.props.canvasController.openTip({
-			id: "paletteTip_" + this.props.nodeTemplate.operator_id_ref,
+			id: "paletteTip_" + this.props.nodeTemplate.op,
 			type: TIP_TYPE_PALETTE_ITEM,
 			targetObj: ev.currentTarget,
 			nodeTemplate: this.props.nodeTemplate
@@ -52,6 +53,15 @@ class PaletteContentNode extends React.Component {
 	}
 
 	render() {
+		let image = null;
+		let label = "";
+		if (has(this.props.nodeTemplate, "app_data.ui_data.image")) {
+			image = this.props.nodeTemplate.app_data.ui_data.image;
+		}
+		if (has(this.props.nodeTemplate, "app_data.ui_data.label")) {
+			label = this.props.nodeTemplate.app_data.ui_data.label;
+		}
+
 		return (
 			<div id={this.props.nodeTemplate.id}
 				draggable="true"
@@ -63,12 +73,12 @@ class PaletteContentNode extends React.Component {
 			>
 				<div className="palette-grid-node-inner">
 					<div className="palette-grid-node-icon">
-						<img className="node-icon" src={this.props.nodeTemplate.image}
-							alt={this.props.nodeTemplate.label}
+						<img className="node-icon" src={image}
+							alt={label}
 						/>
 					</div>
 					<div className="palette-grid-node-text">
-						{this.props.nodeTemplate.label}
+						{label}
 					</div>
 				</div>
 			</div>

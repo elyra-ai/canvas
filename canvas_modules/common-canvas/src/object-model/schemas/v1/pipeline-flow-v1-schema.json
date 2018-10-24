@@ -443,7 +443,7 @@
         "ui_data": {
           "anyOf": [
             {
-              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/pipeline_overview"
+              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/pipeline_overview_def"
             },
             {
               "$ref": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/pipeline_def"

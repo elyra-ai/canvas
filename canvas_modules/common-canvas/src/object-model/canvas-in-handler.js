@@ -24,8 +24,8 @@ export default class CanvasInHandler {
 		};
 		return {
 			doc_type: "pipeline",
-			version: "2.0",
-			json_schema: "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
+			version: "3.0",
+			json_schema: "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
 			id: canvas.id,
 			primary_pipeline: canvas.diagram.id,
 			pipelines: [canvasInfoPipeline]
@@ -48,10 +48,10 @@ export default class CanvasInHandler {
 				newNode.description = canvasNode.objectData.description;
 			}
 			if (canvasNode.inputPorts) {
-				newNode.input_ports = this.getInputPorts(canvasNode.inputPorts, 1);
+				newNode.inputs = this.getInputPorts(canvasNode.inputPorts, 1);
 			}
 			if (canvasNode.outputPorts) {
-				newNode.output_ports = this.getOutputPorts(canvasNode.outputPorts, -1);
+				newNode.outputs = this.getOutputPorts(canvasNode.outputPorts, -1);
 			}
 			if (canvasNode.decorations) {
 				newNode.decorations = this.getDecorations(canvasNode.decorations);
@@ -60,6 +60,7 @@ export default class CanvasInHandler {
 				// Assume WML Canvas will always use vertical format.
 				const layout = LayoutDimensions.getLayout("ports-vertical");
 				newNode.subflow_ref = { pipeline_id_ref: canvasNode.subDiagramId, url: "app_defined" };
+				newNode.open_with_tool = "canvas";
 				newNode.is_expanded = false;
 				newNode.expanded_width = layout.supernodeDefaultWidth;
 				newNode.expanded_height = layout.supernodeDefaultHeight;
@@ -71,9 +72,9 @@ export default class CanvasInHandler {
 
 			if (nodeType === "execution_node") {
 				if (canvasNode.userData && canvasNode.userData.typeId) {
-					newNode.operator_id_ref = canvasNode.userData.typeId;
+					newNode.op = canvasNode.userData.typeId;
 				} else {
-					newNode.operator_id_ref = "";
+					newNode.op = "";
 				}
 			}
 
@@ -215,13 +216,14 @@ export default class CanvasInHandler {
 	}
 
 	// ==========================================================================
-	// Functions below are for converting old palette data to new palette data
-	// used with pipeline flow.
+	// Functions below are for converting old palette data to new v1.0 palette
+	// data used with pipeline flow. The upgrade-palette.js file will do all
+	// necessary conversions from v1.0 to the latest version.
 	// ==========================================================================
 
 	static convertPaletteToPipelineFlowPalette(canvasPalette) {
 		return {
-			version: "2.0",
+			version: "1.0",
 			categories: this.getCategories(canvasPalette.categories)
 		};
 	}
@@ -240,6 +242,7 @@ export default class CanvasInHandler {
 	static convertNodeTypes(nodetypes) {
 		return nodetypes.map((nodetype) => {
 			var newNodeType = {
+				type: this.getType(nodetype),
 				label: nodetype.label,
 				description: nodetype.description,
 				operator_id_ref: nodetype.typeId,
@@ -282,11 +285,9 @@ export default class CanvasInHandler {
 		let isVersion0Palette = false;
 
 		for (let idx = 0; idx < palette.categories.length; idx++) {
-			if (palette.categories[idx].nodetypes.length > 0) {
-				if (this.isVersion0Category(palette.categories[idx])) {
-					isVersion0Palette = true;
-					break;
-				}
+			if (this.isVersion0Category(palette.categories[idx])) {
+				isVersion0Palette = true;
+				break;
 			}
 		}
 		return isVersion0Palette;
@@ -297,10 +298,12 @@ export default class CanvasInHandler {
 	static isVersion0Category(category) {
 		let isVersion0Palette = false;
 
-		for (let idx = 0; idx < category.nodetypes.length; idx++) {
-			if (category.nodetypes[idx].typeId) {
-				isVersion0Palette = true;
-				break;
+		if (category.nodetypes) {
+			for (let idx = 0; idx < category.nodetypes.length; idx++) {
+				if (category.nodetypes[idx].typeId) {
+					isVersion0Palette = true;
+					break;
+				}
 			}
 		}
 		return isVersion0Palette;

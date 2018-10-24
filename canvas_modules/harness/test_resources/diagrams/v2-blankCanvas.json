@@ -1,0 +1,26 @@
+{
+  "doc_type": "pipeline",
+  "version": "2.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
+  "id": "blank-canvas-id",
+  "primary_pipeline": "empty-pipeline",
+  "pipelines": [
+    {
+      "id": "empty-pipeline",
+      "nodes": [],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        }
+      },
+      "runtime_ref": "scala-spark-2.0.1"
+    }
+  ],
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "scala-spark-2.0.1",
+      "name": "scala-spark-2.0.1"
+    }
+  ]
+}

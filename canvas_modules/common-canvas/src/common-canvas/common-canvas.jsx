@@ -157,22 +157,8 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	initializeController(props) {
-		this.canvasController.setCanvasConfig({
-			enableConnectionType: props.config.enableConnectionType,
-			enableNodeFormatType: props.config.enableNodeFormatType,
-			enableLinkType: props.config.enableLinkType,
-			enableInternalObjectModel: props.config.enableInternalObjectModel,
-			enablePaletteLayout: props.config.enablePaletteLayout,
-			enableMoveNodesOnSupernodeResize: props.config.enableMoveNodesOnSupernodeResize,
-			emptyCanvasContent: props.config.emptyCanvasContent,
-			toolbarConfig: props.toolbarConfig,
-			contextMenuConfig: props.contextMenuConfig,
-			tipConfig: props.config.tipConfig,
-			rightFlyoutContent: props.rightFlyoutContent,
-			showRightFlyout: props.showRightFlyout,
-			closeRightFlyout: props.closeRightFlyout,
-			schemaValidation: props.config.schemaValidation
-		});
+		this.canvasController.setCanvasConfig(props.config);
+		this.canvasController.setContextMenuConfig(props.contextMenuConfig);
 
 		this.canvasController.setHandlers({
 			contextMenuHandler: props.contextMenuHandler,

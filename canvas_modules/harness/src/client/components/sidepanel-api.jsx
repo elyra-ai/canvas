@@ -34,28 +34,41 @@ import {
 } from "../constants/constants.js";
 
 const defaultNodeType = {
-	"label": "Custom Node Type",
-	"description": "Custom node type",
-	"operator_id_ref": "customOp",
+	"id": "",
+	"op": "customOp",
 	"type": "binding",
-	"image": "/images/common_node_icons/models/model_cart_build.svg",
-	"input_ports": [
+	"app_data": {
+		"ui_data": {
+			"label": "Custom Node Type",
+			"description": "Custom node type",
+			"image": "/images/common_node_icons/models/model_cart_build.svg"
+		}
+	},
+	"inputs": [
 		{
 			"id": "inPort",
-			"label": "Input Port",
-			"cardinality": {
-				"min": 0,
-				"max": -1
+			"app_data": {
+				"ui_data": {
+					"label": "Input Port",
+					"cardinality": {
+						"min": 0,
+						"max": -1
+					}
+				}
 			}
 		}
 	],
-	"output_ports": [
+	"outputs": [
 		{
 			"id": "outPort",
-			"label": "Output Port",
-			"cardinality": {
-				"min": 0,
-				"max": -1
+			"app_data": {
+				"ui_data": {
+					"label": "Output Port",
+					"cardinality": {
+						"min": 0,
+						"max": -1
+					}
+				}
 			}
 		}
 	],
@@ -126,15 +139,15 @@ export default class SidePanelAPI extends React.Component {
 		} else if (operation === API_SET_INPUT_PORT_LABEL || operation === API_SET_OUTPUT_PORT_LABEL) {
 			// when selecting operation to set input or output port...
 			const filteredNodeList = (operation === API_SET_INPUT_PORT_LABEL)
-				? this.props.getCanvasInfo().nodes.filter((node) => !isEmpty(node.input_ports))
-				: this.props.getCanvasInfo().nodes.filter((node) => !isEmpty(node.output_ports));
+				? this.props.getCanvasInfo().nodes.filter((node) => !isEmpty(node.inputs))
+				: this.props.getCanvasInfo().nodes.filter((node) => !isEmpty(node.outputs));
 			// ... get list if nodes that have input or output ports...
 			nodes = this.getNodePortList(filteredNodeList);
 			if (!isEmpty(nodes)) {
 				// ... select the first node by default
 				nodeId = nodes[0].value;
 				const filteredPortList = (operation === API_SET_INPUT_PORT_LABEL
-					? filteredNodeList[0].input_ports : filteredNodeList[0].output_ports);
+					? filteredNodeList[0].inputs : filteredNodeList[0].outputs);
 				// ... build the list of ports and select the first one by default
 				if (!isEmpty(filteredPortList)) {
 					ports = this.getNodePortList(filteredPortList);
@@ -173,20 +186,20 @@ export default class SidePanelAPI extends React.Component {
 				}
 			} else if (this.props.selectedOperation === API_SET_INPUT_PORT_LABEL) {
 				// get list of input ports for the selected node and select the first one by default
-				newState.ports = this.getNodePortList(existingNode.input_ports);
+				newState.ports = this.getNodePortList(existingNode.inputs);
 				if (!isEmpty(newState.ports)) {
 					newState.portId = newState.ports[0].value;
-					const port = existingNode.input_ports.find(function(port2) {
+					const port = existingNode.inputs.find(function(port2) {
 						return (port2.id === newState.ports[0].value);
 					});
 					newState.newLabel = port.label;
 				}
 			} else if (this.props.selectedOperation === API_SET_OUTPUT_PORT_LABEL) {
 				// get list of output ports for the selected node and select the first one by default
-				newState.ports = this.getNodePortList(existingNode.output_ports);
+				newState.ports = this.getNodePortList(existingNode.outputs);
 				if (!isEmpty(newState.ports)) {
 					newState.portId = newState.ports[0].value;
-					const port = existingNode.output_ports.find(function(port2) {
+					const port = existingNode.outputs.find(function(port2) {
 						return (port2.id === newState.ports[0].value);
 					});
 					newState.newLabel = port.label;
@@ -204,7 +217,7 @@ export default class SidePanelAPI extends React.Component {
 		const existingNode = this.props.getCanvasInfo().nodes.find((node) => (node.id === this.state.nodeId));
 		if (existingNode) {
 			const ports = (this.props.selectedOperation === API_SET_INPUT_PORT_LABEL
-				? existingNode.input_ports : existingNode.output_ports);
+				? existingNode.inputs : existingNode.outputs);
 			const existingPort = ports.find((port) => (port.id === portId));
 			if (existingPort) {
 				newState.newLabel = existingPort.label;
@@ -314,7 +327,7 @@ export default class SidePanelAPI extends React.Component {
 				INPUT_PORT
 			);
 			const existingNode = this.props.getCanvasInfo().nodes.find((node) => (node.id === this.state.nodeId));
-			this.setState({ ports: this.getNodePortList(existingNode.input_ports) });
+			this.setState({ ports: this.getNodePortList(existingNode.inputs) });
 			break;
 		}
 		case API_SET_OUTPUT_PORT_LABEL: {
@@ -325,7 +338,7 @@ export default class SidePanelAPI extends React.Component {
 				OUTPUT_PORT
 			);
 			const existingNode = this.props.getCanvasInfo().nodes.find((node) => (node.id === this.state.nodeId));
-			this.setState({ ports: this.getNodePortList(existingNode.output_ports) });
+			this.setState({ ports: this.getNodePortList(existingNode.outputs) });
 			break;
 		}
 		case API_SET_NODE_DECORATIONS:

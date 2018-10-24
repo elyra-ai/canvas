@@ -1,0 +1,319 @@
+{
+  "version": "2.0",
+  "categories": [
+    {
+      "category": "canvas-transformation",
+      "label": "Transformations",
+      "image": "/images/palette-categories/sources_open.svg",
+      "nodetypes": [
+        {
+          "label": "Filter Rows",
+          "description": "Filter rows according to a condition",
+          "operator_id_ref": "org.apache.spark.ml.ibm.transformers.Filter",
+          "type": "execution_node",
+          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE4IC0xOC4yIDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxOCAtMTguMiA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMxRDM2NDk7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDR7ZmlsbDojMUQzNjQ5O30NCgkuc3Q1e2ZpbGw6bm9uZTt9DQoJLnN0NntmaWxsOiM1QUFBRkE7fQ0KCS5zdDd7Zm9udC1mYW1pbHk6J0hlbHZOZXVlUm9tYW5mb3JJQk0nO30NCgkuc3Q4e2ZvbnQtc2l6ZToxMnB4O30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0NyIgeGxpbms6aHJlZj0iMjk0RjczMzgwMDYzQTc5Qy5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDE3IC0xNSkiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMzEuMSwyNyAxOS40LDYuNSAzMS4xLC0xNCA1NC42LC0xNCA2Ni40LDYuNSA1NC42LDI3IAkJIi8+DQoJPC9nPg0KPC9nPg0KPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIyOCwyMS41IDMxLjEsMjcgNTQuNiwyNyA2Ni40LDYuNSA1Ny42LC04LjYgIi8+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0OSIgeGxpbms6aHJlZj0iMjk0RjczMzgwMDYzQTc5RC5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDE2IC0xNikiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDIiIHBvaW50cz0iMzEuMSwyNyAxOS40LDYuNSAzMS4xLC0xNCA1NC42LC0xNCA2Ni40LDYuNSA1NC42LDI3IAkJIi8+DQoJPC9nPg0KPC9nPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjMxIiB5MT0iLTMuNSIgeDI9IjQ2IiB5Mj0iLTMuNSIvPg0KPHBvbHlnb24gY2xhc3M9InN0NCIgcG9pbnRzPSI1MCwtMC42IDUwLC0yIDQ2LC0yIDQ2LC01IDUwLC01IDUwLC03LjMgNTUuOCwtNCAiLz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIzMSIgeTE9IjYuNSIgeDI9IjQ2IiB5Mj0iNi41Ii8+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iNDEiIHkxPSIxNi41IiB4Mj0iNDYiIHkyPSIxNi41Ii8+DQo8cG9seWdvbiBjbGFzcz0ic3Q0IiBwb2ludHM9IjUwLDkuNCA1MCw4IDQ2LDggNDYsNSA1MCw1IDUwLDIuNyA1NS44LDYgIi8+DQo8cG9seWdvbiBjbGFzcz0ic3Q0IiBwb2ludHM9IjUwLDE5LjQgNTAsMTggNDYsMTggNDYsMTUgNTAsMTUgNTAsMTIuNyA1NS44LDE2ICIvPg0KPHJlY3QgeD0iMzMuMSIgeT0iMTEuMyIgY2xhc3M9InN0NSIgd2lkdGg9IjYuNyIgaGVpZ2h0PSI5LjQiLz4NCjx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMzMuMTM1NiAxOS44NjkzKSIgY2xhc3M9InN0NiBzdDcgc3Q4Ij4/PC90ZXh0Pg0KPC9zdmc+DQo=",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
+          ]
+        },
+        {
+          "label": "Select Columns",
+          "description": "Select or remove a subset of columns",
+          "operator_id_ref": "org.apache.spark.ml.ibm.transformers.Projection",
+          "type": "execution_node",
+          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE4IC0xOC4yIDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxOCAtMTguMiA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMxRDM2NDk7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDR7b3BhY2l0eTowLjU7ZmlsbDpub25lO3N0cm9rZTojMUQzNjQ5O3N0cm9rZS13aWR0aDozO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q1e2ZpbGw6I0U3MUQzMjt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7IiB3aWR0aD0iNTQiIGhlaWdodD0iNDciIHhsaW5rOmhyZWY9IkJBOTI2N0EyRjgxNjk1QzIucG5nIiAgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxOCAtMTYpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjMyLjEsMjYgMjAuNCw1LjUgMzIuMSwtMTUgNTUuNiwtMTUgNjcuNCw1LjUgNTUuNiwyNiAJCSIvPg0KCTwvZz4NCjwvZz4NCjxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMjksMjAuNSAzMi4xLDI2IDU1LjYsMjYgNjcuNCw1LjUgNTguNiwtOS42ICIvPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7IiB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhsaW5rOmhyZWY9IkJBOTI2N0EyRjgxNjk1QzYucG5nIiAgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxNyAtMTcpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QyIiBwb2ludHM9IjMyLjEsMjYgMjAuNCw1LjUgMzIuMSwtMTUgNTUuNiwtMTUgNjcuNCw1LjUgNTUuNiwyNiAJCSIvPg0KCTwvZz4NCjwvZz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSI1My41IiB5MT0iLTIiIHgyPSI1My41IiB5Mj0iMTYiLz4NCjxsaW5lIGNsYXNzPSJzdDQiIHgxPSI0NC41IiB5MT0iLTIiIHgyPSI0NC41IiB5Mj0iMSIvPg0KPGxpbmUgY2xhc3M9InN0NCIgeDE9IjQ0LjUiIHkxPSItNiIgeDI9IjQ0LjUiIHkyPSItNCIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjM1LjUiIHkxPSItNiIgeDI9IjM1LjUiIHkyPSItNCIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjUzLjUiIHkxPSItNiIgeDI9IjUzLjUiIHkyPSItNCIvPg0KPGxpbmUgY2xhc3M9InN0NCIgeDE9IjQ0LjUiIHkxPSI5IiB4Mj0iNDQuNSIgeTI9IjE2Ii8+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iMzUuNSIgeTE9Ii0yIiB4Mj0iMzUuNSIgeTI9IjE2Ii8+DQo8cmVjdCB4PSI0My42IiB5PSIxLjQiIHRyYW5zZm9ybT0ibWF0cml4KC0wLjcwNzEgMC43MDcxIC0wLjcwNzEgLTAuNzA3MSA3OC44OTI4IC0yMy44MjU1KSIgY2xhc3M9InN0NSIgd2lkdGg9IjEuNSIgaGVpZ2h0PSI2Ii8+DQo8cmVjdCB4PSI0My43IiB5PSIxLjUiIHRyYW5zZm9ybT0ibWF0cml4KC0wLjcwNzEgLTAuNzA3MSAwLjcwNzEgLTAuNzA3MSA3Mi42OTcxIDM5LjA5MzgpIiBjbGFzcz0ic3Q1IiB3aWR0aD0iMS41IiBoZWlnaHQ9IjYiLz4NCjwvc3ZnPg0K",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
+          ]
+        },
+        {
+          "label": "Add Column",
+          "description": "Create a new column with a computed value",
+          "operator_id_ref": "spark.AddColumn",
+          "type": "execution_node",
+          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjI2NC44IDE2Mi44IDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAyNjQuOCAxNjIuOCA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMxRDM2NDk7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDR7ZmlsbDojNUFBQUZBO30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0NyIgeGxpbms6aHJlZj0iQjRCOUREQzI2QUI0MDQ2OS5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDI2NCAxNjUpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjI3Ny45LDIwNyAyNjYuMiwxODYuNSAyNzcuOSwxNjYgMzAxLjQsMTY2IDMxMy4yLDE4Ni41IDMwMS40LDIwNyAJCSIvPg0KCTwvZz4NCjwvZz4NCjxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMjc0LjgsMjAxLjUgMjc3LjksMjA3IDMwMS40LDIwNyAzMTMuMiwxODYuNSAzMDQuNCwxNzEuNCAiLz4NCjxnPg0KCQ0KCQk8aW1hZ2Ugc3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2OyIgd2lkdGg9IjU3IiBoZWlnaHQ9IjQ5IiB4bGluazpocmVmPSJCNEI5RERDMjZBQjQwNDZCLnBuZyIgIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMjYyIDE2NCkiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDIiIHBvaW50cz0iMjc3LjksMjA3IDI2Ni4yLDE4Ni41IDI3Ny45LDE2NiAzMDEuNCwxNjYgMzEzLjIsMTg2LjUgMzAxLjQsMjA3IAkJIi8+DQoJPC9nPg0KPC9nPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjI4OS41IiB5MT0iMTc5IiB4Mj0iMjg5LjUiIHkyPSIxOTciLz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIyOTcuNSIgeTE9IjE3OSIgeDI9IjI5Ny41IiB5Mj0iMTgyIi8+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iMjk3LjUiIHkxPSIxNzUiIHgyPSIyOTcuNSIgeTI9IjE3NyIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjI4MS41IiB5MT0iMTc1IiB4Mj0iMjgxLjUiIHkyPSIxNzciLz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIyODkuNSIgeTE9IjE3NSIgeDI9IjI4OS41IiB5Mj0iMTc3Ii8+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iMjk3LjUiIHkxPSIxOTAiIHgyPSIyOTcuNSIgeTI9IjE5NyIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjI4MS41IiB5MT0iMTc5IiB4Mj0iMjgxLjUiIHkyPSIxOTciLz4NCjxyZWN0IHg9IjI5NC42IiB5PSIxODUuMyIgY2xhc3M9InN0NCIgd2lkdGg9IjUuNCIgaGVpZ2h0PSIxLjMiLz4NCjxyZWN0IHg9IjI5Ni43IiB5PSIxODMuMiIgY2xhc3M9InN0NCIgd2lkdGg9IjEuMyIgaGVpZ2h0PSI1LjQiLz4NCjwvc3ZnPg0K",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
+          ]
+        },
+        {
+          "label": "Rename Column",
+          "description": "Change the name of a column",
+          "operator_id_ref": "spark.RenameColumn",
+          "type": "execution_node",
+          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjI2NC44IDE2Mi44IDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAyNjQuOCAxNjIuOCA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMxRDM2NDk7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDR7ZmlsbDpub25lO30NCgkuc3Q1e2ZpbGw6IzVBQUFGQTt9DQoJLnN0Nntmb250LWZhbWlseTonSGVsdk5ldWVCb2xkZm9ySUJNJzt9DQoJLnN0N3tmb250LXNpemU6OHB4O30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0NyIgeGxpbms6aHJlZj0iOUMzNzA3RkEyNkI5REQzQi5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDI2NSAxNjUpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjI3OC45LDIwNyAyNjcuMiwxODYuNSAyNzguOSwxNjYgMzAyLjQsMTY2IDMxNC4yLDE4Ni41IDMwMi40LDIwNyAJCSIvPg0KCTwvZz4NCjwvZz4NCjxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMjc1LjgsMjAxLjUgMjc4LjksMjA3IDMwMi40LDIwNyAzMTQuMiwxODYuNSAzMDUuNCwxNzEuNCAiLz4NCjxnPg0KCQ0KCQk8aW1hZ2Ugc3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2OyIgd2lkdGg9IjU3IiBoZWlnaHQ9IjQ5IiB4bGluazpocmVmPSI5QzM3MDdGQTI2QjlERDM5LnBuZyIgIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMjYzIDE2NCkiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDIiIHBvaW50cz0iMjc4LjksMjA3IDI2Ny4yLDE4Ni41IDI3OC45LDE2NiAzMDIuNCwxNjYgMzE0LjIsMTg2LjUgMzAyLjQsMjA3IAkJIi8+DQoJPC9nPg0KPC9nPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjI5OC41IiB5MT0iMTc5IiB4Mj0iMjk4LjUiIHkyPSIxOTciLz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIyOTAuNSIgeTE9IjE3OSIgeDI9IjI5MC41IiB5Mj0iMTgyIi8+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iMjkwLjUiIHkxPSIxNzUiIHgyPSIyOTAuNSIgeTI9IjE3NyIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjI4Mi41IiB5MT0iMTc1IiB4Mj0iMjgyLjUiIHkyPSIxNzciLz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIyOTguNSIgeTE9IjE3NSIgeDI9IjI5OC41IiB5Mj0iMTc3Ii8+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iMjkwLjUiIHkxPSIxOTAiIHgyPSIyOTAuNSIgeTI9IjE5NyIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjI4Mi41IiB5MT0iMTc5IiB4Mj0iMjgyLjUiIHkyPSIxOTciLz4NCjxyZWN0IHg9IjI4NS40IiB5PSIxODMuMiIgY2xhc3M9InN0NCIgd2lkdGg9IjEwLjgiIGhlaWdodD0iNi4xIi8+DQo8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDI4NS4zODkgMTg4Ljk0MjYpIiBjbGFzcz0ic3Q1IHN0NiBzdDciPkFiPC90ZXh0Pg0KPC9zdmc+DQo=",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
+          ]
+        },
+        {
+          "label": "Sample Rows",
+          "description": "Perform a simple sample operation on the data, with or without replacement",
+          "operator_id_ref": "spark.Sample",
+          "type": "execution_node",
+          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjI2NC44IDE2Mi44IDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAyNjQuOCAxNjIuOCA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOiNGOUY5RkI7c3Ryb2tlOiM1QUFBRkE7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDR7ZmlsbDojMUQzNjQ5O30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0NyIgeGxpbms6aHJlZj0iMzY0RURCNUZBNzUyRjM3QS5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDI2NSAxNjUpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjI3OC45LDIwNyAyNjcuMiwxODYuNSAyNzguOSwxNjYgMzAyLjQsMTY2IDMxNC4yLDE4Ni41IDMwMi40LDIwNyAJCSIvPg0KCTwvZz4NCjwvZz4NCjxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMjc1LjgsMjAxLjUgMjc4LjksMjA3IDMwMi40LDIwNyAzMTQuMiwxODYuNSAzMDUuNCwxNzEuNCAiLz4NCjxnPg0KCQ0KCQk8aW1hZ2Ugc3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2OyIgd2lkdGg9IjU3IiBoZWlnaHQ9IjQ5IiB4bGluazpocmVmPSIzNjRFREI1RkE3NTJGMzdFLnBuZyIgIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMjYzIDE2NCkiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDIiIHBvaW50cz0iMjc4LjksMjA3IDI2Ny4yLDE4Ni41IDI3OC45LDE2NiAzMDIuNCwxNjYgMzE0LjIsMTg2LjUgMzAyLjQsMjA3IAkJIi8+DQoJPC9nPg0KPC9nPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjI4OSIgeTE9IjE4Ni41IiB4Mj0iMjkyIiB5Mj0iMTg2LjUiLz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIyODQiIHkxPSIxODYuNSIgeDI9IjI4NyIgeTI9IjE4Ni41Ii8+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iMjc5IiB5MT0iMTg2LjUiIHgyPSIyODIiIHkyPSIxODYuNSIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjI3NCIgeTE9IjE4Ni41IiB4Mj0iMjc3IiB5Mj0iMTg2LjUiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDQiIHBvaW50cz0iMzAwLDE4OS40IDMwMCwxODggMjk0LDE4OCAyOTQsMTg1IDMwMCwxODUgMzAwLDE4Mi43IDMwNy43LDE4NiAiLz4NCjwvc3ZnPg0K",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
+          ]
+        },
+        {
+          "label": "Select Distinct Rows",
+          "description": "Remove rows to leave only rows with distinct combinations of rows",
+          "operator_id_ref": "spark.Distinct",
+          "type": "execution_node",
+          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjI2NC44IDE2Mi44IDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAyNjQuOCAxNjIuOCA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMxRDM2NDk7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDR7ZmlsbDojMUQzNjQ5O30NCgkuc3Q1e2ZpbGw6IzVBQUFGQTt9DQoJLnN0NntmaWxsOm5vbmU7c3Ryb2tlOiM1QUFBRkE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDd7ZmlsbDpub25lO3N0cm9rZTojMDVBQUZBO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0NyIgeGxpbms6aHJlZj0iNDQwRTAyNTk1MTg0RjVCLnBuZyIgIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMjY1IDE2NSkiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMjc4LjksMjA3IDI2Ny4yLDE4Ni41IDI3OC45LDE2NiAzMDIuNCwxNjYgMzE0LjIsMTg2LjUgMzAyLjQsMjA3IAkJIi8+DQoJPC9nPg0KPC9nPg0KPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIyNzUuOCwyMDEuNSAyNzguOSwyMDcgMzAyLjQsMjA3IDMxNC4yLDE4Ni41IDMwNS40LDE3MS40ICIvPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7IiB3aWR0aD0iNTciIGhlaWdodD0iNDkiIHhsaW5rOmhyZWY9IjQ0MEUwMjU5NTE4NEY1OS5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDI2MyAxNjQpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QyIiBwb2ludHM9IjI3OC45LDIwNyAyNjcuMiwxODYuNSAyNzguOSwxNjYgMzAyLjQsMTY2IDMxNC4yLDE4Ni41IDMwMi40LDIwNyAJCSIvPg0KCTwvZz4NCjwvZz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIyODEiIHkxPSIxODYuNSIgeDI9IjI4OCIgeTI9IjE4Ni41Ii8+DQo8cG9seWdvbiBjbGFzcz0ic3Q0IiBwb2ludHM9IjI5OSwxODkuNCAyOTksMTg4IDI5NSwxODggMjk1LDE4NSAyOTksMTg1IDI5OSwxODIuNyAzMDQuOCwxODYgIi8+DQo8cmVjdCB4PSIyODguNiIgeT0iMTg0LjgiIGNsYXNzPSJzdDUiIHdpZHRoPSI1LjUiIGhlaWdodD0iMy4xIi8+DQo8bGluZSBjbGFzcz0ic3Q2IiB4MT0iMjkxLjUiIHkxPSIxODMiIHgyPSIyOTEuNSIgeTI9IjE3NiIvPg0KPGxpbmUgY2xhc3M9InN0NyIgeDE9IjI5MS41IiB5MT0iMTk3IiB4Mj0iMjkxLjUiIHkyPSIxOTAiLz4NCjxsaW5lIGNsYXNzPSJzdDYiIHgxPSIyOTMuNSIgeTE9IjE4Mi44IiB4Mj0iMjk4LjYiIHkyPSIxNzcuNyIvPg0KPGxpbmUgY2xhc3M9InN0NyIgeDE9IjI5My41IiB5MT0iMTg5LjciIHgyPSIyOTguNiIgeTI9IjE5NC44Ii8+DQo8bGluZSBjbGFzcz0ic3Q3IiB4MT0iMjg5LjYiIHkxPSIxODkuNyIgeDI9IjI4NC41IiB5Mj0iMTk0LjgiLz4NCjxsaW5lIGNsYXNzPSJzdDYiIHgxPSIyODkuNiIgeTE9IjE4Mi44IiB4Mj0iMjg0LjUiIHkyPSIxNzcuNyIvPg0KPC9zdmc+DQo=",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
+          ]
+        },
+        {
+          "label": "Data Shaper",
+          "description": "Data Shaper",
+          "operator_id_ref": "ibm.Shaper",
+          "type": "super_node",
+          "open_with_tool": "shaper",
+          "image": "/images/palette-categories/operations_open.svg",
+          "subDiagramId": "",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "canvas-modeling",
+      "label": "Modeling",
+      "image": "/images/palette-categories/models_open.svg",
+      "nodetypes": [
+        {
+          "label": "Logistic Regression",
+          "description": "Fit a Logistic Regression Model",
+          "operator_id_ref": "spark.LogisticRegression",
+          "type": "execution_node",
+          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE3MSA5MC42IDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNzEgOTAuNiA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiM1QUFBRkE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KPC9zdHlsZT4NCjxnPg0KCQ0KCQk8aW1hZ2Ugc3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2OyIgd2lkdGg9IjUwIiBoZWlnaHQ9IjQ4IiB4bGluazpocmVmPSI5NTQwMzlBN0QyNkUzOEY5LnBuZyIgIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTczIDkyKSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIxODMuNiwxMzUgMTc1LjQsMTA5LjMgMTk2LjksOTMuNSAyMTguNCwxMDkuNCAyMTAuMSwxMzUgCQkiLz4NCgk8L2c+DQo8L2c+DQo8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9IjIxMC4yLDEwMy4zIDE4Mi41LDEzMS42IDE4My42LDEzNSAyMTAuMSwxMzUgMjE4LjQsMTA5LjQgIi8+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1MiIgaGVpZ2h0PSI1MCIgeGxpbms6aHJlZj0iOTU0MDM5QTdEMjZFMzhGQi5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDE3MiA5MSkiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDIiIHBvaW50cz0iMTgzLjYsMTM1IDE3NS40LDEwOS4zIDE5Ni45LDkzLjUgMjE4LjQsMTA5LjQgMjEwLjEsMTM1IAkJIi8+DQoJPC9nPg0KPC9nPg0KPHBhdGggY2xhc3M9InN0MyIgZD0iTTE4OC41LDEyMy4zYzEuMSwwLjIsMy4xLDAuNCw1LjQtMC41YzAuNy0wLjMsMS40LTAuNiwyLjItMS4zYzEuMy0xLjIsMS4zLTIuMywyLjUtNS42DQoJYzAuOS0yLjQsMS4zLTMuNSwyLjEtNC40YzEuNS0xLjUsMy41LTIsNS0yLjEiLz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxODgiIHkxPSIxMDgiIHgyPSIxODgiIHkyPSIxMjQiLz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxODciIHkxPSIxMjUiIHgyPSIyMDYiIHkyPSIxMjUiLz4NCjwvc3ZnPg0K",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
+          ]
+        },
+        {
+          "label": "Decision Tree Classifier",
+          "description": "Fit a Decision Tree Classifier Model",
+          "operator_id_ref": "spark.DecisionTreeClassifier",
+          "type": "execution_node",
+          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE3MSA5MC42IDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNzEgOTAuNiA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMxRDM2NDk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDR7ZmlsbDojNUFBQUZBO3N0cm9rZTojMTUyOTM1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q1e2ZpbGw6bm9uZTt9DQoJLnN0NntmaWxsOiMxRDM2NDk7fQ0KCS5zdDd7Zm9udC1mYW1pbHk6J0hlbHZOZXVlQm9sZGZvcklCTSc7fQ0KCS5zdDh7Zm9udC1zaXplOjlweDt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7IiB3aWR0aD0iNTAiIGhlaWdodD0iNDgiIHhsaW5rOmhyZWY9IjIwQUI3MTU1MDM3OUQ0RjYucG5nIiAgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxNzMgOTMpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjE4My41LDEzNiAxNzUuMywxMTAuMiAxOTYuOCw5NC4zIDIxOC4zLDExMC4zIDIxMC4xLDEzNiAJCSIvPg0KCTwvZz4NCjwvZz4NCjxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMjEwLjIsMTA0LjEgMTgyLjUsMTMyLjQgMTgzLjUsMTM2IDIxMC4xLDEzNiAyMTguMywxMTAuMyAiLz4NCjxnPg0KCQ0KCQk8aW1hZ2Ugc3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2OyIgd2lkdGg9IjUyIiBoZWlnaHQ9IjUxIiB4bGluazpocmVmPSIyMEFCNzE1NTAzNzlENEZBLnBuZyIgIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTcyIDkxKSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MiIgcG9pbnRzPSIxODMuNSwxMzYgMTc1LjMsMTEwLjIgMTk2LjgsOTQuMyAyMTguMywxMTAuMyAyMTAuMSwxMzYgCQkiLz4NCgk8L2c+DQo8L2c+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iMTk0LjMiIHkxPSIxMTEuOCIgeDI9IjE5OS45IiB5Mj0iMTE1LjciLz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIxODkuOSIgeTE9IjExMS44IiB4Mj0iMTg0LjMiIHkyPSIxMTUuNyIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjE5Ny45IiB5MT0iMTE3LjgiIHgyPSIxOTIuMyIgeTI9IjEyMS43Ii8+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iMjAyLjMiIHkxPSIxMTcuOCIgeDI9IjIwNy45IiB5Mj0iMTIxLjciLz4NCjxjaXJjbGUgY2xhc3M9InN0NCIgY3g9IjE5Mi40IiBjeT0iMTEwLjQiIHI9IjIuNSIvPg0KPGNpcmNsZSBjbGFzcz0ic3Q0IiBjeD0iMTgzLjQiIGN5PSIxMTYuNCIgcj0iMi41Ii8+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iMjAwLjUiIHkxPSIxMTkiIHgyPSIyMDAuNSIgeTI9IjEyMiIvPg0KPGNpcmNsZSBjbGFzcz0ic3Q0IiBjeD0iMjAwLjQiIGN5PSIxMTYuNCIgcj0iMi41Ii8+DQo8Y2lyY2xlIGNsYXNzPSJzdDQiIGN4PSIxOTEuNCIgY3k9IjEyMi40IiByPSIyLjUiLz4NCjxjaXJjbGUgY2xhc3M9InN0NCIgY3g9IjIwMC40IiBjeT0iMTI0LjQiIHI9IjIuNSIvPg0KPGNpcmNsZSBjbGFzcz0ic3Q0IiBjeD0iMjA5LjQiIGN5PSIxMjIuNCIgcj0iMi41Ii8+DQo8cmVjdCB4PSIxOTguOSIgeT0iMTA1LjgiIGNsYXNzPSJzdDUiIHdpZHRoPSIxMS4zIiBoZWlnaHQ9IjkuNiIvPg0KPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxOTguODc4NiAxMTIuMTc3MikiIGNsYXNzPSJzdDYgc3Q3IHN0OCI+Q2w8L3RleHQ+DQo8L3N2Zz4NCg==",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
+          ]
+        },
+        {
+          "label": "Random Forest Classifier",
+          "description": "Fit a Random Forest Classifier Model",
+          "operator_id_ref": "spark.RandomForestClassifier",
+          "type": "execution_node",
+          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE3MSA5MC42IDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNzEgOTAuNiA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7fQ0KCS5zdDR7ZmlsbDojMUQzNjQ5O30NCgkuc3Q1e2ZvbnQtZmFtaWx5OidIZWx2TmV1ZUJvbGRmb3JJQk0nO30NCgkuc3Q2e2ZvbnQtc2l6ZTo5cHg7fQ0KCS5zdDd7ZmlsbDojNUFBQUZBO30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1MCIgaGVpZ2h0PSI0OCIgeGxpbms6aHJlZj0iRjcxQTc2NThGQTk4NDRGLnBuZyIgIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTczIDkzKSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIxODMuNSwxMzYgMTc1LjMsMTEwLjIgMTk2LjgsOTQuMyAyMTguMywxMTAuMyAyMTAuMSwxMzYgCQkiLz4NCgk8L2c+DQo8L2c+DQo8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9IjIxMC4yLDEwNC4xIDE4Mi41LDEzMi40IDE4My41LDEzNiAyMTAuMSwxMzYgMjE4LjMsMTEwLjMgIi8+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1MiIgaGVpZ2h0PSI1MSIgeGxpbms6aHJlZj0iRjcxQTc2NThGQTk4NDRELnBuZyIgIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTcyIDkxKSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MiIgcG9pbnRzPSIxODMuNSwxMzYgMTc1LjMsMTEwLjIgMTk2LjgsOTQuMyAyMTguMywxMTAuMyAyMTAuMSwxMzYgCQkiLz4NCgk8L2c+DQo8L2c+DQo8cmVjdCB4PSIxOTguOSIgeT0iMTA1LjgiIGNsYXNzPSJzdDMiIHdpZHRoPSIxMS4zIiBoZWlnaHQ9IjkuNiIvPg0KPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxOTguODc4NiAxMTIuMTc3MikiIGNsYXNzPSJzdDQgc3Q1IHN0NiI+Q2w8L3RleHQ+DQo8cmVjdCB4PSIxODcuOCIgeT0iMTE0LjgiIGNsYXNzPSJzdDQiIHdpZHRoPSIxLjgiIGhlaWdodD0iNi42Ii8+DQo8cG9seWdvbiBjbGFzcz0ic3Q3IiBwb2ludHM9IjE4NC4zLDExNiAxODguNiwxMDguNSAxOTIuOSwxMTYgIi8+DQo8cG9seWdvbiBjbGFzcz0ic3Q3IiBwb2ludHM9IjE4NC4zLDExMyAxODguNiwxMDUuNSAxOTIuOSwxMTMgIi8+DQo8cmVjdCB4PSIyMDIuOCIgeT0iMTIyLjgiIGNsYXNzPSJzdDQiIHdpZHRoPSIxLjgiIGhlaWdodD0iNi42Ii8+DQo8cG9seWdvbiBjbGFzcz0ic3Q3IiBwb2ludHM9IjE5OS4zLDEyNCAyMDMuNiwxMTYuNSAyMDcuOSwxMjQgIi8+DQo8cG9seWdvbiBjbGFzcz0ic3Q3IiBwb2ludHM9IjE5OS4zLDEyMSAyMDMuNiwxMTMuNSAyMDcuOSwxMjEgIi8+DQo8cmVjdCB4PSIxOTMuOCIgeT0iMTI1LjgiIGNsYXNzPSJzdDQiIHdpZHRoPSIxLjgiIGhlaWdodD0iNi42Ii8+DQo8cG9seWdvbiBjbGFzcz0ic3Q3IiBwb2ludHM9IjE5MC4zLDEyNyAxOTQuNiwxMTkuNSAxOTguOSwxMjcgIi8+DQo8cG9seWdvbiBjbGFzcz0ic3Q3IiBwb2ludHM9IjE5MC4zLDEyNCAxOTQuNiwxMTYuNSAxOTguOSwxMjQgIi8+DQo8L3N2Zz4NCg==",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
+          ]
+        },
+        {
+          "label": "Gradient Boosted Tree Classifier",
+          "description": "Fit a Gradient Boosted Tree Classifier Model",
+          "operator_id_ref": "spark.GBTClassifier",
+          "type": "execution_node",
+          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE3MSA5MC42IDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNzEgOTAuNiA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7fQ0KCS5zdDR7ZmlsbDojMUQzNjQ5O30NCgkuc3Q1e2ZvbnQtZmFtaWx5OidIZWx2TmV1ZUJvbGRmb3JJQk0nO30NCgkuc3Q2e2ZvbnQtc2l6ZTo5cHg7fQ0KCS5zdDd7ZmlsbDpub25lO3N0cm9rZTojMUQzNjQ5O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q4e2ZpbGw6IzVBQUFGQTtzdHJva2U6IzE1MjkzNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7IiB3aWR0aD0iNTAiIGhlaWdodD0iNDgiIHhsaW5rOmhyZWY9IjFGODY2M0Q2QTk5ODQ3OTMucG5nIiAgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxNzQgOTIpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjE4NC41LDEzNSAxNzYuMywxMDkuMiAxOTcuOCw5My4zIDIxOS4zLDEwOS4zIDIxMS4xLDEzNSAJCSIvPg0KCTwvZz4NCjwvZz4NCjxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMjExLjIsMTAzLjEgMTgzLjUsMTMxLjQgMTg0LjUsMTM1IDIxMS4xLDEzNSAyMTkuMywxMDkuMyAiLz4NCjxnPg0KCQ0KCQk8aW1hZ2Ugc3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2OyIgd2lkdGg9IjUyIiBoZWlnaHQ9IjUxIiB4bGluazpocmVmPSIxRjg2NjNENkE5OTg0NzkxLnBuZyIgIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTczIDkwKSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MiIgcG9pbnRzPSIxODQuNSwxMzUgMTc2LjMsMTA5LjIgMTk3LjgsOTMuMyAyMTkuMywxMDkuMyAyMTEuMSwxMzUgCQkiLz4NCgk8L2c+DQo8L2c+DQo8cmVjdCB4PSIxOTkuOSIgeT0iMTA0LjgiIGNsYXNzPSJzdDMiIHdpZHRoPSIxMS4zIiBoZWlnaHQ9IjkuNiIvPg0KPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxOTkuODc4NiAxMTEuMTc3MikiIGNsYXNzPSJzdDQgc3Q1IHN0NiI+Q2w8L3RleHQ+DQo8bGluZSBjbGFzcz0ic3Q3IiB4MT0iMTk3LjIiIHkxPSIxMjMuNyIgeDI9IjE5Mi4yIiB5Mj0iMTI3LjIiLz4NCjxsaW5lIGNsYXNzPSJzdDciIHgxPSIyMDEuMiIgeTE9IjEyMy43IiB4Mj0iMjA2LjIiIHkyPSIxMjcuMiIvPg0KPGxpbmUgY2xhc3M9InN0NyIgeDE9IjE5OS41IiB5MT0iMTI1IiB4Mj0iMTk5LjUiIHkyPSIxMjgiLz4NCjxsaW5lIGNsYXNzPSJzdDciIHgxPSIxOTEuNSIgeTE9IjExNCIgeDI9IjE5MS41IiB5Mj0iMTE3Ii8+DQo8Y2lyY2xlIGNsYXNzPSJzdDgiIGN4PSIxOTkuNCIgY3k9IjEyMi40IiByPSIyLjIiLz4NCjxjaXJjbGUgY2xhc3M9InN0OCIgY3g9IjE5MS4zIiBjeT0iMTI3LjgiIHI9IjIuMiIvPg0KPGxpbmUgY2xhc3M9InN0NyIgeDE9IjE4OS40IiB5MT0iMTA3LjEiIHgyPSIxODUuNSIgeTI9IjEwOS44Ii8+DQo8Y2lyY2xlIGNsYXNzPSJzdDgiIGN4PSIxODQuOCIgY3k9IjExMC4zIiByPSIxLjgiLz4NCjxjaXJjbGUgY2xhc3M9InN0OCIgY3g9IjE5OS40IiBjeT0iMTI5LjYiIHI9IjIuMiIvPg0KPGNpcmNsZSBjbGFzcz0ic3Q4IiBjeD0iMjA3LjYiIGN5PSIxMjcuOCIgcj0iMi4yIi8+DQo8bGluZSBjbGFzcz0ic3Q3IiB4MT0iMTkyLjYiIHkxPSIxMDcuMSIgeDI9IjE5Ni41IiB5Mj0iMTA5LjgiLz4NCjxjaXJjbGUgY2xhc3M9InN0OCIgY3g9IjE5Ny42IiBjeT0iMTEwLjMiIHI9IjEuOCIvPg0KPGNpcmNsZSBjbGFzcz0ic3Q4IiBjeD0iMTkxLjIiIGN5PSIxMDYiIHI9IjEuOCIvPg0KPGNpcmNsZSBjbGFzcz0ic3Q4IiBjeD0iMTkxLjYiIGN5PSIxMTcuMyIgcj0iMS44Ii8+DQo8ZWxsaXBzZSBjbGFzcz0ic3Q4IiBjeD0iMTkxLjMiIGN5PSIxMTIiIHJ4PSIxLjkiIHJ5PSIxLjgiLz4NCjwvc3ZnPg0K",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

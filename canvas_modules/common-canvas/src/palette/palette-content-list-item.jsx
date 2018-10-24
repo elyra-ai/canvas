@@ -9,6 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import has from "lodash/has";
 import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../common-canvas/constants/canvas-constants.js";
 
 class PaletteContentListItem extends React.Component {
@@ -40,7 +41,7 @@ class PaletteContentListItem extends React.Component {
 
 	onMouseOver(ev) {
 		this.props.canvasController.openTip({
-			id: "paletteTip_" + this.props.nodeTemplate.operator_id_ref,
+			id: "paletteTip_" + this.props.nodeTemplate.op,
 			type: TIP_TYPE_PALETTE_ITEM,
 			targetObj: ev.currentTarget,
 			nodeTemplate: this.props.nodeTemplate
@@ -57,15 +58,21 @@ class PaletteContentListItem extends React.Component {
 
 	render() {
 		let itemText = null;
+		let image = null;
 
-		if (this.props.isPaletteOpen) {
+		if (this.props.isPaletteOpen &&
+				has(this.props.nodeTemplate, "app_data.ui_data.label")) {
 			itemText = (
 				<div className="palette-list-item-text-div">
 					<span className="palette-list-item-text-span">
-						{this.props.nodeTemplate.label}
+						{this.props.nodeTemplate.app_data.ui_data.label}
 					</span>
 				</div>
 			);
+		}
+
+		if (has(this.props.nodeTemplate, "app_data.ui_data.image")) {
+			image = this.props.nodeTemplate.app_data.ui_data.image;
 		}
 
 		return (
@@ -78,7 +85,7 @@ class PaletteContentListItem extends React.Component {
 				onMouseLeave={this.onMouseLeave}
 			>
 				<div className="palette-list-item-icon">
-					<img src={this.props.nodeTemplate.image} draggable="false" />
+					<img src={image} draggable="false" />
 				</div>
 				{itemText}
 			</div>

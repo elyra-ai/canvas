@@ -13,7 +13,7 @@ import { expect } from "chai";
 import isEqual from "lodash/isEqual";
 import startCanvas from "../test_resources/json/startCanvas.json";
 import clonedCanvas from "../test_resources/json/canvasWithClones.json";
-import paletteJson from "../test_resources/json/testPalette.json";
+import paletteJson from "../test_resources/palettes/test-palette.json";
 import filterNode from "../test_resources/json/filterNode.json";
 import horizontalLayoutCanvas from "../test_resources/json/horizontalLayoutCanvas.json";
 import verticalLayoutCanvas from "../test_resources/json/verticalLayoutCanvas.json";
@@ -33,6 +33,10 @@ import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CL
 import CloneMultipleObjectsAction from "../../src/command-actions/cloneMultipleObjectsAction.js";
 
 const objectModel = new ObjectModel();
+
+// TODO - Remove this when we support v3 schemas permanently.
+objectModel.setReturnPipelineFlowDraftVersion(true);
+
 
 describe("ObjectModel API handle model OK", () => {
 
@@ -347,17 +351,25 @@ describe("ObjectModel API handle model OK", () => {
 	it("should add palette item into existing test category", () => {
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const nodeTypeObj = {
-			"label": "MyNodeType",
-			"description": "My custom node type",
-			"operator_id_ref": "filter",
+			"id": "",
+			"op": "filter",
 			"type": "binding",
-			"image": "/images/filter.svg"
+			"app_data": {
+				"ui_data": {
+					"label": "MyNodeType",
+					"description": "My custom node type",
+					"image": "/images/filter.svg"
+				}
+			}
 		};
 
 		const expectedPaletteJSON = JSON.parse(JSON.stringify(paletteJson));
-		expectedPaletteJSON.categories[0].nodetypes.push(nodeTypeObj);
+		expectedPaletteJSON.categories[0].node_types.push(nodeTypeObj);
 
 		objectModel.addNodeTypeToPalette(nodeTypeObj, "test");
+
+		// console.log("actual=" + JSON.stringify(objectModel.getPaletteData(), null, 2));
+		// console.log("expected=" + JSON.stringify(expectedPaletteJSON, null, 2));
 
 		expect(isEqual(expectedPaletteJSON, objectModel.getPaletteData())).to.be.true;
 	});
@@ -366,18 +378,23 @@ describe("ObjectModel API handle model OK", () => {
 		const newCategoryName = "newCategory";
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const nodeTypeObj = {
-			"label": "MyNodeType",
-			"description": "My custom node type",
-			"operator_id_ref": "filter",
+			"id": "",
+			"op": "filter",
 			"type": "binding",
-			"image": "/images/filter.svg"
+			"app_data": {
+				"ui_data": {
+					"label": "MyNodeType",
+					"description": "My custom node type",
+					"image": "/images/filter.svg"
+				}
+			}
 		};
 
 		const expectedPaletteJSON = JSON.parse(JSON.stringify(paletteJson));
 		const newCategory = {};
-		newCategory.category = newCategoryName;
+		newCategory.id = newCategoryName;
 		newCategory.label = newCategoryName;
-		newCategory.nodetypes = [nodeTypeObj];
+		newCategory.node_types = [nodeTypeObj];
 		expectedPaletteJSON.categories.push(newCategory);
 
 		objectModel.addNodeTypeToPalette(nodeTypeObj, newCategoryName);
@@ -390,18 +407,23 @@ describe("ObjectModel API handle model OK", () => {
 		const newCategoryLabel = "New Category";
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const nodeTypeObj = {
-			"label": "MyNodeType",
-			"description": "My custom node type",
-			"operator_id_ref": "filter",
+			"id": "",
+			"op": "filter",
 			"type": "binding",
-			"image": "/images/filter.svg"
+			"app_data": {
+				"ui_data": {
+					"label": "MyNodeType",
+					"description": "My custom node type",
+					"image": "/images/filter.svg"
+				}
+			}
 		};
 
 		const expectedPaletteJSON = JSON.parse(JSON.stringify(paletteJson));
 		const newCategory = {};
-		newCategory.category = newCategoryName;
+		newCategory.id = newCategoryName;
 		newCategory.label = newCategoryLabel;
-		newCategory.nodetypes = [nodeTypeObj];
+		newCategory.node_types = [nodeTypeObj];
 		expectedPaletteJSON.categories.push(newCategory);
 
 		objectModel.addNodeTypeToPalette(nodeTypeObj, newCategoryName, newCategoryLabel);
@@ -570,7 +592,7 @@ describe("ObjectModel API handle model OK", () => {
 		const node = objectModel.getAPIPipeline().createNode(filterNode);
 		objectModel.getAPIPipeline().addNode(node);
 
-		const sourceNodeId = uniqueNodeId + "_" + filterNode.label;
+		const sourceNodeId = uniqueNodeId + "_" + filterNode.nodeTemplate.label;
 		const linkData = {
 			"editType": "linkNodes",
 			"nodes": [{ "id": sourceNodeId }],
@@ -580,6 +602,7 @@ describe("ObjectModel API handle model OK", () => {
 		};
 
 		const nodeLinks = objectModel.getAPIPipeline().createNodeLinks(linkData);
+
 		objectModel.getAPIPipeline().addLinks(nodeLinks);
 
 		const expectedLinkId = uniqueNodeLink + "_" + sourceNodeId + "_b4f90b52-d198-42f0-85cc-31af3914dd4f";
@@ -1293,7 +1316,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.getAPIPipeline().setInputPortLabel(nodeId, portId, newLabel);
 		const node = objectModel.getAPIPipeline().getNode(nodeId);
 
-		expect(isEqual(newLabel, objectModel.getAPIPipeline().getPort(node.input_ports, portId).label)).to.be.true;
+		expect(isEqual(newLabel, objectModel.getAPIPipeline().getPort(node.inputs, portId).label)).to.be.true;
 	}
 
 	function shouldUpdateOutputPortLabel(nodeId, portId, newLabel) {
@@ -1302,7 +1325,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.getAPIPipeline().setOutputPortLabel(nodeId, portId, newLabel);
 		const node = objectModel.getAPIPipeline().getNode(nodeId);
 
-		expect(isEqual(newLabel, objectModel.getAPIPipeline().getPort(node.output_ports, portId).label)).to.be.true;
+		expect(isEqual(newLabel, objectModel.getAPIPipeline().getPort(node.outputs, portId).label)).to.be.true;
 	}
 
 });

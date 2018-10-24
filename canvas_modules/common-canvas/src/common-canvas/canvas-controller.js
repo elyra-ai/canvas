@@ -69,6 +69,10 @@ export default class CanvasController {
 			tipConfig: this.defaultTipConfig
 		};
 
+		this.contextMenuConfig = {
+			enableCreateSupernodeNonContiguous: false
+		};
+
 		this.handlers = {
 			contextMenuHandler: null,
 			contextMenuActionHandler: null,
@@ -100,6 +104,15 @@ export default class CanvasController {
 	setCanvasConfig(config) {
 		this.canvasConfig = Object.assign(this.canvasConfig, config);
 		this.objectModel.setSchemaValidation(this.canvasConfig.schemaValidation);
+	}
+
+	// TODO - Remove this call when we transition to V3 schemas permanently
+	setReturnPipelineFlowDraftVersion(state) {
+		this.objectModel.setReturnPipelineFlowDraftVersion(state);
+	}
+
+	setContextMenuConfig(contextMenuConfig) {
+		this.contextMenuConfig = Object.assign(this.contextMenuConfig, contextMenuConfig);
 	}
 
 	setHandlers(inHandlers) {
@@ -1114,12 +1127,89 @@ export default class CanvasController {
 		}
 	}
 
+	createDroppedNode(dropData, link, transPos, pipelineId) {
+		if (dropData.operation === "createFromTemplate") {
+			const newNodeTemplate = this.convertNodeTemplate(dropData.nodeTemplate);
+			if (link &&
+					this.canNodeBeDroppedOnLink(newNodeTemplate, this.pipelineId) &&
+					this.isInternalObjectModelEnabled()) {
+				this.createNodeFromTemplateOnLinkAt(newNodeTemplate, link, transPos.x, transPos.y, pipelineId);
+			} else {
+				this.createNodeFromTemplateAt(newNodeTemplate, transPos.x, transPos.y, pipelineId);
+			}
+
+		} else if (dropData.operation === "createFromObject") {
+			this.createNodeFromObjectAt(dropData.sourceId, dropData.sourceObjectTypeId, dropData.label, transPos.x, transPos.y, pipelineId);
+
+		} else if (dropData.operation === "addToCanvas" || dropData.operation === "addTableFromConnection") {
+			this.createNodeFromDataAt(transPos.x, transPos.y, dropData.data, pipelineId);
+		}
+	}
+
+	// Converts a nodeTemplate from the palette (which will be in the pipelineFlowId
+	// format) to a nodeTemplate compatible with the internal format stored in the
+	// object model.
+	convertNodeTemplate(nodeTemplate) {
+		if (nodeTemplate) {
+			const newNodeTemplate = Object.assign({}, nodeTemplate);
+
+			if (newNodeTemplate.app_data) {
+				// Ensure we've cloned the app_data not just refer to the original from the palette.
+				newNodeTemplate.app_data = JSON.parse(JSON.stringify(nodeTemplate.app_data));
+
+				if (newNodeTemplate.app_data.ui_data) {
+					newNodeTemplate.label = nodeTemplate.app_data.ui_data.label;
+					newNodeTemplate.image = nodeTemplate.app_data.ui_data.image;
+					newNodeTemplate.description = nodeTemplate.app_data.ui_data.description;
+					newNodeTemplate.class_name = nodeTemplate.app_data.ui_data.class_name;
+					newNodeTemplate.decorations = nodeTemplate.app_data.ui_data.decorations;
+					newNodeTemplate.messages = nodeTemplate.app_data.ui_data.messages;
+
+					// We can remove the app_data.ui_data
+					delete newNodeTemplate.app_data.ui_data;
+				}
+			}
+
+			if (nodeTemplate.inputs) {
+				newNodeTemplate.inputs = nodeTemplate.inputs.map((port) => this.convertPort(port));
+			}
+
+			if (nodeTemplate.outputs) {
+				newNodeTemplate.outputs = nodeTemplate.outputs.map((port) => this.convertPort(port));
+			}
+
+			return newNodeTemplate;
+		}
+		return null;
+	}
+
+	// Converts an incoming port (eiter input or output ) from a nodetemplate
+	// from the palette to an internal format port.
+	convertPort(port) {
+		const newPort = Object.assign({}, port);
+		if (port.app_data && port.app_data.ui_data) {
+			if (port.app_data.ui_data.label) {
+				newPort.label = port.app_data.ui_data.label;
+			}
+			if (port.app_data.ui_data.cardinality) {
+				newPort.cardinality = port.app_data.ui_data.cardinality;
+			}
+			if (port.app_data.ui_data.class_name) {
+				newPort.class_name = port.app_data.ui_data.class_name;
+			}
+			// We can remvove this as it is not needed in the internal format.
+			delete newPort.app_data.ui_data;
+		}
+		return newPort;
+	}
+
+
 	createAutoNode(nodeTemplate) {
 		const selApiPipeline = this.objectModel.getSelectionAPIPipeline();
 		const apiPipeline = selApiPipeline ? selApiPipeline : this.objectModel.getAPIPipeline();
 		var data = {
 			editType: "createAutoNode",
-			nodeTemplate: nodeTemplate,
+			nodeTemplate: this.convertNodeTemplate(nodeTemplate),
 			pipelineId: apiPipeline.pipelineId
 		};
 
@@ -1182,8 +1272,8 @@ export default class CanvasController {
 	}
 
 	canNodeBeDroppedOnLink(nodeType, pipelineId) {
-		if (nodeType.input_ports && nodeType.input_ports.length > 0 &&
-				nodeType.output_ports && nodeType.output_ports.length > 0) {
+		if (nodeType.inputs && nodeType.inputs.length > 0 &&
+				nodeType.outputs && nodeType.outputs.length > 0) {
 			return true;
 		}
 		return false;
@@ -1265,8 +1355,8 @@ export default class CanvasController {
 		}
 		// Create supernode
 		if (source.type === "node" || source.type === "comment") {
-			if ((has(this, "canvasConfig.contextMenuConfig.enableCreateSupernodeNonContiguous") &&
-					this.canvasConfig.contextMenuConfig.enableCreateSupernodeNonContiguous) ||
+			if ((has(this, "contextMenuConfig.enableCreateSupernodeNonContiguous") &&
+					this.contextMenuConfig.enableCreateSupernodeNonContiguous) ||
 					this.areSelectedNodesContiguous()) {
 				menuDefinition = menuDefinition.concat([{ action: "createSuperNode", label: this.getLabel("node_createSuperNode", "Create supernode") }]);
 				menuDefinition = menuDefinition.concat([{ divider: true }]);
@@ -1591,8 +1681,8 @@ export default class CanvasController {
 	addHistoricalFields(data) {
 		data.nodeId = data.newNode.id;
 		data.label = data.newNode.label;
-		data.operator_id_ref = data.newNode.operator_id_ref;
-		data.nodeTypeId = data.newNode.operator_id_ref; // TODO - Remove this when WML Canvas migrates to pipeline flow
+		data.operator_id_ref = data.newNode.op;
+		data.nodeTypeId = data.newNode.op; // TODO - Remove this when WML Canvas migrates to pipeline flow
 		return data;
 	}
 

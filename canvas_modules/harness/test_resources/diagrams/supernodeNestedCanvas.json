@@ -1,7 +1,7 @@
 {
   "doc_type": "pipeline",
-  "version": "2.0",
-  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
   "id": "62685555-bb4b-4010-82c3-003beff3739a",
   "primary_pipeline": "62685555-bb4b-4010-82c3-003beff3739a",
   "parameters": {
@@ -758,7 +758,10 @@
               "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
               "x_pos": 841,
               "y_pos": 82.5,
-              "description": "This supernode was created by common-canvas. Its open_with_tool field has the value shaper."
+              "description": "This supernode was created by common-canvas. Its open_with_tool field has the value shaper.",
+              "is_expanded": false,
+              "expanded_width": 200,
+              "expanded_height": 200
             }
           },
           "parameters": {
@@ -781,7 +784,10 @@
               "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
               "x_pos": 840,
               "y_pos": 245.5,
-              "description": "This supernode was created by common-canvas. Its open_with_tool field has the value canvas."
+              "description": "This supernode was created by common-canvas. Its open_with_tool field has the value canvas.",
+              "is_expanded": false,
+              "expanded_width": 200,
+              "expanded_height": 200
             }
           },
           "parameters": {
@@ -803,7 +809,10 @@
               "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
               "x_pos": 829,
               "y_pos": 364.5,
-              "description": "This supernode was created by common-canvas. Its open_with_tool field is unspecified."
+              "description": "This supernode was created by common-canvas. Its open_with_tool field is unspecified.",
+              "is_expanded": false,
+              "expanded_width": 200,
+              "expanded_height": 200
             }
           },
           "parameters": {

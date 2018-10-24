@@ -61,7 +61,7 @@ export default class PipelineOutHandler {
 
 		if (ciNode.type === "execution_node" ||
 				ciNode.type === "binding") {
-			newNode.op = ciNode.operator_id_ref;
+			newNode.op = ciNode.op;
 		}
 
 		if (ciNode.type === "super_node") {
@@ -76,18 +76,10 @@ export default class PipelineOutHandler {
 		newNode.app_data =
 			Object.assign({}, ciNode.app_data, { ui_data: this.createNodeUiData(ciNode) });
 
-		if (ciNode.messages && !isEmpty(ciNode.messages)) {
-			newNode.app_data.ui_data.messages = ciNode.messages;
-		}
-
-		if (ciNode.uiParameters && !isEmpty(ciNode.uiParameters)) {
-			newNode.app_data.ui_data.ui_parameters = ciNode.uiParameters;
-		}
-
-		if (ciNode.input_ports && ciNode.input_ports.length > 0) {
+		if (ciNode.inputs && ciNode.inputs.length > 0) {
 			newNode.inputs = this.createInputs(ciNode, ciLinks);
 		}
-		if (ciNode.output_ports && ciNode.output_ports.length > 0) {
+		if (ciNode.outputs && ciNode.outputs.length > 0) {
 			newNode.outputs = this.createOutputs(ciNode);
 		}
 
@@ -134,6 +126,14 @@ export default class PipelineOutHandler {
 			uiData.expanded_height = ciNode.expanded_height;
 		}
 
+		if (ciNode.messages && !isEmpty(ciNode.messages)) {
+			uiData.messages = ciNode.messages;
+		}
+
+		if (ciNode.ui_parameters && !isEmpty(ciNode.ui_parameters)) {
+			uiData.ui_parameters = ciNode.ui_parameters;
+		}
+
 		return uiData;
 	}
 
@@ -150,7 +150,7 @@ export default class PipelineOutHandler {
 
 	static createInputs(ciNode, canvasLinks) {
 		var newInputs = [];
-		ciNode.input_ports.forEach((ciInputPort, portIndex) => {
+		ciNode.inputs.forEach((ciInputPort, portIndex) => {
 			const newInput = {
 				id: ciInputPort.id
 			};
@@ -184,7 +184,7 @@ export default class PipelineOutHandler {
 
 	static createOutputs(ciNode) {
 		var newOutputs = [];
-		ciNode.output_ports.forEach((ciOutputPort) => {
+		ciNode.outputs.forEach((ciOutputPort) => {
 			var newOutput = {
 				id: ciOutputPort.id
 			};

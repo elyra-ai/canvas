@@ -13,9 +13,7 @@
 const FIRST_PALETTE_VERSION = 1;
 
 // The latest palette version - update as new versions are developed
-const LATEST_PALETTE_VERSION = 2;
-// Remove the line above and un-comment this when we move to v3
-// const LATEST_PALETTE_VERSION = 3;
+const LATEST_PALETTE_VERSION = 3;
 
 // Array of major version upgrade functions
 const updateFuncs = [
@@ -83,9 +81,9 @@ function _update0to1(palette) {
  * @return A palette object that has been upgraded to version 2
  */
 function _update1to2(palette) {
-	palette.version = "2.0";
+	const newPalette = Object.assign({}, { version: "2.0" }, palette);
 
-	return palette;
+	return newPalette;
 }
 
 // Version 3 methods ------------------------>
@@ -103,16 +101,23 @@ function _update2to3(palette) {
 	for (const category of palette.categories) {
 		category.id = category.category;
 		delete category.category;
-		category.label = category.label;
-		category.image = category.image;
-		category.description = "";
+		// Category fields: label, image and description, all
+		// remain the same, if present.
 		category.node_types = [];
 		for (let idx = 0; idx < category.nodetypes.length; idx++) {
 			const oldNode = category.nodetypes[idx];
 			const node = {};
 			node.id = "";
 			node.type = oldNode.type;
-			node.op = oldNode.operator_id_ref;
+			if (oldNode.type === "execution_node" ||
+					oldNode.type === "binding") {
+				node.op = oldNode.operator_id_ref;
+			} else if (oldNode.type === "super_node") {
+				if (oldNode.open_with_tool) {
+					node.open_with_tool = oldNode.open_with_tool;
+				}
+				node.subflow_ref = { "pipeline_id_ref": oldNode.subDiagramId };
+			}
 			if (oldNode.input_ports && oldNode.input_ports.length > 0) {
 				node.inputs = _readPorts(oldNode.input_ports);
 			}

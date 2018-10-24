@@ -28,7 +28,9 @@ import union from "lodash/union";
 import mergeWith from "lodash/mergeWith";
 import uuid4 from "uuid/v4";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
-import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@wdp/pipeline-schemas";
+// TODO - Remove line below and uncomment following line when we move to support v3 schemas officially
+import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "./schemas-utils/upgrade-flow.js";
+// import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@wdp/pipeline-schemas";
 import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from "./schemas-utils/upgrade-palette.js";
 
 const nodes = (state = [], action) => {
@@ -101,7 +103,7 @@ const nodes = (state = [], action) => {
 		return state.map((node, index) => {
 			if (action.data.nodeId === node.id) {
 				const newNode = Object.assign({}, node);
-				newNode.uiParameters = action.data.uiParameters;
+				newNode.ui_parameters = action.data.ui_parameters;
 				return newNode;
 			}
 			return node;
@@ -232,7 +234,7 @@ const nodes = (state = [], action) => {
 	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":
 		return state.map((node, index) => {
 			if (action.data.nodeId === node.id) {
-				return Object.assign({}, node, { input_ports: ports(node.input_ports, action) });
+				return Object.assign({}, node, { inputs: ports(node.inputs, action) });
 			}
 			return node;
 		});
@@ -241,7 +243,7 @@ const nodes = (state = [], action) => {
 	case "SET_OUTPUT_PORT_SUBFLOW_NODE_REF":
 		return state.map((node, index) => {
 			if (action.data.nodeId === node.id) {
-				return Object.assign({}, node, { output_ports: ports(node.output_ports, action) });
+				return Object.assign({}, node, { outputs: ports(node.outputs, action) });
 			}
 			return node;
 		});
@@ -790,27 +792,29 @@ const categories = (state = [], action) => {
 
 	case "ADD_NODE_TYPE_TO_PALETTE": {
 		let category = state.find((cat) => {
-			return (cat.category === action.data.category);
+			return (cat.id === action.data.categoryId);
 		});
 
 		if (category) {
-			return state.map((cat, index) => {
-				if (action.data.category === cat.category) {
-					return Object.assign({}, cat, { nodetypes: nodetypes(cat.nodetypes, action) });
+			return state.map((cat) => {
+				if (action.data.categoryId === cat.id) {
+					return Object.assign({}, cat, { node_types: nodetypes(cat.node_types, action) });
 				}
 				return cat;
 			});
 		}
 
+		// If a category was not found, we create a new one using the ID and label
+		// provided.
 		category = {
-			"category": action.data.category,
-			"label": action.data.categoryLabel ? action.data.categoryLabel : action.data.category,
-			"nodetypes": []
+			"id": action.data.categoryId,
+			"label": action.data.categoryLabel ? action.data.categoryLabel : action.data.categoryId,
+			"node_types": []
 		};
 
 		return [
 			...state,
-			Object.assign({}, category, { nodetypes: nodetypes(category.nodetypes, action) })
+			Object.assign({}, category, { node_types: nodetypes(category.node_types, action) })
 		];
 	}
 	default:
@@ -822,8 +826,7 @@ const nodetypes = (state = [], action) => {
 	switch (action.type) {
 
 	case "ADD_NODE_TYPE_TO_PALETTE":
-		if (action.data.nodeType && action.data.nodeType.label &&
-				action.data.nodeType.operator_id_ref && action.data.nodeType.image) {
+		if (action.data.nodeType) {
 			return [
 				...state,
 				action.data.nodeType
@@ -944,12 +947,12 @@ const setNodeDimensions = (node, layoutInfo) => {
 	const newNode = Object.assign({}, node);
 
 	if (layoutInfo.connectionType === "ports") {
-		newNode.inputPortsHeight = node.input_ports
-			? (node.input_ports.length * (layoutInfo.portArcRadius * 2)) + ((node.input_ports.length - 1) * layoutInfo.portArcSpacing)
+		newNode.inputPortsHeight = node.inputs
+			? (node.inputs.length * (layoutInfo.portArcRadius * 2)) + ((node.inputs.length - 1) * layoutInfo.portArcSpacing)
 			: 0;
 
-		newNode.outputPortsHeight = node.output_ports
-			? (node.output_ports.length * (layoutInfo.portArcRadius * 2)) + ((node.output_ports.length - 1) * layoutInfo.portArcSpacing)
+		newNode.outputPortsHeight = node.outputs
+			? (node.outputs.length * (layoutInfo.portArcRadius * 2)) + ((node.outputs.length - 1) * layoutInfo.portArcSpacing)
 			: 0;
 
 		newNode.height = Math.max(newNode.inputPortsHeight, newNode.outputPortsHeight, layoutInfo.defaultNodeHeight);
@@ -1013,6 +1016,9 @@ export default class ObjectModel {
 
 		// Optional callback for notification of selection changes
 		this.selectionChangeHandler = null;
+
+		// TODO - remove this when we support v3 schemas permanently
+		this.returnPipelineFlowDraftVersion = false;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1070,10 +1076,10 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "CLEAR_PALETTE_DATA" });
 	}
 
-	// Deprecated  TODO - Remvove this method when WML Canvas migrates to setPipelineFlowPalette() method
+	// Deprecated  TODO - Remove this method when WML Canvas migrates to setPipelineFlowPalette() method
 	setPaletteData(paletteData) {
 		var newPalData = CanvasInHandler.convertPaletteToPipelineFlowPalette(paletteData);
-		this.store.dispatch({ type: "SET_PALETTE_DATA", data: newPalData });
+		this.setPipelineFlowPalette(newPalData);
 	}
 
 	setPipelineFlowPalette(paletteData) {
@@ -1083,12 +1089,12 @@ export default class ObjectModel {
 		}
 		// TODO - this method is called by App.js test harness. Remove this check and
 		// code when we remove the x-* example palette files after WML Canvas migrates to use v2.0 palette.
-		if (CanvasInHandler.isVersion0Palette(paletteData)) {
-			this.setPaletteData(paletteData);
-			return;
+		let palData = paletteData;
+		if (CanvasInHandler.isVersion0Palette(palData)) {
+			palData = CanvasInHandler.convertPaletteToPipelineFlowPalette(palData);
 		}
 
-		const newPalData = this.validateAndUpgradePalette(paletteData);
+		const newPalData = this.validateAndUpgradePalette(palData);
 		this.store.dispatch({ type: "SET_PALETTE_DATA", data: newPalData });
 	}
 
@@ -1096,24 +1102,28 @@ export default class ObjectModel {
 		return this.store.getState().palette;
 	}
 
-	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
+	addNodeTypeToPalette(nodeTypeObj, categoryId, categoryLabel) {
 		const nodeTypePaletteData = {
 			"nodeType": nodeTypeObj,
-			"category": category,
+			"categoryId": categoryId,
 		};
 		if (categoryLabel) {
 			nodeTypePaletteData.categoryLabel = categoryLabel;
 		}
 
 		this.store.dispatch({ type: "ADD_NODE_TYPE_TO_PALETTE", data: nodeTypePaletteData });
+
+		if (this.schemaValidation) {
+			validatePaletteAgainstSchema(this.getPaletteData(), LATEST_PALETTE_VERSION);
+		}
 	}
 
 	getPaletteNode(nodeOpIdRef) {
 		let outNodeType = null;
 		if (!isEmpty(this.getPaletteData())) {
 			this.getPaletteData().categories.forEach((category) => {
-				category.nodetypes.forEach((nodeType) => {
-					if (nodeType.operator_id_ref === nodeOpIdRef) {
+				category.node_types.forEach((nodeType) => {
+					if (nodeType.op === nodeOpIdRef) {
 						outNodeType = nodeType;
 					}
 				});
@@ -1125,8 +1135,8 @@ export default class ObjectModel {
 	getCategoryForNode(nodeOpIdRef) {
 		let result = null;
 		this.getPaletteData().categories.forEach((category) => {
-			category.nodetypes.forEach((nodeType) => {
-				if (nodeType.operator_id_ref === nodeOpIdRef) {
+			category.node_types.forEach((nodeType) => {
+				if (nodeType.op === nodeOpIdRef) {
 					result = category;
 				}
 			});
@@ -1135,7 +1145,9 @@ export default class ObjectModel {
 	}
 
 	validateAndUpgradePalette(newPalette) {
-		let pal = newPalette;
+		// Clone the palette to ensure we don't modify the incoming parameter.
+		let pal = JSON.parse(JSON.stringify(newPalette));
+
 		const version = extractPaletteVersion(pal);
 
 		if (this.schemaValidation) {
@@ -1204,13 +1216,12 @@ export default class ObjectModel {
 			"pipelines": [
 				{
 					"id": newPipelineId,
-					"runtime_ref": "empty_runtime",
+					"runtime_ref": "",
 					"nodes": [],
 					"comments": [],
 					"links": []
 				}
 			],
-			"runtimes": [{ "id": "empty_runtime", "name": "empty_runtime" }],
 			"schemas": []
 		};
 	}
@@ -1251,6 +1262,12 @@ export default class ObjectModel {
 		return pipelineFlow;
 	}
 
+	// TODO - Remove this method when we transition to V3 schemas permanently
+	// Also remove the call to this from canvas controller.
+	setReturnPipelineFlowDraftVersion(state) {
+		this.returnPipelineFlowDraftVersion = state;
+	}
+
 	// Returns a pipeline flow based on the initial pipeline flow we were given
 	// with the changes to canvasinfo made by the user. We don't do this in the
 	// redux code because that would result is continuous update of the pipelineflow
@@ -1259,9 +1276,28 @@ export default class ObjectModel {
 	getPipelineFlow() {
 		const pipelineFlow =
 			PipelineOutHandler.createPipelineFlow(this.getCanvasInfo());
+
+		// TODO - Remove this if clause when we transition to V3 schemas permanently
+		// This is temporary code - For now return a v2 pipelineFlow.
+		// Note: v3 pipelineFlow docs will be the same as v2 provided the host
+		// app has not used any v3 features, so all we need to do is change the
+		// version and json_schema fields.
+		if (this.returnPipelineFlowDraftVersion === false) {
+			pipelineFlow.version = "2.0";
+			if (pipelineFlow.json_schema) {
+				pipelineFlow.json_schema = "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json";
+			}
+
+			if (this.schemaValidation) {
+				validatePipelineFlowAgainstSchema(pipelineFlow, 2);
+			}
+			return pipelineFlow;
+		}
+
 		if (this.schemaValidation) {
 			validatePipelineFlowAgainstSchema(pipelineFlow);
 		}
+
 		return pipelineFlow;
 	}
 
@@ -2062,7 +2098,7 @@ export default class ObjectModel {
 				const parentPipelineId = supernodeObj.parentPipelineId;
 				const parentPipeline = this.getAPIPipeline(parentPipelineId);
 				const supernode = parentPipeline.getNode(supernodeObj.supernodeId);
-				supernode.input_ports.forEach((inputPort) => {
+				supernode.inputs.forEach((inputPort) => {
 					if (inputPort.subflow_node_ref === nodeId) {
 						const supernodeLinks = parentPipeline.getLinksContainingTargetId(supernode.id);
 						supernodeLinks.forEach((supernodeLink) => {
@@ -2154,7 +2190,7 @@ export default class ObjectModel {
 				const parentPipeline = this.getAPIPipeline(parentPipelineId);
 				const supernode = parentPipeline.getNode(supernodeObj.supernodeId);
 
-				supernode.output_ports.forEach((outputPort) => {
+				supernode.outputs.forEach((outputPort) => {
 					if (outputPort.subflow_node_ref === nodeId) {
 						const supernodeLinks = parentPipeline.getLinksContainingSourceId(supernode.id);
 						supernodeLinks.forEach((supernodeLink) => {
@@ -2202,7 +2238,7 @@ export default class ObjectModel {
 	getSupernodeInputPortForLink(trgNode, link) {
 		let port = null;
 		if (has(trgNode, "subflow_ref.pipeline_id_ref") && link.trgNodePortId) {
-			trgNode.input_ports.forEach((inputPort) => {
+			trgNode.inputs.forEach((inputPort) => {
 				if (inputPort.id === link.trgNodePortId) {
 					port = inputPort;
 					return;
@@ -2218,7 +2254,7 @@ export default class ObjectModel {
 	getSupernodeOutputPortForLink(srcNode, link) {
 		let port = null;
 		if (has(srcNode, "subflow_ref.pipeline_id_ref") && link.srcNodePortId) {
-			srcNode.output_ports.forEach((outputPort) => {
+			srcNode.outputs.forEach((outputPort) => {
 				if (outputPort.id === link.srcNodePortId) {
 					port = outputPort;
 					return;
@@ -2468,11 +2504,11 @@ export class APIPipeline {
 			var nodesArray = this.getNodes();
 			if (nodesArray.length > 0) {
 				var lastNodeAdded = nodesArray[nodesArray.length - 1];
-				if (lastNodeAdded.output_ports && lastNodeAdded.output_ports.length >= 0) {
+				if (lastNodeAdded.outputs && lastNodeAdded.outputs.length >= 0) {
 					sourceNode = lastNodeAdded;
 				} else if (nodesArray.length > 1) {
 					var lastButOneNodeAdded = nodesArray[nodesArray.length - 2];
-					if (lastButOneNodeAdded.output_ports && lastButOneNodeAdded.output_ports.length >= 0) {
+					if (lastButOneNodeAdded.outputs && lastButOneNodeAdded.outputs.length >= 0) {
 						sourceNode = lastButOneNodeAdded;
 					}
 				}
@@ -2552,11 +2588,11 @@ export class APIPipeline {
 
 		if (newNode &&
 				srcNode &&
-				newNode.input_ports &&
-				srcNode.output_ports &&
-				newNode.input_ports.length === 1 &&
-				srcNode.output_ports.length === 1 &&
-				!this.isCardinalityExceeded(srcNode.output_ports[0].id, newNode.input_ports[0].id, srcNode, newNode)) {
+				newNode.inputs &&
+				srcNode.outputs &&
+				newNode.inputs.length === 1 &&
+				srcNode.outputs.length === 1 &&
+				!this.isCardinalityExceeded(srcNode.outputs[0].id, newNode.inputs[0].id, srcNode, newNode)) {
 			isLinkNeededWithAutoNode = true;
 		}
 
@@ -2564,14 +2600,14 @@ export class APIPipeline {
 	}
 
 	isEntryBindingNode(node) {
-		if (node.input_ports && node.input_ports.length > 0) {
+		if (node.inputs && node.inputs.length > 0) {
 			return false;
 		}
 		return true;
 	}
 
 	isExitBindingNode(node) {
-		if (node.output_ports && node.output_ports.length > 0) {
+		if (node.outputs && node.outputs.length > 0) {
 			return false;
 		}
 		return true;
@@ -2742,7 +2778,7 @@ export class APIPipeline {
 	}
 
 	doesNodeHavePorts(node) {
-		return node.input_ports && node.input_ports.length > 0;
+		return node.inputs && node.inputs.length > 0;
 	}
 
 	getNodeParameters(nodeId) {
@@ -2752,7 +2788,7 @@ export class APIPipeline {
 
 	getNodeUiParameters(nodeId) {
 		var node = this.getNode(nodeId);
-		return (node ? node.uiParameters : null);
+		return (node ? node.ui_parameters : null);
 	}
 
 	setNodeLabel(nodeId, newLabel) {
@@ -2788,7 +2824,7 @@ export class APIPipeline {
 	}
 
 	setNodeUiParameters(nodeId, uiParameters) {
-		this.store.dispatch({ type: "SET_NODE_UI_PARAMETERS", data: { nodeId: nodeId, uiParameters: uiParameters }, pipelineId: this.pipelineId });
+		this.store.dispatch({ type: "SET_NODE_UI_PARAMETERS", data: { nodeId: nodeId, ui_parameters: uiParameters }, pipelineId: this.pipelineId });
 	}
 
 	setNodeParameters(nodeId, parameters) {
@@ -3104,11 +3140,11 @@ export class APIPipeline {
 			type: "nodeLink"
 		};
 
-		if (srcNode.output_ports && srcNode.output_ports.length > 0) {
-			newLink = Object.assign(newLink, { "srcNodePortId": srcNode.output_ports[0].id });
+		if (srcNode.outputs && srcNode.outputs.length > 0) {
+			newLink = Object.assign(newLink, { "srcNodePortId": srcNode.outputs[0].id });
 		}
-		if (newNode.input_ports && newNode.input_ports.length > 0) {
-			newLink = Object.assign(newLink, { "trgNodePortId": newNode.input_ports[0].id });
+		if (newNode.inputs && newNode.inputs.length > 0) {
+			newLink = Object.assign(newLink, { "trgNodePortId": newNode.inputs[0].id });
 		}
 
 		return newLink;
@@ -3343,7 +3379,6 @@ export class APIPipeline {
 								link.trgNodeId === id2) ||
 								(link.srcNodeId === id2 &&
 								link.trgNodeId === id1);
-
 			}
 			return false;
 		});
@@ -3353,8 +3388,8 @@ export class APIPipeline {
 	getDefaultSrcPortId(srcNodeId, srcNodePortId) {
 		if (!srcNodePortId) {
 			const srcNode = this.getNode(srcNodeId);
-			if (srcNode && srcNode.output_ports && srcNode.output_ports.length > 0) {
-				return srcNode.output_ports[0].id;
+			if (srcNode && srcNode.outputs && srcNode.outputs.length > 0) {
+				return srcNode.outputs[0].id;
 			}
 		}
 		return srcNodePortId;
@@ -3364,8 +3399,8 @@ export class APIPipeline {
 	getDefaultTrgPortId(trgNodeId, trgNodePortId) {
 		if (!trgNodePortId) {
 			const trgNode = this.getNode(trgNodeId);
-			if (trgNode && trgNode.input_ports && trgNode.input_ports.length > 0) {
-				return trgNode.input_ports[0].id;
+			if (trgNode && trgNode.inputs && trgNode.inputs.length > 0) {
+				return trgNode.inputs[0].id;
 			}
 		}
 		return trgNodePortId;
@@ -3467,14 +3502,14 @@ export class APIPipeline {
 			if (link.type === "nodeLink") {
 				if (link.srcNodeId === srcNode.id && srcPortId) {
 					if (link.srcNodePortId === srcPortId ||
-							(!link.srcNodePortId && this.isFirstPort(srcNode.output_ports, srcPortId))) {
+							(!link.srcNodePortId && this.isFirstPort(srcNode.outputs, srcPortId))) {
 						srcCount++;
 					}
 				}
 
 				if (link.trgNodeId === trgNode.id && trgPortId) {
 					if (link.trgNodePortId === trgPortId ||
-							(!link.trgNodePortId && this.isFirstPort(trgNode.input_ports, trgPortId))) {
+							(!link.trgNodePortId && this.isFirstPort(trgNode.inputs, trgPortId))) {
 						trgCount++;
 					}
 				}
@@ -3482,7 +3517,7 @@ export class APIPipeline {
 		});
 
 		if (srcCount > 0) {
-			const srcPort = this.getPort(srcNode.output_ports, srcPortId);
+			const srcPort = this.getPort(srcNode.outputs, srcPortId);
 			if (srcPort &&
 					srcPort.cardinality &&
 					Number(srcPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed
@@ -3492,7 +3527,7 @@ export class APIPipeline {
 		}
 
 		if (trgCount > 0) {
-			const trgPort = this.getPort(trgNode.input_ports, trgPortId);
+			const trgPort = this.getPort(trgNode.inputs, trgPortId);
 			if (trgPort &&
 					trgPort.cardinality &&
 					Number(trgPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed

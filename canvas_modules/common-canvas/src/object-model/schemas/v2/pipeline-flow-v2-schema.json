@@ -503,7 +503,7 @@
         "ui_data": {
           "anyOf": [
             {
-              "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_overview"
+              "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_overview_def"
             },
             {
               "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_def"
