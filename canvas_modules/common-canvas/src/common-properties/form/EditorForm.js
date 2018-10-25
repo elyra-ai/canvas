@@ -341,6 +341,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let rowSelection;
 	let addRemoveRows;
 	let header;
+	let includeAllRows;
 
 	// The control type defines the basic UI element that should be used to edit the property
 	if (parameter.getRole() === ParamRole.CUSTOM) {
@@ -412,6 +413,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 						rowSelection = structureDef.rowSelection;
 						addRemoveRows = structureDef.addRemoveRows;
 						header = structureDef.header;
+						includeAllRows = structureDef.includeAllRows;
 					} else {
 						controlType = ControlType.STRUCTURELISTEDITOR;
 						moveableRows = structureDef.moveableRows;
@@ -483,6 +485,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	settings.displayChars = parameter.displayChars;
 	settings.header = header;
 	settings.uionly = parameter.uionly;
+	settings.includeAllRows = includeAllRows;
 	return new Control(settings);
 }
 

@@ -469,7 +469,7 @@ describe("condition renders correctly with structure table control", () => {
 			"type": "error",
 			"text": "order cannot be descending"
 		};
-		expect(renderedController.getErrorMessages(conditionsPropertyId)).to.eql([errorMessage]);
+		expect(renderedController.getErrorMessages(conditionsPropertyId)[1]).to.eql(errorMessage);
 		const tableWrapper = wrapper.find("div[data-id='properties-ft-structuretableErrors']");
 		expect(tableWrapper.find("div.properties-validation-message span").text()).to.equal(errorMessage.text);
 	});
@@ -623,9 +623,11 @@ describe("structuretable control with multi input schemas renders correctly", ()
 
 describe("structuretable control displays with no header and no button", () => {
 	let wrapper;
+	let renderedController;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
 	});
 
 	afterEach(() => {
@@ -638,6 +640,29 @@ describe("structuretable control displays with no header and no button", () => {
 		const header = table.find(".reactable-column-header");
 		expect(header).to.have.length(1);
 	});
+	it("should use dmDefault property values", () => {
+		// Open rename fields Summary Panel in structuretableParamDef
+		const table = propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnDefaultIndex-summary-panel");
+		const container = table.find("div.properties-ft-container-panel");
+		// Open field picker
+		const addColumnsButton = container.find("button.properties-add-fields-button");
+		addColumnsButton.simulate("click");
+		const fieldPickerTable = wrapper.find("div.properties-fp-table");
+		// Select header checkbox to select all fields in column override
+		const tableCheckboxHeader = fieldPickerTable.find("input[type='checkbox']").at(0); // find the table header checkbox
+		tableCheckboxHeader.getDOMNode().checked = true;
+		tableCheckboxHeader.simulate("change");
+		// Select Ok to close field picker table.
+		const okButton = fieldPickerTable.find("button[data-id='properties-apply-button']");
+		okButton.simulate("click");
+		wrapper.render();
+		// Newly added fields should have the proper type
+		const tableId = { name: "structuretableReadonlyColumnDefaultIndex" };
+		const tableValue = renderedController.getPropertyValue(tableId);
+		expect(tableValue).to.have.length(8);
+		const cell = tableValue[7][4];
+		expect(cell).to.equal("integer");
+	});
 	it("should display no header", () => {
 		const table = propertyUtils.openSummaryPanel(wrapper, "structuretableNoHeader-summary-panel");
 		const header = table.find(".reactable-column-header");
@@ -647,6 +672,16 @@ describe("structuretable control displays with no header and no button", () => {
 		const table = propertyUtils.openSummaryPanel(wrapper, "structuretableNoButtons-summary-panel");
 		// no add/remove buttons should be rendered
 		expect(table.find(".properties-at-buttons-container")).to.have.length(0);
+	});
+	it("should have all fields in tables without the add/remove buttons", () => {
+		propertyUtils.openSummaryPanel(wrapper, "structuretableNoButtons-summary-panel");
+		// All fields should be present, plus the two bad fields in current_parameters
+		const tableId = { name: "structuretableNoButtons" };
+		const tableValue = renderedController.getPropertyValue(tableId);
+		expect(tableValue).to.have.length(10);
+		expect(tableValue[1][0]).to.equal("Kathy");
+		expect(tableValue[1][1]).to.equal("Descending");
+		expect(tableValue[9][0]).to.equal("Ag");
 	});
 });
 

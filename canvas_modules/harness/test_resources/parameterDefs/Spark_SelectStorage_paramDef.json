@@ -5,11 +5,6 @@
   "current_parameters": {
     "field_types": [
       [
-        "Age",
-        true,
-        "integer"
-      ],
-      [
         "Sex",
         false,
         "string"
@@ -90,6 +85,7 @@
       {
         "complex_type_ref": "FieldStorageEntry",
         "add_remove_rows": false,
+        "include_all_fields": true,
         "key_definition": {
           "parameter_ref": "field",
           "label": {

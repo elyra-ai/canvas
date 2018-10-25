@@ -101,6 +101,8 @@ class StructureTableControl extends AbstractTable {
 				row.push(field);
 			} else if (subControl.role === ParamRole.NEW_COLUMN) {
 				row.push(PropertyUtils.stringifyFieldValue(field, subControl).replace(".", "_"));
+			} else if (typeof subControl.dmDefault !== "undefined") {
+				row.push(PropertyUtils.getDMDefault(subControl, field, this.props.controller.getDatasetMetadataFields()));
 			} else if (typeof this.props.control.defaultRow !== "undefined") {
 				let defaultRowIndex = idx;
 				// defaultRow does not contain the first column field, ex: aggregate.json

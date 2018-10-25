@@ -36,6 +36,10 @@
       [
         "Kathy",
         "Descending"
+      ],
+      [
+        "Age",
+        "Descending"
       ]
     ],
     "structuretableNoHeader": [
@@ -268,10 +272,13 @@
           "id": "new_type",
           "enum": [
             "string",
-            "number",
-            "boolean",
+            "integer",
+            "double",
             "time",
-            "date"
+            "date",
+            "timestamp",
+            "binary",
+            "boolean"
           ],
           "default": "string"
         },
@@ -441,8 +448,7 @@
             "boolean",
             "time",
             "date"
-          ],
-          "default": "string"
+          ]
         }
       ]
     },
@@ -810,7 +816,8 @@
               "default": "Select data type"
             },
             "width": 26,
-            "edit_style": "inline"
+            "edit_style": "inline",
+            "dm_default": "type"
           },
           {
             "parameter_ref": "new_date",
@@ -856,6 +863,7 @@
       {
         "complex_type_ref": "structuretableNoButtons",
         "add_remove_rows": false,
+        "include_all_fields": true,
         "key_definition": {
           "parameter_ref": "field",
           "width": 28,
@@ -1292,7 +1300,7 @@
             "group_info": [
               {
                 "id": "structuretableNoButtons_panel",
-                "type": "controls",
+                "type": "columnSelection",
                 "label": {
                   "default": "Columns"
                 },

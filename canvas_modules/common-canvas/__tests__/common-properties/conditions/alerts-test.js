@@ -140,7 +140,7 @@ describe("condition messages should add alerts tab for tables", () => {
 
 	it("alerts should not show messages for hidden table controls", () => {
 		// open the conditions tabs
-		const conditionsCategory = wrapper.find("div.properties-category-container").at(2); // Conditions category
+		const conditionsCategory = wrapper.find("div.properties-category-container").at(3); // Conditions category
 		const conditionsButton = conditionsCategory.find("button.properties-category-title");
 		expect(conditionsButton.text()).to.equal("CONDITIONS");
 		conditionsButton.simulate("click");
@@ -176,7 +176,7 @@ describe("condition messages should add alerts tab for tables", () => {
 		// get alerts tabs
 		let alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
 		const alertButton = alertCategory.find("button.properties-category-title");
-		expect(alertButton.text()).to.equal("ALERTS (1)");
+		expect(alertButton.text()).to.equal("ALERTS (2)");
 		alertButton.simulate("click");
 
 		// ensure that alert tab is open
@@ -184,7 +184,7 @@ describe("condition messages should add alerts tab for tables", () => {
 		const alertDiv = alertCategory.find("div.properties-category-content.show"); // ALERTS div
 		expect(alertDiv).to.have.length(1);
 		const alertList = alertDiv.find("a.properties-link-text");
-		expect(alertList).to.have.length(1);
+		expect(alertList).to.have.length(2);
 		expect(alertList.at(0).text()).to.equal("The field cannot contain 'number'");
 
 		// open the summary link for the hide table
@@ -207,9 +207,9 @@ describe("condition messages should add alerts tab for tables", () => {
 		applyButton.simulate("click");
 
 		// validate the first tab is not the alert tab
-		const firstCategory = wrapper.find("div.properties-category-container").at(0);
+		const firstCategory = wrapper.find("div.properties-category-container").at(1);
 		const firstTab = firstCategory.find("button.properties-category-title");
-		expect(firstTab.text()).to.equal("TABLES");
+		expect(firstTab.text()).to.equal("TABLES (1)");
 	});
 
 	it("alerts should not show messages for hidden table cell controls", () => {

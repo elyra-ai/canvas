@@ -261,6 +261,60 @@ function fieldStringToValue(stringValue, control, controller) {
 	return stringValue;
 }
 
+function getDMDefault(subControlDef, fieldName, fields) {
+	let defaultValue;
+	const dmField = subControlDef.dmDefault;
+	if (fieldName) {
+		for (const field of fields) {
+			if (field.name === fieldName) {
+				switch (dmField) {
+				case "type":
+					defaultValue = field.type;
+					break;
+				case "description":
+					defaultValue = field.metadata.description;
+					break;
+				case "measure":
+					defaultValue = _findCorrespondingValue(field.metadata.measure, subControlDef.values);
+					break;
+				case "modeling_role":
+					defaultValue = _findCorrespondingValue(field.metadata.modeling_role, subControlDef.values);
+					break;
+				default:
+					break;
+				}
+				break;
+			}
+		}
+	}
+	return defaultValue;
+}
+
+// Attempts to synchronize the Modeler notions of measurement level
+// and modeling role with those defined in datarecord-metadata.
+function _findCorrespondingValue(input, values) {
+	// First try for an exact match
+	const idx = values.indexOf(input);
+	if (idx > -1) {
+		return values[idx];
+	}
+	// Next try for a case insensitive match
+	const searchTerm = input.toLowerCase();
+	for (const value of values) {
+		if (searchTerm === value.toLowerCase()) {
+			return value;
+		}
+	}
+	// Finally try for a startsWith match
+	for (const value of values) {
+		if (searchTerm.startsWith(value.substring(0, 6).toLowerCase())) {
+			return value;
+		}
+	}
+	// Last resort: Return the original value
+	return input;
+}
+
 module.exports = {
 	toType: toType,
 	formatMessage: formatMessage,
@@ -272,5 +326,6 @@ module.exports = {
 	stringifyFieldValue: stringifyFieldValue,
 	fieldValueMatchesProto: fieldValueMatchesProto,
 	fieldStringToValue: fieldStringToValue,
-	generateId: generateId
+	generateId: generateId,
+	getDMDefault: getDMDefault
 };

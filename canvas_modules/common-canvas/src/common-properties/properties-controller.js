@@ -259,12 +259,13 @@ export default class PropertiesController {
 			const control = this.controls[keyName];
 			const propertyId = { name: control.name };
 			let controlValue = this.getPropertyValue(propertyId);
+
 			if (resolveParameterRefs) {
 				if (typeof controlValue !== "undefined" && controlValue !== null && typeof controlValue.parameterRef !== "undefined") {
 					controlValue = this.getPropertyValue({ name: controlValue.parameterRef });
 					this.updatePropertyValue(propertyId, controlValue);
 				}
-			} else if (control.controlType === "structuretable" && control.addRemoveRows === false && typeof control.dmDefault !== "undefined") {
+			} else if (control.controlType === "structuretable" && control.addRemoveRows === false && control.includeAllRows === true) {
 				controlValue = this._populateFieldData(controlValue, control);
 				this.updatePropertyValue(propertyId, controlValue);
 			} else if (typeof control.valueDef !== "undefined" && typeof control.valueDef.defaultValue !== "undefined" &&
@@ -276,25 +277,25 @@ export default class PropertiesController {
 	}
 
 	_populateFieldData(controlValue, control) {
-		const rowData = [];
 		const fields = this.getDatasetMetadataFields();
-		const updateCells = [];
 		const multiSchema = this._isMultiSchemaControl(control);
+		// Start with the values stored in current_parameters
+		const rowData = [].concat(controlValue);
+		// Add in any rows containing fields not present in the current parameters
 		for (let i = 0; i < fields.length; i++) {
 			const row = [];
 			const fieldIndex = this._indexOfField(fields[i].name, controlValue);
-			for (let k = 0; k < control.subControls.length; k++) {
-				if (k === control.keyIndex) {
-					const fieldValue = multiSchema ? { link_ref: fields[i].schema, field_name: fields[i].origName } : fields[i].name;
-					row.push(fieldValue);
-				} else if (fieldIndex > -1 && controlValue.length > i && controlValue[i].length > k) {
-					row.push(controlValue[i][k]);
-				} else {
-					row.push(this._getDefaultSubControlValue(k, fields[i].name, fields, control));
-					updateCells.push([i, k]);
+			if (fieldIndex === -1) {
+				for (let k = 0; k < control.subControls.length; k++) {
+					if (k === control.keyIndex) {
+						const fieldValue = multiSchema ? { link_ref: fields[i].schema, field_name: fields[i].origName } : fields[i].name;
+						row.push(fieldValue);
+					} else {
+						row.push(this._getDefaultSubControlValue(k, fields[i].name, fields, control));
+					}
 				}
+				rowData.push(row);
 			}
-			rowData.push(row);
 		}
 		return rowData;
 	}
@@ -342,13 +343,13 @@ export default class PropertiesController {
 	_getDefaultSubControlValue(col, fieldName, fields, control) {
 		let val;
 		const subControl = control.subControls[col];
-		if (PropertyUtils.toType(subControl.valueDef.defaultValue) !== "undefined") {
+		if (PropertyUtils.toType(subControl.dmDefault) !== "undefined") {
+			val = PropertyUtils.getDMDefault(subControl, fieldName, fields);
+		} else if (PropertyUtils.toType(subControl.valueDef.defaultValue) !== "undefined") {
 			val = subControl.valueDef.defaultValue;
 			if (val.parameterRef) {
 				val = this.getPropertyValue({ name: val.parameterRef });
 			}
-		} else if (PropertyUtils.toType(subControl.dmDefault) !== "undefined") {
-			val = this._getDMDefault(subControl, fieldName, fields);
 		} else if (subControl.values) {
 			val = subControl.values[0];
 		} else if (subControl.valueDef.propType === "string") {
@@ -367,35 +368,6 @@ export default class PropertiesController {
 			val = null;
 		}
 		return val;
-	}
-
-	_getDMDefault(subControlDef, fieldName, fields) {
-		let defaultValue;
-		const dmField = subControlDef.dmDefault;
-		if (fieldName) {
-			for (const field of fields) {
-				if (field.name === fieldName) {
-					switch (dmField) {
-					case "type":
-						defaultValue = field.type;
-						break;
-					case "description":
-						defaultValue = field.description;
-						break;
-					case "measure":
-						defaultValue = field.measure;
-						break;
-					case "modeling_role":
-						defaultValue = field.modeling_role;
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-			}
-		}
-		return defaultValue;
 	}
 
 	_indexOfField(fieldName, controlValue) {
