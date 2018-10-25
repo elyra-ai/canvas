@@ -15,7 +15,6 @@ import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 import { CHARACTER_LIMITS, TOOL_TIP_DELAY } from "./../../constants/constants.js";
-import isEmpty from "lodash/isEmpty";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
 import uuid4 from "uuid/v4";
@@ -39,15 +38,6 @@ class TextfieldControl extends React.Component {
 		const value = this.props.value ? this.props.value : "";
 		const className = classNames("properties-textfield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
-		const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
-		let tooltip;
-		if (value && this.props.tableControl) {
-			tooltip = (
-				<div className="properties-tooltips">
-					{value.toString()}
-				</div>
-			);
-		}
 		const textInput =
 			(<TextInput
 				autoComplete={this.props.tableControl === true ? "off" : "on"}
@@ -59,19 +49,32 @@ class TextfieldControl extends React.Component {
 				labelText={this.props.control.label ? this.props.control.label.text : ""}
 				hideLabel
 			/>);
+		let display = textInput;
+		if (this.props.tableControl) {
+			const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
+			let disabled = true;
+			if (value) {
+				disabled = false;
+			}
+			const tooltip = (
+				<div className="properties-tooltips">
+					{String(value)}
+				</div>
+			);
+			display = (<Tooltip
+				id={tooltipId}
+				tip={tooltip}
+				direction="top"
+				delay={TOOL_TIP_DELAY}
+				className="properties-tooltips"
+				disable={disabled}
+			>
+				{textInput}
+			</Tooltip>);
+		}
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				{ isEmpty(tooltip) ? textInput
-					: <Tooltip
-						id={tooltipId}
-						tip={tooltip}
-						direction="top"
-						delay={TOOL_TIP_DELAY}
-						className="properties-tooltips"
-					>
-						{textInput}
-					</Tooltip>
-				}
+				{display}
 				<ValidationMessage inTable={this.props.tableControl} state={ this.props.state} messageInfo={ this.props.messageInfo} />
 			</div>
 		);

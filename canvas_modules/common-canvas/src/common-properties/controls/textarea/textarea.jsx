@@ -16,7 +16,6 @@ import ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 import { CHARACTER_LIMITS, TOOL_TIP_DELAY } from "./../../constants/constants.js";
 import classNames from "classnames";
-import isEmpty from "lodash/isEmpty";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import uuid4 from "uuid/v4";
 
@@ -59,15 +58,6 @@ class TextareaControl extends React.Component {
 	render() {
 		let value = this.props.value ? this.props.value : "";
 		value = this.joinNewlines(value);
-		const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
-		let tooltip;
-		if (value && this.props.tableControl) {
-			tooltip = (
-				<div className="properties-tooltips">
-					{value.toString()}
-				</div>
-			);
-		}
 		const textArea =
 			(
 				<TextArea
@@ -80,20 +70,33 @@ class TextareaControl extends React.Component {
 					hideLabel
 				/>
 			);
+		let display = textArea;
+		if (this.props.tableControl) {
+			const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
+			let disabled = true;
+			if (value) {
+				disabled = false;
+			}
+			const tooltip = (
+				<div className="properties-tooltips">
+					{String(value)}
+				</div>
+			);
+			display = (<Tooltip
+				id={tooltipId}
+				tip={tooltip}
+				direction="top"
+				delay={TOOL_TIP_DELAY}
+				className="properties-tooltips"
+				disable={disabled}
+			>
+				{textArea}
+			</Tooltip>);
+		}
 		const className = classNames("properties-textarea", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				{ isEmpty(tooltip) ? textArea
-					: <Tooltip
-						id={tooltipId}
-						tip={tooltip}
-						direction="top"
-						delay={TOOL_TIP_DELAY}
-						className="properties-tooltips"
-					>
-						{textArea}
-					</Tooltip>
-				}
+				{display}
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 

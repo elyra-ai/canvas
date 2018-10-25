@@ -13,7 +13,6 @@ import { connect } from "react-redux";
 import ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import { STATES, TOOL_TIP_DELAY } from "./../../constants/constants.js";
-import isEmpty from "lodash/isEmpty";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import uuid4 from "uuid/v4";
 
@@ -40,32 +39,36 @@ class ReadonlyControl extends React.Component {
 				controlValue = this.props.controller.getCustomControl(this.props.propertyId, this.props.columnDef, { table: true, editStyle: "summary" });
 			}
 		}
-		const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
-		let tooltip;
-		if (controlValue && this.props.tableControl === true) {
-			tooltip = (
+		const readOnly = <span disabled={this.props.state === STATES.DISABLED}>{controlValue}</span>;
+		let display = readOnly;
+		if (this.props.tableControl) {
+			const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
+			let disabled = true;
+			if (controlValue) {
+				disabled = false;
+			}
+			const tooltip = (
 				<div className="properties-tooltips">
-					{controlValue.toString()}
+					{String(controlValue)}
 				</div>
 			);
+			display = (<Tooltip
+				id={tooltipId}
+				tip={tooltip}
+				direction="top"
+				delay={TOOL_TIP_DELAY}
+				className="properties-tooltips"
+				disable={disabled}
+			>
+				{readOnly}
+			</Tooltip>);
 		}
 		return (
 			<div
 				className={classNames("properties-readonly", { "hide": this.props.state === STATES.HIDDEN })}
 				data-id={ControlUtils.getDataId(this.props.propertyId)}
 			>
-				{ isEmpty(tooltip)
-					? <span disabled={this.props.state === STATES.DISABLED}>{controlValue}</span>
-					: <Tooltip
-						id={tooltipId}
-						tip={tooltip}
-						direction="top"
-						delay={TOOL_TIP_DELAY}
-						className="properties-tooltips"
-					>
-						<span disabled={this.props.state === STATES.DISABLED}>{controlValue}</span>
-					</Tooltip>
-				}
+				{display}
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);
