@@ -1120,6 +1120,10 @@ class App extends React.Component {
 			this.log("toolbar action: addComment", source);
 		} else if (action === "delete") {
 			this.log("toolbar action: delete", source);
+		} else if (action === "run") {
+			if (this.state.selectedCanvasDropdownFile === "allTypesCanvas.json") {
+				this.runProgress();
+			}
 		}
 	}
 
@@ -1336,6 +1340,91 @@ class App extends React.Component {
 		this.log("propertyActionHandler() " + actionId);
 	}
 
+	runProgress() {
+		const nodeAnimation =
+			"animation-duration:1000ms; animation-name:wiggle2; " +
+			"animation-iteration-count:infinite; fill: skyblue;";
+
+		const nodeStyle = {
+			body: { default: nodeAnimation, hover: "fill: orange; stroke: coralred; stroke-width: 5;" },
+			// selection_outline: { default: animation },
+			image: { default: null },
+			label: { default: "fill: blue" },
+			text: { default: "fill: white" }
+		};
+
+		const removeNodeStyle = {
+			body: { default: null, hover: null },
+			// selection_outline: { default: animation },
+			image: { default: null },
+			label: { default: null },
+			text: { default: null }
+		};
+
+		const objects1 = { "153651d6-9b88-423c-b01b-861f12d01489": ["id8I6RH2V91XW"] };
+		const objects2 = { "153651d6-9b88-423c-b01b-861f12d01489": ["idGWRVT47XDV"] };
+		const objects3 = { "153651d6-9b88-423c-b01b-861f12d01489": ["nodeIDSuperNodePE"] };
+		const objects4 = { "153651d6-9b88-423c-b01b-861f12d01489": ["id125TTEEIK7V", "id5KIRGGJ3FYT"] };
+
+		const linkAnimation =
+			"animation-duration:1000ms; animation-name:blink; " +
+			"animation-iteration-count:infinite; animation-direction: alternate";
+
+		const linkStyle = {
+			line: { default: linkAnimation, hover: "stroke: yellow; stroke-width: 2" }
+		};
+
+		const removeLinkStyle = {
+			line: { default: null, hover: null }
+		};
+
+		const lnk1 = this.canvasController.getNodeDataLinkFromInfo("id8I6RH2V91XW", "outPort", "idGWRVT47XDV", "inPort");
+		const link1 = { "153651d6-9b88-423c-b01b-861f12d01489": [lnk1.id]	};
+		const lnk2 = this.canvasController.getNodeDataLinkFromInfo("idGWRVT47XDV", null, "nodeIDSuperNodePE", "input2SuperNodePE");
+		const link2 = { "153651d6-9b88-423c-b01b-861f12d01489": [lnk2.id]	};
+		const lnk3 = this.canvasController.getNodeDataLinkFromInfo("nodeIDSuperNodePE", null, "id125TTEEIK7V", "inPort");
+		const lnk4 = this.canvasController.getNodeDataLinkFromInfo("nodeIDSuperNodePE", "output1SuperNodePE", "id5KIRGGJ3FYT", "inPort");
+		const link3 = { "153651d6-9b88-423c-b01b-861f12d01489": [lnk3.id, lnk4.id]	};
+
+		const that = this;
+
+		that.canvasController.setObjectsStyle(objects1, nodeStyle, true);
+
+		setTimeout(() => {
+			that.canvasController.setLinksStyle(link1, linkStyle, true);
+			that.canvasController.setObjectsStyle(objects2, nodeStyle, true);
+		}, 2000);
+
+		setTimeout(() => {
+			that.canvasController.setObjectsStyle(objects1, removeNodeStyle, true);
+			that.canvasController.setLinksStyle(link1, removeLinkStyle, true);
+		}, 4000);
+
+		setTimeout(() => {
+			that.canvasController.setLinksStyle(link2, linkStyle, true);
+			that.canvasController.setObjectsStyle(objects3, nodeStyle, true);
+		}, 6000);
+
+		setTimeout(() => {
+			that.canvasController.setObjectsStyle(objects2, removeNodeStyle, true);
+			that.canvasController.setLinksStyle(link2, removeLinkStyle, true);
+		}, 8000);
+
+		setTimeout(() => {
+			that.canvasController.setLinksStyle(link3, linkStyle, true);
+			that.canvasController.setObjectsStyle(objects4, nodeStyle, true);
+		}, 10000);
+
+		setTimeout(() => {
+			that.canvasController.setLinksStyle(link3, removeLinkStyle, true);
+			that.canvasController.setObjectsStyle(objects3, removeNodeStyle, true);
+		}, 12000);
+
+		setTimeout(() => {
+			that.canvasController.setObjectsStyle(objects4, removeNodeStyle, true);
+		}, 14000);
+	}
+
 	render() {
 		const locale = "en";
 		const messages = i18nData.messages;
@@ -1423,7 +1512,7 @@ class App extends React.Component {
 			{ action: "palette", label: "Palette", enable: true },
 			{ divider: true },
 			{ action: "stop", label: "Stop Execution", enable: false },
-			{ action: "run", label: "Run Pipeline", enable: false },
+			{ action: "run", label: "Run Pipeline", enable: true },
 			{ divider: true },
 			{ action: "undo", label: "Undo", enable: true },
 			{ action: "redo", label: "Redo", enable: true },
