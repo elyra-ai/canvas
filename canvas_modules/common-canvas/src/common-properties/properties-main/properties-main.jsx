@@ -16,7 +16,6 @@ import EditorForm from "./../components/editor-form";
 import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
-import logger from "./../../../utils/logger";
 import PropertyUtils from "./../util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
@@ -53,9 +52,6 @@ class PropertiesMain extends React.Component {
 			this.previousErrorMessages = this.propertiesController.getErrorMessages();
 		}
 		this.currentParameters = this.propertiesController.getPropertyValues();
-		this.propertiesController.subscribe(() => {
-			this.forceUpdate();
-		});
 		this.state = {
 			showPropertiesButtons: true,
 			editorSize: this.propertiesController.getForm().editorSize
@@ -105,19 +101,17 @@ class PropertiesMain extends React.Component {
 
 	setForm(propertiesInfo) {
 		let formData = null;
-		try {
-			if (propertiesInfo.formData && Object.keys(propertiesInfo.formData).length !== 0) {
-				formData = propertiesInfo.formData;
-			} else if (propertiesInfo.parameterDef) {
-				formData = Form.makeForm(propertiesInfo.parameterDef, !this.props.propertiesConfig.rightFlyout);
-			}
-			// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
-			if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
-				formData.data.datasetMetadata = PropertyUtils.convertInputDataModel(formData.data.inputDataModel);
-			}
-		} catch (error) {
-			logger.error("Error generating form in common-properties: " + error);
+
+		if (propertiesInfo.formData && Object.keys(propertiesInfo.formData).length !== 0) {
+			formData = propertiesInfo.formData;
+		} else if (propertiesInfo.parameterDef) {
+			formData = Form.makeForm(propertiesInfo.parameterDef, !this.props.propertiesConfig.rightFlyout);
 		}
+		// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
+		if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
+			formData.data.datasetMetadata = PropertyUtils.convertInputDataModel(formData.data.inputDataModel);
+		}
+
 		this.propertiesController.setForm(formData, this.props.intl);
 		if (formData) {
 			this.originalTitle = formData.label;
