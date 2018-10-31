@@ -1171,11 +1171,11 @@ export default class CanvasController {
 			}
 
 			if (nodeTemplate.inputs) {
-				newNodeTemplate.inputs = nodeTemplate.inputs.map((port) => this.convertPort(port));
+				newNodeTemplate.inputs = newNodeTemplate.inputs.map((port) => this.convertPort(port));
 			}
 
 			if (nodeTemplate.outputs) {
-				newNodeTemplate.outputs = nodeTemplate.outputs.map((port) => this.convertPort(port));
+				newNodeTemplate.outputs = newNodeTemplate.outputs.map((port) => this.convertPort(port));
 			}
 
 			return newNodeTemplate;
