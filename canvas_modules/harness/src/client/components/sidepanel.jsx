@@ -58,6 +58,8 @@ export default class SidePanel extends React.Component {
 				useInternalObjectModel={this.props.canvasConfig.useInternalObjectModel}
 				setConnectionType={this.props.canvasConfig.setConnectionType}
 				selectedConnectionType={this.props.canvasConfig.selectedConnectionType}
+				setInteractionType={this.props.canvasConfig.setInteractionType}
+				selectedInteractionType={this.props.canvasConfig.selectedInteractionType}
 				setNodeFormatType={this.props.canvasConfig.setNodeFormatType}
 				selectedNodeFormat={this.props.canvasConfig.selectedNodeFormat}
 				setLinkType={this.props.canvasConfig.setLinkType}
@@ -161,6 +163,8 @@ SidePanel.propTypes = {
 		useInternalObjectModel: PropTypes.func,
 		setConnectionType: PropTypes.func,
 		selectedConnectionType: PropTypes.string,
+		setInteractionType: PropTypes.func,
+		selectedInteractionType: PropTypes.string,
 		setNodeFormatType: PropTypes.func,
 		selectedNodeFormat: PropTypes.string,
 		setLinkType: PropTypes.func,

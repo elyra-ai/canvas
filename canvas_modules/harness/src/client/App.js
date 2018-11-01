@@ -51,6 +51,7 @@ import {
 	SIDE_PANEL_API,
 	SIDE_PANEL,
 	CHOOSE_FROM_LOCATION,
+	MOUSE_INTERACTION,
 	PORTS_CONNECTION,
 	VERTICAL_FORMAT,
 	CURVE_LINKS,
@@ -94,6 +95,7 @@ class App extends React.Component {
 			propertiesJson: null,
 			selectedPanel: null,
 			selectedLayout: NONE,
+			selectedInteractionType: MOUSE_INTERACTION,
 			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormat: VERTICAL_FORMAT,
 			selectedLinkType: CURVE_LINKS,
@@ -180,6 +182,7 @@ class App extends React.Component {
 		this.setNarrowPalette = this.setNarrowPalette.bind(this);
 		this.schemaValidation = this.schemaValidation.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
+		this.setInteractionType = this.setInteractionType.bind(this);
 		this.setConnectionType = this.setConnectionType.bind(this);
 		this.setNodeFormatType = this.setNodeFormatType.bind(this);
 		this.setLinkType = this.setLinkType.bind(this);
@@ -562,6 +565,11 @@ class App extends React.Component {
 		this.canvasController2.setFixedAutoLayout(selectedLayout);
 		this.setState({ selectedLayout: selectedLayout });
 		this.log("Layout selected", selectedLayout);
+	}
+
+	setInteractionType(selectedInteractionType) {
+		this.setState({ selectedInteractionType: selectedInteractionType });
+		this.log("Interaction Type selected", selectedInteractionType);
 	}
 
 	setConnectionType(selectedConnectionType) {
@@ -1481,6 +1489,7 @@ class App extends React.Component {
 			</div>);
 
 		const commonCanvasConfig = {
+			enableInteractionType: this.state.selectedInteractionType,
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
@@ -1491,6 +1500,7 @@ class App extends React.Component {
 			tipConfig: this.state.tipConfig,
 			schemaValidation: this.state.schemaValidationEnabled,
 			enableNarrowPalette: this.state.narrowPalette
+			// enableBoundingRectangles: true
 		};
 
 		const commonCanvasConfig2 = {
@@ -1671,6 +1681,8 @@ class App extends React.Component {
 			setLayoutDirection: this.setLayoutDirection,
 			selectedLayout: this.state.selectedLayout,
 			useInternalObjectModel: this.useInternalObjectModel,
+			setInteractionType: this.setInteractionType,
+			selectedInteractionType: this.state.selectedInteractionType,
 			setConnectionType: this.setConnectionType,
 			selectedConnectionType: this.state.selectedConnectionType,
 			setNodeFormatType: this.setNodeFormatType,

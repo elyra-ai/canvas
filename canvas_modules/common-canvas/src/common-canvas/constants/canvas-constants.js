@@ -30,6 +30,9 @@ _defineConstant("NOTIFICATION_BELL_ICON", {
 
 _defineConstant("DEFAULT_NOTIFICATION_HEADER", "Notifications");
 
+_defineConstant("MOUSE_INTERACTION", "Mouse");
+_defineConstant("TRACKPAD_INTERACTION", "Trackpad");
+
 _defineConstant("ERROR", "error");
 _defineConstant("WARNING", "warning");
 _defineConstant("INFO", "info");

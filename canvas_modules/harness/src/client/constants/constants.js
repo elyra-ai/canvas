@@ -36,6 +36,9 @@ _defineConstant("NONE", "none");
 _defineConstant("HORIZONTAL", "horizontal");
 _defineConstant("VERTICAL", "vertical");
 
+_defineConstant("MOUSE_INTERACTION", "Mouse");
+_defineConstant("TRACKPAD_INTERACTION", "Trackpad");
+
 _defineConstant("PORTS_CONNECTION", "Ports");
 _defineConstant("HALO_CONNECTION", "Halo");
 

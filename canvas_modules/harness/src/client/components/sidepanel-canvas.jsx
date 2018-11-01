@@ -31,6 +31,8 @@ import {
 	HORIZONTAL_FORMAT,
 	HALO_CONNECTION,
 	PORTS_CONNECTION,
+	MOUSE_INTERACTION,
+	TRACKPAD_INTERACTION,
 	CURVE_LINKS,
 	ELBOW_LINKS,
 	STRAIGHT_LINKS,
@@ -70,6 +72,7 @@ export default class SidePanelForms extends React.Component {
 		this.useEnableCreateSupernodeNonContiguous = this.useEnableCreateSupernodeNonContiguous.bind(this);
 		this.onEnableMoveNodesOnSupernodeResizeToggle = this.onEnableMoveNodesOnSupernodeResizeToggle.bind(this);
 		this.connectionTypeOptionChange = this.connectionTypeOptionChange.bind(this);
+		this.interactionTypeOptionChange = this.interactionTypeOptionChange.bind(this);
 		this.nodeFormatTypeOptionChange = this.nodeFormatTypeOptionChange.bind(this);
 		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
 		this.paletteLayoutOptionChange = this.paletteLayoutOptionChange.bind(this);
@@ -287,6 +290,10 @@ export default class SidePanelForms extends React.Component {
 
 	connectionTypeOptionChange(value) {
 		this.props.setConnectionType(value);
+	}
+
+	interactionTypeOptionChange(value) {
+		this.props.setInteractionType(value);
 	}
 
 	nodeFormatTypeOptionChange(value) {
@@ -556,6 +563,26 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
+		var interactionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-interaction-type">
+			<div className="harness-sidepanel-headers">Interaction Type</div>
+			<RadioButtonGroup
+				className="harness-sidepanel-radio-group"
+				name="interaction_type_radio"
+				onChange={this.interactionTypeOptionChange}
+				defaultSelected={this.props.selectedInteractionType}
+			>
+				<RadioButton
+					value={MOUSE_INTERACTION}
+					labelText={MOUSE_INTERACTION}
+				/>
+				<RadioButton
+					value={TRACKPAD_INTERACTION}
+					labelText={TRACKPAD_INTERACTION}
+				/>
+			</RadioButtonGroup>
+		</div>);
+
+
 		var connectionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-connection-type">
 			<div className="harness-sidepanel-headers">Connection Type</div>
 			<RadioButtonGroup
@@ -740,6 +767,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{enableMoveNodesOnSupernodeResize}
 				{divider}
+				{interactionType}
+				{divider}
 				{connectionType}
 				{divider}
 				{nodeFormatType}
@@ -790,7 +819,9 @@ SidePanelForms.propTypes = {
 	useInternalObjectModel: PropTypes.func,
 	useEnableCreateSupernodeNonContiguous: PropTypes.func,
 	setConnectionType: PropTypes.func,
+	setInteractionType: PropTypes.func,
 	selectedConnectionType: PropTypes.string,
+	selectedInteractionType: PropTypes.string,
 	setNodeFormatType: PropTypes.func,
 	selectedNodeFormat: PropTypes.string,
 	setLinkType: PropTypes.func,

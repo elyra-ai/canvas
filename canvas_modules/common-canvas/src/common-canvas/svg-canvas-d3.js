@@ -19,7 +19,8 @@ import union from "lodash/union";
 import forIn from "lodash/forIn";
 import get from "lodash/get";
 import { NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
-	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "./constants/canvas-constants";
+	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION }
+	from "./constants/canvas-constants";
 import Logger from "../logging/canvas-logger.js";
 
 const BACKSPACE_KEY = 8;
@@ -77,6 +78,7 @@ export default class CanvasD3Layout {
 		this.logger = new Logger(["CanvasD3Layout", "FlowId", canvasInfo.id]);
 		if (canvasInfo.id !== this.canvasInfo.id ||
 				(this.renderer && this.renderer.pipelineId !== this.canvasController.getCurrentBreadcrumb().pipelineId) ||
+				this.config.enableInteractionType !== config.enableInteractionType ||
 				this.config.enableConnectionType !== config.enableConnectionType ||
 				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
 				this.config.enableLinkType !== config.enableLinkType ||
@@ -467,10 +469,7 @@ class CanvasRenderer {
 
 	clearCanvas() {
 		this.canvasController.clearSelections();
-		// TODO - Remove these commented lines when we're usre clearing SVG is the right way to go.
-		// this.canvasGrp.selectAll("g").remove();
 		this.initializeZoomVariables();
-		// this.canvasSVG.call(this.zoom.transform, d3.zoomIdentity); // Reset the SVG zoom and scale
 		this.canvasSVG.remove();
 	}
 
@@ -505,15 +504,23 @@ class CanvasRenderer {
 			this.displaySVGToFitSupernode();
 		}
 
+		// The supernode will not have any calculated port positions when the
+		// subflow is being displayed full screen, so calculate them first.
 		if (this.isDisplayingSubFlowFullPage()) {
-			// The supernode will not have any calculated port positions when the
-			// subflow is being displayed full screen, so calculate them first.
-			this.setPortPositionsForNode(this.getParentSupernodeDatum());
-			this.displayBindingNodesToFitSVG();
+			this.displayPortsForSubFlowFullPage();
 		}
 
-		// this.displayBoundingRectangles(); // This can be uncommented for debugging to see boundaries.
+		if (this.config.enableBoundingRectangles) {
+			this.displayBoundingRectangles();
+		}
 		this.logger.logEndTimer("displayCanvas");
+	}
+
+	// Ensures the binding ports for a full-page sub-flow are calculated
+	// and displayed correctly.
+	displayPortsForSubFlowFullPage() {
+		this.setPortPositionsForNode(this.getParentSupernodeDatum());
+		this.displayBindingNodesToFitSVG();
 	}
 
 	// Called during a resize.
@@ -650,7 +657,8 @@ class CanvasRenderer {
 				.style("stroke", "blue")
 				.lower();
 		}
-		if (this.superRenderers.length > 0) {
+		if (this.config.enableBoundingRectangles &&
+				this.superRenderers.length > 0) {
 			this.superRenderers.forEach((sr) => sr.displayBoundingRectangles());
 		}
 	}
@@ -844,9 +852,44 @@ class CanvasRenderer {
 			.attr("y", dims.y);
 
 		// Only attach the zoom behaviour and 'defs' to the top most SVG area
-		if (!this.isDisplayingSubFlowInPlace()) {
-			canvasSVG
-				.call(this.zoom);
+		// when we are displaying either the primary pipeline full page or
+		// a sub-pipeline full page.
+		if (this.isDisplayingFullPage()) {
+			if (this.config.enableInteractionType === TRACKPAD_INTERACTION) {
+				canvasSVG
+					.call(this.zoom) // In trackpad mode we need the zoom behavior to handle region select
+					.on("wheel.zoom", () => {
+						// Browsers convert the pinch gesture to a wheel event with ctrlKey
+						// set to true (even when the ctrl key is not pressed).
+						// https://stackoverflow.com/questions/52130484/how-to-catch-pinch-and-stretch-gesture-events-in-d3-zoom-d3v4-v5
+						if (d3Event.ctrlKey) {
+							const canv = this.getCanvasDimensionsAdjustedForScale(1);
+							const transMousePos = this.getTransformedMousePos();
+							const wheelDelta = (d3Event.deltaY * 0.01);
+							const k = this.zoomTransform.k - wheelDelta;
+
+							if (k > this.minScaleExtent && k < this.maxScaleExtent) {
+								let x = this.zoomTransform.x + (canv.left * wheelDelta);
+								let y = this.zoomTransform.y + (canv.top * wheelDelta);
+
+								x += ((transMousePos.x - canv.left) * wheelDelta);
+								y += ((transMousePos.y - canv.top) * wheelDelta);
+
+								this.zoomCanvasBackground(x, y, k);
+							}
+						} else {
+							this.panCanvasBackground(
+								this.zoomTransform.x - d3Event.deltaX,
+								this.zoomTransform.y - d3Event.deltaY,
+								this.zoomTransform.k
+							);
+						}
+						stopPropagationAndPreventDefault();
+					});
+			} else {
+				canvasSVG
+					.call(this.zoom); // Then re-add the zoom object to reinstate the scale behaviour.
+			}
 
 			// Add defs element to allow a filter for the drop shadow
 			var defs = canvasSVG.append("defs");
@@ -1023,7 +1066,6 @@ class CanvasRenderer {
 		this.zoomToFitCanvas(canvasDimensions);
 	}
 
-
 	zoomToFitForInPlaceSubFlow() {
 		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, this.layout.supernodeZoomPadding);
 		this.zoomToFitCanvas(canvasDimensions);
@@ -1104,10 +1146,24 @@ class CanvasRenderer {
 	zoomStart() {
 		this.logger.log("zoomStart - " + JSON.stringify(d3Event.transform));
 
-		// this.zoomingToFitForScale flag is used to avoid redo actions initialized by
-		// Cmd+Shirt+Z (where the shift key has been pressed) causing a region selection to start.
-		if (d3Event.sourceEvent && d3Event.sourceEvent.shiftKey && !this.zoomingToFitForScale) {
-			this.regionSelect = true;
+		// Ensure any open tip is closed before starting a zoom operation.
+		this.canvasController.closeTip();
+
+		// this.zoomingToFitForScale flag is used to avoid redo actions initialized
+		// by Cmd+Shift+Z (where the shift key has been pressed) causing a region
+		// selection to start. So whenever it is set, make sure we do a scale
+		// operation.
+		// Also, below, we must check the d3Event.sourceEvent because for a zoom
+		// operation d3Event does not contain info about the shift key.
+		if (this.zoomingToFitForScale) {
+			this.regionSelect = false;
+		} else if (d3Event.sourceEvent && d3Event.sourceEvent.shiftKey) {
+			this.regionSelect = !(this.config.enableInteractionType === TRACKPAD_INTERACTION);
+		} else {
+			this.regionSelect = (this.config.enableInteractionType === TRACKPAD_INTERACTION);
+		}
+
+		if (this.regionSelect) {
 			this.regionStartTransformX = d3Event.transform.x;
 			this.regionStartTransformY = d3Event.transform.y;
 			const transPos = this.getTransformedMousePos();
@@ -1117,69 +1173,24 @@ class CanvasRenderer {
 				width: 0,
 				height: 0
 			};
-		} else {
-			this.canvasController.closeTip();
-			this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
 		}
+
+		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
 	}
 
 	zoomAction() {
 		this.logger.log("zoomAction - " + JSON.stringify(d3Event.transform));
 
-		if (this.regionSelect === true) {
-			const transPos = this.getTransformedMousePos();
-			this.region.width = transPos.x - this.region.startX;
-			this.region.height = transPos.y - this.region.startY;
-			this.drawRegionSelector();
+		// If the scale amount is the same we are not zooming, so we must be  panning.
+		if (d3Event.transform.k === this.zoomStartPoint.k) {
+			if (this.regionSelect) {
+				this.drawRegionSelector();
 
+			} else {
+				this.panCanvasBackground(d3Event.transform.x, d3Event.transform.y, d3Event.transform.k);
+			}
 		} else {
-			var x = d3Event.transform.x;
-			var y = d3Event.transform.y;
-			var k = d3Event.transform.k;
-
-			// this.displayBoundingRectangles(); // This can be uncommented for debugging to see boundaries.
-
-			// If we are not zooming we must be dragging so, if the canvas rectangle
-			// (nodes and comments) is smaller than the SVG area then don't let the
-			// canvas be dragged out of the SVG area.
-			if (k === this.zoomStartPoint.k) {
-				let canv;
-				if (this.isDisplayingSubFlowInPlace()) {
-					canv = this.getCanvasDimensionsAdjustedForScale(k, this.layout.supernodeZoomPadding);
-				} else {
-					canv = this.getCanvasDimensionsAdjustedForScale(k);
-				}
-				const zoomSvgRect = this.getViewPortDimensions();
-
-				if (canv && canv.width < zoomSvgRect.width) {
-					x = Math.max(-canv.left, Math.min(x, zoomSvgRect.width - canv.width - canv.left));
-				}
-				if (canv && canv.height < zoomSvgRect.height) {
-					y = Math.max(-canv.top, Math.min(y, zoomSvgRect.height - canv.height - canv.top));
-				}
-			}
-
-			this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(k);
-			this.canvasGrp.attr("transform", this.zoomTransform);
-
-			// If this zoom is for a full page display (for either primary pipelines
-			// or sub-pipeline) and there is a textarea (for comment entry) open,
-			// apply the zoom transform to it.
-			if (this.isDisplayingFullPage()) {
-				const ta = this.canvasDiv.select(".d3-comment-entry");
-				if (!ta.empty()) {
-					const pipelineId = ta.attr("data-pipeline-id");
-					const ren = this.getRendererForPipelineIdRecursively(pipelineId);
-					ta.style("transform", ren.getTextAreaTransform(ta.datum()));
-				}
-			}
-
-			if (this.isDisplayingSubFlowFullPage()) {
-				// The supernode will not have any calculated port positions when the
-				// subflow is being displayed full screen, so calculate them first.
-				this.setPortPositionsForNode(this.getParentSupernodeDatum());
-				this.displayBindingNodesToFitSVG();
-			}
+			this.zoomCanvasBackground(d3Event.transform.x, d3Event.transform.y, d3Event.transform.k);
 		}
 	}
 
@@ -1191,7 +1202,8 @@ class CanvasRenderer {
 			this.drawingNewLink = false;
 		}
 
-		if (this.regionSelect === true) {
+		if (d3Event.transform.k === this.zoomStartPoint.k &&
+				this.regionSelect === true) {
 			this.removeRegionSelector();
 
 			// Reset the transform x and y to what they were before the region
@@ -1209,6 +1221,72 @@ class CanvasRenderer {
 			this.regionSelect = false;
 		}
 	}
+
+	panCanvasBackground(panX, panY, panK) {
+		if (this.config.enableBoundingRectangles) {
+			this.displayBoundingRectangles();
+		}
+
+		let x = panX;
+		let y = panY;
+		const k = panK;
+
+		// If the canvas rectangle (nodes and comments) is smaller than the
+		// SVG area then don't let the canvas be dragged out of the SVG area.
+		let canv;
+		if (this.isDisplayingSubFlowInPlace()) {
+			canv = this.getCanvasDimensionsAdjustedForScale(k, this.layout.supernodeZoomPadding);
+		} else {
+			canv = this.getCanvasDimensionsAdjustedForScale(k);
+		}
+		const zoomSvgRect = this.getViewPortDimensions();
+
+		if (canv && canv.width < zoomSvgRect.width) {
+			x = Math.max(-canv.left, Math.min(x, zoomSvgRect.width - canv.width - canv.left));
+		}
+		if (canv && canv.height < zoomSvgRect.height) {
+			y = Math.max(-canv.top, Math.min(y, zoomSvgRect.height - canv.height - canv.top));
+		}
+
+		this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(k);
+		this.canvasGrp.attr("transform", this.zoomTransform);
+
+		// The supernode will not have any calculated port positions when the
+		// subflow is being displayed full screen, so calculate them first.
+		if (this.isDisplayingSubFlowFullPage()) {
+			this.displayPortsForSubFlowFullPage();
+		}
+	}
+
+	zoomCanvasBackground(x, y, k) {
+		this.regionSelect = false;
+
+		this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(k);
+		this.canvasGrp.attr("transform", this.zoomTransform);
+
+		if (this.config.enableBoundingRectangles) {
+			this.displayBoundingRectangles();
+		}
+
+		// If this zoom is for a full page display (for either primary pipelines
+		// or sub-pipeline) and there is a textarea (for comment entry) open,
+		// apply the zoom transform to it.
+		if (this.isDisplayingFullPage()) {
+			const ta = this.canvasDiv.select(".d3-comment-entry");
+			if (!ta.empty()) {
+				const pipelineId = ta.attr("data-pipeline-id");
+				const ren = this.getRendererForPipelineIdRecursively(pipelineId);
+				ta.style("transform", ren.getTextAreaTransform(ta.datum()));
+			}
+		}
+
+		// The supernode will not have any calculated port positions when the
+		// subflow is being displayed full screen, so calculate them first.
+		if (this.isDisplayingSubFlowFullPage()) {
+			this.displayPortsForSubFlowFullPage();
+		}
+	}
+
 
 	// Returns the dimensions in SVG coordinates of the canvas area. This is
 	// based on the position and width and height of the nodes and comments. It
@@ -1263,6 +1341,10 @@ class CanvasRenderer {
 	}
 
 	drawRegionSelector() {
+		const transPos = this.getTransformedMousePos();
+		this.region.width = transPos.x - this.region.startX;
+		this.region.height = transPos.y - this.region.startY;
+
 		this.removeRegionSelector();
 		var { startX, startY, width, height } = this.getRegionDimensions();
 
@@ -3230,10 +3312,12 @@ class CanvasRenderer {
 				// and the auto size does not increase the height correctly.
 				setTimeout(that.autoSizeTextArea.bind(that), 500, this, datum);
 			})
-			.on("blur", function() {
+			.on("blur", function(cd) {
 				that.logger.log("Text area - blur");
 				var commentObj = that.getComment(datum.id);
 				commentObj.content = this.value;
+				that.canvasGrp.selectAll(that.getId("#comment_text", cd.id))
+					.attr("beingedited", "no");
 				that.saveCommentChanges(this);
 				that.closeCommentTextArea();
 				that.displayComments();
