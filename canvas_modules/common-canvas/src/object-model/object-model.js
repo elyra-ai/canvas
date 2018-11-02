@@ -649,10 +649,9 @@ const canvasinfo = (state = [], action) => {
 	}
 
 	case "ADD_SUPERNODE" : {
-		// Add the new supernode pipelines.
-		let canvasInfoPipelines = Object.assign({}, state, { pipelines: state.pipelines.concat(action.data.newSubPipelines) });
-		// Add the new supernode.
-		canvasInfoPipelines = canvasInfoPipelines.pipelines.map((pipeline) => {
+		let canvasInfoPipelines = state.pipelines.concat(action.data.newSubPipelines);
+
+		canvasInfoPipelines = canvasInfoPipelines.map((pipeline) => {
 			if (pipeline.id === action.pipelineId) {
 				return Object.assign({}, pipeline, {
 					nodes: nodes(pipeline.nodes, action)
@@ -779,7 +778,8 @@ const palette = (state = {}, action) => {
 	case "SET_PALETTE_DATA":
 		return Object.assign({}, action.data);
 
-	case "ADD_NODE_TYPE_TO_PALETTE": {
+	case "ADD_NODE_TYPES_TO_PALETTE":
+	case "REMOVE_NODE_TYPES_FROM_PALETTE": {
 		return Object.assign({}, state, { categories: categories(state.categories, action) });
 	}
 	default:
@@ -790,10 +790,8 @@ const palette = (state = {}, action) => {
 const categories = (state = [], action) => {
 	switch (action.type) {
 
-	case "ADD_NODE_TYPE_TO_PALETTE": {
-		let category = state.find((cat) => {
-			return (cat.id === action.data.categoryId);
-		});
+	case "ADD_NODE_TYPES_TO_PALETTE": {
+		let category = state.find((cat) => cat.id === action.data.categoryId);
 
 		if (category) {
 			return state.map((cat) => {
@@ -808,15 +806,31 @@ const categories = (state = [], action) => {
 		// provided.
 		category = {
 			"id": action.data.categoryId,
-			"label": action.data.categoryLabel ? action.data.categoryLabel : action.data.categoryId,
-			"node_types": []
+			"label": action.data.categoryLabel ? action.data.categoryLabel : action.data.categoryId
 		};
+		if (action.data.categoryDescription) {
+			category.description = action.data.categoryDescription;
+		}
+		if (action.data.categoryImage) {
+			category.image = action.data.categoryImage;
+		}
+		category.node_types = [];
 
 		return [
 			...state,
 			Object.assign({}, category, { node_types: nodetypes(category.node_types, action) })
 		];
 	}
+
+	case "REMOVE_NODE_TYPES_FROM_PALETTE": {
+		return state.map((category) => {
+			if (category.id === action.data.categoryId) {
+				return Object.assign({}, category, { node_types: nodetypes(category.node_types, action) });
+			}
+			return category;
+		});
+	}
+
 	default:
 		return state;
 	}
@@ -825,14 +839,20 @@ const categories = (state = [], action) => {
 const nodetypes = (state = [], action) => {
 	switch (action.type) {
 
-	case "ADD_NODE_TYPE_TO_PALETTE":
-		if (action.data.nodeType) {
+	case "ADD_NODE_TYPES_TO_PALETTE":
+		if (action.data.nodeTypes) {
 			return [
 				...state,
-				action.data.nodeType
+				...action.data.nodeTypes
 			];
 		}
 		return state;
+
+	case "REMOVE_NODE_TYPES_FROM_PALETTE": {
+		return state.filter((nodeType) => {
+			return action.data.selObjectIds.findIndex((objId) => objId === nodeType.id) === -1;
+		});
+	}
 
 	default:
 		return state;
@@ -1102,20 +1122,28 @@ export default class ObjectModel {
 		return this.store.getState().palette;
 	}
 
-	addNodeTypeToPalette(nodeTypeObj, categoryId, categoryLabel) {
-		const nodeTypePaletteData = {
-			"nodeType": nodeTypeObj,
-			"categoryId": categoryId,
-		};
-		if (categoryLabel) {
-			nodeTypePaletteData.categoryLabel = categoryLabel;
-		}
+	addNodeTypeToPalette(nodeTypeObj, categoryId, categoryLabel, categoryDescription, categoryImage) {
+		this.addNodeTypesToPalette([nodeTypeObj], categoryId, categoryLabel, categoryDescription, categoryImage);
+	}
 
-		this.store.dispatch({ type: "ADD_NODE_TYPE_TO_PALETTE", data: nodeTypePaletteData });
+	addNodeTypesToPalette(nodeTypeObjs, categoryId, categoryLabel, categoryDescription, categoryImage) {
+		const nodeTypePaletteData = {
+			"nodeTypes": nodeTypeObjs,
+			"categoryId": categoryId,
+			"categoryLabel": categoryLabel,
+			"categoryDescription": categoryDescription,
+			"categoryImage": categoryImage
+		};
+
+		this.store.dispatch({ type: "ADD_NODE_TYPES_TO_PALETTE", data: nodeTypePaletteData });
 
 		if (this.schemaValidation) {
 			validatePaletteAgainstSchema(this.getPaletteData(), LATEST_PALETTE_VERSION);
 		}
+	}
+
+	removeNodesFromPalette(selObjectIds, categoryId) {
+		this.store.dispatch({ type: "REMOVE_NODE_TYPES_FROM_PALETTE", data: { selObjectIds: selObjectIds, categoryId: categoryId } });
 	}
 
 	getPaletteNode(nodeOpIdRef) {
@@ -1449,9 +1477,58 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "DELETE_PIPELINE", data: { id: pipelineId } });
 	}
 
+	// Clones the contents of the input node (which is expected to be a supernode)
+	// and returns an array of cloned pipelines from the inPipelines array that
+	// correspond to descendents of the supernode passed in. The returned
+	// pipelines are in the internal 'canvasinfo' format.
+	cloneSuperNodeContents(node, inPipelines) {
+		let subPipelines = [];
+		if (node.type === SUPER_NODE &&
+				has(node, "subflow_ref.pipeline_id_ref")) {
+			const targetPipeline = inPipelines.find((inPipeline) => inPipeline.id === node.subflow_ref.pipeline_id_ref);
+			const clonedPipeline = this.clonePipelineWithNewId(targetPipeline);
+			node.subflow_ref.pipeline_id_ref = clonedPipeline.id;
+			const canvInfoPipeline =
+				PipelineInHandler.convertPipelineToCanvasInfoPipeline(clonedPipeline, this.store.getState().layoutinfo);
+			if (canvInfoPipeline.nodes) {
+				canvInfoPipeline.nodes = canvInfoPipeline.nodes.map((n) => {
+					return setNodeDimensions(n, this.store.getState().layoutinfo);
+				});
+			}
+
+			subPipelines.push(canvInfoPipeline);
+
+			clonedPipeline.nodes.forEach((clonedNode) => {
+				const extraPipelines = this.cloneSuperNodeContents(clonedNode, inPipelines);
+				subPipelines = subPipelines.concat(extraPipelines);
+			});
+		}
+		return subPipelines;
+	}
+
 	// Clone the pipeline and assigns it a new id.
-	getPipelineWithNewId(pipeline) {
-		return Object.assign({}, pipeline, { id: this.getUniqueId(CLONE_PIPELINE, { "pipeline": pipeline }) });
+	clonePipelineWithNewId(pipeline) {
+		const clonedPipeline = JSON.parse(JSON.stringify(pipeline));
+		return Object.assign({}, clonedPipeline, { id: this.getUniqueId(CLONE_PIPELINE, { "pipeline": clonedPipeline }) });
+	}
+
+	// Returns an array of pipelines, that conform to the schema, for the
+	// supernode passed in or an empty array if the supernode doesn't reference
+	// a pipeline.
+	getSubPipelinesForSupernode(supernode) {
+		const schemaPipelines = [];
+		if (supernode.type === SUPER_NODE &&
+				has(supernode, "subflow_ref.pipeline_id_ref")) {
+			let subPipelines = [supernode.subflow_ref.pipeline_id_ref];
+			subPipelines = subPipelines.concat(this.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
+
+			subPipelines.forEach((subPiplineId) => {
+				const canvInfoPipeline = this.getCanvasInfoPipeline(subPiplineId);
+				const schemaPipeline = PipelineOutHandler.createPipeline(canvInfoPipeline);
+				schemaPipelines.push(schemaPipeline);
+			});
+		}
+		return schemaPipelines;
 	}
 
 	createCanvasInfoPipeline(pipelineInfo) {
@@ -2575,6 +2652,31 @@ export class APIPipeline {
 		return node;
 	}
 
+	// Returns an array of nodes (that are in a format that conforms to the
+	// schema) that can be added to a palette category. Each node is given
+	// a new ID to make it unique within the palette.
+	createNodesForPalette(selectedObjectIds) {
+		const newNodes = [];
+		selectedObjectIds.forEach((selObjId) => {
+			let node = this.getNode(selObjId);
+			if (node) {
+				node = JSON.parse(JSON.stringify(node));
+				node.id = this.objectModel.getUUID();
+				node.x_pos = 0;
+				node.y_pos = 0;
+				node = PipelineOutHandler.createNode(node, []);
+				if (node.type === SUPER_NODE) {
+					if (!node.app_data) {
+						node.app_data = {};
+					}
+					node.app_data.pipeline_data = this.objectModel.getSubPipelinesForSupernode(node);
+				}
+				newNodes.push(node);
+			}
+		});
+		return newNodes;
+	}
+
 	replaceNodes(replacementNodes) {
 		this.store.dispatch({ type: "REPLACE_NODES", data: replacementNodes, pipelineId: this.pipelineId });
 	}
@@ -2661,26 +2763,6 @@ export class APIPipeline {
 		}
 	}
 
-	deleteSupernode(supernode) {
-		let pipelineIds = [];
-		if (has(supernode, "subflow_ref.pipeline_id_ref")) {
-			pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
-			pipelineIds = pipelineIds.concat(this.objectModel.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
-		}
-		this.store.dispatch({
-			type: "DELETE_SUPERNODE",
-			data: {
-				id: supernode.id,
-				pipelineIds: pipelineIds
-			},
-			pipelineId: this.pipelineId
-		});
-
-		if (this.objectModel.fixedLayout !== NONE) {
-			this.autoLayout(this.objectModel.fixedLayout);
-		}
-	}
-
 	addAutoNodeAndLink(newNode, newLink) {
 		this.store.dispatch({ type: "ADD_AUTO_NODE", data: {
 			newNode: newNode,
@@ -2690,6 +2772,29 @@ export class APIPipeline {
 
 	deleteNode(id) {
 		this.deleteObject(id);
+	}
+
+	deleteSupernode(supernodeId) {
+		let pipelineIds = [];
+		const supernode = this.getNode(supernodeId);
+		if (supernode) {
+			if (has(supernode, "subflow_ref.pipeline_id_ref")) {
+				pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
+				pipelineIds = pipelineIds.concat(this.objectModel.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
+			}
+			this.store.dispatch({
+				type: "DELETE_SUPERNODE",
+				data: {
+					id: supernode.id,
+					pipelineIds: pipelineIds
+				},
+				pipelineId: this.pipelineId
+			});
+
+			if (this.objectModel.fixedLayout !== NONE) {
+				this.autoLayout(this.objectModel.fixedLayout);
+			}
+		}
 	}
 
 	getNodes() {
@@ -2774,7 +2879,7 @@ export class APIPipeline {
 	}
 
 	isSupernode(nodeId) {
-		return this.getNode(nodeId).type === "super_node";
+		return this.getNode(nodeId).type === SUPER_NODE;
 	}
 
 	doesNodeHavePorts(node) {

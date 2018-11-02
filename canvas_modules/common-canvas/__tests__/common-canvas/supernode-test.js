@@ -1392,7 +1392,7 @@ describe("Copy and Paste Supernode", () => {
 
 	it("Copy supernode with subflow into same canvas", () => {
 		let selections = [
-			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+			"6f704d84-85be-4520-9d76-57fe2295b310", // Select node
 			"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
 		];
 		canvasController.setSelections(selections);
@@ -1406,7 +1406,7 @@ describe("Copy and Paste Supernode", () => {
 		expect(supernodes).to.have.length(1);
 
 		const newSupernode = supernodes[0];
-		const canvasInfoBefore = Object.assign({}, objectModel.getPipelineFlow());
+		const pipelineFlowBefore = Object.assign({}, objectModel.getPipelineFlow());
 
 		// Copy and paste the newly created supernode.
 		selections = [newSupernode.id];
@@ -1414,7 +1414,7 @@ describe("Copy and Paste Supernode", () => {
 		canvasController.copyToClipboard();
 		canvasController.pasteFromClipboard(primaryPipelineId);
 
-		const canvasInfo = objectModel.getPipelineFlow();
+		const pipelineFlow = objectModel.getPipelineFlow();
 
 		supernodes = apiPipeline.getSupernodes();
 		expect(supernodes).to.have.length(2);
@@ -1432,9 +1432,9 @@ describe("Copy and Paste Supernode", () => {
 		deleteSupernodeUniqueIds(clonedSupernode);
 		expect(isEqual(JSON.stringify(originalSupernode), JSON.stringify(clonedSupernode))).to.be.true;
 
-		expect(canvasInfo.pipelines).to.have.length(5);
-		const originalPipeline = Object.assign({}, canvasInfo.pipelines[2]);
-		const clonedPipeline = Object.assign({}, canvasInfo.pipelines[4]);
+		expect(pipelineFlow.pipelines).to.have.length(5);
+		const originalPipeline = Object.assign({}, pipelineFlow.pipelines[2]);
+		const clonedPipeline = Object.assign({}, pipelineFlow.pipelines[3]);
 
 		// Delete the unique ids before comparing.
 		deletePipelineUniqueIds(originalPipeline, 1);
@@ -1443,12 +1443,12 @@ describe("Copy and Paste Supernode", () => {
 
 		// Undo the clone action.
 		canvasController.contextMenuActionHandler("undo");
-		expect(isEqual(JSON.stringify(canvasInfoBefore), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
+		expect(isEqual(JSON.stringify(pipelineFlowBefore), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
 	});
 
 	it("Copy multiple supernodes with nested subflow into same canvas", () => {
 		let selections = [
-			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+			"6f704d84-85be-4520-9d76-57fe2295b310", // Select node
 			"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
 		];
 		canvasController.setSelections(selections);
@@ -1462,7 +1462,7 @@ describe("Copy and Paste Supernode", () => {
 		expect(supernodes).to.have.length(1);
 
 		const newSupernode = supernodes[0];
-		const canvasInfoBefore1 = Object.assign({}, objectModel.getPipelineFlow());
+		const pipelineFlowBefore1 = Object.assign({}, objectModel.getPipelineFlow());
 
 		// Copy and paste the newly created supernode.
 		selections = [newSupernode.id];
@@ -1490,7 +1490,7 @@ describe("Copy and Paste Supernode", () => {
 		expect(supernodes).to.have.length(2);
 
 		const newSupernode2 = JSON.parse(JSON.stringify(supernodes[1]));
-		const canvasInfoBefore2 = Object.assign({}, objectModel.getPipelineFlow());
+		const pipelineFlowBefore2 = Object.assign({}, objectModel.getPipelineFlow());
 
 		// Copy and paste both supernodes in primary pipeline.
 		selections = [
@@ -1525,19 +1525,23 @@ describe("Copy and Paste Supernode", () => {
 		expect(canvasInfo.pipelines).to.have.length(11);
 		const originalPipeline = Object.assign({}, canvasInfo.pipelines[2]);
 		const originalPipelineSubflow = Object.assign({}, canvasInfo.pipelines[1]);
-		const clonedOriginalPipeline = Object.assign({}, canvasInfo.pipelines[7]);
-		const clonedOriginalPipelineSubflow = Object.assign({}, canvasInfo.pipelines[6]);
+
 		const originalPipeline2 = Object.assign({}, canvasInfo.pipelines[5]);
-		const originalPipeline2Subflow = Object.assign({}, canvasInfo.pipelines[4]);
-		const originalPipeline2NestedSubflow = Object.assign({}, canvasInfo.pipelines[3]);
-		const clonedOriginalPipeline2 = Object.assign({}, canvasInfo.pipelines[10]);
+		const originalPipeline2Subflow = Object.assign({}, canvasInfo.pipelines[3]);
+		const originalPipeline2NestedSubflow = Object.assign({}, canvasInfo.pipelines[4]);
+
+		const clonedOriginalPipeline = Object.assign({}, canvasInfo.pipelines[6]);
+		const clonedOriginalPipelineSubflow = Object.assign({}, canvasInfo.pipelines[7]);
+
+		const clonedOriginalPipeline2 = Object.assign({}, canvasInfo.pipelines[8]);
 		const clonedOriginalPipeline2Subflow = Object.assign({}, canvasInfo.pipelines[9]);
-		const clonedOriginalPipeline2NestedSubflow = Object.assign({}, canvasInfo.pipelines[8]);
+		const clonedOriginalPipeline2NestedSubflow = Object.assign({}, canvasInfo.pipelines[10]);
 
 		// Verify the subPipeline references are correct.
 		expect(isEqual(originalPipeline.nodes[1].subflow_ref.pipeline_id_ref, originalPipelineSubflow.id)).to.be.true;
 		expect(isEqual(clonedOriginalPipeline.nodes[1].subflow_ref.pipeline_id_ref, clonedOriginalPipelineSubflow.id)).to.be.true;
 		expect(isEqual(originalPipeline2.nodes[0].subflow_ref.pipeline_id_ref, originalPipeline2Subflow.id)).to.be.true;
+
 		expect(isEqual(originalPipeline2Subflow.nodes[1].subflow_ref.pipeline_id_ref, originalPipeline2NestedSubflow.id)).to.be.true;
 		expect(isEqual(clonedOriginalPipeline2.nodes[0].subflow_ref.pipeline_id_ref, clonedOriginalPipeline2Subflow.id)).to.be.true;
 		expect(isEqual(clonedOriginalPipeline2Subflow.nodes[1].subflow_ref.pipeline_id_ref, clonedOriginalPipeline2NestedSubflow.id)).to.be.true;
@@ -1552,6 +1556,14 @@ describe("Copy and Paste Supernode", () => {
 		deletePipelineUniqueIds(originalPipeline2NestedSubflow);
 		deletePipelineUniqueIds(clonedOriginalPipeline2NestedSubflow);
 
+		// When originalPipeline2 is created in this test its supernode is not
+		// assigned any of the three expanded properties. Therefore we have to
+		// remove them from clonedOriginalPipeline2 for the comparison to
+		// succeed.
+		delete clonedOriginalPipeline2.nodes[0].app_data.ui_data.is_expanded;
+		delete clonedOriginalPipeline2.nodes[0].app_data.ui_data.expanded_width;
+		delete clonedOriginalPipeline2.nodes[0].app_data.ui_data.expanded_height;
+
 		expect(isEqual(JSON.stringify(originalPipeline), JSON.stringify(clonedOriginalPipeline))).to.be.true;
 		expect(isEqual(JSON.stringify(originalPipeline2), JSON.stringify(clonedOriginalPipeline2))).to.be.true;
 		expect(isEqual(JSON.stringify(originalPipeline2Subflow), JSON.stringify(clonedOriginalPipeline2Subflow))).to.be.true;
@@ -1559,15 +1571,15 @@ describe("Copy and Paste Supernode", () => {
 
 		// Undo the clone action.
 		canvasController.contextMenuActionHandler("undo");
-		expect(isEqual(JSON.stringify(canvasInfoBefore2), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
+		expect(isEqual(JSON.stringify(pipelineFlowBefore2), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo"); // Undo the create supernode.
 		canvasController.contextMenuActionHandler("undo"); // Undo the clone.
-		expect(isEqual(JSON.stringify(canvasInfoBefore1), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
+		expect(isEqual(JSON.stringify(pipelineFlowBefore1), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
 
 		canvasController.contextMenuActionHandler("redo");
 		canvasController.contextMenuActionHandler("redo");
-		expect(isEqual(JSON.stringify(canvasInfoBefore2), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
+		expect(isEqual(JSON.stringify(pipelineFlowBefore2), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
 	});
 
 	it("Select in sub-flow should cancel selection in parent flow", () => {

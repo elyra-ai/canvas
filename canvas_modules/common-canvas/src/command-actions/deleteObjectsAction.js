@@ -50,7 +50,7 @@ export default class DeleteObjectsAction extends Action {
 	// Standard methods
 	do() {
 		this.supernodes.forEach((supernode) => {
-			this.apiPipeline.deleteSupernode(supernode);
+			this.apiPipeline.deleteSupernode(supernode.id);
 		});
 		this.apiPipeline.deleteObjects(this.data);
 	}

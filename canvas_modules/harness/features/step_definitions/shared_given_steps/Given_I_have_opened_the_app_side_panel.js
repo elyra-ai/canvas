@@ -31,6 +31,11 @@ module.exports = function() {
 			.click();
 	});
 
+	this.Given("I click on the save to palette toggle", function() {
+		browser.$("#harness-sidepanel-save-to-palette-toggle").$$("div")[1].$("div").$("label")
+			.click();
+	});
+
 	this.Then("I click the download button", function() {
 		browser.$("[data-tip=download]").click();
 	});

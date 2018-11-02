@@ -9,6 +9,8 @@
 
 import has from "lodash/has";
 import LayoutDimensions from "./layout-dimensions.js";
+import { BINDING, EXECUTION_NODE,
+	SUPER_NODE, MODEL_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CanvasInHandler {
 
@@ -56,7 +58,7 @@ export default class CanvasInHandler {
 			if (canvasNode.decorations) {
 				newNode.decorations = this.getDecorations(canvasNode.decorations);
 			}
-			if (nodeType === "super_node") {
+			if (nodeType === SUPER_NODE) {
 				// Assume WML Canvas will always use vertical format.
 				const layout = LayoutDimensions.getLayout("ports-vertical");
 				newNode.subflow_ref = { pipeline_id_ref: canvasNode.subDiagramId, url: "app_defined" };
@@ -66,11 +68,11 @@ export default class CanvasInHandler {
 				newNode.expanded_height = layout.supernodeDefaultHeight;
 			}
 
-			if (nodeType === "model_node") {
+			if (nodeType === MODEL_NODE) {
 				newNode.model_ref = "";
 			}
 
-			if (nodeType === "execution_node") {
+			if (nodeType === EXECUTION_NODE) {
 				if (canvasNode.userData && canvasNode.userData.typeId) {
 					newNode.op = canvasNode.userData.typeId;
 				} else {
@@ -84,16 +86,16 @@ export default class CanvasInHandler {
 
 	static getType(canvasNode) {
 		if (canvasNode.userData && canvasNode.userData.containsModel === true) {
-			return "model_node";
+			return MODEL_NODE;
 		}
 		if (canvasNode.inputPorts && canvasNode.inputPorts.length > 0 &&
 				canvasNode.outputPorts && canvasNode.outputPorts.length > 0) {
 			if (canvasNode.subDiagramId) {
-				return "super_node";
+				return SUPER_NODE;
 			}
-			return "execution_node";
+			return EXECUTION_NODE;
 		}
-		return "binding";
+		return BINDING;
 	}
 
 	static getInputPorts(canvasInputPorts, defaultMaxCard) {

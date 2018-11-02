@@ -76,3 +76,50 @@ Feature: Palette
 		When I enter "output" into the Category id field
 		And I call the API by clicking on the Submit button
 		Then I verify that "Custom Node Type" was added in palette category "Outputs"
+
+	Scenario: Test saving 3 nodes of different types to palette
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Flyout" palette layout
+		Given I click on the save to palette toggle
+		Given I have uploaded predefined palette "sparkPalette.json"
+		Given I have uploaded diagram "/test_resources/diagrams/allTypesCanvas.json"
+		Given I have toggled the app side panel
+		Then I open the palette
+
+		Then I verify the number of nodes are 5
+
+		Then I click the "Binding (entry) node" node to select it
+		Then I Ctrl/Cmnd+click the "Execution node" node to add it to the selections
+		Then I Ctrl/Cmnd+click the "Model Node" node to add it to the selections
+		Then I right click the "Execution node" node to display the context menu
+		Then I click option "Save to palette" from the context menu
+
+		Then I open the "Saved Nodes" palette category
+		Then I add a node of type "Binding (entry) node" from the "Saved Nodes" category onto the canvas at 1200, 200
+		Then I add a node of type "Execution node" from the "Saved Nodes" category onto the canvas at 1200, 280
+		Then I add a node of type "Model Node" from the "Saved Nodes" category onto the canvas at 1200, 360
+		Then I verify the number of nodes are 8
+
+	Scenario: Test saving a supernode to palette
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Flyout" palette layout
+		Given I click on the save to palette toggle
+		Given I have uploaded predefined palette "sparkPalette.json"
+		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
+		Given I have toggled the app side panel
+		Then I open the palette
+
+		Then I verify pipeline 0 have 15 nodes
+
+		Then I click the "Supernode" node to select it
+		Then I right click the "Supernode" node to display the context menu
+		Then I click option "Save to palette" from the context menu
+
+		Then I open the "Saved Nodes" palette category
+		Then I add a node of type "Supernode" from the "Saved Nodes" category onto the canvas at 1200, 200
+		Then I verify pipeline 0 have 16 nodes
+		Then I verify there are 3 pipelines

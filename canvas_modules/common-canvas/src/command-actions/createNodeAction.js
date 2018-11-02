@@ -7,6 +7,9 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import Action from "../command-stack/action.js";
+import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
+
+import has from "lodash/has";
 
 export default class CreateNodeAction extends Action {
 	constructor(data, objectModel) {
@@ -15,12 +18,19 @@ export default class CreateNodeAction extends Action {
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.newNode = this.apiPipeline.createNode(data);
-		this.newPipeline = null;
-		if (this.newNode && this.newNode.open_with_tool === "shaper") {
-			this.newPipeline = this.objectModel.createEmptyPipeline();
-			this.newNode.subflow_ref = {
-				pipeline_id_ref: this.newPipeline.id
-			};
+		if (this.newNode.type === SUPER_NODE) {
+			this.subPipelines = [];
+			if (has(this.newNode, "app_data.pipeline_data")) {
+				const pipelines = this.newNode.app_data.pipeline_data;
+				this.subPipelines = this.objectModel.cloneSuperNodeContents(this.newNode, pipelines);
+				delete this.newNode.app_data.pipeline_data; // Remove the pipeline_data so it doesn't get included in the pipelineFlow
+			} else {
+				this.newPipeline = this.objectModel.createEmptyPipeline();
+				this.newNode.subflow_ref = {
+					pipeline_id_ref: this.newPipeline.id
+				};
+				this.subPipelines.push(this.newPipeline);
+			}
 		}
 	}
 
@@ -28,22 +38,24 @@ export default class CreateNodeAction extends Action {
 	// client app.
 	getData() {
 		this.data.newNode = this.newNode;
-		this.data.newPipeline = this.newPipeline;
+		this.data.subPipelines = this.subPipelines;
 		return this.data;
 	}
 
 	// Standard methods
 	do() {
-		this.apiPipeline.addNode(this.newNode);
-		if (this.newPipeline) {
-			this.objectModel.addPipeline(this.newPipeline);
+		if (this.newNode.type === SUPER_NODE) {
+			this.apiPipeline.addSupernode(this.newNode, this.subPipelines);
+		} else {
+			this.apiPipeline.addNode(this.newNode);
 		}
 	}
 
 	undo() {
-		this.apiPipeline.deleteNode(this.newNode.id);
-		if (this.newPipeline) {
-			this.objectModel.deletePipeline(this.newPipeline.id);
+		if (this.newNode.type === SUPER_NODE) {
+			this.apiPipeline.deleteSupernode(this.newNode.id);
+		} else {
+			this.apiPipeline.deleteNode(this.newNode.id);
 		}
 	}
 

@@ -6,11 +6,12 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-
+/* eslint complexity: ["error", 22] */
 import has from "lodash/has";
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
 import uuid4 from "uuid/v4";
+import { BINDING, EXECUTION_NODE, SUPER_NODE, MODEL_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class PipelineInHandler {
 
@@ -32,7 +33,13 @@ export default class PipelineInHandler {
 			"app_data": pipeline.app_data,
 			"parameters": pipeline.parameters
 		};
-
+		if (pipeline.zoom) {
+			canvas.zoom = pipeline.zoom;
+		}
+		// Remove comments from app_data.ui_data as it's now stored in canvas obj.
+		if (has(canvas, "app_data.ui_data.comments")) {
+			delete canvas.app_data.ui_data.comments;
+		}
 		return canvas;
 	}
 
@@ -41,12 +48,9 @@ export default class PipelineInHandler {
 			const obj = {
 				"id": node.id,
 				"type": node.type,
-				"op": node.op,
 				"outputs": this.convertOutputs(node),
 				"inputs": this.convertInputs(node),
 				"label": this.convertLabel(node),
-				"description": has(node, "app_data.ui_data.description") ? node.app_data.ui_data.description : "",
-				"image": has(node, "app_data.ui_data.image") ? node.app_data.ui_data.image : "",
 				"x_pos": has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
 				"y_pos": has(node, "app_data.ui_data.y_pos") ? node.app_data.ui_data.y_pos : 10,
 				"decorations": has(node, "app_data.ui_data.decorations") ? this.convertDecorations(node.app_data.ui_data.decorations) : [],
@@ -54,15 +58,29 @@ export default class PipelineInHandler {
 				"messages": has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
 				"ui_parameters": has(node, "app_data.ui_data.ui_parameters") ? node.app_data.ui_data.ui_parameters : [],
 				"app_data": has(node, "app_data") ? this.removeUiDataFromAppData(node.app_data) : [],
-				"subflow_ref": has(node, "subflow_ref") ? node.subflow_ref : {},
-				"model_ref": has(node, "model_ref") ? node.model_ref : "",
-				"is_expanded": has(node, "app_data.ui_data.is_expanded") ? node.app_data.ui_data.is_expanded : false,
-				"expanded_width": has(node, "app_data.ui_data.expanded_width") ? node.app_data.ui_data.expanded_width : layoutInfo.supernodeDefaultWidth,
-				"expanded_height": has(node, "app_data.ui_data.expanded_height") ? node.app_data.ui_data.expanded_height : layoutInfo.supernodeDefaultHeight
+
 			};
-			// Separate initialization needed to ensure field is only created when present.
-			if (has(node, "open_with_tool")) {
-				obj.open_with_tool = node.open_with_tool;
+			if (node.type === EXECUTION_NODE || node.type === BINDING) {
+				obj.op = node.op;
+			}
+			if (node.type === SUPER_NODE) {
+				// Separate initialization needed to ensure field is only created when present.
+				if (has(node, "open_with_tool")) {
+					obj.open_with_tool = node.open_with_tool;
+				}
+				obj.subflow_ref = has(node, "subflow_ref") ? node.subflow_ref : {};
+				obj.is_expanded = has(node, "app_data.ui_data.is_expanded") ? node.app_data.ui_data.is_expanded : false;
+				obj.expanded_width = has(node, "app_data.ui_data.expanded_width") ? node.app_data.ui_data.expanded_width : layoutInfo.supernodeDefaultWidth;
+				obj.expanded_height = has(node, "app_data.ui_data.expanded_height") ? node.app_data.ui_data.expanded_height : layoutInfo.supernodeDefaultHeight;
+			}
+			if (node.type === MODEL_NODE) {
+				obj.model_ref = has(node, "model_ref") ? node.model_ref : "";
+			}
+			if (has(node, "app_data.ui_data.description")) {
+				obj.description = node.app_data.ui_data.description;
+			}
+			if (has(node, "app_data.ui_data.image")) {
+				obj.image = node.app_data.ui_data.image;
 			}
 			if (has(node, "app_data.ui_data.class_name")) {
 				obj.class_name = node.app_data.ui_data.class_name;

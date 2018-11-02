@@ -449,7 +449,7 @@ export default class CreateSuperNodeAction extends Action {
 	}
 
 	undo() {
-		this.apiPipeline.deleteSupernode(this.supernode);
+		this.apiPipeline.deleteSupernode(this.supernode.id);
 
 		this.subflowNodes.forEach((node) => {
 			if (node.type === "super_node") {

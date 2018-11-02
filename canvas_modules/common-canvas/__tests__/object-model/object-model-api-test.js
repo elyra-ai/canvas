@@ -402,9 +402,11 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(expectedPaletteJSON, objectModel.getPaletteData())).to.be.true;
 	});
 
-	it("should add palette item into new category with label", () => {
-		const newCategoryName = "newCategory";
+	it("should add palette item into new category with label, description and image", () => {
+		const newCategoryId = "newCategory";
 		const newCategoryLabel = "New Category";
+		const newCategoryDescription = "A description of the New Category";
+		const newCategoryImage = "/images/newcat.svg";
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const nodeTypeObj = {
 			"id": "",
@@ -421,12 +423,17 @@ describe("ObjectModel API handle model OK", () => {
 
 		const expectedPaletteJSON = JSON.parse(JSON.stringify(paletteJson));
 		const newCategory = {};
-		newCategory.id = newCategoryName;
+		newCategory.id = newCategoryId;
 		newCategory.label = newCategoryLabel;
+		newCategory.description = newCategoryDescription;
+		newCategory.image = newCategoryImage;
 		newCategory.node_types = [nodeTypeObj];
 		expectedPaletteJSON.categories.push(newCategory);
 
-		objectModel.addNodeTypeToPalette(nodeTypeObj, newCategoryName, newCategoryLabel);
+		objectModel.addNodeTypeToPalette(nodeTypeObj, newCategoryId, newCategoryLabel, newCategoryDescription, newCategoryImage);
+
+		// console.log("JSON = " + JSON.stringify(expectedPaletteJSON, null, 2));
+		// console.log("JSON = " + JSON.stringify(objectModel.getPaletteData(), null, 2));
 
 		expect(isEqual(expectedPaletteJSON, objectModel.getPaletteData())).to.be.true;
 	});

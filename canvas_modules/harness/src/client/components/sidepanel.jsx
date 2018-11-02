@@ -75,6 +75,8 @@ export default class SidePanel extends React.Component {
 				schemaValidationEnabled={this.props.canvasConfig.schemaValidationEnabled}
 				validateFlowOnOpen={this.props.canvasConfig.validateFlowOnOpen}
 				changeValidateFlowOnOpen={this.props.canvasConfig.changeValidateFlowOnOpen}
+				enableSaveToPalette={this.props.canvasConfig.enableSaveToPalette}
+				useEnableSaveToPalette={this.props.canvasConfig.useEnableSaveToPalette}
 				enableCreateSupernodeNonContiguous={this.props.canvasConfig.enableCreateSupernodeNonContiguous}
 				useEnableCreateSupernodeNonContiguous={this.props.canvasConfig.useEnableCreateSupernodeNonContiguous}
 				enableMoveNodesOnSupernodeResize={this.props.canvasConfig.enableMoveNodesOnSupernodeResize}
@@ -148,6 +150,8 @@ SidePanel.propTypes = {
 		canvasFileChooserVisible2: PropTypes.bool,
 		paletteFileChooserVisible: PropTypes.bool,
 		paletteFileChooserVisible2: PropTypes.bool,
+		enableSaveToPalette: PropTypes.bool,
+		useEnableSaveToPalette: PropTypes.func,
 		enableCreateSupernodeNonContiguous: PropTypes.bool,
 		useEnableCreateSupernodeNonContiguous: PropTypes.func,
 		selectedCanvasDropdownFile: PropTypes.string,

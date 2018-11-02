@@ -111,6 +111,7 @@ class App extends React.Component {
 			},
 			extraCanvasDisplayed: false,
 			displayAdditionalComponents: false,
+			enableSaveToPalette: false,
 			enableCreateSupernodeNonContiguous: false,
 			enableMoveNodesOnSupernodeResize: true,
 			applyOnBlur: true,
@@ -177,6 +178,7 @@ class App extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
+		this.useEnableSaveToPalette = this.useEnableSaveToPalette.bind(this);
 		this.useEnableCreateSupernodeNonContiguous = this.useEnableCreateSupernodeNonContiguous.bind(this);
 		this.setEnableMoveNodesOnSupernodeResize = this.setEnableMoveNodesOnSupernodeResize.bind(this);
 		this.setNarrowPalette = this.setNarrowPalette.bind(this);
@@ -932,6 +934,11 @@ class App extends React.Component {
 		this.log("additional components display", enabled);
 	}
 
+	useEnableSaveToPalette(enabled) {
+		this.setState({ enableSaveToPalette: enabled });
+		this.log("save to palette", enabled);
+	}
+
 	useEnableCreateSupernodeNonContiguous(enabled) {
 		this.setState({ enableCreateSupernodeNonContiguous: enabled });
 		this.log("noncontiguous nodes supernode creation", enabled);
@@ -1537,7 +1544,12 @@ class App extends React.Component {
 
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications" };
 		const notificationConfig2 = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications Canvas 2" };
-		const contextMenuConfig = { enableCreateSupernodeNonContiguous: this.state.enableCreateSupernodeNonContiguous };
+		const contextMenuConfig = {
+			enableCreateSupernodeNonContiguous: this.state.enableCreateSupernodeNonContiguous,
+			defaultMenuEntries: {
+				saveToPalette: this.state.enableSaveToPalette
+			}
+		};
 
 		const propertiesConfig = {
 			containerType: this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType,
@@ -1700,6 +1712,8 @@ class App extends React.Component {
 			schemaValidationEnabled: this.state.schemaValidationEnabled,
 			validateFlowOnOpen: this.state.validateFlowOnOpen,
 			changeValidateFlowOnOpen: this.validateFlowOnOpen,
+			enableSaveToPalette: this.state.enableSaveToPalette,
+			useEnableSaveToPalette: this.useEnableSaveToPalette,
 			enableCreateSupernodeNonContiguous: this.state.enableCreateSupernodeNonContiguous,
 			useEnableCreateSupernodeNonContiguous: this.useEnableCreateSupernodeNonContiguous,
 			enableMoveNodesOnSupernodeResize: this.state.enableMoveNodesOnSupernodeResize,

@@ -29,6 +29,7 @@ import DisplaySubPipelineAction from "../command-actions/displaySubPipelineActio
 import EditCommentAction from "../command-actions/editCommentAction.js";
 import ExpandSuperNodeInPlaceAction from "../command-actions/expandSuperNodeInPlaceAction.js";
 import MoveObjectsAction from "../command-actions/moveObjectsAction.js";
+import SaveToPaletteAction from "../command-actions/saveToPaletteAction.js";
 import SetObjectsStyleAction from "../command-actions/setObjectsStyleAction.js";
 import SetLinksStyleAction from "../command-actions/setLinksStyleAction.js";
 import Logger from "../logging/canvas-logger.js";
@@ -38,15 +39,28 @@ import has from "lodash/has";
 
 // Global instance ID counter
 var commonCanvasControllerInstanceId = 0;
-const labelChoices = { canvas_addComment: "New comment",
-	canvas_selectAll: "Select All", edit_cutSelection: "Cut",
-	edit_copySelection: "Copy", edit_pasteSelection: "Paste",
-	canvas_undo: "Undo", canvas_redo: "Redo",
+
+// Label used for context menu
+// TODO - Move these to a translatable file.
+const labelChoices = {
+	canvas_addComment: "New comment",
+	canvas_selectAll: "Select All",
+	canvas_undo: "Undo",
+	canvas_redo: "Redo",
+	canvas_deleteObject: "Delete",
+	canvas_validateFlow: "Validate Flow",
+	edit_cutSelection: "Cut",
+	edit_copySelection: "Copy",
+	edit_pasteSelection: "Paste",
 	node_createSuperNode: "Create supernode",
 	node_expandSuperNodeInPlace: "Expand supernode",
-	node_collapseSuperNodeInPlace: "Collapse supernode", node_editNode: "Open",
-	canvas_deleteObject: "Delete", node_disconnectNode: "Disconnect", link_deleteLink: "Delete",
-	canvas_validateFlow: "Validate Flow", node_editMenu: "Edit" };
+	node_collapseSuperNodeInPlace: "Collapse supernode",
+	node_editNode: "Open",
+	node_editMenu: "Edit",
+	node_disconnectNode: "Disconnect",
+	node_saveToPalette: "Save to palette",
+	link_deleteLink: "Delete"
+};
 
 export default class CanvasController {
 
@@ -70,7 +84,10 @@ export default class CanvasController {
 		};
 
 		this.contextMenuConfig = {
-			enableCreateSupernodeNonContiguous: false
+			enableCreateSupernodeNonContiguous: false,
+			defaultMenuEntries: {
+				saveToPalette: false
+			}
 		};
 
 		this.handlers = {
@@ -265,16 +282,46 @@ export default class CanvasController {
 
 	// Adds a new node into the palette:
 	// nodeTypeObj - must conform to the style of node used by the palette as
-	// described in the palette schema. It must include at least a label, image
-	// and operator_id_ref (see objects in nodeTypes array in the
+	// described in the palette schema. See objects in nodeTypes array in the
 	// palette-v2-schema:
+	//  https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-canvas/palette/palette-v2-schema.json)
+	// category - is the name of the palette category where the node will be
+	// added. If the category doesn't exist it will be created.
+	// categoryLabel - Is an optional param. If a new category is created it will
+	// be displayed with this label.
+	// categoryDescription - Is an optional param. If a new category is created
+	// it will be displayed with this description.
+	// categoryImage - Is an optional param. The image displayed for the category provided as a
+	// reference to an image or the image itself.
+	addNodeTypeToPalette(nodeTypeObj, categoryId, categoryLabel, categoryDescription, categoryImage) {
+		this.objectModel.addNodeTypeToPalette(nodeTypeObj, categoryId, categoryLabel, categoryDescription, categoryImage);
+	}
+
+	// Adds an array of new node into the palette:
+	// nodeTypeObjs - an array of nodetypes that must conform to the style of
+	// nodes used by the palette as described in the palette schema. See objects
+	// in nodeTypes array in the palette-v2-schema:
 	//  https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-canvas/palette/palette-v2-schema.json)
 	// category - is the name of the palette category where the node will be
 	// added. If the category doesn't exist it will be created.
 	// categoryLabel - is an optional param. If a new category is created it will
 	// be displayed with this label.
-	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
-		this.objectModel.addNodeTypeToPalette(nodeTypeObj, category, categoryLabel);
+	// categoryImage - the image displayed for the category provided as a
+	// reference to an image or the image itself.
+	// categoryDescription - Is an optional param. If a new category is created
+	// it will be displayed with this description.
+	// categoryImage - Is an optional param. The image displayed for the category provided as a
+	// reference to an image or the image itself.
+	addNodeTypesToPalette(nodeTypeObjs, categoryId, categoryLabel, categoryDescription, categoryImage) {
+		this.objectModel.addNodeTypesToPalette(nodeTypeObjs, categoryId, categoryLabel, categoryDescription, categoryImage);
+	}
+
+	// Removes nodetypes from a palette category
+	// selObjectIds - an array of object IDs to identify the nodetypes to be
+	// removed
+	// categoryId - the ID of teh category from which the nodes will be removed
+	removeNodesFromPalette(selObjectIds, categoryId) {
+		this.objectModel.addNodeTypesToPalette(selObjectIds, categoryId);
 	}
 
 	// Returns the palette data document which will conform to the latest version
@@ -979,7 +1026,6 @@ export default class CanvasController {
 		const nodes = this.objectModel.getSelectedNodes();
 		const comments = this.objectModel.getSelectedComments();
 		const links = apiPipeline.getLinksBetween(nodes, comments);
-		const pipelines = [];
 
 		if (nodes.length === 0 && comments.length === 0) {
 			return false;
@@ -987,15 +1033,10 @@ export default class CanvasController {
 
 		if (nodes && nodes.length > 0) {
 			copyData.nodes = nodes;
+			let pipelines = [];
 			const supernodes = apiPipeline.getSupernodes(nodes);
 			supernodes.forEach((supernode) => {
-				if (has(supernode, "subflow_ref.pipeline_id_ref")) {
-					pipelines.push(this.objectModel.getCanvasInfoPipeline(supernode.subflow_ref.pipeline_id_ref));
-					const subPiplines = this.objectModel.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref);
-					subPiplines.forEach((subPiplineId) => {
-						pipelines.push(this.objectModel.getCanvasInfoPipeline(subPiplineId));
-					});
-				}
+				pipelines = pipelines.concat(this.objectModel.getSubPipelinesForSupernode(supernode));
 			});
 			copyData.pipelines = pipelines;
 		}
@@ -1390,6 +1431,11 @@ export default class CanvasController {
 		if (source.type === "canvas") {
 			menuDefinition = menuDefinition.concat({ action: "unhighlight", label: "Unhighlight", enable: this.highlight });
 		}
+		if (source.type === "node" &&
+				has(this, "contextMenuConfig.defaultMenuEntries.saveToPalette") &&
+				this.contextMenuConfig.defaultMenuEntries.saveToPalette) {
+			menuDefinition = menuDefinition.concat({ divider: true }, { action: "saveToPalette", label: this.getLabel("node_saveToPalette", "Save to palette") });
+		}
 		return (menuDefinition);
 	}
 
@@ -1456,6 +1502,11 @@ export default class CanvasController {
 			}
 			case "disconnectNode": {
 				const command = new DisconnectObjectsAction(this.contextMenuSource, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "saveToPalette": {
+				const command = new SaveToPaletteAction(this.contextMenuSource, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}

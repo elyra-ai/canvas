@@ -78,7 +78,12 @@ _defineConstant("PALETTE", {
 	NARROW_WIDTH: 64
 });
 
+_defineConstant("BINDING", "binding");
 _defineConstant("SUPER_NODE", "super_node");
+_defineConstant("MODEL_NODE", "model_node");
+_defineConstant("EXECUTION_NODE", "execution_node");
+
+_defineConstant("SAVED_NODES_CATEGORY_ID", "savedNodes");
 
 _defineConstant("NODE_MENU_ICON",
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 16.14\">" +
@@ -108,3 +113,12 @@ _defineConstant("NODE_WARNING_ICON",
 	" M 8 13.25 A .25 .25 0 1 0 8 12.25 a .25 .25 0 0 0 0 1 z" + // Exclamation mark dot.
 	" M 8 12 l 0.5 1.25\"/>" + // Draw a line through the exclamation circle to fill it.
 	"</svg>");
+
+// This image is stored in the format to be shown as an <img> in the JSX
+// created by palette-flyout-content-category render method.
+_defineConstant("SAVED_NODES_FOLDER_ICON",
+	"data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllci" +
+	"AxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNC" +
+	"AyMCI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiM5NDkzOTQ7fTwvc3R5bGU+PC9kZWZzPj" +
+	"x0aXRsZT5zb3VyY2VzX29wZW48L3RpdGxlPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTEwLD" +
+	"MuNDRWMkgyVjE4SDIyVjMuNDRabTEwLjE3LDEzSDMuNzdWNS4xN0gyMC4xNFoiLz48L3N2Zz4=");

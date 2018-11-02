@@ -8,6 +8,9 @@
  *******************************************************************************/
 
 import isEmpty from "lodash/isEmpty";
+import { BINDING, EXECUTION_NODE,
+	SUPER_NODE, MODEL_NODE } from "../common-canvas/constants/canvas-constants.js";
+
 
 export default class PipelineOutHandler {
 
@@ -33,12 +36,14 @@ export default class PipelineOutHandler {
 
 	static createPipeline(canvasInfoPipeline) {
 		const newPipeline = {
-			id: canvasInfoPipeline.id,
-			name: canvasInfoPipeline.name,
-			nodes: this.createNodes(canvasInfoPipeline),
-			app_data: this.createPipelineAppData(canvasInfoPipeline),
-			runtime_ref: canvasInfoPipeline.runtime_ref
+			id: canvasInfoPipeline.id
 		};
+		if (canvasInfoPipeline.name) {
+			newPipeline.name = canvasInfoPipeline.name;
+		}
+		newPipeline.nodes = this.createNodes(canvasInfoPipeline);
+		newPipeline.app_data = this.createPipelineAppData(canvasInfoPipeline);
+		newPipeline.runtime_ref = canvasInfoPipeline.runtime_ref;
 
 		if (canvasInfoPipeline.parameters) {
 			newPipeline.parameters = canvasInfoPipeline.parameters;
@@ -59,17 +64,21 @@ export default class PipelineOutHandler {
 			type: ciNode.type
 		};
 
-		if (ciNode.type === "execution_node" ||
-				ciNode.type === "binding") {
-			newNode.op = ciNode.op;
+		if (ciNode.type === EXECUTION_NODE ||
+				ciNode.type === BINDING) {
+			if (ciNode.op || ciNode.op === "") {
+				newNode.op = ciNode.op; // Write out op even if it is "" to allow our tests to work.
+			}
 		}
 
-		if (ciNode.type === "super_node") {
-			newNode.open_with_tool = ciNode.open_with_tool;
+		if (ciNode.type === SUPER_NODE) {
+			if (ciNode.open_with_tool) {
+				newNode.open_with_tool = ciNode.open_with_tool;
+			}
 			newNode.subflow_ref = ciNode.subflow_ref;
 		}
 
-		if (ciNode.type === "model_node") {
+		if (ciNode.type === MODEL_NODE) {
 			newNode.model_ref = ciNode.model_ref;
 		}
 
@@ -120,7 +129,7 @@ export default class PipelineOutHandler {
 			uiData.description = ciNode.description;
 		}
 
-		if (ciNode.type === "super_node") {
+		if (ciNode.type === SUPER_NODE) {
 			uiData.is_expanded = ciNode.is_expanded;
 			uiData.expanded_width = ciNode.expanded_width;
 			uiData.expanded_height = ciNode.expanded_height;
@@ -155,7 +164,7 @@ export default class PipelineOutHandler {
 				id: ciInputPort.id
 			};
 
-			if (ciNode.type === "super_node") {
+			if (ciNode.type === SUPER_NODE) {
 				if (ciInputPort.subflow_node_ref) {
 					newInput.subflow_node_ref = ciInputPort.subflow_node_ref;
 				}
@@ -189,7 +198,7 @@ export default class PipelineOutHandler {
 				id: ciOutputPort.id
 			};
 
-			if (ciNode.type === "super_node") {
+			if (ciNode.type === SUPER_NODE) {
 				if (ciOutputPort.subflow_node_ref) {
 					newOutput.subflow_node_ref = ciOutputPort.subflow_node_ref;
 				}
@@ -212,11 +221,15 @@ export default class PipelineOutHandler {
 	}
 
 	static createPortUiData(ciPort) {
-		return {
-			cardinality: ciPort.cardinality,
-			class_name: ciPort.class_name,
-			label: ciPort.label
-		};
+		const port = {};
+		if (ciPort.cardinality) {
+			port.cardinality = ciPort.cardinality;
+		}
+		if (ciPort.class_name) {
+			port.class_name = ciPort.class_name;
+		}
+		port.label = ciPort.label;
+		return port;
 	}
 
 	static createLinks(ciLinks, ciNodeId, ciInputPortId, portIndex) {
@@ -318,7 +331,14 @@ export default class PipelineOutHandler {
 		canvasInfoLinks.forEach((link) => {
 			if (link.type === "commentLink" &&
 					link.srcNodeId === commentId) {
-				newLinks.push({ node_ref: link.trgNodeId, class_name: link.class_name, style: link.style });
+				const newLink = { node_ref: link.trgNodeId };
+				if (link.class_name) {
+					newLink.class_name = link.class_name;
+				}
+				if (link.style) {
+					newLink.style = link.style;
+				}
+				newLinks.push(newLink);
 			}
 		});
 		return newLinks;
