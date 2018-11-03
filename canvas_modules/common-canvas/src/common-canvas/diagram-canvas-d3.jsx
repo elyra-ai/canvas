@@ -59,7 +59,7 @@ export default class DiagramCanvas extends React.Component {
 		try {
 			return JSON.parse(event.dataTransfer.getData(DND_DATA_TEXT));
 		} catch (e) {
-			this.logger.error(e);
+			this.logger.warn(e);
 			return null;
 		}
 	}
@@ -84,7 +84,19 @@ export default class DiagramCanvas extends React.Component {
 	drop(event) {
 		event.preventDefault();
 		const mousePos = this.mouseCoords(event);
-		const dropData = this.getDNDJson(event);
+		let dropData = this.getDNDJson(event);
+		// If no drop data is found (which complies with the calling protocol
+		// described in the wiki) we just pass through the dataTransfer data and
+		// set an appropriate operation.
+		if (!dropData) {
+			dropData = {
+				operation: "addToCanvas",
+				data: {
+					dataTransfer: event.dataTransfer,
+					editType: "createFromExternalObject"
+				}
+			};
+		}
 		const element = this.getElementAtMousePos(event);
 		this.canvasD3Layout.nodeDropped(dropData, mousePos, element);
 	}

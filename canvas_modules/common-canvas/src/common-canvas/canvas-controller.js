@@ -335,6 +335,12 @@ export default class CanvasController {
 		return this.objectModel.getPaletteNode(operatorId);
 	}
 
+	// Converts a node template from the format used in the palette (that conforms
+	// to the schema) to the internal node format.
+	convertNodeTemplate(nodeTemplate) {
+		return this.objectModel.convertNodeTemplate(nodeTemplate);
+	}
+
 	// ---------------------------------------------------------------------------
 	// Selections methods
 	// ---------------------------------------------------------------------------
@@ -507,15 +513,19 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodes();
 	}
 
+	// Returns a new node created from the object passed in which has the
+	// following properties:
+	// nodeTemplate - a node template from the palette
+	// offsetX - the x coordinate of the new node
+	// offsetY - the y coordinate of the new node
+	// pipelineId - the ID of the pipeline where the new node will exist
+	createNode(data, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).createNode(data);
+	}
+
 	// Adds a new node into the pipeline specified by the pipelineId.
 	addNode(node, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).addNode(node);
-	}
-
-	// Creates a new node from the data for the pipeline specified by the
-	// pipelineId.
-	createNode(data, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).createNode(data);
 	}
 
 	// Deletes the node specified.
@@ -1170,7 +1180,7 @@ export default class CanvasController {
 
 	createDroppedNode(dropData, link, transPos, pipelineId) {
 		if (dropData.operation === "createFromTemplate") {
-			const newNodeTemplate = this.convertNodeTemplate(dropData.nodeTemplate);
+			const newNodeTemplate = this.objectModel.convertNodeTemplate(dropData.nodeTemplate);
 			if (link &&
 					this.canNodeBeDroppedOnLink(newNodeTemplate, this.pipelineId) &&
 					this.isInternalObjectModelEnabled()) {
@@ -1187,70 +1197,12 @@ export default class CanvasController {
 		}
 	}
 
-	// Converts a nodeTemplate from the palette (which will be in the pipelineFlowId
-	// format) to a nodeTemplate compatible with the internal format stored in the
-	// object model.
-	convertNodeTemplate(nodeTemplate) {
-		if (nodeTemplate) {
-			const newNodeTemplate = Object.assign({}, nodeTemplate);
-
-			if (newNodeTemplate.app_data) {
-				// Ensure we've cloned the app_data not just refer to the original from the palette.
-				newNodeTemplate.app_data = JSON.parse(JSON.stringify(nodeTemplate.app_data));
-
-				if (newNodeTemplate.app_data.ui_data) {
-					newNodeTemplate.label = nodeTemplate.app_data.ui_data.label;
-					newNodeTemplate.image = nodeTemplate.app_data.ui_data.image;
-					newNodeTemplate.description = nodeTemplate.app_data.ui_data.description;
-					newNodeTemplate.class_name = nodeTemplate.app_data.ui_data.class_name;
-					newNodeTemplate.decorations = nodeTemplate.app_data.ui_data.decorations;
-					newNodeTemplate.messages = nodeTemplate.app_data.ui_data.messages;
-
-					// We can remove the app_data.ui_data
-					delete newNodeTemplate.app_data.ui_data;
-				}
-			}
-
-			if (nodeTemplate.inputs) {
-				newNodeTemplate.inputs = newNodeTemplate.inputs.map((port) => this.convertPort(port));
-			}
-
-			if (nodeTemplate.outputs) {
-				newNodeTemplate.outputs = newNodeTemplate.outputs.map((port) => this.convertPort(port));
-			}
-
-			return newNodeTemplate;
-		}
-		return null;
-	}
-
-	// Converts an incoming port (eiter input or output ) from a nodetemplate
-	// from the palette to an internal format port.
-	convertPort(port) {
-		const newPort = Object.assign({}, port);
-		if (port.app_data && port.app_data.ui_data) {
-			if (port.app_data.ui_data.label) {
-				newPort.label = port.app_data.ui_data.label;
-			}
-			if (port.app_data.ui_data.cardinality) {
-				newPort.cardinality = port.app_data.ui_data.cardinality;
-			}
-			if (port.app_data.ui_data.class_name) {
-				newPort.class_name = port.app_data.ui_data.class_name;
-			}
-			// We can remvove this as it is not needed in the internal format.
-			delete newPort.app_data.ui_data;
-		}
-		return newPort;
-	}
-
-
 	createAutoNode(nodeTemplate) {
 		const selApiPipeline = this.objectModel.getSelectionAPIPipeline();
 		const apiPipeline = selApiPipeline ? selApiPipeline : this.objectModel.getAPIPipeline();
 		var data = {
 			editType: "createAutoNode",
-			nodeTemplate: this.convertNodeTemplate(nodeTemplate),
+			nodeTemplate: this.objectModel.convertNodeTemplate(nodeTemplate),
 			pipelineId: apiPipeline.pipelineId
 		};
 

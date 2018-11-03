@@ -1146,6 +1146,63 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "REMOVE_NODE_TYPES_FROM_PALETTE", data: { selObjectIds: selObjectIds, categoryId: categoryId } });
 	}
 
+	// Converts a nodeTemplate from the palette (which will be in the pipelineFlow
+	// format) to a nodeTemplate compatible with the internal format stored in the
+	// object model.
+	convertNodeTemplate(nodeTemplate) {
+		if (nodeTemplate) {
+			const newNodeTemplate = Object.assign({}, nodeTemplate);
+
+			if (newNodeTemplate.app_data) {
+				// Ensure we've cloned the app_data not just refer to the original from the palette.
+				newNodeTemplate.app_data = JSON.parse(JSON.stringify(nodeTemplate.app_data));
+
+				if (newNodeTemplate.app_data.ui_data) {
+					newNodeTemplate.label = nodeTemplate.app_data.ui_data.label;
+					newNodeTemplate.image = nodeTemplate.app_data.ui_data.image;
+					newNodeTemplate.description = nodeTemplate.app_data.ui_data.description;
+					newNodeTemplate.class_name = nodeTemplate.app_data.ui_data.class_name;
+					newNodeTemplate.decorations = nodeTemplate.app_data.ui_data.decorations;
+					newNodeTemplate.messages = nodeTemplate.app_data.ui_data.messages;
+
+					// We can remove the app_data.ui_data
+					delete newNodeTemplate.app_data.ui_data;
+				}
+			}
+
+			if (nodeTemplate.inputs) {
+				newNodeTemplate.inputs = newNodeTemplate.inputs.map((port) => this.convertPort(port));
+			}
+
+			if (nodeTemplate.outputs) {
+				newNodeTemplate.outputs = newNodeTemplate.outputs.map((port) => this.convertPort(port));
+			}
+
+			return newNodeTemplate;
+		}
+		return null;
+	}
+
+	// Converts an incoming port (either input or output ) from a nodetemplate
+	// from the palette to an internal format port.
+	convertPort(port) {
+		const newPort = Object.assign({}, port);
+		if (port.app_data && port.app_data.ui_data) {
+			if (port.app_data.ui_data.label) {
+				newPort.label = port.app_data.ui_data.label;
+			}
+			if (port.app_data.ui_data.cardinality) {
+				newPort.cardinality = port.app_data.ui_data.cardinality;
+			}
+			if (port.app_data.ui_data.class_name) {
+				newPort.class_name = port.app_data.ui_data.class_name;
+			}
+			// We can remvove this as it is not needed in the internal format.
+			delete newPort.app_data.ui_data;
+		}
+		return newPort;
+	}
+
 	getPaletteNode(nodeOpIdRef) {
 		let outNodeType = null;
 		if (!isEmpty(this.getPaletteData())) {
@@ -2740,10 +2797,12 @@ export class APIPipeline {
 	}
 
 	addNode(newNode) {
-		this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode }, pipelineId: this.pipelineId });
+		if (newNode) {
+			this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode }, pipelineId: this.pipelineId });
 
-		if (this.objectModel.fixedLayout !== NONE) {
-			this.autoLayout(this.objectModel.fixedLayout);
+			if (this.objectModel.fixedLayout !== NONE) {
+				this.autoLayout(this.objectModel.fixedLayout);
+			}
 		}
 	}
 

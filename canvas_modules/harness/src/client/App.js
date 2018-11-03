@@ -203,9 +203,10 @@ class App extends React.Component {
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
+		this.extraCanvasContextMenuActionHandler = this.extraCanvasContextMenuActionHandler.bind(this);
 		this.toolbarMenuActionHandler = this.toolbarMenuActionHandler.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
-		this.extraCanvasActionHandler = this.extraCanvasActionHandler.bind(this);
+		this.extraCanvasEditActionHandler = this.extraCanvasEditActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.extraCanvasClickActionHandler = this.extraCanvasClickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
@@ -1039,7 +1040,12 @@ class App extends React.Component {
 		return defMenu;
 	}
 
-	editActionHandler(data) {
+	editActionHandler(data, inExtraCanvas) {
+		let canvasController = this.canvasController;
+
+		if (inExtraCanvas) {
+			canvasController = this.canvasController2;
+		}
 		var type = "";
 		if (data.newNode && data.newNode.op) {
 			type = data.newNode.op;
@@ -1060,20 +1066,33 @@ class App extends React.Component {
 		}
 		if (data.editType === "createNode") {
 			NodeToForm.setNodeForm(data.nodeId, type);
+
 		} else if (data.editType === "displaySubPipeline" || data.editType === "displayPreviousPipeline") {
 			this.setFlowNotificationMessages();
 			this.setBreadcrumbsDefinition(data.pipelineInfo.pipelineId);
-		}
 
+		} else if (data.editType === "createTestHarnessNode") {
+			const nodeTemplate = canvasController.getPaletteNode(data.op);
+			if (nodeTemplate) {
+				data.editType = "createNode";
+				data.nodeTemplate = canvasController.convertNodeTemplate(nodeTemplate);
+				canvasController.editActionHandler(data);
+			}
+
+		} else if (data.editType === "createFromExternalObject") {
+			const nodeTemplate = canvasController.getPaletteNode("variablefile");
+			if (nodeTemplate) {
+				data.editType = "createNode";
+				data.nodeTemplate = canvasController.convertNodeTemplate(nodeTemplate);
+				data.nodeTemplate.label = data.dataTransfer.files[0].name;
+				canvasController.editActionHandler(data);
+			}
+		}
 		this.log("editActionHandler() " + data.editType, type, data.label);
 	}
 
-	extraCanvasActionHandler(action, source) {
-		var sessionData = {
-			canvas2: this.canvasController2.getCanvasInfo()
-		};
-		TestService.postSessionData(sessionData);
-		this.contextMenuActionHandler(action, source, true);
+	extraCanvasEditActionHandler(data) {
+		this.editActionHandler(data, true);
 	}
 
 	contextMenuActionHandler(action, source, inExtraCanvas) {
@@ -1120,6 +1139,10 @@ class App extends React.Component {
 			this.log("action: unhighlight");
 			// this.canvasController.setSubdueStyle(null);
 		}
+	}
+
+	extraCanvasContextMenuActionHandler(action, source) {
+		this.contextMenuActionHandler(action, source, true);
 	}
 
 	toolbarMenuActionHandler(action, source) {
@@ -1650,8 +1673,8 @@ class App extends React.Component {
 						<CommonCanvas
 							config={commonCanvasConfig2}
 							contextMenuHandler={this.contextMenuHandler}
-							contextMenuActionHandler= {this.extraCanvasActionHandler}
-							editActionHandler= {this.extraCanvasActionHandler}
+							contextMenuActionHandler= {this.extraCanvasContextMenuActionHandler}
+							editActionHandler= {this.extraCanvasEditActionHandler}
 							clickActionHandler= {this.extraCanvasClickActionHandler}
 							toolbarConfig={toolbarConfig}
 							canvasController={this.canvasController2}
