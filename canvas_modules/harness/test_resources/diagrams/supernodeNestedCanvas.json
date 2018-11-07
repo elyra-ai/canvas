@@ -351,7 +351,7 @@
           "app_data": {
             "ui_data": {
               "label": "Supernode2",
-              "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
+              "image": "useDefaultIcon",
               "x_pos": 467,
               "y_pos": 161,
               "description": "This supernode was created by common-canvas.",
@@ -472,7 +472,7 @@
           "app_data": {
             "ui_data": {
               "label": "Supernode1",
-              "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
+              "image": "useDefaultIcon",
               "x_pos": 19,
               "y_pos": 191.5,
               "description": "This supernode was created by common-canvas.",
@@ -517,7 +517,7 @@
           "app_data": {
             "ui_data": {
               "label": "Supernode3",
-              "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
+              "image": "useDefaultIcon",
               "x_pos": 296,
               "y_pos": 369.5,
               "description": "This supernode was created by common-canvas.",
@@ -755,7 +755,7 @@
           "app_data": {
             "ui_data": {
               "label": "Supernode4",
-              "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
+              "image": "useDefaultIcon",
               "x_pos": 841,
               "y_pos": 82.5,
               "description": "This supernode was created by common-canvas. Its open_with_tool field has the value shaper.",
@@ -781,7 +781,7 @@
           "app_data": {
             "ui_data": {
               "label": "Supernode5",
-              "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
+              "image": "useDefaultIcon",
               "x_pos": 840,
               "y_pos": 245.5,
               "description": "This supernode was created by common-canvas. Its open_with_tool field has the value canvas.",
@@ -806,7 +806,7 @@
           "app_data": {
             "ui_data": {
               "label": "Supernode6",
-              "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
+              "image": "useDefaultIcon",
               "x_pos": 829,
               "y_pos": 364.5,
               "description": "This supernode was created by common-canvas. Its open_with_tool field is unspecified.",
@@ -1342,7 +1342,7 @@
           "app_data": {
             "ui_data": {
               "label": "Supernode2A",
-              "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
+              "image": "useDefaultIcon",
               "x_pos": 297,
               "y_pos": 235,
               "description": "supernode",
@@ -1559,7 +1559,7 @@
           "app_data": {
             "ui_data": {
               "label": "Supernode2B",
-              "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
+              "image": "useDefaultIcon",
               "x_pos": 547.4381713867188,
               "y_pos": 137.9592742919922,
               "description": "This supernode was created by common-canvas.",
@@ -2147,7 +2147,7 @@
           "app_data": {
             "ui_data": {
               "label": "Supernode3A",
-              "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
+              "image": "useDefaultIcon",
               "x_pos": 378.2166748046875,
               "y_pos": 402.1438903808594,
               "description": "This supernode was created by common-canvas.",
@@ -2412,7 +2412,7 @@
           "app_data": {
             "ui_data": {
               "label": "Supernode3B",
-              "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
+              "image": "useDefaultIcon",
               "x_pos": 439,
               "y_pos": 563.9999923706055,
               "description": "This supernode was created by common-canvas.",
@@ -2664,7 +2664,7 @@
           "app_data": {
             "ui_data": {
               "label": "Supernode2B-1",
-              "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
+              "image": "useDefaultIcon",
               "x_pos": 504.43817138671875,
               "y_pos": -84.04072570800781,
               "description": "This supernode was created by common-canvas.",

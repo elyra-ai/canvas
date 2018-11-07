@@ -241,7 +241,7 @@
           "app_data": {
             "ui_data": {
               "label": "Supernode",
-              "image": "test-file-stub",
+              "image": "useDefaultIcon",
               "x_pos": 482,
               "y_pos": 132.99999237060547,
               "description": "This supernode was created by common-canvas."

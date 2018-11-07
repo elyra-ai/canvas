@@ -85,6 +85,9 @@ _defineConstant("EXECUTION_NODE", "execution_node");
 
 _defineConstant("SAVED_NODES_CATEGORY_ID", "savedNodes");
 
+_defineConstant("USE_DEFAULT_ICON", "useDefaultIcon");
+
+
 _defineConstant("NODE_MENU_ICON",
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 16.14\">" +
 	"<circle cx=\"2\" cy=\"2\" r=\"2\"/>" +

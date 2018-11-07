@@ -8,8 +8,7 @@
  *******************************************************************************/
 
 import Action from "../command-stack/action.js";
-import SupernodeIcon from "../../assets/images/supernode.svg";
-import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
+import { SUPER_NODE, USE_DEFAULT_ICON } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CreateSuperNodeAction extends Action {
 	constructor(data, objectModel) {
@@ -155,7 +154,7 @@ export default class CreateSuperNodeAction extends Action {
 		// Supernode
 		const supernodeTemplate = {
 			description: "This supernode was created by common-canvas.",
-			image: SupernodeIcon,
+			image: USE_DEFAULT_ICON,
 			label: "Supernode",
 			inputs: supernodeInputPorts,
 			outputs: supernodeOutputPorts,
@@ -452,7 +451,7 @@ export default class CreateSuperNodeAction extends Action {
 		this.apiPipeline.deleteSupernode(this.supernode.id);
 
 		this.subflowNodes.forEach((node) => {
-			if (node.type === "super_node") {
+			if (node.type === SUPER_NODE) {
 				this.apiPipeline.addSupernode(node, this.subflowPipelines[node.id]);
 			} else {
 				this.apiPipeline.addNode(node);

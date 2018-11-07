@@ -844,7 +844,7 @@
           "app_data": {
             "ui_data": {
               "label": "Supernode",
-              "image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
+              "image": "useDefaultIcon",
               "x_pos": 297,
               "y_pos": 235,
               "description": "supernode",

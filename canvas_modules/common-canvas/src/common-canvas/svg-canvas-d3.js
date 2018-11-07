@@ -19,8 +19,9 @@ import union from "lodash/union";
 import forIn from "lodash/forIn";
 import get from "lodash/get";
 import { NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
-	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION }
+	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
+import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import Logger from "../logging/canvas-logger.js";
 
 const BACKSPACE_KEY = 8;
@@ -1630,7 +1631,7 @@ class CanvasRenderer {
 			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
 				.append("image")
 				.attr("id", (d) => this.getId("node_image", d.id))
-				.attr("xlink:href", (d) => d.image)
+				.attr("xlink:href", (d) => this.getNodeImage(d))
 				.attr("width", this.layout.imageWidth)
 				.attr("height", this.layout.imageHeight)
 				.attr("x", this.layout.imagePosX)
@@ -1979,6 +1980,17 @@ class CanvasRenderer {
 			nodeGroupSel.exit().remove();
 		}
 		this.logger.logEndTimer("displayNodes " + this.getFlags());
+	}
+
+	getNodeImage(d) {
+		if (!d.image) {
+			return null;
+		} else if (d.image === USE_DEFAULT_ICON) {
+			if (this.isSupernode(d)) {
+				return SUPERNODE_ICON;
+			}
+		}
+		return d.image;
 	}
 
 	setNodeStyles(d, type) {
@@ -2352,7 +2364,7 @@ class CanvasRenderer {
 	}
 
 	isSupernode(data) {
-		return data.type === "super_node";
+		return data.type === SUPER_NODE;
 	}
 
 	openContextMenu(type, d) {
