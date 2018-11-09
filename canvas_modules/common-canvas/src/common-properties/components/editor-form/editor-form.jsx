@@ -168,7 +168,7 @@ class EditorForm extends React.Component {
 				}
 				tabContent.push(
 					<Tab
-						key={i}
+						key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
 						tabIndex={i}
 						label={tab.text}
 						onClick={this._modalTabsOnClick.bind(this, tab.group)}
