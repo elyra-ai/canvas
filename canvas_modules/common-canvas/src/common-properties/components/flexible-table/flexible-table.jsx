@@ -168,13 +168,17 @@ export default class FlexibleTable extends React.Component {
 			return;
 		}
 		const rowHeight = 3; // in em
+		const fixedHeaderHeight = 2.5;
 		const rows = this.props.rows ? this.props.rows : 4;
+		// this is to adjust for multiple-select edit.
+		// There is one additional row and header to account for.
+		const mseHeight = this.props.selectedEditRow ? rowHeight + fixedHeaderHeight : 0;
 		// Allow for the table header
 		let headerHeight = 0;
 		if (this.theadNode) {
-			headerHeight = 2.5; // in em
+			headerHeight = fixedHeaderHeight; // in em
 		}
-		const newHeight = (rowHeight * rows + headerHeight);
+		const newHeight = (rowHeight * rows + headerHeight + mseHeight);
 		if (newHeight !== this.state.tableHeight) {
 			this.setState({ tableHeight: newHeight });
 		}

@@ -430,7 +430,7 @@ export default class AbstractTable extends React.Component {
 				/>
 			</div>);
 		}
-		return (<div />);
+		return null;
 	}
 
 
@@ -567,7 +567,7 @@ export default class AbstractTable extends React.Component {
 
 		const selectedEditRow = this.props.control.rowSelection === "multiple-edit"
 			? this.makeSelectedEditRow(this.props.selectedRows)
-			: <div />;
+			: null;
 
 		const topRightPanel = (typeof this.props.control.addRemoveRows === "undefined" || this.props.control.addRemoveRows) // default to true.
 			? this.makeAddRemoveButtonPanel(tableState, tableButtonConfig)
