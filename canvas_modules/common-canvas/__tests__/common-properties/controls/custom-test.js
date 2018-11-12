@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import propertyUtils from "../../_utils_/property-utils";
-import customControlParamDef from "../../test_resources/paramDefs/custom_paramDef.json";
+import customControlParamDef from "../../test_resources/paramDefs/custom-ctrl-op_paramDef.json";
 import { expect } from "chai";
 
 describe("custom control renders correctly", () => {

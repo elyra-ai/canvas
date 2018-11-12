@@ -12,7 +12,7 @@ import CustomToggleCtrl from "../custom-components/CustomToggleCtrl";
 
 class CustomToggleControl {
 	static id() {
-		return "custom-toggle-control";
+		return "harness-custom-toggle-control";
 	}
 	constructor(propertyId, controller, data, tableInfo) {
 		this.propertyId = propertyId;

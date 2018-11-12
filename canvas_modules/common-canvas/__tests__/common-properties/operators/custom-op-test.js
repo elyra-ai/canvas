@@ -10,7 +10,7 @@
 
 import propertyUtils from "../../_utils_/property-utils";
 import { expect } from "chai";
-import customControlParamDef from "../../test_resources/paramDefs/custom_paramDef.json";
+import customControlParamDef from "../../test_resources/paramDefs/custom-ctrl-op_paramDef.json";
 
 describe("validating custom operators work correctly", () => {
 	var wrapper;
