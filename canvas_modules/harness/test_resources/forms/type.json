@@ -1,27 +1,22 @@
 {
-  "title": {
-    "key": null,
-    "ref": null,
-    "props": {
-      "id": "dialog.nodePropertiesTitle",
-      "tagName": "span",
-      "values": {}
-    },
-    "_owner": null,
-    "_store": {}
-  },
   "formData": {
     "componentId": "type",
-    "label": "Type",
+    "label": "Define Types",
     "editorSize": "small",
+    "pixelWidth": {
+      "min": 1000,
+      "max": 1000
+    },
     "uiItems": [
       {
+        "id": "form-primary-tabs",
         "itemType": "primaryTabs",
         "tabs": [
           {
             "text": "Settings",
             "group": "basic-settings",
             "content": {
+              "id": "basic-settings-uiitem",
               "itemType": "panel",
               "panel": {
                 "id": "basic-settings",
@@ -29,24 +24,30 @@
                 "label": "Settings",
                 "uiItems": [
                   {
+                    "id": "other-settings-uiitem",
                     "itemType": "panel",
                     "panel": {
                       "id": "other-settings",
                       "panelType": "general",
                       "uiItems": [
                         {
+                          "id": "default_value_mode-uiitem",
                           "itemType": "control",
                           "control": {
                             "name": "default_value_mode",
+                            "visible": true,
+                            "description": null,
+                            "separateLabel": true,
                             "label": {
-                              "text": "Default mode"
+                              "text": "Default Mode"
                             },
-                            "orientation": "vertical",
+                            "language": "CLEM",
                             "values": [
                               "Read",
                               "Pass"
                             ],
                             "controlType": "radioset",
+                            "required": false,
                             "valueLabels": [
                               "Read metadata",
                               "Pass (do not scan)"
@@ -55,20 +56,228 @@
                               "propType": "string",
                               "isList": false,
                               "isMap": false
-                            }
+                            },
+                            "labelVisible": true
                           }
                         }
                       ]
                     }
                   },
                   {
+                    "id": "type-operations-panel-uiitem",
+                    "itemType": "panel",
+                    "panel": {
+                      "id": "type-operations-panel",
+                      "panelType": "twisty",
+                      "label": "Type Operations",
+                      "uiItems": [
+                        {
+                          "id": "type-operations-setting-panel-uiitem",
+                          "itemType": "panel",
+                          "panel": {
+                            "id": "type-operations-setting-panel",
+                            "panelType": "general",
+                            "uiItems": [
+                              {
+                                "id": "ignore_unique_fields-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "ignore_unique_fields",
+                                  "visible": true,
+                                  "description": null,
+                                  "separateLabel": false,
+                                  "label": {
+                                    "text": "Ignore unique fields"
+                                  },
+                                  "language": "CLEM",
+                                  "controlType": "checkbox",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "boolean",
+                                    "isList": false,
+                                    "isMap": false
+                                  },
+                                  "labelVisible": false
+                                }
+                              },
+                              {
+                                "id": "ignore_large_set-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "ignore_large_set",
+                                  "visible": true,
+                                  "description": null,
+                                  "separateLabel": false,
+                                  "label": {
+                                    "text": "Ignore sets larger than"
+                                  },
+                                  "language": "CLEM",
+                                  "controlType": "checkbox",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "boolean",
+                                    "isList": false,
+                                    "isMap": false
+                                  },
+                                  "labelVisible": false
+                                }
+                              },
+                              {
+                                "id": "sets_larger_than-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "sets_larger_than",
+                                  "visible": true,
+                                  "description": null,
+                                  "separateLabel": false,
+                                  "label": {
+                                    "text": "sets_larger_than.label"
+                                  },
+                                  "language": "CLEM",
+                                  "controlType": "numberfield",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "integer",
+                                    "isList": false,
+                                    "isMap": false
+                                  },
+                                  "labelVisible": false
+                                }
+                              },
+                              {
+                                "id": "continuous_to_ordinal-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "continuous_to_ordinal",
+                                  "visible": true,
+                                  "description": null,
+                                  "separateLabel": false,
+                                  "label": {
+                                    "text": "Convert continuous integer to ordinal"
+                                  },
+                                  "language": "CLEM",
+                                  "controlType": "checkbox",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "boolean",
+                                    "isList": false,
+                                    "isMap": false
+                                  },
+                                  "labelVisible": false
+                                }
+                              },
+                              {
+                                "id": "continuous_to_ordinal_range-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "continuous_to_ordinal_range",
+                                  "visible": true,
+                                  "description": null,
+                                  "separateLabel": false,
+                                  "label": {
+                                    "text": "continuous_to_ordinal_range.label"
+                                  },
+                                  "language": "CLEM",
+                                  "controlType": "numberfield",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "integer",
+                                    "isList": false,
+                                    "isMap": false
+                                  },
+                                  "labelVisible": false
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "id": "actions-uiitem",
+                          "itemType": "panel",
+                          "panel": {
+                            "id": "actions",
+                            "panelType": "actionPanel",
+                            "uiItems": [
+                              {
+                                "id": "typeops_apply-uiitem",
+                                "itemType": "action",
+                                "action": {
+                                  "name": "typeops_apply",
+                                  "label": {
+                                    "text": "Apply"
+                                  },
+                                  "actionType": "button",
+                                  "data": {
+                                    "parameter_ref": "metadata",
+                                    "action_type": "common-canvas-custom-action",
+                                    "action_sub_type": "typeops"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "settings-summary-uiitem",
                     "itemType": "panel",
                     "panel": {
                       "id": "settings-summary",
-                      "panelType": "summary",
+                      "panelType": "general",
                       "label": "Configure Types",
                       "uiItems": [
                         {
+                          "id": "actions-uiitem",
+                          "itemType": "panel",
+                          "panel": {
+                            "id": "actions",
+                            "panelType": "actionPanel",
+                            "uiItems": [
+                              {
+                                "id": "readValues-uiitem",
+                                "itemType": "action",
+                                "action": {
+                                  "name": "readValues",
+                                  "label": {
+                                    "text": "Read Values"
+                                  },
+                                  "actionType": "button",
+                                  "data": {
+                                    "async": true,
+                                    "action_type": "task",
+                                    "action_sub_type": "partialExecute",
+                                    "parameters": [],
+                                    "settings": {},
+                                    "return_type": "editor_data"
+                                  }
+                                }
+                              },
+                              {
+                                "id": "clearAllValues-uiitem",
+                                "itemType": "action",
+                                "action": {
+                                  "name": "clearAllValues",
+                                  "label": {
+                                    "text": "Clear All Values"
+                                  },
+                                  "actionType": "button",
+                                  "data": {
+                                    "parameter_ref": [
+                                      "metadata",
+                                      "missing_metadata"
+                                    ],
+                                    "action_type": "common-canvas-custom-action",
+                                    "action_sub_type": "clearallvalues"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "id": "type-settings-uiitem",
                           "itemType": "panel",
                           "panel": {
                             "id": "type-settings",
@@ -76,23 +285,32 @@
                             "label": "Field Definition",
                             "uiItems": [
                               {
+                                "id": "metadata-uiitem",
                                 "itemType": "control",
                                 "control": {
                                   "name": "metadata",
+                                  "visible": true,
                                   "childItem": {
+                                    "id": "metadata-edit-uiitem",
                                     "itemType": "additionalLink",
                                     "panel": {
                                       "id": "TypeEntry",
                                       "panelType": "general",
                                       "uiItems": [
                                         {
+                                          "id": "measure_type-uiitem",
                                           "itemType": "control",
                                           "control": {
                                             "name": "measure_type",
                                             "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
                                             "label": {
                                               "text": "Measure"
                                             },
+                                            "language": "CLEM",
+                                            "editStyle": "inline",
                                             "values": [
                                               "Default",
                                               "Range",
@@ -100,38 +318,43 @@
                                               "Flag",
                                               "Set",
                                               "OrderedSet",
-                                              "Typeless",
-                                              "Collection",
-                                              "Geospatial"
+                                              "Typeless"
                                             ],
                                             "controlType": "oneofselect",
+                                            "required": false,
                                             "valueLabels": [
                                               "Default",
-                                              "Range",
-                                              "Discrete",
+                                              "Continuous",
+                                              "Categorical",
                                               "Flag",
-                                              "Set",
-                                              "Ordered Set",
-                                              "Typeless",
-                                              "Collection",
-                                              "Geospatial"
+                                              "Nominal",
+                                              "Ordinal",
+                                              "Typeless"
                                             ],
-                                            "summary": true,
+                                            "width": 20,
+                                            "filterable": false,
                                             "valueDef": {
                                               "propType": "string",
                                               "isList": false,
                                               "isMap": false
-                                            }
+                                            },
+                                            "labelVisible": true
                                           }
                                         },
                                         {
+                                          "id": "role-uiitem",
                                           "itemType": "control",
                                           "control": {
                                             "name": "role",
                                             "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
                                             "label": {
                                               "text": "Role"
                                             },
+                                            "language": "CLEM",
+                                            "editStyle": "inline",
                                             "values": [
                                               "Input",
                                               "Target",
@@ -143,6 +366,7 @@
                                               "RecordID"
                                             ],
                                             "controlType": "oneofselect",
+                                            "required": false,
                                             "valueLabels": [
                                               "Input",
                                               "Target",
@@ -153,22 +377,29 @@
                                               "Frequency",
                                               "Record ID"
                                             ],
-                                            "summary": true,
+                                            "width": 15,
                                             "valueDef": {
                                               "propType": "string",
                                               "isList": false,
                                               "isMap": false
-                                            }
+                                            },
+                                            "labelVisible": true
                                           }
                                         },
                                         {
+                                          "id": "value_mode-uiitem",
                                           "itemType": "control",
                                           "control": {
                                             "name": "value_mode",
-                                            "sortable": true,
+                                            "sortable": false,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
                                             "label": {
                                               "text": "Value mode"
                                             },
+                                            "language": "CLEM",
+                                            "editStyle": "inline",
                                             "values": [
                                               "Read",
                                               "Pass",
@@ -177,6 +408,7 @@
                                               "Current"
                                             ],
                                             "controlType": "oneofselect",
+                                            "required": false,
                                             "valueLabels": [
                                               "Read",
                                               "Pass",
@@ -184,67 +416,100 @@
                                               "Extend",
                                               "Current"
                                             ],
+                                            "width": 18,
                                             "valueDef": {
                                               "propType": "string",
                                               "isList": false,
                                               "isMap": false
-                                            }
+                                            },
+                                            "labelVisible": true
                                           }
                                         },
                                         {
+                                          "id": "values-uiitem",
                                           "itemType": "control",
                                           "control": {
                                             "name": "values",
-                                            "sortable": true,
+                                            "sortable": false,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
                                             "label": {
                                               "text": "Values"
                                             },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
                                             "controlType": "textarea",
+                                            "required": false,
+                                            "width": 35,
                                             "valueDef": {
                                               "propType": "string",
                                               "isList": true,
                                               "isMap": false
-                                            }
+                                            },
+                                            "labelVisible": true
                                           }
                                         },
                                         {
+                                          "id": "labels-uiitem",
                                           "itemType": "control",
                                           "control": {
                                             "name": "labels",
+                                            "visible": false,
+                                            "description": null,
+                                            "separateLabel": true,
                                             "label": {
                                               "text": "Value Labels"
                                             },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
                                             "controlType": "textarea",
+                                            "required": false,
                                             "valueDef": {
                                               "propType": "string",
                                               "isList": true,
                                               "isMap": false
-                                            }
+                                            },
+                                            "labelVisible": true
                                           }
                                         },
                                         {
+                                          "id": "max_string_length-uiitem",
                                           "itemType": "control",
                                           "control": {
                                             "name": "max_string_length",
+                                            "visible": false,
+                                            "description": null,
+                                            "separateLabel": true,
                                             "label": {
                                               "text": "Max String Length"
                                             },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
                                             "controlType": "numberfield",
+                                            "required": false,
                                             "valueDef": {
                                               "propType": "integer",
                                               "isList": false,
                                               "isMap": false
-                                            }
+                                            },
+                                            "labelVisible": true
                                           }
                                         },
                                         {
+                                          "id": "check-uiitem",
                                           "itemType": "control",
                                           "control": {
                                             "name": "check",
-                                            "sortable": true,
+                                            "sortable": false,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
                                             "label": {
                                               "text": "Check"
                                             },
+                                            "language": "CLEM",
+                                            "editStyle": "inline",
                                             "values": [
                                               "None",
                                               "Nullify",
@@ -254,6 +519,7 @@
                                               "Abort"
                                             ],
                                             "controlType": "oneofselect",
+                                            "required": false,
                                             "valueLabels": [
                                               "None",
                                               "Nullify",
@@ -262,33 +528,45 @@
                                               "Warn",
                                               "Abort"
                                             ],
+                                            "width": 13,
                                             "valueDef": {
                                               "propType": "string",
                                               "isList": false,
                                               "isMap": false
-                                            }
+                                            },
+                                            "labelVisible": true
                                           }
                                         },
                                         {
+                                          "id": "description-uiitem",
                                           "itemType": "control",
                                           "control": {
                                             "name": "description",
+                                            "visible": false,
+                                            "description": null,
+                                            "separateLabel": true,
                                             "label": {
                                               "text": "Description"
                                             },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
                                             "controlType": "textfield",
+                                            "required": false,
                                             "valueDef": {
                                               "propType": "string",
                                               "isList": false,
                                               "isMap": false
-                                            }
+                                            },
+                                            "labelVisible": true
                                           }
                                         }
                                       ]
                                     },
-                                    "text": "...",
+                                    "textType": "...",
                                     "secondaryText": "Field Definition"
                                   },
+                                  "description": null,
+                                  "separateLabel": false,
                                   "label": {
                                     "text": "Types"
                                   },
@@ -303,37 +581,40 @@
                                     "None",
                                     ""
                                   ],
+                                  "row_selection": "multiple",
                                   "subControls": [
                                     {
                                       "name": "field",
+                                      "sortable": true,
+                                      "role": "column",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
                                       "label": {
                                         "text": "Field"
                                       },
-                                      "visible": true,
-                                      "width": 12,
+                                      "language": "CLEM",
                                       "controlType": "selectcolumn",
+                                      "required": false,
+                                      "width": 20,
                                       "valueDef": {
                                         "propType": "string",
                                         "isList": false,
                                         "isMap": false
                                       },
-                                      "role": "column",
-                                      "sortable": true,
-                                      "summary": true
+                                      "labelVisible": true
                                     },
                                     {
                                       "name": "measure_type",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
                                       "label": {
                                         "text": "Measure"
                                       },
-                                      "visible": true,
-                                      "width": 8,
-                                      "controlType": "oneofselect",
-                                      "valueDef": {
-                                        "propType": "string",
-                                        "isList": false,
-                                        "isMap": false
-                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "inline",
                                       "values": [
                                         "Default",
                                         "Range",
@@ -341,38 +622,39 @@
                                         "Flag",
                                         "Set",
                                         "OrderedSet",
-                                        "Typeless",
-                                        "Collection",
-                                        "Geospatial"
+                                        "Typeless"
                                       ],
+                                      "controlType": "oneofselect",
+                                      "required": false,
                                       "valueLabels": [
                                         "Default",
-                                        "Range",
-                                        "Discrete",
+                                        "Continuous",
+                                        "Categorical",
                                         "Flag",
-                                        "Set",
-                                        "Ordered Set",
-                                        "Typeless",
-                                        "Collection",
-                                        "Geospatial"
+                                        "Nominal",
+                                        "Ordinal",
+                                        "Typeless"
                                       ],
-                                      "sortable": true,
-                                      "editStyle": "inline",
-                                      "summary": true
-                                    },
-                                    {
-                                      "name": "role",
-                                      "label": {
-                                        "text": "Role"
-                                      },
-                                      "visible": true,
-                                      "width": 8,
-                                      "controlType": "oneofselect",
+                                      "width": 20,
+                                      "filterable": false,
                                       "valueDef": {
                                         "propType": "string",
                                         "isList": false,
                                         "isMap": false
                                       },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "role",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Role"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "inline",
                                       "values": [
                                         "Input",
                                         "Target",
@@ -383,6 +665,8 @@
                                         "Frequency",
                                         "RecordID"
                                       ],
+                                      "controlType": "oneofselect",
+                                      "required": false,
                                       "valueLabels": [
                                         "Input",
                                         "Target",
@@ -393,23 +677,25 @@
                                         "Frequency",
                                         "Record ID"
                                       ],
-                                      "sortable": true,
-                                      "editStyle": "inline",
-                                      "summary": true
-                                    },
-                                    {
-                                      "name": "value_mode",
-                                      "label": {
-                                        "text": "Value mode"
-                                      },
-                                      "visible": true,
-                                      "width": 12,
-                                      "controlType": "oneofselect",
+                                      "width": 15,
                                       "valueDef": {
                                         "propType": "string",
                                         "isList": false,
                                         "isMap": false
                                       },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "value_mode",
+                                      "sortable": false,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Value mode"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "inline",
                                       "values": [
                                         "Read",
                                         "Pass",
@@ -417,6 +703,8 @@
                                         "Read+",
                                         "Current"
                                       ],
+                                      "controlType": "oneofselect",
+                                      "required": false,
                                       "valueLabels": [
                                         "Read",
                                         "Pass",
@@ -424,69 +712,84 @@
                                         "Extend",
                                         "Current"
                                       ],
-                                      "sortable": true,
-                                      "editStyle": "inline"
+                                      "width": 18,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
                                     },
                                     {
                                       "name": "values",
+                                      "sortable": false,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
                                       "label": {
                                         "text": "Values"
                                       },
-                                      "visible": true,
-                                      "width": 8,
-                                      "controlType": "textfield",
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "controlType": "textarea",
+                                      "required": false,
+                                      "width": 35,
                                       "valueDef": {
                                         "propType": "string",
                                         "isList": true,
                                         "isMap": false
                                       },
-                                      "sortable": true,
-                                      "displayChars": 10,
-                                      "editStyle": "subpanel"
+                                      "labelVisible": true
                                     },
                                     {
                                       "name": "labels",
+                                      "visible": false,
+                                      "description": null,
+                                      "separateLabel": true,
                                       "label": {
                                         "text": "Value Labels"
                                       },
-                                      "visible": false,
-                                      "width": 8,
-                                      "controlType": "textfield",
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "controlType": "textarea",
+                                      "required": false,
                                       "valueDef": {
                                         "propType": "string",
                                         "isList": true,
                                         "isMap": false
                                       },
-                                      "editStyle": "subpanel"
+                                      "labelVisible": true
                                     },
                                     {
                                       "name": "max_string_length",
+                                      "visible": false,
+                                      "description": null,
+                                      "separateLabel": true,
                                       "label": {
                                         "text": "Max String Length"
                                       },
-                                      "visible": false,
-                                      "width": 8,
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
                                       "controlType": "numberfield",
+                                      "required": false,
                                       "valueDef": {
                                         "propType": "integer",
                                         "isList": false,
                                         "isMap": false
                                       },
-                                      "editStyle": "subpanel"
+                                      "labelVisible": true
                                     },
                                     {
                                       "name": "check",
+                                      "sortable": false,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
                                       "label": {
                                         "text": "Check"
                                       },
-                                      "visible": true,
-                                      "width": 8,
-                                      "controlType": "oneofselect",
-                                      "valueDef": {
-                                        "propType": "string",
-                                        "isList": false,
-                                        "isMap": false
-                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "inline",
                                       "values": [
                                         "None",
                                         "Nullify",
@@ -495,6 +798,8 @@
                                         "Warn",
                                         "Abort"
                                       ],
+                                      "controlType": "oneofselect",
+                                      "required": false,
                                       "valueLabels": [
                                         "None",
                                         "Nullify",
@@ -503,32 +808,1989 @@
                                         "Warn",
                                         "Abort"
                                       ],
-                                      "sortable": true,
-                                      "editStyle": "inline"
-                                    },
-                                    {
-                                      "name": "description",
-                                      "label": {
-                                        "text": "Description"
-                                      },
-                                      "visible": false,
-                                      "width": 8,
-                                      "controlType": "textfield",
+                                      "width": 13,
                                       "valueDef": {
                                         "propType": "string",
                                         "isList": false,
                                         "isMap": false
                                       },
-                                      "editStyle": "subpanel"
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "description",
+                                      "visible": false,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Description"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "controlType": "textfield",
+                                      "required": false,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
                                     }
                                   ],
+                                  "language": "CLEM",
+                                  "addRemoveRows": false,
                                   "keyIndex": 0,
                                   "controlType": "structuretable",
+                                  "required": false,
+                                  "rows": 8,
                                   "valueDef": {
                                     "propType": "complex_type",
                                     "isList": true,
                                     "isMap": false
-                                  }
+                                  },
+                                  "labelVisible": false
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "missing-summary-uiitem",
+                    "itemType": "panel",
+                    "panel": {
+                      "id": "missing-summary",
+                      "panelType": "summary",
+                      "label": "Configure Missing Values",
+                      "uiItems": [
+                        {
+                          "id": "missing-settings-uiitem",
+                          "itemType": "panel",
+                          "panel": {
+                            "id": "missing-settings",
+                            "panelType": "columnSelection",
+                            "label": "Configure Missing Values",
+                            "uiItems": [
+                              {
+                                "id": "missing_metadata-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "missing_metadata",
+                                  "visible": true,
+                                  "childItem": {
+                                    "id": "missing_metadata-edit-uiitem",
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "MissingEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "id": "enable-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "enable",
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": false,
+                                            "label": {
+                                              "text": "Enable"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "inline",
+                                            "controlType": "checkbox",
+                                            "required": false,
+                                            "width": 15,
+                                            "summary": true,
+                                            "valueDef": {
+                                              "propType": "boolean",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": false
+                                          }
+                                        },
+                                        {
+                                          "id": "values-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "values",
+                                            "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Values"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "controlType": "textarea",
+                                            "required": false,
+                                            "width": 15,
+                                            "summary": true,
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": true,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        },
+                                        {
+                                          "id": "null-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "null",
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": false,
+                                            "label": {
+                                              "text": "Null"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "inline",
+                                            "controlType": "checkbox",
+                                            "required": false,
+                                            "width": 15,
+                                            "valueDef": {
+                                              "propType": "boolean",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": false
+                                          }
+                                        },
+                                        {
+                                          "id": "whitespace-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "whitespace",
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": false,
+                                            "label": {
+                                              "text": "Whitespace"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "inline",
+                                            "controlType": "checkbox",
+                                            "required": false,
+                                            "width": 20,
+                                            "valueDef": {
+                                              "propType": "boolean",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": false
+                                          }
+                                        },
+                                        {
+                                          "id": "range-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "range",
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": false,
+                                            "label": {
+                                              "text": "Range"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "inline",
+                                            "controlType": "checkbox",
+                                            "required": false,
+                                            "width": 15,
+                                            "valueDef": {
+                                              "propType": "boolean",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": false
+                                          }
+                                        },
+                                        {
+                                          "id": "lower-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "lower",
+                                            "visible": false,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Lower"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "controlType": "numberfield",
+                                            "required": false,
+                                            "valueDef": {
+                                              "propType": "double",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        },
+                                        {
+                                          "id": "upper-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "upper",
+                                            "sortable": false,
+                                            "visible": false,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Upper"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "controlType": "numberfield",
+                                            "required": false,
+                                            "valueDef": {
+                                              "propType": "double",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "textType": "...",
+                                    "secondaryText": "Configure Missing Values"
+                                  },
+                                  "description": null,
+                                  "separateLabel": true,
+                                  "label": {
+                                    "text": "Missing Values"
+                                  },
+                                  "defaultRow": [
+                                    "",
+                                    false,
+                                    [],
+                                    false,
+                                    false,
+                                    false,
+                                    null,
+                                    null
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "sortable": true,
+                                      "role": "column",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "language": "CLEM",
+                                      "controlType": "selectcolumn",
+                                      "required": false,
+                                      "width": 20,
+                                      "summary": true,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "enable",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": false,
+                                      "label": {
+                                        "text": "Enable"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "inline",
+                                      "controlType": "checkbox",
+                                      "required": false,
+                                      "width": 15,
+                                      "summary": true,
+                                      "valueDef": {
+                                        "propType": "boolean",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": false
+                                    },
+                                    {
+                                      "name": "values",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Values"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "controlType": "textarea",
+                                      "required": false,
+                                      "width": 15,
+                                      "summary": true,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": true,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "null",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": false,
+                                      "label": {
+                                        "text": "Null"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "inline",
+                                      "controlType": "checkbox",
+                                      "required": false,
+                                      "width": 15,
+                                      "valueDef": {
+                                        "propType": "boolean",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": false
+                                    },
+                                    {
+                                      "name": "whitespace",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": false,
+                                      "label": {
+                                        "text": "Whitespace"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "inline",
+                                      "controlType": "checkbox",
+                                      "required": false,
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "boolean",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": false
+                                    },
+                                    {
+                                      "name": "range",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": false,
+                                      "label": {
+                                        "text": "Range"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "inline",
+                                      "controlType": "checkbox",
+                                      "required": false,
+                                      "width": 15,
+                                      "valueDef": {
+                                        "propType": "boolean",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": false
+                                    },
+                                    {
+                                      "name": "lower",
+                                      "visible": false,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Lower"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "controlType": "numberfield",
+                                      "required": false,
+                                      "valueDef": {
+                                        "propType": "double",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "upper",
+                                      "sortable": false,
+                                      "visible": false,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Upper"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "controlType": "numberfield",
+                                      "required": false,
+                                      "valueDef": {
+                                        "propType": "double",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    }
+                                  ],
+                                  "language": "CLEM",
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structuretable",
+                                  "required": false,
+                                  "rows": 8,
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": true,
+                                    "isMap": false
+                                  },
+                                  "labelVisible": true
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "text": "Format",
+            "group": "format-settings",
+            "content": {
+              "id": "format-settings-uiitem",
+              "itemType": "panel",
+              "panel": {
+                "id": "format-settings",
+                "panelType": "general",
+                "label": "Format",
+                "uiItems": [
+                  {
+                    "id": "format-summary-uiitem",
+                    "itemType": "panel",
+                    "panel": {
+                      "id": "format-summary",
+                      "panelType": "summary",
+                      "label": "Configure Formats",
+                      "uiItems": [
+                        {
+                          "id": "format-settings-uiitem",
+                          "itemType": "panel",
+                          "panel": {
+                            "id": "format-settings",
+                            "panelType": "columnSelection",
+                            "label": "Format",
+                            "uiItems": [
+                              {
+                                "id": "date_format-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "date_format",
+                                  "visible": true,
+                                  "childItem": {
+                                    "id": "date_format-edit-uiitem",
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "DateFormatEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "id": "format-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "format",
+                                            "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Format"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "values": [
+                                              "DEFAULT",
+                                              "DDMMYY",
+                                              "MMDDYY",
+                                              "YYMMDD",
+                                              "YYYYMMDD",
+                                              "YYYYDDD",
+                                              "DAY",
+                                              "MONTH",
+                                              "DD-MM-YY",
+                                              "DD-MM-YYYY",
+                                              "MM-DD-YY",
+                                              "MM-DD-YYYY",
+                                              "DD-MON-YY",
+                                              "DD-MON-YYYY",
+                                              "YYYY-MM-DD",
+                                              "DD.MM.YY",
+                                              "DD.MM.YYYY",
+                                              "MM.DD.YYYY",
+                                              "DD.MON.YY",
+                                              "DD.MON.YYYY",
+                                              "DD/MM/YY",
+                                              "DD/MM/YYYY",
+                                              "MM/DD/YY",
+                                              "MM/DD/YYYY",
+                                              "DD/MON/YY",
+                                              "DD/MON/YYYY",
+                                              "MON YYYY",
+                                              "q Q YYYY",
+                                              "ww WK YYYY"
+                                            ],
+                                            "controlType": "oneofselect",
+                                            "required": false,
+                                            "valueLabels": [
+                                              "Stream default",
+                                              "DDMMYY",
+                                              "MMDDYY",
+                                              "YYMMDD",
+                                              "YYYYMMDD",
+                                              "YYYYDDD",
+                                              "DAY",
+                                              "MONTH",
+                                              "DD-MM-YY",
+                                              "DD-MM-YYYY",
+                                              "MM-DD-YY",
+                                              "MM-DD-YYYY",
+                                              "DD-MON-YY",
+                                              "DD-MON-YYYY",
+                                              "YYYY-MM-DD",
+                                              "DD.MM.YY",
+                                              "DD.MM.YYYY",
+                                              "MM.DD.YYYY",
+                                              "DD.MON.YY",
+                                              "DD.MON.YYYY",
+                                              "DD/MM/YY",
+                                              "DD/MM/YYYY",
+                                              "MM/DD/YY",
+                                              "MM/DD/YYYY",
+                                              "DD/MON/YY",
+                                              "DD/MON/YYYY",
+                                              "MON YYYY",
+                                              "q Q YYYY",
+                                              "ww WK YYYY"
+                                            ],
+                                            "width": 20,
+                                            "summary": true,
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "textType": "...",
+                                    "secondaryText": "Format"
+                                  },
+                                  "description": null,
+                                  "separateLabel": true,
+                                  "label": {
+                                    "text": "Date Format"
+                                  },
+                                  "defaultRow": [
+                                    "DEFAULT"
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "sortable": true,
+                                      "role": "column",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "language": "CLEM",
+                                      "controlType": "selectcolumn",
+                                      "required": false,
+                                      "width": 20,
+                                      "summary": true,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "format",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Format"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "values": [
+                                        "DEFAULT",
+                                        "DDMMYY",
+                                        "MMDDYY",
+                                        "YYMMDD",
+                                        "YYYYMMDD",
+                                        "YYYYDDD",
+                                        "DAY",
+                                        "MONTH",
+                                        "DD-MM-YY",
+                                        "DD-MM-YYYY",
+                                        "MM-DD-YY",
+                                        "MM-DD-YYYY",
+                                        "DD-MON-YY",
+                                        "DD-MON-YYYY",
+                                        "YYYY-MM-DD",
+                                        "DD.MM.YY",
+                                        "DD.MM.YYYY",
+                                        "MM.DD.YYYY",
+                                        "DD.MON.YY",
+                                        "DD.MON.YYYY",
+                                        "DD/MM/YY",
+                                        "DD/MM/YYYY",
+                                        "MM/DD/YY",
+                                        "MM/DD/YYYY",
+                                        "DD/MON/YY",
+                                        "DD/MON/YYYY",
+                                        "MON YYYY",
+                                        "q Q YYYY",
+                                        "ww WK YYYY"
+                                      ],
+                                      "controlType": "oneofselect",
+                                      "required": false,
+                                      "valueLabels": [
+                                        "Stream default",
+                                        "DDMMYY",
+                                        "MMDDYY",
+                                        "YYMMDD",
+                                        "YYYYMMDD",
+                                        "YYYYDDD",
+                                        "DAY",
+                                        "MONTH",
+                                        "DD-MM-YY",
+                                        "DD-MM-YYYY",
+                                        "MM-DD-YY",
+                                        "MM-DD-YYYY",
+                                        "DD-MON-YY",
+                                        "DD-MON-YYYY",
+                                        "YYYY-MM-DD",
+                                        "DD.MM.YY",
+                                        "DD.MM.YYYY",
+                                        "MM.DD.YYYY",
+                                        "DD.MON.YY",
+                                        "DD.MON.YYYY",
+                                        "DD/MM/YY",
+                                        "DD/MM/YYYY",
+                                        "MM/DD/YY",
+                                        "MM/DD/YYYY",
+                                        "DD/MON/YY",
+                                        "DD/MON/YYYY",
+                                        "MON YYYY",
+                                        "q Q YYYY",
+                                        "ww WK YYYY"
+                                      ],
+                                      "width": 20,
+                                      "summary": true,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    }
+                                  ],
+                                  "language": "CLEM",
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structuretable",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": false,
+                                    "isMap": true
+                                  },
+                                  "labelVisible": true
+                                }
+                              },
+                              {
+                                "id": "time_format-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "time_format",
+                                  "visible": true,
+                                  "childItem": {
+                                    "id": "time_format-edit-uiitem",
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "TimeFormatEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "id": "format-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "format",
+                                            "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Format"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "values": [
+                                              "DEFAULT",
+                                              "HHMMSS",
+                                              "HHMM",
+                                              "MMSS",
+                                              "HH:mm:SS",
+                                              "HH:MM",
+                                              "MM:SS",
+                                              "(H)H:(M)M:(S)S",
+                                              "(H)H:(M)M",
+                                              "(M)M:(S)S",
+                                              "HH.MM.SS",
+                                              "HH.MM",
+                                              "MM.SS",
+                                              "(H)H.(M)M.(S)S",
+                                              "(H)H.(M)M",
+                                              "(M)M.(S)S"
+                                            ],
+                                            "controlType": "oneofselect",
+                                            "required": false,
+                                            "valueLabels": [
+                                              "Stream default",
+                                              "HHMMSS",
+                                              "HHMM",
+                                              "MMSS",
+                                              "HH:mm:SS",
+                                              "HH:MM",
+                                              "MM:SS",
+                                              "(H)H:(M)M:(S)S",
+                                              "(H)H:(M)M",
+                                              "(M)M:(S)S",
+                                              "HH.MM.SS",
+                                              "HH.MM",
+                                              "MM.SS",
+                                              "(H)H.(M)M.(S)S",
+                                              "(H)H.(M)M",
+                                              "(M)M.(S)S"
+                                            ],
+                                            "width": 20,
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "textType": "...",
+                                    "secondaryText": "Format"
+                                  },
+                                  "description": null,
+                                  "separateLabel": true,
+                                  "label": {
+                                    "text": "Time Format"
+                                  },
+                                  "defaultRow": [
+                                    "DEFAULT"
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "sortable": true,
+                                      "role": "column",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "language": "CLEM",
+                                      "controlType": "selectcolumn",
+                                      "required": false,
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "format",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Format"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "values": [
+                                        "DEFAULT",
+                                        "HHMMSS",
+                                        "HHMM",
+                                        "MMSS",
+                                        "HH:mm:SS",
+                                        "HH:MM",
+                                        "MM:SS",
+                                        "(H)H:(M)M:(S)S",
+                                        "(H)H:(M)M",
+                                        "(M)M:(S)S",
+                                        "HH.MM.SS",
+                                        "HH.MM",
+                                        "MM.SS",
+                                        "(H)H.(M)M.(S)S",
+                                        "(H)H.(M)M",
+                                        "(M)M.(S)S"
+                                      ],
+                                      "controlType": "oneofselect",
+                                      "required": false,
+                                      "valueLabels": [
+                                        "Stream default",
+                                        "HHMMSS",
+                                        "HHMM",
+                                        "MMSS",
+                                        "HH:mm:SS",
+                                        "HH:MM",
+                                        "MM:SS",
+                                        "(H)H:(M)M:(S)S",
+                                        "(H)H:(M)M",
+                                        "(M)M:(S)S",
+                                        "HH.MM.SS",
+                                        "HH.MM",
+                                        "MM.SS",
+                                        "(H)H.(M)M.(S)S",
+                                        "(H)H.(M)M",
+                                        "(M)M.(S)S"
+                                      ],
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    }
+                                  ],
+                                  "language": "CLEM",
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structuretable",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": false,
+                                    "isMap": true
+                                  },
+                                  "labelVisible": true
+                                }
+                              },
+                              {
+                                "id": "number_format-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "number_format",
+                                  "visible": true,
+                                  "childItem": {
+                                    "id": "number_format-edit-uiitem",
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "NumberFormatEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "id": "format-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "format",
+                                            "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Format"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "orientation": "vertical",
+                                            "values": [
+                                              "DEFAULT",
+                                              "STANDARD",
+                                              "SCIENTIFIC",
+                                              "CURRENCY"
+                                            ],
+                                            "controlType": "radioset",
+                                            "required": false,
+                                            "valueLabels": [
+                                              "Stream default",
+                                              "Standard (###.###)",
+                                              "Scientific (#.###E+##)",
+                                              "Currency ($###.##)"
+                                            ],
+                                            "width": 20,
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "textType": "...",
+                                    "secondaryText": "Format"
+                                  },
+                                  "description": null,
+                                  "separateLabel": true,
+                                  "label": {
+                                    "text": "Number Format"
+                                  },
+                                  "defaultRow": [
+                                    "DEFAULT"
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "sortable": true,
+                                      "role": "column",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "language": "CLEM",
+                                      "controlType": "selectcolumn",
+                                      "required": false,
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "format",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Format"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "orientation": "vertical",
+                                      "values": [
+                                        "DEFAULT",
+                                        "STANDARD",
+                                        "SCIENTIFIC",
+                                        "CURRENCY"
+                                      ],
+                                      "controlType": "oneofselect",
+                                      "required": false,
+                                      "valueLabels": [
+                                        "Stream default",
+                                        "Standard (###.###)",
+                                        "Scientific (#.###E+##)",
+                                        "Currency ($###.##)"
+                                      ],
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    }
+                                  ],
+                                  "language": "CLEM",
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structuretable",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": false,
+                                    "isMap": true
+                                  },
+                                  "labelVisible": true
+                                }
+                              },
+                              {
+                                "id": "decimal_separator-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "decimal_separator",
+                                  "visible": true,
+                                  "childItem": {
+                                    "id": "decimal_separator-edit-uiitem",
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "DecimalSeparatorEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "id": "separator-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "separator",
+                                            "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Separator"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "orientation": "vertical",
+                                            "values": [
+                                              "DEFAULT",
+                                              "PERIOD",
+                                              "COMMA"
+                                            ],
+                                            "controlType": "radioset",
+                                            "required": false,
+                                            "valueLabels": [
+                                              "Stream default",
+                                              "Period (.)",
+                                              "Comma (,)"
+                                            ],
+                                            "width": 20,
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "textType": "...",
+                                    "secondaryText": "Format"
+                                  },
+                                  "description": null,
+                                  "separateLabel": true,
+                                  "label": {
+                                    "text": "Decimal symbol"
+                                  },
+                                  "defaultRow": [
+                                    "DEFAULT"
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "sortable": true,
+                                      "role": "column",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "language": "CLEM",
+                                      "controlType": "selectcolumn",
+                                      "required": false,
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "separator",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Separator"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "orientation": "vertical",
+                                      "values": [
+                                        "DEFAULT",
+                                        "PERIOD",
+                                        "COMMA"
+                                      ],
+                                      "controlType": "oneofselect",
+                                      "required": false,
+                                      "valueLabels": [
+                                        "Stream default",
+                                        "Period (.)",
+                                        "Comma (,)"
+                                      ],
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    }
+                                  ],
+                                  "language": "CLEM",
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structuretable",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": false,
+                                    "isMap": true
+                                  },
+                                  "labelVisible": true
+                                }
+                              },
+                              {
+                                "id": "grouping_symbol-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "grouping_symbol",
+                                  "visible": true,
+                                  "childItem": {
+                                    "id": "grouping_symbol-edit-uiitem",
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "GroupingSymbolEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "id": "symbol-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "symbol",
+                                            "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Symbol"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "orientation": "vertical",
+                                            "values": [
+                                              "DEFAULT",
+                                              "NONE",
+                                              "LOCALE",
+                                              "PERIOD",
+                                              "COMMA",
+                                              "SPACE"
+                                            ],
+                                            "controlType": "oneofselect",
+                                            "required": false,
+                                            "valueLabels": [
+                                              "Stream default",
+                                              "None",
+                                              "Locale defined",
+                                              "Period (.)",
+                                              "Comma (,)",
+                                              "Space"
+                                            ],
+                                            "width": 20,
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "textType": "...",
+                                    "secondaryText": "Format"
+                                  },
+                                  "description": null,
+                                  "separateLabel": true,
+                                  "label": {
+                                    "text": "Number grouping symbol"
+                                  },
+                                  "defaultRow": [
+                                    "DEFAULT"
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "sortable": true,
+                                      "role": "column",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "language": "CLEM",
+                                      "controlType": "selectcolumn",
+                                      "required": false,
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "symbol",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Symbol"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "orientation": "vertical",
+                                      "values": [
+                                        "DEFAULT",
+                                        "NONE",
+                                        "LOCALE",
+                                        "PERIOD",
+                                        "COMMA",
+                                        "SPACE"
+                                      ],
+                                      "controlType": "oneofselect",
+                                      "required": false,
+                                      "valueLabels": [
+                                        "Stream default",
+                                        "None",
+                                        "Locale defined",
+                                        "Period (.)",
+                                        "Comma (,)",
+                                        "Space"
+                                      ],
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    }
+                                  ],
+                                  "language": "CLEM",
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structuretable",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": false,
+                                    "isMap": true
+                                  },
+                                  "labelVisible": true
+                                }
+                              },
+                              {
+                                "id": "standard_places-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "standard_places",
+                                  "visible": true,
+                                  "childItem": {
+                                    "id": "standard_places-edit-uiitem",
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "StandardPlacesEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "id": "places-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "places",
+                                            "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Places"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "controlType": "numberfield",
+                                            "required": false,
+                                            "width": 20,
+                                            "valueDef": {
+                                              "propType": "integer",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "textType": "...",
+                                    "secondaryText": "Format"
+                                  },
+                                  "description": null,
+                                  "separateLabel": true,
+                                  "label": {
+                                    "text": "Standard decimal places"
+                                  },
+                                  "defaultRow": [
+                                    -1
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "sortable": true,
+                                      "role": "column",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "language": "CLEM",
+                                      "controlType": "selectcolumn",
+                                      "required": false,
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "places",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Places"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "controlType": "numberfield",
+                                      "required": false,
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "integer",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    }
+                                  ],
+                                  "language": "CLEM",
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structuretable",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": false,
+                                    "isMap": true
+                                  },
+                                  "labelVisible": true
+                                }
+                              },
+                              {
+                                "id": "scientific_places-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "scientific_places",
+                                  "visible": true,
+                                  "childItem": {
+                                    "id": "scientific_places-edit-uiitem",
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "ScientificPlacesEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "id": "places-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "places",
+                                            "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Places"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "controlType": "numberfield",
+                                            "required": false,
+                                            "width": 20,
+                                            "valueDef": {
+                                              "propType": "integer",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "textType": "...",
+                                    "secondaryText": "Format"
+                                  },
+                                  "description": null,
+                                  "separateLabel": true,
+                                  "label": {
+                                    "text": "Scientific decimal places"
+                                  },
+                                  "defaultRow": [
+                                    -1
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "sortable": true,
+                                      "role": "column",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "language": "CLEM",
+                                      "controlType": "selectcolumn",
+                                      "required": false,
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "places",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Places"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "controlType": "numberfield",
+                                      "required": false,
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "integer",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    }
+                                  ],
+                                  "language": "CLEM",
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structuretable",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": false,
+                                    "isMap": true
+                                  },
+                                  "labelVisible": true
+                                }
+                              },
+                              {
+                                "id": "currency_places-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "currency_places",
+                                  "visible": true,
+                                  "childItem": {
+                                    "id": "currency_places-edit-uiitem",
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "CurrencyPlacesEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "id": "places-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "places",
+                                            "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Places"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "controlType": "numberfield",
+                                            "required": false,
+                                            "width": 20,
+                                            "valueDef": {
+                                              "propType": "integer",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "textType": "...",
+                                    "secondaryText": "Format"
+                                  },
+                                  "description": null,
+                                  "separateLabel": true,
+                                  "label": {
+                                    "text": "Currency decimal places"
+                                  },
+                                  "defaultRow": [
+                                    -1
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "sortable": true,
+                                      "role": "column",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "language": "CLEM",
+                                      "controlType": "selectcolumn",
+                                      "required": false,
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "places",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Places"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "controlType": "numberfield",
+                                      "required": false,
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "integer",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    }
+                                  ],
+                                  "language": "CLEM",
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structuretable",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": false,
+                                    "isMap": true
+                                  },
+                                  "labelVisible": true
+                                }
+                              },
+                              {
+                                "id": "export_places-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "export_places",
+                                  "visible": true,
+                                  "childItem": {
+                                    "id": "export_places-edit-uiitem",
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "ExportPlacesEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "id": "places-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "places",
+                                            "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Places"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "controlType": "numberfield",
+                                            "required": false,
+                                            "width": 20,
+                                            "valueDef": {
+                                              "propType": "integer",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "textType": "...",
+                                    "secondaryText": "Format"
+                                  },
+                                  "description": null,
+                                  "separateLabel": true,
+                                  "label": {
+                                    "text": "Export decimal places"
+                                  },
+                                  "defaultRow": [
+                                    -1
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "sortable": true,
+                                      "role": "column",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "language": "CLEM",
+                                      "controlType": "selectcolumn",
+                                      "required": false,
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "places",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Places"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "controlType": "numberfield",
+                                      "required": false,
+                                      "width": 20,
+                                      "valueDef": {
+                                        "propType": "integer",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    }
+                                  ],
+                                  "language": "CLEM",
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structuretable",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": false,
+                                    "isMap": true
+                                  },
+                                  "labelVisible": true
+                                }
+                              },
+                              {
+                                "id": "justify-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "justify",
+                                  "visible": true,
+                                  "childItem": {
+                                    "id": "justify-edit-uiitem",
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "JustifyEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "id": "Justify-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "Justify",
+                                            "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Justify"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "orientation": "vertical",
+                                            "values": [
+                                              "AUTO",
+                                              "CENTER",
+                                              "LEFT",
+                                              "RIGHT"
+                                            ],
+                                            "controlType": "oneofselect",
+                                            "required": false,
+                                            "valueLabels": [
+                                              "Auto",
+                                              "Center",
+                                              "Left",
+                                              "Right"
+                                            ],
+                                            "width": 20,
+                                            "summary": true,
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "textType": "...",
+                                    "secondaryText": "Format"
+                                  },
+                                  "description": null,
+                                  "separateLabel": true,
+                                  "label": {
+                                    "text": "Justify"
+                                  },
+                                  "defaultRow": [
+                                    "AUTO"
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "sortable": true,
+                                      "role": "column",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "language": "CLEM",
+                                      "controlType": "selectcolumn",
+                                      "required": false,
+                                      "width": 20,
+                                      "summary": true,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "Justify",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Justify"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "orientation": "vertical",
+                                      "values": [
+                                        "AUTO",
+                                        "CENTER",
+                                        "LEFT",
+                                        "RIGHT"
+                                      ],
+                                      "controlType": "oneofselect",
+                                      "required": false,
+                                      "valueLabels": [
+                                        "Auto",
+                                        "Center",
+                                        "Left",
+                                        "Right"
+                                      ],
+                                      "width": 20,
+                                      "summary": true,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    }
+                                  ],
+                                  "language": "CLEM",
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structuretable",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": false,
+                                    "isMap": true
+                                  },
+                                  "labelVisible": true
+                                }
+                              },
+                              {
+                                "id": "column_width-uiitem",
+                                "itemType": "control",
+                                "control": {
+                                  "name": "column_width",
+                                  "visible": true,
+                                  "childItem": {
+                                    "id": "column_width-edit-uiitem",
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "ColumnWidthEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "id": "width-uiitem",
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "width",
+                                            "sortable": true,
+                                            "visible": true,
+                                            "description": null,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Width"
+                                            },
+                                            "language": "CLEM",
+                                            "editStyle": "subpanel",
+                                            "controlType": "numberfield",
+                                            "required": false,
+                                            "width": 20,
+                                            "summary": true,
+                                            "valueDef": {
+                                              "propType": "integer",
+                                              "isList": false,
+                                              "isMap": false
+                                            },
+                                            "labelVisible": true
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "textType": "...",
+                                    "secondaryText": "Format"
+                                  },
+                                  "description": null,
+                                  "separateLabel": true,
+                                  "label": {
+                                    "text": "Column Width"
+                                  },
+                                  "defaultRow": [
+                                    -1
+                                  ],
+                                  "subControls": [
+                                    {
+                                      "name": "field",
+                                      "sortable": true,
+                                      "role": "column",
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Field"
+                                      },
+                                      "language": "CLEM",
+                                      "controlType": "selectcolumn",
+                                      "required": false,
+                                      "width": 20,
+                                      "summary": true,
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    },
+                                    {
+                                      "name": "width",
+                                      "sortable": true,
+                                      "visible": true,
+                                      "description": null,
+                                      "separateLabel": true,
+                                      "label": {
+                                        "text": "Width"
+                                      },
+                                      "language": "CLEM",
+                                      "editStyle": "subpanel",
+                                      "controlType": "numberfield",
+                                      "required": false,
+                                      "width": 20,
+                                      "summary": true,
+                                      "valueDef": {
+                                        "propType": "integer",
+                                        "isList": false,
+                                        "isMap": false
+                                      },
+                                      "labelVisible": true
+                                    }
+                                  ],
+                                  "language": "CLEM",
+                                  "addRemoveRows": true,
+                                  "keyIndex": 0,
+                                  "controlType": "structuretable",
+                                  "required": false,
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": false,
+                                    "isMap": true
+                                  },
+                                  "labelVisible": true
                                 }
                               }
                             ]
@@ -545,55 +2807,76 @@
             "text": "Annotations",
             "group": "annotations",
             "content": {
+              "id": "annotations-uiitem",
               "itemType": "panel",
               "panel": {
                 "id": "annotations",
                 "panelType": "general",
                 "uiItems": [
                   {
+                    "id": "use_custom_name-uiitem",
                     "itemType": "control",
                     "control": {
                       "name": "use_custom_name",
-                      "labelVisible": false,
+                      "visible": true,
+                      "description": null,
+                      "separateLabel": false,
                       "label": {
                         "text": "Custom name"
                       },
+                      "language": "CLEM",
                       "controlType": "checkbox",
+                      "required": false,
                       "valueDef": {
                         "propType": "boolean",
                         "isList": false,
                         "isMap": false
-                      }
+                      },
+                      "labelVisible": false
                     }
                   },
                   {
+                    "id": "custom_name-uiitem",
                     "itemType": "control",
                     "control": {
                       "name": "custom_name",
+                      "visible": true,
+                      "description": null,
+                      "separateLabel": true,
                       "label": {
                         "text": ""
                       },
+                      "language": "CLEM",
                       "controlType": "textfield",
+                      "required": false,
                       "valueDef": {
                         "propType": "string",
                         "isList": false,
                         "isMap": false
-                      }
+                      },
+                      "labelVisible": true
                     }
                   },
                   {
+                    "id": "annotation-uiitem",
                     "itemType": "control",
                     "control": {
                       "name": "annotation",
+                      "visible": true,
+                      "description": null,
+                      "separateLabel": true,
                       "label": {
                         "text": "Annotation"
                       },
+                      "language": "CLEM",
                       "controlType": "textarea",
+                      "required": false,
                       "valueDef": {
                         "propType": "string",
                         "isList": false,
                         "isMap": false
-                      }
+                      },
+                      "labelVisible": true
                     }
                   }
                 ]
@@ -621,6 +2904,34 @@
       {
         "enabled": {
           "parameter_refs": [
+            "sets_larger_than"
+          ],
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "ignore_large_set",
+              "op": "equals",
+              "value": true
+            }
+          }
+        }
+      },
+      {
+        "enabled": {
+          "parameter_refs": [
+            "continuous_to_ordinal_range"
+          ],
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "continuous_to_ordinal",
+              "op": "equals",
+              "value": true
+            }
+          }
+        }
+      },
+      {
+        "enabled": {
+          "parameter_refs": [
             "custom_name"
           ],
           "evaluate": {
@@ -631,68 +2942,111 @@
             }
           }
         }
-      },
-			{
-        "validation": {
-          "id": "tableerror2test1",
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "metadata",
-            "message": {
-              "default": "metadata table control error."
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "metadata",
-              "op": "isEmpty"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "id": "tableerror2test2",
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "metadata[1]",
-            "message": {
-              "default": "measure contains Range"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "metadata[1]",
-              "op": "notContains",
-              "value": "Range"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "id": "tableerror2test3",
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "metadata[7]",
-            "message": {
-              "default": "check contains Coerce"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "metadata[7]",
-              "op": "notContains",
-              "value": "Coerce"
-            }
-          }
-        }
       }
     ],
     "data": {
       "currentParameters": {
+        "number_format": [],
+        "grouping_symbol": [],
         "annotation": "",
+        "standard_places": [],
         "default_value_mode": "Read",
+        "column_width": [],
+        "missing_metadata": [
+          [
+            "Drug",
+            false,
+            [],
+            false,
+            false,
+            false,
+            null,
+            null
+          ],
+          [
+            "Na",
+            false,
+            [],
+            false,
+            false,
+            false,
+            null,
+            null
+          ],
+          [
+            "Cholestrol",
+            false,
+            [],
+            false,
+            false,
+            false,
+            null,
+            null
+          ],
+          [
+            "Sex",
+            false,
+            [],
+            false,
+            false,
+            false,
+            null,
+            null
+          ],
+          [
+            "K",
+            false,
+            [],
+            false,
+            false,
+            false,
+            null,
+            null
+          ],
+          [
+            "Age",
+            false,
+            [],
+            false,
+            false,
+            false,
+            null,
+            null
+          ],
+          [
+            "BP",
+            false,
+            [],
+            false,
+            false,
+            false,
+            null,
+            null
+          ],
+          [
+            "Cholesterol",
+            false,
+            [],
+            false,
+            false,
+            false,
+            null,
+            null
+          ],
+          [
+            "Na_to_K",
+            false,
+            [],
+            false,
+            false,
+            false,
+            null,
+            null
+          ]
+        ],
+        "justify": [],
+        "scientific_places": [],
+        "currency_places": [],
         "use_custom_name": true,
         "metadata": [
           [
@@ -713,21 +3067,29 @@
             ""
           ],
           [
-            "Sex",
-            "Flag",
+            "Na",
+            "Default",
             "Input",
-            "Specify",
-            [
-              "F",
-              "M"
-            ],
+            "Read",
             [],
-            1,
-            "Coerce",
-            ""
+            [],
+            null,
+            "None",
+            null
           ],
           [
-            "BADVAR",
+            "Cholestrol",
+            "Default",
+            "Input",
+            "Read",
+            [],
+            [],
+            null,
+            "None",
+            null
+          ],
+          [
+            "Sex",
             "Flag",
             "Input",
             "Specify",
@@ -739,6 +3101,17 @@
             1,
             "None",
             ""
+          ],
+          [
+            "K",
+            "Default",
+            "Input",
+            "Read",
+            [],
+            [],
+            null,
+            "None",
+            null
           ],
           [
             "Age",
@@ -798,68 +3171,72 @@
             ""
           ]
         ],
-        "custom_name": "Define Types"
+        "export_places": [],
+        "date_format": [],
+        "time_format": [],
+        "custom_name": "Define Types",
+        "decimal_separator": []
       },
-      "datasetMetadata": {
-        "fields": [
-          {
-            "name": "Age",
-            "type": "integer",
-            "metadata": {
-              "description": "",
-              "measure": "range",
-              "modeling_role": "input"
+      "datasetMetadata": [
+        {
+          "fields": [
+            {
+              "name": "Age",
+              "type": "integer",
+              "metadata": {
+                "description": "",
+                "measure": "range",
+                "modeling_role": "input"
+              }
+            },
+            {
+              "name": "Sex",
+              "type": "string",
+              "metadata": {
+                "description": "",
+                "measure": "discrete",
+                "modeling_role": "input"
+              }
+            },
+            {
+              "name": "BP",
+              "type": "string",
+              "metadata": {
+                "description": "",
+                "measure": "discrete",
+                "modeling_role": "input"
+              }
+            },
+            {
+              "name": "Cholesterol",
+              "type": "string",
+              "metadata": {
+                "description": "",
+                "measure": "discrete",
+                "modeling_role": "input"
+              }
+            },
+            {
+              "name": "Drug",
+              "type": "string",
+              "metadata": {
+                "description": "",
+                "measure": "discrete",
+                "modeling_role": "input"
+              }
+            },
+            {
+              "name": "Na_to_K",
+              "type": "double",
+              "metadata": {
+                "description": "",
+                "measure": "range",
+                "modeling_role": "input"
+              }
             }
-          },
-          {
-            "name": "Sex",
-            "type": "string",
-            "metadata": {
-              "description": "",
-              "measure": "discrete",
-              "modeling_role": "input"
-            }
-          },
-          {
-            "name": "BP",
-            "type": "string",
-            "metadata": {
-              "description": "",
-              "measure": "discrete",
-              "modeling_role": "input"
-            }
-          },
-          {
-            "name": "Cholesterol",
-            "type": "string",
-            "metadata": {
-              "description": "",
-              "measure": "discrete",
-              "modeling_role": "input"
-            }
-          },
-          {
-            "name": "Drug",
-            "type": "string",
-            "metadata": {
-              "description": "",
-              "measure": "discrete",
-              "modeling_role": "input"
-            }
-          },
-          {
-            "name": "Na_to_K",
-            "type": "double",
-            "metadata": {
-              "description": "",
-              "measure": "range",
-              "modeling_role": "input"
-            }
-          }
-        ]
-      }
+          ]
+        }
+      ]
     }
-  },
-  "appData": {},
-  "additionalComponents": null
+  }
 }

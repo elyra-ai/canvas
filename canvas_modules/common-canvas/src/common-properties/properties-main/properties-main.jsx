@@ -22,6 +22,7 @@ import { Size } from "./../constants/form-constants";
 import isEqual from "lodash/isEqual";
 import omit from "lodash/omit";
 import pick from "lodash/pick";
+import has from "lodash/has";
 import Icon from "carbon-components-react/lib/components/Icon";
 import { Provider } from "react-redux";
 
@@ -54,7 +55,8 @@ class PropertiesMain extends React.Component {
 		this.currentParameters = this.propertiesController.getPropertyValues();
 		this.state = {
 			showPropertiesButtons: true,
-			editorSize: this.propertiesController.getForm().editorSize
+			editorSize: this.propertiesController.getForm().editorSize,
+			pixelWidth: this.propertiesController.getForm().pixelWidth
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
@@ -74,7 +76,8 @@ class PropertiesMain extends React.Component {
 				(newProps.propertiesInfo.appData && !isEqual(newProps.propertiesInfo.appData, this.props.propertiesInfo.appData))) {
 				this.setForm(newProps.propertiesInfo);
 				this.state = {
-					editorSize: this.propertiesController.getForm().editorSize
+					editorSize: this.propertiesController.getForm().editorSize,
+					pixelWidth: this.propertiesController.getForm().pixelWidth
 				};
 				this.currentParameters = this.propertiesController.getPropertyValues();
 				this.propertiesController.setAppData(newProps.propertiesInfo.appData);
@@ -250,7 +253,16 @@ class PropertiesMain extends React.Component {
 					rejectLabel={rejectLabel}
 					showPropertiesButtons={this.state.showPropertiesButtons}
 				/>);
-				if (this.props.propertiesConfig.enableResize !== false) {
+				// Only show the left/right buttons if: resize is enabled; there is no
+				// fixed pixel_width provided or the pixel_width is smaller than the
+				// medium size; and the default editor size is SMALL. All
+				// other cases we don't show the buttons as the panel should be big
+				// enough to work with and the user will not want to reduce its size.
+				if (this.props.propertiesConfig.enableResize !== false &&
+						(!this.state.pixelWidth && this.propertiesController.getForm().editorSize === Size.SMALL ||
+							!has(this.state, "pixelWidth.min") && has(this.state, "pixelWidth.max") && this.propertiesController.getForm().editorSize === Size.SMALL ||
+							!has(this.state, "pixelWidth.max") && has(this.state, "pixelWidth.min") && this.propertiesController.getForm().editorSize === Size.MEDIUM ||
+							(this.state.pixelWidth && this.state.pixelWidth.max > this.state.pixelWidth.min))) {
 					resizeBtn = (
 						<button className="properties-btn-resize" onClick={this.resize.bind(this)} >
 							<div>
@@ -301,6 +313,12 @@ class PropertiesMain extends React.Component {
 				</PropertiesModal>);
 			}
 			const className = classNames("properties-wrapper", { "properties-right-flyout": this.props.propertiesConfig.rightFlyout }, `properties-${this.state.editorSize}`);
+			let overrideStyle = null;
+			if (this.state.pixelWidth && this.state.pixelWidth.min && this.state.editorSize === Size.SMALL) {
+				overrideStyle = { width: this.state.pixelWidth.min + "px" };
+			} else if (this.state.pixelWidth && this.state.pixelWidth.max && this.state.editorSize === Size.MEDIUM) {
+				overrideStyle = { width: this.state.pixelWidth.max + "px" };
+			}
 			return (
 				<Provider store={this.propertiesController.getStore()}>
 					<div
@@ -308,6 +326,7 @@ class PropertiesMain extends React.Component {
 						className={className}
 						tabIndex="0"
 						onBlur={this.onBlur}
+						style={overrideStyle}
 					>
 						{resizeBtn}
 						{propertiesTitle}

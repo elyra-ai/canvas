@@ -73,7 +73,8 @@ describe("Correct form should be created", () => {
 			}
 		};
 		let help;
-		const expectedForm = new Form("TestOp", "TestOp", true, help, "small", [primaryTabs], buttons, data);
+		let pixelWidth; // Pass in an undefined pixelWidth to simulate it missing from ParamDefs.
+		const expectedForm = new Form("TestOp", "TestOp", true, help, "small", pixelWidth, [primaryTabs], buttons, data);
 
 		const paramSpec = {
 			"current_parameters": {
@@ -101,8 +102,8 @@ describe("Correct form should be created", () => {
 			}
 		};
 		const generatedForm = Form.makeForm(paramSpec);
-		// console.info("Expected: " + JSON.stringify(expectedForm));
-		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
+		// console.info("Expected: " + JSON.stringify(expectedForm, null, 2));
+		// console.info("Actual  : " + JSON.stringify(generatedForm, null, 2));
 		// console.info("\n\n");
 		expect(isEqual(JSON.parse(JSON.stringify(expectedForm)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});

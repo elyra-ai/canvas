@@ -81,6 +81,7 @@ module.exports = function() {
 			tableDiv.$(".properties-remove-fields-button").click();
 		}
 	});
+
 	this.Then(/^I select the row (\d+) in the table "([^"]*)"$/, function(rowNumber, tableControlId) {
 		const containingDiv = browser.$("div[data-id='properties-" + tableControlId + "']");
 		const rows = containingDiv.$(".reactable-data")
@@ -103,7 +104,6 @@ module.exports = function() {
 		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
 		expect(newTitle).toEqual((lastEventLog.data.title).toString());
 	});
-
 
 	this.Then(/^I verify the event log for the "([^"]*)" parameter contains "([^"]*)"$/, function(parameterName, values) {
 		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
@@ -128,7 +128,6 @@ module.exports = function() {
 			clickCancelButton(subcell);
 		}
 	});
-
 
 	this.Then(/^I click on the "([^"]*)" button$/, function(buttonName) {
 		if (buttonName === "OK" || buttonName === "Save") {
@@ -229,7 +228,6 @@ module.exports = function() {
 		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
 		expect(title).toEqual(lastEventLog.data.title);
 	});
-
 
 	this.Then(/^I verify the event log has no error messages$/, function() {
 		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");

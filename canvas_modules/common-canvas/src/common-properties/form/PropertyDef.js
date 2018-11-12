@@ -17,10 +17,11 @@ import { ResourceDef } from "../util/L10nProvider";
 import propertyOf from "lodash/propertyOf";
 
 export class PropertyDef {
-	constructor(cname, icon, editorSize, label, labelEditable, help, description, structureMetadata, parameterMetadata, groupMetadata, actionMetadata) {
+	constructor(cname, icon, editorSize, pixelWidth, label, labelEditable, help, description, structureMetadata, parameterMetadata, groupMetadata, actionMetadata) {
 		this.name = cname;
 		this.icon = icon;
 		this.editorSize = editorSize;
+		this.pixelWidth = pixelWidth;
 		this.label = label;
 		this.labelEditable = labelEditable;
 		this.help = help;
@@ -59,6 +60,7 @@ export class PropertyDef {
 			propertyOf(uihints)("id"),
 			propertyOf(uihints)("icon"),
 			propertyOf(uihints)("editor_size"),
+			propertyOf(uihints)("pixel_width"),
 			label,
 			labelEditable,
 			propertyOf(uihints)("help"),

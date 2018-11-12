@@ -40,7 +40,7 @@ Feature: ContextMenu
 
 		# Test the context menu is pushed to the left correctly even when the palette is open AND the right flyout is open
 		Then I click the canvas background at 1, 1 to close the context menu or clear selections
-		Then I double click the "Define Types" node to open its properties
+		Then I double click the "Na_to_K" node to open its properties
 		Then I right click at position 640, 300 to display the context menu
 		Then I verify the context menu is at 640, 300
 

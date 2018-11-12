@@ -1,0 +1,39 @@
+{
+  "titleDefinition": {
+    "title": "PixelWidth Test"
+  },
+  "current_parameters": {
+  },
+  "parameters": [
+
+  ],
+  "complex_types": [
+
+  ],
+  "uihints": {
+    "id": "PixelWidth.test",
+    "icon": "images/modelbuildspark.svg",
+    "editor_size": "small",
+    "pixel_width": {
+      "min": 600,
+      "max": 800
+    },
+    "label": {
+      "default": "Pixel Width Test"
+    },
+    "description": {
+      "default": "Test pixel width property"
+    },
+    "parameter_info": [
+    ],
+    "complex_type_info": [
+    ],
+    "group_info": [
+    ]
+  },
+  "conditions": [
+
+  ],
+  "resources": {
+  }
+}

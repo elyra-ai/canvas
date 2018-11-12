@@ -16,12 +16,13 @@ import Conditions from "./Conditions";
 import { Size } from "../constants/form-constants";
 
 export default class Form {
-	constructor(componentId, label, labelEditable, help, editorSize, uiItems, buttons, data, conditions) {
+	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions) {
 		this.componentId = componentId;
 		this.label = label;
 		this.labelEditable = labelEditable;
 		this.help = help;
 		this.editorSize = editorSize;
+		this.pixelWidth = pixelWidth;
 		this.uiItems = uiItems;
 		this.buttons = buttons;
 		this.data = data;
@@ -59,6 +60,7 @@ export default class Form {
 				propDef.labelEditable,
 				propDef.help,
 				propDef.editorSizeHint(editorSizeDefault),
+				propDef.pixelWidth,
 				[UIItem.makePrimaryTabs(tabs)],
 				_defaultButtons(),
 				data,

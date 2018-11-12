@@ -16,8 +16,8 @@ Feature: FlowValidation
 
 		Then I pause for 1 seconds
 
-		Then I verify that there are 1 nodes with a "warning" indicator
-		Then I verify that there are 1 nodes with a "error" indicator
+		Then I verify that there are 2 nodes with a "warning" indicator
+		Then I verify that there are 0 nodes with a "error" indicator
 
 		Then I pause for 1 seconds
 
