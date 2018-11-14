@@ -1,0 +1,314 @@
+{
+  "doc_type": "pipeline",
+  "version": "2.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
+  "id": "77363139-1f12-45f1-aa25-b6c71a264ad8",
+  "primary_pipeline": "f03bb483-83a4-45ac-9645-2be70c6da796",
+  "pipelines": [
+    {
+      "id": "f03bb483-83a4-45ac-9645-2be70c6da796",
+      "nodes": [
+        {
+          "id": "b8d29516-ac8f-4103-b85a-2432f1da7806",
+          "type": "binding",
+          "op": "userinput",
+          "app_data": {
+            "ui_data": {
+              "label": "Triangle",
+              "image": "images/palette-animations/index-dev.gif",
+              "x_pos": 50,
+              "y_pos": 50,
+              "description": "Spinning triangle"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "890b58bb-3ac2-4582-ab8c-09e895417925",
+          "type": "execution_node",
+          "op": "select",
+          "app_data": {
+            "ui_data": {
+              "label": "IBM Logos",
+              "image": "images/palette-animations/ibm2.gif",
+              "x_pos": 200,
+              "y_pos": 50,
+              "description": "Rotate through different IBM logos"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "b8d29516-ac8f-4103-b85a-2432f1da7806",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "d7c38fb2-9a14-471f-a9fd-12e8774f7fb1",
+          "type": "execution_node",
+          "op": "sample",
+          "app_data": {
+            "ui_data": {
+              "label": "LCFC",
+              "image": "images/palette-animations/LCFC.gif",
+              "x_pos": 350,
+              "y_pos": 50,
+              "description": "LCFC logo"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "890b58bb-3ac2-4582-ab8c-09e895417925",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "02299e64-af8d-48c5-95c2-35e41b9f5a6f",
+          "type": "execution_node",
+          "op": "merge",
+          "app_data": {
+            "ui_data": {
+              "label": "Multi-color IBM",
+              "image": "images/palette-animations/ibm.gif",
+              "x_pos": 195.23532104492188,
+              "y_pos": 188.44493103027344,
+              "description": "Multi-color IBM logo"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "d7c38fb2-9a14-471f-a9fd-12e8774f7fb1",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "7c7cab50-e983-4dfb-9ebc-4eaee6d7c867",
+          "type": "execution_node",
+          "op": "spok",
+          "app_data": {
+            "ui_data": {
+              "label": "Spock",
+              "image": "images/palette-animations/spock.gif",
+              "x_pos": 320.1479797363281,
+              "y_pos": 188.4449234008789,
+              "description": "Spock from Star Trek TOS"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "02299e64-af8d-48c5-95c2-35e41b9f5a6f",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "6d4a06b3-894e-4a29-973c-0d93858161dc",
+          "type": "execution_node",
+          "op": "spok",
+          "app_data": {
+            "ui_data": {
+              "label": "Vardy",
+              "image": "images/palette-animations/vardy.gif",
+              "x_pos": 434.83984375,
+              "y_pos": 188.44493865966797,
+              "description": "Jamie Vardy scores the 11th"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "7c7cab50-e983-4dfb-9ebc-4eaee6d7c867",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}

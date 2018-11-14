@@ -84,7 +84,7 @@
 }
 
 .palette-flyout-category-item-icon {
-	width: 25px;
+	width: 25px;  /* Not specifying height preserves the image's aspect ratio. */
 	margin-left: 16px;
 }
 
@@ -339,9 +339,7 @@
 }
 
 .palette-list-item-icon {
-	line-height: 46px; /* Must be same as containing div height plus half the icon size */
-	height: 32px;
-	width: 32px;
+	width: 32px; /* Not specifying height preserves the image's aspect ratio. */
 	margin-left: 12px;
 }
 

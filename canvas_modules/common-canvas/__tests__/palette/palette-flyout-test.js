@@ -109,6 +109,7 @@ describe("Palette renders correctly", () => {
 		// 2 nodes should be rendered
 		expect(palette.find(PaletteFlyoutContentListItem)).to.have.length(2);
 	});
+
 	it("narrow palette should show correct values for category and node with and without an image", () => {
 		const config = {
 			showPalette: false,
@@ -147,6 +148,7 @@ function createMountedPalette(config) {
 	const showPalette = config ? config.showPalette : true;
 	const paletteWidth = config ? config.paletteWidth : 64;
 	const palette = (config && config.palette) ? config.palette : testPalette2;
+
 	const wrapper = mount(
 		<PaletteFlyout
 			paletteJSON={palette}

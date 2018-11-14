@@ -84,8 +84,8 @@ class PaletteContentListItem extends React.Component {
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
 			>
-				<div className="palette-list-item-icon">
-					<img src={image} draggable="false" />
+				<div>
+					<img className="palette-list-item-icon" src={image} draggable="false" />
 				</div>
 				{itemText}
 			</div>

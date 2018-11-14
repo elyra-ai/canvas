@@ -68,8 +68,8 @@ class PaletteFlyoutContentCategory extends React.Component {
 		let itemImage = null;
 		if (this.props.category.image && this.props.category.image !== "") {
 			itemImage = (
-				<div className="palette-flyout-category-item-icon">
-					<img src={this.props.category.image} draggable="false" />
+				<div>
+					<img src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" />
 				</div>
 			);
 		}

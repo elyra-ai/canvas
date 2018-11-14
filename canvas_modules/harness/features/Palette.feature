@@ -123,3 +123,17 @@ Feature: Palette
 		Then I add a node of type "Supernode" from the "Saved Nodes" category onto the canvas at 1200, 200
 		Then I verify pipeline 0 have 16 nodes
 		Then I verify there are 3 pipelines
+
+	Scenario: Test aspect ratio of images is preserved
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Flyout" palette layout
+		Given I have uploaded predefined palette "animationsPalette.json"
+		Given I have toggled the app side panel
+		Then I open the palette
+		Then I open the "Animations" palette category
+
+		# The aspect ratio is preserved when height and width are different.
+		Then I verify the "LCFC" node in the category has a "width" of 32 pixels
+		Then I verify the "LCFC" node in the category has a "height" of 20.4531 pixels
