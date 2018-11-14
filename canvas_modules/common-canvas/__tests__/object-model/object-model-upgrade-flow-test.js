@@ -34,6 +34,7 @@ import robWoodsCanvas from "../../../harness/test_resources/diagrams/robWoodsCan
 import supernodeCanvas from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
 import supernodeNestedCanvas from "../../../harness/test_resources/diagrams/supernodeNestedCanvas.json";
 import uiParametersCanvas from "../../../harness/test_resources/diagrams/uiParametersCanvas.json";
+import titanicFlowCanvas from "../../../harness/test_resources/diagrams/titanicFlowCanvas.json";
 
 import allNodesV2 from "../../../harness/test_resources/diagrams/v2-allNodes.json";
 import allTypesCanvasV2 from "../../../harness/test_resources/diagrams/v2-allTypesCanvas.json";
@@ -73,6 +74,7 @@ import decoratorCanvasV0 from "../../../harness/test_resources/diagrams/x-decora
 import linkColorCanvasV0 from "../../../harness/test_resources/diagrams/x-linkColorCanvas.json";
 import modelerCanvasV0 from "../../../harness/test_resources/diagrams/x-modelerCanvas.json";
 import multiPortsCanvasV0 from "../../../harness/test_resources/diagrams/x-multiPortsCanvas.json";
+import titanicFlowCanvasV0 from "../../../harness/test_resources/diagrams/x-titanicFlowCanvas.json";
 
 const objectModel = new ObjectModel();
 objectModel.setSchemaValidation(true); // Ensure we validate against the schemas as we upgrade
@@ -163,6 +165,10 @@ describe("ObjectModel files handling test", () => {
 
 	it("should read in and write out the same file: uiParametersCanvas", () => {
 		readWriteSameFile(uiParametersCanvas);
+	});
+
+	it("should read in and write out the same file: titanicFlowCanvas", () => {
+		readWriteSameFile(titanicFlowCanvas);
 	});
 
 	// --------------------------------------------------------------------------
@@ -309,13 +315,18 @@ describe("ObjectModel files handling test", () => {
 	it("should upgrade a pipelineFlow from v0 to latest version for linkColorCanvasV0", () => {
 		upgradeV0ToLatestVersion(linkColorCanvasV0, linkColorCanvas);
 	});
-	//
+
 	it("should upgrade a pipelineFlow from v0 to latest version for modelerCanvasV0", () => {
 		upgradeV0ToLatestVersion(modelerCanvasV0, modelerCanvas);
 	});
 
 	it("should upgrade a pipelineFlow from v0 to latest version for multiPortsCanvasV0", () => {
 		upgradeV0ToLatestVersion(multiPortsCanvasV0, multiPortsCanvas);
+	});
+
+	// This will test upgrade of a WML Canvas flow that contains a node at 0,0 to current version.
+	it("should upgrade a pipelineFlow from v0 to latest version for titanicFlowCanvasV0", () => {
+		upgradeV0ToLatestVersion(titanicFlowCanvasV0, titanicFlowCanvas);
 	});
 
 	function readWriteSameFile(file) {

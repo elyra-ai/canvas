@@ -40,8 +40,8 @@ export default class CanvasInHandler {
 			var newNode = {
 				id: canvasNode.id,
 				image: canvasNode.image,
-				x_pos: canvasNode.x_pos ? canvasNode.x_pos : canvasNode.xPos, // Handle old field name xPos
-				y_pos: canvasNode.y_pos ? canvasNode.y_pos : canvasNode.yPos, // Handle old field name yPos
+				x_pos: typeof canvasNode.x_pos !== "undefined" ? canvasNode.x_pos : canvasNode.xPos, // Handle old field name xPos
+				y_pos: typeof canvasNode.y_pos !== "undefined" ? canvasNode.y_pos : canvasNode.yPos, // Handle old field name yPos
 				class_name: canvasNode.className,
 				label: canvasNode.objectData.label,
 				type: nodeType
