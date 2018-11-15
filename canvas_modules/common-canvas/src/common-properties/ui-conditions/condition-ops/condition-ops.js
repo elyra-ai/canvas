@@ -20,6 +20,8 @@ import lessThan from "./lessThan";
 import notContains from "./notContains";
 import notEquals from "./notEquals";
 import isDateTime from "./isDateTime";
+import dmTypeEquals from "./dmTypeEquals";
+import dmTypeNotEquals from "./dmTypeNotEquals";
 
 
 /**
@@ -39,6 +41,8 @@ function getConditionOps(customOps) {
 	ops[notContains.op()] = notContains.evaluate;
 	ops[notEquals.op()] = notEquals.evaluate;
 	ops[isDateTime.op()] = isDateTime.evaluate;
+	ops[dmTypeEquals.op()] = dmTypeEquals.evaluate;
+	ops[dmTypeNotEquals.op()] = dmTypeNotEquals.evaluate;
 
 
 	if (Array.isArray(customOps)) {

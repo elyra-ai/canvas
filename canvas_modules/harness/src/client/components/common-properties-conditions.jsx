@@ -290,26 +290,28 @@ class CommonPropertiesComponents extends React.Component {
 			{ key: "equals", label: <div>equals/<br />notEquals</div> },
 			{ key: "contains", label: <div>contains/<br />notContains</div> },
 			{ key: "colNotExists", label: <div>colNotExists</div> },
-			{ key: "isDateTime", label: <div>isDateTime</div> }
+			{ key: "isDateTime", label: <div>isDateTime</div> },
+			{ key: "dmTypeEquals", label: <div>dmTypeEquals</div> },
+			{ key: "dmTypeNotEquals", label: <div>dmTypeNotEquals</div> }
 		];
 
 		const tableConditionsData = [
-			{ Control: "checkbox (boolean)", empty: "no", greaterLessThan: "no", equals: "yes", contains: "no", colNotExists: "no", isDateTime: "no" },
-			{ Control: "checkboxset ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
-			{ Control: "expression (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
-			{ Control: "numberfield (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", colNotExists: "no", isDateTime: "no" },
-			{ Control: "oneofselect (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
-			{ Control: "timeField (time)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "yes" },
-			{ Control: "dateField (date)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "yes" },
-			{ Control: "password (string)", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no", isDateTime: "no" },
-			{ Control: "radioset (boolean|number|string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
-			{ Control: "selectcolumn (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
-			{ Control: "selectcolumns  ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
-			{ Control: "someofselect ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
-			{ Control: "textarea (string/[string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
-			{ Control: "textfield (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "yes", isDateTime: "no" },
-			{ Control: "structure-list-editor ([[string]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no", isDateTime: "no" },
-			{ Control: "structuretable ([[primitive]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no", isDateTime: "no" }
+			{ Control: "checkbox (boolean)", empty: "no", greaterLessThan: "no", equals: "yes", contains: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no" },
+			{ Control: "checkboxset ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no" },
+			{ Control: "expression (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no" },
+			{ Control: "numberfield (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no" },
+			{ Control: "oneofselect (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no" },
+			{ Control: "timeField (time)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "yes", dmTypeEquals: "no", dmTypeNotEquals: "no" },
+			{ Control: "dateField (date)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "yes", dmTypeEquals: "no", dmTypeNotEquals: "no" },
+			{ Control: "password (string)", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no" },
+			{ Control: "radioset (boolean|number|string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no" },
+			{ Control: "selectcolumn (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "yes", dmTypeNotEquals: "yes" },
+			{ Control: "selectcolumns  ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "yes", dmTypeNotEquals: "yes" },
+			{ Control: "someofselect ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no" },
+			{ Control: "textarea (string/[string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no" },
+			{ Control: "textfield (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "yes", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no" },
+			{ Control: "structure-list-editor ([[string]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no" },
+			{ Control: "structuretable ([[primitive]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no" }
 
 		];
 
@@ -329,7 +331,8 @@ class CommonPropertiesComponents extends React.Component {
 			{ Conditions: "equals/notEquals", boolean: "yes", string: "yes", number: "yes", date_time: "yes", stringArray: "yes", doubleArray: "no" },
 			{ Conditions: "contains/notContains", boolean: "no", string: "yes", number: "no", date_time: "yes", stringArray: "yes", doubleArray: "no" },
 			{ Conditions: "colNotExists", boolean: "no", string: "yes", number: "no", date_time: "no", stringArray: "no", doubleArray: "no" },
-			{ Conditions: "isDateTime", boolean: "no", string: "no", number: "no", date_time: "yes", stringArray: "no", doubleArray: "no" }
+			{ Conditions: "isDateTime", boolean: "no", string: "no", number: "no", date_time: "yes", stringArray: "no", doubleArray: "no" },
+			{ Conditions: "dmTypeEquals/dmTypeNotEquals", boolean: "no", string: "yes", number: "no", date_time: "no", stringArray: "yes", doubleArray: "no" }
 
 		];
 

@@ -1,0 +1,547 @@
+{
+  "titleDefinition": {
+    "title": "Set Global Test"
+  },
+  "current_parameters": {
+    "globals": [
+    ],
+    "defaultOperations": null
+  },
+  "parameters": [
+    {
+      "id": "defaultMean",
+      "type": "boolean"
+    },
+    {
+      "id": "defaultSum",
+      "type": "boolean"
+    },
+    {
+      "id": "defaultMin",
+      "type": "boolean"
+    },
+    {
+      "id": "defaultMax",
+      "type": "boolean"
+    },
+    {
+      "id": "defaultSDev",
+      "type": "boolean"
+    },
+    {
+      "id": "clear_first",
+      "type": "boolean"
+    },
+    {
+      "id": "show_preview",
+      "type": "boolean"
+    },
+    {
+      "id": "globals",
+      "type": "map[string,globals]",
+      "role": "column",
+      "default": []
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "globals",
+      "key_definition": {
+        "id": "field",
+        "type": "object",
+        "role": "column"
+      },
+      "parameters": [
+        {
+          "id": "mean",
+          "type": "boolean",
+          "default": {
+            "parameter_ref": "defaultMean"
+          }
+        },
+        {
+          "id": "sum",
+          "type": "boolean",
+          "default": {
+            "parameter_ref": "defaultSum"
+          }
+        },
+        {
+          "id": "min",
+          "type": "boolean",
+          "default": {
+            "parameter_ref": "defaultMin"
+          }
+        },
+        {
+          "id": "max",
+          "type": "boolean",
+          "default": {
+            "parameter_ref": "defaultMax"
+          }
+        },
+        {
+          "id": "sdev",
+          "type": "boolean",
+          "default": {
+            "parameter_ref": "defaultSDev"
+          }
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "SetGlobals.test",
+    "icon": "images/modelbuildspark.svg",
+    "editor_size": "medium",
+    "label": {
+      "default": "Set Globals Test"
+    },
+    "description": {
+      "default": "Test readonly numbered column in a column structure table control"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "defaultMean",
+        "label": {
+          "default": "Mean"
+        }
+      },
+      {
+        "parameter_ref": "defaultSum",
+        "label": {
+          "default": "Sum"
+        }
+      },
+      {
+        "parameter_ref": "defaultMin",
+        "label": {
+          "default": "Min"
+        }
+      },
+      {
+        "parameter_ref": "defaultMax",
+        "label": {
+          "default": "Max"
+        }
+      },
+      {
+        "parameter_ref": "defaultSDev",
+        "label": {
+          "default": "SDev"
+        }
+      },
+      {
+        "parameter_ref": "clear_first",
+        "label": {
+          "default": "Clear all globals before executing"
+        }
+      },
+      {
+        "parameter_ref": "show_preview",
+        "label": {
+          "default": "Display preview of globals created after execution"
+        }
+      },
+      {
+        "parameter_ref": "globals",
+        "rows": 7,
+        "label": {
+          "resource_key": "globals.header.label"
+        },
+        "key_definition": {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        },
+        "parameters": [
+          {
+            "id": "mean",
+            "type": "boolean"
+          },
+          {
+            "id": "sum",
+            "type": "boolean"
+          },
+          {
+            "id": "min",
+            "type": "boolean"
+          },
+          {
+            "id": "max",
+            "type": "boolean"
+          },
+          {
+            "id": "sdev",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "globals",
+        "row_selection": "multiple-edit",
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 10,
+          "label": {
+            "resource_key": "globals.field.label"
+          }
+        },
+        "parameters": [
+          {
+            "parameter_ref": "mean",
+            "label": {
+              "resource_key": "globals.mean.label"
+            },
+            "width": 9,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "sum",
+            "label": {
+              "resource_key": "globals.sum.label"
+            },
+            "width": 9,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "min",
+            "label": {
+              "resource_key": "globals.min.label"
+            },
+            "width": 9,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "max",
+            "label": {
+              "resource_key": "globals.max.label"
+            },
+            "width": 9,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "sdev",
+            "label": {
+              "resource_key": "globals.sdev.label"
+            },
+            "width": 9,
+            "edit_style": "inline"
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "TableMain",
+        "label" : {
+          "resource_key": "tableMain.header"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "globals",
+            "type": "controls",
+            "label": {
+              "default": "Columns"
+            },
+            "parameter_refs": [
+              "globals"
+            ]
+          },
+          {
+            "id": "defaultOperationsText",
+            "type": "textPanel",
+            "label": {
+              "resource_key": "defaultOperationsText.label"
+            },
+            "description": {
+              "resource_key": "defaultOperationsText.description"
+            }
+          },
+          {
+            "id": "defaultOperations",
+            "type": "controls",
+            "label": {
+              "default": "Columns"
+            },
+            "parameter_refs": [
+              "defaultMean",
+              "defaultSum",
+              "defaultMin",
+              "defaultMax",
+              "defaultSDev"
+            ]
+          },
+          {
+            "id": "globalsOptionsText",
+            "type": "textPanel",
+            "label": {
+              "resource_key": "globalOptionsText.label"
+            },
+            "description": {
+              "resource_key": "globalOptionsText.description"
+            }
+          },
+          {
+            "id": "globalsOptions",
+            "type": "controls",
+            "label": {
+              "default": "Columns"
+            },
+            "parameter_refs": [
+              "clear_first",
+              "show_preview"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "enabled": {
+        "parameter_refs": [
+          "globals[1]"
+        ],
+
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "globals[0]",
+                "op": "dmTypeEquals",
+                "value": "integer"
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "globals[0]",
+                "op": "dmTypeEquals",
+                "value": "double"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "globals[2]"
+        ],
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "globals[0]",
+                "op": "dmTypeEquals",
+                "value": "integer"
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "globals[0]",
+                "op": "dmTypeEquals",
+                "value": "double"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "globals[5]"
+        ],
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "globals[0]",
+                "op": "dmTypeEquals",
+                "value": "integer"
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "globals[0]",
+                "op": "dmTypeEquals",
+                "value": "double"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "dataset_metadata": [
+    {
+      "name": "data",
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug3",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug4",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Ag",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "globals.header.label": "Globals to be created:",
+    "globals.field.label": "Field",
+    "globals.mean.label": "Mean",
+    "globals.mean.desc": "Average value of all appearances of this variable",
+    "globals.sum.label": "Sum",
+    "globals.sum.desc": "Sum of all appearances of this variable",
+    "globals.min.label": "Min",
+    "globals.min.desc": "Minimum value of all appearances of this variable",
+    "globals.max.label": "Max",
+    "globals.max.desc": "Maximum value of all appearances of this variable",
+    "globals.sdev.label": "SDev",
+    "globals.sdev.desc": "Standard Deviation of all appearances of this variable",
+    "defaultOperations.label": "Default Operation(s)",
+    "globalOptionsText.label": "Globals Options",
+    "globalOptionsText.description": "Set global expection behavior",
+    "defaultOperationsText.label": "Default Operations",
+    "defaultOperationsText.description": "Choose default global operations for new fields",
+    "tableMain.header": "Set Globals"
+  }
+}
