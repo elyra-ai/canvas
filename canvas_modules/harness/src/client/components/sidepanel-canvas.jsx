@@ -83,7 +83,7 @@ export default class SidePanelForms extends React.Component {
 		this.narrowPalette = this.narrowPalette.bind(this);
 		this.onDragStart = this.onDragStart.bind(this);
 		this.changeValidateFlowOnOpen = this.changeValidateFlowOnOpen.bind(this);
-
+		this.changeDisplayFullLabelOnHover = this.changeDisplayFullLabelOnHover.bind(this);
 	}
 
 	componentWillMount() {
@@ -345,6 +345,10 @@ export default class SidePanelForms extends React.Component {
 
 	changeValidateFlowOnOpen(checked) {
 		this.props.changeValidateFlowOnOpen(checked);
+	}
+
+	changeDisplayFullLabelOnHover(checked) {
+		this.props.changeDisplayFullLabelOnHover(checked);
 	}
 
 	schemaValidationChange(checked) {
@@ -768,6 +772,16 @@ export default class SidePanelForms extends React.Component {
 				/>
 			</div>);
 
+		const displayFullLabelOnHover = (
+			<div className="harness-sidepanel-children">
+				<div className="harness-sidepanel-headers">Display full node label on hover</div>
+				<Toggle
+					id="harness-sidepanel-displayFullLabelOnHover-toggle"
+					toggled={this.props.displayFullLabelOnHover}
+					onToggle={this.changeDisplayFullLabelOnHover}
+				/>
+			</div>);
+
 		return (
 			<div>
 				{canvasInput}
@@ -801,6 +815,8 @@ export default class SidePanelForms extends React.Component {
 				{schemaValidation}
 				{divider}
 				{validateFlowOnOpen}
+				{divider}
+				{displayFullLabelOnHover}
 				{divider}
 				{extraCanvas}
 				{canvasInput2}
@@ -857,6 +873,8 @@ SidePanelForms.propTypes = {
 	setNarrowPalette: PropTypes.func,
 	validateFlowOnOpen: PropTypes.bool,
 	changeValidateFlowOnOpen: PropTypes.func,
+	displayFullLabelOnHover: PropTypes.bool,
+	changeDisplayFullLabelOnHover: PropTypes.func,
 	enableMoveNodesOnSupernodeResize: PropTypes.bool,
 	setEnableMoveNodesOnSupernodeResize: PropTypes.func
 };

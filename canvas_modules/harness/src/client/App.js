@@ -118,6 +118,7 @@ class App extends React.Component {
 			expressionBuilder: true,
 			expressionValidate: true,
 			validateFlowOnOpen: true,
+			displayFullLabelOnHover: false,
 			narrowPalette: true,
 			schemaValidationEnabled: true,
 			canvasFileChooserVisible: false,
@@ -194,6 +195,7 @@ class App extends React.Component {
 		this.setTipConfig = this.setTipConfig.bind(this);
 		this.showExtraCanvas = this.showExtraCanvas.bind(this);
 		this.validateFlowOnOpen = this.validateFlowOnOpen.bind(this);
+		this.displayFullLabelOnHover = this.displayFullLabelOnHover.bind(this);
 		this.addNodeTypeToPalette = this.addNodeTypeToPalette.bind(this);
 		this.getCanvasInfo = this.getCanvasInfo.bind(this);
 		this.setNodeLabel = this.setNodeLabel.bind(this);
@@ -954,6 +956,10 @@ class App extends React.Component {
 		this.setState({ validateFlowOnOpen: enabled });
 	}
 
+	displayFullLabelOnHover(enabled) {
+		this.setState({ displayFullLabelOnHover: enabled });
+	}
+
 	usePropertiesContainerType(type) {
 		this.setState({ propertiesContainerType: type });
 		this.log("set properties container", type);
@@ -1529,7 +1535,8 @@ class App extends React.Component {
 			enableMoveNodesOnSupernodeResize: this.state.enableMoveNodesOnSupernodeResize,
 			tipConfig: this.state.tipConfig,
 			schemaValidation: this.state.schemaValidationEnabled,
-			enableNarrowPalette: this.state.narrowPalette
+			enableNarrowPalette: this.state.narrowPalette,
+			enableDisplayFullLabelOnHover: this.state.displayFullLabelOnHover
 			// enableBoundingRectangles: true
 		};
 
@@ -1735,6 +1742,8 @@ class App extends React.Component {
 			schemaValidationEnabled: this.state.schemaValidationEnabled,
 			validateFlowOnOpen: this.state.validateFlowOnOpen,
 			changeValidateFlowOnOpen: this.validateFlowOnOpen,
+			displayFullLabelOnHover: this.state.displayFullLabelOnHover,
+			changeDisplayFullLabelOnHover: this.displayFullLabelOnHover,
 			enableSaveToPalette: this.state.enableSaveToPalette,
 			useEnableSaveToPalette: this.useEnableSaveToPalette,
 			enableCreateSupernodeNonContiguous: this.state.enableCreateSupernodeNonContiguous,

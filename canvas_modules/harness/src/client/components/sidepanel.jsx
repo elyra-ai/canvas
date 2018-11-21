@@ -75,6 +75,8 @@ export default class SidePanel extends React.Component {
 				schemaValidationEnabled={this.props.canvasConfig.schemaValidationEnabled}
 				validateFlowOnOpen={this.props.canvasConfig.validateFlowOnOpen}
 				changeValidateFlowOnOpen={this.props.canvasConfig.changeValidateFlowOnOpen}
+				displayFullLabelOnHover={this.props.canvasConfig.displayFullLabelOnHover}
+				changeDisplayFullLabelOnHover={this.props.canvasConfig.changeDisplayFullLabelOnHover}
 				enableSaveToPalette={this.props.canvasConfig.enableSaveToPalette}
 				useEnableSaveToPalette={this.props.canvasConfig.useEnableSaveToPalette}
 				enableCreateSupernodeNonContiguous={this.props.canvasConfig.enableCreateSupernodeNonContiguous}
@@ -184,6 +186,8 @@ SidePanel.propTypes = {
 		schemaValidationEnabled: PropTypes.bool,
 		validateFlowOnOpen: PropTypes.bool,
 		changeValidateFlowOnOpen: PropTypes.func,
+		displayFullLabelOnHover: PropTypes.bool,
+		changeDisplayFullLabelOnHover: PropTypes.func,
 		enableMoveNodesOnSupernodeResize: PropTypes.bool,
 		setEnableMoveNodesOnSupernodeResize: PropTypes.func
 	}),

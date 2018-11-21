@@ -47,10 +47,6 @@ const haloLayout = {
 	// Horizontal Justification of the lable based on label position X and Y.
 	labelHorizontalJustification: "center",
 
-	// Specifies whether a label that has been truncated should be displayed
-	// in full when the pointer is hovered over the truncated label.
-	displayFullLabelOnHover: true,
-
 	labelWidth: 52,
 	labelHeight: 12,
 
@@ -190,10 +186,6 @@ const portsHorizontal = {
 
 	// Horizontal Justification of the lable based on label position X and Y.
 	labelHorizontalJustification: "left",
-
-	// Specifies whether a label that has been truncated should be displayed
-	// in full when the pointer is hovered over the truncated label.
-	displayFullLabelOnHover: false,
 
 	labelWidth: 104,
 	labelHeight: 12,
@@ -354,10 +346,6 @@ const portsVertical = {
 
 	// Horizontal Justification of the lable based on label position X and Y.
 	labelHorizontalJustification: "center",
-
-	// Specifies whether a label that has been truncated should be displayed
-	// in full when the pointer is hovered over the truncated label.
-	displayFullLabelOnHover: true,
 
 	labelWidth: 64,
 	labelHeight: 12,

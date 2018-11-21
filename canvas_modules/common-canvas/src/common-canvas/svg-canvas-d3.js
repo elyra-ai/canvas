@@ -83,6 +83,7 @@ export default class CanvasD3Layout {
 				this.config.enableConnectionType !== config.enableConnectionType ||
 				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
 				this.config.enableLinkType !== config.enableLinkType ||
+				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
 				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize) {
 			this.logger.logStartTimer("Initializing Canvas");
 
@@ -1652,7 +1653,7 @@ class CanvasRenderer {
 				.attr("id", (d) => that.getId("node_label", d.id))
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
 					const labelObj = d3.select(this);
-					if (that.layout.displayFullLabelOnHover &&
+					if (that.config.enableDisplayFullLabelOnHover &&
 							this.textContent.endsWith("...")) {
 						labelObj
 							.attr("abbr-label", this.textContent) // Do this before setting the new label
