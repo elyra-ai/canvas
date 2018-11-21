@@ -7,8 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-$common-properties-small-flyout-width: 320px; // This aligns the right-flyout with the divider in DSX header
-$common-properties-medium-flyout-width: 625px; // This is an arbitrary width for wider-flyout panels
+@import "./properties-main-widths.scss";
 
 .properties-right-flyout {
 	// Set the font explicitly to 14px to shrink them across the entire properties editor
@@ -26,7 +25,7 @@ $common-properties-medium-flyout-width: 625px; // This is an arbitrary width for
 		width: $common-properties-medium-flyout-width;
 	}
 	&.properties-large {
-		width: $common-properties-medium-flyout-width;
+		width: $common-properties-large-flyout-width;
 	}
 	&:hover {
 		.properties-btn-resize {

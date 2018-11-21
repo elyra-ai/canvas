@@ -22,15 +22,20 @@ import { Size } from "./../constants/form-constants";
 import isEqual from "lodash/isEqual";
 import omit from "lodash/omit";
 import pick from "lodash/pick";
-import has from "lodash/has";
 import Icon from "carbon-components-react/lib/components/Icon";
 import { Provider } from "react-redux";
+import logger from "../../../utils/logger";
 
 import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
 import cloneDeep from "lodash/cloneDeep";
 
 import { injectIntl, intlShape } from "react-intl";
+import styles from "./properties-main-widths.scss";
+
+const FLYOUT_WIDTH_SMALL = parseInt(styles.flyoutWidthSmall, 10);
+const FLYOUT_WIDTH_MEDIUM = parseInt(styles.flyoutWidthMedium, 10);
+const FLYOUT_WIDTH_LARGE = parseInt(styles.flyoutWidthLarge, 10);
 
 class PropertiesMain extends React.Component {
 	constructor(props) {
@@ -55,12 +60,14 @@ class PropertiesMain extends React.Component {
 		this.currentParameters = this.propertiesController.getPropertyValues();
 		this.state = {
 			showPropertiesButtons: true,
-			editorSize: this.propertiesController.getForm().editorSize,
-			pixelWidth: this.propertiesController.getForm().pixelWidth
+			editorSize: this.propertiesController.getForm().editorSize
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
+		this._getOverrideSize = this._getOverrideSize.bind(this);
+		this._getResizeButtonDirection = this._getResizeButtonDirection.bind(this);
+		this._isResizeButtonRequired = this._isResizeButtonRequired.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 	}
 
@@ -76,8 +83,7 @@ class PropertiesMain extends React.Component {
 				(newProps.propertiesInfo.appData && !isEqual(newProps.propertiesInfo.appData, this.props.propertiesInfo.appData))) {
 				this.setForm(newProps.propertiesInfo);
 				this.state = {
-					editorSize: this.propertiesController.getForm().editorSize,
-					pixelWidth: this.propertiesController.getForm().pixelWidth
+					editorSize: this.propertiesController.getForm().editorSize
 				};
 				this.currentParameters = this.propertiesController.getPropertyValues();
 				this.propertiesController.setAppData(newProps.propertiesInfo.appData);
@@ -130,6 +136,99 @@ class PropertiesMain extends React.Component {
 		this.initialValueInfo.undoInfo.properties = this.propertiesController.getPropertyValues(); // used for undoing when node editor open
 		this.initialValueInfo.undoInfo.messages = this.propertiesController.getErrorMessages(); // used for undoing when node editor open
 		this.initialValueInfo.additionalInfo.title = this.propertiesController.getTitle();
+	}
+
+	_getOverrideSize() {
+		const pixelWidth = this.propertiesController.getForm().pixelWidth;
+		const editorSizeInForm = this.propertiesController.getForm().editorSize;
+		let overrideSize = null;
+
+		if (pixelWidth) {
+			if (editorSizeInForm === Size.SMALL) {
+				if (this.state.editorSize === Size.SMALL && pixelWidth.min) {
+					overrideSize = pixelWidth.min;
+
+				} else if (this.state.editorSize === Size.MEDIUM && pixelWidth.max) {
+					overrideSize = pixelWidth.max;
+				}
+
+			} else if (editorSizeInForm === Size.MEDIUM) {
+				if (this.state.editorSize === Size.MEDIUM && pixelWidth.min) {
+					overrideSize = pixelWidth.min;
+
+				} else if (this.state.editorSize === Size.LARGE && pixelWidth.max) {
+					overrideSize = pixelWidth.max;
+				}
+
+			} else if (editorSizeInForm === Size.LARGE && pixelWidth.max) {
+				overrideSize = pixelWidth.max;
+			}
+		}
+		return overrideSize;
+	}
+
+	_getResizeButtonDirection() {
+		let direction = "left";
+		if (this.propertiesController.getForm().editorSize === Size.SMALL) {
+			if (this.state.editorSize === Size.MEDIUM) {
+				direction = "right";
+			}
+		} else if (this.propertiesController.getForm().editorSize === Size.MEDIUM) {
+			if (this.state.editorSize === Size.LARGE) {
+				direction = "right";
+			}
+		}
+		return direction;
+	}
+
+	_isResizeButtonRequired() {
+		const pixelWidth = this.propertiesController.getForm().pixelWidth;
+
+		if (this.props.propertiesConfig.enableResize !== false) {
+			if (pixelWidth) {
+				if (!pixelWidth.min && !pixelWidth.max) {
+					logger.warn("Pixel width was provided but no min or max property was found in it.");
+					return true;
+
+				} else if (this.propertiesController.getForm().editorSize === Size.SMALL) {
+					if (pixelWidth.min && !pixelWidth.max && pixelWidth.min >= FLYOUT_WIDTH_MEDIUM) {
+						logger.warn("No resize button shown. Pixel width min size is greater than or equal to default max size: " + FLYOUT_WIDTH_MEDIUM);
+						return false;
+					} else if (!pixelWidth.min && pixelWidth.max && pixelWidth.max <= FLYOUT_WIDTH_SMALL) {
+						logger.warn("No resize button shown. Pixel width max size is less than or equal to default min size: " + FLYOUT_WIDTH_SMALL);
+						return false;
+					} else if (pixelWidth.min >= pixelWidth.max) {
+						logger.warn("No resize button shown. Pixel width min size is greater than or equal to pixel width max size.");
+						return false;
+					}
+
+				} else if (this.propertiesController.getForm().editorSize === Size.MEDIUM) {
+					if (pixelWidth.min && !pixelWidth.max && pixelWidth.min >= FLYOUT_WIDTH_LARGE) {
+						logger.warn("No resize button shown. Pixel width min size is greater than or equal to default max size: " + FLYOUT_WIDTH_LARGE);
+						return false;
+					} else if (!pixelWidth.min && pixelWidth.max && pixelWidth.max <= FLYOUT_WIDTH_MEDIUM) {
+						logger.warn("No resize button shown. Pixel width max size is less than or equal to default min size: " + FLYOUT_WIDTH_MEDIUM);
+						return false;
+					} else if (pixelWidth.min >= pixelWidth.max) {
+						logger.warn("No resize button shown. Pixel width min size is greater than or equal to default max size.");
+						return false;
+					}
+
+				} else if (this.propertiesController.getForm().editorSize === Size.LARGE) {
+					if (pixelWidth.min) {
+						logger.warn("No resize button shown. Pixel width min size ignored.");
+						return false;
+					}
+					return false;
+				}
+
+			} else if (this.propertiesController.getForm().editorSize === Size.LARGE) {
+				return false;
+			}
+			return true;
+		}
+
+		return false;
 	}
 
 	_setValueInforProperties(valueInfo, filterHiddenDisabled) {
@@ -211,14 +310,26 @@ class PropertiesMain extends React.Component {
 	}
 
 	resize() {
-		if (this.state.editorSize === Size.SMALL) {
-			this.setState({
-				editorSize: Size.MEDIUM
-			});
-		} else {
-			this.setState({
-				editorSize: Size.SMALL
-			});
+		if (this.propertiesController.getForm().editorSize === Size.SMALL) {
+			if (this.state.editorSize === Size.SMALL) {
+				this.setState({
+					editorSize: Size.MEDIUM
+				});
+			} else {
+				this.setState({
+					editorSize: Size.SMALL
+				});
+			}
+		} else if (this.propertiesController.getForm().editorSize === Size.MEDIUM) {
+			if (this.state.editorSize === Size.MEDIUM) {
+				this.setState({
+					editorSize: Size.LARGE
+				});
+			} else {
+				this.setState({
+					editorSize: Size.MEDIUM
+				});
+			}
 		}
 	}
 
@@ -253,20 +364,12 @@ class PropertiesMain extends React.Component {
 					rejectLabel={rejectLabel}
 					showPropertiesButtons={this.state.showPropertiesButtons}
 				/>);
-				// Only show the left/right buttons if: resize is enabled; there is no
-				// fixed pixel_width provided or the pixel_width is smaller than the
-				// medium size; and the default editor size is SMALL. All
-				// other cases we don't show the buttons as the panel should be big
-				// enough to work with and the user will not want to reduce its size.
-				if (this.props.propertiesConfig.enableResize !== false &&
-						(!this.state.pixelWidth && this.propertiesController.getForm().editorSize === Size.SMALL ||
-							!has(this.state, "pixelWidth.min") && has(this.state, "pixelWidth.max") && this.propertiesController.getForm().editorSize === Size.SMALL ||
-							!has(this.state, "pixelWidth.max") && has(this.state, "pixelWidth.min") && this.propertiesController.getForm().editorSize === Size.MEDIUM ||
-							(this.state.pixelWidth && this.state.pixelWidth.max > this.state.pixelWidth.min))) {
+				if (this._isResizeButtonRequired()) {
+					const direction = this._getResizeButtonDirection();
 					resizeBtn = (
 						<button className="properties-btn-resize" onClick={this.resize.bind(this)} >
 							<div>
-								<Icon name={`icon--chevron--${this.state.editorSize === Size.SMALL ? "left" : "right"}`} />
+								<Icon name={`icon--chevron--${direction}`} />
 							</div>
 						</button>
 					);
@@ -313,11 +416,10 @@ class PropertiesMain extends React.Component {
 				</PropertiesModal>);
 			}
 			const className = classNames("properties-wrapper", { "properties-right-flyout": this.props.propertiesConfig.rightFlyout }, `properties-${this.state.editorSize}`);
+			const overrideSize = this._getOverrideSize();
 			let overrideStyle = null;
-			if (this.state.pixelWidth && this.state.pixelWidth.min && this.state.editorSize === Size.SMALL) {
-				overrideStyle = { width: this.state.pixelWidth.min + "px" };
-			} else if (this.state.pixelWidth && this.state.pixelWidth.max && this.state.editorSize === Size.MEDIUM) {
-				overrideStyle = { width: this.state.pixelWidth.max + "px" };
+			if (overrideSize !== null) {
+				overrideStyle = { width: overrideSize + "px" };
 			}
 			return (
 				<Provider store={this.propertiesController.getStore()}>
