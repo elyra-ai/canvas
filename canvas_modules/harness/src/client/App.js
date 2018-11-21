@@ -1663,7 +1663,6 @@ class App extends React.Component {
 				toolbarMenuActionHandler={this.toolbarMenuActionHandler}
 				rightFlyoutContent={rightFlyoutContent}
 				showRightFlyout={showRightFlyoutProperties}
-				closeRightFlyout={this.closePropertiesEditorDialog}
 				canvasController={this.canvasController}
 			/>);
 
@@ -1688,7 +1687,6 @@ class App extends React.Component {
 							notificationConfig={notificationConfig2}
 							rightFlyoutContent={rightFlyoutContent2}
 							showRightFlyout={showRightFlyoutProperties2}
-							closeRightFlyout={this.closePropertiesEditorDialog2}
 							selectionChangeHandler={this.selectionChangeHandler2}
 						/>
 					</div>

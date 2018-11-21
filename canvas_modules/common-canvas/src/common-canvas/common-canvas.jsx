@@ -450,21 +450,20 @@ export default class CommonCanvas extends React.Component {
 }
 
 CommonCanvas.propTypes = {
+	canvasController: PropTypes.object.isRequired,
 	config: PropTypes.object.isRequired,
+	toolbarConfig: PropTypes.array,
+	notificationConfig: PropTypes.object,
+	contextMenuConfig: PropTypes.object,
 	contextMenuHandler: PropTypes.func,
 	contextMenuActionHandler: PropTypes.func,
 	editActionHandler: PropTypes.func,
 	clickActionHandler: PropTypes.func,
 	decorationActionHandler: PropTypes.func,
 	toolbarMenuActionHandler: PropTypes.func,
-	toolbarConfig: PropTypes.array,
-	notificationConfig: PropTypes.object,
-	contextMenuConfig: PropTypes.object,
-	rightFlyoutContent: PropTypes.object,
-	showRightFlyout: PropTypes.bool,
-	closeRightFlyout: PropTypes.func,
 	tipHandler: PropTypes.func,
 	idGeneratorHandler: PropTypes.func,
 	selectionChangeHandler: PropTypes.func,
-	canvasController: PropTypes.object.isRequired
+	rightFlyoutContent: PropTypes.object,
+	showRightFlyout: PropTypes.bool
 };
