@@ -35,7 +35,11 @@ export default class PropertiesStore {
 	constructor() {
 		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, panelStatesReducer,
 			errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer, componentMetadataReducer });
-		this.store = createStore(this.combinedReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+		let enableDevTools = false;
+		if (typeof window !== "undefined") {
+			enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+		}
+		this.store = createStore(this.combinedReducer, enableDevTools);
 	}
 
 	dispatch(action) {
