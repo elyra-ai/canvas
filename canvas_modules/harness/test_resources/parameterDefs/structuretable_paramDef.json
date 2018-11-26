@@ -117,7 +117,11 @@
         "Don't show",
         false,
         "European",
-        ["a", "b", "c"]
+        [
+          "a",
+          "b",
+          "c"
+        ]
       ],
       [
         "BP",
@@ -135,7 +139,9 @@
         "Don't show",
         true,
         "Canadian",
-        ["1"]
+        [
+          "1"
+        ]
       ],
       [
         "K",
@@ -528,7 +534,10 @@
         {
           "id": "anArray",
           "type": "array[string]",
-          "default": ["One", "Two"]
+          "default": [
+            "One",
+            "Two"
+          ]
         }
       ]
     }
@@ -711,7 +720,10 @@
           {
             "id": "anArray",
             "type": "array[string]",
-            "default": ["One", "Two"]
+            "default": [
+              "One",
+              "Two"
+            ]
           }
         ]
       }
@@ -1580,6 +1592,23 @@
             "parameter_ref": "structuretableRenameFields[3]",
             "op": "notContains",
             "value": "number"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "structuretableRenameFields[1]",
+          "message": {
+            "default": "The given column name is already in use"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretableRenameFields[1]",
+            "op": "colNotExists"
           }
         }
       }
