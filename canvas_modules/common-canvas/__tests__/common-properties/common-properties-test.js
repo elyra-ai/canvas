@@ -426,6 +426,45 @@ describe("CommonProperties validates on close in flyout", () => {
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
 	});
 
+	it("Validate returned property values when conditionReturnValueHandling='value'", (done) => {
+		const myApplyPropertyChanges = function(values) {
+			expect(values.number_hidden).to.equal(10);
+			done();
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { conditionReturnValueHandling: "value" },
+			{ applyPropertyChanges: myApplyPropertyChanges });
+		wrapper = renderedObject.wrapper;
+		wrapper.find("button[data-id='properties-apply-button']")
+			.at(0)
+			.simulate("click");
+	});
+
+	it("Validate returned property values when conditionReturnValueHandling not set configuration", (done) => {
+		const myApplyPropertyChanges = function(values) {
+			expect(values.number_hidden).to.equal(10);
+			done();
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, null,
+			{ applyPropertyChanges: myApplyPropertyChanges });
+		wrapper = renderedObject.wrapper;
+		wrapper.find("button[data-id='properties-apply-button']")
+			.at(0)
+			.simulate("click");
+	});
+
+	it("Validate returned property values when conditionReturnValueHandling='null'", (done) => {
+		const myApplyPropertyChanges = function(values) {
+			expect(values.number_hidden).to.be.undefined;
+			done();
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { conditionReturnValueHandling: "null" },
+			{ applyPropertyChanges: myApplyPropertyChanges });
+		wrapper = renderedObject.wrapper;
+		wrapper.find("button[data-id='properties-apply-button']")
+			.at(0)
+			.simulate("click");
+	});
+
 });
 
 describe("CommonProperties validates on open correctly", () => {

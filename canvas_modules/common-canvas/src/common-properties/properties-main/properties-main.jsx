@@ -17,7 +17,7 @@ import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
 import PropertyUtils from "./../util/property-utils";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, CONDITION_RETURN_VALUE_HANDLING } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
 import isEqual from "lodash/isEqual";
 import omit from "lodash/omit";
@@ -231,7 +231,8 @@ class PropertiesMain extends React.Component {
 		return false;
 	}
 
-	_setValueInforProperties(valueInfo, filterHiddenDisabled) {
+	_setValueInforProperties(valueInfo) {
+		const filterHiddenDisabled = this.props.propertiesConfig.conditionReturnValueHandling === CONDITION_RETURN_VALUE_HANDLING.NULL;
 		const properties = this.propertiesController.getPropertyValues(filterHiddenDisabled);
 		if (this.uiParameterKeys.length > 0) {
 			valueInfo.properties = omit(properties, this.uiParameterKeys);
@@ -274,12 +275,12 @@ class PropertiesMain extends React.Component {
 		// only save if title or parameters have changed or new error messages
 		if (this.originalTitle !== this.propertiesController.getTitle() ||
 				(this.currentParameters && JSON.stringify(this.currentParameters) !==
-				JSON.stringify(this.propertiesController.getPropertyValues(false))) ||
+				JSON.stringify(this.propertiesController.getPropertyValues())) ||
 				(JSON.stringify(this.previousErrorMessages) !== JSON.stringify(newErrorMessages))) {
 
 			// set current values
 			let valueInfo = { additionalInfo: {}, undoInfo: {} };
-			valueInfo = this._setValueInforProperties(valueInfo, true);
+			valueInfo = this._setValueInforProperties(valueInfo);
 			valueInfo.undoInfo.properties = this.propertiesController.getPropertyValues();
 			const errorMessages = this.propertiesController.getErrorMessages(true, true, true);
 			if (errorMessages) {
@@ -448,7 +449,8 @@ PropertiesMain.propTypes = {
 		applyOnBlur: PropTypes.bool,
 		rightFlyout: PropTypes.bool,
 		containerType: PropTypes.string,
-		enableResize: PropTypes.bool
+		enableResize: PropTypes.bool,
+		conditionReturnValueHandling: PropTypes.string
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
@@ -463,17 +465,6 @@ PropertiesMain.propTypes = {
 	customControls: PropTypes.array, // array of custom controls
 	customConditionOps: PropTypes.array, // array of custom condition ops
 	intl: intlShape,
-};
-
-PropertiesMain.defaultProps = {
-	propertiesConfig: {
-		containerType: "Custom",
-		rightFlyout: true,
-		applyOnBlur: false,
-		enableResize: true
-	},
-	callbacks: {
-	}
 };
 
 export default injectIntl(PropertiesMain, { withRef: true });

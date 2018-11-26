@@ -214,3 +214,8 @@ _defineConstant("EXPRESSION_TABLE_ROWS", 6);
 _defineConstant("TABLE_SUBPANEL_BUTTON_WIDTH", "36px");
 
 _defineConstant("TABLE_SCROLLBAR_WIDTH", "15px");
+
+_defineConstant("CONDITION_RETURN_VALUE_HANDLING", {
+	VALUE: "value",
+	NULL: "null"
+});
