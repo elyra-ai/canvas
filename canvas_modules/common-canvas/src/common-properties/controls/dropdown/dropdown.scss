@@ -12,15 +12,6 @@
 	&.hide {
 		display: none;
 	}
-	.bx--list-box {
-		max-height: none;
-	}
-	.bx--list-box__label {
-		padding: 5px 0;
-	}
-	.bx--select__arrow {
-		right: 0.5rem;
-	}
 	&.error {
 		.bx--list-box__field {
 			border-bottom: 2px solid $support-01;
@@ -32,25 +23,18 @@
 		}
 	}
 }
-.properties-table-cell-control .properties-dropdown {
-	padding-top: 0;
-	padding-bottom: 5px;
-	width: 100%;
-}
-.properties-table-subcell, .properties-onpanel-container {
-	.properties-dropdown {
-		.bx--list-box__menu {
-			position: absolute;
-			width: 100%;
+.properties-table-cell-control {
+	>.properties-dropdown {
+		padding: 0; // override for when in a table cell
+		width: 100%;
+		.bx--select-input {
+			padding: 0 1.25rem 0 0;
 		}
-	}
-}
-select.properties-table-dropdown {
-	background-color: inherit;
-	font-weight: 600;
-	color: $brand-01;
-	padding: 0.35rem 0 0;
-	&:hover {
-		color: $brand-02;
+		.bx--select__arrow {
+			right: 0.5rem;
+		}
+		.bx--form-item {
+			margin: 0 0 0 $table-column-left-padding; // override carbon but need to set correct spacing when in a table
+		}
 	}
 }

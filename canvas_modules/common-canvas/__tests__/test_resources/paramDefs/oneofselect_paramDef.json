@@ -15,11 +15,15 @@
     "disable": true,
     "oneofselect_disabled": "blue",
     "filter": false,
-    "oneofselect_filtered": "orange",
+    "oneofselect_filtered": "purple",
+    "filter_default": false,
+    "oneofselect_filtered_default": "purple",
     "oneofselect_table_error": [
       [
         "cat",
-        "pear"
+        "pear",
+        "blue",
+        "Lemond"
       ]
     ]
   },
@@ -184,6 +188,22 @@
       "required": true
     },
     {
+      "id": "filter_default",
+      "type": "boolean"
+    },
+    {
+      "id": "oneofselect_filtered_default",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "default": "blue"
+    },
+    {
       "id": "oneofselect_table_error",
       "type": "array[oneofselect_table]",
       "default": []
@@ -194,17 +214,18 @@
       "id": "oneofselect_table",
       "parameters": [
         {
-          "id": "dropdown",
+          "id": "animal",
           "enum": [
             "dog",
             "cat",
             "pig",
-            "horse"
+            "horse",
+            "all of the above animals"
           ],
           "default": "horse"
         },
         {
-          "id": "textfield",
+          "id": "fruit",
           "enum": [
             "apple",
             "orange",
@@ -223,6 +244,18 @@
             "brown"
           ],
           "default": "red"
+        },
+        {
+          "id": "cyclist",
+          "enum": [
+            "Lemond",
+            "Mercyk",
+            "Indurain",
+            "Wiggins",
+            "Froome",
+            "Thomas"
+          ],
+          "default": "Lemond"
         }
       ]
     }
@@ -359,7 +392,23 @@
         },
         "resource_key": "oneofselect_filtered",
         "description": {
-          "default": "oneofselect filtered to have values 'red' and 'blue'"
+          "default": "oneofselect filtered to have values 'red', 'blue', and 'green'"
+        }
+      },
+      {
+        "parameter_ref": "filter_default",
+        "label": {
+          "default": "Filter 'oneofselect Filtered Default'"
+        }
+      },
+      {
+        "parameter_ref": "oneofselect_filtered_default",
+        "label": {
+          "default": "oneofselect Filtered Default"
+        },
+        "resource_key": "oneofselect_filtered_default",
+        "description": {
+          "default": "oneofselect filtered to have values 'red', 'blue', and 'green'.  Defaults to 'blue'"
         }
       },
       {
@@ -381,7 +430,7 @@
         "row_selection": "single",
         "parameters": [
           {
-            "parameter_ref": "dropdown",
+            "parameter_ref": "animal",
             "label": {
               "default": "Pet inline"
             },
@@ -392,7 +441,7 @@
             "edit_style": "inline"
           },
           {
-            "parameter_ref": "textfield",
+            "parameter_ref": "fruit",
             "label": {
               "default": "Fruit on-panel"
             },
@@ -409,6 +458,17 @@
             },
             "description": {
               "default": "color subpanel"
+            },
+            "width": 10,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "cyclist",
+            "label": {
+              "default": "Bicyclist"
+            },
+            "description": {
+              "default": "cyclist subpanel"
             },
             "width": 10,
             "edit_style": "subpanel"
@@ -456,7 +516,9 @@
         "type": "controls",
         "parameter_refs": [
           "filter",
-          "oneofselect_filtered"
+          "oneofselect_filtered",
+          "filter_default",
+          "oneofselect_filtered_default"
         ]
       },
       {
@@ -556,7 +618,8 @@
           "parameter_ref": "oneofselect_filtered",
           "values": [
             "red",
-            "blue"
+            "blue",
+            "green"
           ]
         },
         "evaluate": {
@@ -573,10 +636,11 @@
         "target": {
           "parameter_ref": "oneofselect_filtered",
           "values": [
+            "red",
             "orange",
             "yellow",
             "green",
-            "purple"
+            "blue"
           ]
         },
         "evaluate": {
@@ -584,6 +648,25 @@
             "parameter_ref": "filter",
             "op": "equals",
             "value": false
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "oneofselect_filtered_default",
+          "values": [
+            "red",
+            "blue",
+            "green"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter_default",
+            "op": "equals",
+            "value": true
           }
         }
       }

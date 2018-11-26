@@ -17,13 +17,12 @@ import Controller from "../../../src/common-properties/properties-controller";
 import oneofselectParamDef from "../../test_resources/paramDefs/oneofselect_paramDef.json";
 
 
-const emptyValueIndicator = "...";
-
-const propertyName = "test-oneofselect";
-const propertyId = { name: propertyName };
-
-
 describe("oneofselect renders correctly", () => {
+
+	const propertyName = "test-oneofselect";
+	const propertyId = { name: propertyName };
+	const emptyValueIndicator = "...";
+
 	const controller = new Controller();
 	const control = {
 		"name": "test-oneofselect",
@@ -242,4 +241,59 @@ describe("oneofselect allows enum label to be created for an enum value with spa
 	expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.blue green.label"]).to.equal("Blue Green");
 	// Enum value with a space can be assigned a label and renders as expected.
 	expect(dropdownList.at(8).text()).to.equal("Blue Green");
+});
+
+describe("oneofselect filtered enum works correctly", () => {
+	let wrapper;
+	let renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("Validate oneofselect should have options filtered by enum_filter", () => {
+		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect_filtered']");
+		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		dropdownButton.simulate("click");
+		// validate the correct number of options show up on open
+		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect_filtered']");
+		let dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		expect(dropdownList).to.have.length(5);
+		// make sure there isn't warning on first open
+		expect(dropdownWrapper.find("div.properties-validation-message")).to.have.length(0);
+		// checked the filter box
+		const checkboxWrapper = wrapper.find("div[data-id='properties-filter']");
+		const checkbox = checkboxWrapper.find("input");
+		checkbox.getDOMNode().checked = true;
+		checkbox.simulate("change");
+		// validate the correct number of options show up on open
+		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect_filtered']");
+		dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		expect(dropdownList).to.have.length(3);
+	});
+
+	it("Validate oneofselect should clear the property value if filtered", () => {
+		const propertyId = { name: "oneofselect_filtered" };
+		// value was initially set to "purple" but on open the value is cleared by the filter
+		expect(renderedController.getPropertyValue(propertyId)).to.be.equal(null);
+		renderedController.updatePropertyValue(propertyId, "orange");
+		expect(renderedController.getPropertyValue(propertyId)).to.equal("orange");
+		renderedController.updatePropertyValue({ name: "filter" }, true);
+		// "orange" isn't part of the filter so the value should be cleared
+		expect(renderedController.getPropertyValue(propertyId)).to.equal(null);
+	});
+
+	it("Validate oneofselect should set default value if current value is filtered out", () => {
+		const propertyId = { name: "oneofselect_filtered_default" };
+		// value was initially set to "purple" but on open the value is cleared by the filter
+		expect(renderedController.getPropertyValue(propertyId)).to.equal("purple");
+		renderedController.updatePropertyValue({ name: "filter_default" }, true);
+		// "purple" isn't part of the filter so the value should be cleared and the default value should be set
+		expect(renderedController.getPropertyValue(propertyId)).to.equal("blue");
+	});
+
 });

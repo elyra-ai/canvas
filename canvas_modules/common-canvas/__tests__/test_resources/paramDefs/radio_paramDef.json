@@ -17,7 +17,9 @@
     "hide": true,
     "radioHidden": "gini",
     "filter": false,
-    "radioFilter": "red",
+    "radioFilter": "yellow",
+    "filterDefault": false,
+    "radioFilterDefault": "yellow",
     "radioset_table_error": [
       [
         "dog",
@@ -157,9 +159,24 @@
       "enum": [
         "red",
         "green",
-        "blue"
+        "blue",
+        "yellow"
       ],
       "required": true
+    },
+    {
+      "id": "filterDefault",
+      "type": "boolean"
+    },
+    {
+      "id": "radioFilterDefault",
+      "enum": [
+        "red",
+        "green",
+        "blue",
+        "yellow"
+      ],
+      "default": "blue"
     },
     {
       "id": "radioset_table_error",
@@ -380,6 +397,25 @@
         "control": "radioset"
       },
       {
+        "parameter_ref": "filterDefault",
+        "label": {
+          "default": "Filter radio set default"
+        },
+        "description": {
+          "default": "Filter out the 'green' radio"
+        }
+      },
+      {
+        "parameter_ref": "radioFilterDefault",
+        "label": {
+          "default": "Radio Filter Default"
+        },
+        "description": {
+          "default": "Filtered by controlling checkbox.  Will default the value to 'blue'"
+        },
+        "control": "radioset"
+      },
+      {
         "parameter_ref": "radioset_table_error",
         "label": {
           "default": "Radioset in a table errors"
@@ -467,9 +503,20 @@
           "disable",
           "radioDisable",
           "hide",
-          "radioHidden",
+          "radioHidden"
+        ]
+      },
+      {
+        "id": "radio-filters",
+        "label": {
+          "default": "Filters"
+        },
+        "type": "controls",
+        "parameter_refs": [
           "filter",
-          "radioFilter"
+          "radioFilter",
+          "filterDefault",
+          "radioFilterDefault"
         ]
       },
       {
@@ -575,6 +622,43 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "filter",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "radioFilter",
+          "values": [
+            "red",
+            "blue",
+            "green"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "radioFilterDefault",
+          "values": [
+            "red",
+            "blue"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filterDefault",
             "op": "equals",
             "value": true
           }

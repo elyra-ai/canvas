@@ -11,13 +11,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Dropdown from "carbon-components-react/lib/components/DropdownV2";
+import Select from "carbon-components-react/lib/components/Select";
+import SelectItem from "carbon-components-react/lib/components/SelectItem";
 import ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
 import PropertyUtils from "./../../util/property-utils.js";
 import { ControlType } from "./../../constants/form-constants";
 import { STATES } from "./../../constants/constants.js";
-
 
 class DropDown extends React.Component {
 	constructor(props) {
@@ -26,10 +27,20 @@ class DropDown extends React.Component {
 		if (props.control.additionalText) {
 			this.emptyLabel = props.control.additionalText;
 		}
+		this.id = ControlUtils.getControlId(this.props.propertyId);
 		this.handleChange = this.handleChange.bind(this);
 		this.genSchemaSelectOptions = this.genSchemaSelectOptions.bind(this);
 		this.genSelectOptions = this.genSelectOptions.bind(this);
 		this.genFieldSelectOptions = this.genFieldSelectOptions.bind(this);
+		this.updateValueFromFilterEnum = this.updateValueFromFilterEnum.bind(this);
+	}
+
+	componentDidMount() {
+		this.updateValueFromFilterEnum(true);
+	}
+
+	componentDidUpdate(prevProps) {
+		this.updateValueFromFilterEnum();
 	}
 
 	getSelectedOption(options, selectedValue) {
@@ -98,6 +109,19 @@ class DropDown extends React.Component {
 			selectedOption: selectedOption
 		};
 	}
+	// this is needed in order to reset the property value when a value is filtered out.
+	updateValueFromFilterEnum(skipValidateInput) {
+		// update property value if value isn't in current enum value.  Should only be used for oneofselect
+		if (this.props.control.controlType === ControlType.ONEOFSELECT && this.props.value !== null && typeof this.props.value !== "undefined" &&
+			this.props.controlOpts.values.indexOf(this.props.value) < 0) {
+			let defaultValue = null;
+			// set to default value if default value is in filtered enum list
+			if (this.props.control.valueDef && this.props.control.valueDef.defaultValue && this.props.controlOpts.values.indexOf(this.props.control.valueDef.defaultValue) > 0) {
+				defaultValue = this.props.control.valueDef.defaultValue;
+			}
+			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput);
+		}
+	}
 
 	handleChange(evt) {
 		let value = this.props.tableControl ? evt.target.value : evt.selectedItem.value;
@@ -119,7 +143,7 @@ class DropDown extends React.Component {
 			dropDown = this.genSelectOptions(this.props.value);
 		}
 
-		let ourDropDown = (<Dropdown
+		let dropdownComponent = (<Dropdown
 			disabled={this.props.state === STATES.DISABLED}
 			type={dropdownType}
 			items={dropDown.options}
@@ -131,25 +155,31 @@ class DropDown extends React.Component {
 		if (this.props.tableControl) {
 			const options = [];
 			const selection = dropDown.selectedOption && dropDown.selectedOption.value ? dropDown.selectedOption.value : "";
-			for (const option of dropDown.options) {
-				options.push(<option className="bx--select-option" value={option.value} key={option.value}>{option.label}</option>);
+			if (!dropDown.selectedOption) {
+				// need to add null option when no value set.  Shouldn't be an option for the user to select otherwise
+				options.push(<SelectItem text={this.emptyLabel} key="" value="" />);
 			}
-			ourDropDown =
-			(<div className="bx--select">
-				<select className="bx--select-input properties-table-dropdown" onChange={this.handleChange} value={selection}>
-					{options}
-				</select>
-				<svg className="bx--select__arrow" width="10" height="5" viewBox="0 0 10 5">
-					<path d="M0 0l5 4.998L10 0z" fillRule="evenodd" />
-				</svg>
-			</div>);
+			for (const option of dropDown.options) {
+				options.push(<SelectItem text={option.label} key={option.value} value={option.value} />);
+			}
+			dropdownComponent = (<Select
+				id={this.id}
+				hideLabel
+				inline
+				labelText={this.props.control.label ? this.props.control.label.text : ""}
+				disabled={this.props.state === STATES.DISABLED}
+				onChange={this.handleChange}
+				value={selection}
+			>
+				{ options }
+			</Select>);
 		}
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)}
 				className={classNames("properties-dropdown", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}
 			>
-				{ourDropDown}
+				{dropdownComponent}
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>
 		);

@@ -15,6 +15,8 @@ import Checkbox from "carbon-components-react/lib/components/Checkbox";
 import ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
+import intersection from "lodash/intersection";
+import isEqual from "lodash/isEqual";
 
 import { TABLE_SCROLLBAR_WIDTH, STATES } from "../../constants/constants";
 
@@ -22,14 +24,23 @@ import { TABLE_SCROLLBAR_WIDTH, STATES } from "../../constants/constants";
 class SomeofselectControl extends React.Component {
 	constructor(props) {
 		super(props);
-		this.newSelection = null;
 		this.genSelectOptions = this.genSelectOptions.bind(this);
+		this.updateValueFromFilterEnum = this.updateValueFromFilterEnum.bind(this);
 	}
 
 	componentDidMount() {
-		if (this.newSelection) {
-			this.props.controller.updatePropertyValue(this.props.propertyId, this.newSelection);
-			this.newSelection = null;
+		this.updateValueFromFilterEnum(true);
+	}
+
+	componentDidUpdate() {
+		this.updateValueFromFilterEnum();
+	}
+
+	// this is needed in order to reset the property value when a value is filtered out.
+	updateValueFromFilterEnum(skipValidateInput) {
+		const newValues = intersection(this.props.value, this.props.controlOpts.values);
+		if (!isEqual(newValues, this.props.value)) {
+			this.props.controller.updatePropertyValue(this.props.propertyId, newValues, skipValidateInput);
 		}
 	}
 
@@ -50,19 +61,18 @@ class SomeofselectControl extends React.Component {
 		this.props.controller.updatePropertyValue(this.props.propertyId, controlValues);
 	}
 
-	genSelectOptions(selectedValues, state) {
+	genSelectOptions(selectedValues) {
 		const options = [];
 
 		// Allow for enumeration replacement
-		const controlOpts = this.props.controller.getFilteredEnumItems(this.props.propertyId, this.props.control);
-		for (let i = 0; i < controlOpts.values.length; i++) {
-			const checked = selectedValues.indexOf(controlOpts.values[i]) !== -1;
+		for (let i = 0; i < this.props.controlOpts.values.length; i++) {
+			const checked = selectedValues.indexOf(this.props.controlOpts.values[i]) !== -1;
 			const id = this.props.propertyId.name + "-" + i;
 			const cellContent = (<Checkbox
-				disabled={state === STATES.DISABLED}
+				disabled={this.props.state === STATES.DISABLED}
 				id={id}
-				labelText={controlOpts.valueLabels[i]}
-				onChange={this.handleChange.bind(this, controlOpts.values[i])}
+				labelText={this.props.controlOpts.valueLabels[i]}
+				onChange={this.handleChange.bind(this, this.props.controlOpts.values[i])}
 				checked={checked}
 			/>);
 
@@ -81,20 +91,6 @@ class SomeofselectControl extends React.Component {
 			});
 			options.push({ className: "table-row", columns: columns });
 		}
-
-		// Check for filtered selections
-		if (Array.isArray(selectedValues)) {
-			const newSelns = selectedValues.slice(0);
-			for (let i = 0; i < selectedValues.length; i++) {
-				if ((controlOpts.values.indexOf(selectedValues[i])) === -1) {
-					newSelns.splice(newSelns.indexOf(selectedValues[i]), 1);
-				}
-			}
-			if (selectedValues.length !== newSelns.length) {
-				this.newSelection = newSelns;
-			}
-		}
-
 		return options;
 	}
 
@@ -104,7 +100,7 @@ class SomeofselectControl extends React.Component {
 			controlValue = [];
 		}
 
-		const options = this.genSelectOptions(controlValue, this.props.state);
+		const options = this.genSelectOptions(controlValue);
 		const rows = this.props.control.rows ? this.props.control.rows : 4;
 
 		return (
@@ -133,13 +129,15 @@ SomeofselectControl.propTypes = {
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	controlOpts: PropTypes.object // pass in by redux
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
 	state: ownProps.controller.getControlState(ownProps.propertyId),
-	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId),
+	controlOpts: ownProps.controller.getFilteredEnumItems(ownProps.propertyId, ownProps.control)
 });
 
 export default connect(mapStateToProps, null)(SomeofselectControl);

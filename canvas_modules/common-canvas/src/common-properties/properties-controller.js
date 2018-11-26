@@ -697,7 +697,7 @@ export default class PropertiesController {
 	*/
 	getFilteredEnumItems(propertyId, enumSet) {
 		const replacementItems = this.propertiesStore.getFilteredEnumItems(propertyId);
-		if (replacementItems && PropertyUtils.toType(replacementItems) === "array") {
+		if (Array.isArray(replacementItems)) {
 			const newControl = {};
 			newControl.values = [];
 			newControl.valueLabels = [];

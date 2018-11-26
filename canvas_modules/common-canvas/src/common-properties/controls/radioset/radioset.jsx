@@ -23,17 +23,18 @@ class RadiosetControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.uuid = uuid4();
-		this.setEmptySelection = false;
 		this.handleChange = this.handleChange.bind(this);
+		this.updateValueFromFilterEnum = this.updateValueFromFilterEnum.bind(this);
 	}
 
 	componentDidMount() {
-		if (this.setEmptySelection) {
-			this.setEmptySelection = false;
-			this.props.controller.updatePropertyValue(this.props.propertyId, "");
-		}
+		this.updateValueFromFilterEnum(true);
 		const val = this.props.controller.getPropertyValue(this.props.propertyId);
 		this.setEnabledStateOfOptionalPanels(val);
+	}
+
+	componentDidUpdate() {
+		this.updateValueFromFilterEnum();
 	}
 
 	/*
@@ -45,7 +46,7 @@ class RadiosetControl extends React.Component {
 	*/
 	setEnabledStateOfOptionalPanels(targetValue) {
 		if (this.props.control.optionalPanels) {
-			const valueSet = this.props.controller.getFilteredEnumItems(this.props.propertyId, this.props.control);
+			const valueSet = this.props.controlOpts;
 			const refState = this.props.controller.getPanelStates();
 
 			// This populates the control.panelTree with the panels passed in and
@@ -69,6 +70,19 @@ class RadiosetControl extends React.Component {
 
 	getOptionalPanel(val) {
 		return this.props.control.optionalPanels ? this.props.control.optionalPanels[val] : null;
+	}
+
+	// this is needed in order to reset the property value when a value is filtered out.
+	updateValueFromFilterEnum(skipValidateInput) {
+		if (this.props.value !== null && typeof this.props.value !== "undefined" &&
+			this.props.controlOpts.values.indexOf(this.props.value) < 0) {
+			let defaultValue = null;
+			// set to default value if default value is in filtered enum list
+			if (this.props.control.valueDef && this.props.control.valueDef.defaultValue && this.props.controlOpts.values.indexOf(this.props.control.valueDef.defaultValue) > 0) {
+				defaultValue = this.props.control.valueDef.defaultValue;
+			}
+			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput);
+		}
 	}
 
 	convertTargetValue(targetValue) {
@@ -100,7 +114,7 @@ class RadiosetControl extends React.Component {
 		}
 		const buttons = [];
 		let wasChecked = false;
-		const valueSet = this.props.controller.getFilteredEnumItems(this.props.propertyId, this.props.control);
+		const valueSet = this.props.controlOpts;
 		for (var i = 0; i < valueSet.values.length; i++) {
 			const checked = valueSet.values[i] === this.props.value;
 			// RadioButton only accepts values of type string || number
@@ -125,9 +139,6 @@ class RadiosetControl extends React.Component {
 					{optionalPanel}
 				</div>
 			);
-		}
-		if (this.props.value && this.props.value.length > 0 && !wasChecked) {
-			this.setEmptySelection = true;
 		}
 
 		return (
@@ -157,13 +168,15 @@ RadiosetControl.propTypes = {
 		PropTypes.number,
 		PropTypes.bool
 	]), // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	controlOpts: PropTypes.object // pass in by redux
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
 	state: ownProps.controller.getControlState(ownProps.propertyId),
-	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId),
+	controlOpts: ownProps.controller.getFilteredEnumItems(ownProps.propertyId, ownProps.control)
 });
 
 export default connect(mapStateToProps, null)(RadiosetControl);

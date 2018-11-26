@@ -16,36 +16,36 @@ import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
 import SomeOfSelectParamDef from "../../test_resources/paramDefs/someofselect_paramDef.json";
 
-const controller = new Controller();
-
-const control = {
-	"name": "test-someofselect",
-	"label": {
-		"text": "Merge method"
-	},
-	"controlType": "someofselect",
-	"valueDef": {
-		"propType": "string",
-		"isList": true,
-		"isMap": false
-	},
-	"values": [
-		"Order",
-		"Keys",
-		"Condition",
-		"Gtt"
-	],
-	"valueLabels": [
-		"Order",
-		"Keys",
-		"Condition",
-		"Ranked condition"
-	]
-};
-propertyUtils.setControls(controller, [control]);
-const propertyId = { name: "test-someofselect" };
-
 describe("SomeOfSelectControl renders correctly", () => {
+
+	const controller = new Controller();
+
+	const control = {
+		"name": "test-someofselect",
+		"label": {
+			"text": "Merge method"
+		},
+		"controlType": "someofselect",
+		"valueDef": {
+			"propType": "string",
+			"isList": true,
+			"isMap": false
+		},
+		"values": [
+			"Order",
+			"Keys",
+			"Condition",
+			"Gtt"
+		],
+		"valueLabels": [
+			"Order",
+			"Keys",
+			"Condition",
+			"Ranked condition"
+		]
+	};
+	propertyUtils.setControls(controller, [control]);
+	const propertyId = { name: "test-someofselect" };
 
 	it("props should have been defined", () => {
 		const wrapper = shallowWithIntl(
@@ -232,4 +232,45 @@ describe("someofselect works correctly in common-properties", () => {
 		someofselectCheckbox = someofselectWrapper.find("input");
 		expect(someofselectCheckbox).to.have.length(3);
 	});
+});
+
+describe("someofselect filtered enum works correctly", () => {
+	let wrapper;
+	let renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(SomeOfSelectParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("Validate someofselect should have options filtered by enum_filter", () => {
+		let someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_filtered']");
+		// validate the correct number of options show up on open
+		expect(someofselectWrapper.find("tr.table-row")).to.have.length(5);
+		// make sure there isn't warning on first open
+		expect(someofselectWrapper.find("div.properties-validation-message")).to.have.length(0);
+		// checked the filter box
+		const checkboxWrapper = wrapper.find("div[data-id='properties-filter']");
+		const checkbox = checkboxWrapper.find("input");
+		checkbox.getDOMNode().checked = true;
+		checkbox.simulate("change");
+		// validate the correct number of options show up on open
+		someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_filtered']");
+		expect(someofselectWrapper.find("tr.table-row")).to.have.length(3);
+	});
+
+	it("Validate someofselectParamDef should clear the property value if filtered", () => {
+		const propertyId = { name: "someofselect_filtered" };
+		// value was initially set to "purple" but on open the value is cleared by the filter
+		expect(renderedController.getPropertyValue(propertyId)).to.be.eql(["red"]);
+		renderedController.updatePropertyValue(propertyId, ["red", "orange"]);
+		expect(renderedController.getPropertyValue(propertyId)).to.eql(["red", "orange"]);
+		renderedController.updatePropertyValue({ name: "filter" }, true);
+		// "orange" isn't part of the filter so the value should be cleared
+		expect(renderedController.getPropertyValue(propertyId)).to.eql(["red"]);
+	});
+
 });

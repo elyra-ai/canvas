@@ -3,15 +3,31 @@
     "title": "Some of Select"
   },
   "current_parameters": {
-    "someofselect": ["orange", "green"],
+    "someofselect": [
+      "orange",
+      "green"
+    ],
     "someofselect_null": null,
     "someofselect_empty_array": [],
-    "someofselect_error": ["yellow"],
-    "someofselect_warning": ["orange"],
+    "someofselect_error": [
+      "yellow"
+    ],
+    "someofselect_warning": [
+      "orange"
+    ],
     "hide": true,
-    "someofselect_hidden": ["yellow"],
+    "someofselect_hidden": [
+      "yellow"
+    ],
     "disable": true,
-    "someofselect_disabled": ["yellow"]
+    "someofselect_disabled": [
+      "yellow"
+    ],
+    "filter": false,
+    "someofselect_filtered": [
+      "red",
+      "purple"
+    ]
   },
   "parameters": [
     {
@@ -38,7 +54,9 @@
         "blue",
         "purple"
       ],
-      "default": ["yellow"],
+      "default": [
+        "yellow"
+      ],
       "required": true
     },
     {
@@ -129,6 +147,23 @@
     },
     {
       "id": "someofselect_disabled",
+      "type": "array[string]",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "filter",
+      "type": "boolean"
+    },
+    {
+      "id": "someofselect_filtered",
       "type": "array[string]",
       "enum": [
         "red",
@@ -240,6 +275,22 @@
         "description": {
           "default": "Enabled and filtered list"
         }
+      },
+      {
+        "parameter_ref": "filter",
+        "label": {
+          "default": "Filter 'someofselect Filtered'"
+        }
+      },
+      {
+        "parameter_ref": "someofselect_filtered",
+        "label": {
+          "default": "someofselect Filtered"
+        },
+        "resource_key": "someofselect_filtered",
+        "description": {
+          "default": "someofselect filtered to have values 'red' and 'blue'"
+        }
       }
     ],
     "group_info": [
@@ -270,6 +321,17 @@
           "someofselect_hidden",
           "disable",
           "someofselect_disabled"
+        ]
+      },
+      {
+        "id": "someofselect-filters",
+        "label": {
+          "default": "Filters"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "filter",
+          "someofselect_filtered"
         ]
       }
     ]
@@ -340,23 +402,63 @@
       }
     },
     {
-       "enum_filter":{
-          "target":{
-             "parameter_ref":"someofselect_disabled",
-             "values":[
-                "red",
-                "yellow",
-                "purple"
-             ]
-          },
-          "evaluate":{
-            "condition": {
-              "parameter_ref": "disable",
-              "op": "equals",
-              "value": false
-            }
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "someofselect_disabled",
+          "values": [
+            "red",
+            "yellow",
+            "purple"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
           }
-       }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "someofselect_filtered",
+          "values": [
+            "red",
+            "blue",
+            "green"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "someofselect_filtered",
+          "values": [
+            "red",
+            "orange",
+            "yellow",
+            "green",
+            "blue"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
     }
   ]
 }

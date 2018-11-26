@@ -141,7 +141,8 @@
     },
     {
       "id": "selectcolumn_table_error",
-      "type": "array[selectcolumn_table]"
+      "type": "array[selectcolumn_table]",
+      "role": "column"
     }
   ],
   "complex_types": [

@@ -6,21 +6,25 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint no-undefined: "off"*/
 
-// import RadiosetControl from "../../../src/common-properties/editor-controls/radioset-control.jsx";
 import { expect } from "chai";
 import propertyUtils from "../../_utils_/property-utils";
 import radioParamDef from "../../test_resources/paramDefs/radio_paramDef.json";
 
-
 describe("radio renders and works correctly with different enum types", () => {
 
-	const renderedObject = propertyUtils.flyoutEditorForm(radioParamDef);
-	const wrapper = renderedObject.wrapper;
-	const renderedController = renderedObject.controller;
-
-	const labels = wrapper.find("label.properties-control-label");
+	let wrapper;
+	let renderedController;
+	let labels;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(radioParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+		labels = wrapper.find("label.properties-control-label");
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
 
 	it("radioset control with string enum", () => {
 		expect(labels.at(0).text()).to.equal("Radio String");
@@ -78,7 +82,7 @@ describe("radio renders and works correctly with different enum types", () => {
 
 	it("radioset control undefined", () => {
 		expect(labels.at(6).text()).to.equal("Radio Undefined");
-		expect(renderedController.getPropertyValue({ name: "radioUndefined" })).to.equal(undefined);
+		expect(renderedController.getPropertyValue({ name: "radioUndefined" })).is.undefined;
 		const radioGroup = wrapper.find("div[data-id='properties-radioUndefined']");
 		const radioUndefined = radioGroup.find("input[value='entropy']");
 		radioUndefined.simulate("change", { target: { checked: true, value: "entropy" } });
@@ -146,16 +150,57 @@ describe("radio renders and works correctly with different enum types", () => {
 		expect(renderedController.getPropertyValue({ name: "radioHidden" })).to.equal("entropy");
 	});
 
+});
+
+describe("radio filtered enum works correctly", () => {
+	let wrapper;
+	let renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(radioParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
 	it("Validate radioFilter should have options filtered by enum_filter", () => {
+		let radioGroup = wrapper.find("div[data-id='properties-radioFilter']");
+		// validate the correct number of options show up on open
+		let options = radioGroup.find("div.properties-radioset-panel");
+		expect(options).to.have.length(3);
+		// make sure there isn't warning on first open
+		expect(radioGroup.find("div.properties-validation-message")).to.have.length(0);
+		// checked the filter box
 		const checkboxWrapper = wrapper.find("div[data-id='properties-filter']");
 		const checkbox = checkboxWrapper.find("input");
-		// checked the filter box
 		checkbox.getDOMNode().checked = true;
 		checkbox.simulate("change");
-		const radioGroup = wrapper.find("div[data-id='properties-radioFilter']");
-		const options = radioGroup.find("label");
+		radioGroup = wrapper.find("div[data-id='properties-radioFilter']");
+		options = radioGroup.find("div.properties-radioset-panel");
 		expect(options).to.have.length(2);
 	});
 
-	// TODO: add radioset in tables unit test cases.
+	it("Validate radioFilter should clear the property value if filtered", () => {
+		const propertyId = { name: "radioFilter" };
+		// value was initially set to "yellow" but on open the value is cleared by the filter
+		expect(renderedController.getPropertyValue(propertyId)).to.be.equal(null);
+		renderedController.updatePropertyValue(propertyId, "green");
+		expect(renderedController.getPropertyValue(propertyId)).to.equal("green");
+		renderedController.updatePropertyValue({ name: "filter" }, true);
+		// "green" isn't part of the filter so the value should be cleared
+		expect(renderedController.getPropertyValue(propertyId)).to.equal(null);
+	});
+
+	it("Validate radioFilter should set default value if current value is filtered out", () => {
+		const propertyId = { name: "radioFilterDefault" };
+		// value was initially set to "yellow" but on open the value is cleared by the filter
+		expect(renderedController.getPropertyValue(propertyId)).to.equal("yellow");
+		renderedController.updatePropertyValue({ name: "filterDefault" }, true);
+		// "yellow" isn't part of the filter so the value should be cleared and the default value should be set
+		expect(renderedController.getPropertyValue(propertyId)).to.equal("blue");
+	});
+
 });
+
+// TODO: add radioset in tables unit test cases.
