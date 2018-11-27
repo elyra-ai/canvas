@@ -38,8 +38,28 @@ function	getCharLimit(control, defaultLimit) {
 	return limit;
 }
 
+function splitNewlines(text, splitValue) {
+	if (text.length > 0) {
+		const split = text.split(splitValue);
+		if (Array.isArray(split)) {
+			return split;
+		}
+		return [split];
+	}
+	return [];
+}
+
+function joinNewlines(list, joinValue) {
+	if (Array.isArray(list)) {
+		return list.length === 0 ? "" : list.join(joinValue);
+	}
+	return list;
+}
+
 module.exports = {
 	getCharLimit: getCharLimit,
 	getControlId: getControlId,
-	getDataId: getDataId
+	getDataId: getDataId,
+	splitNewlines: splitNewlines,
+	joinNewlines: joinNewlines
 };

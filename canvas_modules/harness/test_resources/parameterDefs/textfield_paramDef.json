@@ -20,7 +20,11 @@
         "Hopper",
         "Turing",
         "Shannon",
-        "Babbage"
+        "Babbage",
+        [
+          "RAM",
+          "ROM"
+        ]
       ],
       []
     ],
@@ -29,7 +33,11 @@
         "Hopper",
         "Turing",
         "Shannon",
-        "Babbage"
+        "Babbage",
+        [
+          "RAM",
+          "ROM"
+        ]
       ],
       []
     ]
@@ -124,6 +132,10 @@
         {
           "id": "textfield_sub_panel",
           "type": "string"
+        },
+        {
+          "id": "textfield_array",
+          "type": "array[string]"
         }
       ]
     }
@@ -309,6 +321,13 @@
               "default": "textfield with `edit_style=sub_panel`"
             },
             "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "textfield_array",
+            "width": 20,
+            "label": {
+              "default": "textfield array"
+            }
           }
         ]
       }

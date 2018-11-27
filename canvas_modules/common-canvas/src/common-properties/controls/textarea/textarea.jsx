@@ -19,6 +19,8 @@ import classNames from "classnames";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import uuid4 from "uuid/v4";
 
+const newLine = "\n";
+
 class TextareaControl extends React.Component {
 	constructor(props) {
 		super(props);
@@ -32,32 +34,14 @@ class TextareaControl extends React.Component {
 			value = value.substring(0, this.charLimit);
 		}
 		if (this.props.control.valueDef && this.props.control.valueDef.isList) { // array
-			value = this.splitNewlines(value);
+			value = ControlUtils.splitNewlines(value, newLine);
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 
-	splitNewlines(text) {
-		if (text.length > 0) {
-			const split = text.split("\n");
-			if (Array.isArray(split)) {
-				return split;
-			}
-			return [split];
-		}
-		return [];
-	}
-
-	joinNewlines(list) {
-		if (Array.isArray(list)) {
-			return list.length === 0 ? "" : list.join("\n");
-		}
-		return list;
-	}
-
 	render() {
 		let value = this.props.value ? this.props.value : "";
-		value = this.joinNewlines(value);
+		value = ControlUtils.joinNewlines(value, newLine);
 		const textArea =
 			(
 				<TextArea

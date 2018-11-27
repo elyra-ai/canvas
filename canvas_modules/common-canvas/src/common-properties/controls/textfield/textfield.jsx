@@ -19,11 +19,18 @@ import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
 import uuid4 from "uuid/v4";
 
+const arrayValueDelimiter = ", ";
+
 class TextfieldControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.charLimit = ControlUtils.getCharLimit(props.control, CHARACTER_LIMITS.TEXT_FIELD);
 		this.id = ControlUtils.getControlId(props.propertyId);
+		this.isList = false;
+		if (this.props.control.valueDef && this.props.control.valueDef.isList) {
+			this.isList = true;
+		}
+
 	}
 
 	handleChange(evt) {
@@ -31,11 +38,17 @@ class TextfieldControl extends React.Component {
 		if (this.charLimit !== -1 && value) {
 			value = value.substring(0, this.charLimit);
 		}
+		if (this.isList) {
+			value = ControlUtils.splitNewlines(value, arrayValueDelimiter);
+		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 
 	render() {
-		const value = this.props.value ? this.props.value : "";
+		let value = this.props.value ? this.props.value : "";
+		if (this.isList) {
+			value = ControlUtils.joinNewlines(value, arrayValueDelimiter);
+		}
 		const className = classNames("properties-textfield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
 		const textInput =
@@ -87,7 +100,10 @@ TextfieldControl.propTypes = {
 	controller: PropTypes.object.isRequired,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
-	value: PropTypes.string, // pass in by redux
+	value: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.array
+	]), // pass in by redux
 	messageInfo: PropTypes.object // pass in by redux
 };
 

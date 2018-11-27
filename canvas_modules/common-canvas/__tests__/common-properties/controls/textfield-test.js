@@ -26,14 +26,22 @@ const control = {
 		isList: false
 	}
 };
+
+const controlList = {
+	name: "test-text-list",
+	additionalText: "Enter file name",
+	valueDef: {
+		isList: true
+	}
+};
 const control2 = {
 	name: "test-text2",
 };
-propertyUtils.setControls(controller, [control, control2]);
-const propertyId = { name: "test-text" };
+propertyUtils.setControls(controller, [control, control2, controlList]);
 
 
 describe("textfield renders correctly", () => {
+	const propertyId = { name: "test-text" };
 
 	beforeEach(() => {
 		controller.setErrorMessages({});
@@ -70,6 +78,21 @@ describe("textfield renders correctly", () => {
 		const input = textWrapper.find("input");
 		input.simulate("change", { target: { value: "My new value" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal("My new value");
+	});
+
+	it("textfield should update text value with list delimiter", () => {
+		const wrapper = mount(
+			<Textfield
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.find("div[data-id='properties-test-text']");
+		const input = textWrapper.find("input");
+		input.simulate("change", { target: { value: "value 1, value2" } });
+		expect(controller.getPropertyValue(propertyId)).to.equal("value 1, value2");
 	});
 
 	it("textfield should not go over max chars", () => {
@@ -200,5 +223,60 @@ describe("textfield renders correctly", () => {
 		const textWrapper = wrapper.find("div[data-id='properties-test-text']");
 		const messageWrapper = textWrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
+	});
+});
+
+describe("textfield list works correctly", () => {
+	const propertyId = { name: "test-text-list" };
+	beforeEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+		controller.setPropertyValues(
+			{ "test-text-list": ["item 1", "item 2"] }
+		);
+	});
+	it("textfield should update list value with single value", () => {
+		const wrapper = mount(
+			<Textfield
+				store={controller.getStore()}
+				control={controlList}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.find("div[data-id='properties-test-text-list']");
+		const input = textWrapper.find("input");
+		input.simulate("change", { target: { value: "My new value" } });
+		expect(controller.getPropertyValue(propertyId)).to.eql(["My new value"]);
+	});
+
+	it("textfield should update list value with multiple values", () => {
+		const wrapper = mount(
+			<Textfield
+				store={controller.getStore()}
+				control={controlList}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.find("div[data-id='properties-test-text-list']");
+		const input = textWrapper.find("input");
+		input.simulate("change", { target: { value: "value 1, value 2, value 3" } });
+		expect(controller.getPropertyValue(propertyId)).to.eql(["value 1", "value 2", "value 3"]);
+	});
+
+	it("textfield should set value to [] when no value is entered", () => {
+		const wrapper = mount(
+			<Textfield
+				store={controller.getStore()}
+				control={controlList}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.find("div[data-id='properties-test-text-list']");
+		const input = textWrapper.find("input");
+		input.simulate("change", { target: { value: "" } });
+		expect(controller.getPropertyValue(propertyId)).to.eql([]);
 	});
 });
