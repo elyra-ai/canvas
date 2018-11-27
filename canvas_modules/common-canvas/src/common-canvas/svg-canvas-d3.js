@@ -534,7 +534,7 @@ class CanvasRenderer {
 		this.canvasSVG.attr("y", dims.y);
 
 		// Keep the background rectangle the same size as the SVG area.
-		const background = this.canvasSVG.selectAll(this.getSelectorForClass("d3-subflow-background"));
+		const background = this.canvasSVG.selectAll(this.getSelectorForClass("d3-svg-background"));
 		background.attr("width", dims.width);
 		background.attr("height", dims.height);
 
@@ -854,6 +854,27 @@ class CanvasRenderer {
 			.attr("x", dims.x)
 			.attr("y", dims.y);
 
+		// This rectangle is added for two reasons:
+		// 1. On Safari, wheel events will not go to the SVG unless there is an
+		//    SVG object under the mouse pointer. Therefore we open this rectangle
+		//    to fill the SVG area to catch those events in Safari. See this stack
+		//    overflow issue for details:
+		//    https://stackoverflow.com/questions/40887193/d3-js-zoom-is-not-working-with-mousewheel-in-safari
+		// 2. If we're displaying a sub-flow inside a supernode (on any browser)
+		//    we need a background rectangle to display the same color as
+		//    the background of the main canvas.
+		// So this rectangle is not needed on Chrome and Firefox with full page
+		// display but we open it anyway, for consistency.
+		canvasSVG
+			.append("rect")
+			.attr("x", 0)
+			.attr("y", 0)
+			.attr("width", dims.width)
+			.attr("height", dims.height)
+			.attr("data-pipeline-id", this.activePipeline.id)
+			.attr("class", "d3-svg-background")
+			.attr("pointer-events", "all");
+
 		// Only attach the zoom behaviour and 'defs' to the top most SVG area
 		// when we are displaying either the primary pipeline full page or
 		// a sub-pipeline full page.
@@ -904,6 +925,7 @@ class CanvasRenderer {
 			}
 
 			// Add defs element to allow a filter for the drop shadow
+			// This only needs to be done once for the whole page.
 			var defs = canvasSVG.append("defs");
 			this.createDropShadow(defs);
 		}
@@ -942,19 +964,6 @@ class CanvasRenderer {
 				}
 				this.openContextMenu("canvas");
 			});
-
-		// If we're displaying a sub-flow inside a supernode we need a
-		// background rectangle to catch zoom event etc.
-		if (this.isDisplayingSubFlowInPlace()) {
-			canvasSVG
-				.append("rect")
-				.attr("x", 0)
-				.attr("y", 0)
-				.attr("width", dims.width)
-				.attr("height", dims.height)
-				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "d3-subflow-background");
-		}
 
 		return canvasSVG;
 	}
