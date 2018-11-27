@@ -727,11 +727,12 @@ class CanvasRenderer {
 	// offset variables provide an offset from within the object the mouse is over.
 	// Note: added checks for event to prevent error in FF when building in production:
 	// TypeError: Value being assigned to SVGPoint.x is not a finite floating-point value.
+	// Note: d3Event.scale added to the if below because that property will exist
+	// on Safari when processing a 'gesturechange' event.
 	getMousePos(svg) {
-		if (d3Event instanceof MouseEvent || (d3Event && d3Event.sourceEvent)) {
-			// Get mouse position relative to the top level SVG in the Div becasue,
+		if (d3Event instanceof MouseEvent || (d3Event && d3Event.sourceEvent) || d3Event.scale) {
+			// Get mouse position relative to the top level SVG in the Div because,
 			// when we're rendering a sub-flow this.canvasSVG will be the SVG in the supernode.
-			// const mousePos = d3.mouse(this.canvasDiv.selectAll("svg").node());
 			const mousePos = d3.mouse(svg.node());
 			return { x: mousePos[0], y: mousePos[1] };
 		}
@@ -860,25 +861,34 @@ class CanvasRenderer {
 			if (this.config.enableInteractionType === TRACKPAD_INTERACTION) {
 				canvasSVG
 					.call(this.zoom) // In trackpad mode we need the zoom behavior to handle region select
+					// On Safari, gesturestart, gesturechange, and gestureend will be
+					// called for the pinch/spread gesture. This code not only implements
+					// zoom on pinch/spread but also stops the whole browser page being
+					// zoomed which is the default behavior for that gesture on Safari.
+					// https://stackoverflow.com/questions/36458954/prevent-pinch-zoom-in-safari-for-osx
+					.on("gesturestart", () => {
+						this.scale = d3Event.scale;
+						stopPropagationAndPreventDefault();
+					})
+					.on("gesturechange", () => {
+						const delta = this.scale - d3Event.scale;
+						this.scale = d3Event.scale;
+						this.pinchZoom(delta);
+						stopPropagationAndPreventDefault();
+					})
+					.on("gestureend", () => {
+						stopPropagationAndPreventDefault();
+					})
+					// On Chrome and Firefox, the wheel event will be called for
+					// pinch/spread gesture with ctrlKey set to true (even when the
+					// ctrl key is not pressed). See this stack overflow issue for details:
+					// https://stackoverflow.com/questions/52130484/how-to-catch-pinch-and-stretch-gesture-events-in-d3-zoom-d3v4-v5
+					// On Chrome, Firefox and Safari, the wheel event will be called
+					// for two finger scroll.
 					.on("wheel.zoom", () => {
-						// Browsers convert the pinch gesture to a wheel event with ctrlKey
-						// set to true (even when the ctrl key is not pressed).
-						// https://stackoverflow.com/questions/52130484/how-to-catch-pinch-and-stretch-gesture-events-in-d3-zoom-d3v4-v5
 						if (d3Event.ctrlKey) {
-							const canv = this.getCanvasDimensionsAdjustedForScale(1);
-							const transMousePos = this.getTransformedMousePos();
 							const wheelDelta = (d3Event.deltaY * 0.01);
-							const k = this.zoomTransform.k - wheelDelta;
-
-							if (k > this.minScaleExtent && k < this.maxScaleExtent) {
-								let x = this.zoomTransform.x + (canv.left * wheelDelta);
-								let y = this.zoomTransform.y + (canv.top * wheelDelta);
-
-								x += ((transMousePos.x - canv.left) * wheelDelta);
-								y += ((transMousePos.y - canv.top) * wheelDelta);
-
-								this.zoomCanvasBackground(x, y, k);
-							}
+							this.pinchZoom(wheelDelta);
 						} else {
 							this.panCanvasBackground(
 								this.zoomTransform.x - d3Event.deltaX,
@@ -947,6 +957,22 @@ class CanvasRenderer {
 		}
 
 		return canvasSVG;
+	}
+
+	pinchZoom(zoomDelta) {
+		const canv = this.getCanvasDimensionsAdjustedForScale(1);
+		const transMousePos = this.getTransformedMousePos();
+		const k = this.zoomTransform.k - zoomDelta;
+
+		if (k > this.minScaleExtent && k < this.maxScaleExtent) {
+			let x = this.zoomTransform.x + (canv.left * zoomDelta);
+			let y = this.zoomTransform.y + (canv.top * zoomDelta);
+
+			x += ((transMousePos.x - canv.left) * zoomDelta);
+			y += ((transMousePos.y - canv.top) * zoomDelta);
+
+			this.zoomCanvasBackground(x, y, k);
+		}
 	}
 
 	createCanvasGroup(canvasSVG) {
