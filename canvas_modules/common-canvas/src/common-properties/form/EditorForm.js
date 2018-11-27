@@ -114,12 +114,14 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	case GroupType.SUB_TABS: {
 		// Defines a sub-tab group where each child group represents a sub-tab.
 		const subTabItems = [];
-		group.subGroups.forEach(function(subGroup) {
-			const subGroupName = subGroup.name;
-			groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
-			groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
-			subTabItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
-		});
+		if (Array.isArray(group.subGroups)) {
+			group.subGroups.forEach(function(subGroup) {
+				const subGroupName = subGroup.name;
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
+				subTabItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
+			});
+		}
 		return UIItem.makeSubTabs(subTabItems);
 	}
 	case GroupType.PANEL_SELECTOR: {
@@ -129,10 +131,12 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	}
 	case GroupType.PANELS: {
 		const panSubItems = [];
-		group.subGroups.forEach(function(subGroup) {
-			groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
-			panSubItems.push(groupItem);
-		});
+		if (Array.isArray(group.subGroups)) {
+			group.subGroups.forEach(function(subGroup) {
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				panSubItems.push(groupItem);
+			});
+		}
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, panSubItems));
 	}
 	case GroupType.CUSTOM_PANEL: {
@@ -141,10 +145,12 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	case GroupType.SUMMARY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
 		const panSubItems = [];
-		group.subGroups.forEach(function(subGroup) {
-			groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
-			panSubItems.push(groupItem);
-		});
+		if (Array.isArray(group.subGroups)) {
+			group.subGroups.forEach(function(subGroup) {
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				panSubItems.push(groupItem);
+			});
+		}
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.SUMMARY, panSubItems, groupLabel));
 	}
 	case GroupType.ACTION_PANEL: {
@@ -158,10 +164,12 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	case GroupType.TWISTY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
 		const panSubItems = [];
-		group.subGroups.forEach(function(subGroup) {
-			groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
-			panSubItems.push(groupItem);
-		});
+		if (Array.isArray(group.subGroups)) {
+			group.subGroups.forEach(function(subGroup) {
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				panSubItems.push(groupItem);
+			});
+		}
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, panSubItems, groupLabel));
 	}
 	default:
@@ -175,6 +183,9 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 function _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider) {
 	const uiItems = [];
 	const panelInsertedFor = [];
+	if (!Array.isArray(group.parameterNames())) {
+		return uiItems;
+	}
 	group.parameterNames().forEach(function(paramName) {
 		// Assume property definition exists
 		const prop = parameterMetadata.getParameter(paramName);
@@ -224,7 +235,7 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 
 	// Process any subgroups which have not already been inserted into a
 	// radio button set (see code in loop above).
-	if (group.subGroups && group.subGroups.length > 0) {
+	if (Array.isArray(group.subGroups)) {
 		group.subGroups.forEach(function(subGroup) {
 			if (!_hasPanelBeenInserted(panelInsertedFor, subGroup.dependsOn)) {
 				const uiItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
@@ -256,12 +267,14 @@ function _hasPanelBeenInserted(panelInsertedFor, dependsOn) {
  */
 function _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, structureMetadata, l10nProvider) {
 	const panSelSubItems = [];
-	group.subGroups.forEach(function(subGroup) {
-		const subGroupName = subGroup.name;
-		const groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
-		const groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
-		panSelSubItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
-	});
+	if (Array.isArray(group.subGroups)) {
+		group.subGroups.forEach(function(subGroup) {
+			const subGroupName = subGroup.name;
+			const groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+			const groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
+			panSelSubItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
+		});
+	}
 	return panSelSubItems;
 }
 
@@ -397,9 +410,11 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				defaultRow = structureDef.defaultStructure();
 				// For inline/row editing, create definitions for all the columns that can be edited
 				subControls = [];
-				structureDef.parameterMetadata.paramDefs.forEach(function(param) {
-					subControls.push(_makeSubControl(param, l10nProvider));
-				});
+				if (structureDef.parameterMetadata && Array.isArray(structureDef.parameterMetadata.paramDefs)) {
+					structureDef.parameterMetadata.paramDefs.forEach(function(param) {
+						subControls.push(_makeSubControl(param, l10nProvider));
+					});
+				}
 				// If the property is a keyed property or a structure list then the key should not be included in the
 				// structure definition. However it will still need to be included in the table column definitions.
 				if ((parameter.isMapValue() || parameter.isList()) && structureDef.keyDefinition) {
@@ -659,11 +674,13 @@ function _isEmbeddedMultiOption(parameter) {
  */
 function _makeActions(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider) {
 	const uiItems = [];
-	group.actionIds().forEach(function(actionId) {
-		// Assume property definition exists
-		const action = UIItem.makeAction(_makeAction(actionMetadata.getAction(actionId), l10nProvider));
-		uiItems.push(action);
-	});
+	if (Array.isArray(group.actionIds())) {
+		group.actionIds().forEach(function(actionId) {
+			// Assume property definition exists
+			const action = UIItem.makeAction(_makeAction(actionMetadata.getAction(actionId), l10nProvider));
+			uiItems.push(action);
+		});
+	}
 	return uiItems;
 }
 
@@ -685,9 +702,11 @@ function _parameterValueLabels(parameter, l10nProvider) {
 			key = parameter.name;
 		}
 		const paramLabels = [];
-		parameter.getValidValues().forEach(function(paramValue) {
-			paramLabels.push(l10nProvider.l10nValueLabel(key, String(paramValue)));
-		});
+		if (Array.isArray(parameter.getValidValues())) {
+			parameter.getValidValues().forEach(function(paramValue) {
+				paramLabels.push(l10nProvider.l10nValueLabel(key, String(paramValue)));
+			});
+		}
 		return paramLabels;
 	}
 	return null;

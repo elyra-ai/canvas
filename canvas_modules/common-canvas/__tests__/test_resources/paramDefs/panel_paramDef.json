@@ -117,14 +117,14 @@
     ],
     "group_info": [
       {
-        "id": "panels",
+        "id": "text-panels",
         "label": {
-          "default": "Panels"
+          "default": "Text Panels"
         },
         "type": "panels",
         "group_info": [
           {
-            "id": "orange",
+            "id": "textPanel",
             "type": "textPanel",
             "label": {
               "default": "Oranges"
@@ -132,20 +132,14 @@
             "description": {
               "default": "An orange tree can grow to reach 30 feet and live for over a hundred years."
             }
-          }
-        ]
-      },
-      {
-        "id": "panel-selector",
-        "label": {
-          "default": "Panel Selector"
-        },
-        "type": "controls",
-        "parameter_refs": [
-          "fruit-color",
-          "number"
-        ],
-        "group_info": [
+          },
+          {
+            "id": "number-panel",
+            "type": "controls",
+            "parameter_refs": [
+              "number"
+            ]
+          },
           {
             "id": "dynamicTextPercent",
             "type": "textPanel",
@@ -165,7 +159,68 @@
             "description": {
               "default": "Sum: ${sum(number, number)} with (number, number). Sum: ${sum(number, 2, number)} with (number, 2, number)"
             }
+          }
+        ]
+      },
+      {
+        "id": "empty-panels-container",
+        "label": {
+          "default": "Empty Panels"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "empty-control",
+            "type": "controls"
           },
+          {
+            "id": "empty-panels",
+            "type": "panels"
+          },
+          {
+            "id": "empty-twistyPanel",
+            "type": "twistyPanel"
+          },
+          {
+            "id": "empty-textPanel",
+            "type": "textPanel"
+          },
+          {
+            "id": "empty-actionPanel",
+            "type": "actionPanel"
+          },
+          {
+            "id": "empty-summaryPanel",
+            "type": "summaryPanel"
+          },
+          {
+            "id": "empty-customPanel",
+            "type": "customPanel"
+          },
+          {
+            "id": "empty-panelSelector",
+            "type": "panelSelector"
+          },
+          {
+            "id": "empty-columnSelection",
+            "type": "columnSelection"
+          },
+          {
+            "id": "empty-subTabs",
+            "type": "subTabs"
+          }
+        ]
+      },
+      {
+        "id": "panel-selector",
+        "label": {
+          "default": "Panel Selector"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "fruit-color"
+        ],
+        "group_info": [
           {
             "id": "panel-selector-fields",
             "label": {
@@ -239,45 +294,45 @@
     ]
   },
   "dataset_metadata": [
-		{
-	    "fields": [
-	      {
-	        "name": "age",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "BP",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Na",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "drug",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "set",
-	          "modeling_role": "input"
-	        }
-	      }
-	    ]
-	  }
-	]
+    {
+      "fields": [
+        {
+          "name": "age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ]
 }

@@ -213,20 +213,22 @@ class SummaryPanel extends React.Component {
 		let msg = {};
 		let errorCount = 0;
 		let warningCount = 0;
-		controls.forEach((controlId) => {
-			const controlMsg = this.props.controller.getErrorMessage({ name: controlId }, true);
-			if (!isEmpty(controlMsg)) {
-				if (controlMsg.type === CONDITION_MESSAGE_TYPE.WARNING) {
-					warningCount += 1;
+		if (Array.isArray(controls)) {
+			controls.forEach((controlId) => {
+				const controlMsg = this.props.controller.getErrorMessage({ name: controlId }, true);
+				if (!isEmpty(controlMsg)) {
+					if (controlMsg.type === CONDITION_MESSAGE_TYPE.WARNING) {
+						warningCount += 1;
+					}
+					if (controlMsg.type === CONDITION_MESSAGE_TYPE.ERROR) {
+						errorCount += 1;
+					}
 				}
-				if (controlMsg.type === CONDITION_MESSAGE_TYPE.ERROR) {
-					errorCount += 1;
+				if (!isEmpty(controlMsg) && (!isEmpty(msg) || msg.type !== "error")) {
+					msg = controlMsg;
 				}
-			}
-			if (!isEmpty(controlMsg) && (!isEmpty(msg) || msg.type !== "error")) {
-				msg = controlMsg;
-			}
-		});
+			});
+		}
 		if (!isEmpty(msg)) {
 			let descriptionText = "";
 			if (errorCount > 0 && warningCount === 0) {

@@ -379,12 +379,12 @@ class EditorForm extends React.Component {
 						</div>);
 					} catch (error) {
 						logger.warn("Error thrown creating custom panel: " + error);
-						return (<div />);
+						return null;
 					}
 				}
 			}
 		}
-		return <div>Panel Not Found: {panel.id}</div>;
+		return <div key={"custom." + key}>Panel Not Found: {panel.id}</div>;
 	}
 
 	generateSharedControlNames(panel) {

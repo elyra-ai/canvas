@@ -35,7 +35,7 @@ const Size = {
 
 const GroupType = {
 	CONTROLS: "controls",
-	TABS: "tabs",
+	TABS: "tabs", // currently not used
 	SUB_TABS: "subTabs",
 	PANELS: "panels",
 	ADDITIONAL: "additional",
