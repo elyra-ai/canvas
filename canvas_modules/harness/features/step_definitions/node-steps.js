@@ -1034,4 +1034,16 @@ module.exports = function() {
 		const nodePorts = browser.$(nodeSelector).$$(".d3-node-port-" + portType);
 		expect(nodePorts.length).toEqual(Number(numPorts));
 	});
+
+	// Then I verify the node image for the "Supernode" node is displayed at 5, 4
+	this.Then(/^I verify the node image for the "([^"]*)" node is displayed at (\d+), (\d+)$/, function(nodeName, xPos, yPos) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const nodeSelector = "#node_image_" + nodeId;
+		const nodeImages = browser.$$(nodeSelector);
+		const xAttr = nodeImages[0].getAttribute("x");
+		const yAttr = nodeImages[0].getAttribute("y");
+		expect(Number(xAttr)).toEqual(Number(xPos));
+		expect(Number(yAttr)).toEqual(Number(yPos));
+	});
+
 };

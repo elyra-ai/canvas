@@ -1633,9 +1633,6 @@ class CanvasRenderer {
 				.append("image")
 				.attr("id", (d) => this.getId("node_image", d.id))
 				.attr("xlink:href", (d) => this.getNodeImage(d))
-				.attr("width", this.layout.imageWidth)
-				.attr("height", this.layout.imageHeight)
-				.attr("x", this.layout.imagePosX)
 				.attr("class", "node-image");
 
 			// Label outline - this code used for debugging purposes
@@ -1728,8 +1725,10 @@ class CanvasRenderer {
 					// from the canvas) and when WML Canvas uses that clipboard support in place
 					// of its own.
 					nodeGrp.select(that.getId("#node_image", d.id))
-						.attr("y", (nd) => this.getImagePosY(nd))
-						.style("display", function(nd) { return that.isExpandedSupernode(nd) ? "none" : "inherit"; })
+						.attr("x", (nd) => this.getNodeImagePosX(nd))
+						.attr("y", (nd) => this.getNodeImagePosY(nd))
+						.attr("width", (nd) => this.getNodeImageWidth(nd))
+						.attr("height", (nd) => this.getNodeImageHeight(nd))
 						.datum(node) // Set the __data__ to the updated data
 						.each(function(nd) {
 							var imageObj = d3.select(this);
@@ -1994,6 +1993,27 @@ class CanvasRenderer {
 		return d.image;
 	}
 
+	getNodeImageWidth(d) {
+		if (this.isExpandedSupernode(d)) {
+			return this.layout.supernodeImageWidth;
+		}
+		return this.layout.imageWidth;
+	}
+
+	getNodeImageHeight(d) {
+		if (this.isExpandedSupernode(d)) {
+			return this.layout.supernodeImageHeight;
+		}
+		return this.layout.imageHeight;
+	}
+
+	getNodeImagePosX(d) {
+		if (this.isExpandedSupernode(d)) {
+			return this.layout.supernodeImagePosX;
+		}
+		return this.layout.imagePosX;
+	}
+
 	setNodeStyles(d, type) {
 		this.setNodeBodyStyles(d, type);
 		this.setNodeSelectionOutlineStyles(d, type);
@@ -2092,10 +2112,10 @@ class CanvasRenderer {
 				nodeGrp
 					.append("rect")
 					.attr("id", () => this.getId("node_exp_back", d.id))
-					.attr("width", this.layout.supernodeIconWidth + (2 * this.layout.supernodeIconPadding))
-					.attr("height", this.layout.supernodeIconHeight + (2 * this.layout.supernodeIconPadding))
+					.attr("width", this.layout.supernodeExpansionIconWidth + (2 * this.layout.supernodeIconPadding))
+					.attr("height", this.layout.supernodeExpansionIconHeight + (2 * this.layout.supernodeIconPadding))
 					.attr("x", (nd) => this.getExpansionIconPosX(nd) - this.layout.supernodeIconPadding)
-					.attr("y", this.layout.supernodeIconPosY - this.layout.supernodeIconPadding)
+					.attr("y", this.layout.supernodeExpansionIconPosY - this.layout.supernodeIconPadding)
 					.attr("class", "d3-node-super-expand-icon-outline")
 					.on("click", () => {
 						stopPropagationAndPreventDefault();
@@ -2108,10 +2128,10 @@ class CanvasRenderer {
 					.attr("id", () => this.getId("node_exp_icon", d.id))
 					.attr("class", "d3-node-super-expand-icon")
 					.html(SUPER_NODE_EXPAND_ICON)
-					.attr("width", this.layout.supernodeIconWidth)
-					.attr("height", this.layout.supernodeIconHeight)
+					.attr("width", this.layout.supernodeExpansionIconWidth)
+					.attr("height", this.layout.supernodeExpansionIconHeight)
 					.attr("x", (nd) => this.getExpansionIconPosX(nd))
-					.attr("y", this.layout.supernodeIconPosY)
+					.attr("y", this.layout.supernodeExpansionIconPosY)
 					.on("click", () => {
 						stopPropagationAndPreventDefault();
 						this.displaySupernodeFullPage(d);
@@ -2246,7 +2266,10 @@ class CanvasRenderer {
 		this.canvasController.displaySubPipeline({ pipelineId: d.subflow_ref.pipeline_id_ref, pipelineFlowId: this.pipelineFlowId });
 	}
 
-	getImagePosY(data) {
+	getNodeImagePosY(data) {
+		if (this.isExpandedSupernode(data)) {
+			return this.layout.supernodeImagePosY;
+		}
 		if (this.layout.labelAndIconVerticalJustification === "center") {
 			if (this.layout.nodeFormatType === "horizontal") {
 				return (data.height / 2) - (this.layout.imageHeight / 2);
@@ -2275,7 +2298,7 @@ class CanvasRenderer {
 
 	getLabelPosX(data) {
 		if (this.isExpandedSupernode(data)) {
-			return this.layout.supernodeLabelPosY;
+			return this.layout.supernodeLabelPosX;
 		}
 		return this.layout.labelHorizontalJustification === "left" // If not "left" then "center"
 			? this.layout.labelPosX : this.layout.labelPosX + (this.layout.labelWidth / 2);
@@ -2323,7 +2346,7 @@ class CanvasRenderer {
 
 	getEllipsisPosX(data) {
 		if (this.isExpandedSupernode(data)) {
-			return data.width - (2 * this.layout.supernodeIconSeparation) - this.layout.supernodeIconWidth - this.layout.ellipsisWidth;
+			return data.width - (2 * this.layout.supernodeIconSeparation) - this.layout.supernodeExpansionIconWidth - this.layout.ellipsisWidth;
 		}
 
 		return this.layout.ellipsisPosX;
@@ -2339,7 +2362,7 @@ class CanvasRenderer {
 				return (data.height / 2) - (this.layout.ellipsisHeight / 2);
 
 			} else if (this.layout.nodeFormatType === "vertical") {
-				return this.getImagePosY(data) - (this.layout.ellipsisPosY - this.layout.imagePosY);
+				return this.getNodeImagePosY(data) - (this.layout.ellipsisPosY - this.layout.imagePosY);
 			}
 		}
 		return this.layout.ellipsisPosY;
@@ -2353,7 +2376,7 @@ class CanvasRenderer {
 	}
 
 	getExpansionIconPosX(data) {
-		return data.width - this.layout.supernodeIconSeparation - this.layout.supernodeIconWidth;
+		return data.width - this.layout.supernodeIconSeparation - this.layout.supernodeExpansionIconWidth;
 	}
 
 	isExpandedSupernode(data) {
@@ -3456,7 +3479,7 @@ class CanvasRenderer {
 		this.removeDynamicNodeIcons(nodeObj);
 		const minWidth =
 			this.layout.supernodeLabelWidth + this.layout.ellipsisWidth +
-			this.layout.supernodeIconWidth + (2 * this.layout.supernodeIconPadding);
+			this.layout.supernodeExpansionIconWidth + (2 * this.layout.supernodeIconPadding);
 		const delta = this.resizeObject(nodeObj, this.nodeSizingDirection, minWidth, 80);
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {

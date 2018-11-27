@@ -5,6 +5,19 @@ Feature: Supernode
 	As a human
 	I want to create a supernode
 
+	Scenario: Test the supernode expanded structure
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
+		Given I have toggled the app side panel
+
+		Then I resize the window size to 1330 width and 660 height
+
+		Then I right click the "Supernode" node to display the context menu
+		Then I click option "Expand supernode" from the context menu
+
+		Then I verify the node image for the "Supernode" node is displayed at 5, 4
+
 	Scenario: Sanity test supernode expanded to correct size
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
