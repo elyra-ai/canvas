@@ -328,4 +328,10 @@ module.exports = function() {
 		const objectModel = getCanvas();
 		expect(objectModel.pipelines[pipelineNum].links.length).toEqual(Number(numLinks));
 	});
+
+	this.Then(/^I display the browser configuration$/,
+		function() {
+			console.log("browser.desiredCapabilities: ");
+			console.log(browser.desiredCapabilities);
+		});
 };

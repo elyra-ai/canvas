@@ -48,10 +48,10 @@ const haloLayout = {
 	labelHorizontalJustification: "center",
 
 	labelWidth: 52,
-	labelHeight: 12,
+	labelHeight: 13, // Should match the font size specified in common-canvas-d3.scss
 
 	// The underhang of letters below the baseline for the label font used
-	labelDescent: 3,
+	labelDescent: 3, // Should match the font size specified in common-canvas-d3.scss
 
 	labelPosX: 4,
 	labelPosY: 53,
@@ -120,20 +120,22 @@ const haloLayout = {
 	// Supernode in-place containment area attributes
 	supernodeLabelPosX: 30,
 	supernodeLabelPosY: 8,
-	supernodeLabelWidth: 150,
 	supernodeImageWidth: 18,
 	supernodeImageHeight: 18,
 	supernodeImagePosX: 5,
 	supernodeImagePosY: 4,
-	supernodeEllipsisPosY: 5,
-	supernodeExpansionIconPosY: 5,
-	supernodeExpansionIconHeight: 14,
-	supernodeExpansionIconWidth: 14,
-	supernodeIconPadding: 2,
-	supernodeIconSeparation: 5,
+	supernodeEllipsisPosY: 3,
+	supernodeEllipsisWidth: 10,
+	supernodeEllipsisHeight: 20,
+	supernodeExpansionIconPosY: 4,
+	supernodeExpansionIconHeight: 18,
+	supernodeExpansionIconWidth: 18,
+	supernodeExpansionIconHoverAreaPadding: 2,
+	supernodeIconSeparation: 3,
 	supernodeDefaultWidth: 200,
 	supernodeDefaultHeight: 200,
-	supernodeElementsPadding: 5,
+	supernodeMinWidth: 100,
+	supernodeMinHeight: 80,
 	supernodeSVGTopAreaHeight: 25,
 	supernodeSVGAreaPadding: 3,
 	supernodeBindingPortRadius: 10,
@@ -192,10 +194,10 @@ const portsHorizontal = {
 	labelHorizontalJustification: "left",
 
 	labelWidth: 104,
-	labelHeight: 12,
+	labelHeight: 12, // Should match the font size specified in common-canvas-d3.scss
 
 	// The underhang of letters below the baseline for the label font used
-	labelDescent: 3,
+	labelDescent: 3, // Should match the font size specified in common-canvas-d3.scss
 
 	labelPosX: 38,
 	labelPosY: 14,
@@ -264,23 +266,25 @@ const portsHorizontal = {
 	// Supernode in-place containment area attributes
 	supernodeLabelPosX: 30,
 	supernodeLabelPosY: 8,
-	supernodeLabelWidth: 150,
 	supernodeImageWidth: 18,
 	supernodeImageHeight: 18,
 	supernodeImagePosX: 5,
 	supernodeImagePosY: 4,
-	supernodeEllipsisPosY: 5,
-	supernodeExpansionIconPosY: 5,
-	supernodeExpansionIconHeight: 14,
-	supernodeExpansionIconWidth: 14,
-	supernodeIconPadding: 2,
-	supernodeIconSeparation: 5,
+	supernodeEllipsisPosY: 3,
+	supernodeEllipsisWidth: 10,
+	supernodeEllipsisHeight: 20,
+	supernodeExpansionIconPosY: 4,
+	supernodeExpansionIconHeight: 18,
+	supernodeExpansionIconWidth: 18,
+	supernodeExpansionIconHoverAreaPadding: 2,
+	supernodeIconSeparation: 3,
 	supernodeDefaultWidth: 200,
 	supernodeDefaultHeight: 200,
-	supernodeElementsPadding: 5,
+	supernodeMinWidth: 100,
+	supernodeMinHeight: 80,
 	supernodeSVGTopAreaHeight: 25,
 	supernodeSVGAreaPadding: 3,
-	supernodeBindingPortRadius: 8,
+	supernodeBindingPortRadius: 7,
 	supernodeZoomPadding: 40,
 
 	// ---------------------------------------------------------------------------
@@ -309,10 +313,10 @@ const portsHorizontal = {
 	commentPortRadius: 5,
 
 	// Display of vertical ellipsis to show context menu
-	ellipsisWidth: 4,
-	ellipsisHeight: 16,
-	ellipsisPosX: 148,
-	ellipsisPosY: 12,
+	ellipsisWidth: 10,
+	ellipsisHeight: 22,
+	ellipsisPosX: 145,
+	ellipsisPosY: 9,
 	ellipsisHoverAreaPadding: 3
 };
 
@@ -356,10 +360,10 @@ const portsVertical = {
 	labelHorizontalJustification: "center",
 
 	labelWidth: 64,
-	labelHeight: 12,
+	labelHeight: 13, // Should match the font size specified in common-canvas-d3.scss
 
 	// The underhang of letters below the baseline for the label font used
-	labelDescent: 3,
+	labelDescent: 3, // Should match the font size specified in common-canvas-d3.scss
 
 	labelPosX: 3,
 	labelPosY: 57,
@@ -428,20 +432,22 @@ const portsVertical = {
 	// Supernode in-place containment area attributes
 	supernodeLabelPosX: 30,
 	supernodeLabelPosY: 8,
-	supernodeLabelWidth: 150,
 	supernodeImageWidth: 18,
 	supernodeImageHeight: 18,
 	supernodeImagePosX: 5,
 	supernodeImagePosY: 4,
-	supernodeEllipsisPosY: 5,
-	supernodeExpansionIconPosY: 5,
-	supernodeExpansionIconHeight: 14,
-	supernodeExpansionIconWidth: 14,
-	supernodeIconPadding: 2,
-	supernodeIconSeparation: 5,
+	supernodeEllipsisPosY: 3,
+	supernodeEllipsisWidth: 10,
+	supernodeEllipsisHeight: 20,
+	supernodeExpansionIconPosY: 4,
+	supernodeExpansionIconHeight: 18,
+	supernodeExpansionIconWidth: 18,
+	supernodeExpansionIconHoverAreaPadding: 2,
+	supernodeIconSeparation: 3,
 	supernodeDefaultWidth: 200,
 	supernodeDefaultHeight: 200,
-	supernodeElementsPadding: 5,
+	supernodeMinWidth: 100,
+	supernodeMinHeight: 80,
 	supernodeSVGTopAreaHeight: 25,
 	supernodeSVGAreaPadding: 3,
 	supernodeBindingPortRadius: 10,
@@ -473,10 +479,10 @@ const portsVertical = {
 	commentPortRadius: 5,
 
 	// Display of vertical ellipsis to show context menu
-	ellipsisWidth: 5,
-	ellipsisHeight: 15,
-	ellipsisPosX: 60,
-	ellipsisPosY: 7,
+	ellipsisWidth: 11,
+	ellipsisHeight: 21,
+	ellipsisPosX: 57,
+	ellipsisPosY: 8,
 	ellipsisHoverAreaPadding: 3
 };
 

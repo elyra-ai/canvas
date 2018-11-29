@@ -1784,7 +1784,7 @@ class CanvasRenderer {
 						.attr("text-anchor", (nd) => this.getLabelHorizontalJustification(nd))
 						.text(function(nd) {
 							var textObj = d3.select(this);
-							return that.getLabelText(nd, textObj);
+							return that.getNodeLabelText(nd, textObj);
 						})
 						.attr("class", function(nd) { return that.layout.cssNodeLabel + " " + that.getMessageLabelClass(nd.messages); });
 
@@ -2119,10 +2119,10 @@ class CanvasRenderer {
 					.append("rect")
 					.attr("id", () => this.getId("node_ellipsis_background", d.id))
 					.attr("class", "d3-node-ellipsis-background")
-					.attr("width", this.layout.ellipsisWidth + (2 * this.layout.ellipsisHoverAreaPadding))
-					.attr("height", this.layout.ellipsisHeight + (2 * this.layout.ellipsisHoverAreaPadding))
-					.attr("x", (nd) => this.getEllipsisPosX(nd) - this.layout.ellipsisHoverAreaPadding)
-					.attr("y", (nd) => this.getEllipsisPosY(nd) - this.layout.ellipsisHoverAreaPadding)
+					.attr("width", (nd) => this.getEllipsisWidth(nd))
+					.attr("height", (nd) => this.getEllipsisHeight(nd))
+					.attr("x", (nd) => this.getEllipsisPosX(nd))
+					.attr("y", (nd) => this.getEllipsisPosY(nd))
 					.on("click", () => {
 						stopPropagationAndPreventDefault();
 						this.openContextMenu("node", d);
@@ -2132,10 +2132,10 @@ class CanvasRenderer {
 					.attr("id", () => this.getId("node_ellipsis", d.id))
 					.attr("class", "d3-node-ellipsis")
 					.html(NODE_MENU_ICON)
-					.attr("width", this.layout.ellipsisWidth)
-					.attr("height", this.layout.ellipsisHeight)
-					.attr("x", (nd) => this.getEllipsisPosX(nd))
-					.attr("y", (nd) => this.getEllipsisPosY(nd))
+					.attr("width", (nd) => this.getEllipsisWidth(nd) - (2 * this.layout.ellipsisHoverAreaPadding))
+					.attr("height", (nd) => this.getEllipsisHeight(nd) - (2 * this.layout.ellipsisHoverAreaPadding))
+					.attr("x", (nd) => this.getEllipsisPosX(nd) + this.layout.ellipsisHoverAreaPadding)
+					.attr("y", (nd) => this.getEllipsisPosY(nd) + this.layout.ellipsisHoverAreaPadding)
 					.on("click", () => {
 						stopPropagationAndPreventDefault();
 						this.openContextMenu("node", d);
@@ -2147,14 +2147,22 @@ class CanvasRenderer {
 				nodeGrp
 					.append("rect")
 					.attr("id", () => this.getId("node_exp_back", d.id))
-					.attr("width", this.layout.supernodeExpansionIconWidth + (2 * this.layout.supernodeIconPadding))
-					.attr("height", this.layout.supernodeExpansionIconHeight + (2 * this.layout.supernodeIconPadding))
-					.attr("x", (nd) => this.getExpansionIconPosX(nd) - this.layout.supernodeIconPadding)
-					.attr("y", this.layout.supernodeExpansionIconPosY - this.layout.supernodeIconPadding)
+					.attr("width", this.layout.supernodeExpansionIconWidth)
+					.attr("height", this.layout.supernodeExpansionIconHeight)
+					.attr("x", (nd) => this.getExpansionIconPosX(nd))
+					.attr("y", this.layout.supernodeExpansionIconPosY)
 					.attr("class", "d3-node-super-expand-icon-outline")
 					.on("click", () => {
 						stopPropagationAndPreventDefault();
 						this.displaySupernodeFullPage(d);
+					})
+					.on("mouseenter", (nd) => { // Use function keyword so 'this' pointer references the DOM text object
+						d3.select(this.getId("#node_exp_back", nd.id))
+							.attr("data-pointer-hover", "yes");
+					})
+					.on("mouseleave", (nd) => { // Use function keyword so 'this' pointer references the DOM text object
+						d3.select(this.getId("#node_exp_back", nd.id))
+							.attr("data-pointer-hover", "no");
 					});
 
 				// Supernode expansion icon
@@ -2163,13 +2171,21 @@ class CanvasRenderer {
 					.attr("id", () => this.getId("node_exp_icon", d.id))
 					.attr("class", "d3-node-super-expand-icon")
 					.html(SUPER_NODE_EXPAND_ICON)
-					.attr("width", this.layout.supernodeExpansionIconWidth)
-					.attr("height", this.layout.supernodeExpansionIconHeight)
-					.attr("x", (nd) => this.getExpansionIconPosX(nd))
-					.attr("y", this.layout.supernodeExpansionIconPosY)
+					.attr("width", this.layout.supernodeExpansionIconWidth - (2 * this.layout.supernodeExpansionIconHoverAreaPadding))
+					.attr("height", this.layout.supernodeExpansionIconHeight - (2 * this.layout.supernodeExpansionIconHoverAreaPadding))
+					.attr("x", (nd) => this.getExpansionIconPosX(nd) + this.layout.supernodeExpansionIconHoverAreaPadding)
+					.attr("y", this.layout.supernodeExpansionIconPosY + this.layout.supernodeExpansionIconHoverAreaPadding)
 					.on("click", () => {
 						stopPropagationAndPreventDefault();
 						this.displaySupernodeFullPage(d);
+					})
+					.on("mouseenter", (nd) => { // Use function keyword so 'this' pointer references the DOM text object
+						d3.select(this.getId("#node_exp_back", nd.id))
+							.attr("data-pointer-hover", "yes");
+					})
+					.on("mouseleave", (nd) => { // Use function keyword so 'this' pointer references the DOM text object
+						d3.select(this.getId("#node_exp_back", nd.id))
+							.attr("data-pointer-hover", "no");
 					});
 			}
 		}
@@ -2317,10 +2333,13 @@ class CanvasRenderer {
 		return this.layout.imagePosY;
 	}
 
-	getLabelText(data, textObj) {
+	getNodeLabelText(data, textObj) {
 		let labelWidth = this.layout.labelWidth;
 		if (this.isExpandedSupernode(data)) {
-			labelWidth = this.layout.supernodeLabelWidth;
+			labelWidth = data.width - this.layout.supernodeLabelPosX -
+				(4 * this.layout.supernodeIconSeparation) -
+				this.layout.supernodeExpansionIconWidth -
+				this.layout.supernodeEllipsisWidth;
 
 			// Reduce the available space for the label by the error icon width.
 			if (this.getMessageLevel(data.messages) !== "") {
@@ -2358,7 +2377,7 @@ class CanvasRenderer {
 	getErrorPosX(data, nodeGrp) {
 		if (this.isExpandedSupernode(data)) {
 			const nodeText = nodeGrp.select(this.getId("#node_label", data.id)).node();
-			return nodeText.getComputedTextLength() + this.layout.supernodeLabelPosX + this.layout.supernodeElementsPadding;
+			return this.layout.supernodeLabelPosX + nodeText.getComputedTextLength() + this.layout.supernodeIconSeparation;
 		}
 		return this.layout.errorXPos;
 	}
@@ -2379,9 +2398,25 @@ class CanvasRenderer {
 		return this.layout.errorYPos;
 	}
 
+	getEllipsisWidth(d) {
+		if (this.isExpandedSupernode(d)) {
+			return this.layout.supernodeEllipsisWidth;
+		}
+		return this.layout.ellipsisWidth;
+	}
+
+	getEllipsisHeight(d) {
+		if (this.isExpandedSupernode(d)) {
+			return this.layout.supernodeEllipsisHeight;
+		}
+		return this.layout.ellipsisHeight;
+	}
+
 	getEllipsisPosX(data) {
 		if (this.isExpandedSupernode(data)) {
-			return data.width - (2 * this.layout.supernodeIconSeparation) - this.layout.supernodeExpansionIconWidth - this.layout.ellipsisWidth;
+			return data.width - (2 * this.layout.supernodeIconSeparation) -
+				this.layout.supernodeExpansionIconWidth -
+				this.layout.supernodeEllipsisWidth;
 		}
 
 		return this.layout.ellipsisPosX;
@@ -3512,10 +3547,8 @@ class CanvasRenderer {
 	resizeNode() {
 		const nodeObj = this.getNode(this.nodeSizingId);
 		this.removeDynamicNodeIcons(nodeObj);
-		const minWidth =
-			this.layout.supernodeLabelWidth + this.layout.ellipsisWidth +
-			this.layout.supernodeExpansionIconWidth + (2 * this.layout.supernodeIconPadding);
-		const delta = this.resizeObject(nodeObj, this.nodeSizingDirection, minWidth, 80);
+		const delta = this.resizeObject(nodeObj, this.nodeSizingDirection,
+			this.layout.supernodeMinWidth, this.layout.supernodeMinHeight);
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
 			this.addToNodeSizingArray(nodeObj);

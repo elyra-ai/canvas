@@ -263,7 +263,7 @@ $link-hightlight-color: $brand-01;
 	fill: transparent;
 }
 
-.d3-node-super-expand-icon-outline:hover {
+.d3-node-super-expand-icon-outline[data-pointer-hover="yes"] {
 	fill: $node-super-expand-icon-outline-hover-color;
 }
 

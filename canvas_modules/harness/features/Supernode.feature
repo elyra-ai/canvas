@@ -6,26 +6,36 @@ Feature: Supernode
 	I want to create a supernode
 
 	Scenario: Test the supernode expanded structure
+		Then I resize the window size to 1330 width and 660 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
 		Given I have toggled the app side panel
-
-		Then I resize the window size to 1330 width and 660 height
 
 		Then I right click the "Supernode" node to display the context menu
 		Then I click option "Expand supernode" from the context menu
 
-		Then I verify the node image for the "Supernode" node is displayed at 5, 4
+		Then I verify the "image" for the "Supernode" node is displayed at 5, 4
+		Then I verify the "label" for the "Supernode" node is displayed at 30, 18
+		Then I verify the "label" for the "Supernode" node has height 13 and width 63.71875
+
+		Given I have toggled the app side api panel
+		Given I have selected the "Set Node Label" API
+
+		# Add a very long label to the supernode
+		When I select node "Supernode" in the node label drop-down list
+		And I enter "New Very Long Supernode Label To Test The Label Abbreviation" into the new label field
+		And I call the API by clicking on the Submit button
+
+		Then I verify the "label" for the "New Very Long Supernode Label To Test The Label Abbreviation" node is displayed at 30, 18
+		Then I verify the "label" for the "New Very Long Supernode Label To Test The Label Abbreviation" node has height 13 and width 129.375
 
 	Scenario: Sanity test supernode expanded to correct size
-		Then I resize the window size to 1400 width and 800 height
+		Then I resize the window size to 1330 width and 660 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
 		Given I have toggled the app side panel
-
-		Then I resize the window size to 1330 width and 660 height
 
 		Then I right click the "Supernode" node to display the context menu
 		Then I click option "Expand supernode" from the context menu
@@ -60,7 +70,7 @@ Feature: Supernode
 		Then I verify pipeline 2 have 4 links
 
 	Scenario: Sanity test create supernode within a supernode with a new node from palette
-		Then I resize the window size to 1400 width and 800 height
+		Then I resize the window size to 1330 width and 660 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
@@ -163,14 +173,12 @@ Feature: Supernode
 		Then I verify the extra canvas have 3 pipelines
 
 	Scenario: Sanity test create supernode with link that does not have port info
-		Then I resize the window size to 1400 width and 800 height
+		Then I resize the window size to 1330 width and 660 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
 		Given I have selected the "Halo" connection type
 		Given I have uploaded predefined palette "modelerPalette.json"
-
-		Then I resize the window size to 1330 width and 660 height
 
 		Then I open the palette
 		Then I add node 1 a "Filler" node from the "Field Ops" category onto the canvas at 400, 200

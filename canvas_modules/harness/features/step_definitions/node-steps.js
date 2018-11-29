@@ -1035,15 +1035,32 @@ module.exports = function() {
 		expect(nodePorts.length).toEqual(Number(numPorts));
 	});
 
-	// Then I verify the node image for the "Supernode" node is displayed at 5, 4
-	this.Then(/^I verify the node image for the "([^"]*)" node is displayed at (\d+), (\d+)$/, function(nodeName, xPos, yPos) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		const nodeSelector = "#node_image_" + nodeId;
-		const nodeImages = browser.$$(nodeSelector);
-		const xAttr = nodeImages[0].getAttribute("x");
-		const yAttr = nodeImages[0].getAttribute("y");
-		expect(Number(xAttr)).toEqual(Number(xPos));
-		expect(Number(yAttr)).toEqual(Number(yPos));
-	});
+	// Then I verify the "image" for the "Supernode" node is displayed at 5, 4
+	// nodeElement can be either "image" or "label"
+	this.Then(/^I verify the "([^"]*)" for the "([^"]*)" node is displayed at (\d+), (\d+)$/,
+		function(nodeElement, nodeName, xPos, yPos) {
+			const nodeId = getNodeIdForLabel(nodeName);
+			const nodeSelector = "#node_" + nodeElement + "_" + nodeId;
+			const nodeImages = browser.$$(nodeSelector);
+			const xAttr = nodeImages[0].getAttribute("x");
+			const yAttr = nodeImages[0].getAttribute("y");
+			expect(Number(xAttr)).toEqual(Number(xPos));
+			expect(Number(yAttr)).toEqual(Number(yPos));
+		});
 
+	// Then I verify the "image" for the "Supernode" node is displayed at 5, 4 with ht 1.23 and wid 5.43
+	// nodeElement can be either "image" or "label"
+	this.Then(/^I verify the "([^"]*)" for the "([^"]*)" node has height ([-+]?[0-9]*\.?[0-9]+) and width ([-+]?[0-9]*\.?[0-9]+)$/,
+		function(nodeElement, nodeName, height, width) {
+			const nodeId = getNodeIdForLabel(nodeName);
+			const nodeSelector = "#node_" + nodeElement + "_" + nodeId;
+			const nodeImages = browser.$$(nodeSelector);
+			// TODO -- For some reason on Travis the getElementSize method returns
+			// a different height SVG text that when the test is run on Mac OS locally.
+			const hAttr = nodeImages[0].getElementSize("height");
+			expect(Number(hAttr)).toEqual(Number(height));
+			const wAttr = nodeImages[0].getElementSize("width");
+			expect(Number(wAttr)).toEqual(Number(width));
+
+		});
 };
