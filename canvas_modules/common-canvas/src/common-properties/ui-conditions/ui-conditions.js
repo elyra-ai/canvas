@@ -82,9 +82,18 @@ function visible(data, propertyId, controller) {
 	throw new Error("Invalid visible schema");
 }
 
-function filter(filterDef, controller, fields) {
+/**
+ * Filters fields based on conditions.
+ *
+ * @param propertyId Id of the control being filtered
+ * @param filterDef A filter definition for this item
+ * @param controller Properties controller
+ * @param fields Fields to filter
+ * @return Array of filtered fields
+ */
+function filter(propertyId, filterDef, controller, fields) {
 	if (filterDef && filterDef.filter && filterDef.filter.evaluate) {
-		return evaluateFilter(filterDef.filter.evaluate, controller, fields);
+		return evaluateFilter(propertyId, filterDef.filter, filterDef.filter.evaluate, controller, fields);
 	}
 	return fields;
 }
@@ -120,13 +129,13 @@ function evaluate(data, propertyId, controller) {
 /**
  * Evaluate Definition.
  */
-function evaluateFilter(conditionItem, controller, fields) {
+function evaluateFilter(propertyId, filterItem, conditionItem, controller, fields) {
 	if (conditionItem.or) {
-		return orFilter(conditionItem.or, controller, fields);
+		return orFilter(propertyId, filterItem, conditionItem.or, controller, fields);
 	} else if (conditionItem.and) {
-		return andFilter(conditionItem.and, controller, fields);
+		return andFilter(propertyId, filterItem, conditionItem.and, controller, fields);
 	} else if (conditionItem.condition) { // condition
-		return conditionFilter(conditionItem.condition, controller, fields);
+		return conditionFilter(propertyId, filterItem, conditionItem.condition, controller, fields);
 	}
 	throw new Error("Failed to parse filter definition");
 }
@@ -149,10 +158,10 @@ function or(data, propertyId, controller) {
 	return false;
 }
 
-function orFilter(conditionItems, controller, inFields) {
+function orFilter(propertyId, filterItem, conditionItems, controller, inFields) {
 	let fields = [];
 	for (const item of conditionItems) {
-		const newFields = evaluateFilter(item, controller, inFields);
+		const newFields = evaluateFilter(propertyId, filterItem, item, controller, inFields);
 		fields = unionWith(fields, newFields, isEqual);
 	}
 	return fields;
@@ -178,10 +187,10 @@ function and(data, propertyId, controller) {
 	return true;
 }
 
-function andFilter(conditionItems, controller, inFields) {
+function andFilter(propertyId, filterItem, conditionItems, controller, inFields) {
 	let fields = cloneDeep(inFields);
 	for (const item of conditionItems) {
-		const newFields = evaluateFilter(item, controller, fields);
+		const newFields = evaluateFilter(propertyId, filterItem, item, controller, fields);
 		fields = intersectionWith(fields, newFields, isEqual);
 	}
 	return fields;
@@ -225,13 +234,16 @@ function condition(data, propertyId, controller) {
 }
 
 /**
- * A parameter condition. Evaluates to true or false.
- * @param {Object} data.op A single operator for the properties of the condition.
- * @param {Object} data.value optional value the condition checks for
- * @param {Object} data.values optional value the condition checks for
- * @param {Object} info optional dataset fields and cell coordinates info
+ * A filter parameter condition. Evaluates to an array of field names.
+ *
+ * @param {Object} propertyId Id of the property being operated upon
+ * @param {Object} filterItem Top level filter entry for the property
+ * @param {Object} conditionItem A single condition to evaluate
+ * @param {Object} controller The properties controller
+ * @param {Object} fields Array of fields to filter
+ * @return {Object} Array of filtered field names
  */
-function conditionFilter(conditionItem, controller, fields) {
+function conditionFilter(propertyId, filterItem, conditionItem, controller, fields) {
 	const op = conditionItem.op;
 	const values = [];
 	if (typeof conditionItem.value !== "undefined" && conditionItem.value !== null) {
@@ -246,6 +258,8 @@ function conditionFilter(conditionItem, controller, fields) {
 		return _handleDmType(fields, values);
 	case "dmModelingRole":
 		return _handleDmModelingRole(fields, values);
+	case "dmSharedFields":
+		return _handleSharedFields(propertyId, filterItem, controller, fields);
 	default:
 		logger.warn("Ignoring unknown condition operation '" + op + "'");
 		return fields;
@@ -298,6 +312,14 @@ function _handleDmModelingRole(inFields, roleValues) {
 		});
 	}
 	return fields;
+}
+
+function _handleSharedFields(propertyId, filterItem, controller, fields) {
+	let returnFields = fields;
+	if (filterItem.parameter_refs) {
+		returnFields = controller.filterFieldsFromSharedProps(fields, filterItem.parameter_refs, propertyId.name);
+	}
+	return returnFields;
 }
 
 /**

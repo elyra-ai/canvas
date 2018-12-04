@@ -17,7 +17,11 @@ function parseInput(definition) {
 	var data = definition;
 	if (data.evaluate) {
 		var paramsList = [];
-		evaluate(data.evaluate, paramsList, data.parameter_ref);
+		if (data.parameter_refs) {
+			evaluate(data.evaluate, paramsList, data.parameter_refs);
+		} else {
+			evaluate(data.evaluate, paramsList, data.parameter_ref);
+		}
 		// remove duplicates in paramsList array
 		var uniqueList = Array.from(new Set(paramsList));
 		if (uniqueList.length > 1) {

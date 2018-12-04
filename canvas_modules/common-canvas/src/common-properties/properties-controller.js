@@ -510,25 +510,39 @@ export default class PropertiesController {
 			return fields;
 		}
 		const skipControlName = propertyId.name;
-		try {
-			// gets all the controls that are shared with this property
-			let sharedCtrlNames = [];
-			for (const sharedCtrlList of this.sharedCtrlInfo) {
-				for (const sharedCtrl of sharedCtrlList.controlNames) {
-					if (skipControlName === sharedCtrl.controlName) {
-						sharedCtrlNames = sharedCtrlList.controlNames;
-						break;
-					}
+		// gets all the controls that are shared with this property
+		let sharedCtrlNames = [];
+		for (const sharedCtrlList of this.sharedCtrlInfo) {
+			for (const sharedCtrl of sharedCtrlList.controlNames) {
+				if (skipControlName === sharedCtrl.controlName) {
+					sharedCtrlNames = sharedCtrlList.controlNames;
+					break;
 				}
 			}
-			// get all the fields that are used by other controls
+		}
+		// get all the fields that are used by other controls
+		const propNames = sharedCtrlNames.map(function(item) {
+			return item.controlName;
+		});
+		return this.filterFieldsFromSharedProps(fields, propNames, skipControlName);
+	}
+
+	/**
+	 * Filters field names that are already in use from the given list.
+	 *
+	 * @param fieldNames - Array of field names to filter
+	 * @param propNames - Array of property names that share a single source field list
+	 * @param skipName - Name of a property to skip from the list
+	 * @return An array of filtered field names that are not in use
+	 */
+	filterFieldsFromSharedProps(fieldNames, propNames, skipName) {
+		try {
 			const usedFields = [];
-			for (const sharedCtr of sharedCtrlNames) {
-				const ctrlName = sharedCtr.controlName;
-				if (ctrlName !== skipControlName) {
-					const control = this.getControl({ name: ctrlName });
+			for (const sharedProp of propNames) {
+				if (sharedProp !== skipName) {
+					const control = this.getControl({ name: sharedProp });
 					// only remove from the main list the values that are in other controls
-					const propValue = this.getPropertyValue({ name: ctrlName });
+					const propValue = this.getPropertyValue({ name: sharedProp });
 					if (Array.isArray(propValue)) {
 						for (const arrayValue of propValue) {
 							if (Array.isArray(arrayValue)) {
@@ -549,14 +563,14 @@ export default class PropertiesController {
 				}
 			}
 			const usedFieldsList = Array.from(new Set(usedFields)); // make all values unique
-			const filteredFields = fields.filter(function(field) {
+			const filteredFields = fieldNames.filter(function(field) {
 				return usedFieldsList.indexOf(field.name) === -1;
 			});
 			return filteredFields;
 		} catch (error) {
 			logger.warn("Error filtering shared controls " + error);
 		}
-		return fields;
+		return fieldNames;
 	}
 
 	/**

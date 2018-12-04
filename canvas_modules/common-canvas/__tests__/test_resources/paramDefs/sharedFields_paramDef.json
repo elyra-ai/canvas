@@ -1,0 +1,421 @@
+{
+  "titleDefinition": {
+    "title": "Shared Fields Test"
+  },
+  "current_parameters": {
+    "structuretable_filter": [
+      [
+        1,
+        "Sex"
+      ],
+      [
+        2,
+        "Drug"
+      ]
+    ],
+    "input_fields": [
+      "Age",
+      "Cholesterol"
+    ],
+    "regression_weight_field": "K",
+    "offset_field": "Na",
+    "column_selection_fields": [
+      "Age",
+      "BP"
+    ],
+    "column_selection_chooser": "Cholesterol",
+    "dmSharedFields_chooser": "Age"
+  },
+  "complex_types": [
+    {
+      "id": "structuretable_filter",
+      "key_definition": {
+        "id": "readonly",
+        "type": "integer"
+      },
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "input_fields",
+      "type": "array[string]",
+      "role": "column"
+    },
+    {
+      "id": "structuretable_filter",
+      "type": "map[string,structuretable_filter]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "regression_weight_field",
+      "type": "string",
+      "role": "column"
+    },
+    {
+      "id": "offset_field",
+      "type": "string",
+      "role": "column"
+    },
+    {
+      "id": "column_selection_fields",
+      "type": "array[string]",
+      "role": "column"
+    },
+    {
+      "id": "column_selection_chooser",
+      "type": "string",
+      "role": "column"
+    },
+    {
+      "id": "dmSharedFields_chooser",
+      "type": "string",
+      "role": "column"
+    }
+  ],
+  "uihints": {
+    "id": "sharedFields",
+    "label": {
+      "default": "Shared Fields"
+    },
+    "description": {
+      "default": "Shared Data Model Fields"
+    },
+    "icon": "images/glmm.svg",
+    "editor_size": "large",
+    "pixel_width": {
+      "max": 600
+    },
+    "complex_type_info": [
+      {
+        "complex_type_ref": "structuretable_filter",
+        "label": {
+          "default": "Filter Fields"
+        },
+        "key_definition": {
+          "parameter_ref": "readonly",
+          "label": {
+            "default": "Index"
+          },
+          "width": 15,
+          "generated_values": {
+            "operation": "index"
+          },
+          "control": "readonly",
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "default": "Field"
+            },
+            "width": 26,
+            "summary": true
+          }
+        ]
+      }
+    ],
+    "parameter_info": [
+      {
+        "parameter_ref": "input_fields",
+        "label": {
+          "default": "Shares common source field list"
+        }
+      },
+      {
+        "parameter_ref": "structuretable_filter",
+        "label": {
+          "default": "StructureTable shares fields with other pickers on the first two tabs"
+        },
+        "description": {
+          "default": "Filters fields in a table"
+        },
+        "rows": 12
+      },
+      {
+        "parameter_ref": "regression_weight_field",
+        "label": {
+          "resource_key": "regression_weight_field.label"
+        }
+      },
+      {
+        "parameter_ref": "offset_field",
+        "label": {
+          "resource_key": "offset_field.label"
+        }
+      },
+      {
+        "parameter_ref": "column_selection_fields",
+        "label": {
+          "default": "Multi-chooser on columnSelection panel"
+        }
+      },
+      {
+        "parameter_ref": "column_selection_chooser",
+        "label": {
+          "default": "Single-chooser on columnSelection panel"
+        },
+        "separator": "after"
+      },
+      {
+        "parameter_ref": "dmSharedFields_chooser",
+        "label": {
+          "default": "Single-chooser using dmSharedFields with the above single chooser"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "id": "data-structure",
+        "label": {
+          "resource_key": "data-structure.label"
+        },
+        "type": "panels",
+        "parameter_refs": [
+        ],
+        "group_info": [
+          {
+            "id": "fields-panel",
+            "type": "controls",
+            "parameter_refs": [
+              "input_fields"
+            ]
+          },
+          {
+            "id": "structuretable_filter-summary-panel",
+            "label": {
+              "default": "Configure StructureTable"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretable_filter_panel",
+                "type": "controls",
+                "parameter_refs": [
+                  "structuretable_filter"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "effects-weight",
+        "label": {
+          "resource_key": "effects-weight.label"
+        },
+        "type": "subTabs",
+        "parameter_refs": [
+        ],
+        "group_info": [
+          {
+            "id": "weight-offset",
+            "label": {
+              "resource_key": "weight-offset.label"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "regression_weight_field",
+              "offset_field"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "column-selection-category",
+        "label": {
+          "default": "Column Selection Test"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "column-selection-panel",
+            "label": {
+              "default": "Shared via columnSelection"
+            },
+            "type": "columnSelection",
+            "parameter_refs": [
+              "column_selection_fields",
+              "column_selection_chooser"
+            ]
+          },
+          {
+            "id": "dmShared-panel",
+            "label": {
+              "default": "Shared via dmSharedFields"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "dmSharedFields_chooser"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "filter": {
+        "parameter_ref": "structuretable_filter",
+        "evaluate": {
+          "condition": {
+            "op": "dmType",
+            "value": "string"
+          }
+        }
+      }
+    },
+    {
+      "filter": {
+        "parameter_ref": "regression_weight_field",
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "range"
+              }
+            },
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "set"
+              }
+            },
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "ordered-set"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "filter": {
+        "parameter_ref": "offset_field",
+        "evaluate": {
+          "condition": {
+            "op": "dmMeasurement",
+            "value": "range"
+          }
+        }
+      }
+    },
+    {
+      "filter": {
+        "parameter_refs": [
+          "input_fields",
+          "structuretable_filter",
+          "regression_weight_field",
+          "offset_field"
+        ],
+        "evaluate": {
+          "condition": {
+            "op": "dmSharedFields"
+          }
+        }
+      }
+    },
+    {
+      "filter": {
+        "parameter_refs": [
+          "column_selection_chooser",
+          "dmSharedFields_chooser"
+        ],
+        "evaluate": {
+          "condition": {
+            "op": "dmSharedFields"
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "ordered-set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": {
+  	"regression_weight_field.label": "Filters by measurement level (set, ordered-set, range):",
+  	"offset_field.label": "Filters by measurement level (range):",
+  	"covariance_list.label": "Fields:",
+    "data-structure.label": "Multi-Field Pickers",
+    "effects-weight.label": "Single Field Pickers",
+    "weight-offset.label": "A tab with two single field pickers",
+    "build-options.label": "Build Options"
+  }
+}

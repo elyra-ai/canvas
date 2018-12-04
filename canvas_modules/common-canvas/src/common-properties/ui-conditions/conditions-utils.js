@@ -228,23 +228,28 @@ function allowConditions(inPropertyId, controller) {
 }
 
 /**
-* Filters the datamodel fields for a parameter.
+* Filters the datamodel fields for the given parameter.
 *
 * @param {object} propertyId. required
-* @param {object} list of filter defintions. required.
+* @param {object} list of filter definitions. required.
 * @param {object} properties controller. required
-* @param {object} list of fields. required
+* @param {object} list of fields to filter. required
+* @return {object} list of filtered fields
 */
 function filterConditions(propertyId, filterDefinitions, controller, fields) {
-	// filters only have 1 definition
-	if (filterDefinitions && filterDefinitions[propertyId.name] && filterDefinitions[propertyId.name][0]) {
+	// Check each definition
+	let returnFields = fields;
+	if (filterDefinitions && Array.isArray(filterDefinitions[propertyId.name])) {
 		try {
-			return UiConditions.filter(filterDefinitions[propertyId.name][0].definition, controller, fields);
+			const defs = filterDefinitions[propertyId.name];
+			for (let i = 0; i < defs.length; i++) {
+				returnFields = UiConditions.filter(propertyId, filterDefinitions[propertyId.name][i].definition, controller, returnFields);
+			}
 		} catch (error) {
-			logger.warn("Error thrown in filter: " + error);
+			logger.warn("Error thrown in filter for propertyId (" + propertyId.name + "): " + error);
 		}
 	}
-	return fields;
+	return returnFields;
 }
 
 // ========= miscellanious APIs
@@ -401,7 +406,7 @@ function searchInArray(array, element, state) {
 
 // ========= internal functions
 
-// This function will travers the panel tree and propogate the state so that a higher order
+// This function will traverse the panel tree and propogate the state so that a higher order
 // panel state will be set for lower order panels.  The disableOnly flag will only propagate the
 // disable state.
 function 	_propagateParentPanelStates(panelTree, newStates, currentPanel, disabledOnly) {
