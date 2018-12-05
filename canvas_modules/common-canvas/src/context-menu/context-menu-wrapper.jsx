@@ -33,7 +33,15 @@ export default class ContextMenuWrapper extends React.Component {
 
 	getCanvasRect() {
 		const containingDiv = document.getElementById(this.props.containingDivId);
-		const canvasRect = JSON.parse(JSON.stringify(containingDiv.getBoundingClientRect()));
+		const clientRect = containingDiv.getBoundingClientRect();
+		const canvasRect = {
+			top: clientRect.top,
+			bottom: clientRect.bottom,
+			left: clientRect.left,
+			right: clientRect.right,
+			height: clientRect.height,
+			width: clientRect.width
+		};
 
 		// The commonCanvasRect height and top are relative to the bottom of the
 		// page banner while the context menu mouse position is relative to the
