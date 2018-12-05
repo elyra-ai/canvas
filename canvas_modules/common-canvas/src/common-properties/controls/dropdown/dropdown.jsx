@@ -113,10 +113,10 @@ class DropDown extends React.Component {
 	updateValueFromFilterEnum(skipValidateInput) {
 		// update property value if value isn't in current enum value.  Should only be used for oneofselect
 		if (this.props.control.controlType === ControlType.ONEOFSELECT && this.props.value !== null && typeof this.props.value !== "undefined" &&
-			this.props.controlOpts.values.indexOf(this.props.value) < 0) {
+			!this.props.controlOpts.values.includes(this.props.value)) {
 			let defaultValue = null;
 			// set to default value if default value is in filtered enum list
-			if (this.props.control.valueDef && this.props.control.valueDef.defaultValue && this.props.controlOpts.values.indexOf(this.props.control.valueDef.defaultValue) > 0) {
+			if (this.props.control.valueDef && this.props.control.valueDef.defaultValue && this.props.controlOpts.values.includes(this.props.control.valueDef.defaultValue)) {
 				defaultValue = this.props.control.valueDef.defaultValue;
 			}
 			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput);
