@@ -112,6 +112,7 @@ class App extends React.Component {
 			extraCanvasDisplayed: false,
 			displayAdditionalComponents: false,
 			enableSaveToPalette: false,
+			enableDropZoneOnExternalDrag: false,
 			enableCreateSupernodeNonContiguous: false,
 			enableMoveNodesOnSupernodeResize: true,
 			applyOnBlur: true,
@@ -180,6 +181,7 @@ class App extends React.Component {
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useEnableSaveToPalette = this.useEnableSaveToPalette.bind(this);
+		this.useEnableDropZoneOnExternalDrag = this.useEnableDropZoneOnExternalDrag.bind(this);
 		this.useEnableCreateSupernodeNonContiguous = this.useEnableCreateSupernodeNonContiguous.bind(this);
 		this.setEnableMoveNodesOnSupernodeResize = this.setEnableMoveNodesOnSupernodeResize.bind(this);
 		this.setNarrowPalette = this.setNarrowPalette.bind(this);
@@ -931,7 +933,6 @@ class App extends React.Component {
 		this.log("use expression validate link", enabled);
 	}
 
-
 	useDisplayAdditionalComponents(enabled) {
 		this.setState({ displayAdditionalComponents: enabled });
 		this.log("additional components display", enabled);
@@ -939,12 +940,17 @@ class App extends React.Component {
 
 	useEnableSaveToPalette(enabled) {
 		this.setState({ enableSaveToPalette: enabled });
-		this.log("save to palette", enabled);
+		this.log("enable save to palette", enabled);
+	}
+
+	useEnableDropZoneOnExternalDrag(enabled) {
+		this.setState({ enableDropZoneOnExternalDrag: enabled });
+		this.log("enable drop zone on external drag", enabled);
 	}
 
 	useEnableCreateSupernodeNonContiguous(enabled) {
 		this.setState({ enableCreateSupernodeNonContiguous: enabled });
-		this.log("noncontiguous nodes supernode creation", enabled);
+		this.log("enable noncontiguous nodes supernode creation", enabled);
 	}
 
 	showExtraCanvas(enabled) {
@@ -1524,6 +1530,17 @@ class App extends React.Component {
 				>Click here to take a tour</span>
 			</div>);
 
+		// Uncomment the code below to experiement with passing in a custom div
+		// to specify the 'drop zone' content. Provide it in the dropZoneCanvasContent
+		// in the canvas config object below.
+		// const dropZoneCanvasDiv = (
+		// 	<div>
+		// 		<div className="dropzone-canvas" />
+		// 		<div className="dropzone-canvas-rect" />
+		// 		<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
+		// 	</div>);
+
+
 		const commonCanvasConfig = {
 			enableInteractionType: this.state.selectedInteractionType,
 			enableConnectionType: this.state.selectedConnectionType,
@@ -1536,8 +1553,10 @@ class App extends React.Component {
 			tipConfig: this.state.tipConfig,
 			schemaValidation: this.state.schemaValidationEnabled,
 			enableNarrowPalette: this.state.narrowPalette,
-			enableDisplayFullLabelOnHover: this.state.displayFullLabelOnHover
-			// enableBoundingRectangles: true
+			enableDisplayFullLabelOnHover: this.state.displayFullLabelOnHover,
+			enableBoundingRectangles: false, // Set this to true to see bounding rectangles for debugging.
+			enableDropZoneOnExternalDrag: this.state.enableDropZoneOnExternalDrag,
+			// dropZoneCanvasContent: dropZoneCanvasDiv
 		};
 
 		const commonCanvasConfig2 = {
@@ -1744,6 +1763,8 @@ class App extends React.Component {
 			changeDisplayFullLabelOnHover: this.displayFullLabelOnHover,
 			enableSaveToPalette: this.state.enableSaveToPalette,
 			useEnableSaveToPalette: this.useEnableSaveToPalette,
+			enableDropZoneOnExternalDrag: this.state.enableDropZoneOnExternalDrag,
+			useEnableDropZoneOnExternalDrag: this.useEnableDropZoneOnExternalDrag,
 			enableCreateSupernodeNonContiguous: this.state.enableCreateSupernodeNonContiguous,
 			useEnableCreateSupernodeNonContiguous: this.useEnableCreateSupernodeNonContiguous,
 			enableMoveNodesOnSupernodeResize: this.state.enableMoveNodesOnSupernodeResize,

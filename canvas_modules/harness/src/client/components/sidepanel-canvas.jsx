@@ -70,6 +70,7 @@ export default class SidePanelForms extends React.Component {
 		this.layoutDirectionOptionChange = this.layoutDirectionOptionChange.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useEnableSaveToPalette = this.useEnableSaveToPalette.bind(this);
+		this.useEnableDropZoneOnExternalDrag = this.useEnableDropZoneOnExternalDrag.bind(this);
 		this.useEnableCreateSupernodeNonContiguous = this.useEnableCreateSupernodeNonContiguous.bind(this);
 		this.onEnableMoveNodesOnSupernodeResizeToggle = this.onEnableMoveNodesOnSupernodeResizeToggle.bind(this);
 		this.connectionTypeOptionChange = this.connectionTypeOptionChange.bind(this);
@@ -283,6 +284,10 @@ export default class SidePanelForms extends React.Component {
 
 	useEnableSaveToPalette(checked) {
 		this.props.useEnableSaveToPalette(checked);
+	}
+
+	useEnableDropZoneOnExternalDrag(checked) {
+		this.props.useEnableDropZoneOnExternalDrag(checked);
 	}
 
 	useEnableCreateSupernodeNonContiguous(checked) {
@@ -555,6 +560,20 @@ export default class SidePanelForms extends React.Component {
 				</form>
 			</div>);
 
+		var enableDropZoneOnExternalDrag = (
+			<div className="harness-sidepanel-children" id="harness-sidepanel-drop-zone-on-external-drag-toggle">
+				<form>
+					<div className="harness-sidepanel-headers">Enable Drop Zone on Drag</div>
+					<div>
+						<Toggle
+							id="harness-sidepanel-enable-drop-zone-on-external-drag-toggle"
+							toggled={this.props.enableDropZoneOnExternalDrag}
+							onToggle={this.useEnableDropZoneOnExternalDrag}
+						/>
+					</div>
+				</form>
+			</div>);
+
 		var enableCreateSupernodeNonContiguous = (<div className="harness-sidepanel-children">
 			<form>
 				<div className="harness-sidepanel-headers">Enable Create Supernode for Noncontiguous Nodes</div>
@@ -794,6 +813,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{enableSaveToPalette}
 				{divider}
+				{enableDropZoneOnExternalDrag}
+				{divider}
 				{enableCreateSupernodeNonContiguous}
 				{divider}
 				{enableMoveNodesOnSupernodeResize}
@@ -831,6 +852,7 @@ SidePanelForms.propTypes = {
 	enableNavPalette: PropTypes.func,
 	internalObjectModel: PropTypes.bool,
 	enableSaveToPalette: PropTypes.bool,
+	enableDropZoneOnExternalDrag: PropTypes.bool,
 	enableCreateSupernodeNonContiguous: PropTypes.bool,
 	setDiagramJSON: PropTypes.func,
 	setPaletteJSON: PropTypes.func,
@@ -852,6 +874,7 @@ SidePanelForms.propTypes = {
 	selectedLayout: PropTypes.string,
 	useInternalObjectModel: PropTypes.func,
 	useEnableSaveToPalette: PropTypes.func,
+	useEnableDropZoneOnExternalDrag: PropTypes.func,
 	useEnableCreateSupernodeNonContiguous: PropTypes.func,
 	setConnectionType: PropTypes.func,
 	setInteractionType: PropTypes.func,

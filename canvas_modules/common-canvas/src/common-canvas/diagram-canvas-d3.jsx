@@ -13,6 +13,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ObserveSize from "react-observe-size";
+import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
+import DropZoneCanvasImage from "../../assets/images/drop_zone.svg";
 
 import {
 	DND_DATA_TEXT
@@ -26,6 +28,7 @@ export default class DiagramCanvas extends React.Component {
 		super(props);
 
 		this.state = {
+			isDropZoneDisplayed: false
 		};
 
 		this.logger = new Logger("DiagramCanvas");
@@ -34,8 +37,16 @@ export default class DiagramCanvas extends React.Component {
 		this.svgCanvasDivSelector = "#" + this.svgCanvasDivId;
 
 		this.drop = this.drop.bind(this);
-		this.dragOver = this.dragOver.bind(this);
 		this.focusOnCanvas = this.focusOnCanvas.bind(this);
+		this.setIsDropZoneDisplayed = this.setIsDropZoneDisplayed.bind(this);
+		this.dragEnter = this.dragEnter.bind(this);
+		this.dragLeave = this.dragLeave.bind(this);
+
+		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
+		// of dragEnter/dragLeave events are fired as an external object is
+		// dragged around over the top of the 'drop zone' canvas.
+		this.first = false;
+		this.second = false;
 
 		this.canvasDivId = "canvas-div-" + this.props.canvasController.getInstanceId();
 	}
@@ -50,7 +61,7 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	componentDidUpdate() {
-		if (this.canvasD3Layout) {
+		if (this.canvasD3Layout && !this.isDropZoneDisplayed()) {
 			this.canvasD3Layout.setCanvasInfo(this.props.canvasInfo, this.props.config);
 		}
 	}
@@ -59,7 +70,7 @@ export default class DiagramCanvas extends React.Component {
 		try {
 			return JSON.parse(event.dataTransfer.getData(DND_DATA_TEXT));
 		} catch (e) {
-			this.logger.warn(e);
+			this.logger.warn("The dragged object's data does not conform to the expected internal format: " + e);
 			return null;
 		}
 	}
@@ -70,6 +81,23 @@ export default class DiagramCanvas extends React.Component {
 
 	getElementAtMousePos(event) {
 		return document.elementFromPoint(event.clientX, event.clientY);
+	}
+
+	setIsDropZoneDisplayed(isDropZoneDisplayed) {
+		if (isDropZoneDisplayed !== this.state.isDropZoneDisplayed) {
+			this.setState({ isDropZoneDisplayed: isDropZoneDisplayed });
+		}
+	}
+
+	isDropZoneDisplayed() {
+		return this.props.config.enableDropZoneOnExternalDrag && this.state.isDropZoneDisplayed;
+	}
+
+	isDataTypeBeingDraggedFile(event) {
+		if (event.dataTransfer && Array.isArray(event.dataTransfer.types)) {
+			return event.dataTransfer.types.includes("Files");
+		}
+		return false;
 	}
 
 	mouseCoords(event) {
@@ -83,6 +111,9 @@ export default class DiagramCanvas extends React.Component {
 
 	drop(event) {
 		event.preventDefault();
+		this.first = false;
+		this.second = false;
+		this.setIsDropZoneDisplayed(false);
 		const mousePos = this.mouseCoords(event);
 		let dropData = this.getDNDJson(event);
 		// If no drop data is found (which complies with the calling protocol
@@ -101,7 +132,30 @@ export default class DiagramCanvas extends React.Component {
 		this.canvasD3Layout.nodeDropped(dropData, mousePos, element);
 	}
 
-	dragOver(event) {
+	dragEnter(event) {
+		if (this.isDataTypeBeingDraggedFile(event)) {
+			if (this.first) {
+				this.second = true;
+			} else {
+				this.first = true;
+				this.setIsDropZoneDisplayed(true);
+			}
+		}
+		event.preventDefault();
+	}
+
+	dragLeave(event) {
+		if (this.isDataTypeBeingDraggedFile(event)) {
+			if (this.second) {
+				this.second = false;
+			} else if (this.first) {
+				this.first = false;
+			}
+
+			if (!this.first && !this.second) {
+				this.setIsDropZoneDisplayed(false);
+			}
+		}
 		event.preventDefault();
 	}
 
@@ -134,6 +188,43 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	render() {
+		let emptyCanvas = null;
+
+		if (this.props.isCanvasEmpty && !this.isDropZoneDisplayed()) {
+			if (this.props.config.emptyCanvasContent) {
+				emptyCanvas = (
+					<div className="empty-canvas">
+						{this.props.config.emptyCanvasContent}
+					</div>);
+			} else {
+				emptyCanvas = (
+					<div className="empty-canvas">
+						<div>
+							<img src={BlankCanvasImage} className="empty-canvas-image" />
+							<span className="empty-canvas-text">Your flow is empty!</span>
+						</div>
+					</div>);
+			}
+		}
+
+		let dropZoneCanvas = null;
+
+		if (this.isDropZoneDisplayed()) {
+			if (this.props.config.dropZoneCanvasContent) {
+				dropZoneCanvas = this.props.config.dropZoneCanvasContent;
+			} else {
+				dropZoneCanvas = (
+					<div>
+						<div className="dropzone-canvas" />
+						<div className="dropzone-canvas-rect" />
+						<div className="dropzone-canvas-image-div">
+							<img src={DropZoneCanvasImage} className="dropzone-canvas-image" />
+						</div>
+						<span className="dropzone-canvas-text">DROP TO ADD TO<br />CANVAS AND PROJECT</span>
+					</div>);
+			}
+		}
+
 		// Set tabindex to -1 so the focus (see componentDidMount above) can go to
 		// the div (which allows keyboard events to go there) and using -1 means
 		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
@@ -145,11 +236,14 @@ export default class DiagramCanvas extends React.Component {
 				<div
 					id={this.canvasDivId}
 					className="common-canvas-drop-div"
-					onDragOver={this.dragOver}
 					onDrop={this.drop}
+					onDragEnter={this.dragEnter}
+					onDragLeave={this.dragLeave}
 				>
+					{emptyCanvas}
 					{svgCanvas}
 					{this.props.children}
+					{dropZoneCanvas}
 				</div>
 			</ObserveSize>
 		);
@@ -159,6 +253,7 @@ export default class DiagramCanvas extends React.Component {
 DiagramCanvas.propTypes = {
 	canvasInfo: PropTypes.object,
 	config: PropTypes.object.isRequired,
+	canvasController: PropTypes.object.isRequired,
 	children: PropTypes.element,
-	canvasController: PropTypes.object.isRequired
+	isCanvasEmpty: PropTypes.bool
 };

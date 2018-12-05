@@ -19,7 +19,6 @@ import Palette from "../palette/palette.jsx";
 import PaletteFlyout from "../palette/palette-flyout.jsx";
 import Toolbar from "../toolbar/toolbar.jsx";
 import NotificationPanel from "../notification-panel/notification-panel.jsx";
-import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 import TooltipWrapper from "../tooltip/tooltip-wrapper.jsx";
 import isEmpty from "lodash/isEmpty";
 
@@ -140,6 +139,21 @@ export default class CommonCanvas extends React.Component {
 	componentWillUnmount() {
 		this.unsubscribe();
 		document.removeEventListener("mousedown", this.canvasController.closeTip, true);
+	}
+
+	// Prevent the default behavior (which is to show a plus-sign pointer) as
+	// an object is being dragged over the common canvas components.
+	// Note: this is overriden by the canvas area itself to allow external objects
+	// to be dragged over it.
+	onDragOver(evt) {
+		evt.preventDefault();
+	}
+
+	// Prevent an object being dropped on the common canvas causing a file
+	// download event (which is the default!). Note: this is overriden by the
+	// canvas area itself to allow external objects to be dropped on it.
+	onDrop(evt) {
+		evt.preventDefault();
 	}
 
 	setPaletteWidth() {
@@ -344,6 +358,7 @@ export default class CommonCanvas extends React.Component {
 					canvasInfo={canvasInfo}
 					config={this.props.config}
 					canvasController={this.canvasController}
+					isCanvasEmpty={this.objectModel.isPrimaryPipelineEmpty()}
 				>
 					{contextMenuWrapper}
 				</DiagramCanvasD3>);
@@ -396,27 +411,7 @@ export default class CommonCanvas extends React.Component {
 			</div>);
 		}
 
-		let emptyCanvas = null;
-
-		if (this.objectModel.isPrimaryPipelineEmpty()) {
-			if (this.props.config.emptyCanvasContent) {
-				emptyCanvas = (
-					<div className="empty-canvas">
-						{this.props.config.emptyCanvasContent}
-					</div>);
-			} else {
-				emptyCanvas = (
-					<div className="empty-canvas">
-						<div>
-							<img src={BlankCanvasImage} className="empty-canvas-image" />
-							<span className="empty-canvas-text">Your flow is empty!</span>
-						</div>
-					</div>);
-			}
-		}
-
 		if (!isEmpty(this.state.tipDef)) {
-
 			tip = (<TooltipWrapper
 				id={this.state.tipDef.id}
 				type={this.state.tipDef.type}
@@ -432,12 +427,11 @@ export default class CommonCanvas extends React.Component {
 		}
 
 		return (
-			<div className="common-canvas">
+			<div className="common-canvas" onDragOver={this.onDragOver} onDrop={this.onDrop}>
 				{palette}
 				<div className="common-canvas-right-side-items">
 					<div id={this.itemsContainerDivId} className="common-canvas-items-container">
 						{canvas}
-						{emptyCanvas}
 						{canvasToolbar}
 						{notificationPanel}
 					</div>

@@ -79,6 +79,8 @@ export default class SidePanel extends React.Component {
 				changeDisplayFullLabelOnHover={this.props.canvasConfig.changeDisplayFullLabelOnHover}
 				enableSaveToPalette={this.props.canvasConfig.enableSaveToPalette}
 				useEnableSaveToPalette={this.props.canvasConfig.useEnableSaveToPalette}
+				enableDropZoneOnExternalDrag={this.props.canvasConfig.enableDropZoneOnExternalDrag}
+				useEnableDropZoneOnExternalDrag={this.props.canvasConfig.useEnableDropZoneOnExternalDrag}
 				enableCreateSupernodeNonContiguous={this.props.canvasConfig.enableCreateSupernodeNonContiguous}
 				useEnableCreateSupernodeNonContiguous={this.props.canvasConfig.useEnableCreateSupernodeNonContiguous}
 				enableMoveNodesOnSupernodeResize={this.props.canvasConfig.enableMoveNodesOnSupernodeResize}
@@ -154,6 +156,8 @@ SidePanel.propTypes = {
 		paletteFileChooserVisible2: PropTypes.bool,
 		enableSaveToPalette: PropTypes.bool,
 		useEnableSaveToPalette: PropTypes.func,
+		enableDropZoneOnExternalDrag: PropTypes.bool,
+		useEnableDropZoneOnExternalDrag: PropTypes.func,
 		enableCreateSupernodeNonContiguous: PropTypes.bool,
 		useEnableCreateSupernodeNonContiguous: PropTypes.func,
 		selectedCanvasDropdownFile: PropTypes.string,
