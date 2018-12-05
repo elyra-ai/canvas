@@ -224,6 +224,11 @@ module.exports = function() {
 		expect(value).toEqual(text.getText());
 	});
 
+	this.Then(/^I verify readonly control "([^"]*)" CSS style "([^"]*)" is "([^"]*)"$/, function(controlId, style, value) {
+		const text = browser.$("div[data-id='properties-" + controlId + "'] span");
+		expect(text.getCssProperty(style).value).toEqual(value);
+	});
+
 	this.Then(/^I verify the event log title is "([^"]*)"$/, function(title) {
 		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
 		expect(title).toEqual(lastEventLog.data.title);

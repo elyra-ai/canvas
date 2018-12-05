@@ -23,6 +23,8 @@
 	}
 	span {
 		line-height: 1.5;
+		overflow-wrap: break-word;
+		white-space: normal;
 		&[disabled] {
 			opacity: 0.5;
 		}

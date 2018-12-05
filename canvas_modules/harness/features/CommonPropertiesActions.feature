@@ -19,3 +19,13 @@ Feature: CommonPropertiesActions
 		Then I verify that readonly value is "3"
 		Then I click the "Decrement" action
 		Then I verify that readonly value is "2"
+
+	Scenario: Test of text styling and word wrapping
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side common-properties panel
+		Then I have selected the "Flyout" properties container type
+		Given I have uploaded JSON for common-properties "readonly_paramDef.json"
+
+		Then I verify readonly control "readonly_text" value is "The more I study, the more insatiable do I feel my genius for it to be. 'Ada Lovelace'"
+		Then I verify readonly control "readonly_text" CSS style "overflow-wrap" is "break-word"
