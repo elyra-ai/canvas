@@ -17,7 +17,6 @@ import PropertyUtils from "./../../../util/property-utils";
 export default class ExpressionBuilder extends React.Component {
 	constructor(props) {
 		super(props);
-
 		this.selection = [];
 		this.expressionInfo = props.controller.getExpressionInfo();
 		this.editorDidMount = this.editorDidMount.bind(this);
@@ -110,6 +109,7 @@ export default class ExpressionBuilder extends React.Component {
 					onChange={this.onChange}
 					functionList={this.expressionInfo.functionCategories}
 					operatorList={this.expressionInfo.operators}
+					language={this.props.control.language}
 				/>
 			</div>
 		);

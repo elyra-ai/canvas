@@ -119,7 +119,6 @@ const propertiesInfo = {
 	additionalComponents: {},
 };
 describe("expression-control renders correctly", () => {
-
 	it("props should have been defined", () => {
 		const wrapper = mountWithIntl(
 			<Expression
@@ -221,7 +220,7 @@ describe("expression-builder select from tables correctly", () => {
 		);
 		const fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
 		fieldRows.at(0).simulate("dblclick");
-		expect(controller.getPropertyValue(propertyId)).to.equal(" Age");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" 'Age'");
 	});
 
 	it("expression builder select a field value", () => {
@@ -257,9 +256,8 @@ describe("expression-builder select from tables correctly", () => {
 		// select a string value from value table.
 		const valueRows = wrapper.find("div.properties-value-table-container .reactable-data tr");
 		valueRows.at(1).simulate("dblclick");
-		expect(controller.getPropertyValue(propertyId)).to.equal(" 'female'");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" \"female\"");
 	});
-
 
 	it("expression builder select a function", () => {
 		reset();

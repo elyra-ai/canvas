@@ -35,7 +35,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		this.onValueFilter = this.onValueFilter.bind(this);
 		this.recentUseCat = PropertyUtils.formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_RECENTLY_USED, MESSAGE_KEYS_DEFAULTS.EXPRESSION_RECENTLY_USED);
-
+		this.language = props.language;
 	}
 
 	onTabClick(tabidx, evt) {
@@ -60,7 +60,12 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	onFieldTableDblClick(row, evt) {
 		if (this.props.onChange) {
-			this.props.onChange(this.datasetFields[row].name);
+			let quote = "";
+			if (this.language === "CLEM") {
+				quote = "'";
+			}
+			const field = this.datasetFields[row].name;
+			this.props.onChange(quote + field + quote);
 		}
 	}
 	onFieldFilter(filterString) {
@@ -77,7 +82,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		if (this.props.onChange) {
 			const field = this.datasetFields[this.state.fieldSelectedRow];
 			if (field.metadata.values) {
-				const fieldValue = (field.type === "string") ? "'" + field.metadata.values[row] + "'" : field.metadata.values[row];
+				const quote = "\"";
+				const fieldValue = (field.type === "string") ? quote + field.metadata.values[row] + quote : field.metadata.values[row];
 				this.props.onChange(fieldValue);
 			} else if (field.metadata.range) {
 				this.props.onChange(row === 0 ? field.metadata.range.min : field.metadata.range.max);
@@ -375,5 +381,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 ExpressionSelectFieldOrFunction.propTypes = {
 	controller: PropTypes.object.isRequired,
 	onChange: PropTypes.func,
-	functionList: PropTypes.array
+	functionList: PropTypes.array,
+	language: PropTypes.string
 };

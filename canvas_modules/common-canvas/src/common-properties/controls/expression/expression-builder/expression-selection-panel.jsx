@@ -20,6 +20,7 @@ export default class ExpressionSelectionPanel extends React.Component {
 				controller= {this.props.controller}
 				onChange={this.props.onChange}
 				functionList={this.props.functionList}
+				language={this.props.language}
 			/>
 		);
 		const operators = (
@@ -43,5 +44,6 @@ ExpressionSelectionPanel.propTypes = {
 	controller: PropTypes.object.isRequired,
 	onChange: PropTypes.func.isRequired,
 	functionList: PropTypes.array.isRequired,
-	operatorList: PropTypes.array.isRequired
+	operatorList: PropTypes.array.isRequired,
+	language: PropTypes.string
 };

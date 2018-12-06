@@ -271,8 +271,8 @@ class CommonPropertiesComponents extends React.Component {
 	}
 
 	render() {
-		const expressioInfoProps = EXPRESSION_PROPS_INFO;
-		expressioInfoProps.expressionInfo = FunctionList;
+		const expressionInfoProps = EXPRESSION_PROPS_INFO;
+		expressionInfoProps.expressionInfo = FunctionList;
 		const dropMenu = (<div className="harness-properties-documentation-menu">
 			<Dropdown
 				label="Navigation"
@@ -742,14 +742,14 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="harness-section-row">
 						<div className="harness-section-column">
 							<CommonProperties
-								propertiesInfo={expressioInfoProps}
+								propertiesInfo={expressionInfoProps}
 								propertiesConfig={this.propertiesConfig}
 							/>
-							{this.renderRightFlyoutButton(expressioInfoProps)}
+							{this.renderRightFlyoutButton(expressionInfoProps)}
 						</div>
 						<div className="harness-section-column harness-section-column-code">
 							<pre className="harness-json-block">
-								{this.jsonReplacer(expressioInfoProps.parameterDef, "control")}
+								{this.jsonReplacer(expressionInfoProps.parameterDef, "control")}
 							</pre>
 						</div>
 					</div>
