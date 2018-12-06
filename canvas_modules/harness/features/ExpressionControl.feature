@@ -26,6 +26,7 @@ Feature: ExpressionControl
 		Then I enter "a" in ExpressionEditor and press autocomplete and select "age" a "variable"
 		Then I enter "and" in ExpressionEditor and verify it is a "keyword"
 		Then I enter "age" in ExpressionEditor and verify it is a "variable"
+		Then I enter "'age'" in ExpressionEditor and verify it is a "variable"
 		Then I enter "=" in ExpressionEditor and verify it is a "operator"
 		Then I enter "120" in ExpressionEditor and verify it is a "number"
 		Then I enter "this is a string" in ExpressionEditor and verify it is a "string"

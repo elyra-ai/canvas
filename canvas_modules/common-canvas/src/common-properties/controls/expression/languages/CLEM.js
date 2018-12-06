@@ -53,9 +53,14 @@ CodeMirror.defineMode("CLEM", function() {
 			return "meta";
 		}
 
-		if (ch === "\"" || ch === "'") {
+		if (ch === "\"") {
 			tokenString(ch, stream, state);
 			return "string";
+		}
+
+		if (ch === "'") {
+			tokenVariable(ch, stream, state);
+			return "variable";
 		}
 
 		if (isSpecialChar.test(ch)) {
@@ -92,6 +97,21 @@ CodeMirror.defineMode("CLEM", function() {
 			state.tokenize = null;
 		}
 		return "string";
+	}
+
+	function tokenVariable(quote, stream, state) {
+		var next;
+		var end = false;
+		while (typeof (next = stream.next()) !== "undefined") {
+			if (next === quote) {
+				end = true;
+				break;
+			}
+		}
+		if (end) {
+			state.tokenize = null;
+		}
+		return "variable";
 	}
 
 	// Required implementation
