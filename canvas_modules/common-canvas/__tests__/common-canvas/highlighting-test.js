@@ -12,6 +12,7 @@ import { expect } from "chai";
 import { HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM, HIGHLIGHT_DOWNSTREAM } from "../../src/common-canvas/constants/canvas-constants.js";
 
 import ObjectModel from "../../src/object-model/object-model.js";
+import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
 import supernodeNestedCanvas from "../../../harness/test_resources/diagrams/supernodeNestedCanvas.json";
 
 const objectModel = new ObjectModel();
@@ -99,6 +100,14 @@ const model3B = "dbf2aef9-dceb-49b5-9012-5c8fd0f75ac9";
 // const bindindExitNode2 = "bb68c332-1a98-4da6-aa91-907fb6d51470";
 const entryBinding3Bx1 = "d4c2535e-d3ac-4f32-9f0e-a4adfad1c79f";
 // const entryBinding3Bx2 = "9e88f684-7758-4e9d-8245-0d0d1d1d1542";
+
+// Identifying variables for the allTypesCanvas.json test file
+const atPrimaryPipelineId = "153651d6-9b88-423c-b01b-861f12d01489";
+const atBindingEntryNode = "id8I6RH2V91XW";
+const atExecNode = "idGWRVT47XDV";
+const atSuperNode = "nodeIDSuperNodePE";
+const atModelNode = "id125TTEEIK7V";
+const atBindingExitNode = "id5KIRGGJ3FYT";
 
 describe("Highlight branch", () => {
 	beforeEach(() => {
@@ -307,5 +316,35 @@ describe("Highlight downstream", () => {
 		const expected = { primaryPipelineId: [dataAudit] };
 		expect(isEqual(JSON.stringify(expected.primaryPipelineId), JSON.stringify(branchObjects.nodes[primaryPipelineId]))).to.be.true;
 		expect(branchObjects.links[primaryPipelineId]).to.have.length(0);
+	});
+});
+
+
+// The allTypesCanvas.json has a supernode with missing sub-pipeline binding
+// nodes which caused issue #2227. These tests are to verify that fix.
+describe("Test with pipelineFlow with missing sub-pipeline binding nodes", () => {
+	beforeEach(() => {
+		objectModel.setPipelineFlow(allTypesCanvas);
+	});
+
+	it("should get highlight branch object ids correctly in primary flow", () => {
+		const branchObjects = objectModel.getHighlightObjectIds(atPrimaryPipelineId, [atExecNode], HIGHLIGHT_BRANCH);
+		const expected = { atPrimaryPipelineId: [atBindingEntryNode, atExecNode, atSuperNode, atModelNode, atBindingExitNode] };
+		expect(isEqual(JSON.stringify(expected.atPrimaryPipelineId), JSON.stringify(branchObjects.nodes[atPrimaryPipelineId]))).to.be.true;
+		expect(branchObjects.links[atPrimaryPipelineId]).to.have.length(4);
+	});
+
+	it("should get upstream object ids correctly in primary flow", () => {
+		const branchObjects = objectModel.getHighlightObjectIds(atPrimaryPipelineId, [atModelNode], HIGHLIGHT_UPSTREAM);
+		const expected = { atPrimaryPipelineId: [atSuperNode, atExecNode, atBindingEntryNode, atModelNode] };
+		expect(isEqual(JSON.stringify(expected.atPrimaryPipelineId), JSON.stringify(branchObjects.nodes[atPrimaryPipelineId]))).to.be.true;
+		expect(branchObjects.links[atPrimaryPipelineId]).to.have.length(3);
+	});
+
+	it("should get downstream object ids correctly in primary flow", () => {
+		const branchObjects = objectModel.getHighlightObjectIds(atPrimaryPipelineId, [atBindingEntryNode], HIGHLIGHT_DOWNSTREAM);
+		const expected = { atPrimaryPipelineId: [atExecNode, atSuperNode, atModelNode, atBindingExitNode, atBindingEntryNode] };
+		expect(isEqual(JSON.stringify(expected.atPrimaryPipelineId), JSON.stringify(branchObjects.nodes[atPrimaryPipelineId]))).to.be.true;
+		expect(branchObjects.links[atPrimaryPipelineId]).to.have.length(4);
 	});
 });

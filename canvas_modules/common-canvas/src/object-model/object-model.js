@@ -2214,11 +2214,13 @@ export default class ObjectModel {
 							upstreamObjIds[subflowRef] = [];
 						}
 						const bindingNode = this.getAPIPipeline(subflowRef).getNode(srcNodeOutputPort.subflow_node_ref);
-						if (objectType === "nodes") {
-							upstreamObjIds[subflowRef] = union(upstreamObjIds[subflowRef], [bindingNode.id]);
+						if (bindingNode) {
+							if (objectType === "nodes") {
+								upstreamObjIds[subflowRef] = union(upstreamObjIds[subflowRef], [bindingNode.id]);
+							}
+							const subUpstreamObjs = this.getUpstreamObjIdsFrom(bindingNode.id, subflowRef, objectType);
+							upstreamObjIds = mergeWith(upstreamObjIds, subUpstreamObjs, this.mergeWithUnion);
 						}
-						const subUpstreamObjs = this.getUpstreamObjIdsFrom(bindingNode.id, subflowRef, objectType);
-						upstreamObjIds = mergeWith(upstreamObjIds, subUpstreamObjs, this.mergeWithUnion);
 					}
 
 					const upstreamIds = this.getUpstreamObjIdsFrom(link.srcNodeId, pipelineId, objectType);
@@ -2306,11 +2308,13 @@ export default class ObjectModel {
 							downstreamObjIds[subflowRef] = [];
 						}
 						const bindingNode = this.getAPIPipeline(subflowRef).getNode(trgNodeInputPort.subflow_node_ref);
-						if (objectType === "nodes") {
-							downstreamObjIds[subflowRef] = union(downstreamObjIds[subflowRef], [bindingNode.id]);
+						if (bindingNode) {
+							if (objectType === "nodes") {
+								downstreamObjIds[subflowRef] = union(downstreamObjIds[subflowRef], [bindingNode.id]);
+							}
+							const subDownstreamObjs = this.getDownstreamObjIdsFrom(bindingNode.id, subflowRef, objectType);
+							downstreamObjIds = mergeWith(downstreamObjIds, subDownstreamObjs, this.mergeWithUnion);
 						}
-						const subDownstreamObjs = this.getDownstreamObjIdsFrom(bindingNode.id, subflowRef, objectType);
-						downstreamObjIds = mergeWith(downstreamObjIds, subDownstreamObjs, this.mergeWithUnion);
 					}
 
 					const downstreamIds = this.getDownstreamObjIdsFrom(link.trgNodeId, pipelineId, objectType);
