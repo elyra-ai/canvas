@@ -88,7 +88,8 @@ class CommonProperties extends React.Component {
 				<ValidationMessage messageInfo={errorInfo} />
 			</div>
 		);
-		const errorMessage = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_ERROR, MESSAGE_KEYS_DEFAULTS.PROPERTIES_ERROR);
+		let errorMessage;
+		const supportMessage = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_SUPPORT_MESSAGE, MESSAGE_KEYS_DEFAULTS.PROPERTIES_SUPPORT_MESSAGE);
 		const closeText = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
 		const closeFunction = this.props.callbacks.closePropertiesDialog;
 		const revertText = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REVERTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_REVERTBUTTON_LABEL);
@@ -96,6 +97,7 @@ class CommonProperties extends React.Component {
 		let closeAndRevertContainer;
 		if (this.props.propertiesConfig.containerType === "Custom") { // Right flyout view or Custom
 			if (this.propertiesMainHasMounted === true) {
+				errorMessage = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_REVERT_MESSAGE, MESSAGE_KEYS_DEFAULTS.PROPERTIES_REVERT_MESSAGE);
 				closeAndRevertContainer = ( // Close and Revert Button
 					<div className="properties-modal-buttons">
 						<PropertiesButtons
@@ -109,6 +111,7 @@ class CommonProperties extends React.Component {
 					</div>
 				);
 			} else {
+				errorMessage = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_CLOSE_MESSAGE, MESSAGE_KEYS_DEFAULTS.PROPERTIES_CLOSE_MESSAGE);
 				closeAndRevertContainer = ( // Close Button only
 					<div className="properties-modal-buttons">
 						<PropertiesButtons
@@ -129,6 +132,8 @@ class CommonProperties extends React.Component {
 							<br />
 							<div className="properties-error-content" >
 								{errorMessage}
+								<br />
+								{supportMessage}
 							</div >
 						</div>
 						{closeAndRevertContainer}
@@ -143,6 +148,8 @@ class CommonProperties extends React.Component {
 						<br />
 						<div className="properties-error-content" >
 							{errorMessage}
+							<br />
+							{supportMessage}
 						</div >
 					</div>
 					{closeAndRevertContainer}
@@ -151,6 +158,7 @@ class CommonProperties extends React.Component {
 		}
 		// Modal View
 		if (this.propertiesMainHasMounted === true) { // Revert and Close Button
+			errorMessage = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_REVERT_MESSAGE, MESSAGE_KEYS_DEFAULTS.PROPERTIES_REVERT_MESSAGE);
 			closeAndRevertContainer = (
 				<PropertiesModal
 					bsSize="large"
@@ -163,10 +171,13 @@ class CommonProperties extends React.Component {
 				>
 					<div className="properties-modal-container properties-error-content">
 						{errorMessage}
+						<br />
+						{supportMessage}
 					</div>
 				</PropertiesModal>
 			);
 		} else {	// Close Button Only
+			errorMessage = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_CLOSE_MESSAGE, MESSAGE_KEYS_DEFAULTS.PROPERTIES_CLOSE_MESSAGE);
 			closeAndRevertContainer = (
 				<div className = "properties-modal-error">
 					<PropertiesModal
@@ -179,6 +190,8 @@ class CommonProperties extends React.Component {
 					>
 						<div className="properties-modal-container properties-error-content">
 							{errorMessage}
+							<br />
+							{supportMessage}
 						</div>
 					</PropertiesModal>
 				</div>);
