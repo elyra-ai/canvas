@@ -1285,6 +1285,16 @@ class CanvasRenderer {
 			y = Math.max(-canv.top, Math.min(y, zoomSvgRect.height - canv.height - canv.top));
 		}
 
+		// Readjust the d3Event properties to the newly calculated values so d3Event
+		// stays in sync with the actual pan amount. This is only needed when this
+		// method is called from zoomAction as a result of the d3 zoom behavior when
+		// using the Mouse interaction behavior. It is not needed when using the
+		// Trackpad interaction behavior.
+		if (d3Event.transform) {
+			d3Event.transform.x = x;
+			d3Event.transform.y = y;
+		}
+
 		this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(k);
 		this.canvasGrp.attr("transform", this.zoomTransform);
 
