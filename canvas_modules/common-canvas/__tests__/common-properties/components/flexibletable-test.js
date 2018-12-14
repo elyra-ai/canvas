@@ -95,7 +95,7 @@ const headers = [
 	{ "key": "junk", "label": "Filter Field" },
 	{ "key": "last", "label": "Last Column" }
 ];
-const sortFields = ["fields"];
+const sortFields = ["fields", "last"];
 const filterFields = ["junk"];
 
 function onFilter(filterString) {
@@ -103,7 +103,11 @@ function onFilter(filterString) {
 }
 
 function onSort(spec) {
-	expect(spec.column).to.equal("fields");
+	let valid = false;
+	if (spec.column === "fields" || spec.column === "last") {
+		valid = true;
+	}
+	expect(valid).to.be.true;
 	expect(spec.direction).to.equal(1);
 }
 
@@ -195,10 +199,31 @@ describe("FlexibleTable renders correctly", () => {
 				controller={controller}
 			/>
 		);
-		const input = wrapper.find("div.properties-ft-column");
-		expect(input).to.have.length(1);
-		input.simulate("click");
+		// verify that no columns are active sort column class
+		var input = wrapper.find("th.reactable-header-sortable.sort-column-active");
+		expect(input).to.have.length(0);
+
+		// sort the first sort column
+		input = wrapper.find("div.properties-ft-column");
+		expect(input).to.have.length(2);
+		input.at(0).simulate("click");
 		// the verification is that the onSort function gets invoked with proper column name
+
+		// verify that the first sort column has the active sort column class
+		input = wrapper.find("th.reactable-header-sortable.sort-column-active");
+		expect(input).to.have.length(1);
+		expect(input.find("div.tooltip-trigger").text()).to.equals("Field Name");
+
+		// sort the second sort column
+		input = wrapper.find("div.properties-ft-column");
+		input.at(1).simulate("click");
+		// the verification is that the onSort function gets invoked with proper column name
+
+		// verify that the first sort column is not active and the second sort column is active
+		input = wrapper.find("th.reactable-header-sortable");
+		expect(input).to.have.length(2);
+		expect(input.at(0).hasClass("sort-column-active")).to.be.false;
+		expect(input.at(1).hasClass("sort-column-active")).to.be.true;
 	});
 
 	it("should handle row click in `FlexibleTable`", () => {

@@ -43,6 +43,7 @@ export default class FlexibleTable extends React.Component {
 		}
 		this.state = {
 			columnSortDir: sortDirs,
+			currentSortColumn: "",
 			tableWidth: 0,
 			tableHeight: 0
 		};
@@ -205,7 +206,8 @@ export default class FlexibleTable extends React.Component {
 		if (typeof colSortDir[columnName] !== "undefined") {
 			colSortDir[columnName] = (colSortDir[columnName] === sortDir.ASC) ? sortDir.DESC : sortDir.ASC;
 			this.setState({
-				columnSortDir: colSortDir
+				columnSortDir: colSortDir,
+				currentSortColumn: columnName
 			});
 		}
 	}
@@ -247,7 +249,6 @@ export default class FlexibleTable extends React.Component {
 			const columnDef = this.props.columns[j];
 			const columnStyle = { "minWidth": columnWidths[j], "width": columnWidths[j] };
 			const tooltipId = uuid4() + "-tooltip-column-" + columnDef.key;
-			const className = "";
 			//   wrap the label in a tooltip in case it overflows
 			let headerLabel;
 			if (typeof (columnDef.label) === "object") {
@@ -282,6 +283,7 @@ export default class FlexibleTable extends React.Component {
 				const arrowIcon = ((this.state.columnSortDir[columnDef.key] === sortDir.ASC)
 					? <Icon type="upCaret" disabled={this.props.tableState === STATES.DISABLED} />
 					: <Icon type="downCaret" disabled={this.props.tableState === STATES.DISABLED} />);
+				const className = this.state.currentSortColumn === columnDef.key ? "sort-column-active" : "";
 				headers.push(<Th className={className} key={"flexible-table-headers" + j} column={columnDef.key} style={columnStyle} >
 					<div
 						className="properties-ft-column properties-tooltips-container"
@@ -299,11 +301,13 @@ export default class FlexibleTable extends React.Component {
 								{columnDef.label}
 							</Tooltip>
 						}
-						{arrowIcon}
+						<div className="properties-ft-column-sort-icon">
+							{arrowIcon}
+						</div>
 					</div>
 				</Th>);
 			} else {
-				headers.push(<Th className={className} key={"properties-ft-headers" + j} column={columnDef.key} style={columnStyle}>
+				headers.push(<Th key={"properties-ft-headers" + j} column={columnDef.key} style={columnStyle}>
 					<div className="properties-tooltips-container">
 						{ isEmpty(tooltip)
 							? columnDef.label

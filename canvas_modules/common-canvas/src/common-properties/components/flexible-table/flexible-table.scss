@@ -184,6 +184,25 @@ $flexible-table-header-row-height: 32px;
 .reactable-header-sortable:focus {
 	outline: none;
 }
+// sort icon viewable when hover or sorted column
+.reactable-header-sortable {
+	.properties-ft-column-sort-icon
+	svg:not(:root) {
+		stroke: none;
+	}
+	&:hover:not([disabled])
+	.properties-ft-column-sort-icon
+	svg:not(:root) {
+		stroke: $brand-02;
+	}
+
+	&.sort-column-active
+	.properties-ft-column-sort-icon
+	svg:not(:root) {
+		stroke: $brand-02;
+	}
+
+}
 
 .properties-ft-control-container {
 	width: 100%;
