@@ -265,7 +265,7 @@ export default class PropertiesController {
 					controlValue = this.getPropertyValue({ name: controlValue.parameterRef });
 					this.updatePropertyValue(propertyId, controlValue);
 				}
-			} else if (control.controlType === "structuretable" && control.addRemoveRows === false && control.includeAllRows === true) {
+			} else if (control.controlType === "structuretable" && control.addRemoveRows === false && control.includeAllFields === true) {
 				controlValue = this._populateFieldData(controlValue, control);
 				this.updatePropertyValue(propertyId, controlValue);
 			} else if (typeof control.valueDef !== "undefined" && typeof control.valueDef.defaultValue !== "undefined" &&

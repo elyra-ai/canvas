@@ -129,8 +129,8 @@ export class Control extends ControlDef {
 		if (typeof settings.uionly === "boolean") {
 			this.uionly = settings.uionly;
 		}
-		if (typeof settings.includeAllRows === "boolean") {
-			this.includeAllRows = settings.includeAllRows;
+		if (typeof settings.includeAllFields === "boolean") {
+			this.includeAllFields = settings.includeAllFields;
 		}
 	}
 }

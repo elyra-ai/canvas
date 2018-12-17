@@ -13,7 +13,7 @@ import { ResourceDef } from "../util/L10nProvider";
 
 export class StructureDef {
 	constructor(cname, keyDefinition, parameterMetadata, moveableRows, label,
-		rowSelection, addRemoveRows, header, includeAllRows) {
+		rowSelection, addRemoveRows, header, includeAllFields) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
@@ -30,8 +30,8 @@ export class StructureDef {
 		} else {
 			this.header = true; // set the default value
 		}
-		if (typeof includeAllRows === "boolean") {
-			this.includeAllRows = includeAllRows;
+		if (typeof includeAllFields === "boolean") {
+			this.includeAllFields = includeAllFields;
 		}
 	}
 
