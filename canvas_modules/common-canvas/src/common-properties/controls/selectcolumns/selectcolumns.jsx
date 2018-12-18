@@ -86,9 +86,7 @@ class SelectColumns extends AbstractTable {
 	}
 
 	render() {
-		const sortFields = [];
 		const headers = [];
-		const filterFields = [];
 
 		const tableButtonConfig = {
 			fieldPickerCloseFunction: this.onFieldPickerClose
@@ -99,15 +97,11 @@ class SelectColumns extends AbstractTable {
 
 		const table =	(
 			<FlexibleTable
-				sortable={sortFields}
-				filterable={filterFields}
 				columns={headers}
 				data={rows}
 				showHeader={false}
 				scrollToRow={this.scrollToRow}
 				alignTop={this.alignTop}
-				onFilter={this.onFilter}
-				onSort={this.onSort}
 				topRightPanel={topRightPanel}
 				scrollKey={this.props.control.name}
 				tableState={this.props.state}

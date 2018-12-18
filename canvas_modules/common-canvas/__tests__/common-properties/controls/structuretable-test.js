@@ -115,6 +115,7 @@ const readonlyControlDefault = {
 				"defaultValue": ""
 			},
 			"role": "column",
+			"sortable": true,
 			"summary": true,
 			"visible": true,
 			"width": 28,
@@ -575,6 +576,42 @@ describe("structuretable control with readonly numbered column renders correctly
 		const controllerData = controller.getPropertyValue(propertyIdReadonlyControlStartValue);
 		expect(JSON.stringify(controllerData)).to.equal(expectedData);
 	});
+
+	it("should have correct index values after sort", () => {
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<StructureTableControl
+					control={readonlyControlDefault}
+					controller={controller}
+					propertyId={propertyIdReadonlyControl}
+					buildUIItem={genUIItem}
+					openFieldPicker={openFieldPicker}
+					rightFlyout
+				/>
+			</Provider>
+		);
+		const tableHeader = wrapper.find("th.reactable-th-field");
+		// click on the column header to trigger the onClick sort
+		tableHeader.simulate("click");
+		var tableRows = controller.getPropertyValue(propertyIdReadonlyControl);
+		expect(tableRows[0][0]).to.equal("Age");
+		expect(tableRows[1][0]).to.equal("Cholesterol");
+		expect(tableRows[2][0]).to.equal("Drug");
+		expect(tableRows[0][1]).to.equal(1);
+		expect(tableRows[1][1]).to.equal(2);
+		expect(tableRows[2][1]).to.equal(3);
+
+		// click on the column header to trigger the onClick sort
+		tableHeader.simulate("click");
+		tableRows = controller.getPropertyValue(propertyIdReadonlyControl);
+		expect(tableRows[0][0]).to.equal("Drug");
+		expect(tableRows[1][0]).to.equal("Cholesterol");
+		expect(tableRows[2][0]).to.equal("Age");
+		expect(tableRows[0][1]).to.equal(1);
+		expect(tableRows[1][1]).to.equal(2);
+		expect(tableRows[2][1]).to.equal(3);
+	});
+
 });
 
 describe("structuretable control with multi input schemas renders correctly", () => {
@@ -822,12 +859,12 @@ describe("structuretable columns sort correctly", () => {
 		// click on the column header to trigger the onClick sort
 		tableHeader.simulate("click");
 		tableRows = controller.getPropertyValue(propertyId);
-		expect(tableRows[0][0]).to.equal("Sex");
-		expect(tableRows[5][0]).to.equal("Age");
-		tableHeader.simulate("click");
-		tableRows = controller.getPropertyValue(propertyId);
 		expect(tableRows[0][0]).to.equal("Age");
 		expect(tableRows[5][0]).to.equal("Sex");
+		tableHeader.simulate("click");
+		tableRows = controller.getPropertyValue(propertyId);
+		expect(tableRows[0][0]).to.equal("Sex");
+		expect(tableRows[5][0]).to.equal("Age");
 
 	});
 });

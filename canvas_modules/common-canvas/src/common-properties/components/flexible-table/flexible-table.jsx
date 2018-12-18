@@ -38,7 +38,7 @@ export default class FlexibleTable extends React.Component {
 		if (typeof this.props.sortable !== "undefined") {
 			for (var i = 0; i < this.props.sortable.length; i++) {
 				const sortCol = this.props.sortable[i];
-				sortDirs[sortCol] = sortDir.ASC;
+				sortDirs[sortCol] = sortDir.DESC;
 			}
 		}
 		this.state = {

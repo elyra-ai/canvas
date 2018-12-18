@@ -107,7 +107,7 @@ export default class AbstractTable extends React.Component {
 			controlValue = sortBy(controlValue, function(row) {
 				return row[col];
 			});
-			if (spec.direction > 0) {
+			if (spec.direction < 0) {
 				controlValue = controlValue.reverse();
 			}
 			this.setCurrentControlValueSelected(controlValue, []);
