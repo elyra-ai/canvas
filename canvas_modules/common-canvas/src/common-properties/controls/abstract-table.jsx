@@ -526,12 +526,38 @@ export default class AbstractTable extends React.Component {
 				row: i,
 				col: colIndex
 			};
-			this.props.controller.updatePropertyValue(propertyId, checked);
+			if (this.props.controller.getControlState(propertyId) !== STATES.DISABLED) {
+				this.props.controller.updatePropertyValue(propertyId, checked);
+			}
 		}
 		this.checkedAll[colIndex] = checked;
 	}
 
 	checkedAll(colIndex) {
+		const controlValue = this.props.value;
+		if (Array.isArray(controlValue)) {
+			if (controlValue.length === 0) {
+				return false;
+			}
+			for (let i = 0; i < controlValue.length; i++) {
+				const propertyId = {
+					name: this.props.control.name,
+					row: i,
+					col: colIndex
+				};
+				if (this.props.controller.getControlState(propertyId) !== STATES.DISABLED) {
+					if (!controlValue[i][colIndex]) {
+						return false;
+					}
+				}
+			}
+		} else {
+			return false;
+		}
+		return true;
+	}
+
+	disabledAll(colIndex) {
 		const controlValue = this.props.value;
 		if (Array.isArray(controlValue)) {
 			if (controlValue.length === 0) {

@@ -20,6 +20,7 @@ import isEqual from "lodash/isEqual";
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 import structuretableMultiInputParamDef from "../../test_resources/paramDefs/structuretable_multiInput_paramDef.json";
 import filterColumnParamDef from "../../test_resources/paramDefs/Filter_paramDef.json";
+import setGlobalsParamDef from "../../test_resources/paramDefs/setGlobals_paramDef.json";
 
 const controller = new Controller();
 
@@ -817,14 +818,101 @@ describe("structuretable control displays with checkbox header", () => {
 		expect(columnValues[0][2]).to.be.equal(false);
 		expect(columnValues[1][2]).to.be.equal(true);
 		expect(columnValues[2][2]).to.be.equal(false);
-		// set the column header checkbox to true
+		// set the column header checkbox to false
 		const tableCheckboxHeader = wrapper.find("input[type='checkbox']").at(0); // find the table header checkbox
 		tableCheckboxHeader.simulate("change", { target: { checked: false, id: "field_types2" } });
-		// validate all rows checkboxes are true
+		// validate all rows checkboxes are false
 		columnValues = renderedController.getPropertyValue(colPropertyId);
 		expect(columnValues[0][2]).to.be.equal(false);
 		expect(columnValues[1][2]).to.be.equal(false);
 		expect(columnValues[2][2]).to.be.equal(false);
+	});
+});
+
+
+describe("structuretable control checkbox header ignores disabled rows", () => {
+	let wrapper;
+	let renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(setGlobalsParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should display header with checkbox", () => {
+		const tableCheckboxHeader = wrapper.find("input#globals1"); // find the table header
+		expect(tableCheckboxHeader).to.have.length(1);
+		expect(tableCheckboxHeader.prop("type")).to.equal("checkbox");
+	});
+	it("checkbox header on should select column value for all rows", () => {
+		const colPropertyId = { name: "globals" };
+		// validate the original state
+		let columnValues = renderedController.getPropertyValue(colPropertyId);
+		expect(columnValues).to.have.length(3);
+		// check that the initial values for the table (including disabled rows) are correct
+		expect(columnValues[0][1]).to.be.equal(false);
+		expect(columnValues[1][1]).to.be.equal(false);
+		expect(columnValues[2][1]).to.be.equal(false);
+		// set the column header checkbox to true
+		const tableCheckboxHeader = wrapper.find("input[type='checkbox']").at(0); // find the table header checkbox
+		tableCheckboxHeader.getDOMNode().checked = true;
+		tableCheckboxHeader.simulate("change");
+		// validate all rows checkboxes are true
+		columnValues = renderedController.getPropertyValue(colPropertyId);
+		// the header should not have changed the state of the disabled checkbox
+		expect(columnValues[0][1]).to.be.equal(true);
+		expect(columnValues[1][1]).to.be.equal(false);
+		expect(columnValues[2][1]).to.be.equal(true);
+	});
+	it("checkbox header off should un-select column value for all rows", () => {
+		const colPropertyId = { name: "globals" };
+		// validate the original state
+		let columnValues = renderedController.getPropertyValue(colPropertyId);
+		expect(columnValues).to.have.length(3);
+		// check that the initial values for the table (including disabled rows) are correct
+		expect(columnValues[0][5]).to.be.equal(true);
+		expect(columnValues[1][5]).to.be.equal(false);
+		expect(columnValues[2][5]).to.be.equal(true);
+		// set the column header checkbox to false-
+		const tableCheckboxHeader = wrapper.find("input#globals5"); // find the table header checkbox
+		tableCheckboxHeader.getDOMNode().checked = false;
+		tableCheckboxHeader.simulate("change");
+		// validate that the header has set all checkboxes to false
+		columnValues = renderedController.getPropertyValue(colPropertyId);
+		expect(columnValues[0][5]).to.be.equal(false);
+		expect(columnValues[1][5]).to.be.equal(false);
+		expect(columnValues[2][5]).to.be.equal(false);
+	});
+	it("checkbox header should become checked if all non-disabled rows become checked", () => {
+		const colPropertyId = { name: "globals" };
+		// validate the original state
+		let columnValues = renderedController.getPropertyValue(colPropertyId);
+		const tableCheckboxHeader = wrapper.find("input[type='checkbox']").at(0); // find the table header checkbox
+		expect(columnValues).to.have.length(3);
+		// check that the initial values for the table (including disabled rows) are correct
+		expect(columnValues[0][1]).to.be.equal(false);
+		expect(columnValues[1][1]).to.be.equal(false);
+		expect(columnValues[2][1]).to.be.equal(false);
+		expect(tableCheckboxHeader.getDOMNode().checked).to.be.equal(false);
+		// set the column header checkbox to true
+		const colCheckbox1 = wrapper.find("div[data-id='properties-globals_0_1']").find("input[type='checkbox']");
+		colCheckbox1.getDOMNode().checked = true;
+		colCheckbox1.simulate("change");
+		const colCheckbox2 = wrapper.find("div[data-id='properties-globals_2_1']").find("input[type='checkbox']");
+		colCheckbox2.getDOMNode().checked = true;
+		colCheckbox2.simulate("change");
+		// validate all rows checkboxes are true
+		columnValues = renderedController.getPropertyValue(colPropertyId);
+		// the header should not have changed the state of the disabled checkbox
+		expect(columnValues[0][1]).to.be.equal(true);
+		expect(columnValues[1][1]).to.be.equal(false);
+		expect(columnValues[2][1]).to.be.equal(true);
+		// expect the table checkbox header to now be checked
+		expect(tableCheckboxHeader.getDOMNode().checked).to.be.equal(true);
 	});
 });
 
