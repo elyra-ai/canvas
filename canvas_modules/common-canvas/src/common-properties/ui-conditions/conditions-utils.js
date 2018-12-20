@@ -99,15 +99,28 @@ function validatePropertiesListConditions(controller, controls, newStates) {
 			}
 			const propertyId = control.name ? { name: control.name } : { name: control };
 			const controlValue = controller.getPropertyValue(propertyId);
-			if (Array.isArray(controlValue) && control.subControls) {
-			// validate the table as a whole
-				_validateConditionsByType(propertyId, newStates, controller);
-				// validate each cell
-				for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+			if (control.subControls) {
+				if (control.valueDef.isList || control.valueDef.isMap) {
+					// validate the table as a whole
+					_validateConditionsByType(propertyId, newStates, controller);
+					// validate each cell
+					if (Array.isArray(controlValue)) {
+						for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+							for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
+								propertyId.row = rowIndex;
+								propertyId.col = colIndex;
+								_validateConditionsByType(propertyId, newStates, controller);
+							}
+						}
+					}
+				} else {
+					// An 'unrolled' structure not within a table
+					const subPropId = {
+						name: propertyId.name
+					};
 					for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
-						propertyId.row = rowIndex;
-						propertyId.col = colIndex;
-						_validateConditionsByType(propertyId, newStates, controller);
+						subPropId.col = colIndex;
+						_validateConditionsByType(subPropId, newStates, controller);
 					}
 				}
 			} else {
@@ -139,11 +152,23 @@ function validateInput(inPropertyId, controller) {
 		_validateInput(propertyId, controller, control);
 		// validate each cell
 		if (control.subControls) {
-			for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+			if (control.valueDef.isList || control.valueDef.isMap) {
+				// Handle tables
+				for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+					for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
+						propertyId.row = rowIndex;
+						propertyId.col = colIndex;
+						_validateInput(propertyId, controller, control.subControls[colIndex]);
+					}
+				}
+			} else {
+				// Handle 'unrolled' structs outside of tables
 				for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
-					propertyId.row = rowIndex;
-					propertyId.col = colIndex;
-					_validateInput(propertyId, controller, control.subControls[colIndex]);
+					const subPropId = {
+						name: inPropertyId.name,
+						col: colIndex
+					};
+					_validateInput(subPropId, controller, control.subControls[colIndex]);
 				}
 			}
 		} else {
@@ -287,7 +312,8 @@ function updateState(refState, propertyId, value) {
 		propState = {};
 	}
 	const newPropState = Object.assign({}, propState);
-	if (newPropState.value === STATES.HIDDEN && (value === STATES.DISABLED || value === STATES.ENABLED)) {
+	const topLevelId = typeof propertyId.row === "undefined" && typeof propertyId.col === "undefined";
+	if (topLevelId && newPropState.value === STATES.HIDDEN && (value === STATES.DISABLED || value === STATES.ENABLED)) {
 		newPropState.value = STATES.HIDDEN;
 	} else {
 		newPropState.value = value;
@@ -319,10 +345,11 @@ function updateState(refState, propertyId, value) {
 
 /**
 * Generate a propertyId from a parameter_ref.  The new propertyId will include the row
-* value from the control propertyId.
+* value from the control propertyId. If the controlPropertyId is a member of an
+* unrolled structure, that propertyId will be returned.
 *
 * @param {string} parameter_ref value. required.
-* @param {object} control propertyId. required.
+* @param {object} control propertyId. optional.
 * @return {object} generated propertyId.
 */
 function getParamRefPropertyId(paramRef, controlPropertyId) {
@@ -578,7 +605,7 @@ function _updateControlState(stateOn, definition, propertyId, newStates, control
 		if (definition.parameter_refs) {
 			for (const paramRef of definition.parameter_refs) {
 				const referenceId = getParamRefPropertyId(paramRef, propertyId);
-				const currentState = _getState(newStates.panels, referenceId);
+				const currentState = _getState(newStates.controls, referenceId);
 				if (referenceId && (visibleControl || (!visibleControl && currentState !== notAllowedState))) {
 					_updateStateIfPanel(newStates, referenceId, newOffState);
 				}
@@ -744,7 +771,7 @@ function _getFilteredEnumItems(definition, filtered) {
 	return null;
 }
 
-// state is stored in objects rather then arrays
+// state is stored in objects rather than arrays
 function _getState(refState, propertyId) {
 	let propState = refState[propertyId.name];
 	if (typeof propertyId.col !== "undefined" && propState) {

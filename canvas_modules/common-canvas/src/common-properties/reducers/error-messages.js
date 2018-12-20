@@ -19,25 +19,26 @@ function messages(state = {}, action) {
 	switch (action.type) {
 	case UPDATE_ERROR_MESSAGE: {
 		const newState = state;
-		if (typeof newState[action.message.propertyId.name] === "undefined") {
-			newState[action.message.propertyId.name] = {};
+		const propertyId = action.message.propertyId;
+		if (typeof newState[propertyId.name] === "undefined") {
+			newState[propertyId.name] = {};
 		}
-		if (typeof action.message.propertyId.row !== "undefined") {
-			const strRow = action.message.propertyId.row.toString();
-			if (typeof newState[action.message.propertyId.name][strRow] === "undefined") {
-				newState[action.message.propertyId.name][strRow] = {};
+		if (typeof propertyId.row !== "undefined") {
+			const strRow = propertyId.row.toString();
+			if (typeof newState[propertyId.name][strRow] === "undefined") {
+				newState[propertyId.name][strRow] = {};
 			}
-			if (typeof action.message.propertyId.col !== "undefined") {
-				const strCol = action.message.propertyId.col.toString();
-				if (typeof newState[action.message.propertyId.name][strRow][strCol] === "undefined") {
-					newState[action.message.propertyId.name][strRow][strCol] = {};
+			if (typeof propertyId.col !== "undefined") {
+				const strCol = propertyId.col.toString();
+				if (typeof newState[propertyId.name][strRow][strCol] === "undefined") {
+					newState[propertyId.name][strRow][strCol] = {};
 				}
-				newState[action.message.propertyId.name][strRow][strCol] = action.message.value;
+				newState[propertyId.name][strRow][strCol] = action.message.value;
 			} else {
-				newState[action.message.propertyId.name][strRow] = Object.assign(newState[action.message.propertyId.name][strRow], action.message.value);
+				newState[propertyId.name][strRow] = Object.assign(newState[propertyId.name][strRow], action.message.value);
 			}
 		} else {
-			newState[action.message.propertyId.name] = Object.assign(newState[action.message.propertyId.name], action.message.value);
+			newState[propertyId.name] = Object.assign(newState[propertyId.name], action.message.value);
 		}
 		return Object.assign({}, state, newState);
 	}

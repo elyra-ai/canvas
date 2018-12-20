@@ -35,7 +35,8 @@ const propValues = {
 	param_message2: [],
 	param_null: null,
 	param_empty: "",
-	param_complex: [3, "col in complex type", "zoom"]
+	param_complex: [3, "col in complex type", "zoom"],
+	structureeditor: [1, 2, 3]
 };
 deepFreeze(propValues);
 
@@ -145,18 +146,56 @@ const controls = [
 		],
 		"keyIndex": -1,
 		"defaultRow": []
+	},
+	{
+		"name": "structureeditor",
+		"controlType": "structureeditor",
+		"valueDef": {
+			"propType": "structure",
+			"isList": false,
+			"isMap": false,
+		},
+		"subControls": [
+			{
+				"name": "dummy1",
+				"controlType": "numberfield",
+				"valueDef": {
+					"propType": "double",
+					"isList": false,
+					"isMap": false
+				}
+			},
+			{
+				"name": "single_element",
+				"controlType": "numberfield",
+				"valueDef": {
+					"propType": "integer",
+					"isList": false,
+					"isMap": false
+				}
+			},
+			{
+				"name": "label",
+				"controlType": "textfield",
+				"valueDef": {
+					"propType": "string",
+					"isList": false,
+					"isMap": false
+				}
+			}
+		]
 	}
 ];
 
 
 const propStates = {
-	param_int: {
+	"param_int": {
 		value: "enabled"
 	},
-	param_str_array: {
+	"param_str_array": {
 		value: "hidden"
 	},
-	param_mix_table: {
+	"param_mix_table": {
 		"0": {
 			"3": {
 				value: "enabled"
@@ -182,6 +221,11 @@ const propStates = {
 			"4": {
 				value: "hidden"
 			}
+		}
+	},
+	"structureeditor": {
+		"1": {
+			value: "visible"
 		}
 	}
 };
@@ -279,6 +323,13 @@ const errorMessages = {
 			type: "error",
 			text: "Bad value in column"
 		}
+	},
+	structureeditor: {
+		"1": {
+			validation_id: "single_element",
+			type: "error",
+			text: "Bad data value"
+		}
 	}
 };
 deepFreeze(errorMessages);
@@ -337,6 +388,17 @@ describe("Properties Controller property values", () => {
 		expectedValues.param_mix_table[2][3] = 10;
 		expect(expectedValues).to.eql(actualValues);
 	});
+	it("should update a structureeditor property value correctly", () => {
+		reset();
+		controller.updatePropertyValue({
+			name: "structureeditor",
+			col: 1 },
+		10);
+		const actualValues = controller.getPropertyValues();
+		const expectedValues = getCopy(propValues);
+		expectedValues.structureeditor[1] = 10;
+		expect(expectedValues).to.eql(actualValues);
+	});
 	it("should remove a property value correctly", () => {
 		reset();
 		controller.updatePropertyValue({ name: "param_removed" }, 10);
@@ -368,6 +430,14 @@ describe("Properties Controller property values", () => {
 		reset();
 		const actualValue = controller.getPropertyValue({ name: "param_mix_table", row: 3, col: 4 });
 		expect(actualValue).to.equal(propValues.param_mix_table[3][4]);
+	});
+	it("should get a structureeditor property value correctly", () => {
+		reset();
+		const propertyId = {
+			name: "structureeditor",
+			col: 1 };
+		const actualValue = controller.getPropertyValue(propertyId);
+		expect(actualValue).to.equal(propValues.structureeditor[1]);
 	});
 	it("should get filtered a property value correctly", () => {
 		reset();
@@ -406,7 +476,8 @@ describe("Properties Controller property values", () => {
 			param_message2: [],
 			param_null: null,
 			param_empty: "",
-			param_complex: [3, "col in complex type", "zoom"]
+			param_complex: [3, "col in complex type", "zoom"],
+			structureeditor: [1, 2, 3]
 		};
 		expect(expectedValues).to.eql(actualValues);
 	});
@@ -448,6 +519,19 @@ describe("Properties Controller states", () => {
 		};
 		expect(expectedValues).to.eql(actualValues);
 	});
+	it("should update a structureeditor element property state correctly", () => {
+		reset();
+		controller.updateControlState({
+			name: "structureeditor",
+			col: 1 },
+		"hidden");
+		const actualValues = controller.getControlStates();
+		const expectedValues = getCopy(propStates);
+		expectedValues.structureeditor[1] = {
+			value: "hidden"
+		};
+		expect(expectedValues).to.eql(actualValues);
+	});
 	it("should get a simple property state correctly", () => {
 		reset();
 		const actualValue = controller.getControlState({ name: "param_str_array" });
@@ -461,6 +545,14 @@ describe("Properties Controller states", () => {
 	it("should get a cell property state correctly", () => {
 		reset();
 		const actualValue = controller.getControlState({ name: "param_mix_table", row: 3, col: 3 });
+		expect(actualValue).to.equal("visible");
+	});
+	it("should get a structureeditor property state correctly", () => {
+		reset();
+		const actualValue = controller.getControlState({
+			name: "structureeditor",
+			col: 1
+		});
 		expect(actualValue).to.equal("visible");
 	});
 	it("should get property states correctly", () => {
@@ -705,6 +797,27 @@ describe("Properties Controller property messages", () => {
 		};
 		expect(expectedValues).to.eql(actualValues);
 	});
+	it("should update a structureeditor property message correctly", () => {
+		reset();
+		const propertyId = {
+			name: "structureeditor",
+			col: 1 };
+		controller.updateErrorMessage(propertyId, {
+			validation_id: "single_element",
+			type: "error",
+			text: "Bad data value"
+		});
+		const actualValues = controller.getErrorMessages();
+		const expectedValues = getCopy(errorMessages);
+		expectedValues.structureeditor = {
+			"1": {
+				validation_id: "single_element",
+				type: "error",
+				text: "Bad data value"
+			}
+		};
+		expect(expectedValues).to.eql(actualValues);
+	});
 	it("should get a table property message correctly", () => {
 		reset();
 		const actualValue = controller.getErrorMessage({ name: "param_mix_table" });
@@ -735,6 +848,19 @@ describe("Properties Controller property messages", () => {
 		};
 		expect(expectedValue).to.eql(actualValue);
 	});
+	it("should get a structureeditor property message correctly", () => {
+		reset();
+		const propertyId = {
+			name: "structureeditor",
+			col: 1 };
+		const actualValue = controller.getErrorMessage(propertyId);
+		const expectedValue = {
+			validation_id: "single_element",
+			type: "error",
+			text: "Bad data value"
+		};
+		expect(expectedValue).to.eql(actualValue);
+	});
 	it("should get pipeline property messages correctly", () => {
 		reset();
 		const actualValues = controller.getErrorMessages(true);
@@ -762,6 +888,12 @@ describe("Properties Controller property messages", () => {
 				validation_id: "param_complex",
 				type: "error",
 				text: "Bad value in column"
+			},
+			{
+				id_ref: "structureeditor",
+				validation_id: "single_element",
+				type: "error",
+				text: "Bad data value"
 			}
 		];
 		expect(expectedValues).to.eql(actualValues);

@@ -17,30 +17,31 @@ function states(state = {}, action) {
 	switch (action.type) {
 	case UPDATE_CONTROL_STATE: {
 		const newState = state;
-		let propState = newState[action.state.propertyId.name];
+		const propertyId = action.state.propertyId;
+		let propState = newState[propertyId.name];
 		if (typeof propState === "undefined") {
 			propState = {};
 		}
-		if (typeof action.state.propertyId.row !== "undefined") {
-			const strRow = action.state.propertyId.row.toString();
+		if (typeof propertyId.row !== "undefined") {
+			const strRow = propertyId.row.toString();
 			if (typeof propState[strRow] === "undefined") {
 				propState[strRow] = {};
 			}
-			if (typeof action.state.propertyId.col !== "undefined") {
-				const strCol = action.state.propertyId.col.toString();
+			if (typeof propertyId.col !== "undefined") {
+				const strCol = propertyId.col.toString();
 				if (typeof propState[strRow][strCol] === "undefined") {
 					propState[strRow][strCol] = {};
 				}
-				newState[action.state.propertyId.name][strRow][strCol] = {
+				newState[propertyId.name][strRow][strCol] = {
 					value: action.state.value
 				};
 			} else {
-				newState[action.state.propertyId.name][strRow] = {
+				newState[propertyId.name][strRow] = {
 					value: action.state.value
 				};
 			}
 		} else {
-			newState[action.state.propertyId.name] = {
+			newState[propertyId.name] = {
 				value: action.state.value
 			};
 		}

@@ -183,7 +183,7 @@ export default class PropertiesStore {
 
 	/*
 	* Returns the message for a propertyId.  Iterates over row and cell level messages
-	* and returns terror message summary for all cell level errors.
+	* and returns an error message summary for all cell level errors.
 	*/
 	getErrorMessage(propertyId, intl) {
 		if (typeof propertyId === "undefined") {

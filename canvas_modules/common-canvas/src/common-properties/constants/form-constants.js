@@ -75,7 +75,7 @@ const ControlType = {
 	SELECTCOLUMNS: "selectcolumns",
 	SELECTSCHEMA: "selectschema",
 	STRUCTURETABLE: "structuretable",
-	STRUCTUREEDITOR: "structureeditor", // deprecated, no longer supported
+	STRUCTUREEDITOR: "structureeditor",
 	STRUCTURELISTEDITOR: "structurelisteditor",
 	TOGGLETEXT: "toggletext",
 	READONLY: "readonly",

@@ -1,0 +1,408 @@
+{
+  "titleDefinition": {
+    "title": "StructureEditorControl"
+  },
+  "current_parameters": {
+    "field_type": [
+      "Field 2",
+      "Field 2",
+      false
+     ],
+     "custom_name_checkbox": false,
+     "hidden_field": true,
+     "custom_name": "",
+     "annotation": []
+  },
+  "complex_types": [
+    {
+      "id": "fieldFilterEntry",
+      "parameters": [
+        {
+          "id": "input",
+          "type": "string",
+          "role": "column"
+        },
+        {
+          "id": "output",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "exclude",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "nameLayout",
+      "parameters": [
+        {
+          "id": "hidden_field",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "id": "custom_name",
+          "type": "string",
+          "role": "new_column",
+          "default": ""
+        },
+        {
+          "id": "custom_name_checkbox",
+          "type": "boolean",
+          "enum": [
+            "Add Description"
+          ],
+          "default": false
+        },
+        {
+          "id": "annotation",
+          "type": "array[string]",
+          "default": [],
+          "role": "new_column"
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "field_type",
+      "type": "fieldFilterEntry",
+      "default": []
+    },
+    {
+      "id": "hider",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "id": "disabler",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "id": "layout_struct",
+      "type": "nameLayout",
+      "default": []
+    }
+  ],
+  "uihints": {
+    "id": "structureeditor",
+    "icon": "images/structureeditor.svg",
+    "editor_size": "medium",
+    "complex_type_info": [
+      {
+        "complex_type_ref": "fieldFilterEntry",
+        "parameters": [
+          {
+            "parameter_ref": "input",
+            "label": {
+              "default": "",
+              "resource_key": "fieldFilterEntry.input"
+            }
+          },
+          {
+            "parameter_ref": "output",
+            "label": {
+              "default": "",
+              "resource_key": "fieldFilterEntry.output"
+            }
+          },
+          {
+            "parameter_ref": "exclude",
+            "label": {
+              "default": "",
+              "resource_key": "fieldFilterEntry.exclude"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "nameLayout",
+        "layout": [
+          ["custom_name_checkbox", "custom_name"],
+          ["annotation"]
+        ],
+        "parameters": [
+          {
+            "parameter_ref": "hidden_field",
+            "label": {
+              "default": " "
+            },
+            "description": {
+              "default": ""
+            }
+          },
+          {
+            "parameter_ref": "custom_name",
+            "label": {
+              "default": " "
+            },
+            "description": {
+              "default": ""
+            }
+          },
+          {
+            "parameter_ref": "custom_name_checkbox",
+            "label": {
+              "default": "Custom name"
+            },
+            "description": {
+              "default": "Check this box in order to use a custom name for the node."
+            }
+          },
+          {
+            "parameter_ref": "annotation",
+            "label": {
+              "default": "Annotation"
+            },
+            "description": {
+              "default": "Annotation"
+            }
+          }
+        ]
+      }
+    ],
+    "parameter_info": [
+      {
+        "parameter_ref": "field_type",
+        "label": {
+          "default": ""
+        },
+        "description": {
+          "default": "Filter columns"
+        }
+      },
+      {
+        "parameter_ref": "hider",
+        "label": {
+          "default": "Hide structureeditor controls"
+        },
+        "description": {
+          "default": "Hide the controls in the structureeditor"
+        }
+      },
+      {
+        "parameter_ref": "disabler",
+        "label": {
+          "default": "Disable structureeditor controls"
+        },
+        "description": {
+          "default": "Disable the controls in the structureeditor"
+        }
+      },
+      {
+        "parameter_ref": "layout_struct",
+        "label": {
+          "default": "Layout Controls"
+        },
+        "description": {
+          "default": "Layout Controls"
+        },
+        "separator": "before"
+      }
+    ],
+    "group_info": [
+      {
+        "id": "basic-settings",
+        "label": {
+          "default": "Settings"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "field_type"
+        ]
+      },
+      {
+        "id": "annotations",
+        "label": {
+          "default": "Annotations"
+        },
+        "parameter_refs": [
+          "hider",
+          "disabler",
+          "layout_struct"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "enabled": {
+        "parameter_refs": [
+          "field_type[1]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "field_type[2]",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "layout_struct[1]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "layout_struct[2]",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "layout_struct"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disabler",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "layout_struct"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hider",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "field_type[0]",
+          "message": {
+            "default": "Input name cannot equal Output name"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "field_type[0]",
+            "op": "notEquals",
+            "parameter_2_ref": "field_type[1]"
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "Field 1",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Field 2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Field 3",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Field 4",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Field 5",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Field 6",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Field 7",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Field 8",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Field 9",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Field 10",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "StructureEditorControl.label": "Structure Editor Control",
+    "field_type.label": "",
+    "fieldFilterEntry.input": "Input name",
+    "fieldFilterEntry.output": "Output name",
+    "fieldFilterEntry.exclude": "Exclude"
+  }
+}

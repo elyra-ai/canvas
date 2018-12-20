@@ -355,6 +355,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let addRemoveRows;
 	let header;
 	let includeAllFields;
+	let layout;
 
 	// The control type defines the basic UI element that should be used to edit the property
 	if (parameter.getRole() === ParamRole.CUSTOM) {
@@ -437,8 +438,10 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 						header = structureDef.header;
 					}
 				} else {
-					logger.warn("Complex types should be arrays or maps.  Found: " + parameter.propType());
 					controlType = ControlType.STRUCTUREEDITOR;
+					if (structureDef.layout) {
+						layout = structureDef.layout;
+					}
 				}
 			} else {
 				controlType = ControlType.TEXTFIELD;
@@ -501,6 +504,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	settings.header = header;
 	settings.uionly = parameter.uionly;
 	settings.includeAllFields = includeAllFields;
+	settings.layout = layout;
 	return new Control(settings);
 }
 

@@ -26,6 +26,8 @@ function getDataId(propertyId) {
 		if (typeof propertyId.col !== "undefined") {
 			id += "_" + propertyId.col;
 		}
+	} else if (typeof propertyId.col !== "undefined") {
+		id += "_" + propertyId.col;
 	}
 	return "properties-" + id;
 }

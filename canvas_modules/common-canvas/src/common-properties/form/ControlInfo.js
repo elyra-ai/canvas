@@ -132,6 +132,9 @@ export class Control extends ControlDef {
 		if (typeof settings.includeAllFields === "boolean") {
 			this.includeAllFields = settings.includeAllFields;
 		}
+		if (settings.layout) {
+			this.layout = settings.layout;
+		}
 	}
 }
 

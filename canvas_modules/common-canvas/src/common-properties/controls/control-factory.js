@@ -31,6 +31,7 @@ import RadiosetControl from "./radioset";
 import Dropdown from "./dropdown";
 import SomeofselectControl from "./someofselect";
 import SelectColumnsControl from "./selectcolumns";
+import StructureEditorControl from "./structureeditor";
 import StructureTableControl from "./structuretable";
 import StructurelisteditorControl from "./structurelisteditor";
 
@@ -146,6 +147,8 @@ export default class ControlFactory {
 					{this.controller.getCustomControl(propertyId, control, tableInfo)}
 				</div>
 			);
+		} else if (control.controlType === ControlType.STRUCTUREEDITOR) {
+			return (<StructureEditorControl {...props} />);
 		}
 		return (<ReadonlyControl {...props} />);
 	}

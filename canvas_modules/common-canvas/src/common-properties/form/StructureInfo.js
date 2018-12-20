@@ -13,7 +13,7 @@ import { ResourceDef } from "../util/L10nProvider";
 
 export class StructureDef {
 	constructor(cname, keyDefinition, parameterMetadata, moveableRows, label,
-		rowSelection, addRemoveRows, header, includeAllFields) {
+		rowSelection, addRemoveRows, header, includeAllFields, layout) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
@@ -32,6 +32,9 @@ export class StructureDef {
 		}
 		if (typeof includeAllFields === "boolean") {
 			this.includeAllFields = includeAllFields;
+		}
+		if (Array.isArray(layout)) {
+			this.layout = layout;
 		}
 	}
 
@@ -88,7 +91,8 @@ export class StructureDef {
 				propertyOf(uihints)("row_selection"),
 				propertyOf(uihints)("add_remove_rows"),
 				propertyOf(uihints)("header"),
-				propertyOf(uihints)("include_all_fields")
+				propertyOf(uihints)("include_all_fields"),
+				propertyOf(uihints)("layout")
 			);
 		}
 		return null;

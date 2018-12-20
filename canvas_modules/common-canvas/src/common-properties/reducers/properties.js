@@ -10,17 +10,18 @@
 import { UPDATE_PROPERTY_VALUE, SET_PROPERTY_VALUES, REMOVE_PROPERTY_VALUE } from "../actions";
 
 function properties(state = {}, action) {
+	const propertyId = action.property && action.property.propertyId ? action.property.propertyId : null;
 	switch (action.type) {
 	case UPDATE_PROPERTY_VALUE: {
 		var newState = state;
-		if (typeof action.property.propertyId.row !== "undefined") {
-			if (typeof action.property.propertyId.col !== "undefined") {
-				newState[action.property.propertyId.name][action.property.propertyId.row][action.property.propertyId.col] = action.property.value;
+		if (typeof propertyId.row !== "undefined") {
+			if (typeof propertyId.col !== "undefined") {
+				newState[propertyId.name][propertyId.row][propertyId.col] = action.property.value;
 			} else {
-				newState[action.property.propertyId.name][action.property.propertyId.row] = action.property.value;
+				newState[propertyId.name][propertyId.row] = action.property.value;
 			}
 		} else {
-			newState[action.property.propertyId.name] = action.property.value;
+			newState[propertyId.name] = action.property.value;
 		}
 		return Object.assign({}, state, newState);
 	}
@@ -29,8 +30,8 @@ function properties(state = {}, action) {
 	}
 	case REMOVE_PROPERTY_VALUE: {
 		const nextState = state;
-		if (typeof action.property.propertyId.name !== "undefined") {
-			delete nextState[action.property.propertyId.name];
+		if (typeof propertyId.name !== "undefined") {
+			delete nextState[propertyId.name];
 		}
 		return Object.assign({}, state, nextState);
 	}

@@ -179,10 +179,9 @@ export default class PropertiesController {
 	/*
 	* This function will get all definitions of the input definition type (visible, enabled,
 	* filteredEnum and validation) and the definition index (controls, refs) that are
-	* referenced by the propertyId.  The definition types visible and enabled have two indexes.
-	* Controls indexes are  all definitions that have the propertyId as an operand in the evaluate.
+	* referenced by the propertyId.  The definition types visible and enabled have two indices.
+	* Controls indices are all definitions that have the propertyId as an operand in the evaluate.
 	* Refs are all definitions that have the propertyId as something that is set as a result of the evaluate.
-	*
 	*/
 	getDefinitions(propertyId, dfnType, dfnIndex) {
 		let conditionDefinitions;
@@ -221,7 +220,6 @@ export default class PropertiesController {
 			}
 		}
 		return retCond;
-
 	}
 
 	/*
@@ -272,6 +270,12 @@ export default class PropertiesController {
 				(typeof controlValue === "undefined")) {
 				controlValue = control.valueDef.defaultValue;
 				this.updatePropertyValue(propertyId, controlValue);
+			} else if (control.controlType === "structureeditor") {
+				if (!controlValue || (Array.isArray(controlValue) && controlValue.length === 0)) {
+					if (Array.isArray(control.defaultRow)) {
+						this.updatePropertyValue(propertyId, control.defaultRow);
+					}
+				}
 			}
 		}
 	}
@@ -840,10 +844,13 @@ export default class PropertiesController {
 	}
 
 	/**
-	* @param propertyId
+	* Updates the enabled/visible state of a control.
+	*
+	* @param inPropertyId Id of the property for the control to operate upon
 	* @param state string ("disabled", "enabled", "hidden", "visible")
 	*/
-	updateControlState(propertyId, state) {
+	updateControlState(inPropertyId, state) {
+		const propertyId = this.convertPropertyId(inPropertyId);
 		this.propertiesStore.updateControlState(propertyId, state);
 	}
 	getControlState(propertyId) {
@@ -885,8 +892,11 @@ export default class PropertiesController {
 	}
 
 	/**
-	* returns a single error message for a propertyId
-	* @param inPropertyId boolean
+	* Returns a single error message for a propertyId.
+	*
+	* @param inPropertyId Target propertyId
+	* @param filterHiddenDisable True to leave out hidden and disabled properties
+	* @param filterSuccess If true, leave out success messages
 	* @return error message object
 	*/
 	getErrorMessage(inPropertyId, filterHiddenDisable, filterSuccess) {
