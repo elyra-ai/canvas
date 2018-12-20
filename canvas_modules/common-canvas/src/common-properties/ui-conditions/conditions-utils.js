@@ -171,8 +171,7 @@ function validateInput(inPropertyId, controller) {
 					_validateInput(subPropId, controller, control.subControls[colIndex]);
 				}
 			}
-		} else {
-			// validate each row in array.
+		} else if (typeof propertyId.row === "undefined") { // validate each row in array for controls that are not within a table.
 			for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				propertyId.row = rowIndex;
 				propertyId.col = 0;

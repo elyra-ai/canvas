@@ -393,3 +393,41 @@ describe("selectcolumns control displays the proper number of rows", () => {
 		expect(heightStyle).to.eql({ "height": "15em" });
 	});
 });
+
+describe("selectcolumns control functions correctly in a table", () => {
+	let wrapper;
+	let scController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
+		wrapper = renderedObject.wrapper;
+		scController = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should not display invalid fields warnings for selectColumns control in a table", () => {
+		// open the summary on_panel and add a row to the table
+		const summaryPanelWrapper = wrapper.find("div[data-id='properties-selectcolumns-tables-structurelist-summary']");
+		summaryPanelWrapper.find("button").simulate("click");
+
+		// select the add column button
+		let tableWrapper = wrapper.find("div[data-id='properties-ft-structurelist_sub_panel']");
+		expect(tableWrapper.length).to.equal(1);
+		const addFieldsButtons = tableWrapper.find("button.properties-add-fields-button"); // add row button
+		addFieldsButtons.at(0).simulate("click"); // add row button
+
+		// Need to reassign tableWrapper after adding row.
+		tableWrapper = wrapper.find("div[data-id='properties-ft-structurelist_sub_panel']");
+		const editButton = tableWrapper.find(".properties-subpanel-button").at(0);
+		editButton.simulate("click"); // open the subpanel for the added row
+
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields2");
+		propertyUtils.fieldPicker(fieldPicker, ["Na"]);
+
+		// There should be no error messages
+		expect(scController.getErrorMessages()).to.eql({});
+	});
+
+});

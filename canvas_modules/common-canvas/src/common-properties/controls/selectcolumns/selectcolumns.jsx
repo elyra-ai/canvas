@@ -36,7 +36,7 @@ class SelectColumns extends AbstractTable {
 				const columns = [];
 
 				// If the propertyId contains 'row' then this selectcolumns control is part of a table.
-				// Need to add an additional 'index' to retireve the correct value from the control within a table.
+				// Need to add an additional 'index' to retrieve the correct value from the control within a table.
 				const row = typeof this.props.propertyId.row !== "undefined"
 					? { row: this.props.propertyId.row, index: rowIndex }
 					: { row: rowIndex };
