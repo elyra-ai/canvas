@@ -15,19 +15,19 @@ describe("radio renders and works correctly with different enum types", () => {
 
 	let wrapper;
 	let renderedController;
-	let labels;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(radioParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
-		labels = wrapper.find("label.properties-control-label");
 	});
 	afterEach(() => {
 		wrapper.unmount();
 	});
 
 	it("radioset control with string enum", () => {
-		expect(labels.at(0).text()).to.equal("Radio String");
+		const controlDiv = wrapper.find("div[data-id='properties-ci-radioString']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio String");
 		expect(renderedController.getPropertyValue({ name: "radioString" })).to.equal("entropy");
 		const radioGroup = wrapper.find("div[data-id='properties-radioString']");
 		const radioStringGini = radioGroup.find("input[value='gini']");
@@ -36,25 +36,42 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control with boolean enum", () => {
-		expect(labels.at(1).text()).to.equal("Radio Boolean");
-		expect(renderedController.getPropertyValue({ name: "radioBoolean" })).to.equal(true);
-		const radioGroup = wrapper.find("div[data-id='properties-radioBoolean']");
+		const controlDiv = wrapper.find("div[data-id='properties-ci-radioBooleanWithEnum']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Boolean with Enum");
+		expect(renderedController.getPropertyValue({ name: "radioBooleanWithEnum" })).to.equal(true);
+		const radioGroup = wrapper.find("div[data-id='properties-radioBooleanWithEnum']");
 		const radioFalseBoolean = radioGroup.find("input[value='false']");
 		radioFalseBoolean.simulate("change", { target: { checked: true, value: false } });
-		expect(renderedController.getPropertyValue({ name: "radioBoolean" })).to.equal(false);
+		expect(renderedController.getPropertyValue({ name: "radioBooleanWithEnum" })).to.equal(false);
 	});
 
 	it("radioset control for boolean without enum", () => {
-		expect(labels.at(2).text()).to.equal("Radio Boolean Without Enum");
-		expect(renderedController.getPropertyValue({ name: "radioBoolean2" })).to.equal(true);
-		const radioGroup = wrapper.find("div[data-id='properties-radioBoolean2']");
+		const controlDiv = wrapper.find("div[data-id='properties-ci-radioBooleanWithoutEnum']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Boolean without Enum");
+		expect(renderedController.getPropertyValue({ name: "radioBooleanWithoutEnum" })).to.equal(true);
+		const radioGroup = wrapper.find("div[data-id='properties-radioBooleanWithoutEnum']");
 		const radioFalseBoolean = radioGroup.find("input[value='false']");
 		radioFalseBoolean.simulate("change", { target: { checked: true, value: false } });
-		expect(renderedController.getPropertyValue({ name: "radioBoolean2" })).to.equal(false);
+		expect(renderedController.getPropertyValue({ name: "radioBooleanWithoutEnum" })).to.equal(false);
+	});
+
+	it("radioset control for boolean with labels", () => {
+		const controlDiv = wrapper.find("div[data-id='properties-ci-radioBooleanWithLabels']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Boolean with Labels");
+		expect(renderedController.getPropertyValue({ name: "radioBooleanWithLabels" })).to.equal(false);
+		const radioGroup = wrapper.find("div[data-id='properties-radioBooleanWithLabels']");
+		const radioTrueBoolean = radioGroup.find("input[value='true']");
+		radioTrueBoolean.simulate("change", { target: { checked: true, value: true } });
+		expect(renderedController.getPropertyValue({ name: "radioBooleanWithLabels" })).to.equal(true);
 	});
 
 	it("radioset control with number enum", () => {
-		expect(labels.at(3).text()).to.equal("Radio Number");
+		const controlDiv = wrapper.find("div[data-id='properties-ci-radioInteger']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Number");
 		expect(renderedController.getPropertyValue({ name: "radioInteger" })).to.equal(2);
 		const radioGroup = wrapper.find("div[data-id='properties-radioInteger']");
 		const radioIntegerOne = radioGroup.find("input[value=1]");
@@ -63,7 +80,9 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control with double enum", () => {
-		expect(labels.at(4).text()).to.equal("Radio Double");
+		const controlDiv = wrapper.find("div[data-id='properties-ci-radioDouble']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Double");
 		expect(renderedController.getPropertyValue({ name: "radioDouble" })).to.equal(1.23);
 		const radioGroup = wrapper.find("div[data-id='properties-radioDouble']");
 		const radioDouble = radioGroup.find("input[type='radio']");
@@ -72,7 +91,9 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control with default value", () => {
-		expect(labels.at(5).text()).to.equal("Radio Default");
+		const controlDiv = wrapper.find("div[data-id='properties-ci-radioDefault']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Default");
 		expect(renderedController.getPropertyValue({ name: "radioDefault" })).to.equal(23);
 		const radioGroup = wrapper.find("div[data-id='properties-radioDefault']");
 		const radioDefault = radioGroup.find("input[value=32]");
@@ -81,7 +102,9 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control undefined", () => {
-		expect(labels.at(6).text()).to.equal("Radio Undefined");
+		const controlDiv = wrapper.find("div[data-id='properties-ci-radioUndefined']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Undefined");
 		expect(renderedController.getPropertyValue({ name: "radioUndefined" })).is.undefined;
 		const radioGroup = wrapper.find("div[data-id='properties-radioUndefined']");
 		const radioUndefined = radioGroup.find("input[value='entropy']");
@@ -90,7 +113,9 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control with null value", () => {
-		expect(labels.at(7).text()).to.equal("Radio Null");
+		const controlDiv = wrapper.find("div[data-id='properties-ci-radioNull']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Null");
 		expect(renderedController.getPropertyValue({ name: "radioNull" })).to.equal(null);
 		const radioGroup = wrapper.find("div[data-id='properties-radioNull']");
 		const radioNull = radioGroup.find("input[value='entropy']");
@@ -99,7 +124,9 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control with long label wrapped", () => {
-		expect(labels.at(8).text()).to.equal("Radio Label Wrapped");
+		const controlDiv = wrapper.find("div[data-id='properties-ci-radioLabelWrapped']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Label Wrapped");
 		expect(renderedController.getPropertyValue({ name: "radioLabelWrapped" })).to.equal("firstN");
 		const radioGroup = wrapper.find("div[data-id='properties-radioLabelWrapped']");
 		const radioOneInN = radioGroup.find("input[value='oneInN']");
@@ -111,7 +138,9 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control with error", () => {
-		expect(labels.at(9).text()).to.equal("Radio Error");
+		const controlDiv = wrapper.find("div[data-id='properties-ci-radioError']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Error");
 		expect(renderedController.getPropertyValue({ name: "radioError" })).to.equal("gini");
 		let radioGroup = wrapper.find("div[data-id='properties-radioError']");
 		const radioError = radioGroup.find("input[value='entropy']");
@@ -123,7 +152,9 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control disabled", () => {
-		expect(labels.at(11).text()).to.equal("Radio Disabled");
+		const controlDiv = wrapper.find("div[data-id='properties-ci-radioDisable']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Disabled");
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-disable']");
 		const checkbox = checkboxsetWrapper.find("input");
 		// checked the disable box
@@ -137,7 +168,9 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control hidden", () => {
-		expect(labels.at(12).text()).to.equal("Radio Hidden");
+		const controlDiv = wrapper.find("div[data-id='properties-ci-radioHidden']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Hidden");
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-hide']");
 		const checkbox = checkboxsetWrapper.find("input");
 		// checked the hidden box

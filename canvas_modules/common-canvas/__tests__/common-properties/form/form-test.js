@@ -58,7 +58,15 @@ describe("Correct form should be created", () => {
 											"propType": "boolean",
 											"isList": false,
 											"isMap": false
-										}
+										},
+										"values": [
+											true,
+											false
+										],
+										"valueLabels": [
+											"true",
+											"false"
+										]
 									}
 								}
 							]

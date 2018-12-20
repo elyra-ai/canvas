@@ -698,7 +698,7 @@ function _makeAction(action, l10nProvider) {
 }
 
 function _parameterValueLabels(parameter, l10nProvider) {
-	if (parameter.valueRestriction) {
+	if (parameter.getValidValues()) {
 		let key;
 		if (parameter.resource_key) {
 			key = parameter.resource_key;

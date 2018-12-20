@@ -360,7 +360,15 @@
                               "isList": false,
                               "isMap": false,
                               "defaultValue": false
-                            }
+                            },
+	                          "values": [
+	                            true,
+	                            false
+	                          ],
+	                          "valueLabels": [
+	                            "true",
+	                            "false"
+	                          ]
                           }
                         },
                         {

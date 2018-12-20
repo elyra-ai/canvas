@@ -191,7 +191,7 @@ export class ParameterDef {
 	getRole() {
 		if (this.role) {
 			return this.role;
-		} else if (this.valueRestriction) {
+		} else if (this.getValidValues()) {
 			// Assume valueRestriction implies ENUM
 			return ParamRole.ENUM;
 		}
@@ -217,8 +217,10 @@ export class ParameterDef {
 
 	getValidValues() {
 		var undef;
-		if (this.getRole() === ParamRole.ENUM && this.valueRestriction) {
+		if (this.valueRestriction) {
 			return this.valueRestriction;
+		} else if (this.type === Type.BOOLEAN) {
+			return [true, false];
 		}
 		return undef;
 	}

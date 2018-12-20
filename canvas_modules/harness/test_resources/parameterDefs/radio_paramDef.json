@@ -4,8 +4,9 @@
   },
   "current_parameters": {
     "radioString": "entropy",
-    "radioBoolean": true,
-    "radioBoolean2": true,
+    "radioBooleanWithEnum": true,
+    "radioBooleanWithoutEnum": true,
+    "radioBooleanWithLabels": false,
     "radioInteger": 2,
     "radioDouble": 1.23,
     "radioNull": null,
@@ -37,7 +38,7 @@
       "required": true
     },
     {
-      "id": "radioBoolean",
+      "id": "radioBooleanWithEnum",
       "enum": [
         true,
         false
@@ -46,7 +47,12 @@
       "required": true
     },
     {
-      "id": "radioBoolean2",
+      "id": "radioBooleanWithoutEnum",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "id": "radioBooleanWithLabels",
       "type": "boolean",
       "required": true
     },
@@ -241,9 +247,9 @@
         "resource_key": "withradioString"
       },
       {
-        "parameter_ref": "radioBoolean",
+        "parameter_ref": "radioBooleanWithEnum",
         "label": {
-          "default": "Radio Boolean"
+          "default": "Radio Boolean with Enum"
         },
         "description": {
           "default": "RadioSet with enum boolean type"
@@ -253,15 +259,27 @@
         "resource_key": "withradioBoolean"
       },
       {
-        "parameter_ref": "radioBoolean2",
+        "parameter_ref": "radioBooleanWithoutEnum",
         "label": {
-          "default": "Radio Boolean Without Enum"
+          "default": "Radio Boolean without Enum"
         },
         "description": {
-          "default": "RadioSet with enum boolean type and without enum defined"
+          "default": "RadioSet without enum boolean type"
         },
         "label_visible": true,
         "control": "radioset"
+      },
+      {
+        "parameter_ref": "radioBooleanWithLabels",
+        "label": {
+          "default": "Radio Boolean with Labels"
+        },
+        "description": {
+          "default": "RadioSet of boolean type with labels"
+        },
+        "label_visible": true,
+        "control": "radioset",
+        "resource_key": "radioBooleanWithLabels"
       },
       {
         "parameter_ref": "radioInteger",
@@ -481,8 +499,9 @@
         "type": "controls",
         "parameter_refs": [
           "radioString",
-          "radioBoolean",
-          "radioBoolean2",
+          "radioBooleanWithEnum",
+          "radioBooleanWithoutEnum",
+          "radioBooleanWithLabels",
           "radioInteger",
           "radioDouble",
           "radioDefault",
@@ -728,6 +747,8 @@
     "withradioString.entropy.label": "Entropy",
     "withradioBoolean.true.label": "trueBoolean",
     "withradioBoolean.false.label": "falseBoolean",
+    "radioBooleanWithLabels.true.label": "True Label",
+    "radioBooleanWithLabels.false.label": "False Label",
     "withradioLabelWrapped.firstN.label": "First N",
     "withradioLabelWrapped.oneInN.label": "One in N",
     "withradioLabelWrapped.longLabel.label": "This is really a longggggggggggggg label"
