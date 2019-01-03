@@ -192,6 +192,7 @@ describe("selectcolumn control renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.equal("");
 	});
 });
+
 describe("selectcolumn control renders correctly with paramDef", () => {
 	let wrapper;
 	let controller;
@@ -376,6 +377,26 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 			{ label: "age4", value: "age4" }
 		];
 		expect(options).to.eql(expectedOptions);
+	});
+
+	it("should not show an error for a non-selection if the property isn't required", () => {
+		let selectField = wrapper.find("div[data-id='properties-field_placeholder'] DropdownV2");
+		let dropdownButton = selectField.find("div[role='button']");
+		dropdownButton.simulate("click");
+		// select the first item
+		selectField = wrapper.find("div[data-id='properties-field_placeholder'] DropdownV2");
+		let dropdownList = selectField.find("div.bx--list-box__menu-item");
+		dropdownList.at(2).simulate("click");
+		selectField = wrapper.find("div[data-id='properties-field_placeholder'] DropdownV2");
+		dropdownButton = selectField.find("div[role='button']");
+		dropdownButton.simulate("click");
+		// select the first item
+		selectField = wrapper.find("div[data-id='properties-field_placeholder'] DropdownV2");
+		dropdownList = selectField.find("div.bx--list-box__menu-item");
+		dropdownList.at(0).simulate("click");
+		selectField = wrapper.find("div[data-id='properties-field_placeholder'] DropdownV2");
+		const errorMsgDiv = selectField.find("div.properties-validation-message");
+		expect(errorMsgDiv).to.have.length(0);
 	});
 });
 

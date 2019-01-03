@@ -202,17 +202,24 @@ function validateConditions(inPropertyId, controller) {
 		panels: controller.getPanelStates()
 	};
 	const propertyId = cloneDeep(inPropertyId);
-	// _validateConditionsByType(propertyId, newStates, controller);
 	const controlValue = controller.getPropertyValue(propertyId);
 	if (Array.isArray(controlValue) && control.subControls) {
-	// validate the table as a whole
-		_validateConditionsByType(propertyId, newStates, controller);
-		// validate each cell
-		for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+		if (!(control.valueDef.isList || control.valueDef.isMap)) {
+			// An unrolled structure on a panel (e.g. not a row in a table)
 			for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
-				propertyId.row = rowIndex;
 				propertyId.col = colIndex;
 				_validateConditionsByType(propertyId, newStates, controller);
+			}
+		} else {
+			// validate the table as a whole
+			_validateConditionsByType(propertyId, newStates, controller);
+			// validate each cell
+			for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+				for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
+					propertyId.row = rowIndex;
+					propertyId.col = colIndex;
+					_validateConditionsByType(propertyId, newStates, controller);
+				}
 			}
 		}
 	} else {
@@ -874,10 +881,20 @@ function _injectInvalidFieldDefinition(control, valDefinitions, keyName, control
 					focus_parameter_ref: keyName
 				},
 				evaluate: {
-					condition: {
-						parameter_ref: keyName,
-						op: "colDoesExists"
-					}
+					or: [
+						{
+							condition: {
+								parameter_ref: keyName,
+								op: "colDoesExists"
+							}
+						},
+						{
+							condition: {
+								parameter_ref: keyName,
+								op: "isEmpty"
+							}
+						}
+					]
 				}
 			}
 		}
