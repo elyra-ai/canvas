@@ -16,9 +16,6 @@ import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
 import sinon from "sinon";
-import propertyUtils from "../../_utils_/property-utils";
-
-import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 
 chai.use(chaiEnzyme()); // Note the invocation at the end
 
@@ -248,25 +245,4 @@ describe("FlexibleTable renders correctly", () => {
 		expect(handleRowClick).to.have.property("callCount", 1);
 	});
 
-});
-
-describe("text cells should display limited text", () => {
-	let wrapper;
-	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
-		wrapper = renderedObject.wrapper;
-	});
-
-	afterEach(() => {
-		wrapper.unmount();
-	});
-	it("Cell text field should activate ellipsis when text overflows", () => {
-		let tableSummary = wrapper.find("div[data-id='properties-structuretableReadonlyColumnDefaultIndex-summary-panel']"); // Configure Rename fields
-		tableSummary.find("button").simulate("click"); // open the summary panel (modal)
-		tableSummary = wrapper.find("div[data-id='properties-structuretableReadonlyColumnDefaultIndex-summary-panel']"); // Configure Rename fields
-		const labelCells = tableSummary.find("td[data-label='new_label']");
-		expect(labelCells).to.have.length(2);
-		var bloodPressureText = labelCells.at(1);
-		expect(bloodPressureText.offsetWidth !== bloodPressureText.scrollWidth); // Overflow text is truncated and ellipsis has been activated (through CSS styling)
-	});
 });

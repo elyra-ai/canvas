@@ -22,9 +22,9 @@
 		text-overflow: clip;
 	}
 	span {
+		white-space: normal;
 		line-height: 1.5;
 		overflow-wrap: break-word;
-		white-space: normal;
 		&[disabled] {
 			opacity: 0.5;
 		}
@@ -35,6 +35,7 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		span {
+			white-space: nowrap;
 			line-height: 1.5;
 			&[disabled] {
 				opacity: 0.5;

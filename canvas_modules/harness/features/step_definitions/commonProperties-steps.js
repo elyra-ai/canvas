@@ -224,6 +224,11 @@ module.exports = function() {
 		expect(value).toEqual(text.getText());
 	});
 
+	this.Then(/^I verify readonly control "([^"]*)" has no text overflow/, function(controlId) {
+		const spanText = browser.$("div[data-id='properties-" + controlId + "'] span").getElementSize("height");
+		expect(spanText).toBeLessThan(25); // the span height should not be a large number, as this indicates a text overflow
+	});
+
 	this.Then(/^I verify readonly control "([^"]*)" CSS style "([^"]*)" is "([^"]*)"$/, function(controlId, style, value) {
 		const text = browser.$("div[data-id='properties-" + controlId + "'] span");
 		expect(text.getCssProperty(style).value).toEqual(value);

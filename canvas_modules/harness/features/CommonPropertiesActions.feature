@@ -29,3 +29,15 @@ Feature: CommonPropertiesActions
 
 		Then I verify readonly control "readonly_text" value is "The more I study, the more insatiable do I feel my genius for it to be. 'Ada Lovelace'"
 		Then I verify readonly control "readonly_text" CSS style "overflow-wrap" is "break-word"
+
+	Scenario: Test of ellipsis activation for a long readonly text
+    Then I resize the window size to 1400 width and 800 height
+    Given I am on the test harness
+    Given I have toggled the app side common-properties panel
+    Then I have selected the "Flyout" properties container type
+    Given I have uploaded JSON for common-properties "structuretable_paramDef.json"
+    Then I open the "Configure Rename fields" summary link in the "TABLES (1)" category
+    Then I click the subpanel button in control "structuretableReadonlyColumnDefaultIndex" in row "0"
+    Then I enter "This is a very long sentence of text to test whether or not an overflow of text occurs" in textfield "structuretableReadonlyColumnDefaultIndex_0_3" in parent control "structuretableReadonlyColumnDefaultIndex" in row "0"
+    Then I click the subpanel button "OK" button in control "structuretableReadonlyColumnDefaultIndex" in row "0"
+    Then I verify readonly control "structuretableReadonlyColumnDefaultIndex_0_3" has no text overflow.
