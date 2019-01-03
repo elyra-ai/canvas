@@ -35,6 +35,7 @@ import CustomTogglePanel from "./components/custom-panels/CustomTogglePanel";
 import CustomMapPanel from "./components/custom-panels/CustomMapPanel";
 import CustomButtonPanel from "./components/custom-panels/CustomButtonPanel";
 import CustomDatasetsPanel from "./components/custom-panels/CustomDatasetsPanel";
+import EMMeansPanel from "./components/custom-panels/EMMeansPanel";
 import CustomToggleControl from "./components/custom-controls/CustomToggleControl";
 import CustomTableControl from "./components/custom-controls/CustomTableControl";
 import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
@@ -1628,7 +1629,7 @@ class App extends React.Component {
 				} }
 				propertiesInfo={this.state.propertiesInfo}
 				propertiesConfig={propertiesConfig}
-				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel, CustomDatasetsPanel]}
+				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel]}
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl]}
 				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
@@ -1641,12 +1642,11 @@ class App extends React.Component {
 				} }
 				propertiesInfo={this.state.propertiesInfo2}
 				propertiesConfig={propertiesConfig}
-				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel, CustomDatasetsPanel]}
+				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel]}
 				callbacks={callbacks2}
 				customControls={[CustomToggleControl, CustomTableControl]}
 				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
 			/>);
-
 
 		let commonPropertiesContainer = null;
 		let rightFlyoutContent = null;

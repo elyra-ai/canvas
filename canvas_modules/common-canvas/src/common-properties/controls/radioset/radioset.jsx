@@ -31,10 +31,16 @@ class RadiosetControl extends React.Component {
 		this.updateValueFromFilterEnum(true);
 		const val = this.props.controller.getPropertyValue(this.props.propertyId);
 		this.setEnabledStateOfOptionalPanels(val);
+		if (typeof this.props.value !== "undefined" && this.props.value !== null) {
+			this.handleCheckedDisabled(this.props.value, this.isRadioButtonDisabled(String(this.props.value)));
+		}
 	}
 
 	componentDidUpdate() {
 		this.updateValueFromFilterEnum();
+		if (typeof this.props.value !== "undefined" && this.props.value !== null) {
+			this.handleCheckedDisabled(this.props.value, this.isRadioButtonDisabled(String(this.props.value)));
+		}
 	}
 
 	/*
@@ -52,7 +58,6 @@ class RadiosetControl extends React.Component {
 			// This populates the control.panelTree with the panels passed in and
 			// associates them with any children they have.
 			this.props.controller.parsePanelTree();
-
 
 			for (let i = 0; i < valueSet.values.length; i++) {
 				const val = valueSet.values[i];
@@ -106,8 +111,43 @@ class RadiosetControl extends React.Component {
 		}
 	}
 
-	render() {
+	isRadioButtonDisabled(radioValue) {
+		const propState = this.props.valueStates;
+		if (propState && propState[radioValue] && propState[radioValue].value) {
+			return propState[radioValue].value === STATES.DISABLED;
+		}
+		return false;
+	}
 
+	/**
+	 * Handles those cases where a radio button is both checked and disabled -
+	 * Will attempt to select another enabled radio button if possible.
+	 *
+	 * @param val A radio button enumeration value that is selected
+	 * @param itemDisabled True if the radio button is disabled
+	 */
+	handleCheckedDisabled(val, itemDisabled) {
+		if (typeof val !== "undefined" && val !== null && itemDisabled && this.props.state !== STATES.DISABLED) {
+			const control = this.props.controller.getControl(this.props.propertyId);
+			let newRadioSelection;
+			const defaultValue = this.props.control.valueDef.defaultValue;
+			if (defaultValue && !this.isRadioButtonDisabled(defaultValue)) {
+				newRadioSelection = defaultValue;
+			} else {
+				for (const radioValue of control.values) {
+					if (radioValue !== val && !this.isRadioButtonDisabled(radioValue)) {
+						newRadioSelection = radioValue;
+						break;
+					}
+				}
+			}
+			if (newRadioSelection) {
+				this.props.controller.updatePropertyValue(this.props.propertyId, newRadioSelection);
+			}
+		}
+	}
+
+	render() {
 		if (!this.props.control.values && this.props.control.controlType === "radioset") {
 			this.props.control.values = [true, false];
 			this.props.control.valueLabels = ["true", "false"];
@@ -118,8 +158,9 @@ class RadiosetControl extends React.Component {
 		for (var i = 0; i < valueSet.values.length; i++) {
 			const checked = valueSet.values[i] === this.props.value;
 			// RadioButton only accepts values of type string || number
-			const val = (this.props.control.valueDef.propType === "boolean") ? valueSet.values[i].toString() : valueSet.values[i];
+			const val = (this.props.control.valueDef.propType === "boolean") ? String(valueSet.values[i]) : valueSet.values[i];
 			wasChecked = wasChecked || checked;
+			const itemDisabled = this.isRadioButtonDisabled(val);
 			const optionalPanel = this.getOptionalPanel(val);
 			const id = {
 				name: this.props.propertyId.name,
@@ -130,7 +171,7 @@ class RadiosetControl extends React.Component {
 					<RadioButton
 						key={i}
 						id={ControlUtils.getControlId(id, this.uuid)}
-						disabled={this.props.state === STATES.DISABLED}
+						disabled={this.props.state === STATES.DISABLED || itemDisabled}
 						labelText={valueSet.valueLabels[i]}
 						value={val}
 						onChange={this.handleChange}
@@ -163,6 +204,7 @@ RadiosetControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
+	valueStates: PropTypes.object, // pass in by redux
 	value: PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.number,
@@ -175,6 +217,7 @@ RadiosetControl.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
 	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
 	state: ownProps.controller.getControlState(ownProps.propertyId),
+	valueStates: ownProps.controller.getControlValueStates(ownProps.propertyId),
 	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId),
 	controlOpts: ownProps.controller.getFilteredEnumItems(ownProps.propertyId, ownProps.control)
 });

@@ -1,0 +1,2295 @@
+{
+  "titleDefinition": {
+    "title": "GLMM"
+  },
+  "current_parameters": {
+    "fixed_effects_list": [
+      [["Age", "Sex", "Drug"], [0, 0, 1]],
+      [["intAndRange", "stringAndSet"], [0, 1]],
+      [["Drug", "stringAndSet"], [0, 1]],
+      [["BP", "Drug", "Sex", "Cholesterol"], [0, 0, 1, 1]]
+    ]
+  },
+  "complex_types": [
+    {
+      "id": "effectStructure",
+      "parameters": [
+        {
+          "id": "fields",
+          "type": "array[string]",
+          "role": "column"
+        },
+        {
+          "id": "nestingLevels",
+          "type": "array[integer]"
+        }
+      ]
+    },
+    {
+      "id": "random_effects_listStructure",
+      "parameters": [
+        {
+          "id": "EffectList",
+          "type": "array[effectStructure]"
+        },
+        {
+          "id": "Intercept",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "id": "SubjectSpec",
+          "type": "effectStructure"
+        },
+        {
+          "id": "GroupSpec",
+          "type": "array[string]",
+          "role": "column"
+        },
+        {
+          "id": "CovarianceType",
+          "enum": [
+            "AR1",
+            "ARMA11",
+            "CS",
+            "DIAG",
+            "ID",
+            "TP",
+            "UN",
+            "VC",
+            "SPPOW",
+            "SPEXP",
+            "SPGAU",
+            "SPLIN",
+            "SPLINLOG",
+            "SPSPH"
+          ],
+          "default": "VC"
+        },
+        {
+          "id": "CovarianceTBand",
+          "type": "integer",
+          "default": 2
+        },
+        {
+          "id": "ShowEBLUPs",
+          "type": "boolean",
+          "default": false
+        }
+      ]
+    },
+    {
+      "id": "stop_criteriaStructure",
+      "parameters": [
+        {
+          "id": "loglikelihoodCheck",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "id": "LoglikelihoodConvMin",
+          "type": "double",
+          "default": 0.000001
+        },
+        {
+          "id": "LoglikelihoodConvType",
+          "enum": [
+            "Absolute",
+            "Relative"
+          ],
+          "default": "Absolute"
+        },
+        {
+          "id": "parameterCheck",
+          "type": "boolean",
+          "default": true
+        },
+        {
+          "id": "ParameterConvInnMin",
+          "type": "double",
+          "default": 0.000001
+        },
+        {
+          "id": "ParameterConvInnType",
+          "enum": [
+            "Absolute",
+            "Relative"
+          ],
+          "default": "Absolute"
+        },
+        {
+          "id": "hessianCheck",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "id": "HessianConvMin",
+          "type": "double",
+          "default": 0.000001
+        },
+        {
+          "id": "HessianConvType",
+          "enum": [
+            "Absolute",
+            "Relative"
+          ],
+          "default": "Absolute"
+        },
+        {
+          "id": "MaxStepHalving",
+          "type": "integer",
+          "default": 5
+        }
+      ]
+    },
+    {
+      "id": "emMeansStructure",
+      "parameters": [
+        {
+          "id": "Factors",
+          "type": "effectStructure"
+        },
+        {
+          "id": "EstimateMeans",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "id": "CompareFactor",
+          "type": "string",
+          "role": "column"
+        },
+        {
+          "id": "ContrastType",
+          "enum": [
+            "Pairwise",
+            "Deviation",
+            "Simple",
+            "None"
+          ],
+          "default": "None"
+        },
+        {
+          "id": "ReferenceType",
+          "enum": [
+            "Last",
+            "Value"
+          ],
+          "default": "Last"
+        },
+        {
+          "id": "ReferenceValue",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "id": "emMeansUIStructure",
+      "parameters": [
+        {
+          "id": "terms",
+          "type": "string"
+        },
+        {
+          "id": "EstimateMeans",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "id": "ContrastType",
+          "enum": [
+            "Pairwise",
+            "Deviation",
+            "Simple",
+            "None"
+          ],
+          "default": "None"
+        },
+        {
+          "id": "CompareFactor",
+          "type": "string",
+          "role": "column"
+        }
+      ]
+    },
+    {
+      "id": "emMeansCovariatesStructure",
+      "parameters": [
+        {
+          "id": "Field",
+          "type": "string",
+          "role": "column"
+        },
+        {
+          "id": "Constant",
+          "enum": [
+            "Mean",
+            "Value"
+          ],
+          "default": "Mean"
+        },
+        {
+          "id": "Value",
+          "type": "double"
+        }
+      ]
+    },
+    {
+      "id": "source_field_list_item",
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "id": "effectsString",
+      "parameters": [
+        {
+          "id": "effect",
+          "type": "string",
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "residual_subject_spec",
+      "type": "effectStructure",
+      "type": "array[string]",
+      "role": "column"
+    },
+    {
+      "id": "repeated_measures",
+      "type": "effectStructure",
+      "type": "array[string]",
+      "role": "column"
+    },
+    {
+      "id": "residual_group_spec",
+      "type": "array[string]",
+      "role": "column"
+    },
+    {
+      "id": "residual_covariance_type",
+      "enum": [
+        "AR1",
+        "ARMA11",
+        "CS",
+        "DIAG",
+        "ID",
+        "TP",
+        "UN",
+        "VC",
+        "SPPOW",
+        "SPEXP",
+        "SPGAU",
+        "SPLIN",
+        "SPLINLOG",
+        "SPSPH"
+      ]
+    },
+    {
+      "id": "SpatialFields",
+      "type": "array[string]",
+      "role": "column"
+    },
+
+    {
+      "id": "custom_target",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "id": "target_field",
+      "type": "string",
+      "role": "column"
+    },
+    {
+      "id": "use_trials",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "id": "use_custom_target_reference",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "id": "target_reference_value",
+      "type": "string"
+    },
+    {
+      "id": "use_trials_field_or_value",
+      "enum": [
+        "field",
+        "value"
+      ],
+      "default": "field"
+    },
+    {
+      "id": "trials_field",
+      "type": "string",
+      "role": "column"
+    },
+    {
+      "id": "trials_value",
+      "type": "integer",
+      "default": 1
+    },
+    {
+      "id": "dist_link_combination",
+      "enum": [
+        "NormalIdentity",
+        "NominalLogit",
+        "GammaLog",
+        "BinomialLogit",
+        "PoissonLog",
+        "BinomialProbit",
+        "NegbinLog",
+        "BinomialLogC",
+        "Custom"
+      ],
+      "default": "NormalIdentity"
+    },
+    {
+      "id": "target_distribution",
+      "enum": [
+        "NORMAL",
+        "BINOMIAL",
+        "MULTINOMIAL",
+        "GAMMA",
+        "IGAUSS",
+        "NEGBIN",
+        "POISSON"
+      ],
+      "default": "NORMAL"
+    },
+    {
+      "id": "link_function_type",
+      "enum": [
+        "IDENTITY",
+        "LOGC",
+        "LOG",
+        "CLOGLOG",
+        "LOGIT",
+        "NLOGLOG",
+        "PROBIT",
+        "POWER",
+        "CAUCHIT"
+      ],
+      "default": "IDENTITY"
+    },
+    {
+      "id": "link_function_param",
+      "type": "double",
+      "default": 1.0
+    },
+
+    {
+      "id": "use_predefined_inputs",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "id": "use_intercept",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "id": "fixed_effects_list",
+      "type": "array[effectStructure]"
+    },
+
+    {
+      "id": "random_effects_list",
+      "type": "array[random_effects_listStructure]"
+    },
+
+    {
+      "id": "regression_weight_field",
+      "type": "string",
+      "role": "column"
+    },
+    {
+      "id": "use_offset",
+      "enum": [
+        "None",
+        "Value",
+        "Variable"
+      ],
+      "default": "None"
+    },
+    {
+      "id": "offset_value",
+      "type": "double",
+      "default": 0
+    },
+    {
+      "id": "offset_field",
+      "type": "string",
+      "role": "column"
+    },
+
+    {
+      "id": "target_category_order",
+      "enum": [
+        "Ascending",
+        "Descending",
+        "Data"
+      ],
+      "default": "Ascending"
+    },
+    {
+      "id": "inputs_category_order",
+      "enum": [
+        "Ascending",
+        "Descending",
+        "Data"
+      ],
+      "default": "Ascending"
+    },
+    {
+      "id": "max_iterations",
+      "type": "integer",
+      "default": 100
+    },
+    {
+      "id": "confidence_level",
+      "type": "double",
+      "default": 95
+    },
+    {
+      "id": "degrees_of_freedom_method",
+      "enum": [
+        "Residual",
+        "Satterthwaite"
+      ],
+      "default": "Residual"
+    },
+    {
+      "id": "test_fixed_effects_coeffecients",
+      "enum": [
+        "Model",
+        "Robust"
+      ],
+      "default": "Model"
+    },
+
+    {
+      "id": "stop_criteria",
+      "type": "stop_criteriaStructure"
+    },
+    {
+      "id": "max_fisher_step",
+      "type": "integer",
+      "default": 0
+    },
+    {
+      "id": "sing_tolerance",
+      "type": "double",
+      "default": 1e-12
+    },
+
+    {
+      "id": "modelRename",
+      "enum": [
+        "false",
+        "true"
+      ],
+      "default": "false"
+    },
+    {
+      "id": "modelName",
+      "type": "string"
+    },
+    {
+      "id": "confidence",
+      "enum": [
+        "onProbability",
+        "onIncrease"
+      ],
+      "default": "onProbability"
+    },
+    {
+      "id": "score_category_probabilities",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "id": "max_categories",
+      "type": "integer",
+      "default": 25
+    },
+    {
+      "id": "score_propensity",
+      "enum": [
+        "Calculate",
+        "NotCalculate"
+      ],
+      "default": "NotCalculate"
+    },
+
+    {
+      "id": "emeans",
+      "type": "array[emMeansStructure]"
+    },
+    {
+      "id": "covariance_list",
+      "type": "array[emMeansCovariatesStructure]"
+    },
+    {
+      "id": "mean_scale",
+      "enum": [
+        "Original",
+        "Transformed"
+      ],
+      "default": "Original"
+    },
+    {
+      "id": "comparison_adjustment_method",
+      "enum": [
+        "LSD",
+        "SEQBONFERRONI",
+        "SEQSIDAK"
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "glmm",
+    "label": {
+      "default": "GLMM"
+    },
+    "description": {
+      "default": "GLMM model output"
+    },
+    "icon": "images/glmm.svg",
+    "editor_size": "large",
+    "pixel_width": {
+      "max": 700
+    },
+    "complex_type_info": [
+      {
+        "complex_type_ref": "effectStructure",
+        "add_remove_rows": false,
+        "key_definition": {
+          "parameter_ref": "fields",
+          "label": {
+            "resource_key": "effectStructure.fields"
+          }
+        },
+        "parameters": [
+          {
+            "parameter_ref": "nestingLevel",
+            "label": {
+              "resource_key": "effectStructure.nestingLevel"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "random_effects_listStructure",
+        "parameters": [
+          {
+            "parameter_ref": "EffectList",
+            "label": {
+              "resource_key": "random_effects_listStructure.EffectList"
+            }
+          },
+          {
+            "parameter_ref": "Intercept",
+            "label": {
+              "resource_key": "random_effects_listStructure.Intercept"
+            }
+          },
+          {
+            "parameter_ref": "SubjectSpec",
+            "label": {
+              "resource_key": "random_effects_listStructure.SubjectSpec"
+            }
+          },
+          {
+            "parameter_ref": "GroupSpec",
+            "label": {
+              "resource_key": "random_effects_listStructure.GroupSpec"
+            }
+          },
+          {
+            "parameter_ref": "CovarianceType",
+            "label": {
+              "resource_key": "random_effects_listStructure.CovarianceType"
+            }
+          },
+          {
+            "parameter_ref": "CovarianceTBand",
+            "label": {
+              "resource_key": "random_effects_listStructure.CovarianceTBand"
+            }
+          },
+          {
+            "parameter_ref": "ShowEBLUPs",
+            "label": {
+              "resource_key": "random_effects_listStructure.ShowEBLUPs"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "stop_criteriaStructure",
+        "layout": [
+          ["parameterCheck", "ParameterConvInnMin", "ParameterConvInnType"],
+          ["loglikelihoodCheck", "LoglikelihoodConvMin", "LoglikelihoodConvType"],
+          ["hessianCheck", "HessianConvMin", "HessianConvType"]
+        ],
+        "parameters": [
+          {
+            "parameter_ref": "loglikelihoodCheck",
+            "label": {
+              "resource_key": "stop_criteriaStructure.loglikelihoodCheck.label"
+            }
+          },
+          {
+            "parameter_ref": "LoglikelihoodConvMin",
+            "label": {
+              "resource_key": "stop_criteriaStructure.LoglikelihoodConvMin.label"
+            }
+          },
+          {
+            "parameter_ref": "LoglikelihoodConvType",
+            "label": {
+              "resource_key": "stop_criteriaStructure.LoglikelihoodConvType.label"
+            }
+          },
+          {
+            "parameter_ref": "parameterCheck",
+            "label": {
+              "resource_key": "stop_criteriaStructure.parameterCheck.label"
+            }
+          },
+          {
+            "parameter_ref": "ParameterConvInnMin",
+            "label": {
+              "resource_key": "stop_criteriaStructure.ParameterConvInnMin.label"
+            }
+          },
+          {
+            "parameter_ref": "ParameterConvInnType",
+            "label": {
+              "resource_key": "stop_criteriaStructure.ParameterConvInnType.label"
+            }
+          },
+          {
+            "parameter_ref": "hessianCheck",
+            "label": {
+              "resource_key": "stop_criteriaStructure.hessianCheck.label"
+            }
+          },
+          {
+            "parameter_ref": "HessianConvMin",
+            "label": {
+              "resource_key": "stop_criteriaStructure.HessianConvMin.label"
+            }
+          },
+          {
+            "parameter_ref": "HessianConvType",
+            "label": {
+              "resource_key": "stop_criteriaStructure.HessianConvType.label"
+            }
+          },
+          {
+            "parameter_ref": "MaxStepHalving",
+            "visible": false
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "emMeansUIStructure",
+        "add_remove_rows": false,
+        "parameters": [
+          {
+            "parameter_ref": "Factors",
+            "label": {
+              "resource_key": "emMeansStructure.Factors"
+            }
+          },
+          {
+            "parameter_ref": "EstimateMeans",
+            "label": {
+              "resource_key": "emMeansStructure.EstimateMeans"
+            }
+          },
+          {
+            "parameter_ref": "ContrastType",
+            "label": {
+              "resource_key": "emMeansStructure.ContrastType"
+            }
+          },
+          {
+            "parameter_ref": "CompareFactor",
+            "label": {
+              "resource_key": "emMeansStructure.CompareFactor"
+            },
+            "edit_style": "subpanel"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "emMeansCovariatesStructure",
+        "add_remove_rows": false,
+        "parameters": [
+          {
+            "parameter_ref": "Field",
+            "label": {
+              "resource_key": "emMeansCovariatesStructure.Field"
+            }
+          },
+          {
+            "parameter_ref": "Constant",
+            "label": {
+              "resource_key": "emMeansCovariatesStructure.Constant"
+            }
+          },
+          {
+            "parameter_ref": "Value",
+            "label": {
+              "resource_key": "emMeansCovariatesStructure.Value"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "source_field_list_item",
+        "moveable_rows": false,
+        "include_all_fields": true,
+        "add_remove_rows": false,
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "default": "Name"
+            },
+            "summary": false
+        	}
+        ]
+      },
+      {
+        "complex_type_ref": "effectsString",
+        "moveable_rows": false,
+        "add_remove_rows": false,
+        "header": false,
+        "parameters": [
+          {
+            "parameter_ref": "effect",
+            "control": "readonly"
+        	}
+        ]
+      }
+    ],
+    "ui_parameters": [
+      {
+        "id": "source_fields",
+        "type": "array[source_field_list_item]"
+      },
+      {
+        "id": "fixed_effects_ui_list",
+        "type": "array[effectsString]"
+      },
+      {
+        "id": "emeansUI",
+        "type": "array[emMeansUIStructure]"
+      }
+    ],
+    "parameter_info": [
+      {
+        "parameter_ref": "residual_subject_spec",
+        "label": {
+          "resource_key": "residual_subject_spec.label"
+        },
+        "moveable_rows": true,
+        "separator": "before"
+      },
+      {
+        "parameter_ref": "repeated_measures",
+        "label": {
+          "resource_key": "repeated_measures.label"
+        },
+        "moveable_rows": true
+      },
+      {
+        "parameter_ref": "residual_group_spec",
+        "label": {
+          "resource_key": "residual_group_spec.label"
+        },
+        "description": {
+          "resource_key": "residual_group_spec.desc"
+        }
+      },
+      {
+        "parameter_ref": "residual_covariance_type",
+        "label": {
+          "resource_key": "residual_covariance_type.label"
+        }
+      },
+      {
+        "parameter_ref": "SpatialFields",
+        "label": {
+          "resource_key": "SpatialFields.label"
+        }
+      },
+
+      {
+        "parameter_ref": "custom_target",
+        "label": {
+          "resource_key": "custom_target.label"
+        }
+      },
+      {
+        "parameter_ref": "target_field",
+        "label": {
+          "resource_key": "target_field.label"
+        }
+      },
+      {
+        "parameter_ref": "use_trials",
+        "label": {
+          "resource_key": "use_trials.label"
+        }
+      },
+      {
+        "parameter_ref": "use_custom_target_reference",
+        "label": {
+          "resource_key": "use_custom_target_reference.label"
+        }
+      },
+      {
+        "parameter_ref": "target_reference_value",
+        "label": {
+          "resource_key": "target_reference_value.label"
+        },
+        "separator": "after"
+      },
+      {
+        "parameter_ref": "use_trials_field_or_value",
+        "label": {
+          "resource_key": "use_trials_field_or_value.label"
+        },
+        "control": "radioset"
+      },
+      {
+        "parameter_ref": "trials_field",
+        "label": {
+          "resource_key": "trials_field.label"
+        }
+      },
+      {
+        "parameter_ref": "trials_value",
+        "label": {
+          "resource_key": "trials_value.label"
+        }
+      },
+      {
+        "parameter_ref": "dist_link_combination",
+        "label": {
+          "resource_key": "dist_link_combination.label"
+        },
+        "control": "radioset",
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "target_distribution",
+        "label": {
+          "resource_key": "target_distribution.label"
+        }
+      },
+      {
+        "parameter_ref": "link_function_type",
+        "label": {
+          "resource_key": "link_function_type.label"
+        }
+      },
+      {
+        "parameter_ref": "link_function_param",
+        "label": {
+          "resource_key": "link_function_param.label"
+        },
+        "separator": "after"
+      },
+
+      {
+        "parameter_ref": "use_predefined_inputs",
+        "label": {
+          "resource_key": "use_predefined_inputs.label"
+        },
+        "control": "radioset",
+        "orientation": "horizontal"
+      },
+      {
+        "parameter_ref": "use_intercept",
+        "label": {
+          "resource_key": "use_intercept.label"
+        }
+      },
+      {
+        "parameter_ref": "fixed_effects_ui_list",
+        "label": {
+          "default": "Effect builder:"
+        },
+        "description": {
+          "default": "Add and remove effects here"
+        },
+        "rows": 6,
+        "control": "structurelisteditor"
+      },
+
+      {
+        "parameter_ref": "random_effects_list",
+        "label": {
+          "resource_key": "random_effects_list.label"
+        }
+      },
+
+      {
+        "parameter_ref": "regression_weight_field",
+        "label": {
+          "resource_key": "regression_weight_field.label"
+        },
+        "place_holder_text": {
+          "resource_key": "regression_weight_field.placeholder.label"
+        }
+      },
+      {
+        "parameter_ref": "use_offset",
+        "label": {
+          "resource_key": "use_offset.label"
+        },
+        "control": "radioset",
+        "orientation": "vertical",
+        "separator": "before"
+      },
+      {
+        "parameter_ref": "offset_value",
+        "label": {
+          "resource_key": "offset_value.label"
+        }
+      },
+      {
+        "parameter_ref": "offset_field",
+        "label": {
+          "resource_key": "offset_field.label"
+        }
+      },
+
+      {
+        "parameter_ref": "target_category_order",
+        "label": {
+          "resource_key": "target_category_order.label"
+        },
+        "control": "oneofselect"
+      },
+      {
+        "parameter_ref": "inputs_category_order",
+        "label": {
+          "resource_key": "inputs_category_order.label"
+        },
+        "control": "oneofselect",
+        "separator": "after"
+      },
+      {
+        "parameter_ref": "max_iterations",
+        "label": {
+          "resource_key": "max_iterations.label"
+        },
+        "separator": "after"
+      },
+      {
+        "parameter_ref": "confidence_level",
+        "label": {
+          "resource_key": "confidence_level.label"
+        },
+        "separator": "after"
+      },
+      {
+        "parameter_ref": "degrees_of_freedom_method",
+        "label": {
+          "default": " "
+        },
+        "separator": "after",
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "test_fixed_effects_coeffecients",
+        "label": {
+          "default": " "
+        },
+        "orientation": "vertical"
+      },
+
+      {
+        "parameter_ref": "stop_criteria",
+        "label": {
+          "resource_key": "stop_criteria.label"
+        }
+      },
+      {
+        "parameter_ref": "max_fisher_step",
+        "label": {
+          "resource_key": "max_fisher_step.label"
+        },
+        "separator": "before"
+      },
+      {
+        "parameter_ref": "sing_tolerance",
+        "label": {
+          "resource_key": "sing_tolerance.label"
+        }
+      },
+
+      {
+        "parameter_ref": "modelRename",
+        "label": {
+          "resource_key": "modelRename.label"
+        },
+        "control": "radioset"
+      },
+      {
+        "parameter_ref": "modelName",
+        "label": {
+          "default": " "
+        },
+        "separator": "after"
+      },
+      {
+        "parameter_ref": "confidence",
+        "label": {
+          "resource_key": "confidence.label"
+        }
+      },
+      {
+        "parameter_ref": "score_category_probabilities",
+        "label": {
+          "resource_key": "score_category_probabilities.label"
+        }
+      },
+      {
+        "parameter_ref": "max_categories",
+        "label": {
+          "resource_key": "max_categories.label"
+        }
+      },
+      {
+        "parameter_ref": "score_propensity",
+        "label": {
+          "resource_key": "score_propensity.label"
+        },
+        "separator": "after"
+      },
+
+      {
+        "parameter_ref": "emeansUI",
+        "label": {
+          "resource_key": "emeans.label"
+        },
+        "separator": "after"
+      },
+      {
+        "parameter_ref": "covariance_list",
+        "label": {
+          "resource_key": "covariance_list.label"
+        },
+        "text_before": {
+          "resource_key": "covariance_list-info.label",
+          "type": "info"
+        },
+        "separator": "after"
+      },
+      {
+        "parameter_ref": "mean_scale",
+        "label": {
+          "resource_key": "mean_scale.label"
+        }
+      },
+      {
+        "parameter_ref": "comparison_adjustment_method",
+        "label": {
+          "resource_key": "comparison_adjustment_method.label"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "id": "data-structure",
+        "label": {
+          "resource_key": "data-structure.label"
+        },
+        "type": "panels",
+        "parameter_refs": [
+        ],
+        "group_info": [
+          {
+            "id": "fields-panel",
+            "type": "controls",
+            "parameter_refs": [
+            ],
+            "group_info": [
+              {
+                "id": "target-field",
+                "type": "controls",
+                "parameter_refs": [
+                  "target_field"
+                ],
+                "group_info": [
+                  {
+                    "id": "target-options-summary",
+                    "label": {
+                      "resource_key": "target-options-summary.label"
+                    },
+                    "type": "summaryPanel",
+                    "group_info": [
+                      {
+                        "id": "trials-field-check",
+                        "type": "controls",
+                        "parameter_refs": [
+                          "use_trials"
+                        ],
+                        "group_info": [
+                          {
+                            "id": "trials-field-info",
+                            "type": "controls",
+                            "parameter_refs": [
+                              "use_trials_field_or_value",
+                              "trials_field",
+                              "trials_value"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "id": "target-options",
+                        "type": "controls",
+                        "label": {
+                          "resource_key": "target-options.label"
+                        },
+                        "parameter_refs": [
+                          "use_custom_target_reference"
+                        ],
+                        "group_info": [
+                          {
+                            "id": "target-ref-value",
+                            "type": "controls",
+                            "parameter_refs": [
+                              "target_reference_value"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "id": "target-distribution",
+                        "type": "controls",
+                        "label": {
+                          "resource_key": "target-distribution.label"
+                        },
+                        "parameter_refs": [
+                          "dist_link_combination"
+                        ],
+                        "group_info": [
+                          {
+                            "id": "target-distribution-link",
+                            "type": "controls",
+                            "parameter_refs": [
+                              "target_distribution",
+                              "link_function_type"
+                            ],
+                            "group_info": [
+                              {
+                                "id": "target-distribution-link-function",
+                                "type": "controls",
+                                "parameter_refs": [
+                                  "link_function_param"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "id": "panel-selector-text",
+                        "label": {
+                          "resource_key": "panel-selector-text.label"
+                        },
+                        "type": "panelSelector",
+                        "depends_on_ref": "dist_link_combination",
+                        "group_info": [
+                          {
+                            "id": "NormalIdentity",
+                            "type": "textPanel",
+                            "description": {
+                              "resource_key": "NormalIdentity.panel-text.label"
+                            }
+                          },
+                          {
+                            "id": "NominalLogit",
+                            "type": "textPanel",
+                            "description": {
+                              "resource_key": "NominalLogit.panel-text.label"
+                            }
+                          },
+                          {
+                            "id": "GammaLog",
+                            "type": "textPanel",
+                            "description": {
+                              "resource_key": "GammaLog.panel-text.label"
+                            }
+                          },
+                          {
+                            "id": "BinomialLogit",
+                            "type": "textPanel",
+                            "description": {
+                              "resource_key": "BinomialLogit.panel-text.label"
+                            }
+                          },
+                          {
+                            "id": "PoissonLog",
+                            "type": "textPanel",
+                            "description": {
+                              "resource_key": "PoissonLog.panel-text.label"
+                            }
+                          },
+                          {
+                            "id": "BinomialProbit",
+                            "type": "textPanel",
+                            "description": {
+                              "resource_key": "BinomialProbit.panel-text.label"
+                            }
+                          },
+                          {
+                            "id": "NegbinLog",
+                            "type": "textPanel",
+                            "description": {
+                              "resource_key": "NegbinLog.panel-text.label"
+                            }
+                          },
+                          {
+                            "id": "BinomialLogC",
+                            "type": "textPanel",
+                            "description": {
+                              "resource_key": "BinomialLogC.panel-text.label"
+                            }
+                          },
+                          {
+                            "id": "Custom",
+                            "type": "textPanel",
+                            "description": {
+                              "resource_key": "Custom.panel-text.label"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "subjects-measures",
+                "type": "controls",
+                "parameter_refs": [
+                  "residual_subject_spec",
+                  "repeated_measures"
+                ]
+              },
+              {
+                "id": "covariance-groups-summary",
+                "label": {
+                  "resource_key": "covariance-groups-summary.label"
+                },
+                "type": "summaryPanel",
+                "group_info": [
+                  {
+                    "id": "covariance-groups",
+                    "type": "controls",
+                    "parameter_refs": [
+                      "residual_group_spec",
+                      "residual_covariance_type",
+                      "SpatialFields"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "effects-weight",
+        "label": {
+          "resource_key": "effects-weight.label"
+        },
+        "type": "subTabs",
+        "parameter_refs": [
+        ],
+        "group_info": [
+          {
+            "id": "custom-effects-panel",
+            "label": {
+              "resource_key": "fixed-effects.label"
+            },
+            "type": "customPanel",
+            "description": {
+              "default": ""
+            },
+            "parameter_refs": [
+              "source_fields",
+              "fixed_effects_ui_list"
+            ],
+            "data": []
+          },
+          {
+            "id": "random-effects",
+            "label": {
+              "resource_key": "random-effects.label"
+            },
+            "type": "textPanel",
+            "description": {
+              "default": "(TBD)"
+            },
+            "parameter_refs": [
+            ]
+          },
+          {
+            "id": "weight-offset",
+            "label": {
+              "resource_key": "weight-offset.label"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "regression_weight_field",
+              "use_offset"
+            ],
+            "group_info": [
+              {
+                "id": "offset-selector",
+                "type": "panelSelector",
+                "depends_on_ref": "use_offset",
+                "insert_panels": true,
+                "group_info": [
+                  {
+                    "id": "Value",
+                    "type": "controls",
+                    "parameter_refs": [
+                      "offset_value"
+                    ]
+                  },
+                  {
+                    "id": "Variable",
+                    "type": "controls",
+                    "parameter_refs": [
+                      "offset_field"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "build-options",
+        "label": {
+          "resource_key": "build-options.label"
+        },
+        "type": "subTabs",
+        "parameter_refs": [
+        ],
+        "group_info": [
+          {
+            "id": "general-options",
+            "label": {
+              "resource_key": "general-options.label"
+            },
+            "type": "panels",
+            "parameter_refs": [
+            ],
+            "group_info": [
+              {
+                "id": "sorting-order",
+                "type": "textPanel",
+                "label": {
+                  "resource_key": "sorting-order.label"
+                },
+                "description": {
+                  "default": " "
+                }
+              },
+              {
+                "id": "sorting-order-props",
+                "type": "controls",
+                "parameter_refs": [
+                  "target_category_order",
+                  "inputs_category_order"
+                ]
+              },
+              {
+                "id": "stopping-rules",
+                "type": "textPanel",
+                "label": {
+                  "resource_key": "stopping-rules.label"
+                },
+                "description": {
+                  "default": " "
+                }
+              },
+              {
+                "id": "stopping-rules-props",
+                "type": "controls",
+                "parameter_refs": [
+                  "max_iterations"
+                ]
+              },
+              {
+                "id": "post-estimation",
+                "type": "textPanel",
+                "label": {
+                  "resource_key": "post-estimation.label"
+                },
+                "description": {
+                  "default": " "
+                }
+              },
+              {
+                "id": "post-estimation-props",
+                "type": "controls",
+                "parameter_refs": [
+                  "confidence_level"
+                ],
+                "group_info": [
+                  {
+                    "id": "degrees-of-freedom",
+                    "type": "textPanel",
+                    "label": {
+                      "resource_key": "degrees-of-freedom.label"
+                    },
+                    "description": {
+                      "default": " "
+                    }
+                  },
+                  {
+                    "id": "degrees-of-freedom-props",
+                    "type": "controls",
+                    "parameter_refs": [
+                      "degrees_of_freedom_method"
+                    ],
+                    "group_info": [
+                      {
+                        "id": "dof-selector",
+                        "type": "panelSelector",
+                        "depends_on_ref": "degrees_of_freedom_method",
+                        "insert_panels": true,
+                        "group_info": [
+                          {
+                            "id": "Residual",
+                            "type": "textPanel",
+                            "label": {
+                              "default": " "
+                            },
+                            "description": {
+                              "resource_key": "Residual.desc"
+                            }
+                          },
+                          {
+                            "id": "Satterthwaite",
+                            "type": "textPanel",
+                            "label": {
+                              "default": " "
+                            },
+                            "description": {
+                              "resource_key": "Satterthwaite.desc"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "asym-eff-cov",
+                    "label": {
+                      "resource_key": "asym-eff-cov.label"
+                    },
+                    "description": {
+                      "default": " "
+                    },
+                    "type": "textPanel"
+                  },
+                  {
+                    "id": "asym-eff-cov-props",
+                    "type": "controls",
+                    "parameter_refs": [
+                      "test_fixed_effects_coeffecients"
+                    ],
+                    "group_info": [
+                      {
+                        "id": "aec-selector",
+                        "type": "panelSelector",
+                        "depends_on_ref": "test_fixed_effects_coeffecients",
+                        "insert_panels": true,
+                        "group_info": [
+                          {
+                            "id": "Model",
+                            "type": "textPanel",
+                            "label": {
+                              "default": " "
+                            },
+                            "description": {
+                              "resource_key": "Model.desc"
+                            }
+                          },
+                          {
+                            "id": "Robust",
+                            "type": "textPanel",
+                            "label": {
+                              "default": " "
+                            },
+                            "description": {
+                              "resource_key": "Robust.desc"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "estimation-options",
+            "label": {
+              "resource_key": "estimation-options.label"
+            },
+            "type": "panels",
+            "group_info": [
+              {
+                "id": "convergence-criteria",
+                "type": "textPanel",
+                "label": {
+                  "resource_key": "convergence-criteria.label"
+                },
+                "description": {
+                  "default": " "
+                }
+              },
+              {
+                "id": "convergence-criteria-props",
+                "type": "controls",
+                "parameter_refs": [
+                  "stop_criteria"
+                ]
+              },
+              {
+                "id": "",
+                "type": "controls",
+                "parameter_refs": [
+                  "max_fisher_step",
+                  "sing_tolerance"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "model-options",
+        "type": "subTabs",
+        "label": {
+          "resource_key": "model-options.label"
+        },
+        "group_info": [
+          {
+            "id": "general-tab",
+            "type": "panels",
+            "label": {
+              "resource_key": "general-tab.label"
+            },
+            "group_info": [
+              {
+                "id": "model-rename",
+                "type": "controls",
+                "parameter_refs": [
+                  "modelRename",
+                  "modelName"
+                ]
+              },
+              {
+                "id": "available-scoring",
+                "type": "textPanel",
+                "label": {
+                  "resource_key": "available-scoring.label"
+                },
+                "description": {
+                  "resource_key": "available-scoring.desc"
+                }
+              },
+              {
+                "id": "available-scoring-props",
+                "type": "controls",
+                "parameter_refs": [
+                  "confidence",
+                  "score_category_probabilities",
+                  "max_categories",
+                  "score_propensity"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "emeans-tab",
+            "type": "panels",
+            "label": {
+              "resource_key": "emeans-tab.label"
+            },
+            "group_info": [
+              {
+                "id": "emmeans-hidden-panel",
+                "type": "customPanel",
+                "parameter_refs": [
+                  "emeans",
+                  "covariance_list"
+                ],
+                "data": {
+                  "parameter_ref": ""
+                }
+              },
+              {
+                "id": "target-estimation",
+                "type": "textPanel",
+                "label": {
+                  "resource_key": "target-estimation.label"
+                },
+                "description": {
+                  "resource_key": "target-estimation.desc"
+                }
+              },
+              {
+                "id": "emeans-table",
+                "type": "controls",
+                "parameter_refs": [
+                  "emeansUI",
+                  "covariance_list",
+                  "mean_scale",
+                  "comparison_adjustment_method"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "enabled": {
+        "parameter_refs": [
+          "target_reference_value"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "use_custom_target_reference",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "target_distribution",
+          "link_function_type"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "dist_link_combination",
+            "op": "equals",
+            "value": "Custom"
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "link_function_param"
+        ],
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "dist_link_combination",
+                "op": "equals",
+                "value": "Custom"
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "link_function_type",
+                "op": "equals",
+                "value": "POWER"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "use_trials_field_or_value"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "use_trials",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "trials_field"
+        ],
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "use_trials",
+                "op": "equals",
+                "value": true
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "use_trials_field_or_value",
+                "op": "equals",
+                "value": "field"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "trials_value"
+        ],
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "use_trials",
+                "op": "equals",
+                "value": true
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "use_trials_field_or_value",
+                "op": "equals",
+                "value": "value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "dist_link_combination"
+        ],
+        "values": [
+          "NormalIdentity",
+          "GammaLog",
+          "PoissonLog",
+          "NegbinLog",
+          "NominalLogit"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "use_trials",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "target-options-summary"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "target_field",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "stop_criteria[1]",
+          "stop_criteria[2]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "stop_criteria[0]",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "stop_criteria[4]",
+          "stop_criteria[5]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "stop_criteria[3]",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "stop_criteria[7]",
+          "stop_criteria[8]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "stop_criteria[6]",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "modelName"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "modelRename",
+            "op": "equals",
+            "value": "true"
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "max_categories"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "score_category_probabilities",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "emeansUI[2]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "emeansUI[1]",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "covariance_list[2]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "covariance_list[1]",
+            "op": "equals",
+            "value": "Value"
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "emeansUI[3]"
+        ],
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "emeansUI[1]",
+                "op": "equals",
+                "value": true
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "emeansUI[2]",
+                "op": "notEquals",
+                "value": "None"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "filter": {
+        "parameter_ref": "regression_weight_field",
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "range"
+              }
+            },
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "set"
+              }
+            },
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "ordered-set"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "filter": {
+        "parameter_ref": "offset_field",
+        "evaluate": {
+          "condition": {
+            "op": "dmMeasurement",
+            "value": "range"
+          }
+        }
+      }
+    },
+    {
+      "filter": {
+        "parameter_refs": [
+          "target_field",
+          "residual_subject_spec",
+          "residual_group_spec",
+          "regression_weight_field",
+          "repeated_measures",
+          "trials_field",
+          "offset_field"
+        ],
+        "evaluate": {
+          "condition": {
+            "op": "dmSharedFields"
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "intAndRange",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "stringAndDiscrete",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "stringAndSet",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": {
+  	"effectStructure.subjects": "Subjects",
+  	"effectStructure.fields": "Fields",
+  	"effectStructure.nestingLevel": "Nesting Level",
+  	"residual_subject_spec.label": "Subjects",
+  	"residual_subject_spec.desc": "Residual subject specification",
+  	"repeated_measures.label": "Repeated Measures",
+  	"repeated_measures.desc": "Repeated Measures",
+  	"residual_group_spec.label": "Define covariance groups by:",
+  	"residual_covariance_type.label": "Repeated covariance type:",
+  	"residual_covariance_type.AR1.label": "First-order autoregressive (AR1)",
+  	"residual_covariance_type.ARMA11.label": "Autoregressive moving average (1,1) (ARMA11)",
+  	"residual_covariance_type.CS.label": "Compound symmetry",
+  	"residual_covariance_type.DIAG.label": "Diagonal",
+  	"residual_covariance_type.ID.label": "Scaled identity",
+  	"residual_covariance_type.TP.label": "Toeplitz",
+  	"residual_covariance_type.UN.label": "Unstructured",
+  	"residual_covariance_type.VC.label": "Variance component",
+  	"residual_covariance_type.SPPOW.label": "Spatial: Power",
+  	"residual_covariance_type.SPEXP.label": "Spatial: Exponential",
+  	"residual_covariance_type.SPGAU.label": "Spatial: Gaussian",
+  	"residual_covariance_type.SPLIN.label": "Spatial: Linear",
+  	"residual_covariance_type.SPLINLOG.label": "Spatial: Linear-log",
+  	"residual_covariance_type.SPSPH.label": "Spatial: Spherical",
+  	"SpatialFields.label": "Spatial covariance coordinates:",
+  	"custom_target.true.label": "Use custom target",
+  	"custom_target.false.label": "Use predefined target",
+  	"target_field.label": "Target:",
+  	"target_field.desc": "Select a target field for analysis",
+  	"use_trials.label": "Use number of trials as denominator",
+    "trials_field.label": "Field:",
+    "trials_value.label": "Value:",
+  	"use_custom_target_reference.label": "Custom reference category",
+  	"target_reference_value.label": "Reference value:",
+    "use_trials_field_or_value.label": "",
+  	"use_trials_field_or_value.field.label": "Use field",
+  	"use_trials_field_or_value.value.label": "Use value",
+  	"dist_link_combination.label": "Target Distribution and Relationship (Link) with the Linear Model",
+  	"dist_link_combination.NormalIdentity.label": "Linear model",
+  	"dist_link_combination.NominalLogit.label": "Multinomial logistic regression",
+  	"dist_link_combination.GammaLog.label": "Gamma regression",
+  	"dist_link_combination.BinomialLogit.label": "Binary logistic regression",
+  	"dist_link_combination.PoissonLog.label": "Loglinear",
+  	"dist_link_combination.BinomialProbit.label": "Binary probit",
+  	"dist_link_combination.NegbinLog.label": "Negative binomial regression",
+  	"dist_link_combination.BinomialLogC.label": "Interval censored survival",
+  	"dist_link_combination.Custom.label": "Custom",
+    "target_distribution.label": "Distribution",
+    "target_distribution.NORMAL.label": "Normal",
+    "target_distribution.BINOMIAL.label": "Binomial",
+    "target_distribution.MULTINOMIAL.label": "Multinomial",
+    "target_distribution.GAMMA.label": "Gamma",
+    "target_distribution.IGAUSS.label": "Inverse Gaussian",
+    "target_distribution.NEGBIN.label": "Negative Binomial",
+    "target_distribution.POISSON.label": "Poisson",
+  	"link_function_type.label": "Link function:",
+    "link_function_type.IDENTITY.label": "Identity",
+    "link_function_type.LOGC.label": "Log complement",
+    "link_function_type.LOG.label": "Log",
+    "link_function_type.CLOGLOG.label": "Complementary log-log",
+    "link_function_type.LOGIT.label": "Logit",
+    "link_function_type.NLOGLOG.label": "Negative log-log",
+    "link_function_type.PROBIT.label": "Probit",
+    "link_function_type.POWER.label": "Power",
+    "link_function_type.CAUCHIT.label": "Cauchit",
+  	"link_function_param.label": "Power:",
+  	"use_predefined_inputs.true.label": "Use predefined inputs",
+  	"use_predefined_inputs.false.label": "Use custom inputs",
+  	"use_intercept.label": "Include intercept",
+  	"fixed_effects_list.label": "Effect builder:",
+  	"random_effects_list.label": "Random effect blocks:",
+  	"regression_weight_field.label": "Analysis weight:",
+  	"use_offset.label": "Offset",
+  	"use_offset.None.label": "This model does not need to be offset",
+  	"use_offset.Value.label": "Use offset value",
+  	"use_offset.Variable.label": "Use offset field",
+  	"offset_value.label": "Offset value:",
+  	"offset_field.label": "Offset field:",
+  	"target_category_order.label": "Sorting order for categorical targets:",
+  	"target_category_order.Ascending.label": "Ascending",
+  	"target_category_order.Descending.label": "Descending",
+  	"target_category_order.Data.label": "Order found in data",
+  	"inputs_category_order.label": "Sorting order for categorical predictors:",
+  	"inputs_category_order.Ascending.label": "Ascending",
+  	"inputs_category_order.Descending.label": "Descending",
+  	"inputs_category_order.Data.label": "Order found in data",
+  	"max_iterations.label": "Maximum iterations (for both inner and outer loops):",
+  	"confidence_level.label": "Confidence level (%):",
+  	"degrees_of_freedom_method.Residual.label": "Fixed for all tests (Residual method)",
+  	"degrees_of_freedom_method.Satterthwaite.label": "Varied across tests (Satterthwaite approximation)",
+  	"test_fixed_effects_coeffecients.Model.label": "Assume model assumptions are correct",
+  	"test_fixed_effects_coeffecients.Robust.label": "Use robust estimation to handle violations of model assumptions",
+  	"stop_criteria.label": " ",
+  	"stop_criteriaStructure.loglikelihoodCheck.label": "Log-Likelihood Convergence",
+  	"stop_criteriaStructure.LoglikelihoodConvMin.label": "Value:",
+  	"stop_criteriaStructure.LoglikelihoodConvType.label": "Type:",
+  	"stop_criteriaStructure.parameterCheck.label": "Parameter Convergence",
+  	"stop_criteriaStructure.ParameterConvInnMin.label": "Value:",
+  	"stop_criteriaStructure.ParameterConvInnType.label": "Type:",
+  	"stop_criteriaStructure.hessianCheck.label": "Hessian Convergence",
+  	"stop_criteriaStructure.HessianConvMin.label": "Value:",
+  	"stop_criteriaStructure.HessianConvType.label": "Type:",
+  	"max_fisher_step.label": "Maximum Fisher scoring steps:",
+  	"sing_tolerance.label": "Singularity tolerance:",
+  	"modelRename.label": "Model Name:",
+  	"modelRename.true.label": "Custom",
+  	"modelRename.false.label": "Automatic",
+  	"confidence.label": "Confidence is based on:",
+  	"confidence.onProbability.label": "The probability of the predicted value",
+  	"confidence.onIncrease.label": "The increase in probability from the next most likely value",
+  	"score_category_probabilities.label": "Predicted probability for categorical targets",
+  	"max_categories.label": "Maximum categories to save:",
+  	"score_propensity.label": "Propensity scores for flag targets",
+    "score_propensity.Calculate.label": "Calculate",
+    "score_propensity.NotCalculate.label": "Do not calculate",
+  	"emeans.label": "Terms:",
+  	"covariance_list.label": "Fields:",
+    "emMeansCovariatesStructure.Field": "Continuous Fields",
+    "emMeansCovariatesStructure.Constant": "Constant",
+    "emMeansCovariatesStructure.Value": "Value",
+  	"mean_scale.label": "Display estimated means in terms of:",
+  	"mean_scale.Original.label": "Original target scale",
+  	"mean_scale.Transformed.label": "Link function transformation",
+  	"comparison_adjustment_method.label": "Adjust for multiple comparisons using:",
+  	"comparison_adjustment_method.LSD.label": "Least significant difference",
+  	"comparison_adjustment_method.SEQBONFERRONI.label": "sequential Bonferroni",
+  	"comparison_adjustment_method.SEQSIDAK.label": "sequential Sidak",
+    "data-structure.label": "Fields",
+    "effects-weight.label": "Effects and Weight",
+    "target-options-summary.label": "Define Target...",
+    "target-options.label": "Target",
+    "target-distribution.label": "Target Distribution and Relationship (Link) with the Linear Model",
+    "panel-selector-text.label": "Description",
+    "NormalIdentity.panel-text.label": "Linear model uses a normal distribution with an identity link, which is useful when the target can be predicted using a linear regression or ANOVA model.",
+    "NominalLogit.panel-text.label": "Multinomial logistic regression should be used for ordinal outcomes or multi-category responses. It uses either a cumulative logit link (ordinal outcomes) or a generalized logit link (multi-category responses).",
+    "GammaLog.panel-text.label": "Gamma regression uses a Gamma distribution with a log link, which should be used when the target contains all positive values and is skewed towards larger values.",
+    "BinomialLogit.panel-text.label": "Binary logistic regression uses a binomial distribution with a logit link, which should be used when the target is a binary response predicted by a logistic regression model.",
+    "PoissonLog.panel-text.label": "Loglinear uses a Poisson distribution with a log link, which should be used when the target represents a count of occurrences in a fixed period of time.",
+    "BinomialProbit.panel-text.label": "Binary probit uses a Binomial distribution with a probit link, which should be used when the target is a binary response with an underlying normal distribution.",
+    "NegbinLog.panel-text.label": "Negative binomial regression uses a negative binomial distribution with a log link, which should be used when the target represents a count of occurrences with high variance.",
+    "BinomialLogC.panel-text.label": "Interval censored survival uses a binomial distribution with a complementary log-log link, which is useful in survival analysis when some observations have no termination event.",
+    "Custom.panel-text.label": "Custom allows the user to choose a different target distribution and link function.",
+    "covariance-groups-summary.label": "Covariance Groups...",
+    "fixed-effects.label": "Fixed Effects",
+    "random-effects.label": "Random Effects",
+    "weight-offset.label": "Weight and Offset",
+    "build-options.label": "Build Options",
+    "general-options.label": "General",
+    "estimation-options.label": "Estimation",
+    "sorting-order.label": "Sorting Order",
+    "stopping-rules.label": "Stopping Rules",
+    "post-estimation.label": "Post-Estimation Settings",
+    "degrees-of-freedom.label": "Degrees of Freedom",
+    "asym-eff-cov.label": "Tests of Fixed Effects and Coefficients",
+    "Residual.desc": "Useful if sample size is larger; or data are balanced or uses a simpler covariance type (for example scaled identity or diagonal)",
+    "Satterthwaite.desc": "Useful if sample size is smaller; or data are unbalanced or have complicated covariance types (for example unstructured)",
+    "Model.desc": "(model-based covariances)",
+    "Robust.desc": "(robust covariances)",
+    "convergence-criteria.label": "Convergence Criteria",
+    "model-options.label": "Model Options",
+    "general-tab.label": "General",
+    "emeans-tab.label": "Estimated Means",
+    "available-scoring.label": "Make Available for Scoring",
+    "available-scoring.desc": "Predicted value is always available for scoring. Confidence is only available for scoring in case of categorical targets.",
+    "covariance_list-info.label": "Continuous fields will be held constant when estimating the target",
+    "target-estimation.label": "Do you want to estimate the target?",
+    "target-estimation.desc": "Specify custom estimated means and contrasts.",
+    "emMeansStructure.Factors": "Categorical-based terms",
+    "emMeansStructure.EstimateMeans": "Estimate Means",
+    "emMeansStructure.CompareFactor": "Contrast Field",
+    "emMeansStructure.ContrastType": "Contrast Type",
+    "regression_weight_field.placeholder.label": "(none)"
+  }
+}

@@ -15,6 +15,7 @@
     "radioWarning": "gini",
     "disable": true,
     "radioDisable": "gini",
+    "radioDisableSome": "apples",
     "hide": true,
     "radioHidden": "gini",
     "filter": false,
@@ -24,7 +25,8 @@
     "radioset_table_error": [
       [
         "dog",
-        "pear"
+        "pear",
+        false
       ]
     ]
   },
@@ -145,6 +147,27 @@
       "required": true
     },
     {
+      "id": "disable_one",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "id": "disable_two",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "id": "radioDisableSome",
+      "enum": [
+        "apples",
+        "oranges",
+        "pears",
+        "persimmons"
+      ],
+      "default": "oranges",
+      "required": false
+    },
+    {
       "id": "hide",
       "type": "boolean"
     },
@@ -212,6 +235,11 @@
             "pear",
             "strawberry"
           ]
+        },
+        {
+          "id": "radioset_col2_checkbox",
+          "type": "boolean",
+          "default": false
         },
         {
           "id": "radioset_col3",
@@ -380,6 +408,28 @@
         "control": "radioset"
       },
       {
+        "parameter_ref": "disable_one",
+        "label": {
+          "default": "Disable one of 'Radio Some Disabled'"
+        }
+      },
+      {
+        "parameter_ref": "disable_two",
+        "label": {
+          "default": "Disable two of 'Radio Some Disabled'"
+        }
+      },
+      {
+        "parameter_ref": "radioDisableSome",
+        "label": {
+          "default": "Radio Some Disabled"
+        },
+        "description": {
+          "default": "Some disabled RadioSet items"
+        },
+        "control": "radioset"
+      },
+      {
         "parameter_ref": "hide",
         "label": {
           "default": "Hide 'Radio Hidden'"
@@ -442,7 +492,10 @@
           "default": "Radioset in a table errors"
         },
         "text_before": {
-          "default": "To generated an error:  pet = pig || fruit = strawberry || color = purple"
+          "default": "To generate an error:  pet = pig || fruit = strawberry || color = purple"
+        },
+        "text_after": {
+          "default": "To disable the color orange: select pet = cat"
         }
       }
     ],
@@ -474,6 +527,18 @@
             "width": 10,
             "edit_style": "on_panel",
             "control": "radioset"
+          },
+          {
+            "parameter_ref": "radioset_col2_checkbox",
+            "label": {
+              "default": "Disable 'pear'"
+            },
+            "description": {
+              "default": "Disabler"
+            },
+            "width": 10,
+            "edit_style": "on_panel",
+            "control": "checkbox"
           },
           {
             "parameter_ref": "radioset_col3",
@@ -521,6 +586,9 @@
           "radioWarning",
           "disable",
           "radioDisable",
+          "disable_one",
+          "disable_two",
+          "radioDisableSome",
           "hide",
           "radioHidden"
         ]
@@ -625,6 +693,75 @@
             "parameter_ref": "disable",
             "op": "equals",
             "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "radioDisableSome"
+        ],
+        "values": [
+          "apples"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable_one",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "radioDisableSome"
+        ],
+        "values": [
+          "oranges",
+          "persimmons"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable_two",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "radioset_table_error[1]"
+        ],
+        "values": [
+          "pear"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "radioset_table_error[2]",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "radioset_table_error[3]"
+        ],
+        "values": [
+          "orange"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "radioset_table_error[0]",
+            "op": "notEquals",
+            "value": "cat"
           }
         }
       }
@@ -751,6 +888,6 @@
     "radioBooleanWithLabels.false.label": "False Label",
     "withradioLabelWrapped.firstN.label": "First N",
     "withradioLabelWrapped.oneInN.label": "One in N",
-    "withradioLabelWrapped.longLabel.label": "This is really a longggggggggggggg label"
+    "withradioLabelWrapped.longLabel.label": "This is really a longgggggggggggg label"
   }
 }

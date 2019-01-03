@@ -350,6 +350,70 @@ function updateState(refState, propertyId, value) {
 }
 
 /**
+* Update the state of a value in an enumeration property.
+*
+* @param {object} a list of controls and panels states.  This will be modified to contain
+*                 the updated state. required.
+* @param {object} propertyId. required.
+* @param {string} enumValue The enumeration value to operate upon. required.
+* @param {string} proposed new state value. required.
+*/
+function updateEnumerationState(refState, propertyId, enumValue, value) {
+	let propState = refState[propertyId.name];
+	if (!propState) {
+		propState = {};
+	}
+	if (!propState.values) {
+		propState.values = {};
+	}
+	if (!propState.values[enumValue]) {
+		propState.values[enumValue] = {};
+	}
+	const newPropState = Object.assign({}, propState);
+	const topLevelId = typeof propertyId.row === "undefined" && typeof propertyId.col === "undefined";
+	if (topLevelId && newPropState.values[enumValue].value === STATES.HIDDEN && (value === STATES.DISABLED || value === STATES.ENABLED)) {
+		newPropState.values[enumValue].value = STATES.HIDDEN;
+	} else {
+		newPropState.values[enumValue].value = value;
+	}
+
+	// First allow for table level state, then column level state, and finally cell level state
+	if (typeof propertyId.col !== "undefined") {
+		const colId = propertyId.col.toString();
+		if (!propState[colId]) {
+			propState[colId] = {};
+		}
+		if (typeof propertyId.row !== "undefined") {
+			const rowId = propertyId.row.toString();
+			if (!propState[colId][rowId]) {
+				propState[colId][rowId] = {};
+			}
+			if (!propState[colId][rowId].values) {
+				propState[colId][rowId].values = {};
+			}
+			if (!propState[colId][rowId].values[enumValue]) {
+				propState[colId][rowId].values[enumValue] = {};
+			}
+			// Table cell level
+			propState[colId][rowId].values[enumValue].value = newPropState.values[enumValue].value;
+		} else {
+			// Table column level
+			if (!propState[colId].values) {
+				propState[colId].values = {};
+			}
+			if (!propState[colId].values[enumValue]) {
+				propState[colId].values[enumValue] = {};
+			}
+			propState[colId].values[enumValue].value = newPropState.values[enumValue].value;
+		}
+	} else {
+		// Control level
+		propState.values[enumValue] = newPropState.values[enumValue];
+	}
+	refState[propertyId.name] = propState;
+}
+
+/**
 * Generate a propertyId from a parameter_ref.  The new propertyId will include the row
 * value from the control propertyId. If the controlPropertyId is a member of an
 * unrolled structure, that propertyId will be returned.
@@ -588,7 +652,12 @@ function _updateControlState(stateOn, definition, propertyId, newStates, control
 				const referenceId = getParamRefPropertyId(paramRef, propertyId);
 				const currentState = _getState(newStates.controls, referenceId);
 				// check for visible or enabled so we aren't resetting the state all the time
-				if (referenceId && currentState !== newOnState && currentState !== notAllowedState) {
+				if (Array.isArray(definition.values)) {
+					// Short-circuit for disabling individual enumeration items
+					for (const value of definition.values) {
+						updateEnumerationState(newStates.controls, referenceId, value, newOnState);
+					}
+				} else if (referenceId && currentState !== newOnState && currentState !== notAllowedState) {
 					updateState(newStates.controls, referenceId, newOnState);
 				}
 			}
@@ -612,7 +681,12 @@ function _updateControlState(stateOn, definition, propertyId, newStates, control
 			for (const paramRef of definition.parameter_refs) {
 				const referenceId = getParamRefPropertyId(paramRef, propertyId);
 				const currentState = _getState(newStates.controls, referenceId);
-				if (referenceId && (visibleControl || (!visibleControl && currentState !== notAllowedState))) {
+				if (Array.isArray(definition.values)) {
+					// Short-circuit for disabling individual enumeration items
+					for (const value of definition.values) {
+						updateEnumerationState(newStates.controls, referenceId, value, newOffState);
+					}
+				} else if (referenceId && (visibleControl || (!visibleControl && currentState !== notAllowedState))) {
 					_updateStateIfPanel(newStates, referenceId, newOffState);
 				}
 			}

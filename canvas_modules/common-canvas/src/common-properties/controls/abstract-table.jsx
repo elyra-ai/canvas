@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -520,17 +520,19 @@ export default class AbstractTable extends React.Component {
 
 	checkedAllValue(colIndex, checked) {
 		const controlValue = this.props.value;
-		for (let i = 0; i < controlValue.length; i++) {
-			const propertyId = {
-				name: this.props.control.name,
-				row: i,
-				col: colIndex
-			};
-			if (this.props.controller.getControlState(propertyId) !== STATES.DISABLED) {
-				this.props.controller.updatePropertyValue(propertyId, checked);
+		if (Array.isArray(controlValue)) {
+			for (let i = 0; i < controlValue.length; i++) {
+				const propertyId = {
+					name: this.props.control.name,
+					row: i,
+					col: colIndex
+				};
+				if (this.props.controller.getControlState(propertyId) !== STATES.DISABLED) {
+					this.props.controller.updatePropertyValue(propertyId, checked);
+				}
 			}
+			this.checkedAll[colIndex] = checked;
 		}
-		this.checkedAll[colIndex] = checked;
 	}
 
 	checkedAll(colIndex) {

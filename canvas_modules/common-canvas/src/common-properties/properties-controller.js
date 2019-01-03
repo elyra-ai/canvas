@@ -854,10 +854,23 @@ export default class PropertiesController {
 		this.propertiesStore.updateControlState(propertyId, state);
 	}
 	getControlState(propertyId) {
-		return this.propertiesStore.getControlState(propertyId);
+		const state = this.propertiesStore.getControlState(propertyId);
+		return state ? state.value : "";
 	}
 	getControlStates() {
 		return this.propertiesStore.getControlStates();
+	}
+
+	/**
+	 * Retrieves the enumeration value states for the given propertyId.
+	 *
+	 * @param propertyId The of an enumeration property
+	 * @return An object containing state settings for those enumeration values
+	 * that have previously been set
+	 */
+	getControlValueStates(propertyId) {
+		const state = this.propertiesStore.getControlState(propertyId);
+		return state ? state.values : {};
 	}
 
 	/**

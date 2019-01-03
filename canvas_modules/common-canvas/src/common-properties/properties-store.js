@@ -92,7 +92,7 @@ export default class PropertiesStore {
 		let locState = state.controlStatesReducer[propertyId.name];
 		// in a table return state of parent if set.
 		if (locState && (locState.value === "hidden" || locState.value === "disabled")) {
-			return locState.value;
+			return locState;
 		}
 
 		// First check for control-level, then column level, and finally cell level property addressing
@@ -100,16 +100,18 @@ export default class PropertiesStore {
 		const rowId = typeof propertyId.row !== "undefined" ? propertyId.row.toString() : null;
 		if (colId !== null && locState && locState[colId] &&
 				(typeof locState[colId].value !== "undefined" || (locState[colId][rowId] &&
-					typeof locState[colId][rowId].value !== "undefined"))) {
+					(typeof locState[colId][rowId].value !== "undefined" ||
+						typeof locState[colId][rowId].values !== "undefined")))) {
 			// Column level state
 			locState = locState[colId];
-			if (rowId !== null && locState && locState[rowId] && typeof locState[rowId].value !== "undefined") {
+			if (rowId !== null && locState && locState[rowId] &&
+				(typeof locState[rowId].value !== "undefined" || typeof locState[rowId].values !== "undefined")) {
 				// Cell level state
 				locState = locState[rowId];
 			}
 		}
 		if (locState) {
-			return locState.value;
+			return locState;
 		}
 		return null;
 	}

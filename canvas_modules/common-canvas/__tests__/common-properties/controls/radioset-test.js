@@ -167,6 +167,32 @@ describe("radio renders and works correctly with different enum types", () => {
 		expect(renderedController.getPropertyValue({ name: "radioDisable" })).to.equal("entropy");
 	});
 
+	it("radioset control selected items disabled", () => {
+		let checkboxsetWrapper = wrapper.find("div[data-id='properties-disable_one']");
+		let checkbox = checkboxsetWrapper.find("input");
+		// checked the disable box
+		checkbox.getDOMNode().checked = true;
+		checkbox.simulate("change");
+		expect(renderedController.getPropertyValue({ name: "radioDisableSome" })).to.equal("oranges");
+
+		checkboxsetWrapper = wrapper.find("div[data-id='properties-disable_two']");
+		checkbox = checkboxsetWrapper.find("input");
+		checkbox.getDOMNode().checked = true;
+		checkbox.simulate("change");
+		expect(renderedController.getPropertyValue({ name: "radioDisableSome" })).to.equal("pears");
+
+		const radioGroup = wrapper.find("div[data-id='properties-radioDisableSome']");
+		const options = radioGroup.find("div.properties-radioset-panel");
+		expect(options).to.have.length(4);
+		let radioWrapper = options.at(1).find("input");
+		expect(radioWrapper.prop("disabled")).to.equal(true);
+		radioWrapper = options.at(2).find("input");
+		expect(radioWrapper.prop("disabled")).to.equal(false);
+		radioWrapper = options.at(3).find("input");
+		expect(radioWrapper.prop("disabled")).to.equal(true);
+	});
+
+
 	it("radioset control hidden", () => {
 		const controlDiv = wrapper.find("div[data-id='properties-ci-radioHidden']");
 		const label = controlDiv.find("label.properties-control-label");
