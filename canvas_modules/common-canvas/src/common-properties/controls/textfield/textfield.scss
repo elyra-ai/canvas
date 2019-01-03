@@ -59,4 +59,8 @@
 	.bx--text-input {
 		min-width: 0;
 	}
+
+	.bx--text-input:disabled:hover {
+		border-bottom: 2px solid $text-02;
+	}
 }
