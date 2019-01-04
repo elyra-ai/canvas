@@ -148,6 +148,7 @@ class EditorForm extends React.Component {
 				}
 				const panelItemsContainer = (<div className={classNames("properties-category-content", { "show": categoryOpen }) }>
 					{panelItems}
+					{additionalComponent}
 				</div>);
 
 				tabContent.push(
@@ -159,7 +160,6 @@ class EditorForm extends React.Component {
 							{panelArrow}
 						</button>
 						{panelItemsContainer}
-						{additionalComponent}
 					</div>
 				);
 			} else {
