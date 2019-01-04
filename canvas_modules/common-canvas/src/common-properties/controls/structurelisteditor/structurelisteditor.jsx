@@ -93,7 +93,7 @@ const mapStateToProps = (state, ownProps) => ({
 	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
 	state: ownProps.controller.getControlState(ownProps.propertyId),
 	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId),
-	selectedRows: ownProps.controller.getSelectedRows(ownProps.control.name)
+	selectedRows: ownProps.controller.getSelectedRows(ownProps.propertyId)
 });
 
 export default connect(mapStateToProps, null)(StructurelisteditorControl);

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -231,6 +231,12 @@ export default class PropertiesController {
 	* @return propertyId
 	*/
 	convertPropertyId(propertyId) {
+		// used for backward compatibility when a controlName is passed in
+		if (typeof propertyId === "string") {
+			return {
+				name: propertyId
+			};
+		}
 		// used for complex types that aren't tables
 		if (propertyId && typeof propertyId.col !== "undefined" && typeof propertyId.row === "undefined") {
 			return {
@@ -659,16 +665,19 @@ export default class PropertiesController {
 	//
 	// Table row selections
 	//
-	getSelectedRows(controlName) {
-		return this.propertiesStore.getSelectedRows(controlName);
+	getSelectedRows(inPropertyId) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		return this.propertiesStore.getSelectedRows(propertyId);
 	}
 
-	updateSelectedRows(controlName, selection) {
-		this.propertiesStore.updateSelectedRows(controlName, selection);
+	updateSelectedRows(inPropertyId, selection) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		this.propertiesStore.updateSelectedRows(propertyId, selection);
 	}
 
-	clearSelectedRows(controlName) {
-		this.propertiesStore.clearSelectedRows(controlName);
+	clearSelectedRows(inPropertyId) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		this.propertiesStore.clearSelectedRows(propertyId);
 	}
 
 	//

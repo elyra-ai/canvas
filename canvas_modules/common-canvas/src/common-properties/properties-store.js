@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -303,20 +303,27 @@ export default class PropertiesStore {
 	/*
 	* Row Selection Methods
 	*/
-	getSelectedRows(controlName) {
-		const state = this.store.getState();
-		if (typeof state.rowSelectionsReducer[controlName] === "undefined") {
+	getSelectedRows(propertyId) {
+		if (typeof propertyId === "undefined") {
 			return [];
 		}
-		return state.rowSelectionsReducer[controlName];
+		const state = this.store.getState();
+		let rowSelections = state.rowSelectionsReducer[propertyId.name];
+		if (Number.isInteger(propertyId.row) && rowSelections) {
+			rowSelections = rowSelections[String(propertyId.row)]; // row selection
+			if (Number.isInteger(propertyId.col) && rowSelections) {
+				rowSelections = rowSelections[String(propertyId.col)]; // cell selection
+			}
+		}
+		return rowSelections && rowSelections.selectedRows ? rowSelections.selectedRows : [];
 	}
 
-	updateSelectedRows(controlName, selection) {
-		this.store.dispatch(updateSelectedRows({ name: controlName, selectedRows: selection }));
+	updateSelectedRows(propertyId, selection) {
+		this.store.dispatch(updateSelectedRows({ propertyId: propertyId, selectedRows: selection }));
 	}
 
-	clearSelectedRows(controlName) {
-		this.store.dispatch(clearSelectedRows({ name: controlName }));
+	clearSelectedRows(propertyId) {
+		this.store.dispatch(clearSelectedRows({ propertyId: propertyId }));
 	}
 
 	/*

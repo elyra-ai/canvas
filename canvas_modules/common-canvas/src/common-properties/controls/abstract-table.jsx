@@ -175,7 +175,7 @@ export default class AbstractTable extends React.Component {
 		// Update the property value
 		this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
 		const selectedRows = Array.isArray(inSelectedRows) ? inSelectedRows : [];
-		this.updateRowSelections(this.props.control.name, selectedRows);
+		this.updateRowSelections(selectedRows);
 	}
 
 	setReadOnlyColumnValue(controlValue) {
@@ -247,7 +247,7 @@ export default class AbstractTable extends React.Component {
 		} else {
 			selectedRows = [rowIndex];
 		}
-		this.updateRowSelections(this.props.control.name, selectedRows);
+		this.updateRowSelections(selectedRows);
 	}
 
 	// this will got through all selected rows and update any column value in the row with the
@@ -272,8 +272,8 @@ export default class AbstractTable extends React.Component {
 		}
 	}
 
-	updateRowSelections(ctrlName, selection) {
-		this.props.controller.updateSelectedRows(ctrlName, selection);
+	updateRowSelections(selection) {
+		this.props.controller.updateSelectedRows(this.props.propertyId, selection);
 		// react throws warning when modal because the button does not exist at this moment
 		if (this.props.rightFlyout) {
 			this.setState({ enableRemoveIcon: (selection.length !== 0) });

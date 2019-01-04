@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -962,6 +962,14 @@ describe("Properties Controller property messages", () => {
 		const actualValues = controller.getErrorMessages(null, true);
 		expect(expectedValue).to.eql(actualValues);
 	});
+	it("should return a null message", () => {
+		controller.setForm(conditionForm);
+		const propertyId = { name: "numberfieldCheckpointInterval" };
+		const filterSuccess = true;
+		const filterHiddenDisable = false;
+		const shouldBeNull = controller.getErrorMessage(propertyId, filterHiddenDisable, filterSuccess);
+		expect(shouldBeNull).to.equal(null);
+	});
 });
 
 function validateExpressionInfo(actualValue) {
@@ -1109,14 +1117,6 @@ describe("Properties Controller controls", () => {
 		const actualValue = controller.getControlType({ name: "structuretableSortOrder", col: 0 });
 		expect(actualValue).to.equal("selectcolumn");
 	});
-	it("should have a method to get the selected rows", () => {
-		reset();
-		controller.setForm(conditionForm);
-		controller.updateSelectedRows("structuretableSortOrder", [2]);
-		const selectedRows = controller.getSelectedRows("structuretableSortOrder");
-		expect(selectedRows.length === 1).to.equal(true);
-		expect(selectedRows[0]).to.equal(2);
-	});
 });
 
 describe("Properties Controller summary panel", () => {
@@ -1154,7 +1154,7 @@ describe("Properties Controller updatePropertyValue validation", () => {
 });
 
 
-describe("Properties Controller operators", () => {
+describe("Properties Controller condition operators methods", () => {
 	const standardOpCount = Object.keys(controller.getConditionOps()).length;
 	it("set an invalid custom operator", () => {
 		reset();
@@ -1195,13 +1195,142 @@ describe("Properties Controller operators", () => {
 	});
 });
 
-describe("getErrorMessage should able to handle a null message object", () => {
-	controller.setForm(conditionForm);
-	it("should return a null message", () => {
-		const propertyId = { name: "numberfieldCheckpointInterval" };
-		const filterSuccess = true;
-		const filterHiddenDisable = false;
-		const shouldBeNull = controller.getErrorMessage(propertyId, filterHiddenDisable, filterSuccess);
-		expect(shouldBeNull).to.equal(null);
+describe("Properties Controller row selection methods", () => {
+	it("should get selected rows using controlName (deprecated)", () => {
+		reset();
+		controller.updateSelectedRows("control", [2]);
+		let selectedRows = controller.getSelectedRows("control");
+		expect(selectedRows).to.eql([2]);
+		controller.updateSelectedRows("control2", [2, 4]);
+		selectedRows = controller.getSelectedRows("control2");
+		expect(selectedRows).to.eql([2, 4]);
 	});
+	it("should clear selected rows using controlName (deprecated)", () => {
+		reset();
+		controller.updateSelectedRows("control", [2]);
+		let selectedRows = controller.getSelectedRows("control");
+		expect(selectedRows).to.eql([2]);
+		controller.clearSelectedRows("control");
+		selectedRows = controller.getSelectedRows("control");
+		expect(selectedRows).to.eql([]);
+	});
+	it("should get selected rows using propertyId", () => {
+		reset();
+		const propertyId = {
+			name: "control"
+		};
+		const propertyId2 = {
+			name: "control2"
+		};
+		controller.updateSelectedRows(propertyId, [2]);
+		let selectedRows = controller.getSelectedRows(propertyId);
+		expect(selectedRows).to.eql([2]);
+		controller.updateSelectedRows(propertyId2, [2, 4]);
+		selectedRows = controller.getSelectedRows(propertyId2);
+		expect(selectedRows).to.eql([2, 4]);
+	});
+	it("should clear selected rows using propertyId", () => {
+		reset();
+		const propertyId = {
+			name: "control"
+		};
+		controller.updateSelectedRows(propertyId, [2]);
+		let selectedRows = controller.getSelectedRows(propertyId);
+		expect(selectedRows).to.eql([2]);
+		controller.clearSelectedRows(propertyId);
+		selectedRows = controller.getSelectedRows(propertyId);
+		expect(selectedRows).to.eql([]);
+	});
+	it("should get selected rows using propertyId with row and col", () => {
+		reset();
+		const propertyId1 = {
+			name: "control"
+		};
+		const propertyId2 = {
+			name: "control",
+			row: 1
+		};
+		const propertyId3 = {
+			name: "control",
+			row: 2,
+			col: 1
+		};
+		const propertyId4 = {
+			name: "control2",
+			col: 2
+		};
+		controller.updateSelectedRows(propertyId1, [1]);
+		controller.updateSelectedRows(propertyId2, [2, 4]);
+		controller.updateSelectedRows(propertyId3, [3, 6, 9]);
+		controller.updateSelectedRows(propertyId4, [4, 8, 12]);
+		let selectedRows = controller.getSelectedRows(propertyId1);
+		expect(selectedRows).to.eql([1]);
+		selectedRows = controller.getSelectedRows(propertyId2);
+		expect(selectedRows).to.eql([2, 4]);
+		selectedRows = controller.getSelectedRows(propertyId3);
+		expect(selectedRows).to.eql([3, 6, 9]);
+		selectedRows = controller.getSelectedRows(propertyId4);
+		expect(selectedRows).to.eql([4, 8, 12]);
+	});
+	it("selected rows using propertyId without selection set", () => {
+		reset();
+		const propertyId1 = {
+			name: "control"
+		};
+		const propertyId2 = {
+			name: "control",
+			row: 1
+		};
+		const propertyId3 = {
+			name: "control",
+			row: 2,
+			col: 1
+		};
+		const propertyId4 = {
+			name: "control2",
+			col: 2
+		};
+		let selectedRows = controller.getSelectedRows(propertyId1);
+		expect(selectedRows).to.eql([]);
+		selectedRows = controller.getSelectedRows(propertyId2);
+		expect(selectedRows).to.eql([]);
+		selectedRows = controller.getSelectedRows(propertyId3);
+		expect(selectedRows).to.eql([]);
+		selectedRows = controller.getSelectedRows(propertyId4);
+		expect(selectedRows).to.eql([]);
+	});
+
+	it("clear selected rows without propertyId to clear all selections", () => {
+		reset();
+		const propertyId1 = {
+			name: "control"
+		};
+		const propertyId2 = {
+			name: "control",
+			row: 1
+		};
+		const propertyId3 = {
+			name: "control",
+			row: 2,
+			col: 1
+		};
+		const propertyId4 = {
+			name: "control2",
+			col: 2
+		};
+		controller.updateSelectedRows(propertyId1, [1]);
+		controller.updateSelectedRows(propertyId2, [2, 4]);
+		controller.updateSelectedRows(propertyId3, [3, 6, 9]);
+		controller.updateSelectedRows(propertyId4, [4, 8, 12]);
+		controller.clearSelectedRows();
+		let selectedRows = controller.getSelectedRows(propertyId1);
+		expect(selectedRows).to.eql([]);
+		selectedRows = controller.getSelectedRows(propertyId2);
+		expect(selectedRows).to.eql([]);
+		selectedRows = controller.getSelectedRows(propertyId3);
+		expect(selectedRows).to.eql([]);
+		selectedRows = controller.getSelectedRows(propertyId4);
+		expect(selectedRows).to.eql([]);
+	});
+
 });
