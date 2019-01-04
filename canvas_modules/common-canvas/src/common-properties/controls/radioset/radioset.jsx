@@ -80,10 +80,10 @@ class RadiosetControl extends React.Component {
 	// this is needed in order to reset the property value when a value is filtered out.
 	updateValueFromFilterEnum(skipValidateInput) {
 		if (this.props.value !== null && typeof this.props.value !== "undefined" &&
-			this.props.controlOpts.values.indexOf(this.props.value) < 0) {
+			!this.props.controlOpts.values.includes(this.props.value)) {
 			let defaultValue = null;
 			// set to default value if default value is in filtered enum list
-			if (this.props.control.valueDef && this.props.control.valueDef.defaultValue && this.props.controlOpts.values.indexOf(this.props.control.valueDef.defaultValue) > 0) {
+			if (this.props.control.valueDef && this.props.control.valueDef.defaultValue && this.props.controlOpts.values.includes(this.props.control.valueDef.defaultValue)) {
 				defaultValue = this.props.control.valueDef.defaultValue;
 			}
 			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput);
