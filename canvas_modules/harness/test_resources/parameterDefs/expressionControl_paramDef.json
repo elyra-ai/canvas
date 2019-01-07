@@ -7,7 +7,13 @@
     "enableExpression": false,
     "expr": "ab\ncd\nef",
     "visibleExpression": false,
-    "hiddenExpr": "This is hidden by default"
+    "hiddenExpr": "This is hidden by default",
+    "expressionCellTable": [
+      [
+        "BabyBoomer",
+        "Age >= 55"
+      ]
+    ]
   },
   "parameters": [
     {
@@ -68,9 +74,37 @@
       "type": "string",
       "default": "",
       "role": "expression"
+    },
+    {
+      "id": "expressionCellTable",
+      "type": "array[expressionCellTable]"
     }
   ],
-  "complex_types": [],
+  "complex_types": [
+    {
+        "id": "expressionCellTable",
+        "parameters": [
+          {
+            "id": "valueName",
+            "type": "string",
+            "default": "Value",
+            "role": "new_column"
+          },
+          {
+            "id": "condition",
+            "type": "string",
+            "default": "",
+            "role": "expression"
+          },
+          {
+            "id": "condition2",
+            "type": "string",
+            "default": "",
+            "role": "expression"
+          }
+        ]
+      }
+    ],
   "uihints": {
     "id": "Expressions.test",
     "icon": "images/modelbuildspark.svg",
@@ -185,9 +219,69 @@
         "text_before": {
           "default": "Enter help to generate a warning message"
         }
+      },
+      {
+        "parameter_ref": "expressionCellTable",
+        "label": {
+          "default": "Table Values"
+        },
+        "description": {
+          "default": "expression control on panel",
+          "placement": "on_panel"
+        }
       }
     ],
-    "complex_type_info": [],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "expressionCellTable",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Structure Name",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 15,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "condition",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.subPanelLabel"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "subpanel",
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          },
+          {
+            "parameter_ref": "condition2",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.onPanelLabel"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "on_panel",
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          }
+        ]
+      }
+    ],
     "group_info": [
       {
         "id": "Values",
@@ -214,7 +308,32 @@
           "warningExpr",
           "errorExpr"
         ]
+      },
+      {
+        "id": "expressionCellTable-summary-panel",
+        "label": {
+          "default": "Tables"
+        },
+        "type": "summaryPanel",
+        "group_info": [
+          {
+            "id": "tables",
+            "type": "panels",
+            "label": {
+              "default": "tables"
+            },
+            "group_info": [
+              {
+                "id": "Expression Control Cell",
+                "parameter_refs": [
+                  "expressionCellTable"
+                ]
+              }
+            ]
+          }
+        ]
       }
+
     ]
   },
   "conditions": [
@@ -540,6 +659,11 @@
     }
   ],
   "resources": {
-    "expression_box_not_valid": "Expression cannot contain /, double or single \"quotes\""
+    "expression_box_not_valid": "Expression cannot contain /, double or single \"quotes\"",
+    "expressionCellTable.name.label": "Set Field To",
+    "expressionCellTable.name.desc": "Enter a name",
+    "expressionCellTable.description.subPanelLabel": "subpanel Condition",
+    "expressionCellTable.description.onPanelLabel": "on_panel Condition"
+
   }
 }

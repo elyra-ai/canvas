@@ -18,19 +18,18 @@ function states(state = {}, action) {
 	case UPDATE_CONTROL_STATE: {
 		const newState = state;
 		const propertyId = action.state.propertyId;
-		let propState = newState[propertyId.name];
-		if (typeof propState === "undefined") {
-			propState = {};
+		if (typeof newState[propertyId.name] === "undefined") {
+			newState[propertyId.name] = {};
 		}
 		if (typeof propertyId.row !== "undefined") {
 			const strRow = propertyId.row.toString();
-			if (typeof propState[strRow] === "undefined") {
-				propState[strRow] = {};
+			if (typeof newState[propertyId.name][strRow] === "undefined") {
+				newState[propertyId.name][strRow] = {};
 			}
 			if (typeof propertyId.col !== "undefined") {
 				const strCol = propertyId.col.toString();
-				if (typeof propState[strRow][strCol] === "undefined") {
-					propState[strRow][strCol] = {};
+				if (typeof newState[propertyId.name][strRow][strCol] === "undefined") {
+					newState[propertyId.name][strRow][strCol] = {};
 				}
 				newState[propertyId.name][strRow][strCol] = {
 					value: action.state.value
