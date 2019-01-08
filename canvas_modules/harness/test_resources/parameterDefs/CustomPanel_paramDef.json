@@ -20,7 +20,8 @@
     ],
     "custom_toggle": true,
     "custom_toggle2": true,
-    "text_field": ""
+    "text_field": "",
+    "readonly_text": "[]"
   },
   "complex_types": [
     {
@@ -74,6 +75,10 @@
     {
       "id": "text_field",
       "type": "string"
+    },
+    {
+      "id": "readonly_text",
+      "type": "string"
     }
   ],
   "uihints": {
@@ -109,6 +114,16 @@
         "description": {
           "default": "Latitude, longitude, and zoom setting"
         }
+      },
+      {
+        "parameter_ref": "readonly_text",
+        "label": {
+          "default": "Currently selected rows:"
+        },
+        "description": {
+          "default": "We have a listener here"
+        },
+        "control": "readonly"
       }
     ],
     "complex_type_info": [
@@ -153,7 +168,7 @@
             ]
           },
           {
-            "id": "harness-custom-toggle-panel",
+            "id": "harness-custom-toggle-panel1",
             "type": "customPanel",
             "parameter_refs": [
               "custom_toggle2"
@@ -209,6 +224,13 @@
                   "custom_slider",
                   "structuretable",
                   "color"
+                ]
+              },
+              {
+                "id": "text-listener-panel",
+                "type": "controls",
+                "parameter_refs": [
+                  "readonly_text"
                 ]
               }
             ]

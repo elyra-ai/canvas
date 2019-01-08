@@ -22,7 +22,16 @@ class CustomSliderPanel {
 		this.controller = controller;
 		this.propertyId = { name: parameters[0] };
 		this.controller.setControlInSummary(this.propertyId, "Slider", true);
+		this.selectionChanged = this.selectionChanged.bind(this);
+		if (this.parameters.length >= 2) {
+			this.controller.addRowSelectionListener(this.parameters[1], this.selectionChanged);
+		}
 	}
+
+	selectionChanged(selections) {
+		this.controller.updatePropertyValue({ name: "readonly_text" }, JSON.stringify(selections));
+	}
+
 	renderPanel() {
 		let table = (<div />);
 		if (this.parameters.length >= 2) {

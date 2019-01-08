@@ -56,6 +56,7 @@ export default class PropertiesController {
 		this.conditionOps = ConditionOps.getConditionOps();
 		this.expressionFunctionInfo = {};
 		this.expressionRecentlyUsed = [];
+		this.selectionListeners = {};
 	}
 
 	getStore() {
@@ -673,11 +674,108 @@ export default class PropertiesController {
 	updateSelectedRows(inPropertyId, selection) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		this.propertiesStore.updateSelectedRows(propertyId, selection);
+		this._notifySelectionListener(propertyId, selection);
 	}
 
 	clearSelectedRows(inPropertyId) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		this.propertiesStore.clearSelectedRows(propertyId);
+	}
+
+	//
+	// Table row selection listeners
+	//
+
+	/**
+	 * Adds a row selection listener for a table or list.
+	 *
+	 * @param inPropertyId Property id for a table or list control
+	 * @param listener A callback function that contains a parameter that is
+	 *	an array of row selection indices. The callback is fired whenever
+	 *	row selections change for the given (row-based) control.
+	 */
+	addRowSelectionListener(inPropertyId, listener) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		const controlName = propertyId.name;
+		if (!this.selectionListeners[controlName]) {
+			this.selectionListeners[controlName] = {};
+		}
+		if (Number.isInteger(propertyId.row)) {
+			throw new Error("Listening for row selection changes on controls within table cells is not currently supported");
+
+			// TODO: Add this back if we ever get a request for listening to row changes on embedded tables.
+
+			/*
+			const row = String(propertyId.row);
+			if (!this.selectionListeners[propertyId.name][row]) {
+				this.selectionListeners[propertyId.name][row] = {};
+			}
+			if (Number.isInteger(propertyId.col)) {
+				const col = String(propertyId.col);
+				if (!this.selectionListeners[propertyId.name][row][col]) {
+					this.selectionListeners[propertyId.name][row][col] = {};
+				}
+				this.selectionListeners[controlName][row][col] = listener;
+			} else {
+				this.selectionListeners[controlName][row] = listener;
+			}
+			*/
+		} else {
+			this.selectionListeners[controlName].listener = listener;
+		}
+	}
+
+	/**
+	 * Removes the row selection listener from a control.
+	 *
+	 * @param inPropertyId Property id for a table or list control
+	 */
+	removeRowSelectionListener(inPropertyId) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		const controlName = propertyId.name;
+		if (Number.isInteger(propertyId.row)) {
+			throw new Error("Listening for row selection changes on controls within table cells is not currently supported");
+
+			// TODO: Add this back if we ever get a request for listening to row changes on embedded tables.
+
+			/*
+			const row = propertyId.row;
+			if (Number.isInteger(propertyId.col)) {
+				const col = propertyId.col;
+				if (this.selectionListeners[controlName][row][col]) {
+					delete this.selectionListeners[controlName][row][col];
+				}
+			} else if (this.selectionListeners[controlName][row]) {
+				delete this.selectionListeners[controlName][row];
+			}
+			*/
+		} else if (this.selectionListeners[controlName]) {
+			delete this.selectionListeners[controlName];
+		}
+	}
+
+	_notifySelectionListener(inPropertyId, selections) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		const controlName = propertyId.name;
+		if (this.selectionListeners[controlName]) {
+
+			// TODO: Add this back if we ever get a request for listening to row changes on embedded tables.
+
+			/*
+			const row = propertyId.row;
+			if (Number.isInteger(propertyId.row)) {
+				const col = propertyId.col;
+				if (Number.isInteger(propertyId.col)) {
+					if (this.selectionListeners[controlName][row][col].listener) {
+						this.selectionListeners[controlName][row][col].listener(selections);
+					}
+				} else if (this.selectionListeners[controlName][row].listener) {
+					this.selectionListeners[controlName][row].listener(selections);
+				}
+			}
+			*/
+			this.selectionListeners[controlName].listener(selections);
+		}
 	}
 
 	//

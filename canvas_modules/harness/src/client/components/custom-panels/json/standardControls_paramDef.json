@@ -21,6 +21,10 @@
       "type": "array[structuretable]",
       "role": "column",
       "required": true
+    },
+    {
+      "id": "readonly_text",
+      "type": "string"
     }
   ],
   "complex_types": [
@@ -78,6 +82,16 @@
           "default": "This is a standard table in a customPanel.",
           "placement": "on_panel"
         }
+      },
+      {
+        "parameter_ref": "readonly_text",
+        "label": {
+          "default": "Currently selected rows:"
+        },
+        "description": {
+          "default": "We have a listener here"
+        },
+        "control": "readonly"
       }
     ],
     "complex_type_info": [

@@ -1332,5 +1332,37 @@ describe("Properties Controller row selection methods", () => {
 		selectedRows = controller.getSelectedRows(propertyId4);
 		expect(selectedRows).to.eql([]);
 	});
+	it("should have a method to listen for row selection changes", () => {
+		reset();
+		controller.setForm(conditionForm);
+		let structuretableSelections = [];
+		controller.addRowSelectionListener({ name: "structuretableSortOrder" }, function(selections) {
+			structuretableSelections = selections;
+		});
+		let structurelistSelections = [];
+		controller.addRowSelectionListener({ name: "structurelisteditorTableInput" }, function(selections) {
+			structurelistSelections = selections;
+		});
+		let columnSelectSelections = [];
+		controller.addRowSelectionListener("columnSelectInputFieldList", function(selections) {
+			columnSelectSelections = selections;
+		});
+		controller.updateSelectedRows({ name: "structuretableSortOrder" }, [2, 4]);
+		controller.updateSelectedRows({ name: "structurelisteditorTableInput" }, [1, 3, 5]);
+		controller.updateSelectedRows("columnSelectInputFieldList", []);
+		expect(structuretableSelections.length === 2).to.equal(true);
+		expect(structuretableSelections[0]).to.equal(2);
+		expect(structuretableSelections[1]).to.equal(4);
+		expect(structurelistSelections.length === 3).to.equal(true);
+		expect(structurelistSelections[0]).to.equal(1);
+		expect(structurelistSelections[2]).to.equal(5);
+		expect(columnSelectSelections.length === 0).to.equal(true);
 
+		// The value shouldn't change after the listener has been removed
+		controller.removeRowSelectionListener({ name: "structuretableSortOrder" });
+		controller.updateSelectedRows({ name: "structuretableSortOrder" }, [3]);
+		expect(structuretableSelections.length === 2).to.equal(true);
+		expect(structuretableSelections[0]).to.equal(2);
+		expect(structuretableSelections[1]).to.equal(4);
+	});
 });
