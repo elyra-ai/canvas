@@ -345,7 +345,7 @@ class CanvasRenderer {
 
 	setDisplayState() {
 		if (this.canvasController.getBreadcrumbs().length > 1 &&
-				this.canvasController.getCurrentBreadcrumb().pipelineId === this.pipelineId) {
+				this.isDisplayingCurrentPipeline()) {
 			this.displayState = "sub-flow-full-page";
 
 		} else if (this.parentSupernodeD3Selection) { // Existance of this varable means we are rendering an in-place sub-flow
@@ -473,6 +473,20 @@ class CanvasRenderer {
 		this.canvasController.clearSelections();
 		this.initializeZoomVariables();
 		this.canvasSVG.remove();
+	}
+
+	setCanvasCursorStyle(cursorType) {
+		if (!this.regionSelect && this.isDisplayingCurrentPipeline()) {
+			let displayCursorType = cursorType;
+			if (this.nodeSizing) {
+				displayCursorType = this.getCursorBasedOnDirection(this.nodeSizingDirection);
+			}
+			this.canvasSVG.style("cursor", displayCursorType);
+		}
+	}
+
+	isDisplayingCurrentPipeline() {
+		return this.canvasController.getCurrentBreadcrumb().pipelineId === this.pipelineId;
 	}
 
 	// This is called when the user changes the size of the canvas area.
@@ -1201,6 +1215,7 @@ class CanvasRenderer {
 		}
 
 		if (this.regionSelect) {
+			this.canvasSVG.style("cursor", "crosshair");
 			this.regionStartTransformX = d3Event.transform.x;
 			this.regionStartTransformY = d3Event.transform.y;
 			const transPos = this.getTransformedMousePos();
@@ -1211,6 +1226,7 @@ class CanvasRenderer {
 				height: 0
 			};
 		}
+		this.setCanvasCursorStyle("move");
 
 		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
 	}
@@ -1257,6 +1273,8 @@ class CanvasRenderer {
 			}
 			this.regionSelect = false;
 		}
+
+		this.setCanvasCursorStyle("default");
 	}
 
 	panCanvasBackground(panX, panY, panK) {
@@ -1560,6 +1578,7 @@ class CanvasRenderer {
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
 					that.setNodeStyles(d, "hover");
+					that.setCanvasCursorStyle("pointer");
 					// If doing region select, ensure the dynamic icons are never
 					// displayed until the selection has finished. This prevents the icons
 					// from flashing as the region is being pulled out across a node.
@@ -1581,6 +1600,7 @@ class CanvasRenderer {
 				})
 				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
 					that.setNodeStyles(d, "default");
+					that.setCanvasCursorStyle("default");
 					that.canvasGrp.selectAll(that.getId("#node_body", d.id)).attr("hover", "no");
 					that.removeDynamicNodeIcons(d);
 					that.canvasController.closeTip();
@@ -1588,6 +1608,9 @@ class CanvasRenderer {
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d) => {
 					this.logger.log("Node Group - mouse down");
+					if (this.nodeSizing) {
+						this.setCanvasCursorStyle(this.getCursorBasedOnDirection(this.nodeSizingDirection));
+					}
 					this.selecting = true;
 					d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
 					if (!this.objectModel.isSelected(d.id, this.activePipeline.id)) {
@@ -3098,6 +3121,7 @@ class CanvasRenderer {
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
 					that.setCommentStyles(d, "hover");
+					that.setCanvasCursorStyle("pointer");
 					if (that.layout.connectionType === "ports") {
 						d3.select(this)
 							.append("circle")
@@ -3120,6 +3144,7 @@ class CanvasRenderer {
 				})
 				.on("mouseleave", (d) => {
 					that.setCommentStyles(d, "default");
+					that.setCanvasCursorStyle("default");
 					if (that.layout.connectionType === "ports") {
 						that.canvasGrp.selectAll(that.getId("#comment_port")).remove();
 					}
@@ -3707,6 +3732,7 @@ class CanvasRenderer {
 		this.nodeSizingMovedNodes = [];
 		this.nodeSizing = false;
 		this.nodeSizingInitialSize = {};
+		this.setCanvasCursorStyle("pointer");
 	}
 
 	// Finalises the sizing of a comment by calling editActionHandler
