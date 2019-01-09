@@ -1560,7 +1560,14 @@ class CanvasRenderer {
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
 					that.setNodeStyles(d, "hover");
-					that.addDynamicNodeIcons(d, this);
+					// If doing region select, ensure the dynamic icons are never
+					// displayed until the selection has finished. This prevents the icons
+					// from flashing as the region is being pulled out across a node.
+					if (that.regionSelect) {
+						that.removeDynamicNodeIcons(d);
+					} else {
+						that.addDynamicNodeIcons(d, this);
+					}
 					if (that.canOpenTip(TIP_TYPE_NODE)) {
 						that.canvasController.closeTip(); // Ensure existing tip is removed when moving pointer within an in-place supernode
 						that.canvasController.openTip({
