@@ -27,9 +27,21 @@ $harness-navbar-icon-width: 48px;
 
 .harness-title {
 	color: $text-01;
-	width: $harness-navbar-title-width;
+	min-width: $harness-navbar-title-width;
+	display: block;
 	font-size: 14px;
-	padding: 5px 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 15px;
+}
+
+.harness-version {
+	color: $text-01;
+	display: block;
+	font-size: 8px;
+	text-align: right;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 /* Styles for elements displayed for empty canvas. */
@@ -80,7 +92,7 @@ $harness-navbar-icon-width: 48px;
 .harness-navbar-li {
 	float: left;
 	height: 100%;
-	display: flex;
+	display: block;
 	align-items: center;
 
 	a {

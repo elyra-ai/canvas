@@ -23,6 +23,7 @@ import forIn from "lodash/forIn";
 import has from "lodash/has";
 
 import { CommonCanvas, CanvasController, CommonProperties, FlowValidation } from "common-canvas";
+import CommonCanvasPackage from "@wdp/common-canvas/package.json";
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console.jsx";
@@ -1489,7 +1490,8 @@ class App extends React.Component {
 		const navBar = (<div className="harness-app-navbar">
 			<ul className="harness-app-navbar-items">
 				<li className="harness-navbar-li">
-					<span className="harness-title">Canvas Testbed</span>
+					<span className="harness-title">Common Canvas</span>
+					<span className="harness-version">{"v" + CommonCanvasPackage.version}</span>
 				</li>
 				<li className="harness-navbar-li harness-nav-divider" data-tip="console">
 					<a onClick={this.openConsole.bind(this) }>

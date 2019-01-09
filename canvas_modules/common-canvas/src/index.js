@@ -13,5 +13,4 @@ import CommandStack from "./command-stack/command-stack";
 import FlowValidation from "./flow-validation/validate-flow";
 import "./index.scss";
 
-
 export { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation };
