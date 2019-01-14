@@ -1,0 +1,373 @@
+{
+	"titleDefinition": {
+		"title": "DM Condition Operators"
+	},
+	"current_parameters": {
+	},
+	"parameters": [{
+			"id": "dmTypeEqualList",
+			"type": "object",
+			"role": "column"
+
+		},
+		{
+			"id": "checkbox",
+			"type": "boolean"
+		},
+		{
+			"id": "dmTypeNotEqualList",
+			"type": "object",
+			"role": "column"
+
+		},
+		{
+			"id": "checkbox1",
+			"type": "boolean"
+		},
+		{
+			"id": "dmRoleEqualList",
+			"type": "object",
+			"role": "column"
+
+		},
+		{
+			"id": "checkbox2",
+			"type": "boolean"
+		},
+		{
+			"id": "dmRoleNotEqualList",
+			"type": "object",
+			"role": "column"
+
+		},
+		{
+			"id": "checkbox3",
+			"type": "boolean"
+		},
+    {
+      "id": "dmMeasurementEqualList",
+      "type": "object",
+      "role": "column"
+
+    },
+		{
+			"id": "dmMeasurementNotEqualList",
+			"type": "object",
+			"role": "column"
+
+		}
+
+	],
+	"uihints": {
+		"parameter_info": [{
+				"parameter_ref": "dmTypeEqualList",
+				"label": {
+					"default": "To enable checkbox control, select a field with a type of string"
+				}
+			},
+			{
+				"parameter_ref": "checkbox",
+				"label": {
+					"default": "Enabled"
+				}
+			},
+			{
+				"parameter_ref": "dmTypeNotEqualList",
+				"label": {
+					"default": "To view another checkbox control, select a field that does not have a type of string"
+				}
+			},
+			{
+				"parameter_ref": "checkbox1",
+				"label": {
+					"default": "I am now visible."
+				}
+			},
+			{
+				"parameter_ref": "dmRoleEqualList",
+				"label": {
+					"default": "To enable this control, select a field with a role of input"
+				}
+			},
+			{
+				"parameter_ref": "checkbox2",
+				"label": {
+					"default": "Enabled"
+				}
+			},
+			{
+				"parameter_ref": "dmRoleNotEqualList",
+				"label": {
+					"default": "To view another checkbox control, select a field that does not have a role of input."
+				}
+			},
+			{
+				"parameter_ref": "checkbox3",
+				"label": {
+					"default": "I am now visible"
+				}
+			},
+      {
+        "parameter_ref": "dmMeasurementEqualList",
+        "label": {
+          "default": "To validate a text control, select a field that with a measure of discrete."
+        }
+      },
+			{
+				"parameter_ref": "dmMeasurementNotEqualList",
+				"label": {
+					"default": "To validate a text control, select a field that does not have a measure of discrete."
+				}
+			}
+		],
+		"group_info": [{
+				"id": "dmType Operator",
+				"type": "columnSelection",
+				"parameter_refs": [
+					"checkbox",
+					"dmTypeEqualList",
+					"checkbox1",
+					"dmTypeNotEqualList"
+				]
+			},
+			{
+				"id": "dmRole Operator",
+				"type": "columnSelection",
+				"parameter_refs": [
+					"checkbox2",
+					"dmRoleEqualList",
+					"checkbox3",
+					"dmRoleNotEqualList"
+				]
+			},
+      {
+        "id": "dmMeasurement Operator",
+        "type": "columnSelection",
+        "parameter_refs": [
+          "dmMeasurementEqualList",
+					"dmMeasurementNotEqualList"
+        ]
+      }
+		]
+	},
+
+	"conditions": [{
+			"enabled": {
+				"parameter_refs": [
+					"checkbox"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "dmTypeEqualList",
+						"op": "dmTypeEquals",
+						"value": "string"
+					}
+				}
+			}
+		},
+		{
+			"visible": {
+				"parameter_refs": [
+					"checkbox1"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "dmTypeNotEqualList",
+						"op": "dmTypeNotEquals",
+						"value": "string"
+					}
+				}
+			}
+		},
+		{
+			"enabled": {
+				"parameter_refs": [
+					"checkbox2"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "dmRoleEqualList",
+						"op": "dmRoleEquals",
+						"value": "input"
+					}
+				}
+			}
+		},
+		{
+			"visible": {
+				"parameter_refs": [
+					"checkbox3"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "dmRoleNotEqualList",
+						"op": "dmRoleNotEquals",
+						"value": "input"
+					}
+				}
+			}
+		},
+    {
+      "validation": {
+				"fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "dmMeasurementEqualList",
+          "message": {
+            "resource_key": "dmMeasurement_not_valid"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "dmMeasurementEqualList",
+            "op": "dmMeasurementEquals",
+            "value": "discrete"
+          }
+        }
+      }
+    },
+		{
+			"validation": {
+				"fail_message": {
+					"type": "error",
+					"focus_parameter_ref": "dmMeasurementNotEqualList",
+					"message": {
+						"resource_key": "dmMeasurementNot_not_valid"
+					}
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "dmMeasurementNotEqualList",
+						"op": "dmMeasurementNotEquals",
+						"value": "discrete"
+					}
+				}
+			}
+		}
+	],
+	"dataset_metadata": [{
+		"name": "Schema-1",
+		"fields": [{
+				"name": "Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "AGE",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "target"
+				}
+			},
+			{
+				"name": "Sex",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "none"
+				}
+			},
+			{
+				"name": "BP",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "partition"
+				}
+			},
+			{
+				"name": "Cholesterol",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Na",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "K",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Height",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Weight",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "BMI",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "frequency"
+				}
+			},
+			{
+				"name": "Name",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "DOB",
+				"type": "date",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			}
+		]
+	}],
+	"resources":{
+		"dmMeasurement_not_valid": "Select field with measure of discrete.",
+		"dmMeasurementNot_not_valid": "Select field that does not have a measure of discrete."
+
+	}
+}

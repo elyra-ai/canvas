@@ -22,6 +22,10 @@ import notEquals from "./notEquals";
 import isDateTime from "./isDateTime";
 import dmTypeEquals from "./dmTypeEquals";
 import dmTypeNotEquals from "./dmTypeNotEquals";
+import dmMeasurementEquals from "./dmMeasurementEquals";
+import dmMeasurementNotEquals from "./dmMeasurementNotEquals";
+import dmRoleEquals from "./dmRoleEquals";
+import dmRoleNotEquals from "./dmRoleNotEquals";
 
 
 /**
@@ -43,6 +47,10 @@ function getConditionOps(customOps) {
 	ops[isDateTime.op()] = isDateTime.evaluate;
 	ops[dmTypeEquals.op()] = dmTypeEquals.evaluate;
 	ops[dmTypeNotEquals.op()] = dmTypeNotEquals.evaluate;
+	ops[dmMeasurementEquals.op()] = dmMeasurementEquals.evaluate;
+	ops[dmMeasurementNotEquals.op()] = dmMeasurementNotEquals.evaluate;
+	ops[dmRoleEquals.op()] = dmRoleEquals.evaluate;
+	ops[dmRoleNotEquals.op()] = dmRoleNotEquals.evaluate;
 
 
 	if (Array.isArray(customOps)) {
