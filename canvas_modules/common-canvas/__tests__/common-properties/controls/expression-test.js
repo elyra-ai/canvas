@@ -110,7 +110,8 @@ function reset() {
 	controller.saveControls([control]);
 	controller.updatePropertyValue(propertyId, "");
 	controller.setDatasetMetadata(getCopy(dataModel));
-	controller.setExpressionInfo(getCopy(ExpressionInfo.input));
+	var expressionInfo = getCopy(ExpressionInfo.input);
+	controller.setExpressionInfo(expressionInfo);
 }
 
 const propertiesConfig = { containerType: "Custom", rightFLyout: true };
@@ -352,4 +353,75 @@ describe("expression handles no expression builder resources correctly", () => {
 	});
 
 
+});
+
+describe("ExpressionBuilder generates and accesses field dropdown correctly", () => {
+	it("expression builder selects dropdown correctly", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		expect(wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__label").text()).to.equal("Fields");
+		const dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
+		dropDown.simulate("click");
+		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		// check that all dropdown options are loaded
+		expect(dropDownList).to.have.length(4);
+		// selecting the dropdown list has the correct entries
+		expect(dropDownList.at(0).text()).to.be.equal("Fields");
+		expect(dropDownList.at(1).text()).to.be.equal("Globals");
+		expect(dropDownList.at(2).text()).to.be.equal("Multi Response Set");
+		expect(dropDownList.at(3).text()).to.be.equal("Parameters");
+		// select an option
+		dropDownList.at(1).simulate("click");
+		// properly close the dropdown once selected
+		expect(wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item")).to.have.length(0);
+		expect(wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__label").text()).to.equal("Globals");
+	});
+
+	it("expression builder adds dropdown menu fields and values correctly", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		var dropDown = wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__field");
+		dropDown.simulate("click");
+		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		// test globals
+		dropDownList.at(1).simulate("click");
+		expect(wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__label").text()).to.equal("Globals");
+		var fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
+		fieldRows.at(0).simulate("dblclick");
+		// expect selecting a field enters the correct value
+		expect(controller.getPropertyValue(propertyId)).to.equal(" '@GLOBAL_MEAN('AGE')'");
+		var valueRows = wrapper.find("div.properties-value-table-container .reactable-data tr");
+		fieldRows.at(1).simulate("click");
+		valueRows.at(0).simulate("dblclick");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" '@GLOBAL_MEAN('AGE')' 8863");
+		// test mrs
+		dropDown = wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__field");
+		dropDown.simulate("click");
+		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList.at(2).simulate("click");
+		expect(wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__label").text()).to.equal("Multi Response Set");
+		fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
+		fieldRows.at(0).simulate("dblclick");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" '@GLOBAL_MEAN('AGE')' 8863 'numberSet'");
+		valueRows = wrapper.find("div.properties-value-table-container .reactable-data tr");
+		fieldRows.at(1).simulate("click");
+		valueRows.at(0).simulate("dblclick");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" '@GLOBAL_MEAN('AGE')' 8863 'numberSet' 1");
+	});
 });

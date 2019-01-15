@@ -21,16 +21,20 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	constructor(props) {
 		super(props);
 		this.inCategories = Object.keys(props.functionList);
+		this.fields = this._makeDatasetFields(props.controller.getDatasetMetadataFields(), props.controller.getExpressionInfo().fields);
 		this.state = {
 			fieldSelectedRow: 0,
 			valueSelectedRow: 0,
 			functionSelectedRow: 0,
 			functionCategory: this.inCategories[0], // set the initial function category to the first one in the list.
-			selectedTab: 0
+			selectedTab: 0,
+			fieldCategory: "fields",
+			currentFieldDataset: this.fields.field_table_info[0].field_value_groups
 		};
+		this.controller = props.controller;
 		this.reactIntl = props.controller.getReactIntl();
-		this.datasetFields = props.controller.getDatasetMetadataFields();
 		this.onFunctionCatChange = this.onFunctionCatChange.bind(this);
+		this.onFieldCatChange = this.onFieldCatChange.bind(this);
 		this.onFieldFilter = this.onFieldFilter.bind(this);
 		this.onValueFilter = this.onValueFilter.bind(this);
 		this.recentUseCat = PropertyUtils.formatMessage(this.reactIntl,
@@ -51,6 +55,20 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		});
 	}
 
+	onFieldCatChange(evt) {
+		var currentData = [];
+		for (let index = 0; index < this.fields.field_table_info.length; index++) {
+			if (evt.selectedItem.value === this.fields.field_table_info[index].id) {
+				currentData = this.fields.field_table_info[index].field_value_groups;
+			}
+		}
+		this.setState({
+			fieldCategory: evt.selectedItem.value,
+			fieldSelectedRow: 0,
+			currentFieldDataset: currentData
+		});
+	}
+
 	onFieldTableClick(row, evt) {
 		this.setState({
 			fieldSelectedRow: row,
@@ -64,10 +82,11 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			if (this.language === "CLEM") {
 				quote = "'";
 			}
-			const field = this.datasetFields[row].name;
+			const field = this.state.currentFieldDataset[row].id;
 			this.props.onChange(quote + field + quote);
 		}
 	}
+
 	onFieldFilter(filterString) {
 		this.setState({ fieldFilterText: filterString });
 	}
@@ -80,13 +99,14 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	onValueTableDblClick(row, evt) {
 		if (this.props.onChange) {
-			const field = this.datasetFields[this.state.fieldSelectedRow];
-			if (field.metadata.values) {
+			const field = this.state.currentFieldDataset[this.state.fieldSelectedRow];
+			if (field.values) {
 				const quote = "\"";
-				const fieldValue = (field.type === "string") ? quote + field.metadata.values[row] + quote : field.metadata.values[row];
+				const value = field.values[row].value;
+				const fieldValue = (typeof value === "string") ? quote + value + quote : value;
 				this.props.onChange(fieldValue);
-			} else if (field.metadata.range) {
-				this.props.onChange(row === 0 ? field.metadata.range.min : field.metadata.range.max);
+			} else if (field.range) {
+				this.props.onChange(row === 0 ? field.range.min.value : field.range.max.value);
 			}
 		}
 		this.setState({
@@ -131,58 +151,133 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		);
 	}
 
-	_makeFieldAndValuesContent() {
-		// Make field and value tables headers.
-		const fieldHeaders = [];
+	_makeDatasetFields(dataset, fieldDataset) {
 		const fieldColumn = PropertyUtils.formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_FIELD_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_FIELD_COLUMN);
 		const storageColumn = PropertyUtils.formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_STORAGE_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_STORAGE_COLUMN);
 		const valueColumn = PropertyUtils.formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_VALUE_COLUMN);
+		const dropdownLabel = PropertyUtils.formatMessage(this.reactIntl,
+			MESSAGE_KEYS.EXPRESSION_FIELDS_DROPDOWN_TITLE, MESSAGE_KEYS_DEFAULTS.EXPRESSION_FIELDS_DROPDOWN_TITLE);
+
+		var datasetCategories = {
+			id: "fields",
+			locLabel: dropdownLabel,
+			field_columns: {
+				field_column_info: {
+					locLabel: fieldColumn
+				},
+				value_column_info: {
+					locLabel: valueColumn
+				},
+				additional_column_info: [
+					{
+						id: "storage",
+						locLabel: storageColumn
+					}
+				]
+			}
+		};
+
+		var datasetTableInfo = {
+			id: "fields",
+			field_value_groups: []
+		};
+		dataset.forEach((field) => {
+			var entry = {
+				id: field.name,
+				additional_column_entries: [
+					{
+						id: "storage",
+						value: field.type
+					}
+				]
+			};
+			if (field.metadata.values) {
+				entry.values = [];
+				field.metadata.values.forEach((val) => {
+					entry.values.push({ value: val });
+				});
+			}
+			if (field.metadata.range) {
+				entry.range = {};
+				if (field.metadata.range.min) {
+					entry.range.min = { value: field.metadata.range.min };
+				}
+				if (field.metadata.range.max) {
+					entry.range.max = { value: field.metadata.range.max };
+				}
+			}
+			datasetTableInfo.field_value_groups.push(entry);
+		});
+		fieldDataset.field_categories.unshift(datasetCategories);
+		fieldDataset.field_table_info.unshift(datasetTableInfo);
+		return fieldDataset;
+	}
 
 
-		fieldHeaders.push({ key: "fieldName", label: fieldColumn });
-		fieldHeaders.push({ key: "storage", label: storageColumn });
-		const valueHeader = [{ key: "values", label: valueColumn }];
+	_makeFieldAndValuesContent() {
+		// Make field and value tables headers.
+		const fieldCategory = this._makeFieldDropdown();
+		const fieldHeaders = [];
+		const valueHeader = [];
+		const sortable = ["fieldName"];
 
-		// go through the data set and make the fields and the values tables.
-		const fieldTableData = [];
+		var tableContents = null;
+		// get the table contents
+		for (let index = 0; index < this.fields.field_table_info.length; index++) {
+			if (this.state.fieldCategory === this.fields.field_table_info[index].id) {
+				tableContents = this.fields.field_table_info[index];
+			}
+		}
+		// get column metadata
+		var categoryInfo = null;
+		for (let index = 0; index < this.fields.field_categories.length; index++) {
+			if (this.state.fieldCategory === this.fields.field_categories[index].id) {
+				categoryInfo = this.fields.field_categories[index];
+			}
+		}
+
+		fieldHeaders.push({ key: "fieldName", label: categoryInfo.field_columns.field_column_info.locLabel });
+		valueHeader.push({ key: "values", label: categoryInfo.field_columns.value_column_info.locLabel });
+		if (categoryInfo.field_columns.additional_column_info) {
+			for (let i = 0; i < categoryInfo.field_columns.additional_column_info.length; i++) {
+				sortable.push(categoryInfo.field_columns.additional_column_info[i].id);
+				fieldHeaders.push({ key: categoryInfo.field_columns.additional_column_info[i].id, label: categoryInfo.field_columns.additional_column_info[i].locLabel });
+			}
+		}
+		const tableData = [];
 		let valuesTableData = [];
-		for (let index = 0; index < this.datasetFields.length; index++) {
-			const field = this.datasetFields[index];
-			const fieldColumns = [];
-			const rowClass = (index === this.state.fieldSelectedRow)
-				? "table-row table-selected-row"
-				: "table-row";
-			// only include rows that meet the filter tex
-			if (!this.state.fieldFilterText || this.state.fieldFilterText.length === 0 ||
-					(field.name.toLowerCase().indexOf(this.state.fieldFilterText.toLowerCase()) > -1)) {
-				fieldColumns.push({ column: "fieldName", content: this.createContentObject(field.name), value: field.name });
-				fieldColumns.push({ column: "storage", content: this.createContentObject(field.type), value: field.type });
-				fieldTableData.push({ className: rowClass, columns: fieldColumns,
-					onClickCallback: this.onFieldTableClick.bind(this, index), onDblClickCallback: this.onFieldTableDblClick.bind(this, index) });
-				// Make the content of the values table the values of the field selected.
-				if (index === this.state.fieldSelectedRow) {
-					valuesTableData = this._makeValuesContent(field, valuesTableData);
+		if (tableContents && tableContents.field_value_groups) {
+			for (let index = 0; index < tableContents.field_value_groups.length; index++) {
+				const field = tableContents.field_value_groups[index];
+				const fieldColumns = [];
+				const rowClass = (index === this.state.fieldSelectedRow)
+					? "table-row table-selected-row"
+					: "table-row";
+				if (!this.state.fieldFilterText || this.state.fieldFilterText.length === 0 ||
+								(field.id.toLowerCase().indexOf(this.state.fieldFilterText.toLowerCase()) > -1)) {
+					fieldColumns.push({ column: "fieldName", content: this.createContentObject(field.id), value: field.id });
+					if (field.additional_column_entries) {
+						this._makeAdditionalColumnsContent(field, fieldColumns);
+					}
+					tableData.push({ className: rowClass, columns: fieldColumns,
+						onClickCallback: this.onFieldTableClick.bind(this, index), onDblClickCallback: this.onFieldTableDblClick.bind(this, index) });
+					if (index === this.state.fieldSelectedRow) {
+						valuesTableData = this._makeValuesContent(field, valuesTableData);
+					}
 				}
 			}
 		}
-		const fieldsTitle = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_FIELDS_TITLE, MESSAGE_KEYS_DEFAULTS.EXPRESSION_FIELDS_TITLE);
-		const valuesTitle = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_VALUES_TITLE, MESSAGE_KEYS_DEFAULTS.EXPRESSION_VALUES_TITLE);
-
 		return (
 			<div className="properties-field-and-values-table-container" >
+				{fieldCategory}
 				<div className="properties-field-table-container" >
-					<div className="properties-field-table-title" >
-						<span>{fieldsTitle}</span>
-					</div>
 					<FlexibleTable
 						columns={fieldHeaders}
-						data={fieldTableData}
-						sortable={["fieldName", "storage"]}
+						data={tableData}
+						sortable={sortable}
 						filterable={["fieldName"]}
 						onFilter={this.onFieldFilter}
 						rows={EXPRESSION_TABLE_ROWS}
@@ -190,9 +285,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					/>
 				</div>
 				<div className="properties-value-table-container" >
-					<div className="properties-field-table-title" >
-						<span>{valuesTitle}</span>
-					</div>
 					<FlexibleTable
 						columns={valueHeader}
 						data={valuesTableData}
@@ -205,6 +297,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				</div>
 			</div>
 		);
+
 	}
 
 	_makeValuesContent(field, valuesTableData) {
@@ -212,17 +305,16 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			MESSAGE_KEYS.EXPRESSION_MIN_LABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSION_MIN_LABEL);
 		const maxLabel = PropertyUtils.formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_MAX_LABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSION_MAX_LABEL);
-
-		if (field.metadata.values) {
-			for (let idx = 0; idx < field.metadata.values.length; idx++) {
-				this._addValueRow(field.metadata.values[idx], idx, valuesTableData);
+		if (field.values) {
+			for (let idx = 0; idx < field.values.length; idx++) {
+				this._addValueRow(field.values[idx].value, idx, valuesTableData);
 			}
-		} else if (field.metadata.range) {
-			if (field.metadata.range.min) {
-				this._addValueRow(minLabel + ": " + field.metadata.range.min, 0, valuesTableData);
+		} else if (field.range) {
+			if (field.range.min) {
+				this._addValueRow(minLabel + ": " + field.range.min.value, 0, valuesTableData);
 			}
-			if (field.metadata.range.max) {
-				this._addValueRow(maxLabel + ": " + field.metadata.range.max, 1, valuesTableData);
+			if (field.range.max) {
+				this._addValueRow(maxLabel + ": " + field.range.max.value, 1, valuesTableData);
 			}
 		}
 		return valuesTableData;
@@ -233,13 +325,13 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			? "table-row table-selected-row"
 			: "table-row";
 		if (!this.state.valueFilterText || this.state.valueFilterText.length === 0 ||
-					(content.toLowerCase().indexOf(this.state.valueFilterText.toLowerCase()) > -1)) {
+					(String(content).toLowerCase()
+						.indexOf(this.state.valueFilterText.toLowerCase()) > -1)) {
 			const valueColumns = [{ column: "values", content: this.createContentObject(content), value: content }];
 			valuesTableData.push({ className: valueRowClass, columns: valueColumns,
 				onClickCallback: this.onValueTableClick.bind(this, index), onDblClickCallback: this.onValueTableDblClick.bind(this, index) });
 		}
 	}
-
 
 	_makeFunctionsContent() {
 		if (this.props.functionList) {
@@ -248,7 +340,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			const functionsTable = this._makeFunctionsTable(categories);
 			return (
 				<div className="properties-expression-function-table-container" >
-					<br />
 					{selectCategory}
 					{functionsTable}
 				</div>
@@ -256,6 +347,13 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		}
 		return (<span>PropertyUtils.formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS, MESSAGE_KEYS_DEFAULTS.EXPRESSION_NO_FUNCTIONS);</span>);
+	}
+
+	_makeAdditionalColumnsContent(field, fieldColumns) {
+		for (let i = 0; i < field.additional_column_entries.length; i++) {
+			fieldColumns.push({ column: field.additional_column_entries[i].id,
+				content: this.createContentObject(field.additional_column_entries[i].value), value: field.additional_column_entries[i].value });
+		}
 	}
 
 	_makeSelect(categories) {
@@ -272,6 +370,22 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					label={label}
 					items={items}
 					onChange={this.onFunctionCatChange}
+				/>
+			</div>);
+	}
+
+	_makeFieldDropdown() {
+		const items = [];
+		for (let i = 0; i < this.fields.field_categories.length; i++) {
+			items.push({ value: this.fields.field_categories[i].id, label: this.fields.field_categories[i].locLabel });
+		}
+		return (
+			<div className="properties-expression-field-select">
+				<Dropdown
+					light
+					label={items[0].label}
+					items={items}
+					onChange={this.onFieldCatChange}
 				/>
 			</div>);
 	}

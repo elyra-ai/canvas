@@ -970,6 +970,170 @@
       "to_integer.label": "to_integer",
       "to_integer.item.param": "Item",
       "to_integer.item.help": "Converts ITEM to an integer. ITEM must be a string, or a number."
+    },
+    "fields": {
+      "field_categories":[
+        {
+          "id": "globals",
+          "label": {
+            "default": "Globals"
+          },
+          "field_columns": {
+            "field_column_info": {
+              "label": "Field"
+            },
+            "value_column_info": {
+              "label": "Value"
+            }
+          }
+        },
+        {
+          "id": "mrs",
+          "label": {
+            "default": "Multi Response Set"
+          },
+          "field_columns": {
+            "field_column_info": {
+              "label": "Group"
+            },
+            "value_column_info": {
+              "label": "Counted Value"
+            },
+            "additional_column_info": [
+              {
+              "id": "type",
+              "label": "Type"
+              }
+            ]
+          }
+        },
+        {
+          "id": "parameters",
+          "label": {
+            "default": "Parameters"
+          },
+          "field_columns": {
+            "field_column_info": {
+              "label": "Parameter"
+            },
+            "value_column_info": {
+              "label": "Current Value"
+            }
+          }
+        }
+      ],
+      "field_table_info": [
+        {
+          "id": "globals",
+          "field_value_groups": [
+            {
+              "id": "@GLOBAL_MEAN('AGE')",
+              "values": [
+                {
+                  "value": 44.315
+                }
+              ]
+            },
+            {
+              "id": "@GLOBAL_SUM('AGE')",
+              "values": [
+                {
+                  "value": 8863
+                }
+              ]
+            },
+            {
+              "id": "@GLOBAL_MIN('AGE')",
+              "values": [
+                {
+                  "value": 15
+                }
+              ]
+            },
+            {
+              "id": "@GLOBAL_SDEV('AGE')",
+              "values": [
+                {
+                  "value": 16.544
+                },
+                {
+                  "value": 16.545
+                }
+              ]
+            },
+            {
+              "id": "@GLOBAL_MIN('BP')",
+              "values": [
+                {
+                  "value": "HIGH"
+                }
+              ]
+            },
+            {
+              "id": "@GLOBAL_MAX('BP')",
+              "values": [
+                {
+                  "value": "NORMAL"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "mrs",
+          "field_value_groups": [
+            {
+              "id": "numberSet",
+              "values": [
+                {
+                  "value": 1
+                }
+              ],
+              "additional_column_entries": [
+                {
+                  "id": "type",
+                  "value": "Multiple dichotomy set"
+                }
+              ]
+            },
+            {
+              "id": "stringSet",
+              "values": [
+                {
+                  "value": 1
+                }
+              ],
+              "additional_column_entries": [
+                {
+                  "id": "type",
+                  "value": "Multiple dichotomy set"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "parameters",
+          "field_value_groups": [
+            {
+              "id": "$P-parameter0",
+              "values": [
+                {
+                  "value": "string param"
+                }
+              ]
+            },
+            {
+              "id": "$P-parameter1",
+              "values": [
+                {
+                  "value": 11.1
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   },
   "actual": {

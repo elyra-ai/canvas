@@ -49,6 +49,27 @@ function setExpressionInfo(inExpressionInfo) {
 					}
 				});
 			}
+			expressionFunctionInfo.fields = { "field_categories": [], "field_table_info": [] };
+			if (inExpressionInfo.fields) {
+				if (inExpressionInfo.fields.field_categories) {
+					inExpressionInfo.fields.field_categories.forEach((fieldCat) => {
+						fieldCat.locLabel = l10nProvider.l10nLabel(fieldCat, fieldCat.id);
+						fieldCat.field_columns.field_column_info.locLabel = l10nProvider.l10nLabel(fieldCat.field_columns.field_column_info, fieldCat.id + ".field_column_info");
+						fieldCat.field_columns.value_column_info.locLabel = l10nProvider.l10nLabel(fieldCat.field_columns.value_column_info, fieldCat.id + ".value_column_info");
+						if (fieldCat.field_columns.additional_column_info) {
+							fieldCat.field_columns.additional_column_info.forEach((col) => {
+								col.locLabel = l10nProvider.l10nLabel(col, fieldCat.id + ".additional_column_info." + col.id);
+							});
+						}
+						expressionFunctionInfo.fields.field_categories.push(fieldCat);
+					});
+				}
+				if (inExpressionInfo.fields.field_table_info) {
+					inExpressionInfo.fields.field_table_info.forEach((fieldInfo) => {
+						expressionFunctionInfo.fields.field_table_info.push(fieldInfo);
+					});
+				}
+			}
 		}
 	}
 	return expressionFunctionInfo;

@@ -267,9 +267,6 @@
           {
             "id": "globals",
             "type": "controls",
-            "label": {
-              "default": "Columns"
-            },
             "parameter_refs": [
               "globals"
             ]
@@ -287,9 +284,6 @@
           {
             "id": "defaultOperations",
             "type": "controls",
-            "label": {
-              "default": "Columns"
-            },
             "parameter_refs": [
               "defaultMean",
               "defaultSum",
