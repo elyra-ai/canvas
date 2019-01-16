@@ -364,17 +364,26 @@ export class ParameterMetadata {
 	}
 
 	// operation arguments
-	static makeParameterMetadata(parameters, uihintsParams) {
-		if (parameters) {
-			const paramDefs = [];
+	static makeParameterMetadata(parameters, uihintsParams, uihintsUiParams) {
+		const paramDefs = [];
+		if (Array.isArray(parameters)) {
 			for (const param of parameters) {
 				const paramDef = ParameterDef.makeParameterDef(param, getParamUIHint(param.id, uihintsParams));
 				if (paramDef) {
 					paramDefs.push(paramDef);
 				}
 			}
-			return new ParameterMetadata(paramDefs);
 		}
-		return null;
+		// Add any ui_parameters
+		if (Array.isArray(uihintsUiParams)) {
+			for (const param of uihintsUiParams) {
+				const paramDef = ParameterDef.makeParameterDef(param, getParamUIHint(param.id, uihintsParams));
+				if (paramDef) {
+					paramDef.uionly = true;
+					paramDefs.push(paramDef);
+				}
+			}
+		}
+		return new ParameterMetadata(paramDefs);
 	}
 }

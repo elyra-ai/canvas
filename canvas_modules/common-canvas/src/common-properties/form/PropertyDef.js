@@ -49,7 +49,8 @@ export class PropertyDef {
 
 	static makePropertyDef(titleDefinition, parameters, structures, uihints) {
 		const structureMetadata = StructureMetadata.makeStructureMetadata(structures, propertyOf(uihints)("complex_type_info"));
-		const parameterMetadata = ParameterMetadata.makeParameterMetadata(parameters, propertyOf(uihints)("parameter_info"));
+		const parameterMetadata = ParameterMetadata.makeParameterMetadata(parameters,
+			propertyOf(uihints)("parameter_info"), propertyOf(uihints)("ui_parameters"));
 		const actionMetadata = ActionMetadata.makeActionMetadata(propertyOf(uihints)("action_info"));
 		const groupMetadata = GroupMetadata.makeGroupMetadata(propertyOf(uihints)("group_info"));
 

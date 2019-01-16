@@ -35,8 +35,7 @@ export default class Form {
 	* @param isModal True for modal dialogs
 	*/
 	static makeForm(paramDef, isModal) {
-		const totalParameters = _setTotalParameter(paramDef);
-		const propDef = PropertyDef.makePropertyDef(propertyOf(paramDef)("titleDefinition"), totalParameters, propertyOf(paramDef)("complex_types"),
+		const propDef = PropertyDef.makePropertyDef(propertyOf(paramDef)("titleDefinition"), propertyOf(paramDef)("parameters"), propertyOf(paramDef)("complex_types"),
 			propertyOf(paramDef)("uihints"));
 
 		const conditions = propertyOf(paramDef)("conditions");
@@ -68,19 +67,6 @@ export default class Form {
 		}
 		return null;
 	}
-}
-
-function _setTotalParameter(paramDef) {
-	const parameters = propertyOf(paramDef)("parameters");
-	const uiHints = propertyOf(paramDef)("uihints");
-	const uiParameters = propertyOf(uiHints)("ui_parameters");
-	if (uiParameters) {
-		uiParameters.forEach((x) => {
-			x.uionly = true;
-		});
-	}
-	return uiParameters ? parameters.concat(uiParameters) : parameters;
-
 }
 
 function _defaultButtons() {

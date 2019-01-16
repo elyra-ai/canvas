@@ -3,12 +3,6 @@
     "title": "GLMM"
   },
   "current_parameters": {
-    "fixed_effects_list": [
-      [["Age", "Sex", "Drug"], [0, 0, 1]],
-      [["intAndRange", "stringAndSet"], [0, 1]],
-      [["Drug", "stringAndSet"], [0, 1]],
-      [["BP", "Drug", "Sex", "Cholesterol"], [0, 0, 1, 1]]
-    ]
   },
   "complex_types": [
     {
@@ -259,15 +253,11 @@
   "parameters": [
     {
       "id": "residual_subject_spec",
-      "type": "effectStructure",
-      "type": "array[string]",
-      "role": "column"
+      "type": "effectStructure"
     },
     {
       "id": "repeated_measures",
-      "type": "effectStructure",
-      "type": "array[string]",
-      "role": "column"
+      "type": "effectStructure"
     },
     {
       "id": "residual_group_spec",
@@ -407,7 +397,8 @@
 
     {
       "id": "random_effects_list",
-      "type": "array[random_effects_listStructure]"
+      "type": "array[random_effects_listStructure]",
+      "default": []
     },
 
     {
@@ -592,53 +583,6 @@
         ]
       },
       {
-        "complex_type_ref": "random_effects_listStructure",
-        "parameters": [
-          {
-            "parameter_ref": "EffectList",
-            "label": {
-              "resource_key": "random_effects_listStructure.EffectList"
-            }
-          },
-          {
-            "parameter_ref": "Intercept",
-            "label": {
-              "resource_key": "random_effects_listStructure.Intercept"
-            }
-          },
-          {
-            "parameter_ref": "SubjectSpec",
-            "label": {
-              "resource_key": "random_effects_listStructure.SubjectSpec"
-            }
-          },
-          {
-            "parameter_ref": "GroupSpec",
-            "label": {
-              "resource_key": "random_effects_listStructure.GroupSpec"
-            }
-          },
-          {
-            "parameter_ref": "CovarianceType",
-            "label": {
-              "resource_key": "random_effects_listStructure.CovarianceType"
-            }
-          },
-          {
-            "parameter_ref": "CovarianceTBand",
-            "label": {
-              "resource_key": "random_effects_listStructure.CovarianceTBand"
-            }
-          },
-          {
-            "parameter_ref": "ShowEBLUPs",
-            "label": {
-              "resource_key": "random_effects_listStructure.ShowEBLUPs"
-            }
-          }
-        ]
-      },
-      {
         "complex_type_ref": "stop_criteriaStructure",
         "layout": [
           ["parameterCheck", "ParameterConvInnMin", "ParameterConvInnType"],
@@ -762,23 +706,8 @@
         ]
       },
       {
-        "complex_type_ref": "source_field_list_item",
-        "moveable_rows": false,
-        "include_all_fields": true,
-        "add_remove_rows": false,
-        "parameters": [
-          {
-            "parameter_ref": "field",
-            "label": {
-              "default": "Name"
-            },
-            "summary": false
-        	}
-        ]
-      },
-      {
         "complex_type_ref": "effectsString",
-        "moveable_rows": false,
+        "moveable_rows": true,
         "add_remove_rows": false,
         "header": false,
         "parameters": [
@@ -791,7 +720,11 @@
     ],
     "ui_parameters": [
       {
-        "id": "source_fields",
+        "id": "fixed_source_fields",
+        "type": "array[source_field_list_item]"
+      },
+      {
+        "id": "random_source_fields",
         "type": "array[source_field_list_item]"
       },
       {
@@ -799,23 +732,48 @@
         "type": "array[effectsString]"
       },
       {
+        "id": "random_effects_ui_list",
+        "type": "array[effectsString]"
+      },
+      {
         "id": "emeansUI",
         "type": "array[emMeansUIStructure]"
+      },
+      {
+        "id": "residual_subject_ui_spec",
+        "type": "array[string]",
+        "role": "column"
+      },
+      {
+        "id": "repeated_ui_measures",
+        "type": "array[string]",
+        "role": "column"
+      },
+      {
+        "id": "randomEffectsIndex",
+        "type": "integer",
+        "default": 0
       }
     ],
     "parameter_info": [
       {
-        "parameter_ref": "residual_subject_spec",
+        "parameter_ref": "residual_subject_ui_spec",
         "label": {
-          "resource_key": "residual_subject_spec.label"
+          "resource_key": "residual_subject_ui_spec.label"
+        },
+        "description": {
+          "resource_key": "residual_subject_ui_spec.desc"
         },
         "moveable_rows": true,
         "separator": "before"
       },
       {
-        "parameter_ref": "repeated_measures",
+        "parameter_ref": "repeated_ui_measures",
         "label": {
-          "resource_key": "repeated_measures.label"
+          "resource_key": "repeated_ui_measures.label"
+        },
+        "description": {
+          "resource_key": "repeated_ui_measures.desc"
         },
         "moveable_rows": true
       },
@@ -941,15 +899,23 @@
         "description": {
           "default": "Add and remove effects here"
         },
-        "rows": 6,
+        "rows": 5,
         "control": "structurelisteditor"
       },
-
       {
-        "parameter_ref": "random_effects_list",
+        "parameter_ref": "random_effects_ui_list",
         "label": {
-          "resource_key": "random_effects_list.label"
-        }
+          "default": "Effect builder:"
+        },
+        "description": {
+          "default": "Add and remove effects here"
+        },
+        "rows": 5,
+        "control": "structurelisteditor"
+      },
+      {
+        "parameter_ref": "randomEffectsIndex",
+        "visible": false
       },
 
       {
@@ -1296,8 +1262,8 @@
                 "id": "subjects-measures",
                 "type": "controls",
                 "parameter_refs": [
-                  "residual_subject_spec",
-                  "repeated_measures"
+                  "residual_subject_ui_spec",
+                  "repeated_ui_measures"
                 ]
               },
               {
@@ -1332,7 +1298,7 @@
         ],
         "group_info": [
           {
-            "id": "custom-effects-panel",
+            "id": "fixed-effects-panel",
             "label": {
               "resource_key": "fixed-effects.label"
             },
@@ -1341,21 +1307,34 @@
               "default": ""
             },
             "parameter_refs": [
-              "source_fields",
-              "fixed_effects_ui_list"
+              "fixed_effects_list",
+              "use_intercept",
+              "fixed_effects_ui_list",
+              "fixed_source_fields"
             ],
-            "data": []
+            "data": [
+              "fixed_source_fields",
+              "fixed_effects_ui_list"
+            ]
           },
           {
-            "id": "random-effects",
+            "id": "random-effects-panel",
             "label": {
               "resource_key": "random-effects.label"
             },
-            "type": "textPanel",
+            "type": "customPanel",
             "description": {
-              "default": "(TBD)"
+              "default": ""
             },
             "parameter_refs": [
+              "random_effects_list",
+              "random_effects_ui_list",
+              "random_source_fields",
+              "randomEffectsIndex"
+            ],
+            "data": [
+              "random_source_fields",
+              "random_effects_ui_list"
             ]
           },
           {
@@ -2008,10 +1987,10 @@
       "filter": {
         "parameter_refs": [
           "target_field",
-          "residual_subject_spec",
+          "residual_subject_ui_spec",
           "residual_group_spec",
           "regression_weight_field",
-          "repeated_measures",
+          "repeated_ui_measures",
           "trials_field",
           "offset_field"
         ],
@@ -2123,10 +2102,10 @@
   	"effectStructure.subjects": "Subjects",
   	"effectStructure.fields": "Fields",
   	"effectStructure.nestingLevel": "Nesting Level",
-  	"residual_subject_spec.label": "Subjects",
-  	"residual_subject_spec.desc": "Residual subject specification",
-  	"repeated_measures.label": "Repeated Measures",
-  	"repeated_measures.desc": "Repeated Measures",
+  	"residual_subject_ui_spec.label": "Subjects",
+  	"residual_subject_ui_spec.desc": "Residual subject specification",
+  	"repeated_ui_measures.label": "Repeated Measures",
+  	"repeated_ui_measures.desc": "Repeated Measures",
   	"residual_group_spec.label": "Define covariance groups by:",
   	"residual_covariance_type.label": "Repeated covariance type:",
   	"residual_covariance_type.AR1.label": "First-order autoregressive (AR1)",

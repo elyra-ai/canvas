@@ -122,8 +122,11 @@ class EMMeansPanel {
 			}
 		}
 		if (changed) {
-			const continuousId = this.parameters[1];
-			this.controller.updatePropertyValue({ name: continuousId }, continuousItems, true);
+			const that = this;
+			setTimeout(function() {
+				const continuousId = that.parameters[1];
+				that.controller.updatePropertyValue({ name: continuousId }, continuousItems, true);
+			}, 100);
 		}
 	}
 
@@ -232,9 +235,12 @@ class EMMeansPanel {
 
 		// Place back into properties
 		if (changed) {
-			const categoricalId = this.parameters[0];
-			this.controller.updatePropertyValue({ name: categoricalId }, newTerms, true);
-			this.controller.updatePropertyValue({ name: "emeansUI" }, categoricalsUI, true);
+			const that = this;
+			setTimeout(function() {
+				const categoricalId = that.parameters[0];
+				that.controller.updatePropertyValue({ name: categoricalId }, newTerms, true);
+				that.controller.updatePropertyValue({ name: "emeansUI" }, categoricalsUI, true);
+			}, 100);
 		}
 	}
 

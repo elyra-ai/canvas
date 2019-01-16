@@ -40,7 +40,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			case "number":
 				return paramInfo.value === value;
 			case "string":
-				return paramInfo.value.trim() === value.trim();
+				return paramInfo.value.trim() === value.toString().trim();
 			case "object":
 				if (paramInfo.value === null) {
 					return paramInfo.value === value;

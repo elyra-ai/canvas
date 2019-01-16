@@ -15,7 +15,13 @@ function properties(state = {}, action) {
 	case UPDATE_PROPERTY_VALUE: {
 		var newState = state;
 		if (typeof propertyId.row !== "undefined") {
+			if (typeof newState[propertyId.name] === "undefined") {
+				newState[propertyId.name] = [];
+			}
 			if (typeof propertyId.col !== "undefined") {
+				if (typeof newState[propertyId.name][propertyId.row] === "undefined") {
+					newState[propertyId.name][propertyId.row] = [];
+				}
 				newState[propertyId.name][propertyId.row][propertyId.col] = action.property.value;
 			} else {
 				newState[propertyId.name][propertyId.row] = action.property.value;

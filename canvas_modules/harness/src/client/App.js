@@ -39,6 +39,8 @@ import CustomDatasetsPanel from "./components/custom-panels/CustomDatasetsPanel"
 import EMMeansPanel from "./components/custom-panels/EMMeansPanel";
 import CustomToggleControl from "./components/custom-controls/CustomToggleControl";
 import CustomTableControl from "./components/custom-controls/CustomTableControl";
+import FixedEffectsPanel from "./components/custom-panels/FixedEffectsPanel";
+import RandomEffectsPanel from "./components/custom-panels/RandomEffectsPanel";
 import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
 
 import CustomOpMax from "./custom/condition-ops/customMax";
@@ -1631,7 +1633,9 @@ class App extends React.Component {
 				} }
 				propertiesInfo={this.state.propertiesInfo}
 				propertiesConfig={propertiesConfig}
-				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel]}
+				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel,
+					CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel, FixedEffectsPanel,
+					RandomEffectsPanel]}
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl]}
 				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
@@ -1644,7 +1648,9 @@ class App extends React.Component {
 				} }
 				propertiesInfo={this.state.propertiesInfo2}
 				propertiesConfig={propertiesConfig}
-				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel]}
+				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel,
+					CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel, FixedEffectsPanel,
+					RandomEffectsPanel]}
 				callbacks={callbacks2}
 				customControls={[CustomToggleControl, CustomTableControl]}
 				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
