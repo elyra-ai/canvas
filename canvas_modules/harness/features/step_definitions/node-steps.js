@@ -691,10 +691,26 @@ module.exports = function() {
 		browser.keys([useKey]);
 	});
 
-
 	this.Then(/^I click the supernode label with node id "([^"]*)" to select it$/, function(nodeId) {
 		var nodeSelector = "#node_label_0_" + nodeId;
 		browser.$(nodeSelector).click();
+	});
+
+	this.Then(/^I click the expanded supernode canvas background with node label "([^"]*)" to select it$/, function(nodeName) {
+		var nodeId = getNodeIdForLabel(nodeName);
+		var nodeSelector = "#node_grp_" + nodeId;
+		var canvasBackground = browser.$(nodeSelector).$(".svg-area");
+		canvasBackground.click();
+	});
+
+	this.Then(/^I Ctrl\\\/Cmnd\\\+click the expanded supernode canvas background with node label "([^"]*)" to add it to the selections$/, function(nodeName) {
+		const useKey = useCmdOrCtrl();
+		browser.keys([useKey]);
+		var nodeId = getNodeIdForLabel(nodeName);
+		var nodeSelector = "#node_grp_" + nodeId;
+		var canvasBackground = browser.$(nodeSelector).$(".svg-area");
+		canvasBackground.click();
+		browser.keys([useKey]);
 	});
 
 	// Then I right click the "Var. File" node to display the context menu

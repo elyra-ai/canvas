@@ -205,3 +205,24 @@ Feature: Supernode
 
 		#Includes two output ports from its subflow.
 		Then I verify the "Supernode" node has 3 "output" ports
+
+	Scenario: Sanity test selecting the canvas background of expanded supernodes
+		Then I resize the window size to 1330 width and 660 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have uploaded diagram "/test_resources/diagrams/supernodeNestedCanvas.json"
+		Given I have toggled the app side panel
+
+		Then I click the expanded supernode canvas background with node label "Supernode1" to select it
+		Then I Ctrl\/Cmnd\+click the expanded supernode canvas background with node label "Supernode3" to add it to the selections
+		Then I verify that 2 objects are selected
+
+		Then I click the canvas background at 100, 100 to close the context menu or clear selections
+		Then I verify that 0 objects are selected
+
+		Then I click the "Database" node to select it
+		Then I Ctrl\/Cmnd\+click the expanded supernode canvas background with node label "Supernode1" to add it to the selections
+		Then I verify that 2 objects are selected
+
+		Then I click the expanded supernode canvas background with node label "Supernode3" to select it
+		Then I verify that 1 objects are selected

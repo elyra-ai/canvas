@@ -960,7 +960,12 @@ class CanvasRenderer {
 			.on("click.zoom", () => {
 				this.logger.log("Zoom - click");
 				this.selecting = true;
-				this.canvasController.clearSelections();
+
+				// Only clear selections if clicked on the canvas of the current active pipeline.
+				// Clicking the canvas of an expanded supernode will select that node.
+				if (this.isDisplayingCurrentPipeline()) {
+					this.canvasController.clearSelections();
+				}
 				this.canvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
 				this.selecting = false;
 			})
