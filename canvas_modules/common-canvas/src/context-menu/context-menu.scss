@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 /* Context Menu styles - used by react-contextmenu module */
+@import "carbon-components/scss/globals/scss/typography";
 
 .context-menu-popover {
 	min-width: 160px;
@@ -80,6 +81,7 @@
 
 .react-contextmenu-item.react-contextmenu-submenu > div {
 	padding-right: 27px;
+	font-family: $font-family-helvetica;
 }
 
 .react-contextmenu-item.react-contextmenu-submenu > div::after {
