@@ -27,6 +27,10 @@ class CommonContextMenu extends React.Component {
 		this.itemSelected = this.itemSelected.bind(this);
 	}
 
+	onContextMenu(e) {
+		e.preventDefault();
+	}
+
 	itemSelected(data, selectedEvent) {
 		this.props.contextHandler(data);
 		// This stops the canvasClicked function from being fired which would
@@ -163,7 +167,7 @@ class CommonContextMenu extends React.Component {
 		const menuItems = this.buildMenu(this.props.menuDefinition, this.props.mousePos, menuSize, menuPos, this.props.canvasRect);
 
 		return (
-			<div id="context-menu-popover" className="context-menu-popover" style={posStyle}>
+			<div id="context-menu-popover" className="context-menu-popover" style={posStyle} onContextMenu={this.onContextMenu}>
 				{menuItems}
 			</div>
 		);
