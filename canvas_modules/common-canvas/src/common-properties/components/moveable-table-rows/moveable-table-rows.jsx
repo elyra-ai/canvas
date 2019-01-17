@@ -87,7 +87,15 @@ export default class MoveableTableRows extends React.Component {
 					this.props.controller.moveErrorMessageRows(this.props.propertyId.name, selectedRow, selectedRow - 1);
 				}
 			}
-			this.props.setScrollToRow(selected[0], true);
+			if (selected.length > 1) {
+				if (selected[0] === 0) {
+					this.props.setScrollToRow(selected[0], true);
+				} else {
+					this.props.setScrollToRow(selected[0], { behavior: "smooth", block: "start", inline: "nearest" });
+				}
+			} else {
+				this.props.setScrollToRow(selected[0], { behavior: "smooth", block: "center", inline: "center" });
+			}
 			this.props.setCurrentControlValueSelected(controlValue, selected);
 		}
 	}
@@ -107,7 +115,15 @@ export default class MoveableTableRows extends React.Component {
 					this.props.controller.moveErrorMessageRows(this.props.propertyId.name, selectedRow, selectedRow + 1);
 				}
 			}
-			this.props.setScrollToRow(selected[selected.length - 1], false);
+			if (selected.length > 1) {
+				if (selected[selected.length - 1] === controlValue.length - 1) {
+					this.props.setScrollToRow(selected[selected.length - 1], false);
+				} else {
+					this.props.setScrollToRow(selected[selected.length - 1], { behavior: "smooth", block: "end", inline: "end" });
+				}
+			} else {
+				this.props.setScrollToRow(selected[0], { behavior: "smooth", block: "center", inline: "center" });
+			}
 			this.props.setCurrentControlValueSelected(controlValue, selected);
 		}
 	}

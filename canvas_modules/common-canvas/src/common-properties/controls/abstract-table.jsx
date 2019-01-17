@@ -589,10 +589,6 @@ export default class AbstractTable extends React.Component {
 		const controlValue = this.props.value;
 		this.makeCells(rows, controlValue, tableState);
 
-		if (this.props.rightFlyout) {
-			this.scrollToRow = null;
-		}
-
 		const selectedEditRow = this.props.control.rowSelection === "multiple-edit"
 			? this.makeSelectedEditRow(this.props.selectedRows)
 			: null;

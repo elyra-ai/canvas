@@ -223,7 +223,7 @@ export default class FlexibleTable extends React.Component {
 			var tableBody = this.tableNode.getElementsByClassName("reactable-data");
 			var tableRows = tableBody[tableBody.length - 1].getElementsByTagName("tr");
 			if (tableRows.length !== 0 && this.props.scrollToRow <= tableRows.length - 1 &&
-			typeof tableRows[this.props.scrollToRow] === "function") {
+			typeof tableRows[this.props.scrollToRow].scrollIntoView === "function") {
 				tableRows[this.props.scrollToRow].scrollIntoView(alignTop);
 			}
 		}
