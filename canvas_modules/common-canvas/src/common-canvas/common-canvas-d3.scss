@@ -136,6 +136,12 @@ $link-hightlight-color: $brand-01;
 	fill: $canvas-background-color;
 }
 
+/* Temporary overlay to display altered pointer cursor styles on dynamic drag operations */
+
+.d3-temp-cursor-overlay {
+	fill: transparent;
+}
+
 /* Back to Previous Flow control */
 
 .d3-back-to-previous-flow-box {
@@ -152,6 +158,16 @@ $link-hightlight-color: $brand-01;
 	font-size: 14px;
 	font-weight: 400;
 	fill: $back-to-previous-flow-box-color;
+}
+
+.d3-back-to-previous-flow-box, .d3-back-to-previous-flow-text {
+	cursor: pointer;
+}
+
+/* Node and comment styles */
+
+.obj-group {
+	cursor: pointer;
 }
 
 /* Node styles - Regular (Vertical) Theme */
@@ -274,11 +290,13 @@ $link-hightlight-color: $brand-01;
 .d3-node-ellipsis-background {
 	fill: transparent;
 	stroke-width: 0;
+	cursor: context-menu;
 }
 
 .d3-node-ellipsis {
 	fill: $node-ellipsis-color;
 	stroke-width: 0;
+	cursor: context-menu;
 }
 
 .d3-node-ellipsis:hover,
@@ -590,14 +608,4 @@ g .d3-selectable-link:hover,
 g .d3-selectable-link:hover ~ .d3-selectable-link,      /* Colors arrow head when hovering over line. */
 g .d3-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
 	stroke: $link-hightlight-color;
-}
-
-/*Cursor pointers*/
-
-.d3-node-ellipsis-background:hover, .d3-node-ellipsis:hover {
-	cursor: context-menu;
-}
-
-.d3-back-to-previous-flow-box:hover, .d3-back-to-previous-flow-text:hover {
-	cursor: pointer;
 }

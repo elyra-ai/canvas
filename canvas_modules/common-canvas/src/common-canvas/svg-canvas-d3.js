@@ -475,16 +475,6 @@ class CanvasRenderer {
 		this.canvasSVG.remove();
 	}
 
-	setCanvasCursorStyle(cursorType) {
-		if (!this.regionSelect && this.isDisplayingCurrentPipeline()) {
-			let displayCursorType = cursorType;
-			if (this.nodeSizing) {
-				displayCursorType = this.getCursorBasedOnDirection(this.nodeSizingDirection);
-			}
-			this.canvasSVG.style("cursor", displayCursorType);
-		}
-	}
-
 	isDisplayingCurrentPipeline() {
 		return this.canvasController.getCurrentBreadcrumb().pipelineId === this.pipelineId;
 	}
@@ -887,7 +877,8 @@ class CanvasRenderer {
 			.attr("height", dims.height)
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", "d3-svg-background")
-			.attr("pointer-events", "all");
+			.attr("pointer-events", "all")
+			.style("cursor", this.isDisplayingFullPage() ? "default" : "pointer");
 
 		// Only attach the zoom behaviour and 'defs' to the top most SVG area
 		// when we are displaying either the primary pipeline full page or
@@ -1220,7 +1211,6 @@ class CanvasRenderer {
 		}
 
 		if (this.regionSelect) {
-			this.canvasSVG.style("cursor", "crosshair");
 			this.regionStartTransformX = d3Event.transform.x;
 			this.regionStartTransformY = d3Event.transform.y;
 			const transPos = this.getTransformedMousePos();
@@ -1231,7 +1221,6 @@ class CanvasRenderer {
 				height: 0
 			};
 		}
-		this.setCanvasCursorStyle("move");
 
 		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
 	}
@@ -1239,12 +1228,14 @@ class CanvasRenderer {
 	zoomAction() {
 		this.logger.log("zoomAction - " + JSON.stringify(d3Event.transform));
 
-		// If the scale amount is the same we are not zooming, so we must be  panning.
+		// If the scale amount is the same we are not zooming, so we must be panning.
 		if (d3Event.transform.k === this.zoomStartPoint.k) {
 			if (this.regionSelect) {
+				this.addTempCursorOverlay("crosshair");
 				this.drawRegionSelector();
 
 			} else {
+				this.addTempCursorOverlay("move");
 				this.panCanvasBackground(d3Event.transform.x, d3Event.transform.y, d3Event.transform.k);
 			}
 		} else {
@@ -1278,8 +1269,7 @@ class CanvasRenderer {
 			}
 			this.regionSelect = false;
 		}
-
-		this.setCanvasCursorStyle("default");
+		this.removeTempCursorOverlay();
 	}
 
 	panCanvasBackground(panX, panY, panK) {
@@ -1456,7 +1446,7 @@ class CanvasRenderer {
 		this.logger.logStartTimer("dragStart");
 		this.dragOffsetX = 0;
 		this.dragOffsetY = 0;
-		// Note: Comment resizing is started by the comment highlight rectangle.
+		// Note: Comment and supernode resizing is started by the comment/supernode highlight rectangle.
 		this.logger.logEndTimer("dragStart", true);
 	}
 
@@ -1492,6 +1482,9 @@ class CanvasRenderer {
 
 	dragEnd() {
 		this.logger.logStartTimer("dragEnd");
+
+		this.removeTempCursorOverlay();
+
 		if (this.commentSizing) {
 			this.dragging = false;
 			this.endCommentSizing();
@@ -1583,15 +1576,7 @@ class CanvasRenderer {
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
 					that.setNodeStyles(d, "hover");
-					that.setCanvasCursorStyle("pointer");
-					// If doing region select, ensure the dynamic icons are never
-					// displayed until the selection has finished. This prevents the icons
-					// from flashing as the region is being pulled out across a node.
-					if (that.regionSelect) {
-						that.removeDynamicNodeIcons(d);
-					} else {
-						that.addDynamicNodeIcons(d, this);
-					}
+					that.addDynamicNodeIcons(d, this);
 					if (that.canOpenTip(TIP_TYPE_NODE)) {
 						that.canvasController.closeTip(); // Ensure existing tip is removed when moving pointer within an in-place supernode
 						that.canvasController.openTip({
@@ -1605,7 +1590,6 @@ class CanvasRenderer {
 				})
 				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
 					that.setNodeStyles(d, "default");
-					that.setCanvasCursorStyle("default");
 					that.canvasGrp.selectAll(that.getId("#node_body", d.id)).attr("hover", "no");
 					that.removeDynamicNodeIcons(d);
 					that.canvasController.closeTip();
@@ -1613,9 +1597,6 @@ class CanvasRenderer {
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d) => {
 					this.logger.log("Node Group - mouse down");
-					if (this.nodeSizing) {
-						this.setCanvasCursorStyle(this.getCursorBasedOnDirection(this.nodeSizingDirection));
-					}
 					this.selecting = true;
 					d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
 					if (!this.objectModel.isSelected(d.id, this.activePipeline.id)) {
@@ -1686,12 +1667,26 @@ class CanvasRenderer {
 						this.nodeSizingInitialSize = { width: d.width, height: d.height };
 						this.nodeSizingId = d.id;
 						// Note - node resizing and finalization of size is handled by drag functions.
+						this.addTempCursorOverlay(this.nodeSizingCursor);
 					}
 				})
-				.on("mouseenter", (d) => {
-					if (this.isExpandedSupernode(d)) {
-						this.nodeSizingDirection = this.getSizingDirection(d);
-						this.displaySizingCursor("node_outline", d.id, this.nodeSizingDirection);
+				// Use mousemove as well as mouseenter so the cursor will change
+				// if the pointer moves from one area of the node outline to another
+				// (eg. from east area to north-east area) without exiting the node outline.
+				// A mouseenter is triggered when the sizing operation stops and the
+				// pointer leaves the temporary overlay (which is removed) and enters
+				// the node outline.
+				.on("mousemove mouseenter", (d) => {
+					if (this.isExpandedSupernode(d) &&
+							!this.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
+						let cursorType = "pointer";
+						if (!this.isPointerCloseToBodyEdge(d)) {
+							this.nodeSizingDirection = this.getSizingDirection(d);
+							this.nodeSizingCursor = this.getCursorBasedOnDirection(this.nodeSizingDirection);
+							cursorType = this.nodeSizingCursor;
+						}
+						const id = this.getId("#node_outline", d.id);
+						this.canvasDiv.selectAll(id).style("cursor", cursorType);
 					}
 				});
 
@@ -1795,6 +1790,23 @@ class CanvasRenderer {
 						.attr("class", this.layout.cssNodeSelectionHighlight)
 						.datum(node); // Set the __data__ to the updated data
 
+					// Move the dynamic icons (if any exist)
+					nodeGrp.select(that.getId("#node_ellipsis_background", d.id))
+						.attr("x", (nd) => that.getEllipsisPosX(nd))
+						.attr("y", (nd) => that.getEllipsisPosY(nd));
+
+					nodeGrp.select(that.getId("#node_ellipsis", d.id))
+						.attr("x", (nd) => that.getEllipsisPosX(nd) + this.layout.ellipsisHoverAreaPadding)
+						.attr("y", (nd) => that.getEllipsisPosY(nd) + this.layout.ellipsisHoverAreaPadding);
+
+					nodeGrp.select(that.getId("#node_exp_back", d.id))
+						.attr("x", (nd) => this.getExpansionIconPosX(nd))
+						.attr("y", this.layout.supernodeExpansionIconPosY);
+
+					nodeGrp.select(that.getId("#node_exp_icon", d.id))
+						.attr("x", (nd) => this.getExpansionIconPosX(nd) + this.layout.supernodeExpansionIconHoverAreaPadding)
+						.attr("y", this.layout.supernodeExpansionIconPosY + this.layout.supernodeExpansionIconHoverAreaPadding);
+
 					// Node styles
 					this.setNodeStyles(d, "default");
 
@@ -1837,7 +1849,6 @@ class CanvasRenderer {
 					if (this.isSupernode(d)) {
 						const ren = this.getRendererForSupernode(d);
 						if (ren) {
-							this.removeDynamicNodeIcons(d);
 							if (this.isExpanded(d)) {
 								ren.displayCanvas();
 							} else {
@@ -3126,7 +3137,6 @@ class CanvasRenderer {
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
 					that.setCommentStyles(d, "hover");
-					that.setCanvasCursorStyle("pointer");
 					if (that.layout.connectionType === "ports") {
 						d3.select(this)
 							.append("circle")
@@ -3149,7 +3159,6 @@ class CanvasRenderer {
 				})
 				.on("mouseleave", (d) => {
 					that.setCommentStyles(d, "default");
-					that.setCanvasCursorStyle("default");
 					if (that.layout.connectionType === "ports") {
 						that.canvasGrp.selectAll(that.getId("#comment_port")).remove();
 					}
@@ -3215,10 +3224,23 @@ class CanvasRenderer {
 					this.commentSizing = true;
 					this.commentSizingId = d.id;
 					// Note - comment resizing and finalization of size is handled by drag functions.
+					this.addTempCursorOverlay(this.commentSizingCursor);
 				})
-				.on("mouseenter", (d) => {
-					this.commentSizingDirection = this.getSizingDirection(d);
-					this.displaySizingCursor("comment_outline", d.id, this.commentSizingDirection);
+				// Use mousemove here rather than mouseenter so the cursor will change
+				// if the pointer moves from one area of the node outline to another
+				// (eg. from east area to north-east area) without exiting the node outline.
+				.on("mousemove", (d) => {
+					if (!this.isRegionSelectOrSizingInProgress()) // Don't switch sizing direction if we are already sizing
+					{
+						let cursorType = "pointer";
+						if (!this.isPointerCloseToBodyEdge(d)) {
+							this.commentSizingDirection = this.getSizingDirection(d);
+							this.commentSizingCursor = this.getCursorBasedOnDirection(this.commentSizingDirection);
+							cursorType = this.commentSizingCursor;
+						}
+						const id = this.getId("#comment_outline", d.id);
+						this.canvasDiv.selectAll(id).style("cursor", cursorType);
+					}
 				});
 
 			// Background rectangle for comment
@@ -3529,14 +3551,79 @@ class CanvasRenderer {
 		this.canvasDiv.select("textarea").remove();
 	}
 
-	// Displays a sizing cursor at the edge of a comment box based on the
-	// direction passed in.
-	displaySizingCursor(prefix, id, direction) {
-		var cursor = this.getCursorBasedOnDirection(direction);
-		this.canvasGrp.selectAll(this.getSelectorForId(prefix, id)).style("cursor", cursor);
+	// Adds a rectangle over the top of the canvas which is used to display a
+	// temporary pointer cursor style (like the crosshair while doing a region
+	// select operation). This allows the same cursor to be displayed even when
+	// the pointer is moved over the top of objects that have their own cursor
+	// styles set in the CSS because the style for the overlay rectangle overrides
+	// any cursor styles of the underlying objects.
+	addTempCursorOverlay(cursorStyle) {
+		if (this.isDisplayingFullPage()) {
+			if (this.canvasDiv.selectAll(".d3-temp-cursor-overlay").size() > 0) {
+				this.removeTempCursorOverlay();
+			}
+
+			this.canvasSVG
+				.append("rect")
+				.attr("x", 0)
+				.attr("y", 0)
+				.attr("width", "100%")
+				.attr("height", "100%")
+				.attr("data-pipeline-id", this.activePipeline.id)
+				.attr("class", "d3-temp-cursor-overlay")
+				.attr("pointer-events", "all")
+				.style("cursor", cursorStyle);
+		}
 	}
 
-	// Returns the comment or node sizing direction (i.e. one of n, s, e, w, nw, ne,
+	// Removes the temporary cursor overlay.
+	removeTempCursorOverlay() {
+		if (this.isDisplayingFullPage()) {
+			this.canvasDiv.selectAll(".d3-temp-cursor-overlay").remove();
+		}
+	}
+
+	// Returns true if this renderer or any of its ancestors are currently in the
+	// process of selecting a region or sizing a node or comment.
+	isRegionSelectOrSizingInProgress() {
+		if (this.regionSelect || this.nodeSizing || this.commentSizing) {
+			return true;
+		}
+		const parentRenderer = this.getParentRenderer();
+		if (parentRenderer) {
+			if (parentRenderer.isRegionSelectOrSizingInProgress()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// This method allows us to avoid a strange behavior which only appears in the
+	// Chrome browser. That is, when the mouse pointer is inside the
+	// node/comment selection highlight area but is close to either the
+	// right or bottom side of the node/comment body, any mousedown events will go
+	// to the body instead of the hightlight area. We use this method to detect
+	// this situation and use the result to decide whether to display the sizing
+	// cursor or not.
+	isPointerCloseToBodyEdge(d) {
+		const pos = this.getTransformedMousePos();
+		const rightEdge = d.x_pos + d.width;
+		const bottomEdge = d.y_pos + d.height;
+
+		// Is the pointer within 1 pixel of the right edge of the node or comment
+		const rightEdgeState =
+			pos.x >= rightEdge && pos.x <= rightEdge + 1 &&
+			pos.y >= 0 && pos.y <= bottomEdge;
+
+		// Is the pointer within 1 pixel of the bottom edge of the node or comment
+		const bottomEdgeState =
+			pos.y >= bottomEdge && pos.y <= bottomEdge + 1 &&
+			pos.x >= 0 && pos.x <= rightEdge;
+
+		return rightEdgeState || bottomEdgeState;
+	}
+
+	// Returns the comment or supernode sizing direction (i.e. one of n, s, e, w, nw, ne,
 	// sw or se) based on the current mouse position and the position and
 	// dimensions of the comment or node outline.
 	getSizingDirection(d) {
@@ -3593,7 +3680,6 @@ class CanvasRenderer {
 	// on the node size change).
 	resizeNode() {
 		const nodeObj = this.getNode(this.nodeSizingId);
-		this.removeDynamicNodeIcons(nodeObj);
 		const delta = this.resizeObject(nodeObj, this.nodeSizingDirection,
 			this.layout.supernodeMinWidth, this.layout.supernodeMinHeight);
 
@@ -3737,7 +3823,6 @@ class CanvasRenderer {
 		this.nodeSizingMovedNodes = [];
 		this.nodeSizing = false;
 		this.nodeSizingInitialSize = {};
-		this.setCanvasCursorStyle("pointer");
 	}
 
 	// Finalises the sizing of a comment by calling editActionHandler
