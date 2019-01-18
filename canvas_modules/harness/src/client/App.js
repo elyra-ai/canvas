@@ -42,6 +42,7 @@ import CustomTableControl from "./components/custom-controls/CustomTableControl"
 import FixedEffectsPanel from "./components/custom-panels/FixedEffectsPanel";
 import RandomEffectsPanel from "./components/custom-panels/RandomEffectsPanel";
 import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
+import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel";
 
 import CustomOpMax from "./custom/condition-ops/customMax";
 import CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
@@ -1635,7 +1636,7 @@ class App extends React.Component {
 				propertiesConfig={propertiesConfig}
 				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel,
 					CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel, FixedEffectsPanel,
-					RandomEffectsPanel]}
+					RandomEffectsPanel, CustomSubjectsPanel]}
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl]}
 				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
@@ -1650,7 +1651,7 @@ class App extends React.Component {
 				propertiesConfig={propertiesConfig}
 				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel,
 					CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel, FixedEffectsPanel,
-					RandomEffectsPanel]}
+					RandomEffectsPanel, CustomSubjectsPanel]}
 				callbacks={callbacks2}
 				customControls={[CustomToggleControl, CustomTableControl]}
 				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}

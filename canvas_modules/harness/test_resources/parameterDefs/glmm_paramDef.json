@@ -757,6 +757,14 @@
     ],
     "parameter_info": [
       {
+        "parameter_ref": "residual_subject_spec",
+        "visible": false
+      },
+      {
+        "parameter_ref": "repeated_measures",
+        "visible": false
+      },
+      {
         "parameter_ref": "residual_subject_ui_spec",
         "label": {
           "resource_key": "residual_subject_ui_spec.label"
@@ -1264,6 +1272,18 @@
                 "parameter_refs": [
                   "residual_subject_ui_spec",
                   "repeated_ui_measures"
+                ],
+                "group_info": [
+                  {
+                    "id": "custom-subjects-panel",
+                    "type": "customPanel",
+                    "parameter_refs": [
+                      "residual_subject_spec",
+                      "repeated_measures"
+                    ],
+                    "data": {
+                    }
+                  }
                 ]
               },
               {
@@ -1974,7 +1994,84 @@
     },
     {
       "filter": {
+        "parameter_ref": "residual_subject_ui_spec",
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "discrete"
+              }
+            },
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "flag"
+              }
+            },
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "set"
+              }
+            },
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "ordered-set"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "filter": {
         "parameter_ref": "offset_field",
+        "evaluate": {
+          "condition": {
+            "op": "dmMeasurement",
+            "value": "range"
+          }
+        }
+      }
+    },
+    {
+      "filter": {
+        "parameter_ref": "residual_group_spec",
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "discrete"
+              }
+            },
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "flag"
+              }
+            },
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "set"
+              }
+            },
+            {
+              "condition": {
+                "op": "dmMeasurement",
+                "value": "ordered-set"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "filter": {
+        "parameter_ref": "SpatialFields",
         "evaluate": {
           "condition": {
             "op": "dmMeasurement",
