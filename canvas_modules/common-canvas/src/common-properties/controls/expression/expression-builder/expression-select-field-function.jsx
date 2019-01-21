@@ -82,6 +82,9 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			if (this.language === "CLEM") {
 				quote = "'";
 			}
+			if (this.state.fieldCategory === "globals") {
+				quote = "";
+			}
 			const field = this.state.currentFieldDataset[row].id;
 			this.props.onChange(quote + field + quote);
 		}

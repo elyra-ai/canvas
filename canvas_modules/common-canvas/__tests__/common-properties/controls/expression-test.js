@@ -405,11 +405,11 @@ describe("ExpressionBuilder generates and accesses field dropdown correctly", ()
 		var fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
 		fieldRows.at(0).simulate("dblclick");
 		// expect selecting a field enters the correct value
-		expect(controller.getPropertyValue(propertyId)).to.equal(" '@GLOBAL_MEAN('AGE')'");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE')");
 		var valueRows = wrapper.find("div.properties-value-table-container .reactable-data tr");
 		fieldRows.at(1).simulate("click");
 		valueRows.at(0).simulate("dblclick");
-		expect(controller.getPropertyValue(propertyId)).to.equal(" '@GLOBAL_MEAN('AGE')' 8863");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863");
 		// test mrs
 		dropDown = wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__field");
 		dropDown.simulate("click");
@@ -418,10 +418,10 @@ describe("ExpressionBuilder generates and accesses field dropdown correctly", ()
 		expect(wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__label").text()).to.equal("Multi Response Set");
 		fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
 		fieldRows.at(0).simulate("dblclick");
-		expect(controller.getPropertyValue(propertyId)).to.equal(" '@GLOBAL_MEAN('AGE')' 8863 'numberSet'");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 'numberSet'");
 		valueRows = wrapper.find("div.properties-value-table-container .reactable-data tr");
 		fieldRows.at(1).simulate("click");
 		valueRows.at(0).simulate("dblclick");
-		expect(controller.getPropertyValue(propertyId)).to.equal(" '@GLOBAL_MEAN('AGE')' 8863 'numberSet' 1");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 'numberSet' 1");
 	});
 });
