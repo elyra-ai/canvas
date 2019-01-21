@@ -51,7 +51,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 				return field2.metadata.modeling_role === target;
 			}
 		}
-	} else {
+	} else if (typeof paramInfo.value !== "undefined") {
 		logger.warn("dmRoleEquals cannot handle the given type: " + typeof paramInfo.value);
 	}
 	return false;

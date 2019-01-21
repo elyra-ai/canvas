@@ -655,29 +655,35 @@
         "add_remove_rows": false,
         "parameters": [
           {
-            "parameter_ref": "Factors",
+            "parameter_ref": "terms",
             "label": {
               "resource_key": "emMeansStructure.Factors"
-            }
+            },
+            "width": 30
           },
           {
             "parameter_ref": "EstimateMeans",
             "label": {
               "resource_key": "emMeansStructure.EstimateMeans"
-            }
+            },
+            "width": 22
           },
           {
             "parameter_ref": "ContrastType",
             "label": {
               "resource_key": "emMeansStructure.ContrastType"
-            }
+            },
+            "width": 19
           },
           {
             "parameter_ref": "CompareFactor",
             "label": {
               "resource_key": "emMeansStructure.CompareFactor"
             },
-            "edit_style": "subpanel"
+            "control": "custom",
+            "custom_control_id": "custom-emmeans-droplist",
+            "width": 19,
+            "edit_style": "inline"
           }
         ]
       },
@@ -1814,15 +1820,83 @@
           "NormalIdentity",
           "GammaLog",
           "PoissonLog",
-          "NegbinLog",
+          "NegbinLog"
+        ],
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "use_trials",
+                "op": "equals",
+                "value": false
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "target_field",
+                "op": "dmMeasurementEquals",
+                "value": "range"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "dist_link_combination"
+        ],
+        "values": [
           "NominalLogit"
         ],
         "evaluate": {
-          "condition": {
-            "parameter_ref": "use_trials",
-            "op": "equals",
-            "value": false
-          }
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "use_trials",
+                "op": "equals",
+                "value": false
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "target_field",
+                "op": "dmMeasurementNotEquals",
+                "value": "range"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "dist_link_combination"
+        ],
+        "values": [
+          "BinomialLogit",
+          "BinomialProbit",
+          "BinomialLogC"
+        ],
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "use_trials",
+                "op": "equals",
+                "value": true
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "target_field",
+                "op": "dmMeasurementNotEquals",
+                "value": "range"
+              }
+            }
+          ]
         }
       }
     },
@@ -2028,6 +2102,17 @@
     {
       "filter": {
         "parameter_ref": "offset_field",
+        "evaluate": {
+          "condition": {
+            "op": "dmMeasurement",
+            "value": "range"
+          }
+        }
+      }
+    },
+    {
+      "filter": {
+        "parameter_ref": "trials_field",
         "evaluate": {
           "condition": {
             "op": "dmMeasurement",

@@ -161,7 +161,7 @@ class CustomEffectsCtrl extends React.Component {
 			controlValue = [];
 		}
 		// Need to use another shared field property id here so we can filter source list items
-		const otherPropId = { name: "residual_group_spec" };
+		const otherPropId = { name: "repeated_ui_measures" };
 		const fields = this.controller.getFilteredDatasetMetadata(otherPropId);
 		const fieldArray = fields.map((field) => field.name);
 		if (!isEqual([...controlValue].sort(), [...fieldArray].sort())) {

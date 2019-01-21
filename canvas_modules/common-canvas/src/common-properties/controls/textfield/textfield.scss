@@ -31,6 +31,7 @@
 .properties-table-cell-control { // overrides when in a table cell
 	.properties-input-control {
 		padding-bottom: 5px;
+		width: 100%;
 		input { //override styling from carbon
 			background: unset;
 			background-color: unset;

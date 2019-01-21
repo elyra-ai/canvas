@@ -201,7 +201,7 @@ class EMMeansPanel {
 				if (!this.effectStructureInTermsList(emmeans, terms)) {
 					categoricals.splice(idx, 1);
 					if (categoricalsUI.length > idx) {
-						categoricalsUI = categoricalsUI.splice(idx, 1);
+						categoricalsUI.splice(idx, 1);
 					}
 					changed = true;
 				}
