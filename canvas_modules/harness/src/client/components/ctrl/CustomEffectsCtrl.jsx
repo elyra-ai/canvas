@@ -229,9 +229,9 @@ class CustomEffectsCtrl extends React.Component {
 			label={"T"}
 		/>);
 		return (<div>
-			<span style={{ float: "left" }}>Type:</span>
+			<span className="glmm-move-label">Type:</span>
 			<br />
-			<div style={{ paddingTop: "6px" }}>
+			<div className="glmm-move-dropdown">
 				{dropdownComponent}
 			</div>
 			<br />
@@ -251,7 +251,7 @@ class CustomEffectsCtrl extends React.Component {
 		const buttons = [];
 		const suffix = this.props.arrayIndex > -1 ? "_randomEffectsRadio" : "_fixedEffectsRadio";
 		buttons.push(
-			<div key={1} className="properties-radioset-panel" style={{ paddingTop: "4px" }}>
+			<div key={1} className="properties-radioset-panel glmm-radios">
 				<RadioButton
 					key={1}
 					id={String(1 + suffix)}
@@ -264,7 +264,7 @@ class CustomEffectsCtrl extends React.Component {
 			</div>
 		);
 		buttons.push(
-			<div key={2} className="properties-radioset-panel" style={{ paddingTop: "4px" }}>
+			<div key={2} className="properties-radioset-panel glmm-radios">
 				<RadioButton
 					key={2}
 					id={String(2 + suffix)}
@@ -517,23 +517,16 @@ class CustomEffectsCtrl extends React.Component {
 		if (controlValue === "") {
 			controlValue = "\xa0";
 		}
-		const spanStyle = {
-			lineHeight: 1.5
-		};
-		const divStyle = {
-			border: "2px solid #3d70b2",
-			marginTop: "4px"
-		};
-		const outerDivStyle = {
-			marginTop: "8px"
-		};
 		const label = <span disabled={this.state.buildNested === true}>{"Build term:"}</span>;
-		const readOnly = <span style={spanStyle} disabled={this.state.buildNested === true}>{controlValue}</span>;
-		return (<div style={outerDivStyle}>{label}<br /><div style={divStyle}>{readOnly}</div></div>);
+		const readOnly = (<span className="glmm-term-builder"
+			disabled={this.state.buildNested === true}
+		>{controlValue}</span>);
+		return (<div className="glmm-term-outer-div">{label}<br />
+			<div className="glmm-term-div">{readOnly}</div></div>);
 	}
 
 	buildPanel() {
-		const errorPanel = (<div style={{ width: "400px", color: "red" }}><span>{this.state.errorMsg}</span></div>);
+		const errorPanel = (<div className="glmm-error-panel"><span>{this.state.errorMsg}</span></div>);
 		const radioset = this.buildRadios();
 		const sourceList = this.sourceListCtrl;
 		const effectsListCtrl = this.makeEffectsList();
@@ -543,13 +536,13 @@ class CustomEffectsCtrl extends React.Component {
 			<table>
 				<tbody>
 					<tr>
-						<td style={{ width: "240px", padding: "4px" }}>{sourceList}</td>
-						<td style={{ width: "140px", padding: "4px", textAlign: "center", verticalAlign: "middle" }}>
+						<td className="glmm-sourcelist-cell">{sourceList}</td>
+						<td className="glmm-move-panel-cell">
 							<div>{this.makeMovePanel()}</div></td>
-						<td style={{ width: "280px", padding: "4px" }}><div>{effectsListCtrl}</div></td>
+						<td className="glmm-effects-list-cell"><div>{effectsListCtrl}</div></td>
 					</tr>
 					<tr>
-						<td colSpan="3" style={{ paddingBottom: "8px" }}><div>{errorPanel}</div></td>
+						<td colSpan="3" className="glmm-error-panel-cell"><div>{errorPanel}</div></td>
 					</tr>
 					<tr>
 						<td colSpan="3"><div>{this.makeButtonPanel()}</div></td>

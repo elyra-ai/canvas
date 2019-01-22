@@ -301,8 +301,8 @@ class RandomEffectsPanel {
 		const propertyValue = this.controller.getPropertyValue({ name: "random_effects_list" });
 		const length = propertyValue ? propertyValue.length : 1;
 		const text = "Random Effect " + (this.arrayIndex + 1) + " of " + length;
-		return (<div style={{ marginTop: "10px", marginBottom: "6px" }}>
-			<span style={{ fontWeight: "bold" }}>{text}</span></div>);
+		return (<div className="glmm-panel-index-div">
+			<span className="glmm-panel-index-span">{text}</span></div>);
 	}
 
 	makeButtonPanel() {
@@ -335,9 +335,7 @@ class RandomEffectsPanel {
 	}
 
 	makeHSeparator() {
-		return (<hr key={"h-separator." + String(this.arrayIndex)}
-			style={{ marginTop: "8px", marginBottom: "8px" }}
-		/>);
+		return (<hr key={"h-separator." + String(this.arrayIndex)} className="glmm-hr-style" />);
 	}
 
 	makeUseInterceptControl() {
@@ -452,8 +450,8 @@ class RandomEffectsPanel {
 				<table>
 					<tbody>
 						<tr>
-							<td style={{ width: "320px", paddingRight: "15px" }}>{subjectSpec}</td>
-							<td style={{ width: "320px", paddingRight: "0px" }}>{covarianceType}</td>
+							<td className="glmm-random-effects-subjects-cell">{subjectSpec}</td>
+							<td className="glmm-random-effects-covariance-cell">{covarianceType}</td>
 						</tr>
 						<tr>
 							<td colSpan="2">{covariancePicker}</td>
