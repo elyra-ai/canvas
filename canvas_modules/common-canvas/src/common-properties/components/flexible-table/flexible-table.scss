@@ -72,6 +72,13 @@ $flexible-table-header-row-height: 32px;
 		border-bottom: 1px solid $ui-04;
 		display: inline-flex;
 		height: 2.5em;
+		span {
+			width: inherit;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			padding: 2px 0;
+		}
 		th {
 			height: 100%;
 			display: inline-flex;
@@ -85,7 +92,6 @@ $flexible-table-header-row-height: 32px;
 				width: 11px;
 				height: 11px;
 			}
-
 			// align labels and sort icon
 			.properties-ft-column {
 				display: inline-flex;
@@ -123,13 +129,7 @@ $flexible-table-header-row-height: 32px;
 			}
 		}
 	}
-	span {
-		width: inherit;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		padding: 2px 0;
-	}
+
 	tbody {
 		width: 100%;
 		overflow-y: auto;
