@@ -281,7 +281,8 @@
         "SPLIN",
         "SPLINLOG",
         "SPSPH"
-      ]
+      ],
+      "default": "DIAG"
     },
     {
       "id": "SpatialFields",
@@ -311,7 +312,8 @@
     },
     {
       "id": "target_reference_value",
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     {
       "id": "use_trials_field_or_value",
@@ -324,12 +326,14 @@
     {
       "id": "trials_field",
       "type": "string",
-      "role": "column"
+      "role": "column",
+      "required": true
     },
     {
       "id": "trials_value",
       "type": "integer",
-      "default": 1
+      "default": 1,
+      "required": true
     },
     {
       "id": "dist_link_combination",
@@ -377,7 +381,8 @@
     {
       "id": "link_function_param",
       "type": "double",
-      "default": 1.0
+      "default": 1.0,
+      "required": true
     },
 
     {
@@ -1694,6 +1699,23 @@
   },
   "conditions": [
     {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "modelName",
+          "message": {
+            "resource_key": "no_empty_model_name"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "modelName",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
       "enabled": {
         "parameter_refs": [
           "target_reference_value"
@@ -2451,6 +2473,7 @@
     "emMeansStructure.EstimateMeans": "Estimate Means",
     "emMeansStructure.CompareFactor": "Contrast Field",
     "emMeansStructure.ContrastType": "Contrast Type",
-    "regression_weight_field.placeholder.label": "(none)"
+    "regression_weight_field.placeholder.label": "(none)",
+    "no_empty_model_name": "The name must be provided when defining a custom model name"
   }
 }
