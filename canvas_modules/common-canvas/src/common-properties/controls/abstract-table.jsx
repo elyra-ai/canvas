@@ -108,7 +108,7 @@ export default class AbstractTable extends React.Component {
 				return row[col];
 			});
 			if (spec.direction < 0) {
-				controlValue = controlValue.reverse();
+				controlValue.reverse();
 			}
 			this.setCurrentControlValueSelected(controlValue, []);
 		}

@@ -93,7 +93,7 @@ export default class FieldPicker extends React.Component {
 			}
 		});
 		if (spec.direction > 0) {
-			fields = fields.reverse();
+			fields.reverse();
 		}
 		this.setState({ fields: fields });
 	}

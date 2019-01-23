@@ -2642,11 +2642,11 @@ export class APIPipeline {
 			var nodesArray = this.getNodes();
 			if (nodesArray.length > 0) {
 				var lastNodeAdded = nodesArray[nodesArray.length - 1];
-				if (lastNodeAdded.outputs && lastNodeAdded.outputs.length >= 0) {
+				if (lastNodeAdded.outputs) {
 					sourceNode = lastNodeAdded;
 				} else if (nodesArray.length > 1) {
 					var lastButOneNodeAdded = nodesArray[nodesArray.length - 2];
-					if (lastButOneNodeAdded.outputs && lastButOneNodeAdded.outputs.length >= 0) {
+					if (lastButOneNodeAdded.outputs) {
 						sourceNode = lastButOneNodeAdded;
 					}
 				}

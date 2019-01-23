@@ -13,6 +13,9 @@ function properties(state = {}, action) {
 	const propertyId = action.property && action.property.propertyId ? action.property.propertyId : null;
 	switch (action.type) {
 	case UPDATE_PROPERTY_VALUE: {
+		if (propertyId === null) {
+			return state;
+		}
 		var newState = state;
 		if (typeof propertyId.row !== "undefined") {
 			if (typeof newState[propertyId.name] === "undefined") {
@@ -36,7 +39,7 @@ function properties(state = {}, action) {
 	}
 	case REMOVE_PROPERTY_VALUE: {
 		const nextState = state;
-		if (typeof propertyId.name !== "undefined") {
+		if (propertyId !== null && typeof propertyId.name !== "undefined") {
 			delete nextState[propertyId.name];
 		}
 		return Object.assign({}, state, nextState);

@@ -241,15 +241,17 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				categoryInfo = this.fields.field_categories[index];
 			}
 		}
-
-		fieldHeaders.push({ key: "fieldName", label: categoryInfo.field_columns.field_column_info.locLabel });
-		valueHeader.push({ key: "values", label: categoryInfo.field_columns.value_column_info.locLabel });
-		if (categoryInfo.field_columns.additional_column_info) {
-			for (let i = 0; i < categoryInfo.field_columns.additional_column_info.length; i++) {
-				sortable.push(categoryInfo.field_columns.additional_column_info[i].id);
-				fieldHeaders.push({ key: categoryInfo.field_columns.additional_column_info[i].id, label: categoryInfo.field_columns.additional_column_info[i].locLabel });
+		if (categoryInfo) {
+			fieldHeaders.push({ key: "fieldName", label: categoryInfo.field_columns.field_column_info.locLabel });
+			valueHeader.push({ key: "values", label: categoryInfo.field_columns.value_column_info.locLabel });
+			if (categoryInfo.field_columns.additional_column_info) {
+				for (let i = 0; i < categoryInfo.field_columns.additional_column_info.length; i++) {
+					sortable.push(categoryInfo.field_columns.additional_column_info[i].id);
+					fieldHeaders.push({ key: categoryInfo.field_columns.additional_column_info[i].id, label: categoryInfo.field_columns.additional_column_info[i].locLabel });
+				}
 			}
 		}
+
 		const tableData = [];
 		let valuesTableData = [];
 		if (tableContents && tableContents.field_value_groups) {

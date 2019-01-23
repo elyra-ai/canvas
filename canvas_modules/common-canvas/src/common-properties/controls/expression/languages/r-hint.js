@@ -44,7 +44,7 @@ function scriptHint(editor, _keywords, getToken) {
 	context.push(tprop);
 
 	var completionList = getCompletions(token, context);
-	completionList = completionList.sort();
+	completionList.sort();
 
 	return { list: completionList,
 		from: CodeMirror.Pos(cur.line, token.start),
@@ -124,7 +124,7 @@ function getCompletions(token, context) {
 
 	if (context) {
 		var obj = context.pop();
-		var base;
+		var base = "";
 
 		if (obj.type === "variable") {
 			base = obj.string;
