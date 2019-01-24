@@ -298,7 +298,8 @@
     {
       "id": "target_field",
       "type": "string",
-      "role": "column"
+      "role": "column",
+      "required": true
     },
     {
       "id": "use_trials",
@@ -492,7 +493,7 @@
     },
 
     {
-      "id": "modelRename",
+      "id": "use_model_name",
       "enum": [
         "false",
         "true"
@@ -500,7 +501,7 @@
       "default": "false"
     },
     {
-      "id": "modelName",
+      "id": "model_name",
       "type": "string"
     },
     {
@@ -1034,14 +1035,14 @@
       },
 
       {
-        "parameter_ref": "modelRename",
+        "parameter_ref": "use_model_name",
         "label": {
           "resource_key": "modelRename.label"
         },
         "control": "radioset"
       },
       {
-        "parameter_ref": "modelName",
+        "parameter_ref": "model_name",
         "label": {
           "default": " "
         },
@@ -1627,8 +1628,8 @@
                 "id": "model-rename",
                 "type": "controls",
                 "parameter_refs": [
-                  "modelRename",
-                  "modelName"
+                  "use_model_name",
+                  "model_name"
                 ]
               },
               {
@@ -1702,14 +1703,14 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "modelName",
+          "focus_parameter_ref": "model_name",
           "message": {
             "resource_key": "no_empty_model_name"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "modelName",
+            "parameter_ref": "model_name",
             "op": "isNotEmpty"
           }
         }
@@ -1983,11 +1984,11 @@
     {
       "enabled": {
         "parameter_refs": [
-          "modelName"
+          "model_name"
         ],
         "evaluate": {
           "condition": {
-            "parameter_ref": "modelRename",
+            "parameter_ref": "use_model_name",
             "op": "equals",
             "value": "true"
           }
