@@ -285,7 +285,7 @@
       "default": "DIAG"
     },
     {
-      "id": "SpatialFields",
+      "id": "spatial_field",
       "type": "array[string]",
       "role": "column"
     },
@@ -813,7 +813,7 @@
         }
       },
       {
-        "parameter_ref": "SpatialFields",
+        "parameter_ref": "spatial_field",
         "label": {
           "resource_key": "SpatialFields.label"
         }
@@ -1311,7 +1311,7 @@
                     "parameter_refs": [
                       "residual_group_spec",
                       "residual_covariance_type",
-                      "SpatialFields"
+                      "spatial_field"
                     ]
                   }
                 ]
@@ -2179,7 +2179,7 @@
     },
     {
       "filter": {
-        "parameter_ref": "SpatialFields",
+        "parameter_ref": "spatial_field",
         "evaluate": {
           "condition": {
             "op": "dmMeasurement",
