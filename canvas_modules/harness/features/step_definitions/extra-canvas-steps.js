@@ -9,7 +9,7 @@
 /* eslint no-console: "off" */
 
 import {
-	findCategoryElement, findNodeIndexInPalette, getNodeIdForLabel,
+	findCategoryElement, findNodeIndexInPalette, getNodeSelector,
 	getObjectModelCount
 } from "./utilities/validate-utils.js";
 import { getCanvasDataForSecondCanvas, getSecondCanvas } from "./utilities/test-utils.js";
@@ -21,8 +21,8 @@ module.exports = function() {
 
 	// Then I verify the extra canvas have a "Derive" node.
 	this.Then(/^I verify extra canvas has a "([^"]*)" node$/, function(nodeName) {
-		const nodeId = getNodeIdForLabel(nodeName, true);
-		const node = browser.$("#node_label_" + nodeId);
+		const nodeSelector = getNodeSelector(nodeName, "grp", true);
+		const node = browser.$(nodeSelector);
 		// Use getHTML() here instead of getText() incase the node is 'inactive' i.e. partly or fully off the screen
 		// Also, take first 7substring the name were given (which is the full node name) because then
 		// text in the DOM might be truncated.
@@ -84,8 +84,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I double click the "([^"]*)" node to open its properties in extra canvas$/, function(nodeName) {
-		var nodeId = getNodeIdForLabel(nodeName, true);
-		var nodeSelector = "#node_grp_" + nodeId;
+		const nodeSelector = getNodeSelector(nodeName, "grp", true);
 		browser.$(nodeSelector).doubleClick();
 		browser.pause(1000); // Wait for properties to be displayed
 	});

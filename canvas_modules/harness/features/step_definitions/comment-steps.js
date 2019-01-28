@@ -183,15 +183,15 @@ module.exports = function() {
 
 	this.Then(/^I click the comment with text "([^"]*)" to select it$/, function(commentText) {
 		const comIndex = getCommentIndexFromCanvasUsingText(commentText);
-		const commentId = browser.$("#common-canvas-items-container-0").$$(".comment-group")[comIndex].getAttribute("id");
-		var cmntSelector = "#" + commentId;
+		const commentId = browser.$("#common-canvas-items-container-0").$$(".comment-group")[comIndex].getAttribute("data-id");
+		const cmntSelector = "[data-id='" + commentId + "']";
 		browser.$(cmntSelector).click();
 	});
 
 	this.Then(/^I right click the comment with text "([^"]*)" to open the context menu$/, function(commentText) {
 		const comIndex = getCommentIndexFromCanvasUsingText(commentText);
-		const commentId = browser.$("#common-canvas-items-container-0").$$(".comment-group")[comIndex].getAttribute("id");
-		var cmntSelector = "#" + commentId;
+		const commentId = browser.$("#common-canvas-items-container-0").$$(".comment-group")[comIndex].getAttribute("data-id");
+		const cmntSelector = "[data-id='" + commentId + "']";
 		browser.$(cmntSelector).rightClick();
 	});
 

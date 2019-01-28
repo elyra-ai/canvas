@@ -45,7 +45,7 @@ class ToolTip extends React.Component {
 			clearTimeout(this.state.pendingTooltip);
 		}
 
-		const tooltip = document.getElementById(this.props.id);
+		const tooltip = document.querySelector("[data-id='" + this.props.id + "']");
 		this.setState({
 			showToolTip: visible,
 			pendingTooltip: null
@@ -56,7 +56,7 @@ class ToolTip extends React.Component {
 			if (this.props.targetObj) {
 				tooltipTrigger = this.props.targetObj;
 			} else {
-				tooltipTrigger = document.getElementById(this.props.id + "-trigger");
+				tooltipTrigger = document.querySelector("[data-id='" + this.props.id + "-trigger']");
 			}
 			if (tooltipTrigger && tooltip) {
 				this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
@@ -267,7 +267,7 @@ class ToolTip extends React.Component {
 			const mouseleave = () => this.setTooltipVisible(false);
 			const mousedown = () => this.setTooltipVisible(false);
 
-			triggerContent = (<div id={this.props.id + "-trigger"} className="tooltip-trigger" onMouseOver={mouseover} onMouseLeave={mouseleave} onMouseDown={mousedown}>
+			triggerContent = (<div data-id={this.props.id + "-trigger"} className="tooltip-trigger" onMouseOver={mouseover} onMouseLeave={mouseleave} onMouseDown={mousedown}>
 				{this.props.children}
 			</div>);
 		}
@@ -299,7 +299,7 @@ class ToolTip extends React.Component {
 		return (
 			<div className="tooltip-container">
 				{triggerContent}
-				<div id={this.props.id} className={tipClass} style={style} aria-hidden={!this.state.showToolTip} direction={this.props.direction}>
+				<div data-id={this.props.id} className={tipClass} style={style} aria-hidden={!this.state.showToolTip} direction={this.props.direction}>
 					<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 						<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
 						<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />

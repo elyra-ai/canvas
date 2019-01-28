@@ -3,7 +3,7 @@
   "version": "2.0",
   "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
   "id": "153651d6-9b88-423c-b01b-861f12d01489",
-  "primary_pipeline": "153651d6-9b88-423c-b01b-861f12d01489",
+  "primary_pipeline": "`~!@#$%^&*()_+=-{}][|:;<,>.9?/",
   "parameters": {
     "props": [
       {
@@ -16,7 +16,7 @@
   },
   "pipelines": [
     {
-      "id": "153651d6-9b88-423c-b01b-861f12d01489",
+      "id": "`~!@#$%^&*()_+=-{}][|:;<,>.9?/",
       "name": "My pipeline",
       "nodes": [
         {
@@ -75,7 +75,7 @@
           }
         },
         {
-          "id": "idGWRVT47XDV",
+          "id": "|:;<,>.9?/`~!@#$%^&*()_+=-{}][",
           "type": "execution_node",
           "op": "dummy_operator",
           "app_data": {
@@ -110,6 +110,7 @@
                   "node_id_ref": "id8I6RH2V91XW",
                   "app_data": {
                     "ui_data": {
+                       "id": ",>.9?/`~!@#$%^&*()_+=-{}][|:;<",
                       "class_name": "d3-data-link"
                     }
                   },
@@ -204,7 +205,7 @@
               },
               "links": [
                 {
-                  "node_id_ref": "idGWRVT47XDV",
+                  "node_id_ref": "|:;<,>.9?/`~!@#$%^&*()_+=-{}][",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
@@ -392,7 +393,7 @@
               "associated_id_refs": []
             },
             {
-              "id": "id42ESQA31234",
+              "id": ">.9?/`~!@#$%^&*()_+=-{}][|:;<,",
               "x_pos": 400,
               "y_pos": 50,
               "width": 200,
@@ -405,7 +406,7 @@
                   "class_name": "canvas-comment-link"
                 },
                 {
-                  "node_ref": "idGWRVT47XDV",
+                  "node_ref": "|:;<,>.9?/`~!@#$%^&*()_+=-{}][",
                   "class_name": "canvas-comment-link"
                 },
                 {

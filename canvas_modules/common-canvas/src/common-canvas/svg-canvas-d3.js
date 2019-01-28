@@ -228,7 +228,6 @@ export default class CanvasD3Layout {
 	getSvgViewportOffset() {
 		return this.renderer.getSvgViewportOffset();
 	}
-
 }
 
 class CanvasRenderer {
@@ -626,13 +625,14 @@ class CanvasRenderer {
 		const canv = this.getCanvasDimensionsAdjustedForScale(1);
 		const transformedSVGRect = this.getTransformedSVGRect(svgRect, 1);
 
-		this.canvasGrp.selectAll(this.getId("#br_svg_rect")).remove();
-		this.canvasGrp.selectAll(this.getId("#br_svg_rect_trans")).remove();
-		this.canvasGrp.selectAll(this.getId("#br_canvas_rect")).remove();
+		this.canvasGrp.selectAll(this.getSelectorForId("br_svg_rect")).remove();
+		this.canvasGrp.selectAll(this.getSelectorForId("br_svg_rect_trans")).remove();
+		this.canvasGrp.selectAll(this.getSelectorForId("br_canvas_rect")).remove();
 
 		this.canvasGrp
 			.append("rect")
-			.attr("id", this.getId("br_svg_rect"))
+			.attr("data-id", this.getId("br_svg_rect"))
+			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("height", svgRect.height)
 			.attr("width", svgRect.width)
 			.attr("x", 0)
@@ -642,7 +642,8 @@ class CanvasRenderer {
 
 		this.canvasGrp
 			.append("rect")
-			.attr("id", this.getId("br_svg_rect_trans"))
+			.attr("data-id", this.getId("br_svg_rect_trans"))
+			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("height", transformedSVGRect.height)
 			.attr("width", transformedSVGRect.width)
 			.attr("x", transformedSVGRect.x)
@@ -654,7 +655,8 @@ class CanvasRenderer {
 		if (canv) {
 			this.canvasGrp
 				.append("rect")
-				.attr("id", this.getId("br_canvas_rect"))
+				.attr("data-id", this.getId("br_canvas_rect"))
+				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("height", canv.height)
 				.attr("width", canv.width)
 				.attr("x", canv.left)
@@ -682,24 +684,21 @@ class CanvasRenderer {
 		return state;
 	}
 
-	// Returns a selector for the ID information passed in which includes a
-	// condition for selecting on the current pipelineId. See getId() for
-	// explanation of parameters.
+	// Returns a selector for the ID string like one of the following:
+	// * [data-id='prefix_instanceID'][data-pipeline-id='1234']
+	// * [data-id='prefix_instanceID_suffix'][data-pipeline-id='1234']
+	// * [data-id='prefix_instanceID_suffix_suffix2'][data-pipeline-id='1234']
+	// depending on what parameters are provided.
 	getSelectorForId(prefix, suffix, suffix2) {
-		const id = this.getId(prefix, suffix, suffix2);
-		return this.getSelector(`#${id}`); // Add a '#' when selecting on an ID
+		let sel = `[data-id='${this.getId(prefix, suffix, suffix2)}`;
+		sel += `'][data-pipeline-id='${this.activePipeline.id}']`;
+		return sel;
 	}
 
 	// Returns a selector for the class name passed in which includes a
 	// condition for selecting on the current pipelineId.
 	getSelectorForClass(classs) {
-		return this.getSelector(`.${classs}`); // Add a '.' when selecting on a class
-	}
-
-	// Returns a new selector based on the selector passed in which includes
-	// a condition for the current pipeline Id.
-	getSelector(selector) {
-		return selector + `[data-pipeline-id='${this.activePipeline.id}']`;
+		return `.${classs}[data-pipeline-id='${this.activePipeline.id}']`; // Add a '.' when selecting on a class
 	}
 
 	// Returns an ID string like one of the following:
@@ -1463,6 +1462,8 @@ class CanvasRenderer {
 
 			var objs = this.getSelectedNodesAndComments();
 
+			// Limit the size a drag can be so, when the user is dragging objects in
+			// an in-place subflow they do not drag them too far.
 			// this.logger.log("Drag offset X = " + this.dragOffsetX + " y = " + this.dragOffsetY);
 			if (this.dragOffsetX < 5000 && this.dragOffsetX > -5000 &&
 					this.dragOffsetY < 5000 && this.dragOffsetY > -5000) {
@@ -1553,11 +1554,11 @@ class CanvasRenderer {
 
 		} else if (this.selecting || this.regionSelect) {
 			nodeGroupSel.each(function(d) {
-				const nodeOutlineSelector = that.getSelectorForId("node_outline", d.id);
-				that.canvasGrp.selectAll(nodeOutlineSelector)
+				const nodeGrp = d3.select(this);
+				nodeGrp.select(that.getSelectorForId("node_outline", d.id))
 					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 					.attr("class", that.layout.cssNodeSelectionHighlight);
-				that.setNodeStyles(d, "default");
+				that.setNodeStyles(d, "default", nodeGrp);
 			});
 
 			this.superRenderers.forEach((renderer) => {
@@ -1570,12 +1571,12 @@ class CanvasRenderer {
 			// Handle new nodes
 			var newNodeGroups = nodeGroupSel.enter()
 				.append("g")
-				.attr("id", (d) => that.getId("node_grp", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id) // Values cannot begin with a number so add x!
+				.attr("data-id", (d) => that.getId("node_grp", d.id))
+				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("class", "obj-group node-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
-					that.setNodeStyles(d, "hover");
+					that.setNodeStyles(d, "hover", d3.select(this));
 					that.addDynamicNodeIcons(d, this);
 					if (that.canOpenTip(TIP_TYPE_NODE)) {
 						that.canvasController.closeTip(); // Ensure existing tip is removed when moving pointer within an in-place supernode
@@ -1589,9 +1590,10 @@ class CanvasRenderer {
 					}
 				})
 				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
-					that.setNodeStyles(d, "default");
-					that.canvasGrp.selectAll(that.getId("#node_body", d.id)).attr("hover", "no");
-					that.removeDynamicNodeIcons(d);
+					const nodeGrp = d3.select(this);
+					that.setNodeStyles(d, "default", nodeGrp);
+					nodeGrp.select(that.getSelectorForId("node_body", d.id)).attr("hover", "no");
+					that.removeDynamicNodeIcons(d, nodeGrp);
 					that.canvasController.closeTip();
 				})
 				// Use mouse down instead of click because it gets called before drag start.
@@ -1659,7 +1661,7 @@ class CanvasRenderer {
 			// Node selection highlighting outline for new nodes, flexible properties set in next step
 			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
 				.append("path")
-				.attr("id", (d) => this.getId("node_outline", d.id))
+				.attr("data-id", (d) => this.getId("node_outline", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.on("mousedown", (d) => {
 					if (this.isExpandedSupernode(d)) {
@@ -1676,23 +1678,23 @@ class CanvasRenderer {
 				// A mouseenter is triggered when the sizing operation stops and the
 				// pointer leaves the temporary overlay (which is removed) and enters
 				// the node outline.
-				.on("mousemove mouseenter", (d) => {
-					if (this.isExpandedSupernode(d) &&
-							!this.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
+				.on("mousemove mouseenter", function(d) {
+					if (that.isExpandedSupernode(d) &&
+							!that.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
 						let cursorType = "pointer";
-						if (!this.isPointerCloseToBodyEdge(d)) {
-							this.nodeSizingDirection = this.getSizingDirection(d);
-							this.nodeSizingCursor = this.getCursorBasedOnDirection(this.nodeSizingDirection);
-							cursorType = this.nodeSizingCursor;
+						if (!that.isPointerCloseToBodyEdge(d)) {
+							that.nodeSizingDirection = that.getSizingDirection(d);
+							that.nodeSizingCursor = that.getCursorBasedOnDirection(that.nodeSizingDirection);
+							cursorType = that.nodeSizingCursor;
 						}
-						const id = this.getId("#node_outline", d.id);
-						this.canvasDiv.selectAll(id).style("cursor", cursorType);
+						d3.select(this).style("cursor", cursorType);
 					}
 				});
 
 			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
 				.append("path")
-				.attr("id", (d) => this.getId("node_body", d.id));
+				.attr("data-id", (d) => this.getId("node_body", d.id))
+				.attr("data-pipeline-id", this.activePipeline.id);
 
 			// Image outline - this code used for debugging purposes
 			// newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
@@ -1706,7 +1708,8 @@ class CanvasRenderer {
 			// Node image
 			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
 				.append("image")
-				.attr("id", (d) => this.getId("node_image", d.id))
+				.attr("data-id", (d) => this.getId("node_image", d.id))
+				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("xlink:href", (d) => this.getNodeImage(d))
 				.attr("class", "node-image");
 
@@ -1722,7 +1725,8 @@ class CanvasRenderer {
 			// Label
 			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
 				.append("text")
-				.attr("id", (d) => that.getId("node_label", d.id))
+				.attr("data-id", (d) => this.getId("node_label", d.id))
+				.attr("data-pipeline-id", this.activePipeline.id)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
 					const labelObj = d3.select(this);
 					if (that.config.enableDisplayFullLabelOnHover &&
@@ -1749,7 +1753,8 @@ class CanvasRenderer {
 			// Halo
 			if (this.layout.connectionType === "halo") {
 				newNodeGroups.append("circle")
-					.attr("id", (d) => this.getId("node_halo", d.id))
+					.attr("data-id", (d) => this.getId("node_halo", d.id))
+					.attr("data-pipeline-id", this.activePipeline.id)
 					.attr("class", "d3-node-halo")
 					.attr("cx", this.layout.haloCenterX)
 					.attr("cy", this.layout.haloCenterY)
@@ -1768,14 +1773,15 @@ class CanvasRenderer {
 
 			// Error indicator
 			newNodeGroups.filter((d) => !this.isSuperBindingNode(d)).append("svg")
-				.attr("id", (d) => that.getId("node_error_marker", d.id));
+				.attr("data-id", (d) => this.getId("node_error_marker", d.id))
+				.attr("data-pipeline-id", this.activePipeline.id);
 
 			const newAndExistingNodeGrps =
 				nodeGroupSel.enter().merge(nodeGroupSel);
 
 			newAndExistingNodeGrps
 				.each((d) => {
-					const nodeGrp = this.canvasGrp.selectAll(that.getId("#node_grp", d.id));
+					const nodeGrp = this.canvasGrp.selectAll(this.getSelectorForId("node_grp", d.id));
 					const node = this.getNode(d.id);
 
 					nodeGrp
@@ -1784,31 +1790,31 @@ class CanvasRenderer {
 						.datum(node); // Set the __data__ to the updated data
 
 					// Node selection highlighting
-					nodeGrp.select(that.getId("#node_outline", d.id))
+					nodeGrp.select(this.getSelectorForId("node_outline", d.id))
 						.attr("d", (nd) => this.getNodeShapePathOutline(nd))
 						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 						.attr("class", this.layout.cssNodeSelectionHighlight)
 						.datum(node); // Set the __data__ to the updated data
 
 					// Move the dynamic icons (if any exist)
-					nodeGrp.select(that.getId("#node_ellipsis_background", d.id))
+					nodeGrp.select(this.getSelectorForId("node_ellipsis_background", d.id))
 						.attr("x", (nd) => that.getEllipsisPosX(nd))
 						.attr("y", (nd) => that.getEllipsisPosY(nd));
 
-					nodeGrp.select(that.getId("#node_ellipsis", d.id))
+					nodeGrp.select(this.getSelectorForId("node_ellipsis", d.id))
 						.attr("x", (nd) => that.getEllipsisPosX(nd) + this.layout.ellipsisHoverAreaPadding)
 						.attr("y", (nd) => that.getEllipsisPosY(nd) + this.layout.ellipsisHoverAreaPadding);
 
-					nodeGrp.select(that.getId("#node_exp_back", d.id))
+					nodeGrp.select(this.getSelectorForId("node_exp_back", d.id))
 						.attr("x", (nd) => this.getExpansionIconPosX(nd))
 						.attr("y", this.layout.supernodeExpansionIconPosY);
 
-					nodeGrp.select(that.getId("#node_exp_icon", d.id))
+					nodeGrp.select(this.getSelectorForId("node_exp_icon", d.id))
 						.attr("x", (nd) => this.getExpansionIconPosX(nd) + this.layout.supernodeExpansionIconHoverAreaPadding)
 						.attr("y", this.layout.supernodeExpansionIconPosY + this.layout.supernodeExpansionIconHoverAreaPadding);
 
 					// Node styles
-					this.setNodeStyles(d, "default");
+					this.setNodeStyles(d, "default", nodeGrp);
 
 					// This code will remove custom attributes from a node. This might happen when
 					// the user clicks the canvas background to remove the greyed out appearance of
@@ -1816,7 +1822,7 @@ class CanvasRenderer {
 					// TODO - Remove this code if/when common canvas supports cut (which removes nodes
 					// from the canvas) and when WML Canvas uses that clipboard support in place
 					// of its own.
-					nodeGrp.select(that.getId("#node_image", d.id))
+					nodeGrp.select(this.getSelectorForId("node_image", d.id))
 						.attr("x", (nd) => this.getNodeImagePosX(nd))
 						.attr("y", (nd) => this.getNodeImagePosY(nd))
 						.attr("width", (nd) => this.getNodeImageWidth(nd))
@@ -1834,7 +1840,7 @@ class CanvasRenderer {
 						});
 
 					// Set y for node label in new and existing nodes
-					nodeGrp.select(that.getId("#node_label", d.id))
+					nodeGrp.select(this.getSelectorForId("node_label", d.id))
 						.datum(node) // Set the __data__ to the updated data
 						.attr("x", (nd) => this.getLabelPosX(nd))
 						.attr("y", (nd) => this.getLabelPosY(nd) + this.layout.labelHeight - this.layout.labelDescent)
@@ -1858,7 +1864,7 @@ class CanvasRenderer {
 					}
 
 					// Set position for error circle in new and existing nodes
-					nodeGrp.select(that.getId("#node_error_marker", d.id))
+					nodeGrp.select(this.getSelectorForId("node_error_marker", d.id))
 						.datum(node) // Set the __data__ to the updated data
 						.attr("class", (nd) => "node-error-marker " + that.getErrorMarkerClass(nd.messages))
 						.html((nd) => that.getErrorMarkerIcon(nd))
@@ -1870,7 +1876,7 @@ class CanvasRenderer {
 					// Handle port related objects
 					if (this.layout.connectionType === "ports") {
 						// Node body updates
-						nodeGrp.select(that.getId("#node_body", d.id))
+						nodeGrp.select(this.getSelectorForId("node_body", d.id))
 							.datum(node) // Set the __data__ to the updated data
 							.attr("d", (cd) => this.getNodeShapePath(cd))
 							.attr("class", (cd) => this.getNodeBodyClass(cd));
@@ -1891,9 +1897,9 @@ class CanvasRenderer {
 							// Input port circle
 							inputPortSelection.enter()
 								.append("circle")
-								.attr("id", (port) => this.getId("node_trg_port", d.id, port.id))
+								.attr("data-id", (port) => this.getId("node_trg_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
-								.attr("portId", (port) => port.id) // This is needed by getNodeInputPortAtMousePos
+								.attr("data-port-id", (port) => port.id) // This is needed by getNodeInputPortAtMousePos
 								.attr("cx", 0)
 								.attr("connected", "no")
 								.attr("isSupernodeBinding", this.isSuperBindingNode(d) ? "yes" : "no")
@@ -1932,7 +1938,7 @@ class CanvasRenderer {
 							// Input port arrow in circle
 							inputPortArrowSelection.enter()
 								.append("path")
-								.attr("id", (port) => this.getId("node_trg_port_arrow", d.id, port.id))
+								.attr("data-id", (port) => this.getId("node_trg_port_arrow", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
 								.attr("class", this.layout.cssNodePortInputArrow)
 								.attr("connected", "no")
@@ -1974,7 +1980,7 @@ class CanvasRenderer {
 
 							outputPortSelection.enter()
 								.append("circle")
-								.attr("id", (port) => this.getId("node_src_port", d.id, port.id))
+								.attr("data-id", (port) => this.getId("node_src_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
 								.on("mousedown", (port) => {
 									// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
@@ -2027,7 +2033,7 @@ class CanvasRenderer {
 
 						decoratorOutlnsSelection.enter()
 							.append("rect")
-							.attr("id", (dec) => this.getId("node_dec_outln", dec.id))
+							.attr("data-id", (dec) => this.getId("node_dec_outln", dec.id)) // Used in Chimp tests
 							.attr("data-pipeline-id", this.activePipeline.id)
 							.attr("width", this.layout.decoratorWidth + 2)
 							.attr("height", this.layout.decoratorHeight + 2)
@@ -2049,7 +2055,7 @@ class CanvasRenderer {
 						decoratorImgsSelection.enter()
 							.filter((dec) => dec.image)
 							.append("image")
-							.attr("id", (dec) => this.getId("node_dec_img", dec.id))
+							.attr("data-id", (dec) => this.getId("node_dec_img", dec.id)) // Used in Chimp tests
 							.attr("data-pipeline-id", this.activePipeline.id)
 							.attr("width", this.layout.decoratorWidth)
 							.attr("height", this.layout.decoratorHeight)
@@ -2105,37 +2111,36 @@ class CanvasRenderer {
 		return this.layout.imagePosX;
 	}
 
-	setNodeStyles(d, type) {
-		this.setNodeBodyStyles(d, type);
-		this.setNodeSelectionOutlineStyles(d, type);
-		this.setNodeImageStyles(d, type);
-		this.setNodeLabelStyles(d, type);
+	setNodeStyles(d, type, nodeGrp) {
+		this.setNodeBodyStyles(d, type, nodeGrp);
+		this.setNodeSelectionOutlineStyles(d, type, nodeGrp);
+		this.setNodeImageStyles(d, type, nodeGrp);
+		this.setNodeLabelStyles(d, type, nodeGrp);
 	}
 
-	setNodeBodyStyles(d, type) {
+	setNodeBodyStyles(d, type, nodeGrp) {
 		let style = this.getObjectStyle(d, "body", type);
 		// For port-arcs display we reapply the drop shadow if no styles is provided
 		if (style === null && this.layout.nodeShape === "port-arcs") {
 			style = `filter:url(${this.getId("#node_drop_shadow")})`;
 		}
-		d3.select(this.getId("#node_body", d.id)).attr("style", style);
+		nodeGrp.select(this.getSelectorForId("node_body", d.id)).attr("style", style);
 	}
 
-	setNodeSelectionOutlineStyles(d, type) {
+	setNodeSelectionOutlineStyles(d, type, nodeGrp) {
 		const style = this.getObjectStyle(d, "selection_outline", type);
-		d3.select(this.getId("#node_outline", d.id)).attr("style", style);
+		nodeGrp.select(this.getSelectorForId("node_outline", d.id)).attr("style", style);
 	}
 
-	setNodeImageStyles(d, type) {
+	setNodeImageStyles(d, type, nodeGrp) {
 		const style = this.getObjectStyle(d, "image", type);
-		d3.select(this.getId("#node_image", d.id)).attr("style", style);
+		nodeGrp.select(this.getSelectorForId("node_image", d.id)).attr("style", style);
 	}
 
-	setNodeLabelStyles(d, type) {
+	setNodeLabelStyles(d, type, nodeGrp) {
 		const style = this.getObjectStyle(d, "label", type);
-		d3.select(this.getId("#node_label", d.id)).attr("style", style);
+		nodeGrp.select(this.getSelectorForId("node_label", d.id)).attr("style", style);
 	}
-
 
 	getNodeGrpStyle(d) {
 		return !d.style_temp && !d.style && this.canvasInfo.subdueStyle && !this.doesExpandedSupernodeHaveStyledNodes(d) ? this.canvasInfo.subdueStyle : null;
@@ -2170,10 +2175,11 @@ class CanvasRenderer {
 		if (!this.nodeSizing && !this.isSuperBindingNode(d)) {
 			const nodeGrp = d3.select(nodeGrpSrc);
 			if (this.layout.connectionType === "ports") {
-				this.canvasGrp.selectAll(this.getId("#node_body", d.id)).attr("hover", "yes");
+				nodeGrp.select(this.getSelectorForId("node_body", d.id)).attr("hover", "yes");
 				nodeGrp
 					.append("rect")
-					.attr("id", () => this.getId("node_ellipsis_background", d.id))
+					.attr("data-id", this.getId("node_ellipsis_background", d.id))
+					.attr("data-pipeline-id", this.activePipeline.id)
 					.attr("class", "d3-node-ellipsis-background")
 					.attr("width", (nd) => this.getEllipsisWidth(nd))
 					.attr("height", (nd) => this.getEllipsisHeight(nd))
@@ -2185,7 +2191,8 @@ class CanvasRenderer {
 					});
 				nodeGrp
 					.append("svg")
-					.attr("id", () => this.getId("node_ellipsis", d.id))
+					.attr("data-id", this.getId("node_ellipsis", d.id))
+					.attr("data-pipeline-id", this.activePipeline.id)
 					.attr("class", "d3-node-ellipsis")
 					.html(NODE_MENU_ICON)
 					.attr("width", (nd) => this.getEllipsisWidth(nd) - (2 * this.layout.ellipsisHoverAreaPadding))
@@ -2202,7 +2209,8 @@ class CanvasRenderer {
 				// Supernode expansion icon background
 				nodeGrp
 					.append("rect")
-					.attr("id", () => this.getId("node_exp_back", d.id))
+					.attr("data-id", this.getId("node_exp_back", d.id))
+					.attr("data-pipeline-id", this.activePipeline.id)
 					.attr("width", this.layout.supernodeExpansionIconWidth)
 					.attr("height", this.layout.supernodeExpansionIconHeight)
 					.attr("x", (nd) => this.getExpansionIconPosX(nd))
@@ -2212,19 +2220,18 @@ class CanvasRenderer {
 						stopPropagationAndPreventDefault();
 						this.displaySupernodeFullPage(d);
 					})
-					.on("mouseenter", (nd) => { // Use function keyword so 'this' pointer references the DOM text object
-						d3.select(this.getId("#node_exp_back", nd.id))
-							.attr("data-pointer-hover", "yes");
+					.on("mouseenter", function(nd) { // Use function keyword so 'this' pointer references the DOM text object
+						d3.select(this).attr("data-pointer-hover", "yes");
 					})
-					.on("mouseleave", (nd) => { // Use function keyword so 'this' pointer references the DOM text object
-						d3.select(this.getId("#node_exp_back", nd.id))
-							.attr("data-pointer-hover", "no");
+					.on("mouseleave", function(nd) { // Use function keyword so 'this' pointer references the DOM text object
+						d3.select(this).attr("data-pointer-hover", "no");
 					});
 
 				// Supernode expansion icon
 				nodeGrp
 					.append("svg")
-					.attr("id", () => this.getId("node_exp_icon", d.id))
+					.attr("data-id", this.getId("node_exp_icon", d.id))
+					.attr("data-pipeline-id", this.activePipeline.id)
 					.attr("class", "d3-node-super-expand-icon")
 					.html(SUPER_NODE_EXPAND_ICON)
 					.attr("width", this.layout.supernodeExpansionIconWidth - (2 * this.layout.supernodeExpansionIconHoverAreaPadding))
@@ -2235,13 +2242,11 @@ class CanvasRenderer {
 						stopPropagationAndPreventDefault();
 						this.displaySupernodeFullPage(d);
 					})
-					.on("mouseenter", (nd) => { // Use function keyword so 'this' pointer references the DOM text object
-						d3.select(this.getId("#node_exp_back", nd.id))
-							.attr("data-pointer-hover", "yes");
+					.on("mouseenter", function(nd) { // Use function keyword so 'this' pointer references the DOM text object
+						d3.select(this).attr("data-pointer-hover", "yes");
 					})
-					.on("mouseleave", (nd) => { // Use function keyword so 'this' pointer references the DOM text object
-						d3.select(this.getId("#node_exp_back", nd.id))
-							.attr("data-pointer-hover", "no");
+					.on("mouseleave", function(nd) { // Use function keyword so 'this' pointer references the DOM text object
+						d3.select(this).attr("data-pointer-hover", "no");
 					});
 			}
 		}
@@ -2285,14 +2290,14 @@ class CanvasRenderer {
 		return node.type === "binding" && node.inputs && node.inputs.length > 0;
 	}
 
-	removeDynamicNodeIcons(d) {
+	removeDynamicNodeIcons(d, nodeGrp) {
 		if (this.layout.connectionType === "ports") {
-			this.canvasGrp.selectAll(this.getId("#node_ellipsis", d.id)).remove();
-			this.canvasGrp.selectAll(this.getId("#node_ellipsis_background", d.id)).remove();
+			nodeGrp.selectAll(this.getSelectorForId("node_ellipsis", d.id)).remove();
+			nodeGrp.selectAll(this.getSelectorForId("node_ellipsis_background", d.id)).remove();
 		}
 
-		this.canvasGrp.selectAll(this.getId("#node_exp_icon", d.id)).remove();
-		this.canvasGrp.selectAll(this.getId("#node_exp_back", d.id)).remove();
+		nodeGrp.selectAll(this.getSelectorForId("node_exp_icon", d.id)).remove();
+		nodeGrp.selectAll(this.getSelectorForId("node_exp_back", d.id)).remove();
 	}
 
 	createSupernodeRenderer(d, supernodeD3Object) {
@@ -2432,7 +2437,7 @@ class CanvasRenderer {
 
 	getErrorPosX(data, nodeGrp) {
 		if (this.isExpandedSupernode(data)) {
-			const nodeText = nodeGrp.select(this.getId("#node_label", data.id)).node();
+			const nodeText = nodeGrp.select(this.getSelectorForId("node_label", data.id)).node();
 			return this.layout.supernodeLabelPosX + nodeText.getComputedTextLength() + this.layout.supernodeIconSeparation;
 		}
 		return this.layout.errorXPos;
@@ -2531,15 +2536,17 @@ class CanvasRenderer {
 	}
 
 	setTrgPortStatus(trgId, trgPortId, newStatus) {
+		const nodeGrp = this.canvasGrp.selectAll(this.getSelectorForId("node_grp", trgId));
 		const trgPrtSelector = this.getSelectorForId("node_trg_port", trgId, trgPortId);
 		const trgPrtArrSelector = this.getSelectorForId("node_trg_port_arrow", trgId, trgPortId);
-		this.canvasGrp.selectAll(trgPrtSelector).attr("connected", newStatus);
-		this.canvasGrp.selectAll(trgPrtArrSelector).attr("connected", newStatus);
+		nodeGrp.selectAll(trgPrtSelector).attr("connected", newStatus);
+		nodeGrp.selectAll(trgPrtArrSelector).attr("connected", newStatus);
 	}
 
 	setSrcPortStatus(srcId, srcPortId, newStatus) {
+		const nodeGrp = this.canvasGrp.selectAll(this.getSelectorForId("node_grp", srcId));
 		const srcPrtSelector = this.getSelectorForId("node_src_port", srcId, srcPortId);
-		this.canvasGrp.selectAll(srcPrtSelector).attr("connected", newStatus);
+		nodeGrp.selectAll(srcPrtSelector).attr("connected", newStatus);
 	}
 
 	getDecorator(id, node) {
@@ -2911,7 +2918,7 @@ class CanvasRenderer {
 		var portId = null;
 		const node = this.getNodeAtMousePos();
 		if (node) {
-			this.canvasGrp.selectAll(this.getId("#node_grp", node.id)).selectAll("." + this.layout.cssNodePortInput)
+			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id)).selectAll("." + this.layout.cssNodePortInput)
 				.each(function(p) { // Use function keyword so 'this' pointer references the dom object
 					var cx = node.x_pos + this.cx.baseVal.value;
 					var cy = node.y_pos + this.cy.baseVal.value;
@@ -2919,7 +2926,7 @@ class CanvasRenderer {
 							pos.x <= cx + that.layout.portRadius &&
 							pos.y >= cy - that.layout.portRadius &&
 							pos.y <= cy + that.layout.portRadius) {
-						portId = this.getAttribute("portId");
+						portId = this.getAttribute("data-port-id");
 					}
 				});
 		}
@@ -3117,7 +3124,7 @@ class CanvasRenderer {
 							imageObj.attr("data-is-cut", null); // TODO - This should be made generic
 						}
 					});
-				that.setCommentStyles(d, "default");
+				that.setCommentStyles(d, "default", d3.select(this));
 			});
 
 			this.superRenderers.forEach((renderer) => {
@@ -3130,17 +3137,18 @@ class CanvasRenderer {
 			// Handle new comments
 			var newCommentGroups = commentGroupSel.enter()
 				.append("g")
-				.attr("id", (d) => this.getId("comment_grp", d.id))
+				.attr("data-id", (d) => this.getId("comment_grp", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("class", "obj-group comment-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
-					that.setCommentStyles(d, "hover");
+					that.setCommentStyles(d, "hover", d3.select(this));
 					if (that.layout.connectionType === "ports") {
 						d3.select(this)
 							.append("circle")
-							.attr("id", that.getId("comment_port"))
+							.attr("data-id", that.getId("comment_port", d.id))
+							.attr("data-pipeline-id", that.activePipeline.id)
 							.attr("cx", 0 - that.layout.highlightGap)
 							.attr("cy", 0 - that.layout.highlightGap)
 							.attr("r", that.layout.commentPortRadius)
@@ -3157,10 +3165,10 @@ class CanvasRenderer {
 							});
 					}
 				})
-				.on("mouseleave", (d) => {
-					that.setCommentStyles(d, "default");
+				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+					that.setCommentStyles(d, "default", d3.select(this));
 					if (that.layout.connectionType === "ports") {
-						that.canvasGrp.selectAll(that.getId("#comment_port")).remove();
+						that.canvasGrp.selectAll(that.getSelectorForId("comment_port", d.id)).remove();
 					}
 				})
 				// Use mouse down instead of click because it gets called before drag start.
@@ -3218,7 +3226,7 @@ class CanvasRenderer {
 
 			// Comment selection highlighting and sizing outline
 			newCommentGroups.append("rect")
-				.attr("id", (d) => this.getId("comment_outline", d.id))
+				.attr("data-id", (d) => this.getId("comment_outline", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.on("mousedown", (d) => {
 					this.commentSizing = true;
@@ -3229,23 +3237,25 @@ class CanvasRenderer {
 				// Use mousemove here rather than mouseenter so the cursor will change
 				// if the pointer moves from one area of the node outline to another
 				// (eg. from east area to north-east area) without exiting the node outline.
-				.on("mousemove", (d) => {
-					if (!this.isRegionSelectOrSizingInProgress()) // Don't switch sizing direction if we are already sizing
+				// A mouseenter is triggered when the sizing operation stops and the
+				// pointer leaves the temporary overlay (which is removed) and enters
+				// the node outline.
+				.on("mousemove mouseenter", function(d) {
+					if (!that.isRegionSelectOrSizingInProgress()) // Don't switch sizing direction if we are already sizing
 					{
 						let cursorType = "pointer";
-						if (!this.isPointerCloseToBodyEdge(d)) {
-							this.commentSizingDirection = this.getSizingDirection(d);
-							this.commentSizingCursor = this.getCursorBasedOnDirection(this.commentSizingDirection);
-							cursorType = this.commentSizingCursor;
+						if (!that.isPointerCloseToBodyEdge(d)) {
+							that.commentSizingDirection = that.getSizingDirection(d);
+							that.commentSizingCursor = that.getCursorBasedOnDirection(that.commentSizingDirection);
+							cursorType = that.commentSizingCursor;
 						}
-						const id = this.getId("#comment_outline", d.id);
-						this.canvasDiv.selectAll(id).style("cursor", cursorType);
+						d3.select(this).style("cursor", cursorType);
 					}
 				});
 
 			// Background rectangle for comment
 			newCommentGroups.append("rect")
-				.attr("id", (d) => this.getId("comment_body", d.id))
+				.attr("data-id", (d) => this.getId("comment_body", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("width", (d) => d.width)
 				.attr("height", (d) => d.height)
@@ -3263,9 +3273,11 @@ class CanvasRenderer {
 
 			// Clip path to clip the comment text to the comment rectangle
 			newCommentGroups.append("clipPath")
-				.attr("id", (d) => that.getId("comment_clip_path", d.id))
+				.attr("id", (d) => that.getId("comment_clip_path", d.id)) // We use id here because it needs to be referred to by the URL on the comment_text.
+				.attr("data-pipeline-id", this.activePipeline.id)
 				.append("rect")
-				.attr("id", (d) => that.getId("comment_clip_rect", d.id))
+				.attr("data-id", (d) => that.getId("comment_clip_rect", d.id))
+				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("width", (d) => d.width - (2 * that.layout.commentWidthPadding))
 				.attr("height", (d) => d.height - (2 * that.layout.commentHeightPadding))
 				.attr("x", 0 + that.layout.commentWidthPadding)
@@ -3273,7 +3285,8 @@ class CanvasRenderer {
 
 			// Comment text
 			newCommentGroups.append("text")
-				.attr("id", (d) => that.getId("comment_text", d.id))
+				.attr("data-id", (d) => that.getId("comment_text", d.id))
+				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("class", "d3-comment-text")
 				.attr("clip-path", (d) => "url(" + that.getId("#comment_clip_path", d.id) + ")")
 				.attr("xml:space", "preserve")
@@ -3283,7 +3296,8 @@ class CanvasRenderer {
 			// Halo
 			if (this.layout.connectionType === "halo") {
 				newCommentGroups.append("rect")
-					.attr("id", (d) => that.getId("comment_halo", d.id))
+					.attr("data-id", (d) => that.getId("comment_halo", d.id))
+					.attr("data-pipeline-id", this.activePipeline.id)
 					.attr("class", "d3-comment-halo")
 					.on("mousedown", (d) => {
 						this.logger.log("Comment Halo - mouse down");
@@ -3303,7 +3317,7 @@ class CanvasRenderer {
 
 			newAndExistingCommentGrps
 				.each((d) => {
-					const commentGrp = this.canvasGrp.selectAll(that.getId("#comment_grp", d.id));
+					const commentGrp = this.canvasGrp.selectAll(that.getSelectorForId("comment_grp", d.id));
 					const comment = this.getComment(d.id);
 
 					commentGrp
@@ -3311,7 +3325,7 @@ class CanvasRenderer {
 						.datum(comment); // Set the __data__ to the updated data
 
 					// Comment selection highlighting and sizing outline
-					commentGrp.select(that.getId("#comment_outline", d.id))
+					commentGrp.select(this.getSelectorForId("comment_outline", d.id))
 						.attr("x", -this.layout.highlightGap)
 						.attr("y", -this.layout.highlightGap)
 						.attr("height", d.height + (2 * that.layout.highlightGap))
@@ -3321,20 +3335,20 @@ class CanvasRenderer {
 						.datum(comment); // Set the __data__ to the updated data
 
 					// Set comments styles
-					this.setCommentStyles(d, "default");
+					this.setCommentStyles(d, "default", commentGrp);
 
 					// Clip path for text
-					commentGrp.select(`#comment_clip__path_${d.id}`)
+					commentGrp.select(this.getSelectorForId("comment_clip_path", d.id))
 						.datum(comment); // Set the __data__ to the updated data
 
 					// Clip rectangle for text
-					commentGrp.select(that.getId("#comment_clip_rect", d.id))
+					commentGrp.select(this.getSelectorForId("comment_clip_rect", d.id))
 						.attr("height", d.height - (2 * that.layout.commentHeightPadding))
 						.attr("width", d.width - (2 * that.layout.commentWidthPadding))
 						.datum(comment); // Set the __data__ to the updated data
 
 					// Background rectangle for comment
-					commentGrp.select(that.getId("#comment_body", d.id))
+					commentGrp.select(this.getSelectorForId("comment_body", d.id))
 						.attr("height", d.height)
 						.attr("width", d.width)
 						.attr("class", (cd) => that.getCommentRectClass(cd))
@@ -3349,7 +3363,7 @@ class CanvasRenderer {
 						});
 
 					// Comment text
-					commentGrp.select(that.getId("#comment_text", d.id))
+					commentGrp.select(this.getSelectorForId("comment_text", d.id))
 						.datum(comment) // Set the __data__ to the updated data
 						.attr("beingedited", that.editingCommentId === d.id ? "yes" : "no") // Use the beingedited css style to make text transparent
 						.each(function(cd) {
@@ -3359,8 +3373,10 @@ class CanvasRenderer {
 						});
 
 					// Comment halo
+					// We need to dynamically set size of the halo here becasue the size
+					// of the text object maye be changed by the user.
 					if (that.layout.connectionType === "halo") {
-						commentGrp.select(that.getId("#comment_halo", d.id))
+						commentGrp.select(this.getSelectorForId("comment_halo", d.id))
 							.attr("x", 0 - this.layout.haloCommentGap)
 							.attr("y", 0 - this.layout.haloCommentGap)
 							.attr("width", d.width + (2 * that.layout.haloCommentGap))
@@ -3375,25 +3391,25 @@ class CanvasRenderer {
 		this.logger.logEndTimer("displayComments " + this.getFlags());
 	}
 
-	setCommentStyles(d, type) {
-		this.setCommentBodyStyles(d, type);
-		this.setNodeSelectionOutlineStyles(d, type);
-		this.setCommentTextStyles(d, type);
+	setCommentStyles(d, type, comGrp) {
+		this.setCommentBodyStyles(d, type, comGrp);
+		this.setNodeSelectionOutlineStyles(d, type, comGrp);
+		this.setCommentTextStyles(d, type, comGrp);
 	}
 
-	setCommentBodyStyles(d, type) {
+	setCommentBodyStyles(d, type, comGrp) {
 		const style = this.getObjectStyle(d, "body", type);
-		d3.select(this.getId("#comment_body", d.id)).attr("style", style);
+		comGrp.select(this.getSelectorForId("comment_body", d.id)).attr("style", style);
 	}
 
-	setCommentSelectionOutlineStyles(d, type) {
+	setCommentSelectionOutlineStyles(d, type, comGrp) {
 		const style = this.getObjectStyle(d, "selection_outline", type);
-		d3.select(this.getId("#comment_outline", d.id)).attr("style", style);
+		comGrp.select(this.getSelectorForId("comment_outline", d.id)).attr("style", style);
 	}
 
-	setCommentTextStyles(d, type) {
+	setCommentTextStyles(d, type, comGrp) {
 		const style = this.getObjectStyle(d, "text", type);
-		d3.select(this.getId("#comment_text", d.id)).attr("style", style);
+		comGrp.select(this.getSelectorForId("comment_text", d.id)).attr("style", style);
 	}
 
 	getObjectStyle(d, part, type) {
@@ -3423,7 +3439,7 @@ class CanvasRenderer {
 			var comment = this.getComment(datum.id);
 			comment.height = this.textAreaHeight;
 			datum.height = this.textAreaHeight;
-			this.canvasDiv.select(this.getId("#comment_text_area", datum.id))
+			this.canvasDiv.select(this.getSelectorForId("comment_text_area", datum.id))
 				.style("height", this.textAreaHeight + "px")
 				.style("transform", this.getTextAreaTransform(datum)); // Since the height has changed the translation needs to be reapplied.
 			this.displayComments();
@@ -3453,7 +3469,7 @@ class CanvasRenderer {
 	displayTextArea(d) {
 		// Make SVG text invisible when in edit mode. This will be reversed when
 		// leaving edit mode.
-		this.canvasGrp.selectAll(this.getId("#comment_text", d.id))
+		this.canvasGrp.selectAll(this.getSelectorForId("comment_text", d.id))
 			.attr("beingedited", "yes");
 
 		const that = this;
@@ -3465,7 +3481,7 @@ class CanvasRenderer {
 
 		this.canvasDiv
 			.append("textarea")
-			.attr("id",	this.getId("comment_text_area", datum.id))
+			.attr("data-id", this.getId("comment_text_area", datum.id))
 			.attr("data-pipeline-id", that.activePipeline.id)
 			.attr("class", "d3-comment-entry")
 			.text(datum.content)
@@ -3491,7 +3507,7 @@ class CanvasRenderer {
 				that.logger.log("Text area - blur");
 				var commentObj = that.getComment(datum.id);
 				commentObj.content = this.value;
-				that.canvasGrp.selectAll(that.getId("#comment_text", cd.id))
+				that.canvasGrp.selectAll(that.getSelectorForId("comment_text", cd.id))
 					.attr("beingedited", "no");
 				that.saveCommentChanges(this);
 				that.closeCommentTextArea();
@@ -3499,7 +3515,7 @@ class CanvasRenderer {
 			});
 
 		// Note: Couldn't get focus to work through d3, so used dom instead.
-		document.getElementById(this.getId("comment_text_area", datum.id)).focus();
+		document.querySelector(this.getSelectorForId("comment_text_area", datum.id)).focus();
 	}
 
 	// Returns the transform amount for the text area control that positions the
@@ -4100,7 +4116,7 @@ class CanvasRenderer {
 			.data(lineArray, function(line) { return line.id; })
 			.enter()
 			.append("g")
-			.attr("id", (d) => this.getId("link_grp", d.id))
+			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", "link-group")
 			.attr("style", function(d) { return !d.style_temp && !d.style && that.canvasInfo.subdueStyle ? that.canvasInfo.subdueStyle : null; })
@@ -4148,7 +4164,8 @@ class CanvasRenderer {
 		// Link line
 		linkGroup.append("path")
 			.attr("d", (d) => d.path)
-			.attr("id", (d) => this.getId("link_line", d.id))
+			.attr("data-id", (d) => this.getId("link_line", d.id))
+			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", (d) => {
 				var classStr;
 
@@ -4215,7 +4232,7 @@ class CanvasRenderer {
 
 	setLinkLineStyles(link, type) {
 		const style = this.getObjectStyle(link, "line", type);
-		d3.select(this.getId("#link_line", link.id)).attr("style", style);
+		this.canvasGrp.select(this.getSelectorForId("link_line", link.id)).attr("style", style);
 	}
 
 	// Adds the binding nodes, which map to the containing supernode's ports, to
@@ -4298,7 +4315,7 @@ class CanvasRenderer {
 		const comments = this.activePipeline.comments;
 
 		for (var idx = comments.length - 1; idx > -1; idx--) {
-			this.canvasGrp.selectAll(this.getId("#comment_grp", comments[idx].id)).lower();
+			this.canvasGrp.selectAll(this.getSelectorForId("comment_grp", comments[idx].id)).lower();
 		}
 	}
 

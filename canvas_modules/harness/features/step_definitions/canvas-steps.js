@@ -9,9 +9,9 @@
 /* eslint no-console: "off" */
 /* eslint max-depth: ["error", 5] */
 
-import { clickSVGAreaAt, doesTipExist, findCategoryElement, findNodeIndexInPalette,
-	getNodeIdForLabel, getNodeIdForLabelInSubFlow, getNumberOfSelectedComments,
-	getNumberOfSelectedNodes } from "./utilities/validate-utils.js";
+import { clickSVGAreaAt, doesTipExist, doesTipExistInSubFlow, findCategoryElement, findNodeIndexInPalette,
+	getNodePortSelector, getNodePortTipSelector, getNodeSelector, getNodeSelectorInSubFlow,
+	getNumberOfSelectedComments, getNumberOfSelectedNodes } from "./utilities/validate-utils.js";
 import { getCanvas, isSchemaValidationError, useCmdOrCtrl } from "./utilities/test-utils.js";
 
 /* global browser */
@@ -191,23 +191,21 @@ module.exports = function() {
 	});
 
 	this.Then(/^I hover over the node "([^"]*)"$/, function(nodeName) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		const nodeSelector = "#node_grp_" + nodeId;
+		const nodeSelector = getNodeSelector(nodeName, "grp");
 		browser.$(nodeSelector).moveToObject();
 		browser.pause(1000); // Wait for the tooltip to be displayed
 	});
 
 	this.Then(/^I hover over the node "([^"]*)" in the subflow$/, function(nodeName) {
-		const nodeId = getNodeIdForLabelInSubFlow(nodeName);
-		const nodeSelector = "#node_grp_" + nodeId;
+		const nodeSelector = getNodeSelectorInSubFlow(nodeName, "grp");
 		browser.$(nodeSelector).moveToObject();
 		browser.pause(1000); // Wait for the tooltip to be displayed
 	});
 
 
 	this.Then(/^I verify the node with name "([^"]*)" shows in the canvas$/, function(nodeName) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		const node = browser.$("#node_label_" + nodeId);
+		const nodeSelector = getNodeSelector(nodeName, "label");
+		const node = browser.$(nodeSelector);
 		// Use getHTML() here instead of getText() incase the node is 'inactive' i.e. partly or fully off the screen
 		// Also, take first 7substring the name were given (which is the full node name) because then
 		// text in the DOM might be truncated.
@@ -215,34 +213,30 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify the tip shows "([^"]*)" the node "([^"]*)"$/, function(location, nodeName) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		doesTipExist(nodeId, nodeName, location);
+		doesTipExist(nodeName, location);
 	});
 
 	this.Then(/^I verify the tip shows "([^"]*)" the node "([^"]*)" in the subflow$/, function(location, nodeName) {
-		const nodeId = getNodeIdForLabelInSubFlow(nodeName);
-		doesTipExist(nodeId, nodeName, location);
+		doesTipExistInSubFlow(nodeName, location);
 	});
 
 
 	this.Then(/^I hover over the input port "([^"]*)" of node "([^"]*)"$/, function(portId, nodeName) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		const portSelector = "#node_trg_port_" + nodeId + "_" + portId;
+		const portSelector = getNodePortSelector(nodeName, "trg_port", portId);
 		browser.$(portSelector).moveToObject();
 		browser.pause(1000); // Wait for the tooltip to be displayed
 	});
 
 	this.Then(/^I hover over the output port "([^"]*)" of node "([^"]*)"$/, function(portId, nodeName) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		const portSelector = "#node_src_port_" + nodeId + "_" + portId;
+		const portSelector = getNodePortSelector(nodeName, "src_port", portId);
 		browser.$(portSelector).moveToObject();
 		browser.pause(1000); // Wait for the tooltip to be displayed
 	});
 
 	this.Then(/^I verify the port name "([^"]*)" shows below the input port id "([^"]*)" of node "([^"]*)"$/, function(portName, portId, nodeName) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		const portSelector = "#node_trg_port_" + nodeId + "_" + portId;
-		const tip = browser.$("#node_port_tip_0_" + portId);
+		const portSelector = getNodePortSelector(nodeName, "trg_port", portId);
+		const portTipSelector = getNodePortTipSelector(portId);
+		const tip = browser.$(portTipSelector);
 		expect(tip.value).not.toEqual(null);
 
 		const port = browser.$(portSelector);
@@ -255,9 +249,9 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify the port name "([^"]*)" shows below the output port id "([^"]*)" of node "([^"]*)"$/, function(portName, portId, nodeName) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		const portSelector = "#node_src_port_" + nodeId + "_" + portId;
-		const tip = browser.$("#node_port_tip_0_" + portId);
+		const portSelector = getNodePortSelector(nodeName, "src_port", portId);
+		const portTipSelector = getNodePortTipSelector(portId);
+		const tip = browser.$(portTipSelector);
 		expect(tip.value).not.toEqual(null);
 
 		const port = browser.$(portSelector);
@@ -276,7 +270,7 @@ module.exports = function() {
 
 	this.Then(/^I verify the tip shows below (\d+) for link between node "([^"]*)", port "([^"]*)" and node "([^"]*)", port "([^"]*)"$/,
 		function(mouseY, sourceNode, sourcePort, targetNode, targetPort) {
-			const tip = browser.$("[id*=link_tip_0_]"); // Find tip with id that starts with 'link_tip_0_'
+			const tip = browser.$("[data-id*=link_tip_0_]"); // Find tip with id that starts with 'link_tip_0_'
 			expect(tip.value).not.toEqual(null);
 
 			const tipTop = tip.getLocation().y;
@@ -295,8 +289,8 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify the tip doesn't show for node "([^"]*)"$/, function(nodeName) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		const tip = browser.$("#node_tip_" + nodeId);
+		const nodeSelector = getNodeSelector(nodeName, "tip");
+		const tip = browser.$(nodeSelector);
 		expect(tip.value).toEqual(null);
 	});
 

@@ -9,7 +9,7 @@
 /* eslint no-console: "off" */
 
 import { deleteLinkInObjectModel, findCategoryElement, findNodeIndexInPalette, getEventLogCount,
-	getNodeFromObjectModel, getNodeIdForLabel, getNodeIdForLabelInSubFlow, getNodeIdFromObjectModel,
+	getNodeFromObjectModel, getNodeIdFromObjectModel, getNodeSelector, getNodeSelectorInSubFlow,
 	getObjectModelCount, isObjectModelEmpty
 } from "./utilities/validate-utils.js";
 import { getCanvasData, getEventLogData, getLastEventLogData, useCmdOrCtrl } from "./utilities/test-utils.js";
@@ -655,29 +655,25 @@ module.exports = function() {
 	// Then I double click the "Type" node to open its properties
 	//
 	this.Then(/^I double click the "([^"]*)" node to open its properties$/, function(nodeName) {
-		var nodeId = getNodeIdForLabel(nodeName);
-		var nodeSelector = "#node_grp_" + nodeId;
+		const nodeSelector = getNodeSelector(nodeName, "grp");
 		browser.$(nodeSelector).doubleClick();
 		browser.pause(1000); // Wait for properties to be displayed
 	});
 
 	this.Then(/^I click the "([^"]*)" node to select it$/, function(nodeName) {
-		var nodeId = getNodeIdForLabel(nodeName);
-		var nodeSelector = "#node_grp_" + nodeId;
+		const nodeSelector = getNodeSelector(nodeName, "grp");
 		browser.$(nodeSelector).click();
 	});
 
 	this.Then(/^I click the "([^"]*)" node in the subflow to select it$/, function(nodeName) {
-		var nodeId = getNodeIdForLabelInSubFlow(nodeName);
-		var nodeSelector = "#node_grp_" + nodeId;
+		const nodeSelector = getNodeSelectorInSubFlow(nodeName, "grp");
 		browser.$(nodeSelector).click();
 	});
 
 	this.Then(/^I Ctrl\/Cmnd\+click the "([^"]*)" node to add it to the selections$/, function(nodeName) {
 		const useKey = useCmdOrCtrl();
 		browser.keys([useKey]);
-		var nodeId = getNodeIdForLabel(nodeName);
-		var nodeSelector = "#node_grp_" + nodeId;
+		const nodeSelector = getNodeSelector(nodeName, "grp");
 		browser.$(nodeSelector).click();
 		browser.keys([useKey]);
 	});
@@ -685,30 +681,27 @@ module.exports = function() {
 	this.Then(/^I Ctrl\/Cmnd\+click the "([^"]*)" node in the subflow to add it to the selections$/, function(nodeName) {
 		const useKey = useCmdOrCtrl();
 		browser.keys([useKey]);
-		var nodeId = getNodeIdForLabelInSubFlow(nodeName);
-		var nodeSelector = "#node_grp_" + nodeId;
+		const nodeSelector = getNodeSelectorInSubFlow(nodeName, "grp");
 		browser.$(nodeSelector).click();
 		browser.keys([useKey]);
 	});
 
 	this.Then(/^I click the supernode label with node id "([^"]*)" to select it$/, function(nodeId) {
-		var nodeSelector = "#node_label_0_" + nodeId;
+		var nodeSelector = "[data-id='node_label_0_" + nodeId + "']";
 		browser.$(nodeSelector).click();
 	});
 
 	this.Then(/^I click the expanded supernode canvas background with node label "([^"]*)" to select it$/, function(nodeName) {
-		var nodeId = getNodeIdForLabel(nodeName);
-		var nodeSelector = "#node_grp_" + nodeId;
-		var canvasBackground = browser.$(nodeSelector).$(".svg-area");
+		const nodeSelector = getNodeSelector(nodeName, "grp");
+		const canvasBackground = browser.$(nodeSelector).$(".svg-area");
 		canvasBackground.click();
 	});
 
 	this.Then(/^I Ctrl\\\/Cmnd\\\+click the expanded supernode canvas background with node label "([^"]*)" to add it to the selections$/, function(nodeName) {
 		const useKey = useCmdOrCtrl();
 		browser.keys([useKey]);
-		var nodeId = getNodeIdForLabel(nodeName);
-		var nodeSelector = "#node_grp_" + nodeId;
-		var canvasBackground = browser.$(nodeSelector).$(".svg-area");
+		const nodeSelector = getNodeSelector(nodeName, "grp");
+		const canvasBackground = browser.$(nodeSelector).$(".svg-area");
 		canvasBackground.click();
 		browser.keys([useKey]);
 	});
@@ -716,16 +709,14 @@ module.exports = function() {
 	// Then I right click the "Var. File" node to display the context menu
 	//
 	this.Then(/^I right click the "([^"]*)" node to display the context menu$/, function(nodeName) {
-		var nodeId = getNodeIdForLabel(nodeName);
-		var nodeSelector = "#node_grp_" + nodeId;
+		const nodeSelector = getNodeSelector(nodeName, "grp");
 		browser.$(nodeSelector).rightClick();
 	});
 
 	// Then I right click the "Var. File" node in the subflow to display the context menu
 	//
 	this.Then(/^I right click the "([^"]*)" node in the subflow to display the context menu$/, function(nodeName) {
-		var nodeId = getNodeIdForLabelInSubFlow(nodeName);
-		var nodeSelector = "#node_grp_" + nodeId;
+		const nodeSelector = getNodeSelectorInSubFlow(nodeName, "grp");
 		browser.$(nodeSelector).rightClick();
 	});
 
@@ -985,9 +976,9 @@ module.exports = function() {
 	});
 
 	this.Then(/^I click on the hotspot for decorator "([^"]*)" on the "([^"]*)" node$/, function(decoratorId, nodeName) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		const node = browser.$("#node_grp_" + nodeId);
-		const decoratorImage = node.$(".d3-decorator-image[id=node_dec_img_0_" + decoratorId + "]");
+		const nodeSelector = getNodeSelector(nodeName, "grp");
+		const node = browser.$(nodeSelector);
+		const decoratorImage = node.$(".d3-decorator-image[data-id=node_dec_img_0_" + decoratorId + "]");
 		decoratorImage.click();
 	});
 
@@ -998,21 +989,21 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify node "([^"]*)" has (\d+) decorators$/, function(nodeName, decoratorCount) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		const node = browser.$("#node_grp_" + nodeId);
+		const nodeSelector = getNodeSelector(nodeName, "grp");
+		const node = browser.$(nodeSelector);
 		const decorators = node.$$(".d3-decorator-outline");
 		expect(String(decorators.length)).toEqual(decoratorCount);
 	});
 
 	this.Then(/^I verify node "([^"]*)" has a decorator with id "([^"]*)" at position x (-?\d+) y (-?\d+)$/, function(nodeName, decoratorId, xPos, yPos) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		const node = browser.$("#node_grp_" + nodeId);
+		const nodeSelector = getNodeSelector(nodeName, "grp");
+		const node = browser.$(nodeSelector);
 		const decorators = node.$$(".d3-decorator-outline");
 		let found = false;
 		let xx = 0;
 		let yy = 0;
 		for (const decorator of decorators) {
-			var id = decorator.getAttribute("id");
+			var id = decorator.getAttribute("data-id");
 			if (id === "node_dec_outln_0_" + decoratorId) {
 				found = true;
 				xx = decorator.getAttribute("x");
@@ -1026,13 +1017,13 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify node "([^"]*)" has a decorator with id "([^"]*)" which has an image "([^"]*)"$/, function(nodeName, decoratorId, decoratorImage) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		const node = browser.$("#node_grp_" + nodeId);
+		const nodeSelector = getNodeSelector(nodeName, "grp");
+		const node = browser.$(nodeSelector);
 		const decoratorImages = node.$$(".d3-decorator-image");
 		let found = false;
 		let img = "";
 		for (const decImage of decoratorImages) {
-			var id = decImage.getAttribute("id");
+			var id = decImage.getAttribute("data-id");
 			if (id === "node_dec_img_0_" + decoratorId) {
 				found = true;
 				img = decImage.getAttribute("href");
@@ -1045,8 +1036,7 @@ module.exports = function() {
 
 	// Then I verify the "Supernode" node has 1 "output" ports
 	this.Then(/^I verify the "([^"]*)" node has (\d+) "([^"]*)" ports$/, function(nodeName, numPorts, portType) {
-		const nodeId = getNodeIdForLabel(nodeName);
-		const nodeSelector = "#node_grp_" + nodeId;
+		const nodeSelector = getNodeSelector(nodeName, "grp");
 		const nodePorts = browser.$(nodeSelector).$$(".d3-node-port-" + portType);
 		expect(nodePorts.length).toEqual(Number(numPorts));
 	});
@@ -1055,8 +1045,7 @@ module.exports = function() {
 	// nodeElement can be either "image" or "label"
 	this.Then(/^I verify the "([^"]*)" for the "([^"]*)" node is displayed at (\d+), (\d+)$/,
 		function(nodeElement, nodeName, xPos, yPos) {
-			const nodeId = getNodeIdForLabel(nodeName);
-			const nodeSelector = "#node_" + nodeElement + "_" + nodeId;
+			const nodeSelector = getNodeSelector(nodeName, nodeElement);
 			const nodeImages = browser.$$(nodeSelector);
 			const xAttr = nodeImages[0].getAttribute("x");
 			const yAttr = nodeImages[0].getAttribute("y");
@@ -1068,8 +1057,7 @@ module.exports = function() {
 	// nodeElement can be either "image" or "label"
 	this.Then(/^I verify the "([^"]*)" for the "([^"]*)" node has width ([-+]?[0-9]*\.?[0-9]+)$/,
 		function(nodeElement, nodeName, width) {
-			const nodeId = getNodeIdForLabel(nodeName);
-			const nodeSelector = "#node_" + nodeElement + "_" + nodeId;
+			const nodeSelector = getNodeSelector(nodeName, nodeElement);
 			const nodeImages = browser.$$(nodeSelector);
 			const wAttr = nodeImages[0].getElementSize("width");
 			expect(Number(wAttr)).toEqual(Number(width));

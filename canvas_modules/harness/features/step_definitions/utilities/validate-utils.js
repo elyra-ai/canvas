@@ -214,15 +214,44 @@ function isObjectModelEmpty(objectModel) {
 	return count;
 }
 
+function getNodePortTipSelector(portId, extraCanvas) {
+	const portSelector = "[data-id='node_port_tip_0_" + portId + "']";
+	return portSelector;
+}
+
+function getNodePortSelector(nodeText, nodeElement, portId, extraCanvas) {
+	const nodeId = getNodeIdForLabel(nodeText, extraCanvas);
+	const portSelector = "[data-id='node_" + nodeElement + "_" + nodeId + "_" + portId + "']";
+	return portSelector;
+}
+
+function getNodePortSelectorInSubFlow(nodeText, nodeElement, portId, extraCanvas) {
+	const nodeId = getNodeIdForLabelInSubFlow(nodeText, extraCanvas);
+	const portSelector = "[data-id='node_" + nodeElement + "_" + nodeId + "_" + portId + "']";
+	return portSelector;
+}
+
+function getNodeSelector(nodeText, nodeElement, extraCanvas) {
+	const nodeId = getNodeIdForLabel(nodeText, extraCanvas);
+	const nodeSelector = "[data-id='node_" + nodeElement + "_" + nodeId + "']";
+	return nodeSelector;
+}
+
+function getNodeSelectorInSubFlow(nodeText, nodeElement, extraCanvas) {
+	const nodeId = getNodeIdForLabelInSubFlow(nodeText, extraCanvas);
+	const nodeSelector = "[data-id='node_" + nodeElement + "_" + nodeId + "']";
+	return nodeSelector;
+}
+
 function getNodeIdForLabel(nodeText, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
-	const selector = `div > svg > g > g > text[id^=node_label_${inst}]`;
+	const selector = `div > svg > g > g > text[data-id^='node_label_${inst}']`;
 	return getNodeId(nodeText, selector);
 }
 
 function getNodeIdForLabelInSubFlow(nodeText, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
-	const selector = `div > svg > g > g > svg > g > g > text[id^=node_label_${inst}]`;
+	const selector = `div > svg > g > g > svg > g > g > text[data-id^='node_label_${inst}']`;
 	return getNodeId(nodeText, selector);
 }
 
@@ -233,7 +262,7 @@ function getNodeId(nodeText, selector) {
 		var domLabels = document.querySelectorAll(inSelector);
 		for (let idx = 0; idx < domLabels.length; idx++) {
 			if (domLabels.item(idx).__data__.label === labelText) {
-				nodeId = domLabels.item(idx).id;
+				nodeId = domLabels.item(idx).getAttribute("data-id");
 				break;
 			}
 		}
@@ -249,24 +278,24 @@ function getNodeId(nodeText, selector) {
 
 function getCommentIdForText(commentText, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
-	const selector = `div > svg > g > g[id^=comment_grp_${inst}]`;
+	const selector = `div > svg > g > g[data-id^=comment_grp_${inst}]`;
 	return getCommentId(commentText, selector);
 }
 
 function getCommentIdForTextInSubFlow(commentText, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
-	const selector = `div > svg > g > g > svg > g > g[id^=comment_grp_${inst}]`;
+	const selector = `div > svg > g > g > svg > g > g[data-id^=comment_grp_${inst}]`;
 	return getCommentId(commentText, selector);
 }
 
 function getCommentIdForTextInSubFlowInSubFlow(commentText, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
-	const selector = `div > svg > g > g > svg > g > g > svg > g > g[id^=comment_grp_${inst}]`;
+	const selector = `div > svg > g > g > svg > g > g > svg > g > g[data-id^=comment_grp_${inst}]`;
 	return getCommentId(commentText, selector);
 }
 
 function addTextForComment(comId, newCommentText) {
-	var selector = "#comment_grp_" + comId;
+	var selector = "[data-id='comment_grp_" + comId + "']";
 	var comment = browser.$(selector);
 	comment.click();
 	comment.doubleClick();
@@ -292,7 +321,7 @@ function getCommentId(commentText, selector) {
 		var domComments = document.querySelectorAll(inSelector);
 		for (let idx = 0; idx < domComments.length; idx++) {
 			if (domComments.item(idx).__data__.content === comText) {
-				commentId = domComments.item(idx).id;
+				commentId = domComments.item(idx).getAttribute("data-id");
 				break;
 			}
 		}
@@ -306,11 +335,25 @@ function getCommentId(commentText, selector) {
 	return null;
 }
 
-function doesTipExist(nodeId, nodeName, location) {
-	const tip = browser.$("#node_tip_" + nodeId);
+function doesTipExist(nodeName, location) {
+	const nodeSelectorTip = getNodeSelector(nodeName, "tip");
+	const nodeSelectorGrp = getNodeSelector(nodeName, "grp");
+
+	checkTipExists(nodeName, location, nodeSelectorTip, nodeSelectorGrp);
+}
+
+function doesTipExistInSubFlow(nodeName, location) {
+	const nodeSelectorTip = getNodeSelectorInSubFlow(nodeName, "tip");
+	const nodeSelectorGrp = getNodeSelectorInSubFlow(nodeName, "grp");
+
+	checkTipExists(nodeName, location, nodeSelectorTip, nodeSelectorGrp);
+}
+
+function checkTipExists(nodeName, location, nodeSelectorTip, nodeSelectorGrp) {
+	const tip = browser.$(nodeSelectorTip);
 	expect(tip.value).not.toEqual(null);
 
-	const node = browser.$("#node_grp_" + nodeId);
+	const node = browser.$(nodeSelectorGrp);
 	const tipTop = tip.getLocation().y;
 	if (location === "below") {
 		expect(tipTop).toBeGreaterThan(node.getLocation().y + node.getElementSize().height);
@@ -410,8 +453,11 @@ module.exports = {
 	getObjectModelCount: getObjectModelCount,
 	getPortLinks: getPortLinks,
 	isObjectModelEmpty: isObjectModelEmpty,
-	getNodeIdForLabel: getNodeIdForLabel,
-	getNodeIdForLabelInSubFlow: getNodeIdForLabelInSubFlow,
+	getNodeSelector: getNodeSelector,
+	getNodeSelectorInSubFlow: getNodeSelectorInSubFlow,
+	getNodePortSelector: getNodePortSelector,
+	getNodePortSelectorInSubFlow: getNodePortSelectorInSubFlow,
+	getNodePortTipSelector: getNodePortTipSelector,
 	addTextForComment: addTextForComment,
 	getCommentIdForText: getCommentIdForText,
 	getCommentIdForTextInSubFlow: getCommentIdForTextInSubFlow,
@@ -423,5 +469,6 @@ module.exports = {
 	getControlContainerFromName: getControlContainerFromName,
 	getNumberOfSelectedNodes: getNumberOfSelectedNodes,
 	getNumberOfSelectedComments: getNumberOfSelectedComments,
-	doesTipExist: doesTipExist
+	doesTipExist: doesTipExist,
+	doesTipExistInSubFlow: doesTipExistInSubFlow
 };

@@ -102,9 +102,9 @@ const entryBinding3Bx1 = "d4c2535e-d3ac-4f32-9f0e-a4adfad1c79f";
 // const entryBinding3Bx2 = "9e88f684-7758-4e9d-8245-0d0d1d1d1542";
 
 // Identifying variables for the allTypesCanvas.json test file
-const atPrimaryPipelineId = "153651d6-9b88-423c-b01b-861f12d01489";
+const atPrimaryPipelineId = "`~!@#$%^&*()_+=-{}][|:;<,>.9?/"; // AllTypes.json contains some ID contaiing special characters.
 const atBindingEntryNode = "id8I6RH2V91XW";
-const atExecNode = "idGWRVT47XDV";
+const atExecNode = "|:;<,>.9?/`~!@#$%^&*()_+=-{}]["; // AllTypes.json contains some ID contaiing special characters.
 const atSuperNode = "nodeIDSuperNodePE";
 const atModelNode = "id125TTEEIK7V";
 const atBindingExitNode = "id5KIRGGJ3FYT";
