@@ -64,9 +64,9 @@ class NumberfieldControl extends React.Component {
 	}
 
 	render() {
-		let controlValue = this.props.value;
-		if (typeof controlValue === "undefined" || controlValue === null) {
-			controlValue = ""; // default to ""
+		let controlValue;
+		if (this.props.value !== null) {
+			controlValue = this.props.value;
 		}
 		const className = classNames("properties-numberfield", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
 
