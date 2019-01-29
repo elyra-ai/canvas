@@ -52,7 +52,7 @@ export class PropertyDef {
 		const parameterMetadata = ParameterMetadata.makeParameterMetadata(parameters,
 			propertyOf(uihints)("parameter_info"), propertyOf(uihints)("ui_parameters"));
 		const actionMetadata = ActionMetadata.makeActionMetadata(propertyOf(uihints)("action_info"));
-		const groupMetadata = GroupMetadata.makeGroupMetadata(propertyOf(uihints)("group_info"));
+		const groupMetadata = GroupMetadata.makeGroupMetadata(propertyOf(uihints)("group_info"), parameterMetadata.getParameters());
 
 		const label = titleDefinition && titleDefinition.title ? titleDefinition.title : "";
 		const labelEditable = titleDefinition && typeof titleDefinition.editable !== "undefined" ? titleDefinition.editable : DEFAULT_LABEL_EDITABLE;

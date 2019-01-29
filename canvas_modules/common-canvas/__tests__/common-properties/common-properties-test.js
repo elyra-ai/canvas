@@ -16,7 +16,6 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
-import conditionTestResource from "../test_resources/json/form-test-condition.json";
 import expressionTestResource from "../test_resources/json/expression-one-category.json";
 
 import numberfieldResource from "../test_resources/paramDefs/numberfield_paramDef.json";
@@ -474,13 +473,13 @@ describe("CommonProperties validates on open correctly", () => {
 	});
 
 	it("If messages are passed in then validate (generate errors)", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(conditionTestResource.paramDef, null, null, { messages: propertiesInfo.messages });
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, null, null, { messages: propertiesInfo.messages });
 		wrapper = renderedObject.wrapper;
 		expect(wrapper.find("div[data-id='properties-alerts-panel']")).to.have.length(1);
 	});
 
 	it("If messages are not passed in then no validation", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(conditionTestResource.paramDef);
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource);
 		wrapper = renderedObject.wrapper;
 		expect(wrapper.find("div[data-id='properties-alerts-panel']")).to.have.length(0);
 

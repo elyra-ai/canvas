@@ -698,7 +698,7 @@ function _makeAction(action, l10nProvider) {
 }
 
 function _parameterValueLabels(parameter, l10nProvider) {
-	if (parameter.getValidValues()) {
+	if (Array.isArray(parameter.getValidValues())) {
 		let key;
 		if (parameter.resource_key) {
 			key = parameter.resource_key;
@@ -706,14 +706,12 @@ function _parameterValueLabels(parameter, l10nProvider) {
 			key = parameter.name;
 		}
 		const paramLabels = [];
-		if (Array.isArray(parameter.getValidValues())) {
-			parameter.getValidValues().forEach(function(paramValue) {
-				paramLabels.push(l10nProvider.l10nValueLabel(key, String(paramValue)));
-			});
-		}
+		parameter.getValidValues().forEach(function(paramValue) {
+			paramLabels.push(l10nProvider.l10nValueLabel(key, String(paramValue)));
+		});
 		return paramLabels;
 	}
-	return null;
+	return [];
 }
 
 module.exports.makePrimaryTab = makePrimaryTab;

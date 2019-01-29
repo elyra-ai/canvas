@@ -1,0 +1,157 @@
+{
+  "titleDefinition": {
+    "title": "No Uihints"
+  },
+  "current_parameters": {
+    "textfield": "test",
+    "columnSelect": [
+      "Age",
+      "Sex"
+    ],
+    "structuretableSortOrder": [
+      [
+        "Cholesterol",
+        "ascending"
+      ]
+    ],
+    "structurelist": []
+  },
+  "parameters": [
+    {
+      "id": "textfield",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "columnSelect",
+      "type": "array[string]",
+      "default": [],
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "structuretableSortOrder",
+      "type": "array[structuretableSortOrder]",
+      "role": "column"
+    },
+    {
+      "id": "structurelist",
+      "type": "array[structurelist_info]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "structuretableSortOrder",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "structuretable_sort_order",
+          "enum": [
+            "ascending",
+            "descending"
+          ],
+          "default": "ascending"
+        }
+      ]
+    },
+    {
+      "id": "structurelist_info",
+      "parameters": [
+        {
+          "id": "name",
+          "type": "string"
+        },
+        {
+          "id": "value",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "textfield.label": "Name",
+    "structuretableSortOrder.label": "Sort",
+    "field.label": "Field",
+    "structuretable_sort_order.label": "Order",
+    "structuretable_sort_order.ascending.label": "Ascending",
+    "structuretable_sort_order.descending.label": "Descending",
+    "columnSelect.label": "Select Columns",
+    "structurelist.label": "Add Values",
+    "name.label": "Key",
+    "value.label": "Value"
+  }
+}

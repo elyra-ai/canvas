@@ -139,6 +139,15 @@ class EditorForm extends React.Component {
 			if (this.props.additionalComponents) {
 				additionalComponent = this.props.additionalComponents[tab.group];
 			}
+			// if only 1 tab don't show any tabs
+			if (tabs.length === 1) {
+				return (
+					<div key={"cat." + key} className="properties-category">
+						{panelItems}
+						{additionalComponent}
+					</div>
+				);
+			}
 			if (this.props.rightFlyout) {
 				let panelArrow = <CanvasIcon type="downCaret" />;
 				let categoryOpen = false;
@@ -146,11 +155,6 @@ class EditorForm extends React.Component {
 					panelArrow = <CanvasIcon type="upCaret" />;
 					categoryOpen = true;
 				}
-				const panelItemsContainer = (<div className={classNames("properties-category-content", { "show": categoryOpen }) }>
-					{panelItems}
-					{additionalComponent}
-				</div>);
-
 				tabContent.push(
 					<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key} className="properties-category-container">
 						<button type="button" onClick={this._showCategoryPanel.bind(this, tab.group)}
@@ -159,7 +163,10 @@ class EditorForm extends React.Component {
 							{tab.text.toUpperCase()}{this._getMessageCountForCategory(tab)}
 							{panelArrow}
 						</button>
-						{panelItemsContainer}
+						<div className={classNames("properties-category-content", { "show": categoryOpen }) }>
+							{panelItems}
+							{additionalComponent}
+						</div>
 					</div>
 				);
 			} else {
@@ -542,7 +549,7 @@ class EditorForm extends React.Component {
 
 	render() {
 		let uiItems = this.props.controller.getUiItems();
-		if (!isEmpty(this.messages) && uiItems[0].itemType === "primaryTabs") {
+		if (!isEmpty(this.messages) && uiItems[0].itemType === "primaryTabs" && uiItems[0].tabs && uiItems[0].tabs.length > 1) {
 			// create a new copy for uiItems object so that alerts are not added multiple times
 			uiItems = cloneDeep(uiItems);
 			uiItems[0].tabs.unshift(this.genAlertsTab(this.messages)); // add alerts tab to the beginning of the tabs array

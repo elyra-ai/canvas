@@ -10,6 +10,7 @@
 import propertyUtils from "../../_utils_/property-utils";
 import { expect } from "chai";
 import TAB_PARAM_DEF from "../../test_resources/paramDefs/tab_paramDef.json";
+import PARAMS_ONLY_DEF from "../../test_resources/paramDefs/paramsOnly_paramDef.json";
 
 
 describe("tabs and subtabs should be rendered correctly", () => {
@@ -49,5 +50,41 @@ describe("tabs and subtabs should be rendered correctly", () => {
 		expect(tabContent.at(0).prop("hidden")).to.equal(true);
 		expect(tabContent.at(1).prop("hidden")).to.equal(false);
 		expect(tabContent.at(2).prop("hidden")).to.equal(true);
+	});
+});
+
+describe("controls should be rendered correctly when no uihints are provided", () => {
+	let wrapper;
+	let controller;
+	beforeEach(() => {
+		const flyout = propertyUtils.flyoutEditorForm(PARAMS_ONLY_DEF);
+		wrapper = flyout.wrapper;
+		controller = flyout.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("validate controls show up correctly", () => {
+		// 4 controls are rendered on the screen
+		expect(wrapper.find(".properties-control-item")).to.have.length(4);
+		expect(wrapper.find("div[data-id='properties-textfield']")).to.have.length(1);
+
+	});
+
+	it("validate no tabs are present", () => {
+		expect(wrapper.find(".properties-categories")).to.have.length(0);
+		expect(wrapper.find(".properties-category")).to.have.length(1);
+	});
+
+	it("validate alerts tab isn't created", () => {
+		expect(wrapper.find(".properties-categories")).to.have.length(0);
+		controller.updatePropertyValue({ name: "textfield" }, null);
+		wrapper.update();
+		// validate message is created
+		expect(wrapper.find(".properties-validation-message")).to.have.length(1);
+		// valide no catagories(tabs) are created
+		expect(wrapper.find(".properties-categories")).to.have.length(0);
 	});
 });

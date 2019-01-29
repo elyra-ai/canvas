@@ -363,6 +363,11 @@ export class ParameterMetadata {
 		return paramDef;
 	}
 
+	// Return a single parameter
+	getParameters() {
+		return this.paramDefs.map((param) => param.name);
+	}
+
 	// operation arguments
 	static makeParameterMetadata(parameters, uihintsParams, uihintsUiParams) {
 		const paramDefs = [];

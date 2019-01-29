@@ -141,10 +141,10 @@ Scenario: Sanity test changing input port name to update port tip
 		Given I have toggled the app side common-properties panel
 		Given I have uploaded JSON for common-properties "CLEM_FilterRows_paramDef.json"
 
-		Then I move the mouse to coordinates 40, 120 in common-properties
+		Then I move the mouse to coordinates 40, 70 in common-properties
 		And I verify the tip for label "Mode" is visible on the "left"
 
-		Then I move the mouse to coordinates 100, 170 in common-properties
+		Then I move the mouse to coordinates 40, 120 in common-properties
 		And I verify the tip for label "Modeler CLEM Condition Expression" is visible on the "left"
 
 	Scenario: Test if tips show up for the summary table values

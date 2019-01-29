@@ -11,6 +11,7 @@ import { GroupType } from "../constants/form-constants";
 import { ResourceDef } from "../util/L10nProvider";
 import propertyOf from "lodash/propertyOf";
 import has from "lodash/has";
+import uuid4 from "uuid/v4";
 
 class Group {
 	constructor(cname, parameters, actions, type, label, dependsOn, insertPanels, subGroups, description, data) {
@@ -71,17 +72,20 @@ export class GroupMetadata {
 		this.groups = groups;
 	}
 
-	static makeGroupMetadata(uiGroups) {
+	static makeGroupMetadata(uiGroups, parameters) {
+		const groups = [];
 		if (uiGroups) {
-			const groups = [];
 			for (const group of uiGroups) {
 				const newGroup = Group.makeGroup(group);
 				if (newGroup !== null) {
 					groups.push(newGroup);
 				}
 			}
-			return new GroupMetadata(groups);
+
+		} else {
+			// if no group create a default group with controls
+			groups.push(new Group(uuid4(), parameters, null, GroupType.CONTROLS));
 		}
-		return null;
+		return new GroupMetadata(groups);
 	}
 }
