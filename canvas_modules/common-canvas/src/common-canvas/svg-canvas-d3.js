@@ -3271,24 +3271,13 @@ class CanvasRenderer {
 					}
 				});
 
-			// Clip path to clip the comment text to the comment rectangle
-			newCommentGroups.append("clipPath")
-				.attr("id", (d) => that.getId("comment_clip_path", d.id)) // We use id here because it needs to be referred to by the URL on the comment_text.
-				.attr("data-pipeline-id", this.activePipeline.id)
-				.append("rect")
-				.attr("data-id", (d) => that.getId("comment_clip_rect", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("width", (d) => d.width - (2 * that.layout.commentWidthPadding))
-				.attr("height", (d) => d.height - (2 * that.layout.commentHeightPadding))
-				.attr("x", 0 + that.layout.commentWidthPadding)
-				.attr("y", 0 + that.layout.commentHeightPadding);
-
 			// Comment text
+			// The clip area for the text is set when the inline styles are set
+			// in the setCommentStyles method.
 			newCommentGroups.append("text")
 				.attr("data-id", (d) => that.getId("comment_text", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("class", "d3-comment-text")
-				.attr("clip-path", (d) => "url(" + that.getId("#comment_clip_path", d.id) + ")")
 				.attr("xml:space", "preserve")
 				.attr("x", 0) // Text position is controlled by x and y
 				.attr("y", 0); // of the tspan objects inside this text object.
@@ -3336,16 +3325,6 @@ class CanvasRenderer {
 
 					// Set comments styles
 					this.setCommentStyles(d, "default", commentGrp);
-
-					// Clip path for text
-					commentGrp.select(this.getSelectorForId("comment_clip_path", d.id))
-						.datum(comment); // Set the __data__ to the updated data
-
-					// Clip rectangle for text
-					commentGrp.select(this.getSelectorForId("comment_clip_rect", d.id))
-						.attr("height", d.height - (2 * that.layout.commentHeightPadding))
-						.attr("width", d.width - (2 * that.layout.commentWidthPadding))
-						.datum(comment); // Set the __data__ to the updated data
 
 					// Background rectangle for comment
 					commentGrp.select(this.getSelectorForId("comment_body", d.id))
@@ -3408,7 +3387,9 @@ class CanvasRenderer {
 	}
 
 	setCommentTextStyles(d, type, comGrp) {
-		const style = this.getObjectStyle(d, "text", type);
+		let style = this.getObjectStyle(d, "text", type);
+		const clipRectStyle = this.getClipRectStyle(d);
+		style = style ? clipRectStyle + style : clipRectStyle;
 		comGrp.select(this.getSelectorForId("comment_text", d.id)).attr("style", style);
 	}
 
@@ -3430,6 +3411,18 @@ class CanvasRenderer {
 			return style;
 		}
 		return get(d, `style.${part}.${type}`, null);
+	}
+
+	// Returns a clip-path string that can be set as an inline style for clipping
+	// comment text. We use polygon here because 'inset' which is supposed to
+	// provide a rectangle clipping area doesn't seem to work on the current browsers.
+	// Also, -webkit-clip-path has to be provided as well as clip-path because
+	// Safari doesn't recognize clip-path. FF and Chrome do.
+	getClipRectStyle(d) {
+		const x2 = d.width - (2 * this.layout.commentWidthPadding);
+		const y2 = d.height - (2 * (this.layout.commentHeightPadding - 2));
+		const poly = `polygon(0px 0px, ${x2}px 0px, ${x2}px ${y2}px, 0px ${y2}px)`;
+		return `clip-path:${poly}; -webkit-clip-path:${poly}; `;
 	}
 
 	autoSizeTextArea(textArea, datum) {

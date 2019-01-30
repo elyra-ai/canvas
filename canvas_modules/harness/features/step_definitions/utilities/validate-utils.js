@@ -311,6 +311,11 @@ function addTextForComment(comId, newCommentText) {
 	browser.pause(1000);
 	// Click somewhere on the canvas (hopefully nothing is there) to go out of edit mode.
 	browser.leftClick("#common-canvas-items-container-0", 400, 1);
+
+	// Verify that the text has a clip-path within its style
+	var textSelector = "[data-id='comment_text_" + comId + "']";
+	var commentText = browser.$(textSelector);
+	expect(commentText.getCssProperty("clip-path").value).not.toBe(null);
 }
 
 
