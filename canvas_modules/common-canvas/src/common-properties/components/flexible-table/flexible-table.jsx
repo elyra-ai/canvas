@@ -218,14 +218,22 @@ export default class FlexibleTable extends React.Component {
 		}
 	}
 
-	scrollToRow(alignTop) {
+	scrollToRow() {
 		if (this.tableNode && typeof this.props.scrollToRow === "number") {
-			var tableBody = this.tableNode.getElementsByClassName("reactable-data");
-			var tableRows = tableBody[tableBody.length - 1].getElementsByTagName("tr");
-			if (tableRows.length !== 0 && this.props.scrollToRow <= tableRows.length - 1 &&
-			typeof tableRows[this.props.scrollToRow].scrollIntoView === "function") {
-				tableRows[this.props.scrollToRow].scrollIntoView(alignTop);
-			}
+			const that = this;
+			setTimeout(function() {
+				var tableBody = that.tableNode.getElementsByClassName("reactable-data");
+				var tableRows = tableBody[tableBody.length - 1].getElementsByTagName("tr");
+				if (tableRows.length !== 0 && that.props.scrollToRow <= tableRows.length - 1 &&
+				typeof tableRows[that.props.scrollToRow].scrollIntoView === "function") {
+					const alignmentObject = {
+						behavior: "smooth",
+						block: "nearest",
+						inline: "center"
+					};
+					tableRows[that.props.scrollToRow].scrollIntoView(alignmentObject);
+				}
+			}, 100);
 		}
 	}
 
@@ -437,7 +445,7 @@ export default class FlexibleTable extends React.Component {
 		}
 
 		if (typeof this.props.scrollToRow !== "undefined" && this.props.scrollToRow !== null) {
-			this.scrollToRow(this.props.alignTop);
+			this.scrollToRow();
 		}
 
 
@@ -507,7 +515,6 @@ FlexibleTable.propTypes = {
 	scrollToRow: PropTypes.number,
 	onSort: PropTypes.func,
 	onFilter: PropTypes.func,
-	alignTop: PropTypes.bool,
 	showHeader: PropTypes.bool,
 	selectedEditRow: PropTypes.object,
 	topRightPanel: PropTypes.object,

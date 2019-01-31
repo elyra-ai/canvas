@@ -58,7 +58,6 @@ export default class AbstractTable extends React.Component {
 
 		if (props.selectedRows && props.selectedRows.length > 0) {
 			this.scrollToRow = props.selectedRows[props.selectedRows.length - 1];
-			this.alignTop = true;
 		}
 
 		this.selectSummaryPropertyName = "table-multi-select-edit-property-" + props.control.name;
@@ -142,9 +141,8 @@ export default class AbstractTable extends React.Component {
 		return row;
 	}
 
-	setScrollToRow(row, alignTop) {
+	setScrollToRow(row) {
 		this.scrollToRow = row;
-		this.alignTop = alignTop;
 	}
 
 	setCurrentControlValueSelected(controlValue, inSelectedRows) {
@@ -577,7 +575,6 @@ export default class AbstractTable extends React.Component {
 	}
 
 	createTable(tableState, tableButtonConfig) {
-		const that = this;
 		const rows = [];
 		const sortFields = [];
 		const filterFields = [];
@@ -597,6 +594,12 @@ export default class AbstractTable extends React.Component {
 			? this.makeAddRemoveButtonPanel(tableState, tableButtonConfig)
 			: <div />;
 
+		let rowToScrollTo;
+		if (Number.isInteger(this.scrollToRow) && rows.length > this.scrollToRow) {
+			rowToScrollTo = this.scrollToRow;
+			delete this.scrollToRow;
+		}
+
 		const table =	(
 			<FlexibleTable
 				sortable={sortFields}
@@ -604,8 +607,7 @@ export default class AbstractTable extends React.Component {
 				columns={headers}
 				data={rows}
 				showHeader={showHeader}
-				scrollToRow={this.scrollToRow}
-				alignTop={this.alignTop}
+				scrollToRow={rowToScrollTo}
 				onFilter={this.onFilter}
 				onSort={this.onSort}
 				topRightPanel={topRightPanel}
@@ -616,9 +618,6 @@ export default class AbstractTable extends React.Component {
 				rows={this.props.control.rows}
 				controller={this.props.controller}
 			/>);
-		setTimeout(function() {
-			that.scrollToRow = null;
-		}, 500);
 		return (
 			<div>
 				{table}

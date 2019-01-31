@@ -67,7 +67,7 @@ export default class MoveableTableRows extends React.Component {
 			}
 		}
 		if (selected.length > 0) {
-			this.props.setScrollToRow(selected[0], true);
+			this.props.setScrollToRow(selected[0]);
 		}
 		this.props.setCurrentControlValueSelected(controlValue, selected);
 	}
@@ -89,12 +89,12 @@ export default class MoveableTableRows extends React.Component {
 			}
 			if (selected.length > 1) {
 				if (selected[0] === 0) {
-					this.props.setScrollToRow(selected[0], true);
+					this.props.setScrollToRow(selected[0]);
 				} else {
-					this.props.setScrollToRow(selected[0], { behavior: "smooth", block: "start", inline: "nearest" });
+					this.props.setScrollToRow(selected[0]);
 				}
 			} else {
-				this.props.setScrollToRow(selected[0], { behavior: "smooth", block: "center", inline: "center" });
+				this.props.setScrollToRow(selected[0]);
 			}
 			this.props.setCurrentControlValueSelected(controlValue, selected);
 		}
@@ -117,12 +117,12 @@ export default class MoveableTableRows extends React.Component {
 			}
 			if (selected.length > 1) {
 				if (selected[selected.length - 1] === controlValue.length - 1) {
-					this.props.setScrollToRow(selected[selected.length - 1], false);
+					this.props.setScrollToRow(selected[selected.length - 1]);
 				} else {
-					this.props.setScrollToRow(selected[selected.length - 1], { behavior: "smooth", block: "end", inline: "end" });
+					this.props.setScrollToRow(selected[selected.length - 1]);
 				}
 			} else {
-				this.props.setScrollToRow(selected[0], { behavior: "smooth", block: "center", inline: "center" });
+				this.props.setScrollToRow(selected[0]);
 			}
 			this.props.setCurrentControlValueSelected(controlValue, selected);
 		}
@@ -142,7 +142,7 @@ export default class MoveableTableRows extends React.Component {
 			}
 		}
 		if (selected.length > 0) {
-			this.props.setScrollToRow(selected[selected.length - 1], false);
+			this.props.setScrollToRow(selected[selected.length - 1]);
 		}
 		this.props.setCurrentControlValueSelected(controlValue, selected);
 	}

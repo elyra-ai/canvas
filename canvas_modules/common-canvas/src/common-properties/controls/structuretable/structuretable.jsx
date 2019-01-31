@@ -142,6 +142,8 @@ class StructureTableControl extends AbstractTable {
 				newControlValues.push(this.getDefaultRow(field));
 			}
 			this.setCurrentControlValueSelected(newControlValues, newSelections);
+			const scrollToRow = newSelections[newSelections.length - 1];
+			this.setScrollToRow(scrollToRow);
 		}
 	}
 

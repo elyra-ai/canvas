@@ -82,6 +82,8 @@ class SelectColumns extends AbstractTable {
 	onFieldPickerClose(allSelectedFields, newSelections) {
 		if (allSelectedFields && newSelections) {
 			this.setCurrentControlValueSelected(allSelectedFields, newSelections);
+			const scrollToRow = newSelections[newSelections.length - 1];
+			this.setScrollToRow(scrollToRow);
 		}
 	}
 
@@ -94,14 +96,17 @@ class SelectColumns extends AbstractTable {
 
 		const rows = this.makeRows(this.props.value, this.props.state);
 		const topRightPanel = this.makeAddRemoveButtonPanel(this.props.state, tableButtonConfig);
-
+		let rowToScrollTo;
+		if (Number.isInteger(this.scrollToRow) && rows.length > this.scrollToRow) {
+			rowToScrollTo = this.scrollToRow;
+			delete this.scrollToRow;
+		}
 		const table =	(
 			<FlexibleTable
 				columns={headers}
 				data={rows}
 				showHeader={false}
-				scrollToRow={this.scrollToRow}
-				alignTop={this.alignTop}
+				scrollToRow={rowToScrollTo}
 				topRightPanel={topRightPanel}
 				scrollKey={this.props.control.name}
 				tableState={this.props.state}
