@@ -9,10 +9,11 @@
 /* eslint no-console: "off" */
 /* eslint sort-imports: "off" */
 
-import { getCanvasData, getEventLogData } from "./utilities/test-utils.js";
+import { getCanvasData, getEventLogData, useCmdOrCtrl } from "./utilities/test-utils.js";
 import { addTextForComment, getCommentIdForText, getCommentIdForTextInSubFlow,
 	getCommentIdForTextInSubFlowInSubFlow,
 	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
+	getCommentSelectorInSubFlow,
 	getEventLogCount, getObjectModelCount } from "./utilities/validate-utils.js";
 import isEqual from "lodash/isEqual";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
@@ -186,6 +187,14 @@ module.exports = function() {
 		const commentId = browser.$("#common-canvas-items-container-0").$$(".comment-group")[comIndex].getAttribute("data-id");
 		const cmntSelector = "[data-id='" + commentId + "']";
 		browser.$(cmntSelector).click();
+	});
+
+	this.Then(/^I Ctrl\/Cmnd\+click the comment with text "([^"]*)" to add it to the selections$/, function(commentText) {
+		const useKey = useCmdOrCtrl();
+		browser.keys([useKey]);
+		const commentSelector = getCommentSelectorInSubFlow(commentText, "grp");
+		browser.$(commentSelector).click();
+		browser.keys([useKey]);
 	});
 
 	this.Then(/^I right click the comment with text "([^"]*)" to open the context menu$/, function(commentText) {

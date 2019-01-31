@@ -697,6 +697,12 @@ module.exports = function() {
 		canvasBackground.click();
 	});
 
+	this.Then(/^I right click the canvas background for supernode "([^"]*)" to display the context menu$/, function(nodeName) {
+		const nodeSelector = getNodeSelector(nodeName, "grp");
+		const canvasBackground = browser.$(nodeSelector).$(".svg-area");
+		canvasBackground.rightClick();
+	});
+
 	this.Then(/^I Ctrl\\\/Cmnd\\\+click the expanded supernode canvas background with node label "([^"]*)" to add it to the selections$/, function(nodeName) {
 		const useKey = useCmdOrCtrl();
 		browser.keys([useKey]);

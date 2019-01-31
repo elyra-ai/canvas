@@ -87,6 +87,8 @@ _defineConstant("SAVED_NODES_CATEGORY_ID", "savedNodes");
 
 _defineConstant("USE_DEFAULT_ICON", "useDefaultIcon");
 
+_defineConstant("CONTEXT_MENU_BUTTON", 2);
+
 
 _defineConstant("NODE_MENU_ICON",
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 16.14\">" +

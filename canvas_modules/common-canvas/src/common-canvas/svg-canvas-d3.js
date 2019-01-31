@@ -18,7 +18,7 @@ import { event as d3Event } from "d3-selection";
 import union from "lodash/union";
 import forIn from "lodash/forIn";
 import get from "lodash/get";
-import { NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
+import { CONTEXT_MENU_BUTTON, NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
@@ -941,6 +941,19 @@ class CanvasRenderer {
 					this.drawNewLink();
 				}
 			})
+			// Don't use mousedown.zoom here as it will replace the zoom start behavior
+			// and prevent panning of canvas background.
+			.on("mousedown", () => {
+				this.logger.log("Canvas - mousedown");
+				// When displaying inplace subflow and a context menu is requested
+				// suppress the mouse down which would go to the containing supernode.
+				// This prevents the deselection of any selected nodes in the subflow.
+				if (this.isDisplayingSubFlowInPlace() &&
+						d3Event.button === CONTEXT_MENU_BUTTON) {
+					d3Event.stopPropagation();
+				}
+			})
+
 			.on("mouseup.zoom", () => {
 				this.logger.log("Zoom - mouseup");
 				if (this.drawingNewLink === true) {
@@ -968,9 +981,6 @@ class CanvasRenderer {
 			})
 			.on("contextmenu.zoom", (d) => {
 				this.logger.log("Zoom - context menu");
-				if (this.isDisplayingSubFlowInPlace()) {
-					this.canvasController.clearSelections();
-				}
 				this.openContextMenu("canvas");
 			});
 

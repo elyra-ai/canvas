@@ -276,6 +276,12 @@ function getNodeId(nodeText, selector) {
 	return null;
 }
 
+function getCommentSelectorInSubFlow(commentText, commentElement, extraCanvas) {
+	const commentId = getCommentIdForTextInSubFlow(commentText, extraCanvas);
+	const commentSelector = "[data-id='comment_" + commentElement + "_" + commentId + "']";
+	return commentSelector;
+}
+
 function getCommentIdForText(commentText, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
 	const selector = `div > svg > g > g[data-id^=comment_grp_${inst}]`;
@@ -464,6 +470,7 @@ module.exports = {
 	getNodePortSelectorInSubFlow: getNodePortSelectorInSubFlow,
 	getNodePortTipSelector: getNodePortTipSelector,
 	addTextForComment: addTextForComment,
+	getCommentSelectorInSubFlow: getCommentSelectorInSubFlow,
 	getCommentIdForText: getCommentIdForText,
 	getCommentIdForTextInSubFlow: getCommentIdForTextInSubFlow,
 	getCommentIdForTextInSubFlowInSubFlow: getCommentIdForTextInSubFlowInSubFlow,

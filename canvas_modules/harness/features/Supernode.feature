@@ -226,3 +226,25 @@ Feature: Supernode
 
 		Then I click the expanded supernode canvas background with node label "Supernode3" to select it
 		Then I verify that 1 objects are selected
+
+	Scenario: Test context menu for sub-flow canvas background doesn't deselect nodes or comments
+		Then I resize the window size to 1330 width and 660 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
+		Given I have toggled the app side panel
+
+		# Select a node and check right click on sub-flow background doesn't deselect it
+		Then I right click the "Supernode" node to display the context menu
+		Then I click option "Expand supernode" from the context menu
+		Then I click the "Partition" node in the subflow to select it
+		Then I right click the canvas background for supernode "Supernode" to display the context menu
+		Then I verify that 1 objects are selected
+
+		# Create a comment in the sub-flow and check right on sub-flow background doesn't deselect it
+		Then I click option "New comment" from the context menu
+		Then I edit the comment "" in the subflow with text "Hello Canvas in a sub-flow!"
+		Then I click the "Partition" node in the subflow to select it
+		Then I Ctrl/Cmnd+click the comment with text "Hello Canvas in a sub-flow!" to add it to the selections
+		Then I right click the canvas background for supernode "Supernode" to display the context menu
+		Then I verify that 2 objects are selected
