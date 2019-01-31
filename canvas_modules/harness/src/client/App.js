@@ -1417,10 +1417,24 @@ class App extends React.Component {
 			text: { default: null }
 		};
 
-		const objects1 = { "153651d6-9b88-423c-b01b-861f12d01489": ["id8I6RH2V91XW"] };
-		const objects2 = { "153651d6-9b88-423c-b01b-861f12d01489": ["idGWRVT47XDV"] };
-		const objects3 = { "153651d6-9b88-423c-b01b-861f12d01489": ["nodeIDSuperNodePE"] };
-		const objects4 = { "153651d6-9b88-423c-b01b-861f12d01489": ["id125TTEEIK7V", "id5KIRGGJ3FYT"] };
+		// Note: The pipelineId uses special characters for testing purposes.
+		const pipelineId = "`~!@#$%^&*()_+=-{}][|:;<,>.9?/";
+
+		const bindingEntryNode = "id8I6RH2V91XW";
+		const executionNode = "|:;<,>.9?/`~!@#$%^&*()_+=-{}]["; // The executiion node id uses special characters for testing.
+		const superNode = "nodeIDSuperNodePE";
+		const modelNode = "id125TTEEIK7V";
+		const bindingExitNode = "id5KIRGGJ3FYT";
+
+		const objects1 = [];
+		const objects2 = [];
+		const objects3 = [];
+		const objects4 = [];
+
+		objects1[pipelineId] = [bindingEntryNode];
+		objects2[pipelineId] = [executionNode];
+		objects3[pipelineId] = [superNode];
+		objects4[pipelineId] = [modelNode, bindingExitNode];
 
 		const linkAnimation =
 			"animation-duration:1000ms; animation-name:blink; " +
@@ -1434,13 +1448,18 @@ class App extends React.Component {
 			line: { default: null, hover: null }
 		};
 
-		const lnk1 = this.canvasController.getNodeDataLinkFromInfo("id8I6RH2V91XW", "outPort", "idGWRVT47XDV", "inPort");
-		const link1 = { "153651d6-9b88-423c-b01b-861f12d01489": [lnk1.id]	};
-		const lnk2 = this.canvasController.getNodeDataLinkFromInfo("idGWRVT47XDV", null, "nodeIDSuperNodePE", "input2SuperNodePE");
-		const link2 = { "153651d6-9b88-423c-b01b-861f12d01489": [lnk2.id]	};
-		const lnk3 = this.canvasController.getNodeDataLinkFromInfo("nodeIDSuperNodePE", null, "id125TTEEIK7V", "inPort");
-		const lnk4 = this.canvasController.getNodeDataLinkFromInfo("nodeIDSuperNodePE", "output1SuperNodePE", "id5KIRGGJ3FYT", "inPort");
-		const link3 = { "153651d6-9b88-423c-b01b-861f12d01489": [lnk3.id, lnk4.id]	};
+		const lnk1 = this.canvasController.getNodeDataLinkFromInfo(bindingEntryNode, "outPort", executionNode, "inPort");
+		const lnk2 = this.canvasController.getNodeDataLinkFromInfo(executionNode, null, superNode, "input2SuperNodePE");
+		const lnk3 = this.canvasController.getNodeDataLinkFromInfo(superNode, null, modelNode, "inPort");
+		const lnk4 = this.canvasController.getNodeDataLinkFromInfo(superNode, "output1SuperNodePE", bindingExitNode, "inPort");
+
+		const link1 = [];
+		const link2 = [];
+		const link3 = [];
+
+		link1[pipelineId] = [lnk1.id];
+		link2[pipelineId] = [lnk2.id];
+		link3[pipelineId] = [lnk3.id, lnk4.id];
 
 		const that = this;
 
