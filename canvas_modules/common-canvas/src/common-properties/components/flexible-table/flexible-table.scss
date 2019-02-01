@@ -83,7 +83,7 @@ $flexible-table-header-row-height: 32px;
 			height: 100%;
 			display: inline-flex;
 			align-items: center;
-			padding: 8px 0 8px $table-column-left-padding;
+			padding: 0 0 0 $table-column-left-padding;
 			vertical-align: middle;
 			font-weight: 600;
 			// sort icon in header
@@ -106,7 +106,6 @@ $flexible-table-header-row-height: 32px;
 		}
 
 		.properties-tooltips-container {
-			height: 100%;
 			width: inherit;
 			overflow: hidden;
 			text-overflow: ellipsis;
