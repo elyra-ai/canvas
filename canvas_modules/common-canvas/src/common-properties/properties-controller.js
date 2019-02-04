@@ -268,19 +268,19 @@ export default class PropertiesController {
 			if (resolveParameterRefs) {
 				if (typeof controlValue !== "undefined" && controlValue !== null && typeof controlValue.parameterRef !== "undefined") {
 					controlValue = this.getPropertyValue({ name: controlValue.parameterRef });
-					this.updatePropertyValue(propertyId, controlValue);
+					this.updatePropertyValue(propertyId, controlValue, true);
 				}
 			} else if (control.controlType === "structuretable" && control.addRemoveRows === false && control.includeAllFields === true) {
 				controlValue = this._populateFieldData(controlValue, control);
-				this.updatePropertyValue(propertyId, controlValue);
+				this.updatePropertyValue(propertyId, controlValue, true);
 			} else if (typeof control.valueDef !== "undefined" && typeof control.valueDef.defaultValue !== "undefined" &&
 				(typeof controlValue === "undefined")) {
 				controlValue = control.valueDef.defaultValue;
-				this.updatePropertyValue(propertyId, controlValue);
+				this.updatePropertyValue(propertyId, controlValue, true);
 			} else if (control.controlType === "structureeditor") {
 				if (!controlValue || (Array.isArray(controlValue) && controlValue.length === 0)) {
 					if (Array.isArray(control.defaultRow)) {
-						this.updatePropertyValue(propertyId, control.defaultRow);
+						this.updatePropertyValue(propertyId, control.defaultRow, true);
 					}
 				}
 			}

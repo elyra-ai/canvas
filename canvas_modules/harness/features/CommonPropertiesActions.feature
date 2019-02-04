@@ -36,7 +36,7 @@ Feature: CommonPropertiesActions
     Given I have toggled the app side common-properties panel
     Then I have selected the "Flyout" properties container type
     Given I have uploaded JSON for common-properties "structuretable_paramDef.json"
-    Then I open the "Configure Rename fields" summary link in the "TABLES (1)" category
+    Then I open the "Configure Rename fields" summary link in the "TABLES" category
     Then I click the subpanel button in control "structuretableReadonlyColumnDefaultIndex" in row "0"
     Then I enter "This is a very long sentence of text to test whether or not an overflow of text occurs" in textfield "structuretableReadonlyColumnDefaultIndex_0_3" in parent control "structuretableReadonlyColumnDefaultIndex" in row "0"
     Then I click the subpanel button "OK" button in control "structuretableReadonlyColumnDefaultIndex" in row "0"
