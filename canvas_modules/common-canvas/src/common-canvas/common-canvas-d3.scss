@@ -507,10 +507,6 @@ $link-hightlight-color: $brand-01;
 	fill: $comment-text-color;  /* Must be the same as color in .d3-comment-display */
 }
 
-.d3-comment-text[beingedited="yes"] {
-	fill: transparent;
-}
-
 /* Style for comment text when displayed as SVG text */
 .d3-comment-text-tspan {
 	font-size: $comment-text-font-size;

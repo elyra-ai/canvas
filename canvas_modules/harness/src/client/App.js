@@ -251,6 +251,10 @@ class App extends React.Component {
 		try {
 			this.canvasController = new CanvasController();
 			this.canvasController2 = new CanvasController();
+			// TODO - Remove these calls when we transition to V3 schemas permanently
+			this.canvasController.setReturnPipelineFlowDraftVersion(true);
+			this.canvasController.setReturnPipelineFlowDraftVersion(true);
+
 		} catch (err) {
 			console.error("Error setting up canvas controllers: " + err);
 		}
@@ -1177,7 +1181,8 @@ class App extends React.Component {
 		} else if (action === "delete") {
 			this.log("toolbar action: delete", source);
 		} else if (action === "run") {
-			if (this.state.selectedCanvasDropdownFile === "allTypesCanvas.json") {
+			if (this.state.selectedCanvasDropdownFile === "allTypesCanvas.json" ||
+					this.state.selectedCanvasDropdownFile === "stylesCanvas.json") {
 				this.runProgress();
 			}
 		}

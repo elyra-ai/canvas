@@ -3354,7 +3354,6 @@ class CanvasRenderer {
 					// Comment text
 					commentGrp.select(this.getSelectorForId("comment_text", d.id))
 						.datum(comment) // Set the __data__ to the updated data
-						.attr("beingedited", that.editingCommentId === d.id ? "yes" : "no") // Use the beingedited css style to make text transparent
 						.each(function(cd) {
 							var textObj = d3.select(this);
 							textObj.selectAll("tspan").remove();
@@ -3382,7 +3381,7 @@ class CanvasRenderer {
 
 	setCommentStyles(d, type, comGrp) {
 		this.setCommentBodyStyles(d, type, comGrp);
-		this.setNodeSelectionOutlineStyles(d, type, comGrp);
+		this.setCommentSelectionOutlineStyles(d, type, comGrp);
 		this.setCommentTextStyles(d, type, comGrp);
 	}
 
@@ -3400,6 +3399,12 @@ class CanvasRenderer {
 		let style = this.getObjectStyle(d, "text", type);
 		const clipRectStyle = this.getClipRectStyle(d);
 		style = style ? clipRectStyle + style : clipRectStyle;
+		// When editing a comment always override the text fill color with
+		// 'transparent' so the SVG text becomes invisible and the user only sees
+		// the text in the textarea which is open during editing.
+		if (d.id === this.editingCommentId && this.editingComment) {
+			style = style ? style + " fill: transparent" : "fill: transparent";
+		}
 		comGrp.select(this.getSelectorForId("comment_text", d.id)).attr("style", style);
 	}
 
@@ -3470,11 +3475,6 @@ class CanvasRenderer {
 	}
 
 	displayTextArea(d) {
-		// Make SVG text invisible when in edit mode. This will be reversed when
-		// leaving edit mode.
-		this.canvasGrp.selectAll(this.getSelectorForId("comment_text", d.id))
-			.attr("beingedited", "yes");
-
 		const that = this;
 		const datum = d;
 
@@ -3510,8 +3510,6 @@ class CanvasRenderer {
 				that.logger.log("Text area - blur");
 				var commentObj = that.getComment(datum.id);
 				commentObj.content = this.value;
-				that.canvasGrp.selectAll(that.getSelectorForId("comment_text", cd.id))
-					.attr("beingedited", "no");
 				that.saveCommentChanges(this);
 				that.closeCommentTextArea();
 				that.displayComments();
