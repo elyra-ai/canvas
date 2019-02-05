@@ -135,6 +135,9 @@ export class Control extends ControlDef {
 		if (settings.layout) {
 			this.layout = settings.layout;
 		}
+		if (settings.dmImage) {
+			this.dmImage = settings.dmImage;
+		}
 	}
 }
 
@@ -154,6 +157,9 @@ export class SubControl extends ControlDef {
 		}
 		if (settings.dmDefault) {
 			this.dmDefault = settings.dmDefault;
+		}
+		if (settings.dmImage) {
+			this.dmImage = settings.dmImage;
 		}
 	}
 }

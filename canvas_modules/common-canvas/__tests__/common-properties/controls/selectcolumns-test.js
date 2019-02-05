@@ -431,3 +431,22 @@ describe("selectcolumns control functions correctly in a table", () => {
 	});
 
 });
+
+describe("measurement icons should be rendered correctly in selectcolumns", () => {
+	var wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+	fit("measurement icons should render in selectcolumns control if dm_image is enabled", () => {
+		const tableWrapper = wrapper.find("div[data-id='properties-ft-fields1_panel']");
+		expect(tableWrapper.find("div.properties-field-type-icon")).to.have.length(1);
+	});
+	it("measurement icons should render in fieldpicker of selectcolumns control where dm_image is set to measure", () => {
+		const tableWrapper = wrapper.find("div[data-id='properties-ft-fields1_panel']");
+		expect(tableWrapper.find("div.properties-field-type-icon")).to.have.length(1);
+	});
+});

@@ -100,7 +100,8 @@
         "text_after": {
           "default": "Values shared with 'Fields2 Panel'.  Issue 1054",
           "type": "info"
-        }
+        },
+        "dm_image":"measure"
       },
       {
         "parameter_ref": "fields2_panel",
@@ -118,7 +119,8 @@
         },
         "description": {
           "default": "Filters out all fields without a 'measurement' of 'discrete'.  Should be all '*BP*' and 'stringAndDiscrete' fields."
-        }
+        },
+        "dm_image":"measure"
       },
       {
         "parameter_ref": "fields_filter_measurements",
@@ -136,7 +138,8 @@
         },
         "description": {
           "default": "Filters out all fields without a 'type' of 'integer' and 'double' using 'values'.  Should be all '*age*', 'Na*' 'intAndRange' fields."
-        }
+        },
+        "dm_image":"measure"
       },
       {
         "parameter_ref": "fields_filter_types",
@@ -145,7 +148,8 @@
         },
         "description": {
           "default": "Filters out all fields without a 'type' of 'integer'.  Should be all '*age*' and 'intAndRange' fields."
-        }
+        },
+        "dm_image":"measure"
       },
       {
         "parameter_ref": "fields_filter_and",
@@ -154,7 +158,8 @@
         },
         "description": {
           "default": "Filters out all fields without a 'type' of 'string' and 'measurement' of 'set'.  Should be all '*drug*' and 'stringAndSet' fields."
-        }
+        },
+        "dm_image":"measure"
       },
       {
         "parameter_ref": "fields_filter_or",
@@ -163,7 +168,8 @@
         },
         "description": {
           "default": "Filters out all fields without a 'type' of 'integer' or 'measurement' of 'set'.  Should be all '*drug*', '*age*', 'stringAndSet', and 'intAndRange' fields."
-        }
+        },
+        "dm_image":"measure"
       }
     ],
     "group_info": [

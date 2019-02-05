@@ -247,7 +247,8 @@
       },
       {
         "parameter_ref": "inputs",
-        "resource_key": "inputs"
+        "resource_key": "inputs",
+        "dm_image":"measure"
       },
       {
         "parameter_ref": "use_max_depth",

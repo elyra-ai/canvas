@@ -290,6 +290,48 @@ function getDMDefault(subControlDef, fieldName, fields) {
 	return defaultValue;
 }
 
+function getDMFieldIcon(fields, value, iconType) {
+	let icon;
+	const correctField = fields.find(function(field) {
+		return field.origName === value;
+	});
+	if (iconType === "measure") {
+		if (!correctField) {
+			return "measurementEmpty";
+		}
+		const measureLevel = correctField.metadata.measure;
+		switch (measureLevel) {
+		case "range":
+			icon = "measurementScale";
+			break;
+		case "ordered_set":
+			icon = "measurementOrdinal";
+			break;
+		case "discrete":
+			icon = "measurementDiscrete";
+			break;
+		case "set":
+			icon = "measurementNominal";
+			break;
+		case "flag":
+			icon = "measurementFlag";
+			break;
+		case "collection":
+			icon = "measurementNominal";
+			break;
+		case "geospatial":
+			icon = "measurementNominal";
+			break;
+		default:
+			icon = "measurementEmpty";
+			break;
+		}
+	}
+	return icon;
+
+}
+
+
 // Attempts to synchronize the Modeler notions of measurement level
 // and modeling role with those defined in datarecord-metadata.
 function _findCorrespondingValue(input, values) {
@@ -327,5 +369,6 @@ module.exports = {
 	fieldValueMatchesProto: fieldValueMatchesProto,
 	fieldStringToValue: fieldStringToValue,
 	generateId: generateId,
-	getDMDefault: getDMDefault
+	getDMDefault: getDMDefault,
+	getDMFieldIcon: getDMFieldIcon
 };

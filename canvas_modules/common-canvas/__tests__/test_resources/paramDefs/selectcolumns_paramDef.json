@@ -259,7 +259,8 @@
         "text_after": {
           "default": "Values shared with 'Fields2 Panel'.  Issue 1054",
           "type": "info"
-        }
+        },
+        "dm_image":"measure"
       },
       {
         "parameter_ref": "fields2_panel",
@@ -268,7 +269,8 @@
         },
         "description": {
           "default": "selectcolumns with parameter shared with Field1 Panel"
-        }
+        },
+        "dm_image":"measure"
       },
       {
         "parameter_ref": "fields_error",

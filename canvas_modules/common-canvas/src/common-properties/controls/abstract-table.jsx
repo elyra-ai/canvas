@@ -305,6 +305,13 @@ export default class AbstractTable extends React.Component {
 		const cellClassName = "";
 		const ControlFactory = this.props.controller.getControlFactory();
 		let cellContent;
+		const columnDefObj = Object.assign({}, columnDef); // clone columnDef
+		if (columnDef.dmImage) {
+			const fields = this.props.controller.getDatasetMetadataFields();
+			const stringValue = PropertyUtils.stringifyFieldValue(this.props.controller.getPropertyValue(propertyId), columnDef, true);
+			columnDefObj.icon = PropertyUtils.getDMFieldIcon(fields,
+				stringValue, columnDef.dmImage);
+		}
 		if (columnDef.editStyle === EditStyle.SUBPANEL || columnDef.editStyle === EditStyle.ON_PANEL) {
 			if (selectSummaryRow) {
 				cellContent = <div />;
@@ -315,7 +322,7 @@ export default class AbstractTable extends React.Component {
 						propertyId={propertyId}
 						controller={this.props.controller}
 						tableControl
-						columnDef={columnDef}
+						columnDef={columnDefObj}
 					/>
 				</div>);
 				if (columnDef.editStyle === EditStyle.ON_PANEL) {
@@ -326,7 +333,7 @@ export default class AbstractTable extends React.Component {
 		} else { // defaults to inline control
 			tableInfo.editStyle = EditStyle.INLINE;
 			cellContent = (<div className="properties-table-cell-control">
-				{ControlFactory.createControl(columnDef, propertyId, tableInfo)}
+				{ControlFactory.createControl(columnDefObj, propertyId, tableInfo)}
 			</div>);
 
 		}

@@ -159,7 +159,26 @@ export default class FieldPicker extends React.Component {
 						labelText={field.name}
 					/></div>)
 			});
-			columns.push({ column: "fieldName", content: field.origName });
+			let fieldContent = field.origName;
+			if (this.props.dmIcon) {
+				const metadata = this.props.controller.getDatasetMetadataFields();
+				const dmIcon = PropertyUtils.getDMFieldIcon(metadata,
+					field.origName, this.props.dmIcon);
+				fieldContent = (
+					<div className="properties-fp-field">
+						<div className="properties-fp-field-type-icon">
+							<Icon type={dmIcon} />
+						</div>
+						<div className="properties-fp-field-type">
+							{field.origName}
+						</div>
+					</div>
+				);
+			}
+			columns.push({
+				column: "fieldName",
+				content: fieldContent
+			});
 			if (this.multiSchema) {
 				columns.push({ column: "schemaName", content: field.schema });
 			}
@@ -533,4 +552,5 @@ FieldPicker.propTypes = {
 	title: PropTypes.string,
 	controller: PropTypes.object.isRequired,
 	rightFlyout: PropTypes.bool,
+	dmIcon: PropTypes.string
 };

@@ -505,6 +505,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	settings.uionly = parameter.uionly;
 	settings.includeAllFields = includeAllFields;
 	settings.layout = layout;
+	settings.dmImage = parameter.dmImage;
 	return new Control(settings);
 }
 
@@ -650,6 +651,7 @@ function _makeSubControl(parameter, l10nProvider) {
 	settings.editStyle = parameter.editStyle;
 	settings.isKeyField = parameter.isKey;
 	settings.dmDefault = parameter.dmDefault;
+	settings.dmImage = parameter.dmImage;
 	settings.language = parameter.language;
 	settings.summary = parameter.summary;
 	settings.increment = parameter.increment;

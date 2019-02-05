@@ -14,6 +14,7 @@ import ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import { STATES, TOOL_TIP_DELAY } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
+import Icon from "./../../../icons/icon.jsx";
 import uuid4 from "uuid/v4";
 
 import { ControlType } from "./../../constants/form-constants";
@@ -39,7 +40,7 @@ class ReadonlyControl extends React.Component {
 				controlValue = this.props.controller.getCustomControl(this.props.propertyId, this.props.columnDef, { table: true, editStyle: "summary" });
 			}
 		}
-		const readOnly = <span disabled={this.props.state === STATES.DISABLED}>{controlValue}</span>;
+		const readOnly = <span className="properties-field-type" disabled={this.props.state === STATES.DISABLED}>{controlValue}</span>;
 		let display = readOnly;
 		if (this.props.tableControl) {
 			const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
@@ -52,6 +53,12 @@ class ReadonlyControl extends React.Component {
 					{String(controlValue)}
 				</div>
 			);
+			let icon = "";
+			if (this.props.control.icon) {
+				icon = (<div className={"properties-field-type-icon"}>
+					<Icon type={this.props.control.icon} />
+				</div>);
+			}
 			display = (<Tooltip
 				id={tooltipId}
 				tip={tooltip}
@@ -60,6 +67,7 @@ class ReadonlyControl extends React.Component {
 				className="properties-tooltips"
 				disable={disabled}
 			>
+				{icon}
 				{readOnly}
 			</Tooltip>);
 		}
@@ -76,6 +84,7 @@ class ReadonlyControl extends React.Component {
 }
 
 ReadonlyControl.propTypes = {
+	icon: PropTypes.string,
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,

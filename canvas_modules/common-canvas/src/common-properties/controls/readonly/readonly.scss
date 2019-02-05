@@ -28,6 +28,15 @@
 		&[disabled] {
 			opacity: 0.5;
 		}
+		&.properties-field-type {
+			line-height: 0;
+		}
+	}
+	.properties-field-type-icon {
+		width: 15px;
+		height: 15px;
+		float: left;
+		margin-right: 5px;
 	}
 	.tooltip-trigger {
 		width: inherit;
@@ -36,9 +45,11 @@
 		white-space: nowrap;
 		span {
 			white-space: nowrap;
-			line-height: 1.5;
 			&[disabled] {
 				opacity: 0.5;
+			}
+			&.properties-field-type {
+				line-height: 0;
 			}
 		}
 	}

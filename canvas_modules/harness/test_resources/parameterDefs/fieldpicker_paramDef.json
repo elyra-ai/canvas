@@ -116,7 +116,8 @@
               "resource_key": "structuretableMultiInputSchema.field.label"
             },
             "width": 26,
-            "summary": true
+            "summary": true,
+            "dm_image": "measure"
           },
           {
             "parameter_ref": "new_name",

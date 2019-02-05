@@ -956,3 +956,30 @@ describe("structuretable columns sort correctly", () => {
 
 	});
 });
+
+describe("measurement icons should be rendered correctly in structuretable", () => {
+	var wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+	it("measurement icons should render for table where dm_image is set to measure ", () => {
+		propertyUtils.openSummaryPanel(wrapper, "structuretableSortableColumns-summary-panel");
+		const tableWrapper = wrapper.find("div[data-id='properties-ft-structuretableSortableColumns']");
+		expect(tableWrapper.find("div.properties-field-type-icon")).to.have.length(2);
+	});
+	it("measurement icons should render in fieldpicker for table where dm_image is set to measure", () => {
+		propertyUtils.openSummaryPanel(wrapper, "structuretableSortableColumns-summary-panel");
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-structuretableSortableColumns");
+		expect(fieldPicker.find("div.properties-fp-field-type-icon")).to.have.length(8);
+	});
+	it("measurement icons should not render for table where dm_image value is set to invalid value", () => {
+		propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
+		const tableWrapper = wrapper.find("div[data-id='properties-ft-structuretableReadonlyColumnStartValue']"); // "dm_image"="invalid"
+		expect(tableWrapper.find("div.properties-field-type-icon")).to.have.length(0);
+	});
+});

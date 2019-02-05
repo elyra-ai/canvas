@@ -15,6 +15,8 @@ import MoveableTableRows from "./../../components/moveable-table-rows";
 import AbstractTable from "./../abstract-table.jsx";
 import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
+import PropertyUtils from "./../../util/property-utils";
+
 import { TABLE_SCROLLBAR_WIDTH, STATES } from "./../../constants/constants";
 
 import ReadonlyControl from "./../readonly";
@@ -34,18 +36,24 @@ class SelectColumns extends AbstractTable {
 		if (controlValue) {
 			for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				const columns = [];
-
 				// If the propertyId contains 'row' then this selectcolumns control is part of a table.
 				// Need to add an additional 'index' to retrieve the correct value from the control within a table.
 				const row = typeof this.props.propertyId.row !== "undefined"
 					? { row: this.props.propertyId.row, index: rowIndex }
 					: { row: rowIndex };
 				const propertyId = Object.assign({}, this.props.propertyId, row);
-
+				const control = Object.assign({}, this.props.control);
+				if (control.dmImage) {
+					const fields = this.props.controller.getDatasetMetadataFields();
+					const value = PropertyUtils.stringifyFieldValue(this.props.controller.getPropertyValue(propertyId), control, true);
+					const icon = PropertyUtils.getDMFieldIcon(fields,
+						value, control.dmImage);
+					control.icon = icon;
+				}
 				const cellContent = (
 					<div className="properties-table-cell-control">
 						<ReadonlyControl
-							control={this.props.control}
+							control={control}
 							propertyId={propertyId}
 							controller={this.props.controller}
 							tableControl

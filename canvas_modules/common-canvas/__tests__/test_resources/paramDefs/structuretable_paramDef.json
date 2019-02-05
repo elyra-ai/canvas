@@ -738,7 +738,8 @@
           "label": {
             "resource_key": "structuretableReadonlyColumnStartValue.field.label"
           },
-          "summary": true
+          "summary": true,
+          "dm_image": "invalid"
         },
         "parameters": [
           {
@@ -788,6 +789,7 @@
             "operation": "index"
           },
           "control": "readonly"
+
         },
         "parameters": [
           {
@@ -796,7 +798,8 @@
               "resource_key": "structuretableReadonlyColumnDefaultIndex.field.label"
             },
             "width": 26,
-            "summary": true
+            "summary": true,
+            "dm_image":"measure"
           },
           {
             "parameter_ref": "new_name",
@@ -882,7 +885,8 @@
           "label": {
             "resource_key": "structuretableNoButtons.field.label"
           },
-          "summary": true
+          "summary": true,
+          "dm_image":"measure"
         },
         "parameters": [
           {
@@ -955,7 +959,8 @@
             },
             "width": 26,
             "summary": true,
-            "sortable": true
+            "sortable": true,
+            "dm_image": "measure"
           },
           {
             "parameter_ref": "new_name",
@@ -1753,83 +1758,83 @@
     }
   ],
   "dataset_metadata": [
+{
+  "fields": [
     {
-      "fields": [
-        {
-          "name": "Age",
-          "type": "integer",
-          "metadata": {
-            "description": "",
-            "measure": "range",
-            "modeling_role": "input"
-          }
-        },
-        {
-          "name": "Sex",
-          "type": "string",
-          "metadata": {
-            "description": "",
-            "measure": "discrete",
-            "modeling_role": "input"
-          }
-        },
-        {
-          "name": "BP",
-          "type": "string",
-          "metadata": {
-            "description": "",
-            "measure": "discrete",
-            "modeling_role": "input"
-          }
-        },
-        {
-          "name": "Cholesterol",
-          "type": "string",
-          "metadata": {
-            "description": "",
-            "measure": "discrete",
-            "modeling_role": "input"
-          }
-        },
-        {
-          "name": "Na",
-          "type": "double",
-          "metadata": {
-            "description": "",
-            "measure": "range",
-            "modeling_role": "input"
-          }
-        },
-        {
-          "name": "K",
-          "type": "double",
-          "metadata": {
-            "description": "",
-            "measure": "range",
-            "modeling_role": "input"
-          }
-        },
-        {
-          "name": "Drug",
-          "type": "string",
-          "metadata": {
-            "description": "",
-            "measure": "discrete",
-            "modeling_role": "input"
-          }
-        },
-        {
-          "name": "Ag",
-          "type": "integer",
-          "metadata": {
-            "description": "",
-            "measure": "range",
-            "modeling_role": "input"
-          }
-        }
-      ]
+      "name": "Age",
+      "type": "integer",
+      "metadata": {
+        "description": "",
+        "measure": "range",
+        "modeling_role": "input"
+      }
+    },
+    {
+      "name": "Sex",
+      "type": "string",
+      "metadata": {
+        "description": "",
+        "measure": "ordered_set",
+        "modeling_role": "input"
+      }
+    },
+    {
+      "name": "BP",
+      "type": "string",
+      "metadata": {
+        "description": "",
+        "measure": "discrete",
+        "modeling_role": "input"
+      }
+    },
+    {
+      "name": "Cholesterol",
+      "type": "string",
+      "metadata": {
+        "description": "",
+        "measure": "set",
+        "modeling_role": "input"
+      }
+    },
+    {
+      "name": "Na",
+      "type": "double",
+      "metadata": {
+        "description": "",
+        "measure": "flag",
+        "modeling_role": "input"
+      }
+    },
+    {
+      "name": "K",
+      "type": "double",
+      "metadata": {
+        "description": "",
+        "measure": "collection",
+        "modeling_role": "input"
+      }
+    },
+    {
+      "name": "Drug",
+      "type": "string",
+      "metadata": {
+        "description": "",
+        "measure": "geospatial",
+        "modeling_role": "input"
+      }
+    },
+    {
+      "name": "Ag",
+      "type": "integer",
+      "metadata": {
+        "description": "",
+        "measure": "",
+        "modeling_role": "input"
+      }
     }
-  ],
+  ]
+}
+],
   "resources": {
     "structuretableReadonlyColumnStartValue.label": "Sort",
     "structuretableReadonlyColumnStartValue.field.label": "Field",

@@ -182,6 +182,7 @@
           "default": "Use arrows to reorder the sorting priority. The index column will be auto-populated with an integer value for each row starting at 5. Subsequent rows will be incremented by 1.",
           "placement": "on_panel"
         }
+
       },
       {
         "parameter_ref": "structuretable_filter",
@@ -221,7 +222,8 @@
           "label": {
             "resource_key": "structuretableReadonlyColumnStartValue.field.label"
           },
-          "summary": true
+          "summary": true,
+          "dm_image":"measure"
         },
         "parameters": [
           {
@@ -252,7 +254,8 @@
             "value_icons": [
               "/images/up-triangle.svg",
               "/images/down-triangle.svg"
-            ]
+            ],
+            "dm_image":"measure"
           }
         ]
       },
@@ -337,7 +340,8 @@
             },
             "width": 26,
             "summary": true,
-            "sortable": true
+            "sortable": true,
+            "dm_image":"measure"
           },
           {
             "parameter_ref": "new_name",

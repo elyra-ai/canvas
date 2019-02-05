@@ -504,6 +504,16 @@ class EditorForm extends React.Component {
 
 			// create a list of field names to be passed into the field picker
 			const control = this.props.controller.getControl(this.fieldPickerPropertyId);
+			let dmImage;
+			const tableFieldIndex = PropertyUtil.getTableFieldIndex(control);
+			const subControls = control.subControls;
+			if (tableFieldIndex !== -1) {
+				if (!subControls) {
+					dmImage = control.dmImage;
+				} else {
+					dmImage = subControls[tableFieldIndex].dmImage;
+				}
+			}
 			const formattedFieldsList = PropertyUtil.getFieldsFromControlValues(control, currentControlValues, fields);
 
 			return (<div className="properties-fp-table">
@@ -515,6 +525,7 @@ class EditorForm extends React.Component {
 					fields={fields}
 					title={title}
 					rightFlyout={this.props.rightFlyout}
+					dmIcon={dmImage}
 				/>
 			</div>);
 		}

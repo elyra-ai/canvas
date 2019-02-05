@@ -13,7 +13,7 @@ import { ResourceDef } from "../util/L10nProvider";
 import propertyOf from "lodash/propertyOf";
 import PropertyUtil from "../util/property-utils";
 
-/* eslint complexity: ["error", 40] */
+/* eslint complexity: ["error", 41] */
 
 export class ParameterDef {
 	constructor(settings) {
@@ -95,6 +95,9 @@ export class ParameterDef {
 		}
 		if (settings.dmDefault) {
 			this.dmDefault = settings.dmDefault;
+		}
+		if (settings.dmImage) {
+			this.dmImage = settings.dmImage;
 		}
 		if (settings.language) {
 			this.language = settings.language;
@@ -314,6 +317,7 @@ export class ParameterDef {
 				"numberGenerator": propertyOf(uihint)("number_generator"),
 				"isKey": isKey,
 				"dmDefault": propertyOf(uihint)("dm_default"),
+				"dmImage": propertyOf(uihint)("dm_image"),
 				"language": propertyOf(uihint)("language"),
 				"summary": propertyOf(uihint)("summary"),
 				"increment": propertyOf(uihint)("increment"),

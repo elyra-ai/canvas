@@ -785,7 +785,8 @@
           "resource_key": "residual_subject_ui_spec.desc"
         },
         "moveable_rows": true,
-        "separator": "before"
+        "separator": "before",
+        "dm_image":"measure"
       },
       {
         "parameter_ref": "repeated_ui_measures",
@@ -795,7 +796,8 @@
         "description": {
           "resource_key": "repeated_ui_measures.desc"
         },
-        "moveable_rows": true
+        "moveable_rows": true,
+        "dm_image":"measure"
       },
       {
         "parameter_ref": "residual_group_spec",
