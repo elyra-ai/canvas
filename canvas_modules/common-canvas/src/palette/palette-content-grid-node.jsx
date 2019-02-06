@@ -40,12 +40,14 @@ class PaletteContentNode extends React.Component {
 	}
 
 	onMouseOver(ev) {
-		this.props.canvasController.openTip({
-			id: "paletteTip_" + this.props.nodeTemplate.op,
-			type: TIP_TYPE_PALETTE_ITEM,
-			targetObj: ev.currentTarget,
-			nodeTemplate: this.props.nodeTemplate
-		});
+		if (ev.button === 0) {
+			this.props.canvasController.openTip({
+				id: "paletteTip_" + this.props.nodeTemplate.op,
+				type: TIP_TYPE_PALETTE_ITEM,
+				targetObj: ev.currentTarget,
+				nodeTemplate: this.props.nodeTemplate
+			});
+		}
 	}
 
 	onMouseLeave() {
