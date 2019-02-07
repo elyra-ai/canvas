@@ -54,7 +54,9 @@ export default class MoveableTableRows extends React.Component {
 	}
 
 	topMoveRow(evt) {
-		var selected = this.props.controller.getSelectedRows(this.props.propertyId).sort();
+		var selected = this.props.controller.getSelectedRows(this.props.propertyId).sort(function(a, b) {
+			return a - b;
+		});
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		for (var firstRow = selected[0]; firstRow > 0; firstRow--) {
 			for (var i = 0; i <= selected.length - 1; i++) {
@@ -73,7 +75,9 @@ export default class MoveableTableRows extends React.Component {
 	}
 
 	upMoveRow(evt) {
-		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort();
+		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort(function(a, b) {
+			return a - b;
+		});
 		// only move up if not already at the top especially for multiple selected
 		if (selected.length !== 0 && selected[0] !== 0) {
 			const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
@@ -101,7 +105,9 @@ export default class MoveableTableRows extends React.Component {
 	}
 
 	downMoveRow(evt) {
-		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort();
+		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort(function(a, b) {
+			return a - b;
+		});
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		// only move down if not already at the end especially for multiple selected
 		if (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) {
@@ -129,7 +135,9 @@ export default class MoveableTableRows extends React.Component {
 	}
 
 	bottomMoveRow(evt) {
-		var selected = this.props.controller.getSelectedRows(this.props.propertyId).sort();
+		var selected = this.props.controller.getSelectedRows(this.props.propertyId).sort(function(a, b) {
+			return a - b;
+		});
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		for (var lastRow = selected[selected.length - 1]; lastRow < controlValue.length - 1; lastRow++) {
 			for (var i = selected.length - 1; i >= 0; i--) {
