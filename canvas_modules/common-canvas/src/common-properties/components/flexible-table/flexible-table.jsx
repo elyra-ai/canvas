@@ -200,9 +200,8 @@ export default class FlexibleTable extends React.Component {
 					const fontSize = parseFloat(style);
 					// this is to adjust for multiple-select edit.
 					// There is one additional row and header to account for.
-					const mseHeight = this.props.selectedEditRow ? rowHeight + fixedHeaderHeight + 1 : 0;
 					const minHeight = (rowHeight * 2 + headerHeight);
-					newHeight = (parentElement.offsetHeight - tableElement.offsetTop) / fontSize + headerHeight - mseHeight;
+					newHeight = (parentElement.offsetHeight - tableElement.offsetTop) / fontSize + headerHeight;
 					newHeight = Math.max(newHeight, minHeight);
 				} else {
 					newHeight = (rowHeight * 4 + headerHeight);
