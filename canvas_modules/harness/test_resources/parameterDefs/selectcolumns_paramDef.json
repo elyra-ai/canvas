@@ -390,7 +390,8 @@
         },
         "description": {
           "default": "Complex table control list editor with sub-panel column select control"
-        }
+        },
+				"rows": -1
       }
     ],
     "complex_type_info": [

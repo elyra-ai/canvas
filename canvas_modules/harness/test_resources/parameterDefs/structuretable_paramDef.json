@@ -580,7 +580,7 @@
         "description": {
           "default": "Filters fields that aren't of type 'string'"
         },
-        "rows": 12
+        "rows": -1
       },
       {
         "parameter_ref": "structuretableNoButtons",
@@ -679,7 +679,7 @@
           "default": "If 'Text' field is 'European' then 'Sport' will not be allowed to change to 'Football'.",
           "placement": "on_panel"
         },
-        "rows": 12
+        "rows": -1
       },
       {
         "id": "ST_mse_table",

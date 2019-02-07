@@ -16,6 +16,12 @@ module.exports = function() {
 		browser.pause(500);
 	});
 
+	this.Then(/^I verify the table "([^"]*)" is of height "([^"]*)"$/, function(tableId, height) {
+		const table = browser.$("div[data-id='properties-ft-" + tableId + "']");
+		const data = table.$(".properties-ft-container-wrapper");
+		expect(data.getCssProperty("height").value).toEqual(height);
+	});
+
 	/*
 	* selectColumns steps
  	*/

@@ -18,3 +18,12 @@ Feature: StructureTableControl
 		Then I verify readonly control "structuretableReadonlyColumnDefaultIndex_0_3" value is "textValue"
 		Then I click on the "structuretableReadonlyColumnDefaultIndex-summary-panel" panel OK button
 		Then I click on the "OK" button
+
+	Scenario: Test the feature to have tables use the available vertical space
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side common-properties panel
+		Then I have selected the "Flyout" properties container type
+		Given I have uploaded JSON for common-properties "structuretable_paramDef.json"
+		Then I open the "MSE Structure Table" summary link in the "TABLES" category
+		Then I verify the table "ST_mse_table" is of height "569px"

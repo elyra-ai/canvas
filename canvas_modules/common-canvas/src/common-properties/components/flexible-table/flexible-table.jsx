@@ -168,18 +168,47 @@ export default class FlexibleTable extends React.Component {
 		if (this.props.noAutoSize) {
 			return;
 		}
+		let newHeight = this.state.tableHeight;
 		const rowHeight = 3; // in em
 		const fixedHeaderHeight = 2.5;
-		const rows = this.props.rows ? this.props.rows : 4;
-		// this is to adjust for multiple-select edit.
-		// There is one additional row and header to account for.
-		const mseHeight = this.props.selectedEditRow ? rowHeight + fixedHeaderHeight : 0;
 		// Allow for the table header
 		let headerHeight = 0;
 		if (this.theadNode) {
 			headerHeight = fixedHeaderHeight; // in em
 		}
-		const newHeight = (rowHeight * rows + headerHeight + mseHeight);
+		const rows = this.props.rows ? this.props.rows : 4;
+		if (rows > 0) {
+			newHeight = (rowHeight * rows + headerHeight);
+		} else {
+			// A -1 row count indicates a desire to use the entire available vertical space
+			const rootElement = document.getElementById("root");
+			let container = rootElement ? rootElement.getElementsByClassName("properties-wf-children") : [];
+			if (rootElement && container.length === 0) {
+				container = rootElement.getElementsByClassName("bx--modal-content");
+			}
+			if (container.length > 0) {
+				const parentElement = container[0];
+				let tableElement = this.flexibleTableDiv ? this.flexibleTableDiv.parentNode.parentNode : null;
+				if (!tableElement) {
+					const tableElements =	parentElement.getElementsByClassName("properties-ft-container-wrapper");
+					if (tableElements.length > 0) {
+						tableElement = tableElements[tableElements.length - 1];
+					}
+				}
+				if (tableElement) {
+					const style = window.getComputedStyle(tableElement, null).getPropertyValue("font-size");
+					const fontSize = parseFloat(style);
+					// this is to adjust for multiple-select edit.
+					// There is one additional row and header to account for.
+					const mseHeight = this.props.selectedEditRow ? rowHeight + fixedHeaderHeight + 1 : 0;
+					const minHeight = (rowHeight * 2 + headerHeight);
+					newHeight = (parentElement.offsetHeight - tableElement.offsetTop) / fontSize + headerHeight - mseHeight;
+					newHeight = Math.max(newHeight, minHeight);
+				} else {
+					newHeight = (rowHeight * 4 + headerHeight);
+				}
+			}
+		}
 		if (newHeight !== this.state.tableHeight) {
 			this.setState({ tableHeight: newHeight });
 		}

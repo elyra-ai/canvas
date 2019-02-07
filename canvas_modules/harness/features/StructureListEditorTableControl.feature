@@ -29,3 +29,13 @@ Feature: structurelisteditorControl
 		# Verify the string array in structurelisteditor table
 		Then I click on the "ft-structurelist_sub_panel" panel OK button
 		Then I verify the StructureListEditor table "structurelist_sub_panel" contains "BP, Na" at row 0 col 0
+
+	Scenario: Test the feature to have tables use the available vertical space
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side common-properties panel
+		Then I have selected the "Flyout" properties container type
+		Given I have uploaded JSON for common-properties "selectcolumns_paramDef.json"
+		Then I open the "TABLE" category
+		Then I open the "Configure Fields in Sub-panel" summary link in the "TABLE" category
+		Then I verify the table "structurelist_sub_panel" is of height "581px"

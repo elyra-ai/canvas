@@ -443,7 +443,7 @@
         "description": {
           "default": "Complex table control list editor table input"
         },
-        "rows": 10
+        "rows": -1
       },
       {
         "parameter_ref": "inlineEditingTableNoButtons",
@@ -513,7 +513,7 @@
         "text_before": {
           "default": "When 'Animals' has a value of 'horse' the order cannot be changed to 'Descending'"
         },
-        "rows": 10
+        "rows": -1
       }
     ],
     "complex_type_info": [

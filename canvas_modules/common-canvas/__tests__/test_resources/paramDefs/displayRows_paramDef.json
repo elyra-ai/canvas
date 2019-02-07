@@ -174,8 +174,9 @@
           "default": "Complex table control list editor table input"
         },
         "text_before": {
-          "default": "This table control falls back on the default 4 rows"
-        }
+          "default": "This table control uses -1 for the row count"
+        },
+				"rows": -1
       },
       {
         "parameter_ref": "structurelist",
@@ -194,7 +195,7 @@
         "description": {
           "default": "Complex table control list editor with sub-panel column select control"
         },
-        "rows": 12
+        "rows": -1
       }
     ],
     "complex_type_info": [
