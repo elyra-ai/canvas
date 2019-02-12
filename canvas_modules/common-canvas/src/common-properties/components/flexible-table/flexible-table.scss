@@ -111,12 +111,12 @@ $flexible-table-header-row-height: 32px;
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			text-align: left;
+			line-height: normal;
 			.tooltip-trigger {
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				height: 100%;
-
 			}
 			.properties-tooltips {
 				span {

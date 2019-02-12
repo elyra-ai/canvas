@@ -53,11 +53,15 @@ class ReadonlyControl extends React.Component {
 					{String(controlValue)}
 				</div>
 			);
-			let icon = "";
+			let content = readOnly;
 			if (this.props.control.icon) {
-				icon = (<div className={"properties-field-type-icon"}>
-					<Icon type={this.props.control.icon} />
-				</div>);
+				content = (
+					<div className={"properties-field-readonly"}>
+						<div className={"properties-field-type-icon"}>
+							<Icon type={this.props.control.icon} />
+						</div>
+						{readOnly}
+					</div>);
 			}
 			display = (<Tooltip
 				id={tooltipId}
@@ -67,8 +71,7 @@ class ReadonlyControl extends React.Component {
 				className="properties-tooltips"
 				disable={disabled}
 			>
-				{icon}
-				{readOnly}
+				{content}
 			</Tooltip>);
 		}
 		return (
