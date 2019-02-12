@@ -441,7 +441,7 @@ describe("measurement icons should be rendered correctly in selectcolumns", () =
 	afterEach(() => {
 		wrapper.unmount();
 	});
-	fit("measurement icons should render in selectcolumns control if dm_image is enabled", () => {
+	it("measurement icons should render in selectcolumns control if dm_image is enabled", () => {
 		const tableWrapper = wrapper.find("div[data-id='properties-ft-fields1_panel']");
 		expect(tableWrapper.find("div.properties-field-type-icon")).to.have.length(1);
 	});
