@@ -90,8 +90,7 @@ describe("ObjectModel files handling test", () => {
 	// --------------------------------------------------------------------------
 
 	// TODO - This is a special test for checking to see if we can load a Canvas
-	// with a supernode that doesn't have a corresponding pipeline.  We should
-	// fix the code so such a pipeline can be loaded and remove this test.
+	// with a supernode that doesn't have a corresponding pipeline.
 	it("should read in and write out the same file: supernodeWithoutSubPipelineCanvas", () => {
 		readWriteSameFile(supernodeWithoutSubPipelineCanvas);
 	});

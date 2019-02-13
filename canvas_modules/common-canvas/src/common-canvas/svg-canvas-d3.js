@@ -18,6 +18,7 @@ import { event as d3Event } from "d3-selection";
 import union from "lodash/union";
 import forIn from "lodash/forIn";
 import get from "lodash/get";
+import isEmpty from "lodash/isEmpty";
 import { CONTEXT_MENU_BUTTON, NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
@@ -330,6 +331,7 @@ class CanvasRenderer {
 
 		this.canvasSVG = this.createCanvasSVG();
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG);
+		this.resetCanvasSVGBehaviors();
 
 		this.displayCanvas();
 
@@ -374,6 +376,15 @@ class CanvasRenderer {
 
 	isDisplayingFullPage() {
 		return this.displayState === "primary-flow-full-page" || this.displayState === "sub-flow-full-page";
+	}
+
+	isCanvasEmptyOrBindingsOnly() {
+		return (isEmpty(this.activePipeline.nodes) || this.containsOnlyBindingNodes(this.activePipeline)) &&
+						isEmpty(this.activePipeline.comments);
+	}
+
+	containsOnlyBindingNodes(pipeline) {
+		return !pipeline.nodes.find((node) => !this.isSuperBindingNode(node));
 	}
 
 	getParentSupernodeDatum() {
@@ -431,6 +442,16 @@ class CanvasRenderer {
 		// Set the display state incase we changed from in-place to full-page
 		// sub-flow display.
 		this.setDisplayState();
+
+		// Reset the SVG area's zoom behaviors. We do this in case the canvas has
+		// changed from empty (no nodes/comments) where we do not need any zoom
+		// behavior to populated (with at least one node or comment) where we do
+		// need to zoom behavior, or vice versa.
+		this.resetCanvasSVGBehaviors();
+
+		// Reset the canvas cursor, in case we went from an empty canvas
+		// (default cursor) to one with nodes and/or comments (hand cursor).
+		this.resetCanvasCursor();
 
 		// If a supernode and its corresponding pipeline has been deleted in the
 		// object model we need to make sure the renderer is removed.
@@ -494,12 +515,6 @@ class CanvasRenderer {
 
 		// Ensure the SVG area is displayed, incase it was previously hidden.
 		this.canvasSVG.style("display", "inherit");
-
-		// If we are handling a sub-flow set the supernode binding status for
-		// use when displaying the nodes.
-		if (this.isDisplayingSubFlow()) {
-			this.setSupernodesBindingStatus();
-		}
 
 		this.displayComments(); // Show comments first so they appear under nodes, if there is overlap.
 		this.displayNodes();
@@ -877,20 +892,49 @@ class CanvasRenderer {
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", "d3-svg-background")
 			.attr("pointer-events", "all")
-			.style("cursor", this.isDisplayingFullPage() ? "default" : "pointer");
+			.style("cursor", this.getCanvasCursor());
 
-		// Only attach the zoom behaviour and 'defs' to the top most SVG area
-		// when we are displaying either the primary pipeline full page or
-		// a sub-pipeline full page.
+		// Only attach the 'defs' to the top most SVG area when we are displaying
+		// either the primary pipeline full page or a sub-pipeline full page.
 		if (this.isDisplayingFullPage()) {
+			// Add defs element to allow a filter for the drop shadow
+			// This only needs to be done once for the whole page.
+			var defs = canvasSVG.append("defs");
+			this.createDropShadow(defs);
+		}
+
+		return canvasSVG;
+	}
+
+	// Sets the canvas zoom and mouse behaviors on the canvas SVG area. This is
+	// done when the SVG area is created and also when set new canvas info is
+	// called. This is necessary because the canvas may transition between an
+	// empty canvas and a populated canvas (i.e. a canvas with at least one node
+	// or comment). In the empty case we do not want any zoom behavior and in
+	// the populated case we do.
+	resetCanvasSVGBehaviors() {
+		// Remove zoom behaviors from canvasSVG area.
+		this.canvasSVG.on(".zoom", null);
+
+		// If there are no nodes or comments we don't apply any zoom behaviors
+		// to the SVG area. We only attach the zoom behaviour to the top most SVG
+		//  area i.e. when we are displaying either the primary pipeline full page
+		// or a sub-pipeline full page.
+		if (!this.isCanvasEmptyOrBindingsOnly() &&
+				this.isDisplayingFullPage()) {
+			// In mouse interaction mode the zoom behavior will hande all zooming
+			// but in trackpad interaction mode we only need the zoom behavior to
+			// handle region select
+			this.canvasSVG
+				.call(this.zoom);
+
 			if (this.config.enableInteractionType === TRACKPAD_INTERACTION) {
-				canvasSVG
-					.call(this.zoom) // In trackpad mode we need the zoom behavior to handle region select
-					// On Safari, gesturestart, gesturechange, and gestureend will be
-					// called for the pinch/spread gesture. This code not only implements
-					// zoom on pinch/spread but also stops the whole browser page being
-					// zoomed which is the default behavior for that gesture on Safari.
-					// https://stackoverflow.com/questions/36458954/prevent-pinch-zoom-in-safari-for-osx
+				// On Safari, gesturestart, gesturechange, and gestureend will be
+				// called for the pinch/spread gesture. This code not only implements
+				// zoom on pinch/spread but also stops the whole browser page being
+				// zoomed which is the default behavior for that gesture on Safari.
+				// https://stackoverflow.com/questions/36458954/prevent-pinch-zoom-in-safari-for-osx
+				this.canvasSVG
 					.on("gesturestart", () => {
 						this.scale = d3Event.scale;
 						stopPropagationAndPreventDefault();
@@ -923,18 +967,12 @@ class CanvasRenderer {
 						}
 						stopPropagationAndPreventDefault();
 					});
-			} else {
-				canvasSVG
-					.call(this.zoom); // Then re-add the zoom object to reinstate the scale behaviour.
 			}
-
-			// Add defs element to allow a filter for the drop shadow
-			// This only needs to be done once for the whole page.
-			var defs = canvasSVG.append("defs");
-			this.createDropShadow(defs);
 		}
 
-		canvasSVG
+		// These behaviors will be applied to SVG areas at the top level and
+		// SVG areas displaying an in-place subflow
+		this.canvasSVG
 			.on("mousemove.zoom", () => {
 				// this.logger.log("Zoom - mousemove - " + drawingNewLink = " + this.drawingNewLink);
 				if (this.drawingNewLink === true) {
@@ -953,7 +991,6 @@ class CanvasRenderer {
 					d3Event.stopPropagation();
 				}
 			})
-
 			.on("mouseup.zoom", () => {
 				this.logger.log("Zoom - mouseup");
 				if (this.drawingNewLink === true) {
@@ -963,7 +1000,6 @@ class CanvasRenderer {
 			.on("click.zoom", () => {
 				this.logger.log("Zoom - click");
 				this.selecting = true;
-
 				// Only clear selections if clicked on the canvas of the current active pipeline.
 				// Clicking the canvas of an expanded supernode will select that node.
 				if (this.isDisplayingCurrentPipeline()) {
@@ -983,8 +1019,24 @@ class CanvasRenderer {
 				this.logger.log("Zoom - context menu");
 				this.openContextMenu("canvas");
 			});
+	}
 
-		return canvasSVG;
+	// Resets the pointer cursor on the background rectangle in the Canvas SVG area.
+	resetCanvasCursor() {
+		const selector = ".d3-svg-background[data-pipeline-id='" + this.activePipeline.id + "']";
+		this.canvasSVG.select(selector).style("cursor", this.getCanvasCursor());
+	}
+
+	// Retuens the appropriate cursor for the canvas SVG area.
+	getCanvasCursor() {
+		if (this.isDisplayingFullPage()) {
+			if (this.config.enableInteractionType === TRACKPAD_INTERACTION ||
+					this.isCanvasEmptyOrBindingsOnly()) {
+				return "default";
+			}
+			return "grab";
+		}
+		return "pointer";
 	}
 
 	pinchZoom(zoomDelta) {
@@ -1155,7 +1207,7 @@ class CanvasRenderer {
 
 			this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(newScale);
 			this.zoomingToFitForScale = true;
-			this.canvasSVG.call(this.zoom.transform, this.zoomTransform);
+			this.canvasSVG.call(this.zoom.transform, this.zoomTransform); // Use the zoom behavior
 			this.zoomingToFitForScale = false;
 		}
 	}
@@ -1231,6 +1283,16 @@ class CanvasRenderer {
 			};
 		}
 
+		// To make the new cursor style appear *immediately* on mousedown we set the
+		// appropriate cursor style on the SVG background rectanagle. The cursor
+		// overlay will handle the cursor style as the mouse is moved.
+		const selector = ".d3-svg-background[data-pipeline-id='" + this.activePipeline.id + "']";
+		if (this.regionSelect) {
+			this.canvasSVG.select(selector).style("cursor", "crosshair");
+		} else {
+			this.canvasSVG.select(selector).style("cursor", "grabbing");
+		}
+
 		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
 	}
 
@@ -1244,7 +1306,7 @@ class CanvasRenderer {
 				this.drawRegionSelector();
 
 			} else {
-				this.addTempCursorOverlay("move");
+				this.addTempCursorOverlay("grabbing");
 				this.panCanvasBackground(d3Event.transform.x, d3Event.transform.y, d3Event.transform.k);
 			}
 		} else {
@@ -1278,6 +1340,9 @@ class CanvasRenderer {
 			}
 			this.regionSelect = false;
 		}
+		// Remove the cursor overlay and reset the SVG background rectangle
+		// cursor style, which was set in the zoom start method.
+		this.resetCanvasCursor();
 		this.removeTempCursorOverlay();
 	}
 
@@ -1371,7 +1436,7 @@ class CanvasRenderer {
 		const selector = this.getSelectorForClass("node-group");
 
 		this.canvasGrp.selectAll(selector).each((d) => {
-			if (d.isSupernodeInputBinding || d.isSupernodeOutputBinding) { // Always ignore Supernode binding nodes
+			if (this.isSuperBindingNode(d)) { // Always ignore Supernode binding nodes
 				return;
 			}
 			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.highlightGap);
@@ -1662,7 +1727,7 @@ class CanvasRenderer {
 				.on("contextmenu", (d) => {
 					this.logger.log("Node Group - context menu");
 					stopPropagationAndPreventDefault();
-					if (!d.isSupernodeInputBinding && !d.isSupernodeOutputBinding) {
+					if (!this.isSuperBindingNode(d)) {
 						that.openContextMenu("node", d);
 					}
 				})
@@ -2260,22 +2325,6 @@ class CanvasRenderer {
 					});
 			}
 		}
-	}
-
-	setSupernodesBindingStatus() {
-		const supernodeDatum = this.getParentSupernodeDatum();
-		this.activePipeline.nodes.forEach((node) => {
-			if (supernodeDatum.inputs && this.isEntryBindingNode(node)) {
-				supernodeDatum.inputs.forEach((supernodeInputPort) => {
-					node.isSupernodeInputBinding = (supernodeInputPort.subflow_node_ref === node.id) ? true : node.isSupernodeInputBinding;
-				});
-			}
-			if (supernodeDatum.outputs && this.isExitBindingNode(node)) {
-				supernodeDatum.outputs.forEach((supernodeOutputPort) => {
-					node.isSupernodeOutputBinding = (supernodeOutputPort.subflow_node_ref === node.id) ? true : node.isSupernodeOutputBinding;
-				});
-			}
-		});
 	}
 
 	updatePortRadius(node, d, cssNodePort) {
@@ -4241,7 +4290,7 @@ class CanvasRenderer {
 	getSupernodeBindingNodes() {
 		const snBindingNodes = [];
 		this.activePipeline.nodes.forEach((node) => {
-			if (node.isSupernodeInputBinding || node.isSupernodeOutputBinding) {
+			if (this.isSuperBindingNode(node)) {
 				snBindingNodes.push(node);
 			}
 		});

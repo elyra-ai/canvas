@@ -248,3 +248,17 @@ Feature: Supernode
 		Then I Ctrl/Cmnd+click the comment with text "Hello Canvas in a sub-flow!" to add it to the selections
 		Then I right click the canvas background for supernode "Supernode" to display the context menu
 		Then I verify that 2 objects are selected
+
+	Scenario: Test Select All in context menu for sub-flow canvas only selects non-binding nodes
+		Then I resize the window size to 1330 width and 660 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
+		Given I have toggled the app side panel
+
+		# Select a node and check right click on sub-flow background doesn't deselect it
+		Then I right click the "Supernode" node to display the context menu
+		Then I click option "Expand supernode" from the context menu
+		Then I right click the canvas background for supernode "Supernode" to display the context menu
+		Then I click option "Select All" from the context menu
+		Then I verify that 5 objects are selected

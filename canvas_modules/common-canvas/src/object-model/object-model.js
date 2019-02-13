@@ -1320,6 +1320,8 @@ export default class ObjectModel {
 
 		const pipelineFlow = this.validateAndUpgrade(newPipelineFlow);
 
+		this.setSupernodesBindingStatus(pipelineFlow.pipelines);
+
 		this.executeWithSelectionChange(this.store.dispatch, {
 			type: "SET_PIPELINE_FLOW",
 			data: pipelineFlow,
@@ -1501,14 +1503,6 @@ export default class ObjectModel {
 		return supernodeRef;
 	}
 
-	// Returns true if nodeId is a supernode binding node.
-	isSupernodeBindingNode(nodeId, pipelineId) {
-		if (pipelineId !== this.getPrimaryPipelineId() && this.getAPIPipeline(pipelineId).getNode(nodeId).type === "binding") {
-			return true;
-		}
-		return false;
-	}
-
 	setCanvasInfo(canvasInfo) {
 		this.store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo, layoutinfo: this.getLayout() });
 	}
@@ -1605,6 +1599,60 @@ export default class ObjectModel {
 
 	removeAllStyles(temporary) {
 		this.store.dispatch({ type: "REMOVE_ALL_STYLES", data: { temporary: temporary } });
+	}
+
+	setSupernodesBindingStatus(pipelines) {
+		// Clear all supernode binding statuses from nodes
+		pipelines.forEach((pipeline) => {
+			if (pipeline.nodes) {
+				pipeline.nodes.forEach((node) => {
+					delete node.isSupernodeInputBinding;
+					delete node.isSupernodeOutputBinding;
+				});
+			}
+		});
+		// Set the supernode binding statuses as appropriate.
+		pipelines.forEach((pipeline) => {
+			if (pipeline.nodes) {
+				pipeline.nodes.forEach((node) => {
+					if (node.type === "super_node" && node.subflow_ref && node.subflow_ref.pipeline_id_ref) {
+						if (node.inputs) {
+							node.inputs.forEach((input) => {
+								if (input.subflow_node_ref) {
+									const subNode = this.findNode(input.subflow_node_ref, node.subflow_ref.pipeline_id_ref, pipelines);
+									if (subNode) {
+										subNode.isSupernodeInputBinding = true;
+									}
+								}
+							});
+						}
+						if (node.outputs) {
+							node.outputs.forEach((output) => {
+								if (output.subflow_node_ref) {
+									const subNode = this.findNode(output.subflow_node_ref, node.subflow_ref.pipeline_id_ref, pipelines);
+									if (subNode) {
+										subNode.isSupernodeOutputBinding = true;
+									}
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+	}
+
+	findNode(nodeId, pipelineId, pipelines) {
+		const targetPipeline = pipelines.find((p) => {
+			return (p.id === pipelineId);
+		});
+
+		if (targetPipeline && targetPipeline.nodes) {
+			return targetPipeline.nodes.find((node) => {
+				return (node.id === nodeId);
+			});
+		}
+		return null;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1799,7 +1847,9 @@ export default class ObjectModel {
 		const pipeId = pipelineId ? pipelineId : this.getAPIPipeline().pipelineId; // If no pipelineId is provided use the default pipelineId.
 		const pipeline = this.getAPIPipeline(pipeId);
 		for (const node of pipeline.getNodes()) {
-			selected.push(node.id);
+			if (!this.isSupernodeBinding(node)) { // Dont allow supernode binding nodes to be selected
+				selected.push(node.id);
+			}
 		}
 		for (const comment of pipeline.getComments()) {
 			selected.push(comment.id);
@@ -1807,11 +1857,16 @@ export default class ObjectModel {
 		this.setSelections(selected, pipeId);
 	}
 
+	isSupernodeBinding(node) {
+		return node.isSupernodeInputBinding || node.isSupernodeOutputBinding;
+	}
+
 	selectInRegion(minX, minY, maxX, maxY, pipelineId) {
 		const pipeline = this.getAPIPipeline(pipelineId);
 		var regionSelections = [];
 		for (const node of pipeline.getNodes()) {
-			if (minX < node.x_pos + node.width &&
+			if (!this.isSupernodeBinding(node) && // Don't include binding nodes in select
+					minX < node.x_pos + node.width &&
 					maxX > node.x_pos &&
 					minY < node.y_pos + node.height &&
 					maxY > node.y_pos) {
@@ -2196,6 +2251,7 @@ export default class ObjectModel {
 			upstreamObjIds[pipelineId] = [];
 		}
 		const currentPipeline = this.getAPIPipeline(pipelineId);
+		const node = currentPipeline.getNode(nodeId);
 		const nodeLinks = currentPipeline.getLinksContainingTargetId(nodeId);
 		if (nodeLinks.length > 0) {
 			nodeLinks.forEach((link) => {
@@ -2227,8 +2283,8 @@ export default class ObjectModel {
 					upstreamObjIds = mergeWith(upstreamObjIds, upstreamIds, this.mergeWithUnion);
 				}
 			});
-		} else if (currentPipeline.isEntryBindingNode(currentPipeline.getNode(nodeId))) {
-			if (this.isSupernodeBindingNode(nodeId, pipelineId)) {
+		} else if (currentPipeline.isEntryBindingNode(node)) {
+			if (this.isSupernodeBinding(node)) {
 				// Check if this is a binding node within a supernode.
 				const supernodeObj = this.getSupernodeObjReferencing(pipelineId);
 				const parentPipelineId = supernodeObj.parentPipelineId;
@@ -2290,6 +2346,7 @@ export default class ObjectModel {
 			downstreamObjIds[pipelineId] = [];
 		}
 		const currentPipeline = this.getAPIPipeline(pipelineId);
+		const node = currentPipeline.getNode(nodeId);
 		const nodeLinks = currentPipeline.getLinksContainingSourceId(nodeId);
 		if (nodeLinks.length > 0) {
 			nodeLinks.forEach((link) => {
@@ -2321,8 +2378,8 @@ export default class ObjectModel {
 					downstreamObjIds = mergeWith(downstreamObjIds, downstreamIds, this.mergeWithUnion);
 				}
 			});
-		} else if (currentPipeline.isExitBindingNode(currentPipeline.getNode(nodeId))) {
-			if (this.isSupernodeBindingNode(nodeId, pipelineId)) {
+		} else if (currentPipeline.isExitBindingNode(node)) {
+			if (this.isSupernodeBinding(node)) {
 				const supernodeObj = this.getSupernodeObjReferencing(pipelineId);
 				const parentPipelineId = supernodeObj.parentPipelineId;
 				const parentPipeline = this.getAPIPipeline(parentPipelineId);

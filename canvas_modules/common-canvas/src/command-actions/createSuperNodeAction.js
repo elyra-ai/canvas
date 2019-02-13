@@ -225,6 +225,7 @@ export default class CreateSuperNodeAction extends Action {
 					portId: bindingNodeData.port.id,
 					link: bindingNodeData.link
 				};
+				inputBindingNode.isSupernodeInputBinding = true;
 				this.supernodeEntryBindingNodes.push(inputBindingNode);
 			} else {
 				const pos = { x: subflowRect.x + subflowRect.width + boundingRectPadding, y: exitBindingYPos += boundingRectPadding };
@@ -234,6 +235,7 @@ export default class CreateSuperNodeAction extends Action {
 					portId: bindingNodeData.port.id,
 					link: bindingNodeData.link
 				};
+				outputBindingNode.isSupernodeOutputBinding = true;
 				this.supernodeExitBindingNodes.push(outputBindingNode);
 			}
 		});
