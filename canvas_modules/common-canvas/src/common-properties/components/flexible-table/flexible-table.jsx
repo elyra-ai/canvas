@@ -479,14 +479,12 @@ export default class FlexibleTable extends React.Component {
 		// adjust the height of the body so it can scroll correctly, in em
 		if (this.tbodyNode) {
 			let clientHeightEm;
-			let clientWidthEm;
 			if (this.flexibleTableDiv.clientHeight) {
 				const fontSize = parseFloat(getComputedStyle(document.querySelector("table"))["font-size"]);
 				clientHeightEm = this.flexibleTableDiv.clientHeight / fontSize;
-				clientWidthEm = this.flexibleTableDiv.clientWidth / fontSize;
 			}
 			this.tbodyNode.style.height = (this.theadNode) ? (clientHeightEm - 2.5) + "em" : "auto";
-			this.tbodyNode.style.width = (clientWidthEm !== 0) ? clientWidthEm + "em" : "auto"; // table body renders wider than the table even when contents are also tableWidth
+			this.tbodyNode.style.width = (tableWidth) ? tableWidth + "px" : "auto"; // table body renders wider than the table even when contents are also tableWidth
 		}
 
 		const heightStyle = this.props.noAutoSize ? {} : { height: tableHeight + "em" };
