@@ -82,7 +82,7 @@ module.exports = {
 		new ExtractTextPlugin("common-canvas.min.css"),
 		new OptimizeCssAssetsPlugin({
 			assetNameRegExp: /\.min.css$/g,
-			cssProcessorOptions: { discardComments: { removeAll: true } }
+			cssProcessorOptions: { discardComments: { removeAll: true }, postcssZindex: { disable: true } }
 		}),
 		new BundleAnalyzerPlugin(
 			{ generateStatsFile: true, openAnalyzer: false }),
