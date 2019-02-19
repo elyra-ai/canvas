@@ -483,11 +483,11 @@ export default class FlexibleTable extends React.Component {
 				const fontSize = parseFloat(getComputedStyle(document.querySelector("table"))["font-size"]);
 				clientHeightEm = this.flexibleTableDiv.clientHeight / fontSize;
 			}
-			this.tbodyNode.style.height = (this.theadNode) ? (clientHeightEm - 2.5) + "em" : "auto";
+			this.tbodyNode.style.height = (this.theadNode && (clientHeightEm - 2.5) !== 0) ? (clientHeightEm - 2.5) + "em" : "auto";
 			this.tbodyNode.style.width = (tableWidth) ? tableWidth + "px" : "auto"; // table body renders wider than the table even when contents are also tableWidth
 		}
 
-		const heightStyle = this.props.noAutoSize ? {} : { height: tableHeight + "em" };
+		const heightStyle = (this.props.noAutoSize || tableHeight === 0) ? {} : { height: tableHeight + "em" };
 		const containerId = this.props.showHeader ? "properties-ft-container" : "properties-ft-container-noheader";
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass + this.props.messageInfo.type;
