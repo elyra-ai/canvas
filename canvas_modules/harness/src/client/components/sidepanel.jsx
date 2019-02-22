@@ -55,8 +55,14 @@ export default class SidePanel extends React.Component {
 				selectedPaletteDropdownFile2={this.props.canvasConfig.selectedPaletteDropdownFile2}
 				setLayoutDirection={this.props.canvasConfig.setLayoutDirection}
 				selectedLayout={this.props.canvasConfig.selectedLayout}
+				setSnapToGridType={this.props.canvasConfig.setSnapToGridType}
+				setSnapToGridX={this.props.canvasConfig.setSnapToGridX}
+				setSnapToGridY={this.props.canvasConfig.setSnapToGridY}
+				snapToGridX={this.props.canvasConfig.snapToGridX}
+				snapToGridY={this.props.canvasConfig.snapToGridY}
 				useInternalObjectModel={this.props.canvasConfig.useInternalObjectModel}
 				setConnectionType={this.props.canvasConfig.setConnectionType}
+				selectedSnapToGrid={this.props.canvasConfig.selectedSnapToGrid}
 				selectedConnectionType={this.props.canvasConfig.selectedConnectionType}
 				setInteractionType={this.props.canvasConfig.setInteractionType}
 				selectedInteractionType={this.props.canvasConfig.selectedInteractionType}
@@ -169,9 +175,15 @@ SidePanel.propTypes = {
 		setPaletteDropdownSelect: PropTypes.func,
 		setPaletteDropdownSelect2: PropTypes.func,
 		setLayoutDirection: PropTypes.func,
+		setSnapToGridType: PropTypes.func,
+		setSnapToGridX: PropTypes.func,
+		setSnapToGridY: PropTypes.func,
+		snapToGridX: PropTypes.string,
+		snapToGridY: PropTypes.string,
 		selectedLayout: PropTypes.string,
 		useInternalObjectModel: PropTypes.func,
 		setConnectionType: PropTypes.func,
+		selectedSnapToGrid: PropTypes.string,
 		selectedConnectionType: PropTypes.string,
 		setInteractionType: PropTypes.func,
 		selectedInteractionType: PropTypes.string,

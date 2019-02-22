@@ -8,7 +8,7 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-import { deleteLinkInObjectModel, findCategoryElement, findNodeIndexInPalette, getEventLogCount,
+import { deleteLinkInObjectModel, dragAndDrop, findCategoryElement, findNodeIndexInPalette, getEventLogCount,
 	getNodeFromObjectModel, getNodeIdFromObjectModel, getNodeSelector, getNodeSelectorInSubFlow,
 	getObjectModelCount, isObjectModelEmpty
 } from "./utilities/validate-utils.js";
@@ -843,6 +843,12 @@ module.exports = function() {
 			browser.execute(simulateDragDrop, ".node-group", nodeNumber, "#canvas-div-0", 0, canvasX, canvasY);
 		});
 
+	this.Then(/^I move the "([^"]*)" node on the canvas by (-?\d+), (-?\d+)$/,
+		function(nodeName, canvasX, canvasY) {
+			const nodeSelector = getNodeSelector(nodeName, "grp");
+			dragAndDrop(nodeSelector, 1, 1, ".svg-area", canvasX, canvasY);
+		});
+
 	// Then I expect the object model to be empty
 	//
 	this.Then(/^I expect the object model to be empty$/, function() {
@@ -973,6 +979,14 @@ module.exports = function() {
 		var actualNodePosition = node.getAttribute("transform");
 		expect(actualNodePosition).toEqual(givenNodePosition);
 	});
+
+	this.Then(/^I verify the "([^"]*)" node position is "([^"]*)"$/, function(nodeName, givenNodePosition) {
+		const nodeSelector = getNodeSelector(nodeName, "grp");
+		const node = browser.$(nodeSelector);
+		var actualNodePosition = node.getAttribute("transform");
+		expect(actualNodePosition).toEqual(givenNodePosition);
+	});
+
 
 	this.Then(/^I verify the node id "([^"]*)" has width (\d+) and height (\d+)$/, function(nodeId, width, height) {
 		const objectModel = getCanvasData();

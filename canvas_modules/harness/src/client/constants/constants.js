@@ -36,6 +36,10 @@ _defineConstant("NONE", "none");
 _defineConstant("HORIZONTAL", "horizontal");
 _defineConstant("VERTICAL", "vertical");
 
+_defineConstant("NONE_DRAG", "None");
+_defineConstant("DURING_DRAG", "During");
+_defineConstant("AFTER_DRAG", "After");
+
 _defineConstant("MOUSE_INTERACTION", "Mouse");
 _defineConstant("TRACKPAD_INTERACTION", "Trackpad");
 

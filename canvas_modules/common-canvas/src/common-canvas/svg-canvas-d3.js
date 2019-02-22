@@ -81,6 +81,9 @@ export default class CanvasD3Layout {
 		if (canvasInfo.id !== this.canvasInfo.id ||
 				(this.renderer && this.renderer.pipelineId !== this.canvasController.getCurrentBreadcrumb().pipelineId) ||
 				this.config.enableInteractionType !== config.enableInteractionType ||
+				this.config.enableSnapToGridType !== config.enableSnapToGridType ||
+				this.config.enableSnapToGridX !== config.enableSnapToGridX ||
+				this.config.enableSnapToGridY !== config.enableSnapToGridY ||
 				this.config.enableConnectionType !== config.enableConnectionType ||
 				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
 				this.config.enableLinkType !== config.enableLinkType ||
@@ -206,8 +209,8 @@ export default class CanvasD3Layout {
 		}
 	}
 
-	nodeDropped(dropData, dropX, dropY) {
-		this.renderer.nodeDropped(dropData, dropX, dropY);
+	nodeDropped(dropData, mousePos, element) {
+		this.renderer.nodeDropped(dropData, mousePos, element);
 	}
 
 	zoomIn() {
@@ -266,13 +269,18 @@ class CanvasRenderer {
 		this.commentSizing = false;
 		this.commentSizingId = 0;
 		this.commentSizingDirection = "";
-		this.commentSizingHasChanged = false;
 
 		// Allows us to track the sizing behavior of supernodes
 		this.nodeSizing = false;
 		this.nodeSizingId = 0;
 		this.nodeSizingDirection = "";
 		this.nodeSizingMovedNodes = [];
+
+		// General purpose variables to allow us to hanlde resize and snap to grid
+		this.resizeObjXPos = 0;
+		this.resizeObjYPos = 0;
+		this.resizeObjWidth = 0;
+		this.resizeObjHeight = 0;
 
 		// Allows us to track the editing of comments
 		this.editingComment = false;
@@ -283,6 +291,21 @@ class CanvasRenderer {
 		this.dragging = false;
 		this.dragOffsetX = 0;
 		this.dragOffsetY = 0;
+		this.dragRunningX = 0;
+		this.dragRunningY = 0;
+		this.dragObjects = [];
+		this.dragStartX = 0;
+		this.dragStartY = 0;
+
+		// Snap to grid configuration. 25% for X and 20% for Y (of node width and
+		// height) by default. It can be overridden by the config which can be either
+		// a number or a percentage of the node width/height.
+		const snapToGridXStr = this.config.enableSnapToGridX || this.layout.snapToGridX || "25%";
+		const snapToGridYStr = this.config.enableSnapToGridX || this.layout.snapToGridY || "20%";
+
+		// Set the snap-to-grid sizes in pixels.
+		this.snapToGridX = this.getSnapToGridSize(snapToGridXStr, this.layout.defaultNodeWidth);
+		this.snapToGridY = this.getSnapToGridSize(snapToGridYStr, this.layout.defaultNodeHeight);
 
 		// Allow us to track when a selection is being made so there is
 		// no need to re-render whole canvas
@@ -342,6 +365,17 @@ class CanvasRenderer {
 			this.zoomToFit();
 		}
 		this.logger.logEndTimer("Constructor");
+	}
+
+	// Returns a snap-to-grid size in pixels based on the snapToGridSizeStr
+	// which can be either a numeric value (which is taken as the nuber of pixels)
+	// or a numeric value with a % sign at the end which is taken as the percentage
+	// of the defaultNodeSize passed in.
+	getSnapToGridSize(snapToGridSizeStr, defaultNodeSize) {
+		if (snapToGridSizeStr.endsWith("%")) {
+			return (Number.parseInt(snapToGridSizeStr, 10) / 100) * defaultNodeSize;
+		}
+		return Number.parseInt(snapToGridSizeStr, 10);
 	}
 
 	setDisplayState() {
@@ -782,16 +816,23 @@ class CanvasRenderer {
 	}
 
 	nodeDropped(dropData, mousePos, element) {
+		if (dropData === null) {
+			return;
+		}
+
 		// Offset mousePos so new node appers in center of mouse location.
 		mousePos.x -= (this.layout.defaultNodeWidth / 2) * this.zoomTransform.k;
 		mousePos.y -= (this.layout.defaultNodeHeight / 2) * this.zoomTransform.k;
 
-		const transPos = this.transformPos(mousePos);
+		let transPos = this.transformPos(mousePos);
 		const link = this.getNodeLinkForElement(element);
 
-		if (dropData !== null) {
-			this.canvasController.createDroppedNode(dropData, link, transPos, this.pipelineId);
+		if (this.config.enableSnapToGridType === "During" ||
+				this.config.enableSnapToGridType === "After") {
+			transPos = this.snapToGridObject(transPos);
 		}
+
+		this.canvasController.createDroppedNode(dropData, link, transPos, this.pipelineId);
 	}
 
 	// Returns the node link object from the canvasInfo corresponding to the
@@ -1516,10 +1557,35 @@ class CanvasRenderer {
 		return { startX, startY, width, height };
 	}
 
+	// Records the initial starting position of the object being dragged so
+	// that drag increments can be added to the original starting
+	// position to aide calculating the snap-to-grid position.
+	initializeResizeVariables(resizeObj) {
+		this.resizeObjXPos = resizeObj.x_pos;
+		this.resizeObjYPos = resizeObj.y_pos;
+		this.resizeObjWidth = resizeObj.width;
+		this.resizeObjHeight = resizeObj.height;
+	}
+
 	dragStart(d) {
 		this.logger.logStartTimer("dragStart");
-		this.dragOffsetX = 0;
-		this.dragOffsetY = 0;
+		if (this.commentSizing) {
+			this.resizeObj = this.getComment(this.commentSizingId);
+			this.initializeResizeVariables(this.resizeObj);
+
+		} else if (this.nodeSizing) {
+			this.resizeObj = this.getNode(this.nodeSizingId);
+			this.initializeResizeVariables(this.resizeObj);
+
+		} else {
+			this.dragOffsetX = 0;
+			this.dragOffsetY = 0;
+			this.dragRunningX = 0;
+			this.dragRunningY = 0;
+			this.dragObjects = this.getSelectedNodesAndComments();
+			this.dragStartX = this.dragObjects[0].x_pos;
+			this.dragStartY = this.dragObjects[0].y_pos;
+		}
 		// Note: Comment and supernode resizing is started by the comment/supernode highlight rectangle.
 		this.logger.logEndTimer("dragStart", true);
 	}
@@ -1535,16 +1601,34 @@ class CanvasRenderer {
 			this.dragOffsetX += d3Event.dx;
 			this.dragOffsetY += d3Event.dy;
 
-			var objs = this.getSelectedNodesAndComments();
-
 			// Limit the size a drag can be so, when the user is dragging objects in
 			// an in-place subflow they do not drag them too far.
 			// this.logger.log("Drag offset X = " + this.dragOffsetX + " y = " + this.dragOffsetY);
-			if (this.dragOffsetX < 5000 && this.dragOffsetX > -5000 &&
-					this.dragOffsetY < 5000 && this.dragOffsetY > -5000) {
-				objs.forEach(function(d) {
-					d.x_pos += d3Event.dx;
-					d.y_pos += d3Event.dy;
+			if (this.dragOffsetX < 1000 && this.dragOffsetX > -1000 &&
+					this.dragOffsetY < 1000 && this.dragOffsetY > -1000) {
+				let	increment = { x: 0, y: 0 };
+
+				if (this.config.enableSnapToGridType === "During") {
+					const stgPos = this.snapToGridDraggedNode();
+
+					increment = {
+						x: stgPos.x - this.dragObjects[0].x_pos,
+						y: stgPos.y - this.dragObjects[0].y_pos
+					};
+
+				} else {
+					increment = {
+						x: d3Event.dx,
+						y: d3Event.dy
+					};
+				}
+
+				this.dragRunningX += increment.x;
+				this.dragRunningY += increment.y;
+
+				this.dragObjects.forEach((d) => {
+					d.x_pos += increment.x;
+					d.y_pos += increment.y;
 				});
 			} else {
 				this.dragOffsetX -= d3Event.dx;
@@ -1571,17 +1655,61 @@ class CanvasRenderer {
 
 		} else if (this.dragging) {
 			this.dragging = false; // Set to false before updating object model so main body of displayNodes is run.
-			if (this.dragOffsetX !== 0 ||
-					this.dragOffsetY !== 0) {
+			if (this.dragRunningX !== 0 ||
+					this.dragRunningY !== 0) {
+				let dragFinalOffset = null;
+				if (this.config.enableSnapToGridType === "After") {
+					const stgPos = this.snapToGridDraggedNode();
+					dragFinalOffset = {
+						x: stgPos.x - this.dragStartX,
+						y: stgPos.y - this.dragStartY
+					};
+				} else {
+					dragFinalOffset = { x: this.dragRunningX, y: this.dragRunningY };
+				}
 				this.canvasController.editActionHandler({
 					editType: "moveObjects",
 					nodes: this.objectModel.getSelectedObjectIds(),
-					offsetX: this.dragOffsetX,
-					offsetY: this.dragOffsetY,
+					offsetX: dragFinalOffset.x,
+					offsetY: dragFinalOffset.y,
 					pipelineId: this.activePipeline.id });
 			}
 		}
 		this.logger.logEndTimer("dragEnd", true);
+	}
+
+	// Returns the snap-to-grid position of the object positioned at
+	// this.dragStartX and this.dragStartY after applying the current offset of
+	// this.dragOffsetX and this.dragOffsetY.
+	snapToGridDraggedNode() {
+		const objPosX = this.dragStartX + this.dragOffsetX;
+		const objPosY = this.dragStartY + this.dragOffsetY;
+
+		return this.snapToGridObject({ x: objPosX, y: objPosY });
+	}
+
+	// Returns the snap-to-grid position of the object positioned at objPos.x
+	// and objPos.y. The grid that is snapped to is defined by this.snapToGridX
+	// and this.snapToGridY.
+	snapToGridObject(objPos) {
+		const stgPosX = this.snapToGrid(objPos.x, this.snapToGridX);
+		const stgPosY = this.snapToGrid(objPos.y, this.snapToGridY);
+
+		return { x: stgPosX, y: stgPosY };
+	}
+
+	// Returns a snap-to-grid value for the value passed in based on a grid
+	// size defined by the gridSize passed in.
+	snapToGrid(value, gridSize) {
+		const div = value / gridSize;
+		let abs = Math.trunc(div);
+		const remainder = div - abs;
+
+		if (remainder > 0.5) {
+			abs++;
+		}
+
+		return abs * gridSize;
 	}
 
 	displayNodes() {
@@ -3745,14 +3873,13 @@ class CanvasRenderer {
 	// then redraws the nodes and links (the link positions may move based
 	// on the node size change).
 	resizeNode() {
-		const nodeObj = this.getNode(this.nodeSizingId);
-		const delta = this.resizeObject(nodeObj, this.nodeSizingDirection,
+		const delta = this.resizeObject(this.resizeObj, this.nodeSizingDirection,
 			this.layout.supernodeMinWidth, this.layout.supernodeMinHeight);
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
-			this.addToNodeSizingArray(nodeObj);
+			this.addToNodeSizingArray(this.resizeObj);
 			if (this.config.enableMoveNodesOnSupernodeResize) {
-				this.moveSurroundingNodes(nodeObj, delta);
+				this.moveSurroundingNodes(this.resizeObj, delta);
 			}
 			this.displayNodes();
 			this.displayLinks();
@@ -3819,37 +3946,57 @@ class CanvasRenderer {
 	// then redraws the comment and links (the link positions may move based
 	// on the comment size change).
 	resizeComment() {
-		const commentObj = this.getComment(this.commentSizingId);
-		const delta = this.resizeObject(commentObj, this.commentSizingDirection, 20, 20);
-		if (delta && (delta.x_pos > 0 || delta.y_pos || delta.width || delta.height)) {
-			this.displayComments();
-			this.displayLinks();
-		} else {
-			this.commentSizingHasChanged = true;
-		}
+		this.resizeObject(this.resizeObj, this.commentSizingDirection, 20, 20);
+		this.displayComments();
+		this.displayLinks();
 	}
 
 	// Sets the size and position of the object in the canvasInfo
 	// array based on the position of the pointer during the resize action.
 	resizeObject(canvasObj, direction, minWidth, minHeight) {
-		var width = canvasObj.width;
-		var height = canvasObj.height;
-		var xPos = canvasObj.x_pos;
-		var yPos = canvasObj.y_pos;
+		let incrementX = 0;
+		let incrementY = 0;
+		let incrementWidth = 0;
+		let incrementHeight = 0;
 
 		if (direction.indexOf("e") > -1) {
-			width += d3Event.dx;
+			incrementWidth += d3Event.dx;
 		}
 		if (direction.indexOf("s") > -1) {
-			height += d3Event.dy;
+			incrementHeight += d3Event.dy;
 		}
 		if (direction.indexOf("n") > -1) {
-			yPos += d3Event.dy;
-			height -= d3Event.dy;
+			incrementY += d3Event.dy;
+			incrementHeight -= d3Event.dy;
 		}
 		if (direction.indexOf("w") > -1) {
-			xPos += d3Event.dx;
-			width -= d3Event.dx;
+			incrementX += d3Event.dx;
+			incrementWidth -= d3Event.dx;
+		}
+
+		let xPos = 0;
+		let yPos = 0;
+		let width = 0;
+		let height = 0;
+
+		if (this.config.enableSnapToGridType === "During") {
+			// Calculate where the object being resized would be and its size given
+			// current increments.
+			this.resizeObjXPos += incrementX;
+			this.resizeObjYPos += incrementY;
+			this.resizeObjWidth += incrementWidth;
+			this.resizeObjHeight += incrementHeight;
+
+			xPos = this.snapToGrid(this.resizeObjXPos, this.snapToGridX);
+			yPos = this.snapToGrid(this.resizeObjYPos, this.snapToGridY);
+			width = this.snapToGrid(this.resizeObjWidth, this.snapToGridX);
+			height = this.snapToGrid(this.resizeObjHeight, this.snapToGridY);
+
+		} else {
+			xPos = canvasObj.x_pos + incrementX;
+			yPos = canvasObj.y_pos + incrementY;
+			width = canvasObj.width + incrementWidth;
+			height = canvasObj.height + incrementHeight;
 		}
 
 		// Don't allow the object area to shrink below the min width and height.
@@ -3878,6 +4025,13 @@ class CanvasRenderer {
 	// Finalises the sizing of a node by calling editActionHandler
 	// with an editNode action.
 	endNodeSizing() {
+		if (this.config.enableSnapToGridType === "After") {
+			const sizedNode = this.nodeSizingMovedNodes[this.nodeSizingId];
+			sizedNode.x_pos = this.snapToGrid(sizedNode.x_pos, this.snapToGridX);
+			sizedNode.y_pos = this.snapToGrid(sizedNode.y_pos, this.snapToGridY);
+			sizedNode.width = this.snapToGrid(sizedNode.width, this.snapToGridX);
+			sizedNode.height = this.snapToGrid(sizedNode.height, this.snapToGridY);
+		}
 		if (Object.keys(this.nodeSizingMovedNodes).length > 0) {
 			const data = {
 				editType: "resizeObjects",
@@ -3894,22 +4048,38 @@ class CanvasRenderer {
 	// Finalises the sizing of a comment by calling editActionHandler
 	// with an editComment action.
 	endCommentSizing() {
-		if (this.commentSizingHasChanged) { // No need to issue edit command if nothing chnaged
-			var commentObj = this.getComment(this.commentSizingId);
+		const commentObj = this.getComment(this.commentSizingId);
+		let xPos = commentObj.x_pos;
+		let yPos = commentObj.y_pos;
+		let width = commentObj.width;
+		let height = commentObj.height;
+
+		if (this.config.enableSnapToGridType === "After") {
+			xPos = this.snapToGrid(xPos, this.snapToGridX);
+			yPos = this.snapToGrid(yPos, this.snapToGridY);
+			width = this.snapToGrid(width, this.snapToGridX);
+			height = this.snapToGrid(height, this.snapToGridY);
+		}
+
+		// Update the object model comment if the new position or size is different
+		// from the comment's original position and size.
+		if (this.resizeObjXPos !== xPos ||
+				this.resizeObjYPos !== yPos ||
+				this.resizeObjWidth !== width ||
+				this.resizeObjHeight !== height) {
 			const data = {
 				editType: "editComment",
 				id: commentObj.id,
 				content: commentObj.content,
-				width: commentObj.width,
-				height: commentObj.height,
-				x_pos: commentObj.x_pos,
-				y_pos: commentObj.y_pos,
+				width: width,
+				height: height,
+				x_pos: xPos,
+				y_pos: yPos,
 				pipelineId: this.pipelineId
 			};
 			this.canvasController.editActionHandler(data);
 		}
 		this.commentSizing = false;
-		this.commentSizingHasChanged = false;
 	}
 
 	// Formats the text string passed in as a set of lines of text and displays

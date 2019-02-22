@@ -10,6 +10,13 @@
 
 /* global browser */
 
+function dragAndDrop(srcSelector, srcXPos, srcYPos, trgSelector, trgXPos, trgYPos) {
+	browser.moveToObject(srcSelector, Number(srcXPos), Number(srcYPos));
+	browser.buttonDown();
+	browser.moveToObject(trgSelector, Number(trgXPos), Number(trgYPos));
+	browser.buttonUp();
+}
+
 // Find the number of link events in event log
 function containLinkEvent(eventLog, srcNodeId, destNodeId, eventType) {
 	var count = 0;
@@ -276,6 +283,12 @@ function getNodeId(nodeText, selector) {
 	return null;
 }
 
+function getCommentSelector(commentText, commentElement, extraCanvas) {
+	const commentId = getCommentIdForText(commentText, extraCanvas);
+	const commentSelector = "[data-id='comment_" + commentElement + "_" + commentId + "']";
+	return commentSelector;
+}
+
 function getCommentSelectorInSubFlow(commentText, commentElement, extraCanvas) {
 	const commentId = getCommentIdForTextInSubFlow(commentText, extraCanvas);
 	const commentSelector = "[data-id='comment_" + commentElement + "_" + commentId + "']";
@@ -298,6 +311,24 @@ function getCommentIdForTextInSubFlowInSubFlow(commentText, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
 	const selector = `div > svg > g > g > svg > g > g > svg > g > g[data-id^=comment_grp_${inst}]`;
 	return getCommentId(commentText, selector);
+}
+
+function getCommentDimensions(commentSelector) {
+	var result = browser.execute(function(comSelector) {
+		/* global document */
+		var comElement = document.querySelector(comSelector);
+		return {
+			x_pos: comElement.__data__.x_pos,
+			y_pos: comElement.__data__.y_pos,
+			width: comElement.__data__.width,
+			height: comElement.__data__.height
+		};
+	}, commentSelector);
+
+	if (result.value) {
+		return result.value;
+	}
+	return null;
 }
 
 function addTextForComment(comId, newCommentText) {
@@ -451,6 +482,7 @@ function getNumberOfSelectedComments() {
 
 
 module.exports = {
+	dragAndDrop: dragAndDrop,
 	containLinkEvent: containLinkEvent,
 	containLinkInObjectModel: containLinkInObjectModel,
 	deleteLinkInObjectModel: deleteLinkInObjectModel,
@@ -470,10 +502,12 @@ module.exports = {
 	getNodePortSelectorInSubFlow: getNodePortSelectorInSubFlow,
 	getNodePortTipSelector: getNodePortTipSelector,
 	addTextForComment: addTextForComment,
+	getCommentSelector: getCommentSelector,
 	getCommentSelectorInSubFlow: getCommentSelectorInSubFlow,
 	getCommentIdForText: getCommentIdForText,
 	getCommentIdForTextInSubFlow: getCommentIdForTextInSubFlow,
 	getCommentIdForTextInSubFlowInSubFlow: getCommentIdForTextInSubFlowInSubFlow,
+	getCommentDimensions: getCommentDimensions,
 	clickSVGAreaAt: clickSVGAreaAt,
 	findNodeIndexInPalette: findNodeIndexInPalette,
 	findCategoryElement: findCategoryElement,

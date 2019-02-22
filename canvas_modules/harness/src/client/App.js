@@ -64,6 +64,7 @@ import {
 	CUSTOM,
 	FLYOUT,
 	NONE,
+	NONE_DRAG,
 	INPUT_PORT,
 	OUTPUT_PORT,
 	NOTIFICATION_MESSAGE_TYPE,
@@ -101,6 +102,9 @@ class App extends React.Component {
 			propertiesJson: null,
 			selectedPanel: null,
 			selectedLayout: NONE,
+			selectedSnapToGrid: NONE_DRAG,
+			snapToGridX: "",
+			snapToGridY: "",
 			selectedInteractionType: MOUSE_INTERACTION,
 			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormat: VERTICAL_FORMAT,
@@ -194,6 +198,9 @@ class App extends React.Component {
 		this.schemaValidation = this.schemaValidation.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.setInteractionType = this.setInteractionType.bind(this);
+		this.setSnapToGridType = this.setSnapToGridType.bind(this);
+		this.setSnapToGridX = this.setSnapToGridX.bind(this);
+		this.setSnapToGridY = this.setSnapToGridY.bind(this);
 		this.setConnectionType = this.setConnectionType.bind(this);
 		this.setNodeFormatType = this.setNodeFormatType.bind(this);
 		this.setLinkType = this.setLinkType.bind(this);
@@ -582,6 +589,21 @@ class App extends React.Component {
 		this.canvasController2.setFixedAutoLayout(selectedLayout);
 		this.setState({ selectedLayout: selectedLayout });
 		this.log("Layout selected", selectedLayout);
+	}
+
+	setSnapToGridType(selectedSnapToGrid) {
+		this.setState({ selectedSnapToGrid: selectedSnapToGrid });
+		this.log("Snap to Grid selected", selectedSnapToGrid);
+	}
+
+	setSnapToGridX(enteredSnapToGridX) {
+		this.setState({ snapToGridX: enteredSnapToGridX });
+		this.log("Snap to Grid X entered ", enteredSnapToGridX);
+	}
+
+	setSnapToGridY(enteredSnapToGridY) {
+		this.setState({ snapToGridY: enteredSnapToGridY });
+		this.log("Snap to Grid Y entered ", enteredSnapToGridY);
 	}
 
 	setInteractionType(selectedInteractionType) {
@@ -1574,6 +1596,9 @@ class App extends React.Component {
 
 		const commonCanvasConfig = {
 			enableInteractionType: this.state.selectedInteractionType,
+			enableSnapToGridType: this.state.selectedSnapToGrid,
+			enableSnapToGridX: this.state.snapToGridX,
+			enableSnapToGridY: this.state.snapToGridY,
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
@@ -1776,7 +1801,13 @@ class App extends React.Component {
 			useInternalObjectModel: this.useInternalObjectModel,
 			setInteractionType: this.setInteractionType,
 			selectedInteractionType: this.state.selectedInteractionType,
+			setSnapToGridType: this.setSnapToGridType,
+			setSnapToGridX: this.setSnapToGridX,
+			setSnapToGridY: this.setSnapToGridY,
+			snapToGridX: this.state.snapToGridX,
+			snapToGridY: this.state.snapToGridY,
 			setConnectionType: this.setConnectionType,
+			selectedSnapToGrid: this.state.selectedSnapToGrid,
 			selectedConnectionType: this.state.selectedConnectionType,
 			setNodeFormatType: this.setNodeFormatType,
 			selectedNodeFormat: this.state.selectedNodeFormat,

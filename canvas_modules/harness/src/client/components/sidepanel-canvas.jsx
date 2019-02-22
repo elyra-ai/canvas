@@ -20,12 +20,16 @@ import Checkbox from "carbon-components-react/lib/components/Checkbox";
 import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
 import RadioButton from "carbon-components-react/lib/components/RadioButton";
 import Toggle from "carbon-components-react/lib/components/Toggle";
+import TextInput from "carbon-components-react/lib/components/TextInput";
 
 
 import {
 	NONE,
 	HORIZONTAL,
 	VERTICAL,
+	NONE_DRAG,
+	DURING_DRAG,
+	AFTER_DRAG,
 	CHOOSE_FROM_LOCATION,
 	VERTICAL_FORMAT,
 	HORIZONTAL_FORMAT,
@@ -68,6 +72,7 @@ export default class SidePanelForms extends React.Component {
 		this.isReadyToSubmitPaletteData2 = this.isReadyToSubmitPaletteData2.bind(this);
 
 		this.layoutDirectionOptionChange = this.layoutDirectionOptionChange.bind(this);
+		this.snapToGridOptionChange = this.snapToGridOptionChange.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useEnableSaveToPalette = this.useEnableSaveToPalette.bind(this);
 		this.useEnableDropZoneOnExternalDrag = this.useEnableDropZoneOnExternalDrag.bind(this);
@@ -276,6 +281,18 @@ export default class SidePanelForms extends React.Component {
 
 	layoutDirectionOptionChange(value) {
 		this.props.setLayoutDirection(value);
+	}
+
+	snapToGridOptionChange(value) {
+		this.props.setSnapToGridType(value);
+	}
+
+	snapToGridFieldChange(fieldName, evt) {
+		if (fieldName === "newSnapToGridX") {
+			this.props.setSnapToGridX(evt.target.value);
+		} else {
+			this.props.setSnapToGridY(evt.target.value);
+		}
 	}
 
 	useInternalObjectModel(checked) {
@@ -531,6 +548,55 @@ export default class SidePanelForms extends React.Component {
 					labelText={VERTICAL}
 				/>
 			</RadioButtonGroup>
+		</div>);
+
+		var inlineStyle = { "display": "inline-flex", "height": "60px" };
+		var rbSize = { "height": "80px" };
+		var entrySize = { "width": "80px", "minWidth": "80px" };
+
+		var snapToGrid = (<div className="harness-sidepanel-children" id="harness-sidepanel-snap-to-grid-type">
+			<div className="harness-sidepanel-headers">Snap to Grid on Drag/Resize</div>
+			<div style={rbSize}>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="snap_to_grid_radio"
+					onChange={this.snapToGridOptionChange}
+					defaultSelected={this.props.selectedSnapToGrid}
+				>
+					<RadioButton
+						value={NONE_DRAG}
+						labelText={NONE_DRAG}
+					/>
+					<RadioButton
+						value={DURING_DRAG}
+						labelText={DURING_DRAG}
+					/>
+					<RadioButton
+						value={AFTER_DRAG}
+						labelText={AFTER_DRAG}
+					/>
+				</RadioButtonGroup>
+			</div>
+			<div className="harness-sidepanel-headers">
+				Enter a pixel size or percentage of node width/height ("25%").
+			</div>
+			<div style={inlineStyle}>
+				<TextInput
+					style={entrySize}
+					id="harness-snap-to-grid-x"
+					labelText="X Grid Size"
+					placeholder="X Size"
+					onChange={this.snapToGridFieldChange.bind(this, "newSnapToGridX")}
+					value={this.props.snapToGridX}
+				/>
+				<TextInput style={entrySize}
+					id="harness-snap-to-grid-y"
+					labelText="Y Grid Size"
+					placeholder="Y Size"
+					onChange={this.snapToGridFieldChange.bind(this, "newSnapToGridY")}
+					value={this.props.snapToGridY}
+				/>
+			</div>
 		</div>);
 
 		var enableObjectModel = (<div className="harness-sidepanel-children">
@@ -807,7 +873,19 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{paletteInput}
 				{divider}
+				{interactionType}
+				{divider}
+				{connectionType}
+				{divider}
+				{nodeFormatType}
+				{divider}
+				{linkType}
+				{divider}
+				{snapToGrid}
+				{divider}
 				{layoutDirection}
+				{divider}
+				{paletteLayout}
 				{divider}
 				{enableObjectModel}
 				{divider}
@@ -819,25 +897,15 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{enableMoveNodesOnSupernodeResize}
 				{divider}
-				{interactionType}
-				{divider}
-				{connectionType}
-				{divider}
-				{nodeFormatType}
-				{divider}
-				{linkType}
-				{divider}
-				{paletteLayout}
-				{divider}
-				{tipConfig}
-				{divider}
-				{nodeDraggable}
-				{divider}
 				{schemaValidation}
 				{divider}
 				{validateFlowOnOpen}
 				{divider}
 				{displayFullLabelOnHover}
+				{divider}
+				{tipConfig}
+				{divider}
+				{nodeDraggable}
 				{divider}
 				{extraCanvas}
 				{canvasInput2}
@@ -872,12 +940,18 @@ SidePanelForms.propTypes = {
 	selectedPaletteDropdownFile2: PropTypes.string,
 	setLayoutDirection: PropTypes.func,
 	selectedLayout: PropTypes.string,
+	setSnapToGridType: PropTypes.func,
+	setSnapToGridX: PropTypes.func,
+	setSnapToGridY: PropTypes.func,
+	snapToGridX: PropTypes.string,
+	snapToGridY: PropTypes.string,
 	useInternalObjectModel: PropTypes.func,
 	useEnableSaveToPalette: PropTypes.func,
 	useEnableDropZoneOnExternalDrag: PropTypes.func,
 	useEnableCreateSupernodeNonContiguous: PropTypes.func,
 	setConnectionType: PropTypes.func,
 	setInteractionType: PropTypes.func,
+	selectedSnapToGrid: PropTypes.string,
 	selectedConnectionType: PropTypes.string,
 	selectedInteractionType: PropTypes.string,
 	setNodeFormatType: PropTypes.func,

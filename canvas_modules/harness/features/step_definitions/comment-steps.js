@@ -10,10 +10,10 @@
 /* eslint sort-imports: "off" */
 
 import { getCanvasData, getEventLogData, useCmdOrCtrl } from "./utilities/test-utils.js";
-import { addTextForComment, getCommentIdForText, getCommentIdForTextInSubFlow,
+import { addTextForComment, dragAndDrop, getCommentIdForText, getCommentIdForTextInSubFlow,
 	getCommentIdForTextInSubFlowInSubFlow,
 	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
-	getCommentSelectorInSubFlow,
+	getCommentSelector, getCommentSelectorInSubFlow, getCommentDimensions,
 	getEventLogCount, getObjectModelCount } from "./utilities/validate-utils.js";
 import isEqual from "lodash/isEqual";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
@@ -80,6 +80,40 @@ module.exports = function() {
 			var index = getCommentIndexFromCanvasUsingText(commentText);
 			browser.execute(simulateDragDrop, ".comment-group", index, "#canvas-div-0", 0, canvasX, canvasY);
 		});
+
+	this.Then(/^I move the "([^"]*)" comment on the canvas by (-?\d+), (-?\d+)$/,
+		function(commentName, canvasX, canvasY) {
+			const commentSelector = getCommentSelector(commentName, "grp");
+			dragAndDrop(commentSelector, 30, 30, ".svg-area", canvasX, canvasY);
+		});
+
+	this.Then(/^I size the "([^"]*)" comment to width (-?\d+) and height (-?\d+)$/,
+		function(commentName, newWidth, newHeight) {
+			const commentSelector = getCommentSelector(commentName, "outline");
+
+			const dimensions = getCommentDimensions(commentSelector);
+			dimensions.width += 6; // Add some pixels to find the edge of the outline
+			dimensions.height += 6; // Add some pixels to find the edge of the outline
+
+			// Need to add a couple of pixels because we are specifying the position
+			// for the comment outline rather than the comment itself. So we need the
+			// extra pixels to get the comment to be sized to the dimensions provided.
+			const canvasX = dimensions.x_pos + Number(newWidth) + 2;
+			const canvasY = dimensions.y_pos + Number(newHeight) + 2;
+
+			dragAndDrop(commentSelector, dimensions.width, dimensions.height, ".svg-area", Number(canvasX), Number(canvasY));
+		});
+
+	this.Then(/^I verify the "([^"]*)" comment has width ([-+]?[0-9]*\.?[0-9]+) and height ([-+]?[0-9]*\.?[0-9]+)$/,
+		function(commentName, trgWidth, trgHeight) {
+			const commentSelector = getCommentSelector(commentName, "outline");
+			const dimensions = getCommentDimensions(commentSelector);
+			const expWidth = Number(trgWidth);
+			const expHeight = Number(trgHeight);
+			expect(dimensions.width).toBe(expWidth);
+			expect(dimensions.height).toBe(expHeight);
+		});
+
 
 	// Then I edit comment 1 linked to the "Derive" node with the comment text "This comment box should be linked to the derive node."
 	//
@@ -237,6 +271,13 @@ module.exports = function() {
 	this.Then(/^I verify the comment (\d+) position is "([^"]*)"$/, function(commentNumber, givenCommentPosition) {
 		var commentIndex = commentNumber - 1;
 		var comment = browser.$$(".comment-group")[commentIndex];
+		var actualCommentPosition = comment.getAttribute("transform");
+		expect(actualCommentPosition).toEqual(givenCommentPosition);
+	});
+
+	this.Then(/^I verify the "([^"]*)" comment position is "([^"]*)"$/, function(commentName, givenCommentPosition) {
+		const commentSelector = getCommentSelector(commentName, "grp");
+		const comment = browser.$(commentSelector);
 		var actualCommentPosition = comment.getAttribute("transform");
 		expect(actualCommentPosition).toEqual(givenCommentPosition);
 	});

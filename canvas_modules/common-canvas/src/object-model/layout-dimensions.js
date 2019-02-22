@@ -39,6 +39,10 @@ const haloLayout = {
 	imagePosX: 6,
 	imagePosY: 0,
 
+	// Sizes of snap to grid as a percentage of default node height and width
+	snapToGridX: "25%",
+	snapToGridY: "20%",
+
 	// Sets the justification of label and icon within the node height. This
 	// overrides any labelPosY value provided. Possible value are "center" or
 	// "none". Specify "none" to use the labelPosY value.
@@ -184,6 +188,10 @@ const portsHorizontal = {
 
 	imagePosX: 6,
 	imagePosY: 7,
+
+	// Sizes of snap to grid as a percentage of default node height and width
+	snapToGridX: "20%",
+	snapToGridY: "33.33%",
 
 	// Sets the justification of label and icon within the node height. This
 	// overrides any labelPosY value provided. Possible value are "center" or
@@ -350,6 +358,10 @@ const portsVertical = {
 
 	imagePosX: 11,
 	imagePosY: 5,
+
+	// Sizes of snap to grid as a percentage of default node height and width
+	snapToGridX: "25%",
+	snapToGridY: "20%",
 
 	// Sets the justification of label and icon within the node height. This
 	// overrides any labelPosY value provided. Possible value are "center" or
