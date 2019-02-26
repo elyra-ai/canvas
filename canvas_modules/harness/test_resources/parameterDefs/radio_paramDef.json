@@ -26,7 +26,8 @@
       [
         "dog",
         "pear",
-        false
+        false,
+        "red"
       ]
     ]
   },
@@ -864,14 +865,14 @@
         "id": "tableerrortest3",
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "radioset_table_error[2]",
+          "focus_parameter_ref": "radioset_table_error[3]",
           "message": {
             "default": "color equals purple"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "radioset_table_error[2]",
+            "parameter_ref": "radioset_table_error[3]",
             "op": "notEquals",
             "value": "purple"
           }
