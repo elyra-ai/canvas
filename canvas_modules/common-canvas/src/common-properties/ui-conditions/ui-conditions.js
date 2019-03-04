@@ -6,7 +6,6 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 34] */
 /* eslint max-depth: ["error", 7] */
 
 import logger from "./../../../utils/logger";

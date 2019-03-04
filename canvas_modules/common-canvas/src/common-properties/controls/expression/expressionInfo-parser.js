@@ -7,8 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint complexity: ["error", 30]*/
-
 import logger from "../../../../utils/logger";
 import { L10nProvider } from "../../util/L10nProvider";
 import propertyOf from "lodash/propertyOf";

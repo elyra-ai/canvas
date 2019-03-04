@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 24] */
+
 import has from "lodash/has";
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";

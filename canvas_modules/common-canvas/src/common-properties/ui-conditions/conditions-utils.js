@@ -7,7 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /*	eslint max-depth: ["error", 10]*/
-/* eslint complexity: ["error", 27] */
 
 import logger from "../../../utils/logger";
 import UiConditions from "./ui-conditions";

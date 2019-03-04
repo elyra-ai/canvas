@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 21] */
+
 import React from "react";
 import PropTypes from "prop-types";
 import Tooltip from "./tooltip.jsx";

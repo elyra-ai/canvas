@@ -7,8 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint complexity: ["error", 28] */
-
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";

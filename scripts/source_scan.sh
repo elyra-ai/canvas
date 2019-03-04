@@ -24,26 +24,26 @@ if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 	fi
 
 	#download the sonar-scanner
-	wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.0.3.778-linux.zip
+	wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
 	if [ ! $? -eq 0 ]; then
 	    echo "Error: Problem with downloading the sonar-scanner program"
 	    exit 1
 	fi
 
-	unzip sonar-scanner-cli-3.0.3.778-linux.zip
+	unzip sonar-scanner-cli-3.3.0.1492-linux.zip
 	if [ ! $? -eq 0 ]; then
 	    echo "Error: Problem extracting the sonar-scanner program"
 	    exit 1
 	fi
 
 	#update scanner config
-	sed -e "s#.*sonar.host.url.*#sonar.host.url=http://9.30.122.209:9000/sonarqube/#" sonar-scanner-3.0.3.778-linux/conf/sonar-scanner.properties > /tmp/foo
+	sed -e "s#.*sonar.host.url.*#sonar.host.url=http://9.30.122.209:9000/sonarqube/#" sonar-scanner-3.3.0.1492-linux/conf/sonar-scanner.properties > /tmp/foo
 	if [ ! $? -eq 0 ]; then
 	    echo "Error: Problem updating the file, sonar-scanner.properties"
 	    exit 1
 	fi
 
-	mv /tmp/foo sonar-scanner-3.0.3.778-linux/conf/sonar-scanner.properties
+	mv /tmp/foo sonar-scanner-3.3.0.1492-linux/conf/sonar-scanner.properties
 	if [ ! $? -eq 0 ]; then
 	    echo "Error: Problem moving the file, sonar-scanner.properties"
 	    exit 1
@@ -62,7 +62,7 @@ if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 	fi
 
 	#run the scanner
-	sonar-scanner-3.0.3.778-linux/bin/sonar-scanner
+	sonar-scanner-3.3.0.1492-linux/bin/sonar-scanner
 	if [ ! $? -eq 0 ]; then
 	    echo "Error: Problem while running sonar-scanner"
 	    exit 1

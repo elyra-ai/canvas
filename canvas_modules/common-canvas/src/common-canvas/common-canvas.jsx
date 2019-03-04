@@ -7,7 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint complexity: ["error", 15] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-return-assign: "off" */
 

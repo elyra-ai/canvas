@@ -13,8 +13,6 @@ import { ResourceDef } from "../util/L10nProvider";
 import propertyOf from "lodash/propertyOf";
 import PropertyUtil from "../util/property-utils";
 
-/* eslint complexity: ["error", 41] */
-
 export class ParameterDef {
 	constructor(settings) {
 		if (settings.id) {

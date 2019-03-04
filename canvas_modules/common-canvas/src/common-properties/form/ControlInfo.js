@@ -6,11 +6,9 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 30]*/
 
 import { EditStyle } from "../constants/form-constants";
 
-/* eslint complexity: ["error", 40] */
 
 class ControlDef {
 	constructor(settings) {

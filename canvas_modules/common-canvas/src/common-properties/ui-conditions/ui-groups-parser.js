@@ -7,8 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint complexity: ["error", 32]*/
-
 import logger from "../../../utils/logger";
 import { ItemType } from "../constants/form-constants";
 
