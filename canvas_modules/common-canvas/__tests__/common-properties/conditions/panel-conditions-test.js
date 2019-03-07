@@ -837,10 +837,9 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		// hide action panel
 		hiddenCheckbox.getDOMNode().checked = true;
 		hiddenCheckbox.simulate("change");
-
 		// action panel should be hidden "hidden"
 		expect(controller.getPanelState({ name: "action-buttons-panel" })).to.equal("hidden");
-		expect(wrapper.find("div.properties-action-panel .hide")).to.have.length(1);
+		expect(wrapper.find("div.properties-action-panel.hide")).to.have.length(1);
 	});
 	it("action panels should be disabled", () => {
 		const category = wrapper.find("div[data-id='properties-action-panels']");

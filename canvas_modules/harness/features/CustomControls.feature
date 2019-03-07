@@ -18,6 +18,7 @@ Feature: CustomControls
 		Then I open the "Configure Map" summary link in the "MAP AND SLIDER" category
 		Then I verify that the "map-summary-panel" panel wideflyout dialog has opened
 		Then I show the map
+		Then I pause for 1 seconds
 		Then I click on "zoom_out" button
 		Then I pause for 1 seconds
 		Then I validate map has error

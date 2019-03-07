@@ -7,6 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import { dropdownSelect } from "./utilities/test-utils.js";
+import { findCategoryElement } from "./utilities/validate-utils.js";
 
 /* eslint no-console: "off" */
 /* global browser */
@@ -186,15 +187,6 @@ module.exports = function() {
 			}
 		}
 		return -1;
-	}
-
-	function findCategoryElement(nodeCategory) {
-		for (var cat of browser.$$(".palette-flyout-category")) {
-			if (cat.getValue() === nodeCategory) {
-				return cat;
-			}
-		}
-		return null;
 	}
 
 	function findCategoryElementModal(nodeCategory) {

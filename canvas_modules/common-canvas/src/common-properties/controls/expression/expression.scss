@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -26,7 +26,7 @@
 
 
 .properties-expression-editor {
-	border: 1px solid $ui-04;
+	border: 1px solid $ui-03;
 	&.disabled {
 		opacity: 0.5;
 	}

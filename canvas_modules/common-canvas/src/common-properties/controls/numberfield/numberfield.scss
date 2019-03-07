@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -9,58 +9,43 @@
 
 
 .properties-numberfield {
-	.bx--form-requirement { // carbon override to not display error
-		display: none;
-	}
+
 	.bx--form-item { // carbon overrides
 		margin-right: 0;
 		margin-bottom: 0;
 	}
 	.bx--number[data-invalid] { // carbon override to not display error
-		input[type="number"] {
-			box-shadow: none;
+		.bx--form-requirement { // carbon override to not display error
+			display: none;
 		}
 	}
 	.bx--label {
 		display: none;
 	}
+	&.error {
+		input[type="number"], input[type="number"]:focus {
+			box-shadow: 0 2px 0 0 $support-01;
+		}
+	}
+	&.warning {
+		input[type="number"], input[type="number"]:focus {
+			box-shadow: 0 2px 0 0 $support-03;
+		}
+	}
 }
 
 .properties-table-cell-control { // overrides when in a table cell
 	.properties-numberfield {
-		> div:first-of-type {
-			border-bottom: 2px solid $text-02;
+		.bx--number__controls {
+			bottom: unset;
 		}
 		input[type="number"] { //override styling from carbon
-			background: unset;
 			background-color: unset;
 			padding-left: 0;
-			padding-right: 0;
 			height: 1.5rem;
-			&:focus {
-				outline: unset;
-			}
-		}
-		&.error {
-			> div:first-of-type {
-				border-bottom: 2px solid $support-01;
-			}
-		}
-		&.warning {
-			> div:first-of-type {
-				border-bottom: 2px solid $support-03;
-			}
-		}
-		&:focus {
-			> div:first-of-type {
-				border-bottom: 2px solid $text-01;
-			}
 		}
 		.bx--number input[type="number"] {
 			min-width: 0;
-		}
-		.bx--number__controls {
-			left: 0;
 		}
 	}
 }

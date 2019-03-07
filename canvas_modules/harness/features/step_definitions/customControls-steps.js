@@ -14,7 +14,7 @@ import testUtils from "./utilities/test-utils.js";
 module.exports = function() {
 
 	this.Then(/^I click on toggle (\d+)$/, function(toggle) {
-		const toggleBtn = browser.$$(".harness-custom-control-custom-toggle")[toggle].$$("div")[0];
+		const toggleBtn = browser.$$(".harness-custom-control-custom-toggle")[toggle].$("label");
 		toggleBtn.click();
 	});
 
@@ -31,7 +31,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I validate the dropdown has (\d+) options$/, function(numOptions) {
-		browser.$("div[data-id='properties-color']").click(".bx--dropdown-v2");
+		browser.$("div[data-id='properties-color']").click();
 		browser.pause(500);
 		const options = browser.$("div[data-id='properties-color").$$(".bx--list-box__menu-item");
 		expect(options.length).toEqual(Number(numOptions));

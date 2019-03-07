@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -37,7 +37,7 @@ $notification-left-border-color-width: 4px;
 .notification-popup-arrow {
 	display: block;
 	fill: $ui-02;
-	stroke: $ui-04;
+	stroke: $ui-03;
 	position: absolute;
 	right: 16px;
 	width: 16px;
@@ -53,7 +53,7 @@ $notification-left-border-color-width: 4px;
 	flex-direction: column;
 	justify-content: center;
 	padding-left: 12px;
-	border: 1px solid $ui-04;
+	border: 1px solid $ui-03;
 	border-bottom: 0;
 	font-weight: 400;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
@@ -66,11 +66,11 @@ $notification-left-border-color-width: 4px;
 	max-height: calc((100% / 2) - #{$notification-panel-header-height});
 	overflow-y: auto;
 	background-color: $ui-01;
-	border: 1px solid $ui-04;
+	border: 1px solid $ui-03;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
 
 	.notifications-button-container {
-		border-bottom: 1px solid $ui-04;
+		border-bottom: 1px solid $ui-03;
 	}
 
 	.notifications-button-container:nth-last-of-type(1) {

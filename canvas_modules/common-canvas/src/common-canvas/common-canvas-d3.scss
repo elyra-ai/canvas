@@ -19,18 +19,18 @@ $canvas-background-color: $ui-01;
 
 /* Region selection colors */
 $region-selector-stroke-color: $ui-05;
-$region-selector-fill-color: $ui-04;
+$region-selector-fill-color: $ui-03;
 
 /* 'Back to previous flow' control colors */
 $back-to-previous-flow-box-color: $brand-01;
-$back-to-previous-flow-box-fill-hover: $ui-04;
+$back-to-previous-flow-box-fill-hover: $ui-03;
 
 /* Node colors shared between themes */
 $node-selection-color: $brand-02;
 $node-label-color: $text-01;
 $node-decoration-outline: $ui-05;
 $node-halo-color: $brand-02;
-$node-super-expand-icon-outline-hover-color: $ui-04;
+$node-super-expand-icon-outline-hover-color: $ui-03;
 $node-super-expand-icon-color: $brand-01;
 $node-ellipsis-color: $brand-01;
 $node-ellipsis-hover-color: $brand-02;
@@ -64,7 +64,7 @@ $node-port-input-arrow-connected-fill-color: transparent;
 $node-body-stroke-austin: $light-grey;
 $node-body-fill-austin: $ui-02;
 
-$node-body-stroke-austin-hover: $ui-04;
+$node-body-stroke-austin-hover: $ui-03;
 $node-body-fill-austin-hover: $ui-03;
 
 $node-port-output-stroke-color-austin: $very-dark-blue;

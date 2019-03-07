@@ -424,8 +424,8 @@ function findNodeIndexInPalette(nodeType) {
 }
 
 function findCategoryElement(nodeCategory) {
-	for (var cat of browser.$$(".palette-flyout-category")) {
-		if (cat.getValue() === nodeCategory) {
+	for (var cat of browser.$$(".palette-flyout-category span")) {
+		if (cat.getText() === nodeCategory) {
 			return cat;
 		}
 	}

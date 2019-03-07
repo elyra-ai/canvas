@@ -32,21 +32,24 @@ describe("tabs and subtabs should be rendered correctly", () => {
 		expect(subTabs).to.have.length(3);
 		subTabs.at(2).simulate("click");
 		category = wrapper.find("div[data-id='properties-Primary2']");
-		let tabContent = category.find("div.tab-content");
+		// use react object to find tab content.
+		let tabContent = category.find("div.properties-sub-tab-container TabContent");
 		expect(tabContent.at(0).prop("hidden")).to.equal(true);
 		expect(tabContent.at(1).prop("hidden")).to.equal(true);
 		expect(tabContent.at(2).prop("hidden")).to.equal(false);
 		// click on the same tab again to make sure it stays open
 		subTabs.at(2).simulate("click");
 		category = wrapper.find("div[data-id='properties-Primary2']");
-		tabContent = category.find("div.tab-content");
+		// use react object to find tab content.
+		tabContent = category.find("div.properties-sub-tab-container TabContent");
 		expect(tabContent.at(0).prop("hidden")).to.equal(true);
 		expect(tabContent.at(1).prop("hidden")).to.equal(true);
 		expect(tabContent.at(2).prop("hidden")).to.equal(false);
 		// click on a new tab and validate that tab opens
 		subTabs.at(1).simulate("click");
 		category = wrapper.find("div[data-id='properties-Primary2']");
-		tabContent = category.find("div.tab-content");
+		// use react object to find tab content.
+		tabContent = category.find("div.properties-sub-tab-container TabContent");
 		expect(tabContent.at(0).prop("hidden")).to.equal(true);
 		expect(tabContent.at(1).prop("hidden")).to.equal(false);
 		expect(tabContent.at(2).prop("hidden")).to.equal(true);

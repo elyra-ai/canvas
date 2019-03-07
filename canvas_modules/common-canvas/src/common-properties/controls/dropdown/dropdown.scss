@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -14,12 +14,12 @@
 	}
 	&.error {
 		.bx--list-box__field {
-			border-bottom: 2px solid $support-01;
+			box-shadow: 0 2px 0 0 $support-01;
 		}
 	}
 	&.warning {
 		.bx--list-box__field {
-			border-bottom: 2px solid $support-03;
+			box-shadow: 0 2px 0 0 $support-03;
 		}
 	}
 }
@@ -29,12 +29,35 @@
 		width: 100%;
 		.bx--select-input {
 			padding: 0 1.25rem 0 0;
+			height: 1.5rem;
+			box-shadow: 0 2px 0 0 $brand-01;
+			&:hover {
+				background: unset;
+			}
+			&:focus {
+				outline: unset;
+			}
+			~.bx--select__arrow {
+				right: 0.5rem;
+				top: 0.75em;
+			}
 		}
 		.bx--select__arrow {
 			right: 0.5rem;
+			top: 0.75em;
 		}
 		.bx--form-item {
 			margin: 0 0 0 $table-column-left-padding; // override carbon but need to set correct spacing when in a table
+		}
+		&.error {
+			.bx--select-input {
+				box-shadow: 0 2px 0 0 $support-01;
+			}
+		}
+		&.warning {
+			.bx--select-input {
+				box-shadow: 0 2px 0 0 $support-03;
+			}
 		}
 	}
 }

@@ -367,7 +367,7 @@ describe("ExpressionBuilder generates and accesses field dropdown correctly", ()
 				/>
 			</Provider>
 		);
-		expect(wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__label").text()).to.equal("Fields");
+		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Fields");
 		const dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
 		dropDown.simulate("click");
 		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
@@ -382,7 +382,7 @@ describe("ExpressionBuilder generates and accesses field dropdown correctly", ()
 		dropDownList.at(1).simulate("click");
 		// properly close the dropdown once selected
 		expect(wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item")).to.have.length(0);
-		expect(wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__label").text()).to.equal("Globals");
+		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Globals");
 	});
 
 	it("expression builder adds dropdown menu fields and values correctly", () => {
@@ -396,12 +396,12 @@ describe("ExpressionBuilder generates and accesses field dropdown correctly", ()
 				/>
 			</Provider>
 		);
-		var dropDown = wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__field");
+		var dropDown = wrapper.find("div.properties-expression-field-select div.bx--list-box__field");
 		dropDown.simulate("click");
 		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
 		// test globals
 		dropDownList.at(1).simulate("click");
-		expect(wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__label").text()).to.equal("Globals");
+		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Globals");
 		var fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
 		fieldRows.at(0).simulate("dblclick");
 		// expect selecting a field enters the correct value
@@ -411,11 +411,11 @@ describe("ExpressionBuilder generates and accesses field dropdown correctly", ()
 		valueRows.at(0).simulate("dblclick");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863");
 		// test mrs
-		dropDown = wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__field");
+		dropDown = wrapper.find("div.properties-expression-field-select div.bx--list-box__field");
 		dropDown.simulate("click");
 		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
 		dropDownList.at(2).simulate("click");
-		expect(wrapper.find("div.properties-expression-field-select .bx--dropdown-v2 .bx--list-box__label").text()).to.equal("Multi Response Set");
+		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Multi Response Set");
 		fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
 		fieldRows.at(0).simulate("dblclick");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 'numberSet'");

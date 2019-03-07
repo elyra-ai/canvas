@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -550,7 +550,6 @@ export default class SidePanelForms extends React.Component {
 			</RadioButtonGroup>
 		</div>);
 
-		var inlineStyle = { "display": "inline-flex", "height": "60px" };
 		var rbSize = { "height": "80px" };
 		var entrySize = { "width": "80px", "minWidth": "80px" };
 
@@ -580,7 +579,7 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-sidepanel-headers">
 				Enter a pixel size or percentage of node width/height ("25%").
 			</div>
-			<div style={inlineStyle}>
+			<div className="harness-snap-to-grid">
 				<TextInput
 					style={entrySize}
 					id="harness-snap-to-grid-x"

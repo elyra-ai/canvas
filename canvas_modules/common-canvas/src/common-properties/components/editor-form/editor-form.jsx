@@ -228,6 +228,7 @@ class EditorForm extends React.Component {
 			}
 			subTabs.push(
 				<Tab
+					className="properties-subtab"
 					key={"subtabs.tab." + key + "." + i}
 					tabIndex={i}
 					label={tab.text}

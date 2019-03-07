@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -34,7 +34,7 @@
 }
 
 .palette-flyout-content .palette-list-item:active {
-	background-color: $ui-04;
+	background-color: $ui-03;
 }
 
 .palette-flyout-content .palette-scroll {
@@ -42,7 +42,7 @@
 }
 
 .palette-flyout-content .palette-content-list {
-	border-bottom: 2px solid $ui-04;
+	border-bottom: 2px solid $ui-03;
 }
 
 .palette-flyout-content .palette-list-item .palette-list-item-text-div {
@@ -58,7 +58,7 @@
 	align-items: center;
 	justify-content: space-between;
 	display: flex;
-	border-bottom: 2px solid $ui-04;
+	border-bottom: 2px solid $ui-03;
 }
 
 .palette-flyout-category-caret {
@@ -118,13 +118,14 @@
 	align-items: center;
 	justify-content: space-between;
 	display: flex;
-	border-bottom: 2px solid $ui-04;
-	border-right: 2px solid $ui-04;
+	border-bottom: 2px solid $ui-03;
+	border-right: 2px solid $ui-03;
 	.bx--form-item { //override styling from carbon
 		margin: 0;
 		padding: 0;
 	}
 	input { //override styling from carbon
+		min-width: unset;
 		font-size: 16px;
 		font-weight: normal;
 		width: 190px;
@@ -132,8 +133,9 @@
 		margin: 0;
 		padding: 0;
 		padding-left: 10px;
+		box-shadow: unset;
 		&:focus {
-			border: 0;
+			box-shadow: unset;
 		}
 		&::placeholder {
 			font-style: italic;
@@ -150,7 +152,7 @@
 }
 
 .palette-flyout-search-icon:hover {
-	background-color: $ui-04;
+	background-color: $ui-03;
 }
 
 .palette-flyout-search-icon > svg {
@@ -203,7 +205,7 @@
 	height: 40px;
 	padding: 10px;
 	background-color: $ui-03;
-	border-bottom: 2px solid $ui-04;
+	border-bottom: 2px solid $ui-03;
 }
 
 .palette-topbar .left-navbar {
@@ -248,7 +250,7 @@
 	background-color: $ui-03;
 	width: 130px;
 	min-width: 130px; /* Set a min-width to ensure space for the scroll bar when it is displayed */
-	border-right: 2px solid $ui-04;
+	border-right: 2px solid $ui-03;
 	overflow-x: hidden;
 }
 

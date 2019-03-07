@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -187,7 +187,7 @@ export default class SidePanelModal extends React.Component {
 
 	render() {
 		const space = (<div className="harness-sidepanel-spacer" />);
-		let fileChooser = <div />;
+		let fileChooser = <br />;
 		if (this.props.fileChooserVisible) {
 			fileChooser = (<div className="harness-sidepanel-file-uploader">
 				<FileUploader
@@ -268,8 +268,8 @@ export default class SidePanelModal extends React.Component {
 			</div>);
 
 		const expressionValidate = (
-			<div className="sidepanel-children">
-				<div className="sidepanel-headers">Show Expression Validate Link</div>
+			<div className="harness-sidepanel-children">
+				<div className="harness-sidepanel-headers">Show Expression Validate Link</div>
 				<Toggle
 					id="sidepanel-expressionValidate-toggle"
 					toggled={this.props.expressionValidate}
