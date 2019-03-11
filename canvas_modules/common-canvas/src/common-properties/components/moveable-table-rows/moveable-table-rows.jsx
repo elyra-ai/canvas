@@ -91,15 +91,7 @@ export default class MoveableTableRows extends React.Component {
 					this.props.controller.moveErrorMessageRows(this.props.propertyId.name, selectedRow, selectedRow - 1);
 				}
 			}
-			if (selected.length > 1) {
-				if (selected[0] === 0) {
-					this.props.setScrollToRow(selected[0]);
-				} else {
-					this.props.setScrollToRow(selected[0]);
-				}
-			} else {
-				this.props.setScrollToRow(selected[0]);
-			}
+			this.props.setScrollToRow(selected[0]);
 			this.props.setCurrentControlValueSelected(controlValue, selected);
 		}
 	}
@@ -122,11 +114,7 @@ export default class MoveableTableRows extends React.Component {
 				}
 			}
 			if (selected.length > 1) {
-				if (selected[selected.length - 1] === controlValue.length - 1) {
-					this.props.setScrollToRow(selected[selected.length - 1]);
-				} else {
-					this.props.setScrollToRow(selected[selected.length - 1]);
-				}
+				this.props.setScrollToRow(selected[selected.length - 1]);
 			} else {
 				this.props.setScrollToRow(selected[0]);
 			}
