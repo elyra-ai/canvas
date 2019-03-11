@@ -288,6 +288,7 @@ class CommonPropertiesComponents extends React.Component {
 			{ key: "empty", label: <div>isEmpty/<br />isNotEmpty</div> },
 			{ key: "greaterLessThan", label: <div>greaterThan/<br />lessThan</div> },
 			{ key: "equals", label: <div>equals/<br />notEquals</div> },
+			{ key: "matches", label: <div>matches/<br />notMatches</div> },
 			{ key: "contains", label: <div>contains/<br />notContains</div> },
 			{ key: "colNotExists", label: <div>colNotExists</div> },
 			{ key: "isDateTime", label: <div>isDateTime</div> },
@@ -300,37 +301,37 @@ class CommonPropertiesComponents extends React.Component {
 		];
 
 		const tableConditionsData = [
-			{ Control: "checkbox (boolean)", empty: "no", greaterLessThan: "no", equals: "yes", contains: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "checkbox (boolean)", empty: "no", greaterLessThan: "no", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
-			{ Control: "checkboxset ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "checkboxset ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
-			{ Control: "expression (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "expression (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
-			{ Control: "numberfield (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "numberfield (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
-			{ Control: "oneofselect (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "oneofselect (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
-			{ Control: "timeField (time)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "yes", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "timeField (time)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "yes", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
-			{ Control: "dateField (date)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "yes", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "dateField (date)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "yes", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
-			{ Control: "password (string)", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "password (string)", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
-			{ Control: "radioset (boolean|number|string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "radioset (boolean|number|string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
-			{ Control: "selectcolumn (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "yes", dmTypeNotEquals: "yes",
+			{ Control: "selectcolumn (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "yes", dmTypeNotEquals: "yes",
 				dmMeasurementEquals: "yes", dmMeasurementNotEquals: "yes", dmRoleEquals: "yes", dmRoleNotEquals: "yes" },
-			{ Control: "selectcolumns  ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "yes", dmTypeNotEquals: "yes",
+			{ Control: "selectcolumns  ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "yes", dmTypeNotEquals: "yes",
 				dmMeasurementEquals: "yes", dmMeasurementNotEquals: "yes", dmRoleEquals: "yes", dmRoleNotEquals: "yes" },
-			{ Control: "someofselect ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "someofselect ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
-			{ Control: "textarea (string/[string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "textarea (string/[string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
-			{ Control: "textfield (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "yes", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "textfield (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "yes", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
-			{ Control: "structure-list-editor ([[string]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "structure-list-editor ([[string]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
-			{ Control: "structuretable ([[primitive]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "structuretable ([[primitive]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" }
 		];
 
@@ -348,6 +349,7 @@ class CommonPropertiesComponents extends React.Component {
 			{ Conditions: "isEmpty/isNotEmpty", boolean: "yes", string: "yes", number: "yes", date_time: "yes", stringArray: "yes", doubleArray: "yes" },
 			{ Conditions: "greaterThan/lessThan", boolean: "no", string: "yes", number: "yes", date_time: "no", stringArray: "no", doubleArray: "no" },
 			{ Conditions: "equals/notEquals", boolean: "yes", string: "yes", number: "yes", date_time: "yes", stringArray: "yes", doubleArray: "no" },
+			{ Conditions: "matches/notMatches", boolean: "no", string: "yes", number: "no", date_time: "no", stringArray: "no", doubleArray: "no" },
 			{ Conditions: "contains/notContains", boolean: "no", string: "yes", number: "no", date_time: "yes", stringArray: "yes", doubleArray: "no" },
 			{ Conditions: "colNotExists", boolean: "no", string: "yes", number: "no", date_time: "no", stringArray: "no", doubleArray: "no" },
 			{ Conditions: "isDateTime", boolean: "no", string: "no", number: "no", date_time: "yes", stringArray: "no", doubleArray: "no" },
@@ -407,6 +409,10 @@ class CommonPropertiesComponents extends React.Component {
 					validate the format of a <span className="harness-highlight">date</span> or <span className="harness-highlight">time</span> control.  A validation
 					definition using the <span className="harness-highlight">isDateTime</span> operator is automatically generated
 					for a <span className="harness-highlight">date</span> and <span className="harness-highlight">time</span> control.
+				</p>
+				<p>The <span className="harness-highlight">matches/noMatches</span> operator will compare a string value against a regular expression. The string value
+				is in the first parameter value.  The second value or parameter is a regular expression string.  The regular expression string should not be bracketed
+				with "/".  For example, a regular expression to match a string that starts with the character "g" should be specified as <span className="harness-highlight">"^g"</span>.
 				</p>
 			</div>
 		</section>);

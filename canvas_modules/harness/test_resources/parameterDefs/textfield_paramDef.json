@@ -405,7 +405,7 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "string_error",
-            "op": "notEquals",
+            "op": "notMatches",
             "value": "error"
           }
         }
