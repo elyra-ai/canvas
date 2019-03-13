@@ -26,6 +26,9 @@
 			box-shadow: 0 2px 0 0 $support-03;
 		}
 	}
+	.bx--text-input {
+		min-width: unset;
+	}
 }
 
 .properties-table-cell-control { // overrides when in a table cell
@@ -45,10 +48,6 @@
 			}
 		}
 	}
-	.bx--text-input {
-		min-width: 0;
-	}
-
 	.bx--text-input:disabled:hover {
 		box-shadow: 0 2px 0 0 $text-02;
 	}
