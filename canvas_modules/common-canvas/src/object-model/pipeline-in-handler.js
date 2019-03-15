@@ -152,13 +152,7 @@ export default class PipelineInHandler {
 		var newDecorations = [];
 		if (decorations) {
 			decorations.forEach((decoration) => {
-				var newDecoration = {
-					position: decoration.position,
-					class_name: decoration.class_name,
-					hotspot: decoration.hotspot,
-					id: decoration.id || this.getUUID(),
-					image: decoration.image
-				};
+				var newDecoration = Object.assign({}, decoration, { id: decoration.id || this.getUUID() });
 				newDecorations.push(newDecoration);
 			});
 		}
