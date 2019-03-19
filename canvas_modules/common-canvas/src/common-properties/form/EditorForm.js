@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -193,7 +193,7 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 			structureDef = structureMetadata.getStructure(prop.baseType());
 		}
 		if (!(group instanceof StructureDef) || (group instanceof StructureDef && prop.isSubPanelEdit())) {
-			const ctrl = _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider);
+			const ctrl = _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata);
 			const control = UIItem.makeControl(ctrl);
 			if (prop.separatorBefore()) {
 				uiItems.push(UIItem.makeHSeparator());
@@ -327,7 +327,7 @@ function _makeStringControl(parameter) {
 /**
  * Creates a control for the supplied property.
  */
-function _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider) {
+function _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata) {
 	// Assume the property is defined
 	const parameter = parameterMetadata.getParameter(paramName);
 
@@ -466,6 +466,10 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	if (parameter.getRole() === ParamRole.ENUM) {
 		valueLabels = _parameterValueLabels(parameter, l10nProvider);
 	}
+	let action;
+	if (parameter.actionRef) {
+		action = _makeAction(actionMetadata.getAction(parameter.actionRef), l10nProvider);
+	}
 	const settings = {};
 	settings.name = parameter.name;
 	settings.label = controlLabel;
@@ -505,6 +509,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	settings.includeAllFields = includeAllFields;
 	settings.layout = layout;
 	settings.dmImage = parameter.dmImage;
+	settings.action = action;
 	return new Control(settings);
 }
 
@@ -695,7 +700,7 @@ function _makeAction(action, l10nProvider) {
 	if (action.description) {
 		actionDesc = new Description(l10nProvider.l10nDesc(action, action.id));
 	}
-	return new Action(action.id, actionLabel, actionDesc, action.control, action.data);
+	return new Action(action.id, actionLabel, actionDesc, action.control, action.data, action.image);
 }
 
 function _parameterValueLabels(parameter, l10nProvider) {

@@ -7,6 +7,5 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-@import "./button/button.scss";
-@import "./image/image.scss";
-
+import ImageAction from "./image.jsx";
+module.exports = ImageAction;

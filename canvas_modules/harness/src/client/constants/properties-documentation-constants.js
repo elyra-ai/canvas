@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -4239,6 +4239,7 @@ _defineConstant("STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO", {
 	}
 });
 
+
 _defineConstant("ACTION_PROPS_INFO", {
 	"title": "Actions",
 	"parameterDef": {
@@ -4316,6 +4317,83 @@ _defineConstant("ACTION_PROPS_INFO", {
 							"type": "controls",
 							"parameter_refs": [
 								"number"
+							]
+						}
+					]
+				}
+			]
+		}
+	}
+});
+
+_defineConstant("ACTION_IMAGE_PROPS_INFO", {
+	"title": "Actions",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Actions",
+			"editable": false
+		},
+		"current_parameters": {
+			"moon_phase": "Full"
+		},
+		"parameters": [
+			{
+				"id": "moon_phase",
+				"type": "string"
+			}
+		],
+		"uihints": {
+			"id": "actions",
+			"icon": "images/actions.svg",
+			"label": {
+				"default": "Action Test"
+			},
+			"parameter_info": [
+				{
+					"parameter_ref": "moon_phase",
+					"label": {
+						"default": "Current moon phase"
+					},
+					"description": {
+						"default": "Try pressing the moon image"
+					},
+					"control": "readonly",
+					"action_ref": "moon"
+				}
+			],
+			"action_info": [
+				{
+					"id": "moon",
+					"label": {
+						"resource_key": "moon"
+					},
+					"control": "image",
+					"data": {
+						"parameter_ref": "moon_phase"
+					},
+					"image": {
+						"url": "/images/moon.jpg",
+						"placement": "right",
+						"size": {
+							"height": 20,
+							"width": 25
+						}
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "action-tests",
+					"label": {
+						"default": "Actions"
+					},
+					"type": "panels",
+					"group_info": [
+						{
+							"id": "moon-control",
+							"type": "controls",
+							"parameter_refs": [
+								"moon_phase"
 							]
 						}
 					]

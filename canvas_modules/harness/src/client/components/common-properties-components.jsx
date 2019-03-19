@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -66,7 +66,8 @@ import {
 	SUMMARY_PROPS_INFO,
 	STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO,
 	STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO,
-	ACTION_PROPS_INFO
+	ACTION_PROPS_INFO,
+	ACTION_IMAGE_PROPS_INFO
 } from "../constants/properties-documentation-constants.js";
 import { CommonProperties } from "common-canvas";
 
@@ -148,6 +149,25 @@ class CommonPropertiesComponents extends React.Component {
 			let value = this.propertiesController.getPropertyValue(propertyId);
 			this.propertiesController.updatePropertyValue(propertyId, value -= 1);
 		}
+		if (actionId === "moon") {
+			const propertyId = { name: data.parameter_ref };
+			let value = this.propertiesController.getPropertyValue(propertyId);
+			switch (value) {
+			case "Full" :
+				value = "Waning";
+				break;
+			case "Waning" :
+				value = "New";
+				break;
+			case "New" :
+				value = "Waxing";
+				break;
+			default:
+				value = "Full";
+			}
+			this.propertiesController.updatePropertyValue(propertyId, value);
+		}
+
 	}
 
 	twistyActionHandler(actionId, appData, data) {
@@ -169,6 +189,25 @@ class CommonPropertiesComponents extends React.Component {
 			let value = this.flyoutController.getPropertyValue(propertyId);
 			this.flyoutController.updatePropertyValue(propertyId, value -= 1);
 		}
+		if (actionId === "moon") {
+			const propertyId = { name: data.parameter_ref };
+			let value = this.flyoutController.getPropertyValue(propertyId);
+			switch (value) {
+			case "Full" :
+				value = "Waning";
+				break;
+			case "Waning" :
+				value = "New";
+				break;
+			case "New" :
+				value = "Waxing";
+				break;
+			default:
+				value = "Full";
+			}
+			this.flyoutController.updatePropertyValue(propertyId, value);
+		}
+
 	}
 
 	jsonReplacer(json, type, custom) {
@@ -318,7 +357,9 @@ class CommonPropertiesComponents extends React.Component {
 					"--summary",
 					"--generatedValues",
 					"Actions",
-					"--button"
+					"--button",
+					"--image"
+
 				])}
 				type="inline"
 				onChange={this.onMenuDropdownSelect}
@@ -1614,6 +1655,26 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="harness-section-column harness-section-column-code">
 							<pre className="harness-json-block">
 								{this.jsonReplacer(ACTION_PROPS_INFO.parameterDef, "all")}
+							</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className="harness-properties-documentation-section-content">
+				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--image" className="harness-section-subtitle">image</h3>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={ACTION_IMAGE_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								callbacks={{ actionHandler: this.actionHandler, controllerHandler: this.controllerHandler }}
+							/>
+							{this.renderRightFlyoutButton(ACTION_IMAGE_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(ACTION_IMAGE_PROPS_INFO.parameterDef, "all")}
 							</pre>
 						</div>
 					</div>

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -31,7 +31,7 @@ import FieldPicker from "./../field-picker";
 import TextPanel from "./../../panels/text-panel";
 import ActionPanel from "./../../panels/action-panel";
 
-import ButtonAction from "./../../actions/button";
+import ActionFactory from "./../../actions/action-factory.js";
 
 import CanvasIcon from "./../../../icons/icon.jsx";
 import Icon from "carbon-components-react/lib/components/Icon";
@@ -62,6 +62,9 @@ class EditorForm extends React.Component {
 		this.ControlFactory = props.controller.getControlFactory();
 		this.ControlFactory.setFunctions(this.openFieldPicker, this.genUIItem);
 		this.ControlFactory.setRightFlyout(props.rightFlyout);
+
+		this.actionFactory = new ActionFactory(this.props.controller);
+
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -353,26 +356,11 @@ class EditorForm extends React.Component {
 			return this.generateCustomPanel(key, uiItem.panel);
 			// only generate summary panel for right side flyout
 		} else if (uiItem.itemType === "action") {
-			return this.generateAction(key, uiItem.action);
+			return this.actionFactory.generateAction(key, uiItem.action);
 		} else if (uiItem.itemType === "textPanel" && uiItem.panel) {
 			return (<TextPanel key={"text-panel-" + key} panel={uiItem.panel} controller={this.props.controller} />);
 		}
 		return <div key={"unknown." + key}>Unknown: {uiItem.itemType}</div>;
-	}
-
-	generateAction(key, action) {
-		if (action) {
-			if (action.actionType === "button") {
-				return (
-					<ButtonAction
-						key={"action." + key}
-						action={action}
-						controller={this.props.controller}
-					/>
-				);
-			}
-		}
-		return null;
 	}
 
 	generateCustomPanel(key, panel) {

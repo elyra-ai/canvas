@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -138,6 +138,9 @@ export class ParameterDef {
 		}
 		if (settings.uionly) {
 			this.uionly = settings.uionly;
+		}
+		if (settings.actionRef) {
+			this.actionRef = settings.actionRef;
 		}
 	}
 
@@ -329,7 +332,8 @@ export class ParameterDef {
 				"data": propertyOf(uihint)("data"),
 				"rows": propertyOf(uihint)("rows"),
 				"displayChars": propertyOf(uihint)("display_chars"),
-				"uionly": propertyOf(param)("uionly")
+				"uionly": propertyOf(param)("uionly"),
+				"actionRef": propertyOf(uihint)("action_ref")
 			});
 		}
 		return null;

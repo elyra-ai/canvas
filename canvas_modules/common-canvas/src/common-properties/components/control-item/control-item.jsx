@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -17,7 +17,13 @@ import Tooltip from "./../../../tooltip/tooltip.jsx";
 import isEmpty from "lodash/isEmpty";
 import uuid4 from "uuid/v4";
 
+import ActionFactory from "./../../actions/action-factory.js";
+
 class ControlItem extends React.Component {
+	constructor(props) {
+		super(props);
+		this.actionFactory = new ActionFactory(this.props.controller);
+	}
 
 	render() {
 		const hidden = this.props.state === STATES.HIDDEN;
@@ -84,12 +90,15 @@ class ControlItem extends React.Component {
 				</div>);
 		}
 
+		const action = this.actionFactory.generateAction(0, this.props.control.action);
+
 		const className = classNames("properties-control-item", { "hide": hidden });
 		return (
 			<div data-id={"properties-ci-" + this.props.control.name}
 				className={className} disabled={disabled}
 			>
 				{label}
+				{action}
 				{this.props.controlObj}
 			</div>
 		);

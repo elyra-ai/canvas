@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -1420,6 +1420,63 @@ class App extends React.Component {
 			dm[0].fields.push(newField);
 			propertiesController.setDatasetMetadata(dm[0]);
 		}
+		if (actionId === "summer") {
+			const propertyId = { name: data.parameter_ref };
+			propertiesController.updatePropertyValue(propertyId, "Summer: hot, sunny");
+		}
+		if (actionId === "winter") {
+			const propertyId = { name: data.parameter_ref };
+			propertiesController.updatePropertyValue(propertyId, "Winter: cold, snowy");
+		}
+		if (actionId === "fall") {
+			const propertyId = { name: data.parameter_ref };
+			propertiesController.updatePropertyValue(propertyId, "Fall: cool, frosty");
+		}
+		if (actionId === "spring") {
+			const propertyId = { name: data.parameter_ref };
+			propertiesController.updatePropertyValue(propertyId, "Spring: mild, rainy");
+		}
+		if (actionId === "moon") {
+			const propertyId = { name: data.parameter_ref };
+			let value = propertiesController.getPropertyValue(propertyId);
+			switch (value) {
+			case "Full" :
+				value = "Waning";
+				break;
+			case "Waning" :
+				value = "New";
+				break;
+			case "New" :
+				value = "Waxing";
+				break;
+			default:
+				value = "Full";
+			}
+			propertiesController.updatePropertyValue(propertyId, value);
+		}
+		if (actionId === "meteor") {
+			const propertyId = { name: data.parameter_ref };
+			let value = propertiesController.getPropertyValue(propertyId);
+			switch (value) {
+			case "Perseids" :
+				value = "Orionids";
+				break;
+			case "Orionids" :
+				value = "Leonids";
+				break;
+			case "Leonids" :
+				value = "Geminids";
+				break;
+			case "Geminids" :
+				value = "Lyrids";
+				break;
+
+			default:
+				value = "Perseids";
+			}
+			propertiesController.updatePropertyValue(propertyId, value);
+		}
+
 		this.log("propertyActionHandler() " + actionId);
 	}
 
