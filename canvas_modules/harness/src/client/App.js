@@ -1418,7 +1418,7 @@ class App extends React.Component {
 				}
 			};
 			dm[0].fields.push(newField);
-			propertiesController.setDatasetMetadata(dm[0]);
+			propertiesController.setDatasetMetadata(dm);
 		}
 		if (actionId === "summer") {
 			const propertyId = { name: data.parameter_ref };
