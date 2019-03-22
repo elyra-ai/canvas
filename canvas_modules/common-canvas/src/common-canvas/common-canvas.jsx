@@ -41,6 +41,8 @@ export default class CommonCanvas extends React.Component {
 			paletteWidth: PALETTE.OPEN_WIDTH
 		};
 
+		this.diagramCanvasRef = React.createRef();
+
 		this.openContextMenu = this.openContextMenu.bind(this);
 		this.closeContextMenu = this.closeContextMenu.bind(this);
 		this.isContextMenuDisplayed = this.isContextMenuDisplayed.bind(this);
@@ -166,7 +168,7 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	getSvgViewportOffset() {
-		return this.refs.canvas.getSvgViewportOffset();
+		return this.diagramCanvasRef.current.getSvgViewportOffset();
 	}
 
 	initializeController(props) {
@@ -259,19 +261,19 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	zoomIn() {
-		this.refs.canvas.zoomIn();
+		this.diagramCanvasRef.current.zoomIn();
 	}
 
 	zoomOut() {
-		this.refs.canvas.zoomOut();
+		this.diagramCanvasRef.current.zoomOut();
 	}
 
 	zoomToFit() {
-		this.refs.canvas.zoomToFit();
+		this.diagramCanvasRef.current.zoomToFit();
 	}
 
 	focusOnCanvas() {
-		this.refs.canvas.focusOnCanvas(); // Set focus on div so keybord events go there.
+		this.diagramCanvasRef.current.focusOnCanvas(); // Set focus on div so keybord events go there.
 	}
 
 	configureToolbarButtonsState() {
@@ -353,7 +355,7 @@ export default class CommonCanvas extends React.Component {
 
 			canvas = (
 				<DiagramCanvasD3
-					ref="canvas"
+					ref={this.diagramCanvasRef}
 					canvasInfo={canvasInfo}
 					config={this.props.config}
 					canvasController={this.canvasController}

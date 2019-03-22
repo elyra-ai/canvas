@@ -13,6 +13,7 @@ Demo link [https://wdp-common-canvas-dev.stage1.mybluemix.net/](https://wdp-comm
 Clone wdp-abstract-canvas
 ```sh
 git clone git@github.ibm.com:NGP-TWC/wdp-abstract-canvas.git
+
 # Build common-canvas and common-properties
 ./<wdp-abstract-canvas>/canvas_modules/common-canvas/build.sh
 ```
@@ -24,7 +25,9 @@ with
 ```  
 "@wdp/common-canvas": "file:<wdp-abstract-canvas>/canvas_modules/common-canvas"  
 ```
-Delete @wdp from node_modules
+
+Delete @wdp/common-canvas from node_modules of your application
+
 ```sh
 # Run npm install to get local copy of common-canvas and/or common-properties
 npm install
