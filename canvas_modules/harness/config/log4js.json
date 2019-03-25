@@ -1,6 +1,6 @@
 {
 	"levels": {
-		"application": "ERROR",
+		"application": "INFO",
 		"v1-get-syntax-check-controller": "INFO",
 		"v1-get-properties-list-controller": "ERROR",
 		"v1-get-forms-list-controller": "ERROR",

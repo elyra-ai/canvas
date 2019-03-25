@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -15,6 +15,8 @@ const SassLintPlugin = require("sasslint-webpack-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const nodeExternals = require("webpack-node-externals");
+
+const isCoverage = process.env.COVERAGE === "true";
 
 module.exports = {
 	context: __dirname,
@@ -42,7 +44,8 @@ module.exports = {
 				exclude: /node_modules/,
 				loader: "babel-loader",
 				query: {
-					presets: ["react", "es2015", "stage-1"]
+					presets: ["react", "es2015", "stage-1"],
+					plugins: isCoverage ? ["istanbul"] : []
 				}
 			},
 			{

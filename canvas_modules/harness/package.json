@@ -16,6 +16,7 @@
     "express": "4.15.3",
     "express-session": "1.15.4",
     "isomorphic-fetch": "2.2.1",
+    "istanbul-middleware": "0.2.2",
     "log4js": "0.6.32",
     "nconf": "0.8.4",
     "node-sass": "4.5.3"

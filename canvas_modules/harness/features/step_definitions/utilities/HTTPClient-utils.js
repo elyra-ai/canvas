@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -22,6 +22,20 @@ function getHarnessData(url, callback) {
 	anHttpRequest.send(null);
 }
 
+function postData(url, data, callback) {
+	var anHttpRequest = new XMLHttpRequest();
+	anHttpRequest.onreadystatechange = function() {
+		if (anHttpRequest.readyState === 4 && anHttpRequest.status === 200) {
+			return callback();
+		}
+		return null;
+	};
+	anHttpRequest.open("POST", url, true);
+	anHttpRequest.setRequestHeader("Content-Type", "application/json");
+	anHttpRequest.send(data);
+}
+
 module.exports = {
-	getHarnessData: getHarnessData
+	getHarnessData: getHarnessData,
+	postData: postData
 };

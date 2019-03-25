@@ -11,9 +11,8 @@
 #-------------------------------------------------------------
 
 # original https://github.ibm.com/NGP-TWC/WDP-Security/blob/master/automation/sourcescans/sonarqube/source_scan.sh
-RELEASE="release"
 
-if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
+if [[ ( "$TRAVIS_PULL_REQUEST" = "false" && "$TRAVIS_BRANCH" = "master" ) ]]; then
 	set -x
 	VER_NUMBER=$TRAVIS_BUILD_NUMBER
 
@@ -54,7 +53,8 @@ if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 	echo "sonar.sources=./canvas_modules/common-canvas" >> sonar-project.properties
 	echo "sonar.projectVersion=$TRAVIS_BUILD_NUMBER" >> sonar-project.properties
 	echo "sonar.exclusions=**/__tests__/**,**/__mocks__/**, **/node_modules/**, **/common-canvas/dist/**, **/common-canvas/coverage/**" >> sonar-project.properties
-	echo "sonar.javascript.lcov.reportPaths=./canvas_modules/common-canvas/coverage/lcov.info" >> sonar-project.properties
+	echo "sonar.coverage.exclusions=**/common-canvas/Gruntfile.js, **/common-canvas/postcss.config.js, **/common-canvas/webpack.config.js" >> sonar-project.properties
+	echo "sonar.javascript.lcov.reportPaths=./canvas_modules/common-canvas/coverage/lcov.info, ./canvas_modules/harness/coverage/lcov.info" >> sonar-project.properties
 	echo "sonar.sourceEncoding=UTF-8" >> sonar-project.properties
 	if [ ! $? -eq 0 ]; then
 	    echo "Error: Problem writing the file, sonar-scanner.properties"

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -18,6 +18,8 @@ const log4js = require("log4js");
 const bodyParser = require("body-parser");
 const log4jsUtil = require("./utils/log4js-util");
 log4jsUtil.init();
+
+const im = require("istanbul-middleware");
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -58,7 +60,9 @@ function _create(callback) {
 		logger.info("In development mode; using webpack with HMR");
 		_configureHmr(app);
 	}
+
 	app.use(express.static(path.join(__dirname, "../.build")));
+
 	app.use(log4jsUtil.getRequestLogger());
 
 	const routerOptions = {
@@ -67,11 +71,13 @@ function _create(callback) {
 	};
 	const v1Router = express.Router(routerOptions);
 	app.use(constants.API_PATH_V1, v1Router);
+
 	v1Router.use(bodyParser.json({ limit: "10mb" }));
 	v1Router.use(constants.APP_PATH, testAPI);
 	v1Router.use(constants.APP_PATH, formsAPI);
 	v1Router.use(constants.APP_PATH, opsAPI);
 
+	app.use("/coverage", im.createHandler());
 
 	callback(null, app);
 }
