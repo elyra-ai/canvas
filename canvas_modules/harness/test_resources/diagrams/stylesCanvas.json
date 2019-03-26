@@ -3,10 +3,10 @@
   "version": "3.0",
   "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
   "id": "styles-canvas-1234",
-  "primary_pipeline": "`~!@#$%^&*()_+=-{}][|:;<,>.9?/",
+  "primary_pipeline": "styles_canvas_pipeline_flow",
   "pipelines": [
     {
-      "id": "`~!@#$%^&*()_+=-{}][|:;<,>.9?/",
+      "id": "styles_canvas_pipeline_flow",
       "name": "My pipeline",
       "nodes": [
         {
@@ -76,7 +76,7 @@
           }
         },
         {
-          "id": "|:;<,>.9?/`~!@#$%^&*()_+=-{}][",
+          "id": "exec_node_id",
           "type": "execution_node",
           "op": "dummy_operator",
           "app_data": {
@@ -225,7 +225,7 @@
               },
               "links": [
                 {
-                  "node_id_ref": "|:;<,>.9?/`~!@#$%^&*()_+=-{}][",
+                  "node_id_ref": "exec_node_id",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
