@@ -60,6 +60,7 @@ import {
 	MOUSE_INTERACTION,
 	PORTS_CONNECTION,
 	VERTICAL_FORMAT,
+	NONE_SAVE_ZOOM,
 	CURVE_LINKS,
 	CUSTOM,
 	FLYOUT,
@@ -108,6 +109,7 @@ class App extends React.Component {
 			selectedInteractionType: MOUSE_INTERACTION,
 			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormat: VERTICAL_FORMAT,
+			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedLinkType: CURVE_LINKS,
 			selectedPaletteLayout: FLYOUT,
 			showContextMenu: false,
@@ -184,6 +186,7 @@ class App extends React.Component {
 		this.setPaletteDropdownSelect = this.setPaletteDropdownSelect.bind(this);
 		this.setPaletteDropdownSelect2 = this.setPaletteDropdownSelect2.bind(this);
 
+		this.setSaveZoom = this.setSaveZoom.bind(this);
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
@@ -194,6 +197,7 @@ class App extends React.Component {
 		this.useEnableDropZoneOnExternalDrag = this.useEnableDropZoneOnExternalDrag.bind(this);
 		this.useEnableCreateSupernodeNonContiguous = this.useEnableCreateSupernodeNonContiguous.bind(this);
 		this.setEnableMoveNodesOnSupernodeResize = this.setEnableMoveNodesOnSupernodeResize.bind(this);
+		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.setNarrowPalette = this.setNarrowPalette.bind(this);
 		this.schemaValidation = this.schemaValidation.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -260,7 +264,7 @@ class App extends React.Component {
 			this.canvasController2 = new CanvasController();
 			// TODO - Remove these calls when we transition to V3 schemas permanently
 			this.canvasController.setReturnPipelineFlowDraftVersion(true);
-			this.canvasController.setReturnPipelineFlowDraftVersion(true);
+			this.canvasController2.setReturnPipelineFlowDraftVersion(true);
 
 		} catch (err) {
 			console.error("Error setting up canvas controllers: " + err);
@@ -584,6 +588,11 @@ class App extends React.Component {
 		this.log("Properties set");
 	}
 
+	setSaveZoom(selectedSaveZoom) {
+		this.setState({ selectedSaveZoom: selectedSaveZoom });
+		this.log("Save Zoom selected", selectedSaveZoom);
+	}
+
 	setLayoutDirection(selectedLayout) {
 		this.canvasController.setFixedAutoLayout(selectedLayout);
 		this.canvasController2.setFixedAutoLayout(selectedLayout);
@@ -691,6 +700,11 @@ class App extends React.Component {
 		}
 		this.canvasController.setNodeDecorations(nodeId, newDecs);
 		this.log("Set new node decorations", { nodeId: nodeId, newDecorations: newDecs });
+	}
+
+	clearSavedZoomValues() {
+		this.canvasController.clearSavedZoomValues();
+		this.canvasController2.clearSavedZoomValues();
 	}
 
 	generateNodeNotificationMessages(nodeMessages, currentPipelineId) {
@@ -1669,7 +1683,8 @@ class App extends React.Component {
 			enableDisplayFullLabelOnHover: this.state.displayFullLabelOnHover,
 			enableBoundingRectangles: false, // Set this to true to see bounding rectangles for debugging.
 			enableDropZoneOnExternalDrag: this.state.enableDropZoneOnExternalDrag,
-			// dropZoneCanvasContent: dropZoneCanvasDiv
+			// dropZoneCanvasContent: dropZoneCanvasDiv,
+			enableSaveZoom: this.state.selectedSaveZoom
 		};
 
 		const commonCanvasConfig2 = {
@@ -1853,6 +1868,7 @@ class App extends React.Component {
 			setPaletteDropdownSelect2: this.setPaletteDropdownSelect2,
 			selectedPaletteDropdownFile: this.state.selectedPaletteDropdownFile,
 			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
+			setSaveZoom: this.setSaveZoom,
 			setLayoutDirection: this.setLayoutDirection,
 			selectedLayout: this.state.selectedLayout,
 			useInternalObjectModel: this.useInternalObjectModel,
@@ -1870,6 +1886,7 @@ class App extends React.Component {
 			selectedNodeFormat: this.state.selectedNodeFormat,
 			setLinkType: this.setLinkType,
 			selectedLinkType: this.state.selectedLinkType,
+			selectedSaveZoom: this.state.selectedSaveZoom,
 			setPaletteLayout: this.setPaletteLayout,
 			selectedPaletteLayout: this.state.selectedPaletteLayout,
 			setTipConfig: this.setTipConfig,
@@ -1890,7 +1907,8 @@ class App extends React.Component {
 			enableCreateSupernodeNonContiguous: this.state.enableCreateSupernodeNonContiguous,
 			useEnableCreateSupernodeNonContiguous: this.useEnableCreateSupernodeNonContiguous,
 			enableMoveNodesOnSupernodeResize: this.state.enableMoveNodesOnSupernodeResize,
-			setEnableMoveNodesOnSupernodeResize: this.setEnableMoveNodesOnSupernodeResize
+			setEnableMoveNodesOnSupernodeResize: this.setEnableMoveNodesOnSupernodeResize,
+			clearSavedZoomValues: this.clearSavedZoomValues
 		};
 
 		const sidePanelPropertiesConfig = {

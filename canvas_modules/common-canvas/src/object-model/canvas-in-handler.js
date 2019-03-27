@@ -15,7 +15,7 @@ import { BINDING, EXECUTION_NODE,
 export default class CanvasInHandler {
 
 	static convertCanvasToCanvasInfo(canvas) {
-		// There is only one pipeline in a canvas document conained in the
+		// There is only one pipeline in a canvas document contained in the
 		// canvas.diagram field.
 		const canvasInfoPipeline = {
 			id: canvas.diagram.id,
@@ -24,6 +24,17 @@ export default class CanvasInHandler {
 			links: this.getLinks(canvas.diagram.links, canvas.diagram.nodes, canvas.diagram.comments),
 			runtime_ref: ""
 		};
+
+		// The canvas zoom can be specified as a single number which needs to be
+		// converted to our zoom object if it is not 100. If it is 100 we leave out
+		// the zoom object because it will default to k = 1, x = 0, y = 0.
+		if (canvas.zoom && typeof canvas.zoom === "number" && canvas.zoom !== 100) {
+			canvasInfoPipeline.zoom = {
+				k: canvas.zoom / 100,
+				x: 0,
+				y: 0
+			};
+		}
 		return {
 			doc_type: "pipeline",
 			version: "3.0",

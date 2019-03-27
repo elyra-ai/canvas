@@ -33,9 +33,11 @@ export default class PipelineInHandler {
 			"app_data": pipeline.app_data,
 			"parameters": pipeline.parameters
 		};
-		if (pipeline.zoom) {
-			canvas.zoom = pipeline.zoom;
+
+		if (has(pipeline, "app_data.ui_data.zoom")) {
+			canvas.zoom = pipeline.app_data.ui_data.zoom;
 		}
+
 		// Remove comments from app_data.ui_data as it's now stored in canvas obj.
 		if (has(canvas, "app_data.ui_data.comments")) {
 			delete canvas.app_data.ui_data.comments;

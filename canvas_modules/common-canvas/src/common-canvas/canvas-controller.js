@@ -241,6 +241,26 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).autoLayout(layoutDirection);
 	}
 
+	// Changes the zoom amounts for the pipeline. Zoom is an object with three
+	// fields:
+	// k: is the scale amount which is a number greater than 0 where 1 is the
+	//    default scale size.
+	// x: Is the horizontal translate amount which is a number indicating the
+	//    pixel amount to move. Negative left and positive right
+	// y: Is the vertical translate amount which is a number indicating the
+	//    pixel amount to move. Negative up and positive down.
+	zoomPipeline(zoom, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).zoomPipeline(zoom);
+	}
+
+	// Clears any saved zoom values stored in local storage. This means
+	// newly opened flows will appear with the default zoom. This method
+	// is only applicable when the enableSaveZoom config parameter is
+	// set to "localstorage".
+	clearSavedZoomValues() {
+		delete localStorage.canvasSavedZoomValues;
+	}
+
 	// ---------------------------------------------------------------------------
 	// Deprecated methods
 	// ---------------------------------------------------------------------------
@@ -1660,6 +1680,10 @@ export default class CanvasController {
 			case "displayPreviousPipeline": {
 				const command = new DisplayPreviousPipelineAction(data, this.objectModel);
 				this.commandStack.do(command);
+				break;
+			}
+			case "zoomPipeline": {
+				this.zoomPipeline(data.zoom, data.pipelineId);
 				break;
 			}
 			case "undo":

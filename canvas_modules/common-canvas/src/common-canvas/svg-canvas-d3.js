@@ -18,6 +18,7 @@ import { event as d3Event } from "d3-selection";
 import union from "lodash/union";
 import forIn from "lodash/forIn";
 import get from "lodash/get";
+import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
 import { CONTEXT_MENU_BUTTON, NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
@@ -88,7 +89,8 @@ export default class CanvasD3Layout {
 				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
 				this.config.enableLinkType !== config.enableLinkType ||
 				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
-				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize) {
+				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize ||
+				this.config.enableSaveZoom !== config.enableSaveZoom) {
 			this.logger.logStartTimer("Initializing Canvas");
 
 			// The canvasInfo does not need to be cloned here because the two
@@ -358,11 +360,17 @@ class CanvasRenderer {
 
 		this.displayCanvas();
 
-		// If we are showing a sub-flow in full screen mode, zoom it to fit the
-		// screen so it looks similar to the in-place sub-flow view.
+		// If we are showing a sub-flow in full screen mode, show the back to parent
+		// control and also zoom it to fit the screen so it looks similar to the
+		// in-place sub-flow view unless there is a saved zoom for this pipeline.
 		if (this.isDisplayingSubFlowFullPage()) {
 			this.addBackToParentFlowArrow(this.canvasSVG);
-			this.zoomToFit();
+			if (!this.config.enableSaveZoom ||
+					this.config.enableSaveZoom === "None" ||
+					(this.config.enableSaveZoom === "LocalStorage" && !this.getSavedZoom()) ||
+					(this.config.enableSaveZoom === "Pipelineflow" && !this.activePipeline.zoom)) {
+				this.zoomToFit();
+			}
 		}
 		this.logger.logEndTimer("Constructor");
 	}
@@ -556,6 +564,9 @@ class CanvasRenderer {
 
 		if (this.isDisplayingSubFlowInPlace()) {
 			this.displaySVGToFitSupernode();
+
+		} else {
+			this.restoreZoom();
 		}
 
 		// The supernode will not have any calculated port positions when the
@@ -1210,6 +1221,64 @@ class CanvasRenderer {
 		return labelClass;
 	}
 
+	// Restores the zoom of the canvas, if it has changed, based on the type
+	// of 'save zoom' specified in the configuration.
+	restoreZoom() {
+		let newZoom = null;
+
+		if (this.config.enableSaveZoom === "Pipelineflow" &&
+				this.activePipeline.zoom &&
+				this.activePipeline.zoom.k &&
+				this.activePipeline.zoom.x &&
+				this.activePipeline.zoom.y &&
+				this.activePipeline.zoom.k !== this.zoomTransform.k &&
+				this.activePipeline.zoom.x !== this.zoomTransform.x &&
+				this.activePipeline.zoom.y !== this.zoomTransform.y) {
+			newZoom = this.activePipeline.zoom;
+
+		} else if (this.config.enableSaveZoom === "LocalStorage") {
+			const savedZoom = this.getSavedZoom();
+			if (savedZoom &&
+					(savedZoom.k !== this.zoomTransform.k ||
+						savedZoom.x !== this.zoomTransform.x ||
+						savedZoom.y !== this.zoomTransform.y)) {
+				newZoom = savedZoom;
+			}
+		}
+
+		if (newZoom) {
+			const newZoomTransform = d3.zoomIdentity
+				.translate(newZoom.x, newZoom.y)
+				.scale(newZoom.k);
+			this.zoomCanvasInvokeZoomBehavior(newZoomTransform);
+		}
+	}
+
+	// Zooms the canvas to amount specified in zoomTransform. Zooming the canvas
+	// in this way will invoke the zoom behavior methods (zoomStart, zoomAction
+	// and zoomEnd).
+	zoomCanvasInvokeZoomBehavior(zoomTransform) {
+		this.canvasSVG.call(this.zoom.transform, zoomTransform);
+	}
+
+	// Saves the zoom object passed in for this pipeline in local storage.
+	setSavedZoom(zoom) {
+		if (localStorage) {
+			const savedZooms = localStorage.canvasSavedZoomValues ? JSON.parse(localStorage.canvasSavedZoomValues) : {};
+			set(savedZooms, [this.canvasInfo.id, this.pipelineId], zoom);
+			localStorage.canvasSavedZoomValues = JSON.stringify(savedZooms);
+		}
+	}
+
+	// Returns the zoom for this pipeline saved in local storage
+	getSavedZoom() {
+		if (localStorage && localStorage.canvasSavedZoomValues) {
+			const savedZoom = JSON.parse(localStorage.canvasSavedZoomValues);
+			return get(savedZoom, [this.canvasInfo.id, this.pipelineId]);
+		}
+		return null;
+	}
+
 	zoomToFit() {
 		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, 10);
 		this.zoomToFitCanvas(canvasDimensions);
@@ -1248,7 +1317,7 @@ class CanvasRenderer {
 
 			this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(newScale);
 			this.zoomingToFitForScale = true;
-			this.canvasSVG.call(this.zoom.transform, this.zoomTransform); // Use the zoom behavior
+			this.zoomCanvasInvokeZoomBehavior(this.zoomTransform);
 			this.zoomingToFitForScale = false;
 		}
 	}
@@ -1380,7 +1449,21 @@ class CanvasRenderer {
 				this.objectModel.selectInRegion(startX, startY, startX + width, startY + height, this.activePipeline.id);
 			}
 			this.regionSelect = false;
+
+		} else if (this.isDisplayingFullPage()) {
+			if (this.config.enableSaveZoom === "Pipelineflow") {
+				const data = {
+					editType: "zoomPipeline",
+					zoom: this.zoomTransform,
+					pipelineId: this.activePipeline.id
+				};
+				this.canvasController.editActionHandler(data);
+
+			} else if (this.config.enableSaveZoom === "LocalStorage") {
+				this.setSavedZoom(this.zoomTransform);
+			}
 		}
+
 		// Remove the cursor overlay and reset the SVG background rectangle
 		// cursor style, which was set in the zoom start method.
 		this.resetCanvasCursor();

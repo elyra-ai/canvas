@@ -301,10 +301,18 @@ export default class PipelineOutHandler {
 	}
 
 	static createPipelineUiData(canvasInfoPipeline) {
+		let uiData = null;
 		if (canvasInfoPipeline.app_data && canvasInfoPipeline.app_data.ui_data) {
-			return Object.assign({}, canvasInfoPipeline.app_data.ui_data, { comments: this.createComments(canvasInfoPipeline.comments, canvasInfoPipeline.links) });
+			uiData = Object.assign({}, canvasInfoPipeline.app_data.ui_data, {
+				comments: this.createComments(canvasInfoPipeline.comments, canvasInfoPipeline.links) });
+		} else {
+			uiData = { comments: this.createComments(canvasInfoPipeline.comments, canvasInfoPipeline.links) };
 		}
-		return { comments: this.createComments(canvasInfoPipeline.comments, canvasInfoPipeline.links) };
+
+		if (canvasInfoPipeline.zoom) {
+			uiData.zoom = canvasInfoPipeline.zoom;
+		}
+		return uiData;
 	}
 
 	static createComments(canvasInfoComments, canvasInfoLinks) {

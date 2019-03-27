@@ -53,6 +53,7 @@ export default class SidePanel extends React.Component {
 				setPaletteDropdownSelect2={this.props.canvasConfig.setPaletteDropdownSelect2}
 				selectedPaletteDropdownFile={this.props.canvasConfig.selectedPaletteDropdownFile}
 				selectedPaletteDropdownFile2={this.props.canvasConfig.selectedPaletteDropdownFile2}
+				setSaveZoom={this.props.canvasConfig.setSaveZoom}
 				setLayoutDirection={this.props.canvasConfig.setLayoutDirection}
 				selectedLayout={this.props.canvasConfig.selectedLayout}
 				setSnapToGridType={this.props.canvasConfig.setSnapToGridType}
@@ -70,6 +71,7 @@ export default class SidePanel extends React.Component {
 				selectedNodeFormat={this.props.canvasConfig.selectedNodeFormat}
 				setLinkType={this.props.canvasConfig.setLinkType}
 				selectedLinkType={this.props.canvasConfig.selectedLinkType}
+				selectedSaveZoom={this.props.canvasConfig.selectedSaveZoom}
 				setPaletteLayout={this.props.canvasConfig.setPaletteLayout}
 				selectedPaletteLayout={this.props.canvasConfig.selectedPaletteLayout}
 				setTipConfig={this.props.canvasConfig.setTipConfig}
@@ -91,6 +93,7 @@ export default class SidePanel extends React.Component {
 				useEnableCreateSupernodeNonContiguous={this.props.canvasConfig.useEnableCreateSupernodeNonContiguous}
 				enableMoveNodesOnSupernodeResize={this.props.canvasConfig.enableMoveNodesOnSupernodeResize}
 				setEnableMoveNodesOnSupernodeResize={this.props.canvasConfig.setEnableMoveNodesOnSupernodeResize}
+				clearSavedZoomValues={this.props.canvasConfig.clearSavedZoomValues}
 				log={this.props.log}
 			/>);
 			break;
@@ -174,6 +177,7 @@ SidePanel.propTypes = {
 		selectedPaletteDropdownFile2: PropTypes.string,
 		setPaletteDropdownSelect: PropTypes.func,
 		setPaletteDropdownSelect2: PropTypes.func,
+		setSaveZoom: PropTypes.func,
 		setLayoutDirection: PropTypes.func,
 		setSnapToGridType: PropTypes.func,
 		setSnapToGridX: PropTypes.func,
@@ -191,6 +195,7 @@ SidePanel.propTypes = {
 		selectedNodeFormat: PropTypes.string,
 		setLinkType: PropTypes.func,
 		selectedLinkType: PropTypes.string,
+		selectedSaveZoom: PropTypes.string,
 		setPaletteLayout: PropTypes.func,
 		selectedPaletteLayout: PropTypes.string,
 		setTipConfig: PropTypes.func,
@@ -205,7 +210,8 @@ SidePanel.propTypes = {
 		displayFullLabelOnHover: PropTypes.bool,
 		changeDisplayFullLabelOnHover: PropTypes.func,
 		enableMoveNodesOnSupernodeResize: PropTypes.bool,
-		setEnableMoveNodesOnSupernodeResize: PropTypes.func
+		setEnableMoveNodesOnSupernodeResize: PropTypes.func,
+		clearSavedZoomValues: PropTypes.func,
 	}),
 	propertiesConfig: PropTypes.shape({
 		closePropertiesEditorDialog: PropTypes.func,

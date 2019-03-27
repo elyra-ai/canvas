@@ -75,6 +75,13 @@ function getCommentIdFromObjectModelUsingText(objectModel, commentText) {
 	return id;
 }
 
+// return the zoom object from the object model
+//
+function getZoomForPrimaryPipeline(objectModel) {
+	return objectModel.zoom;
+}
+
+
 // We cannot rely on index position of comments because they get messed up
 // when pushing comments to be underneath nodes and links. Therefore we look for the
 // text of the comment being deleted.
@@ -516,5 +523,6 @@ module.exports = {
 	getNumberOfSelectedNodes: getNumberOfSelectedNodes,
 	getNumberOfSelectedComments: getNumberOfSelectedComments,
 	doesTipExist: doesTipExist,
-	doesTipExistInSubFlow: doesTipExistInSubFlow
+	doesTipExistInSubFlow: doesTipExistInSubFlow,
+	getZoomForPrimaryPipeline: getZoomForPrimaryPipeline
 };

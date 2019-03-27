@@ -27,6 +27,9 @@ import {
 	NONE,
 	HORIZONTAL,
 	VERTICAL,
+	NONE_SAVE_ZOOM,
+	LOCAL_STORAGE,
+	PIPELINE_FLOW,
 	NONE_DRAG,
 	DURING_DRAG,
 	AFTER_DRAG,
@@ -72,6 +75,7 @@ export default class SidePanelForms extends React.Component {
 		this.isReadyToSubmitPaletteData2 = this.isReadyToSubmitPaletteData2.bind(this);
 
 		this.layoutDirectionOptionChange = this.layoutDirectionOptionChange.bind(this);
+		this.saveZoomOptionChange = this.saveZoomOptionChange.bind(this);
 		this.snapToGridOptionChange = this.snapToGridOptionChange.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useEnableSaveToPalette = this.useEnableSaveToPalette.bind(this);
@@ -277,6 +281,10 @@ export default class SidePanelForms extends React.Component {
 			return true;
 		}
 		return false;
+	}
+
+	saveZoomOptionChange(value) {
+		this.props.setSaveZoom(value);
 	}
 
 	layoutDirectionOptionChange(value) {
@@ -526,6 +534,42 @@ export default class SidePanelForms extends React.Component {
 			</Dropdown>
 			{paletteFileChooserVisible2}
 		</div>);
+
+		const pad = { "padding-left": "8px" };
+
+		var saveZoom = (<div>
+			<div className="harness-sidepanel-children" id="harness-sidepanel-save-zoom">
+				<div className="harness-sidepanel-headers">Save Zoom</div>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="save_zoom_radio"
+					onChange={this.saveZoomOptionChange}
+					defaultSelected={this.props.selectedSaveZoom}
+				>
+					<RadioButton
+						value={NONE_SAVE_ZOOM}
+						labelText={NONE_SAVE_ZOOM}
+					/>
+					<RadioButton
+						value={LOCAL_STORAGE}
+						labelText={LOCAL_STORAGE}
+					/>
+					<RadioButton
+						value={PIPELINE_FLOW}
+						labelText={PIPELINE_FLOW}
+					/>
+				</RadioButtonGroup>
+			</div>
+			<div className="harness-sidepanel-spacer" />
+			<div style={pad}className="harness-sidepanel-clear-saved-storage">
+				<Button small
+					onClick={this.props.clearSavedZoomValues}
+				>
+				Clear local storage zoom values
+				</Button>
+			</div>
+		</div>
+		);
 
 		var layoutDirection = (<div className="harness-sidepanel-children" id="harness-sidepanel-layout-direction">
 			<div className="harness-sidepanel-headers">Fixed Layout</div>
@@ -882,6 +926,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{snapToGrid}
 				{divider}
+				{saveZoom}
+				{divider}
 				{layoutDirection}
 				{divider}
 				{paletteLayout}
@@ -937,6 +983,7 @@ SidePanelForms.propTypes = {
 	setPaletteDropdownSelect2: PropTypes.func,
 	selectedPaletteDropdownFile: PropTypes.string,
 	selectedPaletteDropdownFile2: PropTypes.string,
+	setSaveZoom: PropTypes.func,
 	setLayoutDirection: PropTypes.func,
 	selectedLayout: PropTypes.string,
 	setSnapToGridType: PropTypes.func,
@@ -957,6 +1004,7 @@ SidePanelForms.propTypes = {
 	selectedNodeFormat: PropTypes.string,
 	setLinkType: PropTypes.func,
 	selectedLinkType: PropTypes.string,
+	selectedSaveZoom: PropTypes.string,
 	extraCanvasDisplayed: PropTypes.bool,
 	showExtraCanvas: PropTypes.func,
 	schemaValidationEnabled: PropTypes.bool,
@@ -972,5 +1020,6 @@ SidePanelForms.propTypes = {
 	displayFullLabelOnHover: PropTypes.bool,
 	changeDisplayFullLabelOnHover: PropTypes.func,
 	enableMoveNodesOnSupernodeResize: PropTypes.bool,
-	setEnableMoveNodesOnSupernodeResize: PropTypes.func
+	setEnableMoveNodesOnSupernodeResize: PropTypes.func,
+	clearSavedZoomValues: PropTypes.func
 };

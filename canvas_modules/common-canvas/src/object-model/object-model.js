@@ -467,7 +467,6 @@ const comments = (state = [], action) => {
 	}
 };
 
-
 const links = (state = [], action) => {
 	switch (action.type) {
 	case "DELETE_SUPERNODE":
@@ -627,10 +626,12 @@ const canvasinfo = (state = [], action) => {
 		});
 		return Object.assign({}, action.data, { pipelines: canvasInfoPipelines });
 	}
+
 	// Save incoming sub-pipeline to the pipeline flow pipelines array.
 	case "ADD_PIPELINE": {
 		return Object.assign({}, state, { pipelines: state.pipelines.concat(action.data) });
 	}
+
 	// Delete a pipeline from the pipeline flow pipelines array.
 	case "DELETE_PIPELINE": {
 		const canvasInfoPipelines = state.pipelines.filter((pipeline) => {
@@ -638,6 +639,17 @@ const canvasinfo = (state = [], action) => {
 		});
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
+
+	case "ZOOM_PIPELINE": {
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
+			if (pipeline.id === action.pipelineId) {
+				return Object.assign({}, pipeline, { zoom: { "k": action.data.zoom.k, "x": action.data.zoom.x, "y": action.data.zoom.y } });
+			}
+			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
 	// Ensure node dimensions are calculated for all nodes in all current
 	// pipelines when layout info is changed.
 	case "SET_LAYOUT_INFO": {
@@ -2018,7 +2030,6 @@ export default class ObjectModel {
 	// 			offset.y = Math.min(offset.y, obj.y_pos - highlightGap);
 	// 		});
 	// 	}
-	//
 	// 	return offset;
 	// }
 
@@ -2481,6 +2492,13 @@ export class APIPipeline {
 		this.pipelineId = pipelineId;
 		this.objectModel = objectModel;
 		this.store = objectModel.store;
+	}
+
+	// ---------------------------------------------------------------------------
+	// Pipeline methods
+	// ---------------------------------------------------------------------------
+	zoomPipeline(zoom, translate) {
+		this.store.dispatch({ type: "ZOOM_PIPELINE", data: { zoom: zoom }, pipelineId: this.pipelineId });
 	}
 
 	// ---------------------------------------------------------------------------
