@@ -10,7 +10,13 @@
     ],
     "weather": "Mild, rainy",
     "moon_phase": "Full",
-    "meteor_showers": "Perseids"
+    "meteor_showers": "Perseids",
+    "hide_button": true,
+    "disable_button": true,
+    "hide_image": false,
+    "disable_image": false,
+    "disable_image_text": "this should be disabled when button is clicked",
+    "disable_button_text": "this should be disabled when button is clicked"
   },
   "parameters": [
     {
@@ -33,6 +39,30 @@
     },
     {
       "id": "meteor_showers",
+      "type": "string"
+    },
+    {
+      "id": "hide_button",
+      "type": "boolean"
+    },
+    {
+      "id": "disable_button",
+      "type": "boolean"
+    },
+    {
+      "id": "hide_image",
+      "type": "boolean"
+    },
+    {
+      "id": "disable_image",
+      "type": "boolean"
+    },
+    {
+      "id": "disable_image_text",
+      "type": "string"
+    },
+    {
+      "id": "disable_button_text",
       "type": "string"
     }
   ],
@@ -94,13 +124,62 @@
         },
         "control": "readonly",
         "action_ref": "meteor"
+      },
+      {
+        "parameter_ref": "hide_button",
+        "label": {
+          "default": "Hide action button"
+        }
+      },
+      {
+        "parameter_ref": "disable_button",
+        "label": {
+          "default": "Disable action button"
+        }
+      },
+      {
+        "parameter_ref": "hide_image",
+        "label": {
+          "default": "Hide action image"
+        }
+      },
+      {
+        "parameter_ref": "disable_image",
+        "label": {
+          "default": "Disable action image"
+        }
+      },
+      {
+        "parameter_ref": "disable_image_text",
+        "label": {
+          "default": "Disable image"
+        },
+        "description": {
+          "default": "Try pressing the moon image"
+        },
+        "control": "readonly",
+        "action_ref": "image_cond_disable"
+      },
+      {
+        "parameter_ref": "disable_button_text",
+        "label": {
+          "default": "Disable button text"
+        },
+        "description": {
+          "default": "Try pressing the button"
+        },
+        "control": "readonly"
       }
     ],
     "action_info": [
+
       {
         "id": "increment",
         "label": {
           "resource_key": "increment"
+        },
+        "description": {
+          "default": "This will increment the number field by 1."
         },
         "control": "button",
         "data": {
@@ -229,6 +308,74 @@
             "width": 25
           }
         }
+      },
+      {
+        "id": "button_cond_hide",
+        "label": {
+          "default": "visible action"
+        },
+        "description": {
+          "default": "Test visible conditions."
+        },
+        "control": "button",
+        "data": {
+          "parameter_ref": "xyz"
+        }
+      },
+      {
+        "id": "button_cond_disable",
+        "label": {
+          "default": "enable action"
+        },
+        "description": {
+          "default": "Test enable conditions."
+        },
+        "control": "button",
+        "data": {
+          "parameter_ref": "disable_button_text"
+        }
+      },
+      {
+        "id": "image_cond_hide",
+        "label": {
+          "default": "visible action"
+        },
+        "description": {
+          "default": "Test visible image conditions."
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "xyz"
+        },
+        "image": {
+          "url": "/images/meteor.jpg",
+          "placement": "left",
+          "size": {
+            "height": 20,
+            "width": 25
+          }
+        }
+      },
+      {
+        "id": "image_cond_disable",
+        "label": {
+          "default": "enable action"
+        },
+        "description": {
+          "default": "Test enable image conditions."
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "disable_image_text"
+        },
+        "image": {
+          "url": "/images/moon.jpg",
+          "placement": "right",
+          "size": {
+            "height": 20,
+            "width": 25
+          }
+        }
       }
     ],
     "group_info": [
@@ -288,6 +435,79 @@
         ]
       },
       {
+        "id": "action-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "hide_button-control-panel",
+            "type": "controls",
+            "parameter_refs": [
+              "hide_button"
+            ]
+          },
+          {
+            "id": "hide_button-action-panel",
+            "type": "actionPanel",
+            "action_refs": [
+              "button_cond_hide"
+            ]
+          },
+          {
+            "id": "disable_button-control-panel",
+            "type": "controls",
+            "parameter_refs": [
+              "disable_button"
+            ]
+          },
+          {
+            "id": "disable_button-action-panel",
+            "type": "actionPanel",
+            "action_refs": [
+              "button_cond_disable"
+            ]
+          },
+          {
+            "id": "disable_button-text-panel",
+            "type": "controls",
+            "parameter_refs": [
+              "disable_button_text"
+            ]
+          },
+          {
+            "id": "hide_image-control-panel",
+            "type": "controls",
+            "parameter_refs": [
+              "hide_image"
+            ]
+          },
+          {
+            "id": "hide_image-action-panel",
+            "type": "actionPanel",
+            "action_refs": [
+              "image_cond_hide"
+            ]
+          },
+          {
+            "id": "disable_image-control-panel",
+            "type": "controls",
+            "parameter_refs": [
+              "disable_image"
+            ]
+          },
+          {
+            "id": "disable_image-action-panel",
+            "type": "controls",
+            "parameter_refs": [
+              "disable_image_text"
+            ]
+          }
+
+        ]
+      },
+      {
         "id": "summary-panel",
         "label": {
           "default": "Summary Panel Actions"
@@ -313,7 +533,72 @@
     ],
     "help": {}
   },
-  "conditions": [],
+  "conditions": [
+    {
+      "visible": {
+        "action_refs": [
+          "button_cond_hide"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide_button",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "action_refs": [
+          "button_cond_disable"
+        ],
+        "parameter_refs": [
+          "disable_button_text"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable_button",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "action_refs": [
+          "image_cond_hide"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide_image",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "action_refs": [
+          "image_cond_disable"
+        ],
+        "parameter_refs": [
+          "disable_image_text"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable_image",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+
+
+  ],
   "dataset_metadata": [
     {
       "fields": [

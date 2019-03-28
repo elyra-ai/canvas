@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -41,7 +41,8 @@ function validatePropertiesValues(controller) {
 function validatePropertiesConditions(controller) {
 	const newStates = {
 		controls: controller.getControlStates(),
-		panels: controller.getPanelStates()
+		panels: controller.getPanelStates(),
+		actions: controller.getActionStates()
 	};
 	const controls = controller.getControls();
 	validatePropertiesListConditions(controller, controls, newStates);
@@ -49,6 +50,7 @@ function validatePropertiesConditions(controller) {
 	_propagateParentPanelStates(controller.panelTree, newStates, PANEL_TREE_ROOT);
 	controller.setControlStates(newStates.controls);
 	controller.setPanelStates(newStates.panels);
+	controller.setActionStates(newStates.actions);
 }
 
 // ========= Validate a list of properties
@@ -198,7 +200,8 @@ function validateConditions(inPropertyId, controller) {
 	}
 	const newStates = {
 		controls: controller.getControlStates(),
-		panels: controller.getPanelStates()
+		panels: controller.getPanelStates(),
+		actions: controller.getActionStates()
 	};
 	const propertyId = cloneDeep(inPropertyId);
 	const controlValue = controller.getPropertyValue(propertyId);
@@ -226,6 +229,8 @@ function validateConditions(inPropertyId, controller) {
 	}
 	controller.setControlStates(newStates.controls);
 	controller.setPanelStates(newStates.panels);
+	controller.setActionStates(newStates.actions);
+
 }
 
 /**
@@ -291,7 +296,8 @@ function filterConditions(propertyId, filterDefinitions, controller, fields) {
 function updatePanelChildrenStatesForPanelIds(panelIds, controller) {
 	const newStates = {
 		controls: controller.getControlStates(),
-		panels: controller.getPanelStates()
+		panels: controller.getPanelStates(),
+		actions: controller.getActionStates()
 	};
 
 	for (let i = 0; i < panelIds.length; i++) {
@@ -301,6 +307,8 @@ function updatePanelChildrenStatesForPanelIds(panelIds, controller) {
 
 	controller.setControlStates(newStates.controls);
 	controller.setPanelStates(newStates.panels);
+	controller.setActionStates(newStates.actions);
+
 }
 
 /**
@@ -510,9 +518,9 @@ function 	_propagateParentPanelStates(panelTree, newStates, currentPanel, disabl
 	const allowUpdate = (disabledOnly) ? (currentPanelState && (currentPanelState.value === STATES.DISABLED))
 		: (currentPanelState && (currentPanelState.value === STATES.HIDDEN || currentPanelState.value === STATES.DISABLED));
 		// only propagate if parent panel is hidden or disabled
-	if (allowUpdate) {
+	if (allowUpdate && panelTree[currentPanel]) {
 		// propagate panel state to children controls
-		if (panelTree[currentPanel] && panelTree[currentPanel].controls) {
+		if (panelTree[currentPanel].controls) {
 			for (const control of panelTree[currentPanel].controls) {
 				if (disabledOnly) {
 					if (newStates.controls[control].value !== STATES.HIDDEN) {
@@ -520,6 +528,18 @@ function 	_propagateParentPanelStates(panelTree, newStates, currentPanel, disabl
 					}
 				} else {
 					updateState(newStates.controls, { name: control }, currentPanelState.value);
+				}
+			}
+		}
+		// propagate panel state to children actions
+		if (panelTree[currentPanel].actions) {
+			for (const action of panelTree[currentPanel].actions) {
+				if (disabledOnly) {
+					if (newStates.actions[action].value !== STATES.HIDDEN) {
+						updateState(newStates.actions, { name: action }, currentPanelState.value);
+					}
+				} else {
+					updateState(newStates.actions, { name: action }, currentPanelState.value);
 				}
 			}
 		}
@@ -642,74 +662,78 @@ function _validateByType(definitions, propertyId, newStates, controller, condTyp
 
 // This function will update the control state of the control and all it children panels and controls.
 function _updateControlState(stateOn, definition, propertyId, newStates, controller, visibleControl) {
+	if (definition.parameter_refs) {
+		_updateRefsState(stateOn, definition, propertyId, newStates, controller, visibleControl, definition.parameter_refs, "control");
+	}
+	if (definition.action_refs) {
+		_updateRefsState(stateOn, definition, propertyId, newStates, controller, visibleControl, definition.action_refs, "action");
+	}
+	if (definition.group_refs) {
+		_updateGroupRefsControlState(stateOn, definition, propertyId, newStates, controller, visibleControl);
+	}
+}
+
+// This function will update the control state of the refs in the condition and all it children panels and controls.
+function _updateGroupRefsControlState(stateOn, definition, propertyId, newStates, controller, visibleControl) {
 	const newOnState = (visibleControl) ? STATES.VISIBLE : STATES.ENABLED;
 	const newOffState = (visibleControl) ? STATES.HIDDEN : STATES.DISABLED;
 	const notAllowedState = (visibleControl) ? STATES.ENABLED : STATES.HIDDEN;
-	if (stateOn === true) { // control|panel should be visible || enabled
-		if (definition.parameter_refs) {
-			for (const paramRef of definition.parameter_refs) {
-				const referenceId = getParamRefPropertyId(paramRef, propertyId);
-				const currentState = _getState(newStates.controls, referenceId);
-				// check for visible or enabled so we aren't resetting the state all the time
-				if (Array.isArray(definition.values)) {
-					// Short-circuit for disabling individual enumeration items
-					for (const value of definition.values) {
-						updateEnumerationState(newStates.controls, referenceId, value, newOnState);
-					}
-				} else if (referenceId && currentState !== newOnState && currentState !== notAllowedState) {
-					updateState(newStates.controls, referenceId, newOnState);
+
+	for (const groupRef of definition.group_refs) {
+		const groupReferenceId = getParamRefPropertyId(groupRef);
+		const currentState = _getState(newStates.panels, groupReferenceId);
+		// check for visible or enabled so we aren't resetting the state all the time
+		if (stateOn === true) { // control|panel should be visible || enabled
+			if (groupReferenceId && currentState !== newOnState && currentState !== notAllowedState) {
+				const updated = _updateStateIfParent(newStates, groupReferenceId, newOnState, controller);
+				// only update the children if parent's state changed or is set for the first time
+				if (updated) {
+					_updatePanelChildrenState(newStates, groupReferenceId, newOnState, controller);
 				}
 			}
-		}
-		if (definition.group_refs) {
-			for (const groupRef of definition.group_refs) {
-				const groupReferenceId = getParamRefPropertyId(groupRef);
-				const currentState = _getState(newStates.panels, groupReferenceId);
-				// check for visible or enabled so we aren't resetting the state all the time
-				if (groupReferenceId && currentState !== newOnState && currentState !== notAllowedState) {
-					const updated = _updateStateIfParent(newStates, groupReferenceId, newOnState, controller);
-					// only update the children if parent's state changed or is set for the first time
-					if (updated) {
-						_updatePanelChildrenState(newStates, groupReferenceId, newOnState, controller);
-					}
-				}
-			}
-		}
-	} else { // control|panel should be hidden || disabled
-		if (definition.parameter_refs) {
-			for (const paramRef of definition.parameter_refs) {
-				const referenceId = getParamRefPropertyId(paramRef, propertyId);
-				const currentState = _getState(newStates.controls, referenceId);
-				if (Array.isArray(definition.values)) {
-					// Short-circuit for disabling individual enumeration items
-					for (const value of definition.values) {
-						updateEnumerationState(newStates.controls, referenceId, value, newOffState);
-					}
-				} else if (referenceId && (visibleControl || (!visibleControl && currentState !== notAllowedState))) {
-					_updateStateIfPanel(newStates, referenceId, newOffState);
-				}
-			}
-		}
-		if (definition.group_refs) {
-			for (const groupRef of definition.group_refs) {
-				const groupReferenceId = getParamRefPropertyId(groupRef);
-				const currentState = _getState(newStates.panels, groupReferenceId);
-				if (groupReferenceId && (visibleControl || (!visibleControl && currentState !== notAllowedState))) {
-					const updated = _updateStateIfParent(newStates, groupReferenceId, newOffState, controller);
-					// only update the children if parent's state changed or is set for the first time
-					if (updated) {
-						_updatePanelChildrenState(newStates, groupReferenceId, newOffState, controller);
-					}
-				}
+		} else if (groupReferenceId && (visibleControl || (!visibleControl && currentState !== notAllowedState))) {
+			const updated = _updateStateIfParent(newStates, groupReferenceId, newOffState, controller);
+			// only update the children if parent's state changed or is set for the first time
+			if (updated) {
+				_updatePanelChildrenState(newStates, groupReferenceId, newOffState, controller);
 			}
 		}
 	}
 }
 
+// This function will update the control state of the refs in the condition and all it children panels and controls.
+function _updateRefsState(stateOn, definition, propertyId, newStates, controller, visibleControl, refsList, refsType) {
+	const newOnState = (visibleControl) ? STATES.VISIBLE : STATES.ENABLED;
+	const newOffState = (visibleControl) ? STATES.HIDDEN : STATES.DISABLED;
+	const notAllowedState = (visibleControl) ? STATES.ENABLED : STATES.HIDDEN;
+	const refStates = (refsType === "control") ? newStates.controls : newStates.actions;
+	for (const ref of refsList) {
+		const referenceId = getParamRefPropertyId(ref, propertyId);
+		const currentState = _getState(refStates, referenceId);
+		// check for visible or enabled so we aren't resetting the state all the time
+		if (Array.isArray(definition.values)) {
+			// Short-circuit for disabling individual enumeration items
+			for (const value of definition.values) {
+				if (stateOn === true) { // control|panel should be visible || enabled
+					updateEnumerationState(refStates, referenceId, value, newOnState);
+				} else { // control|panel should be hidden || disabled
+					updateEnumerationState(refStates, referenceId, value, newOffState);
+				}
+			}
+		} else if (stateOn === true) { // control|panel should be visible || enabled
+			if (referenceId && currentState !== newOnState && currentState !== notAllowedState) {
+				updateState(refStates, referenceId, newOnState);
+			}
+		} else if (referenceId && (visibleControl || (!visibleControl && currentState !== notAllowedState))) {
+			_updateStateIfPanel(newStates, referenceId, newOffState, refStates);
+		}
+	}
+}
+
 // Filtered state is stored in objects rather than arrays
-function _updateFilteredState(definition, inPropertyId, newState, filtered) {
+function _updateFilteredState(definition, inPropertyId, newStates, filtered) {
 	if (definition.enum_filter.target && definition.enum_filter.target.parameter_ref) {
-		const refState = newState.controls;
+		const refState = newStates.controls;
 		const propertyId = getParamRefPropertyId(definition.enum_filter.target.parameter_ref, inPropertyId);
 		let propState = refState[propertyId.name];
 		if (!propState) {
@@ -766,23 +790,33 @@ function _updatePanelChildrenState(newStates, referenceId, state, controller) {
 		}
 		for (const control of panelTree.controls) {
 			const ctrlPropertyId = { name: control };
-			updateState(newStates.controls, ctrlPropertyId, state);
-			// re-run ref conditions to see if they should override this new state.
-			if (state === STATES.ENABLED) {
-				_runRefsValidateDefinitions(ctrlPropertyId, controller, CONDITION_TYPE.ENABLED, newStates);
-				_runRefsValidateDefinitions(ctrlPropertyId, controller, CONDITION_TYPE.VISIBLE, newStates);
-			} else if (state === STATES.VISIBLE) {
-				// need to run the controls visible conditions in case a higher level panel changed the state.
-				_validateDefinitionsByType(ctrlPropertyId, newStates, controller, CONDITION_TYPE.VISIBLE);
-				_runRefsValidateDefinitions(ctrlPropertyId, controller, CONDITION_TYPE.VISIBLE, newStates);
-				// if parent panel is disable then set control to disabled.
-				if (newStates.panels[referenceId.name].value === STATES.DISABLED) {
-					updateState(newStates.controls, ctrlPropertyId, STATES.DISABLED);
-				} else {
-					// otherwise run any enable definition that would set the control.
-					_runRefsValidateDefinitions(ctrlPropertyId, controller, CONDITION_TYPE.ENABLED, newStates);
-				}
-			}
+			_updatePanelChildrenObjectState(newStates, referenceId, state, controller, ctrlPropertyId, newStates.controls);
+		}
+		for (const action of panelTree.actions) {
+			const ctrlPropertyId = { name: action };
+			_updatePanelChildrenObjectState(newStates, referenceId, state, controller, ctrlPropertyId, newStates.actions);
+		}
+
+	}
+}
+
+// In this context "Object" menas either a control or an action.
+function _updatePanelChildrenObjectState(newStates, referenceId, state, controller, objectId, objectStates) {
+	updateState(objectStates, objectId, state);
+	// re-run ref conditions to see if they should override this new state.
+	if (state === STATES.ENABLED) {
+		_runRefsValidateDefinitions(objectId, controller, CONDITION_TYPE.ENABLED, newStates);
+		_runRefsValidateDefinitions(objectId, controller, CONDITION_TYPE.VISIBLE, newStates);
+	} else if (state === STATES.VISIBLE) {
+		// need to run the controls visible conditions in case a higher level panel changed the state.
+		_validateDefinitionsByType(objectId, newStates, controller, CONDITION_TYPE.VISIBLE);
+		_runRefsValidateDefinitions(objectId, controller, CONDITION_TYPE.VISIBLE, newStates);
+		// if parent panel is disable then set control to disabled.
+		if (newStates.panels[referenceId.name].value === STATES.DISABLED) {
+			updateState(objectStates, objectId, STATES.DISABLED);
+		} else {
+			// otherwise run any enable definition that would set the control.
+			_runRefsValidateDefinitions(objectId, controller, CONDITION_TYPE.ENABLED, newStates);
 		}
 	}
 }
@@ -816,30 +850,30 @@ function _updateStateIfParent(newStates, panel, state, controller, referenceId) 
 }
 
 // A control can only set a state to enabled if it was previously disabled. The same applies to hidden and visible
-function _updateStateIfPanel(newStates, referenceId, state) {
+function _updateStateIfPanel(newStates, referenceId, state, refStates) {
 	const controlName = referenceId.name;
-	if (newStates.controls[controlName]) {
-		let prevValue = newStates.controls[controlName].value;
+	if (refStates[controlName]) {
+		let prevValue = refStates[controlName].value;
 		if (typeof referenceId.col !== "undefined") {
 			// control is in a table
-			if (newStates.controls[controlName][referenceId.col]) {
-				if (typeof referenceId.row !== "undefined" && newStates.controls[controlName][referenceId.col][referenceId.row]) {
-					prevValue = newStates.controls[controlName][referenceId.col][referenceId.row].value;
+			if (refStates[controlName][referenceId.col]) {
+				if (typeof referenceId.row !== "undefined" && refStates[controlName][referenceId.col][referenceId.row]) {
+					prevValue = refStates[controlName][referenceId.col][referenceId.row].value;
 				} else { // first time setting control state for each row in the column
-					updateState(newStates.controls, referenceId, state);
+					updateState(refStates, referenceId, state);
 				}
 			} else { // first time setting control state for the column
-				updateState(newStates.controls, referenceId, state);
+				updateState(refStates, referenceId, state);
 			}
 		}
 		// Can only set a state to enabled if it was previously disabled. The same applies to hidden and visible
 		if (((prevValue === STATES.ENABLED || prevValue === STATES.VISIBLE) && (state === STATES.DISABLED || state === STATES.HIDDEN)) ||
 				(prevValue === STATES.DISABLED && state === STATES.ENABLED) ||
 				(prevValue === STATES.HIDDEN && state === STATES.VISIBLE)) {
-			updateState(newStates.controls, referenceId, state);
+			updateState(refStates, referenceId, state);
 		}
 	} else { // first time setting control state
-		updateState(newStates.controls, referenceId, state);
+		updateState(refStates, referenceId, state);
 	}
 }
 

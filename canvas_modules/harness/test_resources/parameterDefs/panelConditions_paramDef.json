@@ -59,9 +59,11 @@
     "hidePanelLevel2": false,
     "textfield1": "1",
     "textfield2": "2",
+    "moon_phase": "Full",
     "disablePanelLevel3": false,
     "hidePanelLevel3": false,
     "textfield3": "3",
+    "disable_button_text": "this should be disabled when button is clicked",
     "disableInit1PanelLevel1": true,
     "hideInit1PanelLevel1": false,
     "disableInit1PanelLevel2": false,
@@ -220,6 +222,10 @@
       "role": "new_column"
     },
     {
+      "id": "moon_phase",
+      "type": "string"
+    },
+    {
       "id": "disablePanelLevel3",
       "type": "boolean"
     },
@@ -231,6 +237,10 @@
       "id": "textfield3",
       "type": "string",
       "role": "new_column"
+    },
+    {
+      "id": "disable_button_text",
+      "type": "string"
     },
     {
       "id": "disableInit1PanelLevel1",
@@ -588,6 +598,17 @@
         }
       },
       {
+        "parameter_ref": "moon_phase",
+        "label": {
+          "default": "Current moon phase"
+        },
+        "description": {
+          "default": "Try pressing the moon image"
+        },
+        "control": "readonly",
+        "action_ref": "moon"
+      },
+      {
         "parameter_ref": "disablePanelLevel3",
         "label": {
           "default": "Disable 'Level3' panel"
@@ -610,6 +631,16 @@
         "label": {
           "default": "textfield3"
         }
+      },
+      {
+        "parameter_ref": "disable_button_text",
+        "label": {
+          "default": "Disable button text"
+        },
+        "description": {
+          "default": "Try pressing the button"
+        },
+        "control": "readonly"
       },
       {
         "parameter_ref": "disableInit1PanelLevel1",
@@ -811,6 +842,37 @@
         "control": "button",
         "data": {
           "parameter_ref": "actionNumber"
+        }
+      },
+      {
+        "id": "moon",
+        "label": {
+          "resource_key": "moon"
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "moon_phase"
+        },
+        "image": {
+          "url": "/images/moon.jpg",
+          "placement": "right",
+          "size": {
+            "height": 20,
+            "width": 25
+          }
+        }
+      },
+      {
+        "id": "button_cond_disable",
+        "label": {
+          "default": "enable action"
+        },
+        "description": {
+          "default": "Test enable conditions."
+        },
+        "control": "button",
+        "data": {
+          "parameter_ref": "disable_button_text"
         }
       }
     ],
@@ -1222,6 +1284,7 @@
                         "parameter_refs": [
                           "textfield1",
                           "textfield2",
+                          "moon_phase",
                           "disablePanelLevel3",
                           "hidePanelLevel3"
                         ],
@@ -1239,6 +1302,20 @@
                                 "type": "controls",
                                 "parameter_refs": [
                                   "textfield3"
+                                ]
+                              },
+                              {
+                                "id": "disable_button-action-panel",
+                                "type": "actionPanel",
+                                "action_refs": [
+                                  "button_cond_disable"
+                                ]
+                              },
+                              {
+                                "id": "disable_button-control-panel",
+                                "type": "controls",
+                                "parameter_refs": [
+                                  "disable_button_text"
                                 ]
                               }
                             ]

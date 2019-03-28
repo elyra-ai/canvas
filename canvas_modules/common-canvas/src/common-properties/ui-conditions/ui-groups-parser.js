@@ -49,6 +49,10 @@ function parseUiItem(panelTree, uiItem, currentPanel) {
 	}
 	case ItemType.CONTROL: {
 		panelTree[currentPanel].controls.push(uiItem.control.name);
+		// a control item may have an action ref associated with it.
+		if (uiItem.control.action) {
+			panelTree[currentPanel].actions.push(uiItem.control.action.name);
+		}
 		// This is a special case for the radio button set which has panels
 		// inserted after each radio button. Those panels are provided in the
 		// additionalItems array which is an array of EditorTab objects.
@@ -75,6 +79,10 @@ function parseUiItem(panelTree, uiItem, currentPanel) {
 	}
 
 	case ItemType.ACTION:
+	{
+		panelTree[currentPanel].actions.push(uiItem.action.name);
+		break;
+	}
 	case ItemType.STATIC_TEXT:
 	case ItemType.HORIZONTAL_SEPARATOR: {
 		break;
@@ -89,7 +97,7 @@ function _newPanelTreeObject(panelTree, panelId) {
 	if (panelTree.hasOwnProperty(panelId)) {
 		logger.warn("Duplicate panel ids, each panel id must be unique.  Panel id = " + panelId);
 	}
-	panelTree[panelId] = { controls: [], panels: [] };
+	panelTree[panelId] = { controls: [], panels: [], actions: [] };
 }
 
 module.exports = {

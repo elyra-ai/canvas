@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -221,8 +221,12 @@ function parseConditions(container, uiCondition, conditionType) {
 			"definition": uiCondition
 		};
 		_setDefinitions(container.controls, controls, groupDef);
-		const refs = (uiCondition[conditionType].group_refs) ? uiCondition[conditionType].group_refs
-			: uiCondition[conditionType].parameter_refs;
+		let refs = uiCondition[conditionType].parameter_refs;
+		if (uiCondition[conditionType].group_refs) {
+			refs = uiCondition[conditionType].group_refs;
+		} else if (uiCondition[conditionType].action_refs) {
+			refs = uiCondition[conditionType].action_refs;
+		}
 		if (refs) {
 			_setDefinitions(container.refs, refs, groupDef);
 		}

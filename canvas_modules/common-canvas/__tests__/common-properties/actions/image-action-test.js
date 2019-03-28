@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import { Provider } from "react-redux";
 import ActionImage from ".../../../src/common-properties/actions/image";
 import { mount } from "enzyme";
 import { expect } from "chai";
@@ -22,11 +23,16 @@ const controller = new Controller();
 controller.setHandlers({ actionHandler: actionHandler });
 const appData = { nodeId: "1234" };
 controller.setAppData(appData);
+const actionStateId = { name: "moon" };
+
 
 const action = {
 	"name": "moon",
 	"label": {
 		"text": "moon"
+	},
+	"description": {
+		"text": "Click to rotate through moon phases."
 	},
 	"actionType": "image",
 	"data": {
@@ -46,30 +52,35 @@ describe("action-image renders correctly", () => {
 
 	it("props should have been defined", () => {
 		const wrapper = mount(
-			<ActionImage
-				action={action}
-				controller={controller}
-			/>
+			<Provider store={controller.getStore()}>
+				<ActionImage
+					action={action}
+					controller={controller}
+				/>
+			</Provider>
 		);
 
-		expect(wrapper.prop("action")).to.equal(action);
-		expect(wrapper.prop("controller")).to.equal(controller);
+		const image = wrapper.find("ImageAction");
+		expect(image).to.have.length(1);
+		expect(image.prop("action")).to.equal(action);
+		expect(image.prop("controller")).to.equal(controller);
 	});
-
 	it("should render a `ActionImage`", () => {
 		const wrapper = mount(
-			<ActionImage
-				action={action}
-				controller={controller}
-			/>
+			<Provider store={controller.getStore()}>
+				<ActionImage
+					action={action}
+					controller={controller}
+				/>
+			</Provider>
 		);
-		const button = wrapper.find("img");
-		expect(button).to.have.length(1);
-		expect(button.prop("height")).to.equal(20);
-		expect(button.prop("width")).to.equal(25);
+		const image = wrapper.find("img");
+		expect(image).to.have.length(1);
+		expect(image.prop("height")).to.equal(20);
+		expect(image.prop("width")).to.equal(25);
 		expect(wrapper.find(".right")).to.have.length(1);
 	});
-	it("should fire action when button clicked", (done) => {
+	it("should fire action when image clicked", (done) => {
 		function callback(id, inAppData, data) {
 			expect(id).to.equal("moon");
 			expect(inAppData).to.eql(appData);
@@ -78,18 +89,59 @@ describe("action-image renders correctly", () => {
 		}
 		controller.setHandlers({ actionHandler: callback });
 		const wrapper = mount(
-			<ActionImage
-				action={action}
-				controller={controller}
-			/>
+			<Provider store={controller.getStore()}>
+				<ActionImage
+					action={action}
+					controller={controller}
+				/>
+			</Provider>
 		);
-		const button = wrapper.find("img");
-		button.simulate("click");
+		const image = wrapper.find("img");
+		image.simulate("click");
+	});
+	it("action image renders when disabled", () => {
+		controller.updateActionState(actionStateId, "disabled");
+		const wrapper = mount(
+			<Provider store={controller.getStore()}>
+				<ActionImage
+					action={action}
+					controller={controller}
+				/>
+			</Provider>
+		);
+		const imageWrapper = wrapper.find("div[data-id='moon']");
+		expect(imageWrapper.hasClass("disabled")).to.equal(true);
+	});
+	it("action image renders when hidden", () => {
+		controller.updateActionState(actionStateId, "hidden");
+		const wrapper = mount(
+			<Provider store={controller.getStore()}>
+				<ActionImage
+					action={action}
+					controller={controller}
+				/>
+			</Provider>
+		);
+		const imageWrapper = wrapper.find("div[data-id='moon']");
+		expect(imageWrapper.hasClass("hide")).to.equal(true);
+	});
+	it("action image renders tooltip", () => {
+		const wrapper = mount(
+			<Provider store={controller.getStore()}>
+				<ActionImage
+					action={action}
+					controller={controller}
+				/>
+			</Provider>
+		);
+		const tooltip = wrapper.find("div[id='tooltipContainer']");
+		expect(tooltip).to.have.length(1);
+		expect(tooltip.text()).to.equal("Click to rotate through moon phases.");
 	});
 });
 
 describe("actions using paramDef", () => {
-	it("should fire action when button clicked", (done) => {
+	it("should fire action when image clicked", (done) => {
 		const renderedObject = propertyUtils.flyoutEditorForm(ACTION_PARAMDEF, null, { actionHandler: callback }, { appData: appData });
 		const wrapper = renderedObject.wrapper;
 		function callback(id, inAppData, data) {
@@ -98,8 +150,8 @@ describe("actions using paramDef", () => {
 			expect(data.parameter_ref).to.equal("moon_phase");
 			done();
 		}
-		const button = wrapper.find("div[data-id='moon'] img");
-		button.simulate("click");
+		const image = wrapper.find("div[data-id='moon'] img");
+		image.simulate("click");
 	});
 
 });

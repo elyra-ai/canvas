@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -949,7 +949,8 @@ class CommonPropertiesComponents extends React.Component {
 					<h3 id="--visible" className="harness-section-subtitle">Visible Conditions</h3>
 					<p>Up until now, all the examples shown are using <span className="harness-highlight">validation</span> condition type.
 						With <span className="harness-highlight">visible</span> conditions, the value of a control can be used to
-						determine if other controls should be visible or not. <br />
+						determine if other controls should be visible or not. Use <span className="harness-highlight">action_refs</span> to
+						determine the visibility of action buttons or images.<br />
 						The following example will show hidden controls by checking the "Advanced options" checkbox.
 					</p>
 					<div className="harness-section-row">
@@ -975,7 +976,8 @@ class CommonPropertiesComponents extends React.Component {
 					<h3 id="--enabled" className="harness-section-subtitle">Enabled Conditions</h3>
 					<p>Similar to <a className="harness-properties-documentation-page-intro-link" href="#/conditions#--visible">
 						visible</a> conditions, the <span className="harness-highlight">enabled</span> condition will disable and enable
-						controls.
+						controls.  Use <span className="harness-highlight">action_refs</span> to
+						determine the enablement of action buttons or images.
 					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">

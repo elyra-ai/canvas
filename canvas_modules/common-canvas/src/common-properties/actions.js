@@ -9,6 +9,8 @@ export const SET_CONTROL_STATES = "SET_CONTROL_STATES";
 export const UPDATE_CONTROL_STATE = "UPDATE_CONTROL_STATE";
 export const SET_PANEL_STATES = "SET_PANEL_STATES";
 export const UPDATE_PANEL_STATE = "UPDATE_PANEL_STATE";
+export const SET_ACTION_STATES = "SET_ACTION_STATES";
+export const UPDATE_ACTION_STATE = "UPDATE_ACTION_STATE";
 export const SET_ERROR_MESSAGES = "SET_ERROR_MESSAGES";
 export const UPDATE_ERROR_MESSAGE = "UPDATE_ERROR_MESSAGE";
 export const CLEAR_ERROR_MESSAGE = "CLEAR_ERROR_MESSAGE";
@@ -51,6 +53,15 @@ export function setPanelStates(states) {
 export function updatePanelState(state) {
 	return { type: UPDATE_PANEL_STATE, state };
 }
+
+export function setActionStates(states) {
+	return { type: SET_ACTION_STATES, states };
+}
+
+export function updateActionState(state) {
+	return { type: UPDATE_ACTION_STATE, state };
+}
+
 
 export function setErrorMessages(messages) {
 	return { type: SET_ERROR_MESSAGES, messages };

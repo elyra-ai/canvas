@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 19] */
+/* eslint complexity: ["error", 21] */
 /* eslint max-len: ["error", 200] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
@@ -1490,6 +1490,17 @@ class App extends React.Component {
 			}
 			propertiesController.updatePropertyValue(propertyId, value);
 		}
+		if (actionId === "image_cond_disable" || actionId === "button_cond_disable") {
+			const propertyId = { name: data.parameter_ref };
+			let value = propertiesController.getPropertyValue(propertyId);
+			if (value === "The disable action has been pressed.") {
+				value = "The disable action has been pressed once more.";
+			} else {
+				value = "The disable action has been pressed.";
+			}
+			propertiesController.updatePropertyValue(propertyId, value);
+		}
+
 
 		this.log("propertyActionHandler() " + actionId);
 	}

@@ -37,6 +37,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("enabled");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("enabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("enabled");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 
@@ -66,6 +71,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("disabled");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("disabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("disabled");
 
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("disabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("disabled");
@@ -97,6 +107,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("hidden");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("hidden");
@@ -130,6 +145,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("disabled");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("disabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("disabled");
 
 		// level1 text panel should not be set and level2 text panel should not be "disabled"
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
@@ -163,6 +183,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("hidden");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		// level1 text panel should not be set and level2 text panel should not be "hidden"
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
@@ -197,6 +222,12 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("disabled");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("enabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("disabled");
+
 
 		// all text panels should not be "disabled"
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
@@ -230,6 +261,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("enabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		// all text panels should not be "disabled"
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
@@ -267,6 +303,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("disabled");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("enabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("disabled");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
@@ -293,6 +334,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("disabled");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("disabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("disabled");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
@@ -319,6 +365,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("disabled");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("disabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("disabled");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("disabled");
@@ -354,6 +405,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("disabled");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("enabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("disabled");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
@@ -390,6 +446,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("enabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
@@ -416,6 +477,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("hidden");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
@@ -442,6 +508,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("hidden");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("hidden");
@@ -477,6 +548,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("visible");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("visible");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("visible");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("visible");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("visible");
@@ -516,6 +592,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("disabled");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("enabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("disabled");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
@@ -541,6 +622,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("hidden");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
@@ -567,6 +653,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("hidden");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("disabled");
@@ -598,6 +689,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("hidden");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
@@ -628,6 +724,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("visible");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("visible");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("visible");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("disabled");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("visible");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("disabled");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
@@ -657,6 +758,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("visible");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("visible");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("visible");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("enabled");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("visible");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("enabled");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
@@ -692,6 +798,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("enabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
@@ -717,6 +828,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("disabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
@@ -742,6 +858,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("hidden");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("hidden");
@@ -767,6 +888,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("disabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("visible");
@@ -792,6 +918,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("hidden");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("enabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("visible");
@@ -817,6 +948,11 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("visible");
+		expect(controller.getControlState({ name: "moon_phase" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disable_button_text" })).to.equal("visible");
+
+		expect(controller.getActionState({ name: "moon" })).to.equal("enabled");
+		expect(controller.getActionState({ name: "button_cond_disable" })).to.equal("visible");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("visible");
@@ -845,14 +981,14 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		const category = wrapper.find("div[data-id='properties-action-panels']");
 		const disableCheckbox = category.find("div[data-id='properties-actionDisable'] input");
 		expect(disableCheckbox.props().checked).to.equal(false);
-		expect(wrapper.find("div.properties-action-panel").prop("disabled")).to.equal(false);
+		expect(wrapper.find("div[data-id='properties-action-buttons-panel']").prop("disabled")).to.equal(false);
 		// hide action panel
 		disableCheckbox.getDOMNode().checked = true;
 		disableCheckbox.simulate("change");
 
 		// action panel should be hidden "hidden"
 		expect(controller.getPanelState({ name: "action-buttons-panel" })).to.equal("disabled");
-		expect(wrapper.find("div.properties-action-panel").prop("disabled")).to.equal(true);
+		expect(wrapper.find("div[data-id='properties-action-buttons-panel']").prop("disabled")).to.equal(true);
 	});
 });
 describe("complex nested panels visible and enabled conditions work correctly", () => {

@@ -11,6 +11,8 @@ import { createStore, combineReducers } from "redux";
 import { setPropertyValues, updatePropertyValue, removePropertyValue } from "./actions";
 import { setControlStates, updateControlState } from "./actions";
 import { setPanelStates, updatePanelState } from "./actions";
+import { setActionStates, updateActionState } from "./actions";
+
 import { clearSelectedRows, updateSelectedRows } from "./actions";
 import { updateExpressionValidate } from "./actions";
 
@@ -21,6 +23,7 @@ import { setTitle, setActiveTab } from "./actions";
 import propertiesReducer from "./reducers/properties";
 import controlStatesReducer from "./reducers/control-states";
 import panelStatesReducer from "./reducers/panel-states";
+import actionStatesReducer from "./reducers/action-states";
 import errorMessagesReducer from "./reducers/error-messages";
 import datasetMetadataReducer from "./reducers/dataset-metadata";
 import rowSelectionsReducer from "./reducers/row-selections";
@@ -34,7 +37,7 @@ import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./c
 export default class PropertiesStore {
 	constructor() {
 		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, panelStatesReducer,
-			errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer, componentMetadataReducer });
+			errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer, componentMetadataReducer, actionStatesReducer });
 		let enableDevTools = false;
 		if (typeof window !== "undefined") {
 			enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
@@ -158,6 +161,33 @@ export default class PropertiesStore {
 	updatePanelState(panelId, value) {
 		this.store.dispatch(updatePanelState({ panelId: panelId, value: value }));
 	}
+
+	getActionState(actionId) {
+		if (typeof actionId === "undefined") {
+			return null;
+		}
+		const state = this.store.getState();
+		const locState = state.actionStatesReducer[actionId.name];
+		if (locState && locState.value) {
+			return locState.value;
+		}
+		return null;
+	}
+	getActionStates() {
+		const state = this.store.getState();
+		// get a copy and not direct reference
+		return PropertyUtils.copy(state.actionStatesReducer);
+	}
+	setActionStates(values) {
+		// check to see if values are equal before firing event
+		if (!isEqual(this.getActionStates(), values)) {
+			this.store.dispatch(setActionStates(values));
+		}
+	}
+	updateActionState(actionId, value) {
+		this.store.dispatch(updateActionState({ actionId: actionId, value: value }));
+	}
+
 
 	/*
 	* Retrieves filtered enumeration values for the given propertyId.

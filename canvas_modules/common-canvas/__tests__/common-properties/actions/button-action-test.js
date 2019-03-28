@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import { Provider } from "react-redux";
 import ActionButton from "./../../../src/common-properties/actions/button";
 import { mount } from "enzyme";
 import { expect } from "chai";
@@ -22,11 +23,15 @@ const controller = new Controller();
 controller.setHandlers({ actionHandler: actionHandler });
 const appData = { nodeId: "1234" };
 controller.setAppData(appData);
+const actionStateId = { name: "increment" };
 
 const action = {
 	"name": "increment",
 	"label": {
 		"text": "Increment"
+	},
+	"description": {
+		"text": "Increment number by 1."
 	},
 	"actionType": "button",
 	"data": {
@@ -38,22 +43,28 @@ describe("action-button renders correctly", () => {
 
 	it("props should have been defined", () => {
 		const wrapper = mount(
-			<ActionButton
-				action={action}
-				controller={controller}
-			/>
+			<Provider store={controller.getStore()}>
+				<ActionButton
+					action={action}
+					controller={controller}
+				/>
+			</Provider>
 		);
 
-		expect(wrapper.prop("action")).to.equal(action);
-		expect(wrapper.prop("controller")).to.equal(controller);
+		const button = wrapper.find("ButtonAction");
+		expect(button).to.have.length(1);
+		expect(button.prop("action")).to.equal(action);
+		expect(button.prop("controller")).to.equal(controller);
 	});
 
 	it("should render a `ActionButton`", () => {
 		const wrapper = mount(
-			<ActionButton
-				action={action}
-				controller={controller}
-			/>
+			<Provider store={controller.getStore()}>
+				<ActionButton
+					action={action}
+					controller={controller}
+				/>
+			</Provider>
 		);
 		const button = wrapper.find("button");
 		expect(button).to.have.length(1);
@@ -67,13 +78,55 @@ describe("action-button renders correctly", () => {
 		}
 		controller.setHandlers({ actionHandler: callback });
 		const wrapper = mount(
-			<ActionButton
-				action={action}
-				controller={controller}
-			/>
+			<Provider store={controller.getStore()}>
+				<ActionButton
+					action={action}
+					controller={controller}
+				/>
+			</Provider>
 		);
 		const button = wrapper.find("button");
 		button.simulate("click");
+	});
+	it("action button renders when disabled", () => {
+		controller.updateActionState(actionStateId, "disabled");
+		const wrapper = mount(
+			<Provider store={controller.getStore()}>
+				<ActionButton
+					action={action}
+					controller={controller}
+				/>
+			</Provider>
+		);
+		const buttonWrapper = wrapper.find("div[data-id='increment']");
+		expect(buttonWrapper.find("button").prop("disabled")).to.equal(true);
+	});
+	it("action button renders when hidden", () => {
+		controller.updateActionState(actionStateId, "hidden");
+		const wrapper = mount(
+			<Provider store={controller.getStore()}>
+				<ActionButton
+					action={action}
+					controller={controller}
+				/>
+			</Provider>
+		);
+		const buttonWrapper = wrapper.find("div[data-id='increment']");
+		expect(buttonWrapper.hasClass("hide")).to.equal(true);
+	});
+	it("action button renders tooltip", () => {
+		const wrapper = mount(
+			<Provider store={controller.getStore()}>
+				<ActionButton
+					action={action}
+					controller={controller}
+				/>
+			</Provider>
+		);
+		const tooltip = wrapper.find("div[id='tooltipContainer']");
+		expect(tooltip).to.have.length(1);
+		expect(tooltip.text()).to.equal("Increment number by 1.");
+
 	});
 });
 

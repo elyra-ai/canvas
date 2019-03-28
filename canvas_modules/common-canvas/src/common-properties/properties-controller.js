@@ -252,7 +252,7 @@ export default class PropertiesController {
 	// Each panel entry will have an array of children controls and children panels.
 	parsePanelTree() {
 		this.panelTree = {};
-		this.panelTree[PANEL_TREE_ROOT] = { controls: [], panels: [] };
+		this.panelTree[PANEL_TREE_ROOT] = { controls: [], panels: [], actions: [] };
 		UiGroupsParser.parseUiContent(this.panelTree, this.form, PANEL_TREE_ROOT);
 	}
 
@@ -980,19 +980,20 @@ export default class PropertiesController {
 		return state ? state.values : {};
 	}
 
+
 	/**
-	 * Panel States Methods
-	 * Sets the panel state. Supported states are:
-	 * "disabled", "enabled", "hidden", "visible".
-	 */
+		 * Panel States Methods
+		 * Sets the panel state. Supported states are:
+		 * "disabled", "enabled", "hidden", "visible".
+		 */
 	setPanelStates(states) {
 		this.propertiesStore.setPanelStates(states);
 	}
 
 	/**
-	* @param panelId {name: panel.id}
-  * @param state string ("disabled", "enabled", "hidden", "visible")
-	*/
+		* @param panelId {name: panel.id}
+	  * @param state string ("disabled", "enabled", "hidden", "visible")
+		*/
 	updatePanelState(panelId, state) {
 		this.propertiesStore.updatePanelState(panelId, state);
 	}
@@ -1001,6 +1002,30 @@ export default class PropertiesController {
 	}
 	getPanelStates() {
 		return this.propertiesStore.getPanelStates();
+	}
+
+
+	/**
+	 * Action States Methods
+	 * Sets the panel state. Supported states are:
+	 * "disabled", "enabled", "hidden", "visible".
+	 */
+	setActionStates(states) {
+		this.propertiesStore.setActionStates(states);
+	}
+
+	/**
+	* @param actionId {name: action.id}
+  * @param state string ("disabled", "enabled", "hidden", "visible")
+	*/
+	updateActionState(actionId, state) {
+		this.propertiesStore.updateActionState(actionId, state);
+	}
+	getActionState(actionId) {
+		return this.propertiesStore.getActionState(actionId);
+	}
+	getActionStates() {
+		return this.propertiesStore.getActionStates();
 	}
 
 	/**
