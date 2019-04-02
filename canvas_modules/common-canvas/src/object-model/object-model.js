@@ -2795,7 +2795,7 @@ export class APIPipeline {
 	}
 
 	isSourceOverlappingTarget(srcNode, trgNode) {
-		var highlightGap = this.store.getState().layoutinfo.highlightGap;
+		var highlightGap = this.store.getState().layoutinfo.nodeHighlightGap;
 		if (((srcNode.x_pos + srcNode.width + highlightGap >= trgNode.x_pos - highlightGap &&
 					trgNode.x_pos + trgNode.width + highlightGap >= srcNode.x_pos - highlightGap) &&
 					(srcNode.y_pos + srcNode.height + highlightGap >= trgNode.y_pos - highlightGap &&

@@ -16,7 +16,6 @@ const haloLayout = {
 	cssNodePortOutput: "d3-node-port-output",
 	cssNodePortInput: "d3-node-port-input",
 	cssNodePortInputArrow: "d3-node-port-input-arrow",
-	cssCommentSelectionHighlight: "d3-comment-selection-highlight",
 
 	// Connection type decides whether the node to node connections use the
 	// 'halo' connection mechanism and arrows pointing directly from source to
@@ -72,16 +71,8 @@ const haloLayout = {
 	// Draw node as a simple rectangle
 	nodeShape: "rectangle",
 
-	// The gap between a node or comment and its selection highlight rectangle
-	highlightGap: 4,
-
-	// Whether to display a link line when linked node/comments overlap. For halo
-	// we don't want to show the link when objects overlap but for ports we do.
-	displayLinkOnOverlap: false,
-
-	// What point to draw the link line towards. Possible values are image_center or node_center.
-	// This is used for comment links going towards nodes.
-	drawLinkLineTo: "image_center",
+	// The gap between a node and its selection highlight rectangle
+	nodeHighlightGap: 4,
 
 	// Error indicator dimensions
 	errorXPos: 52,
@@ -89,37 +80,15 @@ const haloLayout = {
 	errorWidth: 14,
 	errorHeight: 14,
 
-	// The gap between node or comment and the link line.
-	linkGap: 7,
-
-	// When sizing a comment this decides the size of the corner area for
-	// diagonal sizing.
-	cornerResizeArea: 10,
-
-	// The gap between the edge of the comment rectangle and the comment text.
-	commentWidthPadding: 10,
-	commentHeightPadding: 8,
-
-	// Display an arrow head on the comment-to-node links
-	commentLinkArrowHead: true,
-
-	// Initialize values for drawing connectors. minInitialLine is the
-	// size of the horizontal line protruding from the source or target handles
-	// when such a line is required for drawing connectors. wrapAroundSpacing
-	// the spacing for wraparound curved connectors.:
-	elbowSize: 10,
-	minInitialLine: 30,
-	wrapAroundSpacing: 20,
-	wrapAroundNodePadding: 10,
-
 	// Values for AutoLayout and AutoNode function
 	autoLayoutInitialMarginX: 50,
 	autoLayoutInitialMarginY: 50,
 	autoLayoutVerticalSpacing: 80,
 	autoLayoutHorizontalSpacing: 80,
 
-	// Add comment toolbar action, default offset from viewport
-	addCommentOffset: 30,
+	// When sizing a supernode this decides the size of the corner area for
+	// diagonal sizing.
+	nodeCornerResizeArea: 10,
 
 	// Supernode in-place containment area attributes
 	supernodeLabelPosX: 30,
@@ -149,16 +118,65 @@ const haloLayout = {
 	// Below here are halo specific properties
 	// ---------------------------------------------------------------------------
 
-	// Comment Halo size
-	haloCommentGap: 11, // Gap between comment rectangle and its halo
-
 	// Node Halo sizes
 	haloCenterX: 30,
 	haloCenterY: 24,
-	haloRadius: 29
+	haloRadius: 29,
+
+	// ---------------------------------------------------------------------------
+	// Layout values for links
+	// ---------------------------------------------------------------------------
+
+	// Whether to display a link line when linked node/comments overlap. For halo
+	// we don't want to show the link when objects overlap but for ports we do.
+	displayLinkOnOverlap: false,
+
+	// What point to draw the link line towards. Possible values are image_center or node_center.
+	// This is used for comment links going towards nodes.
+	drawLinkLineTo: "image_center",
+
+	// The gap between node or comment and the link line.
+	linkGap: 7,
+
+	// Initialize values for drawing connectors. minInitialLine is the
+	// size of the horizontal line protruding from the source or target handles
+	// when such a line is required for drawing connectors. wrapAroundSpacing
+	// the spacing for wraparound curved connectors.:
+	elbowSize: 10,
+	minInitialLine: 30,
+	wrapAroundSpacing: 20,
+	wrapAroundNodePadding: 10,
+
+	// ---------------------------------------------------------------------------
+	// Layout values for comments
+	// ---------------------------------------------------------------------------
+	// CSS styles for comment highlighting
+	cssCommentSelectionHighlight: "d3-comment-selection-highlight",
+
+	// When sizing a comment this decides the size of the corner area for
+	// diagonal sizing.
+	commentCornerResizeArea: 10,
+
+	// The gap between a comment and its selection highlight rectangle
+	commentHighlightGap: 4,
+
+	// The gap between the edge of the comment rectangle and the comment text.
+	commentWidthPadding: 10,
+	commentHeightPadding: 8,
+
+	// Display an arrow head on the comment-to-node links
+	commentLinkArrowHead: true,
+
+	// Add comment toolbar action, default offset from viewport
+	addCommentOffset: 30,
+
+	// Comment Halo size
+	haloCommentGap: 11 // Gap between comment rectangle and its halo
+
 };
 
 const portsHorizontal = {
+
 	// CSS classes
 	cssNodeSelectionHighlight: "d3-node-selection-highlight-austin",
 	cssNodeBody: "d3-node-body-outline-austin",
@@ -166,7 +184,6 @@ const portsHorizontal = {
 	cssNodePortOutput: "d3-node-port-output-austin",
 	cssNodePortInput: "d3-node-port-input-austin",
 	cssNodePortInputArrow: "d3-node-port-input-arrow-austin",
-	cssCommentSelectionHighlight: "d3-comment-selection-highlight-austin",
 
 	// Connection type decides whether the node to node connections use the
 	// 'halo' connection mechanism and arrows pointing directly from source to
@@ -222,16 +239,8 @@ const portsHorizontal = {
 	// Draw node as a rectangle with port arcs around the ports
 	nodeShape: "port-arcs",
 
-	// The gap between a node or comment and its selection highlight outline
-	highlightGap: 1,
-
-	// Whether to display a link line when linked node/comments overlap. For halo
-	// we don't want to show the link when objects overlap but for ports we do.
-	displayLinkOnOverlap: true,
-
-	// What point to draw the link line towards. Possible values are image_center or node_center.
-	// This is used for comment links going towards nodes.
-	drawLinkLineTo: "node_center",
+	// The gap between a node and its selection highlight rectangle
+	nodeHighlightGap: 1,
 
 	// Error indicator dimensions
 	errorXPos: 24,
@@ -239,37 +248,15 @@ const portsHorizontal = {
 	errorWidth: 10.5,
 	errorHeight: 10.5,
 
-	// The gap between node or comment and the link line.
-	linkGap: 7,
-
-	// When sizing a comment this decides the size of the corner area for
-	// diagonal sizing.
-	cornerResizeArea: 10,
-
-	// The gap between the edge of the comment rectangle and the comment text.
-	commentWidthPadding: 10,
-	commentHeightPadding: 8,
-
-	// Display an arrow head on the comment-to-node links
-	commentLinkArrowHead: false,
-
-	// Initialize values for drawing connectors. minInitialLine is the
-	// size of the horizontal line protruding from the source or target handles
-	// when such a line is required for drawing connectors. wrapAroundSpacing
-	// the spacing for wraparound curved connectors.:
-	elbowSize: 10,
-	minInitialLine: 30,
-	wrapAroundSpacing: 20,
-	wrapAroundNodePadding: 10,
-
 	// Values for AutoLayout and AutoNode function
 	autoLayoutInitialMarginX: 50,
 	autoLayoutInitialMarginY: 50,
 	autoLayoutVerticalSpacing: 80,
 	autoLayoutHorizontalSpacing: 80,
 
-	// Add comment toolbar action, default offset from viewport
-	addCommentOffset: 30,
+	// When sizing a supernode this decides the size of the corner area for
+	// diagonal sizing.
+	nodeCornerResizeArea: 10,
 
 	// Supernode in-place containment area attributes
 	supernodeLabelPosX: 30,
@@ -299,9 +286,6 @@ const portsHorizontal = {
 	// Below here are ports horizontal specific properties
 	// ---------------------------------------------------------------------------
 
-	// This can be overrriden from common-canvas config properties
-	linkType: "Curve",
-
 	// Radius of the port circle
 	portRadius: 3,
 
@@ -317,18 +301,68 @@ const portsHorizontal = {
 	// is half way down the image rather than the center of the node.
 	portPosY: 20,
 
-	// Comment port (circle) radius
-	commentPortRadius: 5,
-
 	// Display of vertical ellipsis to show context menu
 	ellipsisWidth: 10,
 	ellipsisHeight: 22,
 	ellipsisPosX: 145,
 	ellipsisPosY: 9,
-	ellipsisHoverAreaPadding: 3
+	ellipsisHoverAreaPadding: 3,
+
+	// ---------------------------------------------------------------------------
+	// Layout values for links
+	// ---------------------------------------------------------------------------
+	// Whether to display a link line when linked node/comments overlap. For halo
+	// we don't want to show the link when objects overlap but for ports we do.
+	displayLinkOnOverlap: true,
+
+	// What point to draw the link line towards. Possible values are image_center or node_center.
+	// This is used for comment links going towards nodes.
+	drawLinkLineTo: "node_center",
+
+	// The gap between node or comment and the link line.
+	linkGap: 7,
+
+	// Initialize values for drawing connectors. minInitialLine is the
+	// size of the horizontal line protruding from the source or target handles
+	// when such a line is required for drawing connectors. wrapAroundSpacing
+	// the spacing for wraparound curved connectors.:
+	elbowSize: 10,
+	minInitialLine: 30,
+	wrapAroundSpacing: 20,
+	wrapAroundNodePadding: 10,
+
+	// This can be overrriden from common-canvas config properties
+	linkType: "Curve",
+
+	// ---------------------------------------------------------------------------
+	// Layout values for comments
+	// ---------------------------------------------------------------------------
+	// CSS styles for comment highlighting
+	cssCommentSelectionHighlight: "d3-comment-selection-highlight-austin",
+
+	// When sizing a comment this decides the size of the corner area for
+	// diagonal sizing.
+	commentCornerResizeArea: 10,
+
+	// The gap between a comment and its selection highlight rectangle
+	commentHighlightGap: 1,
+
+	// The gap between the edge of the comment rectangle and the comment text.
+	commentWidthPadding: 10,
+	commentHeightPadding: 8,
+
+	// Display an arrow head on the comment-to-node links
+	commentLinkArrowHead: false,
+
+	// Add comment toolbar action, default offset from viewport
+	addCommentOffset: 30,
+
+	// Comment port (circle) radius
+	commentPortRadius: 5
 };
 
 const portsVertical = {
+
 	// CSS classes
 	cssNodeSelectionHighlight: "d3-node-selection-highlight",
 	cssNodeBody: "d3-node-body-outline",
@@ -336,7 +370,6 @@ const portsVertical = {
 	cssNodePortOutput: "d3-node-port-output",
 	cssNodePortInput: "d3-node-port-input",
 	cssNodePortInputArrow: "d3-node-port-input-arrow",
-	cssCommentSelectionHighlight: "d3-comment-selection-highlight",
 
 	// Connection type decides whether the node to node connections use the
 	// 'halo' connection mechanism and arrows pointing directly from source to
@@ -392,16 +425,8 @@ const portsVertical = {
 	// Draw node as a simple rectangle
 	nodeShape: "rectangle",
 
-	// The gap between a node or comment and its selection highlight rectangle
-	highlightGap: 4,
-
-	// Whether to display a link line when linked node/comments overlap. For halo
-	// we don't want to show the link when objects overlap but for ports we do.
-	displayLinkOnOverlap: true,
-
-	// What point to draw the link line towards. Possible values are image_center or node_center.
-	// This is used for comment links going towards nodes.
-	drawLinkLineTo: "node_center",
+	// The gap between a node and its selection highlight rectangle
+	nodeHighlightGap: 4,
 
 	// Error indicator dimensions
 	errorXPos: 45,
@@ -409,37 +434,15 @@ const portsVertical = {
 	errorWidth: 14,
 	errorHeight: 14,
 
-	// The gap between node or comment and the link line.
-	linkGap: 7,
-
-	// When sizing a comment this decides the size of the corner area for
-	// diagonal sizing.
-	cornerResizeArea: 10,
-
-	// The gap between the edge of the comment rectangle and the comment text.
-	commentWidthPadding: 10,
-	commentHeightPadding: 8,
-
-	// Display an arrow head on the comment-to-node links
-	commentLinkArrowHead: false,
-
-	// Initialize values for drawing connectors. minInitialLine is the
-	// size of the horizontal line protruding from the source or target handles
-	// when such a line is required for drawing connectors. wrapAroundSpacing
-	// the spacing for wraparound curved connectors.:
-	elbowSize: 10,
-	minInitialLine: 30,
-	wrapAroundSpacing: 20,
-	wrapAroundNodePadding: 10,
-
 	// Values for AutoLayout and AutoNode function
 	autoLayoutInitialMarginX: 50,
 	autoLayoutInitialMarginY: 50,
 	autoLayoutVerticalSpacing: 80,
 	autoLayoutHorizontalSpacing: 80,
 
-	// Add comment toolbar action, default offset from viewport
-	addCommentOffset: 30,
+	// When sizing a supernode this decides the size of the corner area for
+	// diagonal sizing.
+	nodeCornerResizeArea: 10,
 
 	// Supernode in-place containment area attributes
 	supernodeLabelPosX: 30,
@@ -469,9 +472,6 @@ const portsVertical = {
 	// Below here are ports vertical specific properties
 	// ---------------------------------------------------------------------------
 
-	// This can be overrriden from common-canvas config properties
-	linkType: "Curve",
-
 	// Radius of the port circle
 	portRadius: 6,
 
@@ -487,15 +487,65 @@ const portsVertical = {
 	// is half way down the image rather than the center of the node.
 	portPosY: 29,
 
-	// Comment port (circle) radius
-	commentPortRadius: 5,
-
 	// Display of vertical ellipsis to show context menu
 	ellipsisWidth: 11,
 	ellipsisHeight: 21,
 	ellipsisPosX: 57,
 	ellipsisPosY: 8,
-	ellipsisHoverAreaPadding: 3
+	ellipsisHoverAreaPadding: 3,
+
+	// ---------------------------------------------------------------------------
+	// Layout values for links
+	// ---------------------------------------------------------------------------
+	// Whether to display a link line when linked node/comments overlap. For halo
+	// we don't want to show the link when objects overlap but for ports we do.
+	displayLinkOnOverlap: true,
+
+	// What point to draw the link line towards. Possible values are image_center or node_center.
+	// This is used for comment links going towards nodes.
+	drawLinkLineTo: "node_center",
+
+	// The gap between node or comment and the link line.
+	linkGap: 7,
+
+	// Initialize values for drawing connectors. minInitialLine is the
+	// size of the horizontal line protruding from the source or target handles
+	// when such a line is required for drawing connectors. wrapAroundSpacing
+	// the spacing for wraparound curved connectors.:
+	elbowSize: 10,
+	minInitialLine: 30,
+	wrapAroundSpacing: 20,
+	wrapAroundNodePadding: 10,
+
+
+	// This can be overrriden from common-canvas config properties
+	linkType: "Curve",
+
+	// ---------------------------------------------------------------------------
+	// Layout values for comments
+	// ---------------------------------------------------------------------------
+	// CSS styles for comment highlighting
+	cssCommentSelectionHighlight: "d3-comment-selection-highlight",
+
+	// When sizing a comment this decides the size of the corner area for
+	// diagonal sizing.
+	commentCornerResizeArea: 10,
+
+	// The gap between a comment and its selection highlight rectangle
+	commentHighlightGap: 4,
+
+	// The gap between the edge of the comment rectangle and the comment text.
+	commentWidthPadding: 10,
+	commentHeightPadding: 8,
+
+	// Display an arrow head on the comment-to-node links
+	commentLinkArrowHead: false,
+
+	// Add comment toolbar action, default offset from viewport
+	addCommentOffset: 30,
+
+	// Comment port (circle) radius
+	commentPortRadius: 5
 };
 
 

@@ -1563,19 +1563,19 @@ class CanvasRenderer {
 			if (this.isSuperBindingNode(d)) { // Always ignore Supernode binding nodes
 				return;
 			}
-			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.highlightGap);
-			canvTop = Math.min(canvTop, d.y_pos - this.layout.highlightGap);
-			canvRight = Math.max(canvRight, d.x_pos + d.width + this.layout.highlightGap);
-			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.layout.highlightGap);
+			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.nodeHighlightGap);
+			canvTop = Math.min(canvTop, d.y_pos - this.layout.nodeHighlightGap);
+			canvRight = Math.max(canvRight, d.x_pos + d.width + this.layout.nodeHighlightGap);
+			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.layout.nodeHighlightGap);
 		});
 
 		const selector2 = this.getSelectorForClass("comment-group");
 
 		this.canvasGrp.selectAll(selector2).each((d) => {
-			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.highlightGap);
-			canvTop = Math.min(canvTop, d.y_pos - this.layout.highlightGap);
-			canvRight = Math.max(canvRight, d.x_pos + d.width + this.layout.highlightGap);
-			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.layout.highlightGap);
+			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.commentHighlightGap);
+			canvTop = Math.min(canvTop, d.y_pos - this.layout.commentHighlightGap);
+			canvRight = Math.max(canvRight, d.x_pos + d.width + this.layout.commentHighlightGap);
+			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.layout.commentHighlightGap);
 		});
 
 		const canvWidth = canvRight - canvLeft;
@@ -1969,7 +1969,7 @@ class CanvasRenderer {
 							!that.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
 						let cursorType = "pointer";
 						if (!that.isPointerCloseToBodyEdge(d)) {
-							that.nodeSizingDirection = that.getSizingDirection(d);
+							that.nodeSizingDirection = that.getSizingDirection(d, that.layout.nodeCornerResizeArea);
 							that.nodeSizingCursor = that.getCursorBasedOnDirection(that.nodeSizingDirection);
 							cursorType = that.nodeSizingCursor;
 						}
@@ -3208,7 +3208,7 @@ class CanvasRenderer {
 		if (this.layout.nodeShape === "port-arcs") {
 			return this.getPortArcsNodeShapePath(data); // Port-arc outline does not have a highlight gap
 		}
-		return this.getRectangleNodeShapePath(data, this.layout.highlightGap);
+		return this.getRectangleNodeShapePath(data, this.layout.nodeHighlightGap);
 	}
 
 	// Returns a path string that will draw the body shape of the node.
@@ -3369,8 +3369,8 @@ class CanvasRenderer {
 			commentGroupSel.each(function(d) {
 				const comOutlineSelector = that.getSelectorForId("comment_outline", d.id);
 				that.canvasGrp.selectAll(comOutlineSelector)
-					.attr("height", d.height + (2 * that.layout.highlightGap))
-					.attr("width", d.width + (2 * that.layout.highlightGap))
+					.attr("height", d.height + (2 * that.layout.commentHighlightGap))
+					.attr("width", d.width + (2 * that.layout.commentHighlightGap))
 					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 					.attr("class", that.layout.cssCommentSelectionHighlight)
 					.datum(() => that.getComment(d.id)); // Set the __data__ to the updated data
@@ -3419,8 +3419,8 @@ class CanvasRenderer {
 							.append("circle")
 							.attr("data-id", that.getId("comment_port", d.id))
 							.attr("data-pipeline-id", that.activePipeline.id)
-							.attr("cx", 0 - that.layout.highlightGap)
-							.attr("cy", 0 - that.layout.highlightGap)
+							.attr("cx", 0 - that.layout.commentHighlightGap)
+							.attr("cy", 0 - that.layout.commentHighlightGap)
 							.attr("r", that.layout.commentPortRadius)
 							.attr("class", "d3-comment-port-circle")
 							.on("mousedown", function(cd) {
@@ -3429,7 +3429,7 @@ class CanvasRenderer {
 								that.drawingNewLinkSrcId = d.id;
 								this.drawingNewLinkSrcPortId = null;
 								that.drawingNewLinkAction = "comment-node";
-								that.drawingNewLinkStartPos = { x: d.x_pos - that.layout.highlightGap, y: d.y_pos - that.layout.highlightGap };
+								that.drawingNewLinkStartPos = { x: d.x_pos - that.layout.commentHighlightGap, y: d.y_pos - that.layout.commentHighlightGap };
 								that.drawingNewLinkArray = [];
 								that.drawNewLink();
 							});
@@ -3515,7 +3515,7 @@ class CanvasRenderer {
 					{
 						let cursorType = "pointer";
 						if (!that.isPointerCloseToBodyEdge(d)) {
-							that.commentSizingDirection = that.getSizingDirection(d);
+							that.commentSizingDirection = that.getSizingDirection(d, that.layout.commentCornerResizeArea);
 							that.commentSizingCursor = that.getCursorBasedOnDirection(that.commentSizingDirection);
 							cursorType = that.commentSizingCursor;
 						}
@@ -3585,10 +3585,10 @@ class CanvasRenderer {
 
 					// Comment selection highlighting and sizing outline
 					commentGrp.select(this.getSelectorForId("comment_outline", d.id))
-						.attr("x", -this.layout.highlightGap)
-						.attr("y", -this.layout.highlightGap)
-						.attr("height", d.height + (2 * that.layout.highlightGap))
-						.attr("width", d.width + (2 * that.layout.highlightGap))
+						.attr("x", -this.layout.commentHighlightGap)
+						.attr("y", -this.layout.commentHighlightGap)
+						.attr("height", d.height + (2 * that.layout.commentHighlightGap))
+						.attr("width", d.width + (2 * that.layout.commentHighlightGap))
 						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 						.attr("class", that.layout.cssCommentSelectionHighlight)
 						.datum(comment); // Set the __data__ to the updated data
@@ -3903,20 +3903,20 @@ class CanvasRenderer {
 	// Returns the comment or supernode sizing direction (i.e. one of n, s, e, w, nw, ne,
 	// sw or se) based on the current mouse position and the position and
 	// dimensions of the comment or node outline.
-	getSizingDirection(d) {
+	getSizingDirection(d, cornerResizeArea) {
 		var xPart = "";
 		var yPart = "";
 
 		const transPos = this.getTransformedMousePos();
 
-		if (transPos.x < d.x_pos + this.layout.cornerResizeArea) {
+		if (transPos.x < d.x_pos + cornerResizeArea) {
 			xPart = "w";
-		} else if (transPos.x > d.x_pos + d.width - this.layout.cornerResizeArea) {
+		} else if (transPos.x > d.x_pos + d.width - cornerResizeArea) {
 			xPart = "e";
 		}
-		if (transPos.y < d.y_pos + this.layout.cornerResizeArea) {
+		if (transPos.y < d.y_pos + cornerResizeArea) {
 			yPart = "n";
-		} else if (transPos.y > d.y_pos + d.height - this.layout.cornerResizeArea) {
+		} else if (transPos.y > d.y_pos + d.height - cornerResizeArea) {
 			yPart = "s";
 		}
 
@@ -4722,10 +4722,10 @@ class CanvasRenderer {
 
 	isSourceOverlappingTarget(srcNode, trgNode) {
 		if (this.layout.displayLinkOnOverlap === false) {
-			if (((srcNode.x_pos + srcNode.width + this.layout.highlightGap >= trgNode.x_pos - this.layout.highlightGap &&
-						trgNode.x_pos + trgNode.width + this.layout.highlightGap >= srcNode.x_pos - this.layout.highlightGap) &&
-						(srcNode.y_pos + srcNode.height + this.layout.highlightGap >= trgNode.y_pos - this.layout.highlightGap &&
-							trgNode.y_pos + trgNode.height + this.layout.highlightGap >= srcNode.y_pos - this.layout.highlightGap))) {
+			if (((srcNode.x_pos + srcNode.width + this.layout.nodeHighlightGap >= trgNode.x_pos - this.layout.nodeHighlightGap &&
+						trgNode.x_pos + trgNode.width + this.layout.nodeHighlightGap >= srcNode.x_pos - this.layout.nodeHighlightGap) &&
+						(srcNode.y_pos + srcNode.height + this.layout.nodeHighlightGap >= trgNode.y_pos - this.layout.nodeHighlightGap &&
+							trgNode.y_pos + trgNode.height + this.layout.nodeHighlightGap >= srcNode.y_pos - this.layout.nodeHighlightGap))) {
 				return true;
 			}
 		}

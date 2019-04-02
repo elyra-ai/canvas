@@ -535,7 +535,7 @@ export default class SidePanelForms extends React.Component {
 			{paletteFileChooserVisible2}
 		</div>);
 
-		const pad = { "padding-left": "8px" };
+		const pad = { "paddingLeft": "8px" };
 
 		var saveZoom = (<div>
 			<div className="harness-sidepanel-children" id="harness-sidepanel-save-zoom">
