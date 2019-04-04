@@ -1015,6 +1015,13 @@ module.exports = function() {
 		expect(String(decorators.length)).toEqual(decoratorCount);
 	});
 
+	this.Then(/^I verify node "([^"]*)" has (\d+) label decorators$/, function(nodeName, decoratorCount) {
+		const nodeSelector = getNodeSelector(nodeName, "grp");
+		const node = browser.$(nodeSelector);
+		const decorators = node.$$(".d3-decorator-label");
+		expect(String(decorators.length)).toEqual(decoratorCount);
+	});
+
 	this.Then(/^I verify node "([^"]*)" has a decorator with id "([^"]*)" at position x (-?\d+) y (-?\d+)$/, function(nodeName, decoratorId, xPos, yPos) {
 		const nodeSelector = getNodeSelector(nodeName, "grp");
 		const node = browser.$(nodeSelector);
@@ -1053,6 +1060,32 @@ module.exports = function() {
 		expect(found).toEqual(true);
 		expect(img).toEqual(decoratorImage);
 	});
+
+	this.Then(/^I verify node "([^"]*)" has a label decorator with id "([^"]*)" with label "([^"]*)" at position x (-?\d+) y (-?\d+)$/,
+		function(nodeName, decoratorId, label, xPos, yPos) {
+			const nodeSelector = getNodeSelector(nodeName, "grp");
+			const node = browser.$(nodeSelector);
+			const decorators = node.$$(".d3-decorator-label");
+			let found = false;
+			let xx = 0;
+			let yy = 0;
+			let ll = "";
+			for (const decorator of decorators) {
+				var id = decorator.getAttribute("data-id");
+				if (id === "node_dec_label_0_" + decoratorId) {
+					found = true;
+					xx = decorator.getAttribute("x");
+					yy = decorator.getAttribute("y");
+					ll = decorator.getText();
+				}
+			}
+
+			expect(found).toEqual(true);
+			expect(xx).toEqual(xPos);
+			expect(yy).toEqual(yPos);
+			expect(ll).toEqual(label);
+		});
+
 
 	// Then I verify the "Supernode" node has 1 "output" ports
 	this.Then(/^I verify the "([^"]*)" node has (\d+) "([^"]*)" ports$/, function(nodeName, numPorts, portType) {

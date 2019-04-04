@@ -233,13 +233,13 @@
         "content": " This node does not have any decorators.",
         "height": 55,
         "width": 128,
-        "x_pos": 80,
-        "y_pos": 367
+        "x_pos": 81,
+        "y_pos": 322
       },
       {
         "id": "df78ef91-8a46-48b7-9697-8e35fa274e2e",
         "className": "canvas-comment",
-        "content": "These two nodes have decorators tha are hot spots. Clicking them should output a decorationHandler() message to the test harness console.",
+        "content": "These two nodes have decorators that are hot spots. Clicking them should output a decorationHandler() message to the test harness console.",
         "height": 115,
         "width": 159,
         "x_pos": 779,
@@ -257,11 +257,11 @@
       {
         "id": "36ab82d5-b015-47f4-a295-2a8aedabcc21",
         "className": "canvas-comment",
-        "content": " This node shows a decorator with an zoom-in image and a colored background yellow rectangle.",
-        "height": 89,
-        "width": 128,
-        "x_pos": 789,
-        "y_pos": 342
+        "content": " This node shows a decorator with a zoom-in image and a yellow background rectangle.",
+        "height": 66,
+        "width": 146,
+        "x_pos": 781,
+        "y_pos": 276
       }
     ],
     "links": [

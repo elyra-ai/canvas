@@ -59,9 +59,6 @@ const haloLayout = {
 	labelPosX: 4,
 	labelPosY: 53,
 
-	decoratorHeight: 12,
-	decoratorWidth: 12,
-
 	decoratorTopY: 0,
 	decoratorBottomY: 36,
 
@@ -226,9 +223,6 @@ const portsHorizontal = {
 
 	labelPosX: 38,
 	labelPosY: 14,
-
-	decoratorHeight: 12,
-	decoratorWidth: 12,
 
 	decoratorTopY: 0,
 	decoratorBottomY: 26,
@@ -412,9 +406,6 @@ const portsVertical = {
 
 	labelPosX: 3,
 	labelPosY: 57,
-
-	decoratorHeight: 12,
-	decoratorWidth: 12,
 
 	decoratorTopY: 5,
 	decoratorBottomY: 41,

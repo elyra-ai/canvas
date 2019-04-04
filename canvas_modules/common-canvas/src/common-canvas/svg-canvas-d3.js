@@ -2312,39 +2312,38 @@ class CanvasRenderer {
 
 					// Display decorators
 					if (!this.isSuperBindingNode(d)) {
+						// Handle decoration outlines
+						// We draw an outline for all decorators that are not label decorators ie those with an image or without an image
+						const nonLabelDecorations = d.decorations ? d.decorations.filter((dec) => !dec.label) : [];
 						const decOutlnSelector = this.getSelectorForClass("d3-decorator-outline");
-
 						const decoratorOutlnsSelection = nodeGrp.selectAll(decOutlnSelector)
-							.data(d.decorations || [], function(dec) { return dec.id; });
+							.data(nonLabelDecorations || [], function(dec) { return dec.id; });
 
 						decoratorOutlnsSelection.enter()
 							.append("rect")
 							.attr("data-id", (dec) => this.getId("node_dec_outln", dec.id)) // Used in Chimp tests
 							.attr("data-pipeline-id", this.activePipeline.id)
-							.attr("width", this.layout.decoratorWidth + 2)
-							.attr("height", this.layout.decoratorHeight + 2)
 							.merge(decoratorOutlnsSelection)
 							.attr("x", (dec) => this.getDecoratorX(dec))
 							.attr("y", (dec) => this.getDecoratorY(dec))
-							.attr("class", (dec) => this.getDecoratorClass(dec))
+							.attr("class", (dec) => this.getDecoratorOutlineClass(dec))
 							.datum((dec) => this.getDecorator(dec.id, node))
 							.filter((dec) => dec.hotspot)
 							.on("mousedown", (dec) => this.callDecoratorCallback(node, dec));
 
 						decoratorOutlnsSelection.exit().remove();
 
+						// Handle decoration images
+						const imageDecorations = d.decorations ? d.decorations.filter((dec) => dec.image) : [];
 						const decImgSelector = this.getSelectorForClass("d3-decorator-image");
-
-						var decoratorImgsSelection = nodeGrp.selectAll(decImgSelector)
-							.data(d.decorations || [], function(dec) { return dec.id + dec.image; });
+						const decoratorImgsSelection = nodeGrp.selectAll(decImgSelector)
+							.data(imageDecorations || [], function(dec) { return dec.id; });
 
 						decoratorImgsSelection.enter()
 							.filter((dec) => dec.image)
 							.append("image")
 							.attr("data-id", (dec) => this.getId("node_dec_img", dec.id)) // Used in Chimp tests
 							.attr("data-pipeline-id", this.activePipeline.id)
-							.attr("width", this.layout.decoratorWidth)
-							.attr("height", this.layout.decoratorHeight)
 							.attr("class", "d3-decorator-image")
 							.merge(decoratorImgsSelection)
 							.filter((dec) => dec.image)
@@ -2356,6 +2355,27 @@ class CanvasRenderer {
 							.on("mousedown", (dec) => this.callDecoratorCallback(node, dec));
 
 						decoratorImgsSelection.exit().remove();
+
+						// Handle decoration labels
+						const labelDecorations = d.decorations ? d.decorations.filter((dec) => dec.label) : [];
+						const decLabelSelector = this.getSelectorForClass("d3-decorator-label");
+						const decoratorLabelSelection = nodeGrp.selectAll(decLabelSelector)
+							.data(labelDecorations || [], function(dec) { return dec.id; });
+
+						decoratorLabelSelection.enter()
+							.append("text")
+							.attr("data-id", (dec) => this.getId("node_dec_label", dec.id)) // Used in Chimp tests
+							.attr("data-pipeline-id", this.activePipeline.id)
+							.merge(decoratorLabelSelection)
+							.attr("x", (dec) => this.getDecoratorX(dec))
+							.attr("y", (dec) => this.getDecoratorY(dec))
+							.attr("class", (dec) => this.getDecoratorLabelClass(dec))
+							.text((dec) => dec.label)
+							.datum((dec) => this.getDecorator(dec.id, node))
+							.filter((dec) => dec.hotspot)
+							.on("mousedown", (dec) => this.callDecoratorCallback(node, dec));
+
+						decoratorLabelSelection.exit().remove();
 					}
 				});
 
@@ -2851,8 +2871,16 @@ class CanvasRenderer {
 		return y;
 	}
 
-	getDecoratorClass(dec) {
+	getDecoratorOutlineClass(dec) {
 		let className = "d3-decorator-outline";
+		if (dec && dec.class_name) {
+			className += " " + dec.class_name;
+		}
+		return className;
+	}
+
+	getDecoratorLabelClass(dec) {
+		let className = "d3-decorator-label";
 		if (dec && dec.class_name) {
 			className += " " + dec.class_name;
 		}
@@ -4596,7 +4624,7 @@ class CanvasRenderer {
 	}
 
 	getNodeBodyClass(d) {
-		// If the comment has a classname that isn't the default use it!
+		// If the node has a classname that isn't the default use it!
 		if (d.class_name && d.class_name !== "canvas-node" && d.class_name !== "d3-node-body") {
 			return d.class_name;
 		}

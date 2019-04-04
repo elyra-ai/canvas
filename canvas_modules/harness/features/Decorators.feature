@@ -56,3 +56,10 @@ Feature: Decorators
 		And I call the API by clicking on the Submit button
 		Then I verify node "No Decorator" has 1 decorators
 		Then I verify node "No Decorator" has a decorator with id "999" at position x -20 y -25
+
+		# Add a two label decorations at customized positions
+		Then I update the decorations text area with ""[{"id": "label_1", "x_pos": -20, "y_pos": -25, "label": "A first test label"}, {"id": "label_2", "x_pos": 40, "y_pos": 90, "label": "A second test label"}]""
+		And I call the API by clicking on the Submit button
+		Then I verify node "No Decorator" has 2 label decorators
+		Then I verify node "No Decorator" has a label decorator with id "label_1" with label "A first test label" at position x -20 y -25
+		Then I verify node "No Decorator" has a label decorator with id "label_2" with label "A second test label" at position x 40 y 90

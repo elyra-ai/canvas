@@ -261,6 +261,22 @@ $link-hightlight-color: $brand-01;
 	fill: transparent;
 	stroke: $node-decoration-outline;
 	stroke-width: 1;
+	width: 16px;
+	height: 16px;
+}
+
+.d3-decorator-image {
+	width: 12px;
+	height: 12px;
+	transform: translate(2px, 2px);
+}
+
+.d3-decorator-label {
+	font-size: 13px;
+	fill: $node-label-color;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
 }
 
 .d3-node-halo {

@@ -316,8 +316,8 @@
             },
             {
               "id": "ea4fb177-5e35-4eb1-89ef-d3f3a597c13b",
-              "x_pos": 80,
-              "y_pos": 367,
+              "x_pos": 81,
+              "y_pos": 322,
               "width": 128,
               "height": 55,
               "class_name": "canvas-comment",
@@ -336,7 +336,7 @@
               "width": 159,
               "height": 115,
               "class_name": "canvas-comment",
-              "content": "These two nodes have decorators tha are hot spots. Clicking them should output a decorationHandler() message to the test harness console.",
+              "content": "These two nodes have decorators that are hot spots. Clicking them should output a decorationHandler() message to the test harness console.",
               "associated_id_refs": [
                 {
                   "node_ref": "id1ZZTZ3ZMYWL",
@@ -369,12 +369,12 @@
             },
             {
               "id": "36ab82d5-b015-47f4-a295-2a8aedabcc21",
-              "x_pos": 789,
-              "y_pos": 342,
-              "width": 128,
-              "height": 89,
+              "x_pos": 781,
+              "y_pos": 276,
+              "width": 146,
+              "height": 66,
               "class_name": "canvas-comment",
-              "content": " This node shows a decorator with an zoom-in image and a colored background yellow rectangle.",
+              "content": " This node shows a decorator with a zoom-in image and a yellow background rectangle.",
               "associated_id_refs": [
                 {
                   "node_ref": "id125111111",
