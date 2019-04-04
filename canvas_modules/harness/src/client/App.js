@@ -1094,6 +1094,14 @@ class App extends React.Component {
 		if (source.type === "canvas") {
 			defMenu = defMenu.concat({ action: "validateFlow", label: this.getLabel("canvas_validateFlow", "CMI: Validate Flow") });
 			defMenu = defMenu.concat([{ action: "streamProperties", label: this.getLabel("canvas_streamProperties", "CMI: Options") }]);
+
+		} else if (source.type === "input_port") {
+			const portName = source.port.label ? source.port.label : source.port.id;
+			defMenu = defMenu.concat({ action: "inputPortAction", label: this.getLabel("canvas_inputPortAction", "CMI: Input Port action for '" + portName + "'") });
+
+		} else if (source.type === "output_port") {
+			const portName = source.port.label ? source.port.label : source.port.id;
+			defMenu = defMenu.concat({ action: "outputPortAction", label: this.getLabel("canvas_outputPortAction", "CMI: Output Port action for '" + portName + "'") });
 		}
 		return defMenu;
 	}

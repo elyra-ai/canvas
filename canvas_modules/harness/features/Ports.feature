@@ -141,3 +141,21 @@ Feature: Ports
 		Then I verify 1 link between source node "Select3" source port "outPort1" to target node "Select1" target port "inPort2"
 		Then I verify 1 link between source node "Select1" source port "outPort" to target node "Select3" target port "inPort"
 		Then I verify 1 link between source node "Select1" source port "outPort2" to target node "Select2" target port "inPort"
+
+	Scenario: Test a context menu is displayed for ports
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Flyout" palette layout
+		Given I have selected the "Ports" connection type
+		Given I have uploaded diagram "/test_resources/diagrams/allTypesCanvas.json"
+		Given I have toggled the app side api panel
+
+		Then I right click the source port "outPort" of the "Binding (entry) node" node to display the context menu
+		Then I verify the context menu has a "CMI: Output Port action for 'Output Port'" item
+
+		Then I right click the target port "input2SuperNodePE" of the "Super node" node to display the context menu
+		Then I verify the context menu has a "CMI: Input Port action for 'input2SuperNodePE'" item
+
+		Then I right click the target port "input1SuperNodePE" of the "Super node" node to display the context menu
+		Then I verify the context menu has a "CMI: Input Port action for 'input1SuperNodePE'" item

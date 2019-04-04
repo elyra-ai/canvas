@@ -9,7 +9,7 @@
 /* eslint no-console: "off" */
 
 import { deleteLinkInObjectModel, dragAndDrop, findCategoryElement, findNodeIndexInPalette, getEventLogCount,
-	getNodeFromObjectModel, getNodeIdFromObjectModel, getNodeSelector, getNodeSelectorInSubFlow,
+	getNodeFromObjectModel, getNodeIdFromObjectModel, getNodePortSelector, getNodeSelector, getNodeSelectorInSubFlow,
 	getObjectModelCount, isObjectModelEmpty
 } from "./utilities/validate-utils.js";
 import { getCanvasData, getEventLogData, getLastEventLogData, useCmdOrCtrl } from "./utilities/test-utils.js";
@@ -718,6 +718,21 @@ module.exports = function() {
 		const nodeSelector = getNodeSelector(nodeName, "grp");
 		browser.$(nodeSelector).rightClick();
 	});
+
+	// Then I right click the source port "outPort" of the "Var. File" node to display the context menu
+	//
+	this.Then(/^I right click the source port "([^"]*)" of the "([^"]*)" node to display the context menu$/, function(portId, nodeName) {
+		const portSelector = getNodePortSelector(nodeName, "src_port", portId, false);
+		browser.$(portSelector).rightClick();
+	});
+
+	// Then I right click the target port "inPort" of the "Var. File" node to display the context menu
+	//
+	this.Then(/^I right click the target port "([^"]*)" of the "([^"]*)" node to display the context menu$/, function(portId, nodeName) {
+		const portSelector = getNodePortSelector(nodeName, "trg_port", portId, false);
+		browser.$(portSelector).rightClick();
+	});
+
 
 	// Then I right click the "Var. File" node in the subflow to display the context menu
 	//

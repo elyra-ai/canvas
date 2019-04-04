@@ -2206,6 +2206,11 @@ class CanvasRenderer {
 								.on("mouseleave", (port) => {
 									this.canvasController.closeTip();
 								})
+								.on("contextmenu", (port) => {
+									this.logger.log("Input Port Circle - context menu");
+									stopPropagationAndPreventDefault();
+									this.openContextMenu("input_port", d, port);
+								})
 								.merge(inputPortSelection)
 								.attr("r", () => this.getPortRadius(d))
 								.attr("cy", (port) => port.cy)
@@ -2244,6 +2249,11 @@ class CanvasRenderer {
 								})
 								.on("mouseleave", (port) => {
 									this.canvasController.closeTip();
+								})
+								.on("contextmenu", (port) => {
+									this.logger.log("Input Port Arrow - context menu");
+									stopPropagationAndPreventDefault();
+									this.openContextMenu("input_port", d, port);
 								})
 								.merge(inputPortArrowSelection)
 								.attr("d", (port) => this.getArrowShapePath(port.cy, d, this.zoomTransform.k))
@@ -2298,6 +2308,11 @@ class CanvasRenderer {
 								})
 								.on("mouseleave", (port) => {
 									this.canvasController.closeTip();
+								})
+								.on("contextmenu", (port) => {
+									this.logger.log("Output Port Circle - context menu");
+									stopPropagationAndPreventDefault();
+									this.openContextMenu("output_port", d, port);
 								})
 								.merge(outputPortSelection)
 								.attr("r", () => this.getPortRadius(d))
@@ -2812,7 +2827,7 @@ class CanvasRenderer {
 		return data.type === SUPER_NODE;
 	}
 
-	openContextMenu(type, d) {
+	openContextMenu(type, d, port) {
 		stopPropagationAndPreventDefault(); // Stop the browser context menu appearing
 		this.canvasController.contextMenuHandler({
 			type: type,
@@ -2822,6 +2837,7 @@ class CanvasRenderer {
 			cmPos: this.getMousePos(this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area.
 			mousePos: this.getTransformedMousePos(),
 			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
+			port: port,
 			zoom: this.zoomTransform.k });
 	}
 
