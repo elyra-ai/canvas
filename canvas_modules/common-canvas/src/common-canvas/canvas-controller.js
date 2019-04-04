@@ -767,6 +767,13 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getLink(linkId);
 	}
 
+	// Returns an array of link objects for the pipelineId passed in.
+	// pipelineId - The ID of the pipeline
+	getLinks(pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getLinks();
+	}
+
+
 	// Gets a node to node data link
 	// srcNodeId - The ID of the source node
 	// srcNodePortId - The ID of the source node port

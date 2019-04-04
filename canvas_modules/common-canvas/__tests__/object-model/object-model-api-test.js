@@ -27,12 +27,14 @@ import pipelineFlowTest1Start from "../test_resources/json/pipelineFlowTest1Star
 import pipelineFlowTest1Expected from "../test_resources/json/pipelineFlowTest1Expected.json";
 import supernodeNestedCanvas from "../../../harness/test_resources/diagrams/supernodeNestedCanvas.json";
 
-import ObjectModel from "../../src/object-model/object-model.js";
 import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
 	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK } from "../../src/common-canvas/constants/canvas-constants.js";
+
+import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import CloneMultipleObjectsAction from "../../src/command-actions/cloneMultipleObjectsAction.js";
 
-const objectModel = new ObjectModel();
+const canvasController = new CanvasController();
+const objectModel = canvasController.getObjectModel();
 
 // TODO - Remove this when we support v3 schemas permanently.
 objectModel.setReturnPipelineFlowDraftVersion(true);
@@ -449,6 +451,32 @@ describe("ObjectModel API handle model OK", () => {
 
 		expect(isEqual(JSON.stringify(actualPipelineFlow, null, 2), JSON.stringify(expectedPipelineFlow, null, 2))).to.be.true;
 	});
+
+
+	it("should return and array of links from getLinks method", () => {
+		deepFreeze(startPipelineFlow);
+		canvasController.setPipelineFlow(startPipelineFlow);
+
+		const links = canvasController.getLinks();
+
+		// links.forEach((x) => console.log(JSON.stringify(x)));
+
+		expect(isEqual(links.length, 9)).to.be.true;
+		expect(isEqual(links[0].srcNodeId, "id8I6RH2V91XW")).to.be.true;
+		expect(isEqual(links[0].srcNodePortId, "outPort")).to.be.true;
+		expect(isEqual(links[0].trgNodeId, "idGWRVT47XDV")).to.be.true;
+		expect(isEqual(links[0].trgNodePortId, "inPort")).to.be.true;
+		expect(isEqual(links[0].type, "nodeLink")).to.be.true;
+
+		expect(isEqual(links[4].srcNodeId, "id5KIRGGJ3FYT")).to.be.true;
+		expect(isEqual(links[4].trgNodeId, "id125TTEEIK7V")).to.be.true;
+		expect(isEqual(links[4].type, "associationLink")).to.be.true;
+
+		expect(isEqual(links[7].srcNodeId, "id42ESQA31234")).to.be.true;
+		expect(isEqual(links[7].trgNodeId, "nodeIDSuperNodePE")).to.be.true;
+		expect(isEqual(links[7].type, "commentLink")).to.be.true;
+	});
+
 
 	it("should return custom app_data and ui_data for links from an execution node", () => {
 		shouldReturnCustomAppDataAndUiDataForLinks("idGWRVT47XDV", null);
