@@ -14,8 +14,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import FileUploader from "carbon-components-react/lib/components/FileUploader";
 import Button from "carbon-components-react/lib/components/Button";
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
-import DropdownItem from "carbon-components-react/lib/components/DropdownItem";
+import Dropdown from "carbon-components-react/lib/components/DropdownV2";
 import Checkbox from "carbon-components-react/lib/components/Checkbox";
 import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
 import RadioButton from "carbon-components-react/lib/components/RadioButton";
@@ -169,19 +168,19 @@ export default class SidePanelForms extends React.Component {
 	}
 
 	onCanvasDropdownSelect(evt) {
-		this.props.setCanvasDropdownFile(evt.value);
+		this.props.setCanvasDropdownFile(evt.selectedItem.value);
 	}
 
 	onCanvasDropdownSelect2(evt) {
-		this.props.setCanvasDropdownFile2(evt.value);
+		this.props.setCanvasDropdownFile2(evt.selectedItem.value);
 	}
 
 	onPaletteDropdownSelect(evt) {
-		this.props.setPaletteDropdownSelect(evt.value);
+		this.props.setPaletteDropdownSelect(evt.selectedItem.value);
 	}
 
 	onPaletteDropdownSelect2(evt) {
-		this.props.setPaletteDropdownSelect2(evt.value);
+		this.props.setPaletteDropdownSelect2(evt.selectedItem.value);
 	}
 
 	onEnableMoveNodesOnSupernodeResizeToggle(checked) {
@@ -343,7 +342,7 @@ export default class SidePanelForms extends React.Component {
 		const options = [];
 		let key = 1;
 		for (const option of stringOptions) {
-			options.push(<DropdownItem key={"option." + ++key}itemText={option} value={option} />);
+			options.push({ key: "option." + ++key, label: option, value: option });
 		}
 		return options;
 	}
@@ -439,26 +438,22 @@ export default class SidePanelForms extends React.Component {
 		var canvasInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-input">
 			<div className="harness-sidepanel-headers">Canvas Diagram</div>
 			<Dropdown
-				defaultText="Canvas"
+				label="Canvas"
 				ariaLabel="Canvas"
 				onChange={this.onCanvasDropdownSelect.bind(this)}
-				value={this.props.selectedCanvasDropdownFile}
-			>
-				{this.dropdownOptions(this.state.canvasFiles)}
-			</Dropdown>
+				items={this.dropdownOptions(this.state.canvasFiles)}
+			/>
 			{canvasFileChooserVisible}
 		</div>);
 
 		var paletteInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-input">
 			<div className="harness-sidepanel-headers">Canvas Palette</div>
 			<Dropdown
-				defaultText="Palette"
+				label="Palette"
 				ariaLabel="Palette"
 				onChange={this.onPaletteDropdownSelect.bind(this)}
-				value={this.props.selectedPaletteDropdownFile}
-			>
-				{this.dropdownOptions(this.state.paletteFiles)}
-			</Dropdown>
+				items={this.dropdownOptions(this.state.paletteFiles)}
+			/>
 			{paletteFileChooserVisible}
 		</div>);
 
@@ -511,13 +506,11 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-sidepanel-headers">Canvas Diagram</div>
 			<Dropdown
 				disabled={!this.props.extraCanvasDisplayed}
-				defaultText="Canvas"
+				label="Canvas"
 				ariaLabel="Canvas"
 				onChange={this.onCanvasDropdownSelect2.bind(this)}
-				value={this.props.selectedCanvasDropdownFile2}
-			>
-				{this.dropdownOptions(this.state.canvasFiles)}
-			</Dropdown>
+				items={this.dropdownOptions(this.state.canvasFiles)}
+			/>
 			{canvasFileChooserVisible2}
 		</div>);
 
@@ -525,13 +518,11 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-sidepanel-headers">Canvas Palette</div>
 			<Dropdown
 				disabled={!this.props.extraCanvasDisplayed}
-				defaultText="Palette"
+				label="Palette"
 				ariaLabel="Palette"
 				onChange={this.onPaletteDropdownSelect2.bind(this)}
-				value={this.props.selectedPaletteDropdownFile2}
-			>
-				{this.dropdownOptions(this.state.paletteFiles)}
-			</Dropdown>
+				items={this.dropdownOptions(this.state.paletteFiles)}
+			/>
 			{paletteFileChooserVisible2}
 		</div>);
 

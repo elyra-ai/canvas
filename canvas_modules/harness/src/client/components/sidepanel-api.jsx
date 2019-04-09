@@ -13,8 +13,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import isEmpty from "lodash/isEmpty";
 import Button from "carbon-components-react/lib/components/Button";
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
-import DropdownItem from "carbon-components-react/lib/components/DropdownItem";
+import Dropdown from "carbon-components-react/lib/components/DropdownV2";
 import TextArea from "carbon-components-react/lib/components/TextArea";
 import TextInput from "carbon-components-react/lib/components/TextInput";
 import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
@@ -111,7 +110,7 @@ export default class SidePanelAPI extends React.Component {
 	}
 
 	onOperationSelect(evt) {
-		const operation = evt.value;
+		const operation = evt.selectedItem.value;
 		let nodes = [];
 		let ports = [];
 		let nodeId = "";
@@ -169,7 +168,7 @@ export default class SidePanelAPI extends React.Component {
 	}
 
 	onNodeSelect(evt) {
-		const nodeItem = this.state.nodes.find((node) => node.label === evt.value);
+		const nodeItem = this.state.nodes.find((node) => node.label === evt.selectedItem.value);
 		const nodeId = nodeItem.value;
 		const newState = { nodeId: nodeId, portId: "", newLabel: "" };
 		const existingNode = this.props.getCanvasInfo().nodes.find((node) => (node.id === nodeId));
@@ -211,7 +210,7 @@ export default class SidePanelAPI extends React.Component {
 	}
 
 	onPortSelect(evt) {
-		const portItem = this.state.ports.find((port) => port.label === evt.value);
+		const portItem = this.state.ports.find((port) => port.label === evt.selectedItem.value);
 		const portId = portItem.value;
 		const newState = { portId: portId };
 		const existingNode = this.props.getCanvasInfo().nodes.find((node) => (node.id === this.state.nodeId));
@@ -395,11 +394,10 @@ export default class SidePanelAPI extends React.Component {
 		let key = 1;
 		for (const option of inOptions) {
 			if (typeof option === "string") {
-				options.push(<DropdownItem key={"option." + ++key}itemText={option} value={option} />);
+				options.push({ key: "option." + ++key, label: option, value: option });
 			} else {
-				options.push(<DropdownItem key={"option." + ++key}itemText={option.label} value={option.label} />);
+				options.push({ key: "option." + ++key, label: option.label, value: option.label });
 			}
-
 		}
 		return options;
 	}
@@ -418,13 +416,11 @@ export default class SidePanelAPI extends React.Component {
 		const operationSelection =
 			(<div className="harness-sidepanel-children" id="harness-sidepanel-api-list">
 				<Dropdown
-					defaultText="Operations"
 					ariaLabel="Operations"
+					label="Operations"
 					onChange={this.onOperationSelect.bind(this)}
-					value={this.props.selectedOperation}
-				>
-					{dropdownOptions}
-				</Dropdown>
+					items={dropdownOptions}
+				/>
 			</div>);
 
 		const submit =
@@ -500,24 +496,20 @@ export default class SidePanelAPI extends React.Component {
 					<Dropdown
 						disabled={isEmpty(this.state.nodes)}
 						onChange={this.onNodeSelect.bind(this)}
-						value={this.state.nodeId}
-						defaultText="Node Selection"
+						label="Node Selection"
 						ariaLabel="Node Selection"
-					>
-						{this.dropdownOptions(this.state.nodes)}
-					</Dropdown>
+						items={this.dropdownOptions(this.state.nodes)}
+					/>
 				</div>
 				<div className="harness-sidepanel-spacer" />
 				<div id="harness-sidepanel-api-portSelection">
 					<Dropdown
 						disabled={isEmpty(this.state.ports)}
 						onChange={this.onPortSelect.bind(this)}
-						value={this.state.portId}
 						ariaLabel="Port Selection"
-						defaultText="Port Selection"
-					>
-						{this.dropdownOptions(this.state.ports)}
-					</Dropdown>
+						label="Port Selection"
+						items={this.dropdownOptions(this.state.ports)}
+					/>
 				</div>
 				<div className="harness-sidepanel-spacer" />
 				<TextInput
@@ -537,7 +529,6 @@ export default class SidePanelAPI extends React.Component {
 
 		let setNodeDecorationsSection = <div />;
 		if (this.props.selectedOperation === API_SET_NODE_DECORATIONS) {
-
 			setNodeDecorationsSection = (<div className="harness-sidepanel-children"
 				id="harness-sidepanel-api-decorations"
 			>
@@ -545,12 +536,10 @@ export default class SidePanelAPI extends React.Component {
 					<Dropdown
 						disabled={isEmpty(this.state.nodes)}
 						onChange={this.onNodeSelect.bind(this)}
-						value={this.state.nodeId}
-						defaultText="Node Selection"
+						label="Node Selection"
 						ariaLabel="Node Selection"
-					>
-						{this.dropdownOptions(this.state.nodes)}
-					</Dropdown>
+						items={this.dropdownOptions(this.state.nodes)}
+					/>
 				</div>
 				<div className="harness-sidepanel-spacer" />
 				<TextArea

@@ -100,12 +100,11 @@ function dropdownSelect(dropdownElement, selectedItemName) {
 	// need to click on the canvas drop down
 	dropdownElement.click(".bx--dropdown");
 	browser.pause(600);
-	dropdownElement.$(".bx--dropdown-list")
+	dropdownElement.$(".bx--list-box__menu")
 		.moveToObject();
 	browser.pause(600);
 	// get the list of drop down options.
-	const fileOptions = dropdownElement.$(".bx--dropdown-list")
-		.$("li[value='" + selectedItemName + "']");
+	const fileOptions = dropdownElement.$(".bx--list-box__menu").$(".bx--list-box__menu-item=" + selectedItemName);
 	fileOptions.scroll();
 	browser.pause(600);
 	fileOptions.click();
