@@ -19,59 +19,60 @@ import { shallow } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 
-const canvasController = new CanvasController();
-
-
 describe("CommonCanvas renders correctly", () => {
+	let canvasController;
+	beforeEach(() => {
+		canvasController = new CanvasController();
+	});
 
 	it("should render one <DialogCanvasD3/> component", () => {
-		const config = { enableAutoLayout: "none", canvasController: canvasController };
-		const wrapper = createCommonCanvas(config);
+		const config = { enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(DiagramCanvasD3)).to.have.length(1);
 	});
 
 	it("should render one <Palette/> component when Palette is enabled", () => {
-		const config = { enablePaletteLayout: "Modal", enableAutoLayout: "none", canvasController: canvasController };
-		const wrapper = createCommonCanvas(config);
+		const config = { enablePaletteLayout: "Modal", enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(Palette)).to.have.length(1);
 	});
 
 	it("should render one <PaletteFlyout/> component when Palette layout is not provided", () => {
-		const config = { enableAutoLayout: "none", canvasController: canvasController };
-		const wrapper = createCommonCanvas(config);
+		const config = { enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(PaletteFlyout)).to.have.length(1);
 	});
 
 	it("should render one <PaletteFlyout/> component when Palette layout is enabled", () => {
-		const config = { enablePaletteLayout: "Flyout", enableAutoLayout: "none", canvasController: canvasController };
-		const wrapper = createCommonCanvas(config);
+		const config = { enablePaletteLayout: "Flyout", enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(PaletteFlyout)).to.have.length(1);
 	});
 
 	it("should not render any <Palette/> component when Palette layout is not provided", () => {
-		const config = { enableAutoLayout: "none", canvasController: canvasController };
-		const wrapper = createCommonCanvas(config);
+		const config = { enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(Palette)).to.have.length(0);
 	});
 
 	it("should render one <Toolbar/> component when toolbarConfig is provided", () => {
 		const toolbarConfig = [];
-		const config = { enableAutoLayout: "none", canvasController: canvasController };
-		const wrapper = createCommonCanvas(config, toolbarConfig);
+		const config = { enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config, canvasController, toolbarConfig);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 	});
 
-	it("should not render one <Toolbar/> component when there is no toolbarConfig", () => {
-		const config = { enableAutoLayout: "none", canvasController: canvasController };
-		const wrapper = createCommonCanvas(config);
-		expect(wrapper.find(Toolbar)).to.have.length(0);
+	it("should render one <Toolbar/> component when there is no toolbarConfig", () => {
+		const config = { enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config, canvasController);
+		expect(wrapper.find(Toolbar)).to.have.length(1);
 	});
 
 	it("should render one <NotificationPanel/> component", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
-		const config = { enableAutoLayout: "none", canvasController: canvasController };
-		const wrapper = createCommonCanvas(config, toolbarConfig, notificationConfig);
+		const config = { enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 		expect(wrapper.find(NotificationPanel)).to.have.length(1);
 	});
@@ -80,8 +81,8 @@ describe("CommonCanvas renders correctly", () => {
 	it("canvas controller isPaletteOpen() should return true when paletteInitialState is true", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
-		const config = { enableAutoLayout: "none", paletteInitialState: true, canvasController: canvasController };
-		createCommonCanvas(config, toolbarConfig, notificationConfig);
+		const config = { enableAutoLayout: "none", paletteInitialState: true };
+		createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig);
 
 		// The paletteInitialState config parameter is true
 		// therefore the palette should be open initially.
@@ -91,8 +92,8 @@ describe("CommonCanvas renders correctly", () => {
 	it("canvas controller isPaletteOpen() should return false when paletteInitialState is false", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
-		const config = { enableAutoLayout: "none", paletteInitialState: false, canvasController: canvasController };
-		createCommonCanvas(config, toolbarConfig, notificationConfig);
+		const config = { enableAutoLayout: "none", paletteInitialState: false };
+		createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig);
 
 		// The paletteInitialState config parameter is false
 		// therefore the palette should be closed initially.
@@ -103,8 +104,8 @@ describe("CommonCanvas renders correctly", () => {
 	it("canvas controller isPaletteOpen() should return appropriate boolean based on palette state", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
-		const config = { enableAutoLayout: "none", canvasController: canvasController };
-		createCommonCanvas(config, toolbarConfig, notificationConfig);
+		const config = { enableAutoLayout: "none" };
+		createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig);
 
 		// The paletteInitialState config parameter is not provided when CommonCanvas
 		// is created therefore the palette should be closed initially.
@@ -121,7 +122,7 @@ describe("CommonCanvas renders correctly", () => {
 
 });
 
-function createCommonCanvas(config, toolbarConfig, notificationConfig) {
+function createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig) {
 	canvasController.getObjectModel().setPipelineFlowPalette({});
 	const contextMenuHandler = sinon.spy();
 	const contextMenuActionHandler = sinon.spy();

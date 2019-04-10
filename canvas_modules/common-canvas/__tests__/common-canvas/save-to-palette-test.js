@@ -27,7 +27,7 @@ describe("Expand and Collapse Supernode Action", () => {
 
 	beforeEach(() => {
 		canvasController = new CanvasController();
-		const config = { enableAutoLayout: "none", canvasController: canvasController, enableInternalObjectModel: true };
+		const config = { enableAutoLayout: "none", enableInternalObjectModel: true };
 		createCommonCanvas(config, canvasController);
 	});
 

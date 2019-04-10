@@ -94,7 +94,6 @@ describe("DefaultMenu renders correctly", () => {
 		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
 		const config = {
 			enableAutoLayout: "none",
-			canvasController: canvasController,
 			enableInternalObjectModel: true
 		};
 		createCommonCanvas(config, canvasController);
@@ -258,7 +257,6 @@ describe("create supernode renders correctly", () => {
 		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
 		const config = {
 			enableAutoLayout: "none",
-			canvasController: canvasController,
 			enableInternalObjectModel: true,
 		};
 		const contextMenuConfig = {
@@ -275,7 +273,6 @@ describe("create supernode renders correctly", () => {
 		canvasController.getObjectModel().setPipelineFlow(supernodeFlow);
 		const config = {
 			enableAutoLayout: "none",
-			canvasController: canvasController,
 			enableInternalObjectModel: true,
 		};
 		const contextMenuConfig = {

@@ -374,7 +374,7 @@ describe("Expand and Collapse Supernode Action", () => {
 	beforeEach(() => {
 		canvasController = new CanvasController();
 		canvasController.getObjectModel().setPipelineFlow(supernodeCanvas);
-		const config = { enableAutoLayout: "none", canvasController: canvasController, enableInternalObjectModel: true };
+		const config = { enableNodeFormatType: "Vertical" };
 		createCommonCanvas(config, canvasController);
 
 		objectModel = canvasController.getObjectModel();
@@ -858,7 +858,7 @@ describe("Ensure no cross pipeline selection", () => {
 	beforeEach(() => {
 		canvasController = new CanvasController();
 		canvasController.getObjectModel().setPipelineFlow(supernodeCanvas);
-		const config = { enableAutoLayout: "none", canvasController: canvasController, enableInternalObjectModel: true };
+		const config = { enableNodeFormatType: "Vertical" };
 		createCommonCanvas(config, canvasController);
 	});
 
@@ -914,7 +914,7 @@ describe("Create Supernode Action", () => {
 	beforeEach(() => {
 		canvasController = new CanvasController();
 		canvasController.getObjectModel().setPipelineFlow(supernodeCanvas);
-		const config = { enableAutoLayout: "none", canvasController: canvasController, enableInternalObjectModel: true };
+		const config = { enableNodeFormatType: "Vertical" };
 
 		// TODO - Remove this call when we transition to V3 schemas permanently
 		canvasController.setReturnPipelineFlowDraftVersion(true);
@@ -954,7 +954,9 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
 
+		// console.log(JSON.stringify(test1ExpectedFlow, null, 2));
 		// console.log(JSON.stringify(pipelineFlow, null, 2));
+
 		expect(isEqual(JSON.stringify(test1ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -1343,7 +1345,7 @@ describe("Copy and Paste Supernode", () => {
 	beforeEach(() => {
 		canvasController = new CanvasController();
 		canvasController.getObjectModel().setPipelineFlow(supernodeCanvas);
-		const config = { enableAutoLayout: "none", canvasController: canvasController, enableInternalObjectModel: true };
+		const config = { enableNodeFormatType: "Vertical" };
 		createCommonCanvas(config, canvasController);
 
 		objectModel = canvasController.getObjectModel();
@@ -1709,6 +1711,7 @@ function compareNodePositions(expectedNodes, objectModel) {
 	expectedNodes.forEach((expectedNode) => {
 		const omNode = objectModel.getAPIPipeline().getNode(expectedNode.id);
 		// console.log("node " + expectedNode.label);
+
 		expect(isEqual(expectedNode.x_pos, omNode.x_pos)).to.be.true;
 		expect(isEqual(expectedNode.y_pos, omNode.y_pos)).to.be.true;
 	});

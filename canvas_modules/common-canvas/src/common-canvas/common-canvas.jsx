@@ -27,12 +27,23 @@ export default class CommonCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 
+		let paletteInitialState = this.props.config ? this.props.config.paletteInitialState : false;
+		if (!paletteInitialState) {
+			paletteInitialState = false; // Ensure any falsey value is set to false.
+		}
+
+		let toolbarConfig = this.props.toolbarConfig;
+
+		if (typeof toolbarConfig === "undefined") {
+			toolbarConfig = this.getDefaultToolbar();
+		}
+
 		this.state = {
-			isPaletteOpen: this.props.config.paletteInitialState || false,
+			isPaletteOpen: paletteInitialState,
 			isNotificationOpen: false,
 			showContextMenu: false,
 			contextMenuDef: {},
-			toolbarConfig: this.props.toolbarConfig,
+			toolbarConfig: toolbarConfig,
 			notificationConfig: this.props.notificationConfig,
 			contextMenuConfig: this.props.contextMenuConfig,
 			rightFlyoutContent: this.props.rightFlyoutContent,
@@ -157,8 +168,25 @@ export default class CommonCanvas extends React.Component {
 		evt.preventDefault();
 	}
 
+	// Returns the default toolbar which is shown if the user does not specify
+	// a toolbar.
+	getDefaultToolbar() {
+		return [
+			{ action: "palette", label: "Palette", enable: true },
+			{ divider: true },
+			{ action: "undo", label: "Undo", enable: true },
+			{ action: "redo", label: "Redo", enable: true },
+			{ action: "cut", label: "Cut", enable: true },
+			{ action: "copy", label: "Copy", enable: true },
+			{ action: "paste", label: "Paste", enable: true },
+			{ action: "addComment", label: "Add Comment", enable: true },
+			{ action: "delete", label: "Delete", enable: true }
+		];
+	}
+
 	setPaletteWidth() {
-		let paletteWidth = this.props.config.enableNarrowPalette || typeof this.props.config.enableNarrowPalette === "undefined" ? PALETTE.NARROW_WIDTH : PALETTE.CLOSED_WIDTH;
+		const config = this.canvasController.getCanvasConfig();
+		let paletteWidth = config.enableNarrowPalette || typeof config.enableNarrowPalette === "undefined" ? PALETTE.NARROW_WIDTH : PALETTE.CLOSED_WIDTH;
 		if (this.state.isPaletteOpen) {
 			paletteWidth = PALETTE.OPEN_WIDTH;
 		}
@@ -353,11 +381,13 @@ export default class CommonCanvas extends React.Component {
 				/>);
 			}
 
+			const config = this.canvasController.getCanvasConfig();
+
 			canvas = (
 				<DiagramCanvasD3
 					ref={this.diagramCanvasRef}
 					canvasInfo={canvasInfo}
-					config={this.props.config}
+					config={config}
 					canvasController={this.canvasController}
 					isCanvasEmpty={this.objectModel.isPrimaryPipelineEmpty()}
 				>
@@ -365,7 +395,7 @@ export default class CommonCanvas extends React.Component {
 				</DiagramCanvasD3>);
 
 			if (this.objectModel.getPaletteData()) {
-				if (this.props.config.enablePaletteLayout === "Modal") {
+				if (config.enablePaletteLayout === "Modal") {
 					palette = (<Palette
 						paletteJSON={this.objectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}
@@ -392,7 +422,7 @@ export default class CommonCanvas extends React.Component {
 				canvasController={this.canvasController}
 			/>);
 
-			if (this.props.toolbarConfig) {
+			if (this.state.toolbarConfig) {
 				this.configureToolbarButtonsState();
 				canvasToolbar = (<Toolbar
 					config={this.state.toolbarConfig}
@@ -446,7 +476,7 @@ export default class CommonCanvas extends React.Component {
 
 CommonCanvas.propTypes = {
 	canvasController: PropTypes.object.isRequired,
-	config: PropTypes.object.isRequired,
+	config: PropTypes.object,
 	toolbarConfig: PropTypes.array,
 	notificationConfig: PropTypes.object,
 	contextMenuConfig: PropTypes.object,

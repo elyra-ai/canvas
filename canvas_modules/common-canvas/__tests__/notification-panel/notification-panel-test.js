@@ -19,7 +19,7 @@ import isEqual from "lodash/isEqual";
 
 let canvasController = new CanvasController();
 
-const canvasConfig = { canvasController: canvasController, enableInternalObjectModel: true };
+const canvasConfig = { enableInternalObjectModel: true };
 const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 
 const contextMenuHandler = sinon.spy();

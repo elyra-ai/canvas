@@ -63,6 +63,8 @@ const labelChoices = {
 export default class CanvasController {
 
 	constructor() {
+		this.logger = new Logger("CanvasController");
+
 		this.defaultTipConfig = {
 			"palette": true,
 			"nodes": true,
@@ -70,14 +72,26 @@ export default class CanvasController {
 			"links": true
 		};
 
-		this.logger = new Logger("CanvasController");
-
 		this.canvasConfig = {
+			enableInteractionType: "Mouse",
 			enableConnectionType: "Ports",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Curve",
 			enableInternalObjectModel: true,
+			enableAutoLayout: "none",
 			enablePaletteLayout: "Flyout",
+			enableMoveNodesOnSupernodeResize: true,
+			enableDisplayFullLabelOnHover: false,
+			enableDropZoneOnExternalDrag: false,
+			enableSaveZoom: "None",
+			enableSnapToGridType: "None",
+			enableSnapToGridX: "20%",
+			enableSnapToGridY: "25%",
+			enableNarrowPalette: true,
+			paletteInitialState: false,
+			emptyCanvasContent: null,
+			dropZoneCanvasContent: null,
+			schemaValidation: false,
 			tipConfig: this.defaultTipConfig
 		};
 
@@ -119,6 +133,10 @@ export default class CanvasController {
 	setCanvasConfig(config) {
 		this.canvasConfig = Object.assign(this.canvasConfig, config);
 		this.objectModel.setSchemaValidation(this.canvasConfig.schemaValidation);
+	}
+
+	getCanvasConfig() {
+		return this.canvasConfig;
 	}
 
 	// TODO - Remove this call when we transition to V3 schemas permanently
@@ -1418,8 +1436,8 @@ export default class CanvasController {
 
 	contextMenuHandler(source) {
 		const defMenu = this.createDefaultMenu(source);
+		this.contextMenuSource = source;
 		if (typeof this.handlers.contextMenuHandler === "function") {
-			this.contextMenuSource = source;
 			const menuDef = this.handlers.contextMenuHandler(source, defMenu);
 			if (menuDef && menuDef.length > 0) {
 				this.openContextMenu(menuDef);

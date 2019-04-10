@@ -55,7 +55,7 @@ export default class CanvasD3Layout {
 		this.canvasDiv = this.initializeCanvasDiv(canvasDivSelector);
 
 		// Save the config
-		this.config = config;
+		this.config = this.cloneConfig(config);
 
 		// Initialize dimension and layout variables
 		this.initializeLayoutInfo(config);
@@ -99,7 +99,7 @@ export default class CanvasD3Layout {
 			// will be executed which will clone the canvasInfo.
 			this.canvasInfo = canvasInfo;
 			// Save the config
-			this.config = config;
+			this.config = this.cloneConfig(config);
 
 			// Both these methods will result in the canvas being refreshed through
 			// updates to the object model so there is no need to call displayCanvas
@@ -130,6 +130,12 @@ export default class CanvasD3Layout {
 
 			this.logger.logEndTimer("Set Canvas Info", true);
 		}
+	}
+
+	// Returns a copy of the config option. This is necessary so that comparisons
+	// with new config objects that are provided reveal differences.
+	cloneConfig(config) {
+		return Object.assign({}, config);
 	}
 
 	// Copies canvasInfo because we will need to update it (when moving
