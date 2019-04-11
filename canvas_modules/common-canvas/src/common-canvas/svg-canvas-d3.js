@@ -1063,8 +1063,14 @@ class CanvasRenderer {
 				if (this.isDisplayingCurrentPipeline()) {
 					this.canvasController.clearSelections();
 				}
-				this.canvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
+				// Ensure 'selecting' flag is off before calling click action callback.
 				this.selecting = false;
+				this.canvasController.clickActionHandler({
+					clickType: "SINGLE_CLICK",
+					objectType: "canvas",
+					selectedObjectIds:
+					this.objectModel.getSelectedObjectIds()
+				});
 			})
 			.on("dblclick.zoom", () => {
 				this.logger.log("Zoom - double click");
@@ -1904,13 +1910,14 @@ class CanvasRenderer {
 							this.objectModel.toggleSelection(d.id, isCmndCtrlPressed(), this.activePipeline.id);
 						}
 					}
+					// Ensure 'selecting' flag is off before calling click action callback.
+					this.selecting = false;
 					this.canvasController.clickActionHandler({
 						clickType: "SINGLE_CLICK",
 						objectType: "node",
 						id: d.id,
 						selectedObjectIds: this.objectModel.getSelectedObjectIds(),
 						pipelineId: this.activePipeline.id });
-					this.selecting = false;
 					this.logger.log("Node Group - finished mouse down");
 				})
 				.on("mousemove", (d) => {
@@ -3507,18 +3514,19 @@ class CanvasRenderer {
 							this.objectModel.toggleSelection(d.id, isCmndCtrlPressed(), this.activePipeline.id);
 						}
 					}
+					// Ensure 'selecting' flag is off before calling click action callback.
+					this.selecting = false;
 					// Even though the single click message below should be emitted
 					// from common canvas, if we uncomment this line it prevents the
 					// double click event going to the comment group object. This seems
 					// to be a timing issue since the same problem is not evident with the
 					// similar code for the Node group object.
-					this.canvasController.clickActionHandler({
-						clickType: "SINGLE_CLICK",
-						objectType: "comment",
-						id: d.id,
-						selectedObjectIds: this.objectModel.getSelectedObjectIds(),
-						pipelineId: this.activePipeline.id });
-					this.selecting = false;
+					// this.canvasController.clickActionHandler({
+					// 	clickType: "SINGLE_CLICK",
+					// 	objectType: "comment",
+					// 	id: d.id,
+					// 	selectedObjectIds: this.objectModel.getSelectedObjectIds(),
+					// 	pipelineId: this.activePipeline.id });
 					this.logger.log("Comment Group - finished mouse down");
 				})
 				.on("click", (d) => {
