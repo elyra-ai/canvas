@@ -66,7 +66,7 @@ export default class SidePanelModal extends React.Component {
 	}
 
 	onDropdownSelect(evt) {
-		this.props.setPropertiesDropdownSelect(
+		this.props.propertiesConfig.setPropertiesDropdownSelect(
 			evt.target.selectedOptions[0].value, evt.target.selectedOptions[0].parentElement.label);
 	}
 
@@ -86,14 +86,14 @@ export default class SidePanelModal extends React.Component {
 
 	getSelectedFile() {
 		const that = this;
-		this.props.log("Submit common properties file", this.props.selectedPropertiesDropdownFile);
-		if (this.props.selectedPropertiesFileCategory === PARAMETER_DEFS) {
-			FormsService.getFileContent(PARAMETER_DEFS, this.props.selectedPropertiesDropdownFile)
+		this.props.log("Submit common properties file", this.props.propertiesConfig.selectedPropertiesDropdownFile);
+		if (this.props.propertiesConfig.selectedPropertiesFileCategory === PARAMETER_DEFS) {
+			FormsService.getFileContent(PARAMETER_DEFS, this.props.propertiesConfig.selectedPropertiesDropdownFile)
 				.then(function(res) {
 					that.props.setPropertiesJSON(res);
 				});
 		} else {
-			FormsService.getFileContent(FORMS, this.props.selectedPropertiesDropdownFile)
+			FormsService.getFileContent(FORMS, this.props.propertiesConfig.selectedPropertiesDropdownFile)
 				.then(function(res) {
 					that.props.setPropertiesJSON(res);
 				});
@@ -108,13 +108,13 @@ export default class SidePanelModal extends React.Component {
 			fileReader.onload = function(evt) {
 				var fileContent = fileReader.result;
 				var content = JSON.parse(fileContent);
-				this.props.setPropertiesJSON(content);
+				this.props.propertiesConfig.setPropertiesJSON(content);
 			}.bind(this);
 			fileReader.readAsText(this.state.commonProperties);
 		} else {
 			this.getSelectedFile();
 		}
-		this.props.closeSidePanelModal();
+		this.props.propertiesConfig.closeSidePanelModal();
 	}
 
 	isReadyToSubmitProperties() {
@@ -125,8 +125,8 @@ export default class SidePanelModal extends React.Component {
 	}
 
 	isReadyToSubmitPropertiesDropdownData() {
-		if (this.props.selectedPropertiesDropdownFile !== "" &&
-				this.props.selectedPropertiesDropdownFile !== CHOOSE_FROM_LOCATION) {
+		if (this.props.propertiesConfig.selectedPropertiesDropdownFile !== "" &&
+				this.props.propertiesConfig.selectedPropertiesDropdownFile !== CHOOSE_FROM_LOCATION) {
 			return true;
 		}
 		return false;
@@ -134,26 +134,26 @@ export default class SidePanelModal extends React.Component {
 
 	openPropertiesEditorDialog(changeEvent) {
 		if (changeEvent.target.checked) {
-			this.props.openPropertiesEditorDialog();
+			this.props.propertiesConfig.openPropertiesEditorDialog();
 		} else {
-			this.props.closePropertiesEditorDialog();
+			this.props.propertiesConfig.closePropertiesEditorDialog();
 		}
 	}
 
 	usePropertiesContainerType(value) {
-		this.props.usePropertiesContainerType(value);
+		this.props.propertiesConfig.usePropertiesContainerType(value);
 	}
 
 	useApplyOnBlur(checked) {
-		this.props.useApplyOnBlur(checked);
+		this.props.propertiesConfig.useApplyOnBlur(checked);
 	}
 
 	useExpressionBuilder(checked) {
-		this.props.useExpressionBuilder(checked);
+		this.props.propertiesConfig.useExpressionBuilder(checked);
 	}
 
 	useExpressionValidate(checked) {
-		this.props.useExpressionValidate(checked);
+		this.props.propertiesConfig.useExpressionValidate(checked);
 	}
 
 	dropdownOptions() {
@@ -182,13 +182,13 @@ export default class SidePanelModal extends React.Component {
 	}
 
 	useDisplayAdditionalComponents(checked) {
-		this.props.useDisplayAdditionalComponents(checked);
+		this.props.propertiesConfig.useDisplayAdditionalComponents(checked);
 	}
 
 	render() {
 		const space = (<div className="harness-sidepanel-spacer" />);
 		let fileChooser = <br />;
-		if (this.props.fileChooserVisible) {
+		if (this.props.propertiesConfig.fileChooserVisible) {
 			fileChooser = (<div className="harness-sidepanel-file-uploader">
 				<FileUploader
 					small={"true"}
@@ -212,7 +212,7 @@ export default class SidePanelModal extends React.Component {
 					iconDescription = "list of form and paramdef file options"
 					labelText="Properties"
 					onChange={this.onDropdownSelect.bind(this)}
-					value={this.props.selectedPropertiesDropdownFile}
+					value={this.props.propertiesConfig.selectedPropertiesDropdownFile}
 				>
 					{this.dropdownOptions()}
 				</Select>
@@ -234,7 +234,7 @@ export default class SidePanelModal extends React.Component {
 				className="harness-sidepanel-radio-group"
 				name="properties-container_type_radio"
 				onChange={this.usePropertiesContainerType}
-				valueSelected={this.props.propertiesContainerType}
+				valueSelected={this.props.propertiesConfig.propertiesContainerType}
 			>
 				<RadioButton
 					value={FLYOUT}
@@ -252,7 +252,7 @@ export default class SidePanelModal extends React.Component {
 				<div className="harness-sidepanel-headers">Apply changes on blur</div>
 				<Toggle
 					id="harness-sidepanel-applyOnBlur-toggle"
-					toggled={this.props.applyOnBlur}
+					toggled={this.props.propertiesConfig.applyOnBlur}
 					onToggle={this.useApplyOnBlur}
 				/>
 			</div>);
@@ -262,7 +262,7 @@ export default class SidePanelModal extends React.Component {
 				<div className="harness-sidepanel-headers">Show Expression Builder</div>
 				<Toggle
 					id="harness-sidepanel-expressionBuilder-toggle"
-					toggled={this.props.expressionBuilder}
+					toggled={this.props.propertiesConfig.expressionBuilder}
 					onToggle={this.useExpressionBuilder}
 				/>
 			</div>);
@@ -272,7 +272,7 @@ export default class SidePanelModal extends React.Component {
 				<div className="harness-sidepanel-headers">Show Expression Validate Link</div>
 				<Toggle
 					id="sidepanel-expressionValidate-toggle"
-					toggled={this.props.expressionValidate}
+					toggled={this.props.propertiesConfig.expressionValidate}
 					onToggle={this.useExpressionValidate}
 				/>
 			</div>);
@@ -282,7 +282,7 @@ export default class SidePanelModal extends React.Component {
 				<div className="harness-sidepanel-headers">Display additional components</div>
 				<Toggle
 					id="harness-sidepanel-additionalComponents-toggle"
-					toggled={ this.props.displayAdditionalComponents }
+					toggled={ this.props.propertiesConfig.displayAdditionalComponents }
 					onToggle={ this.useDisplayAdditionalComponents }
 				/>
 			</div>
@@ -309,23 +309,25 @@ export default class SidePanelModal extends React.Component {
 
 SidePanelModal.propTypes = {
 	log: PropTypes.func,
-	closePropertiesEditorDialog: PropTypes.func,
-	openPropertiesEditorDialog: PropTypes.func,
-	setPropertiesJSON: PropTypes.func,
-	usePropertiesContainerType: PropTypes.func,
-	propertiesContainerType: PropTypes.string,
-	showPropertiesDialog: PropTypes.bool,
-	closeSidePanelModal: PropTypes.func,
-	applyOnBlur: PropTypes.bool,
-	useApplyOnBlur: PropTypes.func,
-	expressionBuilder: PropTypes.bool,
-	useExpressionBuilder: PropTypes.func,
-	expressionValidate: PropTypes.bool,
-	useExpressionValidate: PropTypes.func,
-	displayAdditionalComponents: PropTypes.bool,
-	useDisplayAdditionalComponents: PropTypes.func,
-	setPropertiesDropdownSelect: PropTypes.func,
-	selectedPropertiesDropdownFile: PropTypes.string,
-	selectedPropertiesFileCategory: PropTypes.string,
-	fileChooserVisible: PropTypes.bool
+	propertiesConfig: PropTypes.shape({
+		closePropertiesEditorDialog: PropTypes.func,
+		openPropertiesEditorDialog: PropTypes.func,
+		setPropertiesJSON: PropTypes.func,
+		showPropertiesDialog: PropTypes.bool,
+		usePropertiesContainerType: PropTypes.func,
+		propertiesContainerType: PropTypes.string,
+		closeSidePanelModal: PropTypes.func,
+		applyOnBlur: PropTypes.bool,
+		useApplyOnBlur: PropTypes.func,
+		expressionBuilder: PropTypes.bool,
+		useExpressionBuilder: PropTypes.func,
+		expressionValidate: PropTypes.bool,
+		useExpressionValidate: PropTypes.func,
+		displayAdditionalComponents: PropTypes.bool,
+		useDisplayAdditionalComponents: PropTypes.func,
+		selectedPropertiesDropdownFile: PropTypes.string,
+		selectedPropertiesFileCategory: PropTypes.string,
+		fileChooserVisible: PropTypes.bool,
+		setPropertiesDropdownSelect: PropTypes.func
+	})
 };
