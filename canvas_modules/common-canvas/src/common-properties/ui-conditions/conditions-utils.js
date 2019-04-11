@@ -579,6 +579,7 @@ function _validateInput(propertyId, controller, control) {
 						text: output.text
 					};
 				}
+				// msgPropertyId is where the message should be set
 				let msgPropertyId = cloneDeep(propertyId);
 				if (validation.definition.validation &&
 					validation.definition.validation.fail_message &&
@@ -593,6 +594,10 @@ function _validateInput(propertyId, controller, control) {
 				if (validation.definition.validation &&
 					validation.definition.validation.id) {
 					errorMessage.validation_id = validation.definition.validation.id;
+				}
+				// if error message has not been set for this msgPropertyId/focus_parameter_ref, clear errorSet
+				if (!controller.getErrorMessage(msgPropertyId, true, true)) {
+					errorSet = false;
 				}
 				if (isError && !errorSet) {
 					controller.updateErrorMessage(msgPropertyId, errorMessage);

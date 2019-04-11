@@ -1,0 +1,553 @@
+{
+  "titleDefinition": {
+    "title": "Readonly Fields",
+    "editable": false
+  },
+  "current_parameters": {
+    "readonly_num": 10,
+    "readonly_text": "The more I study, the more insatiable do I feel my genius for it to be. 'Ada Lovelace'",
+    "readonly_null": null,
+    "readonly_error": "Hopper",
+    "readonly_warning": "Turing",
+    "hide": true,
+    "readonly_hidden": "Babbage",
+    "disable": true,
+    "readonly_disabled": "Shannon",
+    "readonly_table": [
+      [
+        "Hopper",
+        "Turing",
+        "Shannon",
+        "Babbage"
+      ]
+    ],
+    "readonly_table_cond": [
+      [
+        true,
+        "Hopper",
+        "Turing",
+        "Shannon",
+        "Babbage"
+      ],
+      [
+        false,
+        "Armstrong",
+        "Lemond",
+        "Merckx",
+        "Indurain"
+      ]
+    ]
+  },
+  "parameters": [
+    {
+      "id": "readonly_num",
+      "type": "integer"
+    },
+    {
+      "id": "readonly_text",
+      "type": "string"
+    },
+    {
+      "id": "readonly_default",
+      "type": "string",
+      "default": "Shockley"
+    },
+    {
+      "id": "readonly_undefined",
+      "type": "string"
+    },
+    {
+      "id": "readonly_null",
+      "type": "string"
+    },
+    {
+      "id": "readonly_error",
+      "type": "string"
+    },
+    {
+      "id": "readonly_warning",
+      "type": "string"
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "readonly_hidden",
+      "type": "string"
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "readonly_disabled",
+      "type": "string"
+    },
+    {
+      "id": "readonly_table",
+      "type": "array[readonly]"
+    },
+    {
+      "id": "readonly_table_cond",
+      "type": "array[readonly_table_cond]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "readonly",
+      "parameters": [
+        {
+          "id": "readonly",
+          "type": "string"
+        },
+        {
+          "id": "readonly2",
+          "type": "string"
+        },
+        {
+          "id": "readonly_on_panel",
+          "type": "string"
+        },
+        {
+          "id": "readonly_sub_panel",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "id": "readonly_table_cond",
+      "parameters": [
+        {
+          "id": "checkbox",
+          "type": "boolean",
+          "enum": [
+            "Single Checkbox Label"
+          ],
+          "default": true
+        },
+        {
+          "id": "readonly",
+          "type": "string"
+        },
+        {
+          "id": "readonly2",
+          "type": "string"
+        },
+        {
+          "id": "readonly_on_panel",
+          "type": "string"
+        },
+        {
+          "id": "readonly_sub_panel",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "readonly",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Readonly Fields"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "readonly_num",
+        "label": {
+          "default": "Integer"
+        },
+        "description": {
+          "default": "readonly field with parameter value set to '10'"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "readonly_text",
+        "label": {
+          "default": "String"
+        },
+        "description": {
+          "default": "readonly field with parameter value set to 'The more I study,...'"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "readonly_default",
+        "label": {
+          "default": "Default"
+        },
+        "description": {
+          "default": "readonly field with parameter value set to 'Shockley' by default"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "readonly_null",
+        "label": {
+          "default": "Null"
+        },
+        "description": {
+          "default": "readonly field with parameter value set to 'null'"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "readonly_undefined",
+        "label": {
+          "default": "Undefined"
+        },
+        "description": {
+          "default": "readonly field with parameter value set to 'undefined'"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "readonly_error",
+        "label": {
+          "default": "Error"
+        },
+        "description": {
+          "default": "readonly field with error when set to 'Hopper'"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "readonly_warning",
+        "label": {
+          "default": "Warning"
+        },
+        "description": {
+          "default": "readonly field with warning when set to 'Turing'"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'Readonly Hidden'"
+        }
+      },
+      {
+        "parameter_ref": "readonly_hidden",
+        "label": {
+          "default": "Readonly Hidden"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'Readonly Disabled'"
+        }
+      },
+      {
+        "parameter_ref": "readonly_disabled",
+        "label": {
+          "default": "Readonly Disabled"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "readonly_table",
+        "label": {
+          "default": "Readonly control in a table"
+        }
+      },
+      {
+        "parameter_ref": "readonly_table_cond",
+        "label": {
+          "default": "Readonly conditions in a table"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "readonly",
+        "parameters": [
+          {
+            "parameter_ref": "readonly",
+            "width": 10,
+            "label": {
+              "default": "Standard"
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "readonly2",
+            "width": 10,
+            "label": {
+              "default": "Additional"
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "readonly_on_panel",
+            "width": 10,
+            "label": {
+              "default": "on_panel"
+            },
+            "description": {
+              "default": "readonly with `edit_style=on_panel`"
+            },
+            "edit_style": "on_panel",
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "readonly_sub_panel",
+            "width": 10,
+            "label": {
+              "default": "sub_panel"
+            },
+            "description": {
+              "default": "readonly with `edit_style=sub_panel`"
+            },
+            "edit_style": "subpanel",
+            "control": "readonly"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "readonly_table_cond",
+        "parameters": [
+          {
+            "parameter_ref": "checkbox",
+            "width": 8,
+            "label": {
+              "default": "checkbox"
+            },
+            "description": {
+              "default": ""
+            },
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "readonly",
+            "width": 10,
+            "label": {
+              "default": "Standard"
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "readonly2",
+            "width": 10,
+            "label": {
+              "default": "Additional"
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "readonly_on_panel",
+            "width": 10,
+            "label": {
+              "default": "on_panel"
+            },
+            "description": {
+              "default": "readonly with `edit_style=on_panel`"
+            },
+            "edit_style": "on_panel",
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "readonly_sub_panel",
+            "width": 10,
+            "label": {
+              "default": "sub_panel"
+            },
+            "description": {
+              "default": "readonly with `edit_style=sub_panel`"
+            },
+            "edit_style": "subpanel",
+            "control": "readonly"
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "readonly-field-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "readonly_num",
+          "readonly_text",
+          "readonly_default",
+          "readonly_null",
+          "readonly_undefined"
+        ]
+      },
+      {
+        "id": "readonly-field-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "readonly_error",
+          "readonly_warning",
+          "hide",
+          "readonly_hidden",
+          "disable",
+          "readonly_disabled"
+        ]
+      },
+      {
+        "id": "readonly-table-panels",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "readonly-table-summary",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Edit readonly table"
+            },
+            "group_info": [
+              {
+                "id": "readonly-table-summary-ctrls",
+                "parameter_refs": [
+                  "readonly_table",
+                  "readonly_table_cond"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "help": {
+      "data": {
+        "url": "randomUrl"
+      }
+    }
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "readonly_error",
+          "message": {
+            "default": "Error when not 'Hopper'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "readonly_error",
+            "op": "notEquals",
+            "value": "Hopper"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "readonly_warning",
+          "message": {
+            "default": "Warning when not 'Turing'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "readonly_warning",
+            "op": "notEquals",
+            "value": "Turing"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "readonly_table_cond[2]",
+          "message": {
+            "default": "Readonly in a table warning testing"
+          }
+        },
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "readonly_table_cond[0]",
+                "op": "equals",
+                "value": true
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "readonly_table_cond[2]",
+                "op": "notEquals",
+                "value": "Turing"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "readonly_table_cond[1]",
+          "message": {
+            "default": "Readonly in a table error testing"
+          }
+        },
+        "evaluate": {
+					"and": [
+            {
+              "condition": {
+                "parameter_ref": "readonly_table_cond[0]",
+                "op": "equals",
+                "value": true
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "readonly_table_cond[1]",
+                "op": "notEquals",
+                "value": "Turing"
+              }
+            }
+          ]
+				}
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "readonly_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "readonly_disabled"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ]
+}
