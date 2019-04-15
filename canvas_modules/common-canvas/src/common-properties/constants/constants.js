@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -181,6 +181,7 @@ _defineConstant("ELLIPSIS_STRING", "...");
 _defineConstant("DISPLAY_CHARS_DEFAULT", 64);
 
 _defineConstant("TOOL_TIP_DELAY", 1000);
+_defineConstant("TOOL_TIP_DELAY_ICON", 500);
 
 _defineConstant("STATES", {
 	VISIBLE: "visible",

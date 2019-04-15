@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -452,7 +452,7 @@ function getSummaryFromName(summaryName) {
 }
 
 function getControlContainerFromName(name) {
-	const containers = browser.$$(".properties-tooltips-container");
+	const containers = browser.$$(".properties-label-container");
 	let container = null;
 	for (let idx = 0; idx < containers.length; idx++) {
 		if (containers[idx].$(".properties-control-label").getText() === name) {

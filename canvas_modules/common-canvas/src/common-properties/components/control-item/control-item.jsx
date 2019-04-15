@@ -11,11 +11,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import { STATES, TOOL_TIP_DELAY } from "./../../constants/constants.js";
+import { STATES, TOOL_TIP_DELAY_ICON } from "./../../constants/constants.js";
 import IconButton from "./../icon-button";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import isEmpty from "lodash/isEmpty";
 import uuid4 from "uuid/v4";
+import Icon from "carbon-components-react/lib/components/Icon";
 
 import ActionFactory from "./../../actions/action-factory.js";
 
@@ -23,6 +24,7 @@ class ControlItem extends React.Component {
 	constructor(props) {
 		super(props);
 		this.actionFactory = new ActionFactory(this.props.controller);
+		this.uuid = uuid4();
 	}
 
 	render() {
@@ -37,16 +39,24 @@ class ControlItem extends React.Component {
 			that.props.controller.updatePropertyValue(that.props.propertyId, newValue);
 		}
 
-		let label = null;
+		let label;
+		let description;
 		if (this.props.control.label && this.props.control.labelVisible !== false) {
-			let description;
 			let tooltip;
-			if (this.props.control.description) {
+			if (this.props.control.description && !isEmpty(this.props.control.description.text)) {
 				if (this.props.control.description.placement === "on_panel") {
 					description = <div className="properties-control-description">{this.props.control.description.text}</div>;
 				// only show tooltip when control enabled and visible
 				} else {
-					tooltip = this.props.control.description.text; // default to tooltip
+					tooltip = (<Tooltip
+						id={`${this.uuid}-tooltip-label-${this.props.control.name}`}
+						tip={this.props.control.description.text}
+						direction="top"
+						delay={TOOL_TIP_DELAY_ICON}
+						disable={hidden || disabled}
+					>
+						<Icon className={"info"} description="" name={"info--glyph"} />
+					</Tooltip>);
 				}
 			}
 			let requiredIndicator;
@@ -62,31 +72,12 @@ class ControlItem extends React.Component {
 					disabled={disabled}
 				/>);
 			}
-			const tooltipId = uuid4() + "-tooltip-label-" + this.props.control.name;
-			const tipContent = (
-				<div className="properties-tooltips">
-					{tooltip}
-				</div>
-			);
 			label = (
-				<div className="properties-tooltips-container">
-					<Tooltip
-						id={tooltipId}
-						tip={tipContent}
-						direction="right"
-						delay={TOOL_TIP_DELAY}
-						className="properties-tooltips"
-						disable={isEmpty(tooltip) || hidden || disabled}
-					>
-						<div>
-							<div className="properties-label-container">
-								<label className="properties-control-label">{this.props.control.label.text}</label>
-								{requiredIndicator}
-								{numberGenerator}
-							</div>
-							{description}
-						</div>
-					</Tooltip>
+				<div className="properties-label-container">
+					<label className="properties-control-label">{this.props.control.label.text}</label>
+					{requiredIndicator}
+					{numberGenerator}
+					{tooltip}
 				</div>);
 		}
 
@@ -98,6 +89,7 @@ class ControlItem extends React.Component {
 				className={className} disabled={disabled}
 			>
 				{label}
+				{description}
 				{action}
 				{this.props.controlObj}
 			</div>

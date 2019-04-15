@@ -38,4 +38,4 @@ Feature: structurelisteditorControl
 		Given I have uploaded JSON for common-properties "selectcolumns_paramDef.json"
 		Then I open the "TABLE" category
 		Then I open the "Configure Fields in Sub-panel" summary link in the "TABLE" category
-		Then I verify the table "structurelist_sub_panel" is of height "581px"
+		Then I verify the table "structurelist_sub_panel" is of height "580px"
