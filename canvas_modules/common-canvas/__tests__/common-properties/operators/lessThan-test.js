@@ -50,10 +50,10 @@ describe("validating lessThan operator works correctly", () => {
 	it("Test lessThan behaves as expected comparing paramInfo and value", () => {
 		// type undefined paramInfo
 		expect(lessThan(wrap(undefinedPlaceholder), undefinedPlaceholder, 1, controller)).to.equal(false);
-		expect(lessThan(wrap(undefinedPlaceholder), undefinedPlaceholder, "null", controller)).to.equal(true);
+		expect(lessThan(wrap(undefinedPlaceholder), undefinedPlaceholder, null, controller)).to.equal(true);
 		// type number paramInfo
 		expect(lessThan(wrap(1), undefinedPlaceholder, 2, controller)).to.equal(true);
-		expect(lessThan(wrap(1), undefinedPlaceholder, "null", controller)).to.equal(true);
+		expect(lessThan(wrap(1), undefinedPlaceholder, null, controller)).to.equal(true);
 	});
 
 });

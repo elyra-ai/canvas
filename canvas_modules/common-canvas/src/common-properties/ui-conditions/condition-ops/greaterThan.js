@@ -23,7 +23,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			}
 			return paramInfo.value > param2Info.value;
 		} else if (typeof value !== "undefined") {
-			if (value === "null") {
+			if (value === null) {
 				return true;
 			}
 			return paramInfo.value > value;
