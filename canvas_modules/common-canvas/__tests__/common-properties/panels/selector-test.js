@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -9,7 +9,7 @@
 
 import propertyUtils from "./../../_utils_/property-utils";
 import { expect } from "chai";
-import PANEL_SELECTOR_PARAM_DEF from "./../../test_resources/paramDefs/panelSelector.json";
+import PANEL_SELECTOR_PARAM_DEF from "./../../test_resources/paramDefs/panelSelector_paramDef.json";
 
 describe("'panel selector insert' renders correctly", () => {
 	let wrapper;
