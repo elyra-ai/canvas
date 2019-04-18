@@ -1,23 +1,24 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint max-depth: ["error", 5] */
+/* eslint complexity: ["error", 25] */
+/* eslint max-depth: ["error", 6] */
 
 import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { Table, Thead, Th, Tr, Td } from "reactable";
 import Search from "carbon-components-react/lib/components/Search";
-
+import Checkbox from "carbon-components-react/lib/components/Checkbox";
 import Icon from "./../../../icons/icon.jsx";
 import PropertyUtils from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES } from "./../../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES, ROW_CHECKBOX_WIDTH } from "./../../constants/constants";
 import isEmpty from "lodash/isEmpty";
 import ObserveSize from "react-observe-size";
 import classNames from "classnames";
@@ -53,6 +54,7 @@ export default class FlexibleTable extends React.Component {
 		this.onSort = this.onSort.bind(this);
 		this._updateTableWidth = this._updateTableWidth.bind(this);
 		this._adjustTableHeight = this._adjustTableHeight.bind(this);
+		this.handleCheckedAllRows = this.handleCheckedAllRows.bind(this);
 	}
 
 	componentDidMount() {
@@ -68,6 +70,9 @@ export default class FlexibleTable extends React.Component {
 			prevProps.noAutoSize !== this.props.noAutoSize) {
 			this._setHeaderElement();
 			this._adjustTableHeight();
+		}
+		if (prevProps.selectedRows !== this.props.selectedRows) {
+			this.checkedAllRows = false;
 		}
 		this.tableNode = ReactDOM.findDOMNode(this.refs.table);
 	}
@@ -95,6 +100,9 @@ export default class FlexibleTable extends React.Component {
 	*/
 	calculateColumnWidths(columns, parentTableWidth) {
 		let tableWidth = parentTableWidth - 15; // subtract 15 for the left padding scss $flexible-table-first-column-left-padding
+		if (this.props.rowSelection !== "single") {
+			tableWidth -= 40;
+		}
 		let remainingColumns = columns.length; // keep track of how many columns to calculate width for
 		let maxWeight = 0;
 
@@ -109,7 +117,6 @@ export default class FlexibleTable extends React.Component {
 				}
 			}
 		}
-
 		const widths = [];
 		const defaultWidth = Math.floor(tableWidth / remainingColumns); // use default width for columns without a weight
 		const weightedWidths = [];
@@ -147,9 +154,14 @@ export default class FlexibleTable extends React.Component {
 		}
 
 		// if any columns had decimals floored, allocate additional space to the first column
-		if (sumColumnWidth < parentTableWidth - 1) {
+		let compare = parentTableWidth;
+		if (this.props.rowSelection !== "single") {
+			compare -= 40;
+		}
+
+		if (sumColumnWidth < compare) {
 			const firstColWith = parseInt(widths[0], 10);
-			widths[0] = firstColWith + parentTableWidth - sumColumnWidth - 1 + "px";
+			widths[0] = firstColWith + compare - sumColumnWidth + "px";
 		}
 
 		return widths;
@@ -264,6 +276,37 @@ export default class FlexibleTable extends React.Component {
 		}
 	}
 
+	handleCheckedAllRows(checked) {
+		let selectAll = [];
+		const controlValue = this.props.data;
+		if (checked) {
+			selectAll = Array.from(this.props.selectedRows);
+			for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+				selectAll.push(rowIndex);
+			}
+		}
+		selectAll = Array.from(new Set(selectAll));
+		this.props.updateRowSelections(selectAll);
+		this.checkedAllRows = checked;
+	}
+
+	handleCheckedRow(rowIndex, checked) {
+		let current = this.props.selectedRows ? this.props.selectedRows : [];
+		if (checked) {
+			current = current.concat(rowIndex);
+			if (current.length === this.props.data.length) {
+				this.checkedAllRows = true;
+			}
+		} else if (current) {
+			current = current.filter(function(element) {
+				return element !== rowIndex;
+			});
+			this.checkedAllRows = false;
+		}
+		this.props.updateRowSelections(current);
+	}
+
+
 	/**
 	* Generate the table header from this.props.columns
 	* this.props.columns: array of objects
@@ -280,6 +323,25 @@ export default class FlexibleTable extends React.Component {
 	generateTableHeaderRow(columnWidths) {
 		const headers = [];
 		let searchLabel = "";
+		let checked = false;
+		const selectedRows = this.props.selectedRows ? this.props.selectedRows : [];
+		if (this.checkedAllRows || selectedRows.length === this.props.data.length) {
+			checked = true;
+		}
+		if (this.props.rowSelection !== "single") {
+			if (this.props.columns.length > 0) {
+				const checkboxColumnStyle = { "minWidth": ROW_CHECKBOX_WIDTH, "width": ROW_CHECKBOX_WIDTH };
+				const checkboxLabel = (
+					<Checkbox
+						id= {uuid4() + "all-checkbox"}
+						onChange={this.handleCheckedAllRows}
+						hideLabel
+						checked={checked}
+						labelText={""}
+					/>);
+				headers.push(<Th key={"properties-ft-headers-all-checkbox"} column={"ft-checkbox"} style={checkboxColumnStyle} > {checkboxLabel} </Th>);
+			}
+		}
 		for (var j = 0; j < this.props.columns.length; j++) {
 			const columnDef = this.props.columns[j];
 			const columnStyle = { "minWidth": columnWidths[j], "width": columnWidths[j] };
@@ -392,12 +454,75 @@ export default class FlexibleTable extends React.Component {
 	*/
 	generateTableRows(columnWidths, tableWidth) {
 		const tableRows = [];
+		const selectedRows = this.props.selectedRows ? this.props.selectedRows : [];
 		for (let ridx = 0; ridx < this.props.data.length; ridx++) {
 			const row = this.props.data[ridx];
 			const tableRowColumns = [];
 			const onClickCallback = row.onClickCallback ? { onClick: row.onClickCallback } : null;
 			const onDblClickCallback = row.onDblClickCallback ? { onDoubleClick: row.onDblClickCallback } : null;
-			const rowClassName = row.className ? row.className : "";
+			let rowClassName = "table-row ";
+			if (row.disabled) {
+				rowClassName += "disabled ";
+			}
+			if (row.className) {
+				rowClassName += row.className;
+			}
+			if (this.props.rowSelection === "single") { // If row is single edit, no checkbox
+				if (selectedRows.indexOf(ridx) >= 0) {
+					rowClassName += " table-selected-single-row";
+				} else {
+					rowClassName += " table-single-row";
+				}
+			} else if (this.props.summaryTable) { // If row is summary row for MSE, must account for empty checkbox space on left.
+				const checkboxColWidth = { "minWidth": ROW_CHECKBOX_WIDTH, "width": ROW_CHECKBOX_WIDTH };
+				rowClassName += " table-summary-row";
+				const content = "";
+				tableRowColumns.push(<Td
+					key={this.props.scrollKey + "-row-" + ridx + "checkbox"}
+					style={checkboxColWidth}
+					column="ft-checkbox"
+				>
+					{content}
+				</Td>
+				);
+			} else { // else if row for multi selection, add checkbox
+				if (selectedRows.indexOf(ridx) >= 0 && !this.props.summaryTable) {
+					rowClassName += " table-selected-row";
+				}
+				let checked = false;
+				if (this.checkedAllRows) {
+					checked = true;
+				} else if (selectedRows) {
+					for (let j = 0; j < selectedRows.length; j++) {
+						const key = selectedRows[j];
+						if (key === ridx) {
+							checked = true;
+							break;
+						}
+					}
+				}
+				const checkboxColWidth = { "minWidth": ROW_CHECKBOX_WIDTH, "width": ROW_CHECKBOX_WIDTH };
+				const checkboxContent =
+					(
+						<div className="row-checkbox">
+							<Checkbox id={uuid4() + "select-row"}
+								checked = {checked}
+								onChange={this.handleCheckedRow.bind(this, ridx)}
+								disabled={row.disabled}
+								hideLabel
+								labelText={""}
+							/>
+						</div>
+					);
+				tableRowColumns.push(<Td
+					key={this.props.scrollKey + "-row-" + ridx + "checkbox"}
+					column={"ft-checkbox"}
+					style={checkboxColWidth}
+					className={""}
+				>
+					{checkboxContent}
+				</Td>);
+			}
 			if (row.columns) {
 				for (let cidx = 0; cidx < row.columns.length; cidx++) {
 					const column = row.columns[cidx];
@@ -409,6 +534,7 @@ export default class FlexibleTable extends React.Component {
 						data-label={column.column}
 						style={colWidth}
 						className={column.className ? column.className : ""}
+						value={column.fieldName}
 						{...value}
 					>
 						{column.content}
@@ -426,7 +552,6 @@ export default class FlexibleTable extends React.Component {
 		}
 		return tableRows;
 	}
-
 	render() {
 		const hideTableHeader = this.props.showHeader ? {} : { "hideTableHeader": true };
 
@@ -551,5 +676,9 @@ FlexibleTable.propTypes = {
 	rows: PropTypes.number,
 	noAutoSize: PropTypes.bool,
 	tableState: PropTypes.string,
-	messageInfo: PropTypes.object
+	messageInfo: PropTypes.object,
+	updateRowSelections: PropTypes.func,
+	selectedRows: PropTypes.array,
+	rowSelection: PropTypes.string,
+	summaryTable: PropTypes.bool
 };

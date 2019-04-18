@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -69,8 +69,8 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 // expectedFields is optional
 // fieldsToSelect is an array of field names or objects with name and schema. ex: { "name": "age", "schema": "schema1" }
 function fieldPicker(fieldpickerWrapper, fieldsToSelect, expectedFields) {
+	const rows = fieldpickerWrapper.find("tr.properties-fp-data-rows");
 	if (expectedFields) {
-		const rows = fieldpickerWrapper.find("tr.properties-fp-data-rows");
 		expect(rows).to.have.length(expectedFields.length);
 		for (let i = 0; i < expectedFields.length; ++i) {
 			if (typeof expectedFields[i] === "object") {
@@ -90,20 +90,44 @@ function fieldPicker(fieldpickerWrapper, fieldsToSelect, expectedFields) {
 			}
 		}
 	}
-
 	for (const field of fieldsToSelect) {
-		const checkbox = fieldpickerWrapper.find(`input[data-name="${field}"]`);
-		expect(checkbox).to.have.length(1);
-		checkbox.getDOMNode().checked = true;
-		checkbox.simulate("change");
+		let schemaName = null;
+		let fieldName = null;
+		if (field.indexOf(".") !== -1) { // If field to select with name and schema
+			schemaName = field.split(".")[0];
+			fieldName = field.split(".")[1];
+		} else {
+			fieldName = field;
+		}
+		for (let i = 0; i < rows.length; i++) {
+			const currField = rows.at(i).find("td[data-label='fieldName']")
+				.text();
+			let currSchema = null;
+			if (schemaName) {
+				currSchema = rows.at(i).find("td[data-label='schemaName']")
+					.text();
+			}
+			if (currField === fieldName && currSchema === schemaName) {
+				const checkbox = fieldpickerWrapper.find("tr.properties-fp-data-rows")
+					.at(i)
+					.find("input");
+				expect(checkbox).to.have.length(1);
+				checkbox.getDOMNode().checked = true;
+				checkbox.simulate("change");
+				break;
+			}
+		}
 	}
-
 	fieldpickerWrapper.find("button[data-id='properties-apply-button']").simulate("click"); // applies the field picker
 }
 
 function selectCheckbox(wrapper, idx, id) {
 	const integerCheckbox = wrapper.find("input[type='checkbox']").at(idx);
 	integerCheckbox.simulate("change", { target: { checked: true, id: id } });
+}
+
+function validateSelectedRowNum(wrapper) {
+	return wrapper.find("input[type='checkbox']").filterWhere((checkBox) => checkBox.prop("checked") === true);
 }
 
 function setControls(controller, controls) {
@@ -145,5 +169,6 @@ module.exports = {
 	setControls: setControls,
 	genLongString: genLongString,
 	openSummaryPanel: openSummaryPanel,
-	openFieldPicker: openFieldPicker
+	openFieldPicker: openFieldPicker,
+	validateSelectedRowNum: validateSelectedRowNum
 };

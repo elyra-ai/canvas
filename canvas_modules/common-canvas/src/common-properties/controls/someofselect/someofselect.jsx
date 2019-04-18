@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -11,7 +11,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import FlexibleTable from "../../components/flexible-table";
-import Checkbox from "carbon-components-react/lib/components/Checkbox";
 import ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
@@ -20,12 +19,12 @@ import isEqual from "lodash/isEqual";
 
 import { TABLE_SCROLLBAR_WIDTH, STATES } from "../../constants/constants";
 
-
 class SomeofselectControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.genSelectOptions = this.genSelectOptions.bind(this);
 		this.updateValueFromFilterEnum = this.updateValueFromFilterEnum.bind(this);
+		this.updateSelections = this.updateSelections.bind(this);
 	}
 
 	componentDidMount() {
@@ -44,42 +43,31 @@ class SomeofselectControl extends React.Component {
 		}
 	}
 
-	handleChange(value, selected) {
-		let controlValues = this.props.controller.getPropertyValue(this.props.propertyId);
-		if (selected) {
-			// add to values
-			if (Array.isArray(controlValues) && controlValues.indexOf(value) === -1) {
-				controlValues.push(value);
-			} else {
-				controlValues = [value];
-			}
-		} else if (Array.isArray(controlValues)) {
-			// remove value
-			const valueIndex = controlValues.indexOf(value);
-			controlValues.splice(valueIndex, 1);
+	updateSelections(selected) {
+		const controlValues = [];
+		for (let i = 0; i < selected.length; i++) {
+			const value = this.props.controlOpts.values[selected[i]];
+			controlValues.push(value);
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, controlValues);
 	}
 
 	genSelectOptions(selectedValues) {
-		const options = [];
-
+		const tableOptions = {
+			options: [],
+			selected: []
+		};
 		// Allow for enumeration replacement
 		for (let i = 0; i < this.props.controlOpts.values.length; i++) {
 			const checked = selectedValues.indexOf(this.props.controlOpts.values[i]) !== -1;
-			const id = this.props.propertyId.name + "-" + i;
-			const cellContent = (<Checkbox
-				disabled={this.props.state === STATES.DISABLED}
-				id={id}
-				labelText={this.props.controlOpts.valueLabels[i]}
-				onChange={this.handleChange.bind(this, this.props.controlOpts.values[i])}
-				checked={checked}
-			/>);
-
+			if (checked) {
+				tableOptions.selected.push(i);
+			}
 			const columns = [];
 			columns.push({
-				column: "someofselect-checkbox",
-				content: cellContent,
+				column: "someofselect",
+				state: this.props.state,
+				content: this.props.controlOpts.valueLabels[i],
 			}
 			);
 			// add padding for scrollbar
@@ -89,9 +77,9 @@ class SomeofselectControl extends React.Component {
 				width: TABLE_SCROLLBAR_WIDTH,
 				content: <div />
 			});
-			options.push({ className: "table-row", columns: columns });
+			tableOptions.options.push({ className: "table-row", columns: columns, disabled: this.props.state === STATES.DISABLED }); // add state in obj
 		}
-		return options;
+		return tableOptions;
 	}
 
 	render() {
@@ -99,8 +87,7 @@ class SomeofselectControl extends React.Component {
 		if (typeof controlValue === "undefined" || controlValue === null) {
 			controlValue = [];
 		}
-
-		const options = this.genSelectOptions(controlValue);
+		const tableOptions = this.genSelectOptions(controlValue);
 		const rows = this.props.control.rows ? this.props.control.rows : 4;
 
 		return (
@@ -111,9 +98,13 @@ class SomeofselectControl extends React.Component {
 				<FlexibleTable
 					columns={[]}
 					rows={rows}
-					data={options}
+					data={tableOptions.options}
 					scrollKey={this.props.control.name}
 					controller={this.props.controller}
+					selectedRows={tableOptions.selected}
+					updateRowSelections={this.updateSelections}
+					rowSelection={this.props.control.rowSelection}
+					showHeader={false}
 				/>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>

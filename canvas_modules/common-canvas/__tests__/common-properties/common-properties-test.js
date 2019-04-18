@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -147,9 +147,12 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		// make some changes
-		const tableData = wrapper.find("tbody.reactable-data");
-		let row = tableData.childAt(0);
-		row.simulate("click");
+		const tableData = wrapper.find("tbody.reactable-data").children();
+
+		const row = tableData.at(0).find("input")
+			.at(0);
+		row.getDOMNode().checked = true;
+		row.simulate("change");
 
 		// ensure remove button is enabled and click it
 		const enabledRemoveColumnButton = wrapper.find("button.properties-remove-fields-button");
@@ -167,8 +170,10 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 
 		// make more changes
-		row = tableData.childAt(0);
-		row.simulate("click");
+		tableData.at(0).find("input")
+			.at(0);
+		row.getDOMNode().checked = true;
+		row.simulate("change");
 		enabledRemoveColumnButton.simulate("click");
 
 		// save again, should trigger a save

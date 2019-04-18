@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -160,8 +160,8 @@ describe("add rows in tables with correct default values", () => {
 
 		for (let idx = 0; idx < tableRows.length; idx++) {
 			const tableCell = tableRows.at(idx).find("td span");
-			expect(tableCell.at(0).text()).to.equal(expectedRows[idx][0]);
-			expect(tableCell.at(1).text()).to.equal(expectedRows[idx][1]);
+			expect(tableCell.at(1).text()).to.equal(expectedRows[idx][0]);
+			expect(tableCell.at(2).text()).to.equal(expectedRows[idx][1]);
 		}
 	});
 });

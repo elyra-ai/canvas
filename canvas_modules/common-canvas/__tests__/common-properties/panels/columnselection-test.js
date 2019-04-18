@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -246,7 +246,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		const table2Initial = ["0.Age", "0.Drug", "2.Age"];
 		for (let idx = 0; idx < table2Rows.length; idx++) {
 			expect(table2Rows.at(idx).find("td span")
-				.at(0)
+				.at(1)
 				.text()).to.equal(table2Initial[idx]);
 		}
 

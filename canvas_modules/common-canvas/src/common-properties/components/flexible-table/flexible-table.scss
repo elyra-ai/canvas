@@ -7,6 +7,9 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 $flexible-table-header-row-height: 32px;
+$hover-row: rgba($brand-02, 0.1);
+$selected-row: rgba($brand-02, 0.1);
+$hover-selected-row: rgba($brand-02, 0.2);
 
 .properties-ft-search-container {
 	width: 50%;
@@ -27,6 +30,42 @@ $flexible-table-header-row-height: 32px;
 	overflow: hidden;
 }
 
+.table-row:not(.disabled):hover {
+	border: 1px solid $brand-01;
+	background-color: $hover-row;
+}
+.table-row {
+	border: 1px solid transparent;
+	&.disabled {
+		opacity: 0.5;
+	}
+	&.table-selected-row {
+		background-color: $selected-row;
+		&:hover {
+			background-color: $hover-selected-row;
+		}
+	}
+
+	&.table-single-row {
+		padding-left: solid 4px transparent;
+	}
+	&.table-summary-row {
+		background-color: rgba($brand-01, 0.3);
+	}
+	&.table-summary-row:hover {
+		background-color: rgba($brand-01, 0.3);
+		border: 1px solid transparent;
+	}
+	&.table-selected-single-row {
+		background-color: $selected-row;
+		border: 0;
+		border-left: solid 4px $brand-01;
+		&:hover {
+			background-color: $hover-selected-row;
+		}
+	}
+}
+
 // selectcolumns and tables without headers
 .properties-ft-container-absolute-noheader {
 	position: absolute;
@@ -36,9 +75,13 @@ $flexible-table-header-row-height: 32px;
 	overflow-x: hidden;
 	border: 1px solid $ui-03;
 	background-color: $ui-01;
+	display: flex; // address scrollbar with mouse issue
+	flex-direction: column; // address scrollbar with mouse issue
 	tr {
-		border-bottom: 1px solid $ui-03;
+		display: flex;
+		align-items: center;
 		height: 3em;
+		border: 1px solid transparent;
 	}
 	td {
 		vertical-align: middle;
@@ -48,6 +91,9 @@ $flexible-table-header-row-height: 32px;
 	}
 	&.warning {
 		border: 1px solid $support-03;
+	}
+	.row-checkbox {
+		padding-left: 12px;
 	}
 }
 
@@ -79,6 +125,7 @@ $flexible-table-header-row-height: 32px;
 			white-space: nowrap;
 			padding: 2px 0;
 		}
+
 		th {
 			height: 100%;
 			display: inline-flex;
@@ -128,7 +175,6 @@ $flexible-table-header-row-height: 32px;
 			}
 		}
 	}
-
 	tbody {
 		width: 100%;
 		overflow-y: auto;
@@ -140,6 +186,12 @@ $flexible-table-header-row-height: 32px;
 			display: flex;
 			min-height: 3em;
 			border-bottom: 1px solid $ui-03;
+			thead { // address styling for nested table in table subpanel
+				tr {
+					border: 0;
+					vertical-align: middle;
+				}
+			}
 		}
 		.properties-fp-data-rows td {
 			height: inherit;
@@ -147,9 +199,11 @@ $flexible-table-header-row-height: 32px;
 			padding-bottom: 5px;
 		}
 		td {
-			height: inherit;
 			padding: 0 4px 0 0; // right padding so fields don't merge together
 			border-top: 0;
+			.row-checkbox {
+				padding-left: 12px;
+			}
 		}
 	}
 }
@@ -172,11 +226,6 @@ $flexible-table-header-row-height: 32px;
 		width: inherit;
 		padding-left: $table-first-column-left-padding;
 	}
-}
-
-// highlight selected rows in tables
-.table-selected-row {
-	background-color: $ui-03;
 }
 
 // disable blue outline from header on focus

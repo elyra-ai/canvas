@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -73,9 +73,6 @@
 		padding-bottom: 10px;
 		padding-left: 12px;
 		color: $ui-01;
-	}
-	.table-row {
-		background-color: rgba($brand-01, 0.3);
 	}
 	tbody, .properties-ft-container-absolute-noheader {
 		overflow-y: hidden;

@@ -33,7 +33,7 @@ describe("validateInput validates input and updates controller correctly", () =>
 		expect(JSON.stringify(messages)).to.equal(JSON.stringify({}));
 		const propId = { name: "readonly_table_cond", row: 0, col: 0 };
 		const control = controller.getControl(propId);
-		const rowOneCheckbox = summaryPanelTable.find("input[type='checkbox']").at(1);
+		const rowOneCheckbox = summaryPanelTable.find("input[type='checkbox']").at(5);
 		rowOneCheckbox.getDOMNode().checked = false;
 		rowOneCheckbox.simulate("change");
 		validateInput(propId, controller, control);
@@ -45,8 +45,8 @@ describe("validateInput validates input and updates controller correctly", () =>
 				}
 			};
 		messages = controller.getErrorMessages();
-		expect(messages.readonly_table_cond).to.eql(expected);
-		const rowTwoCheckbox = summaryPanelTable.find("input[type='checkbox']").at(2);
+		expect(JSON.stringify(messages.readonly_table_cond)).to.eql(JSON.stringify(expected));
+		const rowTwoCheckbox = summaryPanelTable.find("input[type='checkbox']").at(7);
 		rowTwoCheckbox.getDOMNode().checked = true;
 		rowTwoCheckbox.simulate("change");
 		rowTwoCheckbox.getDOMNode().checked = false;

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -53,8 +53,11 @@ describe("custom control renders correctly", () => {
 	it("validate custom table is rendered below standard table", () => {
 		let customTable = wrapper.find("div.custom-table");
 		expect(customTable).to.have.length(0);
-		const row = wrapper.find("tr.table-row");
-		row.at(0).simulate("click");
+		const tableData = wrapper.find("tbody.reactable-data").children();
+		const row = tableData.at(0).find("input")
+			.at(0);
+		row.getDOMNode().checked = true;
+		row.simulate("change"); // Select Row
 		customTable = wrapper.find("div.custom-table");
 		expect(customTable).to.have.length(1);
 		const rows = customTable.find("tr");

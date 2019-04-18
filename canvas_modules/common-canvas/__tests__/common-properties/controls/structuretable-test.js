@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -409,7 +409,9 @@ describe("structuretable control renders correctly", () => {
 		// select the first row in the table
 		const tableData = tableWrapper.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(6);
-		tableData.first().simulate("click");
+		const firstRowCheckbox = tableData.first().find("input");
+		firstRowCheckbox.getDOMNode().checked = true;
+		firstRowCheckbox.simulate("change");
 
 		// ensure removed button is enabled and select it
 		tableWrapper = wrapper.find("div[data-id='properties-keys']");
@@ -547,7 +549,6 @@ describe("structuretable control with readonly numbered column renders correctly
 				/>
 			</Provider>
 		);
-
 		const rows = wrapper.find("tr.table-row");
 		expect(rows).to.have.length(3);
 
@@ -759,7 +760,11 @@ describe("structuretable multiselect edit works", () => {
 		// select the first row in the table
 		const tableData = wrapper.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(4);
-		tableData.at(0).simulate("click");
+		const rowCheckbox = tableData.at(0).find("div.row-checkbox")
+			.find("input[type='checkbox']");
+
+		rowCheckbox.getDOMNode().checked = true;
+		rowCheckbox.simulate("change");
 
 		// verify that the select summary row is not present
 		let selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
@@ -801,7 +806,9 @@ describe("structuretable control displays with checkbox header", () => {
 		expect(columnValues[1][2]).to.be.equal(true);
 		expect(columnValues[2][2]).to.be.equal(false);
 		// set the column header checkbox to true
-		const tableCheckboxHeader = wrapper.find("input[type='checkbox']").at(0); // find the table header checkbox
+		const tableCheckboxHeader = wrapper.find("thead").at(0)
+			.find("input[type='checkbox']")
+			.at(1); // find the table header checkbox for column
 		tableCheckboxHeader.getDOMNode().checked = true;
 		tableCheckboxHeader.simulate("change");
 		// validate all rows checkboxes are true
@@ -819,7 +826,9 @@ describe("structuretable control displays with checkbox header", () => {
 		expect(columnValues[1][2]).to.be.equal(true);
 		expect(columnValues[2][2]).to.be.equal(false);
 		// set the column header checkbox to false
-		const tableCheckboxHeader = wrapper.find("input[type='checkbox']").at(0); // find the table header checkbox
+		const tableCheckboxHeader = wrapper.find("thead").at(0)
+			.find("input[type='checkbox']")
+			.at(1); // find the table header checkbox for column
 		tableCheckboxHeader.simulate("change", { target: { checked: false, id: "field_types2" } });
 		// validate all rows checkboxes are false
 		columnValues = renderedController.getPropertyValue(colPropertyId);
@@ -858,7 +867,9 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		expect(columnValues[1][1]).to.be.equal(false);
 		expect(columnValues[2][1]).to.be.equal(false);
 		// set the column header checkbox to true
-		const tableCheckboxHeader = wrapper.find("input[type='checkbox']").at(0); // find the table header checkbox
+		const tableCheckboxHeader = wrapper.find("thead").at(0)
+			.find("input[type='checkbox']")
+			.at(1);
 		tableCheckboxHeader.getDOMNode().checked = true;
 		tableCheckboxHeader.simulate("change");
 		// validate all rows checkboxes are true
@@ -868,7 +879,7 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		expect(columnValues[1][1]).to.be.equal(false);
 		expect(columnValues[2][1]).to.be.equal(true);
 	});
-	it("checkbox header off should un-select column value for all rows", () => {
+	it("checkbox column header off should un-select column value for all rows", () => {
 		const colPropertyId = { name: "globals" };
 		// validate the original state
 		let columnValues = renderedController.getPropertyValue(colPropertyId);
@@ -887,11 +898,13 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		expect(columnValues[1][5]).to.be.equal(false);
 		expect(columnValues[2][5]).to.be.equal(false);
 	});
-	it("checkbox header should become checked if all non-disabled rows become checked", () => {
+	it("checkbox column header should become checked if all non-disabled columns become checked", () => {
 		const colPropertyId = { name: "globals" };
 		// validate the original state
 		let columnValues = renderedController.getPropertyValue(colPropertyId);
-		const tableCheckboxHeader = wrapper.find("input[type='checkbox']").at(0); // find the table header checkbox
+		const tableCheckboxHeader = wrapper.find("thead").at(0)
+			.find("input[type='checkbox']")
+			.at(1);
 		expect(columnValues).to.have.length(3);
 		// check that the initial values for the table (including disabled rows) are correct
 		expect(columnValues[0][1]).to.be.equal(false);

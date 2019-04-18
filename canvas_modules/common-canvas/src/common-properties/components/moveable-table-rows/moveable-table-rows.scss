@@ -49,6 +49,7 @@
 		.properties-mr-table-content {
 			width: 100%;
 			display: flex;
+			border-bottom: 0;
 			&.disabled {
 				pointer-events: none;
 				opacity: 0.5;

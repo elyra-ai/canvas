@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -169,10 +169,13 @@ describe("summary panel renders error/warning status correctly", () => {
 		// remove all rows from Table Input table
 		const tableInputBodyData = wideflyout.find("tbody.reactable-data").at(1);
 		summarypanelParamDef.current_parameters.structurelisteditorTableInput.forEach((value) => {
-			const tableInputDataRow = tableInputBodyData.childAt(0);
-			tableInputDataRow.simulate("click");
+			const tableInputDataRowCheckbox = tableInputBodyData.childAt(0).find("input")
+				.at(0);
+			tableInputDataRowCheckbox.getDOMNode().checked = true;
+			tableInputDataRowCheckbox.simulate("change");
 			const tableInputRemoveButton = wideflyout.find("button.properties-remove-fields-button");
 			expect(tableInputRemoveButton).to.have.length(2);
+
 			tableInputRemoveButton.at(1).simulate("click");
 		});
 		// check that all rows were removed

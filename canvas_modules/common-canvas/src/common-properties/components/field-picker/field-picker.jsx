@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -16,9 +16,8 @@ import PropertiesButtons from "./../properties-buttons";
 import PropertyUtils from "./../../util/property-utils";
 
 import Button from "carbon-components-react/lib/components/Button";
-import Checkbox from "carbon-components-react/lib/components/Checkbox";
 
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, DATA_TYPES, TOOL_TIP_DELAY, FP_CHECKBOX_WIDTH } from "./../../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, DATA_TYPES, TOOL_TIP_DELAY } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
 
 import isEmpty from "lodash/isEmpty";
@@ -33,7 +32,6 @@ export default class FieldPicker extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			checkedAll: false,
 			fields: this.props.fields, // list of fields dynamically adjusted by filtered or sort criteria
 			filterIcons: [],
 			filterText: "",
@@ -52,6 +50,7 @@ export default class FieldPicker extends React.Component {
 		this.getNewSelections = this.getNewSelections.bind(this);
 		this.onSort = this.onSort.bind(this);
 		this.onFilter = this.onFilter.bind(this);
+		this.updateFieldSelections = this.updateFieldSelections.bind(this);
 	}
 
 	componentWillMount() {
@@ -129,37 +128,23 @@ export default class FieldPicker extends React.Component {
 		const fields = this.getVisibleData();
 		const tableData = [];
 		const selectedFields = this.state.selectedFields;
+		const selectedRowsIndex = [];
+		for (let i = 0; i < selectedFields.length; i++) {
+			const idx = fields.findIndex((field) => field.name === selectedFields[i]);
+			if (idx !== -1) {
+				selectedRowsIndex.push(idx);
+			}
+		}
 		for (let i = 0; i < fields.length; i++) {
 			const field = fields[i];
-			let checked = false;
-
-			if (checkedAll) {
-				checked = true;
-			} else if (selectedFields) {
-				for (let j = 0; j < selectedFields.length; j++) {
-					const key = selectedFields[j];
-					if (key === field.name) {
-						checked = true;
-						break;
-					}
-				}
-			}
-			// TODO need to make checkbox Id unique
 			const columns = [];
-			columns.push({
-				column: "checkbox",
-				width: FP_CHECKBOX_WIDTH,
-				content: (<div className="properties-fp-checkbox">
-					<Checkbox id={"properties-fp-checkbox-" + i}
-						checked={checked}
-						onChange={this.handleFieldChecked.bind(this, field.name)}
-						data-name={field.name}
-						data-type={field.type}
-						hideLabel
-						labelText={field.name}
-					/></div>)
-			});
-			let fieldContent = field.origName;
+			let fieldContent = (
+				<div className="properties-fp-field">
+					<div className="properties-fp-field-name">
+						{field.origName}
+					</div>
+				</div>
+			);
 			if (this.props.dmIcon) {
 				const metadata = this.props.controller.getDatasetMetadataFields();
 				const dmIcon = PropertyUtils.getDMFieldIcon(metadata,
@@ -169,7 +154,7 @@ export default class FieldPicker extends React.Component {
 						<div className="properties-fp-field-type-icon">
 							<Icon type={dmIcon} />
 						</div>
-						<div className="properties-fp-field-type">
+						<div className="properties-fp-field-name">
 							{field.origName}
 						</div>
 					</div>
@@ -177,7 +162,8 @@ export default class FieldPicker extends React.Component {
 			}
 			columns.push({
 				column: "fieldName",
-				content: fieldContent
+				content: fieldContent,
+				fieldName: field.origName
 			});
 			if (this.multiSchema) {
 				columns.push({ column: "schemaName", content: field.schema });
@@ -195,6 +181,7 @@ export default class FieldPicker extends React.Component {
 
 			tableData.push({ className: "properties-fp-data-rows", columns: columns });
 		}
+		this.selectedRowsIndex = selectedRowsIndex;
 		return tableData;
 	}
 
@@ -210,7 +197,7 @@ export default class FieldPicker extends React.Component {
 
 		const visibleData = filteredData.filter(function(row) {
 			if (typeof that.state.filterText !== "undefined" && that.state.filterText !== null) {
-				return row.name.toLowerCase().indexOf(that.state.filterText.toLowerCase()) > -1;
+				return row.origName.toLowerCase().indexOf(that.state.filterText.toLowerCase()) > -1;
 			}
 			return true;
 		});
@@ -243,29 +230,23 @@ export default class FieldPicker extends React.Component {
 		this.props.closeFieldPicker();
 	}
 
-	handleCheckAll(checked) {
-		let selectAll = [];
-		const selectedFields = this.state.selectedFields;
-		const visibleData = this.getVisibleData();
-
-		if (checked) {
-			selectAll = Array.from(this.state.selectedFields);
-			for (const field of visibleData) {
-				selectAll.push(field.name);
-			}
-			selectAll = Array.from(new Set(selectAll));
-		} else if (selectedFields) {
-			for (const selectedValue of selectedFields) {
-				// if selectedValue is already checked, don't re-check it
-				if (!this.isFieldInList(visibleData, selectedValue)) {
-					selectAll.push(selectedValue);
-				}
+	updateFieldSelections(rowsIndex) {
+		const fields = this.getVisibleData();
+		const currField = Array.from(this.state.selectedFields);
+		let current = currField.filter(function(value, index, arr) {
+			const idx = fields.findIndex((field) => field.name === currField[index]);
+			return (idx === -1 || rowsIndex.includes(idx));
+		});
+		for (let i = 0; i < rowsIndex.length; i++) {
+			const field = fields[rowsIndex[i]];
+			if (field && !current.includes(field)) {
+				const fieldName = field.name;
+				current.push(fieldName);
 			}
 		}
-
+		current = Array.from(new Set(current));
 		this.setState({
-			selectedFields: selectAll,
-			checkedAll: checked
+			selectedFields: current
 		});
 	}
 
@@ -280,33 +261,11 @@ export default class FieldPicker extends React.Component {
 		});
 	}
 
-	handleFieldChecked(fieldName, checked) {
-		const current = this.state.selectedFields;
-
-		if (checked) {
-			this.setState({ selectedFields: current.concat(fieldName) });
-		} else if (current) {
-			const modified = current.filter(function(element) {
-				return element !== fieldName;
-			});
-
-			this.setState({
-				selectedFields: modified,
-				checkedAll: false
-			});
-		}
-	}
-
 	handleReset() {
-		let checkedAll = false;
-		if (this.props.currentFields && (this.props.currentFields === this.state.fields.length)) {
-			checkedAll = true;
-		}
 		this.setState({
 			selectedFields: this.props.currentFields,
 			filterIcons: [],
 			filterText: "",
-			checkedAll: checkedAll
 		});
 	}
 
@@ -458,23 +417,6 @@ export default class FieldPicker extends React.Component {
 	}
 
 	_genTable() {
-		let checkedAll = this.state.checkedAll;
-		// check all box should be checked if all in view is selected
-		const visibleData = this.getVisibleData();
-		const selectedFields = this.state.selectedFields;
-		// need to always compare contents to make sure the visible ones are selected
-		// because selectedFields may contain invalid fields
-		const sameData = selectedFields.filter(function(row) {
-			let match = false;
-			for (let k = 0; k < visibleData.length; k++) {
-				if (row === visibleData[k].name) {
-					match = true;
-					break;
-				}
-			}
-			return match;
-		});
-		checkedAll = sameData.length === visibleData.length;
 
 		const fieldColumnLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_FIELDCOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_FIELDCOLUMN_LABEL);
@@ -485,21 +427,13 @@ export default class FieldPicker extends React.Component {
 			MESSAGE_KEYS.FIELDPICKER_DATATYPECOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_DATATYPECOLUMN_LABEL);
 		// TODO get label from resource and make id unique
 		const headers = [];
-		headers.push({ "key": "checkbox", "label": <div className="properties-fp-checkbox">
-			<Checkbox id={"properties-fp-checkbox-all"}
-				onChange={this.handleCheckAll.bind(this)}
-				checked={checkedAll}
-				hideLabel
-				labelText="Check all fields"
-			/>
-		</div>, "width": FP_CHECKBOX_WIDTH });
 		headers.push({ "key": "fieldName", "label": fieldColumnLabel });
 		if (this.multiSchema) {
 			headers.push({ "key": "schemaName", "label": schemaColumnLabel });
 		}
 		headers.push({ "key": "dataType", "label": dataTypeColumnLabel });
 
-		const tableData = this.getTableData(checkedAll);
+		const tableData = this.getTableData();
 
 		return (
 			<FlexibleTable className="properties-fp-table"
@@ -513,6 +447,9 @@ export default class FieldPicker extends React.Component {
 				scrollKey="field-picker"
 				noAutoSize
 				controller={this.props.controller}
+				selectedRows={this.selectedRowsIndex}
+				updateRowSelections={this.updateFieldSelections}
+				rowSelection={"multiple-edit"}
 			/>
 		);
 	}
@@ -548,7 +485,7 @@ export default class FieldPicker extends React.Component {
 FieldPicker.propTypes = {
 	closeFieldPicker: PropTypes.func.isRequired,
 	currentFields: PropTypes.array.isRequired,
-	fields: PropTypes.array,
+	fields: PropTypes.array, // in current data model
 	title: PropTypes.string,
 	controller: PropTypes.object.isRequired,
 	rightFlyout: PropTypes.bool,

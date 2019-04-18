@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -14,11 +14,9 @@ import sharedFieldsParamDef from "../../test_resources/paramDefs/sharedFields_pa
 
 describe("Condition dmSharedFields test cases", () => {
 	let wrapper;
-	// let controller;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(sharedFieldsParamDef);
 		wrapper = renderedObject.wrapper;
-		// controller = renderedObject.controller;
 	});
 	afterEach(() => {
 		wrapper.unmount();

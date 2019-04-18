@@ -205,8 +205,10 @@ describe("field-picker-control renders correctly", () => {
 		// looking for equivalent confirmation in the DOM
 		expect(wrapper.find("div.properties-ft-container").find("tr.properties-fp-data-rows")).to.have.length(filteredDataset.length);
 		expect(wrapper.find("div.properties-tooltips-filter")).to.have.length(6); // list of filters
-		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true);
-		expect(checkBoxs).to.have.length(currentFields.length); // controlValues rendered correctly
+		const rows = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("tbody");
+		const selected = propertyUtils.validateSelectedRowNum(rows);
+		expect(selected).to.have.length(currentFields.length); // controlValues rendered correctly
 	});
 
 	it("should add additional field to newControlValues in `FieldPicker`", () => {
@@ -219,11 +221,17 @@ describe("field-picker-control renders correctly", () => {
 				controller={controller}
 			/>
 		);
-		const ageCheckBox = wrapper.find("input[id='properties-fp-checkbox-0']");
+		const rowCheckboxes = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("tbody")
+			.find("input[type='checkbox']");
+		const ageCheckBox = rowCheckboxes.at(0);
 		ageCheckBox.getDOMNode().checked = true;
 		ageCheckBox.simulate("change");
-		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(checkBoxs).to.have.length(4);
+
+		const rows = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("tbody");
+		const selected = propertyUtils.validateSelectedRowNum(rows);
+		expect(selected).to.have.length(4);
 	});
 
 	it("should reset to initial values in `FieldPicker`", () => {
@@ -236,14 +244,21 @@ describe("field-picker-control renders correctly", () => {
 				controller={controller}
 			/>
 		);
-		const sexCheckBox = wrapper.find("input[id='properties-fp-checkbox-1']");
+		const rowCheckboxes = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("tbody")
+			.find("input[type='checkbox']");
+		const sexCheckBox = rowCheckboxes.at(1);
 		sexCheckBox.getDOMNode().checked = true;
 		sexCheckBox.simulate("change");
-		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(checkBoxs).to.have.length(4);
+		const rows = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("tbody");
+		let selected = propertyUtils.validateSelectedRowNum(rows);
+		expect(selected).to.have.length(4);
 		wrapper.find("button.properties-fp-reset-button-container").simulate("click");
-		const resetBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(resetBoxs).to.have.length(3);
+		const resetBoxs = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("tbody");
+		selected = propertyUtils.validateSelectedRowNum(resetBoxs);
+		expect(selected).to.have.length(3);
 	});
 
 	it("should set correct filtered type in `FieldPicker`", () => {
@@ -279,7 +294,9 @@ describe("field-picker-control renders correctly", () => {
 
 		// select the remaining rows
 		expect(wrapper.find("tr.properties-fp-data-rows")).to.have.length(2);
-		const allCheckBox = wrapper.find("input[id='properties-fp-checkbox-all']");
+		const allCheckBox = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("thead")
+			.find("input[type='checkbox']");
 		allCheckBox.getDOMNode().checked = true;
 		allCheckBox.simulate("change");
 
@@ -291,8 +308,10 @@ describe("field-picker-control renders correctly", () => {
 		clickFilter(wrapper, "timestamp", true);
 
 		// validate the number of rows selected
-		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(checkBoxs).to.have.length(4);
+		const rows = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("tbody");
+		const rowsSelected = propertyUtils.validateSelectedRowNum(rows);
+		expect(rowsSelected).to.have.length(4);
 	});
 
 	it("should search correct keyword in `FieldPicker`", () => {
@@ -305,6 +324,7 @@ describe("field-picker-control renders correctly", () => {
 				controller={controller}
 			/>
 		);
+
 		const searchContainer = wrapper.find("div.properties-ft-search-container");
 		const input = searchContainer.find("input[type='text']");
 		input.simulate("change", { target: { value: "Time" } });
@@ -326,15 +346,17 @@ describe("field-picker-control renders correctly", () => {
 				controller={controller}
 			/>
 		);
-		const allCheckBox = wrapper.find("input[id='properties-fp-checkbox-all']");
+		const allCheckBox = wrapper.find("thead").find("input[type='checkbox']")
+			.at(0);
 		allCheckBox.getDOMNode().checked = true;
 		allCheckBox.simulate("change");
 
 		// with intl support wrapper.state() does not work.
 		// looking for equivalent confirmation in the DOM
-
-		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(checkBoxs).to.have.length(filteredDataset.length);
+		const rows = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("tbody");
+		const selected = propertyUtils.validateSelectedRowNum(rows);
+		expect(selected).to.have.length(filteredDataset.length);
 	});
 });
 
@@ -402,29 +424,38 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		clickFilter(wrapper, "double");
 		clickFilter(wrapper, "timestamp");
 
-		let checkAll = wrapper.find("input[id='properties-fp-checkbox-all']");
+		let checkAll = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("thead")
+			.find("input[type='checkbox']");
 		checkAll.getDOMNode().checked = true;
 		checkAll.simulate("change");
-		checkAll = wrapper.find("input[id='properties-fp-checkbox-all']");
-		expect(checkAll.prop("checked")).to.be.true;
 
-		let checkBoxes = wrapper.find("input[type='checkbox']")
-			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(checkBoxes).to.have.length(1);
+		checkAll = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("thead")
+			.find("input[type='checkbox']");
+		expect(checkAll.prop("checked")).to.be.true;
+		let rows = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("tbody");
+		let selected = propertyUtils.validateSelectedRowNum(rows);
+		expect(selected).to.have.length(1);
 
 		clickFilter(wrapper, "timestamp", true);
-		checkAll = wrapper.find("input[id='properties-fp-checkbox-all']");
+		checkAll = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("thead")
+			.find("input[type='checkbox']");
 		expect(checkAll.prop("checked")).to.be.false;
 
 		checkAll.getDOMNode().checked = true;
 		checkAll.simulate("change");
-		checkAll = wrapper.find("input[id='properties-fp-checkbox-all']");
+		checkAll = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("thead")
+			.find("input[type='checkbox']");
 		expect(checkAll.prop("checked")).to.be.true;
 
-		checkBoxes = wrapper.find("input[type='checkbox']")
-			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(checkBoxes).to.have.length(3);
-
+		rows = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("tbody");
+		selected = propertyUtils.validateSelectedRowNum(rows);
+		expect(selected).to.have.length(3);
 		fieldpicker.find("button[data-id='properties-apply-button']").simulate("click");
 		wrapper.find("button[data-id='properties-apply-button']")
 			.at(0)
@@ -480,15 +511,20 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(row4Columns.at(1).text()).to.equal("Timestamp");
 		expect(row4Columns.at(2).text()).to.equal("data_2");
 
-		let checkAll = wrapper.find("input[id='properties-fp-checkbox-all']");
+		let checkAll = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("thead")
+			.find("input[type='checkbox']");
 		checkAll.getDOMNode().checked = true;
 		checkAll.simulate("change");
-		checkAll = wrapper.find("input[id='properties-fp-checkbox-all']");
+		checkAll = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("thead")
+			.find("input[type='checkbox']");
 		expect(checkAll.prop("checked")).to.be.true;
 
-		const checkBoxes = wrapper.find("input[type='checkbox']")
-			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(checkBoxes).to.have.length(5);
+		const rows = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("tbody");
+		const selected = propertyUtils.validateSelectedRowNum(rows);
+		expect(selected).to.have.length(5);
 
 		fieldpicker.find("button[data-id='properties-apply-button']").simulate("click");
 		wrapper.find("button[data-id='properties-apply-button']")
@@ -537,15 +573,20 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(row1Columns.at(1).text()).to.equal("Timestamp");
 		expect(row1Columns.at(2).text()).to.equal("data_2");
 
-		let checkAll = wrapper.find("input[id='properties-fp-checkbox-all']");
+		let checkAll = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("thead")
+			.find("input[type='checkbox']");
 		checkAll.getDOMNode().checked = true;
 		checkAll.simulate("change");
-		checkAll = wrapper.find("input[id='properties-fp-checkbox-all']");
+		checkAll = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("thead")
+			.find("input[type='checkbox']");
 		expect(checkAll.prop("checked")).to.be.true;
 
-		const checkBoxes = wrapper.find("input[type='checkbox']")
-			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(checkBoxes).to.have.length(2);
+		const rows = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("tbody");
+		const selected = propertyUtils.validateSelectedRowNum(rows);
+		expect(selected).to.have.length(2);
 
 		fieldpicker.find("button[data-id='properties-apply-button']").simulate("click");
 		wrapper.find("button[data-id='properties-apply-button']")
@@ -571,15 +612,20 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 
 	it("should be able to select all and display schema.field names correctly in table", () => {
 		propertyUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
-		let checkAll = wrapper.find("input[id='properties-fp-checkbox-all']");
+		let checkAll = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("thead")
+			.find("input[type='checkbox']");
 		checkAll.getDOMNode().checked = true;
 		checkAll.simulate("change");
-		checkAll = wrapper.find("input[id='properties-fp-checkbox-all']");
+		checkAll = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("thead")
+			.find("input[type='checkbox']");
 		expect(checkAll.prop("checked")).to.be.true;
 
-		const checkBoxes = wrapper.find("input[type='checkbox']")
-			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(checkBoxes).to.have.length(29);
+		const rows = wrapper.find("div[data-id='properties-ft-field-picker']")
+			.find("tbody");
+		const selected = propertyUtils.validateSelectedRowNum(rows);
+		expect(selected).to.have.length(29);
 	});
 
 	it("should be able to sort by schema name", () => {

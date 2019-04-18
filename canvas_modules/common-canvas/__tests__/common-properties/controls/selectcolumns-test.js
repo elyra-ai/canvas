@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -143,8 +143,9 @@ describe("selectcolumns renders correctly", () => {
 		// select the second row in the table
 		const tableData = wrapper.find("tr.column-select-table-row");
 		expect(tableData).to.have.length(3);
-		tableData.at(1).simulate("click");
-
+		const rowCheckbox = tableData.at(1).find("input");
+		rowCheckbox.getDOMNode().checked = true;
+		rowCheckbox.simulate("change");
 		// ensure removed button is enabled and select it
 		const enabledRemoveColumnButton = wrapper.find("button.properties-remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
@@ -370,7 +371,7 @@ describe("selectcolumns control displays the proper number of rows", () => {
 		const heightDiv = columnSelect.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.at(0).prop("style");
 		// console.log("STYLE: " + JSON.stringify(heightStyle));
-		expect(heightStyle).to.eql({ "height": "9em" });
+		expect(heightStyle).to.eql({ "height": "11.5em" }); // includes header
 	});
 
 	it("should display 5 rows in select columns in subpanel", () => {
@@ -390,7 +391,7 @@ describe("selectcolumns control displays the proper number of rows", () => {
 		const heightDiv = selectColumnsWrapper.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.prop("style");
 		// console.log("STYLE: " + JSON.stringify(heightStyle));
-		expect(heightStyle).to.eql({ "height": "15em" });
+		expect(heightStyle).to.eql({ "height": "17.5em" }); // includes header
 	});
 });
 

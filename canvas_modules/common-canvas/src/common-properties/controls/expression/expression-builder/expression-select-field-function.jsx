@@ -259,8 +259,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				const field = tableContents.field_value_groups[index];
 				const fieldColumns = [];
 				const rowClass = (index === this.state.fieldSelectedRow)
-					? "table-row table-selected-row"
-					: "table-row";
+					? "table-selected-single-row"
+					: "";
 				if (!this.state.fieldFilterText || this.state.fieldFilterText.length === 0 ||
 								(field.id.toLowerCase().indexOf(this.state.fieldFilterText.toLowerCase()) > -1)) {
 					fieldColumns.push({ column: "fieldName", content: this.createContentObject(field.id), value: field.id });
@@ -287,6 +287,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onFilter={this.onFieldFilter}
 						rows={EXPRESSION_TABLE_ROWS}
 						controller={this.props.controller}
+						rowSelection={"single"}
 					/>
 				</div>
 				<div className="properties-value-table-container" >
@@ -298,6 +299,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onFilter={this.onValueFilter}
 						rows={EXPRESSION_TABLE_ROWS}
 						controller={this.props.controller}
+						rowSelection={"single"}
 					/>
 				</div>
 			</div>
@@ -327,8 +329,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	_addValueRow(content, index, valuesTableData) {
 		const valueRowClass = (this.state.valueSelectedRow === index)
-			? "table-row table-selected-row"
-			: "table-row";
+			? "table-selected-single-row"
+			: "";
 		if (!this.state.valueFilterText || this.state.valueFilterText.length === 0 ||
 					(String(content).toLowerCase()
 						.indexOf(this.state.valueFilterText.toLowerCase()) > -1)) {
@@ -414,6 +416,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						data={table.rows}
 						rows={EXPRESSION_TABLE_ROWS}
 						controller={this.props.controller}
+						rowSelection={"single"}
 					/>
 				</div>
 				<div className="properties-help-table-container" >
@@ -431,8 +434,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				const catFunction = categoryFunctions[index];
 				const columns = [];
 				const rowClass = (index === this.state.functionSelectedRow)
-					? "table-row table-selected-row"
-					: "table-row";
+					? "table-selected-single-row"
+					: "";
 
 				columns.push({ column: "function", content: this.createContentObject(catFunction.locLabel) });
 				columns.push({ column: "return", content: this.createContentObject(catFunction.return_type) });

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -343,7 +343,9 @@ describe("StructureListEditorControl renders correctly", () => {
 		// select the first row in the table
 		const tableData = wrapper.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(6);
-		tableData.at(0).simulate("click");
+		const firstRowCheckbox = tableData.first().find("input");
+		firstRowCheckbox.getDOMNode().checked = true;
+		firstRowCheckbox.simulate("change");
 
 		// ensure removed button is enabled and select it
 		removeColumnButton = wrapper.find("button.properties-remove-fields-button");
@@ -373,14 +375,19 @@ describe("StructureListEditorControl renders correctly", () => {
 		// select the first row in the table
 		const tableData = wrapper.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(6);
-		tableData.at(0).simulate("click");
+		const firstRowCheckbox = tableData.find("input").at(0);
+		firstRowCheckbox.getDOMNode().checked = true;
+		firstRowCheckbox.simulate("change");
 
 		// verify that the select summary row is not present
 		let selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
 		expect(selectedEditRow).to.have.length(0);
 
 		// multiple select the four row in the table
-		tableData.at(3).simulate("click", { ctrlKey: true });
+		tableData.find("input").forEach((checkbox) => {
+			checkbox.getDOMNode().checked = true;
+			checkbox.simulate("change");
+		});
 
 		// verify that the select summary row is present
 		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
@@ -585,12 +592,16 @@ describe("StructureListEditor render from paramdef", () => {
 	});
 
 	it("Multiple select edit should change values of selected rows", () => {
+
 		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
 
 		// select the first row in the table
-		let tableRows = summaryPanel.find("tbody.reactable-data tr");
+
+		let tableRows = summaryPanel.find("tbody.reactable-data").children();
 		expect(tableRows).to.have.length(4);
-		tableRows.at(0).simulate("click");
+		const firstRowCheckbox = tableRows.find("input").at(0);
+		firstRowCheckbox.getDOMNode().checked = true;
+		firstRowCheckbox.simulate("change");
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
 
 		// verify that the select summary row is not present
@@ -598,7 +609,10 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(selectedEditRow).to.have.length(0);
 
 		// multiple select the four row in the table
-		tableRows.at(3).simulate("click", { ctrlKey: true });
+		tableRows.find("input").forEach((checkbox) => {
+			checkbox.getDOMNode().checked = true;
+			checkbox.simulate("change");
+		});
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
 
 		// verify that the select summary row is present
@@ -607,8 +621,8 @@ describe("StructureListEditor render from paramdef", () => {
 
 		// change a value in the select summary row.
 		const selectedEditCells = selectedEditRow.find("td");
-		expect(selectedEditCells).to.have.length(7);
-		const integerNumber = selectedEditCells.at(0).find("input");
+		expect(selectedEditCells).to.have.length(8);
+		const integerNumber = selectedEditCells.at(1).find("input");
 		integerNumber.simulate("change", { target: { value: "44" } });
 
 		// verify that the values have changed in the selected rows.
@@ -618,10 +632,11 @@ describe("StructureListEditor render from paramdef", () => {
 		// and the selectedSummaryRow is still rendered as the first row, so the tableRows
 		// contains the selectedSummaryRow and the table data rows are indexed +1.
 		expect(tableRows.at(1).find("input")
+			.at(1)
 			.prop("value")).to.equal(44);
 		expect(tableRows.at(4).find("input")
+			.at(1)
 			.prop("value")).to.equal(44);
-
 
 	});
 

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -310,7 +310,9 @@ describe("checkboxset works as expected in table control", () => {
 		const tableRows = summaryPanelTable.find("tbody.reactable-data tr");
 		expect(tableRows).to.have.length(2);
 		expect(renderedController.getPropertyValue(propId)).to.eql([8, 5]);
-		tableRows.at(0).simulate("click");
+		const firstRowCheckbox = tableRows.find("input").at(0);
+		firstRowCheckbox.getDOMNode().checked = true;
+		firstRowCheckbox.simulate("change");
 		wrapper.update();
 		const checkboxsetWrapper =
 		wrapper.find("div[data-id='properties-checkboxset_table_0_1']");

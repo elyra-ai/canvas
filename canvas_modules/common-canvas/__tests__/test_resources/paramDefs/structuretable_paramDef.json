@@ -672,7 +672,7 @@
       {
         "parameter_ref": "ST_mse_table",
         "label": {
-          "default": "Test Muilt-select Edit in a structure table control"
+          "default": "Test Multi-select Edit in a structure table control"
         },
         "control": "structuretable",
         "description": {

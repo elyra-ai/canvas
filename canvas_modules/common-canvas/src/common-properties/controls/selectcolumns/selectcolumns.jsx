@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -17,19 +17,18 @@ import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
 import PropertyUtils from "./../../util/property-utils";
 
-import { TABLE_SCROLLBAR_WIDTH, STATES } from "./../../constants/constants";
+import { TABLE_SCROLLBAR_WIDTH, STATES, MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
 
 import ReadonlyControl from "./../readonly";
 
+/* eslint max-depth: ["error", 6] */
+
 class SelectColumns extends AbstractTable {
 
-	getRowClassName(rowIndex) {
-		const selectedRows = this.props.selectedRows;
-		return selectedRows.indexOf(rowIndex) >= 0
-			? "column-select-table-row column-select-table-selected-row "
-			: "column-select-table-row";
+	constructor(props) {
+		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 	}
-
 
 	makeRows(controlValue, tableState) {
 		const rows = [];
@@ -62,7 +61,7 @@ class SelectColumns extends AbstractTable {
 				);
 				columns.push({
 					key: rowIndex + "-0-field",
-					column: "name",
+					column: "field",
 					content: cellContent
 				});
 				// add padding for scrollbar
@@ -75,7 +74,7 @@ class SelectColumns extends AbstractTable {
 					key: rowIndex,
 					onClickCallback: this.handleRowClick.bind(this, rowIndex, false),
 					columns: columns,
-					className: this.getRowClassName(rowIndex)
+					className: "column-select-table-row"
 				});
 			}
 		}
@@ -95,8 +94,19 @@ class SelectColumns extends AbstractTable {
 		}
 	}
 
-	render() {
+	makeHeader() {
 		const headers = [];
+		headers.push({
+			"key": "field",
+			"label": PropertyUtils.formatMessage(this.reactIntl,
+				MESSAGE_KEYS.FIELDPICKER_FIELDCOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_FIELDCOLUMN_LABEL),
+			"description": (null) });
+		headers.push({ "key": "scrollbar", "label": "", "width": TABLE_SCROLLBAR_WIDTH });
+		return headers;
+	}
+
+	render() {
+		const headers = this.makeHeader();
 
 		const tableButtonConfig = {
 			fieldPickerCloseFunction: this.onFieldPickerClose
@@ -113,7 +123,6 @@ class SelectColumns extends AbstractTable {
 			<FlexibleTable
 				columns={headers}
 				data={rows}
-				showHeader={false}
 				scrollToRow={rowToScrollTo}
 				topRightPanel={topRightPanel}
 				scrollKey={this.props.control.name}
@@ -121,6 +130,9 @@ class SelectColumns extends AbstractTable {
 				messageInfo={this.props.messageInfo}
 				rows={this.props.control.rows}
 				controller={this.props.controller}
+				selectedRows={this.props.selectedRows}
+				updateRowSelections={this.updateRowSelections}
+				rowSelection={this.props.control.rowSelection}
 			/>);
 
 		var content = (
@@ -142,6 +154,7 @@ class SelectColumns extends AbstractTable {
 					setScrollToRow={this.setScrollToRow}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 					disabled={this.props.state === STATES.DISABLED}
+
 				/>
 			</div>
 		);

@@ -9,9 +9,6 @@
 
 // overwrite flexible-table.scss: .flexible-table-container-absolute-noheader tr
 .properties-column-select   {
-	tbody > tr {
-		border-bottom: 0;
-	}
 	tbody > tr > td {
 		padding: 8px 0;
 	}
@@ -20,7 +17,11 @@
 .column-select-table-row {
 	font-weight: 500;
 	color: $brand-01;
+	.row-checkbox {
+		padding-left: 12px;
+	}
 }
+//rebase-part
 .column-select-table-selected-row {
 	background-color: $ui-03;
 }

@@ -18,6 +18,7 @@ import ReadonlyControl from "./readonly";
 import Icon from "./../../icons/icon.jsx";
 import PropertyUtils from "./../util/property-utils";
 import { ControlType, EditStyle } from "./../constants/form-constants";
+
 import Tooltip from "./../../tooltip/tooltip.jsx";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES,
 	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH } from "./../constants/constants";
@@ -45,7 +46,6 @@ export default class AbstractTable extends React.Component {
 		this.removeSelected = this.removeSelected.bind(this);
 		this.updateRowSelections = this.updateRowSelections.bind(this);
 		this.handleRowClick = this.handleRowClick.bind(this);
-		this.getRowClassName = this.getRowClassName.bind(this);
 		this.createTable = this.createTable.bind(this);
 		this.onFilter = this.onFilter.bind(this);
 		this.onSort = this.onSort.bind(this);
@@ -55,6 +55,7 @@ export default class AbstractTable extends React.Component {
 		this.buildChildItem = this.buildChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
 		this.checkedAll = this.checkedAll.bind(this);
+
 
 		if (props.selectedRows && props.selectedRows.length > 0) {
 			this.scrollToRow = props.selectedRows[props.selectedRows.length - 1];
@@ -121,12 +122,6 @@ export default class AbstractTable extends React.Component {
 		}
 
 		return (<div className="properties-onpanel-container">{this.onPanelContainer[selectedRows[0]]}</div>);
-	}
-
-	getRowClassName(rowIndex, selectSummaryRow) {
-		return this.props.selectedRows.indexOf(rowIndex) >= 0 && !selectSummaryRow
-			? "table-row table-selected-row "
-			: "table-row";
 	}
 
 	getDefaultRow() {
@@ -242,8 +237,6 @@ export default class AbstractTable extends React.Component {
 				newSelns.push(i);
 			}
 			selectedRows = newSelns;
-		} else {
-			selectedRows = [rowIndex];
 		}
 		this.updateRowSelections(selectedRows);
 	}
@@ -432,6 +425,7 @@ export default class AbstractTable extends React.Component {
 					rows={1}
 					scrollKey={this.selectSummaryPropertyName}
 					controller={this.props.controller}
+					summaryTable
 				/>
 			</div>);
 		}
@@ -523,6 +517,7 @@ export default class AbstractTable extends React.Component {
 		);
 	}
 
+
 	checkedAllValue(colIndex, checked) {
 		const controlValue = this.props.value;
 		if (Array.isArray(controlValue)) {
@@ -587,7 +582,7 @@ export default class AbstractTable extends React.Component {
 		const filterFields = [];
 		this.filterFields = filterFields;
 
-		const headers = (this.props.control.header === false) ? [] : this.makeHeader(sortFields, filterFields);
+		const headers = this.makeHeader(sortFields, filterFields);
 		const showHeader = this.props.control.header !== false;
 
 		const controlValue = this.props.value;
@@ -624,6 +619,9 @@ export default class AbstractTable extends React.Component {
 				messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)}
 				rows={this.props.control.rows}
 				controller={this.props.controller}
+				updateRowSelections={this.updateRowSelections}
+				selectedRows= {this.props.selectedRows}
+				rowSelection={this.props.control.rowSelection}
 			/>);
 		return (
 			<div>
@@ -706,7 +704,6 @@ export default class AbstractTable extends React.Component {
 					content: <div />
 				});
 				rows.push({
-					className: this.getRowClassName(rowIndex, selectSummaryRow),
 					onClickCallback: this.handleRowClick.bind(this, rowIndex, selectSummaryRow),
 					columns: columns
 				});

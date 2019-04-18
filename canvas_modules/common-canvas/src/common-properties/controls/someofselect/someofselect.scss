@@ -11,6 +11,9 @@
 	.properties-ft-container-absolute-noheader tr {
 		border-bottom: 0;
 	}
+	.properties-ft-container-absolute-noheader tr:not(.disabled):hover  {
+		border: 1px solid $brand-01;
+	}
 	&.hide {
 		display: none;
 	}
