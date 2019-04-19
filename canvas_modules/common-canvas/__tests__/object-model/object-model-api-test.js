@@ -1211,11 +1211,11 @@ describe("ObjectModel API handle model OK", () => {
 
 	function shouldSetLinkStyle(temporary) {
 		deepFreeze(startPipelineFlow);
-		objectModel.setPipelineFlow(startPipelineFlow);
+		canvasController.setPipelineFlow(startPipelineFlow);
 
-		const nodeNodeLink = objectModel.getAPIPipeline().getNodeDataLinkFromInfo("id8I6RH2V91XW", "outPort", "idGWRVT47XDV", "inPort");
-		const commentNodeLink = objectModel.getAPIPipeline().getCommentLinkFromInfo("id42ESQA31234", "id8I6RH2V91XW");
-		const assocNodeLink = objectModel.getAPIPipeline().getNodeAssocLinkFromInfo("id5KIRGGJ3FYT", "id125TTEEIK7V");
+		const nodeNodeLink = canvasController.getNodeDataLinkFromInfo("id8I6RH2V91XW", "outPort", "idGWRVT47XDV", "inPort");
+		const commentNodeLink = canvasController.getCommentLinkFromInfo("id42ESQA31234", "id8I6RH2V91XW");
+		const assocNodeLink = canvasController.getNodeAssocLinkFromInfo("id5KIRGGJ3FYT", "id125TTEEIK7V");
 
 		const pipelineObjIds = {
 			"153651d6-9b88-423c-b01b-861f12d01489": [
@@ -1235,19 +1235,19 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.setLinksStyle(pipelineObjIds, newStyleSpec, temporary);
 
 		// Check the style in memory (either temporary or permanent) is as expected.
-		let actualStyleSpec = objectModel.getAPIPipeline().getLinkStyle(nodeNodeLink.id, temporary);
+		let actualStyleSpec = canvasController.getLinkStyle(nodeNodeLink.id, temporary);
 		expect(isEqual(newStyleSpec, actualStyleSpec)).to.be.true;
 
-		actualStyleSpec = objectModel.getAPIPipeline().getLinkStyle(commentNodeLink.id, temporary);
+		actualStyleSpec = canvasController.getLinkStyle(commentNodeLink.id, temporary);
 		expect(isEqual(newStyleSpec, actualStyleSpec)).to.be.true;
 
-		actualStyleSpec = objectModel.getAPIPipeline().getLinkStyle(assocNodeLink.id, temporary);
+		actualStyleSpec = canvasController.getLinkStyle(assocNodeLink.id, temporary);
 		expect(isEqual(newStyleSpec, actualStyleSpec)).to.be.true;
 
 		if (temporary) {
 			// Because we have saved temporary styles the actual pipeline flow should
 			// not have been changed
-			const actualPipelineFlow = objectModel.getPipelineFlow();
+			const actualPipelineFlow = canvasController.getPipelineFlow();
 
 			// console.info("Expected PipelineFlow = " + JSON.stringify(startPipelineFlow, null, 2));
 			// console.info("Actual PipelineFlow   = " + JSON.stringify(actualPipelineFlow, null, 2));
@@ -1255,7 +1255,7 @@ describe("ObjectModel API handle model OK", () => {
 		} else {
 			// Because we have saved permanent styles the actual pipeline flow should
 			// contain those styles
-			const actualPipelineFlow = objectModel.getPipelineFlow();
+			const actualPipelineFlow = canvasController.getPipelineFlow();
 
 			// Check node - node data link
 			const node = actualPipelineFlow.pipelines[0].nodes.find((n) => n.id === "idGWRVT47XDV");

@@ -686,9 +686,11 @@ export default class CanvasController {
 
 	// Gets the style spcification (see Wiki) for a node
 	// nodeId - The ID of the node
+	// temporary - A boolean to indicate if the styles are serialized when
+	//             getPipelineFlow() method is called or not.
 	// pipelineId - The ID of the pipeline
-	getNodeStyle(nodeId, pipelineId) {
-		return this.objectModel.getAPIPipeline(pipelineId).getNodeStyle(nodeId);
+	getNodeStyle(nodeId, temporary, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeStyle(nodeId, temporary);
 	}
 
 	// Adds a custom attribute to the nodes.
@@ -769,9 +771,11 @@ export default class CanvasController {
 
 	// Gets the style spcification (see Wiki) for a comment
 	// commentId - The ID of the node
+	// temporary - A boolean to indicate if the styles are serialized when
+	//             getPipelineFlow() method is called or not.
 	// pipelineId - The ID of the pipeline
-	getCommentStyle(commentId, pipelineId) {
-		return this.objectModel.getAPIPipeline(pipelineId).getCommentStyle(commentId);
+	getCommentStyle(commentId, temporary, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getCommentStyle(commentId, temporary);
 	}
 
 	// ---------------------------------------------------------------------------
@@ -807,7 +811,7 @@ export default class CanvasController {
 	// id2 - The ID of the node
 	// pipelineId - The ID of the pipeline
 	getCommentLinkFromInfo(id1, id2, pipelineId) {
-		return this.objectModel.getAPIPipeline(pipelineId).getNodeDataLinkFromInfo(id1, id2);
+		return this.objectModel.getAPIPipeline(pipelineId).getCommentLinkFromInfo(id1, id2);
 	}
 
 	// Gets a node to node association link
@@ -891,9 +895,11 @@ export default class CanvasController {
 
 	// Returns the style specification for a link.
 	// linkIds - An array of links
+	// temporary - A boolean to indicate if the styles are serialized when
+	//             getPipelineFlow() method is called or not.
 	// pipelineId - The ID of the pipeline
-	getLinkStyle(linkId, pipelineId) {
-		return this.objectModel.getAPIPipeline(pipelineId).getLinkStyle(linkId);
+	getLinkStyle(linkId, temporary, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getLinkStyle(linkId, temporary);
 	}
 
 
