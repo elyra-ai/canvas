@@ -159,12 +159,15 @@ $hover-selected-row: rgba($brand-02, 0.2);
 			white-space: nowrap;
 			text-align: left;
 			line-height: normal;
+			.tooltip-container {
+				overflow: hidden;
+			}
 			.tooltip-trigger {
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				height: 100%;
-			}
+ 			}
 			.properties-tooltips {
 				span {
 					white-space: normal;
