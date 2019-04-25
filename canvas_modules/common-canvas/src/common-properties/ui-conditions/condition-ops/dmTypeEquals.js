@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import logger from "./../../../../utils/logger";
-
+import { getMetadataFieldMatch } from "./../conditions-utils.js";
 function op() {
 	return "dmTypeEquals";
 }
@@ -28,7 +28,12 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	const metadata = controller.getDatasetMetadataFields();
 	var target = null;
 	if (param2Info !== null && typeof param2Info !== "undefined" && param2Info.value !== null) {
-		target = param2Info.value;
+		if (param2Info.control.role === "column") {
+			target = getMetadataFieldMatch(param2Info, metadata, "type");
+		}
+		if (target === null) {
+			target = param2Info.value;
+		}
 	} else if (value !== null && typeof value !== "undefined") {
 		target = value;
 	} else {
@@ -37,20 +42,9 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	if (!metadata) {
 		return false;
 	}
-	if (typeof paramInfo.value === "string") {
-		for (var i = 0; i < metadata.length; i++) {
-			var field = metadata[i];
-			if (field.name === paramInfo.value) {
-				return field.type === target;
-			}
-		}
-	} else if (typeof paramInfo.value === "object") {
-		for (var j = 0; j < metadata.length; j++) {
-			var field2 = metadata[j];
-			if (field2.origName === paramInfo.value.field_name && field2.schema === paramInfo.value.link_ref) {
-				return field2.type === target;
-			}
-		}
+	if (typeof paramInfo.value === "string" || typeof paramInfo.value === "object") {
+		var fieldType = getMetadataFieldMatch(paramInfo, metadata, "type");
+		return fieldType === target;
 	} else if (typeof paramInfo.value !== "undefined") {
 		logger.warn("dmTypeEquals cannot handle the given type: " + typeof paramInfo.value);
 	}
