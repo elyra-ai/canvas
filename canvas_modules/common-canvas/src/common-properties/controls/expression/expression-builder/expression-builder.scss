@@ -66,6 +66,9 @@ $operator-margin: 50%;
 .properties-functions-table {
 	width: $functions-table-width;
 	float: left;
+	.properties-ft-search-container {
+		width: 100%;
+	}
 }
 
 .properties-help-table-container {
@@ -114,5 +117,5 @@ $operator-margin: 50%;
 
 .properties-expression-function-select {
 	width: 50%;
-	margin-bottom: 2px;
+	margin-bottom: 7px;
 }

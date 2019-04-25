@@ -425,3 +425,175 @@ describe("ExpressionBuilder generates and accesses field dropdown correctly", ()
 		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 'numberSet' 1");
 	});
 });
+
+describe("ExpressionBuilder filters and sorts correctly", () => {
+	it("expression builder filters fields table", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		let fieldTable = wrapper.find("div.properties-field-table-container");
+		let rows = fieldTable.find("tr.table-row");
+		expect(rows).to.have.length(4);
+		expect(rows.at(1).text()).to.equal("Sexstring");
+		const searchInput = fieldTable.find("div.properties-ft-search-container input");
+		expect(searchInput).to.have.length(1);
+
+		searchInput.simulate("change", { target: { value: "Age" } });
+		fieldTable = wrapper.find("div.properties-field-table-container");
+		rows = fieldTable.find("tr.table-row");
+		expect(rows).to.have.length(1);
+		expect(rows.at(0).text()).to.equal("Ageinteger");
+	});
+	it("expression builder filters values table", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		let fieldTable = wrapper.find("div.properties-value-table-container");
+		let rows = fieldTable.find("tr.table-row");
+		expect(rows).to.have.length(2);
+		expect(rows.at(0).text()).to.equal("Min: 21");
+		const searchInput = fieldTable.find("div.properties-ft-search-container input");
+		expect(searchInput).to.have.length(1);
+
+		searchInput.simulate("change", { target: { value: "Max" } });
+		fieldTable = wrapper.find("div.properties-value-table-container");
+		rows = fieldTable.find("tr.table-row");
+		expect(rows).to.have.length(1);
+		expect(rows.at(0).text()).to.equal("Max: 55");
+	});
+	it("expression builder filters function table", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		let functionTable = wrapper.find("div.properties-functions-table");
+		let rows = functionTable.find("tr.table-row");
+		expect(rows).to.have.length(4);
+		let searchInput = functionTable.find("div.properties-ft-search-container input");
+
+		expect(searchInput).to.have.length(1);
+		searchInput.simulate("change", { target: { value: "if" } });
+		functionTable = wrapper.find("div.properties-functions-table");
+		rows = functionTable.find("tr.table-row");
+		expect(rows).to.have.length(2);
+		expect(rows.at(0).text()).to.equal("if  COND1  then  EXPR1  else  EXPR2  endifAny");
+		searchInput = functionTable.find("div.properties-ft-search-container input");
+
+		searchInput.simulate("change", { target: { value: "to_int" } });
+		functionTable = wrapper.find("div.properties-functions-table");
+		rows = functionTable.find("tr.table-row");
+		expect(rows).to.have.length(1);
+		expect(rows.at(0).text()).to.equal("to_integer(Item)Integer");
+	});
+	it("expression builder sorts fields table", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		let fieldTable = wrapper.find("div.properties-field-table-container");
+		let rows = fieldTable.find("tr.table-row");
+		let sortHeaders = fieldTable.find("thead th");
+		expect(rows).to.have.length(4);
+		expect(rows.at(1).text()).to.equal("Sexstring");
+		expect(sortHeaders).to.have.length(2);
+
+		sortHeaders.at(0).simulate("click");
+		fieldTable = wrapper.find("div.properties-field-table-container");
+		rows = fieldTable.find("tr.table-row");
+		sortHeaders = fieldTable.find("thead th");
+		expect(rows.at(1).text()).to.equal("BPstring");
+
+		sortHeaders.at(1).simulate("click");
+		sortHeaders.at(1).simulate("click");
+		sortHeaders = fieldTable.find("div.properties-ft-search-container input");
+		fieldTable = wrapper.find("div.properties-field-table-container");
+		rows = fieldTable.find("tr.table-row");
+		expect(rows.at(1).text()).to.equal("Cholesterolstring");
+	});
+	it("expression builder sorts value table", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		let valueTable = wrapper.find("div.properties-value-table-container");
+		let rows = valueTable.find("tr.table-row");
+		let sortHeaders = valueTable.find("thead th");
+		expect(rows).to.have.length(2);
+		expect(rows.at(0).text()).to.equal("Min: 21");
+		expect(sortHeaders).to.have.length(1);
+
+		sortHeaders.at(0).simulate("click");
+		valueTable = wrapper.find("div.properties-value-table-container");
+		rows = valueTable.find("tr.table-row");
+		sortHeaders = valueTable.find("thead th");
+		expect(rows.at(0).text()).to.equal("Max: 55");
+
+		sortHeaders.at(0).simulate("click");
+		valueTable = wrapper.find("div.properties-value-table-container");
+		rows = valueTable.find("tr.table-row");
+		sortHeaders = valueTable.find("thead th");
+		expect(rows.at(0).text()).to.equal("Min: 21");
+	});
+	it("expression builder sorts function table", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		let functionTable = wrapper.find("div.properties-functions-table");
+		let rows = functionTable.find("tr.table-row");
+		let sortHeaders = functionTable.find("thead th");
+		expect(rows).to.have.length(4);
+		expect(rows.at(0).text()).to.equal("to_integer(Item)Integer");
+		expect(sortHeaders).to.have.length(2);
+
+		sortHeaders.at(0).simulate("click");
+		functionTable = wrapper.find("div.properties-functions-table");
+		rows = functionTable.find("tr.table-row");
+		sortHeaders = functionTable.find("thead th");
+		expect(rows.at(0).text()).to.equal("count_equal(Item, List)Integer");
+
+		sortHeaders.at(1).simulate("click");
+		sortHeaders = functionTable.find("div.properties-ft-search-container input");
+		functionTable = wrapper.find("div.properties-functions-table");
+		rows = functionTable.find("tr.table-row");
+		expect(rows.at(0).text()).to.equal("if  COND1  then  EXPR1  else  EXPR2  endifAny");
+	});
+});

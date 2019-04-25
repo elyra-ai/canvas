@@ -37,6 +37,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		this.onFieldCatChange = this.onFieldCatChange.bind(this);
 		this.onFieldFilter = this.onFieldFilter.bind(this);
 		this.onValueFilter = this.onValueFilter.bind(this);
+		this.onFunctionFilter = this.onFunctionFilter.bind(this);
 		this.recentUseCat = PropertyUtils.formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_RECENTLY_USED, MESSAGE_KEYS_DEFAULTS.EXPRESSION_RECENTLY_USED);
 		this.language = props.language;
@@ -140,6 +141,10 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		if (this.props.onChange) {
 			this.props.onChange(value);
 		}
+	}
+
+	onFunctionFilter(filterString) {
+		this.setState({ functionFilterText: filterString });
 	}
 
 	createContentObject(label) {
@@ -340,22 +345,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		}
 	}
 
-	_makeFunctionsContent() {
-		if (this.props.functionList) {
-			const categories = Object.keys(this.props.functionList);
-			const selectCategory = this._makeSelect(categories);
-			const functionsTable = this._makeFunctionsTable(categories);
-			return (
-				<div className="properties-expression-function-table-container" >
-					{selectCategory}
-					{functionsTable}
-				</div>
-			);
-		}
-		return (<span>PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS, MESSAGE_KEYS_DEFAULTS.EXPRESSION_NO_FUNCTIONS);</span>);
-	}
-
 	_makeAdditionalColumnsContent(field, fieldColumns) {
 		for (let i = 0; i < field.additional_column_entries.length; i++) {
 			fieldColumns.push({ column: field.additional_column_entries[i].id,
@@ -397,6 +386,22 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			</div>);
 	}
 
+	_makeFunctionsContent() {
+		if (this.props.functionList) {
+			const categories = Object.keys(this.props.functionList);
+			const selectCategory = this._makeSelect(categories);
+			const functionsTable = this._makeFunctionsTable(categories);
+			return (
+				<div className="properties-expression-function-table-container" >
+					{selectCategory}
+					{functionsTable}
+				</div>
+			);
+		}
+		return (<span>PropertyUtils.formatMessage(this.reactIntl,
+			MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS, MESSAGE_KEYS_DEFAULTS.EXPRESSION_NO_FUNCTIONS);</span>);
+	}
+
 	_makeFunctionsTable(categories) {
 		const headers = [];
 		const functionColumn = PropertyUtils.formatMessage(this.reactIntl,
@@ -414,6 +419,9 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					<FlexibleTable
 						columns={headers}
 						data={table.rows}
+						sortable={["function", "return"]}
+						filterable={["function"]}
+						onFilter={this.onFunctionFilter}
 						rows={EXPRESSION_TABLE_ROWS}
 						controller={this.props.controller}
 						rowSelection={"single"}
@@ -436,20 +444,22 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				const rowClass = (index === this.state.functionSelectedRow)
 					? "table-selected-single-row"
 					: "";
-
-				columns.push({ column: "function", content: this.createContentObject(catFunction.locLabel) });
-				columns.push({ column: "return", content: this.createContentObject(catFunction.return_type) });
-				table.rows.push({ className: rowClass, columns: columns,
-					onClickCallback: this.onFunctionTableClick.bind(this, index), onDblClickCallback: this.onFunctionTableDblClick.bind(this, index) });
-				if (index === this.state.functionSelectedRow) {
-					table.helpContainer = (
-						<div className="properties-function-help-text" >
-							<span className="properties-function-help-command">{catFunction.locLabel}:</span>
-							<br />
-							<br />
-							<span>{catFunction.help}</span>
-						</div>
-					);
+				if (!this.state.functionFilterText || this.state.functionFilterText.length === 0 ||
+					(catFunction.locLabel.toLowerCase().indexOf(this.state.functionFilterText.toLowerCase()) > -1)) {
+					columns.push({ column: "function", content: this.createContentObject(catFunction.locLabel), value: catFunction.locLabel });
+					columns.push({ column: "return", content: this.createContentObject(catFunction.return_type), value: catFunction.return_type });
+					table.rows.push({ className: rowClass, columns: columns,
+						onClickCallback: this.onFunctionTableClick.bind(this, index), onDblClickCallback: this.onFunctionTableDblClick.bind(this, index) });
+					if (index === this.state.functionSelectedRow) {
+						table.helpContainer = (
+							<div className="properties-function-help-text" >
+								<span className="properties-function-help-command">{catFunction.locLabel}:</span>
+								<br />
+								<br />
+								<span>{catFunction.help}</span>
+							</div>
+						);
+					}
 				}
 			}
 		}
