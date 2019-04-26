@@ -57,6 +57,10 @@ _defineConstant("CURVE_LINKS", "Curve");
 _defineConstant("ELBOW_LINKS", "Elbow");
 _defineConstant("STRAIGHT_LINKS", "Straight");
 
+_defineConstant("NO_LAYOUT", "None");
+_defineConstant("BLUE_ELLIPSES_LAYOUT", "Blue Ellipses");
+_defineConstant("DB2_EXPLAIN_LAYOUT", "Db2 Visual Explain");
+
 _defineConstant("FLYOUT", "Flyout");
 _defineConstant("MODAL", "Modal");
 _defineConstant("CUSTOM", "Custom");

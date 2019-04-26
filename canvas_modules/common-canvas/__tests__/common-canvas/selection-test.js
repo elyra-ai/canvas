@@ -15,6 +15,7 @@ import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
 import CanvasController from "../../src/common-canvas/canvas-controller";
+import LayoutDimensions from "../../src/object-model/layout-dimensions.js";
 import supernodeFlow from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
 
 // import log4js from "log4js";
@@ -379,10 +380,17 @@ describe("Selection notification tests", () => {
 
 		deepFreeze(canvasInfo);
 
+		// If there's no current layout info then add some default layout before
+		// setting canvas info.
+		objectModel.dispatch({ type: "SET_LAYOUT_INFO",
+			layoutinfo: LayoutDimensions.getLayout(),
+			layoutHandler: objectModel.layoutHandler
+		});
+
 		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: canvasInfo,
-			layoutinfo: objectModel.getLayout()
+			layoutinfo: objectModel.getLayoutInfo()
 		});
 	}
 

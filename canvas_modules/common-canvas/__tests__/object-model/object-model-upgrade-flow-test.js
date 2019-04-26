@@ -386,7 +386,7 @@ describe("ObjectModel files handling test", () => {
 
 	// Removes nodes from the V3 canvas that has new style decorators which
 	// were not supported in earlier versions. Also, removes corresponding
-	// comments. These changes allow the output flow to be compared to the 
+	// comments. These changes allow the output flow to be compared to the
 	// result of upgrading the previous version flows.
 	function removeNodesAndComments(flow) {
 		const outFlow = JSON.parse(JSON.stringify(flow));

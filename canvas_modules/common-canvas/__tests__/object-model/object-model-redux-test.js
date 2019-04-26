@@ -14,6 +14,7 @@ import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
 import ObjectModel from "../../src/object-model/object-model.js";
+import LayoutDimensions from "../../src/object-model/layout-dimensions.js";
 // import log4js from "log4js";
 
 describe("ObjectModel handle model OK", () => {
@@ -1611,10 +1612,17 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(canvasInfo);
 
+		// If there's no current layout info then add some default layout before
+		// setting canvas info.
+		objectModel.dispatch({ type: "SET_LAYOUT_INFO",
+			layoutinfo: LayoutDimensions.getLayout(),
+			layoutHandler: objectModel.layoutHandler
+		});
+
 		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: canvasInfo,
-			layoutinfo: objectModel.getLayout()
+			layoutinfo: objectModel.getLayoutInfo()
 		});
 	}
 
@@ -1631,6 +1639,7 @@ describe("ObjectModel handle model OK", () => {
 			delete pipeline.nodes[i].height;
 			delete pipeline.nodes[i].outputPortsHeight;
 			delete pipeline.nodes[i].inputPortsHeight;
+			delete pipeline.nodes[i].layout;
 		}
 		return pipeline;
 	}

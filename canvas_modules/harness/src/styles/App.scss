@@ -318,6 +318,7 @@ $harness-navbar-icon-width: 48px;
 	fill: #6A5ACD;
 
 }
+
 /* This style is used in the customAttrs.json canvas file. */
 
 .node-image[data-attr1] {
@@ -344,6 +345,80 @@ $harness-navbar-icon-width: 48px;
 .main-comment-box {
 	fill: #2BE2CA;
 }
+
+/* These styles are used by the Blue Ellipses node layout override setting. */
+
+.default_node_style_blue_ellipses {
+	stroke: #828281;
+	fill: #7BD3F9;
+	stroke-width: 2;
+	text-anchor: middle;
+}
+
+.shape_label_style_blue_ellipses {
+	font-size: 13px;
+	font-weight: 600;
+	user-select: none; // Prevents text highlighting on drag over
+}
+
+/* These styles are used in the db2ExplainCanvas.json. */
+
+.default_node_style_db2_explain {
+	stroke: #828281;
+	fill: #FFFAC2;
+	stroke-width: 2;
+	text-anchor: middle;
+}
+
+.shape_label_style_db2_explain {
+	font-size: 13px;
+	font-weight: 600;
+	text-anchor: middle;
+	user-select: none; // Prevents text highlighting on drag over
+}
+
+.small_text {
+	font-size: 11px;
+	text-anchor: middle;
+	user-select: none; // Prevents text highlighting on drag over
+}
+
+.dark_purple {
+	stroke: #828281;
+	fill: #C2A7CE;
+	stroke-width: 2;
+}
+
+.light_purple {
+	stroke: #828281;
+	fill: #F1F0FE;
+	stroke-width: 2;
+}
+
+.light_brown {
+	stroke: #828281;
+	fill: #F3DAD4;
+	stroke-width: 2;
+}
+
+.pink {
+	stroke: #828281;
+	fill: #F9BEB8;
+	stroke-width: 2;
+}
+
+.gray {
+	stroke: #828281;
+	fill: #BCB7BD;
+	stroke-width: 2;
+}
+
+.light_green {
+	stroke: #828281;
+	fill: #E8F0C1;
+	stroke-width: 2;
+}
+
 
 /* Provide animation key frames for sample progress indication in harness */
 @keyframes blink {

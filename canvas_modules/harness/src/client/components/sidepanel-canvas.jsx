@@ -42,6 +42,9 @@ import {
 	CURVE_LINKS,
 	ELBOW_LINKS,
 	STRAIGHT_LINKS,
+	NO_LAYOUT,
+	BLUE_ELLIPSES_LAYOUT,
+	DB2_EXPLAIN_LAYOUT,
 	FLYOUT,
 	MODAL,
 	TIP_PALETTE,
@@ -85,6 +88,7 @@ export default class SidePanelForms extends React.Component {
 		this.interactionTypeOptionChange = this.interactionTypeOptionChange.bind(this);
 		this.nodeFormatTypeOptionChange = this.nodeFormatTypeOptionChange.bind(this);
 		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
+		this.nodeLayoutOptionChange = this.nodeLayoutOptionChange.bind(this);
 		this.paletteLayoutOptionChange = this.paletteLayoutOptionChange.bind(this);
 		this.tipConfigChange = this.tipConfigChange.bind(this);
 		this.extraCanvasChange = this.extraCanvasChange.bind(this);
@@ -332,6 +336,10 @@ export default class SidePanelForms extends React.Component {
 
 	linkTypeOptionChange(value) {
 		this.props.canvasConfig.setLinkType(value);
+	}
+
+	nodeLayoutOptionChange(value) {
+		this.props.canvasConfig.setNodeLayout(value);
 	}
 
 	paletteLayoutOptionChange(value) {
@@ -782,6 +790,29 @@ export default class SidePanelForms extends React.Component {
 			</RadioButtonGroup>
 		</div>);
 
+		const nodeLayoutType = (<div className="harness-sidepanel-children">
+			<div className="harness-sidepanel-headers">Node Layout Override</div>
+			<RadioButtonGroup
+				className="harness-sidepanel-radio-group"
+				name="node_layout_radio"
+				onChange={this.nodeLayoutOptionChange}
+				defaultSelected={this.props.canvasConfig.selectedNodeLayout}
+			>
+				<RadioButton
+					value={NO_LAYOUT}
+					labelText={NO_LAYOUT}
+				/>
+				<RadioButton
+					value={BLUE_ELLIPSES_LAYOUT}
+					labelText={BLUE_ELLIPSES_LAYOUT}
+				/>
+				<RadioButton
+					value={DB2_EXPLAIN_LAYOUT}
+					labelText={DB2_EXPLAIN_LAYOUT}
+				/>
+			</RadioButtonGroup>
+		</div>);
+
 		var paletteLayout = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-layout">
 			<div className="harness-sidepanel-headers">Palette Layout</div>
 			<RadioButtonGroup
@@ -915,6 +946,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{linkType}
 				{divider}
+				{nodeLayoutType}
+				{divider}
 				{snapToGrid}
 				{divider}
 				{saveZoom}
@@ -996,7 +1029,9 @@ SidePanelForms.propTypes = {
 		setNodeFormatType: PropTypes.func,
 		selectedNodeFormat: PropTypes.string,
 		setLinkType: PropTypes.func,
+		setNodeLayout: PropTypes.func,
 		selectedLinkType: PropTypes.string,
+		selectedNodeLayout: PropTypes.string,
 		selectedSaveZoom: PropTypes.string,
 		setPaletteLayout: PropTypes.func,
 		selectedPaletteLayout: PropTypes.string,

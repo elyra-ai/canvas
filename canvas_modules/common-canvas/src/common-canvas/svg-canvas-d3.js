@@ -20,6 +20,8 @@ import forIn from "lodash/forIn";
 import get from "lodash/get";
 import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
+import isMatch from "lodash/isMatch";
+import cloneDeep from "lodash/cloneDeep";
 import { CONTEXT_MENU_BUTTON, NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
@@ -90,7 +92,8 @@ export default class CanvasD3Layout {
 				this.config.enableLinkType !== config.enableLinkType ||
 				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
 				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize ||
-				this.config.enableSaveZoom !== config.enableSaveZoom) {
+				this.config.enableSaveZoom !== config.enableSaveZoom ||
+				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
 			this.logger.logStartTimer("Initializing Canvas");
 
 			// The canvasInfo does not need to be cloned here because the two
@@ -132,10 +135,20 @@ export default class CanvasD3Layout {
 		}
 	}
 
-	// Returns a copy of the config option. This is necessary so that comparisons
+	// Returns a copy of the config object. This is necessary so that comparisons
 	// with new config objects that are provided reveal differences.
 	cloneConfig(config) {
-		return Object.assign({}, config);
+		return cloneDeep(config);
+	}
+
+	// Returns true if the contents of enableLayout1 and enableLayout2 are exactly the same.
+	enableNodeLayoutExactlyMatches(enableLayout1, enableLayout2) {
+		if (!enableLayout1 && !enableLayout2) {
+			return true;
+		} else if (isMatch(enableLayout1, enableLayout2) && isMatch(enableLayout2, enableLayout1)) {
+			return true;
+		}
+		return false;
 	}
 
 	// Copies canvasInfo because we will need to update it (when moving
@@ -144,7 +157,7 @@ export default class CanvasD3Layout {
 	// updated when the real-time operation is complete.
 	cloneCanvasInfo(canvasInfo) {
 		this.logger.logStartTimer("Cloning canvasInfo");
-		const clone = JSON.parse(JSON.stringify(canvasInfo));
+		const clone = cloneDeep(canvasInfo);
 		this.logger.logEndTimer("Cloning canvasInfo");
 		return clone;
 	}
@@ -205,14 +218,14 @@ export default class CanvasD3Layout {
 	initializeLayoutInfo(config) {
 
 		if (config.enableConnectionType === "Halo") {
-			this.objectModel.setLayoutType("halo");
+			this.objectModel.setLayoutType("halo", config.enableNodeLayout);
 
 		} else { // Ports connection type
 			if (config.enableNodeFormatType === "Horizontal") {
-				this.objectModel.setLayoutType("ports-horizontal", config.enableLinkType);
+				this.objectModel.setLayoutType("ports-horizontal", config.enableNodeLayout, config.enableLinkType);
 
 			} else { // Vertical
-				this.objectModel.setLayoutType("ports-vertical", config.enableLinkType);
+				this.objectModel.setLayoutType("ports-vertical", config.enableNodeLayout, config.enableLinkType);
 			}
 		}
 	}
@@ -264,7 +277,7 @@ class CanvasRenderer {
 		this.instanceId = this.canvasController.getInstanceId();
 
 		// Get the layout info
-		this.layout = this.objectModel.getLayout();
+		this.layout = this.objectModel.getLayoutInfo();
 
 		// Initialize zoom variables
 		this.initializeZoomVariables();
@@ -312,8 +325,8 @@ class CanvasRenderer {
 		const snapToGridYStr = this.config.enableSnapToGridX || this.layout.snapToGridY || "20%";
 
 		// Set the snap-to-grid sizes in pixels.
-		this.snapToGridX = this.getSnapToGridSize(snapToGridXStr, this.layout.defaultNodeWidth);
-		this.snapToGridY = this.getSnapToGridSize(snapToGridYStr, this.layout.defaultNodeHeight);
+		this.snapToGridX = this.getSnapToGridSize(snapToGridXStr, this.layout.nodeLayout.defaultNodeWidth);
+		this.snapToGridY = this.getSnapToGridSize(snapToGridYStr, this.layout.nodeLayout.defaultNodeHeight);
 
 		// Allow us to track when a selection is being made so there is
 		// no need to re-render whole canvas
@@ -344,6 +357,7 @@ class CanvasRenderer {
 		this.drawingNewLinkSrcPortId = null;
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
+		this.drawingNewLinkPortRadius = null;
 		this.drawingNewLinkArray = [];
 
 		// Create a drag object for use with nodes and comments.
@@ -485,7 +499,7 @@ class CanvasRenderer {
 		this.logger.logStartTimer("setCanvasInfoRenderer");
 		this.canvasInfo = canvasInfo;
 		this.activePipeline = this.getPipeline(this.pipelineId);
-		this.layout = this.objectModel.getLayout(); // Refresh the layout info in case it changed.
+		this.layout = this.objectModel.getLayoutInfo(); // Refresh the layout info in case it changed.
 
 		// Set the display state incase we changed from in-place to full-page
 		// sub-flow display.
@@ -838,8 +852,8 @@ class CanvasRenderer {
 		}
 
 		// Offset mousePos so new node appers in center of mouse location.
-		mousePos.x -= (this.layout.defaultNodeWidth / 2) * this.zoomTransform.k;
-		mousePos.y -= (this.layout.defaultNodeHeight / 2) * this.zoomTransform.k;
+		mousePos.x -= (this.layout.nodeLayout.defaultNodeWidth / 2) * this.zoomTransform.k;
+		mousePos.y -= (this.layout.nodeLayout.defaultNodeHeight / 2) * this.zoomTransform.k;
 
 		let transPos = this.transformPos(mousePos);
 		const link = this.getNodeLinkForElement(element);
@@ -1575,10 +1589,10 @@ class CanvasRenderer {
 			if (this.isSuperBindingNode(d)) { // Always ignore Supernode binding nodes
 				return;
 			}
-			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.nodeHighlightGap);
-			canvTop = Math.min(canvTop, d.y_pos - this.layout.nodeHighlightGap);
-			canvRight = Math.max(canvRight, d.x_pos + d.width + this.layout.nodeHighlightGap);
-			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.layout.nodeHighlightGap);
+			canvLeft = Math.min(canvLeft, d.x_pos - d.layout.nodeHighlightGap);
+			canvTop = Math.min(canvTop, d.y_pos - d.layout.nodeHighlightGap);
+			canvRight = Math.max(canvRight, d.x_pos + d.width + d.layout.nodeHighlightGap);
+			canvBottom = Math.max(canvBottom, d.y_pos + d.height + d.layout.nodeHighlightGap);
 		});
 
 		const selector2 = this.getSelectorForClass("comment-group");
@@ -1855,7 +1869,7 @@ class CanvasRenderer {
 				const nodeGrp = d3.select(this);
 				nodeGrp.select(that.getSelectorForId("node_outline", d.id))
 					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
-					.attr("class", that.layout.cssNodeSelectionHighlight);
+					.attr("class", d.layout.cssNodeSelectionHighlight);
 				that.setNodeStyles(d, "default", nodeGrp);
 			});
 
@@ -1982,7 +1996,7 @@ class CanvasRenderer {
 							!that.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
 						let cursorType = "pointer";
 						if (!that.isPointerCloseToBodyEdge(d)) {
-							that.nodeSizingDirection = that.getSizingDirection(d, that.layout.nodeCornerResizeArea);
+							that.nodeSizingDirection = that.getSizingDirection(d, d.layout.nodeCornerResizeArea);
 							that.nodeSizingCursor = that.getCursorBasedOnDirection(that.nodeSizingDirection);
 							cursorType = that.nodeSizingCursor;
 						}
@@ -1998,10 +2012,10 @@ class CanvasRenderer {
 			// Image outline - this code used for debugging purposes
 			// newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
 			//	.append("rect")
-			// 	.attr("width", this.layout.imageWidth)
-			// 	.attr("height", this.layout.imageHeight)
-			// 	.attr("x", this.layout.imagePosX)
-			// 	.attr("y", this.layout.imagePosY)
+			// 	.attr("width", (d) => d.layout.imageWidth)
+			// 	.attr("height", (d) => d.layout.imageHeight)
+			// 	.attr("x", (d) => d.layout.imagePosX)
+			// 	.attr("y", (d) => d.layout.imagePosY)
 			// 	.attr("class", "d3-node-image-outline");
 
 			// Node image
@@ -2014,11 +2028,11 @@ class CanvasRenderer {
 
 			// Label outline - this code used for debugging purposes
 			// newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
-			//	.append("rect")
-			// 	.attr("width", this.layout.labelWidth)
-			// 	.attr("height", this.layout.labelHeight)
-			// 	.attr("x", this.layout.labelPosX)
-			// 	.attr("y", (d) => this.getLabelPosY(d))
+			// 	.append("rect")
+			// 	.attr("width", (d) => d.layout.labelMaxWidth)
+			// 	.attr("height", (d) => d.layout.labelHeight)
+			// 	.attr("x", (d) => this.getLabelOutlinePosX(d))
+			// 	.attr("y", (d) => this.getLabelOutlinePosY(d))
 			// 	.attr("class", "d3-label-outline");
 
 			// Label
@@ -2052,12 +2066,13 @@ class CanvasRenderer {
 			// Halo
 			if (this.layout.connectionType === "halo") {
 				newNodeGroups.append("circle")
+					.filter((d) => d.layout.haloDisplay)
 					.attr("data-id", (d) => this.getId("node_halo", d.id))
 					.attr("data-pipeline-id", this.activePipeline.id)
 					.attr("class", "d3-node-halo")
-					.attr("cx", this.layout.haloCenterX)
-					.attr("cy", this.layout.haloCenterY)
-					.attr("r", this.layout.haloRadius)
+					.attr("cx", (d) => d.layout.haloCenterX)
+					.attr("cy", (d) => d.layout.haloCenterY)
+					.attr("r", (d) => d.layout.haloRadius)
 					.on("mousedown", (d) => {
 						this.logger.log("Halo - mouse down");
 						d3Event.stopPropagation();
@@ -2065,6 +2080,7 @@ class CanvasRenderer {
 						this.drawingNewLinkSrcId = d.id;
 						this.drawingNewLinkAction = "node-node";
 						this.drawingNewLinkStartPos = this.getTransformedMousePos();
+						this.drawingNewLinkPortRadius = null;
 						this.drawingNewLinkArray = [];
 						this.drawNewLink();
 					});
@@ -2092,7 +2108,7 @@ class CanvasRenderer {
 					nodeGrp.select(this.getSelectorForId("node_outline", d.id))
 						.attr("d", (nd) => this.getNodeShapePathOutline(nd))
 						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
-						.attr("class", this.layout.cssNodeSelectionHighlight)
+						.attr("class", (nd) => nd.layout.cssNodeSelectionHighlight)
 						.datum(node); // Set the __data__ to the updated data
 
 					// Move the dynamic icons (if any exist)
@@ -2101,8 +2117,8 @@ class CanvasRenderer {
 						.attr("y", (nd) => that.getEllipsisPosY(nd));
 
 					nodeGrp.select(this.getSelectorForId("node_ellipsis", d.id))
-						.attr("x", (nd) => that.getEllipsisPosX(nd) + this.layout.ellipsisHoverAreaPadding)
-						.attr("y", (nd) => that.getEllipsisPosY(nd) + this.layout.ellipsisHoverAreaPadding);
+						.attr("x", (nd) => that.getEllipsisPosX(nd) + nd.layout.ellipsisHoverAreaPadding)
+						.attr("y", (nd) => that.getEllipsisPosY(nd) + nd.layout.ellipsisHoverAreaPadding);
 
 					nodeGrp.select(this.getSelectorForId("node_exp_back", d.id))
 						.attr("x", (nd) => this.getExpansionIconPosX(nd))
@@ -2142,13 +2158,12 @@ class CanvasRenderer {
 					nodeGrp.select(this.getSelectorForId("node_label", d.id))
 						.datum(node) // Set the __data__ to the updated data
 						.attr("x", (nd) => this.getLabelPosX(nd))
-						.attr("y", (nd) => this.getLabelPosY(nd) + this.layout.labelHeight - this.layout.labelDescent)
-						.attr("text-anchor", (nd) => this.getLabelHorizontalJustification(nd))
+						.attr("y", (nd) => this.getLabelPosY(nd))
 						.text(function(nd) {
 							var textObj = d3.select(this);
 							return that.getNodeLabelText(nd, textObj);
 						})
-						.attr("class", function(nd) { return that.layout.cssNodeLabel + " " + that.getMessageLabelClass(nd.messages); });
+						.attr("class", (nd) => this.getLabelClass(nd));
 
 					// Supernode sub-flow display
 					if (this.isSupernode(d)) {
@@ -2167,19 +2182,19 @@ class CanvasRenderer {
 						.datum(node) // Set the __data__ to the updated data
 						.attr("class", (nd) => "node-error-marker " + that.getErrorMarkerClass(nd.messages))
 						.html((nd) => that.getErrorMarkerIcon(nd))
-						.attr("width", that.layout.errorWidth)
-						.attr("height", that.layout.errorHeight)
+						.attr("width", (nd) => nd.layout.errorWidth)
+						.attr("height", (nd) => nd.layout.errorHeight)
 						.attr("x", (nd) => that.getErrorPosX(nd, nodeGrp))
 						.attr("y", (nd) => that.getErrorPosY(nd));
 
+					// Node body updates
+					nodeGrp.select(this.getSelectorForId("node_body", d.id))
+						.datum(node) // Set the __data__ to the updated data
+						.attr("d", (cd) => this.getNodeShapePath(cd))
+						.attr("class", (cd) => this.getNodeBodyClass(cd));
+
 					// Handle port related objects
 					if (this.layout.connectionType === "ports") {
-						// Node body updates
-						nodeGrp.select(this.getSelectorForId("node_body", d.id))
-							.datum(node) // Set the __data__ to the updated data
-							.attr("d", (cd) => this.getNodeShapePath(cd))
-							.attr("class", (cd) => this.getNodeBodyClass(cd));
-
 						// Input ports
 						if (d.inputs && d.inputs.length > 0) {
 							// This selector will select all input ports which are for the currently
@@ -2301,6 +2316,7 @@ class CanvasRenderer {
 										this.drawingNewLinkAction = "node-node";
 										const srcNode = this.getNode(d.id);
 										this.drawingNewLinkStartPos = { x: srcNode.x_pos + srcNode.width, y: srcNode.y_pos + port.cy };
+										this.drawingNewLinkPortRadius = this.getPortRadius(srcNode);
 										this.drawingNewLinkArray = [];
 										this.drawNewLink();
 									}
@@ -2352,8 +2368,8 @@ class CanvasRenderer {
 							.attr("data-id", (dec) => this.getId("node_dec_outln", dec.id)) // Used in Chimp tests
 							.attr("data-pipeline-id", this.activePipeline.id)
 							.merge(decoratorOutlnsSelection)
-							.attr("x", (dec) => this.getDecoratorX(dec))
-							.attr("y", (dec) => this.getDecoratorY(dec))
+							.attr("x", (dec) => this.getDecoratorX(dec, d))
+							.attr("y", (dec) => this.getDecoratorY(dec, d))
 							.attr("class", (dec) => this.getDecoratorOutlineClass(dec))
 							.datum((dec) => this.getDecorator(dec.id, node))
 							.filter((dec) => dec.hotspot)
@@ -2375,8 +2391,8 @@ class CanvasRenderer {
 							.attr("class", "d3-decorator-image")
 							.merge(decoratorImgsSelection)
 							.filter((dec) => dec.image)
-							.attr("x", (dec) => this.getDecoratorX(dec))
-							.attr("y", (dec) => this.getDecoratorY(dec))
+							.attr("x", (dec) => this.getDecoratorX(dec, d))
+							.attr("y", (dec) => this.getDecoratorY(dec, d))
 							.attr("xlink:href", (dec) => this.getDecoratorImage(dec))
 							.datum((dec) => this.getDecorator(dec.id, node))
 							.filter((dec) => dec.hotspot)
@@ -2395,8 +2411,8 @@ class CanvasRenderer {
 							.attr("data-id", (dec) => this.getId("node_dec_label", dec.id)) // Used in Chimp tests
 							.attr("data-pipeline-id", this.activePipeline.id)
 							.merge(decoratorLabelSelection)
-							.attr("x", (dec) => this.getDecoratorX(dec))
-							.attr("y", (dec) => this.getDecoratorY(dec))
+							.attr("x", (dec) => this.getDecoratorX(dec, d))
+							.attr("y", (dec) => this.getDecoratorY(dec, d))
 							.attr("class", (dec) => this.getDecoratorLabelClass(dec))
 							.text((dec) => dec.label)
 							.datum((dec) => this.getDecorator(dec.id, node))
@@ -2428,21 +2444,21 @@ class CanvasRenderer {
 		if (this.isExpandedSupernode(d)) {
 			return this.layout.supernodeImageWidth;
 		}
-		return this.layout.imageWidth;
+		return d.layout.imageWidth;
 	}
 
 	getNodeImageHeight(d) {
 		if (this.isExpandedSupernode(d)) {
 			return this.layout.supernodeImageHeight;
 		}
-		return this.layout.imageHeight;
+		return d.layout.imageHeight;
 	}
 
 	getNodeImagePosX(d) {
 		if (this.isExpandedSupernode(d)) {
 			return this.layout.supernodeImagePosX;
 		}
-		return this.layout.imagePosX;
+		return d.layout.imagePosX;
 	}
 
 	setNodeStyles(d, type, nodeGrp) {
@@ -2455,7 +2471,7 @@ class CanvasRenderer {
 	setNodeBodyStyles(d, type, nodeGrp) {
 		let style = this.getObjectStyle(d, "body", type);
 		// For port-arcs display we reapply the drop shadow if no styles is provided
-		if (style === null && this.layout.nodeShape === "port-arcs") {
+		if (style === null && d.layout.dropShadow) {
 			style = `filter:url(${this.getId("#node_drop_shadow")})`;
 		}
 		nodeGrp.select(this.getSelectorForId("node_body", d.id)).attr("style", style);
@@ -2498,7 +2514,7 @@ class CanvasRenderer {
 	}
 
 	getPortRadius(d) {
-		return this.isSuperBindingNode(d) ? this.layout.supernodeBindingPortRadius / this.zoomTransform.k : this.layout.portRadius;
+		return this.isSuperBindingNode(d) ? this.layout.supernodeBindingPortRadius / this.zoomTransform.k : d.layout.portRadius;
 	}
 
 	isSuperBindingNode(d) {
@@ -2508,36 +2524,36 @@ class CanvasRenderer {
 	addDynamicNodeIcons(d, nodeGrpSrc) {
 		if (!this.nodeSizing && !this.isSuperBindingNode(d)) {
 			const nodeGrp = d3.select(nodeGrpSrc);
-			if (this.layout.connectionType === "ports") {
-				nodeGrp.select(this.getSelectorForId("node_body", d.id)).attr("hover", "yes");
-				nodeGrp
-					.append("rect")
-					.attr("data-id", this.getId("node_ellipsis_background", d.id))
-					.attr("data-pipeline-id", this.activePipeline.id)
-					.attr("class", "d3-node-ellipsis-background")
-					.attr("width", (nd) => this.getEllipsisWidth(nd))
-					.attr("height", (nd) => this.getEllipsisHeight(nd))
-					.attr("x", (nd) => this.getEllipsisPosX(nd))
-					.attr("y", (nd) => this.getEllipsisPosY(nd))
-					.on("click", () => {
-						stopPropagationAndPreventDefault();
-						this.openContextMenu("node", d);
-					});
-				nodeGrp
-					.append("svg")
-					.attr("data-id", this.getId("node_ellipsis", d.id))
-					.attr("data-pipeline-id", this.activePipeline.id)
-					.attr("class", "d3-node-ellipsis")
-					.html(NODE_MENU_ICON)
-					.attr("width", (nd) => this.getEllipsisWidth(nd) - (2 * this.layout.ellipsisHoverAreaPadding))
-					.attr("height", (nd) => this.getEllipsisHeight(nd) - (2 * this.layout.ellipsisHoverAreaPadding))
-					.attr("x", (nd) => this.getEllipsisPosX(nd) + this.layout.ellipsisHoverAreaPadding)
-					.attr("y", (nd) => this.getEllipsisPosY(nd) + this.layout.ellipsisHoverAreaPadding)
-					.on("click", () => {
-						stopPropagationAndPreventDefault();
-						this.openContextMenu("node", d);
-					});
-			}
+			nodeGrp.select(this.getSelectorForId("node_body", d.id)).attr("hover", "yes");
+			nodeGrp
+				.append("rect")
+				.filter(() => d.layout.ellipsisDisplay)
+				.attr("data-id", this.getId("node_ellipsis_background", d.id))
+				.attr("data-pipeline-id", this.activePipeline.id)
+				.attr("class", "d3-node-ellipsis-background")
+				.attr("width", (nd) => this.getEllipsisWidth(nd))
+				.attr("height", (nd) => this.getEllipsisHeight(nd))
+				.attr("x", (nd) => this.getEllipsisPosX(nd))
+				.attr("y", (nd) => this.getEllipsisPosY(nd))
+				.on("click", () => {
+					stopPropagationAndPreventDefault();
+					this.openContextMenu("node", d);
+				});
+			nodeGrp
+				.append("svg")
+				.filter(() => d.layout.ellipsisDisplay)
+				.attr("data-id", this.getId("node_ellipsis", d.id))
+				.attr("data-pipeline-id", this.activePipeline.id)
+				.attr("class", "d3-node-ellipsis")
+				.html(NODE_MENU_ICON)
+				.attr("width", (nd) => this.getEllipsisWidth(nd) - (2 * nd.layout.ellipsisHoverAreaPadding))
+				.attr("height", (nd) => this.getEllipsisHeight(nd) - (2 * nd.layout.ellipsisHoverAreaPadding))
+				.attr("x", (nd) => this.getEllipsisPosX(nd) + nd.layout.ellipsisHoverAreaPadding)
+				.attr("y", (nd) => this.getEllipsisPosY(nd) + nd.layout.ellipsisHoverAreaPadding)
+				.on("click", () => {
+					stopPropagationAndPreventDefault();
+					this.openContextMenu("node", d);
+				});
 
 			if (this.isExpandedSupernode(d)) {
 				// Supernode expansion icon background
@@ -2609,7 +2625,7 @@ class CanvasRenderer {
 	}
 
 	removeDynamicNodeIcons(d, nodeGrp) {
-		if (this.layout.connectionType === "ports") {
+		if (d.layout.ellipsisDisplay) {
 			nodeGrp.selectAll(this.getSelectorForId("node_ellipsis", d.id)).remove();
 			nodeGrp.selectAll(this.getSelectorForId("node_ellipsis_background", d.id)).remove();
 		}
@@ -2700,57 +2716,82 @@ class CanvasRenderer {
 		if (this.isExpandedSupernode(data)) {
 			return this.layout.supernodeImagePosY;
 		}
-		if (this.layout.labelAndIconVerticalJustification === "center") {
-			if (this.layout.nodeFormatType === "horizontal") {
-				return (data.height / 2) - (this.layout.imageHeight / 2);
+		if (data.layout.labelAndIconVerticalJustification === "center") {
+			if (data.layout.nodeFormatType === "horizontal") {
+				return (data.height / 2) - (data.layout.imageHeight / 2);
 
-			} else if (this.layout.nodeFormatType === "vertical") {
-				var imageLabelGap = this.layout.labelPosY - (this.layout.imagePosY + this.layout.imageHeight);
-				return (data.height / 2) - ((this.layout.imageHeight + this.layout.labelHeight + imageLabelGap) / 2);
+			} else if (data.layout.nodeFormatType === "vertical") {
+				const imageLabelGap = this.getImageLabelVerticalGap(data);
+				return (data.height / 2) - ((data.layout.imageHeight + data.layout.labelHeight + imageLabelGap) / 2);
 			}
 		}
-		return this.layout.imagePosY;
+		return data.layout.imagePosY;
 	}
 
 	getNodeLabelText(data, textObj) {
-		let labelWidth = this.layout.labelWidth;
+		let labelMaxWidth = data.layout.labelMaxWidth;
 		if (this.isExpandedSupernode(data)) {
-			labelWidth = data.width - this.layout.supernodeLabelPosX -
+			labelMaxWidth = data.width - this.layout.supernodeLabelPosX -
 				(4 * this.layout.supernodeIconSeparation) -
 				this.layout.supernodeExpansionIconWidth -
 				this.layout.supernodeEllipsisWidth;
 
 			// Reduce the available space for the label by the error icon width.
 			if (this.getMessageLevel(data.messages) !== "") {
-				labelWidth -= this.layout.errorWidth;
+				labelMaxWidth -= data.layout.errorWidth;
 			}
 		}
-
-		return this.trimLabelToWidth(data.label, labelWidth, this.layout.cssNodeLabel, textObj);
+		const className = this.getLabelClass(data);
+		return this.trimLabelToWidth(data.label, labelMaxWidth, className, textObj);
 	}
 
 	getLabelPosX(data) {
 		if (this.isExpandedSupernode(data)) {
 			return this.layout.supernodeLabelPosX;
 		}
-		return this.layout.labelHorizontalJustification === "left" // If not "left" then "center"
-			? this.layout.labelPosX : this.layout.labelPosX + (this.layout.labelWidth / 2);
+		return data.layout.labelPosX;
+	}
+
+	// Returns an X position for the outline of the label which is used for
+	// debugging.
+	getLabelOutlinePosX(data) {
+		return data.layout.nodeFormatType === "horizontal" ? this.getLabelPosX(data) : this.getLabelPosX(data) - (data.layout.labelMaxWidth / 2);
+	}
+
+	// Returns a Y position for the outline of the label which is used for
+	// debugging.
+	getLabelOutlinePosY(data) {
+		return this.getLabelPosY(data) - data.layout.labelHeight;
 	}
 
 	getLabelPosY(data) {
 		if (this.isExpandedSupernode(data)) {
 			return this.layout.supernodeLabelPosY;
-		} else if (this.layout.labelAndIconVerticalJustification === "center") {
-			if (this.layout.nodeFormatType === "horizontal") {
-				return (data.height / 2) - (this.layout.labelHeight / 2);
+		} else if (data.layout.labelAndIconVerticalJustification === "center") {
+			if (data.layout.nodeFormatType === "horizontal") {
+				return (data.height / 2) + ((data.layout.labelHeight - data.layout.labelDescent) / 2);
 
-			} else if (this.layout.nodeFormatType === "vertical") {
-				var imageLabelGap = this.layout.labelPosY - (this.layout.imagePosY + this.layout.imageHeight);
-				return (data.height / 2) + ((this.layout.imageHeight + this.layout.labelHeight + imageLabelGap) / 2) - this.layout.labelHeight;
+			} else if (data.layout.nodeFormatType === "vertical") {
+				const imageLabelGap = this.getImageLabelVerticalGap(data);
+				return (data.height / 2) + ((data.layout.imageHeight + data.layout.labelHeight + imageLabelGap) / 2);
 			}
 		}
 
-		return this.layout.labelPosY;
+		return data.layout.labelPosY;
+	}
+
+	getLabelClass(data) {
+		if (this.isExpandedSupernode(data)) {
+			return this.layout.cssSupernodeLabel + " " + this.getMessageLabelClass(data.messages);
+		}
+		return data.layout.cssNodeLabel + " " + this.getMessageLabelClass(data.messages);
+	}
+
+	// Returns the gap between the image and the label, when they are arranged
+	// vertically, based on the position of each of those elements as described
+	// by labelPosY and imagePosY.
+	getImageLabelVerticalGap(data) {
+		return data.layout.labelPosY - data.layout.labelHeight - (data.layout.imagePosY + data.layout.imageHeight);
 	}
 
 	getErrorPosX(data, nodeGrp) {
@@ -2758,37 +2799,37 @@ class CanvasRenderer {
 			const nodeText = nodeGrp.select(this.getSelectorForId("node_label", data.id)).node();
 			return this.layout.supernodeLabelPosX + nodeText.getComputedTextLength() + this.layout.supernodeIconSeparation;
 		}
-		return this.layout.errorXPos;
+		return data.layout.errorXPos;
 	}
 
 	getErrorPosY(data) {
 		if (this.isExpandedSupernode(data)) {
-			return (this.layout.supernodeSVGTopAreaHeight / 2) - (this.layout.errorHeight / 2);
+			return (this.layout.supernodeSVGTopAreaHeight / 2) - (data.layout.errorHeight / 2);
 		} else
-		if (this.layout.labelAndIconVerticalJustification === "center") {
-			if (this.layout.nodeFormatType === "horizontal") {
-				return (data.height / 2) - (this.layout.imageHeight / 2);
+		if (data.layout.labelAndIconVerticalJustification === "center") {
+			if (data.layout.nodeFormatType === "horizontal") {
+				return (data.height / 2) - (data.layout.imageHeight / 2);
 
-			} else if (this.layout.nodeFormatType === "vertical") {
-				var imageLabelGap = this.layout.labelPosY - (this.layout.imagePosY + this.layout.imageHeight);
-				return (data.height / 2) - ((this.layout.imageHeight + this.layout.labelHeight + imageLabelGap) / 2);
+			} else if (data.layout.nodeFormatType === "vertical") {
+				const imageLabelGap = this.getImageLabelVerticalGap(data);
+				return (data.height / 2) - ((data.layout.imageHeight + data.layout.labelHeight + imageLabelGap) / 2);
 			}
 		}
-		return this.layout.errorYPos;
+		return data.layout.errorYPos;
 	}
 
 	getEllipsisWidth(d) {
 		if (this.isExpandedSupernode(d)) {
 			return this.layout.supernodeEllipsisWidth;
 		}
-		return this.layout.ellipsisWidth;
+		return d.layout.ellipsisWidth;
 	}
 
 	getEllipsisHeight(d) {
 		if (this.isExpandedSupernode(d)) {
 			return this.layout.supernodeEllipsisHeight;
 		}
-		return this.layout.ellipsisHeight;
+		return d.layout.ellipsisHeight;
 	}
 
 	getEllipsisPosX(data) {
@@ -2798,7 +2839,7 @@ class CanvasRenderer {
 				this.layout.supernodeEllipsisWidth;
 		}
 
-		return this.layout.ellipsisPosX;
+		return data.layout.ellipsisPosX;
 	}
 
 	getEllipsisPosY(data) {
@@ -2806,22 +2847,15 @@ class CanvasRenderer {
 			return this.layout.supernodeEllipsisPosY;
 		}
 
-		if (this.layout.labelAndIconVerticalJustification === "center") {
-			if (this.layout.nodeFormatType === "horizontal") {
-				return (data.height / 2) - (this.layout.ellipsisHeight / 2);
+		if (data.layout.labelAndIconVerticalJustification === "center") {
+			if (data.layout.nodeFormatType === "horizontal") {
+				return (data.height / 2) - (data.layout.ellipsisHeight / 2);
 
-			} else if (this.layout.nodeFormatType === "vertical") {
-				return this.getNodeImagePosY(data) - (this.layout.ellipsisPosY - this.layout.imagePosY);
+			} else if (data.layout.nodeFormatType === "vertical") {
+				return this.getNodeImagePosY(data) - (data.layout.ellipsisPosY - data.layout.imagePosY);
 			}
 		}
-		return this.layout.ellipsisPosY;
-	}
-
-	getLabelHorizontalJustification(data) {
-		if (this.isExpandedSupernode(data)) {
-			return "left";
-		}
-		return this.layout.labelHorizontalJustification === "left" ? "start" : "middle";
+		return data.layout.ellipsisPosY;
 	}
 
 	getExpansionIconPosX(data) {
@@ -2876,26 +2910,28 @@ class CanvasRenderer {
 		return null;
 	}
 
-	getDecoratorX(dec) {
+	getDecoratorX(dec, data) {
+		const position = dec.position || "topLeft";
 		let x = 0;
-		if (dec.x_pos) {
-			x = dec.x_pos;
-		} else if (dec.position === "topLeft" || dec.position === "bottomLeft") {
-			x = this.layout.decoratorLeftX;
-		} else if (dec.position === "topRight" || dec.position === "bottomRight") {
-			x = this.layout.decoratorRightX;
+		if (position === "topLeft" || position === "middleLeft" || position === "bottomLeft") {
+			x = typeof dec.x_pos !== "undefined" ? dec.x_pos : data.layout.decoratorLeftX;
+		} else if (position === "topCenter" || position === "middleCenter" || position === "bottomCenter") {
+			x = typeof dec.x_pos !== "undefined" ? (data.width / 2) + dec.x_pos : data.layout.decoratorCenterX;
+		} else if (position === "topRight" || position === "middleRight" || position === "bottomRight") {
+			x = typeof dec.x_pos !== "undefined" ? data.width + dec.x_pos : data.layout.decoratorRightX;
 		}
 		return x;
 	}
 
-	getDecoratorY(dec) {
+	getDecoratorY(dec, data) {
+		const position = dec.position || "topLeft";
 		let y = 0;
-		if (dec.y_pos) {
-			y = dec.y_pos;
-		} else if (dec.position === "topLeft" || dec.position === "topRight") {
-			y = this.layout.decoratorTopY;
-		} else if (dec.position === "bottomLeft" || dec.position === "bottomRight") {
-			y = this.layout.decoratorBottomY;
+		if (position === "topLeft" || position === "topCenter" || position === "topRight") {
+			y = typeof dec.y_pos !== "undefined" ? dec.y_pos : data.layout.decoratorTopY;
+		} else if (position === "middelLeft" || position === "middleCenter" || position === "middleRight") {
+			y = typeof dec.y_pos !== "undefined" ? (data.height / 2) + dec.y_pos : data.layout.decoratorMiddleY;
+		} else if (position === "bottomLeft" || position === "bottomCenter" || position === "bottomRight") {
+			y = typeof dec.y_pos !== "undefined" ? data.height + dec.y_pos : data.layout.decoratorBottomY;
 		}
 		return y;
 	}
@@ -2988,7 +3024,7 @@ class CanvasRenderer {
 			.append("circle")
 			.attr("cx", (d) => d.x1)
 			.attr("cy", (d) => d.y1)
-			.attr("r", this.layout.portRadius)
+			.attr("r", this.drawingNewLinkPortRadius)
 			.attr("class", "d3-new-connection-start")
 			.attr("linkType", linkType);
 
@@ -2998,7 +3034,7 @@ class CanvasRenderer {
 			.append("circle")
 			.attr("cx", (d) => d.x2)
 			.attr("cy", (d) => d.y2)
-			.attr("r", this.layout.portRadius)
+			.attr("r", this.drawingNewLinkPortRadius)
 			.attr("class", "d3-new-connection-blob")
 			.attr("linkType", linkType)
 			.on("mouseup", () => {
@@ -3110,6 +3146,7 @@ class CanvasRenderer {
 		this.drawingNewLinkSrcPortId = null;
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
+		this.drawingNewLinkPortRadius = null;
 		this.drawingNewLinkArray = [];
 	}
 
@@ -3128,6 +3165,7 @@ class CanvasRenderer {
 		this.drawingNewLinkSrcPortId = null;
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
+		this.drawingNewLinkPortRadius = null;
 		this.drawingNewLinkArray = [];
 	}
 
@@ -3142,6 +3180,7 @@ class CanvasRenderer {
 		this.drawingNewLinkSrcPortId = null;
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
+		this.drawingNewLinkPortRadius = null;
 		this.drawingNewLinkArray = [];
 
 		// If we completed a connection successfully just remove the new line
@@ -3220,7 +3259,7 @@ class CanvasRenderer {
 		const selector = this.getSelectorForClass("node-group");
 		this.canvasGrp.selectAll(selector)
 			.each(function(d) {
-				let portRadius = that.layout.portRadius;
+				let portRadius = d.layout.portRadius;
 				if (that.isSuperBindingNode(d)) {
 					portRadius = that.layout.supernodeBindingPortRadius / that.zoomTransform.k;
 				}
@@ -3240,7 +3279,6 @@ class CanvasRenderer {
 			return null;
 		}
 
-		const that = this;
 		var pos = this.getTransformedMousePos();
 		var portId = null;
 		const node = this.getNodeAtMousePos();
@@ -3249,10 +3287,10 @@ class CanvasRenderer {
 				.each(function(p) { // Use function keyword so 'this' pointer references the dom object
 					var cx = node.x_pos + this.cx.baseVal.value;
 					var cy = node.y_pos + this.cy.baseVal.value;
-					if (pos.x >= cx - that.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
-							pos.x <= cx + that.layout.portRadius &&
-							pos.y >= cy - that.layout.portRadius &&
-							pos.y <= cy + that.layout.portRadius) {
+					if (pos.x >= cx - node.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
+							pos.x <= cx + node.layout.portRadius &&
+							pos.y >= cy - node.layout.portRadius &&
+							pos.y <= cy + node.layout.portRadius) {
 						portId = this.getAttribute("data-port-id");
 					}
 				});
@@ -3262,16 +3300,24 @@ class CanvasRenderer {
 
 	// Returns a path string that will draw the outline shape of the node.
 	getNodeShapePathOutline(data) {
-		if (this.layout.nodeShape === "port-arcs") {
+		if (data.layout.selectionPath) {
+			return data.layout.selectionPath;
+
+		} else if (this.layout.nodeShape === "port-arcs") {
 			return this.getPortArcsNodeShapePath(data); // Port-arc outline does not have a highlight gap
+
 		}
-		return this.getRectangleNodeShapePath(data, this.layout.nodeHighlightGap);
+		return this.getRectangleNodeShapePath(data, data.layout.nodeHighlightGap);
 	}
 
 	// Returns a path string that will draw the body shape of the node.
 	getNodeShapePath(data) {
-		if (this.layout.nodeShape === "port-arcs") {
+		if (data.layout.bodyPath) {
+			return data.layout.bodyPath;
+
+		} else if (this.layout.nodeShape === "port-arcs") {
 			return this.getPortArcsNodeShapePath(data);
+
 		}
 		return this.getRectangleNodeShapePath(data);
 	}
@@ -3305,8 +3351,8 @@ class CanvasRenderer {
 			// Draw straight segment down to ports (if needed)
 			if (data.outputPortsHeight < data.height) {
 				if (data.outputs.length === 1 &&
-						data.height <= this.layout.defaultNodeHeight) {
-					endPoint = this.layout.portPosY - this.layout.portArcRadius;
+						data.height <= data.layout.defaultNodeHeight) {
+					endPoint = data.layout.portPosY - data.layout.portArcRadius;
 				} else {
 					endPoint = ((data.height - data.outputPortsHeight) / 2);
 				}
@@ -3315,10 +3361,10 @@ class CanvasRenderer {
 
 			// Draw port arcs
 			data.outputs.forEach((port, index) => {
-				endPoint += (this.layout.portArcRadius * 2);
-				path += " A " + this.layout.portArcRadius + " " + this.layout.portArcRadius + " 180 0 1 " + data.width + " " + endPoint;
+				endPoint += (data.layout.portArcRadius * 2);
+				path += " A " + data.layout.portArcRadius + " " + data.layout.portArcRadius + " 180 0 1 " + data.width + " " + endPoint;
 				if (index < data.outputs.length - 1) {
-					endPoint += this.layout.portArcSpacing;
+					endPoint += data.layout.portArcSpacing;
 					path += " L " + data.width + " " + endPoint;
 				}
 			});
@@ -3340,8 +3386,8 @@ class CanvasRenderer {
 
 			if (data.inputPortsHeight < data.height) {
 				if (data.inputs.length === 1 &&
-						data.height <= this.layout.defaultNodeHeight) {
-					endPoint = this.layout.portPosY + this.layout.portArcRadius;
+						data.height <= data.layout.defaultNodeHeight) {
+					endPoint = data.layout.portPosY + data.layout.portArcRadius;
 				} else {
 					endPoint = data.height - ((data.height - data.inputPortsHeight) / 2);
 				}
@@ -3349,10 +3395,10 @@ class CanvasRenderer {
 			}
 
 			data.inputs.forEach((port, index) => {
-				endPoint -= (this.layout.portArcRadius * 2);
-				path += " A " + this.layout.portArcRadius + " " + this.layout.portArcRadius + " 180 0 1 0 " + endPoint;
+				endPoint -= (data.layout.portArcRadius * 2);
+				path += " A " + data.layout.portArcRadius + " " + data.layout.portArcRadius + " 180 0 1 0 " + endPoint;
 				if (index < data.inputs.length - 1) {
-					endPoint -= this.layout.portArcSpacing;
+					endPoint -= data.layout.portArcSpacing;
 					path += " L 0 " + endPoint;
 				}
 			});
@@ -3380,9 +3426,9 @@ class CanvasRenderer {
 
 	setPortPositionsByInfo(data, ports, portsHeight) {
 		if (ports && ports.length > 0) {
-			if (data.height <= this.layout.defaultNodeHeight &&
+			if (data.height <= data.layout.defaultNodeHeight &&
 					ports.length === 1) {
-				ports[0].cy = this.layout.portPosY;
+				ports[0].cy = data.layout.portPosY;
 
 			} else {
 				let centerPoint = 0;
@@ -3392,9 +3438,9 @@ class CanvasRenderer {
 				}
 
 				ports.forEach((p) => {
-					centerPoint += this.layout.portArcRadius;
+					centerPoint += data.layout.portArcRadius;
 					p.cy = centerPoint;
-					centerPoint += this.layout.portArcRadius + this.layout.portArcSpacing;
+					centerPoint += data.layout.portArcRadius + data.layout.portArcSpacing;
 				});
 			}
 		}
@@ -3487,6 +3533,7 @@ class CanvasRenderer {
 								this.drawingNewLinkSrcPortId = null;
 								that.drawingNewLinkAction = "comment-node";
 								that.drawingNewLinkStartPos = { x: d.x_pos - that.layout.commentHighlightGap, y: d.y_pos - that.layout.commentHighlightGap };
+								this.drawingNewLinkPortRadius = null;
 								that.drawingNewLinkArray = [];
 								that.drawNewLink();
 							});
@@ -3624,6 +3671,7 @@ class CanvasRenderer {
 						this.drawingNewLinkSrcPortId = null;
 						this.drawingNewLinkAction = "comment-node";
 						this.drawingNewLinkStartPos = this.getTransformedMousePos();
+						this.drawingNewLinkPortRadius = null;
 						this.drawingNewLinkArray = [];
 						this.drawNewLink();
 					});
@@ -4661,7 +4709,7 @@ class CanvasRenderer {
 		// If the class name provided IS the default, or there is no classname, return
 		// the class name from the layout preferences. This allows the layout
 		// preferences to override any default class name passed in.
-		return this.layout.cssNodeBody;
+		return d.layout.cssNodeBody;
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below
@@ -4707,7 +4755,7 @@ class CanvasRenderer {
 
 			// Only proceed if we have a source and a target node/comment.
 			if (srcObj && trgNode) {
-				if (!this.isSourceOverlappingTarget(srcObj, trgNode)) {
+				if (!this.isSourceOverlappingTarget(srcObj, trgNode, link.type)) {
 					var coords = {};
 					var srcPortId;
 					var trgPortId;
@@ -4778,12 +4826,14 @@ class CanvasRenderer {
 		return lineArray;
 	}
 
-	isSourceOverlappingTarget(srcNode, trgNode) {
+	isSourceOverlappingTarget(srcNode, trgNode, linkType) {
 		if (this.layout.displayLinkOnOverlap === false) {
-			if (((srcNode.x_pos + srcNode.width + this.layout.nodeHighlightGap >= trgNode.x_pos - this.layout.nodeHighlightGap &&
-						trgNode.x_pos + trgNode.width + this.layout.nodeHighlightGap >= srcNode.x_pos - this.layout.nodeHighlightGap) &&
-						(srcNode.y_pos + srcNode.height + this.layout.nodeHighlightGap >= trgNode.y_pos - this.layout.nodeHighlightGap &&
-							trgNode.y_pos + trgNode.height + this.layout.nodeHighlightGap >= srcNode.y_pos - this.layout.nodeHighlightGap))) {
+			const srcHightlightGap = linkType === "commentLink" ? this.layout.commentHighlightGap : srcNode.layout.nodeHightlightGap;
+			const trgHightlightGap = trgNode.layout.nodeHightlightGap;
+			if (((srcNode.x_pos + srcNode.width + srcHightlightGap >= trgNode.x_pos - trgHightlightGap &&
+						trgNode.x_pos + trgNode.width + trgHightlightGap >= srcNode.x_pos - srcHightlightGap) &&
+						(srcNode.y_pos + srcNode.height + srcHightlightGap >= trgNode.y_pos - trgHightlightGap &&
+							trgNode.y_pos + trgNode.height + trgHightlightGap >= srcNode.y_pos - srcHightlightGap))) {
 				return true;
 			}
 		}
@@ -4792,8 +4842,8 @@ class CanvasRenderer {
 	}
 
 	getNodeLinkCoordsForPorts(srcNode, srcPortId, trgNode, trgPortId) {
-		let srcY = this.layout.portPosY;
-		let trgY = this.layout.portPosY;
+		let srcY = srcNode.layout.portPosY;
+		let trgY = trgNode.layout.portPosY;
 
 		if (srcNode.outputs && srcNode.outputs.length > 0) {
 			const port = srcNode.outputs.find((srcPort) => srcPort.id === srcPortId);
@@ -4813,13 +4863,34 @@ class CanvasRenderer {
 	}
 
 	getNodeLinkCoordsForHalo(srcNode, trgNode) {
+		let srcCenterX;
+		let srcCenterY;
+		let trgCenterX;
+		let trgCenterY;
+
+		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center") {
+			srcCenterX = srcNode.layout.imagePosX + (srcNode.layout.imageWidth / 2) + this.layout.linkGap;
+			srcCenterY = srcNode.layout.imagePosY + (srcNode.layout.imageHeight / 2) + this.layout.linkGap;
+		} else {
+			srcCenterX = (srcNode.width / 2) + this.layout.linkGap;
+			srcCenterY = srcNode.height / 2;
+		}
+
+		if (trgNode.layout.drawNodeLinkLineFromTo === "image_center") {
+			trgCenterX = trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2) + this.layout.linkGap;
+			trgCenterY = trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2) + this.layout.linkGap;
+		} else {
+			trgCenterX = (trgNode.width / 2) + this.layout.linkGap;
+			trgCenterY = trgNode.height / 2;
+		}
+
 		const startPos = this.getOuterCoord(
 			srcNode.x_pos - this.layout.linkGap,
 			srcNode.y_pos - this.layout.linkGap,
 			srcNode.width + (this.layout.linkGap * 2),
 			srcNode.height + (this.layout.linkGap * 2),
-			this.layout.imagePosX + (this.layout.imageWidth / 2) + this.layout.linkGap,
-			this.layout.imagePosY + (this.layout.imageHeight / 2) + this.layout.linkGap,
+			srcCenterX,
+			srcCenterY,
 			trgNode.x_pos + (trgNode.width / 2),
 			trgNode.y_pos + (trgNode.height / 2));
 
@@ -4828,8 +4899,8 @@ class CanvasRenderer {
 			trgNode.y_pos - this.layout.linkGap,
 			trgNode.width + (this.layout.linkGap * 2),
 			trgNode.height + (this.layout.linkGap * 2),
-			this.layout.imagePosX + (this.layout.imageWidth / 2) + this.layout.linkGap,
-			this.layout.imagePosY + (this.layout.imageHeight / 2) + this.layout.linkGap,
+			trgCenterX,
+			trgCenterY,
 			srcNode.x_pos + (srcNode.width / 2),
 			srcNode.y_pos + (srcNode.height / 2));
 
@@ -4850,9 +4921,9 @@ class CanvasRenderer {
 		var centerX;
 		var centerY;
 
-		if (this.layout.drawLinkLineTo === "image_center") {
-			centerX = this.layout.imagePosX + (this.layout.imageWidth / 2) + this.layout.linkGap;
-			centerY = this.layout.imagePosY + (this.layout.imageHeight / 2) + this.layout.linkGap;
+		if (trgNode.layout.drawCommentLinkLineTo === "image_center") {
+			centerX = trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2) + this.layout.linkGap;
+			centerY = trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2) + this.layout.linkGap;
 		} else {
 			centerX = (trgNode.width / 2) + this.layout.linkGap;
 			centerY = trgNode.height / 2;

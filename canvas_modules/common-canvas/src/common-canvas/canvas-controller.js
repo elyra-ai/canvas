@@ -110,7 +110,8 @@ export default class CanvasController {
 			decorationActionHandler: null,
 			selectionChangeHandler: null,
 			toolbarMenuActionHandler: null,
-			tipHandler: null
+			tipHandler: null,
+			layoutHandler: null
 		};
 
 		this.commonCanvas = null;
@@ -152,6 +153,7 @@ export default class CanvasController {
 		this.handlers = Object.assign(this.handlers, inHandlers);
 		this.objectModel.setIdGeneratorHandler(inHandlers.idGeneratorHandler);
 		this.objectModel.setSelectionChangeHandler(inHandlers.selectionChangeHandler);
+		this.objectModel.setLayoutHandler(inHandlers.layoutHandler);
 	}
 
 	setCommonCanvas(comcan) {

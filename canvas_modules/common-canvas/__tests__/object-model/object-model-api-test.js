@@ -54,6 +54,9 @@ describe("ObjectModel API handle model OK", () => {
 		const expectedCanvas = addNodeHorizontalLayoutCanvas;
 		const actualCanvas = objectModel.getCanvasInfoPipeline(objectModel.getPrimaryPipelineId());
 
+		// Delete transient layout info from nodes
+		actualCanvas.nodes.forEach((nd) => delete nd.layout);
+
 		// Delete ID because IDs are generated at runtime and therefore won't be
 		// the same between expected and actual.
 		delete actualCanvas.nodes[3].id;
@@ -76,6 +79,9 @@ describe("ObjectModel API handle model OK", () => {
 		const expectedCanvas = addNodeVerticalLayoutCanvas;
 		const actualCanvas = objectModel.getCanvasInfoPipeline(objectModel.getPrimaryPipelineId());
 
+		// Delete transient layout info from nodes
+		actualCanvas.nodes.forEach((nd) => delete nd.layout);
+
 		// Delete ID because IDs are generated at runtime and therefore won't be
 		// the same between expected and actual.
 		delete actualCanvas.nodes[3].id;
@@ -93,8 +99,10 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.getAPIPipeline().autoLayout(HORIZONTAL);
 
 		const expectedCanvas = horizontalLayoutCanvas;
-
 		const actualCanvas = objectModel.getCanvasInfoPipeline(objectModel.getPrimaryPipelineId());
+
+		// Delete transient layout info from nodes
+		actualCanvas.nodes.forEach((nd) => delete nd.layout);
 
 		// console.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// console.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
@@ -110,8 +118,10 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.getAPIPipeline().autoLayout(VERTICAL);
 
 		const expectedCanvas = verticalLayoutCanvas;
-
 		const actualCanvas = objectModel.getCanvasInfoPipeline(objectModel.getPrimaryPipelineId());
+
+		// Delete transient layout info from nodes
+		actualCanvas.nodes.forEach((nd) => delete nd.layout);
 
 		// console.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// console.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
@@ -131,6 +141,9 @@ describe("ObjectModel API handle model OK", () => {
 		const expectedCanvas = moveNodeHorizontalLayoutCanvas;
 		const actualCanvas = objectModel.getCanvasInfoPipeline(objectModel.getPrimaryPipelineId());
 
+		// Delete transient layout info from nodes
+		actualCanvas.nodes.forEach((nd) => delete nd.layout);
+
 		// console.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// console.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
@@ -147,6 +160,9 @@ describe("ObjectModel API handle model OK", () => {
 
 		const expectedCanvas = moveNodeVerticalLayoutCanvas;
 		const actualCanvas = objectModel.getCanvasInfoPipeline(objectModel.getPrimaryPipelineId());
+
+		// Delete transient layout info from nodes
+		actualCanvas.nodes.forEach((nd) => delete nd.layout);
 
 		// console.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// console.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
@@ -587,6 +603,9 @@ describe("ObjectModel API handle model OK", () => {
 		expectedCanvas.nodes[3].id = uniqueNodeId;
 		const actualCanvas = objectModel.getCanvasInfoPipeline(objectModel.getPrimaryPipelineId());
 
+		// Delete transient layout info from nodes
+		actualCanvas.nodes.forEach((nd) => delete nd.layout);
+
 		// console.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// console.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
@@ -765,10 +784,16 @@ describe("ObjectModel API handle model OK", () => {
 		const cloneAction = new CloneMultipleObjectsAction(cloneData, objectModel);
 		cloneAction.do();
 
+		const actualCanvas = objectModel.getCanvasInfoPipeline();
+
+		// Delete transient layout info from nodes
+		actualCanvas.nodes.forEach((nd) => delete nd.layout);
+
+
 		// console.info("Expected Canvas = " + JSON.stringify(clonedCanvas, null, 2));
 		// console.info("Actual Canvas   = " + JSON.stringify(objectModel.getCanvasInfoPipeline(), null, 2));
 
-		expect(isEqual(objectModel.getCanvasInfoPipeline(), clonedCanvas)).to.be.true;
+		expect(isEqual(actualCanvas, clonedCanvas)).to.be.true;
 	});
 
 	it("should reset the breadcrumbs when navigating back to primary pipeline", () => {

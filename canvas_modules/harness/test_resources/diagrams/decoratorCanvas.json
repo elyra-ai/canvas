@@ -333,7 +333,7 @@
               "class_name": "canvas-node",
               "decorations": [
                 {
-                  "x_pos": 80,
+                  "x_pos": 70,
                   "y_pos": 50,
                   "id": "labelDecoration1",
                   "label": "First label decorator"

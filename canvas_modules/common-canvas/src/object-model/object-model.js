@@ -252,7 +252,7 @@ const nodes = (state = [], action) => {
 			if (action.data.nodeId === node.id) {
 				let newNode = Object.assign({}, node);
 				newNode.is_expanded = action.data.isExpanded;
-				newNode = setNodeDimensions(newNode, action.layoutinfo);
+				newNode = setNodeDimensions(newNode, action.layoutinfo, action.layoutHandler);
 				return newNode;
 			}
 
@@ -268,14 +268,7 @@ const nodes = (state = [], action) => {
 	case "SET_CANVAS_INFO":
 		return state.map((node, index) => {
 			let newNode = Object.assign({}, node);
-			// When changing node types we throw away any previous node width and heights
-			// This is mainly to satisfy the test harness.
-			if (action.previousLayout &&
-					action.previousLayout.nodeFormatType !== action.layoutinfo.nodeFormatType) {
-				newNode.width = null;
-				newNode.height = null;
-			}
-			newNode = setNodeDimensions(newNode, action.layoutinfo);
+			newNode = setNodeDimensions(newNode, action.layoutinfo, action.layoutHandler);
 			return newNode;
 		});
 
@@ -951,7 +944,7 @@ const breadcrumbs = (state = [], action) => {
 const layoutinfo = (state = LayoutDimensions.getLayout(), action) => {
 	switch (action.type) {
 	case "SET_LAYOUT_INFO":
-		return Object.assign({}, action.layoutinfo, { linkType: action.linkType });
+		return Object.assign({}, action.layoutinfo);
 
 	default:
 		return state;
@@ -974,25 +967,26 @@ const notifications = (state = [], action) => {
 // Returns a copy of the node passed in with additional fields which contains
 //  the height occupied by the input ports and output ports, based on the
 // layout info passed in, as well as the node width.
-const setNodeDimensions = (node, layoutInfo) => {
+const setNodeDimensions = (node, layoutInfo, layoutHandler) => {
 	const newNode = Object.assign({}, node);
+	setNodeLayout(newNode, layoutInfo, layoutHandler);
 
 	if (layoutInfo.connectionType === "ports") {
-		newNode.inputPortsHeight = node.inputs
-			? (node.inputs.length * (layoutInfo.portArcRadius * 2)) + ((node.inputs.length - 1) * layoutInfo.portArcSpacing)
+		newNode.inputPortsHeight = newNode.inputs
+			? (newNode.inputs.length * (newNode.layout.portArcRadius * 2)) + ((newNode.inputs.length - 1) * newNode.layout.portArcSpacing)
 			: 0;
 
-		newNode.outputPortsHeight = node.outputs
-			? (node.outputs.length * (layoutInfo.portArcRadius * 2)) + ((node.outputs.length - 1) * layoutInfo.portArcSpacing)
+		newNode.outputPortsHeight = newNode.outputs
+			? (newNode.outputs.length * (newNode.layout.portArcRadius * 2)) + ((newNode.outputs.length - 1) * newNode.layout.portArcSpacing)
 			: 0;
 
-		newNode.height = Math.max(newNode.inputPortsHeight, newNode.outputPortsHeight, layoutInfo.defaultNodeHeight);
+		newNode.height = Math.max(newNode.inputPortsHeight, newNode.outputPortsHeight, newNode.layout.defaultNodeHeight);
 	} else { // 'halo' connection type
 		newNode.inputPortsHeight = 0;
 		newNode.outputPortsHeight = 0;
-		newNode.height = layoutInfo.defaultNodeHeight;
+		newNode.height = newNode.layout.defaultNodeHeight;
 	}
-	newNode.width = layoutInfo.defaultNodeWidth;
+	newNode.width = newNode.layout.defaultNodeWidth;
 
 	if (newNode.type === SUPER_NODE && newNode.is_expanded) {
 		newNode.width = newNode.expanded_width ? newNode.expanded_width : Math.max(layoutInfo.supernodeDefaultWidth, newNode.width);
@@ -1000,6 +994,16 @@ const setNodeDimensions = (node, layoutInfo) => {
 	}
 
 	return newNode;
+};
+
+const setNodeLayout = (node, layoutInfo, layoutHandler) => {
+	node.layout = layoutInfo.nodeLayout;
+
+	// If using the layoutHandler we must make a copy of the layout for each node
+	// so the original layout info doesn't get overwritten.
+	if (layoutHandler) {
+		node.layout = Object.assign({}, node.layout, layoutHandler(node));
+	}
 };
 
 // Returns true if the 'current' breadcrumb from the breadcrumbs
@@ -1028,7 +1032,7 @@ export default class ObjectModel {
 		const emptyCanvasInfo = this.getEmptyCanvasInfo();
 		const initialState = {
 			selectioninfo: {},
-			layoutinfo: LayoutDimensions.getLayout(),
+			layoutinfo: {},
 			canvasinfo: emptyCanvasInfo,
 			breadcrumbs: [{ pipelineId: emptyCanvasInfo.primary_pipeline, pipelineFlowId: emptyCanvasInfo.id }],
 			palette: {},
@@ -1047,6 +1051,9 @@ export default class ObjectModel {
 
 		// Optional callback for notification of selection changes
 		this.selectionChangeHandler = null;
+
+		// Optional callback for layout of the canvas
+		this.layoutHandler = null;
 
 		// TODO - remove this when we support v3 schemas permanently
 		this.returnPipelineFlowDraftVersion = false;
@@ -1071,6 +1078,10 @@ export default class ObjectModel {
 
 	setSelectionChangeHandler(selectionChangeHandler) {
 		this.selectionChangeHandler = selectionChangeHandler;
+	}
+
+	setLayoutHandler(layoutHandler) {
+		this.layoutHandler = layoutHandler;
 	}
 
 	setFixedAutoLayout(fixedLayoutDirection) {
@@ -1329,6 +1340,12 @@ export default class ObjectModel {
 			return;
 		}
 
+		// If there's no current layout info then add some default layout before
+		// setting canvas info. This is mainly necessary for Jest testcases.
+		if (isEmpty(this.getLayoutInfo())) {
+			this.setDefaultLayout();
+		}
+
 		const pipelineFlow = this.validateAndUpgrade(newPipelineFlow);
 
 		this.setSupernodesBindingStatus(pipelineFlow.pipelines);
@@ -1336,7 +1353,8 @@ export default class ObjectModel {
 		this.executeWithSelectionChange(this.store.dispatch, {
 			type: "SET_PIPELINE_FLOW",
 			data: pipelineFlow,
-			layoutinfo: this.store.getState().layoutinfo,
+			layoutinfo: this.getLayoutInfo(),
+			layoutHandler: this.layoutHandler,
 			currentCanvasInfo: this.getCanvasInfo() });
 	}
 
@@ -1515,7 +1533,12 @@ export default class ObjectModel {
 	}
 
 	setCanvasInfo(canvasInfo) {
-		this.store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo, layoutinfo: this.getLayout() });
+		// If there's no current layout info then add some default layout before
+		// setting canvas info. This is mainly necessary for Jest testcases.
+		if (isEmpty(this.getLayoutInfo())) {
+			this.setDefaultLayout();
+		}
+		this.store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo, layoutinfo: this.getLayoutInfo(), layoutHandler: this.layoutHandler });
 	}
 
 	isPrimaryPipelineEmpty() {
@@ -1551,10 +1574,10 @@ export default class ObjectModel {
 			const clonedPipeline = this.clonePipelineWithNewId(targetPipeline);
 			node.subflow_ref.pipeline_id_ref = clonedPipeline.id;
 			const canvInfoPipeline =
-				PipelineInHandler.convertPipelineToCanvasInfoPipeline(clonedPipeline, this.store.getState().layoutinfo);
+				PipelineInHandler.convertPipelineToCanvasInfoPipeline(clonedPipeline, this.getLayoutInfo());
 			if (canvInfoPipeline.nodes) {
 				canvInfoPipeline.nodes = canvInfoPipeline.nodes.map((n) => {
-					return setNodeDimensions(n, this.store.getState().layoutinfo);
+					return setNodeDimensions(n, this.getLayoutInfo(), this.layoutHandler);
 				});
 			}
 
@@ -1722,14 +1745,22 @@ export default class ObjectModel {
 	// Layout Info methods
 	// ---------------------------------------------------------------------------
 
-	setLayoutType(type, linkType) {
+	setLayoutType(type, nodeLayoutOverrides, linkType) {
+		const layoutInfo = Object.assign({}, LayoutDimensions.getLayout(type, nodeLayoutOverrides), { linkType: linkType });
 		this.store.dispatch({ type: "SET_LAYOUT_INFO",
-			layoutinfo: LayoutDimensions.getLayout(type),
-			linkType: linkType,
-			previousLayout: this.getLayout() });
+			layoutinfo: layoutInfo,
+			layoutHandler: this.layoutHandler
+		});
 	}
 
-	getLayout() {
+	setDefaultLayout() {
+		this.store.dispatch({ type: "SET_LAYOUT_INFO",
+			layoutinfo: LayoutDimensions.getLayout(),
+			layoutHandler: this.layoutHandler
+		});
+	}
+
+	getLayoutInfo() {
 		return this.store.getState().layoutinfo;
 	}
 
@@ -2627,7 +2658,7 @@ export class APIPipeline {
 
 			// Add node height and width and, if appropriate, inputPortsHeight
 			// and outputPortsHeight
-			node = setNodeDimensions(node, this.store.getState().layoutinfo);
+			node = setNodeDimensions(node, this.objectModel.getLayoutInfo(), this.layoutHandler);
 		}
 
 		return node;
@@ -2664,10 +2695,10 @@ export class APIPipeline {
 	// Returns a newly created 'auto node' whose position is based on the
 	// source node (if one is provided) and the the other nodes on the canvas.
 	createAutoNode(data, sourceNode) {
-		const initialMarginX = this.store.getState().layoutinfo.autoLayoutInitialMarginX;
-		const initialMarginY = this.store.getState().layoutinfo.autoLayoutInitialMarginY;
-		const horizontalSpacing = this.store.getState().layoutinfo.autoLayoutHorizontalSpacing;
-		const verticalSpacing = this.store.getState().layoutinfo.autoLayoutVerticalSpacing;
+		const initialMarginX = this.objectModel.getLayoutInfo().autoLayoutInitialMarginX;
+		const initialMarginY = this.objectModel.getLayoutInfo().autoLayoutInitialMarginY;
+		const horizontalSpacing = this.objectModel.getLayoutInfo().autoLayoutHorizontalSpacing;
+		const verticalSpacing = this.objectModel.getLayoutInfo().autoLayoutVerticalSpacing;
 
 		var x = 0;
 		var y = 0;
@@ -2715,7 +2746,7 @@ export class APIPipeline {
 
 		// Add node height and width and, if appropriate, inputPortsHeight
 		// and outputPortsHeight
-		node = setNodeDimensions(node, this.store.getState().layoutinfo);
+		node = setNodeDimensions(node, this.objectModel.getLayoutInfo(), this.layoutHandler);
 		return node;
 	}
 
@@ -2795,11 +2826,12 @@ export class APIPipeline {
 	}
 
 	isSourceOverlappingTarget(srcNode, trgNode) {
-		var highlightGap = this.store.getState().layoutinfo.nodeHighlightGap;
-		if (((srcNode.x_pos + srcNode.width + highlightGap >= trgNode.x_pos - highlightGap &&
-					trgNode.x_pos + trgNode.width + highlightGap >= srcNode.x_pos - highlightGap) &&
-					(srcNode.y_pos + srcNode.height + highlightGap >= trgNode.y_pos - highlightGap &&
-						trgNode.y_pos + trgNode.height + highlightGap >= srcNode.y_pos - highlightGap))) {
+		const srcHighlightGap = srcNode.layout.nodeHighlightGap;
+		const trgHighlightGap = trgNode.layout.nodeHighlightGap;
+		if (((srcNode.x_pos + srcNode.width + srcHighlightGap >= trgNode.x_pos - trgHighlightGap &&
+					trgNode.x_pos + trgNode.width + trgHighlightGap >= srcNode.x_pos - srcHighlightGap) &&
+					(srcNode.y_pos + srcNode.height + srcHighlightGap >= trgNode.y_pos - trgHighlightGap &&
+						trgNode.y_pos + trgNode.height + trgHighlightGap >= srcNode.y_pos - srcHighlightGap))) {
 			return true;
 		}
 
@@ -2926,7 +2958,8 @@ export class APIPipeline {
 				nodePositions: nodePositions
 			},
 			pipelineId: this.pipelineId,
-			layoutinfo: this.objectModel.getLayout()
+			layoutinfo: this.objectModel.getLayoutInfo(),
+			layoutHandler: this.layoutHandler
 		});
 	}
 
@@ -2939,7 +2972,8 @@ export class APIPipeline {
 				nodePositions: nodePositions
 			},
 			pipelineId: this.pipelineId,
-			layoutinfo: this.objectModel.getLayout()
+			layoutinfo: this.objectModel.getLayoutInfo(),
+			layoutHandler: this.layoutHandler
 		});
 	}
 
@@ -3138,10 +3172,10 @@ export class APIPipeline {
 
 		var maxNodeSizes = this.getMaximumNodeSizes();
 
-		const initialMarginX = this.store.getState().layoutinfo.autoLayoutInitialMarginX;
-		const initialMarginY = this.store.getState().layoutinfo.autoLayoutInitialMarginY;
-		const verticalSpacing = this.store.getState().layoutinfo.autoLayoutVerticalSpacing;
-		const horizontalSpacing = this.store.getState().layoutinfo.autoLayoutHorizontalSpacing;
+		const initialMarginX = this.objectModel.getLayoutInfo().autoLayoutInitialMarginX;
+		const initialMarginY = this.objectModel.getLayoutInfo().autoLayoutInitialMarginY;
+		const verticalSpacing = this.objectModel.getLayoutInfo().autoLayoutVerticalSpacing;
+		const horizontalSpacing = this.objectModel.getLayoutInfo().autoLayoutHorizontalSpacing;
 
 		var g = dagre.graphlib.json.read(inputGraph);
 		g.graph().marginx = initialMarginX;
@@ -3165,8 +3199,8 @@ export class APIPipeline {
 	}
 
 	getMaximumNodeSizes() {
-		var maxWidth = this.store.getState().layoutinfo.defaultNodeWidth;
-		var maxHeight = this.store.getState().layoutinfo.defaultNodeHeight;
+		var maxWidth = 0;
+		var maxHeight = 0;
 
 		if (this.objectModel.getCanvasInfo() &&
 				this.getNodes()) {

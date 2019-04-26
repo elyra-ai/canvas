@@ -62,6 +62,9 @@ import {
 	VERTICAL_FORMAT,
 	NONE_SAVE_ZOOM,
 	CURVE_LINKS,
+	NO_LAYOUT,
+	BLUE_ELLIPSES_LAYOUT,
+	DB2_EXPLAIN_LAYOUT,
 	CUSTOM,
 	FLYOUT,
 	NONE,
@@ -111,6 +114,7 @@ class App extends React.Component {
 			selectedNodeFormat: VERTICAL_FORMAT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedLinkType: CURVE_LINKS,
+			selectedNodeLayout: NO_LAYOUT,
 			selectedPaletteLayout: FLYOUT,
 			showContextMenu: false,
 			showPropertiesDialog: false,
@@ -208,6 +212,7 @@ class App extends React.Component {
 		this.setConnectionType = this.setConnectionType.bind(this);
 		this.setNodeFormatType = this.setNodeFormatType.bind(this);
 		this.setLinkType = this.setLinkType.bind(this);
+		this.setNodeLayout = this.setNodeLayout.bind(this);
 		this.setPaletteLayout = this.setPaletteLayout.bind(this);
 		this.getPipelineFlow = this.getPipelineFlow.bind(this);
 		this.setPipelineFlow = this.setPipelineFlow.bind(this);
@@ -633,6 +638,11 @@ class App extends React.Component {
 	setLinkType(selectedLinkType) {
 		this.setState({ selectedLinkType: selectedLinkType });
 		this.log("Link type selected", selectedLinkType);
+	}
+
+	setNodeLayout(selectedNodeLayout) {
+		this.setState({ selectedNodeLayout: selectedNodeLayout });
+		this.log("Node layout selected", selectedNodeLayout);
 	}
 
 	setPaletteLayout(selectedPaletteLayout) {
@@ -1617,6 +1627,62 @@ class App extends React.Component {
 		}, 14000);
 	}
 
+	layoutHandler(data) {
+		const labLen = data.label ? data.label.length : 0;
+		let width = 120;
+		let bodyPath = "";
+		let selectionPath = "";
+
+		let nodeFormat = {};
+		switch (data.op) {
+		case "rectangle": {
+			bodyPath = "     M  0 0  L  0 60 120 60 120  0  0  0 Z";
+			selectionPath = "M -5 -5 L -5 65 125 65 125 -5 -5 -5 Z";
+			break;
+		}
+		case "pentagon": {
+			bodyPath = "     M  0 20 L  0 60 120 60 120 20 60  0  0 20 Z";
+			selectionPath = "M -5 17 L -5 65 125 65 125 17 60 -5 -5 17 Z";
+			break;
+		}
+		case "octagon": {
+			bodyPath = "     M  0 20 L  0 40  20 60 100 60 120 40 120 20 100 0  20  0 Z";
+			selectionPath = "M -5 20 L -5 40  20 65 100 65 125 40 125 20 100 -5 20 -5 Z";
+			break;
+		}
+		case "ellipse": {
+			bodyPath = "     M  0 30 Q  0  0 60  0 Q 120  0 120 30 Q 120 60 60 60 Q  0 60  0 30 Z";
+			selectionPath = "M -5 30 Q -5 -5 60 -5 Q 125 -5 125 30 Q 125 65 60 65 Q -5 65 -5 30 Z";
+			break;
+		}
+		case "triangle": {
+			bodyPath = "     M   0 60 L  140 60 70  0 0 60 Z";
+			selectionPath = "M  -5 65 L  145 65 70 -5 5 65 Z";
+			break;
+		}
+		case "hexagon": {
+			width = (labLen * 9) + 60; // Allow 9 pixels for each character
+			const corner = width - 30;
+			bodyPath = `     M   0 30 L 30 60 ${corner} 60 ${width}     30 ${corner}  0 30  0 Z`;
+			selectionPath = `M  -5 30 L 30 65 ${corner} 65 ${width + 5} 30 ${corner} -5 30 -5 Z`;
+			break;
+		}
+		default:
+			return {};
+		}
+
+		nodeFormat = {
+			defaultNodeWidth: width, // Override default width with calculated width
+			labelPosX: (width / 2), // Specify center of label as center of node Note: text-anchor is set to middle in the CSS for this label
+			labelMaxWidth: width, // Set big enough so that label is not truncated and so no ... appears
+			ellipsisPosX: width - 25, // Always position 25px in from the right side
+			bodyPath: bodyPath,
+			selectionPath: selectionPath
+		};
+
+		return nodeFormat;
+	}
+
 	render() {
 		const locale = "en";
 		const messages = i18nData.messages;
@@ -1683,6 +1749,58 @@ class App extends React.Component {
 		// 		<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
 		// 	</div>);
 
+		const blueEllipsesLayout = {
+			cssNodeLabel: "shape_label_style_blue_ellipses",
+			cssNodeBody: "default_node_style_blue_ellipses",
+			bodyPath: "     M  0 30 Q  0  0 60  0 Q 120  0 120 30 Q 120 60 60 60 Q  0 60  0 30 Z",
+			selectionPath: "M -5 30 Q -5 -5 60 -5 Q 125 -5 125 30 Q 125 65 60 65 Q -5 65 -5 30 Z",
+			defaultNodeWidth: 120,
+			defaultNodeHeight: 60,
+			labelAndIconVerticalJustification: "none",
+			imageWidth: 30,
+			imageHeight: 30,
+			imagePosX: 20,
+			imagePosY: 10,
+			labelPosX: 20,
+			labelPosY: 50,
+			labelMaxWidth: 80,
+			labelHeight: 13, // Should match the font size specified in css
+			ellipsisDisplay: true,
+			ellipsisPosX: 100,
+			ellipsisPosY: 20,
+			haloDisplay: false,
+			haloCenterX: 60,
+			haloCenterY: 30,
+			haloRadius: 30,
+			portPosY: 30
+		};
+
+		const db2ExplainNodeLayout = {
+			cssNodeLabel: "shape_label_style_db2_explain",
+			cssNodeBody: "default_node_style_db2_explain",
+			defaultNodeWidth: 120,
+			defaultNodeHeight: 60,
+			labelAndIconVerticalJustification: "none",
+			drawNodeLinkLineFromTo: "node_center",
+			labelPosX: 60,
+			labelPosY: 28,
+			labelMaxWidth: 200,
+			ellipsisDisplay: true,
+			ellipsisPosX: 100,
+			ellipsisPosY: 19,
+			haloDisplay: false,
+			haloCenterX: 60,
+			haloCenterY: 30,
+			haloRadius: 30,
+			portPosY: 30
+		};
+
+		let layout = null;
+		if (this.state.selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
+			layout = blueEllipsesLayout;
+		} else if (this.state.selectedNodeLayout === DB2_EXPLAIN_LAYOUT) {
+			layout = db2ExplainNodeLayout;
+		}
 
 		const commonCanvasConfig = {
 			enableInteractionType: this.state.selectedInteractionType,
@@ -1692,6 +1810,7 @@ class App extends React.Component {
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
+			enableNodeLayout: layout,
 			enableInternalObjectModel: this.state.internalObjectModel,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
@@ -1825,6 +1944,7 @@ class App extends React.Component {
 				clickActionHandler= {this.clickActionHandler}
 				decorationActionHandler= {this.decorationActionHandler}
 				selectionChangeHandler={this.selectionChangeHandler}
+				layoutHandler={this.layoutHandler}
 				tipHandler={this.tipHandler}
 				toolbarConfig={toolbarConfig}
 				notificationConfig={notificationConfig}
@@ -1904,7 +2024,9 @@ class App extends React.Component {
 			setNodeFormatType: this.setNodeFormatType,
 			selectedNodeFormat: this.state.selectedNodeFormat,
 			setLinkType: this.setLinkType,
+			setNodeLayout: this.setNodeLayout,
 			selectedLinkType: this.state.selectedLinkType,
+			selectedNodeLayout: this.state.selectedNodeLayout,
 			selectedSaveZoom: this.state.selectedSaveZoom,
 			setPaletteLayout: this.setPaletteLayout,
 			selectedPaletteLayout: this.state.selectedPaletteLayout,
