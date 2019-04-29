@@ -614,6 +614,7 @@ export default class FlexibleTable extends React.Component {
 		const heightStyle = (this.props.noAutoSize || tableHeight === 0) ? {} : { height: tableHeight + "em" };
 		const containerId = this.props.showHeader ? "properties-ft-container" : "properties-ft-container-noheader";
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
+		const tableClass = (this.props.rowSelection === "single") ? "table single properties-ft" : "table properties-ft";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass + this.props.messageInfo.type;
 		renderTable = (
 			<div>
@@ -626,7 +627,7 @@ export default class FlexibleTable extends React.Component {
 								<div ref={ (ref) => (this.flexibleTableDiv = ref) } className={containerId} style={{ width: tableWidth }}>
 									{this.props.selectedEditRow}
 									<Table {...filterProps}
-										className={"table properties-ft"}
+										className={tableClass}
 										ref="table"
 										sortable={this.props.sortable}
 										onSort={this.onSort}

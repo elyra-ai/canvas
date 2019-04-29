@@ -10,7 +10,7 @@ $flexible-table-header-row-height: 32px;
 $hover-row: rgba($brand-02, 0.1);
 $selected-row: rgba($brand-02, 0.1);
 $hover-selected-row: rgba($brand-02, 0.2);
-
+$row-left-padding: 4px;
 .properties-ft-search-container {
 	width: 50%;
 	float: left;
@@ -30,6 +30,11 @@ $hover-selected-row: rgba($brand-02, 0.2);
 	overflow: hidden;
 }
 
+table .single {
+	thead {
+		padding-left: $row-left-padding;
+	}
+}
 .table-row:not(.disabled):hover {
 	border: 1px solid $brand-01;
 	background-color: $hover-row;
@@ -47,7 +52,7 @@ $hover-selected-row: rgba($brand-02, 0.2);
 	}
 
 	&.table-single-row {
-		padding-left: solid 4px transparent;
+		padding-left: 3px;
 	}
 	&.table-summary-row {
 		background-color: rgba($brand-01, 0.3);
@@ -59,9 +64,10 @@ $hover-selected-row: rgba($brand-02, 0.2);
 	&.table-selected-single-row {
 		background-color: $selected-row;
 		border: 0;
-		border-left: solid 4px $brand-01;
+		border-left: solid $row-left-padding $brand-01;
 		&:hover {
 			background-color: $hover-selected-row;
+			border-left: solid $row-left-padding $brand-01;
 		}
 	}
 }
