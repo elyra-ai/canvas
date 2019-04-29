@@ -3181,11 +3181,11 @@ export class APIPipeline {
 		g.graph().marginx = initialMarginX;
 		g.graph().marginy = initialMarginY;
 		if (direction === "TB") {
-			g.graph().nodesep = maxNodeSizes.width + horizontalSpacing; // distance to separate the nodes horiziontally
-			g.graph().ranksep = maxNodeSizes.height + verticalSpacing; // distance between each rank of nodes
+			g.graph().nodesep = maxNodeSizes.width + horizontalSpacing; // distance to separate the nodes horizontally
+			g.graph().ranksep = maxNodeSizes.height + verticalSpacing; // distance to separate the ranks vertically
 		} else {
-			g.graph().nodesep = maxNodeSizes.height + horizontalSpacing; // distance to separate the nodes horiziontally
-			g.graph().ranksep = maxNodeSizes.width + verticalSpacing; // distance between each rank of nodes
+			g.graph().nodesep = maxNodeSizes.height + verticalSpacing; // distance to separate the nodes vertically
+			g.graph().ranksep = maxNodeSizes.width + horizontalSpacing; // distance to separate the ranks horizontally
 		}
 		dagre.layout(g);
 
