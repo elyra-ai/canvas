@@ -20,6 +20,22 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	constructor(props) {
 		super(props);
+		this.recentUseCat = PropertyUtils.formatMessage(this.reactIntl,
+			MESSAGE_KEYS.EXPRESSION_RECENTLY_USED, MESSAGE_KEYS_DEFAULTS.EXPRESSION_RECENTLY_USED);
+		this.recentUseCatInfo = {
+			id: this.recentUseCat,
+			locLabel: this.recentUseCat,
+			field_columns: {
+				field_column_info: {
+					locLabel: PropertyUtils.formatMessage(this.reactIntl,
+						MESSAGE_KEYS.EXPRESSION_RECENTLY_USED_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_RECENTLY_USED_COLUMN)
+				},
+				value_column_info: {
+					locLabel: PropertyUtils.formatMessage(this.reactIntl,
+						MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_VALUE_COLUMN)
+				}
+			}
+		};
 		this.inCategories = Object.keys(props.functionList);
 		this.fields = this._makeDatasetFields(props.controller.getDatasetMetadataFields(), props.controller.getExpressionInfo().fields);
 		this.state = {
@@ -38,8 +54,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		this.onFieldFilter = this.onFieldFilter.bind(this);
 		this.onValueFilter = this.onValueFilter.bind(this);
 		this.onFunctionFilter = this.onFunctionFilter.bind(this);
-		this.recentUseCat = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_RECENTLY_USED, MESSAGE_KEYS_DEFAULTS.EXPRESSION_RECENTLY_USED);
 		this.language = props.language;
 	}
 
@@ -57,10 +71,14 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	}
 
 	onFieldCatChange(evt) {
-		var currentData = [];
-		for (let index = 0; index < this.fields.field_table_info.length; index++) {
-			if (evt.selectedItem.value === this.fields.field_table_info[index].id) {
-				currentData = this.fields.field_table_info[index].field_value_groups;
+		let currentData = [];
+		if (evt.selectedItem.value === this.recentUseCat) {
+			currentData = this.props.controller.getExpressionFieldsRecentlyUsed();
+		} else {
+			for (let index = 0; index < this.fields.field_table_info.length; index++) {
+				if (evt.selectedItem.value === this.fields.field_table_info[index].id) {
+					currentData = this.fields.field_table_info[index].field_value_groups;
+				}
 			}
 		}
 		this.setState({
@@ -75,19 +93,19 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			fieldSelectedRow: row,
 			valueSelectedRow: 0
 		});
+
 	}
 
 	onFieldTableDblClick(row, evt) {
+		const field = this.state.currentFieldDataset[row];
+		let value = field.id;
+		if (this.state.fieldCategory !== this.recentUseCat) {
+			this.props.controller.updateExpressionFieldsRecentlyUsed(field);
+		}
 		if (this.props.onChange) {
-			let quote = "";
-			if (this.language === "CLEM") {
-				quote = "'";
-			}
-			if (this.state.fieldCategory === "globals") {
-				quote = "";
-			}
-			const field = this.state.currentFieldDataset[row].id;
-			this.props.onChange(quote + field + quote);
+			const quote = (this.language === "CLEM" && this.state.fieldCategory !== "globals") ? "'" : "";
+			value = quote + field.id + quote;
+			this.props.onChange(value);
 		}
 	}
 
@@ -129,15 +147,14 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	}
 
 	onFunctionTableDblClick(row, evt) {
-		let value;
+		let field;
 		if (this.state.functionCategory === this.recentUseCat) {
-			const recentlyUsedList = this.props.controller.getExpressionRecentlyUsed();
-			value = recentlyUsedList[row].value;
+			field = this.props.controller.getExpressionRecentlyUsed()[row];
 		} else {
-			const rowSelected = this.props.functionList[this.state.functionCategory].functionList[row];
-			this.props.controller.updateExpressionRecentlyUsed(rowSelected);
-			value = rowSelected.value;
+			field = this.props.functionList[this.state.functionCategory].functionList[row];
+			this.props.controller.updateExpressionRecentlyUsed(field);
 		}
+		const value = field.value;
 		if (this.props.onChange) {
 			this.props.onChange(value);
 		}
@@ -168,8 +185,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_VALUE_COLUMN);
 		const dropdownLabel = PropertyUtils.formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_FIELDS_DROPDOWN_TITLE, MESSAGE_KEYS_DEFAULTS.EXPRESSION_FIELDS_DROPDOWN_TITLE);
-
-		var datasetCategories = {
+		const fieldsCatInfo = {
 			id: "fields",
 			locLabel: dropdownLabel,
 			field_columns: {
@@ -188,7 +204,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			}
 		};
 
-		var datasetTableInfo = {
+		const fieldsTableInfo = {
 			id: "fields",
 			field_value_groups: []
 		};
@@ -217,10 +233,31 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					entry.range.max = { value: field.metadata.range.max };
 				}
 			}
-			datasetTableInfo.field_value_groups.push(entry);
+			fieldsTableInfo.field_value_groups.push(entry);
 		});
-		fieldDataset.field_categories.unshift(datasetCategories);
-		fieldDataset.field_table_info.unshift(datasetTableInfo);
+		// if fields already exists in metadata, update it instead of adding it to the front
+		let catIndex;
+		let infoIndex;
+		for (let index = 0; index < fieldDataset.field_categories.length; index++) {
+			if (fieldDataset.field_categories[index].id === "fields") {
+				catIndex = index;
+			}
+		}
+		for (let index = 0; index < fieldDataset.field_table_info.length; index++) {
+			if (fieldDataset.field_table_info[index].id === "fields") {
+				infoIndex = index;
+			}
+		}
+		if (typeof catIndex !== "undefined") {
+			fieldDataset.field_categories[catIndex] = fieldsCatInfo;
+		} else {
+			fieldDataset.field_categories.unshift(fieldsCatInfo);
+		}
+		if (typeof infoIndex !== "undefined") {
+			fieldDataset.field_table_info[infoIndex] = fieldsTableInfo;
+		} else {
+			fieldDataset.field_table_info.unshift(fieldsTableInfo);
+		}
 		return fieldDataset;
 	}
 
@@ -232,20 +269,27 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		const valueHeader = [];
 		const sortable = ["fieldName"];
 
-		var tableContents = null;
-		// get the table contents
-		for (let index = 0; index < this.fields.field_table_info.length; index++) {
-			if (this.state.fieldCategory === this.fields.field_table_info[index].id) {
-				tableContents = this.fields.field_table_info[index];
+
+		let categoryInfo = null;
+		let tableContents = null;
+		if (this.state.fieldCategory === this.recentUseCat) {
+			// get recently used category info and table contents
+			categoryInfo = this.recentUseCatInfo;
+			tableContents = { id: this.recentUseCat, field_value_groups: this.props.controller.getExpressionFieldsRecentlyUsed() };
+		} else {
+			// get category info and table contents
+			for (let index = 0; index < this.fields.field_categories.length; index++) {
+				if (this.state.fieldCategory === this.fields.field_categories[index].id) {
+					categoryInfo = this.fields.field_categories[index];
+				}
+			}
+			for (let index = 0; index < this.fields.field_table_info.length; index++) {
+				if (this.state.fieldCategory === this.fields.field_table_info[index].id) {
+					tableContents = this.fields.field_table_info[index];
+				}
 			}
 		}
-		// get column metadata
-		var categoryInfo = null;
-		for (let index = 0; index < this.fields.field_categories.length; index++) {
-			if (this.state.fieldCategory === this.fields.field_categories[index].id) {
-				categoryInfo = this.fields.field_categories[index];
-			}
-		}
+
 		if (categoryInfo) {
 			fieldHeaders.push({ key: "fieldName", label: categoryInfo.field_columns.field_column_info.locLabel });
 			valueHeader.push({ key: "values", label: categoryInfo.field_columns.value_column_info.locLabel });
@@ -256,6 +300,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				}
 			}
 		}
+
 
 		const tableData = [];
 		let valuesTableData = [];
@@ -345,6 +390,22 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		}
 	}
 
+	_makeFunctionsContent() {
+		if (this.props.functionList) {
+			const categories = Object.keys(this.props.functionList);
+			const selectCategory = this._makeFunctionDropdown(categories);
+			const functionsTable = this._makeFunctionsTable(categories);
+			return (
+				<div className="properties-expression-function-table-container" >
+					{selectCategory}
+					{functionsTable}
+				</div>
+			);
+		}
+		return (<span>PropertyUtils.formatMessage(this.reactIntl,
+			MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS, MESSAGE_KEYS_DEFAULTS.EXPRESSION_NO_FUNCTIONS);</span>);
+	}
+
 	_makeAdditionalColumnsContent(field, fieldColumns) {
 		for (let i = 0; i < field.additional_column_entries.length; i++) {
 			fieldColumns.push({ column: field.additional_column_entries[i].id,
@@ -352,7 +413,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		}
 	}
 
-	_makeSelect(categories) {
+	_makeFunctionDropdown(categories) {
 		let items = categories.map((val, index) => ({ value: val, label: this.props.functionList[val].locLabel }));
 		// Add "Recently Used" category as second category
 		const first = items.slice(0, 1);
@@ -375,32 +436,21 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		for (let i = 0; i < this.fields.field_categories.length; i++) {
 			items.push({ value: this.fields.field_categories[i].id, label: this.fields.field_categories[i].locLabel });
 		}
+		const first = items.slice(0, 1);
+		const last = items.slice(1);
+		const newItems = first.concat({ value: this.recentUseCat, label: this.recentUseCat }, last);
+		const label = (this.state.fieldCategory === this.recentUseCat) ? this.recentUseCat : items[0].label;
 		return (
 			<div className="properties-expression-field-select">
 				<Dropdown
 					light
-					label={items[0].label}
-					items={items}
+					label={label}
+					items={newItems}
 					onChange={this.onFieldCatChange}
 				/>
 			</div>);
 	}
 
-	_makeFunctionsContent() {
-		if (this.props.functionList) {
-			const categories = Object.keys(this.props.functionList);
-			const selectCategory = this._makeSelect(categories);
-			const functionsTable = this._makeFunctionsTable(categories);
-			return (
-				<div className="properties-expression-function-table-container" >
-					{selectCategory}
-					{functionsTable}
-				</div>
-			);
-		}
-		return (<span>PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS, MESSAGE_KEYS_DEFAULTS.EXPRESSION_NO_FUNCTIONS);</span>);
-	}
 
 	_makeFunctionsTable(categories) {
 		const headers = [];

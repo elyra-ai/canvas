@@ -56,6 +56,7 @@ export default class PropertiesController {
 		this.conditionOps = ConditionOps.getConditionOps();
 		this.expressionFunctionInfo = {};
 		this.expressionRecentlyUsed = [];
+		this.expressionFieldsRecentlyUsed = [];
 		this.selectionListeners = {};
 	}
 
@@ -790,19 +791,44 @@ export default class PropertiesController {
 		return this.expressionFunctionInfo;
 	}
 
-
+	// recently used of all categories under functions tab
 	getExpressionRecentlyUsed() {
 		return this.expressionRecentlyUsed;
 	}
 
 	updateExpressionRecentlyUsed(functionInfo) {
-		if (this.expressionRecentlyUsed.indexOf(functionInfo) === -1) {
+		const index = this.expressionRecentlyUsed.indexOf(functionInfo);
+		if (index === -1) {
 			this.expressionRecentlyUsed.splice(0, 0, functionInfo);
+		} else {
+			// if already in the list, move it to the front
+			this.expressionRecentlyUsed.splice(index, 1);
+			this.expressionRecentlyUsed.unshift(functionInfo);
 		}
 	}
 
+	// recently used of all categories under fields/values tab
 	clearExpressionRecentlyUsed() {
 		this.expressionRecentlyUsed = [];
+	}
+
+	getExpressionFieldsRecentlyUsed() {
+		return this.expressionFieldsRecentlyUsed;
+	}
+
+	updateExpressionFieldsRecentlyUsed(fieldInfo) {
+		const index = this.expressionFieldsRecentlyUsed.indexOf(fieldInfo);
+		if (index === -1) {
+			this.expressionFieldsRecentlyUsed.splice(0, 0, fieldInfo);
+		} else {
+			// if already in the list, move it to the front
+			this.expressionFieldsRecentlyUsed.splice(index, 1);
+			this.expressionFieldsRecentlyUsed.unshift(fieldInfo);
+		}
+	}
+
+	clearExpressionFieldsRecentlyUsed() {
+		this.expressionFieldsRecentlyUsed = [];
 	}
 
 	getExpressionValidate(controlName) {

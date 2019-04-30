@@ -190,6 +190,7 @@ describe("expression-builder renders correctly", () => {
 	});
 
 });
+
 describe("expression-builder select from tables correctly", () => {
 
 	it("expression builder select an operator", () => {
@@ -355,7 +356,7 @@ describe("expression handles no expression builder resources correctly", () => {
 
 });
 
-describe("ExpressionBuilder generates and accesses field dropdown correctly", () => {
+describe("expression builder generates and accesses field dropdown correctly", () => {
 	it("expression builder selects dropdown correctly", () => {
 		reset();
 		const wrapper = mountWithIntl(
@@ -372,14 +373,15 @@ describe("ExpressionBuilder generates and accesses field dropdown correctly", ()
 		dropDown.simulate("click");
 		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
 		// check that all dropdown options are loaded
-		expect(dropDownList).to.have.length(4);
+		expect(dropDownList).to.have.length(5);
 		// selecting the dropdown list has the correct entries
 		expect(dropDownList.at(0).text()).to.be.equal("Fields");
-		expect(dropDownList.at(1).text()).to.be.equal("Globals");
-		expect(dropDownList.at(2).text()).to.be.equal("Multi Response Set");
-		expect(dropDownList.at(3).text()).to.be.equal("Parameters");
+		expect(dropDownList.at(1).text()).to.be.equal("Recently Used");
+		expect(dropDownList.at(2).text()).to.be.equal("Globals");
+		expect(dropDownList.at(3).text()).to.be.equal("Multi Response Set");
+		expect(dropDownList.at(4).text()).to.be.equal("Parameters");
 		// select an option
-		dropDownList.at(1).simulate("click");
+		dropDownList.at(2).simulate("click");
 		// properly close the dropdown once selected
 		expect(wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item")).to.have.length(0);
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Globals");
@@ -400,7 +402,7 @@ describe("ExpressionBuilder generates and accesses field dropdown correctly", ()
 		dropDown.simulate("click");
 		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
 		// test globals
-		dropDownList.at(1).simulate("click");
+		dropDownList.at(2).simulate("click");
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Globals");
 		var fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
 		fieldRows.at(0).simulate("dblclick");
@@ -414,7 +416,7 @@ describe("ExpressionBuilder generates and accesses field dropdown correctly", ()
 		dropDown = wrapper.find("div.properties-expression-field-select div.bx--list-box__field");
 		dropDown.simulate("click");
 		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
-		dropDownList.at(2).simulate("click");
+		dropDownList.at(3).simulate("click");
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Multi Response Set");
 		fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
 		fieldRows.at(0).simulate("dblclick");
@@ -595,5 +597,136 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		functionTable = wrapper.find("div.properties-functions-table");
 		rows = functionTable.find("tr.table-row");
 		expect(rows.at(0).text()).to.equal("if  COND1  then  EXPR1  else  EXPR2  endifAny");
+	});
+});
+describe("expression builder correctly runs Recently Used dropdown options", () => {
+	it("expression builder correctly adds and reorders fields to Recently Used", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Fields");
+		var fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
+		expect(fieldRows).to.have.length(4);
+		// navigate to Recently Used fields and check that it is empty
+		var dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
+		dropDown.simulate("click");
+		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList.at(1).simulate("click");
+		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Recently Used");
+		expect(wrapper.find("div.properties-field-table-container th.reactable-th-fieldname span").text()).to.equal("Item");
+		fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
+		expect(fieldRows).to.have.length(0);
+		// back to Fields
+		dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
+		dropDown.simulate("click");
+		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList.at(0).simulate("click");
+		fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
+		// add two rows to Recently Used
+		fieldRows.at(0).simulate("dblclick");
+		fieldRows.at(1).simulate("dblclick");
+		// back to Recently used
+		dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
+		dropDown.simulate("click");
+		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList.at(1).simulate("click");
+		// check that the fields were correctly added
+		fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
+		expect(fieldRows).to.have.length(2);
+		expect(fieldRows.at(0).text()).to.equal("Sex");
+		expect(fieldRows.at(1).text()).to.equal("Age");
+		// check that recently used field has the correct values stored with it
+		var valueRows = wrapper.find("div.properties-value-table-container .reactable-data tr");
+		expect(valueRows).to.have.length(3);
+		expect(valueRows.at(2).text()).to.equal("not specified");
+		// check that reusing a field will move it to the top of Recently Used
+		dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
+		dropDown.simulate("click");
+		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList.at(0).simulate("click");
+		fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
+		// add Age again, moving it to the top of Recently Used
+		fieldRows.at(0).simulate("dblclick");
+		// back to Recently Used
+		dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
+		dropDown.simulate("click");
+		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList.at(1).simulate("click");
+		// order of rows should be reversed
+		fieldRows = wrapper.find("div.properties-field-table-container .reactable-data tr");
+		expect(fieldRows).to.have.length(2);
+		expect(fieldRows.at(0).text()).to.equal("Age");
+		expect(fieldRows.at(1).text()).to.equal("Sex");
+		valueRows = wrapper.find("div.properties-value-table-container .reactable-data tr");
+		expect(valueRows).to.have.length(2);
+		expect(valueRows.at(0).text()).to.equal("Min: 21");
+	});
+	it("expression builder correctly adds and reorders functions to Recently Used", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		expect(wrapper.find("div.properties-expression-function-select span").text()).to.equal("General Functions");
+		var funcRows = wrapper.find("div.properties-functions-table-container .reactable-data tr");
+		expect(funcRows).to.have.length(4);
+		// navigate to Recently Used fields and check that it is empty
+		var dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
+		dropDown.simulate("click");
+		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList.at(1).simulate("click");
+		expect(wrapper.find("div.properties-expression-function-select span").text()).to.equal("Recently Used");
+		expect(wrapper.find("div.properties-functions-table-container th.reactable-th-function span").text()).to.equal("Function");
+		funcRows = wrapper.find("div.properties-functions-table-container .reactable-data tr");
+		expect(funcRows).to.have.length(0);
+		// back to General Functions
+		dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
+		dropDown.simulate("click");
+		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList.at(0).simulate("click");
+		funcRows = wrapper.find("div.properties-functions-table-container .reactable-data tr");
+		// add two rows to Recently Used
+		funcRows.at(0).simulate("dblclick");
+		funcRows.at(1).simulate("dblclick");
+		// back to Recently used
+		dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
+		dropDown.simulate("click");
+		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList.at(1).simulate("click");
+		// check that the functions were correctly added
+		funcRows = wrapper.find("div.properties-functions-table-container .reactable-data tr");
+		expect(funcRows).to.have.length(2);
+		expect(funcRows.at(0).text()).to.equal("count_equal(Item, List)Integer");
+		expect(funcRows.at(1).text()).to.equal("to_integer(Item)Integer");
+		// check that reusing a function will move it to the top of Recently Used
+		dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
+		dropDown.simulate("click");
+		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList.at(0).simulate("click");
+		funcRows = wrapper.find("div.properties-functions-table-container .reactable-data tr");
+		// add to_integer again, moving it to the top of Recently Used
+		funcRows.at(0).simulate("dblclick");
+		// back to Recently Used
+		dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
+		dropDown.simulate("click");
+		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList.at(1).simulate("click");
+		// order of rows should be reversed
+		funcRows = wrapper.find("div.properties-functions-table-container .reactable-data tr");
+		expect(funcRows).to.have.length(2);
+		expect(funcRows.at(0).text()).to.equal("to_integer(Item)Integer");
+		expect(funcRows.at(1).text()).to.equal("count_equal(Item, List)Integer");
 	});
 });
