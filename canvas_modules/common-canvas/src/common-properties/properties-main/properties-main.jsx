@@ -82,9 +82,10 @@ class PropertiesMain extends React.Component {
 				(newProps.propertiesInfo.parameterDef && !isEqual(newProps.propertiesInfo.parameterDef, this.props.propertiesInfo.parameterDef)) ||
 				(newProps.propertiesInfo.appData && !isEqual(newProps.propertiesInfo.appData, this.props.propertiesInfo.appData))) {
 				this.setForm(newProps.propertiesInfo);
-				this.state = {
-					editorSize: this.propertiesController.getForm().editorSize
-				};
+				const newEditorSize = this.propertiesController.getForm().editorSize;
+				if (this.state.editorSize !== newEditorSize) {
+					this.setState({ editorSize: newEditorSize });
+				}
 				this.currentParameters = this.propertiesController.getPropertyValues();
 				this.propertiesController.setAppData(newProps.propertiesInfo.appData);
 				this.propertiesController.setCustomControls(newProps.customControls);
