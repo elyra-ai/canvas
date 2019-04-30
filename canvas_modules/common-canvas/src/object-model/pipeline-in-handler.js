@@ -16,6 +16,19 @@ import { BINDING, EXECUTION_NODE, SUPER_NODE, MODEL_NODE } from "../common-canva
 export default class PipelineInHandler {
 
 	// Returns the 'canvas info' pipeline, stored internally in the object model,
+	// by extracting that info from the pipeline-flow provided.
+	static convertPipelineFlowToCanvasInfo(pipelineFlow, layoutInfo) {
+		let canvasInfoPipelines = [];
+		if (pipelineFlow.pipelines) {
+			canvasInfoPipelines = pipelineFlow.pipelines.map((pFlowPipline) =>
+				this.convertPipelineToCanvasInfoPipeline(pFlowPipline, layoutInfo)
+			);
+		}
+		const newPipelineFlow = Object.assign({}, pipelineFlow, { pipelines: canvasInfoPipelines });
+		return newPipelineFlow;
+	}
+
+	// Returns the 'canvas info' pipeline, stored internally in the object model,
 	// by extracting that info from the pipeline-flow pipeline provided. A
 	// 'canvas info' pipeline consists of an ID and three arrays: nodes,
 	// comments and links.

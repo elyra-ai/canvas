@@ -1621,8 +1621,8 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: canvasInfo,
-			layoutinfo: objectModel.getLayoutInfo()
+			canvasInfo: canvasInfo,
+			currentCanvasInfo: objectModel.getCanvasInfo()
 		});
 	}
 

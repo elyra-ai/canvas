@@ -389,8 +389,8 @@ describe("Selection notification tests", () => {
 
 		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: canvasInfo,
-			layoutinfo: objectModel.getLayoutInfo()
+			canvasInfo: canvasInfo,
+			currentCanvasInfo: objectModel.getCanvasInfo()
 		});
 	}
 

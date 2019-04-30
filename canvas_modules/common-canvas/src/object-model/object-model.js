@@ -9,7 +9,7 @@
 /* eslint arrow-body-style: ["off"] */
 
 import { createStore, combineReducers } from "redux";
-import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
+import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
 	CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
 	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK, CREATE_PIPELINE,
 	CLONE_PIPELINE, SUPER_NODE, HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM,
@@ -35,8 +35,7 @@ import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from ".
 const nodes = (state = [], action) => {
 	switch (action.type) {
 	case "ADD_NODE":
-	case "ADD_AUTO_NODE":
-	case "ADD_SUPERNODE": {
+	case "ADD_AUTO_NODE": {
 		return [
 			...state,
 			action.data.newNode
@@ -249,11 +248,8 @@ const nodes = (state = [], action) => {
 
 	case "SET_SUPERNODE_FLAG":
 		return state.map((node, index) => {
-			if (action.data.nodeId === node.id) {
-				let newNode = Object.assign({}, node);
-				newNode.is_expanded = action.data.isExpanded;
-				newNode = setNodeDimensions(newNode, action.layoutinfo, action.layoutHandler);
-				return newNode;
+			if (action.data.node.id === node.id) {
+				return action.data.node;
 			}
 
 			if (action.data.nodePositions && typeof action.data.nodePositions[node.id] !== "undefined") {
@@ -261,15 +257,6 @@ const nodes = (state = [], action) => {
 				return Object.assign({}, node, { x_pos: newPosition.x_pos, y_pos: newPosition.y_pos });
 			}
 			return node;
-		});
-
-	case "SET_PIPELINE_FLOW":
-	case "SET_LAYOUT_INFO":
-	case "SET_CANVAS_INFO":
-		return state.map((node, index) => {
-			let newNode = Object.assign({}, node);
-			newNode = setNodeDimensions(newNode, action.layoutinfo, action.layoutHandler);
-			return newNode;
 		});
 
 	default:
@@ -478,7 +465,7 @@ const links = (state = [], action) => {
 			type: action.data.type
 		};
 
-		if (action.data.type === "nodeLink") {
+		if (action.data.type === NODE_LINK) {
 			Object.assign(newLink, {
 				"srcNodePortId": action.data.srcNodePortId,
 				"trgNodePortId": action.data.trgNodePortId,
@@ -594,30 +581,14 @@ const links = (state = [], action) => {
 	}
 };
 
-const canvasinfo = (state = [], action) => {
+const canvasinfo = (state = {}, action) => {
 	switch (action.type) {
-	// Convert incoming pipeline flow pipelines to be canvasInfo pipelines and
-	// make sure node dimensions are calculated for all nodes in all current
-	// pipelines.
-	case "SET_PIPELINE_FLOW": {
-		let canvasInfoPipelines = [];
-		if (action.data.pipelines) {
-			canvasInfoPipelines = action.data.pipelines.map((pFlowPipline) => {
-				const pipeline = PipelineInHandler.convertPipelineToCanvasInfoPipeline(pFlowPipline, action.layoutinfo);
-				return Object.assign({}, pipeline, { nodes: nodes(pipeline.nodes, action) });
-			});
-		}
-		return Object.assign({}, action.data, { pipelines: canvasInfoPipelines });
-	}
 
-	// Save incoming pipelines as our current (state) pipelines and make sure
-	// node dimensions are calculated for all nodes in all current
-	// pipelines. This will replace all pipelines with the incomming ones.
 	case "SET_CANVAS_INFO": {
-		const canvasInfoPipelines = action.data.pipelines.map((pipeline) => {
-			return Object.assign({}, pipeline, { nodes: nodes(pipeline.nodes, action) });
-		});
-		return Object.assign({}, action.data, { pipelines: canvasInfoPipelines });
+		if (action.canvasInfo) {
+			return action.canvasInfo;
+		}
+		return state;
 	}
 
 	// Save incoming sub-pipeline to the pipeline flow pipelines array.
@@ -643,27 +614,8 @@ const canvasinfo = (state = [], action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
-	// Ensure node dimensions are calculated for all nodes in all current
-	// pipelines when layout info is changed.
 	case "SET_LAYOUT_INFO": {
-		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
-			return Object.assign({}, pipeline, { nodes: nodes(pipeline.nodes, action) });
-		});
-		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
-	}
-
-	case "ADD_SUPERNODE" : {
-		let canvasInfoPipelines = state.pipelines.concat(action.data.newSubPipelines);
-
-		canvasInfoPipelines = canvasInfoPipelines.map((pipeline) => {
-			if (pipeline.id === action.pipelineId) {
-				return Object.assign({}, pipeline, {
-					nodes: nodes(pipeline.nodes, action)
-				});
-			}
-			return pipeline;
-		});
-		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+		return Object.assign({}, state, { pipelines: action.pipelines });
 	}
 
 	case "DELETE_SUPERNODE": {
@@ -865,12 +817,12 @@ const nodetypes = (state = [], action) => {
 
 const selectioninfo = (state = [], action) => {
 	switch (action.type) {
-	case "SET_PIPELINE_FLOW": {
-		// In some instances, with an external object model, the same canvas may
+	case "SET_CANVAS_INFO": {
+		// In some instances, with an external object model, the same canvas info may
 		// be set multiple times. Consequently, we only clear the selections if
 		// we're given a completely new canvas.
-		if (action.data && action.currentCanvasInfo &&
-				action.data.id !== action.currentCanvasInfo.id) {
+		if (action.canvasInfo && action.currentCanvasInfo &&
+				action.canvasInfo.id !== action.currentCanvasInfo.id) {
 			return {};
 		}
 		return state;
@@ -905,22 +857,19 @@ const selectioninfo = (state = [], action) => {
 
 const breadcrumbs = (state = [], action) => {
 	switch (action.type) {
-	case "SET_PIPELINE_FLOW": {
+	case "SET_CANVAS_INFO": {
 		// In some instances, with an external object model, the same canvas may
 		// be set multiple times. Consequently, we only reset the breadcrumbs if
 		// we're given a completely new canvas or the current breadcrumb does not
 		// reference a pipeline Id in the incoming pipelineFlow, which might happen
 		// if the pipeline has been removed.
-		if ((action.data && action.currentCanvasInfo &&
-					action.data.id !== action.currentCanvasInfo.id) ||
-				!isCurrentBreadcrumbInPipelineFlow(state, action.data)) {
-			return [{ pipelineId: action.data.primary_pipeline, pipelineFlowId: action.data.id }];
+		if ((action.canvasInfo && action.currentCanvasInfo &&
+					action.canvasInfo.id !== action.currentCanvasInfo.id) ||
+				!isCurrentBreadcrumbInPipelineFlow(state, action.canvasInfo)) {
+			return [{ pipelineId: action.canvasInfo.primary_pipeline, pipelineFlowId: action.canvasInfo.id }];
 		}
 		return state;
 	}
-
-	case "SET_CANVAS_INFO":
-		return [{ pipelineId: action.data.primary_pipeline, pipelineFlowId: action.data.id }];
 
 	case "ADD_NEW_BREADCRUMB":
 		return [
@@ -961,48 +910,6 @@ const notifications = (state = [], action) => {
 
 	default:
 		return state;
-	}
-};
-
-// Returns a copy of the node passed in with additional fields which contains
-//  the height occupied by the input ports and output ports, based on the
-// layout info passed in, as well as the node width.
-const setNodeDimensions = (node, layoutInfo, layoutHandler) => {
-	const newNode = Object.assign({}, node);
-	setNodeLayout(newNode, layoutInfo, layoutHandler);
-
-	if (layoutInfo.connectionType === "ports") {
-		newNode.inputPortsHeight = newNode.inputs
-			? (newNode.inputs.length * (newNode.layout.portArcRadius * 2)) + ((newNode.inputs.length - 1) * newNode.layout.portArcSpacing)
-			: 0;
-
-		newNode.outputPortsHeight = newNode.outputs
-			? (newNode.outputs.length * (newNode.layout.portArcRadius * 2)) + ((newNode.outputs.length - 1) * newNode.layout.portArcSpacing)
-			: 0;
-
-		newNode.height = Math.max(newNode.inputPortsHeight, newNode.outputPortsHeight, newNode.layout.defaultNodeHeight);
-	} else { // 'halo' connection type
-		newNode.inputPortsHeight = 0;
-		newNode.outputPortsHeight = 0;
-		newNode.height = newNode.layout.defaultNodeHeight;
-	}
-	newNode.width = newNode.layout.defaultNodeWidth;
-
-	if (newNode.type === SUPER_NODE && newNode.is_expanded) {
-		newNode.width = newNode.expanded_width ? newNode.expanded_width : Math.max(layoutInfo.supernodeDefaultWidth, newNode.width);
-		newNode.height = newNode.expanded_height ? newNode.expanded_height : Math.max(layoutInfo.supernodeDefaultHeight, newNode.height);
-	}
-
-	return newNode;
-};
-
-const setNodeLayout = (node, layoutInfo, layoutHandler) => {
-	node.layout = layoutInfo.nodeLayout;
-
-	// If using the layoutHandler we must make a copy of the layout for each node
-	// so the original layout info doesn't get overwritten.
-	if (layoutHandler) {
-		node.layout = Object.assign({}, node.layout, layoutHandler(node));
 	}
 };
 
@@ -1347,15 +1254,125 @@ export default class ObjectModel {
 		}
 
 		const pipelineFlow = this.validateAndUpgrade(newPipelineFlow);
+		const canvasInfo = PipelineInHandler.convertPipelineFlowToCanvasInfo(pipelineFlow, this.getLayoutInfo());
 
-		this.setSupernodesBindingStatus(pipelineFlow.pipelines);
+		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getLayoutInfo());
 
 		this.executeWithSelectionChange(this.store.dispatch, {
-			type: "SET_PIPELINE_FLOW",
-			data: pipelineFlow,
-			layoutinfo: this.getLayoutInfo(),
-			layoutHandler: this.layoutHandler,
+			type: "SET_CANVAS_INFO",
+			canvasInfo: canvasInfo,
 			currentCanvasInfo: this.getCanvasInfo() });
+	}
+
+	// Does all preparation needed for nodes before they are saved into Redux.
+	prepareNodes(pipelines, layoutInfo) {
+		const newPipelines = this.setSupernodesBindingStatus(pipelines);
+		return newPipelines.map((pipeline) => this.setPipelineNodeAttributes(pipeline, layoutInfo));
+	}
+
+	// Loops through all the pipelines and adds the appropriate supernode binding
+	// attribute to any binding nodes that are referenced by the ports of a supernode.
+	setSupernodesBindingStatus(pipelines) {
+		// First, clear all supernode binding statuses from nodes
+		pipelines.forEach((pipeline) => {
+			if (pipeline.nodes) {
+				pipeline.nodes.forEach((node) => {
+					delete node.isSupernodeInputBinding;
+					delete node.isSupernodeOutputBinding;
+				});
+			}
+		});
+		// Set the supernode binding statuses as appropriate.
+		pipelines.forEach((pipeline) => {
+			if (pipeline.nodes) {
+				pipeline.nodes.forEach((node) => {
+					if (node.type === SUPER_NODE && node.subflow_ref && node.subflow_ref.pipeline_id_ref) {
+						if (node.inputs) {
+							node.inputs.forEach((input) => {
+								if (input.subflow_node_ref) {
+									const subNode = this.findNode(input.subflow_node_ref, node.subflow_ref.pipeline_id_ref, pipelines);
+									if (subNode) {
+										subNode.isSupernodeInputBinding = true;
+									}
+								}
+							});
+						}
+						if (node.outputs) {
+							node.outputs.forEach((output) => {
+								if (output.subflow_node_ref) {
+									const subNode = this.findNode(output.subflow_node_ref, node.subflow_ref.pipeline_id_ref, pipelines);
+									if (subNode) {
+										subNode.isSupernodeOutputBinding = true;
+									}
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+		return pipelines;
+	}
+
+	setPipelineNodeAttributes(inPipeline, layoutInfo) {
+		const pipeline = Object.assign({}, inPipeline);
+		if (pipeline.nodes) {
+			pipeline.nodes = pipeline.nodes.map((node) => this.setNodeAttributes(node, layoutInfo));
+		} else {
+			pipeline.nodes = [];
+		}
+		return pipeline;
+	}
+
+	// Returns a copy of the node passed in with additional fields which contains
+	// layout, diemension and supernode binding status info.
+	setNodeAttributes(node, layoutInfo) {
+		let newNode = Object.assign({}, node);
+		newNode = this.setNodeLayoutAttributes(newNode, layoutInfo);
+		newNode = this.setNodeDimensionAttributes(newNode, layoutInfo);
+		return newNode;
+	}
+
+	// Returns the node passed in with additional fields which contains
+	// the layout info.
+	setNodeLayoutAttributes(node, layoutInfo) {
+		node.layout = layoutInfo.nodeLayout;
+
+		// If using the layoutHandler we must make a copy of the layout for each node
+		// so the original layout info doesn't get overwritten.
+		if (this.layoutHandler) {
+			node.layout = Object.assign({}, node.layout, this.layoutHandler(node));
+		}
+		return node;
+	}
+
+	// Returns the node passed in with additional fields which contains
+	// the height occupied by the input ports and output ports, based on the
+	// layout info passed in, as well as the node width.
+	setNodeDimensionAttributes(node, layoutInfo) {
+		if (layoutInfo.connectionType === "ports") {
+			node.inputPortsHeight = node.inputs
+				? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing)
+				: 0;
+
+			node.outputPortsHeight = node.outputs
+				? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing)
+				: 0;
+
+			node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);
+		} else { // 'halo' connection type
+			node.inputPortsHeight = 0;
+			node.outputPortsHeight = 0;
+			node.height = node.layout.defaultNodeHeight;
+		}
+		node.width = node.layout.defaultNodeWidth;
+
+		if (node.type === SUPER_NODE && node.is_expanded) {
+			node.width = node.expanded_width ? node.expanded_width : Math.max(layoutInfo.supernodeDefaultWidth, node.width);
+			node.height = node.expanded_height ? node.expanded_height : Math.max(layoutInfo.supernodeDefaultHeight, node.height);
+		}
+
+		return node;
 	}
 
 	validateAndUpgrade(newPipelineFlow) {
@@ -1532,13 +1549,15 @@ export default class ObjectModel {
 		return supernodeRef;
 	}
 
-	setCanvasInfo(canvasInfo) {
+	setCanvasInfo(inCanvasInfo) {
 		// If there's no current layout info then add some default layout before
 		// setting canvas info. This is mainly necessary for Jest testcases.
 		if (isEmpty(this.getLayoutInfo())) {
 			this.setDefaultLayout();
 		}
-		this.store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo, layoutinfo: this.getLayoutInfo(), layoutHandler: this.layoutHandler });
+		const canvasInfo = Object.assign({}, inCanvasInfo);
+		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getLayoutInfo());
+		this.store.dispatch({ type: "SET_CANVAS_INFO", canvasInfo: canvasInfo, currentCanvasInfo: this.getCanvasInfo() });
 	}
 
 	isPrimaryPipelineEmpty() {
@@ -1575,17 +1594,14 @@ export default class ObjectModel {
 			node.subflow_ref.pipeline_id_ref = clonedPipeline.id;
 			const canvInfoPipeline =
 				PipelineInHandler.convertPipelineToCanvasInfoPipeline(clonedPipeline, this.getLayoutInfo());
-			if (canvInfoPipeline.nodes) {
-				canvInfoPipeline.nodes = canvInfoPipeline.nodes.map((n) => {
-					return setNodeDimensions(n, this.getLayoutInfo(), this.layoutHandler);
-				});
-			}
 
 			subPipelines.push(canvInfoPipeline);
 
 			clonedPipeline.nodes.forEach((clonedNode) => {
-				const extraPipelines = this.cloneSuperNodeContents(clonedNode, inPipelines);
-				subPipelines = subPipelines.concat(extraPipelines);
+				if (clonedNode.type === SUPER_NODE) {
+					const extraPipelines = this.cloneSuperNodeContents(clonedNode, inPipelines);
+					subPipelines = subPipelines.concat(extraPipelines);
+				}
 			});
 		}
 		return subPipelines;
@@ -1633,47 +1649,6 @@ export default class ObjectModel {
 
 	removeAllStyles(temporary) {
 		this.store.dispatch({ type: "REMOVE_ALL_STYLES", data: { temporary: temporary } });
-	}
-
-	setSupernodesBindingStatus(pipelines) {
-		// Clear all supernode binding statuses from nodes
-		pipelines.forEach((pipeline) => {
-			if (pipeline.nodes) {
-				pipeline.nodes.forEach((node) => {
-					delete node.isSupernodeInputBinding;
-					delete node.isSupernodeOutputBinding;
-				});
-			}
-		});
-		// Set the supernode binding statuses as appropriate.
-		pipelines.forEach((pipeline) => {
-			if (pipeline.nodes) {
-				pipeline.nodes.forEach((node) => {
-					if (node.type === "super_node" && node.subflow_ref && node.subflow_ref.pipeline_id_ref) {
-						if (node.inputs) {
-							node.inputs.forEach((input) => {
-								if (input.subflow_node_ref) {
-									const subNode = this.findNode(input.subflow_node_ref, node.subflow_ref.pipeline_id_ref, pipelines);
-									if (subNode) {
-										subNode.isSupernodeInputBinding = true;
-									}
-								}
-							});
-						}
-						if (node.outputs) {
-							node.outputs.forEach((output) => {
-								if (output.subflow_node_ref) {
-									const subNode = this.findNode(output.subflow_node_ref, node.subflow_ref.pipeline_id_ref, pipelines);
-									if (subNode) {
-										subNode.isSupernodeOutputBinding = true;
-									}
-								}
-							});
-						}
-					}
-				});
-			}
-		});
 	}
 
 	findNode(nodeId, pipelineId, pipelines) {
@@ -1747,16 +1722,21 @@ export default class ObjectModel {
 
 	setLayoutType(type, nodeLayoutOverrides, linkType) {
 		const layoutInfo = Object.assign({}, LayoutDimensions.getLayout(type, nodeLayoutOverrides), { linkType: linkType });
+		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo);
+
 		this.store.dispatch({ type: "SET_LAYOUT_INFO",
 			layoutinfo: layoutInfo,
-			layoutHandler: this.layoutHandler
+			pipelines: newPipelines
 		});
 	}
 
 	setDefaultLayout() {
+		const layoutInfo = LayoutDimensions.getLayout();
+		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo);
+
 		this.store.dispatch({ type: "SET_LAYOUT_INFO",
-			layoutinfo: LayoutDimensions.getLayout(),
-			layoutHandler: this.layoutHandler
+			layoutinfo: layoutInfo,
+			pipelines: newPipelines
 		});
 	}
 
@@ -1999,7 +1979,7 @@ export default class ObjectModel {
 	addConnectedNodeIdToGroup(nodeId, connectedNodesIdsGroup, nodeIds, apiPipeline) {
 		if (connectedNodesIdsGroup.includes(nodeId)) {
 			const nodeLinks = apiPipeline.getLinksContainingId(nodeId).filter((link) => {
-				return link.type === "nodeLink" || link.type === "associationLink";
+				return link.type === NODE_LINK || link.type === ASSOCIATION_LINK;
 			});
 
 			for (const link of nodeLinks) {
@@ -2082,7 +2062,7 @@ export default class ObjectModel {
 		const messages = this.getNodeMessages(node);
 		if (messages) {
 			return (typeof messages.find((msg) => {
-				return msg.type === "error";
+				return msg.type === ERROR;
 			}) !== "undefined");
 		}
 		return false;
@@ -2092,7 +2072,7 @@ export default class ObjectModel {
 		const messages = this.getNodeMessages(node);
 		if (messages) {
 			return (typeof messages.find((msg) => {
-				return msg.type === "warning";
+				return msg.type === WARNING;
 			}) !== "undefined");
 		}
 		return false;
@@ -2228,7 +2208,7 @@ export default class ObjectModel {
 		const nodeLinks = currentPipeline.getLinksContainingTargetId(nodeId);
 		if (nodeLinks.length > 0) {
 			nodeLinks.forEach((link) => {
-				if (link.type === "nodeLink") {
+				if (link.type === NODE_LINK) {
 					if (objectType === "nodes") {
 						upstreamObjIds[pipelineId] = union(upstreamObjIds[pipelineId], [link.srcNodeId]);
 					} else if (objectType === "links") {
@@ -2323,7 +2303,7 @@ export default class ObjectModel {
 		const nodeLinks = currentPipeline.getLinksContainingSourceId(nodeId);
 		if (nodeLinks.length > 0) {
 			nodeLinks.forEach((link) => {
-				if (link.type === "nodeLink") {
+				if (link.type === NODE_LINK) {
 					if (objectType === "nodes") {
 						downstreamObjIds[pipelineId] = union(downstreamObjIds[pipelineId], [link.trgNodeId]);
 					} else if (objectType === "links") {
@@ -2657,8 +2637,8 @@ export class APIPipeline {
 			});
 
 			// Add node height and width and, if appropriate, inputPortsHeight
-			// and outputPortsHeight
-			node = setNodeDimensions(node, this.objectModel.getLayoutInfo(), this.layoutHandler);
+			// and outputPortsHeight and layout info.
+			node = this.objectModel.setNodeAttributes(node, this.objectModel.getLayoutInfo());
 		}
 
 		return node;
@@ -2746,7 +2726,7 @@ export class APIPipeline {
 
 		// Add node height and width and, if appropriate, inputPortsHeight
 		// and outputPortsHeight
-		node = setNodeDimensions(node, this.objectModel.getLayoutInfo(), this.layoutHandler);
+		node = this.objectModel.setNodeAttributes(node, this.objectModel.getLayoutInfo());
 		return node;
 	}
 
@@ -2850,14 +2830,21 @@ export class APIPipeline {
 
 	// Add the newSupernode to canvasInfo and an array of newSubPipelines that it references.
 	addSupernode(newSupernode, newSubPipelines) {
-		this.store.dispatch({
-			type: "ADD_SUPERNODE",
-			data: {
-				newNode: newSupernode,
-				newSubPipelines: newSubPipelines
-			},
-			pipelineId: this.pipelineId
+		const canvasInfo = this.objectModel.getCanvasInfo();
+		let canvasInfoPipelines = this.objectModel.getCanvasInfo().pipelines.concat(newSubPipelines);
+
+		canvasInfoPipelines = canvasInfoPipelines.map((pipeline) => {
+			if (pipeline.id === this.pipelineId) {
+				const newNodes = [
+					...pipeline.nodes,
+					newSupernode
+				];
+				return Object.assign({}, pipeline, { nodes: newNodes });
+			}
+			return pipeline;
 		});
+		const newCanvasInfo = Object.assign({}, canvasInfo, { pipelines: canvasInfoPipelines });
+		this.objectModel.setCanvasInfo(newCanvasInfo);
 
 		if (this.objectModel.fixedLayout !== NONE) {
 			this.autoLayout(this.objectModel.fixedLayout);
@@ -2950,30 +2937,28 @@ export class APIPipeline {
 	}
 
 	expandSuperNodeInPlace(nodeId, nodePositions) {
+		let node = Object.assign({}, this.getNode(nodeId), { is_expanded: true });
+		node = this.objectModel.setNodeAttributes(node, this.objectModel.getLayoutInfo());
 		this.store.dispatch({
 			type: "SET_SUPERNODE_FLAG",
 			data: {
-				nodeId: nodeId,
-				isExpanded: true,
+				node: node,
 				nodePositions: nodePositions
 			},
-			pipelineId: this.pipelineId,
-			layoutinfo: this.objectModel.getLayoutInfo(),
-			layoutHandler: this.layoutHandler
+			pipelineId: this.pipelineId
 		});
 	}
 
 	collapseSuperNodeInPlace(nodeId, nodePositions) {
+		let node = Object.assign({}, this.getNode(nodeId), { is_expanded: false });
+		node = this.objectModel.setNodeAttributes(node, this.objectModel.getLayoutInfo());
 		this.store.dispatch({
 			type: "SET_SUPERNODE_FLAG",
 			data: {
-				nodeId: nodeId,
-				isExpanded: false,
+				node: node,
 				nodePositions: nodePositions
 			},
-			pipelineId: this.pipelineId,
-			layoutinfo: this.objectModel.getLayoutInfo(),
-			layoutHandler: this.layoutHandler
+			pipelineId: this.pipelineId
 		});
 	}
 
@@ -3148,7 +3133,7 @@ export class APIPipeline {
 
 	dagreAutolayout(direction, canvasInfoPipeline) {
 		var nodeLinks = canvasInfoPipeline.links.filter((link) => {
-			return link.type === "nodeLink" || link.type === "associationLink";
+			return link.type === NODE_LINK || link.type === ASSOCIATION_LINK;
 		});
 
 		var edges = nodeLinks.map((link) => {
@@ -3345,7 +3330,7 @@ export class APIPipeline {
 			class_name: "d3-data-link",
 			srcNodeId: srcNode.id,
 			trgNodeId: newNode.id,
-			type: "nodeLink"
+			type: NODE_LINK
 		};
 
 		if (srcNode.outputs && srcNode.outputs.length > 0) {
@@ -3389,7 +3374,7 @@ export class APIPipeline {
 		if (this.isConnectionAllowed(srcInfo, trgInfo)) {
 			const link = {};
 			link.id = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
-			link.type = "nodeLink";
+			link.type = NODE_LINK;
 			link.class_name = "d3-data-link";
 			link.srcNodeId = srcInfo.id;
 			link.srcNodePortId = srcInfo.portId;
@@ -3500,7 +3485,7 @@ export class APIPipeline {
 			newLink.srcNodeId = link.srcNodeId;
 			newLink.trgNodeId = link.trgNodeId;
 			newLink.class_name = link.class_name;
-			if (link.type === "nodeLink") {
+			if (link.type === NODE_LINK) {
 				newLink.srcNodePortId = link.srcNodePortId;
 				newLink.trgNodePortId = link.trgNodePortId;
 			}
@@ -3539,7 +3524,7 @@ export class APIPipeline {
 		inNodes.forEach((node) => {
 			const allNodeLinks = this.getLinksContainingId(node.id);
 			allNodeLinks.forEach((link) => {
-				if (link.type === "nodeLink" || link.type === "associationLink") {
+				if (link.type === NODE_LINK || link.type === ASSOCIATION_LINK) {
 					nodeLinks.push(link);
 				}
 			});
@@ -3555,7 +3540,7 @@ export class APIPipeline {
 		}
 
 		return this.getLinks().find((link) => {
-			if (link.type === "nodeLink") {
+			if (link.type === NODE_LINK) {
 				const linkSrcNodePortId = this.getDefaultSrcPortId(link.srcNodeId, link.srcNodePortId);
 				const linkTrgNodePortId = this.getDefaultTrgPortId(link.trgNodeId, link.trgNodePortId);
 				return (link.srcNodeId === srcNodeId &&
@@ -3582,7 +3567,7 @@ export class APIPipeline {
 
 	getNodeAssocLinkFromInfo(id1, id2) {
 		return this.getLinks().find((link) => {
-			if (link.type === "associationLink") {
+			if (link.type === ASSOCIATION_LINK) {
 				return (link.srcNodeId === id1 &&
 								link.trgNodeId === id2) ||
 								(link.srcNodeId === id2 &&
@@ -3707,7 +3692,7 @@ export class APIPipeline {
 		var trgCount = 0;
 
 		this.getLinks().forEach((link) => {
-			if (link.type === "nodeLink") {
+			if (link.type === NODE_LINK) {
 				if (link.srcNodeId === srcNode.id && srcPortId) {
 					if (link.srcNodePortId === srcPortId ||
 							(!link.srcNodePortId && this.isFirstPort(srcNode.outputs, srcPortId))) {

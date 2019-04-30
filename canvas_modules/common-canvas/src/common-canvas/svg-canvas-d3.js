@@ -22,7 +22,8 @@ import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
 import isMatch from "lodash/isMatch";
 import cloneDeep from "lodash/cloneDeep";
-import { CONTEXT_MENU_BUTTON, NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
+import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, CONTEXT_MENU_BUTTON,
+	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
@@ -874,7 +875,7 @@ class CanvasRenderer {
 			const datum = d3.select(element).datum();
 			if (datum) {
 				var foundLink = this.canvasController.getLink(datum.id, this.pipelineId);
-				if (foundLink && foundLink.type === "nodeLink") {
+				if (foundLink && foundLink.type === NODE_LINK) {
 					return foundLink;
 				}
 			}
@@ -1205,9 +1206,9 @@ class CanvasRenderer {
 		let messageLevel = "";
 		if (messages && messages.length > 0) {
 			for (const message of messages) {
-				if (message.type === "error") {
+				if (message.type === ERROR) {
 					return message.type;
-				} else if (message.type === "warning") {
+				} else if (message.type === WARNING) {
 					messageLevel = message.type;
 				}
 			}
@@ -1219,10 +1220,10 @@ class CanvasRenderer {
 		const messageLevel = this.getMessageLevel(messages);
 		let labelClass = "";
 		switch (messageLevel) {
-		case "error":
+		case ERROR:
 			labelClass = "d3-node-error-label";
 			break;
-		case "warning":
+		case WARNING:
 			labelClass = "d3-node-warning-label";
 			break;
 		default:
@@ -1235,10 +1236,10 @@ class CanvasRenderer {
 		const messageLevel = this.getMessageLevel(messages);
 		let labelClass = "d3-error-circle-off";
 		switch (messageLevel) {
-		case "error":
+		case ERROR:
 			labelClass = "d3-error-circle";
 			break;
-		case "warning":
+		case WARNING:
 			labelClass = "d3-warning-circle";
 			break;
 		default:
@@ -2997,7 +2998,7 @@ class CanvasRenderer {
 
 	drawNewNodeLinkForPorts(transPos) {
 		var that = this;
-		const linkType = "nodeLink";
+		const linkType = NODE_LINK;
 
 		if (this.drawingNewLinkArray.length === 0) {
 			this.drawingNewLinkArray = [{ "x1": this.drawingNewLinkStartPos.x,
@@ -4578,7 +4579,7 @@ class CanvasRenderer {
 			.attr("class", (d) => {
 				var classStr;
 
-				if (d.type === "associationLink") {
+				if (d.type === ASSOCIATION_LINK) {
 					classStr = "d3-selectable-link " + this.getAssociationLinkClass(d);
 				} else if (d.type === "commentLink") {
 					classStr = "d3-selectable-link " + this.getCommentLinkClass(d);
@@ -4597,7 +4598,7 @@ class CanvasRenderer {
 
 
 		// Arrow head
-		linkGroup.filter((d) => (this.layout.connectionType === "halo" && d.type === "nodeLink") ||
+		linkGroup.filter((d) => (this.layout.connectionType === "halo" && d.type === NODE_LINK) ||
 														(d.type === "commentLink" && this.layout.commentLinkArrowHead))
 			.append("path")
 			.attr("d", (d) => this.getArrowHead(d))
@@ -4621,7 +4622,7 @@ class CanvasRenderer {
 			this.canvasGrp.selectAll(portInSelector).attr("connected", "no");
 			this.canvasGrp.selectAll(portInArrSelector).attr("connected", "no");
 			lineArray.forEach((line) => {
-				if (line.type === "nodeLink") {
+				if (line.type === NODE_LINK) {
 					this.setTrgPortStatus(line.trg.id, line.trgPortId, "yes");
 					this.setSrcPortStatus(line.src.id, line.srcPortId, "yes");
 				}
@@ -4760,7 +4761,7 @@ class CanvasRenderer {
 					var srcPortId;
 					var trgPortId;
 
-					if (link.type === "nodeLink") {
+					if (link.type === NODE_LINK) {
 						if (this.layout.connectionType === "halo") {
 							coords = this.getNodeLinkCoordsForHalo(srcObj, trgNode);
 						} else {
@@ -5034,7 +5035,7 @@ class CanvasRenderer {
 
 	getConnectorPath(data) {
 		if (this.layout.connectionType === "ports" &&
-				data.type === "nodeLink") {
+				data.type === NODE_LINK) {
 
 			if (this.layout.linkType === "Curve") {
 				return this.getCurvePath(data);
@@ -5278,10 +5279,10 @@ class CanvasRenderer {
 		const messageLevel = this.getMessageLevel(data.messages);
 		let iconPath = "";
 		switch (messageLevel) {
-		case "error":
+		case ERROR:
 			iconPath = NODE_ERROR_ICON;
 			break;
-		case "warning":
+		case WARNING:
 			iconPath = NODE_WARNING_ICON;
 			break;
 		default:
