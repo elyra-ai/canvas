@@ -38,6 +38,12 @@
     {
       "id": "custom_op_num",
       "type": "integer"
+    },
+    {
+      "id": "colors",
+      "enum": [
+        "blue"
+      ]
     }
   ],
   "complex_types": [
@@ -96,6 +102,16 @@
         },
         "control": "custom",
         "custom_control_id": "harness-custom-toggle-control"
+      },
+      {
+        "parameter_ref": "colors",
+        "label": {
+          "default": "Colors"
+        },
+        "description": {
+          "default": "Enum values change based on value of toggle"
+        },
+        "control": "oneofselect"
       },
       {
         "parameter_ref": "structuretable",
@@ -189,7 +205,8 @@
         "type": "controls",
         "parameter_refs": [
           "custom_toggle",
-          "structuretable"
+          "structuretable",
+          "colors"
         ]
       },
       {

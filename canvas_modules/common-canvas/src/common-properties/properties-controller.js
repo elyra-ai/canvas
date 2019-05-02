@@ -1210,6 +1210,21 @@ export default class PropertiesController {
 		return control;
 	}
 
+	updateControlEnumValues(propertyId, valuesObj) {
+		const control = this.getControl(propertyId);
+		if (!Array.isArray(valuesObj) || !control) {
+			logger.warn("properties-controller", new Error("updateControlEnumValues - control not found or valuesObj not valid"));
+			return;
+		}
+		control.values = valuesObj.map((valueObj) => valueObj.value);
+		control.valueLabels = valuesObj.map((valueObj) => {
+			if (!valueObj.label) {
+				return valueObj.value;
+			}
+			return valueObj.label;
+		});
+	}
+
 	getControls() {
 		return this.controls;
 	}

@@ -50,6 +50,15 @@ const controls = [
 		}
 	},
 	{
+		name: "param_enum",
+		valueDef: {
+			isList: true,
+			propType: "string"
+		},
+		values: ["red", "green"],
+		valueLabels: ["Red", "Green"]
+	},
+	{
 		"name": "param_complex",
 		"controlType": "structureeditor",
 		"valueDef": {
@@ -343,7 +352,7 @@ function reset() {
 	// setting of states needs to be done after property values.
 	// conditions are ran on each set and update of property values
 	controller = new Controller();
-	testUtils.setControls(controller, controls);
+	testUtils.setControls(controller, getCopy(controls));
 	controller.setPropertyValues(getCopy(propValues));
 	controller.setDatasetMetadata(getCopy(dataModel));
 	controller.setErrorMessages(getCopy(errorMessages));
@@ -1153,6 +1162,43 @@ describe("Properties Controller updatePropertyValue validation", () => {
 	});
 });
 
+describe("Properties Controller updateControlEnumValues validation", () => {
+	const propertyId = { name: "param_enum" };
+	beforeEach(() => {
+		reset(); // could do this for all tests
+	});
+	it("should set the values and valuesLabels correctly on a control", () => {
+		controller.updateControlEnumValues(propertyId, [{ value: "orange", label: "Orange" }, { value: "tan", label: "Tan" }]);
+		const control = controller.getControl(propertyId);
+		expect(control.values).to.eql(["orange", "tan"]);
+		expect(control.valueLabels).to.eql(["Orange", "Tan"]);
+	});
+
+	it("should set the values and valuesLabels correctly on a control when no labels supplied", () => {
+		controller.updateControlEnumValues(propertyId, [{ value: "orange" }, { value: "tan" }]);
+		const control = controller.getControl(propertyId);
+		expect(control.values).to.eql(["orange", "tan"]);
+		expect(control.valueLabels).to.eql(["orange", "tan"]);
+	});
+
+	it("should not update values or valueLabels when nothing passed in or invalid control", () => {
+		console.warn = jest.fn();
+		controller.updateControlEnumValues(propertyId);
+		const control = controller.getControl(propertyId);
+		expect(control.values).to.eql(["red", "green"]);
+		expect(control.valueLabels).to.eql(["Red", "Green"]);
+		expect(console.warn.mock.calls[0][0]).to.equal("[WARNING]: properties-controller: updateControlEnumValues - control not found or valuesObj not valid");
+		controller.updateControlEnumValues({ name: "invalid_control" }, []);
+		expect(console.warn.mock.calls[0][0]).to.equal("[WARNING]: properties-controller: updateControlEnumValues - control not found or valuesObj not valid");
+	});
+
+	it("should update values or valueLabels when empty array passed in", () => {
+		controller.updateControlEnumValues(propertyId, []);
+		const control = controller.getControl(propertyId);
+		expect(control.values).to.eql([]);
+		expect(control.valueLabels).to.eql([]);
+	});
+});
 
 describe("Properties Controller condition operators methods", () => {
 	const standardOpCount = Object.keys(controller.getConditionOps()).length;
@@ -1365,4 +1411,5 @@ describe("Properties Controller row selection methods", () => {
 		expect(structuretableSelections[0]).to.equal(2);
 		expect(structuretableSelections[1]).to.equal(4);
 	});
+
 });
