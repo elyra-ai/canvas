@@ -7,7 +7,7 @@ module.exports = {
 			{ "properties": "never" }
 		],
 		"max-len": [2, 180, 4],
-		"id-length": ["error", { "min": 1 }],
+		"id-length": ["error", { "min": 1 }]
 	},
 	env: {
 		jest: true

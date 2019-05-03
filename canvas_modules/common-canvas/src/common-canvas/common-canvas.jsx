@@ -83,8 +83,12 @@ export default class CommonCanvas extends React.Component {
 
 		this.objectModel = this.canvasController.getObjectModel();
 
+		// The host application may set one or more callback functions to execute their own
+		// code after an update has been performed caused by a redux update.
+		this.afterUpdateCallbacks = [];
+
 		this.unsubscribe = this.objectModel.subscribe(() => {
-			this.forceUpdate();
+			this.forceUpdate(this.afterUpdate);
 		});
 
 		this.pendingTooltip = null;
@@ -199,6 +203,28 @@ export default class CommonCanvas extends React.Component {
 		return this.diagramCanvasRef.current.getSvgViewportOffset();
 	}
 
+	getZoomToReveal(objectIds) {
+		return this.diagramCanvasRef.current.getZoomToReveal(objectIds);
+	}
+
+	afterUpdate() {
+		this.afterUpdateCallbacks.forEach((callback) => callback());
+	}
+
+	addAfterUpdateCallback(callback) {
+		const pos = this.afterUpdateCallbacks.findIndex((cb) => cb === callback);
+		if (pos === -1) {
+			this.afterUpdateCallbacks.push(callback);
+		}
+	}
+
+	removeAfterUpdateCallback(callback) {
+		const pos = this.afterUpdateCallbacks.findIndex((cb) => cb === callback);
+		if (pos > -1) {
+			this.afterUpdateCallbacks.splice(pos, 1);
+		}
+	}
+
 	initializeController(props) {
 		this.canvasController.setCanvasConfig(props.config);
 		this.canvasController.setContextMenuConfig(props.contextMenuConfig);
@@ -299,6 +325,10 @@ export default class CommonCanvas extends React.Component {
 
 	zoomToFit() {
 		this.diagramCanvasRef.current.zoomToFit();
+	}
+
+	zoomTo(zoomObject) {
+		this.diagramCanvasRef.current.zoomTo(zoomObject);
 	}
 
 	focusOnCanvas() {

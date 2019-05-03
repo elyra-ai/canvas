@@ -88,6 +88,7 @@ export default class CanvasController {
 			enableSnapToGridX: null,
 			enableSnapToGridY: null,
 			enableNarrowPalette: true,
+			enableBoundingRectangles: false,
 			paletteInitialState: false,
 			emptyCanvasContent: null,
 			dropZoneCanvasContent: null,
@@ -1001,6 +1002,18 @@ export default class CanvasController {
 	// Operational methods
 	// ---------------------------------------------------------------------------
 
+	addAfterUpdateCallback(callback) {
+		if (this.commonCanvas) {
+			this.commonCanvas.addAfterUpdateCallback(callback);
+		}
+	}
+
+	removeAfterUpdateCallback(callback) {
+		if (this.commonCanvas) {
+			this.commonCanvas.removeAfterUpdateCallback(callback);
+		}
+	}
+
 	openPalette() {
 		if (this.commonCanvas) {
 			this.commonCanvas.openPalette();
@@ -1061,6 +1074,39 @@ export default class CanvasController {
 		if (this.commonCanvas) {
 			this.commonCanvas.zoomToFit();
 		}
+	}
+
+	// Changes the zoom amounts for the canvas. This method does not alter the
+	// pipelineFlow document. zoomObject is an object with three fields:
+	// x: Is the horizontal translate amount which is a number indicating the
+	//    pixel amount to move. Negative left and positive right
+	// y: Is the vertical translate amount which is a number indicating the
+	//    pixel amount to move. Negative up and positive down.
+	// k: is the scale amount which is a number greater than 0 where 1 is the
+	//    default scale size.
+	zoomTo(zoomObject) {
+		if (this.commonCanvas) {
+			this.commonCanvas.zoomTo(zoomObject);
+		}
+	}
+
+	// Returns a zoom object if any of the objects (nodes and/or comments)
+	// identified by the objectIds array are not fully within the canvas viewport.
+	// Returns null if all objects are fully within the canvas viewport.
+	// The zoom object returned is an object with three fields:
+	// x: Is the horizontal translate amount which is a number indicating the
+	//    pixel amount to move. Negative left and positive right
+	// y: Is the vertical translate amount which is a number indicating the
+	//    pixel amount to move. Negative up and positive down.
+	// k: is the scale amount which is a number greater than 0 where 1 is the
+	//    default scale size.
+	// Parameter:
+	// objectIds - An array of nodes and/or comment IDs.
+	getZoomToReveal(objectIds) {
+		if (this.commonCanvas) {
+			return this.commonCanvas.getZoomToReveal(objectIds);
+		}
+		return null;
 	}
 
 	cutToClipboard() {
@@ -1256,6 +1302,20 @@ export default class CanvasController {
 			nodeTemplate: this.objectModel.convertNodeTemplate(nodeTemplate),
 			pipelineId: apiPipeline.pipelineId
 		};
+
+		// Declare a function that will reposition the canvas to show the
+		// newly added node if it's outside the viewport.
+		const moveCanvasToReveal = () => {
+			const zoomObject = this.getZoomToReveal([data.newNode.id]);
+			if (zoomObject) {
+				this.zoomTo(zoomObject);
+			}
+			// Remove the callback after it has been called so it is not called for
+			// other canvas operations.
+			this.removeAfterUpdateCallback(moveCanvasToReveal);
+		};
+
+		this.addAfterUpdateCallback(moveCanvasToReveal);
 
 		this.editActionHandler(data);
 	}

@@ -27,6 +27,7 @@ import {
 	API_SET_OUTPUT_PORT_LABEL,
 	API_SET_NODE_DECORATIONS,
 	API_ADD_NOTIFICATION_MESSAGE,
+	API_ZOOM_CANVAS_TO_REVEAL,
 	INPUT_PORT,
 	OUTPUT_PORT,
 	NOTIFICATION_MESSAGE_TYPE
@@ -94,7 +95,8 @@ export default class SidePanelAPI extends React.Component {
 			appendLink: false,
 			notificationTitle: "",
 			notificationMessage: "",
-			notificationType: NOTIFICATION_MESSAGE_TYPE.INFO
+			notificationType: NOTIFICATION_MESSAGE_TYPE.INFO,
+			zoomObject: JSON.stringify({ x: 0, y: 0, k: 1 })
 		};
 
 		this.messageCounter = 0;
@@ -117,6 +119,7 @@ export default class SidePanelAPI extends React.Component {
 		let portId = "";
 		let newLabel = "";
 		let newDecorations = "";
+		let newZoomObj = "";
 
 		if (operation === API_SET_NODE_LABEL) {
 			// when selecting operation to set a node label, build list of nodes and select the first one by default
@@ -154,6 +157,12 @@ export default class SidePanelAPI extends React.Component {
 					newLabel = ports[0].label;
 				}
 			}
+		} else if (operation === API_ZOOM_CANVAS_TO_REVEAL) {
+			nodes = this.getNodePortList(this.props.apiConfig.getCanvasInfo().nodes);
+			if (!isEmpty(nodes)) {
+				const zoomObj = this.props.apiConfig.getZoomToReveal(nodes[0].value);
+				newZoomObj = zoomObj ? JSON.stringify(newZoomObj) : "";
+			}
 		}
 		this.props.apiConfig.setApiSelectedOperation(operation);
 		this.setState({
@@ -163,7 +172,9 @@ export default class SidePanelAPI extends React.Component {
 			nodes: nodes, // list of nodes in format { value: label, id: nodeId }
 			ports: ports, // list of input or output ports in format { value: label, id: portId }
 			newLabel: newLabel,
-			newDecorations: newDecorations });
+			newDecorations: newDecorations,
+			zoomObject: newZoomObj
+		});
 		this.props.log("Operation selected", operation);
 	}
 
@@ -203,6 +214,10 @@ export default class SidePanelAPI extends React.Component {
 					});
 					newState.newLabel = port.label;
 				}
+			} else if (this.props.apiConfig.selectedOperation === API_ZOOM_CANVAS_TO_REVEAL) {
+				// get list of output ports for the selected node and select the first one by default
+				const zoomObj = this.props.apiConfig.getZoomToReveal(existingNode.id);
+				newState.zoomObject = zoomObj ? JSON.stringify(zoomObj) : "";
 			}
 		}
 		this.setState(newState);
@@ -296,6 +311,9 @@ export default class SidePanelAPI extends React.Component {
 			return (this.state.nodeId && this.state.portId && this.state.newLabel.length > 0);
 		case API_ADD_NOTIFICATION_MESSAGE:
 			return this.state.notificationMessage.length > 0;
+		case API_ZOOM_CANVAS_TO_REVEAL:
+			return this.state.zoomObject && this.state.zoomObject.length > 0;
+
 		default:
 			return false;
 		}
@@ -353,6 +371,10 @@ export default class SidePanelAPI extends React.Component {
 			this.props.apiConfig.appendNotificationMessages(message);
 			break;
 		}
+		case API_ZOOM_CANVAS_TO_REVEAL:
+			this.props.apiConfig.zoomCanvas(JSON.parse(this.state.zoomObject), this.state.nodeId);
+			break;
+
 		default:
 		}
 	}
@@ -414,7 +436,9 @@ export default class SidePanelAPI extends React.Component {
 			API_SET_INPUT_PORT_LABEL,
 			API_SET_OUTPUT_PORT_LABEL,
 			API_SET_NODE_DECORATIONS,
-			API_ADD_NOTIFICATION_MESSAGE]);
+			API_ADD_NOTIFICATION_MESSAGE,
+			API_ZOOM_CANVAS_TO_REVEAL
+		]);
 		const operationSelection =
 			(<div className="harness-sidepanel-children" id="harness-sidepanel-api-list">
 				<Dropdown
@@ -640,6 +664,30 @@ export default class SidePanelAPI extends React.Component {
 			</div>);
 		}
 
+		let zoomCanvas = <div />;
+		if (this.props.apiConfig.selectedOperation === API_ZOOM_CANVAS_TO_REVEAL) {
+			zoomCanvas = (<div className="harness-sidepanel-children"
+				id="harness-sidepanel-api-zoomCanvas"
+			>
+				<div id="harness-sidepanel-api-nodeSelection">
+					<Dropdown
+						disabled={isEmpty(this.state.nodes)}
+						onChange={this.onNodeSelect.bind(this)}
+						label="Node Selection"
+						ariaLabel="Node Selection"
+						items={this.dropdownOptions(this.state.nodes)}
+					/>
+				</div>
+				<div className="harness-sidepanel-spacer" />
+				<TextArea
+					labelText="Zoom Object"
+					rows={4}
+					onChange={this.onFieldChange.bind(this, "zoomObject")}
+					value={this.state.zoomObject}
+				/>
+			</div>);
+		}
+
 		return (
 			<div>
 				{space}
@@ -650,6 +698,7 @@ export default class SidePanelAPI extends React.Component {
 				{setNodePortLabelSection}
 				{setNodeDecorationsSection}
 				{setNotificationMessages}
+				{zoomCanvas}
 				{space}
 				{submit}
 			</div>
@@ -670,6 +719,8 @@ SidePanelAPI.propTypes = {
 		setPortLabel: PropTypes.func,
 		setNodeDecorations: PropTypes.func,
 		appendNotificationMessages: PropTypes.func,
-		clearNotificationMessages: PropTypes.func
+		clearNotificationMessages: PropTypes.func,
+		getZoomToReveal: PropTypes.func,
+		zoomCanvas: PropTypes.func
 	})
 };

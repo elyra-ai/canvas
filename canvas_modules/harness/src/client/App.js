@@ -138,6 +138,7 @@ class App extends React.Component {
 			displayFullLabelOnHover: false,
 			narrowPalette: true,
 			schemaValidationEnabled: true,
+			displayBoundingRectanglesEnabled: false,
 			canvasFileChooserVisible: false,
 			canvasFileChooserVisible2: false,
 			paletteFileChooserVisible: false,
@@ -204,6 +205,7 @@ class App extends React.Component {
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.setNarrowPalette = this.setNarrowPalette.bind(this);
 		this.schemaValidation = this.schemaValidation.bind(this);
+		this.displayBoundingRectangles = this.displayBoundingRectangles.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.setInteractionType = this.setInteractionType.bind(this);
 		this.setSnapToGridType = this.setSnapToGridType.bind(this);
@@ -225,6 +227,8 @@ class App extends React.Component {
 		this.setNodeLabel = this.setNodeLabel.bind(this);
 		this.setPortLabel = this.setPortLabel.bind(this);
 		this.setNodeDecorations = this.setNodeDecorations.bind(this);
+		this.getZoomToReveal = this.getZoomToReveal.bind(this);
+		this.zoomCanvas = this.zoomCanvas.bind(this);
 
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
@@ -712,6 +716,22 @@ class App extends React.Component {
 		this.log("Set new node decorations", { nodeId: nodeId, newDecorations: newDecs });
 	}
 
+	getZoomToReveal(nodeId) {
+		this.log("Zoom object requested");
+		return this.canvasController.getZoomToReveal([nodeId]); // Need to pass node Id in an array
+	}
+
+	zoomCanvas(zoomObject, nodeId) {
+		const pipelineId = this.canvasController.getPrimaryPipelineId();
+		const stylePipelineObj = {};
+		stylePipelineObj[pipelineId] = [nodeId];
+		const styleSpec = { body: { default: "fill: coral; stroke: red;", hover: "fill: cornflowerblue; stroke: blue;" } };
+		this.canvasController.removeAllStyles(true);
+		this.canvasController.setObjectsStyle(stylePipelineObj, styleSpec, true);
+		this.canvasController.zoomTo(zoomObject);
+		this.log("Zoomed canvas");
+	}
+
 	clearSavedZoomValues() {
 		this.canvasController.clearSavedZoomValues();
 		this.canvasController2.clearSavedZoomValues();
@@ -839,6 +859,11 @@ class App extends React.Component {
 	schemaValidation(enabled) {
 		this.setState({ schemaValidationEnabled: enabled });
 		this.log("Schema validation enabled ", enabled);
+	}
+
+	displayBoundingRectangles(enabled) {
+		this.setState({ displayBoundingRectanglesEnabled: enabled });
+		this.log("Display bounding rectangles enabled ", enabled);
 	}
 
 	appendNotificationMessages(message) {
@@ -1819,7 +1844,7 @@ class App extends React.Component {
 			schemaValidation: this.state.schemaValidationEnabled,
 			enableNarrowPalette: this.state.narrowPalette,
 			enableDisplayFullLabelOnHover: this.state.displayFullLabelOnHover,
-			enableBoundingRectangles: false, // Set this to true to see bounding rectangles for debugging.
+			enableBoundingRectangles: this.state.displayBoundingRectanglesEnabled,
 			enableDropZoneOnExternalDrag: this.state.enableDropZoneOnExternalDrag,
 			// dropZoneCanvasContent: dropZoneCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom
@@ -1835,6 +1860,7 @@ class App extends React.Component {
 			enableMoveNodesOnSupernodeResize: true,
 			tipConfig: this.state.tipConfig,
 			schemaValidation: this.state.schemaValidationEnabled,
+			enableBoundingRectangles: this.state.displayBoundingRectanglesEnabled,
 			enableNarrowPalette: this.state.narrowPalette
 		};
 
@@ -2037,6 +2063,8 @@ class App extends React.Component {
 			setNarrowPalette: this.setNarrowPalette,
 			schemaValidation: this.schemaValidation,
 			schemaValidationEnabled: this.state.schemaValidationEnabled,
+			displayBoundingRectangles: this.displayBoundingRectangles,
+			displayBoundingRectanglesEnabled: this.state.displayBoundingRectanglesEnabled,
 			validateFlowOnOpen: this.state.validateFlowOnOpen,
 			changeValidateFlowOnOpen: this.validateFlowOnOpen,
 			displayFullLabelOnHover: this.state.displayFullLabelOnHover,
@@ -2083,6 +2111,8 @@ class App extends React.Component {
 			setNodeLabel: this.setNodeLabel,
 			setPortLabel: this.setPortLabel,
 			setNodeDecorations: this.setNodeDecorations,
+			getZoomToReveal: this.getZoomToReveal,
+			zoomCanvas: this.zoomCanvas,
 			appendNotificationMessages: this.appendNotificationMessages,
 			clearNotificationMessages: this.clearNotificationMessages,
 			selectedOperation: this.state.apiSelectedOperation

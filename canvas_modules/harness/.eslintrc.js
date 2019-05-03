@@ -6,7 +6,8 @@ module.exports = {
 			"error",
 			{ "properties": "never" }
 		],
-		"max-len": [2, 180, 4]
+		"max-len": [2, 180, 4],
+		"id-length": ["error", { "min": 1 }]
 	},
 	env: {
 		jasmine: true,

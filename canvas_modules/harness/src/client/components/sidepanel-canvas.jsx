@@ -912,6 +912,19 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
+		var displayBoudingRectangles = (<div className="harness-sidepanel-children">
+			<form>
+				<div className="harness-sidepanel-headers">Display Bounding Rectangles</div>
+				<div>
+					<Toggle
+						id="harness-sidepanel-schema-validation"
+						toggled={this.props.canvasConfig.displayBoundingRectanglesEnabled}
+						onToggle={this.props.canvasConfig.displayBoundingRectangles}
+					/>
+				</div>
+			</form>
+		</div>);
+
 		const validateFlowOnOpen = (
 			<div className="harness-sidepanel-children">
 				<div className="harness-sidepanel-headers">Validate flow on open</div>
@@ -965,6 +978,8 @@ export default class SidePanelForms extends React.Component {
 				{enableCreateSupernodeNonContiguous}
 				{divider}
 				{enableMoveNodesOnSupernodeResize}
+				{divider}
+				{displayBoudingRectangles}
 				{divider}
 				{schemaValidation}
 				{divider}
@@ -1042,12 +1057,14 @@ SidePanelForms.propTypes = {
 		setNarrowPalette: PropTypes.func,
 		schemaValidation: PropTypes.func,
 		schemaValidationEnabled: PropTypes.bool,
+		displayBoundingRectangles: PropTypes.func,
+		displayBoundingRectanglesEnabled: PropTypes.bool,
 		validateFlowOnOpen: PropTypes.bool,
 		changeValidateFlowOnOpen: PropTypes.func,
 		displayFullLabelOnHover: PropTypes.bool,
 		changeDisplayFullLabelOnHover: PropTypes.func,
 		enableMoveNodesOnSupernodeResize: PropTypes.bool,
 		setEnableMoveNodesOnSupernodeResize: PropTypes.func,
-		clearSavedZoomValues: PropTypes.func,
+		clearSavedZoomValues: PropTypes.func
 	})
 };

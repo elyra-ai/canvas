@@ -93,6 +93,7 @@ export default class CanvasD3Layout {
 				this.config.enableLinkType !== config.enableLinkType ||
 				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
 				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize ||
+				this.config.enableBoundingRectangles !== config.enableBoundingRectangles ||
 				this.config.enableSaveZoom !== config.enableSaveZoom ||
 				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
 			this.logger.logStartTimer("Initializing Canvas");
@@ -235,6 +236,10 @@ export default class CanvasD3Layout {
 		this.renderer.nodeDropped(dropData, mousePos, element);
 	}
 
+	zoomTo(zoomObject) {
+		this.renderer.zoomTo(zoomObject);
+	}
+
 	zoomIn() {
 		this.renderer.zoomIn();
 	}
@@ -245,6 +250,10 @@ export default class CanvasD3Layout {
 
 	zoomToFit() {
 		this.renderer.zoomToFit();
+	}
+
+	getZoomToReveal(objectIds) {
+		return this.renderer ? this.renderer.getZoomToReveal(objectIds) : null;
 	}
 
 	refreshOnSizeChange() {
@@ -888,6 +897,17 @@ class CanvasRenderer {
 		return (typeof node === "undefined") ? null : node;
 	}
 
+	getNodes(nodeIds) {
+		const nodes = [];
+		nodeIds.forEach((nId) => {
+			const n = this.getNode(nId);
+			if (n) {
+				nodes.push(n);
+			}
+		});
+		return nodes;
+	}
+
 	getNodePort(nodeId, portId, type) {
 		const node = this.activePipeline.nodes.find((nd) => nd.id === nodeId);
 		if (node) {
@@ -1274,18 +1294,22 @@ class CanvasRenderer {
 		}
 
 		if (newZoom) {
-			const newZoomTransform = d3.zoomIdentity
-				.translate(newZoom.x, newZoom.y)
-				.scale(newZoom.k);
-			this.zoomCanvasInvokeZoomBehavior(newZoomTransform);
+			this.zoomCanvasInvokeZoomBehavior(newZoom);
 		}
 	}
 
 	// Zooms the canvas to amount specified in zoomTransform. Zooming the canvas
 	// in this way will invoke the zoom behavior methods (zoomStart, zoomAction
 	// and zoomEnd).
-	zoomCanvasInvokeZoomBehavior(zoomTransform) {
-		this.canvasSVG.call(this.zoom.transform, zoomTransform);
+	zoomCanvasInvokeZoomBehavior(newZoomTransform, animateTime) {
+		const zoomTransform = d3.zoomIdentity.translate(newZoomTransform.x, newZoomTransform.y).scale(newZoomTransform.k);
+		if (animateTime) {
+			this.canvasSVG.call(this.zoom).transition()
+				.duration(animateTime)
+				.call(this.zoom.transform, zoomTransform);
+		} else {
+			this.canvasSVG.call(this.zoom.transform, zoomTransform);
+		}
 	}
 
 	// Saves the zoom object passed in for this pipeline in local storage.
@@ -1342,11 +1366,15 @@ class CanvasRenderer {
 			x -= newScale * canvasDimensions.left;
 			y -= newScale * canvasDimensions.top;
 
-			this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(newScale);
 			this.zoomingToFitForScale = true;
-			this.zoomCanvasInvokeZoomBehavior(this.zoomTransform);
+			this.zoomCanvasInvokeZoomBehavior({ x: x, y: y, k: newScale });
 			this.zoomingToFitForScale = false;
 		}
+	}
+
+	zoomTo(zoomObject) {
+		const animateTime = 500;
+		this.zoomCanvasInvokeZoomBehavior(zoomObject, animateTime);
 	}
 
 	zoomIn() {
@@ -1368,6 +1396,39 @@ class CanvasRenderer {
 		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1);
 
 		this.zoomToFitForScale(newScale, canvasDimensions, viewPortDimensions);
+	}
+
+	getZoomToReveal(nodeIDs) {
+		const svgRect = this.getViewPortDimensions();
+		const transformedSVGRect = this.getTransformedSVGRect(svgRect, 0);
+		const nodes = this.getNodes(nodeIDs);
+		const canvasDimensions = this.getCanvasDimensionsAdjustedForScaleForObjs(nodes, [], 1, 10);
+
+		if (canvasDimensions) {
+			let xOffset;
+			let yOffset;
+
+			if (canvasDimensions.right > transformedSVGRect.x + transformedSVGRect.width) {
+				xOffset = transformedSVGRect.x + transformedSVGRect.width - canvasDimensions.right;
+			}
+			if (canvasDimensions.left < transformedSVGRect.x) {
+				xOffset = transformedSVGRect.x - canvasDimensions.left;
+			}
+			if (canvasDimensions.bottom > transformedSVGRect.y + transformedSVGRect.height) {
+				yOffset = transformedSVGRect.y + transformedSVGRect.height - canvasDimensions.bottom;
+			}
+			if (canvasDimensions.top < transformedSVGRect.y) {
+				yOffset = transformedSVGRect.y - canvasDimensions.top;
+			}
+
+			if (typeof xOffset !== "undefined" || typeof yOffset !== "undefined") {
+				const x = this.zoomTransform.x + ((xOffset || 0)) * this.zoomTransform.k;
+				const y = this.zoomTransform.y + ((yOffset || 0)) * this.zoomTransform.k;
+				return { x: x || 0, y: y || 0, k: this.zoomTransform.k };
+			}
+		}
+
+		return null;
 	}
 
 	// Returns the dimensions of the SVG area. When we are displaying a sub-flow
@@ -1528,7 +1589,7 @@ class CanvasRenderer {
 		// method is called from zoomAction as a result of the d3 zoom behavior when
 		// using the Mouse interaction behavior. It is not needed when using the
 		// Trackpad interaction behavior.
-		if (d3Event.transform) {
+		if (d3Event && d3Event.transform) {
 			d3Event.transform.x = x;
 			d3Event.transform.y = y;
 		}
@@ -1579,14 +1640,16 @@ class CanvasRenderer {
 	// a sub-flow that map to a port in the containing supernode. The dimensions
 	// are scaled by k and padded by pad (if provided).
 	getCanvasDimensionsAdjustedForScale(k, pad) {
+		return this.getCanvasDimensionsAdjustedForScaleForObjs(this.activePipeline.nodes, this.activePipeline.comments, k, pad);
+	}
+
+	getCanvasDimensionsAdjustedForScaleForObjs(nodes, comments, k, pad) {
 		var canvLeft = Infinity;
 		let canvTop = Infinity;
 		var canvRight = -Infinity;
 		var canvBottom = -Infinity;
 
-		const selector = this.getSelectorForClass("node-group");
-
-		this.canvasGrp.selectAll(selector).each((d) => {
+		nodes.forEach((d) => {
 			if (this.isSuperBindingNode(d)) { // Always ignore Supernode binding nodes
 				return;
 			}
@@ -1596,9 +1659,7 @@ class CanvasRenderer {
 			canvBottom = Math.max(canvBottom, d.y_pos + d.height + d.layout.nodeHighlightGap);
 		});
 
-		const selector2 = this.getSelectorForClass("comment-group");
-
-		this.canvasGrp.selectAll(selector2).each((d) => {
+		comments.forEach((d) => {
 			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.commentHighlightGap);
 			canvTop = Math.min(canvTop, d.y_pos - this.layout.commentHighlightGap);
 			canvRight = Math.max(canvRight, d.x_pos + d.width + this.layout.commentHighlightGap);
@@ -3779,7 +3840,7 @@ class CanvasRenderer {
 		let style = null;
 
 		if (type === "hover") {
-			style = this.getStyleValue(d, part, "default") + this.getStyleValue(d, part, "hover");
+			style = this.getStyleValue(d, part, "default") + ";" + this.getStyleValue(d, part, "hover");
 
 		} else if (type === "default") {
 			style = this.getStyleValue(d, part, "default");
