@@ -2917,9 +2917,9 @@ class CanvasRenderer {
 		if (position === "topLeft" || position === "middleLeft" || position === "bottomLeft") {
 			x = typeof dec.x_pos !== "undefined" ? dec.x_pos : data.layout.decoratorLeftX;
 		} else if (position === "topCenter" || position === "middleCenter" || position === "bottomCenter") {
-			x = typeof dec.x_pos !== "undefined" ? (data.width / 2) + dec.x_pos : data.layout.decoratorCenterX;
+			x = (data.width / 2) + (typeof dec.x_pos !== "undefined" ? dec.x_pos : data.layout.decoratorCenterX);
 		} else if (position === "topRight" || position === "middleRight" || position === "bottomRight") {
-			x = typeof dec.x_pos !== "undefined" ? data.width + dec.x_pos : data.layout.decoratorRightX;
+			x = data.width + (typeof dec.x_pos !== "undefined" ? dec.x_pos : data.layout.decoratorRightX);
 		}
 		return x;
 	}
@@ -2930,9 +2930,9 @@ class CanvasRenderer {
 		if (position === "topLeft" || position === "topCenter" || position === "topRight") {
 			y = typeof dec.y_pos !== "undefined" ? dec.y_pos : data.layout.decoratorTopY;
 		} else if (position === "middelLeft" || position === "middleCenter" || position === "middleRight") {
-			y = typeof dec.y_pos !== "undefined" ? (data.height / 2) + dec.y_pos : data.layout.decoratorMiddleY;
+			y = (data.height / 2) + (typeof dec.y_pos !== "undefined" ? dec.y_pos : data.layout.decoratorMiddleY);
 		} else if (position === "bottomLeft" || position === "bottomCenter" || position === "bottomRight") {
-			y = typeof dec.y_pos !== "undefined" ? data.height + dec.y_pos : data.layout.decoratorBottomY;
+			y = data.height + (typeof dec.y_pos !== "undefined" ? dec.y_pos : data.layout.decoratorBottomY);
 		}
 		return y;
 	}

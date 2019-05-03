@@ -49,14 +49,14 @@ const haloDefaultLayout = {
 		labelPosX: 30,
 		labelPosY: 63,
 
-		// Positions for 4 enumerated decorator positions.
+		// Positions for 4 enumerated default decorator positions.
 		decoratorTopY: 0,
-		decoratorMiddleY: 18,
-		decoratorBottomY: 36,
+		decoratorMiddleY: -8,
+		decoratorBottomY: -32,
 
 		decoratorLeftX: 6,
-		decoratorCenterX: 19,
-		decoratorRightX: 42,
+		decoratorCenterX: -8,
+		decoratorRightX: -22,
 
 		// Display drop shadow
 		dropShadow: false,
@@ -258,14 +258,14 @@ const portsHorizontalDefaultLayout = {
 		labelPosX: 38,
 		labelPosY: 24,
 
-		// Positions for 4 enumerated decorator positions.
-		decoratorTopY: 0,
-		decoratorMiddleY: 13,
-		decoratorBottomY: 26,
+		// Positions for 4 enumerated default decorator positions.
+		decoratorTopY: 2,
+		decoratorMiddleY: -8,
+		decoratorBottomY: -18,
 
 		decoratorLeftX: 2,
-		decoratorCenterX: 66,
-		decoratorRightX: 130,
+		decoratorCenterX: -8,
+		decoratorRightX: -30,
 
 		// Display drop shadow
 		dropShadow: true,
@@ -467,14 +467,14 @@ const portsVerticalDefaultLayout = {
 		labelPosX: 35,
 		labelPosY: 67,
 
-		// Positions for 4 enumerated decorator positions.
+		// Positions for 4 enumerated default decorator positions.
 		decoratorTopY: 5,
-		decoratorMiddleY: 23,
-		decoratorBottomY: 41,
+		decoratorMiddleY: -8,
+		decoratorBottomY: -34,
 
 		decoratorLeftX: 10,
-		decoratorCenterX: 28,
-		decoratorRightX: 46,
+		decoratorCenterX: -8,
+		decoratorRightX: -24,
 
 		// Display drop shadow
 		dropShadow: false,
