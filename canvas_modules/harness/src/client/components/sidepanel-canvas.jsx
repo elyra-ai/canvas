@@ -45,6 +45,7 @@ import {
 	NO_LAYOUT,
 	BLUE_ELLIPSES_LAYOUT,
 	DB2_EXPLAIN_LAYOUT,
+	INC_MIN_INITIAL_LINE_LAYOUT,
 	FLYOUT,
 	MODAL,
 	TIP_PALETTE,
@@ -809,6 +810,10 @@ export default class SidePanelForms extends React.Component {
 				<RadioButton
 					value={DB2_EXPLAIN_LAYOUT}
 					labelText={DB2_EXPLAIN_LAYOUT}
+				/>
+				<RadioButton
+					value={INC_MIN_INITIAL_LINE_LAYOUT}
+					labelText={INC_MIN_INITIAL_LINE_LAYOUT}
 				/>
 			</RadioButtonGroup>
 		</div>);

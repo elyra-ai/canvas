@@ -88,6 +88,10 @@ const haloDefaultLayout = {
 		// are image_center or node_center.
 		drawCommentLinkLineTo: "image_center",
 
+		// This is the size of the horizontal line protruding from the source
+		// port on the source node when drawing an elbow or straight connection line.
+		minInitialLine: 30,
+
 		// Radius of the port circle
 		portRadius: null,
 
@@ -161,12 +165,10 @@ const haloDefaultLayout = {
 	// The gap between node or comment and the link line.
 	linkGap: 7,
 
-	// Initialize values for drawing connectors. minInitialLine is the
-	// size of the horizontal line protruding from the source or target handles
-	// when such a line is required for drawing connectors. wrapAroundSpacing
-	// the spacing for wraparound curved connectors.:
+	// Initialize values for drawing connectors. wrapAroundSpacing and
+	// wrapAroundNodePadding are used when curved connectors are drawn all the
+	// way around a node. ie the target is to the right of the source.
 	elbowSize: 10,
-	minInitialLine: 30,
 	wrapAroundSpacing: 20,
 	wrapAroundNodePadding: 10,
 
@@ -297,6 +299,10 @@ const portsHorizontalDefaultLayout = {
 		// are image_center or node_center.
 		drawCommentLinkLineTo: "node_center",
 
+		// This is the size of the horizontal line protruding from the source
+		// port on the source node when drawing an elbow or straight connection line.
+		minInitialLine: 30,
+
 		// Radius of the port circle
 		portRadius: 3,
 
@@ -375,7 +381,6 @@ const portsHorizontalDefaultLayout = {
 	// when such a line is required for drawing connectors. wrapAroundSpacing
 	// the spacing for wraparound curved connectors.:
 	elbowSize: 10,
-	minInitialLine: 30,
 	wrapAroundSpacing: 20,
 	wrapAroundNodePadding: 10,
 
@@ -506,6 +511,10 @@ const portsVerticalDefaultLayout = {
 		// are image_center or node_center.
 		drawCommentLinkLineTo: "node_center",
 
+		// This is the size of the horizontal line protruding from the source
+		// port on the source node when drawing an elbow or straight connection line.
+		minInitialLine: 30,
+
 		// Radius of the port circle
 		portRadius: 6,
 
@@ -584,7 +593,6 @@ const portsVerticalDefaultLayout = {
 	// when such a line is required for drawing connectors. wrapAroundSpacing
 	// the spacing for wraparound curved connectors.:
 	elbowSize: 10,
-	minInitialLine: 30,
 	wrapAroundSpacing: 20,
 	wrapAroundNodePadding: 10,
 
@@ -637,7 +645,7 @@ const portsVerticalDefaultLayout = {
 
 
 export default class LayoutDimensions {
-	static getLayout(type, nodeLayoutOverrides = {}) {
+	static getLayout(type, config) {
 		let defaultLayout;
 		if (type === "halo") {
 			defaultLayout = haloDefaultLayout;
@@ -647,8 +655,63 @@ export default class LayoutDimensions {
 			defaultLayout = portsHorizontalDefaultLayout;
 		}
 
-		const newLayout = Object.assign({}, defaultLayout);
-		newLayout.nodeLayout = Object.assign({}, defaultLayout.nodeLayout, nodeLayoutOverrides);
+		let newLayout = Object.assign({}, defaultLayout);
+		if (config) {
+			newLayout = this.overrideNodeLayout(newLayout, config); // Do this first because snap-to-grid depends on this.
+			newLayout = this.overrideLinkType(newLayout, config);
+			newLayout = this.overrideSnapToGrid(newLayout, config);
+			newLayout = this.overrideAutoLayout(newLayout, config);
+		}
 		return newLayout;
+	}
+
+	static overrideNodeLayout(layout, config) {
+		layout.nodeLayout = Object.assign({}, layout.nodeLayout, config.enableNodeLayout);
+
+		return layout;
+	}
+
+	// Overrides the input layout objects with any link type provided by the
+	// config object.
+	static overrideLinkType(layout, config) {
+		layout.linkType = config.enableLinkType || layout.linkType || "Curve";
+
+		return layout;
+	}
+
+	// Overrides the snap-to-grid values in the layout object with any
+	// snap-to-grid values provided in the config object.
+	static overrideSnapToGrid(layout, config) {
+		// Snap to grid configuration. 25% for X and 20% for Y (of node width and
+		// height) by default. It can be overridden by the config which can be either
+		// a number or a percentage of the node width/height.
+		const snapToGridXStr = config.enableSnapToGridX || layout.snapToGridX || "25%";
+		const snapToGridYStr = config.enableSnapToGridX || layout.snapToGridY || "20%";
+
+		// Set the snap-to-grid sizes in pixels.
+		layout.snapToGridX = this.getSnapToGridSize(snapToGridXStr, layout.nodeLayout.defaultNodeWidth);
+		layout.snapToGridY = this.getSnapToGridSize(snapToGridYStr, layout.nodeLayout.defaultNodeHeight);
+
+		return layout;
+	}
+
+	// Overrides the auto-layout values in the layout object with any
+	// auto-layout values provided in the config object.
+	static overrideAutoLayout(layout, config) {
+		layout.autoLayoutVerticalSpacing = config.enableAutoLayoutVerticalSpacing || layout.autoLayoutVerticalSpacing || 80;
+		layout.autoLayoutHorizontalSpacing = config.enableAutoLayoutHorizontalSpacing || layout.autoLayoutHorizontalSpacing || 80;
+
+		return layout;
+	}
+
+	// Returns a snap-to-grid size in pixels based on the snapToGridSizeStr
+	// which can be either a numeric value (which is taken as the nuber of pixels)
+	// or a numeric value with a % sign at the end which is taken as the percentage
+	// of the defaultNodeSize passed in.
+	static getSnapToGridSize(snapToGridSizeStr, defaultNodeSize) {
+		if (snapToGridSizeStr.endsWith("%")) {
+			return (Number.parseInt(snapToGridSizeStr, 10) / 100) * defaultNodeSize;
+		}
+		return Number.parseInt(snapToGridSizeStr, 10);
 	}
 }

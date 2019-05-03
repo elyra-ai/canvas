@@ -65,6 +65,7 @@ import {
 	NO_LAYOUT,
 	BLUE_ELLIPSES_LAYOUT,
 	DB2_EXPLAIN_LAYOUT,
+	INC_MIN_INITIAL_LINE_LAYOUT,
 	CUSTOM,
 	FLYOUT,
 	NONE,
@@ -109,6 +110,8 @@ class App extends React.Component {
 			selectedSnapToGrid: NONE_DRAG,
 			snapToGridX: "",
 			snapToGridY: "",
+			autoLayoutVerticalSpacing: "",
+			autoLayoutHorizontalSpacing: "",
 			selectedInteractionType: MOUSE_INTERACTION,
 			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormat: VERTICAL_FORMAT,
@@ -1820,11 +1823,18 @@ class App extends React.Component {
 			portPosY: 30
 		};
 
+		const increaseMinInitialLine = {
+			minInitialLine: 100
+		};
+
+
 		let layout = null;
 		if (this.state.selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
 			layout = blueEllipsesLayout;
 		} else if (this.state.selectedNodeLayout === DB2_EXPLAIN_LAYOUT) {
 			layout = db2ExplainNodeLayout;
+		} else if (this.state.selectedNodeLayout === INC_MIN_INITIAL_LINE_LAYOUT) {
+			layout = increaseMinInitialLine;
 		}
 
 		const commonCanvasConfig = {
@@ -1832,6 +1842,8 @@ class App extends React.Component {
 			enableSnapToGridType: this.state.selectedSnapToGrid,
 			enableSnapToGridX: this.state.snapToGridX,
 			enableSnapToGridY: this.state.snapToGridY,
+			enableAutoLayoutVerticalSpacing: this.state.autoLayoutVerticalSpacing,
+			enableAutoLayoutHorizontalSpacing: this.state.autoLayoutHorizontalSpacing,
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,

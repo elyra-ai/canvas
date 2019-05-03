@@ -87,6 +87,8 @@ export default class CanvasController {
 			enableSnapToGridType: "None",
 			enableSnapToGridX: null,
 			enableSnapToGridY: null,
+			enableAutoLayoutVerticalSpacing: null,
+			enableAutoLayoutHorizontalSpacing: null,
 			enableNarrowPalette: true,
 			enableBoundingRectangles: false,
 			paletteInitialState: false,

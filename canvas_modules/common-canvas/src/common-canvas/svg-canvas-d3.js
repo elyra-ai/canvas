@@ -88,6 +88,8 @@ export default class CanvasD3Layout {
 				this.config.enableSnapToGridType !== config.enableSnapToGridType ||
 				this.config.enableSnapToGridX !== config.enableSnapToGridX ||
 				this.config.enableSnapToGridY !== config.enableSnapToGridY ||
+				this.config.enableAutoLayoutVerticalSpacing !== config.enableAutoLayoutVerticalSpacing ||
+				this.config.enableAutoLayoutHorizontalSpacing !== config.enableAutoLayoutHorizontalSpacing ||
 				this.config.enableConnectionType !== config.enableConnectionType ||
 				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
 				this.config.enableLinkType !== config.enableLinkType ||
@@ -220,14 +222,14 @@ export default class CanvasD3Layout {
 	initializeLayoutInfo(config) {
 
 		if (config.enableConnectionType === "Halo") {
-			this.objectModel.setLayoutType("halo", config.enableNodeLayout);
+			this.objectModel.setLayoutType("halo", config);
 
 		} else { // Ports connection type
 			if (config.enableNodeFormatType === "Horizontal") {
-				this.objectModel.setLayoutType("ports-horizontal", config.enableNodeLayout, config.enableLinkType);
+				this.objectModel.setLayoutType("ports-horizontal", config);
 
 			} else { // Vertical
-				this.objectModel.setLayoutType("ports-vertical", config.enableNodeLayout, config.enableLinkType);
+				this.objectModel.setLayoutType("ports-vertical", config);
 			}
 		}
 	}
@@ -328,16 +330,6 @@ class CanvasRenderer {
 		this.dragStartX = 0;
 		this.dragStartY = 0;
 
-		// Snap to grid configuration. 25% for X and 20% for Y (of node width and
-		// height) by default. It can be overridden by the config which can be either
-		// a number or a percentage of the node width/height.
-		const snapToGridXStr = this.config.enableSnapToGridX || this.layout.snapToGridX || "25%";
-		const snapToGridYStr = this.config.enableSnapToGridX || this.layout.snapToGridY || "20%";
-
-		// Set the snap-to-grid sizes in pixels.
-		this.snapToGridX = this.getSnapToGridSize(snapToGridXStr, this.layout.nodeLayout.defaultNodeWidth);
-		this.snapToGridY = this.getSnapToGridSize(snapToGridYStr, this.layout.nodeLayout.defaultNodeHeight);
-
 		// Allow us to track when a selection is being made so there is
 		// no need to re-render whole canvas
 		this.selecting = false;
@@ -368,6 +360,7 @@ class CanvasRenderer {
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
 		this.drawingNewLinkPortRadius = null;
+		this.drawingNewLinkMinInitialLine = null;
 		this.drawingNewLinkArray = [];
 
 		// Create a drag object for use with nodes and comments.
@@ -403,17 +396,6 @@ class CanvasRenderer {
 			}
 		}
 		this.logger.logEndTimer("Constructor");
-	}
-
-	// Returns a snap-to-grid size in pixels based on the snapToGridSizeStr
-	// which can be either a numeric value (which is taken as the nuber of pixels)
-	// or a numeric value with a % sign at the end which is taken as the percentage
-	// of the defaultNodeSize passed in.
-	getSnapToGridSize(snapToGridSizeStr, defaultNodeSize) {
-		if (snapToGridSizeStr.endsWith("%")) {
-			return (Number.parseInt(snapToGridSizeStr, 10) / 100) * defaultNodeSize;
-		}
-		return Number.parseInt(snapToGridSizeStr, 10);
 	}
 
 	setDisplayState() {
@@ -1863,8 +1845,8 @@ class CanvasRenderer {
 	// and objPos.y. The grid that is snapped to is defined by this.snapToGridX
 	// and this.snapToGridY.
 	snapToGridObject(objPos) {
-		const stgPosX = this.snapToGrid(objPos.x, this.snapToGridX);
-		const stgPosY = this.snapToGrid(objPos.y, this.snapToGridY);
+		const stgPosX = this.snapToGrid(objPos.x, this.layout.snapToGridX);
+		const stgPosY = this.snapToGrid(objPos.y, this.layout.snapToGridY);
 
 		return { x: stgPosX, y: stgPosY };
 	}
@@ -2143,6 +2125,7 @@ class CanvasRenderer {
 						this.drawingNewLinkAction = "node-node";
 						this.drawingNewLinkStartPos = this.getTransformedMousePos();
 						this.drawingNewLinkPortRadius = null;
+						this.drawingNewLinkMinInitialLine = null;
 						this.drawingNewLinkArray = [];
 						this.drawNewLink();
 					});
@@ -2379,6 +2362,7 @@ class CanvasRenderer {
 										const srcNode = this.getNode(d.id);
 										this.drawingNewLinkStartPos = { x: srcNode.x_pos + srcNode.width, y: srcNode.y_pos + port.cy };
 										this.drawingNewLinkPortRadius = this.getPortRadius(srcNode);
+										this.drawingNewLinkMinInitialLine = srcNode.layout.minInitialLine;
 										this.drawingNewLinkArray = [];
 										this.drawNewLink();
 									}
@@ -3062,7 +3046,8 @@ class CanvasRenderer {
 		const linkType = NODE_LINK;
 
 		if (this.drawingNewLinkArray.length === 0) {
-			this.drawingNewLinkArray = [{ "x1": this.drawingNewLinkStartPos.x,
+			this.drawingNewLinkArray = [{
+				"x1": this.drawingNewLinkStartPos.x,
 				"y1": this.drawingNewLinkStartPos.y,
 				"x2": transPos.x,
 				"y2": transPos.y,
@@ -3209,6 +3194,7 @@ class CanvasRenderer {
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
 		this.drawingNewLinkPortRadius = null;
+		this.drawingNewLinkMinInitialLine = null;
 		this.drawingNewLinkArray = [];
 	}
 
@@ -3228,6 +3214,7 @@ class CanvasRenderer {
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
 		this.drawingNewLinkPortRadius = null;
+		this.drawingNewLinkMinInitialLine = null;
 		this.drawingNewLinkArray = [];
 	}
 
@@ -3243,6 +3230,7 @@ class CanvasRenderer {
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
 		this.drawingNewLinkPortRadius = null;
+		this.drawingNewLinkMinInitialLine = null;
 		this.drawingNewLinkArray = [];
 
 		// If we completed a connection successfully just remove the new line
@@ -3596,6 +3584,7 @@ class CanvasRenderer {
 								that.drawingNewLinkAction = "comment-node";
 								that.drawingNewLinkStartPos = { x: d.x_pos - that.layout.commentHighlightGap, y: d.y_pos - that.layout.commentHighlightGap };
 								this.drawingNewLinkPortRadius = null;
+								this.drawingNewLinkMinInitialLine = null;
 								that.drawingNewLinkArray = [];
 								that.drawNewLink();
 							});
@@ -3734,6 +3723,7 @@ class CanvasRenderer {
 						this.drawingNewLinkAction = "comment-node";
 						this.drawingNewLinkStartPos = this.getTransformedMousePos();
 						this.drawingNewLinkPortRadius = null;
+						this.drawingNewLinkMinInitialLine = null;
 						this.drawingNewLinkArray = [];
 						this.drawNewLink();
 					});
@@ -4238,10 +4228,10 @@ class CanvasRenderer {
 			this.resizeObjWidth += incrementWidth;
 			this.resizeObjHeight += incrementHeight;
 
-			xPos = this.snapToGrid(this.resizeObjXPos, this.snapToGridX);
-			yPos = this.snapToGrid(this.resizeObjYPos, this.snapToGridY);
-			width = this.snapToGrid(this.resizeObjWidth, this.snapToGridX);
-			height = this.snapToGrid(this.resizeObjHeight, this.snapToGridY);
+			xPos = this.snapToGrid(this.resizeObjXPos, this.layout.snapToGridX);
+			yPos = this.snapToGrid(this.resizeObjYPos, this.layout.snapToGridY);
+			width = this.snapToGrid(this.resizeObjWidth, this.layout.snapToGridX);
+			height = this.snapToGrid(this.resizeObjHeight, this.layout.snapToGridY);
 
 		} else {
 			xPos = canvasObj.x_pos + incrementX;
@@ -4306,10 +4296,10 @@ class CanvasRenderer {
 		let height = commentObj.height;
 
 		if (this.config.enableSnapToGridType === "After") {
-			xPos = this.snapToGrid(xPos, this.snapToGridX);
-			yPos = this.snapToGrid(yPos, this.snapToGridY);
-			width = this.snapToGrid(width, this.snapToGridX);
-			height = this.snapToGrid(height, this.snapToGridY);
+			xPos = this.snapToGrid(xPos, this.layout.snapToGridX);
+			yPos = this.snapToGrid(yPos, this.layout.snapToGridY);
+			width = this.snapToGrid(width, this.layout.snapToGridX);
+			height = this.snapToGrid(height, this.layout.snapToGridY);
 		}
 
 		// Update the object model comment if the new position or size is different
@@ -5095,17 +5085,23 @@ class CanvasRenderer {
 	}
 
 	getConnectorPath(data) {
+		// Get the minInitialLine configuration variable that will be either from
+		// the node object (data) if we are drawning an existing connection or
+		// from this.drawingNewLinkMinInitialLine if we are dynamically drawing a new link.
+		let minInitialLine = (data.src && data.src.layout) ? data.src.layout.minInitialLine : this.drawingNewLinkMinInitialLine;
+		minInitialLine = minInitialLine || 30;
+
 		if (this.layout.connectionType === "ports" &&
 				data.type === NODE_LINK) {
 
 			if (this.layout.linkType === "Curve") {
-				return this.getCurvePath(data);
+				return this.getCurvePath(data, minInitialLine);
 
 			} else	if (this.layout.linkType === "Elbow") {
-				return this.getElbowPath(data);
+				return this.getElbowPath(data, minInitialLine);
 			}
 
-			return this.getLighteningPath(data);
+			return this.getLighteningPath(data, minInitialLine);
 		}
 
 		return this.getStraightPath(data);
@@ -5121,7 +5117,7 @@ class CanvasRenderer {
 	// Returns the path string for the object passed in which describes a
 	// simple straight connector line and a jaunty zig zag line when the
 	// source is further right than the target.
-	getLighteningPath(data) {
+	getLighteningPath(data, minInitialLine) {
 		let path = "";
 		const xDiff = data.x2 - data.x1;
 		const yDiff = data.y2 - data.y1;
@@ -5131,9 +5127,9 @@ class CanvasRenderer {
 			path = "M " + data.x1 + " " + data.y1 + " L " + data.x2 + " " + data.y2;
 
 		} else {
-			const corner1X = data.x1 + this.layout.minInitialLine;
+			const corner1X = data.x1 + minInitialLine;
 			const corner1Y = data.y1;
-			const corner2X = data.x2 - this.layout.minInitialLine;
+			const corner2X = data.x2 - minInitialLine;
 			const corner2Y = data.y2;
 
 			const centerLineY = corner2Y - (corner2Y - corner1Y) / 2;
@@ -5169,7 +5165,7 @@ class CanvasRenderer {
 
 	// Returns the path string for the object passed in which describes a
 	// quadratic bezier curved connector line.
-	getCurvePath(data) {
+	getCurvePath(data, minInitialLine) {
 		const xDiff = data.x2 - data.x1;
 
 		// When dragging out a new link we will not have src nor trg nodes
@@ -5188,7 +5184,7 @@ class CanvasRenderer {
 
 		let path = "M " + data.x1 + " " + data.y1;
 
-		if (xDiff >= this.layout.minInitialLine ||
+		if (xDiff >= minInitialLine ||
 				(bottomTrg > topSrc - this.layout.wrapAroundNodePadding &&
 					topTrg < bottomSrc + this.layout.wrapAroundNodePadding &&
 					data.x2 > data.x1)) {
@@ -5222,12 +5218,12 @@ class CanvasRenderer {
 			// to be based on the X gap between the source and target nodes but also
 			// dependent on the Y gap between those nodes because, as the Y gap
 			// increases, we want the straight line to decrease in size.
-			const offsetForStraightLine = Math.min((yDiff / 2), -(xDiff - this.layout.minInitialLine / 2));
+			const offsetForStraightLine = Math.min((yDiff / 2), -(xDiff - minInitialLine / 2));
 
 			// Calculate an offset for the first and last corners. This allows the
 			// curve to 'grow' slowly out from a straight line to a point where the
 			// initial corners of the curve are a maximum of minInitialLine.
-			const offsetForFirstCorner = this.layout.minInitialLine - Math.max((xDiff / 2), 0);
+			const offsetForFirstCorner = minInitialLine - Math.max((xDiff / 2), 0);
 
 			const corner1X = data.x1 + offsetForFirstCorner;
 			const corner1Y = data.y1;
@@ -5272,9 +5268,9 @@ class CanvasRenderer {
 
 	// Returns the path string for the object passed in which describes a
 	// curved connector line using elbows and straight lines.
-	getElbowPath(data) {
+	getElbowPath(data, minInitialLine) {
 
-		const corner1X = data.x1 + this.layout.minInitialLine;
+		const corner1X = data.x1 + minInitialLine;
 		const corner1Y = data.y1;
 		let corner2X = corner1X;
 		const corner2Y = data.y2;
@@ -5292,7 +5288,7 @@ class CanvasRenderer {
 
 		// This is a special case where the source and target handles are very
 		// close together.
-		if (xDiff < (2 * this.layout.minInitialLine) &&
+		if (xDiff < (2 * minInitialLine) &&
 				(yDiff < (4 * this.layout.elbowSize) &&
 					yDiff > -(4 * this.layout.elbowSize))) {
 			elbowYOffset = yDiff / 4;
@@ -5301,15 +5297,15 @@ class CanvasRenderer {
 		let elbowXOffset = this.layout.elbowSize;
 		let extraSegments = false;	// Indicates need for extra elbows and lines
 
-		if (xDiff < (this.layout.minInitialLine + this.layout.elbowSize)) {
+		if (xDiff < (minInitialLine + this.layout.elbowSize)) {
 			extraSegments = true;
-			corner2X = data.x2 - this.layout.minInitialLine;
+			corner2X = data.x2 - minInitialLine;
 			elbowXOffset = this.layout.elbowSize;
 		}
-		else if (xDiff < (2 * this.layout.minInitialLine)) {
+		else if (xDiff < (2 * minInitialLine)) {
 			extraSegments = true;
-			corner2X = data.x2 - this.layout.minInitialLine;
-			elbowXOffset = -((xDiff - (2 * this.layout.minInitialLine)) / 2);
+			corner2X = data.x2 - minInitialLine;
+			elbowXOffset = -((xDiff - (2 * minInitialLine)) / 2);
 		}
 
 		let path = "M " + data.x1 + " " + data.y1;
