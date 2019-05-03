@@ -1904,6 +1904,15 @@ class App extends React.Component {
 			}
 		};
 
+		const keyboardConfig = {
+			actions: {
+				delete: true,
+				cutToClipboard: true,
+				copyToClipboard: true,
+				pasteFromClipboard: true
+			}
+		};
+
 		const propertiesConfig = {
 			containerType: this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === FLYOUT,
@@ -1987,6 +1996,7 @@ class App extends React.Component {
 				toolbarConfig={toolbarConfig}
 				notificationConfig={notificationConfig}
 				contextMenuConfig={contextMenuConfig}
+				keyboardConfig={keyboardConfig}
 				toolbarMenuActionHandler={this.toolbarMenuActionHandler}
 				rightFlyoutContent={rightFlyoutContent}
 				showRightFlyout={showRightFlyoutProperties}

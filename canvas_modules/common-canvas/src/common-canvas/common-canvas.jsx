@@ -46,6 +46,7 @@ export default class CommonCanvas extends React.Component {
 			toolbarConfig: toolbarConfig,
 			notificationConfig: this.props.notificationConfig,
 			contextMenuConfig: this.props.contextMenuConfig,
+			keyboardConfig: this.props.keyboardConfig,
 			rightFlyoutContent: this.props.rightFlyoutContent,
 			tipDef: {},
 			rightFlyoutWidth: 0,
@@ -228,6 +229,7 @@ export default class CommonCanvas extends React.Component {
 	initializeController(props) {
 		this.canvasController.setCanvasConfig(props.config);
 		this.canvasController.setContextMenuConfig(props.contextMenuConfig);
+		this.canvasController.setKeyboardConfig(props.keyboardConfig);
 
 		this.canvasController.setHandlers({
 			contextMenuHandler: props.contextMenuHandler,
@@ -511,6 +513,7 @@ CommonCanvas.propTypes = {
 	toolbarConfig: PropTypes.array,
 	notificationConfig: PropTypes.object,
 	contextMenuConfig: PropTypes.object,
+	keyboardConfig: PropTypes.object,
 	contextMenuHandler: PropTypes.func,
 	contextMenuActionHandler: PropTypes.func,
 	editActionHandler: PropTypes.func,

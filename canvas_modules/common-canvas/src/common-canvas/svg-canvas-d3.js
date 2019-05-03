@@ -176,40 +176,37 @@ export default class CanvasD3Layout {
 				// keyboard action.
 				this.canvasController.closeTip();
 
-				// Only catch key pressses when NOT editing because, while editing,
-				// the test area needs to receive key presses for undo, redo, delete etc.
-				if (!this.renderer.isEditingComment()) {
-					if (d3Event.keyCode === BACKSPACE_KEY ||
-							d3Event.keyCode === DELETE_KEY) {
-						stopPropagationAndPreventDefault(); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
-						this.canvasController.editActionHandler({
-							editType: "deleteSelectedObjects",
-							selectedObjectIds: this.objectModel.getSelectedObjectIds(),
-							pipelineId: this.objectModel.getSelectedPipelineId()
-						});
+				const actions = this.canvasController.getKeyboardConfig().actions;
 
-					} else if (isCmndCtrlPressed() && !d3Event.shiftKey && d3Event.keyCode === Z_KEY) {
+				// Only catch key pressses when NOT editing because, while editing,
+				// the text area needs to receive key presses for undo, redo, delete etc.
+				if (!this.renderer.isEditingComment()) {
+					if ((d3Event.keyCode === BACKSPACE_KEY || d3Event.keyCode === DELETE_KEY) && actions.delete) {
+						stopPropagationAndPreventDefault(); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
+						this.canvasController.deleteSelectedObjects();
+
+					} else if (isCmndCtrlPressed() && !d3Event.shiftKey && d3Event.keyCode === Z_KEY && actions.undo) {
 						stopPropagationAndPreventDefault();
 						this.canvasController.undo();
 
 					} else if (isCmndCtrlPressed() &&
-							((d3Event.shiftKey && d3Event.keyCode === Z_KEY) || d3Event.keyCode === Y_KEY)) {
+							((d3Event.shiftKey && d3Event.keyCode === Z_KEY) || d3Event.keyCode === Y_KEY && actions.redo)) {
 						stopPropagationAndPreventDefault();
 						this.canvasController.redo();
 
-					} else if (isCmndCtrlPressed() && d3Event.keyCode === A_KEY) {
+					} else if (isCmndCtrlPressed() && d3Event.keyCode === A_KEY && actions.selectAll) {
 						stopPropagationAndPreventDefault();
 						this.canvasController.selectAll();
 
-					} else if (isCmndCtrlPressed() && d3Event.keyCode === C_KEY) {
+					} else if (isCmndCtrlPressed() && d3Event.keyCode === C_KEY && actions.copyToClipboard) {
 						stopPropagationAndPreventDefault();
 						this.canvasController.copyToClipboard();
 
-					} else if (isCmndCtrlPressed() && d3Event.keyCode === X_KEY) {
+					} else if (isCmndCtrlPressed() && d3Event.keyCode === X_KEY && actions.cutToClipboard) {
 						stopPropagationAndPreventDefault();
 						this.canvasController.cutToClipboard();
 
-					} else if (isCmndCtrlPressed() && d3Event.keyCode === V_KEY) {
+					} else if (isCmndCtrlPressed() && d3Event.keyCode === V_KEY && actions.pasteFromClipboard) {
 						stopPropagationAndPreventDefault();
 						this.canvasController.pasteFromClipboard();
 					}

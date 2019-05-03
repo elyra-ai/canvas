@@ -105,6 +105,18 @@ export default class CanvasController {
 			}
 		};
 
+		this.keyboardConfig = {
+			actions: {
+				delete: true,
+				undo: true,
+				redo: true,
+				selectAll: true,
+				copyToClipboard: true,
+				cutToClipboard: true,
+				pasteFromClipboard: true
+			}
+		};
+
 		this.handlers = {
 			contextMenuHandler: null,
 			contextMenuActionHandler: null,
@@ -150,6 +162,16 @@ export default class CanvasController {
 
 	setContextMenuConfig(contextMenuConfig) {
 		this.contextMenuConfig = Object.assign(this.contextMenuConfig, contextMenuConfig);
+	}
+
+	setKeyboardConfig(keyboardConfig) {
+		if (keyboardConfig && keyboardConfig.actions) {
+			this.keyboardConfig.actions = Object.assign({}, this.keyboardConfig.actions, keyboardConfig.actions);
+		}
+	}
+
+	getKeyboardConfig() {
+		return this.keyboardConfig;
 	}
 
 	setHandlers(inHandlers) {
@@ -427,7 +449,11 @@ export default class CanvasController {
 
 	// Deletes all currently selected objects.
 	deleteSelectedObjects() {
-		this.objectModel.deleteSelectedObjects();
+		this.editActionHandler({
+			editType: "deleteSelectedObjects",
+			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
+			pipelineId: this.objectModel.getSelectedPipelineId()
+		});
 	}
 
 	// Returns true if the currently selected objects are all linked together.
