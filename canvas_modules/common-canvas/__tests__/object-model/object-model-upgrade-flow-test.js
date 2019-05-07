@@ -80,9 +80,6 @@ import titanicFlowCanvasV0 from "../../../harness/test_resources/diagrams/x-tita
 const objectModel = new ObjectModel();
 objectModel.setSchemaValidation(true); // Ensure we validate against the schemas as we upgrade
 
-// TODO - Remove this when we support v3 schemas permanently.
-objectModel.setReturnPipelineFlowDraftVersion(true);
-
 describe("ObjectModel files handling test", () => {
 
 	// --------------------------------------------------------------------------

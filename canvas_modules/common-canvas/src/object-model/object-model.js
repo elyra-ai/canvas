@@ -27,9 +27,7 @@ import union from "lodash/union";
 import mergeWith from "lodash/mergeWith";
 import uuid4 from "uuid/v4";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
-// TODO - Remove line below and uncomment following line when we move to support v3 schemas officially
-import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "./schemas-utils/upgrade-flow.js";
-// import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@wdp/pipeline-schemas";
+import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@wdp/pipeline-schemas";
 import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from "./schemas-utils/upgrade-palette.js";
 
 const nodes = (state = [], action) => {
@@ -961,9 +959,6 @@ export default class ObjectModel {
 
 		// Optional callback for layout of the canvas
 		this.layoutHandler = null;
-
-		// TODO - remove this when we support v3 schemas permanently
-		this.returnPipelineFlowDraftVersion = false;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1395,12 +1390,6 @@ export default class ObjectModel {
 		return pipelineFlow;
 	}
 
-	// TODO - Remove this method when we transition to V3 schemas permanently
-	// Also remove the call to this from canvas controller.
-	setReturnPipelineFlowDraftVersion(state) {
-		this.returnPipelineFlowDraftVersion = state;
-	}
-
 	// Returns a pipeline flow based on the initial pipeline flow we were given
 	// with the changes to canvasinfo made by the user. We don't do this in the
 	// redux code because that would result is continuous update of the pipelineflow
@@ -1409,23 +1398,6 @@ export default class ObjectModel {
 	getPipelineFlow() {
 		const pipelineFlow =
 			PipelineOutHandler.createPipelineFlow(this.getCanvasInfo());
-
-		// TODO - Remove this if clause when we transition to V3 schemas permanently
-		// This is temporary code - For now return a v2 pipelineFlow.
-		// Note: v3 pipelineFlow docs will be the same as v2 provided the host
-		// app has not used any v3 features, so all we need to do is change the
-		// version and json_schema fields.
-		if (this.returnPipelineFlowDraftVersion === false) {
-			pipelineFlow.version = "2.0";
-			if (pipelineFlow.json_schema) {
-				pipelineFlow.json_schema = "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json";
-			}
-
-			if (this.schemaValidation) {
-				validatePipelineFlowAgainstSchema(pipelineFlow, 2);
-			}
-			return pipelineFlow;
-		}
 
 		if (this.schemaValidation) {
 			validatePipelineFlowAgainstSchema(pipelineFlow);

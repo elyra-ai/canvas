@@ -155,11 +155,6 @@ export default class CanvasController {
 		return this.canvasConfig;
 	}
 
-	// TODO - Remove this call when we transition to V3 schemas permanently
-	setReturnPipelineFlowDraftVersion(state) {
-		this.objectModel.setReturnPipelineFlowDraftVersion(state);
-	}
-
 	setContextMenuConfig(contextMenuConfig) {
 		this.contextMenuConfig = Object.assign(this.contextMenuConfig, contextMenuConfig);
 	}

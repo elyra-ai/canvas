@@ -274,10 +274,6 @@ class App extends React.Component {
 		try {
 			this.canvasController = new CanvasController();
 			this.canvasController2 = new CanvasController();
-			// TODO - Remove these calls when we transition to V3 schemas permanently
-			this.canvasController.setReturnPipelineFlowDraftVersion(true);
-			this.canvasController2.setReturnPipelineFlowDraftVersion(true);
-
 		} catch (err) {
 			console.error("Error setting up canvas controllers: " + err);
 		}

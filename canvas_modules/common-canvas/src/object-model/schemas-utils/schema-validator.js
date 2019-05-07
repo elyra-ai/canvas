@@ -19,11 +19,11 @@ import pipelineConnectionV2Schema from "@wdp/pipeline-schemas/common-pipeline/pi
 import dataRecordMetadataV2Schema from "@wdp/pipeline-schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v2-schema.json";
 import paletteV2Schema from "../schemas/v2/palette-v2-schema.json";
 
-import pipelineFlowV3Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema_draft.json";
-import pipelineFlowUIV3Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v3-schema_draft.json";
-import pipelineConnectionV3Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-connection/pipeline-connection-v3-schema_draft.json";
-import dataRecordMetadataV3Schema from "@wdp/pipeline-schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v3-schema_draft.json";
-import paletteV3Schema from "@wdp/pipeline-schemas/common-canvas/palette/palette-v3-schema_draft.json";
+import pipelineFlowV3Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json";
+import pipelineFlowUIV3Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v3-schema.json";
+import pipelineConnectionV3Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-connection/pipeline-connection-v3-schema.json";
+import dataRecordMetadataV3Schema from "@wdp/pipeline-schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v3-schema.json";
+import paletteV3Schema from "@wdp/pipeline-schemas/common-canvas/palette/palette-v3-schema.json";
 
 import Logger from "../../logging/canvas-logger.js";
 

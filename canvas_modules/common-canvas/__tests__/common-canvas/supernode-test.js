@@ -916,9 +916,6 @@ describe("Create Supernode Action", () => {
 		canvasController.getObjectModel().setPipelineFlow(supernodeCanvas);
 		const config = { enableNodeFormatType: "Vertical" };
 
-		// TODO - Remove this call when we transition to V3 schemas permanently
-		canvasController.setReturnPipelineFlowDraftVersion(true);
-
 		createCommonCanvas(config, canvasController);
 
 		objectModel = canvasController.getObjectModel();

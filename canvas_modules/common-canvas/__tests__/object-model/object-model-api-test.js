@@ -36,10 +36,6 @@ import CloneMultipleObjectsAction from "../../src/command-actions/cloneMultipleO
 const canvasController = new CanvasController();
 const objectModel = canvasController.getObjectModel();
 
-// TODO - Remove this when we support v3 schemas permanently.
-objectModel.setReturnPipelineFlowDraftVersion(true);
-
-
 describe("ObjectModel API handle model OK", () => {
 
 	it("should layout a canvas horiziontally", () => {
