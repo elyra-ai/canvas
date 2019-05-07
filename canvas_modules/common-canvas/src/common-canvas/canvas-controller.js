@@ -1000,27 +1000,27 @@ export default class CanvasController {
 
 	// Highlights the branch(s) (both upstream and downstream) from the node
 	// IDs passed in.
-	// pipelineId - The ID of the pipeline
 	// nodeIds - An array of node Ids
-	highlightBranch(pipelineId, nodeIds) {
+	// pipelineId - The ID of the pipeline
+	highlightBranch(nodeIds, pipelineId) {
 		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_BRANCH);
 		this.setHighlightStyle(highlightObjectIds, pipelineId);
 		return highlightObjectIds;
 	}
 
 	// Highlights the upstream nodes from the node IDs passed in.
-	// pipelineId - The ID of the pipeline
 	// nodeIds - An array of node Ids
-	highlightUpstream(pipelineId, nodeIds) {
+	// pipelineId - The ID of the pipeline
+	highlightUpstream(nodeIds, pipelineId) {
 		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_UPSTREAM);
 		this.setHighlightStyle(highlightObjectIds, pipelineId);
 		return highlightObjectIds;
 	}
 
 	// Highlights the downstream nodes from the node IDs passed in.
-	// pipelineId - The ID of the pipeline
 	// nodeIds - An array of node Ids
-	highlightDownstream(pipelineId, nodeIds) {
+	// pipelineId - The ID of the pipeline
+	highlightDownstream(nodeIds, pipelineId) {
 		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_DOWNSTREAM);
 		this.setHighlightStyle(highlightObjectIds, pipelineId);
 		return highlightObjectIds;
@@ -1622,13 +1622,13 @@ export default class CanvasController {
 				this.pasteFromClipboard(this.contextMenuSource.pipelineId);
 				break;
 			case "highlightBranch":
-				this.contextMenuSource.highlightedObjectIds = this.highlightBranch(this.contextMenuSource.pipelineId, this.objectModel.getSelectedNodesIds());
+				this.contextMenuSource.highlightedObjectIds = this.highlightBranch(this.objectModel.getSelectedNodesIds(), this.contextMenuSource.pipelineId);
 				break;
 			case "highlightDownstream":
-				this.contextMenuSource.highlightedObjectIds = this.highlightDownstream(this.contextMenuSource.pipelineId, this.objectModel.getSelectedNodesIds());
+				this.contextMenuSource.highlightedObjectIds = this.highlightDownstream(this.objectModel.getSelectedNodesIds(), this.contextMenuSource.pipelineId);
 				break;
 			case "highlightUpstream":
-				this.contextMenuSource.highlightedObjectIds = this.highlightUpstream(this.contextMenuSource.pipelineId, this.objectModel.getSelectedNodesIds());
+				this.contextMenuSource.highlightedObjectIds = this.highlightUpstream(this.objectModel.getSelectedNodesIds(), this.contextMenuSource.pipelineId);
 				break;
 			case "unhighlight":
 				// this.setSubdueStyle(null);
