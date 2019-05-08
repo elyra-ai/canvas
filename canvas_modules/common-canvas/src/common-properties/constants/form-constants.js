@@ -66,6 +66,7 @@ const ControlType = {
 	NUMBERFIELD: "numberfield",
 	DATEFIELD: "datefield",
 	TIMEFIELD: "timefield",
+	TIMESTAMP: "timestampfield",
 	CHECKBOX: "checkbox",
 	RADIOSET: "radioset",
 	CHECKBOXSET: "checkboxset",

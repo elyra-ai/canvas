@@ -88,6 +88,8 @@ export default class ControlFactory {
 			return (<TextfieldControl {...props} />);
 		} else if (control.controlType === ControlType.READONLY) {
 			return (<ReadonlyControl {...props} />);
+		} else if (control.controlType === ControlType.TIMESTAMPFIELD) {
+			return (<ReadonlyControl {...props} />);
 		} else if (control.controlType === ControlType.TEXTAREA) {
 			return (<TextareaControl {...props} />);
 		} else if (control.controlType === ControlType.EXPRESSION) {

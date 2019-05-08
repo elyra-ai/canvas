@@ -16,6 +16,7 @@ import { STATES, TOOL_TIP_DELAY } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import Icon from "./../../../icons/icon.jsx";
 import uuid4 from "uuid/v4";
+import moment from "moment";
 
 import { ControlType } from "./../../constants/form-constants";
 
@@ -38,6 +39,14 @@ class ReadonlyControl extends React.Component {
 		if (this.props.columnDef) {
 			if (this.props.columnDef.controlType === ControlType.CUSTOM) {
 				controlValue = this.props.controller.getCustomControl(this.props.propertyId, this.props.columnDef, { table: true, editStyle: "summary" });
+			}
+		}
+		if (this.props.control.controlType === ControlType.TIMESTAMP) {
+			const mom = moment(controlValue); // timestamp in ms
+			if (mom.isValid()) {
+				controlValue = mom.format("LLLL");
+			} else {
+				controlValue = ""; // invalid timestamp
 			}
 		}
 		const readOnly = <span className="properties-field-type" disabled={this.props.state === STATES.DISABLED}>{controlValue}</span>;

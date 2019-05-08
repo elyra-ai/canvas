@@ -1,0 +1,77 @@
+{
+  "titleDefinition": {
+    "title": "Timestamp Field"
+  },
+  "current_parameters": {
+    "timestamp_field": -1847548800000,
+    "timestamp_field_invalid": "invalid field",
+    "timestamp_field_null": ""
+  },
+  "parameters": [
+    {
+      "id": "timestamp_field",
+      "type": "double"
+    },
+    {
+      "id": "timestamp_field_invalid",
+      "type": "double"
+    },
+    {
+      "id": "timestamp_field_null",
+      "type": "double"
+    }
+  ],
+  "uihints": {
+    "id": "timestamp",
+    "icon": "images/items.svg",
+    "label": {
+      "default": "Timestamp Field Test"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "timestamp_field",
+        "label": {
+          "default": "Timestamp"
+        },
+        "description": {
+          "default": "Valid timestamp example."
+        },
+        "control": "timestampfield"
+      },
+      {
+        "parameter_ref": "timestamp_field_invalid",
+        "label": {
+          "default": "Invalid Timestamp"
+        },
+        "description": {
+          "default": "Invalid Timestamp will return empty field."
+        },
+        "control": "timestampfield"
+      },
+      {
+        "parameter_ref": "timestamp_field_null",
+        "label": {
+          "default": "Null Timestamp"
+        },
+        "description": {
+          "default": "Null Timestamp will return empty field."
+        },
+        "control": "timestampfield"
+      }
+    ],
+    "group_info": [
+      {
+        "id": "timestamp-values",
+        "label": {
+          "default": "Values"
+        },
+        "parameter_refs": [
+          "timestamp_field",
+          "timestamp_field_invalid",
+          "timestamp_field_null"
+
+        ]
+      }
+    ]
+  }
+}
