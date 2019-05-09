@@ -768,7 +768,7 @@ export default class SidePanelForms extends React.Component {
 			</RadioButtonGroup>
 		</div>);
 
-		var linkType = (<div className="harness-sidepanel-children">
+		var linkType = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-type">
 			<div className="harness-sidepanel-headers">Link Type (for 'Ports')</div>
 			<RadioButtonGroup
 				className="harness-sidepanel-radio-group"
@@ -922,7 +922,7 @@ export default class SidePanelForms extends React.Component {
 				<div className="harness-sidepanel-headers">Display Bounding Rectangles</div>
 				<div>
 					<Toggle
-						id="harness-sidepanel-schema-validation"
+						id="harness-sidepanel-bounding-rectangles"
 						toggled={this.props.canvasConfig.displayBoundingRectanglesEnabled}
 						onToggle={this.props.canvasConfig.displayBoundingRectangles}
 					/>

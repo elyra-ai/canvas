@@ -4552,8 +4552,13 @@ class CanvasRenderer {
 					affectedNodesAndComments = affectedNodesAndComments.concat(this.getSupernodeBindingNodes());
 				}
 
+				if (this.layout.linkType === "Elbow") {
+					affectedNodesAndComments = this.addAffectedNodesForElbow(affectedNodesAndComments);
+				}
+
 				affectLinks = this.getConnectedLinks(affectedNodesAndComments);
 			}
+
 			this.canvasGrp.selectAll(linkSelector)
 				.filter(
 					(linkGroupLink) => typeof affectLinks.find(
@@ -4566,8 +4571,10 @@ class CanvasRenderer {
 		var timeAfterDelete = Date.now();
 
 		var lineArray = this.buildLineArray();
+		if (this.layout.linkType === "Elbow") {
+			lineArray = this.addMinInitialLineForElbow(lineArray);
+		}
 		lineArray = this.addConnectionPaths(lineArray);
-
 		var afterLineArray = Date.now();
 
 		var linkGroup = this.canvasGrp.selectAll(linkSelector)
@@ -4802,36 +4809,35 @@ class CanvasRenderer {
 					" in the Canvas data that does not have a valid target node.");
 			}
 
-			// Only proceed if we have a source and a target node/comment.
-			if (srcObj && trgNode) {
-				if (!this.isSourceOverlappingTarget(srcObj, trgNode, link.type)) {
-					var coords = {};
-					var srcPortId;
-					var trgPortId;
+			// Only proceed if we have a source and a target node/comment and the
+			// conditions are right for displaying the link.
+			if (srcObj && trgNode && this.shouldDisplayLink(srcObj, trgNode, link.type)) {
+				var coords = {};
+				var srcPortId;
+				var trgPortId;
 
-					if (link.type === NODE_LINK) {
-						if (this.layout.connectionType === "halo") {
-							coords = this.getNodeLinkCoordsForHalo(srcObj, trgNode);
-						} else {
-							srcPortId = this.getSourcePortId(link, srcObj);
-							trgPortId = this.getTargetPortId(link, trgNode);
-							coords = this.getNodeLinkCoordsForPorts(srcObj, srcPortId, trgNode, trgPortId);
-						}
+				if (link.type === NODE_LINK) {
+					if (this.layout.connectionType === "halo") {
+						coords = this.getNodeLinkCoordsForHalo(srcObj, trgNode);
 					} else {
-						coords = this.getNonDataLinkCoords(srcObj, trgNode);
+						srcPortId = this.getSourcePortId(link, srcObj);
+						trgPortId = this.getTargetPortId(link, trgNode);
+						coords = this.getNodeLinkCoordsForPorts(srcObj, srcPortId, trgNode, trgPortId);
 					}
-
-					lineArray.push({ "id": link.id,
-						"x1": coords.x1, "y1": coords.y1, "x2": coords.x2, "y2": coords.y2,
-						"class_name": link.class_name,
-						"style": link.style,
-						"style_temp": link.style_temp,
-						"type": link.type,
-						"src": srcObj,
-						"srcPortId": srcPortId,
-						"trg": trgNode,
-						"trgPortId": trgPortId });
+				} else {
+					coords = this.getNonDataLinkCoords(srcObj, trgNode);
 				}
+
+				lineArray.push({ "id": link.id,
+					"x1": coords.x1, "y1": coords.y1, "x2": coords.x2, "y2": coords.y2,
+					"class_name": link.class_name,
+					"style": link.style,
+					"style_temp": link.style_temp,
+					"type": link.type,
+					"src": srcObj,
+					"srcPortId": srcPortId,
+					"trg": trgNode,
+					"trgPortId": trgPortId });
 			}
 		});
 
@@ -4875,19 +4881,99 @@ class CanvasRenderer {
 		return lineArray;
 	}
 
-	isSourceOverlappingTarget(srcNode, trgNode, linkType) {
+	// Returns true if a link should be displayed and false if not. The link
+	// should not be displayed if the displayLinkOnOverlap flag is false and the
+	// nodes are overlapping.
+	shouldDisplayLink(srcNode, trgNode, linkType) {
 		if (this.layout.displayLinkOnOverlap === false) {
-			const srcHightlightGap = linkType === "commentLink" ? this.layout.commentHighlightGap : srcNode.layout.nodeHightlightGap;
-			const trgHightlightGap = trgNode.layout.nodeHightlightGap;
-			if (((srcNode.x_pos + srcNode.width + srcHightlightGap >= trgNode.x_pos - trgHightlightGap &&
-						trgNode.x_pos + trgNode.width + trgHightlightGap >= srcNode.x_pos - srcHightlightGap) &&
-						(srcNode.y_pos + srcNode.height + srcHightlightGap >= trgNode.y_pos - trgHightlightGap &&
-							trgNode.y_pos + trgNode.height + trgHightlightGap >= srcNode.y_pos - srcHightlightGap))) {
-				return true;
-			}
+			return !this.areLinkedObjectsOverlapping(srcNode, trgNode, linkType);
 		}
 
+		return true;
+	}
+
+	// Returns true if the linked objects overlap. srcObj can be either a comment
+	// or node while trgNode is always a node.
+	areLinkedObjectsOverlapping(srcObj, trgNode, linkType) {
+		const srcHightlightGap = linkType === "commentLink" ? this.layout.commentHighlightGap : srcObj.layout.nodeHighlightGap;
+		const trgHightlightGap = trgNode.layout.nodeHighlightGap;
+
+		const srcLeft = srcObj.x_pos - srcHightlightGap;
+		const srcRight = srcObj.x_pos + srcObj.width + srcHightlightGap;
+		const trgLeft = trgNode.x_pos - trgHightlightGap;
+		const trgRight = trgNode.x_pos + trgNode.width + trgHightlightGap;
+
+		const srcTop = srcObj.y_pos - srcHightlightGap;
+		const srcBottom = srcObj.y_pos + srcObj.height + srcHightlightGap;
+		const trgTop = trgNode.y_pos - trgHightlightGap;
+		const trgBottom = trgNode.y_pos + trgNode.height + trgHightlightGap;
+
+		if (srcRight >= trgLeft && trgRight >= srcLeft &&
+				srcBottom >= trgTop && trgBottom >= srcTop) {
+			return true;
+		}
 		return false;
+	}
+
+	// Loops through the current nodes and for each node that has multiple
+	// output ports:
+	// 1. Gets the line-data objects associated with those ports.
+	// 2. Sorts those line-data objects based on the vertical separation from
+	//    the source to the target.
+	// 3. Applies ever increasing minInitialLine values to the line-data objects
+	//    based on their sort order.
+	// The result is that the elbow lines emantating the ports of the node do not
+	// overlap.
+	addMinInitialLineForElbow(lineArray) {
+		this.activePipeline.nodes.forEach((node) => {
+			if (node.outputs && node.outputs.length > 1) {
+				const nodeLineData = this.getNodeLineData(node, lineArray);
+				const sortedNodeLineData = this.sortNodeLineData(nodeLineData);
+				this.applyMinInitialLine(node, sortedNodeLineData);
+			}
+		});
+		return lineArray;
+	}
+
+	// Returns a new array of line-data objects that are for links that
+	// emenate from the output ports of the source node passed in.
+	getNodeLineData(srcNode, lineArray) {
+		const outArray = [];
+		lineArray.forEach((lineData) => {
+			if (lineData.src.id === srcNode.id) {
+				outArray.push(lineData);
+			}
+		});
+		return outArray;
+	}
+
+	// Returns the input array of line-data objects sorted by the differences
+	// between the absolute distance from the source port position to the
+	// target port position. This means the lines connecting source node ports
+	// to target node ports over the furthest distance (in the y direction) will
+	// be sorted first and the lines connecting source to target ports over the
+	// shortest y direction distance will be sorted last.
+	sortNodeLineData(nodeLineData) {
+		return nodeLineData.sort((nodeLineData1, nodeLineData2) => {
+			if (Math.abs(nodeLineData1.y1 - nodeLineData1.y2) < Math.abs(nodeLineData2.y1 - nodeLineData2.y2)) {
+				return 1;
+			}
+			return -1;
+		});
+	}
+
+	// Loops through the line-data objects associated with the output ports of
+	// the node passed in and applies an ever increasing minInitialLine value to
+	// each one. This means that, because the line data objects are sorted by
+	// vertical separation, the line with greatest vertical separation will get
+	// the smallest minInitialLine and the line with the smallest vertical
+	// separation will get the biggest minInitialLine.
+	applyMinInitialLine(node, sortedNodeLineData) {
+		let runningInitialLine = node.layout.minInitialLine;
+		sortedNodeLineData.forEach((lineData) => {
+			lineData.minInitialLineForElbow = runningInitialLine;
+			runningInitialLine += lineData.src.layout.minInitialLineIncrement;
+		});
 	}
 
 	getNodeLinkCoordsForPorts(srcNode, srcPortId, trgNode, trgPortId) {
@@ -5081,12 +5167,22 @@ class CanvasRenderer {
 		return `M ${d.x2} ${d.y2} L ${x3} ${y3} M ${d.x2} ${d.y2} L ${x4} ${y4}`;
 	}
 
+	// Returns an SVG path string for the link (described by the data passed in)
+	// based on the connection and link type in the layout info.
 	getConnectorPath(data) {
-		// Get the minInitialLine configuration variable that will be either from
-		// the node object (data) if we are drawning an existing connection or
-		// from this.drawingNewLinkMinInitialLine if we are dynamically drawing a new link.
-		let minInitialLine = (data.src && data.src.layout) ? data.src.layout.minInitialLine : this.drawingNewLinkMinInitialLine;
-		minInitialLine = minInitialLine || 30;
+		// Get the minInitialLine layout variable that will be either from
+		// the link-data object (if the size has been pre-calculated for elbow style
+		// connections) or from the source node object (data.src) if we are drawing
+		// an existing connection or from this.drawingNewLinkMinInitialLine if we
+		// are dynamically drawing a new link.
+		let minInitialLine;
+		if (data.minInitialLineForElbow) {
+			minInitialLine = data.minInitialLineForElbow;
+		} else if (data.src && data.src.layout) {
+			minInitialLine = data.src.layout.minInitialLine;
+		} else {
+			minInitialLine = this.drawingNewLinkMinInitialLine;
+		}
 
 		if (this.layout.connectionType === "ports" &&
 				data.type === NODE_LINK) {
@@ -5266,7 +5362,6 @@ class CanvasRenderer {
 	// Returns the path string for the object passed in which describes a
 	// curved connector line using elbows and straight lines.
 	getElbowPath(data, minInitialLine) {
-
 		const corner1X = data.x1 + minInitialLine;
 		const corner1Y = data.y1;
 		let corner2X = corner1X;
@@ -5354,6 +5449,28 @@ class CanvasRenderer {
 			links = union(links, linksContaining);
 		});
 		return links;
+	}
+
+	// Adds to the array of nodes and comments passed in, any nodes that are
+	// connected to the nodes in the input array provided they have multiple
+	// output ports. This is necessary for the Elbow link type because the
+	// minInitialIne of links emanating from multiple output ports of a node
+	// are affected by each other.  
+	addAffectedNodesForElbow(affectedNodesAndComments) {
+		let newAffectedNodesAndComments = affectedNodesAndComments.map((obj) => obj);
+		affectedNodesAndComments.forEach((object) => {
+			const addObjects = [];
+			this.activePipeline.links.forEach((link) => {
+				if (link.trgNodeId === object.id) {
+					const srcNode = this.getNode(link.srcNodeId);
+					if (srcNode && srcNode.outputs && srcNode.outputs.length > 1) {
+						addObjects.push(srcNode);
+					}
+				}
+			});
+			newAffectedNodesAndComments = union(newAffectedNodesAndComments, addObjects);
+		});
+		return newAffectedNodesAndComments;
 	}
 
 	getConnectedLinksFromNodeSizingArray(selectedObjects) {

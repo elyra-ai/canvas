@@ -10,7 +10,7 @@
 /* eslint max-len: "off" */
 
 import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel,
-	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
+	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText, getLinkSelector,
 	getNodeIdFromObjectModel, getNodePortSelector, getNodePortSelectorInSubFlow,
 	getNodeSelector, getObjectModelCount, getPortLinks } from "./utilities/validate-utils.js";
 import { getCanvasData, getEventLogData } from "./utilities/test-utils.js";
@@ -188,6 +188,23 @@ module.exports = function() {
 
 	});
 
+	// Then I verify the link from node "Select3" output port "outPort8" to node "Neural Net" input port "inPort1" has path "M L 34 56"
+	this.Then(/^I verify the link from node "([^"]*)" output port "([^"]*)" to node "([^"]*)" input port "([^"]*)" has path "([^"]*)"$/, function(srcNodeLabel, srcPortId, trgNodeLabel, trgPortId, path) {
+		var objectModel = getCanvasData();
+		var links = getPortLinks(objectModel, srcNodeLabel, srcPortId, trgNodeLabel, trgPortId);
+		expect(links.length).toBe(1);
+
+		const selector = getLinkSelector(links[0].id);
+		const linkObjs = browser.$$(selector);
+
+		let linkObjData = null;
+		for (const linkObj of linkObjs) {
+			linkObjData = linkObj.getAttribute("d");
+		}
+
+		expect(linkObjData).toBe(path);
+	});
+
 	// Then I link node "Var. File" output port "out3" to node "Select" input port "inport2"
 	//
 	this.Then(/^I link node "([^"]*)" output port "([^"]*)" to node "([^"]*)" input port "([^"]*)"$/, function(srcNodeText, srcPortId, trgNodeText, trgPortId) {
@@ -237,11 +254,11 @@ module.exports = function() {
 	});
 
 	// Then I verify 1 link between source node "Field Reorder" source port "outPort" to target node "Na_to_K" target port "inPort"
-	this.Then(/^I verify (\d+) link between source node "([^"]*)" source port "([^"]*)" to target node "([^"]*)" target port "([^"]*)"$/, function(linkCount, srcNode, srcPort, trgNode, trgPort) {
+	this.Then(/^I verify (\d+) link between source node "([^"]*)" source port "([^"]*)" to target node "([^"]*)" target port "([^"]*)"$/, function(linkCount, srcNodeLabel, srcPortId, trgNodeLabel, trgPortId) {
 		try {
 			var objectModel = getCanvasData();
-			var returnVal = getPortLinks(objectModel, srcNode, srcPort, trgNode, trgPort);
-			expect(returnVal).toBe(Number(linkCount));
+			var returnVal = getPortLinks(objectModel, srcNodeLabel, srcPortId, trgNodeLabel, trgPortId);
+			expect(returnVal.length).toBe(Number(linkCount));
 		} catch (err) {
 			console.log("Error = " + err);
 			throw err;

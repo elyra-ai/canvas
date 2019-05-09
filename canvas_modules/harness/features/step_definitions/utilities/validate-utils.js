@@ -193,30 +193,33 @@ function getObjectModelCount(objectModel, type, compare) {
 	return count;
 }
 
-function getPortLinks(objectModel, srcNode, srcPort, trgNode, trgPort) {
-	var count = 0;
+// Returns the array of links (usually there's just one) between the source
+// node/port and target node/port passed in.
+//
+function getPortLinks(objectModel, srcNodeLabel, srcPort, trgNodeLabel, trgPort) {
+	var outLinks = [];
 	var nodes = objectModel.nodes;
 	var links = objectModel.links;
 	var srcNodeID;
 	var trgNodeID;
 
 	nodes.forEach(function(node) {
-		if (node.label === srcNode) {
+		if (node.label === srcNodeLabel) {
 			srcNodeID = node.id;
 		}
 
-		if (node.label === trgNode) {
+		if (node.label === trgNodeLabel) {
 			trgNodeID = node.id;
 		}
 	});
 
 	links.forEach(function(link) {
 		if (link.srcNodeId === srcNodeID && link.trgNodeId === trgNodeID && link.srcNodePortId === srcPort && link.trgNodePortId === trgPort) {
-			count++;
+			outLinks.push(link);
 		}
 	});
 
-	return count;
+	return outLinks;
 }
 
 // determine if all the nodes, comments and links are empty in the object model
@@ -320,6 +323,12 @@ function getCommentIdForTextInSubFlowInSubFlow(commentText, extraCanvas) {
 	return getCommentId(commentText, selector);
 }
 
+function getLinkSelector(linkId, extraCanvas) {
+	const inst = extraCanvas === true ? "1" : "0";
+	const selector = `div > svg > g > g > path[data-id^=link_line_${inst}_${linkId}]`;
+	return selector;
+}
+
 function getCommentDimensions(commentSelector) {
 	var result = browser.execute(function(comSelector) {
 		/* global document */
@@ -361,7 +370,6 @@ function addTextForComment(comId, newCommentText) {
 	var commentText = browser.$(textSelector);
 	expect(commentText.getCssProperty("clip-path").value).not.toBe(null);
 }
-
 
 function getCommentId(commentText, selector) {
 	var result = browser.execute(function(comText, inSelector) {
@@ -524,5 +532,6 @@ module.exports = {
 	getNumberOfSelectedComments: getNumberOfSelectedComments,
 	doesTipExist: doesTipExist,
 	doesTipExistInSubFlow: doesTipExistInSubFlow,
-	getZoomForPrimaryPipeline: getZoomForPrimaryPipeline
+	getZoomForPrimaryPipeline: getZoomForPrimaryPipeline,
+	getLinkSelector: getLinkSelector
 };

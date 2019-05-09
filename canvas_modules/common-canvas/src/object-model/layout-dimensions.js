@@ -92,6 +92,11 @@ const haloDefaultLayout = {
 		// port on the source node when drawing an elbow or straight connection line.
 		minInitialLine: 30,
 
+		// For the elbow connection type with nodes with multiple output ports,
+		// this is used to increment the minInitialLine so that connection lines
+		// do not overlap each other when they turn up or down after the elbow.
+		minInitialLineIncrement: 8,
+
 		// Radius of the port circle
 		portRadius: null,
 
@@ -302,6 +307,11 @@ const portsHorizontalDefaultLayout = {
 		// This is the size of the horizontal line protruding from the source
 		// port on the source node when drawing an elbow or straight connection line.
 		minInitialLine: 30,
+
+		// For the elbow connection type with nodes with multiple output ports,
+		// this is used to increment the minInitialLine so that connection lines
+		// do not overlap each other when they turn up or down after the elbow.
+		minInitialLineIncrement: 8,
 
 		// Radius of the port circle
 		portRadius: 3,
@@ -514,6 +524,11 @@ const portsVerticalDefaultLayout = {
 		// This is the size of the horizontal line protruding from the source
 		// port on the source node when drawing an elbow or straight connection line.
 		minInitialLine: 30,
+
+		// For the elbow connection type with nodes with multiple output ports,
+		// this is used to increment the minInitialLine so that connection lines
+		// do not overlap each other when they turn up or down after the elbow.
+		minInitialLineIncrement: 8,
 
 		// Radius of the port circle
 		portRadius: 6,
