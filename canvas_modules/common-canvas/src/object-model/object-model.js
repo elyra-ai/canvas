@@ -1218,8 +1218,8 @@ export default class ObjectModel {
 
 		return {
 			"doc_type": "pipeline",
-			"version": "2.0",
-			"json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
+			"version": "3.0",
+			"json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
 			"id": newFlowId,
 			"primary_pipeline": newPipelineId,
 			"pipelines": [
