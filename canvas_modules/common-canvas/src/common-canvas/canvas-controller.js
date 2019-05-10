@@ -1326,20 +1326,6 @@ export default class CanvasController {
 			pipelineId: apiPipeline.pipelineId
 		};
 
-		// Declare a function that will reposition the canvas to show the
-		// newly added node if it's outside the viewport.
-		const moveCanvasToReveal = () => {
-			const zoomObject = this.getZoomToReveal([data.newNode.id]);
-			if (zoomObject) {
-				this.zoomTo(zoomObject);
-			}
-			// Remove the callback after it has been called so it is not called for
-			// other canvas operations.
-			this.removeAfterUpdateCallback(moveCanvasToReveal);
-		};
-
-		this.addAfterUpdateCallback(moveCanvasToReveal);
-
 		this.editActionHandler(data);
 	}
 
@@ -1736,6 +1722,7 @@ export default class CanvasController {
 			case "createAutoNode": {
 				const command = new CreateAutoNodeAction(data, this.objectModel);
 				this.commandStack.do(command);
+				this.panToReveal(data);
 				data = command.getData();
 				break;
 			}
@@ -1815,6 +1802,25 @@ export default class CanvasController {
 		if (this.handlers.editActionHandler) {
 			this.handlers.editActionHandler(data);
 		}
+	}
+
+	// Pans the canvas to bring the newly added node into view if it is not
+	// already visible. This needs to be done after the canvas has finished
+	// updating so we add the function as a callback to be called after update.
+	panToReveal(data) {
+	// Declare a function that will reposition the canvas to show the
+	// newly added node if it's outside the viewport.
+		const moveCanvasToReveal = () => {
+			const zoomObject = this.getZoomToReveal([data.newNode.id]);
+			if (zoomObject) {
+				this.zoomTo(zoomObject);
+			}
+			// Remove the callback after it has been called so it is not called for
+			// other canvas operations.
+			this.removeAfterUpdateCallback(moveCanvasToReveal);
+		};
+
+		this.addAfterUpdateCallback(moveCanvasToReveal);
 	}
 
 	// These fields are added to the data object because historically we've
