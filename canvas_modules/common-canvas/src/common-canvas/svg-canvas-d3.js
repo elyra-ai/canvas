@@ -2971,7 +2971,7 @@ class CanvasRenderer {
 		let y = 0;
 		if (position === "topLeft" || position === "topCenter" || position === "topRight") {
 			y = typeof dec.y_pos !== "undefined" ? dec.y_pos : data.layout.decoratorTopY;
-		} else if (position === "middelLeft" || position === "middleCenter" || position === "middleRight") {
+		} else if (position === "middleLeft" || position === "middleCenter" || position === "middleRight") {
 			y = (data.height / 2) + (typeof dec.y_pos !== "undefined" ? dec.y_pos : data.layout.decoratorMiddleY);
 		} else if (position === "bottomLeft" || position === "bottomCenter" || position === "bottomRight") {
 			y = data.height + (typeof dec.y_pos !== "undefined" ? dec.y_pos : data.layout.decoratorBottomY);
@@ -5455,7 +5455,7 @@ class CanvasRenderer {
 	// connected to the nodes in the input array provided they have multiple
 	// output ports. This is necessary for the Elbow link type because the
 	// minInitialIne of links emanating from multiple output ports of a node
-	// are affected by each other.  
+	// are affected by each other.
 	addAffectedNodesForElbow(affectedNodesAndComments) {
 		let newAffectedNodesAndComments = affectedNodesAndComments.map((obj) => obj);
 		affectedNodesAndComments.forEach((object) => {

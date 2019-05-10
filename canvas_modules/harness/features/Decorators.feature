@@ -63,3 +63,15 @@ Feature: Decorators
 		Then I verify node "No Decorator" has 2 label decorators
 		Then I verify node "No Decorator" has a label decorator with id "label_1" with label "A first test label" at position x -20 y -25
 		Then I verify node "No Decorator" has a label decorator with id "label_2" with label "A second test label" at position x 40 y 90
+
+		# Check the Big Node decorators are all positioned correctly based on their anchor nodePositions
+		Then I verify node "Big Node" has 9 decorators
+		Then I verify node "Big Node" has a decorator with id "1" at position x 0 y 0
+		Then I verify node "Big Node" has a decorator with id "2" at position x 35 y 0
+		Then I verify node "Big Node" has a decorator with id "3" at position x 70 y 0
+		Then I verify node "Big Node" has a decorator with id "4" at position x 0 y 80
+		Then I verify node "Big Node" has a decorator with id "5" at position x 35 y 80
+		Then I verify node "Big Node" has a decorator with id "6" at position x 70 y 80
+		Then I verify node "Big Node" has a decorator with id "7" at position x 0 y 160
+		Then I verify node "Big Node" has a decorator with id "8" at position x 35 y 160
+		Then I verify node "Big Node" has a decorator with id "9" at position x 70 y 160
