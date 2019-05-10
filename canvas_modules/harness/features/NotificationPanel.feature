@@ -44,8 +44,8 @@ Feature: NotificationPanel
 		Then I click on the toggle with label "harness-sidepanel-api-notification-callback" in the api sidepanel
 		And I call the API by clicking on the Submit button
 		Then I click on the secondary toolbar open notification button
-		Then I verify the action "notification-close-action" in the toolbar has svg of type "bellDot"
-		Then I verify the action "notification-close-action" in the toolbar has svg with className "canvas-icon fill bellDot warning"
+		Then I verify the action "notification-close-action" in the toolbar has svg of type "notificationCounterIcon"
+		Then I verify the action "notification-close-action" in the toolbar has svg with className "canvas-icon fill notificationCounterIcon warning"
 		Then I verify the the notification panel has 1 messages
 		Then I verify the the content of the notification message at index 0 is of type "clickable.warning"
 		Then I verify the the content of the notification message at index 0 contains text "Test warning message in notification panel"
@@ -58,8 +58,8 @@ Feature: NotificationPanel
 		Then I click on the toggle with label "harness-sidepanel-api-notification-link" in the api sidepanel
 		And I call the API by clicking on the Submit button
 		Then I click on the secondary toolbar open notification button
-		Then I verify the action "notification-close-action" in the toolbar has svg of type "bellDot"
-		Then I verify the action "notification-close-action" in the toolbar has svg with className "canvas-icon fill bellDot error"
+		Then I verify the action "notification-close-action" in the toolbar has svg of type "notificationCounterIcon"
+		Then I verify the action "notification-close-action" in the toolbar has svg with className "canvas-icon fill notificationCounterIcon error"
 		Then I verify the the notification panel has 2 messages
 		Then I verify the the content of the notification message at index 1 is of type "clickable.error"
 		Then I verify the the content of the notification message at index 1 contains text "Test error message in notification panel"

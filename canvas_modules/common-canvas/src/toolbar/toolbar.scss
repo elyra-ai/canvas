@@ -57,6 +57,20 @@ $toolbar-default-icons-count: 5;
 	background-color: $ui-02;
 }
 
+.list-item-containers {
+	&.notificationCounterIcon {
+		.toolbar-item {
+			position: relative;
+		}
+		.text-content {
+			position: absolute;
+			z-index: 2;
+			top: 7px;
+			font-size: 9px;
+		}
+	}
+}
+
 .list-item-containers .list-item {
 	height: 45px;
 	width: $toolbar-button-width;
@@ -107,7 +121,6 @@ $toolbar-default-icons-count: 5;
 	margin: auto;
 	display: flex;
 	justify-content: center;
-
 	&.overflow {
 		height: auto;
 		width: inherit;

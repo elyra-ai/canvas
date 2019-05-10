@@ -256,7 +256,7 @@ describe("toolbar notification icon state renders correctly", () => {
 
 		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
 		expect(canvasController.getNotificationMessages().length).to.equal(0);
-		expect(wrapper.find("li[id='bell-action']").find(".list-item-disabled")).to.have.length(1);
+		expect(wrapper.find("li[id='notificationCounterIcon-action']").find(".list-item-disabled")).to.have.length(1);
 
 		canvasController.setNotificationMessages([notificationMessage0]);
 		wrapper.update();
@@ -285,44 +285,142 @@ describe("toolbar notification icon state renders correctly", () => {
 		wrapper.update();
 		let notificationIcon = wrapper.find("li[id='notification-open-action']");
 		expect(notificationIcon).to.have.length(1);
-		expect(notificationIcon.find("svg.canvas-icon.fill.bellDot.info")).to.have.length(1);
+		expect(notificationIcon.find("svg.canvas-icon.fill.notificationCounterIcon.info")).to.have.length(1);
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
 		wrapper.update();
 		notificationIcon = wrapper.find("li[id='notification-open-action']");
-		expect(notificationIcon.find("svg.canvas-icon.fill.bellDot.success")).to.have.length(1);
+		expect(notificationIcon.find("svg.canvas-icon.fill.notificationCounterIcon.success")).to.have.length(1);
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2]);
 		wrapper.update();
 		notificationIcon = wrapper.find("li[id='notification-open-action']");
-		expect(notificationIcon.find("svg.canvas-icon.fill.bellDot.warning")).to.have.length(1);
+		expect(notificationIcon.find("svg.canvas-icon.fill.notificationCounterIcon.warning")).to.have.length(1);
 
 		canvasController.setNotificationMessages(notificationMessages);
 		wrapper.update();
 		notificationIcon = wrapper.find("li[id='notification-open-action']");
-		expect(notificationIcon.find("svg.canvas-icon.fill.bellDot.error")).to.have.length(1);
+		expect(notificationIcon.find("svg.canvas-icon.fill.notificationCounterIcon.error")).to.have.length(1);
 
 		expect(canvasController.getNotificationMessages().length).to.equal(4);
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2]);
 		wrapper.update();
 		notificationIcon = wrapper.find("li[id='notification-open-action']");
-		expect(notificationIcon.find("svg.canvas-icon.fill.bellDot.warning")).to.have.length(1);
+		expect(notificationIcon.find("svg.canvas-icon.fill.notificationCounterIcon.warning")).to.have.length(1);
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
 		wrapper.update();
 		notificationIcon = wrapper.find("li[id='notification-open-action']");
-		expect(notificationIcon.find("svg.canvas-icon.fill.bellDot.success")).to.have.length(1);
+		expect(notificationIcon.find("svg.canvas-icon.fill.notificationCounterIcon.success")).to.have.length(1);
 
 		canvasController.setNotificationMessages([notificationMessage0]);
 		wrapper.update();
 		notificationIcon = wrapper.find("li[id='notification-open-action']");
-		expect(notificationIcon.find("svg.canvas-icon.fill.bellDot.info")).to.have.length(1);
+		expect(notificationIcon.find("svg.canvas-icon.fill.notificationCounterIcon.info")).to.have.length(1);
 		canvasController.setNotificationMessages([]);
 		wrapper.update();
 		// TODO need to fix
-		// notificationIcon = wrapper.find("li[id='bell-action']");
+		// notificationIcon = wrapper.find("li[id='notificationCounterIcon-action']");
 		// expect(notificationIcon).to.have.length(1);
-		// expect(notificationIcon.find("svg[type='bell']")).to.have.length(1);
+		// expect(notificationIcon.find("svg[type='notificationCounterIcon']")).to.have.length(1);
+	});
+});
+
+describe("notification counter and color updates correctly", () => {
+	let wrapper;
+
+	beforeEach(() => {
+		canvasController = new CanvasController();
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("notification counter updates correctly", () => {
+		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
+		wrapper = mountWithIntl(<CommonCanvas
+			config={canvasConfig}
+			contextMenuHandler={contextMenuHandler}
+			contextMenuActionHandler={contextMenuActionHandler}
+			editActionHandler={editActionHandler}
+			clickActionHandler={clickActionHandler}
+			decorationActionHandler={decorationActionHandler}
+			selectionChangeHandler={selectionChangeHandler}
+			tipHandler={tipHandler}
+			toolbarConfig={toolbarConfig}
+			notificationConfig={notificationConfig}
+			toolbarMenuActionHandler={toolbarMenuActionHandler}
+			showRightFlyout={false}
+			canvasController={canvasController}
+		/>);
+		let notificationIcon = wrapper.find("li[id='notificationCounterIcon-action']");
+		let notificationCounter = notificationIcon.find(".notificationCounterIcon .text-content");
+		expect(notificationCounter.text()).to.equal(" 0 ");
+		canvasController.setNotificationMessages([notificationMessage0]);
+		wrapper.update();
+		notificationIcon = wrapper.find("li[id='notification-open-action']");
+		notificationCounter = notificationIcon.find(".text-content");
+		expect(notificationIcon).to.have.length(1);
+		expect(notificationCounter.text()).to.equal(" 1 ");
+		expect(notificationIcon.find("svg.canvas-icon.fill.notificationCounterIcon.info")).to.have.length(1);
+		canvasController.setNotificationMessages(Array(9).fill(notificationMessage0));
+		wrapper.update();
+		notificationIcon = wrapper.find("li[id='notification-open-action']");
+		notificationCounter = notificationIcon.find(".text-content");
+		expect(notificationCounter.text()).to.equal(" 9 ");
+		expect(notificationIcon.find("svg.canvas-icon.fill.notificationCounterIcon.info")).to.have.length(1);
+		canvasController.setNotificationMessages(Array(10).fill(notificationMessage0));
+		wrapper.update();
+		notificationIcon = wrapper.find("li[id='notification-open-action']");
+		notificationCounter = notificationIcon.find(".text-content");
+		expect(notificationCounter.text()).to.equal(" 9+ ");
+		expect(notificationIcon.find("svg.canvas-icon.fill.notificationCounterIcon.info")).to.have.length(1);
+	});
+	it("notification dot updates to indicate the correct message type", () => {
+		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
+		wrapper = mountWithIntl(<CommonCanvas
+			config={canvasConfig}
+			contextMenuHandler={contextMenuHandler}
+			contextMenuActionHandler={contextMenuActionHandler}
+			editActionHandler={editActionHandler}
+			clickActionHandler={clickActionHandler}
+			decorationActionHandler={decorationActionHandler}
+			selectionChangeHandler={selectionChangeHandler}
+			tipHandler={tipHandler}
+			toolbarConfig={toolbarConfig}
+			notificationConfig={notificationConfig}
+			toolbarMenuActionHandler={toolbarMenuActionHandler}
+			showRightFlyout={false}
+			canvasController={canvasController}
+		/>);
+
+		let notificationIcon = wrapper.find("li.notificationCounterIcon svg.canvas-icon");
+		let indicatorClasses = notificationIcon.prop("className");
+		expect(indicatorClasses).to.equal("canvas-icon fill notificationCounterIcon");
+
+		canvasController.setNotificationMessages([notificationMessage0]);
+		wrapper.update();
+		notificationIcon = wrapper.find("li.notificationCounterIcon svg.canvas-icon");
+		indicatorClasses = notificationIcon.prop("className");
+		expect(indicatorClasses).to.equal("canvas-icon fill notificationCounterIcon info");
+
+		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
+		wrapper.update();
+		notificationIcon = wrapper.find("li.notificationCounterIcon svg.canvas-icon");
+		indicatorClasses = notificationIcon.prop("className");
+		expect(indicatorClasses).to.equal("canvas-icon fill notificationCounterIcon success");
+
+		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2]);
+		wrapper.update();
+		notificationIcon = wrapper.find("li.notificationCounterIcon svg.canvas-icon");
+		indicatorClasses = notificationIcon.prop("className");
+		expect(indicatorClasses).to.equal("canvas-icon fill notificationCounterIcon warning");
+
+		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2, notificationMessage3]);
+		wrapper.update();
+		notificationIcon = wrapper.find("li.notificationCounterIcon svg.canvas-icon");
+		indicatorClasses = notificationIcon.prop("className");
+		expect(indicatorClasses).to.equal("canvas-icon fill notificationCounterIcon error");
 	});
 });

@@ -56,10 +56,10 @@ class Toolbar extends React.Component {
 		}
 	}
 
-	// Need to set a className for notification bell icon in the DOM
+	// Need to set a className for notification counter icon in the DOM
 	// to be used in notification-panel.jsx: handleNotificationPanelClickOutside()
 	getActionClassName(action) {
-		return action.indexOf(constants.NOTIFICATION_BELL_ICON.DEFAULT) > -1 ? "notificationBellIcon" : action;
+		return action.indexOf(constants.NOTIFICATION_ICON) > -1 ? "notificationCounterIcon" : action;
 	}
 
 	getNotificationIconStateObject(isIconEnabled) {
@@ -68,22 +68,25 @@ class Toolbar extends React.Component {
 		const warningMessages = this.props.canvasController.getNotificationMessages(constants.WARNING);
 		const successMessages = this.props.canvasController.getNotificationMessages(constants.SUCCESS);
 
-		let className = "canvas-icon fill " + constants.NOTIFICATION_BELL_ICON.DEFAULT + " " + constants.INFO;
+		let className = "canvas-icon fill " + constants.NOTIFICATION_ICON;
 		if (isIconEnabled) {
-			const bellIconClassName = "canvas-icon fill " + constants.NOTIFICATION_BELL_ICON.DOT + " ";
+			const notificationIconClassName = "canvas-icon fill " + constants.NOTIFICATION_ICON + " ";
 			if (errorMessages.length > 0) {
-				className = bellIconClassName + constants.ERROR;
+				className = notificationIconClassName + constants.ERROR;
 			} else if (warningMessages.length > 0) {
-				className = bellIconClassName + constants.WARNING;
+				className = notificationIconClassName + constants.WARNING;
 			} else if (successMessages.length > 0) {
-				className = bellIconClassName + constants.SUCCESS;
+				className = notificationIconClassName + constants.SUCCESS;
+			} else if (notificationMessages.length > 0) {
+				className = notificationIconClassName + constants.INFO;
 			} else {
-				className = bellIconClassName + constants.INFO;
+				className = notificationIconClassName;
 			}
 		}
 		return {
-			icon: notificationMessages.length > 0 ? constants.NOTIFICATION_BELL_ICON.DOT : constants.NOTIFICATION_BELL_ICON.DEFAULT,
-			className: className
+			icon: constants.NOTIFICATION_ICON,
+			className: className,
+			notificationCount: notificationMessages.length
 		};
 	}
 
@@ -137,7 +140,7 @@ class Toolbar extends React.Component {
 			const actionObj = definition[i];
 			if (actionObj.action) {
 				const actionId = actionObj.action + "-action";
-				if (actionObj.action.startsWith("notification") || actionObj.action.startsWith(constants.NOTIFICATION_BELL_ICON.DEFAULT)) {
+				if (actionObj.action.startsWith("notification") || actionObj.action.startsWith(constants.NOTIFICATION_ICON)) {
 					utilityActions[i] = this.generateNotificationIcon(actionObj, actionId, overflow);
 				} else if (actionObj.action.startsWith("palette")) {
 					actionObj.enable = true;
@@ -178,6 +181,8 @@ class Toolbar extends React.Component {
 			/>);
 		}
 
+		const textContent = (typeof actionObj.textContent !== "undefined") ? <div className="text-content"> {actionObj.textContent} </div> : null;
+
 		const tooltipId = actionId + "-" + this.props.canvasController.getInstanceId() + "-tooltip";
 		const iconButtonClassname = classNames("list-item", overflowClassName, { "list-item-disabled": !actionObj.enable });
 		const itemContainersClassname = classNames("list-item-containers", overflowClassName, this.getActionClassName(actionObj.action));
@@ -189,6 +194,7 @@ class Toolbar extends React.Component {
 						<div className={"toolbar-item " + overflowClassName}>
 							{icon}
 							{this.generateLabel(false, overflow, actionObj.label)}
+							{textContent}
 						</div>
 					</a>
 				</Tooltip>
@@ -214,13 +220,13 @@ class Toolbar extends React.Component {
 		actionObj.icon = notificationStateObj.icon;
 		actionObj.className = notificationStateObj.className;
 		actionObj.callback = this.props.canvasController.openNotificationPanel.bind(this.props.canvasController);
+		actionObj.textContent = (notificationStateObj.notificationCount > 9) ? "9+" : notificationStateObj.notificationCount.toString();
 
 		let notification;
+		actionObj.action = constants.NOTIFICATION_ICON;
 		if (actionObj.enable) {
-			actionObj.action = constants.NOTIFICATION_BELL_ICON.DOT;
 			notification = this.generateActionIcon(actionObj, "notification-open-action", null, overflow);
 		} else {
-			actionObj.action = constants.NOTIFICATION_BELL_ICON.DEFAULT;
 			notification = this.generateActionIcon(actionObj, actionId, null, overflow);
 		}
 
@@ -284,11 +290,11 @@ class Toolbar extends React.Component {
 		if (this.props.notificationConfig &&
 			typeof this.props.notificationConfig.action !== "undefined" &&
 			typeof this.props.notificationConfig.enable !== "undefined") {
-			const notificationBell = [
+			const notificationCounter = [
 				{ divider: true },
 				this.props.notificationConfig
 			];
-			rightAlignedActionItems = rightAlignedActionItems.concat(notificationBell);
+			rightAlignedActionItems = rightAlignedActionItems.concat(notificationCounter);
 		}
 
 		const rightAlignedContainerItems = this.generateActionItems(rightAlignedActionItems, rightAlignedActionItems.length, null, false);

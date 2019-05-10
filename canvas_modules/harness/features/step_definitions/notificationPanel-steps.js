@@ -13,11 +13,19 @@ import testUtils from "./utilities/test-utils.js";
 
 module.exports = function() {
 	this.Then(/^I verify the the notification panel has (\d+) messages$/, function(numMessages) {
+		const counterText = browser.$(".notificationCounterIcon").$(".text-content")
+			.getText();
 		if (Number(numMessages) === 0) {
 			expect(browser.$$(".notification-panel-messages").length).toEqual(0);
+			expect(counterText).toEqual("0");
 		} else {
 			const notificationMessages = browser.$(".notification-panel-messages").$$(".notifications-button-container");
 			expect(notificationMessages.length).toEqual(Number(numMessages));
+			if (Number(numMessages) > 9) {
+				expect(counterText).toEqual("9+");
+			} else {
+				expect(counterText).toEqual(numMessages);
+			}
 		}
 	});
 

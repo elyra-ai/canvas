@@ -23,10 +23,7 @@ _defineConstant("DRAG_MOVE", "move");
 _defineConstant("DRAG_LINK", "link");
 _defineConstant("DRAG_SELECT_REGION", "selectRegion");
 
-_defineConstant("NOTIFICATION_BELL_ICON", {
-	DEFAULT: "bell",
-	DOT: "bellDot"
-});
+_defineConstant("NOTIFICATION_ICON", "notificationCounterIcon");
 
 _defineConstant("DEFAULT_NOTIFICATION_HEADER", "Notifications");
 

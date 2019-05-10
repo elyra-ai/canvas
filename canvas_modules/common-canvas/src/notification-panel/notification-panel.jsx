@@ -83,9 +83,9 @@ class NotificationPanel extends React.Component {
 
 	handleNotificationPanelClickOutside(e) {
 		const domNode = document.getElementsByClassName("notification-panel-messages")[0];
-		const bellIcon = document.getElementsByClassName("notificationBellIcon")[0];
+		const notificationIcon = document.getElementsByClassName("notificationCounterIcon")[0];
 
-		if (this.props.isNotificationOpen && bellIcon && !bellIcon.contains(e.target) && domNode && !domNode.contains(e.target)) {
+		if (this.props.isNotificationOpen && notificationIcon && !notificationIcon.contains(e.target) && domNode && !domNode.contains(e.target)) {
 			this.props.canvasController.closeNotificationPanel();
 			e.stopPropagation(); // Prevent D3 canvas code from clearing the selections.
 		}
