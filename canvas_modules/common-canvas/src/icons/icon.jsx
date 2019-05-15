@@ -290,12 +290,12 @@ export default class Icon extends React.Component {
 			notificationCounterIcon:
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 25 25"
+					viewBox="0 0 24 23"
 					className={CLASS_NAME + " fill"}
 					{...this.props}
 				>
-					<path d="M20.8,9.5v10c0,0.7-0.6,1.2-1.2,1.2h-15c-0.7,0-1.2-0.6-1.2-1.2v-15c0-0.7,0.6-1.2,1.2-1.2h10V2h-10
-						C3.1,2,2,3.1,2,4.5v15C2,20.9,3.1,22,4.5,22h15c1.4,0,2.5-1.1,2.5-2.5v-10H20.8z"
+					<path d="M20.8,10.5v9c0,0.7-0.6,1.2-1.2,1.2h-15c-0.7,0-1.2-0.6-1.2-1.2v-15c0-0.7,0.6-1.2,1.2-1.2h9V1h-9
+						C2.2,1,1,2.3,1,4.5v15C1,21.3,1.9,23,4.5,23h15c3.1,0,3.5-1.6,3.5-3.5v-9H20.8z"
 					/>
 					<circle className="dot" cx="21" cy="4" r="3" />
 				</svg>,
