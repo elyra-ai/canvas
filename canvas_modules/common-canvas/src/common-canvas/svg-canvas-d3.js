@@ -21,7 +21,6 @@ import get from "lodash/get";
 import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
 import isMatch from "lodash/isMatch";
-import cloneDeep from "lodash/cloneDeep";
 import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, CONTEXT_MENU_BUTTON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
@@ -140,9 +139,11 @@ export default class CanvasD3Layout {
 	}
 
 	// Returns a copy of the config object. This is necessary so that comparisons
-	// with new config objects that are provided reveal differences.
+	// with new config objects that are provided reveal differences. This will
+	// not clone the contents of emptyCanvasContent, dropZoneCanvasContent nor
+	// enableNodeLayout.
 	cloneConfig(config) {
-		return cloneDeep(config);
+		return Object.assign({}, config);
 	}
 
 	// Returns true if the contents of enableLayout1 and enableLayout2 are exactly the same.
@@ -161,9 +162,9 @@ export default class CanvasD3Layout {
 	// updated when the real-time operation is complete.
 	cloneCanvasInfo(canvasInfo) {
 		this.logger.logStartTimer("Cloning canvasInfo");
-		const clone = cloneDeep(canvasInfo);
+		const cloneCanvasInfo = JSON.parse(JSON.stringify(canvasInfo));
 		this.logger.logEndTimer("Cloning canvasInfo");
-		return clone;
+		return cloneCanvasInfo;
 	}
 
 	initializeCanvasDiv(canvasDivSelector) {
