@@ -8,7 +8,6 @@
  *******************************************************************************/
 /* eslint no-console: ["error", { allow: ["log", "info", "warn", "error", "time", "timeEnd"] }] */
 
-
 export default class Logger {
 
 	// prefix can be either a string or an array of string. The prefix(s) are
@@ -16,13 +15,12 @@ export default class Logger {
 	// message (and from each orther) by a dash.
 	constructor(prefix) {
 		this.prefix = prefix;
-		this.active = false;
 	}
 
 	// Displays a message in the console as either a formatted string or as
 	// an object.
 	log(msg) {
-		if (this.active) {
+		if (Logger.active) {
 			if (typeof msg === "string") {
 				console.info(this.getMessage("", msg));
 			} else {
@@ -33,7 +31,7 @@ export default class Logger {
 
 	// Logs the message provided and starts a timer.
 	logStartTimer(msg) {
-		if (this.active) {
+		if (Logger.active) {
 			const startMsg = this.getStartMessage("", msg);
 			const endMsg = this.getEndMessage("", msg);
 			console.info(startMsg);
@@ -47,7 +45,7 @@ export default class Logger {
 	// optionally allows the display of a separator when displaySeparator is set
 	// to true.
 	logEndTimer(msg, displaySeparator) {
-		if (this.active) {
+		if (Logger.active) {
 			const endMsg = this.getEndMessage("", msg);
 			console.timeEnd(endMsg);
 			if (displaySeparator) {
@@ -57,18 +55,18 @@ export default class Logger {
 	}
 
 	debug(msg) {
-		if (this.active) {
+		if (Logger.active) {
 			console.log(this.getMessage("DEBUG", msg));
 		}
 	}
 
 	warn(msg) {
-		// Always write warnings to the console regardless of whether this.active is true or not
+		// Always write warnings to the console regardless of whether Logger.active is true or not
 		console.warn(this.getMessage("WARNING", msg));
 	}
 
 	error(msg) {
-		// Always write errors to the console regardless of whether this.active is true or not
+		// Always write errors to the console regardless of whether Logger.active is true or not
 		console.error(this.getMessage("ERROR", msg));
 	}
 
@@ -108,3 +106,6 @@ export default class Logger {
 	}
 
 }
+
+// Static variable can be switched on and off by pressing Ctrl+Shift+Option+P
+Logger.active = false;

@@ -49,7 +49,10 @@ const haloDefaultLayout = {
 		labelPosX: 30,
 		labelPosY: 63,
 
-		// Positions for 4 enumerated default decorator positions.
+		// Positions and dimensions for 9 enumerated default decorator positions.
+		// decoratorWidth and decoratorHeight are the diemsions of the outline
+		// rectangle and decoratorPadding is the padding for the image within the
+		// outline rectangle.
 		decoratorTopY: 0,
 		decoratorMiddleY: -8,
 		decoratorBottomY: -32,
@@ -57,6 +60,11 @@ const haloDefaultLayout = {
 		decoratorLeftX: 6,
 		decoratorCenterX: -8,
 		decoratorRightX: -22,
+
+		decoratorWidth: 16,
+		decoratorHeight: 16,
+
+		decoratorPadding: 2,
 
 		// Display drop shadow
 		dropShadow: false,
@@ -265,7 +273,10 @@ const portsHorizontalDefaultLayout = {
 		labelPosX: 38,
 		labelPosY: 24,
 
-		// Positions for 4 enumerated default decorator positions.
+		// Positions and dimensions for 9 enumerated default decorator positions.
+		// decoratorWidth and decoratorHeight are the diemsions of the outline
+		// rectangle and decoratorPadding is the padding for the image within the
+		// outline rectangle.
 		decoratorTopY: 2,
 		decoratorMiddleY: -8,
 		decoratorBottomY: -18,
@@ -273,6 +284,11 @@ const portsHorizontalDefaultLayout = {
 		decoratorLeftX: 2,
 		decoratorCenterX: -8,
 		decoratorRightX: -30,
+
+		decoratorWidth: 16,
+		decoratorHeight: 16,
+
+		decoratorPadding: 2,
 
 		// Display drop shadow
 		dropShadow: true,
@@ -482,7 +498,10 @@ const portsVerticalDefaultLayout = {
 		labelPosX: 35,
 		labelPosY: 67,
 
-		// Positions for 4 enumerated default decorator positions.
+		// Positions and dimensions for 9 enumerated default decorator positions.
+		// decoratorWidth and decoratorHeight are the diemsions of the outline
+		// rectangle and decoratorPadding is the padding for the image within the
+		// outline rectangle.
 		decoratorTopY: 5,
 		decoratorMiddleY: -8,
 		decoratorBottomY: -34,
@@ -490,6 +509,11 @@ const portsVerticalDefaultLayout = {
 		decoratorLeftX: 10,
 		decoratorCenterX: -8,
 		decoratorRightX: -24,
+
+		decoratorWidth: 16,
+		decoratorHeight: 16,
+
+		decoratorPadding: 2,
 
 		// Display drop shadow
 		dropShadow: false,

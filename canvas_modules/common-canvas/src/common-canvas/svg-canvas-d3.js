@@ -32,6 +32,7 @@ const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
 const A_KEY = 65;
 const C_KEY = 67;
+const P_KEY = 80;
 const V_KEY = 86;
 const X_KEY = 88;
 const Y_KEY = 89;
@@ -210,6 +211,9 @@ export default class CanvasD3Layout {
 					} else if (isCmndCtrlPressed() && d3Event.keyCode === V_KEY && actions.pasteFromClipboard) {
 						stopPropagationAndPreventDefault();
 						this.canvasController.pasteFromClipboard();
+					} else if (isCmndCtrlPressed() && d3Event.shiftKey && d3Event.altKey && d3Event.keyCode === P_KEY) {
+						stopPropagationAndPreventDefault();
+						Logger.active = !Logger.active; // Switch the logging on and off
 					}
 				}
 			});
@@ -2414,6 +2418,8 @@ class CanvasRenderer {
 							.merge(decoratorOutlnsSelection)
 							.attr("x", (dec) => this.getDecoratorX(dec, d))
 							.attr("y", (dec) => this.getDecoratorY(dec, d))
+							.attr("width", (dec) => d.layout.decoratorWidth)
+							.attr("height", (dec) => d.layout.decoratorHeight)
 							.attr("class", (dec) => this.getDecoratorOutlineClass(dec))
 							.datum((dec) => this.getDecorator(dec.id, node))
 							.filter((dec) => dec.hotspot)
@@ -2428,15 +2434,15 @@ class CanvasRenderer {
 							.data(imageDecorations || [], function(dec) { return dec.id; });
 
 						decoratorImgsSelection.enter()
-							.filter((dec) => dec.image)
 							.append("image")
 							.attr("data-id", (dec) => this.getId("node_dec_img", dec.id)) // Used in Chimp tests
 							.attr("data-pipeline-id", this.activePipeline.id)
-							.attr("class", "d3-decorator-image")
 							.merge(decoratorImgsSelection)
-							.filter((dec) => dec.image)
-							.attr("x", (dec) => this.getDecoratorX(dec, d))
-							.attr("y", (dec) => this.getDecoratorY(dec, d))
+							.attr("x", (dec) => this.getDecoratorX(dec, d) + d.layout.decoratorPadding)
+							.attr("y", (dec) => this.getDecoratorY(dec, d) + d.layout.decoratorPadding)
+							.attr("width", (dec) => d.layout.decoratorWidth - (2 * d.layout.decoratorPadding))
+							.attr("height", (dec) => d.layout.decoratorHeight - (2 * d.layout.decoratorPadding))
+							.attr("class", "d3-decorator-image")
 							.attr("xlink:href", (dec) => this.getDecoratorImage(dec))
 							.datum((dec) => this.getDecorator(dec.id, node))
 							.filter((dec) => dec.hotspot)
