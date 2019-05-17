@@ -272,7 +272,7 @@ $link-hightlight-color: $brand-01;
 }
 
 .d3-decorator-outline {
-	fill: $canvas-background-color;
+	fill: transparent;
 	stroke: $node-decoration-outline;
 	stroke-width: 1;
 }
