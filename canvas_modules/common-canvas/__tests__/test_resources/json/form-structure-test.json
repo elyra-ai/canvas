@@ -391,6 +391,12 @@
           }
         ]
       }
+    },
+    "resources": {
+      "rename.label": "Rename Columns",
+      "field.label": "Input name",
+      "new_name.label": "Output name",
+      "output_name_not_empty": "The 'Output Name' field cannot be empty"
     }
   }
 }

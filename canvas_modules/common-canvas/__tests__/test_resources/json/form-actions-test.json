@@ -445,6 +445,11 @@
         ]
       }
     },
+    "resources": {
+      "increment": "Increment",
+      "decrement": "Decrement",
+      "dm-update": "Update Datamodel"
+    },
     "conditions": []
   }
 }

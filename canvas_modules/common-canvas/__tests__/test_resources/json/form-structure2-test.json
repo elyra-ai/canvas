@@ -386,6 +386,16 @@
           }
         ]
       }
+    },
+    "resources": {
+      "sort.label": "Sort",
+      "sort.desc": "Sorts the data",
+      "sort.keys.label": "Sort by",
+      "SortEntry.label": "Sort",
+      "SortEntry.field.label": "Field",
+      "SortEntry.sort_order.label": "Order",
+      "SortEntry.sort_order.Ascending.label": "Ascending",
+      "SortEntry.sort_order.Descending.label": "Descending"
     }
   }
 }

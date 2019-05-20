@@ -16,7 +16,7 @@ import Conditions from "./Conditions";
 import { Size } from "../constants/form-constants";
 
 export default class Form {
-	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions) {
+	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions, resources) {
 		this.componentId = componentId;
 		this.label = label;
 		this.labelEditable = labelEditable;
@@ -27,6 +27,7 @@ export default class Form {
 		this.buttons = buttons;
 		this.data = data;
 		this.conditions = conditions;
+		this.resources = resources;
 	}
 
 	/**
@@ -37,10 +38,10 @@ export default class Form {
 	static makeForm(paramDef, isModal) {
 		const propDef = PropertyDef.makePropertyDef(propertyOf(paramDef)("titleDefinition"), propertyOf(paramDef)("parameters"), propertyOf(paramDef)("complex_types"),
 			propertyOf(paramDef)("uihints"));
-
+		const resources = propertyOf(paramDef)("resources");
 		const conditions = propertyOf(paramDef)("conditions");
 		if (propDef) {
-			const l10nProvider = new L10nProvider(propertyOf(paramDef)("resources"));
+			const l10nProvider = new L10nProvider(resources);
 			const tabs = [];
 			if (propDef.groupMetadata && propDef.groupMetadata.groups) {
 				for (const group of propDef.groupMetadata.groups) {
@@ -63,7 +64,9 @@ export default class Form {
 				[UIItem.makePrimaryTabs(tabs)],
 				_defaultButtons(),
 				data,
-				Conditions.translateMessages(conditions, l10nProvider));
+				Conditions.translateMessages(conditions, l10nProvider),
+				resources
+			);
 		}
 		return null;
 	}

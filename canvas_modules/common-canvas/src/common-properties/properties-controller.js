@@ -141,6 +141,13 @@ export default class PropertiesController {
 		return this.form;
 	}
 
+	getResource(key, defaultValue) {
+		if (this.form.resources) {
+			return this.form.resources[key] ? this.form.resources[key] : defaultValue;
+		}
+		return defaultValue;
+	}
+
 	setAppData(appData) {
 		this.appData = appData;
 	}

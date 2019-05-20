@@ -11,8 +11,11 @@ import { expect } from "chai";
 import sinon from "sinon";
 import deepFreeze from "deep-freeze";
 import Controller from "../../src/common-properties/properties-controller";
+import Form from "../../src/common-properties/form/Form";
 import conditionForm from "../test_resources/json/conditions-summary-form.json";
 import datasetMetadata from "../test_resources/json/datasetMetadata.json";
+import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
+
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
 
 import testUtils from "../_utils_/property-utils";
@@ -1125,6 +1128,29 @@ describe("Properties Controller controls", () => {
 		controller.setForm(conditionForm);
 		const actualValue = controller.getControlType({ name: "structuretableSortOrder", col: 0 });
 		expect(actualValue).to.equal("selectcolumn");
+	});
+});
+
+describe("Properties Controller getResource ", () => {
+	it("should return resource given key ", () => {
+		reset();
+		const form = Form.makeForm(structureListEditorParamDef);
+		controller.setForm(form);
+		const value = controller.getResource("structurelisteditorTableInput.name.label", "Default value");
+		expect(value).to.equal("Name");
+	});
+	it("should return default value if resource key does not exist", () => {
+		reset();
+		const form = Form.makeForm(structureListEditorParamDef);
+		controller.setForm(form);
+		const value = controller.getResource("resource.name", "Default value");
+		expect(value).to.equal("Default value");
+	});
+	it("should return default value if no resource exists", () => {
+		reset();
+		controller.setForm(conditionForm);
+		const value = controller.getResource("resource.name", "Default value");
+		expect(value).to.equal("Default value");
 	});
 });
 
