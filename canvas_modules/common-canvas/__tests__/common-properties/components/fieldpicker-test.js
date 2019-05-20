@@ -140,13 +140,13 @@ function closeFieldPicker() {
 }
 
 function clickFilter(wrapper, type, enabled) {
-	let filters = wrapper.find("button.properties-fp-filter-list-li.properties-fp-filter");
+	let filters = wrapper.find("button.properties-fp-filter");
 	filters.forEach((node) => {
 		if (node.prop("data-type") === type) {
 			node.simulate("click");
 		}
 	});
-	filters = wrapper.find("button.properties-fp-filter-list-li.properties-fp-filter");
+	filters = wrapper.find("button.properties-fp-filter");
 	filters.forEach((node) => {
 		if (node.prop("data-type") === type) {
 			if (enabled === true) {

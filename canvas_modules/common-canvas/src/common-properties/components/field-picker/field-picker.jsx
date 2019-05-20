@@ -383,7 +383,7 @@ export default class FieldPicker extends React.Component {
 				</div>
 			);
 			const row = (
-				<div key={"filters" + ind}>
+				<li key={"filters" + ind} className="properties-fp-filter-list-li">
 					<div className="properties-tooltips-filter">
 						<Tooltip
 							id={filterTooltipId}
@@ -393,7 +393,7 @@ export default class FieldPicker extends React.Component {
 							className="properties-tooltips"
 							disable={isEmpty(filter.type)}
 						>
-							<button type="button" className="properties-fp-filter-list-li properties-fp-filter"
+							<button type="button" className="properties-fp-filter"
 								data-type={filter.type}
 								onClick={that.filterType.bind(that)}
 								aria-label={filterLabel + " " + filter.type}
@@ -402,7 +402,7 @@ export default class FieldPicker extends React.Component {
 							</button>
 						</Tooltip>
 					</div>
-				</div>
+				</li>
 			);
 			return (row);
 		});
