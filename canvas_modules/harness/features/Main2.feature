@@ -37,7 +37,7 @@ Feature: Main2
 		Then I select node 2 the "Na_to_K" node
 		Then I right click the "C5.0" node to display the context menu
 		Then I click option "Disconnect" from the context menu
-		Then I move node 4 a "Neural Net" node onto the canvas by 50, 50
+		Then I move the "Neural Net" node on the canvas to 50, 50
 		Then I move comment 3 with text " comment 3 sample comment text" onto the canvas by 100, 100
 		Then I pause for 1 seconds
 

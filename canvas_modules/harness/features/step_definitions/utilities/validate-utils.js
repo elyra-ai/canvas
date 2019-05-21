@@ -533,5 +533,6 @@ module.exports = {
 	doesTipExist: doesTipExist,
 	doesTipExistInSubFlow: doesTipExistInSubFlow,
 	getZoomForPrimaryPipeline: getZoomForPrimaryPipeline,
-	getLinkSelector: getLinkSelector
+	getLinkSelector: getLinkSelector,
+	getNodeIdForLabel: getNodeIdForLabel
 };

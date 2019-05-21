@@ -615,7 +615,7 @@ class CanvasRenderer {
 		background.attr("width", dims.width);
 		background.attr("height", dims.height);
 
-		this.zoomToFitForInPlaceSubFlow();
+		this.zoomToFit();
 		this.displayBindingNodesToFitSVG();
 	}
 
@@ -641,11 +641,11 @@ class CanvasRenderer {
 	getSupernodeSVGDimensions(datum) {
 		return {
 			width: datum.width - (2 * this.layout.supernodeSVGAreaPadding),
-			height: datum.height - this.layout.supernodeSVGTopAreaHeight - this.layout.supernodeSVGAreaPadding,
+			height: datum.height - this.layout.supernodeTopAreaHeight - this.layout.supernodeSVGAreaPadding,
 			x: this.layout.supernodeSVGAreaPadding,
-			y: this.layout.supernodeSVGTopAreaHeight,
+			y: this.layout.supernodeTopAreaHeight,
 			x_pos: datum.x_pos + this.layout.supernodeSVGAreaPadding,
-			y_pos: datum.y_pos + this.layout.supernodeSVGTopAreaHeight
+			y_pos: datum.y_pos + this.layout.supernodeTopAreaHeight
 		};
 	}
 
@@ -663,7 +663,7 @@ class CanvasRenderer {
 
 		const nodeSelector = this.getSelectorForClass("node-group");
 		const supernodeDatum = this.getParentSupernodeDatum();
-		const svgHt = supernodeDatum.height - this.layout.supernodeSVGTopAreaHeight - this.layout.supernodeSVGAreaPadding;
+		const svgHt = supernodeDatum.height - this.layout.supernodeTopAreaHeight - this.layout.supernodeSVGAreaPadding;
 
 		const that = this;
 
@@ -684,7 +684,7 @@ class CanvasRenderer {
 	getSupernodePortYOffset(nodeId, ports) {
 		if (ports) {
 			const supernodePort = ports.find((port) => port.subflow_node_ref === nodeId);
-			return supernodePort.cy - this.layout.supernodeSVGTopAreaHeight;
+			return supernodePort.cy - this.layout.supernodeTopAreaHeight;
 		}
 		return 0;
 	}
@@ -1315,12 +1315,8 @@ class CanvasRenderer {
 	}
 
 	zoomToFit() {
-		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, 10);
-		this.zoomToFitCanvas(canvasDimensions);
-	}
-
-	zoomToFitForInPlaceSubFlow() {
-		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, this.layout.supernodeZoomPadding);
+		const padding = this.isDisplayingSubFlow() ? this.layout.supernodeZoomToFitPadding : this.layout.zoomToFitPadding;
+		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, padding);
 		this.zoomToFitCanvas(canvasDimensions);
 	}
 
@@ -1555,7 +1551,7 @@ class CanvasRenderer {
 		// SVG area then don't let the canvas be dragged out of the SVG area.
 		let canv;
 		if (this.isDisplayingSubFlowInPlace()) {
-			canv = this.getCanvasDimensionsAdjustedForScale(k, this.layout.supernodeZoomPadding);
+			canv = this.getCanvasDimensionsAdjustedForScale(k, this.layout.supernodeZoomToFitPadding);
 		} else {
 			canv = this.getCanvasDimensionsAdjustedForScale(k);
 		}
@@ -2854,7 +2850,7 @@ class CanvasRenderer {
 
 	getErrorPosY(data) {
 		if (this.isExpandedSupernode(data)) {
-			return (this.layout.supernodeSVGTopAreaHeight / 2) - (data.layout.errorHeight / 2);
+			return (this.layout.supernodeTopAreaHeight / 2) - (data.layout.errorHeight / 2);
 		} else
 		if (data.layout.labelAndIconVerticalJustification === "center") {
 			if (data.layout.nodeFormatType === "horizontal") {
@@ -3404,12 +3400,7 @@ class CanvasRenderer {
 
 			// Draw straight segment down to ports (if needed)
 			if (data.outputPortsHeight < data.height) {
-				if (data.outputs.length === 1 &&
-						data.height <= data.layout.defaultNodeHeight) {
-					endPoint = data.layout.portPosY - data.layout.portArcRadius;
-				} else {
-					endPoint = ((data.height - data.outputPortsHeight) / 2);
-				}
+				endPoint = data.outputs[0].cy - data.layout.portArcRadius;
 				path += " L " + data.width + " " + endPoint;
 			}
 
@@ -3439,12 +3430,7 @@ class CanvasRenderer {
 			let endPoint = data.height;
 
 			if (data.inputPortsHeight < data.height) {
-				if (data.inputs.length === 1 &&
-						data.height <= data.layout.defaultNodeHeight) {
-					endPoint = data.layout.portPosY + data.layout.portArcRadius;
-				} else {
-					endPoint = data.height - ((data.height - data.inputPortsHeight) / 2);
-				}
+				endPoint = data.inputs[data.inputs.length - 1].cy + data.layout.portArcRadius;
 				path += " L 0 " + endPoint;
 			}
 
@@ -3487,8 +3473,12 @@ class CanvasRenderer {
 			} else {
 				let centerPoint = 0;
 
-				if (portsHeight < data.height) {
-					centerPoint = ((data.height - portsHeight) / 2);
+				if (this.isExpandedSupernode(data)) {
+					const heightSvgArea = data.height - portsHeight - this.layout.supernodeTopAreaHeight - this.layout.supernodeSVGAreaPadding;
+					centerPoint = this.layout.supernodeTopAreaHeight + (heightSvgArea / 2);
+
+				} else if (portsHeight < data.height) {
+					centerPoint = (data.height - portsHeight) / 2;
 				}
 
 				ports.forEach((p) => {
@@ -5385,9 +5375,14 @@ class CanvasRenderer {
 			elbowYOffset = -this.layout.elbowSize;
 		}
 
+		// The minimum size of the line entering the target port. When
+		// dynamically drawing a new connection we will not have a target node
+		// so use a fixed value for this.
+		const minFinalLine = data.trg ? data.trg.layout.minFinalLine : 30;
+
 		// This is a special case where the source and target handles are very
 		// close together.
-		if (xDiff < (2 * minInitialLine) &&
+		if (xDiff < (minInitialLine + minFinalLine) &&
 				(yDiff < (4 * this.layout.elbowSize) &&
 					yDiff > -(4 * this.layout.elbowSize))) {
 			elbowYOffset = yDiff / 4;
@@ -5396,19 +5391,13 @@ class CanvasRenderer {
 		let elbowXOffset = this.layout.elbowSize;
 		let extraSegments = false;	// Indicates need for extra elbows and lines
 
-		if (xDiff < (minInitialLine + this.layout.elbowSize)) {
+		if (xDiff < (minInitialLine + minFinalLine)) {
 			extraSegments = true;
-			corner2X = data.x2 - minInitialLine;
-			elbowXOffset = this.layout.elbowSize;
-		}
-		else if (xDiff < (2 * minInitialLine)) {
-			extraSegments = true;
-			corner2X = data.x2 - minInitialLine;
-			elbowXOffset = -((xDiff - (2 * minInitialLine)) / 2);
+			corner2X = data.x2 - minFinalLine;
+			elbowXOffset = Math.min(this.layout.elbowSize, -((xDiff - (minInitialLine + minFinalLine)) / 2));
 		}
 
 		let path = "M " + data.x1 + " " + data.y1;
-
 		path += "L " + (corner1X - this.layout.elbowSize) + " " + corner1Y;
 		path += "Q " + corner1X + " " + corner1Y + " "	+ corner1X	+ " " + (corner1Y + elbowYOffset);
 

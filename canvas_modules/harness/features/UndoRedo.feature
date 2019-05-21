@@ -44,12 +44,13 @@ Feature: UndoRedo
 
 		Then I right click the "Var. File" node to display the context menu
 		Then I click option "Disconnect" from the context menu
+		Then I verify the number of data links are 0
 		Then I click undo
 		Then I verify the number of data links are 1
 		Then I press Ctrl/Cmnd+Y to Redo
 		Then I verify the number of data links are 0
 
-		Then I move node 1 a "Var. File" node onto the canvas by 50, 50
+		Then I move the "Var. File" node on the canvas to 50, 50
 		Then I click undo
 		Then I verify the node move was not done
 		Then I click redo
@@ -134,7 +135,10 @@ Feature: UndoRedo
 
 		Then I select all the nodes in the canvas
 		Then I select all the comments in the canvas
-		Then I delete node 1 the "Type" node by selecting more than 1 node
+		Then I right click the "Define Types" node to display the context menu
+		Then I click option "Delete" from the context menu
+		Then I verify the "Define Types" node is not on the canvas
+		Then I verify the number of nodes are 0
 		Then I click undo
 		Then I verify the number of nodes are 8
 		Then I verify the number of comments are 3
@@ -153,7 +157,8 @@ Feature: UndoRedo
 
 		Then I select all the nodes in the canvas
 		Then I select all the comments in the canvas
-		Then I disconnect links for node 1 a "Var. File" on the canvas by selecting more than 1 node
+		Then I right click the "DRUG1n" node to display the context menu
+		Then I click option "Disconnect" from the context menu
 		Then I verify the number of data links are 0
 		Then I verify the number of comment links are 0
 		Then I click undo
@@ -168,7 +173,9 @@ Feature: UndoRedo
 
 		Then I right click at position 300, 10 to display the context menu
 		Then I click option "Select All" from the context menu
-		Then I delete node 1 the "Type" node by selecting more than 1 node
+		Then I right click the "Define Types" node to display the context menu
+		Then I click option "Delete" from the context menu
+		Then I verify the "Define Types" node is not on the canvas
 		Then I expect the canvas to be empty
 		Then I expect the object model to be empty
 		Then I click undo
@@ -184,7 +191,9 @@ Feature: UndoRedo
 		Then I verify the number of comments are 3
 
 		Then I select all objects in the canvas via Ctrl/Cmnd+A
-		Then I delete node 1 the "Type" node by selecting more than 1 node
+		Then I right click the "Define Types" node to display the context menu
+		Then I click option "Delete" from the context menu
+		Then I verify the "Define Types" node is not on the canvas
 		Then I expect the canvas to be empty
 		Then I expect the object model to be empty
 		Then I click undo
@@ -200,7 +209,7 @@ Feature: UndoRedo
 		Then I verify the number of nodes are 8
 		Then I verify the number of comments are 3
 
-		Then I move node 8 a "Sort" node onto the canvas by 50, 50
+		Then I move the "Sort" node on the canvas to 50, 50
 		Then I verify the node move was done
 		Then I click undo
 		Then I verify the node move was not done

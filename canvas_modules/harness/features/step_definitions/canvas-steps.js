@@ -207,7 +207,7 @@ module.exports = function() {
 		const nodeSelector = getNodeSelector(nodeName, "label");
 		const node = browser.$(nodeSelector);
 		// Use getHTML() here instead of getText() incase the node is 'inactive' i.e. partly or fully off the screen
-		// Also, take first 7substring the name were given (which is the full node name) because then
+		// Also, take first 7 characters of the name (which is the full node name) because
 		// text in the DOM might be truncated.
 		expect(node.getHTML().includes(nodeName.substring(0, 7))).toBe(true);
 	});

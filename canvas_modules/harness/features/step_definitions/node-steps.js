@@ -9,8 +9,8 @@
 /* eslint no-console: "off" */
 
 import { deleteLinkInObjectModel, dragAndDrop, findCategoryElement, findNodeIndexInPalette, getEventLogCount,
-	getNodeFromObjectModel, getNodeIdFromObjectModel, getNodePortSelector, getNodeSelector, getNodeSelectorInSubFlow,
-	getObjectModelCount, isObjectModelEmpty
+	getNodeFromObjectModel, getNodeIdForLabel, getNodeIdFromObjectModel, getNodePortSelector, getNodeSelector,
+	getNodeSelectorInSubFlow, getObjectModelCount, isObjectModelEmpty
 } from "./utilities/validate-utils.js";
 import { getCanvasData, getEventLogData, getLastEventLogData, useCmdOrCtrl } from "./utilities/test-utils.js";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
@@ -849,19 +849,13 @@ module.exports = function() {
 	});
 
 
-	// Then I move node 1 a "Field Reorder" node onto the canvas by 50, 50
-	// this moves the node a delta of x +50px and y +50px
+	// Then I move the "Field Reorder" node on the canvas to 50, 50
+	// this moves the node to a position of x +50px and y +50px
 	//
-	this.Then(/^I move node (\d+) a "([^"]*)" node onto the canvas by -?(\d+), -?(\d+)$/,
-		function(nodeIndex, nodeName, canvasX, canvasY) {
-			var nodeNumber = nodeIndex - 1;
-			browser.execute(simulateDragDrop, ".node-group", nodeNumber, "#canvas-div-0", 0, canvasX, canvasY);
-		});
-
-	this.Then(/^I move the "([^"]*)" node on the canvas by (-?\d+), (-?\d+)$/,
+	this.Then(/^I move the "([^"]*)" node on the canvas to (-?\d+), (-?\d+)$/,
 		function(nodeName, canvasX, canvasY) {
 			const nodeSelector = getNodeSelector(nodeName, "grp");
-			dragAndDrop(nodeSelector, 1, 1, ".svg-area", canvasX, canvasY);
+			dragAndDrop(nodeSelector, 10, 10, ".svg-area", canvasX, canvasY);
 		});
 
 	// Then I expect the object model to be empty
@@ -895,56 +889,15 @@ module.exports = function() {
 		browser.pause(Number(seconds) * 1000);
 	});
 
-	// Then I delete node 1 the "Var. File" node by selecting more than 1 node
+	// Then I verify the "Var. File" node is not on the canvas
 	//
-	this.Then(/^I delete node (\d+) the "([^"]*)" node by selecting more than 1 node$/, function(nodeIndex, nodeType) {
-		var nodeNumber = nodeIndex - 1;
-		var nodeSelector = ".node-group";
-		browser.$("#canvas-div-0").$$(nodeSelector)[nodeNumber].rightClick();
-		const contextMenu = browser.$(".context-menu-popover").$$(".react-contextmenu-item");
-		var menuItemDelete;
-		for (var menuIdx = 0; menuIdx < contextMenu.length; menuIdx++) {
-			var menuLabel = contextMenu[menuIdx].getText();
-			if (menuLabel === "Delete") {
-				menuItemDelete = contextMenu[menuIdx];
-			}
-		}
-		// console.log("test Menu item delete? " + JSON.stringify(menuItemDelete));
-		menuItemDelete.click();
-
-		// verify node is not the canvas DOM
-		var count = 0;
-		var nodeList = browser.$("#canvas-div-0").$$(nodeSelector);
-		for (var idx = 0; idx < nodeList.length; idx++) {
-			var imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("image").getAttribute("href");
-
-			// console.log("Image # = " + idx + " image = " + imageName);
-			if (imageName === expectedImages[nodeType]) {
-				count++;
-			}
-		}
-		expect(count).toBe(0);
-
-		browser.pause(1000);
+	this.Then(/^I verify the "([^"]*)" node is not on the canvas$/, function(nodeName) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		expect(nodeId).toBe(null);
 
 		// verify that the  node is in the internal object model
 		var objectModel = getCanvasData();
-		var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", expectedImages[nodeType]);
-		expect(returnVal.value).toBe(0);
-	});
-
-	// Then I disconnect links for node 1 a "Var. File" on the canvas by selecting more than 1 node
-	//
-	this.Then(/^I disconnect links for node (\d+) a "([^"]*)" on the canvas by selecting more than 1 node$/, function(nodeIndex, nodeName) {
-		var nodeNumber = nodeIndex - 1;
-		browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].rightClick();
-		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click();
-		browser.pause(1000);
-
-		// verify that the link is Not in the internal object model
-		var objectModel = getCanvasData();
-		var nodeId = browser.execute(getNodeIdFromObjectModel, objectModel, nodeNumber);
-		var returnVal = browser.execute(deleteLinkInObjectModel, objectModel, nodeId.value);
+		var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", expectedImages[nodeName]);
 		expect(returnVal.value).toBe(0);
 	});
 
