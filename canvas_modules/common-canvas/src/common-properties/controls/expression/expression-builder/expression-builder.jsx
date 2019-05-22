@@ -23,17 +23,30 @@ export default class ExpressionBuilder extends React.Component {
 		this.onChange = this.onChange.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 		this.onSelectionChange = this.onSelectionChange.bind(this);
+		this.lastCursorPos = null;
+
 	}
 
 	onChange(newValue) {
 		const value = (typeof newValue === "string") ? newValue : newValue.toString();
-		const cursor = this.editor.getCursor();
+		let cursor = this.editor.getCursor();
 		let selectionOffset = 1;
 		if (this.editor.somethingSelected()) {
 			selectionOffset = 0;
 			this.editor.replaceSelection(value);
 		} else {
-			this.editor.replaceSelection(" " + value);
+			let buffer = " ";
+			if (this.lastCursorPos) {
+				this.editor.setCursor(this.lastCursorPos);
+				cursor = this.lastCursorPos;
+			}
+			// if adding to a parenth/bracket/brace expression, no need for space
+			const charBefore = this.editor.getLine(cursor.line)[cursor.ch - 1];
+			// edge case of cursor being at line 0, char 0 is still handled here
+			if (["(", "[", "{"].indexOf(charBefore) !== -1) {
+				buffer = "";
+			}
+			this.editor.replaceSelection(buffer + value);
 		}
 		this._setSelection(value, cursor, selectionOffset);
 		// This is needed to generate a render so that the selection will appear.
@@ -46,6 +59,7 @@ export default class ExpressionBuilder extends React.Component {
 	}
 
 	onBlur(editor, evt) {
+		this.lastCursorPos = editor.getCursor();
 		const newValue = this.editor.getValue();
 		this.props.controller.updatePropertyValue(this.props.propertyId, newValue, this.expressionInfo.validateLink);
 	}
