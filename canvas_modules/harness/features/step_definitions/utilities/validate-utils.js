@@ -86,7 +86,7 @@ function getZoomForPrimaryPipeline(objectModel) {
 // when pushing comments to be underneath nodes and links. Therefore we look for the
 // text of the comment being deleted.
 function getCommentIndexFromCanvasUsingText(commentText) {
-	var commentElements = browser.$("#common-canvas-items-container-0").$$(".comment-group");
+	var commentElements = browser.$("#common-canvas-items-container-0").$$(".d3-comment-group");
 	var comIndex = 0;
 	for (let idx = 0; idx < commentElements.length; idx++) {
 		if (commentElements[idx].getAttribute("textContent") === commentText) {
@@ -293,6 +293,24 @@ function getNodeId(nodeText, selector) {
 	return null;
 }
 
+function getNodeDimensions(nodeSelector) {
+	var result = browser.execute(function(ndSelector) {
+		/* global document */
+		var ndElement = document.querySelector(ndSelector);
+		return {
+			x_pos: ndElement.__data__.x_pos,
+			y_pos: ndElement.__data__.y_pos,
+			width: ndElement.__data__.width,
+			height: ndElement.__data__.height
+		};
+	}, nodeSelector);
+
+	if (result.value) {
+		return result.value;
+	}
+	return null;
+}
+
 function getCommentSelector(commentText, commentElement, extraCanvas) {
 	const commentId = getCommentIdForText(commentText, extraCanvas);
 	const commentSelector = "[data-id='comment_" + commentElement + "_" + commentId + "']";
@@ -327,6 +345,12 @@ function getLinkSelector(linkId, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
 	const selector = `div > svg > g > g > path[data-id^=link_line_${inst}_${linkId}]`;
 	return selector;
+}
+
+function getLinksCount(type, extraCanvas) {
+	const inst = extraCanvas === true ? "1" : "0";
+	const selector = `div > svg > g > g > path[data-id^=link_line_${inst}_]`;
+	return getLinksCountBySelector(selector, type);
 }
 
 function getCommentDimensions(commentSelector) {
@@ -369,6 +393,27 @@ function addTextForComment(comId, newCommentText) {
 	var textSelector = "[data-id='comment_text_" + comId + "']";
 	var commentText = browser.$(textSelector);
 	expect(commentText.getCssProperty("clip-path").value).not.toBe(null);
+}
+
+// Returns the number of comment links on the canvas identified by the selector provided.
+function getLinksCountBySelector(selector, type) {
+	var result = browser.execute(function(inSelector, inType) {
+		/* global document */
+		var count = 0;
+		var domComments = document.querySelectorAll(inSelector);
+		for (let idx = 0; idx < domComments.length; idx++) {
+			if (domComments.item(idx).__data__.type === inType) {
+				count++;
+			}
+		}
+
+		return count;
+	}, selector, type);
+
+	if (result) {
+		return result.value;
+	}
+	return null;
 }
 
 function getCommentId(commentText, selector) {
@@ -516,7 +561,9 @@ module.exports = {
 	getNodePortSelector: getNodePortSelector,
 	getNodePortSelectorInSubFlow: getNodePortSelectorInSubFlow,
 	getNodePortTipSelector: getNodePortTipSelector,
+	getNodeDimensions: getNodeDimensions,
 	addTextForComment: addTextForComment,
+	getLinksCount: getLinksCount,
 	getCommentSelector: getCommentSelector,
 	getCommentSelectorInSubFlow: getCommentSelectorInSubFlow,
 	getCommentIdForText: getCommentIdForText,

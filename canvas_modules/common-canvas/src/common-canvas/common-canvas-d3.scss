@@ -166,8 +166,15 @@ $link-hightlight-color: $brand-01;
 
 /* Node and comment styles */
 
-.obj-group {
+.d3-node-group,
+.d3-comment-group {
 	cursor: pointer;
+}
+
+.d3-node-sizing,
+.d3-comment-sizing {
+	fill: transparent;
+	stroke: transparent;
 }
 
 /* Node styles - Regular (Vertical) Theme */
@@ -198,6 +205,7 @@ $link-hightlight-color: $brand-01;
 .d3-node-selection-highlight {
 	stroke-width: 0;
 	fill: transparent;
+	pointer-events: none;
 }
 
 .d3-node-selection-highlight[data-selected="yes"] {
@@ -205,6 +213,7 @@ $link-hightlight-color: $brand-01;
 	stroke-dasharray: 5, 5;
 	stroke-width: 2;
 	fill: transparent;
+	pointer-events: none;
 }
 
 /* Node styles - Austin (Horizontal) Theme */
@@ -504,6 +513,7 @@ $link-hightlight-color: $brand-01;
 .d3-comment-selection-highlight {
 	stroke-width: 0;
 	fill: transparent;
+	pointer-events: none;
 }
 
 .d3-comment-selection-highlight[data-selected="yes"] {
@@ -511,11 +521,13 @@ $link-hightlight-color: $brand-01;
 	stroke-dasharray: 5 5;
 	stroke-width: 2;
 	fill: transparent;
+	pointer-events: none;
 }
 
 .d3-comment-selection-highlight-austin {
 	stroke-width: 0;
 	fill: transparent;
+	pointer-events: none;
 }
 
 .d3-comment-selection-highlight-austin[data-selected="yes"] {
@@ -523,6 +535,7 @@ $link-hightlight-color: $brand-01;
 	stroke-dasharray: none; /* Solid line */
 	stroke-width: 3;
 	fill: transparent;
+	pointer-events: none;
 }
 
 .d3-comment-text {

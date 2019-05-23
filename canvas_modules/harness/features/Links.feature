@@ -103,6 +103,6 @@ Feature: Links
 
 		Then I move the "Neural Net" node on the canvas to 50, 530
 		Then I verify the number of data links are 4
-		Then I verify the link from node "Select3" output port "outPort6" to node "Neural Net" input port "inPort2" has path "M 108 443.5L 128 443.5Q 138 443.5 138 453.5L 138 497.75Q 138 507.75 128 507.75L 26 507.75Q 16 507.75 16 517.75L 16 562Q 16 572 26 572L 46 572"
-		Then I verify the link from node "Select3" output port "outPort7" to node "Neural Net" input port "inPort2" has path "M 108 463.5L 136 463.5Q 146 463.5 146 473.5L 146 507.75Q 146 517.75 136 517.75L 26 517.75Q 16 517.75 16 527.75L 16 562Q 16 572 26 572L 46 572"
-		Then I verify the link from node "Select3" output port "outPort8" to node "Neural Net" input port "inPort1" has path "M 108 483.5L 144 483.5Q 154 483.5 154 493.5L 154 507.75Q 154 517.75 144 517.75L 26 517.75Q 16 517.75 16 527.75L 16 542Q 16 552 26 552L 46 552"
+		Then I verify the link from node "Select3" output port "outPort6" to node "Neural Net" input port "inPort2" has path "M 108 443.5L 128 443.5Q 138 443.5 138 453.5L 138 500.75Q 138 510.75 128 510.75L 30 510.75Q 20 510.75 20 520.75L 20 568Q 20 578 30 578L 50 578"
+		Then I verify the link from node "Select3" output port "outPort7" to node "Neural Net" input port "inPort2" has path "M 108 463.5L 136 463.5Q 146 463.5 146 473.5L 146 510.75Q 146 520.75 136 520.75L 30 520.75Q 20 520.75 20 530.75L 20 568Q 20 578 30 578L 50 578"
+		Then I verify the link from node "Select3" output port "outPort8" to node "Neural Net" input port "inPort1" has path "M 108 483.5L 144 483.5Q 154 483.5 154 493.5L 154 510.75Q 154 520.75 144 520.75L 30 520.75Q 20 520.75 20 530.75L 20 548Q 20 558 30 558L 50 558"

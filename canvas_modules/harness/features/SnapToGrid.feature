@@ -14,22 +14,22 @@ Feature: Snap To Grid
 		# First move a node by an odd amount with no snap-to-grid to make sure
 		# it moves appropriately.
 		Given I have selected the "None" snap to grid type
-		Then I move the "Binding (entry) node" node on the canvas by 321, 281
-		Then I verify the "Binding (entry) node" node position is "translate(324, 284.5)"
+		Then I move the "Binding (entry) node" node on the canvas to 321, 281
+		Then I verify the "Binding (entry) node" node transform is "translate(321, 281.5)"
 
 		# Now undo the move and make the same change with Snap To Grid set to "During"
 		# and verify the node is at a different position.
 		Then I click undo
 		Given I have selected the "During" snap to grid type
-		Then I move the "Binding (entry) node" node on the canvas by 321, 281
-		Then I verify the "Binding (entry) node" node position is "translate(332.5, 285)"
+		Then I move the "Binding (entry) node" node on the canvas to 321, 281
+		Then I verify the "Binding (entry) node" node transform is "translate(315, 285)"
 
 		# Now undo the move and make the same change with Snap To Grid set to "After"
 		# and verify the node is at a different position.
 		Then I click undo
 		Given I have selected the "After" snap to grid type
-		Then I move the "Binding (entry) node" node on the canvas by 321, 281
-		Then I verify the "Binding (entry) node" node position is "translate(332.5, 285)"
+		Then I move the "Binding (entry) node" node on the canvas to 321, 281
+		Then I verify the "Binding (entry) node" node transform is "translate(315, 285)"
 
 		# Now do the same with a comment.
 		# First move a node by an odd amount with no snap-to-grid to make sure
@@ -37,7 +37,7 @@ Feature: Snap To Grid
 		Then I click undo
 		Given I have selected the "None" snap to grid type
 		Then I move the "The 4 different node types" comment on the canvas by 321, 281
-		Then I verify the "The 4 different node types" comment position is "translate(295, 255)"
+		Then I verify the "The 4 different node types" comment position is "translate(301, 261)"
 
 		# Now undo the move and make the same change with Snap To Grid set to "During"
 		# and verify the comment is at a different position.
@@ -62,17 +62,17 @@ Feature: Snap To Grid
 
 		# Now size a comment with Snap to Grid set to "None"
 		Given I have selected the "None" snap to grid type
-		Then I size the "The 4 different node types" comment to width 303 and height 54
+		Then I size the "The 4 different node types" comment using the "south-west" corner to width 303 and height 54
 		Then I verify the "The 4 different node types" comment has width 303 and height 54
 
 		# Now size a comment with Snap to Grid set to "During"
 		Then I click undo
 		Given I have selected the "During" snap to grid type
-		Then I size the "The 4 different node types" comment to width 303 and height 54
+		Then I size the "The 4 different node types" comment using the "south-west" corner to width 303 and height 54
 		Then I verify the "The 4 different node types" comment has width 297.5 and height 60
 
 		# Now size a comment with Snap to Grid set to "After"
 		Then I click undo
 		Given I have selected the "After" snap to grid type
-		Then I size the "The 4 different node types" comment to width 303 and height 54
+		Then I size the "The 4 different node types" comment using the "south-west" corner to width 303 and height 54
 		Then I verify the "The 4 different node types" comment has width 297.5 and height 60

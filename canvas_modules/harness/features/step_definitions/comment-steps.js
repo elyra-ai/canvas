@@ -14,7 +14,7 @@ import { addTextForComment, dragAndDrop, getCommentIdForText, getCommentIdForTex
 	getCommentIdForTextInSubFlowInSubFlow,
 	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
 	getCommentSelector, getCommentSelectorInSubFlow, getCommentDimensions,
-	getEventLogCount, getObjectModelCount } from "./utilities/validate-utils.js";
+	getEventLogCount, getNodeSelector, getNodeDimensions, getObjectModelCount } from "./utilities/validate-utils.js";
 import isEqual from "lodash/isEqual";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
 
@@ -29,10 +29,10 @@ module.exports = function() {
 			var specificComment;
 
 			// create the comment
-			const previousComments = browser.$$(".comment-group");
+			const previousComments = browser.$$(".d3-comment-group");
 			browser.rightClick(".svg-area", Number(canvasX), Number(canvasY));
 			browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click(); // Click 'Add Comment' option
-			const newComments = browser.$$(".comment-group");
+			const newComments = browser.$$(".d3-comment-group");
 
 			// Find the new comment that was added by comparing new comment list with old (previous)
 			for (let idx = 0; idx < newComments.length; idx++) {
@@ -55,7 +55,7 @@ module.exports = function() {
 			// when pushing comments to be underneath nodes and links. Therefore we look for the
 			// text of the comment being deleted.
 			var comIndex = getCommentIndexFromCanvasUsingText(comment);
-			commentValue = browser.$("#common-canvas-items-container-0").$$(".comment-group")[comIndex].getAttribute("textContent");
+			commentValue = browser.$("#common-canvas-items-container-0").$$(".d3-comment-group")[comIndex].getAttribute("textContent");
 			expect(commentValue).toEqual(comment);
 
 			// verify that the comment is in the internal object model
@@ -78,7 +78,7 @@ module.exports = function() {
 			// when pushing comments to be underneath nodes and links. Therefore we look for the
 			// text of the comment being deleted.
 			var index = getCommentIndexFromCanvasUsingText(commentText);
-			browser.execute(simulateDragDrop, ".comment-group", index, "#canvas-div-0", 0, canvasX, canvasY);
+			browser.execute(simulateDragDrop, ".d3-comment-group", index, "#canvas-div-0", 0, canvasX, canvasY);
 		});
 
 	this.Then(/^I move the "([^"]*)" comment on the canvas by (-?\d+), (-?\d+)$/,
@@ -87,26 +87,102 @@ module.exports = function() {
 			dragAndDrop(commentSelector, 30, 30, ".svg-area", canvasX, canvasY);
 		});
 
-	this.Then(/^I size the "([^"]*)" comment to width (-?\d+) and height (-?\d+)$/,
-		function(commentName, newWidth, newHeight) {
-			const commentSelector = getCommentSelector(commentName, "outline");
-
+	this.Then(/^I size the "([^"]*)" comment using the "([^"]*)" corner to width (-?\d+) and height (-?\d+)$/,
+		function(commentName, corner, newWidth, newHeight) {
+			const commentSelector = getCommentSelector(commentName, "body");
 			const dimensions = getCommentDimensions(commentSelector);
-			dimensions.width += 6; // Add some pixels to find the edge of the outline
-			dimensions.height += 6; // Add some pixels to find the edge of the outline
+			const offsetForSizingArea = 6; // Offset from edge of body to somewhere in sizing area
 
-			// Need to add a couple of pixels because we are specifying the position
-			// for the comment outline rather than the comment itself. So we need the
-			// extra pixels to get the comment to be sized to the dimensions provided.
-			const canvasX = dimensions.x_pos + Number(newWidth) + 2;
-			const canvasY = dimensions.y_pos + Number(newHeight) + 2;
+			if (corner === "south-west") {
+				const startPosX = dimensions.width + offsetForSizingArea;
+				const startPosY = dimensions.height + offsetForSizingArea;
 
-			dragAndDrop(commentSelector, dimensions.width, dimensions.height, ".svg-area", Number(canvasX), Number(canvasY));
+				const canvasX = dimensions.x_pos + Number(newWidth) + offsetForSizingArea;
+				const canvasY = dimensions.y_pos + Number(newHeight) + offsetForSizingArea;
+
+				dragAndDrop(commentSelector, startPosX, startPosY, ".svg-area", Number(canvasX), Number(canvasY));
+			} else if (corner === "south-east") {
+				const startPosX = -offsetForSizingArea;
+				const startPosY = dimensions.height + offsetForSizingArea;
+
+				const canvasX = dimensions.x_pos - (Number(newWidth) - dimensions.width) - offsetForSizingArea;
+				const canvasY = dimensions.y_pos + Number(newHeight) + offsetForSizingArea;
+
+				dragAndDrop(commentSelector, startPosX, startPosY, ".svg-area", Number(canvasX), Number(canvasY));
+			} else if (corner === "north-east") {
+				const startPosX = -offsetForSizingArea + 10; // Set to more than 0 so we don't pick up the new connection 'blob'
+				const startPosY = -offsetForSizingArea;
+
+				const canvasX = dimensions.x_pos - (Number(newWidth) - dimensions.width) - offsetForSizingArea + 10; // Add the 10 back in to account for startPosX
+				const canvasY = dimensions.y_pos - (Number(newHeight) - dimensions.height) - offsetForSizingArea;
+
+				dragAndDrop(commentSelector, startPosX, startPosY, ".svg-area", Number(canvasX), Number(canvasY));
+			} else if (corner === "north-west") {
+				const startPosX = dimensions.width + offsetForSizingArea;
+				const startPosY = -offsetForSizingArea;
+
+				const canvasX = dimensions.x_pos + Number(newWidth) + offsetForSizingArea;
+				const canvasY = dimensions.y_pos - (Number(newHeight) - dimensions.height) - offsetForSizingArea;
+
+				dragAndDrop(commentSelector, startPosX, startPosY, ".svg-area", Number(canvasX), Number(canvasY));
+			}
+		});
+
+	this.Then(/^I size the "([^"]*)" comment on the "([^"]*)" side to width (-?\d+)$/,
+		function(commentName, side, newWidth) {
+			const commentSelector = getCommentSelector(commentName, "body");
+			const dimensions = getCommentDimensions(commentSelector);
+			const offsetForSizingArea = 6; // Offset from edge of body to somewhere in sizing area
+
+			if (side === "left") {
+				const startPosX = -offsetForSizingArea;
+				const startPosY = dimensions.height / 2;
+
+				const canvasX = dimensions.x_pos - (Number(newWidth) - dimensions.width) - offsetForSizingArea;
+				const canvasY = dimensions.y_pos + (dimensions.height / 2);
+
+				dragAndDrop(commentSelector, startPosX, startPosY, ".svg-area", Number(canvasX), Number(canvasY));
+
+			} else if (side === "right") {
+				const startPosX = dimensions.width + offsetForSizingArea;
+				const startPosY = dimensions.height / 2;
+
+				const canvasX = dimensions.x_pos + Number(newWidth) + offsetForSizingArea;
+				const canvasY = dimensions.y_pos + (dimensions.height / 2);
+
+				dragAndDrop(commentSelector, startPosX, startPosY, ".svg-area", Number(canvasX), Number(canvasY));
+			}
+		});
+
+	this.Then(/^I size the "([^"]*)" comment on the "([^"]*)" side to height (-?\d+)$/,
+		function(commentName, side, newHeight) {
+			const commentSelector = getCommentSelector(commentName, "body");
+			const dimensions = getCommentDimensions(commentSelector);
+			const offsetForSizingArea = 6; // Offset from edge of body to somewhere in sizing area
+
+			if (side === "top") {
+				const startPosX = dimensions.width / 2;
+				const startPosY = -offsetForSizingArea;
+
+				const canvasX = dimensions.x_pos + (dimensions.width / 2);
+				const canvasY = dimensions.y_pos - (Number(newHeight) - dimensions.height) - offsetForSizingArea;
+
+				dragAndDrop(commentSelector, startPosX, startPosY, ".svg-area", Number(canvasX), Number(canvasY));
+
+			} else if (side === "bottom") {
+				const startPosX = dimensions.width / 2;
+				const startPosY = dimensions.height + offsetForSizingArea;
+
+				const canvasX = dimensions.x_pos + (dimensions.width / 2);
+				const canvasY = dimensions.y_pos + Number(newHeight) + offsetForSizingArea;
+
+				dragAndDrop(commentSelector, startPosX, startPosY, ".svg-area", Number(canvasX), Number(canvasY));
+			}
 		});
 
 	this.Then(/^I verify the "([^"]*)" comment has width ([-+]?[0-9]*\.?[0-9]+) and height ([-+]?[0-9]*\.?[0-9]+)$/,
 		function(commentName, trgWidth, trgHeight) {
-			const commentSelector = getCommentSelector(commentName, "outline");
+			const commentSelector = getCommentSelector(commentName, "body");
 			const dimensions = getCommentDimensions(commentSelector);
 			const expWidth = Number(trgWidth);
 			const expHeight = Number(trgHeight);
@@ -114,6 +190,22 @@ module.exports = function() {
 			expect(dimensions.height).toBe(expHeight);
 		});
 
+	this.Then(/^I link the "([^"]*)" comment to the "([^"]*)" node$/,
+		function(commentName, nodeName) {
+			const commentSelector = getCommentSelector(commentName, "outline");
+			const nodeSelector = getNodeSelector(nodeName, "grp");
+			const nodeDimensions = getNodeDimensions(nodeSelector);
+
+			// Offset within comment that will grab the link 'blob'.
+			const startPosX = 0;
+			const startPosY = 0;
+
+			// Target canvas position within the center of the target node
+			const canvasX = nodeDimensions.x_pos + (nodeDimensions.width / 2);
+			const canvasY = nodeDimensions.y_pos + (nodeDimensions.height / 2);
+
+			dragAndDrop(commentSelector, startPosX, startPosY, ".svg-area", Number(canvasX), Number(canvasY));
+		});
 
 	// Then I edit comment 1 linked to the "Derive" node with the comment text "This comment box should be linked to the derive node."
 	//
@@ -121,7 +213,7 @@ module.exports = function() {
 		function(commentNumber, commentText) {
 			try {
 				var comment;
-				comment = browser.$$(".comment-group")[0];
+				comment = browser.$$(".d3-comment-group")[0];
 				comment.click();
 				comment.doubleClick();
 				// workaround since setValue isn't working with comments.
@@ -192,7 +284,7 @@ module.exports = function() {
 
 	this.Then(/^I verify the number of comments are (\d+)$/, function(comments) {
 		try {
-			var commentsLength = browser.$$(".comment-group").length;
+			var commentsLength = browser.$$(".d3-comment-group").length;
 			expect(Number(comments)).toEqual(commentsLength);
 
 			// verify the number of comments is in the internal object model
@@ -207,7 +299,7 @@ module.exports = function() {
 	});
 
 	this.Then("I select all the comments in the canvas", function() {
-		var comments = browser.$$(".comment-group");
+		var comments = browser.$$(".d3-comment-group");
 		browser.keys("Shift");
 
 		comments.forEach(function(comment) {
@@ -218,7 +310,7 @@ module.exports = function() {
 
 	this.Then(/^I click the comment with text "([^"]*)" to select it$/, function(commentText) {
 		const comIndex = getCommentIndexFromCanvasUsingText(commentText);
-		const commentId = browser.$("#common-canvas-items-container-0").$$(".comment-group")[comIndex].getAttribute("data-id");
+		const commentId = browser.$("#common-canvas-items-container-0").$$(".d3-comment-group")[comIndex].getAttribute("data-id");
 		const cmntSelector = "[data-id='" + commentId + "']";
 		browser.$(cmntSelector).click();
 	});
@@ -233,7 +325,7 @@ module.exports = function() {
 
 	this.Then(/^I right click the comment with text "([^"]*)" to open the context menu$/, function(commentText) {
 		const comIndex = getCommentIndexFromCanvasUsingText(commentText);
-		const commentId = browser.$("#common-canvas-items-container-0").$$(".comment-group")[comIndex].getAttribute("data-id");
+		const commentId = browser.$("#common-canvas-items-container-0").$$(".d3-comment-group")[comIndex].getAttribute("data-id");
 		const cmntSelector = "[data-id='" + commentId + "']";
 		browser.$(cmntSelector).rightClick();
 	});
@@ -270,7 +362,7 @@ module.exports = function() {
 	//
 	this.Then(/^I verify the comment (\d+) position is "([^"]*)"$/, function(commentNumber, givenCommentPosition) {
 		var commentIndex = commentNumber - 1;
-		var comment = browser.$$(".comment-group")[commentIndex];
+		var comment = browser.$$(".d3-comment-group")[commentIndex];
 		var actualCommentPosition = comment.getAttribute("transform");
 		expect(actualCommentPosition).toEqual(givenCommentPosition);
 	});

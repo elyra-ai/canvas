@@ -649,7 +649,7 @@ module.exports = function() {
 	//
 	this.Then(/^I select node (\d+) the "([^"]*)" node$/, function(nodeIndex, nodeName) {
 		var nodeNumber = nodeIndex - 1;
-		browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].click();
+		browser.$("#canvas-div-0").$$(".d3-node-group")[nodeNumber].click();
 	});
 
 	// Then I double click the "Type" node to open its properties
@@ -746,7 +746,7 @@ module.exports = function() {
 	//
 	this.Then(/^I disconnect links for node (\d+) a "([^"]*)" on the canvas$/, function(nodeIndex, nodeName) {
 		var nodeNumber = nodeIndex - 1;
-		browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].rightClick();
+		browser.$("#canvas-div-0").$$(".d3-node-group")[nodeNumber].rightClick();
 		browser.$(".context-menu-popover").$$(".react-contextmenu-item");
 
 
@@ -762,7 +762,7 @@ module.exports = function() {
 	//
 	this.Then(/^I delete node (\d+) the "([^"]*)" node$/, function(nodeIndex, nodeType) {
 		var nodeNumber = nodeIndex - 1;
-		var nodeSelector = ".node-group";
+		var nodeSelector = ".d3-node-group";
 		browser.$("#canvas-div-0").$$(nodeSelector)[nodeNumber].rightClick();
 
 		const contextMenu = browser.$(".context-menu-popover").$$(".react-contextmenu-item");
@@ -805,7 +805,7 @@ module.exports = function() {
 	//
 	this.Then(/^I delete node (\d+) the "([^"]*)" node by pressing Delete$/, function(nodeIndex, nodeType) {
 		var nodeNumber = nodeIndex - 1;
-		var nodeSelector = ".node-group";
+		var nodeSelector = ".d3-node-group";
 		browser.$("#canvas-div-0").$$(nodeSelector)[nodeNumber].click();
 		browser.keys("Delete");
 
@@ -834,8 +834,8 @@ module.exports = function() {
 	});
 
 	this.Then("I expect the canvas to be empty", function() {
-		var nodeSelector = ".node-group";
-		var commentSelector = ".comment-group";
+		var nodeSelector = ".d3-node-group";
+		var commentSelector = ".d3-comment-group";
 		var linkSelector = ".link-group";
 
 		var nodeList = browser.$("#canvas-div-0").$$(nodeSelector);
@@ -854,8 +854,8 @@ module.exports = function() {
 	//
 	this.Then(/^I move the "([^"]*)" node on the canvas to (-?\d+), (-?\d+)$/,
 		function(nodeName, canvasX, canvasY) {
-			const nodeSelector = getNodeSelector(nodeName, "grp");
-			dragAndDrop(nodeSelector, 10, 10, ".svg-area", canvasX, canvasY);
+			const nodeSelector = getNodeSelector(nodeName, "body");
+			dragAndDrop(nodeSelector, 0, 0, ".svg-area", canvasX, canvasY);
 		});
 
 	// Then I expect the object model to be empty
@@ -943,18 +943,17 @@ module.exports = function() {
 	//
 	this.Then(/^I verify the node (\d+) position is "([^"]*)"$/, function(nodeNumber, givenNodePosition) {
 		var nodeIndex = nodeNumber - 1;
-		var node = browser.$$(".node-group")[nodeIndex];
+		var node = browser.$$(".d3-node-group")[nodeIndex];
 		var actualNodePosition = node.getAttribute("transform");
 		expect(actualNodePosition).toEqual(givenNodePosition);
 	});
 
-	this.Then(/^I verify the "([^"]*)" node position is "([^"]*)"$/, function(nodeName, givenNodePosition) {
-		const nodeSelector = getNodeSelector(nodeName, "grp");
-		const node = browser.$(nodeSelector);
-		var actualNodePosition = node.getAttribute("transform");
-		expect(actualNodePosition).toEqual(givenNodePosition);
+	this.Then(/^I verify the "([^"]*)" node transform is "([^"]*)"$/, function(nodeName, transform) {
+		const selector = getNodeSelector(nodeName, "grp");
+		const node = browser.$(selector);
+		const actualTransform = node.getAttribute("transform");
+		expect(actualTransform).toEqual(transform);
 	});
-
 
 	this.Then(/^I verify the node id "([^"]*)" has width (\d+) and height (\d+)$/, function(nodeId, width, height) {
 		const objectModel = getCanvasData();

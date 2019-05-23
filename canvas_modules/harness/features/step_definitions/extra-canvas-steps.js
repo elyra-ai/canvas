@@ -63,7 +63,7 @@ module.exports = function() {
 	//
 	this.Then(/^I delete node (\d+) the "([^"]*)" node from extra canvas$/, function(nodeIndex, nodeType) {
 		var nodeNumber = nodeIndex - 1;
-		var nodeSelector = ".node-group";
+		var nodeSelector = ".d3-node-group";
 		browser.$("#canvas-div-1").$$(nodeSelector)[nodeNumber].rightClick();
 
 		const contextMenu = browser.$(".context-menu-popover").$$(".react-contextmenu-item");
@@ -80,7 +80,7 @@ module.exports = function() {
 
 	this.Then(/^I select node (\d+) the "([^"]*)" node from extra canvas$/, function(nodeIndex, nodeName) {
 		var nodeNumber = nodeIndex - 1;
-		browser.$("#canvas-div-1").$$(".node-group")[nodeNumber].click();
+		browser.$("#canvas-div-1").$$(".d3-node-group")[nodeNumber].click();
 	});
 
 	this.Then(/^I double click the "([^"]*)" node to open its properties in extra canvas$/, function(nodeName) {

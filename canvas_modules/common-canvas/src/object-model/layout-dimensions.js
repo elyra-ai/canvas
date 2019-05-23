@@ -72,6 +72,10 @@ const haloDefaultLayout = {
 		// The gap between a node and its selection highlight rectangle
 		nodeHighlightGap: 4,
 
+		// The size of the node sizing area that extends around the node, over
+		// which the mouse pointer will change to the sizing arrows.
+		nodeSizingArea: 10,
+
 		// Error indicator dimensions
 		errorXPos: 52,
 		errorYPos: 0,
@@ -210,6 +214,9 @@ const haloDefaultLayout = {
 	// The gap between a comment and its selection highlight rectangle
 	commentHighlightGap: 4,
 
+	// The gap between a comment and its sizing area rectangle
+	commentSizingArea: 10,
+
 	// The gap between the edge of the comment rectangle and the comment text.
 	commentWidthPadding: 10,
 	commentHeightPadding: 8,
@@ -304,6 +311,10 @@ const portsHorizontalDefaultLayout = {
 
 		// The gap between a node and its selection highlight rectangle
 		nodeHighlightGap: 1,
+
+		// The size of the node sizing area that extends around the node, over
+		// which the mouse pointer will change to the sizing arrows.
+		nodeSizingArea: 10,
 
 		// Error indicator dimensions
 		errorXPos: 24,
@@ -444,6 +455,9 @@ const portsHorizontalDefaultLayout = {
 	// The gap between a comment and its selection highlight rectangle
 	commentHighlightGap: 1,
 
+	// The gap between a comment and its sizing area rectangle
+	commentSizingArea: 10,
+
 	// The gap between the edge of the comment rectangle and the comment text.
 	commentWidthPadding: 10,
 	commentHeightPadding: 8,
@@ -538,6 +552,10 @@ const portsVerticalDefaultLayout = {
 
 		// The gap between a node and its selection highlight rectangle
 		nodeHighlightGap: 4,
+
+		// The size of the node sizing area that extends around the node, over
+		// which the mouse pointer will change to the sizing arrows.
+		nodeSizingArea: 10,
 
 		// Error indicator dimensions
 		errorXPos: 45,
@@ -678,6 +696,9 @@ const portsVerticalDefaultLayout = {
 
 	// The gap between a comment and its selection highlight rectangle
 	commentHighlightGap: 4,
+
+	// The gap between a comment and its sizing area rectangle
+	commentSizingArea: 10,
 
 	// The gap between the edge of the comment rectangle and the comment text.
 	commentWidthPadding: 10,

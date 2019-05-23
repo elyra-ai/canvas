@@ -661,7 +661,7 @@ class CanvasRenderer {
 		// 	" width = " + transformedSVGRect.width +
 		// 	" height = " + transformedSVGRect.height);
 
-		const nodeSelector = this.getSelectorForClass("node-group");
+		const nodeSelector = this.getSelectorForClass("d3-node-group");
 		const supernodeDatum = this.getParentSupernodeDatum();
 		const svgHt = supernodeDatum.height - this.layout.supernodeTopAreaHeight - this.layout.supernodeSVGAreaPadding;
 
@@ -1876,7 +1876,7 @@ class CanvasRenderer {
 		// will cause its ports to move.
 		this.setPortPositionsAllNodes();
 
-		const nodeSelector = this.getSelectorForClass("node-group");
+		const nodeSelector = this.getSelectorForClass("d3-node-group");
 
 
 		var nodeGroupSel = this.canvasGrp
@@ -1927,7 +1927,7 @@ class CanvasRenderer {
 				.append("g")
 				.attr("data-id", (d) => that.getId("node_grp", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "obj-group node-group")
+				.attr("class", "d3-node-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
 					that.setNodeStyles(d, "hover", d3.select(this));
@@ -2013,10 +2013,10 @@ class CanvasRenderer {
 				})
 				.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
 
-			// Node selection highlighting outline for new nodes, flexible properties set in next step
-			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
+			// Node sizing area.
+			newNodeGroups.filter((d) => this.isSupernode(d))
 				.append("path")
-				.attr("data-id", (d) => this.getId("node_outline", d.id))
+				.attr("data-id", (d) => this.getId("node_sizing", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.on("mousedown", (d) => {
 					if (this.isExpandedSupernode(d)) {
@@ -2046,6 +2046,13 @@ class CanvasRenderer {
 					}
 				});
 
+			// Node selection highlighting outline.
+			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
+				.append("path")
+				.attr("data-id", (d) => this.getId("node_outline", d.id))
+				.attr("data-pipeline-id", this.activePipeline.id);
+
+			// Node body
 			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
 				.append("path")
 				.attr("data-id", (d) => this.getId("node_body", d.id))
@@ -2077,7 +2084,7 @@ class CanvasRenderer {
 			// 	.attr("y", (d) => this.getLabelOutlinePosY(d))
 			// 	.attr("class", "d3-label-outline");
 
-			// Label
+			// Node Label
 			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
 				.append("text")
 				.attr("data-id", (d) => this.getId("node_label", d.id))
@@ -2145,6 +2152,12 @@ class CanvasRenderer {
 					nodeGrp
 						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 						.attr("style", that.getNodeGrpStyle(d))
+						.datum(node); // Set the __data__ to the updated data
+
+					// Node sizing area
+					nodeGrp.select(this.getSelectorForId("node_sizing", d.id))
+						.attr("d", (nd) => this.getNodeShapePathSizing(nd))
+						.attr("class", "d3-node-sizing")
 						.datum(node); // Set the __data__ to the updated data
 
 					// Node selection highlighting
@@ -3306,7 +3319,7 @@ class CanvasRenderer {
 		var pos = this.getTransformedMousePos();
 
 		var node = null;
-		const selector = this.getSelectorForClass("node-group");
+		const selector = this.getSelectorForClass("d3-node-group");
 		this.canvasGrp.selectAll(selector)
 			.each(function(d) {
 				let portRadius = d.layout.portRadius;
@@ -3346,6 +3359,13 @@ class CanvasRenderer {
 				});
 		}
 		return portId;
+	}
+
+	// Returns a sizing rectangle for nodes and comments. This extends an
+	// invisible area out beyond the highlight sizing line to improve usability
+	// when sizing.
+	getNodeShapePathSizing(data) {
+		return this.getRectangleNodeShapePath(data, data.layout.nodeSizingArea);
 	}
 
 	// Returns a path string that will draw the outline shape of the node.
@@ -3497,7 +3517,7 @@ class CanvasRenderer {
 		// be still comments on display that need to be deleted.
 
 		const that = this;
-		const comSelector = this.getSelectorForClass("comment-group");
+		const comSelector = this.getSelectorForClass("d3-comment-group");
 
 		var commentGroupSel = this.canvasGrp
 			.selectAll(comSelector)
@@ -3556,7 +3576,7 @@ class CanvasRenderer {
 				.append("g")
 				.attr("data-id", (d) => this.getId("comment_grp", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "obj-group comment-group")
+				.attr("class", "d3-comment-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
@@ -3644,9 +3664,9 @@ class CanvasRenderer {
 				})
 				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
 
-			// Comment selection highlighting and sizing outline
+			// Comment sizing area
 			newCommentGroups.append("rect")
-				.attr("data-id", (d) => this.getId("comment_outline", d.id))
+				.attr("data-id", (d) => this.getId("comment_sizing", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.on("mousedown", (d) => {
 					this.commentSizing = true;
@@ -3672,6 +3692,11 @@ class CanvasRenderer {
 						d3.select(this).style("cursor", cursorType);
 					}
 				});
+
+			// Comment selection highlighting outline
+			newCommentGroups.append("rect")
+				.attr("data-id", (d) => this.getId("comment_outline", d.id))
+				.attr("data-pipeline-id", this.activePipeline.id);
 
 			// Background rectangle for comment
 			newCommentGroups.append("rect")
@@ -3735,7 +3760,16 @@ class CanvasRenderer {
 						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 						.datum(comment); // Set the __data__ to the updated data
 
-					// Comment selection highlighting and sizing outline
+					// Comment sizing area
+					commentGrp.select(this.getSelectorForId("comment_sizing", d.id))
+						.attr("x", -this.layout.commentSizingArea)
+						.attr("y", -this.layout.commentSizingArea)
+						.attr("height", d.height + (2 * that.layout.commentSizingArea))
+						.attr("width", d.width + (2 * that.layout.commentSizingArea))
+						.attr("class", "d3-comment-sizing")
+						.datum(comment); // Set the __data__ to the updated data
+
+					// Comment selection highlighting outline
 					commentGrp.select(this.getSelectorForId("comment_outline", d.id))
 						.attr("x", -this.layout.commentHighlightGap)
 						.attr("y", -this.layout.commentHighlightGap)
