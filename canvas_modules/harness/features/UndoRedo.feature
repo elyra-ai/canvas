@@ -21,73 +21,73 @@ Feature: UndoRedo
 		Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 350, 200
 		Then I add node 2 a "Select" node from the "Record Ops" category onto the canvas at 450, 200
 		Then I close the palette
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 1
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of nodes are 2
 
 		Then I link node 1 the "Var. File" node to node 2 the "Select" node for link 1 on the canvas
 		Then I press Ctrl/Cmnd+Z to Undo
 		Then I verify the number of data links are 0
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of data links are 1
 
 		Then I select node 2 the "Select" node
 
 		Then I add comment 1 at location 350, 250 with the text "This comment box should be linked to the Select node."
-		Then I click undo
-		Then I click undo
+		Then I click the undo button on the toolbar
+		Then I click the undo button on the toolbar
 		Then I verify the number of comments are 0
 		Then I press Ctrl/Cmnd+Shift+Z to Redo
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of comments are 1
 
 		Then I right click the "Var. File" node to display the context menu
 		Then I click option "Disconnect" from the context menu
 		Then I verify the number of data links are 0
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of data links are 1
 		Then I press Ctrl/Cmnd+Y to Redo
 		Then I verify the number of data links are 0
 
 		Then I move the "Var. File" node on the canvas to 50, 50
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the node move was not done
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the node move was done
 
 		Then I move comment 1 with text " This comment box should be linked to the Select node." onto the canvas by 100, 100
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the comment move was not done
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the comment move was done
 
 		Then I edit comment 1 with the comment text "This comment box should be edited."
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify comment 1 with the comment text "This comment box should be linked to the Select node."
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify comment 1 with the comment text "This comment box should be edited."
 
 		Then I delete node 1 the "Var. File" node
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 2
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of nodes are 1
 
 		Then I right click the comment with text "This comment box should be edited." to open the context menu
 		Then I click option "Delete" from the context menu
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of comments are 1
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of comments are 0
 
 		Given I have toggled the app side common-properties panel
 		Given I have uploaded JSON for common-properties "spark.AddColumn.json"
 		Then I pause for 1 seconds
 		Then I enter "testValue" in the textbox "colName"
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify "testValue" is not present in the textbox "colName"
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify "testValue" is present in the textbox "colName"
 
 		Given I have toggled the app side panel
@@ -96,23 +96,23 @@ Feature: UndoRedo
 
 		Then I link comment 3 with text " comment 3 sample comment text" to node 4 the "Neutral Net" node for link 9 on the canvas
 		Then I verify the number of comment links are 4
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of comment links are 3
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of comment links are 4
 
 		Then I delete link at 205, 248
 		Then I verify the number of data links are 4
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of data links are 5
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of data links are 4
 
 		Then I delete link at 225, 188
 		Then I verify the number of comment links are 3
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of comment links are 4
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of comment links are 3
 
 	Scenario: Sanity test for Complex undo/redo operations
@@ -139,17 +139,17 @@ Feature: UndoRedo
 		Then I click option "Delete" from the context menu
 		Then I verify the "Define Types" node is not on the canvas
 		Then I verify the number of nodes are 0
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 8
 		Then I verify the number of comments are 3
 		Then I verify the number of data links are 5
 		Then I verify the number of comment links are 3
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of nodes are 0
 		Then I verify the number of comments are 0
 		Then I verify the number of data links are 0
 		Then I verify the number of comment links are 0
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 8
 		Then I verify the number of comments are 3
 		Then I verify the number of data links are 5
@@ -161,13 +161,13 @@ Feature: UndoRedo
 		Then I click option "Disconnect" from the context menu
 		Then I verify the number of data links are 0
 		Then I verify the number of comment links are 0
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of data links are 5
 		Then I verify the number of comment links are 3
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of data links are 0
 		Then I verify the number of comment links are 0
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of data links are 5
 		Then I verify the number of comment links are 3
 
@@ -178,7 +178,7 @@ Feature: UndoRedo
 		Then I verify the "Define Types" node is not on the canvas
 		Then I expect the canvas to be empty
 		Then I expect the object model to be empty
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 8
 		Then I verify the number of comments are 3
 
@@ -186,7 +186,7 @@ Feature: UndoRedo
 		Then I delete all selected objects via the Delete key
 		Then I expect the canvas to be empty
 		Then I expect the object model to be empty
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 8
 		Then I verify the number of comments are 3
 
@@ -196,7 +196,7 @@ Feature: UndoRedo
 		Then I verify the "Define Types" node is not on the canvas
 		Then I expect the canvas to be empty
 		Then I expect the object model to be empty
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 8
 		Then I verify the number of comments are 3
 
@@ -205,20 +205,20 @@ Feature: UndoRedo
 		Then I delete all selected objects via the Delete key
 		Then I expect the canvas to be empty
 		Then I expect the object model to be empty
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 8
 		Then I verify the number of comments are 3
 
 		Then I move the "Sort" node on the canvas to 50, 50
 		Then I verify the node move was done
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the node move was not done
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I move comment 1 with text " comment 1" onto the canvas by 100, 100
 		Then I verify the comment move was done
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the comment move was not done
-		Then I click redo
+		Then I click the redo button on the toolbar
 
 	Scenario: Sanity test for Complex Disconnect and Delete undo/redo operations
 		Then I resize the window size to 1400 width and 800 height
@@ -242,16 +242,16 @@ Feature: UndoRedo
 		Then I delete node 4 the "Neural Net" node
 		Then I verify the number of nodes are 7
 		Then I verify the number of data links are 4
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 8
 		Then I verify the number of data links are 4
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 8
 		Then I verify the number of data links are 5
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of nodes are 8
 		Then I verify the number of data links are 4
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of nodes are 7
 		Then I verify the number of data links are 4
 
@@ -271,20 +271,20 @@ Feature: UndoRedo
 		Then I add node 22 a "Neural Net" node from the "Modeling" category onto the canvas at 350, 150
 		Then I close the palette
 		Then I verify the number of nodes are 22
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 21
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of nodes are 22
 
 		Then I select node 19 the "Filter" node
 		Then I add comment 1 at location 30, 300 with the text "Some text comment."
-		Then I click undo
-		Then I click undo
+		Then I click the undo button on the toolbar
+		Then I click the undo button on the toolbar
 		Then I verify the number of comments are 0
 		Then I right click the "DRUG1n" node to display the context menu
 		Then I click option "Disconnect" from the context menu
 		Then I verify the number of data links are 0
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of data links are 20
 
 		Then I link node 19 the "Filter" node to node 22 the "Neural Net" node for link 21 on the canvas
@@ -293,10 +293,10 @@ Feature: UndoRedo
 		Then I add node 24 a "Sort" node from the "Record Ops" category onto the canvas at 250, 250
 		Then I close the palette
 		Then I link node 23 the "Select" node to node 24 the "Sort" node for link 22 on the canvas
-		Then I click undo
-		Then I click redo
-		Then I click undo
-		Then I click undo
+		Then I click the undo button on the toolbar
+		Then I click the redo button on the toolbar
+		Then I click the undo button on the toolbar
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 23
 		Then I verify the number of data links are 21
 
@@ -312,7 +312,7 @@ Feature: UndoRedo
 
 		Then I resize the window size to 1330 width and 660 height
 
-		Then I click on the secondary toolbar horizontal layout button
+		Then I click the horizontal layout button on the toolbar
 		Then I verify the node 1 position is "translate(470, 123)"
 		Then I verify the node 2 position is "translate(190, 123)"
 		Then I verify the node 3 position is "translate(610, 50)"
@@ -320,7 +320,7 @@ Feature: UndoRedo
 		Then I verify the node 5 position is "translate(50, 123)"
 		Then I verify the node 6 position is "translate(330, 123)"
 
-		Then I click on the secondary toolbar vertical layout button
+		Then I click the vertical layout button on the toolbar
 		Then I verify the node 1 position is "translate(120, 488)"
 		Then I verify the node 2 position is "translate(120, 196)"
 		Then I verify the node 3 position is "translate(50, 634)"
@@ -328,7 +328,7 @@ Feature: UndoRedo
 		Then I verify the node 5 position is "translate(120, 50)"
 		Then I verify the node 6 position is "translate(120, 342)"
 
-		Then I click undo
+		Then I click the undo button on the toolbar
 
 		Then I verify the node 1 position is "translate(470, 123)"
 		Then I verify the node 2 position is "translate(190, 123)"
@@ -337,7 +337,7 @@ Feature: UndoRedo
 		Then I verify the node 5 position is "translate(50, 123)"
 		Then I verify the node 6 position is "translate(330, 123)"
 
-		Then I click undo
+		Then I click the undo button on the toolbar
 
 		Then I verify the node 1 position is "translate(445, 219)"
 		Then I verify the node 2 position is "translate(218, 219)"
@@ -346,7 +346,7 @@ Feature: UndoRedo
 		Then I verify the node 5 position is "translate(96, 219)"
 		Then I verify the node 6 position is "translate(328, 219)"
 
-		Then I click redo
+		Then I click the redo button on the toolbar
 
 		Then I verify the node 1 position is "translate(470, 123)"
 		Then I verify the node 2 position is "translate(190, 123)"
@@ -355,7 +355,7 @@ Feature: UndoRedo
 		Then I verify the node 5 position is "translate(50, 123)"
 		Then I verify the node 6 position is "translate(330, 123)"
 
-		Then I click redo
+		Then I click the redo button on the toolbar
 
 		Then I verify the node 1 position is "translate(120, 488)"
 		Then I verify the node 2 position is "translate(120, 196)"
@@ -383,7 +383,7 @@ Feature: UndoRedo
 		Then I verify the event log title is "My C5.0 model"
 		Then I pause for 1 seconds
 		Then I double click the "My C5.0 model" node to open its properties
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I click on the "Save" button
 		Then I verify the event log for the "samplingRatio" parameter contains "1"
 		Then I verify the event log has no error messages
@@ -401,10 +401,10 @@ Feature: UndoRedo
 		Then I verify there are 2 pipelines
 		Then I verify pipeline 0 have 1 nodes
 		Then I verify pipeline 1 have 0 nodes
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify there are 1 pipelines
 		Then I verify pipeline 0 have 0 nodes
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify there are 2 pipelines
 		Then I verify pipeline 0 have 1 nodes
 		Then I verify pipeline 1 have 0 nodes
@@ -442,26 +442,26 @@ Feature: UndoRedo
 		Then I verify pipeline 0 have 0 links
 
 		# Test Undo (using toolbar) of deletion of Supernode
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify pipeline 0 have 1 nodes
 		Then I verify pipeline 0 have 0 links
 		Then I verify pipeline 1 have 2 nodes
 		Then I verify pipeline 1 have 1 links
 
 		# Test Undo (using toolbar) of creation of Supernode
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify pipeline 0 have 2 nodes
 		Then I verify pipeline 0 have 1 links
 
 		# Test Redo (using toolbar) of creation Supernode
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify pipeline 0 have 1 nodes
 		Then I verify pipeline 0 have 0 links
 		Then I verify pipeline 1 have 2 nodes
 		Then I verify pipeline 1 have 1 links
 
 		# Test Redo (using toolbar) of deletion of Supernode
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify pipeline 0 have 0 nodes
 		Then I verify pipeline 0 have 0 links
 

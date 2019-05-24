@@ -25,9 +25,9 @@ Feature: Links
 		Then I verify the number of data links are 3
 
 		# Test undo/redo on node links
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of data links are 5
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of data links are 3
 
 	Scenario: Test comment link disconnection
@@ -50,9 +50,9 @@ Feature: Links
 		Then I verify the number of comment links are 1
 
 		# Test undo/redo on comment links
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of comment links are 3
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of comment links are 1
 
 	Scenario: Test node and comment combination link disconnection
@@ -78,10 +78,10 @@ Feature: Links
 		Then I verify the number of data links are 3
 
 		# Test undo/redo on node and comment links
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of comment links are 3
 		Then I verify the number of data links are 5
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of comment links are 1
 		Then I verify the number of data links are 3
 

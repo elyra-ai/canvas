@@ -3082,23 +3082,12 @@ export class APIPipeline {
 
 	autoLayout(layoutDirection) {
 		const canvasInfoPipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
-		let lookup = {};
+		let movedNodesInfo = {};
 		if (layoutDirection === VERTICAL) {
-			lookup = this.dagreAutolayout(DAGRE_VERTICAL, canvasInfoPipeline);
+			movedNodesInfo = this.dagreAutolayout(DAGRE_VERTICAL, canvasInfoPipeline);
 		} else {
-			lookup = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasInfoPipeline);
+			movedNodesInfo = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasInfoPipeline);
 		}
-
-		const movedNodesInfo = [];
-		canvasInfoPipeline.nodes.forEach((node) => {
-			movedNodesInfo[node.id] = {
-				id: node.id,
-				x_pos: lookup[node.id].value.x,
-				y_pos: lookup[node.id].value.y,
-				width: node.width,
-				height: node.height
-			};
-		});
 
 		this.sizeAndPositionObjects(movedNodesInfo);
 	}
@@ -3113,7 +3102,7 @@ export class APIPipeline {
 		});
 
 		var nodesData = canvasInfoPipeline.nodes.map((node) => {
-			return { "v": node.id, "value": { } };
+			return { "v": node.id, "value": { width: node.width, height: node.height } };
 		});
 
 		// possible values: TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
@@ -3127,8 +3116,6 @@ export class APIPipeline {
 
 		var inputGraph = { nodes: nodesData, edges: edges, value: value };
 
-		var maxNodeSizes = this.getMaximumNodeSizes();
-
 		const initialMarginX = this.objectModel.getLayoutInfo().autoLayoutInitialMarginX;
 		const initialMarginY = this.objectModel.getLayoutInfo().autoLayoutInitialMarginY;
 		const verticalSpacing = this.objectModel.getLayoutInfo().autoLayoutVerticalSpacing;
@@ -3138,11 +3125,11 @@ export class APIPipeline {
 		g.graph().marginx = initialMarginX;
 		g.graph().marginy = initialMarginY;
 		if (direction === "TB") {
-			g.graph().nodesep = maxNodeSizes.width + horizontalSpacing; // distance to separate the nodes horizontally
-			g.graph().ranksep = maxNodeSizes.height + verticalSpacing; // distance to separate the ranks vertically
+			g.graph().nodesep = horizontalSpacing; // distance to separate the nodes horizontally
+			g.graph().ranksep = verticalSpacing; // distance to separate the ranks vertically
 		} else {
-			g.graph().nodesep = maxNodeSizes.height + verticalSpacing; // distance to separate the nodes vertically
-			g.graph().ranksep = maxNodeSizes.width + horizontalSpacing; // distance to separate the ranks horizontally
+			g.graph().nodesep = verticalSpacing; // distance to separate the nodes vertically
+			g.graph().ranksep = horizontalSpacing; // distance to separate the ranks horizontally
 		}
 		dagre.layout(g);
 
@@ -3152,22 +3139,19 @@ export class APIPipeline {
 		for (var i = 0, len = outputGraph.nodes.length; i < len; i++) {
 			lookup[outputGraph.nodes[i].v] = outputGraph.nodes[i];
 		}
-		return lookup;
-	}
 
-	getMaximumNodeSizes() {
-		var maxWidth = 0;
-		var maxHeight = 0;
+		const movedNodesInfo = [];
+		canvasInfoPipeline.nodes.forEach((node) => {
+			movedNodesInfo[node.id] = {
+				id: node.id,
+				x_pos: lookup[node.id].value.x - (node.width / 2),
+				y_pos: lookup[node.id].value.y - (node.height / 2),
+				width: node.width,
+				height: node.height
+			};
+		});
 
-		if (this.objectModel.getCanvasInfo() &&
-				this.getNodes()) {
-			this.getNodes().forEach((node) => {
-				maxWidth = Math.max(maxWidth, node.width);
-				maxHeight = Math.max(maxHeight, node.height);
-			});
-		}
-
-		return { width: maxWidth, height: maxHeight };
+		return movedNodesInfo;
 	}
 
 	// Return the dimensions of the bounding rectangle for the listOfNodes.

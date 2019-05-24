@@ -27,11 +27,11 @@ Feature: AutoNodePlacement
 		Then I verify the number of nodes are 2
 		Then I verify the number of port data links are 0
 
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 1
 		Then I verify the number of port data links are 0
 
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 0
 		Then I verify the number of port data links are 0
 
@@ -100,27 +100,27 @@ Feature: AutoNodePlacement
 		Then I verify the number of nodes are 11
 		Then I verify the number of port data links are 8
 
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 10
 		Then I verify the number of port data links are 8
 
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 9
 		Then I verify the number of port data links are 7
 
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify the number of nodes are 8
 		Then I verify the number of port data links are 6
 
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of nodes are 9
 		Then I verify the number of port data links are 7
 
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of nodes are 10
 		Then I verify the number of port data links are 8
 
-		Then I click redo
+		Then I click the redo button on the toolbar
 		Then I verify the number of nodes are 11
 		Then I verify the number of port data links are 8
 

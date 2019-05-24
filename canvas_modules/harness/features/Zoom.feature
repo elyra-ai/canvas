@@ -19,42 +19,42 @@ Feature: Zoom
 
 		Then I resize the window size to 1330 width and 660 height
 
-		Then I click zoom in
+		Then I click the zoom in button on the toolbar
 		Then I verify zoom transform value is "translate(143.5,4.849999999999994) scale(1.1)"
 
-		Then I click zoom out
+		Then I click the zoom out button on the toolbar
 		Then I verify zoom transform value is "translate(188,30) scale(1)"
 
-		Then I click zoom in
-		Then I click zoom in
-		Then I click zoom out
+		Then I click the zoom in button on the toolbar
+		Then I click the zoom in button on the toolbar
+		Then I click the zoom out button on the toolbar
 		Then I verify zoom transform value is "translate(143.5,4.849999999999994) scale(1.1)"
 
-		Then I click zoom out
-		Then I click zoom out
-		Then I click zoom in
-		Then I click zoom out
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom in button on the toolbar
+		Then I click the zoom out button on the toolbar
 		Then I verify zoom transform value is "translate(228.4545454545455,52.863636363636374) scale(0.9090909090909091)"
 
-		Then I click zoom in
-		Then I click zoom in
-		Then I click zoom in
-		Then I click zoom in
-		Then I click zoom in
-		Then I click zoom in
-		Then I click zoom in
+		Then I click the zoom in button on the toolbar
+		Then I click the zoom in button on the toolbar
+		Then I click the zoom in button on the toolbar
+		Then I click the zoom in button on the toolbar
+		Then I click the zoom in button on the toolbar
+		Then I click the zoom in button on the toolbar
+		Then I click the zoom in button on the toolbar
 		Then I verify zoom transform value is "translate(-155.34464500000047,-164.04759150000027) scale(1.771561000000001)"
 
-		Then I click zoom out
-		Then I click zoom out
-		Then I click zoom out
-		Then I click zoom out
-		Then I click zoom out
-		Then I click zoom out
-		Then I click zoom out
-		Then I click zoom out
-		Then I click zoom out
-		Then I click zoom out
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
 		Then I verify zoom transform value is "translate(329.0590123625436,109.72211597568476) scale(0.6830134553650705)"
 
 	Scenario: Test to see if zoom is NOT preserved with 'Save Zoom' set to 'None'
@@ -68,9 +68,9 @@ Feature: Zoom
 		# The zoom will be the default which is null
 		Then I verify zoom transform value is "null"
 
-		Then I click zoom out
-		Then I click zoom out
-		Then I click zoom out
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
 		Then I verify zoom transform value is "translate(178.6649135987979,92.54432757325321) scale(0.7513148009015777)"
 
 		# Now I load the blank canvas so I can return to the original canvas to make
@@ -94,9 +94,9 @@ Feature: Zoom
 		# The zoom will be the default which is null
 		Then I verify zoom transform value is "null"
 
-		Then I click zoom out
-		Then I click zoom out
-		Then I click zoom out
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
 		Then I verify zoom transform value is "translate(178.6649135987979,92.54432757325321) scale(0.7513148009015777)"
 
 		# Now I load the blank canvas so I can return to the original canvas to make
@@ -121,9 +121,9 @@ Feature: Zoom
 		# The zoom will be the default which is null
 		Then I verify zoom transform value is "null"
 
-		Then I click zoom out
-		Then I click zoom out
-		Then I click zoom out
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
+		Then I click the zoom out button on the toolbar
 		Then I verify zoom transform value is "translate(178.6649135987979,92.54432757325321) scale(0.7513148009015777)"
 
 		# Check to see if the zoom amount in the canvas info for this pipeline

@@ -72,7 +72,7 @@ Feature: Comments
 
 		# Add a comment using the toolbar (which should link the node to the comment)
 		Then I click the "Var. File" node to select it
-		Then I click on the secondary toolbar create comment button
+		Then I click the create comment button on the toolbar
 		Then I verify the number of comment links are 1
 		Then I edit the comment "" with text "Inner node"
 
@@ -84,7 +84,7 @@ Feature: Comments
 
 		# Add a comment to the supernode
 		Then I click the "Supernode" node to select it
-		Then I click on the secondary toolbar create comment button
+		Then I click the create comment button on the toolbar
 		Then I edit the comment "" with text "Inner Supernode"
 
 		# Create a supernode to contain the supernode and its comment

@@ -131,7 +131,7 @@ Scenario: Sanity test changing input port name to update port tip
 		Given I have uploaded diagram "/test_resources/diagrams/allNodes.json"
 		Given I have toggled the app side panel
 
-		Then I click zoom to fit
+		Then I click the zoom to fit button on the toolbar
 		When I hover over the node "Random Forest Classifier"
 		Then I verify the tip shows "above" the node "Random Forest Classifier"
 

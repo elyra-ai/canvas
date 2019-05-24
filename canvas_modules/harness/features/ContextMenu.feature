@@ -46,7 +46,7 @@ Feature: ContextMenu
 
 		# Test the context menu's 'Highlight' submenu is pushed up in a situation where it would appear off the bottom of the screen
 		# To do this, use zoom to fit to get a node near the bottom of the screen
-		Then I click zoom to fit
+		Then I click the zoom to fit button on the toolbar
 		Then I right click the "Neural Net" node to display the context menu
 		Then I click option "Highlight" from the context menu
 		Then I verify the submenu is pushed up by 91 pixels

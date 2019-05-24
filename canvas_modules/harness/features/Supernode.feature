@@ -89,7 +89,7 @@ Feature: Supernode
 		Then I click option "Expand supernode" from the context menu
 
 		Then I click the "Derive" node to select it
-		Then I click on the secondary toolbar cut button
+		Then I click the cut button on the toolbar
 		Then I right click at position 440, 300 to display the context menu
 		Then I click option "Paste" from the "Edit" submenu
 		Then I verify pipeline 0 have 15 nodes
@@ -97,9 +97,9 @@ Feature: Supernode
 
 		# Without zooming in the browser.dragAndDrop() used by the link step does not
 		# work, presumably because the screen is zoomed out too much.
-		Then I click zoom in
+		Then I click the zoom in button on the toolbar
 		Then I link node "Distribution" output port "outPort" to node "Derive" input port "inPort" on the subflow
-		Then I click zoom out
+		Then I click the zoom out button on the toolbar
 
 		Then I click the "Distribution" node in the subflow to select it
 		Then I Ctrl/Cmnd+click the "Derive" node in the subflow to add it to the selections
@@ -126,7 +126,7 @@ Feature: Supernode
 		Then I verify there are 1 pipelines
 		Then I verify pipeline 0 have 14 nodes
 
-		Then I click undo
+		Then I click the undo button on the toolbar
 		Then I verify pipeline 0 have 15 nodes
 		Then I verify pipeline 0 have 24 links
 		Then I verify pipeline 1 have 8 nodes
@@ -149,8 +149,8 @@ Feature: Supernode
 
 		Then I click the "Supernode" node to select it
 
-		Then I click on the secondary toolbar cut button
-		Then I click on the extra canvas secondary toolbar paste button
+		Then I click the cut button on the toolbar
+		Then I click the paste button on the toolbar on the extra canvas
 
 		Then I verify pipeline 0 have 14 nodes
 		Then I verify there are 1 pipelines
@@ -162,8 +162,8 @@ Feature: Supernode
 		Then I click option "Create supernode" from the context menu
 
 		Then I click the "Supernode" node to select it
-		Then I click on the secondary toolbar copy button
-		Then I click on the extra canvas secondary toolbar paste button
+		Then I click the copy button on the toolbar
+		Then I click the paste button on the toolbar on the extra canvas
 
 		Then I verify pipeline 0 have 13 nodes
 		Then I verify there are 2 pipelines
