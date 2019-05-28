@@ -604,6 +604,7 @@ class CanvasRenderer {
 
 	// Called during a resize.
 	displaySVGToFitSupernode() {
+		this.logger.log("displaySVGToFitSupernode - start");
 		const dims = this.getParentSupernodeSVGDimensions();
 		this.canvasSVG.attr("width", dims.width);
 		this.canvasSVG.attr("height", dims.height);
@@ -617,15 +618,17 @@ class CanvasRenderer {
 
 		this.zoomToFit();
 		this.displayBindingNodesToFitSVG();
+		this.logger.log("displaySVGToFitSupernode - end");
 	}
 
 	displayBindingNodesToFitSVG() {
-		this.logger.log("displayBindingNodesToFitSVG");
+		this.logger.log("displayBindingNodesToFitSVG - start");
 		this.moveSuperBindingNodes();
 		this.movingBindingNodes = true;
 		this.displayNodes();
 		this.displayLinks();
 		this.movingBindingNodes = false;
+		this.logger.log("displayBindingNodesToFitSVG - end");
 	}
 
 	getSupernodeSVGDimensionsFor(pipelineId) {
@@ -3557,10 +3560,18 @@ class CanvasRenderer {
 					centerPoint = (data.height - portsHeight) / 2;
 				}
 
+				// Sub-flow binding node ports need to be spaced by the inverse of the
+				// zoom amount so that, after zoomToFit on the in-place sub-flow the
+				// binding node ports line up with those on the supernode.
+				let multiplier = 1;
+				if (this.isSuperBindingNode(data)) {
+					multiplier = 1 / this.zoomTransform.k;
+				}
+
 				ports.forEach((p) => {
-					centerPoint += data.layout.portArcRadius;
+					centerPoint += (data.layout.portArcRadius * multiplier);
 					p.cy = centerPoint;
-					centerPoint += data.layout.portArcRadius + data.layout.portArcSpacing;
+					centerPoint += ((data.layout.portArcRadius + data.layout.portArcSpacing) * multiplier);
 				});
 			}
 		}
