@@ -1315,7 +1315,10 @@ class CanvasRenderer {
 	}
 
 	zoomToFit() {
-		const padding = this.isDisplayingSubFlow() ? this.layout.supernodeZoomToFitPadding : this.layout.zoomToFitPadding;
+		const padding = this.isDisplayingSubFlow()
+			? Math.max(this.layout.zoomToFitPadding, this.getBindingPortRadius() + this.getPaddingForConnections())
+			: this.layout.zoomToFitPadding;
+
 		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, padding);
 		this.zoomToFitCanvas(canvasDimensions);
 	}
@@ -1549,12 +1552,8 @@ class CanvasRenderer {
 
 		// If the canvas rectangle (nodes and comments) is smaller than the
 		// SVG area then don't let the canvas be dragged out of the SVG area.
-		let canv;
-		if (this.isDisplayingSubFlowInPlace()) {
-			canv = this.getCanvasDimensionsAdjustedForScale(k, this.layout.supernodeZoomToFitPadding);
-		} else {
-			canv = this.getCanvasDimensionsAdjustedForScale(k);
-		}
+		// let canv;
+		const canv = this.getCanvasDimensionsAdjustedForScale(k, this.layout.zoomToFitPadding);
 		const zoomSvgRect = this.getViewPortDimensions();
 
 		if (canv && canv.width < zoomSvgRect.width) {
@@ -2572,9 +2571,66 @@ class CanvasRenderer {
 		return expandedSupernodeHaveStyledNodes;
 	}
 
-	getPortRadius(d) {
-		return this.isSuperBindingNode(d) ? this.layout.supernodeBindingPortRadius / this.zoomTransform.k : d.layout.portRadius;
+	// Returns an amount for padding when zooming to fit the canvas objects
+	// withing a subflow to allow the connection lines to be displayed without
+	// them doubling back on themselves.
+	getPaddingForConnections() {
+		let padding = 0;
+		this.activePipeline.nodes.forEach((n) => {
+			const maxIncrement = this.getMaxIncrementToOutputBindingNodes(n);
+
+			// For input binding node connections we will never use the
+			// minInitialLineIncrement because the ports are on separate binding
+			// nodes -- never on a single node -- so we don't set any maxIncrement
+			// for these connections.
+
+			padding = Math.max(padding, n.layout.minInitialLine + n.layout.minFinalLine + maxIncrement);
+		});
+
+		return padding;
 	}
+
+	getMaxIncrementToOutputBindingNodes(node) {
+		return this.getCountOfLinksToOutputBindingNodes(node) * node.layout.minInitialLineIncrement;
+	}
+
+	getCountOfLinksToOutputBindingNodes(node) {
+		let count = 0;
+		if (node.outputs && node.outputs.length > 0) {
+			node.outputs.forEach((output) => {
+				if (this.isOutputLinkedToOutputBindingNode(node, output)) {
+					count++;
+				}
+			});
+		}
+		return count;
+	}
+
+	isOutputLinkedToOutputBindingNode(node, output) {
+		let state = false;
+		this.activePipeline.links.forEach((link) => {
+			if (link.srcNodeId === node.id && link.srcNodePortId === output.id && this.isOutputBindingNode(link.trgNodeId)) {
+				state = true;
+			}
+		});
+		return state;
+	}
+
+	isOutputBindingNode(nodeId) {
+		const node = this.getNode(nodeId);
+		return node.isSupernodeOutputBinding;
+	}
+
+	getPortRadius(d) {
+		return this.isSuperBindingNode(d) ? this.getBindingPortRadius() : d.layout.portRadius;
+	}
+
+	// Returns the radius size of the supernode binding ports sclaed up by
+	// teh zoom scale amount to give the actual size.
+	getBindingPortRadius() {
+		return this.layout.supernodeBindingPortRadius / this.zoomTransform.k;
+	}
+
 
 	isSuperBindingNode(d) {
 		return d.isSupernodeInputBinding || d.isSupernodeOutputBinding;
@@ -4986,7 +5042,12 @@ class CanvasRenderer {
 	// shortest y direction distance will be sorted last.
 	sortNodeLineData(nodeLineData) {
 		return nodeLineData.sort((nodeLineData1, nodeLineData2) => {
-			if (Math.abs(nodeLineData1.y1 - nodeLineData1.y2) < Math.abs(nodeLineData2.y1 - nodeLineData2.y2)) {
+			const first = Math.abs(nodeLineData1.y1 - nodeLineData1.y2);
+			const second = Math.abs(nodeLineData2.y1 - nodeLineData2.y2);
+			if (first === second) {
+				return (nodeLineData1.y1 < nodeLineData1.y2) ? 1 : -1; // Tie breaker
+
+			} else if (first < second) {
 				return 1;
 			}
 			return -1;

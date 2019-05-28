@@ -147,8 +147,8 @@ const haloDefaultLayout = {
 	cssSupernodeLabel: "d3-supernode-label",
 
 	// The amount of padding added around the canvas objects when doing a
-	// zoomToFit on the primary canvas. The supernodeZoomToFitPadding field
-	// controls padding amounts when displaying sub-flows.
+	// zoomToFit on the primary canvas. This may be overriden by common-canvas
+	// when displaying sub-flows.
 	zoomToFitPadding: 10,
 
 	// Supernode in-place containment area attributes
@@ -173,7 +173,6 @@ const haloDefaultLayout = {
 	supernodeTopAreaHeight: 25,
 	supernodeSVGAreaPadding: 3,
 	supernodeBindingPortRadius: 10,
-	supernodeZoomToFitPadding: 40,
 
 	// ---------------------------------------------------------------------------
 	// Layout values for links
@@ -387,8 +386,8 @@ const portsHorizontalDefaultLayout = {
 	cssSupernodeLabel: "d3-node-label-austin",
 
 	// The amount of padding added around the canvas objects when doing a
-	// zoomToFit on the primary canvas. The supernodeZoomToFitPadding field
-	// controls padding amounts when displaying sub-flows.
+	// zoomToFit on the primary canvas. This may be overriden by common-canvas
+	// when displaying sub-flows.
 	zoomToFitPadding: 10,
 
 	// Supernode in-place containment area attributes
@@ -412,8 +411,7 @@ const portsHorizontalDefaultLayout = {
 	supernodeMinHeight: 80,
 	supernodeTopAreaHeight: 25,
 	supernodeSVGAreaPadding: 3,
-	supernodeBindingPortRadius: 7,
-	supernodeZoomToFitPadding: 40,
+	supernodeBindingPortRadius: 6,
 
 	// ---------------------------------------------------------------------------
 	// Layout values for links
@@ -628,8 +626,8 @@ const portsVerticalDefaultLayout = {
 	cssSupernodeLabel: "d3-supernode-label",
 
 	// The amount of padding added around the canvas objects when doing a
-	// zoomToFit on the primary canvas. The supernodeZoomToFitPadding field
-	// controls padding amounts when displaying sub-flows.
+	// zoomToFit on the primary canvas. This may be overriden by common-canvas
+	// when displaying sub-flows.
 	zoomToFitPadding: 10,
 
 	// Supernode in-place containment area attributes
@@ -654,7 +652,6 @@ const portsVerticalDefaultLayout = {
 	supernodeTopAreaHeight: 25,
 	supernodeSVGAreaPadding: 3,
 	supernodeBindingPortRadius: 10,
-	supernodeZoomToFitPadding: 40,
 
 	// ---------------------------------------------------------------------------
 	// Layout values for links
@@ -748,7 +745,6 @@ export default class LayoutDimensions {
 			newLayout = this.overrideLinkType(newLayout, config);
 			newLayout = this.overrideSnapToGrid(newLayout, config);
 			newLayout = this.overrideAutoLayout(newLayout, config);
-			newLayout = this.overrideSupernodeZoomToFitPadding(newLayout, config);
 		}
 		return newLayout;
 	}
@@ -789,19 +785,6 @@ export default class LayoutDimensions {
 		layout.autoLayoutVerticalSpacing = config.enableAutoLayoutVerticalSpacing || layout.autoLayoutVerticalSpacing || 80;
 		layout.autoLayoutHorizontalSpacing = config.enableAutoLayoutHorizontalSpacing || layout.autoLayoutHorizontalSpacing || 80;
 
-		return layout;
-	}
-
-	// Overrides the supernode zoom padding amount with the sum of the
-	// minInitialLine and minFinalLine connections. This will use any
-	// custom minInitialLine and/or minFinalLine values supplied by the host app
-	// if it provides a nodeLayout obejct. The sum of these two values gives a
-	// good padding amount when displaying a sub-flow even though minFinalLine is
-	// not used when drawing Curve connection lines.
-	static overrideSupernodeZoomToFitPadding(layout, config) {
-		if (layout.nodeLayout.minInitialLine && layout.nodeLayout.minFinalLine) {
-			layout.supernodeZoomToFitPadding = layout.nodeLayout.minInitialLine + layout.nodeLayout.minFinalLine;
-		}
 		return layout;
 	}
 

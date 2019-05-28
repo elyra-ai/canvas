@@ -950,6 +950,7 @@ class App extends React.Component {
 			"data": data,
 			"content": content
 		};
+
 		const that = this;
 		this.setState((state) => {
 			state.consoleout = state.consoleout.concat(event);
@@ -1820,7 +1821,8 @@ class App extends React.Component {
 		};
 
 		const increaseMinInitialLine = {
-			minInitialLine: 100
+			minInitialLine: 100,
+			portArcSpacing: 25
 		};
 
 
