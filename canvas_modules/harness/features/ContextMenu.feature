@@ -8,13 +8,10 @@ Feature: ContextMenu
 
 	Scenario: Sanity test context menu options
 		Then I resize the window size to 1400 width and 650 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have selected the "Ports" connection type
-		Given I have toggled the app side panel
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "commentColorCanvas.json"
 
 		# Test the context menu appears OK in the middle of the canvas
 		Then I right click at position 800, 25 to display the context menu

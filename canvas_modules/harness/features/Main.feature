@@ -8,12 +8,10 @@ Feature: Main
 
 	Scenario: Sanity test a adding nodes from palette
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have selected the "Halo" connection type
-		Given I have toggled the app side panel
+		Given I have set this canvas config ""{"selectedConnectionType": "Halo"}""
+		Given I have uploaded palette "modelerPalette.json"
 
 		Then I open the palette
 		Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 300, 200
@@ -39,7 +37,6 @@ Feature: Main
 		Then I add comment 3 at location 750, 50 with the text "This is the functional test canvas that we build through automated test cases. This comment is meant to simulate a typical comment for annotating the entire canvas."
 
 		# Now delete everything and go back to empty canvas
-		Then I pause for 1 seconds
 
 		Then I delete node 1 the "Var. File" node
 		Then I delete node 1 the "Derive" node by pressing Delete
@@ -56,17 +53,13 @@ Feature: Main
 
 		# Verify that the diagram.json has no content.
 		Then I expect the object model to be empty
-		Then I write out the event log
-		Then I pause for 2 seconds
 
 	Scenario: Sanity test selecting nodes opens properties
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have selected the "Halo" connection type
-		Given I have toggled the app side panel
+		Given I have set this canvas config ""{"selectedConnectionType": "Halo"}""
+		Given I have uploaded palette "modelerPalette.json"
 
 		Then I open the palette
 		Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 300, 200
@@ -87,12 +80,9 @@ Feature: Main
 
 	Scenario: Sanity test changing node names reflected in canvas
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have selected the "Ports" connection type
-		Given I have toggled the app side panel
+		Given I have uploaded palette "modelerPalette.json"
 
 		Then I open the palette
 		Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 300, 200

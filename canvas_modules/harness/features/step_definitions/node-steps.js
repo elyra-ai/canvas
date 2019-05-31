@@ -594,16 +594,16 @@ module.exports = function() {
 
 				// verify that the  node is in the internal object model
 				var objectModel = getCanvasData();
-				var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", expectedImages[nodeType]);
-				expect(returnVal.value).toBe(1);
+				var returnVal = getObjectModelCount(objectModel, "nodes", expectedImages[nodeType]);
+				expect(returnVal).toBe(1);
 
 				// verify that an event for a new  node is in the external object model event log
 				var eventLog = getEventLogData();
-				returnVal = browser.execute(getEventLogCount, eventLog, "editActionHandler() createNode", expectedEventData[nodeType]);
-				if (returnVal.value !== 1) {
+				returnVal = getEventLogCount(eventLog, "editActionHandler() createNode", expectedEventData[nodeType]);
+				if (returnVal !== 1) {
 					// console.log(eventLog);
 				}
-				expect(returnVal.value).toBe(1);
+				expect(returnVal).toBe(1);
 			} catch (err) {
 				console.log("Error = " + err);
 				throw err;
@@ -752,9 +752,9 @@ module.exports = function() {
 
 		// verify that the link is Not in the internal object model
 		var objectModel = getCanvasData();
-		var nodeId = browser.execute(getNodeIdFromObjectModel, objectModel, nodeNumber);
-		var returnVal = browser.execute(deleteLinkInObjectModel, objectModel, nodeId.value);
-		expect(returnVal.value).toBe(0);
+		var nodeId = getNodeIdFromObjectModel(objectModel, nodeNumber);
+		var returnVal = deleteLinkInObjectModel(objectModel, nodeId);
+		expect(returnVal).toBe(0);
 	});
 
 
@@ -792,13 +792,13 @@ module.exports = function() {
 
 		// verify that the  node is in the internal object model
 		var objectModel = getCanvasData();
-		var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", expectedImages[nodeType]);
-		expect(returnVal.value).toBe(0);
+		var returnVal = getObjectModelCount(objectModel, "nodes", expectedImages[nodeType]);
+		expect(returnVal).toBe(0);
 
 		// verify that an event for a new  node is in the external object model event log
 		var eventLog = getEventLogData();
-		returnVal = browser.execute(getEventLogCount, eventLog, "action: deleteObjects", nodeType);
-		expect(returnVal.value).toBe(1);
+		returnVal = getEventLogCount(eventLog, "action: deleteObjects", nodeType);
+		expect(returnVal).toBe(1);
 	});
 
 	// Then I delete node 1 the "Var. File" node
@@ -824,13 +824,13 @@ module.exports = function() {
 
 		// verify that the  node is in the internal object model
 		var objectModel = getCanvasData();
-		var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", expectedImages[nodeType]);
-		expect(returnVal.value).toBe(0);
+		var returnVal = getObjectModelCount(objectModel, "nodes", expectedImages[nodeType]);
+		expect(returnVal).toBe(0);
 
 		// verify that an event for a new  node is in the external object model event log
 		var eventLog = getEventLogData();
-		returnVal = browser.execute(getEventLogCount, eventLog, "editActionHandler() deleteSelectedObjects", "");
-		expect(returnVal.value).toBe(1);
+		returnVal = getEventLogCount(eventLog, "editActionHandler() deleteSelectedObjects", "");
+		expect(returnVal).toBe(1);
 	});
 
 	this.Then("I expect the canvas to be empty", function() {
@@ -863,29 +863,13 @@ module.exports = function() {
 	this.Then(/^I expect the object model to be empty$/, function() {
 		// verify that the  node is in the internal object model
 		var objectModel = getCanvasData();
-		var returnVal = browser.execute(isObjectModelEmpty, objectModel);
-		expect(returnVal.value).toBe(0);
-	});
-
-	// Then I write out the object model
-	//
-	this.Then(/^I write out the object model$/, function() {
-		browser.timeouts("script", 5000);
-		// var objectModel = getCanvasData();
-		// console.log("warn Object Model: " + objectModel);
-	});
-
-	// Then I write out the event log
-	//
-	this.Then(/^I write out the event log$/, function() {
-		browser.timeouts("script", 5000);
-		// var eventLog = getEventLogData();
-		// console.log("warn event Log: " + eventLog);
+		var returnVal = isObjectModelEmpty(objectModel);
+		expect(returnVal).toBe(0);
 	});
 
 	// Then I pause for 5 seconds
 	//
-	this.Then(/^I pause for (\d+) seconds$/, function(seconds) {
+	this.Then(/^I pause for ([-+]?[0-9]*\.?[0-9]+) seconds$/, function(seconds) {
 		browser.pause(Number(seconds) * 1000);
 	});
 
@@ -897,8 +881,8 @@ module.exports = function() {
 
 		// verify that the  node is in the internal object model
 		var objectModel = getCanvasData();
-		var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", expectedImages[nodeName]);
-		expect(returnVal.value).toBe(0);
+		var returnVal = getObjectModelCount(objectModel, "nodes", expectedImages[nodeName]);
+		expect(returnVal).toBe(0);
 	});
 
 	this.Then(/^I verify the number of nodes are (\d+)$/, function(nodes) {
@@ -908,8 +892,8 @@ module.exports = function() {
 
 			// verify the number of nodes is in the internal object model
 			var objectModel = getCanvasData();
-			var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", "");
-			expect(returnVal.value).toBe(Number(nodes));
+			var returnVal = getObjectModelCount(objectModel, "nodes", "");
+			expect(returnVal).toBe(Number(nodes));
 		} catch (err) {
 			console.log("Error = " + err);
 			throw err;

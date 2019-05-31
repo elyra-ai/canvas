@@ -577,7 +577,7 @@ export default class SidePanelForms extends React.Component {
 				className="harness-sidepanel-radio-group"
 				name="layout_direction_radio"
 				onChange={this.layoutDirectionOptionChange}
-				defaultSelected={this.props.canvasConfig.selectedLayout}
+				defaultSelected={this.props.canvasConfig.selectedFixedLayout}
 			>
 				<RadioButton
 					value={NONE}
@@ -1039,7 +1039,7 @@ SidePanelForms.propTypes = {
 		setSnapToGridY: PropTypes.func,
 		snapToGridX: PropTypes.string,
 		snapToGridY: PropTypes.string,
-		selectedLayout: PropTypes.string,
+		selectedFixedLayout: PropTypes.string,
 		useInternalObjectModel: PropTypes.func,
 		setConnectionType: PropTypes.func,
 		selectedSnapToGrid: PropTypes.string,

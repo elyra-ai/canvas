@@ -8,12 +8,10 @@ Feature: Decorators
 
 	Scenario: Test for adding a decorator to a node
 		Then I resize the window size to 1200 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/decoratorCanvas.json"
-		Given I have toggled the app side panel
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "decoratorCanvas.json"
 
 		Given I have toggled the app side api panel
 		Given I have selected the "Set Node Decorations" API

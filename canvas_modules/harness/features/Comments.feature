@@ -7,10 +7,9 @@ Feature: Comments
 
 	Scenario: Test creating a comment in main flow with toolbar and and context menu
 		Then I resize the window size to 1400 width and 660 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have toggled the app side panel
+		Given I have uploaded palette "modelerPalette.json"
 
 		# Create a new comment and add text to it
 		Then I right click at position 500, 100 to display the context menu
@@ -60,10 +59,9 @@ Feature: Comments
 
 	Scenario: Test creating comment from toolbar and editing them within supernodes
 		Then I resize the window size to 1400 width and 660 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have toggled the app side panel
+		Given I have uploaded palette "modelerPalette.json"
 
 		# Create a node so we can add a comment which is linked to it
 		Then I open the palette

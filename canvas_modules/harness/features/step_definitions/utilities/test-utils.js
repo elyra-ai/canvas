@@ -8,92 +8,136 @@
  *******************************************************************************/
 
 /* global browser */
+var nconf = require("nconf");
 
-import { getBaseDir, getURL } from "./test-config.js";
-import { getHarnessData } from "./HTTPClient-utils.js";
+function setCanvasConfig(config) {
+	if (config.selectedPaletteLayout) {
+		nconf.set("paletteLayout", config.selectedPaletteLayout);
+	}
+	if (config.selectedConnectionType) {
+		nconf.set("connectionType", config.selectedConnectionType);
+	}
+	if (config.selectedLinkType) {
+		nconf.set("linkType", config.selectedLinkType);
+	}
+	if (config.selectedConnectionType) {
+		nconf.set("connectionType", config.selectedConnectionType);
+	}
+	if (config.selectedSnapToGridType) {
+		nconf.set("snapToGridType", config.selectedSnapToGrodType);
+	}
 
+	browser.execute(function(cfg) {
+		/* global document */
+		document.setCanvasConfig(cfg);
+	}, config);
+}
 
-const testUrl = getURL();
-const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-const getCanvasUrl2 = testUrl + "/v1/test-harness/canvas2";
-const getEventLogUrl = testUrl + "/v1/test-harness/events";
+function loadCanvas(fileName) {
+	browser.execute(function(name) {
+		/* global document */
+		document.setCanvasDropdownFile(name);
+	}, fileName);
+	browser.pause(600);
+}
+
+function loadCanvas2(fileName) {
+	browser.execute(function(name) {
+		/* global document */
+		document.setCanvasDropdownFile2(name);
+	}, fileName);
+	browser.pause(600);
+}
+
+function loadPalette(fileName) {
+	browser.execute(function(name) {
+		/* global document */
+		document.setPaletteDropdownSelect(name);
+	}, fileName);
+	browser.pause(600);
+}
+
+function loadPalette2(fileName) {
+	browser.execute(function(name) {
+		/* global document */
+		document.setPaletteDropdownSelect2(name);
+	}, fileName);
+	browser.pause(600);
+}
+
+function loadProperties(fileName, fileType) {
+	browser.execute(function(name, type) {
+		/* global document */
+		document.setPropertiesDropdownSelect(name, type);
+	}, fileName, fileType);
+	browser.pause(600);
+}
+
 
 function getCanvas() {
-	const canvasData = getServerData(getCanvasUrl);
-	return canvasData;
+	const canvasData = browser.execute(function() {
+		/* global document */
+		return document.canvasInfo;
+	});
+	return canvasData.value;
 }
 
 function getCanvasData() {
-	const canvasData = getServerData(getCanvasUrl);
+	const canvasData = getCanvas();
 	return canvasData.pipelines[0]; // Canvas info returned has an array of pipelines. Return the first.
 }
 
 function getSecondCanvas() {
-	const canvasData = getServerData(getCanvasUrl2);
-	return canvasData;
+	const canvasData = browser.execute(function() {
+		/* global document */
+		return document.canvasInfo2;
+	});
+	return canvasData.value;
 }
 
 function getCanvasDataForSecondCanvas() {
-	const canvasData = getServerData(getCanvasUrl2);
+	const canvasData = getSecondCanvas();
 	return canvasData.pipelines[0]; // Canvas info returned has an array of pipelines. Return the first.
 }
 
 function getEventLogData() {
-	return getServerData(getEventLogUrl);
-}
+	const eventLog = browser.execute(function() {
+		/* global document */
+		return document.eventLog;
+	});
 
-function getServerData(url) {
-	browser.timeouts("script", 3000);
-	let data = browser.executeAsync(getHarnessData, url);
-	let dataObj = JSON.parse(data.value);
-	// try again if data isn't found
-	if (!dataObj.data) {
-		browser.pause(500);
-		data = browser.executeAsync(getHarnessData, url);
-		dataObj = JSON.parse(data.value);
-	}
-	return dataObj;
+	return eventLog.value;
 }
 
 function getLastEventLogData(override) {
-	const eventLogJSON = getEventLogData();
+	const eventLog = getEventLogData();
 	const message = override ? override : 1;
-	const lastEventLog = eventLogJSON[eventLogJSON.length - message];
+	const lastEventLog = eventLog[eventLog.length - message];
 	return lastEventLog;
 }
 
 function getLastLogOfType(logType) {
-	const eventLogJSON = getEventLogData();
+	const eventLog = getEventLogData();
 
 	let lastEventLog = "";
-	for (const log of eventLogJSON) {
+	eventLog.forEach((log) => {
 		if (log.event === logType) {
 			lastEventLog = log;
 		}
-	}
+	});
+
 	return lastEventLog;
 }
 
 function isSchemaValidationError() {
-	const eventLogJSON = getEventLogData();
+	const eventLog = getEventLogData();
 	let schemaValError = false;
-	for (const log of eventLogJSON) {
+	eventLog.forEach((log) => {
 		if (log.event === "Schema validation error") {
 			schemaValError = true;
 		}
-	}
+	});
 	return schemaValError;
-}
-
-function loadUnknownFile(dropdownElement, fileName) {
-	dropdownSelect(dropdownElement, "Choose from location...");
-	const fileInput = dropdownElement.$(".harness-sidepanel-file-uploader")
-		.$("input");
-	// this will not work with relative paths
-	fileInput.setValue(getBaseDir() + fileName);
-	dropdownElement.$(".harness-sidepanel-file-upload-submit")
-		.click("button");
-	browser.pause(600);
 }
 
 function dropdownSelect(dropdownElement, selectedItemName) {
@@ -105,21 +149,6 @@ function dropdownSelect(dropdownElement, selectedItemName) {
 	browser.pause(600);
 	// get the list of drop down options.
 	const fileOptions = dropdownElement.$(".bx--list-box__menu").$(".bx--list-box__menu-item=" + selectedItemName);
-	fileOptions.scroll();
-	browser.pause(600);
-	fileOptions.click();
-	browser.pause(600);
-}
-
-function selectSelect(selectElement, selectedItemName) {
-	selectElement.click(".bx--select");
-	browser.pause(600);
-	selectElement.$(".bx--select-input")
-		.moveToObject();
-	browser.pause(600);
-	// get the list of drop down options.
-	const fileOptions = selectElement.$(".bx--select-input")
-		.$("option[value='" + selectedItemName + "']");
 	fileOptions.scroll();
 	browser.pause(600);
 	fileOptions.click();
@@ -145,7 +174,11 @@ module.exports = {
 	getLastLogOfType: getLastLogOfType,
 	isSchemaValidationError: isSchemaValidationError,
 	dropdownSelect: dropdownSelect,
-	loadUnknownFile: loadUnknownFile,
-	selectSelect: selectSelect,
-	useCmdOrCtrl: useCmdOrCtrl
+	useCmdOrCtrl: useCmdOrCtrl,
+	setCanvasConfig: setCanvasConfig,
+	loadCanvas: loadCanvas,
+	loadCanvas2: loadCanvas2,
+	loadPalette: loadPalette,
+	loadPalette2: loadPalette2,
+	loadProperties: loadProperties
 };

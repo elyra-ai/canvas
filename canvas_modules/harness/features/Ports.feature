@@ -8,13 +8,11 @@ Feature: Ports
 
 	Scenario: Sanity test to check it a port to port link can be made with a new node
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have selected the "Ports" connection type
-		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas.json"
-		Given I have toggled the app side panel
+		Given I have set this canvas config ""{"selectedConnectionType": "Ports"}""
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "multiPortsCanvas.json"
 
 		Then I open the palette
 		Then I add node 7 a "Filler" node from the "Field Ops" category onto the canvas at 380, 580
@@ -39,14 +37,11 @@ Feature: Ports
 
 	Scenario: Sanity test for multiple ports operations
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have selected the "Ports" connection type
-		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas2.json"
-		Given I have toggled the app side panel
 
+		Given I am on the test harness
+		Given I have set this canvas config ""{"selectedConnectionType": "Ports"}""
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "multiPortsCanvas2.json"
 
 		Then I link node "Select4" output port "outPort" to node "Merge1" input port "inPort3"
 		Then I verify the number of port data links are 4
@@ -122,11 +117,9 @@ Feature: Ports
 
 	Scenario: Sanity test for dynamically adding ports by updating pipeline flow through API
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have selected the "Ports" connection type
-		Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas3.json"
+		Given I have uploaded diagram "multiPortsCanvas3.json"
 		Given I have toggled the app side api panel
 		Given I have selected the "Set PipelineFlow" API
 
@@ -144,11 +137,9 @@ Feature: Ports
 
 	Scenario: Test a context menu is displayed for ports
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have selected the "Ports" connection type
-		Given I have uploaded diagram "/test_resources/diagrams/allTypesCanvas.json"
+		Given I have uploaded diagram "allTypesCanvas.json"
 		Given I have toggled the app side api panel
 
 		Then I right click the source port "outPort" of the "Binding (entry) node" node to display the context menu

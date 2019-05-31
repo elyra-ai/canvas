@@ -12,32 +12,6 @@ module.exports = function() {
 
 	/* global browser */
 
-	this.Then(/^I have selected the "([^"]*)" fixed Layout$/, function(fixedLayout) {
-
-		try {
-			if (fixedLayout === "none") {
-				var noneLabel = browser.$("#harness-sidepanel-layout-direction").$$(".radioButtonWrapper")[0].$("label");
-				noneLabel.scroll();
-				browser.pause(500);
-				noneLabel.click();
-			} else if (fixedLayout === "horizontal") {
-				var horizontalLabel = browser.$("#harness-sidepanel-layout-direction").$$(".radioButtonWrapper")[1].$("label");
-				horizontalLabel.scroll();
-				browser.pause(500);
-				horizontalLabel.click();
-			} else if (fixedLayout === "vertical") {
-				var verticalLabel = browser.$("#harness-sidepanel-layout-direction").$$(".radioButtonWrapper")[2].$("label");
-				verticalLabel.scroll();
-				browser.pause(500);
-				verticalLabel.click();
-			}
-		} catch (err) {
-			console.log("Err = " + err);
-			throw err;
-		}
-
-	});
-
 	this.Then(/^I have selected the "([^"]*)" properties container type$/, function(containerType) {
 
 		try {

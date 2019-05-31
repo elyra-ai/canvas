@@ -7,10 +7,12 @@ Feature: Supernode
 
 	Scenario: Test the supernode expanded structure
 		Then I resize the window size to 1330 width and 660 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
-		Given I have toggled the app side panel
+		Given I have uploaded diagram "supernodeCanvas.json"
+
+		# Travis needs this extra time
+		Then I pause for 0.3 seconds
 
 		Then I right click the "Supernode" node to display the context menu
 		Then I click option "Expand supernode" from the context menu
@@ -32,10 +34,9 @@ Feature: Supernode
 
 	Scenario: Sanity test supernode expanded to correct size
 		Then I resize the window size to 1330 width and 660 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
-		Given I have toggled the app side panel
+		Given I have uploaded diagram "supernodeCanvas.json"
 
 		Then I right click the "Supernode" node to display the context menu
 		Then I click option "Expand supernode" from the context menu
@@ -71,15 +72,10 @@ Feature: Supernode
 
 	Scenario: Sanity test create supernode within a supernode with a new node from palette
 		Then I resize the window size to 1330 width and 660 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have selected the "Ports" connection type
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
-		Given I have toggled the app side panel
 
-		Then I resize the window size to 1330 width and 660 height
+		Given I am on the test harness
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "supernodeCanvas.json"
 
 		Then I double click "Derive" node from the "Field Ops" category onto the canvas
 		Then I verify pipeline 0 have 16 nodes
@@ -137,15 +133,10 @@ Feature: Supernode
 
 	Scenario: Sanity test cut and copy supernode from first canvas to second canvas
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have selected the "Ports" connection type
-		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
 
-		Then I click on extra canvas toggle
-		Then I pause for 2 seconds
-		Given I have toggled the app side panel
+		Given I am on the test harness
+		Given I have set this canvas config ""{"extraCanvasDisplayed": true}""
+		Given I have uploaded diagram "supernodeCanvas.json"
 
 		Then I click the "Supernode" node to select it
 
@@ -174,11 +165,10 @@ Feature: Supernode
 
 	Scenario: Sanity test create supernode with link that does not have port info
 		Then I resize the window size to 1330 width and 660 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have selected the "Halo" connection type
-		Given I have uploaded predefined palette "modelerPalette.json"
+		Given I have set this canvas config ""{"selectedConnectionType": "Halo"}""
+		Given I have uploaded palette "modelerPalette.json"
 
 		Then I open the palette
 		Then I add node 1 a "Filler" node from the "Field Ops" category onto the canvas at 400, 200
@@ -195,7 +185,7 @@ Feature: Supernode
 		Then I right click the "Filler" node to display the context menu
 		Then I click option "Create supernode" from the context menu
 
-		Given I have selected the "Ports" connection type
+		Given I have set this canvas config ""{"selectedConnectionType": "Ports"}""
 		Then I right click the "Supernode" node to display the context menu
 		Then I click option "Expand supernode" from the context menu
 
@@ -208,10 +198,12 @@ Feature: Supernode
 
 	Scenario: Sanity test selecting the canvas background of expanded supernodes
 		Then I resize the window size to 1330 width and 660 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have uploaded diagram "/test_resources/diagrams/supernodeNestedCanvas.json"
-		Given I have toggled the app side panel
+		Given I have uploaded diagram "supernodeNestedCanvas.json"
+
+		# Travis needs this extra time
+		Then I pause for 0.3 seconds
 
 		Then I click the expanded supernode canvas background with node label "Supernode1" to select it
 		Then I Ctrl\/Cmnd\+click the expanded supernode canvas background with node label "Supernode3" to add it to the selections
@@ -229,10 +221,12 @@ Feature: Supernode
 
 	Scenario: Test context menu for sub-flow canvas background doesn't deselect nodes or comments
 		Then I resize the window size to 1330 width and 660 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
-		Given I have toggled the app side panel
+		Given I have uploaded diagram "supernodeCanvas.json"
+
+		# Travis needs this extra time
+		Then I pause for 0.3 seconds
 
 		# Select a node and check right click on sub-flow background doesn't deselect it
 		Then I right click the "Supernode" node to display the context menu
@@ -251,10 +245,9 @@ Feature: Supernode
 
 	Scenario: Test Select All in context menu for sub-flow canvas only selects non-binding nodes
 		Then I resize the window size to 1330 width and 660 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
-		Given I have toggled the app side panel
+		Given I have uploaded diagram "supernodeCanvas.json"
 
 		# Select a node and check right click on sub-flow background doesn't deselect it
 		Then I right click the "Supernode" node to display the context menu

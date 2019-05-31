@@ -7,11 +7,10 @@ Feature: Palette
 
 	Scenario: Sanity test adding nodes into empty canvas
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have toggled the app side panel
+		Given I have set this canvas config ""{"selectedPaletteLayout": "Flyout"}""
+		Given I have uploaded palette "modelerPalette.json"
 
 		Then I open the palette
 		Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 300, 200
@@ -23,9 +22,9 @@ Feature: Palette
 
 	Scenario: Sanity test adding node type to palette Flyout Panel
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
+		Given I have set this canvas config ""{"selectedPaletteLayout": "Flyout"}""
 		Given I open the palette
 		Given I have toggled the app side api panel
 		Given I have selected the "Add PaletteItem" API
@@ -37,9 +36,9 @@ Feature: Palette
 
 	Scenario: Sanity test adding node type to palette Modal Panel
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Modal" palette layout
+		Given I have set this canvas config ""{"selectedPaletteLayout": "Modal"}""
 		Given I open the palette
 		Given I have toggled the app side api panel
 		Given I have selected the "Add PaletteItem" API
@@ -51,10 +50,10 @@ Feature: Palette
 
 	Scenario: Sanity test adding node type to existing category to palette Flyout Panel
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
+		Given I have set this canvas config ""{"selectedPaletteLayout": "Flyout"}""
+		Given I have uploaded palette "modelerPalette.json"
 		Given I open the palette
 		Given I have toggled the app side api panel
 		Given I have selected the "Add PaletteItem" API
@@ -65,10 +64,10 @@ Feature: Palette
 
 	Scenario: Sanity test adding node type to existing category to palette Flyout Panel
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Modal" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
+		Given I have set this canvas config ""{"selectedPaletteLayout": "Modal"}""
+		Given I have uploaded palette "modelerPalette.json"
 		Given I open the palette
 		Given I have toggled the app side api panel
 		Given I have selected the "Add PaletteItem" API
@@ -79,15 +78,13 @@ Feature: Palette
 
 	Scenario: Test saving 3 nodes of different types to palette
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I click on the save to palette toggle
-		Given I have uploaded predefined palette "sparkPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/allTypesCanvas.json"
-		Given I have toggled the app side panel
-		Then I open the palette
 
+		Given I am on the test harness
+		Given I have set this canvas config ""{"selectedPaletteLayout": "Flyout", "enableSaveToPalette": "true"}""
+		Given I have uploaded palette "sparkPalette.json"
+		Given I have uploaded diagram "allTypesCanvas.json"
+
+		Then I open the palette
 		Then I verify the number of nodes are 5
 
 		Then I click the "Binding (entry) node" node to select it
@@ -104,15 +101,13 @@ Feature: Palette
 
 	Scenario: Test saving a supernode to palette
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I click on the save to palette toggle
-		Given I have uploaded predefined palette "sparkPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
-		Given I have toggled the app side panel
-		Then I open the palette
 
+		Given I am on the test harness
+		Given I have set this canvas config ""{"selectedPaletteLayout": "Flyout", "enableSaveToPalette": "true"}""
+		Given I have uploaded palette "sparkPalette.json"
+		Given I have uploaded diagram "supernodeCanvas.json"
+
+		Then I open the palette
 		Then I verify pipeline 0 have 15 nodes
 
 		Then I click the "Supernode" node to select it
@@ -126,11 +121,11 @@ Feature: Palette
 
 	Scenario: Test aspect ratio of images is preserved
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "animationsPalette.json"
-		Given I have toggled the app side panel
+		Given I have set this canvas config ""{"selectedPaletteLayout": "Flyout"}""
+		Given I have uploaded palette "animationsPalette.json"
+
 		Then I open the palette
 		Then I open the "Animations" palette category
 

@@ -20,12 +20,16 @@ import Toolbar from "../toolbar/toolbar.jsx";
 import NotificationPanel from "../notification-panel/notification-panel.jsx";
 import TooltipWrapper from "../tooltip/tooltip-wrapper.jsx";
 import isEmpty from "lodash/isEmpty";
+import Logger from "../logging/canvas-logger.js";
 
 import { DEFAULT_NOTIFICATION_HEADER, PALETTE } from "./constants/canvas-constants.js";
 
 export default class CommonCanvas extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.logger = new Logger(["CommonCanvas"]);
+		this.logger.log("constructor");
 
 		let paletteInitialState = this.props.config ? this.props.config.paletteInitialState : false;
 		if (!paletteInitialState) {
@@ -89,6 +93,7 @@ export default class CommonCanvas extends React.Component {
 		this.afterUpdateCallbacks = [];
 
 		this.unsubscribe = this.objectModel.subscribe(() => {
+			this.logger.log("Force Update");
 			this.forceUpdate(this.afterUpdate);
 		});
 
@@ -396,6 +401,7 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	render() {
+		this.logger.log("render");
 		let canvas = null;
 		let palette = null;
 		let contextMenuWrapper = null;

@@ -8,29 +8,21 @@ Feature: FlowValidation
 
 	Scenario: Sanity test flow validation when open a flow
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Halo" connection type
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have toggled the app side panel
 
-		Then I pause for 1 seconds
+		Given I am on the test harness
+		Given I have set this canvas config ""{"selectedConnectionType": "Halo"}""
+		Given I have uploaded diagram "commentColorCanvas.json"
 
 		Then I verify that there are 2 nodes with a "warning" indicator
 		Then I verify that there are 0 nodes with a "error" indicator
 
-		Then I pause for 1 seconds
-
 	Scenario: Sanity test flow validation when adding a node
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have selected the "Halo" connection type
-		Given I have uploaded palette "/test_resources/palettes/sparkPalette.json"
-		Given I have toggled the app side panel
 
-		Then I pause for 1 seconds
+		Given I am on the test harness
+		Given I have set this canvas config ""{"selectedConnectionType": "Halo"}""
+		Given I have uploaded palette "sparkPalette.json"
+
 		Then I open the palette
 		Then I add node 1 a "Add Column" node from the "Transformations" category onto the canvas at 450, 200
 		Then I close the palette

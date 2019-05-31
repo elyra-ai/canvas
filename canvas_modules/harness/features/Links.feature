@@ -8,15 +8,12 @@ Feature: Links
 
 	Scenario: Test node link disconnection
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "vertical" fixed Layout
-		Given I have selected the "Flyout" palette layout
-		Given I have selected the "Halo" connection type
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have toggled the app side panel
 
-		Then I pause for 1 seconds
+		Given I am on the test harness
+		Given I have uploaded diagram "commentColorCanvas.json"
+
+		# Travis needs this extra time
+		Then I pause for 0.3 seconds
 
 		# Test disconnect context menu option functionality
 		Then I verify the number of data links are 5
@@ -32,15 +29,12 @@ Feature: Links
 
 	Scenario: Test comment link disconnection
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "vertical" fixed Layout
-		Given I have selected the "Flyout" palette layout
-		Given I have selected the "Halo" connection type
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have toggled the app side panel
 
-		Then I pause for 1 seconds
+		Given I am on the test harness
+		Given I have uploaded diagram "commentColorCanvas.json"
+
+		# Travis needs this extra time
+		Then I pause for 0.3 seconds
 
 		# Test disconnect context menu option functionality
 		Then I verify the number of comments are 3
@@ -57,15 +51,12 @@ Feature: Links
 
 	Scenario: Test node and comment combination link disconnection
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "vertical" fixed Layout
-		Given I have selected the "Flyout" palette layout
-		Given I have selected the "Halo" connection type
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have toggled the app side panel
 
-		Then I pause for 1 seconds
+		Given I am on the test harness
+		Given I have uploaded diagram "commentColorCanvas.json"
+
+		# Travis needs this extra time
+		Then I pause for 0.3 seconds
 
 		# Test disconnect context menu option functionality
 		Then I verify the number of comment links are 3
@@ -85,16 +76,17 @@ Feature: Links
 		Then I verify the number of comment links are 1
 		Then I verify the number of data links are 3
 
+
 	Scenario: Test elbow connections from multi-port source node do not overlap
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Ports" connection type
-		Given I have selected the "Elbow" link type
-		Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas2.json"
-		Given I have toggled the app side panel
 
-		Then I pause for 1 seconds
+		Given I am on the test harness
+		Given I have set this canvas config ""{"selectedLinkType": "Elbow"}""
+		Given I have uploaded diagram "multiPortsCanvas2.json"
+
+		# Travis needs this extra time
+		Then I pause for 0.3 seconds
+
 		Then I link node "Select3" output port "outPort8" to node "Neural Net" input port "inPort1"
 		Then I verify the number of data links are 4
 		Then I verify the link from node "Select3" output port "outPort6" to node "Neural Net" input port "inPort2" has path "M 108 443.5L 144 443.5Q 154 443.5 154 433.5L 154 407Q 154 397 164 397L 319 397"

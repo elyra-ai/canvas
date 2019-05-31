@@ -8,17 +8,11 @@
 
 	Scenario: Sanity test to perform extra canvas node operation
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have selected the "Ports" connection type
-
-		Then I click on extra canvas toggle
-		Then I pause for 2 seconds
-
-		Given I have uploaded palette for extra canvas "/test_resources/palettes/modelerPalette.json"
-		Given I have uploaded diagram for extra canvas "/test_resources/diagrams/modelerCanvas.json"
-		Given I have toggled the app side panel
+		Given I have set this canvas config ""{"extraCanvasDisplayed": true}""
+		Given I have uploaded palette for extra canvas "modelerPalette.json"
+		Given I have uploaded diagram for extra canvas "modelerCanvas.json"
 
 		Then I verify the number of nodes in extra canvas are 8
 
@@ -40,19 +34,12 @@
 
 	Scenario: Sanity test to perform extra canvas property edit operation
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have selected the "Ports" connection type
-
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-
-		Then I click on extra canvas toggle
-		Then I pause for 2 seconds
-
-		Given I have uploaded palette for extra canvas "/test_resources/palettes/modelerPalette.json"
-		Given I have uploaded diagram for extra canvas "/test_resources/diagrams/modelerCanvas.json"
-		Given I have toggled the app side panel
+		Given I have set this canvas config ""{"extraCanvasDisplayed": true}""
+		Given I have uploaded diagram "commentColorCanvas.json"
+		Given I have uploaded palette for extra canvas "modelerPalette.json"
+		Given I have uploaded diagram for extra canvas "modelerCanvas.json"
 
 		Then I double click the "C5.0" node to open its properties
 		Then I enter "10" in the "samplingRatio" field in "top" canvas

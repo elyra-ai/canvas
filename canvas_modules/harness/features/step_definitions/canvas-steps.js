@@ -16,6 +16,8 @@ import { getCanvas, isSchemaValidationError, useCmdOrCtrl } from "./utilities/te
 
 /* global browser */
 
+const hoverTime = 800;
+
 module.exports = function() {
 
 	this.Then("I press Ctrl/Cmnd+X to Cut", function() {
@@ -137,13 +139,13 @@ module.exports = function() {
 
 	this.Then("I delete all selected objects via the Delete key", function() {
 		browser.keys("Delete");
-		browser.pause(1000);
+		browser.pause(200);
 	});
 
 	this.Then(/^I hover over category "([^"]*)"$/, function(category) {
 		const categoryElem = findCategoryElement(category);
 		categoryElem.moveToObject();
-		browser.pause(1000); // Wait for the tooltip to be displayed
+		browser.pause(hoverTime); // Wait for the tooltip to be displayed
 	});
 
 	this.Then(/^I hover over node type "([^"]*)" in category "([^"]*)"$/, function(nodeType, category) {
@@ -152,7 +154,7 @@ module.exports = function() {
 		const nodeIndex = findNodeIndexInPalette(nodeType);
 
 		browser.$$(".palette-list-item")[nodeIndex].moveToObject();
-		browser.pause(1000); // Wait for the tooltip to be displayed
+		browser.pause(hoverTime); // Wait for the tooltip to be displayed
 	});
 
 	this.Then(/^I verify the tip shows next to category "([^"]*)"$/, function(category) {
@@ -193,13 +195,13 @@ module.exports = function() {
 	this.Then(/^I hover over the node "([^"]*)"$/, function(nodeName) {
 		const nodeSelector = getNodeSelector(nodeName, "grp");
 		browser.$(nodeSelector).moveToObject();
-		browser.pause(1000); // Wait for the tooltip to be displayed
+		browser.pause(hoverTime); // Wait for the tooltip to be displayed
 	});
 
 	this.Then(/^I hover over the node "([^"]*)" in the subflow$/, function(nodeName) {
 		const nodeSelector = getNodeSelectorInSubFlow(nodeName, "grp");
 		browser.$(nodeSelector).moveToObject();
-		browser.pause(1000); // Wait for the tooltip to be displayed
+		browser.pause(hoverTime); // Wait for the tooltip to be displayed
 	});
 
 
@@ -224,13 +226,13 @@ module.exports = function() {
 	this.Then(/^I hover over the input port "([^"]*)" of node "([^"]*)"$/, function(portId, nodeName) {
 		const portSelector = getNodePortSelector(nodeName, "trg_port", portId);
 		browser.$(portSelector).moveToObject();
-		browser.pause(1000); // Wait for the tooltip to be displayed
+		browser.pause(hoverTime); // Wait for the tooltip to be displayed
 	});
 
 	this.Then(/^I hover over the output port "([^"]*)" of node "([^"]*)"$/, function(portId, nodeName) {
 		const portSelector = getNodePortSelector(nodeName, "src_port", portId);
 		browser.$(portSelector).moveToObject();
-		browser.pause(1000); // Wait for the tooltip to be displayed
+		browser.pause(hoverTime); // Wait for the tooltip to be displayed
 	});
 
 	this.Then(/^I verify the port name "([^"]*)" shows below the input port id "([^"]*)" of node "([^"]*)"$/, function(portName, portId, nodeName) {
@@ -265,7 +267,7 @@ module.exports = function() {
 
 	this.Then(/^I hover over the link at (\d+), (\d+)$/, function(mouseX, mouseY) {
 		browser.moveToObject(".d3-svg-canvas-div", Number(mouseX), Number(mouseY));
-		browser.pause(1000); // Wait for the tooltip to be displayed
+		browser.pause(hoverTime); // Wait for the tooltip to be displayed
 	});
 
 	this.Then(/^I verify the tip shows below (\d+) for link between node "([^"]*)", port "([^"]*)" and node "([^"]*)", port "([^"]*)"$/,
@@ -306,6 +308,7 @@ module.exports = function() {
 
 	this.Then(/^I move the mouse to coordinates (\d+), (\d+)$/, function(mouseX, mouseY) {
 		browser.moveToObject(".d3-svg-canvas-div", Number(mouseX), Number(mouseY));
+		browser.pause(100);
 	});
 
 	this.Then(/^I verify there are (\d+) pipelines$/, function(numPipelines) {

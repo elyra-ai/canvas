@@ -67,7 +67,7 @@ module.exports = function() {
 	this.Then(/^I enter "([^"]*)" in ExpressionEditor and verify it is a "([^"]*)"$/, function(enterText, type) {
 		const setText = (type === "string") ? "\"" + enterText + "\"" : enterText;
 		browser.execute(setTextValue, setText, false);
-		browser.pause(3000);
+		browser.pause(500);
 		const CMline = browser.$(".properties-expression-editor").$$(".CodeMirror-line")[0];
 		const searchClass = ".cm-" + type;
 		expect(setText).toEqual(CMline.$$(searchClass)[0].getText());
@@ -152,7 +152,7 @@ module.exports = function() {
 			.$(typeSelector)
 			.$(".properties-expression-validate")
 			.$(".validateLink");
-		browser.pause(3000);
+		browser.pause(500);
 		validateLink.click();
 	});
 

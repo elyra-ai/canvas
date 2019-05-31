@@ -26,16 +26,6 @@ module.exports = function() {
 		browser.pause(550);
 	});
 
-	this.Then("I click on extra canvas toggle", function() {
-		browser.$("#harness-sidepanel-extra-canvas").$$("div")[1].$("div").$("label")
-			.click();
-	});
-
-	this.Given("I click on the save to palette toggle", function() {
-		browser.$("#harness-sidepanel-save-to-palette-toggle").$$("div")[1].$("div").$("label")
-			.click();
-	});
-
 	this.Then("I click the download button", function() {
 		browser.$("[data-tip=download]").click();
 	});

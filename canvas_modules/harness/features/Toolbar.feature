@@ -8,12 +8,10 @@ Feature: Toolbar
 
 	Scenario: Sanity test for secondary toolbar Cut and Paste buttons
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have toggled the app side panel
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "commentColorCanvas.json"
 
 		# Test cutting some nodes and a comment and paste to canvas
 		Then I validate there are 8 links on the canvas with port style
@@ -30,12 +28,10 @@ Feature: Toolbar
 
 	Scenario: Sanity test for secondary toolbar Copy and Paste buttons
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have toggled the app side panel
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "commentColorCanvas.json"
 
 		# Test copying some nodes and a comment and paste to canvas
 		Then I validate there are 8 links on the canvas with port style
@@ -52,12 +48,10 @@ Feature: Toolbar
 
 	Scenario: Sanity test for secondary toolbar Create and Delete button
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have toggled the app side panel
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "commentColorCanvas.json"
 
 		Then I resize the window size to 1330 width and 660 height
 		Then I select node 3 the "C5.0" node
@@ -73,14 +67,11 @@ Feature: Toolbar
 
 	Scenario: Sanity test for secondary toolbar resize
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have toggled the app side panel
 
-		Then I pause for 1 seconds
+		Given I am on the test harness
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "commentColorCanvas.json"
+
 		Then I resize the window size to 500 width and 500 height
 		Then I verify the number of items in the secondary toolbar are 6
 		Then I resize the window size to 600 width and 600 height
@@ -92,12 +83,9 @@ Feature: Toolbar
 		Then I resize the window size to 1330 width and 660 height
 
 	Scenario: Sanity test for secondary toolbar add comment
-		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have toggled the app side panel
 		Then I resize the window size to 1330 width and 660 height
+
+		Given I am on the test harness
 
 		Then I click the create comment button on the toolbar
 		Then I verify the comment 1 position is "translate(30, 30)"
@@ -116,9 +104,7 @@ Feature: Toolbar
 		Then I click the create comment button on the toolbar
 		Then I verify the comment 4 position is "translate(-811.2502479338843, -340.4373140495868)"
 
-		Given I have toggled the app side panel
-		Then I click on extra canvas toggle
-		Given I have toggled the app side panel
+		Given I have set this canvas config ""{"extraCanvasDisplayed": true}""
 
 		Then I click the create comment button on the toolbar on the extra canvas
 		Then I verify the comment 5 position is "translate(30, 30)"

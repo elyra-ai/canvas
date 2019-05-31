@@ -28,7 +28,6 @@ import CommonCanvasPackage from "@wdp/common-canvas/package.json";
 import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
-import TestService from "./services/TestService";
 import NodeToForm from "./NodeToForm/node-to-form";
 
 import CustomSliderPanel from "./components/custom-panels/CustomSliderPanel";
@@ -106,8 +105,8 @@ class App extends React.Component {
 			propertiesInfo2: {},
 			propertiesJson: null,
 			selectedPanel: null,
-			selectedLayout: NONE,
-			selectedSnapToGrid: NONE_DRAG,
+			selectedFixedLayout: NONE,
+			selectedSnapToGridType: NONE_DRAG,
 			snapToGridX: "",
 			snapToGridY: "",
 			autoLayoutVerticalSpacing: "",
@@ -165,12 +164,11 @@ class App extends React.Component {
 		this.currentEditorId = null;
 		this.currentEditorId2 = null;
 
+		this.consoleout = [];
+
 		this.openConsole = this.openConsole.bind(this);
 		this.log = this.log.bind(this);
-
 		this.download = this.download.bind(this);
-		this.postUndoRedo = this.postUndoRedo.bind(this);
-
 		this.enableNavPalette = this.enableNavPalette.bind(this);
 		this.setDiagramJSON = this.setDiagramJSON.bind(this);
 		this.setPaletteJSON = this.setPaletteJSON.bind(this);
@@ -183,6 +181,7 @@ class App extends React.Component {
 		this.setNotificationMessages2 = this.setNotificationMessages2.bind(this);
 		this.appendNotificationMessages = this.appendNotificationMessages.bind(this);
 		this.clearNotificationMessages = this.clearNotificationMessages.bind(this);
+		this.setCanvasConfig = this.setCanvasConfig.bind(this);
 
 		this.setBreadcrumbsDefinition = this.setBreadcrumbsDefinition.bind(this);
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
@@ -277,22 +276,33 @@ class App extends React.Component {
 		} catch (err) {
 			console.error("Error setting up canvas controllers: " + err);
 		}
+
+		// Add these methods to the global document object so they can be called
+		// from the Chimp test cases.
+		document.setCanvasConfig = this.setCanvasConfig;
+		document.setCanvasDropdownFile = this.setCanvasDropdownFile;
+		document.setCanvasDropdownFile2 = this.setCanvasDropdownFile2;
+		document.setPaletteDropdownSelect = this.setPaletteDropdownSelect;
+		document.setPaletteDropdownSelect2 = this.setPaletteDropdownSelect2;
+		document.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect;
 	}
 
 	componentDidMount() {
 		addLocaleData(en);
 
 		this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
-
-		var sessionData = {
-			events: {},
-			canvas: this.canvasController.getCanvasInfo()
-		};
-		if (this.state.extraCanvasDisplayed) {
-			sessionData.canvas2 = this.canvasController2.getCanvasInfo();
-		}
-		TestService.postSessionData(sessionData);
 		NodeToForm.initialize();
+	}
+
+	// Sets the state to the config passed in. This is called by the Chimp
+	// testcases to set the test harness state in one go.
+	setCanvasConfig(config) {
+		this.setState(config);
+
+		if (config.selectedFixedLayout && config.selectedFixedLayout !== NONE) {
+			this.canvasController.setFixedAutoLayout(config.selectedFixedLayout);
+			this.canvasController2.setFixedAutoLayout(config.selectedFixedLayout);
+		}
 	}
 
 	setCanvasDropdownFile(selectedCanvasDropdownFile) {
@@ -467,7 +477,6 @@ class App extends React.Component {
 				FlowValidation.validateFlow(this.canvasController, this.getNodeForm);
 			}
 			this.setFlowNotificationMessages();
-			TestService.postCanvas(canvasJson);
 			this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
 			this.log("Canvas diagram set");
 		} else {
@@ -483,7 +492,6 @@ class App extends React.Component {
 			NodeToForm.setNodeForms(this.canvasController2.getNodes());
 			FlowValidation.validateFlow(this.canvasController2, this.getNodeForm);
 			this.setFlowNotificationMessages2();
-			TestService.postCanvas2(canvasJson);
 			this.log("Canvas diagram set 2");
 		} else {
 			this.log("Canvas diagram cleared 2");
@@ -601,16 +609,17 @@ class App extends React.Component {
 		this.log("Save Zoom selected", selectedSaveZoom);
 	}
 
-	setLayoutDirection(selectedLayout) {
-		this.canvasController.setFixedAutoLayout(selectedLayout);
-		this.canvasController2.setFixedAutoLayout(selectedLayout);
-		this.setState({ selectedLayout: selectedLayout });
-		this.log("Layout selected", selectedLayout);
+	setLayoutDirection(selectedFixedLayout) {
+		this.canvasController.setFixedAutoLayout(selectedFixedLayout);
+		this.canvasController2.setFixedAutoLayout(selectedFixedLayout);
+
+		this.setState({ selectedFixedLayout: selectedFixedLayout });
+		this.log("Layout selected", selectedFixedLayout);
 	}
 
-	setSnapToGridType(selectedSnapToGrid) {
-		this.setState({ selectedSnapToGrid: selectedSnapToGrid });
-		this.log("Snap to Grid selected", selectedSnapToGrid);
+	setSnapToGridType(selectedSnapToGridType) {
+		this.setState({ selectedSnapToGridType: selectedSnapToGridType });
+		this.log("Snap to Grid selected", selectedSnapToGridType);
 	}
 
 	setSnapToGridX(enteredSnapToGridX) {
@@ -944,29 +953,33 @@ class App extends React.Component {
 	}
 
 	log(evt, data, content) {
+		const now = new Date();
 		const event = {
-			"timestamp": new Date().toLocaleString(),
+			"timestamp": now.toLocaleString() + " " + now.getMilliseconds(),
 			"event": evt,
 			"data": data,
 			"content": content
 		};
 
-		const that = this;
-		this.setState((state) => {
-			state.consoleout = state.consoleout.concat(event);
-			return state;
-		}, function() {
-			const sessionData = {
-				events: that.state.consoleout,
-				canvas: that.canvasController.getCanvasInfo()
-			};
-			if (that.state.extraCanvasDisplayed) {
-				sessionData.canvas2 = that.canvasController2.getCanvasInfo();
-			}
-			TestService.postSessionData(sessionData);
-		});
-		const objDiv = document.getElementsByClassName("harness-app-console")[0];
-		objDiv.scrollTop = objDiv.scrollHeight;
+		this.consoleout.push(event);
+
+		// Add canvasInfo to global document so the test harness can access it
+		if (this.canvasController) {
+			document.canvasInfo = this.canvasController.getCanvasInfo();
+		}
+		if (this.canvasController2) {
+			document.canvasInfo2 = this.canvasController2.getCanvasInfo();
+		}
+
+		// Add consoleoutput to the global document so the test harness can access it
+		document.eventLog = this.consoleout;
+
+		this.setState({ consoleout: this.consoleout });
+
+		if (this.state.consoleOpened) {
+			const objDiv = document.getElementsByClassName("harness-app-console")[0];
+			objDiv.scrollTop = objDiv.scrollHeight;
+		}
 	}
 
 	openConsole() {
@@ -976,17 +989,6 @@ class App extends React.Component {
 	download() {
 		var canvas = JSON.stringify(this.getPipelineFlow(), null, 2);
 		ReactFileDownload(canvas, "canvas.json");
-	}
-
-	postUndoRedo() {
-		var sessionData = {
-			events: this.state.consoleout,
-			canvas: this.canvasController.getCanvasInfo()
-		};
-		if (this.state.extraCanvasDisplayed) {
-			sessionData.canvas2 = this.canvasController2.getCanvasInfo();
-		}
-		TestService.postSessionData(sessionData);
 	}
 
 	enableNavPalette(enabled) {
@@ -1250,10 +1252,8 @@ class App extends React.Component {
 		if (action === "execute") {
 			this.log("toolbar action: executeNode");
 		} else if (action === "undo") {
-			this.postUndoRedo();
 			this.log("toolbar action: undo");
 		} else if (action === "redo") {
-			this.postUndoRedo();
 			this.log("toolbar action: redo");
 		} else if (action === "addComment") {
 			this.log("toolbar action: addComment", source);
@@ -1837,7 +1837,7 @@ class App extends React.Component {
 
 		const commonCanvasConfig = {
 			enableInteractionType: this.state.selectedInteractionType,
-			enableSnapToGridType: this.state.selectedSnapToGrid,
+			enableSnapToGridType: this.state.selectedSnapToGridType,
 			enableSnapToGridX: this.state.snapToGridX,
 			enableSnapToGridY: this.state.snapToGridY,
 			enableAutoLayoutVerticalSpacing: this.state.autoLayoutVerticalSpacing,
@@ -1874,7 +1874,7 @@ class App extends React.Component {
 			enableNarrowPalette: this.state.narrowPalette
 		};
 
-		const layoutAction = this.state.selectedLayout === NONE;
+		const layoutAction = this.state.selectedFixedLayout === NONE;
 
 		const toolbarConfig = [
 			{ action: "palette", label: "Palette", enable: true },
@@ -2055,7 +2055,7 @@ class App extends React.Component {
 			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
 			setSaveZoom: this.setSaveZoom,
 			setLayoutDirection: this.setLayoutDirection,
-			selectedLayout: this.state.selectedLayout,
+			selectedFixedLayout: this.state.selectedFixedLayout,
 			useInternalObjectModel: this.useInternalObjectModel,
 			setInteractionType: this.setInteractionType,
 			selectedInteractionType: this.state.selectedInteractionType,
@@ -2065,7 +2065,7 @@ class App extends React.Component {
 			snapToGridX: this.state.snapToGridX,
 			snapToGridY: this.state.snapToGridY,
 			setConnectionType: this.setConnectionType,
-			selectedSnapToGrid: this.state.selectedSnapToGrid,
+			selectedSnapToGrid: this.state.selectedSnapToGridType,
 			selectedConnectionType: this.state.selectedConnectionType,
 			setNodeFormatType: this.setNodeFormatType,
 			selectedNodeFormat: this.state.selectedNodeFormat,
@@ -2138,6 +2138,16 @@ class App extends React.Component {
 			selectedOperation: this.state.apiSelectedOperation
 		};
 
+		let consoleView = null;
+		if (this.state.consoleOpened) {
+			consoleView = (
+				<Console
+					consoleOpened={this.state.consoleOpened}
+					logs={this.state.consoleout}
+				/>
+			);
+		}
+
 		const mainView = (<div id="harness-app-container">
 			{navBar}
 			<SidePanel
@@ -2158,11 +2168,8 @@ class App extends React.Component {
 				{commonCanvas}
 			</IntlProvider>
 
+			{consoleView}
 
-			<Console
-				consoleOpened={this.state.consoleOpened}
-				logs={this.state.consoleout}
-			/>
 			<ReactTooltip place="bottom" effect="solid" />
 		</div>);
 

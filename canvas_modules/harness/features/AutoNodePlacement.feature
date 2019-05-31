@@ -8,12 +8,9 @@ Feature: AutoNodePlacement
 
 	Scenario: Sanity test auto layout variations
 		Then I resize the window size to 1330 width and 660 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have selected the "Ports" connection type
-		Given I have toggled the app side panel
+		Given I have uploaded palette "modelerPalette.json"
 
 		Then I open the palette
 
@@ -127,10 +124,9 @@ Feature: AutoNodePlacement
 Scenario: Test that auto-nodes are added to a in-place expanded supernode
 		Then I resize the window size to 1330 width and 660 height
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have uploaded diagram "/test_resources/diagrams/supernodeCanvas.json"
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have toggled the app side panel
+		Given I have uploaded diagram "supernodeCanvas.json"
+		Given I have uploaded palette "modelerPalette.json"
+
 		Then I verify pipeline 1 have 8 nodes
 		Then I verify pipeline 1 have 7 links
 

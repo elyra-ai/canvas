@@ -36,8 +36,8 @@ module.exports = function() {
 
 			// verify the number of nodes is in the internal object model
 			var objectModel = getCanvasDataForSecondCanvas();
-			var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", "");
-			expect(returnVal.value).toBe(Number(nodes));
+			var returnVal = getObjectModelCount(objectModel, "nodes", "");
+			expect(returnVal).toBe(Number(nodes));
 		} catch (err) {
 			console.log("Error = " + err);
 			throw err;

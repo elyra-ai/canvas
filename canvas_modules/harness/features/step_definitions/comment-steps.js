@@ -60,13 +60,13 @@ module.exports = function() {
 
 			// verify that the comment is in the internal object model
 			var objectModel = getCanvasData();
-			var returnVal = browser.execute(getObjectModelCount, objectModel, "comments", comment);
-			expect(returnVal.value).toBe(1);
+			var count = getObjectModelCount(objectModel, "comments", comment);
+			expect(count).toBe(1);
 
 			// verify that an event for a new comment is in the external object model event log
 			var eventLog = getEventLogData();
-			returnVal = browser.execute(getEventLogCount, eventLog, "editActionHandler() editComment", comment);
-			expect(returnVal.value).toBe(1);
+			count = getEventLogCount(eventLog, "editActionHandler() editComment", comment);
+			expect(count).toBe(1);
 		});
 
 	// Then I move comment 1 onto the canvas by 50, 50
@@ -227,10 +227,9 @@ module.exports = function() {
 				browser.leftClick("#common-canvas-items-container-0", 400, 400);
 
 				// verify the comment is in the internal object model
-				browser.timeouts("script", 5000);
 				var objectModel = getCanvasData();
-				var returnVal = browser.execute(getCommentIdFromObjectModelUsingText, objectModel, commentText);
-				expect(returnVal.value).not.toBe(-1);
+				var returnVal = getCommentIdFromObjectModelUsingText(objectModel, commentText);
+				expect(returnVal).not.toBe(-1);
 
 
 			} catch (err) {
@@ -288,10 +287,9 @@ module.exports = function() {
 			expect(Number(comments)).toEqual(commentsLength);
 
 			// verify the number of comments is in the internal object model
-			browser.timeouts("script", 5000);
 			var objectModel = getCanvasData();
-			var returnVal = browser.execute(getObjectModelCount, objectModel, "comments", "");
-			expect(returnVal.value).toBe(Number(comments));
+			var returnVal = getObjectModelCount(objectModel, "comments", "");
+			expect(returnVal).toBe(Number(comments));
 		} catch (err) {
 			console.log("Error = " + err);
 			throw err;
@@ -339,10 +337,9 @@ module.exports = function() {
 			expect(commentText).toEqual(commentContentTxt);
 
 			// verify the comment is in the internal object model
-			browser.timeouts("script", 5000);
 			var objectModel = getCanvasData();
-			var returnVal = browser.execute(getCommentIdFromObjectModelUsingText, objectModel, commentText);
-			expect(returnVal.value).not.toBe(-1);
+			var returnVal = getCommentIdFromObjectModelUsingText(objectModel, commentText);
+			expect(returnVal).not.toBe(-1);
 		} catch (err) {
 			console.log("Error = " + err);
 			throw err;

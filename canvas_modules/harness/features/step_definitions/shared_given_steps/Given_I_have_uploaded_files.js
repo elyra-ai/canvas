@@ -7,25 +7,20 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { dropdownSelect, loadUnknownFile, selectSelect } from "../utilities/test-utils.js";
+import { loadCanvas, loadCanvas2, loadProperties } from "../utilities/test-utils.js";
 
 module.exports = function() {
 
-	/* global browser */
-	this.Then(/^I have uploaded predefined diagram "([^"]*)"$/, function(diagramFile) {
-		dropdownSelect(browser.$("#harness-sidepanel-canvas-input"), diagramFile);
+	this.Then(/^I have uploaded diagram "([^"]*)"$/, function(fileName) {
+		loadCanvas(fileName);
 	});
 
-	this.Then(/^I have uploaded diagram "([^"]*)"$/, function(diagramFile) {
-		loadUnknownFile(browser.$("#harness-sidepanel-canvas-input"), diagramFile);
+	this.Then(/^I have uploaded diagram for extra canvas "([^"]*)"$/, function(fileName) {
+		loadCanvas2(fileName);
 	});
 
-	this.Then(/^I have uploaded diagram for extra canvas "([^"]*)"$/, function(diagramFile) {
-		loadUnknownFile(browser.$("#harness-sidepanel-canvas-input2"), diagramFile);
-	});
-
-	this.Then(/^I have uploaded JSON for common-properties "([^"]*)"$/, function(propertiesFile) {
-		selectSelect(browser.$("#harness-sidepanel-input"), propertiesFile);
+	this.Then(/^I have uploaded common-properties file "([^"]*)" of type "([^"]*)"$/, function(fileName, fileType) {
+		loadProperties(fileName, fileType);
 	});
 
 };

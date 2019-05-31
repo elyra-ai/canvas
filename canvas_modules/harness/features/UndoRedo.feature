@@ -9,11 +9,8 @@ Feature: UndoRedo
 	Scenario: Sanity test for Base undo/redo operations
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have selected the "Halo" connection type
-		Given I have toggled the app side panel
+		Given I have set this canvas config ""{"selectedConnectionType": "Halo"}""
+		Given I have uploaded palette "modelerPalette.json"
 
 		# Base do/undo/redo tests
 
@@ -82,17 +79,15 @@ Feature: UndoRedo
 		Then I verify the number of comments are 0
 
 		Given I have toggled the app side common-properties panel
-		Given I have uploaded JSON for common-properties "spark.AddColumn.json"
-		Then I pause for 1 seconds
+		Given I have uploaded common-properties file "spark.AddColumn.json" of type "forms"
+
 		Then I enter "testValue" in the textbox "colName"
 		Then I click the undo button on the toolbar
 		Then I verify "testValue" is not present in the textbox "colName"
 		Then I click the redo button on the toolbar
 		Then I verify "testValue" is present in the textbox "colName"
 
-		Given I have toggled the app side panel
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have toggled the app side panel
+		Given I have uploaded diagram "commentColorCanvas.json"
 
 		Then I link comment 3 with text " comment 3 sample comment text" to node 4 the "Neutral Net" node for link 9 on the canvas
 		Then I verify the number of comment links are 4
@@ -118,16 +113,12 @@ Feature: UndoRedo
 	Scenario: Sanity test for Complex undo/redo operations
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have selected the "Halo" connection type
-		Given I have toggled the app side panel
+		Given I have set this canvas config ""{"selectedConnectionType": "Halo"}""
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "commentColorCanvas.json"
 
 		# Complex do/undo/redo tests
 
-		Then I pause for 1 seconds
 		Then I open the palette
 		Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 300, 450
 		Then I add node 8 a "Sort" node from the "Record Ops" category onto the canvas at 500, 450
@@ -222,17 +213,14 @@ Feature: UndoRedo
 
 	Scenario: Sanity test for Complex Disconnect and Delete undo/redo operations
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have selected the "Halo" connection type
-		Given I have toggled the app side panel
+		Given I have set this canvas config ""{"selectedConnectionType": "Halo"}""
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "commentColorCanvas.json"
 
 		# Complex do/undo/redo tests
 
-		Then I pause for 1 seconds
 		Then I open the palette
 		Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 300, 450
 		Then I add node 8 a "Sort" node from the "Record Ops" category onto the canvas at 300, 450
@@ -258,12 +246,9 @@ Feature: UndoRedo
 	Scenario: Sanity test for Multiple undo/redo operations
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/radialCanvas.json"
-		Given I have selected the "Halo" connection type
-		Given I have toggled the app side panel
+		Given I have set this canvas config ""{"selectedConnectionType": "Halo"}""
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "radialCanvas.json"
 
 		# Multiple commands
 
@@ -301,16 +286,12 @@ Feature: UndoRedo
 		Then I verify the number of data links are 21
 
 	Scenario: Sanity test for undo/redo of layout actions
-		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have selected the "Halo" connection type
-		Given I have toggled the app side panel
-
 		Then I resize the window size to 1330 width and 660 height
+
+		Given I am on the test harness
+		Given I have set this canvas config ""{"selectedConnectionType": "Halo"}""
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "commentColorCanvas.json"
 
 		Then I click the horizontal layout button on the toolbar
 		Then I verify the node 1 position is "translate(470, 123)"
@@ -366,11 +347,10 @@ Feature: UndoRedo
 
 	Scenario: Test undo/redo property values and title in common-properties
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have toggled the app side panel
+		Given I have uploaded palette "modelerPalette.json"
+
 		Then I open the palette
 		Then I add node 1 a "C5.0" node from the "Modeling" category onto the canvas at 350, 200
 		Then I double click the "C5.0" node to open its properties
@@ -381,7 +361,6 @@ Feature: UndoRedo
 		Then I verify the event log for the "samplingRatio" parameter contains "null"
 		Then I verify the event log has the "error" message for the "samplingRatio" parameter of "Select a sampling ratio"
 		Then I verify the event log title is "My C5.0 model"
-		Then I pause for 1 seconds
 		Then I double click the "My C5.0 model" node to open its properties
 		Then I click the undo button on the toolbar
 		Then I click on the "Save" button
@@ -391,11 +370,10 @@ Feature: UndoRedo
 
 	Scenario: Test undo/redo of shaper node
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "sparkPalette.json"
-		Given I have toggled the app side panel
+		Given I have uploaded palette "sparkPalette.json"
+
 		Then I open the palette
 		Then I add node 1 a "Data Shaper" node from the "Transformations" category onto the canvas at 350, 200
 		Then I verify there are 2 pipelines
@@ -411,11 +389,9 @@ Feature: UndoRedo
 
 	Scenario: Test undo/redo of supernode creation and deletion
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have toggled the app side panel
+		Given I have uploaded palette "modelerPalette.json"
 
 		Then I open the palette
 		Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 300, 200

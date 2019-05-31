@@ -8,10 +8,9 @@ Feature: ExpressionControl
 
 	Scenario: Test of expression editor control
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side common-properties panel
-		Then I have selected the "Flyout" properties container type
-		Given I have uploaded JSON for common-properties "CLEM_FilterRows_paramDef.json"
+		Given I have uploaded common-properties file "CLEM_FilterRows_paramDef.json" of type "parameterDefs"
 
 		# syntax highlighting and autocomplete features
 		Then I verify "is_real" is a "keyword" in ExpressionEditor
@@ -33,22 +32,19 @@ Feature: ExpressionControl
 		Then I enter "first" in ExpressionEditor and press autocomplete and select "first_index" and verify save
 
 		# placeholder text and validation
-		Given I have toggled the app side common-properties panel
-		Given I have uploaded JSON for common-properties "Javascript_FilterRows_paramDef.json"
+		Given I have uploaded common-properties file "Javascript_FilterRows_paramDef.json" of type "parameterDefs"
+
 		Then I verify that the placeholder text is "Enter JavaScript text" in ExpressionEditor
 		Then I enter "i" in ExpressionEditor and press autocomplete and select "isFinite"
 		Then I click on the validate link.
 		Then I verify error "Cannot have value isFinite"
 		Then I click on the "OK" button
 
-		Given I have toggled the app side common-properties panel
-
 	Scenario: Test of expression editor control in a structure cell
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side common-properties panel
-		Then I have selected the "flyout" properties container type
-		Given I have uploaded JSON for common-properties "summaryPanel_paramDef.json"
+		Given I have uploaded common-properties file "summaryPanel_paramDef.json" of type "parameterDefs"
 
 		# Select an existing row in the table and change it's value in the expression control
 		Then I open the "Configure Derive Node" summary link in the "Structure List Table" category
@@ -72,10 +68,9 @@ Feature: ExpressionControl
 
 	Scenario: Test of expression builder
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side common-properties panel
-		Then I have selected the "Flyout" properties container type
-		Given I have uploaded JSON for common-properties "expressionControl_paramDef.json"
+		Given I have uploaded common-properties file "expressionControl_paramDef.json" of type "parameterDefs"
 
 		Then I click on the expression build button for the "defaultExpr" property
 
@@ -101,10 +96,9 @@ Feature: ExpressionControl
 
 	Scenario: Test of Python and R expression controls
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side common-properties panel
-		Then I have selected the "Flyout" properties container type
-		Given I have uploaded JSON for common-properties "Python_ExpressionControl_paramDef.json"
+		Given I have uploaded common-properties file "Python_ExpressionControl_paramDef.json" of type "parameterDefs"
 
 		# test Python autocomplete and syntax highlighting
 		Then I verify "foo" is a "def" in ExpressionEditor
@@ -124,8 +118,7 @@ Feature: ExpressionControl
 		Then I enter "this is a string" in ExpressionEditor and verify it is a "string"
 
 		# placeholder text and validation
-		Given I have toggled the app side common-properties panel
-		Given I have uploaded JSON for common-properties "R_ExpressionControl_paramDef.json"
+		Given I have uploaded common-properties file "R_ExpressionControl_paramDef.json" of type "parameterDefs"
 
 		# test R autocomplete and syntax highlighting
 		Then I verify "# syntax testing" is a "comment" in ExpressionEditor
@@ -150,4 +143,3 @@ Feature: ExpressionControl
 		Then I enter "=" in ExpressionEditor and verify it is a "operator"
 		Then I enter "120" in ExpressionEditor and verify it is a "number"
 		Then I enter "this is a string" in ExpressionEditor and verify it is a "string"
-		Given I have toggled the app side common-properties panel

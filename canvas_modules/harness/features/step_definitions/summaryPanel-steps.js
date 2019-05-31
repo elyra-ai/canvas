@@ -37,6 +37,7 @@ module.exports = function() {
 		// find the validation icon
 		const icon = summaryPanel.$(".tooltip-container");
 		icon.moveToObject();
+		browser.pause(1000);
 	});
 
 	this.Then(/^I verify the tip for the validation icon in the "([^"]*)" summary panel is visible$/, function(summaryPanelId) {

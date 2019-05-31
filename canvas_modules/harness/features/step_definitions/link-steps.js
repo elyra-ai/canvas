@@ -39,17 +39,17 @@ module.exports = function() {
 
 				// verify that the link is in the internal object model
 				var objectModel = getCanvasData();
-				var srcNodeId = browser.execute(getNodeIdFromObjectModel, objectModel, orgNodeNumber);
-				var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel, destNodeNumber);
-				var returnVal = browser.execute(containLinkInObjectModel, objectModel, srcNodeId.value, destNodeId.value);
-				browser.pause(500);
-				expect(returnVal.value).toBe(1);
+
+				var srcNodeId = getNodeIdFromObjectModel(objectModel, orgNodeNumber);
+				var destNodeId = getNodeIdFromObjectModel(objectModel, destNodeNumber);
+				var returnVal = containLinkInObjectModel(objectModel, srcNodeId, destNodeId);
+				expect(returnVal).toBe(1);
 
 				// verify that an event for a new link is in the external object model event log
 				var eventLog = getEventLogData();
-				returnVal = browser.execute(containLinkEvent, eventLog, srcNodeId.value, destNodeId.value,
+				returnVal = containLinkEvent(eventLog, srcNodeId, destNodeId,
 					"editActionHandler() linkNodes");
-				expect(returnVal.value).toBe(1);
+				expect(returnVal).toBe(1);
 			} catch (err) {
 				console.log("Error = " + err);
 				throw err;
@@ -74,16 +74,16 @@ module.exports = function() {
 
 			// verify that the link is in the internal object model
 			var objectModel = getCanvasData();
-			var srcNodeId = browser.execute(getCommentIdFromObjectModelUsingText, objectModel, commentText);
-			var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel, nodeIndex);
-			var returnVal = browser.execute(containLinkInObjectModel, objectModel, srcNodeId.value, destNodeId.value);
-			expect(returnVal.value).toBe(1);
+			var srcNodeId = getCommentIdFromObjectModelUsingText(objectModel, commentText);
+			var destNodeId = getNodeIdFromObjectModel(objectModel, nodeIndex);
+			var returnVal = containLinkInObjectModel(objectModel, srcNodeId, destNodeId);
+			expect(returnVal).toBe(1);
 
 			// verify that an event for a new link is in the external object model event log
 			var eventLog = getEventLogData();
-			returnVal = browser.execute(containLinkEvent, eventLog, srcNodeId.value,
-				destNodeId.value, "editActionHandler() linkComment");
-			expect(returnVal.value).toBe(1);
+			returnVal = containLinkEvent(eventLog, srcNodeId,
+				destNodeId, "editActionHandler() linkComment");
+			expect(returnVal).toBe(1);
 		});
 
 	// Then I delete link between comment 1 and node 1 the "Derive" node
@@ -99,10 +99,10 @@ module.exports = function() {
 
 			// verify that the link is Not in the internal object model
 			var objectModel = getCanvasData();
-			var srcNodeId = browser.execute(getCommentIdFromObjectModel, objectModel, commentIndex);
-			var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel, nodeIndex);
-			var returnVal = browser.execute(containLinkInObjectModel, objectModel, srcNodeId.value, destNodeId.value);
-			expect(returnVal.value).toBe(0);
+			var srcNodeId = getCommentIdFromObjectModel(objectModel, commentIndex);
+			var destNodeId = getNodeIdFromObjectModel(objectModel, nodeIndex);
+			var returnVal = containLinkInObjectModel(objectModel, srcNodeId, destNodeId);
+			expect(returnVal).toBe(0);
 		});
 
 	// Then I delete link between node 1 the "Filter" node and node 2 the "Type" node
@@ -118,10 +118,10 @@ module.exports = function() {
 
 			// verify that the link is Not in the internal object model
 			var objectModel = getCanvasData();
-			var srcNodeId = browser.execute(getCommentIdFromObjectModel, objectModel, srcNodeIndex);
-			var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel, destNodeIndex);
-			var returnVal = browser.execute(containLinkInObjectModel, objectModel, srcNodeId.value, destNodeId.value);
-			expect(returnVal.value).toBe(0);
+			var srcNodeId = getCommentIdFromObjectModel(objectModel, srcNodeIndex);
+			var destNodeId = getNodeIdFromObjectModel(objectModel, destNodeIndex);
+			var returnVal = containLinkInObjectModel(objectModel, srcNodeId, destNodeId);
+			expect(returnVal).toBe(0);
 		});
 
 	// I delete link at 205, 248
@@ -144,8 +144,8 @@ module.exports = function() {
 
 		// verify that the link is in the internal object model
 		var objectModel = getCanvasData();
-		var returnVal = browser.execute(getObjectModelCount, objectModel, "links", linkCount);
-		expect(returnVal.value).toBe(linkCount);
+		var returnVal = getObjectModelCount(objectModel, "links", linkCount);
+		expect(returnVal).toBe(linkCount);
 
 	});
 
@@ -156,8 +156,8 @@ module.exports = function() {
 
 			// verify the number of data-links is in the internal object model
 			var objectModel = getCanvasData();
-			var returnVal = browser.execute(getObjectModelCount, objectModel, "datalinks", "");
-			expect(returnVal.value).toBe(Number(dataLinks));
+			var returnVal = getObjectModelCount(objectModel, "datalinks", "");
+			expect(returnVal).toBe(Number(dataLinks));
 		} catch (err) {
 			console.log("Error = " + err);
 			throw err;
@@ -172,8 +172,8 @@ module.exports = function() {
 
 			// verify the number of comment-links is in the internal object model
 			var objectModel = getCanvasData();
-			var returnVal = browser.execute(getObjectModelCount, objectModel, "commentLinks", "");
-			expect(returnVal.value).toBe(Number(commentLinks));
+			var returnVal = getObjectModelCount(objectModel, "commentLinks", "");
+			expect(returnVal).toBe(Number(commentLinks));
 		} catch (err) {
 			console.log("Error = " + err);
 			throw err;
@@ -237,8 +237,8 @@ module.exports = function() {
 
 			// verify the number of port-links is in the internal object model
 			var objectModel = getCanvasData();
-			var returnVal = browser.execute(getObjectModelCount, objectModel, "datalinks", "");
-			expect(returnVal.value).toBe(Number(portLinks));
+			var returnVal = getObjectModelCount(objectModel, "datalinks", "");
+			expect(returnVal).toBe(Number(portLinks));
 		} catch (err) {
 			console.log("Error = " + err);
 			throw err;
@@ -250,8 +250,8 @@ module.exports = function() {
 	this.Then(/^I verify (\d+) link between source node "([^"]*)" source port "([^"]*)" to target node "([^"]*)" target port "([^"]*)"$/, function(linkCount, srcNodeLabel, srcPortId, trgNodeLabel, trgPortId) {
 		try {
 			var objectModel = getCanvasData();
-			var returnVal = getPortLinks(objectModel, srcNodeLabel, srcPortId, trgNodeLabel, trgPortId);
-			expect(returnVal.length).toBe(Number(linkCount));
+			var links = getPortLinks(objectModel, srcNodeLabel, srcPortId, trgNodeLabel, trgPortId);
+			expect(links.length).toBe(Number(linkCount));
 		} catch (err) {
 			console.log("Error = " + err);
 			throw err;

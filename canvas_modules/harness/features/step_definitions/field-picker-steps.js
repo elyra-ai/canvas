@@ -85,5 +85,6 @@ module.exports = function() {
 		const fieldPickerContainer = browser.$(".properties-fp-table");
 		const button = fieldPickerContainer.$("button[data-id='properties-" + buttonType + "-button']");
 		button.click();
+		browser.pause(300);
 	});
 };

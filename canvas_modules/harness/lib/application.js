@@ -26,7 +26,6 @@ const isProduction = process.env.NODE_ENV === "production";
 const logger = log4js.getLogger("application");
 
 // Controllers
-var testAPI = require("../controllers/v1-test-api.js");
 var formsAPI = require("../controllers/v1-forms-api.js");
 var opsAPI = require("../controllers/v1-ops-api.js");
 
@@ -73,7 +72,6 @@ function _create(callback) {
 	app.use(constants.API_PATH_V1, v1Router);
 
 	v1Router.use(bodyParser.json({ limit: "10mb" }));
-	v1Router.use(constants.APP_PATH, testAPI);
 	v1Router.use(constants.APP_PATH, formsAPI);
 	v1Router.use(constants.APP_PATH, opsAPI);
 

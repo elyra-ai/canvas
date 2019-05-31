@@ -8,21 +8,17 @@ Feature: Main2
 
 	Scenario: Sanity test adding nodes and comments
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Modal" palette layout
-		Given I have selected the "Halo" connection type
-		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
-		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have toggled the app side panel
 
-		Then I pause for 1 seconds
+		Given I am on the test harness
+		Given I have set this canvas config ""{"selectedConnectionType": "Halo", "selectedPaletteLayout": "Modal"}""
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "commentColorCanvas.json"
 
 		Then I open the palette
+
 		Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 150, 450
 		Then I close the palette
 		Then I select node 7 the "Field Reorder" node
-		Then I pause for 1 seconds
 		Then I add comment 4 at location 350, 450 with the text "Some text comment."
 		Then I open the palette
 		Then I add node 8 a "Sort" node from the "Record Ops" category onto the canvas at 300, 450
@@ -39,30 +35,31 @@ Feature: Main2
 		Then I click option "Disconnect" from the context menu
 		Then I move the "Neural Net" node on the canvas to 50, 50
 		Then I move comment 3 with text " comment 3 sample comment text" onto the canvas by 100, 100
-		Then I pause for 1 seconds
 
 	Scenario: Sanity test from loaded file
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Ports" connection type
-		Given I have uploaded diagram "/test_resources/diagrams/modelerCanvas.json"
-		Given I have toggled the app side panel
 
-		Then I pause for 1 seconds
+		Given I am on the test harness
+		Given I have set this canvas config ""{"selectedConnectionType": "Ports"}""
+		Given I have uploaded diagram "modelerCanvas.json"
+
+		# Travis needs this extra time
+		Then I pause for 0.3 seconds
+
 		Then I validate there are 9 links on the canvas with port style
 		Then I verify the number of port data links are 7
 		Then I verify the number of comment links are 0
 
 	Scenario: Sanity test from loaded file in legacy format
 		Then I resize the window size to 1400 width and 800 height
-		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Ports" connection type
-		Given I have uploaded diagram "/test_resources/diagrams/x-modelerCanvas.json"
-		Given I have toggled the app side panel
 
-		Then I pause for 1 seconds
+		Given I am on the test harness
+		Given I have set this canvas config ""{"selectedConnectionType": "Ports"}""
+		Given I have uploaded diagram "x-modelerCanvas.json"
+
+		# Travis needs this extra time
+		Then I pause for 0.3 seconds
+
 		Then I validate there are 9 links on the canvas with port style
 		Then I verify the number of port data links are 7
 		Then I verify the number of comment links are 0

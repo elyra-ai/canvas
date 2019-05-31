@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-import { dropdownSelect, loadUnknownFile } from "../utilities/test-utils.js";
+import { loadPalette, loadPalette2 } from "../utilities/test-utils.js";
 
 var nconf = require("nconf");
 
@@ -57,19 +57,12 @@ module.exports = function() {
 		browser.$("#palette-flyout-search-text").setValue("", filterText);
 	});
 
-	this.Then(/^I have uploaded predefined palette "([^"]*)"$/, function(paletteFile) {
-		dropdownSelect(browser.$("#harness-sidepanel-palette-input"), paletteFile);
-		browser.pause(500);
+	this.Then(/^I have uploaded palette "([^"]*)"$/, function(fileName) {
+		loadPalette(fileName);
 	});
 
-	this.Then(/^I have uploaded palette "([^"]*)"$/, function(paletteFile) {
-		loadUnknownFile(browser.$("#harness-sidepanel-palette-input"), paletteFile);
-		browser.pause(500);
-	});
-
-	this.Then(/^I have uploaded palette for extra canvas "([^"]*)"$/, function(paletteFile) {
-		loadUnknownFile(browser.$("#harness-sidepanel-palette-input2"), paletteFile);
-		browser.pause(500);
+	this.Then(/^I have uploaded palette for extra canvas "([^"]*)"$/, function(fileName) {
+		loadPalette2(fileName);
 	});
 
 };

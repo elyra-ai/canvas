@@ -8,11 +8,9 @@ Feature: AutoLayoutDagre using Dagre auto-layout algorithm - Vertical and Horizo
 
 	Scenario: Test for toolbar horizontal and vertical layout
 		Then I resize the window size to 1400 width and 800 height
+
 		Given I am on the test harness
-		Given I have toggled the app side panel
-		Given I have selected the "Flyout" palette layout
-		Given I have uploaded diagram "/test_resources/diagrams/supernodeLayoutCanvas.json"
-		Given I have toggled the app side panel
+		Given I have uploaded diagram "supernodeLayoutCanvas.json"
 
 		# Check the original transforms of the nodes are correct before auto layout
 		Then I click the zoom to fit button on the toolbar
