@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -134,6 +134,11 @@ export default class CanvasController {
 
 		this.objectModel = new ObjectModel();
 		this.commandStack = new CommandStack();
+
+		// The following two functions must bind to this so that the correct canvas
+		// controller context can be accessed in context menu wrapper component.
+		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
+		this.closeContextMenu = this.closeContextMenu.bind(this);
 
 		// Increment the global instance ID by 1 each time a new
 		// canvas controller is created.

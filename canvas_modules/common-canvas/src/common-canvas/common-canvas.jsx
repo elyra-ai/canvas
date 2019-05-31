@@ -416,7 +416,10 @@ export default class CommonCanvas extends React.Component {
 				contextMenuWrapper = (<ContextMenuWrapper
 					containingDivId={this.itemsContainerDivId}
 					contextMenuDef={this.state.contextMenuDef}
-					canvasController={this.canvasController}
+					contextMenuActionHandler={this.canvasController.contextMenuActionHandler}
+					contextMenuPos={this.canvasController.getContextMenuPos()}
+					closeContextMenu={this.canvasController.closeContextMenu}
+					stopPropagation
 				/>);
 			}
 

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2019. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -75,13 +75,17 @@ export default class ContextMenuWrapper extends React.Component {
 		// If the click was anywhere outside the context menu we just close the menu.
 		const domNode = document.getElementById("context-menu-popover");
 		if (domNode && !domNode.contains(e.target)) {
-			this.props.canvasController.closeContextMenu();
-			e.stopPropagation();
+			// This stop propagation is needed in common canvas so that selected nodes will
+			// remain selected even after clicking outside the context menu to close the menu.
+			if (this.props.stopPropagation) {
+				e.stopPropagation();
+			}
+			this.props.closeContextMenu();
 		}
 	}
 
 	contextMenuClicked(action) {
-		this.props.canvasController.contextMenuActionHandler(action);
+		this.props.contextMenuActionHandler(action);
 	}
 
 	render() {
@@ -90,7 +94,7 @@ export default class ContextMenuWrapper extends React.Component {
 				contextHandler={this.contextMenuClicked}
 				menuDefinition={this.props.contextMenuDef}
 				canvasRect={this.getCanvasRect()}
-				mousePos={this.props.canvasController.getContextMenuPos()}
+				mousePos={this.props.contextMenuPos}
 			/>
 		);
 	}
@@ -99,5 +103,8 @@ export default class ContextMenuWrapper extends React.Component {
 ContextMenuWrapper.propTypes = {
 	contextMenuDef: PropTypes.array.isRequired,
 	containingDivId: PropTypes.string.isRequired,
-	canvasController: PropTypes.object.isRequired
+	contextMenuPos: PropTypes.object.isRequired,
+	contextMenuActionHandler: PropTypes.func.isRequired,
+	closeContextMenu: PropTypes.func.isRequired,
+	stopPropagation: PropTypes.bool
 };
