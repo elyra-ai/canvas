@@ -237,38 +237,42 @@ function getNodePortTipSelector(portId, extraCanvas) {
 }
 
 function getNodePortSelector(nodeText, nodeElement, portId, extraCanvas) {
+	const inst = extraCanvas === true ? "1" : "0";
 	const nodeId = getNodeIdForLabel(nodeText, extraCanvas);
-	const portSelector = "[data-id='node_" + nodeElement + "_" + nodeId + "_" + portId + "']";
+	const portSelector = `[data-id='node_${nodeElement}_${inst}_${nodeId}_${portId}']`;
 	return portSelector;
 }
 
 function getNodePortSelectorInSubFlow(nodeText, nodeElement, portId, extraCanvas) {
+	const inst = extraCanvas === true ? "1" : "0";
 	const nodeId = getNodeIdForLabelInSubFlow(nodeText, extraCanvas);
-	const portSelector = "[data-id='node_" + nodeElement + "_" + nodeId + "_" + portId + "']";
+	const portSelector = `[data-id='node_${nodeElement}_${inst}_${nodeId}_${portId}']`;
 	return portSelector;
 }
 
 function getNodeSelector(nodeText, nodeElement, extraCanvas) {
+	const inst = extraCanvas === true ? "1" : "0";
 	const nodeId = getNodeIdForLabel(nodeText, extraCanvas);
-	const nodeSelector = "[data-id='node_" + nodeElement + "_" + nodeId + "']";
+	const nodeSelector = `[data-id='node_${nodeElement}_${inst}_${nodeId}']`;
 	return nodeSelector;
 }
 
 function getNodeSelectorInSubFlow(nodeText, nodeElement, extraCanvas) {
+	const inst = extraCanvas === true ? "1" : "0";
 	const nodeId = getNodeIdForLabelInSubFlow(nodeText, extraCanvas);
-	const nodeSelector = "[data-id='node_" + nodeElement + "_" + nodeId + "']";
+	const nodeSelector = `[data-id='node_${nodeElement}_${inst}_${nodeId}']`;
 	return nodeSelector;
 }
 
 function getNodeIdForLabel(nodeText, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
-	const selector = `div > svg > g > g > text[data-id^='node_label_${inst}']`;
+	const selector = `div > svg > g > g[data-id^='node_grp_${inst}']`;
 	return getNodeId(nodeText, selector);
 }
 
 function getNodeIdForLabelInSubFlow(nodeText, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
-	const selector = `div > svg > g > g > svg > g > g > text[data-id^='node_label_${inst}']`;
+	const selector = `div > svg > g > g > svg > g > g[data-id^='node_grp_${inst}']`;
 	return getNodeId(nodeText, selector);
 }
 

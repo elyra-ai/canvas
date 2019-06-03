@@ -1,0 +1,824 @@
+{
+  "id": "2aca0781-971b-405c-94e1-9637137434c4",
+  "app_data": {
+    "job": {
+      "id": "52",
+      "applicationName": "test::Test",
+      "status": "running",
+      "jobName": "NestedUDPComp",
+      "health": "healthy"
+    }
+  },
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "pipelines": [
+    {
+      "id": "primary - 8b1a6885-83d1-44a0-8b65-50ee79fb3481",
+      "name": "test::Test",
+      "nodes": [
+        {
+          "id": "da0b2ccf-34dc-4b15-96b4-a30e2be899bc",
+          "type": "super_node",
+          "subflow_ref": {
+            "pipeline_id_ref": "9b0dfc97-b196-4d0a-b36c-af0e7df3d98b"
+          },
+          "app_data": {
+            "ui_data": {
+              "label": "Supernode-5-binding",
+              "image": "useDefaultIcon",
+              "x_pos": 76.90125274658203,
+              "y_pos": 335.5875015258789,
+              "description": "This supernode was created by common-canvas.",
+              "is_expanded": false,
+              "expanded_width": 218.6214141845703,
+              "expanded_height": 214.89712524414062
+            }
+          },
+          "inputs": [
+            {
+              "id": "ac584be2-8a3c-474f-a046-e10a3665b875_inPort",
+              "subflow_node_ref": "35c7bcf2-4b69-4dbb-9bd5-923f5e079631",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Supernode-5-binding-inputport-0"
+                }
+              }
+            },
+            {
+              "id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26_inPort",
+              "subflow_node_ref": "5e359c9e-7d3d-43d4-8473-a303a7e2246a",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Supernode-5-binding-inputport-1"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "ac584be2-8a3c-474f-a046-e10a3665b875_outPort1",
+              "subflow_node_ref": "ba6f7adc-bb98-4630-8be0-c84a465d32ec",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Supernode-5-binding-outputport-0"
+                }
+              }
+            },
+            {
+              "id": "ac584be2-8a3c-474f-a046-e10a3665b875_outPort2",
+              "subflow_node_ref": "e09e816e-92a0-47f1-adf3-aefccb1557b3",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Supernode-5-binding-outputport-1"
+                }
+              }
+            },
+            {
+              "id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26_outPort",
+              "subflow_node_ref": "cf87bcde-7c34-4810-9e82-4df711d5ff88",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Supernode-5-binding-outputport-3"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "9481aaa7-615e-42c8-94c8-c09a684244cd",
+          "type": "super_node",
+          "subflow_ref": {
+            "pipeline_id_ref": "sub-flow - 5136efe9-e2e1-47a3-a136-a10eb59a4707"
+          },
+          "app_data": {
+            "ui_data": {
+              "label": "Supernode-2-binding",
+              "image": "data:image/svg+xml;base64,PHN2ZyBpZD0iaWNvbiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMzIgMzIiPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDpub25lO308L3N0eWxlPjwvZGVmcz48dGl0bGU+dHJlZS12aWV3PC90aXRsZT48cGF0aCBkPSJNMzAsMjBWMTJIMjJ2M0gxN1Y3YTIsMiwwLDAsMC0yLTJIMTBWMkgydjhoOFY3aDVWMjVhMiwyLDAsMCwwLDIsMmg1djNoOFYyMkgyMnYzSDE3VjE3aDV2M1pNOCw4SDRWNEg4Wk0yNCwyNGg0djRIMjRabTAtMTBoNHY0SDI0WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCkiLz48cmVjdCBpZD0iX1RyYW5zcGFyZW50X1JlY3RhbmdsZV8iIGRhdGEtbmFtZT0iJmx0O1RyYW5zcGFyZW50IFJlY3RhbmdsZSZndDsiIGNsYXNzPSJjbHMtMSIgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIi8+PC9zdmc+",
+              "x_pos": 433.97504867240787,
+              "y_pos": 329.97940826416016,
+              "is_expanded": false,
+              "expanded_width": 397.6427001953125,
+              "expanded_height": 304.1263427734375
+            }
+          },
+          "inputs": [
+            {
+              "id": "3acd11c7-53ac-438a-89bd-ae2622e09ff8",
+              "subflow_node_ref": "254c7ce3-5e4d-4a00-a566-47e0c1b7c2a3",
+              "app_data": {
+                "ui_data": {
+                  "label": "Supernode-2-binding-inputport-0"
+                }
+              }
+            },
+            {
+              "id": "d8604129-4c0e-4f89-98ad-9ee09e007961",
+              "subflow_node_ref": "254c7ce3-5e4d-4a00-a566-47e0c1b7c2a3",
+              "app_data": {
+                "ui_data": {
+                  "label": "Supernode-2-binding-inputport-1"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "0ff47479-0564-452a-88f0-8f51d7c106bd",
+              "subflow_node_ref": "093a1e41-f401-4bf4-9875-80910ae86b1f",
+              "schema_ref": "0",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": -1
+                  },
+                  "label": "Supernode-2-binding-outputport-0"
+                }
+              }
+            },
+            {
+              "id": "c8e519ee-7f69-4ebc-8a17-88e210c0433b",
+              "subflow_node_ref": "093a1e41-f401-4bf4-9875-80910ae86b1f",
+              "schema_ref": "0",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": -1
+                  },
+                  "label": "Supernode-2-binding-outputport-1"
+                }
+              }
+            },
+            {
+              "id": "938c6e02-74d8-416c-b3c0-0f02a0cc091b",
+              "subflow_node_ref": "093a1e41-f401-4bf4-9875-80910ae86b1f",
+              "schema_ref": "0",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": -1
+                  },
+                  "label": "Supernode-2-binding-outputport-2"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "43a1ceb2-09ce-435d-8fb9-8d51a2e9a539",
+              "x_pos": 77.895751953125,
+              "y_pos": 149.93280792236328,
+              "width": 175,
+              "height": 136,
+              "class_name": "d3-comment-rect",
+              "content": "    This supernode has a sub-flow with five binding nodes. Each node has either a single output or single input port. \n    This supernode is constrcted how common canvas typically expects sub-flows to be defined.\n",
+              "associated_id_refs": [
+                {
+                  "node_ref": "da0b2ccf-34dc-4b15-96b4-a30e2be899bc",
+                  "class_name": "d3-comment-link"
+                }
+              ]
+            },
+            {
+              "id": "500fe523-4f71-4d6b-a6aa-899624986a93",
+              "x_pos": 371.51434326171875,
+              "y_pos": 148.31279754638672,
+              "width": 175,
+              "height": 136,
+              "class_name": "d3-comment-rect",
+              "content": "    This supernode has a sub-flow which has two binding nodes -- the input binding node has two output ports and the output binding node has three input ports. \n    So this Supernode is similar to the way Streams constructs sub-flows",
+              "associated_id_refs": [
+                {
+                  "node_ref": "9481aaa7-615e-42c8-94c8-c09a684244cd",
+                  "class_name": "d3-comment-link"
+                }
+              ]
+            },
+            {
+              "id": "8675d986-df0e-4f67-8dbc-34dd8098d650",
+              "x_pos": 53.29318245945582,
+              "y_pos": 27.964066727654284,
+              "width": 322.72984313964844,
+              "height": 69.79146575927734,
+              "class_name": "d3-comment-rect",
+              "content": "This test canvas shows supernodes that have sub-flows that are built in differnet ways.  It is used to ensure that when the supernode is expanded the ports all appear in the correct place.",
+              "associated_id_refs": []
+            }
+          ]
+        }
+      },
+      "runtime_ref": "fd704f5d-d6ad-43cd-b9d9-667556266011"
+    },
+    {
+      "id": "sub-flow - 5136efe9-e2e1-47a3-a136-a10eb59a4707",
+      "name": "",
+      "nodes": [
+        {
+          "id": "254c7ce3-5e4d-4a00-a566-47e0c1b7c2a3",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "SN2-BN-INPUT",
+              "x_pos": 50,
+              "y_pos": 205
+            }
+          },
+          "outputs": [
+            {
+              "id": "777439a4-65be-49fe-9190-b5e2ae7995ae",
+              "schema_ref": "0",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": -1
+                  },
+                  "label": "SN2-BN-INPUT-PORT0"
+                }
+              }
+            },
+            {
+              "id": "25aaf09b-4fc4-4252-acdd-18483305cbe2",
+              "schema_ref": "0",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": -1
+                  },
+                  "label": "SN2-BN-INPUT-PORT1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "093a1e41-f401-4bf4-9875-80910ae86b1f",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "SN2-BN-OUTPUT",
+              "x_pos": 770,
+              "y_pos": 159.25
+            }
+          },
+          "inputs": [
+            {
+              "id": "81318d72-dbac-4002-af5f-fce9dcdf4b09",
+              "app_data": {
+                "ui_data": {
+                  "label": "SN2-BN-OUTPUT-PORT0"
+                }
+              }
+            },
+            {
+              "id": "31465256-5be5-4dfd-9720-d1bf0ea8d6cf",
+              "app_data": {
+                "ui_data": {
+                  "label": "SN2-BN-OUTPUT-PORT1"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "ea8189ec-f02d-4665-9ad9-e09be2d9980d",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort"
+                }
+              ]
+            },
+            {
+              "id": "b6d2d0de-e670-47a4-8d23-3254b1debddb",
+              "app_data": {
+                "ui_data": {
+                  "label": "SN2-BN-OUTPUT-PORT2"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "1db3693e-77fa-4cbc-b32a-f7a574daa12b",
+          "type": "execution_node",
+          "op": "filler",
+          "app_data": {
+            "ui_data": {
+              "label": "SN2-Filler",
+              "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ii0wLjggLTEuNSA0Ny4zIDQyLjEiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgLTAuOCAtMS41IDQ3LjMgNDIuMTsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4NCgkuc3Qwe2ZpbGw6IzFEMzY0OTt9DQoJLnN0MXtmaWxsOm5vbmU7c3Ryb2tlOiMxNTI5MzU7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDJ7ZmlsbDpub25lO3N0cm9rZTojRjlGOUZCO3N0cm9rZS13aWR0aDozO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qze2ZpbGw6I0Y5RjlGQjt9DQoJLnN0NHtmaWxsOiM0MUQ2QzM7fQ0KPC9zdHlsZT4NCjxnPg0KCQ0KCQk8aW1hZ2Ugc3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2O2VuYWJsZS1iYWNrZ3JvdW5kOm5ldyAgICA7IiB3aWR0aD0iNTIiIGhlaWdodD0iNDUiIHhsaW5rOmhyZWY9ImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBRFFBQUFBdENBWUFBQURob1VpNEFBQUFDWEJJV1hNQUFBc1NBQUFMRWdIUzNYNzhBQUFBCkdYUkZXSFJUYjJaMGQyRnlaUUJCWkc5aVpTQkpiV0ZuWlZKbFlXUjVjY2xsUEFBQUJXUkpSRUZVZU5yTVd0MU9HMGNZM1psZFl4dmIKT09uV3FFNnFvRllXS2xBalVhSGN0Rks1NEJYd1N5Q2VBWGdkZUFtaTNxVlZMMGdnRXFWRUpEU3U3QzdGNE1XL085UHpiZFlyMS9IUApMbG5idTlKbzdaRjNaczZjODUyWitkWk1lZGpGcEpUSy92NCtVOFp3N2U3dVNzYnNwcVh2Z2ZsOVlHOXZqeHVHRWRGMVBkcG9OQ0xOClpqTlFVS2xVU3FEOU50cXY0MnNiL1FrL3oydCt3VlNyMVhnaWtjZ0F6Rk1oeENNTkY5Z0tCQlJZa2FacHRwTEpwSEYvZi8rK1Zxc1oKcUc3Nlljb1BJRWJNUktQUmVjVlMxZ1VYejlITjExS1JNYVlFUnBMa25KdlNrbWNBOXdKelZkL2EybW9mSGg1YWdRTkN3eHd6bDdRcwo2MXZKNUkrbytna2xpeklUbU42a3pVUVZ0OGRndlF4UWY2K3NyTndEa1BES2tsZEFEQTFIYm05djlVZ2tzb2ltbDFHM2dKSUdPMnFBCklVU0RUcExNbUdTcllPalB1N3U3NjRPRGcxYWhVUERFa3VxUkhUV2RUczloeHBiUTBjK01zelZVWnh4MnVHTXVRUlR1RnFhMGNMOVcKVmZXZm01dWI2c2JHUnZ2bzZHZ2tTOXdyT3pBQkhZQnk2Q2dIT2Vpb2p6ekVKVDFjM0dIcEc2N3c1K2hydFY2dnoxUDhldWx2SkVPZwpXNzI0dUVpRC91OTYyQmtYb0E1VHhINFVvRnBDaWxJc0Zydk9ack9OMDlOVCtXQ0d5S2JSUUJ4Z0tQaVgwTlhpbU5seHg0Vis0bVE2Ck1JZ2xLR09SRkVKS0dkWHZNSVpZUHArZmdZMW0wZmc2Wm1vRGRYbVVMeDB6R1NjZ1dwT29mZFcrQzhYa0tpOWkzVE5Hc2NSSDJUUWEKK2FobFJhNmllbjRDN0hSTEwySXJBbkZMOGV1RkplN0JDQmFKZHB2K2p6TGd5dVF1Nml1Qk1TeUFwVHlrdndBYlR5S3V1Uy9KRFRJQwpORHdwZHJwWlluNXNYQnRtQkdCa2trYmd5Y2JoZUFac0hGcys4NjkrK3p3MVRFWVFoSTN6a0JuQlo5czRENkVSRExKeFczcWpERUlkCnRWK2JnaEY4bGtGb2ZYYlRPWHpQVGRrSVJob0VDdTN6REJ3NHExRFZoNDVCOEU3c2xNdmxCTXpnR2RqNTNqa2FKTUlndFg2TExjVTEKWWp5UG84c1BZT2twbVFYbE9Od1lBanRxUEI0bnVUMUQ3QkQ2TDBMSVRqZExNWXlUTnNoUDZFd0dFNHQwRWpiMldhWlNxYWdVL0FEMApHS2dKMkV4SXdiaWdNRVlOSzFDVXdnWVd6cnJSU3BpQmhSL1VBT3BmSUwvRjNWZGlZZ3FYd0JqYm1QSUdaWWF3ME1yLzJmYkp5WWxWCnE5VUl5RHN3OUpZY0JLVVZVbENVWDZoam5HWGN5UXdxaVAwVzVmSmNRSlNFeUdReUpyVDRUakw1R2xXWEtLYnpjSmd1NlV4MFNTamkKRmRUMHUyVlp0QVZxT0lsSjE4VWtXR3BGbzFFRExKM2pzWFA4d0FnaFN6VEJWUlJTMFV1TThSZ2JtN0t1Nis0NFhWc21sZ0RJYkxmYgpsNmg5QldDWGRrcEpTaEVtZHV5Smxzb1pQci9CV0l2THk4dTE3dXhxOXpyVHpkSVpOUG9HZFVVeWk1QklqOFpnMmhPTkNhZUpUNlZTCjFVS2hJQVp1VG9rbFdua1JaRytoMFpjQWRVeDZEWUgwdXRrNXA3Q2dpU2NDZXNmVmV4NlNqaDVMY0wxamJOTjFnUHFLRmkrVVIxN3oKZUlHamdld0JwdXF5MDJwZnpzN09tazVHZGZnUm5QUkl1aVI5a2s1SnIxTTJDT0hJdmtoaFFPRXdpSjJCT1FYU0pla3pCQWJoMmpUSgpuOEtBd29IQ29oODd3NUlrWVRFSTE2YnRtSVpOWTV0VDZyWnB6M2s1SEcyVnRiVTFDNkFzeEJMSDduYk8yYlFtbk9mWUJOaHAwaHNJCmZQb052ZjJDUmZRUGpPbHVlM3Q3NEtRT2Uvc3dWWVBvWndSemMzT2YyTFRmVlBDMERNS1hFWGdHTk1RZ3hyblA4MjBFdmdCTllaL24KMndnOG1VS3ZRV3h1YmdyRWtxSnFhZ0xOMHRzSTNjbVZNYWVqSUlwd2NnTkZQMGJnMVJRK1lTbVh5eG5vZ09MbzFIWThhZWZKWm9KOAphZXl3YzQ1anpESEozSXNSOUNZZFBQOTJaMmRuQnRKN29qRnRYWElaL0Z0d1pnTXltV1JuQVBTaTJXeSt2cnE2cW96bExYakh4aEdiCkpRajFWODc0Qi9xZkFzQUU5ejhGaFVtMDJkSTB6UkNXZUErR1RDOUc4RkNHT2xZZTZuK1NQSFF3b2YydnozOENEQUQ4b3JGRmVjS2EKV0FBQUFBQkpSVTVFcmtKZ2dnPT0iIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgLTMgLTIpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjExLjEsMzcgMC40LDE4LjUgMTEuMSwwIDMyLjYsMCA0My40LDE4LjUgMzIuNiwzNyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9IjExLjEsMzcgMC40LDE4LjUgMTEuMSwwIDMyLjYsMCA0My40LDE4LjUgMzIuNiwzNyAJCSIvPg0KCTwvZz4NCjwvZz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxMCIgeTE9IjguNSIgeDI9IjE1IiB5Mj0iOC41Ii8+DQo8cG9seWdvbiBjbGFzcz0ic3QzIiBwb2ludHM9IjI3LDExLjYgMjcsMTAgMjMsMTAgMjMsNyAyNyw3IDI3LDQuOSAzNC4xLDguMiAiLz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxMSIgeTE9IjE4LjUiIHgyPSIxOCIgeTI9IjE4LjUiLz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxMCIgeTE9IjI4LjUiIHgyPSIxNSIgeTI9IjI4LjUiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDMiIHBvaW50cz0iMjksMjEuNiAyOSwyMCAyNSwyMCAyNSwxNyAyOSwxNyAyOSwxNC45IDM0LjgsMTguMiAiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDMiIHBvaW50cz0iMjcsMzEuNiAyNywzMCAyMywzMCAyMywyNyAyNywyNyAyNywyNC45IDM0LDI4LjIgIi8+DQo8cmVjdCB4PSIxOC40IiB5PSI1LjUiIGNsYXNzPSJzdDQiIHdpZHRoPSIxLjUiIGhlaWdodD0iNiIvPg0KPHJlY3QgeD0iMTYuMSIgeT0iNy43IiBjbGFzcz0ic3Q0IiB3aWR0aD0iNiIgaGVpZ2h0PSIxLjUiLz4NCjxyZWN0IHg9IjE4LjQiIHk9IjI1LjUiIGNsYXNzPSJzdDQiIHdpZHRoPSIxLjUiIGhlaWdodD0iNiIvPg0KPHJlY3QgeD0iMTYuMSIgeT0iMjcuNyIgY2xhc3M9InN0NCIgd2lkdGg9IjYiIGhlaWdodD0iMS41Ii8+DQo8cmVjdCB4PSIyMC43IiB5PSIxNS41IiBjbGFzcz0ic3Q0IiB3aWR0aD0iMS41IiBoZWlnaHQ9IjYiLz4NCjxyZWN0IHg9IjE4LjQiIHk9IjE3LjciIGNsYXNzPSJzdDQiIHdpZHRoPSI2IiBoZWlnaHQ9IjEuNSIvPg0KPC9zdmc+DQo=",
+              "x_pos": 752,
+              "y_pos": -351.49998474121094,
+              "description": "Fills in missing values"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "254c7ce3-5e4d-4a00-a566-47e0c1b7c2a3",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "777439a4-65be-49fe-9190-b5e2ae7995ae"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "41786865-f5e0-47d0-a526-8fc31122b6ad",
+          "type": "execution_node",
+          "op": "select",
+          "app_data": {
+            "ui_data": {
+              "label": "SN2-Select",
+              "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ii0xLjEgLTIgNDcuMyA0My41IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IC0xLjEgLTIgNDcuMyA0My41OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojMUQzNjQ5O30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6IzE1MjkzNTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOm5vbmU7c3Ryb2tlOiNGOUY5RkI7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDN7ZmlsbDpub25lO30NCgkuc3Q0e2ZpbGw6IzQxRDZDMzt9DQoJLnN0NXtmb250LWZhbWlseTonSGVsdk5ldWVSb21hbmZvcklCTSc7fQ0KCS5zdDZ7Zm9udC1zaXplOjIwcHg7fQ0KCS5zdDd7ZmlsbDojRjlGOUZCO30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjtlbmFibGUtYmFja2dyb3VuZDpuZXcgICAgOyIgd2lkdGg9IjUyIiBoZWlnaHQ9IjQ1IiB4bGluazpocmVmPSJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQURRQUFBQXRDQVlBQUFEaG9VaTRBQUFBQ1hCSVdYTUFBQXNTQUFBTEVnSFMzWDc4QUFBQQpHWFJGV0hSVGIyWjBkMkZ5WlFCQlpHOWlaU0JKYldGblpWSmxZV1I1Y2NsbFBBQUFCV1ZKUkVGVWVOck1XdDF1R2tjWTNabGRESmkvCnBGdXMwa1N4V2lHcnRvc2xWMUZ1V3FtKzhDdVlsN0Q4RExaZngzNEpWMVZ2MHFvWFRrMGt4M0hrUkEwVlpGMy9zQVlNTzlQemJaWVYKSmZ6c2tnVjJwZEhDaUoyWk0rZDhaMmEraFNualhVeEtxZXp2N3pObEF0ZnU3cTVrekc1YStoNlkzd2YyOXZhNFlSZ1JYZGVqeldZegpjbjkvSHlpb1ZDb2wwSDRiN1Rmd3RZMytoSi9uTmI5Z2FyVmFQSkZJWkFIbWtSRGlnWVlMYkFVQ0NxeEkwelJieVdUU3VMdTdlMWV2CjF3MVUzL3RoeWc4Z1JzeEVvOUVGeFZLZUNpNmVvWnZIVXBFeHBnUkdrdVNjbTlLU3B3RDNDK2Fxc2JXMTFUNDhQTFFDQjRTR09XWXUKYVZuV3Q1TEpIMUgxRTBvT1pTNHd2VW1iaVJwdUQ4RjZGYUQrV1YxZHZRTWc0WlVscjRBWUdvN2MzTnpva1Voa0NVMnZvRzRSSlFOMgoxQUJEaUFhZEpKa3h5ZGJBME92YjI5dkxnNE9EVnJGWTlNU1M2cEVkTlpQSnBERmp5K2pvWjhiWk9xcXpEanZjTVpjZ0NuY0xVMXE0Clg2cXErdUhxNnFxMnNiSFJQam82R3NrUzk4b09URUFIb0R3NnlrTU9PdW9qNDdpa2g0czdMSDNERmY0TWZhMDFHbzBGaWw4di9ZMWsKQ0hTcjUrZm5HZEQvWFE4N2t3TFVZWXJZandKVVMwaFJpY1ZpbDdsY3Jsa3FsZVRZREpGTm80RTR3RkR3TDZPcnBRbXo0NDRML2NUSgpkR0FReTFER0VpbUVsREtxMzJFTXNVS2hNQWNiemFIeHA1aXBEZFFWVUw1MHpHU1NnR2hOb3ZaVit5NFVrNnU4akhYUEdNVVNIMlhUCmFPU2psaFc1aHVxRktiRFRMYjJJclFqRUxjV3ZGNWE0QnlOWUl0cHQrai9LZ0N2VHU2aXZCTWF3Q0pZS2tQNGliRHlKdU9hK0pEZkkKQ05Ed3ROanBab241c1hGdG1CR0FrV2thZ1NjYmgrTVpzSEZzK2N5LysrM3oxREFaUVJBMnprTm1CSjl0NHp5RVJqREl4bTNwalRJSQpkZFIrYlFaRzhGa0dvZlhaVGVmeFBUOWpJeGhwRUNpMHp6Tnc0S3hCVmU4N0JzRTdzVk90VmhNd2d5ZGc1M3ZuYUpBSWc5VDZMYllVCjE0anhBbzR1UDRDbFIyUVdsT053WXdqc3FQRjRuT1QyQkxGRDZMOElJVHZkTE1Vd1R0b2dmMDFuTXBoWXBKT3dzYzh5MTlmWEtnVS8KQUQwRWFnSTJGMUl3TGlpTVVjTUtGS1d3Z1lXemJyUVNabURoQjNXQStoZkliM0QzbFppWXdTVXd4amFtdkVtWklTeTA4bisyZlhKeQpZdFhyZFFMeUZneTlJUWRCYVlVVUZPVVhHaGhuRlhjeWcydkVmb3R5ZVM0Z1NrSmtzMWtUV253cm1md0xWUmNvcHZOd21DN3BUSFJGCktPSUYxUFNuWlZtMEJXbzZpVW5YeFNSWWFrV2pVUU1zbmVHeE0vekFDQ0ZMTk1FMUZGTFJjNHp4R0J1YnFxN3I3amhkV3lhV0FNaHMKdDlzWHFIMEJZQmQyU2tsS0VTWjI3SW1XeWlrK3Y4Ull5eXNySy9YdTdHcjNPdFBOMGlrMCtoSjFaVEtMa0VpUHhtRGFFNDBKcDRsUApwVksxWXJFb0JtNU9pU1ZhZVJGa2I2RFI1d0IxVEhvTmdmUzYyVG1qc0tDSkp3SjZ4OVY3SHBLT0hpdHd2V05zMDNXQStvb1dMNVFIClh2TjRnYU9CN0FHbTVyTFRhbC9NejgrYlRrWjErQkdjOUVpNkpIMlNUa212TXpZSTRjaStUR0ZBNFRDSW5ZRTVCZElsNlRNRUJ1SGEKTk1tZndvRENnY0tpSHp2RGtpUmhNUWpYcHUyWWhrMWptMVBwdG1uUGVUa2NiWlgxOVhVTG9DekVFc2Z1TnUxc1doUE9jMndLN056VApHd2g4K2dPOS9ZcEY5QlhHZEx1OXZUMXdVb2U5ZlppcFFmUXpnblE2L1lsTiswMEZ6OG9nZkJtQlowQkRER0tTK3p6ZlJ1QUwwQXoyCmViNk53Sk1wOUJyRTV1YW1RQ3dwcXFZbTBDeTlqZENkWEJsek9ncWlDQ2MzVVBaakJGNU40Uk9XOHZtOGdRNG9qa3EyNDBrN1R6WVgKNUV0amg1MHpIR09PU2VaZWpHQWNRUFkrYjJkbnB3YnBuV3RNKzAxeVNSSjRUT2Y3QUZNZ0JNaGtrcDNpY3drUy8rREZDTVlDMUxGeAp4R1lGUXYyZE0vNmUvcWNBZG9MN240TENKTnBzYVpwbUNFdThBME9tRnlQb1RRdjV1c0wrVDVKeEJ4UGEvL3I4SjhBQVE3Q3dhNEtHCkRSMEFBQUFBU1VWT1JLNUNZSUk9IiB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIC0zIC0yKSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIxMS4xLDM3IDAuNCwxOC41IDExLjEsMCAzMi42LDAgNDMuNCwxOC41IDMyLjYsMzcgCQkiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIxMS4xLDM3IDAuNCwxOC41IDExLjEsMCAzMi42LDAgNDMuNCwxOC41IDMyLjYsMzcgCQkiLz4NCgk8L2c+DQo8L2c+DQo8bGluZSBjbGFzcz0ic3QyIiB4MT0iNyIgeTE9IjE4LjUiIHgyPSIxNiIgeTI9IjE4LjUiLz4NCjxyZWN0IHg9IjE2IiB5PSIxMC4zIiBjbGFzcz0ic3QzIiB3aWR0aD0iMTEiIGhlaWdodD0iMTYuMiIvPg0KPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxNS45OTk5IDI0LjU4ODUpIiBjbGFzcz0ic3Q0IHN0NSBzdDYiPj88L3RleHQ+DQo8cG9seWdvbiBjbGFzcz0ic3Q3IiBwb2ludHM9IjMyLDIyLjYgMzIsMjAgMjYsMjAgMjYsMTcgMzIsMTcgMzIsMTMuOSAzOS41LDE4LjIgIi8+DQo8L3N2Zz4NCg==",
+              "x_pos": 889.5,
+              "y_pos": -344.99998474121094,
+              "description": "Selects a subset of records based on an expression"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "1db3693e-77fa-4cbc-b32a-f7a574daa12b",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort2"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "ea8189ec-f02d-4665-9ad9-e09be2d9980d",
+          "type": "execution_node",
+          "op": "sample",
+          "app_data": {
+            "ui_data": {
+              "label": "SN2-Sample",
+              "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ii0wLjggLTIgNDggNDMiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgLTAuOCAtMiA0OCA0MzsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4NCgkuc3Qwe2ZpbGw6IzFEMzY0OTt9DQoJLnN0MXtmaWxsOm5vbmU7c3Ryb2tlOiMxNTI5MzU7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDJ7ZmlsbDpub25lO3N0cm9rZTojNDFENkMzO3N0cm9rZS13aWR0aDozO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qze2ZpbGw6I0Y5RjlGQjt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDsiIHdpZHRoPSI1MiIgaGVpZ2h0PSI0NSIgeGxpbms6aHJlZj0iZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFEUUFBQUF0Q0FZQUFBRGhvVWk0QUFBQUNYQklXWE1BQUFzU0FBQUxFZ0hTM1g3OEFBQUEKR1hSRldIUlRiMlowZDJGeVpRQkJaRzlpWlNCSmJXRm5aVkpsWVdSNWNjbGxQQUFBQldWSlJFRlVlTnJNV3QxdUdrY1kzWmxkREppLwpwRnVzMGtTeFdpR3J0b3NsVjFGdVdxbSs4Q3VZbDdEOERMWmZ4MzRKVjFWdjBxb1hUazBreDNIa1JBMFZaRjMvc0FZTU85UHpiWllWCkpmenNrZ1YycGRIQ2lKMlpNK2Q4WjJhK2hTbmpYVXhLcWV6djd6TmxBdGZ1N3E1a3pHNWEraDZZM3dmMjl2YTRZUmdSWGRlanpXWXoKY245L0h5aW9WQ29sMEg0YjdUZnd0WTMraEovbk5iOWdhclZhUEpGSVpBSG1rUkRpZ1lZTGJBVUNDcXhJMHpSYnlXVFN1THU3ZTFldgoxdzFVMy90aHlnOGdSc3hFbzlFRnhWS2VDaTZlb1p2SFVwRXhwZ1JHa3VTY205S1Nwd0QzQythcXNiVzExVDQ4UExRQ0I0U0dPV1l1CmFWbld0NUxKSDFIMUUwb09aUzR3dlVtYmlScHVEOEY2RmFEK1dWMWR2UU1nNFpVbHI0QVlHbzdjM056b2tVaGtDVTJ2b0c0UkpRTjIKMUFCRGlBYWRKSmt4eWRiQTBPdmIyOXZMZzRPRFZyRlk5TVNTNnBFZE5aUEpwREZqeStqb1o4YlpPcXF6RGp2Y01aY2dDbmNMVTFxNApYNnFxK3VIcTZxcTJzYkhSUGpvNkdza1M5OG9PVEVBSG9EdzZ5a01PT3VvajQ3aWtoNHM3TEgzREZmNE1mYTAxR28wRmlsOHYvWTFrCkNIU3I1K2ZuR2REL1hRODdrd0xVWVlyWWp3SlVTMGhSaWNWaWw3bGNybGtxbGVUWURKRk5vNEU0d0ZEd0w2T3JwUW16NDQ0TC9jVEoKZEdBUXkxREdFaW1FbERLcTMyRU1zVUtoTUFjYnphSHhwNWlwRGRRVlVMNTB6R1NTZ0doTm92WlYreTRVazZ1OGpIWFBHTVVTSDJYVAphT1NqbGhXNWh1cUZLYkRUTGIySXJRakVMY1d2RjVhNEJ5TllJdHB0K2ovS2dDdlR1Nml2Qk1hd0NKWUtrUDRpYkR5SnVPYStKRGZJCkNORHd0TmpwWm9uNXNYRnRtQkdBa1drYWdTY2JoK01ac0hGcytjeS8rKzN6MURBWlFSQTJ6a05tQko5dDR6eUVSakRJeG0zcGpUSUkKZGRSK2JRWkc4RmtHb2ZYWlRlZnhQVDlqSXhocEVDaTB6ek53NEt4QlZlODdCc0U3c1ZPdFZoTXdneWRnNTN2bmFKQUlnOVQ2TGJZVQoxNGp4QW80dVA0Q2xSMlFXbE9Od1l3anNxUEY0bk9UMkJMRkQ2TDhJSVR2ZExNVXdUdG9nZjAxbk1waFlwSk93c2M4eTE5ZlhLZ1UvCkFEMEVhZ0kyRjFJd0xpaU1VY01LRktXd2dZV3piclFTWm1EaEIzV0EraGZJYjNEM2xaaVl3U1V3eGphbXZFbVpJU3kwOG4rMmZYSnkKWXRYcmRRTHlGZ3k5SVFkQmFZVVVGT1VYR2hobkZYY3lnMnZFZm90eWVTNGdTa0prczFrVFdud3JtZndMVlJjb3B2TndtQzdwVEhSRgpLT0lGMVBTblpWbTBCV282aVVuWHhTUllha1dqVVFNc25lR3hNL3pBQ0NGTE5NRTFGRkxSYzR6eEdCdWJxcTdyN2poZFd5YVdBTWhzCnQ5c1hxSDBCWUJkMlNrbEtFU1oyN0ltV3lpayt2OFJZeXlzcksvWHU3R3IzT3RQTjBpazAraEoxWlRLTGtFaVB4bURhRTQwSnA0bFAKcFZLMVlyRW9CbTVPaVNWYWVSRmtiNkRSNXdCMVRIb05nZlM2MlRtanNLQ0pKd0o2eDlWN0hwS09IaXR3dldOczAzV0Erb29XTDVRSApYdk40Z2FPQjdBR201ckxUYWwvTXo4K2JUa1oxK0JHYzlFaTZKSDJTVGttdk16WUk0Y2krVEdGQTRUQ0luWUU1QmRJbDZUTUVCdUhhCk5NbWZ3b0RDZ2NLaUh6dkRraVJoTVFqWHB1MlloazFqbTFQcHRtblBlVGtjYlpYMTlYVUxvQ3pFRXNmdU51MXNXaFBPYzJ3SzdOelQKR3doOCtnTzkvWXBGOUJYR2RMdTl2VDF3VW9lOWZaaXBRZlF6Z25RNi9ZbE4rMDBGejhvZ2ZCbUJaMEJEREdLUyt6emZSdUFMMEF6MgplYjZOd0pNcDlCckU1dWFtUUN3cHFxWW0wQ3k5amRDZFhCbHpPZ3FpQ0NjM1VQWmpCRjVONFJPVzh2bThnUTRvamtxMjQwazdUellYCjVFdGpoNTB6SEdPT1NlWmVqR0FjUVBZK2IyZG5wd2Jwbld0TSswMXlTUko0VE9mN0FGTWdCTWhra3AzaWN3a1MvK0RGQ01ZQzFMRngKeEdZRlF2MmRNLzZlL3FjQWRvTDduNExDSk5wc2FacG1DRXU4QTBPbUZ5UG9UUXY1dXNMK1Q1SnhCeFBhLy9yOEo4QUFRN0N3YTRLRwpEUjBBQUFBQVNVVk9SSzVDWUlJPSIgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAtMyAtMikiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMTEuMSwzNyAwLjQsMTguNSAxMS4xLDAgMzIuNiwwIDQzLjQsMTguNSAzMi42LDM3IAkJIi8+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMTEuMSwzNyAwLjQsMTguNSAxMS4xLDAgMzIuNiwwIDQzLjQsMTguNSAzMi42LDM3IAkJIi8+DQoJPC9nPg0KPC9nPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjIxIiB5MT0iMTguNSIgeDI9IjI0IiB5Mj0iMTguNSIvPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjE2IiB5MT0iMTguNSIgeDI9IjE5IiB5Mj0iMTguNSIvPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjExIiB5MT0iMTguNSIgeDI9IjE0IiB5Mj0iMTguNSIvPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjYiIHkxPSIxOC41IiB4Mj0iOSIgeTI9IjE4LjUiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDMiIHBvaW50cz0iMzIsMjEuNiAzMiwyMCAyNiwyMCAyNiwxNyAzMiwxNyAzMiwxNC45IDM5LjcsMTguMiAiLz4NCjwvc3ZnPg0K",
+              "x_pos": 1039.5,
+              "y_pos": -351.99998474121094,
+              "description": "Samples the data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "41786865-f5e0-47d0-a526-8fc31122b6ad",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        }
+      },
+      "runtime_ref": "fd704f5d-d6ad-43cd-b9d9-667556266011"
+    },
+    {
+      "id": "9b0dfc97-b196-4d0a-b36c-af0e7df3d98b",
+      "nodes": [
+        {
+          "id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+          "type": "execution_node",
+          "op": "sample",
+          "app_data": {
+            "ui_data": {
+              "label": "SN1-Sample",
+              "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ii0wLjggLTIgNDggNDMiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgLTAuOCAtMiA0OCA0MzsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4NCgkuc3Qwe2ZpbGw6IzFEMzY0OTt9DQoJLnN0MXtmaWxsOm5vbmU7c3Ryb2tlOiMxNTI5MzU7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDJ7ZmlsbDpub25lO3N0cm9rZTojNDFENkMzO3N0cm9rZS13aWR0aDozO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qze2ZpbGw6I0Y5RjlGQjt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDsiIHdpZHRoPSI1MiIgaGVpZ2h0PSI0NSIgeGxpbms6aHJlZj0iZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFEUUFBQUF0Q0FZQUFBRGhvVWk0QUFBQUNYQklXWE1BQUFzU0FBQUxFZ0hTM1g3OEFBQUEKR1hSRldIUlRiMlowZDJGeVpRQkJaRzlpWlNCSmJXRm5aVkpsWVdSNWNjbGxQQUFBQldWSlJFRlVlTnJNV3QxdUdrY1kzWmxkREppLwpwRnVzMGtTeFdpR3J0b3NsVjFGdVdxbSs4Q3VZbDdEOERMWmZ4MzRKVjFWdjBxb1hUazBreDNIa1JBMFZaRjMvc0FZTU85UHpiWllWCkpmenNrZ1YycGRIQ2lKMlpNK2Q4WjJhK2hTbmpYVXhLcWV6djd6TmxBdGZ1N3E1a3pHNWEraDZZM3dmMjl2YTRZUmdSWGRlanpXWXoKY245L0h5aW9WQ29sMEg0YjdUZnd0WTMraEovbk5iOWdhclZhUEpGSVpBSG1rUkRpZ1lZTGJBVUNDcXhJMHpSYnlXVFN1THU3ZTFldgoxdzFVMy90aHlnOGdSc3hFbzlFRnhWS2VDaTZlb1p2SFVwRXhwZ1JHa3VTY205S1Nwd0QzQythcXNiVzExVDQ4UExRQ0I0U0dPV1l1CmFWbld0NUxKSDFIMUUwb09aUzR3dlVtYmlScHVEOEY2RmFEK1dWMWR2UU1nNFpVbHI0QVlHbzdjM056b2tVaGtDVTJ2b0c0UkpRTjIKMUFCRGlBYWRKSmt4eWRiQTBPdmIyOXZMZzRPRFZyRlk5TVNTNnBFZE5aUEpwREZqeStqb1o4YlpPcXF6RGp2Y01aY2dDbmNMVTFxNApYNnFxK3VIcTZxcTJzYkhSUGpvNkdza1M5OG9PVEVBSG9EdzZ5a01PT3VvajQ3aWtoNHM3TEgzREZmNE1mYTAxR28wRmlsOHYvWTFrCkNIU3I1K2ZuR2REL1hRODdrd0xVWVlyWWp3SlVTMGhSaWNWaWw3bGNybGtxbGVUWURKRk5vNEU0d0ZEd0w2T3JwUW16NDQ0TC9jVEoKZEdBUXkxREdFaW1FbERLcTMyRU1zVUtoTUFjYnphSHhwNWlwRGRRVlVMNTB6R1NTZ0doTm92WlYreTRVazZ1OGpIWFBHTVVTSDJYVAphT1NqbGhXNWh1cUZLYkRUTGIySXJRakVMY1d2RjVhNEJ5TllJdHB0K2ovS2dDdlR1Nml2Qk1hd0NKWUtrUDRpYkR5SnVPYStKRGZJCkNORHd0TmpwWm9uNXNYRnRtQkdBa1drYWdTY2JoK01ac0hGcytjeS8rKzN6MURBWlFSQTJ6a05tQko5dDR6eUVSakRJeG0zcGpUSUkKZGRSK2JRWkc4RmtHb2ZYWlRlZnhQVDlqSXhocEVDaTB6ek53NEt4QlZlODdCc0U3c1ZPdFZoTXdneWRnNTN2bmFKQUlnOVQ2TGJZVQoxNGp4QW80dVA0Q2xSMlFXbE9Od1l3anNxUEY0bk9UMkJMRkQ2TDhJSVR2ZExNVXdUdG9nZjAxbk1waFlwSk93c2M4eTE5ZlhLZ1UvCkFEMEVhZ0kyRjFJd0xpaU1VY01LRktXd2dZV3piclFTWm1EaEIzV0EraGZJYjNEM2xaaVl3U1V3eGphbXZFbVpJU3kwOG4rMmZYSnkKWXRYcmRRTHlGZ3k5SVFkQmFZVVVGT1VYR2hobkZYY3lnMnZFZm90eWVTNGdTa0prczFrVFdud3JtZndMVlJjb3B2TndtQzdwVEhSRgpLT0lGMVBTblpWbTBCV282aVVuWHhTUllha1dqVVFNc25lR3hNL3pBQ0NGTE5NRTFGRkxSYzR6eEdCdWJxcTdyN2poZFd5YVdBTWhzCnQ5c1hxSDBCWUJkMlNrbEtFU1oyN0ltV3lpayt2OFJZeXlzcksvWHU3R3IzT3RQTjBpazAraEoxWlRLTGtFaVB4bURhRTQwSnA0bFAKcFZLMVlyRW9CbTVPaVNWYWVSRmtiNkRSNXdCMVRIb05nZlM2MlRtanNLQ0pKd0o2eDlWN0hwS09IaXR3dldOczAzV0Erb29XTDVRSApYdk40Z2FPQjdBR201ckxUYWwvTXo4K2JUa1oxK0JHYzlFaTZKSDJTVGttdk16WUk0Y2krVEdGQTRUQ0luWUU1QmRJbDZUTUVCdUhhCk5NbWZ3b0RDZ2NLaUh6dkRraVJoTVFqWHB1MlloazFqbTFQcHRtblBlVGtjYlpYMTlYVUxvQ3pFRXNmdU51MXNXaFBPYzJ3SzdOelQKR3doOCtnTzkvWXBGOUJYR2RMdTl2VDF3VW9lOWZaaXBRZlF6Z25RNi9ZbE4rMDBGejhvZ2ZCbUJaMEJEREdLUyt6emZSdUFMMEF6MgplYjZOd0pNcDlCckU1dWFtUUN3cHFxWW0wQ3k5amRDZFhCbHpPZ3FpQ0NjM1VQWmpCRjVONFJPVzh2bThnUTRvamtxMjQwazdUellYCjVFdGpoNTB6SEdPT1NlWmVqR0FjUVBZK2IyZG5wd2Jwbld0TSswMXlTUko0VE9mN0FGTWdCTWhra3AzaWN3a1MvK0RGQ01ZQzFMRngKeEdZRlF2MmRNLzZlL3FjQWRvTDduNExDSk5wc2FacG1DRXU4QTBPbUZ5UG9UUXY1dXNMK1Q1SnhCeFBhLy9yOEo4QUFRN0N3YTRLRwpEUjBBQUFBQVNVVk9SSzVDWUlJPSIgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAtMyAtMikiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMTEuMSwzNyAwLjQsMTguNSAxMS4xLDAgMzIuNiwwIDQzLjQsMTguNSAzMi42LDM3IAkJIi8+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMTEuMSwzNyAwLjQsMTguNSAxMS4xLDAgMzIuNiwwIDQzLjQsMTguNSAzMi42LDM3IAkJIi8+DQoJPC9nPg0KPC9nPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjIxIiB5MT0iMTguNSIgeDI9IjI0IiB5Mj0iMTguNSIvPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjE2IiB5MT0iMTguNSIgeDI9IjE5IiB5Mj0iMTguNSIvPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjExIiB5MT0iMTguNSIgeDI9IjE0IiB5Mj0iMTguNSIvPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjYiIHkxPSIxOC41IiB4Mj0iOSIgeTI9IjE4LjUiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDMiIHBvaW50cz0iMzIsMjEuNiAzMiwyMCAyNiwyMCAyNiwxNyAzMiwxNyAzMiwxNC45IDM5LjcsMTguMiAiLz4NCjwvc3ZnPg0K",
+              "x_pos": 234,
+              "y_pos": 594.5,
+              "description": "Samples the data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "5e359c9e-7d3d-43d4-8473-a303a7e2246a",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "output_5db667dc-b2a9-4c35-bff0-136c4e7b6d26_inPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+          "type": "execution_node",
+          "op": "filler",
+          "app_data": {
+            "ui_data": {
+              "label": "SN1-Filler",
+              "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ii0wLjggLTEuNSA0Ny4zIDQyLjEiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgLTAuOCAtMS41IDQ3LjMgNDIuMTsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4NCgkuc3Qwe2ZpbGw6IzFEMzY0OTt9DQoJLnN0MXtmaWxsOm5vbmU7c3Ryb2tlOiMxNTI5MzU7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDJ7ZmlsbDpub25lO3N0cm9rZTojRjlGOUZCO3N0cm9rZS13aWR0aDozO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qze2ZpbGw6I0Y5RjlGQjt9DQoJLnN0NHtmaWxsOiM0MUQ2QzM7fQ0KPC9zdHlsZT4NCjxnPg0KCQ0KCQk8aW1hZ2Ugc3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2O2VuYWJsZS1iYWNrZ3JvdW5kOm5ldyAgICA7IiB3aWR0aD0iNTIiIGhlaWdodD0iNDUiIHhsaW5rOmhyZWY9ImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBRFFBQUFBdENBWUFBQURob1VpNEFBQUFDWEJJV1hNQUFBc1NBQUFMRWdIUzNYNzhBQUFBCkdYUkZXSFJUYjJaMGQyRnlaUUJCWkc5aVpTQkpiV0ZuWlZKbFlXUjVjY2xsUEFBQUJXUkpSRUZVZU5yTVd0MU9HMGNZM1psZFl4dmIKT09uV3FFNnFvRllXS2xBalVhSGN0Rks1NEJYd1N5Q2VBWGdkZUFtaTNxVlZMMGdnRXFWRUpEU3U3QzdGNE1XL085UHpiZFlyMS9IUApMbG5idTlKbzdaRjNaczZjODUyWitkWk1lZGpGcEpUSy92NCtVOFp3N2U3dVNzYnNwcVh2Z2ZsOVlHOXZqeHVHRWRGMVBkcG9OQ0xOClpqTlFVS2xVU3FEOU50cXY0MnNiL1FrL3oydCt3VlNyMVhnaWtjZ0F6Rk1oeENNTkY5Z0tCQlJZa2FacHRwTEpwSEYvZi8rK1Zxc1oKcUc3Nlljb1BJRWJNUktQUmVjVlMxZ1VYejlITjExS1JNYVlFUnBMa25KdlNrbWNBOXdKelZkL2EybW9mSGg1YWdRTkN3eHd6bDdRcwo2MXZKNUkrbytna2xpeklUbU42a3pVUVZ0OGRndlF4UWY2K3NyTndEa1BES2tsZEFEQTFIYm05djlVZ2tzb2ltbDFHM2dKSUdPMnFBCklVU0RUcExNbUdTcllPalB1N3U3NjRPRGcxYWhVUERFa3VxUkhUV2RUczloeHBiUTBjK01zelZVWnh4MnVHTXVRUlR1RnFhMGNMOVcKVmZXZm01dWI2c2JHUnZ2bzZHZ2tTOXdyT3pBQkhZQnk2Q2dIT2Vpb2p6ekVKVDFjM0dIcEc2N3c1K2hydFY2dnoxUDhldWx2SkVPZwpXNzI0dUVpRC91OTYyQmtYb0E1VHhINFVvRnBDaWxJc0Zydk9ack9OMDlOVCtXQ0d5S2JSUUJ4Z0tQaVgwTlhpbU5seHg0Vis0bVE2Ck1JZ2xLR09SRkVKS0dkWHZNSVpZUHArZmdZMW0wZmc2Wm1vRGRYbVVMeDB6R1NjZ1dwT29mZFcrQzhYa0tpOWkzVE5Hc2NSSDJUUWEKK2FobFJhNmllbjRDN0hSTEwySXJBbkZMOGV1RkplN0JDQmFKZHB2K2p6TGd5dVF1Nml1Qk1TeUFwVHlrdndBYlR5S3V1Uy9KRFRJQwpORHdwZHJwWlluNXNYQnRtQkdCa2trYmd5Y2JoZUFac0hGcys4NjkrK3p3MVRFWVFoSTN6a0JuQlo5czRENkVSRExKeFczcWpERUlkCnRWK2JnaEY4bGtGb2ZYYlRPWHpQVGRrSVJob0VDdTN6REJ3NHExRFZoNDVCOEU3c2xNdmxCTXpnR2RqNTNqa2FKTUlndFg2TExjVTEKWWp5UG84c1BZT2twbVFYbE9Od1lBanRxUEI0bnVUMUQ3QkQ2TDBMSVRqZExNWXlUTnNoUDZFd0dFNHQwRWpiMldhWlNxYWdVL0FEMApHS2dKMkV4SXdiaWdNRVlOSzFDVXdnWVd6cnJSU3BpQmhSL1VBT3BmSUwvRjNWZGlZZ3FYd0JqYm1QSUdaWWF3ME1yLzJmYkp5WWxWCnE5VUl5RHN3OUpZY0JLVVZVbENVWDZoam5HWGN5UXdxaVAwVzVmSmNRSlNFeUdReUpyVDRUakw1R2xXWEtLYnpjSmd1NlV4MFNTamkKRmRUMHUyVlp0QVZxT0lsSjE4VWtXR3BGbzFFRExKM2pzWFA4d0FnaFN6VEJWUlJTMFV1TThSZ2JtN0t1Nis0NFhWc21sZ0RJYkxmYgpsNmg5QldDWGRrcEpTaEVtZHV5Smxzb1pQci9CV0l2THk4dTE3dXhxOXpyVHpkSVpOUG9HZFVVeWk1QklqOFpnMmhPTkNhZUpUNlZTCjFVS2hJQVp1VG9rbFdua1JaRytoMFpjQWRVeDZEWUgwdXRrNXA3Q2dpU2NDZXNmVmV4NlNqaDVMY0wxamJOTjFnUHFLRmkrVVIxN3oKZUlHamdld0JwdXF5MDJwZnpzN09tazVHZGZnUm5QUkl1aVI5a2s1SnIxTTJDT0hJdmtoaFFPRXdpSjJCT1FYU0pla3pCQWJoMmpUSgpuOEtBd29IQ29oODd3NUlrWVRFSTE2YnRtSVpOWTV0VDZyWnB6M2s1SEcyVnRiVTFDNkFzeEJMSDduYk8yYlFtbk9mWUJOaHAwaHNJCmZQb052ZjJDUmZRUGpPbHVlM3Q3NEtRT2Uvc3dWWVBvWndSemMzT2YyTFRmVlBDMERNS1hFWGdHTk1RZ3hyblA4MjBFdmdCTllaL24KMndnOG1VS3ZRV3h1YmdyRWtxSnFhZ0xOMHRzSTNjbVZNYWVqSUlwd2NnTkZQMGJnMVJRK1lTbVh5eG5vZ09MbzFIWThhZWZKWm9KOAphZXl3YzQ1anpESEozSXNSOUNZZFBQOTJaMmRuQnRKN29qRnRYWElaL0Z0d1pnTXltV1JuQVBTaTJXeSt2cnE2cW96bExYakh4aEdiCkpRajFWODc0Qi9xZkFzQUU5ejhGaFVtMDJkSTB6UkNXZUErR1RDOUc4RkNHT2xZZTZuK1NQSFF3b2YydnozOENEQUQ4b3JGRmVjS2EKV0FBQUFBQkpSVTVFcmtKZ2dnPT0iIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgLTMgLTIpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjExLjEsMzcgMC40LDE4LjUgMTEuMSwwIDMyLjYsMCA0My40LDE4LjUgMzIuNiwzNyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9IjExLjEsMzcgMC40LDE4LjUgMTEuMSwwIDMyLjYsMCA0My40LDE4LjUgMzIuNiwzNyAJCSIvPg0KCTwvZz4NCjwvZz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxMCIgeTE9IjguNSIgeDI9IjE1IiB5Mj0iOC41Ii8+DQo8cG9seWdvbiBjbGFzcz0ic3QzIiBwb2ludHM9IjI3LDExLjYgMjcsMTAgMjMsMTAgMjMsNyAyNyw3IDI3LDQuOSAzNC4xLDguMiAiLz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxMSIgeTE9IjE4LjUiIHgyPSIxOCIgeTI9IjE4LjUiLz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxMCIgeTE9IjI4LjUiIHgyPSIxNSIgeTI9IjI4LjUiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDMiIHBvaW50cz0iMjksMjEuNiAyOSwyMCAyNSwyMCAyNSwxNyAyOSwxNyAyOSwxNC45IDM0LjgsMTguMiAiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDMiIHBvaW50cz0iMjcsMzEuNiAyNywzMCAyMywzMCAyMywyNyAyNywyNyAyNywyNC45IDM0LDI4LjIgIi8+DQo8cmVjdCB4PSIxOC40IiB5PSI1LjUiIGNsYXNzPSJzdDQiIHdpZHRoPSIxLjUiIGhlaWdodD0iNiIvPg0KPHJlY3QgeD0iMTYuMSIgeT0iNy43IiBjbGFzcz0ic3Q0IiB3aWR0aD0iNiIgaGVpZ2h0PSIxLjUiLz4NCjxyZWN0IHg9IjE4LjQiIHk9IjI1LjUiIGNsYXNzPSJzdDQiIHdpZHRoPSIxLjUiIGhlaWdodD0iNiIvPg0KPHJlY3QgeD0iMTYuMSIgeT0iMjcuNyIgY2xhc3M9InN0NCIgd2lkdGg9IjYiIGhlaWdodD0iMS41Ii8+DQo8cmVjdCB4PSIyMC43IiB5PSIxNS41IiBjbGFzcz0ic3Q0IiB3aWR0aD0iMS41IiBoZWlnaHQ9IjYiLz4NCjxyZWN0IHg9IjE4LjQiIHk9IjE3LjciIGNsYXNzPSJzdDQiIHdpZHRoPSI2IiBoZWlnaHQ9IjEuNSIvPg0KPC9zdmc+DQo=",
+              "x_pos": 235,
+              "y_pos": 496.5,
+              "description": "Fills in missing values"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "35c7bcf2-4b69-4dbb-9bd5-923f5e079631",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "output_ac584be2-8a3c-474f-a046-e10a3665b875_inPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "35c7bcf2-4b69-4dbb-9bd5-923f5e079631",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "SN1-BN-INPUT0",
+              "x_pos": 74,
+              "y_pos": 496.5,
+              "description": "Supernode binding node"
+            }
+          },
+          "outputs": [
+            {
+              "id": "output_ac584be2-8a3c-474f-a046-e10a3665b875_inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "SN1-BN-INPUT0-PORT0"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "5e359c9e-7d3d-43d4-8473-a303a7e2246a",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "SN1-BN-INPUT1",
+              "x_pos": 74,
+              "y_pos": 576.5,
+              "description": "Supernode binding node"
+            }
+          },
+          "outputs": [
+            {
+              "id": "output_5db667dc-b2a9-4c35-bff0-136c4e7b6d26_inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "SN1-BN-INPUT1-PORT0"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "ba6f7adc-bb98-4630-8be0-c84a465d32ec",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "SN1-BN-OUTPUT0",
+              "x_pos": 385,
+              "y_pos": 496.5,
+              "description": "Supernode binding node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input_ac584be2-8a3c-474f-a046-e10a3665b875_outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "SN1-BN-OUTPUT0-PORT0"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "ac584be2-8a3c-474f-a046-e10a3665b875",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e09e816e-92a0-47f1-adf3-aefccb1557b3",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "SN1-BN-OUTPUT1",
+              "x_pos": 385,
+              "y_pos": 576.5,
+              "description": "Supernode binding node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input_ac584be2-8a3c-474f-a046-e10a3665b875_outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "SN1-BN-OUTPUT1-PORT0"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "ac584be2-8a3c-474f-a046-e10a3665b875",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cf87bcde-7c34-4810-9e82-4df711d5ff88",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "SN1-BN-OUTPUT2",
+              "x_pos": 385,
+              "y_pos": 656.5,
+              "description": "Supernode binding node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input_5db667dc-b2a9-4c35-bff0-136c4e7b6d26_outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "SN1-BN-OUTPUT2-PORT0"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        }
+      },
+      "runtime_ref": "test_runtime"
+    }
+  ],
+  "schemas": [
+    {
+      "id": "0",
+      "fields": [
+        {
+          "type": "int32",
+          "name": "i"
+        },
+        {
+          "type": "rstring",
+          "name": "x"
+        }
+      ]
+    }
+  ],
+  "primary_pipeline": "primary - 8b1a6885-83d1-44a0-8b65-50ee79fb3481",
+  "runtimes": [
+    {
+      "id": "fd704f5d-d6ad-43cd-b9d9-667556266011",
+      "name": "Streams"
+    }
+  ]
+}

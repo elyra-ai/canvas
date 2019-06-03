@@ -623,6 +623,10 @@ class CanvasRenderer {
 
 	displayBindingNodesToFitSVG() {
 		this.logger.log("displayBindingNodesToFitSVG - start");
+		// Need to set port positions before moving super binding nodes because
+		// we need ports poitioned correctly on the supernode so binding nodes are
+		// moved to the right place.
+		this.setPortPositionsAllNodes();
 		this.moveSuperBindingNodes();
 		this.movingBindingNodes = true;
 		this.displayNodes();
@@ -1318,8 +1322,12 @@ class CanvasRenderer {
 	}
 
 	zoomToFit() {
+		// Calculate the padding space for the canvas objects to be zoomed.
+		// This calculation doesn't take into account the space occupied by the
+		// ports of any supernode binding nodes, that is allowed for in the
+		// zoomToFitCanvas method.
 		const padding = this.isDisplayingSubFlow()
-			? Math.max(this.layout.zoomToFitPadding, this.getBindingPortRadius() + this.getPaddingForConnections())
+			? Math.max(this.layout.zoomToFitPadding, this.getPaddingForConnections())
 			: this.layout.zoomToFitPadding;
 
 		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, padding);
@@ -1328,6 +1336,12 @@ class CanvasRenderer {
 
 	zoomToFitCanvas(canvasDimensions) {
 		const viewPortDimensions = this.getViewPortDimensions();
+
+		// If we're displaying a sub-flow reduce the viewport width by the fixed
+		// radius of the ports for the supernode binding nodes.
+		if (this.isDisplayingSubFlow()) {
+			viewPortDimensions.width -= (2 * this.layout.supernodeBindingPortRadius);
+		}
 
 		// this.logger.log("Zoom to fit: " +
 		// 	" viewPort.width " + viewPortDimensions.width +
@@ -1873,13 +1887,7 @@ class CanvasRenderer {
 
 		const that = this;
 
-		// Set the port positions for all ports - these will be needed when displaying
-		// nodes and links. This needs to be done here because resizing the supernode
-		// will cause its ports to move.
-		this.setPortPositionsAllNodes();
-
 		const nodeSelector = this.getSelectorForClass("d3-node-group");
-
 
 		var nodeGroupSel = this.canvasGrp
 			.selectAll(nodeSelector)
@@ -1899,10 +1907,10 @@ class CanvasRenderer {
 				nodeGroupSel
 					.each(function(d) { // Use function so the 'this' pointer refers to the node.
 						if (d.isSupernodeInputBinding) {
-							that.updatePortRadius(this, d, that.layout.cssNodePortOutput);
+							that.updatePortRadiusAndPos(this, d, that.layout.cssNodePortOutput);
 						}
 						if (d.isSupernodeOutputBinding) {
-							that.updatePortRadius(this, d, that.layout.cssNodePortInput);
+							that.updatePortRadiusAndPos(this, d, that.layout.cssNodePortInput);
 							that.updatePortArrowPath(this, d, that.layout.cssNodePortInputArrow);
 						}
 					});
@@ -1924,6 +1932,12 @@ class CanvasRenderer {
 			});
 
 		} else {
+			// Set the port positions for all ports - these will be needed when displaying
+			// nodes and links. This needs to be done here because resizing the supernode
+			// will cause its ports to move. No need to do it when moving binding nodes
+			// because it is done in the code that moves the nodes.
+			this.setPortPositionsAllNodes();
+
 			// Handle new nodes
 			var newNodeGroups = nodeGroupSel.enter()
 				.append("g")
@@ -2628,12 +2642,11 @@ class CanvasRenderer {
 		return this.isSuperBindingNode(d) ? this.getBindingPortRadius() : d.layout.portRadius;
 	}
 
-	// Returns the radius size of the supernode binding ports sclaed up by
-	// teh zoom scale amount to give the actual size.
+	// Returns the radius size of the supernode binding ports scaled up by
+	// the zoom scale amount to give the actual size.
 	getBindingPortRadius() {
 		return this.layout.supernodeBindingPortRadius / this.zoomTransform.k;
 	}
-
 
 	isSuperBindingNode(d) {
 		return d.isSupernodeInputBinding || d.isSupernodeOutputBinding;
@@ -2720,11 +2733,12 @@ class CanvasRenderer {
 		}
 	}
 
-	updatePortRadius(node, d, cssNodePort) {
+	updatePortRadiusAndPos(node, d, cssNodePort) {
 		const nodeGrp = d3.select(node);
 		const selector = this.getSelectorForClass(cssNodePort);
 		nodeGrp.selectAll(selector)
-			.attr("r", () => this.getPortRadius(d));
+			.attr("r", () => this.getPortRadius(d))
+			.attr("cy", (port) => port.cy); // Port position may change for binding nodes with multiple-ports.
 	}
 
 	updatePortArrowPath(node, d, cssNodePortArrow) {
@@ -3550,28 +3564,30 @@ class CanvasRenderer {
 				ports[0].cy = data.layout.portPosY;
 
 			} else {
-				let centerPoint = 0;
+				let yPos = 0;
 
 				if (this.isExpandedSupernode(data)) {
-					const heightSvgArea = data.height - portsHeight - this.layout.supernodeTopAreaHeight - this.layout.supernodeSVGAreaPadding;
-					centerPoint = this.layout.supernodeTopAreaHeight + (heightSvgArea / 2);
+					const heightSvgArea = data.height - this.layout.supernodeTopAreaHeight - this.layout.supernodeSVGAreaPadding;
+					const remainingSpace = heightSvgArea - portsHeight;
+					yPos = this.layout.supernodeTopAreaHeight + (remainingSpace / 2);
 
 				} else if (portsHeight < data.height) {
-					centerPoint = (data.height - portsHeight) / 2;
+					yPos = (data.height - portsHeight) / 2;
 				}
 
 				// Sub-flow binding node ports need to be spaced by the inverse of the
 				// zoom amount so that, after zoomToFit on the in-place sub-flow the
-				// binding node ports line up with those on the supernode.
+				// binding node ports line up with those on the supernode. This is only
+				// necessary with binding nodes with mutiple ports.
 				let multiplier = 1;
 				if (this.isSuperBindingNode(data)) {
 					multiplier = 1 / this.zoomTransform.k;
 				}
 
 				ports.forEach((p) => {
-					centerPoint += (data.layout.portArcRadius * multiplier);
-					p.cy = centerPoint;
-					centerPoint += ((data.layout.portArcRadius + data.layout.portArcSpacing) * multiplier);
+					yPos += (data.layout.portArcRadius * multiplier);
+					p.cy = yPos;
+					yPos += ((data.layout.portArcRadius + data.layout.portArcSpacing) * multiplier);
 				});
 			}
 		}

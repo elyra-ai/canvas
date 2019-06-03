@@ -939,6 +939,13 @@ module.exports = function() {
 		expect(actualTransform).toEqual(transform);
 	});
 
+	this.Then(/^I verify the "([^"]*)" node in the subflow transform is "([^"]*)"$/, function(nodeName, transform) {
+		const selector = getNodeSelectorInSubFlow(nodeName, "grp");
+		const node = browser.$(selector);
+		const actualTransform = node.getAttribute("transform");
+		expect(actualTransform).toEqual(transform);
+	});
+
 	this.Then(/^I verify the node id "([^"]*)" has width (\d+) and height (\d+)$/, function(nodeId, width, height) {
 		const objectModel = getCanvasData();
 		const node = getNodeFromObjectModel(objectModel, nodeId);
