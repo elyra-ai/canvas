@@ -1557,7 +1557,7 @@ export default class CanvasController {
 				break;
 			}
 			case "collapseSuperNodeInPlace": {
-				const command = new CollapseSuperNodeInPlaceAction(this.contextMenuSource, this.objectModel);
+				const command = new CollapseSuperNodeInPlaceAction(this.contextMenuSource, this.objectModel, this.canvasConfig.enableMoveNodesOnSupernodeResize);
 				this.commandStack.do(command);
 				break;
 			}

@@ -27,6 +27,7 @@ import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, CONTEXT_MENU_BUTTON,
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import Logger from "../logging/canvas-logger.js";
+import CanvasUtils from "./common-canvas-utils.js";
 
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
@@ -703,12 +704,14 @@ class CanvasRenderer {
 			return;
 		}
 		const svgRect = this.getViewPortDimensions();
-		const canv = this.getCanvasDimensionsAdjustedForScale(1);
 		const transformedSVGRect = this.getTransformedSVGRect(svgRect, 1);
+		const canv = this.getCanvasDimensionsAdjustedForScale(1);
+		const canvWithPadding = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
 
 		this.canvasGrp.selectAll(this.getSelectorForId("br_svg_rect")).remove();
 		this.canvasGrp.selectAll(this.getSelectorForId("br_svg_rect_trans")).remove();
 		this.canvasGrp.selectAll(this.getSelectorForId("br_canvas_rect")).remove();
+		this.canvasGrp.selectAll(this.getSelectorForId("br_canvas_rect_with_padding")).remove();
 
 		this.canvasGrp
 			.append("rect")
@@ -746,6 +749,21 @@ class CanvasRenderer {
 				.style("stroke", "blue")
 				.lower();
 		}
+
+		if (canvWithPadding) {
+			this.canvasGrp
+				.append("rect")
+				.attr("data-id", this.getId("br_canvas_rect_with_padding"))
+				.attr("data-pipeline-id", this.activePipeline.id)
+				.attr("height", canvWithPadding.height)
+				.attr("width", canvWithPadding.width)
+				.attr("x", canvWithPadding.left)
+				.attr("y", canvWithPadding.top)
+				.style("fill", "none")
+				.style("stroke", "green")
+				.lower();
+		}
+
 		if (this.config.enableBoundingRectangles &&
 				this.superRenderers.length > 0) {
 			this.superRenderers.forEach((sr) => sr.displayBoundingRectangles());
@@ -1322,16 +1340,22 @@ class CanvasRenderer {
 	}
 
 	zoomToFit() {
-		// Calculate the padding space for the canvas objects to be zoomed.
-		// This calculation doesn't take into account the space occupied by the
-		// ports of any supernode binding nodes, that is allowed for in the
-		// zoomToFitCanvas method.
-		const padding = this.isDisplayingSubFlow()
-			? Math.max(this.layout.zoomToFitPadding, this.getPaddingForConnections())
-			: this.layout.zoomToFitPadding;
-
+		const padding = this.getZoomToFitPadding();
 		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, padding);
 		this.zoomToFitCanvas(canvasDimensions);
+	}
+
+	// Returns the padding space for the canvas objects to be zoomed which takes
+	// into account any connections that need to be made to any sub-flow binding
+	// nodes.
+	// This calculation doesn't take into account the space occupied by the
+	// ports of any supernode binding nodes, that is allowed for in the
+	// zoomToFitCanvas method.
+	getZoomToFitPadding() {
+		const padding = this.isDisplayingSubFlow()
+			? Math.max(this.layout.zoomToFitPadding, this.getMaxPaddingForConnections())
+			: this.layout.zoomToFitPadding;
+		return padding;
 	}
 
 	zoomToFitCanvas(canvasDimensions) {
@@ -2589,9 +2613,9 @@ class CanvasRenderer {
 	}
 
 	// Returns an amount for padding when zooming to fit the canvas objects
-	// withing a subflow to allow the connection lines to be displayed without
+	// within a subflow to allow the connection lines to be displayed without
 	// them doubling back on themselves.
-	getPaddingForConnections() {
+	getMaxPaddingForConnections() {
 		let padding = 0;
 		this.activePipeline.nodes.forEach((n) => {
 			const maxIncrement = this.getMaxIncrementToOutputBindingNodes(n);
@@ -4225,13 +4249,23 @@ class CanvasRenderer {
 	// then redraws the nodes and links (the link positions may move based
 	// on the node size change).
 	resizeNode() {
+		const oldSupernode = Object.assign({}, this.resizeObj);
 		const delta = this.resizeObject(this.resizeObj, this.nodeSizingDirection,
 			this.layout.supernodeMinWidth, this.layout.supernodeMinHeight);
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
-			this.addToNodeSizingArray(this.resizeObj);
+			CanvasUtils.addToNodeSizingArray(this.resizeObj, this.nodeSizingMovedNodes);
+
 			if (this.config.enableMoveNodesOnSupernodeResize) {
-				this.moveSurroundingNodes(this.resizeObj, delta);
+				CanvasUtils.moveSurroundingNodes(
+					this.nodeSizingMovedNodes,
+					oldSupernode,
+					this.activePipeline.nodes,
+					this.nodeSizingDirection,
+					this.resizeObj.width,
+					this.resizeObj.height,
+					true // Pass true to indicate that node positions should be updated.
+				);
 			}
 			this.displayNodes();
 			this.displayLinks();
@@ -4240,57 +4274,6 @@ class CanvasRenderer {
 			}
 			this.superRenderers.forEach((renderer) => renderer.displaySVGToFitSupernode());
 		}
-	}
-
-	addToNodeSizingArray(nodeObj) {
-		this.nodeSizingMovedNodes[nodeObj.id] = {
-			id: nodeObj.id,
-			x_pos: nodeObj.x_pos,
-			y_pos: nodeObj.y_pos,
-			width: nodeObj.width,
-			height: nodeObj.height
-		};
-	}
-
-	moveSurroundingNodes(nodeObj, delta) {
-		let xDelta;
-		let yDelta;
-		this.activePipeline.nodes.forEach((node) => {
-			if (node.id === nodeObj.id) {
-				return; // Ignore the supernode
-			}
-
-			xDelta = 0;
-			yDelta = 0;
-
-			if (this.nodeSizingDirection.indexOf("n") > -1 &&
-				node.y_pos + node.height < nodeObj.y_pos && // check node is above supernode bottom border
-				nodeObj.height > this.nodeSizingInitialSize.height) {
-				node.y_pos -= delta.height;
-				yDelta = delta.height;
-			} else if (this.nodeSizingDirection.indexOf("s") > -1 &&
-			node.y_pos > nodeObj.y_pos + nodeObj.height && // check node is below supernode top right corner
-			nodeObj.height > this.nodeSizingInitialSize.height) {
-				node.y_pos += delta.height;
-				yDelta = delta.height;
-			}
-
-			if (this.nodeSizingDirection.indexOf("w") > -1 &&
-			node.x_pos + node.width < nodeObj.x_pos && // check node is left of supernode right border
-			nodeObj.width > this.nodeSizingInitialSize.width) {
-				node.x_pos -= delta.width;
-				xDelta = delta.width;
-			} else if (this.nodeSizingDirection.indexOf("e") > -1 &&
-			node.x_pos > nodeObj.x_pos + nodeObj.width && // check node is right of supernode left border
-			nodeObj.width > this.nodeSizingInitialSize.width) {
-				node.x_pos += delta.width;
-				xDelta = delta.width;
-			}
-
-			if (xDelta !== 0 || yDelta !== 0) {
-				this.addToNodeSizingArray(node);
-			}
-		});
 	}
 
 	// Sets the size and position of the comment in the canvasInfo.comments

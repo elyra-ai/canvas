@@ -420,19 +420,126 @@ describe("Expand and Collapse Supernode Action", () => {
 		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.is_expanded).to.be.false;
 	});
 
-	it("Should not move the surrounding nodes when supernode is expanded if no overlap", () => {
+	it("Should move the surrounding nodes when supernode is expanded", () => {
 		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
 
-		const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": 45, "offsetY": 45, "pipelineId": primaryPipelineId	};
-		objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
-
-		const originalNodePositions = objectModel.getAPIPipeline().getNodes();
 		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
+		const expectedNodePositions = [
+			{
+				"id": "id8I6RH2V91XW",
+				"label": "Binding (entry) node",
+				"x_pos": 89,
+				"y_pos": 99.5
+			},
+			{
+				"id": "idGWRVT47XDV",
+				"label": "Execution node",
+				"x_pos": 297,
+				"y_pos": 138.5
+			},
+			{
+				"id": "nodeIDMultiPlotPE",
+				"label": "Multiplot",
+				"x_pos": 630,
+				"y_pos": 170
+			},
+			{
+				"id": "id125TTEEIK7V",
+				"label": "Model Node",
+				"x_pos": 890,
+				"y_pos": 230.99999237060547
+			},
+			{
+				"id": "id5KIRGGJ3FYT",
+				"label": "Binding (exit) node",
+				"x_pos": 772,
+				"y_pos": 500.99999237060547
+			},
+			{
+				"id": "6f704d84-85be-4520-9d76-57fe2295b310",
+				"label": "Select",
+				"x_pos": 135,
+				"y_pos": 429.5
+			},
+			{
+				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
+				"label": "Database",
+				"x_pos": 97,
+				"y_pos": 642.5
+			},
+			{
+				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+				"label": "Sample",
+				"x_pos": 234,
+				"y_pos": 594.5
+			},
+			{
+				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
+				"label": "Aggregate",
+				"x_pos": 235,
+				"y_pos": 690.5
+			},
+			{
+				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
+				"label": "Merge",
+				"x_pos": 510,
+				"y_pos": 643.5
+			},
+			{
+				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
+				"label": "Table",
+				"x_pos": 660.7247240471117,
+				"y_pos": 644.1793095752446
+			},
+			{
+				"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
+				"label": "C5.0",
+				"x_pos": 805.6818052349669,
+				"y_pos": 596.5656356040878
+			},
+			{
+				"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
+				"label": "Neural Net",
+				"x_pos": 806.7398404208096,
+				"y_pos": 692.8509946880919
+			},
+			{
+				"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
+				"label": "Supernode",
+				"x_pos": 297,
+				"y_pos": 235
+			},
+			{
+				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+				"label": "Filler",
+				"x_pos": 235,
+				"y_pos": 496.5
+			}];
+
+		compareNodePositions(expectedNodePositions, objectModel);
+	});
+
+	it("Surrounding nodes should go back to original positions when supernode is expanded and collapsed", () => {
+		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
+
+		const originalNodePositions = objectModel.getAPIPipeline().getNodes();
+
+		// Expand the supernode
+		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+
+		// Collapse the supernode
+		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuActionHandler("collapseSuperNodeInPlace");
+
+		expect(canvasController.getNode(superNodeId).is_expanded).to.be.false;
+
 		compareNodePositions(originalNodePositions, objectModel);
 	});
+
 
 	it("Should move the surrounding nodes south when supernode is expanded and overlaps nodes", () => {
 		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
@@ -457,32 +564,32 @@ describe("Expand and Collapse Supernode Action", () => {
 			{
 				"id": "nodeIDMultiPlotPE",
 				"label": "Multiplot",
-				"x_pos": 500,
+				"x_pos": 630,
 				"y_pos": 170
 			},
 			{
 				"id": "id125TTEEIK7V",
 				"label": "Model Node",
-				"x_pos": 760,
+				"x_pos": 890,
 				"y_pos": 230.99999237060547
 			},
 			{
 				"id": "id5KIRGGJ3FYT",
 				"label": "Binding (exit) node",
-				"x_pos": 642,
-				"y_pos": 375.99999237060547
+				"x_pos": 772,
+				"y_pos": 500.99999237060547
 			},
 			{
 				"id": "6f704d84-85be-4520-9d76-57fe2295b310",
 				"label": "Select",
 				"x_pos": 135,
-				"y_pos": 304.5
+				"y_pos": 429.5
 			},
 			{
 				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
 				"label": "Database",
 				"x_pos": 97,
-				"y_pos": 517.5
+				"y_pos": 642.5
 			},
 			{
 				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
@@ -499,26 +606,26 @@ describe("Expand and Collapse Supernode Action", () => {
 			{
 				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
 				"label": "Merge",
-				"x_pos": 380,
-				"y_pos": 518.5
+				"x_pos": 510,
+				"y_pos": 643.5
 			},
 			{
 				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
 				"label": "Table",
-				"x_pos": 530.7247240471117,
-				"y_pos": 519.1793095752446
+				"x_pos": 660.7247240471117,
+				"y_pos": 644.1793095752446
 			},
 			{
 				"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
 				"label": "C5.0",
-				"x_pos": 675.6818052349669,
-				"y_pos": 471.5656356040878
+				"x_pos": 805.6818052349669,
+				"y_pos": 596.5656356040878
 			},
 			{
 				"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
 				"label": "Neural Net",
-				"x_pos": 676.7398404208096,
-				"y_pos": 567.8509946880919
+				"x_pos": 806.7398404208096,
+				"y_pos": 692.8509946880919
 			},
 			{
 				"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
@@ -568,62 +675,62 @@ describe("Expand and Collapse Supernode Action", () => {
 			{
 				"id": "id125TTEEIK7V",
 				"label": "Model Node",
-				"x_pos": 760,
-				"y_pos": 230.99999237060547
+				"x_pos": 890,
+				"y_pos": 355.99999237060547
 			},
 			{
 				"id": "id5KIRGGJ3FYT",
 				"label": "Binding (exit) node",
-				"x_pos": 642,
-				"y_pos": 375.99999237060547
+				"x_pos": 772,
+				"y_pos": 500.99999237060547
 			},
 			{
 				"id": "6f704d84-85be-4520-9d76-57fe2295b310",
 				"label": "Select",
 				"x_pos": 135,
-				"y_pos": 304.5
+				"y_pos": 429.5
 			},
 			{
 				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
 				"label": "Database",
 				"x_pos": 97,
-				"y_pos": 517.5
+				"y_pos": 642.5
 			},
 			{
 				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
 				"label": "Sample",
 				"x_pos": 234,
-				"y_pos": 469.5
+				"y_pos": 594.5
 			},
 			{
 				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
 				"label": "Aggregate",
 				"x_pos": 235,
-				"y_pos": 565.5
+				"y_pos": 690.5
 			},
 			{
 				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
 				"label": "Merge",
-				"x_pos": 380,
-				"y_pos": 518.5
+				"x_pos": 510,
+				"y_pos": 643.5
 			},
 			{
 				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
 				"label": "Table",
-				"x_pos": 530.7247240471117,
-				"y_pos": 519.1793095752446
+				"x_pos": 660.7247240471117,
+				"y_pos": 644.1793095752446
 			},
 			{
 				"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
 				"label": "C5.0",
-				"x_pos": 675.6818052349669,
-				"y_pos": 471.5656356040878
+				"x_pos": 805.6818052349669,
+				"y_pos": 596.5656356040878
 			},
 			{
 				"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
 				"label": "Neural Net",
-				"x_pos": 676.7398404208096,
-				"y_pos": 567.8509946880919
+				"x_pos": 806.7398404208096,
+				"y_pos": 692.8509946880919
 			},
 			{
 				"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
@@ -635,7 +742,7 @@ describe("Expand and Collapse Supernode Action", () => {
 				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
 				"label": "Filler",
 				"x_pos": 235,
-				"y_pos": 371.5
+				"y_pos": 496.5
 			}];
 
 		compareNodePositions(expectedNodePositions, objectModel);
@@ -673,7 +780,7 @@ describe("Expand and Collapse Supernode Action", () => {
 			{
 				"id": "id125TTEEIK7V",
 				"label": "Model Node",
-				"x_pos": 760,
+				"x_pos": 890,
 				"y_pos": 230.99999237060547
 			},
 			{
@@ -692,25 +799,25 @@ describe("Expand and Collapse Supernode Action", () => {
 				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
 				"label": "Database",
 				"x_pos": 97,
-				"y_pos": 517.5
+				"y_pos": 642.5
 			},
 			{
 				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
 				"label": "Sample",
 				"x_pos": 234,
-				"y_pos": 469.5
+				"y_pos": 594.5
 			},
 			{
 				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
 				"label": "Aggregate",
 				"x_pos": 235,
-				"y_pos": 565.5
+				"y_pos": 690.5
 			},
 			{
 				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
 				"label": "Merge",
 				"x_pos": 380,
-				"y_pos": 518.5
+				"y_pos": 643.5
 			},
 			{
 				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
@@ -1708,6 +1815,10 @@ function compareNodePositions(expectedNodes, objectModel) {
 	expectedNodes.forEach((expectedNode) => {
 		const omNode = objectModel.getAPIPipeline().getNode(expectedNode.id);
 		// console.log("node " + expectedNode.label);
+
+		// console.log("expectedNode.label = " + expectedNode.label);
+		// console.log("expectedNode.x_pos = " + expectedNode.x_pos + " omNode.x_pos " + omNode.x_pos);
+		// console.log("expectedNode.y_pos = " + expectedNode.y_pos + " omNode.y_pos " + omNode.y_pos);
 
 		expect(isEqual(expectedNode.x_pos, omNode.x_pos)).to.be.true;
 		expect(isEqual(expectedNode.y_pos, omNode.y_pos)).to.be.true;

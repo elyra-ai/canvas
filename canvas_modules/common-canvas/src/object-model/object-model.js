@@ -14,12 +14,13 @@ import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, NONE, VERTICAL, DAGRE_HORI
 	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK, CREATE_PIPELINE,
 	CLONE_PIPELINE, SUPER_NODE, HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM,
 	HIGHLIGHT_DOWNSTREAM } from "../common-canvas/constants/canvas-constants.js";
-import dagre from "dagre/dist/dagre.min.js";
 import LayoutDimensions from "./layout-dimensions.js";
 import CanvasInHandler from "./canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import CanvasOutHandler from "./canvas-out-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import PipelineInHandler from "./pipeline-in-handler.js";
 import PipelineOutHandler from "./pipeline-out-handler.js";
+import CanvasUtils from "../common-canvas/common-canvas-utils";
+import dagre from "dagre/dist/dagre.min.js";
 import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
 import has from "lodash/has";
@@ -1363,8 +1364,8 @@ export default class ObjectModel {
 		node.width = node.layout.defaultNodeWidth;
 
 		if (node.type === SUPER_NODE && node.is_expanded) {
-			node.width = node.expanded_width ? node.expanded_width : Math.max(layoutInfo.supernodeDefaultWidth, node.width);
-			node.height = node.expanded_height ? node.expanded_height : Math.max(layoutInfo.supernodeDefaultHeight, node.height);
+			node.width = CanvasUtils.getSupernodeExpandedWidth(node, layoutInfo);
+			node.height = CanvasUtils.getSupernodeExpandedHeight(node, layoutInfo);
 		}
 
 		return node;

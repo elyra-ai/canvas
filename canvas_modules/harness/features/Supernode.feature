@@ -281,7 +281,7 @@ Feature: Supernode
 			# Check the second supernode (with 2 multi-port binding nodes) is correctly positioned
 			Then I right click the "Supernode-2-binding" node to display the context menu
 			Then I click option "Expand supernode" from the context menu
-			Then I verify the "Supernode-2-binding" node transform is "translate(433.97504867240787, 329.97940826416016)"
+			Then I verify the "Supernode-2-binding" node transform is "translate(582.5964628569782, 329.97940826416016)"
 
 			# Check the three nodes in the second supernode's sub-flow are correctly positioned
 			Then I verify the "SN2-Filler" node in the subflow transform is "translate(752, -351.49998474121094)"
