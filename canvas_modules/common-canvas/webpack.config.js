@@ -24,6 +24,7 @@ module.exports = {
 	entry: {
 		"lib/properties": "./src/common-properties/common-properties.jsx",
 		"lib/context-menu": "./src/context-menu/context-menu-wrapper.jsx",
+		"lib/command-stack": "./src/command-stack/command-stack.js",
 		"lib/canvas": "./src/common-canvas/index.js",
 		"common-canvas": "./src/index.js" // needs to be last to create correct combined css output
 	},

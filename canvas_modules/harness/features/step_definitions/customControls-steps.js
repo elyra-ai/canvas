@@ -63,6 +63,7 @@ module.exports = function() {
 	this.Then(/^I click on "([^"]*)" button$/, function(dataId) {
 		const button = browser.$(`button[data-id='${dataId}']`);
 		button.click();
+		browser.pause(250);
 	});
 
 	this.Then("I show the map", function() {
