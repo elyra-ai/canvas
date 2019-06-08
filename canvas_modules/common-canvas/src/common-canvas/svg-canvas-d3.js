@@ -1346,32 +1346,21 @@ class CanvasRenderer {
 	}
 
 	// Returns the padding space for the canvas objects to be zoomed which takes
-	// into account any connections that need to be made to any sub-flow binding
-	// nodes.
-	// This calculation doesn't take into account the space occupied by the
-	// ports of any supernode binding nodes, that is allowed for in the
-	// zoomToFitCanvas method.
+	// into account any connections that need to be made to/from any sub-flow
+	// binding nodes plus any space needed for the binding nodes ports.
 	getZoomToFitPadding() {
-		const padding = this.isDisplayingSubFlow()
-			? Math.max(this.layout.zoomToFitPadding, this.getMaxPaddingForConnections())
-			: this.layout.zoomToFitPadding;
+		let padding = this.layout.zoomToFitPadding;
+
+		if (this.isDisplayingSubFlow()) {
+			// Allocate some space for connecting lines and the binding node ports
+			const newPadding = this.getMaxZoomToFitPaddingForConnections() + (2 * this.layout.supernodeBindingPortRadius);
+			padding = Math.max(padding, newPadding);
+		}
 		return padding;
 	}
 
 	zoomToFitCanvas(canvasDimensions) {
 		const viewPortDimensions = this.getViewPortDimensions();
-
-		// If we're displaying a sub-flow reduce the viewport width by the fixed
-		// radius of the ports for the supernode binding nodes.
-		if (this.isDisplayingSubFlow()) {
-			viewPortDimensions.width -= (2 * this.layout.supernodeBindingPortRadius);
-		}
-
-		// this.logger.log("Zoom to fit: " +
-		// 	" viewPort.width " + viewPortDimensions.width +
-		// 	" viewPort.height " + viewPortDimensions.height +
-		// 	" canvas.width " + canvasDimensions.width +
-		// 	" canvas.height " + canvasDimensions.height);
 
 		if (canvasDimensions) {
 			const xRatio = viewPortDimensions.width / canvasDimensions.width;
@@ -2612,54 +2601,60 @@ class CanvasRenderer {
 		return expandedSupernodeHaveStyledNodes;
 	}
 
-	// Returns an amount for padding when zooming to fit the canvas objects
-	// within a subflow to allow the connection lines to be displayed without
-	// them doubling back on themselves.
-	getMaxPaddingForConnections() {
-		let padding = 0;
-		this.activePipeline.nodes.forEach((n) => {
-			const maxIncrement = this.getMaxIncrementToOutputBindingNodes(n);
-
-			// For input binding node connections we will never use the
-			// minInitialLineIncrement because the ports are on separate binding
-			// nodes -- never on a single node -- so we don't set any maxIncrement
-			// for these connections.
-
-			padding = Math.max(padding, n.layout.minInitialLine + n.layout.minFinalLine + maxIncrement);
-		});
-
+	// Returns the maximum amount for padding, when zooming to fit the canvas
+	// objects within a subflow, to allow the connection lines to be displayed
+	// without them doubling back on themselves.
+	getMaxZoomToFitPaddingForConnections() {
+		const paddingForInputBinding = this.getMaxPaddingForConnectionsFromInputBindingNodes();
+		const paddingForOutputBinding = this.getMaxPaddingForConnectionsToOutputBindingNodes();
+		const padding = Math.max(paddingForInputBinding, paddingForOutputBinding);
 		return padding;
 	}
 
-	getMaxIncrementToOutputBindingNodes(node) {
-		return this.getCountOfLinksToOutputBindingNodes(node) * node.layout.minInitialLineIncrement;
-	}
+	// Returns the maximum amount for padding, when zooming to fit the canvas
+	// objects within a subflow, to allow the connection lines (from input binding
+	// nodes to other sub-flow nodes) to be displayed without them doubling back
+	// on themselves.
+	getMaxPaddingForConnectionsFromInputBindingNodes() {
+		let maxPadding = 0;
+		const inputBindingNodes = this.activePipeline.nodes.filter((n) => n.isSupernodeInputBinding);
 
-	getCountOfLinksToOutputBindingNodes(node) {
-		let count = 0;
-		if (node.outputs && node.outputs.length > 0) {
-			node.outputs.forEach((output) => {
-				if (this.isOutputLinkedToOutputBindingNode(node, output)) {
-					count++;
-				}
-			});
-		}
-		return count;
-	}
+		inputBindingNodes.forEach((n) => {
+			const nodePadding = CanvasUtils.getNodePaddingToTargetNodes(n, this.activePipeline.nodes,
+				this.activePipeline.links, this.layout.linkType);
 
-	isOutputLinkedToOutputBindingNode(node, output) {
-		let state = false;
-		this.activePipeline.links.forEach((link) => {
-			if (link.srcNodeId === node.id && link.srcNodePortId === output.id && this.isOutputBindingNode(link.trgNodeId)) {
-				state = true;
-			}
+			console.log("getMaxPaddingForConnectionsFromInputBindingNodes maxIncrement = " + nodePadding);
+
+			maxPadding = Math.max(maxPadding, nodePadding);
+
+			console.log("getMaxPaddingForConnectionsFromInputBindingNodes padding = " + maxPadding);
 		});
-		return state;
+
+		console.log("getMaxPaddingForConnectionsFromInputBindingNodes final padding = " + maxPadding);
+		return maxPadding;
 	}
 
-	isOutputBindingNode(nodeId) {
-		const node = this.getNode(nodeId);
-		return node.isSupernodeOutputBinding;
+	// Returns the maximum amount for padding, when zooming to fit the canvas
+	// objects within a subflow, to allow the connection lines (from sub-flow nodes
+	// to output binding nodes) to be displayed without them doubling back
+	// on themselves.
+	getMaxPaddingForConnectionsToOutputBindingNodes() {
+		let maxPadding = 0;
+		const outputBindingNodes = this.activePipeline.nodes.filter((n) => n.isSupernodeOutputBinding);
+
+		this.activePipeline.nodes.forEach((n) => {
+			const nodePadding = CanvasUtils.getNodePaddingToTargetNodes(n, outputBindingNodes,
+				this.activePipeline.links, this.layout.linkType);
+
+			console.log("getMaxPaddingForConnectionsToOutputBindingNodes maxIncrement = " + nodePadding);
+
+			maxPadding = Math.max(maxPadding, nodePadding);
+
+			console.log("getMaxPaddingForConnectionsToOutputBindingNodes padding = " + maxPadding);
+		});
+
+		console.log("getMaxPaddingForConnectionsToOutputBindingNodes final padding = " + maxPadding);
+		return maxPadding;
 	}
 
 	getPortRadius(d) {

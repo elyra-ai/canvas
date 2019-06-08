@@ -3094,6 +3094,8 @@ export class APIPipeline {
 	}
 
 	dagreAutolayout(direction, canvasInfoPipeline) {
+		const layoutInfo = this.objectModel.getLayoutInfo();
+
 		var nodeLinks = canvasInfoPipeline.links.filter((link) => {
 			return link.type === NODE_LINK || link.type === ASSOCIATION_LINK;
 		});
@@ -3103,7 +3105,13 @@ export class APIPipeline {
 		});
 
 		var nodesData = canvasInfoPipeline.nodes.map((node) => {
-			return { "v": node.id, "value": { width: node.width, height: node.height } };
+			let newWidth = node.width;
+			if (direction === DAGRE_HORIZONTAL) {
+				newWidth = node.width +
+					Math.max(this.getPaddingForNode(node, layoutInfo, canvasInfoPipeline), layoutInfo.autoLayoutHorizontalSpacing);
+			}
+
+			return { "v": node.id, "value": { width: newWidth, height: node.height } };
 		});
 
 		// possible values: TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
@@ -3117,10 +3125,13 @@ export class APIPipeline {
 
 		var inputGraph = { nodes: nodesData, edges: edges, value: value };
 
-		const initialMarginX = this.objectModel.getLayoutInfo().autoLayoutInitialMarginX;
-		const initialMarginY = this.objectModel.getLayoutInfo().autoLayoutInitialMarginY;
-		const verticalSpacing = this.objectModel.getLayoutInfo().autoLayoutVerticalSpacing;
-		const horizontalSpacing = this.objectModel.getLayoutInfo().autoLayoutHorizontalSpacing;
+		const initialMarginX = layoutInfo.autoLayoutInitialMarginX;
+		const initialMarginY = layoutInfo.autoLayoutInitialMarginY;
+		const verticalSpacing = layoutInfo.autoLayoutVerticalSpacing;
+		let horizontalSpacing = layoutInfo.autoLayoutHorizontalSpacing;
+		if (direction === DAGRE_HORIZONTAL) {
+			horizontalSpacing = 0;
+		}
 
 		var g = dagre.graphlib.json.read(inputGraph);
 		g.graph().marginx = initialMarginX;
@@ -3134,25 +3145,45 @@ export class APIPipeline {
 		}
 		dagre.layout(g);
 
-		var outputGraph = dagre.graphlib.json.write(g);
+		const outputGraph = dagre.graphlib.json.write(g);
+		const movedNodesInfo = this.convertGraphToMovedNodes(outputGraph, canvasInfoPipeline.nodes);
 
-		var lookup = { };
+		return movedNodesInfo;
+	}
+
+	// Returns an array of move node actions that can be used to reposition the
+	// nodes based on the provided Dagre output graph. (The node width and height
+	// are included in the output because the move nodes action expects them).
+	convertGraphToMovedNodes(outputGraph, canvasInfoPipelineNodes) {
+		const movedNodesInfo = [];
+		const lookup = {};
+
 		for (var i = 0, len = outputGraph.nodes.length; i < len; i++) {
 			lookup[outputGraph.nodes[i].v] = outputGraph.nodes[i];
 		}
 
-		const movedNodesInfo = [];
-		canvasInfoPipeline.nodes.forEach((node) => {
+		// When calculaing the new x_pos and y_pos of the node use the width (and
+		// height) specified in the output graph. This will be the 'newWidth' which
+		// includes the space for the connecting lines calculated earlier.
+		canvasInfoPipelineNodes.forEach((node) => {
 			movedNodesInfo[node.id] = {
 				id: node.id,
-				x_pos: lookup[node.id].value.x - (node.width / 2),
-				y_pos: lookup[node.id].value.y - (node.height / 2),
+				x_pos: lookup[node.id].value.x - (lookup[node.id].value.width / 2),
+				y_pos: lookup[node.id].value.y - (lookup[node.id].value.height / 2),
 				width: node.width,
 				height: node.height
 			};
 		});
-
 		return movedNodesInfo;
+	}
+
+
+	// Returns a width that can be added to the node width for auto-layout.
+	// This extra width is what is needed to display the connection lines
+	// without then doubling back on themselves.
+	getPaddingForNode(node, layoutInfo, canvasInfoPipeline) {
+		return CanvasUtils.getNodePaddingToTargetNodes(node,
+			canvasInfoPipeline.nodes, canvasInfoPipeline.links, layoutInfo.linkType);
 	}
 
 	// Return the dimensions of the bounding rectangle for the listOfNodes.

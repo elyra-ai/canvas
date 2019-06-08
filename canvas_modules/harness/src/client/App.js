@@ -64,7 +64,7 @@ import {
 	NO_LAYOUT,
 	BLUE_ELLIPSES_LAYOUT,
 	DB2_EXPLAIN_LAYOUT,
-	INC_MIN_INITIAL_LINE_LAYOUT,
+	STREAMS_LAYOUT,
 	CUSTOM,
 	FLYOUT,
 	NONE,
@@ -109,8 +109,8 @@ class App extends React.Component {
 			selectedSnapToGridType: NONE_DRAG,
 			snapToGridX: "",
 			snapToGridY: "",
-			autoLayoutVerticalSpacing: "",
-			autoLayoutHorizontalSpacing: "",
+			autoLayoutVerticalSpacing: null,
+			autoLayoutHorizontalSpacing: null,
 			selectedInteractionType: MOUSE_INTERACTION,
 			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormat: VERTICAL_FORMAT,
@@ -1774,68 +1774,7 @@ class App extends React.Component {
 		// 		<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
 		// 	</div>);
 
-		const blueEllipsesLayout = {
-			cssNodeLabel: "shape_label_style_blue_ellipses",
-			cssNodeBody: "default_node_style_blue_ellipses",
-			bodyPath: "     M  0 30 Q  0  0 60  0 Q 120  0 120 30 Q 120 60 60 60 Q  0 60  0 30 Z",
-			selectionPath: "M -5 30 Q -5 -5 60 -5 Q 125 -5 125 30 Q 125 65 60 65 Q -5 65 -5 30 Z",
-			defaultNodeWidth: 120,
-			defaultNodeHeight: 60,
-			labelAndIconVerticalJustification: "none",
-			imageWidth: 30,
-			imageHeight: 30,
-			imagePosX: 20,
-			imagePosY: 10,
-			labelPosX: 20,
-			labelPosY: 50,
-			labelMaxWidth: 80,
-			labelHeight: 13, // Should match the font size specified in css
-			ellipsisDisplay: true,
-			ellipsisPosX: 100,
-			ellipsisPosY: 20,
-			haloDisplay: false,
-			haloCenterX: 60,
-			haloCenterY: 30,
-			haloRadius: 30,
-			portPosY: 30
-		};
-
-		const db2ExplainNodeLayout = {
-			cssNodeLabel: "shape_label_style_db2_explain",
-			cssNodeBody: "default_node_style_db2_explain",
-			defaultNodeWidth: 120,
-			defaultNodeHeight: 60,
-			labelAndIconVerticalJustification: "none",
-			drawNodeLinkLineFromTo: "node_center",
-			labelPosX: 60,
-			labelPosY: 28,
-			labelMaxWidth: 200,
-			ellipsisDisplay: true,
-			ellipsisPosX: 100,
-			ellipsisPosY: 19,
-			haloDisplay: false,
-			haloCenterX: 60,
-			haloCenterY: 30,
-			haloRadius: 30,
-			portPosY: 30
-		};
-
-		const increaseMinInitialLine = {
-			minInitialLine: 100,
-			portArcSpacing: 25
-		};
-
-
-		let layout = null;
-		if (this.state.selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
-			layout = blueEllipsesLayout;
-		} else if (this.state.selectedNodeLayout === DB2_EXPLAIN_LAYOUT) {
-			layout = db2ExplainNodeLayout;
-		} else if (this.state.selectedNodeLayout === INC_MIN_INITIAL_LINE_LAYOUT) {
-			layout = increaseMinInitialLine;
-		}
-
-		const commonCanvasConfig = {
+		let commonCanvasConfig = {
 			enableInteractionType: this.state.selectedInteractionType,
 			enableSnapToGridType: this.state.selectedSnapToGridType,
 			enableSnapToGridX: this.state.snapToGridX,
@@ -1845,7 +1784,7 @@ class App extends React.Component {
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
-			enableNodeLayout: layout,
+			enableNodeLayout: null,
 			enableInternalObjectModel: this.state.internalObjectModel,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
@@ -1859,6 +1798,88 @@ class App extends React.Component {
 			// dropZoneCanvasContent: dropZoneCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom
 		};
+
+		if (this.state.selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
+			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
+				enableNodeLayout:
+					{
+						cssNodeLabel: "shape_label_style_blue_ellipses",
+						cssNodeBody: "default_node_style_blue_ellipses",
+						bodyPath: "     M  0 30 Q  0  0 60  0 Q 120  0 120 30 Q 120 60 60 60 Q  0 60  0 30 Z",
+						selectionPath: "M -5 30 Q -5 -5 60 -5 Q 125 -5 125 30 Q 125 65 60 65 Q -5 65 -5 30 Z",
+						defaultNodeWidth: 120,
+						defaultNodeHeight: 60,
+						labelAndIconVerticalJustification: "none",
+						imageWidth: 30,
+						imageHeight: 30,
+						imagePosX: 20,
+						imagePosY: 10,
+						labelPosX: 20,
+						labelPosY: 50,
+						labelMaxWidth: 80,
+						labelHeight: 13, // Should match the font size specified in css
+						ellipsisDisplay: true,
+						ellipsisPosX: 100,
+						ellipsisPosY: 20,
+						haloDisplay: false,
+						haloCenterX: 60,
+						haloCenterY: 30,
+						haloRadius: 30,
+						portPosY: 30
+					}
+			});
+		} else if (this.state.selectedNodeLayout === DB2_EXPLAIN_LAYOUT) {
+			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
+				enableNodeLayout:
+					{
+						cssNodeLabel: "shape_label_style_db2_explain",
+						cssNodeBody: "default_node_style_db2_explain",
+						defaultNodeWidth: 120,
+						defaultNodeHeight: 60,
+						labelAndIconVerticalJustification: "none",
+						drawNodeLinkLineFromTo: "node_center",
+						labelPosX: 60,
+						labelPosY: 28,
+						labelMaxWidth: 200,
+						ellipsisDisplay: true,
+						ellipsisPosX: 100,
+						ellipsisPosY: 19,
+						haloDisplay: false,
+						haloCenterX: 60,
+						haloCenterY: 30,
+						haloRadius: 30,
+						portPosY: 30
+					}
+			});
+		} else if (this.state.selectedNodeLayout === STREAMS_LAYOUT) {
+			// The below overrides were provided by Mary Komor from the Streams team
+			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
+				enableInteractionType: "Mouse",
+				enableConnectionType: "Ports",
+				enableNodeFormatType: "Horizontal",
+				enableAutoLayoutVerticalSpacing: 50,
+				enableAutoLayoutHorizontalSpacing: 80,
+				enableLinkType: "Elbow",
+				enableInternalObjectModel: true,
+				enablePaletteLayout: "Flyout",
+				enableMoveNodesOnSupernodeResize: true,
+				enableDisplayFullLabelOnHover: true,
+				enableDropZoneOnExternalDrag: true,
+				enableNarrowPalette: false,
+				schemaValidation: true,
+				// emptyCanvasContent: (<img src={LoadingIcon} alt="Loading ...." className="empty-canvas-image" />),
+				tipConfig: {
+					palette: false,
+					nodes: true,
+					ports: true,
+					links: true
+				},
+				enableNodeLayout: {
+					minInitialLine: 75,
+					portArcSpacing: 15
+				}
+			});
+		}
 
 		const commonCanvasConfig2 = {
 			enableConnectionType: this.state.selectedConnectionType,

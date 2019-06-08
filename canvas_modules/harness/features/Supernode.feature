@@ -272,11 +272,11 @@ Feature: Supernode
 			Then I verify the "SN1-Sample" node in the subflow transform is "translate(234, 594.5)"
 
 			# Check the five single-port binding nodes in the first supernode are correctly positioned
-			Then I verify the "SN1-BN-INPUT0" node in the subflow transform is "translate(27.900434625002788, 536.182711501581)"
-			Then I verify the "SN1-BN-INPUT1" node in the subflow transform is "translate(27.900434625002788, 571.817288498419)"
-			Then I verify the "SN1-BN-OUTPUT0" node in the subflow transform is "translate(476.7341423718352, 518.365423003162)"
-			Then I verify the "SN1-BN-OUTPUT1" node in the subflow transform is "translate(476.7341423718352, 554)"
-			Then I verify the "SN1-BN-OUTPUT2" node in the subflow transform is "translate(476.7341423718352, 589.634576996838)"
+			Then I verify the "SN1-BN-INPUT0" node in the subflow transform is "translate(5.5325910785737875, 535.754668534652)"
+			Then I verify the "SN1-BN-INPUT1" node in the subflow transform is "translate(5.5325910785737875, 572.2453314653479)"
+			Then I verify the "SN1-BN-OUTPUT0" node in the subflow transform is "translate(463.4674089214262, 517.509337069304)"
+			Then I verify the "SN1-BN-OUTPUT1" node in the subflow transform is "translate(463.4674089214262, 554)"
+			Then I verify the "SN1-BN-OUTPUT2" node in the subflow transform is "translate(463.4674089214262, 590.490662930696)"
 
 			# Check the second supernode (with 2 multi-port binding nodes) is correctly positioned
 			Then I right click the "Supernode-2-binding" node to display the context menu
@@ -289,5 +289,5 @@ Feature: Supernode
 			Then I verify the "SN2-Sample" node in the subflow transform is "translate(1039.5, -351.99998474121094)"
 
 			# Check the five single-port binding nodes in the first supernode are correctly positioned
-			Then I verify the "SN2-BN-INPUT" node in the subflow transform is "translate(610, -355.48827213318407)"
-			Then I verify the "SN2-BN-OUTPUT" node in the subflow transform is "translate(1208.4882873919732, -358.98241582917063)"
+			Then I verify the "SN2-BN-INPUT" node in the subflow transform is "translate(598, -355.33566939653235)"
+			Then I verify the "SN2-BN-OUTPUT" node in the subflow transform is "translate(1193.5, -358.75351172419306)"

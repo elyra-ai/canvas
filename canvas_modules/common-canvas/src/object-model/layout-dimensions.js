@@ -243,7 +243,7 @@ const haloDefaultLayout = {
 	autoLayoutInitialMarginX: 50,
 	autoLayoutInitialMarginY: 50,
 	autoLayoutVerticalSpacing: 80,
-	autoLayoutHorizontalSpacing: 80
+	autoLayoutHorizontalSpacing: 80 // For horizontal layout, this may be overriden by space for connections
 };
 
 const portsHorizontalDefaultLayout = {
@@ -483,7 +483,7 @@ const portsHorizontalDefaultLayout = {
 	autoLayoutInitialMarginX: 50,
 	autoLayoutInitialMarginY: 50,
 	autoLayoutVerticalSpacing: 80,
-	autoLayoutHorizontalSpacing: 80
+	autoLayoutHorizontalSpacing: 80 // For horizontal layout, this may be overriden by space for connections
 };
 
 const portsVerticalDefaultLayout = {
@@ -724,7 +724,7 @@ const portsVerticalDefaultLayout = {
 	autoLayoutInitialMarginX: 50,
 	autoLayoutInitialMarginY: 50,
 	autoLayoutVerticalSpacing: 80,
-	autoLayoutHorizontalSpacing: 80
+	autoLayoutHorizontalSpacing: 80 // For horizontal layout, this may be overriden by space for connections
 };
 
 
@@ -782,10 +782,20 @@ export default class LayoutDimensions {
 	// Overrides the auto-layout values in the layout object with any
 	// auto-layout values provided in the config object.
 	static overrideAutoLayout(layout, config) {
-		layout.autoLayoutVerticalSpacing = config.enableAutoLayoutVerticalSpacing || layout.autoLayoutVerticalSpacing || 80;
-		layout.autoLayoutHorizontalSpacing = config.enableAutoLayoutHorizontalSpacing || layout.autoLayoutHorizontalSpacing || 80;
+		layout.autoLayoutVerticalSpacing = this.getAutoLayoutSpacing(config.enableAutoLayoutVerticalSpacing, layout.autoLayoutVerticalSpacing);
+		layout.autoLayoutHorizontalSpacing = this.getAutoLayoutSpacing(config.enableAutoLayoutHorizontalSpacing, layout.autoLayoutHorizontalSpacing);
 
 		return layout;
+	}
+
+	static getAutoLayoutSpacing(configAutoLayoutSpacing, layoutAutoLayoutSpacing) {
+		let spacing = 80;
+		if (typeof configAutoLayoutSpacing !== "undefined" && configAutoLayoutSpacing !== null) {
+			spacing = configAutoLayoutSpacing;
+		} else if (typeof layoutAutoLayoutSpacing !== "undefined" && layoutAutoLayoutSpacing !== null) {
+			spacing = layoutAutoLayoutSpacing;
+		}
+		return spacing;
 	}
 
 	// Returns a snap-to-grid size in pixels based on the snapToGridSizeStr

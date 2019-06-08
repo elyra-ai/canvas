@@ -90,10 +90,10 @@
         },
         {
           "label": "Filter",
-          "type": "execution_node",
-          "op": "filter",
           "image": "/images/filter.svg",
           "class_name": "d3-node-body",
+          "type": "execution_node",
+          "op": "filter",
           "inputs": [
             {
               "id": "inPort",

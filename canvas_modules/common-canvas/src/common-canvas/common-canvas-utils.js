@@ -94,4 +94,53 @@ export default class CanvasUtils {
 	static getSupernodeExpandedHeight(supernode, layoutInfo) {
 		return supernode.expanded_height ? supernode.expanded_height : Math.max(layoutInfo.supernodeDefaultHeight, supernode.height);
 	}
+
+	// ---------------------------------------------------------------------------
+	// The methods below calculate the padding needed to display connection lines
+	// ---------------------------------------------------------------------------
+
+	// Returns the maximum padding needed to display any elbow lines, that emanate
+	// from the node passed in, to the set of target nodes passed in.
+	static getNodePaddingToTargetNodes(node, targetNodes, links, linkType) {
+		let padding = 0;
+		if (linkType === "Elbow") {
+			const maxIncrement = this.getCountOfLinksToTargetNodes(node, targetNodes, links) * node.layout.minInitialLineIncrement;
+			padding = node.layout.minInitialLine + node.layout.minFinalLine + maxIncrement;
+		} else {
+			padding = 2 * node.layout.minInitialLine;
+		}
+		return padding;
+	}
+
+	// Returns the count of links from the node passed in to the set of target
+	// nodes passed in.
+	static getCountOfLinksToTargetNodes(node, targetNodes, links) {
+		let count = 0;
+		if (node.outputs && node.outputs.length > 0) {
+			node.outputs.forEach((output) => {
+				if (this.isNodeOutputLinkedToTargetNodes(node, output, targetNodes, links)) {
+					count++;
+				}
+			});
+		}
+		return count;
+	}
+
+	// Returns true if the node and output passed in are linked to any of the
+	// target nodes passed in.
+	static isNodeOutputLinkedToTargetNodes(node, output, targetNodes, links) {
+		let state = false;
+		links.forEach((link) => {
+			if (link.srcNodeId === node.id && link.srcNodePortId === output.id && this.isTargetNode(link.trgNodeId, targetNodes)) {
+				state = true;
+			}
+		});
+		return state;
+	}
+
+	// Returns true if the node identified by targetNodeId is in the set
+	// of target nodes passed in.
+	static isTargetNode(trgNodeId, targetNodes) {
+		return targetNodes.findIndex((tn) => tn.id === trgNodeId) > -1;
+	}
 }

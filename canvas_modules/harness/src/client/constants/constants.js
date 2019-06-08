@@ -60,7 +60,7 @@ _defineConstant("STRAIGHT_LINKS", "Straight");
 _defineConstant("NO_LAYOUT", "None");
 _defineConstant("BLUE_ELLIPSES_LAYOUT", "Blue Ellipses");
 _defineConstant("DB2_EXPLAIN_LAYOUT", "Db2 Visual Explain");
-_defineConstant("INC_MIN_INITIAL_LINE_LAYOUT", "Increase minInitialLine");
+_defineConstant("STREAMS_LAYOUT", "Streams");
 
 
 _defineConstant("FLYOUT", "Flyout");
