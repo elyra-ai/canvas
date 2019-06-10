@@ -2622,15 +2622,9 @@ class CanvasRenderer {
 		inputBindingNodes.forEach((n) => {
 			const nodePadding = CanvasUtils.getNodePaddingToTargetNodes(n, this.activePipeline.nodes,
 				this.activePipeline.links, this.layout.linkType);
-
-			console.log("getMaxPaddingForConnectionsFromInputBindingNodes maxIncrement = " + nodePadding);
-
 			maxPadding = Math.max(maxPadding, nodePadding);
-
-			console.log("getMaxPaddingForConnectionsFromInputBindingNodes padding = " + maxPadding);
 		});
 
-		console.log("getMaxPaddingForConnectionsFromInputBindingNodes final padding = " + maxPadding);
 		return maxPadding;
 	}
 
@@ -2645,15 +2639,9 @@ class CanvasRenderer {
 		this.activePipeline.nodes.forEach((n) => {
 			const nodePadding = CanvasUtils.getNodePaddingToTargetNodes(n, outputBindingNodes,
 				this.activePipeline.links, this.layout.linkType);
-
-			console.log("getMaxPaddingForConnectionsToOutputBindingNodes maxIncrement = " + nodePadding);
-
 			maxPadding = Math.max(maxPadding, nodePadding);
-
-			console.log("getMaxPaddingForConnectionsToOutputBindingNodes padding = " + maxPadding);
 		});
 
-		console.log("getMaxPaddingForConnectionsToOutputBindingNodes final padding = " + maxPadding);
 		return maxPadding;
 	}
 
