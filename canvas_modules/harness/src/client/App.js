@@ -67,7 +67,6 @@ import {
 	STREAMS_LAYOUT,
 	CUSTOM,
 	FLYOUT,
-	NONE,
 	NONE_DRAG,
 	INPUT_PORT,
 	OUTPUT_PORT,
@@ -105,7 +104,6 @@ class App extends React.Component {
 			propertiesInfo2: {},
 			propertiesJson: null,
 			selectedPanel: null,
-			selectedFixedLayout: NONE,
 			selectedSnapToGridType: NONE_DRAG,
 			snapToGridX: "",
 			snapToGridY: "",
@@ -194,7 +192,6 @@ class App extends React.Component {
 		this.setPaletteDropdownSelect2 = this.setPaletteDropdownSelect2.bind(this);
 
 		this.setSaveZoom = this.setSaveZoom.bind(this);
-		this.setLayoutDirection = this.setLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
@@ -298,11 +295,6 @@ class App extends React.Component {
 	// testcases to set the test harness state in one go.
 	setCanvasConfig(config) {
 		this.setState(config);
-
-		if (config.selectedFixedLayout && config.selectedFixedLayout !== NONE) {
-			this.canvasController.setFixedAutoLayout(config.selectedFixedLayout);
-			this.canvasController2.setFixedAutoLayout(config.selectedFixedLayout);
-		}
 	}
 
 	setCanvasDropdownFile(selectedCanvasDropdownFile) {
@@ -607,14 +599,6 @@ class App extends React.Component {
 	setSaveZoom(selectedSaveZoom) {
 		this.setState({ selectedSaveZoom: selectedSaveZoom });
 		this.log("Save Zoom selected", selectedSaveZoom);
-	}
-
-	setLayoutDirection(selectedFixedLayout) {
-		this.canvasController.setFixedAutoLayout(selectedFixedLayout);
-		this.canvasController2.setFixedAutoLayout(selectedFixedLayout);
-
-		this.setState({ selectedFixedLayout: selectedFixedLayout });
-		this.log("Layout selected", selectedFixedLayout);
 	}
 
 	setSnapToGridType(selectedSnapToGridType) {
@@ -1895,8 +1879,6 @@ class App extends React.Component {
 			enableNarrowPalette: this.state.narrowPalette
 		};
 
-		const layoutAction = this.state.selectedFixedLayout === NONE;
-
 		const toolbarConfig = [
 			{ action: "palette", label: "Palette", enable: true },
 			{ divider: true },
@@ -1910,8 +1892,8 @@ class App extends React.Component {
 			{ action: "paste", label: "Paste", enable: true },
 			{ action: "addComment", label: "Add Comment", enable: true },
 			{ action: "delete", label: "Delete", enable: true },
-			{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: layoutAction },
-			{ action: "arrangeVertically", label: "Arrange Vertically", enable: layoutAction }
+			{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+			{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
 		];
 
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications" };
@@ -2075,8 +2057,6 @@ class App extends React.Component {
 			selectedPaletteDropdownFile: this.state.selectedPaletteDropdownFile,
 			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
 			setSaveZoom: this.setSaveZoom,
-			setLayoutDirection: this.setLayoutDirection,
-			selectedFixedLayout: this.state.selectedFixedLayout,
 			useInternalObjectModel: this.useInternalObjectModel,
 			setInteractionType: this.setInteractionType,
 			selectedInteractionType: this.state.selectedInteractionType,

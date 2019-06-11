@@ -9,7 +9,7 @@
 /* eslint arrow-body-style: ["off"] */
 
 import { createStore, combineReducers } from "redux";
-import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
+import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
 	CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
 	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK, CREATE_PIPELINE,
 	CLONE_PIPELINE, SUPER_NODE, HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM,
@@ -946,9 +946,6 @@ export default class ObjectModel {
 		};
 		this.store = createStore(combinedReducer, initialState);
 
-		// Default value for fixed layout behavior
-		this.fixedLayout = NONE;
-
 		// TODO - Remove this global variable when WML Canvas supports pipelineFlow
 		this.oldCanvas = null;
 
@@ -985,11 +982,6 @@ export default class ObjectModel {
 
 	setLayoutHandler(layoutHandler) {
 		this.layoutHandler = layoutHandler;
-	}
-
-	setFixedAutoLayout(fixedLayoutDirection) {
-		this.fixedLayout = fixedLayoutDirection;
-		this.getAPIPipeline().autoLayout(fixedLayoutDirection);
 	}
 
 	// ---------------------------------------------------------------------------
@@ -2422,9 +2414,7 @@ export class APIPipeline {
 	// ---------------------------------------------------------------------------
 
 	moveObjects(data) {
-		if (this.objectModel.fixedLayout === NONE) {
-			this.store.dispatch({ type: "MOVE_OBJECTS", data: data, pipelineId: this.pipelineId });
-		}
+		this.store.dispatch({ type: "MOVE_OBJECTS", data: data, pipelineId: this.pipelineId });
 	}
 
 	deleteObjects(source) {
@@ -2432,9 +2422,6 @@ export class APIPipeline {
 			src.selectedObjectIds.forEach((selId) => {
 				this.store.dispatch({ type: "DELETE_OBJECT", data: { id: selId }, pipelineId: this.pipelineId });
 			});
-			if (this.objectModel.fixedLayout !== NONE) {
-				this.autoLayout(this.objectModel.fixedLayout);
-			}
 		}, source);
 	}
 
@@ -2449,9 +2436,6 @@ export class APIPipeline {
 
 	deleteObject(id) {
 		this.objectModel.executeWithSelectionChange(this.store.dispatch, { type: "DELETE_OBJECT", data: { id: id }, pipelineId: this.pipelineId });
-		if (this.objectModel.fixedLayout !== NONE) {
-			this.autoLayout(this.objectModel.fixedLayout);
-		}
 	}
 
 	getObjectStyle(objId, temporary) {
@@ -2477,9 +2461,6 @@ export class APIPipeline {
 		});
 		const linkIdsToDelete = linksToDelete.map((link) => link.id);
 		this.store.dispatch({ type: "DELETE_LINKS", data: { linkIds: linkIdsToDelete }, pipelineId: this.pipelineId });
-		if (this.objectModel.fixedLayout !== NONE) {
-			this.autoLayout(this.objectModel.fixedLayout);
-		}
 		return linksToDelete;
 	}
 
@@ -2794,10 +2775,6 @@ export class APIPipeline {
 	addNode(newNode) {
 		if (newNode) {
 			this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode }, pipelineId: this.pipelineId });
-
-			if (this.objectModel.fixedLayout !== NONE) {
-				this.autoLayout(this.objectModel.fixedLayout);
-			}
 		}
 	}
 
@@ -2818,10 +2795,6 @@ export class APIPipeline {
 		});
 		const newCanvasInfo = Object.assign({}, canvasInfo, { pipelines: canvasInfoPipelines });
 		this.objectModel.setCanvasInfo(newCanvasInfo);
-
-		if (this.objectModel.fixedLayout !== NONE) {
-			this.autoLayout(this.objectModel.fixedLayout);
-		}
 	}
 
 	addAutoNodeAndLink(newNode, newLink) {
@@ -2851,10 +2824,6 @@ export class APIPipeline {
 				},
 				pipelineId: this.pipelineId
 			});
-
-			if (this.objectModel.fixedLayout !== NONE) {
-				this.autoLayout(this.objectModel.fixedLayout);
-			}
 		}
 	}
 
@@ -3249,9 +3218,6 @@ export class APIPipeline {
 			data.selectedObjectIds = [];
 		}
 		this.store.dispatch({ type: "ADD_COMMENT", data: data, pipelineId: this.pipelineId });
-		if (this.objectModel.fixedLayout !== NONE) {
-			this.autoLayout(this.objectModel.fixedLayout);
-		}
 	}
 
 	// Returns a position for a new comment added by clicking the 'add comment'
@@ -3333,16 +3299,10 @@ export class APIPipeline {
 
 	deleteLink(link) {
 		this.store.dispatch({ type: "DELETE_LINK", data: link, pipelineId: this.pipelineId });
-		if (this.objectModel.fixedLayout !== NONE) {
-			this.autoLayout(this.objectModel.fixedLayout);
-		}
 	}
 
 	deleteLinks(linksToDelete) {
 		this.store.dispatch({ type: "DELETE_LINKS", data: { linkIds: linksToDelete }, pipelineId: this.pipelineId });
-		if (this.objectModel.fixedLayout !== NONE) {
-			this.autoLayout(this.objectModel.fixedLayout);
-		}
 	}
 
 	createNodeLinks(data) {
@@ -3420,9 +3380,6 @@ export class APIPipeline {
 		linkList.forEach((link) => {
 			this.store.dispatch({ type: "ADD_LINK", data: link, pipelineId: this.pipelineId });
 		});
-		if (this.objectModel.fixedLayout !== NONE) {
-			this.autoLayout(this.objectModel.fixedLayout);
-		}
 	}
 
 	getLinks() {

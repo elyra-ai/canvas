@@ -36,15 +36,14 @@ _defineConstant("INFO", "info");
 _defineConstant("SUCCESS", "success");
 _defineConstant("CARBON_SUCCESS", "checkmark");
 
-_defineConstant("NONE", "none");
 _defineConstant("HORIZONTAL", "horizonal");
 _defineConstant("VERTICAL", "vertical");
+
 _defineConstant("DAGRE_HORIZONTAL", "LR");
 _defineConstant("DAGRE_VERTICAL", "TB");
 
 _defineConstant("NODE_LINK", "nodeLink");
 _defineConstant("ASSOCIATION_LINK", "associationLink");
-
 
 _defineConstant("TIP_TYPE_NODE", "tipTypeNode");
 _defineConstant("TIP_TYPE_PORT", "tipTypePort");

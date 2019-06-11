@@ -78,7 +78,6 @@ export default class CanvasController {
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Curve",
 			enableInternalObjectModel: true,
-			enableAutoLayout: "none",
 			enablePaletteLayout: "Flyout",
 			enableMoveNodesOnSupernodeResize: true,
 			enableDisplayFullLabelOnHover: false,
@@ -202,10 +201,6 @@ export default class CanvasController {
 
 	isInternalObjectModelEnabled() {
 		return this.canvasConfig.enableInternalObjectModel;
-	}
-
-	setFixedAutoLayout(selectedLayout) {
-		this.objectModel.setFixedAutoLayout(selectedLayout);
 	}
 
 	// ---------------------------------------------------------------------------

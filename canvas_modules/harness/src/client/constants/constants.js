@@ -32,7 +32,7 @@ _defineConstant("SIDE_PANEL_CANVAS", "sidepanel-canvas");
 _defineConstant("SIDE_PANEL_MODAL", "sidepanel-modal");
 _defineConstant("SIDE_PANEL_API", "sidepanel-api");
 
-_defineConstant("NONE", "none");
+// Used by the autoLayout method in CanvasController
 _defineConstant("HORIZONTAL", "horizontal");
 _defineConstant("VERTICAL", "vertical");
 
@@ -61,7 +61,6 @@ _defineConstant("NO_LAYOUT", "None");
 _defineConstant("BLUE_ELLIPSES_LAYOUT", "Blue Ellipses");
 _defineConstant("DB2_EXPLAIN_LAYOUT", "Db2 Visual Explain");
 _defineConstant("STREAMS_LAYOUT", "Streams");
-
 
 _defineConstant("FLYOUT", "Flyout");
 _defineConstant("MODAL", "Modal");

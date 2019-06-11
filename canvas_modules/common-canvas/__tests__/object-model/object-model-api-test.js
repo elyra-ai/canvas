@@ -18,7 +18,6 @@ import filterNode from "../test_resources/json/filterNode.json";
 import horizontalLayoutCanvas from "../test_resources/json/horizontalLayoutCanvas.json";
 import verticalLayoutCanvas from "../test_resources/json/verticalLayoutCanvas.json";
 import addNodeHorizontalLayoutCanvas from "../test_resources/json/addNodeHorizontalLayoutCanvas.json";
-import addNodeVerticalLayoutCanvas from "../test_resources/json/addNodeVerticalLayoutCanvas.json";
 import moveVarNode from "../test_resources/json/moveVarNode.json";
 import moveNodeHorizontalLayoutCanvas from "../test_resources/json/moveNodeHorizontalLayoutCanvas.json";
 import moveNodeVerticalLayoutCanvas from "../test_resources/json/moveNodeVerticalLayoutCanvas.json";
@@ -37,56 +36,6 @@ const canvasController = new CanvasController();
 const objectModel = canvasController.getObjectModel();
 
 describe("ObjectModel API handle model OK", () => {
-
-	it("should layout a canvas horiziontally", () => {
-		deepFreeze(startCanvas);
-		objectModel.setCanvasInfo(startCanvas);
-		objectModel.setFixedAutoLayout(HORIZONTAL);
-		objectModel.setPipelineFlowPalette(paletteJson);
-		const apiPipeline = objectModel.getAPIPipeline();
-		const node = apiPipeline.createNode(filterNode);
-		apiPipeline.addNode(node);
-
-		const expectedCanvas = addNodeHorizontalLayoutCanvas;
-		const actualCanvas = objectModel.getCanvasInfoPipeline(objectModel.getPrimaryPipelineId());
-
-		// Delete transient layout info from nodes
-		actualCanvas.nodes.forEach((nd) => delete nd.layout);
-
-		// Delete ID because IDs are generated at runtime and therefore won't be
-		// the same between expected and actual.
-		delete actualCanvas.nodes[3].id;
-
-		// console.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
-		// console.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
-	});
-
-	it("should layout a canvas vertically", () => {
-		deepFreeze(startCanvas);
-
-		objectModel.setCanvasInfo(startCanvas);
-		objectModel.setFixedAutoLayout(VERTICAL);
-		objectModel.setPipelineFlowPalette(paletteJson);
-		const node = objectModel.getAPIPipeline().createNode(filterNode);
-		objectModel.getAPIPipeline().addNode(node);
-
-		const expectedCanvas = addNodeVerticalLayoutCanvas;
-		const actualCanvas = objectModel.getCanvasInfoPipeline(objectModel.getPrimaryPipelineId());
-
-		// Delete transient layout info from nodes
-		actualCanvas.nodes.forEach((nd) => delete nd.layout);
-
-		// Delete ID because IDs are generated at runtime and therefore won't be
-		// the same between expected and actual.
-		delete actualCanvas.nodes[3].id;
-
-		// console.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
-		// console.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
-
-		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
-	});
 
 	it("should oneTimeLayout a canvas horiziontally", () => {
 		deepFreeze(startCanvas);
@@ -588,14 +537,13 @@ describe("ObjectModel API handle model OK", () => {
 			return null;
 		});
 		objectModel.setCanvasInfo(startCanvas);
-		objectModel.setFixedAutoLayout(VERTICAL);
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const node = objectModel.getAPIPipeline().createNode(filterNode);
 		objectModel.getAPIPipeline().addNode(node);
-
+		canvasController.autoLayout(HORIZONTAL);
 		expect(isEqual(actualPipelinePassedIn, expectedPipelinePassedIn)).to.be.true;
 
-		const expectedCanvas = addNodeVerticalLayoutCanvas;
+		const expectedCanvas = addNodeHorizontalLayoutCanvas;
 		expectedCanvas.nodes[3].id = uniqueNodeId;
 		const actualCanvas = objectModel.getCanvasInfoPipeline(objectModel.getPrimaryPipelineId());
 

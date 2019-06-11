@@ -23,9 +23,6 @@ import TextInput from "carbon-components-react/lib/components/TextInput";
 
 
 import {
-	NONE,
-	HORIZONTAL,
-	VERTICAL,
 	NONE_SAVE_ZOOM,
 	LOCAL_STORAGE,
 	PIPELINE_FLOW,
@@ -77,7 +74,6 @@ export default class SidePanelForms extends React.Component {
 		this.isReadyToSubmitPaletteData = this.isReadyToSubmitPaletteData.bind(this);
 		this.isReadyToSubmitPaletteData2 = this.isReadyToSubmitPaletteData2.bind(this);
 
-		this.layoutDirectionOptionChange = this.layoutDirectionOptionChange.bind(this);
 		this.saveZoomOptionChange = this.saveZoomOptionChange.bind(this);
 		this.snapToGridOptionChange = this.snapToGridOptionChange.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
@@ -289,10 +285,6 @@ export default class SidePanelForms extends React.Component {
 
 	saveZoomOptionChange(value) {
 		this.props.canvasConfig.setSaveZoom(value);
-	}
-
-	layoutDirectionOptionChange(value) {
-		this.props.canvasConfig.setLayoutDirection(value);
 	}
 
 	snapToGridOptionChange(value) {
@@ -570,29 +562,6 @@ export default class SidePanelForms extends React.Component {
 			</div>
 		</div>
 		);
-
-		var layoutDirection = (<div className="harness-sidepanel-children" id="harness-sidepanel-layout-direction">
-			<div className="harness-sidepanel-headers">Fixed Layout</div>
-			<RadioButtonGroup
-				className="harness-sidepanel-radio-group"
-				name="layout_direction_radio"
-				onChange={this.layoutDirectionOptionChange}
-				defaultSelected={this.props.canvasConfig.selectedFixedLayout}
-			>
-				<RadioButton
-					value={NONE}
-					labelText={NONE}
-				/>
-				<RadioButton
-					value={HORIZONTAL}
-					labelText={HORIZONTAL}
-				/>
-				<RadioButton
-					value={VERTICAL}
-					labelText={VERTICAL}
-				/>
-			</RadioButtonGroup>
-		</div>);
 
 		var rbSize = { "height": "80px" };
 		var entrySize = { "width": "80px", "minWidth": "80px" };
@@ -970,8 +939,6 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{saveZoom}
 				{divider}
-				{layoutDirection}
-				{divider}
 				{paletteLayout}
 				{divider}
 				{enableObjectModel}
@@ -1033,13 +1000,11 @@ SidePanelForms.propTypes = {
 		setPaletteDropdownSelect: PropTypes.func,
 		setPaletteDropdownSelect2: PropTypes.func,
 		setSaveZoom: PropTypes.func,
-		setLayoutDirection: PropTypes.func,
 		setSnapToGridType: PropTypes.func,
 		setSnapToGridX: PropTypes.func,
 		setSnapToGridY: PropTypes.func,
 		snapToGridX: PropTypes.string,
 		snapToGridY: PropTypes.string,
-		selectedFixedLayout: PropTypes.string,
 		useInternalObjectModel: PropTypes.func,
 		setConnectionType: PropTypes.func,
 		selectedSnapToGrid: PropTypes.string,
