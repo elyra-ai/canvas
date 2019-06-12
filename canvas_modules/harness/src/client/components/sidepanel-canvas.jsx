@@ -94,6 +94,7 @@ export default class SidePanelForms extends React.Component {
 		this.onDragStart = this.onDragStart.bind(this);
 		this.changeValidateFlowOnOpen = this.changeValidateFlowOnOpen.bind(this);
 		this.changeDisplayFullLabelOnHover = this.changeDisplayFullLabelOnHover.bind(this);
+		this.useZoomIntoSubFlows = this.useZoomIntoSubFlows.bind(this);
 	}
 
 	componentWillMount() {
@@ -297,6 +298,10 @@ export default class SidePanelForms extends React.Component {
 		} else {
 			this.props.canvasConfig.setSnapToGridY(evt.target.value);
 		}
+	}
+
+	useZoomIntoSubFlows(checked) {
+		this.props.canvasConfig.setZoomIntoSubFlows(checked);
 	}
 
 	useInternalObjectModel(checked) {
@@ -638,6 +643,21 @@ export default class SidePanelForms extends React.Component {
 				</form>
 			</div>);
 
+
+		var enableZoomIntoSubFlows = (
+			<div className="harness-sidepanel-children" id="harness-sidepanel-zoom-into-subflows-toggle">
+				<form>
+					<div className="harness-sidepanel-headers">Enable Zoom Into Sub-flows</div>
+					<div>
+						<Toggle
+							id="harness-sidepanel-enable-zoom-into-subflows-toggle"
+							toggled={this.props.canvasConfig.selectedZoomIntoSubFlows}
+							onToggle={this.useZoomIntoSubFlows}
+						/>
+					</div>
+				</form>
+			</div>);
+
 		var enableDropZoneOnExternalDrag = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-drop-zone-on-external-drag-toggle">
 				<form>
@@ -937,6 +957,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{snapToGrid}
 				{divider}
+				{enableZoomIntoSubFlows}
+				{divider}
 				{saveZoom}
 				{divider}
 				{paletteLayout}
@@ -1000,6 +1022,7 @@ SidePanelForms.propTypes = {
 		setPaletteDropdownSelect: PropTypes.func,
 		setPaletteDropdownSelect2: PropTypes.func,
 		setSaveZoom: PropTypes.func,
+		setZoomIntoSubFlows: PropTypes.func,
 		setSnapToGridType: PropTypes.func,
 		setSnapToGridX: PropTypes.func,
 		setSnapToGridY: PropTypes.func,
@@ -1018,6 +1041,7 @@ SidePanelForms.propTypes = {
 		selectedLinkType: PropTypes.string,
 		selectedNodeLayout: PropTypes.string,
 		selectedSaveZoom: PropTypes.string,
+		selectedZoomIntoSubFlows: PropTypes.bool,
 		setPaletteLayout: PropTypes.func,
 		selectedPaletteLayout: PropTypes.string,
 		setTipConfig: PropTypes.func,

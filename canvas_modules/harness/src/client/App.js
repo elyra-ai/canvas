@@ -113,6 +113,7 @@ class App extends React.Component {
 			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormat: VERTICAL_FORMAT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
+			selectedZoomIntoSubFlows: false,
 			selectedLinkType: CURVE_LINKS,
 			selectedNodeLayout: NO_LAYOUT,
 			selectedPaletteLayout: FLYOUT,
@@ -192,6 +193,7 @@ class App extends React.Component {
 		this.setPaletteDropdownSelect2 = this.setPaletteDropdownSelect2.bind(this);
 
 		this.setSaveZoom = this.setSaveZoom.bind(this);
+		this.setZoomIntoSubFlows = this.setZoomIntoSubFlows.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
@@ -599,6 +601,11 @@ class App extends React.Component {
 	setSaveZoom(selectedSaveZoom) {
 		this.setState({ selectedSaveZoom: selectedSaveZoom });
 		this.log("Save Zoom selected", selectedSaveZoom);
+	}
+
+	setZoomIntoSubFlows(selectedZoomIntoSubFlows) {
+		this.setState({ selectedZoomIntoSubFlows: selectedZoomIntoSubFlows });
+		this.log("Zoom Into Sub-flows selected ", selectedZoomIntoSubFlows);
 	}
 
 	setSnapToGridType(selectedSnapToGridType) {
@@ -1780,7 +1787,8 @@ class App extends React.Component {
 			enableBoundingRectangles: this.state.displayBoundingRectanglesEnabled,
 			enableDropZoneOnExternalDrag: this.state.enableDropZoneOnExternalDrag,
 			// dropZoneCanvasContent: dropZoneCanvasDiv,
-			enableSaveZoom: this.state.selectedSaveZoom
+			enableSaveZoom: this.state.selectedSaveZoom,
+			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows
 		};
 
 		if (this.state.selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
@@ -2057,6 +2065,7 @@ class App extends React.Component {
 			selectedPaletteDropdownFile: this.state.selectedPaletteDropdownFile,
 			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
 			setSaveZoom: this.setSaveZoom,
+			setZoomIntoSubFlows: this.setZoomIntoSubFlows,
 			useInternalObjectModel: this.useInternalObjectModel,
 			setInteractionType: this.setInteractionType,
 			selectedInteractionType: this.state.selectedInteractionType,
@@ -2075,6 +2084,7 @@ class App extends React.Component {
 			selectedLinkType: this.state.selectedLinkType,
 			selectedNodeLayout: this.state.selectedNodeLayout,
 			selectedSaveZoom: this.state.selectedSaveZoom,
+			selectedZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
 			setPaletteLayout: this.setPaletteLayout,
 			selectedPaletteLayout: this.state.selectedPaletteLayout,
 			setTipConfig: this.setTipConfig,

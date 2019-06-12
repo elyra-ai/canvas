@@ -98,6 +98,7 @@ export default class CanvasD3Layout {
 				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize ||
 				this.config.enableBoundingRectangles !== config.enableBoundingRectangles ||
 				this.config.enableSaveZoom !== config.enableSaveZoom ||
+				this.config.enableZoomIntoSubFlows !== config.enableZoomIntoSubFlows ||
 				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
 			this.logger.logStartTimer("Initializing Canvas");
 
@@ -945,6 +946,20 @@ class CanvasRenderer {
 		return obj;
 	}
 
+	// Sets the maximum zoom extent if we are the renderer of the top level flow
+	// or calls the same method on our parent renderer if we are a sub-flow. This
+	// means the factors will multiply as they percolate up to the top flow.
+	setMaxZoomExtent(factor) {
+		if (this.isDisplayingFullPage()) {
+			const newMaxExtent = this.maxScaleExtent * factor;
+
+			this.zoom.scaleExtent([this.minScaleExtent, newMaxExtent]);
+		} else {
+			const newFactor = Number(factor) * 1 / this.zoomTransform.k;
+			this.parentRenderer.setMaxZoomExtent(newFactor);
+		}
+	}
+
 	createCanvasSVG() {
 		this.logger.log("Create Canvas SVG.");
 
@@ -972,7 +987,21 @@ class CanvasRenderer {
 			.attr("width", dims.width)
 			.attr("height", dims.height)
 			.attr("x", dims.x)
-			.attr("y", dims.y);
+			.attr("y", dims.y)
+			.on("mouseenter", (d) => {
+				// If we are a sub-flow (i.e we have a parent renderer) set the max
+				// zoom extent with a factor calculated from our zoom amount.
+				if (this.parentRenderer && this.config.enableZoomIntoSubFlows) {
+					this.parentRenderer.setMaxZoomExtent(1 / this.zoomTransform.k);
+				}
+			})
+			.on("mouseleave", (d) => {
+				// If we are a sub-flow (i.e we have a parent renderer) set the max
+				// zoom extent with a factor of 1.
+				if (this.parentRenderer && this.config.enableZoomIntoSubFlows) {
+					this.parentRenderer.setMaxZoomExtent(1);
+				}
+			});
 
 		// This rectangle is added for two reasons:
 		// 1. On Safari, wheel events will not go to the SVG unless there is an
