@@ -60,7 +60,7 @@ class NotificationPanel extends React.Component {
 				: null;
 
 			notifications.push(<div className="notifications-button-container" key={index + "-" + message.id} >
-				<button
+				<div
 					className={"notifications " + className + message.type}
 					onClick={this.notificationCallback.bind(this, message.id, message.callback)}
 				>
@@ -74,7 +74,7 @@ class NotificationPanel extends React.Component {
 						</div>
 						{timestamp}
 					</div>
-				</button>
+				</div>
 			</div>);
 		}
 

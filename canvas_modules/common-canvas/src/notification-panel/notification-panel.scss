@@ -68,6 +68,8 @@ $notification-left-border-color-width: 4px;
 	background-color: $ui-01;
 	border: 1px solid $ui-03;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+	font-size: 11px;
+	line-height: normal;
 
 	.notifications-button-container {
 		border-bottom: 1px solid $ui-03;
@@ -152,7 +154,7 @@ $notification-left-border-color-width: 4px;
 
 			.notification-message-title {
 				color: $text-01;
-				font-weight: 500;
+				font-weight: 600;
 				line-height: 1.5;
 			}
 
