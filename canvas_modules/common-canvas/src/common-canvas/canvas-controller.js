@@ -638,7 +638,8 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeLabel(nodeId, newLabel);
 	}
 
-	// Sets the decorations on a node
+	// Sets the decorations on a node. The decorations array passed in
+	// will replace any decorations currently applied to the node.
 	// nodeId - The ID of the node
 	// newDecorations - An array of decorations. See Wiki for details.
 	// pipelineId - The ID of the pipeline
@@ -646,9 +647,10 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeDecorations(nodeId, newDecorations);
 	}
 
-	// Sets the decorations of multiple nodes at once.
-	// pipelineNodeDecorations - Specified the objects and the styles each should be
-	// set to. It is a javascript array like this:
+	// Sets the decorations of multiple nodes at once. The decorations array
+	// passed in will replace any decorations currently applied to the nodes.
+	// pipelineNodeDecorations - Specifies the nodes and their decorations.
+	// It is a javascript array like this:
 	//   [
 	//     { pipelineId: <pipelineId>, nodeId: <nodeId>, decorations: <decoration_spec>},
 	//     { pipelineId: <pipelineId>, nodeId: <nodeId>, decorations: <decoration_spec>},
