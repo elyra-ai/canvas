@@ -182,6 +182,17 @@ const nodes = (state = [], action) => {
 			return node;
 		});
 
+	case "SET_NODES_MULTI_DECORATIONS":
+		return state.map((node) => {
+			const pipelineNodeDec =
+				action.data.pipelineNodeDecorations.find((entry) => entry.pipelineId === action.data.pipelineId && entry.nodeId === node.id);
+			if (pipelineNodeDec) {
+				const newNode = Object.assign({}, node, { decorations: pipelineNodeDec.decorations });
+				return newNode;
+			}
+			return node;
+		});
+
 	case "SET_OBJECTS_STYLE":
 		return state.map((node) => {
 			if (action.data.objIds.indexOf(node.id) > -1) {
@@ -705,6 +716,20 @@ const canvasinfo = (state = {}, action) => {
 					nodes: nodes(pipeline.nodes, action),
 					comments: comments(pipeline.comments, action),
 					links: links(pipeline.links, action) });
+			}
+			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+
+	}
+	case "SET_NODES_MULTI_DECORATIONS": {
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
+			if (action.data.pipelineNodeDecorations.findIndex((entry) => entry.pipelineId === pipeline.id) > -1) {
+				action.data.pipelineId = pipeline.id;
+				return Object.assign({}, pipeline, {
+					nodes: nodes(pipeline.nodes, action),
+					comments: pipeline.comments,
+					links: pipeline.links });
 			}
 			return pipeline;
 		});
@@ -2046,6 +2071,15 @@ export default class ObjectModel {
 	getNodeMessages(node) {
 		return node ? node.messages : null;
 	}
+
+	// ---------------------------------------------------------------------------
+	// Add decorations in batch
+	// ---------------------------------------------------------------------------
+
+	setNodesMultiDecorations(pipelineNodeDecorations) {
+		this.store.dispatch({ type: "SET_NODES_MULTI_DECORATIONS", data: { pipelineNodeDecorations: pipelineNodeDecorations } });
+	}
+
 
 	// ---------------------------------------------------------------------------
 	// Styling methods

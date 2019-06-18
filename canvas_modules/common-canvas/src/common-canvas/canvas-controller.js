@@ -646,6 +646,18 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeDecorations(nodeId, newDecorations);
 	}
 
+	// Sets the decorations of multiple nodes at once.
+	// pipelineNodeDecorations - Specified the objects and the styles each should be
+	// set to. It is a javascript array like this:
+	//   [
+	//     { pipelineId: <pipelineId>, nodeId: <nodeId>, decorations: <decoration_spec>},
+	//     { pipelineId: <pipelineId>, nodeId: <nodeId>, decorations: <decoration_spec>},
+	//     { pipelineId: <pipelineId>, nodeId: <nodeId>, decorations: <decoration_spec>}
+	//   ]
+	setNodesMultiDecorations(pipelineNodeDecorations) {
+		this.objectModel.setNodesMultiDecorations(pipelineNodeDecorations);
+	}
+
 	// Sets the input port label on a node
 	// nodeId - The ID of the node
 	// portId - The ID of the input port

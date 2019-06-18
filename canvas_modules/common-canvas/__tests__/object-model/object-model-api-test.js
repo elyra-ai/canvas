@@ -295,6 +295,32 @@ describe("ObjectModel API handle model OK", () => {
 		shouldSaveNodeDecoration("id125TTEEIK7V");
 	});
 
+	it("should save multiple decoratios for multiple nodes", () => {
+		const decorationSpec = [
+			{ "id": 123, "position": "middleLeft" },
+			{ "id": 456, "position": "middleCenter" },
+			{ "id": 789, "position": "middleRight" }
+		];
+
+		const array = [
+			{ pipelineId: "62685555-bb4b-4010-82c3-003beff3739a", nodeId: "idGWRVT47XDV", decorations: decorationSpec },
+			{ pipelineId: "babad275-1719-4224-8d65-b04d0804d95c", nodeId: "691e065f-8359-4b46-aad2-531702ef2a8e", decorations: decorationSpec },
+			{ pipelineId: "8e671b0f-118c-4216-9cea-f522662410ec", nodeId: "7015d906-2eae-45c1-999e-fb888ed957e5", decorations: decorationSpec }
+		];
+		canvasController.setPipelineFlow(supernodeNestedCanvas);
+		canvasController.setNodesMultiDecorations(array);
+
+		const dec1 = canvasController.getNodeDecorations("idGWRVT47XDV", "62685555-bb4b-4010-82c3-003beff3739a");
+		expect(isEqual(dec1, decorationSpec)).to.be.true;
+
+		const dec2 = canvasController.getNodeDecorations("691e065f-8359-4b46-aad2-531702ef2a8e", "babad275-1719-4224-8d65-b04d0804d95c");
+		expect(isEqual(dec2, decorationSpec)).to.be.true;
+
+		const dec3 = canvasController.getNodeDecorations("7015d906-2eae-45c1-999e-fb888ed957e5", "8e671b0f-118c-4216-9cea-f522662410ec");
+		expect(isEqual(dec3, decorationSpec)).to.be.true;
+	});
+
+
 	it("should save temporary node/comment styles", () => {
 		shouldSetNodeCommentStyle(true); // Pass true to indicate styles should be temporary
 	});
