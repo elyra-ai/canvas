@@ -215,35 +215,8 @@ describe("oneofselect renders correctly", () => {
 	});
 });
 
-describe("oneofselect allows enum label different from enum value", () => {
-	const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef);
-	const wrapper = renderedObject.wrapper;
-	let dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
-	const dropdownButton = dropdownWrapper.find("div[role='button']");
-	dropdownButton.simulate("click");
-	dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
-	const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
-	// In oneofselect_paramDef.json, enum value "gold" is assigned a label "Goldilocks"
-	expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.gold.label"]).to.equal("Goldilocks");
-	// Enum label "Goldilocks" has been rendered for enum value "gold".
-	expect(dropdownList.at(9).text()).to.equal("Goldilocks");
-});
 
-describe("oneofselect allows enum label to be created for an enum value with space", () => {
-	const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef);
-	const wrapper = renderedObject.wrapper;
-	let dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
-	const dropdownButton = dropdownWrapper.find("div[role='button']");
-	dropdownButton.simulate("click");
-	dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
-	const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
-	// In our paramDef, enum value has a space in it "blue green" and is assigned a label "Blue Green"
-	expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.blue green.label"]).to.equal("Blue Green");
-	// Enum value with a space can be assigned a label and renders as expected.
-	expect(dropdownList.at(8).text()).to.equal("Blue Green");
-});
-
-describe("oneofselect filtered enum works correctly", () => {
+describe("oneofselect paramDef works correctly", () => {
 	let wrapper;
 	let renderedController;
 	beforeEach(() => {
@@ -255,6 +228,30 @@ describe("oneofselect filtered enum works correctly", () => {
 		wrapper.unmount();
 	});
 
+	it("oneofselect allows enum label different from enum value", () => {
+		let dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		dropdownButton.simulate("click");
+		dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		// In oneofselect_paramDef.json, enum value "gold" is assigned a label "Goldilocks"
+		expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.gold.label"]).to.equal("Goldilocks");
+		// Enum label "Goldilocks" has been rendered for enum value "gold".
+		expect(dropdownList.at(9).text()).to.equal("Goldilocks");
+	});
+
+	it("oneofselect allows enum label to be created for an enum value with space", () => {
+		let dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		dropdownButton.simulate("click");
+		dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		// In our paramDef, enum value has a space in it "blue green" and is assigned a label "Blue Green"
+		expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.blue green.label"]).to.equal("Blue Green");
+		// Enum value with a space can be assigned a label and renders as expected.
+		expect(dropdownList.at(8).text()).to.equal("Blue Green");
+	});
+
 	it("Validate oneofselect should have options filtered by enum_filter", () => {
 		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect_filtered']");
 		const dropdownButton = dropdownWrapper.find("div[role='button']");
@@ -262,7 +259,7 @@ describe("oneofselect filtered enum works correctly", () => {
 		// validate the correct number of options show up on open
 		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect_filtered']");
 		let dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
-		expect(dropdownList).to.have.length(5);
+		expect(dropdownList).to.have.length(4);
 		// make sure there isn't warning on first open
 		expect(dropdownWrapper.find("div.properties-validation-message")).to.have.length(0);
 		// checked the filter box
@@ -293,6 +290,23 @@ describe("oneofselect filtered enum works correctly", () => {
 		expect(renderedController.getPropertyValue(propertyId)).to.equal("purple");
 		renderedController.updatePropertyValue({ name: "filter_default" }, true);
 		// "purple" isn't part of the filter so the value should be cleared and the default value should be set
+		expect(renderedController.getPropertyValue(propertyId)).to.equal("blue");
+	});
+
+	// https://github.ibm.com/NGP-TWC/wml-canvas-planning/issues/4873
+	it("Validate oneofselect should not update value before the enum filters are updated", () => {
+		const propertyId = { name: "oneofselect_filtered" };
+		// value was initially set to "purple" but on open the value is cleared by the filter
+		expect(renderedController.getPropertyValue(propertyId)).to.be.equal(null);
+		renderedController.updatePropertyValue(propertyId, "yellow");
+		expect(renderedController.getPropertyValue(propertyId)).to.equal("yellow");
+		renderedController.updatePropertyValue({ name: "filter" }, false);
+		// "orange" isn't part of the filter so the value should be cleared
+		expect(renderedController.getPropertyValue(propertyId)).to.equal("yellow");
+		renderedController.setPropertyValues({
+			oneofselect_filtered: "blue",
+			filter: true
+		});
 		expect(renderedController.getPropertyValue(propertyId)).to.equal("blue");
 	});
 

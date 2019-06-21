@@ -10,6 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import isEqual from "lodash/isEqual";
 import ControlUtils from "./../../util/control-utils";
 import ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
 import ValidationMessage from "./../../components/validation-message";
@@ -36,8 +37,11 @@ class RadiosetControl extends React.Component {
 		}
 	}
 
-	componentDidUpdate() {
-		this.updateValueFromFilterEnum();
+	componentDidUpdate(prevProps) {
+		// only update if filter options have changed. Fixes issue where filter options are updated after value in setProperties
+		if (!isEqual(this.props.controlOpts, prevProps.controlOpts)) {
+			this.updateValueFromFilterEnum();
+		}
 		if (typeof this.props.value !== "undefined" && this.props.value !== null) {
 			this.handleCheckedDisabled(this.props.value, this.isRadioButtonDisabled(String(this.props.value)));
 		}

@@ -31,8 +31,11 @@ class SomeofselectControl extends React.Component {
 		this.updateValueFromFilterEnum(true);
 	}
 
-	componentDidUpdate() {
-		this.updateValueFromFilterEnum();
+	componentDidUpdate(prevProps) {
+		// only update if filter options have changed. Fixes issue where filter options are updated after value in setProperties
+		if (!isEqual(this.props.controlOpts, prevProps.controlOpts)) {
+			this.updateValueFromFilterEnum();
+		}
 	}
 
 	// this is needed in order to reset the property value when a value is filtered out.

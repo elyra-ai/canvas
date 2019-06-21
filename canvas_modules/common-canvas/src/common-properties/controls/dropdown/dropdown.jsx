@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import Dropdown from "carbon-components-react/lib/components/DropdownV2";
 import Select from "carbon-components-react/lib/components/Select";
 import SelectItem from "carbon-components-react/lib/components/SelectItem";
+import isEqual from "lodash/isEqual";
 import ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
@@ -40,7 +41,10 @@ class DropDown extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		this.updateValueFromFilterEnum();
+		// only update if filter options have changed. Fixes issue where filter options are updated after value in setProperties
+		if (!isEqual(this.props.controlOpts, prevProps.controlOpts)) {
+			this.updateValueFromFilterEnum();
+		}
 	}
 
 	getSelectedOption(options, selectedValue) {
