@@ -1929,6 +1929,11 @@ class CanvasRenderer {
 
 		const that = this;
 
+		// Set the port positions for all ports - these will be needed when displaying
+		// nodes and links. This needs to be done here because resizing the supernode
+		// will cause its ports to move.
+		this.setPortPositionsAllNodes();
+
 		const nodeSelector = this.getSelectorForClass("d3-node-group");
 
 		var nodeGroupSel = this.canvasGrp
@@ -1974,12 +1979,6 @@ class CanvasRenderer {
 			});
 
 		} else {
-			// Set the port positions for all ports - these will be needed when displaying
-			// nodes and links. This needs to be done here because resizing the supernode
-			// will cause its ports to move. No need to do it when moving binding nodes
-			// because it is done in the code that moves the nodes.
-			this.setPortPositionsAllNodes();
-
 			// Handle new nodes
 			var newNodeGroups = nodeGroupSel.enter()
 				.append("g")
