@@ -11,6 +11,7 @@
 @import "carbon-components/scss/globals/scss/typography";
 
 .context-menu-popover {
+	cursor: pointer;
 	min-width: 160px;
 	background-color: $ui-02;
 	background-clip: padding-box;
