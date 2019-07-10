@@ -25,6 +25,44 @@
                   "class_name": "leftDecoration",
                   "id": "topLeftDecoration"
                 }
+              ],
+              "associations": [
+                {
+                  "id": "association1",
+                  "node_ref": "id1ZZTZ3ZMYWL",
+                  "class_name": "canvas-object-link",
+                  "decorations": [
+                    {
+                      "id": "assocDec1",
+                      "position": "source",
+                      "x_pos": -10,
+                      "y_pos": -10
+                    },
+                    {
+                      "id": "assocDec2",
+                      "position": "middle",
+                      "x_pos": -10,
+                      "y_pos": -10,
+                      "height": 60,
+                      "class_name": "zoom-in-decoration",
+                      "image": "/images/decorators/zoom-in_32.svg",
+                      "hotspot": true
+                    },
+                    {
+                      "id": "assocDec3",
+                      "position": "target",
+                      "x_pos": -10,
+                      "y_pos": -10
+                    },
+                    {
+                      "id": "assocDec4",
+                      "label": "5",
+                      "position": "middle",
+                      "x_pos": -6,
+                      "y_pos": 5
+                    }
+                  ]
+                }
               ]
             }
           },
@@ -188,7 +226,40 @@
                   },
                   "label": "Input Port"
                 }
-              }
+              },
+              "links": [
+                {
+                  "node_id_ref": "id2PZSCTRPRIJ",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link",
+                      "decorations": [
+                        {
+                          "id": "123",
+                          "position": "source",
+                          "y_pos": -10
+                        },
+                        {
+                          "id": "456",
+                          "position": "middle",
+                          "x_pos": -10,
+                          "y_pos": -10,
+                          "class_name": "zoom-in-decoration",
+                          "image": "/images/decorators/zoom-in_32.svg",
+                          "hotspot": true
+                        },
+                        {
+                          "id": "789",
+                          "position": "target",
+                          "x_pos": -20,
+                          "y_pos": -10
+                        }
+                      ]
+                    }
+                  },
+                  "port_id_ref": "outPort"
+                }
+              ]
             }
           ],
           "outputs": [

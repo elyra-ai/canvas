@@ -21,7 +21,7 @@ import get from "lodash/get";
 import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
 import isMatch from "lodash/isMatch";
-import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, CONTEXT_MENU_BUTTON,
+import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
@@ -383,6 +383,7 @@ class CanvasRenderer {
 
 		this.canvasSVG = this.createCanvasSVG();
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG);
+
 		this.resetCanvasSVGBehaviors();
 
 		this.displayCanvas();
@@ -2204,25 +2205,24 @@ class CanvasRenderer {
 			newAndExistingNodeGrps
 				.each((d) => {
 					const nodeGrp = this.canvasGrp.selectAll(this.getSelectorForId("node_grp", d.id));
-					const node = this.getNode(d.id);
 
 					nodeGrp
 						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 						.attr("style", that.getNodeGrpStyle(d))
-						.datum(node); // Set the __data__ to the updated data
+						.datum(d); // Set the __data__ to the updated data
 
 					// Node sizing area
 					nodeGrp.select(this.getSelectorForId("node_sizing", d.id))
 						.attr("d", (nd) => this.getNodeShapePathSizing(nd))
 						.attr("class", "d3-node-sizing")
-						.datum(node); // Set the __data__ to the updated data
+						.datum(d); // Set the __data__ to the updated data
 
 					// Node selection highlighting
 					nodeGrp.select(this.getSelectorForId("node_outline", d.id))
 						.attr("d", (nd) => this.getNodeShapePathOutline(nd))
 						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 						.attr("class", (nd) => nd.layout.cssNodeSelectionHighlight)
-						.datum(node); // Set the __data__ to the updated data
+						.datum(d); // Set the __data__ to the updated data
 
 					// Move the dynamic icons (if any exist)
 					nodeGrp.select(this.getSelectorForId("node_ellipsis_background", d.id))
@@ -2255,7 +2255,7 @@ class CanvasRenderer {
 						.attr("y", (nd) => this.getNodeImagePosY(nd))
 						.attr("width", (nd) => this.getNodeImageWidth(nd))
 						.attr("height", (nd) => this.getNodeImageHeight(nd))
-						.datum(node) // Set the __data__ to the updated data
+						.datum(d) // Set the __data__ to the updated data
 						.each(function(nd) {
 							var imageObj = d3.select(this);
 							if (nd.customAttrs && nd.customAttrs.length > 0) {
@@ -2269,7 +2269,7 @@ class CanvasRenderer {
 
 					// Set y for node label in new and existing nodes
 					nodeGrp.select(this.getSelectorForId("node_label", d.id))
-						.datum(node) // Set the __data__ to the updated data
+						.datum(d) // Set the __data__ to the updated data
 						.attr("x", (nd) => this.getLabelPosX(nd))
 						.attr("y", (nd) => this.getLabelPosY(nd))
 						.text(function(nd) {
@@ -2292,7 +2292,7 @@ class CanvasRenderer {
 
 					// Set position for error circle in new and existing nodes
 					nodeGrp.select(this.getSelectorForId("node_error_marker", d.id))
-						.datum(node) // Set the __data__ to the updated data
+						.datum(d) // Set the __data__ to the updated data
 						.attr("class", (nd) => "node-error-marker " + that.getErrorMarkerClass(nd.messages))
 						.html((nd) => that.getErrorMarkerIcon(nd))
 						.attr("width", (nd) => nd.layout.errorWidth)
@@ -2302,7 +2302,7 @@ class CanvasRenderer {
 
 					// Node body updates
 					nodeGrp.select(this.getSelectorForId("node_body", d.id))
-						.datum(node) // Set the __data__ to the updated data
+						.datum(d) // Set the __data__ to the updated data
 						.attr("d", (cd) => this.getNodeShapePath(cd))
 						.attr("class", (cd) => this.getNodeBodyClass(cd));
 
@@ -2470,72 +2470,7 @@ class CanvasRenderer {
 
 					// Display decorators
 					if (!this.isSuperBindingNode(d)) {
-						// Handle decoration outlines
-						// We draw an outline for all decorators that are not label decorators ie those with an image or without an image
-						const nonLabelDecorations = d.decorations ? d.decorations.filter((dec) => !dec.label) : [];
-						const decOutlnSelector = this.getSelectorForClass("d3-decorator-outline");
-						const decoratorOutlnsSelection = nodeGrp.selectAll(decOutlnSelector)
-							.data(nonLabelDecorations || [], function(dec) { return dec.id; });
-
-						decoratorOutlnsSelection.enter()
-							.append("rect")
-							.attr("data-id", (dec) => this.getId("node_dec_outln", dec.id)) // Used in Chimp tests
-							.attr("data-pipeline-id", this.activePipeline.id)
-							.merge(decoratorOutlnsSelection)
-							.attr("x", (dec) => this.getDecoratorX(dec, d))
-							.attr("y", (dec) => this.getDecoratorY(dec, d))
-							.attr("width", (dec) => d.layout.decoratorWidth)
-							.attr("height", (dec) => d.layout.decoratorHeight)
-							.attr("class", (dec) => this.getDecoratorOutlineClass(dec))
-							.datum((dec) => this.getDecorator(dec.id, node))
-							.filter((dec) => dec.hotspot)
-							.on("mousedown", (dec) => this.callDecoratorCallback(node, dec));
-
-						decoratorOutlnsSelection.exit().remove();
-
-						// Handle decoration images
-						const imageDecorations = d.decorations ? d.decorations.filter((dec) => dec.image) : [];
-						const decImgSelector = this.getSelectorForClass("d3-decorator-image");
-						const decoratorImgsSelection = nodeGrp.selectAll(decImgSelector)
-							.data(imageDecorations || [], function(dec) { return dec.id; });
-
-						decoratorImgsSelection.enter()
-							.append("image")
-							.attr("data-id", (dec) => this.getId("node_dec_img", dec.id)) // Used in Chimp tests
-							.attr("data-pipeline-id", this.activePipeline.id)
-							.merge(decoratorImgsSelection)
-							.attr("x", (dec) => this.getDecoratorX(dec, d) + d.layout.decoratorPadding)
-							.attr("y", (dec) => this.getDecoratorY(dec, d) + d.layout.decoratorPadding)
-							.attr("width", (dec) => d.layout.decoratorWidth - (2 * d.layout.decoratorPadding))
-							.attr("height", (dec) => d.layout.decoratorHeight - (2 * d.layout.decoratorPadding))
-							.attr("class", "d3-decorator-image")
-							.attr("xlink:href", (dec) => this.getDecoratorImage(dec))
-							.datum((dec) => this.getDecorator(dec.id, node))
-							.filter((dec) => dec.hotspot)
-							.on("mousedown", (dec) => this.callDecoratorCallback(node, dec));
-
-						decoratorImgsSelection.exit().remove();
-
-						// Handle decoration labels
-						const labelDecorations = d.decorations ? d.decorations.filter((dec) => dec.label) : [];
-						const decLabelSelector = this.getSelectorForClass("d3-decorator-label");
-						const decoratorLabelSelection = nodeGrp.selectAll(decLabelSelector)
-							.data(labelDecorations || [], function(dec) { return dec.id; });
-
-						decoratorLabelSelection.enter()
-							.append("text")
-							.attr("data-id", (dec) => this.getId("node_dec_label", dec.id)) // Used in Chimp tests
-							.attr("data-pipeline-id", this.activePipeline.id)
-							.merge(decoratorLabelSelection)
-							.attr("x", (dec) => this.getDecoratorX(dec, d))
-							.attr("y", (dec) => this.getDecoratorY(dec, d))
-							.attr("class", (dec) => this.getDecoratorLabelClass(dec))
-							.text((dec) => dec.label)
-							.datum((dec) => this.getDecorator(dec.id, node))
-							.filter((dec) => dec.hotspot)
-							.on("mousedown", (dec) => this.callDecoratorCallback(node, dec));
-
-						decoratorLabelSelection.exit().remove();
+						this.addDecorations(d, DEC_NODE, nodeGrp);
 					}
 				});
 
@@ -2543,6 +2478,84 @@ class CanvasRenderer {
 			nodeGroupSel.exit().remove();
 		}
 		this.logger.logEndTimer("displayNodes " + this.getFlags());
+	}
+
+	// Adds a set of decorations to either a node of link object.
+	// d - This is a node of link object. It must contain a decorations field
+	//     that conformas to the specification for a decorations array.
+	// objType - A string set to either DEC_NODE or DEC_LINK.
+	// trgGrp - A D3 selection object that references the node or link to which
+	//          the decorations are to be attached.
+	addDecorations(d, objType, trgGrp) {
+		// Handle decoration outlines
+		// We draw an outline for all decorators that are not label decorators ie those with an image or without an image
+		const outClassName = `d3-${objType}-dec-outline`;
+		const nonLabelDecorations = d.decorations ? d.decorations.filter((dec) => !dec.label) : [];
+		const decOutlnSelector = this.getSelectorForClass(outClassName);
+		const decoratorOutlnsSelection = trgGrp.selectAll(decOutlnSelector)
+			.data(nonLabelDecorations || [], function(dec) { return dec.id; });
+
+		decoratorOutlnsSelection.enter()
+			.append("rect")
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_outln`, dec.id)) // Used in Chimp tests
+			.attr("data-pipeline-id", this.activePipeline.id)
+			.merge(decoratorOutlnsSelection)
+			.attr("x", (dec) => this.getDecoratorX(dec, d, objType))
+			.attr("y", (dec) => this.getDecoratorY(dec, d, objType))
+			.attr("width", (dec) => this.getDecoratorWidth(dec, d, objType))
+			.attr("height", (dec) => this.getDecoratorHeight(dec, d, objType))
+			.attr("class", (dec) => this.getDecoratorClass(dec, outClassName))
+			.datum((dec) => this.getDecorator(dec.id, d))
+			.filter((dec) => dec.hotspot)
+			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
+
+		decoratorOutlnsSelection.exit().remove();
+
+		// Handle decoration images
+		const imgClassName = `d3-${objType}-dec-image`;
+		const imageDecorations = d.decorations ? d.decorations.filter((dec) => dec.image) : [];
+		const decImgSelector = this.getSelectorForClass(imgClassName);
+		const decoratorImgsSelection = trgGrp.selectAll(decImgSelector)
+			.data(imageDecorations || [], function(dec) { return dec.id; });
+
+		decoratorImgsSelection.enter()
+			.append("image")
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_img`, dec.id)) // Used in Chimp tests
+			.attr("data-pipeline-id", this.activePipeline.id)
+			.merge(decoratorImgsSelection)
+			.attr("x", (dec) => this.getDecoratorX(dec, d, objType) + this.getDecoratorPadding(dec, d, objType))
+			.attr("y", (dec) => this.getDecoratorY(dec, d, objType) + this.getDecoratorPadding(dec, d, objType))
+			.attr("width", (dec) => this.getDecoratorWidth(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
+			.attr("height", (dec) => this.getDecoratorHeight(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
+			.attr("class", (dec) => this.getDecoratorClass(dec, imgClassName))
+			.attr("xlink:href", (dec) => this.getDecoratorImage(dec))
+			.datum((dec) => this.getDecorator(dec.id, d))
+			.filter((dec) => dec.hotspot)
+			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
+
+		decoratorImgsSelection.exit().remove();
+
+		// Handle decoration labels
+		const labClassName = `d3-${objType}-dec-label`;
+		const labelDecorations = d.decorations ? d.decorations.filter((dec) => dec.label) : [];
+		const decLabelSelector = this.getSelectorForClass(labClassName);
+		const decoratorLabelSelection = trgGrp.selectAll(decLabelSelector)
+			.data(labelDecorations || [], function(dec) { return dec.id; });
+
+		decoratorLabelSelection.enter()
+			.append("text")
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_label`, dec.id)) // Used in Chimp tests
+			.attr("data-pipeline-id", this.activePipeline.id)
+			.merge(decoratorLabelSelection)
+			.attr("x", (dec) => this.getDecoratorX(dec, d, objType))
+			.attr("y", (dec) => this.getDecoratorY(dec, d, objType))
+			.attr("class", (dec) => this.getDecoratorClass(dec, labClassName))
+			.text((dec) => dec.label)
+			.datum((dec) => this.getDecorator(dec.id, d))
+			.filter((dec) => dec.hotspot)
+			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
+
+		decoratorLabelSelection.exit().remove();
 	}
 
 	getNodeImage(d) {
@@ -3077,42 +3090,101 @@ class CanvasRenderer {
 		return null;
 	}
 
-	getDecoratorX(dec, data) {
+	getDecoratorX(dec, data, objType) {
+		if (objType === DEC_LINK) {
+			return this.getLinkDecoratorX(dec, data);
+		}
+		return this.getNodeDecoratorX(dec, data);
+	}
+
+	getNodeDecoratorX(dec, node) {
 		const position = dec.position || "topLeft";
 		let x = 0;
 		if (position === "topLeft" || position === "middleLeft" || position === "bottomLeft") {
-			x = typeof dec.x_pos !== "undefined" ? dec.x_pos : data.layout.decoratorLeftX;
+			x = typeof dec.x_pos !== "undefined" ? dec.x_pos : node.layout.decoratorLeftX;
 		} else if (position === "topCenter" || position === "middleCenter" || position === "bottomCenter") {
-			x = (data.width / 2) + (typeof dec.x_pos !== "undefined" ? dec.x_pos : data.layout.decoratorCenterX);
+			x = (node.width / 2) + (typeof dec.x_pos !== "undefined" ? dec.x_pos : node.layout.decoratorCenterX);
 		} else if (position === "topRight" || position === "middleRight" || position === "bottomRight") {
-			x = data.width + (typeof dec.x_pos !== "undefined" ? dec.x_pos : data.layout.decoratorRightX);
+			x = node.width + (typeof dec.x_pos !== "undefined" ? dec.x_pos : node.layout.decoratorRightX);
 		}
 		return x;
 	}
 
-	getDecoratorY(dec, data) {
+	getLinkDecoratorX(dec, link) {
+		const position = dec.position || "middle";
+		let x = 0;
+		if (position === "middle") {
+			x = link.centerPoint ? link.centerPoint.x : link.x1 + ((link.x2 - link.x1) / 2);
+		} else if (position === "source") {
+			x = link.x1;
+		} else if (position === "target") {
+			x = link.x2;
+		}
+		x = typeof dec.x_pos !== "undefined" ? x + dec.x_pos : x;
+		return x;
+	}
+
+	getDecoratorY(dec, data, objType) {
+		if (objType === DEC_LINK) {
+			return this.getLinkDecoratorY(dec, data);
+		}
+		return this.getNodeDecoratorY(dec, data);
+	}
+
+	getNodeDecoratorY(dec, node) {
 		const position = dec.position || "topLeft";
 		let y = 0;
 		if (position === "topLeft" || position === "topCenter" || position === "topRight") {
-			y = typeof dec.y_pos !== "undefined" ? dec.y_pos : data.layout.decoratorTopY;
+			y = typeof dec.y_pos !== "undefined" ? dec.y_pos : node.layout.decoratorTopY;
 		} else if (position === "middleLeft" || position === "middleCenter" || position === "middleRight") {
-			y = (data.height / 2) + (typeof dec.y_pos !== "undefined" ? dec.y_pos : data.layout.decoratorMiddleY);
+			y = (node.height / 2) + (typeof dec.y_pos !== "undefined" ? dec.y_pos : node.layout.decoratorMiddleY);
 		} else if (position === "bottomLeft" || position === "bottomCenter" || position === "bottomRight") {
-			y = data.height + (typeof dec.y_pos !== "undefined" ? dec.y_pos : data.layout.decoratorBottomY);
+			y = node.height + (typeof dec.y_pos !== "undefined" ? dec.y_pos : node.layout.decoratorBottomY);
 		}
 		return y;
 	}
 
-	getDecoratorOutlineClass(dec) {
-		let className = "d3-decorator-outline";
-		if (dec && dec.class_name) {
-			className += " " + dec.class_name;
+	getLinkDecoratorY(dec, link) {
+		const position = dec.position || "middle";
+		let y = 0;
+		if (position === "middle") {
+			y = link.centerPoint ? link.centerPoint.y : link.y1 + ((link.y2 - link.y1) / 2);
+		} else if (position === "source") {
+			y = link.y1;
+		} else if (position === "target") {
+			y = link.y2;
 		}
-		return className;
+		y = typeof dec.y_pos !== "undefined" ? y + dec.y_pos : y;
+		return y;
 	}
 
-	getDecoratorLabelClass(dec) {
-		let className = "d3-decorator-label";
+	getDecoratorPadding(dec, obj, objType) {
+		if (objType === DEC_LINK) {
+			return this.layout.linkDecoratorPadding;
+		}
+		return obj.layout.decoratorPadding;
+	}
+
+	getDecoratorWidth(dec, obj, objType) {
+		if (typeof dec.width !== "undefined") {
+			return dec.width;
+		} else if (objType === DEC_LINK) {
+			return this.layout.linkDecoratorWidth;
+		}
+		return obj.layout.decoratorWidth;
+	}
+
+	getDecoratorHeight(dec, obj, objType) {
+		if (typeof dec.height !== "undefined") {
+			return dec.height;
+		} else if (objType === DEC_LINK) {
+			return this.layout.linkDecoratorHeight;
+		}
+		return obj.layout.decoratorHeight;
+	}
+
+	getDecoratorClass(dec, inClassName) {
+		let className = inClassName;
 		if (dec && dec.class_name) {
 			className += " " + dec.class_name;
 		}
@@ -3182,7 +3254,7 @@ class CanvasRenderer {
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("path")
-			.attr("d", (d) => that.getConnectorPath(d))
+			.attr("d", (d) => that.getConnectorPath(d).path)
 			.attr("class", "d3-new-connection-line")
 			.attr("linkType", linkType);
 
@@ -3242,7 +3314,7 @@ class CanvasRenderer {
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("path")
-			.attr("d", (d) => that.getConnectorPath(d))
+			.attr("d", (d) => that.getConnectorPath(d).path)
 			.attr("class", "d3-new-connection-line")
 			.attr("linkType", linkType);
 
@@ -4693,8 +4765,6 @@ class CanvasRenderer {
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", "link-group")
 			.attr("style", function(d) { return !d.style_temp && !d.style && that.canvasInfo.subdueStyle ? that.canvasInfo.subdueStyle : null; })
-			.attr("src", (d) => d.src)
-			.attr("trg", (d) => d.trg)
 			.on("mousedown", () => {
 				// The context menu gesture will cause a mouse down event which
 				// will go through to canvas unless stopped.
@@ -4759,7 +4829,6 @@ class CanvasRenderer {
 				that.setLinkLineStyles(d, "default");
 			});
 
-
 		// Arrow head
 		linkGroup.filter((d) => (this.layout.connectionType === "halo" && d.type === NODE_LINK) ||
 														(d.type === "commentLink" && this.layout.commentLinkArrowHead))
@@ -4775,6 +4844,13 @@ class CanvasRenderer {
 				return classStr;
 			})
 			.style("stroke-dasharray", "0"); // Ensure arrow head is always solid line style
+
+		// Add decorations to the node-node or association links.
+		linkGroup.each(function(d) {
+			if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
+				that.addDecorations(d, DEC_LINK, d3.select(this));
+			}
+		});
 
 		// Set connection status of output ports and input ports plus arrow.
 		if (this.layout.connectionType === "ports") {
@@ -4945,7 +5021,8 @@ class CanvasRenderer {
 					"src": srcObj,
 					"srcPortId": srcPortId,
 					"trg": trgNode,
-					"trgPortId": trgPortId });
+					"trgPortId": trgPortId,
+					"decorations": link.decorations });
 			}
 		});
 
@@ -4984,7 +5061,9 @@ class CanvasRenderer {
 	// settings and adds them to the line array.
 	addConnectionPaths(lineArray) {
 		lineArray.forEach((line, i) => {
-			lineArray[i].path = this.getConnectorPath(line);
+			const pathInfo = this.getConnectorPath(line);
+			lineArray[i].path = pathInfo.path;
+			lineArray[i].centerPoint = pathInfo.centerPoint;
 		});
 		return lineArray;
 	}
@@ -5174,7 +5253,7 @@ class CanvasRenderer {
 			centerY = trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2) + this.layout.linkGap;
 		} else {
 			centerX = (trgNode.width / 2) + this.layout.linkGap;
-			centerY = trgNode.height / 2;
+			centerY = (trgNode.height / 2) + this.layout.linkGap;
 		}
 
 		const endPos = this.getOuterCoord(
@@ -5317,13 +5396,21 @@ class CanvasRenderer {
 	// simple straight connector line from source to target. This is used for
 	// connectors from comments to data nodes.
 	getStraightPath(data) {
-		return "M " + data.x1 + " " + data.y1 + " L " + data.x2 + " " + data.y2;
+		const path = "M " + data.x1 + " " + data.y1 + " L " + data.x2 + " " + data.y2;
+		const centerPoint = {
+			x: data.x1 + ((data.x2 - data.x1) / 2),
+			y: data.y1 + ((data.y2 - data.y1) / 2)
+		};
+		return { path, centerPoint };
 	}
 
 	// Returns the path string for the object passed in which describes a
 	// simple straight connector line and a jaunty zig zag line when the
 	// source is further right than the target.
 	getLighteningPath(data, minInitialLine) {
+		// Record centerPoint which can be used by the link decorations
+		const centerPoint = { x: 0, y: 0 };
+
 		let path = "";
 		const xDiff = data.x2 - data.x1;
 		const yDiff = data.y2 - data.y1;
@@ -5332,6 +5419,8 @@ class CanvasRenderer {
 				Math.abs(yDiff) < data.height) {
 			path = "M " + data.x1 + " " + data.y1 + " L " + data.x2 + " " + data.y2;
 
+			centerPoint.x = data.x1 + (xDiff / 2);
+			centerPoint.y = data.y1 + (yDiff / 2);
 		} else {
 			const corner1X = data.x1 + minInitialLine;
 			const corner1Y = data.y1;
@@ -5344,9 +5433,12 @@ class CanvasRenderer {
 			path += " " + corner1X + " " + centerLineY;
 			path += " " + corner2X + " " + centerLineY;
 			path += " " + data.x2 + " " + data.y2;
+
+			centerPoint.x = corner1X + ((corner2X - corner1X) / 2);
+			centerPoint.y = centerLineY;
 		}
 
-		return path;
+		return { path, centerPoint };
 	}
 
 	// Returns the path string for the object passed in which describes a
@@ -5372,6 +5464,9 @@ class CanvasRenderer {
 	// Returns the path string for the object passed in which describes a
 	// quadratic bezier curved connector line.
 	getCurvePath(data, minInitialLine) {
+		// Record centerPoint which can be used by the link decorations
+		const centerPoint = { x: 0, y: 0 };
+
 		const xDiff = data.x2 - data.x1;
 
 		// When dragging out a new link we will not have src nor trg nodes
@@ -5400,6 +5495,8 @@ class CanvasRenderer {
 			const corner2Y = data.y2;
 
 			path += " C " + corner1X + " " + corner1Y + " " + corner2X + " " + corner2Y + " " + data.x2 + " " + data.y2;
+			centerPoint.x = corner1X;
+			centerPoint.y = corner1Y + ((corner2Y - corner1Y) / 2);
 
 		} else {
 			let yDiff = data.y2 - data.y1;
@@ -5461,20 +5558,29 @@ class CanvasRenderer {
 				path += " L " + corner4bX + " " + corner4bY;
 				path += " Q " + corner5X + " " + corner5Y + " " + corner6X + " " + corner6Y +
 								" T " + data.x2 + " " + data.y2;
+
+				centerPoint.x = corner4aX + ((corner4bX - corner4aX) / 2);
+				centerPoint.y = corner4aY;
 			} else {
 				path += " Q " + corner1X + " " + corner1Y + " " + corner2X + " " + corner2Y +
 								" T " + corner4X + " " + corner4Y;
 				path += " Q " + corner5X + " " + corner5Y + " " + corner6X + " " + corner6Y +
 								" T " + data.x2 + " " + data.y2;
+
+				centerPoint.x = corner4X;
+				centerPoint.y = corner4Y;
 			}
 		}
 
-		return path;
+		return { path, centerPoint };
 	}
 
 	// Returns the path string for the object passed in which describes a
 	// curved connector line using elbows and straight lines.
 	getElbowPath(data, minInitialLine) {
+		// Record centerPoint which can be used by the link decorations
+		const centerPoint = { x: 0, y: 0 };
+
 		const corner1X = data.x1 + minInitialLine;
 		const corner1Y = data.y1;
 		let corner2X = corner1X;
@@ -5520,6 +5626,9 @@ class CanvasRenderer {
 		if (extraSegments === false) {
 			path += "L " + corner2X + " " + (corner2Y - elbowYOffset);
 
+			centerPoint.x = corner2X;
+			centerPoint.y = corner2Y;
+
 		} else {
 			const centerLineY = corner2Y - (corner2Y - corner1Y) / 2;
 
@@ -5528,12 +5637,15 @@ class CanvasRenderer {
 			path += "L " + (corner2X + elbowXOffset) + " " + centerLineY;
 			path += "Q " + corner2X + " " + centerLineY + " "	+ corner2X	+ " " + (centerLineY + elbowYOffset);
 			path += "L " + corner2X + " " + (corner2Y - elbowYOffset);
+
+			centerPoint.x = corner1X;
+			centerPoint.y = centerLineY;
 		}
 
 		path += "Q " + corner2X + " " + corner2Y + " " + (corner2X + this.layout.elbowSize) + " " + corner2Y;
 		path += "L " + data.x2 + " " + data.y2;
 
-		return path;
+		return { path, centerPoint };
 	}
 
 	getErrorMarkerIcon(data) {

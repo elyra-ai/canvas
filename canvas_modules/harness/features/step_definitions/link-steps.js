@@ -11,7 +11,7 @@
 
 import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel,
 	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
-	getLinkSelector, getLinksCount,
+	getLinkFromAPIName, getLinkSelector, getLinksCount,
 	getNodeIdFromObjectModel, getNodePortSelector, getNodePortSelectorInSubFlow,
 	getNodeSelector, getObjectModelCount, getPortLinks } from "./utilities/validate-utils.js";
 import { getCanvasData, getEventLogData } from "./utilities/test-utils.js";
@@ -187,7 +187,7 @@ module.exports = function() {
 		var links = getPortLinks(objectModel, srcNodeLabel, srcPortId, trgNodeLabel, trgPortId);
 		expect(links.length).toBe(1);
 
-		const selector = getLinkSelector(links[0].id);
+		const selector = getLinkSelector(links[0].id, "line");
 		const linkObjs = browser.$$(selector);
 
 		let linkObjData = null;
@@ -256,7 +256,44 @@ module.exports = function() {
 			console.log("Error = " + err);
 			throw err;
 		}
-
 	});
 
+	this.Then(/^I verify link "([^"]*)" has (\d+) decorators$/, function(linkName, decoratorCount) {
+		const link = getLinkFromAPIName(linkName, getCanvasData());
+		const decorators = link.$$(".d3-link-dec-outline");
+		expect(String(decorators.length)).toEqual(decoratorCount);
+	});
+
+	this.Then(/^I verify link "([^"]*)" has (\d+) label decorators$/, function(linkName, decoratorCount) {
+		const link = getLinkFromAPIName(linkName, getCanvasData());
+		const decorators = link.$$(".d3-link-dec-label");
+		expect(String(decorators.length)).toEqual(decoratorCount);
+	});
+
+	this.Then(/^I click on the hotspot for decorator "([^"]*)" on the "([^"]*)" link$/, function(decoratorId, linkName) {
+		const link = getLinkFromAPIName(linkName, getCanvasData());
+		const decoratorImage = link.$(".d3-link-dec-image[data-id=link_dec_img_0_" + decoratorId + "]");
+		decoratorImage.click();
+	});
+
+	this.Then(/^I verify link "([^"]*)" has a decorator with id "([^"]*)" at position x ([-+]?[0-9]*\.?[0-9]+) y ([-+]?[0-9]*\.?[0-9]+)$/,
+		function(linkName, decoratorId, xPos, yPos) {
+			const link = getLinkFromAPIName(linkName, getCanvasData());
+			const decorators = link.$$(".d3-link-dec-outline");
+			let found = false;
+			let xx = 0;
+			let yy = 0;
+			for (const decorator of decorators) {
+				var id = decorator.getAttribute("data-id");
+				if (id === "link_dec_outln_0_" + decoratorId) {
+					found = true;
+					xx = decorator.getAttribute("x");
+					yy = decorator.getAttribute("y");
+				}
+			}
+
+			expect(found).toEqual(true);
+			expect(xx).toEqual(xPos);
+			expect(yy).toEqual(yPos);
+		});
 };

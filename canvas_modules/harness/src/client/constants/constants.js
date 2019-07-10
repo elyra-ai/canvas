@@ -61,6 +61,7 @@ _defineConstant("NO_LAYOUT", "None");
 _defineConstant("BLUE_ELLIPSES_LAYOUT", "Blue Ellipses");
 _defineConstant("DB2_EXPLAIN_LAYOUT", "Db2 Visual Explain");
 _defineConstant("STREAMS_LAYOUT", "Streams");
+_defineConstant("AUTO_AI_LAYOUT", "Auto AI");
 
 _defineConstant("FLYOUT", "Flyout");
 _defineConstant("MODAL", "Modal");
@@ -77,6 +78,7 @@ _defineConstant("API_SET_NODE_LABEL", "Set Node Label");
 _defineConstant("API_SET_INPUT_PORT_LABEL", "Set Input Port Label");
 _defineConstant("API_SET_OUTPUT_PORT_LABEL", "Set Output Port Label");
 _defineConstant("API_SET_NODE_DECORATIONS", "Set Node Decorations");
+_defineConstant("API_SET_LINK_DECORATIONS", "Set Link Decorations");
 _defineConstant("API_ADD_NOTIFICATION_MESSAGE", "Add Notification Message");
 _defineConstant("API_ZOOM_CANVAS_TO_REVEAL", "Zoom Canvas To Reveal");
 

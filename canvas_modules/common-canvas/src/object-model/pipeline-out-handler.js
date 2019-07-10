@@ -96,11 +96,6 @@ export default class PipelineOutHandler {
 			newNode.parameters = ciNode.parameters;
 		}
 
-		var newDecorations = this.createDecorations(ciNode.decorations);
-		if (newDecorations.length > 0) {
-			newNode.app_data.ui_data.decorations = newDecorations;
-		}
-
 		const assocationLinks = this.createAssociationLinks(ciNode, ciLinks);
 		if (!isEmpty(assocationLinks)) {
 			newNode.app_data.ui_data.associations = assocationLinks;
@@ -142,6 +137,14 @@ export default class PipelineOutHandler {
 		if (ciNode.ui_parameters && !isEmpty(ciNode.ui_parameters)) {
 			uiData.ui_parameters = ciNode.ui_parameters;
 		}
+
+		if (ciNode.decorations) {
+			var newDecorations = this.createDecorations(ciNode.decorations);
+			if (newDecorations.length > 0) {
+				uiData.decorations = newDecorations;
+			}
+		}
+
 
 		return uiData;
 	}
@@ -277,6 +280,13 @@ export default class PipelineOutHandler {
 			uiData.style = link.style;
 		}
 
+		if (link.decorations) {
+			var newDecorations = this.createDecorations(link.decorations);
+			if (newDecorations.length > 0) {
+				uiData.decorations = newDecorations;
+			}
+		}
+
 		const appData = Object.assign({}, link.app_data, { ui_data: uiData });
 
 		if (!isEmpty(appData)) {
@@ -366,6 +376,12 @@ export default class PipelineOutHandler {
 				}
 				if (link.style) {
 					assoc.style = link.style;
+				}
+				if (link.decorations) {
+					var newDecorations = this.createDecorations(link.decorations);
+					if (newDecorations.length > 0) {
+						assoc.decorations = newDecorations;
+					}
 				}
 				associationsLinks.push(assoc);
 			}

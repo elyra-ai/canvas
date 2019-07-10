@@ -65,6 +65,7 @@ import {
 	BLUE_ELLIPSES_LAYOUT,
 	DB2_EXPLAIN_LAYOUT,
 	STREAMS_LAYOUT,
+	AUTO_AI_LAYOUT,
 	CUSTOM,
 	FLYOUT,
 	NONE_DRAG,
@@ -228,6 +229,7 @@ class App extends React.Component {
 		this.setNodeLabel = this.setNodeLabel.bind(this);
 		this.setPortLabel = this.setPortLabel.bind(this);
 		this.setNodeDecorations = this.setNodeDecorations.bind(this);
+		this.setLinkDecorations = this.setLinkDecorations.bind(this);
 		this.getZoomToReveal = this.getZoomToReveal.bind(this);
 		this.zoomCanvas = this.zoomCanvas.bind(this);
 
@@ -713,6 +715,15 @@ class App extends React.Component {
 		}
 		this.canvasController.setNodeDecorations(nodeId, newDecs);
 		this.log("Set new node decorations", { nodeId: nodeId, newDecorations: newDecs });
+	}
+
+	setLinkDecorations(linkId, newDecorations) {
+		let newDecs = JSON.parse(newDecorations);
+		if (isEmpty(newDecs)) {
+			newDecs = null;
+		}
+		this.canvasController.setLinkDecorations(linkId, newDecs);
+		this.log("Set new link decorations", { linkId: linkId, newDecorations: newDecs });
 	}
 
 	getZoomToReveal(nodeId) {
@@ -1268,8 +1279,8 @@ class App extends React.Component {
 		}
 	}
 
-	decorationActionHandler(node, id, pipelineId) {
-		this.log("decorationHandler()", id, "Node ID = " + node.id + " pipeline ID = " + pipelineId);
+	decorationActionHandler(object, id, pipelineId) {
+		this.log("decorationHandler() Decoration ID = " + id, id, "Object ID = " + object.id + " pipeline ID = " + pipelineId);
 		if (id === "supernodeZoomIn") {
 			this.refreshContent("this.state.stream.id", "node.subDiagramId");
 		}
@@ -1871,7 +1882,12 @@ class App extends React.Component {
 					portArcSpacing: 15
 				}
 			});
+		} else if (this.state.selectedNodeLayout === AUTO_AI_LAYOUT) {
+			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
+				enableNodeFormatType: "Horizontal"
+			});
 		}
+
 
 		const commonCanvasConfig2 = {
 			enableConnectionType: this.state.selectedConnectionType,
@@ -2142,6 +2158,7 @@ class App extends React.Component {
 			setNodeLabel: this.setNodeLabel,
 			setPortLabel: this.setPortLabel,
 			setNodeDecorations: this.setNodeDecorations,
+			setLinkDecorations: this.setLinkDecorations,
 			getZoomToReveal: this.getZoomToReveal,
 			zoomCanvas: this.zoomCanvas,
 			appendNotificationMessages: this.appendNotificationMessages,

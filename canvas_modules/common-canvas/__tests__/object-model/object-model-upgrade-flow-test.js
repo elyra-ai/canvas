@@ -208,7 +208,7 @@ describe("ObjectModel files handling test", () => {
 	});
 
 	it("should upgrade a pipelineFlow from v2 to latest version for decoratorCanvasV2", () => {
-		upgradeToLatestVersion(decoratorCanvasV2, removeNodesAndComments(decoratorCanvas));
+		upgradeToLatestVersion(decoratorCanvasV2, removeNodesAndCommentsAndLinks(decoratorCanvas));
 	});
 
 	it("should upgrade a pipelineFlow from v2 to latest version for linkColorCanvasV2", () => {
@@ -271,7 +271,7 @@ describe("ObjectModel files handling test", () => {
 	});
 
 	it("should upgrade a pipelineFlow from v1 to latest version for decoratorCanvasV1", () => {
-		upgradeToLatestVersion(decoratorCanvasV1, removeNodesAndComments(decoratorCanvas));
+		upgradeToLatestVersion(decoratorCanvasV1, removeNodesAndCommentsAndLinks(decoratorCanvas));
 	});
 
 	it("should upgrade a pipelineFlow from v1 to latest version for linkColorCanvasV1", () => {
@@ -310,7 +310,7 @@ describe("ObjectModel files handling test", () => {
 	});
 
 	it("should upgrade a pipelineFlow from v0 to latest version for decoratorCanvasV0", () => {
-		upgradeV0ToLatestVersion(decoratorCanvasV0, removeNodesAndComments(decoratorCanvas));
+		upgradeV0ToLatestVersion(decoratorCanvasV0, removeNodesAndCommentsAndLinks(decoratorCanvas));
 	});
 
 	it("should upgrade a pipelineFlow from v0 to latest version for linkColorCanvasV0", () => {
@@ -383,12 +383,21 @@ describe("ObjectModel files handling test", () => {
 
 	// Removes nodes from the V3 canvas that has new style decorators which
 	// were not supported in earlier versions. Also, removes corresponding
-	// comments. These changes allow the output flow to be compared to the
+	// comments. Furthermore, it removed link which now have decoration support
+	// in v3. These changes allow the output flow to be compared to the
 	// result of upgrading the previous version flows.
-	function removeNodesAndComments(flow) {
+	function removeNodesAndCommentsAndLinks(flow) {
 		const outFlow = JSON.parse(JSON.stringify(flow));
 		outFlow.pipelines[0].nodes = outFlow.pipelines[0].nodes.slice(0, 6);
 		outFlow.pipelines[0].app_data.ui_data.comments = outFlow.pipelines[0].app_data.ui_data.comments.slice(0, 5);
+		outFlow.pipelines[0].nodes.forEach((n) => {
+			if (n.app_data && n.app_data.ui_data && n.app_data.ui_data.associations) {
+				delete n.app_data.ui_data.associations;
+			}
+			if (n.inputs) {
+				n.inputs.forEach((inp) => delete inp.links);
+			}
+		});
 		return outFlow;
 	}
 });

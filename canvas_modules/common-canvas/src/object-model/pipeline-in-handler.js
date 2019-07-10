@@ -191,6 +191,7 @@ export default class PipelineInHandler {
 			if (has(comment, "style")) {
 				newComment.style = comment.style;
 			}
+
 			return newComment;
 		});
 	}
@@ -219,6 +220,9 @@ export default class PipelineInHandler {
 								if (has(link, "app_data.ui_data.style")) {
 									newLink.style = link.app_data.ui_data.style;
 								}
+								if (has(link, "app_data.ui_data.decorations")) {
+									newLink.decorations = link.app_data.ui_data.decorations;
+								}
 								if (link.app_data) {
 									newLink.app_data = this.removeUiDataFromAppData(link.app_data);
 								}
@@ -244,7 +248,8 @@ export default class PipelineInHandler {
 							"class_name": association.class_name ? association.class_name : "d3-object-link",
 							"srcNodeId": node.id,
 							"trgNodeId": association.node_ref,
-							"type": "associationLink"
+							"type": "associationLink",
+							"decorations": association.decorations
 						};
 
 						links.push(newLink);

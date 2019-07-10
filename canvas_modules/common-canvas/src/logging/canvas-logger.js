@@ -105,6 +105,13 @@ export default class Logger {
 		return idStr;
 	}
 
+	static getLoggingState() {
+		return Logger.active;
+	}
+
+	static setLoggingState(state) {
+		Logger.active = state;
+	}
 }
 
 // Static variable can be switched on and off by pressing Ctrl+Shift+Option+P

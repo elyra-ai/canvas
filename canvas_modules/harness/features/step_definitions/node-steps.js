@@ -956,34 +956,34 @@ module.exports = function() {
 	this.Then(/^I click on the hotspot for decorator "([^"]*)" on the "([^"]*)" node$/, function(decoratorId, nodeName) {
 		const nodeSelector = getNodeSelector(nodeName, "grp");
 		const node = browser.$(nodeSelector);
-		const decoratorImage = node.$(".d3-decorator-image[data-id=node_dec_img_0_" + decoratorId + "]");
+		const decoratorImage = node.$(".d3-node-dec-image[data-id=node_dec_img_0_" + decoratorId + "]");
 		decoratorImage.click();
 	});
 
 	this.Then(/^I verify an entry in the console was made for the decorationHandler on decorator "([^"]*)"$/, function(decoratorId) {
 		var lastEventLog = getLastEventLogData();
-		expect(lastEventLog.event).toEqual("decorationHandler()");
+		expect(lastEventLog.event).toEqual("decorationHandler() Decoration ID = " + decoratorId);
 		expect(lastEventLog.data).toEqual(decoratorId);
 	});
 
 	this.Then(/^I verify node "([^"]*)" has (\d+) decorators$/, function(nodeName, decoratorCount) {
 		const nodeSelector = getNodeSelector(nodeName, "grp");
 		const node = browser.$(nodeSelector);
-		const decorators = node.$$(".d3-decorator-outline");
+		const decorators = node.$$(".d3-node-dec-outline");
 		expect(String(decorators.length)).toEqual(decoratorCount);
 	});
 
 	this.Then(/^I verify node "([^"]*)" has (\d+) label decorators$/, function(nodeName, decoratorCount) {
 		const nodeSelector = getNodeSelector(nodeName, "grp");
 		const node = browser.$(nodeSelector);
-		const decorators = node.$$(".d3-decorator-label");
+		const decorators = node.$$(".d3-node-dec-label");
 		expect(String(decorators.length)).toEqual(decoratorCount);
 	});
 
 	this.Then(/^I verify node "([^"]*)" has a decorator with id "([^"]*)" at position x (-?\d+) y (-?\d+)$/, function(nodeName, decoratorId, xPos, yPos) {
 		const nodeSelector = getNodeSelector(nodeName, "grp");
 		const node = browser.$(nodeSelector);
-		const decorators = node.$$(".d3-decorator-outline");
+		const decorators = node.$$(".d3-node-dec-outline");
 		let found = false;
 		let xx = 0;
 		let yy = 0;
@@ -1004,7 +1004,7 @@ module.exports = function() {
 	this.Then(/^I verify node "([^"]*)" has a decorator with id "([^"]*)" which has an image "([^"]*)"$/, function(nodeName, decoratorId, decoratorImage) {
 		const nodeSelector = getNodeSelector(nodeName, "grp");
 		const node = browser.$(nodeSelector);
-		const decoratorImages = node.$$(".d3-decorator-image");
+		const decoratorImages = node.$$(".d3-node-dec-image");
 		let found = false;
 		let img = "";
 		for (const decImage of decoratorImages) {
@@ -1023,7 +1023,7 @@ module.exports = function() {
 		function(nodeName, decoratorId, label, xPos, yPos) {
 			const nodeSelector = getNodeSelector(nodeName, "grp");
 			const node = browser.$(nodeSelector);
-			const decorators = node.$$(".d3-decorator-label");
+			const decorators = node.$$(".d3-node-dec-label");
 			let found = false;
 			let xx = 0;
 			let yy = 0;

@@ -545,6 +545,27 @@ const links = (state = [], action) => {
 			return link;
 		});
 
+	case "SET_LINK_DECORATIONS":
+		return state.map((link, index) => {
+			if (action.data.linkId === link.id) {
+				const newLink = Object.assign({}, link);
+				newLink.decorations = action.data.decorations;
+				return newLink;
+			}
+			return link;
+		});
+
+	case "SET_LINKS_MULTI_DECORATIONS":
+		return state.map((link) => {
+			const pipelineLinkDec =
+				action.data.pipelineLinkDecorations.find((entry) => entry.pipelineId === action.data.pipelineId && entry.linkId === link.id);
+			if (pipelineLinkDec) {
+				const newLink = Object.assign({}, link, { decorations: pipelineLinkDec.decorations });
+				return newLink;
+			}
+			return link;
+		});
+
 	case "REMOVE_ALL_STYLES":
 		return state.map((link) => {
 			if (action.data.temporary && link.style_temp) {
@@ -662,6 +683,7 @@ const canvasinfo = (state = {}, action) => {
 	case "SET_NODE_MESSAGE":
 	case "SET_NODE_MESSAGES":
 	case "SET_NODE_DECORATIONS":
+	case "SET_LINK_DECORATIONS":
 	case "ADD_NODE_ATTR":
 	case "REMOVE_NODE_ATTR":
 	case "SET_NODE_LABEL":
@@ -730,6 +752,20 @@ const canvasinfo = (state = {}, action) => {
 					nodes: nodes(pipeline.nodes, action),
 					comments: pipeline.comments,
 					links: pipeline.links });
+			}
+			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+
+	}
+	case "SET_LINKS_MULTI_DECORATIONS": {
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
+			if (action.data.pipelineLinkDecorations.findIndex((entry) => entry.pipelineId === pipeline.id) > -1) {
+				action.data.pipelineId = pipeline.id;
+				return Object.assign({}, pipeline, {
+					nodes: pipeline.nodes,
+					comments: pipeline.comments,
+					links: links(pipeline.links, action) });
 			}
 			return pipeline;
 		});
@@ -2080,6 +2116,9 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "SET_NODES_MULTI_DECORATIONS", data: { pipelineNodeDecorations: pipelineNodeDecorations } });
 	}
 
+	setLinksMultiDecorations(pipelineLinkDecorations) {
+		this.store.dispatch({ type: "SET_LINKS_MULTI_DECORATIONS", data: { pipelineLinkDecorations: pipelineLinkDecorations } });
+	}
 
 	// ---------------------------------------------------------------------------
 	// Styling methods
@@ -3594,6 +3633,15 @@ export class APIPipeline {
 
 	setLinksClassName(linkIds, newClassName) {
 		this.store.dispatch({ type: "SET_LINKS_CLASS_NAME", data: { linkIds: linkIds, label: newClassName }, pipelineId: this.pipelineId });
+	}
+
+	setLinkDecorations(linkId, newDecorations) {
+		this.store.dispatch({ type: "SET_LINK_DECORATIONS", data: { linkId: linkId, decorations: this.ensureDecorationsHaveIds(newDecorations) }, pipelineId: this.pipelineId });
+	}
+
+	getLinkDecorations(linkId) {
+		var link = this.getLink(linkId);
+		return (link ? link.decorations : null);
 	}
 
 	isConnectionAllowed(srcNodeInfo, trgNodeInfo) {

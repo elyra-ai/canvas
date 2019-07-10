@@ -43,6 +43,10 @@ module.exports = function() {
 		dropdownSelect(browser.$("#harness-sidepanel-api-nodeSelection"), nodeName);
 	});
 
+	this.Then(/^I select link "([^"]*)" in the link drop-down list$/, function(linkName) {
+		dropdownSelect(browser.$("#harness-sidepanel-api-linkSelection"), linkName);
+	});
+
 	this.Then(/^I select port "([^"]*)" in the port drop-down list$/, function(portName) {
 		dropdownSelect(browser.$("#harness-sidepanel-api-portSelection"), portName);
 	});

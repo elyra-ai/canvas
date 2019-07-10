@@ -280,13 +280,15 @@ $link-hightlight-color: $brand-01;
 	stroke-width: 1;
 }
 
-.d3-decorator-outline {
+.d3-node-dec-outline,
+.d3-link-dec-outline {
 	fill: transparent;
 	stroke: $node-decoration-outline;
 	stroke-width: 1;
 }
 
-.d3-decorator-label {
+.d3-node-dec-label,
+.d3-link-dec-label {
 	font-size: 13px;
 	fill: $node-label-color;
 	/* Prevent elements from being selectable */

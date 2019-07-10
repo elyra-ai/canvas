@@ -39,6 +39,10 @@ _defineConstant("CARBON_SUCCESS", "checkmark");
 _defineConstant("HORIZONTAL", "horizonal");
 _defineConstant("VERTICAL", "vertical");
 
+// The type of object to which deorations are to be attached.
+_defineConstant("DEC_NODE", "node");
+_defineConstant("DEC_LINK", "link");
+
 _defineConstant("DAGRE_HORIZONTAL", "LR");
 _defineConstant("DAGRE_VERTICAL", "TB");
 

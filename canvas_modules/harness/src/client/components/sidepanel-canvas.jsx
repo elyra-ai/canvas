@@ -43,6 +43,7 @@ import {
 	BLUE_ELLIPSES_LAYOUT,
 	DB2_EXPLAIN_LAYOUT,
 	STREAMS_LAYOUT,
+	AUTO_AI_LAYOUT,
 	FLYOUT,
 	MODAL,
 	TIP_PALETTE,
@@ -803,6 +804,10 @@ export default class SidePanelForms extends React.Component {
 				<RadioButton
 					value={STREAMS_LAYOUT}
 					labelText={STREAMS_LAYOUT}
+				/>
+				<RadioButton
+					value={AUTO_AI_LAYOUT}
+					labelText={AUTO_AI_LAYOUT}
 				/>
 			</RadioButtonGroup>
 		</div>);

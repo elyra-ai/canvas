@@ -836,7 +836,6 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getLinks();
 	}
 
-
 	// Gets a node to node data link
 	// srcNodeId - The ID of the source node
 	// srcNodePortId - The ID of the source node port
@@ -943,6 +942,34 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getLinkStyle(linkId, temporary);
 	}
 
+	// Sets the decorations on a link. The decorations array passed in
+	// will replace any decorations currently applied to the link.
+	// linkId - The ID of the link
+	// newDecorations - An array of decorations. See Wiki for details.
+	// pipelineId - The ID of the pipeline
+	setLinkDecorations(linkId, newDecorations, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setLinkDecorations(linkId, newDecorations);
+	}
+
+	// Sets the decorations of multiple links at once. The decorations array
+	// passed in will replace any decorations currently applied to the links.
+	// pipelineLinkDecorations - Specifies the links and their decorations.
+	// It is a javascript array like this:
+	//   [
+	//     { pipelineId: <pipelineId>, linkId: <linkId>, decorations: <decoration_spec>},
+	//     { pipelineId: <pipelineId>, linkId: <linkId>, decorations: <decoration_spec>},
+	//     { pipelineId: <pipelineId>, linkId: <linkId>, decorations: <decoration_spec>}
+	//   ]
+	setLinksMultiDecorations(pipelineLinkDecorations) {
+		this.objectModel.setLinksMultiDecorations(pipelineLinkDecorations);
+	}
+
+	// Gets an array of decorations for a link
+	// linkId - The ID of the link
+	// pipelineId - The ID of the pipeline
+	getLinkDecorations(linkId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getLinkDecorations(linkId);
+	}
 
 	// ---------------------------------------------------------------------------
 	// Command stack methods
@@ -1039,6 +1066,16 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 	// Operational methods
 	// ---------------------------------------------------------------------------
+
+	// Returns a Boolean to indicate whether canvas logging is switched on or off.
+	getLoggingState() {
+		return Logger.getLoggingState();
+	}
+
+	// Sets canvas logging based on the Boolean passed in.
+	setLoggingState(state) {
+		Logger.setLoggingState(state);
+	}
 
 	addAfterUpdateCallback(callback) {
 		if (this.commonCanvas) {

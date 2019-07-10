@@ -345,9 +345,25 @@ function getCommentIdForTextInSubFlowInSubFlow(commentText, extraCanvas) {
 	return getCommentId(commentText, selector);
 }
 
-function getLinkSelector(linkId, extraCanvas) {
+function getLinkFromAPIName(linkName, canvasData) {
+	const nodeNames = linkName.split("-");
+	const srcNodeId = getNodeIdForLabel(nodeNames[0]);
+	const trgNodeId = getNodeIdForLabel(nodeNames[1]);
+	const canvasLink = canvasData.links.find((lnk) => lnk.srcNodeId === srcNodeId && lnk.trgNodeId === trgNodeId);
+	const linkSelector = getLinkSelector(canvasLink.id, "grp");
+	// console.log("srcNode.id = " + srcNodeId + " trgNode.id = " + trgNodeId + " canvasLink.id = " + canvasLink.id + " linkSelector = " + linkSelector);
+	const link = browser.$(linkSelector);
+	return link;
+}
+
+function getLinkSelector(linkId, element, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
-	const selector = `div > svg > g > g > path[data-id^=link_line_${inst}_${linkId}]`;
+	let selector = null;
+	if (element === "grp") {
+		selector = `div > svg > g > g[data-id^=link_${element}_${inst}_${linkId}]`;
+	} else if (element === "line") {
+		selector = `div > svg > g > g > path[data-id^=link_${element}_${inst}_${linkId}]`;
+	}
 	return selector;
 }
 
@@ -567,6 +583,7 @@ module.exports = {
 	getNodePortTipSelector: getNodePortTipSelector,
 	getNodeDimensions: getNodeDimensions,
 	addTextForComment: addTextForComment,
+	getLinkFromAPIName: getLinkFromAPIName,
 	getLinksCount: getLinksCount,
 	getCommentSelector: getCommentSelector,
 	getCommentSelectorInSubFlow: getCommentSelectorInSubFlow,

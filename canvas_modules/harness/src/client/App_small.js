@@ -25,40 +25,45 @@ class App extends React.Component {
 		this.canvasController.setPipelineFlowPalette(ModelerPalette);
 	}
 
-	contextMenuHandler() {
+	contextMenuHandler(data, defaultMenu) {
 		console.log("contextMenuHandler");
+		return defaultMenu;
 	}
 
-	contextMenuActionHandler() {
+	contextMenuActionHandler(action, data) {
 		console.log("contextMenuActionHandler");
 	}
 
-	editActionHandler() {
+	editActionHandler(data) {
 		console.log("editActionHandler");
 	}
 
-	clickActionHandler() {
+	clickActionHandler(data) {
 		console.log("clickActionHandler");
 	}
 
-	decorationActionHandler() {
+	decorationActionHandler(node, id, pipelineId) {
 		console.log("decorationActionHandler");
 	}
 
-	selectionChangeHandler() {
+	selectionChangeHandler(data) {
 		console.log("selectionChangeHandler");
 	}
 
-	layoutHandler() {
+	layoutHandler(data) {
 		console.log("layoutHandler");
 	}
 
-	tipHandler() {
+	tipHandler(tipType, data) {
 		console.log("tipHandler");
 	}
 
-	toolbarMenuActionHandler() {
+	toolbarMenuActionHandler(action, data) {
 		console.log("toolbarMenuActionHandler");
+	}
+
+	idGenerationHandler(action, data) {
+		console.log("idGenerationHandler");
 	}
 
 	render() {
@@ -153,7 +158,7 @@ class App extends React.Component {
 			}
 		};
 
-		var commonCanvas = (
+		const commonCanvas = (
 			<CommonCanvas
 				canvasController={this.canvasController}
 
@@ -172,6 +177,7 @@ class App extends React.Component {
 				layoutHandler={this.layoutHandler}
 				tipHandler={this.tipHandler}
 				toolbarMenuActionHandler={this.toolbarMenuActionHandler}
+				idGenerationHandler={this.idGenerationHandler}
 			/>);
 
 		return (

@@ -222,6 +222,21 @@ $harness-navbar-icon-width: 48px;
 	stroke: #000000;
 }
 
+/* This styles are used in the autoAICanvas.json canvas file. */
+
+.join-keys-decoration-outline {
+	stroke: transparent;
+	fill: transparent;
+}
+
+.join-keys-decoration-text {
+	stroke: #FFFFFF;
+	fill: #FFFFFF;
+	font-size: 10px;
+	font-weight: 100;
+}
+
+
 /*  Override styles for comments in linkColorCanvas.json */
 
 .custom-canvas-comment {

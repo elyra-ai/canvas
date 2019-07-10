@@ -73,3 +73,57 @@ Feature: Decorators
 		Then I verify node "Big Node" has a decorator with id "7" at position x 0 y 160
 		Then I verify node "Big Node" has a decorator with id "8" at position x 35 y 160
 		Then I verify node "Big Node" has a decorator with id "9" at position x 70 y 160
+
+	Scenario: Test for adding a decorator to a link
+		Then I resize the window size to 1200 width and 800 height
+
+		Given I am on the test harness
+		Given I have uploaded palette "modelerPalette.json"
+		Given I have uploaded diagram "decoratorCanvas.json"
+
+		Then I verify link "Top Left-Top Right" has 3 decorators
+		Then I verify link "Bottom Left-Bottom Right" has 3 decorators
+
+		Then I verify link "Top Left-Top Right" has a decorator with id "assocDec1" at position x 370 y 133.5
+		Then I verify link "Top Left-Top Right" has a decorator with id "assocDec2" at position x 478 y 133.5
+		Then I verify link "Top Left-Top Right" has a decorator with id "assocDec3" at position x 586 y 133.5
+
+		Then I verify link "Bottom Left-Bottom Right" has a decorator with id "123" at position x 373 y 225
+		Then I verify link "Bottom Left-Bottom Right" has a decorator with id "456" at position x 478 y 225
+		Then I verify link "Bottom Left-Bottom Right" has a decorator with id "789" at position x 583 y 225
+
+		Given I have toggled the app side api panel
+		Given I have selected the "Set Link Decorations" API
+
+		# Remove all decorations from the association link
+		When I select link "Top Left-Top Right" in the link drop-down list
+		Then I update the decorations text area with ""[]""
+		And I call the API by clicking on the Submit button
+		Then I verify link "Top Left-Top Right" has 0 decorators
+
+		# Remove all decorations from the node data link
+		When I select link "Bottom Left-Bottom Right" in the link drop-down list
+		Then I update the decorations text area with ""[]""
+		And I call the API by clicking on the Submit button
+		Then I verify link "Bottom Left-Bottom Right" has 0 decorators
+
+		# Add a rectangle decorator to association link
+		When I select link "Top Left-Top Right" in the link drop-down list
+		Then I update the decorations text area with ""[{"id": "123"}]""
+		And I call the API by clicking on the Submit button
+		Then I verify link "Top Left-Top Right" has 1 decorators
+
+		# Add a label decorator to association link
+		Then I update the decorations text area with ""[{"id": "123", "label": "Link Decoration"}]""
+		And I call the API by clicking on the Submit button
+		Then I verify link "Top Left-Top Right" has 1 label decorators
+
+		# Add an image decorator with a hotspot to the node data link
+		When I select link "Bottom Left-Bottom Right" in the link drop-down list
+		Then I update the decorations text area with ""[{"id": "456", "position": "source", "image": "/images/decorators/zoom-in_32.svg", "hotspot": true}]""
+		And I call the API by clicking on the Submit button
+		Then I verify link "Bottom Left-Bottom Right" has 1 decorators
+
+		# Click on the hotspot and make sure it works
+		Then I click on the hotspot for decorator "456" on the "Bottom Left-Bottom Right" link
+		Then I verify an entry in the console was made for the decorationHandler on decorator "456"

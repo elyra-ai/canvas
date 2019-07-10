@@ -190,6 +190,11 @@ const haloDefaultLayout = {
 	// The gap between node or comment and the link line.
 	linkGap: 7,
 
+	// Link decoration dimensions
+	linkDecoratorHeight: 20,
+	linkDecoratorWidth: 20,
+	linkDecoratorPadding: 2,
+
 	// Initialize values for drawing connectors. wrapAroundSpacing and
 	// wrapAroundNodePadding are used when curved connectors are drawn all the
 	// way around a node. ie the target is to the right of the source.
@@ -428,6 +433,11 @@ const portsHorizontalDefaultLayout = {
 
 	// The gap between node or comment and the link line.
 	linkGap: 7,
+
+	// Link decoration dimensions
+	linkDecoratorHeight: 20,
+	linkDecoratorWidth: 20,
+	linkDecoratorPadding: 2,
 
 	// Initialize values for drawing connectors. minInitialLine is the
 	// size of the horizontal line protruding from the source or target handles
@@ -668,6 +678,11 @@ const portsVerticalDefaultLayout = {
 
 	// The gap between node or comment and the link line.
 	linkGap: 7,
+
+	// Link decoration dimensions
+	linkDecoratorHeight: 20,
+	linkDecoratorWidth: 20,
+	linkDecoratorPadding: 2,
 
 	// Initialize values for drawing connectors. minInitialLine is the
 	// size of the horizontal line protruding from the source or target handles

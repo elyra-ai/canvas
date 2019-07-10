@@ -26,6 +26,7 @@ import {
 	API_SET_INPUT_PORT_LABEL,
 	API_SET_OUTPUT_PORT_LABEL,
 	API_SET_NODE_DECORATIONS,
+	API_SET_LINK_DECORATIONS,
 	API_ADD_NOTIFICATION_MESSAGE,
 	API_ZOOM_CANVAS_TO_REVEAL,
 	INPUT_PORT,
@@ -86,10 +87,12 @@ export default class SidePanelAPI extends React.Component {
 			isValidPaletteItem: true,
 			nodeId: "",
 			portId: "",
+			linkId: "",
 			newLabel: "",
 			newDecorations: "",
 			nodes: [],
 			ports: [],
+			links: [],
 			appendTimestamp: false,
 			attachCallback: false,
 			appendLink: false,
@@ -115,8 +118,10 @@ export default class SidePanelAPI extends React.Component {
 		const operation = evt.selectedItem.value;
 		let nodes = [];
 		let ports = [];
+		let links = [];
 		let nodeId = "";
 		let portId = "";
+		let linkId = "";
 		let newLabel = "";
 		let newDecorations = "";
 		let newZoomObj = "";
@@ -134,6 +139,16 @@ export default class SidePanelAPI extends React.Component {
 			if (!isEmpty(nodes)) {
 				nodeId = nodes[0].value;
 				const decorations = this.props.apiConfig.getCanvasInfo().nodes[0].decorations;
+				if (decorations) {
+					newDecorations = JSON.stringify(decorations, null, 2);
+				}
+			}
+		} else if (operation === API_SET_LINK_DECORATIONS) {
+			// when selecting operation to set link decorations, build list of links and select the first one by default
+			links = this.getLinkList(this.props.apiConfig.getCanvasInfo().links);
+			linkId = links[0].value;
+			if (!isEmpty(links)) {
+				const decorations = this.props.apiConfig.getCanvasInfo().links[0].decorations || [];
 				if (decorations) {
 					newDecorations = JSON.stringify(decorations, null, 2);
 				}
@@ -169,8 +184,10 @@ export default class SidePanelAPI extends React.Component {
 			selectedOperation: operation,
 			nodeId: nodeId,	// id of selected node
 			portId: portId, // id of selected port
+			linkId: linkId, // id of selected link
 			nodes: nodes, // list of nodes in format { value: label, id: nodeId }
 			ports: ports, // list of input or output ports in format { value: label, id: portId }
+			links: links, // list links in format { value: label, id: linkId }
 			newLabel: newLabel,
 			newDecorations: newDecorations,
 			zoomObject: newZoomObj
@@ -188,7 +205,7 @@ export default class SidePanelAPI extends React.Component {
 				// when op to set node name is selected, set the current node name in text field
 				newState.newLabel = existingNode.label;
 			} else if (this.props.apiConfig.selectedOperation === API_SET_NODE_DECORATIONS) {
-				// when op to set node decorations is selected, set the current node name in text field
+				// when op to set node decorations is selected, set the current node decorations in text field
 				if (existingNode.decorations) {
 					newState.newDecorations = JSON.stringify(existingNode.decorations, null, 2);
 				} else {
@@ -241,6 +258,25 @@ export default class SidePanelAPI extends React.Component {
 		this.props.log("Port selected", portId);
 	}
 
+	onLinkSelect(evt) {
+		const linkItem = this.state.links.find((link) => link.label === evt.selectedItem.value);
+		const linkId = linkItem.value;
+		const newState = { linkId: linkId, portId: "", newLabel: "" };
+		const existingLink = this.props.apiConfig.getCanvasInfo().links.find((link) => (link.id === linkId));
+		if (existingLink) {
+			if (this.props.apiConfig.selectedOperation === API_SET_LINK_DECORATIONS) {
+				// when op to set link decorations is selected, set the current link decorations in text field
+				if (existingLink.decorations) {
+					newState.newDecorations = JSON.stringify(existingLink.decorations, null, 2);
+				} else {
+					newState.newDecorations = "[]";
+				}
+			}
+		}
+		this.setState(newState);
+		this.props.log("Link selected", linkId);
+	}
+
 	onFieldChange(fieldName, evt) {
 		const stateObj = {};
 		stateObj[fieldName] = evt.target.value;
@@ -290,6 +326,25 @@ export default class SidePanelAPI extends React.Component {
 		});
 	}
 
+	getLinkList(items) {
+		const out = [];
+		items.forEach((item) => {
+			const srcNode = this.getNode(item.srcNodeId);
+			const trgNode = this.getNode(item.trgNodeId);
+			if (srcNode && trgNode) { // srcNode may be null for a comment link
+				const srcLabel = this.getNode(item.srcNodeId).label;
+				const trgLabel = this.getNode(item.trgNodeId).label;
+				out.push({ label: srcLabel + "-" + trgLabel, value: item.id });
+			}
+		});
+		return out;
+	}
+
+	getNode(nodeId) {
+		return this.props.apiConfig.getCanvasInfo().nodes.find((n) => n.id === nodeId);
+	}
+
+
 	refreshPipeline() {
 		this.setState({ pipelineFlow: JSON.stringify(this.props.apiConfig.getPipelineFlow()),
 			isValidPipelineFlow: true });
@@ -309,6 +364,8 @@ export default class SidePanelAPI extends React.Component {
 		case API_SET_INPUT_PORT_LABEL:
 		case API_SET_OUTPUT_PORT_LABEL:
 			return (this.state.nodeId && this.state.portId && this.state.newLabel.length > 0);
+		case API_SET_LINK_DECORATIONS:
+			return (this.state.linkId && this.state.newDecorations.length > 0);
 		case API_ADD_NOTIFICATION_MESSAGE:
 			return this.state.notificationMessage.length > 0;
 		case API_ZOOM_CANVAS_TO_REVEAL:
@@ -360,12 +417,20 @@ export default class SidePanelAPI extends React.Component {
 			this.setState({ ports: this.getNodePortList(existingNode.outputs) });
 			break;
 		}
-		case API_SET_NODE_DECORATIONS:
+		case API_SET_NODE_DECORATIONS: {
 			this.props.apiConfig.setNodeDecorations(
 				this.state.nodeId,
 				this.state.newDecorations);
 			this.setState({ nodes: this.getNodePortList(this.props.apiConfig.getCanvasInfo().nodes) });
 			break;
+		}
+		case API_SET_LINK_DECORATIONS: {
+			this.props.apiConfig.setLinkDecorations(
+				this.state.linkId,
+				this.state.newDecorations);
+			this.setState({ links: this.getLinkList(this.props.apiConfig.getCanvasInfo().links) });
+			break;
+		}
 		case API_ADD_NOTIFICATION_MESSAGE: {
 			const message = this.createNotificationMessage();
 			this.props.apiConfig.appendNotificationMessages(message);
@@ -436,6 +501,7 @@ export default class SidePanelAPI extends React.Component {
 			API_SET_INPUT_PORT_LABEL,
 			API_SET_OUTPUT_PORT_LABEL,
 			API_SET_NODE_DECORATIONS,
+			API_SET_LINK_DECORATIONS,
 			API_ADD_NOTIFICATION_MESSAGE,
 			API_ZOOM_CANVAS_TO_REVEAL
 		]);
@@ -577,6 +643,30 @@ export default class SidePanelAPI extends React.Component {
 			</div>);
 		}
 
+		let setLinkDecorationsSection = <div />;
+		if (this.props.apiConfig.selectedOperation === API_SET_LINK_DECORATIONS) {
+			setLinkDecorationsSection = (<div className="harness-sidepanel-children"
+				id="harness-sidepanel-api-decorations"
+			>
+				<div id="harness-sidepanel-api-linkSelection">
+					<Dropdown
+						disabled={isEmpty(this.state.links)}
+						onChange={this.onLinkSelect.bind(this)}
+						label="Link Selection"
+						ariaLabel="Link Selection"
+						items={this.dropdownOptions(this.state.links)}
+					/>
+				</div>
+				<div className="harness-sidepanel-spacer" />
+				<TextArea
+					labelText="Decorations JSON"
+					rows={10}
+					onChange={this.onFieldChange.bind(this, "newDecorations")}
+					value={this.state.newDecorations}
+				/>
+			</div>);
+		}
+
 		let setNotificationMessages = <div />;
 		if (this.props.apiConfig.selectedOperation === API_ADD_NOTIFICATION_MESSAGE) {
 			setNotificationMessages = (<div className="harness-sidepanel-children"
@@ -697,6 +787,7 @@ export default class SidePanelAPI extends React.Component {
 				{addItemToPaletteSection}
 				{setNodePortLabelSection}
 				{setNodeDecorationsSection}
+				{setLinkDecorationsSection}
 				{setNotificationMessages}
 				{zoomCanvas}
 				{space}
@@ -718,6 +809,7 @@ SidePanelAPI.propTypes = {
 		setNodeLabel: PropTypes.func,
 		setPortLabel: PropTypes.func,
 		setNodeDecorations: PropTypes.func,
+		setLinkDecorations: PropTypes.func,
 		appendNotificationMessages: PropTypes.func,
 		clearNotificationMessages: PropTypes.func,
 		getZoomToReveal: PropTypes.func,
