@@ -428,7 +428,7 @@ export default class CreateSuperNodeAction extends Action {
 		// Create new links to and from supernode in the main flow.
 		this.newLinks = [];
 		for (let idx = 0; idx < this.linkSrcDefs.length; idx++) {
-			this.newLinks.push(this.apiPipeline.createNodeLink(this.linkSrcDefs[idx], this.linkTrgDefs[idx]));
+			this.newLinks.push(this.apiPipeline.createNodeLink(this.linkSrcDefs[idx], this.linkTrgDefs[idx], { type: "nodeLink" }));
 		}
 		this.apiPipeline.addLinks(this.newLinks);
 
@@ -444,7 +444,7 @@ export default class CreateSuperNodeAction extends Action {
 		this.supernodeNewLinks = [];
 		for (let idx = 0; idx < this.bindingNodeLinkSrcDefs.length; idx++) {
 			this.supernodeNewLinks.push(
-				this.subPipeline.createNodeLink(this.bindingNodeLinkSrcDefs[idx], this.bindingNodeLinkTrgDefs[idx]));
+				this.subPipeline.createNodeLink(this.bindingNodeLinkSrcDefs[idx], this.bindingNodeLinkTrgDefs[idx], { type: "nodeLink" }));
 		}
 		this.subPipeline.addLinks(this.supernodeNewLinks);
 	}

@@ -47,6 +47,10 @@ import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel"
 import CustomOpMax from "./custom/condition-ops/customMax";
 import CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
+import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
+import DB2ExplainCanvas from "../../test_resources/diagrams/db2ExplainCanvas.json";
+import AutoAICanvas from "../../test_resources/diagrams/autoAICanvas.json";
+import StreamsCanvas from "../../test_resources/diagrams/streamsJobFlowNested.json";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
@@ -95,6 +99,7 @@ class App extends React.Component {
 			consoleOpened: false,
 			contextMenuInfo: {},
 			internalObjectModel: true,
+			assocLinkCreation: false,
 			propertiesContainerType: FLYOUT,
 			openSidepanelCanvas: false,
 			openSidepanelModal: false,
@@ -196,6 +201,7 @@ class App extends React.Component {
 		this.setSaveZoom = this.setSaveZoom.bind(this);
 		this.setZoomIntoSubFlows = this.setZoomIntoSubFlows.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
+		this.useEnableAssocLinkCreation = this.useEnableAssocLinkCreation.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
@@ -646,6 +652,16 @@ class App extends React.Component {
 	}
 
 	setNodeLayout(selectedNodeLayout) {
+		if (selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
+			this.canvasController.setPipelineFlow(AllTypesCanvas);
+		} else if (selectedNodeLayout === DB2_EXPLAIN_LAYOUT) {
+			this.canvasController.setPipelineFlow(DB2ExplainCanvas);
+		} else if (selectedNodeLayout === STREAMS_LAYOUT) {
+			this.canvasController.setPipelineFlow(StreamsCanvas);
+		} else if (selectedNodeLayout === AUTO_AI_LAYOUT) {
+			this.canvasController.setPipelineFlow(AutoAICanvas);
+		}
+
 		this.setState({ selectedNodeLayout: selectedNodeLayout });
 		this.log("Node layout selected", selectedNodeLayout);
 	}
@@ -1001,6 +1017,11 @@ class App extends React.Component {
 	useInternalObjectModel(enabled) {
 		this.setState({ internalObjectModel: enabled });
 		this.log("use internal object model", enabled);
+	}
+
+	useEnableAssocLinkCreation(enabled) {
+		this.setState({ assocLinkCreation: enabled });
+		this.log("enable association link creation", enabled);
 	}
 
 	useApplyOnBlur(enabled) {
@@ -1654,62 +1675,6 @@ class App extends React.Component {
 		}, 14000);
 	}
 
-	layoutHandler(data) {
-		const labLen = data.label ? data.label.length : 0;
-		let width = 120;
-		let bodyPath = "";
-		let selectionPath = "";
-
-		let nodeFormat = {};
-		switch (data.op) {
-		case "rectangle": {
-			bodyPath = "     M  0 0  L  0 60 120 60 120  0  0  0 Z";
-			selectionPath = "M -5 -5 L -5 65 125 65 125 -5 -5 -5 Z";
-			break;
-		}
-		case "pentagon": {
-			bodyPath = "     M  0 20 L  0 60 120 60 120 20 60  0  0 20 Z";
-			selectionPath = "M -5 17 L -5 65 125 65 125 17 60 -5 -5 17 Z";
-			break;
-		}
-		case "octagon": {
-			bodyPath = "     M  0 20 L  0 40  20 60 100 60 120 40 120 20 100 0  20  0 Z";
-			selectionPath = "M -5 20 L -5 40  20 65 100 65 125 40 125 20 100 -5 20 -5 Z";
-			break;
-		}
-		case "ellipse": {
-			bodyPath = "     M  0 30 Q  0  0 60  0 Q 120  0 120 30 Q 120 60 60 60 Q  0 60  0 30 Z";
-			selectionPath = "M -5 30 Q -5 -5 60 -5 Q 125 -5 125 30 Q 125 65 60 65 Q -5 65 -5 30 Z";
-			break;
-		}
-		case "triangle": {
-			bodyPath = "     M   0 60 L  140 60 70  0 0 60 Z";
-			selectionPath = "M  -5 65 L  145 65 70 -5 5 65 Z";
-			break;
-		}
-		case "hexagon": {
-			width = (labLen * 9) + 60; // Allow 9 pixels for each character
-			const corner = width - 30;
-			bodyPath = `     M   0 30 L 30 60 ${corner} 60 ${width}     30 ${corner}  0 30  0 Z`;
-			selectionPath = `M  -5 30 L 30 65 ${corner} 65 ${width + 5} 30 ${corner} -5 30 -5 Z`;
-			break;
-		}
-		default:
-			return {};
-		}
-
-		nodeFormat = {
-			defaultNodeWidth: width, // Override default width with calculated width
-			labelPosX: (width / 2), // Specify center of label as center of node Note: text-anchor is set to middle in the CSS for this label
-			labelMaxWidth: width, // Set big enough so that label is not truncated and so no ... appears
-			ellipsisPosX: width - 25, // Always position 25px in from the right side
-			bodyPath: bodyPath,
-			selectionPath: selectionPath
-		};
-
-		return nodeFormat;
-	}
-
 	render() {
 		const locale = "en";
 		const messages = i18nData.messages;
@@ -1788,6 +1753,7 @@ class App extends React.Component {
 			enableLinkType: this.state.selectedLinkType,
 			enableNodeLayout: null,
 			enableInternalObjectModel: this.state.internalObjectModel,
+			enableAssocLinkCreation: this.state.assocLinkCreation,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
 			enableMoveNodesOnSupernodeResize: this.state.enableMoveNodesOnSupernodeResize,
@@ -1801,6 +1767,9 @@ class App extends React.Component {
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows
 		};
+
+		let layoutHandler = null;
+		let decorationActionHandler = this.decorationActionHandler;
 
 		if (this.state.selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
 			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
@@ -1854,6 +1823,61 @@ class App extends React.Component {
 						portPosY: 30
 					}
 			});
+			layoutHandler = (data) => {
+				const labLen = data.label ? data.label.length : 0;
+				let width = 120;
+				let bodyPath = "";
+				let selectionPath = "";
+
+				switch (data.op) {
+				case "rectangle": {
+					bodyPath = "     M  0 0  L  0 60 120 60 120  0  0  0 Z";
+					selectionPath = "M -5 -5 L -5 65 125 65 125 -5 -5 -5 Z";
+					break;
+				}
+				case "pentagon": {
+					bodyPath = "     M  0 20 L  0 60 120 60 120 20 60  0  0 20 Z";
+					selectionPath = "M -5 17 L -5 65 125 65 125 17 60 -5 -5 17 Z";
+					break;
+				}
+				case "octagon": {
+					bodyPath = "     M  0 20 L  0 40  20 60 100 60 120 40 120 20 100 0  20  0 Z";
+					selectionPath = "M -5 20 L -5 40  20 65 100 65 125 40 125 20 100 -5 20 -5 Z";
+					break;
+				}
+				case "ellipse": {
+					bodyPath = "     M  0 30 Q  0  0 60  0 Q 120  0 120 30 Q 120 60 60 60 Q  0 60  0 30 Z";
+					selectionPath = "M -5 30 Q -5 -5 60 -5 Q 125 -5 125 30 Q 125 65 60 65 Q -5 65 -5 30 Z";
+					break;
+				}
+				case "triangle": {
+					bodyPath = "     M   0 60 L  140 60 70  0 0 60 Z";
+					selectionPath = "M  -5 65 L  145 65 70 -5 5 65 Z";
+					break;
+				}
+				case "hexagon": {
+					width = (labLen * 9) + 60; // Allow 9 pixels for each character
+					const corner = width - 30;
+					bodyPath = `     M   0 30 L 30 60 ${corner} 60 ${width}     30 ${corner}  0 30  0 Z`;
+					selectionPath = `M  -5 30 L 30 65 ${corner} 65 ${width + 5} 30 ${corner} -5 30 -5 Z`;
+					break;
+				}
+				default:
+					return {};
+				}
+
+				const nodeFormat = {
+					defaultNodeWidth: width, // Override default width with calculated width
+					labelPosX: (width / 2), // Specify center of label as center of node Note: text-anchor is set to middle in the CSS for this label
+					labelMaxWidth: width, // Set big enough so that label is not truncated and so no ... appears
+					ellipsisPosX: width - 25, // Always position 25px in from the right side
+					bodyPath: bodyPath,
+					selectionPath: selectionPath
+				};
+
+				return nodeFormat;
+			};
+
 		} else if (this.state.selectedNodeLayout === STREAMS_LAYOUT) {
 			// The below overrides were provided by Mary Komor from the Streams team
 			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
@@ -1883,11 +1907,63 @@ class App extends React.Component {
 				}
 			});
 		} else if (this.state.selectedNodeLayout === AUTO_AI_LAYOUT) {
+			const getPath = (l, r, t, b) => `M ${l} ${t} L ${l} ${b} ${r} ${b} ${r} ${t} ${l} ${t} Z`;
+			let left = 10;
+			let right = 210;
+			let top = 0;
+			let bot = 50;
 			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
-				enableNodeFormatType: "Horizontal"
+				enableNodeFormatType: "Horizontal",
+				enableAssocLinkCreation: true,
+				enableNodeLayout: {
+					defaultNodeWidth: 220,
+					defaultNodeHeight: 50,
+					bodyPath: getPath(left, right, top, bot),
+					selectionPath: getPath(left, right, top, bot),
+					labelAndIconVerticalJustification: "none",
+					labelPosX: 25,
+					labelPosY: 20,
+					portPosY: 25,
+					portRadius: 8,
+					ellipsisPosX: 190,
+					ellipsisPosY: 16
+				}
 			});
-		}
 
+			left = 10;
+			right = 210;
+			top = 0;
+			bot = 80;
+			layoutHandler = (data) => {
+				if (data.op === "main_table") {
+					const nodeFormat = {
+						bodyPath: getPath(left, right, top, bot),
+						selectionPath: getPath(left, right, top, bot),
+						labelPosY: 45,
+						portPosY: 48,
+						ellipsisPosX: 190,
+						ellipsisPosY: 40
+					};
+					return nodeFormat;
+				}
+				return {};
+			};
+			decorationActionHandler = (link, id, pipeline) => {
+				const decs = this.canvasController.getLinkDecorations(link.id);
+				const decImage = decs.find((d) => d.id === id);
+				const decLabel = decs.find((d) => d.label);
+				if (decImage && decLabel) {
+					if (decImage.image && decImage.image === "/images/decorators/ai-join-keys-selected.png") {
+						decImage.image = "/images/decorators/ai-join-keys-unselected.png";
+						decLabel.class_name = "ai-join-keys-decoration-text-unselected";
+					} else {
+						decImage.image = "/images/decorators/ai-join-keys-selected.png";
+						decLabel.class_name = "ai-join-keys-decoration-text-selected";
+					}
+					this.canvasController.setLinkDecorations(link.id, decs);
+				}
+			};
+		}
 
 		const commonCanvasConfig2 = {
 			enableConnectionType: this.state.selectedConnectionType,
@@ -2014,9 +2090,9 @@ class App extends React.Component {
 				contextMenuActionHandler= {this.contextMenuActionHandler}
 				editActionHandler= {this.editActionHandler}
 				clickActionHandler= {this.clickActionHandler}
-				decorationActionHandler= {this.decorationActionHandler}
+				decorationActionHandler= {decorationActionHandler}
 				selectionChangeHandler={this.selectionChangeHandler}
-				layoutHandler={this.layoutHandler}
+				layoutHandler={layoutHandler}
 				tipHandler={this.tipHandler}
 				toolbarConfig={toolbarConfig}
 				notificationConfig={notificationConfig}
@@ -2064,6 +2140,7 @@ class App extends React.Component {
 			commonCanvasConfig: commonCanvasConfig,
 			enableNavPalette: this.enableNavPalette,
 			internalObjectModel: this.state.internalObjectModel,
+			assocLinkCreation: this.state.assocLinkCreation,
 			setDiagramJSON: this.setDiagramJSON,
 			setPaletteJSON: this.setPaletteJSON,
 			setDiagramJSON2: this.setDiagramJSON2,
@@ -2083,6 +2160,7 @@ class App extends React.Component {
 			setSaveZoom: this.setSaveZoom,
 			setZoomIntoSubFlows: this.setZoomIntoSubFlows,
 			useInternalObjectModel: this.useInternalObjectModel,
+			useEnableAssocLinkCreation: this.useEnableAssocLinkCreation,
 			setInteractionType: this.setInteractionType,
 			selectedInteractionType: this.state.selectedInteractionType,
 			setSnapToGridType: this.setSnapToGridType,

@@ -48,6 +48,7 @@ _defineConstant("DAGRE_VERTICAL", "TB");
 
 _defineConstant("NODE_LINK", "nodeLink");
 _defineConstant("ASSOCIATION_LINK", "associationLink");
+_defineConstant("COMMENT_LINK", "commentLink");
 
 _defineConstant("TIP_TYPE_NODE", "tipTypeNode");
 _defineConstant("TIP_TYPE_PORT", "tipTypePort");

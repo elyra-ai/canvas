@@ -3350,21 +3350,21 @@ export class APIPipeline {
 	// Link methods
 	// ---------------------------------------------------------------------------
 
-	createLink(newNode, srcNode) {
-		const linkId = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": srcNode, "targetNode": newNode });
+	createLink(trgNode, srcNode) {
+		const linkId = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": srcNode, "targetNode": trgNode });
 		let newLink = {
 			id: linkId,
 			class_name: "d3-data-link",
 			srcNodeId: srcNode.id,
-			trgNodeId: newNode.id,
+			trgNodeId: trgNode.id,
 			type: NODE_LINK
 		};
 
 		if (srcNode.outputs && srcNode.outputs.length > 0) {
 			newLink = Object.assign(newLink, { "srcNodePortId": srcNode.outputs[0].id });
 		}
-		if (newNode.inputs && newNode.inputs.length > 0) {
-			newLink = Object.assign(newLink, { "trgNodePortId": newNode.inputs[0].id });
+		if (trgNode.inputs && trgNode.inputs.length > 0) {
+			newLink = Object.assign(newLink, { "trgNodePortId": trgNode.inputs[0].id });
 		}
 
 		return newLink;
@@ -3382,7 +3382,7 @@ export class APIPipeline {
 		const linkNodeList = [];
 		data.nodes.forEach((srcInfo) => {
 			data.targetNodes.forEach((trgInfo) => {
-				const link = this.createNodeLink(srcInfo, trgInfo, data.linkName);
+				const link = this.createNodeLink(srcInfo, trgInfo, data);
 				if (link) {
 					linkNodeList.push(link);
 				}
@@ -3391,18 +3391,18 @@ export class APIPipeline {
 		return linkNodeList;
 	}
 
-	createNodeLink(srcInfo, trgInfo, linkName) {
+	createNodeLink(srcInfo, trgInfo, data) {
 		if (this.isConnectionAllowed(srcInfo, trgInfo)) {
 			const link = {};
 			link.id = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
-			link.type = NODE_LINK;
-			link.class_name = "d3-data-link";
+			link.type = data.type;
+			link.class_name = data.type === ASSOCIATION_LINK ? "d3-object-link" : "d3-data-link";
 			link.srcNodeId = srcInfo.id;
 			link.srcNodePortId = srcInfo.portId;
 			link.trgNodeId = trgInfo.id;
 			link.trgNodePortId = trgInfo.portId;
-			if (linkName) {
-				link.linkName = linkName;
+			if (data.linkName) {
+				link.linkName = data.linkName;
 			}
 			return link;
 		}
@@ -3428,7 +3428,7 @@ export class APIPipeline {
 				if (!this.commentLinkAlreadyExists(srcNodeId, trgNodeId)) {
 					const info = {};
 					info.id = this.objectModel.getUniqueId(CREATE_COMMENT_LINK, { "comment": this.getComment(srcNodeId), "targetNode": this.getNode(trgNodeId) });
-					info.type = "commentLink";
+					info.type = data.type;
 					info.class_name = "d3-comment-link";
 					info.srcNodeId = srcNodeId;
 					info.trgNodeId = trgNodeId;

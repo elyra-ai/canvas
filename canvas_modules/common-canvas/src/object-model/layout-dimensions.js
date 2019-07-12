@@ -144,6 +144,7 @@ const haloDefaultLayout = {
 	cssNodePortOutput: "d3-node-port-output",
 	cssNodePortInput: "d3-node-port-input",
 	cssNodePortInputArrow: "d3-node-port-input-arrow",
+	cssNodePortInputAssoc: "d3-node-port-input-assoc",
 	cssSupernodeLabel: "d3-supernode-label",
 
 	// The amount of padding added around the canvas objects when doing a
@@ -388,6 +389,7 @@ const portsHorizontalDefaultLayout = {
 	cssNodePortOutput: "d3-node-port-output-austin",
 	cssNodePortInput: "d3-node-port-input-austin",
 	cssNodePortInputArrow: "d3-node-port-input-arrow-austin",
+	cssNodePortInputAssoc: "d3-node-port-input-assoc-austin",
 	cssSupernodeLabel: "d3-node-label-austin",
 
 	// The amount of padding added around the canvas objects when doing a
@@ -633,6 +635,7 @@ const portsVerticalDefaultLayout = {
 	cssNodePortOutput: "d3-node-port-output",
 	cssNodePortInput: "d3-node-port-input",
 	cssNodePortInputArrow: "d3-node-port-input-arrow",
+	cssNodePortInputAssoc: "d3-node-port-input-assoc",
 	cssSupernodeLabel: "d3-supernode-label",
 
 	// The amount of padding added around the canvas objects when doing a

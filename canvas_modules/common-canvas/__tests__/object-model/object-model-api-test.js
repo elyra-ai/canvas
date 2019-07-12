@@ -659,7 +659,8 @@ describe("ObjectModel API handle model OK", () => {
 			"nodes": [{ "id": sourceNodeId }],
 			"targetNodes": [{ "id": "b4f90b52-d198-42f0-85cc-31af3914dd4f" }],
 			"linkType": "data",
-			"linkName": "testLink1"
+			"linkName": "testLink1",
+			"type": "nodeLink"
 		};
 
 		const nodeLinks = objectModel.getAPIPipeline().createNodeLinks(linkData);
@@ -1416,7 +1417,8 @@ describe("ObjectModel API handle model OK", () => {
 			"targetNodes": [{ "id": targetNodeId, "portId": targetPortId }],
 			"linkType": "data",
 			"class_name": "canvas-data-link",
-			"linkName": "testLink2"
+			"linkName": "testLink2",
+			"type": "nodeLink"
 		};
 		const nodeLinks = objectModel.getAPIPipeline().createNodeLinks(linkData);
 		objectModel.getAPIPipeline().addLinks(nodeLinks);

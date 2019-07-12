@@ -78,6 +78,7 @@ export default class SidePanelForms extends React.Component {
 		this.saveZoomOptionChange = this.saveZoomOptionChange.bind(this);
 		this.snapToGridOptionChange = this.snapToGridOptionChange.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
+		this.useEnableAssocLinkCreation = this.useEnableAssocLinkCreation.bind(this);
 		this.useEnableSaveToPalette = this.useEnableSaveToPalette.bind(this);
 		this.useEnableDropZoneOnExternalDrag = this.useEnableDropZoneOnExternalDrag.bind(this);
 		this.useEnableCreateSupernodeNonContiguous = this.useEnableCreateSupernodeNonContiguous.bind(this);
@@ -307,6 +308,10 @@ export default class SidePanelForms extends React.Component {
 
 	useInternalObjectModel(checked) {
 		this.props.canvasConfig.useInternalObjectModel(checked);
+	}
+
+	useEnableAssocLinkCreation(checked) {
+		this.props.canvasConfig.useEnableAssocLinkCreation(checked);
 	}
 
 	useEnableSaveToPalette(checked) {
@@ -615,6 +620,19 @@ export default class SidePanelForms extends React.Component {
 					value={this.props.canvasConfig.snapToGridY}
 				/>
 			</div>
+		</div>);
+
+		var enableAssocLinkCreation = (<div className="harness-sidepanel-children">
+			<form>
+				<div className="harness-sidepanel-headers">Enable Association Link Creation</div>
+				<div>
+					<Toggle
+						id="harness-sidepanel-assoc-link-creation-toggle"
+						toggled={this.props.canvasConfig.assocLinkCreation}
+						onToggle={this.useEnableAssocLinkCreation}
+					/>
+				</div>
+			</form>
 		</div>);
 
 		var enableObjectModel = (<div className="harness-sidepanel-children">
@@ -968,6 +986,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{paletteLayout}
 				{divider}
+				{enableAssocLinkCreation}
+				{divider}
 				{enableObjectModel}
 				{divider}
 				{enableSaveToPalette}
@@ -1004,6 +1024,7 @@ SidePanelForms.propTypes = {
 		commonCanvasConfig: PropTypes.object,
 		enableNavPalette: PropTypes.func,
 		internalObjectModel: PropTypes.bool,
+		assocLinkCreation: PropTypes.bool,
 		setDiagramJSON: PropTypes.func,
 		setPaletteJSON: PropTypes.func,
 		setDiagramJSON2: PropTypes.func,
@@ -1034,6 +1055,7 @@ SidePanelForms.propTypes = {
 		snapToGridX: PropTypes.string,
 		snapToGridY: PropTypes.string,
 		useInternalObjectModel: PropTypes.func,
+		useEnableAssocLinkCreation: PropTypes.func,
 		setConnectionType: PropTypes.func,
 		selectedSnapToGrid: PropTypes.string,
 		selectedConnectionType: PropTypes.string,

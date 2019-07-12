@@ -23,6 +23,7 @@ const startingNodes = canvasController.getNodes();
 
 const data = {
 	link: startingLinks[0],
+	type: "nodeLink",
 	nodeTemplate: {
 		id: "dummy-node",
 		inputs: [

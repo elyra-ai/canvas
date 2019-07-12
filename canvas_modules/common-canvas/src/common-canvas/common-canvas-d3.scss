@@ -382,6 +382,17 @@ $link-hightlight-color: $brand-01;
 	stroke-width: 2;
 }
 
+.d3-node-port-input-assoc {
+	stroke: $node-port-input-stroke-color;
+	fill: $node-port-input-fill-color;
+	stroke-width: 2;
+}
+
+.d3-node-port-input-assoc:hover {
+	stroke: $node-port-output-hover-stroke;
+	fill: $node-port-output-hover-fill;
+}
+
 .d3-node-port-input[connected="yes"] {
 	stroke: $node-port-input-connected-stroke-color;
 	fill: $node-port-input-connected-fill-color;
@@ -421,6 +432,17 @@ $link-hightlight-color: $brand-01;
 	stroke: $node-port-input-stroke-color-austin;
 	fill: $node-port-input-fill-color-austin;
 	stroke-width: 1.25;
+}
+
+.d3-node-port-input-assoc-austin {
+	stroke: $node-port-input-stroke-color-austin;
+	fill: $node-port-input-fill-color-austin;
+	stroke-width: 1.25;
+}
+
+.d3-node-port-input-assoc-austin:hover {
+	stroke: $node-port-output-hover-stroke-austin;
+	fill: $node-port-output-hover-fill-austin;
 }
 
 .d3-node-port-input-austin[connected="yes"] {
@@ -605,6 +627,7 @@ $link-hightlight-color: $brand-01;
 	stroke-dasharray: 0;
 }
 
+/* 'object link' is the historical name for an association link */
 .d3-object-link {
 	stroke: $object-link-color;
 	stroke-width: 2;

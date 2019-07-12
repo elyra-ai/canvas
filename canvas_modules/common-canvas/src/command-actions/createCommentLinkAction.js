@@ -19,6 +19,7 @@ export default class CreateCommentLinkAction extends Action {
 
 	getData() {
 		this.data.linkIds = this.linkCommentList.map((link) => link.id);
+		this.data.linkType = "comment"; // Added for historical purposes - for WML Canvas support
 		return this.data;
 	}
 

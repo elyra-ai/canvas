@@ -21,7 +21,7 @@ import get from "lodash/get";
 import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
 import isMatch from "lodash/isMatch";
-import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE,
+import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERROR, WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
@@ -99,6 +99,7 @@ export default class CanvasD3Layout {
 				this.config.enableBoundingRectangles !== config.enableBoundingRectangles ||
 				this.config.enableSaveZoom !== config.enableSaveZoom ||
 				this.config.enableZoomIntoSubFlows !== config.enableZoomIntoSubFlows ||
+				this.config.enableAssocLinkCreation !== config.enableAssocLinkCreation ||
 				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
 			this.logger.logStartTimer("Initializing Canvas");
 
@@ -2306,6 +2307,11 @@ class CanvasRenderer {
 						.attr("d", (cd) => this.getNodeShapePath(cd))
 						.attr("class", (cd) => this.getNodeBodyClass(cd));
 
+					// Display decorators
+					if (!this.isSuperBindingNode(d)) {
+						this.addDecorations(d, DEC_NODE, nodeGrp);
+					}
+
 					// Handle port related objects
 					if (this.layout.connectionType === "ports") {
 						// Input ports
@@ -2315,7 +2321,7 @@ class CanvasRenderer {
 							// because an expanded super node will include its own input ports as well
 							// as those of the sub-flow nodes displayed in the supernode container and
 							// when selecting for a supernode we need to exclude the ones from the sub-flow.
-							const inSelector = this.getSelectorForClass(this.layout.cssNodePortInput);
+							const inSelector = this.getSelectorForClass(this.getNodeInputPortClassName());
 
 							var inputPortSelection =
 								nodeGrp.selectAll(inSelector)
@@ -2330,6 +2336,24 @@ class CanvasRenderer {
 								.attr("cx", 0)
 								.attr("connected", "no")
 								.attr("isSupernodeBinding", this.isSuperBindingNode(d) ? "yes" : "no")
+								.on("mousedown", (port) => {
+									if (this.config.enableAssocLinkCreation) {
+										// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
+										if (d3Event.button === 0) {
+											stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
+											this.drawingNewLink = true;
+											this.drawingNewLinkSrcId = d.id;
+											this.drawingNewLinkSrcPortId = port.id;
+											this.drawingNewLinkAction = "node-node";
+											const srcNode = this.getNode(d.id);
+											this.drawingNewLinkStartPos = { x: srcNode.x_pos, y: srcNode.y_pos + port.cy };
+											this.drawingNewLinkPortRadius = this.getPortRadius(srcNode);
+											this.drawingNewLinkMinInitialLine = srcNode.layout.minInitialLine;
+											this.drawingNewLinkArray = [];
+											this.drawNewLink();
+										}
+									}
+								})
 								.on("mouseenter", function(port) {
 									stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
 									if (that.canOpenTip(TIP_TYPE_PORT)) {
@@ -2356,51 +2380,55 @@ class CanvasRenderer {
 								.attr("r", () => this.getPortRadius(d))
 								.attr("cy", (port) => port.cy)
 								.attr("class", (port) =>
-									this.layout.cssNodePortInput + (port.class_name ? " " + port.class_name : ""))
+									this.getNodeInputPortClassName() + (port.class_name ? " " + port.class_name : ""))
 								.datum((port) => that.getNodePort(d.id, port.id, "input"));
 
 							inputPortSelection.exit().remove();
 
-							const inArrSelector = this.getSelectorForClass(this.layout.cssNodePortInputArrow);
+							// Don't show the port arrow when we are supporting association
+							// link creation
+							if (!this.config.enableAssocLinkCreation) {
+								const inArrSelector = this.getSelectorForClass(this.layout.cssNodePortInputArrow);
 
-							var inputPortArrowSelection =
-								nodeGrp.selectAll(inArrSelector)
-									.data(d.inputs, function(p) { return p.id; });
+								var inputPortArrowSelection =
+									nodeGrp.selectAll(inArrSelector)
+										.data(d.inputs, function(p) { return p.id; });
 
-							// Input port arrow in circle
-							inputPortArrowSelection.enter()
-								.append("path")
-								.attr("data-id", (port) => this.getId("node_trg_port_arrow", d.id, port.id))
-								.attr("data-pipeline-id", this.activePipeline.id)
-								.attr("class", this.layout.cssNodePortInputArrow)
-								.attr("connected", "no")
-								.attr("isSupernodeBinding", this.isSuperBindingNode(d) ? "yes" : "no")
-								.on("mouseenter", function(port) {
-									stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
-									if (that.canOpenTip(TIP_TYPE_PORT)) {
-										that.canvasController.openTip({
-											id: that.getId("node_port_tip", port.id),
-											type: TIP_TYPE_PORT,
-											targetObj: this,
-											pipelineId: that.activePipeline.id,
-											node: d,
-											port: port
-										});
-									}
-								})
-								.on("mouseleave", (port) => {
-									this.canvasController.closeTip();
-								})
-								.on("contextmenu", (port) => {
-									this.logger.log("Input Port Arrow - context menu");
-									stopPropagationAndPreventDefault();
-									this.openContextMenu("input_port", d, port);
-								})
-								.merge(inputPortArrowSelection)
-								.attr("d", (port) => this.getArrowShapePath(port.cy, d, this.zoomTransform.k))
-								.datum((port) => this.getNodePort(d.id, port.id, "input"));
+								// Input port arrow in circle
+								inputPortArrowSelection.enter()
+									.append("path")
+									.attr("data-id", (port) => this.getId("node_trg_port_arrow", d.id, port.id))
+									.attr("data-pipeline-id", this.activePipeline.id)
+									.attr("class", this.layout.cssNodePortInputArrow)
+									.attr("connected", "no")
+									.attr("isSupernodeBinding", this.isSuperBindingNode(d) ? "yes" : "no")
+									.on("mouseenter", function(port) {
+										stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
+										if (that.canOpenTip(TIP_TYPE_PORT)) {
+											that.canvasController.openTip({
+												id: that.getId("node_port_tip", port.id),
+												type: TIP_TYPE_PORT,
+												targetObj: this,
+												pipelineId: that.activePipeline.id,
+												node: d,
+												port: port
+											});
+										}
+									})
+									.on("mouseleave", (port) => {
+										this.canvasController.closeTip();
+									})
+									.on("contextmenu", (port) => {
+										this.logger.log("Input Port Arrow - context menu");
+										stopPropagationAndPreventDefault();
+										this.openContextMenu("input_port", d, port);
+									})
+									.merge(inputPortArrowSelection)
+									.attr("d", (port) => this.getArrowShapePath(port.cy, d, this.zoomTransform.k))
+									.datum((port) => this.getNodePort(d.id, port.id, "input"));
 
-							inputPortArrowSelection.exit().remove();
+								inputPortArrowSelection.exit().remove();
+							}
 						}
 
 						// Output ports
@@ -2467,11 +2495,6 @@ class CanvasRenderer {
 							outputPortSelection.exit().remove();
 						}
 					}
-
-					// Display decorators
-					if (!this.isSuperBindingNode(d)) {
-						this.addDecorations(d, DEC_NODE, nodeGrp);
-					}
 				});
 
 			// Remove any nodes that are no longer in the diagram.nodes array.
@@ -2490,7 +2513,7 @@ class CanvasRenderer {
 		// Handle decoration outlines
 		// We draw an outline for all decorators that are not label decorators ie those with an image or without an image
 		const outClassName = `d3-${objType}-dec-outline`;
-		const nonLabelDecorations = d.decorations ? d.decorations.filter((dec) => !dec.label) : [];
+		const nonLabelDecorations = d.decorations ? d.decorations.filter((dec) => !dec.label && dec.outline !== false) : [];
 		const decOutlnSelector = this.getSelectorForClass(outClassName);
 		const decoratorOutlnsSelection = trgGrp.selectAll(decOutlnSelector)
 			.data(nonLabelDecorations || [], function(dec) { return dec.id; });
@@ -2556,6 +2579,13 @@ class CanvasRenderer {
 			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
 
 		decoratorLabelSelection.exit().remove();
+	}
+
+	getNodeInputPortClassName(port) {
+		if (this.config.enableAssocLinkCreation) {
+			return this.layout.cssNodePortInputAssoc;
+		}
+		return this.layout.cssNodePortInput;
 	}
 
 	getNodeImage(d) {
@@ -3159,6 +3189,10 @@ class CanvasRenderer {
 	}
 
 	getDecoratorPadding(dec, obj, objType) {
+		// If outline is set to false we don't pad the decorator image.
+		if (dec.outline === false) {
+			return 0;
+		}
 		if (objType === DEC_LINK) {
 			return this.layout.linkDecoratorPadding;
 		}
@@ -3369,14 +3403,14 @@ class CanvasRenderer {
 					editType: "linkNodes",
 					nodes: [{ "id": this.drawingNewLinkSrcId, "portId": this.drawingNewLinkSrcPortId }],
 					targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
-					linkType: "data",
+					type: (this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK),
 					pipelineId: this.pipelineId });
 			} else {
 				this.canvasController.editActionHandler({
 					editType: "linkComment",
 					nodes: [this.drawingNewLinkSrcId],
 					targetNodes: [trgNode.id],
-					linkType: "comment",
+					type: COMMENT_LINK,
 					pipelineId: this.pipelineId });
 			}
 		}
@@ -3526,7 +3560,7 @@ class CanvasRenderer {
 		var portId = null;
 		const node = this.getNodeAtMousePos();
 		if (node) {
-			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id)).selectAll("." + this.layout.cssNodePortInput)
+			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id)).selectAll("." + this.getNodeInputPortClassName())
 				.each(function(p) { // Use function keyword so 'this' pointer references the dom object
 					var cx = node.x_pos + this.cx.baseVal.value;
 					var cy = node.y_pos + this.cy.baseVal.value;
@@ -4855,7 +4889,7 @@ class CanvasRenderer {
 		// Set connection status of output ports and input ports plus arrow.
 		if (this.layout.connectionType === "ports") {
 			const portOutSelector = this.getSelectorForClass(this.layout.cssNodePortOutput);
-			const portInSelector = this.getSelectorForClass(this.layout.cssNodePortInput);
+			const portInSelector = this.getSelectorForClass(this.getNodeInputPortClassName());
 			const portInArrSelector = this.getSelectorForClass(this.layout.cssNodePortInputArrow);
 			this.canvasGrp.selectAll(portOutSelector).attr("connected", "no");
 			this.canvasGrp.selectAll(portInSelector).attr("connected", "no");

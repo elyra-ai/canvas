@@ -77,6 +77,7 @@ export default class CanvasController {
 			enableConnectionType: "Ports",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Curve",
+			enableAssocLinkCreation: false,
 			enableInternalObjectModel: true,
 			enablePaletteLayout: "Flyout",
 			enableMoveNodesOnSupernodeResize: true,

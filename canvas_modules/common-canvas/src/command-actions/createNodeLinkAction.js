@@ -19,6 +19,7 @@ export default class CreateNodeLinkAction extends Action {
 
 	getData() {
 		this.data.linkIds = this.linkNodeList.map((link) => link.id);
+		this.data.linkType = "data"; // Added for historical purposes - for WML Canvas support
 		return this.data;
 	}
 
