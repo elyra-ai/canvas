@@ -1586,6 +1586,7 @@ export default class CanvasController {
 
 	contextMenuActionHandler(action) {
 		this.logger.log("contextMenuActionHandler - action: " + action);
+		this.logger.log(this.contextMenuSource);
 		// selectAll is supported for the external AND internal object models.
 		if (action === "selectAll") {
 			this.objectModel.selectAll(this.contextMenuSource.pipelineId);
@@ -1756,6 +1757,7 @@ export default class CanvasController {
 
 	editActionHandler(cmndData) {
 		this.logger.log("editActionHandler - " + cmndData.editType);
+		this.logger.log(cmndData);
 		let data = cmndData;
 		if (this.canvasConfig.enableInternalObjectModel) {
 			switch (data.editType) {

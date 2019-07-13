@@ -3404,6 +3404,7 @@ class CanvasRenderer {
 					nodes: [{ "id": this.drawingNewLinkSrcId, "portId": this.drawingNewLinkSrcPortId }],
 					targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
 					type: (this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK),
+					linkType: "data", // Added for historical purposes - for WML Canvas support
 					pipelineId: this.pipelineId });
 			} else {
 				this.canvasController.editActionHandler({
@@ -3411,6 +3412,7 @@ class CanvasRenderer {
 					nodes: [this.drawingNewLinkSrcId],
 					targetNodes: [trgNode.id],
 					type: COMMENT_LINK,
+					linkType: "comment", // Added for historical purposes - for WML Canvas support
 					pipelineId: this.pipelineId });
 			}
 		}
