@@ -1390,7 +1390,11 @@ export default class ObjectModel {
 		// If using the layoutHandler we must make a copy of the layout for each node
 		// so the original layout info doesn't get overwritten.
 		if (this.layoutHandler) {
-			node.layout = Object.assign({}, node.layout, this.layoutHandler(node));
+			const customLayout = this.layoutHandler(node);
+			if (customLayout && !isEmpty(customLayout)) {
+				const decs = CanvasUtils.getCombinedDecorations(node.layout.decorations, customLayout.decorations);
+				node.layout = Object.assign({}, node.layout, customLayout, { decorations: decs });
+			}
 		}
 		return node;
 	}
@@ -3392,7 +3396,7 @@ export class APIPipeline {
 	}
 
 	createNodeLink(srcInfo, trgInfo, data) {
-		if (this.isConnectionAllowed(srcInfo, trgInfo)) {
+		if (this.isConnectionAllowed(srcInfo, trgInfo, data.type)) {
 			const link = {};
 			link.id = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
 			link.type = data.type;
@@ -3644,7 +3648,18 @@ export class APIPipeline {
 		return (link ? link.decorations : null);
 	}
 
-	isConnectionAllowed(srcNodeInfo, trgNodeInfo) {
+	// Returns a Boolean to indicate if a link can be created or not between
+	// two nodes identified by the objects provided.
+	isConnectionAllowed(srcNodeInfo, trgNodeInfo, type) {
+		if (type === ASSOCIATION_LINK) {
+			return this.isConnectionAllowedAssoc(srcNodeInfo, trgNodeInfo);
+		}
+		return this.isConnectionAllowedPorts(srcNodeInfo, trgNodeInfo);
+	}
+
+	// Returns a Boolean to indicate if an regular port-port link can be created
+	// or not between two nodes identified by the objects provided.
+	isConnectionAllowedPorts(srcNodeInfo, trgNodeInfo) {
 		const srcNode = this.getNode(srcNodeInfo.id);
 		const trgNode = this.getNode(trgNodeInfo.id);
 
@@ -3666,6 +3681,24 @@ export class APIPipeline {
 		}
 
 		if (this.isCardinalityExceeded(srcNodeInfo.portId, trgNodeInfo.portId, srcNode, trgNode)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// Returns a Boolean to indicate if an association link can be created or
+	// not between two nodes identified by the objects provided.
+	isConnectionAllowedAssoc(srcNodeInfo, trgNodeInfo) {
+		const srcNode = this.getNode(srcNodeInfo.id);
+		const trgNode = this.getNode(trgNodeInfo.id);
+
+
+		if (!srcNode || !trgNode) { // Source ot target are not valid.
+			return false;
+		}
+
+		if (srcNodeInfo.id === trgNodeInfo.id) { // Cannot connect to ourselves, currently.
 			return false;
 		}
 

@@ -55,7 +55,28 @@ class App extends React.Component {
 				labelPosY: 45,
 				portPosY: 48,
 				ellipsisPosX: 190,
-				ellipsisPosY: 40
+				ellipsisPosY: 40,
+				decorations: [
+					{
+						id: "default-dec3",
+						image: "/images/decorators/ai-main-table.png",
+						width: 201,
+						height: 23,
+						x_pos: 10,
+						y_pos: 0,
+						outline: false
+					},
+					{
+						id: "default-dec1",
+						x_pos: -10,
+						y_pos: 11
+					},
+					{
+						id: "default-dec2",
+						x_pos: -14,
+						y_pos: 11
+					}
+				]
 			};
 			return nodeFormat;
 		}
@@ -68,7 +89,7 @@ class App extends React.Component {
 		const top = 0;
 		const bot = 50;
 
-		const commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
+		const commonCanvasConfig = {
 			enableNodeFormatType: "Horizontal",
 			enableAssocLinkCreation: true,
 			enableNodeLayout: {
@@ -82,9 +103,33 @@ class App extends React.Component {
 				portPosY: 25,
 				portRadius: 8,
 				ellipsisPosX: 190,
-				ellipsisPosY: 16
+				ellipsisPosY: 16,
+				decorations: [
+					{
+						id: "default-dec1",
+						image: "/images/decorators/ai-port-right.png",
+						class_name: "ai-node-port-image",
+						width: 25,
+						height: 25,
+						position: "middleRight",
+						x_pos: -10,
+						y_pos: -12,
+						outline: false
+					},
+					{
+						id: "default-dec2",
+						image: "/images/decorators/ai-port-left.png",
+						class_name: "ai-node-port-image",
+						width: 25,
+						height: 25,
+						position: "middleLeft",
+						x_pos: -14,
+						y_pos: -12,
+						outline: false
+					}
+				]
 			}
-		});
+		};
 
 		return (
 			<div id="harness-app-container">

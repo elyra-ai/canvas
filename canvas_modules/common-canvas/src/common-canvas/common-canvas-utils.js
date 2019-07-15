@@ -143,4 +143,27 @@ export default class CanvasUtils {
 	static isTargetNode(trgNodeId, targetNodes) {
 		return targetNodes.findIndex((tn) => tn.id === trgNodeId) > -1;
 	}
+
+	// Returns an array of decorations that is a combination of the two input
+	// arrays where the decorations from the overlayDecs array are overlaid on
+	// top of those from the baseDecs array.
+	static getCombinedDecorations(baseDecs = [], overlayDecs = []) {
+		const decs = baseDecs.map((bd) => {
+			const objDec = overlayDecs.find((od) => od.id === bd.id);
+			if (objDec) {
+				return Object.assign({}, bd, objDec);
+			}
+			return bd;
+		});
+
+		overlayDecs.forEach((od) => {
+			const index = baseDecs.findIndex((bd) => bd.id === od.id);
+			if (index === -1) {
+				decs.push(od);
+			}
+		});
+
+		return decs;
+	}
+
 }

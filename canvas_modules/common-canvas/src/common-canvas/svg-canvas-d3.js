@@ -67,8 +67,9 @@ export default class CanvasD3Layout {
 		// Make a copy of canvasInfo because we will need to update it (when moving
 		// nodes and comments and when sizing comments in real time) without updating the
 		// canvasInfo in the objectModel. The objectModel canvasInfo is only updated
-		// when the operation is complete.
-		this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
+		// when the operation is complete. We get the info from the canvas controller
+		// because it may have been changed by the initializeLayoutInfo() above.
+		this.canvasInfo = this.cloneCanvasInfo(this.canvasController.getCanvasInfo());
 
 		// Create a renderer object for the primary pipeline
 		this.renderer = new CanvasRenderer(
@@ -150,14 +151,39 @@ export default class CanvasD3Layout {
 		return Object.assign({}, config);
 	}
 
-	// Returns true if the contents of enableLayout1 and enableLayout2 are exactly the same.
+	// Returns true if the contents of enableLayout1 and enableLayout2 including
+	// their decorations arrays are exactly the same.
 	enableNodeLayoutExactlyMatches(enableLayout1, enableLayout2) {
 		if (!enableLayout1 && !enableLayout2) {
 			return true;
-		} else if (isMatch(enableLayout1, enableLayout2) && isMatch(enableLayout2, enableLayout1)) {
+		} else if (isMatch(enableLayout1, enableLayout2) && isMatch(enableLayout2, enableLayout1) &&
+			this.decorationsArraysExactlyMatches(enableLayout1.decorations, enableLayout2.decorations)) {
 			return true;
 		}
 		return false;
+	}
+
+	// Returns true if two decorations arrays passed in are identical or false
+	// otherwise.
+	decorationsArraysExactlyMatches(decorations1, decorations2) {
+		if (!decorations1 && !decorations2) {
+			return true;
+		}
+		else if (!decorations1 || !decorations2) {
+			return false;
+		}
+		let state = true;
+		decorations1.forEach((dec1, i) => {
+			const dec2 = decorations2[i];
+			if (dec2) {
+				if (!isMatch(dec1, dec2) || !isMatch(dec2, dec1)) {
+					state = false;
+				}
+			} else {
+				state = false;
+			}
+		});
+		return state;
 	}
 
 	// Copies canvasInfo because we will need to update it (when moving
@@ -2206,24 +2232,25 @@ class CanvasRenderer {
 			newAndExistingNodeGrps
 				.each((d) => {
 					const nodeGrp = this.canvasGrp.selectAll(this.getSelectorForId("node_grp", d.id));
+					const node = this.getNode(d.id);
 
 					nodeGrp
 						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 						.attr("style", that.getNodeGrpStyle(d))
-						.datum(d); // Set the __data__ to the updated data
+						.datum(node); // Set the __data__ to the updated data
 
 					// Node sizing area
 					nodeGrp.select(this.getSelectorForId("node_sizing", d.id))
 						.attr("d", (nd) => this.getNodeShapePathSizing(nd))
 						.attr("class", "d3-node-sizing")
-						.datum(d); // Set the __data__ to the updated data
+						.datum(node); // Set the __data__ to the updated data
 
 					// Node selection highlighting
 					nodeGrp.select(this.getSelectorForId("node_outline", d.id))
 						.attr("d", (nd) => this.getNodeShapePathOutline(nd))
 						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 						.attr("class", (nd) => nd.layout.cssNodeSelectionHighlight)
-						.datum(d); // Set the __data__ to the updated data
+						.datum(node); // Set the __data__ to the updated data
 
 					// Move the dynamic icons (if any exist)
 					nodeGrp.select(this.getSelectorForId("node_ellipsis_background", d.id))
@@ -2256,7 +2283,7 @@ class CanvasRenderer {
 						.attr("y", (nd) => this.getNodeImagePosY(nd))
 						.attr("width", (nd) => this.getNodeImageWidth(nd))
 						.attr("height", (nd) => this.getNodeImageHeight(nd))
-						.datum(d) // Set the __data__ to the updated data
+						.datum(node) // Set the __data__ to the updated data
 						.each(function(nd) {
 							var imageObj = d3.select(this);
 							if (nd.customAttrs && nd.customAttrs.length > 0) {
@@ -2270,7 +2297,7 @@ class CanvasRenderer {
 
 					// Set y for node label in new and existing nodes
 					nodeGrp.select(this.getSelectorForId("node_label", d.id))
-						.datum(d) // Set the __data__ to the updated data
+						.datum(node) // Set the __data__ to the updated data
 						.attr("x", (nd) => this.getLabelPosX(nd))
 						.attr("y", (nd) => this.getLabelPosY(nd))
 						.text(function(nd) {
@@ -2293,7 +2320,7 @@ class CanvasRenderer {
 
 					// Set position for error circle in new and existing nodes
 					nodeGrp.select(this.getSelectorForId("node_error_marker", d.id))
-						.datum(d) // Set the __data__ to the updated data
+						.datum(node) // Set the __data__ to the updated data
 						.attr("class", (nd) => "node-error-marker " + that.getErrorMarkerClass(nd.messages))
 						.html((nd) => that.getErrorMarkerIcon(nd))
 						.attr("width", (nd) => nd.layout.errorWidth)
@@ -2303,13 +2330,14 @@ class CanvasRenderer {
 
 					// Node body updates
 					nodeGrp.select(this.getSelectorForId("node_body", d.id))
-						.datum(d) // Set the __data__ to the updated data
+						.datum(node) // Set the __data__ to the updated data
 						.attr("d", (cd) => this.getNodeShapePath(cd))
 						.attr("class", (cd) => this.getNodeBodyClass(cd));
 
 					// Display decorators
 					if (!this.isSuperBindingNode(d)) {
-						this.addDecorations(d, DEC_NODE, nodeGrp);
+						const decorations = CanvasUtils.getCombinedDecorations(d.layout.decorations, d.decorations);
+						this.addDecorations(d, DEC_NODE, nodeGrp, decorations);
 					}
 
 					// Handle port related objects
@@ -2506,14 +2534,18 @@ class CanvasRenderer {
 	// Adds a set of decorations to either a node of link object.
 	// d - This is a node of link object. It must contain a decorations field
 	//     that conformas to the specification for a decorations array.
-	// objType - A string set to either DEC_NODE or DEC_LINK.
-	// trgGrp - A D3 selection object that references the node or link to which
-	//          the decorations are to be attached.
-	addDecorations(d, objType, trgGrp) {
+	// objType -   A string set to either DEC_NODE or DEC_LINK.
+	// trgGrp  -   A D3 selection object that references the node or link to
+	//             which the decorations are to be attached.
+	// decs    -   An array of decorations to be applied to the node or link.
+	//               This is a combination of the object's decorations with any
+	//               decorations from the layout config information.
+	addDecorations(d, objType, trgGrp, decs) {
+		const decorations = decs || [];
 		// Handle decoration outlines
 		// We draw an outline for all decorators that are not label decorators ie those with an image or without an image
 		const outClassName = `d3-${objType}-dec-outline`;
-		const nonLabelDecorations = d.decorations ? d.decorations.filter((dec) => !dec.label && dec.outline !== false) : [];
+		const nonLabelDecorations = decorations.filter((dec) => !dec.label && dec.outline !== false);
 		const decOutlnSelector = this.getSelectorForClass(outClassName);
 		const decoratorOutlnsSelection = trgGrp.selectAll(decOutlnSelector)
 			.data(nonLabelDecorations || [], function(dec) { return dec.id; });
@@ -2528,7 +2560,7 @@ class CanvasRenderer {
 			.attr("width", (dec) => this.getDecoratorWidth(dec, d, objType))
 			.attr("height", (dec) => this.getDecoratorHeight(dec, d, objType))
 			.attr("class", (dec) => this.getDecoratorClass(dec, outClassName))
-			.datum((dec) => this.getDecorator(dec.id, d))
+			.datum((dec) => this.getDecorator(dec.id, decorations))
 			.filter((dec) => dec.hotspot)
 			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
 
@@ -2536,7 +2568,7 @@ class CanvasRenderer {
 
 		// Handle decoration images
 		const imgClassName = `d3-${objType}-dec-image`;
-		const imageDecorations = d.decorations ? d.decorations.filter((dec) => dec.image) : [];
+		const imageDecorations = decorations.filter((dec) => dec.image);
 		const decImgSelector = this.getSelectorForClass(imgClassName);
 		const decoratorImgsSelection = trgGrp.selectAll(decImgSelector)
 			.data(imageDecorations || [], function(dec) { return dec.id; });
@@ -2552,7 +2584,7 @@ class CanvasRenderer {
 			.attr("height", (dec) => this.getDecoratorHeight(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
 			.attr("class", (dec) => this.getDecoratorClass(dec, imgClassName))
 			.attr("xlink:href", (dec) => this.getDecoratorImage(dec))
-			.datum((dec) => this.getDecorator(dec.id, d))
+			.datum((dec) => this.getDecorator(dec.id, decorations))
 			.filter((dec) => dec.hotspot)
 			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
 
@@ -2560,7 +2592,7 @@ class CanvasRenderer {
 
 		// Handle decoration labels
 		const labClassName = `d3-${objType}-dec-label`;
-		const labelDecorations = d.decorations ? d.decorations.filter((dec) => dec.label) : [];
+		const labelDecorations = decorations.filter((dec) => dec.label);
 		const decLabelSelector = this.getSelectorForClass(labClassName);
 		const decoratorLabelSelection = trgGrp.selectAll(decLabelSelector)
 			.data(labelDecorations || [], function(dec) { return dec.id; });
@@ -2574,7 +2606,7 @@ class CanvasRenderer {
 			.attr("y", (dec) => this.getDecoratorY(dec, d, objType))
 			.attr("class", (dec) => this.getDecoratorClass(dec, labClassName))
 			.text((dec) => dec.label)
-			.datum((dec) => this.getDecorator(dec.id, d))
+			.datum((dec) => this.getDecorator(dec.id, decorations))
 			.filter((dec) => dec.hotspot)
 			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
 
@@ -3112,9 +3144,9 @@ class CanvasRenderer {
 		nodeGrp.selectAll(srcPrtSelector).attr("connected", newStatus);
 	}
 
-	getDecorator(id, node) {
-		if (node && node.decorations) {
-			const dec = node.decorations.find((nd) => nd.id === id);
+	getDecorator(id, decorations) {
+		if (decorations) {
+			const dec = decorations.find((nd) => nd.id === id);
 			return dec;
 		}
 		return null;
@@ -4884,7 +4916,7 @@ class CanvasRenderer {
 		// Add decorations to the node-node or association links.
 		linkGroup.each(function(d) {
 			if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
-				that.addDecorations(d, DEC_LINK, d3.select(this));
+				that.addDecorations(d, DEC_LINK, d3.select(this), d.decorations);
 			}
 		});
 

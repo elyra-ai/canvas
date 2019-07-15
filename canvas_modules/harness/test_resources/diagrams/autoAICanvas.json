@@ -22,42 +22,11 @@
               "description": "File One",
               "decorations": [
                 {
-                  "id": "dec1",
-                  "image": "/images/decorators/ai-main-table.png",
-                  "width": 201,
-                  "height": 23,
-                  "x_pos": 10,
-                  "y_pos": 0,
-                  "outline": false
-                },
-                {
                   "id": "dec2",
                   "label": "7 columns",
                   "x_pos": 25,
                   "y_pos": 65,
                   "class_name": "ai-col-label"
-                },
-                {
-                  "id": "dec3",
-                  "image": "/images/decorators/ai-port-right.png",
-                  "class_name": "ai-node-port-image",
-                  "width": 25,
-                  "height": 25,
-                  "position": "middleRight",
-                  "x_pos": -10,
-                  "y_pos": 12,
-                  "outline": false
-                },
-                {
-                  "id": "dec4",
-                  "image": "/images/decorators/ai-port-left.png",
-                  "class_name": "ai-node-port-image",
-                  "width": 25,
-                  "height": 25,
-                  "position": "middleLeft",
-                  "x_pos": -14,
-                  "y_pos": 12,
-                  "outline": false
                 }
               ],
               "associations": [
@@ -138,28 +107,6 @@
                   "x_pos": 25,
                   "y_pos": 40,
                   "class_name": "ai-col-label"
-                },
-                {
-                  "id": "dec3",
-                  "image": "/images/decorators/ai-port-right.png",
-                  "class_name": "ai-node-port-image",
-                  "width": 25,
-                  "height": 25,
-                  "position": "middleRight",
-                  "x_pos": -10,
-                  "y_pos": -12,
-                  "outline": false
-                },
-                {
-                  "id": "dec4",
-                  "image": "/images/decorators/ai-port-left.png",
-                  "class_name": "ai-node-port-image",
-                  "width": 25,
-                  "height": 25,
-                  "position": "middleLeft",
-                  "x_pos": -14,
-                  "y_pos": -12,
-                  "outline": false
                 }
               ]
             }
@@ -213,28 +160,6 @@
                   "x_pos": 25,
                   "y_pos": 40,
                   "class_name": "ai-col-label"
-                },
-                {
-                  "id": "dec3",
-                  "image": "/images/decorators/ai-port-right.png",
-                  "class_name": "ai-node-port-image",
-                  "width": 25,
-                  "height": 25,
-                  "position": "middleRight",
-                  "x_pos": -10,
-                  "y_pos": -12,
-                  "outline": false
-                },
-                {
-                  "id": "dec4",
-                  "image": "/images/decorators/ai-port-left.png",
-                  "class_name": "ai-node-port-image",
-                  "width": 25,
-                  "height": 25,
-                  "position": "middleLeft",
-                  "x_pos": -14,
-                  "y_pos": -12,
-                  "outline": false
                 }
               ]
             }
@@ -288,28 +213,6 @@
                   "x_pos": 25,
                   "y_pos": 40,
                   "class_name": "ai-col-label"
-                },
-                {
-                  "id": "dec3",
-                  "image": "/images/decorators/ai-port-right.png",
-                  "class_name": "ai-node-port-image",
-                  "width": 25,
-                  "height": 25,
-                  "position": "middleRight",
-                  "x_pos": -10,
-                  "y_pos": -12,
-                  "outline": false
-                },
-                {
-                  "id": "dec4",
-                  "image": "/images/decorators/ai-port-left.png",
-                  "class_name": "ai-node-port-image",
-                  "width": 25,
-                  "height": 25,
-                  "position": "middleLeft",
-                  "x_pos": -14,
-                  "y_pos": -12,
-                  "outline": false
                 }
               ]
             }
@@ -363,28 +266,6 @@
                   "x_pos": 25,
                   "y_pos": 40,
                   "class_name": "ai-col-label"
-                },
-                {
-                  "id": "dec3",
-                  "image": "/images/decorators/ai-port-right.png",
-                  "class_name": "ai-node-port-image",
-                  "width": 25,
-                  "height": 25,
-                  "position": "middleRight",
-                  "x_pos": -10,
-                  "y_pos": -12,
-                  "outline": false
-                },
-                {
-                  "id": "dec4",
-                  "image": "/images/decorators/ai-port-left.png",
-                  "class_name": "ai-node-port-image",
-                  "width": 25,
-                  "height": 25,
-                  "position": "middleLeft",
-                  "x_pos": -14,
-                  "y_pos": -12,
-                  "outline": false
                 }
               ]
             }
