@@ -39,6 +39,9 @@ _defineConstant("CARBON_SUCCESS", "checkmark");
 _defineConstant("HORIZONTAL", "horizonal");
 _defineConstant("VERTICAL", "vertical");
 
+_defineConstant("PORT_OBJECT_IMAGE", "image");
+_defineConstant("PORT_OBJECT_CIRCLE", "circle");
+
 // The type of object to which deorations are to be attached.
 _defineConstant("DEC_NODE", "node");
 _defineConstant("DEC_LINK", "link");

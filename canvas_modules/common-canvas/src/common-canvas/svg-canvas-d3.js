@@ -22,7 +22,7 @@ import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
 import isMatch from "lodash/isMatch";
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERROR, WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE,
-	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON,
+	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
@@ -2153,7 +2153,7 @@ class CanvasRenderer {
 			// 	.attr("class", "d3-node-image-outline");
 
 			// Node image
-			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
+			newNodeGroups.filter((d) => !this.isSuperBindingNode(d) && d.layout.imageDisplay)
 				.append("image")
 				.attr("data-id", (d) => this.getId("node_image", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
@@ -2334,12 +2334,6 @@ class CanvasRenderer {
 						.attr("d", (cd) => this.getNodeShapePath(cd))
 						.attr("class", (cd) => this.getNodeBodyClass(cd));
 
-					// Display decorators
-					if (!this.isSuperBindingNode(d)) {
-						const decorations = CanvasUtils.getCombinedDecorations(d.layout.decorations, d.decorations);
-						this.addDecorations(d, DEC_NODE, nodeGrp, decorations);
-					}
-
 					// Handle port related objects
 					if (this.layout.connectionType === "ports") {
 						// Input ports
@@ -2355,13 +2349,12 @@ class CanvasRenderer {
 								nodeGrp.selectAll(inSelector)
 									.data(d.inputs, function(p) { return p.id; });
 
-							// Input port circle
+							// Input port object
 							inputPortSelection.enter()
-								.append("circle")
+								.append(d.layout.inputPortObject)
 								.attr("data-id", (port) => this.getId("node_trg_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
 								.attr("data-port-id", (port) => port.id) // This is needed by getNodeInputPortAtMousePos
-								.attr("cx", 0)
 								.attr("connected", "no")
 								.attr("isSupernodeBinding", this.isSuperBindingNode(d) ? "yes" : "no")
 								.on("mousedown", (port) => {
@@ -2405,8 +2398,22 @@ class CanvasRenderer {
 									this.openContextMenu("input_port", d, port);
 								})
 								.merge(inputPortSelection)
-								.attr("r", () => this.getPortRadius(d))
-								.attr("cy", (port) => port.cy)
+								.each(function(port) {
+									const obj = d3.select(this);
+									if (d.layout.inputPortObject === PORT_OBJECT_IMAGE) {
+										obj
+											.attr("xlink:href", d.layout.inputPortImage)
+											.attr("x", -(d.layout.inputPortWidth / 2))
+											.attr("y", port.cy - (d.layout.inputPortHeight / 2))
+											.attr("width", d.layout.inputPortWidth)
+											.attr("height", d.layout.inputPortHeight);
+									} else {
+										obj
+											.attr("r", that.getPortRadius(d))
+											.attr("cx", 0)
+											.attr("cy", port.cy);
+									}
+								})
 								.attr("class", (port) =>
 									this.getNodeInputPortClassName() + (port.class_name ? " " + port.class_name : ""))
 								.datum((port) => that.getNodePort(d.id, port.id, "input"));
@@ -2472,7 +2479,7 @@ class CanvasRenderer {
 								.data(d.outputs, function(p) { return p.id; });
 
 							outputPortSelection.enter()
-								.append("circle")
+								.append(d.layout.outputPortObject)
 								.attr("data-id", (port) => this.getId("node_src_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
 								.on("mousedown", (port) => {
@@ -2514,14 +2521,33 @@ class CanvasRenderer {
 									this.openContextMenu("output_port", d, port);
 								})
 								.merge(outputPortSelection)
-								.attr("r", () => this.getPortRadius(d))
-								.attr("cx", (port) => d.width)
-								.attr("cy", (port) => port.cy)
+								.each(function(port) {
+									const obj = d3.select(this);
+									if (d.layout.outputPortObject === PORT_OBJECT_IMAGE) {
+										obj
+											.attr("xlink:href", d.layout.outputPortImage)
+											.attr("x", d.width - (d.layout.outputPortWidth / 2))
+											.attr("y", port.cy - (d.layout.outputPortHeight / 2))
+											.attr("width", d.layout.outputPortWidth)
+											.attr("height", d.layout.outputPortHeight);
+									} else {
+										obj
+											.attr("r", that.getPortRadius(d))
+											.attr("cx", d.width)
+											.attr("cy", port.cy);
+									}
+								})
 								.attr("class", (port) => this.layout.cssNodePortOutput + (port.class_name ? " " + port.class_name : ""))
 								.datum((port) => this.getNodePort(d.id, port.id, "output"));
 
 							outputPortSelection.exit().remove();
 						}
+					}
+
+					// Display decorators
+					if (!this.isSuperBindingNode(d)) {
+						const decorations = CanvasUtils.getCombinedDecorations(d.layout.decorations, d.decorations);
+						this.addDecorations(d, DEC_NODE, nodeGrp, decorations);
 					}
 				});
 
@@ -2532,14 +2558,13 @@ class CanvasRenderer {
 	}
 
 	// Adds a set of decorations to either a node of link object.
-	// d - This is a node of link object. It must contain a decorations field
-	//     that conformas to the specification for a decorations array.
-	// objType -   A string set to either DEC_NODE or DEC_LINK.
-	// trgGrp  -   A D3 selection object that references the node or link to
-	//             which the decorations are to be attached.
-	// decs    -   An array of decorations to be applied to the node or link.
-	//               This is a combination of the object's decorations with any
-	//               decorations from the layout config information.
+	// d       - This is a node of link object.
+	// objType - A string set to either DEC_NODE or DEC_LINK.
+	// trgGrp  - A D3 selection object that references the node or link to
+	//           which the decorations are to be attached.
+	// decs    - An array of decorations to be applied to the node or link.
+	//           This is a combination of the object's decorations with any
+	//           decorations from the layout config information.
 	addDecorations(d, objType, trgGrp, decs) {
 		const decorations = decs || [];
 		// Handle decoration outlines
@@ -3596,13 +3621,27 @@ class CanvasRenderer {
 		if (node) {
 			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id)).selectAll("." + this.getNodeInputPortClassName())
 				.each(function(p) { // Use function keyword so 'this' pointer references the dom object
-					var cx = node.x_pos + this.cx.baseVal.value;
-					var cy = node.y_pos + this.cy.baseVal.value;
-					if (pos.x >= cx - node.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
-							pos.x <= cx + node.layout.portRadius &&
-							pos.y >= cy - node.layout.portRadius &&
-							pos.y <= cy + node.layout.portRadius) {
-						portId = this.getAttribute("data-port-id");
+					const portObj = d3.select(this);
+					if (node.layout.inputPortObject === PORT_OBJECT_IMAGE) {
+						const xx = node.x_pos + Number(portObj.attr("x"));
+						const yy = node.x_pos + Number(portObj.attr("y"));
+						const wd = Number(portObj.attr("width"));
+						const ht = Number(portObj.attr("height"));
+						if (pos.x >= xx &&
+								pos.x <= xx + wd &&
+								pos.y >= yy &&
+								pos.y <= yy + ht) {
+							portId = this.getAttribute("data-port-id");
+						}
+					} else { // Port must be a circle
+						const cx = node.x_pos + Number(portObj.attr("cx"));
+						const cy = node.y_pos + Number(portObj.attr("cy"));
+						if (pos.x >= cx - node.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
+								pos.x <= cx + node.layout.portRadius &&
+								pos.y >= cy - node.layout.portRadius &&
+								pos.y <= cy + node.layout.portRadius) {
+							portId = this.getAttribute("data-port-id");
+						}
 					}
 				});
 		}

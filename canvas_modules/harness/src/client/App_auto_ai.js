@@ -27,6 +27,41 @@ class App extends React.Component {
 		return `M ${l} ${t} L ${l} ${b} ${r} ${b} ${r} ${t} ${l} ${t} Z`;
 	}
 
+	getCommonCanvasConfig() {
+		const left = 10;
+		const right = 210;
+		const top = 0;
+		const bot = 50;
+
+		const commonCanvasConfig = {
+			enableNodeFormatType: "Horizontal",
+			enableAssocLinkCreation: true,
+			enableNodeLayout: {
+				defaultNodeWidth: 220,
+				defaultNodeHeight: 50,
+				bodyPath: this.getPath(left, right, top, bot),
+				selectionPath: this.getPath(left, right, top, bot),
+				labelAndIconVerticalJustification: "none",
+				imageDisplay: false,
+				labelPosX: 25,
+				labelPosY: 20,
+				portPosY: 25,
+				portRadius: 8,
+				ellipsisPosX: 190,
+				ellipsisPosY: 16,
+				inputPortObject: "image",
+				inputPortImage: "/images/decorators/ai-port-left.png",
+				inputPortWidth: 20,
+				inputPortHeight: 20,
+				outputPortObject: "image",
+				outputPortImage: "/images/decorators/ai-port-right.png",
+				outputPortWidth: 20,
+				outputPortHeight: 20
+			}
+		};
+		return commonCanvasConfig;
+	}
+
 	decorationActionHandler(link, id, pipeline) {
 		const decs = this.canvasController.getLinkDecorations(link.id);
 		const decImage = decs.find((d) => d.id === id);
@@ -65,16 +100,6 @@ class App extends React.Component {
 						x_pos: 10,
 						y_pos: 0,
 						outline: false
-					},
-					{
-						id: "default-dec1",
-						x_pos: -10,
-						y_pos: 11
-					},
-					{
-						id: "default-dec2",
-						x_pos: -14,
-						y_pos: 11
 					}
 				]
 			};
@@ -84,52 +109,7 @@ class App extends React.Component {
 	}
 
 	render() {
-		const left = 10;
-		const right = 210;
-		const top = 0;
-		const bot = 50;
-
-		const commonCanvasConfig = {
-			enableNodeFormatType: "Horizontal",
-			enableAssocLinkCreation: true,
-			enableNodeLayout: {
-				defaultNodeWidth: 220,
-				defaultNodeHeight: 50,
-				bodyPath: this.getPath(left, right, top, bot),
-				selectionPath: this.getPath(left, right, top, bot),
-				labelAndIconVerticalJustification: "none",
-				labelPosX: 25,
-				labelPosY: 20,
-				portPosY: 25,
-				portRadius: 8,
-				ellipsisPosX: 190,
-				ellipsisPosY: 16,
-				decorations: [
-					{
-						id: "default-dec1",
-						image: "/images/decorators/ai-port-right.png",
-						class_name: "ai-node-port-image",
-						width: 25,
-						height: 25,
-						position: "middleRight",
-						x_pos: -10,
-						y_pos: -12,
-						outline: false
-					},
-					{
-						id: "default-dec2",
-						image: "/images/decorators/ai-port-left.png",
-						class_name: "ai-node-port-image",
-						width: 25,
-						height: 25,
-						position: "middleLeft",
-						x_pos: -14,
-						y_pos: -12,
-						outline: false
-					}
-				]
-			}
-		};
+		const commonCanvasConfig = this.getCommonCanvasConfig();
 
 		return (
 			<div id="harness-app-container">

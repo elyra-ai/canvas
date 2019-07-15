@@ -1921,36 +1921,21 @@ class App extends React.Component {
 					bodyPath: getPath(left, right, top, bot),
 					selectionPath: getPath(left, right, top, bot),
 					labelAndIconVerticalJustification: "none",
+					imageDisplay: false,
 					labelPosX: 25,
 					labelPosY: 20,
 					portPosY: 25,
 					portRadius: 8,
 					ellipsisPosX: 190,
 					ellipsisPosY: 16,
-					decorations: [
-						{
-							id: "default-dec1",
-							image: "/images/decorators/ai-port-right.png",
-							class_name: "ai-node-port-image",
-							width: 25,
-							height: 25,
-							position: "middleRight",
-							x_pos: -10,
-							y_pos: -12,
-							outline: false
-						},
-						{
-							id: "default-dec2",
-							image: "/images/decorators/ai-port-left.png",
-							class_name: "ai-node-port-image",
-							width: 25,
-							height: 25,
-							position: "middleLeft",
-							x_pos: -14,
-							y_pos: -12,
-							outline: false
-						}
-					]
+					inputPortObject: "image",
+					inputPortImage: "/images/decorators/ai-port-left.png",
+					inputPortWidth: 20,
+					inputPortHeight: 20,
+					outputPortObject: "image",
+					outputPortImage: "/images/decorators/ai-port-right.png",
+					outputPortWidth: 20,
+					outputPortHeight: 20
 				}
 			});
 
@@ -1976,16 +1961,6 @@ class App extends React.Component {
 								x_pos: 10,
 								y_pos: 0,
 								outline: false
-							},
-							{
-								id: "default-dec1",
-								x_pos: -10,
-								y_pos: 11
-							},
-							{
-								id: "default-dec2",
-								x_pos: -14,
-								y_pos: 11
 							}
 						]
 					};

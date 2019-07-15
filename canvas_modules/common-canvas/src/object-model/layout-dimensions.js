@@ -23,6 +23,9 @@ const haloDefaultLayout = {
 		defaultNodeWidth: 60,
 		defaultNodeHeight: 66,
 
+		// Display image
+		imageDisplay: true,
+
 		// Image dimensions
 		imageWidth: 48,
 		imageHeight: 48,
@@ -112,6 +115,26 @@ const haloDefaultLayout = {
 		// This is the minimum size of the horizontal line entering the
 		// target port on the target node when drawing an Elbow connection line.
 		minFinalLine: 30,
+
+		// Shape of input port can be circle or image.
+		inputPortObject: "circle",
+
+		// If input port shape is "image" use this image.
+		inputPortImage: "",
+
+		// If input port dimensions for "image".
+		inputPortWidth: 12,
+		inputPortHeight: 12,
+
+		// Shape of output port can be circle or image.
+		outputPortObject: "circle",
+
+		// If output port shape is "image" use this image.
+		outputPortImage: "",
+
+		// Output port dimensions for "image".
+		outputPortWidth: 12,
+		outputPortHeight: 12,
 
 		// Radius of the port circle
 		portRadius: null,
@@ -268,6 +291,9 @@ const portsHorizontalDefaultLayout = {
 		defaultNodeWidth: 160,
 		defaultNodeHeight: 40,
 
+		// Display image
+		imageDisplay: true,
+
 		// Image dimensions
 		imageWidth: 26,
 		imageHeight: 26,
@@ -357,6 +383,26 @@ const portsHorizontalDefaultLayout = {
 		// This is the minimum size of the horizontal line entering the
 		// target port on the target node when drawing an Elbow connection line.
 		minFinalLine: 30,
+
+		// Shape of input port can be circle or image.
+		inputPortObject: "circle",
+
+		// If input port shape is "image" use this image.
+		inputPortImage: "",
+
+		// If input port dimensions for "image".
+		inputPortWidth: 12,
+		inputPortHeight: 12,
+
+		// Shape of output port can be circle or image.
+		outputPortObject: "circle",
+
+		// If output port shape is "image" use this image.
+		outputPortImage: "",
+
+		// Output port dimensions for "image".
+		outputPortWidth: 12,
+		outputPortHeight: 12,
 
 		// Radius of the port circle
 		portRadius: 3,
@@ -514,6 +560,9 @@ const portsVerticalDefaultLayout = {
 		defaultNodeWidth: 70,
 		defaultNodeHeight: 75,
 
+		// Display image
+		imageDisplay: true,
+
 		// Image dimensions
 		imageWidth: 48,
 		imageHeight: 48,
@@ -603,6 +652,26 @@ const portsVerticalDefaultLayout = {
 		// This is the minimum size of the horizontal line entering the
 		// target port on the target node when drawing an Elbow connection line.
 		minFinalLine: 30,
+
+		// Shape of input port can be circle or image.
+		inputPortObject: "circle",
+
+		// If input port shape is "image" use this image.
+		inputPortImage: "",
+
+		// If input port dimensions for "image".
+		inputPortWidth: 12,
+		inputPortHeight: 12,
+
+		// Shape of output port can be circle or image.
+		outputPortObject: "circle",
+
+		// If output port shape is "image" use this image.
+		outputPortImage: "",
+
+		// Output port dimensions for "image".
+		outputPortWidth: 12,
+		outputPortHeight: 12,
 
 		// Radius of the port circle
 		portRadius: 6,

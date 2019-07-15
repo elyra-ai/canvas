@@ -67,7 +67,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "class_name": "ai-node-port-circle",
+                  "class_name": "ai-node-port",
                   "label": "Input Port"
                 }
               }
@@ -82,7 +82,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "class_name": "ai-node-port-circle",
+                  "class_name": "ai-node-port",
                   "label": "Output Port"
                 }
               }
@@ -120,7 +120,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "class_name": "ai-node-port-circle",
+                  "class_name": "ai-node-port",
                   "label": "Input Port"
                 }
               }
@@ -135,7 +135,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "class_name": "ai-node-port-circle",
+                  "class_name": "ai-node-port",
                   "label": "Output Port"
                 }
               }
@@ -173,7 +173,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "class_name": "ai-node-port-circle",
+                  "class_name": "ai-node-port",
                   "label": "Input Port"
                 }
               }
@@ -188,7 +188,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "class_name": "ai-node-port-circle",
+                  "class_name": "ai-node-port",
                   "label": "Output Port"
                 }
               }
@@ -226,7 +226,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "class_name": "ai-node-port-circle",
+                  "class_name": "ai-node-port",
                   "label": "Input Port"
                 }
               }
@@ -241,7 +241,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "class_name": "ai-node-port-circle",
+                  "class_name": "ai-node-port",
                   "label": "Output Port"
                 }
               }
@@ -279,7 +279,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "class_name": "ai-node-port-circle",
+                  "class_name": "ai-node-port",
                   "label": "Input Port"
                 }
               }
@@ -294,7 +294,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "class_name": "ai-node-port-circle",
+                  "class_name": "ai-node-port",
                   "label": "Output Port"
                 }
               }

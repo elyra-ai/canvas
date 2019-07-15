@@ -256,26 +256,14 @@ $harness-navbar-icon-width: 48px;
 }
 
 /* Makes the port decorations (blue with the white cross) be hidden by default */
-.ai-node-port-image {
+.ai-node-port {
 	display: none;
 }
 
 /* Makes the port decorations (blue with the white cross) images appear on hover */
-path[hover="yes"] ~ .ai-node-port-image {
+path[hover="yes"] ~ .ai-node-port {
 	display: inline;
 }
-
-.ai-node-port-circle {
-	fill: transparent;
-	stroke: transparent;
-}
-
-.ai-node-port-circle:hover {
-	fill: #4171B0;
-	stroke: #4171B0;
-	fill-opacity: 0.4;
-}
-
 
 /*  Override styles for comments in linkColorCanvas.json */
 
