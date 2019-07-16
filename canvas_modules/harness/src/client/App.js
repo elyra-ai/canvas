@@ -1894,7 +1894,6 @@ class App extends React.Component {
 				enableDropZoneOnExternalDrag: true,
 				enableNarrowPalette: false,
 				schemaValidation: true,
-				// emptyCanvasContent: (<img src={LoadingIcon} alt="Loading ...." className="empty-canvas-image" />),
 				tipConfig: {
 					palette: false,
 					nodes: true,

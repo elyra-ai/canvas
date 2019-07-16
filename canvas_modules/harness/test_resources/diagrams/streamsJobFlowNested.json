@@ -31,8 +31,8 @@
             ],
             "ui_data": {
               "label": "Custom1",
-              "x_pos": 163.96334838867188,
-              "y_pos": 225.65391540527344
+              "x_pos": 236.96334838867188,
+              "y_pos": 182.65391540527344
             }
           },
           "inputs": [
@@ -49,7 +49,24 @@
                   "app_data": {
                     "schemaRef": "0",
                     "ui_data": {
-                      "class_name": "d3-data-link"
+                      "class_name": "d3-data-link",
+                      "decorations": [
+                        {
+                          "id": "123",
+                          "position": "source",
+                          "x_pos": 15,
+                          "y_pos": -10,
+                          "width": 45,
+                          "class_name": "streams-link-decoration"
+                        },
+                        {
+                          "id": "dec-text",
+                          "label": "78.8K",
+                          "position": "source",
+                          "x_pos": 20,
+                          "y_pos": 5
+                        }
+                      ]
                     }
                   },
                   "port_id_ref": "d66ca268-990a-410d-98b0-11d2e2b4dfa2",
@@ -414,8 +431,8 @@
             "peId": "51",
             "ui_data": {
               "label": "BeaconOut",
-              "x_pos": -119.49756526947021,
-              "y_pos": 225.65390014648438
+              "x_pos": -194.40286445617676,
+              "y_pos": 77.17704010009766
             }
           },
           "outputs": [

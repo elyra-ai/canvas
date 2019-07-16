@@ -23,6 +23,12 @@ const haloDefaultLayout = {
 		defaultNodeWidth: 60,
 		defaultNodeHeight: 66,
 
+		// SVG path strings to define the shape of your node and its
+		// selection highlighting. If set to null the paths will be set by default
+		// based on the nodeFormatType setting.
+		bodyPath: null,
+		selectionPath: null,
+
 		// Display image
 		imageDisplay: true,
 
@@ -52,8 +58,12 @@ const haloDefaultLayout = {
 		labelPosX: 30,
 		labelPosY: 63,
 
+		// An array of decorations to be applied to the node. For details see:
+		// https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/2.4.2-Decoration-Specification
+		decorations: [],
+
 		// Positions and dimensions for 9 enumerated default decorator positions.
-		// decoratorWidth and decoratorHeight are the diemsions of the outline
+		// decoratorWidth and decoratorHeight are the dimensions of the outline
 		// rectangle and decoratorPadding is the padding for the image within the
 		// outline rectangle.
 		decoratorTopY: 0,
@@ -69,7 +79,7 @@ const haloDefaultLayout = {
 
 		decoratorPadding: 2,
 
-		// Display drop shadow
+		// Display drop shadow under and round the nodes
 		dropShadow: false,
 
 		// The gap between a node and its selection highlight rectangle
@@ -96,14 +106,14 @@ const haloDefaultLayout = {
 		haloRadius: 29,
 
 		// What point to draw 'halo' style link lines from and to. Possible values
-		// are image_center or node_center. This is used for node to node links.
+		// are "image_center" or "node_center". This is used for node to node links.
 		drawNodeLinkLineFromTo: "image_center",
 
 		// What point to draw the comment to node link line to. Possible values
-		// are image_center or node_center.
+		// are "image_center" or "node_center".
 		drawCommentLinkLineTo: "image_center",
 
-		// This is the size of the horizontal line protruding from the source
+		// This is the size of the horizontal line protruding from the
 		// port on the source node when drawing an elbow or straight connection line.
 		minInitialLine: 30,
 
@@ -116,7 +126,7 @@ const haloDefaultLayout = {
 		// target port on the target node when drawing an Elbow connection line.
 		minFinalLine: 30,
 
-		// Shape of input port can be circle or image.
+		// Shape of input port can be "circle" or "image".
 		inputPortObject: "circle",
 
 		// If input port shape is "image" use this image.
@@ -126,7 +136,7 @@ const haloDefaultLayout = {
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
-		// Shape of output port can be circle or image.
+		// Shape of output port can be "circle" or "image".
 		outputPortObject: "circle",
 
 		// If output port shape is "image" use this image.
@@ -136,7 +146,7 @@ const haloDefaultLayout = {
 		outputPortWidth: 12,
 		outputPortHeight: 12,
 
-		// Radius of the port circle
+		// Radius of the either the input or output ports when they are set to "circle"
 		portRadius: null,
 
 		// Radius of an imaginary circle around the port. This controls the
@@ -219,7 +229,7 @@ const haloDefaultLayout = {
 	linkDecoratorWidth: 20,
 	linkDecoratorPadding: 2,
 
-	// Initialize values for drawing connectors. wrapAroundSpacing and
+	// Values for drawing connectors. wrapAroundSpacing and
 	// wrapAroundNodePadding are used when curved connectors are drawn all the
 	// way around a node. ie the target is to the right of the source.
 	elbowSize: 10,
@@ -291,6 +301,12 @@ const portsHorizontalDefaultLayout = {
 		defaultNodeWidth: 160,
 		defaultNodeHeight: 40,
 
+		// SVG path strings to define the shape of your node and its
+		// selection highlighting. If set to null the paths will be set by default
+		// based on the nodeFormatType setting.
+		bodyPath: null,
+		selectionPath: null,
+
 		// Display image
 		imageDisplay: true,
 
@@ -320,8 +336,12 @@ const portsHorizontalDefaultLayout = {
 		labelPosX: 38,
 		labelPosY: 24,
 
+		// An array of decorations to be applied to the node. For details see:
+		// https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/2.4.2-Decoration-Specification
+		decorations: [],
+
 		// Positions and dimensions for 9 enumerated default decorator positions.
-		// decoratorWidth and decoratorHeight are the diemsions of the outline
+		// decoratorWidth and decoratorHeight are the dimensions of the outline
 		// rectangle and decoratorPadding is the padding for the image within the
 		// outline rectangle.
 		decoratorTopY: 2,
@@ -337,7 +357,7 @@ const portsHorizontalDefaultLayout = {
 
 		decoratorPadding: 2,
 
-		// Display drop shadow
+		// Display drop shadow under and round the nodes
 		dropShadow: true,
 
 		// The gap between a node and its selection highlight rectangle
@@ -364,14 +384,14 @@ const portsHorizontalDefaultLayout = {
 		haloRadius: null,
 
 		// What point to draw 'halo' style link lines from and to. Possible values
-		// are image_center or node_center. This is used for node to node links.
+		// are "image_center" or "node_center". This is used for node to node links.
 		drawNodeLinkLineFromTo: "node_center",
 
 		// What point to draw the comment to node link line to. Possible values
-		// are image_center or node_center.
+		// are "image_center" or "node_center".
 		drawCommentLinkLineTo: "node_center",
 
-		// This is the size of the horizontal line protruding from the source
+		// This is the size of the horizontal line protruding from the
 		// port on the source node when drawing an elbow or straight connection line.
 		minInitialLine: 30,
 
@@ -384,7 +404,7 @@ const portsHorizontalDefaultLayout = {
 		// target port on the target node when drawing an Elbow connection line.
 		minFinalLine: 30,
 
-		// Shape of input port can be circle or image.
+		// Shape of input port can be "circle" or "image".
 		inputPortObject: "circle",
 
 		// If input port shape is "image" use this image.
@@ -394,7 +414,7 @@ const portsHorizontalDefaultLayout = {
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
-		// Shape of output port can be circle or image.
+		// Shape of output port can be "circle" or "image".
 		outputPortObject: "circle",
 
 		// If output port shape is "image" use this image.
@@ -404,7 +424,7 @@ const portsHorizontalDefaultLayout = {
 		outputPortWidth: 12,
 		outputPortHeight: 12,
 
-		// Radius of the port circle
+		// Radius of the either the input or output ports when they are set to "circle"
 		portRadius: 3,
 
 		// Radius of an imaginary circle around the port. This controls the
@@ -487,10 +507,9 @@ const portsHorizontalDefaultLayout = {
 	linkDecoratorWidth: 20,
 	linkDecoratorPadding: 2,
 
-	// Initialize values for drawing connectors. minInitialLine is the
-	// size of the horizontal line protruding from the source or target handles
-	// when such a line is required for drawing connectors. wrapAroundSpacing
-	// the spacing for wraparound curved connectors.:
+	// Values for drawing connectors. wrapAroundSpacing and
+	// wrapAroundNodePadding are used when curved connectors are drawn all the
+	// way around a node. ie the target is to the right of the source.
 	elbowSize: 10,
 	wrapAroundSpacing: 20,
 	wrapAroundNodePadding: 10,
@@ -560,6 +579,12 @@ const portsVerticalDefaultLayout = {
 		defaultNodeWidth: 70,
 		defaultNodeHeight: 75,
 
+		// SVG path strings to define the shape of your node and its
+		// selection highlighting. If set to null the paths will be set by default
+		// based on the nodeFormatType setting.
+		bodyPath: null,
+		selectionPath: null,
+
 		// Display image
 		imageDisplay: true,
 
@@ -589,8 +614,12 @@ const portsVerticalDefaultLayout = {
 		labelPosX: 35,
 		labelPosY: 67,
 
+		// An array of decorations to be applied to the node. For details see:
+		// https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/2.4.2-Decoration-Specification
+		decorations: [],
+
 		// Positions and dimensions for 9 enumerated default decorator positions.
-		// decoratorWidth and decoratorHeight are the diemsions of the outline
+		// decoratorWidth and decoratorHeight are the dimensions of the outline
 		// rectangle and decoratorPadding is the padding for the image within the
 		// outline rectangle.
 		decoratorTopY: 5,
@@ -606,7 +635,7 @@ const portsVerticalDefaultLayout = {
 
 		decoratorPadding: 2,
 
-		// Display drop shadow
+		// Display drop shadow under and round the nodes
 		dropShadow: false,
 
 		// The gap between a node and its selection highlight rectangle
@@ -633,14 +662,14 @@ const portsVerticalDefaultLayout = {
 		haloRadius: null,
 
 		// What point to draw 'halo' style link lines from and to. Possible values
-		// are image_center or node_center. This is used for node to node links.
+		// are "image_center" or "node_center". This is used for node to node links.
 		drawNodeLinkLineFromTo: "node_center",
 
 		// What point to draw the comment to node link line to. Possible values
-		// are image_center or node_center.
+		// are "image_center" or "node_center".
 		drawCommentLinkLineTo: "node_center",
 
-		// This is the size of the horizontal line protruding from the source
+		// This is the size of the horizontal line protruding from the
 		// port on the source node when drawing an elbow or straight connection line.
 		minInitialLine: 30,
 
@@ -653,7 +682,7 @@ const portsVerticalDefaultLayout = {
 		// target port on the target node when drawing an Elbow connection line.
 		minFinalLine: 30,
 
-		// Shape of input port can be circle or image.
+		// Shape of input port can be "circle" or "image".
 		inputPortObject: "circle",
 
 		// If input port shape is "image" use this image.
@@ -663,7 +692,7 @@ const portsVerticalDefaultLayout = {
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
-		// Shape of output port can be circle or image.
+		// Shape of output port can be "circle" or "image".
 		outputPortObject: "circle",
 
 		// If output port shape is "image" use this image.
@@ -673,7 +702,7 @@ const portsVerticalDefaultLayout = {
 		outputPortWidth: 12,
 		outputPortHeight: 12,
 
-		// Radius of the port circle
+		// Radius of the either the input or output ports when they are set to "circle"
 		portRadius: 6,
 
 		// Radius of an imaginary circle around the port. This controls the
@@ -756,14 +785,12 @@ const portsVerticalDefaultLayout = {
 	linkDecoratorWidth: 20,
 	linkDecoratorPadding: 2,
 
-	// Initialize values for drawing connectors. minInitialLine is the
-	// size of the horizontal line protruding from the source or target handles
-	// when such a line is required for drawing connectors. wrapAroundSpacing
-	// the spacing for wraparound curved connectors.:
+	// Values for drawing connectors. wrapAroundSpacing and
+	// wrapAroundNodePadding are used when curved connectors are drawn all the
+	// way around a node. ie the target is to the right of the source.
 	elbowSize: 10,
 	wrapAroundSpacing: 20,
 	wrapAroundNodePadding: 10,
-
 
 	// This can be overrriden from common-canvas config properties
 	linkType: "Curve",

@@ -222,6 +222,12 @@ $harness-navbar-icon-width: 48px;
 	stroke: #000000;
 }
 
+/* Override styles for streamsJobFlowNested.json canvas */
+.streams-link-decoration {
+	fill: #FFFFFF;
+	stroke: #243C48;
+}
+
 /* This styles are used in the autoAICanvas.json canvas file. */
 
 .ai-join-keys-decoration-outline {
