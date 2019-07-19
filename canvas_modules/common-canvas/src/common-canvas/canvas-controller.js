@@ -34,6 +34,7 @@ import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import has from "lodash/has";
+import { ASSOC_STRAIGHT } from "./constants/canvas-constants";
 
 // Global instance ID counter
 var commonCanvasControllerInstanceId = 0;
@@ -78,6 +79,7 @@ export default class CanvasController {
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Curve",
 			enableAssocLinkCreation: false,
+			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableInternalObjectModel: true,
 			enablePaletteLayout: "Flyout",
 			enableMoveNodesOnSupernodeResize: true,

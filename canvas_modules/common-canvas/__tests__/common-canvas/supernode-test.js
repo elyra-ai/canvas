@@ -1058,8 +1058,8 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
 
-		// console.log(JSON.stringify(test1ExpectedFlow, null, 2));
-		// console.log(JSON.stringify(pipelineFlow, null, 2));
+		// console.log("Exp = " + JSON.stringify(test1ExpectedFlow, null, 2));
+		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
 
 		expect(isEqual(JSON.stringify(test1ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
@@ -1100,7 +1100,7 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
 
-		// console.log(JSON.stringify(pipelineFlow));
+		// console.log(JSON.stringify(pipelineFlow, null, 2));
 		expect(isEqual(JSON.stringify(test2ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -1669,6 +1669,9 @@ describe("Copy and Paste Supernode", () => {
 		delete clonedOriginalPipeline2.nodes[0].app_data.ui_data.is_expanded;
 		delete clonedOriginalPipeline2.nodes[0].app_data.ui_data.expanded_width;
 		delete clonedOriginalPipeline2.nodes[0].app_data.ui_data.expanded_height;
+
+		// console.info("Original = " + JSON.stringify(originalPipeline, null, 2));
+		// console.info("Cloned = " + JSON.stringify(clonedOriginalPipeline, null, 2));
 
 		expect(isEqual(JSON.stringify(originalPipeline), JSON.stringify(clonedOriginalPipeline))).to.be.true;
 		expect(isEqual(JSON.stringify(originalPipeline2), JSON.stringify(clonedOriginalPipeline2))).to.be.true;

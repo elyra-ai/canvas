@@ -39,6 +39,8 @@ import {
 	CURVE_LINKS,
 	ELBOW_LINKS,
 	STRAIGHT_LINKS,
+	ASSOC_RIGHT_SIDE_CURVE,
+	ASSOC_STRAIGHT,
 	NO_LAYOUT,
 	BLUE_ELLIPSES_LAYOUT,
 	DB2_EXPLAIN_LAYOUT,
@@ -87,6 +89,7 @@ export default class SidePanelForms extends React.Component {
 		this.interactionTypeOptionChange = this.interactionTypeOptionChange.bind(this);
 		this.nodeFormatTypeOptionChange = this.nodeFormatTypeOptionChange.bind(this);
 		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
+		this.assocLinkTypeOptionChange = this.assocLinkTypeOptionChange.bind(this);
 		this.nodeLayoutOptionChange = this.nodeLayoutOptionChange.bind(this);
 		this.paletteLayoutOptionChange = this.paletteLayoutOptionChange.bind(this);
 		this.tipConfigChange = this.tipConfigChange.bind(this);
@@ -340,6 +343,10 @@ export default class SidePanelForms extends React.Component {
 
 	linkTypeOptionChange(value) {
 		this.props.canvasConfig.setLinkType(value);
+	}
+
+	assocLinkTypeOptionChange(value) {
+		this.props.canvasConfig.setAssocLinkType(value);
 	}
 
 	nodeLayoutOptionChange(value) {
@@ -633,6 +640,25 @@ export default class SidePanelForms extends React.Component {
 					/>
 				</div>
 			</form>
+		</div>);
+
+		var assocLinkType = (<div className="harness-sidepanel-children" id="harness-sidepanel-assoc-link-type">
+			<div className="harness-sidepanel-headers">Association Link Type</div>
+			<RadioButtonGroup
+				className="harness-sidepanel-radio-group"
+				name="assoc_link_type_radio"
+				onChange={this.assocLinkTypeOptionChange}
+				defaultSelected={this.props.canvasConfig.selectedAssocLinkType}
+			>
+				<RadioButton
+					value={ASSOC_STRAIGHT}
+					labelText={ASSOC_STRAIGHT}
+				/>
+				<RadioButton
+					value={ASSOC_RIGHT_SIDE_CURVE}
+					labelText={ASSOC_RIGHT_SIDE_CURVE}
+				/>
+			</RadioButtonGroup>
 		</div>);
 
 		var enableObjectModel = (<div className="harness-sidepanel-children">
@@ -988,6 +1014,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{enableAssocLinkCreation}
 				{divider}
+				{assocLinkType}
+				{divider}
 				{enableObjectModel}
 				{divider}
 				{enableSaveToPalette}
@@ -1064,8 +1092,10 @@ SidePanelForms.propTypes = {
 		setNodeFormatType: PropTypes.func,
 		selectedNodeFormat: PropTypes.string,
 		setLinkType: PropTypes.func,
+		setAssocLinkType: PropTypes.func,
 		setNodeLayout: PropTypes.func,
 		selectedLinkType: PropTypes.string,
+		selectedAssocLinkType: PropTypes.string,
 		selectedNodeLayout: PropTypes.string,
 		selectedSaveZoom: PropTypes.string,
 		selectedZoomIntoSubFlows: PropTypes.bool,

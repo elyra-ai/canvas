@@ -35,11 +35,6 @@
               },
               "links": [
                 {
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "d3-data-link"
-                    }
-                  },
                   "port_id_ref": "idGWRVT47XDV_outPort"
                 }
               ]
@@ -224,11 +219,6 @@
               },
               "links": [
                 {
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "d3-data-link"
-                    }
-                  },
                   "port_id_ref": "idGWRVT47XDV_outPort"
                 }
               ]
@@ -261,12 +251,7 @@
               },
               "links": [
                 {
-                  "node_id_ref": "id5RYSYN9CV1H",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "d3-data-link"
-                    }
-                  }
+                  "node_id_ref": "id5RYSYN9CV1H"
                 }
               ]
             }
@@ -323,11 +308,6 @@
               },
               "links": [
                 {
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "d3-data-link"
-                    }
-                  },
                   "port_id_ref": "output_idGWRVT47XDV_inPort"
                 }
               ]
@@ -494,11 +474,6 @@
               "links": [
                 {
                   "node_id_ref": "idGWRVT47XDV",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "d3-data-link"
-                    }
-                  },
                   "port_id_ref": "outPort"
                 }
               ]

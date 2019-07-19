@@ -670,7 +670,6 @@ describe("ObjectModel API handle model OK", () => {
 		const expectedLinkId = uniqueNodeLink + "_" + sourceNodeId + "_b4f90b52-d198-42f0-85cc-31af3914dd4f";
 		const expectedNodeLink = {
 			"id": expectedLinkId,
-			"class_name": "d3-data-link",
 			"srcNodeId": sourceNodeId,
 			"trgNodeId": "b4f90b52-d198-42f0-85cc-31af3914dd4f",
 			"type": "nodeLink",
@@ -723,7 +722,6 @@ describe("ObjectModel API handle model OK", () => {
 		const expectedCommentLinkId = uniqueCommentLinkId + "_" + uniqueCommentId + "_2e6ecd75-8b2c-4c49-991c-80fa98fe08eb";
 		const expectedCommentLink = {
 			"id": expectedCommentLinkId,
-			"class_name": "d3-comment-link",
 			"srcNodeId": uniqueCommentId,
 			"trgNodeId": "2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
 			"type": "commentLink"
@@ -797,11 +795,10 @@ describe("ObjectModel API handle model OK", () => {
 		// Delete transient layout info from nodes
 		actualCanvas.nodes.forEach((nd) => delete nd.layout);
 
-
 		// console.info("Expected Canvas = " + JSON.stringify(clonedCanvas, null, 2));
 		// console.info("Actual Canvas   = " + JSON.stringify(objectModel.getCanvasInfoPipeline(), null, 2));
 
-		expect(isEqual(actualCanvas, clonedCanvas)).to.be.true;
+		expect(isEqual(JSON.stringify(actualCanvas), JSON.stringify(clonedCanvas))).to.be.true;
 	});
 
 	it("should reset the breadcrumbs when navigating back to primary pipeline", () => {
@@ -1416,7 +1413,7 @@ describe("ObjectModel API handle model OK", () => {
 			"nodes": [{ "id": sourceNodeId, "portId": sourcePortId }],
 			"targetNodes": [{ "id": targetNodeId, "portId": targetPortId }],
 			"linkType": "data",
-			"class_name": "canvas-data-link",
+			"class_name": "d3-data-link",
 			"linkName": "testLink2",
 			"type": "nodeLink"
 		};

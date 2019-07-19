@@ -21,7 +21,9 @@ import get from "lodash/get";
 import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
 import isMatch from "lodash/isMatch";
-import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERROR, WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE,
+import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERROR,
+	CURVE_LEFT, CURVE_RIGHT, DOUBLE_BACK_RIGHT,
+	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
@@ -101,6 +103,7 @@ export default class CanvasD3Layout {
 				this.config.enableSaveZoom !== config.enableSaveZoom ||
 				this.config.enableZoomIntoSubFlows !== config.enableZoomIntoSubFlows ||
 				this.config.enableAssocLinkCreation !== config.enableAssocLinkCreation ||
+				this.config.enableAssocLinkType !== config.enableAssocLinkType ||
 				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
 			this.logger.logStartTimer("Initializing Canvas");
 
@@ -390,6 +393,7 @@ class CanvasRenderer {
 		this.drawingNewLinkSrcPortId = null;
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
+		this.drawingNewLinkPortType = null;
 		this.drawingNewLinkPortRadius = null;
 		this.drawingNewLinkMinInitialLine = null;
 		this.drawingNewLinkArray = [];
@@ -2368,6 +2372,11 @@ class CanvasRenderer {
 											this.drawingNewLinkAction = "node-node";
 											const srcNode = this.getNode(d.id);
 											this.drawingNewLinkStartPos = { x: srcNode.x_pos, y: srcNode.y_pos + port.cy };
+											this.drawingNewLinkPortType = "input";
+											this.drawingNewLinkPortObject = d.layout.inputPortObject;
+											this.drawingNewLinkPortImage = d.layout.inputPortImage;
+											this.drawingNewLinkPortWidth = d.layout.inputPortWidth;
+											this.drawingNewLinkPortHeight = d.layout.inputPortHeight;
 											this.drawingNewLinkPortRadius = this.getPortRadius(srcNode);
 											this.drawingNewLinkMinInitialLine = srcNode.layout.minInitialLine;
 											this.drawingNewLinkArray = [];
@@ -2492,6 +2501,11 @@ class CanvasRenderer {
 										this.drawingNewLinkAction = "node-node";
 										const srcNode = this.getNode(d.id);
 										this.drawingNewLinkStartPos = { x: srcNode.x_pos + srcNode.width, y: srcNode.y_pos + port.cy };
+										this.drawingNewLinkPortType = "output";
+										this.drawingNewLinkPortObject = d.layout.outputPortObject;
+										this.drawingNewLinkPortImage = d.layout.outputPortImage;
+										this.drawingNewLinkPortWidth = d.layout.outputPortWidth;
+										this.drawingNewLinkPortHeight = d.layout.outputPortHeight;
 										this.drawingNewLinkPortRadius = this.getPortRadius(srcNode);
 										this.drawingNewLinkMinInitialLine = srcNode.layout.minInitialLine;
 										this.drawingNewLinkArray = [];
@@ -2709,7 +2723,15 @@ class CanvasRenderer {
 	}
 
 	getNodeGrpStyle(d) {
-		return !d.style_temp && !d.style && this.canvasInfo.subdueStyle && !this.doesExpandedSupernodeHaveStyledNodes(d) ? this.canvasInfo.subdueStyle : null;
+		return !d.style_temp && !d.style && this.canvasInfo.subdueStyle && !this.doesExpandedSupernodeHaveStyledNodes(d)
+			? this.canvasInfo.subdueStyle
+			: null;
+	}
+
+	getLinkGrpStyle(d) {
+		return !d.style_temp && !d.style && this.canvasInfo.subdueStyle
+			? this.canvasInfo.subdueStyle
+			: null;
 	}
 
 	doesExpandedSupernodeHaveStyledNodes(d) {
@@ -3300,8 +3322,6 @@ class CanvasRenderer {
 	}
 
 	drawNewLink() {
-		this.removeNewLink();
-
 		const transPos = this.getTransformedMousePos();
 
 		if (this.layout.connectionType === "halo") {
@@ -3316,6 +3336,7 @@ class CanvasRenderer {
 	}
 
 	drawNewLinkForHalo(transPos) {
+		this.removeNewLink();
 		this.canvasGrp
 			.append("line")
 			.attr("x1", this.drawingNewLinkStartPos.x)
@@ -3327,7 +3348,7 @@ class CanvasRenderer {
 
 	drawNewNodeLinkForPorts(transPos) {
 		var that = this;
-		const linkType = NODE_LINK;
+		const linkType = this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK;
 
 		if (this.drawingNewLinkArray.length === 0) {
 			this.drawingNewLinkArray = [{
@@ -3341,33 +3362,51 @@ class CanvasRenderer {
 			this.drawingNewLinkArray[0].y2 = transPos.y;
 		}
 
-		this.canvasGrp.selectAll(".d3-new-connection-line")
+		if (this.config.enableAssocLinkCreation) {
+			this.drawingNewLinkArray[0].assocLinkType =
+				this.getNewLinkAssocType(this.drawingNewLinkArray[0].x1, this.drawingNewLinkArray[0].x2);
+		}
+
+		const connectionLineSel = this.canvasGrp.selectAll(".d3-new-connection-line");
+		const connectionStartSel = this.canvasGrp.selectAll(".d3-new-connection-start");
+		const connectionBlobSel = this.canvasGrp.selectAll(".d3-new-connection-blob");
+
+		connectionLineSel
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("path")
-			.attr("d", (d) => that.getConnectorPath(d).path)
 			.attr("class", "d3-new-connection-line")
-			.attr("linkType", linkType);
-
-		this.canvasGrp.selectAll(".d3-new-connection-start")
-			.data(this.drawingNewLinkArray)
-			.enter()
-			.append("circle")
-			.attr("cx", (d) => d.x1)
-			.attr("cy", (d) => d.y1)
-			.attr("r", this.drawingNewLinkPortRadius)
-			.attr("class", "d3-new-connection-start")
-			.attr("linkType", linkType);
-
-		this.canvasGrp.selectAll(".d3-new-connection-blob")
-			.data(this.drawingNewLinkArray)
-			.enter()
-			.append("circle")
-			.attr("cx", (d) => d.x2)
-			.attr("cy", (d) => d.y2)
-			.attr("r", this.drawingNewLinkPortRadius)
-			.attr("class", "d3-new-connection-blob")
 			.attr("linkType", linkType)
+			.merge(connectionLineSel)
+			.attr("d", (d) => that.getConnectorPath(d).path);
+
+		connectionStartSel
+			.data(this.drawingNewLinkArray)
+			.enter()
+			.append(this.drawingNewLinkPortObject)
+			.attr("class", "d3-new-connection-start")
+			.attr("linkType", linkType)
+			.merge(connectionStartSel)
+			.each(function(d) {
+				if (that.drawingNewLinkPortObject === PORT_OBJECT_IMAGE) {
+					d3.select(this)
+						.attr("xlink:href", that.drawingNewLinkPortImage)
+						.attr("x", d.x1 - (that.drawingNewLinkPortWidth / 2))
+						.attr("y", d.y1 - (that.drawingNewLinkPortHeight / 2))
+						.attr("width", that.drawingNewLinkPortWidth)
+						.attr("height", that.drawingNewLinkPortHeight);
+				} else {
+					d3.select(this)
+						.attr("cx", d.x1)
+						.attr("cy", d.y1)
+						.attr("r", that.drawingNewLinkPortRadius);
+				}
+			});
+
+		connectionBlobSel
+			.data(this.drawingNewLinkArray)
+			.enter()
+			.append("circle")
 			.on("mouseup", () => {
 				stopPropagationAndPreventDefault();
 				var trgNode = this.getNodeAtMousePos();
@@ -3376,7 +3415,14 @@ class CanvasRenderer {
 				} else {
 					this.stopDrawingNewLink();
 				}
-			});
+			})
+			.merge(connectionBlobSel)
+			.attr("cx", (d) => d.x2)
+			.attr("cy", (d) => d.y2)
+			.attr("r", this.drawingNewLinkPortRadius)
+			.attr("class", "d3-new-connection-blob")
+			.attr("linkType", linkType);
+
 	}
 
 	drawNewCommentLinkForPorts(transPos) {
@@ -3393,7 +3439,7 @@ class CanvasRenderer {
 			transPos.x,
 			transPos.y);
 
-		var linkType = "commentLink";
+		var linkType = COMMENT_LINK;
 
 		this.drawingNewLinkArray = [{ "x1": this.drawingNewLinkStartPos.x,
 			"y1": this.drawingNewLinkStartPos.y,
@@ -3401,21 +3447,22 @@ class CanvasRenderer {
 			"y2": transPos.y,
 			"type": linkType }];
 
-		this.canvasGrp.selectAll(".d3-new-connection-line")
+		const connectionLineSel = this.canvasGrp.selectAll(".d3-new-connection-line");
+		const connectionBlobSel = this.canvasGrp.selectAll(".d3-new-connection-blob");
+
+		connectionLineSel
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("path")
-			.attr("d", (d) => that.getConnectorPath(d).path)
 			.attr("class", "d3-new-connection-line")
-			.attr("linkType", linkType);
+			.attr("linkType", linkType)
+			.merge(connectionLineSel)
+			.attr("d", (d) => that.getConnectorPath(d).path);
 
-		this.canvasGrp.selectAll(".d3-new-connection-blob")
+		connectionBlobSel
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("circle")
-			.attr("cx", (d) => d.x2)
-			.attr("cy", (d) => d.y2)
-			.attr("r", this.layout.commentPortRadius)
 			.attr("class", "d3-new-connection-blob")
 			.attr("linkType", linkType)
 			.on("mouseup", () => {
@@ -3426,14 +3473,19 @@ class CanvasRenderer {
 				} else {
 					this.stopDrawingNewLink();
 				}
-			});
+			})
+			.merge(connectionBlobSel)
+			.attr("cx", (d) => d.x2)
+			.attr("cy", (d) => d.y2)
+			.attr("r", this.layout.commentPortRadius);
 
 		if (this.layout.commentLinkArrowHead) {
-			this.canvasGrp.selectAll(".d3-new-connection-arrow")
+			const connectionArrowHeadSel = this.canvasGrp.selectAll(".d3-new-connection-arrow");
+
+			connectionArrowHeadSel
 				.data(this.drawingNewLinkArray)
 				.enter()
 				.append("path")
-				.attr("d", (d) => this.getArrowHead(d))
 				.attr("class", "d3-new-connection-arrow")
 				.attr("linkType", linkType)
 				.on("mouseup", () => {
@@ -3444,7 +3496,9 @@ class CanvasRenderer {
 					} else {
 						this.stopDrawingNewLink();
 					}
-				});
+				})
+				.merge(connectionArrowHeadSel)
+				.attr("d", (d) => this.getArrowHead(d));
 		}
 	}
 
@@ -3479,6 +3533,7 @@ class CanvasRenderer {
 		this.drawingNewLinkSrcPortId = null;
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
+		this.drawingNewLinkPortType = null;
 		this.drawingNewLinkPortRadius = null;
 		this.drawingNewLinkMinInitialLine = null;
 		this.drawingNewLinkArray = [];
@@ -3499,6 +3554,7 @@ class CanvasRenderer {
 		this.drawingNewLinkSrcPortId = null;
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
+		this.drawingNewLinkPortType = null;
 		this.drawingNewLinkPortRadius = null;
 		this.drawingNewLinkMinInitialLine = null;
 		this.drawingNewLinkArray = [];
@@ -3515,6 +3571,7 @@ class CanvasRenderer {
 		this.drawingNewLinkSrcPortId = null;
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
+		this.drawingNewLinkPortType = null;
 		this.drawingNewLinkPortRadius = null;
 		this.drawingNewLinkMinInitialLine = null;
 		this.drawingNewLinkArray = [];
@@ -3590,7 +3647,6 @@ class CanvasRenderer {
 	getNodeAtMousePos() {
 		const that = this;
 		var pos = this.getTransformedMousePos();
-
 		var node = null;
 		const selector = this.getSelectorForClass("d3-node-group");
 		this.canvasGrp.selectAll(selector)
@@ -4856,12 +4912,7 @@ class CanvasRenderer {
 		}
 
 		var timeAfterDelete = Date.now();
-
 		var lineArray = this.buildLineArray();
-		if (this.layout.linkType === "Elbow") {
-			lineArray = this.addMinInitialLineForElbow(lineArray);
-		}
-		lineArray = this.addConnectionPaths(lineArray);
 		var afterLineArray = Date.now();
 
 		var linkGroup = this.canvasGrp.selectAll(linkSelector)
@@ -4871,7 +4922,7 @@ class CanvasRenderer {
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", "link-group")
-			.attr("style", function(d) { return !d.style_temp && !d.style && that.canvasInfo.subdueStyle ? that.canvasInfo.subdueStyle : null; })
+			.attr("style", (d) => this.getLinkGrpStyle(d))
 			.on("mousedown", () => {
 				// The context menu gesture will cause a mouse down event which
 				// will go through to canvas unless stopped.
@@ -4916,18 +4967,7 @@ class CanvasRenderer {
 			.attr("d", (d) => d.path)
 			.attr("data-id", (d) => this.getId("link_line", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", (d) => {
-				var classStr;
-
-				if (d.type === ASSOCIATION_LINK) {
-					classStr = "d3-selectable-link " + this.getAssociationLinkClass(d);
-				} else if (d.type === "commentLink") {
-					classStr = "d3-selectable-link " + this.getCommentLinkClass(d);
-				} else {
-					classStr = "d3-selectable-link " + this.getDataLinkClass(d);
-				}
-				return classStr;
-			})
+			.attr("class", (d) => "d3-selectable-link " + this.getLinkClass(d))
 			.attr("style", (d) => that.getObjectStyle(d, "line", "default"))
 			.on("mouseenter", function(d) {
 				that.setLinkLineStyles(d, "hover");
@@ -4938,18 +4978,10 @@ class CanvasRenderer {
 
 		// Arrow head
 		linkGroup.filter((d) => (this.layout.connectionType === "halo" && d.type === NODE_LINK) ||
-														(d.type === "commentLink" && this.layout.commentLinkArrowHead))
+														(d.type === COMMENT_LINK && this.layout.commentLinkArrowHead))
 			.append("path")
 			.attr("d", (d) => this.getArrowHead(d))
-			.attr("class", (d) => {
-				var classStr;
-				if (d.type === "commentLink") {
-					classStr = "d3-selectable-link " + this.getCommentLinkClass(d);
-				} else {
-					classStr = "d3-selectable-link " + this.getDataLinkClass(d);
-				}
-				return classStr;
-			})
+			.attr("class", (d) => "d3-selectable-link " + this.getLinkClass(d))
 			.style("stroke-dasharray", "0"); // Ensure arrow head is always solid line style
 
 		// Add decorations to the node-node or association links.
@@ -5015,6 +5047,15 @@ class CanvasRenderer {
 		return "d3-data-link";
 	}
 
+	getLinkClass(d) {
+		if (d.type === ASSOCIATION_LINK) {
+			return this.getAssociationLinkClass(d);
+		} else if (d.type === COMMENT_LINK) {
+			return this.getCommentLinkClass(d);
+		}
+		return this.getDataLinkClass(d);
+	}
+
 	getAssociationLinkClass(d) {
 		// If the data has a classname that isn't the default use it!
 		if (d.class_name && d.class_name !== "canvas-object-link") {
@@ -5023,6 +5064,9 @@ class CanvasRenderer {
 		// If the class name provided IS the default, or there is no classname, return
 		// the class name from the layout preferences. This allows the layout
 		// preferences to override any default class name passed in.
+		if (this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
+			return "d3-association-link";
+		}
 		return "d3-object-link";
 	}
 
@@ -5082,7 +5126,7 @@ class CanvasRenderer {
 			var srcObj;
 			var trgNode = this.getNode(link.trgNodeId);
 
-			if (link.type === "commentLink") {
+			if (link.type === COMMENT_LINK) {
 				srcObj = this.getComment(link.srcNodeId);
 			} else {
 				srcObj = this.getNode(link.srcNodeId);
@@ -5106,6 +5150,7 @@ class CanvasRenderer {
 				var coords = {};
 				var srcPortId;
 				var trgPortId;
+				let assocLinkType;
 
 				if (link.type === NODE_LINK) {
 					if (this.layout.connectionType === "halo") {
@@ -5115,6 +5160,10 @@ class CanvasRenderer {
 						trgPortId = this.getTargetPortId(link, trgNode);
 						coords = this.getNodeLinkCoordsForPorts(srcObj, srcPortId, trgNode, trgPortId);
 					}
+				} else if (link.type === ASSOCIATION_LINK &&
+										this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
+					assocLinkType = this.getAssocLinkType(srcObj, trgNode);
+					coords = this.getAssociationCurveLinkCoords(srcObj, trgNode, assocLinkType);
 				} else {
 					coords = this.getNonDataLinkCoords(srcObj, trgNode);
 				}
@@ -5125,6 +5174,7 @@ class CanvasRenderer {
 					"style": link.style,
 					"style_temp": link.style_temp,
 					"type": link.type,
+					"assocLinkType": assocLinkType,
 					"src": srcObj,
 					"srcPortId": srcPortId,
 					"trg": trgNode,
@@ -5132,6 +5182,12 @@ class CanvasRenderer {
 					"decorations": link.decorations });
 			}
 		});
+
+		if (this.layout.linkType === "Elbow") {
+			lineArray = this.addMinInitialLineForElbow(lineArray);
+		}
+
+		lineArray = this.addConnectionPaths(lineArray);
 
 		return lineArray;
 	}
@@ -5189,7 +5245,7 @@ class CanvasRenderer {
 	// Returns true if the linked objects overlap. srcObj can be either a comment
 	// or node while trgNode is always a node.
 	areLinkedObjectsOverlapping(srcObj, trgNode, linkType) {
-		const srcHightlightGap = linkType === "commentLink" ? this.layout.commentHighlightGap : srcObj.layout.nodeHighlightGap;
+		const srcHightlightGap = linkType === COMMENT_LINK ? this.layout.commentHighlightGap : srcObj.layout.nodeHighlightGap;
 		const trgHightlightGap = trgNode.layout.nodeHighlightGap;
 
 		const srcLeft = srcObj.x_pos - srcHightlightGap;
@@ -5294,6 +5350,65 @@ class CanvasRenderer {
 			y1: srcNode.y_pos + srcY,
 			x2: trgNode.x_pos,
 			y2: trgNode.y_pos + trgY };
+	}
+
+	// Returns a type of association link to draw when a new link is being
+	// drawn outwards from a port. startX is the beginning point of the line
+	// at the port. endX is the position where the mouse is currently positioned.
+	getNewLinkAssocType(startX, endX) {
+		if (this.drawingNewLinkPortType === "input" && startX > endX) {
+			return CURVE_LEFT;
+
+		} else if (this.drawingNewLinkPortType === "output" && startX < endX) {
+			return CURVE_RIGHT;
+		}
+		return DOUBLE_BACK_RIGHT;
+	}
+
+	// Returns a type of association link to draw between a source node and a
+	// target node based on their relative positions.
+	getAssocLinkType(srcNode, trgNode) {
+		const gap = srcNode.layout.minInitialLine;
+		if (trgNode.x_pos >= srcNode.x_pos + srcNode.width + gap) {
+			return CURVE_RIGHT;
+
+		} else if (srcNode.x_pos >= trgNode.x_pos + trgNode.width + gap) {
+			return "curveLeft";
+
+		// TODO - If we decide to optionally also support doubleBackLeft for
+		// association links at some point uncomment this code.
+		// } else if (trgNode.x_pos + (trgNode.width / 2) >= srcNode.x_pos + (srcNode.width / 2)) {
+		// 	return "doubleBackLeft";
+		}
+		return DOUBLE_BACK_RIGHT;
+	}
+
+	getAssociationCurveLinkCoords(srcNode, trgNode, assocLinkType) {
+		let x1 = 0;
+		let x2 = 0;
+
+		if (assocLinkType === CURVE_RIGHT) {
+			x1 = srcNode.x_pos + srcNode.width;
+			x2 = trgNode.x_pos;
+
+		} else if (assocLinkType === CURVE_LEFT) {
+			x1 = srcNode.x_pos;
+			x2 = trgNode.x_pos + trgNode.width;
+
+		} else if (assocLinkType === "doubleBackLeft") {
+			x1 = srcNode.x_pos;
+			x2 = trgNode.x_pos;
+
+		} else {
+			x1 = srcNode.x_pos + srcNode.width;
+			x2 = trgNode.x_pos + trgNode.width;
+		}
+
+		return {
+			x1: x1,
+			y1: srcNode.y_pos + srcNode.layout.portPosY,
+			x2: x2,
+			y2: trgNode.y_pos + trgNode.layout.portPosY };
 	}
 
 	getNodeLinkCoordsForHalo(srcNode, trgNode) {
@@ -5494,6 +5609,10 @@ class CanvasRenderer {
 			}
 
 			return this.getLighteningPath(data, minInitialLine);
+
+		} else if (data.type === ASSOCIATION_LINK &&
+								this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
+			return this.getAssociationCurvePath(data, minInitialLine);
 		}
 
 		return this.getStraightPath(data);
@@ -5546,6 +5665,77 @@ class CanvasRenderer {
 		}
 
 		return { path, centerPoint };
+	}
+
+	getAssociationCurvePath(data, minInitialLine) {
+		if (data.assocLinkType === CURVE_LEFT) {
+			return this.getCurveLeftPath(data, minInitialLine);
+
+		} else if (data.assocLinkType === "doubleBackLeft") {
+			return this.getDoubleBackLeft(data, minInitialLine);
+
+		} else if (data.assocLinkType === DOUBLE_BACK_RIGHT) {
+			return this.getDoubleBackRight(data, minInitialLine);
+
+		}
+		return this.getCurveRightPath(data, minInitialLine);
+	}
+
+	getCurveLeftPath(data, minInitialLine) {
+		const corner1X = data.x1 - ((data.x1 - data.x2) / 2);
+		return this.getCurveOutPath(data, minInitialLine, corner1X);
+	}
+
+	getCurveRightPath(data, minInitialLine) {
+		const corner1X = data.x1 + ((data.x2 - data.x1) / 2);
+		return this.getCurveOutPath(data, minInitialLine, corner1X);
+	}
+
+	getCurveOutPath(data, minInitialLine, corner1X) {
+		const corner1Y = data.y1;
+		const corner2X = corner1X;
+		const corner2Y = data.y2;
+		const path = "M " + data.x1 + " " + data.y1 +
+			" C " + corner1X + " " + corner1Y + " " + corner2X + " " + corner2Y + " " + data.x2 + " " + data.y2;
+		const centerPoint = { x: corner1X, y: corner1Y + ((corner2Y - corner1Y) / 2) };
+		return { path, centerPoint };
+	}
+
+	getDoubleBackLeft(data, minInitialLine) {
+		const corner1X = Math.min(data.x1, data.x2) - minInitialLine - 100;
+		return this.getDoubleBack(data, minInitialLine, corner1X);
+	}
+
+	getDoubleBackRight(data, minInitialLine) {
+		const corner1X = Math.max(data.x1, data.x2) + minInitialLine + 100;
+		return this.getDoubleBack(data, minInitialLine, corner1X);
+	}
+
+	getDoubleBack(data, minInitialLine, corner1X) {
+		const corner1Y = data.y1;
+		const corner2X = corner1X;
+		const corner2Y = data.y2;
+		const path = "M " + data.x1 + " " + data.y1 +
+			" C " + corner1X + " " + corner1Y + " " +
+			corner2X + " " + corner2Y + " " + data.x2 + " " + data.y2;
+		const centerPointX = this.calcCenterPoint(data.x1, corner1X, corner2X, data.x2);
+		const centerPointY = this.calcCenterPoint(data.y1, corner1Y, corner2Y, data.y2);
+		const centerPoint = { x: centerPointX, y: centerPointY };
+		return { path, centerPoint };
+	}
+
+	// Returns an x or y coordinate of the center point on a bezier curve from
+	// the four x or y coordinates passed in which are the coordinates of the four
+	// control points that describe the curve.
+	calcCenterPoint(c1, c2, c3, c4) {
+		const t = 0.5;
+
+		const part1 = Math.pow((1 - t), 3) * c1;
+		const part2 = 3 * Math.pow((1 - t), 2) * t * c2;
+		const part3 = 3 * Math.pow((1 - t), 2) * t * c3;
+		const part4 = Math.pow(t, 3) * c4;
+
+		return part1 + part2 + part3 + part4;
 	}
 
 	// Returns the path string for the object passed in which describes a

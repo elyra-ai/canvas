@@ -106,7 +106,8 @@ $new-halo-link-color: $ui-05;
 
 /* Link colors */
 $comment-link-color: $light-grey;
-$object-link-color: $ui-05; /* Used for association links */
+$object-link-color: $ui-05; /* Used for association links for a regular data flow canvas */
+$association-link-color: $light-grey; /* Used for association links for enableAssocLinkCreation canvas */
 $data-link-color: $dark-blue;
 $link-hightlight-color: $brand-01;
 
@@ -470,19 +471,22 @@ $link-hightlight-color: $brand-01;
 
 /* New connection dynamic line styles. */
 
-.d3-new-connection-line[linkType="nodeLink"] {
+.d3-new-connection-line[linkType="nodeLink"],
+.d3-new-connection-line[linkType="associationLink"] {
 	stroke: $data-link-color;
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
 }
 
-.d3-new-connection-start[linkType="nodeLink"] {
+.d3-new-connection-start[linkType="nodeLink"],
+.d3-new-connection-start[linkType="associationLink"] {
 	stroke: $data-link-color;
 	fill: $canvas-background-color;
 }
 
-.d3-new-connection-blob[linkType="nodeLink"] {
+.d3-new-connection-blob[linkType="nodeLink"],
+.d3-new-connection-blob[linkType="associationLink"] {
 	stroke: $data-link-color;
 	fill: $data-link-color;
 }
@@ -628,11 +632,20 @@ $link-hightlight-color: $brand-01;
 }
 
 /* 'object link' is the historical name for an association link */
+/* This styles is used for association links on a regular data flow canvas */
 .d3-object-link {
 	stroke: $object-link-color;
 	stroke-width: 2;
 	fill: none;
 	stroke-dasharray: 5.5;
+}
+
+/* This styles is used for association links which are created with the */
+/* enableAssocLinkCreation config value set to true.  */
+.d3-association-link {
+	stroke: $association-link-color;
+	stroke-width: 2;
+	fill: none;
 }
 
 .d3-data-link {

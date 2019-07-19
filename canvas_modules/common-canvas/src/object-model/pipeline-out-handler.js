@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import isEmpty from "lodash/isEmpty";
+import set from "lodash/set";
 import { BINDING, EXECUTION_NODE,
 	SUPER_NODE, MODEL_NODE } from "../common-canvas/constants/canvas-constants.js";
 
@@ -270,27 +271,23 @@ export default class PipelineOutHandler {
 			node_id_ref: link.srcNodeId
 		};
 
-		const uiData = {};
+		if (link.app_data) {
+			set(newNodeLink, "app_data", link.app_data);
+		}
 
 		if (link.class_name) {
-			uiData.class_name = link.class_name;
+			set(newNodeLink, "app_data.ui_data.class_name", link.class_name);
 		}
 
 		if (link.style) {
-			uiData.style = link.style;
+			set(newNodeLink, "app_data.ui_data.style", link.style);
 		}
 
 		if (link.decorations) {
 			var newDecorations = this.createDecorations(link.decorations);
 			if (newDecorations.length > 0) {
-				uiData.decorations = newDecorations;
+				set(newNodeLink, "app_data.ui_data.decorations", newDecorations);
 			}
-		}
-
-		const appData = Object.assign({}, link.app_data, { ui_data: uiData });
-
-		if (!isEmpty(appData)) {
-			newNodeLink.app_data = appData;
 		}
 
 		if (link.srcNodePortId) {

@@ -20,6 +20,7 @@ class App extends React.Component {
 		this.canvasController.setPipelineFlow(AutoAICanvas);
 
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
+		this.editActionHandler = this.editActionHandler.bind(this);
 		this.layoutHandler = this.layoutHandler.bind(this);
 	}
 
@@ -34,8 +35,10 @@ class App extends React.Component {
 		const bot = 50;
 
 		const commonCanvasConfig = {
+			enableConnectionType: "Ports",
 			enableNodeFormatType: "Horizontal",
 			enableAssocLinkCreation: true,
+			enableAssocLinkType: "RightSideCurve",
 			enableNodeLayout: {
 				defaultNodeWidth: 220,
 				defaultNodeHeight: 50,
@@ -62,22 +65,6 @@ class App extends React.Component {
 		return commonCanvasConfig;
 	}
 
-	decorationActionHandler(link, id, pipeline) {
-		const decs = this.canvasController.getLinkDecorations(link.id);
-		const decImage = decs.find((d) => d.id === id);
-		const decLabel = decs.find((d) => d.label);
-		if (decImage && decLabel) {
-			if (decImage.image && decImage.image === "/images/decorators/ai-join-keys-selected.png") {
-				decImage.image = "/images/decorators/ai-join-keys-unselected.png";
-				decLabel.class_name = "ai-join-keys-decoration-text-unselected";
-			} else {
-				decImage.image = "/images/decorators/ai-join-keys-selected.png";
-				decLabel.class_name = "ai-join-keys-decoration-text-selected";
-			}
-			this.canvasController.setLinkDecorations(link.id, decs);
-		}
-	}
-
 	layoutHandler(data) {
 		if (data.op === "main_table") {
 			const left = 10;
@@ -85,6 +72,8 @@ class App extends React.Component {
 			const top = 0;
 			const bot = 80;
 			const nodeFormat = {
+				defaultNodeWidth: 220,
+				defaultNodeHeight: 80,
 				bodyPath: this.getPath(left, right, top, bot),
 				selectionPath: this.getPath(left, right, top, bot),
 				labelPosY: 45,
@@ -108,6 +97,48 @@ class App extends React.Component {
 		return {};
 	}
 
+	decorationActionHandler(link, id, pipeline) {
+		const decs = this.canvasController.getLinkDecorations(link.id);
+		const decImage = decs.find((d) => d.id === id);
+		const decLabel = decs.find((d) => d.label);
+		if (decImage && decLabel) {
+			if (decImage.image && decImage.image === "/images/decorators/ai-join-keys-selected.png") {
+				decImage.image = "/images/decorators/ai-join-keys-unselected.png";
+				decLabel.class_name = "ai-join-keys-decoration-text-unselected";
+			} else {
+				decImage.image = "/images/decorators/ai-join-keys-selected.png";
+				decLabel.class_name = "ai-join-keys-decoration-text-selected";
+			}
+			this.canvasController.setLinkDecorations(link.id, decs);
+		}
+	}
+
+	editActionHandler(data) {
+		if (data.editType === "linkNodes") {
+			const decs = [
+				{
+					"id": "assocDec1",
+					"x_pos": -35,
+					"y_pos": -20,
+					"height": 40,
+					"width": 80,
+					"class_name": "ai-join-keys-decoration-outline",
+					"image": "/images/decorators/ai-join-keys-unselected.png",
+					"hotspot": true
+				},
+				{
+					"id": "assocDec2",
+					"x_pos": 0,
+					"y_pos": 4,
+					"label": "0 Keys",
+					"class_name": "ai-join-keys-decoration-text-unselected",
+					"hotspot": true
+				}
+			];
+			this.canvasController.setLinkDecorations(data.linkIds[0], decs);
+		}
+	}
+
 	render() {
 		const commonCanvasConfig = this.getCommonCanvasConfig();
 
@@ -118,6 +149,7 @@ class App extends React.Component {
 					config = {commonCanvasConfig}
 					layoutHandler={this.layoutHandler}
 					decorationActionHandler={this.decorationActionHandler}
+					editActionHandler={this.editActionHandler}
 				/>
 			</div>
 		);

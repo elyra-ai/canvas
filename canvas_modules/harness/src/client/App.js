@@ -65,6 +65,7 @@ import {
 	VERTICAL_FORMAT,
 	NONE_SAVE_ZOOM,
 	CURVE_LINKS,
+	ASSOC_STRAIGHT,
 	NO_LAYOUT,
 	BLUE_ELLIPSES_LAYOUT,
 	DB2_EXPLAIN_LAYOUT,
@@ -121,6 +122,7 @@ class App extends React.Component {
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
 			selectedLinkType: CURVE_LINKS,
+			selectedAssocLinkType: ASSOC_STRAIGHT,
 			selectedNodeLayout: NO_LAYOUT,
 			selectedPaletteLayout: FLYOUT,
 			showContextMenu: false,
@@ -222,6 +224,7 @@ class App extends React.Component {
 		this.setConnectionType = this.setConnectionType.bind(this);
 		this.setNodeFormatType = this.setNodeFormatType.bind(this);
 		this.setLinkType = this.setLinkType.bind(this);
+		this.setAssocLinkType = this.setAssocLinkType.bind(this);
 		this.setNodeLayout = this.setNodeLayout.bind(this);
 		this.setPaletteLayout = this.setPaletteLayout.bind(this);
 		this.getPipelineFlow = this.getPipelineFlow.bind(this);
@@ -649,6 +652,11 @@ class App extends React.Component {
 	setLinkType(selectedLinkType) {
 		this.setState({ selectedLinkType: selectedLinkType });
 		this.log("Link type selected", selectedLinkType);
+	}
+
+	setAssocLinkType(selectedAssocLinkType) {
+		this.setState({ selectedAssocLinkType: selectedAssocLinkType });
+		this.log("Associated link type selected", selectedAssocLinkType);
 	}
 
 	setNodeLayout(selectedNodeLayout) {
@@ -1751,6 +1759,7 @@ class App extends React.Component {
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
+			enableAssocLinkType: this.state.selectedAssocLinkType,
 			enableNodeLayout: null,
 			enableInternalObjectModel: this.state.internalObjectModel,
 			enableAssocLinkCreation: this.state.assocLinkCreation,
@@ -1770,6 +1779,7 @@ class App extends React.Component {
 
 		let layoutHandler = null;
 		let decorationActionHandler = this.decorationActionHandler;
+		let editActionHandler = this.editActionHandler;
 
 		if (this.state.selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
 			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
@@ -1802,6 +1812,7 @@ class App extends React.Component {
 			});
 		} else if (this.state.selectedNodeLayout === DB2_EXPLAIN_LAYOUT) {
 			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
+				enableConnectionType: "Halo",
 				enableNodeLayout:
 					{
 						cssNodeLabel: "shape_label_style_db2_explain",
@@ -1912,8 +1923,10 @@ class App extends React.Component {
 			let top = 0;
 			let bot = 50;
 			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
+				enableConnectionType: "Ports",
 				enableNodeFormatType: "Horizontal",
 				enableAssocLinkCreation: true,
+				enableAssocLinkType: "RightSideCurve",
 				enableNodeLayout: {
 					defaultNodeWidth: 220,
 					defaultNodeHeight: 50,
@@ -1945,6 +1958,8 @@ class App extends React.Component {
 					top = 0;
 					bot = 80;
 					const nodeFormat = {
+						defaultNodeWidth: 220,
+						defaultNodeHeight: 80,
 						bodyPath: getPath(left, right, top, bot),
 						selectionPath: getPath(left, right, top, bot),
 						labelPosY: 45,
@@ -1980,6 +1995,31 @@ class App extends React.Component {
 						decLabel.class_name = "ai-join-keys-decoration-text-selected";
 					}
 					this.canvasController.setLinkDecorations(link.id, decs);
+				}
+			};
+			editActionHandler = (data) => {
+				if (data.editType === "linkNodes") {
+					const decs = [
+						{
+							"id": "assocDec1",
+							"x_pos": -35,
+							"y_pos": -20,
+							"height": 40,
+							"width": 80,
+							"class_name": "ai-join-keys-decoration-outline",
+							"image": "/images/decorators/ai-join-keys-unselected.png",
+							"hotspot": true
+						},
+						{
+							"id": "assocDec2",
+							"x_pos": 0,
+							"y_pos": 4,
+							"label": "0 Keys",
+							"class_name": "ai-join-keys-decoration-text-unselected",
+							"hotspot": true
+						}
+					];
+					this.canvasController.setLinkDecorations(data.linkIds[0], decs);
 				}
 			};
 		}
@@ -2107,7 +2147,7 @@ class App extends React.Component {
 				config={commonCanvasConfig}
 				contextMenuHandler={this.contextMenuHandler}
 				contextMenuActionHandler= {this.contextMenuActionHandler}
-				editActionHandler= {this.editActionHandler}
+				editActionHandler= {editActionHandler}
 				clickActionHandler= {this.clickActionHandler}
 				decorationActionHandler= {decorationActionHandler}
 				selectionChangeHandler={this.selectionChangeHandler}
@@ -2193,8 +2233,10 @@ class App extends React.Component {
 			setNodeFormatType: this.setNodeFormatType,
 			selectedNodeFormat: this.state.selectedNodeFormat,
 			setLinkType: this.setLinkType,
+			setAssocLinkType: this.setAssocLinkType,
 			setNodeLayout: this.setNodeLayout,
 			selectedLinkType: this.state.selectedLinkType,
+			selectedAssocLinkType: this.state.selectedAssocLinkType,
 			selectedNodeLayout: this.state.selectedNodeLayout,
 			selectedSaveZoom: this.state.selectedSaveZoom,
 			selectedZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,

@@ -57,6 +57,9 @@ _defineConstant("CURVE_LINKS", "Curve");
 _defineConstant("ELBOW_LINKS", "Elbow");
 _defineConstant("STRAIGHT_LINKS", "Straight");
 
+_defineConstant("ASSOC_RIGHT_SIDE_CURVE", "RightSideCurve");
+_defineConstant("ASSOC_STRAIGHT", "Straight");
+
 _defineConstant("NO_LAYOUT", "None");
 _defineConstant("BLUE_ELLIPSES_LAYOUT", "Blue Ellipses");
 _defineConstant("DB2_EXPLAIN_LAYOUT", "Db2 Visual Explain");

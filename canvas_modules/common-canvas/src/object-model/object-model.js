@@ -9,7 +9,7 @@
 /* eslint arrow-body-style: ["off"] */
 
 import { createStore, combineReducers } from "redux";
-import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
+import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERROR, WARNING, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
 	CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
 	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK, CREATE_PIPELINE,
 	CLONE_PIPELINE, SUPER_NODE, HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM,
@@ -588,10 +588,9 @@ const links = (state = [], action) => {
 		action.data.selectedObjectIds.forEach((objId, i) => {
 			createdLinks.push({
 				id: action.data.linkIds[i],
-				class_name: "d3-comment-link",
 				srcNodeId: action.data.id,
 				trgNodeId: action.data.selectedObjectIds[i],
-				type: "commentLink"
+				type: COMMENT_LINK
 			});
 		});
 		return [
@@ -3358,7 +3357,6 @@ export class APIPipeline {
 		const linkId = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": srcNode, "targetNode": trgNode });
 		let newLink = {
 			id: linkId,
-			class_name: "d3-data-link",
 			srcNodeId: srcNode.id,
 			trgNodeId: trgNode.id,
 			type: NODE_LINK
@@ -3400,11 +3398,13 @@ export class APIPipeline {
 			const link = {};
 			link.id = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
 			link.type = data.type;
-			link.class_name = data.type === ASSOCIATION_LINK ? "d3-object-link" : "d3-data-link";
 			link.srcNodeId = srcInfo.id;
 			link.srcNodePortId = srcInfo.portId;
 			link.trgNodeId = trgInfo.id;
 			link.trgNodePortId = trgInfo.portId;
+			if (data.class_name) {
+				link.class_name = data.class_name;
+			}
 			if (data.linkName) {
 				link.linkName = data.linkName;
 			}
@@ -3433,7 +3433,6 @@ export class APIPipeline {
 					const info = {};
 					info.id = this.objectModel.getUniqueId(CREATE_COMMENT_LINK, { "comment": this.getComment(srcNodeId), "targetNode": this.getNode(trgNodeId) });
 					info.type = data.type;
-					info.class_name = "d3-comment-link";
 					info.srcNodeId = srcNodeId;
 					info.trgNodeId = trgNodeId;
 					linkCommentList.push(info);
@@ -3576,7 +3575,7 @@ export class APIPipeline {
 
 	getCommentLinkFromInfo(id1, id2) {
 		return this.getLinks().find((link) => {
-			if (link.type === "commentLink") {
+			if (link.type === COMMENT_LINK) {
 				return (link.srcNodeId === id1 &&
 								link.trgNodeId === id2) ||
 								(link.srcNodeId === id2 &&

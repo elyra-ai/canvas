@@ -30,6 +30,10 @@ _defineConstant("DEFAULT_NOTIFICATION_HEADER", "Notifications");
 _defineConstant("MOUSE_INTERACTION", "Mouse");
 _defineConstant("TRACKPAD_INTERACTION", "Trackpad");
 
+// Values for enableAssocLinkType config parameter
+_defineConstant("ASSOC_RIGHT_SIDE_CURVE", "RightSideCurve");
+_defineConstant("ASSOC_STRAIGHT", "Straight");
+
 _defineConstant("ERROR", "error");
 _defineConstant("WARNING", "warning");
 _defineConstant("INFO", "info");
@@ -41,6 +45,12 @@ _defineConstant("VERTICAL", "vertical");
 
 _defineConstant("PORT_OBJECT_IMAGE", "image");
 _defineConstant("PORT_OBJECT_CIRCLE", "circle");
+
+// Types of association link drawn states
+_defineConstant("CURVE_RIGHT", "curveRight");
+_defineConstant("CURVE_LEFT", "curveLeft");
+_defineConstant("DOUBLE_BACK_RIGHT", "doubleBackRight");
+_defineConstant("DOUBLE_BACK_LEFT", "doubleBackLeft");
 
 // The type of object to which deorations are to be attached.
 _defineConstant("DEC_NODE", "node");

@@ -179,14 +179,12 @@
     },
     {
       "id": "myUniqueCommentLinkId",
-      "class_name": "d3-comment-link",
       "srcNodeId": "myUniqueCommentId",
       "trgNodeId": "2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
       "type": "commentLink"
     },
     {
       "id": "myUniqueClonedCommentLinkId_myUniqueCommentLinkId_myUniqueClonedCommentId_myUniqueCommentId_myUniqueClonedNodeId_2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
-      "class_name": "d3-comment-link",
       "srcNodeId": "myUniqueClonedCommentId_myUniqueCommentId",
       "trgNodeId": "myUniqueClonedNodeId_2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
       "type": "commentLink"

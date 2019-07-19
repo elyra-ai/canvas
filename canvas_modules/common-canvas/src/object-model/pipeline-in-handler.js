@@ -209,14 +209,14 @@ export default class PipelineInHandler {
 									"id":
 										has(link, "app_data.ui_data.id")
 											? link.app_data.ui_data.id : this.getUUID(),
-									"class_name":
-										has(link, "app_data.ui_data.class_name")
-											? link.app_data.ui_data.class_name : "d3-data-link",
 									"srcNodeId": link.node_id_ref,
 									"trgNodeId": node.id,
 									"trgNodePortId": input.id,
 									"type": "nodeLink"
 								};
+								if (has(link, "app_data.ui_data.class_name")) {
+									newLink.class_name = link.app_data.ui_data.class_name;
+								}
 								if (has(link, "app_data.ui_data.style")) {
 									newLink.style = link.app_data.ui_data.style;
 								}
