@@ -77,7 +77,7 @@ function loadProperties(fileName, fileType) {
 function getCanvas() {
 	const canvasData = browser.execute(function() {
 		/* global document */
-		return document.canvasInfo;
+		return document.canvasController.getCanvasInfo();
 	});
 	return canvasData.value;
 }
@@ -90,7 +90,7 @@ function getCanvasData() {
 function getSecondCanvas() {
 	const canvasData = browser.execute(function() {
 		/* global document */
-		return document.canvasInfo2;
+		return document.canvasController2.getCanvasInfo();
 	});
 	return canvasData.value;
 }
@@ -127,6 +127,21 @@ function getLastLogOfType(logType) {
 	});
 
 	return lastEventLog;
+}
+
+function clearMessagesFromAllNodes() {
+	browser.execute(function() {
+		/* global document */
+		const canvasInfo = document.canvasController.getCanvasInfo();
+		canvasInfo.pipelines.forEach((pipeline) => {
+			pipeline.nodes.forEach((n) => {
+				delete n.messages;
+			});
+		});
+
+		/* global document */
+		document.canvasController.getObjectModel().setCanvasInfo(canvasInfo);
+	});
 }
 
 function isSchemaValidationError() {
@@ -168,6 +183,7 @@ module.exports = {
 	getCanvas: getCanvas,
 	getCanvasData: getCanvasData,
 	getSecondCanvas: getSecondCanvas,
+	clearMessagesFromAllNodes: clearMessagesFromAllNodes,
 	getCanvasDataForSecondCanvas: getCanvasDataForSecondCanvas,
 	getEventLogData: getEventLogData,
 	getLastEventLogData: getLastEventLogData,

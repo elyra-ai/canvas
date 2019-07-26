@@ -1,0 +1,738 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "b01b-861f12d01489-abc651d6-9b88-423c",
+  "primary_pipeline": "861f12d01489-abc651d6-9b88-423c-b01b",
+  "pipelines": [
+    {
+      "id": "861f12d01489-abc651d6-9b88-423c-b01b",
+      "nodes": [
+        {
+          "id": "a6edc3e8-6fc5-43fd-8d0c-15033014cab7",
+          "type": "execution_node",
+          "op": "derive",
+          "app_data": {
+            "ui_data": {
+              "label": "Warning",
+              "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ii0wLjkgLTEuNCA0Ni41IDQxLjgiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgLTAuOSAtMS40IDQ2LjUgNDEuODsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4NCgkuc3Qwe2ZpbGw6IzFEMzY0OTt9DQoJLnN0MXtmaWxsOm5vbmU7c3Ryb2tlOiMxNTI5MzU7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDJ7ZmlsbDpub25lO3N0cm9rZTojRjlGOUZCO3N0cm9rZS13aWR0aDozO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qze2ZpbGw6I0Y5RjlGQjt9DQoJLnN0NHtmaWxsOiM0MUQ2QzM7fQ0KPC9zdHlsZT4NCjxnPg0KCQ0KCQk8aW1hZ2Ugc3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2O2VuYWJsZS1iYWNrZ3JvdW5kOm5ldyAgICA7IiB3aWR0aD0iNTIiIGhlaWdodD0iNDUiIHhsaW5rOmhyZWY9ImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBRFFBQUFBdENBWUFBQURob1VpNEFBQUFDWEJJV1hNQUFBc1NBQUFMRWdIUzNYNzhBQUFBCkdYUkZXSFJUYjJaMGQyRnlaUUJCWkc5aVpTQkpiV0ZuWlZKbFlXUjVjY2xsUEFBQUJXVkpSRUZVZU5yTVd0MXVHa2NZM1psZERKaS8KcEZ1czBrU3hXaUdydG9zbFYxRnVXcW0rOEN1WWw3RDhETFpmeDM0SlYxVnYwcW9YVGswa3gzSGtSQTBWWkYzL3NBWU1POVB6YlpZVgpKZnpza2dWMnBkSENpSjJaTStkOFoyYStoU25qWFV4S3FlenY3ek5sQXRmdTdxNWt6RzVhK2g2WTN3ZjI5dmE0WVJnUlhkZWp6V1l6CmNuOS9IeWlvVkNvbDBINGI3VGZ3dFkzK2hKL25OYjlnYXJWYVBKRklaQUhta1JEaWdZWUxiQVVDQ3F4STB6UmJ5V1RTdUx1N2UxZXYKMXcxVTMvdGh5ZzhnUnN4RW85RUZ4VktlQ2k2ZW9adkhVcEV4cGdSR2t1U2NtOUtTcHdEM0MrYXFzYlcxMVQ0OFBMUUNCNFNHT1dZdQphVm5XdDVMSkgxSDFFMG9PWlM0d3ZVbWJpUnB1RDhGNkZhRCtXVjFkdlFNZzRaVWxyNEFZR283YzNOem9rVWhrQ1Uydm9HNFJKUU4yCjFBQkRpQWFkSkpreHlkYkEwT3ZiMjl2TGc0T0RWckZZOU1TUzZwRWROWlBKcERGankram9aOGJaT3FxekRqdmNNWmNnQ25jTFUxcTQKWDZxcSt1SHE2cXEyc2JIUlBqbzZHc2tTOThvT1RFQUhvRHc2eWtNT091b2o0N2lraDRzN0xIM0RGZjRNZmEwMUdvMEZpbDh2L1kxawpDSFNyNStmbkdkRC9YUTg3a3dMVVlZcllqd0pVUzBoUmljVmlsN2xjcmxrcWxlVFlESkZObzRFNHdGRHdMNk9ycFFtejQ0NEwvY1RKCmRHQVF5MURHRWltRWxES3EzMkVNc1VLaE1BY2J6YUh4cDVpcERkUVZVTDUwekdTU2dHaE5vdlpWK3k0VWs2dThqSFhQR01VU0gyWFQKYU9TamxoVzVodXFGS2JEVExiMklyUWpFTGNXdkY1YTRCeU5ZSXRwdCtqL0tnQ3ZUdTZpdkJNYXdDSllLa1A0aWJEeUp1T2ErSkRmSQpDTkR3dE5qcFpvbjVzWEZ0bUJHQWtXa2FnU2NiaCtNWnNIRnMrY3kvKyszejFEQVpRUkEyemtObUJKOXQ0enlFUmpESXhtM3BqVElJCmRkUitiUVpHOEZrR29mWFpUZWZ4UFQ5akl4aHBFQ2kwenpOdzRLeEJWZTg3QnNFN3NWT3RWaE13Z3lkZzUzdm5hSkFJZzlUNkxiWVUKMTRqeEFvNHVQNENsUjJRV2xPTndZd2pzcVBGNG5PVDJCTEZENkw4SUlUdmRMTVV3VHRvZ2YwMW5NcGhZcEpPd3NjOHkxOWZYS2dVLwpBRDBFYWdJMkYxSXdMaWlNVWNNS0ZLV3dnWVd6YnJRU1ptRGhCM1dBK2hmSWIzRDNsWmlZd1NVd3hqYW12RW1aSVN5MDhuKzJmWEp5Cll0WHJkUUx5Rmd5OUlRZEJhWVVVRk9VWEdoaG5GWGN5ZzJ2RWZvdHllUzRnU2tKa3Mxa1RXbndybWZ3TFZSY29wdk53bUM3cFRIUkYKS09JRjFQU25aVm0wQldvNmlVblh4U1JZYWtXalVRTXNuZUd4TS96QUNDRkxOTUUxRkZMUmM0enhHQnVicXE3cjdqaGRXeWFXQU1ocwp0OXNYcUgwQllCZDJTa2xLRVNaMjdJbVd5aWsrdjhSWXl5c3JLL1h1N0dyM090UE4waWswK2hKMVpUS0xrRWlQeG1EYUU0MEpwNGxQCnBWSzFZckVvQm01T2lTVmFlUkZrYjZEUjV3QjFUSG9OZ2ZTNjJUbWpzS0NKSndKNng5VjdIcEtPSGl0d3ZXTnMwM1dBK29vV0w1UUgKWHZONGdhT0I3QUdtNXJMVGFsL016OCtiVGtaMStCR2M5RWk2SkgyU1RrbXZNellJNGNpK1RHRkE0VENJbllFNUJkSWw2VE1FQnVIYQpOTW1md29EQ2djS2lIenZEa2lSaE1RalhwdTJZaGsxam0xUHB0bW5QZVRrY2JaWDE5WFVMb0N6RUVzZnVOdTFzV2hQT2Myd0s3TnpUCkd3aDgrZ085L1lwRjlCWEdkTHU5dlQxd1VvZTlmWmlwUWZRemduUTYvWWxOKzAwRno4b2dmQm1CWjBCRERHS1MrenpmUnVBTDBBejIKZWI2TndKTXA5QnJFNXVhbVFDd3BxcVltMEN5OWpkQ2RYQmx6T2dxaUNDYzNVUFpqQkY1TjRST1c4dm04Z1E0b2prcTI0MGs3VHpZWAo1RXRqaDUwekhHT09TZVplakdBY1FQWStiMmRucHdicG5XdE0rMDF5U1JKNFRPZjdBRk1nQk1oa2twM2ljd2tTLytERkNNWUMxTEZ4CnhHWUZRdjJkTS82ZS9xY0Fkb0w3bjRMQ0pOcHNhWnBtQ0V1OEEwT21GeVBvVFF2NXVzTCtUNUp4QnhQYS8vcjhKOEFBUTdDd2E0S0cKRFIwQUFBQUFTVVZPUks1Q1lJST0iIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgLTMgLTIpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjExLjEsMzcgMC40LDE4LjUgMTEuMSwwIDMyLjYsMCA0My40LDE4LjUgMzIuNiwzNyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9IjExLjEsMzcgMC40LDE4LjUgMTEuMSwwIDMyLjYsMCA0My40LDE4LjUgMzIuNiwzNyAJCSIvPg0KCTwvZz4NCjwvZz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxMCIgeTE9IjguNSIgeDI9IjI1IiB5Mj0iOC41Ii8+DQo8cG9seWdvbiBjbGFzcz0ic3QzIiBwb2ludHM9IjI5LDExLjYgMjksMTAgMjUsMTAgMjUsNyAyOSw3IDI5LDQuOSAzNC44LDguMiAiLz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxMCIgeTE9IjE4LjUiIHgyPSIyNSIgeTI9IjE4LjUiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDMiIHBvaW50cz0iMjksMjEuNiAyOSwyMCAyNSwyMCAyNSwxNyAyOSwxNyAyOSwxNC45IDM0LjgsMTguMiAiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDMiIHBvaW50cz0iMjksMzEuNiAyOSwzMCAyNSwzMCAyNSwyNyAyOSwyNyAyOSwyNC45IDM0LjgsMjguMiAiLz4NCjxyZWN0IHg9IjE1LjIiIHk9IjI0LjUiIGNsYXNzPSJzdDQiIHdpZHRoPSIxLjkiIGhlaWdodD0iNy43Ii8+DQo8cmVjdCB4PSIxMi4zIiB5PSIyNy4zIiBjbGFzcz0ic3Q0IiB3aWR0aD0iNy43IiBoZWlnaHQ9IjEuOSIvPg0KPC9zdmc+DQo=",
+              "x_pos": 227.5,
+              "y_pos": 195,
+              "class_name": "canvas-node",
+              "messages": [
+                {
+                  "id_ref": "custom_name",
+                  "validation_id": "custom_name",
+                  "type": "warning",
+                  "text": "Annotation is empty when there is a custom name"
+                },
+                {
+                  "id_ref": "annotation",
+                  "validation_id": "annotation",
+                  "type": "warning",
+                  "text": "Field cannot be empty nor contain \"quotes\""
+                }
+              ]
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "formula_measure_type": null,
+            "annotation": "",
+            "new_name": "Na_to_K",
+            "formula_expr": "Na/K",
+            "use_custom_name": false,
+            "custom_name": "Na_to_K"
+          }
+        },
+        {
+          "id": "ef026438-7ebc-4b0b-9609-1e49f9821f57",
+          "type": "super_node",
+          "subflow_ref": {
+            "pipeline_id_ref": "a2b03b68-04fd-4df3-b11f-295a64d030c3"
+          },
+          "app_data": {
+            "ui_data": {
+              "label": "Supernode1",
+              "image": "useDefaultIcon",
+              "x_pos": 385,
+              "y_pos": 75,
+              "description": "This supernode was created by common-canvas.",
+              "is_expanded": true,
+              "expanded_width": 192.5,
+              "expanded_height": 195,
+              "messages": [
+                {
+                  "id_ref": "text",
+                  "validation_id": "text",
+                  "type": "warning",
+                  "text": "Should not be 'warn'"
+                }
+              ]
+            }
+          },
+          "outputs": [
+            {
+              "id": "6f704d84-85be-4520-9d76-57fe2295b310_outPort",
+              "subflow_node_ref": "44d458dd-083e-4181-b232-d620fff52c7f",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "text": "warn"
+          }
+        },
+        {
+          "id": "88c1216d-ad22-4f38-b29d-a57007336f09",
+          "type": "super_node",
+          "subflow_ref": {
+            "pipeline_id_ref": "baba5d49-edee-427b-b2a5-fabb5989446b"
+          },
+          "app_data": {
+            "ui_data": {
+              "label": "Supernode3",
+              "image": "useDefaultIcon",
+              "x_pos": 630,
+              "y_pos": 75,
+              "description": "This supernode was created by common-canvas.",
+              "is_expanded": true,
+              "expanded_width": 192.5,
+              "expanded_height": 195
+            }
+          },
+          "inputs": [
+            {
+              "id": "ac584be2-8a3c-474f-a046-e10a3665b875_inPort",
+              "subflow_node_ref": "06593576-88e5-41e3-b879-74c3861cc34a",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            },
+            {
+              "id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26_inPort",
+              "subflow_node_ref": "94ec9e77-1566-49a5-bea4-ae33b545b19b",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            },
+            {
+              "id": "2807a076-6468-4ad1-94d3-f253f99bc8e0_inPort",
+              "subflow_node_ref": "0d2b2992-2ce6-4d52-a2e3-4722d9da0c7c",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "b3acb1f8-89a8-4080-9611-2fb03dee3d73_a723a31c-6c66-421e-b00a-e4d0b1faa265_outPort",
+              "subflow_node_ref": "ca6cfbcf-fadd-4023-9234-ff6e74170836",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "withReplacement": false,
+            "samplingRatio": 1,
+            "useSamplingSize": false,
+            "useSamplingSeed": false
+          }
+        },
+        {
+          "id": "f37f8ae1-b314-4d17-a0ad-3942bcfea01a",
+          "type": "execution_node",
+          "op": "Filter_paramDef",
+          "app_data": {
+            "ui_data": {
+              "label": "Error",
+              "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE2IC0xMy4xIDQ3LjMgNDIuMSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNiAtMTMuMSA0Ny4zIDQyLjE7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiMxRDM2NDk7fQ0KCS5zdDF7ZmlsbDpub25lO3N0cm9rZTojMTUyOTM1O3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6I0Y5RjlGQjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOiNGOUY5RkI7fQ0KCS5zdDR7b3BhY2l0eTowLjU7ZmlsbDojRjlGOUZCO30NCgkuc3Q1e2ZpbGw6I0U3MUQzMjt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7IiB3aWR0aD0iNTIiIGhlaWdodD0iNDYiIHhsaW5rOmhyZWY9ImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBRFFBQUFBdUNBWUFBQUJuTlRvV0FBQUFDWEJJV1hNQUFBc1NBQUFMRWdIUzNYNzhBQUFBCkdYUkZXSFJUYjJaMGQyRnlaUUJCWkc5aVpTQkpiV0ZuWlZKbFlXUjVjY2xsUEFBQUJYWkpSRUZVZU5yY1d1MU9HMGNVM1puMVlodC8KUWJkR2RkTUd0VUtvUUl4RUZlVlBxNWFYd0MrQmVBYmdHWGdMZUFtaS9vdXFJam1CU0lRUWtkSzZ3bG1Lc1JkLzdlNzAzTzJ5M1JKLwo3Q1pydk1wSW8yRUhlMmJPbkh2UDNMbGVTZnJFQ3Z2UTd3a2hwTzN0YlRhS1JXMXViZ3JHN0tIRnlBRnRiVzF4VGRNVVZWWGo3WFpiCjZYUTZvWUxLWkRJV3hqY3dmZ3VQQnVhemdudy9GaFJNbzlGSXBsS3BQTUE4c0N4cktvWUN0a0lCQlZhRXJ1dmRkRHF0M2R6Yy9ONXMKTmpWMGQ0SXdGUVFRSTJiaThmaU1aRXFQTFc0OXdUUmZDVWtrbUJRYVNZSnpyZ3RUSEFQY1UreFZhMjF0emRqYjJ6TkRCNFNCT1hZdQpiWnJtdDRLSkg5RDFJMm9CZFNJMGV4TTJFdzAwMDJDOUNsQi9MUzB0M1FDUTVaY2x2NEFZQmxhdXI2OVZSVkhtTWZRaSttWlJjMkJICkR0R0ZhTkZwTWpNbTJESVllbDJ2MXk5M2QzZTdwVkxKRjB1K0ZvTUI1ZFBUMHh3bStBNFQvY3c0VzBGMzNtR0hPK0lTUnVWdVpWSVgKN2FVc3krK3VycTRhcTZ1cnh2Nyt2dmhvaGtnSWpvNk9rZ0JUZ0Jrc1lLSjV0Q3IrcFh5RTdBOHEzR0hwR3k3eEo1YXd0RmFyQmEzUQovL0FqRU1NWVlzVmljUUtPU21BZVk0SlY5QlZSUDNjMll4U0FicGtpOXVPWXN3dFFGNGxFNHJKUUtMU3h1V0xZYmd3VkFzaXp2VnR3CjFtVjB6NHlRSFhkZDJNQWtpUTdtWElBNHpPT1lVTW1QaDgzTGh3a0JEVVFEMHNEMkJQOU94RWNld2pCbW14N2FXY21TaWpENVdRaEUKR3Y3TVA4amt3STZjeStXeUdIREJLd1I0SGpVN1h0TmpRUVdDKzJCbkRnUE9qVmdJZkFrRTFyQU1nWmloQTc3Zk91U0FNbjNmZ0FJTApCQjhrMDNpOEQ1a09WU0RrQ01pMEg0R2dlV1c3dFNTZHk3d0M1ZFY2c2NRakl0TitURSt4TFFYK1RIN2RqeVVlRlpuMktSQ3BZVEl1ClIwaW1RNUh4V0k5b2VnN1BjMk1XZ3FFeWprb3lydUhDMllCVi9Ya2I1L0ZiMzZsV3F5bUl3VU93ODhpNUdxUWlZbXJ2K1JMNU5YeTgKaUt2TDkyRHBBVWs2NVRoY0h3STdjaktaSkhON0NOOGg5SjlGa0IwdlN3bXNrODdGTCtsT0JoRlRiaE0yOWwybVZxdko1UHdBTkEzVQpCR3dpb21CY1VGaGpEQmVKT0xrTkRscm1SU3NnQmlZKzBBU292NEg4R20yZ3hNUVlpb1UxR3RqeU5tV0dFQTZKLzhuMjRlR2gyV3cyCkNjaGJNUFNHRkFTMUcxRlFsRjlvWVoxVnRDUUdOZmgrbDNKNUxpQktRdVR6ZVIyMitGWXc4UUpkWjNheVFnZ3JZbUNFczlFWGxtUTkKaHpYOVpwb20zV1RiVG1MU1ZURUJscnJ4ZUZ3RGlHT2dmNG0rQ3BtaHN5TlJZcWVCU2xiMERPc3JJN0NwcXFycVdwTjdzQ0lta2xaVwpWa3lBTWhIUmNzaGkxbEc3bFBNNUZnRjJPcFRhd2wrL1lqVy9nSjFYV0hOOWZYM2Q2cFVrRVE3U0MvaFRHYUJVTVBVRnlTTHFsTjhNCjBjalF3UHdCaHR6Z0RIYjEzT2dhWjlsc3RsRXFsYXkrd1NubGtSY1hGNXVHWVZUdytCSTdRUmxNTFFJQ1lUbm1YeUYzSUxjZzl5QTMKdWJ1dTl5SUJRcHpKWkJvQVplK0V2U09TcEkvUmwxd2hBSmd5eE9BWlZPME5oVHhPUm5Yb0Zkd3JFQ2NZN21UTUxMbENRR0JJQ0hDUQpYbmlGWUdoT2daQURrSDZIcFhISXVNMk92YUV3ZjNJRGNnZHlpMzQvcy9RTFBxTWk0elNYN2dvQk5wamM0YTRRK01yTEVVdGtwMlN2Ck50V3dYN0xqZXpROUx6c25aUDc5aE1CYkJ1VzJ4eXJqdldSNmNuSlM3eVVFdmxQQlk1UngzeklkQ05BQUdSK2xRQVNTNmNDQXhpQVEKZ1dUYVYrYjBicmtiNTZFckMyQVU1M2t6UWlLRWFqbTVnY3FnZUcxUThmdVQ1SDhDVVd1V2hTTG9aanVOOEowNVNRc1dvcmtST3llNAp4cFRKekh2RmE4T1NEcjRMNWJ3UERnNm1NTkVqbWNrL1lkSjVPeG9YSVFGaU5pQ2RDWGFNc1o5Mk9wMFg1K2ZudFNDL2dnZGRDTnZZCjJKaElKcE9xTE10ZkE1Z0toMVhDZkU4Qmw4eHVMQmJUWUdyMmV3bzdPenNqZTAvQmEzcnZORTFyNE85WXZWNFBOZFhsZlpNRTU0NFIKOUhqNDVONzErVWVBQVFCMGhLd1BVa2RKakFBQUFBQkpSVTVFcmtKZ2dnPT0iIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTMgLTE1KSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIyNy4xLDI1IDE2LjQsNi41IDI3LjEsLTEyIDQ4LjYsLTEyIDU5LjQsNi41IDQ4LjYsMjUgCQkiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIyNy4xLDI1IDE2LjQsNi41IDI3LjEsLTEyIDQ4LjYsLTEyIDU5LjQsNi41IDQ4LjYsMjUgCQkiLz4NCgk8L2c+DQo8L2c+DQo8bGluZSBjbGFzcz0ic3QyIiB4MT0iMjYiIHkxPSItMy41IiB4Mj0iNDEiIHkyPSItMy41Ii8+DQo8bGluZSBjbGFzcz0ic3QyIiB4MT0iMjYiIHkxPSI1LjUiIHgyPSIzMyIgeTI9IjUuNSIvPg0KPHBvbHlnb24gY2xhc3M9InN0MyIgcG9pbnRzPSI0NSwtMC41IDQ1LC0yIDQxLC0yIDQxLC01IDQ1LC01IDQ1LC03LjIgNTAuOCwtMy45ICIvPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjI2IiB5MT0iMTQuNSIgeDI9IjQxIiB5Mj0iMTQuNSIvPg0KPHBvbHlnb24gY2xhc3M9InN0MyIgcG9pbnRzPSI0NSwxNy41IDQ1LDE2IDQxLDE2IDQxLDEzIDQ1LDEzIDQ1LDEwLjggNTAuOCwxNC4xICIvPg0KPHBvbHlnb24gY2xhc3M9InN0NCIgcG9pbnRzPSI0NSw4LjUgNDUsNyA0MSw3IDQxLDQgNDUsNCA0NSwxLjggNTAuOCw1LjEgIi8+DQo8cmVjdCB4PSIzNi4xIiB5PSIyLjEiIHRyYW5zZm9ybT0ibWF0cml4KDAuNzA3MSAwLjcwNzEgLTAuNzA3MSAwLjcwNzEgMTQuNDI1OCAtMjQuNTI5OCkiIGNsYXNzPSJzdDUiIHdpZHRoPSIxLjUiIGhlaWdodD0iNiIvPg0KPHJlY3QgeD0iMzYuMiIgeT0iMi4xIiB0cmFuc2Zvcm09Im1hdHJpeCgtMC43MDcxIDAuNzA3MSAtMC43MDcxIC0wLjcwNzEgNjYuNTY1NyAtMTcuNDAzOCkiIGNsYXNzPSJzdDUiIHdpZHRoPSIxLjUiIGhlaWdodD0iNiIvPg0KPC9zdmc+DQo=",
+              "x_pos": 87.5,
+              "y_pos": 195,
+              "description": "Filter data",
+              "messages": [
+                {
+                  "id_ref": "field_types",
+                  "validation_id": "field_types",
+                  "type": "error",
+                  "text": "Input name cannot equal Output name"
+                }
+              ]
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "field_types": [
+              [
+                "Field 2",
+                "Field 2",
+                true
+              ]
+            ],
+            "custom_name": "",
+            "custom_name_checkbox": false,
+            "annotation": []
+          }
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "7480223f-8e7a-4c67-b987-2a31e327545b",
+              "x_pos": 56,
+              "y_pos": 18,
+              "width": 175,
+              "height": 88,
+              "class_name": "d3-comment-rect",
+              "content": "This canvas shows examples of different error nodes in both the primary pipeline and also on a supernode and on a node inside a supernode.",
+              "associated_id_refs": []
+            },
+            {
+              "id": "02790203-93e4-4dbf-bc94-f8f4bbba32bf",
+              "x_pos": 80,
+              "y_pos": 315,
+              "width": 87.5,
+              "height": 30,
+              "class_name": "d3-comment-rect",
+              "content": "Error node",
+              "associated_id_refs": [
+                {
+                  "node_ref": "f37f8ae1-b314-4d17-a0ad-3942bcfea01a",
+                  "class_name": "d3-comment-link"
+                }
+              ]
+            },
+            {
+              "id": "7109ee78-192f-459f-81ce-6c5abc042fcf",
+              "x_pos": 210,
+              "y_pos": 315,
+              "width": 105,
+              "height": 30,
+              "class_name": "d3-comment-rect",
+              "content": "Warning node",
+              "associated_id_refs": [
+                {
+                  "node_ref": "a6edc3e8-6fc5-43fd-8d0c-15033014cab7",
+                  "class_name": "d3-comment-link"
+                }
+              ]
+            },
+            {
+              "id": "3133108d-73e7-4401-9556-492d11fdb8fa",
+              "x_pos": 402.5,
+              "y_pos": 315,
+              "width": 157.5,
+              "height": 30,
+              "class_name": "d3-comment-rect",
+              "content": "Warning on a supernode",
+              "associated_id_refs": [
+                {
+                  "node_ref": "ef026438-7ebc-4b0b-9609-1e49f9821f57",
+                  "class_name": "d3-comment-link"
+                }
+              ]
+            },
+            {
+              "id": "63f8b105-9a11-4ff4-ab3c-2fd47fac7f79",
+              "x_pos": 630,
+              "y_pos": 315,
+              "width": 192.5,
+              "height": 30,
+              "class_name": "d3-comment-rect",
+              "content": "Error node inside a supernode",
+              "associated_id_refs": [
+                {
+                  "node_ref": "88c1216d-ad22-4f38-b29d-a57007336f09",
+                  "class_name": "d3-comment-link"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "runtime_ref": "test_runtime"
+    },
+    {
+      "id": "a2b03b68-04fd-4df3-b11f-295a64d030c3",
+      "nodes": [
+        {
+          "id": "id8I6RH2V91XW",
+          "type": "binding",
+          "op": "variablefile",
+          "app_data": {
+            "my_data": {
+              "value": "Binding node - data value"
+            },
+            "ui_data": {
+              "label": "Binding (entry) node",
+              "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ii0wLjggLTQgNDYuNCA0OCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAtMC44IC00IDQ2LjQgNDg7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiMxRDM2NDk7fQ0KCS5zdDF7ZmlsbDpub25lO3N0cm9rZTojMTUyOTM1O3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qye2ZpbGw6I0Y5RjlGQjtzdHJva2U6IzE1MjkzNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOiM0MUQ2QzM7c3Ryb2tlOiMxNTI5MzU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDR7ZmlsbDojMTUyOTM1O30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjtlbmFibGUtYmFja2dyb3VuZDpuZXcgICAgOyIgd2lkdGg9IjQ5IiBoZWlnaHQ9IjQ5IiB4bGluazpocmVmPSJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQURFQUFBQXhDQVlBQUFCem5FRWNBQUFBQ1hCSVdYTUFBQXNTQUFBTEVnSFMzWDc4QUFBQQpHWFJGV0hSVGIyWjBkMkZ5WlFCQlpHOWlaU0JKYldGblpWSmxZV1I1Y2NsbFBBQUFCM0ZKUkVGVWVOcnNXbHR2RTBjWTNkbGQzKzBZClNPUEVKRlNVVXNSRlJTSlZBMEt0bExadjhBeC9CM2psQi9ES08veUdVdFRtcGFTbEVpMlVJbENoWEJJY0hCekhqaTlyNzNET2VOYmEKT0w0a3dkaHUxWlZHdXg3dnpKd3o4NTJaYjc1WncvZ1BYS0pmOVVncGpTdFhybXlydmt1WExra2gxS3R5MkNURTVjdVh4ZjM3OThXSgpFeWNDK0Iyc1ZDcUJhclhhdGM1Z01DaERvWkNEeHlyS09pZ3JVWTk4SDBLN0lTRXVYTGhnVGsxTjJkRm9OR3haVnJoV3ErMnhwSlZ5ClRYY00vOXNZbGJiMW92Y0p0R2E2WnI0dTZobmJ0blAxZXIyOHNiRlJYbDVlcnQyOGVkUGREWmtka1VDUG1kbHNOaERIQmVEN1ROTk0KdTY0N2dmdCtJY1ZoMTNBbjhWcElkS2hXTnZCVlRNTjhMWVY4akxLdlVIWUY5eVVRV2kzZ0doOGZkOUNPK3lGSWlCczNicGdQSGp5SQpsTXZsRkJyOUJMMTZCTUNQQXRnTS92OElhUko1WTY1MEE5MUltTUowTUZKNS9IeU45QWJ2dmdDaGg4aDdCRUovaDhQaHpQSGp4MHNYCkwxN2M5cWlJN2ZZK2JEbUIza29EK0Vsa3p3SFFNZHcvUnRxREZPWUlBRWhBYU1WMnVpUnRUUWhxb29KVVJzb2gvUU15ZitKK0I0VHUKWVpTWG9LMzE3WTZLMWUxUDJENy9qeVlTaVRRYVBxckJ6K04rQnVrenBCUlNnZ1NvQmJ4ajZvN3BtUFE3ckRmSXVuWDVjWTRtNnFhbQpnaGdSRStLdnI2NnVWZzhlUEZpSEJjaGRrU0FCekJ3UjlQNE1PdTlMMlBGM3lQNGFQZlk1N2pOb01JRm56a3ArNERzeFk2SExXcWdyCmpMcmlTUHVRSnRIV1B1U0pTQ1JTVEtmVHBZbUppYTVFckU0bXhGNGlBYmZtenFFNUVqaUxkRmpiUHh1MStyVE93UDdVNk5oSU1hUzkKcWcxaFJHUmRPdERZT21iQTB2bno1MnUzYjk5dVM4UnVWeWsxTURZMlJnSFBvcSsrZ2J4TzY5NlA2Z2I3dFVqNkw5WWJSQnQ3MFVZSQpiZHJNQVlZYXNGU0I2U1hYbG5aaU4xc3pPQXRSeEJEWElZajROSXA4UVFMc3BUNzJmcmRSc2ZTSXpMQnRZaUFXWWlLMm51WkVNMXBaCldZbUMvUUVJY0E3cEt3b1ltaGpEc3pWSWR3aHRjcUpncXFQYjNzS2szdVJ5dWNMOC9Qd1dzN0pielNnV2k2VlF3VW1JYXc3M1E1dzkKOUl3eVdLZXUwV2FDR0lnRjJzaGlqU3JpMm1KV2xuODJnaXN4aGxFNGhrTGZ3amJQYURNS3R6TzdBVG1ucHA2S1E4QkVrV2V3R0s1aQp4cXI0WnlzUG5LQXZSRmVDSzdGZXlOTG9oY2lRQ0RUeGFReHBZaUkyWWlSV3Z6Wk52WW9hZXNHYW9pdWhWK0w0TU15b2cxbkZpVWxqCm05TGV3V1poODBVSUp3WlRPZ3pmNXF3YWpZYVloMDVDaTF4Z0VhL2hPWXNSZVFTVGVyV3dzRkQyQks1QXd1RVNwVklwcUtlMkdBb0YKZS9sQUF4NE5FbW5pSTFaaTlwdVRnRWpvNExIbjZVb25jUTkwMmhNTTQycjRqTXJGSWJaSllpVm1UeGVtdHEwZzdpbk1BSjlpdU9qVQpCVWRvSUF5TmhhdDVBNk5zWVBSMFlkSHVzY0RGNERXU3dGbG80Z2kwTVNwNjJLSUxiTHl5dVArRmhXOXBjWEZSNlVJQmhWRDRVZ0FFCmd0dlpFd3hSRjAyTXhOeldkeG9sSFhUVFIwOEg4Tjk0L1U5aUpFbm91TkJvaHl6YllGUWs0T0txQ0FTOHhDcnYwdStZakk2Z04yRWsKNWlZSnhrV3hFWGV3TnVSVlVFdktQT1pocDE5eDBuNXhJQ2FGRFJpSmxaaUpYWkhna3ZEMDZWT3l5ekFxeDZBV1hxNk1HZ21OU1VVTwppVlZqYnBxVFBIZnVuTU80S01PSytHT0ZGalpLSnFXeGxJbU5HSW1WbUwyT1ZwcmdMb21CWGNaRmtjM3RYMDVINlVhQmlCY3h6QkViCk1SS3JmMmVuOWhQd1A0eloyVm1KUFlVbFRNRW8zSDRkWHdxTndEVE1NT1k2MGtQNHJBc1lpWHR3eGJOWHIxNnR0MDZ4a3FGMVJxWXgKY28vQm1IYVhSZjZ3UjROdE93b0xNQkViTVJLckgxZXpsM2syQUUrMmlEM3NNK1QramdMUGtGM0EzUjJpRmx5TlFXRWlObUxVNXhodApGenZKa3h1OGxHV1lYVWVwbDlBTEczcElCMjVHdXUwbFlpRW1ZaVBHVnV2WUZCQ0RXSXhUcDA3VkdaR1dTaytDa1FacUpLcGpWR0tBCk9pQ0JGOEN3aUduMVJ3ajZqMkt4bUwxKy9YcXQ5ZVhXV0t6a21VQUdWektadkFzUjJUd1gwZEFQYURMbWdBZzhSOXNrOEFNSTNGMWIKVzh1a1VxbTJHdDBTbXVST2lXY0NES2s3amxQQWJGVkJzUkNJTUd3U3dRalp3aERpQTR3S0ZnUHBvbTQxQWlTQTd2b2VaclFZaVVSZQpZSEVyWGJ0MnplMFppL1daRlYyUit2VDA5SVpIUkcvVUdSVzM5UWoyTXpydXFsbklFR3VlQ2FIbVd5UVFqVWFmUXdjbGlMbmVxWERICklMR2ZDTXhxSFJXVzBJaWpHL1JPZXN5V3NPTk9wMDhtZ2lzaExYTXRRQnQzdEFaKzRRajBJdENWaEo4SUR6bXdwMzNMV0NpeTN5cUgKekRDREdyanJDNnVvYUtMMmFVUTc3Nkd4VlphY2VhcmE5dlBxOE5HUXYrTDVGdTRMRkhFK24xK2lDZlVpMEpPRVI0U25OQkJXRVpXcgpFTHRlUVV1QW1kZlBOUldDTjR3cUFOVUkzeU9sd1N2UStJOWxpbmhtR1o2ZVBzSHZoN2ovaHZRVDhuK0dTL0VZYnZZYmRGNmxrd2EyCjdERjJzaC94am9FTGhjSUV5RXd6L29PR3AzbUdqZjhaZUl1NWhwc0UySlIzSE54d2xSdHVOSG81Z3hHazNSYzlqeFQ1TCttVkF2ekwKZUR5K3N0UGozOTNZY2ZOSXVQVnJncHBSUzVJRUkzUU1jSGtIODdxWU9vQkgzaE9BNWdnVWJjTmVhLzJxWURjSDhjWjd6QzV0ditzQQpJY2Fza3Y1UEpQVDd6VThoUUdJTndKMStmdC9SbDlOUDd3c2JCbmwxakhUVHh5citqMUx3amtPZDlmTkxtdy9oUnJUOWJLamZud2Y1CnIzY0NEQUE3NEZybEx3YzRjUUFBQUFCSlJVNUVya0pnZ2c9PSIgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAtMiAtNCkiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxjaXJjbGUgY2xhc3M9InN0MCIgY3g9IjIxIiBjeT0iMTguNyIgcj0iMjAiLz4NCgkJPGNpcmNsZSBjbGFzcz0ic3QxIiBjeD0iMjEiIGN5PSIxOC43IiByPSIyMCIvPg0KCTwvZz4NCjwvZz4NCjxwb2x5Z29uIGNsYXNzPSJzdDIiIHBvaW50cz0iMTMuNSw3LjUgMTMuNSwyOS41IDI5LjUsMjkuNSAyOS41LDEyLjkgMjQuNyw3LjUgIi8+DQo8cG9seWxpbmUgY2xhc3M9InN0MyIgcG9pbnRzPSIyOSwxMi45IDIzLjcsMTIuOCAyMy43LDcgIi8+DQo8cmVjdCB4PSIxNS43IiB5PSIxMC45IiBjbGFzcz0ic3Q0IiB3aWR0aD0iNi45IiBoZWlnaHQ9IjEuMiIvPg0KPHJlY3QgeD0iMTUuNyIgeT0iMTQuNyIgY2xhc3M9InN0NCIgd2lkdGg9IjEyLjEiIGhlaWdodD0iMS4yIi8+DQo8cmVjdCB4PSIxNS43IiB5PSIxOC4zIiBjbGFzcz0ic3Q0IiB3aWR0aD0iMTIuMSIgaGVpZ2h0PSIxLjIiLz4NCjxyZWN0IHg9IjE1LjciIHk9IjIyLjEiIGNsYXNzPSJzdDQiIHdpZHRoPSIxMi4xIiBoZWlnaHQ9IjEuMiIvPg0KPHJlY3QgeD0iMTUuNyIgeT0iMjUuNSIgY2xhc3M9InN0NCIgd2lkdGg9IjEyLjEiIGhlaWdodD0iMS4yIi8+DQo8L3N2Zz4NCg==",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "Imports data from a comma-delimited file"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "my_data": {
+                  "my_field": "Binding node -> Outputs -> My data -> My field -> My value"
+                },
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              },
+              "parameters": {
+                "props": [
+                  {
+                    "field1": "binding-node-port-param-val1"
+                  },
+                  {
+                    "field2": "binding-node-port-param-val2"
+                  }
+                ]
+              }
+            }
+          ],
+          "parameters": {
+            "props": [
+              {
+                "field1": "binding-node-param-val1"
+              },
+              {
+                "field2": "binding-node-param-val2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "6f704d84-85be-4520-9d76-57fe2295b310",
+          "type": "execution_node",
+          "op": "select",
+          "app_data": {
+            "ui_data": {
+              "label": "Select",
+              "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ii0xLjEgLTIgNDcuMyA0My41IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IC0xLjEgLTIgNDcuMyA0My41OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojMUQzNjQ5O30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6IzE1MjkzNTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOm5vbmU7c3Ryb2tlOiNGOUY5RkI7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDN7ZmlsbDpub25lO30NCgkuc3Q0e2ZpbGw6IzQxRDZDMzt9DQoJLnN0NXtmb250LWZhbWlseTonSGVsdk5ldWVSb21hbmZvcklCTSc7fQ0KCS5zdDZ7Zm9udC1zaXplOjIwcHg7fQ0KCS5zdDd7ZmlsbDojRjlGOUZCO30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjtlbmFibGUtYmFja2dyb3VuZDpuZXcgICAgOyIgd2lkdGg9IjUyIiBoZWlnaHQ9IjQ1IiB4bGluazpocmVmPSJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQURRQUFBQXRDQVlBQUFEaG9VaTRBQUFBQ1hCSVdYTUFBQXNTQUFBTEVnSFMzWDc4QUFBQQpHWFJGV0hSVGIyWjBkMkZ5WlFCQlpHOWlaU0JKYldGblpWSmxZV1I1Y2NsbFBBQUFCV1ZKUkVGVWVOck1XdDF1R2tjWTNabGRESmkvCnBGdXMwa1N4V2lHcnRvc2xWMUZ1V3FtKzhDdVlsN0Q4RExaZngzNEpWMVZ2MHFvWFRrMGt4M0hrUkEwVlpGMy9zQVlNTzlQemJaWVYKSmZ6c2tnVjJwZEhDaUoyWk0rZDhaMmEraFNualhVeEtxZXp2N3pObEF0ZnU3cTVrekc1YStoNlkzd2YyOXZhNFlSZ1JYZGVqeldZegpjbjkvSHlpb1ZDb2wwSDRiN1Rmd3RZMytoSi9uTmI5Z2FyVmFQSkZJWkFIbWtSRGlnWVlMYkFVQ0NxeEkwelJieVdUU3VMdTdlMWV2CjF3MVUzL3RoeWc4Z1JzeEVvOUVGeFZLZUNpNmVvWnZIVXBFeHBnUkdrdVNjbTlLU3B3RDNDK2Fxc2JXMTFUNDhQTFFDQjRTR09XWXUKYVZuV3Q1TEpIMUgxRTBvT1pTNHd2VW1iaVJwdUQ4RjZGYUQrV1YxZHZRTWc0WlVscjRBWUdvN2MzTnpva1Voa0NVMnZvRzRSSlFOMgoxQUJEaUFhZEpKa3h5ZGJBME92YjI5dkxnNE9EVnJGWTlNU1M2cEVkTlpQSnBERmp5K2pvWjhiWk9xcXpEanZjTVpjZ0NuY0xVMXE0Clg2cXErdUhxNnFxMnNiSFJQam82R3NrUzk4b09URUFIb0R3NnlrTU9PdW9qNDdpa2g0czdMSDNERmY0TWZhMDFHbzBGaWw4di9ZMWsKQ0hTcjUrZm5HZEQvWFE4N2t3TFVZWXJZandKVVMwaFJpY1ZpbDdsY3Jsa3FsZVRZREpGTm80RTR3RkR3TDZPcnBRbXo0NDRML2NUSgpkR0FReTFER0VpbUVsREtxMzJFTXNVS2hNQWNiemFIeHA1aXBEZFFWVUw1MHpHU1NnR2hOb3ZaVit5NFVrNnU4akhYUEdNVVNIMlhUCmFPU2psaFc1aHVxRktiRFRMYjJJclFqRUxjV3ZGNWE0QnlOWUl0cHQrai9LZ0N2VHU2aXZCTWF3Q0pZS2tQNGliRHlKdU9hK0pEZkkKQ05Ed3ROanBab241c1hGdG1CR0FrV2thZ1NjYmgrTVpzSEZzK2N5LysrM3oxREFaUVJBMnprTm1CSjl0NHp5RVJqREl4bTNwalRJSQpkZFIrYlFaRzhGa0dvZlhaVGVmeFBUOWpJeGhwRUNpMHp6Tnc0S3hCVmU4N0JzRTdzVk90VmhNd2d5ZGc1M3ZuYUpBSWc5VDZMYllVCjE0anhBbzR1UDRDbFIyUVdsT053WXdqc3FQRjRuT1QyQkxGRDZMOElJVHZkTE1Vd1R0b2dmMDFuTXBoWXBKT3dzYzh5MTlmWEtnVS8KQUQwRWFnSTJGMUl3TGlpTVVjTUtGS1d3Z1lXemJyUVNabURoQjNXQStoZkliM0QzbFppWXdTVXd4amFtdkVtWklTeTA4bisyZlhKeQpZdFhyZFFMeUZneTlJUWRCYVlVVUZPVVhHaGhuRlhjeWcydkVmb3R5ZVM0Z1NrSmtzMWtUV253cm1md0xWUmNvcHZOd21DN3BUSFJGCktPSUYxUFNuWlZtMEJXbzZpVW5YeFNSWWFrV2pVUU1zbmVHeE0vekFDQ0ZMTk1FMUZGTFJjNHp4R0J1YnFxN3I3amhkV3lhV0FNaHMKdDlzWHFIMEJZQmQyU2tsS0VTWjI3SW1XeWlrK3Y4Ull5eXNySy9YdTdHcjNPdFBOMGlrMCtoSjFaVEtMa0VpUHhtRGFFNDBKcDRsUApwVksxWXJFb0JtNU9pU1ZhZVJGa2I2RFI1d0IxVEhvTmdmUzYyVG1qc0tDSkp3SjZ4OVY3SHBLT0hpdHd2V05zMDNXQStvb1dMNVFIClh2TjRnYU9CN0FHbTVyTFRhbC9NejgrYlRrWjErQkdjOUVpNkpIMlNUa212TXpZSTRjaStUR0ZBNFRDSW5ZRTVCZElsNlRNRUJ1SGEKTk1tZndvRENnY0tpSHp2RGtpUmhNUWpYcHUyWWhrMWptMVBwdG1uUGVUa2NiWlgxOVhVTG9DekVFc2Z1TnUxc1doUE9jMndLN056VApHd2g4K2dPOS9ZcEY5QlhHZEx1OXZUMXdVb2U5ZlppcFFmUXpnblE2L1lsTiswMEZ6OG9nZkJtQlowQkRER0tTK3p6ZlJ1QUwwQXoyCmViNk53Sk1wOUJyRTV1YW1RQ3dwcXFZbTBDeTlqZENkWEJsek9ncWlDQ2MzVVBaakJGNU40Uk9XOHZtOGdRNG9qa3EyNDBrN1R6WVgKNUV0amg1MHpIR09PU2VaZWpHQWNRUFkrYjJkbnB3YnBuV3RNKzAxeVNSSjRUT2Y3QUZNZ0JNaGtrcDNpY3drUy8rREZDTVlDMUxGeAp4R1lGUXYyZE0vNmUvcWNBZG9MN240TENKTnBzYVpwbUNFdThBME9tRnlQb1RRdjV1c0wrVDVKeEJ4UGEvL3I4SjhBQVE3Q3dhNEtHCkRSMEFBQUFBU1VWT1JLNUNZSUk9IiB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIC0zIC0yKSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIxMS4xLDM3IDAuNCwxOC41IDExLjEsMCAzMi42LDAgNDMuNCwxOC41IDMyLjYsMzcgCQkiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIxMS4xLDM3IDAuNCwxOC41IDExLjEsMCAzMi42LDAgNDMuNCwxOC41IDMyLjYsMzcgCQkiLz4NCgk8L2c+DQo8L2c+DQo8bGluZSBjbGFzcz0ic3QyIiB4MT0iNyIgeTE9IjE4LjUiIHgyPSIxNiIgeTI9IjE4LjUiLz4NCjxyZWN0IHg9IjE2IiB5PSIxMC4zIiBjbGFzcz0ic3QzIiB3aWR0aD0iMTEiIGhlaWdodD0iMTYuMiIvPg0KPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxNS45OTk5IDI0LjU4ODUpIiBjbGFzcz0ic3Q0IHN0NSBzdDYiPj88L3RleHQ+DQo8cG9seWdvbiBjbGFzcz0ic3Q3IiBwb2ludHM9IjMyLDIyLjYgMzIsMjAgMjYsMjAgMjYsMTcgMzIsMTcgMzIsMTMuOSAzOS41LDE4LjIgIi8+DQo8L3N2Zz4NCg==",
+              "x_pos": 135,
+              "y_pos": 304.5,
+              "description": "Selects a subset of records based on an expression"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "id8I6RH2V91XW",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "44d458dd-083e-4181-b232-d620fff52c7f",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "image": "",
+              "x_pos": 285,
+              "y_pos": 99.5,
+              "description": "Supernode binding node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input_6f704d84-85be-4520-9d76-57fe2295b310_outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "6f704d84-85be-4520-9d76-57fe2295b310",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "c9b039c9-b098-412f-a08a-e9b722eadafc",
+              "x_pos": 303,
+              "y_pos": 343,
+              "width": 175,
+              "height": 52,
+              "class_name": "d3-comment-rect",
+              "content": "This is connected to the select node",
+              "associated_id_refs": [
+                {
+                  "node_ref": "6f704d84-85be-4520-9d76-57fe2295b310",
+                  "class_name": "d3-comment-link"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "runtime_ref": "test_runtime"
+    },
+    {
+      "id": "baba5d49-edee-427b-b2a5-fabb5989446b",
+      "nodes": [
+        {
+          "id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+          "type": "execution_node",
+          "op": "Filter_paramDef",
+          "app_data": {
+            "ui_data": {
+              "label": "Filter",
+              "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE2IC0xMy4xIDQ3LjMgNDIuMSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNiAtMTMuMSA0Ny4zIDQyLjE7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiMxRDM2NDk7fQ0KCS5zdDF7ZmlsbDpub25lO3N0cm9rZTojMTUyOTM1O3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6I0Y5RjlGQjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOiNGOUY5RkI7fQ0KCS5zdDR7b3BhY2l0eTowLjU7ZmlsbDojRjlGOUZCO30NCgkuc3Q1e2ZpbGw6I0U3MUQzMjt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7IiB3aWR0aD0iNTIiIGhlaWdodD0iNDYiIHhsaW5rOmhyZWY9ImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBRFFBQUFBdUNBWUFBQUJuTlRvV0FBQUFDWEJJV1hNQUFBc1NBQUFMRWdIUzNYNzhBQUFBCkdYUkZXSFJUYjJaMGQyRnlaUUJCWkc5aVpTQkpiV0ZuWlZKbFlXUjVjY2xsUEFBQUJYWkpSRUZVZU5yY1d1MU9HMGNVM1puMVlodC8KUWJkR2RkTUd0VUtvUUl4RUZlVlBxNWFYd0MrQmVBYmdHWGdMZUFtaS9vdXFJam1CU0lRUWtkSzZ3bG1Lc1JkLzdlNzAzTzJ5M1JKLwo3Q1pydk1wSW8yRUhlMmJPbkh2UDNMbGVTZnJFQ3Z2UTd3a2hwTzN0YlRhS1JXMXViZ3JHN0tIRnlBRnRiVzF4VGRNVVZWWGo3WFpiCjZYUTZvWUxLWkRJV3hqY3dmZ3VQQnVhemdudy9GaFJNbzlGSXBsS3BQTUE4c0N4cktvWUN0a0lCQlZhRXJ1dmRkRHF0M2R6Yy9ONXMKTmpWMGQ0SXdGUVFRSTJiaThmaU1aRXFQTFc0OXdUUmZDVWtrbUJRYVNZSnpyZ3RUSEFQY1UreFZhMjF0emRqYjJ6TkRCNFNCT1hZdQpiWnJtdDRLSkg5RDFJMm9CZFNJMGV4TTJFdzAwMDJDOUNsQi9MUzB0M1FDUTVaY2x2NEFZQmxhdXI2OVZSVkhtTWZRaSttWlJjMkJICkR0R0ZhTkZwTWpNbTJESVllbDJ2MXk5M2QzZTdwVkxKRjB1K0ZvTUI1ZFBUMHh3bStBNFQvY3c0VzBGMzNtR0hPK0lTUnVWdVpWSVgKN2FVc3krK3VycTRhcTZ1cnh2Nyt2dmhvaGtnSWpvNk9rZ0JUZ0Jrc1lLSjV0Q3IrcFh5RTdBOHEzR0hwR3k3eEo1YXd0RmFyQmEzUQovL0FqRU1NWVlzVmljUUtPU21BZVk0SlY5QlZSUDNjMll4U0FicGtpOXVPWXN3dFFGNGxFNHJKUUtMU3h1V0xZYmd3VkFzaXp2VnR3CjFtVjB6NHlRSFhkZDJNQWtpUTdtWElBNHpPT1lVTW1QaDgzTGh3a0JEVVFEMHNEMkJQOU94RWNld2pCbW14N2FXY21TaWpENVdRaEUKR3Y3TVA4amt3STZjeStXeUdIREJLd1I0SGpVN1h0TmpRUVdDKzJCbkRnUE9qVmdJZkFrRTFyQU1nWmloQTc3Zk91U0FNbjNmZ0FJTApCQjhrMDNpOEQ1a09WU0RrQ01pMEg0R2dlV1c3dFNTZHk3d0M1ZFY2c2NRakl0TitURSt4TFFYK1RIN2RqeVVlRlpuMktSQ3BZVEl1ClIwaW1RNUh4V0k5b2VnN1BjMk1XZ3FFeWprb3lydUhDMllCVi9Ya2I1L0ZiMzZsV3F5bUl3VU93ODhpNUdxUWlZbXJ2K1JMNU5YeTgKaUt2TDkyRHBBVWs2NVRoY0h3STdjaktaSkhON0NOOGg5SjlGa0IwdlN3bXNrODdGTCtsT0JoRlRiaE0yOWwybVZxdko1UHdBTkEzVQpCR3dpb21CY1VGaGpEQmVKT0xrTkRscm1SU3NnQmlZKzBBU292NEg4R20yZ3hNUVlpb1UxR3RqeU5tV0dFQTZKLzhuMjRlR2gyV3cyCkNjaGJNUFNHRkFTMUcxRlFsRjlvWVoxVnRDUUdOZmgrbDNKNUxpQktRdVR6ZVIyMitGWXc4UUpkWjNheVFnZ3JZbUNFczlFWGxtUTkKaHpYOVpwb20zV1RiVG1MU1ZURUJscnJ4ZUZ3RGlHT2dmNG0rQ3BtaHN5TlJZcWVCU2xiMERPc3JJN0NwcXFycVdwTjdzQ0lta2xaVwpWa3lBTWhIUmNzaGkxbEc3bFBNNUZnRjJPcFRhd2wrL1lqVy9nSjFYV0hOOWZYM2Q2cFVrRVE3U0MvaFRHYUJVTVBVRnlTTHFsTjhNCjBjalF3UHdCaHR6Z0RIYjEzT2dhWjlsc3RsRXFsYXkrd1NubGtSY1hGNXVHWVZUdytCSTdRUmxNTFFJQ1lUbm1YeUYzSUxjZzl5QTMKdWJ1dTl5SUJRcHpKWkJvQVplK0V2U09TcEkvUmwxd2hBSmd5eE9BWlZPME5oVHhPUm5Yb0Zkd3JFQ2NZN21UTUxMbENRR0JJQ0hDUQpYbmlGWUdoT2daQURrSDZIcFhISXVNMk92YUV3ZjNJRGNnZHlpMzQvcy9RTFBxTWk0elNYN2dvQk5wamM0YTRRK01yTEVVdGtwMlN2Ck50V3dYN0xqZXpROUx6c25aUDc5aE1CYkJ1VzJ4eXJqdldSNmNuSlM3eVVFdmxQQlk1UngzeklkQ05BQUdSK2xRQVNTNmNDQXhpQVEKZ1dUYVYrYjBicmtiNTZFckMyQVU1M2t6UWlLRWFqbTVnY3FnZUcxUThmdVQ1SDhDVVd1V2hTTG9aanVOOEowNVNRc1dvcmtST3llNAp4cFRKekh2RmE4T1NEcjRMNWJ3UERnNm1NTkVqbWNrL1lkSjVPeG9YSVFGaU5pQ2RDWGFNc1o5Mk9wMFg1K2ZudFNDL2dnZGRDTnZZCjJKaElKcE9xTE10ZkE1Z0toMVhDZkU4Qmw4eHVMQmJUWUdyMmV3bzdPenNqZTAvQmEzcnZORTFyNE85WXZWNFBOZFhsZlpNRTU0NFIKOUhqNDVONzErVWVBQVFCMGhLd1BVa2RKakFBQUFBQkpSVTVFcmtKZ2dnPT0iIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTMgLTE1KSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIyNy4xLDI1IDE2LjQsNi41IDI3LjEsLTEyIDQ4LjYsLTEyIDU5LjQsNi41IDQ4LjYsMjUgCQkiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIyNy4xLDI1IDE2LjQsNi41IDI3LjEsLTEyIDQ4LjYsLTEyIDU5LjQsNi41IDQ4LjYsMjUgCQkiLz4NCgk8L2c+DQo8L2c+DQo8bGluZSBjbGFzcz0ic3QyIiB4MT0iMjYiIHkxPSItMy41IiB4Mj0iNDEiIHkyPSItMy41Ii8+DQo8bGluZSBjbGFzcz0ic3QyIiB4MT0iMjYiIHkxPSI1LjUiIHgyPSIzMyIgeTI9IjUuNSIvPg0KPHBvbHlnb24gY2xhc3M9InN0MyIgcG9pbnRzPSI0NSwtMC41IDQ1LC0yIDQxLC0yIDQxLC01IDQ1LC01IDQ1LC03LjIgNTAuOCwtMy45ICIvPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjI2IiB5MT0iMTQuNSIgeDI9IjQxIiB5Mj0iMTQuNSIvPg0KPHBvbHlnb24gY2xhc3M9InN0MyIgcG9pbnRzPSI0NSwxNy41IDQ1LDE2IDQxLDE2IDQxLDEzIDQ1LDEzIDQ1LDEwLjggNTAuOCwxNC4xICIvPg0KPHBvbHlnb24gY2xhc3M9InN0NCIgcG9pbnRzPSI0NSw4LjUgNDUsNyA0MSw3IDQxLDQgNDUsNCA0NSwxLjggNTAuOCw1LjEgIi8+DQo8cmVjdCB4PSIzNi4xIiB5PSIyLjEiIHRyYW5zZm9ybT0ibWF0cml4KDAuNzA3MSAwLjcwNzEgLTAuNzA3MSAwLjcwNzEgMTQuNDI1OCAtMjQuNTI5OCkiIGNsYXNzPSJzdDUiIHdpZHRoPSIxLjUiIGhlaWdodD0iNiIvPg0KPHJlY3QgeD0iMzYuMiIgeT0iMi4xIiB0cmFuc2Zvcm09Im1hdHJpeCgtMC43MDcxIDAuNzA3MSAtMC43MDcxIC0wLjcwNzEgNjYuNTY1NyAtMTcuNDAzOCkiIGNsYXNzPSJzdDUiIHdpZHRoPSIxLjUiIGhlaWdodD0iNiIvPg0KPC9zdmc+DQo=",
+              "x_pos": 248.36752319335938,
+              "y_pos": 367.0442199707031,
+              "description": "Filter data",
+              "messages": [
+                {
+                  "id_ref": "field_types",
+                  "validation_id": "field_types",
+                  "type": "error",
+                  "text": "Input name cannot equal Output name"
+                }
+              ]
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "06593576-88e5-41e3-b879-74c3861cc34a",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  },
+                  "port_id_ref": "output_ac584be2-8a3c-474f-a046-e10a3665b875_inPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "field_types": [
+              [
+                "Field 2",
+                "Field 2",
+                true
+              ]
+            ],
+            "custom_name": "",
+            "custom_name_checkbox": false,
+            "annotation": []
+          }
+        },
+        {
+          "id": "06593576-88e5-41e3-b879-74c3861cc34a",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "image": "",
+              "x_pos": 74,
+              "y_pos": 371.5,
+              "description": "Supernode binding node"
+            }
+          },
+          "outputs": [
+            {
+              "id": "output_ac584be2-8a3c-474f-a046-e10a3665b875_inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "94ec9e77-1566-49a5-bea4-ae33b545b19b",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "image": "",
+              "x_pos": 74,
+              "y_pos": 451.5,
+              "description": "Supernode binding node"
+            }
+          },
+          "outputs": [
+            {
+              "id": "output_5db667dc-b2a9-4c35-bff0-136c4e7b6d26_inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "0d2b2992-2ce6-4d52-a2e3-4722d9da0c7c",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "image": "",
+              "x_pos": 74,
+              "y_pos": 531.5,
+              "description": "Supernode binding node"
+            }
+          },
+          "outputs": [
+            {
+              "id": "output_2807a076-6468-4ad1-94d3-f253f99bc8e0_inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "ca6cfbcf-fadd-4023-9234-ff6e74170836",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "image": "",
+              "x_pos": 530,
+              "y_pos": 371.5,
+              "description": "Supernode binding node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input_b3acb1f8-89a8-4080-9611-2fb03dee3d73_a723a31c-6c66-421e-b00a-e4d0b1faa265_outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        }
+      },
+      "runtime_ref": "test_runtime"
+    }
+  ],
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "test_runtime",
+      "name": "test_runtime"
+    }
+  ]
+}

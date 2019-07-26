@@ -81,7 +81,6 @@ function getZoomForPrimaryPipeline(objectModel) {
 	return objectModel.zoom;
 }
 
-
 // We cannot rely on index position of comments because they get messed up
 // when pushing comments to be underneath nodes and links. Therefore we look for the
 // text of the comment being deleted.
@@ -262,6 +261,14 @@ function getNodeSelectorInSubFlow(nodeText, nodeElement, extraCanvas) {
 	return nodeSelector;
 }
 
+function getNodeSelectorInSupernode(nodeName, supernodeName, nodeElement, extraCanvas) {
+	const inst = extraCanvas === true ? "1" : "0";
+	const supernodeId = getNodeIdForLabel(supernodeName, extraCanvas);
+	const nodeId = getNodeIdForLabelInSupernode(nodeName, supernodeId, extraCanvas);
+	const nodeSelector = `[data-id='node_${nodeElement}_${inst}_${nodeId}']`;
+	return nodeSelector;
+}
+
 function getNodeIdForLabel(nodeText, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
 	const selector = `div > svg > g > g[data-id^='node_grp_${inst}']`;
@@ -271,6 +278,12 @@ function getNodeIdForLabel(nodeText, extraCanvas) {
 function getNodeIdForLabelInSubFlow(nodeText, extraCanvas) {
 	const inst = extraCanvas === true ? "1" : "0";
 	const selector = `div > svg > g > g > svg > g > g[data-id^='node_grp_${inst}']`;
+	return getNodeId(nodeText, selector);
+}
+
+function getNodeIdForLabelInSupernode(nodeText, supernodeId, extraCanvas) {
+	const inst = extraCanvas === true ? "1" : "0";
+	const selector = `div > svg > g > g[data-id='node_grp_${inst}_${supernodeId}'] > svg > g > g[data-id^='node_grp_${inst}']`;
 	return getNodeId(nodeText, selector);
 }
 
@@ -576,6 +589,7 @@ module.exports = {
 	isObjectModelEmpty: isObjectModelEmpty,
 	getNodeSelector: getNodeSelector,
 	getNodeSelectorInSubFlow: getNodeSelectorInSubFlow,
+	getNodeSelectorInSupernode: getNodeSelectorInSupernode,
 	getNodePortSelector: getNodePortSelector,
 	getNodePortSelectorInSubFlow: getNodePortSelectorInSubFlow,
 	getNodePortTipSelector: getNodePortTipSelector,

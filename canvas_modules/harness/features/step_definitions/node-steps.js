@@ -8,11 +8,12 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
+import { clearMessagesFromAllNodes, getCanvasData, getEventLogData, getLastEventLogData, useCmdOrCtrl
+} from "./utilities/test-utils.js";
 import { deleteLinkInObjectModel, dragAndDrop, findCategoryElement, findNodeIndexInPalette, getEventLogCount,
 	getNodeFromObjectModel, getNodeIdForLabel, getNodeIdFromObjectModel, getNodePortSelector, getNodeSelector,
-	getNodeSelectorInSubFlow, getObjectModelCount, isObjectModelEmpty
+	getNodeSelectorInSubFlow, getNodeSelectorInSupernode, getObjectModelCount, isObjectModelEmpty
 } from "./utilities/validate-utils.js";
-import { getCanvasData, getEventLogData, getLastEventLogData, useCmdOrCtrl } from "./utilities/test-utils.js";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
 
 /* global browser */
@@ -1074,4 +1075,47 @@ module.exports = function() {
 			expect(Number(wAttr)).toEqual(Number(width));
 
 		});
+
+	this.Then(/^I verify the "([^"]*)" node has an error marker$/, function(nodeName) {
+		const nodeSelector = getNodeSelector(nodeName, "grp");
+		const node = browser.$(nodeSelector);
+		const errorMarker = node.$$(".d3-error-circle");
+		expect(errorMarker.length).toEqual(1);
+	});
+
+	this.Then(/^I verify the "([^"]*)" node has a warning marker$/, function(nodeName) {
+		const nodeSelector = getNodeSelector(nodeName, "grp");
+		const node = browser.$(nodeSelector);
+		const errorMarker = node.$$(".d3-warning-circle");
+		expect(errorMarker.length).toEqual(1);
+	});
+
+	this.Then(/^I verify the "([^"]*)" node has no error or warning marker$/, function(nodeName) {
+		const nodeSelector = getNodeSelector(nodeName, "grp");
+		const node = browser.$(nodeSelector);
+		const errorMarker = node.$$(".d3-error-circle");
+		expect(errorMarker.length).toEqual(0);
+		const warningMarker = node.$$(".d3-error-warning");
+		expect(warningMarker.length).toEqual(0);
+	});
+
+	this.Then(/^I verify the "([^"]*)" node in the subflow in the "([^"]*)" supernode has an error marker$/, function(nodeName, supernodeName) {
+		const selector = getNodeSelectorInSupernode(nodeName, supernodeName, "grp");
+		const node = browser.$(selector);
+		const errorMarker = node.$$(".d3-error-circle");
+		expect(errorMarker.length).toEqual(1);
+	});
+
+	this.Then(/^I verify the "([^"]*)" node in the subflow in the "([^"]*)" supernode has no error or warning marker$/, function(nodeName, supernodeName) {
+		const selector = getNodeSelectorInSupernode(nodeName, supernodeName, "grp");
+		const node = browser.$(selector);
+		const errorMarker = node.$$(".d3-error-circle");
+		expect(errorMarker.length).toEqual(0);
+		const warningMarker = node.$$(".d3-error-warning");
+		expect(warningMarker.length).toEqual(0);
+	});
+
+	this.Then(/^I clear the messages from nodes on the canvas$/, function() {
+		clearMessagesFromAllNodes();
+	});
 };

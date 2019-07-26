@@ -13,8 +13,8 @@ Feature: FlowValidation
 		Given I have set this canvas config ""{"selectedConnectionType": "Halo"}""
 		Given I have uploaded diagram "commentColorCanvas.json"
 
-		Then I verify that there are 2 nodes with a "warning" indicator
-		Then I verify that there are 0 nodes with a "error" indicator
+		Then I verify the "Na_to_K" node has a warning marker
+		Then I verify the "Define Types" node has a warning marker
 
 	Scenario: Sanity test flow validation when adding a node
 		Then I resize the window size to 1400 width and 800 height
@@ -28,4 +28,4 @@ Feature: FlowValidation
 		Then I close the palette
 		Then I right click at position 200, 200 to display the context menu
 		Then I click option "CMI: Validate Flow" from the context menu
-		Then I verify that there are 1 nodes with a "error" indicator
+		Then I verify the "Add Column" node has an error marker

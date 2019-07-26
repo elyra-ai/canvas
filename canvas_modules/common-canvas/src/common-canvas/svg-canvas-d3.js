@@ -2225,11 +2225,6 @@ class CanvasRenderer {
 					});
 			}
 
-			// Error indicator
-			newNodeGroups.filter((d) => !this.isSuperBindingNode(d)).append("svg")
-				.attr("data-id", (d) => this.getId("node_error_marker", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id);
-
 			const newAndExistingNodeGrps =
 				nodeGroupSel.enter().merge(nodeGroupSel);
 
@@ -2321,16 +2316,6 @@ class CanvasRenderer {
 							}
 						}
 					}
-
-					// Set position for error circle in new and existing nodes
-					nodeGrp.select(this.getSelectorForId("node_error_marker", d.id))
-						.datum(node) // Set the __data__ to the updated data
-						.attr("class", (nd) => "node-error-marker " + that.getErrorMarkerClass(nd.messages))
-						.html((nd) => that.getErrorMarkerIcon(nd))
-						.attr("width", (nd) => nd.layout.errorWidth)
-						.attr("height", (nd) => nd.layout.errorHeight)
-						.attr("x", (nd) => that.getErrorPosX(nd, nodeGrp))
-						.attr("y", (nd) => that.getErrorPosY(nd));
 
 					// Node body updates
 					nodeGrp.select(this.getSelectorForId("node_body", d.id))
@@ -2558,8 +2543,11 @@ class CanvasRenderer {
 						}
 					}
 
-					// Display decorators
 					if (!this.isSuperBindingNode(d)) {
+						// Display error indicator
+						this.addErrorMarker(d, nodeGrp);
+
+						// Display decorators
 						const decorations = CanvasUtils.getCombinedDecorations(d.layout.decorations, d.decorations);
 						this.addDecorations(d, DEC_NODE, nodeGrp, decorations);
 					}
@@ -2650,6 +2638,34 @@ class CanvasRenderer {
 			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
 
 		decoratorLabelSelection.exit().remove();
+	}
+
+	addErrorMarker(d, nodeGrp) {
+		const errorMarkerSelector = this.getSelectorForClass("node-error-marker");
+		const errorMarkerSelection = nodeGrp.selectAll(errorMarkerSelector);
+
+		if (d.messages && d.messages.length > 0) {
+			if (errorMarkerSelection.empty()) {
+				nodeGrp
+					.append("svg")
+					.attr("data-id", this.getId("node_error_marker", d.id))
+					.attr("data-pipeline-id", this.activePipeline.id)
+					.attr("class", () => "node-error-marker"); // Need to set this so following selection will work
+			}
+
+			nodeGrp.selectAll(errorMarkerSelector)
+				.attr("class", () => "node-error-marker " + this.getErrorMarkerClass(d.messages))
+				.html(this.getErrorMarkerIcon(d))
+				.attr("width", d.layout.errorWidth)
+				.attr("height", d.layout.errorHeight)
+				.attr("x", this.getErrorPosX(d, nodeGrp))
+				.attr("y", this.getErrorPosY(d));
+
+		} else {
+			if (!errorMarkerSelection.empty()) {
+				errorMarkerSelection.remove();
+			}
+		}
 	}
 
 	getNodeInputPortClassName(port) {

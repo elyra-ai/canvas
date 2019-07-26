@@ -290,6 +290,8 @@ class App extends React.Component {
 		// Add these methods to the global document object so they can be called
 		// from the Chimp test cases.
 		document.setCanvasConfig = this.setCanvasConfig;
+		document.canvasController = this.canvasController;
+		document.canvasController2 = this.canvasController2;
 		document.setCanvasDropdownFile = this.setCanvasDropdownFile;
 		document.setCanvasDropdownFile2 = this.setCanvasDropdownFile2;
 		document.setPaletteDropdownSelect = this.setPaletteDropdownSelect;
@@ -988,14 +990,6 @@ class App extends React.Component {
 		};
 
 		this.consoleout.push(event);
-
-		// Add canvasInfo to global document so the test harness can access it
-		if (this.canvasController) {
-			document.canvasInfo = this.canvasController.getCanvasInfo();
-		}
-		if (this.canvasController2) {
-			document.canvasInfo2 = this.canvasController2.getCanvasInfo();
-		}
 
 		// Add consoleoutput to the global document so the test harness can access it
 		document.eventLog = this.consoleout;
