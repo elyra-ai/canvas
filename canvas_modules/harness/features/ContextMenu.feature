@@ -21,6 +21,10 @@ Feature: ContextMenu
 		Then I verify the context menu has a "New comment" item
 		Then I verify the context menu has a "Undo" item
 
+		# Test the node context menu has an enabled Edit menu
+		Then I right click the "DRUG1n" node to display the context menu
+		Then I click option "Copy" from the "Edit" submenu
+
 		# Test the context menu is pushed to the left when user clicks near right side of the page
 		Then I right click at position 1300, 100 to display the context menu
 		Then I verify the context menu is at 1140, 100

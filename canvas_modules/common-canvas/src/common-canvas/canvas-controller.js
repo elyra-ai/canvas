@@ -1465,10 +1465,11 @@ export default class CanvasController {
 	}
 
 	createEditMenu(source) {
-		let editSubMenu = [];
-		editSubMenu = editSubMenu.concat({ action: "cut", label: this.getLabel("edit_cutSelection", "Cut"), enable: source.selectedObjectIds.length > 0 },
+		const editSubMenu = [
+			{ action: "cut", label: this.getLabel("edit_cutSelection", "Cut"), enable: source.selectedObjectIds.length > 0 },
 			{ action: "copy", label: this.getLabel("edit_copySelection", "Copy"), enable: source.selectedObjectIds.length > 0 },
-			{ action: "paste", label: this.getLabel("edit_pasteSelection", "Paste"), enable: !this.isClipboardEmpty() });
+			{ action: "paste", label: this.getLabel("edit_pasteSelection", "Paste"), enable: !this.isClipboardEmpty() }
+		];
 		return editSubMenu;
 	}
 

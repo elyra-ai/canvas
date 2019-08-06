@@ -11,7 +11,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { MenuItem, SubMenu } from "react-contextmenu";
-import classNames from "classnames";
 
 // context-menu sizing
 const CONTEXT_MENU_WIDTH = 160; // see context-menu.css .react-context-menu margin
@@ -82,13 +81,17 @@ class CommonContextMenu extends React.Component {
 	}
 
 	areAllSubmenuItemsDisabled(submenuItems) {
+		let itemCount = 0;
 		let disabledCount = 0;
-		submenuItems.forEach(function(entry) {
-			if (entry.props.disabled === true) {
+		submenuItems.forEach(function(submenuItem) {
+			if (!submenuItem.divider) {
+				itemCount++;
+			}
+			if (submenuItem.enable === false) {
 				disabledCount++;
 			}
 		});
-		return disabledCount === submenuItems.length;
+		return disabledCount === itemCount;
 	}
 
 	buildMenu(menuDefinition, mousePos, menuSize, menuPos, canvasRect) {
@@ -110,7 +113,7 @@ class CommonContextMenu extends React.Component {
 
 			} else if (submenu) {
 				const submenuItems = this.buildMenu(menuDefinition[i].menu, mousePos, menuSize, menuPos, canvasRect);
-				const disabled = { disabled: this.areAllSubmenuItemsDisabled(submenuItems) };
+				const disabled = { disabled: this.areAllSubmenuItemsDisabled(menuDefinition[i].menu) };
 				const submenuSize = this.calculateMenuSize(menuDefinition[i].menu);
 				let rtl = false;
 
@@ -132,9 +135,8 @@ class CommonContextMenu extends React.Component {
 					top: offset + "px" // Use negative to push the menu up
 				};
 
-				const classNameValue = classNames("contextmenu-submenu", { "disabled": disabled });
 				menuItems.push(
-					<SubMenu title={menuDefinition[i].label} key={i + 1} className={classNameValue} rtl={rtl} {...disabled}>
+					<SubMenu title={menuDefinition[i].label} key={i + 1} className="contextmenu-submenu" rtl={rtl} {...disabled}>
 						<div key={i + 1} style={subMenuPosStyle} className="context-menu-popover">
 							{submenuItems}
 						</div>
