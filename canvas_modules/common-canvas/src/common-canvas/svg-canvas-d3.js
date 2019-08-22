@@ -1372,13 +1372,17 @@ class CanvasRenderer {
 	// in this way will invoke the zoom behavior methods (zoomStart, zoomAction
 	// and zoomEnd).
 	zoomCanvasInvokeZoomBehavior(newZoomTransform, animateTime) {
-		const zoomTransform = d3.zoomIdentity.translate(newZoomTransform.x, newZoomTransform.y).scale(newZoomTransform.k);
-		if (animateTime) {
-			this.canvasSVG.call(this.zoom).transition()
-				.duration(animateTime)
-				.call(this.zoom.transform, zoomTransform);
-		} else {
-			this.canvasSVG.call(this.zoom.transform, zoomTransform);
+		if (isFinite(newZoomTransform.x) &&
+				isFinite(newZoomTransform.y) &&
+				isFinite(newZoomTransform.k)) {
+			const zoomTransform = d3.zoomIdentity.translate(newZoomTransform.x, newZoomTransform.y).scale(newZoomTransform.k);
+			if (animateTime) {
+				this.canvasSVG.call(this.zoom).transition()
+					.duration(animateTime)
+					.call(this.zoom.transform, zoomTransform);
+			} else {
+				this.canvasSVG.call(this.zoom.transform, zoomTransform);
+			}
 		}
 	}
 
