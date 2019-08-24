@@ -1,7 +1,7 @@
 # Test Harness
 
 ## Environment setup
-- Nodejs `node 8.11`
+- Nodejs `node 8.16.x`
 
 #### Artifactory setup
  <https://github.ibm.com/wdpx/developers-guide/blob/master/guide/Artifactory.md#what-changes-are-required-to-our-deployments>
@@ -44,4 +44,3 @@ The Firefox version that will be used is located in the default folder.  On Mac 
 cd <base dir>/canvas_modules/harness
 npm test -- --browser=firefox
 ```
-

@@ -10,7 +10,7 @@ branches:
   # Build all sandbox branches
   - /^sb-/
 language: node_js
-node_js: "8.15"
+node_js: "8.16"
 addons:
   apt:
     packages:
