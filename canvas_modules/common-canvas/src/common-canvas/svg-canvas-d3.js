@@ -3859,7 +3859,7 @@ class CanvasRenderer {
 				if (this.isExpandedSupernode(data)) {
 					const heightSvgArea = data.height - this.layout.supernodeTopAreaHeight - this.layout.supernodeSVGAreaPadding;
 					const remainingSpace = heightSvgArea - portsHeight;
-					yPos = this.layout.supernodeTopAreaHeight + (remainingSpace / 2);
+					yPos = this.layout.supernodeTopAreaHeight + this.layout.supernodeSVGAreaPadding + (remainingSpace / 2);
 
 				} else if (portsHeight < data.height) {
 					yPos = (data.height - portsHeight) / 2;
@@ -4516,8 +4516,11 @@ class CanvasRenderer {
 	// on the node size change).
 	resizeNode() {
 		const oldSupernode = Object.assign({}, this.resizeObj);
+		const minSupernodeHeight = Math.max(this.resizeObj.inputPortsHeight, this.resizeObj.outputPortsHeight) +
+			this.layout.supernodeTopAreaHeight + this.layout.supernodeSVGAreaPadding;
 		const delta = this.resizeObject(this.resizeObj, this.nodeSizingDirection,
-			this.layout.supernodeMinWidth, this.layout.supernodeMinHeight);
+			this.layout.supernodeMinWidth,
+			Math.max(this.layout.supernodeMinHeight, minSupernodeHeight));
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
 			CanvasUtils.addToNodeSizingArray(this.resizeObj, this.nodeSizingMovedNodes);

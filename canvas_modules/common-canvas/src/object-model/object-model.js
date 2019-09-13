@@ -1412,6 +1412,15 @@ export default class ObjectModel {
 				: 0;
 
 			node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);
+
+			if (node.type === SUPER_NODE && node.is_expanded) {
+				node.height += layoutInfo.supernodeTopAreaHeight + layoutInfo.supernodeSVGAreaPadding;
+				// If an expanded height is provided make sure it is at least as big
+				// as the node height.
+				if (node.expanded_height) {
+					node.expanded_height = Math.max(node.expanded_height, node.height);
+				}
+			}
 		} else { // 'halo' connection type
 			node.inputPortsHeight = 0;
 			node.outputPortsHeight = 0;

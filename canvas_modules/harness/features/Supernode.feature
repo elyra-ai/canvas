@@ -256,38 +256,38 @@ Feature: Supernode
 		Then I click option "Select All" from the context menu
 		Then I verify that 5 objects are selected
 
-		Scenario: Test Select All in context menu for sub-flow canvas only selects non-binding nodes
-			Then I resize the window size to 1330 width and 660 height
+	Scenario: Test Select All in context menu for sub-flow canvas only selects non-binding nodes
+		Then I resize the window size to 1330 width and 660 height
 
-			Given I am on the test harness
-			Given I have uploaded diagram "supernodePortPosCanvas.json"
+		Given I am on the test harness
+		Given I have uploaded diagram "supernodePortPosCanvas.json"
 
-			# Check the first supernode (with 5 single-port binding nodes) is correctly positioned
-			Then I right click the "Supernode-5-binding" node to display the context menu
-			Then I click option "Expand supernode" from the context menu
-			Then I verify the "Supernode-5-binding" node transform is "translate(76.90125274658203, 335.5875015258789)"
+		# Check the first supernode (with 5 single-port binding nodes) is correctly positioned
+		Then I right click the "Supernode-5-binding" node to display the context menu
+		Then I click option "Expand supernode" from the context menu
+		Then I verify the "Supernode-5-binding" node transform is "translate(76.90125274658203, 335.5875015258789)"
 
-			# Check the two nodes in the first supernode's sub-flow are correctly positioned
-			Then I verify the "SN1-Filler" node in the subflow transform is "translate(235, 496.5)"
-			Then I verify the "SN1-Sample" node in the subflow transform is "translate(234, 594.5)"
+		# Check the two nodes in the first supernode's sub-flow are correctly positioned
+		Then I verify the "SN1-Filler" node in the subflow transform is "translate(235, 496.5)"
+		Then I verify the "SN1-Sample" node in the subflow transform is "translate(234, 594.5)"
 
-			# Check the five single-port binding nodes in the first supernode are correctly positioned
-			Then I verify the "SN1-BN-INPUT0" node in the subflow transform is "translate(5.5325910785737875, 535.754668534652)"
-			Then I verify the "SN1-BN-INPUT1" node in the subflow transform is "translate(5.5325910785737875, 572.2453314653479)"
-			Then I verify the "SN1-BN-OUTPUT0" node in the subflow transform is "translate(463.4674089214262, 517.509337069304)"
-			Then I verify the "SN1-BN-OUTPUT1" node in the subflow transform is "translate(463.4674089214262, 554)"
-			Then I verify the "SN1-BN-OUTPUT2" node in the subflow transform is "translate(463.4674089214262, 590.490662930696)"
+		# Check the five single-port binding nodes in the first supernode are correctly positioned
+		Then I verify the "SN1-BN-INPUT0" node in the subflow transform is "translate(5.5325910785737875, 541.2282679742564)"
+		Then I verify the "SN1-BN-INPUT1" node in the subflow transform is "translate(5.5325910785737875, 577.7189309049523)"
+		Then I verify the "SN1-BN-OUTPUT0" node in the subflow transform is "translate(463.4674089214262, 522.9829365089084)"
+		Then I verify the "SN1-BN-OUTPUT1" node in the subflow transform is "translate(463.4674089214262, 559.4735994396044)"
+		Then I verify the "SN1-BN-OUTPUT2" node in the subflow transform is "translate(463.4674089214262, 595.9642623703003)"
 
-			# Check the second supernode (with 2 multi-port binding nodes) is correctly positioned
-			Then I right click the "Supernode-2-binding" node to display the context menu
-			Then I click option "Expand supernode" from the context menu
-			Then I verify the "Supernode-2-binding" node transform is "translate(582.5964628569782, 329.97940826416016)"
+		# Check the second supernode (with 2 multi-port binding nodes) is correctly positioned
+		Then I right click the "Supernode-2-binding" node to display the context menu
+		Then I click option "Expand supernode" from the context menu
+		Then I verify the "Supernode-2-binding" node transform is "translate(582.5964628569782, 329.97940826416016)"
 
-			# Check the three nodes in the second supernode's sub-flow are correctly positioned
-			Then I verify the "SN2-Filler" node in the subflow transform is "translate(752, -351.49998474121094)"
-			Then I verify the "SN2-Select" node in the subflow transform is "translate(889.5, -344.99998474121094)"
-			Then I verify the "SN2-Sample" node in the subflow transform is "translate(1039.5, -351.99998474121094)"
+		# Check the three nodes in the second supernode's sub-flow are correctly positioned
+		Then I verify the "SN2-Filler" node in the subflow transform is "translate(752, -351.49998474121094)"
+		Then I verify the "SN2-Select" node in the subflow transform is "translate(889.5, -344.99998474121094)"
+		Then I verify the "SN2-Sample" node in the subflow transform is "translate(1039.5, -351.99998474121094)"
 
-			# Check the five single-port binding nodes in the first supernode are correctly positioned
-			Then I verify the "SN2-BN-INPUT" node in the subflow transform is "translate(598, -355.33566939653235)"
-			Then I verify the "SN2-BN-OUTPUT" node in the subflow transform is "translate(1193.5, -358.75351172419306)"
+		# Check the five single-port binding nodes in the first supernode are correctly positioned
+		Then I verify the "SN2-BN-INPUT" node in the subflow transform is "translate(598, -351.31031669823415)"
+		Then I verify the "SN2-BN-OUTPUT" node in the subflow transform is "translate(1193.5, -354.72815902589485)"
