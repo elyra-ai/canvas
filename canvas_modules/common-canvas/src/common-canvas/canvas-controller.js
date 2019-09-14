@@ -33,6 +33,7 @@ import SetLinksStyleAction from "../command-actions/setLinksStyleAction.js";
 import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
+import LocalStorage from "./local-storage.js";
 import has from "lodash/has";
 import { ASSOC_STRAIGHT } from "./constants/canvas-constants";
 
@@ -302,7 +303,7 @@ export default class CanvasController {
 	// is only applicable when the enableSaveZoom config parameter is
 	// set to "localstorage".
 	clearSavedZoomValues() {
-		delete localStorage.canvasSavedZoomValues;
+		LocalStorage.delete("canvasSavedZoomValues");
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1233,19 +1234,27 @@ export default class CanvasController {
 		}
 
 		var clipboardData = JSON.stringify(copyData);
-		localStorage.canvasClipboard = clipboardData;
+		LocalStorage.set("canvasClipboard", clipboardData);
 
 		return true;
 	}
 
 	isClipboardEmpty() {
-		return typeof localStorage === "undefined" || !localStorage.canvasClipboard || localStorage.canvasClipboard === "";
+		const value = LocalStorage.get("canvasClipboard");
+		if (value && value !== "") {
+			return false;
+		}
+		return true;
 	}
 
 	pasteFromClipboard(pipelineId) {
-		var pastedText = localStorage.canvasClipboard;
+		const pastedText = LocalStorage.get("canvasClipboard");
 
-		var objects = JSON.parse(pastedText);
+		if (!pastedText) {
+			return;
+		}
+
+		const objects = JSON.parse(pastedText);
 
 		// If there are no nodes and no comments there's nothing to paste so just
 		// return.

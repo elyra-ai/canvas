@@ -29,6 +29,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERRO
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import Logger from "../logging/canvas-logger.js";
+import LocalStorage from "./local-storage.js";
 import CanvasUtils from "./common-canvas-utils.js";
 
 const BACKSPACE_KEY = 8;
@@ -1388,17 +1389,17 @@ class CanvasRenderer {
 
 	// Saves the zoom object passed in for this pipeline in local storage.
 	setSavedZoom(zoom) {
-		if (localStorage) {
-			const savedZooms = localStorage.canvasSavedZoomValues ? JSON.parse(localStorage.canvasSavedZoomValues) : {};
-			set(savedZooms, [this.canvasInfo.id, this.pipelineId], zoom);
-			localStorage.canvasSavedZoomValues = JSON.stringify(savedZooms);
-		}
+		const canvasSavedZoomValues = LocalStorage.get("canvasSavedZoomValues");
+		const savedZooms = canvasSavedZoomValues ? JSON.parse(canvasSavedZoomValues) : {};
+		set(savedZooms, [this.canvasInfo.id, this.pipelineId], zoom);
+		LocalStorage.set("canvasSavedZoomValues", JSON.stringify(savedZooms));
 	}
 
 	// Returns the zoom for this pipeline saved in local storage
 	getSavedZoom() {
-		if (localStorage && localStorage.canvasSavedZoomValues) {
-			const savedZoom = JSON.parse(localStorage.canvasSavedZoomValues);
+		const canvasSavedZoomValues = LocalStorage.get("canvasSavedZoomValues");
+		if (canvasSavedZoomValues) {
+			const savedZoom = JSON.parse(canvasSavedZoomValues);
 			return get(savedZoom, [this.canvasInfo.id, this.pipelineId]);
 		}
 		return null;

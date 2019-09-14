@@ -21,7 +21,7 @@ Feature: NotificationPanel
 		Then I verify the number of nodes are 1
 		Then I right click at position 200, 200 to display the context menu
 		Then I click option "CMI: Validate Flow" from the context menu
-		Then I verify that there are 1 nodes with a "error" indicator
+		Then I verify the "Add Column" node has an error marker
 		Then I verify the the notification panel has 1 messages
 		Then I click the open notification button on the toolbar
 		Then I verify the the content of the notification message at index 0 is of type "error"
