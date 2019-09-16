@@ -3780,13 +3780,14 @@ class CanvasRenderer {
 		let path = "M 0 0 L " + data.width + " 0 "; // Draw line across the top of the node
 
 		if (data.outputs && data.outputs.length > 0) {
-			let endPoint = 0;
+			let endPoint = data.layout.portArcOffset;
 
 			// Draw straight segment down to ports (if needed)
 			if (data.outputPortsHeight < data.height) {
 				endPoint = data.outputs[0].cy - data.layout.portArcRadius;
-				path += " L " + data.width + " " + endPoint;
 			}
+
+			path += " L " + data.width + " " + endPoint;
 
 			// Draw port arcs
 			data.outputs.forEach((port, index) => {
@@ -3799,9 +3800,7 @@ class CanvasRenderer {
 			});
 
 			// Draw finishing segment to bottom right corner
-			if (data.outputPortsHeight < data.height) {
-				path += " L " + data.width + " " + data.height;
-			}
+			path += " L " + data.width + " " + data.height;
 
 		// If no output ports just draw a straight line.
 		} else {
@@ -3811,25 +3810,24 @@ class CanvasRenderer {
 		path += " L 0 " + data.height; // Draw line across the bottom of the node
 
 		if (data.inputs && data.inputs.length > 0) {
-			let endPoint = data.height;
+			let endPoint2 = data.height - data.layout.portArcOffset;
 
 			if (data.inputPortsHeight < data.height) {
-				endPoint = data.inputs[data.inputs.length - 1].cy + data.layout.portArcRadius;
-				path += " L 0 " + endPoint;
+				endPoint2 = data.inputs[data.inputs.length - 1].cy + data.layout.portArcRadius;
 			}
 
+			path += " L 0 " + endPoint2;
+
 			data.inputs.forEach((port, index) => {
-				endPoint -= (data.layout.portArcRadius * 2);
-				path += " A " + data.layout.portArcRadius + " " + data.layout.portArcRadius + " 180 0 1 0 " + endPoint;
+				endPoint2 -= (data.layout.portArcRadius * 2);
+				path += " A " + data.layout.portArcRadius + " " + data.layout.portArcRadius + " 180 0 1 0 " + endPoint2;
 				if (index < data.inputs.length - 1) {
-					endPoint -= data.layout.portArcSpacing;
-					path += " L 0 " + endPoint;
+					endPoint2 -= data.layout.portArcSpacing;
+					path += " L 0 " + endPoint2;
 				}
 			});
 
-			if (data.inputPortsHeight < data.height) {
-				path += " Z"; // Draw finishing segment back to origin
-			}
+			path += " Z"; // Draw finishing segment back to origin
 		} else {
 			path += " Z"; // If no input ports just draw a straight line.
 		}
@@ -3865,6 +3863,8 @@ class CanvasRenderer {
 				} else if (portsHeight < data.height) {
 					yPos = (data.height - portsHeight) / 2;
 				}
+
+				yPos += data.layout.portArcOffset;
 
 				// Sub-flow binding node ports need to be spaced by the inverse of the
 				// zoom amount so that, after zoomToFit on the in-place sub-flow the

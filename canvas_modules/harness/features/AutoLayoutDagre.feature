@@ -142,7 +142,7 @@ Feature: AutoLayoutDagre using Dagre auto-layout algorithm - Vertical and Horizo
 		Then I verify the "Root" node transform is "translate(50, 710)"
 		Then I verify the "Child1" node transform is "translate(290, 470)"
 		Then I verify the "Child2" node transform is "translate(290, 1010)"
-		Then I verify the "Big" node transform is "translate(530, 431.5)"
+		Then I verify the "Big" node transform is "translate(530, 428.5)"
 		Then I verify the "Small" node transform is "translate(530, 1010)"
 		Then I verify the "Select1" node transform is "translate(770, 50)"
 		Then I verify the "Select2" node transform is "translate(770, 170)"
@@ -156,6 +156,7 @@ Feature: AutoLayoutDagre using Dagre auto-layout algorithm - Vertical and Horizo
 		Then I verify the "Sample" node transform is "translate(1010, 170)"
 
 		Given I have set this canvas config ""{"selectedNodeLayout": "Streams"}""
+		Then I pause for 0.2 seconds
 
 		Then I click the horizontal layout button on the toolbar
 		Then I click the zoom to fit button on the toolbar
@@ -163,7 +164,7 @@ Feature: AutoLayoutDagre using Dagre auto-layout algorithm - Vertical and Horizo
 		Then I verify the "Root" node transform is "translate(50, 545)"
 		Then I verify the "Child1" node transform is "translate(323, 365)"
 		Then I verify the "Child2" node transform is "translate(323, 770)"
-		Then I verify the "Big" node transform is "translate(596, 284.5)"
+		Then I verify the "Big" node transform is "translate(596, 281.5)"
 		Then I verify the "Small" node transform is "translate(624, 770)"
 		Then I verify the "Select1" node transform is "translate(929, 50)"
 		Then I verify the "Select2" node transform is "translate(925, 140)"
@@ -175,7 +176,6 @@ Feature: AutoLayoutDagre using Dagre auto-layout algorithm - Vertical and Horizo
 		Then I verify the "Select8" node transform is "translate(929, 680)"
 		Then I verify the "Select9" node transform is "translate(929, 770)"
 		Then I verify the "Sample" node transform is "translate(1198, 140)"
-
 
 	Scenario: Test the horizontal layout of a flow and a sub-flow using curve and elbow connections
 		Then I resize the window size to 1400 width and 800 height
@@ -204,13 +204,13 @@ Feature: AutoLayoutDagre using Dagre auto-layout algorithm - Vertical and Horizo
 		Then I click the horizontal layout button on the toolbar
 		Then I click the zoom to fit button on the toolbar
 
-		Then I verify the "Select1" node transform is "translate(50, 187)"
-		Then I verify the "Select2" node transform is "translate(50, 307)"
+		Then I verify the "Select1" node transform is "translate(50, 193)"
+		Then I verify the "Select2" node transform is "translate(50, 313)"
 		Then I verify the "Select3" node transform is "translate(701.5, 50)"
-		Then I verify the "Table" node transform is "translate(701.5, 187)"
-		Then I verify the "Neural Net" node transform is "translate(701.5, 307)"
-		Then I verify the "Sort" node transform is "translate(701.5, 427)"
-		Then I verify the "Supernode" node transform is "translate(290, 163.5)"
+		Then I verify the "Table" node transform is "translate(701.5, 193)"
+		Then I verify the "Neural Net" node transform is "translate(701.5, 313)"
+		Then I verify the "Sort" node transform is "translate(701.5, 433)"
+		Then I verify the "Supernode" node transform is "translate(290, 169.5)"
 		Then I verify the "Merge1" node in the subflow transform is "translate(-749.5091705322266, 22.57819366455078)"
 		Then I verify the "Merge2" node in the subflow transform is "translate(-518.0227603912354, 238.09954977035522)"
 		Then I verify the "Merge3" node in the subflow transform is "translate(-295.0563049316406, 118.3043441772461)"
@@ -222,13 +222,13 @@ Feature: AutoLayoutDagre using Dagre auto-layout algorithm - Vertical and Horizo
 		Then I click the horizontal layout button on the toolbar
 		Then I click the zoom to fit button on the toolbar
 
-		Then I verify the "Select1" node transform is "translate(50, 193)"
-		Then I verify the "Select2" node transform is "translate(50, 283)"
+		Then I verify the "Select1" node transform is "translate(50, 200.25)"
+		Then I verify the "Select2" node transform is "translate(50, 290.25)"
 		Then I verify the "Select3" node transform is "translate(779.5, 50)"
-		Then I verify the "Table" node transform is "translate(779.5, 193)"
-		Then I verify the "Neural Net" node transform is "translate(779.5, 283)"
-		Then I verify the "Sort" node transform is "translate(779.5, 373)"
-		Then I verify the "Supernode" node transform is "translate(323, 154.5)"
+		Then I verify the "Table" node transform is "translate(779.5, 199)"
+		Then I verify the "Neural Net" node transform is "translate(779.5, 289)"
+		Then I verify the "Sort" node transform is "translate(779.5, 384)"
+		Then I verify the "Supernode" node transform is "translate(323, 161.75)"
 		Then I verify the "Merge1" node in the subflow transform is "translate(-749.5091705322266, 22.57819366455078)"
 		Then I verify the "Merge2" node in the subflow transform is "translate(-518.0227603912354, 238.09954977035522)"
 		Then I verify the "Merge3" node in the subflow transform is "translate(-295.0563049316406, 118.3043441772461)"

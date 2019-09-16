@@ -1404,11 +1404,11 @@ export default class ObjectModel {
 	setNodeDimensionAttributes(node, layoutInfo) {
 		if (layoutInfo.connectionType === "ports") {
 			node.inputPortsHeight = node.inputs
-				? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing)
+				? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
 				: 0;
 
 			node.outputPortsHeight = node.outputs
-				? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing)
+				? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
 				: 0;
 
 			node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);

@@ -149,6 +149,9 @@ const haloDefaultLayout = {
 		// Radius of the either the input or output ports when they are set to "circle"
 		portRadius: null,
 
+		// Size of an offset above and below the set of port arcs.
+		portArcOffset: null,
+
 		// Radius of an imaginary circle around the port. This controls the
 		// spacing of ports and the size of port arcs when nodeShape is set to
 		// port-arcs.
@@ -427,6 +430,9 @@ const portsHorizontalDefaultLayout = {
 		// Radius of the either the input or output ports when they are set to "circle"
 		portRadius: 3,
 
+		// Size of an offset above and below the set of port arcs.
+		portArcOffset: 3,
+
 		// Radius of an imaginary circle around the port. This controls the
 		// spacing of ports and the size of port arcs when nodeShape is set to
 		// port-arcs.
@@ -704,6 +710,9 @@ const portsVerticalDefaultLayout = {
 
 		// Radius of the either the input or output ports when they are set to "circle"
 		portRadius: 6,
+
+		// Size of an offset above and below the set of port arcs.
+		portArcOffset: 0,
 
 		// Radius of an imaginary circle around the port. This controls the
 		// spacing of ports and the size of port arcs when nodeShape is set to

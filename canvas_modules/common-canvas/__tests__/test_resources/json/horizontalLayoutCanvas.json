@@ -19,8 +19,8 @@
           "x_pos": 50,
           "y_pos": 50,
           "label": "Var. File",
-          "inputPortsHeight": -3,
-          "outputPortsHeight": 12,
+          "inputPortsHeight": 3,
+          "outputPortsHeight": 18,
           "height": 40,
           "width": 160
         },
@@ -51,8 +51,8 @@
           "x_pos": 50,
           "y_pos": 170,
           "label": "Select",
-          "inputPortsHeight": 12,
-          "outputPortsHeight": 12,
+          "inputPortsHeight": 18,
+          "outputPortsHeight": 18,
           "height": 40,
           "width": 160
         },
@@ -83,8 +83,8 @@
           "x_pos": 50,
           "y_pos": 290,
           "label": "Sort",
-          "inputPortsHeight": 12,
-          "outputPortsHeight": 12,
+          "inputPortsHeight": 18,
+          "outputPortsHeight": 18,
           "height": 40,
           "width": 160
         }

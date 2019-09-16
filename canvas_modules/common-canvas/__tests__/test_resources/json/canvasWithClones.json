@@ -19,8 +19,8 @@
       "x_pos": 154,
       "y_pos": 97,
       "label": "Var. File",
-      "inputPortsHeight": -3,
-      "outputPortsHeight": 12,
+          "inputPortsHeight": 3,
+          "outputPortsHeight": 18,
       "height": 40,
       "width": 160
     },
@@ -51,8 +51,8 @@
       "x_pos": 327,
       "y_pos": 214,
       "label": "Select",
-      "inputPortsHeight": 12,
-      "outputPortsHeight": 12,
+          "inputPortsHeight": 18,
+          "outputPortsHeight": 18,
       "height": 40,
       "width": 160
     },
@@ -83,8 +83,8 @@
       "x_pos": 500,
       "y_pos": 82,
       "label": "Sort",
-      "inputPortsHeight": 12,
-      "outputPortsHeight": 12,
+          "inputPortsHeight": 18,
+          "outputPortsHeight": 18,
       "height": 40,
       "width": 160
     },
@@ -106,8 +106,8 @@
       "x_pos": 154,
       "y_pos": 97,
       "label": "Var. File",
-      "inputPortsHeight": -3,
-      "outputPortsHeight": 12,
+          "inputPortsHeight": 3,
+          "outputPortsHeight": 18,
       "height": 40,
       "width": 160
     },
@@ -138,8 +138,8 @@
       "x_pos": 327,
       "y_pos": 214,
       "label": "Select",
-      "inputPortsHeight": 12,
-      "outputPortsHeight": 12,
+          "inputPortsHeight": 18,
+          "outputPortsHeight": 18,
       "height": 40,
       "width": 160
     }
