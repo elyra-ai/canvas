@@ -5031,7 +5031,7 @@ class CanvasRenderer {
 			});
 		}
 
-		this.setDisplayOrder();
+		this.setDisplayOrder(linkGroup);
 
 		var endTimeDrawingLines = Date.now();
 
@@ -5130,8 +5130,11 @@ class CanvasRenderer {
 	// Pushes the links to be below nodes and then pushes comments to be below
 	// nodes and links. This lets the user put a large comment underneath a set
 	// of nodes and links for annotation purposes.
-	setDisplayOrder() {
-		this.canvasGrp.selectAll(".link-group").lower(); // Moves link lines below other SVG elements
+	setDisplayOrder(linkGroup) {
+		// Force those links without decorations to be behind those with decorations
+		// in case the links overlap we don't want the decorations to be overwritten.
+		linkGroup.filter((lnk) => this.hasOneDecorationOrMore(lnk)).lower();
+		linkGroup.filter((lnk) => !this.hasOneDecorationOrMore(lnk)).lower();
 
 		// We push comments to the back in the reverse order they were added to the
 		// comments array. This is to ensure that pasted comments get displayed on
@@ -5141,6 +5144,11 @@ class CanvasRenderer {
 		for (var idx = comments.length - 1; idx > -1; idx--) {
 			this.canvasGrp.selectAll(this.getSelectorForId("comment_grp", comments[idx].id)).lower();
 		}
+	}
+
+	// Returns true if the link passed in has one or more decorations.
+	hasOneDecorationOrMore(link) {
+		return link.decorations && link.decorations.length > 0;
 	}
 
 	buildLineArray() {
