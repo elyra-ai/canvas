@@ -7,29 +7,44 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import Logger from "../logging/canvas-logger.js";
+
 // WARNING: Some client apps (eg. Streams) runs Common Canvas within a webview
 // created through visual studio. In this environment localStorage is not
-// accessible so in this class we need to make sure it is always available
-// before accessing it.
+// accessible (and will throw an exception if accessed) so in this class we
+// need to make sure it is always available before accessing it.
 
 export default class LocalStorage {
-
 	static set(attributeName, value) {
-		if (window.localStorage) {
-			window.localStorage[attributeName] = value;
+		try {
+			if (window.localStorage) {
+				window.localStorage[attributeName] = value;
+			}
+		} catch (err) {
+			LocalStorage.logger.warning("Local storage is not accessible: " + err);
 		}
 	}
 
 	static get(attributeName) {
-		if (window.localStorage) {
-			return window.localStorage[attributeName];
+		try {
+			if (window.localStorage) {
+				return window.localStorage[attributeName];
+			}
+		} catch (err) {
+			LocalStorage.logger.warning("Local storage is not accessible: " + err);
 		}
 		return null;
 	}
 
 	static delete(attributeName) {
-		if (window.localStorage) {
-			delete window.localStorage[attributeName];
+		try {
+			if (window.localStorage) {
+				delete window.localStorage[attributeName];
+			}
+		} catch (err) {
+			LocalStorage.logger.warning("Local storage is not accessible: " + err);
 		}
 	}
 }
+
+LocalStorage.logger = new Logger(["LocalStorage"]);
