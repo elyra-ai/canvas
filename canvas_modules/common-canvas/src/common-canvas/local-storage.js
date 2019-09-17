@@ -21,7 +21,7 @@ export default class LocalStorage {
 				window.localStorage[attributeName] = value;
 			}
 		} catch (err) {
-			LocalStorage.logger.warning("Local storage is not accessible: " + err);
+			LocalStorage.logger.warn("Local storage is not accessible: " + err);
 		}
 	}
 
@@ -31,7 +31,7 @@ export default class LocalStorage {
 				return window.localStorage[attributeName];
 			}
 		} catch (err) {
-			LocalStorage.logger.warning("Local storage is not accessible: " + err);
+			LocalStorage.logger.warn("Local storage is not accessible: " + err);
 		}
 		return null;
 	}
@@ -42,7 +42,7 @@ export default class LocalStorage {
 				delete window.localStorage[attributeName];
 			}
 		} catch (err) {
-			LocalStorage.logger.warning("Local storage is not accessible: " + err);
+			LocalStorage.logger.warn("Local storage is not accessible: " + err);
 		}
 	}
 }
