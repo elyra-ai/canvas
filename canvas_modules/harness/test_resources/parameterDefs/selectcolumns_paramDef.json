@@ -210,7 +210,8 @@
           "default": "selectcolumns with parameter value set to 'age'"
         },
         "moveable_rows": true,
-        "summary": true
+        "summary": true,
+        "dm_image": "type"
       },
       {
         "parameter_ref": "fields_null",
@@ -245,8 +246,9 @@
           "default": "Fields Default Value"
         },
         "description": {
-          "default": "selectcolumns with parameter value set to '[BP]'"
-        }
+          "default": "selectcolumns with parameter value set to '[BP]' and dm_image of type"
+        },
+        "dm_image": "type"
       },
       {
         "parameter_ref": "fields1_panel",
@@ -260,7 +262,7 @@
           "default": "Values shared with 'Fields2 Panel'.  Issue 1054",
           "type": "info"
         },
-        "dm_image":"measure"
+        "dm_image": "measure"
       },
       {
         "parameter_ref": "fields2_panel",
@@ -270,7 +272,7 @@
         "description": {
           "default": "selectcolumns with parameter shared with Field1 Panel"
         },
-        "dm_image":"measure"
+        "dm_image": "measure"
       },
       {
         "parameter_ref": "fields_error",
@@ -304,7 +306,7 @@
           "default": "Field Hidden"
         },
         "moveable_rows": true,
-        "dm_image":"measure"
+        "dm_image": "measure"
       },
       {
         "parameter_ref": "disable",
@@ -318,7 +320,7 @@
           "default": "Field Disabled"
         },
         "moveable_rows": true,
-        "dm_image":"measure"
+        "dm_image": "measure"
       },
       {
         "parameter_ref": "fields_bad_field",
@@ -391,7 +393,7 @@
         "description": {
           "default": "Complex table control list editor with sub-panel column select control"
         },
-				"rows": -1
+        "rows": -1
       }
     ],
     "complex_type_info": [

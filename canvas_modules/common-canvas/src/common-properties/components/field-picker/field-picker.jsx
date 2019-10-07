@@ -17,7 +17,7 @@ import PropertyUtils from "./../../util/property-utils";
 
 import Button from "carbon-components-react/lib/components/Button";
 
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, DATA_TYPES, TOOL_TIP_DELAY } from "./../../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, DATA_TYPE, TOOL_TIP_DELAY } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
 
 import isEmpty from "lodash/isEmpty";
@@ -99,25 +99,26 @@ export default class FieldPicker extends React.Component {
 
 	getAvailableFilters() {
 		const filters = [];
-		const filterList = DATA_TYPES;
-		for (let i = 0; i < filterList.length; i++) {
-			for (let j = 0; j < this.props.fields.length; j++) {
-				const field = this.props.fields[j];
-				if (filterList[i] === field.type) {
-					const filter = {
-						"type": field.type
-					};
-					let duplicate = false;
-					for (const filtered of filters) {
-						if (filtered.type === filter.type) {
-							duplicate = true;
-							break;
+		for (const key in DATA_TYPE) {
+			if (DATA_TYPE.hasOwnProperty(key)) {
+				const dataType = DATA_TYPE[key];
+				for (const field of this.props.fields) {
+					if (dataType === field.type) {
+						const filter = {
+							"type": field.type
+						};
+						let duplicate = false;
+						for (const filtered of filters) {
+							if (filtered.type === filter.type) {
+								duplicate = true;
+								break;
+							}
 						}
+						if (!duplicate) {
+							filters.push(filter);
+						}
+						break;
 					}
-					if (!duplicate) {
-						filters.push(filter);
-					}
-					break;
 				}
 			}
 		}

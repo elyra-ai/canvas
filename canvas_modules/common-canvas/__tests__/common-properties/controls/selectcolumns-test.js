@@ -433,21 +433,29 @@ describe("selectcolumns control functions correctly in a table", () => {
 
 });
 
-describe("measurement icons should be rendered correctly in selectcolumns", () => {
+describe("measurement & type icons should be rendered correctly in selectcolumns", () => {
 	var wrapper;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
 		wrapper = renderedObject.wrapper;
 	});
+
 	afterEach(() => {
 		wrapper.unmount();
 	});
-	it("measurement icons should render in selectcolumns control if dm_image is enabled", () => {
+
+	it("measurement icons should render in selectcolumns control if dm_image is measurement", () => {
 		const tableWrapper = wrapper.find("div[data-id='properties-ft-fields1_panel']");
 		expect(tableWrapper.find("div.properties-field-type-icon")).to.have.length(1);
 	});
+
 	it("measurement icons should render in fieldpicker of selectcolumns control where dm_image is set to measure", () => {
-		const tableWrapper = wrapper.find("div[data-id='properties-ft-fields1_panel']");
+		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields1_panel");
+		expect(fieldPicker.find("div.properties-fp-field-type-icon").length).to.be.gt(1);// just check that at least 1 row has icon set
+	});
+
+	it("type icons should render in selectcolumns control if dm_image is type", () => {
+		const tableWrapper = wrapper.find("div[data-id='properties-fields_default_0']");
 		expect(tableWrapper.find("div.properties-field-type-icon")).to.have.length(1);
 	});
 });

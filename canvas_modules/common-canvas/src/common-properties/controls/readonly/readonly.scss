@@ -35,14 +35,8 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
-		span {
-			white-space: normal;
-			line-height: 0;
-			overflow-wrap: break-word;
-			&[disabled] {
-				opacity: 0.5;
-			}
-		}
+		display: flex;
+		align-items: center;
 		.properties-field-type-icon {
 			width: 15px;
 			height: 15px;

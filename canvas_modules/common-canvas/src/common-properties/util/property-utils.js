@@ -9,6 +9,7 @@
 
 import logger from "../../../utils/logger";
 import { ParamRole } from "../constants/form-constants";
+import { DATA_TYPE } from "../constants/constants";
 import cloneDeep from "lodash/cloneDeep";
 import uuid4 from "uuid/v4";
 
@@ -295,12 +296,12 @@ function getDMFieldIcon(fields, value, iconType) {
 	const correctField = fields.find(function(field) {
 		return field.origName === value;
 	});
-	if (iconType === "measure") {
+	switch (iconType) {
+	case "measure":
 		if (!correctField) {
 			return "measurementEmpty";
 		}
-		const measureLevel = correctField.metadata.measure;
-		switch (measureLevel) {
+		switch (correctField.metadata.measure) {
 		case "range":
 			icon = "measurementScale";
 			break;
@@ -326,9 +327,39 @@ function getDMFieldIcon(fields, value, iconType) {
 			icon = "measurementEmpty";
 			break;
 		}
+		break;
+	case "type":
+		if (!correctField) {
+			return "typeEmpty";
+		}
+		switch (correctField.type) {
+		case DATA_TYPE.DATE:
+			icon = DATA_TYPE.DATE;
+			break;
+		case DATA_TYPE.TIME:
+			icon = DATA_TYPE.TIME;
+			break;
+		case DATA_TYPE.TIMESTAMP:
+			icon = DATA_TYPE.TIMESTAMP;
+			break;
+		case DATA_TYPE.STRING:
+			icon = DATA_TYPE.STRING;
+			break;
+		case DATA_TYPE.INTEGER:
+			icon = DATA_TYPE.INTEGER;
+			break;
+		case DATA_TYPE.DOUBLE:
+			icon = DATA_TYPE.DOUBLE;
+			break;
+		default:
+			icon = "typeEmpty";
+			break;
+		}
+		break;
+	default:
+		break;
 	}
 	return icon;
-
 }
 
 

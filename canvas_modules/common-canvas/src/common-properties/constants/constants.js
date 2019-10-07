@@ -165,14 +165,14 @@ _defineConstant("CONDITION_MESSAGE_TYPE", {
 
 _defineConstant("SPINNER", "spinner");
 
-_defineConstant("DATA_TYPES", [
-	"integer",
-	"double",
-	"string",
-	"date",
-	"time",
-	"timestamp"
-]);
+_defineConstant("DATA_TYPE", {
+	INTEGER: "integer",
+	DOUBLE: "double",
+	STRING: "string",
+	DATE: "date",
+	TIME: "time",
+	TIMESTAMP: "timestamp"
+});
 
 _defineConstant("DEFAULT_DATE_FORMAT", "YYYY-M-D");
 
