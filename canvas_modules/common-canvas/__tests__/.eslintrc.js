@@ -1,6 +1,6 @@
 module.exports = {
 	extends: [
-		"@dap/eslint-config-portal-common/react"
+		"eslint-config-canvas/react"
 	].map(require.resolve),
 	env: {
 		"browser": true,

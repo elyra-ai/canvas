@@ -1,5 +1,5 @@
 module.exports = {
-	extends: "@dap/eslint-config-portal-common",
+	extends: "eslint-config-canvas",
 	rules: {
 		// Allow snake_case, but only for object properties e.g. myObj.param_name
 		"camelcase": [

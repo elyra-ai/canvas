@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
-import { STATES, TOOL_TIP_DELAY } from "./../../constants/constants.js";
+import { STATES, TOOL_TIP_DELAY, DATA_TYPE } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import Icon from "./../../../icons/icon.jsx";
 import uuid4 from "uuid/v4";
@@ -41,7 +41,8 @@ class ReadonlyControl extends React.Component {
 				controlValue = this.props.controller.getCustomControl(this.props.propertyId, this.props.columnDef, { table: true, editStyle: "summary" });
 			}
 		}
-		if (this.props.control.controlType === ControlType.TIMESTAMP) {
+		if (this.props.control.controlType === ControlType.TIMESTAMP ||
+			(this.props.control.valueDef && this.props.control.valueDef.propType === DATA_TYPE.TIMESTAMP)) {
 			const mom = moment(controlValue); // timestamp in ms
 			if (mom.isValid()) {
 				controlValue = mom.format("LLLL");

@@ -42,7 +42,6 @@
     "uuid": "3.1.0"
   },
   "devDependencies": {
-    "@dap/eslint-config-portal-common": "1.0.0",
     "autoprefixer": "7.1.2",
     "babel-core": "6.26.0",
     "babel-jest": "23.6",
@@ -61,6 +60,7 @@
     "enzyme-adapter-react-16": "1.10.0",
     "enzyme-react-intl": "2.0.3",
     "eslint": "4.3.0",
+    "eslint-config-canvas": "file:../eslint-config-canvas",
     "eslint-plugin-react": "7.1.0",
     "extract-text-webpack-plugin": "3.0.0",
     "file-loader": "0.11.2",

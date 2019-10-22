@@ -22,7 +22,6 @@
     "node-sass": "4.5.3"
   },
   "devDependencies": {
-    "@dap/eslint-config-portal-common": "1.0.0",
     "@wdp/common-canvas": "file:../common-canvas",
     "autoprefixer": "7.1.2",
     "babel-core": "6.26.0",
@@ -39,6 +38,7 @@
     "codemirror": "5.33",
     "css-loader": "0.28.4",
     "eslint": "4.3.0",
+    "eslint-config-canvas": "file:../eslint-config-canvas",
     "eslint-plugin-react": "7.1.0",
     "extract-text-webpack-plugin": "3.0.0",
     "file-loader": "0.11.2",
