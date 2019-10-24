@@ -18,7 +18,7 @@
 # - Thought we could have used the other trick: <cmd> || true
 set +e # Disable error checking
 echo "Add github to known hosts"
-ssh -o StrictHostKeyChecking=no -T git@github.ibm.com
+ssh -o StrictHostKeyChecking=no -T git@github.com
 set -e # Re-enable fail-on-error checking
 
 SCRIPTNAME=`basename "$0"`
@@ -26,13 +26,13 @@ echo "RUNNING SCRIPT: ${SCRIPTNAME}"
 
 echo "Setting local variables"
 WORKING_DIR="$PWD"
-GIT_ORG="NGP-TWC"
-GIT_REPO="wdp-abstract-canvas"
+GIT_ORG="ai-workspace"
+GIT_REPO="canvas"
 GIT_DIRECTORY="${GIT_REPO}_repo"
 RELEASE="release"
 MASTER_TAG="master-last_success"
-GIT_USER="Y9CTMV866"
-GIT_USER_EMAIL="Y9CTMV866@nomail.relay.ibm.com"
+GIT_USER="automated_user"
+GIT_USER_EMAIL="automated_user.com"
 
 git config --global user.name "${GIT_USER}"
 git config --global user.email "${GIT_USER_EMAIL}"

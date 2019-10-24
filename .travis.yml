@@ -26,7 +26,7 @@ script:
   - ./canvas_modules/common-canvas/build.sh || travis_terminate 1;
   - ./canvas_modules/harness/build.sh || travis_terminate 1;
   - ./canvas_modules/harness/functional_test.sh || travis_terminate 1;
-  - ./scripts/source_scan.sh || travis_terminate 1;
+  #- ./scripts/source_scan.sh || travis_terminate 1;
 deploy:
   - provider: script
     skip_cleanup: true
@@ -38,10 +38,9 @@ deploy:
     script: ./scripts/publish_modules.sh
     on:
       branch: release
-after_deploy:
-  - ./scripts/bluemix_deploy.sh
 notifications:
-  slack:
-    rooms:
-      - watsondataplatform:XVNawCZULSfgMLsovgn2Stkp#wdp-canvas-builds
-group: bluezone
+  email:
+    recipients:
+      - mwhoward@us.ibm.com
+    on_success: never
+    on_failure: always
