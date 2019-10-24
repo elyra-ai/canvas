@@ -1,5 +1,4 @@
-## wdp-abstract-canvas[![Build Status](https://travis.ibm.com/NGP-TWC/wdp-abstract-canvas.svg?token=Th1rZzgdEHjwEFgN1ZmM&branch=master)](https://travis.ibm.com/NGP-TWC/wdp-abstract-canvas)
-
+## wdp-abstract-canvas[![Build Status](https://travis-ci.com/ai-workspace/canvas.svg?token=g6qTF7ovHT9JrUf81Uu1&branch=master)](https://travis-ci.com/ai-workspace/canvas)
 ## Overview
 The WDP Common Canvas tooling consists of two Node JS modules:
 
