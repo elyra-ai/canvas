@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 # Logs
 logs
 *.log
@@ -36,6 +37,13 @@ coverage
 
 # Dependency directory
 node_modules
+
+# Source code
+src
+utils
+assets
+webpack.config.js
+Gruntfile.js
 
 # Testing directories
 test-server

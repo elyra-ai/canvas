@@ -1,5 +1,5 @@
 This directory contains some schema files which are slightly different to the
-schema files in the @wdp/pipeline-schemas module (which is built from the
+schema files in the @ai-workspace/canvas-schemas module (which is built from the
 wdp-pipeline-schemas repo). The reason they are different is that the
 runtime validation code needs them to be different so that validation
 works successfully. They contain syntactical changes rather than semantic

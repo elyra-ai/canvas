@@ -29,14 +29,14 @@ import has from "lodash/has";
 
 import { getMessages } from "../intl/intl-utils";
 import HarnessBundles from "../intl/locales";
-import CommandActionsBundles from "@wdp/common-canvas/locales/command-actions/locales";
-import CommonCanvasBundles from "@wdp/common-canvas/locales/common-canvas/locales";
-import CommonPropsBundles from "@wdp/common-canvas/locales/common-properties/locales";
-import PaletteBundles from "@wdp/common-canvas/locales/palette/locales";
-import ToolbarBundles from "@wdp/common-canvas/locales/toolbar/locales";
+import CommandActionsBundles from "@elyra/canvas/locales/command-actions/locales";
+import CommonCanvasBundles from "@elyra/canvas/locales/common-canvas/locales";
+import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales";
+import PaletteBundles from "@elyra/canvas/locales/palette/locales";
+import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
 import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas";
-import CommonCanvasPackage from "@wdp/common-canvas/package.json";
+import CommonCanvasPackage from "@elyra/canvas/package.json";
 
 import ModelerFlowsCanvas from "./components/custom-canvases/modeler-flows/modeler-flows-canvas";
 import AutoAICanvas from "./components/custom-canvases/auto-ai/auto-ai-canvas";

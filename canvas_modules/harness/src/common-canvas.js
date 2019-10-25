@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-import { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation } from "@wdp/common-canvas";
+import { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation } from "@ai-workspace/canvas";
 
 export { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation };

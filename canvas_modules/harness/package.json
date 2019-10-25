@@ -1,5 +1,5 @@
 {
-  "name": "common-canvas-demo",
+  "name": "canvas-demo",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -23,6 +23,7 @@
     "node-sass": "4.13.1"
   },
   "devDependencies": {
+    "@elyra/canvas": "file:../common-canvas",
     "@carbon/icons-react": "10.8.2",
     "@wdp/common-canvas": "file:../common-canvas",
     "@wdpx/themes": "1.1.9",

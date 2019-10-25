@@ -1,5 +1,5 @@
 {
-  "name": "@wdp/common-canvas",
+  "name": "@elyra/canvas",
   "version": "8.0.10",
   "description": "WDP common-canvas",
   "main": "dist/common-canvas.js",
@@ -11,6 +11,7 @@
   "bugs": {
     "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues"
   },
+  "license": "Apache-2.0",
   "scripts": {
     "test": "NODE_ENV=test jest",
     "test-coverage": "NODE_ENV=test jest --coverage",
@@ -18,7 +19,7 @@
     "debug": "NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
-    "@wdp/pipeline-schemas": "3.0.7",
+    "@elyra/pipeline-schemas": "3.0.7",
     "@carbon/icons-react": "10.8.2",
     "carbon-components": "10.9.3",
     "carbon-components-react": "7.9.3",
@@ -101,9 +102,6 @@
     "react-dom": "^16.0.0",
     "react-intl": "^3.0.0",
     "react-redux": "^7.0.0"
-  },
-  "publishConfig": {
-    "registry": "https://na.artifactory.swg-devops.com:443/artifactory/api/npm/wcp-wdp-npm-local"
   },
   "jest": {
     "moduleFileExtensions": [
