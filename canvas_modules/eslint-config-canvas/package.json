@@ -1,6 +1,7 @@
 {
   "name": "eslint-config-canvas",
   "version": "0.0.1",
+  "private": true,
   "main": "index.js",
   "repository": {
     "type": "git",

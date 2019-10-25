@@ -18,8 +18,7 @@
 
 set -e
 
-printf "registry=https://na.artifactory.swg-devops.com:443/artifactory/api/npm/wcp-wdp-npm-virtual/\n" >> .npmrc
-curl -H "X-JFrog-Art-Api:${ARTIFACTORY_NPM_API_KEY}" -X GET https://na.artifactory.swg-devops.com/artifactory/api/npm/auth >> .npmrc
+printf "registry=https://registry.npmjs.com/\n" >> .npmrc
 
 cp .npmrc ./canvas_modules/common-canvas/
 cp .npmrc ./canvas_modules/harness/
