@@ -35,7 +35,7 @@ import union from "lodash/union";
 import mergeWith from "lodash/mergeWith";
 import uuid4 from "uuid/v4";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
-import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@wdp/pipeline-schemas";
+import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@ai-workspace/canvas-schemas";
 import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from "./schemas-utils/upgrade-palette.js";
 
 const nodes = (state = [], action) => {

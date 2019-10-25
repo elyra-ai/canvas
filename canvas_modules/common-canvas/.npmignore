@@ -31,11 +31,20 @@ coverage
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
-# Eclipse project
-.project
-
 # node-waf configuration
 .lock-wscript
 
 # Dependency directory
 node_modules
+
+# Source code
+src
+utils
+assets
+webpack.config.js
+Gruntfile.js
+
+# Tests
+__tests__
+__mocks__
+jest-setup.js

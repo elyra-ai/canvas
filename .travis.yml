@@ -16,16 +16,8 @@
 ---
 dist: trusty
 sudo: false
-branches:
- only:
-  - master
-  - release
-  # Build all feature branches
-  - /^ff-/
-  # Build all sandbox branches
-  - /^sb-/
 language: node_js
-node_js: "8.16"
+node_js: "8"
 addons:
   apt:
     packages:
@@ -45,17 +37,11 @@ script:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ./scripts/tagBuild.sh master last_success
+    # script: ./scripts/tagBuild.sh master last_success
     on:
       branch: master
   - provider: script
     skip_cleanup: true
-    script: ./scripts/publish_modules.sh
+    # script: ./scripts/publish_modules.sh
     on:
       branch: release
-notifications:
-  email:
-    recipients:
-      - mwhoward@us.ibm.com
-    on_success: never
-    on_failure: always
