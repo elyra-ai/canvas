@@ -3,14 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas"
-  },
   "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issue"
-  },
   "engines": {
     "node": ">= 8",
     "npm": ">= 6"
