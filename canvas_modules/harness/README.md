@@ -21,9 +21,6 @@ limitations under the License.
 ## Environment setup
 - Nodejs `node 8.16.x`
 
-#### Artifactory setup
- <https://github.ibm.com/wdpx/developers-guide/blob/master/guide/Artifactory.md#what-changes-are-required-to-our-deployments>
-
 #### Development setup
 ```sh
 export NODE_ENV=development
