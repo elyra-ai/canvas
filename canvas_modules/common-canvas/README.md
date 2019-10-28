@@ -17,8 +17,6 @@ limitations under the License.
 -->
 
 ## ai-workspaces/canvas
-
-
 The `Common Canvas` exists for use in building canvas-like applications. The canvas is driven by an application-agnostic [PipelineFlow JSON](https://github.com/ai-workspace/canvas-schemas/tree/master/common-pipeline/pipeline-flow), and fires UI events to the consuming application for document management.
 
 ### Documentation
