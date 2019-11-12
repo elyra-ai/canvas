@@ -27,7 +27,7 @@
     "dagre": "0.7.4",
     "immutable-undo": "1.1.1",
     "jsonschema": "1.2.2",
-    "lodash": "4.17.11",
+    "lodash": "4.17.15",
     "log4js": "0.6.38",
     "moment": "2.20.1",
     "prop-types": "15.5.10",
