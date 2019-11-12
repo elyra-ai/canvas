@@ -329,7 +329,7 @@ export default class PropertiesController {
 		if (control.role === ParamRole.COLUMN && control.valueDef.propType === Type.STRUCTURE) {
 			return true;
 		}
-		if (PropertyUtils.toType(control.subControls) === "array") {
+		if (Array.isArray(control.subControls)) {
 			for (const keyName in control.subControls) {
 				if (control.subControls.hasOwnProperty(keyName)) {
 					const subControl = control.subControls[keyName];
@@ -362,9 +362,9 @@ export default class PropertiesController {
 	_getDefaultSubControlValue(col, fieldName, fields, control) {
 		let val;
 		const subControl = control.subControls[col];
-		if (PropertyUtils.toType(subControl.dmDefault) !== "undefined") {
+		if (typeof subControl.dmDefault !== "undefined") {
 			val = PropertyUtils.getDMDefault(subControl, fieldName, fields);
-		} else if (PropertyUtils.toType(subControl.valueDef.defaultValue) !== "undefined") {
+		} else if (typeof subControl.valueDef.defaultValue !== "undefined") {
 			val = subControl.valueDef.defaultValue;
 			if (val.parameterRef) {
 				val = this.getPropertyValue({ name: val.parameterRef });

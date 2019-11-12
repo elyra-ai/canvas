@@ -84,74 +84,100 @@ export default class ControlFactory {
 		if (tableInfo) {
 			props.tableControl = tableInfo.table;
 		}
-		if (control.controlType === ControlType.TEXTFIELD) {
+		switch (control.controlType) {
+		case (ControlType.TEXTFIELD):
 			return (<TextfieldControl {...props} />);
-		} else if (control.controlType === ControlType.READONLY) {
+		case (ControlType.READONLY):
 			return (<ReadonlyControl {...props} />);
-		} else if (control.controlType === ControlType.TIMESTAMPFIELD) {
+		case (ControlType.TIMESTAMPFIELD):
 			return (<ReadonlyControl {...props} />);
-		} else if (control.controlType === ControlType.TEXTAREA) {
+		case (ControlType.TEXTAREA):
 			return (<TextareaControl {...props} />);
-		} else if (control.controlType === ControlType.EXPRESSION) {
+		case (ControlType.EXPRESSION):
 			return (<ExpressionControl
 				{...props}
 				rightFlyout={this.rightFlyout}
 			/>);
-		} else if (control.controlType === ControlType.TOGGLETEXT) {
+		case (ControlType.TOGGLETEXT):
 			return (<ToggletextControl
 				{...props}
 			/>);
-		} else if (control.controlType === ControlType.PASSWORDFIELD) {
+		case (ControlType.PASSWORDFIELD):
 			return (<PasswordControl {...props} />);
-		} else if (control.controlType === ControlType.NUMBERFIELD || control.controlType === ControlType.SPINNER) {
+		case (ControlType.NUMBERFIELD):
+		case (ControlType.SPINNER):
 			return (<NumberfieldControl {...props} />);
-		} else if (control.controlType === ControlType.DATEFIELD) {
+		case (ControlType.DATEFIELD):
 			return (<DatefieldControl {...props} />);
-		} else if (control.controlType === ControlType.TIMEFIELD) {
+		case (ControlType.TIMEFIELD):
 			return (<TimefieldControl {...props} />);
-		} else if (control.controlType === ControlType.CHECKBOX) {
+		case (ControlType.CHECKBOX):
 			return (<CheckboxControl {...props} />);
-		} else if (control.controlType === ControlType.CHECKBOXSET && !tableInfo) {
-			return (<CheckboxsetControl {...props} />);
-		} else if (control.controlType === ControlType.RADIOSET) {
+		case (ControlType.CHECKBOXSET):
+			if (!tableInfo) {
+				return (<CheckboxsetControl {...props} />);
+			}
+			return (<ReadonlyControl {...props} />);
+		case (ControlType.RADIOSET):
 			return (<RadiosetControl {...props} />);
-		} else if (control.controlType === ControlType.ONEOFSELECT || (control.controlType === ControlType.SELECTSCHEMA) ||
-				(control.controlType === ControlType.SELECTCOLUMN && !tableInfo)) {
+		case (ControlType.ONEOFSELECT):
+		case (ControlType.SELECTSCHEMA):
 			return (<Dropdown
 				{...props}
 				rightFlyout={this.rightFlyout}
 			/>);
-		} else if (control.controlType === ControlType.SOMEOFSELECT && !tableInfo) {
-			return (<SomeofselectControl {...props} />);
-		} else if (control.controlType === ControlType.SELECTCOLUMNS && !tableInfo) {
-			return (<SelectColumnsControl
-				{...props}
-				openFieldPicker={this.openFieldPicker}
-				rightFlyout={this.rightFlyout}
-			/>);
-		} else if (control.controlType === ControlType.STRUCTURETABLE && !tableInfo) {
-			return (<StructureTableControl
-				{...props}
-				buildUIItem={this.genUIItem}
-				openFieldPicker={this.openFieldPicker}
-				rightFlyout={this.rightFlyout}
-			/>);
-		} else if (control.controlType === ControlType.STRUCTURELISTEDITOR && !tableInfo) {
-			return (<StructurelisteditorControl
-				{...props}
-				buildUIItem={this.genUIItem}
-				rightFlyout={this.rightFlyout}
-			/>);
-		} else if (control.controlType === ControlType.CUSTOM) {
+		case (ControlType.SELECTCOLUMN):
+			if (!tableInfo) {
+				return (<Dropdown
+					{...props}
+					rightFlyout={this.rightFlyout}
+				/>);
+			}
+			return (<ReadonlyControl {...props} />);
+		case (ControlType.SOMEOFSELECT):
+			if (!tableInfo) {
+				return (<SomeofselectControl {...props} />);
+			}
+			return (<ReadonlyControl {...props} />);
+		case (ControlType.SELECTCOLUMNS):
+			if (!tableInfo) {
+				return (<SelectColumnsControl
+					{...props}
+					openFieldPicker={this.openFieldPicker}
+					rightFlyout={this.rightFlyout}
+				/>);
+			}
+			return (<ReadonlyControl {...props} />);
+		case (ControlType.STRUCTURETABLE):
+			if (!tableInfo) {
+				return (<StructureTableControl
+					{...props}
+					buildUIItem={this.genUIItem}
+					openFieldPicker={this.openFieldPicker}
+					rightFlyout={this.rightFlyout}
+				/>);
+			}
+			return (<ReadonlyControl {...props} />);
+		case (ControlType.STRUCTURELISTEDITOR):
+			if (!tableInfo) {
+				return (<StructurelisteditorControl
+					{...props}
+					buildUIItem={this.genUIItem}
+					rightFlyout={this.rightFlyout}
+				/>);
+			}
+			return (<ReadonlyControl {...props} />);
+		case (ControlType.CUSTOM):
 			return (
 				<div key={controlKey}>
 					{this.controller.getCustomControl(propertyId, control, tableInfo)}
 				</div>
 			);
-		} else if (control.controlType === ControlType.STRUCTUREEDITOR) {
+		case (ControlType.STRUCTUREEDITOR):
 			return (<StructureEditorControl {...props} />);
+		default:
+			return (<ReadonlyControl {...props} />);
 		}
-		return (<ReadonlyControl {...props} />);
 	}
 
 	/**

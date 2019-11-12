@@ -196,7 +196,7 @@ class SummaryPanel extends React.Component {
 	_getSummaryDisplayValue(displayValue, propertyId) {
 		let returnValue = displayValue;
 		const control = this.props.controller.getControl(propertyId);
-		if (PropertyUtils.toType(displayValue) === "object") {
+		if (typeof displayValue === "object") {
 			if (control.valueDef.propType === Type.STRUCTURE && control.role === ParamRole.COLUMN) {
 				returnValue = PropertyUtils.stringifyFieldValue(displayValue, control);
 			} else {

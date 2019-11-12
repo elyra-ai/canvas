@@ -295,8 +295,13 @@ class EditorForm extends React.Component {
 	*  propertyId and indexOf only used for subpanel in tables
 	*/
 	genUIItem(key, uiItem, inPropertyId, indexof) {
-		if (uiItem.itemType === "control") {
-			const propertyId = { name: uiItem.control.name };
+		let textClass = "";
+		let icon = null;
+		let text = "";
+		const propertyId = {};
+		switch (uiItem.itemType) {
+		case ("control"):
+			propertyId.name = uiItem.control.name;
 			// Used for subpanels in tables
 			if (inPropertyId) {
 				propertyId.name = inPropertyId.name;
@@ -312,7 +317,7 @@ class EditorForm extends React.Component {
 					this.generateAdditionalPanels(uiItem.additionalItems, key, null, indexof, true);
 			}
 			return this.ControlFactory.createControlItem(uiItem.control, propertyId);
-		} else if (uiItem.itemType === "additionalLink") {
+		case ("additionalLink"):
 			var subPanel = this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 			return (<SubPanelButton key={"sub-panel-button." + key}
 				label={uiItem.text}
@@ -321,46 +326,49 @@ class EditorForm extends React.Component {
 				controller={this.props.controller}
 				rightFlyout={this.props.rightFlyout}
 			/>);
-		} else if (uiItem.itemType === "staticText") {
-			const textClass = classNames("properties-static-text", uiItem.textType);
-			const icon = uiItem.textType === "info" ? <div><CanvasIcon type="info" /></div> : null;
-			const text = <div className={textClass}>{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}</div>;
+		case ("staticText"):
+			textClass = classNames("properties-static-text", uiItem.textType);
+			icon = uiItem.textType === "info" ? <div><CanvasIcon type="info" /></div> : null;
+			text = <div className={textClass}>{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}</div>;
 			return <div key={"static-text." + key} className="properties-static-text-container">{icon}{text}</div>;
-		} else if (uiItem.itemType === "linkText") { // linkText used for Alerts tab. Only used internally
-			const textClass = classNames("properties-link-text-container", uiItem.textType);
-			let icon = null;
+		case ("linkText"): // linkText used for Alerts tab. Only used internally
+			textClass = classNames("properties-link-text-container", uiItem.textType);
 			if (uiItem.textType === "warning" || uiItem.textType === "error") {
 				icon = (<div><Icon className="info"
 					description=""
 					name={uiItem.textType + "--glyph"}
 				/></div>);
 			}
-			const text = (
+			text = (
 				<a className="properties-link-text" onClick={this._handleMessageClick.bind(this, uiItem.controlId)}>
 					{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}
 				</a>);
 			return <div key={"link-text." + key} className={textClass} >{icon}{text}</div>;
-		} else if (uiItem.itemType === "hSeparator") {
+		case ("hSeparator"):
 			return <hr key={"h-separator." + key} className="properties-h-separator" />;
-		} else if (uiItem.itemType === "panel") {
+		case ("panel"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
-		} else if (uiItem.itemType === "subTabs") {
+		case ("subTabs"):
 			return this.genSubTabs(key, uiItem.tabs, inPropertyId, indexof);
-		} else if (uiItem.itemType === "primaryTabs") {
+		case ("primaryTabs"):
 			return this.genPrimaryTabs(key, uiItem.tabs, inPropertyId, indexof);
-		} else if (uiItem.itemType === "panelSelector") {
+		case ("panelSelector"):
 			return this.genPanelSelector(key, uiItem.tabs, uiItem.dependsOn, inPropertyId, indexof, uiItem.id);
-		} else if (uiItem.itemType === "checkboxSelector") {
+		case ("checkboxSelector"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
-		} else if (uiItem.itemType === "customPanel") {
+		case ("customPanel"):
 			return this.generateCustomPanel(key, uiItem.panel);
 			// only generate summary panel for right side flyout
-		} else if (uiItem.itemType === "action") {
+		case ("action"):
 			return this.actionFactory.generateAction(key, uiItem.action);
-		} else if (uiItem.itemType === "textPanel" && uiItem.panel) {
-			return (<TextPanel key={"text-panel-" + key} panel={uiItem.panel} controller={this.props.controller} />);
+		case ("textPanel"):
+			if (uiItem.panel) {
+				return (<TextPanel key={"text-panel-" + key} panel={uiItem.panel} controller={this.props.controller} />);
+			}
+			return <div key={"unknown." + key}>Unknown: {uiItem.itemType}</div>;
+		default:
+			return <div key={"unknown." + key}>Unknown: {uiItem.itemType}</div>;
 		}
-		return <div key={"unknown." + key}>Unknown: {uiItem.itemType}</div>;
 	}
 
 	generateCustomPanel(key, panel) {
@@ -403,21 +411,20 @@ class EditorForm extends React.Component {
 	genPanel(key, panel, propertyId, indexof) {
 		let content = this.genUIContent(panel.uiItems, propertyId, indexof);
 		const id = "panel." + key;
-		let uiObject;
-		if (panel.panelType === "columnSelection") {
+		switch (panel.panelType) {
+		case ("columnSelection"):
 			this.generateSharedControlNames(panel);
 			// needs to be ran after setting shared controls to get correct fields in shared controls
 			content = this.genUIContent(panel.uiItems, propertyId, indexof);
-			uiObject = (<div
+			return (<div
 				className="properties-control-panel"
 				key={key}
 			>
 				{content}
 			</div>);
-		} else if (panel.panelType === "summary") {
-			uiObject = content;
+		case ("summary"):
 			if (this.props.rightFlyout) {
-				uiObject = (
+				return (
 					<SummaryPanel
 						key={"summary-panel-" + id}
 						controller={this.props.controller}
@@ -426,13 +433,14 @@ class EditorForm extends React.Component {
 						{content}
 					</SummaryPanel>);
 			}
-		} else if (panel.panelType === "actionPanel") {
-			uiObject = (
+			return content;
+		case ("actionPanel"):
+			return (
 				<ActionPanel key={"action-panel-" + key} controller={this.props.controller} panel={panel}>
 					{content}
 				</ActionPanel>);
-		} else if (panel.panelType === "twisty") {
-			uiObject = (
+		case ("twisty"):
+			return (
 				<TwistyPanel
 					key={id}
 					controller={this.props.controller}
@@ -440,12 +448,11 @@ class EditorForm extends React.Component {
 				>
 					{content}
 				</TwistyPanel>);
-		} else {
-			uiObject = (<div className="properties-control-panel" key={key} data-id={"properties-" + panel.id}>
+		default:
+			return (<div className="properties-control-panel" key={key} data-id={"properties-" + panel.id}>
 				{content}
 			</div>);
 		}
-		return uiObject;
 	}
 
 	/**

@@ -327,7 +327,7 @@ export default class PropertiesStore {
 	}
 	getDatasetMetadata() {
 		const state = this.store.getState();
-		return PropertyUtils.copy(state.datasetMetadataReducer);
+		return state.datasetMetadataReducer;
 	}
 
 	/*
