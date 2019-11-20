@@ -13,6 +13,25 @@ import { DATA_TYPE } from "../constants/constants";
 import cloneDeep from "lodash/cloneDeep";
 import uuid4 from "uuid/v4";
 
+/**
+ * A better type identifier than a simple 'typeOf' call:
+ *
+ * 	toType({a: 4}); //"object"
+ *	toType([1, 2, 3]); //"array"
+ *	(function() {console.log(toType(arguments))})(); //arguments
+ *	toType(new ReferenceError); //"error"
+ *	toType(new Date); //"date"
+ *	toType(/a-z/); //"regexp"
+ *	toType(Math); //"math"
+ *	toType(JSON); //"json"
+ *	toType(new Number(4)); //"number"
+ *	toType(new String("abc")); //"string"
+ *	toType(new Boolean(true)); //"boolean"
+ */
+function toType(obj) {
+	return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+}
+
 function copy(obj) {
 	if (typeof obj !== "undefined") {
 		return cloneDeep(obj);
@@ -172,7 +191,7 @@ function getFieldsFromControlValues(control, controlValues, fields) {
 			let fieldName = controlValue;
 			if (Array.isArray(controlValue)) {
 				fieldName = stringifyFieldValue(controlValue[dataColumnIndex], control);
-			} else if (typeof controlValue === "object") {
+			} else if (toType(controlValue) === "object") {
 				fieldName = stringifyFieldValue(controlValue, control);
 			}
 			outputList.push(fieldName);
@@ -191,7 +210,8 @@ function getFieldsFromControlValues(control, controlValues, fields) {
  * @return A string field name value or null
  */
 function stringifyFieldValue(value, control, excludeSchema) {
-	if (typeof value === "object" && value !== null) {
+	const theType = toType(value);
+	if (theType === "object") {
 		if (control && control.valueDef && value.link_ref) {
 			let stringName;
 			if (!excludeSchema) {
@@ -214,7 +234,8 @@ function stringifyFieldValue(value, control, excludeSchema) {
  * @return True if the field value matches the field prototype
  */
 function fieldValueMatchesProto(fieldValue, fieldProto) {
-	if (typeof fieldValue === "object" && fieldValue.link_ref) {
+	const theType = toType(fieldValue);
+	if (theType === "object" && fieldValue.link_ref) {
 		return fieldValue.link_ref === fieldProto.schema &&
 						fieldValue.field_name === fieldProto.origName;
 	}
@@ -368,6 +389,7 @@ function _findCorrespondingValue(input, values) {
 }
 
 module.exports = {
+	toType: toType,
 	formatMessage: formatMessage,
 	evaluateText: evaluateText,
 	getTableFieldIndex: getTableFieldIndex,

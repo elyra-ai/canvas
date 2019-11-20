@@ -11,6 +11,7 @@ import { Separator } from "../constants/form-constants";
 import { Type, ParamRole, EditStyle } from "../constants/form-constants";
 import { ResourceDef } from "../util/L10nProvider";
 import propertyOf from "lodash/propertyOf";
+import PropertyUtil from "../util/property-utils";
 
 export class ParameterDef {
 	constructor(settings) {
@@ -32,7 +33,7 @@ export class ParameterDef {
 		if (settings.valueRestriction) {
 			this.valueRestriction = settings.valueRestriction;
 		}
-		if (settings.defaultValue !== null && typeof settings.defaultValue !== "undefined") {
+		if (settings.defaultValue !== null && PropertyUtil.toType(settings.defaultValue) !== "undefined") {
 			if (settings.defaultValue.parameter_ref) {
 				this.defaultValue = {};
 				this.defaultValue.parameterRef = settings.defaultValue.parameter_ref;
@@ -64,7 +65,7 @@ export class ParameterDef {
 		if (settings.resource_key) {
 			this.resource_key = settings.resource_key;
 		}
-		if (typeof settings.visible === "boolean") {
+		if (PropertyUtil.toType(settings.visible) === "boolean") {
 			this.visible = settings.visible;
 		} else {
 			this.visible = true;
@@ -72,16 +73,16 @@ export class ParameterDef {
 		if (settings.valueIcons) {
 			this.valueIcons = settings.valueIcons;
 		}
-		if (typeof settings.sortable === "boolean") {
+		if (PropertyUtil.toType(settings.sortable) === "boolean") {
 			this.sortable = settings.sortable;
 		}
-		if (typeof settings.filterable === "boolean") {
+		if (PropertyUtil.toType(settings.filterable) === "boolean") {
 			this.filterable = settings.filterable;
 		}
 		if (settings.editStyle) {
 			this.editStyle = settings.editStyle;
 		}
-		if (typeof settings.required === "boolean") {
+		if (PropertyUtil.toType(settings.required) === "boolean") {
 			this.required = settings.required;
 		}
 		if (settings.numberGenerator) {
@@ -99,7 +100,7 @@ export class ParameterDef {
 		if (settings.language) {
 			this.language = settings.language;
 		}
-		if (typeof settings.summary === "boolean") {
+		if (PropertyUtil.toType(settings.summary) === "boolean") {
 			this.summary = settings.summary;
 		}
 		if (settings.increment) {
@@ -111,7 +112,7 @@ export class ParameterDef {
 		if (settings.textBefore) {
 			this.textBefore = ResourceDef.make(settings.textBefore);
 		}
-		if (typeof settings.moveableRows === "boolean") {
+		if (PropertyUtil.toType(settings.moveableRows) === "boolean") {
 			this.moveableRows = settings.moveableRows;
 		}
 		if (settings.generatedValues) {
