@@ -23,7 +23,7 @@
     "node-sass": "4.5.3"
   },
   "devDependencies": {
-    "@ai-workspace/canvas": "file:../common-canvas",
+    "@elyra/canvas": "file:../common-canvas",
     "autoprefixer": "7.1.2",
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",

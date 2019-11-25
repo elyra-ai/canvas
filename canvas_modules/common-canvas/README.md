@@ -16,8 +16,8 @@ limitations under the License.
 {% endcomment %}
 -->
 
-## ai-workspaces/canvas
-The `Common Canvas` exists for use in building canvas-like applications. The canvas is driven by an application-agnostic [PipelineFlow JSON](https://github.com/ai-workspace/canvas-schemas/tree/master/common-pipeline/pipeline-flow), and fires UI events to the consuming application for document management.
+## elyra/canvas
+The `Common Canvas` exists for use in building canvas-like applications. The canvas is driven by an application-agnostic [PipelineFlow JSON](https://github.com/elyra-ai/pipeline-schemas/tree/master/common-pipeline/pipeline-flow), and fires UI events to the consuming application for document management.
 
 ### Documentation
 
