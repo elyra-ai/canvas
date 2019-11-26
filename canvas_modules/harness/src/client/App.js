@@ -30,7 +30,7 @@ import forIn from "lodash/forIn";
 import has from "lodash/has";
 
 import { CommonCanvas, CanvasController, CommonProperties, FlowValidation } from "common-canvas";
-import CommonCanvasPackage from "@ai-workspace/canvas/package.json";
+import CommonCanvasPackage from "@elyra/canvas/package.json";
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console.jsx";

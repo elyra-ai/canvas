@@ -1,15 +1,15 @@
 {
-  "name": "@ai-workspace/canvas",
+  "name": "@elyra/canvas",
   "version": "6.1.23",
-  "description": "WDP common-canvas",
+  "description": "Elyra common-canvas",
   "main": "dist/common-canvas.js",
-  "homepage": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki",
+  "homepage": "https://github.com/elyra-ai/canvas",
   "repository": {
     "type": "git",
-    "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/common-canvas"
+    "url": "https://github.com/elyra-ai/canvas/tree/master/canvas_modules/common-canvas"
   },
   "bugs": {
-    "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues"
+    "url": "https://github.com/elyra-ai/canvas/issues"
   },
   "license": "Apache-2.0",
   "scripts": {
@@ -19,7 +19,7 @@
     "debug": "NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
-    "@ai-workspace/canvas-schemas": "3.0.4",
+    "@elyra/pipeline-schemas": "3.0.4",
     "carbon-components": "9.83.4",
     "carbon-components-react": "6.101.6",
     "carbon-icons": "7.0.7",

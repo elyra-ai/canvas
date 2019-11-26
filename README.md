@@ -16,34 +16,34 @@ limitations under the License.
 {% endcomment %}
 -->
 
-## ai-workspace/canvas [![Build Status](https://api.travis-ci.com/ai-workspace/canvas.svg?token=fxs6hCoNazkbbJ2xVkfD&branch=master)](https://travis-ci.com/ai-workspace/canvas)
+## elyra/canvas [![Build Status](https://api.travis-ci.com/elyra/canvas.svg?token=fxs6hCoNazkbbJ2xVkfD&branch=master)](https://travis-ci.com/ai-workspace/canvas)
 
 ## Overview
 The Common Canvas tooling consists of two Node JS modules:
 
-1) A `Common Canvas` for use in building canvas-like applications. See [detailed API and event documentation](https://github.com/ai-workspace/canvas/tree/master/canvas_modules/common-canvas).
+1) A `Common Canvas` for use in building canvas-like applications. See [detailed API and event documentation](https://github.com/elyra-ai/canvas/tree/master/canvas_modules/common-canvas).
 
 2) `Test harness`  
-See [here]https://github.com/ai-workspace/canvas/tree/master/canvas_modules/harness) for setting up local environment  
+See [here]https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness) for setting up local environment
 
 ## Using local version of common-canvas and/or common-properties
-Clone ai-workspace/canvas
+Clone elyra/canvas
 ```sh
-git clone git@github.com:ai-workspace/canvas.git
+git clone git@github.com:elyra/canvas.git
 
 # Build common-canvas and common-properties
-./<ai-workspace/canvas>/canvas_modules/common-canvas/build.sh
+./<elyra/canvas>/canvas_modules/common-canvas/build.sh
 ```
 In your application's package.json replace  
 ```
-"@ai-workspace/canvas": "<verson>"  
+"@elyra/canvas": "<verson>"
 ```
 with
 ```  
-"@ai-workspace/canvas": "file:<ai-workspace/canvas>/canvas_modules/common-canvas"  
+"@elyra/canvas": "file:<elyra/canvas>/canvas_modules/common-canvas"
 ```
 
-Delete @ai-workspace/canvas from node_modules of your application
+Delete @elyra/canvas from node_modules of your application
 
 ```sh
 # Run npm install to get local copy of common-canvas and/or common-properties
