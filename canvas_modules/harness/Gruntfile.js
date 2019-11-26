@@ -84,7 +84,7 @@ module.exports = function(grunt) {
 				files: [{
 					expand: true,
 					flatten: false,
-					cwd: "./node_modules/@ai-workspace/canvas/dist",
+					cwd: "./node_modules/@elyra/canvas/dist",
 					src: ["common-canvas*.css"],
 					dest: ".build"
 				},

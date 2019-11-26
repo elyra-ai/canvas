@@ -1,15 +1,15 @@
 {
   "name": "@elyra/canvas",
   "version": "8.0.10",
-  "description": "WDP common-canvas",
+  "description": "Elyra common-canvas",
   "main": "dist/common-canvas.js",
-  "homepage": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki",
+  "homepage": "https://github.com/elyra-ai/canvas",
   "repository": {
     "type": "git",
-    "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/common-canvas"
+    "url": "https://github.com/elyra-ai/canvas/tree/master/canvas_modules/common-canvas"
   },
   "bugs": {
-    "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues"
+    "url": "https://github.com/elyra-ai/canvas/issues"
   },
   "license": "Apache-2.0",
   "scripts": {

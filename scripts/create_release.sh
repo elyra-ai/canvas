@@ -32,7 +32,7 @@ echo "RUNNING SCRIPT: ${SCRIPTNAME}"
 
 echo "Setting local variables"
 WORKING_DIR="$PWD"
-GIT_ORG="ai-workspace"
+GIT_ORG="elyra"
 GIT_REPO="canvas"
 GIT_DIRECTORY="${GIT_REPO}_repo"
 RELEASE="release"

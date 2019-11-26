@@ -29,7 +29,7 @@ import has from "lodash/has";
 import union from "lodash/union";
 import uuid4 from "uuid/v4";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
-import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@ai-workspace/canvas-schemas";
+import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@elyra/pipeline-schemas";
 import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from "./schemas-utils/upgrade-palette.js";
 import { createCCStore } from "./redux/store.js";
 
