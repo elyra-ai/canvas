@@ -777,6 +777,36 @@ describe("structuretable multiselect edit works", () => {
 		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
 		expect(selectedEditRow).to.have.length(1);
 	});
+	it("mse table should show header even when rows are filtered", () => {
+		propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
+		// select the first row in the table
+		let tableData = wrapper.find("tbody.reactable-data").children();
+		expect(tableData).to.have.length(4);
+		const rowCheckbox = tableData.at(0).find("div.row-checkbox")
+			.find("input[type='checkbox']");
+
+		rowCheckbox.getDOMNode().checked = true;
+		rowCheckbox.simulate("change");
+
+		// verify that the select summary row is not present
+		let selectedEditRow = wrapper.find("div.properties-at-selectedEditRows").find("tr");
+		expect(selectedEditRow).to.have.length(0);
+
+		const input = wrapper.find("div.properties-ft-search-container").find("input");
+		expect(input).to.have.length(1);
+		input.simulate("change", { target: { value: "k" } });
+		wrapper.update();
+
+		// multiple select the 2 filtered rows in the table
+		tableData = wrapper.find("tbody.reactable-data").children();
+		expect(tableData).to.have.length(2);
+		tableData.at(0).simulate("click", { metaKey: true, ctrlKey: true });
+
+		// verify that the select summary row is present
+		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows").find("tr");
+		// console.log(selectedEditRow.debug());
+		expect(selectedEditRow).to.have.length(1);
+	});
 });
 
 describe("structuretable control displays with checkbox header", () => {
