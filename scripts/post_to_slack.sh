@@ -16,7 +16,7 @@ echo "RUNNING SCRIPT: ${SCRIPTNAME}"
 # Only post to slack for failures
 
 SLACK_CHANNEL="#wdp-canvas-builds"
-SLACK_URL=" https://hooks.slack.com/services/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 "
+SLACK_URL=" https://hooks.slack.com/services/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 " # pragma: whitelist secret
 JENKINS_JOB_URL="${BUILD_URL}"
 echo "---Error occured creating release branch."
 echo "---Posting to slack channel ${SLACK_CHANNEL}. Specifying Jenkins job URL as ${JENKINS_JOB_URL}"
