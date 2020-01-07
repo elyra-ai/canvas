@@ -294,6 +294,7 @@ const propValues = {
 const propertyId = { name: "keys" };
 const propertyIdReadonlyControl = { name: "structuretableSortOrder" };
 const propertyIdReadonlyControlStartValue = { name: "structuretableSortOrderStartValue" };
+const propertyIdMSE = { name: "ST_mse_table" };
 
 propertyUtils.setControls(controller, [control, readonlyControlDefault, readonlyControlStartValue]);
 
@@ -726,9 +727,11 @@ describe("structuretable control displays with no header and no button", () => {
 
 describe("structuretable multiselect edit works", () => {
 	let wrapper;
+	let renderedController;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
 	});
 	afterEach(() => {
 		wrapper.unmount();
@@ -782,11 +785,6 @@ describe("structuretable multiselect edit works", () => {
 		// select the first row in the table
 		let tableData = wrapper.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(4);
-		const rowCheckbox = tableData.at(0).find("div.row-checkbox")
-			.find("input[type='checkbox']");
-
-		rowCheckbox.getDOMNode().checked = true;
-		rowCheckbox.simulate("change");
 
 		// verify that the select summary row is not present
 		let selectedEditRow = wrapper.find("div.properties-at-selectedEditRows").find("tr");
@@ -801,11 +799,18 @@ describe("structuretable multiselect edit works", () => {
 		tableData = wrapper.find("tbody.reactable-data").children();
 		expect(tableData).to.have.length(2);
 		tableData.at(0).simulate("click", { metaKey: true, ctrlKey: true });
+		tableData.at(1).simulate("click", { metaKey: true, ctrlKey: true });
 
 		// verify that the select summary row is present
 		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows").find("tr");
 		// console.log(selectedEditRow.debug());
 		expect(selectedEditRow).to.have.length(1);
+		wrapper.update();
+
+		const selectedRows = renderedController.getSelectedRows(propertyIdMSE);
+		expect(selectedRows).to.have.length(2);
+		expect(selectedRows[0]).to.equal(2);
+		expect(selectedRows[1]).to.equal(3);
 	});
 });
 

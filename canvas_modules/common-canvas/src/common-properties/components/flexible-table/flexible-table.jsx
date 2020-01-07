@@ -23,6 +23,7 @@ import isEmpty from "lodash/isEmpty";
 import ObserveSize from "react-observe-size";
 import classNames from "classnames";
 import uuid4 from "uuid/v4";
+import has from "lodash/has";
 
 const sortDir = {
 	ASC: "ASC",
@@ -85,6 +86,19 @@ export default class FlexibleTable extends React.Component {
 		if (this.props.onSort) {
 			this.props.onSort(spec);
 		}
+	}
+
+	/**
+	* The current displayed row may have an index that is different from its actual index within the dataset
+	* Given the current displayed row and index of the table,
+	*  return its original row index from its row's propertyId
+	*/
+	getOriginalRowIndex(row, index) {
+		let rowIndex = index;
+		if (row.columns && has(row.columns[0], "content.props.children.props.propertyId.row")) {
+			rowIndex = row.columns[0].content.props.children.props.propertyId.row;
+		}
+		return rowIndex;
 	}
 
 	/**
@@ -282,7 +296,8 @@ export default class FlexibleTable extends React.Component {
 		if (checked) {
 			selectAll = Array.from(this.props.selectedRows);
 			for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
-				selectAll.push(rowIndex);
+				const originalRowIndex = this.getOriginalRowIndex(controlValue[rowIndex], rowIndex);
+				selectAll.push(originalRowIndex);
 			}
 		}
 		selectAll = Array.from(new Set(selectAll));
@@ -490,12 +505,13 @@ export default class FlexibleTable extends React.Component {
 					rowClassName += " table-selected-row";
 				}
 				let checked = false;
+				const rowIndex = this.getOriginalRowIndex(row, ridx);
 				if (this.checkedAllRows) {
 					checked = true;
 				} else if (selectedRows) {
 					for (let j = 0; j < selectedRows.length; j++) {
 						const key = selectedRows[j];
-						if (key === ridx) {
+						if (key === rowIndex) {
 							checked = true;
 							break;
 						}
@@ -507,7 +523,7 @@ export default class FlexibleTable extends React.Component {
 						<div className="row-checkbox">
 							<Checkbox id={uuid4() + "select-row"}
 								checked = {checked}
-								onChange={this.handleCheckedRow.bind(this, ridx)}
+								onChange={this.handleCheckedRow.bind(this, rowIndex)}
 								disabled={row.disabled}
 								hideLabel
 								labelText={""}
