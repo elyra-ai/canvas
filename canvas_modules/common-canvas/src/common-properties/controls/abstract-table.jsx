@@ -678,7 +678,7 @@ export default class AbstractTable extends React.Component {
 		for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 			const columns = [];
 			this.onPanelContainer[rowIndex] = [];
-			if (this.includeInFilter(rowIndex)) {
+			if (this.includeInFilter(rowIndex) || selectSummaryRow) {
 				for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
 					const columnDef = this.props.control.subControls[colIndex];
 					// we need to build the on-panel container so that when the row is selected and a not visible column is on-panel

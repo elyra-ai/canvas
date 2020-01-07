@@ -1202,7 +1202,8 @@
           "label": {
             "resource_key": "ST_mse_table.field.label"
           },
-          "summary": true
+          "summary": true,
+          "filterable": true
         },
         "parameters": [
           {
