@@ -1,0 +1,9 @@
+{
+  "SUPERNODE_TEMPLATE_DESCRIPTION": "This supernode was created by common-canvas.",
+  "SUPERNODE_TEMPLATE_LABEL": "Supernode",
+  "SUPERNODE_NEW_PORT_LABEL": "Binding port for supernode",
+  "SUPERNODE_BINDING_NODE_LABEL": "Binding",
+  "SUPERNODE_BINDING_NODE_DESCRIPTION": "Supernode binding node",
+  "PALETTE_SAVED_NODES_LABEL": "Saved Nodes",
+  "PALETTE_SAVED_NODES_DESCRIPTION": "Nodes in this category were previously saved from a flow."
+}

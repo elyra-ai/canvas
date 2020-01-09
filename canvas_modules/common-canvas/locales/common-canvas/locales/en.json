@@ -1,0 +1,23 @@
+{
+  "MENU_HIGHLIGHTBRANCH": "Highlight Branch",
+  "MENU_HIGHLIGHTUPSTREAM": "Highlight Upstream",
+  "MENU_HIGHLIGHTDOWNSTREAM": "Highlight Downstream",
+  "MENU_UNHIGHLIGHT": "Unhighlight",
+  "EDIT_CUTSELECTION": "Cut",
+  "EDIT_COPYSELECTION": "Copy",
+  "EDIT_PASTESELECTION": "Paste",
+  "CANVAS_ADDCOMMENT": "New comment",
+  "CANVAS_SELECTALL": "Select All",
+  "CANVAS_UNDO": "Undo",
+  "CANVAS_REDO": "Redo",
+  "CANVAS_DELETEOBJECT": "Delete",
+  "NODE_CREATESUPERNODE": "Create supernode",
+  "NODE_EXPANDSUPERNODEINPLACE": "Expand supernode",
+  "NODE_COLLAPSESUPERNODEINPLACE": "Collapse supernode",
+  "CANVAS_VALIDATEFLOW": "Validate Flow",
+  "NODE_EDITNODE": "Open",
+  "NODE_EDITMENU": "Edit",
+  "NODE_DISCONNECTNODE": "Disconnect",
+  "NODE_SAVETOPALETTE": "Save to palette",
+  "LINK_DELETELINK": "Delete"
+}
