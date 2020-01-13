@@ -36,6 +36,7 @@ Feature: CommonPropertiesActions
 
     Then I open the "Configure Rename fields" summary link in the "TABLES" category
     Then I click the subpanel button in control "structuretableReadonlyColumnDefaultIndex" in row "0"
-    Then I enter "This is a very long sentence of text to test whether or not an overflow of text occurs" in textfield "structuretableReadonlyColumnDefaultIndex_0_3" in parent control "structuretableReadonlyColumnDefaultIndex" in row "0"
-    Then I click the subpanel button "OK" button in control "structuretableReadonlyColumnDefaultIndex" in row "0"
+    Then I enter "This is a very long sentence of text to test whether or not an overflow of text occurs" in textfield "structuretableReadonlyColumnDefaultIndex_0_3" in sub-panel "Rename Subpanel"
+		Then I click on the "Rename Subpanel" panel OK button
     Then I verify readonly control "structuretableReadonlyColumnDefaultIndex_0_3" has no text overflow.
+		Then I click on the "Configure Rename fields" panel OK button

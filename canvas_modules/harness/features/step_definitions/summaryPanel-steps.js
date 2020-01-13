@@ -40,16 +40,30 @@ module.exports = function() {
 		browser.pause(1000);
 	});
 
-	this.Then(/^I verify the tip for the validation icon in the "([^"]*)" summary panel is visible$/, function(summaryPanelId) {
+	this.Then(/^I verify the tip for the validation icon in the "([^"]*)" summary panel is visible with text "([^"]*)"$/, function(summaryPanelId, text) {
 		// open the category
 		const summaryPanel = browser.$("div[data-id='properties-" + summaryPanelId + "']");
 		expect(summaryPanel).not.toBe(null);
 		// find the validation icon
 		const icon = summaryPanel.$(".tooltip-container");
 		// verify tooltip
-		const tip = icon.$(".common-canvas-tooltip");
-		if (tip) {
-			expect(tip.getAttribute("aria-hidden") === "false").toEqual(true);
+		let visibleTip;
+		const tips = browser.$(".common-canvas-tooltip");
+		for (var idx = 0; idx < tips.length; idx++) {
+			const tip = tips[idx];
+			if (tip.getText() === text) {
+				visibleTip = tip;
+				break;
+			}
+		}
+		if (visibleTip) {
+			expect(visibleTip.getAttribute("aria-hidden") === "false").toEqual(true);
+			const containerLeft = icon.getLocation().x;
+			const tipLeft = visibleTip.getLocation().x;
+			const containerTop = icon.getLocation().y;
+			const tipTop = visibleTip.getLocation().y;
+			expect(tipLeft).toBeGreaterThan(containerLeft);
+			expect(tipTop).toBeGreaterThan(containerTop);
 		}
 	}
 	);

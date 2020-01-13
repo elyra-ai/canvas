@@ -84,20 +84,15 @@ module.exports = function() {
 
 	this.Then(/^I select the row (\d+) in the table "([^"]*)"$/, function(rowNumber, tableControlId) {
 		const containingDiv = browser.$("div[data-id='properties-" + tableControlId + "']");
-		const rows = containingDiv.$(".reactable-data")
-			.$$("tr");
+		const rows = containingDiv.$$("div[role='properties-data-row']");
 		rows[Number(rowNumber) - 1].click();
 	});
 
-	this.Then(/^I select all the rows in the table "([^"]*)"$/, function(tableControlId) {
-		const containingDiv = browser.$("div[data-id='properties-" + tableControlId + "']");
-		const rows = containingDiv.$(".reactable-data")
-			.$$("tr");
-		browser.keys("Shift");
-		for (var index = 0; index < rows.length; index++) {
-			rows[index].click();
-		}
-		browser.keys("Shift");
+	this.Then(/^I select all the rows in the table "([^"]*)" in panel "([^"]*)"$/, function(tableControlId, panelName) {
+		const wideFlyout = testUtils.getWideFlyoutPanel(panelName);
+		const containingDiv = wideFlyout.$("div[data-id='properties-" + tableControlId + "']");
+		const headerCheckbox = containingDiv.$(".properties-vt-header-checkbox").$("label");
+		headerCheckbox.click();
 	});
 
 	this.Then(/^I verify the new title "([^"]*)"$/, function(newTitle) {
@@ -111,8 +106,11 @@ module.exports = function() {
 		expect(values).toEqual((String(lastEventLog.data.form[parameterName])));
 	});
 
+	/** Click on the wideflyout OK button
+	* @param panelName: name of the wide flyout panel
+	*/
 	this.Then(/^I click on the "([^"]*)" panel OK button$/, function(panelName) {
-		const panel = browser.$("div[data-id='properties-" + panelName + "']");
+		const panel = testUtils.getWideFlyoutPanel(panelName);
 		expect(panel).not.toBe(null);
 
 		clickApplyButton(panel);
@@ -168,32 +166,52 @@ module.exports = function() {
 	* @param summaryName: name of summaryPanel
 	* @param visible: string value of 'visible' when tooltip is showing, other values for tooltip hidden
 	*/
-	this.Then(/^I verify the tip below the text "([^"]*)" in summary "([^"]*)" is "([^"]*)"$/, function(text, summaryName, visible) {
+	this.Then(/^I verify the tip with text "([^"]*)" in summary "([^"]*)" is "([^"]*)"$/, function(text, summaryName, visible) {
 		const summary = getSummaryFromName(summaryName);
-		const tips = summary.$$(".common-canvas-tooltip");
-		let found = false;
-		for (let idx = 0; idx < tips.length; idx++) {
-			if (tips[idx].$("span").getText() === text) {
-				found = true;
-				expect(tips[idx].getAttribute("aria-hidden") === "false").toEqual(visible === "visible");
+		const tips = browser.$$(".common-canvas-tooltip");
+
+		let visibleTip;
+		for (var idx = 0; idx < tips.length; idx++) {
+			const tip = tips[idx];
+			if (tip.getText() === text) {
+				visibleTip = tip;
 				break;
 			}
 		}
-		// should have found the text for the tooltip in the summary table when tooltip is visible
-		expect(found).toEqual(visible === "visible");
+
+		if (visibleTip) {
+			expect(visibleTip.getAttribute("aria-hidden") === "false").toEqual(true);
+			const containerLeft = summary.getLocation().x;
+			const tipLeft = visibleTip.getLocation().x;
+			const containerTop = summary.getLocation().y;
+			const tipTop = visibleTip.getLocation().y;
+			expect(tipLeft).toBeGreaterThan(containerLeft);
+			expect(tipTop).toBeGreaterThan(containerTop);
+		}
 	});
 
-	/** Verify the tooltip over the given text in the container is 'visible'
+	/** Verify the tooltip over the given text is 'visible'
 	* @param label: label of the container shown in the UI
+	* @param text: text shown in the tip
 	*/
-	this.Then(/^I verify the tip for label "([^"]*)" is visible on the "([^"]*)"$/, function(label, location) {
+	this.Then(/^I verify the tip for label "([^"]*)" is visible on the "([^"]*)" with text "([^"]*)"$/, function(label, location, text) {
 		browser.pause(1000);
 		const container = getControlContainerFromName(label);
-		const tip = container.$(".common-canvas-tooltip");
-		if (tip) {
-			expect(tip.getAttribute("aria-hidden") === "false").toEqual(true);
+		const tips = browser.$(".common-canvas-tooltip");
+
+		let visibleTip;
+		for (var idx = 0; idx < tips.length; idx++) {
+			const tip = tips[idx];
+			if (tip.getText() === text) {
+				visibleTip = tip;
+				break;
+			}
+		}
+
+		if (visibleTip) {
+			expect(visibleTip.getAttribute("aria-hidden") === "false").toEqual(true);
 			const containerLeft = container.getLocation().x;
-			const tipLeft = tip.getLocation().x;
+			const tipLeft = visibleTip.getLocation().x;
 			if (location === "left") {
 				expect(tipLeft).toBeLessThan(containerLeft);
 			} else if (location === "right") {

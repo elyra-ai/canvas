@@ -216,9 +216,7 @@ _defineConstant("ACTIONS", {
 
 _defineConstant("DEFAULT_LABEL_EDITABLE", true);
 
-_defineConstant("FP_CHECKBOX_WIDTH", "40px");
-
-_defineConstant("ROW_CHECKBOX_WIDTH", "40px");
+_defineConstant("ROW_HEIGHT", 42);
 
 _defineConstant("EXPRESSION_TABLE_ROWS", 6);
 
@@ -229,4 +227,14 @@ _defineConstant("TABLE_SCROLLBAR_WIDTH", "15px");
 _defineConstant("CONDITION_RETURN_VALUE_HANDLING", {
 	VALUE: "value",
 	NULL: "null"
+});
+
+_defineConstant("SORT_DIRECTION", {
+	ASC: "ASC",
+	DESC: "DESC"
+});
+
+_defineConstant("ROW_SELECTION", {
+	SINGLE: "single",
+	MULTIPLE: "multiple-edit"
 });

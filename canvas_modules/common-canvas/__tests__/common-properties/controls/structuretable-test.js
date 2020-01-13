@@ -14,6 +14,7 @@ import { Provider } from "react-redux";
 import { expect } from "chai";
 import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
+import tableUtils from "./../../_utils_/table-utils";
 import Controller from "../../../src/common-properties/properties-controller";
 import isEqual from "lodash/isEqual";
 
@@ -408,11 +409,10 @@ describe("structuretable control renders correctly", () => {
 		expect(removeFieldsButtons.prop("disabled")).to.equal(true);
 
 		// select the first row in the table
-		const tableData = tableWrapper.find("tbody.reactable-data").children();
+		const tableData = tableUtils.getTableRows(tableWrapper);
 		expect(tableData).to.have.length(6);
-		const firstRowCheckbox = tableData.first().find("input");
-		firstRowCheckbox.getDOMNode().checked = true;
-		firstRowCheckbox.simulate("change");
+
+		tableUtils.selectCheckboxes(tableData, [0]);
 
 		// ensure removed button is enabled and select it
 		tableWrapper = wrapper.find("div[data-id='properties-keys']");
@@ -550,7 +550,7 @@ describe("structuretable control with readonly numbered column renders correctly
 				/>
 			</Provider>
 		);
-		const rows = wrapper.find("tr.table-row");
+		const rows = tableUtils.getTableRows(wrapper);
 		expect(rows).to.have.length(3);
 
 		const expectedData = "[[\"Cholesterol\",1,\"Ascending\"],[\"Age\",2,\"Descending\"],[\"Drug\",3,\"Ascending\"]]";
@@ -572,7 +572,7 @@ describe("structuretable control with readonly numbered column renders correctly
 			</Provider>
 		);
 
-		const rows = wrapper.find("tr.table-row");
+		const rows = tableUtils.getTableRows(wrapper);
 		expect(rows).to.have.length(3);
 
 		const expectedData = "[[3,\"Cholesterol\",\"Ascending\"],[4,\"Age\",\"Descending\"],[5,\"Drug\",\"Ascending\"]]";
@@ -593,9 +593,10 @@ describe("structuretable control with readonly numbered column renders correctly
 				/>
 			</Provider>
 		);
-		const tableHeader = wrapper.find("th.reactable-th-field");
+		const tableHeader = tableUtils.getTableHeaderRows(wrapper);
+		const fieldHeaderColumn = tableHeader.find("div[aria-label='Field']");
 		// click on the column header to trigger the onClick sort
-		tableHeader.simulate("click");
+		fieldHeaderColumn.simulate("click");
 		var tableRows = controller.getPropertyValue(propertyIdReadonlyControl);
 		expect(tableRows[0][0]).to.equal("Age");
 		expect(tableRows[1][0]).to.equal("Cholesterol");
@@ -605,7 +606,7 @@ describe("structuretable control with readonly numbered column renders correctly
 		expect(tableRows[2][1]).to.equal(3);
 
 		// click on the column header to trigger the onClick sort
-		tableHeader.simulate("click");
+		fieldHeaderColumn.simulate("click");
 		tableRows = controller.getPropertyValue(propertyIdReadonlyControl);
 		expect(tableRows[0][0]).to.equal("Drug");
 		expect(tableRows[1][0]).to.equal("Cholesterol");
@@ -631,9 +632,10 @@ describe("structuretable control with multi input schemas renders correctly", ()
 	it("should prefix the correct schema for fields selected", () => {
 		// open the field picker on the table and select a few new columns
 		propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-structuretableReadonlyColumnStartValue");
-		propertyUtils.fieldPicker(fieldPicker, ["0.BP", "data.BP", "2.BP"]);
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableReadonlyColumnStartValue");
+		tableUtils.fieldPicker(fieldPicker, ["0.BP", "data.BP", "2.BP"]);
 		// save the changes
+
 		wrapper.find("button[data-id='properties-apply-button']")
 			.at(0)
 			.simulate("click");
@@ -677,7 +679,7 @@ describe("structuretable control displays with no header and no button", () => {
 	it("should display header", () => {
 		// open the summary panel
 		const table = propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnDefaultIndex-summary-panel");
-		const header = table.find(".reactable-column-header");
+		const header = tableUtils.getTableHeaderRows(table);
 		expect(header).to.have.length(1);
 	});
 	it("should use dmDefault property values", () => {
@@ -740,41 +742,38 @@ describe("structuretable multiselect edit works", () => {
 		// Open mse Summary Panel in structuretableParamDef
 		const table = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
 		const container = table.find("div.properties-ft-container-panel");
+
 		// Open field picker
 		const addColumnsButton = container.find("button.properties-add-fields-button");
 		addColumnsButton.simulate("click");
 		const fieldPickerTable = wrapper.find("div.properties-fp-table");
 		// Select header checkbox to select all fields in column override
-		const tableCheckboxHeader = fieldPickerTable.find("input[type='checkbox']").at(0); // find the table header checkbox
-		tableCheckboxHeader.getDOMNode().checked = true;
-		tableCheckboxHeader.simulate("change");
+		tableUtils.selectFieldPickerHeaderCheckbox(fieldPickerTable);
 		// Select Ok to close field picker table.
 		const okButton = fieldPickerTable.find("button[data-id='properties-apply-button']");
 		okButton.simulate("click");
 		wrapper.render();
+
 		// Newly added fields should be selected.
 		const mseTable = wrapper.find("div[data-id='properties-ST_mse_table-summary-panel']");
-		const wideFlyout = mseTable.find("div.properties-wf-content.show");
-		const selectedRows = wideFlyout.find("tr.table-selected-row");
+		const selectedRows = mseTable.find(".properties-vt-row-selected");
 		expect(selectedRows).to.have.length(5);
 	});
 	it("mse table should allow multiple selections", () => {
 		propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
-		// select the first row in the table
-		const tableData = wrapper.find("tbody.reactable-data").children();
-		expect(tableData).to.have.length(4);
-		const rowCheckbox = tableData.at(0).find("div.row-checkbox")
-			.find("input[type='checkbox']");
 
-		rowCheckbox.getDOMNode().checked = true;
-		rowCheckbox.simulate("change");
+		const tableData = tableUtils.getTableRows(wrapper);
+		expect(tableData).to.have.length(4);
+
+		// select the first row in the table
+		tableUtils.selectCheckboxes(wrapper, [0]);
 
 		// verify that the select summary row is not present
 		let selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
 		expect(selectedEditRow).to.have.length(0);
 
 		// multiple select the four row in the table
-		tableData.at(2).simulate("click", { metaKey: true, ctrlKey: true });
+		tableUtils.selectCheckboxes(wrapper, [1, 2, 3]);
 
 		// verify that the select summary row is present
 		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
@@ -783,7 +782,7 @@ describe("structuretable multiselect edit works", () => {
 	it("mse table should show header even when rows are filtered", () => {
 		propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
 		// select the first row in the table
-		let tableData = wrapper.find("tbody.reactable-data").children();
+		const tableData = tableUtils.getTableRows(wrapper);
 		expect(tableData).to.have.length(4);
 
 		// verify that the select summary row is not present
@@ -793,24 +792,17 @@ describe("structuretable multiselect edit works", () => {
 		const input = wrapper.find("div.properties-ft-search-container").find("input");
 		expect(input).to.have.length(1);
 		input.simulate("change", { target: { value: "k" } });
-		wrapper.update();
 
-		// multiple select the 2 filtered rows in the table
-		tableData = wrapper.find("tbody.reactable-data").children();
-		expect(tableData).to.have.length(2);
-		tableData.at(0).simulate("click", { metaKey: true, ctrlKey: true });
-		tableData.at(1).simulate("click", { metaKey: true, ctrlKey: true });
-
-		// verify that the select summary row is present
-		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows").find("tr");
-		// console.log(selectedEditRow.debug());
-		expect(selectedEditRow).to.have.length(1);
-		wrapper.update();
+		tableUtils.selectCheckboxes(wrapper, [0, 1]);
 
 		const selectedRows = renderedController.getSelectedRows(propertyIdMSE);
 		expect(selectedRows).to.have.length(2);
 		expect(selectedRows[0]).to.equal(2);
 		expect(selectedRows[1]).to.equal(3);
+
+		// verify that the select summary row is present
+		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows").find(".properties-vt-row-checkbox");
+		expect(selectedEditRow).to.have.length(1);
 	});
 });
 
@@ -840,13 +832,10 @@ describe("structuretable control displays with checkbox header", () => {
 		expect(columnValues[0][2]).to.be.equal(false);
 		expect(columnValues[1][2]).to.be.equal(true);
 		expect(columnValues[2][2]).to.be.equal(false);
+
 		// set the column header checkbox to true
-		const tableCheckboxHeader = wrapper.find("thead").at(0)
-			.find("input[type='checkbox']")
-			.at(1); // find the table header checkbox for column
-		tableCheckboxHeader.getDOMNode().checked = true;
-		tableCheckboxHeader.simulate("change");
-		// validate all rows checkboxes are true
+		tableUtils.selectHeaderColumnCheckbox(wrapper, 2, true);
+
 		columnValues = renderedController.getPropertyValue(colPropertyId);
 		expect(columnValues[0][2]).to.be.equal(true);
 		expect(columnValues[1][2]).to.be.equal(true);
@@ -861,10 +850,7 @@ describe("structuretable control displays with checkbox header", () => {
 		expect(columnValues[1][2]).to.be.equal(true);
 		expect(columnValues[2][2]).to.be.equal(false);
 		// set the column header checkbox to false
-		const tableCheckboxHeader = wrapper.find("thead").at(0)
-			.find("input[type='checkbox']")
-			.at(1); // find the table header checkbox for column
-		tableCheckboxHeader.simulate("change", { target: { checked: false, id: "field_types2" } });
+		tableUtils.selectHeaderColumnCheckbox(wrapper, 2, false);
 		// validate all rows checkboxes are false
 		columnValues = renderedController.getPropertyValue(colPropertyId);
 		expect(columnValues[0][2]).to.be.equal(false);
@@ -902,11 +888,7 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		expect(columnValues[1][1]).to.be.equal(false);
 		expect(columnValues[2][1]).to.be.equal(false);
 		// set the column header checkbox to true
-		const tableCheckboxHeader = wrapper.find("thead").at(0)
-			.find("input[type='checkbox']")
-			.at(1);
-		tableCheckboxHeader.getDOMNode().checked = true;
-		tableCheckboxHeader.simulate("change");
+		tableUtils.selectHeaderColumnCheckbox(wrapper, 1, true);
 		// validate all rows checkboxes are true
 		columnValues = renderedController.getPropertyValue(colPropertyId);
 		// the header should not have changed the state of the disabled checkbox
@@ -937,16 +919,19 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		const colPropertyId = { name: "globals" };
 		// validate the original state
 		let columnValues = renderedController.getPropertyValue(colPropertyId);
-		const tableCheckboxHeader = wrapper.find("thead").at(0)
-			.find("input[type='checkbox']")
-			.at(1);
 		expect(columnValues).to.have.length(3);
 		// check that the initial values for the table (including disabled rows) are correct
 		expect(columnValues[0][1]).to.be.equal(false);
 		expect(columnValues[1][1]).to.be.equal(false);
 		expect(columnValues[2][1]).to.be.equal(false);
+
+		const tableCheckboxHeader = tableUtils.getTableHeaderRows(wrapper)
+			.find(".properties-vt-column")
+			.at(1)
+			.find("input");
 		expect(tableCheckboxHeader.getDOMNode().checked).to.be.equal(false);
 		// set the column header checkbox to true
+		tableUtils.selectHeaderColumnCheckbox(wrapper, 1, true);
 		const colCheckbox1 = wrapper.find("div[data-id='properties-globals_0_1']").find("input[type='checkbox']");
 		colCheckbox1.getDOMNode().checked = true;
 		colCheckbox1.simulate("change");
@@ -981,9 +966,9 @@ describe("structuretable columns sort correctly", () => {
 
 	// check that table starts with right number of values
 	const tableWrapper = wrapper.find("div[data-id='properties-keys']");
-	const tableData = tableWrapper.find("tbody.reactable-data").children();
+	const tableData = tableUtils.getTableRows(tableWrapper);
 
-	const tableHeader = tableWrapper.find("th.reactable-th-field");
+	const tableHeader = tableUtils.getTableHeaderRows(tableWrapper);
 	let tableRows = controller.getPropertyValue(propertyId);
 	it("should instantiate structuretable in correct order and state", () => {
 		// check that starting table is in original order
@@ -993,11 +978,12 @@ describe("structuretable columns sort correctly", () => {
 	});
 	it("should sort column alphabetically ascending and descending", () => {
 		// click on the column header to trigger the onClick sort
-		tableHeader.simulate("click");
+		const sortableCol = tableHeader.find("div[role='columnheader']").at(0);
+		sortableCol.simulate("click");
 		tableRows = controller.getPropertyValue(propertyId);
 		expect(tableRows[0][0]).to.equal("Age");
 		expect(tableRows[5][0]).to.equal("Sex");
-		tableHeader.simulate("click");
+		sortableCol.simulate("click");
 		tableRows = controller.getPropertyValue(propertyId);
 		expect(tableRows[0][0]).to.equal("Sex");
 		expect(tableRows[5][0]).to.equal("Age");
@@ -1022,7 +1008,7 @@ describe("measurement icons should be rendered correctly in structuretable", () 
 	});
 	it("measurement icons should render in fieldpicker for table where dm_image is set to measure", () => {
 		propertyUtils.openSummaryPanel(wrapper, "structuretableSortableColumns-summary-panel");
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-structuretableSortableColumns");
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableSortableColumns");
 		expect(fieldPicker.find("div.properties-fp-field-type-icon")).to.have.length(8);
 	});
 	it("measurement icons should not render for table where dm_image value is set to invalid value", () => {

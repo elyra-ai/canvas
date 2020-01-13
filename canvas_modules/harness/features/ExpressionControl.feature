@@ -51,7 +51,7 @@ Feature: ExpressionControl
 		Then I select the row 1 in the table "expressionCellTable"
 		Then I verify that the "ExpressionEditor" control is displayed
 		Then I enter "first" in ExpressionEditor and press autocomplete and select "first_index"
-		Then I click on the "expressionCellTable-summary-panel" panel OK button
+		Then I click on the "Configure Derive Node" panel OK button
 		Then I verify that the summary list contains the value of "first_index" for the "Configure Derive Node" summary link in the "Structure List Table" category
 
 		# Add a new row to the table and change it's value in the expression control
@@ -59,7 +59,7 @@ Feature: ExpressionControl
 		Then I click the "Add" button on the "expressionCellTable" table
 		Then I select the row 2 in the table "expressionCellTable"
 		Then I enter "is_" in ExpressionEditor and press autocomplete and select "is_date"
-		Then I click on the "expressionCellTable-summary-panel" panel OK button
+		Then I click on the "Configure Derive Node" panel OK button
 		Then I verify that the summary list contains the value of "is_date" for the "Configure Derive Node" summary link in the "Structure List Table" category
 		Then I click on the "OK" button
 		Then I verify that the event log has a value of "is_date" for the "expressionCellTable" parameter
@@ -75,24 +75,25 @@ Feature: ExpressionControl
 		Then I click on the expression build button for the "defaultExpr" property
 
 		# generate a success validate
-		Then I click on the validate link on the expression "builder" for the "defaultExpr" property.
-		Then I validate the "success" icon on the expression "builder" for the "defaultExpr" property.
+		Then I click on the validate link on the expression builder in the sub-panel.
+		Then I validate the "success" icon on the expression builder.
 
 		# verify the icon goes away on the next input
-		Then I select "Age" from the "field" table for the "defaultExpr" property.
-		Then I validate the "none" icon on the expression "builder" for the "defaultExpr" property.
+		Then I select "Age" from the "defaultExpr" property.
+		Then I validate the "none" icon on the expression builder.
 
 		# generate a error
 		Then I select the "Functions" tab for the "defaultExpr" property.
-		Then I select "to_integer(ITEM)" from the "functions" table for the "defaultExpr" property.
-		Then I click on the validate link on the expression "builder" for the "defaultExpr" property.
+		# TODO: need to scroll to row before it becomes visible
+		Then I select "is_integer(ITEM)" from the "defaultExpr" property.
+		Then I click on the validate link on the expression builder in the sub-panel.
 		Then I verify error "Expression cannot contain '?'"
-		Then I validate the "error" icon on the expression "builder" for the "defaultExpr" property.
+		Then I validate the "error" icon on the expression builder.
 
 		# substitute a param char '?' (dependent on the test above)
 		Then I select the "Fields and Values" tab for the "defaultExpr" property.
-		Then I select "Age" from the "field" table for the "defaultExpr" property.
-		Then I validate the "none" icon on the expression "builder" for the "defaultExpr" property.
+		Then I select "Age" from the "defaultExpr" property.
+		Then I validate the "none" icon on the expression builder.
 
 	Scenario: Test of Python and R expression controls
 		Then I resize the window size to 1400 width and 800 height

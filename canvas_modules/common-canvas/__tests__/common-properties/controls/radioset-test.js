@@ -9,6 +9,7 @@
 
 import { expect } from "chai";
 import propertyUtils from "../../_utils_/property-utils";
+import tableUtils from "./../../_utils_/table-utils";
 import radioParamDef from "../../test_resources/paramDefs/radio_paramDef.json";
 
 describe("radio renders and works correctly with different enum types", () => {
@@ -274,7 +275,7 @@ describe("radioset works in table correctly", () => {
 		renderedController = renderedObject.controller;
 		const controlDiv = wrapper.find("button.properties-summary-link-button");
 		controlDiv.simulate("click");
-		tableDiv = wrapper.find("table.properties-ft");
+		tableDiv = wrapper.find(".properties-vt");
 	});
 	afterEach(() => {
 		wrapper.unmount();
@@ -290,8 +291,10 @@ describe("radioset works in table correctly", () => {
 	});
 
 	it("Check basic use of onpanel radiosets in table flyout", () => {
-		const rowDiv = tableDiv.find("tr.table-row");
-		rowDiv.simulate("click");
+		tableUtils.clickTableRows(tableDiv, [0]);
+		tableDiv = wrapper.find(".properties-vt");
+		expect(tableDiv.find(".properties-vt-row-selected")).to.have.length(1);
+
 		const onPanelRadioset = wrapper.find("div[data-id='properties-radioset_col2']");
 		const onPanelRadios = onPanelRadioset.find("input.bx--radio-button");
 		expect(onPanelRadios).to.have.length(4);
@@ -302,7 +305,7 @@ describe("radioset works in table correctly", () => {
 
 	it("Check basic use of subpanel radiosets in table flyout", () => {
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][3]).to.equal("red");
-		const subpanelButton = tableDiv.find("td[data-label='subpanel']").find("button.properties-subpanel-button");
+		const subpanelButton = tableDiv.find(".properties-table-subcell").find("button.properties-subpanel-button");
 		expect(subpanelButton).to.have.length(1);
 		subpanelButton.simulate("click");
 		const subpanelRadioset = wrapper.find("div[data-id='properties-radioset_col3']");
@@ -314,8 +317,9 @@ describe("radioset works in table correctly", () => {
 
 	it("Check disable interactivity in table flyout", () => {
 		// test on panel disable
-		const rowDiv = tableDiv.find("tr.table-row");
-		rowDiv.simulate("click");
+		tableUtils.clickTableRows(tableDiv, [0]);
+		tableDiv = wrapper.find(".properties-vt");
+
 		const onPanelRadioset = wrapper.find("div[data-id='properties-radioset_col2']");
 		const onPanelRadios = onPanelRadioset.find("input.bx--radio-button");
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][1]).to.equal("pear");
@@ -339,7 +343,7 @@ describe("radioset works in table correctly", () => {
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][0]).to.equal("dog");
 		inlineRadios.at(1).simulate("change");
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][0]).to.equal("cat");
-		const subpanelButton = tableDiv.find("td[data-label='subpanel']").find("button.properties-subpanel-button");
+		const subpanelButton = tableDiv.find(".properties-table-subcell").find("button.properties-subpanel-button");
 		subpanelButton.simulate("click");
 		const subpanelRadioset = wrapper.find("div[data-id='properties-radioset_col3']");
 		const subpanelRadios = subpanelRadioset.find("input.bx--radio-button");
@@ -361,8 +365,7 @@ describe("radioset works in table correctly", () => {
 		// expect an error to appear
 		expect(inlineRadioset.find("div.error")).to.have.length(1);
 		// using fruit = strawberry will generate a warning
-		const rowDiv = tableDiv.find("tr.table-row");
-		rowDiv.simulate("click");
+		tableUtils.clickTableRows(tableDiv, [0]);
 		let onPanelRadioset = wrapper.find("div[data-id='properties-radioset_col2']");
 		expect(onPanelRadioset.find("div.warning")).to.have.length(0);
 		const onPanelRadios = onPanelRadioset.find("input.bx--radio-button");
@@ -372,7 +375,7 @@ describe("radioset works in table correctly", () => {
 		// expect warning to appear
 		expect(onPanelRadioset.find("div.warning")).to.have.length(1);
 		// using color = purple will generate an error
-		const subpanelButton = tableDiv.find("td[data-label='subpanel']").find("button.properties-subpanel-button");
+		const subpanelButton = tableDiv.find(".properties-table-subcell").find("button.properties-subpanel-button");
 		subpanelButton.simulate("click");
 		let subpanelRadioset = wrapper.find("div[data-id='properties-radioset_col3']");
 		const subpanelRadios = subpanelRadioset.find("input.bx--radio-button");

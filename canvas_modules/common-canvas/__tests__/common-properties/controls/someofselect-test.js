@@ -14,6 +14,7 @@ import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
+import tableUtils from "./../../_utils_/table-utils";
 import SomeOfSelectParamDef from "../../test_resources/paramDefs/someofselect_paramDef.json";
 
 describe("SomeOfSelectControl renders correctly", () => {
@@ -93,8 +94,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 		expect(someofselectCheckbox).to.have.length(4);
 
 		expect(someofselectCheckbox.at(0).getDOMNode().checked).to.equal(true);
-		someofselectCheckbox.at(0).getDOMNode().checked = false;
-		someofselectCheckbox.at(0).simulate("change");
+		tableUtils.selectCheckboxes(wrapper, [0]);
 		expect(controller.getPropertyValue(propertyId)).to.have.length(0);
 	});
 	it("SomeOfSelectControl handles null correctly", () => {
@@ -117,8 +117,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 		someofselectCheckbox.forEach(function(checkbox) {
 			expect(checkbox.getDOMNode().checked).to.equal(false);
 		});
-		someofselectCheckbox.at(1).getDOMNode().checked = true;
-		someofselectCheckbox.at(1).simulate("change");
+		tableUtils.selectCheckboxes(wrapper, [1]);
 		const controlValue = controller.getPropertyValue(propertyId);
 		expect(controlValue).to.have.length(1);
 		expect(controlValue[0]).to.equal("Keys");
@@ -143,8 +142,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 		someofselectCheckbox.forEach(function(checkbox) {
 			expect(checkbox.getDOMNode().checked).to.equal(false);
 		});
-		someofselectCheckbox.at(2).getDOMNode().checked = true;
-		someofselectCheckbox.at(2).simulate("change");
+		tableUtils.selectCheckboxes(wrapper, [2]);
 		const controlValue = controller.getPropertyValue(propertyId);
 		expect(controlValue).to.have.length(1);
 		expect(controlValue[0]).to.equal("Condition");
@@ -249,7 +247,7 @@ describe("someofselect filtered enum works correctly", () => {
 	it("Validate someofselect should have options filtered by enum_filter", () => {
 		let someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_filtered']");
 		// validate the correct number of options show up on open
-		expect(someofselectWrapper.find("tr.table-row")).to.have.length(5);
+		expect(tableUtils.getTableRows(someofselectWrapper)).to.have.length(5);
 		// make sure there isn't warning on first open
 		expect(someofselectWrapper.find("div.properties-validation-message")).to.have.length(0);
 		// checked the filter box
@@ -259,7 +257,7 @@ describe("someofselect filtered enum works correctly", () => {
 		checkbox.simulate("change");
 		// validate the correct number of options show up on open
 		someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_filtered']");
-		expect(someofselectWrapper.find("tr.table-row")).to.have.length(3);
+		expect(tableUtils.getTableRows(someofselectWrapper)).to.have.length(3);
 	});
 
 	it("Validate someofselectParamDef should clear the property value if filtered", () => {

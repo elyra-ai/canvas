@@ -10,6 +10,7 @@
 import { expect } from "chai";
 
 import propertyUtils from "./../../_utils_/property-utils";
+import tableUtils from "./../../_utils_/table-utils";
 import columnSelectionPanel from "./../../test_resources/paramDefs/columnSelectionPanel_multiInput_paramDef.json";
 import panelParamDef from "./../../test_resources/paramDefs/panel_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
@@ -70,10 +71,10 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 		// select age
 		dropdownList.at(1).simulate("click");
 		panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-selectcolumns");
-		propertyUtils.fieldPicker(fieldPicker, ["BP"], ["BP", "Na", "drug"]);
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-selectcolumns");
+		tableUtils.fieldPicker(fieldPicker, ["BP"], ["BP", "Na", "drug"]);
 		const panel2 = wrapper.find("div[data-id='properties-selectcolumns']");
-		const rows = panel2.find("tr.column-select-table-row");
+		const rows = tableUtils.getTableRows(panel2);
 		expect(rows).to.have.length(1);
 	});
 });
@@ -202,8 +203,8 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		let actualOptions = panel1.find("DropdownV2").prop("items");
 		expect(actualOptions.length).to.equal(fieldTable.length + 1); // +1 for "..."
 
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-selectcolumns");
-		propertyUtils.fieldPicker(fieldPicker, ["0.drug2", "2.drug2"], fieldTable);
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-selectcolumns");
+		tableUtils.fieldPicker(fieldPicker, ["0.drug2", "2.drug2"], fieldTable);
 
 		// open the dropdown
 		const dropdownButton = panel1.find("div[role='button']");
@@ -240,13 +241,12 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		const selectColumnsTable3 = wrapper.find("div[data-id='properties-ft-selectcolumns3']");
 		expect(selectColumnsTable3).to.have.length(1);
 
-		const table2Rows = selectColumnsTable2.find("tr.column-select-table-row");
+		const table2Rows = tableUtils.getTableRows(selectColumnsTable2);
 		expect(table2Rows).to.have.length(3);
 
 		const table2Initial = ["0.Age", "0.Drug", "2.Age"];
 		for (let idx = 0; idx < table2Rows.length; idx++) {
-			expect(table2Rows.at(idx).find("td span")
-				.at(1)
+			expect(table2Rows.at(idx).find(".properties-field-type")
 				.text()).to.equal(table2Initial[idx]);
 		}
 
@@ -286,8 +286,8 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ "link_ref": "2", "field_name": "drug2" },
 			{ "link_ref": "2", "field_name": "drug3" }
 		];
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-selectcolumns3");
-		propertyUtils.fieldPicker(fieldPicker, selectcolumns3, fieldTable);
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-selectcolumns3");
+		tableUtils.fieldPicker(fieldPicker, selectcolumns3, fieldTable);
 		expect(controller.getPropertyValue({ name: "selectcolumns3" })).to.have.deep.members(selectcolumns3A);
 
 		// Verify field picker from selectcolumns2 gets the correct fields

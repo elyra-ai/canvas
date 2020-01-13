@@ -6,11 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-$flexible-table-header-row-height: 32px;
-$hover-row: rgba($brand-02, 0.1);
-$selected-row: rgba($brand-02, 0.1);
-$hover-selected-row: rgba($brand-02, 0.2);
-$row-left-padding: 4px;
+
 .properties-ft-search-container {
 	width: 50%;
 	float: left;
@@ -30,48 +26,6 @@ $row-left-padding: 4px;
 	overflow: hidden;
 }
 
-table .single {
-	thead {
-		padding-left: $row-left-padding;
-	}
-}
-.table-row:not(.disabled):hover {
-	border: 1px solid $brand-01;
-	background-color: $hover-row;
-}
-.table-row {
-	border: 1px solid transparent;
-	&.disabled {
-		opacity: 0.5;
-	}
-	&.table-selected-row {
-		background-color: $selected-row;
-		&:hover {
-			background-color: $hover-selected-row;
-		}
-	}
-
-	&.table-single-row {
-		padding-left: 3px;
-	}
-	&.table-summary-row {
-		background-color: rgba($brand-01, 0.3);
-	}
-	&.table-summary-row:hover {
-		background-color: rgba($brand-01, 0.3);
-		border: 1px solid transparent;
-	}
-	&.table-selected-single-row {
-		background-color: $selected-row;
-		border: 0;
-		border-left: solid $row-left-padding $brand-01;
-		&:hover {
-			background-color: $hover-selected-row;
-			border-left: solid $row-left-padding $brand-01;
-		}
-	}
-}
-
 // selectcolumns and tables without headers
 .properties-ft-container-absolute-noheader {
 	position: absolute;
@@ -83,15 +37,6 @@ table .single {
 	background-color: $ui-01;
 	display: flex; // address scrollbar with mouse issue
 	flex-direction: column; // address scrollbar with mouse issue
-	tr {
-		display: flex;
-		align-items: center;
-		height: 3em;
-		border: 1px solid transparent;
-	}
-	td {
-		vertical-align: middle;
-	}
 	&.error {
 		border: 1px solid $support-01;
 	}
@@ -118,149 +63,56 @@ table .single {
 		height: 100%;
 	}
 
-	thead {
+	div[role="properties-header-row"] {
 		width: inherit;
 		background-color: $ui-02;
-		border-bottom: 1px solid $ui-03;
 		display: inline-flex;
 		height: 2.5em;
-		span {
-			width: inherit;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			padding: 2px 0;
+
+		&:hover {
+			border: 1px solid transparent;
 		}
 
-		th {
-			height: 100%;
-			display: inline-flex;
-			align-items: center;
-			padding: 0 0 0 $table-column-left-padding;
-			vertical-align: middle;
-			font-weight: 600;
+		.properties-autosized-vt-header {
+			&:focus {
+				outline: none;
+			}
 			// sort icon in header
 			svg {
 				padding-left: 3px;
 				width: 11px;
 				height: 11px;
 			}
-			// align labels and sort icon
-			.properties-ft-column {
-				display: inline-flex;
-				align-items: center;
+			// sort icon viewable when hover or sorted column
+			.properties-ft-column-sort-icon
+			svg:not(:root) {
+				stroke: none;
 			}
-			&.reactable-header-sortable {
-				cursor: pointer;
+			&:hover:not([disabled])
+			.properties-ft-column-sort-icon
+			svg:not(:root) {
+				stroke: $brand-02;
 			}
-		}
-		.reactable-th-scrollbar {
-			padding: 0;
+			.sort-column-active
+			.properties-ft-column-sort-icon
+			svg:not(:root) {
+				stroke: $brand-02;
+			}
 		}
 
 		.properties-tooltips-container {
-			width: inherit;
+			display: inline-flex;
+			width: 100%;
+		}
+		.tooltip-container {
+			overflow: hidden;
+		}
+		.tooltip-trigger {
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
-			text-align: left;
-			line-height: normal;
-			.tooltip-container {
-				overflow: hidden;
-			}
-			.tooltip-trigger {
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-				height: 100%;
- 			}
-			.properties-tooltips {
-				span {
-					white-space: normal;
-					overflow: visible;
-					word-break: break-word;
-					text-overflow: clip;
-				}
-			}
+			height: 100%;
+			font-weight: 600;
 		}
 	}
-	tbody {
-		width: 100%;
-		overflow-y: auto;
-		overflow-x: hidden; // address scrollbar with mouse issue
-		display: flex; // address scrollbar with mouse issue
-		flex-direction: column; // address scrollbar with mouse issue
-		tr {
-			align-items: center;
-			display: flex;
-			min-height: 3em;
-			border-bottom: 1px solid $ui-03;
-			thead { // address styling for nested table in table subpanel
-				tr {
-					border: 0;
-					vertical-align: middle;
-				}
-			}
-		}
-		.properties-fp-data-rows td {
-			height: inherit;
-			padding-top: 5px;
-			padding-bottom: 5px;
-		}
-		td {
-			padding: 0 4px 0 0; // right padding so fields don't merge together
-			border-top: 0;
-			.row-checkbox {
-				padding-left: 12px;
-			}
-		}
-	}
-}
-
-.properties-ft {
-	width: 100%;
-	margin-bottom: 0;
-	overflow: hidden;
-}
-
-// text overflow in cell to truncate with ellipsis
-.table-row .table-text {
-	padding-top: 8px;
-	padding-bottom: 8px;
-	width: inherit;
-	margin-left: -$table-first-column-left-padding; // this is needed so the content will not expand the column width
-	display: inline-flex;
-	span {
-		word-wrap: break-word;
-		width: inherit;
-		padding-left: $table-first-column-left-padding;
-	}
-}
-
-// disable blue outline from header on focus
-.reactable-header-sortable:focus {
-	outline: none;
-}
-// sort icon viewable when hover or sorted column
-.reactable-header-sortable {
-	.properties-ft-column-sort-icon
-	svg:not(:root) {
-		stroke: none;
-	}
-	&:hover:not([disabled])
-	.properties-ft-column-sort-icon
-	svg:not(:root) {
-		stroke: $brand-02;
-	}
-
-	&.sort-column-active
-	.properties-ft-column-sort-icon
-	svg:not(:root) {
-		stroke: $brand-02;
-	}
-
-}
-
-.properties-ft-control-container {
-	width: 100%;
 }

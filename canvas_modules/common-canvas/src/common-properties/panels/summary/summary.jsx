@@ -268,10 +268,10 @@ class SummaryPanel extends React.Component {
 		</div>);
 		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
 		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
-		const flyout = (<WideFlyout
+		const flyout = this.state.showWideFlyout ? (<WideFlyout
 			cancelHandler={this.cancelWideFlyout}
 			okHandler={this.hideWideFlyout}
-			show={this.state.showWideFlyout}
+			show
 			applyLabel={applyLabel}
 			rejectLabel={rejectLabel}
 			title={this.props.panel.label}
@@ -279,7 +279,7 @@ class SummaryPanel extends React.Component {
 			<div>
 				{this.props.children}
 			</div>
-		</WideFlyout>);
+		</WideFlyout>) : <div />;
 		const className = classNames("properties-summary-panel", "properties-control-panel", { "hide": this.props.panelState === STATES.HIDDEN });
 		return (
 			<div className={className} disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}>

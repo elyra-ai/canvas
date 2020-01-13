@@ -567,11 +567,10 @@ class EditorForm extends React.Component {
 		const title = PropertyUtil.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SAVEBUTTON_LABEL) + " " + form.label;
 
-		if (this.props.rightFlyout) {
-			const showFlyoutPicker = this.state.showFieldPicker && this.props.rightFlyout;
+		if (this.props.rightFlyout && this.state.showFieldPicker) {
 			wideFly = (<WideFlyout
 				showPropertiesButtons={false}
-				show={showFlyoutPicker}
+				show
 				title={title}
 			>
 				{this.fieldPicker(title)}

@@ -6,6 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+import testUtils from "./utilities/test-utils.js";
 
 /* global browser */
 
@@ -25,9 +26,11 @@ module.exports = function() {
 	/*
 	* selectColumns steps
  	*/
-	this.Then(/^I verify the selectColumns table "([^"]*)" contains "([^"]*)" at index (\d+)$/, function(tableId, fieldName, index) {
-		const table = browser.$("div[data-id='properties-ft-" + tableId + "']");
-		const data = table.$$(".column-select-table-row")[index].getText();
+	this.Then(/^I verify the selectColumns table "([^"]*)" contains "([^"]*)" at index (\d+) in panel "([^"]*)"$/, function(tableId, fieldName, index, panelName) {
+		const subPanel = testUtils.getWideFlyoutPanel(panelName);
+		const table = subPanel.$("div[data-id='properties-ft-" + tableId + "']");
+		const row = table.$$("div[role='properties-data-row']")[index];
+		const data = row.$(".properties-readonly").getText();
 		expect(data).toEqual(fieldName);
 	});
 

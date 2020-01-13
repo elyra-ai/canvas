@@ -13,6 +13,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { Portal } from "react-portal";
 
 class ToolTip extends React.Component {
 	constructor(props) {
@@ -299,13 +300,15 @@ class ToolTip extends React.Component {
 		return (
 			<div className="tooltip-container">
 				{triggerContent}
-				<div data-id={this.props.id} className={tipClass} style={style} aria-hidden={!this.state.showToolTip} direction={this.props.direction}>
-					<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
-						<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
-						<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />
-					</svg>
-					{tooltipContent}
-				</div>
+				<Portal>
+					<div data-id={this.props.id} className={tipClass} style={style} aria-hidden={!this.state.showToolTip} direction={this.props.direction}>
+						<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
+							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
+							<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />
+						</svg>
+						{tooltipContent}
+					</div>
+				</Portal>
 			</div>
 		);
 	}

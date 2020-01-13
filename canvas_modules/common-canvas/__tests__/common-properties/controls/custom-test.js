@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import propertyUtils from "../../_utils_/property-utils";
+import tableUtils from "./../../_utils_/table-utils";
 import customControlParamDef from "../../test_resources/paramDefs/custom-ctrl-op_paramDef.json";
 import { expect } from "chai";
 
@@ -27,7 +28,7 @@ describe("custom control renders correctly", () => {
 	it("should show the correct custom controls", () => {
 		const customToggles = wrapper.find("div.custom-toggle");
 		expect(customToggles).to.have.length(3);// includes table toggles
-		const tableCustomToggles = wrapper.find("tr.table-row div.custom-toggle");
+		const tableCustomToggles = tableUtils.getTableRows(wrapper);
 		expect(tableCustomToggles).to.have.length(2);
 		// This summary text comes from the custom control
 		const cellText = wrapper.find("div.properties-table-cell-control div.text");
@@ -55,11 +56,8 @@ describe("custom control renders correctly", () => {
 	it("validate custom table is rendered below standard table", () => {
 		let customTable = wrapper.find("div.custom-table");
 		expect(customTable).to.have.length(0);
-		const tableData = wrapper.find("tbody.reactable-data").children();
-		const row = tableData.at(0).find("input")
-			.at(0);
-		row.getDOMNode().checked = true;
-		row.simulate("change"); // Select Row
+		const tableData = tableUtils.getTableRows(wrapper);
+		tableUtils.selectCheckboxes(tableData, [0]);
 		customTable = wrapper.find("div.custom-table");
 		expect(customTable).to.have.length(1);
 		const rows = customTable.find("tr");

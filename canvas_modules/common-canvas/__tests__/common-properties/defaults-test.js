@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import propertyUtils from "../_utils_/property-utils";
+import tableUtils from "../_utils_/table-utils";
 import defaultsParamDef from "../test_resources/paramDefs/defaults_paramDef.json";
 import { expect } from "chai";
 
@@ -87,7 +88,7 @@ describe("add rows in tables with correct default values", () => {
 
 	it("should render datamodel table with new rows with correct default values", () => {
 		const wideflyout = propertyUtils.openSummaryPanel(wrapper, "summary-panel");
-		const tableRows = wideflyout.find("tr.table-row");
+		const tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(2);
 		expect(wideflyout.find("div[data-id='properties-field_types_0_2'] select").instance().selectedIndex).to.equal(1);
 		expect(wideflyout.find("div[data-id='properties-field_types_1_2'] select").instance().selectedIndex).to.equal(0);
@@ -95,7 +96,7 @@ describe("add rows in tables with correct default values", () => {
 
 	it("should render structure list editor table with new rows with correct default values", () => {
 		let wideflyout = propertyUtils.openSummaryPanel(wrapper, "structureListEditorDefault-summary-panel");
-		let tableRows = wideflyout.find("tr.table-row");
+		let tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(1);
 		expect(wideflyout.find("div[data-id='properties-structureListEditorDefault_0_2'] span").text()).to.equal("Ascending");
 
@@ -103,7 +104,7 @@ describe("add rows in tables with correct default values", () => {
 		const addButton = wideflyout.find("button.properties-add-fields-button");
 		addButton.simulate("click");
 		wideflyout = wrapper.find("div[data-id='properties-structureListEditorDefault-summary-panel']");
-		tableRows = wideflyout.find("tr.table-row");
+		tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(2);
 		expect(wideflyout.find("div[data-id='properties-structureListEditorDefault_1_2'] span").text()).to.equal("Ascending");
 
@@ -111,7 +112,7 @@ describe("add rows in tables with correct default values", () => {
 		renderedController.updatePropertyValue({ name: "sLE_DefaultSortOrder" }, "Descending");
 		addButton.simulate("click");
 		wideflyout = wrapper.find("div[data-id='properties-structureListEditorDefault-summary-panel']");
-		tableRows = wideflyout.find("tr.table-row");
+		tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(3);
 		expect(wideflyout.find("div[data-id='properties-structureListEditorDefault_2_2'] span").text()).to.equal("Descending");
 	});
@@ -119,37 +120,37 @@ describe("add rows in tables with correct default values", () => {
 	it("should render column structure table with new rows with correct default values", () => {
 		let wideflyout = propertyUtils.openSummaryPanel(wrapper, "structureTableDefault-summary-panel");
 
-		let tableRows = wideflyout.find("tr.table-row");
+		let tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(0);
 
 		// add a row
-		let fieldPickerWrapper = propertyUtils.openFieldPicker(wrapper, "properties-structureTableDefault-default");
-		propertyUtils.fieldPicker(fieldPickerWrapper, ["Age"]);
+		let fieldPickerWrapper = tableUtils.openFieldPicker(wrapper, "properties-structureTableDefault-default");
+		tableUtils.fieldPicker(fieldPickerWrapper, ["Age"]);
 		wideflyout = wrapper.find("div[data-id='properties-structureTableDefault-summary-panel']");
-		tableRows = wideflyout.find("tr.table-row");
+		tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(1);
 		expect(wideflyout.find("div[data-id='properties-columnStructureTableDefault_0_1'] span").text()).to.equal("Ascending");
 
 		// change the parameter_ref control value and then add a new row.
 		renderedController.updatePropertyValue({ name: "CST_DefaultSortOrder" }, "Descending");
-		fieldPickerWrapper = propertyUtils.openFieldPicker(wrapper, "properties-structureTableDefault-default");
-		propertyUtils.fieldPicker(fieldPickerWrapper, ["Sex"]);
+		fieldPickerWrapper = tableUtils.openFieldPicker(wrapper, "properties-structureTableDefault-default");
+		tableUtils.fieldPicker(fieldPickerWrapper, ["Sex"]);
 		wideflyout = wrapper.find("div[data-id='properties-structureTableDefault-summary-panel']");
-		tableRows = wideflyout.find("tr.table-row");
+		tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(2);
 		expect(wideflyout.find("div[data-id='properties-columnStructureTableDefault_1_1'] span").text()).to.equal("Descending");
 	});
 
 	it("should render column structure table where new rows have correct defaultRow", () => {
 		let wideflyout = propertyUtils.openSummaryPanel(wrapper, "structureTableDefaultRow");
-		let tableRows = wideflyout.find("tr.table-row");
+		let tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(2);
 
 		// add a row
-		const fieldPickerWrapper = propertyUtils.openFieldPicker(wrapper, "properties-columnStructureTableDefaultRow");
-		propertyUtils.fieldPicker(fieldPickerWrapper, ["Sex"]);
+		const fieldPickerWrapper = tableUtils.openFieldPicker(wrapper, "properties-columnStructureTableDefaultRow");
+		tableUtils.fieldPicker(fieldPickerWrapper, ["Sex"]);
 		wideflyout = wrapper.find("div[data-id='properties-structureTableDefaultRow']");
-		tableRows = wideflyout.find("tr.table-row");
+		tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(3);
 
 		const expectedRows = [
@@ -159,9 +160,9 @@ describe("add rows in tables with correct default values", () => {
 		];
 
 		for (let idx = 0; idx < tableRows.length; idx++) {
-			const tableCell = tableRows.at(idx).find("td span");
-			expect(tableCell.at(1).text()).to.equal(expectedRows[idx][0]);
-			expect(tableCell.at(2).text()).to.equal(expectedRows[idx][1]);
+			const tableCell = tableRows.at(idx).find(".properties-field-type");
+			expect(tableCell.at(0).text()).to.equal(expectedRows[idx][0]);
+			expect(tableCell.at(1).text()).to.equal(expectedRows[idx][1]);
 		}
 	});
 });

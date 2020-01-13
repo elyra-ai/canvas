@@ -17,7 +17,7 @@ import PropertyUtils from "./../../util/property-utils";
 
 import Button from "carbon-components-react/lib/components/Button";
 
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, DATA_TYPE, TOOL_TIP_DELAY } from "./../../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, DATA_TYPE, TOOL_TIP_DELAY, SORT_DIRECTION, ROW_SELECTION } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
 
 import isEmpty from "lodash/isEmpty";
@@ -91,7 +91,7 @@ export default class FieldPicker extends React.Component {
 			default: return null;
 			}
 		});
-		if (spec.direction > 0) {
+		if (spec.direction === SORT_DIRECTION.DESC) {
 			fields.reverse();
 		}
 		this.setState({ fields: fields });
@@ -125,7 +125,7 @@ export default class FieldPicker extends React.Component {
 		return filters;
 	}
 
-	getTableData(checkedAll) {
+	getTableData() {
 		const fields = this.getVisibleData();
 		const tableData = [];
 		const selectedFields = this.state.selectedFields;
@@ -167,7 +167,10 @@ export default class FieldPicker extends React.Component {
 				fieldName: field.origName
 			});
 			if (this.multiSchema) {
-				columns.push({ column: "schemaName", content: field.schema });
+				const schemaContent = (<div className="properties-fp-schema">
+					{field.schema}
+				</div>);
+				columns.push({ column: "schemaName", content: schemaContent });
 			}
 			columns.push({
 				column: "dataType",
@@ -446,11 +449,11 @@ export default class FieldPicker extends React.Component {
 				onSort={this.onSort}
 				filterKeyword={this.state.filterText}
 				scrollKey="field-picker"
-				noAutoSize
+				rows={-1}
 				controller={this.props.controller}
 				selectedRows={this.selectedRowsIndex}
 				updateRowSelections={this.updateFieldSelections}
-				rowSelection={"multiple-edit"}
+				rowSelection={ROW_SELECTION.MULTIPLE}
 			/>
 		);
 	}

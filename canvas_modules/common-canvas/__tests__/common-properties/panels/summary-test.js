@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import propertyUtils from "./../../_utils_/property-utils";
+import tableUtils from "./../../_utils_/table-utils";
 import summarypanelParamDef from "./../../test_resources/paramDefs/summarypanel_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
 import { expect } from "chai";
@@ -46,8 +47,8 @@ describe("summary renders correctly", () => {
 		const sortSummary = wrapper.find("div[data-id='properties-structuretableSortOrder-summary-panel']");
 		const summaryButton = sortSummary.find("button.properties-summary-link-button");
 		summaryButton.simulate("click");
-		const fieldPickerWrapper = propertyUtils.openFieldPicker(wrapper, "properties-structuretableSortOrder");
-		propertyUtils.fieldPicker(fieldPickerWrapper, ["Age"], ["Age", "Sex", "BP", "Cholesterol", "Na", "K", "Drug"]);
+		const fieldPickerWrapper = tableUtils.openFieldPicker(wrapper, "properties-structuretableSortOrder");
+		tableUtils.fieldPicker(fieldPickerWrapper, ["Age"], ["Age", "Sex", "BP", "Cholesterol", "Na", "K", "Drug"]);
 	});
 });
 
@@ -93,9 +94,7 @@ describe("summary panel renders error/warning status correctly", () => {
 
 	it("should show warning message in summary when removing rows", () => {
 		let wideflyout = propertyUtils.openSummaryPanel(wrapper, "Derive-Node");
-		const tableData = wideflyout.find("tbody.reactable-data").at(0);
-		let row = tableData.childAt(1);
-		row.simulate("click");
+		tableUtils.clickTableRows(wideflyout, [0]);
 
 		// ensure remove button is enabled and click it
 		wideflyout = wrapper.find("div.properties-wf-content.show");
@@ -106,8 +105,7 @@ describe("summary panel renders error/warning status correctly", () => {
 		enabledRemoveColumnButton.at(0).simulate("click");
 
 		// remove second row
-		row = tableData.childAt(0);
-		row.simulate("click");
+		tableUtils.clickTableRows(wideflyout, [0]);
 		enabledRemoveColumnButton.at(0).simulate("click");
 
 		// close fly-out
@@ -148,9 +146,7 @@ describe("summary panel renders error/warning status correctly", () => {
 
 	it("should show error icon in summary when both error and warning messages exist", () => {
 		let wideflyout = propertyUtils.openSummaryPanel(wrapper, "Derive-Node");
-		const tableData = wideflyout.find("tbody.reactable-data").at(0);
-		let row = tableData.childAt(0);
-		row.simulate("click");
+		tableUtils.clickTableRows(wideflyout, [0]);
 
 		wideflyout = wrapper.find("div.properties-wf-content.show");
 		// ensure remove button is enabled and click it
@@ -161,18 +157,15 @@ describe("summary panel renders error/warning status correctly", () => {
 		enabledRemoveColumnButton.at(0).simulate("click");
 
 		// remove second row
-		row = tableData.childAt(0);
-		row.simulate("click");
+		tableUtils.clickTableRows(wideflyout, [0]);
 		enabledRemoveColumnButton.at(0).simulate("click");
 
 		wideflyout = wrapper.find("div.properties-wf-content.show");
+		expect(tableUtils.getTableRows(wideflyout.find("div[data-id='properties-ft-structurelisteditorTableInput']"))).to.have.length(11);
 		// remove all rows from Table Input table
-		const tableInputBodyData = wideflyout.find("tbody.reactable-data").at(1);
+		const tableInputBodyData = wideflyout.find("div[data-id='properties-ft-structurelisteditorTableInput']");
 		summarypanelParamDef.current_parameters.structurelisteditorTableInput.forEach((value) => {
-			const tableInputDataRowCheckbox = tableInputBodyData.childAt(0).find("input")
-				.at(0);
-			tableInputDataRowCheckbox.getDOMNode().checked = true;
-			tableInputDataRowCheckbox.simulate("change");
+			tableUtils.selectCheckboxes(tableInputBodyData, [0]);
 			const tableInputRemoveButton = wideflyout.find("button.properties-remove-fields-button");
 			expect(tableInputRemoveButton).to.have.length(2);
 
@@ -180,8 +173,7 @@ describe("summary panel renders error/warning status correctly", () => {
 		});
 		// check that all rows were removed
 		wideflyout = wrapper.find("div.properties-wf-content.show");
-		expect(wideflyout.find("tbody.reactable-data").at(1)
-			.children()).to.have.length(0);
+		expect(tableUtils.getTableRows(wideflyout.find("div[data-id='properties-ft-structurelisteditorTableInput']"))).to.have.length(0);
 
 		// close fly-out
 		wideflyout.find("button.properties-apply-button").simulate("click");

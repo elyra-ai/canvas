@@ -14,6 +14,7 @@ import { Provider } from "react-redux";
 import { expect } from "chai";
 import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
+import tableUtils from "./../../_utils_/table-utils";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import selectcolumnsParamDef from "../../test_resources/paramDefs/selectcolumns_paramDef.json";
@@ -103,7 +104,7 @@ describe("selectcolumns renders correctly", () => {
 		);
 		expect(wrapper.find("button.properties-add-fields-button")).to.have.length(1);
 		expect(wrapper.find("button.properties-remove-fields-button")).to.have.length(1);
-		expect(wrapper.find("tr.column-select-table-row")).to.have.length(3);
+		expect(tableUtils.getTableRows(wrapper)).to.have.length(3);
 	});
 
 	it("should select add columns button and openFieldPicker should be invoked", () => {
@@ -141,11 +142,9 @@ describe("selectcolumns renders correctly", () => {
 			</Provider>
 		);
 		// select the second row in the table
-		const tableData = wrapper.find("tr.column-select-table-row");
+		const tableData = tableUtils.getTableRows(wrapper);
 		expect(tableData).to.have.length(3);
-		const rowCheckbox = tableData.at(1).find("input");
-		rowCheckbox.getDOMNode().checked = true;
-		rowCheckbox.simulate("change");
+		tableUtils.selectCheckboxes(wrapper, [1]);
 		// ensure removed button is enabled and select it
 		const enabledRemoveColumnButton = wrapper.find("button.properties-remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
@@ -190,18 +189,19 @@ describe("selectcolumns control filters values correctly", () => {
 	});
 
 	it("should filter type value from selectcolumn control", () => {
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_type");
-		propertyUtils.fieldPicker(fieldPicker, ["age"], ["age", "age2", "age3", "age4"]);
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_type");
+		tableUtils.fieldPicker(fieldPicker, ["age"], ["age", "age2", "age3", "age4"]);
 	});
 	it("should filter role values from selectcolumn control", () => {
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-fields_filter_roles");
-		propertyUtils.fieldPicker(fieldPicker, [], ["age", "drug", "age2", "drug2", "age3", "drug3", "age4", "drug4"]);
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-fields_filter_roles");
+		tableUtils.fieldPicker(fieldPicker, [], ["age", "drug", "age2", "drug2", "age3", "drug3", "age4", "drug4"]);
 	});
 
 });
 
 describe("selectcolumns with multi input schemas renders correctly", () => {
 	let wrapper;
+
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsMultiInputParamDef);
 		wrapper = renderedObject.wrapper;
@@ -217,9 +217,9 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 		// summaryPanelWrapper.find("button").simulate("click");
 		const wideflyout = propertyUtils.openSummaryPanel(wrapper, "selectcolumns-values2");
 		// open the select columns field picker
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields");
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields");
 
-		propertyUtils.fieldPicker(fieldPicker, [], [
+		tableUtils.fieldPicker(fieldPicker, [], [
 			{ "name": "age", "schema": "Schema-1" },
 			{ "name": "AGE", "schema": "Schema-1" },
 			{ "name": "BP", "schema": "Schema-1" },
@@ -260,7 +260,7 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 
 	it("should filter by type in selectcolumns control", () => {
 		// open the "filter by type" select columns field picker
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_type");
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_type");
 		const fieldTable = [
 			{ "name": "age", "schema": "Schema-1" },
 			{ "name": "AGE", "schema": "Schema-1" },
@@ -270,12 +270,12 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 			{ "name": "AGE", "schema": "Schema-2" },
 			{ "name": "intAndRange", "schema": "Schema-2" }
 		];
-		propertyUtils.fieldPicker(fieldPicker, [], fieldTable);
+		tableUtils.fieldPicker(fieldPicker, [], fieldTable);
 	});
 
 	it("should filter by types in selectcolumns control", () => {
 		// open the "filter by types" select columns field picker
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_types");
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_types");
 		const fieldTable = [
 			{ "name": "age", "schema": "Schema-1" },
 			{ "name": "AGE", "schema": "Schema-1" },
@@ -289,13 +289,13 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 			{ "name": "Na", "schema": "Schema-2" },
 			{ "name": "intAndRange", "schema": "Schema-2" }
 		];
-		propertyUtils.fieldPicker(fieldPicker, [], fieldTable);
+		tableUtils.fieldPicker(fieldPicker, [], fieldTable);
 	});
 
 
 	it("should filter by measurement in selectcolumns control", () => {
 		// open the "filter by types" select columns field picker
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_measurement");
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_measurement");
 		const fieldTable = [
 			{ "name": "BP", "schema": "Schema-1" },
 			{ "name": "BP2", "schema": "Schema-1" },
@@ -303,11 +303,11 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 			{ "name": "BP", "schema": "Schema-2" },
 			{ "name": "stringAndDiscrete", "schema": "Schema-2" }
 		];
-		propertyUtils.fieldPicker(fieldPicker, [], fieldTable);
+		tableUtils.fieldPicker(fieldPicker, [], fieldTable);
 	});
 
 	it("should filter by measurements in selectcolumns control", () => {
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_measurements");
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_measurements");
 		const fieldTable = [
 			{ "name": "BP", "schema": "Schema-1" },
 			{ "name": "drug", "schema": "Schema-1" },
@@ -320,11 +320,11 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 			{ "name": "stringAndDiscrete", "schema": "Schema-2" },
 			{ "name": "stringAndSet", "schema": "Schema-2" }
 		];
-		propertyUtils.fieldPicker(fieldPicker, [], fieldTable);
+		tableUtils.fieldPicker(fieldPicker, [], fieldTable);
 	});
 
 	it("should filter by type and measurement in selectcolumns control", () => {
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_and");
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_and");
 		const fieldTable = [
 			{ "name": "drug", "schema": "Schema-1" },
 			{ "name": "drug2", "schema": "Schema-1" },
@@ -332,11 +332,11 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 			{ "name": "drug", "schema": "Schema-2" },
 			{ "name": "stringAndSet", "schema": "Schema-2" }
 		];
-		propertyUtils.fieldPicker(fieldPicker, [], fieldTable);
+		tableUtils.fieldPicker(fieldPicker, [], fieldTable);
 	});
 
 	it("should filter by type or measurement in selectcolumns control", () => {
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_or");
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_or");
 		const fieldTable = [
 			{ "name": "drug", "schema": "Schema-1" },
 			{ "name": "drug2", "schema": "Schema-1" },
@@ -351,7 +351,7 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 			{ "name": "AGE", "schema": "Schema-2" },
 			{ "name": "intAndRange", "schema": "Schema-2" }
 		];
-		propertyUtils.fieldPicker(fieldPicker, [], fieldTable);
+		tableUtils.fieldPicker(fieldPicker, [], fieldTable);
 	});
 });
 
@@ -371,7 +371,7 @@ describe("selectcolumns control displays the proper number of rows", () => {
 		const heightDiv = columnSelect.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.at(0).prop("style");
 		// console.log("STYLE: " + JSON.stringify(heightStyle));
-		expect(heightStyle).to.eql({ "height": "11.5em" }); // includes header
+		expect(heightStyle).to.eql({ "height": "12em" }); // includes header
 	});
 
 	it("should display 5 rows in select columns in subpanel", () => {
@@ -391,7 +391,7 @@ describe("selectcolumns control displays the proper number of rows", () => {
 		const heightDiv = selectColumnsWrapper.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.prop("style");
 		// console.log("STYLE: " + JSON.stringify(heightStyle));
-		expect(heightStyle).to.eql({ "height": "17.5em" }); // includes header
+		expect(heightStyle).to.eql({ "height": "18em" }); // includes header
 	});
 });
 
@@ -424,8 +424,8 @@ describe("selectcolumns control functions correctly in a table", () => {
 		const editButton = tableWrapper.find(".properties-subpanel-button").at(0);
 		editButton.simulate("click"); // open the subpanel for the added row
 
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields2");
-		propertyUtils.fieldPicker(fieldPicker, ["Na"]);
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields2");
+		tableUtils.fieldPicker(fieldPicker, ["Na"]);
 
 		// There should be no error messages
 		expect(scController.getErrorMessages()).to.eql({});
@@ -450,7 +450,7 @@ describe("measurement & type icons should be rendered correctly in selectcolumns
 	});
 
 	it("measurement icons should render in fieldpicker of selectcolumns control where dm_image is set to measure", () => {
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-fields1_panel");
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields1_panel");
 		expect(fieldPicker.find("div.properties-fp-field-type-icon").length).to.be.gt(1);// just check that at least 1 row has icon set
 	});
 

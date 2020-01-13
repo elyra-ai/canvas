@@ -87,6 +87,13 @@ module.exports = function(grunt) {
 					cwd: "./node_modules/codemirror/",
 					src: ["lib/codemirror.css", "addon/hint/show-hint.css"],
 					dest: ".build/codemirror"
+				},
+				{
+					expand: true,
+					flatten: false,
+					cwd: "./node_modules/react-virtualized/",
+					src: ["styles.css"],
+					dest: ".build/react-virtualized"
 				}]
 			}
 		},

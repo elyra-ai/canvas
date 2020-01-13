@@ -13,6 +13,7 @@ import Controller from "./../../../src/common-properties/properties-controller";
 import Checkboxset from "./../../../src/common-properties/controls/checkboxset";
 import { mount } from "enzyme";
 import propertyUtils from "../../_utils_/property-utils";
+import tableUtils from "./../../_utils_/table-utils";
 
 import checkboxSetParamDef from "../../test_resources/paramDefs/checkboxset_paramDef.json";
 
@@ -307,13 +308,11 @@ describe("checkboxset works as expected in table control", () => {
 	it("checkboxset works as expected in table control onpanel", () => {
 		const summaryPanelTable = propertyUtils.openSummaryPanel(wrapper, "checkboxset-table-summary");
 		const propId = { name: "checkboxset_table", row: 0, col: 1 };
-		const tableRows = summaryPanelTable.find("tbody.reactable-data tr");
+		const tableRows = tableUtils.getTableRows(summaryPanelTable);
 		expect(tableRows).to.have.length(2);
 		expect(renderedController.getPropertyValue(propId)).to.eql([8, 5]);
-		const firstRowCheckbox = tableRows.find("input").at(0);
-		firstRowCheckbox.getDOMNode().checked = true;
-		firstRowCheckbox.simulate("change");
-		wrapper.update();
+
+		tableUtils.selectCheckboxes(summaryPanelTable, [0]);
 		const checkboxsetWrapper =
 		wrapper.find("div[data-id='properties-checkboxset_table_0_1']");
 		const checkboxes = checkboxsetWrapper.find("input");
@@ -326,11 +325,11 @@ describe("checkboxset works as expected in table control", () => {
 	it("checkboxset works as expected in table control subpanel", () => {
 		const summaryPanelTable = propertyUtils.openSummaryPanel(wrapper, "checkboxset-table-summary");
 		const propId = { name: "checkboxset_table", row: 0, col: 0 };
-		const tableRows = summaryPanelTable.find("tbody.reactable-data tr");
+		const tableRows = tableUtils.getTableRows(summaryPanelTable);
 		expect(tableRows).to.have.length(2);
 		expect(renderedController.getPropertyValue(propId)).to.eql(["banana", "orange", "pear"]);
 		const rowWrapper = tableRows.at(0);
-		const subpanelButton = rowWrapper.find("td[data-label='subpanel'] button.properties-subpanel-button");
+		const subpanelButton = rowWrapper.find("button.properties-subpanel-button");
 		expect(subpanelButton).to.have.length(1);
 		subpanelButton.simulate("click");
 		wrapper.update();

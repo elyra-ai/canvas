@@ -49,14 +49,9 @@
 }
 
 .properties-table-cell-control {
-	display: flex;
-	align-items: center;
-	height: 100%;
-	position: relative;
-	> div {
-		> :first-child {
-			margin-left: $table-column-left-padding;
-		}
+
+	>div>:first-child {
+		margin-left: $table-column-left-padding;
 	}
 }
 
@@ -74,7 +69,17 @@
 		padding-left: 12px;
 		color: $ui-01;
 	}
-	tbody, .properties-ft-container-absolute-noheader {
-		overflow-y: hidden;
+
+	// align summaryTable row
+	.properties-vt-row-checkbox {
+		margin-left: 0;
+	}
+
+	.properties-vt-row-class {
+		background-color: rgba($brand-01, 0.3);
+		&:hover {
+			border: 1px solid transparent;
+			background-color: rgba($brand-01, 0.3);
+		}
 	}
 }

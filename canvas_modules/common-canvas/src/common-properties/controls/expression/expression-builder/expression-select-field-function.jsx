@@ -13,8 +13,9 @@ import Dropdown from "carbon-components-react/lib/components/DropdownV2";
 import Tabs from "carbon-components-react/lib/components/Tabs";
 import Tab from "carbon-components-react/lib/components/Tab";
 import FlexibleTable from "./../../../components/flexible-table/flexible-table.jsx";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, EXPRESSION_TABLE_ROWS } from "./../../../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
 import PropertyUtils from "./../../../util/property-utils";
+import sortBy from "lodash/sortBy";
 
 export default class ExpressionSelectFieldOrFunction extends React.Component {
 
@@ -39,9 +40,15 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		this.inCategories = Object.keys(props.functionList);
 		this.fields = this._makeDatasetFields(props.controller.getDatasetMetadataFields(), props.controller.getExpressionInfo().fields);
 		this.state = {
-			fieldSelectedRow: 0,
-			valueSelectedRow: 0,
-			functionSelectedRow: 0,
+			fieldSelected: 0,
+			fieldSelectedViewIndex: 0,
+			valueSelected: 0,
+			valueSelectedViewIndex: 0,
+			functionSelected: 0,
+			functionSelectedViewIndex: 0,
+			fieldTableSortSpec: null,
+			valuesTableSortSpec: null,
+			functionTableSortSpec: null,
 			functionCategory: this.inCategories[0], // set the initial function category to the first one in the list.
 			selectedTab: 0,
 			fieldCategory: "fields",
@@ -55,6 +62,15 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		this.onValueFilter = this.onValueFilter.bind(this);
 		this.onFunctionFilter = this.onFunctionFilter.bind(this);
 		this.language = props.language;
+
+		this.onFieldTableClick = this.onFieldTableClick.bind(this);
+		this.onFieldTableDblClick = this.onFieldTableDblClick.bind(this);
+		this.onFunctionTableClick = this.onFunctionTableClick.bind(this);
+		this.onFunctionTableDblClick = this.onFunctionTableDblClick.bind(this);
+		this.onValueTableClick = this.onValueTableClick.bind(this);
+		this.onValueTableDblClick = this.onValueTableDblClick.bind(this);
+
+		this.sortTableRows = this.sortTableRows.bind(this);
 	}
 
 	onTabClick(tabidx, evt) {
@@ -66,7 +82,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	onFunctionCatChange(evt) {
 		this.setState({
 			functionCategory: evt.selectedItem.value,
-			functionSelectedRow: 0
+			functionSelected: 0,
+			functionSelectedViewIndex: 0,
 		});
 	}
 
@@ -83,21 +100,24 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		}
 		this.setState({
 			fieldCategory: evt.selectedItem.value,
-			fieldSelectedRow: 0,
+			fieldSelected: 0,
+			fieldSelectedViewIndex: 0,
 			currentFieldDataset: currentData
 		});
 	}
 
-	onFieldTableClick(row, evt) {
+	onFieldTableClick(row, evt, rowKey) {
 		this.setState({
-			fieldSelectedRow: row,
-			valueSelectedRow: 0
+			fieldSelected: rowKey,
+			fieldSelectedViewIndex: row,
+			valueSelected: 0,
+			valueSelectedViewIndex: 0,
 		});
 
 	}
 
-	onFieldTableDblClick(row, evt) {
-		const field = this.state.currentFieldDataset[row];
+	onFieldTableDblClick(evt, rowKey, index) {
+		const field = this.state.currentFieldDataset[rowKey];
 		let value = field.id;
 		if (this.state.fieldCategory !== this.recentUseCat) {
 			this.props.controller.updateExpressionFieldsRecentlyUsed(field);
@@ -113,26 +133,28 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		this.setState({ fieldFilterText: filterString });
 	}
 
-	onValueTableClick(row, evt) {
+	onValueTableClick(row, evt, rowKey) {
 		this.setState({
-			valueSelectedRow: row
+			valueSelected: rowKey,
+			valueSelectedViewIndex: row,
 		});
 	}
 
-	onValueTableDblClick(row, evt) {
+	onValueTableDblClick(evt, rowKey, index) {
 		if (this.props.onChange) {
-			const field = this.state.currentFieldDataset[this.state.fieldSelectedRow];
+			const field = this.state.currentFieldDataset[this.state.fieldSelected];
 			if (field.values) {
 				const quote = "\"";
-				const value = field.values[row].value;
+				const value = field.values[rowKey].value;
 				const fieldValue = (typeof value === "string") ? quote + value + quote : value;
 				this.props.onChange(fieldValue);
 			} else if (field.range) {
-				this.props.onChange(row === 0 ? field.range.min.value : field.range.max.value);
+				this.props.onChange(rowKey === 0 ? field.range.min.value : field.range.max.value);
 			}
 		}
 		this.setState({
-			valueSelectedRow: row
+			valueSelected: rowKey,
+			valueSelectedViewIndex: index,
 		});
 	}
 
@@ -140,18 +162,19 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		this.setState({ valueFilterText: filterString });
 	}
 
-	onFunctionTableClick(row, evt) {
+	onFunctionTableClick(row, evt, rowKey) {
 		this.setState({
-			functionSelectedRow: row
+			functionSelected: rowKey,
+			functionSelectedViewIndex: row,
 		});
 	}
 
-	onFunctionTableDblClick(row, evt) {
+	onFunctionTableDblClick(evt, rowKey, index) {
 		let field;
 		if (this.state.functionCategory === this.recentUseCat) {
-			field = this.props.controller.getExpressionRecentlyUsed()[row];
+			field = this.props.controller.getExpressionRecentlyUsed()[rowKey];
 		} else {
-			field = this.props.functionList[this.state.functionCategory].functionList[row];
+			field = this.props.functionList[this.state.functionCategory].functionList[rowKey];
 			this.props.controller.updateExpressionRecentlyUsed(field);
 		}
 		const value = field.value;
@@ -162,6 +185,48 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	onFunctionFilter(filterString) {
 		this.setState({ functionFilterText: filterString });
+	}
+
+	setSortColumn(table, spec) {
+		switch (table) {
+		case "fieldTable": {
+			// const sortedData = this.sortTableRows(this.state.currentFieldDataset, spec);
+			this.setState({ fieldTableSortSpec: spec }); // , currentFieldDataset: sortedData });
+			break;
+		}
+		case "valuesTable": {
+			this.setState({ valuesTableSortSpec: spec });
+			break;
+		}
+		case "functionTable": {
+			this.setState({ functionTableSortSpec: spec });
+			break;
+		}
+		default:
+		}
+	}
+
+	sortTableRows(data, spec) {
+		let colIdx = 0;
+
+		if (data.length > 0) {
+			const tableColumns = data[0].columns;
+			for (let idx = 0; idx < tableColumns.length; idx++) {
+				if (tableColumns[idx].column === spec.column) {
+					colIdx = idx;
+					break;
+				}
+			}
+
+			const sortedData = sortBy(data, function(row) {
+				return row.columns[colIdx].value;
+			});
+			if (spec.direction === SORT_DIRECTION.DESC) {
+				sortedData.reverse();
+			}
+			return sortedData;
+		}
+		return data;
 	}
 
 	createContentObject(label) {
@@ -269,7 +334,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		const valueHeader = [];
 		const sortable = ["fieldName"];
 
-
 		let categoryInfo = null;
 		let tableContents = null;
 		if (this.state.fieldCategory === this.recentUseCat) {
@@ -302,29 +366,40 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		}
 
 
-		const tableData = [];
+		let tableData = [];
 		let valuesTableData = [];
 		if (tableContents && tableContents.field_value_groups) {
 			for (let index = 0; index < tableContents.field_value_groups.length; index++) {
 				const field = tableContents.field_value_groups[index];
 				const fieldColumns = [];
-				const rowClass = (index === this.state.fieldSelectedRow)
-					? "table-selected-single-row"
-					: "";
 				if (!this.state.fieldFilterText || this.state.fieldFilterText.length === 0 ||
 								(field.id.toLowerCase().indexOf(this.state.fieldFilterText.toLowerCase()) > -1)) {
 					fieldColumns.push({ column: "fieldName", content: this.createContentObject(field.id), value: field.id });
 					if (field.additional_column_entries) {
 						this._makeAdditionalColumnsContent(field, fieldColumns);
 					}
-					tableData.push({ className: rowClass, columns: fieldColumns,
-						onClickCallback: this.onFieldTableClick.bind(this, index), onDblClickCallback: this.onFieldTableDblClick.bind(this, index) });
-					if (index === this.state.fieldSelectedRow) {
+					tableData.push({ columns: fieldColumns, rowKey: index });
+					if (index === this.state.fieldSelected) {
 						valuesTableData = this._makeValuesContent(field, valuesTableData);
 					}
 				}
 			}
 		}
+
+		// set the selected row and adjust if the table is sorted.
+		let selectedField = this.state.fieldSelectedViewIndex;
+		if (this.state.fieldTableSortSpec !== null) {
+			tableData = this.sortTableRows(tableData, this.state.fieldTableSortSpec);
+			selectedField = tableData.findIndex((row) => row.rowKey === this.state.fieldSelected);
+		}
+
+		// set the selected row and adjust if the table is sorted.
+		let selectedValue = this.state.valueSelectedViewIndex;
+		if (this.state.valuesTableSortSpec !== null) {
+			valuesTableData = this.sortTableRows(valuesTableData, this.state.valuesTableSortSpec);
+			selectedValue = valuesTableData.findIndex((row) => row.rowKey === this.state.valueSelected);
+		}
+
 		return (
 			<div className="properties-field-and-values-table-container" >
 				{fieldCategory}
@@ -337,7 +412,11 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onFilter={this.onFieldFilter}
 						rows={EXPRESSION_TABLE_ROWS}
 						controller={this.props.controller}
-						rowSelection={"single"}
+						rowSelection={ROW_SELECTION.SINGLE}
+						updateRowSelections={this.onFieldTableClick}
+						selectedRows={[selectedField]}
+						onRowDoubleClick={this.onFieldTableDblClick}
+						onSort={this.setSortColumn.bind(this, "fieldTable")}
 					/>
 				</div>
 				<div className="properties-value-table-container" >
@@ -349,7 +428,11 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onFilter={this.onValueFilter}
 						rows={EXPRESSION_TABLE_ROWS}
 						controller={this.props.controller}
-						rowSelection={"single"}
+						rowSelection={ROW_SELECTION.SINGLE}
+						updateRowSelections={this.onValueTableClick}
+						selectedRows={[selectedValue]}
+						onRowDoubleClick={this.onValueTableDblClick}
+						onSort={this.setSortColumn.bind(this, "valuesTable")}
 					/>
 				</div>
 			</div>
@@ -378,15 +461,11 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	}
 
 	_addValueRow(content, index, valuesTableData) {
-		const valueRowClass = (this.state.valueSelectedRow === index)
-			? "table-selected-single-row"
-			: "";
 		if (!this.state.valueFilterText || this.state.valueFilterText.length === 0 ||
 					(String(content).toLowerCase()
 						.indexOf(this.state.valueFilterText.toLowerCase()) > -1)) {
 			const valueColumns = [{ column: "values", content: this.createContentObject(content), value: content }];
-			valuesTableData.push({ className: valueRowClass, columns: valueColumns,
-				onClickCallback: this.onValueTableClick.bind(this, index), onDblClickCallback: this.onValueTableDblClick.bind(this, index) });
+			valuesTableData.push({ columns: valueColumns, rowKey: index });
 		}
 	}
 
@@ -463,18 +542,30 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		headers.push({ key: "function", label: functionColumn, width: 73 });
 		headers.push({ key: "return", label: returnColumn, width: 27 });
 		const table = this._buildFunctionTable(this.state.functionCategory);
+
+		let data = table.rows;
+		let selectedFunction = this.state.functionSelectedViewIndex;
+		if (this.state.functionTableSortSpec !== null) {
+			data = this.sortTableRows(data, this.state.functionTableSortSpec);
+			selectedFunction = data.findIndex((row) => row.rowKey === this.state.functionSelected);
+		}
+
 		return (
 			<div className="properties-functions-table-container" >
 				<div className="properties-functions-table" >
 					<FlexibleTable
 						columns={headers}
-						data={table.rows}
+						data={data}
 						sortable={["function", "return"]}
 						filterable={["function"]}
 						onFilter={this.onFunctionFilter}
 						rows={EXPRESSION_TABLE_ROWS}
 						controller={this.props.controller}
-						rowSelection={"single"}
+						rowSelection={ROW_SELECTION.SINGLE}
+						updateRowSelections={this.onFunctionTableClick}
+						selectedRows={[selectedFunction]}
+						onRowDoubleClick={this.onFunctionTableDblClick}
+						onSort={this.setSortColumn.bind(this, "functionTable")}
 					/>
 				</div>
 				<div className="properties-help-table-container" >
@@ -491,16 +582,12 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			for (let index = 0; index < categoryFunctions.length; index++) {
 				const catFunction = categoryFunctions[index];
 				const columns = [];
-				const rowClass = (index === this.state.functionSelectedRow)
-					? "table-selected-single-row"
-					: "";
 				if (!this.state.functionFilterText || this.state.functionFilterText.length === 0 ||
 					(catFunction.locLabel.toLowerCase().indexOf(this.state.functionFilterText.toLowerCase()) > -1)) {
 					columns.push({ column: "function", content: this.createContentObject(catFunction.locLabel), value: catFunction.locLabel });
 					columns.push({ column: "return", content: this.createContentObject(catFunction.return_type), value: catFunction.return_type });
-					table.rows.push({ className: rowClass, columns: columns,
-						onClickCallback: this.onFunctionTableClick.bind(this, index), onDblClickCallback: this.onFunctionTableDblClick.bind(this, index) });
-					if (index === this.state.functionSelectedRow) {
+					table.rows.push({ columns: columns, rowKey: index });
+					if (index === this.state.functionSelected) {
 						table.helpContainer = (
 							<div className="properties-function-help-text" >
 								<span className="properties-function-help-command">{catFunction.locLabel}:</span>

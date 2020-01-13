@@ -15,6 +15,7 @@ import { Provider } from "react-redux";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
+import tableUtils from "./../../_utils_/table-utils";
 
 import structureListEditorParamDef from "../../test_resources/paramDefs/structurelisteditor_paramDef.json";
 
@@ -341,11 +342,9 @@ describe("StructureListEditorControl renders correctly", () => {
 		expect(removeColumnButton.prop("disabled")).to.equal(true);
 
 		// select the first row in the table
-		const tableData = wrapper.find("tbody.reactable-data").children();
+		const tableData = tableUtils.getTableRows(wrapper);
 		expect(tableData).to.have.length(6);
-		const firstRowCheckbox = tableData.first().find("input");
-		firstRowCheckbox.getDOMNode().checked = true;
-		firstRowCheckbox.simulate("change");
+		tableUtils.selectCheckboxes(wrapper, [0]);
 
 		// ensure removed button is enabled and select it
 		removeColumnButton = wrapper.find("button.properties-remove-fields-button");
@@ -373,21 +372,16 @@ describe("StructureListEditorControl renders correctly", () => {
 		);
 
 		// select the first row in the table
-		const tableData = wrapper.find("tbody.reactable-data").children();
+		const tableData = tableUtils.getTableRows(wrapper);
 		expect(tableData).to.have.length(6);
-		const firstRowCheckbox = tableData.find("input").at(0);
-		firstRowCheckbox.getDOMNode().checked = true;
-		firstRowCheckbox.simulate("change");
+		tableUtils.selectCheckboxes(wrapper, [0]);
 
 		// verify that the select summary row is not present
 		let selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
 		expect(selectedEditRow).to.have.length(0);
 
 		// multiple select the four row in the table
-		tableData.find("input").forEach((checkbox) => {
-			checkbox.getDOMNode().checked = true;
-			checkbox.simulate("change");
-		});
+		tableUtils.selectCheckboxes(wrapper, [1, 2, 3, 4, 5]);
 
 		// verify that the select summary row is present
 		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
@@ -415,7 +409,7 @@ describe("StructureListEditor render from paramdef", () => {
 
 	it("hide not visible column but display on-panel container", () => {
 		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "onPanelNotVisibleTable-summary-panel");
-		const tableRows = summaryPanel.find("tbody.reactable-data tr");
+		const tableRows = tableUtils.getTableRows(summaryPanel);
 		expect(tableRows).to.have.length(1);
 		const expressionField = tableRows.at(0).find("td[data-label='condition']");
 		expect(expressionField).to.have.length(0);
@@ -423,7 +417,7 @@ describe("StructureListEditor render from paramdef", () => {
 		let onPanelContainer = summaryPanel.find("div[data-id='properties-onPanelNotVisibleTable_0_2']");
 		expect(onPanelContainer).to.have.length(0);
 		// select the first row and not visible expression control column displays control below table
-		tableRows.at(0).simulate("click");
+		tableUtils.clickTableRows(summaryPanel, [0]);
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
 		onPanelContainer = summaryPanel.find("div[data-id='properties-onPanelNotVisibleTable_0_2']");
 		expect(onPanelContainer).to.have.length(1);
@@ -455,9 +449,7 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
 		// select the localhost row in the table
-		summaryPanel = wrapper.find("div.properties-wf-content.show");
-		var tableData = summaryPanel.find("tbody.reactable-data").children();
-		tableData.at(1).simulate("click");
+		tableUtils.clickTableRows(wrapper, [0]);
 
 		// ensure removed button is enabled and select it
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
@@ -467,24 +459,22 @@ describe("StructureListEditor render from paramdef", () => {
 	});
 	it("Error messages should not change when deleting rows", () => {
 		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "inlineEditingTableError-summary-panel");
-		let tableData = summaryPanel.find("tbody.reactable-data").children();
 
 		// add two rows to the table.
 		const addColumnButton = summaryPanel.find("button.properties-add-fields-button");
 		addColumnButton.simulate("click");
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
-		tableData = summaryPanel.find("tbody.reactable-data").children();
+		let tableData = tableUtils.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(2);
 		addColumnButton.simulate("click");
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
-		tableData = summaryPanel.find("tbody.reactable-data").children();
+		tableData = tableUtils.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(3);
 
 		// set the error in the last row
 		const checkboxCell = summaryPanel.find("input[type='checkbox']").at(3);
 		checkboxCell.getDOMNode().checked = false;
 		checkboxCell.simulate("change");
-
 
 		const errorMessage = {
 			"validation_id": "tableerrortest3",
@@ -495,10 +485,9 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(errorMessage).to.eql(actual);
 
 		// remove the first row and ensure the error message is associated with the correct row.
-		tableData.at(0).simulate("click");
+		tableUtils.clickTableRows(summaryPanel, [0]);
 		const removeColumnButton = summaryPanel.find("button.properties-remove-fields-button");
 		removeColumnButton.simulate("click");
-
 
 		const messages = renderedController.getErrorMessages();
 		const rowErrorMsg = { "1": { "3": { type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } } };
@@ -506,36 +495,35 @@ describe("StructureListEditor render from paramdef", () => {
 
 		// remove the error row and ensure the error message is removed from the table.
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
-		tableData = summaryPanel.find("tbody.reactable-data").children();
+		tableData = tableUtils.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(2);
-		tableData.at(1).simulate("click");
+		tableUtils.clickTableRows(summaryPanel, [1]);
 		removeColumnButton.simulate("click");
 		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
 		expect(actual).to.equal(null);
 	});
 	it("Error messages should not change when moving rows", () => {
 		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "inlineEditingTableError-summary-panel");
-		let tableData = summaryPanel.find("tbody.reactable-data").children();
+		let tableData = tableUtils.getTableRows(summaryPanel);
 
 		// add four rows to the table.
 		const addColumnButton = summaryPanel.find("button.properties-add-fields-button");
 		addColumnButton.simulate("click");
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
-		tableData = summaryPanel.find("tbody.reactable-data").children();
+		tableData = tableUtils.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(2);
 		addColumnButton.simulate("click");
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
-		tableData = summaryPanel.find("tbody.reactable-data").children();
+		tableData = tableUtils.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(3);
 		addColumnButton.simulate("click");
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
-		tableData = summaryPanel.find("tbody.reactable-data").children();
+		tableData = tableUtils.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(4);
 		addColumnButton.simulate("click");
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
-		tableData = summaryPanel.find("tbody.reactable-data").children();
+		tableData = tableUtils.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(5);
-
 
 		// set the checkbox error in the last row
 		const checkboxCell = summaryPanel.find("input[type='checkbox']").last();
@@ -563,7 +551,7 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(errorMessage).to.eql(actual);
 
 		// select the first row and move it to the bottom and make sure the error messages stay aligned.
-		tableData.at(0).simulate("click");
+		tableUtils.clickTableRows(summaryPanel, [0]);
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
 		const moveRowBottom = summaryPanel.find("button.table-row-move-button").at(3);
 		moveRowBottom.simulate("click");
@@ -575,9 +563,9 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
 		// select the second from the last row and move it to the top and make sure the error messages stay aligned.
-		tableData = summaryPanel.find("tbody.reactable-data").children();
+		tableData = tableUtils.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(5);
-		tableData.at(3).simulate("click");
+		tableUtils.clickTableRows(summaryPanel, [3]);
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
 		const moveRowTop = summaryPanel.find("button.table-row-move-button").at(0);
 		moveRowTop.simulate("click");
@@ -587,7 +575,6 @@ describe("StructureListEditor render from paramdef", () => {
 			"0": { "3": { type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } },
 			"4": { "2": { type: "error", text: "order cannot be descending", validation_id: "tableerrortest2" } }
 		};
-		// console.log(messages.inlineEditingTableError);
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 	});
 
@@ -597,11 +584,9 @@ describe("StructureListEditor render from paramdef", () => {
 
 		// select the first row in the table
 
-		let tableRows = summaryPanel.find("tbody.reactable-data").children();
+		let tableRows = tableUtils.getTableRows(summaryPanel);
 		expect(tableRows).to.have.length(4);
-		const firstRowCheckbox = tableRows.find("input").at(0);
-		firstRowCheckbox.getDOMNode().checked = true;
-		firstRowCheckbox.simulate("change");
+		tableUtils.selectCheckboxes(summaryPanel, [0]);
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
 
 		// verify that the select summary row is not present
@@ -609,10 +594,7 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(selectedEditRow).to.have.length(0);
 
 		// multiple select the four row in the table
-		tableRows.find("input").forEach((checkbox) => {
-			checkbox.getDOMNode().checked = true;
-			checkbox.simulate("change");
-		});
+		tableUtils.selectCheckboxes(summaryPanel, [1, 2, 3]);
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
 
 		// verify that the select summary row is present
@@ -620,14 +602,14 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(selectedEditRow).to.have.length(1);
 
 		// change a value in the select summary row.
-		const selectedEditCells = selectedEditRow.find("td");
-		expect(selectedEditCells).to.have.length(8);
-		const integerNumber = selectedEditCells.at(1).find("input");
+		const selectedEditCells = selectedEditRow.find(".properties-table-cell-control");
+		expect(selectedEditCells).to.have.length(3);
+		const integerNumber = selectedEditCells.at(0).find("input");
 		integerNumber.simulate("change", { target: { value: "44" } });
 
 		// verify that the values have changed in the selected rows.
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
-		tableRows = summaryPanel.find("tbody.reactable-data tr");
+		tableRows = tableUtils.getTableRows(summaryPanel);
 		// need to add one to the row count because multiple rows are still selected
 		// and the selectedSummaryRow is still rendered as the first row, so the tableRows
 		// contains the selectedSummaryRow and the table data rows are indexed +1.

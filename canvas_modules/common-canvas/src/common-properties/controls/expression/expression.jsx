@@ -285,7 +285,7 @@ class ExpressionControl extends React.Component {
 		const rejectLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
 		const expressonTitle = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE, MESSAGE_KEYS_DEFAULTS.EXPRESSION_BUILDER_TITLE);
 
-		const flyout = (<WideFlyout
+		const flyout = this.state.showExpressionBuilder ? (<WideFlyout
 			cancelHandler={this.cancelExpressionBuilder}
 			okHandler={this.hideExpressionBuilder}
 			show={this.state.showExpressionBuilder}
@@ -300,7 +300,7 @@ class ExpressionControl extends React.Component {
 					propertyId={this.props.propertyId}
 				/>
 			</div>
-		</WideFlyout>);
+		</WideFlyout>) : <div />;
 
 		const className = "properties-expression-editor " + messageType;
 		return (

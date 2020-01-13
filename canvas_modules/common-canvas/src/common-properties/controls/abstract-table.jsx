@@ -21,7 +21,8 @@ import { ControlType, EditStyle } from "./../constants/form-constants";
 
 import Tooltip from "./../../tooltip/tooltip.jsx";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES,
-	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH } from "./../constants/constants";
+	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION,
+	ROW_SELECTION } from "./../constants/constants";
 
 import findIndex from "lodash/findIndex";
 import sortBy from "lodash/sortBy";
@@ -107,7 +108,7 @@ export default class AbstractTable extends React.Component {
 			controlValue = sortBy(controlValue, function(row) {
 				return row[col];
 			});
-			if (spec.direction < 0) {
+			if (spec.direction === SORT_DIRECTION.DESC) {
 				controlValue.reverse();
 			}
 			this.setCurrentControlValueSelected(controlValue, []);
@@ -204,7 +205,7 @@ export default class AbstractTable extends React.Component {
 	}
 
 	isSelectSummaryEdit(selectedRows) {
-		return (this.props.control.rowSelection === "multiple-edit" && selectedRows.length > 1);
+		return (this.props.control.rowSelection === ROW_SELECTION.MULTIPLE && selectedRows.length > 1);
 	}
 
 	indexOfColumn(controlId) {
@@ -213,12 +214,9 @@ export default class AbstractTable extends React.Component {
 		});
 	}
 
-	handleRowClick(rowIndex, selectSummaryRow, evt) {
-		if (selectSummaryRow) {
-			return;
-		}
+	handleRowClick(rowIndex, evt) {
 		let selectedRows = this.props.selectedRows;
-		if (this.props.control.rowSelection === "single") {
+		if (this.props.control.rowSelection === ROW_SELECTION.SINGLE) {
 			selectedRows = [rowIndex];
 		} else if (evt.metaKey === true || evt.ctrlKey === true) {
 			// If already selected then remove otherwise add
@@ -426,6 +424,7 @@ export default class AbstractTable extends React.Component {
 					scrollKey={this.selectSummaryPropertyName}
 					controller={this.props.controller}
 					summaryTable
+					rowSelection={ROW_SELECTION.MULTIPLE}
 				/>
 			</div>);
 		}
@@ -588,7 +587,7 @@ export default class AbstractTable extends React.Component {
 		const controlValue = this.props.value;
 		this.makeCells(rows, controlValue, tableState);
 
-		const selectedEditRow = this.props.control.rowSelection === "multiple-edit"
+		const selectedEditRow = this.props.control.rowSelection === ROW_SELECTION.MULTIPLE
 			? this.makeSelectedEditRow(this.props.selectedRows)
 			: null;
 
@@ -601,6 +600,8 @@ export default class AbstractTable extends React.Component {
 			rowToScrollTo = this.scrollToRow;
 			delete this.scrollToRow;
 		}
+
+		const rowClickCallback = this.props.control.rowSelection === ROW_SELECTION.SINGLE ? this.handleRowClick : this.updateRowSelections;
 
 		const table =	(
 			<FlexibleTable
@@ -619,7 +620,7 @@ export default class AbstractTable extends React.Component {
 				messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)}
 				rows={this.props.control.rows}
 				controller={this.props.controller}
-				updateRowSelections={this.updateRowSelections}
+				updateRowSelections={rowClickCallback}
 				selectedRows= {this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
 			/>);
@@ -704,7 +705,6 @@ export default class AbstractTable extends React.Component {
 					content: <div />
 				});
 				rows.push({
-					onClickCallback: this.handleRowClick.bind(this, rowIndex, selectSummaryRow),
 					columns: columns
 				});
 			}

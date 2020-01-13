@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import propertyUtils from "../../_utils_/property-utils";
+import tableUtils from "./../../_utils_/table-utils";
 import { expect } from "chai";
 import sharedFieldsParamDef from "../../test_resources/paramDefs/sharedFields_paramDef.json";
 
@@ -25,13 +26,13 @@ describe("Condition dmSharedFields test cases", () => {
 
 	it("Test the available fields.", () => {
 		// Validate the available fields in the selectColumns control
-		let fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-input_fields");
-		propertyUtils.fieldPicker(fieldPicker, [], ["Age", "BP", "Cholesterol"]);
+		let fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-input_fields");
+		tableUtils.fieldPicker(fieldPicker, [], ["Age", "BP", "Cholesterol"]);
 
 		// Validate the available fields in the table control
 		const summaryPanel = propertyUtils.openSummaryPanel(wrapper, "structuretable_filter-summary-panel");
-		fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-structuretable_filter");
-		const tableRows = fieldPicker.find("tr.properties-fp-data-rows");
+		fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretable_filter");
+		const tableRows = tableUtils.getTableRows(fieldPicker);
 		expect(tableRows).to.have.length(3); // Other fields should be filtered out
 		// close summary panel
 		summaryPanel.find("button.properties-apply-button").simulate("click");
@@ -57,9 +58,13 @@ describe("Condition dmSharedFields test cases", () => {
 	});
 
 	it("Test allow a change to a field to filter another field's choices.", () => {
-		// Select another field in the selectColumns control
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-ft-input_fields");
-		propertyUtils.fieldPicker(fieldPicker, ["Age", "BP", "Cholesterol"], ["Age", "BP", "Cholesterol"]);
+		let selectedFields = tableUtils.getTableRows(wrapper.find("div[data-id='properties-input_fields']"));
+		expect(selectedFields).to.have.length(2); // Age and Cholesterol already selected
+		// Select another field `BP` in the selectColumns control
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-input_fields");
+		tableUtils.fieldPicker(fieldPicker, ["BP"], ["Age", "BP", "Cholesterol"]);
+		selectedFields = tableUtils.getTableRows(wrapper.find("div[data-id='properties-input_fields']"));
+		expect(selectedFields).to.have.length(3); // Age, BP, and Cholesterol selected
 
 		const weightDropDown = wrapper.find("div[data-id='properties-regression_weight_field'] DropdownV2");
 		const options = weightDropDown.prop("items"); // by Type
@@ -72,8 +77,8 @@ describe("Condition dmSharedFields test cases", () => {
 
 	it("Shares fields between dmSharedFields and columnSelection panel", () => {
 		// Validate the available fields in the selectColumns control
-		const fieldPicker = propertyUtils.openFieldPicker(wrapper, "properties-column_selection_fields");
-		propertyUtils.fieldPicker(fieldPicker, [], ["Age", "Sex", "BP", "Na", "K", "Drug"]);
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-column_selection_fields");
+		tableUtils.fieldPicker(fieldPicker, [], ["Age", "Sex", "BP", "Na", "K", "Drug"]);
 
 		// Check the available fields in the single chooser dropdown
 		const weightDropDown = wrapper.find("div[data-id='properties-column_selection_chooser'] DropdownV2");

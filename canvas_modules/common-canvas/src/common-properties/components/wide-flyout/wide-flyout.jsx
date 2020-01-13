@@ -12,6 +12,7 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import PropertiesButtons from "./../properties-buttons";
 import classNames from "classnames";
+import { Portal } from "react-portal";
 
 export default class WideFlyout extends Component {
 	constructor(props) {
@@ -79,12 +80,14 @@ export default class WideFlyout extends Component {
 		}
 		return (
 			<div className="properties-wf-modal" ref={ (ref) => (this.wideFlyout = ref) }>
-				{ overlay }
-				<div className={classNames("properties-wf-content", { "show": this.props.show })} style={this.state.style}>
-					{title}
-					{children}
-					{buttons}
-				</div>
+				<Portal node={this.commonPropertiesParent}>
+					{ overlay }
+					<div className={classNames("properties-wf-content", { "show": this.props.show })} style={this.state.style}>
+						{title}
+						{children}
+						{buttons}
+					</div>
+				</Portal>
 			</div>
 		);
 	}

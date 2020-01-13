@@ -10,6 +10,7 @@
 import React from "react";
 import FlexibleTable from "../../../src/common-properties/components/flexible-table";
 import Controller from "../../../src/common-properties/properties-controller";
+import tableUtils from "./../../_utils_/table-utils";
 
 import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
@@ -21,12 +22,11 @@ chai.use(chaiEnzyme()); // Note the invocation at the end
 
 const controller = new Controller();
 
-const handleRowClick = sinon.spy();
+const updateRowSelections = sinon.spy();
 
 const rows = [
 	{
 		className: "table-row",
-		onClickCallback: handleRowClick,
 		columns: [
 			{ column: "fields", content: "Na" },
 			{ column: "sortOrder", content: "Ascending" },
@@ -36,7 +36,6 @@ const rows = [
 	},
 	{
 		className: "table-row",
-		onClickCallback: handleRowClick,
 		columns: [
 			{ column: "fields", content: "Age" },
 			{ column: "sortOrder", content: "Descending" },
@@ -46,7 +45,6 @@ const rows = [
 	},
 	{
 		className: "table-row",
-		onClickCallback: handleRowClick,
 		columns: [
 			{ column: "fields", content: "Sex" },
 			{ column: "sortOrder", content: "Descending" },
@@ -56,7 +54,6 @@ const rows = [
 	},
 	{
 		className: "table-row",
-		onClickCallback: handleRowClick,
 		columns: [
 			{ column: "fields", content: "Gender" },
 			{ column: "sortOrder", content: "Ascending" },
@@ -66,7 +63,6 @@ const rows = [
 	},
 	{
 		className: "table-row",
-		onClickCallback: handleRowClick,
 		columns: [
 			{ column: "fields", content: "Occupation" },
 			{ column: "sortOrder", content: "Descending" },
@@ -76,7 +72,6 @@ const rows = [
 	},
 	{
 		className: "table-row",
-		onClickCallback: handleRowClick,
 		columns: [
 			{ column: "fields", content: "Age" },
 			{ column: "sortOrder", content: "Descending" },
@@ -105,7 +100,7 @@ function onSort(spec) {
 		valid = true;
 	}
 	expect(valid).to.be.true;
-	expect(spec.direction).to.equal(1);
+	expect(spec.direction).to.equal("ASC");
 }
 
 const alignTop = true;
@@ -155,9 +150,9 @@ describe("FlexibleTable renders correctly", () => {
 		);
 		const table = wrapper.find("div.properties-ft-control-container");
 		expect(table).to.have.length(1);
-		expect(table.find(".reactable-column-header")).to.have.length(1);
-		expect(table.find("tbody.reactable-data")).to.have.length(1);
-		expect(table.find("tbody.reactable-data").find("tr")).to.have.length(6);
+		expect(tableUtils.getTableHeaderRows(table)).to.have.length(1);
+		expect(table.find(".properties-ft-container-panel")).to.have.length(1);
+		expect(tableUtils.getTableRows(table)).to.have.length(6);
 
 	});
 
@@ -197,27 +192,25 @@ describe("FlexibleTable renders correctly", () => {
 			/>
 		);
 		// verify that no columns are active sort column class
-		var input = wrapper.find("th.reactable-header-sortable.sort-column-active");
+		var input = wrapper.find(".properties-vt-column.sort-column-active");
 		expect(input).to.have.length(0);
 
 		// sort the first sort column
-		input = wrapper.find("div.properties-ft-column");
-		expect(input).to.have.length(2);
-		input.at(0).simulate("click");
+		tableUtils.clickHeaderColumnSort(wrapper, 0);
 		// the verification is that the onSort function gets invoked with proper column name
 
 		// verify that the first sort column has the active sort column class
-		input = wrapper.find("th.reactable-header-sortable.sort-column-active");
+		input = wrapper.find(".properties-vt-column.sort-column-active");
 		expect(input).to.have.length(1);
 		expect(input.find("div.tooltip-trigger").text()).to.equals("Field Name");
 
 		// sort the second sort column
-		input = wrapper.find("div.properties-ft-column");
-		input.at(1).simulate("click");
+		tableUtils.clickHeaderColumnSort(wrapper, 1);
+		expect(input).to.have.length(1);
 		// the verification is that the onSort function gets invoked with proper column name
 
 		// verify that the first sort column is not active and the second sort column is active
-		input = wrapper.find("th.reactable-header-sortable");
+		input = wrapper.find(".ReactVirtualized__Table__sortableHeaderColumn").find(".properties-vt-column");
 		expect(input).to.have.length(2);
 		expect(input.at(0).hasClass("sort-column-active")).to.be.false;
 		expect(input.at(1).hasClass("sort-column-active")).to.be.true;
@@ -235,14 +228,14 @@ describe("FlexibleTable renders correctly", () => {
 				onFilter={onFilter}
 				onSort={onSort}
 				controller={controller}
+				rowSelection={"single"}
+				updateRowSelections={updateRowSelections}
 			/>
 		);
 		const tableBody = wrapper.find("div.properties-ft-control-container");
 		expect(tableBody).to.have.length(1);
-		const tableData = tableBody.find("tbody.reactable-data");
-		const row = tableData.childAt(0);
-		row.simulate("click");
-		expect(handleRowClick).to.have.property("callCount", 1);
+		tableUtils.clickTableRows(tableBody, [0]);
+		expect(updateRowSelections).to.have.property("callCount", 1);
 	});
 
 });

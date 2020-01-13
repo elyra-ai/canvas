@@ -59,11 +59,11 @@ export default class SubPanelInvoker extends React.Component {
 			>
 				{this.state.panel}
 			</PropertiesModal>);
-		} else if (this.props.rightFlyout) {
+		} else if (this.props.rightFlyout && this.state.subPanelVisible) {
 			propertiesDialog = (<WideFlyout
 				cancelHandler={this.hideSubDialog.bind(this, false)}
 				okHandler={this.hideSubDialog.bind(this, true)}
-				show={this.state.subPanelVisible}
+				show
 				applyLabel={this.props.applyLabel}
 				rejectLabel={this.props.rejectLabel}
 				title={this.state.title}

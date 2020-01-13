@@ -7,12 +7,14 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import testUtils from "./utilities/test-utils.js";
+
 /* global browser */
 
 module.exports = function() {
-	this.Then(/^I select field "([^"]*)" with data type "([^"]*)" in the field picker$/, function(fieldName, dataType) {
-		const fieldPicker = browser.$("div[data-id='properties-ft-field-picker']");
-		const rows = fieldPicker.$$(".properties-fp-data-rows");
+	this.Then(/^I select field "([^"]*)" with data type "([^"]*)" in the field picker panel "([^"]*)"$/, function(fieldName, dataType, panelName) {
+		const fieldPicker = testUtils.getWideFlyoutPanel(panelName);
+		const rows = fieldPicker.$$("div[role='properties-data-row']");
 		let fieldFound = false;
 		let schemaName = null;
 		let field = null;
@@ -23,20 +25,16 @@ module.exports = function() {
 			field = fieldName;
 		}
 		for (let idx = 0; idx < rows.length; idx++) {
-			const currFieldName = rows[idx].$("td[data-label='fieldName']").$(".properties-fp-field")
-				.$(".properties-fp-field-name")
-				.getText();
-			const currDataType = rows[idx].$("td[data-label='dataType']").$(".properties-fp-data")
-				.$(".properties-fp-field-type")
-				.getText();
+			const currFieldName = rows[idx].$(".properties-fp-field-name").getText();
+			const currDataType = rows[idx].$(".properties-fp-field-type").getText();
 			let currSchema = null;
 			if (schemaName) {
-				currSchema = rows[idx].$("td[data-label='schemaName']").getText();
+				currSchema = rows[idx].$(".properties-fp-schema").getText();
 			}
 			if (currFieldName === field && currSchema === schemaName && currDataType === dataType) {
-				const checkbox = rows[idx].$(".row-checkbox").$("input");
+				const checkbox = rows[idx].$(".properties-vt-row-checkbox").$("input");
 				if (checkbox._status === 0) {
-					const checkboxLabel = rows[idx].$(".row-checkbox").$("label");
+					const checkboxLabel = rows[idx].$(".properties-vt-row-checkbox").$("label");
 					checkboxLabel.click();
 					fieldFound = true;
 					break;
@@ -46,9 +44,9 @@ module.exports = function() {
 		expect(fieldFound).toEqual(true);
 	});
 
-	this.Then(/^I verify field "([^"]*)" with data type "([^"]*)" is selected in the field picker$/, function(fieldName, dataType) {
-		const fieldPicker = browser.$("div[data-id='properties-ft-field-picker']");
-		const rows = fieldPicker.$$(".properties-fp-data-rows");
+	this.Then(/^I verify field "([^"]*)" with data type "([^"]*)" is selected in the field picker panel "([^"]*)"$/, function(fieldName, dataType, panelName) {
+		const fieldPicker = testUtils.getWideFlyoutPanel(panelName);
+		const rows = fieldPicker.$$("div[role='properties-data-row']");
 		let fieldFound = false;
 		let schemaName = null;
 		let field = null;
@@ -59,18 +57,14 @@ module.exports = function() {
 			field = fieldName;
 		}
 		for (let idx = 0; idx < rows.length; idx++) {
-			const currFieldName = rows[idx].$("td[data-label='fieldName']").$(".properties-fp-field")
-				.$(".properties-fp-field-name")
-				.getText();
-			const currDataType = rows[idx].$("td[data-label='dataType']").$(".properties-fp-data")
-				.$(".properties-fp-field-type")
-				.getText();
+			const currFieldName = rows[idx].$(".properties-fp-field-name").getText();
+			const currDataType = rows[idx].$(".properties-fp-field-type").getText();
 			let currSchema = null;
 			if (schemaName) {
-				currSchema = rows[idx].$("td[data-label='schemaName']").getText();
+				currSchema = rows[idx].$(".properties-fp-schema").getText();
 			}
 			if (currFieldName === field && currSchema === schemaName && currDataType === dataType) {
-				const checkbox = rows[idx].$(".row-checkbox").$("input");
+				const checkbox = rows[idx].$(".properties-vt-row-checkbox").$("input");
 				if (checkbox._status === 0) {
 					expect(checkbox.isSelected()).toEqual(true);
 					fieldFound = true;

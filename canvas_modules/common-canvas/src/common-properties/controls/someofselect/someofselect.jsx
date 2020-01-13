@@ -99,14 +99,14 @@ class SomeofselectControl extends React.Component {
 					this.props.messageInfo ? this.props.messageInfo.type : null)}
 			>
 				<FlexibleTable
-					columns={[]}
+					columns={[{ "key": "someofselect", "label": "" }]}
 					rows={rows}
 					data={tableOptions.options}
 					scrollKey={this.props.control.name}
 					controller={this.props.controller}
 					selectedRows={tableOptions.selected}
 					updateRowSelections={this.updateSelections}
-					rowSelection={this.props.control.rowSelection}
+					selectable
 					showHeader={false}
 				/>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />

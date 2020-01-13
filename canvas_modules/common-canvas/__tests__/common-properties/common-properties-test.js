@@ -12,6 +12,7 @@ import CommonProperties from "../../src/common-properties/common-properties.jsx"
 import PropertiesDialog from "../../src/common-properties/components/properties-modal";
 import PropertiesEditing from "../../src/common-properties/components/properties-editor";
 import propertyUtils from "../_utils_/property-utils";
+import tableUtils from "../_utils_/table-utils";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -91,10 +92,10 @@ const callbacks = {
 describe("CommonProperties renders correctly", () => {
 
 	it("all required props should have been defined", () => {
-		const wrapper = createCommonProperties("Modal");
+		const wrapper = createCommonProperties("Editing");
 		expect(wrapper.prop("propertiesInfo")).to.equal(propertiesInfo);
 		expect(wrapper.prop("callbacks")).to.equal(callbacks);
-		expect(wrapper.prop("propertiesConfig").containerType).to.equal("Modal");
+		expect(wrapper.prop("propertiesConfig").containerType).to.equal("Editing");
 	});
 
 	it("should render one <PropertiesDialog/> component", () => {
@@ -143,16 +144,12 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
-		wrapper.find("div.properties-right-flyout").simulate("blur");
+		const commonProperties = wrapper.find("div.properties-right-flyout").at(1);
+		commonProperties.simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		// make some changes
-		const tableData = wrapper.find("tbody.reactable-data").children();
-
-		const row = tableData.at(0).find("input")
-			.at(0);
-		row.getDOMNode().checked = true;
-		row.simulate("change");
+		tableUtils.selectCheckboxes(commonProperties, [0]);
 
 		// ensure remove button is enabled and click it
 		const enabledRemoveColumnButton = wrapper.find("button.properties-remove-fields-button");
@@ -160,24 +157,21 @@ describe("CommonProperties works correctly in flyout", () => {
 		enabledRemoveColumnButton.simulate("click");
 
 		// save again: should save changes
-		wrapper.find("div.properties-right-flyout").simulate("blur");
+		commonProperties.simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 
 		// force blur should not save because no additional changes happened
-		wrapper.find("div.properties-right-flyout").simulate("blur");
+		commonProperties.simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 
 		// make more changes
-		tableData.at(0).find("input")
-			.at(0);
-		row.getDOMNode().checked = true;
-		row.simulate("change");
+		tableUtils.selectCheckboxes(commonProperties, [0]);
 		enabledRemoveColumnButton.simulate("click");
 
 		// save again, should trigger a save
-		wrapper.find("div.properties-right-flyout").simulate("blur");
+		commonProperties.simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 2);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 	});
@@ -195,9 +189,7 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		// make some changes
-		const tableData = wrapper.find("tbody.reactable-data");
-		const row = tableData.childAt(0);
-		row.simulate("click");
+		tableUtils.selectCheckboxes(wrapper, [0]);
 
 		// ensure remove button is enabled and click it
 		const enabledRemoveColumnButton = wrapper.find("button.properties-remove-fields-button");
@@ -205,7 +197,8 @@ describe("CommonProperties works correctly in flyout", () => {
 		enabledRemoveColumnButton.simulate("click");
 
 		// save again: should save changes
-		wrapper.find("div.properties-right-flyout").simulate("blur");
+		wrapper.find("div.properties-right-flyout").at(1)
+			.simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 	});
@@ -399,7 +392,8 @@ describe("CommonProperties validates on close in flyout", () => {
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
 
 		// similate blur with no changes, expect validation error messages
-		wrapper.find("div.properties-right-flyout").simulate("blur");
+		wrapper.find("div.properties-right-flyout").at(1)
+			.simulate("blur");
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErrorMessages));
 	});
 
@@ -496,7 +490,8 @@ describe("applyPropertiesEditing through an instance outside Common Properties",
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
-		renderedObject.wrapper.instance().refs.wrappedInstance.applyPropertiesEditing(true);
+		const commonProperties = renderedObject.wrapper.find("CommonProperties");
+		commonProperties.instance().applyPropertiesEditing(true);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 1);
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 	});
@@ -504,7 +499,8 @@ describe("applyPropertiesEditing through an instance outside Common Properties",
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
-		renderedObject.wrapper.instance().refs.wrappedInstance.applyPropertiesEditing(false);
+		const commonProperties = renderedObject.wrapper.find("CommonProperties");
+		commonProperties.instance().applyPropertiesEditing(false);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 	});
@@ -515,7 +511,7 @@ describe("New error messages of a control should be detected and applyPropertyCh
 		const renderedObject = propertyUtils.flyoutEditorForm(expressionTestResource); // default is applyOnBlur=true
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
-		renderedObject.wrapper.find("button[data-id='properties-apply-button']")
+		renderedObject.wrapper.find("CommonProperties").find("button[data-id='properties-apply-button']")
 			.at(0)
 			.simulate("click");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
@@ -525,10 +521,11 @@ describe("New error messages of a control should be detected and applyPropertyCh
 		const renderedObject = propertyUtils.flyoutEditorForm(expressionTestResource); // default is applyOnBlur=true
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
-		renderedObject.wrapper.find("div.properties-title-editor")
+		renderedObject.wrapper.find("CommonProperties").find("div.properties-title-editor")
 			.at(0)
 			.simulate("click"); // Focus on the editor
-		renderedObject.wrapper.find("div.properties-right-flyout").simulate("blur"); // On blur
+		renderedObject.wrapper.find("div.properties-right-flyout").at(1)
+			.simulate("blur"); // On blur
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 	});
 });

@@ -44,7 +44,7 @@ export default class SubPanelButton extends React.Component {
 			kind="secondary"
 			onClick={this.showSubPanel}
 		>
-			{this.props.label}
+			{this.props.label || ""}
 		</Button>);
 		return (
 			<SubPanelInvoker ref={ (ref) => (this.subPanelInvoker = ref) }
@@ -60,7 +60,7 @@ export default class SubPanelButton extends React.Component {
 }
 
 SubPanelButton.propTypes = {
-	label: PropTypes.string.isRequired,
+	label: PropTypes.string,
 	title: PropTypes.string.isRequired,
 	panel: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,

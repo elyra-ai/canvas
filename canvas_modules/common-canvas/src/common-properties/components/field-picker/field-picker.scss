@@ -11,19 +11,6 @@
 	height: 100%;
 }
 
-.properties-fp-table .properties-ft-container-wrapper .properties-fp-data-rows {
-	td {
-		border-top: 0;
-		vertical-align: middle;
-	}
-	td:first-of-type {
-		margin-left: $table-column-left-padding;
-		.row-checkbox {
-			padding-left: 0;
-		}
-	}
-}
-
 .properties-wf-modal .properties-fp-table .properties-ft-container-absolute {
 	height: 450px;
 }
@@ -34,6 +21,14 @@
 	align-items: center;
 }
 
+.properties-fp-field, .properties-fp-data {
+	padding-left: 10px;
+}
+
+.properties-fp-schema {
+	padding-left: 12px;
+}
+
 .properties-fp-field-type-icon, .properties-fp-data-type-icon {
 	width: 15px;
 	height: 15px;
@@ -42,20 +37,16 @@
 }
 
 .properties-fp-filter-list {
-	list-style-type: none;
-	float: right;
 	margin-top: 6px;
-	margin-bottom: 0;
-	width: 50%;
 	height: 22px;
 }
 
 .properties-fp-filter-list-title.properties-fp-filter-list-li {
 	width: auto;
-	height: 32px;
 	margin-left: 10px;
-	cursor: default;
-
+	&:hover {
+		background-color: $ui-01;
+	}
 }
 
 .properties-fp-filter-list-li {
@@ -63,28 +54,26 @@
 	width: 14px;
 	margin-right: 2px;
 	padding: 2px;
+
+	&:hover {
+		background-color: $ui-03;
+	}
+
+	button {
+		padding: 1px 0 0;
+		-webkit-appearance: none;
+		border: 0;
+		background-color: inherit;
+		cursor: pointer;
+	}
+
+	svg {
+		height: 10px;
+		width: 10px;
+	}
 }
 
-.properties-fp-filter-list-li  button {
-	padding: 1px 0 0;
-	-webkit-appearance: none;
-	border: 0;
-	background-color: inherit;
-	cursor: pointer;
-}
-
-.properties-fp-filter-list-li.properties-fp-filter-list-li svg {
-	height: 10px;
-	width: 10px;
-}
-
-.properties-fp-filter-list-li.properties-fp-filter:hover {
-	background-color: $ui-03;
-}
-
-.properties-fp-back-button.bx--btn.bx--btn--sm.bx--btn--secondary {
-	border: 0;
-}
+// This back button is used in common-properties modal format
 .properties-fp-back-button {
 	height: 32px;
 	width: 32px;
@@ -92,38 +81,38 @@
 	padding: 0;
 	padding-top: 2px;
 	padding-left: 4px;
-}
 
-.properties-fp-back-button svg.icon {
-	overflow: visible;
-}
-
-.properties-fp-back-button > svg:not(:root) {
-	margin-right: 5px;
-	transform: translateY(4px);
-}
-.properties-fp-top-row {
-	margin-bottom: 6px;
-	display: flex;
-	justify-content: space-between;
-	button.bx--btn > svg:not(:root) {
-		top: -5px;
-		left: -5px;
+	.bx--btn.bx--btn--sm.bx--btn--secondary {
+		border: 0;
+	}
+	svg.icon {
+		overflow: visible;
+	}
+	> svg:not(:root) {
+		margin-right: 5px;
+		transform: translateY(4px);
 	}
 }
 
 .properties-fp-table {
 	width: 100%;
 
+	.properties-fp-top-row {
+		width: 50%;
+		float: right;
+		margin-bottom: 6px;
+		display: flex;
+		justify-content: space-between;
+		button.bx--btn > svg:not(:root) {
+			top: -5px;
+			left: -5px;
+		}
+	}
+
 	// Set a height for the thead so the body height can be calculated accordingly
 	thead {
 		height: 35px;
 	}
-}
-
-.properties-wf-modal .properties-fp-top-row {
-	width: 50%;
-	float: right;
 }
 
 .properties-fp-reset-button-container {
@@ -147,21 +136,22 @@
 			color: $ui-01;
 		}
 	}
-}
-.properties-fp-reset-button {
-	&.label {
-		float: left;
-		padding-top: 5px;
-		padding-right: 5px;
-		text-decoration: underline;
-		font-size: 14px;
-		color: $brand-01;
-	}
-	&.icon {
-		float: left;
-	}
-	&.icon > svg {
-		height: 18px;
-		width: 18px;
+
+	.properties-fp-reset-button {
+		&.label {
+			float: left;
+			padding-top: 5px;
+			padding-right: 5px;
+			text-decoration: underline;
+			font-size: 14px;
+			color: $brand-01;
+		}
+		&.icon {
+			float: left;
+		}
+		&.icon > svg {
+			height: 18px;
+			width: 18px;
+		}
 	}
 }

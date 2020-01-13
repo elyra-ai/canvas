@@ -146,20 +146,18 @@ module.exports = function() {
 
 	});
 
-	this.Then(/^I click on the validate link on the expression "([^"]*)" for the "([^"]*)" property\.$/, function(controlType, propertyName) {
-		const typeSelector = (controlType === "builder") ? ".properties-wf-content" : ".properties-expression-editor-wrapper .properties-editor-container";
-		const validateLink = browser.$("div[data-id='properties-ci-" + propertyName + "']")
-			.$(typeSelector)
+	this.Then(/^I click on the validate link on the expression builder in the sub-panel\.$/, function() {
+		const expressionSubPanel = testUtils.getWideFlyoutPanel("Expression Builder");
+		const validateLink = expressionSubPanel
 			.$(".properties-expression-validate")
 			.$(".validateLink");
 		browser.pause(500);
 		validateLink.click();
 	});
 
-	this.Then(/^I validate the "([^"]*)" icon on the expression "([^"]*)" for the "([^"]*)" property\.$/, function(iconName, controlType, propertyName) {
-		const typeSelector = (controlType === "builder") ? ".properties-wf-content" : ".properties-expression-editor-wrapper .properties-editor-container";
-		const icon = browser.$("div[data-id='properties-ci-" + propertyName + "']")
-			.$(typeSelector)
+	this.Then(/^I validate the "([^"]*)" icon on the expression builder\.$/, function(iconName) {
+		const expressionSubPanel = testUtils.getWideFlyoutPanel("Expression Builder");
+		const icon = expressionSubPanel
 			.$(".properties-expression-validate")
 			.$$(".validateIcon");
 		if (icon.length === 0 && iconName === "none") {
@@ -171,8 +169,8 @@ module.exports = function() {
 	});
 
 	this.Then(/^I select the "([^"]*)" tab for the "([^"]*)" property\.$/, function(tabName, propertyName) {
-		const tabs = browser.$("div[data-id='properties-ci-" + propertyName + "']")
-			.$(".properties-expression-selection-fieldOrFunction")
+		const expressionSubPanel = testUtils.getWideFlyoutPanel("Expression Builder");
+		const tabs = expressionSubPanel.$(".properties-expression-selection-fieldOrFunction")
 			.$$("a");
 		tabs.forEach((tab) => {
 			if (tab.getText() === tabName) {
@@ -182,19 +180,17 @@ module.exports = function() {
 
 	});
 
-	this.Then(/^I select "([^"]*)" from the "([^"]*)" table for the "([^"]*)" property\.$/, function(value, tableType, propertyName) {
-		const tableRows = browser.$("div[data-id='properties-ci-" + propertyName + "']")
-			.$(".properties-" + tableType + "-table-container")
-			.$$("tr");
+	this.Then(/^I select "([^"]*)" from the "([^"]*)" property\.$/, function(value, propertyName) {
+		const expressionSubPanel = testUtils.getWideFlyoutPanel("Expression Builder");
+		const tableRows = expressionSubPanel.$$("div[role='properties-data-row']");
 		const foundRow = getRowMatch(tableRows, value);
-		if (foundRow) {
-			foundRow.doubleClick();
-		}
+		expect(foundRow).not.toBe(null);
+		foundRow.doubleClick();
 	});
 
 	function getRowMatch(tableRows, value) {
 		for (let idx = 0; idx < tableRows.length; idx++) {
-			const columns = tableRows[idx].$$("td");
+			const columns = tableRows[idx].$$(".properties-expr-table-cell");
 			for (let index = 0; index < columns.length; index++) {
 				if (columns[index].getText() === value) {
 					return tableRows[idx];

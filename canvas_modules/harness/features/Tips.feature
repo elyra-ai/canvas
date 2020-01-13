@@ -124,10 +124,10 @@ Scenario: Sanity test changing input port name to update port tip
 		Given I have uploaded common-properties file "CLEM_FilterRows_paramDef.json" of type "parameterDefs"
 
 		Then I move the mouse to coordinates 55, 70 in common-properties
-		And I verify the tip for label "Mode" is visible on the "top"
+		And I verify the tip for label "Mode" is visible on the "top" with text "Include or discard rows"
 
 		Then I move the mouse to coordinates 260, 120 in common-properties
-		And I verify the tip for label "Modeler CLEM Condition Expression" is visible on the "top"
+		And I verify the tip for label "Modeler CLEM Condition Expression" is visible on the "top" with text "Enter a boolean expression to use for filtering rows"
 
 	Scenario: Test if tips show up for the summary table values
 		Then I resize the window size to 1400 width and 800 height
@@ -137,9 +137,9 @@ Scenario: Sanity test changing input port name to update port tip
 		Then I have selected the "flyout" properties container type
 		Given I have uploaded common-properties file "summaryPanel_paramDef.json" of type "parameterDefs"
 		Then I hover over the text "people in generation X" in summary "Values"
-		Then I verify the tip below the text "people in generation X" in summary "Values" is "visible"
+		Then I verify the tip with text "people in generation X" in summary "Values" is "visible"
 		Then I move the mouse to coordinates 300, 100
-		Then I verify the tip below the text "people in generation X" in summary "Values" is "hidden"
+		Then I verify the tip with text "people in generation X" in summary "Values" is "hidden"
 
 	Scenario: Test if tips show up for summary validation icon when there is an error or warning
 		Then I resize the window size to 1400 width and 800 height
@@ -157,11 +157,11 @@ Scenario: Sanity test changing input port name to update port tip
 		Then I click the "Delete" button on the "expressionCellTable" table
 
 		# Select an existing row in the table below and delete it's value.
-		Then I select all the rows in the table "structurelisteditorTableInput"
+		Then I select all the rows in the table "structurelisteditorTableInput" in panel "Configure Derive Node"
 		Then I click the "Delete" button on the "structurelisteditorTableInput" table
-		Then I click on the "expressionCellTable-summary-panel" panel OK button
+		Then I click on the "Configure Derive Node" panel OK button
 		Then I hover over the validation icon in the "Derive-Node" summary panel
-		Then I verify the tip for the validation icon in the "Derive-Node" summary panel is visible
+		Then I verify the tip for the validation icon in the "Derive-Node" summary panel is visible with text "There are 1 parameters with errors and 1 parameters with warnings."
 
 	Scenario: Sanity test to check if tips show up for a supernode and nodes inside the subflow
 		Then I resize the window size to 1400 width and 800 height

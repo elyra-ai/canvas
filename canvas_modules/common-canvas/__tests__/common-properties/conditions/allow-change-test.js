@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import propertyUtils from "../../_utils_/property-utils";
+import tableUtils from "./../../_utils_/table-utils";
 import { expect } from "chai";
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 
@@ -29,7 +30,7 @@ describe("Condition allow_change test cases", () => {
 		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
 
 		// select the first row in the table
-		const tableRows = summaryPanel.find("tbody.reactable-data tr");
+		const tableRows = tableUtils.getTableRows(summaryPanel);
 		expect(tableRows).to.have.length(4);
 		tableRows.at(0).simulate("click");
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
@@ -58,7 +59,7 @@ describe("Condition allow_change test cases", () => {
 		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
 
 		// select the first row in the table
-		const tableRows = summaryPanel.find("tbody.reactable-data tr");
+		const tableRows = tableUtils.getTableRows(summaryPanel);
 		expect(tableRows).to.have.length(4);
 		tableRows.at(0).simulate("click");
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");

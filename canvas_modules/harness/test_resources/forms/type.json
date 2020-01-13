@@ -581,7 +581,7 @@
                                     "None",
                                     ""
                                   ],
-                                  "row_selection": "multiple",
+                                  "row_selection": "multiple-edit",
                                   "subControls": [
                                     {
                                       "name": "field",
@@ -597,6 +597,7 @@
                                       "controlType": "selectcolumn",
                                       "required": false,
                                       "width": 20,
+                                      "filterable": true,
                                       "valueDef": {
                                         "propType": "string",
                                         "isList": false,

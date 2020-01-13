@@ -53,7 +53,7 @@ export default class SubPanelCell extends React.Component {
 			MESSAGE_KEYS.SUBPANEL_BUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.SUBPANEL_BUTTON_TOOLTIP);
 		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
 		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
-		const innerObject = this.props.iconName ? (<Icon type={this.props.iconName} />) : this.props.label;
+		const innerObject = this.props.iconName ? (<Icon type={this.props.iconName} />) : this.props.label || "";
 		return (
 
 			<SubPanelInvoker ref={ (ref) => (this.subPanelInvoker = ref) }
@@ -88,7 +88,7 @@ export default class SubPanelCell extends React.Component {
 }
 
 SubPanelCell.propTypes = {
-	label: PropTypes.string.isRequired,
+	label: PropTypes.string,
 	title: PropTypes.string,
 	panel: PropTypes.object.isRequired,
 	disabled: PropTypes.bool,

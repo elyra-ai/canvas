@@ -11,25 +11,28 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Modal from "carbon-components-react/lib/components/Modal";
 import classNames from "classnames";
+import { Portal } from "react-portal";
 
 export default class PropertiesModal extends Component {
 
 	render() {
 
 		return (
-			<Modal
-				className={classNames("properties-modal", this.props.bsSize, { "noButtons": this.props.showPropertiesButtons === false })}
-				open
-				modalHeading={this.props.title}
-				primaryButtonText={this.props.applyLabel}
-				secondaryButtonText={this.props.rejectLabel}
-				onRequestSubmit={this.props.okHandler}
-				onSecondarySubmit={this.props.cancelHandler}
-			>
-				<div className="properties-modal-children">
-					{this.props.children}
-				</div>
-			</Modal>
+			<Portal>
+				<Modal
+					className={classNames("properties-modal", this.props.bsSize, { "noButtons": this.props.showPropertiesButtons === false })}
+					open
+					modalHeading={this.props.title}
+					primaryButtonText={this.props.applyLabel}
+					secondaryButtonText={this.props.rejectLabel}
+					onRequestSubmit={this.props.okHandler}
+					onSecondarySubmit={this.props.cancelHandler}
+				>
+					<div className="properties-modal-children">
+						{this.props.children}
+					</div>
+				</Modal>
+			</Portal>
 		);
 	}
 }

@@ -179,6 +179,19 @@ function useCmdOrCtrl() {
 	return "Control";
 }
 
+function getWideFlyoutPanel(panelName) {
+	const wideFlyouts = browser.$$(".properties-wf-content.show");
+	let panel = null;
+	for (var idx = 0; idx < wideFlyouts.length; idx++) {
+		const flyout = wideFlyouts[idx];
+		if (flyout.$("h2").getText() === panelName) {
+			panel = flyout;
+			break;
+		}
+	}
+	return panel;
+}
+
 module.exports = {
 	getCanvas: getCanvas,
 	getCanvasData: getCanvasData,
@@ -188,6 +201,7 @@ module.exports = {
 	getEventLogData: getEventLogData,
 	getLastEventLogData: getLastEventLogData,
 	getLastLogOfType: getLastLogOfType,
+	getWideFlyoutPanel: getWideFlyoutPanel,
 	isSchemaValidationError: isSchemaValidationError,
 	dropdownSelect: dropdownSelect,
 	useCmdOrCtrl: useCmdOrCtrl,
