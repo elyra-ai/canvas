@@ -96,6 +96,8 @@ export default class FlexibleTable extends React.Component {
 		let rowIndex = index;
 		if (row.columns && has(row.columns[0], "content.props.children.props.propertyId.row")) {
 			rowIndex = row.columns[0].content.props.children.props.propertyId.row;
+		} else if (typeof row.rowKey === "number") { // expression tables uses rowKey
+			rowIndex = parseInt(row.rowKey, 10);
 		}
 		return rowIndex;
 	}

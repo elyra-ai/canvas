@@ -278,6 +278,50 @@ describe("expression-builder select from tables correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.equal(" to_integer(?)");
 	});
 
+	it("expression builder select a field from filtered table correctly", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		// Verify first row is selected by default
+		let fieldTable = wrapper.find("div.properties-field-table-container");
+		let rows = tableUtils.getTableRows(fieldTable);
+		let firstRowClassName = rows.at(0).prop("className");
+		expect(firstRowClassName.indexOf("properties-vt-row-selected")).to.be.greaterThan(-1);
+
+		// Filter by 'l' should return 1 row that is not selected
+		const searchInput = fieldTable.find("div.properties-ft-search-container input");
+		expect(searchInput).to.have.length(1);
+		searchInput.simulate("change", { target: { value: "l" } });
+		fieldTable = wrapper.find("div.properties-field-table-container");
+		rows = tableUtils.getTableRows(fieldTable);
+		firstRowClassName = rows.at(0).prop("className");
+		expect(firstRowClassName.indexOf("properties-vt-row-selected")).to.be.lessThan(0);
+
+		// Clicking on the filtered row will select it
+		tableUtils.clickTableRows(fieldTable, [0]);
+		fieldTable = wrapper.find("div.properties-field-table-container");
+		rows = tableUtils.getTableRows(fieldTable);
+		expect(rows).to.have.length(1);
+		firstRowClassName = rows.at(0).prop("className");
+		expect(firstRowClassName.indexOf("properties-vt-row-selected")).to.be.greaterThan(-1);
+
+		// Clearing the filter should show the correct selected row as selected
+		searchInput.simulate("change", { target: { value: "" } });
+		fieldTable = wrapper.find("div.properties-field-table-container");
+		rows = tableUtils.getTableRows(fieldTable);
+		expect(rows).to.have.length(4);
+		firstRowClassName = rows.at(0).prop("className");
+		expect(firstRowClassName.indexOf("properties-vt-row-selected")).to.be.lessThan(0);
+		const fourthRowClassName = rows.at(3).prop("className");
+		expect(fourthRowClassName.indexOf("properties-vt-row-selected")).to.be.greaterThan(-1);
+	});
 });
 
 describe("expression handles no expression builder resources correctly", () => {

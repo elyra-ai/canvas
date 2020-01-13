@@ -59,7 +59,7 @@ class VirtualizedTable extends React.Component {
 	// This is also triggered when clicking on a checkbox
 	onRowClick(evt, rowData, index) {
 		// Set selections
-		const selected = !this.isRowSelected(rowData.originalRowIndex, rowData.rowKey);
+		const selected = !this.isRowSelected(rowData.originalRowIndex);
 		if (typeof this.props.setRowsSelected === "function") {
 			this.props.setRowsSelected({ "index": index, "originalRowIndex": rowData.originalRowIndex, "selected": selected, "isOverSelectOption": this.isOverSelectOption }, evt);
 		}
@@ -71,7 +71,7 @@ class VirtualizedTable extends React.Component {
 		}
 	}
 
-	isRowSelected(index, rowKey) {
+	isRowSelected(index) {
 		if (this.props.rowsSelected) {
 			return this.props.rowsSelected.indexOf(index) > -1;
 		}
@@ -190,8 +190,7 @@ class VirtualizedTable extends React.Component {
 		}
 
 		if (this.props.selectable) {
-			const rowKey = rowData.rowKey;
-			const rowSelected = this.isRowSelected(rowData.originalRowIndex, rowKey);
+			const rowSelected = this.isRowSelected(rowData.originalRowIndex);
 			selectedRow = this.props.selectable && rowSelected;
 			if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 				selectOption = (<div className="properties-vt-row-checkbox"

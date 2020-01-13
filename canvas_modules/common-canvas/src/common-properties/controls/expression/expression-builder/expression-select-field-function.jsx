@@ -41,11 +41,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		this.fields = this._makeDatasetFields(props.controller.getDatasetMetadataFields(), props.controller.getExpressionInfo().fields);
 		this.state = {
 			fieldSelected: 0,
-			fieldSelectedViewIndex: 0,
 			valueSelected: 0,
-			valueSelectedViewIndex: 0,
 			functionSelected: 0,
-			functionSelectedViewIndex: 0,
 			fieldTableSortSpec: null,
 			valuesTableSortSpec: null,
 			functionTableSortSpec: null,
@@ -82,8 +79,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	onFunctionCatChange(evt) {
 		this.setState({
 			functionCategory: evt.selectedItem.value,
-			functionSelected: 0,
-			functionSelectedViewIndex: 0,
+			functionSelected: 0
 		});
 	}
 
@@ -101,7 +97,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		this.setState({
 			fieldCategory: evt.selectedItem.value,
 			fieldSelected: 0,
-			fieldSelectedViewIndex: 0,
 			currentFieldDataset: currentData
 		});
 	}
@@ -109,9 +104,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	onFieldTableClick(row, evt, rowKey) {
 		this.setState({
 			fieldSelected: rowKey,
-			fieldSelectedViewIndex: row,
-			valueSelected: 0,
-			valueSelectedViewIndex: 0,
+			valueSelected: 0
 		});
 
 	}
@@ -135,8 +128,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	onValueTableClick(row, evt, rowKey) {
 		this.setState({
-			valueSelected: rowKey,
-			valueSelectedViewIndex: row,
+			valueSelected: rowKey
 		});
 	}
 
@@ -153,8 +145,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			}
 		}
 		this.setState({
-			valueSelected: rowKey,
-			valueSelectedViewIndex: index,
+			valueSelected: rowKey
 		});
 	}
 
@@ -164,8 +155,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	onFunctionTableClick(row, evt, rowKey) {
 		this.setState({
-			functionSelected: rowKey,
-			functionSelectedViewIndex: row,
+			functionSelected: rowKey
 		});
 	}
 
@@ -387,14 +377,14 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		}
 
 		// set the selected row and adjust if the table is sorted.
-		let selectedField = this.state.fieldSelectedViewIndex;
+		let selectedField = this.state.fieldSelected;
 		if (this.state.fieldTableSortSpec !== null) {
 			tableData = this.sortTableRows(tableData, this.state.fieldTableSortSpec);
 			selectedField = tableData.findIndex((row) => row.rowKey === this.state.fieldSelected);
 		}
 
 		// set the selected row and adjust if the table is sorted.
-		let selectedValue = this.state.valueSelectedViewIndex;
+		let selectedValue = this.state.valueSelected;
 		if (this.state.valuesTableSortSpec !== null) {
 			valuesTableData = this.sortTableRows(valuesTableData, this.state.valuesTableSortSpec);
 			selectedValue = valuesTableData.findIndex((row) => row.rowKey === this.state.valueSelected);
@@ -544,7 +534,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		const table = this._buildFunctionTable(this.state.functionCategory);
 
 		let data = table.rows;
-		let selectedFunction = this.state.functionSelectedViewIndex;
+		let selectedFunction = this.state.functionSelected;
 		if (this.state.functionTableSortSpec !== null) {
 			data = this.sortTableRows(data, this.state.functionTableSortSpec);
 			selectedFunction = data.findIndex((row) => row.rowKey === this.state.functionSelected);
