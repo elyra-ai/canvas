@@ -1,17 +1,31 @@
+/*******************************************************************************
+
+Licensed Materials - Property of IBM
+(c) Copyright IBM Corporation 2019. All Rights Reserved.
+Note to U.S. Government Users Restricted Rights:
+Use, duplication or disclosure restricted by GSA ADP Schedule
+Contract with IBM Corp.
+*******************************************************************************/
 const de = require("./de.json");
 const en = require("./en.json");
+const es = require("./es.json");
 const fr = require("./fr.json");
+const itIT = require("./it.json");
 const ja = require("./ja.json");
-const ko = require("./ko.json");
-const zhTW = require("./zhTW.json");
-const zh = require("./zh.json");
+const ptBR = require("./pt-br.json");
+const zhTW = require("./zh-tw.json");
+const zhCN = require("./zh-cn.json");
+const ru = require("./ru.json");
 
 module.exports = {
 	"de": de,
 	"en": en,
+	"es": es,
 	"fr": fr,
+	"it": itIT,
 	"ja": ja,
-	"ko": ko,
+	"pt-BR": ptBR,
 	"zh-TW": zhTW,
-	"zh": zh
+	"zh-CN": zhCN,
+	"ru": ru
 };
