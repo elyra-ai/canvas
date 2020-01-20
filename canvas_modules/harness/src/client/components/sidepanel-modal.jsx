@@ -90,12 +90,12 @@ export default class SidePanelModal extends React.Component {
 		if (this.props.propertiesConfig.selectedPropertiesFileCategory === PARAMETER_DEFS) {
 			FormsService.getFileContent(PARAMETER_DEFS, this.props.propertiesConfig.selectedPropertiesDropdownFile)
 				.then(function(res) {
-					that.props.setPropertiesJSON(res);
+					that.props.propertiesConfig.setPropertiesJSON(res);
 				});
 		} else {
 			FormsService.getFileContent(FORMS, this.props.propertiesConfig.selectedPropertiesDropdownFile)
 				.then(function(res) {
-					that.props.setPropertiesJSON(res);
+					that.props.propertiesConfig.setPropertiesJSON(res);
 				});
 		}
 	}
