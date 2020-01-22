@@ -217,9 +217,11 @@ export default class FlexibleTable extends React.Component {
 		let newHeight = this.state.tableHeight;
 		const rowHeight = 3; // in em
 		const headerHeight = 3; // in em
-		const rows = this.props.rows ? this.props.rows : 4;
+		const rows = typeof this.props.rows !== "undefined" ? this.props.rows : 4;
 		if (rows > 0) {
 			newHeight = (rowHeight * rows + headerHeight);
+		} else if (rows === 0) { // only display header
+			newHeight = headerHeight;
 		} else {
 			// A -1 row count indicates a desire to use the entire available vertical space
 			const rootElement = document.getElementById("root");
@@ -236,7 +238,7 @@ export default class FlexibleTable extends React.Component {
 					const fontSize = parseFloat(style);
 					// this is to adjust for multiple-select edit.
 					// There is one additional row and header to account for.
-					const minHeight = (rowHeight * 2 + headerHeight);
+					const minHeight = (rowHeight + headerHeight);
 					newHeight = (parentElement.offsetHeight - tableElement.offsetTop) / fontSize + headerHeight;
 					newHeight = Math.max(newHeight, minHeight);
 				} else {

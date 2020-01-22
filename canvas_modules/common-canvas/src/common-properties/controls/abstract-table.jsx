@@ -420,7 +420,7 @@ export default class AbstractTable extends React.Component {
 					showHeader={showHeader}
 					columns={headers}
 					data={rows}
-					rows={1}
+					rows={0}
 					scrollKey={this.selectSummaryPropertyName}
 					controller={this.props.controller}
 					summaryTable
