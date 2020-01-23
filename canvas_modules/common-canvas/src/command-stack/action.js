@@ -11,7 +11,7 @@
 
 class Action {
 
-// Standard methods
+	// Standard methods
 	do() {
 	}
 

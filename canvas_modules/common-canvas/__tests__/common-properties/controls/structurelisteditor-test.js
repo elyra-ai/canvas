@@ -10,7 +10,7 @@
 import React from "react";
 import StructureListEditorControl from "../../../src/common-properties/controls/structurelisteditor";
 import SubPanelButton from "../../../src/common-properties/panels/sub-panel/button.jsx";
-import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
+import { mountWithIntl, shallowWithIntl } from "../../_utils_/intl-utils";
 import { Provider } from "react-redux";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
@@ -269,10 +269,10 @@ describe("StructureListEditorControl renders correctly", () => {
 				rightFlyout
 			/>
 		);
-		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("controller")).to.equal(controller);
-		expect(wrapper.prop("propertyId")).to.equal(propertyId);
-		expect(wrapper.prop("buildUIItem")).to.equal(genUIItem);
+		expect(wrapper.dive().prop("control")).to.equal(control);
+		expect(wrapper.dive().prop("controller")).to.equal(controller);
+		expect(wrapper.dive().prop("propertyId")).to.equal(propertyId);
+		expect(wrapper.dive().prop("buildUIItem")).to.equal(genUIItem);
 	});
 
 	it("should render a `StructureListEditorControl`", () => {

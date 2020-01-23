@@ -83,7 +83,7 @@ class CustomEffectsCtrl extends React.Component {
 		});
 	}
 
-	componentWillReceiveProps(nextProps) {
+	componentDidUpdate() {
 		this.reconcileSourceList();
 		this.updateEffectsList();
 	}

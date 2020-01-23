@@ -9,7 +9,7 @@
 
 module.exports = function() {
 
-/* global browser */
+	/* global browser */
 
 	this.Given("I have toggled the app side panel", function() {
 		browser.$("#harness-action-bar-sidepanel-canvas").click("a");

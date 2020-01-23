@@ -13,18 +13,18 @@
 
 const path = require("path");
 const webpack = require("webpack");
+const TerserPlugin = require("terser-webpack-plugin-legacy");
 const babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
 const SassLintPlugin = require("sasslint-webpack-plugin");
 const constants = require("./lib/constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CompressionPlugin = require("compression-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 // Entry & Output files ------------------------------------------------------------>
 
 const entry = {
 	canvas: "./src/client/index.js",
-	vendor: ["babel-polyfill", "react", "react-dom"]
+	vendor: ["babel-polyfill", "react", "react-dom", "react-intl", "intl-messageformat", "intl-messageformat-parser"]
 };
 
 const output = {
@@ -78,7 +78,7 @@ const plugins = [
 		failOnError: true
 	}),
 	new webpack.optimize.OccurrenceOrderPlugin(),
-	new webpack.optimize.UglifyJsPlugin(), // minify everything
+	new TerserPlugin(),
 	new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
 	new ExtractTextPlugin("styles/harness.css"),
 	new webpack.optimize.CommonsChunkPlugin({
@@ -89,13 +89,6 @@ const plugins = [
 	new HtmlWebpackPlugin({
 		inject: true,
 		template: "index.html"
-	}),
-	new CompressionPlugin({
-		asset: "[path].gz[query]",
-		algorithm: "gzip",
-		test: /\.js$|\.css$|\.html$/,
-		threshold: 10240,
-		minRatio: 0.8
 	}),
 	new BundleAnalyzerPlugin(
 		{ generateStatsFile: true, openAnalyzer: false })

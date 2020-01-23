@@ -7,6 +7,8 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import has from "lodash/has";
+
 import logger from "../../../utils/logger";
 import { ItemType } from "../constants/form-constants";
 
@@ -94,7 +96,7 @@ function parseUiItem(panelTree, uiItem, currentPanel) {
 }
 
 function _newPanelTreeObject(panelTree, panelId) {
-	if (panelTree.hasOwnProperty(panelId)) {
+	if (has(panelTree, panelId)) {
 		logger.warn("Duplicate panel ids, each panel id must be unique.  Panel id = " + panelId);
 	}
 	panelTree[panelId] = { controls: [], panels: [], actions: [] };

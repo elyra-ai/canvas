@@ -15,6 +15,12 @@ import PaletteFlyoutContentSearch from "./palette-flyout-content-search.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
 
 class PaletteFlyoutContent extends React.Component {
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if (!nextProps.isPaletteOpen) {
+			return ({ filterKeyword: "" });
+		}
+		return ({});
+	}
 	constructor(props) {
 		super(props);
 
@@ -27,12 +33,6 @@ class PaletteFlyoutContent extends React.Component {
 		this.getCategories = this.getCategories.bind(this);
 		this.getNodeTypesForCategory = this.getNodeTypesForCategory.bind(this);
 		this.handleFilterChange = this.handleFilterChange.bind(this);
-	}
-
-	componentWillReceiveProps(newProps) {
-		if (!newProps.isPaletteOpen) {
-			this.setState({ filterKeyword: "" });
-		}
 	}
 
 	/*

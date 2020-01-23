@@ -12,7 +12,7 @@ import TitleEditor from "../../../src/common-properties/components/title-editor"
 import Controller from "../../../src/common-properties/properties-controller";
 import { expect } from "chai";
 import sinon from "sinon";
-import { mountWithIntl } from "enzyme-react-intl";
+import { mountWithIntl } from "../../_utils_/intl-utils";
 
 const controller = new Controller();
 controller.setTitle("test title");
@@ -77,7 +77,7 @@ describe("title-editor renders correctly", () => {
 		expect(wrapper.find(".properties-title-editor-btn[data-id='help']")).to.have.length(0);
 	});
 	it("test help button without a callback", () => {
-		helpClickHandler.reset();
+		helpClickHandler.resetHistory();
 		const wrapper = mountWithIntl(
 			<TitleEditor
 				store={controller.getStore()}
@@ -90,7 +90,7 @@ describe("title-editor renders correctly", () => {
 		helpButton.simulate("click");
 	});
 	it("test edit link", () => {
-		helpClickHandler.reset();
+		helpClickHandler.resetHistory();
 		const wrapper = mountWithIntl(
 			<TitleEditor
 				store={controller.getStore()}
@@ -105,7 +105,7 @@ describe("title-editor renders correctly", () => {
 	});
 	it("test editing node title", () => {
 		controller.setTitle("test title");
-		helpClickHandler.reset();
+		helpClickHandler.resetHistory();
 		const wrapper = mountWithIntl(
 			<TitleEditor
 				store={controller.getStore()}
@@ -118,7 +118,7 @@ describe("title-editor renders correctly", () => {
 		expect("My new title").to.equal(controller.getTitle());
 	});
 	it("test label is readonly", () => {
-		helpClickHandler.reset();
+		helpClickHandler.resetHistory();
 		const wrapper = mountWithIntl(
 			<TitleEditor
 				store={controller.getStore()}

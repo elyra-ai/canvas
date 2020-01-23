@@ -12,7 +12,7 @@ var nconf = require("nconf");
 
 module.exports = function() {
 
-/* global browser */
+	/* global browser */
 
 	this.Given(/^I have selected the "([^"]*)" palette layout$/, function(layout) {
 		if (layout === "Modal") {

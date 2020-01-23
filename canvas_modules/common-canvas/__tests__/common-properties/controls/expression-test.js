@@ -17,7 +17,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
 import tableUtils from "./../../_utils_/table-utils";
 
-import { mountWithIntl } from "enzyme-react-intl";
+import { mountWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
 
 import ExpressionInfo from "../../test_resources/json/expression-function-list.json";

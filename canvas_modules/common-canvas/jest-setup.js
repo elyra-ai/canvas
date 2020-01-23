@@ -12,3 +12,18 @@ import { configure } from "enzyme";
 
 
 configure({ adapter: new Adapter() });
+
+
+// Added to filter out `act` error and warning messages
+console.warn = jest.fn(mockConsole(console.warn));
+console.error = jest.fn(mockConsole(console.error));
+
+function mockConsole(consoleMethod) {
+	const ignoredMessages = ["test was not wrapped in act(...)"];
+	return (message, ...args) => {
+		const hasIgnoredMessage = ignoredMessages.some((ignoredMessage) => message.includes(ignoredMessage));
+		if (!hasIgnoredMessage) {
+			consoleMethod(message, ...args);
+		}
+	};
+}

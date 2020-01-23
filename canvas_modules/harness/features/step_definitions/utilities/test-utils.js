@@ -35,7 +35,6 @@ function setCanvasConfig(config) {
 
 function loadCanvas(fileName) {
 	browser.execute(function(name) {
-		/* global document */
 		document.setCanvasDropdownFile(name);
 	}, fileName);
 	browser.pause(600);
@@ -43,7 +42,6 @@ function loadCanvas(fileName) {
 
 function loadCanvas2(fileName) {
 	browser.execute(function(name) {
-		/* global document */
 		document.setCanvasDropdownFile2(name);
 	}, fileName);
 	browser.pause(600);
@@ -51,7 +49,6 @@ function loadCanvas2(fileName) {
 
 function loadPalette(fileName) {
 	browser.execute(function(name) {
-		/* global document */
 		document.setPaletteDropdownSelect(name);
 	}, fileName);
 	browser.pause(600);
@@ -59,7 +56,6 @@ function loadPalette(fileName) {
 
 function loadPalette2(fileName) {
 	browser.execute(function(name) {
-		/* global document */
 		document.setPaletteDropdownSelect2(name);
 	}, fileName);
 	browser.pause(600);
@@ -67,7 +63,6 @@ function loadPalette2(fileName) {
 
 function loadProperties(fileName, fileType) {
 	browser.execute(function(name, type) {
-		/* global document */
 		document.setPropertiesDropdownSelect(name, type);
 	}, fileName, fileType);
 	browser.pause(600);
@@ -76,7 +71,6 @@ function loadProperties(fileName, fileType) {
 
 function getCanvas() {
 	const canvasData = browser.execute(function() {
-		/* global document */
 		return document.canvasController.getCanvasInfo();
 	});
 	return canvasData.value;
@@ -89,7 +83,6 @@ function getCanvasData() {
 
 function getSecondCanvas() {
 	const canvasData = browser.execute(function() {
-		/* global document */
 		return document.canvasController2.getCanvasInfo();
 	});
 	return canvasData.value;
@@ -102,7 +95,6 @@ function getCanvasDataForSecondCanvas() {
 
 function getEventLogData() {
 	const eventLog = browser.execute(function() {
-		/* global document */
 		return document.eventLog;
 	});
 
@@ -131,15 +123,12 @@ function getLastLogOfType(logType) {
 
 function clearMessagesFromAllNodes() {
 	browser.execute(function() {
-		/* global document */
 		const canvasInfo = document.canvasController.getCanvasInfo();
 		canvasInfo.pipelines.forEach((pipeline) => {
 			pipeline.nodes.forEach((n) => {
 				delete n.messages;
 			});
 		});
-
-		/* global document */
 		document.canvasController.getObjectModel().setCanvasInfo(canvasInfo);
 	});
 }

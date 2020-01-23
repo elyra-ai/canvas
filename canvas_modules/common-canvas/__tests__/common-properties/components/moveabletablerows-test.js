@@ -10,7 +10,7 @@
 import React from "react";
 import MoveableTableRows from "../../../src/common-properties/components/moveable-table-rows";
 import FlexibleTable from "../../../src/common-properties/components/flexible-table";
-import { mountWithIntl } from "enzyme-react-intl";
+import { mountWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";

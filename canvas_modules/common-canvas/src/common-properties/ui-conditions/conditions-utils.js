@@ -16,6 +16,7 @@ import { DEFAULT_VALIDATION_MESSAGE, STATES, PANEL_TREE_ROOT,
 	MESSAGE_KEYS, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
 import isEmpty from "lodash/isEmpty";
 import cloneDeep from "lodash/cloneDeep";
+import has from "lodash/has";
 import seedrandom from "seedrandom";
 
 
@@ -65,7 +66,7 @@ function validatePropertiesConditions(controller) {
 function validatePropertiesListValues(controller, controls) {
 	if (Object.keys(controls).length > 0) {
 		for (const controlKey in controls) {
-			if (!controls.hasOwnProperty(controlKey)) {
+			if (!has(controls, controlKey)) {
 				continue;
 			}
 			const control = controls[controlKey];
@@ -90,7 +91,7 @@ function validatePropertiesListValues(controller, controls) {
 function validatePropertiesListConditions(controller, controls, newStates) {
 	if (Object.keys(controls).length > 0) {
 		for (const controlKey in controls) {
-			if (!controls.hasOwnProperty(controlKey)) {
+			if (!has(controls, controlKey)) {
 				continue;
 			}
 			const control = controls[controlKey];
@@ -456,7 +457,7 @@ function getParamRefPropertyId(paramRef, controlPropertyId) {
 */
 function injectDefaultValidations(controls, validationDefinitions, intl) {
 	for (const keyName in controls) {
-		if (!controls.hasOwnProperty(keyName)) {
+		if (!has(controls, keyName)) {
 			continue;
 		}
 		const control = controls[keyName];

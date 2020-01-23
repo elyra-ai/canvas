@@ -51,7 +51,7 @@ _defineConstant("MESSAGE_KEYS_DEFAULTS", {
 	CONTROL_SUMMARY_ERROR: "There are {errorMsgCount} parameters with errors. ",
 	CONTROL_SUMMARY_WARNING: "There are {warningMsgCount} parameters with warnings. ",
 	CONTROL_SUMMARY_ERROR_WARNING: "There are {errorMsgCount} parameters with errors and {warningMsgCount} parameters with warnings.",
-	REQUIRED_ERROR: "Required parameter '{label}' has no value.",
+	REQUIRED_ERROR: "Required parameter ''{label}'' has no value.",
 	DATETIME_FORMAT_ERROR: "Invalid {role}. Format should be {format}.",
 	INVALID_FIELD_ERROR: "Invalid {label}, field not found in data set.",
 	EXPRESSION_OPERATORS_LABEL: "Operators",

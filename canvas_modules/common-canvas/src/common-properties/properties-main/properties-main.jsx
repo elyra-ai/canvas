@@ -22,6 +22,7 @@ import { Size } from "./../constants/form-constants";
 import isEqual from "lodash/isEqual";
 import omit from "lodash/omit";
 import pick from "lodash/pick";
+import has from "lodash/has";
 import Icon from "carbon-components-react/lib/components/Icon";
 import { Provider } from "react-redux";
 import logger from "../../../utils/logger";
@@ -30,7 +31,7 @@ import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
 import cloneDeep from "lodash/cloneDeep";
 
-import { injectIntl, intlShape } from "react-intl";
+import { injectIntl } from "react-intl";
 import styles from "./properties-main-widths.scss";
 
 const FLYOUT_WIDTH_SMALL = parseInt(styles.flyoutWidthSmall, 10);
@@ -75,7 +76,7 @@ class PropertiesMain extends React.Component {
 		this.props.callbacks.setPropertiesHasMounted();
 	}
 
-	componentWillReceiveProps(newProps) {
+	UNSAFE_componentWillReceiveProps(newProps) { // eslint-disable-line camelcase, react/sort-comp
 		if (newProps.propertiesInfo) {
 			if (!isEqual(Object.keys(newProps.propertiesInfo), Object.keys(this.props.propertiesInfo)) ||
 				(newProps.propertiesInfo.formData && !isEqual(newProps.propertiesInfo.formData, this.props.propertiesInfo.formData)) ||
@@ -250,7 +251,7 @@ class PropertiesMain extends React.Component {
 		const controls = this.propertiesController.getControls();
 		if (Object.keys(controls).length > 0) {
 			for (const controlKey in controls) {
-				if (!controls.hasOwnProperty(controlKey)) {
+				if (!has(controls, controlKey)) {
 					continue;
 				}
 				const control = controls[controlKey];
@@ -465,7 +466,7 @@ PropertiesMain.propTypes = {
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls
 	customConditionOps: PropTypes.array, // array of custom condition ops
-	intl: intlShape,
+	intl: PropTypes.object.isRequired
 };
 
-export default injectIntl(PropertiesMain, { withRef: true });
+export default injectIntl(PropertiesMain, { forwardRef: true });

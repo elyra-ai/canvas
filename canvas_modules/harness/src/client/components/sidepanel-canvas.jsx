@@ -101,9 +101,9 @@ export default class SidePanelForms extends React.Component {
 		this.changeDisplayFullLabelOnHover = this.changeDisplayFullLabelOnHover.bind(this);
 		this.useZoomIntoSubFlows = this.useZoomIntoSubFlows.bind(this);
 	}
-
-	componentWillMount() {
-		var that = this;
+	// should be changed to componentDidMount but causes FVT tests to fail
+	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
+		const that = this;
 
 		FormsService.getFiles("diagrams")
 			.then(function(res) {

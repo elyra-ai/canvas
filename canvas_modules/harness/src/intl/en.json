@@ -1,14 +1,4 @@
-/*******************************************************************************
- * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
- *
- * Note to U.S. Government Users Restricted Rights:
- * Use, duplication or disclosure restricted by GSA ADP Schedule
- * Contract with IBM Corp.
- *******************************************************************************/
-
-/* eslint max-len: ["error", 200] */
-export const messages = {
+{
 	"node-context.editNode": "Open",
 	"node-context.viewModel": "View Model",
 	"node-context.connectNode": "Connect",
@@ -36,9 +26,6 @@ export const messages = {
 
 	"dialog.nodePropertiesTitle": "Node Properties",
 
-	/* ------------------------------ */
-	/* labels and default values     */
-	/* ------------------------------ */
 	"subPanel.button.tooltip": "Edit",
 	"structureListEditor.addButton.label": "Add Value",
 	"structureListEditor.removeButton.tooltip": "Delete selected rows",
@@ -90,4 +77,4 @@ export const messages = {
 	"expression.no.functions": "No functions found.",
 	"multi.selected.row.label": "rows selected.",
 	"multi.selected.row.action": "Changing a value in this row will change the value in all allowed selected rows."
-};
+}

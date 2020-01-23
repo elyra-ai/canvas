@@ -10,7 +10,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { mount } from "enzyme";
-import { shallowWithIntl } from "enzyme-react-intl";
+import { shallowWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 
@@ -118,9 +118,9 @@ describe("structureeditor control renders correctly", () => {
 			/>
 		);
 
-		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("propertyId")).to.equal(propertyId);
-		expect(wrapper.prop("controller")).to.equal(controller);
+		expect(wrapper.dive().prop("control")).to.equal(control);
+		expect(wrapper.dive().prop("propertyId")).to.equal(propertyId);
+		expect(wrapper.dive().prop("controller")).to.equal(controller);
 	});
 
 	it("structureeditor renders messages correctly", () => {

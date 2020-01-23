@@ -81,8 +81,6 @@ function simulateD3LinkCreation(sourceSelector, sourceIndex, destinationSelector
 		MOUSE_UP: "mouseup"
 	};
 
-	/* global CustomEvent document */
-
 	function createCustomEvent(type, clientX, clientY) {
 		var custEvent = new CustomEvent("CustomEvent");
 		custEvent.initCustomEvent(type, true, true, null);

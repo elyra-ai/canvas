@@ -53,7 +53,7 @@ function scriptHint(editor, keywords, getToken, options) {
 	// Find the token at the cursor
 	var cur = editor.getCursor();
 	var token = getToken(editor, cur);
-	if (/\b(?:string|comment)\b/.test(token.type)) {
+	if ((/\b(?:string|comment)\b/).test(token.type)) {
 		return null;
 	}
 	token.state = CodeMirror.innerMode(editor.getMode(), token.state).state;

@@ -10,7 +10,7 @@ import { dropdownSelect } from "../utilities/test-utils.js";
 
 module.exports = function() {
 
-/* global browser */
+	/* global browser */
 
 	this.Given(/^I have selected the "([^"]*)" API$/, function(api) {
 		dropdownSelect(browser.$("#harness-sidepanel-api-list"), api);

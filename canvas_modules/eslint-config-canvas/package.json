@@ -8,9 +8,5 @@
   },
   "bugs": {
     "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issue"
-  },
-  "engines": {
-    "node": ">= 8",
-    "npm": ">= 6"
   }
 }

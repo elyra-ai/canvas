@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -14,17 +14,21 @@ import Icon from "carbon-components-react/lib/components/Icon";
 import { SUCCESS, CARBON_SUCCESS } from "../common-canvas/constants/canvas-constants";
 
 class NotificationPanel extends React.Component {
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if (nextProps.messages !== prevState.messages) {
+			return ({ messages: nextProps.messages });
+		}
+		return ({});
+	}
+
 	constructor(props) {
 		super(props);
+		this.state = {};
 		this.handleNotificationPanelClickOutside = this.handleNotificationPanelClickOutside.bind(this);
 	}
 
 	componentDidMount() {
 		document.addEventListener("click", this.handleNotificationPanelClickOutside, true);
-	}
-
-	componentWillReceiveProps(nextProps) {
-		this.setState({ messages: nextProps.messages });
 	}
 
 	componentWillUnmount() {

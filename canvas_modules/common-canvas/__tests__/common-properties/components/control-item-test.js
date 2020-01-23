@@ -11,7 +11,7 @@ import React from "react";
 import ControlItem from "../../../src/common-properties/components/control-item";
 import Controller from "../../../src/common-properties/properties-controller";
 import { expect } from "chai";
-import { mountWithIntl } from "enzyme-react-intl";
+import { mountWithIntl } from "../../_utils_/intl-utils";
 
 const controller = new Controller();
 const controlObj = <div className="dummy_control">"Dummy control"</div>;

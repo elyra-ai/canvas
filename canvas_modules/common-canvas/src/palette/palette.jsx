@@ -12,9 +12,6 @@ import PropTypes from "prop-types";
 import PaletteTopbar from "./palette-topbar.jsx";
 import PaletteContent from "./palette-content.jsx";
 
-// eslint override
-/* global window document */
-
 class Palette extends React.Component {
 	constructor(props) {
 		super(props);

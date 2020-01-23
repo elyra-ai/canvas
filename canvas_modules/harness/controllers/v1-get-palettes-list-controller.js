@@ -25,6 +25,7 @@ function _get(req, res) {
 	var dirPath = path.join(__dirname, constants.TEST_RESOURCES_PALETTES_PATH);
 	if (req.query.file) { // retrieve file contents
 		var filename = req.query.file;
+		logger.info(`Retrieving ${dirPath}${filename}`);
 		fs.readFile(dirPath + filename, "utf-8", function(err, data) {
 			if (err) {
 				res.status(constants.HTTP_STATUS_NOT_FOUND);

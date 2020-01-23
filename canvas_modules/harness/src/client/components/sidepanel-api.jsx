@@ -79,10 +79,8 @@ export default class SidePanelAPI extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			pipelineFlow: "",
 			categoryId: "",
 			categoryName: "",
-			paletteItem: "",
 			isValidPipelineFlow: true,
 			isValidPaletteItem: true,
 			nodeId: "",
@@ -99,19 +97,15 @@ export default class SidePanelAPI extends React.Component {
 			notificationTitle: "",
 			notificationMessage: "",
 			notificationType: NOTIFICATION_MESSAGE_TYPE.INFO,
-			zoomObject: JSON.stringify({ x: 0, y: 0, k: 1 })
+			zoomObject: JSON.stringify({ x: 0, y: 0, k: 1 }),
+			pipelineFlow: JSON.stringify(this.props.apiConfig.getPipelineFlow()),
+			paletteItem: JSON.stringify(defaultNodeType)
 		};
 
 		this.messageCounter = 0;
 
 		this.createNotificationMessage = this.createNotificationMessage.bind(this);
 		this.notificationMessageCallback = this.notificationMessageCallback.bind(this);
-	}
-
-	componentWillMount() {
-		this.setState({
-			pipelineFlow: JSON.stringify(this.props.apiConfig.getPipelineFlow()),
-			paletteItem: JSON.stringify(defaultNodeType) });
 	}
 
 	onOperationSelect(evt) {

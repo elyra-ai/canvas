@@ -194,7 +194,12 @@ module.exports = function() {
 	}
 
 	function findCategoryElementModal(nodeCategory) {
-		for (var cat of browser.$$(".palette-category")) {
+		for (const cat of browser.$$(".palette-category")) {
+			if (cat.getText() === nodeCategory) {
+				return cat;
+			}
+		}
+		for (const cat of browser.$$(".palette-category-selected")) {
 			if (cat.getText() === nodeCategory) {
 				return cat;
 			}

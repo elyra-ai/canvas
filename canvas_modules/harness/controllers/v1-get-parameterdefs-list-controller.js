@@ -21,10 +21,11 @@ const constants = require("../lib/constants");
 module.exports.get = _get;
 
 function _get(req, res) {
-	logger.info("Retrieving list of files");
+	logger.debug("Retrieving list of files");
 	var dirPath = path.join(__dirname, constants.TEST_RESOURCES_PARAMETERDEFS_PATH);
 	if (req.query.file) { // retrieve file contents
 		var filename = req.query.file;
+		logger.debug(`Retrieving ${dirPath}${filename}`);
 		fs.readFile(dirPath + filename, "utf-8", function(err, data) {
 			if (err) {
 				res.status(constants.HTTP_STATUS_NOT_FOUND);

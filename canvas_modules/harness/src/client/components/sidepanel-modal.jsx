@@ -51,10 +51,11 @@ export default class SidePanelModal extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
+		this.getSelectedFile = this.getSelectedFile.bind(this);
 	}
-
-	componentWillMount() {
-		var that = this;
+	// should be changed to componentDidMount but causes FVT tests to fail
+	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
+		const that = this;
 		FormsService.getFiles(FORMS)
 			.then(function(res) {
 				that.setState({ commonPropertiesFormsFiles: res });

@@ -9,7 +9,7 @@
 
 import React from "react";
 import SelectColumns from "../../../src/common-properties/controls/selectcolumns";
-import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
+import { mountWithIntl, shallowWithIntl } from "../../_utils_/intl-utils";
 import { Provider } from "react-redux";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -84,11 +84,10 @@ describe("selectcolumns renders correctly", () => {
 				openFieldPicker={openFieldPickerSpy}
 			/>
 		);
-
-		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("controller")).to.equal(controller);
-		expect(wrapper.prop("propertyId")).to.equal(propertyId);
-		expect(wrapper.prop("openFieldPicker")).to.equal(openFieldPickerSpy);
+		expect(wrapper.dive().prop("control")).to.equal(control);
+		expect(wrapper.dive().prop("controller")).to.equal(controller);
+		expect(wrapper.dive().prop("propertyId")).to.equal(propertyId);
+		expect(wrapper.dive().prop("openFieldPicker")).to.equal(openFieldPickerSpy);
 	});
 
 	it("should render a `selectcolumns` control", () => {

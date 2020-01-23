@@ -24,6 +24,14 @@ import PropTypes from "prop-types";
 import React from "react";
 
 class VirtualizedTable extends React.Component {
+
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if (nextProps.rowCount !== prevState.rowCount) {
+			return ({ rowCount: nextProps.rowCount });
+		}
+		return ({});
+	}
+
 	constructor(props, context) {
 		super(props, context);
 
@@ -39,12 +47,6 @@ class VirtualizedTable extends React.Component {
 		this.headerColRenderer = this.headerColRenderer.bind(this);
 		this.onRowClick = this.onRowClick.bind(this);
 		this.overSelectOption = this.overSelectOption.bind(this);
-	}
-
-	componentWillReceiveProps(props) {
-		if (props.rowCount !== this.state.rowCount) {
-			this.setState({ rowCount: props.rowCount });
-		}
 	}
 
 	componentDidUpdate() {

@@ -9,9 +9,10 @@
 // ESLint Rule Overrides
 
 /* eslint no-process-exit: 0 */
-var express = require("express");
-var session = require("express-session");
-var path = require("path");
+const express = require("express");
+const session = require("express-session");
+const compression = require("compression");
+const path = require("path");
 const appConfig = require("./utils/app-config");
 const constants = require("./constants");
 const log4js = require("log4js");
@@ -37,15 +38,9 @@ function _create(callback) {
 	}
 
 	var app = express();
-	if (isProduction) {
-		app.get("*.js", function(req, res, next) {
-			req.url += ".gz";
-			res.set("Content-Encoding", "gzip");
-			next();
-		});
-	}
 	// See: http://expressjs.com/en/guide/behind-proxies.html
 	app.set("trust proxy", 1);
+	app.use(compression());
 
 	app.use(session({
 		secret: constants.APP_SESSION_KEY,

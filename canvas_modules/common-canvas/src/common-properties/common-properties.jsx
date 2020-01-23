@@ -10,13 +10,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import PropertiesButtons from "./components/properties-buttons";
-import PropertiesMain from "./properties-main/properties-main";
+import PropertiesMain from "./properties-main";
 import PropertiesModal from "./components/properties-modal";
 import ValidationMessage from "./components/validation-message";
 import PropertyUtils from "./util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, CONDITION_RETURN_VALUE_HANDLING } from "./constants/constants";
 
-import { injectIntl, intlShape } from "react-intl";
+import { injectIntl } from "react-intl";
 
 
 class CommonProperties extends React.Component {
@@ -35,10 +35,6 @@ class CommonProperties extends React.Component {
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 	}
 
-	setPropertiesHasMounted() {
-		this.propertiesMainHasMounted = true;
-	}
-
 	componentDidCatch(error, info) {
 		this.setState({
 			hasError: true,
@@ -47,8 +43,12 @@ class CommonProperties extends React.Component {
 		});
 	}
 
+	setPropertiesHasMounted() {
+		this.propertiesMainHasMounted = true;
+	}
+
 	applyPropertiesEditing(closeEditor) {
-		this.PropertiesMain.getWrappedInstance().applyPropertiesEditing(closeEditor);
+		this.PropertiesMain.applyPropertiesEditing(closeEditor);
 	}
 
 	createPropertiesMainComponent() {
@@ -230,7 +230,7 @@ CommonProperties.propTypes = {
 	customPanels: PropTypes.array,
 	customControls: PropTypes.array,
 	customConditionOps: PropTypes.array,
-	intl: intlShape,
+	intl: PropTypes.object.isRequired
 };
 
 CommonProperties.defaultProps = {
@@ -245,4 +245,4 @@ CommonProperties.defaultProps = {
 	},
 };
 
-export default injectIntl(CommonProperties, { withRef: true });
+export default injectIntl(CommonProperties, { forwardRef: true });

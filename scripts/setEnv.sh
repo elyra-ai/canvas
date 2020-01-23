@@ -20,5 +20,6 @@ cp .npmrc ./canvas_modules/harness/
 
 if [[ ( "$TRAVIS_BRANCH" = "master" ) ]]; then
 	echo "Setting COVERAGE=true"
-	export COVERAGE=true
+	# Disabled until we upgrade to babel 7.  istanbul has issues when compiling with the current version of babel
+	# export COVERAGE=true
 fi

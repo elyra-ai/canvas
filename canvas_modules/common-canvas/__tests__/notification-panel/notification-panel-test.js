@@ -12,7 +12,7 @@ import NotificationPanel from "./../../src/notification-panel/notification-panel
 import CanvasController from "./../../src/common-canvas/canvas-controller";
 import CommonCanvas from "../../src/common-canvas/common-canvas.jsx";
 
-import { mountWithIntl } from "enzyme-react-intl";
+import { mountWithIntl } from "../_utils_/intl-utils";
 import { expect } from "chai";
 import sinon from "sinon";
 import isEqual from "lodash/isEqual";

@@ -310,7 +310,6 @@ function getNodeId(nodeText, selector) {
 
 function getNodeDimensions(nodeSelector) {
 	var result = browser.execute(function(ndSelector) {
-		/* global document */
 		var ndElement = document.querySelector(ndSelector);
 		return {
 			x_pos: ndElement.__data__.x_pos,
@@ -386,7 +385,6 @@ function getLinksCount(type, extraCanvas) {
 
 function getCommentDimensions(commentSelector) {
 	var result = browser.execute(function(comSelector) {
-		/* global document */
 		var comElement = document.querySelector(comSelector);
 		return {
 			x_pos: comElement.__data__.x_pos,
@@ -432,7 +430,6 @@ function addTextForComment(comId, newCommentText) {
 // Returns the number of comment links on the canvas identified by the selector provided.
 function getLinksCountBySelector(selector, type) {
 	var result = browser.execute(function(inSelector, inType) {
-		/* global document */
 		var count = 0;
 		var domComments = document.querySelectorAll(inSelector);
 		for (let idx = 0; idx < domComments.length; idx++) {
@@ -452,7 +449,6 @@ function getLinksCountBySelector(selector, type) {
 
 function getCommentId(commentText, selector) {
 	var result = browser.execute(function(comText, inSelector) {
-		/* global document */
 		var commentId = null;
 		var domComments = document.querySelectorAll(inSelector);
 		for (let idx = 0; idx < domComments.length; idx++) {
@@ -486,6 +482,7 @@ function doesTipExistInSubFlow(nodeName, location) {
 }
 
 function checkTipExists(nodeName, location, nodeSelectorTip, nodeSelectorGrp) {
+	browser.waitForVisible(nodeSelectorTip, 5000);
 	const tip = browser.$(nodeSelectorTip);
 	expect(tip.value).not.toEqual(null);
 

@@ -403,16 +403,15 @@ class CommonPropertiesComponents extends React.Component {
 		const contentIntro = (<section id="Intro">
 			<h2 className="harness-properties-documentation-section-title">Introduction</h2>
 			<div className="harness-section-description">
-				<p>To create UIs based on the WDP Common Properties Components, a JSON adhering to
-					the <a className="harness-properties-documentation-page-intro-link"
+				<p>To create UIs based on the WDP Common Properties Components, a JSON adhering to the
+					<a className="harness-properties-documentation-page-intro-link"
 						href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/tree/master/common-canvas/parameter-defs"
-					>Parameter Definition Schema</a> has to be provided. The JSON contains parameter definitions, uihints,
+					> Parameter Definition Schema</a> has to be provided. The JSON contains parameter definitions, uihints,
 					dataset_metadata, etc. The data in these sections is used to generate the UI. Certain parameter types
-					translate into specific controls. The control type can be overriden in the uihints section, which follows
-					the <a className="harness-properties-documentation-page-intro-link"
+					translate into specific controls. The control type can be overriden in the uihints section, which follows the
+					<a className="harness-properties-documentation-page-intro-link"
 						href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-pipeline/operators/uihints-v1-schema.json"
-					>UI Hints schema
-					</a>. In addition, uihints are used to group UI controls.
+					> UI Hints schema</a>. In addition, uihints are used to group UI controls.
 				</p>
 				<p>
 					Documentation on how to write conditions for controls can be found <Link to="/conditions" target="_blank">here</Link>.
@@ -550,8 +549,7 @@ class CommonPropertiesComponents extends React.Component {
 				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--panelSelector" className="harness-section-subtitle">panelSelector</h3>
 					<p>To show panels based on the selection in
-						a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--radioset">radio set
-						</a>,
+						a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--radioset">radio set</a>,
 						add a nested <span className="harness-highlight">group_info</span> object of
 						type <span className="harness-highlight">panelSelector</span> and in there, add
 						another <span className="harness-highlight">group_info</span> array with the sub-panels
@@ -768,12 +766,12 @@ class CommonPropertiesComponents extends React.Component {
 						and <span className="harness-highlight">role</span> expression.
 						The expression field provides syntax highlighting and text auto completion based on language.
 						Languages supported are <span className="harness-highlight">Spark SQL</span> and
-						<span className="harness-highlight"> Modeler CLEM</span>. Press CTRL-SPACE to see the
+					<span className="harness-highlight"> Modeler CLEM</span>. Press CTRL-SPACE to see the
 						text auto completion feature.</p>
 					<p>An expression builder is provided when the expression control is display in
 						the <span className="harness-highlight"> Flyout</span>. The expression builder provides an easy to use interface for
 						building expressions.  It is enabled by passing in the <span className="harness-highlight"> expressionInfo </span> field in the
-						<span className="harness-highlight"> propertiesInfo </span> object for <span className="harness-highlight"> CommonProperties </span>.
+					<span className="harness-highlight"> propertiesInfo </span> object for <span className="harness-highlight"> CommonProperties </span>.
 							Press the <span className="harness-highlight"> "View in Flyout" </span> to see the expression builder button.
 					</p>
 					<p>Validation of expression field is performed when the <span className="harness-highlight"> Validate </span> link is clicked.
@@ -882,7 +880,7 @@ class CommonPropertiesComponents extends React.Component {
 							specify what date format is required for display and entry of the date. The default is YYYY-M-D.
 							This allows single digit month and day numbers for display and entry. Other dates formats can be
 							derived from here:
-						<a href="https://momentjs.com/docs/#/displaying/format/"> Moment.js docs </a>
+					<a href="https://momentjs.com/docs/#/displaying/format/"> Moment.js docs </a>
 					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">
@@ -910,7 +908,7 @@ class CommonPropertiesComponents extends React.Component {
 							In the example below the default format has been overridden in the ui_hints to require
 							preceding zeros for digits in displayed and eneterd time values. Other time formats can
 							be derived from here:
-						<a href="https://momentjs.com/docs/#/displaying/format/"> Moment.js docs </a>
+					<a href="https://momentjs.com/docs/#/displaying/format/"> Moment.js docs </a>
 					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">
@@ -951,9 +949,8 @@ class CommonPropertiesComponents extends React.Component {
 					<h3 id="--checkboxset" className="harness-section-subtitle">checkboxset</h3>
 					<p>For parameters of <span className="harness-highlight">type</span> array[string] with fewer than five elements,
 						a checkboxset is rendered. For five or more elements,
-						a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--someofselect">
-								someofselect
-						</a> control is rendered.</p>
+						a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--someofselect"> someofselect </a> control is rendered.
+					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">
 							<CommonProperties
@@ -974,7 +971,7 @@ class CommonPropertiesComponents extends React.Component {
 					<p> A radio set where a parameter value is selected from up to four options.
 						For five or more options, a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--oneofselect">
 						oneofselect
-						</a> control is rendered. Enums of <span className="harness-highlight">type</span> string and number (integer, double, long) are supported.
+					</a> control is rendered. Enums of <span className="harness-highlight">type</span> string and number (integer, double, long) are supported.
 						If enum is not defined, a boolean radio set can be rendered by setting <span className="harness-highlight">type</span> to boolean.
 						For type boolean and number, the control must be set to <span className="harness-highlight">radioset</span>.</p>
 					<div className="harness-section-row">
@@ -1012,9 +1009,8 @@ class CommonPropertiesComponents extends React.Component {
 					<h3 id="--oneofselect" className="harness-section-subtitle">oneofselect</h3>
 					<p>A dropdown list control is rendered for a parameter with an <span className="harness-highlight">enum</span> list
 						with five or more elements. For fewer than five elements,
-						a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--radioset">
-						radioset
-						</a> control is rendered.</p>
+						a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--radioset">radioset</a> control is rendered.
+					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">
 							<CommonProperties
@@ -1057,9 +1053,8 @@ class CommonPropertiesComponents extends React.Component {
 					<p>A multi-selection control is rendered for a parameter with an <span className="harness-highlight">enum</span> list
 						with five or more elements of <span className="harness-highlight">type</span> array[string].
 						For fewer than five elements,
-						a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--checkboxset">
-						checkboxset
-						</a> control is rendered.</p>
+						a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--checkboxset">checkboxset</a> control is rendered.
+					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">
 							<CommonProperties
@@ -1176,9 +1171,8 @@ class CommonPropertiesComponents extends React.Component {
 						must be of <span className="harness-highlight">type</span> array[string] (for single input nodes) or array[object] (for multi-input nodes), and
 						the <span className="harness-highlight">role</span> must be set to <span className="harness-highlight">column</span>.
 						The <span className="harness-highlight">type</span> in <span className="harness-highlight">group_info</span> needs
-						to be set to <a className="harness-properties-documentation-page-intro-link" href="#/properties#--columnSelection">
-							columnSelection
-						</a>.</p>
+						to be set to <a className="harness-properties-documentation-page-intro-link" href="#/properties#--columnSelection">columnSelection</a>.
+					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">
 							<CommonProperties
@@ -1263,22 +1257,22 @@ class CommonPropertiesComponents extends React.Component {
 				<p>Complex types representing lists or maps of basic parameter types are supported
 					via complex type controls. Controls can appear as rows in tables or standing on
 					their own in panels. The following controls are supported for complex types:
-					<ul className="harness-properties-documentation-list-indent">
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--textfield">textfield</a></li>
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--textarea">textarea</a></li>
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--readonly">readonly</a></li>
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--expression">expression</a></li>
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--toggletext">toggletext</a></li>
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--password">password</a></li>
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--numberfield">numberfield</a></li>
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--spinner">spinner</a></li>
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--datefield">datefield</a></li>
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--timefield">timefield</a></li>
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--checkbox">checkbox</a></li>
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--radioset">radioset</a></li>
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--oneofselect">oneofselect</a></li>
-						<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--selectschema">selectschema</a></li>
-					</ul>
+				<ul className="harness-properties-documentation-list-indent">
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--textfield">textfield</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--textarea">textarea</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--readonly">readonly</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--expression">expression</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--toggletext">toggletext</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--password">password</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--numberfield">numberfield</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--spinner">spinner</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--datefield">datefield</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--timefield">timefield</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--checkbox">checkbox</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--radioset">radioset</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--oneofselect">oneofselect</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--selectschema">selectschema</a></li>
+				</ul>
 				</p>
 			</div>
 			<div className="harness-properties-documentation-section-content">
@@ -1344,9 +1338,9 @@ class CommonPropertiesComponents extends React.Component {
 						on_panel</span>
 					</p>
 					<p><span className="harness-highlight">inline</span> will render controls inline within the table cells for editing values.
-						The following example shows a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--oneofselect">
-							oneofselect
-						</a> control <span className="harness-highlight">inline</span> with the structuretable rows.</p>
+						The following example shows a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--oneofselect">oneofselect</a> control
+					&nbsp;<span className="harness-highlight">inline</span> with the structuretable rows.
+					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">
 							<CommonProperties
@@ -1452,7 +1446,7 @@ class CommonPropertiesComponents extends React.Component {
 					<h4 id="--row_selection" className="harness-section-row-title section-subtitle">row_selection</h4>
 					<p><span className="harness-highlight">row_selection</span> is a string attribute that can be set
 						in <span className="harness-highlight">complex_type_definition</span> sections. Valid values
-						for <span className="harness-highlight">row_selection</span> are <span className="harness-highlight">single</span>
+						for <span className="harness-highlight">row_selection</span> are <span className="harness-highlight">single</span><span> </span>
 						or <span className="harness-highlight">multiple</span>.  If set to <span className="harness-highlight">single</span> then
 						one and only one row may be selected at one time.</p>
 					<p>In this example, the <span className="harness-highlight">row_selection</span> attribute
@@ -1571,9 +1565,10 @@ class CommonPropertiesComponents extends React.Component {
 					</p>
 					<p>For summary tables with more than ten rows, a placeholder text will be shown instead. The text defaults
 						to <span className="harness-highlight">More than ten fields...</span> This placeholder text can be configured through
-						&nbsp;<a className="harness-properties-documentation-page-intro-link"
-							href="https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/3.0-Common-Properties-documentation#internationalization-and-override-of-labels-in-commonproperties"
-						>custom labels</a>.
+						&nbsp;
+					<a className="harness-properties-documentation-page-intro-link"
+						href="https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/3.0-Common-Properties-documentation#internationalization-and-override-of-labels-in-commonproperties"
+					>custom labels</a>.
 					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">
@@ -1638,7 +1633,7 @@ class CommonPropertiesComponents extends React.Component {
 			<h2 className="harness-properties-documentation-section-title">Actions</h2>
 			<p className="harness-section-description">Actions are used to callback to the consuming application to allow the
 				application to perform a task. All actions call <span className="harness-highlight">actionHandler</span> and pass
-				<span className="harness-highlight"> actionId, appData, and data</span> back to the application.
+			<span className="harness-highlight"> actionId, appData, and data</span> back to the application.
 					The following actions are supported in the Common Properties editor.</p>
 			<div className="harness-properties-documentation-section-content">
 				<div className="harness-properties-documentation-panels-controls-component">

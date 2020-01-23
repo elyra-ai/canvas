@@ -10,7 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Tooltip from "../tooltip/tooltip.jsx";
-import ObserveSize from "react-observe-size";
+import ReactResizeDetector from "react-resize-detector";
 import Icon from "../icons/icon.jsx";
 import constants from "../common-canvas/constants/canvas-constants";
 import classNames from "classnames";
@@ -303,14 +303,14 @@ class Toolbar extends React.Component {
 		</div>);
 
 		const canvasToolbar = (
-			<div id="canvas-toolbar" ref={ (elem) => this.toolbar = elem}>
-				<ObserveSize observerFn={(element) => this.setToolbarDisplayItemsCount()}>
+			<ReactResizeDetector handleWidth onResize={this.setToolbarDisplayItemsCount}>
+				<div id="canvas-toolbar" ref={ (elem) => this.toolbar = elem}>
 					<ul id="toolbar-items">
 						{actionContainer}
 						{rightAlignedContainer}
 					</ul>
-				</ObserveSize>
-			</div>);
+				</div>
+			</ReactResizeDetector>);
 
 		return canvasToolbar;
 	}

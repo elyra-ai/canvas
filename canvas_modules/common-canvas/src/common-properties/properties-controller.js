@@ -24,6 +24,7 @@ import { Type, ParamRole } from "./constants/form-constants";
 import cloneDeep from "lodash/cloneDeep";
 import assign from "lodash/assign";
 import isEmpty from "lodash/isEmpty";
+import has from "lodash/has";
 
 import ConditionOps from "./ui-conditions/condition-ops/condition-ops";
 
@@ -217,7 +218,7 @@ export default class PropertiesController {
 		// only return definitions that reference the propertyId
 		let retCond = [];
 		for (const conditionKey in conditionDefinitions) {
-			if (!conditionDefinitions.hasOwnProperty(conditionKey)) {
+			if (!has(conditionDefinitions, conditionKey)) {
 				continue;
 			}
 			// the definition may have a column indicator, build a propertyID
@@ -266,7 +267,7 @@ export default class PropertiesController {
 
 	_addToControlValues(resolveParameterRefs) {
 		for (const keyName in this.controls) {
-			if (!this.controls.hasOwnProperty(keyName)) {
+			if (!has(this.controls, keyName)) {
 				continue;
 			}
 			const control = this.controls[keyName];
@@ -331,7 +332,7 @@ export default class PropertiesController {
 		}
 		if (PropertyUtils.toType(control.subControls) === "array") {
 			for (const keyName in control.subControls) {
-				if (control.subControls.hasOwnProperty(keyName)) {
+				if (has(control.subControls, keyName)) {
 					const subControl = control.subControls[keyName];
 					if (subControl.role === ParamRole.COLUMN && subControl.valueDef.propType === Type.STRUCTURE) {
 						return true;
@@ -349,7 +350,7 @@ export default class PropertiesController {
 	 */
 	_canHaveMultipleSchemas() {
 		for (const keyName in this.controls) {
-			if (this.controls.hasOwnProperty(keyName)) {
+			if (has(this.controls, keyName)) {
 				const control = this.controls[keyName];
 				if (this._isMultiSchemaControl(control)) {
 					return true;
@@ -947,7 +948,7 @@ export default class PropertiesController {
 		if (filterHiddenDisabled) {
 			const filteredValues = {};
 			for (const propKey in propertyValues) {
-				if (!propertyValues.hasOwnProperty(propKey)) {
+				if (!has(propertyValues, propKey)) {
 					continue;
 				}
 				const filteredValue = this.getPropertyValue({ name: propKey }, filterHiddenDisabled);
@@ -1113,7 +1114,7 @@ export default class PropertiesController {
 		const filteredMessages = {};
 		const pipelineMessages = [];
 		for (const paramKey in messages) {
-			if (!messages.hasOwnProperty(paramKey)) {
+			if (!has(messages, paramKey)) {
 				continue;
 			}
 			const paramMessage = this.getErrorMessage({ name: paramKey }, filterHiddenDisable, filterSuccess);

@@ -107,7 +107,7 @@ export default class CommonCanvas extends React.Component {
 		this.setPaletteWidth();
 	}
 
-	componentWillReceiveProps(newProps) {
+	UNSAFE_componentWillReceiveProps(newProps) { // eslint-disable-line camelcase, react/sort-comp
 		if (newProps.toolbarConfig) {
 			const newToolbarConfig = newProps.toolbarConfig;
 			const oldToolbarConfig = this.state.toolbarConfig;

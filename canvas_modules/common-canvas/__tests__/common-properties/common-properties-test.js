@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import CommonProperties from "../../src/common-properties/common-properties.jsx";
+import CommonProperties from "../../src/common-properties";
 import PropertiesDialog from "../../src/common-properties/components/properties-modal";
 import PropertiesEditing from "../../src/common-properties/components/properties-editor";
 import propertyUtils from "../_utils_/property-utils";

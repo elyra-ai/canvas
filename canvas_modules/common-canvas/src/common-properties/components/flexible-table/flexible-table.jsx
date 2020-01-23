@@ -14,7 +14,7 @@ import Search from "carbon-components-react/lib/components/Search";
 import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
 import PropertyUtils from "./../../util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
-import ObserveSize from "react-observe-size";
+import ReactResizeDetector from "react-resize-detector";
 import classNames from "classnames";
 import has from "lodash/has";
 
@@ -202,10 +202,10 @@ export default class FlexibleTable extends React.Component {
 		return widths;
 	}
 
-	_updateTableWidth(element) {
-		if (this.state.tableWidth !== Math.floor(element.width - 2)) {
+	_updateTableWidth(width, height) {
+		if (this.state.tableWidth !== Math.floor(width - 2)) {
 			this.setState({
-				tableWidth: Math.floor(element.width - 2) // subtract 2 px for the borders
+				tableWidth: Math.floor(width - 2) // subtract 2 px for the borders
 			});
 		}
 	}
@@ -383,7 +383,6 @@ export default class FlexibleTable extends React.Component {
 		const searchLabel = headerInfo.searchLabel;
 		const disabled = this.props.tableState === STATES.DISABLED;
 
-		let renderTable = "";
 		let searchBar = null;
 
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
@@ -401,7 +400,6 @@ export default class FlexibleTable extends React.Component {
 						labelText={""}
 					/>
 				</div>
-
 			);
 		}
 
@@ -413,12 +411,13 @@ export default class FlexibleTable extends React.Component {
 		const heightStyle = (this.props.noAutoSize || tableHeight === 0) ? {} : { height: tableHeight + "em" };
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass + this.props.messageInfo.type;
-		renderTable = (
-			<div>
+
+		return (
+			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container">
 				{searchBar}
 				<div className="properties-ft-container-panel">
 					{this.props.topRightPanel}
-					<ObserveSize observerFn={(element) => this._updateTableWidth(element)}>
+					<ReactResizeDetector handleWidth onResize={this._updateTableWidth}>
 						<div className="properties-ft-container-wrapper" style={ heightStyle }>
 							<div className={messageClass}>
 								{this.props.selectedEditRow}
@@ -447,14 +446,8 @@ export default class FlexibleTable extends React.Component {
 								/>
 							</div>
 						</div>
-					</ObserveSize>
+					</ReactResizeDetector>
 				</div>
-			</div>
-		);
-
-		return (
-			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container">
-				{renderTable}
 			</div>
 		);
 	}

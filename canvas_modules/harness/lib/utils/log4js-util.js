@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -17,11 +17,8 @@ const log4js = require("log4js");
 
 // Globals
 
-// TODO: Extract as a constant?
-// const APP_ID = constants.APP_NAME;
 const RELOAD_INTERVAL = 300; // 5 mins
-const LOCAL_LAYOUT_PATTERN = "[%d] [%[%-5p%]] [%-16c] %m";
-// const BLUEMIX_LAYOUT_PATTERN = `[%d] [%-5p] [${APP_ID}] [%-16c] %m`;
+const LAYOUT_PATTERN = "[%d] [%[%-5p%]] [%-16c] %m";
 
 // Public Methods ------------------------------------------------------------->
 
@@ -31,30 +28,21 @@ module.exports.getRequestLogger = _getRequestLogger;
 // Private Methods ------------------------------------------------------------>
 
 function _init() {
-
-	const log4jsConfigFile = "./config/log4js.json";
-
-	log4js.configure(log4jsConfigFile, {
+	const appenders = {
+		appenders: {
+			out: {
+				type: "stdout",
+				layout: {
+					type: "pattern",
+					pattern: LAYOUT_PATTERN
+				}
+			}
+		},
+		categories: { default: { appenders: ["out"], level: "info" } }
+	};
+	log4js.configure(appenders, {
 		reloadSecs: RELOAD_INTERVAL
 	});
-
-	// let pattern;
-	// if (envUtil.isBluemixEnvironment()) {
-	//	pattern = BLUEMIX_LAYOUT_PATTERN;
-	// } else {
-	const pattern = LOCAL_LAYOUT_PATTERN;
-	// }
-
-	// Console Appender
-
-	const layoutConfig = {
-		pattern: pattern
-	};
-	const layout = log4js.layouts.layout("pattern", layoutConfig);
-	const consoleAppender = log4js.appenders.console(layout);
-
-	log4js.addAppender(consoleAppender);
-
 }
 
 function _getRequestLogger() {

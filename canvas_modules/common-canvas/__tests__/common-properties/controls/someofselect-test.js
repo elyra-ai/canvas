@@ -10,7 +10,7 @@
 import React from "react";
 import SomeOfSelectControl from "../../../src/common-properties/controls/someofselect";
 import { Provider } from "react-redux";
-import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
+import { mountWithIntl, shallowWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
@@ -57,9 +57,9 @@ describe("SomeOfSelectControl renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("controller")).to.equal(controller);
-		expect(wrapper.prop("propertyId")).to.equal(propertyId);
+		expect(wrapper.dive().prop("control")).to.equal(control);
+		expect(wrapper.dive().prop("controller")).to.equal(controller);
+		expect(wrapper.dive().prop("propertyId")).to.equal(propertyId);
 	});
 
 	it("should render a SomeOfSelectControl", () => {

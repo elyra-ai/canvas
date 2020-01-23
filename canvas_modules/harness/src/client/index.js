@@ -16,9 +16,11 @@ import "../styles/index.scss";
 import App from "./App";
 import { IntlProvider } from "react-intl";
 import { HashRouter, Route } from "react-router-dom";
+import i18nData from "../intl/en.json";
+
 
 ReactDOM.render(
-	<IntlProvider locale="en">
+	<IntlProvider locale="en" messages={i18nData}>
 		<HashRouter>
 			<div>
 				<Route exact path="/" component={ App } />

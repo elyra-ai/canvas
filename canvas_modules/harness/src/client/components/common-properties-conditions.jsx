@@ -271,10 +271,11 @@ class CommonPropertiesComponents extends React.Component {
 				<p>Conditions define a set of specifications for evaluating parameter values.
 					The specifications support complex interdependency checking such as relationships
 					between multiple parameters (i.e. valid values for parameter 1 depend upon the value of parameter 2).
-					To create a condition for a control, create a JSON that adheres to the <a className="harness-properties-documentation-page-intro-link"
-						href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-pipeline/operators/conditions-documentation-v1-schema.json"
-					>Conditions schema</a>, and add it to the conditions array in the parameter definition&nbsp;
-					<a className="harness-properties-documentation-page-intro-link" href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-canvas/parameter-defs/parameter-defs-v1-schema.json">
+					To create a condition for a control, create a JSON that adheres to the&nbsp;
+				<a className="harness-properties-documentation-page-intro-link"
+					href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-pipeline/operators/conditions-documentation-v1-schema.json"
+				>Conditions schema</a>, and add it to the conditions array in the parameter definition&nbsp;
+				<a className="harness-properties-documentation-page-intro-link" href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-canvas/parameter-defs/parameter-defs-v1-schema.json">
 					parameter definition</a> JSON.
 				</p>
 				<p>
@@ -374,14 +375,14 @@ class CommonPropertiesComponents extends React.Component {
 			<div className="harness-section-description">
 				<p>Validations for conditions are triggered after a user modifies the value of a control. No errors or warnings
 					will be shown when the controls are first presented to the user.
-					<br />
+				<br />
 					All <span className="harness-highlight">visible</span> conditions will be evaluated first, followed by&nbsp;
-					<span className="harness-highlight">enabled</span> and <span className="harness-highlight">validation</span> conditions.
+				<span className="harness-highlight">enabled</span> and <span className="harness-highlight">validation</span> conditions.
 					Within each category, conditions will be evaluated in the order in which they are passed into the conditions array.
 					If there are multiple conditions for a control, empty or null checks should come before other conditions
 					for that control. If a control has both single and group conditions, group conditions should be placed
 					before single conditions in the array.
-					<br />
+				<br />
 					A condition fails if it evaluates to false. For validations, an error or warning will be shown to indicate that the
 					user input did not pass the test. <br /> Below is a table that describes which conditions each control supports.
 				</p>
@@ -597,7 +598,7 @@ class CommonPropertiesComponents extends React.Component {
 					<h3 id="--checkbox" className="harness-section-subtitle">checkbox</h3>
 					<p>A checkbox control is of type <span className="harness-highlight">boolean</span>.
 						To check whether it’s checked &nbsp;
-						<span className="harness-highlight">equals/notEquals</span> can be used.
+					<span className="harness-highlight">equals/notEquals</span> can be used.
 					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">
@@ -787,7 +788,7 @@ class CommonPropertiesComponents extends React.Component {
 						Other conditions are evaluated at the cell level.
 						Refer to the <a className="harness-properties-documentation-page-intro-link" href="#/conditions#conditions-documentation-conditions-supported-table">table</a> above
 						on what conditions each control supports.
-						<br />
+					<br />
 						The following is an example illustrating the use of these conditions in a structuretable. The structure table
 						will display an error if no rows are selected.
 					</p>
@@ -833,7 +834,7 @@ class CommonPropertiesComponents extends React.Component {
 					<h3 id="--structurelisteditor" className="harness-section-subtitle">structurelisteditor</h3>
 					<p>The structurelisteditor control is of type <span className="harness-highlight">[[string]]</span>.
 						Although this is a complex type control, the <span className="harness-highlight">colNotExists</span> and&nbsp;
-						<span className="harness-highlight">cellNotEmpty</span> conditions are not supported for this control because
+					<span className="harness-highlight">cellNotEmpty</span> conditions are not supported for this control because
 						structurelisteditor does not support map structures. Other supported conditions for this control behave
 						the same as a <a className="harness-properties-documentation-page-intro-link" href="#/conditions#--structuretable">structuretable</a> control.
 					</p>

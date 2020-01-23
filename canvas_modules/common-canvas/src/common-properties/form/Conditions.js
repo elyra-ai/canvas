@@ -6,6 +6,9 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+
+import has from "lodash/has";
+
 /*
 * Iterates over the conditions and replaces the default message with translated message
 */
@@ -20,7 +23,7 @@ function translateMessages(conditions, l10nProvider) {
 
 function searchMessage(object, l10nProvider) {
 	for (var x in object) {
-		if (object.hasOwnProperty(x)) {
+		if (has(object, x)) {
 			if (typeof object[x] === "object" && object[x] !== null) {
 				if (object[x].message) {
 					object[x].message.default = l10nProvider.l10nResource(object[x].message);

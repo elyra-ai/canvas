@@ -33,6 +33,15 @@ import uuid4 from "uuid/v4";
 /* eslint max-depth: ["error", 5] */
 
 export default class AbstractTable extends React.Component {
+
+	static getDerivedStateFromProps(nextProps, prevState) {
+		const enableRemoveIcon = (nextProps.selectedRows.length !== 0);
+		if (prevState.enableRemoveIcon !== enableRemoveIcon) {
+			return ({ enableRemoveIcon: enableRemoveIcon });
+		}
+		return ({});
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -71,13 +80,6 @@ export default class AbstractTable extends React.Component {
 		if (this.props.control.subControls) {
 			const updatedControlValues = this.setReadOnlyColumnValue();
 			this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues, true);
-		}
-	}
-
-	componentWillReceiveProps(nextProps) {
-		const enableRemoveIcon = (nextProps.selectedRows.length !== 0);
-		if (this.state.enableRemoveIcon !== enableRemoveIcon) {
-			this.setState({ enableRemoveIcon: enableRemoveIcon });
 		}
 	}
 

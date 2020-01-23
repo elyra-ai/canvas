@@ -232,7 +232,6 @@ describe("error messages renders correctly for datefield controls", () => {
 			"text": "Required parameter 'Required Date M-D-Y' has no value.",
 		};
 		const actual = controller.getErrorMessage({ name: "date_mdy" });
-
 		expect(datefieldErrorMessages).to.eql(actual);
 		let messageWrapper = dateWrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);

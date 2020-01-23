@@ -14,6 +14,18 @@ import PaletteContentGrid from "./palette-content-grid.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
 
 class PaletteContent extends React.Component {
+	static getDerivedStateFromProps(nextProps, prevState) {
+		// We get the paletteJSON after the initial render so set the
+		// default selected category when it is recieved.
+		if (nextProps.paletteJSON &&
+				nextProps.paletteJSON.categories &&
+				nextProps.paletteJSON.categories.length > 0 &&
+				prevState.selectedCategory === "") {
+			return ({ selectedCategory: nextProps.paletteJSON.categories[0].label });
+		}
+		return ({});
+	}
+
 	constructor(props) {
 		super(props);
 
@@ -24,17 +36,6 @@ class PaletteContent extends React.Component {
 		this.categorySelected = this.categorySelected.bind(this);
 		this.getCategories = this.getCategories.bind(this);
 		this.getJSONForSelectedCategory = this.getJSONForSelectedCategory.bind(this);
-	}
-
-	componentWillReceiveProps() {
-		// We get the paletteJSON after the initial render so set the
-		// default selected category when it is recieved.
-		if (this.props.paletteJSON &&
-				this.props.paletteJSON.categories &&
-				this.props.paletteJSON.categories.length > 0 &&
-				this.state.selectedCategory === "") {
-			this.setState({ selectedCategory: this.props.paletteJSON.categories[0].label });
-		}
 	}
 
 	getCategories(categories) {

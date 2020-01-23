@@ -11,7 +11,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import ObserveSize from "react-observe-size";
+import ReactResizeDetector from "react-resize-detector";
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 import DropZoneCanvasImage from "../../assets/images/drop_zone.svg";
 
@@ -40,6 +40,7 @@ export default class DiagramCanvas extends React.Component {
 		this.setIsDropZoneDisplayed = this.setIsDropZoneDisplayed.bind(this);
 		this.dragEnter = this.dragEnter.bind(this);
 		this.dragLeave = this.dragLeave.bind(this);
+		this.refreshOnSizeChange = this.refreshOnSizeChange.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
@@ -239,7 +240,7 @@ export default class DiagramCanvas extends React.Component {
 		const svgCanvas = (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} />);
 
 		return (
-			<ObserveSize observerFn={(element) => this.refreshOnSizeChange()}>
+			<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
 				<div
 					id={this.canvasDivId}
 					className="common-canvas-drop-div"
@@ -252,7 +253,7 @@ export default class DiagramCanvas extends React.Component {
 					{this.props.children}
 					{dropZoneCanvas}
 				</div>
-			</ObserveSize>
+			</ReactResizeDetector>
 		);
 	}
 }

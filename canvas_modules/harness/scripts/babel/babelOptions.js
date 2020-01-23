@@ -11,7 +11,7 @@ const assign = require("object-assign");
 
 const babelBaseOptions = {
 	babelrc: false, // required so webpack ignores the .babelrc file used for testing in root of project
-	presets: ["react", "es2015"]
+	presets: ["react", "env"]
 };
 
 const babelClientOptions = assign({}, babelBaseOptions, {

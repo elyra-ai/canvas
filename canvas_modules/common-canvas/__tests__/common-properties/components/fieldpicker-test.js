@@ -12,7 +12,7 @@ import FieldPicker from "./../../../src/common-properties/components/field-picke
 import Controller from "./../../../src/common-properties/properties-controller";
 import propertyUtils from "./../../_utils_/property-utils";
 import tableUtils from "./../../_utils_/table-utils";
-import { mountWithIntl } from "enzyme-react-intl";
+import { mountWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
 
 import fieldPickerParamDef from "./../../test_resources/paramDefs/fieldpicker_paramDef.json";

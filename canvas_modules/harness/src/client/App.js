@@ -6,8 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 21] */
-/* eslint max-len: ["error", 200] */
+/* eslint complexity: ["error", 25] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
 
@@ -15,9 +14,7 @@ import React from "react";
 import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
 import ReactFileDownload from "react-file-download";
-import { IntlProvider, FormattedMessage, addLocaleData, injectIntl, intlShape } from "react-intl";
-import en from "react-intl/locale-data/en";
-var i18nData = require("../intl/en.js");
+import { FormattedMessage } from "react-intl";
 import isEmpty from "lodash/isEmpty";
 import forIn from "lodash/forIn";
 import has from "lodash/has";
@@ -91,7 +88,7 @@ import FormsService from "./services/FormsService";
 
 import ExpressionInfo from "./constants/json/functionlist.json";
 
-class App extends React.Component {
+export default class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -300,8 +297,6 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		addLocaleData(en);
-
 		this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
 		NodeToForm.initialize();
 	}
@@ -435,9 +430,6 @@ class App extends React.Component {
 	getLabel(labelId, defaultLabel) {
 		return (<FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />);
 	}
-	getLabelString(labelId, defaultLabel) {
-		return this.intl.formatMessage({ id: labelId, defaultMessage: defaultLabel });
-	}
 	getNodeForm(nodeId, pipelineId, canvasController) {
 		// if pipelineId is not passed in it will default to the main pipeline being viewed.
 		let nodeForm = NodeToForm.getNodeForm(nodeId);
@@ -548,7 +540,7 @@ class App extends React.Component {
 		const notificationMessages = [];
 		const nodeMessages = this.canvasController2.getFlowMessages(pipelineId);
 		for (const nodeId in nodeMessages) {
-			if (nodeMessages.hasOwnProperty(nodeId)) {
+			if (has(nodeMessages, nodeId)) {
 				const node = nodeMessages[nodeId];
 				const errors = node.filter(function(message) {
 					return message.type === NOTIFICATION_MESSAGE_TYPE.ERROR;
@@ -778,7 +770,7 @@ class App extends React.Component {
 		const nodeWarningMessages = [];
 
 		for (const nodeId in nodeMessages) {
-			if (nodeMessages.hasOwnProperty(nodeId)) {
+			if (has(nodeMessages, nodeId)) {
 				const nodeMessage = nodeMessages[nodeId];
 				const errors = nodeMessage.filter(function(message) {
 					return message.type === NOTIFICATION_MESSAGE_TYPE.ERROR;
@@ -1335,7 +1327,7 @@ class App extends React.Component {
 		if (nodeId && currentEditorNodeId !== nodeId) {
 			// apply properties from previous node if node selection has changed w/o closing editor
 			if (currentEditorNodeId && canvasController.getNode(currentEditorNodeId, activePipelineId)) {
-				commonPropertiesRef.getWrappedInstance().applyPropertiesEditing(false);
+				commonPropertiesRef.applyPropertiesEditing(false);
 			}
 			if (inExtraCanvas) {
 				this.currentEditorId2 = nodeId;
@@ -1376,7 +1368,7 @@ class App extends React.Component {
 		if (this.currentEditorId) {
 			// don't apply changes if node has been removed
 			if (this.canvasController.getNode(this.currentEditorId, data.selectedPipelineId)) {
-				this.CommonProperties.getWrappedInstance().applyPropertiesEditing(false);
+				this.CommonProperties.applyPropertiesEditing(false);
 			}
 			this.setState({ showPropertiesDialog: false });
 			this.currentEditorId = null;
@@ -1389,7 +1381,7 @@ class App extends React.Component {
 		if (this.currentEditorId2) {
 			// don't apply changes if node has been removed
 			if (this.canvasController2.getNode(this.currentEditorId2, data.selectedPipelineId)) {
-				this.CommonProperties2.getWrappedInstance().applyPropertiesEditing(false);
+				this.CommonProperties2.applyPropertiesEditing(false);
 			}
 			this.setState({ showPropertiesDialog2: false });
 			this.currentEditorId2 = null;
@@ -1678,8 +1670,6 @@ class App extends React.Component {
 	}
 
 	render() {
-		const locale = "en";
-		const messages = i18nData.messages;
 		const currentPipelineId = this.canvasController.getCurrentBreadcrumb().pipelineId;
 		const breadcrumbs = (<Breadcrumbs
 			canvasController={this.canvasController}
@@ -2129,11 +2119,10 @@ class App extends React.Component {
 			showRightFlyoutProperties = this.state.showPropertiesDialog && this.state.propertiesContainerType === FLYOUT;
 			showRightFlyoutProperties2 = this.state.showPropertiesDialog2 && this.state.propertiesContainerType === FLYOUT;
 		} else {
-			commonPropertiesContainer = (<IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>
+			commonPropertiesContainer = (
 				<div className="harness-common-properties">
 					{commonProperties}
-				</div>
-			</IntlProvider>);
+				</div>);
 		}
 
 		var firstCanvas = (
@@ -2321,14 +2310,8 @@ class App extends React.Component {
 				selectedPanel={this.state.selectedPanel}
 				log={this.log}
 			/>
-			{/* <IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>
-				{commonProperties}
-			</IntlProvider>*/}
 			{ !isEmpty(this.state.propertiesInfo) ? commonPropertiesContainer : null }
-			<IntlProvider key="IntlProvider" locale={ locale } messages={ messages }>
-				{commonCanvas}
-			</IntlProvider>
-
+			{commonCanvas}
 			{consoleView}
 
 			<ReactTooltip place="bottom" effect="solid" />
@@ -2341,7 +2324,5 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-	intl: intlShape.isRequired
-};
 
-export default injectIntl(App);
+};

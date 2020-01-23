@@ -34,7 +34,7 @@
   "CONTROL_SUMMARY_ERROR": "There are {errorMsgCount} parameters with errors. ",
   "CONTROL_SUMMARY_WARNING": "There are {warningMsgCount} parameters with warnings. ",
   "CONTROL_SUMMARY_ERROR_WARNING": "There are {errorMsgCount} parameters with errors and {warningMsgCount} parameters with warnings.",
-  "REQUIRED_ERROR": "Required parameter '{label}' has no value.",
+  "REQUIRED_ERROR": "Required parameter ''{label}'' has no value.",
   "DATETIME_FORMAT_ERROR": "Invalid {role}. Format should be {format}.",
   "INVALID_FIELD_ERROR": "Invalid {label}, field not found in data set.",
   "EXPRESSION_OPERATORS_LABEL": "Operators",
@@ -60,5 +60,5 @@
   "MULTI_SELECTED_ROW_LABEL": "rows selected.",
   "MULTI_SELECTED_ROW_ACTION": "Changing a value in this row will change the value in all allowed selected rows.",
   "DATETIMEFIELD_FORMAT_ERROR_MESSAGE": "Invalid format object provided. Check input definitions.",
-  "EDITORFORM_GROUP_TYPE_ERROR": "(Unknown group type '{group.groupType()}')",
+  "EDITORFORM_GROUP_TYPE_ERROR": "(Unknown group type '{group.groupType()}')"
 }

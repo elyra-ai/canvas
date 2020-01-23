@@ -8,6 +8,9 @@
  *******************************************************************************/
 
 import { createStore, combineReducers } from "redux";
+import has from "lodash/has";
+import isEqual from "lodash/isEqual";
+
 import { setPropertyValues, updatePropertyValue, removePropertyValue } from "./actions";
 import { setControlStates, updateControlState } from "./actions";
 import { setPanelStates, updatePanelState } from "./actions";
@@ -15,7 +18,6 @@ import { setActionStates, updateActionState } from "./actions";
 
 import { clearSelectedRows, updateSelectedRows } from "./actions";
 import { updateExpressionValidate } from "./actions";
-
 
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
 import { setDatasetMetadata } from "./actions";
@@ -29,7 +31,6 @@ import datasetMetadataReducer from "./reducers/dataset-metadata";
 import rowSelectionsReducer from "./reducers/row-selections";
 import componentMetadataReducer from "./reducers/component-metadata";
 import PropertyUtils from "./util/property-utils.js";
-import isEqual from "lodash/isEqual";
 import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants.js";
 
 /* eslint max-depth: ["error", 6] */
@@ -255,7 +256,7 @@ export default class PropertiesStore {
 		let warningMsgCount = 0;
 		// search message for param and return first error message found, else first warning
 		for (const rowKey in controlMsg) {
-			if (!controlMsg.hasOwnProperty(rowKey)) {
+			if (!has(controlMsg, rowKey)) {
 				continue;
 			}
 			if (rowKey === "text") {
@@ -269,7 +270,7 @@ export default class PropertiesStore {
 			}
 			if (rowMessage) { // table cell
 				for (const colKey in rowMessage) {
-					if (!rowMessage.hasOwnProperty(colKey)) {
+					if (!has(rowMessage, colKey)) {
 						continue;
 					}
 					if (colKey === "text") {

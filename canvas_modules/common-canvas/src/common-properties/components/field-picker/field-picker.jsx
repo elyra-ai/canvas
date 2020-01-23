@@ -23,16 +23,30 @@ import Icon from "./../../../icons/icon.jsx";
 import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
 import isEqual from "lodash/isEqual";
+import has from "lodash/has";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 
 import uuid4 from "uuid/v4";
 
 export default class FieldPicker extends React.Component {
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if (!isEqual(nextProps.fields, prevState.origFields)) {
+			let selectedFields = prevState.selectedFields;
+			if (nextProps.currentFields) {
+				if (!isEqual(Object.keys(nextProps.currentFields), Object.keys(prevState.selectedFields))) {
+					selectedFields = nextProps.currentFields;
+				}
+			}
+			return ({ fields: nextProps.fields, selectedFields: selectedFields, origFields: nextProps.fields });
+		}
+		return ({});
+	}
 	constructor(props) {
 		super(props);
 		this.state = {
 			fields: this.props.fields, // list of fields dynamically adjusted by filtered or sort criteria
+			origFields: this.props.fields,
 			filterIcons: [],
 			filterText: "",
 			selectedFields: this.props.currentFields // list of fields selected
@@ -51,26 +65,7 @@ export default class FieldPicker extends React.Component {
 		this.onSort = this.onSort.bind(this);
 		this.onFilter = this.onFilter.bind(this);
 		this.updateFieldSelections = this.updateFieldSelections.bind(this);
-	}
-
-	componentWillMount() {
 		this.filterList = this.getAvailableFilters();
-	}
-
-	componentWillReceiveProps(newProps) {
-		let fields = this.state.fields;
-		let selectedFields = this.state.selectedFields;
-		if (newProps.fields) {
-			if (!isEqual(Object.keys(newProps.fields), Object.keys(this.state.fields))) {
-				fields = newProps.fields;
-			}
-		}
-		if (newProps.currentFields) {
-			if (!isEqual(Object.keys(newProps.currentFields), Object.keys(this.state.selectedFields))) {
-				selectedFields = newProps.currentFields;
-			}
-		}
-		this.setState({ fields: fields, selectedFields: selectedFields });
 	}
 
 	onFilter(filterString) {
@@ -100,7 +95,7 @@ export default class FieldPicker extends React.Component {
 	getAvailableFilters() {
 		const filters = [];
 		for (const key in DATA_TYPE) {
-			if (DATA_TYPE.hasOwnProperty(key)) {
+			if (has(DATA_TYPE, key)) {
 				const dataType = DATA_TYPE[key];
 				for (const field of this.props.fields) {
 					if (dataType === field.type) {
