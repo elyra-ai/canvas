@@ -53,13 +53,13 @@ Feature: UndoRedo
 		Then I click the redo button on the toolbar
 		Then I verify the node move was done
 
-		Then I move comment 1 with text " This comment box should be linked to the Select node." onto the canvas by 100, 100
+		Then I move comment 1 with text "This comment box should be linked to the Select node." onto the canvas by 100, 100
 		Then I click the undo button on the toolbar
 		Then I verify the comment move was not done
 		Then I click the redo button on the toolbar
 		Then I verify the comment move was done
 
-		Then I edit comment 1 with the comment text "This comment box should be edited."
+		Then I edit the comment "This comment box should be linked to the Select node." with text "This comment box should be edited."
 		Then I click the undo button on the toolbar
 		Then I verify comment 1 with the comment text "This comment box should be linked to the Select node."
 		Then I click the redo button on the toolbar

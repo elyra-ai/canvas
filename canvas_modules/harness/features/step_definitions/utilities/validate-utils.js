@@ -408,12 +408,15 @@ function addTextForComment(comId, newCommentText) {
 	comment.click();
 	comment.doubleClick();
 
+	const textArea = comment.$("textarea");
+
 	// workaround since setValue isn't working with comments.
 	// keys is deprecated and might not work in latest version of firefox
 	for (let indx = 0; indx < 60; ++indx) {
-		comment.$("textarea").keys("Backspace");
+		textArea.keys("Right arrow");
+		textArea.keys("Backspace");
 	}
-	comment.$("textarea").keys(newCommentText);
+	textArea.keys(newCommentText);
 
 	// Wait a moment for the keys commands above to execute
 	browser.pause(1000);

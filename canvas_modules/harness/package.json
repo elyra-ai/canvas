@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node index.js",
-    "test": "chimp config/chimp.js",
+    "test": "chimpy config/chimp.js",
     "bundle-report": "webpack-bundle-analyzer --host 127.0.0.1 --port 8888 .build/stats.json"
   },
   "engines": {
@@ -33,7 +33,8 @@
     "carbon-components": "9.83.4",
     "carbon-components-react": "6.101.6",
     "carbon-icons": "7.0.7",
-    "chimp": "0.51.1",
+    "chimpy": "2.0.0",
+    "chromedriver": "79.0.0",
     "compression-webpack-plugin": "1.1.2",
     "codemirror": "5.33",
     "css-loader": "0.28.4",

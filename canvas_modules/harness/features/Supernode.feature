@@ -19,7 +19,7 @@ Feature: Supernode
 
 		Then I verify the "image" for the "Supernode" node is displayed at 5, 4
 		Then I verify the "label" for the "Supernode" node is displayed at 30, 18
-		Then I verify the "label" for the "Supernode" node has width 63.71875
+		Then I verify the "label" for the "Supernode" node has width 63.734375
 
 		Given I have toggled the app side api panel
 		Given I have selected the "Set Node Label" API
@@ -30,7 +30,7 @@ Feature: Supernode
 		And I call the API by clicking on the Submit button
 
 		Then I verify the "label" for the "New Very Long Supernode Label To Test The Label Abbreviation" node is displayed at 30, 18
-		Then I verify the "label" for the "New Very Long Supernode Label To Test The Label Abbreviation" node has width 129.375
+		Then I verify the "label" for the "New Very Long Supernode Label To Test The Label Abbreviation" node has width 129.390625
 
 	Scenario: Sanity test supernode expanded to correct size
 		Then I resize the window size to 1330 width and 660 height

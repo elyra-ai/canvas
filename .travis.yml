@@ -25,7 +25,7 @@ services:
 script:
   - ./canvas_modules/common-canvas/build.sh || travis_terminate 1;
   - ./canvas_modules/harness/build.sh || travis_terminate 1;
-  - ./canvas_modules/harness/functional_test.sh || travis_terminate 1;
+  # - ./canvas_modules/harness/functional_test.sh || travis_terminate 1;
   - ./scripts/source_scan.sh || travis_terminate 1;
 deploy:
   - provider: script

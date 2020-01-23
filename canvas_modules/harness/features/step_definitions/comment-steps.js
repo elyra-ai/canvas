@@ -207,39 +207,7 @@ module.exports = function() {
 			dragAndDrop(commentSelector, startPosX, startPosY, ".svg-area", Number(canvasX), Number(canvasY));
 		});
 
-	// Then I edit comment 1 linked to the "Derive" node with the comment text "This comment box should be linked to the derive node."
-	//
-	this.Then(/^I edit comment (\d+) with the comment text "([^"]*)"$/,
-		function(commentNumber, commentText) {
-			try {
-				var comment;
-				comment = browser.$$(".d3-comment-group")[0];
-				comment.click();
-				comment.doubleClick();
-				// workaround since setValue isn't working with comments.
-				// keys is deprecated and might not work in latest version of firefox
-				for (let indx = 0; indx < 60; ++indx) {
-					comment.$("textarea").keys("Backspace");
-				}
-				comment.$("textarea").keys(commentText);
-
-				browser.pause(1500);
-				browser.leftClick("#common-canvas-items-container-0", 400, 400);
-
-				// verify the comment is in the internal object model
-				var objectModel = getCanvasData();
-				var returnVal = getCommentIdFromObjectModelUsingText(objectModel, commentText);
-				expect(returnVal).not.toBe(-1);
-
-
-			} catch (err) {
-				console.log("Error = " + err);
-				throw err;
-			}
-
-		});
-
-	// Then I edit the comment with text "abc" with text "def"
+	// Then I edit the comment "abc" with text "def"
 	//
 	this.Then(/^I edit the comment "([^"]*)" with text "([^"]*)"$/,
 		function(originalComment, newCommentText) {
@@ -253,7 +221,21 @@ module.exports = function() {
 			}
 		});
 
-	// Then I edit the comment with text "abc" in the subflow with text "def"
+	// Then I edit the comment "abc" with text "def" on the extra canvas
+	//
+	this.Then(/^I edit the comment "([^"]*)" with text "([^"]*)" on the extra canvas$/,
+		function(originalComment, newCommentText) {
+			try {
+				const comId = getCommentIdForText(originalComment, true);
+				addTextForComment(comId, newCommentText);
+
+			} catch (err) {
+				console.log("Error = " + err);
+				throw err;
+			}
+		});
+
+	// Then I edit the comment "abc" in the subflow with text "def"
 	//
 	this.Then(/^I edit the comment "([^"]*)" in the subflow with text "([^"]*)"$/,
 		function(originalComment, newCommentText) {
@@ -267,7 +249,7 @@ module.exports = function() {
 			}
 		});
 
-	// Then I edit the comment with text "abc" in the subflow in the subflow with text "def"
+	// Then I edit the comment "abc" in the subflow in the subflow with text "def"
 	//
 	this.Then(/^I edit the comment "([^"]*)" in the subflow in the subflow with text "([^"]*)"$/,
 		function(originalComment, newCommentText) {
@@ -355,15 +337,8 @@ module.exports = function() {
 		// MOVE OPERATION ISNT WORKING CURRENTLY IN D3
 	});
 
-	// Then I verify the comment 1 position is translate(445, 219)
+	// Then I verify the "abc" comment position is "translate(445, 219)"
 	//
-	this.Then(/^I verify the comment (\d+) position is "([^"]*)"$/, function(commentNumber, givenCommentPosition) {
-		var commentIndex = commentNumber - 1;
-		var comment = browser.$$(".d3-comment-group")[commentIndex];
-		var actualCommentPosition = comment.getAttribute("transform");
-		expect(actualCommentPosition).toEqual(givenCommentPosition);
-	});
-
 	this.Then(/^I verify the "([^"]*)" comment position is "([^"]*)"$/, function(commentName, givenCommentPosition) {
 		const commentSelector = getCommentSelector(commentName, "grp");
 		const comment = browser.$(commentSelector);
@@ -371,5 +346,13 @@ module.exports = function() {
 		expect(actualCommentPosition).toEqual(givenCommentPosition);
 	});
 
+	// Then I verify the "abc" comment position is "translate(445, 219)" on the extra canvas
+	//
+	this.Then(/^I verify the "([^"]*)" comment position is "([^"]*)" on the extra canvas$/, function(commentName, givenCommentPosition) {
+		const commentSelector = getCommentSelector(commentName, "grp", true);
+		const comment = browser.$(commentSelector);
+		var actualCommentPosition = comment.getAttribute("transform");
+		expect(actualCommentPosition).toEqual(givenCommentPosition);
+	});
 
 };
