@@ -108,6 +108,8 @@ module.exports = {
 		alias: {
 			"react": "node_modules/react",
 			"react-dom": "node_modules/react-dom",
+			"react-redux": "node_modules/react-redux",
+			"react-intl": "node_modules/react-intl",
 			"common-canvas": "src/common-canvas.js",
 		},
 		extensions: [".js", ".jsx", ".json"]

@@ -31,7 +31,7 @@ Feature: ContextMenu
 
 		# Test the context menu is pushed upwards when user clicks near bottom of the page
 		Then I right click at position 1000, 500 to display the context menu
-		Then I verify the context menu is at 1000, 305
+		Then I verify the context menu is at 1000, 335
 
 		# Test the context menu is pushed to the left correctly even when the palette is open
 		Then I click the canvas background at 1, 1 to close the context menu or clear selections

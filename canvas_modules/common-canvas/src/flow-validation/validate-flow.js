@@ -15,6 +15,7 @@ import isEqual from "lodash/isEqual";
 /* eslint max-depth: ["error", 7] */
 
 /**
+* @deprecated Validation should be done on the backend and not through the UI for an entire flow.
 * Validate the properties values for each node in a flow.
 *
 * @param canvasController A common canvas controller object. (required)

@@ -6,30 +6,30 @@ Feature: NotificationPanel
 	I want to test NotificationPanel operations
 	So I can test the notification panel appears and functions correctly in the toolbar
 
-	Scenario: Sanity test notification populated from running flow validation
-		Then I resize the window size to 1400 width and 800 height
-
-		Given I am on the test harness
-		Given I have set this canvas config ""{"selectedPaletteLayout": "Flyout"}""
-		Given I have uploaded palette "sparkPalette.json"
-
-		Then I verify the action "notification-action" in the toolbar is "disabled"
-		Then I open the palette
-		Then I open the "Transformations" palette category
-		Then I add a node of type "Add Column" from the "Transformations" category onto the canvas at 450, 200
-		Then I close the palette
-		Then I verify the number of nodes are 1
-		Then I right click at position 200, 200 to display the context menu
-		Then I click option "CMI: Validate Flow" from the context menu
-		Then I verify the "Add Column" node has an error marker
-		Then I verify the the notification panel has 1 messages
-		Then I click the open notification button on the toolbar
-		Then I verify the the content of the notification message at index 0 is of type "error"
-		Then I verify the the content of the notification message at index 0 contains text "Add Column node has 2 errors"
-		Then I click the close notification button on the toolbar
-		Then I click the open notification button on the toolbar
-		Then I close the notification panel by clicking on the canvas
-		Then I verify the notification panel is closed
+#	Scenario: Sanity test notification populated from running flow validation
+#		Then I resize the window size to 1400 width and 800 height
+#
+#		Given I am on the test harness
+#		Given I have set this canvas config ""{"selectedPaletteLayout": "Flyout"}""
+#		Given I have uploaded palette "sparkPalette.json"
+#
+#		Then I verify the action "notification-action" in the toolbar is "disabled"
+#		Then I open the palette
+#		Then I open the "Transformations" palette category
+#		Then I add a node of type "Add Column" from the "Transformations" category onto the canvas at 450, 200
+#		Then I close the palette
+#		Then I verify the number of nodes are 1
+#		Then I right click at position 200, 200 to display the context menu
+#		Then I click option "CMI: Validate Flow" from the context menu
+#		Then I verify the "Add Column" node has an error marker
+#		Then I verify the the notification panel has 1 messages
+#		Then I click the open notification button on the toolbar
+#		Then I verify the the content of the notification message at index 0 is of type "error"
+#		Then I verify the the content of the notification message at index 0 contains text "Add Column node has 2 errors"
+#		Then I click the close notification button on the toolbar
+#		Then I click the open notification button on the toolbar
+#		Then I close the notification panel by clicking on the canvas
+#		Then I verify the notification panel is closed
 
 	Scenario: Sanity test notification message callback and custom content
 		Then I resize the window size to 1400 width and 800 height

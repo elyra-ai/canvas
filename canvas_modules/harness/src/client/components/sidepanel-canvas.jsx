@@ -97,7 +97,6 @@ export default class SidePanelForms extends React.Component {
 		this.schemaValidationChange = this.schemaValidationChange.bind(this);
 		this.narrowPalette = this.narrowPalette.bind(this);
 		this.onDragStart = this.onDragStart.bind(this);
-		this.changeValidateFlowOnOpen = this.changeValidateFlowOnOpen.bind(this);
 		this.changeDisplayFullLabelOnHover = this.changeDisplayFullLabelOnHover.bind(this);
 		this.useZoomIntoSubFlows = this.useZoomIntoSubFlows.bind(this);
 	}
@@ -389,10 +388,6 @@ export default class SidePanelForms extends React.Component {
 
 	extraCanvasChange(checked) {
 		this.props.canvasConfig.showExtraCanvas(checked);
-	}
-
-	changeValidateFlowOnOpen(checked) {
-		this.props.canvasConfig.changeValidateFlowOnOpen(checked);
 	}
 
 	changeDisplayFullLabelOnHover(checked) {
@@ -968,16 +963,6 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
-		const validateFlowOnOpen = (
-			<div className="harness-sidepanel-children">
-				<div className="harness-sidepanel-headers">Validate flow on open</div>
-				<Toggle
-					id="harness-sidepanel-validateFlowOnOpen-toggle"
-					toggled={this.props.canvasConfig.validateFlowOnOpen}
-					onToggle={this.changeValidateFlowOnOpen}
-				/>
-			</div>);
-
 		const displayFullLabelOnHover = (
 			<div className="harness-sidepanel-children">
 				<div className="harness-sidepanel-headers">Display full node label on hover</div>
@@ -1029,8 +1014,6 @@ export default class SidePanelForms extends React.Component {
 				{displayBoudingRectangles}
 				{divider}
 				{schemaValidation}
-				{divider}
-				{validateFlowOnOpen}
 				{divider}
 				{displayFullLabelOnHover}
 				{divider}
@@ -1110,8 +1093,6 @@ SidePanelForms.propTypes = {
 		schemaValidationEnabled: PropTypes.bool,
 		displayBoundingRectangles: PropTypes.func,
 		displayBoundingRectanglesEnabled: PropTypes.bool,
-		validateFlowOnOpen: PropTypes.bool,
-		changeValidateFlowOnOpen: PropTypes.func,
 		displayFullLabelOnHover: PropTypes.bool,
 		changeDisplayFullLabelOnHover: PropTypes.func,
 		enableMoveNodesOnSupernodeResize: PropTypes.bool,

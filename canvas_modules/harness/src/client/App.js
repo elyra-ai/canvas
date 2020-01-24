@@ -19,13 +19,12 @@ import isEmpty from "lodash/isEmpty";
 import forIn from "lodash/forIn";
 import has from "lodash/has";
 
-import { CommonCanvas, CanvasController, CommonProperties, FlowValidation } from "common-canvas";
+import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas";
 import CommonCanvasPackage from "@wdp/common-canvas/package.json";
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
-import NodeToForm from "./NodeToForm/node-to-form";
 
 import CustomSliderPanel from "./components/custom-panels/CustomSliderPanel";
 import CustomTogglePanel from "./components/custom-panels/CustomTogglePanel";
@@ -140,7 +139,6 @@ export default class App extends React.Component {
 			applyOnBlur: true,
 			expressionBuilder: true,
 			expressionValidate: true,
-			validateFlowOnOpen: true,
 			displayFullLabelOnHover: false,
 			narrowPalette: true,
 			schemaValidationEnabled: true,
@@ -169,6 +167,8 @@ export default class App extends React.Component {
 		this.currentEditorId2 = null;
 
 		this.consoleout = [];
+		this.availableForms = [];
+		this.availableParamDefs = [];
 
 		this.openConsole = this.openConsole.bind(this);
 		this.log = this.log.bind(this);
@@ -228,7 +228,6 @@ export default class App extends React.Component {
 		this.setPipelineFlow = this.setPipelineFlow.bind(this);
 		this.setTipConfig = this.setTipConfig.bind(this);
 		this.showExtraCanvas = this.showExtraCanvas.bind(this);
-		this.validateFlowOnOpen = this.validateFlowOnOpen.bind(this);
 		this.displayFullLabelOnHover = this.displayFullLabelOnHover.bind(this);
 		this.addNodeTypeToPalette = this.addNodeTypeToPalette.bind(this);
 		this.getCanvasInfo = this.getCanvasInfo.bind(this);
@@ -238,6 +237,7 @@ export default class App extends React.Component {
 		this.setLinkDecorations = this.setLinkDecorations.bind(this);
 		this.getZoomToReveal = this.getZoomToReveal.bind(this);
 		this.zoomCanvas = this.zoomCanvas.bind(this);
+		this.getPropertyDefName = this.getPropertyDefName.bind(this);
 
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
@@ -254,7 +254,6 @@ export default class App extends React.Component {
 		this.tipHandler = this.tipHandler.bind(this);
 
 		this.applyDiagramEdit = this.applyDiagramEdit.bind(this);
-		this.validateFlow = this.validateFlow.bind(this);
 		this.getNodeForm = this.getNodeForm.bind(this);
 		this.refreshContent = this.refreshContent.bind(this);
 
@@ -298,7 +297,15 @@ export default class App extends React.Component {
 
 	componentDidMount() {
 		this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
-		NodeToForm.initialize();
+		const that = this;
+		FormsService.getFiles(FORMS)
+			.then(function(res) {
+				that.availableForms = res;
+			});
+		FormsService.getFiles(PARAMETER_DEFS)
+			.then(function(res) {
+				that.availableParamDefs = res;
+			});
 	}
 
 	// Sets the state to the config passed in. This is called by the Chimp
@@ -430,51 +437,68 @@ export default class App extends React.Component {
 	getLabel(labelId, defaultLabel) {
 		return (<FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />);
 	}
-	getNodeForm(nodeId, pipelineId, canvasController) {
-		// if pipelineId is not passed in it will default to the main pipeline being viewed.
-		let nodeForm = NodeToForm.getNodeForm(nodeId);
-		// if form for node is not loaded then load it and get it.
-		if (!nodeForm) {
-			NodeToForm.setNodeForm(nodeId, canvasController.getNode(nodeId, pipelineId).op);
-			nodeForm = NodeToForm.getNodeForm(nodeId);
+
+	getPropertyDefName(node) {
+		if (node.op) {
+			let foundName = this.availableForms.find((name) => name.startsWith(node.op));
+			if (foundName) {
+				return {
+					fileName: foundName,
+					type: FORMS
+				};
+			}
+			foundName = this.availableParamDefs.find((name) => name.startsWith(node.op));
+			if (foundName) {
+				return {
+					fileName: foundName,
+					type: PARAMETER_DEFS
+				};
+			}
 		}
+		return {
+			fileName: "default.json",
+			type: FORMS
+		};
+	}
+
+	getNodeForm(nodeId, pipelineId, canvasController, callback) {
 		// set current parameterSet
 		// get the current parameters for the node from the internal ObjectModel
 		const node = canvasController.getNode(nodeId, pipelineId);
-		if (node) {
-			if (nodeForm.data.formData) {
-				if (!isEmpty(node.parameters)) {
-					nodeForm.data.formData.data.currentParameters = node.parameters;
+		const propertyDef = this.getPropertyDefName(node);
+		FormsService.getFileContent(propertyDef.type, propertyDef.fileName)
+			.then(function(res) {
+				const response = res;
+				if (node) {
+					if (response.formData) {
+						if (!isEmpty(node.parameters)) {
+							response.formData.data.currentParameters = node.parameters;
+						}
+						if (!isEmpty(node.uiParameters)) {
+							response.formData.data.uiCurrentParameters = node.uiParameters;
+						}
+						response.formData.label = node.label;
+					} else {
+						if (!isEmpty(node.parameters)) {
+							response.current_parameters = node.parameters;
+						}
+						if (!isEmpty(node.uiParameters)) {
+							response.current_ui_parameters = node.uiParameters;
+						}
+						if (!response.titleDefinition) {
+							response.titleDefinition = {};
+						}
+						response.titleDefinition.title = node.label;
+					}
 				}
-				if (!isEmpty(node.uiParameters)) {
-					nodeForm.data.formData.data.uiCurrentParameters = node.uiParameters;
-				}
-				nodeForm.data.formData.label = node.label;
-			} else {
-				if (!isEmpty(node.parameters)) {
-					nodeForm.data.current_parameters = node.parameters;
-				}
-				if (!isEmpty(node.uiParameters)) {
-					nodeForm.data.current_ui_parameters = node.uiParameters;
-				}
-				if (!nodeForm.data.titleDefinition) {
-					nodeForm.data.titleDefinition = {};
-				}
-				nodeForm.data.titleDefinition.title = node.label;
-			}
-		}
-		return nodeForm;
+				callback(response);
+			});
 	}
 
 	setDiagramJSON(canvasJson) {
 		this.canvasController.getCommandStack().clearCommandStack();
-		NodeToForm.clearNodeForms();
 		if (canvasJson) {
 			this.canvasController.setPipelineFlow(canvasJson);
-			NodeToForm.setNodeForms(this.canvasController.getNodes());
-			if (this.state.validateFlowOnOpen) {
-				FlowValidation.validateFlow(this.canvasController, this.getNodeForm);
-			}
 			this.setFlowNotificationMessages();
 			this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
 			this.log("Canvas diagram set");
@@ -485,11 +509,8 @@ export default class App extends React.Component {
 
 	setDiagramJSON2(canvasJson) {
 		this.canvasController2.getCommandStack().clearCommandStack();
-		NodeToForm.clearNodeForms();
 		if (canvasJson) {
 			this.canvasController2.setPipelineFlow(canvasJson);
-			NodeToForm.setNodeForms(this.canvasController2.getNodes());
-			FlowValidation.validateFlow(this.canvasController2, this.getNodeForm);
 			this.setFlowNotificationMessages2();
 			this.log("Canvas diagram set 2");
 		} else {
@@ -1058,10 +1079,6 @@ export default class App extends React.Component {
 		this.log("show extra canvas", enabled);
 	}
 
-	validateFlowOnOpen(enabled) {
-		this.setState({ validateFlowOnOpen: enabled });
-	}
-
 	displayFullLabelOnHover(enabled) {
 		this.setState({ displayFullLabelOnHover: enabled });
 	}
@@ -1130,11 +1147,6 @@ export default class App extends React.Component {
 		this.log("helpClickHandler()", { nodeTypeId, helpData, appData });
 	}
 
-	validateFlow(source) {
-		FlowValidation.validateFlow(this.canvasController, this.getNodeForm);
-		this.setFlowNotificationMessages();
-	}
-
 	contextMenuHandler(source, defaultMenu) {
 		let defMenu = defaultMenu;
 		// Add custom menu items at proper positions: open, preview & execute
@@ -1146,7 +1158,6 @@ export default class App extends React.Component {
 		}
 		// Add custom menu items validate flow and stream properties if source is canvas
 		if (source.type === "canvas") {
-			defMenu = defMenu.concat({ action: "validateFlow", label: this.getLabel("canvas_validateFlow", "CMI: Validate Flow") });
 			defMenu = defMenu.concat([{ action: "streamProperties", label: this.getLabel("canvas_streamProperties", "CMI: Options") }]);
 
 		} else if (source.type === "input_port") {
@@ -1184,10 +1195,7 @@ export default class App extends React.Component {
 				type += " to " + data.targetNodes[0]; // Comment link
 			}
 		}
-		if (data.editType === "createNode") {
-			NodeToForm.setNodeForm(data.nodeId, type);
-
-		} else if (data.editType === "displaySubPipeline" || data.editType === "displayPreviousPipeline") {
+		if (data.editType === "displaySubPipeline" || data.editType === "displayPreviousPipeline") {
 			this.setFlowNotificationMessages();
 			this.setBreadcrumbsDefinition(data.pipelineInfo.pipelineId);
 
@@ -1250,8 +1258,6 @@ export default class App extends React.Component {
 			this.log("action: previewNode", source.targetObject.id);
 		} else if (action === "deploy") {
 			this.log("action: deploy", source.targetObject.id);
-		} else if (action === "validateFlow") {
-			this.validateFlow(source);
 		} else if (action === "highlightBranch" || action === "highlightDownstream" || action === "highlightUpstream") {
 			this.log("action: " + action);
 			// this.canvasController.setSubdueStyle("opacity:0.4");
@@ -1336,29 +1342,29 @@ export default class App extends React.Component {
 			}
 			// currentEditorNodeId = nodeId; // set new node
 			const appData = { nodeId: nodeId, inExtraCanvas: inExtraCanvas, pipelineId: activePipelineId };
-			const properties = this.getNodeForm(nodeId, activePipelineId, canvasController);
+			this.getNodeForm(nodeId, activePipelineId, canvasController, (properties) => {
+				const messages = canvasController.getNodeMessages(nodeId, activePipelineId);
+				const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
+				const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
+				if (expressionInfo !== null) {
+					expressionInfo.validateLink = this.state.expressionValidate;
+				}
+				const propsInfo = {
+					title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
+					messages: messages,
+					formData: properties.formData,
+					parameterDef: properties,
+					appData: appData,
+					additionalComponents: additionalComponents,
+					expressionInfo: expressionInfo
+				};
 
-			const messages = canvasController.getNodeMessages(nodeId, activePipelineId);
-			const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
-			const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
-			if (expressionInfo !== null) {
-				expressionInfo.validateLink = this.state.expressionValidate;
-			}
-			const propsInfo = {
-				title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
-				messages: messages,
-				formData: properties.data.formData,
-				parameterDef: properties.data,
-				appData: appData,
-				additionalComponents: additionalComponents,
-				expressionInfo: expressionInfo
-			};
-
-			if (inExtraCanvas) {
-				this.setState({ showPropertiesDialog2: true, propertiesInfo2: propsInfo });
-			} else {
-				this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
-			}
+				if (inExtraCanvas) {
+					this.setState({ showPropertiesDialog2: true, propertiesInfo2: propsInfo });
+				} else {
+					this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
+				}
+			});
 		}
 	}
 
@@ -2234,8 +2240,6 @@ export default class App extends React.Component {
 			schemaValidationEnabled: this.state.schemaValidationEnabled,
 			displayBoundingRectangles: this.displayBoundingRectangles,
 			displayBoundingRectanglesEnabled: this.state.displayBoundingRectanglesEnabled,
-			validateFlowOnOpen: this.state.validateFlowOnOpen,
-			changeValidateFlowOnOpen: this.validateFlowOnOpen,
 			displayFullLabelOnHover: this.state.displayFullLabelOnHover,
 			changeDisplayFullLabelOnHover: this.displayFullLabelOnHover,
 			enableSaveToPalette: this.state.enableSaveToPalette,
