@@ -166,4 +166,26 @@ export default class CanvasUtils {
 		return decs;
 	}
 
+	// Returns true if either the Command Key on Mac or Control key on Windows
+	// is pressed.
+	static isCmndCtrlPressed(d3Event) {
+		if (this.isMacintosh()) {
+			return d3Event.metaKey;
+		}
+		return d3Event.ctrlKey;
+	}
+
+	// Returns whether user platform is Mac.
+	static isMacintosh() {
+		return navigator.platform.indexOf("Mac") > -1;
+	}
+
+	// Stops propagation of events and prevents any default behavior from
+	// being executed.
+	static stopPropagationAndPreventDefault(d3Event) {
+		d3Event.stopPropagation();
+		d3Event.preventDefault();
+	}
+
+
 }

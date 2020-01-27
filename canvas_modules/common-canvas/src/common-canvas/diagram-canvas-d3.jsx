@@ -20,7 +20,7 @@ import {
 } from "./constants/canvas-constants";
 
 import Logger from "../logging/canvas-logger.js";
-import CanvasD3Layout from "./svg-canvas-d3.js";
+import SVGCanvasD3 from "./svg-canvas-d3.js";
 
 export default class DiagramCanvas extends React.Component {
 	constructor(props) {
@@ -53,7 +53,7 @@ export default class DiagramCanvas extends React.Component {
 
 	componentDidMount() {
 		this.canvasD3Layout =
-			new CanvasD3Layout(this.props.canvasInfo,
+			new SVGCanvasD3(this.props.canvasInfo,
 				this.svgCanvasDivSelector,
 				this.props.config,
 				this.props.canvasController);
