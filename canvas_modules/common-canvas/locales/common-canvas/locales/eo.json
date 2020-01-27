@@ -1,0 +1,23 @@
+{
+	"MENU_HIGHLIGHTBRANCH": "[Esperanto~Highlight Branch~~eo]",
+	"MENU_HIGHLIGHTUPSTREAM": "[Esperanto~Highlight Upstream~~~~eo]",
+	"MENU_HIGHLIGHTDOWNSTREAM": "[Esperanto~Highlight Downstream~~~~~~eo]",
+	"MENU_UNHIGHLIGHT": "[Esperanto~Unhighlight~eo]",
+	"EDIT_CUTSELECTION": "[Esperanto~Cut~eo]",
+	"EDIT_COPYSELECTION": "[Esperanto~Copy~eo]",
+	"EDIT_PASTESELECTION": "[Esperanto~Paste~eo]",
+	"CANVAS_ADDCOMMENT": "[Esperanto~New comment~eo]",
+	"CANVAS_SELECTALL": "[Esperanto~Select All~~~~~~eo]",
+	"CANVAS_UNDO": "[Esperanto~Undo~eo]",
+	"CANVAS_REDO": "[Esperanto~Redo~eo]",
+	"CANVAS_DELETEOBJECT": "[Esperanto~Delete~eo]",
+	"NODE_CREATESUPERNODE": "[Esperanto~Create supernode~~eo]",
+	"NODE_EXPANDSUPERNODEINPLACE": "[Esperanto~Expand supernode~~eo]",
+	"NODE_COLLAPSESUPERNODEINPLACE": "[Esperanto~Collapse supernode~~~~eo]",
+	"CANVAS_VALIDATEFLOW": "[Esperanto~Validate Flow~eo]",
+	"NODE_EDITNODE": "[Esperanto~Open~eo]",
+	"NODE_EDITMENU": "[Esperanto~Edit~eo]",
+	"NODE_DISCONNECTNODE": "[Esperanto~Disconnect~~~~~~eo]",
+	"NODE_SAVETOPALETTE": "[Esperanto~Save to palette~eo]",
+	"LINK_DELETELINK": "[Esperanto~Delete~eo]"
+}

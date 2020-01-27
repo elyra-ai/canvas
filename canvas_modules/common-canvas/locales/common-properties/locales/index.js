@@ -16,6 +16,7 @@ const ptBR = require("./pt-br.json");
 const zhTW = require("./zh-tw.json");
 const zhCN = require("./zh-cn.json");
 const ru = require("./ru.json");
+const eo = require("./eo.json");
 
 module.exports = {
 	"de": de,
@@ -27,5 +28,6 @@ module.exports = {
 	"pt-BR": ptBR,
 	"zh-TW": zhTW,
 	"zh-CN": zhCN,
-	"ru": ru
+	"ru": ru,
+	"eo": eo
 };
