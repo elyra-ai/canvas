@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -182,11 +182,12 @@ export default class PipelineInHandler {
 				"height": comment.height,
 				"width": comment.width,
 				"x_pos": comment.x_pos,
-				"y_pos": comment.y_pos,
-				"class_name":
-					has(comment, "class_name")
-						? comment.class_name : "d3-comment-rect"
+				"y_pos": comment.y_pos
 			};
+
+			if (has(comment, "class_name")) {
+				newComment.class_name = comment.class_name;
+			}
 
 			if (has(comment, "style")) {
 				newComment.style = comment.style;
@@ -245,12 +246,15 @@ export default class PipelineInHandler {
 					if (this.isNode(nodes, association.node_ref)) {
 						const newLink = {
 							"id": association.id ? association.id : this.getUUID(),
-							"class_name": association.class_name ? association.class_name : "d3-object-link",
 							"srcNodeId": node.id,
 							"trgNodeId": association.node_ref,
 							"type": "associationLink",
 							"decorations": association.decorations
 						};
+
+						if (has(association, "class_name")) {
+							newLink.class_name = association.class_name;
+						}
 
 						links.push(newLink);
 					}
@@ -264,13 +268,15 @@ export default class PipelineInHandler {
 					if (this.isNode(nodes, assocRef.node_ref)) {
 						const newLink = {
 							"id": assocRef.id ? assocRef.id : this.getUUID(),
-							"class_name":
-								has(assocRef, "class_name")
-									? assocRef.class_name : "d3-comment-link",
 							"srcNodeId": comment.id,
 							"trgNodeId": assocRef.node_ref,
 							"type": "commentLink"
 						};
+
+						if (has(assocRef, "class_name")) {
+							newLink.class_name = assocRef.class_name;
+						}
+
 						if (assocRef.style) {
 							newLink.style = assocRef.style;
 						}

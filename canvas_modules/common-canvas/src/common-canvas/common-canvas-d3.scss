@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -107,7 +107,7 @@ $new-halo-link-color: $ui-05;
 /* Link colors */
 $comment-link-color: $light-grey;
 $object-link-color: $ui-05; /* Used for association links for a regular data flow canvas */
-$association-link-color: $light-grey; /* Used for association links for enableAssocLinkCreation canvas */
+$association-link-color: $light-grey; /* Used for association links when config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE.  */
 $data-link-color: $dark-blue;
 $link-hightlight-color: $brand-01;
 
@@ -640,8 +640,8 @@ $link-hightlight-color: $brand-01;
 	stroke-dasharray: 5.5;
 }
 
-/* This styles is used for association links which are created with the */
-/* enableAssocLinkCreation config value set to true.  */
+/* This style is used for association links which are displayed with the */
+/* enableAssocLinkType config variable set to ASSOC_RIGHT_SIDE_CURVE.  */
 .d3-association-link {
 	stroke: $association-link-color;
 	stroke-width: 2;

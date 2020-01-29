@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -330,10 +330,13 @@ export default class PipelineOutHandler {
 				y_pos: comment.y_pos,
 				width: comment.width,
 				height: comment.height,
-				class_name: comment.class_name,
-				content: comment.content,
-				associated_id_refs: this.createCommentLinks(canvasInfoLinks, comment.id)
 			};
+			if (comment.class_name) {
+				newCom.class_name = comment.class_name;
+			}
+			newCom.content = comment.content;
+			newCom.associated_id_refs = this.createCommentLinks(canvasInfoLinks, comment.id);
+
 			if (comment.style) {
 				newCom.style = comment.style;
 			}

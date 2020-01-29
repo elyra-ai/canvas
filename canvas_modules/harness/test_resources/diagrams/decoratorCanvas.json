@@ -605,7 +605,6 @@
               "y_pos": 16.999998092651367,
               "width": 196,
               "height": 61,
-              "class_name": "",
               "content": " This canvas tests the layout of decorators. They show the four possible decorator positions.",
               "associated_id_refs": []
             },
