@@ -8,7 +8,7 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-import { clearMessagesFromAllNodes, getCanvasData, getEventLogData, getLastEventLogData, useCmdOrCtrl
+import { clearMessagesFromAllNodes, getCanvasData, getEventLogData, getLastEventLogData, isNodeSelected, useCmdOrCtrl
 } from "./utilities/test-utils.js";
 import { deleteLinkInObjectModel, dragAndDrop, findCategoryElement, findNodeIndexInPalette, getEventLogCount,
 	getNodeFromObjectModel, getNodeIdForLabel, getNodeIdFromObjectModel, getNodePortSelector, getNodeSelector,
@@ -704,7 +704,7 @@ module.exports = function() {
 		canvasBackground.rightClick();
 	});
 
-	this.Then(/^I Ctrl\\\/Cmnd\\\+click the expanded supernode canvas background with node label "([^"]*)" to add it to the selections$/, function(nodeName) {
+	this.Then(/^I Ctrl\/Cmnd\+click the expanded supernode canvas background with node label "([^"]*)" to add it to the selections$/, function(nodeName) {
 		const useKey = useCmdOrCtrl();
 		browser.keys([useKey]);
 		const nodeSelector = getNodeSelector(nodeName, "grp");
@@ -1114,6 +1114,27 @@ module.exports = function() {
 		const warningMarker = node.$$(".d3-error-warning");
 		expect(warningMarker.length).toEqual(0);
 	});
+
+	this.Then(/^I verify the "([^"]*)" node is selected$/, function(nodeName) {
+		const nodeOutlineSelector = getNodeSelector(nodeName, "outline");
+		const nodeOutline = browser.$(nodeOutlineSelector);
+		const selected = nodeOutline.getAttribute("data-selected");
+		expect(selected).toEqual("yes");
+
+		const isSelected = isNodeSelected(nodeName);
+		expect(isSelected).toEqual(true);
+	});
+
+	this.Then(/^I verify the "([^"]*)" node is not selected$/, function(nodeName) {
+		const nodeOutlineSelector = getNodeSelector(nodeName, "outline");
+		const nodeOutline = browser.$(nodeOutlineSelector);
+		const selected = nodeOutline.getAttribute("data-selected");
+		expect(selected).toEqual("no");
+
+		const isSelected = isNodeSelected(nodeName);
+		expect(isSelected).toEqual(false);
+	});
+
 
 	this.Then(/^I clear the messages from nodes on the canvas$/, function() {
 		clearMessagesFromAllNodes();

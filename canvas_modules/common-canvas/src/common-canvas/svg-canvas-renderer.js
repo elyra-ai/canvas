@@ -888,13 +888,13 @@ export default class SVGCanvasRenderer {
 				}
 			})
 			.on("mouseup.zoom", () => {
-				this.logger.log("Zoom - mouseup");
+				this.logger.log("Canvas - mouseup-zoom");
 				if (this.drawingNewLink === true) {
 					this.stopDrawingNewLink();
 				}
 			})
 			.on("click.zoom", () => {
-				this.logger.log("Zoom - click");
+				this.logger.log("Canvas - click-zoom");
 				this.selecting = true;
 				// Only clear selections if clicked on the canvas of the current active pipeline.
 				// Clicking the canvas of an expanded supernode will select that node.
@@ -1545,6 +1545,21 @@ export default class SVGCanvasRenderer {
 		this.resizeObjHeight = resizeObj.height;
 	}
 
+	// Returns an array of objects to drag. If enableDragWithoutSelect is true,
+	// and the object on which this drag start has initiated is not in the
+	// set of selected objects, then just that object is to be dragged. Otherwise,
+	// the selected objects are the objects to be dragged.
+	getDragObjects(d) {
+		const selectedObjects = this.getSelectedNodesAndComments();
+
+		if (this.config.enableDragWithoutSelect &&
+				selectedObjects.findIndex((o) => o.id === d.id) === -1) {
+			return [d];
+		}
+
+		return selectedObjects;
+	}
+
 	dragStart(d) {
 		this.logger.logStartTimer("dragStart");
 		if (this.commentSizing) {
@@ -1556,11 +1571,12 @@ export default class SVGCanvasRenderer {
 			this.initializeResizeVariables(this.resizeObj);
 
 		} else {
+			this.dragging = true;
 			this.dragOffsetX = 0;
 			this.dragOffsetY = 0;
 			this.dragRunningX = 0;
 			this.dragRunningY = 0;
-			this.dragObjects = this.getSelectedNodesAndComments();
+			this.dragObjects = this.getDragObjects(d);
 			this.dragStartX = this.dragObjects[0].x_pos;
 			this.dragStartY = this.dragObjects[0].y_pos;
 		}
@@ -1618,7 +1634,7 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("dragMove", true);
 	}
 
-	dragEnd() {
+	dragEnd(d) {
 		this.logger.logStartTimer("dragEnd");
 
 		this.removeTempCursorOverlay();
@@ -1632,25 +1648,37 @@ export default class SVGCanvasRenderer {
 			this.endNodeSizing();
 
 		} else if (this.dragging) {
-			this.dragging = false; // Set to false before updating object model so main body of displayNodes is run.
-			if (this.dragRunningX !== 0 ||
-					this.dragRunningY !== 0) {
-				let dragFinalOffset = null;
-				if (this.config.enableSnapToGridType === "After") {
-					const stgPos = this.snapToGridDraggedNode();
-					dragFinalOffset = {
-						x: stgPos.x - this.dragStartX,
-						y: stgPos.y - this.dragStartY
-					};
-				} else {
-					dragFinalOffset = { x: this.dragRunningX, y: this.dragRunningY };
+			// Set to false before updating object model so main body of displayNodes is run.
+			this.dragging = false;
+
+			if (this.dragOffsetX === 0 &&
+					this.dragOffsetY === 0 &&
+					this.config.enableDragWithoutSelect) {
+				this.selectObject(
+					d,
+					d3Event.sourceEvent.shiftKey,
+					CanvasUtils.isCmndCtrlPressed(d3Event.sourceEvent));
+
+			} else {
+				if (this.dragRunningX !== 0 ||
+						this.dragRunningY !== 0) {
+					let dragFinalOffset = null;
+					if (this.config.enableSnapToGridType === "After") {
+						const stgPos = this.snapToGridDraggedNode();
+						dragFinalOffset = {
+							x: stgPos.x - this.dragStartX,
+							y: stgPos.y - this.dragStartY
+						};
+					} else {
+						dragFinalOffset = { x: this.dragRunningX, y: this.dragRunningY };
+					}
+					this.canvasController.editActionHandler({
+						editType: "moveObjects",
+						nodes: this.dragObjects.map((o) => o.id),
+						offsetX: dragFinalOffset.x,
+						offsetY: dragFinalOffset.y,
+						pipelineId: this.activePipeline.id });
 				}
-				this.canvasController.editActionHandler({
-					editType: "moveObjects",
-					nodes: this.objectModel.getSelectedObjectIds(),
-					offsetX: dragFinalOffset.x,
-					offsetY: dragFinalOffset.y,
-					pipelineId: this.activePipeline.id });
 			}
 		}
 		this.logger.logEndTimer("dragEnd", true);
@@ -1779,27 +1807,12 @@ export default class SVGCanvasRenderer {
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d) => {
 					this.logger.log("Node Group - mouse down");
-					this.selecting = true;
-					d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
-					if (!this.objectModel.isSelected(d.id, this.activePipeline.id)) {
-						if (d3Event.shiftKey) {
-							this.objectModel.selectSubGraph(d.id, this.activePipeline.id);
-						} else {
-							this.objectModel.toggleSelection(d.id, CanvasUtils.isCmndCtrlPressed(d3Event), this.activePipeline.id);
-						}
-					} else {
-						if (CanvasUtils.isCmndCtrlPressed(d3Event)) {
-							this.objectModel.toggleSelection(d.id, CanvasUtils.isCmndCtrlPressed(d3Event), this.activePipeline.id);
-						}
+					if (!this.config.enableDragWithoutSelect) {
+						this.selectObject(
+							d,
+							d3Event.shiftKey,
+							CanvasUtils.isCmndCtrlPressed(d3Event));
 					}
-					// Ensure 'selecting' flag is off before calling click action callback.
-					this.selecting = false;
-					this.canvasController.clickActionHandler({
-						clickType: "SINGLE_CLICK",
-						objectType: "node",
-						id: d.id,
-						selectedObjectIds: this.objectModel.getSelectedObjectIds(),
-						pipelineId: this.activePipeline.id });
 					this.logger.log("Node Group - finished mouse down");
 				})
 				.on("mousemove", (d) => {
@@ -1834,6 +1847,11 @@ export default class SVGCanvasRenderer {
 					this.logger.log("Node Group - context menu");
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					if (!this.isSuperBindingNode(d)) {
+						// With enableDragWithoutSelect set to true, the object for which the
+						// context menu is being requested needs to be implicitely selected.
+						if (this.config.enableDragWithoutSelect) {
+							this.selectObject(d, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+						}
 						that.openContextMenu("node", d);
 					}
 				})
@@ -2126,6 +2144,12 @@ export default class SVGCanvasRenderer {
 								.on("contextmenu", (port) => {
 									this.logger.log("Input Port Circle - context menu");
 									CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+									// With enableDragWithoutSelect set to true, the object for which the
+									// context menu is being requested needs to be implicitely selected.
+									if (this.config.enableDragWithoutSelect) {
+										this.selectObject(d, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+									}
+
 									this.openContextMenu("input_port", d, port);
 								})
 								.merge(inputPortSelection)
@@ -2187,6 +2211,11 @@ export default class SVGCanvasRenderer {
 									.on("contextmenu", (port) => {
 										this.logger.log("Input Port Arrow - context menu");
 										CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+										// With enableDragWithoutSelect set to true, the object for which the
+										// context menu is being requested needs to be implicitely selected.
+										if (this.config.enableDragWithoutSelect) {
+											this.selectObject(d, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+										}
 										this.openContextMenu("input_port", d, port);
 									})
 									.merge(inputPortArrowSelection)
@@ -2254,6 +2283,11 @@ export default class SVGCanvasRenderer {
 								.on("contextmenu", (port) => {
 									this.logger.log("Output Port Circle - context menu");
 									CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+									// With enableDragWithoutSelect set to true, the object for which the
+									// context menu is being requested needs to be implicitely selected.
+									if (this.config.enableDragWithoutSelect) {
+										this.selectObject(d, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+									}
 									this.openContextMenu("output_port", d, port);
 								})
 								.merge(outputPortSelection)
@@ -2294,6 +2328,45 @@ export default class SVGCanvasRenderer {
 			nodeGroupSel.exit().remove();
 		}
 		this.logger.logEndTimer("displayNodes " + this.getFlags());
+	}
+
+	// Performs required action for when either a comment or node is selected.
+	// This may mean: simply selecting the object; or adding the object to the
+	// currently selected set of objects; or even toggling the object's selection
+	// off. This method also sends a SINGLE_CLICK action to the
+	// clickActionHandler callback in the host application.
+	selectObject(d, isShiftKeyPressed, isCmndCtrlPressed) {
+		this.selecting = true;
+
+		if (!this.objectModel.isSelected(d.id, this.activePipeline.id)) {
+			if (isShiftKeyPressed) {
+				this.objectModel.selectSubGraph(d.id, this.activePipeline.id);
+			} else {
+				this.objectModel.toggleSelection(d.id, isCmndCtrlPressed, this.activePipeline.id);
+			}
+		} else {
+			if (isCmndCtrlPressed) {
+				this.objectModel.toggleSelection(d.id, isCmndCtrlPressed, this.activePipeline.id);
+			}
+		}
+		// Ensure 'selecting' flag is off before calling click action callback.
+		this.selecting = false;
+
+		// Even though the single click message below should be emitted
+		// from common canvas for comments, if we uncomment this line it prevents
+		// the double click event going to the comment group object. This seems
+		// to be a timing issue since the same problem is not evident with the
+		// similar code for the node group object.
+		// TODO - Issue 2465 - Find out why this problem occurs.
+		const objectTypeName = this.getComment(d.id) ? "comment" : "node";
+		if (objectTypeName === "node") {
+			this.canvasController.clickActionHandler({
+				clickType: "SINGLE_CLICK",
+				objectType: objectTypeName,
+				id: d.id,
+				selectedObjectIds: this.objectModel.getSelectedObjectIds(),
+				pipelineId: this.activePipeline.id });
+		}
 	}
 
 	// Adds a set of decorations to either a node of link object.
@@ -3719,32 +3792,13 @@ export default class SVGCanvasRenderer {
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d) => {
 					this.logger.log("Comment Group - mouse down");
-					this.selecting = true;
-					d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
-					if (!this.objectModel.isSelected(d.id, this.activePipeline.id)) {
-						if (d3Event.shiftKey) {
-							this.objectModel.selectSubGraph(d.id, this.activePipeline.id);
-						} else {
-							this.objectModel.toggleSelection(d.id, CanvasUtils.isCmndCtrlPressed(d3Event), this.activePipeline.id);
-						}
-					} else {
-						if (CanvasUtils.isCmndCtrlPressed(d3Event)) {
-							this.objectModel.toggleSelection(d.id, CanvasUtils.isCmndCtrlPressed(d3Event), this.activePipeline.id);
-						}
+
+					if (!this.config.enableDragWithoutSelect) {
+						this.selectObject(
+							d,
+							d3Event.shiftKey,
+							CanvasUtils.isCmndCtrlPressed(d3Event));
 					}
-					// Ensure 'selecting' flag is off before calling click action callback.
-					this.selecting = false;
-					// Even though the single click message below should be emitted
-					// from common canvas, if we uncomment this line it prevents the
-					// double click event going to the comment group object. This seems
-					// to be a timing issue since the same problem is not evident with the
-					// similar code for the Node group object.
-					// this.canvasController.clickActionHandler({
-					// 	clickType: "SINGLE_CLICK",
-					// 	objectType: "comment",
-					// 	id: d.id,
-					// 	selectedObjectIds: this.objectModel.getSelectedObjectIds(),
-					// 	pipelineId: this.activePipeline.id });
 					this.logger.log("Comment Group - finished mouse down");
 				})
 				.on("click", (d) => {
@@ -3766,6 +3820,11 @@ export default class SVGCanvasRenderer {
 				})
 				.on("contextmenu", (d) => {
 					this.logger.log("Comment Group - context menu");
+					// With enableDragWithoutSelect set to true, the object for which the
+					// context menu is being requested needs to be implicitely selected.
+					if (this.config.enableDragWithoutSelect) {
+						this.selectObject(d, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+					}
 					this.openContextMenu("comment", d);
 				})
 				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
@@ -4644,7 +4703,12 @@ export default class SVGCanvasRenderer {
 			if (this.nodeSizing) {
 				affectLinks = this.getConnectedLinksFromNodeSizingArray(this.nodeSizingMovedNodes);
 			} else {
-				let affectedNodesAndComments = this.getSelectedNodesAndComments();
+				let affectedNodesAndComments;
+				if (this.dragging) {
+					affectedNodesAndComments = this.dragObjects;
+				} else {
+					affectedNodesAndComments = this.getSelectedNodesAndComments();
+				}
 				// For sub-flow rendering, we need to add the supernode binding nodes
 				// because their links will also need to be refreshed when dragging is ocurring.
 				if (this.isDisplayingSubFlow()) {

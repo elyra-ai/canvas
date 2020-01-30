@@ -93,6 +93,38 @@ function getCanvasDataForSecondCanvas() {
 	return canvasData.pipelines[0]; // Canvas info returned has an array of pipelines. Return the first.
 }
 
+function getSelectedNodes() {
+	const selectedNodes = browser.execute(function() {
+		return document.canvasController.getSelectedNodes();
+	});
+
+	return selectedNodes.value;
+}
+
+function isNodeSelected(nodeName) {
+	const find = getSelectedNodes().findIndex((selNode) => selNode.label === nodeName);
+	if (find > -1) {
+		return true;
+	}
+	return false;
+}
+
+function getSelectedComments() {
+	const selectedComments = browser.execute(function() {
+		return document.canvasController.getSelectedComments();
+	});
+
+	return selectedComments.value;
+}
+
+function isCommentSelected(commentText) {
+	const find = getSelectedComments().findIndex((selCom) => selCom.content === commentText);
+	if (find > -1) {
+		return true;
+	}
+	return false;
+}
+
 function getEventLogData() {
 	const eventLog = browser.execute(function() {
 		return document.eventLog;
@@ -199,5 +231,7 @@ module.exports = {
 	loadCanvas2: loadCanvas2,
 	loadPalette: loadPalette,
 	loadPalette2: loadPalette2,
-	loadProperties: loadProperties
+	loadProperties: loadProperties,
+	isNodeSelected: isNodeSelected,
+	isCommentSelected: isCommentSelected
 };

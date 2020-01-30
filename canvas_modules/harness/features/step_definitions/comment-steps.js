@@ -9,7 +9,7 @@
 /* eslint no-console: "off" */
 /* eslint sort-imports: "off" */
 
-import { getCanvasData, getEventLogData, useCmdOrCtrl } from "./utilities/test-utils.js";
+import { getCanvasData, getEventLogData, isCommentSelected, useCmdOrCtrl } from "./utilities/test-utils.js";
 import { addTextForComment, dragAndDrop, getCommentIdForText, getCommentIdForTextInSubFlow,
 	getCommentIdForTextInSubFlowInSubFlow,
 	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
@@ -298,6 +298,14 @@ module.exports = function() {
 	this.Then(/^I Ctrl\/Cmnd\+click the comment with text "([^"]*)" to add it to the selections$/, function(commentText) {
 		const useKey = useCmdOrCtrl();
 		browser.keys([useKey]);
+		const commentSelector = getCommentSelector(commentText, "grp");
+		browser.$(commentSelector).click();
+		browser.keys([useKey]);
+	});
+
+	this.Then(/^I Ctrl\/Cmnd\+click the comment with text "([^"]*)" in the subflow to add it to the selections$/, function(commentText) {
+		const useKey = useCmdOrCtrl();
+		browser.keys([useKey]);
 		const commentSelector = getCommentSelectorInSubFlow(commentText, "grp");
 		browser.$(commentSelector).click();
 		browser.keys([useKey]);
@@ -353,6 +361,33 @@ module.exports = function() {
 		const comment = browser.$(commentSelector);
 		var actualCommentPosition = comment.getAttribute("transform");
 		expect(actualCommentPosition).toEqual(givenCommentPosition);
+	});
+
+	this.Then(/^I verify the "([^"]*)" comment is selected$/, function(commentText) {
+		const comOutlineSelector = getCommentSelector(commentText, "outline");
+		const comOutline = browser.$(comOutlineSelector);
+		const selected = comOutline.getAttribute("data-selected");
+		expect(selected).toEqual("yes");
+
+		const isSelected = isCommentSelected(commentText);
+		expect(isSelected).toEqual(true);
+	});
+
+	this.Then(/^I verify the "([^"]*)" comment is not selected$/, function(commentText) {
+		const comOutlineSelector = getCommentSelector(commentText, "outline");
+		const comOutline = browser.$(comOutlineSelector);
+		const selected = comOutline.getAttribute("data-selected");
+		expect(selected).toEqual("no");
+
+		const isSelected = isCommentSelected(commentText);
+		expect(isSelected).toEqual(false);
+	});
+
+	this.Then(/^I verify the "([^"]*)" comment transform is "([^"]*)"$/, function(commentText, transform) {
+		const comSelector = getCommentSelector(commentText, "grp");
+		const com = browser.$(comSelector);
+		const actualTransform = com.getAttribute("transform");
+		expect(actualTransform).toEqual(transform);
 	});
 
 };

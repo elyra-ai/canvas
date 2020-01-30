@@ -80,6 +80,7 @@ export default class SidePanelForms extends React.Component {
 		this.saveZoomOptionChange = this.saveZoomOptionChange.bind(this);
 		this.snapToGridOptionChange = this.snapToGridOptionChange.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
+		this.useEnableDragWithoutSelect = this.useEnableDragWithoutSelect.bind(this);
 		this.useEnableAssocLinkCreation = this.useEnableAssocLinkCreation.bind(this);
 		this.useEnableSaveToPalette = this.useEnableSaveToPalette.bind(this);
 		this.useEnableDropZoneOnExternalDrag = this.useEnableDropZoneOnExternalDrag.bind(this);
@@ -310,6 +311,10 @@ export default class SidePanelForms extends React.Component {
 
 	useInternalObjectModel(checked) {
 		this.props.canvasConfig.useInternalObjectModel(checked);
+	}
+
+	useEnableDragWithoutSelect(checked) {
+		this.props.canvasConfig.useEnableDragWithoutSelect(checked);
 	}
 
 	useEnableAssocLinkCreation(checked) {
@@ -623,6 +628,20 @@ export default class SidePanelForms extends React.Component {
 				/>
 			</div>
 		</div>);
+
+		var enableDragWithoutSelect = (<div className="harness-sidepanel-children">
+			<form>
+				<div className="harness-sidepanel-headers">Enable Drag Without Select</div>
+				<div>
+					<Toggle
+						id="harness-sidepanel-drag-without-select"
+						toggled={this.props.canvasConfig.dragWithoutSelect}
+						onToggle={this.useEnableDragWithoutSelect}
+					/>
+				</div>
+			</form>
+		</div>);
+
 
 		var enableAssocLinkCreation = (<div className="harness-sidepanel-children">
 			<form>
@@ -997,6 +1016,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{paletteLayout}
 				{divider}
+				{enableDragWithoutSelect}
+				{divider}
 				{enableAssocLinkCreation}
 				{divider}
 				{assocLinkType}
@@ -1035,6 +1056,7 @@ SidePanelForms.propTypes = {
 		commonCanvasConfig: PropTypes.object,
 		enableNavPalette: PropTypes.func,
 		internalObjectModel: PropTypes.bool,
+		dragWithoutSelect: PropTypes.bool,
 		assocLinkCreation: PropTypes.bool,
 		setDiagramJSON: PropTypes.func,
 		setPaletteJSON: PropTypes.func,
@@ -1066,6 +1088,7 @@ SidePanelForms.propTypes = {
 		snapToGridX: PropTypes.string,
 		snapToGridY: PropTypes.string,
 		useInternalObjectModel: PropTypes.func,
+		useEnableDragWithoutSelect: PropTypes.func,
 		useEnableAssocLinkCreation: PropTypes.func,
 		setConnectionType: PropTypes.func,
 		selectedSnapToGrid: PropTypes.string,

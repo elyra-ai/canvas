@@ -96,6 +96,7 @@ export default class App extends React.Component {
 			consoleOpened: false,
 			contextMenuInfo: {},
 			internalObjectModel: true,
+			dragWithoutSelect: false,
 			assocLinkCreation: false,
 			propertiesContainerType: FLYOUT,
 			openSidepanelCanvas: false,
@@ -200,6 +201,7 @@ export default class App extends React.Component {
 		this.setSaveZoom = this.setSaveZoom.bind(this);
 		this.setZoomIntoSubFlows = this.setZoomIntoSubFlows.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
+		this.useEnableDragWithoutSelect = this.useEnableDragWithoutSelect.bind(this);
 		this.useEnableAssocLinkCreation = this.useEnableAssocLinkCreation.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
@@ -1034,6 +1036,11 @@ export default class App extends React.Component {
 		this.log("use internal object model", enabled);
 	}
 
+	useEnableDragWithoutSelect(enabled) {
+		this.setState({ dragWithoutSelect: enabled });
+		this.log("enable drag without select", enabled);
+	}
+
 	useEnableAssocLinkCreation(enabled) {
 		this.setState({ assocLinkCreation: enabled });
 		this.log("enable association link creation", enabled);
@@ -1091,16 +1098,24 @@ export default class App extends React.Component {
 	// common-canvas
 	clickActionHandler(source) {
 		this.log("clickActionHandler()", source);
-		if (source.clickType === "DOUBLE_CLICK" &&
-				source.objectType === "node") {
+		if (source.objectType === "node" &&
+				(this.state.dragWithoutSelect &&
+					source.clickType === "SINGLE_CLICK" &&
+					this.canvasController.getSelectedObjectIds().length === 1) ||
+				(!this.state.dragWithoutSelect &&
+					source.clickType === "DOUBLE_CLICK")) {
 			this.editNodeHandler(source.id, source.pipelineId);
 		}
 	}
 
 	extraCanvasClickActionHandler(source) {
 		this.log("extraCanvasClickActionHandler()", source);
-		if (source.clickType === "DOUBLE_CLICK" &&
-				source.objectType === "node") {
+		if (source.objectType === "node" &&
+				(this.state.dragWithoutSelect &&
+				source.clickType === "SINGLE_CLICK" &&
+				this.canvasController2.getSelectedObjectIds().length === 1) ||
+				(!this.state.dragWithoutSelect &&
+					source.clickType === "DOUBLE_CLICK")) {
 			this.editNodeHandler(source.id, source.pipelineId, true);
 		}
 	}
@@ -1373,7 +1388,8 @@ export default class App extends React.Component {
 		// apply properties from previous node if node selection has to more than one node
 		if (this.currentEditorId) {
 			// don't apply changes if node has been removed
-			if (this.canvasController.getNode(this.currentEditorId, data.selectedPipelineId)) {
+			if (this.canvasController.getNode(this.currentEditorId, data.selectedPipelineId) &&
+					this.CommonProperties) {
 				this.CommonProperties.applyPropertiesEditing(false);
 			}
 			this.setState({ showPropertiesDialog: false });
@@ -1386,7 +1402,8 @@ export default class App extends React.Component {
 		// apply properties from previous node if node selection has to more than one node
 		if (this.currentEditorId2) {
 			// don't apply changes if node has been removed
-			if (this.canvasController2.getNode(this.currentEditorId2, data.selectedPipelineId)) {
+			if (this.canvasController2.getNode(this.currentEditorId2, data.selectedPipelineId) &&
+					this.CommonProperties2) {
 				this.CommonProperties2.applyPropertiesEditing(false);
 			}
 			this.setState({ showPropertiesDialog2: false });
@@ -1752,6 +1769,7 @@ export default class App extends React.Component {
 			enableAssocLinkType: this.state.selectedAssocLinkType,
 			enableNodeLayout: null,
 			enableInternalObjectModel: this.state.internalObjectModel,
+			enableDragWithoutSelect: this.state.dragWithoutSelect,
 			enableAssocLinkCreation: this.state.assocLinkCreation,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
@@ -2019,6 +2037,7 @@ export default class App extends React.Component {
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
 			enableInternalObjectModel: this.state.internalObjectModel,
+			enableDragWithoutSelect: this.state.dragWithoutSelect,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
 			enableMoveNodesOnSupernodeResize: true,
@@ -2188,6 +2207,7 @@ export default class App extends React.Component {
 			commonCanvasConfig: commonCanvasConfig,
 			enableNavPalette: this.enableNavPalette,
 			internalObjectModel: this.state.internalObjectModel,
+			dragWithoutSelect: this.state.dragWithoutSelect,
 			assocLinkCreation: this.state.assocLinkCreation,
 			setDiagramJSON: this.setDiagramJSON,
 			setPaletteJSON: this.setPaletteJSON,
@@ -2208,6 +2228,7 @@ export default class App extends React.Component {
 			setSaveZoom: this.setSaveZoom,
 			setZoomIntoSubFlows: this.setZoomIntoSubFlows,
 			useInternalObjectModel: this.useInternalObjectModel,
+			useEnableDragWithoutSelect: this.useEnableDragWithoutSelect,
 			useEnableAssocLinkCreation: this.useEnableAssocLinkCreation,
 			setInteractionType: this.setInteractionType,
 			selectedInteractionType: this.state.selectedInteractionType,

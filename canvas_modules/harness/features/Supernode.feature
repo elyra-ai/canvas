@@ -206,14 +206,14 @@ Feature: Supernode
 		Then I pause for 0.3 seconds
 
 		Then I click the expanded supernode canvas background with node label "Supernode1" to select it
-		Then I Ctrl\/Cmnd\+click the expanded supernode canvas background with node label "Supernode3" to add it to the selections
+		Then I Ctrl/Cmnd+click the expanded supernode canvas background with node label "Supernode3" to add it to the selections
 		Then I verify that 2 objects are selected
 
 		Then I click the canvas background at 100, 100 to close the context menu or clear selections
 		Then I verify that 0 objects are selected
 
 		Then I click the "Database" node to select it
-		Then I Ctrl\/Cmnd\+click the expanded supernode canvas background with node label "Supernode1" to add it to the selections
+		Then I Ctrl/Cmnd+click the expanded supernode canvas background with node label "Supernode1" to add it to the selections
 		Then I verify that 2 objects are selected
 
 		Then I click the expanded supernode canvas background with node label "Supernode3" to select it
@@ -239,7 +239,7 @@ Feature: Supernode
 		Then I click option "New comment" from the context menu
 		Then I edit the comment "" in the subflow with text "Hello Canvas in a sub-flow!"
 		Then I click the "Partition" node in the subflow to select it
-		Then I Ctrl/Cmnd+click the comment with text "Hello Canvas in a sub-flow!" to add it to the selections
+		Then I Ctrl/Cmnd+click the comment with text "Hello Canvas in a sub-flow!" in the subflow to add it to the selections
 		Then I right click the canvas background for supernode "Supernode" to display the context menu
 		Then I verify that 2 objects are selected
 
