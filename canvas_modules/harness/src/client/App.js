@@ -1099,11 +1099,11 @@ export default class App extends React.Component {
 	clickActionHandler(source) {
 		this.log("clickActionHandler()", source);
 		if (source.objectType === "node" &&
-				(this.state.dragWithoutSelect &&
+				((this.state.dragWithoutSelect &&
 					source.clickType === "SINGLE_CLICK" &&
 					this.canvasController.getSelectedObjectIds().length === 1) ||
-				(!this.state.dragWithoutSelect &&
-					source.clickType === "DOUBLE_CLICK")) {
+					(!this.state.dragWithoutSelect &&
+						source.clickType === "DOUBLE_CLICK"))) {
 			this.editNodeHandler(source.id, source.pipelineId);
 		}
 	}
@@ -1111,11 +1111,11 @@ export default class App extends React.Component {
 	extraCanvasClickActionHandler(source) {
 		this.log("extraCanvasClickActionHandler()", source);
 		if (source.objectType === "node" &&
-				(this.state.dragWithoutSelect &&
-				source.clickType === "SINGLE_CLICK" &&
-				this.canvasController2.getSelectedObjectIds().length === 1) ||
-				(!this.state.dragWithoutSelect &&
-					source.clickType === "DOUBLE_CLICK")) {
+				((this.state.dragWithoutSelect &&
+					source.clickType === "SINGLE_CLICK" &&
+					this.canvasController2.getSelectedObjectIds().length === 1) ||
+					(!this.state.dragWithoutSelect &&
+						source.clickType === "DOUBLE_CLICK"))) {
 			this.editNodeHandler(source.id, source.pipelineId, true);
 		}
 	}
