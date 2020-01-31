@@ -904,10 +904,9 @@ export default class SVGCanvasRenderer {
 				// Ensure 'selecting' flag is off before calling click action callback.
 				this.selecting = false;
 				this.canvasController.clickActionHandler({
-					clickType: "SINGLE_CLICK",
+					clickType: d3Event.type === "contextmenu" ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
 					objectType: "canvas",
-					selectedObjectIds:
-					this.objectModel.getSelectedObjectIds()
+					selectedObjectIds: this.objectModel.getSelectedObjectIds()
 				});
 			})
 			.on("dblclick.zoom", () => {
@@ -1651,11 +1650,14 @@ export default class SVGCanvasRenderer {
 			// Set to false before updating object model so main body of displayNodes is run.
 			this.dragging = false;
 
+			// If the pointer hasn't moved and enableDragWithoutSelect we interpret
+			// that as a select on the object.
 			if (this.dragOffsetX === 0 &&
 					this.dragOffsetY === 0 &&
 					this.config.enableDragWithoutSelect) {
 				this.selectObject(
 					d,
+					d3Event.type,
 					d3Event.sourceEvent.shiftKey,
 					CanvasUtils.isCmndCtrlPressed(d3Event.sourceEvent));
 
@@ -1810,6 +1812,7 @@ export default class SVGCanvasRenderer {
 					if (!this.config.enableDragWithoutSelect) {
 						this.selectObject(
 							d,
+							d3Event.type,
 							d3Event.shiftKey,
 							CanvasUtils.isCmndCtrlPressed(d3Event));
 					}
@@ -1850,7 +1853,7 @@ export default class SVGCanvasRenderer {
 						// With enableDragWithoutSelect set to true, the object for which the
 						// context menu is being requested needs to be implicitely selected.
 						if (this.config.enableDragWithoutSelect) {
-							this.selectObject(d, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+							this.selectObject(d, d3Event.type, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
 						}
 						that.openContextMenu("node", d);
 					}
@@ -2147,7 +2150,7 @@ export default class SVGCanvasRenderer {
 									// With enableDragWithoutSelect set to true, the object for which the
 									// context menu is being requested needs to be implicitely selected.
 									if (this.config.enableDragWithoutSelect) {
-										this.selectObject(d, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+										this.selectObject(d, d3Event.type, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
 									}
 
 									this.openContextMenu("input_port", d, port);
@@ -2214,7 +2217,7 @@ export default class SVGCanvasRenderer {
 										// With enableDragWithoutSelect set to true, the object for which the
 										// context menu is being requested needs to be implicitely selected.
 										if (this.config.enableDragWithoutSelect) {
-											this.selectObject(d, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+											this.selectObject(d, d3Event.type, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
 										}
 										this.openContextMenu("input_port", d, port);
 									})
@@ -2286,7 +2289,7 @@ export default class SVGCanvasRenderer {
 									// With enableDragWithoutSelect set to true, the object for which the
 									// context menu is being requested needs to be implicitely selected.
 									if (this.config.enableDragWithoutSelect) {
-										this.selectObject(d, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+										this.selectObject(d, d3Event.type, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
 									}
 									this.openContextMenu("output_port", d, port);
 								})
@@ -2335,7 +2338,7 @@ export default class SVGCanvasRenderer {
 	// currently selected set of objects; or even toggling the object's selection
 	// off. This method also sends a SINGLE_CLICK action to the
 	// clickActionHandler callback in the host application.
-	selectObject(d, isShiftKeyPressed, isCmndCtrlPressed) {
+	selectObject(d, d3EventType, isShiftKeyPressed, isCmndCtrlPressed) {
 		this.selecting = true;
 
 		if (!this.objectModel.isSelected(d.id, this.activePipeline.id)) {
@@ -2361,7 +2364,7 @@ export default class SVGCanvasRenderer {
 		const objectTypeName = this.getComment(d.id) ? "comment" : "node";
 		if (objectTypeName === "node") {
 			this.canvasController.clickActionHandler({
-				clickType: "SINGLE_CLICK",
+				clickType: d3EventType === "contextmenu" ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
 				objectType: objectTypeName,
 				id: d.id,
 				selectedObjectIds: this.objectModel.getSelectedObjectIds(),
@@ -3796,6 +3799,7 @@ export default class SVGCanvasRenderer {
 					if (!this.config.enableDragWithoutSelect) {
 						this.selectObject(
 							d,
+							d3Event.type,
 							d3Event.shiftKey,
 							CanvasUtils.isCmndCtrlPressed(d3Event));
 					}
@@ -3823,7 +3827,7 @@ export default class SVGCanvasRenderer {
 					// With enableDragWithoutSelect set to true, the object for which the
 					// context menu is being requested needs to be implicitely selected.
 					if (this.config.enableDragWithoutSelect) {
-						this.selectObject(d, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+						this.selectObject(d, d3Event.type, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
 					}
 					this.openContextMenu("comment", d);
 				})
