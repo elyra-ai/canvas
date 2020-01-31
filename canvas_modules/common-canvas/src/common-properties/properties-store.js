@@ -31,7 +31,7 @@ import datasetMetadataReducer from "./reducers/dataset-metadata";
 import rowSelectionsReducer from "./reducers/row-selections";
 import componentMetadataReducer from "./reducers/component-metadata";
 import PropertyUtils from "./util/property-utils.js";
-import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants.js";
+import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS } from "./constants/constants.js";
 
 /* eslint max-depth: ["error", 6] */
 
@@ -289,11 +289,11 @@ export default class PropertiesStore {
 			returnMessage.type = (errorMsgCount > 0) ? CONDITION_MESSAGE_TYPE.ERROR : CONDITION_MESSAGE_TYPE.WARNING;
 			returnMessage.text = (errorMsgCount > 0)
 				? PropertyUtils.formatMessage(intl,
-					MESSAGE_KEYS.TABLE_SUMMARY_ERROR, MESSAGE_KEYS_DEFAULTS.TABLE_SUMMARY_ERROR, { errorMsgCount: errorMsgCount })
+					MESSAGE_KEYS.TABLE_SUMMARY_ERROR, { errorMsgCount: errorMsgCount })
 				: "";
 			returnMessage.text += (warningMsgCount > 0)
 				? PropertyUtils.formatMessage(intl,
-					MESSAGE_KEYS.TABLE_SUMMARY_WARNING, MESSAGE_KEYS_DEFAULTS.TABLE_SUMMARY_WARNING, { warningMsgCount: warningMsgCount })
+					MESSAGE_KEYS.TABLE_SUMMARY_WARNING, { warningMsgCount: warningMsgCount })
 				: "";
 		}
 		return returnMessage;

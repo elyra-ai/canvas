@@ -14,7 +14,7 @@ import ReactDOM from "react-dom";
 import { setTitle } from "./../../actions";
 import Icon from "./../../../icons/icon.jsx";
 import TextInput from "carbon-components-react/lib/components/TextInput";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
+import { MESSAGE_KEYS } from "./../../constants/constants";
 import PropertyUtils from "./../../util/property-utils";
 
 class TitleEditor extends Component {
@@ -24,7 +24,7 @@ class TitleEditor extends Component {
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.id = PropertyUtils.generateId();
 		this.labelText = PropertyUtils.formatMessage(props.controller.getReactIntl(),
-			MESSAGE_KEYS.TITLE_EDITOR_LABEL, MESSAGE_KEYS_DEFAULTS.TITLE_EDITOR_LABEL);
+			MESSAGE_KEYS.TITLE_EDITOR_LABEL);
 	}
 
 	_handleKeyPress(e) {

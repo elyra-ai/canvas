@@ -17,7 +17,7 @@ import Icon from "carbon-components-react/lib/components/Icon";
 import isEmpty from "lodash/isEmpty";
 import PropertyUtils from "./../../util/property-utils";
 import ControlUtils from "./../../util/control-utils";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
+import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import uuid4 from "uuid/v4";
 import { STATES } from "./../../constants/constants.js";
 import { Type, ParamRole } from "./../../constants/form-constants.js";
@@ -171,8 +171,7 @@ class SummaryPanel extends React.Component {
 				</table>);
 				if (summaryValues.length > 10) {
 					const largeTableLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-						MESSAGE_KEYS.LONG_TABLE_SUMMARY_PLACEHOLDER,
-						MESSAGE_KEYS_DEFAULTS.LONG_TABLE_SUMMARY_PLACEHOLDER);
+						MESSAGE_KEYS.LONG_TABLE_SUMMARY_PLACEHOLDER);
 					summaryBody = (<div className={"properties-summary-table"}><span>{largeTableLabel}</span></div>);
 				}
 				summaryTables.push(
@@ -232,14 +231,14 @@ class SummaryPanel extends React.Component {
 			let descriptionText = "";
 			if (errorCount > 0 && warningCount === 0) {
 				descriptionText = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-					MESSAGE_KEYS.CONTROL_SUMMARY_ERROR, MESSAGE_KEYS_DEFAULTS.CONTROL_SUMMARY_ERROR, { errorMsgCount: errorCount });
+					MESSAGE_KEYS.CONTROL_SUMMARY_ERROR, { errorMsgCount: errorCount });
 			} else if (errorCount > 0 && warningCount > 0) {
 				descriptionText = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-					MESSAGE_KEYS.CONTROL_SUMMARY_ERROR_WARNING, MESSAGE_KEYS_DEFAULTS.CONTROL_SUMMARY_ERROR_WARNING,
+					MESSAGE_KEYS.CONTROL_SUMMARY_ERROR_WARNING,
 					{ errorMsgCount: errorCount, warningMsgCount: warningCount });
 			} else if (errorCount === 0 && warningCount > 0) {
 				descriptionText = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-					MESSAGE_KEYS.CONTROL_SUMMARY_WARNING, MESSAGE_KEYS_DEFAULTS.CONTROL_SUMMARY_WARNING, { warningMsgCount: warningCount });
+					MESSAGE_KEYS.CONTROL_SUMMARY_WARNING, { warningMsgCount: warningCount });
 			}
 			return (
 				<Tooltip
@@ -266,8 +265,8 @@ class SummaryPanel extends React.Component {
 			</IconButton>
 			{icon}
 		</div>);
-		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
-		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
+		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL);
+		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL);
 		const flyout = this.state.showWideFlyout ? (<WideFlyout
 			cancelHandler={this.cancelWideFlyout}
 			okHandler={this.hideWideFlyout}

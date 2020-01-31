@@ -15,9 +15,10 @@ import Palette from "../../src/palette/palette.jsx";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
 import NotificationPanel from "../../src/notification-panel/notification-panel.jsx";
-import { shallow } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
+import { mountWithIntl } from "../_utils_/intl-utils";
+
 
 describe("CommonCanvas renders correctly", () => {
 	let canvasController;
@@ -132,7 +133,7 @@ function createCommonCanvas(config, canvasController, toolbarConfig, notificatio
 	const selectionChangeHandler = sinon.spy();
 	const tipHandler = sinon.spy();
 	const toolbarMenuActionHandler = sinon.spy();
-	const wrapper = shallow(
+	const wrapper = mountWithIntl(
 		<CommonCanvas
 			config={config}
 			contextMenuHandler={contextMenuHandler}

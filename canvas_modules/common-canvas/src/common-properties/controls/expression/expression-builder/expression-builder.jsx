@@ -11,7 +11,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ExpressionControl from "./../expression.jsx";
 import ExpressionSelectionPanel from "./expression-selection-panel.jsx";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../../constants/constants";
+import { MESSAGE_KEYS } from "./../../../constants/constants";
 import PropertyUtils from "./../../../util/property-utils";
 
 export default class ExpressionBuilder extends React.Component {
@@ -102,7 +102,7 @@ export default class ExpressionBuilder extends React.Component {
 
 	render() {
 		const expressionLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-			MESSAGE_KEYS.EXPRESSION_BUILDER_LABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSION_BUILDER_LABEL);
+			MESSAGE_KEYS.EXPRESSION_BUILDER_LABEL);
 
 		return (
 			<div >

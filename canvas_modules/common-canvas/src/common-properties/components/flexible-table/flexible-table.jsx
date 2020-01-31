@@ -13,7 +13,7 @@ import PropTypes from "prop-types";
 import Search from "carbon-components-react/lib/components/Search";
 import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
 import PropertyUtils from "./../../util/property-utils";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
+import { MESSAGE_KEYS, SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
 import ReactResizeDetector from "react-resize-detector";
 import classNames from "classnames";
 import has from "lodash/has";
@@ -387,7 +387,7 @@ export default class FlexibleTable extends React.Component {
 
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
 			const placeHolder = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.TABLE_SEARCH_PLACEHOLDER, MESSAGE_KEYS_DEFAULTS.TABLE_SEARCH_PLACEHOLDER) + " " + searchLabel;
+				MESSAGE_KEYS.TABLE_SEARCH_PLACEHOLDER) + " " + searchLabel;
 
 			searchBar = (
 				<div className={classNames("properties-ft-search-container", { "disabled": disabled })}>

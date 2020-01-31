@@ -16,6 +16,7 @@ module.exports = {
 		"globals": {
 				"document": true,
 				"window": true,
-				"location": true
+				"location": true,
+				"navigator": true
 		}
 };

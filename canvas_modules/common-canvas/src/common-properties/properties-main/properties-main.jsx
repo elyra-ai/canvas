@@ -17,7 +17,7 @@ import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
 import PropertyUtils from "./../util/property-utils";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, CONDITION_RETURN_VALUE_HANDLING } from "./../constants/constants";
+import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
 import isEqual from "lodash/isEqual";
 import omit from "lodash/omit";
@@ -338,13 +338,13 @@ class PropertiesMain extends React.Component {
 
 	render() {
 		let cancelHandler = this.cancelHandler;
-		let applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
+		let applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
 		// when onBlur cancel shouldn't be rendered.  Update apply button text to `Close`
 		if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout) {
-			applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
+			applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
 			cancelHandler = null;
 		}
-		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
+		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
 
 		const formData = this.propertiesController.getForm();
 		if (formData !== null) {

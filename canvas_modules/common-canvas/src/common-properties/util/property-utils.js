@@ -12,6 +12,7 @@ import { ParamRole } from "../constants/form-constants";
 import { DATA_TYPE } from "../constants/constants";
 import cloneDeep from "lodash/cloneDeep";
 import uuid4 from "uuid/v4";
+import defaultMessages from "../../../locales/common-properties/locales/en.json";
 
 /**
  * A better type identifier than a simple 'typeOf' call:
@@ -39,12 +40,12 @@ function copy(obj) {
 	return obj;
 }
 
-function formatMessage(intl, key, defaultMessage, substituteObj) {
+function formatMessage(intl, key, substituteObj) {
 	let formattedMessage;
 	if (typeof intl !== "undefined" && intl !== null) {
-		formattedMessage = intl.formatMessage({ id: key, defaultMessage: defaultMessage }, substituteObj);
+		formattedMessage = intl.formatMessage({ id: key, defaultMessage: defaultMessages[key] }, substituteObj);
 	} else {
-		formattedMessage = defaultMessage;
+		formattedMessage = defaultMessages[key];
 	}
 	return formattedMessage;
 }

@@ -8,9 +8,12 @@
  *******************************************************************************/
 
 import React from "react";
+import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
 import Icon from "../icons/icon.jsx";
 import TextInput from "carbon-components-react/lib/components/TextInput";
+import defaultMessages from "../../locales/palette/locales/en.json";
+
 
 class PaletteFlyoutContentSearch extends React.Component {
 
@@ -28,7 +31,7 @@ class PaletteFlyoutContentSearch extends React.Component {
 	}
 
 	render() {
-		const placeHolder = "Search Palette";
+		const placeHolder = this.props.intl.formatMessage({ id: "palette.flyout.search.placeholder", defaultMessage: defaultMessages["palette.flyout.search.placeholder"] });
 
 		let searchField = null;
 
@@ -63,10 +66,11 @@ class PaletteFlyoutContentSearch extends React.Component {
 }
 
 PaletteFlyoutContentSearch.propTypes = {
+	intl: PropTypes.object.isRequired,
 	handleFilterChange: PropTypes.func.isRequired,
 	filterKeyword: PropTypes.string.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired
 };
 
-export default PaletteFlyoutContentSearch;
+export default injectIntl(PaletteFlyoutContentSearch);

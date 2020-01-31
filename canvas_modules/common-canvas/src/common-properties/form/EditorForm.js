@@ -172,7 +172,8 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, panSubItems, groupLabel));
 	}
 	default:
-		return UIItem.makeStaticText("(Unknown group type '" + group.groupType() + "')");
+		logger.warn("(Unknown group type '" + group.groupType() + "')");
+		return null;
 	}
 }
 

@@ -9,14 +9,21 @@
 import Action from "../command-stack/action.js";
 import { SAVED_NODES_CATEGORY_ID, SAVED_NODES_FOLDER_ICON }
 	from "../common-canvas/constants/canvas-constants.js";
+import defaultMessages from "../../locales/command-actions/locales/en.json";
+
 
 export default class SaveToPaletteAction extends Action {
-	constructor(data, objectModel) {
+	constructor(data, objectModel, intl) {
 		super(data);
+		this.intl = intl;
 		this.data = data;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.data.addedNodeTypes = this.apiPipeline.createNodesForPalette(this.data.selectedObjectIds);
+	}
+
+	getLabel(labelId) {
+		return this.intl.formatMessage({ id: labelId, defaultMessage: defaultMessages[labelId] });
 	}
 
 	do() {
@@ -25,8 +32,8 @@ export default class SaveToPaletteAction extends Action {
 		this.objectModel.addNodeTypesToPalette(
 			this.data.addedNodeTypes,
 			SAVED_NODES_CATEGORY_ID,
-			"Saved Nodes",
-			"Nodes in this category were previously saved from a flow.",
+			this.getLabel("palette.saved.nodes.label"),
+			this.getLabel("palette.saved.nodes.description"),
 			SAVED_NODES_FOLDER_ICON);
 	}
 

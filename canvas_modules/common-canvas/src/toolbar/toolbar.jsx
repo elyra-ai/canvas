@@ -8,6 +8,8 @@
  *******************************************************************************/
 
 import React from "react";
+import { injectIntl } from "react-intl";
+
 import PropTypes from "prop-types";
 import Tooltip from "../tooltip/tooltip.jsx";
 import ReactResizeDetector from "react-resize-detector";
@@ -16,6 +18,8 @@ import constants from "../common-canvas/constants/canvas-constants";
 import classNames from "classnames";
 
 import styles from "./toolbar.scss";
+
+import defaultMessages from "../../locales/toolbar/locales/en.json";
 
 // eslint override
 /* eslint no-return-assign: "off" */
@@ -40,6 +44,7 @@ class Toolbar extends React.Component {
 		this.generateNotificationIcon = this.generateNotificationIcon.bind(this);
 		this.toggleShowExtendedMenu = this.toggleShowExtendedMenu.bind(this);
 		this.toolbarMenuActionHandler = this.toolbarMenuActionHandler.bind(this);
+		this.getLabel = this.getLabel.bind(this);
 	}
 
 	componentDidMount() {
@@ -60,6 +65,10 @@ class Toolbar extends React.Component {
 	// to be used in notification-panel.jsx: handleNotificationPanelClickOutside()
 	getActionClassName(action) {
 		return action.indexOf(constants.NOTIFICATION_ICON) > -1 ? "notificationCounterIcon" : action;
+	}
+
+	getLabel(labelId) {
+		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultMessages[labelId] });
 	}
 
 	getNotificationIconStateObject(isIconEnabled) {
@@ -282,9 +291,18 @@ class Toolbar extends React.Component {
 		}
 
 		let rightAlignedActionItems = [
-			{ action: "zoomIn", label: "Zoom In", enable: true, callback: this.props.canvasController.zoomIn.bind(this.props.canvasController) },
-			{ action: "zoomOut", label: "Zoom Out", enable: true, callback: this.props.canvasController.zoomOut.bind(this.props.canvasController) },
-			{ action: "zoomToFit", label: "Zoom to Fit", enable: true, callback: this.props.canvasController.zoomToFit.bind(this.props.canvasController) }
+			{ action: "zoomIn",
+				label: this.getLabel("toolbar.zoomIn"),
+				enable: true,
+				callback: this.props.canvasController.zoomIn.bind(this.props.canvasController) },
+			{ action: "zoomOut",
+				label: this.getLabel("toolbar.zoomOut"),
+				enable: true,
+				callback: this.props.canvasController.zoomOut.bind(this.props.canvasController) },
+			{ action: "zoomToFit",
+				label: this.getLabel("toolbar.zoomToFit"),
+				enable: true,
+				callback: this.props.canvasController.zoomToFit.bind(this.props.canvasController) }
 		];
 
 		if (this.props.notificationConfig &&
@@ -317,6 +335,7 @@ class Toolbar extends React.Component {
 }
 
 Toolbar.propTypes = {
+	intl: PropTypes.object.isRequired,
 	config: PropTypes.array,
 	isPaletteOpen: PropTypes.bool,
 	isNotificationOpen: PropTypes.bool,
@@ -324,4 +343,4 @@ Toolbar.propTypes = {
 	canvasController: PropTypes.object.isRequired
 };
 
-export default Toolbar;
+export default injectIntl(Toolbar);

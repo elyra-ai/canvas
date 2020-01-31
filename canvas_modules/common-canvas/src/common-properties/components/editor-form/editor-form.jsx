@@ -14,7 +14,7 @@ import { setActiveTab } from "./../../actions";
 import Tabs from "carbon-components-react/lib/components/Tabs";
 import Tab from "carbon-components-react/lib/components/Tab";
 import PropertyUtil from "./../../util/property-utils.js";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
+import { MESSAGE_KEYS } from "./../../constants/constants";
 import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
 import cloneDeep from "lodash/cloneDeep";
@@ -538,8 +538,7 @@ class EditorForm extends React.Component {
 		return {
 			"text": PropertyUtil.formatMessage(
 				this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.ALERTS_TAB_TITLE,
-				MESSAGE_KEYS_DEFAULTS.ALERTS_TAB_TITLE),
+				MESSAGE_KEYS.ALERTS_TAB_TITLE),
 			"group": ALERT_TAB_GROUP,
 			"content":
 				{ "itemType": "panel",
@@ -565,7 +564,7 @@ class EditorForm extends React.Component {
 
 		const form = this.props.controller.getForm();
 		const title = PropertyUtil.formatMessage(this.props.controller.getReactIntl(),
-			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SAVEBUTTON_LABEL) + " " + form.label;
+			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_LABEL) + " " + form.label;
 
 		if (this.props.rightFlyout && this.state.showFieldPicker) {
 			wideFly = (<WideFlyout

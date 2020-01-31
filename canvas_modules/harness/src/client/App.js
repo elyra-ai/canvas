@@ -14,10 +14,18 @@ import React from "react";
 import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
 import ReactFileDownload from "react-file-download";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, IntlProvider } from "react-intl";
 import isEmpty from "lodash/isEmpty";
 import forIn from "lodash/forIn";
 import has from "lodash/has";
+
+import { getMessages } from "../intl/intl-utils";
+import HarnessBundles from "../intl/locales";
+import CommandActionsBundles from "@wdp/common-canvas/locales/command-actions/locales";
+import CommonCanvasBundles from "@wdp/common-canvas/locales/common-canvas/locales";
+import CommonPropsBundles from "@wdp/common-canvas/locales/common-properties/locales";
+import PaletteBundles from "@wdp/common-canvas/locales/palette/locales";
+import ToolbarBundles from "@wdp/common-canvas/locales/toolbar/locales";
 
 import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas";
 import CommonCanvasPackage from "@wdp/common-canvas/package.json";
@@ -295,6 +303,8 @@ export default class App extends React.Component {
 		document.setPaletteDropdownSelect = this.setPaletteDropdownSelect;
 		document.setPaletteDropdownSelect2 = this.setPaletteDropdownSelect2;
 		document.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect;
+		this.locale = "en";
+		this.initLocale();
 	}
 
 	componentDidMount() {
@@ -770,6 +780,19 @@ export default class App extends React.Component {
 	getZoomToReveal(nodeId) {
 		this.log("Zoom object requested");
 		return this.canvasController.getZoomToReveal([nodeId]); // Need to pass node Id in an array
+	}
+
+	initLocale() {
+		const languages = { "en": "en", "eo": "eo" };
+		// Get locale from browser
+		const browserLocale = navigator.language.toLowerCase();
+		const browserLocaleWithoutRegionCode = browserLocale.split(/[-_]/)[0];
+
+		if (browserLocale in languages) {
+			this.locale = languages[browserLocale];
+		} else if (browserLocaleWithoutRegionCode in languages) {
+			this.locale = languages[browserLocaleWithoutRegionCode];
+		}
 	}
 
 	zoomCanvas(zoomObject, nodeId) {
@@ -2343,7 +2366,11 @@ export default class App extends React.Component {
 		</div>);
 
 		return (
-			<div>{mainView}</div>
+			<IntlProvider locale={this.locale} defaultLocale="en" messages={getMessages(this.locale, [HarnessBundles,
+				CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles])}
+			>
+				<div>{mainView}</div>
+			</IntlProvider>
 		);
 	}
 }

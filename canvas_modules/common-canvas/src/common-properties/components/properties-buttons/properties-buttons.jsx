@@ -8,18 +8,22 @@
  *******************************************************************************/
 
 import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
 import Button from "carbon-components-react/lib/components/Button";
 import classNames from "classnames";
+import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
-import { MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
 
-
-export default class PropertiesButtons extends Component {
+class PropertiesButtons extends Component {
 
 	render() {
-		const applyButtonLabel = (typeof this.props.applyLabel === "undefined") ? MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL : this.props.applyLabel;
-		const rejectButtonLabel = (typeof this.props.rejectLabel === "undefined") ? MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL : this.props.rejectLabel;
+		const applyButtonLabel = (typeof this.props.applyLabel === "undefined")
+			? this.props.intl.formatMessage({ id: "propertiesEdit.applyButton.label", defaultMessage: defaultMessages["propertiesEdit.applyButton.label"] })
+			: this.props.applyLabel;
+		const rejectButtonLabel = (typeof this.props.rejectLabel === "undefined")
+			? this.props.intl.formatMessage({ id: "propertiesEdit.rejectButton.label", defaultMessage: defaultMessages["propertiesEdit.rejectButton.label"] })
+			: this.props.rejectLabel;
 
 		let rejectButton;
 		if (this.props.cancelHandler) {
@@ -61,9 +65,12 @@ export default class PropertiesButtons extends Component {
 }
 
 PropertiesButtons.propTypes = {
+	intl: PropTypes.object.isRequired,
 	cancelHandler: PropTypes.func,
 	okHandler: PropTypes.func,
 	applyLabel: PropTypes.string,
 	rejectLabel: PropTypes.string,
 	showPropertiesButtons: PropTypes.bool
 };
+
+export default injectIntl(PropertiesButtons);

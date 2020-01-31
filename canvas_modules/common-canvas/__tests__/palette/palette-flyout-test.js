@@ -8,7 +8,8 @@
  *******************************************************************************/
 
 import React from "react";
-import { shallow, mount } from "enzyme";
+import { shallow } from "enzyme";
+import { mountWithIntl } from "../_utils_/intl-utils";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import PaletteFlyoutContent from "../../src/palette/palette-flyout-content.jsx";
 import PaletteFlyoutContentCategory from "../../src/palette/palette-flyout-content-category.jsx";
@@ -149,7 +150,7 @@ function createMountedPalette(config) {
 	const paletteWidth = config ? config.paletteWidth : 64;
 	const palette = (config && config.palette) ? config.palette : testPalette2;
 
-	const wrapper = mount(
+	const wrapper = mountWithIntl(
 		<PaletteFlyout
 			paletteJSON={palette}
 			showPalette={showPalette}

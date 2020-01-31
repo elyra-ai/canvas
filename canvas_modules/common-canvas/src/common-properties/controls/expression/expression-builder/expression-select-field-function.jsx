@@ -13,7 +13,7 @@ import Dropdown from "carbon-components-react/lib/components/DropdownV2";
 import Tabs from "carbon-components-react/lib/components/Tabs";
 import Tab from "carbon-components-react/lib/components/Tab";
 import FlexibleTable from "./../../../components/flexible-table/flexible-table.jsx";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
+import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
 import PropertyUtils from "./../../../util/property-utils";
 import sortBy from "lodash/sortBy";
 
@@ -22,18 +22,18 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	constructor(props) {
 		super(props);
 		this.recentUseCat = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_RECENTLY_USED, MESSAGE_KEYS_DEFAULTS.EXPRESSION_RECENTLY_USED);
+			MESSAGE_KEYS.EXPRESSION_RECENTLY_USED);
 		this.recentUseCatInfo = {
 			id: this.recentUseCat,
 			locLabel: this.recentUseCat,
 			field_columns: {
 				field_column_info: {
 					locLabel: PropertyUtils.formatMessage(this.reactIntl,
-						MESSAGE_KEYS.EXPRESSION_RECENTLY_USED_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_RECENTLY_USED_COLUMN)
+						MESSAGE_KEYS.EXPRESSION_RECENTLY_USED_COLUMN)
 				},
 				value_column_info: {
 					locLabel: PropertyUtils.formatMessage(this.reactIntl,
-						MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_VALUE_COLUMN)
+						MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN)
 				}
 			}
 		};
@@ -233,13 +233,13 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	_makeDatasetFields(dataset, fieldDataset) {
 		const fieldColumn = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_FIELD_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_FIELD_COLUMN);
+			MESSAGE_KEYS.EXPRESSION_FIELD_COLUMN);
 		const storageColumn = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_STORAGE_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_STORAGE_COLUMN);
+			MESSAGE_KEYS.EXPRESSION_STORAGE_COLUMN);
 		const valueColumn = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_VALUE_COLUMN);
+			MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN);
 		const dropdownLabel = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_FIELDS_DROPDOWN_TITLE, MESSAGE_KEYS_DEFAULTS.EXPRESSION_FIELDS_DROPDOWN_TITLE);
+			MESSAGE_KEYS.EXPRESSION_FIELDS_DROPDOWN_TITLE);
 		const fieldsCatInfo = {
 			id: "fields",
 			locLabel: dropdownLabel,
@@ -432,9 +432,9 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	_makeValuesContent(field, valuesTableData) {
 		const minLabel = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_MIN_LABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSION_MIN_LABEL);
+			MESSAGE_KEYS.EXPRESSION_MIN_LABEL);
 		const maxLabel = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_MAX_LABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSION_MAX_LABEL);
+			MESSAGE_KEYS.EXPRESSION_MAX_LABEL);
 		if (field.values) {
 			for (let idx = 0; idx < field.values.length; idx++) {
 				this._addValueRow(field.values[idx].value, idx, valuesTableData);
@@ -472,7 +472,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			);
 		}
 		return (<span>PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS, MESSAGE_KEYS_DEFAULTS.EXPRESSION_NO_FUNCTIONS);</span>);
+			MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS);</span>);
 	}
 
 	_makeAdditionalColumnsContent(field, fieldColumns) {
@@ -524,9 +524,9 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	_makeFunctionsTable(categories) {
 		const headers = [];
 		const functionColumn = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_FUNCTION_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_FUNCTION_COLUMN);
+			MESSAGE_KEYS.EXPRESSION_FUNCTION_COLUMN);
 		const returnColumn = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_RETURN_COLUMN, MESSAGE_KEYS_DEFAULTS.EXPRESSION_RETURN_COLUMN);
+			MESSAGE_KEYS.EXPRESSION_RETURN_COLUMN);
 
 
 		headers.push({ key: "function", label: functionColumn, width: 73 });
@@ -598,9 +598,9 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		const fieldAndValueTable = this._makeFieldAndValuesContent();
 		const functionsTable = this._makeFunctionsContent();
 		const fieldsTab = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_FIELD_TAB, MESSAGE_KEYS_DEFAULTS.EXPRESSION_FIELD_TAB);
+			MESSAGE_KEYS.EXPRESSION_FIELD_TAB);
 		const functionsTab = PropertyUtils.formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_FUNCTIONS_TAB, MESSAGE_KEYS_DEFAULTS.EXPRESSION_FUNCTIONS_TAB);
+			MESSAGE_KEYS.EXPRESSION_FUNCTIONS_TAB);
 
 		tabContent.push(
 			<Tab

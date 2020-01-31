@@ -10,7 +10,7 @@
 import React from "react";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
-import { mount } from "enzyme";
+import { mountWithIntl } from "../_utils_/intl-utils";
 import { expect } from "chai";
 import sinon from "sinon";
 
@@ -67,7 +67,7 @@ describe("Toolbar renders correctly", () => {
 
 function createToolbar(toolbarConfig, notificationConfig) {
 	const setToolbarWidth = sinon.spy();
-	const wrapper = mount(<Toolbar
+	const wrapper = mountWithIntl(<Toolbar
 		config={toolbarConfig}
 		isPaletteOpen
 		isNotificationOpen

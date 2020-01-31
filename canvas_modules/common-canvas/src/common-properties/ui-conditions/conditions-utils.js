@@ -12,7 +12,7 @@ import logger from "../../../utils/logger";
 import UiConditions from "./ui-conditions";
 import PropertyUtils from "../util/property-utils";
 import { DEFAULT_VALIDATION_MESSAGE, STATES, PANEL_TREE_ROOT,
-	CONDITION_TYPE, CONDITION_DEFINITION_INDEX, MESSAGE_KEYS_DEFAULTS,
+	CONDITION_TYPE, CONDITION_DEFINITION_INDEX,
 	MESSAGE_KEYS, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
 import isEmpty from "lodash/isEmpty";
 import cloneDeep from "lodash/cloneDeep";
@@ -909,7 +909,7 @@ function _injectRequiredDefinition(control, valDefinitions, keyName, controlValI
 	// inject required validation definition
 	const label = (control.label && control.label.text) ? control.label.text : keyName;
 	const errorMsg = PropertyUtils.formatMessage(intl,
-		MESSAGE_KEYS.REQUIRED_ERROR, MESSAGE_KEYS_DEFAULTS.REQUIRED_ERROR, { label: label });
+		MESSAGE_KEYS.REQUIRED_ERROR, { label: label });
 	const injectedDefinition = {
 		params: keyName,
 		definition: {
@@ -945,7 +945,7 @@ function _injectDateTimeDefinition(control, valDefinitions, keyName, controlValI
 	const defaultFormat = (control.dateFormat) ? DEFAULT_DATE_FORMAT : DEFAULT_TIME_FORMAT;
 	const dtFormat = (format) ? format : defaultFormat;
 	const errorMsg = PropertyUtils.formatMessage(intl,
-		MESSAGE_KEYS.DATETIME_FORMAT_ERROR, MESSAGE_KEYS_DEFAULTS.DATETIME_FORMAT_ERROR, { role: control.role, format: dtFormat });
+		MESSAGE_KEYS.DATETIME_FORMAT_ERROR, { role: control.role, format: dtFormat });
 	const injectedDefinition = {
 		params: keyName,
 		definition: {
@@ -980,7 +980,7 @@ function _injectInvalidFieldDefinition(control, valDefinitions, keyName, control
 	// inject invalid field validation definition
 	const label = (control.label && control.label.text) ? control.label.text : keyName;
 	const errorMsg = PropertyUtils.formatMessage(intl,
-		MESSAGE_KEYS.INVALID_FIELD_ERROR, MESSAGE_KEYS_DEFAULTS.INVALID_FIELD_ERROR, { label: label });
+		MESSAGE_KEYS.INVALID_FIELD_ERROR, { label: label });
 	const injectedDefinition = {
 		params: keyName,
 		definition: {

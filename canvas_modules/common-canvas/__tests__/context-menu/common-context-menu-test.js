@@ -10,6 +10,7 @@
 import React from "react";
 import CommonContextMenu from "../../src/context-menu/common-context-menu.jsx";
 import { shallow, mount } from "enzyme";
+import { mountWithIntl } from "../_utils_/intl-utils";
 import { expect } from "chai";
 import sinon from "sinon";
 import { MenuItem, SubMenu } from "react-contextmenu";
@@ -366,7 +367,7 @@ function createCommonCanvas(config, canvasController, contextMenuConfig) {
 		enable: true
 	};
 
-	const wrapper = mount(
+	const wrapper = mountWithIntl(
 		<CommonCanvas
 			config={config}
 			contextMenuHandler={contextMenuHandler}

@@ -20,7 +20,7 @@ import PropertyUtils from "./../util/property-utils";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 
 import Tooltip from "./../../tooltip/tooltip.jsx";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES,
+import { MESSAGE_KEYS, TOOL_TIP_DELAY, STATES,
 	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION,
 	ROW_SELECTION } from "./../constants/constants";
 
@@ -403,9 +403,9 @@ export default class AbstractTable extends React.Component {
 	makeSelectedEditRow(selectedRows) {
 		if (selectedRows && Array.isArray(selectedRows) && selectedRows.length > 1) {
 			const rowsSelectedLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL, MESSAGE_KEYS_DEFAULTS.MULTI_SELECTED_ROW_LABEL);
+				MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL);
 			const rowsSelectedAction = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.MULTI_SELECTED_ROW_ACTION, MESSAGE_KEYS_DEFAULTS.MULTI_SELECTED_ROW_ACTION);
+				MESSAGE_KEYS.MULTI_SELECTED_ROW_ACTION);
 			const title = selectedRows.length + " " + rowsSelectedLabel + " " + rowsSelectedAction;
 			const rows = [];
 			const sortFields = [];
@@ -444,7 +444,7 @@ export default class AbstractTable extends React.Component {
 			: this.removeSelected;
 		const disabled = !this.state.enableRemoveIcon || tableState === STATES.DISABLED;
 		const removeButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-			MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
+			MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
 		const removeButton = (<button type="button" className="properties-remove-fields-button"
 			onClick={removeOnClick}
 			disabled={disabled}
@@ -459,7 +459,7 @@ export default class AbstractTable extends React.Component {
 			: this.props.openFieldPicker;
 		const addButtonLabel = (tableButtonConfig && tableButtonConfig.addButtonLabel) ? tableButtonConfig.addButtonLabel
 			: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_ADDBUTTON_LABEL);
+				MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
 		if (tableState === STATES.DISABLED) {
 			addButtonDisabled = true;
 			this.addOnClickCallback = null;
@@ -479,14 +479,14 @@ export default class AbstractTable extends React.Component {
 			<div className="properties-tooltips">
 				{(tableButtonConfig && tableButtonConfig.addButtonTooltip) ? tableButtonConfig.addButtonTooltip
 					: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-						MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_ADDBUTTON_TOOLTIP)}
+						MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_TOOLTIP)}
 			</div>
 		);
 		const removeToolTip = (
 			<div className="properties-tooltips">
 				{(tableButtonConfig && tableButtonConfig.removeButtonTooltip) ? tableButtonConfig.removeButtonTooltip
 					: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-						MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP)}
+						MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP)}
 			</div>
 		);
 		return (

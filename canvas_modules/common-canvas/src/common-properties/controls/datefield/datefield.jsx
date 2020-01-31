@@ -16,6 +16,8 @@ import ControlUtils from "./../../util/control-utils";
 import moment from "moment";
 import { DEFAULT_DATE_FORMAT, STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
+import PropertyUtils from "./../../util/property-utils.js";
+
 
 class DatefieldControl extends React.Component {
 	constructor(props) {
@@ -53,7 +55,7 @@ class DatefieldControl extends React.Component {
 				try {
 					displayValue = mom.format(format);
 				} catch (err) { // This will only happen if the caller provides something other than a string as the format.
-					displayValue = "Invalid format object provided. Check input definitions.";
+					displayValue = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), "datetimefield.format.error.message");
 				}
 			} else {
 				displayValue = this.props.value;

@@ -1,5 +1,5 @@
 {
-  "TOOLBAR_ZOOMIN": "Zoom In",
-  "TOOLBAR_ZOOMOUT": "Zoom Out",
-  "TOOLBAR_ZOOMTOFIT": "Zoom To Fit"
+  "toolbar.zoomIn": "Zoom In",
+  "toolbar.zoomOut": "Zoom Out",
+  "toolbar.zoomToFit": "Zoom To Fit"
 }

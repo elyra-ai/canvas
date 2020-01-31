@@ -11,6 +11,8 @@
 /* eslint no-return-assign: "off" */
 
 import React from "react";
+import { injectIntl } from "react-intl";
+
 import PropTypes from "prop-types";
 import ContextMenuWrapper from "../context-menu/context-menu-wrapper.jsx";
 import DiagramCanvasD3 from "./diagram-canvas-d3.jsx";
@@ -21,10 +23,11 @@ import NotificationPanel from "../notification-panel/notification-panel.jsx";
 import TooltipWrapper from "../tooltip/tooltip-wrapper.jsx";
 import isEmpty from "lodash/isEmpty";
 import Logger from "../logging/canvas-logger.js";
+import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
 import { DEFAULT_NOTIFICATION_HEADER, PALETTE } from "./constants/canvas-constants.js";
 
-export default class CommonCanvas extends React.Component {
+class CommonCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -78,8 +81,10 @@ export default class CommonCanvas extends React.Component {
 		this.initializeController = this.initializeController.bind(this);
 
 		this.setPaletteWidth = this.setPaletteWidth.bind(this);
+		this.getLabel = this.getLabel.bind(this);
 
 		this.canvasController = this.props.canvasController;
+		this.canvasController.setIntl(props.intl);
 		this.initializeController(props);
 
 		this.canvasController.setCommonCanvas(this);
@@ -184,14 +189,18 @@ export default class CommonCanvas extends React.Component {
 		return [
 			{ action: "palette", label: "Palette", enable: true },
 			{ divider: true },
-			{ action: "undo", label: "Undo", enable: true },
-			{ action: "redo", label: "Redo", enable: true },
-			{ action: "cut", label: "Cut", enable: true },
-			{ action: "copy", label: "Copy", enable: true },
-			{ action: "paste", label: "Paste", enable: true },
-			{ action: "addComment", label: "Add Comment", enable: true },
-			{ action: "delete", label: "Delete", enable: true }
+			{ action: "undo", label: this.getLabel("canvas.undo"), enable: true },
+			{ action: "redo", label: this.getLabel("canvas.redo"), enable: true },
+			{ action: "cut", label: this.getLabel("edit.cutSelection"), enable: true },
+			{ action: "copy", label: this.getLabel("edit.copySelection"), enable: true },
+			{ action: "paste", label: this.getLabel("edit.pasteSelection"), enable: true },
+			{ action: "addComment", label: this.getLabel("canvas.addComment"), enable: true },
+			{ action: "delete", label: this.getLabel("canvas.deleteObject"), enable: true }
 		];
+	}
+
+	getLabel(labelId) {
+		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultMessages[labelId] });
 	}
 
 	setPaletteWidth() {
@@ -517,6 +526,7 @@ export default class CommonCanvas extends React.Component {
 }
 
 CommonCanvas.propTypes = {
+	intl: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	config: PropTypes.object,
 	toolbarConfig: PropTypes.array,
@@ -536,3 +546,5 @@ CommonCanvas.propTypes = {
 	rightFlyoutContent: PropTypes.object,
 	showRightFlyout: PropTypes.bool
 };
+
+export default injectIntl(CommonCanvas);

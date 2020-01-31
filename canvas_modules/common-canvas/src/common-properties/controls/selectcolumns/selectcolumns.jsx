@@ -17,7 +17,7 @@ import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
 import PropertyUtils from "./../../util/property-utils";
 
-import { TABLE_SCROLLBAR_WIDTH, STATES, MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
+import { TABLE_SCROLLBAR_WIDTH, STATES, MESSAGE_KEYS } from "./../../constants/constants";
 
 import ReadonlyControl from "./../readonly";
 
@@ -99,7 +99,7 @@ class SelectColumns extends AbstractTable {
 		headers.push({
 			"key": "field",
 			"label": PropertyUtils.formatMessage(this.reactIntl,
-				MESSAGE_KEYS.FIELDPICKER_FIELDCOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_FIELDCOLUMN_LABEL),
+				MESSAGE_KEYS.FIELDPICKER_FIELDCOLUMN_LABEL),
 			"description": (null) });
 		headers.push({ "key": "scrollbar", "label": "", "width": TABLE_SCROLLBAR_WIDTH });
 		return headers;

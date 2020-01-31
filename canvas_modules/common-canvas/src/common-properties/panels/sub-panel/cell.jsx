@@ -16,7 +16,7 @@ import Tooltip from "./../../../tooltip/tooltip.jsx";
 import Icon from "./../../../icons/icon.jsx";
 import cloneDeep from "lodash/cloneDeep";
 
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
+import { MESSAGE_KEYS } from "./../../constants/constants";
 import { TOOL_TIP_DELAY } from "./../../constants/constants.js";
 
 
@@ -50,9 +50,9 @@ export default class SubPanelCell extends React.Component {
 		const tooltipId = "tooltip-subpanel-cell";
 		const disabled = typeof this.props.disabled !== "undefined" ? this.props.disabled : false;
 		const subPanelToolTip = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-			MESSAGE_KEYS.SUBPANEL_BUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.SUBPANEL_BUTTON_TOOLTIP);
-		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
-		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
+			MESSAGE_KEYS.SUBPANEL_BUTTON_TOOLTIP);
+		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL);
+		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL);
 		const innerObject = this.props.iconName ? (<Icon type={this.props.iconName} />) : this.props.label || "";
 		return (
 

@@ -21,7 +21,7 @@ import ValidationMessage from "./../../components/validation-message";
 import WideFlyout from "./../../components/wide-flyout";
 import PropertyUtils from "./../../util/property-utils";
 import ExpressionBuilder from "./expression-builder/expression-builder.jsx";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE } from "./../../constants/constants";
+import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE } from "./../../constants/constants";
 import ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 
@@ -261,7 +261,7 @@ class ExpressionControl extends React.Component {
 			</div>);
 		}
 
-		const validateLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_VALIDATE_LABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSION_VALIDATE_LABEL);
+		const validateLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_VALIDATE_LABEL);
 		const validateLink = this.expressionInfo.validateLink ? (
 			<div className="properties-expression-validate" disabled={this.props.state === STATES.DISABLED}>
 				{validateIcon}
@@ -281,9 +281,9 @@ class ExpressionControl extends React.Component {
 			extraKeys: { "Ctrl-Space": "autocomplete" },
 			autoRefresh: true
 		};
-		const applyLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
-		const rejectLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
-		const expressonTitle = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE, MESSAGE_KEYS_DEFAULTS.EXPRESSION_BUILDER_TITLE);
+		const applyLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL);
+		const rejectLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
+		const expressonTitle = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE);
 
 		const flyout = this.state.showExpressionBuilder ? (<WideFlyout
 			cancelHandler={this.cancelExpressionBuilder}

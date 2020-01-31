@@ -1,9 +1,9 @@
 {
-	"SUPERNODE_TEMPLATE_DESCRIPTION": "[Esperanto~This supernode was created by common-canvas.~~~~~~~~~~~~eo]",
-	"SUPERNODE_TEMPLATE_LABEL": "[Esperanto~Supernode~~~~eo]",
-	"SUPERNODE_NEW_PORT_LABEL": "[Esperanto~Binding port for supernode~~~~~~eo]",
-	"SUPERNODE_BINDING_NODE_LABEL": "[Esperanto~Binding~eo]",
-	"SUPERNODE_BINDING_NODE_DESCRIPTION": "[Esperanto~Supernode binding node~~~eo]",
-	"PALETTE_SAVED_NODES_LABEL": "[Esperanto~Saved Nodes~eo]",
-	"PALETTE_SAVED_NODES_DESCRIPTION": "[Esperanto~Nodes in this category were previously saved from a flow.~~~~~~~~eo]"
+	"supernode.template.description": "[Esperanto~This supernode was created by common-canvas.~~~~~~~~~~~~eo]",
+	"supernode.template.label": "[Esperanto~Supernode~~~~eo]",
+	"supernode.new.port.label": "[Esperanto~Binding port for supernode~~~~~~eo]",
+	"supernode.binding.node.label": "[Esperanto~Binding~eo]",
+	"supernode.binding.node.description": "[Esperanto~Supernode binding node~~~eo]",
+	"palette.saved.nodes.label": "[Esperanto~Saved Nodes~eo]",
+	"palette.saved.nodes.description": "[Esperanto~Nodes in this category were previously saved from a flow.~~~~~~~~eo]"
 }

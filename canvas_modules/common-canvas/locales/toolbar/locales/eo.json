@@ -1,5 +1,5 @@
 {
-	"TOOLBAR_ZOOMIN": "[Esperanto~Zoom In~eo]",
-	"TOOLBAR_ZOOMOUT": "[Esperanto~Zoom Out~~eo]",
-	"TOOLBAR_ZOOMTOFIT": "[Esperanto~Zoom To Fit~eo]"
+	"toolbar.zoomIn": "[Esperanto~Zoom In~eo]",
+	"toolbar.zoomOut": "[Esperanto~Zoom Out~~eo]",
+	"toolbar.zoomToFit": "[Esperanto~Zoom To Fit~eo]"
 }

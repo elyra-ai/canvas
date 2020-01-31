@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import { mount } from "enzyme";
+import { mountWithIntl } from "../_utils_/intl-utils";
 import { expect } from "chai";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
@@ -69,7 +69,7 @@ describe("Toolbar renders correctly", () => {
 
 function createToolbar(config) {
 	const setToolbarWidth = sinon.spy();
-	const canvasToolbar = mount(
+	const canvasToolbar = mountWithIntl(
 		<Toolbar
 			config={config}
 			isPaletteOpen

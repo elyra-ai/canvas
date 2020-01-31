@@ -12,7 +12,7 @@ import React from "react";
 import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import CommonCanvas from "../../src/common-canvas/common-canvas.jsx";
-import { mount } from "enzyme";
+import { mountWithIntl } from "../_utils_/intl-utils";
 import { expect } from "chai";
 import sinon from "sinon";
 
@@ -130,7 +130,7 @@ function createCommonCanvas(config, canvasController) {
 	const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 	const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 
-	const wrapper = mount(
+	const wrapper = mountWithIntl(
 		<CommonCanvas
 			config={config}
 			contextMenuHandler={contextMenuHandler}

@@ -14,20 +14,16 @@ import CommonPropertiesComponents from "./components/common-properties-component
 import CommonPropertiesConditions from "./components/common-properties-conditions.jsx";
 import "../styles/index.scss";
 import App from "./App";
-import { IntlProvider } from "react-intl";
 import { HashRouter, Route } from "react-router-dom";
-import i18nData from "../intl/en.json";
 
 
 ReactDOM.render(
-	<IntlProvider locale="en" messages={i18nData}>
-		<HashRouter>
-			<div>
-				<Route exact path="/" component={ App } />
-				<Route path="/properties" component={ CommonPropertiesComponents } />
-				<Route path="/conditions" component={ CommonPropertiesConditions } />
-			</div>
-		</HashRouter>
-	</IntlProvider>,
+	<HashRouter>
+		<div>
+			<Route exact path="/" component={ App } />
+			<Route path="/properties" component={ CommonPropertiesComponents } />
+			<Route path="/conditions" component={ CommonPropertiesConditions } />
+		</div>
+	</HashRouter>,
 	document.getElementById("root")
 );

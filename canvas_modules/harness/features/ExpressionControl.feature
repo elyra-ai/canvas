@@ -91,7 +91,7 @@ Feature: ExpressionControl
 		Then I validate the "error" icon on the expression builder.
 
 		# substitute a param char '?' (dependent on the test above)
-		Then I select the "Fields and Values" tab for the "defaultExpr" property.
+		Then I select the "Fields" tab for the "defaultExpr" property.
 		Then I select "Age" from the "defaultExpr" property.
 		Then I validate the "none" icon on the expression builder.
 

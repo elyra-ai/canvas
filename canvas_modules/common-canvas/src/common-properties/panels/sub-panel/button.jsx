@@ -12,7 +12,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Button from "carbon-components-react/lib/components/Button";
 import PropertyUtils from "./../../util/property-utils";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
+import { MESSAGE_KEYS } from "./../../constants/constants";
 
 
 import SubPanelInvoker from "./invoker.jsx";
@@ -34,8 +34,8 @@ export default class SubPanelButton extends React.Component {
 	}
 
 	render() {
-		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
-		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
+		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL);
+		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL);
 
 		const button = (<Button
 			className="properties-subpanel-button"
