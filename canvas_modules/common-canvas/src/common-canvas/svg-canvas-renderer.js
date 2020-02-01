@@ -2364,11 +2364,12 @@ export default class SVGCanvasRenderer {
 		const objectTypeName = this.getComment(d.id) ? "comment" : "node";
 		if (objectTypeName === "node") {
 			this.canvasController.clickActionHandler({
-				clickType: d3EventType === "contextmenu" ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
+				clickType: d3EventType === "contextmenu" || this.ellipsisClicked ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
 				objectType: objectTypeName,
 				id: d.id,
 				selectedObjectIds: this.objectModel.getSelectedObjectIds(),
 				pipelineId: this.activePipeline.id });
+			this.ellipsisClicked = false;
 		}
 	}
 
@@ -2642,6 +2643,7 @@ export default class SVGCanvasRenderer {
 		if (!this.nodeSizing && !this.isSuperBindingNode(d)) {
 			const nodeGrp = d3.select(nodeGrpSrc);
 			nodeGrp.select(this.getSelectorForId("node_body", d.id)).attr("hover", "yes");
+
 			nodeGrp
 				.append("rect")
 				.filter(() => d.layout.ellipsisDisplay)
@@ -2652,10 +2654,14 @@ export default class SVGCanvasRenderer {
 				.attr("height", (nd) => this.getEllipsisHeight(nd))
 				.attr("x", (nd) => this.getEllipsisPosX(nd))
 				.attr("y", (nd) => this.getEllipsisPosY(nd))
+				.on("mousedown", (nd) => {
+					this.ellipsisClicked = true;
+				})
 				.on("click", () => {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					this.openContextMenu("node", d);
 				});
+
 			nodeGrp
 				.append("svg")
 				.filter(() => d.layout.ellipsisDisplay)
@@ -2667,6 +2673,9 @@ export default class SVGCanvasRenderer {
 				.attr("height", (nd) => this.getEllipsisHeight(nd) - (2 * nd.layout.ellipsisHoverAreaPadding))
 				.attr("x", (nd) => this.getEllipsisPosX(nd) + nd.layout.ellipsisHoverAreaPadding)
 				.attr("y", (nd) => this.getEllipsisPosY(nd) + nd.layout.ellipsisHoverAreaPadding)
+				.on("mousedown", (nd) => {
+					this.ellipsisClicked = true;
+				})
 				.on("click", () => {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					this.openContextMenu("node", d);
