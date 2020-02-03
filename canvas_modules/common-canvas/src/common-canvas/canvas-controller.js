@@ -60,6 +60,7 @@ export default class CanvasController {
 			enableLinkType: "Curve",
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
+			enableDragWithoutSelect: false,
 			enableInternalObjectModel: true,
 			enablePaletteLayout: "Flyout",
 			enableMoveNodesOnSupernodeResize: true,
