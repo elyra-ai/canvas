@@ -3,6 +3,8 @@
     {
       "category": "import",
       "label": "Import",
+      "description": "Description for Import",
+      "image":  "/images/palette-categories/sources_open.svg",
       "nodetypes": [
         {
           "label": "Var. File",
@@ -48,6 +50,7 @@
     {
       "category": "recordOp",
       "label": "Record Ops",
+      "image":  "/images/palette-categories/operations_open.svg",
       "nodetypes": [
         {
           "label": "User Input",
@@ -187,6 +190,7 @@
     {
       "category": "fieldOp",
       "label": "Field Ops",
+      "image": "/images/palette-categories/sources_open.svg",
       "nodetypes": [
         {
           "label": "Filler",
@@ -318,6 +322,7 @@
     {
       "category": "graph",
       "label": "Graphs",
+      "image": "/images/palette-categories/sources_open.svg",
       "nodetypes": [
         {
           "label": "Multiplot",
@@ -384,6 +389,7 @@
     {
       "category": "modeling",
       "label": "Modeling",
+      "image": "/images/palette-categories/models_open.svg",
       "nodetypes": [
         {
           "label": "C5.0",
@@ -530,6 +536,7 @@
     {
       "category": "output",
       "label": "Outputs",
+      "image": "/images/palette-categories/outputs_open.svg",
       "nodetypes": [
         {
           "label": "Table",
@@ -596,6 +603,7 @@
     {
       "category": "export",
       "label": "Export",
+      "image": "/images/palette-categories/sources_open.svg",
       "nodetypes": [
         {
           "label": "Object Store",

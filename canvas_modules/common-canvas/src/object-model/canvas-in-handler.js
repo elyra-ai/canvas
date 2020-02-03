@@ -246,6 +246,7 @@ export default class CanvasInHandler {
 			({
 				category: cat.category,
 				label: cat.label,
+				description: cat.description,
 				image: cat.image,
 				nodetypes: this.convertNodeTypes(cat.nodetypes)
 			})

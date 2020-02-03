@@ -160,13 +160,6 @@ describe("Upgrade palette test", () => {
 			return cat;
 		});
 
-		// The input v0 palette does not have image or descriotion data for
-		// categories so remove from expected.
-		for (let i = 0; i < expectedPalette.categories.length; i++) {
-			delete expectedPalette.categories[i].image;
-			delete expectedPalette.categories[i].description;
-		}
-
 		// console.info("Expected Palette = " + JSON.stringify(expectedPalette, null, 2));
 		// console.info("Actual Palette   = " + JSON.stringify(actualPalette, null, 2));
 
