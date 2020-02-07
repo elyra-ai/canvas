@@ -20,7 +20,6 @@ import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
 import has from "lodash/has";
 import union from "lodash/union";
-import mergeWith from "lodash/mergeWith";
 import uuid4 from "uuid/v4";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
 import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@wdp/pipeline-schemas";
@@ -1196,32 +1195,40 @@ export default class ObjectModel {
 	// Highlighting methods
 	// ---------------------------------------------------------------------------
 
+	// Return an object containing nodes and links to be highlighted based on the
+	// array of nodeIds passed in (which usually corresponds to the set of selected
+	// nodes on the canvas). The nodes and links info returned are in the form of
+	// associative arrays indexed by pipeline ID.
 	getHighlightObjectIds(pipelineId, nodeIds, operator) {
-		let highlightNodeIds = [];
-		let highlightLinkIds = [];
+		const highlightNodeIds = {};
+		const highlightLinkIds = {};
+
+		highlightNodeIds[pipelineId] = [];
+		highlightLinkIds[pipelineId] = [];
 
 		nodeIds.forEach((nodeId) => {
-			if (this.getAPIPipeline(pipelineId).isSupernode(nodeId)) {
-				highlightNodeIds = mergeWith(highlightNodeIds, this.getSupernodeNodeIds(nodeId, pipelineId), this.mergeWithUnion);
-				highlightLinkIds = mergeWith(highlightLinkIds, this.getSupernodeLinkIds(nodeId, pipelineId), this.mergeWithUnion);
-			}
+			// Automatically include the selected node
+			highlightNodeIds[pipelineId].push(nodeId);
 
 			switch (operator) {
 			case HIGHLIGHT_BRANCH:
-				highlightNodeIds = mergeWith(highlightNodeIds, this.getNodeIdsInBranchContaining(nodeId, pipelineId), this.mergeWithUnion);
-				highlightLinkIds = mergeWith(highlightLinkIds, this.getLinkIdsInBranchContaining(nodeId, pipelineId), this.mergeWithUnion);
+				this.getUpstreamObjIdsFrom(nodeId, pipelineId, highlightNodeIds, highlightLinkIds);
+				this.getDownstreamObjIdsFrom(nodeId, pipelineId, highlightNodeIds, highlightLinkIds);
 				break;
-			case HIGHLIGHT_UPSTREAM:
-				highlightNodeIds = mergeWith(highlightNodeIds, this.getUpstreamNodeIdsFrom(nodeId, pipelineId), this.mergeWithUnion);
-				highlightNodeIds[pipelineId] = union(highlightNodeIds[pipelineId], [nodeId]);
-				highlightLinkIds = mergeWith(highlightLinkIds, this.getUpstreamLinkIdsFrom(nodeId, pipelineId), this.mergeWithUnion);
+			case HIGHLIGHT_UPSTREAM: {
+				this.getUpstreamObjIdsFrom(nodeId, pipelineId, highlightNodeIds, highlightLinkIds);
 				break;
+			}
 			case HIGHLIGHT_DOWNSTREAM:
-				highlightNodeIds = mergeWith(highlightNodeIds, this.getDownstreamNodeIdsFrom(nodeId, pipelineId), this.mergeWithUnion);
-				highlightNodeIds[pipelineId] = union(highlightNodeIds[pipelineId], [nodeId]);
-				highlightLinkIds = mergeWith(highlightLinkIds, this.getDownstreamLinkIdsFrom(nodeId, pipelineId), this.mergeWithUnion);
+				this.getDownstreamObjIdsFrom(nodeId, pipelineId, highlightNodeIds, highlightLinkIds);
 				break;
 			default:
+			}
+
+			// Finally, if the selected node is a supernode, make sure to include all
+			// the nodes and links within it.
+			if (this.getAPIPipeline(pipelineId).isSupernode(nodeId)) {
+				this.getSupernodeNodeIds(nodeId, pipelineId, highlightNodeIds, highlightLinkIds);
 			}
 		});
 
@@ -1231,186 +1238,137 @@ export default class ObjectModel {
 		};
 	}
 
-	// Returns an associative array of the supernode's subpipeline IDs to its node IDs.
-	getSupernodeNodeIds(nodeId, pipelineId) {
-		const supernodeNodeIds = [];
-		const supernode = this.getAPIPipeline(pipelineId).getNode(nodeId);
-		const supernodePipelineRef = this.getSupernodePipelineID(supernode);
-		supernodeNodeIds[supernodePipelineRef] = this.getAPIPipeline(supernodePipelineRef).getNodeIds();
+	// If nodeId and pipelineId specify a supernode, this method popultaes the
+	// highlightNodeIds and highlightLinkIds arrays with all the nodes and links
+	// that are in the supernode and any of its descendent supernodes.
+	getSupernodeNodeIds(nodeId, pipelineId, highlightNodeIds, highlightLinkIds) {
+		const node = this.getAPIPipeline(pipelineId).getNode(nodeId);
+		if (node.type === SUPER_NODE) {
+			const supernodePipelineId = this.getSupernodePipelineID(node);
 
-		const subPipelineIds = this.getDescendentPipelineIds(supernodePipelineRef);
-		subPipelineIds.forEach((subPipelineId) => {
-			supernodeNodeIds[subPipelineId] = this.getAPIPipeline(subPipelineId).getNodeIds();
-		});
-		return supernodeNodeIds;
-	}
+			highlightNodeIds[supernodePipelineId] = highlightNodeIds[supernodePipelineId] || [];
+			highlightLinkIds[supernodePipelineId] = highlightLinkIds[supernodePipelineId] || [];
 
-	// Returns an associative array of the supernode's subpipeline IDs to its link IDs.
-	getSupernodeLinkIds(nodeId, pipelineId) {
-		const getSupernodeLinkIds = [];
-		const supernode = this.getAPIPipeline(pipelineId).getNode(nodeId);
-		const supernodePipelineRef = this.getSupernodePipelineID(supernode);
-		getSupernodeLinkIds[supernodePipelineRef] = this.getAPIPipeline(supernodePipelineRef).getLinkIds();
+			const nodeIds = this.getAPIPipeline(supernodePipelineId).getNodeIds();
+			const linkIds = this.getAPIPipeline(supernodePipelineId).getLinkIds();
 
-		const subPipelineIds = this.getDescendentPipelineIds(supernodePipelineRef);
-		subPipelineIds.forEach((subPipelineId) => {
-			getSupernodeLinkIds[subPipelineId] = this.getAPIPipeline(subPipelineId).getLinkIds();
-		});
-		return getSupernodeLinkIds;
-	}
+			highlightNodeIds[supernodePipelineId] = union(highlightNodeIds[supernodePipelineId], nodeIds);
+			highlightLinkIds[supernodePipelineId] = union(highlightLinkIds[supernodePipelineId], linkIds);
 
-	getNodeIdsInBranchContaining(nodeId, pipelineId) {
-		const upstreamNodes = this.getUpstreamNodeIdsFrom(nodeId, pipelineId);
-		upstreamNodes[pipelineId].push(nodeId);
-		const downstreamNodes = this.getDownstreamNodeIdsFrom(nodeId, pipelineId);
-		return mergeWith(upstreamNodes, downstreamNodes, this.mergeWithUnion);
-	}
-
-	getLinkIdsInBranchContaining(nodeId, pipelineId) {
-		const upstreamLinks = this.getUpstreamLinkIdsFrom(nodeId, pipelineId);
-		const downstreamLinks = this.getDownstreamLinkIdsFrom(nodeId, pipelineId);
-		return mergeWith(upstreamLinks, downstreamLinks, this.mergeWithUnion);
-	}
-
-	getUpstreamNodeIdsFrom(nodeId, pipelineId) {
-		return this.getUpstreamObjIdsFrom(nodeId, pipelineId, "nodes");
-	}
-
-	getUpstreamLinkIdsFrom(nodeId, pipelineId) {
-		return this.getUpstreamObjIdsFrom(nodeId, pipelineId, "links");
-	}
-
-	getUpstreamObjIdsFrom(nodeId, pipelineId, objectType) {
-		let upstreamObjIds = [];
-		if (typeof upstreamObjIds[pipelineId] === "undefined") {
-			upstreamObjIds[pipelineId] = [];
+			nodeIds.forEach((nId) => {
+				this.getSupernodeNodeIds(nId, supernodePipelineId, highlightNodeIds, highlightLinkIds);
+			});
 		}
+	}
+
+	getUpstreamObjIdsFrom(nodeId, pipelineId, highlightNodeIds, highlightLinkIds) {
+		highlightNodeIds[pipelineId] = highlightNodeIds[pipelineId] || [];
+		highlightLinkIds[pipelineId] = highlightLinkIds[pipelineId] || [];
+
 		const currentPipeline = this.getAPIPipeline(pipelineId);
 		const node = currentPipeline.getNode(nodeId);
-		const nodeLinks = currentPipeline.getLinksContainingTargetId(nodeId);
+		const nodeLinks = currentPipeline
+			.getLinksContainingTargetId(nodeId)
+			.filter((l) => l.type === NODE_LINK);
+
 		if (nodeLinks.length > 0) {
 			nodeLinks.forEach((link) => {
-				if (link.type === NODE_LINK) {
-					if (objectType === "nodes") {
-						upstreamObjIds[pipelineId] = union(upstreamObjIds[pipelineId], [link.srcNodeId]);
-					} else if (objectType === "links") {
-						upstreamObjIds[pipelineId].push(link.id);
-					}
-
+				// Prevent endless looping with circular graphs by detecting if we
+				// have encountered this link before.
+				if (!highlightLinkIds[pipelineId].includes(link.id)) {
 					const srcNode = currentPipeline.getNode(link.srcNodeId);
+
+					highlightLinkIds[pipelineId] = union(highlightLinkIds[pipelineId], [link.id]);
+					highlightNodeIds[pipelineId] = union(highlightNodeIds[pipelineId], [link.srcNodeId]);
+
 					const srcNodeOutputPort = this.getSupernodeOutputPortForLink(srcNode, link);
 					if (srcNodeOutputPort) {
-						const subflowRef = srcNode.subflow_ref.pipeline_id_ref;
-						if (typeof upstreamObjIds[subflowRef] === "undefined") {
-							upstreamObjIds[subflowRef] = [];
-						}
-						const bindingNode = this.getAPIPipeline(subflowRef).getNode(srcNodeOutputPort.subflow_node_ref);
-						if (bindingNode) {
-							if (objectType === "nodes") {
-								upstreamObjIds[subflowRef] = union(upstreamObjIds[subflowRef], [bindingNode.id]);
-							}
-							const subUpstreamObjs = this.getUpstreamObjIdsFrom(bindingNode.id, subflowRef, objectType);
-							upstreamObjIds = mergeWith(upstreamObjIds, subUpstreamObjs, this.mergeWithUnion);
-						}
-					}
+						const subflowPipelineId = srcNode.subflow_ref.pipeline_id_ref;
+						const bindingNode = this.getAPIPipeline(subflowPipelineId).getNode(srcNodeOutputPort.subflow_node_ref);
 
-					const upstreamIds = this.getUpstreamObjIdsFrom(link.srcNodeId, pipelineId, objectType);
-					upstreamObjIds = mergeWith(upstreamObjIds, upstreamIds, this.mergeWithUnion);
+						if (bindingNode) {
+							highlightLinkIds[subflowPipelineId] = highlightLinkIds[subflowPipelineId] || [];
+							highlightNodeIds[subflowPipelineId] = highlightNodeIds[subflowPipelineId] || [];
+							highlightNodeIds[subflowPipelineId] = union(highlightNodeIds[subflowPipelineId], [bindingNode.id]);
+
+							this.getUpstreamObjIdsFrom(bindingNode.id, subflowPipelineId, highlightNodeIds, highlightLinkIds);
+						}
+					} else {
+						this.getUpstreamObjIdsFrom(link.srcNodeId, pipelineId, highlightNodeIds, highlightLinkIds);
+					}
 				}
 			});
-		} else if (currentPipeline.isEntryBindingNode(node)) {
-			if (this.isSupernodeBinding(node)) {
-				// Check if this is a binding node within a supernode.
-				const supernodeObj = this.getSupernodeObjReferencing(pipelineId);
-				const parentPipelineId = supernodeObj.parentPipelineId;
-				const parentPipeline = this.getAPIPipeline(parentPipelineId);
-				const supernode = parentPipeline.getNode(supernodeObj.supernodeId);
-				supernode.inputs.forEach((inputPort) => {
-					if (inputPort.subflow_node_ref === nodeId) {
-						const supernodeLinks = parentPipeline.getLinksContainingTargetId(supernode.id);
-						supernodeLinks.forEach((supernodeLink) => {
-							if (supernodeLink.trgNodePortId === inputPort.id) {
-								if (typeof upstreamObjIds[parentPipelineId] === "undefined") {
-									upstreamObjIds[parentPipelineId] = [];
+		} else if (currentPipeline.isEntryBindingNode(node) &&
+								this.isSupernodeBinding(node)) {
+			const supernodeObj = this.getSupernodeObjReferencing(pipelineId);
+			const parentPipelineId = supernodeObj.parentPipelineId;
+			const parentPipeline = this.getAPIPipeline(parentPipelineId);
+			const supernode = parentPipeline.getNode(supernodeObj.supernodeId);
+
+			supernode.inputs.forEach((inputPort) => {
+				if (inputPort.subflow_node_ref === nodeId) {
+					const supernodeLinks = parentPipeline.getLinksContainingTargetId(supernode.id);
+					supernodeLinks.forEach((supernodeLink) => {
+						if (supernodeLink.trgNodePortId === inputPort.id) {
+							highlightNodeIds[parentPipelineId] = highlightNodeIds[parentPipelineId] || [];
+							highlightLinkIds[parentPipelineId] = highlightLinkIds[parentPipelineId] || [];
+
+							highlightNodeIds[parentPipelineId] = union(highlightNodeIds[parentPipelineId], [supernodeLink.srcNodeId]);
+							highlightLinkIds[parentPipelineId] = union(highlightLinkIds[parentPipelineId], [supernodeLink.id]);
+
+							// If srcNodeId is supernode, need to find the corresponding exit binding node.
+							if (parentPipeline.isSupernode(supernodeLink.srcNodeId)) {
+								const upstreamSupernode = parentPipeline.getNode(supernodeLink.srcNodeId);
+								const upstreamSupernodeOutputPort = this.getSupernodeOutputPortForLink(upstreamSupernode, supernodeLink);
+								if (upstreamSupernodeOutputPort) {
+									const bindingNodeId = upstreamSupernodeOutputPort.subflow_node_ref;
+									this.getUpstreamObjIdsFrom(bindingNodeId, upstreamSupernode.subflow_ref.pipeline_id_ref, highlightNodeIds, highlightLinkIds);
 								}
-								if (objectType === "nodes") {
-									upstreamObjIds[parentPipelineId] = union(upstreamObjIds[parentPipelineId], [supernodeLink.srcNodeId]);
-								} else if (objectType === "links") {
-									upstreamObjIds[parentPipelineId] = union(upstreamObjIds[parentPipelineId], [supernodeLink.id]);
-								}
-								// If srcNodeId is supernode, need to find the corresponding exit binding node.
-								let upstreamIds = {};
-								if (parentPipeline.isSupernode(supernodeLink.srcNodeId)) {
-									if (objectType === "nodes") {
-										upstreamObjIds[parentPipelineId] = union(upstreamObjIds[parentPipelineId], [supernodeLink.srcNodeId]);
-									} else if (objectType === "links") {
-										upstreamObjIds[parentPipelineId] = union(upstreamObjIds[parentPipelineId], [supernodeLink.id]);
-									}
-									const upstreamSupernode = parentPipeline.getNode(supernodeLink.srcNodeId);
-									const upstreamSupernodeOutputPort = this.getSupernodeOutputPortForLink(upstreamSupernode, supernodeLink);
-									if (upstreamSupernodeOutputPort) {
-										const upstreamBindingNodeId = upstreamSupernodeOutputPort.subflow_node_ref;
-										upstreamIds = this.getUpstreamObjIdsFrom(upstreamBindingNodeId, upstreamSupernode.subflow_ref.pipeline_id_ref, objectType);
-									}
-								} else {
-									upstreamIds = this.getUpstreamObjIdsFrom(supernodeLink.srcNodeId, parentPipelineId, objectType);
-								}
-								upstreamObjIds = mergeWith(upstreamObjIds, upstreamIds, this.mergeWithUnion);
+							} else {
+								this.getUpstreamObjIdsFrom(supernodeLink.srcNodeId, parentPipelineId, highlightNodeIds, highlightLinkIds);
 							}
-						});
-					}
-				});
-			} else if (objectType === "nodes") {
-				upstreamObjIds[pipelineId] = union(upstreamObjIds[pipelineId], [nodeId]);
-			}
+						}
+					});
+				}
+			});
 		}
-		return upstreamObjIds;
 	}
 
-	getDownstreamNodeIdsFrom(nodeId, pipelineId) {
-		return this.getDownstreamObjIdsFrom(nodeId, pipelineId, "nodes");
-	}
+	getDownstreamObjIdsFrom(nodeId, pipelineId, highlightNodeIds, highlightLinkIds) {
+		highlightNodeIds[pipelineId] = highlightNodeIds[pipelineId] || [];
+		highlightLinkIds[pipelineId] = highlightLinkIds[pipelineId] || [];
 
-	getDownstreamLinkIdsFrom(nodeId, pipelineId) {
-		return this.getDownstreamObjIdsFrom(nodeId, pipelineId, "links");
-	}
-
-	getDownstreamObjIdsFrom(nodeId, pipelineId, objectType) {
-		let downstreamObjIds = [];
-		if (typeof downstreamObjIds[pipelineId] === "undefined") {
-			downstreamObjIds[pipelineId] = [];
-		}
 		const currentPipeline = this.getAPIPipeline(pipelineId);
 		const node = currentPipeline.getNode(nodeId);
-		const nodeLinks = currentPipeline.getLinksContainingSourceId(nodeId);
+		const nodeLinks = currentPipeline
+			.getLinksContainingSourceId(nodeId)
+			.filter((l) => l.type === NODE_LINK);
+
 		if (nodeLinks.length > 0) {
 			nodeLinks.forEach((link) => {
-				if (link.type === NODE_LINK) {
-					if (objectType === "nodes") {
-						downstreamObjIds[pipelineId] = union(downstreamObjIds[pipelineId], [link.trgNodeId]);
-					} else if (objectType === "links") {
-						downstreamObjIds[pipelineId].push(link.id);
-					}
-
+				// Prevent endless looping with circular graphs by detecting if we
+				// have encountered this link before.
+				if (!highlightLinkIds[pipelineId].includes(link.id)) {
 					const trgNode = currentPipeline.getNode(link.trgNodeId);
+
+					highlightLinkIds[pipelineId] = union(highlightLinkIds[pipelineId], [link.id]);
+					highlightNodeIds[pipelineId] = union(highlightNodeIds[pipelineId], [link.trgNodeId]);
+
 					const trgNodeInputPort = this.getSupernodeInputPortForLink(trgNode, link);
 					if (trgNodeInputPort) {
-						const subflowRef = trgNode.subflow_ref.pipeline_id_ref;
-						if (typeof downstreamObjIds[subflowRef] === "undefined") {
-							downstreamObjIds[subflowRef] = [];
-						}
-						const bindingNode = this.getAPIPipeline(subflowRef).getNode(trgNodeInputPort.subflow_node_ref);
-						if (bindingNode) {
-							if (objectType === "nodes") {
-								downstreamObjIds[subflowRef] = union(downstreamObjIds[subflowRef], [bindingNode.id]);
-							}
-							const subDownstreamObjs = this.getDownstreamObjIdsFrom(bindingNode.id, subflowRef, objectType);
-							downstreamObjIds = mergeWith(downstreamObjIds, subDownstreamObjs, this.mergeWithUnion);
-						}
-					}
+						const subflowPipelineId = trgNode.subflow_ref.pipeline_id_ref;
+						const bindingNode = this.getAPIPipeline(subflowPipelineId).getNode(trgNodeInputPort.subflow_node_ref);
 
-					const downstreamIds = this.getDownstreamObjIdsFrom(link.trgNodeId, pipelineId, objectType);
-					downstreamObjIds = mergeWith(downstreamObjIds, downstreamIds, this.mergeWithUnion);
+						if (bindingNode) {
+							highlightLinkIds[subflowPipelineId] = highlightLinkIds[subflowPipelineId] || [];
+							highlightNodeIds[subflowPipelineId] = highlightNodeIds[subflowPipelineId] || [];
+							highlightNodeIds[subflowPipelineId] = union(highlightNodeIds[subflowPipelineId], [bindingNode.id]);
+
+							this.getDownstreamObjIdsFrom(bindingNode.id, subflowPipelineId, highlightNodeIds, highlightLinkIds);
+						}
+					} else {
+						this.getDownstreamObjIdsFrom(link.trgNodeId, pipelineId, highlightNodeIds, highlightLinkIds);
+					}
 				}
 			});
 		} else if (currentPipeline.isExitBindingNode(node)) {
@@ -1425,41 +1383,29 @@ export default class ObjectModel {
 						const supernodeLinks = parentPipeline.getLinksContainingSourceId(supernode.id);
 						supernodeLinks.forEach((supernodeLink) => {
 							if (supernodeLink.srcNodePortId === outputPort.id) {
-								if (typeof downstreamObjIds[parentPipelineId] === "undefined") {
-									downstreamObjIds[parentPipelineId] = [];
-								}
-								if (objectType === "nodes") {
-									downstreamObjIds[parentPipelineId] = union(downstreamObjIds[parentPipelineId], [supernodeLink.trgNodeId]);
-								} else if (objectType === "links") {
-									downstreamObjIds[parentPipelineId] = union(downstreamObjIds[parentPipelineId], [supernodeLink.id]);
-								}
+								highlightNodeIds[parentPipelineId] = highlightNodeIds[parentPipelineId] || [];
+								highlightLinkIds[parentPipelineId] = highlightLinkIds[parentPipelineId] || [];
 
-								let downstreamIds = {};
+								highlightNodeIds[parentPipelineId] = union(highlightNodeIds[parentPipelineId], [supernodeLink.trgNodeId]);
+								highlightLinkIds[parentPipelineId] = union(highlightLinkIds[parentPipelineId], [supernodeLink.id]);
+
+								// If trgNodeId is supernode, need to find the corresponding entry binding node.
 								if (parentPipeline.isSupernode(supernodeLink.trgNodeId)) {
-									if (objectType === "nodes") {
-										downstreamIds[parentPipelineId] = union(downstreamIds[parentPipelineId], [supernodeLink.trgNodeId]);
-									} else if (objectType === "links") {
-										downstreamIds[parentPipelineId] = union(downstreamIds[parentPipelineId], [supernodeLink.id]);
-									}
 									const downstreamSupernode = parentPipeline.getNode(supernodeLink.trgNodeId);
 									const downstreamSupernodeInputPort = this.getSupernodeInputPortForLink(downstreamSupernode, supernodeLink);
 									if (downstreamSupernodeInputPort) {
-										const downstreamBindingNodeId = downstreamSupernodeInputPort.subflow_node_ref;
-										downstreamIds = this.getDownstreamObjIdsFrom(downstreamBindingNodeId, downstreamSupernode.subflow_ref.pipeline_id_ref, objectType);
+										const bindingNodeId = downstreamSupernodeInputPort.subflow_node_ref;
+										this.getDownstreamObjIdsFrom(bindingNodeId, downstreamSupernode.subflow_ref.pipeline_id_ref, highlightNodeIds, highlightLinkIds);
 									}
 								} else {
-									downstreamIds = this.getDownstreamObjIdsFrom(supernodeLink.trgNodeId, parentPipelineId, objectType);
+									this.getDownstreamObjIdsFrom(supernodeLink.trgNodeId, parentPipelineId, highlightNodeIds, highlightLinkIds);
 								}
-								downstreamObjIds = mergeWith(downstreamObjIds, downstreamIds, this.mergeWithUnion);
 							}
 						});
 					}
 				});
-			} else if (objectType === "nodes") {
-				downstreamObjIds[pipelineId] = union(downstreamObjIds[pipelineId], [nodeId]);
 			}
 		}
-		return downstreamObjIds;
 	}
 
 	// Returns an input port from the node passed in (provided it is a supernode) which is
@@ -1492,12 +1438,6 @@ export default class ObjectModel {
 			});
 		}
 		return port;
-	}
-
-	// Lodash mergeWith() Customizer function. Merge objects of arrays by taking the union.
-	// ex: mergeWith({ a: [1, 2] }, {a: [2, 3], b: [1, 4] }) => { a: [1, 2, 3], b: [1, 4]}
-	mergeWithUnion(objValue, srcValue) {
-		return union(objValue, srcValue);
 	}
 
 	// Pythagorean Theorem.
