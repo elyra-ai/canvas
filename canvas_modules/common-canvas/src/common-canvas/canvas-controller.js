@@ -392,10 +392,12 @@ export default class CanvasController {
 	// Selections methods
 	// ---------------------------------------------------------------------------
 
-	// Sets the currently selected objects.
+	// Sets the currently selected objects replacing any current selections.
 	// newSelection - An array of object IDs for nodes and/or comments
-	// pipelineId - The ID of the pipeline where the objects exist. Selected
-	// objects can only be in one pipeline.
+	// pipelineId - Optional. The ID of the pipeline where the objects exist.
+	// Selected objects can only be in one pipeline. If this parameter is omitted
+	// it is assumed the selections will be for objects in the 'top-level' pipeline
+	// being displayed.
 	setSelections(newSelection, pipelineId) {
 		this.objectModel.setSelections(newSelection, pipelineId);
 	}

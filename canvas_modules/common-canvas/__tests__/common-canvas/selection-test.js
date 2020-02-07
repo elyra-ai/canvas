@@ -71,6 +71,34 @@ describe("Selection notification tests", () => {
 		objectModel.setSelectionChangeHandler(null);
 	});
 
+	it("Should select node and comment without specifying pipelineId on setSelections", () => {
+		const objectModel = canvasController.getObjectModel();
+		const startPipeline =
+			{ id: "123",
+				nodes: [
+					{ id: "node1", x_pos: 10, y_pos: 10 },
+					{ id: "node2", x_pos: 20, y_pos: 20 },
+					{ id: "node3", x_pos: 30, y_pos: 30 }
+				],
+				comments: [
+					{ id: "comment1", x_pos: 50, y_pos: 50 },
+					{ id: "comment2", x_pos: 60, y_pos: 60 }
+				],
+				links: [
+					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
+					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
+				]
+			};
+
+		setupStartCanvasInfo("123", startPipeline, objectModel);
+		canvasController.setSelections(["comment1", "node3"]); // Note: No pipelineId specified.
+
+		const expectedSelections = ["comment1", "node3"];
+		const actualSelections = canvasController.getSelectedObjectIds();
+
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
 	it("should select nodes in a fork subgraph", () => {
 		const objectModel = canvasController.getObjectModel();
 		const startPipeline =

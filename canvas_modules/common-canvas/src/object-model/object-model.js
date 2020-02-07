@@ -925,7 +925,9 @@ export default class ObjectModel {
 	}
 
 	setSelections(newSelections, pipelineId) {
-		this.executeWithSelectionChange(this.store.dispatch, { type: "SET_SELECTIONS", data: { pipelineId: pipelineId, selections: newSelections } });
+		// This will return the default API pipeline if a pipelineId is not provided.
+		const selPipelineId = this.getAPIPipeline(pipelineId).pipelineId;
+		this.executeWithSelectionChange(this.store.dispatch, { type: "SET_SELECTIONS", data: { pipelineId: selPipelineId, selections: newSelections } });
 	}
 
 	deleteSelectedObjects() {
@@ -1195,10 +1197,12 @@ export default class ObjectModel {
 	// Highlighting methods
 	// ---------------------------------------------------------------------------
 
-	// Return an object containing nodes and links to be highlighted based on the
-	// array of nodeIds passed in (which usually corresponds to the set of selected
-	// nodes on the canvas). The nodes and links info returned are in the form of
-	// associative arrays indexed by pipeline ID.
+	// Returns an object containing nodes and links to be highlighted based on the
+	// array of nodeIds passed in (which corresponds to the set of selected
+	// nodes on the canvas when this method is called through a context menu
+	// highlight option).
+	// The nodes and links info returned are in the form of associative arrays
+	// indexed by pipeline ID.
 	getHighlightObjectIds(pipelineId, nodeIds, operator) {
 		const highlightNodeIds = {};
 		const highlightLinkIds = {};
@@ -1238,7 +1242,7 @@ export default class ObjectModel {
 		};
 	}
 
-	// If nodeId and pipelineId specify a supernode, this method popultaes the
+	// If nodeId and pipelineId specify a supernode, this method populates the
 	// highlightNodeIds and highlightLinkIds arrays with all the nodes and links
 	// that are in the supernode and any of its descendent supernodes.
 	getSupernodeNodeIds(nodeId, pipelineId, highlightNodeIds, highlightLinkIds) {
