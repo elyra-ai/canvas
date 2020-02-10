@@ -140,8 +140,8 @@ export default class SidePanelAPI extends React.Component {
 		} else if (operation === API_SET_LINK_DECORATIONS) {
 			// when selecting operation to set link decorations, build list of links and select the first one by default
 			links = this.getLinkList(this.props.apiConfig.getCanvasInfo().links);
-			linkId = links[0].value;
 			if (!isEmpty(links)) {
+				linkId = links[0].value;
 				const decorations = this.props.apiConfig.getCanvasInfo().links[0].decorations || [];
 				if (decorations) {
 					newDecorations = JSON.stringify(decorations, null, 2);
