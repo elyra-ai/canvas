@@ -165,8 +165,8 @@ export default class CanvasInHandler {
 				id: canvasComment.id,
 				class_name: canvasComment.className,
 				content: canvasComment.content,
-				x_pos: canvasComment.x_pos ? canvasComment.x_pos : canvasComment.xPos, // Handle old field name xPos
-				y_pos: canvasComment.y_pos ? canvasComment.y_pos : canvasComment.yPos, // Handle old field name yPos
+				x_pos: typeof canvasComment.x_pos !== "undefined" ? canvasComment.x_pos : canvasComment.xPos, // Handle old field name xPos
+				y_pos: typeof canvasComment.y_pos !== "undefined" ? canvasComment.y_pos : canvasComment.yPos, // Handle old field name yPos
 				height: canvasComment.height,
 				width: canvasComment.width
 			})
