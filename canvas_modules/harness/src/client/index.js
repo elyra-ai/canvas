@@ -15,15 +15,18 @@ import CommonPropertiesConditions from "./components/common-properties-condition
 import "../styles/index.scss";
 import App from "./App";
 import { HashRouter, Route } from "react-router-dom";
+import { IntlProvider } from "react-intl";
 
 
 ReactDOM.render(
 	<HashRouter>
-		<div>
-			<Route exact path="/" component={ App } />
-			<Route path="/properties" component={ CommonPropertiesComponents } />
-			<Route path="/conditions" component={ CommonPropertiesConditions } />
-		</div>
+		<IntlProvider>
+			<div>
+				<Route exact path="/" component={ App } />
+				<Route path="/properties" component={ CommonPropertiesComponents } />
+				<Route path="/conditions" component={ CommonPropertiesConditions } />
+			</div>
+		</IntlProvider>
 	</HashRouter>,
 	document.getElementById("root")
 );
