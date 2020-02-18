@@ -1585,7 +1585,6 @@ export default class SVGCanvasRenderer {
 
 	dragMove() {
 		this.logger.logStartTimer("dragMove");
-		this.dragging = true;
 		if (this.commentSizing) {
 			this.resizeComment();
 		} else if (this.nodeSizing) {
@@ -1639,11 +1638,9 @@ export default class SVGCanvasRenderer {
 		this.removeTempCursorOverlay();
 
 		if (this.commentSizing) {
-			this.dragging = false;
 			this.endCommentSizing();
 
 		} else if (this.nodeSizing) {
-			this.dragging = false;
 			this.endNodeSizing();
 
 		} else if (this.dragging) {
@@ -4715,6 +4712,10 @@ export default class SVGCanvasRenderer {
 			let affectLinks;
 			if (this.nodeSizing) {
 				affectLinks = this.getConnectedLinksFromNodeSizingArray(this.nodeSizingMovedNodes);
+
+			} else if (this.commentSizing) {
+				affectLinks = this.getConnectedLinksFromCommentBeingSized(this.resizeObj);
+
 			} else {
 				let affectedNodesAndComments;
 				if (this.dragging) {
@@ -5842,6 +5843,13 @@ export default class SVGCanvasRenderer {
 				return (link.srcNodeId === selectedObjectId || link.trgNodeId === selectedObjectId);
 			});
 			links = union(links, linksContaining);
+		});
+		return links;
+	}
+
+	getConnectedLinksFromCommentBeingSized(resizedComment) {
+		const links = this.activePipeline.links.filter(function(link) {
+			return (link.srcNodeId === resizedComment.id || link.trgNodeId === resizedComment.id);
 		});
 		return links;
 	}
