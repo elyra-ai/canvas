@@ -42,6 +42,7 @@ import {
 	ASSOC_RIGHT_SIDE_CURVE,
 	ASSOC_STRAIGHT,
 	NO_LAYOUT,
+	CLASSIC_LAYOUT,
 	BLUE_ELLIPSES_LAYOUT,
 	DB2_EXPLAIN_LAYOUT,
 	STREAMS_LAYOUT,
@@ -854,6 +855,10 @@ export default class SidePanelForms extends React.Component {
 				<RadioButton
 					value={NO_LAYOUT}
 					labelText={NO_LAYOUT}
+				/>
+				<RadioButton
+					value={CLASSIC_LAYOUT}
+					labelText={CLASSIC_LAYOUT}
 				/>
 				<RadioButton
 					value={BLUE_ELLIPSES_LAYOUT}

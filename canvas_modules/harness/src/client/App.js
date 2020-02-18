@@ -71,6 +71,7 @@ import {
 	CURVE_LINKS,
 	ASSOC_STRAIGHT,
 	NO_LAYOUT,
+	CLASSIC_LAYOUT,
 	BLUE_ELLIPSES_LAYOUT,
 	DB2_EXPLAIN_LAYOUT,
 	STREAMS_LAYOUT,
@@ -1790,6 +1791,7 @@ export default class App extends React.Component {
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
+			enableParentClass: "",
 			enableNodeLayout: null,
 			enableInternalObjectModel: this.state.internalObjectModel,
 			enableDragWithoutSelect: this.state.dragWithoutSelect,
@@ -1812,12 +1814,15 @@ export default class App extends React.Component {
 		let decorationActionHandler = this.decorationActionHandler;
 		let editActionHandler = this.editActionHandler;
 
-		if (this.state.selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
+		if (this.state.selectedNodeLayout === CLASSIC_LAYOUT) {
 			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
+				enableParentClass: "classic"
+			});
+		} else if (this.state.selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
+			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
+				enableParentClass: "blue-ellipses",
 				enableNodeLayout:
 					{
-						cssNodeLabel: "shape_label_style_blue_ellipses",
-						cssNodeBody: "default_node_style_blue_ellipses",
 						bodyPath: "     M  0 30 Q  0  0 60  0 Q 120  0 120 30 Q 120 60 60 60 Q  0 60  0 30 Z",
 						selectionPath: "M -5 30 Q -5 -5 60 -5 Q 125 -5 125 30 Q 125 65 60 65 Q -5 65 -5 30 Z",
 						defaultNodeWidth: 120,
@@ -1827,7 +1832,7 @@ export default class App extends React.Component {
 						imageHeight: 30,
 						imagePosX: 20,
 						imagePosY: 10,
-						labelPosX: 20,
+						labelPosX: 60,
 						labelPosY: 50,
 						labelMaxWidth: 80,
 						labelHeight: 13, // Should match the font size specified in css
@@ -1844,6 +1849,7 @@ export default class App extends React.Component {
 		} else if (this.state.selectedNodeLayout === DB2_EXPLAIN_LAYOUT) {
 			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
 				enableConnectionType: "Halo",
+				enableParentClass: "db2-explain",
 				enableNodeLayout:
 					{
 						cssNodeLabel: "shape_label_style_db2_explain",
@@ -1926,6 +1932,7 @@ export default class App extends React.Component {
 				enableInteractionType: "Mouse",
 				enableConnectionType: "Ports",
 				enableNodeFormatType: "Horizontal",
+				enableParentClass: "streams-monitor",
 				enableAutoLayoutVerticalSpacing: 50,
 				enableAutoLayoutHorizontalSpacing: 80,
 				enableLinkType: "Elbow",
@@ -1958,6 +1965,7 @@ export default class App extends React.Component {
 				enableNodeFormatType: "Horizontal",
 				enableAssocLinkCreation: true,
 				enableAssocLinkType: "RightSideCurve",
+				enableParentClass: "ai-join",
 				enableNodeLayout: {
 					defaultNodeWidth: 220,
 					defaultNodeHeight: 50,

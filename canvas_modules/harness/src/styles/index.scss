@@ -11,9 +11,11 @@ $font-path: "/fonts";
 
 @import "@wdpx/themes/scss/cloud/_theme.scss";
 // @import "@wdpx/themes/scss/carbon10_gray10/_theme";
+// @import "@wdpx/themes/scss/dark/_theme.scss";
 @import "carbon-components/scss/globals/scss/styles";
 @import "@wdp/common-canvas/src/index.scss";
 
+@import "./canvas-customization.scss";
 @import "./sidepanel.scss";
 @import "./App.scss";
 @import "./properties.scss";

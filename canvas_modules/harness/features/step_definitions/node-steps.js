@@ -1116,7 +1116,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify the "([^"]*)" node is selected$/, function(nodeName) {
-		const nodeOutlineSelector = getNodeSelector(nodeName, "outline");
+		const nodeOutlineSelector = getNodeSelector(nodeName, "sel_outline");
 		const nodeOutline = browser.$(nodeOutlineSelector);
 		const selected = nodeOutline.getAttribute("data-selected");
 		expect(selected).toEqual("yes");
@@ -1126,7 +1126,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify the "([^"]*)" node is not selected$/, function(nodeName) {
-		const nodeOutlineSelector = getNodeSelector(nodeName, "outline");
+		const nodeOutlineSelector = getNodeSelector(nodeName, "sel_outline");
 		const nodeOutline = browser.$(nodeOutlineSelector);
 		const selected = nodeOutline.getAttribute("data-selected");
 		expect(selected).toEqual("no");

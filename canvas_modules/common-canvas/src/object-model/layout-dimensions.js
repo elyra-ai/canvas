@@ -9,11 +9,6 @@
 
 const haloDefaultLayout = {
 	nodeLayout: {
-		// CSS classes
-		cssNodeBody: "d3-node-body-halo",
-		cssNodeSelectionHighlight: "d3-node-selection-highlight",
-		cssNodeLabel: "d3-node-label",
-
 		// Node format specifies whether the image and label are arranged side by side
 		// (horizontal) or with the image above the label (vertical).
 		nodeFormatType: "vertical",
@@ -176,13 +171,6 @@ const haloDefaultLayout = {
 	// Draw node as a simple rectangle
 	nodeShape: "rectangle",
 
-	// CSS classes
-	cssNodePortOutput: "d3-node-port-output",
-	cssNodePortInput: "d3-node-port-input",
-	cssNodePortInputArrow: "d3-node-port-input-arrow",
-	cssNodePortInputAssoc: "d3-node-port-input-assoc",
-	cssSupernodeLabel: "d3-supernode-label",
-
 	// The amount of padding added around the canvas objects when doing a
 	// zoomToFit on the primary canvas. This may be overriden by common-canvas
 	// when displaying sub-flows.
@@ -245,9 +233,6 @@ const haloDefaultLayout = {
 	// ---------------------------------------------------------------------------
 	// Layout values for comments
 	// ---------------------------------------------------------------------------
-	// CSS styles for comment highlighting
-	cssCommentSelectionHighlight: "d3-comment-selection-highlight",
-
 	// When sizing a comment this decides the size of the corner area for
 	// diagonal sizing.
 	commentCornerResizeArea: 10,
@@ -290,11 +275,6 @@ const haloDefaultLayout = {
 
 const portsHorizontalDefaultLayout = {
 	nodeLayout: {
-		// CSS classes
-		cssNodeBody: "d3-node-body-outline-austin",
-		cssNodeSelectionHighlight: "d3-node-selection-highlight-austin",
-		cssNodeLabel: "d3-node-label-austin",
-
 		// Node format specifies whether the image and label are arranged side by side
 		// (horizontal) or with the image above the label (vertical).
 		nodeFormatType: "horizontal",
@@ -457,13 +437,6 @@ const portsHorizontalDefaultLayout = {
 	// Draw node as a rectangle with port arcs around the ports
 	nodeShape: "port-arcs",
 
-	// CSS classes
-	cssNodePortOutput: "d3-node-port-output-austin",
-	cssNodePortInput: "d3-node-port-input-austin",
-	cssNodePortInputArrow: "d3-node-port-input-arrow-austin",
-	cssNodePortInputAssoc: "d3-node-port-input-assoc-austin",
-	cssSupernodeLabel: "d3-node-label-austin",
-
 	// The amount of padding added around the canvas objects when doing a
 	// zoomToFit on the primary canvas. This may be overriden by common-canvas
 	// when displaying sub-flows.
@@ -526,9 +499,6 @@ const portsHorizontalDefaultLayout = {
 	// ---------------------------------------------------------------------------
 	// Layout values for comments
 	// ---------------------------------------------------------------------------
-	// CSS styles for comment highlighting
-	cssCommentSelectionHighlight: "d3-comment-selection-highlight-austin",
-
 	// When sizing a comment this decides the size of the corner area for
 	// diagonal sizing.
 	commentCornerResizeArea: 10,
@@ -571,11 +541,6 @@ const portsHorizontalDefaultLayout = {
 
 const portsVerticalDefaultLayout = {
 	nodeLayout: {
-		// CSS classes
-		cssNodeBody: "d3-node-body-outline",
-		cssNodeSelectionHighlight: "d3-node-selection-highlight",
-		cssNodeLabel: "d3-node-label",
-
 		// Node format specifies whether the image and label are arranged side by side
 		// (horizontal) or with the image above the label (vertical).
 		nodeFormatType: "vertical",
@@ -738,13 +703,6 @@ const portsVerticalDefaultLayout = {
 	// Draw node as a simple rectangle
 	nodeShape: "rectangle",
 
-	// CSS classes
-	cssNodePortOutput: "d3-node-port-output",
-	cssNodePortInput: "d3-node-port-input",
-	cssNodePortInputArrow: "d3-node-port-input-arrow",
-	cssNodePortInputAssoc: "d3-node-port-input-assoc",
-	cssSupernodeLabel: "d3-supernode-label",
-
 	// The amount of padding added around the canvas objects when doing a
 	// zoomToFit on the primary canvas. This may be overriden by common-canvas
 	// when displaying sub-flows.
@@ -807,9 +765,6 @@ const portsVerticalDefaultLayout = {
 	// ---------------------------------------------------------------------------
 	// Layout values for comments
 	// ---------------------------------------------------------------------------
-	// CSS styles for comment highlighting
-	cssCommentSelectionHighlight: "d3-comment-selection-highlight",
-
 	// When sizing a comment this decides the size of the corner area for
 	// diagonal sizing.
 	commentCornerResizeArea: 10,

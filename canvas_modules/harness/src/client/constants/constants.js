@@ -61,6 +61,7 @@ _defineConstant("ASSOC_RIGHT_SIDE_CURVE", "RightSideCurve");
 _defineConstant("ASSOC_STRAIGHT", "Straight");
 
 _defineConstant("NO_LAYOUT", "None");
+_defineConstant("CLASSIC_LAYOUT", "Classic");
 _defineConstant("BLUE_ELLIPSES_LAYOUT", "Blue Ellipses");
 _defineConstant("DB2_EXPLAIN_LAYOUT", "Db2 Visual Explain");
 _defineConstant("STREAMS_LAYOUT", "Streams");

@@ -7,107 +7,84 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* Some useful variations on Carbon colors */
-$blue: lighten($inverse-link, 20%);
-$light-blue: lighten($inverse-link, 34%);
-$dark-blue: lighten($inverse-link, 10%);
-
-/* Canvas background color */
+// Canvas background color
 $canvas-background-color: $ui-background;
 
-/* Region selection colors */
+// Region selection colors
 $region-selector-stroke-color: $ui-05;
 $region-selector-fill-color: $ui-03;
 
-/* 'Back to previous flow' control colors */
+// 'Back to previous flow' control colors
 $back-to-previous-flow-box-color: $brand-01;
 $back-to-previous-flow-box-fill-hover: $ui-03;
 
-/* Node colors shared between themes */
+// Node colors
+$node-body-stroke: $ui-05;
+$node-body-fill: $ui-01;
+
+$node-body-stroke-hover: $ui-03;
+$node-body-fill-hover: $ui-03;
+
 $node-selection-color: $inverse-link;
 $node-label-color: $text-01;
+
 $node-decoration-outline: $ui-05;
 $node-halo-color: $inverse-link;
+
 $node-super-expand-icon-outline-hover-color: $ui-03;
 $node-super-expand-icon-color: $brand-01;
+
 $node-ellipsis-color: $brand-01;
 $node-ellipsis-hover-color: $inverse-link;
-$node-error-color: $support-01; /* Error red */
-$node-warning-color: $support-03; /* Warning yellow */
 
-/* Node colors for the Regular (Vertical) theme */
-$node-body-stroke: $blue;
-$node-body-fill: $light-blue;
+$node-error-color: $support-01; // Error red
+$node-warning-color: $support-03; // Warning yellow
 
-$node-port-output-stroke-color: $blue;
-$node-port-output-fill-color: $canvas-background-color;
+// Output port styles
 
-$node-port-output-connected-stroke-color: $blue;
-$node-port-output-connected-fill-color: $light-blue;
+$node-port-output-stroke-color: $inverse-02;
+$node-port-output-fill-color: $node-body-fill;
 
-$node-port-output-hover-stroke: $dark-blue;
-$node-port-output-hover-fill: $dark-blue;
+$node-port-output-connected-stroke-color: $inverse-02;
+$node-port-output-connected-fill-color: $inverse-02;
 
-$node-port-input-stroke-color: $blue;
-$node-port-input-fill-color: $canvas-background-color;
+$node-port-output-hover-stroke: $inverse-02;
+$node-port-output-hover-fill: $inverse-02;
 
-$node-port-input-connected-stroke-color: $blue;
-$node-port-input-connected-fill-color: $light-blue;
+// Input port styles
 
-$node-port-input-arrow-connected-stroke-color: $dark-blue;
+$node-port-input-stroke-color: $inverse-02;
+$node-port-input-fill-color: $node-body-fill;
+
+$node-port-input-connected-stroke-color: $node-body-fill;
+$node-port-input-connected-fill-color: $node-body-fill;
+
+$node-port-input-connected-super-binding-stroke-color: $inverse-02;
+$node-port-input-connected-super-binding-fill-color: $ui-02;
+
+$node-port-input-arrow-connected-stroke-color: $inverse-02;
 $node-port-input-arrow-connected-fill-color: transparent;
 
-
-/* Node colors for the Austin (Horizontal) theme */
-$node-body-stroke-austin: $ui-04;
-$node-body-fill-austin: $ui-02;
-
-$node-body-stroke-austin-hover: $ui-03;
-$node-body-fill-austin-hover: $ui-03;
-
-$node-port-output-stroke-color-austin: $inverse-02;
-$node-port-output-fill-color-austin: transparent;
-
-$node-port-output-connected-stroke-color-austin: $inverse-02;
-$node-port-output-connected-fill-color-austin: $inverse-02;
-
-$node-port-output-hover-stroke-austin: $inverse-02;
-$node-port-output-hover-fill-austin: $inverse-02;
-
-$node-port-input-stroke-color-austin: $inverse-02;
-$node-port-input-fill-color-austin: transparent;
-
-$node-port-input-connected-stroke-color-austin: transparent;
-$node-port-input-connected-fill-color-austin: transparent;
-
-$node-port-input-connected-super-binding-stroke-color-austin: $inverse-02;
-$node-port-input-connected-super-binding-fill-color-austin: $ui-02;
-
-$node-port-input-arrow-connected-stroke-color-austin: $inverse-02;
-$node-port-input-arrow-connected-fill-color-austin: transparent;
-
-/* Comment colors */
+// Comment colors
 $comment-outline-color: $ui-04;
 $comment-fill-color: $ui-01;
 $comment-text-color: $text-02;
 $comment-halo-color: $inverse-link;
 
-/* Comment font */
-/* These values are used for both comment text and the comment textarea used for
-  text entry. They must be the same for each. */
+// Comment font
+// These values are used for both comment text and the comment textarea used for
+// text entry. They must be the same for each.
 $comment-text-font-size: 12px;
 $comment-text-font-weight: 400;
 $comment-text-font-family: "ibm-plex-sans", Helvetica Neue, Arial, sans-serif;
 
-/* New link colors */
-$new-halo-link-color: $ui-05;
-
-/* Link colors */
+// Link colors
 $comment-link-color: $ui-04;
-$object-link-color: $ui-05; /* Used for association links for a regular data flow canvas */
-$association-link-color: $ui-04; /* Used for association links when config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE.  */
-$data-link-color: $dark-blue;
+$object-link-color: $ui-05; // Used for association links for a regular data flow canvas
+$association-link-color: $ui-04; // Used for association links when config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE.
+$data-link-color: $support-04;
 $link-hightlight-color: $brand-01;
+$new-halo-link-color: $ui-05;
 
 /* Canvas styles */
 
@@ -176,53 +153,26 @@ $link-hightlight-color: $brand-01;
 	stroke: transparent;
 }
 
-/* Node styles - Regular (Vertical) Theme */
+/* Node styles  */
 
 .d3-node-body-outline {
 	stroke: $node-body-stroke;
-	stroke-width: 2;
+	stroke-width: 1;
 	fill: $node-body-fill;
 }
 
-.d3-node-body-halo {
-	stroke: transparent;
-	fill: transparent;
-}
-
-.d3-node-body-outline-austin {
-	stroke: $node-body-stroke-austin;
+.d3-node-body-outline[hover="yes"] {
+	stroke: $node-body-stroke-hover;
 	stroke-width: 1;
-	fill: $node-body-fill-austin;
-}
-
-.d3-node-body-outline-austin[hover="yes"] {
-	stroke: $node-body-stroke-austin-hover;
-	stroke-width: 1;
-	fill: $node-body-fill-austin-hover;
+	fill: $node-body-fill-hover;
 }
 
 .d3-node-selection-highlight {
 	stroke-width: 0;
 	fill: transparent;
-	pointer-events: none;
 }
 
 .d3-node-selection-highlight[data-selected="yes"] {
-	stroke: $node-selection-color;
-	stroke-dasharray: 5, 5;
-	stroke-width: 2;
-	fill: transparent;
-	pointer-events: none;
-}
-
-/* Node styles - Austin (Horizontal) Theme */
-
-.d3-node-selection-highlight-austin {
-	stroke-width: 0;
-	fill: transparent;
-}
-
-.d3-node-selection-highlight-austin[data-selected="yes"] {
 	stroke: $node-selection-color;
 	stroke-dasharray: none; /* Solid line */
 	stroke-width: 5;
@@ -237,21 +187,16 @@ $link-hightlight-color: $brand-01;
 }
 
 .d3-node-label {
-	font-size: 13px;
+	font-size: 12px;
+	font-weight: 500;
 	fill: $node-label-color;
-	text-anchor: middle;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	user-select: none;
 }
 
-.d3-node-label-austin {
-	font-size: 12px;
-	font-weight: 600;
-	fill: $node-label-color;
-	/* Prevent elements from being selectable */
-	/* This stops it being dragged incorrectly.*/
-	user-select: none;
+.d3-node-label-middle {
+	text-anchor: middle;
 }
 
 .d3-supernode-label {
@@ -273,6 +218,7 @@ $link-hightlight-color: $brand-01;
 }
 
 /* Used for debugging label position */
+
 .d3-label-outline {
 	fill: $node-body-fill;
 	stroke: $node-body-stroke;
@@ -295,6 +241,8 @@ $link-hightlight-color: $brand-01;
 	user-select: none;
 }
 
+/* Node halo styles */
+
 .d3-node-halo {
 	fill: none;
 	stroke: transparent;
@@ -306,6 +254,8 @@ $link-hightlight-color: $brand-01;
 	stroke: $node-halo-color;
 	stroke-width: 8;
 }
+
+/* Super node styles */
 
 .d3-node-super-expand-icon-outline {
 	fill: transparent;
@@ -361,7 +311,7 @@ $link-hightlight-color: $brand-01;
 .d3-node-port-output {
 	stroke: $node-port-output-stroke-color;
 	fill: $node-port-output-fill-color;
-	stroke-width: 2;
+	stroke-width: 1.25;
 }
 
 .d3-node-port-output[connected="yes"] {
@@ -378,13 +328,13 @@ $link-hightlight-color: $brand-01;
 .d3-node-port-input {
 	stroke: $node-port-input-stroke-color;
 	fill: $node-port-input-fill-color;
-	stroke-width: 2;
+	stroke-width: 1.25;
 }
 
 .d3-node-port-input-assoc {
 	stroke: $node-port-input-stroke-color;
 	fill: $node-port-input-fill-color;
-	stroke-width: 2;
+	stroke-width: 1.25;
 }
 
 .d3-node-port-input-assoc:hover {
@@ -395,7 +345,13 @@ $link-hightlight-color: $brand-01;
 .d3-node-port-input[connected="yes"] {
 	stroke: $node-port-input-connected-stroke-color;
 	fill: $node-port-input-connected-fill-color;
-	stroke-width: 2;
+	stroke-width: 1;
+}
+
+.d3-node-port-input[connected="yes"][isSupernodeBinding="yes"] {
+	stroke: $node-port-input-connected-super-binding-stroke-color;
+	fill: $node-port-input-connected-super-binding-fill-color;
+	stroke-width: 1;
 }
 
 .d3-node-port-input-arrow {
@@ -405,66 +361,8 @@ $link-hightlight-color: $brand-01;
 
 .d3-node-port-input-arrow[connected="yes"] {
 	stroke: $node-port-input-arrow-connected-stroke-color;
+	stroke-width: 1;
 	fill: $node-port-input-arrow-connected-fill-color;
-}
-
-/* Styles for Austin theme */
-
-.d3-node-port-output-austin {
-	stroke: $node-port-output-stroke-color-austin;
-	fill: $node-port-output-fill-color-austin;
-	stroke-width: 1.25;
-}
-
-.d3-node-port-output-austin[connected="yes"] {
-	stroke: $node-port-output-connected-stroke-color-austin;
-	fill: $node-port-output-connected-fill-color-austin;
-	stroke-width: 2;
-}
-
-.d3-node-port-output-austin:hover {
-	stroke: $node-port-output-hover-stroke-austin;
-	fill: $node-port-output-hover-fill-austin;
-}
-
-.d3-node-port-input-austin {
-	stroke: $node-port-input-stroke-color-austin;
-	fill: $node-port-input-fill-color-austin;
-	stroke-width: 1.25;
-}
-
-.d3-node-port-input-assoc-austin {
-	stroke: $node-port-input-stroke-color-austin;
-	fill: $node-port-input-fill-color-austin;
-	stroke-width: 1.25;
-}
-
-.d3-node-port-input-assoc-austin:hover {
-	stroke: $node-port-output-hover-stroke-austin;
-	fill: $node-port-output-hover-fill-austin;
-}
-
-.d3-node-port-input-austin[connected="yes"] {
-	stroke: $node-port-input-connected-stroke-color-austin;
-	fill: $node-port-input-connected-fill-color-austin;
-	stroke-width: 1;
-}
-
-.d3-node-port-input-austin[connected="yes"][isSupernodeBinding="yes"] {
-	stroke: $node-port-input-connected-super-binding-stroke-color-austin;
-	fill: $node-port-input-connected-super-binding-fill-color-austin;
-	stroke-width: 1;
-}
-
-.d3-node-port-input-arrow-austin {
-	stroke: transparent;
-	fill: transparent;
-}
-
-.d3-node-port-input-arrow-austin[connected="yes"] {
-	stroke: $node-port-input-arrow-connected-stroke-color-austin;
-	stroke-width: 1;
-	fill: $node-port-input-arrow-connected-fill-color-austin;
 }
 
 /* New connection dynamic line styles. */
@@ -518,7 +416,7 @@ $link-hightlight-color: $brand-01;
 
 /* Halo - Temporary connector line pulled out from halo */
 
-.d3-node-connector {
+.d3-new-halo-connection {
 	stroke: $new-halo-link-color;
 	stroke-dasharray: 2.2;
 }
@@ -543,20 +441,6 @@ $link-hightlight-color: $brand-01;
 }
 
 .d3-comment-selection-highlight[data-selected="yes"] {
-	stroke: $node-selection-color;
-	stroke-dasharray: 5 5;
-	stroke-width: 2;
-	fill: transparent;
-	pointer-events: none;
-}
-
-.d3-comment-selection-highlight-austin {
-	stroke-width: 0;
-	fill: transparent;
-	pointer-events: none;
-}
-
-.d3-comment-selection-highlight-austin[data-selected="yes"] {
 	stroke: $node-selection-color;
 	stroke-dasharray: none; /* Solid line */
 	stroke-width: 3;
@@ -600,6 +484,8 @@ $link-hightlight-color: $brand-01;
 	word-break: break-word;
 	background-color: transparent;
 }
+
+/* Comment halo styles */
 
 .d3-comment-halo {
 	fill: none;

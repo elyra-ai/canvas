@@ -58,6 +58,7 @@ export default class CanvasController {
 			enableConnectionType: "Ports",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Curve",
+			enableParentClass: "",
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,

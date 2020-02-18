@@ -748,7 +748,7 @@ export default class SVGCanvasRenderer {
 
 		const canvasSVG = parentObject
 			.append("svg")
-			.attr("class", "svg-area") // Used by Chimp tests.
+			.attr("class", "svg-area " + this.config.enableParentClass) // svg-area used by Chimp tests.
 			.attr("width", dims.width)
 			.attr("height", dims.height)
 			.attr("x", dims.x)
@@ -1750,11 +1750,11 @@ export default class SVGCanvasRenderer {
 				nodeGroupSel
 					.each(function(d) { // Use function so the 'this' pointer refers to the node.
 						if (d.isSupernodeInputBinding) {
-							that.updatePortRadiusAndPos(this, d, that.layout.cssNodePortOutput);
+							that.updatePortRadiusAndPos(this, d, "d3-node-port-output");
 						}
 						if (d.isSupernodeOutputBinding) {
-							that.updatePortRadiusAndPos(this, d, that.layout.cssNodePortInput);
-							that.updatePortArrowPath(this, d, that.layout.cssNodePortInputArrow);
+							that.updatePortRadiusAndPos(this, d, "d3-node-port-input");
+							that.updatePortArrowPath(this, d, "d3-node-port-input-arrow");
 						}
 					});
 			}
@@ -1762,9 +1762,9 @@ export default class SVGCanvasRenderer {
 		} else if (this.selecting || this.regionSelect) {
 			nodeGroupSel.each(function(d) {
 				const nodeGrp = d3.select(this);
-				nodeGrp.select(that.getSelectorForId("node_outline", d.id))
+				nodeGrp.select(that.getSelectorForId("node_sel_outline", d.id))
 					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
-					.attr("class", d.layout.cssNodeSelectionHighlight);
+					.attr("class", "d3-node-selection-highlight");
 				that.setNodeStyles(d, "default", nodeGrp);
 			});
 
@@ -1893,7 +1893,7 @@ export default class SVGCanvasRenderer {
 			// Node selection highlighting outline.
 			newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
 				.append("path")
-				.attr("data-id", (d) => this.getId("node_outline", d.id))
+				.attr("data-id", (d) => this.getId("node_sel_outline", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id);
 
 			// Node body
@@ -2000,10 +2000,10 @@ export default class SVGCanvasRenderer {
 						.datum(node); // Set the __data__ to the updated data
 
 					// Node selection highlighting
-					nodeGrp.select(this.getSelectorForId("node_outline", d.id))
+					nodeGrp.select(this.getSelectorForId("node_sel_outline", d.id))
 						.attr("d", (nd) => this.getNodeShapePathOutline(nd))
 						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
-						.attr("class", (nd) => nd.layout.cssNodeSelectionHighlight)
+						.attr("class", (nd) => "d3-node-selection-highlight")
 						.datum(node); // Set the __data__ to the updated data
 
 					// Move the dynamic icons (if any exist)
@@ -2178,7 +2178,7 @@ export default class SVGCanvasRenderer {
 							// Don't show the port arrow when we are supporting association
 							// link creation
 							if (!this.config.enableAssocLinkCreation) {
-								const inArrSelector = this.getSelectorForClass(this.layout.cssNodePortInputArrow);
+								const inArrSelector = this.getSelectorForClass("d3-node-port-input-arrow");
 
 								var inputPortArrowSelection =
 									nodeGrp.selectAll(inArrSelector)
@@ -2189,7 +2189,7 @@ export default class SVGCanvasRenderer {
 									.append("path")
 									.attr("data-id", (port) => this.getId("node_trg_port_arrow", d.id, port.id))
 									.attr("data-pipeline-id", this.activePipeline.id)
-									.attr("class", this.layout.cssNodePortInputArrow)
+									.attr("class", "d3-node-port-input-arrow")
 									.attr("connected", "no")
 									.attr("isSupernodeBinding", this.isSuperBindingNode(d) ? "yes" : "no")
 									.on("mouseenter", function(port) {
@@ -2233,7 +2233,7 @@ export default class SVGCanvasRenderer {
 							// because an expanded super node will include its own output ports as well
 							// as those of the sub-flow nodes displayed in the supernode container and
 							// when selecting for a supernode we need to exclude the ones from the sub-flow.
-							const outSelector = this.getSelectorForClass(this.layout.cssNodePortOutput);
+							const outSelector = this.getSelectorForClass("d3-node-port-output");
 
 							var outputPortSelection = nodeGrp.selectAll(outSelector)
 								.data(d.outputs, function(p) { return p.id; });
@@ -2307,7 +2307,7 @@ export default class SVGCanvasRenderer {
 											.attr("cy", port.cy);
 									}
 								})
-								.attr("class", (port) => this.layout.cssNodePortOutput + (port.class_name ? " " + port.class_name : ""))
+								.attr("class", (port) => "d3-node-port-output" + (port.class_name ? " " + port.class_name : ""))
 								.datum((port) => this.getNodePort(d.id, port.id, "output"));
 
 							outputPortSelection.exit().remove();
@@ -2481,9 +2481,9 @@ export default class SVGCanvasRenderer {
 
 	getNodeInputPortClassName(port) {
 		if (this.config.enableAssocLinkCreation) {
-			return this.layout.cssNodePortInputAssoc;
+			return "d3-node-port-input-assoc";
 		}
-		return this.layout.cssNodePortInput;
+		return "d3-node-port-input";
 	}
 
 	getNodeImage(d) {
@@ -2536,7 +2536,7 @@ export default class SVGCanvasRenderer {
 
 	setNodeSelectionOutlineStyles(d, type, nodeGrp) {
 		const style = this.getObjectStyle(d, "selection_outline", type);
-		nodeGrp.select(this.getSelectorForId("node_outline", d.id)).attr("style", style);
+		nodeGrp.select(this.getSelectorForId("node_sel_outline", d.id)).attr("style", style);
 	}
 
 	setNodeImageStyles(d, type, nodeGrp) {
@@ -2906,9 +2906,10 @@ export default class SVGCanvasRenderer {
 
 	getLabelClass(data) {
 		if (this.isExpandedSupernode(data)) {
-			return this.layout.cssSupernodeLabel + " " + this.getMessageLabelClass(data.messages);
+			return "d3-supernode-label " + this.getMessageLabelClass(data.messages);
 		}
-		return data.layout.cssNodeLabel + " " + this.getMessageLabelClass(data.messages);
+		const justificationClass = data.layout.nodeFormatType === "vertical" ? "d3-node-label-middle" : "";
+		return "d3-node-label " + this.getMessageLabelClass(data.messages) + justificationClass;
 	}
 
 	// Returns the gap between the image and the label, when they are arranged
@@ -3178,7 +3179,7 @@ export default class SVGCanvasRenderer {
 			.attr("y1", this.drawingNewLinkStartPos.y)
 			.attr("x2", transPos.x - 2) // Offset mouse position so mouse messages don't go to link line
 			.attr("y2", transPos.y - 2) // Offset mouse position so mouse messages don't go to link line
-			.attr("class", "d3-node-connector");
+			.attr("class", "d3-new-halo-connection");
 	}
 
 	drawNewNodeLinkForPorts(transPos) {
@@ -3470,7 +3471,7 @@ export default class SVGCanvasRenderer {
 
 	removeNewLink() {
 		if (this.layout.connectionType === "halo") {
-			this.canvasGrp.selectAll(".d3-node-connector").remove();
+			this.canvasGrp.selectAll(".d3-new-halo-connection").remove();
 		} else {
 			this.canvasGrp.selectAll(".d3-new-connection-line").remove();
 			this.canvasGrp.selectAll(".d3-new-connection-start").remove();
@@ -3727,7 +3728,7 @@ export default class SVGCanvasRenderer {
 					.attr("height", d.height + (2 * that.layout.commentHighlightGap))
 					.attr("width", d.width + (2 * that.layout.commentHighlightGap))
 					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
-					.attr("class", that.layout.cssCommentSelectionHighlight)
+					.attr("class", "d3-comment-selection-highlight")
 					.datum(() => that.getComment(d.id)); // Set the __data__ to the updated data
 
 				// This code will remove custom attributes from a comment. This might happen when
@@ -3951,7 +3952,7 @@ export default class SVGCanvasRenderer {
 						.attr("height", d.height + (2 * that.layout.commentHighlightGap))
 						.attr("width", d.width + (2 * that.layout.commentHighlightGap))
 						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
-						.attr("class", that.layout.cssCommentSelectionHighlight)
+						.attr("class", "d3-comment-selection-highlight")
 						.datum(comment); // Set the __data__ to the updated data
 
 					// Set comments styles
@@ -4827,9 +4828,9 @@ export default class SVGCanvasRenderer {
 
 		// Set connection status of output ports and input ports plus arrow.
 		if (this.layout.connectionType === "ports") {
-			const portOutSelector = this.getSelectorForClass(this.layout.cssNodePortOutput);
+			const portOutSelector = this.getSelectorForClass("d3-node-port-output");
 			const portInSelector = this.getSelectorForClass(this.getNodeInputPortClassName());
-			const portInArrSelector = this.getSelectorForClass(this.layout.cssNodePortInputArrow);
+			const portInArrSelector = this.getSelectorForClass("d3-node-port-input-arrow");
 			this.canvasGrp.selectAll(portOutSelector).attr("connected", "no");
 			this.canvasGrp.selectAll(portInSelector).attr("connected", "no");
 			this.canvasGrp.selectAll(portInArrSelector).attr("connected", "no");
@@ -4932,9 +4933,8 @@ export default class SVGCanvasRenderer {
 			return d.class_name;
 		}
 		// If the class name provided IS the default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
-		return d.layout.cssNodeBody;
+		// the class name.
+		return "d3-node-body-outline";
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below
