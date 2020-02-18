@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2019, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -9,8 +9,6 @@
 
 $properties-vt-checkbox-width: 45px;
 $properties-vt-checkbox-margin: 5px;
-$selected-row: rgba($brand-02, 0.1);
-$hover-selected-row: rgba($brand-02, 0.2);
 
 .properties-vt {
 	width: 100%;
@@ -34,10 +32,11 @@ $hover-selected-row: rgba($brand-02, 0.2);
 		}
 
 		div[role="properties-header-row"] {
+			border-bottom: 1px solid $hover-selected-ui;
 			&:hover {
 				border: 1px solid transparent;
-				border-bottom: 1px solid $ui-03;
-				background-color: $ui-02;
+				border-bottom: 1px solid $hover-selected-ui;
+				background-color: $ui-03;
 			}
 		}
 	}
@@ -82,7 +81,7 @@ $hover-selected-row: rgba($brand-02, 0.2);
 
 		&:hover {
 			background-color: $hover-row;
-			border: 1px solid $brand-01;
+			border: 1px solid $interactive-01;
 		}
 
 		// Required for numberfields within react-virtualized table cell
@@ -94,11 +93,6 @@ $hover-selected-row: rgba($brand-02, 0.2);
 			}
 		}
 
-		// Required for checkboxes within react-virtualized table cell
-		.properties-checkbox {
-			padding-bottom: 8px;
-		}
-
 		// Required to position the warning/error icons correctly within react-virtualized table cell
 		.ReactVirtualized__Table__headerColumn {
 			margin-right: 0;
@@ -107,9 +101,9 @@ $hover-selected-row: rgba($brand-02, 0.2);
 	}
 
 	.properties-vt-row-selected {
-		background-color: $selected-row;
+		background-color: $selected-ui;
 		&:hover {
-			background-color: $hover-selected-row;
+			background-color: $hover-selected-ui;
 		}
 	}
 
@@ -124,17 +118,17 @@ $hover-selected-row: rgba($brand-02, 0.2);
 			padding-left: 3px;
 		}
 		.properties-vt-row-selected {
-			border-left: 4px solid $brand-01;
+			border-left: 4px solid $interactive-01;
 			padding-left: 0;
 
 			&:not(.properties-vt-row-disabled):hover {
-				border-left: 4px solid $brand-01;
+				border-left: 4px solid $interactive-01;
 			}
 		}
 	}
 
 	.properties-vt-small-loading svg {
-		stroke: $brand-03; // Override carbon's small Loading color.
+		stroke: $interactive-01; // Override carbon's small Loading color.
 	}
 
 	// Required for Autosizer in VirtualizedTable to set a height and width

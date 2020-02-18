@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -67,7 +67,7 @@ export default class WideFlyout extends Component {
 		let children;
 		if (this.props.show) {
 			if (this.props.title) {
-				title = (<h2>{this.props.title}</h2>);
+				title = (<div className="properties-wf-title">{this.props.title}</div>);
 			}
 			buttons = (<PropertiesButtons
 				okHandler={this.props.okHandler}

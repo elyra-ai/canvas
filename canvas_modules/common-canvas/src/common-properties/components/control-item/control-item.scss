@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -27,18 +27,25 @@
 	font-weight: 700;
 	.properties-number-generator {
 		margin-left: 3px;
-	}
-	svg {
-		width: 12px;
-		height: 12px;
-		margin: 0 7px 0 3px;
-		&.info {
-			fill: $brand-01;
+		padding: 2px;
+		min-height: 30px;
+		span {
+			text-decoration: underline;
 		}
 	}
-	// fixes alignment issues on Firefox.  Override default
-	.properties-icon-button {
-		margin-top: -5px;
+}
+
+.properties-label-container, .properties-summary-link-container {
+	.tooltip-container {
+		display: flex;
+		width: 16px;
+		height: 16px;
+		margin-left: 3px;
+		svg {
+			width: 16px;
+			height: 16px;
+			margin: 0 7px 0 3px;
+		}
 	}
 }
 
@@ -47,6 +54,6 @@
 }
 
 .properties-required-indicator {
-	color: $brand-01;
+	color: $text-01;
 	font-weight: 700;
 }

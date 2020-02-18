@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 import Button from "carbon-components-react/lib/components/Button";
 import RadioButton from "carbon-components-react/lib/components/RadioButton";
 import Icon from "carbon-components-react/lib/components/Icon";
-import Dropdown from "carbon-components-react/lib/components/DropdownV2";
+import Dropdown from "carbon-components-react/lib/components/Dropdown";
 import { connect } from "react-redux";
 import isEqual from "lodash/isEqual";
 
@@ -221,6 +221,7 @@ class CustomEffectsCtrl extends React.Component {
 	makeMovePanel() {
 		const dropOpts = this.genDropdownOptions(this.state.effectType);
 		const dropdownComponent = (<Dropdown
+			id="harness-custom-effects-ctrl-dropdown"
 			disabled={this.state.buildNested}
 			type={"default"}
 			items={dropOpts.options}

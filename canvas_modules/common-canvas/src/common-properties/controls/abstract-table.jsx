@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -10,19 +10,21 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import IconButton from "./../components/icon-button";
+import Button from "carbon-components-react/lib/components/Button";
 import Checkbox from "carbon-components-react/lib/components/Checkbox";
+import IconButton from "./../components/icon-button";
 import FlexibleTable from "./../components/flexible-table";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
-import Icon from "./../../icons/icon.jsx";
 import PropertyUtils from "./../util/property-utils";
+import Icon from "./../../icons/icon.jsx";
+import { SubtractAlt24 } from "@carbon/icons-react";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 
 import Tooltip from "./../../tooltip/tooltip.jsx";
 import { MESSAGE_KEYS, TOOL_TIP_DELAY, STATES,
 	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION,
-	ROW_SELECTION } from "./../constants/constants";
+	ROW_SELECTION, CARBON_ICONS } from "./../constants/constants";
 
 import findIndex from "lodash/findIndex";
 import sortBy from "lodash/sortBy";
@@ -445,13 +447,14 @@ export default class AbstractTable extends React.Component {
 		const disabled = !this.state.enableRemoveIcon || tableState === STATES.DISABLED;
 		const removeButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
-		const removeButton = (<button type="button" className="properties-remove-fields-button"
-			onClick={removeOnClick}
+		const removeButton = (<Button
+			className="properties-remove-fields-button"
 			disabled={disabled}
-			aria-label={removeButtonLabel}
-		>
-			<Icon type="remove" disabled={disabled} />
-		</button>);
+			onClick={removeOnClick}
+			renderIcon={SubtractAlt24}
+			iconDescription={removeButtonLabel}
+			kind="ghost"
+		/>);
 
 		let addButtonDisabled = false;
 		this.addOnClickCallback = (tableButtonConfig && tableButtonConfig.addButtonFunction)
@@ -467,7 +470,7 @@ export default class AbstractTable extends React.Component {
 		const addButton = (
 			<IconButton
 				className="properties-add-fields-button"
-				icon="add--outline"
+				icon={<Icon type={CARBON_ICONS.ADD} />}
 				onClick={this.addOnClick.bind(this, this.props.propertyId)}
 				disabled={addButtonDisabled}
 			>
@@ -491,29 +494,25 @@ export default class AbstractTable extends React.Component {
 		);
 		return (
 			<div className="properties-at-buttons-container">
-				<div className="properties-tooltips-container add-remove-columns">
-					<Tooltip
-						id={uuid4() + "-tooltip-remove-columns-" + this.props.control.name}
-						tip={removeToolTip}
-						direction="top"
-						delay={TOOL_TIP_DELAY}
-						className="properties-tooltips"
-						disable={disabled}
-					>
-						{removeButton}
-					</Tooltip>
-				</div>
-				<div className="properties-tooltips-container add-remove-columns">
-					<Tooltip
-						id={uuid4() + "-tooltip-add-columns-" + this.props.control.name}
-						tip={addToolTip}
-						direction="top"
-						delay={TOOL_TIP_DELAY}
-						className="properties-tooltips"
-					>
-						{addButton}
-					</Tooltip>
-				</div>
+				<Tooltip
+					id={uuid4() + "-tooltip-remove-columns-" + this.props.control.name}
+					tip={removeToolTip}
+					direction="top"
+					delay={TOOL_TIP_DELAY}
+					className="properties-tooltips"
+					disable={disabled}
+				>
+					{removeButton}
+				</Tooltip>
+				<Tooltip
+					id={uuid4() + "-tooltip-add-columns-" + this.props.control.name}
+					tip={addToolTip}
+					direction="top"
+					delay={TOOL_TIP_DELAY}
+					className="properties-tooltips"
+				>
+					{addButton}
+				</Tooltip>
 			</div>
 		);
 	}
@@ -718,6 +717,7 @@ export default class AbstractTable extends React.Component {
 		// However, we will extract information from the and will create our own Cell-based invoker.
 		const propertyId = { name: propName, row: rowIndex };
 		const subItemButton = this.props.buildUIItem(rowIndex, this.props.control.childItem, propertyId, this.indexOfColumn);
+		const settingsIcon = <Icon type={CARBON_ICONS.SETTINGS} />;
 		// Hack to decompose the button into our own in-table link
 		const subCell = (
 			<div className="properties-table-subcell">
@@ -725,7 +725,7 @@ export default class AbstractTable extends React.Component {
 					label={subItemButton.props.label}
 					title={subItemButton.props.title}
 					panel={subItemButton.props.panel}
-					iconName="gear"
+					buttonIcon={settingsIcon}
 					disabled={tableState === STATES.DISABLED}
 					controller={this.props.controller}
 					propertyId={this.props.propertyId}

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -64,13 +64,13 @@ module.exports = function(grunt) {
 					dest: ".build"
 				}]
 			},
-			plexFonts: {
+			fonts: {
 				files: [{
 					expand: true,
-					flatten: false,
-					cwd: "./node_modules/carbon-components/src/globals/",
-					src: ["fonts/**/*"],
-					dest: ".build"
+					flatten: true,
+					cwd: "./node_modules/@wdpx/themes",
+					src: ["fonts/woff/*"],
+					dest: ".build/fonts"
 				}]
 			},
 			styleguide: {
@@ -111,7 +111,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-contrib-copy");
 	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint", "sasslint"]);
 
-	var buildTasks = ["clean", "lint", "copy:graphics", "copy:styleguide", "copy:plexFonts"];
+	var buildTasks = ["clean", "lint", "copy:graphics", "copy:styleguide", "copy:fonts"];
 	if (IS_PRODUCTION) {
 		buildTasks = buildTasks.concat(["webpack"]);
 	}

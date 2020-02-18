@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017. 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -9,7 +9,7 @@
 
 import logger from "../../../utils/logger";
 import { ParamRole } from "../constants/form-constants";
-import { DATA_TYPE } from "../constants/constants";
+import { DATA_TYPE, CARBON_ICONS } from "../constants/constants";
 import cloneDeep from "lodash/cloneDeep";
 import uuid4 from "uuid/v4";
 import defaultMessages from "../../../locales/common-properties/locales/en.json";
@@ -300,32 +300,32 @@ function getDMFieldIcon(fields, value, iconType) {
 	switch (iconType) {
 	case "measure":
 		if (!correctField) {
-			return "measurementEmpty";
+			return CARBON_ICONS.MEASUREMENTS.EMPTY;
 		}
 		switch (correctField.metadata.measure) {
 		case "range":
-			icon = "measurementScale";
+			icon = CARBON_ICONS.MEASUREMENTS.SCALE;
 			break;
 		case "ordered_set":
-			icon = "measurementOrdinal";
+			icon = CARBON_ICONS.MEASUREMENTS.ORDINAL;
 			break;
 		case "discrete":
-			icon = "measurementDiscrete";
+			icon = CARBON_ICONS.MEASUREMENTS.DISCRETE;
 			break;
 		case "set":
-			icon = "measurementNominal";
+			icon = CARBON_ICONS.MEASUREMENTS.NOMINAL;
 			break;
 		case "flag":
-			icon = "measurementFlag";
+			icon = CARBON_ICONS.MEASUREMENTS.FLAG;
 			break;
 		case "collection":
-			icon = "measurementNominal";
+			icon = CARBON_ICONS.MEASUREMENTS.NOMINAL;
 			break;
 		case "geospatial":
-			icon = "measurementNominal";
+			icon = CARBON_ICONS.MEASUREMENTS.NOMINAL;
 			break;
 		default:
-			icon = "measurementEmpty";
+			icon = CARBON_ICONS.MEASUREMENTS.EMPTY;
 			break;
 		}
 		break;

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -75,7 +75,11 @@ _defineConstant("MESSAGE_KEYS", {
 	EXPRESSION_MAX_LABEL: "expression.max.label",
 	EXPRESSION_NO_FUNCTIONS: "expression.no.functions",
 	MULTI_SELECTED_ROW_LABEL: "multi.selected.row.label",
-	MULTI_SELECTED_ROW_ACTION: "multi.selected.row.action"
+	MULTI_SELECTED_ROW_ACTION: "multi.selected.row.action",
+	MOVEABLE_TABLE_BUTTON_TOP_DESCRIPTION: "moveable.table.button.top",
+	MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION: "moveable.table.button.up",
+	MOVEABLE_TABLE_BUTTON_DOWN_DESCRIPTION: "moveable.table.button.down",
+	MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION: "moveable.table.button.bottom"
 });
 
 _defineConstant("CHARACTER_LIMITS", {
@@ -174,4 +178,39 @@ _defineConstant("SORT_DIRECTION", {
 _defineConstant("ROW_SELECTION", {
 	SINGLE: "single",
 	MULTIPLE: "multiple-edit"
+});
+
+
+_defineConstant("CARBON_ICONS", {
+	CHEVRONARROWS: {
+		UP: "chevron-up",
+		DOWN: "chevron-down",
+		LEFT: "chevron-left",
+		RIGHT: "chevron-right"
+	},
+	CALCULATOR: "calculator",
+	ADD: "add-alt",
+	EDIT: "edit",
+	MEASUREMENTS: {
+		EMPTY: "measurement-empty",
+		ORDINAL: "measurement-ordinal",
+		NOMINAL: "measurement-nominal",
+		SCALE: "measurement-scale",
+		FLAG: "measurement-flag",
+		DISCRETE: "measurement-discrete"
+	},
+	INFORMATION: "informationHollow",
+	TOOLBAR_STOP: "stop",
+	TOOLBAR_RUN: "run",
+	TOOLBAR_UNDO: "undo",
+	TOOLBAR_REDO: "redo",
+	TOOLBAR_CUT: "cut",
+	TOOLBAR_COPY: "copy",
+	TOOLBAR_PASTE: "paste",
+	TOOLBAR_ADD_COMMENT: "addComment",
+	TOOLBAR_DELETE: "delete",
+	TOOLBAR_ZOOM_IN: "zoomIn",
+	TOOLBAR_ZOOM_OUT: "zoomOut",
+	TOOLBAR_ZOOM_FIT: "zoomToFit",
+	SETTINGS: "settings"
 });

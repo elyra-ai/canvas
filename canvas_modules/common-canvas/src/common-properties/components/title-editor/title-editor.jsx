@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -13,8 +13,9 @@ import { connect } from "react-redux";
 import ReactDOM from "react-dom";
 import { setTitle } from "./../../actions";
 import Icon from "./../../../icons/icon.jsx";
+import Button from "carbon-components-react/lib/components/Button";
 import TextInput from "carbon-components-react/lib/components/TextInput";
-import { MESSAGE_KEYS } from "./../../constants/constants";
+import { MESSAGE_KEYS, CARBON_ICONS } from "./../../constants/constants";
 import PropertyUtils from "./../../util/property-utils";
 
 class TitleEditor extends Component {
@@ -50,14 +51,14 @@ class TitleEditor extends Component {
 
 	render() {
 		const propertiesTitleEdit = this.props.labelEditable === false ? <div />
-			: (<button type="button" className="properties-title-editor-btn edit" data-id="edit" onClick={this.editTitleClickHandler}>
-				<Icon type="edit" />
-			</button>);
+			: (<Button kind="ghost" className="properties-title-editor-btn edit" data-id="edit" onClick={this.editTitleClickHandler}>
+				<Icon type={CARBON_ICONS.EDIT} />
+			</Button>);
 
 		const helpButton = this.props.help
-			? (<button type="button" className="properties-title-editor-btn" data-id="help" onClick={this.helpClickHandler}>
-				<Icon type="info" />
-			</button>)
+			? (<Button kind="ghost" className="properties-title-editor-btn" data-id="help" onClick={this.helpClickHandler}>
+				<Icon type={CARBON_ICONS.INFORMATION} />
+			</Button>)
 			: <div />;
 
 		return (
@@ -72,8 +73,8 @@ class TitleEditor extends Component {
 						labelText={this.labelText}
 						hideLabel
 					/>
+					{propertiesTitleEdit}
 				</div>
-				{propertiesTitleEdit}
 				{helpButton}
 			</div>
 		);

@@ -76,7 +76,7 @@ Feature: ExpressionControl
 
 		# generate a success validate
 		Then I click on the validate link on the expression builder in the sub-panel.
-		Then I validate the "success" icon on the expression builder.
+		Then I validate the "canvas-state-icon-success" icon on the expression builder.
 
 		# verify the icon goes away on the next input
 		Then I select "Age" from the "defaultExpr" property.
@@ -88,7 +88,7 @@ Feature: ExpressionControl
 		Then I select "is_integer(ITEM)" from the "defaultExpr" property.
 		Then I click on the validate link on the expression builder in the sub-panel.
 		Then I verify error "Expression cannot contain '?'"
-		Then I validate the "error" icon on the expression builder.
+		Then I validate the "canvas-state-icon-error" icon on the expression builder.
 
 		# substitute a param char '?' (dependent on the test above)
 		Then I select the "Fields" tab for the "defaultExpr" property.

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -32,7 +32,7 @@ class PropertiesButtons extends Component {
 					data-id="properties-cancel-button"
 					className="properties-cancel-button"
 					type="button"
-					small
+					size="small"
 					kind="secondary"
 					onClick={this.props.cancelHandler}
 				>
@@ -45,7 +45,7 @@ class PropertiesButtons extends Component {
 				data-id="properties-apply-button"
 				className="properties-apply-button"
 				type="button"
-				small
+				size="small"
 				onClick={this.props.okHandler}
 			>
 				{applyButtonLabel}

@@ -34,7 +34,7 @@ Feature: CommonPropertiesActions
     Given I am on the test harness
     Given I have uploaded common-properties file "structuretable_paramDef.json" of type "parameterDefs"
 
-    Then I open the "Configure Rename fields" summary link in the "TABLES" category
+    Then I open the "Configure Rename fields" summary link in the "Tables" category
     Then I click the subpanel button in control "structuretableReadonlyColumnDefaultIndex" in row "0"
     Then I enter "This is a very long sentence of text to test whether or not an overflow of text occurs" in textfield "structuretableReadonlyColumnDefaultIndex_0_3" in sub-panel "Rename Subpanel"
 		Then I click on the "Rename Subpanel" panel OK button

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -10,6 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import Button from "carbon-components-react/lib/components/Button";
 import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
@@ -42,15 +43,15 @@ class ToggletextControl extends React.Component {
 		}
 		let icon = null;
 		if (typeof this.iconsMap[this.props.value] !== "undefined") {
-			icon = <img className="icon" src={this.iconsMap[this.props.value]} onClick={this.onClick.bind(this)} />;
+			icon = <img className="icon" src={this.iconsMap[this.props.value]} />;
 		}
 		let button = <div />;
 		if (typeof rendered !== "undefined") {
 			button = (
-				<button type="button" onClick={this.onClick.bind(this)}>
+				<Button kind="tertiary" size="small" onClick={this.onClick.bind(this)} disabled={this.props.state === STATES.DISABLED} >
 					{icon}
 					<span className="text">{rendered}</span>
-				</button>
+				</Button>
 			);
 		}
 

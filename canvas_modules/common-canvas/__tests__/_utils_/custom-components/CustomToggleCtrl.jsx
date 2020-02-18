@@ -69,7 +69,7 @@ class CustomToggleCtrl extends React.Component {
 				id={id}
 				toggled={this.props.controlValue}
 				onToggle={this.handleChange}
-				ariaLabel={"toggle"}
+				aria-label={"toggle"}
 			/>);
 		}
 		return (

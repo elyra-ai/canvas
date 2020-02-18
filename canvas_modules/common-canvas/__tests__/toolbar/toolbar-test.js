@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -37,7 +37,7 @@ describe("Toolbar renders correctly", () => {
 		expect(canvasToolbar.find("#canvas-toolbar")).to.have.length(1);
 		expect(canvasToolbar.find("#actions-container")).to.have.length(1);
 		expect(canvasToolbar.find("#zoom-actions-container")).to.have.length(1);
-		expect(canvasToolbar.find(".list-item-disabled")).to.have.length(5);
+		expect(canvasToolbar.find(".list-item-disabled").hostNodes()).to.have.length(5);
 	});
 
 	it("should render a Toolbar", () => {

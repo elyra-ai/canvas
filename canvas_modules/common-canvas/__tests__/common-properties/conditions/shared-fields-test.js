@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -38,7 +38,7 @@ describe("Condition dmSharedFields test cases", () => {
 		summaryPanel.find("button.properties-apply-button").simulate("click");
 
 		// Check the available fields in the weight dropdown
-		const weightDropDown = wrapper.find("div[data-id='properties-regression_weight_field'] DropdownV2");
+		const weightDropDown = wrapper.find("div[data-id='properties-regression_weight_field'] Dropdown");
 		let options = weightDropDown.prop("items"); // by Type
 		let expectedOptions = [
 			{ label: "...", value: "" },
@@ -48,7 +48,7 @@ describe("Condition dmSharedFields test cases", () => {
 		expect(options).to.eql(expectedOptions);
 
 		// Check the available fields in the offset dropdown
-		const offsetDropDown = wrapper.find("div[data-id='properties-offset_field'] DropdownV2");
+		const offsetDropDown = wrapper.find("div[data-id='properties-offset_field'] Dropdown");
 		options = offsetDropDown.prop("items"); // by Type
 		expectedOptions = [
 			{ label: "...", value: "" },
@@ -66,7 +66,7 @@ describe("Condition dmSharedFields test cases", () => {
 		selectedFields = tableUtils.getTableRows(wrapper.find("div[data-id='properties-input_fields']"));
 		expect(selectedFields).to.have.length(3); // Age, BP, and Cholesterol selected
 
-		const weightDropDown = wrapper.find("div[data-id='properties-regression_weight_field'] DropdownV2");
+		const weightDropDown = wrapper.find("div[data-id='properties-regression_weight_field'] Dropdown");
 		const options = weightDropDown.prop("items"); // by Type
 		const expectedOptions = [
 			{ label: "...", value: "" },
@@ -81,7 +81,7 @@ describe("Condition dmSharedFields test cases", () => {
 		tableUtils.fieldPicker(fieldPicker, [], ["Age", "Sex", "BP", "Na", "K", "Drug"]);
 
 		// Check the available fields in the single chooser dropdown
-		const weightDropDown = wrapper.find("div[data-id='properties-column_selection_chooser'] DropdownV2");
+		const weightDropDown = wrapper.find("div[data-id='properties-column_selection_chooser'] Dropdown");
 		let options = weightDropDown.prop("items"); // by Type
 		let expectedOptions = [
 			{ label: "...", value: "" },
@@ -94,7 +94,7 @@ describe("Condition dmSharedFields test cases", () => {
 		expect(options).to.eql(expectedOptions);
 
 		// Check the available fields in the offset dropdown
-		const offsetDropDown = wrapper.find("div[data-id='properties-dmSharedFields_chooser'] DropdownV2");
+		const offsetDropDown = wrapper.find("div[data-id='properties-dmSharedFields_chooser'] Dropdown");
 		options = offsetDropDown.prop("items"); // by Type
 		expectedOptions = [
 			{ label: "...", value: "" },

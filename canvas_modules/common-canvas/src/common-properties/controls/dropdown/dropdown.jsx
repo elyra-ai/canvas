@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -10,7 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Dropdown from "carbon-components-react/lib/components/DropdownV2";
+import Dropdown from "carbon-components-react/lib/components/Dropdown";
 import Select from "carbon-components-react/lib/components/Select";
 import SelectItem from "carbon-components-react/lib/components/SelectItem";
 import isEqual from "lodash/isEqual";
@@ -148,6 +148,7 @@ class DropDown extends React.Component {
 		}
 
 		let dropdownComponent = (<Dropdown
+			id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
 			disabled={this.props.state === STATES.DISABLED}
 			type={dropdownType}
 			items={dropDown.options}

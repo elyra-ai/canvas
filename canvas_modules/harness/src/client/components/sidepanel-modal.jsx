@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -210,7 +210,6 @@ export default class SidePanelModal extends React.Component {
 				<Select
 					id = "common-properties-select-item"
 					className = "common-properties-select-item"
-					iconDescription = "list of form and paramdef file options"
 					labelText="Properties"
 					onChange={this.onDropdownSelect.bind(this)}
 					value={this.props.propertiesConfig.selectedPropertiesDropdownFile}
@@ -218,7 +217,7 @@ export default class SidePanelModal extends React.Component {
 					{this.dropdownOptions()}
 				</Select>
 				{fileChooser}
-				<Button small
+				<Button size="small"
 					disabled={!this.isReadyToSubmitProperties()}
 					onClick={this.submitProperties.bind(this)}
 				>

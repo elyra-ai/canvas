@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -26,7 +26,7 @@ describe("tabs and subtabs should be rendered correctly", () => {
 
 	it("validate subtabs work correctly", () => {
 		let category = wrapper.find("div[data-id='properties-Primary2']");
-		const subTabsContainer = category.find("nav.properties-subtabs");
+		const subTabsContainer = category.find("div.properties-subtabs");
 		expect(subTabsContainer).to.have.length(1);
 		const subTabs = subTabsContainer.find("a.bx--tabs__nav-link");
 		expect(subTabs).to.have.length(3);

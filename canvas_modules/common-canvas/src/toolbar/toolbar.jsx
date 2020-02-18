@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -14,8 +14,10 @@ import PropTypes from "prop-types";
 import Tooltip from "../tooltip/tooltip.jsx";
 import ReactResizeDetector from "react-resize-detector";
 import Icon from "../icons/icon.jsx";
+import Button from "carbon-components-react/lib/components/Button";
 import constants from "../common-canvas/constants/canvas-constants";
 import classNames from "classnames";
+import SVG from "react-inlinesvg";
 
 import styles from "./toolbar.scss";
 
@@ -77,9 +79,9 @@ class Toolbar extends React.Component {
 		const warningMessages = this.props.canvasController.getNotificationMessages(constants.WARNING);
 		const successMessages = this.props.canvasController.getNotificationMessages(constants.SUCCESS);
 
-		let className = "canvas-icon fill " + constants.NOTIFICATION_ICON;
+		let className = "fill " + constants.NOTIFICATION_ICON;
 		if (isIconEnabled) {
-			const notificationIconClassName = "canvas-icon fill " + constants.NOTIFICATION_ICON + " ";
+			const notificationIconClassName = "fill " + constants.NOTIFICATION_ICON + " ";
 			if (errorMessages.length > 0) {
 				className = notificationIconClassName + constants.ERROR;
 			} else if (warningMessages.length > 0) {
@@ -167,6 +169,7 @@ class Toolbar extends React.Component {
 		if (definition.length !== displayItemsCount &&
 			!(definition.length - 1 === displayItemsCount && definition[displayItemsCount].divider)) { // Don't show overflow icon if last item is divider.
 			utilityActions[displayItemsCount] = this.generatedExtendedMenu(definition, displayItemsCount, actionsHandler);
+			utilityActions[displayItemsCount + 1] = (<div key={"toolbar-divider-" + displayItemsCount} className="toolbar-divider" />);
 		}
 
 		return utilityActions;
@@ -179,13 +182,13 @@ class Toolbar extends React.Component {
 			actionClickHandler = () => actionsHandler(actionObj.action);
 		}
 
-		const iconClassname = actionObj.className ? { className: actionObj.className } : {};
-		let icon = <Icon type={actionObj.action} disabled={!actionObj.enable} {...iconClassname} />;
+		const iconClassname = actionObj.className ? actionObj.className : "";
+		let icon = <Icon type={actionObj.action} disabled={!actionObj.enable} className={iconClassname} />;
 
 		// Customer provided icon.
 		if (actionObj.iconEnabled && actionObj.iconDisabled) {
 			const customIcon = actionObj.enable ? actionObj.iconEnabled : actionObj.iconDisabled;
-			icon = (<img id={"toolbar-icon-" + actionObj.action} className={"toolbar-icons " + overflowClassName} disabled={!actionObj.enable}
+			icon = (<SVG id={"toolbar-icon-" + actionObj.action} className={"toolbar-icons " + overflowClassName} disabled={!actionObj.enable}
 				src={customIcon}
 			/>);
 		}
@@ -198,15 +201,19 @@ class Toolbar extends React.Component {
 
 		return (
 			<li id={actionId} key={actionId} className={itemContainersClassname}>
-				<Tooltip id={tooltipId} tip={actionObj.label} disable={overflow}>
-					<a onClick={actionClickHandler} className={iconButtonClassname} >
+				<Button kind="ghost"
+					onClick={actionClickHandler}
+					className={iconButtonClassname}
+					disabled={!actionObj.enable}
+				>
+					<Tooltip id={tooltipId} tip={actionObj.label} disable={overflow}>
 						<div className={"toolbar-item " + overflowClassName}>
 							{icon}
-							{this.generateLabel(false, overflow, actionObj.label)}
+							{this.generateLabel(!actionObj.enable, overflow, actionObj.label)}
 							{textContent}
 						</div>
-					</a>
-				</Tooltip>
+					</Tooltip>
+				</Button>
 			</li>
 		);
 	}
@@ -252,14 +259,18 @@ class Toolbar extends React.Component {
 		const subMenuClassName = this.state.showExtendedMenu === true ? "" : "toolbar-popover-list-hide";
 		return (
 			<li id={"overflow-action"} key={"overflow-action"} className="list-item-containers" >
-				<a onClick={() => this.toggleShowExtendedMenu()} className="overflow-action-list-item list-item toolbar-divider">
+				<Button kind="ghost"
+					onClick={() => this.toggleShowExtendedMenu()}
+					className="overflow-action-list-item list-item"
+				>
 					<div className="toolbar-item">
-						<Icon type="overflow" />
+						<Icon type={constants.CANVAS_CARBON_ICONS.OVERFLOWMENU} />
 					</div>
-				</a>
+				</Button>
 				<ul className={"toolbar-popover-list " + subMenuClassName}>
 					{subActionsListItems}
 				</ul>
+
 			</li>
 		);
 	}

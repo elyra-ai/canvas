@@ -72,15 +72,15 @@ Feature: Toolbar
 		Given I have uploaded palette "modelerPalette.json"
 		Given I have uploaded diagram "commentColorCanvas.json"
 
-		Then I resize the window size to 500 width and 500 height
-		Then I verify the number of items in the secondary toolbar are 6
-		Then I resize the window size to 600 width and 600 height
-		Then I verify the number of items in the secondary toolbar are 8
-		Then I resize the window size to 700 width and 600 height
-		Then I verify the number of items in the secondary toolbar are 9
-		Then I resize the window size to 800 width and 600 height
+		Then I resize the window size to 500 width and 600 height
+		Then I verify the number of items in the secondary toolbar are 10
+		Then I resize the window size to 540 width and 600 height
 		Then I verify the number of items in the secondary toolbar are 11
-		Then I resize the window size to 1330 width and 660 height
+		Then I resize the window size to 580 width and 600 height
+		Then I verify the number of items in the secondary toolbar are 12
+		Then I resize the window size to 620 width and 600 height
+		Then I verify the number of items in the secondary toolbar are 13
+		Then I resize the window size to 660 width and 600 height
 
 	Scenario: Sanity test for secondary toolbar add comment
 		Then I resize the window size to 1330 width and 660 height
@@ -92,21 +92,21 @@ Feature: Toolbar
 		Then I verify the "Comment 1" comment position is "translate(30, 30)"
 		Then I click the zoom in button on the toolbar
 		Then I click the zoom in button on the toolbar
-		Then I verify zoom transform value is "translate(490.825,219.79) scale(1.2100000000000002)"
+		Then I verify zoom transform value is "translate(490.825,222.29) scale(1.2100000000000002)"
 		Then I click the create comment button on the toolbar
 		Then I edit the comment "" with text "Comment 2"
-		Then I verify the "Comment 2" comment position is "translate(-375.64049586776855, -151.64462809917353)"
+		Then I verify the "Comment 2" comment position is "translate(-375.64049586776855, -153.71074380165285)"
 		Then I click the zoom out button on the toolbar
 		Then I click the zoom out button on the toolbar
 		Then I click the zoom out button on the toolbar
 		Then I click the zoom out button on the toolbar
-		Then I verify zoom transform value is "translate(703.5126015982514,314.41100334676594) scale(0.8264462809917354)"
+		Then I verify zoom transform value is "translate(703.5126015982514,317.7647701659722) scale(0.8264462809917354)"
 		Then I click the create comment button on the toolbar
 		Then I edit the comment "" with text "Comment 3"
-		Then I verify the "Comment 3" comment position is "translate(-821.2502479338843, -350.4373140495868)"
+		Then I verify the "Comment 3" comment position is "translate(-821.2502479338843, -354.4953719008264)"
 		Then I click the create comment button on the toolbar
 		Then I edit the comment "" with text "Comment 4"
-		Then I verify the "Comment 4" comment position is "translate(-811.2502479338843, -340.4373140495868)"
+		Then I verify the "Comment 4" comment position is "translate(-811.2502479338843, -344.4953719008264)"
 
 		Given I have set this canvas config ""{"extraCanvasDisplayed": true}""
 		Then I pause for 0.5 seconds
@@ -116,24 +116,24 @@ Feature: Toolbar
 		Then I verify the "Comment 5" comment position is "translate(30, 30)" on the extra canvas
 		Then I click the zoom in button on the toolbar on the extra canvas
 		Then I click the zoom in button on the toolbar on the extra canvas
-		Then I verify extra canvas zoom transform value is "translate(490.825,67.78999999999999) scale(1.2100000000000002)"
+		Then I verify extra canvas zoom transform value is "translate(490.825,70.28999999999999) scale(1.2100000000000002)"
 		Then I click the create comment button on the toolbar on the extra canvas
 		Then I edit the comment "" with text "Comment 6" on the extra canvas
-		Then I verify the "Comment 6" comment position is "translate(-375.64049586776855, -26.024793388429735)" on the extra canvas
+		Then I verify the "Comment 6" comment position is "translate(-375.64049586776855, -28.090909090909072)" on the extra canvas
 		Then I click the zoom out button on the toolbar on the extra canvas
 		Then I click the zoom out button on the toolbar on the extra canvas
 		Then I click the zoom out button on the toolbar on the extra canvas
 		Then I click the zoom out button on the toolbar on the extra canvas
-		Then I verify extra canvas zoom transform value is "translate(703.5126015982514,110.50198073902054) scale(0.8264462809917354)"
+		Then I verify extra canvas zoom transform value is "translate(703.5126015982514,113.85574755822688) scale(0.8264462809917354)"
 		Then I click the create comment button on the toolbar on the extra canvas
 		Then I edit the comment "" with text "Comment 7" on the extra canvas
-		Then I verify the "Comment 7" comment position is "translate(-821.2502479338843, -103.70739669421488)" on the extra canvas
+		Then I verify the "Comment 7" comment position is "translate(-821.2502479338843, -107.76545454545453)" on the extra canvas
 		Then I click the create comment button on the toolbar on the extra canvas
 		Then I edit the comment "" with text "Comment 8" on the extra canvas
-		Then I verify the "Comment 8" comment position is "translate(-811.2502479338843, -93.70739669421488)" on the extra canvas
+		Then I verify the "Comment 8" comment position is "translate(-811.2502479338843, -97.76545454545453)" on the extra canvas
 
 		# Add 5th comment to first canvas
 		Then I click the zoom to fit button on the toolbar
 		Then I click the create comment button on the toolbar
 		Then I edit the comment "" with text "Comment 5a"
-		Then I verify the "Comment 5a" comment position is "translate(-1379.000876064967, -334.4373140495868)"
+		Then I verify the "Comment 5a" comment position is "translate(-1367.8810725018782, -338.4953719008264)"

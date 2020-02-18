@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -14,7 +14,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import FileUploader from "carbon-components-react/lib/components/FileUploader";
 import Button from "carbon-components-react/lib/components/Button";
-import Dropdown from "carbon-components-react/lib/components/DropdownV2";
+import Dropdown from "carbon-components-react/lib/components/Dropdown";
 import Checkbox from "carbon-components-react/lib/components/Checkbox";
 import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
 import RadioButton from "carbon-components-react/lib/components/RadioButton";
@@ -422,7 +422,7 @@ export default class SidePanelForms extends React.Component {
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
-					<Button small
+					<Button size="small"
 						disabled={!this.isReadyToSubmitCanvasData()}
 						onClick={this.submitCanvas.bind(this)}
 					>
@@ -443,7 +443,7 @@ export default class SidePanelForms extends React.Component {
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
-					<Button small
+					<Button size="small"
 						disabled={!this.isReadyToSubmitPaletteData()}
 						onClick={this.submitPalette.bind(this)}
 						onChange={(evt) => this.props.canvasConfig.enableNavPalette(evt.target.checked)}
@@ -457,6 +457,7 @@ export default class SidePanelForms extends React.Component {
 		var canvasInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-input">
 			<div className="harness-sidepanel-headers">Canvas Diagram</div>
 			<Dropdown
+				id="harness-sidepanel-canvas-dropdown"
 				label="Canvas"
 				ariaLabel="Canvas"
 				onChange={this.onCanvasDropdownSelect.bind(this)}
@@ -468,6 +469,7 @@ export default class SidePanelForms extends React.Component {
 		var paletteInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-input">
 			<div className="harness-sidepanel-headers">Canvas Palette</div>
 			<Dropdown
+				id="harness-sidepanel-palette-dropdown"
 				label="Palette"
 				ariaLabel="Palette"
 				onChange={this.onPaletteDropdownSelect.bind(this)}
@@ -488,7 +490,7 @@ export default class SidePanelForms extends React.Component {
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
-					<Button small
+					<Button size="small"
 						disabled={!this.isReadyToSubmitCanvasData2()}
 						onClick={this.submitCanvas2.bind(this)}
 					>
@@ -510,7 +512,7 @@ export default class SidePanelForms extends React.Component {
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
-					<Button small
+					<Button size="small"
 						disabled={!this.isReadyToSubmitPaletteData2()}
 						onClick={this.submitPalette2.bind(this)}
 						onChange={(evt) => this.props.canvasConfig.enableNavPalette(evt.target.checked)}
@@ -524,6 +526,7 @@ export default class SidePanelForms extends React.Component {
 		var canvasInput2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-input2">
 			<div className="harness-sidepanel-headers">Canvas Diagram</div>
 			<Dropdown
+				id="harness-sidepanel-canvas2-dropdown"
 				disabled={!this.props.canvasConfig.extraCanvasDisplayed}
 				label="Canvas"
 				ariaLabel="Canvas"
@@ -536,6 +539,7 @@ export default class SidePanelForms extends React.Component {
 		var paletteInput2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-input2">
 			<div className="harness-sidepanel-headers">Canvas Palette</div>
 			<Dropdown
+				id="harness-sidepanel-palette2-dropdown"
 				disabled={!this.props.canvasConfig.extraCanvasDisplayed}
 				label="Palette"
 				ariaLabel="Palette"
@@ -572,7 +576,7 @@ export default class SidePanelForms extends React.Component {
 			</div>
 			<div className="harness-sidepanel-spacer" />
 			<div style={pad}className="harness-sidepanel-clear-saved-storage">
-				<Button small
+				<Button size="small"
 					onClick={this.props.canvasConfig.clearSavedZoomValues}
 				>
 				Clear local storage zoom values

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -27,6 +27,7 @@ export default class PropertiesModal extends Component {
 					secondaryButtonText={this.props.rejectLabel}
 					onRequestSubmit={this.props.okHandler}
 					onSecondarySubmit={this.props.cancelHandler}
+					aria-label=""
 				>
 					<div className="properties-modal-children">
 						{this.props.children}

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -41,8 +41,8 @@ class ButtonAction extends React.Component {
 			<div className={className} data-id={this.props.action.name}>
 				<Button
 					type="button"
-					small
-					kind="secondary"
+					size="small"
+					kind="tertiary"
 					onClick={this.applyAction}
 					disabled={disabled}
 				>

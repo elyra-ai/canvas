@@ -8,14 +8,12 @@
  *******************************************************************************/
 
 /* Some useful variations on Carbon colors */
-$blue: lighten($brand-02, 20%);
-$light-blue: lighten($brand-02, 34%);
-$dark-blue: lighten($brand-02, 10%);
-$very-dark-blue: darken($brand-01, 100%);
-$light-grey: lighten($ui-05, 20%);
+$blue: lighten($inverse-link, 20%);
+$light-blue: lighten($inverse-link, 34%);
+$dark-blue: lighten($inverse-link, 10%);
 
 /* Canvas background color */
-$canvas-background-color: $ui-01;
+$canvas-background-color: $ui-background;
 
 /* Region selection colors */
 $region-selector-stroke-color: $ui-05;
@@ -26,14 +24,14 @@ $back-to-previous-flow-box-color: $brand-01;
 $back-to-previous-flow-box-fill-hover: $ui-03;
 
 /* Node colors shared between themes */
-$node-selection-color: $brand-02;
+$node-selection-color: $inverse-link;
 $node-label-color: $text-01;
 $node-decoration-outline: $ui-05;
-$node-halo-color: $brand-02;
+$node-halo-color: $inverse-link;
 $node-super-expand-icon-outline-hover-color: $ui-03;
 $node-super-expand-icon-color: $brand-01;
 $node-ellipsis-color: $brand-01;
-$node-ellipsis-hover-color: $brand-02;
+$node-ellipsis-hover-color: $inverse-link;
 $node-error-color: $support-01; /* Error red */
 $node-warning-color: $support-03; /* Warning yellow */
 
@@ -61,42 +59,42 @@ $node-port-input-arrow-connected-fill-color: transparent;
 
 
 /* Node colors for the Austin (Horizontal) theme */
-$node-body-stroke-austin: $light-grey;
+$node-body-stroke-austin: $ui-04;
 $node-body-fill-austin: $ui-02;
 
 $node-body-stroke-austin-hover: $ui-03;
 $node-body-fill-austin-hover: $ui-03;
 
-$node-port-output-stroke-color-austin: $very-dark-blue;
+$node-port-output-stroke-color-austin: $inverse-02;
 $node-port-output-fill-color-austin: transparent;
 
-$node-port-output-connected-stroke-color-austin: $very-dark-blue;
-$node-port-output-connected-fill-color-austin: $very-dark-blue;
+$node-port-output-connected-stroke-color-austin: $inverse-02;
+$node-port-output-connected-fill-color-austin: $inverse-02;
 
-$node-port-output-hover-stroke-austin: $very-dark-blue;
-$node-port-output-hover-fill-austin: $very-dark-blue;
+$node-port-output-hover-stroke-austin: $inverse-02;
+$node-port-output-hover-fill-austin: $inverse-02;
 
-$node-port-input-stroke-color-austin: $very-dark-blue;
+$node-port-input-stroke-color-austin: $inverse-02;
 $node-port-input-fill-color-austin: transparent;
 
 $node-port-input-connected-stroke-color-austin: transparent;
 $node-port-input-connected-fill-color-austin: transparent;
 
-$node-port-input-connected-super-binding-stroke-color-austin: $very-dark-blue;
+$node-port-input-connected-super-binding-stroke-color-austin: $inverse-02;
 $node-port-input-connected-super-binding-fill-color-austin: $ui-02;
 
-$node-port-input-arrow-connected-stroke-color-austin: $very-dark-blue;
+$node-port-input-arrow-connected-stroke-color-austin: $inverse-02;
 $node-port-input-arrow-connected-fill-color-austin: transparent;
 
 /* Comment colors */
-$comment-outline-color: $light-grey;
+$comment-outline-color: $ui-04;
 $comment-fill-color: $ui-01;
 $comment-text-color: $text-02;
-$comment-halo-color: $brand-02;
+$comment-halo-color: $inverse-link;
 
 /* Comment font */
 /* These values are used for both comment text and the comment textarea used for
-   text entry. They must be the same for each. */
+  text entry. They must be the same for each. */
 $comment-text-font-size: 12px;
 $comment-text-font-weight: 400;
 $comment-text-font-family: "ibm-plex-sans", Helvetica Neue, Arial, sans-serif;
@@ -105,9 +103,9 @@ $comment-text-font-family: "ibm-plex-sans", Helvetica Neue, Arial, sans-serif;
 $new-halo-link-color: $ui-05;
 
 /* Link colors */
-$comment-link-color: $light-grey;
+$comment-link-color: $ui-04;
 $object-link-color: $ui-05; /* Used for association links for a regular data flow canvas */
-$association-link-color: $light-grey; /* Used for association links when config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE.  */
+$association-link-color: $ui-04; /* Used for association links when config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE.  */
 $data-link-color: $dark-blue;
 $link-hightlight-color: $brand-01;
 

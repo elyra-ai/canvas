@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -158,7 +158,7 @@ describe("oneofselect renders correctly", () => {
 			/>
 		);
 		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		expect(dropdownWrapper.find("DropdownV2").prop("disabled")).to.equal(true);
+		expect(dropdownWrapper.find("Dropdown").prop("disabled")).to.equal(true);
 	});
 	it("dropdown renders when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");

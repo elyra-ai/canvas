@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -131,7 +131,7 @@ module.exports = function() {
 
 	this.Then(/^I have selected the "([^"]*)" message type in the api sidepanel$/, function(messageType) {
 		const apiSidePanel = browser.$("#harness-sidepanel-api-nm-types");
-		const radioOptions = apiSidePanel.$$(".radioButtonWrapper");
+		const radioOptions = apiSidePanel.$$(".bx--radio-button-wrapper");
 		try {
 			if (messageType === "informational") {
 				const informational = radioOptions[0].$("label");

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -14,14 +14,14 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { UnControlled as CodeMirror } from "react-codemirror2";
 import Icon from "./../../../icons/icon.jsx";
-import CarbonIcon from "carbon-components-react/lib/components/Icon";
-import Link from "carbon-components-react/lib/components/Link";
+import Button from "carbon-components-react/lib/components/Button";
 
 import ValidationMessage from "./../../components/validation-message";
 import WideFlyout from "./../../components/wide-flyout";
 import PropertyUtils from "./../../util/property-utils";
 import ExpressionBuilder from "./expression-builder/expression-builder.jsx";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE } from "./../../constants/constants";
+import { Calculator24 } from "@carbon/icons-react";
 import ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 
@@ -242,34 +242,31 @@ class ExpressionControl extends React.Component {
 		const reactIntl = this.props.controller.getReactIntl();
 
 		const button = this._showBuilderButton() ? (
-			<div className="properties-expression-button" disabled={this.props.state === STATES.DISABLED}>
-				<button type="button" disabled={this.props.state === STATES.DISABLED} onClick={this.showExpressionBuilder} >
-					<Icon disabled={this.props.state === STATES.DISABLED} type="builder" />
-				</button>
-			</div>)
+			<Button kind="ghost" size="small"
+				className="properties-expression-button"
+				disabled={this.props.state === STATES.DISABLED}
+				onClick={this.showExpressionBuilder}
+				renderIcon={Calculator24}
+				iconDescription={PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE)}
+			/>)
 			: <div />;
 
 		let validateIcon = <div />;
 		if (this.props.controller.getExpressionValidate(this.props.propertyId.name)) {
-			const iconName = (messageType === CONDITION_MESSAGE_TYPE.SUCCESS || messageType === CONDITION_MESSAGE_TYPE.INFO)
-				? "checkmark--glyph" : messageType + "--glyph";
+			const iconType = (messageType === CONDITION_MESSAGE_TYPE.SUCCESS || messageType === CONDITION_MESSAGE_TYPE.INFO)
+				? CONDITION_MESSAGE_TYPE.SUCCESS : messageType;
 			validateIcon = (<div className="icon validateIcon">
-				<CarbonIcon className={ messageType}
-					description=""
-					name={iconName}
-				/>
+				<Icon type={iconType} className={`properties-validation-icon-${iconType}`} />
 			</div>);
 		}
 
 		const validateLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_VALIDATE_LABEL);
 		const validateLink = this.expressionInfo.validateLink ? (
 			<div className="properties-expression-validate" disabled={this.props.state === STATES.DISABLED}>
+				<Button className="validateLink" kind="ghost" onClick={this.handleValidate} disabled={this.props.state === STATES.DISABLED}>
+					{validateLabel}
+				</Button>
 				{validateIcon}
-				<div className="validateLink">
-					<Link onClick={this.handleValidate}>
-						{validateLabel}
-					</Link>
-				</div>
 			</div>)
 			: <div />;
 

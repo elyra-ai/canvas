@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -256,7 +256,9 @@ describe("toolbar notification icon state renders correctly", () => {
 
 		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
 		expect(canvasController.getNotificationMessages().length).to.equal(0);
-		expect(wrapper.find("li[id='notificationCounterIcon-action']").find(".list-item-disabled")).to.have.length(1);
+		expect(wrapper.find("li[id='notificationCounterIcon-action']")
+			.find(".list-item-disabled")
+			.hostNodes()).to.have.length(1);
 
 		canvasController.setNotificationMessages([notificationMessage0]);
 		wrapper.update();
@@ -397,30 +399,30 @@ describe("notification counter and color updates correctly", () => {
 
 		let notificationIcon = wrapper.find("li.notificationCounterIcon svg.canvas-icon");
 		let indicatorClasses = notificationIcon.prop("className");
-		expect(indicatorClasses).to.equal("canvas-icon fill notificationCounterIcon");
+		expect(indicatorClasses).to.equal("canvas-icon properties-icon fill notificationCounterIcon");
 
 		canvasController.setNotificationMessages([notificationMessage0]);
 		wrapper.update();
 		notificationIcon = wrapper.find("li.notificationCounterIcon svg.canvas-icon");
 		indicatorClasses = notificationIcon.prop("className");
-		expect(indicatorClasses).to.equal("canvas-icon fill notificationCounterIcon info");
+		expect(indicatorClasses).to.equal("canvas-icon properties-icon fill notificationCounterIcon info");
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
 		wrapper.update();
 		notificationIcon = wrapper.find("li.notificationCounterIcon svg.canvas-icon");
 		indicatorClasses = notificationIcon.prop("className");
-		expect(indicatorClasses).to.equal("canvas-icon fill notificationCounterIcon success");
+		expect(indicatorClasses).to.equal("canvas-icon properties-icon fill notificationCounterIcon success");
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2]);
 		wrapper.update();
 		notificationIcon = wrapper.find("li.notificationCounterIcon svg.canvas-icon");
 		indicatorClasses = notificationIcon.prop("className");
-		expect(indicatorClasses).to.equal("canvas-icon fill notificationCounterIcon warning");
+		expect(indicatorClasses).to.equal("canvas-icon properties-icon fill notificationCounterIcon warning");
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2, notificationMessage3]);
 		wrapper.update();
 		notificationIcon = wrapper.find("li.notificationCounterIcon svg.canvas-icon");
 		indicatorClasses = notificationIcon.prop("className");
-		expect(indicatorClasses).to.equal("canvas-icon fill notificationCounterIcon error");
+		expect(indicatorClasses).to.equal("canvas-icon properties-icon fill notificationCounterIcon error");
 	});
 });

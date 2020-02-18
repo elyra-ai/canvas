@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -12,7 +12,7 @@
 		border-bottom: 0;
 	}
 	.properties-ft-container-absolute-noheader tr:not(.disabled):hover  {
-		border: 1px solid $brand-01;
+		border: 1px solid $interactive-01;
 	}
 	&.hide {
 		display: none;

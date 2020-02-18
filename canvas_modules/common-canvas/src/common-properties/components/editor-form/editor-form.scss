@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -28,10 +28,13 @@
 }
 
 .properties-category-title {
+	@include carbon--type-style("body-long-01");
+	text-decoration-color: $text-01;
+	color: $text-01;
+
 	height: 46px;
 	width: 100%;
-	font-size: 12px;
-	color: $text-02;
+
 	display: flex;
 	background-color: $ui-01;
 	justify-content: space-between;
@@ -40,14 +43,15 @@
 	padding-right: 20px;
 	border: 0; // override for button styling
 	outline: none; // override for button styling
-	border-bottom: 2px solid $ui-03;
+	border-bottom: 1px solid $ui-03;
 	cursor: pointer;
 	&:hover {
-		background-color: $ui-03;
+		background-color: $hover-ui;
 	}
 	> svg {
-		height: 12px;
-		width: 12px;
+		height: 20px;
+		width: 20px;
+		fill: $icon-01;
 	}
 }
 
@@ -55,7 +59,7 @@
 	height: 100%;
 	padding-left: 10px;
 	padding-right: 10px;
-	border-bottom: 2px solid $ui-03;
+	border-bottom: 1px solid $ui-03;
 	display: none;
 	&.show {
 		display: inherit;
@@ -98,7 +102,7 @@
 		}
 		.bx--tabs__nav-item--selected {
 			border-bottom: 0;
-			border-left: 3px solid $brand-01;
+			border-left: 3px solid $interactive-01;
 			a {
 				margin-left: 7px;
 			}
@@ -108,6 +112,7 @@
 
 .properties-right-flyout {
 	.properties-sub-tab-container {
+		overflow-x: scroll;
 		.bx--tabs__nav-item:not(:first-of-type) {
 			margin-left: 1rem;
 		}
@@ -141,22 +146,13 @@
 
 .properties-link-text-container {
 	display: flex;
-	margin-left: -5px;
 	padding: 4px 0;
 	svg {
-		width: 10px;
-		height: 10px;
-		margin: 4px 4px 0;
-	}
-	&.warning {
-		svg {
-			fill: $support-03;
-		}
-	}
-	&.error {
-		svg {
-			fill: $support-01;
-		}
+		margin-right: 4px;
+		margin-top: 1px;
+		width: 16px;
+		height: 16px;
+		flex-shrink: 0;
 	}
 	.properties-link-text {
 		cursor: pointer;

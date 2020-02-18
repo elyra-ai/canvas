@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -280,7 +280,7 @@ describe("structureeditor control renders correctly with paramDef", () => {
 	});
 
 	it("structureeditor control will have updated options by the controller", () => {
-		let dropdownField1 = wrapper.find("div[data-id='properties-field_type_0'] DropdownV2");
+		let dropdownField1 = wrapper.find("div[data-id='properties-field_type_0'] Dropdown");
 		let field1Options = dropdownField1.prop("items");	// Field1 Panel
 		const field1OptionsExpectedOptions = [
 			{ label: "...", value: "" },
@@ -323,7 +323,7 @@ describe("structureeditor control renders correctly with paramDef", () => {
 		datasetMetadata[0].fields.push(newField2);
 		controller.setDatasetMetadata(datasetMetadata);
 		wrapper.update();
-		dropdownField1 = wrapper.find("div[data-id='properties-field_type_0'] DropdownV2");
+		dropdownField1 = wrapper.find("div[data-id='properties-field_type_0'] Dropdown");
 		field1Options = dropdownField1.prop("items");
 
 		const dropDownValue1 = {

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -141,7 +141,6 @@ module.exports = function() {
 	this.Then(/^I click on the expression build button for the "([^"]*)" property$/, function(propertyName) {
 		browser.$("div[data-id='properties-ci-" + propertyName + "']")
 			.$(".properties-expression-button")
-			.$("button")
 			.click();
 
 	});
@@ -165,7 +164,7 @@ module.exports = function() {
 		}
 		const iconClass = icon[0].$("svg").getAttribute("class");
 		const iconCheck = (iconName === "success") ? "info" : iconName;
-		expect(iconClass).toEqual(iconCheck);
+		expect(iconClass.indexOf(iconCheck)).toBeGreaterThan(-1);
 	});
 
 	this.Then(/^I select the "([^"]*)" tab for the "([^"]*)" property\.$/, function(tabName, propertyName) {

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -11,9 +11,8 @@
 
 $toolbar-icon-label-margin: 8px;
 $toolbar-icon-size: 16px;
-$toolbar-icon-width: ($toolbar-icon-label-margin * 2) + $toolbar-icon-size;
-$toolbar-button-width: ($toolbar-icon-width * 2);
-$toolbar-divider-width: 2px;
+$toolbar-button-width: 40px;
+$toolbar-divider-width: 1px;
 $toolbar-default-icons-count: 5;
 
 // sass-lint:disable no-misspelled-properties
@@ -24,11 +23,11 @@ $toolbar-default-icons-count: 5;
 // sass-lint:enable no-misspelled-properties
 
 #canvas-toolbar {
-	height: 45px;
+	height: $toolbar-button-width;
 	min-width: ($toolbar-button-width * $toolbar-default-icons-count) + $toolbar-divider-width;
 	width: 100%;
-	background-color: $ui-02;
-	border-bottom: 2px solid $ui-03;
+	background-color: $ui-01;
+	border-bottom: $toolbar-divider-width solid $ui-04;
 	box-sizing: content-box;
 	position: relative;
 }
@@ -39,7 +38,6 @@ $toolbar-default-icons-count: 5;
 }
 
 #toolbar-items {
-	height: 45px;
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
@@ -53,8 +51,7 @@ $toolbar-default-icons-count: 5;
 
 #zoom-actions-container {
 	position: absolute;
-	right: 0;
-	background-color: $ui-02;
+	right: 2px; // accommodate notification onClick border
 }
 
 .list-item-containers {
@@ -65,42 +62,30 @@ $toolbar-default-icons-count: 5;
 		.text-content {
 			position: absolute;
 			z-index: 2;
-			top: 8px;
+			top: 13px;
 			font-size: 9px;
 			line-height: 9px;
+			color: $icon-01;
 		}
 	}
-}
 
-.list-item-containers .list-item {
-	height: 45px;
-	width: $toolbar-button-width;
-	display: flex;
-	justify-content: center;
-	box-sizing: content-box;
-	cursor: pointer;
-	user-select: none;
+	.list-item {
+		padding: 0;
+		min-height: $toolbar-button-width;
+		width: $toolbar-button-width;
+		display: flex;
+		justify-content: center;
+		user-select: none;
 
-	&.toolbar-divider {
-		box-sizing: border-box;
+		&.overflow {
+			height: auto;
+			width: 200px;
+			display: block;
+		}
 	}
-	&:hover {
-		background-color: $ui-03;
-	}
-	&:active {
-		background-color: $ui-05;
-	}
-}
 
-.list-item-containers .list-item.overflow {
-	height: auto;
-	width: 200px;
-}
-
-.list-item-containers .list-item-disabled {
-	cursor: default;
-	&:hover, &:active {
-		background-color: transparent;
+	.list-item-disabled svg {
+		fill: $disabled-02;
 	}
 }
 
@@ -108,28 +93,24 @@ $toolbar-default-icons-count: 5;
 	border-right: $toolbar-divider-width solid $ui-03;
 }
 
-#overflow-action {
-	justify-content: flex-start;
-}
-
 .overflow-toolbar-divider {
-	border-bottom: 1px solid $ui-03;
+	border-bottom: $toolbar-divider-width solid $ui-03;
 }
 
 .toolbar-item {
-	height: 24px;
-	width: 24px;
-	margin: auto;
+	// set height/width for tooltip
+	height: 34px;
+	width: 34px;
+
 	display: flex;
 	justify-content: center;
 	&.overflow {
-		height: auto;
 		width: inherit;
-		margin: 0;
-		display: flex;
-		justify-content: flex-start;
-		padding-top: 8px;
-		padding-bottom: 8px;
+		padding: 8px;
+
+		svg {
+			margin-right: 8px;
+		}
 	}
 }
 
@@ -141,38 +122,26 @@ $toolbar-default-icons-count: 5;
 	-webkit-user-drag: none;
 }
 
-.toolbar-icons.overflow, .toolbar-item.overflow > svg {
-	margin-left: $toolbar-icon-label-margin;
-	margin-right: $toolbar-icon-label-margin;
-	float: left;
-}
-
-.overflow-action-list-item {
-	position: relative;
-}
-
 .overflow-toolbar-icon-label {
-	margin-left: 0;
-	margin-right: $toolbar-icon-label-margin;
 	color: $text-01;
-	width: calc(100% - #{$toolbar-icon-width});
+	width: 100%;
 	word-break: break-word;
 	hyphens: auto;
 
 	&.disabled {
-		opacity: 0.5;
+		color: $disabled-02;
 	}
 }
 
 .toolbar-popover-list {
 	z-index: 1;
-	top: 45px;
+	top: calc(#{$toolbar-button-width} + #{$toolbar-divider-width});
 	display: block;
 	position: absolute;
 	list-style-type: none;
 	padding: 0;
-	border: 2px solid $ui-03;
-	background-color: $ui-02;
+	border: $toolbar-divider-width solid $ui-03;
+	background-color: $ui-01;
 }
 
 .toolbar-popover-list-hide {

@@ -1,6 +1,6 @@
 {
   "name": "@wdp/common-canvas",
-  "version": "7.0.11",
+  "version": "8.0.0",
   "description": "WDP common-canvas",
   "main": "dist/common-canvas.js",
   "homepage": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki",
@@ -19,9 +19,9 @@
   },
   "dependencies": {
     "@wdp/pipeline-schemas": "3.0.4",
-    "carbon-components": "9.83.4",
-    "carbon-components-react": "6.101.6",
-    "carbon-icons": "7.0.7",
+    "@carbon/icons-react": "10.8.2",
+    "carbon-components": "10.9.3",
+    "carbon-components-react": "7.9.3",
     "codemirror": "5.50.2",
     "d3": "5.15.0",
     "dagre": "0.8.5",
@@ -34,6 +34,7 @@
     "prop-types": "15.7.2",
     "react-codemirror2": "6.0.0",
     "react-contextmenu": "2.13.0",
+    "react-inlinesvg": "1.2.0",
     "react-portal": "4.2.0",
     "react-resize-detector": "4.2.1",
     "react-virtualized": "9.21.2",
@@ -72,6 +73,7 @@
     "grunt-webpack": "3.1.3",
     "grunt-yamllint": "0.3.0",
     "jest": "23.6",
+    "jest-fetch-mock": "3.0.1",
     "jest-localstorage-mock": "2.4.0",
     "node-sass": "4.13.1",
     "optimize-css-assets-webpack-plugin": "3.1.1",
@@ -125,7 +127,8 @@
     "setupTestFrameworkScriptFile": "./jest-setup.js",
     "verbose": true,
     "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(svg)": "<rootDir>/__mocks__/svgMock.js",
       "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.js"
     },
     "testURL": "http://localhost/"

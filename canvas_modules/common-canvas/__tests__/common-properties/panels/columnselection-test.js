@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -35,7 +35,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 			{ label: "Na", value: "Na" },
 			{ label: "drug", value: "drug" }
 		];
-		const actualOptions = panel1.find("DropdownV2").prop("items");
+		const actualOptions = panel1.find("Dropdown").prop("items");
 		expect(actualOptions).to.eql(expectedOptions);
 
 		const panel2 = wrapper.find("div[data-id='properties-field2_panel']");
@@ -46,7 +46,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 			{ label: "Na", value: "Na" },
 			{ label: "drug", value: "drug" }
 		];
-		const actualOptions2 = panel2.find("DropdownV2").prop("items");
+		const actualOptions2 = panel2.find("Dropdown").prop("items");
 		expect(actualOptions2).to.eql(expectedOptions2);
 	});
 
@@ -60,7 +60,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 			{ label: "Na", value: "Na" },
 			{ label: "drug", value: "drug" }
 		];
-		const actualOptions = panel1.find("DropdownV2").prop("items");
+		const actualOptions = panel1.find("Dropdown").prop("items");
 		expect(actualOptions).to.eql(expectedOptions);
 		// open the dropdown
 		const dropdownButton = panel1.find("div[role='button']");
@@ -111,7 +111,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ label: "2.drug2", value: "2.drug2" },
 			{ label: "2.drug3", value: "2.drug3" }
 		];
-		let actualOptions = panel1.find("DropdownV2").prop("items");
+		let actualOptions = panel1.find("Dropdown").prop("items");
 		expect(actualOptions).to.eql(expectedSelectColumn1Options);
 
 		let panel2 = wrapper.find("div[data-id='properties-field2_panel']");
@@ -132,7 +132,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ label: "2.drug2", value: "2.drug2" },
 			{ label: "2.drug3", value: "2.drug3" }
 		];
-		let actualOptions2 = panel2.find("DropdownV2").prop("items");
+		let actualOptions2 = panel2.find("Dropdown").prop("items");
 		expect(actualOptions2).to.eql(expectedSelectColumn2Options);
 		// open the dropdown
 		const dropdownButton = panel1.find("div[role='button']");
@@ -158,7 +158,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ label: "2.drug3", value: "2.drug3" }
 		];
 		panel1 = wrapper.find("div[data-id='properties-field1_panel']");
-		actualOptions = panel1.find("DropdownV2").prop("items");
+		actualOptions = panel1.find("Dropdown").prop("items");
 		expect(actualOptions).to.eql(expectedSelectColumn1Options);
 
 		expectedSelectColumn2Options = [
@@ -177,7 +177,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ label: "2.drug3", value: "2.drug3" }
 		];
 		panel2 = wrapper.find("div[data-id='properties-field2_panel']");
-		actualOptions2 = panel2.find("DropdownV2").prop("items");
+		actualOptions2 = panel2.find("Dropdown").prop("items");
 		expect(actualOptions2).to.eql(expectedSelectColumn2Options);
 	});
 
@@ -200,7 +200,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ "name": "drug2", "schema": "2" },
 			{ "name": "drug3", "schema": "2" }
 		];
-		let actualOptions = panel1.find("DropdownV2").prop("items");
+		let actualOptions = panel1.find("Dropdown").prop("items");
 		expect(actualOptions.length).to.equal(fieldTable.length + 1); // +1 for "..."
 
 		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-selectcolumns");
@@ -215,7 +215,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		// select data.Age
 		dropdownList.at(5).simulate("click");
 		panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
-		actualOptions = panel1.find("DropdownV2").prop("items");
+		actualOptions = panel1.find("Dropdown").prop("items");
 		expect(actualOptions.length).to.equal(fieldTable.length - 1);
 
 		const expectedOptions = [

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -13,7 +13,6 @@ import Button from "carbon-components-react/lib/components/Button";
 import uuid4 from "uuid/v4";
 import PropertyUtils from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import Icon from "./../../../icons/icon.jsx";
 import cloneDeep from "lodash/cloneDeep";
 
 import { MESSAGE_KEYS } from "./../../constants/constants";
@@ -53,7 +52,7 @@ export default class SubPanelCell extends React.Component {
 			MESSAGE_KEYS.SUBPANEL_BUTTON_TOOLTIP);
 		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL);
 		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL);
-		const innerObject = this.props.iconName ? (<Icon type={this.props.iconName} />) : this.props.label || "";
+		const innerObject = this.props.buttonIcon ? this.props.buttonIcon : this.props.label || "";
 		return (
 
 			<SubPanelInvoker ref={ (ref) => (this.subPanelInvoker = ref) }
@@ -73,7 +72,7 @@ export default class SubPanelCell extends React.Component {
 						<Button
 							className="properties-subpanel-button"
 							type="button"
-							small
+							size="small"
 							kind="secondary"
 							onClick={this.showSubPanel}
 							disabled={disabled}
@@ -95,5 +94,5 @@ SubPanelCell.propTypes = {
 	controller: PropTypes.object.isRequired,
 	propertyId: PropTypes.object,
 	rightFlyout: PropTypes.bool,
-	iconName: PropTypes.string
+	buttonIcon: PropTypes.object
 };

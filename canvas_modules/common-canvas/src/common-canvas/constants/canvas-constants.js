@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -38,7 +38,6 @@ _defineConstant("ERROR", "error");
 _defineConstant("WARNING", "warning");
 _defineConstant("INFO", "info");
 _defineConstant("SUCCESS", "success");
-_defineConstant("CARBON_SUCCESS", "checkmark");
 
 _defineConstant("HORIZONTAL", "horizonal");
 _defineConstant("VERTICAL", "vertical");
@@ -107,6 +106,14 @@ _defineConstant("USE_DEFAULT_ICON", "useDefaultIcon");
 
 _defineConstant("CONTEXT_MENU_BUTTON", 2);
 
+_defineConstant("CANVAS_CARBON_ICONS", {
+	CHEVRONARROWS: {
+		UP: "chevron-up",
+		DOWN: "chevron-down"
+	},
+	OVERFLOWMENU: "overflow-menu",
+	SEARCH: "search"
+});
 
 _defineConstant("NODE_MENU_ICON",
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 16.14\">" +
@@ -125,16 +132,14 @@ _defineConstant("SUPER_NODE_EXPAND_ICON",
 
 _defineConstant("NODE_ERROR_ICON",
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\">" +
-	"<path d=\"M8 16 A8 8 0 1 1 8 0 a 8 8 0 0 1 0 16 z" + // Circle.
-	" M 11.5 4.3 l -7 7z\"/>" + // Slash.
+	"<path d=\"M8 1C4.1 1 1 4.1 1 8s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm2.7 10.5L4.5 5.3l.8-.8 6.2 6.2-.8.8z\"></path>" +
+	"<path style=\"fill: #ffffff;\" d=\"M10.7 11.5L4.5 5.3l.8-.8 6.2 6.2-.8.8z\"></path>" +
 	"</svg>");
 
 _defineConstant("NODE_WARNING_ICON",
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\">" +
-	"<path d=\"M.75 16 a.75.75 0 0 1 -.67 -1.085 L 7.33 .415 a .75 .75 0 0 1 1.34 0 l 7.25 14.5 A .75 .75 0 0 1 15.25 16 H .75 z" + // Triangle.
-	" m 7.25 -10.5 v 5" + // Exclamation mark line.
-	" M 8 13.25 A .25 .25 0 1 0 8 12.25 a .25 .25 0 0 0 0 1 z" + // Exclamation mark dot.
-	" M 8 12 l 0.5 1.25\"/>" + // Draw a line through the exclamation circle to fill it.
+	"<path d=\"M8 1C4.2 1 1 4.2 1 8s3.2 7 7 7 7-3.1 7-7-3.1-7-7-7zm-.5 3h1v5h-1V4zm.5 8.2c-.4 0-.8-.4-.8-.8s.3-.8.8-.8c.4 0 .8.4.8.8s-.4.8-.8.8z\"></path>" +
+	"<path style=\"stroke-width: 0; fill: #161616; opacity: 1;\" d=\"M7.5 4h1v5h-1V4zm.5 8.2c-.4 0-.8-.4-.8-.8s.3-.8.8-.8c.4 0 .8.4.8.8s-.4.8-.8.8z\"></path>" +
 	"</svg>");
 
 // This image is stored in the format to be shown as an <img> in the JSX

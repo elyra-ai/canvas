@@ -12,7 +12,12 @@
     "npm": "5.6"
   },
   "dependencies": {
+    "@carbon/icons-react": "10.8.2",
+    "@wdp/common-canvas": "file:../common-canvas",
+    "@wdpx/themes": "1.1.9",
     "body-parser": "1.19.0",
+    "carbon-components": "10.9.3",
+    "carbon-components-react": "7.9.3",
     "compression": "1.7.4",
     "express": "4.17.1",
     "express-session": "1.17.0",
@@ -23,7 +28,6 @@
     "node-sass": "4.13.1"
   },
   "devDependencies": {
-    "@wdp/common-canvas": "file:../common-canvas",
     "autoprefixer": "7.1.2",
     "babel-core": "6.26.3",
     "babel-loader": "7.1.2",
@@ -31,9 +35,6 @@
     "babel-preset-env": "1.7.0",
     "babel-preset-react": "6.24.1",
     "babel-preset-react-hmre": "1.1.1",
-    "carbon-components": "9.83.4",
-    "carbon-components-react": "6.101.6",
-    "carbon-icons": "7.0.7",
     "chimpy": "2.0.0",
     "chromedriver": "79.0.0",
     "codemirror": "5.50.2",

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -17,13 +17,14 @@ import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
 import PropertyUtils from "./../util/property-utils";
-import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING } from "./../constants/constants";
+import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
 import isEqual from "lodash/isEqual";
 import omit from "lodash/omit";
 import pick from "lodash/pick";
 import has from "lodash/has";
-import Icon from "carbon-components-react/lib/components/Icon";
+import Icon from "./../../icons/icon.jsx";
+import Button from "carbon-components-react/lib/components/Button";
 import { Provider } from "react-redux";
 import logger from "../../../utils/logger";
 
@@ -67,7 +68,7 @@ class PropertiesMain extends React.Component {
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
 		this._getOverrideSize = this._getOverrideSize.bind(this);
-		this._getResizeButtonDirection = this._getResizeButtonDirection.bind(this);
+		this._getResizeButton = this._getResizeButton.bind(this);
 		this._isResizeButtonRequired = this._isResizeButtonRequired.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 	}
@@ -169,18 +170,18 @@ class PropertiesMain extends React.Component {
 		return overrideSize;
 	}
 
-	_getResizeButtonDirection() {
-		let direction = "left";
+	_getResizeButton() {
+		let resizeButton = <Icon type={CARBON_ICONS.CHEVRONARROWS.LEFT} className="properties-resize-caret-left" />;
 		if (this.propertiesController.getForm().editorSize === Size.SMALL) {
 			if (this.state.editorSize === Size.MEDIUM) {
-				direction = "right";
+				resizeButton = <Icon type={CARBON_ICONS.CHEVRONARROWS.RIGHT} className="properties-resize-caret-right" />;
 			}
 		} else if (this.propertiesController.getForm().editorSize === Size.MEDIUM) {
 			if (this.state.editorSize === Size.LARGE) {
-				direction = "right";
+				resizeButton = <Icon type={CARBON_ICONS.CHEVRONARROWS.RIGHT} className="properties-resize-caret-right" />;
 			}
 		}
-		return direction;
+		return resizeButton;
 	}
 
 	_isResizeButtonRequired() {
@@ -368,13 +369,11 @@ class PropertiesMain extends React.Component {
 					showPropertiesButtons={this.state.showPropertiesButtons}
 				/>);
 				if (this._isResizeButtonRequired()) {
-					const direction = this._getResizeButtonDirection();
+					const resizeIcon = this._getResizeButton();
 					resizeBtn = (
-						<button className="properties-btn-resize" onClick={this.resize.bind(this)} >
-							<div>
-								<Icon name={`icon--chevron--${direction}`} />
-							</div>
-						</button>
+						<Button kind="ghost" className="properties-btn-resize" onClick={this.resize.bind(this)} >
+							{resizeIcon}
+						</Button>
 					);
 				}
 			}

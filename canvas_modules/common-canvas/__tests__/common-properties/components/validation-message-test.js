@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -46,7 +46,7 @@ describe("validation-message renders correctly", () => {
 		);
 		const messageWrapper = wrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper.find("div.icon svg.error")).to.have.length(1);
+		expect(messageWrapper.find("div.icon svg.canvas-state-icon-error")).to.have.length(1);
 		expect(messageWrapper.find("span").text()).to.equal(errorMessage.text);
 	});
 	it("validation-message renders warning message correctly", () => {
@@ -57,7 +57,7 @@ describe("validation-message renders correctly", () => {
 		);
 		const messageWrapper = wrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper.find("div.icon svg.warning")).to.have.length(1);
+		expect(messageWrapper.find("div.icon svg.canvas-state-icon-warning")).to.have.length(1);
 		expect(messageWrapper.find("span").text()).to.equal(warningMessage.text);
 
 	});
@@ -69,7 +69,7 @@ describe("validation-message renders correctly", () => {
 		);
 		const messageWrapper = wrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper.find("div.icon svg.info")).to.have.length(1);
+		expect(messageWrapper.find("div.icon svg.canvas-state-icon-info")).to.have.length(1);
 		expect(messageWrapper.find("span").text()).to.equal(infoMessage.text);
 	});
 	it("validation-message renders correctly when no message set", () => {

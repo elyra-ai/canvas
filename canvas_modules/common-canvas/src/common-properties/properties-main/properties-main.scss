@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -16,7 +16,7 @@
 	height: 100%;
 	background-color: $ui-01;
 	overflow: hidden;
-	border-left: 2px solid $ui-03;
+	border-left: 1px solid $ui-03;
 	outline: none;
 	&.properties-small {
 		width: $common-properties-small-flyout-width;
@@ -40,23 +40,18 @@
 		position: absolute;
 		top: 50%;
 		left: -13px;
-		cursor: pointer;
 		z-index: 1; // needs to sit on top of common-properties div
-		height: 25px;
+		min-height: 20px;
 		border-radius: 5px;
 		background-color: $ui-01;
-		border: 2px $ui-03 solid;
+		border: 1px $ui-03 solid;
+		padding: 2px;
 		&:hover {
 			background-color: $ui-03;
 		}
-		> div {
-			height: 100%;
-			width: 100%;
-			display: flex;
-			align-items: center;
-		}
 		svg {
-			fill: $brand-01;
+			width: 20px;
+			height: 20px;
 		}
 	}
 }

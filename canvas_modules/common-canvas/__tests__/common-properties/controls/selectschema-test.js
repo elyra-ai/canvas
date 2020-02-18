@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -105,21 +105,21 @@ describe("selectschema works correctly in common-properties", () => {
 		wrapper.unmount();
 	});
 	it("Validate selectschema rendered correctly", () => {
-		const dropDown = wrapper.find("div[data-id='properties-selectschema'] DropdownV2");
+		const dropDown = wrapper.find("div[data-id='properties-selectschema'] Dropdown");
 		const options = dropDown.prop("items"); // selectschema
 		expect(options).to.eql(expectedOptions);
 	});
 	it("Validate selectschema_placeholder rendered correctly", () => {
-		const dropDown = wrapper.find("div[data-id='properties-selectschema_placeholder'] DropdownV2");
+		const dropDown = wrapper.find("div[data-id='properties-selectschema_placeholder'] Dropdown");
 		expect(dropDown.find("div > span").text()).to.equal("None...");
 	});
 	it("Validate selectschema can select ''", () => {
-		let dropDown = wrapper.find("div[data-id='properties-selectschema'] DropdownV2");
+		let dropDown = wrapper.find("div[data-id='properties-selectschema'] Dropdown");
 		// open the dropdown
 		const dropdownButton = dropDown.find("div[role='button']");
 		dropdownButton.simulate("click");
 		// select the first item
-		dropDown = wrapper.find("div[data-id='properties-selectschema'] DropdownV2");
+		dropDown = wrapper.find("div[data-id='properties-selectschema'] Dropdown");
 		const dropdownList = dropDown.find("div.bx--list-box__menu-item");
 		dropdownList.at(0).simulate("click");
 		expect(propertiesController.getPropertyValue({ name: "selectschema" })).to.equal("");

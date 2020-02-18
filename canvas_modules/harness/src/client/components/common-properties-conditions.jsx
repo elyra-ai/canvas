@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -11,7 +11,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import Dropdown from "carbon-components-react/lib/components/DropdownV2";
+import Dropdown from "carbon-components-react/lib/components/Dropdown";
 import Button from "carbon-components-react/lib/components/Button";
 import {
 	TEXTFIELD_ERROR_PROPS_INFO,
@@ -182,7 +182,7 @@ class CommonPropertiesComponents extends React.Component {
 		const openFlyoutButton = (<Button
 			className="harness-properties-documentation-show-flyout-button"
 			type="button"
-			small
+			size="small"
 			kind="secondary"
 			onClick={() => this.setRightFlyoutState(content)}
 		>
@@ -195,6 +195,7 @@ class CommonPropertiesComponents extends React.Component {
 	render() {
 		const dropMenu = (<div className="harness-conditions-documentation-menu">
 			<Dropdown
+				id="harness-conditions-documentation-menu-dropdown"
 				label="Navigation"
 				items={this.dropdownOptions([
 					"Conditions",

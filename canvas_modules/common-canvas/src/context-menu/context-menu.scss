@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -13,7 +13,7 @@
 .context-menu-popover {
 	cursor: pointer;
 	min-width: 160px;
-	background-color: $ui-02;
+	background-color: $ui-01;
 	background-clip: padding-box;
 	border: 0;
 	outline: none;
@@ -70,7 +70,7 @@
 .react-contextmenu-item:active,
 .react-contextmenu-item:focus,
 .react-contextmenu-item:hover {
-	background: $ui-03;
+	background: $hover-ui;
 	text-decoration: none;
 	border: 0;
 	outline: none; /* Suppress Chrome's blue active border */
@@ -82,7 +82,6 @@
 
 .react-contextmenu-item.react-contextmenu-submenu > div {
 	padding-right: 27px;
-	font-family: $font-family-helvetica;
 }
 
 .react-contextmenu-item.react-contextmenu-submenu > div::after {

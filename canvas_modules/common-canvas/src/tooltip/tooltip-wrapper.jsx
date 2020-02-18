@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -10,9 +10,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Tooltip from "./tooltip.jsx";
-import Icon from "carbon-components-react/lib/components/Icon";
+import Icon from "../icons/icon.jsx";
 import isEmpty from "lodash/isEmpty";
-import { TIP_TYPE_PALETTE_ITEM, TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "../common-canvas/constants/canvas-constants.js";
+import { TIP_TYPE_PALETTE_ITEM, TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK,
+	ERROR, WARNING } from "../common-canvas/constants/canvas-constants.js";
 
 export default class TooltipWrapper extends React.Component {
 	constructor(props) {
@@ -82,10 +83,10 @@ export default class TooltipWrapper extends React.Component {
 			case TIP_TYPE_NODE:
 				{
 					let icon = null;
-					if (this.props.canvasController.getObjectModel().hasErrorMessage(this.props.node.id)) {
-						icon = (<Icon className="tip-node-status error" name="error--glyph" />);
-					} else if (this.props.canvasController.getObjectModel().hasWarningMessage(this.props.node.id)) {
-						icon = (<Icon className="tip-node-status warning" name="warning--glyph" />);
+					if (this.props.canvasController.getObjectModel().hasErrorMessage(this.props.node)) {
+						icon = (<Icon type={ERROR} className="tip-node-status error" />);
+					} else if (this.props.canvasController.getObjectModel().hasWarningMessage(this.props.node)) {
+						icon = (<Icon type={WARNING} className="tip-node-status warning" />);
 					}
 					const nodeType = this.props.canvasController.getObjectModel().getPaletteNode(this.props.node.op);
 					let nodeLabel = this.props.node.label;

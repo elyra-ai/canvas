@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Icon from "carbon-components-react/lib/components/Icon";
+import { WarningFilled16, ErrorFilled16 } from "@carbon/icons-react";
 import CustomMapSummary from "./CustomMapSummary";
 import Button from "carbon-components-react/lib/components/Button";
 import { connect } from "react-redux";
@@ -154,9 +154,9 @@ class CustomMapCtrl extends React.Component {
 		if (this.props.messageInfo && this.props.messageInfo.text) {
 			messageText = this.props.messageInfo.text;
 			if (this.props.messageInfo.type === "warning") {
-				icon = (<Icon className="warning" name="warning--glyph" />);
+				icon = (<WarningFilled16 className="warning" />);
 			} else if (this.props.messageInfo.type === "error") {
-				icon = (<Icon className="error" name="error--glyph" />);
+				icon = (<ErrorFilled16 className="error" />);
 			}
 		}
 		let visibility;
@@ -176,9 +176,9 @@ class CustomMapCtrl extends React.Component {
 						<div className="icon">{icon}</div>
 						<div>{messageText}</div>
 					</div>
-					<Button small data-id="go_to_svl" onClick={this.gotoSVL.bind(this)}>Go to SVL</Button>
-					<Button small data-id="go_to_armonk" onClick={this.gotoArmonk.bind(this)}>Go to Armonk</Button>
-					<Button small data-id="zoom_out" onClick={this.zoomOut.bind(this)}>Zoom Out</Button>
+					<Button size="small" data-id="go_to_svl" onClick={this.gotoSVL.bind(this)}>Go to SVL</Button>
+					<Button size="small" data-id="go_to_armonk" onClick={this.gotoArmonk.bind(this)}>Go to Armonk</Button>
+					<Button size="small" data-id="zoom_out" onClick={this.zoomOut.bind(this)}>Zoom Out</Button>
 				</div>
 			</div>
 		);

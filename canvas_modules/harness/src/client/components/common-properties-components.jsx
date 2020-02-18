@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -11,7 +11,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import Dropdown from "carbon-components-react/lib/components/DropdownV2";
+import Dropdown from "carbon-components-react/lib/components/Dropdown";
 import Button from "carbon-components-react/lib/components/Button";
 import FunctionList from "../constants/json/functionlist.json";
 import {
@@ -299,7 +299,7 @@ class CommonPropertiesComponents extends React.Component {
 		const openFlyoutButton = (<Button
 			className="harness-properties-documentation-show-flyout-button"
 			type="button"
-			small
+			size="small"
 			kind="secondary"
 			onClick={() => this.setRightFlyoutState(content)}
 		>
@@ -314,6 +314,7 @@ class CommonPropertiesComponents extends React.Component {
 		expressionInfoProps.expressionInfo = FunctionList;
 		const dropMenu = (<div className="harness-properties-documentation-menu">
 			<Dropdown
+				id="harness-properties-documentation-menu-dropdown"
 				label="Navigation"
 				items={this.dropdownOptions([
 					"Groups",
@@ -363,7 +364,7 @@ class CommonPropertiesComponents extends React.Component {
 				])}
 				type="inline"
 				onChange={this.onMenuDropdownSelect}
-				itemToString={(item) => item.text }
+				itemToString={(item) => (item ? item.text : "") }
 			/>
 		</div>);
 

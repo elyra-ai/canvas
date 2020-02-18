@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -142,18 +142,18 @@ function closeFieldPicker() {
 
 function clickFilter(wrapper, type, enabled) {
 	let filters = wrapper.find("button.properties-fp-filter");
-	filters.forEach((node) => {
-		if (node.prop("data-type") === type) {
-			node.simulate("click");
+	filters.forEach((filter) => {
+		if (filter.prop("data-type") === type) {
+			filter.simulate("click");
 		}
 	});
 	filters = wrapper.find("button.properties-fp-filter");
-	filters.forEach((node) => {
-		if (node.prop("data-type") === type) {
+	filters.forEach((filter) => {
+		if (filter.prop("data-type") === type) {
 			if (enabled === true) {
-				expect(node.find("svg").prop("disabled")).to.equal(false);
+				expect(filter.find("svg").prop("disabled")).to.equal(false);
 			} else {
-				expect(node.find("svg").prop("disabled")).to.equal(true);
+				expect(filter.find("svg").prop("disabled")).to.equal(true);
 			}
 		}
 	});
@@ -169,6 +169,7 @@ describe("field-picker-control renders correctly", () => {
 				currentFields={currentFields}
 				fields={filteredDataset}
 				controller={controller}
+				title="Field Picker Test"
 			/>
 		);
 
@@ -185,6 +186,7 @@ describe("field-picker-control renders correctly", () => {
 				currentFields={currentFields}
 				fields={filteredDataset}
 				controller={controller}
+				title="Field Picker Test"
 			/>
 		);
 		expect(wrapper.find("button.properties-fp-reset-button-container")).to.have.length(1);
@@ -200,6 +202,7 @@ describe("field-picker-control renders correctly", () => {
 				currentFields={currentFields}
 				fields={filteredDataset}
 				controller={controller}
+				title="Field Picker Test"
 			/>
 		);
 		// with intl support wrapper.state() does not work.
@@ -219,6 +222,7 @@ describe("field-picker-control renders correctly", () => {
 				currentFields={currentFields}
 				fields={filteredDataset}
 				controller={controller}
+				title="Field Picker Test"
 			/>
 		);
 		tableUtils.selectCheckboxes(wrapper, [0]);
@@ -235,6 +239,7 @@ describe("field-picker-control renders correctly", () => {
 				currentFields={currentFields}
 				fields={filteredDataset}
 				controller={controller}
+				title="Field Picker Test"
 			/>
 		);
 		tableUtils.selectCheckboxes(wrapper, [1]);
@@ -256,6 +261,7 @@ describe("field-picker-control renders correctly", () => {
 				currentFields={currentFields}
 				fields={filteredDataset}
 				controller={controller}
+				title="Field Picker Test"
 			/>
 		);
 		clickFilter(wrapper, "integer");
@@ -270,6 +276,7 @@ describe("field-picker-control renders correctly", () => {
 				currentFields={currentFields}
 				fields={filteredDataset}
 				controller={controller}
+				title="Field Picker Test"
 			/>
 		);
 		// disable a set of icons except double
@@ -304,6 +311,7 @@ describe("field-picker-control renders correctly", () => {
 				currentFields={currentFields}
 				fields={filteredDataset}
 				controller={controller}
+				title="Field Picker Test"
 			/>
 		);
 
@@ -326,6 +334,7 @@ describe("field-picker-control renders correctly", () => {
 				currentFields={currentFields}
 				fields={filteredDataset}
 				controller={controller}
+				title="Field Picker Test"
 			/>
 		);
 		tableUtils.selectFieldPickerHeaderCheckbox(wrapper);

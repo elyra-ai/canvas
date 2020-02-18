@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -10,7 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Icon from "../icons/icon.jsx";
-import { TIP_TYPE_PALETTE_CATEGORY } from "../common-canvas/constants/canvas-constants.js";
+import { TIP_TYPE_PALETTE_CATEGORY, CANVAS_CARBON_ICONS } from "../common-canvas/constants/canvas-constants.js";
 
 class PaletteFlyoutContentCategory extends React.Component {
 	constructor(props) {
@@ -59,9 +59,9 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 		let caretImage = null;
 		if (this.props.itemCount > 0) {
-			caretImage = <svg className={caretClassName}><Icon type="downCaret" /></svg>;
+			caretImage = <Icon type={CANVAS_CARBON_ICONS.CHEVRONARROWS.DOWN} className={caretClassName} />;
 			if (this.props.selectedCategoryId === this.props.category.id) {
-				caretImage = <svg className={caretClassName}><Icon type="upCaret" /></svg>;
+				caretImage = <Icon type={CANVAS_CARBON_ICONS.CHEVRONARROWS.UP} className={caretClassName} />;
 			}
 		}
 

@@ -13,8 +13,8 @@ Feature: StructureListEditorControl
 		Then I have selected the "Flyout" properties container type
 		Given I have uploaded common-properties file "selectcolumns_paramDef.json" of type "parameterDefs"
 
-		Then I open the "TABLE" category
-		Then I open the "Configure Fields in Sub-panel" summary link in the "TABLE" category
+		Then I open the "Table" category
+		Then I open the "Configure Fields in Sub-panel" summary link in the "Table" category
 		Then I click the "Add" button on the "structurelist_sub_panel" table
 		Then I click the subpanel button in control "structurelist_sub_panel" in row "0"
 		Then I click the "Add" button on the "fields2" table
@@ -42,6 +42,6 @@ Feature: StructureListEditorControl
 		Given I have toggled the app side common-properties panel
 		Then I have selected the "Flyout" properties container type
 		Given I have uploaded common-properties file "selectcolumns_paramDef.json" of type "parameterDefs"
-		Then I open the "TABLE" category
-		Then I open the "Configure Fields in Sub-panel" summary link in the "TABLE" category
+		Then I open the "Table" category
+		Then I open the "Configure Fields in Sub-panel" summary link in the "Table" category
 		Then I verify the table "structurelist_sub_panel" is of height "501px"

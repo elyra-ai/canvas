@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -34,26 +34,26 @@ describe("condition messages should add alerts tab", () => {
 		// get alerts tabs
 		let alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
 		let alertButton = alertCategory.find("button.properties-category-title");
-		expect(alertButton.text()).to.equal("ALERTS (2)");
+		expect(alertButton.text()).to.equal("Alerts (2)");
 		alertButton.simulate("click");
 
 		// ensure that alert tab is open
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		const alertDiv = alertCategory.find("div.properties-category-content.show"); // ALERTS div
+		const alertDiv = alertCategory.find("div.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(2);
 		expect(alertList.at(0).text()).to.equal("Required parameter 'Integer' has no value.");
 		expect(alertList.at(1).text()).to.equal("Required parameter 'Random' has no value.");
 
-		// go to VALUES tab by clicking on error message
+		// go to Values tab by clicking on error message
 		alertList.at(0).find("a.properties-link-text")
 			.simulate("click");
-		let valuesCategory = wrapper.find("div.properties-category-container").at(1); // VALUES category
-		expect(valuesCategory.find("button.properties-category-title").text()).to.equal("VALUES (2)");
+		let valuesCategory = wrapper.find("div.properties-category-container").at(1); // Values category
+		expect(valuesCategory.find("button.properties-category-title").text()).to.equal("Values (2)");
 
 		// regenerate random number should decrease alert list
-		let valuesDiv = valuesCategory.find("div.properties-category-content.show"); // VALUES div
+		let valuesDiv = valuesCategory.find("div.properties-category-content.show"); // Values div
 		expect(valuesDiv).to.have.length(1);
 		const generator = valuesDiv.find("button.properties-number-generator");
 		expect(generator).to.have.length(1);
@@ -61,7 +61,7 @@ describe("condition messages should add alerts tab", () => {
 
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
 		alertButton = alertCategory.find("button.properties-category-title");
-		expect(alertButton.text()).to.equal("ALERTS (1)");
+		expect(alertButton.text()).to.equal("Alerts (1)");
 		alertButton.simulate("click");
 
 		alertList = alertCategory.find("a.properties-link-text");
@@ -71,23 +71,23 @@ describe("condition messages should add alerts tab", () => {
 			.simulate("click");
 
 		// enter new integer value to remove all Alerts
-		valuesCategory = wrapper.find("div.properties-category-container").at(1); // VALUES category
-		expect(valuesCategory.find("button.properties-category-title").text()).to.equal("VALUES (1)");
+		valuesCategory = wrapper.find("div.properties-category-container").at(1); // Values category
+		expect(valuesCategory.find("button.properties-category-title").text()).to.equal("Values (1)");
 
-		valuesDiv = valuesCategory.find("div.properties-category-content.show"); // VALUES category
+		valuesDiv = valuesCategory.find("div.properties-category-content.show"); // Values category
 		expect(valuesDiv).to.have.length(1);
 		integerInput = valuesDiv.find("div[data-id='properties-number_int'] input");
 		expect(integerInput).to.have.length(1);
 		integerInput.simulate("change", { target: { value: "1" } });
 
-		valuesCategory = wrapper.find("div.properties-category-container").at(0); // VALUES category
-		expect(valuesCategory.find("button.properties-category-title").text()).to.equal("VALUES");
+		valuesCategory = wrapper.find("div.properties-category-container").at(0); // Values category
+		expect(valuesCategory.find("button.properties-category-title").text()).to.equal("Values");
 	});
 	it("alerts should not show messages for hidden controls", () => {
 		// open the conditions tabs
 		const conditionsCategory = wrapper.find("div.properties-category-container").at(1); // Conditions category
 		const conditionsButton = conditionsCategory.find("button.properties-category-title");
-		expect(conditionsButton.text()).to.equal("CONDITIONS");
+		expect(conditionsButton.text()).to.equal("Conditions");
 		conditionsButton.simulate("click");
 
 		// unhide the number field
@@ -105,12 +105,12 @@ describe("condition messages should add alerts tab", () => {
 		// get alerts tabs
 		let alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
 		const alertButton = alertCategory.find("button.properties-category-title");
-		expect(alertButton.text()).to.equal("ALERTS (1)");
+		expect(alertButton.text()).to.equal("Alerts (1)");
 		alertButton.simulate("click");
 
 		// ensure that alert tab is open
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		let alertDiv = alertCategory.find("div.properties-category-content.show"); // ALERTS div
+		let alertDiv = alertCategory.find("div.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(1);
@@ -122,7 +122,7 @@ describe("condition messages should add alerts tab", () => {
 
 		// there should be no alerts for the hidden field
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		alertDiv = alertCategory.find("div.properties-category-content.show"); // ALERTS div
+		alertDiv = alertCategory.find("div.properties-category-content.show"); // Alerts div
 		alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(0);
 	});
@@ -142,7 +142,7 @@ describe("condition messages should add alerts tab for tables", () => {
 		// open the conditions tabs
 		const conditionsCategory = wrapper.find("div.properties-category-container").at(2); // Conditions category
 		const conditionsButton = conditionsCategory.find("button.properties-category-title");
-		expect(conditionsButton.text()).to.equal("CONDITIONS");
+		expect(conditionsButton.text()).to.equal("Conditions");
 		conditionsButton.simulate("click");
 
 		// open the summary link for hide tables
@@ -176,12 +176,12 @@ describe("condition messages should add alerts tab for tables", () => {
 		// get alerts tabs
 		let alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
 		const alertButton = alertCategory.find("button.properties-category-title");
-		expect(alertButton.text()).to.equal("ALERTS (1)");
+		expect(alertButton.text()).to.equal("Alerts (1)");
 		alertButton.simulate("click");
 
 		// ensure that alert tab is open
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		const alertDiv = alertCategory.find("div.properties-category-content.show"); // ALERTS div
+		const alertDiv = alertCategory.find("div.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		const alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(1);
@@ -209,7 +209,7 @@ describe("condition messages should add alerts tab for tables", () => {
 		// validate the first tab is not the alert tab
 		const firstCategory = wrapper.find("div.properties-category-container").at(0);
 		const firstTab = firstCategory.find("button.properties-category-title");
-		expect(firstTab.text()).to.equal("TABLES");
+		expect(firstTab.text()).to.equal("Tables");
 	});
 
 	it("alerts should not show messages for hidden table cell controls", () => {

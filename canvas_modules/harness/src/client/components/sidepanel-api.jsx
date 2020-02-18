@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -13,7 +13,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import isEmpty from "lodash/isEmpty";
 import Button from "carbon-components-react/lib/components/Button";
-import Dropdown from "carbon-components-react/lib/components/DropdownV2";
+import Dropdown from "carbon-components-react/lib/components/Dropdown";
 import TextArea from "carbon-components-react/lib/components/TextArea";
 import TextInput from "carbon-components-react/lib/components/TextInput";
 import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
@@ -502,6 +502,7 @@ export default class SidePanelAPI extends React.Component {
 		const operationSelection =
 			(<div className="harness-sidepanel-children" id="harness-sidepanel-api-list">
 				<Dropdown
+					id="harness-sidepanel-api-ops-dropdown"
 					ariaLabel="Operations"
 					label="Operations"
 					onChange={this.onOperationSelect.bind(this)}
@@ -511,7 +512,7 @@ export default class SidePanelAPI extends React.Component {
 
 		const submit =
 			(<div className="harness-sidepanel-children" id="harness-sidepanel-api-submit">
-				<Button
+				<Button size="small"
 					disabled={!this.isReadyToSubmit()}
 					onClick={this.callAPI.bind(this)}
 				>
@@ -529,7 +530,7 @@ export default class SidePanelAPI extends React.Component {
 					onChange={this.onFieldChange.bind(this, "pipelineFlow")}
 					value={this.state.pipelineFlow}
 				/>
-				<Button small
+				<Button size="small"
 					onClick={this.refreshPipeline.bind(this)}
 				>
 					Refresh
@@ -580,6 +581,7 @@ export default class SidePanelAPI extends React.Component {
 			setNodePortLabelSection = (<div className="harness-sidepanel-children">
 				<div id="harness-sidepanel-api-nodePortSelection">
 					<Dropdown
+						id="harness-sidepanel-api-npls-dropdown"
 						disabled={isEmpty(this.state.nodes)}
 						onChange={this.onNodeSelect.bind(this)}
 						label="Node Selection"
@@ -590,6 +592,7 @@ export default class SidePanelAPI extends React.Component {
 				<div className="harness-sidepanel-spacer" />
 				<div id="harness-sidepanel-api-portSelection">
 					<Dropdown
+						id="harness-sidepanel-api-nps-dropdown"
 						disabled={isEmpty(this.state.ports)}
 						onChange={this.onPortSelect.bind(this)}
 						ariaLabel="Port Selection"
@@ -620,6 +623,7 @@ export default class SidePanelAPI extends React.Component {
 			>
 				<div id="harness-sidepanel-api-nodeSelection">
 					<Dropdown
+						id="harness-sidepanel-api-ns-dropdown"
 						disabled={isEmpty(this.state.nodes)}
 						onChange={this.onNodeSelect.bind(this)}
 						label="Node Selection"
@@ -644,6 +648,7 @@ export default class SidePanelAPI extends React.Component {
 			>
 				<div id="harness-sidepanel-api-linkSelection">
 					<Dropdown
+						id="harness-sidepanel-api-ls-dropdown"
 						disabled={isEmpty(this.state.links)}
 						onChange={this.onLinkSelect.bind(this)}
 						label="Link Selection"
@@ -667,7 +672,7 @@ export default class SidePanelAPI extends React.Component {
 				id="harness-sidepanel-api-notificationMessages"
 			>
 				<div className="harness-sidepanel-headers">Clear Notification Messages</div>
-				<Button small
+				<Button size="small"
 					id="harness-clearNotificationMessagesubmit"
 					onClick={this.clearNotificationMessages.bind(this)}
 				>
@@ -755,6 +760,7 @@ export default class SidePanelAPI extends React.Component {
 			>
 				<div id="harness-sidepanel-api-nodeSelection">
 					<Dropdown
+						id="harness-sidepanel-api-zoom-dropdown"
 						disabled={isEmpty(this.state.nodes)}
 						onChange={this.onNodeSelect.bind(this)}
 						label="Node Selection"

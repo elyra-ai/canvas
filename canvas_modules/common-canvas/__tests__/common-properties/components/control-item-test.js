@@ -91,7 +91,7 @@ describe("control-item renders correctly", () => {
 		const tooltip = wrapper.find("div.tooltip-container");
 		expect(tooltip).to.have.length(1);
 		// tooltip icon
-		expect(tooltip.find("svg.info")).to.have.length(1);
+		expect(tooltip.find("svg.canvas-state-icon-information-hollow")).to.have.length(1);
 		// tooltip text
 		expect(tooltip.find("div.common-canvas-tooltip span").text()).to.equal(control.description.text);
 	});

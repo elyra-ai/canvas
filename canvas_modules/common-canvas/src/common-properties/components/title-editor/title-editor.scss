@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -8,46 +8,51 @@
  *******************************************************************************/
 
 .properties-title-editor {
-	height: 47px;
+	height: 41px;
 	display: flex;
 	align-items: center;
-	padding-left: 20px;
-	border-bottom: 2px solid $ui-03;
+	border-bottom: 1px solid $ui-03;
 }
 
 .properties-title-editor-input {
 	height: 100%;
-	width: 100%;
-	input { //override styling from carbon
-		min-width: unset;
-		font-size: 24px;
-		background: unset;
-		margin: 0;
-		padding: 0;
-		&[readonly] {
-			box-shadow: unset;
-			cursor: default;
+	width: calc(100% - 2px); // subtract 2px for input active right border
+	top: 1px; // align input with bottom border
+	position: relative;
+	display: flex;
+	align-items: center;
+
+	.bx--form-item.bx--text-input-wrapper {
+		// allow edit icon to be at the end of text input
+		position: absolute;
+		width: 100%;
+
+		input { //override styling from carbon
+			@include carbon--type-style("productive-heading-01");
+
+			min-width: unset;
+			background: unset;
+			padding-right: 40px; // avoid edit icon
+			&[readonly] {
+				box-shadow: unset;
+				cursor: default;
+			}
 		}
 	}
-}
 
-.properties-title-editor-btn {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100%;
-	width: 45px;
-	border: 0;
-	background-color: $ui-01;
-	cursor: pointer;
-	&:hover {
-		background-color: $ui-03;
-	}
-	&:active {
-		background-color: $ui-03;
-	}
-	> svg {
-		height: 20px;
-		width: 20px;
+	// Edit button should be inside the title input box
+	.properties-title-editor-btn {
+		position: absolute;
+		right: 2px;
+		fill: $icon-02;
+		padding: 7px;
+		min-height: 16px;
+
+		&:hover {
+			background-color: $ui-03;
+		}
+		&:active {
+			background-color: $ui-03;
+		}
 	}
 }

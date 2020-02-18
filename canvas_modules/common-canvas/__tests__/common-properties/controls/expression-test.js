@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -356,7 +356,7 @@ describe("expression handles no expression builder resources correctly", () => {
 				rightFlyout
 			/>
 		);
-		const input = wrapper.find("div.properties-expression-button");
+		const input = wrapper.find("button.properties-expression-button");
 		expect(input).to.have.length(1);
 	});
 
@@ -395,7 +395,7 @@ describe("expression handles no expression builder resources correctly", () => {
 		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
 		propertiesInfo.expressionInfo.validateLink = true;
 		const renderedObject = propertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, null, propertiesInfo);
-		expect(renderedObject.wrapper.find(".validateLink")).to.have.length(8); // there are 8 expressions in this paramdef
+		expect(renderedObject.wrapper.find("button.validateLink")).to.have.length(8); // there are 8 expressions in this paramdef
 	});
 
 

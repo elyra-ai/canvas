@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -9,9 +9,12 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Icon from "./../../../icons/icon.jsx";
+import Button from "carbon-components-react/lib/components/Button";
+import PropertyUtils from "./../../util/property-utils";
+import { ArrowUp24, ArrowDown24, BackToTop24, DownToBottom24 } from "@carbon/icons-react";
 import classNames from "classnames";
 
+import { MESSAGE_KEYS } from "./../../constants/constants";
 
 export default class MoveableTableRows extends React.Component {
 	constructor(props) {
@@ -30,24 +33,49 @@ export default class MoveableTableRows extends React.Component {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const topEnabled = (selected.length !== 0 && selected[0] !== 0) && !this.props.disabled;
 		const bottomEnabled = (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) && !this.props.disabled;
+
+		const topLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_TOP_DESCRIPTION);
+		const upLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION);
 		const topImages = (
 			<div key="topImages">
-				<button type="button" className="table-row-move-button" onClick={this.topMoveRow} disabled={!topEnabled}>
-					<Icon type="moveTop" disabled={!topEnabled} />
-				</button>
-				<button type="button" className="table-row-move-button" onClick={this.upMoveRow} disabled={!topEnabled}>
-					<Icon type="moveUp" disabled={!topEnabled} />
-				</button>
+				<Button
+					className="table-row-move-button"
+					onClick={this.topMoveRow}
+					disabled={!topEnabled}
+					kind="ghost"
+					renderIcon={BackToTop24}
+					iconDescription={topLabel}
+				/>
+				<Button
+					className="table-row-move-button"
+					onClick={this.upMoveRow}
+					disabled={!topEnabled}
+					kind="ghost"
+					renderIcon={ArrowUp24}
+					iconDescription={upLabel}
+				/>
 			</div>
 		);
+		const bottomLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_DOWN_DESCRIPTION);
+		const downLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION);
 		const bottomImages = (
 			<div key="bottomImages">
-				<button type="button" className="table-row-move-button" onClick={this.downMoveRow} disabled={!bottomEnabled}>
-					<Icon type="moveDown" disabled={!bottomEnabled} />
-				</button>
-				<button type="button" className="table-row-move-button" onClick={this.bottomMoveRow} disabled={!bottomEnabled}>
-					<Icon type="moveBottom" disabled={!bottomEnabled} />
-				</button>
+				<Button
+					className="table-row-move-button"
+					onClick={this.downMoveRow}
+					disabled={!bottomEnabled}
+					kind="ghost"
+					renderIcon={ArrowDown24}
+					iconDescription={bottomLabel}
+				/>
+				<Button
+					className="table-row-move-button"
+					onClick={this.bottomMoveRow}
+					disabled={!bottomEnabled}
+					kind="ghost"
+					renderIcon={DownToBottom24}
+					iconDescription={downLabel}
+				/>
 			</div>
 		);
 		return [topImages, bottomImages];

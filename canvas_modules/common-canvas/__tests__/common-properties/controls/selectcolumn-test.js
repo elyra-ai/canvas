@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -206,7 +206,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 	});
 
 	it("selectcolumn control will have updated options by the controller", () => {
-		let dropdownField1 = wrapper.find("div[data-id='properties-field1_panel'] DropdownV2");
+		let dropdownField1 = wrapper.find("div[data-id='properties-field1_panel'] Dropdown");
 		let field1Options = dropdownField1.prop("items");	// Field1 Panel
 		const field1OptionsExpectedOptions = [
 			{ label: "...", value: "" },
@@ -229,7 +229,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 
 		expect(field1Options).to.eql(field1OptionsExpectedOptions);
 
-		let dropdownField2 = wrapper.find("div[data-id='properties-field2_panel'] DropdownV2");
+		let dropdownField2 = wrapper.find("div[data-id='properties-field2_panel'] Dropdown");
 
 		let field2Options = dropdownField2.prop("items");	// Field2 Panel
 		const field2OptionsExpectedOptions = [
@@ -279,9 +279,9 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 		datasetMetadata[0].fields.push(newField2);
 		controller.setDatasetMetadata(datasetMetadata);
 		wrapper.update();
-		dropdownField1 = wrapper.find("div[data-id='properties-field1_panel'] DropdownV2");
+		dropdownField1 = wrapper.find("div[data-id='properties-field1_panel'] Dropdown");
 		field1Options = dropdownField1.prop("items");
-		dropdownField2 = wrapper.find("div[data-id='properties-field2_panel'] DropdownV2");
+		dropdownField2 = wrapper.find("div[data-id='properties-field2_panel'] Dropdown");
 		field2Options = dropdownField2.prop("items");
 
 		const dropDownValue1 = {
@@ -305,7 +305,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 	});
 
 	it("should filter values from selectcolumn control", () => {
-		const typeDropDown = wrapper.find("div[data-id='properties-field_filter_type'] DropdownV2");
+		const typeDropDown = wrapper.find("div[data-id='properties-field_filter_type'] Dropdown");
 		let options = typeDropDown.prop("items"); // by Type
 		let expectedOptions = [
 			{ label: "...", value: "" },
@@ -315,7 +315,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 			{ label: "age4", value: "age4" }
 		];
 		expect(options).to.eql(expectedOptions);
-		const typesDropDown = wrapper.find("div[data-id='properties-field_filter_types'] DropdownV2");
+		const typesDropDown = wrapper.find("div[data-id='properties-field_filter_types'] Dropdown");
 		options = typesDropDown.prop("items"); // by Types
 		expectedOptions = [
 			{ label: "...", value: "" },
@@ -329,7 +329,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 			{ label: "Na4", value: "Na4" }
 		];
 		expect(options).to.eql(expectedOptions);
-		const measurementDropDown = wrapper.find("div[data-id='properties-field_filter_measurement'] DropdownV2");
+		const measurementDropDown = wrapper.find("div[data-id='properties-field_filter_measurement'] Dropdown");
 		options = measurementDropDown.prop("items"); // by Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
@@ -339,7 +339,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 			{ label: "BP4", value: "BP4" }
 		];
 		expect(options).to.eql(expectedOptions);
-		const measurementsDropDown = wrapper.find("div[data-id='properties-field_filter_measurements'] DropdownV2");
+		const measurementsDropDown = wrapper.find("div[data-id='properties-field_filter_measurements'] Dropdown");
 		options = measurementsDropDown.prop("items"); // by Measurements
 		expectedOptions = [
 			{ label: "...", value: "" },
@@ -353,7 +353,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 			{ label: "drug4", value: "drug4" }
 		];
 		expect(options).to.eql(expectedOptions);
-		const andDropDown = wrapper.find("div[data-id='properties-field_filter_and'] DropdownV2");
+		const andDropDown = wrapper.find("div[data-id='properties-field_filter_and'] Dropdown");
 		options = andDropDown.prop("items"); // by Type and Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
@@ -363,7 +363,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 			{ label: "drug4", value: "drug4" }
 		];
 		expect(options).to.eql(expectedOptions);
-		const orDropDown = wrapper.find("div[data-id='properties-field_filter_or'] DropdownV2");
+		const orDropDown = wrapper.find("div[data-id='properties-field_filter_or'] Dropdown");
 		options = orDropDown.prop("items"); // by Type or Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
@@ -380,21 +380,21 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 	});
 
 	it("should not show an error for a non-selection if the property isn't required", () => {
-		let selectField = wrapper.find("div[data-id='properties-field_placeholder'] DropdownV2");
+		let selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
 		let dropdownButton = selectField.find("div[role='button']");
 		dropdownButton.simulate("click");
 		// select the first item
-		selectField = wrapper.find("div[data-id='properties-field_placeholder'] DropdownV2");
+		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
 		let dropdownList = selectField.find("div.bx--list-box__menu-item");
 		dropdownList.at(2).simulate("click");
-		selectField = wrapper.find("div[data-id='properties-field_placeholder'] DropdownV2");
+		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
 		dropdownButton = selectField.find("div[role='button']");
 		dropdownButton.simulate("click");
 		// select the first item
-		selectField = wrapper.find("div[data-id='properties-field_placeholder'] DropdownV2");
+		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
 		dropdownList = selectField.find("div.bx--list-box__menu-item");
 		dropdownList.at(0).simulate("click");
-		selectField = wrapper.find("div[data-id='properties-field_placeholder'] DropdownV2");
+		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
 		const errorMsgDiv = selectField.find("div.properties-validation-message");
 		expect(errorMsgDiv).to.have.length(0);
 	});
@@ -414,7 +414,7 @@ describe("selectcolumn works correctly with multi input schemas", () => {
 
 	it("should show correct values from selectcolumn control", () => {
 
-		let selectField = wrapper.find("div[data-id='properties-field'] DropdownV2");
+		let selectField = wrapper.find("div[data-id='properties-field'] Dropdown");
 
 		const expectedOptions = [
 			{ label: "...", value: "" },
@@ -446,7 +446,7 @@ describe("selectcolumn works correctly with multi input schemas", () => {
 		const dropdownButton = selectField.find("div[role='button']");
 		dropdownButton.simulate("click");
 		// select the first item
-		selectField = wrapper.find("div[data-id='properties-field'] DropdownV2");
+		selectField = wrapper.find("div[data-id='properties-field'] Dropdown");
 		const dropdownList = selectField.find("div.bx--list-box__menu-item");
 		dropdownList.at(15).simulate("click");
 		const expectedValue = { link_ref: "1", field_name: "Na" };
@@ -455,7 +455,7 @@ describe("selectcolumn works correctly with multi input schemas", () => {
 
 	it("should filter values from selectcolumn control", () => {
 		const filterCategory = wrapper.find("div.properties-category-container").at(1); // FILTER category
-		const dropDowns = filterCategory.find("DropdownV2");
+		const dropDowns = filterCategory.find("Dropdown");
 		expect(dropDowns).to.have.length(5);
 		let options = dropDowns.at(0).prop("items"); // by Type
 		let expectedOptions = [

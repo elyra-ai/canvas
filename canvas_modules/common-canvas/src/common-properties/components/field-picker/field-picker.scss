@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
 
-.properties-wf-modal .properties-fp-table .properties-ft-container-wrapper {
+.properties-wf-content .properties-fp-table .properties-ft-container-wrapper {
 	height: 100%;
 }
 
-.properties-wf-modal .properties-fp-table .properties-ft-container-absolute {
+.properties-wf-content .properties-fp-table .properties-ft-container-absolute {
 	height: 450px;
 }
 
@@ -23,6 +23,8 @@
 
 .properties-fp-field, .properties-fp-data {
 	padding-left: 10px;
+	display: flex;
+	align-items: center;
 }
 
 .properties-fp-schema {
@@ -30,67 +32,44 @@
 }
 
 .properties-fp-field-type-icon, .properties-fp-data-type-icon {
-	width: 15px;
-	height: 15px;
-	float: left;
+	width: 16px;
+	height: 16px;
 	margin-right: 5px;
+	> svg {
+		width: 16px;
+		height: 16px;
+	}
 }
 
 .properties-fp-filter-list {
 	margin-top: 6px;
-	height: 22px;
-}
+	display: flex;
+	align-items: center;
 
-.properties-fp-filter-list-title.properties-fp-filter-list-li {
-	width: auto;
-	margin-left: 10px;
-	&:hover {
-		background-color: $ui-01;
-	}
-}
-
-.properties-fp-filter-list-li {
-	float: left;
-	width: 14px;
-	margin-right: 2px;
-	padding: 2px;
-
-	&:hover {
-		background-color: $ui-03;
+	.properties-fp-filter-list-title.properties-fp-filter-list-li {
+		width: auto;
+		margin-left: 10px;
 	}
 
-	button {
-		padding: 1px 0 0;
-		-webkit-appearance: none;
-		border: 0;
-		background-color: inherit;
-		cursor: pointer;
-	}
+	.properties-fp-filter-list-li {
+		float: left;
+		padding: 2px;
 
-	svg {
-		height: 10px;
-		width: 10px;
-	}
-}
+		button {
+			min-height: 15px;
+			padding: 0;
+			border: 0;
+		}
 
-// This back button is used in common-properties modal format
-.properties-fp-back-button {
-	height: 32px;
-	width: 32px;
-	border: 0;
-	padding: 0;
-	padding-top: 2px;
-	padding-left: 4px;
+		svg {
+			height: 16px;
+			width: 16px;
+			margin: 2px;
 
-	.bx--btn.bx--btn--sm.bx--btn--secondary {
-		border: 0;
-	}
-	svg.icon {
-		overflow: visible;
-	}
-	> svg:not(:root) {
-		margin-right: 5px;
-		transform: translateY(4px);
+			&[disabled] {
+				fill: $disabled-02;
+			}
+		}
 	}
 }
 
@@ -103,55 +82,42 @@
 		margin-bottom: 6px;
 		display: flex;
 		justify-content: space-between;
-		button.bx--btn > svg:not(:root) {
-			top: -5px;
-			left: -5px;
-		}
-	}
 
-	// Set a height for the thead so the body height can be calculated accordingly
-	thead {
-		height: 35px;
+		.properties-fp-reset-button-container {
+			span {
+				margin-right: 4px;
+			}
+		}
 	}
 }
 
-.properties-fp-reset-button-container {
-	border: 0;
-	float: right;
-	background-color: $ui-01;
-	height: 32px;
-	width: 90px;
-	padding-right: 0;
-	line-height: 0.5;
-	cursor: pointer;
-	&:hover:not([disabled]) {
-		background-color: $brand-01;
-	}
-	&:hover:not([disabled]) .properties-fp-reset-button {
-		&.icon > svg > path {
-			fill: $inverse-01;
+// This is for field-picker in properties-modal instead of flyout
+.properties-modal {
+	.properties-fp-top-row {
+		width: 100%;
+		margin-bottom: 6px;
+		display: flex;
+		justify-content: space-between;
+
+		.properties-fp-button-label {
+			position: relative;
+			top: 5px;
 		}
-		&.label {
-			text-decoration-color: $ui-01;
-			color: $ui-01;
+
+		// This back button is used in common-properties modal format
+		.properties-fp-back-button {
+			height: 32px;
+			width: 32px;
+			padding: 0;
+			margin-right: 8px;
+
+			> svg {
+				left: 5px;
+			}
 		}
 	}
 
-	.properties-fp-reset-button {
-		&.label {
-			float: left;
-			padding-top: 5px;
-			padding-right: 5px;
-			text-decoration: underline;
-			font-size: 14px;
-			color: $brand-01;
-		}
-		&.icon {
-			float: left;
-		}
-		&.icon > svg {
-			height: 18px;
-			width: 18px;
-		}
+	.properties-fp-filter-list {
+		float: right;
 	}
 }

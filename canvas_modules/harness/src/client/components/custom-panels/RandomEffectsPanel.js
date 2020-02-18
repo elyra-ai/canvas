@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2019, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -11,7 +11,7 @@ import React from "react";
 import Button from "carbon-components-react/lib/components/Button";
 import isEqual from "lodash/isEqual";
 import CustomEffectsCtrl from "../ctrl/CustomEffectsCtrl.jsx";
-import Dropdown from "carbon-components-react/lib/components/DropdownV2";
+import Dropdown from "carbon-components-react/lib/components/Dropdown";
 
 class RandomEffectsPanel {
 	static id() {
@@ -406,6 +406,7 @@ class RandomEffectsPanel {
 			}
 		}
 		const dropdownComponent = (<Dropdown
+			id="harness-custom-random-ctrl-dropdown"
 			disabled={false}
 			type={"default"}
 			items={options}

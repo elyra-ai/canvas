@@ -1,11 +1,13 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+
+$properties-wf-title-height: 41px;
 
 .properties-wf-overlay {
 	position: fixed;
@@ -36,10 +38,13 @@
 		margin-right: 0;
 		transition: margin-right 0.3s;
 	}
-	h2 {
-		padding: 5px 10px;
-		height: 45px;
-		border-bottom: 2px solid $ui-03;
+	.properties-wf-title {
+		@include carbon--type-style("productive-heading-01");
+		padding-left: 20px;
+		display: flex;
+		align-items: center;
+		height: $properties-wf-title-height;
+		border-bottom: 1px solid $ui-03;
 	}
 	.properties-modal-buttons {
 		bottom: 0;
@@ -50,6 +55,6 @@
 	.properties-wf-children {
 		padding: 5px 10px;
 		overflow-y: auto;
-		height: calc(100% - (45px * 2));
+		height: calc(100% - (#{$properties-wf-title-height} * 2));
 	}
 }

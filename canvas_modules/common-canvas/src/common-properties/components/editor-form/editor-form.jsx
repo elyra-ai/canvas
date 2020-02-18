@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -14,7 +14,7 @@ import { setActiveTab } from "./../../actions";
 import Tabs from "carbon-components-react/lib/components/Tabs";
 import Tab from "carbon-components-react/lib/components/Tab";
 import PropertyUtil from "./../../util/property-utils.js";
-import { MESSAGE_KEYS } from "./../../constants/constants";
+import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
 import cloneDeep from "lodash/cloneDeep";
@@ -32,9 +32,7 @@ import TextPanel from "./../../panels/text-panel";
 import ActionPanel from "./../../panels/action-panel";
 
 import ActionFactory from "./../../actions/action-factory.js";
-
-import CanvasIcon from "./../../../icons/icon.jsx";
-import Icon from "carbon-components-react/lib/components/Icon";
+import Icon from "./../../../icons/icon.jsx";
 
 const ALERT_TAB_GROUP = "alertMsgs";
 
@@ -150,10 +148,10 @@ class EditorForm extends React.Component {
 				);
 			}
 			if (this.props.rightFlyout) {
-				let panelArrow = <CanvasIcon type="downCaret" />;
+				let panelArrow = <Icon type={CARBON_ICONS.CHEVRONARROWS.DOWN} className="properties-category-caret-down" />;
 				let categoryOpen = false;
 				if (this.props.activeTab === tab.group) {
-					panelArrow = <CanvasIcon type="upCaret" />;
+					panelArrow = <Icon type={CARBON_ICONS.CHEVRONARROWS.UP} className="properties-category-caret-up" />;
 					categoryOpen = true;
 				}
 				tabContent.push(
@@ -161,7 +159,7 @@ class EditorForm extends React.Component {
 						<button type="button" onClick={this._showCategoryPanel.bind(this, tab.group)}
 							className="properties-category-title"
 						>
-							{tab.text.toUpperCase()}{this._getMessageCountForCategory(tab)}
+							{tab.text}{this._getMessageCountForCategory(tab)}
 							{panelArrow}
 						</button>
 						<div className={classNames("properties-category-content", { "show": categoryOpen }) }>
@@ -328,16 +326,15 @@ class EditorForm extends React.Component {
 			/>);
 		case ("staticText"):
 			textClass = classNames("properties-static-text", uiItem.textType);
-			icon = uiItem.textType === "info" ? <div><CanvasIcon type="info" /></div> : null;
+			icon = uiItem.textType === "info" ? <div><Icon type={CARBON_ICONS.INFORMATION} className="properties-static-text-icon-info" /></div> : null;
 			text = <div className={textClass}>{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}</div>;
 			return <div key={"static-text." + key} className="properties-static-text-container">{icon}{text}</div>;
 		case ("linkText"): // linkText used for Alerts tab. Only used internally
 			textClass = classNames("properties-link-text-container", uiItem.textType);
-			if (uiItem.textType === "warning" || uiItem.textType === "error") {
-				icon = (<div><Icon className="info"
-					description=""
-					name={uiItem.textType + "--glyph"}
-				/></div>);
+			if (uiItem.textType === "warning") {
+				icon = <Icon type={CONDITION_MESSAGE_TYPE.WARNING} />;
+			} else if (uiItem.textType === "error") {
+				icon = <Icon type={CONDITION_MESSAGE_TYPE.ERROR} />;
 			}
 			text = (
 				<a className="properties-link-text" onClick={this._handleMessageClick.bind(this, uiItem.controlId)}>

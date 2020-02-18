@@ -13,7 +13,7 @@ Feature: StructureTableControl
 		Then I have selected the "Flyout" properties container type
 		Given I have uploaded common-properties file "structuretable_paramDef.json" of type "parameterDefs"
 
-		Then I open the "Configure Rename fields" summary link in the "TABLES" category
+		Then I open the "Configure Rename fields" summary link in the "Tables" category
 		Then I click the subpanel button in control "structuretableReadonlyColumnDefaultIndex" in row "0"
 		Then I enter "textValue" in textfield "structuretableReadonlyColumnDefaultIndex_0_3" in sub-panel "Rename Subpanel"
 		Then I click on the "Rename Subpanel" panel OK button
@@ -29,5 +29,5 @@ Feature: StructureTableControl
 		Then I have selected the "Flyout" properties container type
 		Given I have uploaded common-properties file "structuretable_paramDef.json" of type "parameterDefs"
 
-		Then I open the "MSE Structure Table" summary link in the "TABLES" category
-		Then I verify the table "ST_mse_table" is of height "476px"
+		Then I open the "MSE Structure Table" summary link in the "Tables" category
+		Then I verify the table "ST_mse_table" is of height "488px"

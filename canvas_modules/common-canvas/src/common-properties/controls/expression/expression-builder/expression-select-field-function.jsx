@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -9,13 +9,14 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Dropdown from "carbon-components-react/lib/components/DropdownV2";
+import Dropdown from "carbon-components-react/lib/components/Dropdown";
 import Tabs from "carbon-components-react/lib/components/Tabs";
 import Tab from "carbon-components-react/lib/components/Tab";
 import FlexibleTable from "./../../../components/flexible-table/flexible-table.jsx";
 import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
 import PropertyUtils from "./../../../util/property-utils";
 import sortBy from "lodash/sortBy";
+import uuid4 from "uuid/v4";
 
 export default class ExpressionSelectFieldOrFunction extends React.Component {
 
@@ -492,6 +493,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		return (
 			<div className="properties-expression-function-select">
 				<Dropdown
+					id={"properties-expression-function-select-dropdown-" + uuid4()}
 					light
 					label={label}
 					items={items}
@@ -512,6 +514,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		return (
 			<div className="properties-expression-field-select">
 				<Dropdown
+					id={"properties-expression-field-select-dropdown-" + uuid4()}
 					light
 					label={label}
 					items={newItems}

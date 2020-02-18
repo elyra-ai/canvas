@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -68,11 +68,11 @@ describe("Palette renders correctly", () => {
 		const wrapper = createMountedPalette();
 		const importCat = findCategoryElement(wrapper, "Import");
 		importCat.simulate("click");
-		// Simulate click on search icon to open palette with search bar
-		const searchIcon = wrapper.find("div.palette-flyout-search-icon");
-		searchIcon.simulate("click");
+		// Simulate click on search input to open palette with search bar
+		const searchInput = wrapper.find("div.palette-flyout-search");
+		searchInput.simulate("click");
 
-		const input = wrapper.find(".palette-flyout-search input");
+		const input = searchInput.find("input");
 		input.simulate("change", { target: { value: "Var" } });
 		expect(wrapper.find(PaletteFlyoutContentListItem)).to.have.length(1);
 

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -93,20 +93,22 @@ $operator-margin: 50%;
 	text-align: center;
 }
 
-.properties-operator-button {
-	margin-bottom: 2px;
-	&.bx--btn--sm {
+.properties-operator-button-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	width: 95px;
+
+	.properties-operator-tooltip-container {
+		width: $operator-width;
+		margin-bottom: 2px;
+	}
+
+	.properties-operator-button {
+		margin-bottom: 2px;
 		height: 20px;
-	}
-	&.first {
-		display: flex;
 		width: $operator-width;
-		float: left;
-	}
-	&.second {
-		display: flex;
-		width: $operator-width;
-		margin-left: $operator-margin;
+		padding: 2px 35px 2px 10px;
 	}
 }
 

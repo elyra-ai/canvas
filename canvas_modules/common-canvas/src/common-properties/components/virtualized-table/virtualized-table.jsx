@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2019, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -14,7 +14,7 @@ import Loading from "carbon-components-react/lib/components/Loading";
 import Checkbox from "carbon-components-react/lib/components/Checkbox";
 import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { TOOL_TIP_DELAY, SORT_DIRECTION, STATES, ROW_SELECTION } from "./../../constants/constants";
+import { TOOL_TIP_DELAY, SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS } from "./../../constants/constants";
 
 import isEmpty from "lodash/isEmpty";
 import uuid4 from "uuid/v4";
@@ -128,8 +128,8 @@ class VirtualizedTable extends React.Component {
 		let sortIcon = null;
 		if (typeof this.props.sortColumns[dataKey] !== "undefined") {
 			sortIcon = this.props.sortColumns[dataKey] === SORT_DIRECTION.ASC
-				? <Icon type="upCaret" disabled={this.props.tableState === STATES.DISABLED} />
-				: <Icon type="downCaret" disabled={this.props.tableState === STATES.DISABLED} />;
+				? <Icon type={CARBON_ICONS.CHEVRONARROWS.UP} disabled={this.props.tableState === STATES.DISABLED} />
+				: <Icon type={CARBON_ICONS.CHEVRONARROWS.DOWN} disabled={this.props.tableState === STATES.DISABLED} />;
 			sortIcon = (<div className="properties-ft-column-sort-icon">
 				{sortIcon}
 			</div>);

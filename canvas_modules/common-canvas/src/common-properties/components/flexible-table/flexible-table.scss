@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -13,6 +13,10 @@
 	margin-bottom: 6px;
 	.properties-ft-search-text {
 		float: left;
+
+		svg {
+			fill: $icon-01;
+		}
 	}
 	&.disabled {
 		opacity: 0.5;
@@ -20,7 +24,7 @@
 }
 
 .properties-ft-container-wrapper {
-	height: 200px;
+	height: 400px;
 	width: 100%;
 	position: relative;
 	overflow: hidden;
@@ -65,7 +69,7 @@
 
 	div[role="properties-header-row"] {
 		width: inherit;
-		background-color: $ui-02;
+		background-color: $ui-03;
 		display: inline-flex;
 		height: 2.5em;
 
@@ -79,24 +83,26 @@
 			}
 			// sort icon in header
 			svg {
-				padding-left: 3px;
+				margin-left: 3px;
 				width: 11px;
 				height: 11px;
 			}
 			// sort icon viewable when hover or sorted column
 			.properties-ft-column-sort-icon
 			svg:not(:root) {
-				stroke: none;
+				display: none;
 			}
 			&:hover:not([disabled])
 			.properties-ft-column-sort-icon
 			svg:not(:root) {
-				stroke: $brand-02;
+				display: inline;
+				stroke: $icon-01;
 			}
 			.sort-column-active
 			.properties-ft-column-sort-icon
 			svg:not(:root) {
-				stroke: $brand-02;
+				display: inline;
+				stroke: $icon-01;
 			}
 		}
 

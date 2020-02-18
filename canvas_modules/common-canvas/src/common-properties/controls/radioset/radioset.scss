@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -12,7 +12,7 @@
 		display: none;
 	}
 	.bx--form-item {
-		margin-bottom: 5px;
+		margin-bottom: 4px;
 	}
 }
 
@@ -23,9 +23,14 @@
 		flex-wrap: wrap;
 	}
 	.properties-radioset-panel {
-		margin-bottom: 5px;
+		margin-bottom: 4px;
+		margin-right: 12px;
 		&:last-of-type {
 			margin-bottom: 0; // don't want margin when last radio button in group
+		}
+
+		.bx--radio-button-wrapper > label {
+			justify-content: left; // override carbon style to center justify radio-button labels
 		}
 	}
 	&.error {

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -11,12 +11,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import { STATES, TOOL_TIP_DELAY_ICON } from "./../../constants/constants.js";
-import IconButton from "./../icon-button";
+import { STATES, TOOL_TIP_DELAY_ICON, CARBON_ICONS } from "./../../constants/constants.js";
+import Button from "carbon-components-react/lib/components/Button";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import isEmpty from "lodash/isEmpty";
 import uuid4 from "uuid/v4";
-import Icon from "carbon-components-react/lib/components/Icon";
+import Icon from "./../../../icons/icon.jsx";
 
 import ActionFactory from "./../../actions/action-factory.js";
 
@@ -55,7 +55,7 @@ class ControlItem extends React.Component {
 						delay={TOOL_TIP_DELAY_ICON}
 						disable={hidden || disabled}
 					>
-						<Icon className={"info"} description="" name={"info--glyph"} />
+						<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
 					</Tooltip>);
 				}
 			}
@@ -65,12 +65,14 @@ class ControlItem extends React.Component {
 			}
 			let numberGenerator;
 			if (this.props.control.label.numberGenerator) {
-				numberGenerator = (<IconButton
-					className="properties-number-generator"
-					children={this.props.control.label.numberGenerator.label.default}
-					onClick={generateNumber} hide={hidden}
+				numberGenerator = (<Button
+					className={classNames("properties-number-generator", { "hide": hidden })}
+					onClick={generateNumber}
 					disabled={disabled}
-				/>);
+					kind="ghost"
+				>
+					<span>{this.props.control.label.numberGenerator.label.default}</span>
+				</Button>);
 			}
 			label = (
 				<div className="properties-label-container">

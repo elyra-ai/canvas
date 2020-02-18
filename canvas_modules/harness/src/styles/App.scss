@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -85,7 +85,7 @@ $harness-navbar-icon-width: 48px;
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-	background-color: $ui-02;
+	background-color: $ui-01;
 	border-bottom: 2px solid $ui-03;
 }
 
@@ -100,7 +100,7 @@ $harness-navbar-icon-width: 48px;
 		text-align: center;
 		padding: 14px;
 		width: 18px;
-		fill: $brand-01;
+		fill: $icon-01;
 		box-sizing: content-box;
 		cursor: pointer;
 
@@ -137,17 +137,17 @@ $harness-navbar-icon-width: 48px;
 		background-color: transparent;
 		padding: 0 5px;
 		font-size: 12px;
-		color: $brand-01;
+		color: $text-01;
 
 		&:hover {
-			color: $text-01;
+			color: $link-01;
 			text-decoration-line: underline;
 		}
 		&.last-item {
 			cursor: default;
 			height: 10px;
 			&:hover {
-				color: $brand-01;
+				color: $text-01;
 				text-decoration-line: none;
 			}
 		}

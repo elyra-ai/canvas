@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -15,17 +15,18 @@
 	font-size: 12px;
 	position: fixed;
 	padding: 5px 10px;
-	background-color: $ui-02;
-	border: 1px solid $ui-03;
+	background-color: $inverse-02;
+	border: 1px solid $inverse-02;
 	font-weight: 400;
 	opacity: 90%;
-	color: $text-02;
+	color: $inverse-01;
 	line-height: 1.2;
 	text-align: center;
 	z-index: 8000;
 	pointer-events: none;
 	word-wrap: break-word;
 	max-width: 180px;
+	border-radius: 2px;
 	transition: opacity 0.1s ease-in-out, visibility 0.1s ease-in-out, transform 0.1s cubic-bezier(0.71, 1.7, 0.77, 1.24);
 }
 
@@ -65,12 +66,12 @@
 
 
 .common-canvas-tooltip #tipArrow polyline {
-	fill: $ui-02;
+	fill: $inverse-02;
 	stroke-width: 0;
 }
 
 .common-canvas-tooltip #tipArrow polygon {
-	fill: $ui-03;
+	fill: $inverse-02;
 }
 
 .common-canvas-tooltip[aria-hidden="false"] {
@@ -87,19 +88,18 @@
 .tip-palette-item, .tip-node {
 	min-width: 80px;
 	max-width: 180px;
-	padding: 10px 5px;
 	text-align: left;
 }
 
 .tip-palette-category {
 	font-size: 10px;
 	padding-bottom: 4px;
-	color: $text-02;
+	color: $inverse-01;
 }
 
 .tip-palette-label, .tip-node-label {
 	font-weight: 600;
-	color: $text-01;
+	color: $inverse-01;
 }
 
 .tip-palette-desc, .tip-node-desc {
@@ -116,7 +116,7 @@
 		fill: $support-03;
 	}
 	&.error {
-		fill: $support-03;
+		fill: $support-01;
 	}
 }
 
@@ -125,13 +125,11 @@
 }
 
 .properties-tooltips {
-	background-color: $ui-01;
-	color: $text-01;
-	min-width: 80px;
+	background-color: $inverse-02;
+	color: $inverse-01;
 	max-width: 250px;
-	padding: 5px 10px;
 }
 
 .properties-tooltips #tipArrow polyline {
-	fill: $ui-01;
+	fill: $inverse-02;
 }

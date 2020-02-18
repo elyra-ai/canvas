@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -16,12 +16,12 @@ module.exports = function() {
 
 		try {
 			if (containerType === "Custom" || containerType === "Flyout") {
-				var customContainer = browser.$("#harness-sidepanel-properties-container-type").$$(".radioButtonWrapper")[0].$("label");
+				var customContainer = browser.$("#harness-sidepanel-properties-container-type").$$(".bx--radio-button-wrapper")[0].$("label");
 				customContainer.scroll();
 				browser.pause(500);
 				customContainer.click();
 			} else if (containerType === "Modal") {
-				var modalContainer = browser.$("#harness-sidepanel-properties-container-type").$$(".radioButtonWrapper")[1].$("label");
+				var modalContainer = browser.$("#harness-sidepanel-properties-container-type").$$(".bx--radio-button-wrapper")[1].$("label");
 				modalContainer.scroll();
 				browser.pause(500);
 				modalContainer.click();

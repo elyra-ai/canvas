@@ -51,7 +51,7 @@ describe("Toolbar renders correctly", () => {
 		const actions = wrapper.find(".list-item-containers");
 		expect(actions.length).to.equal(5);
 
-		expect(wrapper.find(".list-item.list-item-disabled").length).to.equal(1); // Palette is never disabled
+		expect(wrapper.find("button.list-item.list-item-disabled").length).to.equal(1); // Palette is never disabled
 	});
 
 	it("should render one <Toolbar/> component with no icons on the left side of the toolbar", () => {

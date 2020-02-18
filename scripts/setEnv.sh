@@ -13,6 +13,9 @@
 set -e
 
 printf "registry=https://na.artifactory.swg-devops.com:443/artifactory/api/npm/wcp-wdp-npm-virtual/\n" >> .npmrc
+
+printf "@ibm-analytics:registry=https://na.artifactory.swg-devops.com/artifactory/api/npm/hyc-design-npm-local/\n" >> .npmrc
+
 curl -H "X-JFrog-Art-Api:${ARTIFACTORY_NPM_API_KEY}" -X GET https://na.artifactory.swg-devops.com/artifactory/api/npm/auth >> .npmrc
 
 cp .npmrc ./canvas_modules/common-canvas/

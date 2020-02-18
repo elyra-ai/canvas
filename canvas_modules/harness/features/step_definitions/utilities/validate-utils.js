@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -419,7 +419,7 @@ function addTextForComment(comId, newCommentText) {
 	// Wait a moment for the keys commands above to execute
 	browser.pause(1000);
 	// Click somewhere on the canvas (hopefully nothing is there) to go out of edit mode.
-	browser.leftClick("#common-canvas-items-container-0", 400, 1);
+	browser.leftClick("#common-canvas-items-container-0", 400, 41);
 
 	// Verify that the text has a clip-path within its style
 	var textSelector = "[data-id='comment_text_" + comId + "']";

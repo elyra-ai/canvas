@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -13,11 +13,12 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import IconButton from "../../components/icon-button";
 import WideFlyout from "./../../components/wide-flyout";
-import Icon from "carbon-components-react/lib/components/Icon";
+import Icon from "./../../../icons/icon.jsx";
+
 import isEmpty from "lodash/isEmpty";
 import PropertyUtils from "./../../util/property-utils";
 import ControlUtils from "./../../util/control-utils";
-import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
+import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, CARBON_ICONS } from "./../../constants/constants";
 import uuid4 from "uuid/v4";
 import { STATES } from "./../../constants/constants.js";
 import { Type, ParamRole } from "./../../constants/form-constants.js";
@@ -240,13 +241,14 @@ class SummaryPanel extends React.Component {
 				descriptionText = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 					MESSAGE_KEYS.CONTROL_SUMMARY_WARNING, { warningMsgCount: warningCount });
 			}
+
 			return (
 				<Tooltip
 					id= {uuid4() + "summary-icon"}
 					tip={descriptionText}
 					className="properties-tooltips"
 				>
-					<Icon className={msg.type} name={msg.type + "--glyph"} description="" />
+					{<Icon type={msg.type} className={`properties-summary-link-icon ${msg.type}`} />}
 				</Tooltip>
 			);
 		}
@@ -258,7 +260,7 @@ class SummaryPanel extends React.Component {
 		const link = (<div className="properties-summary-link-container">
 			<IconButton
 				className="properties-summary-link-button"
-				icon="add--outline"
+				icon={<Icon type={CARBON_ICONS.ADD} />}
 				onClick={this.handleLinkClicked}
 			>
 				{this.props.panel.label}

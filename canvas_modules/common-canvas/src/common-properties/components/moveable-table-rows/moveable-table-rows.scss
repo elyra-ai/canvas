@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -10,31 +10,22 @@
 // vertical align row reorder buttons in moveable tables
 .properties-mr-button-container {
 	width: 16px;
-	padding-left: 1px;
+	padding-left: 2px;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 }
 
-.table-row-move-button {
-	-webkit-appearance: none;
-	border: 0;
-	outline: none;
-	background-color: inherit;
+.table-row-move-button.bx--btn--ghost {
 	padding: 0;
-	margin-bottom: 9px;
-	&:not([disabled]) {
-		cursor: pointer;
-		svg:hover {
-			border-bottom: 2px solid $brand-01;
-			padding-bottom: 0;
-		}
-	}
+	min-height: 24px;
+	margin-bottom: 8px;
+
 	> svg {
-		height: 14px;
-		width: 14px;
-		padding-bottom: 2px;
+		height: 16px;
+		width: 16px;
+		margin-left: 0;
 	}
 }
 

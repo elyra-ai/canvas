@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -106,45 +106,45 @@ describe("getDMFieldIcon retrieves correct icon type for each measurement level 
 		wrapper.unmount();
 	});
 
-	it("measure level of range should return measurementScale icon", () => {
+	it("measure level of range should return measurement-scale icon", () => {
 		// Open rename fields Summary Panel in structuretableParamDef
 		const fields = controller.getDatasetMetadataFields();
 		const icon = PropertyUtils.getDMFieldIcon(fields, "Age", "measure");
-		expect(icon).to.equal("measurementScale");
+		expect(icon).to.equal("measurement-scale");
 	});
-	it("measure level of ordered_set should return measurementOrdinal icon", () => {
+	it("measure level of ordered_set should return measurement-ordinal icon", () => {
 		const fields = controller.getDatasetMetadataFields();
 		const icon = PropertyUtils.getDMFieldIcon(fields, "Sex", "measure");
-		expect(icon).to.equal("measurementOrdinal");
+		expect(icon).to.equal("measurement-ordinal");
 	});
-	it("measure level of discrete should return measurementDiscrete icon", () => {
+	it("measure level of discrete should return measurement-discrete icon", () => {
 		const fields = controller.getDatasetMetadataFields();
 		const icon = PropertyUtils.getDMFieldIcon(fields, "BP", "measure");
-		expect(icon).to.equal("measurementDiscrete");
+		expect(icon).to.equal("measurement-discrete");
 	});
-	it("measure level of set should return measurementNominal icon", () => {
+	it("measure level of set should return measurement-nominal icon", () => {
 		const fields = controller.getDatasetMetadataFields();
 		const icon = PropertyUtils.getDMFieldIcon(fields, "Cholesterol", "measure");
-		expect(icon).to.equal("measurementNominal");
+		expect(icon).to.equal("measurement-nominal");
 	});
-	it("measure level of flag should return measurementFlag icon", () => {
+	it("measure level of flag should return measurement-flag icon", () => {
 		const fields = controller.getDatasetMetadataFields();
 		const icon = PropertyUtils.getDMFieldIcon(fields, "Na", "measure");
-		expect(icon).to.equal("measurementFlag");
+		expect(icon).to.equal("measurement-flag");
 	});
-	it("measure level of collection should return measurementNominal icon", () => {
+	it("measure level of collection should return measurement-nominal icon", () => {
 		const fields = controller.getDatasetMetadataFields();
 		const icon = PropertyUtils.getDMFieldIcon(fields, "K", "measure");
-		expect(icon).to.equal("measurementNominal");
+		expect(icon).to.equal("measurement-nominal");
 	});
-	it("measure level of geospatial should return measurementNominal icon", () => {
+	it("measure level of geospatial should return measurement-nominal icon", () => {
 		const fields = controller.getDatasetMetadataFields();
 		const icon = PropertyUtils.getDMFieldIcon(fields, "Drug", "measure");
-		expect(icon).to.equal("measurementNominal");
+		expect(icon).to.equal("measurement-nominal");
 	});
 	it("field with no measurement level should return empty icon", () => {
 		const fields = controller.getDatasetMetadataFields();
 		const icon = PropertyUtils.getDMFieldIcon(fields, "Ag", "measure");
-		expect(icon).to.equal("measurementEmpty");
+		expect(icon).to.equal("measurement-empty");
 	});
 });

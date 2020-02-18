@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2018, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -19,6 +19,7 @@ import Button from "carbon-components-react/lib/components/Button";
 
 import { MESSAGE_KEYS, DATA_TYPE, TOOL_TIP_DELAY, SORT_DIRECTION, ROW_SELECTION } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
+import { ArrowLeft24, Reset24 } from "@carbon/icons-react";
 
 import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
@@ -143,12 +144,13 @@ export default class FieldPicker extends React.Component {
 			);
 			if (this.props.dmIcon) {
 				const metadata = this.props.controller.getDatasetMetadataFields();
-				const dmIcon = PropertyUtils.getDMFieldIcon(metadata,
+				const dmIconType = PropertyUtils.getDMFieldIcon(metadata,
 					field.origName, this.props.dmIcon);
+				const dmIcon = dmIconType ? <Icon type={dmIconType} /> : null;
 				fieldContent = (
 					<div className="properties-fp-field">
 						<div className="properties-fp-field-type-icon">
-							<Icon type={dmIcon} />
+							{dmIcon}
 						</div>
 						<div className="properties-fp-field-name">
 							{field.origName}
@@ -315,10 +317,10 @@ export default class FieldPicker extends React.Component {
 					<div>
 						<Button
 							className="properties-fp-back-button"
-							icon="arrow--left"
-							type="button"
-							small
-							kind="secondary"
+							renderIcon={ArrowLeft24}
+							iconDescription={this.props.title}
+							size="small"
+							kind="primary"
 							onClick={this.handleSave}
 						/>
 						<label className="properties-fp-button-label">{this.props.title}</label>
@@ -348,17 +350,16 @@ export default class FieldPicker extends React.Component {
 					delay={TOOL_TIP_DELAY}
 					className="properties-tooltips"
 				>
-					<button type="button"
+					<Button
 						className="properties-fp-reset-button-container"
 						onClick={this.handleReset}
-						onMouseEnter={this.mouseEnterResetButton}
-						onMouseLeave={this.mouseLeaveResetButton}
+						renderIcon={Reset24}
+						iconDescription={resetLabel}
+						size="small"
+						kind="ghost"
 					>
-						<div className="properties-fp-reset-button label">{resetLabel}</div>
-						<div className="properties-fp-reset-button icon">
-							<Icon type="reset" />
-						</div>
-					</button>
+						<span>{resetLabel}</span>
+					</Button>
 				</Tooltip>
 			</div>);
 	}
@@ -392,13 +393,15 @@ export default class FieldPicker extends React.Component {
 							className="properties-tooltips"
 							disable={isEmpty(filter.type)}
 						>
-							<button type="button" className="properties-fp-filter"
+							<Button
+								className="properties-fp-filter"
 								data-type={filter.type}
 								onClick={that.filterType.bind(that)}
 								aria-label={filterLabel + " " + filter.type}
+								kind="ghost"
 							>
 								<Icon type={filter.type} disabled={!enabled} />
-							</button>
+							</Button>
 						</Tooltip>
 					</div>
 				</li>

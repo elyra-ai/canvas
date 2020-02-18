@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -37,7 +37,7 @@ export default class ExpressionSelectOperator extends React.Component {
 					</div>
 				);
 				operatorButtons.push(
-					<div key={"expression-operator-" + index}>
+					<div className="properties-operator-tooltip-container" key={"expression-operator-" + index}>
 						<Tooltip
 							id={tooltipId}
 							tip={tooltip}
@@ -45,18 +45,15 @@ export default class ExpressionSelectOperator extends React.Component {
 							delay={TOOL_TIP_DELAY}
 							className="properties-tooltips"
 						>
-							<div >
-								<Button
-									className={classNames("properties-operator-button", { "first": (index % 2 === 0),
-										"second": !(index % 2 === 0) })}
-									type="button"
-									small
-									kind="secondary"
-									onClick={this.onOperatorClick.bind(this, operator.value)}
-								>
-									{operator.locLabel}
-								</Button>
-							</div>
+							<Button
+								className={classNames("properties-operator-button", { "first": (index % 2 === 0),
+									"second": !(index % 2 === 0) })}
+								size="small"
+								kind="tertiary"
+								onClick={this.onOperatorClick.bind(this, operator.value)}
+							>
+								{operator.locLabel}
+							</Button>
 						</Tooltip>
 					</div>
 				);
@@ -69,7 +66,9 @@ export default class ExpressionSelectOperator extends React.Component {
 					<div className="properties-operator-title" >
 						<span>{operatorTitle}</span>
 					</div>
-					{operatorButtons}
+					<div className="properties-operator-button-container">
+						{operatorButtons}
+					</div>
 					<br />
 				</div>
 			);

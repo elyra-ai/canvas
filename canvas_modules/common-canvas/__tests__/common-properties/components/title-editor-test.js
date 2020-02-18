@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2018, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -61,7 +61,7 @@ describe("title-editor renders correctly", () => {
 				help={help}
 			/>
 		);
-		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']");
+		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']").hostNodes();
 		expect(helpButton).to.have.length(1);
 		helpButton.simulate("click");
 	});
@@ -86,7 +86,7 @@ describe("title-editor renders correctly", () => {
 				help={help}
 			/>
 		);
-		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']");
+		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']").hostNodes();
 		helpButton.simulate("click");
 	});
 	it("test edit link", () => {
@@ -99,7 +99,7 @@ describe("title-editor renders correctly", () => {
 				help={help}
 			/>
 		);
-		const titleEdit = wrapper.find(".properties-title-editor-btn[data-id='edit']");
+		const titleEdit = wrapper.find(".properties-title-editor-btn[data-id='edit']").hostNodes();
 		titleEdit.simulate("click");
 		expect(wrapper.find("input").getDOMNode()).to.equal(document.activeElement);
 	});

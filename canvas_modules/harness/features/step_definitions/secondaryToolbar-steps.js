@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -124,10 +124,12 @@ module.exports = function() {
 			if (action.getAttribute("id") === actionId) {
 				actionFound = true;
 				if (iconState === "disabled") {
-					expect(action.$("a").getAttribute("class")).toEqual("list-item list-item-disabled");
+					expect(action.$("button").getAttribute("class")
+						.indexOf("list-item list-item-disabled"))
+						.toBeGreaterThan(-1);
 					break;
 				}
-				expect(action.$("a").getAttribute("class")).toEqual("list-item");
+				expect(action.$("button").getAttribute("class")).toEqual("list-item");
 				break;
 			}
 		}
@@ -140,7 +142,7 @@ module.exports = function() {
 		for (const action of actionItems) {
 			if (action.getAttribute("id") === actionId) {
 				actionFound = true;
-				expect(action.$("svg").getAttribute("type")).toEqual(svgType);
+				expect(action.getAttribute("class").includes(svgType)).toBeGreaterThan(-1);
 			}
 		}
 		expect(actionFound).toEqual(true);
