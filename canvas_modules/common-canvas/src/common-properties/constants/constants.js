@@ -200,17 +200,5 @@ _defineConstant("CARBON_ICONS", {
 		DISCRETE: "measurement-discrete"
 	},
 	INFORMATION: "informationHollow",
-	TOOLBAR_STOP: "stop",
-	TOOLBAR_RUN: "run",
-	TOOLBAR_UNDO: "undo",
-	TOOLBAR_REDO: "redo",
-	TOOLBAR_CUT: "cut",
-	TOOLBAR_COPY: "copy",
-	TOOLBAR_PASTE: "paste",
-	TOOLBAR_ADD_COMMENT: "addComment",
-	TOOLBAR_DELETE: "delete",
-	TOOLBAR_ZOOM_IN: "zoomIn",
-	TOOLBAR_ZOOM_OUT: "zoomOut",
-	TOOLBAR_ZOOM_FIT: "zoomToFit",
 	SETTINGS: "settings"
 });

@@ -112,6 +112,16 @@ export default class Logger {
 	static setLoggingState(state) {
 		Logger.active = state;
 	}
+
+	static switchLoggingState() {
+		if (Logger.active) {
+			new Logger("Logger").log("Switching canvas logging off");
+			Logger.active = false;
+		} else {
+			Logger.active = true;
+			new Logger("Logger").log("Switching canvas logging on");
+		}
+	}
 }
 
 // Static variable can be switched on and off by pressing Ctrl+Shift+Option+P

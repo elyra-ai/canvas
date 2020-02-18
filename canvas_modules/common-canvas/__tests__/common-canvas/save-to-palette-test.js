@@ -35,15 +35,11 @@ describe("Expand and Collapse Supernode Action", () => {
 		canvasController.setPipelineFlowPalette(paletteJson);
 		canvasController.setPipelineFlow(startPipelineFlow);
 
-		const source = {
-			selectedObjectIds: [
-				"id8I6RH2V91XW",
-				"idGWRVT47XDV"
-			],
-			pipelineId: "153651d6-9b88-423c-b01b-861f12d01489"
-		};
+		canvasController.setSelections([
+			"id8I6RH2V91XW",
+			"idGWRVT47XDV"
+		]);
 
-		canvasController.contextMenuHandler(source);
 		canvasController.contextMenuActionHandler("saveToPalette");
 
 		const paletteData = canvasController.getPaletteData();
@@ -81,14 +77,7 @@ describe("Expand and Collapse Supernode Action", () => {
 		canvasController.setPipelineFlowPalette(paletteJson);
 		canvasController.setPipelineFlow(supernodeCanvas);
 
-		const source = {
-			selectedObjectIds: [
-				"7015d906-2eae-45c1-999e-fb888ed957e5"
-			],
-			pipelineId: "153651d6-9b88-423c-b01b-861f12d01489"
-		};
-
-		canvasController.contextMenuHandler(source);
+		canvasController.setSelections(["7015d906-2eae-45c1-999e-fb888ed957e5"]);
 		canvasController.contextMenuActionHandler("saveToPalette");
 
 		const paletteData = canvasController.getPaletteData();

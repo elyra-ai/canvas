@@ -886,6 +886,10 @@ export default class ObjectModel {
 		return objs;
 	}
 
+	getSelectedObjects() {
+		return this.getSelectedNodes().concat(this.getSelectedComments());
+	}
+
 	getSelectionInfo() {
 		return this.store.getState().selectioninfo;
 	}
@@ -932,7 +936,7 @@ export default class ObjectModel {
 
 	deleteSelectedObjects() {
 		const apiPipeline = this.getSelectedPipeline();
-		apiPipeline.deleteObjects({ "selectedObjectIds": this.getSelectedObjectIds() });
+		apiPipeline.deleteObjects(this.getSelectedObjectIds());
 	}
 
 	selectAll(pipelineId) {

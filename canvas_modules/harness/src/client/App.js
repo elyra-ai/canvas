@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 25] */
+/* eslint complexity: ["error", 22] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
 
@@ -252,9 +252,6 @@ export default class App extends React.Component {
 
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
-		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
-		this.extraCanvasContextMenuActionHandler = this.extraCanvasContextMenuActionHandler.bind(this);
-		this.toolbarMenuActionHandler = this.toolbarMenuActionHandler.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.extraCanvasEditActionHandler = this.extraCanvasEditActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
@@ -264,7 +261,6 @@ export default class App extends React.Component {
 		this.selectionChangeHandler2 = this.selectionChangeHandler2.bind(this);
 		this.tipHandler = this.tipHandler.bind(this);
 
-		this.applyDiagramEdit = this.applyDiagramEdit.bind(this);
 		this.getNodeForm = this.getNodeForm.bind(this);
 		this.refreshContent = this.refreshContent.bind(this);
 
@@ -1019,13 +1015,12 @@ export default class App extends React.Component {
 		});
 	}
 
-	log(evt, data, content) {
+	log(evt, data) {
 		const now = new Date();
 		const event = {
 			"timestamp": now.toLocaleString() + " " + now.getMilliseconds(),
 			"event": evt,
-			"data": data,
-			"content": content
+			"data": data
 		};
 
 		this.consoleout.push(event);
@@ -1144,10 +1139,6 @@ export default class App extends React.Component {
 		}
 	}
 
-	applyDiagramEdit(data, options) {
-		this.log("applyDiagramEdit()", data.editType);
-	}
-
 	applyPropertyChanges(form, appData, additionalInfo, undoInfo, uiProperties) {
 		const data = {
 			form: form,
@@ -1216,24 +1207,7 @@ export default class App extends React.Component {
 		if (inExtraCanvas) {
 			canvasController = this.canvasController2;
 		}
-		var type = "";
-		if (data.newNode && data.newNode.op) {
-			type = data.newNode.op;
-		} else if (data.nodes) {
-			if (data.nodes[0].id) {
-				type = data.nodes[0].id; // Node link
-			} else {
-				type = data.nodes[0]; // Comment link
-			}
-		}
 
-		if (data.targetNodes) {
-			if (data.targetNodes[0].id) {
-				type += " to " + data.targetNodes[0].id; // Node link
-			} else {
-				type += " to " + data.targetNodes[0]; // Comment link
-			}
-		}
 		if (data.editType === "displaySubPipeline" || data.editType === "displayPreviousPipeline") {
 			this.setFlowNotificationMessages();
 			this.setBreadcrumbsDefinition(data.pipelineInfo.pipelineId);
@@ -1254,89 +1228,21 @@ export default class App extends React.Component {
 				data.nodeTemplate.label = data.dataTransfer.files[0].name;
 				canvasController.editActionHandler(data);
 			}
-		}
-		this.log("editActionHandler() " + data.editType, type, data.label);
-	}
 
-	extraCanvasEditActionHandler(data) {
-		this.editActionHandler(data, true);
-	}
+		} else if (data.editType === "editNode") {
+			this.editNodeHandler(data.targetObject.id, data.pipelineId, inExtraCanvas);
 
-	contextMenuActionHandler(action, source, inExtraCanvas) {
-		if (action === "streamProperties") {
-			this.log("action: streamProperties");
-		} else if (action === "addComment") {
-			this.applyDiagramEdit({
-				editType: "createComment",
-				label: " ",
-				nodes: source.selectedObjectIds,
-				offsetX: source.mousePos.x,
-				offsetY: source.mousePos.y,
-				width: 0,
-				height: 0
-			});
-		} else if (action === "deleteLink") {
-			this.log("action: deleteLink", source.id);
-		} else if (action === "editNode") {
-			this.editNodeHandler(source.targetObject.id, source.pipelineId, inExtraCanvas);
-		} else if (action === "viewModel") {
-			this.log("action: viewModel", source.targetObject.id);
-		} else if (action === "disconnectNode") {
-			this.log("action: disconnectNode", source.selectedObjectIds, source.targetObject.label);
-		} else if (action === "createSuperNode") {
-			this.log("action: createSuperNode", source.selectedObjectIds, source.targetObject.label);
-		} else if (action === "expandSuperNodeInPlace") {
-			this.log("action: expandSuperNodeInPlace", source.targetObject.id);
-		} else if (action === "collapseSuperNodeInPlace") {
-			this.log("action: collapseSuperNodeInPlace", source.targetObject.id);
-		} else if (action === "deleteObjects") {
-			this.deleteObjectsActionHandler(source);
-		} else if (action === "executeNode") {
-			this.log("action: executeNode", source.targetObject.id);
-		} else if (action === "previewNode") {
-			this.log("action: previewNode", source.targetObject.id);
-		} else if (action === "deploy") {
-			this.log("action: deploy", source.targetObject.id);
-		} else if (action === "highlightBranch" || action === "highlightDownstream" || action === "highlightUpstream") {
-			this.log("action: " + action);
-			// this.canvasController.setSubdueStyle("opacity:0.4");
-		} else if (action === "unhighlight") {
-			this.log("action: unhighlight");
-			// this.canvasController.setSubdueStyle(null);
-		}
-	}
-
-	extraCanvasContextMenuActionHandler(action, source) {
-		this.contextMenuActionHandler(action, source, true);
-	}
-
-	toolbarMenuActionHandler(action, source) {
-		if (action === "execute") {
-			this.log("toolbar action: executeNode");
-		} else if (action === "undo") {
-			this.log("toolbar action: undo");
-		} else if (action === "redo") {
-			this.log("toolbar action: redo");
-		} else if (action === "addComment") {
-			this.log("toolbar action: addComment", source);
-		} else if (action === "delete") {
-			this.log("toolbar action: delete", source);
-		} else if (action === "run") {
+		} else if (data.editType === "run") {
 			if (this.state.selectedCanvasDropdownFile === "allTypesCanvas.json" ||
 					this.state.selectedCanvasDropdownFile === "stylesCanvas.json") {
 				this.runProgress();
 			}
 		}
+		this.log("editActionHandler(): " + data.editType, data);
 	}
 
-	deleteObjectsActionHandler(source) {
-		if (typeof source.targetObject.label !== "undefined") {
-			this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.label);
-		} else if (typeof source.targetObject.content !== "undefined") {
-			this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.content);
-		} else {
-			this.log("action: deleteObjects", source.selectedObjectIds, "");
-		}
+	extraCanvasEditActionHandler(data) {
+		this.editActionHandler(data, true);
 	}
 
 	decorationActionHandler(object, id, pipelineId) {
@@ -2089,8 +1995,8 @@ export default class App extends React.Component {
 			{ action: "cut", label: "Cut", enable: true },
 			{ action: "copy", label: "Copy", enable: true },
 			{ action: "paste", label: "Paste", enable: true },
-			{ action: "addComment", label: "Add Comment", enable: true },
-			{ action: "delete", label: "Delete", enable: true },
+			{ action: "createAutoComment", label: "Add Comment", enable: true },
+			{ action: "deleteSelectedObjects", label: "Delete", enable: true },
 			{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
 			{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
 		];
@@ -2185,7 +2091,6 @@ export default class App extends React.Component {
 			<CommonCanvas
 				config={commonCanvasConfig}
 				contextMenuHandler={this.contextMenuHandler}
-				contextMenuActionHandler= {this.contextMenuActionHandler}
 				editActionHandler= {editActionHandler}
 				clickActionHandler= {this.clickActionHandler}
 				decorationActionHandler= {decorationActionHandler}
@@ -2196,7 +2101,6 @@ export default class App extends React.Component {
 				notificationConfig={notificationConfig}
 				contextMenuConfig={contextMenuConfig}
 				keyboardConfig={keyboardConfig}
-				toolbarMenuActionHandler={this.toolbarMenuActionHandler}
 				rightFlyoutContent={rightFlyoutContent}
 				showRightFlyout={showRightFlyoutProperties}
 				canvasController={this.canvasController}
@@ -2215,7 +2119,6 @@ export default class App extends React.Component {
 						<CommonCanvas
 							config={commonCanvasConfig2}
 							contextMenuHandler={this.contextMenuHandler}
-							contextMenuActionHandler= {this.extraCanvasContextMenuActionHandler}
 							editActionHandler= {this.extraCanvasEditActionHandler}
 							clickActionHandler= {this.extraCanvasClickActionHandler}
 							toolbarConfig={toolbarConfig}

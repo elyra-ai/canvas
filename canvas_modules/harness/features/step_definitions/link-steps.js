@@ -9,12 +9,12 @@
 /* eslint no-console: "off" */
 /* eslint max-len: "off" */
 
-import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel,
+import { containLinkInObjectModel, getCommentIdFromObjectModel,
 	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
 	getLinkFromAPIName, getLinkSelector, getLinksCount,
 	getNodeIdFromObjectModel, getNodePortSelector, getNodePortSelectorInSubFlow,
 	getNodeSelector, getObjectModelCount, getPortLinks } from "./utilities/validate-utils.js";
-import { getCanvasData, getEventLogData } from "./utilities/test-utils.js";
+import { getCanvasData, getLastEventLogData } from "./utilities/test-utils.js";
 import { simulateD3LinkCreation } from "./utilities/dragAndDrop-utils.js";
 
 /* global browser */
@@ -46,10 +46,11 @@ module.exports = function() {
 				expect(returnVal).toBe(1);
 
 				// verify that an event for a new link is in the external object model event log
-				var eventLog = getEventLogData();
-				returnVal = containLinkEvent(eventLog, srcNodeId, destNodeId,
-					"editActionHandler() linkNodes");
-				expect(returnVal).toBe(1);
+				const lastEventLogEntry = getLastEventLogData();
+				expect(lastEventLogEntry.event).toBe("editActionHandler(): linkNodes");
+				expect(lastEventLogEntry.data.nodes[0].id).toBe(srcNodeId);
+				expect(lastEventLogEntry.data.targetNodes[0].id).toBe(destNodeId);
+
 			} catch (err) {
 				console.log("Error = " + err);
 				throw err;
@@ -80,10 +81,11 @@ module.exports = function() {
 			expect(returnVal).toBe(1);
 
 			// verify that an event for a new link is in the external object model event log
-			var eventLog = getEventLogData();
-			returnVal = containLinkEvent(eventLog, srcNodeId,
-				destNodeId, "editActionHandler() linkComment");
-			expect(returnVal).toBe(1);
+			const lastEventLogEntry = getLastEventLogData();
+			expect(lastEventLogEntry.event).toBe("editActionHandler(): linkComment");
+			expect(lastEventLogEntry.data.nodes[0]).toBe(srcNodeId);
+			expect(lastEventLogEntry.data.targetNodes[0]).toBe(destNodeId);
+
 		});
 
 	// Then I delete link between comment 1 and node 1 the "Derive" node

@@ -115,6 +115,21 @@ _defineConstant("CANVAS_CARBON_ICONS", {
 	SEARCH: "search"
 });
 
+_defineConstant("TOOLBAR_ACTIONS", {
+	TOOLBAR_STOP: "stop",
+	TOOLBAR_RUN: "run",
+	TOOLBAR_UNDO: "undo",
+	TOOLBAR_REDO: "redo",
+	TOOLBAR_CUT: "cut",
+	TOOLBAR_COPY: "copy",
+	TOOLBAR_PASTE: "paste",
+	TOOLBAR_CREATE_AUTO_COMMENT: "createAutoComment",
+	TOOLBAR_DELETE_SELECTED_OBJECTS: "deleteSelectedObjects",
+	TOOLBAR_ZOOM_IN: "zoomIn",
+	TOOLBAR_ZOOM_OUT: "zoomOut",
+	TOOLBAR_ZOOM_FIT: "zoomToFit"
+});
+
 _defineConstant("NODE_MENU_ICON",
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 16.14\">" +
 	"<circle cx=\"2\" cy=\"2\" r=\"2\"/>" +

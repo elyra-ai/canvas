@@ -52,7 +52,7 @@ export default class DeleteObjectsAction extends Action {
 		this.supernodes.forEach((supernode) => {
 			this.apiPipeline.deleteSupernode(supernode.id);
 		});
-		this.apiPipeline.deleteObjects(this.data);
+		this.apiPipeline.deleteObjects(this.data.selectedObjectIds);
 	}
 
 	undo() {

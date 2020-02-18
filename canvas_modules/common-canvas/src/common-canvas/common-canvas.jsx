@@ -194,8 +194,8 @@ class CommonCanvas extends React.Component {
 			{ action: "cut", label: this.getLabel("edit.cutSelection"), enable: true },
 			{ action: "copy", label: this.getLabel("edit.copySelection"), enable: true },
 			{ action: "paste", label: this.getLabel("edit.pasteSelection"), enable: true },
-			{ action: "addComment", label: this.getLabel("canvas.addComment"), enable: true },
-			{ action: "delete", label: this.getLabel("canvas.deleteObject"), enable: true }
+			{ action: "createAutoComment", label: this.getLabel("canvas.addComment"), enable: true },
+			{ action: "deleteSelectedObjects", label: this.getLabel("canvas.deleteObject"), enable: true }
 		];
 	}
 
@@ -398,7 +398,7 @@ class CommonCanvas extends React.Component {
 				if (this.state.toolbarConfig[i].action === "paste") {
 					this.state.toolbarConfig[i].enable = pasteState;
 				}
-				if (this.state.toolbarConfig[i].action === "delete") {
+				if (this.state.toolbarConfig[i].action === "deleteSelectedObjects") {
 					this.state.toolbarConfig[i].enable = deleteState;
 				}
 			}

@@ -48,12 +48,12 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "MOVE_OBJECTS", data: data, pipelineId: this.pipelineId });
 	}
 
-	deleteObjects(source) {
-		this.objectModel.executeWithSelectionChange((src) => {
-			src.selectedObjectIds.forEach((selId) => {
-				this.store.dispatch({ type: "DELETE_OBJECT", data: { id: selId }, pipelineId: this.pipelineId });
+	deleteObjects(objectIds) {
+		this.objectModel.executeWithSelectionChange((objIds) => {
+			objIds.forEach((id) => {
+				this.store.dispatch({ type: "DELETE_OBJECT", data: { id: id }, pipelineId: this.pipelineId });
 			});
-		}, source);
+		}, objectIds);
 	}
 
 	// Delete an array of objects that have ids.
@@ -62,7 +62,7 @@ export default class APIPipeline {
 		objects.forEach((object) => {
 			objectIds.push(object.id);
 		});
-		this.deleteObjects({ selectedObjectIds: objectIds });
+		this.deleteObjects(objectIds);
 	}
 
 	deleteObject(id) {

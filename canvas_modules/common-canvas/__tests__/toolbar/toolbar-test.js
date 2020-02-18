@@ -30,8 +30,8 @@ describe("Toolbar renders correctly", () => {
 			{ action: "cut", label: "Cut", enable: false },
 			{ action: "copy", label: "Copy", enable: false },
 			{ action: "paste", label: "Paste", enable: false },
-			{ action: "addComment", label: "Add Comment", enable: true },
-			{ action: "delete", label: "Delete", enable: true }
+			{ action: "createAutoComment", label: "Add Comment", enable: true },
+			{ action: "deleteSelectedObjects", label: "Delete", enable: true }
 		];
 		const canvasToolbar = createToolbar(toolbarConfig);
 		expect(canvasToolbar.find("#canvas-toolbar")).to.have.length(1);
@@ -54,8 +54,8 @@ describe("Toolbar renders correctly", () => {
 			{ action: "copy", label: "Copy", enable: false },
 			{ action: "paste", label: "Paste", enable: false },
 			{ divider: true },
-			{ action: "addComment", label: "Add Comment", enable: true },
-			{ action: "delete", label: "Delete", enable: true }
+			{ action: "createAutoComment", label: "Add Comment", enable: true },
+			{ action: "deleteSelectedObjects", label: "Delete", enable: true }
 		];
 		const canvasToolbar = createToolbar(toolbarConfig);
 		expect(canvasToolbar.find("#canvas-toolbar")).to.have.length(1);

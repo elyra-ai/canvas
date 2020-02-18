@@ -8,9 +8,9 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-import { clearMessagesFromAllNodes, getCanvasData, getEventLogData, getLastEventLogData, isNodeSelected, useCmdOrCtrl
+import { clearMessagesFromAllNodes, getCanvasData, getLastEventLogData, isNodeSelected, useCmdOrCtrl
 } from "./utilities/test-utils.js";
-import { deleteLinkInObjectModel, dragAndDrop, findCategoryElement, findNodeIndexInPalette, getEventLogCount,
+import { deleteLinkInObjectModel, dragAndDrop, findCategoryElement, findNodeIndexInPalette,
 	getNodeFromObjectModel, getNodeIdForLabel, getNodeIdFromObjectModel, getNodePortSelector, getNodeSelector,
 	getNodeSelectorInSubFlow, getNodeSelectorInSupernode, getObjectModelCount, isObjectModelEmpty
 } from "./utilities/validate-utils.js";
@@ -486,42 +486,6 @@ module.exports = function() {
 		"nN0NCIgd2lkdGg9IjUuNCIgaGVpZ2h0PSIxLjMiLz4NCjxyZWN0IHg9IjI5Ni43IiB5PSIxODMuMiIgY2xhc3M9InN0NCIgd2lkdGg9IjEuMyIgaGVpZ2h0PSI1LjQiLz4NCjwvc3ZnPg0K"
 	};
 
-	const expectedEventData = {
-		"Var. File": "variablefile",
-		"Database": "",
-		"Object Store": "",
-		"User Input": "",
-		"Select": "select",
-		"Sample": "",
-		"Merge": "",
-		"Sort": "sort",
-		"Aggregate": "",
-		"Balance": "",
-		"Filler": "filler",
-		"Type": "type",
-		"Filter": "filter",
-		"Partition": "",
-		"Derive": "derive",
-		"Field Reorder": "reorder",
-		"Multiplot": "",
-		"Histogram": "",
-		"Distribution": "",
-		"C5.0": "c50",
-		"C&R Tree": "",
-		"Linear": "",
-		"Logistic": "",
-		"Neural Net": "neuralnetwork",
-		"Random Trees": "",
-		"Feature Selection": "",
-		"Table": "",
-		"Data Audit": "",
-		"Analysis": "",
-		"Export Object Store": "",
-		"Add Column": "spark.AddColumn",
-		"Data Shaper": "Data Shaper"
-	};
-
-
 	// ------------------------------------
 	//   Test Cases
 	// -------------------------------------
@@ -599,12 +563,10 @@ module.exports = function() {
 				expect(returnVal).toBe(1);
 
 				// verify that an event for a new  node is in the external object model event log
-				var eventLog = getEventLogData();
-				returnVal = getEventLogCount(eventLog, "editActionHandler() createNode", expectedEventData[nodeType]);
-				if (returnVal !== 1) {
-					// console.log(eventLog);
-				}
-				expect(returnVal).toBe(1);
+				const lastEventLogEntry = getLastEventLogData();
+				expect(lastEventLogEntry.event).toBe("editActionHandler(): createNode");
+				expect(lastEventLogEntry.data.newNode.label).toBe(nodeType);
+
 			} catch (err) {
 				console.log("Error = " + err);
 				throw err;
@@ -797,9 +759,9 @@ module.exports = function() {
 		expect(returnVal).toBe(0);
 
 		// verify that an event for a new  node is in the external object model event log
-		var eventLog = getEventLogData();
-		returnVal = getEventLogCount(eventLog, "action: deleteObjects", nodeType);
-		expect(returnVal).toBe(1);
+		const lastEventLogEntry = getLastEventLogData();
+		expect(lastEventLogEntry.event).toBe("editActionHandler(): deleteSelectedObjects");
+		expect(lastEventLogEntry.data.targetObject.label).toBe(nodeType);
 	});
 
 	// Then I delete node 1 the "Var. File" node
@@ -829,9 +791,10 @@ module.exports = function() {
 		expect(returnVal).toBe(0);
 
 		// verify that an event for a new  node is in the external object model event log
-		var eventLog = getEventLogData();
-		returnVal = getEventLogCount(eventLog, "editActionHandler() deleteSelectedObjects", "");
-		expect(returnVal).toBe(1);
+		const lastEventLogEntry = getLastEventLogData();
+		expect(lastEventLogEntry.event).toBe("editActionHandler(): deleteSelectedObjects");
+		expect(lastEventLogEntry.data.selectedObjects[0].label).toBe(nodeType);
+
 	});
 
 	this.Then("I expect the canvas to be empty", function() {

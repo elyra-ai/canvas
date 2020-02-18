@@ -1352,6 +1352,7 @@ export default class SVGCanvasRenderer {
 			if (this.config.enableSaveZoom === "Pipelineflow") {
 				const data = {
 					editType: "zoomPipeline",
+					editSource: "canvas",
 					zoom: this.zoomTransform,
 					pipelineId: this.activePipeline.id
 				};
@@ -1673,6 +1674,7 @@ export default class SVGCanvasRenderer {
 					}
 					this.canvasController.editActionHandler({
 						editType: "moveObjects",
+						editSource: "canvas",
 						nodes: this.dragObjects.map((o) => o.id),
 						offsetX: dragFinalOffset.x,
 						offsetY: dragFinalOffset.y,
@@ -3348,6 +3350,7 @@ export default class SVGCanvasRenderer {
 				trgPortId = trgPortId || (trgNode.inputs && trgNode.inputs.length > 0 ? trgNode.inputs[0].id : null);
 				this.canvasController.editActionHandler({
 					editType: "linkNodes",
+					editSource: "canvas",
 					nodes: [{ "id": this.drawingNewLinkSrcId, "portId": this.drawingNewLinkSrcPortId }],
 					targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
 					type: (this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK),
@@ -3356,6 +3359,7 @@ export default class SVGCanvasRenderer {
 			} else {
 				this.canvasController.editActionHandler({
 					editType: "linkComment",
+					editSource: "canvas",
 					nodes: [this.drawingNewLinkSrcId],
 					targetNodes: [trgNode.id],
 					type: COMMENT_LINK,
@@ -4084,6 +4088,7 @@ export default class SVGCanvasRenderer {
 			const commentDatum = d3.select(textArea).datum();
 			const data = {
 				editType: "editComment",
+				editSource: "canvas",
 				id: commentDatum.id,
 				content: textArea.value,
 				width: commentDatum.width,
@@ -4442,6 +4447,7 @@ export default class SVGCanvasRenderer {
 		if (Object.keys(this.nodeSizingMovedNodes).length > 0) {
 			const data = {
 				editType: "resizeObjects",
+				editSource: "canvas",
 				objectsInfo: this.nodeSizingMovedNodes,
 				pipelineId: this.pipelineId
 			};
@@ -4476,6 +4482,7 @@ export default class SVGCanvasRenderer {
 				this.resizeObjHeight !== height) {
 			const data = {
 				editType: "editComment",
+				editSource: "canvas",
 				id: commentObj.id,
 				content: commentObj.content,
 				width: width,

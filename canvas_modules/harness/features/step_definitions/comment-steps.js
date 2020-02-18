@@ -9,12 +9,12 @@
 /* eslint no-console: "off" */
 /* eslint sort-imports: "off" */
 
-import { getCanvasData, getEventLogData, isCommentSelected, useCmdOrCtrl } from "./utilities/test-utils.js";
+import { getCanvasData, getLastEventLogData, isCommentSelected, useCmdOrCtrl } from "./utilities/test-utils.js";
 import { addTextForComment, dragAndDrop, getCommentIdForText, getCommentIdForTextInSubFlow,
 	getCommentIdForTextInSubFlowInSubFlow,
 	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
 	getCommentSelector, getCommentSelectorInSubFlow, getCommentDimensions,
-	getEventLogCount, getNodeSelector, getNodeDimensions, getObjectModelCount } from "./utilities/validate-utils.js";
+	getNodeSelector, getNodeDimensions, getObjectModelCount } from "./utilities/validate-utils.js";
 import isEqual from "lodash/isEqual";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
 
@@ -64,9 +64,10 @@ module.exports = function() {
 			expect(count).toBe(1);
 
 			// verify that an event for a new comment is in the external object model event log
-			var eventLog = getEventLogData();
-			count = getEventLogCount(eventLog, "editActionHandler() editComment", comment);
-			expect(count).toBe(1);
+			const lastEventLogEntry = getLastEventLogData(3);
+			expect(lastEventLogEntry.event).toBe("editActionHandler(): editComment");
+			expect(lastEventLogEntry.data.content).toBe(comment);
+
 		});
 
 	// Then I move comment 1 onto the canvas by 50, 50

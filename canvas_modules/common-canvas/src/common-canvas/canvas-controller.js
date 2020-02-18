@@ -428,6 +428,11 @@ export default class CanvasController {
 		return this.objectModel.getSelectedComments();
 	}
 
+	// Returns the currently selected objects (Nodes and Comments).
+	getSelectedObjects() {
+		return this.objectModel.getSelectedObjects();
+	}
+
 	// Returns the ID of the pipeline in which the currently selected objects
 	// exist. Only one pipeline may contain selected objects.
 	getSelectedPipelineId() {
@@ -436,11 +441,7 @@ export default class CanvasController {
 
 	// Deletes all currently selected objects.
 	deleteSelectedObjects() {
-		this.editActionHandler({
-			editType: "deleteSelectedObjects",
-			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
-			pipelineId: this.objectModel.getSelectedPipelineId()
-		});
+		this.objectModel.deleteSelectedObjects();
 	}
 
 	// Returns true if the currently selected objects are all linked together.
@@ -496,14 +497,10 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).moveObjects(data);
 	}
 
-	// Delete the objects specified in source in the pipleine specified by
-	// pipeline ID.
-	// source - A javascript object like this:
-	// {
-	//   selectedObjectIds: []  // An array of node and comment IDs
-	// }
-	deleteObjects(source, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).deleteObjects(source);
+	// Deletes the objects specified in objectIds array.
+	// objectIds - An array of node and comment IDs
+	deleteObjects(objectIds, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).deleteObjects(objectIds);
 	}
 
 	// Removes the links to and from the objects specified in the source object.
@@ -1487,7 +1484,7 @@ export default class CanvasController {
 		let menuDefinition = [];
 		// Select all & add comment: canvas only
 		if (source.type === "canvas") {
-			menuDefinition = menuDefinition.concat([{ action: "addComment", label: this.getLabel("canvas.addComment") },
+			menuDefinition = menuDefinition.concat([{ action: "createComment", label: this.getLabel("canvas.addComment") },
 				{ action: "selectAll", label: this.getLabel("canvas.selectAll") },
 				{ divider: true }]);
 		}
@@ -1513,7 +1510,7 @@ export default class CanvasController {
 		}
 		// Delete objects
 		if (source.type === "node" || source.type === "comment") {
-			menuDefinition = menuDefinition.concat([{ action: "deleteObjects", label: this.getLabel("canvas.deleteObject") },
+			menuDefinition = menuDefinition.concat([{ action: "deleteSelectedObjects", label: this.getLabel("canvas.deleteObject") },
 				{ divider: true }]);
 		}
 		// Create supernode
@@ -1585,158 +1582,26 @@ export default class CanvasController {
 	contextMenuActionHandler(action) {
 		this.logger.log("contextMenuActionHandler - action: " + action);
 		this.logger.log(this.contextMenuSource);
-		// selectAll is supported for the external AND internal object models.
-		if (action === "selectAll") {
-			this.objectModel.selectAll(this.contextMenuSource.pipelineId);
-		}
-
-		if (this.canvasConfig.enableInternalObjectModel) {
-			switch (action) {
-			case "createSuperNode": {
-				const command = new CreateSuperNodeAction(this.contextMenuSource, this.objectModel, this.intl);
-				this.commandStack.do(command);
-				this.contextMenuSource = command.getData();
-				break;
-			}
-			case "expandSuperNodeInPlace": {
-				const command = new ExpandSuperNodeInPlaceAction(this.contextMenuSource, this.objectModel, this.canvasConfig.enableMoveNodesOnSupernodeResize);
-				this.commandStack.do(command);
-				break;
-			}
-			case "collapseSuperNodeInPlace": {
-				const command = new CollapseSuperNodeInPlaceAction(this.contextMenuSource, this.objectModel, this.canvasConfig.enableMoveNodesOnSupernodeResize);
-				this.commandStack.do(command);
-				break;
-			}
-			case "deleteObjects": {
-				const command = new DeleteObjectsAction(this.contextMenuSource, this.objectModel);
-				this.commandStack.do(command);
-				break;
-			}
-			case "addComment": {
-				const command = new CreateCommentAction(this.contextMenuSource, this.objectModel);
-				this.commandStack.do(command);
-				this.contextMenuSource = command.getData();
-				break;
-			}
-			case "deleteLink": {
-				const command = new DeleteLinkAction(this.contextMenuSource, this.objectModel);
-				this.commandStack.do(command);
-				break;
-			}
-			case "disconnectNode": {
-				const command = new DisconnectObjectsAction(this.contextMenuSource, this.objectModel);
-				this.commandStack.do(command);
-				break;
-			}
-			case "saveToPalette": {
-				const command = new SaveToPaletteAction(this.contextMenuSource, this.objectModel, this.intl);
-				this.commandStack.do(command);
-				break;
-			}
-			case "displayPreviousPipeline": {
-				const command = new DisplayPreviousPipelineAction({}, this.objectModel);
-				this.commandStack.do(command);
-				break;
-			}
-			case "undo":
-				this.undo();
-				break;
-			case "redo":
-				this.redo();
-				break;
-			case "cut":
-				this.cutToClipboard();
-				break;
-			case "copy":
-				this.copyToClipboard();
-				break;
-			case "paste":
-				this.pasteFromClipboard(this.contextMenuSource.pipelineId);
-				break;
-			case "highlightBranch":
-				this.contextMenuSource.highlightedObjectIds = this.highlightBranch(this.objectModel.getSelectedNodesIds(), this.contextMenuSource.pipelineId);
-				break;
-			case "highlightDownstream":
-				this.contextMenuSource.highlightedObjectIds = this.highlightDownstream(this.objectModel.getSelectedNodesIds(), this.contextMenuSource.pipelineId);
-				break;
-			case "highlightUpstream":
-				this.contextMenuSource.highlightedObjectIds = this.highlightUpstream(this.objectModel.getSelectedNodesIds(), this.contextMenuSource.pipelineId);
-				break;
-			case "unhighlight":
-				// this.setSubdueStyle(null);
-				this.removeAllStyles(true);
-				this.highlight = false; // TODO: use this for context menu when to show unhighlight option.
-				break;
-			default:
-			}
-		}
-
-		if (this.handlers.contextMenuActionHandler) {
-			this.handlers.contextMenuActionHandler(action, this.contextMenuSource);
-		}
+		const data = Object.assign({}, this.contextMenuSource, { "editType": action, "editSource": "contextmenu" });
+		this.editActionHandler(data);
 
 		this.commonCanvas.focusOnCanvas(); // Set focus on canvas so keybord events go there.
 		this.closeContextMenu();
 	}
 
-	toolbarMenuActionHandler(action) {
+	toolbarActionHandler(action) {
 		this.logger.log("toolbarMenuActionHandler - action: " + action);
-		let source = {
-			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
-		};
-		if (this.canvasConfig.enableInternalObjectModel) {
-			switch (action) {
-			case "delete": {
-				const command = new DeleteObjectsAction(source, this.objectModel);
-				this.commandStack.do(command);
-				this.commonCanvas.configureToolbarButtonsState();
-				break;
-			}
-			case "cut":
-				this.cutToClipboard();
-				this.commonCanvas.configureToolbarButtonsState();
-				break;
-			case "copy":
-				this.copyToClipboard();
-				this.commonCanvas.configureToolbarButtonsState();
-				break;
-			case "paste":
-				this.pasteFromClipboard();
-				this.commonCanvas.configureToolbarButtonsState();
-				break;
-			case "addComment": {
-				const svgPos = this.commonCanvas.getSvgViewportOffset();
-				const command = new CreateCommentAction(source, this.objectModel, svgPos);
-				this.commandStack.do(command);
-				source = command.getData();
-				break;
-			}
-			case "arrangeHorizontally": {
-				const command = new ArrangeLayoutAction(constants.HORIZONTAL, this.objectModel);
-				this.commandStack.do(command);
-				break;
-			}
-			case "arrangeVertically": {
-				const command = new ArrangeLayoutAction(constants.VERTICAL, this.objectModel);
-				this.commandStack.do(command);
-				break;
-			}
-			case "undo":
-				this.commandStack.undo();
-				this.commonCanvas.configureToolbarButtonsState();
-				break;
-			case "redo":
-				this.commandStack.redo();
-				this.commonCanvas.configureToolbarButtonsState();
-				break;
-			default:
-			}
-		}
+		this.editActionHandler({ editType: action, editSource: "toolbar" });
+	}
 
-		if (this.handlers.toolbarMenuActionHandler) {
-			this.handlers.toolbarMenuActionHandler(action, source);
-		}
+	keyboardActionHandler(action) {
+		this.logger.log("keyboardActionHandler - action: " + action);
+
+		this.editActionHandler({
+			editType: action,
+			editSource: "keyboard",
+			pipelineId: this.objectModel.getSelectedPipelineId()
+		});
 	}
 
 	clickActionHandler(source) {
@@ -1757,6 +1622,22 @@ export default class CanvasController {
 		this.logger.log("editActionHandler - " + cmndData.editType);
 		this.logger.log(cmndData);
 		let data = cmndData;
+		data.selectedObjectIds = this.getSelectedObjectIds();
+		data.selectedObjects = this.getSelectedObjects();
+
+		// Only execute the delete if there are some selections to delete.
+		// This prevents an 'empty' command being added to the command stack when
+		// 'delete' is pressed on the keyboard.
+		if (data.editType === "deleteSelectedObjects" &&
+				data.selectedObjectIds.length === 0) {
+			return;
+		}
+
+		// selectAll is supported for the external AND internal object models.
+		if (data.editType === "selectAll") {
+			this.objectModel.selectAll(data.pipelineId);
+		}
+
 		if (this.canvasConfig.enableInternalObjectModel) {
 			switch (data.editType) {
 			case "createNode": {
@@ -1776,6 +1657,18 @@ export default class CanvasController {
 				const command = new CreateAutoNodeAction(data, this.objectModel);
 				this.commandStack.do(command);
 				this.panToReveal(data);
+				data = command.getData();
+				break;
+			}
+			case "createComment": {
+				const command = new CreateCommentAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "createAutoComment": {
+				const svgPos = this.commonCanvas.getSvgViewportOffset();
+				const command = new CreateCommentAction(data, this.objectModel, svgPos);
+				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
@@ -1838,10 +1731,73 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
+			case "arrangeHorizontally": {
+				const command = new ArrangeLayoutAction(constants.HORIZONTAL, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "arrangeVertically": {
+				const command = new ArrangeLayoutAction(constants.VERTICAL, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
 			case "zoomPipeline": {
 				this.zoomPipeline(data.zoom, data.pipelineId);
 				break;
 			}
+			case "createSuperNode": {
+				const command = new CreateSuperNodeAction(data, this.objectModel, this.intl);
+				this.commandStack.do(command);
+				break;
+			}
+			case "expandSuperNodeInPlace": {
+				const command = new ExpandSuperNodeInPlaceAction(data, this.objectModel, this.canvasConfig.enableMoveNodesOnSupernodeResize);
+				this.commandStack.do(command);
+				break;
+			}
+			case "collapseSuperNodeInPlace": {
+				const command = new CollapseSuperNodeInPlaceAction(data, this.objectModel, this.canvasConfig.enableMoveNodesOnSupernodeResize);
+				this.commandStack.do(command);
+				break;
+			}
+			case "deleteLink": {
+				const command = new DeleteLinkAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "disconnectNode": {
+				const command = new DisconnectObjectsAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "saveToPalette": {
+				const command = new SaveToPaletteAction(data, this.objectModel, this.intl);
+				this.commandStack.do(command);
+				break;
+			}
+			case "highlightBranch":
+				data.highlightedObjectIds = this.highlightBranch(this.objectModel.getSelectedNodesIds(), data.pipelineId);
+				break;
+			case "highlightDownstream":
+				data.highlightedObjectIds = this.highlightDownstream(this.objectModel.getSelectedNodesIds(), data.pipelineId);
+				break;
+			case "highlightUpstream":
+				data.highlightedObjectIds = this.highlightUpstream(this.objectModel.getSelectedNodesIds(), data.pipelineId);
+				break;
+			case "unhighlight":
+				// this.setSubdueStyle(null);
+				this.removeAllStyles(true);
+				this.highlight = false; // TODO: use this for context menu when to show unhighlight option.
+				break;
+			case "cut":
+				this.cutToClipboard();
+				break;
+			case "copy":
+				this.copyToClipboard();
+				break;
+			case "paste":
+				this.pasteFromClipboard(data.pipelineId);
+				break;
 			case "undo":
 				this.commandStack.undo();
 				break;

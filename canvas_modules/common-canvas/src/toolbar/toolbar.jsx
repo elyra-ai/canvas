@@ -288,7 +288,7 @@ class Toolbar extends React.Component {
 	}
 
 	toolbarMenuActionHandler(action) {
-		this.props.canvasController.toolbarMenuActionHandler(action);
+		this.props.canvasController.toolbarActionHandler(action);
 	}
 
 	render() {

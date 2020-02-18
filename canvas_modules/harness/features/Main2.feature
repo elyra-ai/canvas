@@ -19,7 +19,9 @@ Feature: Main2
 		Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 150, 450
 		Then I close the palette
 		Then I select node 7 the "Field Reorder" node
-		Then I add comment 4 at location 350, 450 with the text "Some text comment."
+		Then I right click at position 350, 450 to display the context menu
+		Then I click option "New comment" from the context menu
+		Then I edit the comment "" with text "Some text comment."
 		Then I open the palette
 		Then I add node 8 a "Sort" node from the "Record Ops" category onto the canvas at 300, 450
 		Then I close the palette

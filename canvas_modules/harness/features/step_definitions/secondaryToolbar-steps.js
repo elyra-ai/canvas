@@ -22,11 +22,11 @@ module.exports = function() {
 	});
 
 	this.Then("I click the create comment button on the toolbar", function() {
-		browser.$("#addComment-action").click();
+		browser.$("#createAutoComment-action").click();
 	});
 
 	this.Then("I click the delete button on the toolbar", function() {
-		browser.$("#delete-action").click();
+		browser.$("#deleteSelectedObjects-action").click();
 	});
 
 	this.Then("I click the horizontal layout button on the toolbar", function() {
@@ -76,7 +76,7 @@ module.exports = function() {
 	/* Extra canvas - toolbar actions */
 
 	this.Then("I click the create comment button on the toolbar on the extra canvas", function() {
-		browser.$$("#addComment-action")[1].click();
+		browser.$$("#createAutoComment-action")[1].click();
 	});
 
 	this.Then("I click the paste button on the toolbar on the extra canvas", function() {

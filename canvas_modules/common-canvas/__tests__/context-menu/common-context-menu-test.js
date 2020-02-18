@@ -101,7 +101,7 @@ describe("DefaultMenu renders correctly", () => {
 	});
 	it("correctly displays canvas menu when canvas is selected", () => {
 		const defMenu = [
-			{ "action": "addComment", "label": "New comment" },
+			{ "action": "createComment", "label": "New comment" },
 			{ "action": "selectAll", "label": "Select All" },
 			{ "divider": true },
 			{ "submenu": true, "menu": [{ "action": "cut", "label": "Cut" }, { "action": "copy", "label": "Copy" }, { "action": "paste", "label": "Paste" }], "label": "Edit" },

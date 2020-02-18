@@ -34,7 +34,7 @@ import { WarningFilled16, ErrorFilled16, CheckmarkFilled16, InformationFilled16,
 	CircleDash16, RulerAlt16, ListNumbered16, ListBulleted16, Flag16, ChartVennDiagram16,
 	Calendar16, Time16, EventSchedule16 } from "@carbon/icons-react";
 
-import { ERROR, WARNING, INFO, SUCCESS, CANVAS_CARBON_ICONS } from "../common-canvas/constants/canvas-constants";
+import { ERROR, WARNING, INFO, SUCCESS, CANVAS_CARBON_ICONS, TOOLBAR_ACTIONS } from "../common-canvas/constants/canvas-constants";
 import { CONDITION_MESSAGE_TYPE, CARBON_ICONS, DATA_TYPE } from "../common-properties/constants/constants";
 
 const iconClassName = "properties-icon";
@@ -69,10 +69,10 @@ export default class Icon extends React.Component {
 			return <CheckmarkFilled16 className={classNames("canvas-state-icon-success", className)} disabled={this.props.disabled} />;
 		case (CONDITION_MESSAGE_TYPE.INFO):
 			return <InformationFilled16 className={classNames("canvas-state-icon-info", className)} disabled={this.props.disabled} />;
+
 		case (INFO):
 		case (CARBON_ICONS.INFORMATION):
 			return <Information16 className={classNames("canvas-state-icon-information-hollow", className)} disabled={this.props.disabled} />;
-
 		case (CARBON_ICONS.CHEVRONARROWS.UP):
 			return <ChevronUp16 className={className} disabled={this.props.disabled} />;
 		case (CARBON_ICONS.CHEVRONARROWS.DOWN):
@@ -81,38 +81,39 @@ export default class Icon extends React.Component {
 			return <ChevronLeft16 className={className} disabled={this.props.disabled} />;
 		case (CARBON_ICONS.CHEVRONARROWS.RIGHT):
 			return <ChevronRight16 className={className} disabled={this.props.disabled} />;
-		case (CANVAS_CARBON_ICONS.OVERFLOWMENU):
-			return <OverflowMenuVertical16 className={className} disabled={this.props.disabled} />;
 		case (CARBON_ICONS.ADD):
 			return <AddAlt16 className={className} disabled={this.props.disabled} />;
 		case (CARBON_ICONS.SETTINGS):
 			return <Settings16 className={className} disabled={this.props.disabled} />;
-		case (CANVAS_CARBON_ICONS.SEARCH):
-			return <Search16 className={className} disabled={this.props.disabled} />;
 		case (CARBON_ICONS.EDIT):
 			return <Edit16 className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.TOOLBAR_STOP):
-			return <StopFilledAlt16 className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.TOOLBAR_RUN):
-			return <Play16 className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.TOOLBAR_UNDO):
-			return <Undo16 className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.TOOLBAR_REDO):
-			return <Redo16 className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.TOOLBAR_CUT):
-			return <Cut16 className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.TOOLBAR_COPY):
-			return <Copy16 className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.TOOLBAR_PASTE):
-			return <Paste16 className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.TOOLBAR_ADD_COMMENT):
-			return <AddComment16 className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.TOOLBAR_DELETE):
-			return <Delete16 className={className} disabled={this.props.disabled} />;
 
-		case (CARBON_ICONS.TOOLBAR_ZOOM_IN):
+		case (CANVAS_CARBON_ICONS.OVERFLOWMENU):
+			return <OverflowMenuVertical16 className={className} disabled={this.props.disabled} />;
+		case (CANVAS_CARBON_ICONS.SEARCH):
+			return <Search16 className={className} disabled={this.props.disabled} />;
+
+		case (TOOLBAR_ACTIONS.TOOLBAR_STOP):
+			return <StopFilledAlt16 className={className} disabled={this.props.disabled} />;
+		case (TOOLBAR_ACTIONS.TOOLBAR_RUN):
+			return <Play16 className={className} disabled={this.props.disabled} />;
+		case (TOOLBAR_ACTIONS.TOOLBAR_UNDO):
+			return <Undo16 className={className} disabled={this.props.disabled} />;
+		case (TOOLBAR_ACTIONS.TOOLBAR_REDO):
+			return <Redo16 className={className} disabled={this.props.disabled} />;
+		case (TOOLBAR_ACTIONS.TOOLBAR_CUT):
+			return <Cut16 className={className} disabled={this.props.disabled} />;
+		case (TOOLBAR_ACTIONS.TOOLBAR_COPY):
+			return <Copy16 className={className} disabled={this.props.disabled} />;
+		case (TOOLBAR_ACTIONS.TOOLBAR_PASTE):
+			return <Paste16 className={className} disabled={this.props.disabled} />;
+		case (TOOLBAR_ACTIONS.TOOLBAR_CREATE_AUTO_COMMENT):
+			return <AddComment16 className={className} disabled={this.props.disabled} />;
+		case (TOOLBAR_ACTIONS.TOOLBAR_DELETE_SELECTED_OBJECTS):
+			return <Delete16 className={className} disabled={this.props.disabled} />;
+		case (TOOLBAR_ACTIONS.TOOLBAR_ZOOM_IN):
 			return <ZoomIn16 className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.TOOLBAR_ZOOM_OUT):
+		case (TOOLBAR_ACTIONS.TOOLBAR_ZOOM_OUT):
 			return <ZoomOut16 className={className} disabled={this.props.disabled} />;
 
 		case (CARBON_ICONS.MEASUREMENTS.EMPTY):
