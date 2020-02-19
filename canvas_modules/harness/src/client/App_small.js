@@ -30,10 +30,6 @@ class App extends React.Component {
 		return defaultMenu;
 	}
 
-	contextMenuActionHandler(action, data) {
-		console.log("contextMenuActionHandler");
-	}
-
 	editActionHandler(data) {
 		console.log("editActionHandler");
 	}
@@ -56,10 +52,6 @@ class App extends React.Component {
 
 	tipHandler(tipType, data) {
 		console.log("tipHandler");
-	}
-
-	toolbarMenuActionHandler(action, data) {
-		console.log("toolbarMenuActionHandler");
 	}
 
 	idGenerationHandler(action, data) {
@@ -108,7 +100,12 @@ class App extends React.Component {
 			// enablePaletteLayout: "Flyout",
 			// emptyCanvasContent: emptyCanvasDiv,
 			// enableMoveNodesOnSupernodeResize: true,
-			// tipConfig: this.state.tipConfig,
+			// tipConfig: {
+			// 	"palette": true,
+			// 	"nodes": true,
+			// 	"ports": true,
+			// 	"links": true
+			// },
 			// schemaValidation: false,
 			// enableDisplayFullLabelOnHover: false,
 			// enableBoundingRectangles: false,
@@ -129,8 +126,8 @@ class App extends React.Component {
 			{ action: "cut", label: "Cut", enable: true },
 			{ action: "copy", label: "Copy", enable: true },
 			{ action: "paste", label: "Paste", enable: true },
-			{ action: "addComment", label: "Add Comment", enable: true },
-			{ action: "delete", label: "Delete", enable: true },
+			{ action: "createAutoComment", label: "Add Comment", enable: true },
+			{ action: "deleteSelectedObjects", label: "Delete", enable: true },
 			{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true }
 			// { action: "arrangeVertically", label: "Arrange Vertically", enable: true }
 		];
@@ -169,14 +166,12 @@ class App extends React.Component {
 				keyboardConfig={keyboardConfig}
 
 				contextMenuHandler={this.contextMenuHandler}
-				contextMenuActionHandler= {this.contextMenuActionHandler}
 				editActionHandler= {this.editActionHandler}
 				clickActionHandler= {this.clickActionHandler}
 				decorationActionHandler= {this.decorationActionHandler}
 				selectionChangeHandler={this.selectionChangeHandler}
 				layoutHandler={this.layoutHandler}
 				tipHandler={this.tipHandler}
-				toolbarMenuActionHandler={this.toolbarMenuActionHandler}
 				idGenerationHandler={this.idGenerationHandler}
 			/>);
 
