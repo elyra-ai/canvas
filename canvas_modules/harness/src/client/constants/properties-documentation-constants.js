@@ -179,21 +179,21 @@ const fields2 = [
 
 // Public Methods ------------------------------------------------------------->
 _defineConstant("CONTAINERS_RIGHT_FLYOUT_PROPERTIES", "const rightFlyoutContent =(<CommonProperties \n" +
-"    showPropertiesDialog={this.showPropertiesDialog} \n" +
+"    propertiesConfig={this.propertiesConfig} \n" +
 "    propertiesInfo={this.propertiesInfo} \n" +
-"    containerType=\"Custom\" \n" +
-"    rightFlyout \n" +
 "/>);");
 
+_defineConstant("CONTAINERS_RIGHT_FLYOUT_PROPERTIES_CONFIG", "this.propertiesConfig = { \n" +
+"    containerType=\"Custom\" \n" +
+"    rightFlyout \n" +
+"};");
+
+_defineConstant("CONTAINERS_RIGHT_FLYOUT_PROPERTIES_INFO", "this.propertiesInfo = { \n" +
+"    parameterDef: someParameterDefinition \n" +
+"};");
+
 _defineConstant("CONTAINERS_RIGHT_FLYOUT_CANVAS", "<CommonCanvas \n" +
-"    config={commonCanvasConfig} \n" +
-"    contextMenuHandler={this.contextMenuHandler} \n" +
-"    contextMenuActionHandler= {this.contextMenuActionHandler} \n" +
-"    editActionHandler= {this.editActionHandler} \n" +
-"    clickActionHandler= {this.clickActionHandler} \n" +
-"    decorationActionHandler= {this.decorationActionHandler} \n" +
-"    toolbarConfig={toolbarConfig} \n" +
-"    toolbarMenuActionHandler={this.toolbarMenuActionHandler} \n" +
+"    canvasController={this.canvasController} \n" +
 "    rightFlyoutContent={rightFlyoutContent} \n" +
 "    showRightFlyout={showRightFlyoutProperties} \n" +
 "/>");

@@ -30,9 +30,11 @@
 	top: 50px;
 	height: calc(100% - 50px);
 	overflow-x: scroll;
-	font-size: 14px;
 	p {
+		font-size: 14px;
 		font-weight: 200;
+		line-height: 20px;
+		margin: 6px 0;
 	}
 }
 
@@ -170,9 +172,6 @@
 }
 
 .harness-section-description {
-	& p {
-		margin-bottom: 10px;
-	}
 	& ul {
 		list-style-type: disc;
 		margin-left: 1em;

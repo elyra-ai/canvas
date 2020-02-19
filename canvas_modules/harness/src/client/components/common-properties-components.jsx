@@ -16,6 +16,8 @@ import Button from "carbon-components-react/lib/components/Button";
 import FunctionList from "../constants/json/functionlist.json";
 import {
 	CONTAINERS_RIGHT_FLYOUT_PROPERTIES,
+	CONTAINERS_RIGHT_FLYOUT_PROPERTIES_CONFIG,
+	CONTAINERS_RIGHT_FLYOUT_PROPERTIES_INFO,
 	CONTAINERS_RIGHT_FLYOUT_CANVAS,
 	CONTROLS_PROPS_INFO,
 	TABS_PROPS_INFO,
@@ -404,15 +406,15 @@ class CommonPropertiesComponents extends React.Component {
 		const contentIntro = (<section id="Intro">
 			<h2 className="harness-properties-documentation-section-title">Introduction</h2>
 			<div className="harness-section-description">
-				<p>To create UIs based on the WDP Common Properties Components, a JSON adhering to the
+				<p>To create UIs based on the WDP Common Properties Components, a JSON adhering to the&nbsp;
 					<a className="harness-properties-documentation-page-intro-link"
 						href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/tree/master/common-canvas/parameter-defs"
-					> Parameter Definition Schema</a> has to be provided. The JSON contains parameter definitions, uihints,
+					>Parameter Definition Schema</a> has to be provided. The JSON contains parameter definitions, uihints,
 					dataset_metadata, etc. The data in these sections is used to generate the UI. Certain parameter types
-					translate into specific controls. The control type can be overriden in the uihints section, which follows the
+					translate into specific controls. The control type can be overriden in the uihints section, which follows the&nbsp;
 					<a className="harness-properties-documentation-page-intro-link"
 						href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-pipeline/operators/uihints-v1-schema.json"
-					> UI Hints schema</a>. In addition, uihints are used to group UI controls.
+					>UI Hints schema</a>. In addition, uihints are used to group UI controls.
 				</p>
 				<p>
 					Documentation on how to write conditions for controls can be found <Link to="/conditions" target="_blank">here</Link>.
@@ -431,9 +433,24 @@ class CommonPropertiesComponents extends React.Component {
 				<p>For example, CommonCanvas provides an optional right-flyout div that may be used to display the properties editor.
 					To use this, create a CommonProperties object with <span className="harness-highlight">containerType</span> set
 					to <span className="harness-highlight">Custom</span> and <span className="harness-highlight">rightFlyout</span> set to true.
+					Below is the minimum specifications to render CommonProperties. More options and details are listed in the&nbsp;
+				<a className="harness-properties-documentation-page-intro-link"
+					href={"https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/3.0-Common-properties-documentation-documentation" +
+					"#using-commonproperties-documentation-in-commoncanvas-right-flyout-panel"}
+				>
+					Common Properties wiki
+				</a>.
 				</p>
 				<pre className="harness-json-block">
 					{CONTAINERS_RIGHT_FLYOUT_PROPERTIES}
+				</pre>
+				<p>where</p>
+				<pre className="harness-json-block">
+					{CONTAINERS_RIGHT_FLYOUT_PROPERTIES_CONFIG}
+				</pre>
+				<p>and the <span className="harness-highlight">propertiesInfo</span> contains the parameter definition as mentioned above.</p>
+				<pre className="harness-json-block">
+					{CONTAINERS_RIGHT_FLYOUT_PROPERTIES_INFO}
 				</pre>
 				<p>In the CommonCanvas object, pass the CommonProperties object into the <span className="harness-highlight">rightFlyoutContent</span>
 					&nbsp;property.</p>
@@ -527,6 +544,12 @@ class CommonPropertiesComponents extends React.Component {
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--subtabs" className="harness-section-subtitle">subTabs</h3>
+					<p>This is currently not supported in <span className="harness-highlight">Modal</span> dialogs.
+						Please let us know in the issue if this is desired:&nbsp;
+					<a className="harness-properties-documentation-page-intro-link"
+						href={"https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/2678"}
+					>#2678</a>. Please view the following example in the flyout.
+					</p>
 					<p>To create vertical sub-tabs, set the <span className="harness-highlight">type</span> to <span className="harness-highlight">subTabs</span> and
 						add a nested <span className="harness-highlight">group_info</span> array with the objects
 						defining the grouping of the controls in the subtabs.</p>
