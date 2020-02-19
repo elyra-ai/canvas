@@ -13,6 +13,8 @@ npm install
 export NODE_ENV=production
 echo "grunt build"
 grunt build
+echo "Prune production"
+npm prune --production
 
 echo "cd $WORKING_DIR"
 cd $WORKING_DIR
