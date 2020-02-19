@@ -81,9 +81,9 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "SET_OBJECTS_CLASS_NAME", data: { objIds: objectIds, label: newClassName }, pipelineId: this.pipelineId });
 	}
 
-	disconnectObjects(source) {
+	disconnectObjects(objectIds) {
 		let linksToDelete = [];
-		source.selectedObjectIds.forEach((id) => {
+		objectIds.forEach((id) => {
 			// save all the links associated with each node, but don't store duplicate links
 			const objectLinks = this.getLinksContainingId(id);
 			objectLinks.forEach((objectLink) => {

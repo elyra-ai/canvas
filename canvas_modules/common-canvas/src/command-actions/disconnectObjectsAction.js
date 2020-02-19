@@ -19,7 +19,7 @@ export default class DisconnectObjectsAction extends Action {
 
 	// Standard methods
 	do() {
-		this.links = this.apiPipeline.disconnectObjects(this.data);
+		this.links = this.apiPipeline.disconnectObjects(this.data.selectedObjectIds);
 	}
 
 	undo() {

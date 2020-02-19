@@ -503,9 +503,10 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).deleteObjects(objectIds);
 	}
 
-	// Removes the links to and from the objects specified in the source object.
-	disconnectObjects(source, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).disconnectObjects(source);
+	// Removes the links to and from the objects specified in the objectIds array.
+	// objectIds - An array of node and comment IDs
+	disconnectObjects(objectIds, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).disconnectObjects(objectIds);
 	}
 
 	// Deletes the object specified by the id in the pipleine specified by
