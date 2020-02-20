@@ -1173,17 +1173,6 @@ export default class CanvasController {
 		return null;
 	}
 
-	cutToClipboard() {
-		if (this.copyToClipboard()) {
-			const apiPipeline = this.objectModel.getSelectionAPIPipeline();
-			this.editActionHandler({
-				editType: "deleteSelectedObjects",
-				selectedObjectIds: this.objectModel.getSelectedObjectIds(),
-				pipelineId: apiPipeline.pipelineId
-			});
-		}
-	}
-
 	// Copies the currently selected objects to the internal clipboard and
 	// returns true if successful. Returns false if there is nothing to copy to
 	// the clipboard.
@@ -1233,18 +1222,26 @@ export default class CanvasController {
 	}
 
 	pasteFromClipboard(pipelineId) {
-		const pastedText = LocalStorage.get("canvasClipboard");
+		this.editActionHandler({
+			editType: "paste",
+			editSource: "api",
+			pipelineId: pipelineId
+		});
+	}
 
-		if (!pastedText) {
-			return;
+	getObjectsToPaste(pipelineId) {
+		const textToPaste = LocalStorage.get("canvasClipboard");
+
+		if (!textToPaste) {
+			return {};
 		}
 
-		const objects = JSON.parse(pastedText);
+		const objects = JSON.parse(textToPaste);
 
 		// If there are no nodes and no comments there's nothing to paste so just
 		// return.
 		if (!objects.nodes && !objects.comments) {
-			return;
+			return {};
 		}
 
 		// If a pipeline is not provided (like when the user clicks paste in the
@@ -1271,11 +1268,10 @@ export default class CanvasController {
 			}
 		}
 
-		this.editActionHandler({
-			editType: "cloneMultipleObjects",
+		return {
 			objects: objects,
 			pipelineId: apiPipeline.pipelineId
-		});
+		};
 	}
 
 	openTip(tipConfig) {
@@ -1673,12 +1669,6 @@ export default class CanvasController {
 				data = command.getData();
 				break;
 			}
-			case "cloneMultipleObjects": {
-				const command = new CloneMultipleObjectsAction(data, this.objectModel);
-				this.commandStack.do(command);
-				data = command.getData();
-				break;
-			}
 			case "moveObjects": {
 				const command = new MoveObjectsAction(data, this.objectModel);
 				this.commandStack.do(command);
@@ -1790,15 +1780,25 @@ export default class CanvasController {
 				this.removeAllStyles(true);
 				this.highlight = false; // TODO: use this for context menu when to show unhighlight option.
 				break;
-			case "cut":
-				this.cutToClipboard();
+			case "cut": {
+				this.copyToClipboard();
+				const command = new DeleteObjectsAction(data, this.objectModel);
+				this.commandStack.do(command);
 				break;
+			}
 			case "copy":
 				this.copyToClipboard();
 				break;
-			case "paste":
-				this.pasteFromClipboard(data.pipelineId);
+			case "paste": {
+				const pasteObj = this.getObjectsToPaste(data.pipelineId);
+				if (pasteObj.objects) {
+					data = Object.assign(data, { objects: pasteObj.objects, pipelineId: pasteObj.pipelineId });
+					const command = new CloneMultipleObjectsAction(data, this.objectModel);
+					this.commandStack.do(command);
+					data = command.getData();
+				}
 				break;
+			}
 			case "undo":
 				this.commandStack.undo();
 				break;
