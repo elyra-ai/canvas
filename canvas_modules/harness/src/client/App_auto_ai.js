@@ -9,6 +9,7 @@
 /* eslint no-console: ["error", { allow: ["log", "info", "warn", "error", "time", "timeEnd"] }] */
 
 import React from "react";
+import { IntlProvider } from "react-intl";
 import AutoAICanvas from "../../test_resources/diagrams/autoAICanvas.json";
 import { CommonCanvas, CanvasController } from "common-canvas";
 
@@ -144,13 +145,15 @@ class App extends React.Component {
 
 		return (
 			<div id="harness-app-container">
-				<CommonCanvas
-					canvasController={this.canvasController}
-					config = {commonCanvasConfig}
-					layoutHandler={this.layoutHandler}
-					decorationActionHandler={this.decorationActionHandler}
-					editActionHandler={this.editActionHandler}
-				/>
+				<IntlProvider>
+					<CommonCanvas
+						canvasController={this.canvasController}
+						config = {commonCanvasConfig}
+						layoutHandler={this.layoutHandler}
+						decorationActionHandler={this.decorationActionHandler}
+						editActionHandler={this.editActionHandler}
+					/>
+				</IntlProvider>
 			</div>
 		);
 	}

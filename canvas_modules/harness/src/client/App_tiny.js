@@ -9,6 +9,7 @@
 /* eslint no-console: ["error", { allow: ["log", "info", "warn", "error", "time", "timeEnd"] }] */
 
 import React from "react";
+import { IntlProvider } from "react-intl";
 import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
 import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
 import { CommonCanvas, CanvasController } from "common-canvas";
@@ -25,9 +26,11 @@ class App extends React.Component {
 	render() {
 		return (
 			<div id="harness-app-container">
-				<CommonCanvas
-					canvasController={this.canvasController}
-				/>
+				<IntlProvider>
+					<CommonCanvas
+						canvasController={this.canvasController}
+					/>
+				</IntlProvider>
 			</div>
 		);
 	}

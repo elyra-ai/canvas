@@ -9,6 +9,7 @@
 /* eslint no-console: ["error", { allow: ["log", "info", "warn", "error", "time", "timeEnd"] }] */
 
 import React from "react";
+import { IntlProvider } from "react-intl";
 import { CommonCanvas, CanvasController } from "common-canvas";
 import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
 import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
@@ -156,24 +157,26 @@ class App extends React.Component {
 		};
 
 		const commonCanvas = (
-			<CommonCanvas
-				canvasController={this.canvasController}
+			<IntlProvider>
+				<CommonCanvas
+					canvasController={this.canvasController}
 
-				config={commonCanvasConfig}
-				toolbarConfig={toolbarConfig}
-				notificationConfig={notificationConfig}
-				contextMenuConfig={contextMenuConfig}
-				keyboardConfig={keyboardConfig}
+					config={commonCanvasConfig}
+					toolbarConfig={toolbarConfig}
+					notificationConfig={notificationConfig}
+					contextMenuConfig={contextMenuConfig}
+					keyboardConfig={keyboardConfig}
 
-				contextMenuHandler={this.contextMenuHandler}
-				editActionHandler= {this.editActionHandler}
-				clickActionHandler= {this.clickActionHandler}
-				decorationActionHandler= {this.decorationActionHandler}
-				selectionChangeHandler={this.selectionChangeHandler}
-				layoutHandler={this.layoutHandler}
-				tipHandler={this.tipHandler}
-				idGenerationHandler={this.idGenerationHandler}
-			/>);
+					contextMenuHandler={this.contextMenuHandler}
+					editActionHandler= {this.editActionHandler}
+					clickActionHandler= {this.clickActionHandler}
+					decorationActionHandler= {this.decorationActionHandler}
+					selectionChangeHandler={this.selectionChangeHandler}
+					layoutHandler={this.layoutHandler}
+					tipHandler={this.tipHandler}
+					idGenerationHandler={this.idGenerationHandler}
+				/>
+			</IntlProvider>);
 
 		return (
 			<div id="harness-app-container">
