@@ -188,7 +188,8 @@ class Toolbar extends React.Component {
 		// Customer provided icon.
 		if (actionObj.iconEnabled && actionObj.iconDisabled) {
 			const customIcon = actionObj.enable ? actionObj.iconEnabled : actionObj.iconDisabled;
-			icon = (<SVG id={"toolbar-icon-" + actionObj.action} className={"toolbar-icons " + overflowClassName} disabled={!actionObj.enable}
+			const customIconClass = classNames("canvas-icon", "toolbar-icons", overflowClassName, iconClassname);
+			icon = (<SVG id={"toolbar-icon-" + actionObj.action} className={customIconClass} disabled={!actionObj.enable}
 				src={customIcon}
 			/>);
 		}
