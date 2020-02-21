@@ -970,13 +970,13 @@ export default class CanvasController {
 
 	undo() {
 		if (this.canUndo()) {
-			this.editActionHandler({ editType: "undo" });
+			this.getCommandStack().undo();
 		}
 	}
 
 	redo() {
 		if (this.canRedo()) {
-			this.editActionHandler({ editType: "redo" });
+			this.getCommandStack().redo();
 		}
 	}
 
@@ -1367,6 +1367,7 @@ export default class CanvasController {
 		const apiPipeline = selApiPipeline ? selApiPipeline : this.objectModel.getAPIPipeline();
 		var data = {
 			editType: "createAutoNode",
+			editSource: "canvas",
 			nodeTemplate: this.objectModel.convertNodeTemplate(nodeTemplate),
 			pipelineId: apiPipeline.pipelineId
 		};
@@ -1378,6 +1379,7 @@ export default class CanvasController {
 	createNodeFromTemplateAt(nodeTemplate, x, y, pipelineId) {
 		var data = {
 			editType: "createNode",
+			editSource: "canvas",
 			nodeTemplate: nodeTemplate,
 			offsetX: x,
 			offsetY: y,
@@ -1392,6 +1394,7 @@ export default class CanvasController {
 	createNodeFromTemplateOnLinkAt(nodeTemplate, link, x, y, pipelineId) {
 		var data = {
 			editType: "createNodeOnLink",
+			editSource: "canvas",
 			nodeTemplate: nodeTemplate,
 			offsetX: x,
 			offsetY: y,
@@ -1406,6 +1409,7 @@ export default class CanvasController {
 	createNodeFromObjectAt(sourceId, sourceObjectTypeId, label, x, y, pipelineId) {
 		var data = {
 			editType: "createNode",
+			editSource: "canvas",
 			label: label, // label will be passed through to the external object model
 			offsetX: x,
 			offsetY: y,
@@ -1425,6 +1429,7 @@ export default class CanvasController {
 		data.offsetX = x;
 		data.offsetY = y;
 		data.pipelineId = pipelineId;
+		data.editSource = "canvas";
 
 		this.editActionHandler(data);
 	}
@@ -1438,12 +1443,12 @@ export default class CanvasController {
 	}
 
 	displaySubPipeline(pipelineInfo) {
-		const data = { editType: "displaySubPipeline", pipelineInfo: pipelineInfo };
+		const data = { editType: "displaySubPipeline", pipelineInfo: pipelineInfo, editSource: "canvas" };
 		this.editActionHandler(data);
 	}
 
 	displayPreviousPipeline() {
-		const data = { editType: "displayPreviousPipeline", pipelineInfo: this.objectModel.getPreviousBreadcrumb() };
+		const data = { editType: "displayPreviousPipeline", pipelineInfo: this.objectModel.getPreviousBreadcrumb(), editSource: "canvas" };
 		this.editActionHandler(data);
 	}
 
