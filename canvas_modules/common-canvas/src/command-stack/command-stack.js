@@ -39,6 +39,20 @@ export default class CommandStack {
 		}
 	}
 
+	getUndoCommand() {
+		if (this.commands.canUndo) {
+			return this.commands.previous;
+		}
+		return null;
+	}
+
+	getRedoCommand() {
+		if (this.commands.canRedo) {
+			return this.commands.next;
+		}
+		return null;
+	}
+
 	// need this for validation on unit tests
 	getStack() {
 		const undoStack = this.commands.undos;

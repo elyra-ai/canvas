@@ -1804,12 +1804,16 @@ export default class CanvasController {
 				}
 				break;
 			}
-			case "undo":
+			case "undo": {
+				data = Object.assign(data, { undoData: this.getUndoData() });
 				this.commandStack.undo();
 				break;
-			case "redo":
+			}
+			case "redo": {
+				data = Object.assign(data, { redoData: this.getRedoData() });
 				this.commandStack.redo();
 				break;
+			}
 			default:
 			}
 		}
@@ -1817,6 +1821,26 @@ export default class CanvasController {
 		if (this.handlers.editActionHandler) {
 			this.handlers.editActionHandler(data);
 		}
+	}
+
+	// Returns the data associated with the next command on the command stack
+	// to be undone.
+	getUndoData() {
+		const undoCmnd = this.getCommandStack().getUndoCommand();
+		if (undoCmnd && undoCmnd.getData) {
+			return undoCmnd.getData();
+		}
+		return {};
+	}
+
+	// Returns the data associated with the next command on the command stack
+	// to be redone.
+	getRedoData() {
+		const redoCmnd = this.getCommandStack().getRedoCommand();
+		if (redoCmnd && redoCmnd.getData) {
+			return redoCmnd.getData();
+		}
+		return {};
 	}
 
 	// Pans the canvas to bring the newly added node into view if it is not
