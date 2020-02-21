@@ -252,6 +252,7 @@ export default class App extends React.Component {
 
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
+		this.beforeEditActionHandler = this.beforeEditActionHandler.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.extraCanvasEditActionHandler = this.extraCanvasEditActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
@@ -1201,6 +1202,15 @@ export default class App extends React.Component {
 		return defMenu;
 	}
 
+	beforeEditActionHandler(cmndData) {
+		const data = cmndData;
+		// Uncomment to play with setting the command data.
+		// if (data && data.editType === "editComment") {
+		// 	data.content += " -- Added text";
+		// }
+		return data;
+	}
+
 	editActionHandler(data, inExtraCanvas) {
 		let canvasController = this.canvasController;
 
@@ -2091,6 +2101,7 @@ export default class App extends React.Component {
 			<CommonCanvas
 				config={commonCanvasConfig}
 				contextMenuHandler={this.contextMenuHandler}
+				beforeEditActionHandler= {this.beforeEditActionHandler}
 				editActionHandler= {editActionHandler}
 				clickActionHandler= {this.clickActionHandler}
 				decorationActionHandler= {decorationActionHandler}

@@ -104,14 +104,14 @@ export default class CanvasController {
 
 		this.handlers = {
 			contextMenuHandler: null,
-			contextMenuActionHandler: null,
+			beforeEditActionHandler: null,
 			editActionHandler: null,
 			clickActionHandler: null,
 			decorationActionHandler: null,
-			selectionChangeHandler: null,
-			toolbarMenuActionHandler: null,
 			tipHandler: null,
-			layoutHandler: null
+			layoutHandler: null,
+			idGeneratorHandler: null,
+			selectionChangeHandler: null
 		};
 
 		this.commonCanvas = null;
@@ -1592,7 +1592,7 @@ export default class CanvasController {
 	}
 
 	toolbarActionHandler(action) {
-		this.logger.log("toolbarMenuActionHandler - action: " + action);
+		this.logger.log("toolbarActionHandler - action: " + action);
 		this.editActionHandler({ editType: action, editSource: "toolbar" });
 	}
 
@@ -1626,6 +1626,15 @@ export default class CanvasController {
 		let data = cmndData;
 		data.selectedObjectIds = this.getSelectedObjectIds();
 		data.selectedObjects = this.getSelectedObjects();
+
+		// Check with host application if it wants to proceed with the command
+		// and also let the application modify the commend data if required.
+		if (this.handlers.beforeEditActionHandler) {
+			data = this.handlers.beforeEditActionHandler(data);
+			if (!data) {
+				return;
+			}
+		}
 
 		// Only execute the delete if there are some selections to delete.
 		// This prevents an 'empty' command being added to the command stack when

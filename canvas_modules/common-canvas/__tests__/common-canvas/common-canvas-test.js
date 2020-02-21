@@ -121,13 +121,63 @@ describe("CommonCanvas renders correctly", () => {
 		expect(canvasController.isPaletteOpen() === false).to.be.true;
 	});
 
+	it("should call editActionHandler when object model is being edited", () => {
+		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
+		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
+		const config = { enableAutoLayout: "none" };
+
+		const editActionHandler = sinon.spy();
+		createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig,
+			{ editActionHandler: editActionHandler });
+
+		canvasController.editActionHandler({ editType: "dummayFunction" });
+
+		expect(editActionHandler.called).to.be.true;
+	});
+
+	it("should call editActionHandler when object model is being edited and beforeEditActionHandler returns command data", () => {
+		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
+		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
+		const config = { enableAutoLayout: "none" };
+
+		const beforeEditActionHandler = (data) => data; // Just return the data passd in
+		const editActionHandler = sinon.spy();
+
+		createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig,
+			{ editActionHandler: editActionHandler,
+				beforeEditActionHandler: beforeEditActionHandler });
+
+		canvasController.editActionHandler({ editType: "dummayFunction" });
+
+		expect(editActionHandler.called).to.be.true;
+	});
+
+	it("should not call editActionHandler when object model is being edited and beforeEditActionHandler returns null", () => {
+		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
+		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
+		const config = { enableAutoLayout: "none" };
+
+		const beforeEditActionHandler = (data) => null; // Return null to stop command being executed
+		const editActionHandler = sinon.spy();
+
+		createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig,
+			{ editActionHandler: editActionHandler,
+				beforeEditActionHandler: beforeEditActionHandler });
+
+		canvasController.editActionHandler({ editType: "dummayFunction" });
+
+		expect(editActionHandler.called).to.be.false;
+	});
+
+
 });
 
-function createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig) {
+function createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig, handlers) {
 	canvasController.getObjectModel().setPipelineFlowPalette({});
 	const contextMenuHandler = sinon.spy();
 	const contextMenuActionHandler = sinon.spy();
-	const editActionHandler = sinon.spy();
+	const beforeEditActionHandler = handlers && handlers.beforeEditActionHandler ? handlers.beforeEditActionHandler : null;
+	const editActionHandler = handlers && handlers.editActionHandler ? handlers.editActionHandler : sinon.spy();
 	const clickActionHandler = sinon.spy();
 	const decorationActionHandler = sinon.spy();
 	const selectionChangeHandler = sinon.spy();
@@ -138,6 +188,7 @@ function createCommonCanvas(config, canvasController, toolbarConfig, notificatio
 			config={config}
 			contextMenuHandler={contextMenuHandler}
 			contextMenuActionHandler={contextMenuActionHandler}
+			beforeEditActionHandler={beforeEditActionHandler}
 			editActionHandler={editActionHandler}
 			clickActionHandler={clickActionHandler}
 			decorationActionHandler={decorationActionHandler}
