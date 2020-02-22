@@ -36,6 +36,8 @@
 }
 
 .properties-summary-table {
+	@include carbon--type-style("body-short-01");
+	color: $text-01;
 	max-height: 270px;
 	width: calc(100% - 10px);
 	display: flex;
@@ -47,7 +49,8 @@
 }
 
 .properties-summary-label {
-	color: $text-02;
+	@include carbon--type-style("productive-heading-01");
+	color: $text-01;
 	margin-bottom: 10px;
 }
 

@@ -35,8 +35,8 @@
 		}
 	}
 	span {
-		font-weight: 600;
-		font-size: 12px;
+		@include carbon--type-style("label-01");
+		color: $text-02;
 	}
 	&.hide {
 		display: none;

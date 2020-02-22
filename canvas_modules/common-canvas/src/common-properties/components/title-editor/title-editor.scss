@@ -28,7 +28,8 @@
 		width: 100%;
 
 		input { //override styling from carbon
-			@include carbon--type-style("productive-heading-01");
+			@include carbon--type-style("productive-heading-03");
+			color: $text-01;
 
 			min-width: unset;
 			background: unset;
