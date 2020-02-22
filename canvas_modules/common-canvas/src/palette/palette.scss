@@ -102,6 +102,7 @@ $palette-border-color: $ui-03;
 .palette-flyout-category-item-icon {
 	width: 25px;  /* Not specifying height preserves the image's aspect ratio. */
 	margin-left: 16px;
+	fill: $icon-01;
 }
 
 .palette-flyout-text-container {

@@ -10,6 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Icon from "../icons/icon.jsx";
+import SVG from "react-inlinesvg";
 import { TIP_TYPE_PALETTE_CATEGORY, CANVAS_CARBON_ICONS } from "../common-canvas/constants/canvas-constants.js";
 
 class PaletteFlyoutContentCategory extends React.Component {
@@ -67,11 +68,19 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 		let itemImage = null;
 		if (this.props.category.image && this.props.category.image !== "") {
-			itemImage = (
-				<div>
-					<img src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" />
-				</div>
-			);
+			if (this.props.category.image.endsWith(".svg")) {
+				itemImage = (
+					<div>
+						<SVG src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" />
+					</div>
+				);
+			} else {
+				itemImage = (
+					<div>
+						<img src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" />
+					</div>
+				);
+			}
 		}
 
 		const label = this.getDisplayLabel();
