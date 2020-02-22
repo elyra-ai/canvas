@@ -84,6 +84,7 @@ export default class SVGCanvasD3 {
 				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
 				this.config.enableLinkType !== config.enableLinkType ||
 				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
+				this.config.enableInsertNodeDroppedOnLink !== config.enableInsertNodeDroppedOnLink ||
 				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize ||
 				this.config.enableBoundingRectangles !== config.enableBoundingRectangles ||
 				this.config.enableSaveZoom !== config.enableSaveZoom ||
@@ -255,6 +256,10 @@ export default class SVGCanvasD3 {
 				this.objectModel.setLayoutType("ports-vertical", config);
 			}
 		}
+	}
+
+	nodeDraggedOver(element) {
+		this.renderer.nodeDraggedOver(element);
 	}
 
 	nodeDropped(dropData, mousePos, element) {

@@ -631,6 +631,29 @@ export default class SVGCanvasRenderer {
 		};
 	}
 
+	nodeDraggedOver(element) {
+		if (this.config.enableInsertNodeDroppedOnLink) {
+			const link = this.getNodeLinkForElement(element);
+			if (link) {
+				if (!this.dragOverLink) {
+					this.dragOverLink = link;
+					this.setLinkDragOverHighlighting(this.dragOverLink, true);
+				}
+			} else {
+				if (this.dragOverLink) {
+					this.setLinkDragOverHighlighting(this.dragOverLink, false);
+					this.dragOverLink = null;
+				}
+			}
+		}
+	}
+
+	setLinkDragOverHighlighting(link, state) {
+		this.canvasGrp
+			.select(this.getSelectorForId("link_line", link.id))
+			.classed("d3-link-drop-node-highlight", state);
+	}
+
 	nodeDropped(dropData, mousePos, element) {
 		if (dropData === null) {
 			return;
@@ -641,7 +664,7 @@ export default class SVGCanvasRenderer {
 		mousePos.y -= (this.layout.nodeLayout.defaultNodeHeight / 2) * this.zoomTransform.k;
 
 		let transPos = this.transformPos(mousePos);
-		const link = this.getNodeLinkForElement(element);
+		const link = this.config.enableInsertNodeDroppedOnLink ? this.getNodeLinkForElement(element) : null;
 
 		if (this.config.enableSnapToGridType === "During" ||
 				this.config.enableSnapToGridType === "After") {

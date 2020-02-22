@@ -1714,6 +1714,7 @@ export default class App extends React.Component {
 			enableAssocLinkCreation: this.state.assocLinkCreation,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
+			enableInsertNodeDroppedOnLink: true,
 			enableMoveNodesOnSupernodeResize: this.state.enableMoveNodesOnSupernodeResize,
 			tipConfig: this.state.tipConfig,
 			schemaValidation: this.state.schemaValidationEnabled,

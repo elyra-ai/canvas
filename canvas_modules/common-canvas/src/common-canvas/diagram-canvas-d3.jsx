@@ -38,6 +38,7 @@ export default class DiagramCanvas extends React.Component {
 		this.drop = this.drop.bind(this);
 		this.focusOnCanvas = this.focusOnCanvas.bind(this);
 		this.setIsDropZoneDisplayed = this.setIsDropZoneDisplayed.bind(this);
+		this.dragOver = this.dragOver.bind(this);
 		this.dragEnter = this.dragEnter.bind(this);
 		this.dragLeave = this.dragLeave.bind(this);
 		this.refreshOnSizeChange = this.refreshOnSizeChange.bind(this);
@@ -138,6 +139,11 @@ export default class DiagramCanvas extends React.Component {
 		}
 		const element = this.getElementAtMousePos(event);
 		this.canvasD3Layout.nodeDropped(dropData, mousePos, element);
+	}
+
+	dragOver(event) {
+		const element = this.getElementAtMousePos(event);
+		this.canvasD3Layout.nodeDraggedOver(element);
 	}
 
 	dragEnter(event) {
@@ -245,6 +251,7 @@ export default class DiagramCanvas extends React.Component {
 					id={this.canvasDivId}
 					className="common-canvas-drop-div"
 					onDrop={this.drop}
+					onDragOver={this.dragOver}
 					onDragEnter={this.dragEnter}
 					onDragLeave={this.dragLeave}
 				>
