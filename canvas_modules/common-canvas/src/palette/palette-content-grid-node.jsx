@@ -10,6 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import has from "lodash/has";
+import SVG from "react-inlinesvg";
 import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../common-canvas/constants/canvas-constants.js";
 
 class PaletteContentNode extends React.Component {
@@ -55,10 +56,16 @@ class PaletteContentNode extends React.Component {
 	}
 
 	render() {
-		let image = null;
+		let icon = <div className="node-icon" />;
 		let label = "";
 		if (has(this.props.nodeTemplate, "app_data.ui_data.image")) {
-			image = this.props.nodeTemplate.app_data.ui_data.image;
+			const image = this.props.nodeTemplate.app_data.ui_data.image;
+			icon = (<img className="node-icon" src={image}
+				alt={label}
+			/>);
+			if (image.endsWith(".svg")) {
+				icon = <SVG src={image} className="node-icon" alt={label} />;
+			}
 		}
 		if (has(this.props.nodeTemplate, "app_data.ui_data.label")) {
 			label = this.props.nodeTemplate.app_data.ui_data.label;
@@ -75,9 +82,7 @@ class PaletteContentNode extends React.Component {
 			>
 				<div className="palette-grid-node-inner">
 					<div className="palette-grid-node-icon">
-						<img className="node-icon" src={image}
-							alt={label}
-						/>
+						{icon}
 					</div>
 					<div className="palette-grid-node-text">
 						{label}

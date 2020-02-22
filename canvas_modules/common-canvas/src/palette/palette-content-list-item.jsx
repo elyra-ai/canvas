@@ -10,6 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import has from "lodash/has";
+import SVG from "react-inlinesvg";
 import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../common-canvas/constants/canvas-constants.js";
 
 class PaletteContentListItem extends React.Component {
@@ -60,7 +61,7 @@ class PaletteContentListItem extends React.Component {
 
 	render() {
 		let itemText = null;
-		let image = null;
+		let icon = <div className="palette-list-item-icon" />;
 
 		if (this.props.isPaletteOpen &&
 				has(this.props.nodeTemplate, "app_data.ui_data.label")) {
@@ -74,8 +75,14 @@ class PaletteContentListItem extends React.Component {
 		}
 
 		if (has(this.props.nodeTemplate, "app_data.ui_data.image")) {
-			image = this.props.nodeTemplate.app_data.ui_data.image;
+			const image = this.props.nodeTemplate.app_data.ui_data.image;
+
+			icon = <img src={image} className="palette-list-item-icon" draggable="false" />;
+			if (image.endsWith(".svg")) {
+				icon = <SVG src={image} className="palette-list-item-icon" draggable="false" />;
+			}
 		}
+
 
 		return (
 			<div id={this.props.nodeTemplate.id}
@@ -87,7 +94,7 @@ class PaletteContentListItem extends React.Component {
 				onMouseLeave={this.onMouseLeave}
 			>
 				<div>
-					<img className="palette-list-item-icon" src={image} draggable="false" />
+					{icon}
 				</div>
 				{itemText}
 			</div>
