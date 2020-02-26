@@ -97,6 +97,10 @@ export default class SVGCanvasRenderer {
 		this.dragStartX = 0;
 		this.dragStartY = 0;
 
+		// The data link a node is currently being dragged over. It will be null
+		// when the node being dragged is not over a data link.
+		this.dragOverLink = null;
+
 		// Allow us to track when a selection is being made so there is
 		// no need to re-render whole canvas
 		this.selecting = false;
@@ -631,63 +635,92 @@ export default class SVGCanvasRenderer {
 		};
 	}
 
-	nodeDraggedOver(element) {
-		if (this.config.enableInsertNodeDroppedOnLink) {
-			const link = this.getNodeLinkForElement(element);
-			if (link) {
-				if (!this.dragOverLink) {
-					this.dragOverLink = link;
-					this.setLinkDragOverHighlighting(this.dragOverLink, true);
-				}
-			} else {
-				if (this.dragOverLink) {
-					this.setLinkDragOverHighlighting(this.dragOverLink, false);
-					this.dragOverLink = null;
-				}
+	// Highlights any data link, that an 'insertable' nodeTemplate from the
+	// palette, is dragged over.
+	paletteNodeDraggedOver(nodeTemplate, x, y) {
+		if (this.isNodeTemplateInsertableIntoLink(nodeTemplate)) {
+			const link = this.getLinkAtMousePos(x, y);
+			this.setLinkHighlighting(link);
+		}
+	}
+
+	// Switches on or off data link highlighting depending on the element
+	// passed in and keeps track of the currently highlighted link.
+	setLinkHighlighting(link) {
+		if (link) {
+			if (!this.dragOverLink) {
+				this.dragOverLink = link;
+				this.setLinkDragOverHighlighting(this.dragOverLink, true);
+
+			} else if (link.id !== this.dragOverLink.id) {
+				this.setLinkDragOverHighlighting(this.dragOverLink, false);
+				this.dragOverLink = link;
+				this.setLinkDragOverHighlighting(this.dragOverLink, true);
+			}
+		} else {
+			if (this.dragOverLink) {
+				this.setLinkDragOverHighlighting(this.dragOverLink, false);
+				this.dragOverLink = null;
 			}
 		}
 	}
 
+	// Switches on or off the drop-node highlighting on the link passed in.
+	// This is called when the user drags an 'insertable' node over a link.
 	setLinkDragOverHighlighting(link, state) {
 		this.canvasGrp
 			.select(this.getSelectorForId("link_line", link.id))
 			.classed("d3-link-drop-node-highlight", state);
 	}
 
-	nodeDropped(dropData, mousePos, element) {
+	// Processes the drop of a palette node template onto the canvas.
+	nodeTemplateDropped(nodeTemplate, mousePos) {
+		if (nodeTemplate === null) {
+			return;
+		}
+		const transPos = this.transformMousePosForNode(mousePos);
+		this.canvasController.createDroppedPalettedNode(nodeTemplate, this.dragOverLink, transPos, this.pipelineId);
+	}
+
+	// Processes the drop of an 'external' object onto the canvas. This may be
+	// either a node from the desktop or even from elsewhere on the browser page.
+	externalObjectDropped(dropData, mousePos) {
 		if (dropData === null) {
 			return;
 		}
+		const transPos = this.transformMousePosForNode(mousePos);
+		this.canvasController.createDroppeExternalObject(dropData, transPos, this.pipelineId);
+	}
 
+	// Transforms the mouse position passed in to be appropriate for a palette
+	// node or external object being dragged over the canvas.
+	transformMousePosForNode(mousePos) {
 		// Offset mousePos so new node appers in center of mouse location.
 		mousePos.x -= (this.layout.nodeLayout.defaultNodeWidth / 2) * this.zoomTransform.k;
 		mousePos.y -= (this.layout.nodeLayout.defaultNodeHeight / 2) * this.zoomTransform.k;
 
 		let transPos = this.transformPos(mousePos);
-		const link = this.config.enableInsertNodeDroppedOnLink ? this.getNodeLinkForElement(element) : null;
 
 		if (this.config.enableSnapToGridType === "During" ||
 				this.config.enableSnapToGridType === "After") {
 			transPos = this.snapToGridObject(transPos);
 		}
-
-		this.canvasController.createDroppedNode(dropData, link, transPos, this.pipelineId);
+		return transPos;
 	}
 
-	// Returns the node link object from the canvasInfo corresponding to the
-	// element passed in provided it is a 'path' DOM object. Returns null if
-	// a link cannot be found.
-	getNodeLinkForElement(element) {
-		if (element && element.nodeName === "path") {
-			const datum = d3.select(element).datum();
-			if (datum) {
-				var foundLink = this.canvasController.getLink(datum.id, this.pipelineId);
-				if (foundLink && foundLink.type === NODE_LINK) {
-					return foundLink;
-				}
-			}
-		}
-		return null;
+	// Returns true if the nodeTemplate passed in is 'insertable' into a data
+	// link between nodes on the canvas.
+	isNodeTemplateInsertableIntoLink(nodeTemplate) {
+		return this.config.enableInsertNodeDroppedOnLink &&
+			this.isNonBindingNode(nodeTemplate);
+	}
+
+	// Returns true if the current drag objects array has a single node which
+	// is 'insertable' into a data link between nodes on the canvas.
+	isExistingNodeInsertableIntoLink() {
+		return (this.config.enableInsertNodeDroppedOnLink &&
+			this.dragObjects.length === 1 &&
+			this.isNonBindingNode(this.dragObjects[0]));
 	}
 
 	getNode(nodeId) {
@@ -1602,6 +1635,12 @@ export default class SVGCanvasRenderer {
 			this.dragObjects = this.getDragObjects(d);
 			this.dragStartX = this.dragObjects[0].x_pos;
 			this.dragStartY = this.dragObjects[0].y_pos;
+
+			// If we are dragging an 'insertable' node, set it to be translucent so
+			// that, when it is dragged over a link line, the highlightd line can be seen OK.
+			if (this.isExistingNodeInsertableIntoLink()) {
+				this.setNodeTranslucentState(this.dragObjects[0].id, true);
+			}
 		}
 		// Note: Comment and supernode resizing is started by the comment/supernode highlight rectangle.
 		this.logger.logEndTimer("dragStart", true);
@@ -1652,7 +1691,13 @@ export default class SVGCanvasRenderer {
 			}
 
 			this.displayCanvas();
+
+			if (this.isExistingNodeInsertableIntoLink()) {
+				const link = this.getLinkAtMousePos(d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
+				this.setLinkHighlighting(link);
+			}
 		}
+
 		this.logger.logEndTimer("dragMove", true);
 	}
 
@@ -1670,6 +1715,11 @@ export default class SVGCanvasRenderer {
 		} else if (this.dragging) {
 			// Set to false before updating object model so main body of displayNodes is run.
 			this.dragging = false;
+
+			// If we are dragging an 'insertable' node switch the translucent state off.
+			if (this.isExistingNodeInsertableIntoLink()) {
+				this.setNodeTranslucentState(this.dragObjects[0].id, false);
+			}
 
 			// If the pointer hasn't moved and enableDragWithoutSelect we interpret
 			// that as a select on the object.
@@ -1695,17 +1745,39 @@ export default class SVGCanvasRenderer {
 					} else {
 						dragFinalOffset = { x: this.dragRunningX, y: this.dragRunningY };
 					}
-					this.canvasController.editActionHandler({
-						editType: "moveObjects",
-						editSource: "canvas",
-						nodes: this.dragObjects.map((o) => o.id),
-						offsetX: dragFinalOffset.x,
-						offsetY: dragFinalOffset.y,
-						pipelineId: this.activePipeline.id });
+					if (this.isExistingNodeInsertableIntoLink() &&
+							this.dragOverLink) {
+						this.canvasController.editActionHandler({
+							editType: "insertNodeIntoLink",
+							editSource: "canvas",
+							node: this.dragObjects[0],
+							link: this.dragOverLink,
+							offsetX: dragFinalOffset.x,
+							offsetY: dragFinalOffset.y,
+							pipelineId: this.activePipeline.id });
+					} else {
+						this.canvasController.editActionHandler({
+							editType: "moveObjects",
+							editSource: "canvas",
+							nodes: this.dragObjects.map((o) => o.id),
+							offsetX: dragFinalOffset.x,
+							offsetY: dragFinalOffset.y,
+							pipelineId: this.activePipeline.id });
+					}
 				}
 			}
 		}
 		this.logger.logEndTimer("dragEnd", true);
+	}
+
+	// Switches on or off the translucent state of the node identified by the
+	// node ID passed in. This is used when an 'insertable' node is dragged on
+	// the canvas. It makes is easier for the user to see the highlighted link
+	// when the node is dragged over it.
+	setNodeTranslucentState(nodeId, state) {
+		const nodeGrpSelector = this.getSelectorForId("node_grp", nodeId);
+		const nodeGrpSel = this.canvasSVG.select(nodeGrpSelector);
+		nodeGrpSel.classed("d3-node-group-translucent", state);
 	}
 
 	// Returns the snap-to-grid position of the object positioned at
@@ -2773,6 +2845,13 @@ export default class SVGCanvasRenderer {
 		return node.type === "binding" && node.inputs && node.inputs.length > 0;
 	}
 
+	isNonBindingNode(node) {
+		return (node.inputs &&
+						node.inputs.length > 0 &&
+						node.outputs &&
+						node.outputs.length > 0);
+	}
+
 	removeDynamicNodeIcons(d, nodeGrp) {
 		if (d.layout.ellipsisDisplay) {
 			nodeGrp.selectAll(this.getSelectorForId("node_ellipsis", d.id)).remove();
@@ -3505,6 +3584,45 @@ export default class SVGCanvasRenderer {
 			this.canvasGrp.selectAll(".d3-new-connection-blob").remove();
 			this.canvasGrp.selectAll(".d3-new-connection-arrow").remove();
 		}
+	}
+
+	// Returns a link, if one can be found, at the position indicated by x and y
+	// coordinates.
+	getLinkAtMousePos(x, y) {
+		const element = this.getLinkElementAtMousePos(x, y);
+		const link = this.getNodeLinkForElement(element);
+		return link;
+	}
+
+	// Returns a link-selection-area DOM element, if one can be found, at the
+	// position indicated by x and y coordinates. Note: It may not be the
+	// top-most element so we have to search through the array for it.
+	getLinkElementAtMousePos(x, y) {
+		this.setDataLinkSelectionAreaWider(true);
+		const elements = document.elementsFromPoint(x, y);
+		const element = elements.find((el) => el.className && el.className.baseVal && el.className.baseVal.includes("d3-data-link-selection-area"));
+		this.setDataLinkSelectionAreaWider(false);
+		return element;
+	}
+
+	// Returns the node link object from the canvasInfo corresponding to the
+	// element passed in provided it is a 'path' DOM object. Returns null if
+	// a link cannot be found.
+	getNodeLinkForElement(element) {
+		if (element && element.nodeName === "path") {
+			const datum = d3.select(element).datum();
+			if (datum) {
+				var foundLink = this.canvasController.getLink(datum.id, this.pipelineId);
+				if (foundLink && foundLink.type === NODE_LINK) {
+					return foundLink;
+				}
+			}
+		}
+		return null;
+	}
+
+	setDataLinkSelectionAreaWider(state) {
+		this.canvasSVG.selectAll(".d3-data-link-selection-area").classed("d3-extra-width", state);
 	}
 
 	getNodeAtMousePos() {
@@ -4819,7 +4937,7 @@ export default class SVGCanvasRenderer {
 		// Link selection area
 		linkGroup.append("path")
 			.attr("d", (d) => d.path)
-			.attr("class", "d3-link-selection-area")
+			.attr("class", (d) => this.getLinkSelectionAreaClass(d))
 			.on("mouseenter", function(link) {
 				that.setLinkLineStyles(link, "hover");
 			})
@@ -4899,6 +5017,15 @@ export default class SVGCanvasRenderer {
 		});
 
 		return snBindingNodes;
+	}
+
+	getLinkSelectionAreaClass(d) {
+		if (d.type === ASSOCIATION_LINK) {
+			return "d3-association-link-selection-area";
+		} else if (d.type === COMMENT_LINK) {
+			return "d3-comment-link-selection-area";
+		}
+		return "d3-data-link-selection-area";
 	}
 
 	getDataLinkClass(d) {

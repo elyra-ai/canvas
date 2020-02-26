@@ -80,10 +80,6 @@ export default class DiagramCanvas extends React.Component {
 		return this.canvasD3Layout.getSvgViewportOffset();
 	}
 
-	getElementAtMousePos(event) {
-		return document.elementFromPoint(event.clientX, event.clientY);
-	}
-
 	getZoomToReveal(objectIds) {
 		return this.canvasD3Layout.getZoomToReveal(objectIds);
 	}
@@ -124,26 +120,39 @@ export default class DiagramCanvas extends React.Component {
 		this.second = false;
 		this.setIsDropZoneDisplayed(false);
 		const mousePos = this.mouseCoords(event);
-		let dropData = this.getDNDJson(event);
-		// If no drop data is found (which complies with the calling protocol
-		// described in the wiki) we just pass through the dataTransfer data and
-		// set an appropriate operation.
-		if (!dropData) {
-			dropData = {
-				operation: "addToCanvas",
-				data: {
-					dataTransfer: event.dataTransfer,
-					editType: "createFromExternalObject"
-				}
-			};
+
+		const nodeTemplate = event.canvasNodeTemplate;
+		if (nodeTemplate) {
+			this.canvasD3Layout.nodeTemplateDropped(nodeTemplate, mousePos);
+
+		} else {
+			let dropData = this.getDNDJson(event);
+			// If no drop data is found (which complies with the calling protocol
+			// described in the wiki) we just pass through the dataTransfer data and
+			// set an appropriate operation.
+			if (!dropData) {
+				dropData = {
+					operation: "addToCanvas",
+					data: {
+						dataTransfer: event.dataTransfer,
+						editType: "createFromExternalObject"
+					}
+				};
+			}
+			this.canvasD3Layout.externalObjectDropped(dropData, mousePos);
 		}
-		const element = this.getElementAtMousePos(event);
-		this.canvasD3Layout.nodeDropped(dropData, mousePos, element);
+
+		// canvasNodeTemplate will persist in future events if we don't remove it
+		delete event.canvasNodeTemplate;
+		// Also clear dataTransfer data for when we get external objects.
+		event.dataTransfer.clearData();
 	}
 
 	dragOver(event) {
-		const element = this.getElementAtMousePos(event);
-		this.canvasD3Layout.nodeDraggedOver(element);
+		const nodeTemplate = event.canvasNodeTemplate;
+		if (nodeTemplate) {
+			this.canvasD3Layout.paletteNodeDraggedOver(nodeTemplate, event.clientX, event.clientY);
+		}
 	}
 
 	dragEnter(event) {

@@ -147,6 +147,10 @@ $new-halo-link-color: $ui-05;
 	cursor: pointer;
 }
 
+.d3-node-group-translucent {
+	opacity: 0.5;
+}
+
 .d3-node-sizing,
 .d3-comment-sizing {
 	fill: transparent;
@@ -545,10 +549,15 @@ $new-halo-link-color: $ui-05;
 	stroke-dasharray: 0;
 }
 
-.d3-link-selection-area {
+.d3-association-link-selection-area,
+.d3-comment-link-selection-area,
+.d3-data-link-selection-area {
 	fill: none;
 	stroke: transparent;
 	stroke-width: 10;
+	&.d3-extra-width {
+		stroke-width: 80;
+	}
 }
 
 .d3-link-drop-node-highlight {
@@ -564,6 +573,8 @@ g .d3-comment-link:hover,
 g .d3-data-link:hover,
 g .d3-selectable-link:hover,
 g .d3-selectable-link:hover ~ .d3-selectable-link,      /* Colors arrow head when hovering over line. */
-g .d3-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
+g .d3-data-link-selection-area:hover ~ .d3-selectable-link, /* Colors arrow head when hovering over line selection area. */
+g .d3-comment-link-selection-area:hover ~ .d3-selectable-link, /* Colors arrow head when hovering over line selection area. */
+g .d3-association-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
 	stroke: $link-hightlight-color;
 }

@@ -27,11 +27,14 @@ class PaletteContentNode extends React.Component {
 	}
 
 	onDragStart(ev) {
-		ev.dataTransfer.setData(DND_DATA_TEXT,
-			JSON.stringify({
-				operation: "createFromTemplate",
-				nodeTemplate: this.props.nodeTemplate
-			}));
+		// We cannot use the dataTransfer object for the nodeTemplate because
+		// the dataTransfer data is not available during dragOver events so we set
+		// the nodeTemplate into an event field.
+		ev.canvasNodeTemplate = this.props.nodeTemplate;
+
+		// On firefox, the drag will not start unless something is written to
+		// the dataTransfer object so just write an empty string
+		ev.dataTransfer.setData(DND_DATA_TEXT, "");
 	}
 
 	onDoubleClick() {

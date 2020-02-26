@@ -258,12 +258,16 @@ export default class SVGCanvasD3 {
 		}
 	}
 
-	nodeDraggedOver(element) {
-		this.renderer.nodeDraggedOver(element);
+	paletteNodeDraggedOver(nodeTemplate, x, y) {
+		this.renderer.paletteNodeDraggedOver(nodeTemplate, x, y);
 	}
 
-	nodeDropped(dropData, mousePos, element) {
-		this.renderer.nodeDropped(dropData, mousePos, element);
+	nodeTemplateDropped(nodeTemplate, mousePos) {
+		this.renderer.nodeTemplateDropped(nodeTemplate, mousePos);
+	}
+
+	externalObjectDropped(dropData, mousePos) {
+		this.renderer.externalObjectDropped(dropData, mousePos);
 	}
 
 	zoomTo(zoomObject) {

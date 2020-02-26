@@ -144,6 +144,7 @@ export default class App extends React.Component {
 			displayAdditionalComponents: false,
 			enableSaveToPalette: false,
 			enableDropZoneOnExternalDrag: false,
+			insertNodeDroppedOnLink: false,
 			enableCreateSupernodeNonContiguous: false,
 			enableMoveNodesOnSupernodeResize: true,
 			applyOnBlur: true,
@@ -209,6 +210,7 @@ export default class App extends React.Component {
 
 		this.setSaveZoom = this.setSaveZoom.bind(this);
 		this.setZoomIntoSubFlows = this.setZoomIntoSubFlows.bind(this);
+		this.useEnableInsertNodeDroppedOnLink = this.useEnableInsertNodeDroppedOnLink.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useEnableDragWithoutSelect = this.useEnableDragWithoutSelect.bind(this);
 		this.useEnableAssocLinkCreation = this.useEnableAssocLinkCreation.bind(this);
@@ -1066,6 +1068,11 @@ export default class App extends React.Component {
 		this.log("enable association link creation", enabled);
 	}
 
+	useEnableInsertNodeDroppedOnLink(selectedInsert) {
+		this.setState({ insertNodeDroppedOnLink: selectedInsert });
+		this.log("Insert node droped  on link ", selectedInsert);
+	}
+
 	useApplyOnBlur(enabled) {
 		this.setState({ applyOnBlur: enabled });
 		this.log("apply changes on blur", enabled);
@@ -1714,7 +1721,7 @@ export default class App extends React.Component {
 			enableAssocLinkCreation: this.state.assocLinkCreation,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
-			enableInsertNodeDroppedOnLink: true,
+			enableInsertNodeDroppedOnLink: this.state.insertNodeDroppedOnLink,
 			enableMoveNodesOnSupernodeResize: this.state.enableMoveNodesOnSupernodeResize,
 			tipConfig: this.state.tipConfig,
 			schemaValidation: this.state.schemaValidationEnabled,
@@ -2173,8 +2180,11 @@ export default class App extends React.Component {
 			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
 			setSaveZoom: this.setSaveZoom,
 			setZoomIntoSubFlows: this.setZoomIntoSubFlows,
+			setBooleanValue: this.setBooleanValue,
+			enableInsertNodeDroppedOnLink: this.state.insertNodeDroppedOnLink,
 			useInternalObjectModel: this.useInternalObjectModel,
 			useEnableDragWithoutSelect: this.useEnableDragWithoutSelect,
+			useEnableInsertNodeDroppedOnLink: this.useEnableInsertNodeDroppedOnLink,
 			useEnableAssocLinkCreation: this.useEnableAssocLinkCreation,
 			setInteractionType: this.setInteractionType,
 			selectedInteractionType: this.state.selectedInteractionType,

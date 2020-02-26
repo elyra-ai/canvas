@@ -26,6 +26,7 @@ import DisplayPreviousPipelineAction from "../command-actions/displayPreviousPip
 import DisplaySubPipelineAction from "../command-actions/displaySubPipelineAction.js";
 import EditCommentAction from "../command-actions/editCommentAction.js";
 import ExpandSuperNodeInPlaceAction from "../command-actions/expandSuperNodeInPlaceAction.js";
+import InsertNodeIntoLinkAction from "../command-actions/insertNodeIntoLinkAction.js";
 import MoveObjectsAction from "../command-actions/moveObjectsAction.js";
 import SaveToPaletteAction from "../command-actions/saveToPaletteAction.js";
 import SetObjectsStyleAction from "../command-actions/setObjectsStyleAction.js";
@@ -1344,22 +1345,37 @@ export default class CanvasController {
 		}
 	}
 
-	createDroppedNode(dropData, link, transPos, pipelineId) {
-		if (dropData.operation === "createFromTemplate") {
-			const newNodeTemplate = this.objectModel.convertNodeTemplate(dropData.nodeTemplate);
+	// Processes the drop of a palette node template onto the canvas.
+	// nodeTemplate - The node template being dragged from the palette
+	// link - the link where the node template is being dropped, or null if no link
+	// transPos - mouse position transformed for canvas co-ordinates
+	// pipelineId - the ID of the pipeline onto which the node is being dropped
+	createDroppedPalettedNode(nodeTemplate, link, transPos, pipelineId) {
+		if (nodeTemplate) {
+			const newNodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
 			if (link &&
-					this.canNodeBeDroppedOnLink(newNodeTemplate, this.pipelineId) &&
+					this.canNodeBeDroppedOnLink(newNodeTemplate) &&
 					this.isInternalObjectModelEnabled()) {
 				this.createNodeFromTemplateOnLinkAt(newNodeTemplate, link, transPos.x, transPos.y, pipelineId);
 			} else {
 				this.createNodeFromTemplateAt(newNodeTemplate, transPos.x, transPos.y, pipelineId);
 			}
+		}
+	}
 
-		} else if (dropData.operation === "createFromObject") {
-			this.createNodeFromObjectAt(dropData.sourceId, dropData.sourceObjectTypeId, dropData.label, transPos.x, transPos.y, pipelineId);
+	// Processes the drop of an 'external' object, either from the desktop or
+	// elsewhere on the browser page, onto the canvas.
+	// dropData - The data describing the object being dropped
+	// transPos - mouse position transformed for canvas coordinates
+	// pipelineId - the ID of the pipeline onto which the object is being dropped
+	createDroppedExternalObject(dropData, transPos, pipelineId) {
+		if (dropData) {
+			if (dropData.operation === "createFromObject") {
+				this.createNodeFromObjectAt(dropData.sourceId, dropData.sourceObjectTypeId, dropData.label, transPos.x, transPos.y, pipelineId);
 
-		} else if (dropData.operation === "addToCanvas" || dropData.operation === "addTableFromConnection") {
-			this.createNodeFromDataAt(transPos.x, transPos.y, dropData.data, pipelineId);
+			} else {
+				this.createNodeFromDataAt(transPos.x, transPos.y, dropData, pipelineId);
+			}
 		}
 	}
 
@@ -1426,7 +1442,8 @@ export default class CanvasController {
 	// The data object must contain the 'action' field that is passed to
 	// the host app from editActionHandler. The editActionHandler method
 	// does not intercept this action.
-	createNodeFromDataAt(x, y, data, pipelineId) {
+	createNodeFromDataAt(x, y, dropData, pipelineId) {
+		const data = dropData.data;
 		data.offsetX = x;
 		data.offsetY = y;
 		data.pipelineId = pipelineId;
@@ -1435,7 +1452,7 @@ export default class CanvasController {
 		this.editActionHandler(data);
 	}
 
-	canNodeBeDroppedOnLink(nodeType, pipelineId) {
+	canNodeBeDroppedOnLink(nodeType) {
 		if (nodeType.inputs && nodeType.inputs.length > 0 &&
 				nodeType.outputs && nodeType.outputs.length > 0) {
 			return true;
@@ -1682,6 +1699,11 @@ export default class CanvasController {
 				const command = new CreateCommentAction(data, this.objectModel, svgPos);
 				this.commandStack.do(command);
 				data = command.getData();
+				break;
+			}
+			case "insertNodeIntoLink": {
+				const command = new InsertNodeIntoLinkAction(data, this.objectModel);
+				this.commandStack.do(command);
 				break;
 			}
 			case "moveObjects": {

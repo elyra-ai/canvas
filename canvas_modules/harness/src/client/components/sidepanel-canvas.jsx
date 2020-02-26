@@ -82,6 +82,7 @@ export default class SidePanelForms extends React.Component {
 		this.snapToGridOptionChange = this.snapToGridOptionChange.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useEnableDragWithoutSelect = this.useEnableDragWithoutSelect.bind(this);
+		this.useEnableInsertNodeDroppedOnLink = this.useEnableInsertNodeDroppedOnLink.bind(this);
 		this.useEnableAssocLinkCreation = this.useEnableAssocLinkCreation.bind(this);
 		this.useEnableSaveToPalette = this.useEnableSaveToPalette.bind(this);
 		this.useEnableDropZoneOnExternalDrag = this.useEnableDropZoneOnExternalDrag.bind(this);
@@ -316,6 +317,10 @@ export default class SidePanelForms extends React.Component {
 
 	useEnableDragWithoutSelect(checked) {
 		this.props.canvasConfig.useEnableDragWithoutSelect(checked);
+	}
+
+	useEnableInsertNodeDroppedOnLink(checked) {
+		this.props.canvasConfig.useEnableInsertNodeDroppedOnLink(checked);
 	}
 
 	useEnableAssocLinkCreation(checked) {
@@ -707,6 +712,19 @@ export default class SidePanelForms extends React.Component {
 				</form>
 			</div>);
 
+		var enableInsertNodeDroppedOnLink = (
+			<div className="harness-sidepanel-children" id="harness-sidepanel-insert-node-dropped-on-link-toggle">
+				<form>
+					<div className="harness-sidepanel-headers">Enable Insert Node Droped On Link</div>
+					<div>
+						<Toggle
+							id="harness-sidepanel-enable-insert-node-dropped-on-link-toggle"
+							toggled={this.props.canvasConfig.enableInsertNodeDroppedOnLink}
+							onToggle={this.useEnableInsertNodeDroppedOnLink}
+						/>
+					</div>
+				</form>
+			</div>);
 
 		var enableZoomIntoSubFlows = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-zoom-into-subflows-toggle">
@@ -1027,6 +1045,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{enableDragWithoutSelect}
 				{divider}
+				{enableInsertNodeDroppedOnLink}
+				{divider}
 				{enableAssocLinkCreation}
 				{divider}
 				{assocLinkType}
@@ -1078,6 +1098,8 @@ SidePanelForms.propTypes = {
 		enableSaveToPalette: PropTypes.bool,
 		useEnableSaveToPalette: PropTypes.func,
 		enableDropZoneOnExternalDrag: PropTypes.bool,
+		enableInsertNodeDroppedOnLink: PropTypes.bool,
+		useEnableInsertNodeDroppedOnLink: PropTypes.func,
 		useEnableDropZoneOnExternalDrag: PropTypes.func,
 		enableCreateSupernodeNonContiguous: PropTypes.bool,
 		useEnableCreateSupernodeNonContiguous: PropTypes.func,
