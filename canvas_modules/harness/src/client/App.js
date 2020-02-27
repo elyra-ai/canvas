@@ -1209,7 +1209,7 @@ export default class App extends React.Component {
 		return defMenu;
 	}
 
-	beforeEditActionHandler(cmndData) {
+	beforeEditActionHandler(cmndData, command) {
 		const data = cmndData;
 		// Uncomment to play with setting the command data.
 		// if (data && data.editType === "editComment") {
@@ -1218,7 +1218,7 @@ export default class App extends React.Component {
 		return data;
 	}
 
-	editActionHandler(data, inExtraCanvas) {
+	editActionHandler(data, command, inExtraCanvas) {
 		let canvasController = this.canvasController;
 
 		if (inExtraCanvas) {
@@ -1258,8 +1258,8 @@ export default class App extends React.Component {
 		this.log("editActionHandler(): " + data.editType, data);
 	}
 
-	extraCanvasEditActionHandler(data) {
-		this.editActionHandler(data, true);
+	extraCanvasEditActionHandler(data, command) {
+		this.editActionHandler(data, command, true);
 	}
 
 	decorationActionHandler(object, id, pipelineId) {

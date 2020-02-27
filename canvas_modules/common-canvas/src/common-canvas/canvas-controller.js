@@ -1646,9 +1646,15 @@ export default class CanvasController {
 		data.selectedObjects = this.getSelectedObjects();
 
 		// Check with host application if it wants to proceed with the command
-		// and also let the application modify the commend data if required.
+		// and also let the application modify the command input data if required.
 		if (this.handlers.beforeEditActionHandler) {
-			data = this.handlers.beforeEditActionHandler(data);
+			let cmnd = null;
+			if (data.editType === "undo") {
+				cmnd = this.getCommandStack().getUndoCommand();
+			} else if (data.editType === "redo") {
+				cmnd = this.getCommandStack().getRedoCommand();
+			}
+			data = this.handlers.beforeEditActionHandler(data, cmnd);
 			if (!data) {
 				return;
 			}
@@ -1667,140 +1673,171 @@ export default class CanvasController {
 			this.objectModel.selectAll(data.pipelineId);
 		}
 
+		let command = null;
+
 		if (this.canvasConfig.enableInternalObjectModel) {
 			switch (data.editType) {
 			case "createNode": {
-				const command = new CreateNodeAction(data, this.objectModel);
+				command = new CreateNodeAction(data, this.objectModel);
 				this.commandStack.do(command);
 				data = command.getData();
-				data = this.addHistoricalFields(data);
 				break;
 			}
 			case "createNodeOnLink": {
-				const command = new CreateNodeOnLinkAction(data, this.objectModel);
+				command = new CreateNodeOnLinkAction(data, this.objectModel);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "createAutoNode": {
-				const command = new CreateAutoNodeAction(data, this.objectModel);
+				command = new CreateAutoNodeAction(data, this.objectModel);
 				this.commandStack.do(command);
 				this.panToReveal(data);
 				data = command.getData();
 				break;
 			}
 			case "createComment": {
-				const command = new CreateCommentAction(data, this.objectModel);
+				command = new CreateCommentAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "createAutoComment": {
 				const svgPos = this.commonCanvas.getSvgViewportOffset();
-				const command = new CreateCommentAction(data, this.objectModel, svgPos);
+				command = new CreateCommentAction(data, this.objectModel, svgPos);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "insertNodeIntoLink": {
-				const command = new InsertNodeIntoLinkAction(data, this.objectModel);
+				command = new InsertNodeIntoLinkAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "moveObjects": {
-				const command = new MoveObjectsAction(data, this.objectModel);
+				command = new MoveObjectsAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "resizeObjects": {
-				const command = new SizeAndPositionObjectsAction(data, this.objectModel);
+				command = new SizeAndPositionObjectsAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "setObjectsStyle": {
-				const command = new SetObjectsStyleAction(data, this.objectModel);
+				command = new SetObjectsStyleAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "setLinksStyle": {
-				const command = new SetLinksStyleAction(data, this.objectModel);
+				command = new SetLinksStyleAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "editComment": {
-				const command = new EditCommentAction(data, this.objectModel);
+				command = new EditCommentAction(data, this.objectModel);
 				this.commandStack.do(command);
-				data = this.addHistoricalFieldsEditComment(data);
 				break;
 			}
 			case "linkNodes": {
-				const command = new CreateNodeLinkAction(data, this.objectModel);
+				command = new CreateNodeLinkAction(data, this.objectModel);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "linkComment": {
-				const command = new CreateCommentLinkAction(data, this.objectModel);
+				command = new CreateCommentLinkAction(data, this.objectModel);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "deleteSelectedObjects": {
-				const command = new DeleteObjectsAction(data, this.objectModel);
+				command = new DeleteObjectsAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "displaySubPipeline": {
-				const command = new DisplaySubPipelineAction(data, this.objectModel);
+				command = new DisplaySubPipelineAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "displayPreviousPipeline": {
-				const command = new DisplayPreviousPipelineAction(data, this.objectModel);
+				command = new DisplayPreviousPipelineAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "arrangeHorizontally": {
-				const command = new ArrangeLayoutAction(constants.HORIZONTAL, this.objectModel);
+				command = new ArrangeLayoutAction(constants.HORIZONTAL, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "arrangeVertically": {
-				const command = new ArrangeLayoutAction(constants.VERTICAL, this.objectModel);
+				command = new ArrangeLayoutAction(constants.VERTICAL, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
-			case "zoomPipeline": {
-				this.zoomPipeline(data.zoom, data.pipelineId);
-				break;
-			}
 			case "createSuperNode": {
-				const command = new CreateSuperNodeAction(data, this.objectModel, this.intl);
+				command = new CreateSuperNodeAction(data, this.objectModel, this.intl);
 				this.commandStack.do(command);
 				break;
 			}
 			case "expandSuperNodeInPlace": {
-				const command = new ExpandSuperNodeInPlaceAction(data, this.objectModel, this.canvasConfig.enableMoveNodesOnSupernodeResize);
+				command = new ExpandSuperNodeInPlaceAction(data, this.objectModel, this.canvasConfig.enableMoveNodesOnSupernodeResize);
 				this.commandStack.do(command);
 				break;
 			}
 			case "collapseSuperNodeInPlace": {
-				const command = new CollapseSuperNodeInPlaceAction(data, this.objectModel, this.canvasConfig.enableMoveNodesOnSupernodeResize);
+				command = new CollapseSuperNodeInPlaceAction(data, this.objectModel, this.canvasConfig.enableMoveNodesOnSupernodeResize);
 				this.commandStack.do(command);
 				break;
 			}
 			case "deleteLink": {
-				const command = new DeleteLinkAction(data, this.objectModel);
+				command = new DeleteLinkAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "disconnectNode": {
-				const command = new DisconnectObjectsAction(data, this.objectModel);
+				command = new DisconnectObjectsAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "saveToPalette": {
-				const command = new SaveToPaletteAction(data, this.objectModel, this.intl);
+				command = new SaveToPaletteAction(data, this.objectModel, this.intl);
 				this.commandStack.do(command);
+				break;
+			}
+			case "cut": {
+				this.copyToClipboard();
+				command = new DeleteObjectsAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "copy":
+				this.copyToClipboard();
+				break;
+			case "paste": {
+				const pasteObj = this.getObjectsToPaste(data.pipelineId);
+				if (pasteObj.objects) {
+					data = Object.assign(data, { objects: pasteObj.objects, pipelineId: pasteObj.pipelineId });
+					command = new CloneMultipleObjectsAction(data, this.objectModel);
+					this.commandStack.do(command);
+					data = command.getData();
+				}
+				break;
+			}
+			case "undo": {
+				command = this.getCommandStack().getUndoCommand();
+				this.commandStack.undo();
+				break;
+			}
+			case "redo": {
+				command = this.getCommandStack().getRedoCommand();
+				this.commandStack.redo();
+				break;
+			}
+
+			// Commands which are not added to the command stack.
+			case "zoomPipeline": {
+				this.zoomPipeline(data.zoom, data.pipelineId);
 				break;
 			}
 			case "highlightBranch":
@@ -1817,62 +1854,14 @@ export default class CanvasController {
 				this.removeAllStyles(true);
 				this.highlight = false; // TODO: use this for context menu when to show unhighlight option.
 				break;
-			case "cut": {
-				this.copyToClipboard();
-				const command = new DeleteObjectsAction(data, this.objectModel);
-				this.commandStack.do(command);
-				break;
-			}
-			case "copy":
-				this.copyToClipboard();
-				break;
-			case "paste": {
-				const pasteObj = this.getObjectsToPaste(data.pipelineId);
-				if (pasteObj.objects) {
-					data = Object.assign(data, { objects: pasteObj.objects, pipelineId: pasteObj.pipelineId });
-					const command = new CloneMultipleObjectsAction(data, this.objectModel);
-					this.commandStack.do(command);
-					data = command.getData();
-				}
-				break;
-			}
-			case "undo": {
-				data = Object.assign(data, { undoData: this.getUndoData() });
-				this.commandStack.undo();
-				break;
-			}
-			case "redo": {
-				data = Object.assign(data, { redoData: this.getRedoData() });
-				this.commandStack.redo();
-				break;
-			}
+
 			default:
 			}
 		}
 
 		if (this.handlers.editActionHandler) {
-			this.handlers.editActionHandler(data);
+			this.handlers.editActionHandler(data, command);
 		}
-	}
-
-	// Returns the data associated with the next command on the command stack
-	// to be undone.
-	getUndoData() {
-		const undoCmnd = this.getCommandStack().getUndoCommand();
-		if (undoCmnd && undoCmnd.getData) {
-			return undoCmnd.getData();
-		}
-		return {};
-	}
-
-	// Returns the data associated with the next command on the command stack
-	// to be redone.
-	getRedoData() {
-		const redoCmnd = this.getCommandStack().getRedoCommand();
-		if (redoCmnd && redoCmnd.getData) {
-			return redoCmnd.getData();
-		}
-		return {};
 	}
 
 	// Pans the canvas to bring the newly added node into view if it is not
@@ -1892,27 +1881,5 @@ export default class CanvasController {
 		};
 
 		this.addAfterUpdateCallback(moveCanvasToReveal);
-	}
-
-	// These fields are added to the data object because historically we've
-	// passed this information to the consuming app in these fields.
-	addHistoricalFields(data) {
-		data.nodeId = data.newNode.id;
-		data.label = data.newNode.label;
-		data.operator_id_ref = data.newNode.op;
-		data.nodeTypeId = data.newNode.op; // TODO - Remove this when WML Canvas migrates to pipeline flow
-		return data;
-	}
-
-	// These fields are added to the data object because historically we've
-	// passed this information to WML Canvas in this way.
-	// TODO - Remove this if WML Canvas moved to GFE.
-	addHistoricalFieldsEditComment(data) {
-		data.nodes = [data.id];
-		data.label = data.content;
-		data.offsetX = data.x_pos;
-		data.offsetY = data.y_pos;
-
-		return data;
 	}
 }
