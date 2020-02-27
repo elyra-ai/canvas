@@ -689,7 +689,7 @@ export default class SVGCanvasRenderer {
 			return;
 		}
 		const transPos = this.transformMousePosForNode(mousePos);
-		this.canvasController.createDroppeExternalObject(dropData, transPos, this.pipelineId);
+		this.canvasController.createDroppedExternalObject(dropData, transPos, this.pipelineId);
 	}
 
 	// Transforms the mouse position passed in to be appropriate for a palette
