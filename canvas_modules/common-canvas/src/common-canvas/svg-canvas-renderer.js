@@ -3012,7 +3012,7 @@ export default class SVGCanvasRenderer {
 		if (this.isExpandedSupernode(data)) {
 			return "d3-supernode-label " + this.getMessageLabelClass(data.messages);
 		}
-		const justificationClass = data.layout.nodeFormatType === "vertical" ? "d3-node-label-middle" : "";
+		const justificationClass = data.layout.nodeFormatType === "vertical" ? " d3-node-label-middle" : "";
 		return "d3-node-label " + this.getMessageLabelClass(data.messages) + justificationClass;
 	}
 
