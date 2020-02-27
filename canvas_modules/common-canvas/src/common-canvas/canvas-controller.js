@@ -1854,7 +1854,12 @@ export default class CanvasController {
 				this.removeAllStyles(true);
 				this.highlight = false; // TODO: use this for context menu when to show unhighlight option.
 				break;
-
+			case "openNotificationPanel":
+				this.commonCanvas.openNotificationPanel();
+				break;
+			case "closeNotificationPanel":
+				this.commonCanvas.closeNotificationPanel();
+				break;
 			default:
 			}
 		}

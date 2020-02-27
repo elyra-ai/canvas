@@ -236,7 +236,7 @@ class Toolbar extends React.Component {
 		const notificationStateObj = this.getNotificationIconStateObject(actionObj.enable);
 		actionObj.icon = notificationStateObj.icon;
 		actionObj.className = notificationStateObj.className;
-		actionObj.callback = this.props.canvasController.openNotificationPanel.bind(this.props.canvasController);
+		actionObj.callback = this.toolbarMenuActionHandler.bind(this.canvasController, "openNotificationPanel");
 		actionObj.textContent = (notificationStateObj.notificationCount > 9) ? "9+" : notificationStateObj.notificationCount.toString();
 
 		let notification;
@@ -248,7 +248,7 @@ class Toolbar extends React.Component {
 		}
 
 		if (this.props.isNotificationOpen) {
-			actionObj.callback = this.props.canvasController.closeNotificationPanel.bind(this.props.canvasController);
+			actionObj.callback = this.toolbarMenuActionHandler.bind(this.canvasController, "closeNotificationPanel");
 			notification = this.generateActionIcon(actionObj, "notification-close-action", null, overflow);
 		}
 		return notification;

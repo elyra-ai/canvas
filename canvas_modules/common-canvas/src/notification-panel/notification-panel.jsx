@@ -88,7 +88,7 @@ class NotificationPanel extends React.Component {
 				notificationIcon && !notificationIcon.contains(e.target) &&
 				notificationHeader && !notificationHeader.contains(e.target) &&
 				notificationMessages && !notificationMessages.contains(e.target)) {
-			this.props.canvasController.closeNotificationPanel();
+			this.props.canvasController.toolbarActionHandler("closeNotificationPanel");
 			e.stopPropagation(); // Prevent D3 canvas code from clearing the selections.
 		}
 	}
