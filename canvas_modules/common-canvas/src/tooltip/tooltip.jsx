@@ -19,9 +19,10 @@ class ToolTip extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showToolTip: false,
-			pendingTooltip: null
+			showToolTip: false
 		};
+
+		this.pendingTooltip = null;
 	}
 
 	componentDidMount() {
@@ -35,32 +36,39 @@ class ToolTip extends React.Component {
 	}
 
 	componentWillUnmount() {
-		if (this.state.pendingTooltip) {
-			clearTimeout(this.state.pendingTooltip);
+		if (this.pendingTooltip) {
+			clearTimeout(this.pendingTooltip);
 		}
 	}
 
 	setTooltipVisible(visible) {
 		// clear the display timer if set
-		if (!visible && this.state.pendingTooltip) {
-			clearTimeout(this.state.pendingTooltip);
+		if (this.props.disable || (!visible && this.pendingTooltip)) {
+			clearTimeout(this.pendingTooltip);
+			this.pendingTooltip = null;
+			this.setState({
+				showToolTip: false
+			});
 		}
 
-		const tooltip = document.querySelector("[data-id='" + this.props.id + "']");
-		this.setState({
-			showToolTip: visible,
-			pendingTooltip: null
-		});
-		// updates the tooltip display
-		if (visible) {
-			let tooltipTrigger = null;
-			if (this.props.targetObj) {
-				tooltipTrigger = this.props.targetObj;
-			} else {
-				tooltipTrigger = document.querySelector("[data-id='" + this.props.id + "-trigger']");
-			}
-			if (tooltipTrigger && tooltip) {
-				this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
+
+		if (!this.props.disable) {
+			const tooltip = document.querySelector("[data-id='" + this.props.id + "']");
+			this.pendingTooltip = null;
+			this.setState({
+				showToolTip: visible
+			});
+			// updates the tooltip display
+			if (visible) {
+				let tooltipTrigger = null;
+				if (this.props.targetObj) {
+					tooltipTrigger = this.props.targetObj;
+				} else {
+					tooltipTrigger = document.querySelector("[data-id='" + this.props.id + "-trigger']");
+				}
+				if (tooltipTrigger && tooltip) {
+					this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
+				}
 			}
 		}
 	}
@@ -89,13 +97,11 @@ class ToolTip extends React.Component {
 
 	showTooltipWithDelay() {
 		// set a delay on displaying the tooltip
-		if (!this.state.pendingTooltip) {
+		if (!this.pendingTooltip && !this.props.disable) {
 			const that = this;
-			this.setState({
-				pendingTooltip: setTimeout(function() {
-					that.setTooltipVisible(true);
-				}, this.props.delay)
-			});
+			this.pendingTooltip = setTimeout(function() {
+				that.setTooltipVisible(true);
+			}, this.props.delay);
 		}
 
 	}
@@ -273,11 +279,6 @@ class ToolTip extends React.Component {
 			</div>);
 		}
 
-		const style = {};
-		if (this.props.disable) {
-			style.display = "none";
-		}
-
 		if ((typeof this.props.tip) === "string") {
 			tooltipContent = (
 				<span id="tooltipContainer">
@@ -301,7 +302,7 @@ class ToolTip extends React.Component {
 			<div className="tooltip-container">
 				{triggerContent}
 				<Portal>
-					<div data-id={this.props.id} className={tipClass} style={style} aria-hidden={!this.state.showToolTip} direction={this.props.direction}>
+					<div data-id={this.props.id} className={tipClass} aria-hidden={!this.state.showToolTip} direction={this.props.direction}>
 						<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
 							<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />
