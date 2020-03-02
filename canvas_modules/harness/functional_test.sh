@@ -15,8 +15,8 @@ npm start &
 
 # start running the test Cases
 sleep 30
-echo "npm test"
-npm test -- --screenshotsOnError=false
+echo "Starting cypress chrome tests"
+npx cypress run --headless --browser chrome
 
 echo "download coverage"
 mkdir -p coverage

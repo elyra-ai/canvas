@@ -168,7 +168,7 @@
             ]
           },
           {
-            "id": "harness-custom-toggle-panel1",
+            "id": "harness-custom-toggle-panel",
             "type": "customPanel",
             "parameter_refs": [
               "custom_toggle2"

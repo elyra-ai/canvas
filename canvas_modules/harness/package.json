@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node index.js",
-    "test": "chimpy config/chimp.js",
+    "test": "npx cypress open",
     "bundle-report": "webpack-bundle-analyzer --host 127.0.0.1 --port 8888 .build/stats.json"
   },
   "engines": {
@@ -24,8 +24,8 @@
   },
   "devDependencies": {
     "@carbon/icons-react": "10.8.2",
-    "@wdpx/themes": "1.1.9",
     "@wdp/common-canvas": "file:../common-canvas",
+    "@wdpx/themes": "1.1.9",
     "autoprefixer": "7.1.2",
     "babel-core": "6.26.3",
     "babel-loader": "7.1.2",
@@ -39,8 +39,10 @@
     "chromedriver": "79.0.0",
     "codemirror": "5.50.2",
     "css-loader": "0.28.4",
+    "cypress": "4.0.2",
     "eslint": "6.8.0",
     "eslint-config-canvas": "file:../eslint-config-canvas",
+    "eslint-plugin-cypress": "2.10.3",
     "eslint-plugin-react": "7.18.0",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "0.11.2",

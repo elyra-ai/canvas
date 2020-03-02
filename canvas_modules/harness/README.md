@@ -36,11 +36,10 @@ npm start
 Ensure that the test harness is running.  The default location is http://localhost:3001.  
 ```sh
 cd <base dir>/canvas_modules/harness
-npm test
-```
-The default browser tested is Chrome.  I have successfully tested with Firefox v45.8.  Firefox versions over 47+ will not work.
-The Firefox version that will be used is located in the default folder.  On Mac it is /Applications/Firefox.app
-```sh
-cd <base dir>/canvas_modules/harness
-npm test -- --browser=firefox
+# Chrome
+npx cypress run --headless --browser chrome
+# Firefox
+npx cypress run --headless --browser firefox
+# Interactive
+npx cypress open
 ```
