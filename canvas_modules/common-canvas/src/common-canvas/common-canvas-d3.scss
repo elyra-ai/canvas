@@ -385,8 +385,8 @@ $new-halo-link-color: $ui-05;
 	fill: $canvas-background-color;
 }
 
-.d3-new-connection-blob[linkType="nodeLink"],
-.d3-new-connection-blob[linkType="associationLink"] {
+.d3-new-connection-guide[linkType="nodeLink"],
+.d3-new-connection-guide[linkType="associationLink"] {
 	stroke: $data-link-color;
 	fill: $data-link-color;
 }
@@ -400,7 +400,7 @@ $new-halo-link-color: $ui-05;
 	fill: none;
 }
 
-.d3-new-connection-blob[linkType="commentLink"] {
+.d3-new-connection-guide[linkType="commentLink"] {
 	stroke: $comment-link-color;
 	stroke-width: 4;
 	fill: $comment-link-color;

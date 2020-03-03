@@ -121,25 +121,41 @@ const haloDefaultLayout = {
 		// target port on the target node when drawing an Elbow connection line.
 		minFinalLine: 30,
 
-		// Shape of input port can be "circle" or "image".
+		// Object for input port can be "circle" or "image".
 		inputPortObject: "circle",
 
-		// If input port shape is "image" use this image.
+		// If input port object is "image" use this image.
 		inputPortImage: "",
 
 		// If input port dimensions for "image".
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
-		// Shape of output port can be "circle" or "image".
+		// 'Connector' is the object drawn at the mouse position as a new line
+		// is being dragged outwards.
+		// Object for input port guide can be "circle" or "image".
+		inputPortGuideObject: "circle",
+
+		// If input port guide object is "image" use this image.
+		inputPortGuideImage: "",
+
+		// Object for output port can be "circle" or "image".
 		outputPortObject: "circle",
 
-		// If output port shape is "image" use this image.
+		// If output port object is "image" use this image.
 		outputPortImage: "",
 
 		// Output port dimensions for "image".
 		outputPortWidth: 12,
 		outputPortHeight: 12,
+
+		// The 'guide' is the object drawn at the mouse position as a new line
+		// is being dragged outwards.
+		// Object for output port guide can be "circle" or "image".
+		outputPortGuideObject: "circle",
+
+		// If output port guide object is "image" use this image.
+		outputPortGuideImage: "",
 
 		// Radius of the either the input or output ports when they are set to "circle"
 		portRadius: null,
@@ -387,25 +403,41 @@ const portsHorizontalDefaultLayout = {
 		// target port on the target node when drawing an Elbow connection line.
 		minFinalLine: 30,
 
-		// Shape of input port can be "circle" or "image".
+		// Object for input port can be "circle" or "image".
 		inputPortObject: "circle",
 
-		// If input port shape is "image" use this image.
+		// If input port object is "image" use this image.
 		inputPortImage: "",
 
 		// If input port dimensions for "image".
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
-		// Shape of output port can be "circle" or "image".
+		// The 'guide' is the object drawn at the mouse position as a new line
+		// is being dragged outwards.
+		// Object for input port guide can be "circle" or "image".
+		inputPortGuideObject: "circle",
+
+		// If input port guide object is "image" use this image.
+		inputPortGuideImage: "",
+
+		// Object for output port can be "circle" or "image".
 		outputPortObject: "circle",
 
-		// If output port shape is "image" use this image.
+		// If output port object is "image" use this image.
 		outputPortImage: "",
 
 		// Output port dimensions for "image".
 		outputPortWidth: 12,
 		outputPortHeight: 12,
+
+		// The 'guide' is the object drawn at the mouse position as a new line
+		// is being dragged outwards.
+		// Object for output port guide can be "circle" or "image".
+		outputPortGuideObject: "circle",
+
+		// If output port guide object is "image" use this image.
+		outputPortGuideImage: "",
 
 		// Radius of the either the input or output ports when they are set to "circle"
 		portRadius: 3,
@@ -653,25 +685,41 @@ const portsVerticalDefaultLayout = {
 		// target port on the target node when drawing an Elbow connection line.
 		minFinalLine: 30,
 
-		// Shape of input port can be "circle" or "image".
+		// Object for input port can be "circle" or "image".
 		inputPortObject: "circle",
 
-		// If input port shape is "image" use this image.
+		// If input port object is "image" use this image.
 		inputPortImage: "",
 
 		// If input port dimensions for "image".
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
-		// Shape of output port can be "circle" or "image".
+		// The 'guide' is the object drawn at the mouse position as a new line
+		// is being dragged outwards.
+		// Object for input port guide can be "circle" or "image".
+		inputPortGuideObject: "circle",
+
+		// If input port guide object is "image" use this image.
+		inputPortGuideImage: "",
+
+		// Object for output port can be "circle" or "image".
 		outputPortObject: "circle",
 
-		// If output port shape is "image" use this image.
+		// If output port object is "image" use this image.
 		outputPortImage: "",
 
 		// Output port dimensions for "image".
 		outputPortWidth: 12,
 		outputPortHeight: 12,
+
+		// The 'guide' is the object drawn at the mouse position as a new line
+		// is being dragged outwards.
+		// Object for output port guide can be "circle" or "image".
+		outputPortGuideObject: "circle",
+
+		// If output port guide object is "image" use this image.
+		outputPortGuideImage: "",
 
 		// Radius of the either the input or output ports when they are set to "circle"
 		portRadius: 6,
