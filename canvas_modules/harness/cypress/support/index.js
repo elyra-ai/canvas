@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import "./properties-cmds";
+import "./canvas-cmds";
 
 // turn off screenshots when running in headless mode.
 Cypress.Screenshot.defaults({

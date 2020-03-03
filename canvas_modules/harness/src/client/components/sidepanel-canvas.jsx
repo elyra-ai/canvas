@@ -14,7 +14,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import FileUploader from "carbon-components-react/lib/components/FileUploader";
 import Button from "carbon-components-react/lib/components/Button";
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
+import Select from "carbon-components-react/lib/components/Select";
+import SelectItemGroup from "carbon-components-react/lib/components/SelectItemGroup";
+import SelectItem from "carbon-components-react/lib/components/SelectItem";
 import Checkbox from "carbon-components-react/lib/components/Checkbox";
 import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
 import RadioButton from "carbon-components-react/lib/components/RadioButton";
@@ -30,6 +32,7 @@ import {
 	DURING_DRAG,
 	AFTER_DRAG,
 	CHOOSE_FROM_LOCATION,
+	LOCAL_FILE_OPTION,
 	VERTICAL_FORMAT,
 	HORIZONTAL_FORMAT,
 	HALO_CONNECTION,
@@ -109,15 +112,11 @@ export default class SidePanelForms extends React.Component {
 
 		FormsService.getFiles("diagrams")
 			.then(function(res) {
-				var list = res;
-				list.push(CHOOSE_FROM_LOCATION);
 				that.setState({ canvasFiles: res });
 			});
 
 		FormsService.getFiles("palettes")
 			.then(function(res) {
-				var list = res;
-				list.push(CHOOSE_FROM_LOCATION);
 				that.setState({ paletteFiles: res });
 			});
 	}
@@ -177,19 +176,19 @@ export default class SidePanelForms extends React.Component {
 	}
 
 	onCanvasDropdownSelect(evt) {
-		this.props.canvasConfig.setCanvasDropdownFile(evt.selectedItem.value);
+		this.props.canvasConfig.setCanvasDropdownFile(evt.target.selectedOptions[0].value);
 	}
 
 	onCanvasDropdownSelect2(evt) {
-		this.props.canvasConfig.setCanvasDropdownFile2(evt.selectedItem.value);
+		this.props.canvasConfig.setCanvasDropdownFile2(evt.target.selectedOptions[0].value);
 	}
 
 	onPaletteDropdownSelect(evt) {
-		this.props.canvasConfig.setPaletteDropdownSelect(evt.selectedItem.value);
+		this.props.canvasConfig.setPaletteDropdownSelect(evt.target.selectedOptions[0].value);
 	}
 
 	onPaletteDropdownSelect2(evt) {
-		this.props.canvasConfig.setPaletteDropdownSelect2(evt.selectedItem.value);
+		this.props.canvasConfig.setPaletteDropdownSelect2(evt.target.selectedOptions[0].value);
 	}
 
 	onEnableMoveNodesOnSupernodeResizeToggle(checked) {
@@ -367,12 +366,21 @@ export default class SidePanelForms extends React.Component {
 		this.props.canvasConfig.setPaletteLayout(value);
 	}
 
-	dropdownOptions(stringOptions) {
+	dropdownOptions(optionsInput, typeLabel) {
 		const options = [];
 		let key = 1;
-		for (const option of stringOptions) {
-			options.push({ key: "option." + ++key, label: option, value: option });
+		const groupOptions = [];
+		const choosefromlocation = [];
+		options.push(<SelectItem key = "choose-an-option" hidden text = "Choose an option..." />);
+		choosefromlocation.push(
+			<SelectItem key={"choose-from-location"} text = "Choose From Location" value = {CHOOSE_FROM_LOCATION} />);
+		options.push(
+			<SelectItemGroup key ={"choose-file-option"} label = {LOCAL_FILE_OPTION}>{choosefromlocation}
+			</SelectItemGroup>);
+		for (const option of optionsInput) {
+			groupOptions.push(<SelectItem key={"param-def-option-" + key++} text={option} value={option} />);
 		}
+		options.push(<SelectItemGroup key ={"form-option"} label = {typeLabel}>{groupOptions}</SelectItemGroup>);
 		return options;
 	}
 
@@ -462,25 +470,27 @@ export default class SidePanelForms extends React.Component {
 
 		var canvasInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-input">
 			<div className="harness-sidepanel-headers">Canvas Diagram</div>
-			<Dropdown
+			<Select
 				id="harness-sidepanel-canvas-dropdown"
 				label="Canvas"
-				ariaLabel="Canvas"
+				aria-label="Canvas"
 				onChange={this.onCanvasDropdownSelect.bind(this)}
-				items={this.dropdownOptions(this.state.canvasFiles)}
-			/>
+			>
+				{this.dropdownOptions(this.state.canvasFiles, "Canvas")}
+			</Select>
 			{canvasFileChooserVisible}
 		</div>);
 
 		var paletteInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-input">
 			<div className="harness-sidepanel-headers">Canvas Palette</div>
-			<Dropdown
+			<Select
 				id="harness-sidepanel-palette-dropdown"
 				label="Palette"
-				ariaLabel="Palette"
+				aria-label="Palette"
 				onChange={this.onPaletteDropdownSelect.bind(this)}
-				items={this.dropdownOptions(this.state.paletteFiles)}
-			/>
+			>
+				{this.dropdownOptions(this.state.paletteFiles, "Palette")}
+			</Select>
 			{paletteFileChooserVisible}
 		</div>);
 
@@ -531,27 +541,29 @@ export default class SidePanelForms extends React.Component {
 
 		var canvasInput2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-input2">
 			<div className="harness-sidepanel-headers">Canvas Diagram</div>
-			<Dropdown
+			<Select
 				id="harness-sidepanel-canvas2-dropdown"
 				disabled={!this.props.canvasConfig.extraCanvasDisplayed}
 				label="Canvas"
-				ariaLabel="Canvas"
+				aria-label="Canvas"
 				onChange={this.onCanvasDropdownSelect2.bind(this)}
-				items={this.dropdownOptions(this.state.canvasFiles)}
-			/>
+			>
+				{this.dropdownOptions(this.state.canvasFiles, "Canvas")}
+			</Select>
 			{canvasFileChooserVisible2}
 		</div>);
 
 		var paletteInput2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-input2">
 			<div className="harness-sidepanel-headers">Canvas Palette</div>
-			<Dropdown
+			<Select
 				id="harness-sidepanel-palette2-dropdown"
 				disabled={!this.props.canvasConfig.extraCanvasDisplayed}
 				label="Palette"
-				ariaLabel="Palette"
+				aria-label="Palette"
 				onChange={this.onPaletteDropdownSelect2.bind(this)}
-				items={this.dropdownOptions(this.state.paletteFiles)}
-			/>
+			>
+				{this.dropdownOptions(this.state.paletteFiles, "Palette")}
+			</Select>
 			{paletteFileChooserVisible2}
 		</div>);
 
