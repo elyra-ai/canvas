@@ -223,7 +223,7 @@ export default class APIPipeline {
 
 			// Add node height and width and, if appropriate, inputPortsHeight
 			// and outputPortsHeight and layout info.
-			node = this.objectModel.setNodeAttributes(node, this.objectModel.getLayoutInfo());
+			node = this.objectModel.setNodeAttributes(node);
 		}
 
 		return node;
@@ -260,10 +260,10 @@ export default class APIPipeline {
 	// Returns a newly created 'auto node' whose position is based on the
 	// source node (if one is provided) and the the other nodes on the canvas.
 	createAutoNode(data, sourceNode) {
-		const initialMarginX = this.objectModel.getLayoutInfo().autoLayoutInitialMarginX;
-		const initialMarginY = this.objectModel.getLayoutInfo().autoLayoutInitialMarginY;
-		const horizontalSpacing = this.objectModel.getLayoutInfo().autoLayoutHorizontalSpacing;
-		const verticalSpacing = this.objectModel.getLayoutInfo().autoLayoutVerticalSpacing;
+		const initialMarginX = this.objectModel.getCanvasLayout().autoLayoutInitialMarginX;
+		const initialMarginY = this.objectModel.getCanvasLayout().autoLayoutInitialMarginY;
+		const horizontalSpacing = this.objectModel.getCanvasLayout().autoLayoutHorizontalSpacing;
+		const verticalSpacing = this.objectModel.getCanvasLayout().autoLayoutVerticalSpacing;
 
 		var x = 0;
 		var y = 0;
@@ -311,7 +311,7 @@ export default class APIPipeline {
 
 		// Add node height and width and, if appropriate, inputPortsHeight
 		// and outputPortsHeight
-		node = this.objectModel.setNodeAttributes(node, this.objectModel.getLayoutInfo());
+		node = this.objectModel.setNodeAttributes(node);
 		return node;
 	}
 
@@ -511,7 +511,7 @@ export default class APIPipeline {
 
 	expandSuperNodeInPlace(nodeId, nodePositions) {
 		let node = Object.assign({}, this.getNode(nodeId), { is_expanded: true });
-		node = this.objectModel.setNodeAttributes(node, this.objectModel.getLayoutInfo());
+		node = this.objectModel.setNodeAttributes(node);
 		this.store.dispatch({
 			type: "SET_SUPERNODE_FLAG",
 			data: {
@@ -524,7 +524,7 @@ export default class APIPipeline {
 
 	collapseSuperNodeInPlace(nodeId, nodePositions) {
 		let node = Object.assign({}, this.getNode(nodeId), { is_expanded: false });
-		node = this.objectModel.setNodeAttributes(node, this.objectModel.getLayoutInfo());
+		node = this.objectModel.setNodeAttributes(node);
 		this.store.dispatch({
 			type: "SET_SUPERNODE_FLAG",
 			data: {
@@ -694,7 +694,7 @@ export default class APIPipeline {
 	}
 
 	dagreAutolayout(direction, canvasInfoPipeline) {
-		const layoutInfo = this.objectModel.getLayoutInfo();
+		const canvasLayout = this.objectModel.getCanvasLayout();
 
 		var nodeLinks = canvasInfoPipeline.links.filter((link) => {
 			return link.type === NODE_LINK || link.type === ASSOCIATION_LINK;
@@ -708,7 +708,7 @@ export default class APIPipeline {
 			let newWidth = node.width;
 			if (direction === DAGRE_HORIZONTAL) {
 				newWidth = node.width +
-					Math.max(this.getPaddingForNode(node, layoutInfo, canvasInfoPipeline), layoutInfo.autoLayoutHorizontalSpacing);
+					Math.max(this.getPaddingForNode(node, canvasLayout, canvasInfoPipeline), canvasLayout.autoLayoutHorizontalSpacing);
 			}
 
 			return { "v": node.id, "value": { width: newWidth, height: node.height } };
@@ -725,10 +725,10 @@ export default class APIPipeline {
 
 		var inputGraph = { nodes: nodesData, edges: edges, value: value };
 
-		const initialMarginX = layoutInfo.autoLayoutInitialMarginX;
-		const initialMarginY = layoutInfo.autoLayoutInitialMarginY;
-		const verticalSpacing = layoutInfo.autoLayoutVerticalSpacing;
-		let horizontalSpacing = layoutInfo.autoLayoutHorizontalSpacing;
+		const initialMarginX = canvasLayout.autoLayoutInitialMarginX;
+		const initialMarginY = canvasLayout.autoLayoutInitialMarginY;
+		const verticalSpacing = canvasLayout.autoLayoutVerticalSpacing;
+		let horizontalSpacing = canvasLayout.autoLayoutHorizontalSpacing;
 		if (direction === DAGRE_HORIZONTAL) {
 			horizontalSpacing = 0;
 		}

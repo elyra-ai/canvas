@@ -82,8 +82,8 @@ export default class CanvasUtils {
 	// It may not be assigned to the supernode to allow the extended width to
 	// change based on the node type selected (this is more for use in the test
 	// harness than in a real application).
-	static getSupernodeExpandedWidth(supernode, layoutInfo) {
-		return supernode.expanded_width ? supernode.expanded_width : Math.max(layoutInfo.supernodeDefaultWidth, supernode.width);
+	static getSupernodeExpandedWidth(supernode, canvasLayout) {
+		return supernode.expanded_width ? supernode.expanded_width : Math.max(canvasLayout.supernodeDefaultWidth, supernode.width);
 	}
 
 	// Returns the expanded height for the supernode passed in. This might be
@@ -91,8 +91,8 @@ export default class CanvasUtils {
 	// It may not be assigned to the supernode to allow the extended height to
 	// change based on the node type selected (this is more for use in the test
 	// harness than in a real application).
-	static getSupernodeExpandedHeight(supernode, layoutInfo) {
-		return supernode.expanded_height ? supernode.expanded_height : Math.max(layoutInfo.supernodeDefaultHeight, supernode.height);
+	static getSupernodeExpandedHeight(supernode, canvasLayout) {
+		return supernode.expanded_height ? supernode.expanded_height : Math.max(canvasLayout.supernodeDefaultHeight, supernode.height);
 	}
 
 	// ---------------------------------------------------------------------------

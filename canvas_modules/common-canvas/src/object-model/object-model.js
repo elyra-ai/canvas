@@ -333,9 +333,9 @@ export default class ObjectModel {
 		}
 
 		const pipelineFlow = this.validateAndUpgrade(newPipelineFlow);
-		const canvasInfo = PipelineInHandler.convertPipelineFlowToCanvasInfo(pipelineFlow, this.getLayoutInfo());
+		const canvasInfo = PipelineInHandler.convertPipelineFlowToCanvasInfo(pipelineFlow, this.getCanvasLayout());
 
-		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getLayoutInfo());
+		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout());
 
 		this.executeWithSelectionChange(this.store.dispatch, {
 			type: "SET_CANVAS_INFO",
@@ -344,9 +344,9 @@ export default class ObjectModel {
 	}
 
 	// Does all preparation needed for nodes before they are saved into Redux.
-	prepareNodes(pipelines, layoutInfo) {
+	prepareNodes(pipelines, nodeLayout, canvasLayout) {
 		const newPipelines = this.setSupernodesBindingStatus(pipelines);
-		return newPipelines.map((pipeline) => this.setPipelineNodeAttributes(pipeline, layoutInfo));
+		return newPipelines.map((pipeline) => this.setPipelineNodeAttributes(pipeline, nodeLayout, canvasLayout));
 	}
 
 	// Loops through all the pipelines and adds the appropriate supernode binding
@@ -393,29 +393,37 @@ export default class ObjectModel {
 		return pipelines;
 	}
 
-	setPipelineNodeAttributes(inPipeline, layoutInfo) {
+	setPipelineNodeAttributes(inPipeline, nodeLayout, canvasLayout) {
 		const pipeline = Object.assign({}, inPipeline);
 		if (pipeline.nodes) {
-			pipeline.nodes = pipeline.nodes.map((node) => this.setNodeAttributes(node, layoutInfo));
+			pipeline.nodes = pipeline.nodes.map((node) => this.setNodeAttributesWithLayout(node, nodeLayout, canvasLayout));
 		} else {
 			pipeline.nodes = [];
 		}
 		return pipeline;
 	}
 
-	// Returns a copy of the node passed in with additional fields which contains
-	// layout, diemension and supernode binding status info.
-	setNodeAttributes(node, layoutInfo) {
+	// Returns a copy of the node passed in with additional fields which contain
+	// layout, dimension and supernode binding status info. This uses the redux
+	// layout information. This is called from the api-pipeline class.
+	setNodeAttributes(node) {
+		return this.setNodeAttributesWithLayout(node, this.getNodeLayout(), this.getCanvasLayout());
+	}
+
+	// Returns a copy of the node passed using the layout info provided. The
+	// returned node is augmented with additional fields which contain
+	// layout, dimension and supernode binding status info.
+	setNodeAttributesWithLayout(node, nodeLayout, canvasLayout) {
 		let newNode = Object.assign({}, node);
-		newNode = this.setNodeLayoutAttributes(newNode, layoutInfo);
-		newNode = this.setNodeDimensionAttributes(newNode, layoutInfo);
+		newNode = this.setNodeLayoutAttributes(newNode, nodeLayout);
+		newNode = this.setNodeDimensionAttributes(newNode, canvasLayout);
 		return newNode;
 	}
 
 	// Returns the node passed in with additional fields which contains
 	// the layout info.
-	setNodeLayoutAttributes(node, layoutInfo) {
-		node.layout = layoutInfo.nodeLayout;
+	setNodeLayoutAttributes(node, nodeLayout) {
+		node.layout = nodeLayout;
 
 		// If using the layoutHandler we must make a copy of the layout for each node
 		// so the original layout info doesn't get overwritten.
@@ -432,8 +440,8 @@ export default class ObjectModel {
 	// Returns the node passed in with additional fields which contains
 	// the height occupied by the input ports and output ports, based on the
 	// layout info passed in, as well as the node width.
-	setNodeDimensionAttributes(node, layoutInfo) {
-		if (layoutInfo.connectionType === "ports") {
+	setNodeDimensionAttributes(node, canvasLayout) {
+		if (canvasLayout.connectionType === "ports") {
 			node.inputPortsHeight = node.inputs
 				? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
 				: 0;
@@ -445,7 +453,7 @@ export default class ObjectModel {
 			node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);
 
 			if (node.type === SUPER_NODE && node.is_expanded) {
-				node.height += layoutInfo.supernodeTopAreaHeight + layoutInfo.supernodeSVGAreaPadding;
+				node.height += canvasLayout.supernodeTopAreaHeight + canvasLayout.supernodeSVGAreaPadding;
 				// If an expanded height is provided make sure it is at least as big
 				// as the node height.
 				if (node.expanded_height) {
@@ -460,8 +468,8 @@ export default class ObjectModel {
 		node.width = node.layout.defaultNodeWidth;
 
 		if (node.type === SUPER_NODE && node.is_expanded) {
-			node.width = CanvasUtils.getSupernodeExpandedWidth(node, layoutInfo);
-			node.height = CanvasUtils.getSupernodeExpandedHeight(node, layoutInfo);
+			node.width = CanvasUtils.getSupernodeExpandedWidth(node, canvasLayout);
+			node.height = CanvasUtils.getSupernodeExpandedHeight(node, canvasLayout);
 		}
 
 		return node;
@@ -625,7 +633,7 @@ export default class ObjectModel {
 			this.setDefaultLayout();
 		}
 		const canvasInfo = Object.assign({}, inCanvasInfo);
-		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getLayoutInfo());
+		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout());
 		this.store.dispatch({ type: "SET_CANVAS_INFO", canvasInfo: canvasInfo, currentCanvasInfo: this.getCanvasInfo() });
 	}
 
@@ -662,7 +670,7 @@ export default class ObjectModel {
 			const clonedPipeline = this.clonePipelineWithNewId(targetPipeline);
 			node.subflow_ref.pipeline_id_ref = clonedPipeline.id;
 			const canvInfoPipeline =
-				PipelineInHandler.convertPipelineToCanvasInfoPipeline(clonedPipeline, this.getLayoutInfo());
+				PipelineInHandler.convertPipelineToCanvasInfoPipeline(clonedPipeline, this.getCanvasLayout());
 
 			subPipelines.push(canvInfoPipeline);
 
@@ -791,7 +799,7 @@ export default class ObjectModel {
 
 	setLayoutType(type, config) {
 		const layoutInfo = Object.assign({}, LayoutDimensions.getLayout(type, config));
-		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo);
+		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo.nodeLayout, layoutInfo.canvasLayout);
 
 		this.store.dispatch({ type: "SET_LAYOUT_INFO",
 			layoutinfo: layoutInfo,
@@ -801,7 +809,7 @@ export default class ObjectModel {
 
 	setDefaultLayout() {
 		const layoutInfo = LayoutDimensions.getLayout();
-		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo);
+		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo.nodeLayout, layoutInfo.canvasLayout);
 
 		this.store.dispatch({ type: "SET_LAYOUT_INFO",
 			layoutinfo: layoutInfo,
@@ -812,6 +820,15 @@ export default class ObjectModel {
 	getLayoutInfo() {
 		return this.store.getState().layoutinfo;
 	}
+
+	getNodeLayout() {
+		return this.store.getState().layoutinfo.nodeLayout;
+	}
+
+	getCanvasLayout() {
+		return this.store.getState().layoutinfo.canvasLayout;
+	}
+
 
 	// ---------------------------------------------------------------------------
 	// Notification Messages methods

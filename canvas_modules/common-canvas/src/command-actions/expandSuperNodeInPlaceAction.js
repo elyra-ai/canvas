@@ -34,8 +34,8 @@ export default class expandSuperNodeInPlaceAction extends Action {
 				this.supernode,
 				this.apiPipeline.getNodes(),
 				"se",
-				CanvasUtils.getSupernodeExpandedWidth(this.supernode, this.objectModel.getLayoutInfo()),
-				CanvasUtils.getSupernodeExpandedHeight(this.supernode, this.objectModel.getLayoutInfo()),
+				CanvasUtils.getSupernodeExpandedWidth(this.supernode, this.objectModel.getCanvasLayout()),
+				CanvasUtils.getSupernodeExpandedHeight(this.supernode, this.objectModel.getCanvasLayout()),
 				false); // Pass false to indicate that node positions should not be updated.
 		}
 	}

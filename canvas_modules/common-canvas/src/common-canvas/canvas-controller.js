@@ -82,7 +82,9 @@ export default class CanvasController {
 			emptyCanvasContent: null,
 			dropZoneCanvasContent: null,
 			schemaValidation: false,
-			tipConfig: this.defaultTipConfig
+			tipConfig: this.defaultTipConfig,
+			enableCanvasLayout: {},
+			enableNodeLayout: {}
 		};
 
 		this.contextMenuConfig = {

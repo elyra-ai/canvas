@@ -18,9 +18,12 @@ const haloDefaultLayout = {
 		defaultNodeWidth: 60,
 		defaultNodeHeight: 66,
 
+		// Default node shape
+		nodeShape: "rectangle",
+
 		// SVG path strings to define the shape of your node and its
 		// selection highlighting. If set to null the paths will be set by default
-		// based on the nodeFormatType setting.
+		// based on the nodeShape setting.
 		bodyPath: null,
 		selectionPath: null,
 
@@ -184,109 +187,111 @@ const haloDefaultLayout = {
 		ellipsisHoverAreaPadding: 3
 	},
 
-	// Draw node as a simple rectangle
-	nodeShape: "rectangle",
+	canvasLayout: {
+		// The amount of padding added around the canvas objects when doing a
+		// zoomToFit on the primary canvas. This may be overriden by common-canvas
+		// when displaying sub-flows.
+		zoomToFitPadding: 10,
 
-	// The amount of padding added around the canvas objects when doing a
-	// zoomToFit on the primary canvas. This may be overriden by common-canvas
-	// when displaying sub-flows.
-	zoomToFitPadding: 10,
+		// Supernode in-place containment area attributes
+		supernodeLabelPosX: 30,
+		supernodeLabelPosY: 18,
+		supernodeImageWidth: 18,
+		supernodeImageHeight: 18,
+		supernodeImagePosX: 5,
+		supernodeImagePosY: 4,
+		supernodeEllipsisPosY: 3,
+		supernodeEllipsisWidth: 10,
+		supernodeEllipsisHeight: 20,
+		supernodeExpansionIconPosY: 4,
+		supernodeExpansionIconHeight: 18,
+		supernodeExpansionIconWidth: 18,
+		supernodeExpansionIconHoverAreaPadding: 2,
+		supernodeIconSeparation: 3,
+		supernodeDefaultWidth: 200,
+		supernodeDefaultHeight: 200,
+		supernodeMinWidth: 100,
+		supernodeMinHeight: 80,
+		supernodeTopAreaHeight: 25,
+		supernodeSVGAreaPadding: 3,
+		supernodeBindingPortRadius: 10,
 
-	// Supernode in-place containment area attributes
-	supernodeLabelPosX: 30,
-	supernodeLabelPosY: 18,
-	supernodeImageWidth: 18,
-	supernodeImageHeight: 18,
-	supernodeImagePosX: 5,
-	supernodeImagePosY: 4,
-	supernodeEllipsisPosY: 3,
-	supernodeEllipsisWidth: 10,
-	supernodeEllipsisHeight: 20,
-	supernodeExpansionIconPosY: 4,
-	supernodeExpansionIconHeight: 18,
-	supernodeExpansionIconWidth: 18,
-	supernodeExpansionIconHoverAreaPadding: 2,
-	supernodeIconSeparation: 3,
-	supernodeDefaultWidth: 200,
-	supernodeDefaultHeight: 200,
-	supernodeMinWidth: 100,
-	supernodeMinHeight: 80,
-	supernodeTopAreaHeight: 25,
-	supernodeSVGAreaPadding: 3,
-	supernodeBindingPortRadius: 10,
+		// ---------------------------------------------------------------------------
+		// Layout values for links
+		// ---------------------------------------------------------------------------
+		// Connection type decides whether the node to node connections use the
+		// 'halo' connection mechanism and arrows pointing directly from source to
+		// target or the 'ports' connections with connection lines draw from output
+		// ports to input ports.
+		connectionType: "halo",
 
-	// ---------------------------------------------------------------------------
-	// Layout values for links
-	// ---------------------------------------------------------------------------
-	// Connection type decides whether the node to node connections use the
-	// 'halo' connection mechanism and arrows pointing directly from source to
-	// target or the 'ports' connections with connection lines draw from output
-	// ports to input ports.
-	connectionType: "halo",
+		// Whether to display a link line when linked node/comments overlap. For halo
+		// we don't want to show the link when objects overlap but for ports we do.
+		displayLinkOnOverlap: false,
 
-	// Whether to display a link line when linked node/comments overlap. For halo
-	// we don't want to show the link when objects overlap but for ports we do.
-	displayLinkOnOverlap: false,
+		// The gap between node or comment and the link line.
+		linkGap: 7,
 
-	// The gap between node or comment and the link line.
-	linkGap: 7,
+		// Link decoration dimensions
+		linkDecoratorHeight: 20,
+		linkDecoratorWidth: 20,
+		linkDecoratorPadding: 2,
 
-	// Link decoration dimensions
-	linkDecoratorHeight: 20,
-	linkDecoratorWidth: 20,
-	linkDecoratorPadding: 2,
+		// Values for drawing connectors. wrapAroundSpacing and
+		// wrapAroundNodePadding are used when curved connectors are drawn all the
+		// way around a node. ie the target is to the right of the source.
+		elbowSize: 10,
+		wrapAroundSpacing: 20,
+		wrapAroundNodePadding: 10,
 
-	// Values for drawing connectors. wrapAroundSpacing and
-	// wrapAroundNodePadding are used when curved connectors are drawn all the
-	// way around a node. ie the target is to the right of the source.
-	elbowSize: 10,
-	wrapAroundSpacing: 20,
-	wrapAroundNodePadding: 10,
+		// This can be overrriden from common-canvas config properties
+		linkType: null,
 
-	// This can be overrriden from common-canvas config properties
-	linkType: null,
+		// Display an arrow head on the comment-to-node links
+		commentLinkArrowHead: true,
 
-	// ---------------------------------------------------------------------------
-	// Layout values for comments
-	// ---------------------------------------------------------------------------
-	// When sizing a comment this decides the size of the corner area for
-	// diagonal sizing.
-	commentCornerResizeArea: 10,
+		// Display an arrow head on the data links
+		dataLinkArrowHead: true,
 
-	// The gap between a comment and its selection highlight rectangle
-	commentHighlightGap: 4,
+		// ---------------------------------------------------------------------------
+		// Layout values for comments
+		// ---------------------------------------------------------------------------
+		// When sizing a comment this decides the size of the corner area for
+		// diagonal sizing.
+		commentCornerResizeArea: 10,
 
-	// The gap between a comment and its sizing area rectangle
-	commentSizingArea: 10,
+		// The gap between a comment and its selection highlight rectangle
+		commentHighlightGap: 4,
 
-	// The gap between the edge of the comment rectangle and the comment text.
-	commentWidthPadding: 10,
-	commentHeightPadding: 8,
+		// The gap between a comment and its sizing area rectangle
+		commentSizingArea: 10,
 
-	// Display an arrow head on the comment-to-node links
-	commentLinkArrowHead: true,
+		// The gap between the edge of the comment rectangle and the comment text.
+		commentWidthPadding: 10,
+		commentHeightPadding: 8,
 
-	// Add comment toolbar action, default offset from viewport
-	addCommentOffset: 30,
+		// Add comment toolbar action, default offset from viewport
+		addCommentOffset: 30,
 
-	// Comment port (circle) radius
-	commentPortRadius: null,
+		// Comment port (circle) radius
+		commentPortRadius: null,
 
-	// Comment Halo size
-	haloCommentGap: 11, // Gap between comment rectangle and its halo
+		// Comment Halo size
+		haloCommentGap: 11, // Gap between comment rectangle and its halo
 
-	// ---------------------------------------------------------------------------
-	// Layout values for operations
-	// ---------------------------------------------------------------------------
-	// Sizes of snap to grid as a percentage of default node height and width
-	snapToGridX: "25%",
-	snapToGridY: "20%",
+		// ---------------------------------------------------------------------------
+		// Layout values for operations
+		// ---------------------------------------------------------------------------
+		// Sizes of snap to grid as a percentage of default node height and width
+		snapToGridX: "25%",
+		snapToGridY: "20%",
 
-	// Values for AutoLayout and AutoNode function
-	autoLayoutInitialMarginX: 50,
-	autoLayoutInitialMarginY: 50,
-	autoLayoutVerticalSpacing: 80,
-	autoLayoutHorizontalSpacing: 80 // For horizontal layout, this may be overriden by space for connections
+		// Values for AutoLayout and AutoNode function
+		autoLayoutInitialMarginX: 50,
+		autoLayoutInitialMarginY: 50,
+		autoLayoutVerticalSpacing: 80,
+		autoLayoutHorizontalSpacing: 80 // For horizontal layout, this may be overriden by space for connections
+	}
 };
 
 const portsHorizontalDefaultLayout = {
@@ -300,9 +305,12 @@ const portsHorizontalDefaultLayout = {
 		defaultNodeWidth: 160,
 		defaultNodeHeight: 40,
 
+		// Default node shape
+		nodeShape: "port-arcs",
+
 		// SVG path strings to define the shape of your node and its
 		// selection highlighting. If set to null the paths will be set by default
-		// based on the nodeFormatType setting.
+		// based on the nodeShape setting.
 		bodyPath: null,
 		selectionPath: null,
 
@@ -466,109 +474,111 @@ const portsHorizontalDefaultLayout = {
 		ellipsisHoverAreaPadding: 3
 	},
 
-	// Draw node as a rectangle with port arcs around the ports
-	nodeShape: "port-arcs",
+	canvasLayout: {
+		// The amount of padding added around the canvas objects when doing a
+		// zoomToFit on the primary canvas. This may be overriden by common-canvas
+		// when displaying sub-flows.
+		zoomToFitPadding: 10,
 
-	// The amount of padding added around the canvas objects when doing a
-	// zoomToFit on the primary canvas. This may be overriden by common-canvas
-	// when displaying sub-flows.
-	zoomToFitPadding: 10,
+		// Supernode in-place containment area attributes
+		supernodeLabelPosX: 30,
+		supernodeLabelPosY: 18,
+		supernodeImageWidth: 18,
+		supernodeImageHeight: 18,
+		supernodeImagePosX: 5,
+		supernodeImagePosY: 4,
+		supernodeEllipsisPosY: 3,
+		supernodeEllipsisWidth: 10,
+		supernodeEllipsisHeight: 20,
+		supernodeExpansionIconPosY: 4,
+		supernodeExpansionIconHeight: 18,
+		supernodeExpansionIconWidth: 18,
+		supernodeExpansionIconHoverAreaPadding: 2,
+		supernodeIconSeparation: 3,
+		supernodeDefaultWidth: 300,
+		supernodeDefaultHeight: 200,
+		supernodeMinWidth: 100,
+		supernodeMinHeight: 80,
+		supernodeTopAreaHeight: 25,
+		supernodeSVGAreaPadding: 3,
+		supernodeBindingPortRadius: 6,
 
-	// Supernode in-place containment area attributes
-	supernodeLabelPosX: 30,
-	supernodeLabelPosY: 18,
-	supernodeImageWidth: 18,
-	supernodeImageHeight: 18,
-	supernodeImagePosX: 5,
-	supernodeImagePosY: 4,
-	supernodeEllipsisPosY: 3,
-	supernodeEllipsisWidth: 10,
-	supernodeEllipsisHeight: 20,
-	supernodeExpansionIconPosY: 4,
-	supernodeExpansionIconHeight: 18,
-	supernodeExpansionIconWidth: 18,
-	supernodeExpansionIconHoverAreaPadding: 2,
-	supernodeIconSeparation: 3,
-	supernodeDefaultWidth: 300,
-	supernodeDefaultHeight: 200,
-	supernodeMinWidth: 100,
-	supernodeMinHeight: 80,
-	supernodeTopAreaHeight: 25,
-	supernodeSVGAreaPadding: 3,
-	supernodeBindingPortRadius: 6,
+		// ---------------------------------------------------------------------------
+		// Layout values for links
+		// ---------------------------------------------------------------------------
+		// Connection type decides whether the node to node connections use the
+		// 'halo' connection mechanism and arrows pointing directly from source to
+		// target or the 'ports' connections with connection lines draw from output
+		// ports to input ports.
+		connectionType: "ports",
 
-	// ---------------------------------------------------------------------------
-	// Layout values for links
-	// ---------------------------------------------------------------------------
-	// Connection type decides whether the node to node connections use the
-	// 'halo' connection mechanism and arrows pointing directly from source to
-	// target or the 'ports' connections with connection lines draw from output
-	// ports to input ports.
-	connectionType: "ports",
+		// Whether to display a link line when linked node/comments overlap. For halo
+		// we don't want to show the link when objects overlap but for ports we do.
+		displayLinkOnOverlap: true,
 
-	// Whether to display a link line when linked node/comments overlap. For halo
-	// we don't want to show the link when objects overlap but for ports we do.
-	displayLinkOnOverlap: true,
+		// The gap between node or comment and the link line.
+		linkGap: 7,
 
-	// The gap between node or comment and the link line.
-	linkGap: 7,
+		// Link decoration dimensions
+		linkDecoratorHeight: 20,
+		linkDecoratorWidth: 20,
+		linkDecoratorPadding: 2,
 
-	// Link decoration dimensions
-	linkDecoratorHeight: 20,
-	linkDecoratorWidth: 20,
-	linkDecoratorPadding: 2,
+		// Values for drawing connectors. wrapAroundSpacing and
+		// wrapAroundNodePadding are used when curved connectors are drawn all the
+		// way around a node. ie the target is to the right of the source.
+		elbowSize: 10,
+		wrapAroundSpacing: 20,
+		wrapAroundNodePadding: 10,
 
-	// Values for drawing connectors. wrapAroundSpacing and
-	// wrapAroundNodePadding are used when curved connectors are drawn all the
-	// way around a node. ie the target is to the right of the source.
-	elbowSize: 10,
-	wrapAroundSpacing: 20,
-	wrapAroundNodePadding: 10,
+		// This can be overrriden from common-canvas config properties
+		linkType: "Curve",
 
-	// This can be overrriden from common-canvas config properties
-	linkType: "Curve",
+		// Display an arrow head on the comment-to-node links
+		commentLinkArrowHead: false,
 
-	// ---------------------------------------------------------------------------
-	// Layout values for comments
-	// ---------------------------------------------------------------------------
-	// When sizing a comment this decides the size of the corner area for
-	// diagonal sizing.
-	commentCornerResizeArea: 10,
+		// Display an arrow head on the data links
+		dataLinkArrowHead: false,
 
-	// The gap between a comment and its selection highlight rectangle
-	commentHighlightGap: 1,
+		// ---------------------------------------------------------------------------
+		// Layout values for comments
+		// ---------------------------------------------------------------------------
+		// When sizing a comment this decides the size of the corner area for
+		// diagonal sizing.
+		commentCornerResizeArea: 10,
 
-	// The gap between a comment and its sizing area rectangle
-	commentSizingArea: 10,
+		// The gap between a comment and its selection highlight rectangle
+		commentHighlightGap: 1,
 
-	// The gap between the edge of the comment rectangle and the comment text.
-	commentWidthPadding: 10,
-	commentHeightPadding: 8,
+		// The gap between a comment and its sizing area rectangle
+		commentSizingArea: 10,
 
-	// Display an arrow head on the comment-to-node links
-	commentLinkArrowHead: false,
+		// The gap between the edge of the comment rectangle and the comment text.
+		commentWidthPadding: 10,
+		commentHeightPadding: 8,
 
-	// Add comment toolbar action, default offset from viewport
-	addCommentOffset: 30,
+		// Add comment toolbar action, default offset from viewport
+		addCommentOffset: 30,
 
-	// Comment port (circle) radius
-	commentPortRadius: 5,
+		// Comment port (circle) radius
+		commentPortRadius: 5,
 
-	// Comment Halo size
-	haloCommentGap: null, // Gap between comment rectangle and its halo
+		// Comment Halo size
+		haloCommentGap: null, // Gap between comment rectangle and its halo
 
-	// ---------------------------------------------------------------------------
-	// Layout values for operations
-	// ---------------------------------------------------------------------------
-	// Sizes of snap to grid as a percentage of default node height and width
-	snapToGridX: "20%",
-	snapToGridY: "33.33%",
+		// ---------------------------------------------------------------------------
+		// Layout values for operations
+		// ---------------------------------------------------------------------------
+		// Sizes of snap to grid as a percentage of default node height and width
+		snapToGridX: "20%",
+		snapToGridY: "33.33%",
 
-	// Values for AutoLayout and AutoNode function
-	autoLayoutInitialMarginX: 50,
-	autoLayoutInitialMarginY: 50,
-	autoLayoutVerticalSpacing: 80,
-	autoLayoutHorizontalSpacing: 80 // For horizontal layout, this may be overriden by space for connections
+		// Values for AutoLayout and AutoNode function
+		autoLayoutInitialMarginX: 50,
+		autoLayoutInitialMarginY: 50,
+		autoLayoutVerticalSpacing: 80,
+		autoLayoutHorizontalSpacing: 80 // For horizontal layout, this may be overriden by space for connections
+	}
 };
 
 const portsVerticalDefaultLayout = {
@@ -582,9 +592,12 @@ const portsVerticalDefaultLayout = {
 		defaultNodeWidth: 70,
 		defaultNodeHeight: 75,
 
+		// Default node shape
+		nodeShape: "rectangle",
+
 		// SVG path strings to define the shape of your node and its
 		// selection highlighting. If set to null the paths will be set by default
-		// based on the nodeFormatType setting.
+		// based on the nodeShape setting.
 		bodyPath: null,
 		selectionPath: null,
 
@@ -748,109 +761,111 @@ const portsVerticalDefaultLayout = {
 		ellipsisHoverAreaPadding: 3
 	},
 
-	// Draw node as a simple rectangle
-	nodeShape: "rectangle",
+	canvasLayout: {
+		// The amount of padding added around the canvas objects when doing a
+		// zoomToFit on the primary canvas. This may be overriden by common-canvas
+		// when displaying sub-flows.
+		zoomToFitPadding: 10,
 
-	// The amount of padding added around the canvas objects when doing a
-	// zoomToFit on the primary canvas. This may be overriden by common-canvas
-	// when displaying sub-flows.
-	zoomToFitPadding: 10,
+		// Supernode in-place containment area attributes
+		supernodeLabelPosX: 30,
+		supernodeLabelPosY: 18,
+		supernodeImageWidth: 18,
+		supernodeImageHeight: 18,
+		supernodeImagePosX: 5,
+		supernodeImagePosY: 4,
+		supernodeEllipsisPosY: 3,
+		supernodeEllipsisWidth: 10,
+		supernodeEllipsisHeight: 20,
+		supernodeExpansionIconPosY: 4,
+		supernodeExpansionIconHeight: 18,
+		supernodeExpansionIconWidth: 18,
+		supernodeExpansionIconHoverAreaPadding: 2,
+		supernodeIconSeparation: 3,
+		supernodeDefaultWidth: 200,
+		supernodeDefaultHeight: 200,
+		supernodeMinWidth: 100,
+		supernodeMinHeight: 80,
+		supernodeTopAreaHeight: 25,
+		supernodeSVGAreaPadding: 3,
+		supernodeBindingPortRadius: 10,
 
-	// Supernode in-place containment area attributes
-	supernodeLabelPosX: 30,
-	supernodeLabelPosY: 18,
-	supernodeImageWidth: 18,
-	supernodeImageHeight: 18,
-	supernodeImagePosX: 5,
-	supernodeImagePosY: 4,
-	supernodeEllipsisPosY: 3,
-	supernodeEllipsisWidth: 10,
-	supernodeEllipsisHeight: 20,
-	supernodeExpansionIconPosY: 4,
-	supernodeExpansionIconHeight: 18,
-	supernodeExpansionIconWidth: 18,
-	supernodeExpansionIconHoverAreaPadding: 2,
-	supernodeIconSeparation: 3,
-	supernodeDefaultWidth: 200,
-	supernodeDefaultHeight: 200,
-	supernodeMinWidth: 100,
-	supernodeMinHeight: 80,
-	supernodeTopAreaHeight: 25,
-	supernodeSVGAreaPadding: 3,
-	supernodeBindingPortRadius: 10,
+		// ---------------------------------------------------------------------------
+		// Layout values for links
+		// ---------------------------------------------------------------------------
+		// Connection type decides whether the node to node connections use the
+		// 'halo' connection mechanism and arrows pointing directly from source to
+		// target or the 'ports' connections with connection lines draw from output
+		// ports to input ports.
+		connectionType: "ports",
 
-	// ---------------------------------------------------------------------------
-	// Layout values for links
-	// ---------------------------------------------------------------------------
-	// Connection type decides whether the node to node connections use the
-	// 'halo' connection mechanism and arrows pointing directly from source to
-	// target or the 'ports' connections with connection lines draw from output
-	// ports to input ports.
-	connectionType: "ports",
+		// Whether to display a link line when linked node/comments overlap. For halo
+		// we don't want to show the link when objects overlap but for ports we do.
+		displayLinkOnOverlap: true,
 
-	// Whether to display a link line when linked node/comments overlap. For halo
-	// we don't want to show the link when objects overlap but for ports we do.
-	displayLinkOnOverlap: true,
+		// The gap between node or comment and the link line.
+		linkGap: 7,
 
-	// The gap between node or comment and the link line.
-	linkGap: 7,
+		// Link decoration dimensions
+		linkDecoratorHeight: 20,
+		linkDecoratorWidth: 20,
+		linkDecoratorPadding: 2,
 
-	// Link decoration dimensions
-	linkDecoratorHeight: 20,
-	linkDecoratorWidth: 20,
-	linkDecoratorPadding: 2,
+		// Values for drawing connectors. wrapAroundSpacing and
+		// wrapAroundNodePadding are used when curved connectors are drawn all the
+		// way around a node. ie the target is to the right of the source.
+		elbowSize: 10,
+		wrapAroundSpacing: 20,
+		wrapAroundNodePadding: 10,
 
-	// Values for drawing connectors. wrapAroundSpacing and
-	// wrapAroundNodePadding are used when curved connectors are drawn all the
-	// way around a node. ie the target is to the right of the source.
-	elbowSize: 10,
-	wrapAroundSpacing: 20,
-	wrapAroundNodePadding: 10,
+		// This can be overrriden from common-canvas config properties
+		linkType: "Curve",
 
-	// This can be overrriden from common-canvas config properties
-	linkType: "Curve",
+		// Display an arrow head on the comment-to-node links
+		commentLinkArrowHead: false,
 
-	// ---------------------------------------------------------------------------
-	// Layout values for comments
-	// ---------------------------------------------------------------------------
-	// When sizing a comment this decides the size of the corner area for
-	// diagonal sizing.
-	commentCornerResizeArea: 10,
+		// Display an arrow head on the data links
+		dataLinkArrowHead: false,
 
-	// The gap between a comment and its selection highlight rectangle
-	commentHighlightGap: 4,
+		// ---------------------------------------------------------------------------
+		// Layout values for comments
+		// ---------------------------------------------------------------------------
+		// When sizing a comment this decides the size of the corner area for
+		// diagonal sizing.
+		commentCornerResizeArea: 10,
 
-	// The gap between a comment and its sizing area rectangle
-	commentSizingArea: 10,
+		// The gap between a comment and its selection highlight rectangle
+		commentHighlightGap: 4,
 
-	// The gap between the edge of the comment rectangle and the comment text.
-	commentWidthPadding: 10,
-	commentHeightPadding: 8,
+		// The gap between a comment and its sizing area rectangle
+		commentSizingArea: 10,
 
-	// Display an arrow head on the comment-to-node links
-	commentLinkArrowHead: false,
+		// The gap between the edge of the comment rectangle and the comment text.
+		commentWidthPadding: 10,
+		commentHeightPadding: 8,
 
-	// Add comment toolbar action, default offset from viewport
-	addCommentOffset: 30,
+		// Add comment toolbar action, default offset from viewport
+		addCommentOffset: 30,
 
-	// Comment port (circle) radius
-	commentPortRadius: 5,
+		// Comment port (circle) radius
+		commentPortRadius: 5,
 
-	// Comment Halo size
-	haloCommentGap: null, // Gap between comment rectangle and its halo
+		// Comment Halo size
+		haloCommentGap: null, // Gap between comment rectangle and its halo
 
-	// ---------------------------------------------------------------------------
-	// Layout values for operations
-	// ---------------------------------------------------------------------------
-	// Sizes of snap to grid as a percentage of default node height and width
-	snapToGridX: "25%",
-	snapToGridY: "20%",
+		// ---------------------------------------------------------------------------
+		// Layout values for operations
+		// ---------------------------------------------------------------------------
+		// Sizes of snap to grid as a percentage of default node height and width
+		snapToGridX: "25%",
+		snapToGridY: "20%",
 
-	// Values for AutoLayout and AutoNode function
-	autoLayoutInitialMarginX: 50,
-	autoLayoutInitialMarginY: 50,
-	autoLayoutVerticalSpacing: 80,
-	autoLayoutHorizontalSpacing: 80 // For horizontal layout, this may be overriden by space for connections
+		// Values for AutoLayout and AutoNode function
+		autoLayoutInitialMarginX: 50,
+		autoLayoutInitialMarginY: 50,
+		autoLayoutVerticalSpacing: 80,
+		autoLayoutHorizontalSpacing: 80 // For horizontal layout, this may be overriden by space for connections
+	}
 };
 
 
@@ -868,6 +883,7 @@ export default class LayoutDimensions {
 		let newLayout = Object.assign({}, defaultLayout);
 		if (config) {
 			newLayout = this.overrideNodeLayout(newLayout, config); // Do this first because snap-to-grid depends on this.
+			newLayout = this.overrideCanvasLayout(newLayout, config);
 			newLayout = this.overrideLinkType(newLayout, config);
 			newLayout = this.overrideSnapToGrid(newLayout, config);
 			newLayout = this.overrideAutoLayout(newLayout, config);
@@ -881,10 +897,16 @@ export default class LayoutDimensions {
 		return layout;
 	}
 
+	static overrideCanvasLayout(layout, config) {
+		layout.canvasLayout = Object.assign({}, layout.canvasLayout, config.enableCanvasLayout);
+
+		return layout;
+	}
+
 	// Overrides the input layout objects with any link type provided by the
 	// config object.
 	static overrideLinkType(layout, config) {
-		layout.linkType = config.enableLinkType || layout.linkType || "Curve";
+		layout.canvasLayout.linkType = config.enableLinkType || layout.canvasLayout.linkType || "Curve";
 
 		return layout;
 	}
@@ -895,12 +917,12 @@ export default class LayoutDimensions {
 		// Snap to grid configuration. 25% for X and 20% for Y (of node width and
 		// height) by default. It can be overridden by the config which can be either
 		// a number or a percentage of the node width/height.
-		const snapToGridXStr = config.enableSnapToGridX || layout.snapToGridX || "25%";
-		const snapToGridYStr = config.enableSnapToGridX || layout.snapToGridY || "20%";
+		const snapToGridXStr = config.enableSnapToGridX || layout.canvasLayout.snapToGridX || "25%";
+		const snapToGridYStr = config.enableSnapToGridX || layout.canvasLayout.snapToGridY || "20%";
 
 		// Set the snap-to-grid sizes in pixels.
-		layout.snapToGridX = this.getSnapToGridSize(snapToGridXStr, layout.nodeLayout.defaultNodeWidth);
-		layout.snapToGridY = this.getSnapToGridSize(snapToGridYStr, layout.nodeLayout.defaultNodeHeight);
+		layout.canvasLayout.snapToGridX = this.getSnapToGridSize(snapToGridXStr, layout.nodeLayout.defaultNodeWidth);
+		layout.canvasLayout.snapToGridY = this.getSnapToGridSize(snapToGridYStr, layout.nodeLayout.defaultNodeHeight);
 
 		return layout;
 	}
@@ -908,8 +930,8 @@ export default class LayoutDimensions {
 	// Overrides the auto-layout values in the layout object with any
 	// auto-layout values provided in the config object.
 	static overrideAutoLayout(layout, config) {
-		layout.autoLayoutVerticalSpacing = this.getAutoLayoutSpacing(config.enableAutoLayoutVerticalSpacing, layout.autoLayoutVerticalSpacing);
-		layout.autoLayoutHorizontalSpacing = this.getAutoLayoutSpacing(config.enableAutoLayoutHorizontalSpacing, layout.autoLayoutHorizontalSpacing);
+		layout.canvasLayout.autoLayoutVerticalSpacing = this.getAutoLayoutSpacing(config.enableAutoLayoutVerticalSpacing, layout.canvasLayout.autoLayoutVerticalSpacing);
+		layout.canvasLayout.autoLayoutHorizontalSpacing = this.getAutoLayoutSpacing(config.enableAutoLayoutHorizontalSpacing, layout.canvasLayout.autoLayoutHorizontalSpacing);
 
 		return layout;
 	}

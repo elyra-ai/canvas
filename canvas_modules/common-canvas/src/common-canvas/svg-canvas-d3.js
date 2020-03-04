@@ -93,6 +93,7 @@ export default class SVGCanvasD3 {
 				this.config.enableAssocLinkType !== config.enableAssocLinkType ||
 				this.config.enableDragWithoutSelect !== config.enableDragWithoutSelect ||
 				this.config.enableParentClass !== config.enableParentClass ||
+				!this.enableCanvasLayoutExactlyMatches(this.config.enableCanvasLayout, config.enableCanvasLayout) ||
 				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
 			this.logger.logStartTimer("Initializing Canvas");
 
@@ -141,6 +142,17 @@ export default class SVGCanvasD3 {
 	// enableNodeLayout.
 	cloneConfig(config) {
 		return Object.assign({}, config);
+	}
+
+	// Returns true if the contents of enableLayout1 and enableLayout2 are
+	// exactly the same.
+	enableCanvasLayoutExactlyMatches(enableLayout1, enableLayout2) {
+		if (!enableLayout1 && !enableLayout2) {
+			return true;
+		} else if (isMatch(enableLayout1, enableLayout2) && isMatch(enableLayout2, enableLayout1)) {
+			return true;
+		}
+		return false;
 	}
 
 	// Returns true if the contents of enableLayout1 and enableLayout2 including

@@ -17,11 +17,11 @@ export default class PipelineInHandler {
 
 	// Returns the 'canvas info' pipeline, stored internally in the object model,
 	// by extracting that info from the pipeline-flow provided.
-	static convertPipelineFlowToCanvasInfo(pipelineFlow, layoutInfo) {
+	static convertPipelineFlowToCanvasInfo(pipelineFlow, canvasLayout) {
 		let canvasInfoPipelines = [];
 		if (pipelineFlow.pipelines) {
 			canvasInfoPipelines = pipelineFlow.pipelines.map((pFlowPipline) =>
-				this.convertPipelineToCanvasInfoPipeline(pFlowPipline, layoutInfo)
+				this.convertPipelineToCanvasInfoPipeline(pFlowPipline, canvasLayout)
 			);
 		}
 		const newPipelineFlow = Object.assign({}, pipelineFlow, { pipelines: canvasInfoPipelines });
@@ -32,14 +32,14 @@ export default class PipelineInHandler {
 	// by extracting that info from the pipeline-flow pipeline provided. A
 	// 'canvas info' pipeline consists of an ID and three arrays: nodes,
 	// comments and links.
-	static convertPipelineToCanvasInfoPipeline(pipeline, layoutInfo) {
+	static convertPipelineToCanvasInfoPipeline(pipeline, canvasLayout) {
 		const nodes = has(pipeline, "nodes") ? pipeline.nodes : [];
 		const comments = has(pipeline, "app_data.ui_data.comments") ? pipeline.app_data.ui_data.comments : [];
 
 		var canvas = {
 			"id": pipeline.id,
 			"name": pipeline.name,
-			"nodes": this.convertNodes(nodes, layoutInfo),
+			"nodes": this.convertNodes(nodes, canvasLayout),
 			"comments": this.convertComments(comments),
 			"links": this.convertLinks(nodes, comments),
 			"runtime_ref": pipeline.runtime_ref,
@@ -58,7 +58,7 @@ export default class PipelineInHandler {
 		return canvas;
 	}
 
-	static convertNodes(nodes, layoutInfo) {
+	static convertNodes(nodes, canvasLayout) {
 		return nodes.map((node) => {
 			const obj = {
 				"id": node.id,
@@ -85,8 +85,8 @@ export default class PipelineInHandler {
 				}
 				obj.subflow_ref = has(node, "subflow_ref") ? node.subflow_ref : {};
 				obj.is_expanded = has(node, "app_data.ui_data.is_expanded") ? node.app_data.ui_data.is_expanded : false;
-				obj.expanded_width = has(node, "app_data.ui_data.expanded_width") ? node.app_data.ui_data.expanded_width : layoutInfo.supernodeDefaultWidth;
-				obj.expanded_height = has(node, "app_data.ui_data.expanded_height") ? node.app_data.ui_data.expanded_height : layoutInfo.supernodeDefaultHeight;
+				obj.expanded_width = has(node, "app_data.ui_data.expanded_width") ? node.app_data.ui_data.expanded_width : canvasLayout.supernodeDefaultWidth;
+				obj.expanded_height = has(node, "app_data.ui_data.expanded_height") ? node.app_data.ui_data.expanded_height : canvasLayout.supernodeDefaultHeight;
 			}
 			if (node.type === MODEL_NODE) {
 				obj.model_ref = has(node, "model_ref") ? node.model_ref : "";
