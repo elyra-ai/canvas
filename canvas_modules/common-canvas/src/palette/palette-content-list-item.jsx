@@ -10,7 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import has from "lodash/has";
-import SVG from "react-inlinesvg";
+// import SVG from "react-inlinesvg";
 import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../common-canvas/constants/canvas-constants.js";
 
 class PaletteContentListItem extends React.Component {
@@ -81,11 +81,14 @@ class PaletteContentListItem extends React.Component {
 			const image = this.props.nodeTemplate.app_data.ui_data.image;
 
 			icon = <img src={image} className="palette-list-item-icon" draggable="false" />;
-			if (image.endsWith(".svg")) {
-				icon = <SVG src={image} className="palette-list-item-icon" draggable="false" />;
-			}
+			// This code is commented out because when the palette icons as displayed
+			// as inline SVG the embedded classes from categories (which have fill:none)
+			// interfere with the palette node icons.
+			// TDOO - Investigate to see if there is a workaround for this issue.
+			// if (image.endsWith(".svg")) {
+			// 	icon = <SVG src={image} className="palette-list-item-icon" draggable="false" />;
+			// }
 		}
-
 
 		return (
 			<div id={this.props.nodeTemplate.id}
