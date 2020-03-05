@@ -5556,17 +5556,25 @@ export default class SVGCanvasRenderer {
 		return path;
 	}
 
-	// Returns arrow head path for Halo presentation.
+	// Returns arrow head path. If the linkType is Curve or Elbow it makes sure
+	// the arrow head is for a horizontal line because the end of those types of
+	// line is always horizontal. Otherwise it returns an arrow head
+	// path relevant to the slope of the straight link being drawn.
 	getArrowHead(d) {
-		var angle = Math.atan2((d.y2 - d.y1), (d.x2 - d.x1));
+		const yDiff =
+			this.canvasLayout.linkType === "Curve" || this.canvasLayout.linkType === "Elbow"
+				? 0
+				: d.y2 - d.y1;
 
-		var clockwiseAngle = angle - 0.3;
-		var x3 = d.x2 - Math.cos(clockwiseAngle) * 10;
-		var y3 = d.y2 - Math.sin(clockwiseAngle) * 10;
+		const angle = Math.atan2(yDiff, (d.x2 - d.x1));
 
-		var antiClockwiseAngle = angle + 0.3;
-		var x4 = d.x2 - Math.cos(antiClockwiseAngle) * 10;
-		var y4 = d.y2 - Math.sin(antiClockwiseAngle) * 10;
+		const clockwiseAngle = angle - 0.3;
+		const x3 = d.x2 - Math.cos(clockwiseAngle) * 10;
+		const y3 = d.y2 - Math.sin(clockwiseAngle) * 10;
+
+		const antiClockwiseAngle = angle + 0.3;
+		const x4 = d.x2 - Math.cos(antiClockwiseAngle) * 10;
+		const y4 = d.y2 - Math.sin(antiClockwiseAngle) * 10;
 
 		return `M ${d.x2} ${d.y2} L ${x3} ${y3} M ${d.x2} ${d.y2} L ${x4} ${y4}`;
 	}

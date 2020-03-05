@@ -245,7 +245,7 @@ const haloDefaultLayout = {
 		wrapAroundNodePadding: 10,
 
 		// This can be overrriden from common-canvas config properties
-		linkType: null,
+		linkType: "Straight",
 
 		// Display an arrow head on the comment-to-node links
 		commentLinkArrowHead: true,
@@ -906,7 +906,11 @@ export default class LayoutDimensions {
 	// Overrides the input layout objects with any link type provided by the
 	// config object.
 	static overrideLinkType(layout, config) {
-		layout.canvasLayout.linkType = config.enableLinkType || layout.canvasLayout.linkType || "Curve";
+		if (layout.canvasLayout.connectionType === "halo") {
+			layout.canvasLayout.linkType = "Straight";
+		} else {
+			layout.canvasLayout.linkType = config.enableLinkType || layout.canvasLayout.linkType || "Curve";
+		}
 
 		return layout;
 	}
