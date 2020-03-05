@@ -507,8 +507,10 @@ class CommonCanvas extends React.Component {
 			/>);
 		}
 
+		const className = "common-canvas" + (this.props.config.enableParentClass ? " " + this.props.config.enableParentClass : "");
+
 		return (
-			<div className="common-canvas" onDragOver={this.onDragOver} onDrop={this.onDrop}>
+			<div className={className} onDragOver={this.onDragOver} onDrop={this.onDrop}>
 				{palette}
 				<div className="common-canvas-right-side-items">
 					<div id={this.itemsContainerDivId} className="common-canvas-items-container">

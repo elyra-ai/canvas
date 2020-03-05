@@ -798,7 +798,7 @@ export default class SVGCanvasRenderer {
 
 		const canvasSVG = parentObject
 			.append("svg")
-			.attr("class", "svg-area " + this.config.enableParentClass) // svg-area used by Chimp tests.
+			.attr("class", "svg-area") // svg-area used by Chimp tests.
 			.attr("width", dims.width)
 			.attr("height", dims.height)
 			.attr("x", dims.x)
