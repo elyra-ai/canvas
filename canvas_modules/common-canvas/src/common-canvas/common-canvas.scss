@@ -90,7 +90,7 @@
 	cursor: default;
 	transform: translate(-50%, -50%);
 	pointer-events: all;
-	background-color: #FBF7FB; /* TODO Replace with carbon variable when we update to latest version. */
+	background-color: $ui-background;
 	opacity: 0.75;
 }
 
@@ -100,34 +100,7 @@
 	left: 30px;
 	right: 30px;
 	bottom: 30px;
-	border-color: #CDD1D4; /* TODO Replace with carbon variable when we update to latest version. */
+	border-color: $ui-04;
 	border-style: dashed;
 	border-width: 2px;
-}
-
-.dropzone-canvas-image-div {
-	position: absolute;
-	top: 15%;
-	left: 30px;
-	right: 30px;
-}
-
-.dropzone-canvas-image {
-	height: 150px;
-	margin-left: auto;
-	margin-right: auto;
-	display: block;
-}
-
-.dropzone-canvas-text {
-	position: absolute;
-	display: block;
-	color: #8897A2; /* TODO Replace with carbon variable when we update to latest version. */
-	font-family: "ibm-plex-sans", Helvetica Neue, Arial, sans-serif;
-	font-weight: bold;
-	font-size: 67px;
-	text-align: center;
-	top: 45%;
-	left: 30px;
-	right: 30px;
 }

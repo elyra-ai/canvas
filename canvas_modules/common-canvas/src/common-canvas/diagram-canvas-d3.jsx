@@ -13,7 +13,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import ReactResizeDetector from "react-resize-detector";
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
-import DropZoneCanvasImage from "../../assets/images/drop_zone.svg";
 
 import {
 	DND_DATA_TEXT
@@ -213,7 +212,7 @@ export default class DiagramCanvas extends React.Component {
 	render() {
 		let emptyCanvas = null;
 
-		if (this.props.isCanvasEmpty && !this.isDropZoneDisplayed()) {
+		if (this.props.isCanvasEmpty) {
 			if (this.props.config.emptyCanvasContent) {
 				emptyCanvas = (
 					<div className="empty-canvas">
@@ -240,10 +239,6 @@ export default class DiagramCanvas extends React.Component {
 					<div>
 						<div className="dropzone-canvas" />
 						<div className="dropzone-canvas-rect" />
-						<div className="dropzone-canvas-image-div">
-							<img src={DropZoneCanvasImage} className="dropzone-canvas-image" />
-						</div>
-						<span className="dropzone-canvas-text">DROP TO ADD TO<br />CANVAS AND PROJECT</span>
 					</div>);
 			}
 		}
