@@ -134,6 +134,11 @@ const haloDefaultLayout = {
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
+		// This is used with portPosY to position input ports. It is an offset
+		// in the x direction from the left side of the node outline. Negative for
+		// left, positive for right.
+		inputPortPosX: 0,
+
 		// 'Connector' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
 		// Object for input port guide can be "circle" or "image".
@@ -151,6 +156,11 @@ const haloDefaultLayout = {
 		// Output port dimensions for "image".
 		outputPortWidth: 12,
 		outputPortHeight: 12,
+
+		// This is used with portPosY to position output ports. It is an offset
+		// in the x direction from the right side of the node outline. Negative for
+		// left, positive for right.
+		outputPortPosX: 0,
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -421,6 +431,11 @@ const portsHorizontalDefaultLayout = {
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
+		// This is used with portPosY to position input ports. It is an offset
+		// in the x direction from the left side of the node outline. Negative for
+		// left, positive for right.
+		inputPortPosX: 0,
+
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
 		// Object for input port guide can be "circle" or "image".
@@ -438,6 +453,11 @@ const portsHorizontalDefaultLayout = {
 		// Output port dimensions for "image".
 		outputPortWidth: 12,
 		outputPortHeight: 12,
+
+		// This is used with portPosY to position output ports. It is an offset
+		// in the x direction from the right side of the node outline. Negative for
+		// left, positive for right.
+		outputPortPosX: 0,
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -708,6 +728,11 @@ const portsVerticalDefaultLayout = {
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
+		// This is used with portPosY to position input ports. It is an offset
+		// in the x direction from the left side of the node outline. Negative for
+		// left, positive for right.
+		inputPortPosX: 0,
+
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
 		// Object for input port guide can be "circle" or "image".
@@ -725,6 +750,11 @@ const portsVerticalDefaultLayout = {
 		// Output port dimensions for "image".
 		outputPortWidth: 12,
 		outputPortHeight: 12,
+
+		// This is used with portPosY to position output ports. It is an offset
+		// in the x direction from the right side of the node outline. Negative for
+		// left, positive for right.
+		outputPortPosX: 0,
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.

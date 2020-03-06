@@ -23,7 +23,7 @@ import isEmpty from "lodash/isEmpty";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERROR,
 	CURVE_LEFT, CURVE_RIGHT, DOUBLE_BACK_RIGHT,
 	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE,
-	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_IMAGE,
+	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
@@ -2201,7 +2201,7 @@ export default class SVGCanvasRenderer {
 												srcObjId: d.id,
 												srcPortId: port.id,
 												action: "node-node",
-												startPos: { x: srcNode.x_pos, y: srcNode.y_pos + port.cy },
+												startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
 												portType: "input",
 												portObject: d.layout.inputPortObject,
 												portImage: d.layout.inputPortImage,
@@ -2251,14 +2251,14 @@ export default class SVGCanvasRenderer {
 									if (d.layout.inputPortObject === PORT_OBJECT_IMAGE) {
 										obj
 											.attr("xlink:href", d.layout.inputPortImage)
-											.attr("x", -(d.layout.inputPortWidth / 2))
+											.attr("x", port.cx - (d.layout.inputPortWidth / 2))
 											.attr("y", port.cy - (d.layout.inputPortHeight / 2))
 											.attr("width", d.layout.inputPortWidth)
 											.attr("height", d.layout.inputPortHeight);
 									} else {
 										obj
 											.attr("r", that.getPortRadius(d))
-											.attr("cx", 0)
+											.attr("cx", port.cx)
 											.attr("cy", port.cy);
 									}
 								})
@@ -2344,7 +2344,7 @@ export default class SVGCanvasRenderer {
 											srcObjId: d.id,
 											srcPortId: port.id,
 											action: "node-node",
-											startPos: { x: srcNode.x_pos + srcNode.width, y: srcNode.y_pos + port.cy },
+											startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
 											portType: "output",
 											portObject: d.layout.outputPortObject,
 											portImage: d.layout.outputPortImage,
@@ -2392,14 +2392,14 @@ export default class SVGCanvasRenderer {
 									if (d.layout.outputPortObject === PORT_OBJECT_IMAGE) {
 										obj
 											.attr("xlink:href", d.layout.outputPortImage)
-											.attr("x", d.width - (d.layout.outputPortWidth / 2))
+											.attr("x", port.cx - (d.layout.outputPortWidth / 2))
 											.attr("y", port.cy - (d.layout.outputPortHeight / 2))
 											.attr("width", d.layout.outputPortWidth)
 											.attr("height", d.layout.outputPortHeight);
 									} else {
 										obj
 											.attr("r", that.getPortRadius(d))
-											.attr("cx", d.width)
+											.attr("cx", port.cx)
 											.attr("cy", port.cy);
 									}
 								})
@@ -3327,20 +3327,15 @@ export default class SVGCanvasRenderer {
 			.attr("linkType", linkType)
 			.merge(connectionStartSel)
 			.each(function(d) {
-				if (that.drawingNewLinkData.portObject === PORT_OBJECT_IMAGE) {
-					d3.select(this)
-						.attr("xlink:href", that.drawingNewLinkData.portImage)
-						.attr("x", d.x1 - (that.drawingNewLinkData.portWidth / 2))
-						.attr("y", d.y1 - (that.drawingNewLinkData.portHeight / 2))
-						.attr("width", that.drawingNewLinkData.portWidth)
-						.attr("height", that.drawingNewLinkData.portHeight);
-				} else {
+				// No need to draw the starting object of the new line if it is an image.
+				if (that.drawingNewLinkData.portObject === PORT_OBJECT_CIRCLE) {
 					d3.select(this)
 						.attr("cx", d.x1)
 						.attr("cy", d.y1)
 						.attr("r", that.drawingNewLinkData.portRadius);
 				}
 			});
+
 
 		connectionGuideSel
 			.data(this.drawingNewLinkData.linkArray)
@@ -3797,15 +3792,16 @@ export default class SVGCanvasRenderer {
 	}
 
 	setPortPositionsForNode(node) {
-		this.setPortPositionsByInfo(node, node.inputs, node.inputPortsHeight);
-		this.setPortPositionsByInfo(node, node.outputs, node.outputPortsHeight);
+		this.setPortPositionsByInfo(node, node.inputs, node.inputPortsHeight, node.layout.inputPortPosX);
+		this.setPortPositionsByInfo(node, node.outputs, node.outputPortsHeight, node.width + node.layout.outputPortPosX);
 	}
 
-	setPortPositionsByInfo(data, ports, portsHeight) {
+	setPortPositionsByInfo(data, ports, portsHeight, xPos) {
 		if (ports && ports.length > 0) {
 			if (data.height <= data.layout.defaultNodeHeight &&
 					ports.length === 1) {
 				ports[0].cy = data.layout.portPosY;
+				ports[0].cx = xPos;
 
 			} else {
 				let yPos = 0;
@@ -3833,6 +3829,7 @@ export default class SVGCanvasRenderer {
 				ports.forEach((p) => {
 					yPos += (data.layout.portArcRadius * multiplier);
 					p.cy = yPos;
+					p.cx = xPos;
 					yPos += ((data.layout.portArcRadius + data.layout.portArcSpacing) * multiplier);
 				});
 			}
@@ -5336,9 +5333,9 @@ export default class SVGCanvasRenderer {
 		}
 
 		return {
-			x1: srcNode.x_pos + srcNode.width,
+			x1: srcNode.x_pos + srcNode.width + srcNode.layout.outputPortPosX,
 			y1: srcNode.y_pos + srcY,
-			x2: trgNode.x_pos,
+			x2: trgNode.x_pos + srcNode.layout.inputPortPosX,
 			y2: trgNode.y_pos + trgY };
 	}
 
@@ -5561,12 +5558,10 @@ export default class SVGCanvasRenderer {
 	// line is always horizontal. Otherwise it returns an arrow head
 	// path relevant to the slope of the straight link being drawn.
 	getArrowHead(d) {
-		const yDiff =
+		const angle =
 			this.canvasLayout.linkType === "Curve" || this.canvasLayout.linkType === "Elbow"
 				? 0
-				: d.y2 - d.y1;
-
-		const angle = Math.atan2(yDiff, (d.x2 - d.x1));
+				: Math.atan2((d.y2 - d.y1), (d.x2 - d.x1));
 
 		const clockwiseAngle = angle - 0.3;
 		const x3 = d.x2 - Math.cos(clockwiseAngle) * 10;
@@ -5599,7 +5594,13 @@ export default class SVGCanvasRenderer {
 			minInitialLine = this.drawingNewLinkData.minInitialLine;
 		}
 
-		if (this.canvasLayout.connectionType === "ports" &&
+		// If its a very short line to be drawn just draw a straight line instead
+		// of zig-zagging in a very small space.
+		if (Math.abs(data.x1 - data.x2) < 20 &&
+				Math.abs(data.y1 - data.y2) < 20) {
+			return this.getStraightPath(data);
+
+		} else if (this.canvasLayout.connectionType === "ports" &&
 				data.type === NODE_LINK) {
 
 			if (this.canvasLayout.linkType === "Curve") {

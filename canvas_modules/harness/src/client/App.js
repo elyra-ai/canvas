@@ -55,6 +55,7 @@ import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
 import DB2ExplainCanvas from "../../test_resources/diagrams/db2ExplainCanvas.json";
 import AutoAICanvas from "../../test_resources/diagrams/autoAICanvas.json";
 import StreamsCanvas from "../../test_resources/diagrams/streamsJobFlowNested.json";
+import ModelerFlowsPalette from "../../test_resources/palettes/c-10-modelerFlowsPalette.json";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
@@ -72,6 +73,7 @@ import {
 	ASSOC_STRAIGHT,
 	NO_LAYOUT,
 	CLASSIC_LAYOUT,
+	MODELER_FLOWS_LAYOUT,
 	BLUE_ELLIPSES_LAYOUT,
 	DB2_EXPLAIN_LAYOUT,
 	STREAMS_LAYOUT,
@@ -689,6 +691,8 @@ export default class App extends React.Component {
 	setNodeLayout(selectedNodeLayout) {
 		if (selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
 			this.canvasController.setPipelineFlow(AllTypesCanvas);
+		} else if (selectedNodeLayout === MODELER_FLOWS_LAYOUT) {
+			this.canvasController.setPipelineFlowPalette(ModelerFlowsPalette);
 		} else if (selectedNodeLayout === DB2_EXPLAIN_LAYOUT) {
 			this.canvasController.setPipelineFlow(DB2ExplainCanvas);
 		} else if (selectedNodeLayout === STREAMS_LAYOUT) {
@@ -1742,6 +1746,53 @@ export default class App extends React.Component {
 			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
 				enableParentClass: "classic"
 			});
+
+		} else if (this.state.selectedNodeLayout === MODELER_FLOWS_LAYOUT) {
+			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
+				enableParentClass: "modeler-flows",
+				enableDropZoneOnExternalDrag: true,
+				enableNodeFormatType: "Vertical",
+				enableConnectionType: "Ports",
+				enableLinkType: "Elbow",
+				enableSaveZoom: "LocalStorage",
+				enableSnapToGridType: "After",
+				enableInteractionType: "Mouse",
+				tipConfig: {
+					palette: true,
+					nodes: true,
+					ports: false,
+					links: false
+				},
+				enableNodeLayout: {
+					labelAndIconVerticalJustification: "none",
+					defaultNodeWidth: 66,
+					defaultNodeHeight: 66,
+					nodeHighlightGap: -5,
+					ellipsisWidth: 16,
+					ellipsisHeight: 22,
+					ellipsisPosY: 0,
+					ellipsisPosX: 62,
+					imageWidth: 48,
+					imageHeight: 48,
+					imagePosX: 9,
+					imagePosY: 9,
+					labelPosX: 33,
+					labelPosY: 74,
+					inputPortPosX: 0,
+					outputPortPosX: 0,
+					portPosY: 33,
+					outputPortObject: "image",
+					outputPortImage: "/images/arrow-guide.svg",
+					outputPortWidth: 20,
+					outputPortHeight: 20,
+					outputPortGuideObject: "image",
+					outputPortGuideImage: "/images/arrow-guide.svg"
+				},
+				enableCanvasLayout: {
+					dataLinkArrowHead: true
+				}
+			});
+
 		} else if (this.state.selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
 			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
 				enableParentClass: "blue-ellipses",

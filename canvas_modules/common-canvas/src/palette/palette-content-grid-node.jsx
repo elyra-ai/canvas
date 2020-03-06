@@ -66,10 +66,10 @@ class PaletteContentNode extends React.Component {
 			icon = (<img className="node-icon" src={image}
 				alt={label}
 			/>);
-			// This code is commented out because when the palette icons as displayed
-			// as inline SVG the embedded classes from categories (which have fill:none)
-			// interfere with the palette node icons.
-			// TDOO - Investigate to see if there is a workaround for this issue.
+			// When the palette icons are displayed as inline SVG the images become
+			// corrupted because they are zoomed to a smaller size than their designer
+			// expected. Therefore, we choose to display them using <img> which allows
+			// them to appear OK.
 			// if (image.endsWith(".svg")) {
 			// 	icon = <SVG src={image} className="node-icon" alt={label} />;
 			// }

@@ -37,6 +37,156 @@ $node-port-input-connected-fill-color: $light-blue;
 $node-port-input-arrow-connected-stroke-color: $dark-blue;
 $node-port-input-arrow-connected-fill-color: transparent;
 
+.modeler-flows {
+
+	.d3-node-group {
+		.d3-node-body-outline-austin,
+		.d3-node-body-outline {
+			fill: transparent;
+			stroke: transparent;
+
+			&[hover="yes"] {
+				fill: transparent;
+			}
+
+			&.node-disabled {
+				fill: $disabled-02;
+			}
+
+			&.node-disabled:hover {
+				fill: $disabled-02;
+			}
+		}
+
+		.d3-node-selection-highlight[data-selected="yes"],
+		.d3-comment-selection-highlight[data-selected="yes"] {
+			stroke: $gray-50;
+			stroke-dasharray: 5, 5;
+			stroke-width: 1;
+			fill: transparent;
+			pointer-events: none;
+		}
+
+		.d3-node-port-input {
+			stroke: transparent;
+			fill: transparent;
+			stroke-width: 1;
+
+			&[connected="yes"] {
+				stroke: transparent;
+				fill: transparent;
+				stroke-width: 2;
+			}
+		}
+
+		.d3-node-port-input-arrow[connected="yes"] {
+			stroke: transparent;
+			fill: none;
+			stroke-width: 2;
+		}
+
+		.d3-node-port-output {
+			opacity: 0;
+			transform: translateX(-8px);
+			transition: opacity 0.1s cubic-bezier(0.4, 0.14, 0.3, 1), transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			transition-delay: 0.125s;
+		}
+
+		/* Hover over d3-node-group */
+		&:hover {
+			.d3-node-port-input {
+				stroke: transparent;
+				fill: transparent;
+				stroke-width: 1;
+
+				// &:hover {
+				// 	stroke: $interactive-01;
+				// 	fill: $interactive-01;
+				// }
+			}
+
+			.d3-node-port-output {
+				opacity: 1;
+				transform: translateX(0);
+				transition: opacity 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				transition-delay: 0.125s;
+			}
+
+			/* Vertical Ellipsis (overflow menu) Styles */
+			.d3-node-ellipsis:hover,
+			.d3-node-ellipsis-background:hover~.d3-node-ellipsis {
+				fill: $icon-01;
+				stroke-width: 0;
+			}
+
+			.d3-node-ellipsis-background {
+				fill: transparent;
+				stroke-width: 0;
+				cursor: context-menu;
+
+				&:hover {
+					fill: $gray-20;
+				}
+			}
+
+		}
+	}
+
+	.d3-data-link {
+		fill: none;
+		stroke: $ui-04;
+		stroke-width: 1;
+	}
+
+	g .d3-comment-link:hover,
+	g .d3-data-link:hover,
+	g .d3-selectable-link:hover,
+	g .d3-selectable-link:hover ~ .d3-selectable-link,      /* Colors arrow head when hovering over line. */
+	g .d3-data-link-selection-area:hover ~ .d3-selectable-link, /* Colors arrow head when hovering over line selection area. */
+	g .d3-comment-link-selection-area:hover ~ .d3-selectable-link, /* Colors arrow head when hovering over line selection area. */
+	g .d3-association-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
+		stroke: $interactive-01;
+		stroke-width: 2;
+	}
+
+
+	.d3-new-connection-line[linkType="nodeLink"] {
+		stroke: $interactive-01;
+		stroke-width: 2;
+		stroke-dasharray: 5 5;
+		fill: none;
+	}
+
+	/* Decoration Styles */
+
+	.node-cache-empty {
+		fill: $ui-01;
+	}
+
+	.node-cache-full {
+		fill: $ui-01;
+	}
+
+	.node-sql-pushback {
+		fill: $ui-01;
+	}
+
+	/* Override styles in common canvas to fade out nodes and comments
+		 when they are cut to the clipboard.*/
+	.node-image[data-is-cut] {
+		zoom: 1;
+		filter: "alpha(opacity=50)";
+		opacity: 0.5;
+	}
+
+	.canvas-comment[data-is-cut] {
+		zoom: 1;
+		filter: "alpha(opacity=50)";
+		opacity: 0.5;
+	}
+}
+
+
 .classic {
 	.d3-node-body-outline {
 		stroke: $node-body-stroke;
