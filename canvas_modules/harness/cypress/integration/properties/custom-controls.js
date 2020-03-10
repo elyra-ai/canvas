@@ -19,7 +19,7 @@ describe("Test of custom panels", function() {
 			.click();
 		// custom toggle should have an error
 		cy.get("#custom_toggle2").should("have.attr", "disabled");
-		cy.toggleCategory("Map and Slider");
+		cy.toggleCategory("Slider");
 		cy.openSubPanel("Configure Slider");
 		verifySliderDropDown(6);
 		// move slider to be above 60

@@ -11,55 +11,12 @@
       ]
     ],
     "color": "yellow",
-    "map_zoom": 9,
-    "map_checkbox": false,
-    "custom_map_info": [
-      37.5,
-      238,
-      9
-    ],
     "custom_toggle": true,
     "custom_toggle2": true,
     "text_field": "",
     "readonly_text": "[]"
   },
-  "complex_types": [
-    {
-      "id": "map_info",
-      "parameters": [
-        {
-          "id": "lat",
-          "type": "double"
-        },
-        {
-          "id": "lng",
-          "type": "double"
-        },
-        {
-          "id": "zoom",
-          "type": "integer"
-        }
-      ]
-    }
-  ],
   "parameters": [
-    {
-      "id": "map_zoom",
-      "type": "integer"
-    },
-    {
-      "id": "map_checkbox",
-      "type": "boolean"
-    },
-    {
-      "id": "custom_map_info",
-      "type": "map_info",
-      "default": [
-        37.5,
-        238,
-        9
-      ]
-    },
     {
       "id": "custom_slider",
       "type": "integer"
@@ -92,30 +49,6 @@
     },
     "parameter_info": [
       {
-        "parameter_ref": "map_zoom",
-        "label": {
-          "default": "Zoom Value from map"
-        }
-      },
-      {
-        "parameter_ref": "map_checkbox",
-        "label": {
-          "default": "Show map"
-        },
-        "description": {
-          "default": "Select to show a map control"
-        }
-      },
-      {
-        "parameter_ref": "custom_map_info",
-        "label": {
-          "default": "Map parameters"
-        },
-        "description": {
-          "default": "Latitude, longitude, and zoom setting"
-        }
-      },
-      {
         "parameter_ref": "readonly_text",
         "label": {
           "default": "Currently selected rows:"
@@ -124,31 +57,6 @@
           "default": "We have a listener here"
         },
         "control": "readonly"
-      }
-    ],
-    "complex_type_info": [
-      {
-        "complex_type_ref": "map_info",
-        "parameters": [
-          {
-            "parameter_ref": "lat",
-            "label": {
-              "default": "Latitude"
-            }
-          },
-          {
-            "parameter_ref": "lng",
-            "label": {
-              "default": "Longitude"
-            }
-          },
-          {
-            "parameter_ref": "zoom",
-            "label": {
-              "default": "Zoom"
-            }
-          }
-        ]
       }
     ],
     "group_info": [
@@ -177,39 +85,12 @@
         ]
       },
       {
-        "id": "map-panel",
+        "id": "slider-panel",
         "label": {
-          "default": "Map and Slider"
+          "default": "Slider"
         },
         "type": "panels",
         "group_info": [
-          {
-            "id": "map-summary-panel",
-            "label": {
-              "default": "Configure Map"
-            },
-            "type": "summaryPanel",
-            "group_info": [
-              {
-                "id": "checkbox-panel",
-                "type": "controls",
-                "parameter_refs": [
-                  "map_checkbox",
-                  "map_zoom"
-                ]
-              },
-              {
-                "id": "harness-custom-map-panel",
-                "type": "customPanel",
-                "parameter_refs": [
-                  "custom_map_info"
-                ],
-                "data": {
-                  "parameter_ref": "map_zoom"
-                }
-              }
-            ]
-          },
           {
             "id": "slider-summary-panel",
             "label": {
@@ -259,24 +140,6 @@
       }
     },
     {
-      "validation": {
-        "fail_message": {
-          "type": "error",
-          "focus_parameter_ref": "custom_map_info",
-          "message": {
-            "default": "Map zoom too wide, please decrease"
-          }
-        },
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "custom_map_info[2]",
-            "op": "greaterThan",
-            "value": 8
-          }
-        }
-      }
-    },
-    {
       "enabled": {
         "parameter_refs": [
           "custom_toggle2"
@@ -318,64 +181,49 @@
           }
         }
       }
-    },
-    {
-      "visible": {
-        "parameter_refs": [
-          "custom_map_info",
-          "map_zoom"
-        ],
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "map_checkbox",
-            "op": "equals",
-            "value": true
-          }
-        }
-      }
     }
   ],
   "dataset_metadata": [
-		{
-	    "fields": [
-	      {
-	        "name": "age",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "BP",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Na",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "drug",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      }
-	    ]
-	  }
-	],
+    {
+      "fields": [
+        {
+          "name": "age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
   "resources": {}
 }

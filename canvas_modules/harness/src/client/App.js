@@ -36,7 +36,6 @@ import SidePanel from "./components/sidepanel.jsx";
 
 import CustomSliderPanel from "./components/custom-panels/CustomSliderPanel";
 import CustomTogglePanel from "./components/custom-panels/CustomTogglePanel";
-import CustomMapPanel from "./components/custom-panels/CustomMapPanel";
 import CustomButtonPanel from "./components/custom-panels/CustomButtonPanel";
 import CustomDatasetsPanel from "./components/custom-panels/CustomDatasetsPanel";
 import EMMeansPanel from "./components/custom-panels/EMMeansPanel";
@@ -2116,7 +2115,7 @@ export default class App extends React.Component {
 				} }
 				propertiesInfo={this.state.propertiesInfo}
 				propertiesConfig={propertiesConfig}
-				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel,
+				customPanels={[CustomSliderPanel, CustomTogglePanel,
 					CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel, FixedEffectsPanel,
 					RandomEffectsPanel, CustomSubjectsPanel]}
 				callbacks={callbacks}
@@ -2131,9 +2130,8 @@ export default class App extends React.Component {
 				} }
 				propertiesInfo={this.state.propertiesInfo2}
 				propertiesConfig={propertiesConfig}
-				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel,
-					CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel, FixedEffectsPanel,
-					RandomEffectsPanel, CustomSubjectsPanel]}
+				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomButtonPanel, CustomDatasetsPanel,
+					EMMeansPanel, FixedEffectsPanel, RandomEffectsPanel, CustomSubjectsPanel]}
 				callbacks={callbacks2}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
 				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}

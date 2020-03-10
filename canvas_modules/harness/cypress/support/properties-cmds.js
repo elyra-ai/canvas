@@ -28,7 +28,7 @@ Cypress.Commands.add("openPropertyDefinition", (propertyFileName) => {
 });
 
 Cypress.Commands.add("toggleCategory", (categoryName) => {
-	cy.get(".properties-category-container button")
+	cy.get(".properties-category-title")
 		.contains(categoryName)
 		.click();
 });
