@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2019. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -22,7 +22,9 @@ module.exports = {
 	context: __dirname,
 	devtool: "source-map",
 	entry: {
-		"lib/properties": "./src/common-properties/common-properties.jsx",
+		"lib/properties": "./src/common-properties/index.js",
+		"lib/properties/field-picker": "./src/common-properties/components/field-picker/index.js",
+		"lib/properties/flexible-table": "./src/common-properties/components/flexible-table/index.js",
 		"lib/context-menu": "./src/context-menu/context-menu-wrapper.jsx",
 		"lib/command-stack": "./src/command-stack/command-stack.js",
 		"lib/canvas": "./src/common-canvas/index.js",
