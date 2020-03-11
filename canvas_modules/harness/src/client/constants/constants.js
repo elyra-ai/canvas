@@ -60,8 +60,7 @@ _defineConstant("STRAIGHT_LINKS", "Straight");
 _defineConstant("ASSOC_RIGHT_SIDE_CURVE", "RightSideCurve");
 _defineConstant("ASSOC_STRAIGHT", "Straight");
 
-_defineConstant("NO_LAYOUT", "None");
-_defineConstant("CLASSIC_LAYOUT", "Classic");
+_defineConstant("NO_LAYOUT", "None - use options below");
 _defineConstant("MODELER_FLOWS_LAYOUT", "Modeler Flows");
 _defineConstant("BLUE_ELLIPSES_LAYOUT", "Blue Ellipses");
 _defineConstant("DB2_EXPLAIN_LAYOUT", "Db2 Visual Explain");

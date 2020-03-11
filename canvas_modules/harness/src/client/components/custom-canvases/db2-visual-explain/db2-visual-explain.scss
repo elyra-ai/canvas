@@ -1,0 +1,68 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2020. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+/* These styles are used in the db2ExplainCanvas.json. */
+
+.db2-explain {
+	.d3-node-body-outline {
+		stroke: #828281;
+		fill: #FFFAC2;
+		stroke-width: 2;
+		text-anchor: middle;
+	}
+
+	.d3-node-label {
+		font-size: 13px;
+		font-weight: 600;
+		text-anchor: middle;
+		user-select: none; // Prevents text highlighting on drag over
+	}
+
+	.small_text {
+		font-size: 11px;
+		text-anchor: middle;
+		user-select: none; // Prevents text highlighting on drag over
+	}
+
+	.dark_purple {
+		stroke: #828281;
+		fill: #C2A7CE;
+		stroke-width: 2;
+	}
+
+	.light_purple {
+		stroke: #828281;
+		fill: #F1F0FE;
+		stroke-width: 2;
+	}
+
+	.light_brown {
+		stroke: #828281;
+		fill: #F3DAD4;
+		stroke-width: 2;
+	}
+
+	.pink {
+		stroke: #828281;
+		fill: #F9BEB8;
+		stroke-width: 2;
+	}
+
+	.gray {
+		stroke: #828281;
+		fill: #BCB7BD;
+		stroke-width: 2;
+	}
+
+	.light_green {
+		stroke: #828281;
+		fill: #E8F0C1;
+		stroke-width: 2;
+	}
+}

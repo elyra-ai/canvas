@@ -194,7 +194,7 @@ const haloDefaultLayout = {
 		ellipsisHeight: 22,
 		ellipsisPosX: 145,
 		ellipsisPosY: 9,
-		ellipsisHoverAreaPadding: 3
+		ellipsisHoverAreaPadding: 2
 	},
 
 	canvasLayout: {
@@ -210,7 +210,7 @@ const haloDefaultLayout = {
 		supernodeImageHeight: 18,
 		supernodeImagePosX: 5,
 		supernodeImagePosY: 4,
-		supernodeEllipsisPosY: 3,
+		supernodeEllipsisPosY: 2,
 		supernodeEllipsisWidth: 10,
 		supernodeEllipsisHeight: 20,
 		supernodeExpansionIconPosY: 4,
@@ -491,7 +491,7 @@ const portsHorizontalDefaultLayout = {
 		ellipsisHeight: 22,
 		ellipsisPosX: 145,
 		ellipsisPosY: 9,
-		ellipsisHoverAreaPadding: 3
+		ellipsisHoverAreaPadding: 2
 	},
 
 	canvasLayout: {
@@ -507,7 +507,7 @@ const portsHorizontalDefaultLayout = {
 		supernodeImageHeight: 18,
 		supernodeImagePosX: 5,
 		supernodeImagePosY: 4,
-		supernodeEllipsisPosY: 3,
+		supernodeEllipsisPosY: 2,
 		supernodeEllipsisWidth: 10,
 		supernodeEllipsisHeight: 20,
 		supernodeExpansionIconPosY: 4,
@@ -788,7 +788,7 @@ const portsVerticalDefaultLayout = {
 		ellipsisHeight: 21,
 		ellipsisPosX: 57,
 		ellipsisPosY: 8,
-		ellipsisHoverAreaPadding: 3
+		ellipsisHoverAreaPadding: 2
 	},
 
 	canvasLayout: {
@@ -804,7 +804,7 @@ const portsVerticalDefaultLayout = {
 		supernodeImageHeight: 18,
 		supernodeImagePosX: 5,
 		supernodeImagePosY: 4,
-		supernodeEllipsisPosY: 3,
+		supernodeEllipsisPosY: 2,
 		supernodeEllipsisWidth: 10,
 		supernodeEllipsisHeight: 20,
 		supernodeExpansionIconPosY: 4,

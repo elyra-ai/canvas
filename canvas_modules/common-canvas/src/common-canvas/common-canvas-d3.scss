@@ -31,11 +31,11 @@ $node-label-color: $text-01;
 $node-decoration-outline: $ui-05;
 $node-halo-color: $inverse-link;
 
-$node-super-expand-icon-outline-hover-color: $ui-03;
 $node-super-expand-icon-color: $brand-01;
+$node-super-expand-icon-background-hover-color: $active-01;
 
 $node-ellipsis-color: $brand-01;
-$node-ellipsis-hover-color: $inverse-link;
+$node-ellipsis-background-hover-color: $active-01;
 
 $node-error-color: $support-01; // Error red
 $node-warning-color: $support-03; // Warning yellow
@@ -82,8 +82,8 @@ $comment-text-font-family: "ibm-plex-sans", Helvetica Neue, Arial, sans-serif;
 $comment-link-color: $ui-04;
 $object-link-color: $ui-05; // Used for association links for a regular data flow canvas
 $association-link-color: $ui-04; // Used for association links when config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE.
-$data-link-color: $support-04;
-$link-hightlight-color: $brand-01;
+$data-link-color: $inverse-link;
+$link-hightlight-color: $support-04;
 $new-halo-link-color: $ui-05;
 
 /* Canvas styles */
@@ -261,35 +261,46 @@ $new-halo-link-color: $ui-05;
 
 /* Super node styles */
 
-.d3-node-super-expand-icon-outline {
-	fill: transparent;
+.d3-node-ellipsis-group {
+	.d3-node-ellipsis-background {
+		fill: transparent;
+		stroke-width: 0;
+		cursor: context-menu;
+	}
+
+	.d3-node-ellipsis {
+		fill: $node-ellipsis-color;
+		stroke-width: 0;
+		cursor: context-menu;
+	}
+
+	&:hover {
+		.d3-node-ellipsis-background {
+			fill: $node-ellipsis-background-hover-color;
+		}
+	}
 }
 
-.d3-node-super-expand-icon-outline[data-pointer-hover="yes"] {
-	fill: $node-super-expand-icon-outline-hover-color;
+.d3-node-super-expand-icon-group {
+	.d3-node-super-expand-icon-background {
+		fill: transparent;
+		stroke-width: 0;
+		cursor: context-menu;
+	}
+
+	.d3-node-super-expand-icon {
+		fill: $node-super-expand-icon-color;
+		stroke-width: 0;
+		cursor: context-menu;
+	}
+
+	&:hover {
+		.d3-node-super-expand-icon-background {
+			fill: $node-super-expand-icon-background-hover-color;
+		}
+	}
 }
 
-.d3-node-super-expand-icon {
-	fill: $node-super-expand-icon-color;
-}
-
-.d3-node-ellipsis-background {
-	fill: transparent;
-	stroke-width: 0;
-	cursor: context-menu;
-}
-
-.d3-node-ellipsis {
-	fill: $node-ellipsis-color;
-	stroke-width: 0;
-	cursor: context-menu;
-}
-
-.d3-node-ellipsis:hover,
-.d3-node-ellipsis-background:hover~.d3-node-ellipsis {
-	fill: $node-ellipsis-hover-color;
-	stroke-width: 0;
-}
 
 /* Error indicator */
 .d3-error-circle {

@@ -131,10 +131,10 @@ _defineConstant("TOOLBAR_ACTIONS", {
 });
 
 _defineConstant("NODE_MENU_ICON",
-	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 16.14\">" +
-	"<circle cx=\"2\" cy=\"2\" r=\"2\"/>" +
-	"<circle cx=\"2\" cy=\"8.03\" r=\"2\"/>" +
-	"<circle cx=\"2\" cy=\"14.14\" r=\"2\"/>" +
+	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 16\">" +
+	"<circle cx=\"2\" cy=\"4\" r=\"1.1\"/>" +
+	"<circle cx=\"2\" cy=\"9\" r=\"1.1\"/>" +
+	"<circle cx=\"2\" cy=\"14\" r=\"1.1\"/>" +
 	"</svg>");
 
 _defineConstant("SUPER_NODE_EXPAND_ICON",

@@ -224,19 +224,19 @@ module.exports = function() {
 
 
 	this.Then(/^I hover over the input port "([^"]*)" of node "([^"]*)"$/, function(portId, nodeName) {
-		const portSelector = getNodePortSelector(nodeName, "trg_port", portId);
+		const portSelector = getNodePortSelector(nodeName, "inp_port", portId);
 		browser.$(portSelector).moveToObject();
 		browser.pause(hoverTime); // Wait for the tooltip to be displayed
 	});
 
 	this.Then(/^I hover over the output port "([^"]*)" of node "([^"]*)"$/, function(portId, nodeName) {
-		const portSelector = getNodePortSelector(nodeName, "src_port", portId);
+		const portSelector = getNodePortSelector(nodeName, "out_port", portId);
 		browser.$(portSelector).moveToObject();
 		browser.pause(hoverTime); // Wait for the tooltip to be displayed
 	});
 
 	this.Then(/^I verify the port name "([^"]*)" shows below the input port id "([^"]*)" of node "([^"]*)"$/, function(portName, portId, nodeName) {
-		const portSelector = getNodePortSelector(nodeName, "trg_port", portId);
+		const portSelector = getNodePortSelector(nodeName, "inp_port", portId);
 		const portTipSelector = getNodePortTipSelector(portId);
 		const tip = browser.$(portTipSelector);
 		expect(tip.value).not.toEqual(null);
@@ -251,7 +251,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify the port name "([^"]*)" shows below the output port id "([^"]*)" of node "([^"]*)"$/, function(portName, portId, nodeName) {
-		const portSelector = getNodePortSelector(nodeName, "src_port", portId);
+		const portSelector = getNodePortSelector(nodeName, "out_port", portId);
 		const portTipSelector = getNodePortTipSelector(portId);
 		const tip = browser.$(portTipSelector);
 		expect(tip.value).not.toEqual(null);

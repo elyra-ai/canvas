@@ -685,14 +685,14 @@ module.exports = function() {
 	// Then I right click the source port "outPort" of the "Var. File" node to display the context menu
 	//
 	this.Then(/^I right click the source port "([^"]*)" of the "([^"]*)" node to display the context menu$/, function(portId, nodeName) {
-		const portSelector = getNodePortSelector(nodeName, "src_port", portId, false);
+		const portSelector = getNodePortSelector(nodeName, "out_port", portId, false);
 		browser.$(portSelector).rightClick();
 	});
 
 	// Then I right click the target port "inPort" of the "Var. File" node to display the context menu
 	//
 	this.Then(/^I right click the target port "([^"]*)" of the "([^"]*)" node to display the context menu$/, function(portId, nodeName) {
-		const portSelector = getNodePortSelector(nodeName, "trg_port", portId, false);
+		const portSelector = getNodePortSelector(nodeName, "inp_port", portId, false);
 		browser.$(portSelector).rightClick();
 	});
 

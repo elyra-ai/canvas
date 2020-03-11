@@ -193,7 +193,7 @@ module.exports = function() {
 
 	this.Then(/^I link the "([^"]*)" comment to the "([^"]*)" node$/,
 		function(commentName, nodeName) {
-			const commentSelector = getCommentSelector(commentName, "outline");
+			const commentSelector = getCommentSelector(commentName, "sel_outline");
 			const nodeSelector = getNodeSelector(nodeName, "grp");
 			const nodeDimensions = getNodeDimensions(nodeSelector);
 
@@ -365,7 +365,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify the "([^"]*)" comment is selected$/, function(commentText) {
-		const comOutlineSelector = getCommentSelector(commentText, "outline");
+		const comOutlineSelector = getCommentSelector(commentText, "sel_outline");
 		const comOutline = browser.$(comOutlineSelector);
 		const selected = comOutline.getAttribute("data-selected");
 		expect(selected).toEqual("yes");
@@ -375,7 +375,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify the "([^"]*)" comment is not selected$/, function(commentText) {
-		const comOutlineSelector = getCommentSelector(commentText, "outline");
+		const comOutlineSelector = getCommentSelector(commentText, "sel_outline");
 		const comOutline = browser.$(comOutlineSelector);
 		const selected = comOutline.getAttribute("data-selected");
 		expect(selected).toEqual("no");

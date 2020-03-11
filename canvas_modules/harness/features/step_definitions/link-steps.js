@@ -203,8 +203,8 @@ module.exports = function() {
 	// Then I link node "Var. File" output port "out3" to node "Select" input port "inport2"
 	//
 	this.Then(/^I link node "([^"]*)" output port "([^"]*)" to node "([^"]*)" input port "([^"]*)"$/, function(srcNodeText, srcPortId, trgNodeText, trgPortId) {
-		const srcSelector = getNodePortSelector(srcNodeText, "src_port", srcPortId);
-		const trgSelector = getNodePortSelector(trgNodeText, "trg_port", trgPortId);
+		const srcSelector = getNodePortSelector(srcNodeText, "out_port", srcPortId);
+		const trgSelector = getNodePortSelector(trgNodeText, "inp_port", trgPortId);
 
 		browser.dragAndDrop(srcSelector, trgSelector);
 	});
@@ -212,8 +212,8 @@ module.exports = function() {
 	// Then I link node "Var. File" output port "out3" to node "Select" input port "inport2" on the subflow
 	//
 	this.Then(/^I link node "([^"]*)" output port "([^"]*)" to node "([^"]*)" input port "([^"]*)" on the subflow$/, function(srcNodeText, srcPortId, trgNodeText, trgPortId) {
-		const srcSelector = getNodePortSelectorInSubFlow(srcNodeText, "src_port", srcPortId);
-		const trgSelector = getNodePortSelectorInSubFlow(trgNodeText, "trg_port", trgPortId);
+		const srcSelector = getNodePortSelectorInSubFlow(srcNodeText, "out_port", srcPortId);
+		const trgSelector = getNodePortSelectorInSubFlow(trgNodeText, "inp_port", trgPortId);
 
 		browser.dragAndDrop(srcSelector, trgSelector);
 	});
@@ -225,7 +225,7 @@ module.exports = function() {
 	// port of the target node.
 	//
 	this.Then(/^I link node "([^"]*)" output port "([^"]*)" to node "([^"]*)"$/, function(srcNodeText, srcPortId, trgNodeText) {
-		const srcSelector = getNodePortSelector(srcNodeText, "src_port", srcPortId);
+		const srcSelector = getNodePortSelector(srcNodeText, "out_port", srcPortId);
 		const trgSelector = getNodeSelector(trgNodeText, "grp");
 
 		browser.dragAndDrop(srcSelector, trgSelector);

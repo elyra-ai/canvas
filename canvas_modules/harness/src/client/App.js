@@ -30,6 +30,12 @@ import ToolbarBundles from "@wdp/common-canvas/locales/toolbar/locales";
 import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas";
 import CommonCanvasPackage from "@wdp/common-canvas/package.json";
 
+import ModelerFlowsCanvas from "./components/custom-canvases/modeler-flows/modeler-flows-canvas";
+import AutoAICanvas from "./components/custom-canvases/auto-ai/auto-ai-canvas";
+import DB2VisualExplainCanvas from "./components/custom-canvases/db2-visual-explain/db2-visual-explain-canvas";
+import StreamsCanvas from "./components/custom-canvases/streams-monitor/streams-monitor-canvas";
+import BlueEllipsesCanvas from "./components/custom-canvases/blue-ellipses/blue-ellipses-canvas";
+
 import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
@@ -50,12 +56,6 @@ import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel"
 import CustomOpMax from "./custom/condition-ops/customMax";
 import CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
-import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
-import DB2ExplainCanvas from "../../test_resources/diagrams/db2ExplainCanvas.json";
-import AutoAICanvas from "../../test_resources/diagrams/autoAICanvas.json";
-import StreamsCanvas from "../../test_resources/diagrams/streamsJobFlowNested.json";
-import ModelerFlowsPalette from "../../test_resources/palettes/c-10-modelerFlowsPalette.json";
-
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import {
@@ -71,7 +71,6 @@ import {
 	CURVE_LINKS,
 	ASSOC_STRAIGHT,
 	NO_LAYOUT,
-	CLASSIC_LAYOUT,
 	MODELER_FLOWS_LAYOUT,
 	BLUE_ELLIPSES_LAYOUT,
 	DB2_EXPLAIN_LAYOUT,
@@ -688,18 +687,6 @@ export default class App extends React.Component {
 	}
 
 	setNodeLayout(selectedNodeLayout) {
-		if (selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
-			this.canvasController.setPipelineFlow(AllTypesCanvas);
-		} else if (selectedNodeLayout === MODELER_FLOWS_LAYOUT) {
-			this.canvasController.setPipelineFlowPalette(ModelerFlowsPalette);
-		} else if (selectedNodeLayout === DB2_EXPLAIN_LAYOUT) {
-			this.canvasController.setPipelineFlow(DB2ExplainCanvas);
-		} else if (selectedNodeLayout === STREAMS_LAYOUT) {
-			this.canvasController.setPipelineFlow(StreamsCanvas);
-		} else if (selectedNodeLayout === AUTO_AI_LAYOUT) {
-			this.canvasController.setPipelineFlow(AutoAICanvas);
-		}
-
 		this.setState({ selectedNodeLayout: selectedNodeLayout });
 		this.log("Node layout selected", selectedNodeLayout);
 	}
@@ -1706,7 +1693,15 @@ export default class App extends React.Component {
 		// 		<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
 		// 	</div>);
 
-		let commonCanvasConfig = {
+		let parentClass = "";
+		if (this.state.selectedNodeFormat === "Vertical") {
+			parentClass = "classic-vertical";
+			if (this.state.selectedConnectionType === "Halo") {
+				parentClass = "classic-halo";
+			}
+		}
+
+		const commonCanvasConfig = {
 			enableInteractionType: this.state.selectedInteractionType,
 			enableSnapToGridType: this.state.selectedSnapToGridType,
 			enableSnapToGridX: this.state.snapToGridX,
@@ -1717,7 +1712,7 @@ export default class App extends React.Component {
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
-			enableParentClass: "",
+			enableParentClass: parentClass,
 			enableNodeLayout: null,
 			enableInternalObjectModel: this.state.internalObjectModel,
 			enableDragWithoutSelect: this.state.dragWithoutSelect,
@@ -1737,310 +1732,14 @@ export default class App extends React.Component {
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows
 		};
 
-		let layoutHandler = null;
-		let decorationActionHandler = this.decorationActionHandler;
-		let editActionHandler = this.editActionHandler;
-
-		if (this.state.selectedNodeLayout === CLASSIC_LAYOUT) {
-			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
-				enableParentClass: "classic"
-			});
-
-		} else if (this.state.selectedNodeLayout === MODELER_FLOWS_LAYOUT) {
-			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
-				enableParentClass: "modeler-flows",
-				enableDropZoneOnExternalDrag: true,
-				enableNodeFormatType: "Vertical",
-				enableConnectionType: "Ports",
-				enableLinkType: "Elbow",
-				enableSaveZoom: "LocalStorage",
-				enableSnapToGridType: "After",
-				enableInteractionType: "Mouse",
-				tipConfig: {
-					palette: true,
-					nodes: true,
-					ports: false,
-					links: false
-				},
-				enableNodeLayout: {
-					labelAndIconVerticalJustification: "none",
-					defaultNodeWidth: 66,
-					defaultNodeHeight: 66,
-					nodeHighlightGap: -5,
-					ellipsisWidth: 16,
-					ellipsisHeight: 22,
-					ellipsisPosY: 0,
-					ellipsisPosX: 62,
-					imageWidth: 48,
-					imageHeight: 48,
-					imagePosX: 9,
-					imagePosY: 9,
-					labelPosX: 33,
-					labelPosY: 74,
-					inputPortPosX: 0,
-					outputPortPosX: 0,
-					portPosY: 33,
-					outputPortObject: "image",
-					outputPortImage: "/images/arrow-guide.svg",
-					outputPortWidth: 20,
-					outputPortHeight: 20,
-					outputPortGuideObject: "image",
-					outputPortGuideImage: "/images/arrow-guide.svg"
-				},
-				enableCanvasLayout: {
-					dataLinkArrowHead: true
-				}
-			});
-
-		} else if (this.state.selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
-			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
-				enableParentClass: "blue-ellipses",
-				enableNodeLayout:
-					{
-						bodyPath: "     M  0 30 Q  0  0 60  0 Q 120  0 120 30 Q 120 60 60 60 Q  0 60  0 30 Z",
-						selectionPath: "M -5 30 Q -5 -5 60 -5 Q 125 -5 125 30 Q 125 65 60 65 Q -5 65 -5 30 Z",
-						defaultNodeWidth: 120,
-						defaultNodeHeight: 60,
-						labelAndIconVerticalJustification: "none",
-						imageWidth: 30,
-						imageHeight: 30,
-						imagePosX: 20,
-						imagePosY: 10,
-						labelPosX: 60,
-						labelPosY: 50,
-						labelMaxWidth: 80,
-						labelHeight: 13, // Should match the font size specified in css
-						ellipsisDisplay: true,
-						ellipsisPosX: 100,
-						ellipsisPosY: 20,
-						haloDisplay: false,
-						haloCenterX: 60,
-						haloCenterY: 30,
-						haloRadius: 30,
-						portPosY: 30
-					}
-			});
-		} else if (this.state.selectedNodeLayout === DB2_EXPLAIN_LAYOUT) {
-			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
-				enableConnectionType: "Halo",
-				enableParentClass: "db2-explain",
-				enableNodeLayout:
-					{
-						cssNodeLabel: "shape_label_style_db2_explain",
-						cssNodeBody: "default_node_style_db2_explain",
-						defaultNodeWidth: 120,
-						defaultNodeHeight: 60,
-						labelAndIconVerticalJustification: "none",
-						drawNodeLinkLineFromTo: "node_center",
-						labelPosX: 60,
-						labelPosY: 28,
-						labelMaxWidth: 200,
-						ellipsisDisplay: true,
-						ellipsisPosX: 100,
-						ellipsisPosY: 19,
-						haloDisplay: false,
-						haloCenterX: 60,
-						haloCenterY: 30,
-						haloRadius: 30,
-						portPosY: 30
-					}
-			});
-			layoutHandler = (data) => {
-				const labLen = data.label ? data.label.length : 0;
-				let width = 120;
-				let bodyPath = "";
-				let selectionPath = "";
-
-				switch (data.op) {
-				case "rectangle": {
-					bodyPath = "     M  0 0  L  0 60 120 60 120  0  0  0 Z";
-					selectionPath = "M -5 -5 L -5 65 125 65 125 -5 -5 -5 Z";
-					break;
-				}
-				case "pentagon": {
-					bodyPath = "     M  0 20 L  0 60 120 60 120 20 60  0  0 20 Z";
-					selectionPath = "M -5 17 L -5 65 125 65 125 17 60 -5 -5 17 Z";
-					break;
-				}
-				case "octagon": {
-					bodyPath = "     M  0 20 L  0 40  20 60 100 60 120 40 120 20 100 0  20  0 Z";
-					selectionPath = "M -5 20 L -5 40  20 65 100 65 125 40 125 20 100 -5 20 -5 Z";
-					break;
-				}
-				case "ellipse": {
-					bodyPath = "     M  0 30 Q  0  0 60  0 Q 120  0 120 30 Q 120 60 60 60 Q  0 60  0 30 Z";
-					selectionPath = "M -5 30 Q -5 -5 60 -5 Q 125 -5 125 30 Q 125 65 60 65 Q -5 65 -5 30 Z";
-					break;
-				}
-				case "triangle": {
-					bodyPath = "     M   0 60 L  140 60 70  0 0 60 Z";
-					selectionPath = "M  -5 65 L  145 65 70 -5 5 65 Z";
-					break;
-				}
-				case "hexagon": {
-					width = (labLen * 9) + 60; // Allow 9 pixels for each character
-					const corner = width - 30;
-					bodyPath = `     M   0 30 L 30 60 ${corner} 60 ${width}     30 ${corner}  0 30  0 Z`;
-					selectionPath = `M  -5 30 L 30 65 ${corner} 65 ${width + 5} 30 ${corner} -5 30 -5 Z`;
-					break;
-				}
-				default:
-					return {};
-				}
-
-				const nodeFormat = {
-					defaultNodeWidth: width, // Override default width with calculated width
-					labelPosX: (width / 2), // Specify center of label as center of node Note: text-anchor is set to middle in the CSS for this label
-					labelMaxWidth: width, // Set big enough so that label is not truncated and so no ... appears
-					ellipsisPosX: width - 25, // Always position 25px in from the right side
-					bodyPath: bodyPath,
-					selectionPath: selectionPath
-				};
-
-				return nodeFormat;
-			};
-
-		} else if (this.state.selectedNodeLayout === STREAMS_LAYOUT) {
-			// The below overrides were provided by Mary Komor from the Streams team
-			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
-				enableInteractionType: "Mouse",
-				enableConnectionType: "Ports",
-				enableNodeFormatType: "Horizontal",
-				enableParentClass: "streams-monitor",
-				enableAutoLayoutVerticalSpacing: 50,
-				enableAutoLayoutHorizontalSpacing: 80,
-				enableLinkType: "Elbow",
-				enableInternalObjectModel: true,
-				enablePaletteLayout: "Flyout",
-				enableMoveNodesOnSupernodeResize: true,
-				enableDisplayFullLabelOnHover: true,
-				enableDropZoneOnExternalDrag: true,
-				enableNarrowPalette: false,
-				schemaValidation: true,
-				tipConfig: {
-					palette: false,
-					nodes: true,
-					ports: true,
-					links: true
-				},
-				enableNodeLayout: {
-					minInitialLine: 75,
-					portArcSpacing: 15
-				}
-			});
-		} else if (this.state.selectedNodeLayout === AUTO_AI_LAYOUT) {
-			const getPath = (l, r, t, b) => `M ${l} ${t} L ${l} ${b} ${r} ${b} ${r} ${t} ${l} ${t} Z`;
-			let left = 10;
-			let right = 210;
-			let top = 0;
-			let bot = 50;
-			commonCanvasConfig = Object.assign({}, commonCanvasConfig, {
-				enableConnectionType: "Ports",
-				enableNodeFormatType: "Horizontal",
-				enableAssocLinkCreation: true,
-				enableAssocLinkType: "RightSideCurve",
-				enableParentClass: "ai-join",
-				enableNodeLayout: {
-					defaultNodeWidth: 220,
-					defaultNodeHeight: 50,
-					bodyPath: getPath(left, right, top, bot),
-					selectionPath: getPath(left, right, top, bot),
-					labelAndIconVerticalJustification: "none",
-					imageDisplay: false,
-					labelPosX: 25,
-					labelPosY: 20,
-					portPosY: 25,
-					portRadius: 8,
-					ellipsisPosX: 190,
-					ellipsisPosY: 16,
-					inputPortObject: "image",
-					inputPortImage: "/images/decorators/ai-port-left.png",
-					inputPortWidth: 20,
-					inputPortHeight: 20,
-					outputPortObject: "image",
-					outputPortImage: "/images/decorators/ai-port-right.png",
-					outputPortWidth: 20,
-					outputPortHeight: 20
-				}
-			});
-
-			layoutHandler = (data) => {
-				if (data.op === "main_table") {
-					left = 10;
-					right = 210;
-					top = 0;
-					bot = 80;
-					const nodeFormat = {
-						defaultNodeWidth: 220,
-						defaultNodeHeight: 80,
-						bodyPath: getPath(left, right, top, bot),
-						selectionPath: getPath(left, right, top, bot),
-						labelPosY: 45,
-						portPosY: 48,
-						ellipsisPosX: 190,
-						ellipsisPosY: 40,
-						decorations: [
-							{
-								id: "default-dec3",
-								image: "/images/decorators/ai-main-table.png",
-								width: 201,
-								height: 23,
-								x_pos: 10,
-								y_pos: 0,
-								outline: false
-							}
-						]
-					};
-					return nodeFormat;
-				}
-				return {};
-			};
-			decorationActionHandler = (link, id, pipeline) => {
-				const decs = this.canvasController.getLinkDecorations(link.id);
-				const decImage = decs.find((d) => d.id === id);
-				const decLabel = decs.find((d) => d.label);
-				if (decImage && decLabel) {
-					if (decImage.image && decImage.image === "/images/decorators/ai-join-keys-selected.png") {
-						decImage.image = "/images/decorators/ai-join-keys-unselected.png";
-						decLabel.class_name = "ai-join-keys-decoration-text-unselected";
-					} else {
-						decImage.image = "/images/decorators/ai-join-keys-selected.png";
-						decLabel.class_name = "ai-join-keys-decoration-text-selected";
-					}
-					this.canvasController.setLinkDecorations(link.id, decs);
-				}
-			};
-			editActionHandler = (data) => {
-				if (data.editType === "linkNodes") {
-					const decs = [
-						{
-							"id": "assocDec1",
-							"x_pos": -35,
-							"y_pos": -20,
-							"height": 40,
-							"width": 80,
-							"class_name": "ai-join-keys-decoration-outline",
-							"image": "/images/decorators/ai-join-keys-unselected.png",
-							"hotspot": true
-						},
-						{
-							"id": "assocDec2",
-							"x_pos": 0,
-							"y_pos": 4,
-							"label": "0 Keys",
-							"class_name": "ai-join-keys-decoration-text-unselected",
-							"hotspot": true
-						}
-					];
-					this.canvasController.setLinkDecorations(data.linkIds[0], decs);
-				}
-			};
-		}
+		const decorationActionHandler = this.decorationActionHandler;
+		const editActionHandler = this.editActionHandler;
 
 		const commonCanvasConfig2 = {
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
+			enableParentClass: parentClass,
 			enableInternalObjectModel: this.state.internalObjectModel,
 			enableDragWithoutSelect: this.state.dragWithoutSelect,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
@@ -2163,7 +1862,7 @@ export default class App extends React.Component {
 				clickActionHandler= {this.clickActionHandler}
 				decorationActionHandler= {decorationActionHandler}
 				selectionChangeHandler={this.selectionChangeHandler}
-				layoutHandler={layoutHandler}
+				layoutHandler={this.layoutHandler}
 				tipHandler={this.tipHandler}
 				toolbarConfig={toolbarConfig}
 				notificationConfig={notificationConfig}
@@ -2173,6 +1872,38 @@ export default class App extends React.Component {
 				showRightFlyout={showRightFlyoutProperties}
 				canvasController={this.canvasController}
 			/>);
+
+		if (this.state.selectedNodeLayout === MODELER_FLOWS_LAYOUT) {
+			firstCanvas = (
+				<ModelerFlowsCanvas
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedNodeLayout === AUTO_AI_LAYOUT) {
+			firstCanvas = (
+				<AutoAICanvas
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedNodeLayout === DB2_EXPLAIN_LAYOUT) {
+			firstCanvas = (
+				<DB2VisualExplainCanvas
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedNodeLayout === STREAMS_LAYOUT) {
+			firstCanvas = (
+				<StreamsCanvas
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
+			firstCanvas = (
+				<BlueEllipsesCanvas
+					config={commonCanvasConfig}
+				/>
+			);
+		}
 
 		const canvasContainerWidth = this.isSidePanelOpen() === false ? "100%" : "calc(100% - " + SIDE_PANEL.MAXIMIXED + ")";
 

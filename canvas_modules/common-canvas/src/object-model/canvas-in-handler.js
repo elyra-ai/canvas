@@ -155,7 +155,10 @@ export default class CanvasInHandler {
 			class_name: decoration.className,
 			hotspot: decoration.hotspot,
 			id: decoration.id,
-			image: decoration.image
+			image: decoration.image,
+			outline: decoration.outline,
+			x_pos: decoration.x_pos,
+			y_pos: decoration.y_pos
 		}));
 	}
 

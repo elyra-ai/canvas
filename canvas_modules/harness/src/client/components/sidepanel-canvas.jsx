@@ -45,7 +45,6 @@ import {
 	ASSOC_RIGHT_SIDE_CURVE,
 	ASSOC_STRAIGHT,
 	NO_LAYOUT,
-	CLASSIC_LAYOUT,
 	MODELER_FLOWS_LAYOUT,
 	BLUE_ELLIPSES_LAYOUT,
 	DB2_EXPLAIN_LAYOUT,
@@ -876,7 +875,7 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		const nodeLayoutType = (<div className="harness-sidepanel-children">
-			<div className="harness-sidepanel-headers">Node Layout Override</div>
+			<div className="harness-sidepanel-headers">Pre-packaged canvas types</div>
 			<RadioButtonGroup
 				className="harness-sidepanel-radio-group"
 				name="node_layout_radio"
@@ -884,20 +883,8 @@ export default class SidePanelForms extends React.Component {
 				defaultSelected={this.props.canvasConfig.selectedNodeLayout}
 			>
 				<RadioButton
-					value={NO_LAYOUT}
-					labelText={NO_LAYOUT}
-				/>
-				<RadioButton
-					value={CLASSIC_LAYOUT}
-					labelText={CLASSIC_LAYOUT}
-				/>
-				<RadioButton
 					value={MODELER_FLOWS_LAYOUT}
 					labelText={MODELER_FLOWS_LAYOUT}
-				/>
-				<RadioButton
-					value={BLUE_ELLIPSES_LAYOUT}
-					labelText={BLUE_ELLIPSES_LAYOUT}
 				/>
 				<RadioButton
 					value={DB2_EXPLAIN_LAYOUT}
@@ -910,6 +897,14 @@ export default class SidePanelForms extends React.Component {
 				<RadioButton
 					value={AUTO_AI_LAYOUT}
 					labelText={AUTO_AI_LAYOUT}
+				/>
+				<RadioButton
+					value={BLUE_ELLIPSES_LAYOUT}
+					labelText={BLUE_ELLIPSES_LAYOUT}
+				/>
+				<RadioButton
+					value={NO_LAYOUT}
+					labelText={NO_LAYOUT}
 				/>
 			</RadioButtonGroup>
 		</div>);
@@ -1038,11 +1033,11 @@ export default class SidePanelForms extends React.Component {
 
 		return (
 			<div>
+				{nodeLayoutType}
+				{divider}
 				{canvasInput}
 				{divider}
 				{paletteInput}
-				{divider}
-				{interactionType}
 				{divider}
 				{connectionType}
 				{divider}
@@ -1050,7 +1045,7 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{linkType}
 				{divider}
-				{nodeLayoutType}
+				{interactionType}
 				{divider}
 				{snapToGrid}
 				{divider}

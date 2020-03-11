@@ -1,0 +1,51 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2020. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+/* These styles are used by the Blue Ellipses node layout override setting. */
+$dark-blue: lighten($focus, 10%);
+
+.blue-ellipses {
+	.d3-node-body-outline {
+		stroke: #828281;
+		fill: #7BD3F9;
+		stroke-width: 2;
+	}
+
+	.d3-node-label {
+		font-size: 13px;
+		font-weight: 600;
+		text-anchor: left;
+		user-select: none; // Prevents text highlighting on drag over
+	}
+
+	.d3-node-port-output {
+		stroke: #828281;
+		fill: $ui-01;
+	}
+
+	.d3-node-port-output[connected="yes"] {
+		stroke: #828281;
+		fill: #7BD3F9;
+	}
+
+	.d3-node-port-output:hover {
+		stroke: $dark-blue;
+		fill: $dark-blue;
+	}
+
+	.d3-node-port-input {
+		stroke: #828281;
+		fill: $ui-01;
+	}
+
+	.d3-node-port-input[connected="yes"] {
+		stroke: #828281;
+		fill: #7BD3F9;
+	}
+}

@@ -101,6 +101,12 @@ export default class SVGCanvasRenderer {
 		// when the node being dragged is not over a data link.
 		this.dragOverLink = null;
 
+		// The node and port over which the 'guide' object for a new link is
+		// being dragged. Used when enableHightlightPortOnNewLinkDrag config
+		// option is switched on.
+		this.dragNewLinkOverNode = null;
+		this.dragNewLinkOverPort = null;
+
 		// Allow us to track when a selection is being made so there is
 		// no need to re-render whole canvas
 		this.selecting = false;
@@ -665,6 +671,75 @@ export default class SVGCanvasRenderer {
 		this.canvasGrp
 			.select(this.getSelectorForId("link_line", link.id))
 			.classed("d3-link-drop-node-highlight", state);
+	}
+
+	// Switches on or off node port highlighting depending on the node
+	// passed in and keeps track of the currently highlighted node. This is
+	// called as a new link is being drawn towards a target node to highlight
+	// the input port.
+	setInputPortHighlightingOverNode(node) {
+		if (node && node.id !== this.drawingNewLinkData.srcObjId) {
+			if (!this.dragNewLinkOverNode) {
+				this.dragNewLinkOverNode = node;
+				this.setInputPortDragOverNodeHighlighting(this.dragNewLinkOverNode, true);
+
+			} else if (node.id !== this.dragNewLinkOverNode.id) {
+				this.setInputPortDragOverNodeHighlighting(this.dragNewLinkOverNode, false);
+				this.dragNewLinkOverNode = node;
+				this.setInputPortDragOverNodeHighlighting(this.dragNewLinkOverNode, true);
+			}
+
+		} else {
+			if (this.dragNewLinkOverNode) {
+				this.setInputPortDragOverNodeHighlighting(this.dragNewLinkOverNode, false);
+				this.dragNewLinkOverNode = null;
+			}
+		}
+	}
+
+	// Switches on or off the input-port highlighting on the node passed in.
+	// This is called when the user drags a new link towards a target node.
+	setInputPortDragOverNodeHighlighting(node, state) {
+		if (node && node.inputs && node.inputs.length > 0) {
+			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id))
+				.selectAll("." + this.getNodeInputPortClassName())
+				.classed("d3-node-port-input-drop-target", state);
+		}
+	}
+
+	// Switches on or off node port highlighting showing an expanded port
+	// depending on the node and portId passed in. It also keeps track of the
+	// currently highlighted port. This is called as a new link is being drawn
+	// towards a target port to highlight the input port with an expanded radius.
+	setInputPortHighlightingOverPort(node, portId) {
+		if (portId !== this.drawingNewLinkData.srcPortId) {
+			if (!this.dragNewLinkOverPortId) {
+				this.dragNewLinkOverPortId = portId;
+				this.setInputPortDragOverPortHighlighting(node, this.dragNewLinkOverPortId, true);
+
+			} else if (portId !== this.dragNewLinkOverPortId) {
+				this.setInputPortDragOverPortHighlighting(node, this.dragNewLinkOverPortId, false);
+				this.dragNewLinkOverPortId = portId;
+				this.setInputPortDragOverPortHighlighting(node, this.dragNewLinkOverPortId, true);
+			}
+
+		} else {
+			if (this.dragNewLinkOverPortId) {
+				this.setInputPortDragOverPortHighlighting(node, this.dragNewLinkOverPortId, false);
+				this.dragNewLinkOverPortId = null;
+			}
+		}
+	}
+
+	// Switches on or off the input-port highlighting, to show an expanded radius
+	// for the port, based on the portId and node passed in. This is called when
+	// the user drags a new link over a target port.
+	setInputPortDragOverPortHighlighting(node, portId, state) {
+		if (portId) {
+			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id))
+				.selectAll("." + this.getNodeInputPortClassName())
+				.classed("d3-node-port-input-drop-target-expanded", state);
+		}
 	}
 
 	// Processes the drop of a palette node template onto the canvas.
@@ -2007,7 +2082,6 @@ export default class SVGCanvasRenderer {
 				.append("image")
 				.attr("data-id", (d) => this.getId("node_image", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("xlink:href", (d) => this.getNodeImage(d))
 				.attr("class", "node-image");
 
 			// Label outline - this code used for debugging purposes
@@ -2097,21 +2171,11 @@ export default class SVGCanvasRenderer {
 						.datum(node); // Set the __data__ to the updated data
 
 					// Move the dynamic icons (if any exist)
-					nodeGrp.select(this.getSelectorForId("node_ellipsis_background", d.id))
-						.attr("x", (nd) => that.getEllipsisPosX(nd))
-						.attr("y", (nd) => that.getEllipsisPosY(nd));
+					nodeGrp.select(this.getSelectorForId("node_ellipsis_group", d.id))
+						.attr("transform", (nd) => `translate(${this.getEllipsisPosX(nd)}, ${this.getEllipsisPosY(nd)})`);
 
-					nodeGrp.select(this.getSelectorForId("node_ellipsis", d.id))
-						.attr("x", (nd) => that.getEllipsisPosX(nd) + nd.layout.ellipsisHoverAreaPadding)
-						.attr("y", (nd) => that.getEllipsisPosY(nd) + nd.layout.ellipsisHoverAreaPadding);
-
-					nodeGrp.select(this.getSelectorForId("node_exp_back", d.id))
-						.attr("x", (nd) => this.getExpansionIconPosX(nd))
-						.attr("y", this.canvasLayout.supernodeExpansionIconPosY);
-
-					nodeGrp.select(this.getSelectorForId("node_exp_icon", d.id))
-						.attr("x", (nd) => this.getExpansionIconPosX(nd) + this.canvasLayout.supernodeExpansionIconHoverAreaPadding)
-						.attr("y", this.canvasLayout.supernodeExpansionIconPosY + this.canvasLayout.supernodeExpansionIconHoverAreaPadding);
+					nodeGrp.select(this.getSelectorForId("node_exp_group", d.id))
+						.attr("transform", (nd) => `translate(${this.getExpansionIconPosX(nd)}, ${this.canvasLayout.supernodeExpansionIconPosY})`);
 
 					// Node styles
 					this.setNodeStyles(d, "default", nodeGrp);
@@ -2123,6 +2187,7 @@ export default class SVGCanvasRenderer {
 					// from the canvas) and when WML Canvas uses that clipboard support in place
 					// of its own.
 					nodeGrp.select(this.getSelectorForId("node_image", d.id))
+						.attr("xlink:href", (nd) => this.getNodeImage(nd))
 						.attr("x", (nd) => this.getNodeImagePosX(nd))
 						.attr("y", (nd) => this.getNodeImagePosY(nd))
 						.attr("width", (nd) => this.getNodeImageWidth(nd))
@@ -2186,7 +2251,7 @@ export default class SVGCanvasRenderer {
 							// Input port object
 							inputPortSelection.enter()
 								.append(d.layout.inputPortObject)
-								.attr("data-id", (port) => this.getId("node_trg_port", d.id, port.id))
+								.attr("data-id", (port) => this.getId("node_inp_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
 								.attr("data-port-id", (port) => port.id) // This is needed by getNodeInputPortAtMousePos
 								.attr("connected", "no")
@@ -2280,7 +2345,7 @@ export default class SVGCanvasRenderer {
 								// Input port arrow in circle
 								inputPortArrowSelection.enter()
 									.append("path")
-									.attr("data-id", (port) => this.getId("node_trg_port_arrow", d.id, port.id))
+									.attr("data-id", (port) => this.getId("node_inp_port_arrow", d.id, port.id))
 									.attr("data-pipeline-id", this.activePipeline.id)
 									.attr("class", "d3-node-port-input-arrow")
 									.attr("connected", "no")
@@ -2333,7 +2398,7 @@ export default class SVGCanvasRenderer {
 
 							outputPortSelection.enter()
 								.append(d.layout.outputPortObject)
-								.attr("data-id", (port) => this.getId("node_src_port", d.id, port.id))
+								.attr("data-id", (port) => this.getId("node_out_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
 								.on("mousedown", (port) => {
 									// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
@@ -2480,15 +2545,15 @@ export default class SVGCanvasRenderer {
 		// We draw an outline for all decorators that are not label decorators ie those with an image or without an image
 		const outClassName = `d3-${objType}-dec-outline`;
 		const nonLabelDecorations = decorations.filter((dec) => !dec.label && dec.outline !== false);
-		const decOutlnSelector = this.getSelectorForClass(outClassName);
-		const decoratorOutlnsSelection = trgGrp.selectAll(decOutlnSelector)
+		const decOutlineSelector = this.getSelectorForClass(outClassName);
+		const decoratorOutlinesSelection = trgGrp.selectAll(decOutlineSelector)
 			.data(nonLabelDecorations || [], function(dec) { return dec.id; });
 
-		decoratorOutlnsSelection.enter()
+		decoratorOutlinesSelection.enter()
 			.append("rect")
 			.attr("data-id", (dec) => this.getId(`${objType}_dec_outln`, dec.id)) // Used in Chimp tests
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.merge(decoratorOutlnsSelection)
+			.merge(decoratorOutlinesSelection)
 			.attr("x", (dec) => this.getDecoratorX(dec, d, objType))
 			.attr("y", (dec) => this.getDecoratorY(dec, d, objType))
 			.attr("width", (dec) => this.getDecoratorWidth(dec, d, objType))
@@ -2498,7 +2563,7 @@ export default class SVGCanvasRenderer {
 			.filter((dec) => dec.hotspot)
 			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
 
-		decoratorOutlnsSelection.exit().remove();
+		decoratorOutlinesSelection.exit().remove();
 
 		// Handle decoration images
 		const imgClassName = `d3-${objType}-dec-image`;
@@ -2737,16 +2802,13 @@ export default class SVGCanvasRenderer {
 			const nodeGrp = d3.select(nodeGrpSrc);
 			nodeGrp.select(this.getSelectorForId("node_body", d.id)).attr("hover", "yes");
 
-			nodeGrp
-				.append("rect")
+			const ellipsisGrp = nodeGrp
+				.append("g")
 				.filter(() => d.layout.ellipsisDisplay)
-				.attr("data-id", this.getId("node_ellipsis_background", d.id))
+				.attr("data-id", this.getId("node_ellipsis_group", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "d3-node-ellipsis-background")
-				.attr("width", (nd) => this.getEllipsisWidth(nd))
-				.attr("height", (nd) => this.getEllipsisHeight(nd))
-				.attr("x", (nd) => this.getEllipsisPosX(nd))
-				.attr("y", (nd) => this.getEllipsisPosY(nd))
+				.attr("class", "d3-node-ellipsis-group")
+				.attr("transform", (nd) => `translate(${this.getEllipsisPosX(nd)}, ${this.getEllipsisPosY(nd)})`)
 				.on("mousedown", (nd) => {
 					this.ellipsisClicked = true;
 				})
@@ -2755,36 +2817,32 @@ export default class SVGCanvasRenderer {
 					this.openContextMenu("node", d);
 				});
 
-			nodeGrp
+			ellipsisGrp
+				.append("rect")
+				.attr("class", "d3-node-ellipsis-background")
+				.attr("width", (nd) => this.getEllipsisWidth(nd))
+				.attr("height", (nd) => this.getEllipsisHeight(nd))
+				.attr("x", 0)
+				.attr("y", 0);
+
+			ellipsisGrp
 				.append("svg")
-				.filter(() => d.layout.ellipsisDisplay)
-				.attr("data-id", this.getId("node_ellipsis", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("class", "d3-node-ellipsis")
 				.html(NODE_MENU_ICON)
 				.attr("width", (nd) => this.getEllipsisWidth(nd) - (2 * nd.layout.ellipsisHoverAreaPadding))
 				.attr("height", (nd) => this.getEllipsisHeight(nd) - (2 * nd.layout.ellipsisHoverAreaPadding))
-				.attr("x", (nd) => this.getEllipsisPosX(nd) + nd.layout.ellipsisHoverAreaPadding)
-				.attr("y", (nd) => this.getEllipsisPosY(nd) + nd.layout.ellipsisHoverAreaPadding)
-				.on("mousedown", (nd) => {
-					this.ellipsisClicked = true;
-				})
-				.on("click", () => {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.openContextMenu("node", d);
-				});
+				.attr("x", (nd) => nd.layout.ellipsisHoverAreaPadding)
+				.attr("y", (nd) => nd.layout.ellipsisHoverAreaPadding);
 
+
+			// Add Supernode expansion icon and background for expanded supernodes
 			if (this.isExpandedSupernode(d)) {
-				// Supernode expansion icon background
-				nodeGrp
-					.append("rect")
-					.attr("data-id", this.getId("node_exp_back", d.id))
+				const expGrp = nodeGrp
+					.append("g")
+					.attr("data-id", this.getId("node_exp_group", d.id))
 					.attr("data-pipeline-id", this.activePipeline.id)
-					.attr("width", this.canvasLayout.supernodeExpansionIconWidth)
-					.attr("height", this.canvasLayout.supernodeExpansionIconHeight)
-					.attr("x", (nd) => this.getExpansionIconPosX(nd))
-					.attr("y", this.canvasLayout.supernodeExpansionIconPosY)
-					.attr("class", "d3-node-super-expand-icon-outline")
+					.attr("transform", (nd) => `translate(${this.getExpansionIconPosX(nd)}, ${this.canvasLayout.supernodeExpansionIconPosY})`)
+					.attr("class", "d3-node-super-expand-icon-group")
 					.on("click", () => {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						this.displaySupernodeFullPage(d);
@@ -2796,27 +2854,22 @@ export default class SVGCanvasRenderer {
 						d3.select(this).attr("data-pointer-hover", "no");
 					});
 
-				// Supernode expansion icon
-				nodeGrp
+				expGrp
+					.append("rect")
+					.attr("class", "d3-node-super-expand-icon-background")
+					.attr("width", this.canvasLayout.supernodeExpansionIconWidth)
+					.attr("height", this.canvasLayout.supernodeExpansionIconHeight)
+					.attr("x", 0)
+					.attr("y", 0);
+
+				expGrp
 					.append("svg")
-					.attr("data-id", this.getId("node_exp_icon", d.id))
-					.attr("data-pipeline-id", this.activePipeline.id)
 					.attr("class", "d3-node-super-expand-icon")
 					.html(SUPER_NODE_EXPAND_ICON)
 					.attr("width", this.canvasLayout.supernodeExpansionIconWidth - (2 * this.canvasLayout.supernodeExpansionIconHoverAreaPadding))
 					.attr("height", this.canvasLayout.supernodeExpansionIconHeight - (2 * this.canvasLayout.supernodeExpansionIconHoverAreaPadding))
-					.attr("x", (nd) => this.getExpansionIconPosX(nd) + this.canvasLayout.supernodeExpansionIconHoverAreaPadding)
-					.attr("y", this.canvasLayout.supernodeExpansionIconPosY + this.canvasLayout.supernodeExpansionIconHoverAreaPadding)
-					.on("click", () => {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.displaySupernodeFullPage(d);
-					})
-					.on("mouseenter", function(nd) { // Use function keyword so 'this' pointer references the DOM text object
-						d3.select(this).attr("data-pointer-hover", "yes");
-					})
-					.on("mouseleave", function(nd) { // Use function keyword so 'this' pointer references the DOM text object
-						d3.select(this).attr("data-pointer-hover", "no");
-					});
+					.attr("x", this.canvasLayout.supernodeExpansionIconHoverAreaPadding)
+					.attr("y", this.canvasLayout.supernodeExpansionIconHoverAreaPadding);
 			}
 		}
 	}
@@ -2853,12 +2906,9 @@ export default class SVGCanvasRenderer {
 
 	removeDynamicNodeIcons(d, nodeGrp) {
 		if (d.layout.ellipsisDisplay) {
-			nodeGrp.selectAll(this.getSelectorForId("node_ellipsis", d.id)).remove();
-			nodeGrp.selectAll(this.getSelectorForId("node_ellipsis_background", d.id)).remove();
+			nodeGrp.selectAll(this.getSelectorForId("node_ellipsis_group", d.id)).remove();
 		}
-
-		nodeGrp.selectAll(this.getSelectorForId("node_exp_icon", d.id)).remove();
-		nodeGrp.selectAll(this.getSelectorForId("node_exp_back", d.id)).remove();
+		nodeGrp.selectAll(this.getSelectorForId("node_exp_group", d.id)).remove();
 	}
 
 	createSupernodeRenderer(d, supernodeD3Object) {
@@ -3118,15 +3168,15 @@ export default class SVGCanvasRenderer {
 
 	setTrgPortStatus(trgId, trgPortId, newStatus) {
 		const nodeGrp = this.canvasGrp.selectAll(this.getSelectorForId("node_grp", trgId));
-		const trgPrtSelector = this.getSelectorForId("node_trg_port", trgId, trgPortId);
-		const trgPrtArrSelector = this.getSelectorForId("node_trg_port_arrow", trgId, trgPortId);
+		const trgPrtSelector = this.getSelectorForId("node_inp_port", trgId, trgPortId);
+		const trgPrtArrSelector = this.getSelectorForId("node_inp_port_arrow", trgId, trgPortId);
 		nodeGrp.selectAll(trgPrtSelector).attr("connected", newStatus);
 		nodeGrp.selectAll(trgPrtArrSelector).attr("connected", newStatus);
 	}
 
 	setSrcPortStatus(srcId, srcPortId, newStatus) {
 		const nodeGrp = this.canvasGrp.selectAll(this.getSelectorForId("node_grp", srcId));
-		const srcPrtSelector = this.getSelectorForId("node_src_port", srcId, srcPortId);
+		const srcPrtSelector = this.getSelectorForId("node_out_port", srcId, srcPortId);
 		nodeGrp.selectAll(srcPrtSelector).attr("connected", newStatus);
 	}
 
@@ -3149,11 +3199,11 @@ export default class SVGCanvasRenderer {
 		const position = dec.position || "topLeft";
 		let x = 0;
 		if (position === "topLeft" || position === "middleLeft" || position === "bottomLeft") {
-			x = typeof dec.x_pos !== "undefined" ? dec.x_pos : node.layout.decoratorLeftX;
+			x = typeof dec.x_pos !== "undefined" ? Number(dec.x_pos) : node.layout.decoratorLeftX;
 		} else if (position === "topCenter" || position === "middleCenter" || position === "bottomCenter") {
-			x = (node.width / 2) + (typeof dec.x_pos !== "undefined" ? dec.x_pos : node.layout.decoratorCenterX);
+			x = (node.width / 2) + (typeof dec.x_pos !== "undefined" ? Number(dec.x_pos) : node.layout.decoratorCenterX);
 		} else if (position === "topRight" || position === "middleRight" || position === "bottomRight") {
-			x = node.width + (typeof dec.x_pos !== "undefined" ? dec.x_pos : node.layout.decoratorRightX);
+			x = node.width + (typeof dec.x_pos !== "undefined" ? Number(dec.x_pos) : node.layout.decoratorRightX);
 		}
 		return x;
 	}
@@ -3168,7 +3218,7 @@ export default class SVGCanvasRenderer {
 		} else if (position === "target") {
 			x = link.x2;
 		}
-		x = typeof dec.x_pos !== "undefined" ? x + dec.x_pos : x;
+		x = typeof dec.x_pos !== "undefined" ? x + Number(dec.x_pos) : x;
 		return x;
 	}
 
@@ -3183,11 +3233,11 @@ export default class SVGCanvasRenderer {
 		const position = dec.position || "topLeft";
 		let y = 0;
 		if (position === "topLeft" || position === "topCenter" || position === "topRight") {
-			y = typeof dec.y_pos !== "undefined" ? dec.y_pos : node.layout.decoratorTopY;
+			y = typeof dec.y_pos !== "undefined" ? Number(dec.y_pos) : node.layout.decoratorTopY;
 		} else if (position === "middleLeft" || position === "middleCenter" || position === "middleRight") {
-			y = (node.height / 2) + (typeof dec.y_pos !== "undefined" ? dec.y_pos : node.layout.decoratorMiddleY);
+			y = (node.height / 2) + (typeof dec.y_pos !== "undefined" ? Number(dec.y_pos) : node.layout.decoratorMiddleY);
 		} else if (position === "bottomLeft" || position === "bottomCenter" || position === "bottomRight") {
-			y = node.height + (typeof dec.y_pos !== "undefined" ? dec.y_pos : node.layout.decoratorBottomY);
+			y = node.height + (typeof dec.y_pos !== "undefined" ? Number(dec.y_pos) : node.layout.decoratorBottomY);
 		}
 		return y;
 	}
@@ -3202,7 +3252,7 @@ export default class SVGCanvasRenderer {
 		} else if (position === "target") {
 			y = link.y2;
 		}
-		y = typeof dec.y_pos !== "undefined" ? y + dec.y_pos : y;
+		y = typeof dec.y_pos !== "undefined" ? y + Number(dec.y_pos) : y;
 		return y;
 	}
 
@@ -3219,7 +3269,7 @@ export default class SVGCanvasRenderer {
 
 	getDecoratorWidth(dec, obj, objType) {
 		if (typeof dec.width !== "undefined") {
-			return dec.width;
+			return Number(dec.width);
 		} else if (objType === DEC_LINK) {
 			return this.canvasLayout.linkDecoratorWidth;
 		}
@@ -3228,7 +3278,7 @@ export default class SVGCanvasRenderer {
 
 	getDecoratorHeight(dec, obj, objType) {
 		if (typeof dec.height !== "undefined") {
-			return dec.height;
+			return Number(dec.height);
 		} else if (objType === DEC_LINK) {
 			return this.canvasLayout.linkDecoratorHeight;
 		}
@@ -3270,6 +3320,16 @@ export default class SVGCanvasRenderer {
 				this.drawNewCommentLinkForPorts(transPos);
 			} else {
 				this.drawNewNodeLinkForPorts(transPos);
+
+				// Highlight target port if we are over a node, and make the port display
+				// with an expanded radius if we over the port itself.
+				if (this.config.enableHightlightPortOnNewLinkDrag) {
+					const node = this.getNodeAtMousePos(40);
+					this.setInputPortHighlightingOverNode(node);
+
+					const portId = this.getNodeInputPortAtMousePos(40, 15);
+					this.setInputPortHighlightingOverPort(node, portId);
+				}
 			}
 		}
 	}
@@ -3615,10 +3675,14 @@ export default class SVGCanvasRenderer {
 		this.canvasSVG.selectAll(".d3-data-link-selection-area").classed("d3-extra-width", state);
 	}
 
-	getNodeAtMousePos() {
+	// Returns the node that is at the current mouse position. If nodeProximity
+	// is provided it will be used as additional space beyond the node boundary
+	// to decide if the node is under the current mouse position.
+	getNodeAtMousePos(proximity) {
 		const that = this;
 		var pos = this.getTransformedMousePos();
 		var node = null;
+		const prox = proximity || 0;
 		const selector = this.getSelectorForClass("d3-node-group");
 		this.canvasGrp.selectAll(selector)
 			.each(function(d) {
@@ -3627,46 +3691,51 @@ export default class SVGCanvasRenderer {
 					portRadius = that.canvasLayout.supernodeBindingPortRadius / that.zoomTransform.k;
 				}
 
-				if (pos.x >= d.x_pos - portRadius && // Target port sticks out by its radius so need to allow for it.
-						pos.x <= d.x_pos + d.width + portRadius &&
-						pos.y >= d.y_pos &&
-						pos.y <= d.y_pos + d.height) {
+				if (pos.x >= d.x_pos - portRadius - prox && // Target port sticks out by its radius so need to allow for it.
+						pos.x <= d.x_pos + d.width + portRadius + prox &&
+						pos.y >= d.y_pos - prox &&
+						pos.y <= d.y_pos + d.height + prox) {
 					node = d;
 				}
 			});
 		return node;
 	}
 
-	getNodeInputPortAtMousePos() {
+	// Returns the input port that is at the current mouse position. If
+	// nodeProximity and portProximity are provided they will be used as
+	// additional space beyond the node and port boundaries to decide if the
+	// node or port are under the current mouse position.
+	getNodeInputPortAtMousePos(nodeProximity, portProximity) {
 		if (this.canvasLayout.connectionType === "halo") {
 			return null;
 		}
 
-		var pos = this.getTransformedMousePos();
-		var portId = null;
-		const node = this.getNodeAtMousePos();
+		const pos = this.getTransformedMousePos();
+		const node = this.getNodeAtMousePos(nodeProximity);
+		const portProx = portProximity || 0;
+		let portId = null;
 		if (node) {
 			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id)).selectAll("." + this.getNodeInputPortClassName())
 				.each(function(p) { // Use function keyword so 'this' pointer references the dom object
 					const portObj = d3.select(this);
 					if (node.layout.inputPortObject === PORT_OBJECT_IMAGE) {
 						const xx = node.x_pos + Number(portObj.attr("x"));
-						const yy = node.x_pos + Number(portObj.attr("y"));
+						const yy = node.y_pos + Number(portObj.attr("y"));
 						const wd = Number(portObj.attr("width"));
 						const ht = Number(portObj.attr("height"));
-						if (pos.x >= xx &&
-								pos.x <= xx + wd &&
-								pos.y >= yy &&
-								pos.y <= yy + ht) {
+						if (pos.x >= xx - portProx &&
+								pos.x <= xx + wd + portProx &&
+								pos.y >= yy - portProx &&
+								pos.y <= yy + ht + portProx) {
 							portId = this.getAttribute("data-port-id");
 						}
 					} else { // Port must be a circle
 						const cx = node.x_pos + Number(portObj.attr("cx"));
 						const cy = node.y_pos + Number(portObj.attr("cy"));
-						if (pos.x >= cx - node.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
-								pos.x <= cx + node.layout.portRadius &&
-								pos.y >= cy - node.layout.portRadius &&
-								pos.y <= cy + node.layout.portRadius) {
+						if (pos.x >= cx - node.layout.portRadius - portProx && // Target port sticks out by its radius so need to allow for it.
+								pos.x <= cx + node.layout.portRadius + portProx &&
+								pos.y >= cy - node.layout.portRadius - portProx &&
+								pos.y <= cy + node.layout.portRadius + portProx) {
 							portId = this.getAttribute("data-port-id");
 						}
 					}
@@ -3860,7 +3929,7 @@ export default class SVGCanvasRenderer {
 
 		} else if (this.selecting || this.regionSelect) {
 			commentGroupSel.each(function(d) {
-				const comOutlineSelector = that.getSelectorForId("comment_outline", d.id);
+				const comOutlineSelector = that.getSelectorForId("comment_sel_outline", d.id);
 				that.canvasGrp.selectAll(comOutlineSelector)
 					.attr("height", d.height + (2 * that.canvasLayout.commentHighlightGap))
 					.attr("width", d.width + (2 * that.canvasLayout.commentHighlightGap))
@@ -4006,7 +4075,7 @@ export default class SVGCanvasRenderer {
 
 			// Comment selection highlighting outline
 			newCommentGroups.append("rect")
-				.attr("data-id", (d) => this.getId("comment_outline", d.id))
+				.attr("data-id", (d) => this.getId("comment_sel_outline", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id);
 
 			// Background rectangle for comment
@@ -4079,7 +4148,7 @@ export default class SVGCanvasRenderer {
 						.datum(comment); // Set the __data__ to the updated data
 
 					// Comment selection highlighting outline
-					commentGrp.select(this.getSelectorForId("comment_outline", d.id))
+					commentGrp.select(this.getSelectorForId("comment_sel_outline", d.id))
 						.attr("x", -this.canvasLayout.commentHighlightGap)
 						.attr("y", -this.canvasLayout.commentHighlightGap)
 						.attr("height", d.height + (2 * that.canvasLayout.commentHighlightGap))
@@ -4147,7 +4216,7 @@ export default class SVGCanvasRenderer {
 
 	setCommentSelectionOutlineStyles(d, type, comGrp) {
 		const style = this.getObjectStyle(d, "selection_outline", type);
-		comGrp.select(this.getSelectorForId("comment_outline", d.id)).attr("style", style);
+		comGrp.select(this.getSelectorForId("comment_sel_outline", d.id)).attr("style", style);
 	}
 
 	setCommentTextStyles(d, type, comGrp) {
@@ -4375,7 +4444,7 @@ export default class SVGCanvasRenderer {
 	// Chrome browser. That is, when the mouse pointer is inside the
 	// node/comment selection highlight area but is close to either the
 	// right or bottom side of the node/comment body, any mousedown events will go
-	// to the body instead of the hightlight area. We use this method to detect
+	// to the body instead of the highlight area. We use this method to detect
 	// this situation and use the result to decide whether to display the sizing
 	// cursor or not.
 	isPointerCloseToBodyEdge(d) {

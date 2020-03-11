@@ -95,6 +95,12 @@ export default class TooltipWrapper extends React.Component {
 						nodeLabel += ` (${nodeTypeLabel})`;
 					}
 
+					// If there's nothing to display just give up. This will prevent us
+					// displaying an empty tooltip.
+					if (!icon && !nodeLabel && !nodeTypeLabel && !this.props.node.description) {
+						return null;
+					}
+
 					content = (
 						<div className="tip-node">
 							{icon}
