@@ -920,7 +920,7 @@ module.exports = function() {
 	this.Then(/^I click on the hotspot for decorator "([^"]*)" on the "([^"]*)" node$/, function(decoratorId, nodeName) {
 		const nodeSelector = getNodeSelector(nodeName, "grp");
 		const node = browser.$(nodeSelector);
-		const decoratorImage = node.$(".d3-node-dec-image[data-id=node_dec_img_0_" + decoratorId + "]");
+		const decoratorImage = node.$(".d3-node-dec-image[data-id=node_dec_image_0_" + decoratorId + "]");
 		decoratorImage.click();
 	});
 
@@ -947,22 +947,19 @@ module.exports = function() {
 	this.Then(/^I verify node "([^"]*)" has a decorator with id "([^"]*)" at position x (-?\d+) y (-?\d+)$/, function(nodeName, decoratorId, xPos, yPos) {
 		const nodeSelector = getNodeSelector(nodeName, "grp");
 		const node = browser.$(nodeSelector);
-		const decorators = node.$$(".d3-node-dec-outline");
+		const decorators = node.$$(".d3-node-dec-group");
 		let found = false;
-		let xx = 0;
-		let yy = 0;
+		let transform = "";
 		for (const decorator of decorators) {
 			var id = decorator.getAttribute("data-id");
-			if (id === "node_dec_outln_0_" + decoratorId) {
+			if (id === "node_dec_group_0_" + decoratorId) {
 				found = true;
-				xx = decorator.getAttribute("x");
-				yy = decorator.getAttribute("y");
+				transform = decorator.getAttribute("transform");
 			}
 		}
 
 		expect(found).toEqual(true);
-		expect(xx).toEqual(xPos);
-		expect(yy).toEqual(yPos);
+		expect(transform).toEqual(`translate(${xPos}, ${yPos})`);
 	});
 
 	this.Then(/^I verify node "([^"]*)" has a decorator with id "([^"]*)" which has an image "([^"]*)"$/, function(nodeName, decoratorId, decoratorImage) {
@@ -973,7 +970,7 @@ module.exports = function() {
 		let img = "";
 		for (const decImage of decoratorImages) {
 			var id = decImage.getAttribute("data-id");
-			if (id === "node_dec_img_0_" + decoratorId) {
+			if (id === "node_dec_image_0_" + decoratorId) {
 				found = true;
 				img = decImage.getAttribute("href");
 			}
@@ -987,24 +984,22 @@ module.exports = function() {
 		function(nodeName, decoratorId, label, xPos, yPos) {
 			const nodeSelector = getNodeSelector(nodeName, "grp");
 			const node = browser.$(nodeSelector);
-			const decorators = node.$$(".d3-node-dec-label");
+			const decorators = node.$$(".d3-node-dec-group");
 			let found = false;
-			let xx = 0;
-			let yy = 0;
+			let transform = "";
 			let ll = "";
 			for (const decorator of decorators) {
 				var id = decorator.getAttribute("data-id");
-				if (id === "node_dec_label_0_" + decoratorId) {
+				if (id === "node_dec_group_0_" + decoratorId) {
 					found = true;
-					xx = decorator.getAttribute("x");
-					yy = decorator.getAttribute("y");
-					ll = decorator.getText();
+					transform = decorator.getAttribute("transform");
+					const decLabel = decorator.$(".d3-node-dec-label");
+					ll = decLabel.getText();
 				}
 			}
 
 			expect(found).toEqual(true);
-			expect(xx).toEqual(xPos);
-			expect(yy).toEqual(yPos);
+			expect(transform).toEqual(`translate(${xPos}, ${yPos})`);
 			expect(ll).toEqual(label);
 		});
 

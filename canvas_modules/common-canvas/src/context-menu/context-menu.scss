@@ -84,10 +84,9 @@
 	padding-right: 27px;
 }
 
-.react-contextmenu-item.react-contextmenu-submenu > div::after {
-	content: ">";
-	font-size: 18px;
-	display: inline-block;
+/* Style for the chevron '>' in menu item that opens a submenu. */
+.react-contextmenu-item svg {
+	color: $text-01;
 	position: absolute;
 	right: 12px;
 }

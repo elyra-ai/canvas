@@ -22,7 +22,7 @@ import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERROR,
 	CURVE_LEFT, CURVE_RIGHT, DOUBLE_BACK_RIGHT,
-	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE,
+	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
@@ -60,6 +60,15 @@ export default class SVGCanvasRenderer {
 
 		// Initialize zoom variables
 		this.initializeZoomVariables();
+
+		// If we're using one of the snap to grid settings force all nodes and
+		// comments to a grid position. This enhances usability by NOT leaving nodes
+		// or comments slightly off grid which can be confusing when the user is
+		// trying to arrange nodes and/or comments.
+		// if (this.config.enableSnapToGridType === "During" ||
+		// 		this.config.enableSnapToGridType === "After") {
+		// 	this.activePipeline = this.snapToGridPipeline(this.activePipeline);
+		// }
 
 		// Dimensions for extent of canvas scaling
 		this.minScaleExtent = 0.2;
@@ -156,11 +165,17 @@ export default class SVGCanvasRenderer {
 
 		this.displayCanvas();
 
-		// If we are showing a sub-flow in full screen mode, show the back to parent
-		// control and also zoom it to fit the screen so it looks similar to the
-		// in-place sub-flow view unless there is a saved zoom for this pipeline.
-		if (this.isDisplayingSubFlowFullPage()) {
+		// If we are showing a sub-flow in full screen mode, or the options is
+		// switched on to alwas display it, show the back to parent control.
+		if (this.isDisplayingSubFlowFullPage() ||
+				this.canvasLayout.alwaysDisplayBackToParentFlow) {
 			this.addBackToParentFlowArrow(this.canvasSVG);
+		}
+
+		// If we are showing a sub-flow in full screen mode, zoom it to fit the
+		// screen so it looks similar to the in-place sub-flow view unless there
+		// is a saved zoom for this pipeline.
+		if (this.isDisplayingSubFlowFullPage()) {
 			if (!this.config.enableSaveZoom ||
 					this.config.enableSaveZoom === "None" ||
 					(this.config.enableSaveZoom === "LocalStorage" && !this.getSavedZoom()) ||
@@ -265,6 +280,15 @@ export default class SVGCanvasRenderer {
 		this.canvasInfo = canvasInfo;
 		this.activePipeline = this.getPipeline(this.pipelineId);
 		this.canvasLayout = this.objectModel.getCanvasLayout(); // Refresh the canvas layout info in case it changed.
+
+		// If we're using one of the snap to grid settings force all nodes and
+		// comments to a grid position. This enhances usability by NOT leaving nodes
+		// or comments slightly off grid which can be confusing when the user is
+		// trying to arrange nodes and/or comments.
+		// if (this.config.enableSnapToGridType === "During" ||
+		// 		this.config.enableSnapToGridType === "After") {
+		// 	this.activePipeline = this.snapToGridPipeline(this.activePipeline);
+		// }
 
 		// Set the display state incase we changed from in-place to full-page
 		// sub-flow display.
@@ -559,9 +583,18 @@ export default class SVGCanvasRenderer {
 	// * [data-id='prefix_instanceID_suffix_suffix2'][data-pipeline-id='1234']
 	// depending on what parameters are provided.
 	getSelectorForId(prefix, suffix, suffix2) {
-		let sel = `[data-id='${this.getId(prefix, suffix, suffix2)}`;
-		sel += `'][data-pipeline-id='${this.activePipeline.id}']`;
+		let sel = this.getSelectorForIdWithoutPipeline(prefix, suffix, suffix2);
+		sel += `[data-pipeline-id='${this.activePipeline.id}']`;
 		return sel;
+	}
+
+	// Returns a selector for the ID string like one of the following:
+	// * [data-id='prefix_instanceID']
+	// * [data-id='prefix_instanceID_suffix']
+	// * [data-id='prefix_instanceID_suffix_suffix2']
+	// depending on what parameters are provided.
+	getSelectorForIdWithoutPipeline(prefix, suffix, suffix2) {
+		return `[data-id='${this.getId(prefix, suffix, suffix2)}']`;
 	}
 
 	// Returns a selector for the class name passed in which includes a
@@ -1088,6 +1121,7 @@ export default class SVGCanvasRenderer {
 	addBackToParentFlowArrow(canvasSVG) {
 		const g = canvasSVG
 			.append("g")
+			.attr("transform", "translate(15, 15)")
 			.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
 				d3.select(this).select("rect")
 					.attr("data-pointer-hover", "yes");
@@ -1102,17 +1136,25 @@ export default class SVGCanvasRenderer {
 			});
 
 		g.append("rect")
-			.attr("x", 5)
-			.attr("y", 5)
-			.attr("width", 170)
-			.attr("height", 20)
+			.attr("x", 0)
+			.attr("y", 0)
+			.attr("width", 210)
+			.attr("height", 40)
 			.attr("class", "d3-back-to-previous-flow-box");
 
+		g.append("svg")
+			.attr("x", 16)
+			.attr("y", 11)
+			.attr("width", 16)
+			.attr("height", 16)
+			.html(LEFT_ARROW_ICON)
+			.attr("class", "d3-back-to-previous-flow-text");
+
 		g.append("text")
-			.attr("x", 10)
-			.attr("y", 20)
+			.attr("x", 40)
+			.attr("y", 24)
 			.attr("class", "d3-back-to-previous-flow-text")
-			.text("⬅ Back to Previous Flow");
+			.text("Return to previous flow");
 	}
 
 	createDropShadow(defs) {
@@ -1849,6 +1891,28 @@ export default class SVGCanvasRenderer {
 		nodeGrpSel.classed("d3-node-group-translucent", state);
 	}
 
+	// Snaps the nodes and comments in the pipeline provided to a grid position
+	// as defined in the layout information.
+	snapToGridPipeline(pipeline) {
+		if (pipeline.nodes && pipeline.nodes.length > 0) {
+			pipeline.nodes = pipeline.nodes.map((node) => {
+				const newPos = this.snapToGridObject({ x: node.x_pos, y: node.y_pos });
+				node.x_pos = newPos.x;
+				node.y_pos = newPos.y;
+				return node;
+			});
+		}
+		if (pipeline.comments && pipeline.comments.length > 0) {
+			pipeline.comments = pipeline.comments.map((comment) => {
+				const newPos = this.snapToGridObject({ x: comment.x_pos, y: comment.y_pos });
+				comment.x_pos = newPos.x;
+				comment.y_pos = newPos.y;
+				return comment;
+			});
+		}
+		return pipeline;
+	}
+
 	// Returns the snap-to-grid position of the object positioned at
 	// this.dragStartX and this.dragStartY after applying the current offset of
 	// this.dragOffsetX and this.dragOffsetY.
@@ -2532,7 +2596,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Adds a set of decorations to either a node of link object.
-	// d       - This is a node of link object.
+	// d       - This is a node or link object.
 	// objType - A string set to either DEC_NODE or DEC_LINK.
 	// trgGrp  - A D3 selection object that references the node or link to
 	//           which the decorations are to be attached.
@@ -2541,75 +2605,75 @@ export default class SVGCanvasRenderer {
 	//           decorations from the layout config information.
 	addDecorations(d, objType, trgGrp, decs) {
 		const decorations = decs || [];
-		// Handle decoration outlines
-		// We draw an outline for all decorators that are not label decorators ie those with an image or without an image
-		const outClassName = `d3-${objType}-dec-outline`;
-		const nonLabelDecorations = decorations.filter((dec) => !dec.label && dec.outline !== false);
-		const decOutlineSelector = this.getSelectorForClass(outClassName);
-		const decoratorOutlinesSelection = trgGrp.selectAll(decOutlineSelector)
-			.data(nonLabelDecorations || [], function(dec) { return dec.id; });
+		const decGrpClassName = `d3-${objType}-dec-group`;
+		const decGrpSelector = this.getSelectorForClass(decGrpClassName);
+		const decGroupsSel = trgGrp.selectAll(decGrpSelector)
+			.data(decorations, function(dec) { return dec.id; });
 
-		decoratorOutlinesSelection.enter()
+		const newDecGroups = decGroupsSel.enter()
+			.append("g")
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_group`, dec.id)) // Used in Chimp tests
+			.attr("data-pipeline-id", this.activePipeline.id)
+			.attr("class", decGrpClassName);
+
+		newDecGroups
+			.filter((dec) => dec.hotspot)
+			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
+
+		newDecGroups.filter((dec) => !dec.label && dec.outline !== false)
 			.append("rect")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_outln`, dec.id)) // Used in Chimp tests
-			.attr("data-pipeline-id", this.activePipeline.id)
-			.merge(decoratorOutlinesSelection)
-			.attr("x", (dec) => this.getDecoratorX(dec, d, objType))
-			.attr("y", (dec) => this.getDecoratorY(dec, d, objType))
-			.attr("width", (dec) => this.getDecoratorWidth(dec, d, objType))
-			.attr("height", (dec) => this.getDecoratorHeight(dec, d, objType))
-			.attr("class", (dec) => this.getDecoratorClass(dec, outClassName))
-			.datum((dec) => this.getDecorator(dec.id, decorations))
-			.filter((dec) => dec.hotspot)
-			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_outln`, dec.id)); // Used in Chimp tests
 
-		decoratorOutlinesSelection.exit().remove();
-
-		// Handle decoration images
-		const imgClassName = `d3-${objType}-dec-image`;
-		const imageDecorations = decorations.filter((dec) => dec.image);
-		const decImgSelector = this.getSelectorForClass(imgClassName);
-		const decoratorImgsSelection = trgGrp.selectAll(decImgSelector)
-			.data(imageDecorations || [], function(dec) { return dec.id; });
-
-		decoratorImgsSelection.enter()
+		newDecGroups.filter((dec) => dec.image)
 			.append("image")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_img`, dec.id)) // Used in Chimp tests
-			.attr("data-pipeline-id", this.activePipeline.id)
-			.merge(decoratorImgsSelection)
-			.attr("x", (dec) => this.getDecoratorX(dec, d, objType) + this.getDecoratorPadding(dec, d, objType))
-			.attr("y", (dec) => this.getDecoratorY(dec, d, objType) + this.getDecoratorPadding(dec, d, objType))
-			.attr("width", (dec) => this.getDecoratorWidth(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
-			.attr("height", (dec) => this.getDecoratorHeight(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
-			.attr("class", (dec) => this.getDecoratorClass(dec, imgClassName))
-			.attr("xlink:href", (dec) => this.getDecoratorImage(dec))
-			.datum((dec) => this.getDecorator(dec.id, decorations))
-			.filter((dec) => dec.hotspot)
-			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_image`, dec.id)); // Used in Chimp tests
 
-		decoratorImgsSelection.exit().remove();
-
-		// Handle decoration labels
-		const labClassName = `d3-${objType}-dec-label`;
-		const labelDecorations = decorations.filter((dec) => dec.label);
-		const decLabelSelector = this.getSelectorForClass(labClassName);
-		const decoratorLabelSelection = trgGrp.selectAll(decLabelSelector)
-			.data(labelDecorations || [], function(dec) { return dec.id; });
-
-		decoratorLabelSelection.enter()
+		newDecGroups.filter((dec) => dec.label)
 			.append("text")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_label`, dec.id)) // Used in Chimp tests
-			.attr("data-pipeline-id", this.activePipeline.id)
-			.merge(decoratorLabelSelection)
-			.attr("x", (dec) => this.getDecoratorX(dec, d, objType))
-			.attr("y", (dec) => this.getDecoratorY(dec, d, objType))
-			.attr("class", (dec) => this.getDecoratorClass(dec, labClassName))
-			.text((dec) => dec.label)
-			.datum((dec) => this.getDecorator(dec.id, decorations))
-			.filter((dec) => dec.hotspot)
-			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_label`, dec.id)); // Used in Chimp tests
 
-		decoratorLabelSelection.exit().remove();
+		const newAndExistingDecGrps =
+			decGroupsSel.enter().merge(decGroupsSel);
+
+		newAndExistingDecGrps
+			.each((dec) => {
+				const decGrp = trgGrp.selectAll(this.getSelectorForId(`${objType}_dec_group`, dec.id));
+				const decDatum = this.getDecorator(dec.id, decorations);
+				decGrp
+					.attr("transform", `translate(${this.getDecoratorX(dec, d, objType)}, ${this.getDecoratorY(dec, d, objType)})`);
+
+				// We didn't add pipeline ID to these sub-objects so don't include it in
+				// the predicate of the selector.
+				const outlnSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_outln`, dec.id);
+				const imageSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_image`, dec.id);
+				const labelSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_label`, dec.id);
+
+				decGrp.select(outlnSelector)
+					.attr("x", 0)
+					.attr("y", 0)
+					.attr("width", this.getDecoratorWidth(dec, d, objType))
+					.attr("height", this.getDecoratorHeight(dec, d, objType))
+					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-outline`))
+					.datum(decDatum);
+
+				decGrp.select(imageSelector)
+					.attr("x", this.getDecoratorPadding(dec, d, objType))
+					.attr("y", this.getDecoratorPadding(dec, d, objType))
+					.attr("width", this.getDecoratorWidth(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
+					.attr("height", this.getDecoratorHeight(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
+					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-image`))
+					.attr("xlink:href", this.getDecoratorImage(dec))
+					.datum(decDatum);
+
+				decGrp.select(labelSelector)
+					.attr("x", 0)
+					.attr("y", 0)
+					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
+					.text(dec.label)
+					.datum(decDatum);
+			});
+
+		decGroupsSel.exit().remove();
 	}
 
 	addErrorMarker(d, nodeGrp) {

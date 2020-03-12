@@ -34,7 +34,7 @@ import { WarningFilled16, ErrorFilled16, CheckmarkFilled16, InformationFilled16,
 	CircleDash16, RulerAlt16, ListNumbered16, ListBulleted16, Flag16, ChartVennDiagram16,
 	Calendar16, Time16, EventSchedule16 } from "@carbon/icons-react";
 
-import { ERROR, WARNING, INFO, SUCCESS, CANVAS_CARBON_ICONS, TOOLBAR_ACTIONS } from "../common-canvas/constants/canvas-constants";
+import { ERROR, WARNING, INFO, SUCCESS, CANVAS_CARBON_ICONS, CONTEXT_MENU_CARBON_ICONS, TOOLBAR_ACTIONS } from "../common-canvas/constants/canvas-constants";
 import { CONDITION_MESSAGE_TYPE, CARBON_ICONS, DATA_TYPE } from "../common-properties/constants/constants";
 
 const iconClassName = "properties-icon";
@@ -92,6 +92,9 @@ export default class Icon extends React.Component {
 			return <OverflowMenuVertical16 className={className} disabled={this.props.disabled} />;
 		case (CANVAS_CARBON_ICONS.SEARCH):
 			return <Search16 className={className} disabled={this.props.disabled} />;
+
+		case (CONTEXT_MENU_CARBON_ICONS.CHEVRONARROWS.RIGHT):
+			return <ChevronRight16 className={className} disabled={this.props.disabled} />;
 
 		case (TOOLBAR_ACTIONS.TOOLBAR_STOP):
 			return <StopFilledAlt16 className={className} disabled={this.props.disabled} />;

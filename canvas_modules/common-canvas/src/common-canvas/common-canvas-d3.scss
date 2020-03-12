@@ -15,7 +15,7 @@ $region-selector-stroke-color: $ui-05;
 $region-selector-fill-color: $ui-03;
 
 // 'Back to previous flow' control colors
-$back-to-previous-flow-box-color: $brand-01;
+$back-to-previous-flow-box-color: $interactive-01;
 $back-to-previous-flow-box-fill-hover: $ui-03;
 
 // Node colors
@@ -23,7 +23,7 @@ $node-body-stroke: $ui-05;
 $node-body-fill: $ui-01;
 
 $node-body-stroke-hover: $ui-03;
-$node-body-fill-hover: $ui-03;
+$node-body-fill-hover: $hover-selected-ui;
 
 $node-selection-color: $inverse-link;
 $node-label-color: $text-01;
@@ -35,7 +35,7 @@ $node-super-expand-icon-color: $brand-01;
 $node-super-expand-icon-background-hover-color: $active-01;
 
 $node-ellipsis-color: $brand-01;
-$node-ellipsis-background-hover-color: $active-01;
+$node-ellipsis-background-hover-color: $ui-03;
 
 $node-error-color: $support-01; // Error red
 $node-warning-color: $support-03; // Warning yellow

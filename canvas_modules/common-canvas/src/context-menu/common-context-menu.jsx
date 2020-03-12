@@ -11,6 +11,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { MenuItem, SubMenu } from "react-contextmenu";
+import Icon from "../icons/icon.jsx";
+import { CONTEXT_MENU_CARBON_ICONS } from "../common-canvas/constants/canvas-constants";
 
 // context-menu sizing
 const CONTEXT_MENU_WIDTH = 160; // see context-menu.css .react-context-menu margin
@@ -135,8 +137,11 @@ class CommonContextMenu extends React.Component {
 					top: offset + "px" // Use negative to push the menu up
 				};
 
+				const icon = <Icon type={CONTEXT_MENU_CARBON_ICONS.CHEVRONARROWS.RIGHT} disabled={false} className={"react-contextmenu-submenu-icon"} />;
+				const menuItem = <div>{menuDefinition[i].label}{icon} </div>;
+
 				menuItems.push(
-					<SubMenu title={menuDefinition[i].label} key={i + 1} className="contextmenu-submenu" rtl={rtl} {...disabled}>
+					<SubMenu title={menuItem} key={i + 1} className="contextmenu-submenu" rtl={rtl} {...disabled}>
 						<div key={i + 1} style={subMenuPosStyle} className="context-menu-popover">
 							{submenuItems}
 						</div>

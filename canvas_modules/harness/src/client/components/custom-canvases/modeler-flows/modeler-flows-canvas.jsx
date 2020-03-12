@@ -58,7 +58,8 @@ export default class ModelerFlowsCanvas extends React.Component {
 			},
 			enableCanvasLayout: {
 				dataLinkArrowHead: true,
-				linkGap: 4
+				linkGap: 4,
+				alwaysDisplayBackToParentFlow: true
 			}
 		});
 	}
