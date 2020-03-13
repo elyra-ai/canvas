@@ -60,7 +60,7 @@
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.10.0",
     "enzyme-react-intl": "2.0.3",
-    "eslint": "4.3.0",
+    "eslint": "4.19.1",
     "eslint-config-canvas": "file:../eslint-config-canvas",
     "eslint-plugin-react": "7.1.0",
     "extract-text-webpack-plugin": "3.0.0",
