@@ -79,7 +79,7 @@
     "path": "0.12.7",
     "postcss-loader": "2.0.6",
     "react": "16.3.2",
-    "react-dom": "16.3.2",
+    "react-dom": "16.13.0",
     "react-test-renderer": "16.3.2",
     "sass-lint": "1.10.2",
     "sass-loader": "6.0.6",
