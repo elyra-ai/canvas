@@ -84,8 +84,8 @@ module.exports = function() {
 
 	this.Then(/^I move the "([^"]*)" comment on the canvas by (-?\d+), (-?\d+)$/,
 		function(commentName, canvasX, canvasY) {
-			const commentSelector = getCommentSelector(commentName, "grp");
-			dragAndDrop(commentSelector, 30, 30, ".svg-area", canvasX, canvasY);
+			const commentSelector = getCommentSelector(commentName, "body");
+			dragAndDrop(commentSelector, 1, 1, ".svg-area", Number(canvasX) + 1, Number(canvasY) + 1);
 		});
 
 	this.Then(/^I size the "([^"]*)" comment using the "([^"]*)" corner to width (-?\d+) and height (-?\d+)$/,
@@ -94,7 +94,7 @@ module.exports = function() {
 			const dimensions = getCommentDimensions(commentSelector);
 			const offsetForSizingArea = 6; // Offset from edge of body to somewhere in sizing area
 
-			if (corner === "south-west") {
+			if (corner === "south-east") {
 				const startPosX = dimensions.width + offsetForSizingArea;
 				const startPosY = dimensions.height + offsetForSizingArea;
 
@@ -102,7 +102,7 @@ module.exports = function() {
 				const canvasY = dimensions.y_pos + Number(newHeight) + offsetForSizingArea;
 
 				dragAndDrop(commentSelector, startPosX, startPosY, ".svg-area", Number(canvasX), Number(canvasY));
-			} else if (corner === "south-east") {
+			} else if (corner === "south-west") {
 				const startPosX = -offsetForSizingArea;
 				const startPosY = dimensions.height + offsetForSizingArea;
 
@@ -110,7 +110,7 @@ module.exports = function() {
 				const canvasY = dimensions.y_pos + Number(newHeight) + offsetForSizingArea;
 
 				dragAndDrop(commentSelector, startPosX, startPosY, ".svg-area", Number(canvasX), Number(canvasY));
-			} else if (corner === "north-east") {
+			} else if (corner === "north-west") {
 				const startPosX = -offsetForSizingArea + 10; // Set to more than 0 so we don't pick up the new connection 'blob'
 				const startPosY = -offsetForSizingArea;
 
@@ -118,7 +118,7 @@ module.exports = function() {
 				const canvasY = dimensions.y_pos - (Number(newHeight) - dimensions.height) - offsetForSizingArea;
 
 				dragAndDrop(commentSelector, startPosX, startPosY, ".svg-area", Number(canvasX), Number(canvasY));
-			} else if (corner === "north-west") {
+			} else if (corner === "north-east") {
 				const startPosX = dimensions.width + offsetForSizingArea;
 				const startPosY = -offsetForSizingArea;
 
@@ -346,22 +346,22 @@ module.exports = function() {
 		// MOVE OPERATION ISNT WORKING CURRENTLY IN D3
 	});
 
-	// Then I verify the "abc" comment position is "translate(445, 219)"
+	// Then I verify the "abc" comment transform is "translate(445, 219)"
 	//
-	this.Then(/^I verify the "([^"]*)" comment position is "([^"]*)"$/, function(commentName, givenCommentPosition) {
+	this.Then(/^I verify the "([^"]*)" comment transform is "([^"]*)"$/, function(commentName, transform) {
 		const commentSelector = getCommentSelector(commentName, "grp");
 		const comment = browser.$(commentSelector);
-		var actualCommentPosition = comment.getAttribute("transform");
-		expect(actualCommentPosition).toEqual(givenCommentPosition);
+		var actualTransform = comment.getAttribute("transform");
+		expect(actualTransform).toEqual(transform);
 	});
 
-	// Then I verify the "abc" comment position is "translate(445, 219)" on the extra canvas
+	// Then I verify the "abc" comment transform is "translate(445, 219)" on the extra canvas
 	//
-	this.Then(/^I verify the "([^"]*)" comment position is "([^"]*)" on the extra canvas$/, function(commentName, givenCommentPosition) {
+	this.Then(/^I verify the "([^"]*)" comment transform is "([^"]*)" on the extra canvas$/, function(commentName, transform) {
 		const commentSelector = getCommentSelector(commentName, "grp", true);
 		const comment = browser.$(commentSelector);
-		var actualCommentPosition = comment.getAttribute("transform");
-		expect(actualCommentPosition).toEqual(givenCommentPosition);
+		var actualTransform = comment.getAttribute("transform");
+		expect(actualTransform).toEqual(transform);
 	});
 
 	this.Then(/^I verify the "([^"]*)" comment is selected$/, function(commentText) {
@@ -384,11 +384,5 @@ module.exports = function() {
 		expect(isSelected).toEqual(false);
 	});
 
-	this.Then(/^I verify the "([^"]*)" comment transform is "([^"]*)"$/, function(commentText, transform) {
-		const comSelector = getCommentSelector(commentText, "grp");
-		const com = browser.$(comSelector);
-		const actualTransform = com.getAttribute("transform");
-		expect(actualTransform).toEqual(transform);
-	});
 
 };

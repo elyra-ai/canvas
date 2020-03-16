@@ -61,15 +61,6 @@ export default class SVGCanvasRenderer {
 		// Initialize zoom variables
 		this.initializeZoomVariables();
 
-		// If we're using one of the snap to grid settings force all nodes and
-		// comments to a grid position. This enhances usability by NOT leaving nodes
-		// or comments slightly off grid which can be confusing when the user is
-		// trying to arrange nodes and/or comments.
-		// if (this.config.enableSnapToGridType === "During" ||
-		// 		this.config.enableSnapToGridType === "After") {
-		// 	this.activePipeline = this.snapToGridPipeline(this.activePipeline);
-		// }
-
 		// Dimensions for extent of canvas scaling
 		this.minScaleExtent = 0.2;
 		this.maxScaleExtent = 2;
@@ -280,15 +271,6 @@ export default class SVGCanvasRenderer {
 		this.canvasInfo = canvasInfo;
 		this.activePipeline = this.getPipeline(this.pipelineId);
 		this.canvasLayout = this.objectModel.getCanvasLayout(); // Refresh the canvas layout info in case it changed.
-
-		// If we're using one of the snap to grid settings force all nodes and
-		// comments to a grid position. This enhances usability by NOT leaving nodes
-		// or comments slightly off grid which can be confusing when the user is
-		// trying to arrange nodes and/or comments.
-		// if (this.config.enableSnapToGridType === "During" ||
-		// 		this.config.enableSnapToGridType === "After") {
-		// 	this.activePipeline = this.snapToGridPipeline(this.activePipeline);
-		// }
 
 		// Set the display state incase we changed from in-place to full-page
 		// sub-flow display.
@@ -1891,28 +1873,6 @@ export default class SVGCanvasRenderer {
 		nodeGrpSel.classed("d3-node-group-translucent", state);
 	}
 
-	// Snaps the nodes and comments in the pipeline provided to a grid position
-	// as defined in the layout information.
-	snapToGridPipeline(pipeline) {
-		if (pipeline.nodes && pipeline.nodes.length > 0) {
-			pipeline.nodes = pipeline.nodes.map((node) => {
-				const newPos = this.snapToGridObject({ x: node.x_pos, y: node.y_pos });
-				node.x_pos = newPos.x;
-				node.y_pos = newPos.y;
-				return node;
-			});
-		}
-		if (pipeline.comments && pipeline.comments.length > 0) {
-			pipeline.comments = pipeline.comments.map((comment) => {
-				const newPos = this.snapToGridObject({ x: comment.x_pos, y: comment.y_pos });
-				comment.x_pos = newPos.x;
-				comment.y_pos = newPos.y;
-				return comment;
-			});
-		}
-		return pipeline;
-	}
-
 	// Returns the snap-to-grid position of the object positioned at
 	// this.dragStartX and this.dragStartY after applying the current offset of
 	// this.dragOffsetX and this.dragOffsetY.
@@ -1927,24 +1887,10 @@ export default class SVGCanvasRenderer {
 	// and objPos.y. The grid that is snapped to is defined by this.snapToGridX
 	// and this.snapToGridY.
 	snapToGridObject(objPos) {
-		const stgPosX = this.snapToGrid(objPos.x, this.canvasLayout.snapToGridX);
-		const stgPosY = this.snapToGrid(objPos.y, this.canvasLayout.snapToGridY);
+		const stgPosX = CanvasUtils.snapToGrid(objPos.x, this.canvasLayout.snapToGridX);
+		const stgPosY = CanvasUtils.snapToGrid(objPos.y, this.canvasLayout.snapToGridY);
 
 		return { x: stgPosX, y: stgPosY };
-	}
-
-	// Returns a snap-to-grid value for the value passed in based on a grid
-	// size defined by the gridSize passed in.
-	snapToGrid(value, gridSize) {
-		const div = value / gridSize;
-		let abs = Math.trunc(div);
-		const remainder = div - abs;
-
-		if (remainder > 0.5) {
-			abs++;
-		}
-
-		return abs * gridSize;
 	}
 
 	displayNodes() {
@@ -4661,10 +4607,10 @@ export default class SVGCanvasRenderer {
 			this.resizeObjWidth += incrementWidth;
 			this.resizeObjHeight += incrementHeight;
 
-			xPos = this.snapToGrid(this.resizeObjXPos, this.canvasLayout.snapToGridX);
-			yPos = this.snapToGrid(this.resizeObjYPos, this.canvasLayout.snapToGridY);
-			width = this.snapToGrid(this.resizeObjWidth, this.canvasLayout.snapToGridX);
-			height = this.snapToGrid(this.resizeObjHeight, this.canvasLayout.snapToGridY);
+			xPos = CanvasUtils.snapToGrid(this.resizeObjXPos, this.canvasLayout.snapToGridX);
+			yPos = CanvasUtils.snapToGrid(this.resizeObjYPos, this.canvasLayout.snapToGridY);
+			width = CanvasUtils.snapToGrid(this.resizeObjWidth, this.canvasLayout.snapToGridX);
+			height = CanvasUtils.snapToGrid(this.resizeObjHeight, this.canvasLayout.snapToGridY);
 
 		} else {
 			xPos = canvasObj.x_pos + incrementX;
@@ -4701,10 +4647,10 @@ export default class SVGCanvasRenderer {
 	endNodeSizing() {
 		if (this.config.enableSnapToGridType === "After") {
 			const sizedNode = this.nodeSizingMovedNodes[this.nodeSizingId];
-			sizedNode.x_pos = this.snapToGrid(sizedNode.x_pos, this.snapToGridX);
-			sizedNode.y_pos = this.snapToGrid(sizedNode.y_pos, this.snapToGridY);
-			sizedNode.width = this.snapToGrid(sizedNode.width, this.snapToGridX);
-			sizedNode.height = this.snapToGrid(sizedNode.height, this.snapToGridY);
+			sizedNode.x_pos = CanvasUtils.snapToGrid(sizedNode.x_pos, this.snapToGridX);
+			sizedNode.y_pos = CanvasUtils.snapToGrid(sizedNode.y_pos, this.snapToGridY);
+			sizedNode.width = CanvasUtils.snapToGrid(sizedNode.width, this.snapToGridX);
+			sizedNode.height = CanvasUtils.snapToGrid(sizedNode.height, this.snapToGridY);
 		}
 		if (Object.keys(this.nodeSizingMovedNodes).length > 0) {
 			const data = {
@@ -4730,10 +4676,10 @@ export default class SVGCanvasRenderer {
 		let height = commentObj.height;
 
 		if (this.config.enableSnapToGridType === "After") {
-			xPos = this.snapToGrid(xPos, this.canvasLayout.snapToGridX);
-			yPos = this.snapToGrid(yPos, this.canvasLayout.snapToGridY);
-			width = this.snapToGrid(width, this.canvasLayout.snapToGridX);
-			height = this.snapToGrid(height, this.canvasLayout.snapToGridY);
+			xPos = CanvasUtils.snapToGrid(xPos, this.canvasLayout.snapToGridX);
+			yPos = CanvasUtils.snapToGrid(yPos, this.canvasLayout.snapToGridY);
+			width = CanvasUtils.snapToGrid(width, this.canvasLayout.snapToGridX);
+			height = CanvasUtils.snapToGrid(height, this.canvasLayout.snapToGridY);
 		}
 
 		// Update the object model comment if the new position or size is different

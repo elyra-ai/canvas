@@ -820,7 +820,7 @@ export default class APIPipeline {
 	// ---------------------------------------------------------------------------
 
 	createComment(source) {
-		const info = {
+		let comment = {
 			id: this.objectModel.getUniqueId(CREATE_COMMENT),
 			class_name: "d3-comment-rect",
 			content: "",
@@ -831,17 +831,25 @@ export default class APIPipeline {
 			linkIds: [],
 			selectedObjectIds: []
 		};
+
+		// Adjust for snap to grid, if necessary.
+		comment = this.objectModel.setCommentAttributes(comment);
+
 		source.selectedObjectIds.forEach((objId) => {
 			if (this.isDataNode(objId)) { // Only add links to data nodes, not comments
-				info.selectedObjectIds.push(objId);
-				info.linkIds.push(this.objectModel.getUniqueId(CREATE_COMMENT_LINK, { "comment": info, "targetNode": this.getNode(objId) }));
+				comment.selectedObjectIds.push(objId);
+				comment.linkIds.push(this.objectModel.getUniqueId(CREATE_COMMENT_LINK, { "comment": comment, "targetNode": this.getNode(objId) }));
 			}
 		});
-		return info;
+
+		return comment;
 	}
 
 	cloneComment(inComment) {
-		return Object.assign({}, inComment, { id: this.objectModel.getUniqueId(CLONE_COMMENT, { "comment": inComment }) });
+		// Adjust for snap to grid, if necessary.
+		const comment = this.objectModel.setCommentAttributes(inComment);
+
+		return Object.assign({}, comment, { id: this.objectModel.getUniqueId(CLONE_COMMENT, { "comment": comment }) });
 	}
 
 	addComment(data) {

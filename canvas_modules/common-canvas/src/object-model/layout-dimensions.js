@@ -292,6 +292,9 @@ const haloDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
 		// ---------------------------------------------------------------------------
+		// Snap to grid type.
+		snapToGridType: "None",
+
 		// Sizes of snap to grid as a percentage of default node height and width
 		snapToGridX: "25%",
 		snapToGridY: "20%",
@@ -589,6 +592,9 @@ const portsHorizontalDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
 		// ---------------------------------------------------------------------------
+		// Snap to grid type.
+		snapToGridType: "None",
+
 		// Sizes of snap to grid as a percentage of default node height and width
 		snapToGridX: "20%",
 		snapToGridY: "33.33%",
@@ -886,6 +892,9 @@ const portsVerticalDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
 		// ---------------------------------------------------------------------------
+		// Snap to grid type.
+		snapToGridType: "None",
+
 		// Sizes of snap to grid as a percentage of default node height and width
 		snapToGridX: "25%",
 		snapToGridY: "20%",
@@ -948,6 +957,10 @@ export default class LayoutDimensions {
 	// Overrides the snap-to-grid values in the layout object with any
 	// snap-to-grid values provided in the config object.
 	static overrideSnapToGrid(layout, config) {
+		if (config.enableSnapToGridType) {
+			layout.canvasLayout.snapToGridType = config.enableSnapToGridType;
+		}
+
 		// Snap to grid configuration. 25% for X and 20% for Y (of node width and
 		// height) by default. It can be overridden by the config which can be either
 		// a number or a percentage of the node width/height.

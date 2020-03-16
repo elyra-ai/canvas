@@ -74,7 +74,7 @@ Feature: Drag
 		Then I verify the "The 4 different node types" comment is not selected
 		Then I verify the "This canvas shows the 4 different node types and three link types: node links, association links and comments links." comment is selected
 
-		Then I verify the "This canvas shows the 4 different node types and three link types: node links, association links and comments links." comment transform is "translate(280, 330)"
+		Then I verify the "This canvas shows the 4 different node types and three link types: node links, association links and comments links." comment transform is "translate(300, 350)"
 		Then I click the undo button on the toolbar
 
 
@@ -149,5 +149,5 @@ Feature: Drag
 			Then I verify the "The 4 different node types" comment is selected
 			Then I verify the "This canvas shows the 4 different node types and three link types: node links, association links and comments links." comment is not selected
 
-			Then I verify the "This canvas shows the 4 different node types and three link types: node links, association links and comments links." comment transform is "translate(280, 330)"
+			Then I verify the "This canvas shows the 4 different node types and three link types: node links, association links and comments links." comment transform is "translate(300, 350)"
 			Then I click the undo button on the toolbar

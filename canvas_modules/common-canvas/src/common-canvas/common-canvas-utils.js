@@ -187,5 +187,18 @@ export default class CanvasUtils {
 		d3Event.preventDefault();
 	}
 
+	// Returns a snap-to-grid value for the value passed in based on a grid
+	// size defined by the gridSize passed in.
+	static snapToGrid(value, gridSize) {
+		const div = value / gridSize;
+		let abs = Math.trunc(div);
+		const remainder = div - abs;
+
+		if (remainder > 0.5) {
+			abs++;
+		}
+
+		return abs * gridSize;
+	}
 
 }

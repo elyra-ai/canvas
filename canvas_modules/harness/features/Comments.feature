@@ -26,19 +26,19 @@ Feature: Comments
 		Then I verify the number of comment links are 1
 
 		# Test sizing the comment, using the sizing area, to the right and downwards.
-		Then I size the "Hello Canvas!" comment using the "south-west" corner to width 120 and height 80
+		Then I size the "Hello Canvas!" comment using the "south-east" corner to width 120 and height 80
 		Then I verify the "Hello Canvas!" comment has width 120 and height 80
 
 		# Test sizing the comment, using the sizing area, to the left and downwards.
-		Then I size the "Hello Canvas!" comment using the "south-east" corner to width 130 and height 90
+		Then I size the "Hello Canvas!" comment using the "south-west" corner to width 130 and height 90
 		Then I verify the "Hello Canvas!" comment has width 130 and height 90
 
 		# Test sizing the comment, using the sizing area, to the left and downwards.
-		Then I size the "Hello Canvas!" comment using the "north-east" corner to width 140 and height 100
+		Then I size the "Hello Canvas!" comment using the "north-west" corner to width 140 and height 100
 		Then I verify the "Hello Canvas!" comment has width 140 and height 100
 
 		# Test sizing the comment, using the sizing area, to the left and downwards.
-		Then I size the "Hello Canvas!" comment using the "north-west" corner to width 150 and height 110
+		Then I size the "Hello Canvas!" comment using the "north-east" corner to width 150 and height 110
 		Then I verify the "Hello Canvas!" comment has width 150 and height 110
 
 		# Size the comment to the left

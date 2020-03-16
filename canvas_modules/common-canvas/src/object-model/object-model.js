@@ -334,7 +334,6 @@ export default class ObjectModel {
 
 		const pipelineFlow = this.validateAndUpgrade(newPipelineFlow);
 		const canvasInfo = PipelineInHandler.convertPipelineFlowToCanvasInfo(pipelineFlow, this.getCanvasLayout());
-
 		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout());
 
 		this.executeWithSelectionChange(this.store.dispatch, {
@@ -346,7 +345,7 @@ export default class ObjectModel {
 	// Does all preparation needed for nodes before they are saved into Redux.
 	prepareNodes(pipelines, nodeLayout, canvasLayout) {
 		const newPipelines = this.setSupernodesBindingStatus(pipelines);
-		return newPipelines.map((pipeline) => this.setPipelineNodeAttributes(pipeline, nodeLayout, canvasLayout));
+		return newPipelines.map((pipeline) => this.setPipelineObjectAttributes(pipeline, nodeLayout, canvasLayout));
 	}
 
 	// Loops through all the pipelines and adds the appropriate supernode binding
@@ -393,13 +392,20 @@ export default class ObjectModel {
 		return pipelines;
 	}
 
-	setPipelineNodeAttributes(inPipeline, nodeLayout, canvasLayout) {
+	setPipelineObjectAttributes(inPipeline, nodeLayout, canvasLayout) {
 		const pipeline = Object.assign({}, inPipeline);
 		if (pipeline.nodes) {
 			pipeline.nodes = pipeline.nodes.map((node) => this.setNodeAttributesWithLayout(node, nodeLayout, canvasLayout));
 		} else {
 			pipeline.nodes = [];
 		}
+
+		if (pipeline.comments) {
+			pipeline.comments = pipeline.comments.map((comment) => this.setCommentAttributesWithLayout(comment, canvasLayout));
+		} else {
+			pipeline.comments = [];
+		}
+
 		return pipeline;
 	}
 
@@ -410,6 +416,12 @@ export default class ObjectModel {
 		return this.setNodeAttributesWithLayout(node, this.getNodeLayout(), this.getCanvasLayout());
 	}
 
+	// Returns a copy of the comment passed in with position adjusted for
+	// snap to grid, if necessary. This is called from the api-pipeline class.
+	setCommentAttributes(comment) {
+		return this.setCommentAttributesWithLayout(comment, this.getCanvasLayout());
+	}
+
 	// Returns a copy of the node passed using the layout info provided. The
 	// returned node is augmented with additional fields which contain
 	// layout, dimension and supernode binding status info.
@@ -417,7 +429,24 @@ export default class ObjectModel {
 		let newNode = Object.assign({}, node);
 		newNode = this.setNodeLayoutAttributes(newNode, nodeLayout);
 		newNode = this.setNodeDimensionAttributes(newNode, canvasLayout);
+		if (canvasLayout.snapToGridType === "During" ||
+				canvasLayout.snapToGridType === "After") {
+			newNode.x_pos = CanvasUtils.snapToGrid(newNode.x_pos, canvasLayout.snapToGridX);
+			newNode.y_pos = CanvasUtils.snapToGrid(newNode.y_pos, canvasLayout.snapToGridY);
+		}
 		return newNode;
+	}
+
+	// Returns a copy of the comment passed using the layout info provided. The
+	// returned comment has its position adjusted for snap to grid, if necessary.
+	setCommentAttributesWithLayout(comment, canvasLayout) {
+		const newComment = Object.assign({}, comment);
+		if (canvasLayout.snapToGridType === "During" ||
+				canvasLayout.snapToGridType === "After") {
+			newComment.x_pos = CanvasUtils.snapToGrid(newComment.x_pos, canvasLayout.snapToGridX);
+			newComment.y_pos = CanvasUtils.snapToGrid(newComment.y_pos, canvasLayout.snapToGridY);
+		}
+		return newComment;
 	}
 
 	// Returns the node passed in with additional fields which contains
