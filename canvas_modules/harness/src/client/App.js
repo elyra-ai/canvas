@@ -1877,6 +1877,7 @@ export default class App extends React.Component {
 			firstCanvas = (
 				<ModelerFlowsCanvas
 					config={commonCanvasConfig}
+					canvasController={this.canvasController}
 				/>
 			);
 		} else if (this.state.selectedNodeLayout === AUTO_AI_LAYOUT) {

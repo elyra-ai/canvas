@@ -20,13 +20,14 @@
               "y_pos": 118.80000000000001,
               "description": "Pull in data from remote data sources using connections, or pull in data from a file.",
               "decorations": [
-               {
-                 "position": "bottomLeft",
-                 "x_pos": "-10",
-                 "y_pos": "-30",
-                 "image": "images/modeler-flows/decorations/SQL.svg",
-                 "outline": false
-               }
+                {
+                  "position": "bottomLeft",
+                  "x_pos": "-10",
+                  "y_pos": "-30",
+                  "image": "images/modeler-flows/decorations/SQL.svg",
+                  "outline": false,
+                  "id": "d890146a-ecd5-4ad9-90d7-112c48b2c93c"
+                }
               ]
             }
           },
@@ -53,17 +54,18 @@
             "ui_data": {
               "label": "Balance",
               "image": "images/modeler-flows/palette/icons/balance.svg",
-              "x_pos": 346.5,
-              "y_pos": 0,
+              "x_pos": 342,
+              "y_pos": -43.2,
               "description": "Correct imbalances in datasets so they conform to specified test criteria.",
               "decorations": [
-               {
-                 "position": "topLeft",
-                 "x_pos": "-10",
-                 "y_pos": "0",
-                 "image": "images/modeler-flows/decorations/cacheWithNoData.svg",
-                 "outline": false
-               }
+                {
+                  "position": "topLeft",
+                  "x_pos": "-10",
+                  "y_pos": "0",
+                  "image": "images/modeler-flows/decorations/cacheWithNoData.svg",
+                  "outline": false,
+                  "id": "463528be-1099-496c-a458-b6364e6dc449"
+                }
               ]
             }
           },
@@ -104,17 +106,18 @@
             "ui_data": {
               "label": "Distinct",
               "image": "images/modeler-flows/palette/icons/distinct.svg",
-              "x_pos": 346.5,
-              "y_pos": 118.80000000000003,
+              "x_pos": 342,
+              "y_pos": 57.6,
               "description": "Find or remove duplicate records in your data, or create a single, composite record from a group of duplicate records.",
               "decorations": [
-               {
-                 "position": "topLeft",
-                 "x_pos": "-10",
-                 "y_pos": 0,
-                 "image": "images/modeler-flows/decorations/cacheWithData.svg",
-                 "outline": false
-               }
+                {
+                  "position": "topLeft",
+                  "x_pos": "-10",
+                  "y_pos": 0,
+                  "image": "images/modeler-flows/decorations/cacheWithData.svg",
+                  "outline": false,
+                  "id": "c542c7ec-5777-4dcc-b466-2e411a554487"
+                }
               ]
             }
           },
@@ -155,8 +158,8 @@
             "ui_data": {
               "label": "Charts",
               "image": "images/modeler-flows/palette/icons/dvcharts.svg",
-              "x_pos": 346.5,
-              "y_pos": 237.60000000000002,
+              "x_pos": 342,
+              "y_pos": 288,
               "description": "Launch the chart builder and create chart definitions to save with your flow."
             }
           },
@@ -273,8 +276,8 @@
             "ui_data": {
               "label": "Auto Cluster",
               "image": "images/modeler-flows/palette/icons/autocluster.svg",
-              "x_pos": 346.5,
-              "y_pos": 356.40000000000003,
+              "x_pos": 342,
+              "y_pos": 374.40000000000003,
               "description": "Estimates and compares clustering models that identify groups of records with similar characteristics.",
               "associations": [
                 {
@@ -306,9 +309,9 @@
           "app_data": {
             "ui_data": {
               "label": "Auto Cluster",
-              "image": "images/modeler-flows/palette/apply/applyautocluster.svg",
-              "x_pos": 346.5,
-              "y_pos": 490,
+              "image": "images/modeler-flows/palette/icons/applyautocluster.svg",
+              "x_pos": 342,
+              "y_pos": 489.6,
               "description": "Estimates and compares clustering models that identify groups of records with similar characteristics."
             }
           },
@@ -326,6 +329,58 @@
               }
             }
           ]
+        },
+        {
+          "id": "e2f0e832-f036-4a63-b5d1-55bf6ab448cd",
+          "type": "execution_node",
+          "op": "supernode",
+          "app_data": {
+            "ui_data": {
+              "label": "Supernode",
+              "image": "images/modeler-flows/palette/icons/supernode.svg",
+              "x_pos": 342,
+              "y_pos": 172.8,
+              "description": "A supernode containing a subflow of other nodes.",
+              "decorations": [
+                {
+                  "position": "topLeft",
+                  "x_pos": "00",
+                  "y_pos": "0",
+                  "image": "images/modeler-flows/decorations/drillIntoSupernode.svg",
+                  "outline": true,
+                  "id": "supernode-zoom"
+                }
+              ]
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
         }
       ],
       "app_data": {
@@ -333,12 +388,12 @@
           "comments": [
             {
               "id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
-              "x_pos": 50,
-              "y_pos": 0,
+              "x_pos": 18,
+              "y_pos": 14.4,
               "width": 175,
-              "height": 42,
+              "height": 52,
               "class_name": "d3-comment-rect",
-              "content": "Hello new canvas design!",
+              "content": "This canvas shows the new design for modeler flows.",
               "associated_id_refs": []
             },
             {

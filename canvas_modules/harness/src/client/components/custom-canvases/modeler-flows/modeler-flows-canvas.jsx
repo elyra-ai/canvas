@@ -10,12 +10,17 @@ import ModelerFlowsPalette from "./modelerFlowsNewDesignPalette.json";
 export default class ModelerFlowsCanvas extends React.Component {
 	constructor(props) {
 		super(props);
-
 		this.canvasController = new CanvasController();
 		this.canvasController.setPipelineFlow(ModelerFlowsCanvasFlow);
 		this.canvasController.setPipelineFlowPalette(ModelerFlowsPalette);
 
-		this.config = Object.assign({}, props.config, {
+		this.getConfig = this.getConfig.bind(this);
+	}
+
+	getConfig() {
+		// this.canvasController = new CanvasController();
+
+		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "modeler-flows",
 			enableNodeFormatType: "Vertical",
 			enableConnectionType: "Ports",
@@ -62,14 +67,15 @@ export default class ModelerFlowsCanvas extends React.Component {
 				alwaysDisplayBackToParentFlow: true
 			}
 		});
+		return config;
 	}
 
 	render() {
-
+		const config = this.getConfig();
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
-				config={this.config}
+				config={config}
 			/>
 		);
 	}

@@ -73,8 +73,32 @@
 			transition-delay: 0.125s;
 		}
 
-		.d3-node-ellipsis {
-			fill: $icon-01;
+		.d3-node-ellipsis-group {
+			.d3-node-ellipsis {
+				fill: $icon-01;
+			}
+
+			&:hover {
+				.d3-node-ellipsis-background {
+					fill: $ui-03;
+				}
+			}
+		}
+
+		// Set the outline/background for decorations. This will only affect the
+		// zoom-in decorations on supernode since that is th eonly one with an
+		// outline.
+		.d3-node-dec-group {
+			.d3-node-dec-outline {
+				fill: transparent;
+				stroke-width: 0;
+			}
+
+			.d3-node-dec-image[data-id*="supernode-zoom"] {
+				display: none;
+				fill: transparent;
+				stroke-width: 0;
+			}
 		}
 
 		/* Hover over d3-node-group */
@@ -83,11 +107,6 @@
 				stroke: transparent;
 				fill: transparent;
 				stroke-width: 1;
-
-				// &:hover {
-				// 	stroke: $interactive-01;
-				// 	fill: $interactive-01;
-				// }
 			}
 
 			.d3-node-port-output {
@@ -97,23 +116,23 @@
 				transition-delay: 0.125s;
 			}
 
-			/* Vertical Ellipsis (overflow menu) Styles */
-			.d3-node-ellipsis:hover,
-			.d3-node-ellipsis-background:hover~.d3-node-ellipsis {
-				fill: $icon-01;
-				stroke-width: 0;
-			}
-
-			.d3-node-ellipsis-background {
-				fill: transparent;
-				stroke-width: 0;
-				cursor: context-menu;
+			// Set the outline/background for decorations. This will only affect the
+			// zoom-in decorations on supernode since that is the only one with an
+			// outline.
+			.d3-node-dec-group {
+				.d3-node-dec-image[data-id*="supernode-zoom"] {
+					display: block;
+					fill: $icon-01;
+					stroke-width: 0;
+				}
 
 				&:hover {
-					fill: $gray-20;
+					.d3-node-dec-outline {
+						fill: $ui-03;
+						stroke-width: 0;
+					}
 				}
 			}
-
 		}
 	}
 
@@ -192,4 +211,36 @@
 		filter: "alpha(opacity=50)";
 		opacity: 0.5;
 	}
+
+	.canvas-ui-empty-placeholder {
+		height: 150px;
+		width: 320px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.canvas-ui-empty-image-placeholder {
+		height: 150px;
+		width: 250px;
+		float: left;
+		margin-left: -48px;
+	}
+
+	.canvas-ui-empty-text-placeholder {
+		@include carbon--type-style("productive-heading-03");
+		color: $text-01;
+	}
+
+	.canvas-ui-empty-subtext-placeholder {
+		@include carbon--type-style("body-long-02");
+		color: $text-02;
+		margin-top: 8px;
+	}
+
+	.canvas-ui-empty-node-text {
+		@include carbon--type-style("productive-heading-02");
+		color: $text-02;
+	}
+
 }
