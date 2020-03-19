@@ -33,6 +33,8 @@ describe("validating matches operator works correctly", () => {
 		expect(matches(wrapParam("foob"), wrapParam("foo?b"), null, controller)).to.equal(true);
 		expect(matches(wrapParam("foooob"), null, "foo?b", controller)).to.equal(false);
 		expect(matches(wrapParam("foooob"), wrapParam("foo?b"), null, controller)).to.equal(false);
+		expect(matches(wrapParam(), null, "foo", controller)).to.equal(false);
+		expect(matches(wrapParam(""), null, "foo", controller)).to.equal(false);
 
 		// error test cases.  These generate a console.log warning and return true.
 		expect(matches(wrapParam("foooob"), null, null, controller)).to.equal(true);

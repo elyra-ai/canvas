@@ -24,7 +24,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 		logger.warn("Ignoring condition operation 'notMatches' for parameter_ref " + paramInfo.param + " no regular expression specified in condition.");
 		return true;
 	}
-	if (dataType === "string") {
+	if (dataType === "string" || dataType === "undefined") {
 		// the added regexp before and after the value strips out whitespace or positions at the start and end of the string.
 		const regex = new RegExp(regExp);
 		return !regex.test(paramInfo.value);

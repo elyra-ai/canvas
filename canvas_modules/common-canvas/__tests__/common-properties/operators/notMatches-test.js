@@ -29,6 +29,8 @@ describe("validating notMatches operator works correctly", () => {
 		expect(notMatches(wrapParam("foob"), wrapParam("foo?b"), null, controller)).to.equal(false);
 		expect(notMatches(wrapParam("foooob"), null, "^g", controller)).to.equal(true);
 		expect(notMatches(wrapParam("foooob"), wrapParam("^g"), null, controller)).to.equal(true);
+		expect(notMatches(wrapParam(), null, "foo", controller)).to.equal(true);
+		expect(notMatches(wrapParam(""), null, "foo", controller)).to.equal(true);
 
 		// error test cases.  These generate a console.log warning and return true.
 		expect(notMatches(wrapParam("foooob"), null, null, controller)).to.equal(true);
