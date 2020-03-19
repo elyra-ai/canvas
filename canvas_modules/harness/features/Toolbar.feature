@@ -92,21 +92,21 @@ Feature: Toolbar
 		Then I verify the "Comment 1" comment transform is "translate(30, 30)"
 		Then I click the zoom in button on the toolbar
 		Then I click the zoom in button on the toolbar
-		Then I verify zoom transform value is "translate(490.825,222.29) scale(1.2100000000000002)"
+		Then I verify zoom transform value is "translate(486.825,222.29) scale(1.2100000000000002)"
 		Then I click the create comment button on the toolbar
 		Then I edit the comment "" with text "Comment 2"
-		Then I verify the "Comment 2" comment transform is "translate(-375.64049586776855, -153.71074380165285)"
+		Then I verify the "Comment 2" comment transform is "translate(-372.33471074380157, -153.71074380165285)"
 		Then I click the zoom out button on the toolbar
 		Then I click the zoom out button on the toolbar
 		Then I click the zoom out button on the toolbar
 		Then I click the zoom out button on the toolbar
-		Then I verify zoom transform value is "translate(703.5126015982514,317.7647701659722) scale(0.8264462809917354)"
+		Then I verify zoom transform value is "translate(698.1465746875213,317.7647701659722) scale(0.8264462809917354)"
 		Then I click the create comment button on the toolbar
 		Then I edit the comment "" with text "Comment 3"
-		Then I verify the "Comment 3" comment transform is "translate(-821.2502479338843, -354.4953719008264)"
+		Then I verify the "Comment 3" comment transform is "translate(-814.7573553719008, -354.4953719008264)"
 		Then I click the create comment button on the toolbar
 		Then I edit the comment "" with text "Comment 4"
-		Then I verify the "Comment 4" comment transform is "translate(-811.2502479338843, -344.4953719008264)"
+		Then I verify the "Comment 4" comment transform is "translate(-804.7573553719008, -344.4953719008264)"
 
 		Given I have set this canvas config ""{"extraCanvasDisplayed": true}""
 		Then I pause for 0.5 seconds
@@ -116,24 +116,24 @@ Feature: Toolbar
 		Then I verify the "Comment 5" comment transform is "translate(30, 30)" on the extra canvas
 		Then I click the zoom in button on the toolbar on the extra canvas
 		Then I click the zoom in button on the toolbar on the extra canvas
-		Then I verify extra canvas zoom transform value is "translate(490.825,70.28999999999999) scale(1.2100000000000002)"
+		Then I verify extra canvas zoom transform value is "translate(486.825,70.28999999999999) scale(1.2100000000000002)"
 		Then I click the create comment button on the toolbar on the extra canvas
 		Then I edit the comment "" with text "Comment 6" on the extra canvas
-		Then I verify the "Comment 6" comment transform is "translate(-375.64049586776855, -28.090909090909072)" on the extra canvas
+		Then I verify the "Comment 6" comment transform is "translate(-372.33471074380157, -28.090909090909072)" on the extra canvas
 		Then I click the zoom out button on the toolbar on the extra canvas
 		Then I click the zoom out button on the toolbar on the extra canvas
 		Then I click the zoom out button on the toolbar on the extra canvas
 		Then I click the zoom out button on the toolbar on the extra canvas
-		Then I verify extra canvas zoom transform value is "translate(703.5126015982514,113.85574755822688) scale(0.8264462809917354)"
+		Then I verify extra canvas zoom transform value is "translate(698.1465746875213,113.85574755822688) scale(0.8264462809917354)"
 		Then I click the create comment button on the toolbar on the extra canvas
 		Then I edit the comment "" with text "Comment 7" on the extra canvas
-		Then I verify the "Comment 7" comment transform is "translate(-821.2502479338843, -107.76545454545453)" on the extra canvas
+		Then I verify the "Comment 7" comment transform is "translate(-814.7573553719008, -107.76545454545453)" on the extra canvas
 		Then I click the create comment button on the toolbar on the extra canvas
 		Then I edit the comment "" with text "Comment 8" on the extra canvas
-		Then I verify the "Comment 8" comment transform is "translate(-811.2502479338843, -97.76545454545453)" on the extra canvas
+		Then I verify the "Comment 8" comment transform is "translate(-804.7573553719008, -97.76545454545453)" on the extra canvas
 
 		# Add 5th comment to first canvas
 		Then I click the zoom to fit button on the toolbar
 		Then I click the create comment button on the toolbar
 		Then I edit the comment "" with text "Comment 5a"
-		Then I verify the "Comment 5a" comment transform is "translate(-1367.8810725018782, -338.4953719008264)"
+		Then I verify the "Comment 5a" comment transform is "translate(-1357.7483327072375, -338.4953719008264)"

@@ -35,10 +35,7 @@ $palette-border-color: $ui-03;
 
 // Center search icon when narrow palette
 .palette-flyout-div-closed {
-	svg {
-		margin-left: 10px;
-		transition: 0.2s ease-in-out;
-	}
+	transition: 0.2s ease-in-out;
 }
 
 .palette-flyout-content {
@@ -77,17 +74,17 @@ $palette-border-color: $ui-03;
 }
 
 .palette-flyout-category-caret {
-	height: 20px;
-	width: 20px;
+	height: 16px;
+	width: 16px;
 	position: relative;
-	right: 18px;
+	right: 16px;
 	background-color: $ui-01;
 	fill: $icon-01;
 }
 
 .palette-flyout-category-caret-closed {
-	top: 9px;
-	right: 20px;
+	top: 0;
+	right: 16px;
 }
 
 .palette-flyout-category-item {
@@ -100,7 +97,7 @@ $palette-border-color: $ui-03;
 }
 
 .palette-flyout-category-item-icon {
-	width: 25px;  /* Not specifying height preserves the image's aspect ratio. */
+	width: 20px;  /* Not specifying height preserves the image's aspect ratio. */
 	margin-left: 16px;
 	fill: $icon-01;
 }
@@ -118,7 +115,8 @@ $palette-border-color: $ui-03;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	margin-left: 10px;
+	margin-left: 16px;
+	width: 135px; // We need to allow enough space for search numbers to appear eg "(12)"
 }
 
 .palette-flyout-category-count {
@@ -136,14 +134,33 @@ $palette-border-color: $ui-03;
 		height: 100%;
 		overflow: hidden;
 
+		// Style for magnifier icon and x icon (when it appears)
 		svg {
 			fill: $icon-01;
 		}
 
+		// Move the magnifier icon so it lines up with the category icons in the
+		// category divs.
+		.bx--search-magnifier {
+			margin-left: 5px;
+		}
+
 		input {
 			background: $field-01;
-			margin-right: 1px;
 			height: 100%;
+			padding-right: 3rem;
+		}
+
+		// Move the x icon button to the right (when it appears after the user
+		// enters text) so that it lines up with the carets in the category divs.
+		// Getting rid of ::before allows the right side of the highlight rectangle
+		// on hover to appear.
+		button {
+			margin-right: 8px;
+
+			&.bx--search-close::before {
+				content: none;
+			}
 		}
 	}
 }
@@ -328,8 +345,8 @@ $palette-border-color: $ui-03;
 }
 
 .palette-list-item-icon {
-	width: 32px; /* Not specifying height preserves the image's aspect ratio. */
-	margin-left: 12px;
+	width: 28px; /* Not specifying height preserves the image's aspect ratio. */
+	margin-left: 20px;
 }
 
 

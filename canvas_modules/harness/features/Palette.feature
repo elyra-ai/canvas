@@ -130,5 +130,5 @@ Feature: Palette
 		Then I open the "Animations" palette category
 
 		# The aspect ratio is preserved when height and width are different.
-		Then I verify the "LCFC" node in the category has a "width" of 32 pixels
-		Then I verify the "LCFC" node in the category has a "height" of 20.4531 pixels
+		Then I verify the "LCFC" node in the category has a "width" of 28 pixels
+		Then I verify the "LCFC" node in the category has a "height" of 17.8906 pixels

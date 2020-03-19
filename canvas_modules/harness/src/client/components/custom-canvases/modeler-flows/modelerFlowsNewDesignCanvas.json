@@ -344,7 +344,7 @@
               "decorations": [
                 {
                   "position": "topLeft",
-                  "x_pos": "00",
+                  "x_pos": "9",
                   "y_pos": "0",
                   "image": "images/modeler-flows/decorations/drillIntoSupernode.svg",
                   "outline": true,

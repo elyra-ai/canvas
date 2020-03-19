@@ -90,9 +90,9 @@ _defineConstant("HIGHLIGHT_STROKE", "#152935");
 _defineConstant("HIGHLIGHT_STROKE_WIDTH", "3px");
 
 _defineConstant("PALETTE", {
-	OPEN_WIDTH: 250,
+	OPEN_WIDTH: 256,
 	CLOSED_WIDTH: 0,
-	NARROW_WIDTH: 64
+	NARROW_WIDTH: 72
 });
 
 _defineConstant("BINDING", "binding");
