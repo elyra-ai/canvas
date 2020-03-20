@@ -18,7 +18,9 @@ export default (state = {}, action) => {
 		return Object.assign({}, action.data);
 
 	case "ADD_NODE_TYPES_TO_PALETTE":
-	case "REMOVE_NODE_TYPES_FROM_PALETTE": {
+	case "REMOVE_NODE_TYPES_FROM_PALETTE":
+	case "SET_CATEGORY_LOADING_TEXT":
+	case "SET_CATEGORY_EMPTY_TEXT": {
 		return Object.assign({}, state, { categories: categories(state.categories, action) });
 	}
 	default:

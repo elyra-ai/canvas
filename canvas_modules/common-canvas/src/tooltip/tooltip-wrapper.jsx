@@ -55,19 +55,16 @@ export default class TooltipWrapper extends React.Component {
 		} else {
 			switch (this.props.type) {
 			case TIP_TYPE_PALETTE_ITEM:
-				{
-					const category = this.props.canvasController.getObjectModel().getCategoryForNode(this.props.nodeTemplate.op);
-					content = (
-						<div className="tip-palette-item">
-							<div className="tip-palette-category">{category.label}</div>
-							<div className="tip-palette-label">{this.props.nodeTemplate.app_data.ui_data.label}</div>
-							{this.props.nodeTemplate.app_data.ui_data.description
-								? (<div className="tip-palette-desc">{this.props.nodeTemplate.app_data.ui_data.description}</div>)
-								: ("")
-							}
-						</div>
-					);
-				}
+				content = (
+					<div className="tip-palette-item">
+						<div className="tip-palette-category">{this.props.category.label}</div>
+						<div className="tip-palette-label">{this.props.nodeTemplate.app_data.ui_data.label}</div>
+						{this.props.nodeTemplate.app_data.ui_data.description
+							? (<div className="tip-palette-desc">{this.props.nodeTemplate.app_data.ui_data.description}</div>)
+							: ("")
+						}
+					</div>
+				);
 				break;
 			case TIP_TYPE_PALETTE_CATEGORY:
 				content = (

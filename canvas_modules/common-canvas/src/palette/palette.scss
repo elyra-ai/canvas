@@ -96,6 +96,10 @@ $palette-border-color: $ui-03;
 	user-select: none;
 }
 
+.palette-flyout-category-item-loading {
+	margin-left: 16px;
+}
+
 .palette-flyout-category-item-icon {
 	width: 20px;  /* Not specifying height preserves the image's aspect ratio. */
 	margin-left: 16px;
@@ -117,6 +121,18 @@ $palette-border-color: $ui-03;
 	white-space: nowrap;
 	margin-left: 16px;
 	width: 135px; // We need to allow enough space for search numbers to appear eg "(12)"
+}
+
+.palette-flyout-category-text-abbr {
+	line-height: 46px;  /* Must be same as containing div height */
+	margin-left: 16px;
+	width: 35px;
+}
+
+.palette-flyout-category-text-no-image {
+	line-height: 46px;  /* Must be same as containing div height */
+	margin-left: 16px;
+	width: 170px;
 }
 
 .palette-flyout-category-count {
@@ -319,6 +335,16 @@ $palette-border-color: $ui-03;
 	height: 64px;
 }
 
+.palette-grid-node-icon-warning {
+	transform: scale(4);
+	margin-top: 25px;
+}
+
+.palette-grid-node-text-warning {
+	width: 100%;
+	padding-top: 30px;
+}
+
 .palette-grid-node-text {
 	width: 100%;
 	padding-top: 6px;
@@ -349,6 +375,10 @@ $palette-border-color: $ui-03;
 	margin-left: 20px;
 }
 
+.palette-list-item-icon-warning {
+	transform: scale(1.5);
+	margin-left: 25px;
+}
 
 .palette-list-item-text-span {
 	line-height: 46px;  /* Must be same as containing div height */

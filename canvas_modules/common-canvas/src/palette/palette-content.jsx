@@ -35,7 +35,7 @@ class PaletteContent extends React.Component {
 
 		this.categorySelected = this.categorySelected.bind(this);
 		this.getCategories = this.getCategories.bind(this);
-		this.getJSONForSelectedCategory = this.getJSONForSelectedCategory.bind(this);
+		this.getSelectedCategory = this.getSelectedCategory.bind(this);
 	}
 
 	getCategories(categories) {
@@ -51,13 +51,13 @@ class PaletteContent extends React.Component {
 		return out;
 	}
 
-	getJSONForSelectedCategory(categories) {
-		var out = [];
+	getSelectedCategory(categories) {
+		var out = null;
 
 		if (categories) {
 			for (var idx = 0; idx < categories.length; idx++) {
 				if (categories[idx].label === this.state.selectedCategory) {
-					out = categories[idx].node_types;
+					out = categories[idx];
 				}
 			}
 		}
@@ -69,9 +69,10 @@ class PaletteContent extends React.Component {
 	}
 
 	render() {
+		const cats = this.getCategories(this.props.paletteJSON.categories);
 
-		var cats = this.getCategories(this.props.paletteJSON.categories);
-		var categoryJSON = this.getJSONForSelectedCategory(this.props.paletteJSON.categories);
+		const category = this.getSelectedCategory(this.props.paletteJSON.categories);
+		const nodeTypes = category ? category.node_types : [];
 
 		return (
 			<div className="palette-content" ref="palettecontent">
@@ -80,11 +81,13 @@ class PaletteContent extends React.Component {
 					categorySelectedMethod={this.categorySelected}
 				/>
 				<PaletteContentGrid show={this.props.showGrid}
-					categoryJSON={categoryJSON}
+					category={category}
+					nodeTypes={nodeTypes}
 					canvasController={this.props.canvasController}
 				/>
 				<PaletteContentList show={!this.props.showGrid}
-					categoryJSON={categoryJSON}
+					category={category}
+					nodeTypes={nodeTypes}
 					canvasController={this.props.canvasController}
 					isPaletteOpen
 				/>

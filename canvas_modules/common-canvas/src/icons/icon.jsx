@@ -28,6 +28,7 @@ import { WarningFilled16, ErrorFilled16, CheckmarkFilled16, InformationFilled16,
 	AddAlt16,
 	Settings16,
 	Search16,
+	Warning16,
 	Edit16,
 	StopFilledAlt16, Play16, Undo16, Redo16, Cut16, Copy16, Paste16, AddComment16, Delete16,
 	ZoomIn16, ZoomOut16,
@@ -92,6 +93,8 @@ export default class Icon extends React.Component {
 			return <OverflowMenuVertical16 className={className} disabled={this.props.disabled} />;
 		case (CANVAS_CARBON_ICONS.SEARCH):
 			return <Search16 className={className} disabled={this.props.disabled} />;
+		case (CANVAS_CARBON_ICONS.WARNING_UNFILLED):
+			return <Warning16 className={className} disabled={this.props.disabled} />;
 
 		case (CONTEXT_MENU_CARBON_ICONS.CHEVRONARROWS.RIGHT):
 			return <ChevronRight16 className={className} disabled={this.props.disabled} />;

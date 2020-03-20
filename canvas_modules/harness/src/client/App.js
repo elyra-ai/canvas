@@ -53,6 +53,8 @@ import RandomEffectsPanel from "./components/custom-panels/RandomEffectsPanel";
 import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
 import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel";
 
+import ModelerFlowsNewDesignPalette from "./components/custom-canvases/modeler-flows/modelerFlowsNewDesignPalette";
+
 import CustomOpMax from "./custom/condition-ops/customMax";
 import CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
@@ -622,6 +624,11 @@ export default class App extends React.Component {
 
 	setPaletteJSON(paletteJson) {
 		this.canvasController.setPipelineFlowPalette(paletteJson);
+
+		if (this.state.selectedPaletteDropdownFile === "loadingPalette.json") {
+			this.activateLoadingCanvas();
+		}
+
 		this.log("Palette set");
 	}
 
@@ -1523,6 +1530,20 @@ export default class App extends React.Component {
 
 
 		this.log("propertyActionHandler() " + actionId);
+	}
+
+	activateLoadingCanvas() {
+		this.canvasController.setCategoryLoadingText("recordOp", "Loading record ops");
+		this.canvasController.setCategoryLoadingText("fieldOp", "Loading field ops");
+		this.canvasController.setCategoryLoadingText("graph", "Loading graphs");
+		this.canvasController.setCategoryLoadingText("modeling", "Loading modeling");
+		this.canvasController.setCategoryLoadingText("TextMining", "Loading text mining");
+		this.canvasController.setCategoryLoadingText("output", "Loading outputs");
+		this.canvasController.setCategoryLoadingText("export", "Loading exports");
+		this.canvasController.setCategoryLoadingText("models", "Loading models");
+		setTimeout(() => {
+			this.canvasController.setPipelineFlowPalette(ModelerFlowsNewDesignPalette);
+		}, 5000);
 	}
 
 	runProgress() {

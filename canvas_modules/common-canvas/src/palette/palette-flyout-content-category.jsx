@@ -9,6 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import InlineLoading from "carbon-components-react/lib/components/InlineLoading";
 import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
 import { TIP_TYPE_PALETTE_CATEGORY, CANVAS_CARBON_ICONS } from "../common-canvas/constants/canvas-constants.js";
@@ -41,25 +42,45 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 		// With narrow palette, if there's no image just display first 3 letters
 		} else if (!this.props.category.image &&
-					this.props.category.label &&
-					this.props.category.label.length > 0) {
+								this.props.category.label &&
+								this.props.category.label.length > 0) {
 			return this.props.category.label.substr(0, 3);
 		}
 		return null;
 	}
 
-	categorySelected() {
-		this.props.categorySelectedMethod(this.props.category.id);
+	getInlineLoadingRenderCategory() {
+		let description = "";
+		if (this.props.isPaletteOpen) {
+			description = this.props.category.loading_text;
+		}
+
+		const content = (
+			<div className="palette-flyout-category">
+				<div className="palette-flyout-category-item-loading">
+					<InlineLoading
+						description={ description }
+						iconDescription={ description }
+						onSuccess={function noRefCheck() {
+							return null;
+						}}
+						status="active"
+						successDelay={1500}
+					/>
+				</div>
+			</div>
+		);
+		return content;
 	}
 
-	render() {
+	getRenderCategory() {
 		let caretClassName = "palette-flyout-category-caret";
 		if (!this.props.isPaletteOpen) {
 			caretClassName += " palette-flyout-category-caret-closed"; // When palette is closed extra style
 		}
 
 		let caretImage = null;
-		if (this.props.itemCount > 0) {
+		if (this.props.itemCount > 0 || this.props.category.empty_text) {
 			caretImage = <Icon type={CANVAS_CARBON_ICONS.CHEVRONARROWS.DOWN} className={caretClassName} />;
 			if (this.props.selectedCategoryId === this.props.category.id) {
 				caretImage = <Icon type={CANVAS_CARBON_ICONS.CHEVRONARROWS.UP} className={caretClassName} />;
@@ -83,16 +104,26 @@ class PaletteFlyoutContentCategory extends React.Component {
 			}
 		}
 
-		const label = this.getDisplayLabel();
 		let itemText = null;
-		if (label) {
+		const label = this.getDisplayLabel();
+		if (this.props.isPaletteOpen === true) {
+			const className = this.props.category.image ? "palette-flyout-category-text" : "palette-flyout-category-text-no-image";
 			itemText = (
-				<span className="palette-flyout-category-text">
+				<span className={className}>
+					{label}
+				</span>
+			);
+
+		// With narrow palette, if there's no image just display first 3 letters
+		} else if (!this.props.category.image &&
+								this.props.category.label &&
+								this.props.category.label.length > 0) {
+			itemText = (
+				<span className="palette-flyout-category-text-abbr">
 					{label}
 				</span>
 			);
 		}
-
 
 		var itemCount = null;
 		if (this.props.isPaletteOpen && this.props.itemsFiltered && this.props.itemCount > 0) {
@@ -103,7 +134,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 			);
 		}
 
-		var content = (
+		const content = (
 			<div className="palette-flyout-category"
 				onClick={this.categorySelected}
 				value={this.props.category.label}
@@ -118,6 +149,20 @@ class PaletteFlyoutContentCategory extends React.Component {
 				{caretImage}
 			</div>
 		);
+		return content;
+	}
+
+	categorySelected() {
+		this.props.categorySelectedMethod(this.props.category.id);
+	}
+
+	render() {
+		let content = null;
+		if (this.props.category.loading_text) {
+			content = this.getInlineLoadingRenderCategory();
+		} else {
+			content = this.getRenderCategory();
+		}
 
 		return content;
 	}

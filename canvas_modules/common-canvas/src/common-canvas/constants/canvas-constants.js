@@ -112,7 +112,8 @@ _defineConstant("CANVAS_CARBON_ICONS", {
 		DOWN: "chevron-down"
 	},
 	OVERFLOWMENU: "overflow-menu",
-	SEARCH: "search"
+	SEARCH: "search",
+	WARNING_UNFILLED: "warning16"
 });
 
 _defineConstant("CONTEXT_MENU_CARBON_ICONS", {

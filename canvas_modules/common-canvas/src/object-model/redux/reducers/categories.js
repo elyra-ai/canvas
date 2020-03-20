@@ -53,6 +53,24 @@ export default (state = [], action) => {
 		});
 	}
 
+	case "SET_CATEGORY_LOADING_TEXT": {
+		return state.map((category) => {
+			if (category.id === action.data.categoryId) {
+				return Object.assign({}, category, { loading_text: action.data.loadingText });
+			}
+			return category;
+		});
+	}
+
+	case "SET_CATEGORY_EMPTY_TEXT": {
+		return state.map((category) => {
+			if (category.id === action.data.categoryId) {
+				return Object.assign({}, category, { empty_text: action.data.emptyText });
+			}
+			return category;
+		});
+	}
+
 	default:
 		return state;
 	}

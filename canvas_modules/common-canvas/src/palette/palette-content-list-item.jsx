@@ -10,8 +10,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import has from "lodash/has";
+import Icon from "../icons/icon.jsx";
 // import SVG from "react-inlinesvg";
-import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../common-canvas/constants/canvas-constants.js";
+import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../common-canvas/constants/canvas-constants.js";
 
 class PaletteContentListItem extends React.Component {
 	constructor(props) {
@@ -45,11 +46,16 @@ class PaletteContentListItem extends React.Component {
 
 	onMouseOver(ev) {
 		if (ev.button === 0) {
+			const nodeTemplate = this.props.category.empty_text
+				? { app_data: { ui_data: { label: this.props.category.empty_text } } }
+				: this.props.nodeTemplate;
+
 			this.props.canvasController.openTip({
 				id: "paletteTip_" + this.props.nodeTemplate.op,
 				type: TIP_TYPE_PALETTE_ITEM,
 				targetObj: ev.currentTarget,
-				nodeTemplate: this.props.nodeTemplate
+				nodeTemplate: nodeTemplate,
+				category: this.props.category
 			});
 		}
 	}
@@ -64,17 +70,12 @@ class PaletteContentListItem extends React.Component {
 
 	render() {
 		let itemText = null;
+		let draggable = "true";
 		let icon = <div className="palette-list-item-icon" />;
 
 		if (this.props.isPaletteOpen &&
 				has(this.props.nodeTemplate, "app_data.ui_data.label")) {
-			itemText = (
-				<div className="palette-list-item-text-div">
-					<span className="palette-list-item-text-span">
-						{this.props.nodeTemplate.app_data.ui_data.label}
-					</span>
-				</div>
-			);
+			itemText = this.props.nodeTemplate.app_data.ui_data.label;
 		}
 
 		if (has(this.props.nodeTemplate, "app_data.ui_data.image")) {
@@ -90,9 +91,19 @@ class PaletteContentListItem extends React.Component {
 			// }
 		}
 
+		// Special case for when there are no nodes in the category so we show
+		// a dummy node to include the empty text from the category.
+		if (this.props.category.node_types.length === 0 && this.props.category.empty_text) {
+			if (this.props.isPaletteOpen) {
+				itemText = this.props.category.empty_text;
+			}
+			draggable = "false";
+			icon = (<Icon type={CANVAS_CARBON_ICONS.WARNING_UNFILLED} className="palette-list-item-icon-warning" draggable="false" />);
+		}
+
 		return (
 			<div id={this.props.nodeTemplate.id}
-				draggable="true"
+				draggable={draggable}
 				onDragStart={this.onDragStart}
 				onDoubleClick={this.onDoubleClick}
 				className="palette-list-item"
@@ -102,13 +113,18 @@ class PaletteContentListItem extends React.Component {
 				<div>
 					{icon}
 				</div>
-				{itemText}
+				<div className="palette-list-item-text-div">
+					<span className="palette-list-item-text-span">
+						{itemText}
+					</span>
+				</div>
 			</div>
 		);
 	}
 }
 
 PaletteContentListItem.propTypes = {
+	category: PropTypes.object.isRequired,
 	nodeTemplate: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired

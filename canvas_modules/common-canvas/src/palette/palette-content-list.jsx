@@ -22,18 +22,32 @@ class PaletteContentList extends React.Component {
 	render() {
 		var contentItems = [];
 
-		for (var idx = 0; idx < this.props.categoryJSON.length; idx++) {
-			var itemKey = "item_" + idx;
-
+		if (this.props.category && this.props.category.node_types.length === 0 && this.props.category.empty_text) {
 			contentItems.push(
-				<div key={itemKey}>
+				<div key={"item_empty"}>
 					<PaletteContentListItem
-						nodeTemplate={this.props.categoryJSON[idx]}
+						category={this.props.category}
+						nodeTemplate={ {} }
 						canvasController={this.props.canvasController}
 						isPaletteOpen={this.props.isPaletteOpen}
 					/>
 				</div>
 			);
+		} else {
+			for (var idx = 0; idx < this.props.nodeTypes.length; idx++) {
+				var itemKey = "item_" + idx;
+
+				contentItems.push(
+					<div key={itemKey}>
+						<PaletteContentListItem
+							category={this.props.category}
+							nodeTemplate={this.props.nodeTypes[idx]}
+							canvasController={this.props.canvasController}
+							isPaletteOpen={this.props.isPaletteOpen}
+						/>
+					</div>
+				);
+			}
 		}
 
 		const style = {};
@@ -49,7 +63,8 @@ class PaletteContentList extends React.Component {
 }
 
 PaletteContentList.propTypes = {
-	categoryJSON: PropTypes.array.isRequired,
+	category: PropTypes.object.isRequired,
+	nodeTypes: PropTypes.array.isRequired,
 	show: PropTypes.bool.isRequired,
 	style: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,

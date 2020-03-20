@@ -333,6 +333,21 @@ export default class CanvasController {
 		this.objectModel.clearPaletteData();
 	}
 
+	// Sets the loading text of the category. If set to a non-empty string the
+	// category will show an InlineLoading control in the palette category div
+	// with this text as the label. If set to falsey the palette category
+	// will display as normal.
+	setCategoryLoadingText(categoryId, loadingText) {
+		this.objectModel.setCategoryLoadingText(categoryId, loadingText);
+	}
+
+	// Sets the empty text of the category. If set to a non-empty string and the
+	// category does not have any nodes the palette will show a dummy node with
+	// this text as the displayed text. If set to falsey no dummy node will be displayed.
+	setCategoryEmptyText(categoryId, emptyText) {
+		this.objectModel.setCategoryEmptyText(categoryId, emptyText);
+	}
+
 	// Adds a new node into the palette:
 	// nodeTypeObj - must conform to the style of node used by the palette as
 	// described in the palette schema. See objects in nodeTypes array in the

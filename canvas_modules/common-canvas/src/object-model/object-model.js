@@ -130,6 +130,14 @@ export default class ObjectModel {
 		return this.store.getState().palette;
 	}
 
+	setCategoryLoadingText(categoryId, loadingText) {
+		this.store.dispatch({ type: "SET_CATEGORY_LOADING_TEXT", data: { categoryId: categoryId, loadingText: loadingText } });
+	}
+
+	setCategoryEmptyText(categoryId, emptyText) {
+		this.store.dispatch({ type: "SET_CATEGORY_EMPTY_TEXT", data: { categoryId: categoryId, emptyText: emptyText } });
+	}
+
 	addNodeTypeToPalette(nodeTypeObj, categoryId, categoryLabel, categoryDescription, categoryImage) {
 		this.addNodeTypesToPalette([nodeTypeObj], categoryId, categoryLabel, categoryDescription, categoryImage);
 	}

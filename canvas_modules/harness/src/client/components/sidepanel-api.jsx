@@ -35,7 +35,7 @@ import {
 } from "../constants/constants.js";
 
 const defaultNodeType = {
-	"id": "",
+	"id": "custop",
 	"op": "customOp",
 	"type": "binding",
 	"app_data": {
@@ -58,21 +58,7 @@ const defaultNodeType = {
 				}
 			}
 		}
-	],
-	"outputs": [
-		{
-			"id": "outPort",
-			"app_data": {
-				"ui_data": {
-					"label": "Output Port",
-					"cardinality": {
-						"min": 0,
-						"max": -1
-					}
-				}
-			}
-		}
-	],
+	]
 };
 
 export default class SidePanelAPI extends React.Component {

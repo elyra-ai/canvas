@@ -99,20 +99,26 @@ class PaletteFlyoutContent extends React.Component {
 			if (idx === categories.length - 1) {
 				style = { "borderBottom": "none" };
 			}
-			var content = null;
+
+			let filteredNodeTypes = null;
+
 			const nodeTypes = this.getNodeTypesForCategory(this.props.paletteJSON.categories, category.id);
-			const filteredNodeTypes = this.filterNodeTypes(nodeTypes);
-			if (this.state.selectedCategoryId === category.id && filteredNodeTypes.length > 0) {
+			filteredNodeTypes = this.filterNodeTypes(nodeTypes);
+
+			let content = null;
+			if (this.state.selectedCategoryId === category.id) {
 				content = (
 					<PaletteContentList
 						style={style}
 						show
 						key={category.label + "-nodes"}
-						categoryJSON={filteredNodeTypes}
+						category={category}
+						nodeTypes={filteredNodeTypes}
 						canvasController={this.props.canvasController}
 						isPaletteOpen={this.props.isPaletteOpen}
 					/>);
 			}
+
 			var itemsFiltered = false;
 			if (this.state.filterKeyword) {
 				itemsFiltered = true;

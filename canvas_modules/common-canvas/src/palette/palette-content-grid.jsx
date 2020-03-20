@@ -23,13 +23,24 @@ class PaletteContentGrid extends React.Component {
 	render() {
 		var gridNodes = [];
 
-		for (var idx = 0; idx < this.props.categoryJSON.length; idx++) {
+		if (this.props.category && this.props.category.node_types.length === 0 && this.props.category.empty_text) {
 			gridNodes.push(
-				<PaletteContentGridNode key={"pal_grid_node_" + idx}
-					nodeTemplate={this.props.categoryJSON[idx]}
+				<PaletteContentGridNode key={"pal_grid_node_empty"}
+					category={this.props.category}
+					nodeTemplate={ {} }
 					canvasController={this.props.canvasController}
 				/>
 			);
+		} else {
+			for (var idx = 0; idx < this.props.nodeTypes.length; idx++) {
+				gridNodes.push(
+					<PaletteContentGridNode key={"pal_grid_node_" + idx}
+						category={this.props.category}
+						nodeTemplate={this.props.nodeTypes[idx]}
+						canvasController={this.props.canvasController}
+					/>
+				);
+			}
 		}
 
 		const displayValue = this.props.show ? "block" : "none";
@@ -45,7 +56,8 @@ class PaletteContentGrid extends React.Component {
 }
 
 PaletteContentGrid.propTypes = {
-	categoryJSON: PropTypes.array.isRequired,
+	category: PropTypes.object.isRequired,
+	nodeTypes: PropTypes.array.isRequired,
 	show: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired
 };

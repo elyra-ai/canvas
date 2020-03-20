@@ -10,10 +10,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import has from "lodash/has";
+import Icon from "../icons/icon.jsx";
 // import SVG from "react-inlinesvg";
-import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../common-canvas/constants/canvas-constants.js";
+import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../common-canvas/constants/canvas-constants.js";
 
-class PaletteContentNode extends React.Component {
+class PaletteContentGridNode extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -45,11 +46,16 @@ class PaletteContentNode extends React.Component {
 
 	onMouseOver(ev) {
 		if (ev.button === 0) {
+			const nodeTemplate = this.props.category.empty_text
+				? { app_data: { ui_data: { label: this.props.category.empty_text } } }
+				: this.props.nodeTemplate;
+
 			this.props.canvasController.openTip({
 				id: "paletteTip_" + this.props.nodeTemplate.op,
 				type: TIP_TYPE_PALETTE_ITEM,
 				targetObj: ev.currentTarget,
-				nodeTemplate: this.props.nodeTemplate
+				nodeTemplate: nodeTemplate,
+				category: this.props.category
 			});
 		}
 	}
@@ -59,8 +65,13 @@ class PaletteContentNode extends React.Component {
 	}
 
 	render() {
-		let icon = <div className="node-icon" />;
 		let label = "";
+		if (has(this.props.nodeTemplate, "app_data.ui_data.label")) {
+			label = this.props.nodeTemplate.app_data.ui_data.label;
+		}
+
+		let icon = <div className="node-icon" />;
+
 		if (has(this.props.nodeTemplate, "app_data.ui_data.image")) {
 			const image = this.props.nodeTemplate.app_data.ui_data.image;
 			icon = (<img className="node-icon" src={image}
@@ -74,13 +85,22 @@ class PaletteContentNode extends React.Component {
 			// 	icon = <SVG src={image} className="node-icon" alt={label} />;
 			// }
 		}
-		if (has(this.props.nodeTemplate, "app_data.ui_data.label")) {
-			label = this.props.nodeTemplate.app_data.ui_data.label;
+
+		let draggable = "true";
+		let txtClassName = "palette-grid-node-text";
+
+		// Special case for when there are no nodes in the category so we show
+		// a dummy node to include the empty text from the category.
+		if (this.props.category && this.props.category.node_types.length === 0 && this.props.category.empty_text) {
+			label = this.props.category.empty_text;
+			draggable = "false";
+			txtClassName = "palette-grid-node-text-warning";
+			icon = (<Icon type={CANVAS_CARBON_ICONS.WARNING_UNFILLED} className="palette-grid-node-icon-warning" draggable="false" />);
 		}
 
 		return (
 			<div id={this.props.nodeTemplate.id}
-				draggable="true"
+				draggable={draggable}
 				onDragStart={this.onDragStart}
 				onDoubleClick={this.onDoubleClick}
 				onMouseOver={this.onMouseOver}
@@ -91,7 +111,7 @@ class PaletteContentNode extends React.Component {
 					<div className="palette-grid-node-icon">
 						{icon}
 					</div>
-					<div className="palette-grid-node-text">
+					<div className={ txtClassName }>
 						{label}
 					</div>
 				</div>
@@ -100,9 +120,10 @@ class PaletteContentNode extends React.Component {
 	}
 }
 
-PaletteContentNode.propTypes = {
+PaletteContentGridNode.propTypes = {
+	category: PropTypes.object.isRequired,
 	nodeTemplate: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired
 };
 
-export default PaletteContentNode;
+export default PaletteContentGridNode;
