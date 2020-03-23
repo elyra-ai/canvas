@@ -42,12 +42,19 @@
 	}
 
 	/* Makes the port decorations (blue with the white cross) be hidden by default */
-	.ai-node-port {
-		display: none;
-	}
+	.d3-node-group {
+		.ai-node-port {
+			opacity: 0;
 
-	/* Makes the port decorations (blue with the white cross) images appear on hover */
-	path[hover="yes"] ~ .ai-node-port {
-		display: inline;
+			/* Makes the port decorations (blue with the white cross) images appear on hover */
+			&:hover {
+				opacity: 100;
+			}
+		}
+
+		/* Makes the port decorations (blue with the white cross) images appear on hover */
+		&:hover .ai-node-port {
+			opacity: 100;
+		}
 	}
 }
