@@ -7,20 +7,19 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-// -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+// Global scope - extraCanvas
+document.extraCanvas = false;
+
+Cypress.Commands.add("inExtraCanvas", () => {
+	document.extraCanvas = true;
+});
+
+Cypress.Commands.add("inRegularCanvas", () => {
+	document.extraCanvas = false;
+});
+
+// `cy.log()` command's output can be seen on the screen along with test steps
+Cypress.Commands.overwrite("log", (subject, message) => cy.task("log", message));
 
 Cypress.Commands.add("openCanvasDefinition", (canvasFileName) => {
 	cy.get("#harness-action-bar-sidepanel-canvas").click();
@@ -30,4 +29,10 @@ Cypress.Commands.add("openCanvasDefinition", (canvasFileName) => {
 	// are executed. Note: this won't work if the testcase selects a second
 	// canvas while an existing canvas with nodes is displayed.
 	cy.get(".d3-node-group");
+});
+
+Cypress.Commands.add("setCanvasConfig", (config) => {
+	cy.document().then((doc) => {
+		doc.setCanvasConfig(config);
+	});
 });

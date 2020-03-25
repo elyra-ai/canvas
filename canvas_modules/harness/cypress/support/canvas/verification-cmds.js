@@ -7,13 +7,12 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import "./properties/properties-cmds";
-import "./canvas/node-cmds";
-import "./canvas/test-harness-cmds";
-import "./canvas/toolbar-cmds";
-import "./canvas/verification-cmds";
+Cypress.Commands.add("verifyNodeTransform", (nodeLabel, transformValue) => {
+	cy.getNodeForLabel(nodeLabel)
+		.should("have.attr", "transform", transformValue);
+});
 
-// turn off screenshots when running in headless mode.
-Cypress.Screenshot.defaults({
-	screenshotOnRunFailure: false,
+Cypress.Commands.add("verifyNodeTransformInSubFlow", (nodeLabel, transformValue) => {
+	cy.getNodeForLabelInSubFlow(nodeLabel)
+		.should("have.attr", "transform", transformValue);
 });
