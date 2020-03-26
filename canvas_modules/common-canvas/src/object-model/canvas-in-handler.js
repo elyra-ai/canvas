@@ -158,7 +158,9 @@ export default class CanvasInHandler {
 			image: decoration.image,
 			outline: decoration.outline,
 			x_pos: decoration.x_pos,
-			y_pos: decoration.y_pos
+			y_pos: decoration.y_pos,
+			width: decoration.width,
+			height: decoration.height
 		}));
 	}
 
