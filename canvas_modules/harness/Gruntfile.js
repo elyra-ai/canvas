@@ -75,8 +75,8 @@ module.exports = function(grunt) {
 				files: [{
 					expand: true,
 					flatten: true,
-					cwd: "./node_modules/@wdpx/themes",
-					src: ["fonts/woff/*"],
+					cwd: "./node_modules/@ibm/plex",
+					src: ["IBM-Plex*"],
 					dest: ".build/fonts"
 				}]
 			},

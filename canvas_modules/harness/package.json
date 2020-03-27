@@ -26,8 +26,8 @@
   "devDependencies": {
     "@elyra/canvas": "file:../common-canvas",
     "@carbon/icons-react": "10.8.2",
-    "@wdp/common-canvas": "file:../common-canvas",
-    "@wdpx/themes": "1.1.9",
+    "@carbon/themes": "10.10.2",
+    "@ibm/plex": "4.0.2",
     "autoprefixer": "7.1.2",
     "babel-core": "6.26.3",
     "babel-loader": "7.1.2",

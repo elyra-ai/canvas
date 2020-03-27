@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-$font-path: "/fonts";
+$font-prefix: "/fonts";
+@import "@ibm/plex/scss/ibm-plex.scss";
 
-// @import "@wdpx/themes/scss/cloud/_theme.scss";
-@import "@wdpx/themes/scss/carbon10_gray10/_theme";
-// @import "@wdpx/themes/scss/dark/_theme.scss";
+@import "@carbon/themes/scss/themes";
+// Use the gray 10 theme
+$carbon--theme: $carbon--theme--g10;
+// $carbon--theme: $carbon--theme--g90;
+@include carbon--theme;
 @import "carbon-components/scss/globals/scss/styles";
-@import "@wdp/common-canvas/src/index.scss";
+
+@import "@elyra/canvas/src/index.scss";
 
 @import "../client/components/custom-canvases/auto-ai/auto-ai.scss";
 @import "../client/components/custom-canvases/blue-ellipses/blue-ellipses.scss";
