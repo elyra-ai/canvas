@@ -193,7 +193,7 @@ module.exports = function() {
 		expect(tipLabel).toEqual(nodeType);
 	});
 
-	this.Then(/^I verify the "([^"]*)" node in the category has a "([^"]*)" of ([-+]?[0-9]*\.?[0-9]+) pixels$/, function(nodeType, dimension, size) {
+	this.Then(/^I verify the "([^"]*)" node image has a "([^"]*)" of ([-+]?[0-9]*\.?[0-9]+) pixels$/, function(nodeType, dimension, size) {
 		const nodeIndex = findNodeIndexInPalette(nodeType);
 		const dim = browser.$$(".palette-list-item-icon")[nodeIndex].getCssProperty(dimension);
 		expect(dim.value).toEqual(size + "px");
