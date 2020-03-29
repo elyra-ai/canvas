@@ -98,7 +98,8 @@ export default class CanvasController {
 		this.contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: false,
 			defaultMenuEntries: {
-				saveToPalette: false
+				saveToPalette: false,
+				createSupernode: true
 			}
 		};
 
@@ -1560,9 +1561,10 @@ export default class CanvasController {
 		}
 		// Create supernode
 		if (source.type === "node" || source.type === "comment") {
-			if ((has(this, "contextMenuConfig.enableCreateSupernodeNonContiguous") &&
-					this.contextMenuConfig.enableCreateSupernodeNonContiguous) ||
-					this.areSelectedNodesContiguous()) {
+			if (this.isCreateSupernodeCMOptionRequired() &&
+					((has(this, "contextMenuConfig.enableCreateSupernodeNonContiguous") &&
+						this.contextMenuConfig.enableCreateSupernodeNonContiguous) ||
+						this.areSelectedNodesContiguous())) {
 				menuDefinition = menuDefinition.concat([{ action: "createSuperNode", label: this.getLabel("node.createSupernode") }]);
 				menuDefinition = menuDefinition.concat([{ divider: true }]);
 			}
@@ -1602,6 +1604,18 @@ export default class CanvasController {
 				{ action: "saveToPalette", label: this.getLabel("node.saveToPalette") });
 		}
 		return (menuDefinition);
+	}
+
+	// Returns whether the 'Create Supernode' context menu option is required or
+	// not. The default is true.
+	isCreateSupernodeCMOptionRequired() {
+		let required = true;
+		if (has(this, "contextMenuConfig.defaultMenuEntries.createSupernode") &&
+				this.contextMenuConfig.defaultMenuEntries.createSupernode === false) {
+			required = false;
+		}
+
+		return required;
 	}
 
 	contextMenuHandler(source) {
