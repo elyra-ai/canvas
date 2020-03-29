@@ -1802,7 +1802,8 @@ export default class App extends React.Component {
 		const contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: this.state.enableCreateSupernodeNonContiguous,
 			defaultMenuEntries: {
-				saveToPalette: this.state.enableSaveToPalette
+				saveToPalette: this.state.enableSaveToPalette,
+				createSupernode: true
 			}
 		};
 
