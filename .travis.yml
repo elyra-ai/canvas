@@ -33,3 +33,19 @@ script:
   - ./canvas_modules/harness/build.sh || travis_terminate 1;
   - ./canvas_modules/harness/functional_test.sh || travis_terminate 1;
   #- ./scripts/source_scan.sh || travis_terminate 1;
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: ./scripts/tagBuild.sh master last_success
+    on:
+      branch: mhoward-release-builds
+  - provider: script
+    skip_cleanup: true
+    script: ./scripts/create_release.sh
+    on:
+      branch: master
+  - provider: script
+    skip_cleanup: true
+    script: ./scripts/publish_modules.sh
+    on:
+      branch: release
