@@ -18,10 +18,7 @@
 
 set -e
 
-BRANCH="$1"
-TAG="$2"
-
-TAG_NAME=$BRANCH-$TAG
+TAG_NAME="$1"
 
 echo "Setting github tag $TAG_NAME"
 

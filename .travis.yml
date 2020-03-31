@@ -36,7 +36,7 @@ script:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ./scripts/tagBuild.sh master last_success
+    script: ./scripts/tagBuild.sh master-last_success
     on:
       branch: mhoward-release-branch
   - provider: script
