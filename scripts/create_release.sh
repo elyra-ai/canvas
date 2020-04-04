@@ -50,14 +50,14 @@ git config --global user.email "${GIT_USER_EMAIL}"
 echo "GIT user set as: Username: ${GIT_USER} # Email: ${GIT_USER_EMAIL}"
 
 echo "Clone canvas"
-git clone https://$GITHUB_TOKEN@github.com:${GIT_ORG}/${GIT_REPO} ${GIT_DIRECTORY}
+git clone https://$GITHUB_TOKEN@github.com:${GIT_ORG}:${GIT_REPO} ${GIT_DIRECTORY}
 
 cd $WORKING_DIR/$GIT_DIRECTORY
 git checkout ${RELEASE}
 if [[ $(git diff --name-status ${MASTER_TAG}..${RELEASE}) ]]; then
 	echo "Changes found between ${MASTER_TAG} and ${RELEASE}.  Merge branches."
 	git checkout ${MASTER_TAG}
-	git push https://$GITHUB_TOKEN@github.com/${GIT_ORG}/{GIT_REPO} HEAD:${RELEASE} --force
+	git push https://$GITHUB_TOKEN@github.com:${GIT_ORG}/{GIT_REPO} HEAD:${RELEASE} --force
 else
 	echo "No changes found between ${MASTER_TAG} and ${RELEASE}"
 	exit 0;

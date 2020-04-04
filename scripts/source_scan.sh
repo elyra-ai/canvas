@@ -42,7 +42,7 @@ if [[ ( "$TRAVIS_PULL_REQUEST" = "false" && "$TRAVIS_BRANCH" = "master" ) ]]; th
 	fi
 
 	#update scanner config
-	sed -e "s#.*sonar.host.url.*#sonar.host.url=http://9.30.122.209:9000/sonarqube/#" sonar-scanner-3.3.0.1492-linux/conf/sonar-scanner.properties > /tmp/foo
+	sed -e "s#.*sonar.host.url.*#sonar.host.url=http://hostname:9000/sonarqube/#" sonar-scanner-3.3.0.1492-linux/conf/sonar-scanner.properties > /tmp/foo
 	if [ ! $? -eq 0 ]; then
 	    echo "Error: Problem updating the file, sonar-scanner.properties"
 	    exit 1
