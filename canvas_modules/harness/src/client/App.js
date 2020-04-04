@@ -79,6 +79,7 @@ import {
 	VERTICAL_FORMAT,
 	NONE_SAVE_ZOOM,
 	CURVE_LINKS,
+	DIRECTION_LEFT_RIGHT,
 	ASSOC_STRAIGHT,
 	NO_LAYOUT,
 	MODELER_FLOWS_LAYOUT,
@@ -138,6 +139,7 @@ export default class App extends React.Component {
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
 			selectedLinkType: CURVE_LINKS,
+			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
 			selectedNodeLayout: NO_LAYOUT,
 			selectedPaletteLayout: FLYOUT,
@@ -244,6 +246,7 @@ export default class App extends React.Component {
 		this.setConnectionType = this.setConnectionType.bind(this);
 		this.setNodeFormatType = this.setNodeFormatType.bind(this);
 		this.setLinkType = this.setLinkType.bind(this);
+		this.setLinkDirection = this.setLinkDirection.bind(this);
 		this.setAssocLinkType = this.setAssocLinkType.bind(this);
 		this.setNodeLayout = this.setNodeLayout.bind(this);
 		this.setPaletteLayout = this.setPaletteLayout.bind(this);
@@ -694,6 +697,11 @@ export default class App extends React.Component {
 	setLinkType(selectedLinkType) {
 		this.setState({ selectedLinkType: selectedLinkType });
 		this.log("Link type selected", selectedLinkType);
+	}
+
+	setLinkDirection(selectedLinkDirection) {
+		this.setState({ selectedLinkDirection: selectedLinkDirection });
+		this.log("Link direction selected", selectedLinkDirection);
 	}
 
 	setAssocLinkType(selectedAssocLinkType) {
@@ -1740,6 +1748,7 @@ export default class App extends React.Component {
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
+			enableLinkDirection: this.state.selectedLinkDirection,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
 			enableParentClass: parentClass,
 			enableNodeLayout: null,
@@ -1758,7 +1767,10 @@ export default class App extends React.Component {
 			enableDropZoneOnExternalDrag: this.state.enableDropZoneOnExternalDrag,
 			// dropZoneCanvasContent: dropZoneCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
-			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows
+			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
+			// enableCanvasLayout: {
+			// 	dataLinkArrowHead: true
+			// }
 		};
 
 		const decorationActionHandler = this.decorationActionHandler;
@@ -2010,9 +2022,11 @@ export default class App extends React.Component {
 			setNodeFormatType: this.setNodeFormatType,
 			selectedNodeFormat: this.state.selectedNodeFormat,
 			setLinkType: this.setLinkType,
+			setLinkDirection: this.setLinkDirection,
 			setAssocLinkType: this.setAssocLinkType,
 			setNodeLayout: this.setNodeLayout,
 			selectedLinkType: this.state.selectedLinkType,
+			selectedLinkDirection: this.state.selectedLinkDirection,
 			selectedAssocLinkType: this.state.selectedAssocLinkType,
 			selectedNodeLayout: this.state.selectedNodeLayout,
 			selectedSaveZoom: this.state.selectedSaveZoom,

@@ -37,6 +37,15 @@ _defineConstant("DEFAULT_NOTIFICATION_HEADER", "Notifications");
 _defineConstant("MOUSE_INTERACTION", "Mouse");
 _defineConstant("TRACKPAD_INTERACTION", "Trackpad");
 
+_defineConstant("LINK_TYPE_CURVE", "Curve");
+_defineConstant("LINK_TYPE_ELBOW", "Elbow");
+_defineConstant("LINK_TYPE_STRAIGHT", "Straight");
+
+_defineConstant("LINK_DIR_LEFT_RIGHT", "LeftRight");
+_defineConstant("LINK_DIR_TOP_BOTTOM", "TopBottom");
+_defineConstant("LINK_DIR_BOTTOM_TOP", "BottomTop");
+
+
 // Values for enableAssocLinkType config parameter
 _defineConstant("ASSOC_RIGHT_SIDE_CURVE", "RightSideCurve");
 _defineConstant("ASSOC_STRAIGHT", "Straight");
@@ -52,11 +61,11 @@ _defineConstant("VERTICAL", "vertical");
 _defineConstant("PORT_OBJECT_IMAGE", "image");
 _defineConstant("PORT_OBJECT_CIRCLE", "circle");
 
-// Types of association link drawn states
-_defineConstant("CURVE_RIGHT", "curveRight");
-_defineConstant("CURVE_LEFT", "curveLeft");
-_defineConstant("DOUBLE_BACK_RIGHT", "doubleBackRight");
-_defineConstant("DOUBLE_BACK_LEFT", "doubleBackLeft");
+// Variations of association links - when enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE
+_defineConstant("ASSOC_VAR_CURVE_RIGHT", "curveRight");
+_defineConstant("ASSOC_VAR_CURVE_LEFT", "curveLeft");
+_defineConstant("ASSOC_VAR_DOUBLE_BACK_RIGHT", "doubleBackRight");
+_defineConstant("ASSOC_VAR_DOUBLE_BACK_LEFT", "doubleBackLeft");
 
 // The type of object to which deorations are to be attached.
 _defineConstant("DEC_NODE", "node");

@@ -37,6 +37,9 @@ $node-port-input-connected-fill-color: $light-blue;
 $node-port-input-arrow-connected-stroke-color: $dark-blue;
 $node-port-input-arrow-connected-fill-color: transparent;
 
+$node-port-input-connected-super-binding-stroke-color: $blue;
+$node-port-input-connected-super-binding-fill-color: $light-blue;
+
 .classic-halo {
 	.d3-node-body-outline {
 		stroke: transparent;
@@ -122,7 +125,7 @@ $node-port-input-arrow-connected-fill-color: transparent;
 	.d3-node-port-input[connected="yes"][isSupernodeBinding="yes"] {
 		stroke: $node-port-input-connected-super-binding-stroke-color;
 		fill: $node-port-input-connected-super-binding-fill-color;
-		stroke-width: 1;
+		stroke-width: 2;
 	}
 
 	.d3-node-port-input-arrow {
