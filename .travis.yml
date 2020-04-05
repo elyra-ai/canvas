@@ -38,12 +38,12 @@ deploy:
     skip_cleanup: true
     script: ./scripts/tagBuild.sh master-last_success
     on:
-      branch: mhoward-release-branch
+      branch: master
   - provider: script
     skip_cleanup: true
     script: ./scripts/create_release.sh
     on:
-      branch: mhoward-release-branch
+      branch: master
   - provider: script
     skip_cleanup: true
     script: ./scripts/publish_modules.sh

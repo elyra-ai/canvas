@@ -20,7 +20,7 @@ set -e
 
 WORKING_DIR="$PWD"
 RELEASE="release"
-MASTER="mhoward-release-branch"
+MASTER="master"
 SKIP_CI="[skip ci]"
 
 checkout_branch()
@@ -48,7 +48,7 @@ setup_git_branch()
 		git fetch
 }
 # Update package.json version on release and master if they are the same major and minor versions
-# if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
+if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 	# In Travis the build uses a branch.  Switch to release to update package.json
 	setup_git_branch
 	checkout_branch ${RELEASE}
@@ -87,4 +87,4 @@ setup_git_branch()
 	cd ./canvas_modules/common-canvas
 	npm publish
 	cd $WORKING_DIR
-#fi
+fi
