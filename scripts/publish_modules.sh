@@ -20,7 +20,7 @@ set -e
 
 WORKING_DIR="$PWD"
 RELEASE="release"
-MASTER="master"
+MASTER="mhoward-release-branch"
 SKIP_CI="[skip ci]"
 
 checkout_branch()
@@ -44,11 +44,11 @@ commit_changes()
 setup_git_branch()
 {
 		# needed since travis only clones a single branch
-		git config --replace-all remote.origin.fetch +refs/heads/master:refs/remotes/origin/master
+		git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 		git fetch
 }
 # Update package.json version on release and master if they are the same major and minor versions
-if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
+# if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 	# In Travis the build uses a branch.  Switch to release to update package.json
 	setup_git_branch
 	checkout_branch ${RELEASE}
@@ -62,7 +62,7 @@ if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 	commit_changes ${RELEASE} "Update version for common-canvas to version ${RELEASE_BUILD} ${SKIP_CI}"
 	# Tag release build
 	cd ./scripts
-	./tagBuild.sh ${RELEASE} ${RELEASE_BUILD}
+	./tagBuild.sh "${RELEASE}_${RELEASE_BUILD}"
 	cd $WORKING_DIR
 
 	checkout_branch ${MASTER}
@@ -87,4 +87,4 @@ if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 	cd ./canvas_modules/common-canvas
 	npm publish
 	cd $WORKING_DIR
-fi
+#fi
