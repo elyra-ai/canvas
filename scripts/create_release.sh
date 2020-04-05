@@ -57,7 +57,7 @@ git checkout ${RELEASE}
 if [[ $(git diff --name-status ${MASTER_TAG}..${RELEASE}) ]]; then
 	echo "Changes found between ${MASTER_TAG} and ${RELEASE}.  Merge branches."
 	git checkout ${MASTER_TAG}
-	git push https://$GITHUB_TOKEN@github.com/${GIT_ORG}/{GIT_REPO} HEAD:${RELEASE} --force
+	git push https://$GITHUB_TOKEN@github.com/${GIT_ORG}/${GIT_REPO} HEAD:${RELEASE} --force
 else
 	echo "No changes found between ${MASTER_TAG} and ${RELEASE}"
 	exit 0;
