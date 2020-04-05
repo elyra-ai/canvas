@@ -15,6 +15,10 @@
 #
 
 dist: xenial
+branches:
+  except:
+    - master-last_success
+    - /release-*/
 language: node_js
 node_js: "8"
 addons:
