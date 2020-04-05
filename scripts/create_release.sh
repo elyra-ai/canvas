@@ -47,6 +47,7 @@ GIT_USER_EMAIL="automated_user.com"
 
 git config --global user.name "${GIT_USER}"
 git config --global user.email "${GIT_USER_EMAIL}"
+git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 echo "GIT user set as: Username: ${GIT_USER} # Email: ${GIT_USER_EMAIL}"
 
 echo "Clone canvas"
