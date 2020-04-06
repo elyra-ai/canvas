@@ -50,7 +50,7 @@ git config --global user.email "${GIT_USER_EMAIL}"
 git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 echo "GIT user set as: Username: ${GIT_USER} # Email: ${GIT_USER_EMAIL}"
 
-echo "Clone canvas"
+echo "Clone canvas repo"
 git clone https://$GITHUB_TOKEN@github.com/${GIT_ORG}/${GIT_REPO} ${GIT_DIRECTORY}
 
 cd $WORKING_DIR/$GIT_DIRECTORY
