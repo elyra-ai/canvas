@@ -37,6 +37,8 @@ export default class ModelerFlowsCanvas extends React.Component {
 			},
 			enableNodeLayout: {
 				labelAndIconVerticalJustification: "none",
+				drawNodeLinkLineFromTo: "image_center",
+				drawCommentLinkLineTo: "image_center",
 				defaultNodeWidth: 72,
 				defaultNodeHeight: 72,
 				selectionPath: "M 8 0 L 64 0 64 56 8 56 8 0",
@@ -51,9 +53,10 @@ export default class ModelerFlowsCanvas extends React.Component {
 				labelPosX: 36,
 				labelPosY: 70,
 				portRadius: 10,
-				inputPortPosX: 0,
-				outputPortPosX: 0,
-				portPosY: 28,
+				inputPortLeftPosX: 0,
+				inputPortLeftPosY: 28,
+				outputPortRightPosX: 0,
+				outputPortRightPosY: 28,
 				outputPortObject: "image",
 				outputPortImage: "/images/modeler-flows/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,
@@ -64,7 +67,8 @@ export default class ModelerFlowsCanvas extends React.Component {
 			enableCanvasLayout: {
 				dataLinkArrowHead: true,
 				linkGap: 4,
-				alwaysDisplayBackToParentFlow: true
+				alwaysDisplayBackToParentFlow: true,
+				displayLinkOnOverlap: false
 			}
 		});
 		return config;
