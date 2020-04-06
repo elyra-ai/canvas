@@ -44,7 +44,7 @@ function findGrpForLabel(grpArray, nodeLabel) {
 Cypress.Commands.add("clickCategory", (nodeCategory) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
-		if (doc.canvasController.canvasConfig.enablePaletteLayout === "Modal") {
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
 			cy.get(".palette-categories > div").each((category) => {
 				if (category[0].outerText === nodeCategory) {
 					category.click();
@@ -64,7 +64,7 @@ Cypress.Commands.add("clickCategory", (nodeCategory) => {
 Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
-		if (doc.canvasController.canvasConfig.enablePaletteLayout === "Modal") {
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
 			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel)
 				.dblclick();
 		} else {
