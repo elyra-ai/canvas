@@ -350,16 +350,14 @@ export default class SvgCanvasLinks {
 	// curved connector line. The pathInfo contains:
 	// path - an SVG path string describing the elbow line
 	// centerPoint - the center point of the line used for decoration placement
-	// sourcePoint - the point of the line used for decoration placement near the source node
-	// targetPoint - the point of the line used for decoration placement near the target node
 	getCurvePath(data, minInitialLine) {
 		let newData = data;
 
 		// When dragging out a new link we will not have src nor trg nodes
-		let topSrc = data.y1;
-		let topTrg = data.y2;
-		let bottomSrc = data.y1;
-		let bottomTrg = data.y2;
+		let topSrc;
+		let topTrg;
+		let bottomSrc;
+		let bottomTrg;
 
 		// When drawing a link from node to node we will have src and trg nodes.
 		if (data.src && data.trg) {
@@ -381,6 +379,25 @@ export default class SvgCanvasLinks {
 				topTrg = data.trg.y_pos;
 				bottomTrg = data.trg.y_pos + data.trg.height;
 			}
+		} else {
+			if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
+				topSrc = -data.x1;
+				topTrg = -data.x2;
+				bottomSrc = -data.x1;
+				bottomTrg = -data.x2;
+
+			} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+				topSrc = data.x1;
+				topTrg = data.x2;
+				bottomSrc = data.x1;
+				bottomTrg = data.x2;
+
+			} else {
+				topSrc = data.y1;
+				topTrg = data.y2;
+				bottomSrc = data.y1;
+				bottomTrg = data.y2;
+			}
 		}
 
 		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
@@ -397,14 +414,10 @@ export default class SvgCanvasLinks {
 		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
 			pathInfo.elements = this.rotateElements90Degrees(pathInfo.elements, CLOCKWISE);
 			pathInfo.centerPoint = this.rotatePoint90Degrees(pathInfo.centerPoint.x, pathInfo.centerPoint.y, CLOCKWISE);
-			pathInfo.sourcePoint = this.rotatePoint90Degrees(pathInfo.sourcePoint.x, pathInfo.sourcePoint.y, CLOCKWISE);
-			pathInfo.targetPoint = this.rotatePoint90Degrees(pathInfo.targetPoint.x, pathInfo.targetPoint.y, CLOCKWISE);
 
 		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
 			pathInfo.elements = this.rotateElements90Degrees(pathInfo.elements, ANTI_CLOCKWISE);
 			pathInfo.centerPoint = this.rotatePoint90Degrees(pathInfo.centerPoint.x, pathInfo.centerPoint.y, ANTI_CLOCKWISE);
-			pathInfo.sourcePoint = this.rotatePoint90Degrees(pathInfo.sourcePoint.x, pathInfo.sourcePoint.y, ANTI_CLOCKWISE);
-			pathInfo.targetPoint = this.rotatePoint90Degrees(pathInfo.targetPoint.x, pathInfo.targetPoint.y, ANTI_CLOCKWISE);
 		}
 
 		pathInfo.path = this.createPath(pathInfo.elements);
@@ -419,16 +432,11 @@ export default class SvgCanvasLinks {
 	// following fields:
 	// elements - an array of path elements describing the line
 	// centerPoint - an object with x, y coordinate for the center of the line
-	// sourcePoint - an object with x, y coordinate for the source of the line
-	// targetPoint - an object with x, y coordinate for the target of the line
-	// centerPoint, sourcePoint and targetPoint are used for decoration placement.
+	// centerPoint is used for decoration placement.
 	getCurvePathInfo(data, minInitialLine, topSrc, topTrg, bottomSrc, bottomTrg) {
 		// Declare points for decorator positioning. CenterPoint will be the
 		// middle of the line.
 		const centerPoint = { x: 0, y: 0 };
-		const sourcePoint = { x: data.x1, y: data.y1 };
-		const targetPoint = { x: data.x2, y: data.y2 };
-
 		const xDiff = data.x2 - data.x1;
 
 		const elements = [];
@@ -443,8 +451,9 @@ export default class SvgCanvasLinks {
 			const corner2X = corner1X;
 			const corner2Y = data.y2;
 
-			elements.push({ p: "C", x: corner1X, y: corner1Y, x2: corner2X, y2: corner2Y, x3: data.x2, y3: data.y2 });
-			// path += " C " + corner1X + " " + corner1Y + " " + corner2X + " " + corner2Y + " " + data.x2 + " " + data.y2;
+			elements.push(
+				{ p: "C", x: corner1X, y: corner1Y, x2: corner2X, y2: corner2Y, x3: data.x2, y3: data.y2 }
+			);
 			centerPoint.x = corner1X;
 			centerPoint.y = corner1Y + ((corner2Y - corner1Y) / 2);
 
@@ -526,15 +535,13 @@ export default class SvgCanvasLinks {
 			}
 		}
 
-		return { elements, centerPoint, sourcePoint, targetPoint };
+		return { elements, centerPoint };
 	}
 
 	// Returns the path info, for the object passed in, which describes an
 	// elbow connector line. The pathInfo contains:
 	// path - an SVG path string describing the elbow line
 	// centerPoint - the center point of the line used for decoration placement
-	// sourcePoint - the point of the line used for decoration placement near the source node
-	// targetPoint - the point of the line used for decoration placement near the target node
 	getElbowPath(data, minInitialLine) {
 		let newData = data;
 
@@ -554,14 +561,10 @@ export default class SvgCanvasLinks {
 		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
 			pathInfo.elements = this.rotateElements90Degrees(pathInfo.elements, CLOCKWISE);
 			pathInfo.centerPoint = this.rotatePoint90Degrees(pathInfo.centerPoint.x, pathInfo.centerPoint.y, CLOCKWISE);
-			pathInfo.sourcePoint = this.rotatePoint90Degrees(pathInfo.sourcePoint.x, pathInfo.sourcePoint.y, CLOCKWISE);
-			pathInfo.targetPoint = this.rotatePoint90Degrees(pathInfo.targetPoint.x, pathInfo.targetPoint.y, CLOCKWISE);
 
 		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
 			pathInfo.elements = this.rotateElements90Degrees(pathInfo.elements, ANTI_CLOCKWISE);
 			pathInfo.centerPoint = this.rotatePoint90Degrees(pathInfo.centerPoint.x, pathInfo.centerPoint.y, ANTI_CLOCKWISE);
-			pathInfo.sourcePoint = this.rotatePoint90Degrees(pathInfo.sourcePoint.x, pathInfo.sourcePoint.y, ANTI_CLOCKWISE);
-			pathInfo.targetPoint = this.rotatePoint90Degrees(pathInfo.targetPoint.x, pathInfo.targetPoint.y, ANTI_CLOCKWISE);
 		}
 
 		pathInfo.path = this.createPath(pathInfo.elements);
@@ -637,14 +640,10 @@ export default class SvgCanvasLinks {
 	// following fields:
 	// elements - an array of path elements describing the line
 	// centerPoint - an object with x, y coordinate for the center of the line
-	// sourcePoint - an object with x, y coordinate for the source of the line
-	// targetPoint - an object with x, y coordinate for the target of the line
-	// centerPoint, sourcePoint and targetPoint are used for decoration placement.
+	// centerPoint is used for decoration placement.
 	getElbowPathInfo(data, minInitialLine) {
 		// Record centerPoint which can be used by the link decorations
 		const centerPoint = { x: 0, y: 0 };
-		const sourcePoint = { x: data.x1, y: data.y1 };
-		const targetPoint = { x: data.x2, y: data.y2 };
 
 		const corner1X = data.x1 + minInitialLine;
 		const corner1Y = data.y1;
@@ -718,7 +717,7 @@ export default class SvgCanvasLinks {
 			{ p: "L", x: data.x2, y: data.y2 }
 		);
 
-		return { elements, centerPoint, sourcePoint, targetPoint };
+		return { elements, centerPoint };
 	}
 
 	// Returns the path string for the object passed in which describes a

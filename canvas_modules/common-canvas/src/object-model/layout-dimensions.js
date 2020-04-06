@@ -223,10 +223,6 @@ const haloDefaultLayout = {
 		// Spacing between the port arcs around the ports.
 		portArcSpacing: null,
 
-		// Default position of a single port - for vertical node format this
-		// is half way down the image rather than the center of the node.
-		// portPosY: null,
-
 		// Display of vertical ellipsis to show context menu
 		ellipsisDisplay: false,
 		ellipsisWidth: 10,
@@ -558,10 +554,6 @@ const portsHorizontalDefaultLayout = {
 		// Spacing between the port arcs around the ports.
 		portArcSpacing: 3,
 
-		// Default position of a single port - for vertical node format this
-		// is half way down the image rather than the center of the node.
-		// portPosY: 20,
-
 		// Display of vertical ellipsis to show context menu
 		ellipsisDisplay: true,
 		ellipsisWidth: 10,
@@ -892,10 +884,6 @@ const portsVerticalDefaultLayout = {
 
 		// Spacing between the port arcs around the ports.
 		portArcSpacing: 0,
-
-		// Default position of a single port - for vertical node format this
-		// is half way down the image rather than the center of the node.
-		// portPosY: 29,
 
 		// Display of vertical ellipsis to show context menu
 		ellipsisDisplay: true,

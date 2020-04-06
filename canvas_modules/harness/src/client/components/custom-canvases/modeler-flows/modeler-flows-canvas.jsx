@@ -24,7 +24,7 @@ export default class ModelerFlowsCanvas extends React.Component {
 			enableParentClass: "modeler-flows",
 			enableNodeFormatType: "Vertical",
 			enableConnectionType: "Ports",
-			enableLinkType: "Straight",
+			enableLinkType: "Elbow",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",
 			enableDropZoneOnExternalDrag: true,

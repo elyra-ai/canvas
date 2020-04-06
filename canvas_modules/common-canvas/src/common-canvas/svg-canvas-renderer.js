@@ -3424,7 +3424,7 @@ export default class SVGCanvasRenderer {
 
 		if (this.config.enableAssocLinkCreation) {
 			this.drawingNewLinkData.linkArray[0].assocLinkVariation =
-				this.getNewLinkAssocType(this.drawingNewLinkData.linkArray[0].x1, this.drawingNewLinkData.linkArray[0].x2);
+				this.getNewLinkAssocVariation(this.drawingNewLinkData.linkArray[0].x1, this.drawingNewLinkData.linkArray[0].x2);
 		}
 
 		const pathInfo = this.linkUtils.getConnectorPathInfo(this.drawingNewLinkData.linkArray[0], this.drawingNewLinkData.minInitialLine);
@@ -5560,7 +5560,7 @@ export default class SVGCanvasRenderer {
 	// Returns a variation of association link to draw when a new link is being
 	// drawn outwards from a port. startX is the beginning point of the line
 	// at the port. endX is the position where the mouse is currently positioned.
-	getNewLinkAssocType(startX, endX) {
+	getNewLinkAssocVariation(startX, endX) {
 		if (this.drawingNewLinkData.portType === "input" && startX > endX) {
 			return ASSOC_VAR_CURVE_LEFT;
 
