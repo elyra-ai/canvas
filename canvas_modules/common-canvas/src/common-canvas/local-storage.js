@@ -24,11 +24,11 @@ import Logger from "../logging/canvas-logger.js";
 export default class LocalStorage {
 	static set(attributeName, value) {
 		try {
-			if (window.localStorage) {
-				window.localStorage[attributeName] = value;
-
-			} else if (window.electronUtil && window.electronUtil.localStorage) {
+			if (window.electronUtil && window.electronUtil.localStorage) {
 				window.electronUtil.localStorage[attributeName] = value;
+
+			} else if (window.localStorage) {
+				window.localStorage[attributeName] = value;
 			}
 		} catch (err) {
 			LocalStorage.logger.warn("Local storage is not accessible: " + err);
@@ -37,11 +37,11 @@ export default class LocalStorage {
 
 	static get(attributeName) {
 		try {
-			if (window.localStorage) {
-				return window.localStorage[attributeName];
-
-			} else if (window.electronUtil && window.electronUtil.localStorage) {
+			if (window.electronUtil && window.electronUtil.localStorage) {
 				return window.electronUtil.localStorage[attributeName];
+
+			} else if (window.localStorage) {
+				return window.localStorage[attributeName];
 			}
 		} catch (err) {
 			LocalStorage.logger.warn("Local storage is not accessible: " + err);
@@ -51,13 +51,12 @@ export default class LocalStorage {
 
 	static delete(attributeName) {
 		try {
-			if (window.localStorage) {
-				delete window.localStorage[attributeName];
-
-			} else if (window.electronUtil && window.electronUtil.localStorage) {
+			if (window.electronUtil && window.electronUtil.localStorage) {
 				delete window.electronUtil.localStorage[attributeName];
-			}
 
+			} else if (window.localStorage) {
+				delete window.localStorage[attributeName];
+			}
 		} catch (err) {
 			LocalStorage.logger.warn("Local storage is not accessible: " + err);
 		}
