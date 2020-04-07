@@ -90,6 +90,7 @@ export default class SVGCanvasD3 {
 				this.config.enableConnectionType !== config.enableConnectionType ||
 				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
 				this.config.enableLinkType !== config.enableLinkType ||
+				this.config.enableLinkDirection !== config.enableLinkDirection ||
 				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
 				this.config.enableInsertNodeDroppedOnLink !== config.enableInsertNodeDroppedOnLink ||
 				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize ||

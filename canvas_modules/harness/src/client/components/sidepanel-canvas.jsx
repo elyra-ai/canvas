@@ -49,6 +49,9 @@ import {
 	CURVE_LINKS,
 	ELBOW_LINKS,
 	STRAIGHT_LINKS,
+	DIRECTION_LEFT_RIGHT,
+	DIRECTION_TOP_BOTTOM,
+	DIRECTION_BOTTOM_TOP,
 	ASSOC_RIGHT_SIDE_CURVE,
 	ASSOC_STRAIGHT,
 	NO_LAYOUT,
@@ -102,6 +105,7 @@ export default class SidePanelForms extends React.Component {
 		this.interactionTypeOptionChange = this.interactionTypeOptionChange.bind(this);
 		this.nodeFormatTypeOptionChange = this.nodeFormatTypeOptionChange.bind(this);
 		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
+		this.linkDirectionOptionChange = this.linkDirectionOptionChange.bind(this);
 		this.assocLinkTypeOptionChange = this.assocLinkTypeOptionChange.bind(this);
 		this.nodeLayoutOptionChange = this.nodeLayoutOptionChange.bind(this);
 		this.paletteLayoutOptionChange = this.paletteLayoutOptionChange.bind(this);
@@ -359,6 +363,10 @@ export default class SidePanelForms extends React.Component {
 
 	linkTypeOptionChange(value) {
 		this.props.canvasConfig.setLinkType(value);
+	}
+
+	linkDirectionOptionChange(value) {
+		this.props.canvasConfig.setLinkDirection(value);
 	}
 
 	assocLinkTypeOptionChange(value) {
@@ -881,6 +889,29 @@ export default class SidePanelForms extends React.Component {
 			</RadioButtonGroup>
 		</div>);
 
+		var linkDirection = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-direction">
+			<div className="harness-sidepanel-headers">Link Direction (for 'Ports')</div>
+			<RadioButtonGroup
+				className="harness-sidepanel-radio-group"
+				name="link_type_direction"
+				onChange={this.linkDirectionOptionChange}
+				defaultSelected={this.props.canvasConfig.selectedLinkDirection}
+			>
+				<RadioButton
+					value={DIRECTION_LEFT_RIGHT}
+					labelText={DIRECTION_LEFT_RIGHT}
+				/>
+				<RadioButton
+					value={DIRECTION_TOP_BOTTOM}
+					labelText={DIRECTION_TOP_BOTTOM}
+				/>
+				<RadioButton
+					value={DIRECTION_BOTTOM_TOP}
+					labelText={DIRECTION_BOTTOM_TOP}
+				/>
+			</RadioButtonGroup>
+		</div>);
+
 		const nodeLayoutType = (<div className="harness-sidepanel-children">
 			<div className="harness-sidepanel-headers">Pre-packaged canvas types</div>
 			<RadioButtonGroup
@@ -1052,6 +1083,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{linkType}
 				{divider}
+				{linkDirection}
+				{divider}
 				{interactionType}
 				{divider}
 				{snapToGrid}
@@ -1148,9 +1181,11 @@ SidePanelForms.propTypes = {
 		setNodeFormatType: PropTypes.func,
 		selectedNodeFormat: PropTypes.string,
 		setLinkType: PropTypes.func,
+		setLinkDirection: PropTypes.func,
 		setAssocLinkType: PropTypes.func,
 		setNodeLayout: PropTypes.func,
 		selectedLinkType: PropTypes.string,
+		selectedLinkDirection: PropTypes.string,
 		selectedAssocLinkType: PropTypes.string,
 		selectedNodeLayout: PropTypes.string,
 		selectedSaveZoom: PropTypes.string,

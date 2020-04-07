@@ -141,10 +141,26 @@ const haloDefaultLayout = {
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
-		// This is used with portPosY to position input ports. It is an offset
-		// in the x direction from the left side of the node outline. Negative for
-		// left, positive for right.
-		inputPortPosX: 0,
+		// Position of left single input port. Multiple input ports will be
+		// automatically positioned with the Y coordinate being overriden. These
+		// values are an offset from the top left corner of the node outline.
+		// Used when linkDirection is "LeftRight".
+		inputPortLeftPosX: null,
+		inputPortLeftPosY: null,
+
+		// Position of top single input port. Multiple input ports will be
+		// automatically positioned with the X coordinate being overriden. These
+		// values are an offset from the top left corner of the node outline.
+		// Used when linkDirection is "TopBottom".
+		inputPortTopPosX: null,
+		inputPortTopPosY: null,
+
+		// Position of bottom single input port. Multiple input ports will be
+		// automatically positioned with the X coordinate being overriden. These
+		// values are an offset from the bottom left corner of the node outline.
+		// Used when linkDirection is "BottomTop".
+		inputPortBottomPosX: null,
+		inputPortBottomPosY: null,
 
 		// 'Connector' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -164,10 +180,26 @@ const haloDefaultLayout = {
 		outputPortWidth: 12,
 		outputPortHeight: 12,
 
-		// This is used with portPosY to position output ports. It is an offset
-		// in the x direction from the right side of the node outline. Negative for
-		// left, positive for right.
-		outputPortPosX: 0,
+		// Position of right single input port. Multiple input ports will be
+		// automatically positioned with the Y coordinate being overriden. These
+		// values are an offset from the top right corner of the node outline.
+		// Used when linkDirection is "LeftRight".
+		outputPortRightPosX: null,
+		outputPortRightPosY: null,
+
+		// Position of top single input port. Multiple input ports will be
+		// automatically positioned with the X coordinate being overriden. These
+		// values are an offset from the top left corner of the node outline.
+		// Used when linkDirection is "BottomTop".
+		outputPortTopPosX: null,
+		outputPortTopPosY: null,
+
+		// Position of bottom single input port. Multiple input ports will be
+		// automatically positioned with the X coordinate being overriden. These
+		// values are an offset from the bottom left corner of the node outline.
+		// Used when linkDirection is "TopBottom".
+		outputPortBottomPosX: null,
+		outputPortBottomPosY: null,
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -190,10 +222,6 @@ const haloDefaultLayout = {
 
 		// Spacing between the port arcs around the ports.
 		portArcSpacing: null,
-
-		// Default position of a single port - for vertical node format this
-		// is half way down the image rather than the center of the node.
-		portPosY: null,
 
 		// Display of vertical ellipsis to show context menu
 		ellipsisDisplay: false,
@@ -241,6 +269,9 @@ const haloDefaultLayout = {
 		// target or the 'ports' connections with connection lines draw from output
 		// ports to input ports.
 		connectionType: "halo",
+
+		// Specifies which direction the nodes will be linked up
+		linkDirection: "LeftRight",
 
 		// Whether to display a link line when linked node/comments overlap. For halo
 		// we don't want to show the link when objects overlap but for ports we do.
@@ -441,10 +472,26 @@ const portsHorizontalDefaultLayout = {
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
-		// This is used with portPosY to position input ports. It is an offset
-		// in the x direction from the left side of the node outline. Negative for
-		// left, positive for right.
-		inputPortPosX: 0,
+		// Position of left single input port. Multiple input ports will be
+		// automatically positioned with the Y coordinate being overriden. These
+		// values are an offset from the top left corner of the node outline.
+		// Used when linkDirection is "LeftRight".
+		inputPortLeftPosX: 0,
+		inputPortLeftPosY: 20,
+
+		// Position of top single input port. Multiple input ports will be
+		// automatically positioned with the X coordinate being overriden. These
+		// values are an offset from the top left corner of the node outline.
+		// Used when linkDirection is "TopBottom".
+		inputPortTopPosX: 80,
+		inputPortTopPosY: 0,
+
+		// Position of bottom single input port. Multiple input ports will be
+		// automatically positioned with the X coordinate being overriden. These
+		// values are an offset from the bottom left corner of the node outline.
+		// Used when linkDirection is "BottomTop".
+		inputPortBottomPosX: 80,
+		inputPortBottomPosY: 0,
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -464,10 +511,26 @@ const portsHorizontalDefaultLayout = {
 		outputPortWidth: 12,
 		outputPortHeight: 12,
 
-		// This is used with portPosY to position output ports. It is an offset
-		// in the x direction from the right side of the node outline. Negative for
-		// left, positive for right.
-		outputPortPosX: 0,
+		// Position of right single input port. Multiple input ports will be
+		// automatically positioned with the Y coordinate being overriden. These
+		// values are an offset from the top right corner of the node outline.
+		// Used when linkDirection is "LeftRight".
+		outputPortRightPosX: 0,
+		outputPortRightPosY: 20,
+
+		// Position of top single input port. Multiple input ports will be
+		// automatically positioned with the X coordinate being overriden. These
+		// values are an offset from the top left corner of the node outline.
+		// Used when linkDirection is "BottomTop".
+		outputPortTopPosX: 80,
+		outputPortTopPosY: 0,
+
+		// Position of bottom single input port. Multiple input ports will be
+		// automatically positioned with the X coordinate being overriden. These
+		// values are an offset from the bottom left corner of the node outline.
+		// Used when linkDirection is "TopBottom".
+		outputPortBottomPosX: 80,
+		outputPortBottomPosY: 0,
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -490,10 +553,6 @@ const portsHorizontalDefaultLayout = {
 
 		// Spacing between the port arcs around the ports.
 		portArcSpacing: 3,
-
-		// Default position of a single port - for vertical node format this
-		// is half way down the image rather than the center of the node.
-		portPosY: 20,
 
 		// Display of vertical ellipsis to show context menu
 		ellipsisDisplay: true,
@@ -541,6 +600,9 @@ const portsHorizontalDefaultLayout = {
 		// target or the 'ports' connections with connection lines draw from output
 		// ports to input ports.
 		connectionType: "ports",
+
+		// Specifies which direction the nodes will be linked up
+		linkDirection: "LeftRight",
 
 		// Whether to display a link line when linked node/comments overlap. For halo
 		// we don't want to show the link when objects overlap but for ports we do.
@@ -741,10 +803,26 @@ const portsVerticalDefaultLayout = {
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
-		// This is used with portPosY to position input ports. It is an offset
-		// in the x direction from the left side of the node outline. Negative for
-		// left, positive for right.
-		inputPortPosX: 0,
+		// Position of left single input port. Multiple input ports will be
+		// automatically positioned with the Y coordinate being overriden. These
+		// values are an offset from the top left corner of the node outline.
+		// Used when linkDirection is "LeftRight".
+		inputPortLeftPosX: 0,
+		inputPortLeftPosY: 29,
+
+		// Position of top single input port. Multiple input ports will be
+		// automatically positioned with the X coordinate being overriden. These
+		// values are an offset from the top left corner of the node outline.
+		// Used when linkDirection is "TopBottom".
+		inputPortTopPosX: 35,
+		inputPortTopPosY: 0,
+
+		// Position of bottom single input port. Multiple input ports will be
+		// automatically positioned with the X coordinate being overriden. These
+		// values are an offset from the bottom left corner of the node outline.
+		// Used when linkDirection is "BottomTop".
+		inputPortBottomPosX: 35,
+		inputPortBottomPosY: 0,
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -764,10 +842,26 @@ const portsVerticalDefaultLayout = {
 		outputPortWidth: 12,
 		outputPortHeight: 12,
 
-		// This is used with portPosY to position output ports. It is an offset
-		// in the x direction from the right side of the node outline. Negative for
-		// left, positive for right.
-		outputPortPosX: 0,
+		// Position of right single input port. Multiple input ports will be
+		// automatically positioned with the Y coordinate being overriden. These
+		// values are an offset from the top right corner of the node outline.
+		// Used when linkDirection is "LeftRight".
+		outputPortRightPosX: 0,
+		outputPortRightPosY: 29,
+
+		// Position of top single input port. Multiple input ports will be
+		// automatically positioned with the X coordinate being overriden. These
+		// values are an offset from the top left corner of the node outline.
+		// Used when linkDirection is "BottomTop".
+		outputPortTopPosX: 35,
+		outputPortTopPosY: 0,
+
+		// Position of bottom single input port. Multiple input ports will be
+		// automatically positioned with the X coordinate being overriden. These
+		// values are an offset from the bottom left corner of the node outline.
+		// Used when linkDirection is "TopBottom".
+		outputPortBottomPosX: 35,
+		outputPortBottomPosY: 0,
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -790,10 +884,6 @@ const portsVerticalDefaultLayout = {
 
 		// Spacing between the port arcs around the ports.
 		portArcSpacing: 0,
-
-		// Default position of a single port - for vertical node format this
-		// is half way down the image rather than the center of the node.
-		portPosY: 29,
 
 		// Display of vertical ellipsis to show context menu
 		ellipsisDisplay: true,
@@ -841,6 +931,9 @@ const portsVerticalDefaultLayout = {
 		// target or the 'ports' connections with connection lines draw from output
 		// ports to input ports.
 		connectionType: "ports",
+
+		// Specifies which direction the nodes will be linked up
+		linkDirection: "LeftRight",
 
 		// Whether to display a link line when linked node/comments overlap. For halo
 		// we don't want to show the link when objects overlap but for ports we do.
@@ -944,7 +1037,7 @@ export default class LayoutDimensions {
 	}
 
 	static overrideCanvasLayout(layout, config) {
-		layout.canvasLayout = Object.assign({}, layout.canvasLayout, config.enableCanvasLayout);
+		layout.canvasLayout = Object.assign({}, layout.canvasLayout, { linkDirection: config.enableLinkDirection }, config.enableCanvasLayout);
 
 		return layout;
 	}

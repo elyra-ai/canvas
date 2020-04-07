@@ -443,7 +443,12 @@ export default class ObjectModel {
 	setNodeAttributesWithLayout(node, nodeLayout, canvasLayout) {
 		let newNode = Object.assign({}, node);
 		newNode = this.setNodeLayoutAttributes(newNode, nodeLayout);
-		newNode = this.setNodeDimensionAttributes(newNode, canvasLayout);
+		if (canvasLayout.linkDirection === "TopBottom" ||
+				canvasLayout.linkDirection === "BottomTop") {
+			newNode = this.setNodeDimensionAttributesVertical(newNode, canvasLayout);
+		} else {
+			newNode = this.setNodeDimensionAttributesLeftRight(newNode, canvasLayout);
+		}
 		if (canvasLayout.snapToGridType === "During" ||
 				canvasLayout.snapToGridType === "After") {
 			newNode.x_pos = CanvasUtils.snapToGrid(newNode.x_pos, canvasLayout.snapToGridX);
@@ -484,7 +489,7 @@ export default class ObjectModel {
 	// Returns the node passed in with additional fields which contains
 	// the height occupied by the input ports and output ports, based on the
 	// layout info passed in, as well as the node width.
-	setNodeDimensionAttributes(node, canvasLayout) {
+	setNodeDimensionAttributesLeftRight(node, canvasLayout) {
 		if (canvasLayout.connectionType === "ports") {
 			node.inputPortsHeight = node.inputs
 				? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
@@ -510,6 +515,44 @@ export default class ObjectModel {
 			node.height = node.layout.defaultNodeHeight;
 		}
 		node.width = node.layout.defaultNodeWidth;
+
+		if (node.type === SUPER_NODE && node.is_expanded) {
+			node.width = CanvasUtils.getSupernodeExpandedWidth(node, canvasLayout);
+			node.height = CanvasUtils.getSupernodeExpandedHeight(node, canvasLayout);
+		}
+
+		return node;
+	}
+
+	// Returns the node passed in with additional fields which contains
+	// the height occupied by the input ports and output ports, based on the
+	// layout info passed in, as well as the node width.
+	setNodeDimensionAttributesVertical(node, canvasLayout) {
+		if (canvasLayout.connectionType === "ports") {
+			node.inputPortsWidth = node.inputs
+				? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
+				: 0;
+
+			node.outputPortsWidth = node.outputs
+				? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
+				: 0;
+
+			node.width = Math.max(node.inputPortsWidth, node.outputPortsWidth, node.layout.defaultNodeWidth);
+
+			if (node.type === SUPER_NODE && node.is_expanded) {
+				node.width += (2 * canvasLayout.supernodeSVGAreaPadding);
+				// If an expanded height is provided make sure it is at least as big
+				// as the node height.
+				if (node.expanded_width) {
+					node.expanded_width = Math.max(node.expanded_width, node.width);
+				}
+			}
+		} else { // 'halo' connection type
+			node.inputPortsWidth = 0;
+			node.outputPortsWidth = 0;
+			node.width = node.layout.defaultNodeWidth;
+		}
+		node.height = node.layout.defaultNodeHeight;
 
 		if (node.type === SUPER_NODE && node.is_expanded) {
 			node.width = CanvasUtils.getSupernodeExpandedWidth(node, canvasLayout);
