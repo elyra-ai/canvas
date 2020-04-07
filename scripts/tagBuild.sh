@@ -18,13 +18,9 @@
 
 set -e
 
-BRANCH="$1"
-TAG="$2"
-
-TAG_NAME=$BRANCH-$TAG
+TAG_NAME="$1"
 
 echo "Setting github tag $TAG_NAME"
-
 git tag -f $TAG_NAME
-git push origin $TAG_NAME -f
+git push --quiet https://$GITHUB_TOKEN@github.com/${GIT_ORG}/canvas $TAG_NAME -f
 echo "$TAG_NAME tag set successfully"

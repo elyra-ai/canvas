@@ -1,11 +1,18 @@
-/*******************************************************************************
- * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017, 2020. All Rights Reserved.
+/*
+ * Copyright 2017-2020 IBM Corporation
  *
- * Note to U.S. Government Users Restricted Rights:
- * Use, duplication or disclosure restricted by GSA ADP Schedule
- * Contract with IBM Corp.
- *******************************************************************************/
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 /* eslint no-invalid-this: "off" */
 /* eslint brace-style: "off" */
@@ -21,7 +28,9 @@ import get from "lodash/get";
 import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERROR,
-	CURVE_LEFT, CURVE_RIGHT, DOUBLE_BACK_RIGHT,
+	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
+	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
+	LINK_DIR_LEFT_RIGHT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
 	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
@@ -30,8 +39,11 @@ import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import Logger from "../logging/canvas-logger.js";
 import LocalStorage from "./local-storage.js";
 import CanvasUtils from "./common-canvas-utils.js";
+import SvgCanvasLinks from "./svg-canvas-links.js";
 
 const showLinksTime = false;
+
+const NINETY_DEGREES_IN_RADIANS = 90 * (Math.PI / 180);
 
 
 export default class SVGCanvasRenderer {
@@ -60,6 +72,8 @@ export default class SVGCanvasRenderer {
 
 		// Initialize zoom variables
 		this.initializeZoomVariables();
+
+		this.linkUtils = new SvgCanvasLinks(this.canvasLayout, this.config);
 
 		// Dimensions for extent of canvas scaling
 		this.minScaleExtent = 0.2;
@@ -447,22 +461,50 @@ export default class SVGCanvasRenderer {
 
 		const nodeSelector = this.getSelectorForClass("d3-node-group");
 		const supernodeDatum = this.getParentSupernodeDatum();
-		const svgHt = supernodeDatum.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
 
-		const that = this;
+		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM ||
+				this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+			const svgWid = supernodeDatum.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
+			this.canvasGrp.selectAll(nodeSelector).each((d) => {
+				if (d.isSupernodeInputBinding) {
+					const x = this.getSupernodePortXOffset(d.id, supernodeDatum.inputs);
+					d.x_pos = (transformedSVGRect.width * (x / svgWid)) + transformedSVGRect.x - d.outputs[0].cx;
+					d.y_pos = this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM
+						? transformedSVGRect.y - d.height
+						: transformedSVGRect.y + transformedSVGRect.height;
+				}
+				if (d.isSupernodeOutputBinding) {
+					const x = this.getSupernodePortXOffset(d.id, supernodeDatum.outputs);
+					d.x_pos = (transformedSVGRect.width * (x / svgWid)) + transformedSVGRect.x - d.inputs[0].cx;
+					d.y_pos = this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM
+						? d.y_pos = transformedSVGRect.y + transformedSVGRect.height
+						: d.y_pos = transformedSVGRect.y - d.height;
+				}
+			});
 
-		this.canvasGrp.selectAll(nodeSelector).each(function(d) {
-			if (d.isSupernodeInputBinding) {
-				d.x_pos = transformedSVGRect.x - d.width;
-				const y = that.getSupernodePortYOffset(d.id, supernodeDatum.inputs);
-				d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.outputs[0].cy;
-			}
-			if (d.isSupernodeOutputBinding) {
-				d.x_pos = transformedSVGRect.x + transformedSVGRect.width;
-				const y = that.getSupernodePortYOffset(d.id, supernodeDatum.outputs);
-				d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.inputs[0].cy;
-			}
-		});
+		} else {
+			const svgHt = supernodeDatum.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
+			this.canvasGrp.selectAll(nodeSelector).each((d) => {
+				if (d.isSupernodeInputBinding) {
+					d.x_pos = transformedSVGRect.x - d.width;
+					const y = this.getSupernodePortYOffset(d.id, supernodeDatum.inputs);
+					d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.outputs[0].cy;
+				}
+				if (d.isSupernodeOutputBinding) {
+					d.x_pos = transformedSVGRect.x + transformedSVGRect.width;
+					const y = this.getSupernodePortYOffset(d.id, supernodeDatum.outputs);
+					d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.inputs[0].cy;
+				}
+			});
+		}
+	}
+
+	getSupernodePortXOffset(nodeId, ports) {
+		if (ports) {
+			const supernodePort = ports.find((port) => port.subflow_node_ref === nodeId);
+			return supernodePort.cx - this.canvasLayout.supernodeSVGAreaPadding;
+		}
+		return 0;
 	}
 
 	getSupernodePortYOffset(nodeId, ports) {
@@ -2276,6 +2318,7 @@ export default class SVGCanvasRenderer {
 												srcObjId: d.id,
 												srcPortId: port.id,
 												action: "node-node",
+												srcNode: srcNode,
 												startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
 												portType: "input",
 												portObject: d.layout.inputPortObject,
@@ -2345,14 +2388,16 @@ export default class SVGCanvasRenderer {
 
 							// Don't show the port arrow when we are supporting association
 							// link creation
-							if (!this.config.enableAssocLinkCreation) {
+							if (!this.config.enableAssocLinkCreation &&
+									d.layout.inputPortObject === "circle" &&
+									!this.isSuperBindingNode(d)) {
 								const inArrSelector = this.getSelectorForClass("d3-node-port-input-arrow");
 
 								var inputPortArrowSelection =
 									nodeGrp.selectAll(inArrSelector)
 										.data(d.inputs, function(p) { return p.id; });
 
-								// Input port arrow in circle
+								// Input port arrow in circle for nodes which are not supernode binding nodes.
 								inputPortArrowSelection.enter()
 									.append("path")
 									.attr("data-id", (port) => this.getId("node_inp_port_arrow", d.id, port.id))
@@ -2387,7 +2432,7 @@ export default class SVGCanvasRenderer {
 										this.openContextMenu("input_port", d, port);
 									})
 									.merge(inputPortArrowSelection)
-									.attr("d", (port) => this.getArrowShapePath(port.cy, d, this.zoomTransform.k))
+									.attr("d", (port) => this.getPortArrowPath(port))
 									.datum((port) => this.getNodePort(d.id, port.id, "input"));
 
 								inputPortArrowSelection.exit().remove();
@@ -2419,6 +2464,7 @@ export default class SVGCanvasRenderer {
 											srcObjId: d.id,
 											srcPortId: port.id,
 											action: "node-node",
+											srcNode: srcNode,
 											startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
 											portType: "output",
 											portObject: d.layout.outputPortObject,
@@ -2541,7 +2587,7 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	// Adds a set of decorations to either a node of link object.
+	// Adds a set of decorations to either a node or link object.
 	// d       - This is a node or link object.
 	// objType - A string set to either DEC_NODE or DEC_LINK.
 	// trgGrp  - A D3 selection object that references the node or link to
@@ -2889,6 +2935,7 @@ export default class SVGCanvasRenderer {
 		const selector = this.getSelectorForClass(cssNodePort);
 		nodeGrp.selectAll(selector)
 			.attr("r", () => this.getPortRadius(d))
+			.attr("cx", (port) => port.cx)
 			.attr("cy", (port) => port.cy); // Port position may change for binding nodes with multiple-ports.
 	}
 
@@ -2896,7 +2943,7 @@ export default class SVGCanvasRenderer {
 		const nodeGrp = d3.select(node);
 		const selector = this.getSelectorForClass(cssNodePortArrow);
 		nodeGrp.selectAll(selector)
-			.attr("d", (port) => this.getArrowShapePath(port.cy, d, this.zoomTransform.k));
+			.attr("d", (port) => this.getPortArrowPath(port));
 	}
 
 	isEntryBindingNode(node) {
@@ -3222,11 +3269,11 @@ export default class SVGCanvasRenderer {
 		const position = dec.position || "middle";
 		let x = 0;
 		if (position === "middle") {
-			x = link.centerPoint ? link.centerPoint.x : link.x1 + ((link.x2 - link.x1) / 2);
+			x = link.pathInfo.centerPoint ? link.pathInfo.centerPoint.x : link.x1 + ((link.x2 - link.x1) / 2);
 		} else if (position === "source") {
-			x = link.x1;
+			x = link.pathInfo.sourcePoint ? link.pathInfo.sourcePoint.x : link.x1;
 		} else if (position === "target") {
-			x = link.x2;
+			x = link.pathInfo.targetPoint ? link.pathInfo.targetPoint.x : link.x2;
 		}
 		x = typeof dec.x_pos !== "undefined" ? x + Number(dec.x_pos) : x;
 		return x;
@@ -3256,11 +3303,11 @@ export default class SVGCanvasRenderer {
 		const position = dec.position || "middle";
 		let y = 0;
 		if (position === "middle") {
-			y = link.centerPoint ? link.centerPoint.y : link.y1 + ((link.y2 - link.y1) / 2);
+			y = link.pathInfo.centerPoint ? link.pathInfo.centerPoint.y : link.y1 + ((link.y2 - link.y1) / 2);
 		} else if (position === "source") {
-			y = link.y1;
+			y = link.pathInfo.sourcePoint ? link.pathInfo.sourcePoint.y : link.y1;
 		} else if (position === "target") {
-			y = link.y2;
+			y = link.pathInfo.targetPoint ? link.pathInfo.targetPoint.y : link.y2;
 		}
 		y = typeof dec.y_pos !== "undefined" ? y + Number(dec.y_pos) : y;
 		return y;
@@ -3359,22 +3406,28 @@ export default class SVGCanvasRenderer {
 		var that = this;
 		const linkType = this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK;
 
-		if (this.drawingNewLinkData.linkArray.length === 0) {
-			this.drawingNewLinkData.linkArray = [{
-				"x1": this.drawingNewLinkData.startPos.x,
-				"y1": this.drawingNewLinkData.startPos.y,
-				"x2": transPos.x,
-				"y2": transPos.y,
-				"type": linkType }];
+		let startPos;
+		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
+			startPos = this.linkUtils.getNewStraightNodeLinkStartPos(this.drawingNewLinkData.srcNode, transPos);
 		} else {
-			this.drawingNewLinkData.linkArray[0].x2 = transPos.x;
-			this.drawingNewLinkData.linkArray[0].y2 = transPos.y;
+			startPos = {
+				x: this.drawingNewLinkData.startPos.x,
+				y: this.drawingNewLinkData.startPos.y };
 		}
 
+		this.drawingNewLinkData.linkArray = [{
+			"x1": startPos.x,
+			"y1": startPos.y,
+			"x2": transPos.x,
+			"y2": transPos.y,
+			"type": linkType }];
+
 		if (this.config.enableAssocLinkCreation) {
-			this.drawingNewLinkData.linkArray[0].assocLinkType =
-				this.getNewLinkAssocType(this.drawingNewLinkData.linkArray[0].x1, this.drawingNewLinkData.linkArray[0].x2);
+			this.drawingNewLinkData.linkArray[0].assocLinkVariation =
+				this.getNewLinkAssocVariation(this.drawingNewLinkData.linkArray[0].x1, this.drawingNewLinkData.linkArray[0].x2);
 		}
+
+		const pathInfo = this.linkUtils.getConnectorPathInfo(this.drawingNewLinkData.linkArray[0], this.drawingNewLinkData.minInitialLine);
 
 		const connectionLineSel = this.canvasGrp.selectAll(".d3-new-connection-line");
 		const connectionStartSel = this.canvasGrp.selectAll(".d3-new-connection-start");
@@ -3387,25 +3440,27 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-new-connection-line")
 			.attr("linkType", linkType)
 			.merge(connectionLineSel)
-			.attr("d", (d) => that.getConnectorPath(d).path);
+			.attr("d", pathInfo.path)
+			.attr("transform", pathInfo.transform);
 
-		connectionStartSel
-			.data(this.drawingNewLinkData.linkArray)
-			.enter()
-			.append(this.drawingNewLinkData.portObject)
-			.attr("class", "d3-new-connection-start")
-			.attr("linkType", linkType)
-			.merge(connectionStartSel)
-			.each(function(d) {
-				// No need to draw the starting object of the new line if it is an image.
-				if (that.drawingNewLinkData.portObject === PORT_OBJECT_CIRCLE) {
-					d3.select(this)
-						.attr("cx", d.x1)
-						.attr("cy", d.y1)
-						.attr("r", that.drawingNewLinkData.portRadius);
-				}
-			});
-
+		if (this.canvasLayout.linkType !== LINK_TYPE_STRAIGHT) {
+			connectionStartSel
+				.data(this.drawingNewLinkData.linkArray)
+				.enter()
+				.append(this.drawingNewLinkData.portObject)
+				.attr("class", "d3-new-connection-start")
+				.attr("linkType", linkType)
+				.merge(connectionStartSel)
+				.each(function(d) {
+					// No need to draw the starting object of the new line if it is an image.
+					if (that.drawingNewLinkData.portObject === PORT_OBJECT_CIRCLE) {
+						d3.select(this)
+							.attr("cx", d.x1)
+							.attr("cy", d.y1)
+							.attr("r", that.drawingNewLinkData.portRadius);
+					}
+				});
+		}
 
 		connectionGuideSel
 			.data(this.drawingNewLinkData.linkArray)
@@ -3443,22 +3498,12 @@ export default class SVGCanvasRenderer {
 	drawNewCommentLinkForPorts(transPos) {
 		const that = this;
 		const srcComment = this.getComment(this.drawingNewLinkData.srcObjId);
-
-		this.drawingNewLinkData.startPos = this.getOuterCoord(
-			srcComment.x_pos - this.canvasLayout.linkGap,
-			srcComment.y_pos - this.canvasLayout.linkGap,
-			srcComment.width + (this.canvasLayout.linkGap * 2),
-			srcComment.height + (this.canvasLayout.linkGap * 2),
-			srcComment.width / 2 + this.canvasLayout.linkGap,
-			srcComment.height / 2 + this.canvasLayout.linkGap,
-			transPos.x,
-			transPos.y);
-
-		var linkType = COMMENT_LINK;
+		const startPos = this.linkUtils.getNewStraightCommentLinkStartPos(srcComment, transPos);
+		const linkType = COMMENT_LINK;
 
 		this.drawingNewLinkData.linkArray = [{
-			"x1": this.drawingNewLinkData.startPos.x,
-			"y1": this.drawingNewLinkData.startPos.y,
+			"x1": startPos.x,
+			"y1": startPos.y,
 			"x2": transPos.x,
 			"y2": transPos.y,
 			"type": linkType }];
@@ -3473,7 +3518,7 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-new-connection-line")
 			.attr("linkType", linkType)
 			.merge(connectionLineSel)
-			.attr("d", (d) => that.getConnectorPath(d).path);
+			.attr("d", (d) => that.linkUtils.getConnectorPathInfo(d).path);
 
 		connectionGuideSel
 			.data(this.drawingNewLinkData.linkArray)
@@ -3577,13 +3622,13 @@ export default class SVGCanvasRenderer {
 		let newPath = "";
 		let duration = 350;
 
-		if (this.canvasLayout.linkType === "Curve") {
+		if (this.canvasLayout.linkType === LINK_TYPE_CURVE) {
 			newPath = "M " + saveX1 + " " + saveY1 +
 								"C " + saveX2 + " " + saveY2 +
 								" " + saveX2 + " " + saveY2 +
 								" " + saveX2 + " " + saveY2;
 
-		} else if (this.canvasLayout.linkType === "Straight") {
+		} else if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
 			if (saveX1 < saveX2) {
 				duration = 0;
 			}
@@ -3806,6 +3851,18 @@ export default class SVGCanvasRenderer {
 	// Returns a path that will draw the outline shape for the 'port-arcs' display
 	// which shows arcs around each of the node circles.
 	getPortArcsNodeShapePath(data) {
+		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
+			return this.getPortArcsNodeShapePathVertical(data, data.inputs, data.inputPortsWidth, data.outputs, data.outputPortsWidth);
+		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+			return this.getPortArcsNodeShapePathVertical(data, data.outputs, data.outputPortsWidth, data.inputs, data.inputPortsWidth);
+		}
+
+		return this.getPortArcsNodeShapePathLeftRight(data);
+	}
+
+	// Returns a path that will draw the outline shape for the 'port-arcs' display
+	// which shows arcs around each of the node circles for left to right link direction.
+	getPortArcsNodeShapePathLeftRight(data) {
 		let path = "M 0 0 L " + data.width + " 0 "; // Draw line across the top of the node
 
 		if (data.outputs && data.outputs.length > 0) {
@@ -3863,6 +3920,66 @@ export default class SVGCanvasRenderer {
 		return path;
 	}
 
+	// Returns a path that will draw the outline shape for the 'port-arcs' display
+	// which shows arcs around each of the node circles for vertical link directions.
+	getPortArcsNodeShapePathVertical(data, topPorts, topPortsWidth, bottomPorts, bottomPortsWidth) {
+		let path = "M 0 0 L 0 " + data.height; // Draw line down the left of the node
+
+		if (bottomPorts && bottomPorts.length > 0) {
+			let endPoint = data.layout.portArcOffset;
+
+			// Draw straight segment across to ports (if needed)
+			if (bottomPortsWidth < data.width) {
+				endPoint = bottomPorts[0].cx - data.layout.portArcRadius;
+			}
+
+			path += " L " + endPoint + " " + data.height;
+
+			// Draw port arcs
+			bottomPorts.forEach((port, index) => {
+				endPoint += (data.layout.portArcRadius * 2);
+				path += " A " + data.layout.portArcRadius + " " + data.layout.portArcRadius + " 180 0 0 " + endPoint + " " + data.height;
+				if (index < bottomPorts.length - 1) {
+					endPoint += data.layout.portArcSpacing;
+					path += " L " + endPoint + " " + data.height;
+				}
+			});
+
+			// Draw finishing segment to bottom right corner
+			path += " L " + data.width + " " + data.height;
+
+		// If no output ports just draw a straight line.
+		} else {
+			path += " L " + data.width + " " + data.height;
+		}
+
+		path += " L " + data.width + " 0 "; // Draw line up the right side of the node
+
+		if (topPorts && topPorts.length > 0) {
+			let endPoint2 = data.width - data.layout.portArcOffset;
+
+			if (topPortsWidth < data.width) {
+				endPoint2 = topPorts[topPorts.length - 1].cx + data.layout.portArcRadius;
+			}
+
+			path += " L " + endPoint2 + " 0 ";
+
+			topPorts.forEach((port, index) => {
+				endPoint2 -= (data.layout.portArcRadius * 2);
+				path += " A " + data.layout.portArcRadius + " " + data.layout.portArcRadius + " 180 0 0 " + endPoint2 + " 0 ";
+				if (index < topPorts.length - 1) {
+					endPoint2 -= data.layout.portArcSpacing;
+					path += " L " + endPoint2 + " 0 ";
+				}
+			});
+
+			path += " Z"; // Draw finishing segment back to origin
+		} else {
+			path += " Z"; // If no input ports just draw a straight line.
+		}
+		return path;
+	}
+
 	// Sets the port positions on nodes for use when displaying nodes and links
 	setPortPositionsAllNodes() {
 		this.activePipeline.nodes.forEach((node) => {
@@ -3871,30 +3988,45 @@ export default class SVGCanvasRenderer {
 	}
 
 	setPortPositionsForNode(node) {
-		this.setPortPositionsByInfo(node, node.inputs, node.inputPortsHeight, node.layout.inputPortPosX);
-		this.setPortPositionsByInfo(node, node.outputs, node.outputPortsHeight, node.width + node.layout.outputPortPosX);
+		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
+			this.setPortPositionsVertical(node, node.inputs, node.inputPortsWidth, node.layout.inputPortTopPosX, node.layout.inputPortTopPosY);
+			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.outputPortBottomPosX, this.getOutputPortYPosTopBottom(node));
+		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+			this.setPortPositionsVertical(node, node.inputs, node.inputPortsWidth, node.layout.outputPortBottomPosX, this.getOutputPortYPosTopBottom(node));
+			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.inputPortTopPosX, node.layout.inputPortTopPosY);
+		} else {
+			this.setPortPositionsLeftRight(node, node.inputs, node.inputPortsHeight, node.layout.inputPortLeftPosX, node.layout.inputPortLeftPosY);
+			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight, this.getOutputPortXPosLeftRight(node), node.layout.outputPortRightPosY);
+		}
 	}
 
-	setPortPositionsByInfo(data, ports, portsHeight, xPos) {
-		if (ports && ports.length > 0) {
-			if (data.height <= data.layout.defaultNodeHeight &&
-					ports.length === 1) {
-				ports[0].cy = data.layout.portPosY;
-				ports[0].cx = xPos;
+	getOutputPortXPosLeftRight(node) {
+		return node.width + node.layout.outputPortRightPosX;
+	}
 
+	getOutputPortYPosTopBottom(node) {
+		return node.height + node.layout.outputPortBottomPosY;
+	}
+
+	setPortPositionsVertical(data, ports, portsWidth, xPos, yPos) {
+		if (ports && ports.length > 0) {
+			if (data.width <= data.layout.defaultNodeWidth &&
+					ports.length === 1) {
+				ports[0].cx = xPos;
+				ports[0].cy = yPos;
 			} else {
-				let yPos = 0;
+				let xPosition = 0;
 
 				if (this.isExpandedSupernode(data)) {
-					const heightSvgArea = data.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
-					const remainingSpace = heightSvgArea - portsHeight;
-					yPos = this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding + (remainingSpace / 2);
+					const widthSvgArea = data.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
+					const remainingSpace = widthSvgArea - portsWidth;
+					xPosition = (2 * this.canvasLayout.supernodeSVGAreaPadding) + (remainingSpace / 2);
 
-				} else if (portsHeight < data.height) {
-					yPos = (data.height - portsHeight) / 2;
+				} else if (portsWidth < data.width) {
+					xPosition = (data.width - portsWidth) / 2;
 				}
 
-				yPos += data.layout.portArcOffset;
+				xPosition += data.layout.portArcOffset;
 
 				// Sub-flow binding node ports need to be spaced by the inverse of the
 				// zoom amount so that, after zoomToFit on the in-place sub-flow the
@@ -3906,10 +4038,49 @@ export default class SVGCanvasRenderer {
 				}
 
 				ports.forEach((p) => {
-					yPos += (data.layout.portArcRadius * multiplier);
+					xPosition += (data.layout.portArcRadius * multiplier);
+					p.cx = xPosition;
 					p.cy = yPos;
+					xPosition += ((data.layout.portArcRadius + data.layout.portArcSpacing) * multiplier);
+				});
+			}
+		}
+	}
+
+	setPortPositionsLeftRight(data, ports, portsHeight, xPos, yPos) {
+		if (ports && ports.length > 0) {
+			if (data.height <= data.layout.defaultNodeHeight &&
+					ports.length === 1) {
+				ports[0].cx = xPos;
+				ports[0].cy = yPos;
+			} else {
+				let yPosition = 0;
+
+				if (this.isExpandedSupernode(data)) {
+					const heightSvgArea = data.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
+					const remainingSpace = heightSvgArea - portsHeight;
+					yPosition = this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding + (remainingSpace / 2);
+
+				} else if (portsHeight < data.height) {
+					yPosition = (data.height - portsHeight) / 2;
+				}
+
+				yPosition += data.layout.portArcOffset;
+
+				// Sub-flow binding node ports need to be spaced by the inverse of the
+				// zoom amount so that, after zoomToFit on the in-place sub-flow the
+				// binding node ports line up with those on the supernode. This is only
+				// necessary with binding nodes with mutiple ports.
+				let multiplier = 1;
+				if (this.isSuperBindingNode(data)) {
+					multiplier = 1 / this.zoomTransform.k;
+				}
+
+				ports.forEach((p) => {
+					yPosition += (data.layout.portArcRadius * multiplier);
 					p.cx = xPos;
-					yPos += ((data.layout.portArcRadius + data.layout.portArcSpacing) * multiplier);
+					p.cy = yPosition;
+					yPosition += ((data.layout.portArcRadius + data.layout.portArcSpacing) * multiplier);
 				});
 			}
 		}
@@ -4263,12 +4434,13 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns a clip-path string that can be set as an inline style for clipping
-	// comment text. We use polygon here because 'inset' which is supposed to
+	// comment text vertically when the bounding box is smaller than the space the
+	// full text occupies. We use polygon here because 'inset' which is supposed to
 	// provide a rectangle clipping area doesn't seem to work on the current browsers.
 	// Also, -webkit-clip-path has to be provided as well as clip-path because
 	// Safari doesn't recognize clip-path. FF and Chrome do.
 	getClipRectStyle(d) {
-		const x2 = d.width - (2 * this.canvasLayout.commentWidthPadding);
+		const x2 = d.width + 20;
 		const y2 = d.height - (2 * (this.canvasLayout.commentHeightPadding - 2));
 		const poly = `polygon(0px 0px, ${x2}px 0px, ${x2}px ${y2}px, 0px ${y2}px)`;
 		return `clip-path:${poly}; -webkit-clip-path:${poly}; `;
@@ -4945,7 +5117,7 @@ export default class SVGCanvasRenderer {
 					affectedNodesAndComments = affectedNodesAndComments.concat(this.getSupernodeBindingNodes());
 				}
 
-				if (this.canvasLayout.linkType === "Elbow") {
+				if (this.canvasLayout.linkType === LINK_TYPE_ELBOW) {
 					affectedNodesAndComments = this.addAffectedNodesForElbow(affectedNodesAndComments);
 				}
 
@@ -5003,7 +5175,7 @@ export default class SVGCanvasRenderer {
 
 		// Link selection area
 		linkGroup.append("path")
-			.attr("d", (d) => d.path)
+			.attr("d", (d) => d.pathInfo.path)
 			.attr("class", (d) => this.getLinkSelectionAreaClass(d))
 			.on("mouseenter", function(link) {
 				that.setLinkLineStyles(link, "hover");
@@ -5014,7 +5186,7 @@ export default class SVGCanvasRenderer {
 
 		// Link line
 		linkGroup.append("path")
-			.attr("d", (d) => d.path)
+			.attr("d", (d) => d.pathInfo.path)
 			.attr("data-id", (d) => this.getId("link_line", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", (d) => "d3-selectable-link " + this.getLinkClass(d))
@@ -5028,7 +5200,8 @@ export default class SVGCanvasRenderer {
 
 		// Arrow head
 		linkGroup.filter((d) => (d.type === NODE_LINK && this.canvasLayout.dataLinkArrowHead) ||
-														(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead))
+														(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
+														(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
 			.append("path")
 			.attr("d", (d) => this.getArrowHead(d))
 			.attr("class", (d) => "d3-selectable-link " + this.getLinkClass(d))
@@ -5186,17 +5359,11 @@ export default class SVGCanvasRenderer {
 	}
 
 	buildLineArray() {
-		var lineArray = [];
+		let lineArray = [];
 
 		this.activePipeline.links.forEach((link) => {
-			var srcObj;
-			var trgNode = this.getNode(link.trgNodeId);
-
-			if (link.type === COMMENT_LINK) {
-				srcObj = this.getComment(link.srcNodeId);
-			} else {
-				srcObj = this.getNode(link.srcNodeId);
-			}
+			const trgNode = this.getNode(link.trgNodeId);
+			const srcObj = link.type === COMMENT_LINK ? this.getComment(link.srcNodeId) : this.getNode(link.srcNodeId);
 
 			if (srcObj === null) {
 				this.logger.error(
@@ -5213,47 +5380,41 @@ export default class SVGCanvasRenderer {
 			// Only proceed if we have a source and a target node/comment and the
 			// conditions are right for displaying the link.
 			if (srcObj && trgNode && this.shouldDisplayLink(srcObj, trgNode, link.type)) {
-				var coords = {};
-				var srcPortId;
-				var trgPortId;
-				let assocLinkType;
+				const srcPortId = this.getSourcePortId(link, srcObj);
+				const trgPortId = this.getTargetPortId(link, trgNode);
+				const assocLinkVariation =
+					link.type === ASSOCIATION_LINK && this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE
+						? this.getAssocLinkVariation(srcObj, trgNode)
+						: null;
+				const coords = this.linkUtils.getLinkCoords(link.type, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation);
 
-				if (link.type === NODE_LINK) {
-					if (this.canvasLayout.connectionType === "halo") {
-						coords = this.getNodeLinkCoordsForHalo(srcObj, trgNode);
-					} else {
-						srcPortId = this.getSourcePortId(link, srcObj);
-						trgPortId = this.getTargetPortId(link, trgNode);
-						coords = this.getNodeLinkCoordsForPorts(srcObj, srcPortId, trgNode, trgPortId);
-					}
-				} else if (link.type === ASSOCIATION_LINK &&
-										this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
-					assocLinkType = this.getAssocLinkType(srcObj, trgNode);
-					coords = this.getAssociationCurveLinkCoords(srcObj, trgNode, assocLinkType);
-				} else {
-					coords = this.getNonDataLinkCoords(srcObj, trgNode);
-				}
-
-				lineArray.push({ "id": link.id,
-					"x1": coords.x1, "y1": coords.y1, "x2": coords.x2, "y2": coords.y2,
+				lineArray.push({
+					"id": link.id,
 					"class_name": link.class_name,
 					"style": link.style,
 					"style_temp": link.style_temp,
 					"type": link.type,
-					"assocLinkType": assocLinkType,
+					"decorations": link.decorations,
+					"assocLinkVariation": assocLinkVariation,
 					"src": srcObj,
 					"srcPortId": srcPortId,
 					"trg": trgNode,
 					"trgPortId": trgPortId,
-					"decorations": link.decorations });
+					"x1": coords.x1,
+					"y1": coords.y1,
+					"x2": coords.x2,
+					"y2": coords.y2
+				});
 			}
 		});
 
-		if (this.canvasLayout.linkType === "Elbow") {
+		// Adjust the minInitialLine for elbow type connections to prevent overlapping
+		if (this.canvasLayout.linkType === LINK_TYPE_ELBOW) {
 			lineArray = this.addMinInitialLineForElbow(lineArray);
 		}
 
-		lineArray = this.addConnectionPaths(lineArray);
+		// Add conneciton path info to the line objects.
+		lineArray = this.linkUtils.addConnectionPaths(lineArray);
 
 		return lineArray;
 	}
@@ -5284,17 +5445,6 @@ export default class SVGCanvasRenderer {
 			trgPortId = null;
 		}
 		return trgPortId;
-	}
-
-	// Calculates the connection path to draw connections for the current config
-	// settings and adds them to the line array.
-	addConnectionPaths(lineArray) {
-		lineArray.forEach((line, i) => {
-			const pathInfo = this.getConnectorPath(line);
-			lineArray[i].path = pathInfo.path;
-			lineArray[i].centerPoint = pathInfo.centerPoint;
-		});
-		return lineArray;
 	}
 
 	// Returns true if a link should be displayed and false if not. The link
@@ -5343,7 +5493,7 @@ export default class SVGCanvasRenderer {
 	addMinInitialLineForElbow(lineArray) {
 		this.activePipeline.nodes.forEach((node) => {
 			if (node.outputs && node.outputs.length > 1) {
-				const nodeLineData = this.getNodeLineData(node, lineArray);
+				const nodeLineData = this.getNodeOutputLines(node, lineArray);
 				const sortedNodeLineData = this.sortNodeLineData(nodeLineData);
 				this.applyMinInitialLine(node, sortedNodeLineData);
 			}
@@ -5353,7 +5503,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns a new array of line-data objects that are for links that
 	// emenate from the output ports of the source node passed in.
-	getNodeLineData(srcNode, lineArray) {
+	getNodeOutputLines(srcNode, lineArray) {
 		const outArray = [];
 		lineArray.forEach((lineData) => {
 			if (lineData.src.id === srcNode.id) {
@@ -5366,15 +5516,25 @@ export default class SVGCanvasRenderer {
 	// Returns the input array of line-data objects sorted by the differences
 	// between the absolute distance from the source port position to the
 	// target port position. This means the lines connecting source node ports
-	// to target node ports over the furthest distance (in the y direction) will
-	// be sorted first and the lines connecting source to target ports over the
-	// shortest y direction distance will be sorted last.
+	// to target node ports over the furthest distance (in the y direction with
+	// Left -> Right linkDirection) will be sorted first and the lines connecting
+	// source to target ports over the shortest y direction distance will be sorted last.
 	sortNodeLineData(nodeLineData) {
 		return nodeLineData.sort((nodeLineData1, nodeLineData2) => {
-			const first = Math.abs(nodeLineData1.y1 - nodeLineData1.y2);
-			const second = Math.abs(nodeLineData2.y1 - nodeLineData2.y2);
+			let first;
+			let second;
+			if (this.canvasLayout.linkDirection === LINK_DIR_LEFT_RIGHT) {
+				first = Math.abs(nodeLineData1.y1 - nodeLineData1.y2);
+				second = Math.abs(nodeLineData2.y1 - nodeLineData2.y2);
+			} else {
+				first = Math.abs(nodeLineData1.x1 - nodeLineData1.x2);
+				second = Math.abs(nodeLineData2.x1 - nodeLineData2.x2);
+			}
 			if (first === second) {
-				return (nodeLineData1.y1 < nodeLineData1.y2) ? 1 : -1; // Tie breaker
+				if (this.canvasLayout.linkDirection === LINK_DIR_LEFT_RIGHT) {
+					return (nodeLineData1.y1 < nodeLineData1.y2) ? 1 : -1; // Tie breaker
+				}
+				return (nodeLineData1.x1 < nodeLineData1.x2) ? 1 : -1; // Tie breaker
 
 			} else if (first < second) {
 				return 1;
@@ -5397,249 +5557,57 @@ export default class SVGCanvasRenderer {
 		});
 	}
 
-	getNodeLinkCoordsForPorts(srcNode, srcPortId, trgNode, trgPortId) {
-		let srcY = srcNode.layout.portPosY;
-		let trgY = trgNode.layout.portPosY;
-
-		if (srcNode.outputs && srcNode.outputs.length > 0) {
-			const port = srcNode.outputs.find((srcPort) => srcPort.id === srcPortId);
-			srcY = port ? port.cy : srcY;
-		}
-
-		if (trgNode.inputs && trgNode.inputs.length > 0) {
-			const port = trgNode.inputs.find((trgPort) => trgPort.id === trgPortId);
-			trgY = port ? port.cy : trgY;
-		}
-
-		return {
-			x1: srcNode.x_pos + srcNode.width + srcNode.layout.outputPortPosX,
-			y1: srcNode.y_pos + srcY,
-			x2: trgNode.x_pos + srcNode.layout.inputPortPosX,
-			y2: trgNode.y_pos + trgY };
-	}
-
-	// Returns a type of association link to draw when a new link is being
+	// Returns a variation of association link to draw when a new link is being
 	// drawn outwards from a port. startX is the beginning point of the line
 	// at the port. endX is the position where the mouse is currently positioned.
-	getNewLinkAssocType(startX, endX) {
+	getNewLinkAssocVariation(startX, endX) {
 		if (this.drawingNewLinkData.portType === "input" && startX > endX) {
-			return CURVE_LEFT;
+			return ASSOC_VAR_CURVE_LEFT;
 
 		} else if (this.drawingNewLinkData.portType === "output" && startX < endX) {
-			return CURVE_RIGHT;
+			return ASSOC_VAR_CURVE_RIGHT;
 		}
-		return DOUBLE_BACK_RIGHT;
+		return ASSOC_VAR_DOUBLE_BACK_RIGHT;
 	}
 
-	// Returns a type of association link to draw between a source node and a
+	// Returns a variation of association link to draw between a source node and a
 	// target node based on their relative positions.
-	getAssocLinkType(srcNode, trgNode) {
+	getAssocLinkVariation(srcNode, trgNode) {
 		const gap = srcNode.layout.minInitialLine;
 		if (trgNode.x_pos >= srcNode.x_pos + srcNode.width + gap) {
-			return CURVE_RIGHT;
+			return ASSOC_VAR_CURVE_RIGHT;
 
 		} else if (srcNode.x_pos >= trgNode.x_pos + trgNode.width + gap) {
-			return "curveLeft";
+			return ASSOC_VAR_CURVE_LEFT;
 
 		// TODO - If we decide to optionally also support doubleBackLeft for
 		// association links at some point uncomment this code.
 		// } else if (trgNode.x_pos + (trgNode.width / 2) >= srcNode.x_pos + (srcNode.width / 2)) {
-		// 	return "doubleBackLeft";
+		// 	return DOUBLE_BACK_LEFT;
 		}
-		return DOUBLE_BACK_RIGHT;
+		return ASSOC_VAR_DOUBLE_BACK_RIGHT;
 	}
 
-	getAssociationCurveLinkCoords(srcNode, trgNode, assocLinkType) {
-		let x1 = 0;
-		let x2 = 0;
+	// Returns path for arrow head
+	getPortArrowPath(port) {
+		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
+			return `M ${port.cx - 3} ${port.cy - 2} L ${port.cx} ${port.cy + 2} ${port.cx + 3} ${port.cy - 2}`;
 
-		if (assocLinkType === CURVE_RIGHT) {
-			x1 = srcNode.x_pos + srcNode.width;
-			x2 = trgNode.x_pos;
-
-		} else if (assocLinkType === CURVE_LEFT) {
-			x1 = srcNode.x_pos;
-			x2 = trgNode.x_pos + trgNode.width;
-
-		} else if (assocLinkType === "doubleBackLeft") {
-			x1 = srcNode.x_pos;
-			x2 = trgNode.x_pos;
-
-		} else {
-			x1 = srcNode.x_pos + srcNode.width;
-			x2 = trgNode.x_pos + trgNode.width;
+		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+			return `M ${port.cx - 3} ${port.cy + 2} L ${port.cx} ${port.cy - 2} ${port.cx + 3} ${port.cy + 2}`;
 		}
 
-		return {
-			x1: x1,
-			y1: srcNode.y_pos + srcNode.layout.portPosY,
-			x2: x2,
-			y2: trgNode.y_pos + trgNode.layout.portPosY };
+		return `M ${port.cx - 2} ${port.cy - 3} L ${port.cx + 2} ${port.cy} ${port.cx - 2} ${port.cy + 3}`;
 	}
 
-	getNodeLinkCoordsForHalo(srcNode, trgNode) {
-		let srcCenterX;
-		let srcCenterY;
-		let trgCenterX;
-		let trgCenterY;
-
-		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			srcCenterX = srcNode.layout.imagePosX + (srcNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
-			srcCenterY = srcNode.layout.imagePosY + (srcNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
-		} else {
-			srcCenterX = (srcNode.width / 2) + this.canvasLayout.linkGap;
-			srcCenterY = srcNode.height / 2;
-		}
-
-		if (trgNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			trgCenterX = trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
-			trgCenterY = trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
-		} else {
-			trgCenterX = (trgNode.width / 2) + this.canvasLayout.linkGap;
-			trgCenterY = trgNode.height / 2;
-		}
-
-		const startPos = this.getOuterCoord(
-			srcNode.x_pos - this.canvasLayout.linkGap,
-			srcNode.y_pos - this.canvasLayout.linkGap,
-			srcNode.width + (this.canvasLayout.linkGap * 2),
-			srcNode.height + (this.canvasLayout.linkGap * 2),
-			srcCenterX,
-			srcCenterY,
-			trgNode.x_pos + (trgNode.width / 2),
-			trgNode.y_pos + (trgNode.height / 2));
-
-		const endPos = this.getOuterCoord(
-			trgNode.x_pos - this.canvasLayout.linkGap,
-			trgNode.y_pos - this.canvasLayout.linkGap,
-			trgNode.width + (this.canvasLayout.linkGap * 2),
-			trgNode.height + (this.canvasLayout.linkGap * 2),
-			trgCenterX,
-			trgCenterY,
-			srcNode.x_pos + (srcNode.width / 2),
-			srcNode.y_pos + (srcNode.height / 2));
-
-		return { x1: startPos.x, y1: startPos.y, x2: endPos.x, y2: endPos.y };
-	}
-
-	getNonDataLinkCoords(srcNode, trgNode) {
-		const startPos = this.getOuterCoord(
-			srcNode.x_pos - this.canvasLayout.linkGap,
-			srcNode.y_pos - this.canvasLayout.linkGap,
-			srcNode.width + (this.canvasLayout.linkGap * 2),
-			srcNode.height + (this.canvasLayout.linkGap * 2),
-			(srcNode.width / 2) + this.canvasLayout.linkGap,
-			(srcNode.height / 2) + this.canvasLayout.linkGap,
-			trgNode.x_pos + (trgNode.width / 2),
-			trgNode.y_pos + (trgNode.height / 2));
-
-		var centerX;
-		var centerY;
-
-		if (trgNode.layout.drawCommentLinkLineTo === "image_center") {
-			centerX = trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
-			centerY = trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
-		} else {
-			centerX = (trgNode.width / 2) + this.canvasLayout.linkGap;
-			centerY = (trgNode.height / 2) + this.canvasLayout.linkGap;
-		}
-
-		const endPos = this.getOuterCoord(
-			trgNode.x_pos - this.canvasLayout.linkGap,
-			trgNode.y_pos - this.canvasLayout.linkGap,
-			trgNode.width + (this.canvasLayout.linkGap * 2),
-			trgNode.height + (this.canvasLayout.linkGap * 2),
-			centerX,
-			centerY,
-			srcNode.x_pos + (srcNode.width / 2),
-			srcNode.y_pos + (srcNode.height / 2));
-
-		return { x1: startPos.x, y1: startPos.y, x2: endPos.x, y2: endPos.y };
-	}
-
-	getOuterCoord(xPos, yPos, width, height, innerCenterX, innerCenterY, outerCenterX, outerCenterY) {
-		const topLeft = { x: xPos, y: yPos };
-		const topRight = { x: xPos + width, y: yPos };
-		const botLeft = { x: xPos, y: yPos + height };
-		const botRight = { x: xPos + width, y: yPos + height };
-		const center = { x: innerCenterX + xPos, y: innerCenterY + yPos };
-
-		var startPointX;
-		var startPointY;
-
-		// Outer point is to the right of center
-		if (outerCenterX > center.x) {
-			const topRightRatio = (center.y - topRight.y) / (center.x - topRight.x);
-			const botRightRatio = (center.y - botRight.y) / (center.x - botRight.x);
-			const ratioRight = (center.y - outerCenterY) / (center.x - outerCenterX);
-
-			// North
-			if (ratioRight < topRightRatio) {
-				startPointX = center.x - (innerCenterY / ratioRight);
-				startPointY = yPos;
-			// South
-			} else if (ratioRight > botRightRatio) {
-				startPointX = center.x + ((height - innerCenterY) / ratioRight);
-				startPointY = yPos + height;
-			// East
-			} else {
-				startPointX = xPos + width;
-				startPointY = center.y + (innerCenterX * ratioRight);
-			}
-		// Outer point is to the left of center
-		} else {
-			const topLeftRatio = (center.y - topLeft.y) / (center.x - topLeft.x);
-			const botLeftRatio = (center.y - botLeft.y) / (center.x - botLeft.x);
-			const ratioLeft = (center.y - outerCenterY) / (center.x - outerCenterX);
-
-			// North
-			if (ratioLeft > topLeftRatio) {
-				startPointX = center.x - (innerCenterY / ratioLeft);
-				startPointY = yPos;
-			// South
-			} else if (ratioLeft < botLeftRatio) {
-				startPointX = center.x + ((height - innerCenterY) / ratioLeft);
-				startPointY = yPos + height;
-			// West
-			} else {
-				startPointX = xPos;
-				startPointY = center.y - (innerCenterX * ratioLeft);
-			}
-		}
-
-		return { x: startPointX, y: startPointY };
-	}
-
-	// Returns arrow shape for Ports presentation.
-	getArrowShapePath(cy, d, k) {
-		let x1 = -2;
-		let x2 = 2;
-		let y1 = cy - 3;
-		let y2 = cy + 3;
-		// Offset the arrow for super binding input nodes to the left so they are not
-		// obstructed by the edge of the containing SVG area. Also, zoom them by the
-		// zoom amount so they stay a standard size when zooming.
-		if (this.isSuperBindingNode(d)) {
-			x1 = -5 / k;
-			x2 = -1 / k;
-			const ygap = 3 / k;
-			y1 = cy - ygap;
-			y2 = cy + ygap;
-		}
-		let path = "M " + x1 + " " + y1;
-		path += " L  " + x2 + " " + cy;
-		path += " L " + x1 + " " + y2;
-		return path;
-	}
-
-	// Returns arrow head path. If the linkType is Curve or Elbow it makes sure
+	// Returns arrow head path. If the linkType is Elbow it makes sure
 	// the arrow head is for a horizontal line because the end of those types of
 	// line is always horizontal. Otherwise it returns an arrow head
 	// path relevant to the slope of the straight link being drawn.
 	getArrowHead(d) {
 		const angle =
-			this.canvasLayout.linkType === "Curve" || this.canvasLayout.linkType === "Elbow"
-				? 0
+			this.canvasLayout.linkType === LINK_TYPE_ELBOW
+				? this.getElbowArrowHeadAngle()
 				: Math.atan2((d.y2 - d.y1), (d.x2 - d.x1));
 
 		const clockwiseAngle = angle - 0.3;
@@ -5653,377 +5621,15 @@ export default class SVGCanvasRenderer {
 		return `M ${d.x2} ${d.y2} L ${x3} ${y3} M ${d.x2} ${d.y2} L ${x4} ${y4}`;
 	}
 
-	// Returns an SVG path string for the link (described by the data passed in)
-	// based on the connection and link type in the layout info.
-	getConnectorPath(data) {
-		// Get the minInitialLine layout variable that will be either for a
-		// comment link or from
-		// the link-data object (if the size has been pre-calculated for elbow style
-		// connections) or from the source node object (data.src) if we are drawing
-		// an existing connection or from this.drawingNewLinkData.minInitialLine if we
-		// are dynamically drawing a new link.
-		let minInitialLine;
-		if (data.type === COMMENT_LINK) {
-			minInitialLine = 0;
-		} else if (data.minInitialLineForElbow) {
-			minInitialLine = data.minInitialLineForElbow;
-		} else if (data.src && data.src.layout) {
-			minInitialLine = data.src.layout.minInitialLine;
-		} else {
-			minInitialLine = this.drawingNewLinkData.minInitialLine;
+	// Returns the angle the arrow head, for an elbow type link, should point.
+	getElbowArrowHeadAngle() {
+		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
+			return NINETY_DEGREES_IN_RADIANS;
+
+		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+			return -NINETY_DEGREES_IN_RADIANS;
 		}
-
-		// If its a very short line to be drawn just draw a straight line instead
-		// of zig-zagging in a very small space.
-		if (Math.abs(data.x1 - data.x2) < 20 &&
-				Math.abs(data.y1 - data.y2) < 20) {
-			return this.getStraightPath(data);
-
-		} else if (this.canvasLayout.connectionType === "ports" &&
-				data.type === NODE_LINK) {
-
-			if (this.canvasLayout.linkType === "Curve") {
-				return this.getCurvePath(data, minInitialLine);
-
-			} else	if (this.canvasLayout.linkType === "Elbow") {
-				return this.getElbowPath(data, minInitialLine);
-			}
-
-			return this.getLighteningPath(data, minInitialLine);
-
-		} else if (data.type === ASSOCIATION_LINK &&
-								this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
-			return this.getAssociationCurvePath(data, minInitialLine);
-		}
-
-		return this.getStraightPath(data);
-	}
-
-	// Returns the path string for the object passed in which describes a
-	// simple straight connector line from source to target. This is used for
-	// connectors from comments to data nodes.
-	getStraightPath(data) {
-		const path = "M " + data.x1 + " " + data.y1 + " L " + data.x2 + " " + data.y2;
-		const centerPoint = {
-			x: data.x1 + ((data.x2 - data.x1) / 2),
-			y: data.y1 + ((data.y2 - data.y1) / 2)
-		};
-		return { path, centerPoint };
-	}
-
-	// Returns the path string for the object passed in which describes a
-	// simple straight connector line and a jaunty zig zag line when the
-	// source is further right than the target.
-	getLighteningPath(data, minInitialLine) {
-		// Record centerPoint which can be used by the link decorations
-		const centerPoint = { x: 0, y: 0 };
-
-		let path = "";
-		const xDiff = data.x2 - data.x1;
-		const yDiff = data.y2 - data.y1;
-
-		if (xDiff > 20 ||
-				Math.abs(yDiff) < data.height) {
-			path = "M " + data.x1 + " " + data.y1 + " L " + data.x2 + " " + data.y2;
-
-			centerPoint.x = data.x1 + (xDiff / 2);
-			centerPoint.y = data.y1 + (yDiff / 2);
-		} else {
-			const corner1X = data.x1 + minInitialLine;
-			const corner1Y = data.y1;
-			const corner2X = data.x2 - minInitialLine;
-			const corner2Y = data.y2;
-
-			const centerLineY = corner2Y - (corner2Y - corner1Y) / 2;
-
-			path = "M " + data.x1 + " " + data.y1;
-			path += " " + corner1X + " " + centerLineY;
-			path += " " + corner2X + " " + centerLineY;
-			path += " " + data.x2 + " " + data.y2;
-
-			centerPoint.x = corner1X + ((corner2X - corner1X) / 2);
-			centerPoint.y = centerLineY;
-		}
-
-		return { path, centerPoint };
-	}
-
-	getAssociationCurvePath(data, minInitialLine) {
-		if (data.assocLinkType === CURVE_LEFT) {
-			return this.getCurveLeftPath(data, minInitialLine);
-
-		} else if (data.assocLinkType === "doubleBackLeft") {
-			return this.getDoubleBackLeft(data, minInitialLine);
-
-		} else if (data.assocLinkType === DOUBLE_BACK_RIGHT) {
-			return this.getDoubleBackRight(data, minInitialLine);
-
-		}
-		return this.getCurveRightPath(data, minInitialLine);
-	}
-
-	getCurveLeftPath(data, minInitialLine) {
-		const corner1X = data.x1 - ((data.x1 - data.x2) / 2);
-		return this.getCurveOutPath(data, minInitialLine, corner1X);
-	}
-
-	getCurveRightPath(data, minInitialLine) {
-		const corner1X = data.x1 + ((data.x2 - data.x1) / 2);
-		return this.getCurveOutPath(data, minInitialLine, corner1X);
-	}
-
-	getCurveOutPath(data, minInitialLine, corner1X) {
-		const corner1Y = data.y1;
-		const corner2X = corner1X;
-		const corner2Y = data.y2;
-		const path = "M " + data.x1 + " " + data.y1 +
-			" C " + corner1X + " " + corner1Y + " " + corner2X + " " + corner2Y + " " + data.x2 + " " + data.y2;
-		const centerPoint = { x: corner1X, y: corner1Y + ((corner2Y - corner1Y) / 2) };
-		return { path, centerPoint };
-	}
-
-	getDoubleBackLeft(data, minInitialLine) {
-		const corner1X = Math.min(data.x1, data.x2) - minInitialLine - 100;
-		return this.getDoubleBack(data, minInitialLine, corner1X);
-	}
-
-	getDoubleBackRight(data, minInitialLine) {
-		const corner1X = Math.max(data.x1, data.x2) + minInitialLine + 100;
-		return this.getDoubleBack(data, minInitialLine, corner1X);
-	}
-
-	getDoubleBack(data, minInitialLine, corner1X) {
-		const corner1Y = data.y1;
-		const corner2X = corner1X;
-		const corner2Y = data.y2;
-		const path = "M " + data.x1 + " " + data.y1 +
-			" C " + corner1X + " " + corner1Y + " " +
-			corner2X + " " + corner2Y + " " + data.x2 + " " + data.y2;
-		const centerPointX = this.calcCenterPoint(data.x1, corner1X, corner2X, data.x2);
-		const centerPointY = this.calcCenterPoint(data.y1, corner1Y, corner2Y, data.y2);
-		const centerPoint = { x: centerPointX, y: centerPointY };
-		return { path, centerPoint };
-	}
-
-	// Returns an x or y coordinate of the center point on a bezier curve from
-	// the four x or y coordinates passed in which are the coordinates of the four
-	// control points that describe the curve.
-	calcCenterPoint(c1, c2, c3, c4) {
-		const t = 0.5;
-
-		const part1 = Math.pow((1 - t), 3) * c1;
-		const part2 = 3 * Math.pow((1 - t), 2) * t * c2;
-		const part3 = 3 * Math.pow((1 - t), 2) * t * c3;
-		const part4 = Math.pow(t, 3) * c4;
-
-		return part1 + part2 + part3 + part4;
-	}
-
-	// Returns the path string for the object passed in which describes a
-	// cubic bezier curved connector line.
-	// getCurvePath(data) {
-	// 	let corner1X = data.x1 + (data.x2 - data.x1) / 2;
-	// 	const corner1Y = data.y1;
-	// 	let corner2X = corner1X;
-	// 	const corner2Y = data.y2;
-	//
-	// 	const x = data.x2 - data.x1 - 50;
-	//
-	// 	if (x < 0) {
-	// 		corner1X = data.x1 - (x * 2);
-	// 		corner2X = data.x2 + (x * 2);
-	// 	}
-	//
-	// 	let path = "M " + data.x1 + " " + data.y1;
-	// 	path += "C " + corner1X + " " + corner1Y + " " + corner2X + " " + corner2Y + " " + data.x2 + " " + data.y2;
-	// 	return path;
-	// }
-
-	// Returns the path string for the object passed in which describes a
-	// quadratic bezier curved connector line.
-	getCurvePath(data, minInitialLine) {
-		// Record centerPoint which can be used by the link decorations
-		const centerPoint = { x: 0, y: 0 };
-
-		const xDiff = data.x2 - data.x1;
-
-		// When dragging out a new link we will not have src nor trg nodes
-		let topSrc = data.y1;
-		let topTrg = data.y2;
-		let bottomSrc = data.y1;
-		let bottomTrg = data.y2;
-
-		// When drawing a link from node to node we will have src and trg nodes.
-		if (data.src && data.trg) {
-			topSrc = data.src.y_pos;
-			topTrg = data.trg.y_pos;
-			bottomSrc = data.src.y_pos + data.src.height;
-			bottomTrg = data.trg.y_pos + data.trg.height;
-		}
-
-		let path = "M " + data.x1 + " " + data.y1;
-
-		if (xDiff >= minInitialLine ||
-				(bottomTrg > topSrc - this.canvasLayout.wrapAroundNodePadding &&
-					topTrg < bottomSrc + this.canvasLayout.wrapAroundNodePadding &&
-					data.x2 > data.x1)) {
-			const corner1X = data.x1 + (data.x2 - data.x1) / 2;
-			const corner1Y = data.y1;
-			const corner2X = corner1X;
-			const corner2Y = data.y2;
-
-			path += " C " + corner1X + " " + corner1Y + " " + corner2X + " " + corner2Y + " " + data.x2 + " " + data.y2;
-			centerPoint.x = corner1X;
-			centerPoint.y = corner1Y + ((corner2Y - corner1Y) / 2);
-
-		} else {
-			let yDiff = data.y2 - data.y1;
-
-			let midY = 0;
-			if (topTrg >= bottomSrc + this.canvasLayout.wrapAroundNodePadding) {
-				midY = bottomSrc + ((topTrg - bottomSrc) / 2);
-			} else if (bottomTrg <= topSrc - this.canvasLayout.wrapAroundNodePadding) {
-				midY = bottomTrg + ((topSrc - bottomTrg) / 2);
-				yDiff = -yDiff;
-			} else {
-				if (data.y1 > data.y2) {
-					midY = Math.min(topSrc, topTrg) - this.canvasLayout.wrapAroundSpacing;
-					yDiff = -yDiff;
-				} else {
-					midY = Math.max(bottomSrc, bottomTrg) + this.canvasLayout.wrapAroundSpacing;
-				}
-			}
-
-			// Calculate an offset for the start points of the straight line. This
-			// will be relative to the start and end point of the curve. This needs
-			// to be based on the X gap between the source and target nodes but also
-			// dependent on the Y gap between those nodes because, as the Y gap
-			// increases, we want the straight line to decrease in size.
-			const offsetForStraightLine = Math.min((yDiff / 2), -(xDiff - minInitialLine / 2));
-
-			// Calculate an offset for the first and last corners. This allows the
-			// curve to 'grow' slowly out from a straight line to a point where the
-			// initial corners of the curve are a maximum of minInitialLine.
-			const offsetForFirstCorner = minInitialLine - Math.max((xDiff / 2), 0);
-
-			const corner1X = data.x1 + offsetForFirstCorner;
-			const corner1Y = data.y1;
-
-			const corner2X = corner1X;
-			const corner2Y = data.y1 + ((midY - data.y1) / 2);
-
-			const corner4X = data.x1 + ((data.x2 - data.x1) / 2);
-			const corner4Y = midY;
-
-			const corner4aX = data.x1 - offsetForStraightLine;
-			const corner4aY = midY;
-
-			const corner4bX = data.x2 + offsetForStraightLine;
-			const corner4bY = midY;
-
-			const corner5X = data.x2 - offsetForFirstCorner;
-			const corner5Y = midY;
-
-			const corner6X = corner5X;
-			const corner6Y = midY + ((data.y2 - midY) / 2);
-
-			// There is enough space we draw a straight line to join one end of the
-			// curve to another. Otherwise we just draw a continuous curve with no
-			// straight line.
-			if (corner4aX > corner4bX) {
-				path += " Q " + corner1X + " " + corner1Y + " " + corner2X + " " + corner2Y +
-								" T " + corner4aX + " " + corner4aY;
-				path += " L " + corner4bX + " " + corner4bY;
-				path += " Q " + corner5X + " " + corner5Y + " " + corner6X + " " + corner6Y +
-								" T " + data.x2 + " " + data.y2;
-
-				centerPoint.x = corner4aX + ((corner4bX - corner4aX) / 2);
-				centerPoint.y = corner4aY;
-			} else {
-				path += " Q " + corner1X + " " + corner1Y + " " + corner2X + " " + corner2Y +
-								" T " + corner4X + " " + corner4Y;
-				path += " Q " + corner5X + " " + corner5Y + " " + corner6X + " " + corner6Y +
-								" T " + data.x2 + " " + data.y2;
-
-				centerPoint.x = corner4X;
-				centerPoint.y = corner4Y;
-			}
-		}
-
-		return { path, centerPoint };
-	}
-
-	// Returns the path string for the object passed in which describes a
-	// curved connector line using elbows and straight lines.
-	getElbowPath(data, minInitialLine) {
-		// Record centerPoint which can be used by the link decorations
-		const centerPoint = { x: 0, y: 0 };
-
-		const corner1X = data.x1 + minInitialLine;
-		const corner1Y = data.y1;
-		let corner2X = corner1X;
-		const corner2Y = data.y2;
-
-		const xDiff = data.x2 - data.x1;
-		const yDiff = data.y2 - data.y1;
-		let elbowYOffset = yDiff / 2;
-
-		if (yDiff > (2 * this.canvasLayout.elbowSize)) {
-			elbowYOffset = this.canvasLayout.elbowSize;
-		}
-		else if (yDiff < -(2 * this.canvasLayout.elbowSize)) {
-			elbowYOffset = -this.canvasLayout.elbowSize;
-		}
-
-		// The minimum size of the line entering the target port. When
-		// dynamically drawing a new connection we will not have a target node
-		// so use a fixed value for this.
-		const minFinalLine = data.trg ? data.trg.layout.minFinalLine : 30;
-
-		// This is a special case where the source and target handles are very
-		// close together.
-		if (xDiff < (minInitialLine + minFinalLine) &&
-				(yDiff < (4 * this.canvasLayout.elbowSize) &&
-					yDiff > -(4 * this.canvasLayout.elbowSize))) {
-			elbowYOffset = yDiff / 4;
-		}
-
-		let elbowXOffset = this.canvasLayout.elbowSize;
-		let extraSegments = false;	// Indicates need for extra elbows and lines
-
-		if (xDiff < (minInitialLine + minFinalLine)) {
-			extraSegments = true;
-			corner2X = data.x2 - minFinalLine;
-			elbowXOffset = Math.min(this.canvasLayout.elbowSize, -((xDiff - (minInitialLine + minFinalLine)) / 2));
-		}
-
-		let path = "M " + data.x1 + " " + data.y1;
-		path += "L " + (corner1X - this.canvasLayout.elbowSize) + " " + corner1Y;
-		path += "Q " + corner1X + " " + corner1Y + " "	+ corner1X	+ " " + (corner1Y + elbowYOffset);
-
-		if (extraSegments === false) {
-			path += "L " + corner2X + " " + (corner2Y - elbowYOffset);
-
-			centerPoint.x = corner2X;
-			centerPoint.y = corner2Y;
-
-		} else {
-			const centerLineY = corner2Y - (corner2Y - corner1Y) / 2;
-
-			path += "L " + corner1X + " " + (centerLineY - elbowYOffset);
-			path += "Q " + corner1X + " " + centerLineY + " "	+ (corner1X - elbowXOffset) + " " + centerLineY;
-			path += "L " + (corner2X + elbowXOffset) + " " + centerLineY;
-			path += "Q " + corner2X + " " + centerLineY + " "	+ corner2X	+ " " + (centerLineY + elbowYOffset);
-			path += "L " + corner2X + " " + (corner2Y - elbowYOffset);
-
-			centerPoint.x = corner1X;
-			centerPoint.y = centerLineY;
-		}
-
-		path += "Q " + corner2X + " " + corner2Y + " " + (corner2X + this.canvasLayout.elbowSize) + " " + corner2Y;
-		path += "L " + data.x2 + " " + data.y2;
-
-		return { path, centerPoint };
+		return 0;
 	}
 
 	getErrorMarkerIcon(data) {

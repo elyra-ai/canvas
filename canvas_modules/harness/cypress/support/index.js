@@ -9,6 +9,7 @@
 
 import "./properties/properties-cmds";
 import "./canvas/node-cmds";
+import "./canvas/object-model-cmds";
 import "./canvas/test-harness-cmds";
 import "./canvas/toolbar-cmds";
 import "./canvas/verification-cmds";

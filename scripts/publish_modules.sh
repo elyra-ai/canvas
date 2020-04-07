@@ -38,13 +38,13 @@ commit_changes()
 	git status
 	git commit -m "$2"
 	echo "Push changes to $1"
-	git push origin $1
+	git push https://$GITHUB_TOKEN@github.com/${GIT_ORG}/canvas $1
 }
 
 setup_git_branch()
 {
 		# needed since travis only clones a single branch
-		git config --replace-all remote.origin.fetch +refs/heads/master:refs/remotes/origin/master
+		git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 		git fetch
 }
 # Update package.json version on release and master if they are the same major and minor versions
@@ -62,7 +62,7 @@ if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 	commit_changes ${RELEASE} "Update version for common-canvas to version ${RELEASE_BUILD} ${SKIP_CI}"
 	# Tag release build
 	cd ./scripts
-	./tagBuild.sh ${RELEASE} ${RELEASE_BUILD}
+	./tagBuild.sh "${RELEASE}_${RELEASE_BUILD}"
 	cd $WORKING_DIR
 
 	checkout_branch ${MASTER}
@@ -85,6 +85,7 @@ if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 
 	echo "Publishing common-canvas $RELEASE_BUILD to Artifactory NPM"
 	cd ./canvas_modules/common-canvas
+	echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
 	npm publish
 	cd $WORKING_DIR
 fi

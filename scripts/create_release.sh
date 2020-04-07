@@ -23,6 +23,12 @@
 # This is a workaround so that this command doesnt hit the fail-on-error stuff.
 # - Thought we could have used the other trick: <cmd> || true
 set +e # Disable error checking
+
+# only create the release if this is a travis cron job.
+if [ ${TRAVIS_EVENT_TYPE} != "cron" ]; then
+  exit 0;
+fi
+
 echo "Add github to known hosts"
 ssh -o StrictHostKeyChecking=no -T git@github.com
 set -e # Re-enable fail-on-error checking
@@ -32,9 +38,7 @@ echo "RUNNING SCRIPT: ${SCRIPTNAME}"
 
 echo "Setting local variables"
 WORKING_DIR="$PWD"
-GIT_ORG="elyra"
-GIT_REPO="canvas"
-GIT_DIRECTORY="${GIT_REPO}_repo"
+GIT_DIRECTORY="canvas_repo"
 RELEASE="release"
 MASTER_TAG="master-last_success"
 GIT_USER="automated_user"
@@ -42,17 +46,18 @@ GIT_USER_EMAIL="automated_user.com"
 
 git config --global user.name "${GIT_USER}"
 git config --global user.email "${GIT_USER_EMAIL}"
+git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 echo "GIT user set as: Username: ${GIT_USER} # Email: ${GIT_USER_EMAIL}"
 
-echo "Clone wdp-abstract-canvas"
-git clone git@github.ibm.com:${GIT_ORG}/${GIT_REPO}.git ${GIT_DIRECTORY}
+echo "Clone canvas repo"
+git clone https://$GITHUB_TOKEN@github.com/${GIT_ORG}/canvas ${GIT_DIRECTORY}
 
 cd $WORKING_DIR/$GIT_DIRECTORY
 git checkout ${RELEASE}
 if [[ $(git diff --name-status ${MASTER_TAG}..${RELEASE}) ]]; then
 	echo "Changes found between ${MASTER_TAG} and ${RELEASE}.  Merge branches."
 	git checkout ${MASTER_TAG}
-	git push origin HEAD:${RELEASE} --force
+	git push https://$GITHUB_TOKEN@github.com/${GIT_ORG}/canvas HEAD:${RELEASE} --force
 else
 	echo "No changes found between ${MASTER_TAG} and ${RELEASE}"
 	exit 0;

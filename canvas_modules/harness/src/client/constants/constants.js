@@ -64,6 +64,10 @@ _defineConstant("CURVE_LINKS", "Curve");
 _defineConstant("ELBOW_LINKS", "Elbow");
 _defineConstant("STRAIGHT_LINKS", "Straight");
 
+_defineConstant("DIRECTION_LEFT_RIGHT", "LeftRight");
+_defineConstant("DIRECTION_TOP_BOTTOM", "TopBottom");
+_defineConstant("DIRECTION_BOTTOM_TOP", "BottomTop");
+
 _defineConstant("ASSOC_RIGHT_SIDE_CURVE", "RightSideCurve");
 _defineConstant("ASSOC_STRAIGHT", "Straight");
 
