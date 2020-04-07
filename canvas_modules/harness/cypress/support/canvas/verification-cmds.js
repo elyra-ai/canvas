@@ -37,6 +37,31 @@ Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
 	});
 });
 
+Cypress.Commands.add("verifyNumberOfComments", (noOfComments) => {
+	cy.get(".d3-comment-group").should("have.length", noOfComments);
+
+	// verify the number of comments in the internal object model
+	cy.getPipeline().then((pipeline) => {
+		cy.getCountComments(pipeline).should("eq", noOfComments);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
+	// Sum of different types of links on canvas
+	cy.get(".d3-data-link").its("length")
+		.then((dataLinks) => {
+			cy.get(".d3-comment-link").its("length")
+				.then((commentLinks) => {
+					expect(dataLinks + commentLinks).equal(noOfLinks);
+				});
+		});
+
+	// verify the number of links in the internal object model
+	cy.getPipeline().then((pipeline) => {
+		cy.getCountLinks(pipeline).should("eq", noOfLinks);
+	});
+});
+
 Cypress.Commands.add("verifyNumberOfNodesInSupernode", (supernodeName, noOfNodes) => {
 	cy.getSupernodePipeline(supernodeName).then((supernodePipeline) => {
 		cy.getCountNodes(supernodePipeline).should("eq", noOfNodes);

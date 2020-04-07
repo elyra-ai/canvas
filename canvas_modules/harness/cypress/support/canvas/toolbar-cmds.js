@@ -74,3 +74,21 @@ Cypress.Commands.add("clickToolbarZoomToFit", () => {
 Cypress.Commands.add("clickToolbarNotifications", () => {
 	cy.get("#notificationCounterIcon-action").click();
 });
+
+Cypress.Commands.add("shortcutKeysCut", () => {
+	// Press Ctrl/Cmnd+x to Cut
+	const keySelector = Cypress.platform === "darwin" ? "{meta}" : "{ctrl}";
+	cy.get("body").type(keySelector + "{x}", { release: false });
+});
+
+Cypress.Commands.add("shortcutKeysCopy", () => {
+	// Press Ctrl/Cmnd+c to Copy
+	const keySelector = Cypress.platform === "darwin" ? "{meta}" : "{ctrl}";
+	cy.get("body").type(keySelector + "{c}", { release: false });
+});
+
+Cypress.Commands.add("shortcutKeysPaste", () => {
+	// Press Ctrl/Cmnd+v to Paste
+	const keySelector = Cypress.platform === "darwin" ? "{meta}" : "{ctrl}";
+	cy.get("body").type(keySelector + "{v}", { release: false });
+});
