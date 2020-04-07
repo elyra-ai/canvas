@@ -38,7 +38,7 @@ commit_changes()
 	git status
 	git commit -m "$2"
 	echo "Push changes to $1"
-	git push origin $1
+	git push https://$GITHUB_TOKEN@github.com/${GIT_ORG}/canvas origin $1
 }
 
 setup_git_branch()
@@ -85,6 +85,7 @@ if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 
 	echo "Publishing common-canvas $RELEASE_BUILD to Artifactory NPM"
 	cd ./canvas_modules/common-canvas
+	echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
 	npm publish
 	cd $WORKING_DIR
 fi
