@@ -29,6 +29,18 @@ Cypress.Commands.add("openCanvasDefinition", (canvasFileName) => {
 	// are executed. Note: this won't work if the testcase selects a second
 	// canvas while an existing canvas with nodes is displayed.
 	cy.get(".d3-node-group");
+	cy.get("#harness-action-bar-sidepanel-canvas").click();
+});
+
+Cypress.Commands.add("openCanvasPalette", (paletteName) => {
+	cy.get("#harness-action-bar-sidepanel-canvas").click();
+	cy.get("#harness-sidepanel-palette-dropdown").select(paletteName);
+	// Wait until we can get a palette flyout category from the canvas before proceeding. This
+	// allows the canvas to load and display before any more test case steps
+	// are executed. Note: this won't work if the testcase selects a second
+	// canvas while an existing canvas with nodes is displayed.
+	cy.get(".palette-flyout-category");
+	cy.get("#harness-action-bar-sidepanel-canvas").click();
 });
 
 Cypress.Commands.add("setCanvasConfig", (config) => {
