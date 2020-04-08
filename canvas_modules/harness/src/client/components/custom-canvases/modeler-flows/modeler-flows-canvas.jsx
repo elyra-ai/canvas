@@ -27,6 +27,7 @@ export default class ModelerFlowsCanvas extends React.Component {
 			enableLinkType: "Elbow",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",
+			paletteInitialState: true,
 			enableDropZoneOnExternalDrag: true,
 			enableHightlightPortOnNewLinkDrag: true,
 			tipConfig: {
@@ -42,10 +43,10 @@ export default class ModelerFlowsCanvas extends React.Component {
 				defaultNodeWidth: 72,
 				defaultNodeHeight: 72,
 				selectionPath: "M 8 0 L 64 0 64 56 8 56 8 0",
-				ellipsisWidth: 16,
-				ellipsisHeight: 22,
-				ellipsisPosY: -5,
-				ellipsisPosX: 62,
+				ellipsisWidth: 12,
+				ellipsisHeight: 16,
+				ellipsisPosY: -1,
+				ellipsisPosX: 64.5,
 				imageWidth: 48,
 				imageHeight: 48,
 				imagePosX: 12,
@@ -67,8 +68,8 @@ export default class ModelerFlowsCanvas extends React.Component {
 			enableCanvasLayout: {
 				dataLinkArrowHead: true,
 				linkGap: 4,
-				alwaysDisplayBackToParentFlow: true,
-				displayLinkOnOverlap: false
+				displayLinkOnOverlap: false,
+				alwaysDisplayBackToParentFlow: true
 			}
 		});
 		return config;
