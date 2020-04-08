@@ -38,13 +38,6 @@ coverage
 # Dependency directory
 node_modules
 
-# Source code
-src
-utils
-assets
-webpack.config.js
-Gruntfile.js
-
 # Testing directories
 test-server
 __tests__
