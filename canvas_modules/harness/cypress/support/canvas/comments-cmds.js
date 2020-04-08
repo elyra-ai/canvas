@@ -25,6 +25,6 @@ Cypress.Commands.add("getCommentWithText", (commentText) => {
 
 Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 	// Get the os name to decide whether to click ctrl or cmd
-	const keySelector = Cypress.platform === "darwin" ? "{meta}" : "{ctrl}";
-	cy.getCommentWithText(commentText).type(keySelector, { release: false });
+	cy.useCtrlOrCmdKey()
+		.then((selectedKey) => cy.getCommentWithText(commentText).type(selectedKey, { release: false }));
 });

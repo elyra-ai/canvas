@@ -77,6 +77,5 @@ Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
 
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	// Get the os name to decide whether to click ctrl or cmd
-	const keySelector = Cypress.platform === "darwin" ? "{meta}" : "{ctrl}";
-	cy.getNodeForLabel(nodeName).type(keySelector, { release: false });
+	cy.useCtrlOrCmdKey().then((selectedKey) => cy.getNodeForLabel(nodeName).type(selectedKey, { release: false }));
 });
