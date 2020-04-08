@@ -75,13 +75,7 @@ Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
 	});
 });
 
-Cypress.Commands.add("clickOptionFromContextMenu", (optionName) => {
-	cy.get(".context-menu-popover").find(".react-contextmenu-item:not(.contextmenu-divider)")
-		.then((options) => {
-			options.each((idx) => {
-				if (options[idx].outerText === optionName) {
-					options[idx].click();
-				}
-			});
-		});
+Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
+	// Get the os name to decide whether to click ctrl or cmd
+	cy.useCtrlOrCmdKey().then((selectedKey) => cy.getNodeForLabel(nodeName).type(selectedKey, { release: false }));
 });
