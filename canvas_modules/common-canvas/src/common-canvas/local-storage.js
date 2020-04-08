@@ -24,8 +24,8 @@ import Logger from "../logging/canvas-logger.js";
 export default class LocalStorage {
 	static set(attributeName, value) {
 		try {
-			if (window.electronUtil && window.electronUtil.localStorage) {
-				window.electronUtil.localStorage[attributeName] = value;
+			if (window.electronUtil && window.electronUtil.wsdStorage) {
+				window.electronUtil.wsdStorage[attributeName] = value;
 
 			} else if (window.localStorage) {
 				window.localStorage[attributeName] = value;
@@ -37,8 +37,8 @@ export default class LocalStorage {
 
 	static get(attributeName) {
 		try {
-			if (window.electronUtil && window.electronUtil.localStorage) {
-				return window.electronUtil.localStorage[attributeName];
+			if (window.electronUtil && window.electronUtil.wsdStorage) {
+				return window.electronUtil.wsdStorage[attributeName];
 
 			} else if (window.localStorage) {
 				return window.localStorage[attributeName];
@@ -51,8 +51,8 @@ export default class LocalStorage {
 
 	static delete(attributeName) {
 		try {
-			if (window.electronUtil && window.electronUtil.localStorage) {
-				delete window.electronUtil.localStorage[attributeName];
+			if (window.electronUtil && window.electronUtil.wsdStorage) {
+				delete window.electronUtil.wsdStorage[attributeName];
 
 			} else if (window.localStorage) {
 				delete window.localStorage[attributeName];
