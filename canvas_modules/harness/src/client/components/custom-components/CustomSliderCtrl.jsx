@@ -16,8 +16,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Slider from "carbon-components-react/lib/components/Slider";
 import { WarningFilled16, ErrorFilled16 } from "@carbon/icons-react";
+import { Slider } from "carbon-components-react";
 import { connect } from "react-redux";
 
 class CustomSliderCtrl extends React.Component {

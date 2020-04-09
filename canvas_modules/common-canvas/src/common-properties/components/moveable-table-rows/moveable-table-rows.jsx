@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 import PropertyUtils from "./../../util/property-utils";
 import { ArrowUp24, ArrowDown24, BackToTop24, DownToBottom24 } from "@carbon/icons-react";
 import classNames from "classnames";

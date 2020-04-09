@@ -31,7 +31,7 @@ import omit from "lodash/omit";
 import pick from "lodash/pick";
 import has from "lodash/has";
 import Icon from "./../../icons/icon.jsx";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 import { Provider } from "react-redux";
 import logger from "../../../utils/logger";
 

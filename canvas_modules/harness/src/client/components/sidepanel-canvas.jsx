@@ -19,16 +19,18 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import FileUploader from "carbon-components-react/lib/components/FileUploader";
-import Button from "carbon-components-react/lib/components/Button";
-import Select from "carbon-components-react/lib/components/Select";
-import SelectItemGroup from "carbon-components-react/lib/components/SelectItemGroup";
-import SelectItem from "carbon-components-react/lib/components/SelectItem";
-import Checkbox from "carbon-components-react/lib/components/Checkbox";
-import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
-import RadioButton from "carbon-components-react/lib/components/RadioButton";
-import Toggle from "carbon-components-react/lib/components/Toggle";
-import TextInput from "carbon-components-react/lib/components/TextInput";
+import {
+	FileUploader,
+	Button,
+	Select,
+	SelectItem,
+	SelectItemGroup,
+	Checkbox,
+	RadioButtonGroup,
+	RadioButton,
+	Toggle,
+	TextInput
+} from "carbon-components-react";
 
 
 import {

@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";

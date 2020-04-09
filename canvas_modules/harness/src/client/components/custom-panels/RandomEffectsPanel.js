@@ -15,10 +15,9 @@
  */
 
 import React from "react";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button, Dropdown } from "carbon-components-react";
 import isEqual from "lodash/isEqual";
 import CustomEffectsCtrl from "../ctrl/CustomEffectsCtrl.jsx";
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
 
 class RandomEffectsPanel {
 	static id() {

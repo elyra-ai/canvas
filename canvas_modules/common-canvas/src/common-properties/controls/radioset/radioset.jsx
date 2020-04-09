@@ -21,7 +21,7 @@ import isEqual from "lodash/isEqual";
 import ControlUtils from "./../../util/control-utils";
 import ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
 import ValidationMessage from "./../../components/validation-message";
-import RadioButton from "carbon-components-react/lib/components/RadioButton";
+import { RadioButton } from "carbon-components-react";
 import classNames from "classnames";
 import { STATES } from "./../../constants/constants.js";
 import { ORIENTATIONS } from "./../../constants/form-constants.js";

@@ -17,7 +17,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 
 export default class IconButton extends Component {
 

@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import { STATES, TOOL_TIP_DELAY_ICON, CARBON_ICONS } from "./../../constants/constants.js";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import isEmpty from "lodash/isEmpty";
 import uuid4 from "uuid/v4";

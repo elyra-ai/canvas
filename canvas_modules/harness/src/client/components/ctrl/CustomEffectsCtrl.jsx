@@ -16,10 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "carbon-components-react/lib/components/Button";
-import RadioButton from "carbon-components-react/lib/components/RadioButton";
-import Icon from "carbon-components-react/lib/components/Icon";
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
+import { Button, RadioButton, Icon, Dropdown } from "carbon-components-react";
 import { connect } from "react-redux";
 import isEqual from "lodash/isEqual";
 

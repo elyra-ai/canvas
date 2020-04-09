@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 import uuid4 from "uuid/v4";
 import PropertyUtils from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";

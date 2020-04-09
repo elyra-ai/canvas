@@ -19,13 +19,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import isEmpty from "lodash/isEmpty";
-import Button from "carbon-components-react/lib/components/Button";
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
-import TextArea from "carbon-components-react/lib/components/TextArea";
-import TextInput from "carbon-components-react/lib/components/TextInput";
-import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
-import RadioButton from "carbon-components-react/lib/components/RadioButton";
-import Toggle from "carbon-components-react/lib/components/Toggle";
+import { Button, Dropdown, TextArea, TextInput, RadioButtonGroup, RadioButton, Toggle } from "carbon-components-react";
 import {
 	API_SET_PIPELINEFLOW,
 	API_ADD_PALETTE_ITEM,

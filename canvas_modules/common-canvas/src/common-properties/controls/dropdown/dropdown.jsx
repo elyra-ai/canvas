@@ -17,9 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
-import Select from "carbon-components-react/lib/components/Select";
-import SelectItem from "carbon-components-react/lib/components/SelectItem";
+import { Dropdown, Select, SelectItem } from "carbon-components-react";
 import isEqual from "lodash/isEqual";
 import ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";

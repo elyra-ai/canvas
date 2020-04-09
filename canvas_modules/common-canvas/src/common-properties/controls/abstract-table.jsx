@@ -17,8 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "carbon-components-react/lib/components/Button";
-import Checkbox from "carbon-components-react/lib/components/Checkbox";
+import { Button, Checkbox } from "carbon-components-react";
 import IconButton from "./../components/icon-button";
 import FlexibleTable from "./../components/flexible-table";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";

@@ -18,8 +18,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
-import Button from "carbon-components-react/lib/components/Button";
+import { Dropdown, Button } from "carbon-components-react";
 import {
 	TEXTFIELD_ERROR_PROPS_INFO,
 	TEXTFIELD_WARNING_PROPS_INFO,

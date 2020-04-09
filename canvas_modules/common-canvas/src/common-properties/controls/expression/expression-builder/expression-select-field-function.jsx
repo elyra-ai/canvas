@@ -16,9 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
-import Tabs from "carbon-components-react/lib/components/Tabs";
-import Tab from "carbon-components-react/lib/components/Tab";
+import { Dropdown, Tabs, Tab } from "carbon-components-react";
 import FlexibleTable from "./../../../components/flexible-table/flexible-table.jsx";
 import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
 import PropertyUtils from "./../../../util/property-utils";

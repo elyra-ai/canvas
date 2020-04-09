@@ -22,7 +22,7 @@ import FlexibleTable from "./../flexible-table";
 import PropertiesButtons from "./../properties-buttons";
 import PropertyUtils from "./../../util/property-utils";
 
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 
 import { MESSAGE_KEYS, DATA_TYPE, TOOL_TIP_DELAY, SORT_DIRECTION, ROW_SELECTION } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";

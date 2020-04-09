@@ -20,8 +20,7 @@ import { connect } from "react-redux";
 import ReactDOM from "react-dom";
 import { setTitle } from "./../../actions";
 import Icon from "./../../../icons/icon.jsx";
-import Button from "carbon-components-react/lib/components/Button";
-import TextInput from "carbon-components-react/lib/components/TextInput";
+import { Button, TextInput } from "carbon-components-react";
 import { MESSAGE_KEYS, CARBON_ICONS } from "./../../constants/constants";
 import PropertyUtils from "./../../util/property-utils";
 
