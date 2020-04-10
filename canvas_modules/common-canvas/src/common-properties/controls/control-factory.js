@@ -134,7 +134,7 @@ export default class ControlFactory {
 				rightFlyout={this.rightFlyout}
 			/>);
 		case (ControlType.SELECTCOLUMN):
-			if (!tableInfo) {
+			if (!tableInfo || (tableInfo && tableInfo.allowColumnControls)) {
 				return (<Dropdown
 					{...props}
 					rightFlyout={this.rightFlyout}
