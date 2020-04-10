@@ -89,7 +89,10 @@ CheckboxsetControl.propTypes = {
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux
-	controlOpts: PropTypes.array, // pass in by redux
+	controlOpts: PropTypes.oneOfType([
+		PropTypes.object,
+		PropTypes.array
+	]), // pass in by redux
 	messageInfo: PropTypes.object // pass in by redux
 };
 
