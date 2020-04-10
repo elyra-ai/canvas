@@ -74,7 +74,7 @@ export default class CanvasController {
 			enableInternalObjectModel: true,
 			enablePaletteLayout: "Flyout",
 			enableInsertNodeDroppedOnLink: false,
-			enableHightlightPortOnNewLinkDrag: false,
+			enableHightlightNodeOnNewLinkDrag: false,
 			enableMoveNodesOnSupernodeResize: true,
 			enableDisplayFullLabelOnHover: false,
 			enableDropZoneOnExternalDrag: false,
