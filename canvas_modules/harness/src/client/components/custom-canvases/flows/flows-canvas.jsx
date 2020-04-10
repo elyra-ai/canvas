@@ -3,18 +3,22 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas";
 
-import ModelerFlowsCanvasFlow from "./modelerFlowsNewDesignCanvas.json";
-import ModelerFlowsPalette from "./modelerFlowsNewDesignPalette.json";
+import FlowsCanvasFlow from "./flowsCanvas.json";
+import FlowsPalette from "./flowsPalette.json";
+import FlowsLoadingPalette from "./flowsLoadingPalette.json";
 
 
-export default class ModelerFlowsCanvas extends React.Component {
+export default class FlowsCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(ModelerFlowsCanvasFlow);
-		this.canvasController.setPipelineFlowPalette(ModelerFlowsPalette);
+		this.canvasController.setPipelineFlow(FlowsCanvasFlow);
+		this.canvasController.setPipelineFlowPalette(FlowsLoadingPalette);
+
+		this.activateLoadingCanvas();
 
 		this.getConfig = this.getConfig.bind(this);
+		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 	}
 
 	getConfig() {
@@ -59,20 +63,40 @@ export default class ModelerFlowsCanvas extends React.Component {
 				outputPortRightPosX: 0,
 				outputPortRightPosY: 28,
 				outputPortObject: "image",
-				outputPortImage: "/images/modeler-flows/decorations/dragStateArrow.svg",
+				outputPortImage: "/images/custom-canvases/flows/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,
 				outputPortHeight: 20,
 				outputPortGuideObject: "image",
-				outputPortGuideImage: "/images/modeler-flows/decorations/dragStateArrow.svg"
+				outputPortGuideImage: "/images/custom-canvases/flows/decorations/dragStateArrow.svg"
 			},
 			enableCanvasLayout: {
 				dataLinkArrowHead: true,
 				linkGap: 4,
-				displayLinkOnOverlap: false,
-				alwaysDisplayBackToParentFlow: true
+				displayLinkOnOverlap: false
 			}
 		});
 		return config;
+	}
+
+	decorationActionHandler() {
+		this.canvasController.displaySubPipeline({
+			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
+			pipelineFlowId: "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159"
+		});
+	}
+
+	activateLoadingCanvas() {
+		this.canvasController.setCategoryLoadingText("recordOp", "Loading record ops");
+		this.canvasController.setCategoryLoadingText("fieldOp", "Loading field ops");
+		this.canvasController.setCategoryLoadingText("modeling", "Loading modeling");
+		this.canvasController.setCategoryLoadingText("TextMining", "Loading text mining");
+		this.canvasController.setCategoryLoadingText("graph", "Loading graphs");
+		this.canvasController.setCategoryLoadingText("output", "Loading outputs");
+		this.canvasController.setCategoryLoadingText("export", "Loading exports");
+		this.canvasController.setCategoryLoadingText("models", "Loading models");
+		setTimeout(() => {
+			this.canvasController.setPipelineFlowPalette(FlowsPalette);
+		}, 3000);
 	}
 
 	render() {
@@ -80,12 +104,13 @@ export default class ModelerFlowsCanvas extends React.Component {
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
+				decorationActionHandler={this.decorationActionHandler}
 				config={config}
 			/>
 		);
 	}
 }
 
-ModelerFlowsCanvas.propTypes = {
+FlowsCanvas.propTypes = {
 	config: PropTypes.object
 };

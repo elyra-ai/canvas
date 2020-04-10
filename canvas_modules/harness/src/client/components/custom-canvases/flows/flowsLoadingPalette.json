@@ -4,7 +4,7 @@
     {
       "label": "Import",
       "description": "This category defines data importers",
-      "image": "images/modeler-flows/palette/icons/palette-import.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-import.svg",
       "id": "import",
       "node_types": [
         {
@@ -30,7 +30,7 @@
             "ui_data": {
               "label": "Data Asset",
               "description": "Pull in data from remote data sources using connections, or pull in data from a file.",
-              "image": "images/modeler-flows/palette/icons/dataassetimport.svg",
+              "image": "images/custom-canvases/flows/palette/icons/dataassetimport.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -59,7 +59,7 @@
             "ui_data": {
               "label": "User Input",
               "description": "Easily create synthetic data—either from scratch or by altering existing data.",
-              "image": "images/modeler-flows/palette/icons/userinput.svg",
+              "image": "images/custom-canvases/flows/palette/icons/userinput.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -88,7 +88,7 @@
             "ui_data": {
               "label": "Sim Gen",
               "description": "Generate simulated data automatically or with user-specified statistical distributions.",
-              "image": "images/modeler-flows/palette/icons/simgen.svg",
+              "image": "images/custom-canvases/flows/palette/icons/simgen.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -99,7 +99,7 @@
     {
       "label": "Record Operations",
       "description": "This category defines operations on records",
-      "image": "images/modeler-flows/palette/icons/palette-record-ops.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-record-ops.svg",
       "id": "recordOp",
       "node_types": [
       ]
@@ -107,7 +107,7 @@
     {
       "label": "Field Operations",
       "description": "This category defines operations on fields",
-      "image": "images/modeler-flows/palette/icons/palette-field-ops.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-field-ops.svg",
       "id": "fieldOp",
       "node_types": [
       ]
@@ -115,7 +115,7 @@
     {
       "label": "Graphs",
       "description": "This category defines chart builders",
-      "image": "images/modeler-flows/palette/icons/palette-charts.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-charts.svg",
       "id": "graph",
       "node_types": [
       ]
@@ -123,7 +123,7 @@
     {
       "label": "Modeling",
       "description": "This category defines model builders",
-      "image": "images/modeler-flows/palette/icons/palette-modeling.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-modeling.svg",
       "id": "modeling",
       "node_types": [
       ]
@@ -131,7 +131,7 @@
     {
       "label": "Text Analytics",
       "description": "This category defines Text Mining operations",
-      "image": "images/modeler-flows/palette/icons/palette-textmining.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-textmining.svg",
       "id": "TextMining",
       "node_types": [
       ]
@@ -139,7 +139,7 @@
     {
       "label": "Outputs",
       "description": "This category defines output builders",
-      "image": "images/modeler-flows/palette/icons/palette-output.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-output.svg",
       "id": "output",
       "node_types": [
       ]
@@ -147,7 +147,7 @@
     {
       "label": "Export",
       "description": "This category defines data exporters",
-      "image": "images/modeler-flows/palette/icons/palette-export.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-export.svg",
       "id": "export",
       "node_types": [
       ]
@@ -155,7 +155,7 @@
     {
       "label": "Models",
       "description": "This category defines models built from the modeling nodes",
-      "image": "images/modeler-flows/palette/icons/palette-modeling.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-modeling.svg",
       "id": "models",
       "node_types": [
       ]

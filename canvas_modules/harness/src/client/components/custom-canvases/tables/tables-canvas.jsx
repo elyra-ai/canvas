@@ -3,15 +3,15 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas";
 
-import AutoAICanvasFlow from "./autoAICanvas.json";
+import TablesCanvasFlow from "./tablesCanvas.json";
 
 
-export default class AutoAICanvas extends React.Component {
+export default class TablesCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(AutoAICanvasFlow);
+		this.canvasController.setPipelineFlow(TablesCanvasFlow);
 
 		this.left = 10;
 		this.right = 210;
@@ -23,7 +23,7 @@ export default class AutoAICanvas extends React.Component {
 			enableNodeFormatType: "Horizontal",
 			enableAssocLinkCreation: true,
 			enableAssocLinkType: "RightSideCurve",
-			enableParentClass: "ai-join",
+			enableParentClass: "tables-join",
 			enableNodeLayout: {
 				defaultNodeWidth: 220,
 				defaultNodeHeight: 50,
@@ -40,11 +40,11 @@ export default class AutoAICanvas extends React.Component {
 				ellipsisPosX: 190,
 				ellipsisPosY: 16,
 				inputPortObject: "image",
-				inputPortImage: "/images/decorators/ai-port-left.png",
+				inputPortImage: "/images/custom-canvases/tables/tables-port-left.png",
 				inputPortWidth: 20,
 				inputPortHeight: 20,
 				outputPortObject: "image",
-				outputPortImage: "/images/decorators/ai-port-right.png",
+				outputPortImage: "/images/custom-canvases/tables/tables-port-right.png",
 				outputPortWidth: 20,
 				outputPortHeight: 20
 			}
@@ -78,7 +78,7 @@ export default class AutoAICanvas extends React.Component {
 				decorations: [
 					{
 						id: "default-dec3",
-						image: "/images/decorators/ai-main-table.png",
+						image: "/images/custom-canvases/tables/tables-main-table.png",
 						width: 201,
 						height: 23,
 						x_pos: 10,
@@ -97,12 +97,12 @@ export default class AutoAICanvas extends React.Component {
 		const decImage = decs.find((d) => d.id === id);
 		const decLabel = decs.find((d) => d.label);
 		if (decImage && decLabel) {
-			if (decImage.image && decImage.image === "/images/decorators/ai-join-keys-selected.png") {
-				decImage.image = "/images/decorators/ai-join-keys-unselected.png";
-				decLabel.class_name = "ai-join-keys-decoration-text-unselected";
+			if (decImage.image && decImage.image === "/images/custom-canvases/tables/tables-join-keys-selected.png") {
+				decImage.image = "/images/custom-canvases/tables/tables-join-keys-unselected.png";
+				decLabel.class_name = "tables-join-keys-decoration-text-unselected";
 			} else {
-				decImage.image = "/images/decorators/ai-join-keys-selected.png";
-				decLabel.class_name = "ai-join-keys-decoration-text-selected";
+				decImage.image = "/images/custom-canvases/tables/tables-join-keys-selected.png";
+				decLabel.class_name = "tables-join-keys-decoration-text-selected";
 			}
 			this.canvasController.setLinkDecorations(link.id, decs);
 		}
@@ -117,8 +117,8 @@ export default class AutoAICanvas extends React.Component {
 					"y_pos": -20,
 					"height": 40,
 					"width": 80,
-					"class_name": "ai-join-keys-decoration-outline",
-					"image": "/images/decorators/ai-join-keys-unselected.png",
+					"class_name": "tables-join-keys-decoration-outline",
+					"image": "/images/custom-canvases/tables/tables-join-keys-unselected.png",
 					"hotspot": true
 				},
 				{
@@ -126,7 +126,7 @@ export default class AutoAICanvas extends React.Component {
 					"x_pos": 0,
 					"y_pos": 4,
 					"label": "0 Keys",
-					"class_name": "ai-join-keys-decoration-text-unselected",
+					"class_name": "tables-join-keys-decoration-text-unselected",
 					"hotspot": true
 				}
 			];
@@ -147,6 +147,6 @@ export default class AutoAICanvas extends React.Component {
 	}
 }
 
-AutoAICanvas.propTypes = {
+TablesCanvas.propTypes = {
 	config: PropTypes.object
 };
