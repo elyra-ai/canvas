@@ -1,27 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 import { CommonCanvas, CanvasController } from "common-canvas";
-
-import DB2VisualExplainCanvasFlow from "./db2ExplainCanvas.json";
-import ModelerPalette from "../../../../../test_resources/palettes/modelerPalette.json";
+import ExplainCanvasFlow from "./explainCanvas.json";
 
 
-export default class DB2VisualExplainCanvas extends React.Component {
+export default class ExplainCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(DB2VisualExplainCanvasFlow);
-		this.canvasController.setPipelineFlowPalette(ModelerPalette);
+		this.canvasController.setPipelineFlow(ExplainCanvasFlow);
 
 		this.config = Object.assign({}, props.config, {
 			enableConnectionType: "Halo",
-			enableParentClass: "db2-explain",
+			enableParentClass: "explain",
 			enableNodeLayout:
 			{
-				cssNodeLabel: "shape_label_style_db2_explain",
-				cssNodeBody: "default_node_style_db2_explain",
 				defaultNodeWidth: 120,
 				defaultNodeHeight: 60,
 				labelAndIconVerticalJustification: "none",
@@ -108,6 +102,6 @@ export default class DB2VisualExplainCanvas extends React.Component {
 	}
 }
 
-DB2VisualExplainCanvas.propTypes = {
+ExplainCanvas.propTypes = {
 	config: PropTypes.object
 };

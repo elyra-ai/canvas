@@ -4,7 +4,7 @@
     {
       "label": "Import",
       "description": "This category defines data importers",
-      "image": "images/modeler-flows/palette/icons/palette-import.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-import.svg",
       "id": "import",
       "node_types": [
         {
@@ -30,7 +30,7 @@
             "ui_data": {
               "label": "Data Asset",
               "description": "Pull in data from remote data sources using connections, or pull in data from a file.",
-              "image": "images/modeler-flows/palette/icons/dataassetimport.svg",
+              "image": "images/custom-canvases/flows/palette/icons/dataassetimport.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -59,7 +59,7 @@
             "ui_data": {
               "label": "User Input",
               "description": "Easily create synthetic data—either from scratch or by altering existing data.",
-              "image": "images/modeler-flows/palette/icons/userinput.svg",
+              "image": "images/custom-canvases/flows/palette/icons/userinput.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -88,7 +88,7 @@
             "ui_data": {
               "label": "Sim Gen",
               "description": "Generate simulated data automatically or with user-specified statistical distributions.",
-              "image": "images/modeler-flows/palette/icons/simgen.svg",
+              "image": "images/custom-canvases/flows/palette/icons/simgen.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -99,7 +99,7 @@
     {
       "label": "Record Operations",
       "description": "This category defines operations on records",
-      "image": "images/modeler-flows/palette/icons/palette-record-ops.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-record-ops.svg",
       "id": "recordOp",
       "node_types": [
         {
@@ -139,7 +139,7 @@
             "ui_data": {
               "label": "Select",
               "description": "Select or discard a subset of records from the data stream based on a specific condition.",
-              "image": "images/modeler-flows/palette/icons/select.svg",
+              "image": "images/custom-canvases/flows/palette/icons/select.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -182,7 +182,7 @@
             "ui_data": {
               "label": "Sample",
               "description": "Select a subset of records for analysis, or specify a proportion of records to discard.",
-              "image": "images/modeler-flows/palette/icons/sample.svg",
+              "image": "images/custom-canvases/flows/palette/icons/sample.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -225,7 +225,7 @@
             "ui_data": {
               "label": "Sort",
               "description": "Sort records into ascending or descending order based on the values of one or more fields.",
-              "image": "images/modeler-flows/palette/icons/sort.svg",
+              "image": "images/custom-canvases/flows/palette/icons/sort.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -268,7 +268,7 @@
             "ui_data": {
               "label": "Balance",
               "description": "Correct imbalances in datasets so they conform to specified test criteria.",
-              "image": "images/modeler-flows/palette/icons/balance.svg",
+              "image": "images/custom-canvases/flows/palette/icons/balance.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -311,7 +311,7 @@
             "ui_data": {
               "label": "Distinct",
               "description": "Find or remove duplicate records in your data, or create a single, composite record from a group of duplicate records.",
-              "image": "images/modeler-flows/palette/icons/distinct.svg",
+              "image": "images/custom-canvases/flows/palette/icons/distinct.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -354,7 +354,7 @@
             "ui_data": {
               "label": "Aggregate",
               "description": "Replace a sequence of input records with summary, aggregated output records.",
-              "image": "images/modeler-flows/palette/icons/aggregate.svg",
+              "image": "images/custom-canvases/flows/palette/icons/aggregate.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -397,7 +397,7 @@
             "ui_data": {
               "label": "Merge",
               "description": "Take multiple input records and create a single output record containing all or some of the input fields.",
-              "image": "images/modeler-flows/palette/icons/merge.svg",
+              "image": "images/custom-canvases/flows/palette/icons/merge.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -440,7 +440,7 @@
             "ui_data": {
               "label": "Append",
               "description": "Combine datasets with similar structures but different data.",
-              "image": "images/modeler-flows/palette/icons/append.svg",
+              "image": "images/custom-canvases/flows/palette/icons/append.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -483,7 +483,7 @@
             "ui_data": {
               "label": "Space-Time-Boxes",
               "description": "An STB is an alphanumeric string that represents a regularly shaped region of space and time.",
-              "image": "images/modeler-flows/palette/icons/spacetimebox.svg",
+              "image": "images/custom-canvases/flows/palette/icons/spacetimebox.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -526,7 +526,7 @@
             "ui_data": {
               "label": "Streaming TS",
               "description": "Build and score time series models in one step.",
-              "image": "images/modeler-flows/palette/icons/ts_streaming.svg",
+              "image": "images/custom-canvases/flows/palette/icons/ts_streaming.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -569,7 +569,7 @@
             "ui_data": {
               "label": "SMOTE",
               "description": "To perform over-sampling using SMOTE - Synthetic Minority Over-sampling Technique",
-              "image": "images/modeler-flows/palette/icons/smote.svg",
+              "image": "images/custom-canvases/flows/palette/icons/smote.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -612,7 +612,7 @@
             "ui_data": {
               "label": "RFM Aggregate",
               "description": "Take historical transaction data, strip away unused data, and combine all remaining transaction data into one row.",
-              "image": "images/modeler-flows/palette/icons/rfmaggregate.svg",
+              "image": "images/custom-canvases/flows/palette/icons/rfmaggregate.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -623,7 +623,7 @@
     {
       "label": "Field Operations",
       "description": "This category defines operations on fields",
-      "image": "images/modeler-flows/palette/icons/palette-field-ops.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-field-ops.svg",
       "id": "fieldOp",
       "node_types": [
         {
@@ -663,7 +663,7 @@
             "ui_data": {
               "label": "Auto Data Prep",
               "description": "Prepare your data for model building quickly and easily, without needing prior knowledge of the statistical concepts involved.",
-              "image": "images/modeler-flows/palette/icons/autodataprep.svg",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -706,7 +706,7 @@
             "ui_data": {
               "label": "Type",
               "description": "Specify field metadata and properties that are invaluable to modeling.",
-              "image": "images/modeler-flows/palette/icons/type.svg",
+              "image": "images/custom-canvases/flows/palette/icons/type.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -749,7 +749,7 @@
             "ui_data": {
               "label": "Filter",
               "description": "Rename or exclude fields at any point in a flow.",
-              "image": "images/modeler-flows/palette/icons/filter.svg",
+              "image": "images/custom-canvases/flows/palette/icons/filter.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -792,7 +792,7 @@
             "ui_data": {
               "label": "Derive",
               "description": "Modify data values or create new fields from one or more existing fields.",
-              "image": "images/modeler-flows/palette/icons/derive.svg",
+              "image": "images/custom-canvases/flows/palette/icons/derive.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -835,7 +835,7 @@
             "ui_data": {
               "label": "Filler",
               "description": "Replace field values and change storage. Often used with a Type node to replace missing values.",
-              "image": "images/modeler-flows/palette/icons/filler.svg",
+              "image": "images/custom-canvases/flows/palette/icons/filler.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -878,7 +878,7 @@
             "ui_data": {
               "label": "Reclassify",
               "description": "Transform one set of categorical values to another. Useful for collapsing categories or regrouping data for analysis.",
-              "image": "images/modeler-flows/palette/icons/reclassify.svg",
+              "image": "images/custom-canvases/flows/palette/icons/reclassify.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -921,7 +921,7 @@
             "ui_data": {
               "label": "Binning",
               "description": "Automatically create new nominal fields based on the values of one or more existing continuous fields.",
-              "image": "images/modeler-flows/palette/icons/binning.svg",
+              "image": "images/custom-canvases/flows/palette/icons/binning.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -964,7 +964,7 @@
             "ui_data": {
               "label": "RFM Analysis",
               "description": "Examine recent customer purchases (recency), how often they purchased (frequency), and how much they spent (monetary).",
-              "image": "images/modeler-flows/palette/icons/rfmanalysis.svg",
+              "image": "images/custom-canvases/flows/palette/icons/rfmanalysis.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1007,7 +1007,7 @@
             "ui_data": {
               "label": "Ensemble",
               "description": "Combines two or more model nuggets to obtain more accurate predictions than can be gained from any of the individual models.",
-              "image": "images/modeler-flows/palette/icons/ensemble.svg",
+              "image": "images/custom-canvases/flows/palette/icons/ensemble.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1050,7 +1050,7 @@
             "ui_data": {
               "label": "Partition",
               "description": "Generate a partition field that splits data into separate subsets or samples for the training, testing, and validation stages of model building.",
-              "image": "images/modeler-flows/palette/icons/partition.svg",
+              "image": "images/custom-canvases/flows/palette/icons/partition.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1093,7 +1093,7 @@
             "ui_data": {
               "label": "SetToFlag",
               "description": "Derive flag fields based on the categorical values defined for one or more nominal fields.",
-              "image": "images/modeler-flows/palette/icons/settoflag.svg",
+              "image": "images/custom-canvases/flows/palette/icons/settoflag.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1136,7 +1136,7 @@
             "ui_data": {
               "label": "Restructure",
               "description": "Generate multiple fields based on the values of a nominal or flag field.",
-              "image": "images/modeler-flows/palette/icons/restructure.svg",
+              "image": "images/custom-canvases/flows/palette/icons/restructure.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1179,7 +1179,7 @@
             "ui_data": {
               "label": "Transpose",
               "description": "Swap the data in rows and columns so that fields become records and records become fields.",
-              "image": "images/modeler-flows/palette/icons/transpose.svg",
+              "image": "images/custom-canvases/flows/palette/icons/transpose.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1222,7 +1222,7 @@
             "ui_data": {
               "label": "Field Reorder",
               "description": "Define the natural order for displaying fields downstream.",
-              "image": "images/modeler-flows/palette/icons/fieldreorder.svg",
+              "image": "images/custom-canvases/flows/palette/icons/fieldreorder.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1265,7 +1265,7 @@
             "ui_data": {
               "label": "History",
               "description": "Create new fields containing data from fields in previous records (most often used for sequential data, such as time series data).",
-              "image": "images/modeler-flows/palette/icons/history.svg",
+              "image": "images/custom-canvases/flows/palette/icons/history.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1308,7 +1308,7 @@
             "ui_data": {
               "label": "Time Intervals",
               "description": "Specify intervals and derive a new time field for estimating or forecasting.",
-              "image": "images/modeler-flows/palette/icons/astimeintervals.svg",
+              "image": "images/custom-canvases/flows/palette/icons/astimeintervals.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1351,7 +1351,7 @@
             "ui_data": {
               "label": "Anonymize",
               "description": "Disguise field names, field values, or both when working with data that's to be included in a model downstream of the node.",
-              "image": "images/modeler-flows/palette/icons/anonymize.svg",
+              "image": "images/custom-canvases/flows/palette/icons/anonymize.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1394,7 +1394,7 @@
             "ui_data": {
               "label": "Reproject",
               "description": "Change the coordinate system for fields that can't be reprojected automatically.",
-              "image": "images/modeler-flows/palette/icons/reproject.svg",
+              "image": "images/custom-canvases/flows/palette/icons/reproject.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1405,7 +1405,7 @@
     {
       "label": "Graphs",
       "description": "This category defines chart builders",
-      "image": "images/modeler-flows/palette/icons/palette-charts.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-charts.svg",
       "id": "graph",
       "node_types": [
         {
@@ -1445,7 +1445,7 @@
             "ui_data": {
               "label": "Charts",
               "description": "Launch the chart builder and create chart definitions to save with your flow.",
-              "image": "images/modeler-flows/palette/icons/dvcharts.svg",
+              "image": "images/custom-canvases/flows/palette/icons/dvcharts.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1488,7 +1488,7 @@
             "ui_data": {
               "label": "Plot",
               "description": "Shows the relationship between numeric fields.",
-              "image": "images/modeler-flows/palette/icons/plot.svg",
+              "image": "images/custom-canvases/flows/palette/icons/plot.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1531,7 +1531,7 @@
             "ui_data": {
               "label": "Multiplot",
               "description": "A special type of plot that displays multiple Y fields over a single X field.",
-              "image": "images/modeler-flows/palette/icons/multiplot.svg",
+              "image": "images/custom-canvases/flows/palette/icons/multiplot.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1574,7 +1574,7 @@
             "ui_data": {
               "label": "Time plot",
               "description": "View one or more time series plotted over time.",
-              "image": "images/modeler-flows/palette/icons/timeplot.svg",
+              "image": "images/custom-canvases/flows/palette/icons/timeplot.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1617,7 +1617,7 @@
             "ui_data": {
               "label": "Distribution",
               "description": "Shows the occurrence of symbolic (non-numeric) values, such as mortgage type or gender, in a dataset.",
-              "image": "images/modeler-flows/palette/icons/distribution.svg",
+              "image": "images/custom-canvases/flows/palette/icons/distribution.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1660,7 +1660,7 @@
             "ui_data": {
               "label": "Histogram",
               "description": "Shows the occurrence of values for numeric fields.",
-              "image": "images/modeler-flows/palette/icons/histogram.svg",
+              "image": "images/custom-canvases/flows/palette/icons/histogram.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1703,7 +1703,7 @@
             "ui_data": {
               "label": "Collection",
               "description": "Shows the distribution of values for one numeric field relative to the values of another.",
-              "image": "images/modeler-flows/palette/icons/collection.svg",
+              "image": "images/custom-canvases/flows/palette/icons/collection.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1746,7 +1746,7 @@
             "ui_data": {
               "label": "Web",
               "description": "Shows the strength of relationships between values of two or more symbolic fields.",
-              "image": "images/modeler-flows/palette/icons/web.svg",
+              "image": "images/custom-canvases/flows/palette/icons/web.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1789,7 +1789,7 @@
             "ui_data": {
               "label": "Evaluation",
               "description": "Evaluate and compare predictive models to choose the best model for your application.",
-              "image": "images/modeler-flows/palette/icons/evaluation.svg",
+              "image": "images/custom-canvases/flows/palette/icons/evaluation.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1800,7 +1800,7 @@
     {
       "label": "Modeling",
       "description": "This category defines model builders",
-      "image": "images/modeler-flows/palette/icons/palette-modeling.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-modeling.svg",
       "id": "modeling",
       "node_types": [
         {
@@ -1826,7 +1826,7 @@
             "ui_data": {
               "label": "Auto Classifier",
               "description": "Estimates and compares models to try out a variety of approaches for nominal and binary data.",
-              "image": "images/modeler-flows/palette/icons/autoclassifier.svg",
+              "image": "images/custom-canvases/flows/palette/icons/autoclassifier.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1855,7 +1855,7 @@
             "ui_data": {
               "label": "Auto Numeric",
               "description": "Estimates and compares models to try out a variety of approaches for a continuous numeric range.",
-              "image": "images/modeler-flows/palette/icons/autonumeric.svg",
+              "image": "images/custom-canvases/flows/palette/icons/autonumeric.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1884,7 +1884,7 @@
             "ui_data": {
               "label": "Auto Cluster",
               "description": "Estimates and compares clustering models that identify groups of records with similar characteristics.",
-              "image": "images/modeler-flows/palette/icons/autocluster.svg",
+              "image": "images/custom-canvases/flows/palette/icons/autocluster.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1913,7 +1913,7 @@
             "ui_data": {
               "label": "Bayes Net",
               "description": "Build a probability model to establish the likelihood of occurrences by using seemingly unlinked attributes.",
-              "image": "images/modeler-flows/palette/icons/bayesnet.svg",
+              "image": "images/custom-canvases/flows/palette/icons/bayesnet.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1942,7 +1942,7 @@
             "ui_data": {
               "label": "C5.0",
               "description": "Build either a decision tree or a ruleset by splitting the sample based on the field that provides the maximum information gain.",
-              "image": "images/modeler-flows/palette/icons/c50.svg",
+              "image": "images/custom-canvases/flows/palette/icons/c50.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -1971,7 +1971,7 @@
             "ui_data": {
               "label": "C&R Tree",
               "description": "Tree-based classification and prediction method that splits training records into segments with similar output field values.",
-              "image": "images/modeler-flows/palette/icons/cart.svg",
+              "image": "images/custom-canvases/flows/palette/icons/cart.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2000,7 +2000,7 @@
             "ui_data": {
               "label": "CHAID",
               "description": "Build decision trees by using chi-square statistics to identify optimal splits.",
-              "image": "images/modeler-flows/palette/icons/chaid.svg",
+              "image": "images/custom-canvases/flows/palette/icons/chaid.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2029,7 +2029,7 @@
             "ui_data": {
               "label": "Quest",
               "description": "Build decision trees by using a binary classification method.",
-              "image": "images/modeler-flows/palette/icons/quest.svg",
+              "image": "images/custom-canvases/flows/palette/icons/quest.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2058,7 +2058,7 @@
             "ui_data": {
               "label": "Tree-AS",
               "description": "Build decision trees using either a CHAID or Exhaustive CHAID model.",
-              "image": "images/modeler-flows/palette/icons/treeas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/treeas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2087,7 +2087,7 @@
             "ui_data": {
               "label": "Random Trees",
               "description": "Build an ensemble model that consists of multiple decision trees.",
-              "image": "images/modeler-flows/palette/icons/randomtrees.svg",
+              "image": "images/custom-canvases/flows/palette/icons/randomtrees.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2116,7 +2116,7 @@
             "ui_data": {
               "label": "Random Forest",
               "description": "Implement a bagging algorithm with a tree model as the base model.",
-              "image": "images/modeler-flows/palette/icons/randomforest.svg",
+              "image": "images/custom-canvases/flows/palette/icons/randomforest.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2145,7 +2145,7 @@
             "ui_data": {
               "label": "Decision List",
               "description": "Identify subgroups or segments that show a higher or lower likelihood of a binary (yes or no) outcome relative to the overall sample.",
-              "image": "images/modeler-flows/palette/icons/decisionlist.svg",
+              "image": "images/custom-canvases/flows/palette/icons/decisionlist.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2174,7 +2174,7 @@
             "ui_data": {
               "label": "Time Series",
               "description": "Estimate and build exponential smoothing, ARIMA, or multivariate ARIMA models and produce forecasts.",
-              "image": "images/modeler-flows/palette/icons/ts.svg",
+              "image": "images/custom-canvases/flows/palette/icons/ts.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2203,7 +2203,7 @@
             "ui_data": {
               "label": "TCM",
               "description": "Create a temporal causal model to discover key causal relationships in time series data.",
-              "image": "images/modeler-flows/palette/icons/tcm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/tcm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2232,7 +2232,7 @@
             "ui_data": {
               "label": "GenLin",
               "description": "Build an equation that relates the input field values to the output field values.",
-              "image": "images/modeler-flows/palette/icons/genlin.svg",
+              "image": "images/custom-canvases/flows/palette/icons/genlin.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2261,7 +2261,7 @@
             "ui_data": {
               "label": "GLMM",
               "description": "Creates a generalized linear mixed model that extends the linear model.",
-              "image": "images/modeler-flows/palette/icons/glmm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/glmm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2290,7 +2290,7 @@
             "ui_data": {
               "label": "GLE",
               "description": "Identify the dependent variable that's linearly related to the factors and covariates via a specified link function.",
-              "image": "images/modeler-flows/palette/icons/gle.svg",
+              "image": "images/custom-canvases/flows/palette/icons/gle.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2319,7 +2319,7 @@
             "ui_data": {
               "label": "Linear",
               "description": "Classify records based on the values of numeric input fields.",
-              "image": "images/modeler-flows/palette/icons/linear.svg",
+              "image": "images/custom-canvases/flows/palette/icons/linear.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2348,7 +2348,7 @@
             "ui_data": {
               "label": "Linear-AS",
               "description": "Classify records based on the values of numeric input fields.",
-              "image": "images/modeler-flows/palette/icons/linearas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/linearas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2377,7 +2377,7 @@
             "ui_data": {
               "label": "Regression",
               "description": "Classify records based on the values of numeric input fields.",
-              "image": "images/modeler-flows/palette/icons/regression.svg",
+              "image": "images/custom-canvases/flows/palette/icons/regression.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2406,7 +2406,7 @@
             "ui_data": {
               "label": "LSVM",
               "description": "Use a linear support vector machine to classify data.",
-              "image": "images/modeler-flows/palette/icons/lsvm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/lsvm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2435,7 +2435,7 @@
             "ui_data": {
               "label": "Logistic",
               "description": "Classify records based on the values of categorical input fields.",
-              "image": "images/modeler-flows/palette/icons/logreg.svg",
+              "image": "images/custom-canvases/flows/palette/icons/logreg.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2464,7 +2464,7 @@
             "ui_data": {
               "label": "Neural Net",
               "description": "Approximate a wide range of predictive models with minimal demands on model structure and assumption.",
-              "image": "images/modeler-flows/palette/icons/neuralnetwork.svg",
+              "image": "images/custom-canvases/flows/palette/icons/neuralnetwork.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2493,7 +2493,7 @@
             "ui_data": {
               "label": "KNN",
               "description": "Find patterns of data without requiring an exact match to any stored patterns, or cases.",
-              "image": "images/modeler-flows/palette/icons/knn.svg",
+              "image": "images/custom-canvases/flows/palette/icons/knn.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2522,7 +2522,7 @@
             "ui_data": {
               "label": "Cox",
               "description": "Build a predictive model for time-to-even data.",
-              "image": "images/modeler-flows/palette/icons/cox.svg",
+              "image": "images/custom-canvases/flows/palette/icons/cox.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2551,7 +2551,7 @@
             "ui_data": {
               "label": "PCA/Factor",
               "description": "Provides powerful data-reduction techniques to reduce the complexity of your data.",
-              "image": "images/modeler-flows/palette/icons/pca.svg",
+              "image": "images/custom-canvases/flows/palette/icons/pca.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2580,7 +2580,7 @@
             "ui_data": {
               "label": "SVM",
               "description": "Use a support vector machine to classify data.",
-              "image": "images/modeler-flows/palette/icons/svm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/svm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2609,7 +2609,7 @@
             "ui_data": {
               "label": "Feature Selection",
               "description": "Identify fields that are most important for a given analysis.",
-              "image": "images/modeler-flows/palette/icons/featureselection.svg",
+              "image": "images/custom-canvases/flows/palette/icons/featureselection.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2638,7 +2638,7 @@
             "ui_data": {
               "label": "Discriminant",
               "description": "Build a predictive model for group membership.",
-              "image": "images/modeler-flows/palette/icons/discriminant.svg",
+              "image": "images/custom-canvases/flows/palette/icons/discriminant.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2667,7 +2667,7 @@
             "ui_data": {
               "label": "SLRM",
               "description": "Predict which offers are most appropriate for customers and the probability of the offers being accepted.",
-              "image": "images/modeler-flows/palette/icons/slrm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/slrm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2696,7 +2696,7 @@
             "ui_data": {
               "label": "STP",
               "description": "Has many potential applications such as energy management for buildings, or public transport planning.",
-              "image": "images/modeler-flows/palette/icons/stp.svg",
+              "image": "images/custom-canvases/flows/palette/icons/stp.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2725,7 +2725,7 @@
             "ui_data": {
               "label": "Association Rules",
               "description": "Automatically find associations that you could find manually using visualization techniques.",
-              "image": "images/modeler-flows/palette/icons/associationrules.svg",
+              "image": "images/custom-canvases/flows/palette/icons/associationrules.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2754,7 +2754,7 @@
             "ui_data": {
               "label": "Apriori",
               "description": "Discover association rules in your data.",
-              "image": "images/modeler-flows/palette/icons/apriori.svg",
+              "image": "images/custom-canvases/flows/palette/icons/apriori.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2783,7 +2783,7 @@
             "ui_data": {
               "label": "Carma",
               "description": "Use an association rules discovery algorithm to discover association rules in your data.",
-              "image": "images/modeler-flows/palette/icons/carma.svg",
+              "image": "images/custom-canvases/flows/palette/icons/carma.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2812,7 +2812,7 @@
             "ui_data": {
               "label": "Sequence",
               "description": "Discover patterns in sequential or time-oriented data.",
-              "image": "images/modeler-flows/palette/icons/sequence.svg",
+              "image": "images/custom-canvases/flows/palette/icons/sequence.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2841,7 +2841,7 @@
             "ui_data": {
               "label": "Kohonen",
               "description": "Cluster your dataset into distinct groups when you don't know what those groups are at the beginning.",
-              "image": "images/modeler-flows/palette/icons/kohonen.svg",
+              "image": "images/custom-canvases/flows/palette/icons/kohonen.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2870,7 +2870,7 @@
             "ui_data": {
               "label": "Anomaly",
               "description": "Identify outliers, or unusual cases, in your data.",
-              "image": "images/modeler-flows/palette/icons/anomaly.svg",
+              "image": "images/custom-canvases/flows/palette/icons/anomaly.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2899,7 +2899,7 @@
             "ui_data": {
               "label": "K-Means",
               "description": "Use a cluster method to cluster your dataset into distinct groups when you don't know what those groups are at the beginning.",
-              "image": "images/modeler-flows/palette/icons/kmeans.svg",
+              "image": "images/custom-canvases/flows/palette/icons/kmeans.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2928,7 +2928,7 @@
             "ui_data": {
               "label": "TwoStep",
               "description": "Cluster your dataset into distinct groups when you don't know what those groups are at first.",
-              "image": "images/modeler-flows/palette/icons/twostep.svg",
+              "image": "images/custom-canvases/flows/palette/icons/twostep.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2957,7 +2957,7 @@
             "ui_data": {
               "label": "TwoStep-AS",
               "description": "Use this exploratory tool  to reveal natural groupings (clusters) within your dataset.",
-              "image": "images/modeler-flows/palette/icons/twostepas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/twostepas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -2986,7 +2986,7 @@
             "ui_data": {
               "label": "Isotonic-AS",
               "description": "Isotonic Regression belongs to the family of regression algorithms. Implemented in Spark.",
-              "image": "images/modeler-flows/palette/icons/isotonicas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/isotonicas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3015,7 +3015,7 @@
             "ui_data": {
               "label": "K-Means-AS",
               "description": "Cluster data points into a predefined number of clusters.",
-              "image": "images/modeler-flows/palette/icons/kmeansas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/kmeansas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3044,7 +3044,7 @@
             "ui_data": {
               "label": "KDE Modeling",
               "description": "Walks the line between unsupervised learning, feature engineering, and data modeling.",
-              "image": "images/modeler-flows/palette/icons/kdemodel.svg",
+              "image": "images/custom-canvases/flows/palette/icons/kdemodel.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3073,7 +3073,7 @@
             "ui_data": {
               "label": "Gaussian Mixture",
               "description": "CExposes the core features and commonly used parameters of the Gaussian Mixture Python library.",
-              "image": "images/modeler-flows/palette/icons/gmm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/gmm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3102,7 +3102,7 @@
             "ui_data": {
               "label": "XGBoost-AS",
               "description": "xgboostas.desc",
-              "image": "images/modeler-flows/palette/icons/xgboostas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/xgboostas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3131,7 +3131,7 @@
             "ui_data": {
               "label": "XGBoost Tree",
               "description": "Uses an advanced implementation of a gradient boosting algorithm with a tree model as the base model.",
-              "image": "images/modeler-flows/palette/icons/xgboosttree.svg",
+              "image": "images/custom-canvases/flows/palette/icons/xgboosttree.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3160,7 +3160,7 @@
             "ui_data": {
               "label": "XGBoost Linear",
               "description": "Uses an advanced implementation of a gradient boosting algorithm with a linear model as the base model.",
-              "image": "images/modeler-flows/palette/icons/xgboostlinear.svg",
+              "image": "images/custom-canvases/flows/palette/icons/xgboostlinear.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3189,7 +3189,7 @@
             "ui_data": {
               "label": "One-Class SVM",
               "description": "Detects the soft boundary of a given set of samples, to then classify new points as belonging to that set or not.",
-              "image": "images/modeler-flows/palette/icons/ocsvm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/ocsvm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3218,7 +3218,7 @@
             "ui_data": {
               "label": "MultiLayerPerceptron-AS",
               "description": "A classifier based on the feedforward artificial neural network. Consists of multiple layers.",
-              "image": "images/modeler-flows/palette/icons/mlpas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/mlpas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3247,7 +3247,7 @@
             "ui_data": {
               "label": "HDBSCAN",
               "description": "Uses unsupervised learning to find clusters, or dense regions, of a data set.",
-              "image": "images/modeler-flows/palette/icons/hdbscan.svg",
+              "image": "images/custom-canvases/flows/palette/icons/hdbscan.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3258,7 +3258,7 @@
     {
       "label": "Text Analytics",
       "description": "This category defines Text Mining operations",
-      "image": "images/modeler-flows/palette/icons/palette-textmining.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-textmining.svg",
       "id": "TextMining",
       "node_types": [
         {
@@ -3298,7 +3298,7 @@
             "ui_data": {
               "label": "Language Identifier",
               "description": "Identify the natural language of a text field within your source data.",
-              "image": "images/modeler-flows/palette/icons/languageidentifier.svg",
+              "image": "images/custom-canvases/flows/palette/icons/languageidentifier.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3341,7 +3341,7 @@
             "ui_data": {
               "label": "Text Link Analysis",
               "description": "Identify relationships between the concepts in the text data based on known patterns.",
-              "image": "images/modeler-flows/palette/icons/textlinkanalysis.svg",
+              "image": "images/custom-canvases/flows/palette/icons/textlinkanalysis.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3370,7 +3370,7 @@
             "ui_data": {
               "label": "Text Mining",
               "description": "Extract key concepts from text and create categories with these concepts and other data.",
-              "image": "images/modeler-flows/palette/icons/textminingworkbench.svg",
+              "image": "images/custom-canvases/flows/palette/icons/textminingworkbench.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3381,7 +3381,7 @@
     {
       "label": "Outputs",
       "description": "This category defines output builders",
-      "image": "images/modeler-flows/palette/icons/palette-output.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-output.svg",
       "id": "output",
       "node_types": [
         {
@@ -3421,7 +3421,7 @@
             "ui_data": {
               "label": "Table",
               "description": "Create a table that lists the values in your data.",
-              "image": "images/modeler-flows/palette/icons/table.svg",
+              "image": "images/custom-canvases/flows/palette/icons/table.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3464,7 +3464,7 @@
             "ui_data": {
               "label": "Matrix",
               "description": "Create a table that shows relationships between fields.",
-              "image": "images/modeler-flows/palette/icons/matrix.svg",
+              "image": "images/custom-canvases/flows/palette/icons/matrix.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3507,7 +3507,7 @@
             "ui_data": {
               "label": "Analysis",
               "description": "Evaluate the ability of a model to generate accurate predictions.",
-              "image": "images/modeler-flows/palette/icons/analysis.svg",
+              "image": "images/custom-canvases/flows/palette/icons/analysis.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3550,7 +3550,7 @@
             "ui_data": {
               "label": "Data Audit",
               "description": "Get a comprehensive first look at your data, presented in an easy-to-read matrix.",
-              "image": "images/modeler-flows/palette/icons/dataaudit.svg",
+              "image": "images/custom-canvases/flows/palette/icons/dataaudit.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3593,7 +3593,7 @@
             "ui_data": {
               "label": "Transform",
               "description": "Perform a rapid visual assessment of the best transformation to use.",
-              "image": "images/modeler-flows/palette/icons/transform.svg",
+              "image": "images/custom-canvases/flows/palette/icons/transform.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3636,7 +3636,7 @@
             "ui_data": {
               "label": "Statistics",
               "description": "Get basic summary information about numeric fields.",
-              "image": "images/modeler-flows/palette/icons/statistics.svg",
+              "image": "images/custom-canvases/flows/palette/icons/statistics.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3679,7 +3679,7 @@
             "ui_data": {
               "label": "Means",
               "description": "Compare the means between independent groups or between pairs of related fields to test whether a significant difference exists.",
-              "image": "images/modeler-flows/palette/icons/means.svg",
+              "image": "images/custom-canvases/flows/palette/icons/means.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3722,7 +3722,7 @@
             "ui_data": {
               "label": "Report",
               "description": "Create formatted reports containing fixed text, data, or other expressions derived from your data.",
-              "image": "images/modeler-flows/palette/icons/report.svg",
+              "image": "images/custom-canvases/flows/palette/icons/report.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3765,7 +3765,7 @@
             "ui_data": {
               "label": "Set Globals",
               "description": "Scans your data and computes summary values that can be used in CLEM expressions.",
-              "image": "images/modeler-flows/palette/icons/setglobals.svg",
+              "image": "images/custom-canvases/flows/palette/icons/setglobals.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3808,7 +3808,7 @@
             "ui_data": {
               "label": "Sim Fit",
               "description": "Fits a set of candidate statistical distributions to each field in your data.",
-              "image": "images/modeler-flows/palette/icons/simfit.svg",
+              "image": "images/custom-canvases/flows/palette/icons/simfit.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3819,7 +3819,7 @@
     {
       "label": "Export",
       "description": "This category defines data exporters",
-      "image": "images/modeler-flows/palette/icons/palette-export.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-export.svg",
       "id": "export",
       "node_types": [
         {
@@ -3845,7 +3845,7 @@
             "ui_data": {
               "label": "Data Asset Export",
               "description": "Write to remote data sources using connections.",
-              "image": "images/modeler-flows/palette/icons/dataassetexport.svg",
+              "image": "images/custom-canvases/flows/palette/icons/dataassetexport.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3856,7 +3856,7 @@
     {
       "label": "Models",
       "description": "This category defines models built from the modeling nodes",
-      "image": "images/modeler-flows/palette/icons/palette-modeling.svg",
+      "image": "images/custom-canvases/flows/palette/icons/palette-modeling.svg",
       "id": "models",
       "node_types": [
         {
@@ -3882,7 +3882,7 @@
             "ui_data": {
               "label": "Auto Classifier",
               "description": "Estimates and compares models to try out a variety of approaches for nominal and binary data.",
-              "image": "images/modeler-flows/palette/icons/applyautoclassifier.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyautoclassifier.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3911,7 +3911,7 @@
             "ui_data": {
               "label": "Auto Numeric",
               "description": "Estimates and compares models to try out a variety of approaches for a continuous numeric range.",
-              "image": "images/modeler-flows/palette/icons/applyautonumeric.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyautonumeric.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3940,7 +3940,7 @@
             "ui_data": {
               "label": "Auto Cluster",
               "description": "Estimates and compares clustering models that identify groups of records with similar characteristics.",
-              "image": "images/modeler-flows/palette/icons/applyautocluster.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyautocluster.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3969,7 +3969,7 @@
             "ui_data": {
               "label": "Bayes Net",
               "description": "Build a probability model to establish the likelihood of occurrences by using seemingly unlinked attributes.",
-              "image": "images/modeler-flows/palette/icons/applybayesnet.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applybayesnet.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -3998,7 +3998,7 @@
             "ui_data": {
               "label": "C5.0",
               "description": "Build either a decision tree or a ruleset by splitting the sample based on the field that provides the maximum information gain.",
-              "image": "images/modeler-flows/palette/icons/applyc50.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyc50.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4027,7 +4027,7 @@
             "ui_data": {
               "label": "C&R Tree",
               "description": "Tree-based classification and prediction method that splits training records into segments with similar output field values.",
-              "image": "images/modeler-flows/palette/icons/applycart.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applycart.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4056,7 +4056,7 @@
             "ui_data": {
               "label": "CHAID",
               "description": "Build decision trees by using chi-square statistics to identify optimal splits.",
-              "image": "images/modeler-flows/palette/icons/applychaid.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applychaid.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4085,7 +4085,7 @@
             "ui_data": {
               "label": "Quest",
               "description": "Build decision trees by using a binary classification method.",
-              "image": "images/modeler-flows/palette/icons/applyquest.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyquest.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4114,7 +4114,7 @@
             "ui_data": {
               "label": "Tree-AS",
               "description": "Build decision trees using either a CHAID or Exhaustive CHAID model.",
-              "image": "images/modeler-flows/palette/icons/applytreeas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applytreeas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4143,7 +4143,7 @@
             "ui_data": {
               "label": "Random Trees",
               "description": "Build an ensemble model that consists of multiple decision trees.",
-              "image": "images/modeler-flows/palette/icons/applyrandomtrees.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyrandomtrees.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4172,7 +4172,7 @@
             "ui_data": {
               "label": "Random Forest",
               "description": "Implement a bagging algorithm with a tree model as the base model.",
-              "image": "images/modeler-flows/palette/icons/applyrandomforest.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyrandomforest.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4201,7 +4201,7 @@
             "ui_data": {
               "label": "Decision List",
               "description": "Identify subgroups or segments that show a higher or lower likelihood of a binary (yes or no) outcome relative to the overall sample.",
-              "image": "images/modeler-flows/palette/icons/applydecisionlist.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applydecisionlist.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4230,7 +4230,7 @@
             "ui_data": {
               "label": "Time Series",
               "description": "Estimate and build exponential smoothing, ARIMA, or multivariate ARIMA models and produce forecasts.",
-              "image": "images/modeler-flows/palette/icons/applyts.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyts.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4259,7 +4259,7 @@
             "ui_data": {
               "label": "TCM",
               "description": "Create a temporal causal model to discover key causal relationships in time series data.",
-              "image": "images/modeler-flows/palette/icons/applytcm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applytcm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4288,7 +4288,7 @@
             "ui_data": {
               "label": "GenLin",
               "description": "Build an equation that relates the input field values to the output field values.",
-              "image": "images/modeler-flows/palette/icons/applygeneralizedlinear.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applygeneralizedlinear.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4317,7 +4317,7 @@
             "ui_data": {
               "label": "GLMM",
               "description": "Creates a generalized linear mixed model that extends the linear model.",
-              "image": "images/modeler-flows/palette/icons/applyglmm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyglmm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4346,7 +4346,7 @@
             "ui_data": {
               "label": "GLE",
               "description": "Identify the dependent variable that's linearly related to the factors and covariates via a specified link function.",
-              "image": "images/modeler-flows/palette/icons/applygle.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applygle.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4375,7 +4375,7 @@
             "ui_data": {
               "label": "Linear",
               "description": "Classify records based on the values of numeric input fields.",
-              "image": "images/modeler-flows/palette/icons/applylinear.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applylinear.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4404,7 +4404,7 @@
             "ui_data": {
               "label": "Linear-AS",
               "description": "Classify records based on the values of numeric input fields.",
-              "image": "images/modeler-flows/palette/icons/applylinearas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applylinearas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4433,7 +4433,7 @@
             "ui_data": {
               "label": "Regression",
               "description": "Classify records based on the values of numeric input fields.",
-              "image": "images/modeler-flows/palette/icons/applyregression.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyregression.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4462,7 +4462,7 @@
             "ui_data": {
               "label": "LSVM",
               "description": "Use a linear support vector machine to classify data.",
-              "image": "images/modeler-flows/palette/icons/applylsvm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applylsvm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4491,7 +4491,7 @@
             "ui_data": {
               "label": "Logistic",
               "description": "Classify records based on the values of categorical input fields.",
-              "image": "images/modeler-flows/palette/icons/applylogreg.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applylogreg.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4520,7 +4520,7 @@
             "ui_data": {
               "label": "Neural Net",
               "description": "Approximate a wide range of predictive models with minimal demands on model structure and assumption.",
-              "image": "images/modeler-flows/palette/icons/applyneuralnetwork.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyneuralnetwork.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4549,7 +4549,7 @@
             "ui_data": {
               "label": "KNN",
               "description": "Find patterns of data without requiring an exact match to any stored patterns, or cases.",
-              "image": "images/modeler-flows/palette/icons/applyknn.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyknn.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4578,7 +4578,7 @@
             "ui_data": {
               "label": "Cox",
               "description": "Build a predictive model for time-to-even data.",
-              "image": "images/modeler-flows/palette/icons/applycox.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applycox.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4607,7 +4607,7 @@
             "ui_data": {
               "label": "PCA/Factor",
               "description": "Provides powerful data-reduction techniques to reduce the complexity of your data.",
-              "image": "images/modeler-flows/palette/icons/applypca.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applypca.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4636,7 +4636,7 @@
             "ui_data": {
               "label": "SVM",
               "description": "Use a support vector machine to classify data.",
-              "image": "images/modeler-flows/palette/icons/applysvm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applysvm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4665,7 +4665,7 @@
             "ui_data": {
               "label": "Feature Selection",
               "description": "Identify fields that are most important for a given analysis.",
-              "image": "images/modeler-flows/palette/icons/applyfeatureselection.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyfeatureselection.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4694,7 +4694,7 @@
             "ui_data": {
               "label": "Discriminant",
               "description": "Build a predictive model for group membership.",
-              "image": "images/modeler-flows/palette/icons/applydiscriminant.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applydiscriminant.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4723,7 +4723,7 @@
             "ui_data": {
               "label": "SLRM",
               "description": "Predict which offers are most appropriate for customers and the probability of the offers being accepted.",
-              "image": "images/modeler-flows/palette/icons/applyslrm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyslrm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4752,7 +4752,7 @@
             "ui_data": {
               "label": "STP",
               "description": "Has many potential applications such as energy management for buildings, or public transport planning.",
-              "image": "images/modeler-flows/palette/icons/applystp.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applystp.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4781,7 +4781,7 @@
             "ui_data": {
               "label": "Association Rules",
               "description": "Automatically find associations that you could find manually using visualization techniques.",
-              "image": "images/modeler-flows/palette/icons/applyassociationrules.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyassociationrules.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4810,7 +4810,7 @@
             "ui_data": {
               "label": "Apriori",
               "description": "Discover association rules in your data.",
-              "image": "images/modeler-flows/palette/icons/applyapriori.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyapriori.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4839,7 +4839,7 @@
             "ui_data": {
               "label": "Carma",
               "description": "Use an association rules discovery algorithm to discover association rules in your data.",
-              "image": "images/modeler-flows/palette/icons/applycarma.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applycarma.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4868,7 +4868,7 @@
             "ui_data": {
               "label": "Sequence",
               "description": "Discover patterns in sequential or time-oriented data.",
-              "image": "images/modeler-flows/palette/icons/applysequence.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applysequence.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4897,7 +4897,7 @@
             "ui_data": {
               "label": "Kohonen",
               "description": "Cluster your dataset into distinct groups when you don't know what those groups are at the beginning.",
-              "image": "images/modeler-flows/palette/icons/applykohonen.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applykohonen.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4926,7 +4926,7 @@
             "ui_data": {
               "label": "Anomaly",
               "description": "Identify outliers, or unusual cases, in your data.",
-              "image": "images/modeler-flows/palette/icons/applyanomaly.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyanomaly.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4955,7 +4955,7 @@
             "ui_data": {
               "label": "K-Means",
               "description": "Use a cluster method to cluster your dataset into distinct groups when you don't know what those groups are at the beginning.",
-              "image": "images/modeler-flows/palette/icons/applykmeans.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applykmeans.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -4984,7 +4984,7 @@
             "ui_data": {
               "label": "TwoStep",
               "description": "Cluster your dataset into distinct groups when you don't know what those groups are at first.",
-              "image": "images/modeler-flows/palette/icons/applytwostep.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applytwostep.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -5013,7 +5013,7 @@
             "ui_data": {
               "label": "TwoStep-AS",
               "description": "Use this exploratory tool  to reveal natural groupings (clusters) within your dataset.",
-              "image": "images/modeler-flows/palette/icons/applytwostepas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applytwostepas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -5042,7 +5042,7 @@
             "ui_data": {
               "label": "Isotonic-AS",
               "description": "Isotonic Regression belongs to the family of regression algorithms. Implemented in Spark.",
-              "image": "images/modeler-flows/palette/icons/applyisotonicas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyisotonicas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -5071,7 +5071,7 @@
             "ui_data": {
               "label": "K-Means-AS",
               "description": "Cluster data points into a predefined number of clusters.",
-              "image": "images/modeler-flows/palette/icons/applykmeansas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applykmeansas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -5100,7 +5100,7 @@
             "ui_data": {
               "label": "KDE Modeling",
               "description": "Walks the line between unsupervised learning, feature engineering, and data modeling.",
-              "image": "images/modeler-flows/palette/icons/kdeapply.svg",
+              "image": "images/custom-canvases/flows/palette/icons/kdeapply.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -5129,7 +5129,7 @@
             "ui_data": {
               "label": "Gaussian Mixture",
               "description": "CExposes the core features and commonly used parameters of the Gaussian Mixture Python library.",
-              "image": "images/modeler-flows/palette/icons/applygmm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applygmm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -5158,7 +5158,7 @@
             "ui_data": {
               "label": "XGBoost-AS",
               "description": "xgboostas.desc",
-              "image": "images/modeler-flows/palette/icons/applyxgboostas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyxgboostas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -5187,7 +5187,7 @@
             "ui_data": {
               "label": "XGBoost Tree",
               "description": "Uses an advanced implementation of a gradient boosting algorithm with a tree model as the base model.",
-              "image": "images/modeler-flows/palette/icons/applyxgboosttree.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyxgboosttree.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -5216,7 +5216,7 @@
             "ui_data": {
               "label": "XGBoost Linear",
               "description": "Uses an advanced implementation of a gradient boosting algorithm with a linear model as the base model.",
-              "image": "images/modeler-flows/palette/icons/applyxgboostlinear.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyxgboostlinear.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -5245,7 +5245,7 @@
             "ui_data": {
               "label": "One-Class SVM",
               "description": "Detects the soft boundary of a given set of samples, to then classify new points as belonging to that set or not.",
-              "image": "images/modeler-flows/palette/icons/applyocsvm.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyocsvm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -5274,7 +5274,7 @@
             "ui_data": {
               "label": "MultiLayerPerceptron-AS",
               "description": "A classifier based on the feedforward artificial neural network. Consists of multiple layers.",
-              "image": "images/modeler-flows/palette/icons/applymlpas.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applymlpas.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -5303,7 +5303,7 @@
             "ui_data": {
               "label": "HDBSCAN",
               "description": "Uses unsupervised learning to find clusters, or dense regions, of a data set.",
-              "image": "images/modeler-flows/palette/icons/applyhdbscan.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applyhdbscan.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -5332,7 +5332,7 @@
             "ui_data": {
               "label": "Text Mining Workbench",
               "description": "Uses unsupervised learning to find clusters, or dense regions, of a data set.",
-              "image": "images/modeler-flows/palette/icons/applytextminingworkbench.svg",
+              "image": "images/custom-canvases/flows/palette/icons/applytextminingworkbench.svg",
               "x_pos": 0,
               "y_pos": 0
             }
