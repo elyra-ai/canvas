@@ -79,7 +79,7 @@ export default class SidePanelForms extends React.Component {
 			canvasPalette2: "",
 			canvasFiles: [],
 			paletteFiles: [],
-			controlsDisabled: false
+			controlsDisabled: this.props.canvasConfig.selectedNodeLayout !== EXAMPLE_APP_NONE
 		};
 
 		this.onCanvasFileSelect = this.onCanvasFileSelect.bind(this);

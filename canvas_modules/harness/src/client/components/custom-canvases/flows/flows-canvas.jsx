@@ -22,10 +22,8 @@ export default class FlowsCanvas extends React.Component {
 	}
 
 	getConfig() {
-		// this.canvasController = new CanvasController();
-
 		const config = Object.assign({}, this.props.config, {
-			enableParentClass: "modeler-flows",
+			enableParentClass: "flows",
 			enableNodeFormatType: "Vertical",
 			enableConnectionType: "Ports",
 			enableLinkType: "Elbow",

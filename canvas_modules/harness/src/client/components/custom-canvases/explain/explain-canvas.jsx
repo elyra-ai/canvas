@@ -16,8 +16,6 @@ export default class ExplainCanvas extends React.Component {
 			enableParentClass: "explain",
 			enableNodeLayout:
 			{
-				cssNodeLabel: "shape_label_style_db2_explain",
-				cssNodeBody: "default_node_style_db2_explain",
 				defaultNodeWidth: 120,
 				defaultNodeHeight: 60,
 				labelAndIconVerticalJustification: "none",
