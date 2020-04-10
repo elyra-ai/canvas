@@ -61,8 +61,9 @@ class CheckboxsetControl extends React.Component {
 			};
 			const val = this.props.control.values[i];
 			const checked = (controlValue.indexOf(val) >= 0);
+			const disabled = this.props.state === STATES.DISABLED || !this.props.controlOpts.values.includes(val);
 			checkboxes.push(<Checkbox
-				disabled={this.props.state === STATES.DISABLED}
+				disabled={disabled}
 				id={ControlUtils.getControlId(id, this.uuid)}
 				key={val + i}
 				labelText={this.props.control.valueLabels[i]}
@@ -88,13 +89,18 @@ CheckboxsetControl.propTypes = {
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux
+	controlOpts: PropTypes.array, // pass in by redux
 	messageInfo: PropTypes.object // pass in by redux
 };
 
-const mapStateToProps = (state, ownProps) => ({
-	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
-	state: ownProps.controller.getControlState(ownProps.propertyId),
-	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
-});
+const mapStateToProps = (state, ownProps) => {
+	const props = {
+		value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+		state: ownProps.controller.getControlState(ownProps.propertyId),
+		messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+	};
+	props.controlOpts = ownProps.controller.getFilteredEnumItems(ownProps.propertyId, ownProps.control);
+	return props;
+};
 
 export default connect(mapStateToProps, null)(CheckboxsetControl);
