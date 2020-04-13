@@ -733,12 +733,12 @@ export default class SVGCanvasRenderer {
 	// Switches on or off node port highlighting depending on the node
 	// passed in and keeps track of the currently highlighted node. This is
 	// called as a new link is being drawn towards a target node to highlight
-	// the input port.
+	// the target node.
 	setNewLinkOverNode() {
-		const node = this.getNodeAtMousePos(40);
+		const node = this.getNodeAtMousePos(30);
 		if (node && node.id !== this.drawingNewLinkData.srcObjId &&
 				((this.drawingNewLinkData.action === "node-node" && !this.isPortConnected(node)) ||
-					this.drawingNewLinkData.action === "comment-node")) {
+					(this.drawingNewLinkData.action === "comment-node" && !this.isSrcObjConnectedToNode(this.drawingNewLinkData.srcObjId, node.id)))) {
 			if (!this.dragNewLinkOverNode) {
 				this.dragNewLinkOverNode = node;
 				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, true);
@@ -783,6 +783,14 @@ export default class SVGCanvasRenderer {
 			.selectAll(this.getSelectorForClass(this.getNodeInputPortClassName()))
 			.attr("connected");
 		return connected === "yes";
+	}
+
+	// Returns true if the object for the src node ID passed in is currently
+	// connected to the node for the trgNodeId passed in.
+	isSrcObjConnectedToNode(srcObjId, trgNodeId) {
+		const ret = this.activePipeline.links.filter((link) =>
+			link.srcNodeId === srcObjId && link.trgNodeId === trgNodeId);
+		return ret.length > 0;
 	}
 
 	// Processes the drop of a palette node template onto the canvas.
