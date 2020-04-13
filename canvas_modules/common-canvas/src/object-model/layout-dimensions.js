@@ -131,6 +131,9 @@ const haloDefaultLayout = {
 		// target port on the target node when drawing an Elbow connection line.
 		minFinalLine: 30,
 
+		// Display input ports.
+		inputPortDisplay: true,
+
 		// Object for input port can be "circle" or "image".
 		inputPortObject: "circle",
 
@@ -169,6 +172,9 @@ const haloDefaultLayout = {
 
 		// If input port guide object is "image" use this image.
 		inputPortGuideImage: "",
+
+		// Display output ports.
+		outputPortDisplay: true,
 
 		// Object for output port can be "circle" or "image".
 		outputPortObject: "circle",
@@ -462,6 +468,9 @@ const portsHorizontalDefaultLayout = {
 		// target port on the target node when drawing an Elbow connection line.
 		minFinalLine: 30,
 
+		// Display input ports.
+		inputPortDisplay: true,
+
 		// Object for input port can be "circle" or "image".
 		inputPortObject: "circle",
 
@@ -500,6 +509,9 @@ const portsHorizontalDefaultLayout = {
 
 		// If input port guide object is "image" use this image.
 		inputPortGuideImage: "",
+
+		// Display output ports.
+		outputPortDisplay: true,
 
 		// Object for output port can be "circle" or "image".
 		outputPortObject: "circle",
@@ -793,6 +805,9 @@ const portsVerticalDefaultLayout = {
 		// target port on the target node when drawing an Elbow connection line.
 		minFinalLine: 30,
 
+		// Display input ports.
+		inputPortDisplay: true,
+
 		// Object for input port can be "circle" or "image".
 		inputPortObject: "circle",
 
@@ -831,6 +846,9 @@ const portsVerticalDefaultLayout = {
 
 		// If input port guide object is "image" use this image.
 		inputPortGuideImage: "",
+
+		// Display output ports.
+		outputPortDisplay: true,
 
 		// Object for output port can be "circle" or "image".
 		outputPortObject: "circle",

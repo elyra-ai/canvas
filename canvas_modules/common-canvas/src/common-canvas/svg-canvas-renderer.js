@@ -2274,7 +2274,7 @@ export default class SVGCanvasRenderer {
 					// Handle port related objects
 					if (this.canvasLayout.connectionType === "ports") {
 						// Input ports
-						if (d.inputs && d.inputs.length > 0) {
+						if (d.layout.inputPortDisplay && d.inputs && d.inputs.length > 0) {
 							// This selector will select all input ports which are for the currently
 							// active pipeline. It is necessary to select them by the active pipeline
 							// because an expanded super node will include its own input ports as well
@@ -2426,7 +2426,7 @@ export default class SVGCanvasRenderer {
 						}
 
 						// Output ports
-						if (d.outputs && d.outputs.length > 0) {
+						if (d.layout.outputPortDisplay && d.outputs && d.outputs.length > 0) {
 							// This selector will select all output ports which are for the currently
 							// active pipeline. It is necessary to select them by the active pipeline
 							// because an expanded super node will include its own output ports as well
@@ -3981,22 +3981,26 @@ export default class SVGCanvasRenderer {
 	setPortPositionsForNode(node) {
 		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
 			this.setPortPositionsVertical(node, node.inputs, node.inputPortsWidth, node.layout.inputPortTopPosX, node.layout.inputPortTopPosY);
-			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.outputPortBottomPosX, this.getOutputPortYPosTopBottom(node));
+			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.outputPortBottomPosX, this.getOutputPortBottomPosY(node));
 		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-			this.setPortPositionsVertical(node, node.inputs, node.inputPortsWidth, node.layout.outputPortBottomPosX, this.getOutputPortYPosTopBottom(node));
-			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.inputPortTopPosX, node.layout.inputPortTopPosY);
+			this.setPortPositionsVertical(node, node.inputs, node.inputPortsWidth, node.layout.inputPortBottomPosX, this.getInputPortBottomPosY(node));
+			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.outputPortTopPosX, node.layout.outputPortTopPosY);
 		} else {
 			this.setPortPositionsLeftRight(node, node.inputs, node.inputPortsHeight, node.layout.inputPortLeftPosX, node.layout.inputPortLeftPosY);
-			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight, this.getOutputPortXPosLeftRight(node), node.layout.outputPortRightPosY);
+			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight, this.getOutputPortRightPosX(node), node.layout.outputPortRightPosY);
 		}
 	}
 
-	getOutputPortXPosLeftRight(node) {
+	getOutputPortRightPosX(node) {
 		return node.width + node.layout.outputPortRightPosX;
 	}
 
-	getOutputPortYPosTopBottom(node) {
+	getOutputPortBottomPosY(node) {
 		return node.height + node.layout.outputPortBottomPosY;
+	}
+
+	getInputPortBottomPosY(node) {
+		return node.height + node.layout.inputPortBottomPosY;
 	}
 
 	setPortPositionsVertical(data, ports, portsWidth, xPos, yPos) {
