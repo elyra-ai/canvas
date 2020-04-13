@@ -1,0 +1,1224 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "explain2_pipeline_flow",
+  "primary_pipeline": "explain2_pipeline",
+  "pipelines": [
+    {
+      "id": "explain2_pipeline",
+      "nodes": [
+        {
+          "id": "860d3c1b-f62d-467c-8ce5-2274444349ce",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 30,
+              "sql_cost": 1000.00,
+              "index": "[3]",
+              "estimated_cardinality": 42,
+              "cumulative_total_cost": 897.62,
+              "cumulative_cpu_cost": 745.23,
+              "total_cost": 123.34,
+              "cpu_cost": 89.45
+            },
+            "ui_data": {
+              "label": "TBSCAN",
+              "x_pos": 360,
+              "y_pos": 184.8,
+              "description": "Scans the data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "f272cfbd-eca7-4f61-8199-eae38da4ff03",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "62d43a24-7057-4fb7-a152-a453966630e0",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 50,
+              "sql_cost": 1000.00,
+              "index": "[1]",
+              "estimated_cardinality": 5,
+              "cumulative_total_cost": 567.89,
+              "cumulative_cpu_cost": 543.23,
+              "total_cost": 201.34,
+              "cpu_cost": 123.45
+            },
+            "ui_data": {
+              "label": "HSJOIN",
+              "x_pos": 360,
+              "y_pos": 26.400000000000002
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "860d3c1b-f62d-467c-8ce5-2274444349ce",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "f272cfbd-eca7-4f61-8199-eae38da4ff03",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 2,
+              "sql_cost": 1000,
+              "index": "",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "DB_GET_CFG",
+              "x_pos": 360,
+              "y_pos": 343.20000000000005,
+              "description": "Databse get"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "99498428-1825-4bc9-994f-47be9a2c5034",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "99498428-1825-4bc9-994f-47be9a2c5034",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 10,
+              "sql_cost": 900.05,
+              "index": "[2]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "NLJOIN",
+              "x_pos": 360,
+              "y_pos": 501.6,
+              "description": "Joins data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "fe4ac258-8be3-468a-b903-9932487f550b",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                },
+                {
+                  "node_id_ref": "d9fbade4-365e-4c0b-a650-7dced72f41f4",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "fe4ac258-8be3-468a-b903-9932487f550b",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 25,
+              "sql_cost": 600.00,
+              "index": "[8]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "NLJOIN",
+              "x_pos": 80,
+              "y_pos": 660,
+              "description": "Joins data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "4253d36a-7e23-44be-a90c-5dcb99111232",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                },
+                {
+                  "node_id_ref": "6242086a-3017-4982-97fb-0662b90d6397",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "4253d36a-7e23-44be-a90c-5dcb99111232",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 80,
+              "sql_cost": 899.99,
+              "index": "[1]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "NLJOIN",
+              "x_pos": -120,
+              "y_pos": 818.4000000000001,
+              "description": "Joins data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "483cec3f-5331-4e66-abb8-e63015ca8e3a",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                },
+                {
+                  "node_id_ref": "aa2b1e19-d958-4a24-aee7-046deee7174b",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "483cec3f-5331-4e66-abb8-e63015ca8e3a",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 15,
+              "sql_cost": 1000.00,
+              "index": "[3]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "TBSCAN",
+              "x_pos": -240,
+              "y_pos": 976.8000000000001,
+              "description": "Scanns the data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "3668ef48-d556-4ca5-9363-64afa395ecb9",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "aa2b1e19-d958-4a24-aee7-046deee7174b",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 34,
+              "sql_cost": 876.12,
+              "index": "[12]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "FETCH",
+              "x_pos": 40,
+              "y_pos": 976.8000000000001,
+              "description": "Fetches the data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "16264d7b-2759-45b6-a889-b0e6197b2ffa",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "16264d7b-2759-45b6-a889-b0e6197b2ffa",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 63,
+              "sql_cost": 489.00,
+              "index": "[7]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "IXSCAN",
+              "x_pos": 40,
+              "y_pos": 1135.2,
+              "description": "Fetches the data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "8848ba64-b130-4f85-9c6d-e3d8b305730d",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "6242086a-3017-4982-97fb-0662b90d6397",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 22,
+              "sql_cost": 700.00,
+              "index": "[2]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "FETCH",
+              "x_pos": 280,
+              "y_pos": 818.4000000000001,
+              "description": "Fetches the data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "3668ef48-d556-4ca5-9363-64afa395ecb9",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 22,
+              "sql_cost": 432.00,
+              "index": "[4]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "TEMP",
+              "x_pos": -240,
+              "y_pos": 1135.2,
+              "description": "Does some temporary stuff"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "210c6766-0be9-4b96-ae19-ca7d6e1a1386",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "210c6766-0be9-4b96-ae19-ca7d6e1a1386",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 60,
+              "sql_cost": 789.00,
+              "index": "[9]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "GRBY",
+              "x_pos": -240,
+              "y_pos": 1293.6000000000001,
+              "description": "Green, Red, Blue and Yellow"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "8848ba64-b130-4f85-9c6d-e3d8b305730d",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 12,
+              "sql_cost": 123.45,
+              "index": "[7]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "SQL180105160757660-1234567890-1234556768900",
+              "x_pos": 40,
+              "y_pos": 1293.6000000000001,
+              "description": "SQL Table"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "d9fbade4-365e-4c0b-a650-7dced72f41f4",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 34,
+              "sql_cost": 444.44,
+              "index": "[5]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "NLJOIN",
+              "x_pos": 640,
+              "y_pos": 660,
+              "description": "Joins data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "cd91fb63-a4d2-47c7-b683-f115b4871bf1",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                },
+                {
+                  "node_id_ref": "afbc84da-53c3-40ce-895d-f03c9ac1406f",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "cd91fb63-a4d2-47c7-b683-f115b4871bf1",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 52,
+              "sql_cost": 945.39,
+              "index": "[6]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "TBSCAN",
+              "x_pos": 560,
+              "y_pos": 818.4000000000001,
+              "description": "Scanns the data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "b0c19d66-e9cd-48d0-b962-fafaaa8adcb6",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "afbc84da-53c3-40ce-895d-f03c9ac1406f",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 10,
+              "sql_cost": 125.00,
+              "index": "[9]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "FETCH",
+              "x_pos": 880,
+              "y_pos": 818.4000000000001,
+              "description": "Fetches the data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "81f6c9ec-1f42-40d2-8e56-fadc0c9eb837",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "81f6c9ec-1f42-40d2-8e56-fadc0c9eb837",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 45,
+              "sql_cost": 239.70,
+              "index": "[2]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "IXSCAN",
+              "x_pos": 880,
+              "y_pos": 976.8000000000001,
+              "description": "Fetches the data"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "c13b7497-8522-4da3-a704-b93843ea37ba",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "b0c19d66-e9cd-48d0-b962-fafaaa8adcb6",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 77,
+              "sql_cost": 905.34,
+              "index": "[8]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "TEMP",
+              "x_pos": 560,
+              "y_pos": 976.8000000000001,
+              "description": "Does some temporary stuff"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "c39d565e-d590-4602-9ab0-a3f01df966c3",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "d3-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "c39d565e-d590-4602-9ab0-a3f01df966c3",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 14,
+              "sql_cost": 100.42,
+              "index": "[3]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "GRBY",
+              "x_pos": 560,
+              "y_pos": 1135.2,
+              "description": "Green, Red, Blue and Yellow"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "c13b7497-8522-4da3-a704-b93843ea37ba",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "explain": {
+              "percentage": 36,
+              "sql_cost": 1000.00,
+              "index": "[9]",
+              "estimated_cardinality": 21,
+              "cumulative_total_cost": 778.39,
+              "cumulative_cpu_cost": 783.23,
+              "total_cost": 301.11,
+              "cpu_cost": 141.29
+            },
+            "ui_data": {
+              "label": "SQL180105160757660-1234567890-1234556768900",
+              "x_pos": 880,
+              "y_pos": 1135.2,
+              "description": "SQL Table"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        }
+      },
+      "runtime_ref": "scala-spark-2.0.1"
+    }
+  ],
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "scala-spark-2.0.1",
+      "name": "scala-spark-2.0.1"
+    }
+  ]
+}

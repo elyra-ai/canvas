@@ -1,0 +1,83 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2020. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+/* These styles are used in the explainCanvas.json. */
+
+.explain2 {
+	.d3-node-body-outline {
+		stroke: transparent;
+		fill: $ui-01;
+		stroke-width: 2;
+		text-anchor: middle;
+	}
+
+	.d3-node-selection-highlight[data-selected="yes"] {
+		stroke: $inverse-support-04;
+	}
+
+	.d3-node-label {
+		font-size: 14px;
+		font-weight: 600;
+		text-anchor: start;
+		user-select: none; // Prevents text highlighting on drag over
+	}
+
+	.d3-data-link {
+		stroke: $ui-04;
+		stroke-width: 1px;
+	}
+
+	.d3-data-link-arrow-head {
+		stroke: $ui-04;
+	}
+
+	.dec-percentage-label {
+		font-size: 14px;
+		font-weight: 600;
+		text-anchor: end;
+		user-select: none; // Prevents text highlighting on drag over
+	}
+
+	.dec-index-label {
+		font-size: 14px;
+		font-weight: 600;
+		text-anchor: start;
+	}
+
+	.dec-sql-cost-label {
+		font-size: 14px;
+		fill: $text-05;
+		font-weight: 600;
+		text-anchor: start;
+	}
+
+	.dec-right-bar {
+		fill: $ui-03;
+		stroke: $ui-03;
+	}
+
+	.dec-percentage-bar-red {
+		fill: $support-01;
+		stroke: $support-01;
+	}
+
+	.dec-percentage-bar-gray {
+		fill: $text-05;
+		stroke: $text-05;
+	}
+}
+
+.tipTable > tbody > tr > td {
+	padding-right: 5px;
+}
+
+// Override the max width for common-canvas tooltips
+.common-canvas-tooltip {
+	max-width: 400px;
+}

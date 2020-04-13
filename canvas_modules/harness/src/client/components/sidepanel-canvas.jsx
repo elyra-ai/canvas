@@ -58,6 +58,7 @@ import {
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
 	EXAMPLE_APP_EXPLAIN,
+	EXAMPLE_APP_EXPLAIN2,
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	FLYOUT,
@@ -934,6 +935,10 @@ export default class SidePanelForms extends React.Component {
 				<RadioButton
 					value={EXAMPLE_APP_EXPLAIN}
 					labelText={EXAMPLE_APP_EXPLAIN}
+				/>
+				<RadioButton
+					value={EXAMPLE_APP_EXPLAIN2}
+					labelText={EXAMPLE_APP_EXPLAIN2}
 				/>
 				<RadioButton
 					value={EXAMPLE_APP_STREAMS}

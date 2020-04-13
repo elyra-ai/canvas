@@ -75,6 +75,7 @@ _defineConstant("EXAMPLE_APP_NONE", "None - use options below");
 _defineConstant("EXAMPLE_APP_FLOWS", "Flows");
 _defineConstant("EXAMPLE_APP_BLUE_ELLIPSES", "Blue Ellipses");
 _defineConstant("EXAMPLE_APP_EXPLAIN", "Explain");
+_defineConstant("EXAMPLE_APP_EXPLAIN2", "Explain2");
 _defineConstant("EXAMPLE_APP_STREAMS", "Streams");
 _defineConstant("EXAMPLE_APP_TABLES", "Tables");
 

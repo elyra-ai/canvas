@@ -41,6 +41,7 @@ import CommonCanvasPackage from "@elyra/canvas/package.json";
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
+import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
 import BlueEllipsesCanvas from "./components/custom-canvases/blue-ellipses/blue-ellipses-canvas";
 
@@ -83,6 +84,7 @@ import {
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
 	EXAMPLE_APP_EXPLAIN,
+	EXAMPLE_APP_EXPLAIN2,
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	CUSTOM,
@@ -1918,6 +1920,13 @@ export default class App extends React.Component {
 		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_EXPLAIN) {
 			firstCanvas = (
 				<ExplainCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_EXPLAIN2) {
+			firstCanvas = (
+				<Explain2Canvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
