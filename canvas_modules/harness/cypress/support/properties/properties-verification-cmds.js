@@ -14,15 +14,6 @@
  * limitations under the License.
  */
 
-Cypress.Commands.add("verifyReadOnlyNumericValue", (value) => {
-	cy.get(".properties-readonly span").first()
-		.invoke("text")
-		.then((text) => {
-			const num = parseFloat(text);
-			expect(value).equal(num);
-		});
-});
-
 Cypress.Commands.add("verifyReadOnlyTextValue", (controlId, value) => {
 	cy.get("div[data-id='properties-" + controlId + "'] span")
 		.invoke("text")

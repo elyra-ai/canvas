@@ -14,22 +14,6 @@
  * limitations under the License.
  */
 
-describe("Test of common properties actions", function() {
-	before(() => {
-		cy.visit("/");
-		cy.openPropertyDefinition("action_paramDef.json");
-	});
-
-	it("Test of Increment, Decrement actions", function() {
-		cy.clickAction("Increment");
-		cy.clickAction("Increment");
-		cy.clickAction("Increment");
-		cy.verifyReadOnlyNumericValue(3);
-		cy.clickAction("Decrement");
-		cy.verifyReadOnlyNumericValue(2);
-	});
-});
-
 describe("Test of text styling and word wrapping", function() {
 	before(() => {
 		cy.visit("/");
@@ -52,10 +36,10 @@ describe("Test of ellipsis activation for a long readonly text", function() {
 	it("Test of ellipsis activation for a long readonly text", function() {
 		cy.openSubPanel("Configure Rename fields");
 		cy.clickSubPanelButtonInRow("structuretableReadonlyColumnDefaultIndex", 0);
-		cy.setRenameSubPanelLabel("structuretableReadonlyColumnDefaultIndex_0_3",
+		cy.setTextFieldValue("structuretableReadonlyColumnDefaultIndex_0_3",
 			"This is a very long sentence of text to test whether or not an overflow of text occurs");
-		cy.saveWideFlyoutHavingName("Rename Subpanel");
+		cy.saveWideFlyout("Rename Subpanel");
 		cy.verifyNoTextOverflow("structuretableReadonlyColumnDefaultIndex_0_3");
-		cy.saveWideFlyoutHavingName("Configure Rename fields");
+		cy.saveWideFlyout("Configure Rename fields");
 	});
 });

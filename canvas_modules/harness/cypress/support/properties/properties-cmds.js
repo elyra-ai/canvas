@@ -35,11 +35,6 @@ Cypress.Commands.add("openSubPanel", (title) => {
 		.click();
 });
 
-Cypress.Commands.add("clickAction", (actionName) => {
-	cy.get(".properties-action-button button").contains(actionName)
-		.click();
-});
-
 Cypress.Commands.add("clickSubPanelButtonInRow", (controlId, row) => {
 	cy.get("div[data-id='properties-" + controlId + "']").find(".properties-subpanel-button")
 		.then((idx) => {
@@ -47,7 +42,7 @@ Cypress.Commands.add("clickSubPanelButtonInRow", (controlId, row) => {
 		});
 });
 
-Cypress.Commands.add("setRenameSubPanelLabel", (controlId, labelText) => {
+Cypress.Commands.add("setTextFieldValue", (controlId, labelText) => {
 	cy.get("div[data-id='properties-" + controlId + "']").find("input")
 		.type(labelText);
 });
@@ -67,7 +62,7 @@ Cypress.Commands.add("getWideFlyoutPanel", (panelName) => {
 		});
 });
 
-Cypress.Commands.add("saveWideFlyoutHavingName", (panelName) => {
+Cypress.Commands.add("saveWideFlyout", (panelName) => {
 	cy.getWideFlyoutPanel(panelName).then((wideFlyoutPanel) => {
 		cy.wrap(wideFlyoutPanel)
 			.find(".properties-modal-buttons button[data-id='properties-apply-button']")
