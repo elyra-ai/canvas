@@ -14,21 +14,6 @@
  * limitations under the License.
  */
 
-// -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-
 Cypress.Commands.add("openPropertyDefinition", (propertyFileName) => {
 	cy.get("#harness-action-bar-sidepanel-modal").click();
 	cy.get("#common-properties-select-item").select(propertyFileName);
@@ -40,10 +25,6 @@ Cypress.Commands.add("toggleCategory", (categoryName) => {
 		.click();
 });
 
-Cypress.Commands.add("saveWideflyout", () => {
-	cy.get(".properties-wf-content button[data-id='properties-apply-button']").click();
-});
-
 Cypress.Commands.add("saveFlyout", () => {
 	cy.get(".properties-modal-buttons button[data-id='properties-apply-button']").click();
 });
@@ -52,4 +33,44 @@ Cypress.Commands.add("saveFlyout", () => {
 Cypress.Commands.add("openSubPanel", (title) => {
 	cy.get(".properties-icon-button-label").contains(title)
 		.click();
+});
+
+Cypress.Commands.add("clickAction", (actionName) => {
+	cy.get(".properties-action-button button").contains(actionName)
+		.click();
+});
+
+Cypress.Commands.add("clickSubPanelButtonInRow", (controlId, row) => {
+	cy.get("div[data-id='properties-" + controlId + "']").find(".properties-subpanel-button")
+		.then((idx) => {
+			idx[row].click();
+		});
+});
+
+Cypress.Commands.add("setRenameSubPanelLabel", (controlId, labelText) => {
+	cy.get("div[data-id='properties-" + controlId + "']").find("input")
+		.type(labelText);
+});
+
+Cypress.Commands.add("getWideFlyoutPanel", (panelName) => {
+	cy.get(".properties-wf-content.show")
+		.then((wideFlyoutPanels) => {
+			let panel = null;
+			for (var idx = 0; idx < wideFlyoutPanels.length; idx++) {
+				const flyout = wideFlyoutPanels[idx];
+				if (flyout.textContent.includes(panelName)) {
+					panel = flyout;
+					break;
+				}
+			}
+			return panel;
+		});
+});
+
+Cypress.Commands.add("saveWideFlyoutHavingName", (panelName) => {
+	cy.getWideFlyoutPanel(panelName).then((wideFlyoutPanel) => {
+		cy.wrap(wideFlyoutPanel)
+			.find(".properties-modal-buttons button[data-id='properties-apply-button']")
+			.click();
+	});
 });

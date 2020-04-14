@@ -35,7 +35,7 @@ describe("Test of custom panels", function() {
 			.trigger("mousemove", { clientX: 900 })
 			.trigger("mouseup");
 		verifySliderDropDown(3);
-		cy.saveWideflyout();
+		cy.saveWideFlyoutHavingName("Configure Slider");
 		cy.saveFlyout();
 		cy.document().then((doc) => {
 			const lastEventLog = testUtils.getLastEventLogData(doc);

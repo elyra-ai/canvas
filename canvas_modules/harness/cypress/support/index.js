@@ -15,6 +15,7 @@
  */
 
 import "./properties/properties-cmds";
+import "./properties/properties-verification-cmds";
 import "./canvas/comments-cmds";
 import "./canvas/context-menu-cmds";
 import "./canvas/node-cmds";
