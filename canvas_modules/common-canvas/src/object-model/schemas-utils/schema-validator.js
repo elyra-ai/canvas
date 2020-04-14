@@ -26,7 +26,9 @@ import pipelineConnectionV2Schema from "@elyra/pipeline-schemas/common-pipeline/
 import dataRecordMetadataV2Schema from "@elyra/pipeline-schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v2-schema.json";
 import paletteV2Schema from "../schemas/v2/palette-v2-schema.json";
 
-import pipelineFlowV3Schema from "@elyra/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json";
+// TDOD - Uncomment the import below and remove temporary import bwlow it when Elyra pipeline-schemas build is working.
+// import pipelineFlowV3Schema from "@elyra/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json";
+import pipelineFlowV3Schema from "../schemas/V3/pipeline-flow-v3-schema.json";
 import pipelineFlowUIV3Schema from "@elyra/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v3-schema.json";
 import pipelineConnectionV3Schema from "@elyra/pipeline-schemas/common-pipeline/pipeline-connection/pipeline-connection-v3-schema.json";
 import dataRecordMetadataV3Schema from "@elyra/pipeline-schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v3-schema.json";

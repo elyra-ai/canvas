@@ -167,6 +167,7 @@
         {
           "id": "id125TTEEIK7V",
           "type": "model_node",
+          "op": "neuralnetwork",
           "model_ref": "",
           "app_data": {
             "ui_data": {
@@ -219,6 +220,7 @@
         {
           "id": "id5KIRGGJ3FYT",
           "type": "binding",
+          "op": "neuralnetwork",
           "app_data": {
             "ui_data": {
               "label": "Drug",
@@ -263,6 +265,7 @@
         {
           "id": "id6PXRG57DGIV",
           "type": "binding",
+          "op": "variablefile",
           "app_data": {
             "ui_data": {
               "label": "DRUG1n",
@@ -342,6 +345,7 @@
         {
           "id": "id8I6RH2V91XW",
           "type": "model_node",
+          "op": "c50",
           "model_ref": "",
           "app_data": {
             "ui_data": {

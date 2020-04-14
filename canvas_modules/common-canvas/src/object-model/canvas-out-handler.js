@@ -53,6 +53,9 @@ export default class CanvasOutHandler {
 				label: canvasnode.label,
 				description: canvasnode.description || ""
 			};
+			newNode.userData = {
+				typeId: canvasnode.op
+			};
 			if (canvasnode.decorations) {
 				newNode.decorations = this.getCanvasDecorations(canvasnode.decorations);
 			}
