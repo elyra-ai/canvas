@@ -11,6 +11,7 @@
             {
               "id": "id1JFT2QZ4J7Y",
               "type": "binding",
+              "op": "featureselection",
               "app_data": {
                 "ui_data": {
                   "label": "Survived",
@@ -55,6 +56,7 @@
             {
               "id": "idKPUE5L81JB",
               "type": "binding",
+              "op": "dataaudit",
               "app_data": {
                 "ui_data": {
                   "label": "7 Fields",
@@ -92,6 +94,7 @@
             {
               "id": "id1FWTTHWXCZB",
               "type": "binding",
+              "op": "dataaudit",
               "app_data": {
                 "ui_data": {
                   "label": "12 Fields",
@@ -181,6 +184,7 @@
             {
               "id": "id584UATQFUJJ",
               "type": "binding",
+              "op": "dataassetimport",
               "app_data": {
                 "ui_data": {
                   "label": "titanic.csv",
@@ -208,6 +212,7 @@
             {
               "id": "id574TW99Q62X",
               "type": "model_node",
+              "op": "applyfeatureselection",
               "model_ref": "",
               "app_data": {
                 "ui_data": {
@@ -312,6 +317,7 @@
             {
               "id": "id35QUBK8XKH5",
               "type": "binding",
+              "op": "table",
               "app_data": {
                 "ui_data": {
                   "label": "Table",
@@ -349,6 +355,7 @@
             {
               "id": "id73FUEVIPAF4",
               "type": "binding",
+              "op": "analysis",
               "app_data": {
                 "ui_data": {
                   "label": "Analysis",
@@ -386,6 +393,7 @@
             {
               "id": "idF9UM45CQA5",
               "type": "binding",
+              "op": "autoclassifier",
               "app_data": {
                 "ui_data": {
                   "label": "Survived",
@@ -430,6 +438,7 @@
             {
               "id": "id654UDIS8H3M",
               "type": "model_node",
+              "op": "applyautoclassifier",
               "model_ref": "",
               "app_data": {
                 "ui_data": {

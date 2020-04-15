@@ -166,6 +166,7 @@
         {
           "id": "id8I6RH2V91XW",
           "type": "binding",
+          "op": "c50",
           "app_data": {
             "ui_data": {
               "label": "C5.0",
@@ -205,6 +206,7 @@
         {
           "id": "id5KIRGGJ3FYT",
           "type": "binding",
+          "op": "neuralnetwork",
           "app_data": {
             "ui_data": {
               "label": "Neural Net",
@@ -243,6 +245,7 @@
         {
           "id": "id6PXRG57DGIV",
           "type": "binding",
+          "op": "variablefile",
           "app_data": {
             "ui_data": {
               "label": "DRUG1n",
