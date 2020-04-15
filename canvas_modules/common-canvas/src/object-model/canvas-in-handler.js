@@ -90,7 +90,7 @@ export default class CanvasInHandler {
 				newNode.model_ref = "";
 			}
 
-			if (nodeType === EXECUTION_NODE) {
+			if (nodeType === EXECUTION_NODE || nodeType === BINDING || nodeType === MODEL_NODE) {
 				if (canvasNode.userData && canvasNode.userData.typeId) {
 					newNode.op = canvasNode.userData.typeId;
 				} else {

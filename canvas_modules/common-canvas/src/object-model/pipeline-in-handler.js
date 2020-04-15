@@ -82,7 +82,9 @@ export default class PipelineInHandler {
 				"app_data": has(node, "app_data") ? this.removeUiDataFromAppData(node.app_data) : [],
 
 			};
-			if (node.type === EXECUTION_NODE || node.type === BINDING) {
+			if (node.type === EXECUTION_NODE ||
+					node.type === BINDING ||
+					node.type === MODEL_NODE) {
 				obj.op = node.op;
 			}
 			if (node.type === SUPER_NODE) {

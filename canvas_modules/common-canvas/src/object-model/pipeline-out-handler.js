@@ -73,7 +73,8 @@ export default class PipelineOutHandler {
 		};
 
 		if (ciNode.type === EXECUTION_NODE ||
-				ciNode.type === BINDING) {
+				ciNode.type === BINDING ||
+				ciNode.type === MODEL_NODE) {
 			if (ciNode.op || ciNode.op === "") {
 				newNode.op = ciNode.op; // Write out op even if it is "" to allow our tests to work.
 			}
