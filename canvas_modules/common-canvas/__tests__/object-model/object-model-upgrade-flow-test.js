@@ -351,7 +351,7 @@ describe("ObjectModel files handling test", () => {
 		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
 	}
 
-	function upgradeToLatestVersion(earlierPipelineFlow, latestPipelineFlow, fromV1) {
+	function upgradeToLatestVersion(earlierPipelineFlow, latestPipelineFlow) {
 		deepFreeze(earlierPipelineFlow);
 
 		objectModel.setPipelineFlow(earlierPipelineFlow);
