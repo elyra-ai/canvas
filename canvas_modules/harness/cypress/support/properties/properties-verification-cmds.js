@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-import "./properties/properties-cmds";
-import "./properties/properties-verification-cmds";
-import "./canvas/comments-cmds";
-import "./canvas/context-menu-cmds";
-import "./canvas/node-cmds";
-import "./canvas/object-model-cmds";
-import "./canvas/test-harness-cmds";
-import "./canvas/toolbar-cmds";
-import "./canvas/verification-cmds";
+Cypress.Commands.add("verifyReadOnlyTextValue", (controlId, value) => {
+	cy.get("div[data-id='properties-" + controlId + "'] span")
+		.invoke("text")
+		.then((text) => {
+			expect(value).equal(text);
+		});
+});
 
-// turn off screenshots when running in headless mode.
-Cypress.Screenshot.defaults({
-	screenshotOnRunFailure: false,
+Cypress.Commands.add("verifyReadOnlyTextCSS", (controlId, style, value) => {
+	cy.get("div[data-id='properties-" + controlId + "'] span")
+		.should("have.css", style, value);
+});
+
+Cypress.Commands.add("verifyNoTextOverflow", (controlId) => {
+	cy.get("div[data-id='properties-" + controlId + "'] span")
+		.invoke("height")
+		.should("be.lt", 25);
 });
