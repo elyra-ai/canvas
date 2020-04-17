@@ -35,3 +35,11 @@ Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 	cy.useCtrlOrCmdKey()
 		.then((selectedKey) => cy.getCommentWithText(commentText).type(selectedKey, { release: false }));
 });
+
+Cypress.Commands.add("getNumberOfSelectedComments", () => {
+	cy.get(".d3-comment-selection-highlight")
+		.then((comments) => {
+			const selectedComments = comments.filter((idx) => comments[idx].getAttribute("data-selected") === "yes");
+			return selectedComments.length;
+		});
+});

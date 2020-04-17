@@ -25,8 +25,15 @@ Cypress.Commands.add("verifyNodeTransformInSubFlow", (nodeLabel, transformValue)
 });
 
 Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
-	cy.get("#canvas-div-0").find(".node-image")
-		.should("have.length", noOfNodes);
+	cy.get("body").then(($body) => {
+		if ($body.find(".node-image").length) {
+			cy.get("#canvas-div-0").find(".node-image")
+				.should("have.length", noOfNodes);
+		} else {
+			// No nodes found on canvas
+			expect(0).equal(noOfNodes);
+		}
+	});
 
 	// verify the number of nodes in the internal object model
 	cy.getPipeline().then((pipeline) => {
@@ -35,8 +42,14 @@ Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 });
 
 Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
-	cy.get(".d3-data-link")
-		.should("have.length", noOfLinks);
+	cy.get("body").then(($body) => {
+		if ($body.find(".d3-data-link").length) {
+			cy.get(".d3-data-link").should("have.length", noOfLinks);
+		} else {
+			// No Port Data Links found on canvas
+			expect(0).equal(noOfLinks);
+		}
+	});
 
 	// verify the number of port-links in the internal object model
 	cy.getPipeline().then((pipeline) => {
@@ -45,7 +58,14 @@ Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
 });
 
 Cypress.Commands.add("verifyNumberOfComments", (noOfComments) => {
-	cy.get(".d3-comment-group").should("have.length", noOfComments);
+	cy.get("body").then(($body) => {
+		if ($body.find(".d3-comment-group").length) {
+			cy.get(".d3-comment-group").should("have.length", noOfComments);
+		} else {
+			// No comments found on canvas
+			expect(0).equal(noOfComments);
+		}
+	});
 
 	// verify the number of comments in the internal object model
 	cy.getPipeline().then((pipeline) => {
@@ -55,17 +75,41 @@ Cypress.Commands.add("verifyNumberOfComments", (noOfComments) => {
 
 Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
 	// Sum of different types of links on canvas
-	cy.get(".d3-data-link").its("length")
-		.then((dataLinks) => {
-			cy.get(".d3-comment-link").its("length")
-				.then((commentLinks) => {
-					expect(dataLinks + commentLinks).equal(noOfLinks);
-				});
-		});
+	cy.get("body").then(($body) => {
+		let dataLinks = 0;
+		let commentLinks = 0;
+		let associationLinks = 0;
+		if ($body.find(".d3-data-link").length) {
+			dataLinks = $body.find(".d3-data-link").length;
+		}
+		if ($body.find(".d3-comment-link").length) {
+			commentLinks = $body.find(".d3-comment-link").length;
+		}
+		if ($body.find(".d3-object-link").length) {
+			associationLinks = $body.find(".d3-object-link").length;
+		}
+		expect(dataLinks + commentLinks + associationLinks).equal(noOfLinks);
+	});
 
 	// verify the number of links in the internal object model
 	cy.getPipeline().then((pipeline) => {
 		cy.getCountLinks(pipeline).should("eq", noOfLinks);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
+	cy.get("body").then(($body) => {
+		if ($body.find(".d3-comment-link").length) {
+			cy.get(".d3-comment-link").should("have.length", noOfCommentLinks);
+		} else {
+			// No comment links found on canvas
+			expect(0).equal(noOfCommentLinks);
+		}
+	});
+
+	// verify the number of comment-links in the internal object model
+	cy.getPipeline().then((pipeline) => {
+		cy.getCountCommentLinks(pipeline).should("eq", noOfCommentLinks);
 	});
 });
 
@@ -79,4 +123,41 @@ Cypress.Commands.add("verifyNumberOfLinksInSupernode", (supernodeName, noOfLinks
 	cy.getSupernodePipeline(supernodeName).then((supernodePipeline) => {
 		cy.getCountLinks(supernodePipeline).should("eq", noOfLinks);
 	});
+});
+
+Cypress.Commands.add("verifyNumberOfSelectedObjects", (noOfSelectedObjects) => {
+	cy.getNumberOfSelectedComments()
+		.then((selectedComments) => {
+			cy.getNumberOfSelectedNodes()
+				.then((selectedNodes) => {
+					expect(noOfSelectedObjects).equal(selectedComments + selectedNodes);
+				});
+		});
+});
+
+Cypress.Commands.add("verifyOptionInContextMenu", (optionName) => {
+	cy.getOptionFromContextMenu(optionName).should("have.length", 1);
+});
+
+Cypress.Commands.add("verifyContextMenuPosition", (distFromLeft, distFromTop) => {
+	// first() returns context menu
+	cy.get(".context-menu-popover").first()
+		.invoke("css", "left")
+		.then((leftDist) => {
+			expect(Math.round(parseFloat(leftDist.split("px")[0]))).equal(distFromLeft);
+		});
+	cy.get(".context-menu-popover").first()
+		.invoke("css", "top")
+		.then((topDist) => {
+			expect(Math.round(parseFloat(topDist.split("px")[0]))).equal(distFromTop);
+		});
+});
+
+Cypress.Commands.add("verifySubmenuPushedUpBy", (distFromTop) => {
+	// last() returns context submenu
+	cy.get(".context-menu-popover").last()
+		.invoke("css", "top")
+		.then((topDist) => {
+			expect(Math.abs(parseFloat(topDist.split("px")[0]))).equal(distFromTop);
+		});
 });

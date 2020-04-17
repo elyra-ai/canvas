@@ -18,15 +18,20 @@ Cypress.Commands.add("rightClickToDisplayContextMenu", (distFromLeft, distFromTo
 	cy.get("#canvas-div-0").rightclick(distFromLeft, distFromTop);
 });
 
-Cypress.Commands.add("clickOptionFromContextMenu", (optionName) => {
+Cypress.Commands.add("getOptionFromContextMenu", (optionName) => {
 	cy.get(".context-menu-popover").find(".react-contextmenu-item:not(.contextmenu-divider)")
 		.then((options) => {
-			options.each((idx) => {
+			for (let idx = 0; idx < options.length; idx++) {
 				if (options[idx].outerText === optionName) {
-					options[idx].click();
+					return options[idx];
 				}
-			});
+			}
+			return null;
 		});
+});
+
+Cypress.Commands.add("clickOptionFromContextMenu", (optionName) => {
+	cy.getOptionFromContextMenu(optionName).click();
 });
 
 Cypress.Commands.add("clickOptionFromContextSubmenu", (submenuName, optionName) => {
