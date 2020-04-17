@@ -281,7 +281,7 @@ module.exports = function() {
 
 	this.Then(/^I click on the hotspot for decorator "([^"]*)" on the "([^"]*)" link$/, function(decoratorId, linkName) {
 		const link = getLinkFromAPIName(linkName, getCanvasData());
-		const decoratorImage = link.$(".d3-link-dec-image[data-id=link_dec_image_0_" + decoratorId + "]");
+		const decoratorImage = link.$(".d3-link-dec-outline[data-id=link_dec_outln_0_" + decoratorId + "]");
 		decoratorImage.click();
 	});
 
