@@ -158,10 +158,10 @@ class DropDown extends React.Component {
 			const selection = dropDown.selectedOption && dropDown.selectedOption.value ? dropDown.selectedOption.value : "";
 			if (!dropDown.selectedOption) {
 				// need to add null option when no value set.  Shouldn't be an option for the user to select otherwise
-				options.push(<SelectItem text={this.emptyLabel} key="" value="" />);
+				options.push(<SelectItem text={this.emptyLabel} key={this.id} value="" />);
 			}
 			for (const option of dropDown.options) {
-				options.push(<SelectItem text={option.label} key={option.value} value={option.value} />);
+				options.push(<SelectItem text={option.label} key={this.id + "-" + option.value} value={option.value} />);
 			}
 			dropdownComponent = (<Select
 				id={this.id}
