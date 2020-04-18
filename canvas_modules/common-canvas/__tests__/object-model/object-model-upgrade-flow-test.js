@@ -223,7 +223,7 @@ describe("ObjectModel files handling test", () => {
 	});
 
 	it("should upgrade a pipelineFlow from v2 to latest version for modelerCanvasV2", () => {
-		upgradeToLatestVersion(modelerCanvasV2, modelerCanvas);
+		upgradeToLatestVersion(modelerCanvasV2, removeOpFromModelNodes(modelerCanvas));
 	});
 
 	it("should upgrade a pipelineFlow from v2 to latest version for multiPortsCanvasV2", () => {
@@ -266,11 +266,11 @@ describe("ObjectModel files handling test", () => {
 	});
 
 	it("should upgrade a pipelineFlow from v1 to latest version for commentColorCanvasV1", () => {
-		upgradeToLatestVersion(commentColorCanvasV1, commentColorCanvas);
+		upgradeToLatestVersion(commentColorCanvasV1, removeOpFromBindingAndModelNodes(commentColorCanvas));
 	});
 
 	it("should upgrade a pipelineFlow from v1 to latest version for commentUnderlapCanvasV1", () => {
-		upgradeToLatestVersion(commentUnderlapCanvasV1, commentUnderlapCanvas);
+		upgradeToLatestVersion(commentUnderlapCanvasV1, removeOpFromBindingAndModelNodes(commentUnderlapCanvas));
 	});
 
 	it("should upgrade a pipelineFlow from v1 to latest version for customAttrsCanvasV1", () => {
@@ -282,15 +282,15 @@ describe("ObjectModel files handling test", () => {
 	});
 
 	it("should upgrade a pipelineFlow from v1 to latest version for linkColorCanvasV1", () => {
-		upgradeToLatestVersion(linkColorCanvasV1, linkColorCanvas);
+		upgradeToLatestVersion(linkColorCanvasV1, removeOpFromBindingAndModelNodes(linkColorCanvas));
 	});
 
 	it("should upgrade a pipelineFlow from v1 to latest version for modelerCanvasV1", () => {
-		upgradeToLatestVersion(modelerCanvasV1, modelerCanvas);
+		upgradeToLatestVersion(modelerCanvasV1, removeOpFromBindingAndModelNodes(modelerCanvas));
 	});
 
 	it("should upgrade a pipelineFlow from v1 to latest version for multiPortsCanvasV1", () => {
-		upgradeToLatestVersion(multiPortsCanvasV1, multiPortsCanvas);
+		upgradeToLatestVersion(multiPortsCanvasV1, removeOpFromBindingAndModelNodes(multiPortsCanvas));
 	});
 
 	it("should upgrade a pipelineFlow from v1 to latest version for pipelineFlowExampleV1", () => {
@@ -364,6 +364,35 @@ describe("ObjectModel files handling test", () => {
 
 		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
 	}
+
+	// Returns a modified expected canvas for comparing with an upgraded V1 pipeline
+	// flow. We remove the op property from the expected canvas because this was
+	// not supported in the V1 schema for model nodes but we need it in
+	// the expected file for comparison with upgraded x- canvas files.
+	function removeOpFromBindingAndModelNodes(latestPipelineFlow) {
+		const expectedCanvas = JSON.parse(JSON.stringify(latestPipelineFlow));
+		expectedCanvas.pipelines[0].nodes.forEach((n) => {
+			if (n.type === "binding" || n.type === "model_node") {
+				delete n.op;
+			}
+		});
+		return expectedCanvas;
+	}
+
+	// Returns a modified expected canvas for comparing with an upgraded V2 pipeline
+	// flow. We remove the op property from the expected canvas because this was
+	// not supported in the V2 schema for model nodes but we need it in
+	// the expected file for comparison with upgraded x- canvas files.
+	function removeOpFromModelNodes(latestPipelineFlow) {
+		const expectedCanvas = JSON.parse(JSON.stringify(latestPipelineFlow));
+		expectedCanvas.pipelines[0].nodes.forEach((n) => {
+			if (n.type === "model_node") {
+				delete n.op;
+			}
+		});
+		return expectedCanvas;
+	}
+
 
 	// V0 needs a special function because runtime ref fields are not handled
 	// correctly with V0 (because the canvas does not contain runtime info)

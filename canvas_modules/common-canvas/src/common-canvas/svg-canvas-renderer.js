@@ -20,7 +20,7 @@
 
 // Import just the D3 modules that are needed. Doing this means that the
 // d3Event object needs to be explicitly imported.
-var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-zoom"));
+var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-zoom"), require("d3-fetch"));
 import { event as d3Event } from "d3-selection";
 import union from "lodash/union";
 import forIn from "lodash/forIn";
@@ -733,22 +733,25 @@ export default class SVGCanvasRenderer {
 	// Switches on or off node port highlighting depending on the node
 	// passed in and keeps track of the currently highlighted node. This is
 	// called as a new link is being drawn towards a target node to highlight
-	// the input port.
-	setInputPortHighlightingOverNode(node) {
-		if (node && node.id !== this.drawingNewLinkData.srcObjId) {
+	// the target node.
+	setNewLinkOverNode() {
+		const node = this.getNodeAtMousePos(30);
+		if (node && node.id !== this.drawingNewLinkData.srcObjId &&
+				((this.drawingNewLinkData.action === "node-node" && !this.isPortConnected(node)) ||
+					(this.drawingNewLinkData.action === "comment-node" && !this.isSrcObjConnectedToNode(this.drawingNewLinkData.srcObjId, node.id)))) {
 			if (!this.dragNewLinkOverNode) {
 				this.dragNewLinkOverNode = node;
-				this.setInputPortDragOverNodeHighlighting(this.dragNewLinkOverNode, true);
+				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, true);
 
 			} else if (node.id !== this.dragNewLinkOverNode.id) {
-				this.setInputPortDragOverNodeHighlighting(this.dragNewLinkOverNode, false);
+				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, false);
 				this.dragNewLinkOverNode = node;
-				this.setInputPortDragOverNodeHighlighting(this.dragNewLinkOverNode, true);
+				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, true);
 			}
 
 		} else {
 			if (this.dragNewLinkOverNode) {
-				this.setInputPortDragOverNodeHighlighting(this.dragNewLinkOverNode, false);
+				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, false);
 				this.dragNewLinkOverNode = null;
 			}
 		}
@@ -756,47 +759,38 @@ export default class SVGCanvasRenderer {
 
 	// Switches on or off the input-port highlighting on the node passed in.
 	// This is called when the user drags a new link towards a target node.
-	setInputPortDragOverNodeHighlighting(node, state) {
-		if (node && node.inputs && node.inputs.length > 0) {
+	setNewLinkOverNodeHighlighting(node, state) {
+		if (node &&
+				((this.drawingNewLinkData.action === "node-node" && node.inputs && node.inputs.length > 0) ||
+					this.drawingNewLinkData.action === "comment-node")) {
 			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id))
-				.selectAll("." + this.getNodeInputPortClassName())
-				.classed("d3-node-port-input-drop-target", state);
+				.attr("data-new-link-over", state ? "yes" : "no");
 		}
 	}
 
-	// Switches on or off node port highlighting showing an expanded port
-	// depending on the node and portId passed in. It also keeps track of the
-	// currently highlighted port. This is called as a new link is being drawn
-	// towards a target port to highlight the input port with an expanded radius.
-	setInputPortHighlightingOverPort(node, portId) {
-		if (portId !== this.drawingNewLinkData.srcPortId) {
-			if (!this.dragNewLinkOverPortId) {
-				this.dragNewLinkOverPortId = portId;
-				this.setInputPortDragOverPortHighlighting(node, this.dragNewLinkOverPortId, true);
-
-			} else if (portId !== this.dragNewLinkOverPortId) {
-				this.setInputPortDragOverPortHighlighting(node, this.dragNewLinkOverPortId, false);
-				this.dragNewLinkOverPortId = portId;
-				this.setInputPortDragOverPortHighlighting(node, this.dragNewLinkOverPortId, true);
-			}
-
-		} else {
-			if (this.dragNewLinkOverPortId) {
-				this.setInputPortDragOverPortHighlighting(node, this.dragNewLinkOverPortId, false);
-				this.dragNewLinkOverPortId = null;
-			}
-		}
+	// Removes the data-new-link-over attribute used for highlighting a node
+	// that a new link is being dragged towards or over.
+	setNewLinkOverNodeCancel() {
+		const node = this.getNodeAtMousePos(40);
+		this.setNewLinkOverNodeHighlighting(node, false);
+		this.dragNewLinkOverNode = null;
 	}
 
-	// Switches on or off the input-port highlighting, to show an expanded radius
-	// for the port, based on the portId and node passed in. This is called when
-	// the user drags a new link over a target port.
-	setInputPortDragOverPortHighlighting(node, portId, state) {
-		if (portId) {
-			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id))
-				.selectAll("." + this.getNodeInputPortClassName())
-				.classed("d3-node-port-input-drop-target-expanded", state);
-		}
+	// Returns true if the first port of the node passed in is in connected state
+	// or false if it isn't connected.
+	isPortConnected(node) {
+		const connected = this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id))
+			.selectAll(this.getSelectorForClass(this.getNodeInputPortClassName()))
+			.attr("connected");
+		return connected === "yes";
+	}
+
+	// Returns true if the object for the src node ID passed in is currently
+	// connected to the node for the trgNodeId passed in.
+	isSrcObjConnectedToNode(srcObjId, trgNodeId) {
+		const ret = this.activePipeline.links.filter((link) =>
+			link.srcNodeId === srcObjId && link.trgNodeId === trgNodeId);
+		return ret.length > 0;
 	}
 
 	// Processes the drop of a palette node template onto the canvas.
@@ -930,7 +924,7 @@ export default class SVGCanvasRenderer {
 
 		const canvasSVG = parentObject
 			.append("svg")
-			.attr("class", "svg-area") // svg-area used by Chimp tests.
+			.attr("class", "svg-area") // svg-area used in tests.
 			.attr("width", dims.width)
 			.attr("height", dims.height)
 			.attr("x", dims.x)
@@ -2131,10 +2125,16 @@ export default class SVGCanvasRenderer {
 
 			// Node image
 			newNodeGroups.filter((d) => !this.isSuperBindingNode(d) && d.layout.imageDisplay)
-				.append("image")
-				.attr("data-id", (d) => this.getId("node_image", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "node-image");
+				.each(function(nd) {
+					const nodeImage = that.getNodeImage(nd);
+					const nodeImageType = that.getNodeImageType(nodeImage);
+					d3.select(this)
+						.append(nodeImageType)
+						.attr("data-image", nodeImage) // Used in tests
+						.attr("data-id", (d) => that.getId("node_image", d.id))
+						.attr("data-pipeline-id", that.activePipeline.id)
+						.attr("class", "node-image");
+				});
 
 			// Label outline - this code used for debugging purposes
 			// newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
@@ -2239,7 +2239,7 @@ export default class SVGCanvasRenderer {
 					// from the canvas) and when WML Canvas uses that clipboard support in place
 					// of its own.
 					nodeGrp.select(this.getSelectorForId("node_image", d.id))
-						.attr("xlink:href", (nd) => this.getNodeImage(nd))
+						.each(function() { that.setImageContent(this, d); })
 						.attr("x", (nd) => this.getNodeImagePosX(nd))
 						.attr("y", (nd) => this.getNodeImagePosY(nd))
 						.attr("width", (nd) => this.getNodeImageWidth(nd))
@@ -2288,7 +2288,7 @@ export default class SVGCanvasRenderer {
 					// Handle port related objects
 					if (this.canvasLayout.connectionType === "ports") {
 						// Input ports
-						if (d.inputs && d.inputs.length > 0) {
+						if (d.layout.inputPortDisplay && d.inputs && d.inputs.length > 0) {
 							// This selector will select all input ports which are for the currently
 							// active pipeline. It is necessary to select them by the active pipeline
 							// because an expanded super node will include its own input ports as well
@@ -2440,7 +2440,7 @@ export default class SVGCanvasRenderer {
 						}
 
 						// Output ports
-						if (d.outputs && d.outputs.length > 0) {
+						if (d.layout.outputPortDisplay && d.outputs && d.outputs.length > 0) {
 							// This selector will select all output ports which are for the currently
 							// active pipeline. It is necessary to select them by the active pipeline
 							// because an expanded super node will include its own output ports as well
@@ -2596,6 +2596,7 @@ export default class SVGCanvasRenderer {
 	//           This is a combination of the object's decorations with any
 	//           decorations from the layout config information.
 	addDecorations(d, objType, trgGrp, decs) {
+		const that = this;
 		const decorations = decs || [];
 		const decGrpClassName = `d3-${objType}-dec-group`;
 		const decGrpSelector = this.getSelectorForClass(decGrpClassName);
@@ -2604,7 +2605,7 @@ export default class SVGCanvasRenderer {
 
 		const newDecGroups = decGroupsSel.enter()
 			.append("g")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_group`, dec.id)) // Used in Chimp tests
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_group`, dec.id)) // Used in tests
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", decGrpClassName);
 
@@ -2614,15 +2615,21 @@ export default class SVGCanvasRenderer {
 
 		newDecGroups.filter((dec) => !dec.label && dec.outline !== false)
 			.append("rect")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_outln`, dec.id)); // Used in Chimp tests
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_outln`, dec.id)); // Used in tests
 
 		newDecGroups.filter((dec) => dec.image)
-			.append("image")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_image`, dec.id)); // Used in Chimp tests
+			.each(function(dec) {
+				const nodeImage = that.getNodeImage(dec);
+				const nodeImageType = that.getNodeImageType(nodeImage);
+				d3.select(this)
+					.append(nodeImageType)
+					.attr("data-image", nodeImage) // Used in tests
+					.attr("data-id", () => that.getId(`${objType}_dec_image`, dec.id)); // Used in tests
+			});
 
 		newDecGroups.filter((dec) => dec.label)
 			.append("text")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_label`, dec.id)); // Used in Chimp tests
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_label`, dec.id)); // Used in tests
 
 		const newAndExistingDecGrps =
 			decGroupsSel.enter().merge(decGroupsSel);
@@ -2654,7 +2661,7 @@ export default class SVGCanvasRenderer {
 					.attr("width", this.getDecoratorWidth(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
 					.attr("height", this.getDecoratorHeight(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
 					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-image`))
-					.attr("xlink:href", this.getDecoratorImage(dec))
+					.each(function() { that.setImageContent(this, dec); })
 					.datum(decDatum);
 
 				decGrp.select(labelSelector)
@@ -2703,6 +2710,22 @@ export default class SVGCanvasRenderer {
 		return "d3-node-port-input";
 	}
 
+	// Sets the image content on the DOM imageElement from the image field of
+	// the object d (either a node or decoration) passed in. This means svg files
+	// will be loaded as inline SVG while other images files are loaded with href.
+	setImageContent(imageElement, d) {
+		const imageObj = d3.select(imageElement);
+		const nodeImage = this.getNodeImage(d);
+		const nodeImageType = this.getNodeImageType(nodeImage);
+		if (nodeImageType === "svg") {
+			d3.text(nodeImage).then((img) => imageObj.html(img));
+		} else {
+			imageObj.attr("xlink:href", nodeImage);
+		}
+	}
+
+	// Returns the appropriate image from the object (either node or decoration)
+	// passed in.
 	getNodeImage(d) {
 		if (!d.image) {
 			return null;
@@ -2712,6 +2735,12 @@ export default class SVGCanvasRenderer {
 			}
 		}
 		return d.image;
+	}
+
+	// Returns the type of image passed in, either "svg" or "image". This will
+	// be used to append an svg or image element to the DOM.
+	getNodeImageType(nodeImage) {
+		return nodeImage && nodeImage.endsWith(".svg") ? "svg" : "image";
 	}
 
 	getNodeImageWidth(d) {
@@ -3377,16 +3406,11 @@ export default class SVGCanvasRenderer {
 				this.drawNewCommentLinkForPorts(transPos);
 			} else {
 				this.drawNewNodeLinkForPorts(transPos);
-
-				// Highlight target port if we are over a node, and make the port display
-				// with an expanded radius if we over the port itself.
-				if (this.config.enableHightlightPortOnNewLinkDrag) {
-					const node = this.getNodeAtMousePos(40);
-					this.setInputPortHighlightingOverNode(node);
-
-					const portId = this.getNodeInputPortAtMousePos(40, 15);
-					this.setInputPortHighlightingOverPort(node, portId);
-				}
+			}
+			// Switch on an attribute to indicate a new link is being dragged
+			// towards and over a target node.
+			if (this.config.enableHightlightNodeOnNewLinkDrag) {
+				this.setNewLinkOverNode();
 			}
 		}
 	}
@@ -3567,6 +3591,11 @@ export default class SVGCanvasRenderer {
 		// If we completed a connection remove the new line objects.
 		this.removeNewLink();
 
+		// Switch 'new link over node' highlighting off
+		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+			this.setNewLinkOverNodeCancel();
+		}
+
 		if (trgNode !== null) {
 			if (this.drawingNewLinkData.action === "node-node") {
 				var trgPortId = this.getNodeInputPortAtMousePos();
@@ -3595,6 +3624,11 @@ export default class SVGCanvasRenderer {
 	}
 
 	stopDrawingNewLink() {
+		// Switch 'new link over node' highlighting off
+		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+			this.setNewLinkOverNodeCancel();
+		}
+
 		if (this.canvasLayout.connectionType === "halo") {
 			this.stopDrawingNewLinkForHalo();
 		} else {
@@ -3990,22 +4024,26 @@ export default class SVGCanvasRenderer {
 	setPortPositionsForNode(node) {
 		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
 			this.setPortPositionsVertical(node, node.inputs, node.inputPortsWidth, node.layout.inputPortTopPosX, node.layout.inputPortTopPosY);
-			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.outputPortBottomPosX, this.getOutputPortYPosTopBottom(node));
+			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.outputPortBottomPosX, this.getOutputPortBottomPosY(node));
 		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-			this.setPortPositionsVertical(node, node.inputs, node.inputPortsWidth, node.layout.outputPortBottomPosX, this.getOutputPortYPosTopBottom(node));
-			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.inputPortTopPosX, node.layout.inputPortTopPosY);
+			this.setPortPositionsVertical(node, node.inputs, node.inputPortsWidth, node.layout.inputPortBottomPosX, this.getInputPortBottomPosY(node));
+			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.outputPortTopPosX, node.layout.outputPortTopPosY);
 		} else {
 			this.setPortPositionsLeftRight(node, node.inputs, node.inputPortsHeight, node.layout.inputPortLeftPosX, node.layout.inputPortLeftPosY);
-			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight, this.getOutputPortXPosLeftRight(node), node.layout.outputPortRightPosY);
+			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight, this.getOutputPortRightPosX(node), node.layout.outputPortRightPosY);
 		}
 	}
 
-	getOutputPortXPosLeftRight(node) {
+	getOutputPortRightPosX(node) {
 		return node.width + node.layout.outputPortRightPosX;
 	}
 
-	getOutputPortYPosTopBottom(node) {
+	getOutputPortBottomPosY(node) {
 		return node.height + node.layout.outputPortBottomPosY;
+	}
+
+	getInputPortBottomPosY(node) {
+		return node.height + node.layout.inputPortBottomPosY;
 	}
 
 	setPortPositionsVertical(data, ports, portsWidth, xPos, yPos) {

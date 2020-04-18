@@ -71,12 +71,13 @@ _defineConstant("DIRECTION_BOTTOM_TOP", "BottomTop");
 _defineConstant("ASSOC_RIGHT_SIDE_CURVE", "RightSideCurve");
 _defineConstant("ASSOC_STRAIGHT", "Straight");
 
-_defineConstant("NO_LAYOUT", "None - use options below");
-_defineConstant("MODELER_FLOWS_LAYOUT", "Modeler Flows");
-_defineConstant("BLUE_ELLIPSES_LAYOUT", "Blue Ellipses");
-_defineConstant("DB2_EXPLAIN_LAYOUT", "Db2 Visual Explain");
-_defineConstant("STREAMS_LAYOUT", "Streams");
-_defineConstant("AUTO_AI_LAYOUT", "Auto AI");
+_defineConstant("EXAMPLE_APP_NONE", "None - use options below");
+_defineConstant("EXAMPLE_APP_FLOWS", "Flows");
+_defineConstant("EXAMPLE_APP_BLUE_ELLIPSES", "Blue Ellipses");
+_defineConstant("EXAMPLE_APP_EXPLAIN", "Explain");
+_defineConstant("EXAMPLE_APP_EXPLAIN2", "Explain2");
+_defineConstant("EXAMPLE_APP_STREAMS", "Streams");
+_defineConstant("EXAMPLE_APP_TABLES", "Tables");
 
 _defineConstant("FLYOUT", "Flyout");
 _defineConstant("MODAL", "Modal");

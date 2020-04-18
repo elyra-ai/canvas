@@ -1,0 +1,535 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159",
+  "primary_pipeline": "3ae0efae-9a3c-4a1a-9fd9-185f442a81aa",
+  "pipelines": [
+    {
+      "id": "3ae0efae-9a3c-4a1a-9fd9-185f442a81aa",
+      "nodes": [
+        {
+          "id": "428a247b-e126-452c-bd10-5970af945dcd",
+          "type": "execution_node",
+          "op": "dvcharts",
+          "app_data": {
+            "ui_data": {
+              "label": "Charts",
+              "image": "images/custom-canvases/flows/palette/icons/dvcharts.svg",
+              "x_pos": 558,
+              "y_pos": 129.6,
+              "description": "Launch the chart builder and create chart definitions to save with your flow."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "1af18594-86db-4b21-8f40-16afad1ece0b",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "bf082e34-bf1c-4927-9f87-89d2d9033b55",
+          "type": "binding",
+          "op": "simgen",
+          "app_data": {
+            "ui_data": {
+              "label": "Sim Gen",
+              "image": "images/custom-canvases/flows/palette/icons/simgen.svg",
+              "x_pos": -36,
+              "y_pos": 172.79999999999998,
+              "description": "Generate simulated data automatically or with user-specified statistical distributions."
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "bef59803-c593-478f-93d4-d1bd0deaf14e",
+          "type": "binding",
+          "op": "autocluster",
+          "app_data": {
+            "ui_data": {
+              "label": "Auto Cluster",
+              "image": "images/custom-canvases/flows/palette/icons/autocluster.svg",
+              "x_pos": 558,
+              "y_pos": 216.00000000000003,
+              "description": "Estimates and compares clustering models that identify groups of records with similar characteristics.",
+              "associations": [
+                {
+                  "id": "223278ed-3037-41c7-ade4-ed7fc279c693",
+                  "node_ref": "140c34a1-63be-4aa9-865c-47160a48d804"
+                }
+              ]
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "1af18594-86db-4b21-8f40-16afad1ece0b",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "140c34a1-63be-4aa9-865c-47160a48d804",
+          "type": "binding",
+          "op": "applyautocluster",
+          "app_data": {
+            "ui_data": {
+              "label": "Auto Cluster",
+              "image": "images/custom-canvases/flows/palette/icons/applyautocluster.svg",
+              "x_pos": 558,
+              "y_pos": 331.20000000000005,
+              "description": "Estimates and compares clustering models that identify groups of records with similar characteristics."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "1af18594-86db-4b21-8f40-16afad1ece0b",
+          "type": "execution_node",
+          "op": "type",
+          "app_data": {
+            "ui_data": {
+              "label": "Type",
+              "image": "images/custom-canvases/flows/palette/icons/type.svg",
+              "x_pos": 306,
+              "y_pos": 172.79999999999998,
+              "description": "Specify field metadata and properties that are invaluable to modeling."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "00035b26-230a-4d60-ab69-631877207b23",
+                  "port_id_ref": "3ee97ab2-bdc0-4151-abd6-7dcd907432c0_outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "00035b26-230a-4d60-ab69-631877207b23",
+          "type": "super_node",
+          "subflow_ref": {
+            "pipeline_id_ref": "75ed071a-ba8d-4212-a2ad-41a54198dd6b"
+          },
+          "app_data": {
+            "ui_data": {
+              "label": "Supernode",
+              "image": "images/custom-canvases/flows/palette/icons/supernode.svg",
+              "x_pos": 144,
+              "y_pos": 172.79999999999998,
+              "description": "This supernode was created by common-canvas.",
+              "decorations": [
+                {
+                  "position": "topLeft",
+                  "x_pos": "9",
+                  "y_pos": "0",
+                  "image": "images/custom-canvases/flows/decorations/drillIntoSupernode.svg",
+                  "outline": true,
+                  "hotspot": true,
+                  "id": "supernode-zoom"
+                }
+              ]
+            }
+          },
+          "inputs": [
+            {
+              "id": "1b4c8250-fc73-4357-a84c-bed175ab1cf1_inPort",
+              "subflow_node_ref": "aa0f90c5-441d-4bf1-ab35-5cadb7c32510",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "bf082e34-bf1c-4927-9f87-89d2d9033b55",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "3ee97ab2-bdc0-4151-abd6-7dcd907432c0_outPort",
+              "subflow_node_ref": "7b6cf855-244b-4017-a062-e37832f95642",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
+              "x_pos": 18,
+              "y_pos": 14.4,
+              "width": 175,
+              "height": 52,
+              "class_name": "d3-comment-rect",
+              "content": "This canvas shows a flow of data processing nodes..",
+              "associated_id_refs": []
+            }
+          ]
+        }
+      },
+      "runtime_ref": ""
+    },
+    {
+      "id": "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
+      "nodes": [
+        {
+          "id": "3ee97ab2-bdc0-4151-abd6-7dcd907432c0",
+          "type": "execution_node",
+          "op": "balance",
+          "app_data": {
+            "ui_data": {
+              "label": "Balance",
+              "image": "images/custom-canvases/flows/palette/icons/balance.svg",
+              "x_pos": 468,
+              "y_pos": 273.6,
+              "description": "Correct imbalances in datasets so they conform to specified test criteria.",
+              "decorations": [
+                {
+                  "position": "topLeft",
+                  "x_pos": "-10",
+                  "y_pos": "0",
+                  "image": "images/custom-canvases/flows/decorations/cacheWithNoData.svg",
+                  "outline": false,
+                  "id": "463528be-1099-496c-a458-b6364e6dc449"
+                }
+              ]
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "04a6ca7a-d6ef-4bc6-b64c-5a7c7b5caa5c",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "04a6ca7a-d6ef-4bc6-b64c-5a7c7b5caa5c",
+          "type": "execution_node",
+          "op": "distinct",
+          "app_data": {
+            "ui_data": {
+              "label": "Distinct",
+              "image": "images/custom-canvases/flows/palette/icons/distinct.svg",
+              "x_pos": 306,
+              "y_pos": 288,
+              "description": "Find or remove duplicate records in your data, or create a single, composite record from a group of duplicate records.",
+              "decorations": [
+                {
+                  "position": "topLeft",
+                  "x_pos": "-10",
+                  "y_pos": 0,
+                  "image": "images/custom-canvases/flows/decorations/cacheWithData.svg",
+                  "outline": false,
+                  "id": "c542c7ec-5777-4dcc-b466-2e411a554487"
+                }
+              ]
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "1b4c8250-fc73-4357-a84c-bed175ab1cf1",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "1b4c8250-fc73-4357-a84c-bed175ab1cf1",
+          "type": "execution_node",
+          "op": "filler",
+          "app_data": {
+            "ui_data": {
+              "label": "Filler",
+              "image": "images/custom-canvases/flows/palette/icons/filler.svg",
+              "x_pos": 144,
+              "y_pos": 273.6,
+              "description": "Replace field values and change storage. Often used with a Type node to replace missing values."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "aa0f90c5-441d-4bf1-ab35-5cadb7c32510",
+                  "port_id_ref": "output_1b4c8250-fc73-4357-a84c-bed175ab1cf1_inPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "aa0f90c5-441d-4bf1-ab35-5cadb7c32510",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "x_pos": 0,
+              "y_pos": 273.6,
+              "description": "Supernode binding node"
+            }
+          },
+          "outputs": [
+            {
+              "id": "output_1b4c8250-fc73-4357-a84c-bed175ab1cf1_inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "7b6cf855-244b-4017-a062-e37832f95642",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "x_pos": 612,
+              "y_pos": 273.6,
+              "description": "Supernode binding node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input_3ee97ab2-bdc0-4151-abd6-7dcd907432c0_outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "3ee97ab2-bdc0-4151-abd6-7dcd907432c0",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "0b123469-7d21-43a5-ae84-cbc999990033",
+              "x_pos": 36,
+              "y_pos": 446.40000000000003,
+              "width": 175,
+              "height": 42,
+              "class_name": "d3-comment-rect",
+              "content": "A connected comment",
+              "associated_id_refs": [
+                {
+                  "node_ref": "1b4c8250-fc73-4357-a84c-bed175ab1cf1"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}

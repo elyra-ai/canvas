@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import has from "lodash/has";
 import Icon from "../icons/icon.jsx";
-// import SVG from "react-inlinesvg";
+import SVG from "react-inlinesvg";
 import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../common-canvas/constants/canvas-constants.js";
 
 class PaletteContentGridNode extends React.Component {
@@ -84,13 +84,9 @@ class PaletteContentGridNode extends React.Component {
 			icon = (<img className="node-icon" src={image}
 				alt={label}
 			/>);
-			// When the palette icons are displayed as inline SVG the images become
-			// corrupted because they are zoomed to a smaller size than their designer
-			// expected. Therefore, we choose to display them using <img> which allows
-			// them to appear OK.
-			// if (image.endsWith(".svg")) {
-			// 	icon = <SVG src={image} className="node-icon" alt={label} />;
-			// }
+			if (image.endsWith(".svg")) {
+				icon = <SVG src={image} className="node-icon" alt={label} />;
+			}
 		}
 
 		let draggable = "true";

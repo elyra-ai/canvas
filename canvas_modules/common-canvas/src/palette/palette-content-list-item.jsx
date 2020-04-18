@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import has from "lodash/has";
 import Icon from "../icons/icon.jsx";
-// import SVG from "react-inlinesvg";
+import SVG from "react-inlinesvg";
 import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../common-canvas/constants/canvas-constants.js";
 
 class PaletteContentListItem extends React.Component {
@@ -89,13 +89,9 @@ class PaletteContentListItem extends React.Component {
 			const image = this.props.nodeTemplate.app_data.ui_data.image;
 
 			icon = <img src={image} className="palette-list-item-icon" draggable="false" />;
-			// When the palette icons are displayed as inline SVG the images become
-			// corrupted because they are zoomed to a smaller size than their designer
-			// expected. Therefore, we choose to display them using <img> which allows
-			// them to appear OK.
-			// if (image.endsWith(".svg")) {
-			// 	icon = <SVG src={image} className="palette-list-item-icon" draggable="false" />;
-			// }
+			if (image.endsWith(".svg")) {
+				icon = <SVG src={image} className="palette-list-item-icon" draggable="false" />;
+			}
 		}
 
 		// Special case for when there are no nodes in the category so we show

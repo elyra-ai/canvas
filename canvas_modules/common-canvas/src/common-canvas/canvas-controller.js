@@ -74,7 +74,7 @@ export default class CanvasController {
 			enableInternalObjectModel: true,
 			enablePaletteLayout: "Flyout",
 			enableInsertNodeDroppedOnLink: false,
-			enableHightlightPortOnNewLinkDrag: false,
+			enableHightlightNodeOnNewLinkDrag: false,
 			enableMoveNodesOnSupernodeResize: true,
 			enableDisplayFullLabelOnHover: false,
 			enableDropZoneOnExternalDrag: false,
@@ -1487,6 +1487,10 @@ export default class CanvasController {
 		return false;
 	}
 
+	// Opens a full screen display if a sub-flow. pipelineInfo should contain two
+	// fields:
+	// pipelineId: The pipeline ID of the pipeline to be shown.
+	// pipelineFlowId: The ID of the pipelineFlow document
 	displaySubPipeline(pipelineInfo) {
 		const data = { editType: "displaySubPipeline", pipelineInfo: pipelineInfo, editSource: "canvas" };
 		this.editActionHandler(data);
