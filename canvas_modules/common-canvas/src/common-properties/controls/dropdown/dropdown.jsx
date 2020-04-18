@@ -143,8 +143,6 @@ class DropDown extends React.Component {
 	}
 
 	render() {
-		const dropdownType = (this.props.tableControl) ? "inline" : "default";
-
 		let dropDown;
 		if (this.props.control.controlType === ControlType.SELECTSCHEMA) {
 			dropDown = this.genSchemaSelectOptions(this.props.value);
@@ -154,16 +152,7 @@ class DropDown extends React.Component {
 			dropDown = this.genSelectOptions(this.props.value);
 		}
 
-		let dropdownComponent = (<Dropdown
-			id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
-			disabled={this.props.state === STATES.DISABLED}
-			type={dropdownType}
-			items={dropDown.options}
-			onChange={this.handleChange}
-			selectedItem={dropDown.selectedOption}
-			label={this.emptyLabel}
-		/>);
-
+		let dropdownComponent = null;
 		if (this.props.tableControl) {
 			const options = [];
 			const selection = dropDown.selectedOption && dropDown.selectedOption.value ? dropDown.selectedOption.value : "";
@@ -185,6 +174,16 @@ class DropDown extends React.Component {
 			>
 				{ options }
 			</Select>);
+		} else {
+			dropdownComponent = (<Dropdown
+				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
+				disabled={this.props.state === STATES.DISABLED}
+				type="default"
+				items={dropDown.options}
+				onChange={this.handleChange}
+				selectedItem={dropDown.selectedOption}
+				label={this.emptyLabel}
+			/>);
 		}
 
 		return (

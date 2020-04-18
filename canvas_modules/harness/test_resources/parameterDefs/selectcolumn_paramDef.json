@@ -355,7 +355,8 @@
         },
         "text_before": {
           "default": "To generated an error:  inline = age2 || on_panel = drug3 || subpanel = Na"
-        }
+        },
+				"control": "structurelisteditor"
       }
     ],
     "complex_type_info": [
