@@ -1,0 +1,71 @@
+{
+  "titleDefinition": {
+    "title": "Code Control Tests"
+  },
+  "current_parameters": {
+    "code": "Age >= 55",
+    "code_rows": ""
+  },
+  "parameters": [
+    {
+      "id": "code",
+      "type": "string"
+    },
+    {
+      "id": "code_rows",
+      "type": "string"
+    }
+  ],
+  "uihints": {
+    "id": "code.test",
+    "label": {
+      "default": "Code Test"
+    },
+    "editor_size": "medium",
+    "description": {
+      "default": "Test code controls"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "code",
+        "language": "text/x-python",
+        "label": {
+          "default": "Code"
+        },
+        "description": {
+          "default": "Enter Python code"
+        },
+        "text_before": {
+          "default": "Press ctrl-space to autocomplete, enter a '?' for validate to fail."
+        },
+        "control": "code"
+      },
+      {
+        "parameter_ref": "code_rows",
+        "language": "text/x-rsrc",
+        "label": {
+          "default": "R code with Rows"
+        },
+        "description": {
+          "default": "Code control with 15 rows"
+        },
+        "control": "code",
+        "rows": 15
+      }
+    ],
+    "group_info": [
+      {
+        "id": "Values",
+        "label": {
+          "default": "Values"
+        },
+        "parameter_refs": [
+          "code",
+          "code_rows"
+        ]
+      }
+    ]
+  },
+  "conditions": [],
+  "resources": {}
+}

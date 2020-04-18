@@ -156,6 +156,7 @@ class ExpressionControl extends React.Component {
 		let height = (this.props.control.charLimit)
 			? Math.min((this.props.control.charLimit / charPerLine) * pxPerLine, maxLineHeight) : minLineHeight;
 		// let an explicit prop override the calculated height
+		height = this.props.control.rows ? pxPerLine * this.props.control.rows : height;
 		height = this.props.height ? this.props.height : height;
 		this.editor.setSize(null, Math.max(Math.floor(height), minLineHeight));
 
@@ -256,9 +257,9 @@ class ExpressionControl extends React.Component {
 				renderIcon={Calculator24}
 				iconDescription={PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE)}
 			/>)
-			: <div />;
+			: null;
 
-		let validateIcon = <div />;
+		let validateIcon = null;
 		if (this.props.controller.getExpressionValidate(this.props.propertyId.name)) {
 			const iconType = (messageType === CONDITION_MESSAGE_TYPE.SUCCESS || messageType === CONDITION_MESSAGE_TYPE.INFO)
 				? CONDITION_MESSAGE_TYPE.SUCCESS : messageType;
@@ -268,14 +269,14 @@ class ExpressionControl extends React.Component {
 		}
 
 		const validateLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_VALIDATE_LABEL);
-		const validateLink = this.expressionInfo.validateLink ? (
+		const validateLink = this.expressionInfo.validateLink && this.props.validateLink ? (
 			<div className="properties-expression-validate" disabled={this.props.state === STATES.DISABLED}>
 				<Button className="validateLink" kind="ghost" onClick={this.handleValidate} disabled={this.props.state === STATES.DISABLED}>
 					{validateLabel}
 				</Button>
 				{validateIcon}
 			</div>)
-			: <div />;
+			: null;
 
 		const mirrorOptions = {
 			mode: this.props.control.language,
@@ -304,7 +305,7 @@ class ExpressionControl extends React.Component {
 					propertyId={this.props.propertyId}
 				/>
 			</div>
-		</WideFlyout>) : <div />;
+		</WideFlyout>) : null;
 
 		const className = "properties-expression-editor " + messageType;
 		return (
@@ -342,6 +343,7 @@ ExpressionControl.propTypes = {
 	tableControl: PropTypes.bool,
 	editorDidMount: PropTypes.func,
 	builder: PropTypes.bool,
+	validateLink: PropTypes.bool,
 	rightFlyout: PropTypes.bool,
 	selectionRange: PropTypes.array,
 	onSelectionChange: PropTypes.func,
@@ -353,7 +355,8 @@ ExpressionControl.propTypes = {
 };
 
 ExpressionControl.defaultProps = {
-	builder: true
+	builder: true,
+	validateLink: true
 };
 
 const mapStateToProps = (state, ownProps) => ({

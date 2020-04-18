@@ -367,6 +367,22 @@ describe("expression handles no expression builder resources correctly", () => {
 		expect(input).to.have.length(1);
 	});
 
+	it("expression builder with a function list json provided with builder=false doesn't render an expression builder", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Expression
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				builder={false}
+				rightFlyout
+			/>
+		);
+		const input = wrapper.find("button.properties-expression-button");
+		expect(input).to.have.length(0);
+	});
+
 	it("CommonProperties renders with no expressionInfo values ", () => {
 		propertiesInfo.expressionInfo = { functions: {}, resources: {} };
 		const renderedObject = propertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, null, propertiesInfo);
