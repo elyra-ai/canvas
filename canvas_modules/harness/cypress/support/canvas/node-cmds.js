@@ -169,3 +169,14 @@ Cypress.Commands.add("deleteNode", (nodeLabel) => {
 	cy.getNodeForLabel(nodeLabel).rightclick();
 	cy.clickOptionFromContextMenu("Delete");
 });
+
+Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
+	cy.getNodeForLabel(nodeLabel).then((node) => {
+		const nodeDimensions = {
+			x_pos: node[0].__data__.x_pos,
+			y_pos: node[0].__data__.y_pos,
+			width: node[0].__data__.width,
+			height: node[0].__data__.height
+		};
+		return nodeDimensions;
+	});
