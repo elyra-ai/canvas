@@ -205,7 +205,7 @@ describe("checkboxset control tests", () => {
 		// unchecked a box
 		checkboxes.at(2).getDOMNode().checked = true;
 		checkboxes.at(2).simulate("change");
-		expect(controller.getPropertyValue(propertyIdInvalid)).to.eql(["apple", "orange", "peach"]);
+		expect(controller.getPropertyValue(propertyIdInvalid)).to.eql(["orange", "peach"]);
 	});
 	it("checkboxset handles null correctly", () => {
 		const propertyIdNull = { name: "test-checkboxset-null" };
