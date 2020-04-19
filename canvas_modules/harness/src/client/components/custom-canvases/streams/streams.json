@@ -23,7 +23,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Custom1",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "annotations": [
               "@spl_note(id=0, text=This is a note)",
@@ -97,7 +97,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Custom2_1",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "annotations": [
               "@catch(exception=streams, stackTrace=true, tupleTrace=false)"
@@ -226,7 +226,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Custom3_1",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "Custom3_1",
@@ -264,7 +264,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Custom3_2",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "Custom3_2",
@@ -302,7 +302,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Custom3_3",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "Custom3_3",
@@ -340,7 +340,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Custom4_1",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "Custom4_1",
@@ -389,7 +389,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Custom4_2",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "Custom4_2",
@@ -427,7 +427,7 @@
           "op": "spl.utility::Beacon",
           "app_data": {
             "name": "BeaconOut",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "BeaconOut",
@@ -457,7 +457,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Custom2_2",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "Custom2_2",
@@ -510,7 +510,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Custom4_3",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "Custom4_3",
@@ -550,7 +550,7 @@
           },
           "app_data": {
             "name": "Comp3_4",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "ui_data": {
               "label": "Comp3_4",
               "image": "data:image/svg+xml;base64,PHN2ZyBpZD0iaWNvbiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMzIgMzIiPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDpub25lO308L3N0eWxlPjwvZGVmcz48dGl0bGU+dHJlZS12aWV3PC90aXRsZT48cGF0aCBkPSJNMzAsMjBWMTJIMjJ2M0gxN1Y3YTIsMiwwLDAsMC0yLTJIMTBWMkgydjhoOFY3aDVWMjVhMiwyLDAsMCwwLDIsMmg1djNoOFYyMkgyMnYzSDE3VjE3aDV2M1pNOCw4SDRWNEg4Wk0yNCwyNGg0djRIMjRabTAtMTBoNHY0SDI0WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCkiLz48cmVjdCBpZD0iX1RyYW5zcGFyZW50X1JlY3RhbmdsZV8iIGRhdGEtbmFtZT0iJmx0O1RyYW5zcGFyZW50IFJlY3RhbmdsZSZndDsiIGNsYXNzPSJjbHMtMSIgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIi8+PC9zdmc+",
@@ -660,7 +660,7 @@
           },
           "app_data": {
             "name": "SubSubFlowComp_18",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "ui_data": {
               "label": "SubSubFlowComp_18",
               "image": "data:image/svg+xml;base64,PHN2ZyBpZD0iaWNvbiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMzIgMzIiPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDpub25lO308L3N0eWxlPjwvZGVmcz48dGl0bGU+dHJlZS12aWV3PC90aXRsZT48cGF0aCBkPSJNMzAsMjBWMTJIMjJ2M0gxN1Y3YTIsMiwwLDAsMC0yLTJIMTBWMkgydjhoOFY3aDVWMjVhMiwyLDAsMCwwLDIsMmg1djNoOFYyMkgyMnYzSDE3VjE3aDV2M1pNOCw4SDRWNEg4Wk0yNCwyNGg0djRIMjRabTAtMTBoNHY0SDI0WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCkiLz48cmVjdCBpZD0iX1RyYW5zcGFyZW50X1JlY3RhbmdsZV8iIGRhdGEtbmFtZT0iJmx0O1RyYW5zcGFyZW50IFJlY3RhbmdsZSZndDsiIGNsYXNzPSJjbHMtMSIgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIi8+PC9zdmc+",
@@ -845,7 +845,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Comp3_4.Custom3_4_2_1",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "Comp3_4.Custom3_4_2_1",
@@ -898,7 +898,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Comp3_4.Custom3_4_1_1",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "Comp3_4.Custom3_4_1_1",
@@ -951,7 +951,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Comp3_4.Custom3_4_2_2",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "Comp3_4.Custom3_4_2_2",
@@ -1025,7 +1025,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Comp3_4.Custom3_4_1_2",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "Comp3_4.Custom3_4_1_2",
@@ -1080,7 +1080,7 @@
           },
           "app_data": {
             "name": "Comp3_4.SubSubFlowComp_17",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "annotations": [
               "@spl_category(name=cat1)"
             ],
@@ -1215,7 +1215,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "Comp3_4.SubSubFlowComp_17.Custom1",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "Comp3_4.SubSubFlowComp_17.Custom1",
@@ -1342,7 +1342,7 @@
           "op": "spl.utility::Custom",
           "app_data": {
             "name": "SubSubFlowComp_18.Custom1",
-            "sourceUri": "file:///home/mkomor/InfoSphere_Streams_4.3_GM2/4.3.0.0/etc/StreamsStudio/StreamsStudio/workspace/Canvas/test/Test.spl",
+            "sourceUri": "file:///home/workspace/Canvas/test/Test.spl",
             "peId": "51",
             "ui_data": {
               "label": "SubSubFlowComp_18.Custom1",

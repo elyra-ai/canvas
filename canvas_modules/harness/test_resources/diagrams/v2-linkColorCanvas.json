@@ -11,6 +11,7 @@
         {
           "id": "4d7f3bdc-12e1-4dea-8b98-ee70209a8ede",
           "type": "binding",
+          "op": "",
           "app_data": {
             "ui_data": {
               "label": "Var. File",
@@ -38,6 +39,7 @@
         {
           "id": "139588b8-04ec-45dc-aa7f-793083f6220c",
           "type": "binding",
+          "op": "",
           "app_data": {
             "ui_data": {
               "label": "User Input",
@@ -293,6 +295,7 @@
         {
           "id": "e359d2f2-8d25-4eae-9f3d-18c46fe7cc13",
           "type": "binding",
+          "op": "",
           "app_data": {
             "ui_data": {
               "label": "Object Store",

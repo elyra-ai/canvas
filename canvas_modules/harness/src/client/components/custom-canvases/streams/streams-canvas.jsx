@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas";
 
-import StreamsCanvasFlow from "./streamsJobFlowNested.json";
+import StreamsCanvasFlow from "./streams.json";
 
 export default class StreamsCanvas extends React.Component {
 	constructor(props) {
@@ -18,7 +18,7 @@ export default class StreamsCanvas extends React.Component {
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Elbow",
 			enablePaletteLayout: "Flyout",
-			enableParentClass: "streams-monitor",
+			enableParentClass: "streams",
 			enableAutoLayoutVerticalSpacing: 50,
 			enableAutoLayoutHorizontalSpacing: 80,
 			enableInternalObjectModel: true,

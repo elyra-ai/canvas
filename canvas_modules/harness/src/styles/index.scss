@@ -26,11 +26,12 @@ $carbon--theme: $carbon--theme--g10;
 
 @import "@elyra/canvas/src/index.scss";
 
-@import "../client/components/custom-canvases/auto-ai/auto-ai.scss";
+@import "../client/components/custom-canvases/tables/tables.scss";
 @import "../client/components/custom-canvases/blue-ellipses/blue-ellipses.scss";
-@import "../client/components/custom-canvases/db2-visual-explain/db2-visual-explain.scss";
-@import "../client/components/custom-canvases/modeler-flows/modeler-flows.scss";
-@import "../client/components/custom-canvases/streams-monitor/streams-monitor.scss";
+@import "../client/components/custom-canvases/explain/explain.scss";
+@import "../client/components/custom-canvases/explain2/explain2.scss";
+@import "../client/components/custom-canvases/flows/flows.scss";
+@import "../client/components/custom-canvases/streams/streams.scss";
 @import "./canvas-customization.scss";
 @import "./sidepanel.scss";
 @import "./App.scss";

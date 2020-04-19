@@ -219,6 +219,7 @@
         {
           "id": "id5KIRGGJ3FYT",
           "type": "binding",
+          "op": "neuralnetwork",
           "app_data": {
             "ui_data": {
               "label": "Drug",
@@ -263,6 +264,7 @@
         {
           "id": "id6PXRG57DGIV",
           "type": "binding",
+          "op": "variablefile",
           "app_data": {
             "ui_data": {
               "label": "DRUG1n",

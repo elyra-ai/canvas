@@ -38,10 +38,11 @@ import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas";
 import CommonCanvasPackage from "@elyra/canvas/package.json";
 
-import ModelerFlowsCanvas from "./components/custom-canvases/modeler-flows/modeler-flows-canvas";
-import AutoAICanvas from "./components/custom-canvases/auto-ai/auto-ai-canvas";
-import DB2VisualExplainCanvas from "./components/custom-canvases/db2-visual-explain/db2-visual-explain-canvas";
-import StreamsCanvas from "./components/custom-canvases/streams-monitor/streams-monitor-canvas";
+import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
+import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
+import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
+import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
+import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
 import BlueEllipsesCanvas from "./components/custom-canvases/blue-ellipses/blue-ellipses-canvas";
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
@@ -61,8 +62,6 @@ import RandomEffectsPanel from "./components/custom-panels/RandomEffectsPanel";
 import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
 import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel";
 
-import ModelerFlowsNewDesignPalette from "./components/custom-canvases/modeler-flows/modelerFlowsNewDesignPalette";
-
 import CustomOpMax from "./custom/condition-ops/customMax";
 import CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
@@ -81,12 +80,13 @@ import {
 	CURVE_LINKS,
 	DIRECTION_LEFT_RIGHT,
 	ASSOC_STRAIGHT,
-	NO_LAYOUT,
-	MODELER_FLOWS_LAYOUT,
-	BLUE_ELLIPSES_LAYOUT,
-	DB2_EXPLAIN_LAYOUT,
-	STREAMS_LAYOUT,
-	AUTO_AI_LAYOUT,
+	EXAMPLE_APP_NONE,
+	EXAMPLE_APP_FLOWS,
+	EXAMPLE_APP_BLUE_ELLIPSES,
+	EXAMPLE_APP_EXPLAIN,
+	EXAMPLE_APP_EXPLAIN2,
+	EXAMPLE_APP_STREAMS,
+	EXAMPLE_APP_TABLES,
 	CUSTOM,
 	FLYOUT,
 	NONE_DRAG,
@@ -141,7 +141,7 @@ export default class App extends React.Component {
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
-			selectedNodeLayout: NO_LAYOUT,
+			selectedNodeLayout: EXAMPLE_APP_NONE,
 			selectedPaletteLayout: FLYOUT,
 			showContextMenu: false,
 			showPropertiesDialog: false,
@@ -635,11 +635,6 @@ export default class App extends React.Component {
 
 	setPaletteJSON(paletteJson) {
 		this.canvasController.setPipelineFlowPalette(paletteJson);
-
-		if (this.state.selectedPaletteDropdownFile === "loadingPalette.json") {
-			this.activateLoadingCanvas();
-		}
-
 		this.log("Palette set");
 	}
 
@@ -1057,7 +1052,8 @@ export default class App extends React.Component {
 	}
 
 	download() {
-		var canvas = JSON.stringify(this.getPipelineFlow(), null, 2);
+		const pipelineFlow = this.canvasRef ? this.canvasRef.current.canvasController.getPipelineFlow() : this.getPipelineFlow();
+		var canvas = JSON.stringify(pipelineFlow, null, 2);
 		ReactFileDownload(canvas, "canvas.json");
 	}
 
@@ -1548,20 +1544,6 @@ export default class App extends React.Component {
 		this.log("propertyActionHandler() " + actionId);
 	}
 
-	activateLoadingCanvas() {
-		this.canvasController.setCategoryLoadingText("recordOp", "Loading record ops");
-		this.canvasController.setCategoryLoadingText("fieldOp", "Loading field ops");
-		this.canvasController.setCategoryLoadingText("graph", "Loading graphs");
-		this.canvasController.setCategoryLoadingText("modeling", "Loading modeling");
-		this.canvasController.setCategoryLoadingText("TextMining", "Loading text mining");
-		this.canvasController.setCategoryLoadingText("output", "Loading outputs");
-		this.canvasController.setCategoryLoadingText("export", "Loading exports");
-		this.canvasController.setCategoryLoadingText("models", "Loading models");
-		setTimeout(() => {
-			this.canvasController.setPipelineFlowPalette(ModelerFlowsNewDesignPalette);
-		}, 5000);
-	}
-
 	runProgress() {
 		const nodeAnimation =
 			"animation-duration:1000ms; animation-name:wiggle2; " +
@@ -1915,34 +1897,51 @@ export default class App extends React.Component {
 				canvasController={this.canvasController}
 			/>);
 
-		if (this.state.selectedNodeLayout === MODELER_FLOWS_LAYOUT) {
+		if (this.state.selectedNodeLayout === EXAMPLE_APP_NONE) {
+			this.canvasRef = null;
+		} else {
+			this.canvasRef = React.createRef();
+		}
+		if (this.state.selectedNodeLayout === EXAMPLE_APP_FLOWS) {
 			firstCanvas = (
-				<ModelerFlowsCanvas
+				<FlowsCanvas
+					ref={this.canvasRef}
 					config={commonCanvasConfig}
 					canvasController={this.canvasController}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === AUTO_AI_LAYOUT) {
+		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_TABLES) {
 			firstCanvas = (
-				<AutoAICanvas
+				<TablesCanvas
+					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === DB2_EXPLAIN_LAYOUT) {
+		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_EXPLAIN) {
 			firstCanvas = (
-				<DB2VisualExplainCanvas
+				<ExplainCanvas
+					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === STREAMS_LAYOUT) {
+		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_EXPLAIN2) {
+			firstCanvas = (
+				<Explain2Canvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_STREAMS) {
 			firstCanvas = (
 				<StreamsCanvas
+					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === BLUE_ELLIPSES_LAYOUT) {
+		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_BLUE_ELLIPSES) {
 			firstCanvas = (
 				<BlueEllipsesCanvas
+					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
