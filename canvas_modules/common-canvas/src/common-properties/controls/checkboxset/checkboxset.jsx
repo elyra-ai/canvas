@@ -23,11 +23,37 @@ import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
 import { STATES } from "./../../constants/constants.js";
 import uuid4 from "uuid/v4";
+import isEqual from "lodash/isEqual";
+import intersection from "lodash/intersection";
 
 class CheckboxsetControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.uuid = uuid4();
+		this.handleChange = this.handleChange.bind(this);
+		this.updateValueFromFilterEnum = this.updateValueFromFilterEnum.bind(this);
+	}
+
+	componentDidMount() {
+		this.updateValueFromFilterEnum(true);
+	}
+
+	componentDidUpdate(prevProps) {
+		// only update if filter options have changed. Fixes issue where filter options are updated after value in setProperties
+		if (!isEqual(this.props.controlOpts, prevProps.controlOpts)) {
+			this.updateValueFromFilterEnum();
+		}
+	}
+
+	// this is needed in order to reset the property value when a value is filtered out.
+	updateValueFromFilterEnum(skipValidateInput) {
+		// update property value if value isn't in current enum value.  Should only be used for oneofselect
+		if (Array.isArray(this.props.value)) {
+			const newValue = intersection(this.props.value, this.props.controlOpts.values);
+			if (!isEqual(this.props.value, newValue)) {
+				this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidateInput);
+			}
+		}
 	}
 
 	handleChange(val, checked) {

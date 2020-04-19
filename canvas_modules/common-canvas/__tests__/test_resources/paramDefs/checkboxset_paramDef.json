@@ -24,20 +24,25 @@
     "checkbox_hidden": [
       "pear"
     ],
+    "filter": false,
+    "checkbox_filtered": [
+      "red",
+      "purple"
+    ],
     "checkboxset_table": [
+      [
         [
-          [
-            "banana",
-            "orange",
-            "pear"
-          ],
-          [
-            8,
-            5
-          ]
+          "banana",
+          "orange",
+          "pear"
         ],
-        []
-      ]
+        [
+          8,
+          5
+        ]
+      ],
+      []
+    ]
   },
   "parameters": [
     {
@@ -133,6 +138,20 @@
       ]
     },
     {
+      "id": "filter",
+      "type": "boolean"
+    },
+    {
+      "id": "checkboxset_filtered",
+      "type": "array[string]",
+      "enum": [
+        "apple",
+        "orange",
+        "pear"
+      ],
+      "required": true
+    },
+    {
       "id": "checkboxset_table",
       "type": "array[checkboxsetTableDef]"
     }
@@ -144,14 +163,22 @@
         {
           "id": "fruit",
           "type": "array[string]",
-          "enum":[
-            "apple", "banana", "orange", "pear"
+          "enum": [
+            "apple",
+            "banana",
+            "orange",
+            "pear"
           ]
         },
         {
           "id": "number",
           "type": "array[integer]",
-          "enum": [8, 3, 5, 7]
+          "enum": [
+            8,
+            3,
+            5,
+            7
+          ]
         }
       ]
     }
@@ -264,6 +291,22 @@
         }
       },
       {
+        "parameter_ref": "filter",
+        "label": {
+          "default": "Filter 'checkboxset Filtered'"
+        }
+      },
+      {
+        "parameter_ref": "checkboxset_filtered",
+        "label": {
+          "default": "checkboxset Filtered"
+        },
+        "resource_key": "checkboxset_filtered",
+        "description": {
+          "default": "checkboxset filtered to have values 'red' and 'blue'"
+        }
+      },
+      {
         "parameter_ref": "checkboxset_table",
         "label": {
           "default": "checkboxsets in a table"
@@ -280,20 +323,20 @@
           {
             "parameter_ref": "fruit",
             "label": {
-              "default" : "fruit"
+              "default": "fruit"
             },
             "description": {
-              "default" : "checkboxset in sub panel"
+              "default": "checkboxset in sub panel"
             },
             "edit_style": "subpanel"
           },
           {
             "parameter_ref": "number",
             "label": {
-              "default" : "number"
+              "default": "number"
             },
             "description": {
-              "default" : "checkboxset on panel"
+              "default": "checkboxset on panel"
             },
             "edit_style": "on_panel",
             "control": "checkboxset"
@@ -333,6 +376,17 @@
         ]
       },
       {
+        "id": "checkboxset-filters",
+        "label": {
+          "default": "Filters"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "filter",
+          "checkboxset_filtered"
+        ]
+      },
+      {
         "id": "checkboxset-table-panels",
         "label": {
           "default": "Table"
@@ -349,7 +403,8 @@
               {
                 "id": "checkboxset-table-summary-ctrls",
                 "parameter_refs": [
-                  "checkboxset_table"                ]
+                  "checkboxset_table"
+                ]
               }
             ]
           }
@@ -418,6 +473,24 @@
             "parameter_ref": "disable",
             "op": "equals",
             "value": false
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "checkboxset_filtered",
+          "values": [
+            "apple",
+            "pear"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter",
+            "op": "equals",
+            "value": true
           }
         }
       }
