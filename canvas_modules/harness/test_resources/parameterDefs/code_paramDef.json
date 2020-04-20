@@ -36,7 +36,7 @@
           "default": "Enter Python code"
         },
         "text_before": {
-          "default": "Press ctrl-space to autocomplete, enter a '?' for validate to fail."
+          "default": "Press ctrl-space to autocomplete"
         },
         "control": "code"
       },
