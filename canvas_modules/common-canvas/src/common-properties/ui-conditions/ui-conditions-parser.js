@@ -233,6 +233,8 @@ function parseConditions(container, uiCondition, conditionType) {
 			refs = uiCondition[conditionType].group_refs;
 		} else if (uiCondition[conditionType].action_refs) {
 			refs = uiCondition[conditionType].action_refs;
+		} else if (uiCondition[conditionType].target && uiCondition[conditionType].target.parameter_ref) {
+			refs = [uiCondition[conditionType].target.parameter_ref];
 		}
 		if (refs) {
 			_setDefinitions(container.refs, refs, groupDef);

@@ -312,6 +312,7 @@ describe("checkboxset works as expected in table control", () => {
 	afterEach(() => {
 		wrapper.unmount();
 	});
+
 	it("checkboxset works as expected in table control onpanel", () => {
 		const summaryPanelTable = propertyUtils.openSummaryPanel(wrapper, "checkboxset-table-summary");
 		const propId = { name: "checkboxset_table", row: 0, col: 1 };
@@ -329,6 +330,7 @@ describe("checkboxset works as expected in table control", () => {
 		checkboxes.at(2).simulate("change");
 		expect(renderedController.getPropertyValue(propId)).to.eql([]);
 	});
+
 	it("checkboxset works as expected in table control subpanel", () => {
 		const summaryPanelTable = propertyUtils.openSummaryPanel(wrapper, "checkboxset-table-summary");
 		const propId = { name: "checkboxset_table", row: 0, col: 0 };
@@ -355,4 +357,56 @@ describe("checkboxset works as expected in table control", () => {
 		checkboxes.at(2).simulate("change");
 		expect(renderedController.getPropertyValue(propId)).to.eql(["pear"]);
 	});
+
+	it("checkboxset works as expected in table control when new row added with filter", () => {
+		propertyUtils.openSummaryPanel(wrapper, "checkboxset-table-summary");
+		// add 1 row and validate with filter disabled
+		const table = wrapper.find("div[data-id='properties-checkboxset_table']");
+		const addValueBtn = table.find("button.properties-add-fields-button");
+		addValueBtn.simulate("click");
+		expect(renderedController.getPropertyValue({ name: "checkboxset_table", row: 2, col: 0 })).to.eql(["banana", "orange", "pear"]);
+		// enable filter add new row.  Existing rows should also be updated to remove invalid values
+		renderedController.updatePropertyValue({ name: "filter2" }, true);
+		addValueBtn.simulate("click");
+		expect(renderedController.getPropertyValue({ name: "checkboxset_table", row: 2, col: 0 })).to.eql(["orange", "pear"]);
+		expect(renderedController.getPropertyValue({ name: "checkboxset_table", row: 3, col: 0 })).to.eql(["orange", "pear"]);
+	});
+});
+
+describe("checkboxset enum_filter works correctly", () => {
+	var wrapper;
+	var renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(checkboxSetParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("Validate checkboxset should have options filtered by enum_filter", () => {
+		let checkboxes = wrapper.find("div[data-id='properties-checkboxset_filtered'] input");
+		// validate all checkboxes are enabled
+		checkboxes.forEach((checkbox) => {
+			expect(checkbox.prop("disabled")).to.equal(false);
+		});
+		// checked the filter box
+		renderedController.updatePropertyValue({ name: "filter" }, true);
+		wrapper.update();
+		// validate the correct number of options show up on open
+		checkboxes = wrapper.find("div[data-id='properties-checkboxset_filtered'] input[disabled=true]");
+		// one of the checkboxes should be disabled
+		expect(checkboxes).to.have.length(1);
+	});
+
+	it("Validate checkboxset should uncheck filtered value", () => {
+		const locPropertyId = { name: "checkboxset_filtered" };
+		renderedController.updatePropertyValue(locPropertyId, ["apple", "pear", "orange"]);
+		// checked the filter box
+		renderedController.updatePropertyValue({ name: "filter" }, true);
+		const checkboxsetValue = renderedController.getPropertyValue(locPropertyId);
+		expect(checkboxsetValue).to.eql(["apple", "pear"]);
+	});
+
 });
