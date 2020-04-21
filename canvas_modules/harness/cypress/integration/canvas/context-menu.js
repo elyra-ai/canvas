@@ -24,44 +24,44 @@ describe("Test of context menu", function() {
 
 	it.only("Test context menu options and verify position of context menu when clicked at different locations", function() {
 		// Test the context menu appears OK in the middle of the canvas
-		cy.rightClickToDisplayContextMenu(800, 25);
-		cy.verifyContextMenuPosition(800, 25);
-
-		// Test the context menu has some of the expected entries
-		cy.verifyOptionInContextMenu("New comment");
-		cy.verifyOptionInContextMenu("Undo");
-
-		// Test the node context menu has an enabled Edit menu
-		cy.getNodeForLabel("DRUG1n").rightclick();
-		cy.clickOptionFromContextSubmenu("Edit", "Copy");
-
-		// Test the context menu is pushed to the left when user clicks near right side of the page
-		cy.rightClickToDisplayContextMenu(1300, 100);
-		cy.verifyContextMenuPosition(1140, 100);
-
-		// Test the context menu is pushed upwards when user clicks near bottom of the page
-		cy.rightClickToDisplayContextMenu(1000, 500);
-		cy.verifyContextMenuPosition(1000, 335);
-
-		// Test the context menu is pushed to the left correctly even when the palette is open
-		cy.get("#canvas-div-0").click(1, 1);
-		cy.clickToolbarPaletteOpen();
-		cy.rightClickToDisplayContextMenu(940, 300);
-		cy.verifyContextMenuPosition(940, 300);
-
-		// Test the context menu is pushed to the left correctly when the palette is open AND the right flyout is open
-		cy.get("#canvas-div-0").click(1, 1);
-		cy.getNodeForLabel("Na_to_K").dblclick();
-		cy.rightClickToDisplayContextMenu(640, 300);
-		cy.verifyContextMenuPosition(640, 300);
-
-		// Test the context menu's 'Highlight' submenu is pushed up in a situation
-		// where it would appear off the bottom of the screen
-		// To do this, use zoom to fit to get a node near the bottom of the screen
-		cy.clickToolbarZoomToFit();
-		cy.getNodeForLabel("Neural Net").rightclick();
-		cy.clickOptionFromContextMenu("Highlight");
-		cy.verifySubmenuPushedUpBy(91);
+		// cy.rightClickToDisplayContextMenu(800, 25);
+		// cy.verifyContextMenuPosition(800, 25);
+		//
+		// // Test the context menu has some of the expected entries
+		// cy.verifyOptionInContextMenu("New comment");
+		// cy.verifyOptionInContextMenu("Undo");
+		//
+		// // Test the node context menu has an enabled Edit menu
+		// cy.getNodeForLabel("DRUG1n").rightclick();
+		// cy.clickOptionFromContextSubmenu("Edit", "Copy");
+		//
+		// // Test the context menu is pushed to the left when user clicks near right side of the page
+		// cy.rightClickToDisplayContextMenu(1300, 100);
+		// cy.verifyContextMenuPosition(1140, 100);
+		//
+		// // Test the context menu is pushed upwards when user clicks near bottom of the page
+		// cy.rightClickToDisplayContextMenu(1000, 500);
+		// cy.verifyContextMenuPosition(1000, 335);
+		//
+		// // Test the context menu is pushed to the left correctly even when the palette is open
+		// cy.get("#canvas-div-0").click(1, 1);
+		// cy.clickToolbarPaletteOpen();
+		// cy.rightClickToDisplayContextMenu(940, 300);
+		// cy.verifyContextMenuPosition(940, 300);
+		//
+		// // Test the context menu is pushed to the left correctly when the palette is open AND the right flyout is open
+		// cy.get("#canvas-div-0").click(1, 1);
+		// cy.getNodeForLabel("Na_to_K").dblclick();
+		// cy.rightClickToDisplayContextMenu(640, 300);
+		// cy.verifyContextMenuPosition(640, 300);
+		//
+		// // Test the context menu's 'Highlight' submenu is pushed up in a situation
+		// // where it would appear off the bottom of the screen
+		// // To do this, use zoom to fit to get a node near the bottom of the screen
+		// cy.clickToolbarZoomToFit();
+		// cy.getNodeForLabel("Neural Net").rightclick();
+		// cy.clickOptionFromContextMenu("Highlight");
+		// cy.verifySubmenuPushedUpBy(91);
 
 		// Test that, when a set of objects are selected, a click opening the context menu will not clear the selections
 		cy.get("#canvas-div-0").click(1, 1);
@@ -74,7 +74,8 @@ describe("Test of context menu", function() {
 		cy.get("#canvas-div-0").click(1, 1); // Context menu is closed on localhost but not on travis build
 		cy.verifyNumberOfSelectedObjects(3);
 		cy.get("#canvas-div-0").click(1, 1);
-		// cy.verifyNumberOfSelectedObjects(0); // This assertion fails on travis build because context menu is open
+		cy.get("#cut-action > button.bx--btn--disabled");
+		cy.verifyNumberOfSelectedObjects(0); // This assertion fails on travis build because context menu is open
 	});
 
 	it("Test selecting multiple objects, and click anywhere on canvas should clear the selections", function() {
