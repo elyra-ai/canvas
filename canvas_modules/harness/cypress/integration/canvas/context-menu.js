@@ -69,12 +69,17 @@ describe("Test of context menu", function() {
 		cy.ctrlOrCmdClickNode("Neural Net");
 		cy.ctrlOrCmdClickNode("Define Types");
 		cy.verifyNumberOfSelectedObjects(3);
+
 		cy.rightClickToDisplayContextMenu(1000, 300);
 		cy.verifyNumberOfSelectedObjects(3);
+		cy.get("#context-menu-popover");
+
 		cy.get("#canvas-div-0").click(1, 1); // Context menu is closed on localhost but not on travis build
 		cy.verifyNumberOfSelectedObjects(3);
+		cy.get("#context-menu-popover");
+
 		cy.get("#canvas-div-0").click(1, 1);
-		cy.get("#cut-action > button.bx--btn--disabled");
+		cy.get("#context-menu-popover");
 		cy.verifyNumberOfSelectedObjects(0); // This assertion fails on travis build because context menu is open
 	});
 
