@@ -87,7 +87,8 @@ const ControlType = {
 	STRUCTURELISTEDITOR: "structurelisteditor",
 	TOGGLETEXT: "toggletext",
 	READONLY: "readonly",
-	SPINNER: "spinner"
+	SPINNER: "spinner",
+	CODE: "code"
 };
 
 const ParamRole = {

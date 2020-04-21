@@ -29,6 +29,7 @@ class StructurelisteditorControl extends AbstractTable {
 	constructor(props) {
 		super(props);
 		this.addRow = this.addRow.bind(this);
+		this.allowColumnControls = true;
 	}
 
 	addRow() {

@@ -105,6 +105,13 @@ export default class ControlFactory {
 				{...props}
 				rightFlyout={this.rightFlyout}
 			/>);
+		case (ControlType.CODE):
+			return (<ExpressionControl
+				{...props}
+				builder={false}
+				validateLink={false}
+				rightFlyout={this.rightFlyout}
+			/>);
 		case (ControlType.TOGGLETEXT):
 			return (<ToggletextControl
 				{...props}
@@ -134,7 +141,7 @@ export default class ControlFactory {
 				rightFlyout={this.rightFlyout}
 			/>);
 		case (ControlType.SELECTCOLUMN):
-			if (!tableInfo) {
+			if (!tableInfo || (tableInfo && tableInfo.allowColumnControls)) {
 				return (<Dropdown
 					{...props}
 					rightFlyout={this.rightFlyout}
@@ -176,7 +183,7 @@ export default class ControlFactory {
 			return (<ReadonlyControl {...props} />);
 		case (ControlType.CUSTOM):
 			return (
-				<div key={controlKey}>
+				<div className="properties-custom-ctrl" key={controlKey}>
 					{this.controller.getCustomControl(propertyId, control, tableInfo)}
 				</div>
 			);

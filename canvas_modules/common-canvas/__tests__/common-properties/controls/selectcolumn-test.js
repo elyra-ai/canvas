@@ -405,6 +405,12 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 		const errorMsgDiv = selectField.find("div.properties-validation-message");
 		expect(errorMsgDiv).to.have.length(0);
 	});
+
+	it("should render inline in structurelisteditor control", () => {
+		propertyUtils.openSummaryPanel(wrapper, "selectcolumn_table-error-panel");
+		const selectField = wrapper.find("div[data-id='properties-selectcolumn_table_error_0_0'] select");
+		expect(selectField).to.have.length(1); // validate dropdown rendered in table cell
+	});
 });
 
 describe("selectcolumn works correctly with multi input schemas", () => {
