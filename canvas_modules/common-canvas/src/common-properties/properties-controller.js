@@ -32,7 +32,6 @@ import cloneDeep from "lodash/cloneDeep";
 import assign from "lodash/assign";
 import isEmpty from "lodash/isEmpty";
 import has from "lodash/has";
-import intersection from "lodash/intersection";
 
 import ConditionOps from "./ui-conditions/condition-ops/condition-ops";
 
@@ -899,21 +898,6 @@ export default class PropertiesController {
 		if (!skipValidateInput) {
 			conditionsUtil.validateInput(inPropertyId, this);
 		}
-		// check enum filters and filter out any invalid values
-		const propertyValue = this.getPropertyValue(propertyId);
-		if (Array.isArray(propertyValue)) {
-			for (let rowIdx = 0; rowIdx < propertyValue.length; rowIdx++) {
-				if (Array.isArray(propertyValue[rowIdx])) {
-					for (let colIdx = 0; colIdx < propertyValue.length; colIdx++) {
-						this._updatePropertyValueFilterEnum({ name: propertyId.name, row: rowIdx, col: colIdx });
-					}
-				} else {
-					this._updatePropertyValueFilterEnum({ name: propertyId.name, row: rowIdx });
-				}
-			}
-		} else {
-			this._updatePropertyValueFilterEnum({ name: propertyId.name });
-		}
 
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
@@ -925,19 +909,6 @@ export default class PropertiesController {
 			);
 		}
 	}
-
-	_updatePropertyValueFilterEnum(inPropertyId) {
-		const propertyId = this.convertPropertyId(inPropertyId);
-		const enumFilterItems = this.propertiesStore.getFilteredEnumItems(propertyId);
-		if (enumFilterItems) {
-			const propValue = this.propertiesStore.getPropertyValue(propertyId);
-			if (Array.isArray(propValue)) {
-				const newPropValue = intersection(propValue, enumFilterItems);
-				this.propertiesStore.updatePropertyValue(propertyId, newPropValue);
-			}
-		}
-	}
-
 
 	getPropertyValue(inPropertyId, filterHiddenDisabled) {
 		const propertyId = this.convertPropertyId(inPropertyId);

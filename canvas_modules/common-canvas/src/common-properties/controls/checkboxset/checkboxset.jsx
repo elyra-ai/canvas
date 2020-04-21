@@ -47,7 +47,7 @@ class CheckboxsetControl extends React.Component {
 
 	// this is needed in order to reset the property value when a value is filtered out.
 	updateValueFromFilterEnum(skipValidateInput) {
-		// update property value if value isn't in current enum value.  Should only be used for oneofselect
+		// update property value if value isn't in current enum value.
 		if (Array.isArray(this.props.value)) {
 			const newValue = intersection(this.props.value, this.props.controlOpts.values);
 			if (!isEqual(this.props.value, newValue)) {

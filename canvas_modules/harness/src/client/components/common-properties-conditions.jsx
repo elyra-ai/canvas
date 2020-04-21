@@ -316,6 +316,8 @@ class CommonPropertiesComponents extends React.Component {
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
 			{ Control: "expression (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+			{ Control: "code (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
 			{ Control: "numberfield (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
 			{ Control: "oneofselect (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",

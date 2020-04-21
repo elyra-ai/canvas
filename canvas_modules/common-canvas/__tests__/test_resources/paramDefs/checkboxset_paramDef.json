@@ -26,9 +26,9 @@
     ],
     "filter": false,
     "filter2": false,
-    "checkbox_filtered": [
-      "red",
-      "purple"
+    "checkboxset_filtered": [
+      "apple",
+      "orange"
     ],
     "checkboxset_table": [
       [
@@ -321,7 +321,7 @@
         },
         "resource_key": "checkboxset_filtered",
         "description": {
-          "default": "checkboxset filtered to have values 'red' and 'blue'"
+          "default": "checkboxset filtered to have values 'apple' and 'pear'"
         }
       },
       {
