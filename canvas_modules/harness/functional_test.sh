@@ -25,7 +25,7 @@ cd $SCRIPT_DIR
 
 # start the test harness
 echo "npm start"
-export NODE_ENV=production
+export NODE_ENV=development
 npm start &
 
 # start running the test Cases
