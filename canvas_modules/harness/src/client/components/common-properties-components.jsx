@@ -40,6 +40,7 @@ import {
 	TEXTAREA_PROPS_INFO,
 	PASSWORD_FIELD_PROPS_INFO,
 	EXPRESSION_PROPS_INFO,
+	CODE_PROPS_INFO,
 	READONLY_PROPS_INFO,
 	NUMBERFIELD_PROPS_INFO,
 	NUMBERFIELD_GENERATOR_PROPS_INFO,
@@ -341,6 +342,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--textarea",
 					"--password",
 					"--expression",
+					"--code",
 					"--readonly",
 					"--numberfield",
 					"--spinner",
@@ -825,6 +827,24 @@ class CommonPropertiesComponents extends React.Component {
 					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--code" className="harness-section-subtitle">code</h3>
+					<p>Identical to <span className="harness-highlight"> expression </span> control without the expressionBuilder option</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={CODE_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+							/>
+							{this.renderRightFlyoutButton(CODE_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(CODE_PROPS_INFO.parameterDef, "control")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--readonly" className="harness-section-subtitle">readonly</h3>
 					<p>A readonly field is rendered for a parameter of attribute <span className="harness-highlight">control </span>
 					and value <span className="harness-highlight">readonly</span></p>
@@ -1293,6 +1313,7 @@ class CommonPropertiesComponents extends React.Component {
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--textarea">textarea</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--readonly">readonly</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--expression">expression</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--code">code</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--toggletext">toggletext</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--password">password</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--numberfield">numberfield</a></li>

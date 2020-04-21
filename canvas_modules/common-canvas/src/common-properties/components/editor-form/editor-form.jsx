@@ -380,7 +380,7 @@ class EditorForm extends React.Component {
 			for (const custPanel of this.props.customPanels) {
 				if (custPanel.id() === panel.id) {
 					try {
-						return (<div key={"custom." + key}>
+						return (<div className="properties-custom-panel" key={"custom." + key}>
 							{new custPanel(panel.parameters, this.props.controller, panel.data).renderPanel()}
 						</div>);
 					} catch (error) {
