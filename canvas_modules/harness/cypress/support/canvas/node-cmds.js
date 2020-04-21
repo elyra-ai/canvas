@@ -86,3 +86,11 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	// Get the os name to decide whether to click ctrl or cmd
 	cy.useCtrlOrCmdKey().then((selectedKey) => cy.getNodeForLabel(nodeName).type(selectedKey, { release: false }));
 });
+
+Cypress.Commands.add("getNumberOfSelectedNodes", () => {
+	cy.get(".d3-node-selection-highlight")
+		.then((nodes) => {
+			const selectedNodes = nodes.filter((idx) => nodes[idx].getAttribute("data-selected") === "yes");
+			return selectedNodes.length;
+		});
+});
