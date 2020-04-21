@@ -86,6 +86,7 @@ describe("Test of context menu", function() {
 		cy.verifyNumberOfSelectedObjects(0); // This assertion fails on travis build because context menu is open
 	});
 
+
 	it("Test selecting multiple objects, and click anywhere on canvas should clear the selections", function() {
 		cy.ctrlOrCmdClickNode("C5.0");
 		cy.ctrlOrCmdClickNode("Neural Net");
