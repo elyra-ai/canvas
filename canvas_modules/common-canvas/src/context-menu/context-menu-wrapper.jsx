@@ -35,7 +35,7 @@ export default class ContextMenuWrapper extends React.Component {
 	}
 
 	componentWillUnmount() {
-		document.removeEventListener("click", this.handleClickOutside, true);
+		// document.removeEventListener("click", this.handleClickOutside, true);
 	}
 
 	getCanvasRect() {
