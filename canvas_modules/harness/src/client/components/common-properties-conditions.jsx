@@ -316,6 +316,8 @@ class CommonPropertiesComponents extends React.Component {
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
 			{ Control: "expression (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+			{ Control: "code (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
 			{ Control: "numberfield (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
 			{ Control: "oneofselect (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
@@ -1010,7 +1012,7 @@ class CommonPropertiesComponents extends React.Component {
 				<div className="harness-conditions-documentation-panels-controls-component">
 					<h3 id="--filteredEnum" className="harness-section-subtitle">Filtered Enumeration Conditions</h3>
 					<p>The <span className="harness-highlight">enum_filter</span> condition operates upon controls
-						whose parameter is backed by an enumerated list of options. This includes radiosets
+						whose parameter is backed by an enumerated list of options. This includes radioset, checkboxset,
 						and droplist controls. When the condition is true, enum_filter conditions allow authors
 						to dynamically filter the available enumeration options based upon the state of other parameters.
 					</p>

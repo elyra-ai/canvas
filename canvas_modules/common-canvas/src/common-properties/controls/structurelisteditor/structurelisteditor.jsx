@@ -34,8 +34,7 @@ class StructurelisteditorControl extends AbstractTable {
 
 	addRow() {
 		const newRow = this.getDefaultRow();
-		const rows = this.props.controller.getPropertyValue(this.props.propertyId);
-		rows.push(newRow);
+		const rows = this.props.controller.getPropertyValue(this.props.propertyId).concat([newRow]);
 		this.setCurrentControlValueSelected(rows);
 	}
 

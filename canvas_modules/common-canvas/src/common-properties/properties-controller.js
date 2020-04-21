@@ -898,6 +898,7 @@ export default class PropertiesController {
 		if (!skipValidateInput) {
 			conditionsUtil.validateInput(inPropertyId, this);
 		}
+
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{

@@ -24,6 +24,8 @@ import Tooltip from "./../../../tooltip/tooltip.jsx";
 import Icon from "./../../../icons/icon.jsx";
 import uuid4 from "uuid/v4";
 import moment from "moment";
+import isEqual from "lodash/isEqual";
+import intersection from "lodash/intersection";
 
 import { ControlType } from "./../../constants/form-constants";
 
@@ -31,6 +33,33 @@ import classNames from "classnames";
 import PropertyUtils from "./../../util/property-utils";
 
 class ReadonlyControl extends React.Component {
+	constructor(props) {
+		super(props);
+		this.updateValueFromFilterEnum = this.updateValueFromFilterEnum.bind(this);
+	}
+
+	componentDidMount() {
+		this.updateValueFromFilterEnum(true);
+	}
+
+	componentDidUpdate(prevProps) {
+		// only update if filter options have changed. Fixes issue where filter options are updated after value in setProperties
+		if (!isEqual(this.props.controlOpts, prevProps.controlOpts)) {
+			this.updateValueFromFilterEnum();
+		}
+	}
+
+	// this is needed in order to reset the property value when a value is filtered out.
+	updateValueFromFilterEnum(skipValidateInput) {
+		// update property value if value isn't in current enum value.  Don't filter custom control values.
+		if (Array.isArray(this.props.value) && Array.isArray(this.props.controlOpts.values) && this.props.control.controlType !== ControlType.CUSTOM) {
+			const newValue = intersection(this.props.value, this.props.controlOpts.values);
+			if (!isEqual(this.props.value, newValue)) {
+				this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidateInput);
+			}
+		}
+	}
+
 	render() {
 		let controlValue = this.props.value;
 		if (typeof controlValue === "undefined" || controlValue === null) {
@@ -43,12 +72,9 @@ class ReadonlyControl extends React.Component {
 		} else if (typeof controlValue === "boolean") {
 			controlValue = controlValue.toString();
 		}
-		if (this.props.columnDef) {
-			if (this.props.columnDef.controlType === ControlType.CUSTOM) {
-				controlValue = this.props.controller.getCustomControl(this.props.propertyId, this.props.columnDef, { table: true, editStyle: "summary" });
-			}
-		}
-		if (this.props.control.controlType === ControlType.TIMESTAMP ||
+		if (this.props.control.controlType === ControlType.CUSTOM) {
+			controlValue = this.props.controller.getCustomControl(this.props.propertyId, this.props.control, { table: true, editStyle: "summary" });
+		} else if (this.props.control.controlType === ControlType.TIMESTAMP ||
 			(this.props.control.valueDef && this.props.control.valueDef.propType === DATA_TYPE.TIMESTAMP)) {
 			const mom = moment(controlValue); // timestamp in ms
 			if (mom.isValid()) {
@@ -109,16 +135,23 @@ ReadonlyControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	tableControl: PropTypes.bool,
-	columnDef: PropTypes.object,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.any, // pass in by redux
+	controlOpts: PropTypes.oneOfType([
+		PropTypes.object,
+		PropTypes.array
+	]), // pass in by redux
 	messageInfo: PropTypes.object // pass in by redux
 };
 
-const mapStateToProps = (state, ownProps) => ({
-	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
-	state: ownProps.controller.getControlState(ownProps.propertyId),
-	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
-});
+const mapStateToProps = (state, ownProps) => {
+	const props = {
+		value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+		state: ownProps.controller.getControlState(ownProps.propertyId),
+		messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+	};
+	props.controlOpts = ownProps.controller.getFilteredEnumItems(ownProps.propertyId, ownProps.control);
+	return props;
+};
 
 export default connect(mapStateToProps, null)(ReadonlyControl);

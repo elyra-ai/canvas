@@ -322,11 +322,10 @@ export default class AbstractTable extends React.Component {
 			} else {
 				cellContent = (<div className="properties-table-cell-control">
 					<ReadonlyControl
-						control={this.props.control}
+						control={this.props.controller.getControl(propertyId)}
 						propertyId={propertyId}
 						controller={this.props.controller}
 						tableControl
-						columnDef={columnDefObj}
 					/>
 				</div>);
 				if (columnDef.editStyle === EditStyle.ON_PANEL) {
