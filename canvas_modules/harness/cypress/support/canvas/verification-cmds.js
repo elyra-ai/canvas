@@ -170,7 +170,7 @@ Cypress.Commands.add("verifyNumberOfDecoratorsOnNode", (nodeName, noOfDecorators
 });
 
 Cypress.Commands.add("verifyNumberOfDecoratorsOnLink", (linkName, noOfDecorators) => {
-	cy.getLinkFromAPIName(linkName)
+	cy.getLinkFromName(linkName)
 		.find(".d3-link-dec-outline")
 		.should("have.length", noOfDecorators);
 });
@@ -182,7 +182,7 @@ Cypress.Commands.add("verifyNumberOfLabelDecoratorsOnNode", (nodeName, noOfDecor
 });
 
 Cypress.Commands.add("verifyNumberOfLabelDecoratorsOnLink", (linkName, noOfDecorators) => {
-	cy.getLinkFromAPIName(linkName)
+	cy.getLinkFromName(linkName)
 		.find(".d3-link-dec-label")
 		.should("have.length", noOfDecorators);
 });
@@ -209,7 +209,7 @@ Cypress.Commands.add("verifyDecorationTransformOnNode", (nodeName, decoratorId, 
 });
 
 Cypress.Commands.add("verifyDecorationTransformOnLink", (linkName, decoratorId, xPos, yPos) => {
-	cy.getLinkFromAPIName(linkName)
+	cy.getLinkFromName(linkName)
 		.find(".d3-link-dec-group")
 		.then((decorators) => {
 			const decorator = decorators.filter((idx) =>

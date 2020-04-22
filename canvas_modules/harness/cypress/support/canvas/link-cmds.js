@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-Cypress.Commands.add("getLinkFromAPIName", (linkName) => {
+Cypress.Commands.add("getLinkFromName", (linkName) => {
 	const nodeNames = linkName.split("-");
 	cy.getPipeline()
 		.then((pipeline) => {
@@ -50,7 +50,7 @@ function getLinkSelector(linkId, element) {
 }
 
 Cypress.Commands.add("clickDecoratorHotspotOnLink", (decoratorId, linkName) => {
-	cy.getLinkFromAPIName(linkName)
+	cy.getLinkFromName(linkName)
 		.find(`.d3-link-dec-outline[data-id=link_dec_outln_0_${decoratorId}]`)
 		.click();
 });
