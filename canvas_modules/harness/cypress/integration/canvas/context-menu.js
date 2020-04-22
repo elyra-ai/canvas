@@ -22,7 +22,7 @@ describe("Test of context menu", function() {
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
-	it.only("Test context menu options and verify position of context menu when clicked at different locations", function() {
+	it("Test context menu options and verify position of context menu when clicked at different locations", function() {
 		// Test the context menu appears OK in the middle of the canvas
 		cy.rightClickToDisplayContextMenu(800, 25);
 		cy.verifyContextMenuPosition(800, 25);
@@ -74,7 +74,8 @@ describe("Test of context menu", function() {
 		cy.get("#canvas-div-0").click(1, 1); // Context menu is closed on localhost but not on travis build
 		cy.verifyNumberOfSelectedObjects(3);
 		cy.get("#canvas-div-0").click(1, 1);
-		// cy.verifyNumberOfSelectedObjects(0); // This assertion fails on travis build because context menu is open
+		// TODO: This assertion fails on travis build because context menu is open
+		// cy.verifyNumberOfSelectedObjects(0);
 	});
 
 	it("Test selecting multiple objects, and click anywhere on canvas should clear the selections", function() {

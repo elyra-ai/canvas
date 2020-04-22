@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as testUtils from "../../utils/eventlog-utils";
 
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, transformValue) => {
 	cy.getNodeForLabel(nodeLabel)
@@ -160,4 +161,80 @@ Cypress.Commands.add("verifySubmenuPushedUpBy", (distFromTop) => {
 		.then((topDist) => {
 			expect(Math.abs(parseFloat(topDist.split("px")[0]))).equal(distFromTop);
 		});
+});
+
+Cypress.Commands.add("verifyNumberOfDecoratorsOnNode", (nodeName, noOfDecorators) => {
+	cy.getNodeForLabel(nodeName)
+		.find(".d3-node-dec-outline")
+		.should("have.length", noOfDecorators);
+});
+
+Cypress.Commands.add("verifyNumberOfDecoratorsOnLink", (linkName, noOfDecorators) => {
+	cy.getLinkFromAPIName(linkName)
+		.find(".d3-link-dec-outline")
+		.should("have.length", noOfDecorators);
+});
+
+Cypress.Commands.add("verifyNumberOfLabelDecoratorsOnNode", (nodeName, noOfDecorators) => {
+	cy.getNodeForLabel(nodeName)
+		.find(".d3-node-dec-label")
+		.should("have.length", noOfDecorators);
+});
+
+Cypress.Commands.add("verifyNumberOfLabelDecoratorsOnLink", (linkName, noOfDecorators) => {
+	cy.getLinkFromAPIName(linkName)
+		.find(".d3-link-dec-label")
+		.should("have.length", noOfDecorators);
+});
+
+Cypress.Commands.add("verifyLabelDecoration", (nodeName, decoratorId, label, xPos, yPos) => {
+	cy.verifyDecorationTransformOnNode(nodeName, decoratorId, xPos, yPos)
+		.then((labelDecorator) => {
+			cy.wrap(labelDecorator)
+				.find(".d3-node-dec-label")
+				.should("have.text", label);
+		});
+});
+
+Cypress.Commands.add("verifyDecorationTransformOnNode", (nodeName, decoratorId, xPos, yPos) => {
+	cy.getNodeForLabel(nodeName)
+		.find(".d3-node-dec-group")
+		.then((decorators) => {
+			const decorator = decorators.filter((idx) =>
+				decorators[idx].getAttribute("data-id") === ("node_dec_group_0_" + decoratorId));
+			expect(decorator[0].getAttribute("data-id")).equal(`node_dec_group_0_${decoratorId}`);
+			expect(decorator[0].getAttribute("transform")).equal(`translate(${xPos}, ${yPos})`);
+			return decorator;
+		});
+});
+
+Cypress.Commands.add("verifyDecorationTransformOnLink", (linkName, decoratorId, xPos, yPos) => {
+	cy.getLinkFromAPIName(linkName)
+		.find(".d3-link-dec-group")
+		.then((decorators) => {
+			const decorator = decorators.filter((idx) =>
+				decorators[idx].getAttribute("data-id") === ("link_dec_group_0_" + decoratorId));
+			expect(decorator[0].getAttribute("data-id")).equal(`link_dec_group_0_${decoratorId}`);
+			expect(decorator[0].getAttribute("transform")).equal(`translate(${xPos}, ${yPos})`);
+			return decorator;
+		});
+});
+
+Cypress.Commands.add("verifyDecorationImage", (nodeName, decoratorId, decoratorImage) => {
+	cy.getNodeForLabel(nodeName)
+		.find(".d3-node-dec-image")
+		.then((decoratorImages) => {
+			const decorator = decoratorImages.filter((idx) =>
+				decoratorImages[idx].getAttribute("data-id") === ("node_dec_image_0_" + decoratorId));
+			expect(decorator[0].getAttribute("data-id")).equal(`node_dec_image_0_${decoratorId}`);
+			expect(decorator[0].getAttribute("data-image")).equal(decoratorImage);
+		});
+});
+
+Cypress.Commands.add("verifyDecorationHandlerEntryInConsole", (decoratorId) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal(`decorationHandler() Decoration ID = ${decoratorId}`);
+		expect(lastEventLog.data).to.equal(decoratorId);
+	});
 });
