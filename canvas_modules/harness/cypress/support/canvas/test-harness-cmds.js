@@ -50,8 +50,47 @@ Cypress.Commands.add("openCanvasPalette", (paletteName) => {
 	cy.get("#harness-action-bar-sidepanel-canvas").click();
 });
 
+Cypress.Commands.add("openCanvasAPI", (api) => {
+	cy.get("#harness-action-bar-sidepanel-api > a").click();
+	cy.dropdownSelect("#harness-sidepanel-api-list", api);
+});
+
+Cypress.Commands.add("dropdownSelect", (dropdownElement, selectedItemName) => {
+	// Get the list of drop down options
+	cy.get(dropdownElement)
+		.find(".bx--dropdown")
+		.click();
+
+	// Select option from drop down list
+	cy.get(".bx--list-box__menu")
+		.find(".bx--list-box__menu-item")
+		.then((options) => options.filter((idx) => options[idx].outerText === selectedItemName))
+		.click();
+});
+
 Cypress.Commands.add("setCanvasConfig", (config) => {
 	cy.document().then((doc) => {
 		doc.setCanvasConfig(config);
 	});
+});
+
+Cypress.Commands.add("selectNodeForDecoration", (nodeName) => {
+	cy.dropdownSelect("#harness-sidepanel-api-nodeSelection", nodeName);
+});
+
+Cypress.Commands.add("selectLinkForDecoration", (linkName) => {
+	cy.dropdownSelect("#harness-sidepanel-api-linkSelection", linkName);
+});
+
+Cypress.Commands.add("updateDecorationsJSON", (decoratorsJSON) => {
+	cy.get("#harness-sidepanel-api-decorations")
+		.find("textarea")
+		.clear()
+		.type(decoratorsJSON);
+});
+
+Cypress.Commands.add("submitAPI", () => {
+	cy.get("#harness-sidepanel-api-submit")
+		.find("button")
+		.click();
 });

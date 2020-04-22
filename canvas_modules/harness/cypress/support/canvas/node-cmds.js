@@ -94,3 +94,9 @@ Cypress.Commands.add("getNumberOfSelectedNodes", () => {
 			return selectedNodes.length;
 		});
 });
+
+Cypress.Commands.add("clickDecoratorHotspotOnNode", (decoratorId, nodeName) => {
+	cy.getNodeForLabel(nodeName)
+		.find(`.d3-node-dec-outline[data-id=node_dec_outln_0_${decoratorId}]`)
+		.click();
+});
