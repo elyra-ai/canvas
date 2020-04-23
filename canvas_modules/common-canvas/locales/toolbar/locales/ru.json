@@ -1,1 +1,5 @@
-{}
+{
+    "TOOLBAR_ZOOMIN": "Увеличить",
+    "TOOLBAR_ZOOMOUT": "Уменьшить",
+    "TOOLBAR_ZOOMTOFIT": "Уместить"
+}

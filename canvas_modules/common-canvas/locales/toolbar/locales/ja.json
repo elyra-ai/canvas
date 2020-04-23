@@ -1,1 +1,5 @@
-{}
+{
+    "TOOLBAR_ZOOMIN": "ズームイン",
+    "TOOLBAR_ZOOMOUT": "ズームアウト",
+    "TOOLBAR_ZOOMTOFIT": "適合ズーム"
+}

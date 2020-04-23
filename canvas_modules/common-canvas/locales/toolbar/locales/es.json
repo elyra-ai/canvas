@@ -1,1 +1,5 @@
-{}
+{
+    "TOOLBAR_ZOOMIN": "Acercar",
+    "TOOLBAR_ZOOMOUT": "Alejar",
+    "TOOLBAR_ZOOMTOFIT": "Ajustar"
+}

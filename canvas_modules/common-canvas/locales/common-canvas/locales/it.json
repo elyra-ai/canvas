@@ -1,1 +1,23 @@
-{}
+{
+    "CANVAS_ADDCOMMENT": "Nuovo commento",
+    "CANVAS_DELETEOBJECT": "Elimina",
+    "CANVAS_REDO": "Ripeti",
+    "CANVAS_SELECTALL": "Seleziona tutto",
+    "CANVAS_UNDO": "Annulla",
+    "CANVAS_VALIDATEFLOW": "Convalida flusso",
+    "EDIT_COPYSELECTION": "Copia",
+    "EDIT_CUTSELECTION": "Taglia",
+    "EDIT_PASTESELECTION": "Incolla",
+    "LINK_DELETELINK": "Elimina",
+    "MENU_HIGHLIGHTBRANCH": "Evidenzia ramo",
+    "MENU_HIGHLIGHTDOWNSTREAM": "Evidenzia downstream",
+    "MENU_HIGHLIGHTUPSTREAM": "Evidenzia upstream",
+    "MENU_UNHIGHLIGHT": "Annulla evidenziazione",
+    "NODE_COLLAPSESUPERNODEINPLACE": "Riduci supernodo",
+    "NODE_CREATESUPERNODE": "Crea supernodo",
+    "NODE_DISCONNECTNODE": "Disconnetti",
+    "NODE_EDITMENU": "Modifica",
+    "NODE_EDITNODE": "Apri",
+    "NODE_EXPANDSUPERNODEINPLACE": "Espandi supernodo",
+    "NODE_SAVETOPALETTE": "Salva nella tavolozza"
+}

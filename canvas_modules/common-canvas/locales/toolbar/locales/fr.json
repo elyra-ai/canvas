@@ -1,1 +1,5 @@
-{}
+{
+    "TOOLBAR_ZOOMIN": "Zoom avant",
+    "TOOLBAR_ZOOMOUT": "Zoom arrière",
+    "TOOLBAR_ZOOMTOFIT": "Zoom d'ajustement"
+}

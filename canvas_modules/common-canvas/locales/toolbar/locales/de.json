@@ -1,1 +1,5 @@
-{}
+{
+    "TOOLBAR_ZOOMIN": "Vergrößern",
+    "TOOLBAR_ZOOMOUT": "Verkleinern",
+    "TOOLBAR_ZOOMTOFIT": "Automatisch zoomen"
+}

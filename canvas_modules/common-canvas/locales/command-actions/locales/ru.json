@@ -1,1 +1,9 @@
-{}
+{
+    "PALETTE_SAVED_NODES_DESCRIPTION": "Узлы в этой категории были ранее сохранены из потока.",
+    "PALETTE_SAVED_NODES_LABEL": "Сохраненные узлы",
+    "SUPERNODE_BINDING_NODE_DESCRIPTION": "Узел связывания надузла",
+    "SUPERNODE_BINDING_NODE_LABEL": "Связывание",
+    "SUPERNODE_NEW_PORT_LABEL": "Порт связывания для надузла",
+    "SUPERNODE_TEMPLATE_DESCRIPTION": "Этот надузел был создан общим холстом.",
+    "SUPERNODE_TEMPLATE_LABEL": "Надузел"
+}

@@ -1,1 +1,5 @@
-{}
+{
+    "TOOLBAR_ZOOMIN": "放大",
+    "TOOLBAR_ZOOMOUT": "缩小",
+    "TOOLBAR_ZOOMTOFIT": "缩放为合适大小"
+}

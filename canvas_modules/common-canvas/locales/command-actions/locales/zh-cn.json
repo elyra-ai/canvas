@@ -1,1 +1,9 @@
-{}
+{
+    "PALETTE_SAVED_NODES_DESCRIPTION": "此类别中的节点是先前从流程中保存所得。",
+    "PALETTE_SAVED_NODES_LABEL": "已保存的节点",
+    "SUPERNODE_BINDING_NODE_DESCRIPTION": "超节点绑定节点",
+    "SUPERNODE_BINDING_NODE_LABEL": "绑定",
+    "SUPERNODE_NEW_PORT_LABEL": "超节点的绑定端口",
+    "SUPERNODE_TEMPLATE_DESCRIPTION": "这个超节点是由公共画布创建的。",
+    "SUPERNODE_TEMPLATE_LABEL": "超节点"
+}

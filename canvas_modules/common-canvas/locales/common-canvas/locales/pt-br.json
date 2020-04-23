@@ -1,1 +1,23 @@
-{}
+{
+    "CANVAS_ADDCOMMENT": "Novo comentário",
+    "CANVAS_DELETEOBJECT": "Excluir",
+    "CANVAS_REDO": "Refazer",
+    "CANVAS_SELECTALL": "Selecionar todos",
+    "CANVAS_UNDO": "Desfazer",
+    "CANVAS_VALIDATEFLOW": "Validar Fluxo",
+    "EDIT_COPYSELECTION": "Copiar",
+    "EDIT_CUTSELECTION": "Cortar",
+    "EDIT_PASTESELECTION": "Colar",
+    "LINK_DELETELINK": "Excluir",
+    "MENU_HIGHLIGHTBRANCH": "Destacar ramificação",
+    "MENU_HIGHLIGHTDOWNSTREAM": "Destacar recebimento de dados",
+    "MENU_HIGHLIGHTUPSTREAM": "Destacar envio de dados",
+    "MENU_UNHIGHLIGHT": "Remover Destaque",
+    "NODE_COLLAPSESUPERNODEINPLACE": "Reduzir o supernó",
+    "NODE_CREATESUPERNODE": "Criar o supernó",
+    "NODE_DISCONNECTNODE": "Desconectar",
+    "NODE_EDITMENU": "Editar",
+    "NODE_EDITNODE": "Abrir",
+    "NODE_EXPANDSUPERNODEINPLACE": "Expandir o supernó",
+    "NODE_SAVETOPALETTE": "Salvar na paleta"
+}
