@@ -22,6 +22,15 @@ Cypress.Commands.add("getNodeForLabelInSubFlow", (nodeLabel) =>
 	cy.get(getNodeGrpSelectorInSubFlow())
 		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel)));
 
+Cypress.Commands.add("getNodeForLabelInSupernode", (nodeLabel, supernodeName) => {
+	cy.getNodeForLabel(supernodeName)
+		.then((supernode) => {
+			const supernodeId = supernode[0].getAttribute("data-id").substring(11);
+			cy.get(getNodeGrpSelectorInSupernode(supernodeId))
+				.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));
+		});
+});
+
 Cypress.Commands.add("getSupernodePipelineId", (supernodeName) => {
 	cy.get(getNodeGrpSelector())
 		.then((grpArray) => findGrpForLabel(grpArray, supernodeName).__data__.subflow_ref.pipeline_id_ref);
@@ -36,6 +45,13 @@ function getNodeGrpSelector() {
 function getNodeGrpSelectorInSubFlow() {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	const selector = `div > svg > g > g > svg > g > g[data-id^='node_grp_${inst}']`;
+	return selector;
+}
+
+function getNodeGrpSelectorInSupernode(supernodeId) {
+	const inst = document.extraCanvas === true ? "1" : "0";
+	const selector =
+	`div > svg > g > g[data-id='node_grp_${inst}_${supernodeId}'] > svg > g > g[data-id^='node_grp_${inst}']`;
 	return selector;
 }
 
