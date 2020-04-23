@@ -62,3 +62,17 @@ Cypress.Commands.add("getCountCommentLinks", (pipeline) => {
 	});
 	return count;
 });
+
+Cypress.Commands.add("clearMessagesFromAllNodes", () => {
+	cy.document().then((doc) => {
+		cy.getCanvasData()
+			.then((canvasData) => {
+				canvasData.pipelines.forEach((pipeline) => {
+					pipeline.nodes.forEach((node) => {
+						delete node.messages;
+					});
+				});
+				doc.canvasController.getObjectModel().setCanvasInfo(canvasData);
+			});
+	});
+});

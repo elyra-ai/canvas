@@ -238,3 +238,51 @@ Cypress.Commands.add("verifyDecorationHandlerEntryInConsole", (decoratorId) => {
 		expect(lastEventLog.data).to.equal(decoratorId);
 	});
 });
+
+Cypress.Commands.add("verifyErrorMarkerOnNode", (nodeName) => {
+	cy.getNodeForLabel(nodeName)
+		.find(".d3-error-circle")
+		.should("have.length", 1);
+});
+
+Cypress.Commands.add("verifyWarningMarkerOnNode", (nodeName) => {
+	cy.getNodeForLabel(nodeName)
+		.find(".d3-warning-circle")
+		.should("have.length", 1);
+});
+
+Cypress.Commands.add("verifyNoErrorOrWarningMarkerOnNode", (nodeName) => {
+	cy.getNodeForLabel(nodeName)
+		.then((node) => {
+			// Verify error marker does not exist
+			cy.wrap(node)
+				.find(".d3-error-circle")
+				.should("not.exist");
+
+			// Verify warning marker does not exist
+			cy.wrap(node)
+				.find(".d3-error-warning")
+				.should("not.exist");
+		});
+});
+
+Cypress.Commands.add("verifyErrorMarkerOnNodeInSupernode", (nodeName, supernodeName) => {
+	cy.getNodeForLabelInSupernode(nodeName, supernodeName)
+		.find(".d3-error-circle")
+		.should("have.length", 1);
+});
+
+Cypress.Commands.add("verifyNoErrorOrWarningMarkerOnNodeInSupernode", (nodeName, supernodeName) => {
+	cy.getNodeForLabelInSupernode(nodeName, supernodeName)
+		.then((node) => {
+			// Verify error marker does not exist
+			cy.wrap(node)
+				.find(".d3-error-circle")
+				.should("not.exist");
+
+			// Verify warning marker does not exist
+			cy.wrap(node)
+				.find(".d3-error-warning")
+				.should("not.exist");
+		});
+});
