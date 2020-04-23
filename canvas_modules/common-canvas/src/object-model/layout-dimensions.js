@@ -343,6 +343,10 @@ const haloDefaultLayout = {
 		snapToGridX: "25%",
 		snapToGridY: "20%",
 
+		// Indicates the proximity to a node, when dragging a new connection,
+		// to switch the data-new-link-over attribute to "yes".
+		nodeProximity: 20,
+
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
 		autoLayoutInitialMarginY: 50,
@@ -680,6 +684,10 @@ const portsHorizontalDefaultLayout = {
 		snapToGridX: "20%",
 		snapToGridY: "33.33%",
 
+		// Indicates the proximity to a node, when dragging a new connection,
+		// to switch the data-new-link-over attribute to "yes".
+		nodeProximity: 20,
+
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
 		autoLayoutInitialMarginY: 50,
@@ -1016,6 +1024,10 @@ const portsVerticalDefaultLayout = {
 		// Sizes of snap to grid as a percentage of default node height and width
 		snapToGridX: "25%",
 		snapToGridY: "20%",
+
+		// Indicates the proximity to a node, when dragging a new connection,
+		// to switch the data-new-link-over attribute to "yes".
+		nodeProximity: 20,
 
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
