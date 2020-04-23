@@ -735,7 +735,7 @@ export default class SVGCanvasRenderer {
 	// called as a new link is being drawn towards a target node to highlight
 	// the target node.
 	setNewLinkOverNode() {
-		const node = this.getNodeAtMousePos(30);
+		const node = this.getNodeAtMousePos(this.canvasLayout.nodeProximity);
 		if (node && node.id !== this.drawingNewLinkData.srcObjId &&
 				((this.drawingNewLinkData.action === "node-node" && !this.isPortConnected(node)) ||
 					(this.drawingNewLinkData.action === "comment-node" && !this.isSrcObjConnectedToNode(this.drawingNewLinkData.srcObjId, node.id)))) {
@@ -771,7 +771,7 @@ export default class SVGCanvasRenderer {
 	// Removes the data-new-link-over attribute used for highlighting a node
 	// that a new link is being dragged towards or over.
 	setNewLinkOverNodeCancel() {
-		const node = this.getNodeAtMousePos(40);
+		const node = this.getNodeAtMousePos(this.canvasLayout.nodeProximity);
 		this.setNewLinkOverNodeHighlighting(node, false);
 		this.dragNewLinkOverNode = null;
 	}
