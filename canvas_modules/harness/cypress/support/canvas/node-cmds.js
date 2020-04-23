@@ -113,10 +113,25 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 });
 
 Cypress.Commands.add("getNumberOfSelectedNodes", () => {
-	cy.get(".d3-node-selection-highlight")
-		.then((nodes) => {
-			const selectedNodes = nodes.filter((idx) => nodes[idx].getAttribute("data-selected") === "yes");
-			return selectedNodes.length;
+	cy.getSelectedNodes()
+		.then((selectedNodes) => selectedNodes.length);
+});
+
+Cypress.Commands.add("getSelectedNodes", () => {
+	cy.document().then((doc) => {
+		const selectedNodes = doc.canvasController.getSelectedNodes();
+		return selectedNodes;
+	});
+});
+
+Cypress.Commands.add("isNodeSelected", (nodeName) => {
+	cy.getSelectedNodes()
+		.then((selectedNodes) => {
+			const idx = selectedNodes.findIndex((selNode) => selNode.label === nodeName);
+			if (idx > -1) {
+				return true;
+			}
+			return false;
 		});
 });
 

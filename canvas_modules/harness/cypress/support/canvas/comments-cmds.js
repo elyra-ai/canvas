@@ -65,10 +65,25 @@ Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 });
 
 Cypress.Commands.add("getNumberOfSelectedComments", () => {
-	cy.get(".d3-comment-selection-highlight")
-		.then((comments) => {
-			const selectedComments = comments.filter((idx) => comments[idx].getAttribute("data-selected") === "yes");
-			return selectedComments.length;
+	cy.getSelectedComments()
+		.then((selectedComments) => selectedComments.length);
+});
+
+Cypress.Commands.add("getSelectedComments", () => {
+	cy.document().then((doc) => {
+		const selectedComments = doc.canvasController.getSelectedComments();
+		return selectedComments;
+	});
+});
+
+Cypress.Commands.add("isCommentSelected", (commentText) => {
+	cy.getSelectedComments()
+		.then((selectedComments) => {
+			const idx = selectedComments.findIndex((selComment) => selComment.label === commentText);
+			if (idx > -1) {
+				return true;
+			}
+			return false;
 		});
 });
 
