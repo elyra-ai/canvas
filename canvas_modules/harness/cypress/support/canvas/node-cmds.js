@@ -116,3 +116,11 @@ Cypress.Commands.add("clickDecoratorHotspotOnNode", (decoratorId, nodeName) => {
 		.find(`.d3-node-dec-outline[data-id=node_dec_outln_0_${decoratorId}]`)
 		.click();
 });
+
+Cypress.Commands.add("dragDeriveNodeAtPosition", (canvasX, canvasY) => {
+	const dataTransfer = new DataTransfer();
+	cy.get("#harness-sidePanelNodeDraggable")
+		.trigger("dragstart", { dataTransfer });
+	cy.get("#harness-app-container")
+		.trigger("drop", canvasX, canvasY, { dataTransfer });
+});
