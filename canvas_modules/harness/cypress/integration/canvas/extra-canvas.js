@@ -29,7 +29,7 @@ describe("Test of extra canvas node operation", function() {
 		// Drag a node from palette to canvas
 		cy.clickToolbarPaletteOpenInExtraCanvas();
 		cy.clickCategory("Field Ops");
-		cy.dragNodeAtPosition("Filler", 380, 480);
+		cy.dragNodeToPosition("Filler", 380, 480);
 		cy.clickToolbarPaletteCloseInExtraCanvas();
 		cy.verifyNumberOfNodesInExtraCanvas(9);
 

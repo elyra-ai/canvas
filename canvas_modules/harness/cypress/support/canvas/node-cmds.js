@@ -125,7 +125,7 @@ Cypress.Commands.add("dragDeriveNodeAtPosition", (canvasX, canvasY) => {
 		.trigger("drop", canvasX, canvasY, { dataTransfer });
 });
 
-Cypress.Commands.add("dragNodeAtPosition", (nodeLabel, canvasX, canvasY) => {
+Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 	cy.document().then((doc) => {
 		const dataTransfer = new DataTransfer();
 		// Palette Layout - Modal
