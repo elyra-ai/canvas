@@ -43,7 +43,13 @@ Cypress.Commands.add("clickSubPanelButtonInRow", (controlId, row) => {
 });
 
 Cypress.Commands.add("setTextFieldValue", (controlId, labelText) => {
+	// Replace the existing text with new text in input field by
+	// selecting all the text and typing new text
+	// This is a workaround for issue -
+	// cy.type() on input[type='number'] prepends text to current value instead of appending
 	cy.get("div[data-id='properties-" + controlId + "']").find("input")
+		.focus()
+		.type("{selectall}")
 		.type(labelText);
 });
 

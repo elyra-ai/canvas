@@ -18,8 +18,20 @@ Cypress.Commands.add("clickToolbarPaletteOpen", () => {
 	cy.get("#palette-open-action").click();
 });
 
+Cypress.Commands.add("clickToolbarPaletteOpenInExtraCanvas", () => {
+	cy.get("#common-canvas-items-container-1")
+		.find("#palette-open-action")
+		.click();
+});
+
 Cypress.Commands.add("clickToolbarPaletteClose", () => {
 	cy.get("#palette-close-action").click();
+});
+
+Cypress.Commands.add("clickToolbarPaletteCloseInExtraCanvas", () => {
+	cy.get("#common-canvas-items-container-1")
+		.find("#palette-close-action")
+		.click();
 });
 
 Cypress.Commands.add("clickToolbarStop", () => {

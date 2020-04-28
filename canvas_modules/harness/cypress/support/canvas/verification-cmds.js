@@ -42,6 +42,16 @@ Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 	});
 });
 
+Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
+	cy.get("#canvas-div-1").find(".node-image")
+		.should("have.length", noOfNodes);
+
+	// verify the number of nodes in the internal object model
+	cy.getPipelineForExtraCanvas().then((extraCanvasPipeline) => {
+		cy.getCountNodes(extraCanvasPipeline).should("eq", noOfNodes);
+	});
+});
+
 Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(".d3-data-link").length) {
@@ -236,6 +246,14 @@ Cypress.Commands.add("verifyDecorationHandlerEntryInConsole", (decoratorId) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc);
 		expect(lastEventLog.event).to.equal(`decorationHandler() Decoration ID = ${decoratorId}`);
 		expect(lastEventLog.data).to.equal(decoratorId);
+	});
+});
+
+Cypress.Commands.add("verifyApplyPropertyChangesEntryInConsole", (propertyValue) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
+		expect("applyPropertyChanges()").to.equal(lastEventLog.event);
+		expect(propertyValue).to.equal(lastEventLog.data.form.samplingRatio);
 	});
 });
 
