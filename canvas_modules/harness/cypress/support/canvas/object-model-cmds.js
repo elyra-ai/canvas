@@ -21,10 +21,24 @@ Cypress.Commands.add("getCanvasData", () => {
 	});
 });
 
+Cypress.Commands.add("getCanvasDataForExtraCanvas", () => {
+	cy.document().then((doc) => {
+		const extraCanvasData = doc.canvasController2.getCanvasInfo();
+		return extraCanvasData;
+	});
+});
+
 Cypress.Commands.add("getPipeline", () => {
 	cy.getCanvasData().then((canvasData) => {
 		const pipeline = canvasData.pipelines[0];
 		return pipeline;
+	});
+});
+
+Cypress.Commands.add("getPipelineForExtraCanvas", () => {
+	cy.getCanvasDataForExtraCanvas().then((extraCanvasData) => {
+		const extraCanvasPipeline = extraCanvasData.pipelines[0];
+		return extraCanvasPipeline;
 	});
 });
 

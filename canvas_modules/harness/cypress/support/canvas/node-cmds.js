@@ -124,3 +124,29 @@ Cypress.Commands.add("dragDeriveNodeAtPosition", (canvasX, canvasY) => {
 	cy.get("#harness-app-container")
 		.trigger("drop", canvasX, canvasY, { dataTransfer });
 });
+
+Cypress.Commands.add("dragNodeAtPosition", (nodeLabel, canvasX, canvasY) => {
+	cy.document().then((doc) => {
+		const dataTransfer = new DataTransfer();
+		// Palette Layout - Modal
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+			// drag the node to the canvas
+			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel)
+				.trigger("dragstart", { dataTransfer });
+			cy.get("#harness-app-container")
+				.trigger("drop", canvasX, canvasY, { dataTransfer });
+		} else {
+			// Palette Layout - Flyout
+			cy.get(".palette-list-item-text-div > span").contains(nodeLabel)
+				.trigger("dragstart", { dataTransfer });
+			cy.get("#harness-app-container")
+				.trigger("drop", canvasX, canvasY, { dataTransfer });
+		}
+	});
+});
+
+Cypress.Commands.add("deleteNode", (nodeLabel) => {
+	// Delete node from context menu
+	cy.getNodeForLabel(nodeLabel).rightclick();
+	cy.clickOptionFromContextMenu("Delete");
+});

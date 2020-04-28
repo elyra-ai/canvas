@@ -28,26 +28,42 @@ Cypress.Commands.add("inRegularCanvas", () => {
 // `cy.log()` command's output can be seen on the screen along with test steps
 Cypress.Commands.overwrite("log", (subject, message) => cy.task("log", message));
 
-Cypress.Commands.add("openCanvasDefinition", (canvasFileName) => {
+Cypress.Commands.add("toggleCommonCanvasSidePanel", () => {
 	cy.get("#harness-action-bar-sidepanel-canvas").click();
+});
+
+Cypress.Commands.add("openCanvasDefinition", (canvasFileName) => {
+	cy.toggleCommonCanvasSidePanel();
 	cy.get("#harness-sidepanel-canvas-dropdown").select(canvasFileName);
 	// Wait until we can get a node from the canvas before proceeding. This
 	// allows the canvas to load and display before any more test case steps
 	// are executed. Note: this won't work if the testcase selects a second
 	// canvas while an existing canvas with nodes is displayed.
 	cy.get(".d3-node-group");
-	cy.get("#harness-action-bar-sidepanel-canvas").click();
+	cy.toggleCommonCanvasSidePanel();
+});
+
+Cypress.Commands.add("openCanvasDefinitionForExtraCanvas", (canvasFileName) => {
+	cy.document().then((doc) => {
+		doc.setCanvasDropdownFile2(canvasFileName);
+	});
 });
 
 Cypress.Commands.add("openCanvasPalette", (paletteName) => {
-	cy.get("#harness-action-bar-sidepanel-canvas").click();
+	cy.toggleCommonCanvasSidePanel();
 	cy.get("#harness-sidepanel-palette-dropdown").select(paletteName);
 	// Wait until we can get a palette flyout category from the canvas before proceeding. This
 	// allows the canvas to load and display before any more test case steps
 	// are executed. Note: this won't work if the testcase selects a second
 	// canvas while an existing canvas with nodes is displayed.
 	cy.get(".palette-flyout-category");
-	cy.get("#harness-action-bar-sidepanel-canvas").click();
+	cy.toggleCommonCanvasSidePanel();
+});
+
+Cypress.Commands.add("openCanvasPaletteForExtraCanvas", (paletteName) => {
+	cy.document().then((doc) => {
+		doc.setPaletteDropdownSelect2(paletteName);
+	});
 });
 
 Cypress.Commands.add("openCanvasAPI", (api) => {
