@@ -18,6 +18,10 @@ Cypress.Commands.add("getNodeForLabel", (nodeLabel) =>
 	cy.get(getNodeGrpSelector())
 		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel)));
 
+Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
+	cy.getNodeForLabel(nodeLabel)
+		.then((node) => node[0].getAttribute("data-id").substring(11)));
+
 Cypress.Commands.add("getNodeForLabelInSubFlow", (nodeLabel) =>
 	cy.get(getNodeGrpSelectorInSubFlow())
 		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel)));
@@ -143,6 +147,19 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 				.trigger("drop", canvasX, canvasY, { dataTransfer });
 		}
 	});
+});
+
+// This command is not working
+Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
+	cy.getNodeForLabel(nodeLabel)
+		.then((node) => {
+			const srcSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "body") + "']";
+			cy.get(srcSelector)
+				.trigger("mousedown", "top", { button: 0 }, { force: true });
+			cy.get(".svg-area")
+				.trigger("mousemove", canvasX, canvasY, { force: true })
+				.trigger("mouseup", { force: true });
+		});
 });
 
 Cypress.Commands.add("deleteNode", (nodeLabel) => {
