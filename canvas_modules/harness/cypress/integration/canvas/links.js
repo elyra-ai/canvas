@@ -68,9 +68,8 @@ describe("Test node and comment combination link disconnection", function() {
 		cy.verifyNumberOfCommentLinks(3);
 		cy.verifyNumberOfPortDataLinks(5);
 		cy.ctrlOrCmdClickComment(" comment 2");
-		cy.ctrlOrCmdClickNode("Discard Fields");
-		cy.getNodeForLabel("Discard Fields").click()
-			.rightclick();
+		cy.ctrlOrCmdClickNode("Discard Fields").click();
+		cy.getNodeForLabel("Discard Fields").rightclick();
 		cy.clickOptionFromContextMenu("Disconnect");
 		cy.verifyNumberOfCommentLinks(1);
 		cy.verifyNumberOfPortDataLinks(3);
