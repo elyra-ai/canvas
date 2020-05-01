@@ -69,7 +69,7 @@ describe("Test node and comment combination link disconnection", function() {
 		cy.verifyNumberOfPortDataLinks(5);
 
 		// Ctrl/cmd Select comment and node and rightclick on node to display context menu
-		// Following code works fine on localhost but fails on travis build
+		// TODO: Following code works fine on localhost but fails on travis build
 		// cy.ctrlOrCmdClickComment(" comment 2");
 		// cy.getNodeForLabel("Discard Fields").rightclick();
 		// cy.clickOptionFromContextMenu("Disconnect");
@@ -112,7 +112,23 @@ describe("Test elbow connections from multi-port source node do not overlap", fu
 			"M 108 483.5L 128 483.5Q 138 483.5 138 473.5L 138 387Q 138 377 148 377L 319 377"
 		);
 
-		// TODO: Move node on canvas and verify updated link paths
-		// cy.moveNodeToPosition("Neural Net", 50, 530);
+		// Move node on canvas and verify updated link paths
+		cy.moveNodeToPosition("Neural Net", 50, 530);
+		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyLinkPath(
+			"Select3", "outPort6", "Neural Net", "inPort2",
+			"M 108 443.5L 128 443.5Q 138 443.5 138 453.5L 138 500.25Q 138 510.25 " +
+			"128 510.25L 30 510.25Q 20 510.25 20 520.25L 20 567Q 20 577 30 577L 50 577"
+		);
+		cy.verifyLinkPath(
+			"Select3", "outPort7", "Neural Net", "inPort2",
+			"M 108 463.5L 136 463.5Q 146 463.5 146 473.5L 146 510.25Q 146 520.25 " +
+			"136 520.25L 30 520.25Q 20 520.25 20 530.25L 20 567Q 20 577 30 577L 50 577"
+		);
+		cy.verifyLinkPath(
+			"Select3", "outPort8", "Neural Net", "inPort1",
+			"M 108 483.5L 144 483.5Q 154 483.5 154 493.5L 154 510.25Q 154 520.25 " +
+			"144 520.25L 30 520.25Q 20 520.25 20 530.25L 20 547Q 20 557 30 557L 50 557"
+		);
 	});
 });
