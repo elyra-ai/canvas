@@ -149,16 +149,18 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 	});
 });
 
-// This command is not working
+// Solution found here - https://github.com/cypress-io/cypress/issues/3441#issuecomment-463239982
 Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 	cy.getNodeForLabel(nodeLabel)
 		.then((node) => {
 			const srcSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "body") + "']";
-			cy.get(srcSelector)
-				.trigger("mousedown", "top", { button: 0 }, { force: true });
-			cy.get(".svg-area")
-				.trigger("mousemove", canvasX, canvasY, { force: true })
-				.trigger("mouseup", { force: true });
+			cy.window().then((win) => {
+				cy.get(srcSelector)
+					.trigger("mousedown", "topLeft", { which: 1, view: win });
+				cy.get(".svg-area")
+					.trigger("mousemove", canvasX, canvasY, { view: win })
+					.trigger("mouseup", { which: 1, view: win });
+			});
 		});
 });
 
