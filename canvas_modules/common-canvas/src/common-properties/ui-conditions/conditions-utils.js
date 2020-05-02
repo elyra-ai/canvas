@@ -1029,24 +1029,26 @@ function _injectInvalidFieldDefinition(control, valDefinitions, keyName, control
 
 // key should be 'type', 'measure', or 'modeling_role'. Return the matching metadata given the paramInfo
 function getMetadataFieldMatch(paramInfo, metadata, key) {
-	if (typeof paramInfo.value === "string") {
-		for (let i = 0; i < metadata.length; i++) {
-			var field = metadata[i];
-			if (field.name === paramInfo.value) {
-				if (key === "type") {
-					return field.type;
+	if (paramInfo.value) {
+		if (typeof paramInfo.value === "string") {
+			for (let i = 0; i < metadata.length; i++) {
+				var field = metadata[i];
+				if (field.name === paramInfo.value) {
+					if (key === "type") {
+						return field.type;
+					}
+					return field.metadata[key];
 				}
-				return field.metadata[key];
 			}
-		}
-	} else if (typeof paramInfo.value === "object") {
-		for (var j = 0; j < metadata.length; j++) {
-			var field2 = metadata[j];
-			if (field2.origName === paramInfo.value.field_name && field2.schema === paramInfo.value.link_ref) {
-				if (key === "type") {
-					return field2.type;
+		} else if (typeof paramInfo.value === "object") {
+			for (var j = 0; j < metadata.length; j++) {
+				var field2 = metadata[j];
+				if (field2.origName === paramInfo.value.field_name && field2.schema === paramInfo.value.link_ref) {
+					if (key === "type") {
+						return field2.type;
+					}
+					return field2.metadata[key];
 				}
-				return field2.metadata[key];
 			}
 		}
 	}
