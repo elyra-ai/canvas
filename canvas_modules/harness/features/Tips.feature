@@ -45,7 +45,7 @@ Feature: Tips
 		Then I resize the window size to 1400 width and 800 height
 
 		Given I am on the test harness
-		Given I have set this canvas config ""{"tipConfig": { "palette": false, "nodes": false, "ports": false, "links": false }}""
+		Given I have set this canvas config ""{"selectedTipConfig": { "palette": false, "nodes": false, "ports": false, "links": false }}""
 		Given I have uploaded palette "modelerPalette.json"
 		Given I have uploaded diagram "multiPortsCanvas.json"
 

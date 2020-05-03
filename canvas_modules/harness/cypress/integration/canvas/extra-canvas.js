@@ -17,7 +17,7 @@
 describe("Test of extra canvas node operation", function() {
 	before(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "extraCanvasDisplayed": true });
+		cy.setCanvasConfig({ "selectedExtraCanvasDisplayed": true });
 		cy.inExtraCanvas();
 		cy.openCanvasPaletteForExtraCanvas("modelerPalette.json");
 		cy.openCanvasDefinitionForExtraCanvas("modelerCanvas.json");
@@ -52,7 +52,7 @@ describe("Test of extra canvas node operation", function() {
 describe("Test of extra canvas property edit operation", function() {
 	before(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "extraCanvasDisplayed": true });
+		cy.setCanvasConfig({ "selectedExtraCanvasDisplayed": true });
 		cy.openCanvasDefinition("commentColorCanvas.json");
 		cy.openCanvasPaletteForExtraCanvas("modelerPalette.json");
 		cy.openCanvasDefinitionForExtraCanvas("modelerCanvas.json");
