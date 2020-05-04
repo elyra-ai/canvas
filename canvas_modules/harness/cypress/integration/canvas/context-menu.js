@@ -64,7 +64,8 @@ describe("Test of context menu", function() {
 		cy.verifySubmenuPushedUpBy(91);
 
 		// Test that, when a set of objects are selected, a click opening the context menu will not clear the selections
-		cy.get("#canvas-div-0").click(1, 1);
+		cy.get("#canvas-div-0").click(1, 1); // To close context menu
+		cy.get("#canvas-div-0").click(1, 1); // To remove selection on Neural Net node
 		cy.ctrlOrCmdClickNode("C5.0");
 		cy.ctrlOrCmdClickNode("Neural Net");
 		cy.ctrlOrCmdClickNode("Define Types");

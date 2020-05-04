@@ -104,7 +104,12 @@ Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
 
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	// Get the os name to decide whether to click ctrl or cmd
-	cy.useCtrlOrCmdKey().then((selectedKey) => cy.getNodeForLabel(nodeName).type(selectedKey, { release: false }));
+	cy.useCtrlOrCmdKey().then((selectedKey) => {
+		cy.get("body")
+			.type(selectedKey, { release: false })
+			.getNodeForLabel(nodeName)
+			.click();
+	});
 });
 
 Cypress.Commands.add("getNumberOfSelectedNodes", () => {
@@ -180,3 +185,4 @@ Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
 		};
 		return nodeDimensions;
 	});
+});

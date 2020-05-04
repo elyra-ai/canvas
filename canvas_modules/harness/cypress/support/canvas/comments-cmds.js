@@ -56,7 +56,12 @@ function findGrpForText(grpArray, commentText) {
 Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 	// Get the os name to decide whether to click ctrl or cmd
 	cy.useCtrlOrCmdKey()
-		.then((selectedKey) => cy.getCommentWithText(commentText).type(selectedKey, { release: false }));
+		.then((selectedKey) => {
+			cy.get("body")
+				.type(selectedKey, { release: false })
+				.getCommentWithText(commentText)
+				.click();
+		});
 });
 
 Cypress.Commands.add("getNumberOfSelectedComments", () => {
@@ -115,13 +120,12 @@ Cypress.Commands.add("dragAndDrop", (srcSelector, srcXPos, srcYPos, trgSelector,
 		.trigger("mouseup");
 });
 
+// This command is not working as expected
 Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
 			const srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
 			cy.getCommentDimensions(srcSelector).then((commentDimensions) => {
-				cy.log(srcSelector);
-				cy.log(commentDimensions);
 				const offsetForSizingArea = 6; // Offset from edge of body to somewhere in sizing area
 
 				if (corner === "south-east") {
@@ -131,9 +135,15 @@ Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight)
 					const canvasX = commentDimensions.x_pos + newWidth + offsetForSizingArea;
 					const canvasY = commentDimensions.y_pos + newHeight + offsetForSizingArea;
 
-					cy.log(startPosX + " + " + startPosY + " + " + canvasX + " + " + canvasY);
-
-					cy.dragAndDrop(srcSelector, startPosX, startPosY, ".svg-area", canvasX, canvasY);
+					cy.window().then((win) => {
+						cy.get(srcSelector)
+							.trigger("mousedown", startPosX, startPosY, { which: 1, view: win, force: true })
+							.trigger("dragstart")
+							.trigger("drag");
+						cy.get(".svg-area")
+							.trigger("mousemove", canvasX, canvasY, { view: win })
+							.trigger("mouseup", canvasX, canvasY, { which: 1, view: win });
+					});
 				}
 			});
 		});
