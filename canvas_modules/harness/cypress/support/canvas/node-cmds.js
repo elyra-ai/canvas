@@ -104,7 +104,12 @@ Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
 
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	// Get the os name to decide whether to click ctrl or cmd
-	cy.useCtrlOrCmdKey().then((selectedKey) => cy.getNodeForLabel(nodeName).type(selectedKey, { release: false }));
+	cy.useCtrlOrCmdKey().then((selectedKey) => {
+		cy.get("body")
+			.type(selectedKey, { release: false })
+			.getNodeForLabel(nodeName)
+			.click();
+	});
 });
 
 Cypress.Commands.add("getNumberOfSelectedNodes", () => {
@@ -168,4 +173,16 @@ Cypress.Commands.add("deleteNode", (nodeLabel) => {
 	// Delete node from context menu
 	cy.getNodeForLabel(nodeLabel).rightclick();
 	cy.clickOptionFromContextMenu("Delete");
+});
+
+Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
+	cy.getNodeForLabel(nodeLabel).then((node) => {
+		const nodeDimensions = {
+			x_pos: node[0].__data__.x_pos,
+			y_pos: node[0].__data__.y_pos,
+			width: node[0].__data__.width,
+			height: node[0].__data__.height
+		};
+		return nodeDimensions;
+	});
 });

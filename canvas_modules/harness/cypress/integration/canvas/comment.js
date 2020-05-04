@@ -32,3 +32,76 @@ describe("Test of canvas comments", function() {
 		});
 	});
 });
+
+describe("Test creating a comment in main flow with toolbar and context menu", function() {
+	before(() => {
+		cy.visit("/");
+		cy.openCanvasPalette("modelerPalette.json");
+	});
+
+	it("Test creating a comment using context menu, link comment to node, resize the comment", function() {
+		// Create a new comment and add text to it
+		cy.rightClickToDisplayContextMenu(500, 100);
+		cy.clickOptionFromContextMenu("New comment");
+		cy.editTextInComment("", "Hello Canvas!");
+		cy.verifyNumberOfComments(1);
+
+		// Test manually linking the comment to a node
+		cy.verifyNumberOfCommentLinks(0);
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("Record Ops");
+		cy.dragNodeToPosition("Sample", 800, 450);
+		cy.linkCommentToNode("Hello Canvas!", "Sample");
+		cy.verifyNumberOfCommentLinks(1);
+
+		// TODO: Test sizing the comment, using the sizing area, to the right and downwards.
+		// cy.resizeComment("Hello Canvas!", "south-east", 120, 80);
+
+	});
+});
+
+describe("Test creating comment from toolbar and editing them within supernodes", function() {
+	before(() => {
+		cy.visit("/");
+		cy.openCanvasPalette("modelerPalette.json");
+	});
+
+	it("Test creating a comment using toolbar, add comment to node, add comment to supernode," +
+	" edit comments in nested supernode", function() {
+		// Create a node so we can add a comment which is linked to it
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("Import");
+		cy.dragNodeToPosition("Var. File", 400, 300);
+
+		// Add a comment using the toolbar (which should link the node to the comment)
+		cy.getNodeForLabel("Var. File").click();
+		cy.clickToolbarAddComment();
+		cy.verifyNumberOfCommentLinks(1);
+		cy.editTextInComment("", "Inner node");
+
+		// Add the node and comment to a supernode
+		cy.getNodeForLabel("Var. File").rightclick();
+		cy.clickOptionFromContextMenu("Create supernode");
+
+		// Add a comment to the supernode
+		cy.getNodeForLabel("Supernode").click();
+		cy.clickToolbarAddComment();
+		cy.editTextInComment("", "Inner Supernode");
+
+		// Create a supernode to contain the supernode and its comment
+		cy.getNodeForLabel("Supernode").rightclick();
+		cy.clickOptionFromContextMenu("Create supernode");
+
+		// Open the supernode
+		cy.getNodeForLabel("Supernode").rightclick();
+		cy.clickOptionFromContextMenu("Expand supernode");
+
+		// Open the inner supernode
+		cy.getNodeForLabelInSubFlow("Supernode").rightclick();
+		cy.clickOptionFromContextMenu("Expand supernode");
+
+		// Test editing the inner comment and the nested comment
+		cy.editTextInCommentInSubFlow("Inner Supernode", "New Inner Supernode text");
+		cy.editTextInCommentInSubFlowNested("Inner node", "New Inner node text");
+	});
+});
