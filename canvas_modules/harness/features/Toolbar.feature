@@ -108,7 +108,7 @@ Feature: Toolbar
 		Then I edit the comment "" with text "Comment 4"
 		Then I verify the "Comment 4" comment transform is "translate(-804.7573553719008, -344.4953719008264)"
 
-		Given I have set this canvas config ""{"extraCanvasDisplayed": true}""
+		Given I have set this canvas config ""{"selectedExtraCanvasDisplayed": true}""
 		Then I pause for 0.5 seconds
 
 		Then I click the create comment button on the toolbar on the extra canvas

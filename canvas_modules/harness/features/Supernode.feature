@@ -135,7 +135,7 @@ Feature: Supernode
 		Then I resize the window size to 1400 width and 800 height
 
 		Given I am on the test harness
-		Given I have set this canvas config ""{"extraCanvasDisplayed": true}""
+		Given I have set this canvas config ""{"selectedExtraCanvasDisplayed": true}""
 		Given I have uploaded diagram "supernodeCanvas.json"
 
 		Then I click the "Supernode" node to select it

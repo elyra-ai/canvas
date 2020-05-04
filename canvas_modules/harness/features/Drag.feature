@@ -82,7 +82,7 @@ Feature: Drag
 			Then I resize the window size to 1330 width and 660 height
 
 			Given I am on the test harness
-			Given I have set this canvas config ""{"dragWithoutSelect": true}""
+			Given I have set this canvas config ""{"selectedDragWithoutSelect": true}""
 			Given I have uploaded diagram "allTypesCanvas.json"
 
 			# Try dragging a single selected node
