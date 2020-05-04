@@ -79,7 +79,7 @@ Cypress.Commands.add("getSelectedComments", () => {
 Cypress.Commands.add("isCommentSelected", (commentText) => {
 	cy.getSelectedComments()
 		.then((selectedComments) => {
-			const idx = selectedComments.findIndex((selComment) => selComment.label === commentText);
+			const idx = selectedComments.findIndex((selComment) => selComment.content === commentText);
 			if (idx > -1) {
 				return true;
 			}
@@ -109,6 +109,20 @@ Cypress.Commands.add("editTextInCommentInSubFlowNested", (originalCommentText, n
 		.get("textarea")
 		.clear()
 		.type(newCommentText);
+});
+
+Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) => {
+	cy.getCommentWithText(commentText)
+		.then((comment) => {
+			const srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
+			cy.window().then((win) => {
+				cy.get(srcSelector)
+					.trigger("mousedown", "topLeft", { which: 1, view: win });
+				cy.get("#canvas-div-0")
+					.trigger("mousemove", canvasX, canvasY, { view: win })
+					.trigger("mouseup", { which: 1, view: win });
+			});
+		});
 });
 
 Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {

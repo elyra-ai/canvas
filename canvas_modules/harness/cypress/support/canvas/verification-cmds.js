@@ -20,9 +20,70 @@ Cypress.Commands.add("verifyNodeTransform", (nodeLabel, transformValue) => {
 		.should("have.attr", "transform", transformValue);
 });
 
+Cypress.Commands.add("verifyCommentTransform", (commentText, transformValue) => {
+	cy.getCommentWithText(commentText)
+		.should("have.attr", "transform", transformValue);
+});
+
 Cypress.Commands.add("verifyNodeTransformInSubFlow", (nodeLabel, transformValue) => {
 	cy.getNodeForLabelInSubFlow(nodeLabel)
 		.should("have.attr", "transform", transformValue);
+});
+
+Cypress.Commands.add("verifyNodeIsSelected", (nodeName) => {
+	// Verify node is selected on document
+	cy.getNodeForLabel(nodeName)
+		.then((node) => {
+			const nodeOutlineSelector =
+			"[data-id='" + node[0].getAttribute("data-id").replace("grp", "sel_outline") + "']";
+			cy.get(nodeOutlineSelector)
+				.should("have.attr", "data-selected", "yes");
+		});
+
+	// Verify node is selected in object model
+	cy.isNodeSelected(nodeName).should("eq", true);
+});
+
+Cypress.Commands.add("verifyCommentIsSelected", (commentText) => {
+	// Verify comment is selected on document
+	cy.getCommentWithText(commentText)
+		.then((comment) => {
+			const commentOutlineSelector =
+			"[data-id='" + comment[0].getAttribute("data-id").replace("grp", "sel_outline") + "']";
+			cy.get(commentOutlineSelector)
+				.should("have.attr", "data-selected", "yes");
+		});
+
+	// Verify comment is selected in object model
+	cy.isCommentSelected(commentText).should("eq", true);
+});
+
+Cypress.Commands.add("verifyNodeIsNotSelected", (nodeName) => {
+	// Verify node is not selected on document
+	cy.getNodeForLabel(nodeName)
+		.then((node) => {
+			const nodeOutlineSelector =
+			"[data-id='" + node[0].getAttribute("data-id").replace("grp", "sel_outline") + "']";
+			cy.get(nodeOutlineSelector)
+				.should("have.attr", "data-selected", "no");
+		});
+
+	// Verify node is not selected in object model
+	cy.isNodeSelected(nodeName).should("eq", false);
+});
+
+Cypress.Commands.add("verifyCommentIsNotSelected", (commentText) => {
+	// Verify comment is not selected on document
+	cy.getCommentWithText(commentText)
+		.then((comment) => {
+			const commentOutlineSelector =
+			"[data-id='" + comment[0].getAttribute("data-id").replace("grp", "sel_outline") + "']";
+			cy.get(commentOutlineSelector)
+				.should("have.attr", "data-selected", "no");
+		});
+
+	// Verify comment is not selected in object model
+	cy.isCommentSelected(commentText).should("eq", false);
 });
 
 Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {

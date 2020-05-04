@@ -177,7 +177,7 @@ Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 			cy.window().then((win) => {
 				cy.get(srcSelector)
 					.trigger("mousedown", "topLeft", { which: 1, view: win });
-				cy.get(".svg-area")
+				cy.get("#canvas-div-0")
 					.trigger("mousemove", canvasX, canvasY, { view: win })
 					.trigger("mouseup", { which: 1, view: win });
 			});
