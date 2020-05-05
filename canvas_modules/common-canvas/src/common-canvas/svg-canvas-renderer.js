@@ -658,8 +658,10 @@ export default class SVGCanvasRenderer {
 	// TypeError: Value being assigned to SVGPoint.x is not a finite floating-point value.
 	// Note: d3Event.scale added to the if below because that property will exist
 	// on Safari when processing a 'gesturechange' event.
+	// Note 2: Add window.Cypress to if below because the other conditions are not
+	// met when running inside Cypress.
 	getMousePos(svg) {
-		if (d3Event instanceof MouseEvent || (d3Event && d3Event.sourceEvent) || d3Event.scale) {
+		if (d3Event instanceof MouseEvent || (d3Event && d3Event.sourceEvent) || d3Event.scale || window.Cypress) {
 			// Get mouse position relative to the top level SVG in the Div because,
 			// when we're rendering a sub-flow this.canvasSVG will be the SVG in the supernode.
 			const mousePos = d3.mouse(svg.node());
@@ -4693,7 +4695,6 @@ export default class SVGCanvasRenderer {
 		var yPart = "";
 
 		const transPos = this.getTransformedMousePos();
-
 		if (transPos.x < d.x_pos + cornerResizeArea) {
 			xPart = "w";
 		} else if (transPos.x > d.x_pos + d.width - cornerResizeArea) {

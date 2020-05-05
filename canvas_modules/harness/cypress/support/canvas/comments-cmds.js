@@ -117,34 +117,95 @@ Cypress.Commands.add("dragAndDrop", (srcSelector, srcXPos, srcYPos, trgSelector,
 		.trigger("mousedown", srcXPos, srcYPos, { force: true });
 	cy.get(trgSelector)
 		.trigger("mousemove", trgXPos, trgYPos)
-		.trigger("mouseup");
+		.trigger("mouseup", trgXPos, trgYPos);
 });
 
-// This command is not working as expected
 Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
-			const srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
-			cy.getCommentDimensions(srcSelector).then((commentDimensions) => {
-				const offsetForSizingArea = 6; // Offset from edge of body to somewhere in sizing area
+			const srcBodySelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
+			const srcSizingSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "sizing") + "']";
 
-				if (corner === "south-east") {
-					const startPosX = commentDimensions.width + offsetForSizingArea;
-					const startPosY = commentDimensions.height + offsetForSizingArea;
+			cy.getCommentDimensions(srcBodySelector).then((commentDimensions) => {
+				const offsetForSizingArea = 10; // Offset from edge of body to somewhere in sizing area
+				let canvasX;
+				let canvasY;
+				let startPosition;
 
-					const canvasX = commentDimensions.x_pos + newWidth + offsetForSizingArea;
-					const canvasY = commentDimensions.y_pos + newHeight + offsetForSizingArea;
+				if (corner === "north-west") {
+					canvasX = commentDimensions.x_pos - (newWidth - commentDimensions.width) - offsetForSizingArea;
+					canvasY = commentDimensions.y_pos - (newHeight - commentDimensions.height) - offsetForSizingArea;
+					startPosition = "topLeft";
 
-					cy.window().then((win) => {
-						cy.get(srcSelector)
-							.trigger("mousedown", startPosX, startPosY, { which: 1, view: win, force: true })
-							.trigger("dragstart")
-							.trigger("drag");
-						cy.get(".svg-area")
-							.trigger("mousemove", canvasX, canvasY, { view: win })
-							.trigger("mouseup", canvasX, canvasY, { which: 1, view: win });
-					});
+				} else if (corner === "north-east") {
+					canvasX = commentDimensions.x_pos + newWidth + offsetForSizingArea;
+					canvasY = commentDimensions.y_pos - (newHeight - commentDimensions.height) - offsetForSizingArea;
+					startPosition = "topRight";
+
+				} else if (corner === "south-west") {
+					canvasX = commentDimensions.x_pos - (newWidth - commentDimensions.width) - offsetForSizingArea;
+					canvasY = commentDimensions.y_pos + newHeight + offsetForSizingArea;
+					startPosition = "bottomLeft";
+
+				} else { // "south-east"
+					canvasX = commentDimensions.x_pos + newWidth + offsetForSizingArea;
+					canvasY = commentDimensions.y_pos + newHeight + offsetForSizingArea;
+					startPosition = "bottomRight";
 				}
+
+				cy.window().then((win) => {
+					cy.get(srcSizingSelector)
+						.trigger("mouseenter", startPosition, { view: win })
+						.trigger("mousedown", startPosition, { view: win });
+					cy.get(".svg-area")
+						.trigger("mousemove", canvasX, canvasY, { view: win })
+						.trigger("mouseup", canvasX, canvasY, { view: win });
+				});
+			});
+		});
+});
+
+Cypress.Commands.add("resizeCommentOneDirection", (commentText, corner, newValue) => {
+	cy.getCommentWithText(commentText)
+		.then((comment) => {
+			const srcBodySelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
+			const srcSizingSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "sizing") + "']";
+
+			cy.getCommentDimensions(srcBodySelector).then((commentDimensions) => {
+				const offsetForSizingArea = 10; // Offset from edge of body to somewhere in sizing area
+				let canvasX;
+				let canvasY;
+				let startPosition;
+
+				if (corner === "north") {
+					canvasX = commentDimensions.x_pos + (commentDimensions.width / 2);
+					canvasY = commentDimensions.y_pos - (newValue - commentDimensions.height) - offsetForSizingArea;
+					startPosition = "top";
+
+				} else if (corner === "east") {
+					canvasX = commentDimensions.x_pos + newValue + offsetForSizingArea;
+					canvasY = commentDimensions.y_pos - (commentDimensions.height / 2);
+					startPosition = "right";
+
+				} else if (corner === "west") {
+					canvasX = commentDimensions.x_pos - (newValue - commentDimensions.width) - offsetForSizingArea;
+					canvasY = commentDimensions.y_pos + (commentDimensions.height / 2);
+					startPosition = "left";
+
+				} else { // "south"
+					canvasX = commentDimensions.x_pos + (commentDimensions.width / 2);
+					canvasY = commentDimensions.y_pos + newValue + offsetForSizingArea;
+					startPosition = "bottom";
+				}
+
+				cy.window().then((win) => {
+					cy.get(srcSizingSelector)
+						.trigger("mouseenter", startPosition, { view: win })
+						.trigger("mousedown", startPosition, { view: win });
+					cy.get(".svg-area")
+						.trigger("mousemove", canvasX, canvasY, { view: win })
+						.trigger("mouseup", canvasX, canvasY, { view: win });
+				});
 			});
 		});
 });
