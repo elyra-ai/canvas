@@ -147,6 +147,8 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		cy.ctrlOrCmdClickNode("Binding (entry) node");
 		cy.ctrlOrCmdClickComment("The 4 different node types");
 		cy.log("blah101112");
+		cy.getSelectedNodes().then((sel) => sel.forEach((node) => cy.log(node.label)));
+		cy.getSelectedComments().then((sel) => sel.forEach((comment) => cy.log(comment.content)));
 
 		// Verify 2 nodes and 1 comment is selected
 		cy.verifyNodeIsSelected("Execution node");
