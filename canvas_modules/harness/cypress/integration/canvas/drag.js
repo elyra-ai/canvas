@@ -144,6 +144,11 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 
 		// Select 2 nodes and 1 comment
 		cy.clickToolbarUndo();
+		cy.get("#canvas-div-0").click();
+		cy.log("After clicking somewhere on canvas to clear selection");
+		cy.getSelectedNodes().then((sel) => sel.forEach((node) => cy.log(node.label)));
+		cy.getSelectedComments().then((sel) => sel.forEach((comment) => cy.log(comment.content)));
+		cy.ctrlOrCmdClickNode("Execution node");
 		cy.ctrlOrCmdClickNode("Binding (entry) node");
 		cy.ctrlOrCmdClickComment("The 4 different node types");
 		cy.log("blah101112");
