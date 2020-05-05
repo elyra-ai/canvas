@@ -24,7 +24,7 @@ describe("Test to see if regular selection and drag behavior works " +
 	it("Test dragging single and multiple selected nodes, " +
   "test dragging a node and comment which is not selected", function() {
 		cy.document().then((doc) => {
-			cy.log("Hahaha");
+			cy.log("blah11111");
 			cy.log(doc.canvasController.getCanvasConfig().enableDragWithoutSelect);
 		});
 		// Select one node
@@ -114,14 +114,14 @@ describe("Test to see if regular selection and drag behavior works " +
 describe("Test to see if selection works with dragWithoutSelect set to true", function() {
 	before(() => {
 		cy.visit("/");
-		// cy.setCanvasConfig({ "selectedDragWithoutSelect": true });
+		cy.setCanvasConfig({ "selectedDragWithoutSelect": true });
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
 	it("Test dragging single and multiple selected nodes, " +
   "test dragging a node and comment which is not selected", function() {
 		cy.document().then((doc) => {
-			cy.log("Hahaha");
+			cy.log("blah22222");
 			cy.log(doc.canvasController.getCanvasConfig().enableDragWithoutSelect);
 		});
 		// Select one node
@@ -141,14 +141,9 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 
 		// Select 2 nodes and 1 comment
 		cy.clickToolbarUndo();
-		cy.get("#canvas-div-0").click();
-		cy.log("After clicking somewhere on canvas to clear selection");
-		cy.getSelectedNodes().then((sel) => sel.forEach((node) => cy.log(node.label)));
-		cy.getSelectedComments().then((sel) => sel.forEach((comment) => cy.log(comment.content)));
-		cy.getNodeForLabel("Execution node").click();
 		cy.ctrlOrCmdClickNode("Binding (entry) node");
 		cy.ctrlOrCmdClickComment("The 4 different node types");
-		cy.log("blah101112");
+		cy.log("blah33333");
 		cy.getSelectedNodes().then((sel) => sel.forEach((node) => cy.log(node.label)));
 		cy.getSelectedComments().then((sel) => sel.forEach((comment) => cy.log(comment.content)));
 
@@ -159,13 +154,13 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		cy.verifyNodeIsNotSelected("Binding (exit) node");
 		cy.verifyNodeIsNotSelected("Model Node");
 		cy.verifyCommentIsSelected("The 4 different node types");
-		cy.log("blah131415");
+		cy.log("blah44444");
 
 		// Try dragging a couple of selected nodes and a selected comment
 		cy.moveNodeToPosition("Binding (entry) node", 300, 350);
 		cy.verifyNodeTransform("Binding (entry) node", "translate(300, 349.5)");
 		cy.verifyNodeTransform("Execution node", "translate(508, 388.5)");
-		cy.log("blah161718");
+		cy.log("blah55555");
 
 		// Verify 2 nodes and 1 comment is selected after drag
 		cy.verifyNodeIsSelected("Execution node");
@@ -175,54 +170,54 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		cy.verifyNodeIsNotSelected("Model Node");
 		cy.verifyCommentIsSelected("The 4 different node types");
 		cy.clickToolbarUndo();
-		cy.log("blah192021");
+		cy.log("blah66666");
 
 		// Try dragging a node that is not selected -
 		// with dragWithoutSelect set to true this should not select the node
 		// being dragged and should not deselect the three selections
-		// cy.moveNodeToPosition("Super node", 300, 350);
-		// cy.log("blah222324");
+		cy.moveNodeToPosition("Super node", 300, 350);
+		cy.log("blah77777");
 
 		// Verify selections are not cleared after drag - 2 nodes and 1 comment should be selected
-		// cy.verifyNodeIsSelected("Execution node");
-		// cy.verifyNodeIsSelected("Binding (entry) node");
-		// cy.verifyNodeIsNotSelected("Super node");
-		// cy.verifyNodeIsNotSelected("Binding (exit) node");
-		// cy.verifyNodeIsNotSelected("Model Node");
-		// cy.verifyCommentIsSelected("The 4 different node types");
-		// cy.log("blah252627");
+		cy.verifyNodeIsSelected("Execution node");
+		cy.verifyNodeIsSelected("Binding (entry) node");
+		cy.verifyNodeIsNotSelected("Super node");
+		cy.verifyNodeIsNotSelected("Binding (exit) node");
+		cy.verifyNodeIsNotSelected("Model Node");
+		cy.verifyCommentIsSelected("The 4 different node types");
+		cy.log("blah88888");
 
-		// cy.verifyNodeTransform("Super node", "translate(300, 350)");
-		// cy.clickToolbarUndo();
-		// cy.log("blah282930");
+		cy.verifyNodeTransform("Super node", "translate(300, 350)");
+		cy.clickToolbarUndo();
+		cy.log("blah99999");
 
 		// Try dragging a comment that is not selected -
 		// with dragWithoutSelect set to true this should not select the comment
 		// being dragged and should not deselect the three selections
-		// cy.moveCommentToPosition(
-		// 	"This canvas shows the 4 different node types and three link types: node links, " +
-		// 	"association links and comments links.", 300, 350
-		// );
-		// cy.log("blah313233");
+		cy.moveCommentToPosition(
+			"This canvas shows the 4 different node types and three link types: node links, " +
+			"association links and comments links.", 300, 350
+		);
+		cy.log("blah1010");
 
 		// Verify selections are not cleared after drag - 2 nodes and 1 comment should be selected
-		// cy.verifyNodeIsSelected("Execution node");
-		// cy.verifyNodeIsSelected("Binding (entry) node");
-		// cy.verifyNodeIsNotSelected("Super node");
-		// cy.verifyNodeIsNotSelected("Binding (exit) node");
-		// cy.verifyNodeIsNotSelected("Model Node");
-		// cy.verifyCommentIsSelected("The 4 different node types");
-		// cy.verifyCommentIsNotSelected(
-		// 	"This canvas shows the 4 different node types and three link types: node links, " +
-		// 	"association links and comments links."
-		// );
-		// cy.log("blah343536");
+		cy.verifyNodeIsSelected("Execution node");
+		cy.verifyNodeIsSelected("Binding (entry) node");
+		cy.verifyNodeIsNotSelected("Super node");
+		cy.verifyNodeIsNotSelected("Binding (exit) node");
+		cy.verifyNodeIsNotSelected("Model Node");
+		cy.verifyCommentIsSelected("The 4 different node types");
+		cy.verifyCommentIsNotSelected(
+			"This canvas shows the 4 different node types and three link types: node links, " +
+			"association links and comments links."
+		);
+		cy.log("blah101010");
 
-		// cy.verifyCommentTransform(
-		// 	"This canvas shows the 4 different node types and three link types: node links, " +
-		// 	"association links and comments links.", "translate(300, 350)"
-		// );
-		// cy.clickToolbarUndo();
-		// cy.log("blah373839");
+		cy.verifyCommentTransform(
+			"This canvas shows the 4 different node types and three link types: node links, " +
+			"association links and comments links.", "translate(300, 350)"
+		);
+		cy.clickToolbarUndo();
+		cy.log("blah1010101010");
 	});
 });
