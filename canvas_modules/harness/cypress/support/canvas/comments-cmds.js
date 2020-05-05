@@ -61,6 +61,8 @@ Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 				.type(selectedKey, { release: false })
 				.getCommentWithText(commentText)
 				.click();
+			cy.log("Inside ctrlOrCmdClickComment " + commentText);
+			cy.getSelectedComments().then((sel) => sel.forEach((comment) => cy.log(comment.content)));
 		});
 });
 
