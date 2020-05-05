@@ -41,7 +41,7 @@ describe("Test creating a comment in main flow with toolbar and context menu", f
 
 	it("Test creating a comment using context menu, link comment to node, resize the comment", function() {
 		// Create a new comment and add text to it
-		cy.rightClickToDisplayContextMenu(500, 100);
+		cy.rightClickToDisplayContextMenu(400, 100);
 		cy.clickOptionFromContextMenu("New comment");
 		cy.editTextInComment("", "Hello Canvas!");
 		cy.verifyNumberOfComments(1);
@@ -54,8 +54,39 @@ describe("Test creating a comment in main flow with toolbar and context menu", f
 		cy.linkCommentToNode("Hello Canvas!", "Sample");
 		cy.verifyNumberOfCommentLinks(1);
 
-		// TODO: Test sizing the comment, using the sizing area, to the right and downwards.
-		// cy.resizeComment("Hello Canvas!", "south-east", 120, 80);
+		// TODO: Add verification commands with cypress commands
+
+		// Test sizing the comment, using the sizing area, to the right and downwards.
+		cy.resizeComment("Hello Canvas!", "south-east", 120, 80);
+		// Then I verify the "Hello Canvas!" comment has width 120 and height 80
+
+		// Test sizing the comment, using the sizing area, to the left and downwards.
+		cy.resizeComment("Hello Canvas!", "south-west", 130, 90);
+		// Then I verify the "Hello Canvas!" comment has width 130 and height 90
+
+		// Test sizing the comment, using the sizing area, to the left and downwards.
+		cy.resizeComment("Hello Canvas!", "north-west", 140, 100);
+		// Then I verify the "Hello Canvas!" comment has width 140 and height 100
+
+		// Test sizing the comment, using the sizing area, to the left and downwards.
+		cy.resizeComment("Hello Canvas!", "north-east", 150, 110);
+		// Then I verify the "Hello Canvas!" comment has width 150 and height 110
+
+		// Size the comment to the left
+		cy.resizeCommentOneDirection("Hello Canvas!", "west", 170);
+		// Then I verify the "Hello Canvas!" comment has width 170 and height 110
+
+		// Size the comment to the right
+		cy.resizeCommentOneDirection("Hello Canvas!", "east", 200);
+		// Then I verify the "Hello Canvas!" comment has width 200 and height 110
+
+		//  Size the comment upwards
+		cy.resizeCommentOneDirection("Hello Canvas!", "north", 100);
+		// Then I verify the "Hello Canvas!" comment has width 200 and height 100
+
+		// Size the comment downwards
+		cy.resizeCommentOneDirection("Hello Canvas!", "south", 150);
+		// Then I verify the "Hello Canvas!" comment has width 200 and height 150
 
 	});
 });
