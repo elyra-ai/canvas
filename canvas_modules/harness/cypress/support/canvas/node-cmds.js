@@ -114,9 +114,6 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 		// causing problems with subsequent selections.
 		cy.get("body")
 			.type(selectedKey, { release: true });
-
-		cy.log("In ctrlOrCmdClickNode:" + nodeName);
-		cy.getSelectedNodes().then((selNodes) => selNodes.forEach((node) => cy.log(node.label)));
 	});
 });
 

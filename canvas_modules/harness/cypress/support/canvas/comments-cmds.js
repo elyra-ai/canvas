@@ -67,8 +67,6 @@ Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 			// causing problems with subsequent selections.
 			cy.get("body")
 				.type(selectedKey, { release: true });
-			cy.log("In ctrlOrCmdClickComment:" + commentText);
-			cy.getSelectedComments().then((selComments) => selComments.forEach((comment) => cy.log(comment.content)));
 		});
 });
 
@@ -165,7 +163,7 @@ Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight)
 
 			cy.getCommentDimensions(srcBodySelector).then((commentDimensions) => {
 				const addOffsetForSizingArea = 9; // Offset from edge of body to somewhere in sizing area
-				const subtractOffsetForSizingArea = 10;
+				const subtractOffsetForSizingArea = 10; // Adding two offset values to adjust the comment dimensions
 				let canvasX;
 				let canvasY;
 				let startPosition;
@@ -211,7 +209,7 @@ Cypress.Commands.add("resizeCommentOneDirection", (commentText, corner, newValue
 
 			cy.getCommentDimensions(srcBodySelector).then((commentDimensions) => {
 				const addOffsetForSizingArea = 9; // Offset from edge of body to somewhere in sizing area
-				const subtractOffsetForSizingArea = 10;
+				const subtractOffsetForSizingArea = 10; // Adding two offset values to adjust the comment dimensions
 				let canvasX;
 				let canvasY;
 				let startPosition;
