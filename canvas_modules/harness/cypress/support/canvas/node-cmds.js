@@ -109,8 +109,6 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 			.type(selectedKey, { release: false })
 			.getNodeForLabel(nodeName)
 			.click();
-		cy.log("Inside ctrlOrCmdClickNode " + nodeName);
-		cy.getSelectedNodes().then((sel) => sel.forEach((node) => cy.log(node.label)));
 	});
 });
 
