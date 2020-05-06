@@ -109,8 +109,19 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 			.type(selectedKey, { release: false })
 			.getNodeForLabel(nodeName)
 			.click();
+		// Cancel the command/ctrl key press -- the documentation doesn't say
+		// this needs to be done but if it isn't the command key stays pressed down
+		// causing problems with subsequent selections.
+		cy.get("body")
+			.type(selectedKey, { release: true });
 	});
 });
+
+Cypress.Commands.add("rightClickNode", (nodeName) => {
+	cy.getNodeForLabel(nodeName)
+		.rightclick();
+});
+
 
 Cypress.Commands.add("getNumberOfSelectedNodes", () => {
 	cy.get(".d3-node-selection-highlight")
