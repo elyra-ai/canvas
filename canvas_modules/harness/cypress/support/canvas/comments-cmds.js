@@ -67,6 +67,8 @@ Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 			// causing problems with subsequent selections.
 			cy.get("body")
 				.type(selectedKey, { release: true });
+			cy.log("In ctrlOrCmdClickComment:" + commentText);
+			cy.getSelectedComments().then((selComments) => selComments.forEach((comment) => cy.log(comment.content)));
 		});
 });
 
