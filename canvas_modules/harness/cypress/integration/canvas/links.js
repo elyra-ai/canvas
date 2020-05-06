@@ -63,26 +63,27 @@ describe("Test node and comment combination link disconnection", function() {
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
-	it("Test disconnecting node and comment from context menu", function() {
+	it("Test disconnecting node and comment using context menu", function() {
 		// Test disconnect context menu option functionality
 		cy.verifyNumberOfCommentLinks(3);
 		cy.verifyNumberOfPortDataLinks(5);
 
 		// Ctrl/cmd Select comment and node and rightclick on node to display context menu
 		// TODO: Following code works fine on localhost but fails on travis build
-		// cy.ctrlOrCmdClickComment(" comment 2");
-		// cy.getNodeForLabel("Discard Fields").rightclick();
-		// cy.clickOptionFromContextMenu("Disconnect");
-		// cy.verifyNumberOfCommentLinks(1); // Travis build error - Too many elements found. Found '3', expected '1'
-		// cy.verifyNumberOfPortDataLinks(3);
+		cy.getCommentWithText(" comment 2").click();
+		cy.ctrlOrCmdClickNode("Discard Fields");
+		cy.rightClickNode("Discard Fields");
+		cy.clickOptionFromContextMenu("Disconnect");
+		cy.verifyNumberOfCommentLinks(1); // Travis build error - Too many elements found. Found '3', expected '1'
+		cy.verifyNumberOfPortDataLinks(3);
 
 		// Test undo/redo on node and comment links
-		// cy.clickToolbarUndo();
-		// cy.verifyNumberOfCommentLinks(3);
-		// cy.verifyNumberOfPortDataLinks(5);
-		// cy.clickToolbarRedo();
-		// cy.verifyNumberOfCommentLinks(1);
-		// cy.verifyNumberOfPortDataLinks(3);
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfCommentLinks(3);
+		cy.verifyNumberOfPortDataLinks(5);
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfCommentLinks(1);
+		cy.verifyNumberOfPortDataLinks(3);
 	});
 });
 

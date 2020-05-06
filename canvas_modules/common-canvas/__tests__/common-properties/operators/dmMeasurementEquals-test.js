@@ -27,6 +27,10 @@ describe("validating dmMeasurementEquals operator works correctly", () => {
 		return { value: { link_ref: "0", field_name: desc }, control: { role: "column" } };
 	}
 
+	function wrapParamNull() {
+		return { value: null, control: { role: "column" } };
+	}
+
 	function badWrap(desc) {
 		return { value: desc, control: { role: "checkbox" } };
 	}
@@ -47,6 +51,7 @@ describe("validating dmMeasurementEquals operator works correctly", () => {
 		expect(measurementEquals(badWrap("Drug"), null, "discrete", controller)).to.equal(true);
 		expect(measurementEquals(wrap("K"), wrap("discrete"), null, controller)).to.equal(false);
 		expect(measurementEquals(wrapParam("Cholesterol"), wrap("discrete"), null, controller)).to.equal(true);
+		expect(measurementEquals(wrapParamNull(), null, "range", controller)).to.equal(false);
 	});
 
 });

@@ -104,14 +104,45 @@ Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
 
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	// Get the os name to decide whether to click ctrl or cmd
-	cy.useCtrlOrCmdKey().then((selectedKey) => cy.getNodeForLabel(nodeName).type(selectedKey, { release: false }));
+	cy.useCtrlOrCmdKey().then((selectedKey) => {
+		cy.get("body")
+			.type(selectedKey, { release: false })
+			.getNodeForLabel(nodeName)
+			.click();
+		// Cancel the command/ctrl key press -- the documentation doesn't say
+		// this needs to be done but if it isn't the command key stays pressed down
+		// causing problems with subsequent selections.
+		cy.get("body")
+			.type(selectedKey, { release: true });
+	});
 });
 
+Cypress.Commands.add("rightClickNode", (nodeName) => {
+	cy.getNodeForLabel(nodeName)
+		.rightclick();
+});
+
+
 Cypress.Commands.add("getNumberOfSelectedNodes", () => {
-	cy.get(".d3-node-selection-highlight")
-		.then((nodes) => {
-			const selectedNodes = nodes.filter((idx) => nodes[idx].getAttribute("data-selected") === "yes");
-			return selectedNodes.length;
+	cy.getSelectedNodes()
+		.then((selectedNodes) => selectedNodes.length);
+});
+
+Cypress.Commands.add("getSelectedNodes", () => {
+	cy.document().then((doc) => {
+		const selectedNodes = doc.canvasController.getSelectedNodes();
+		return selectedNodes;
+	});
+});
+
+Cypress.Commands.add("isNodeSelected", (nodeName) => {
+	cy.getSelectedNodes()
+		.then((selectedNodes) => {
+			const idx = selectedNodes.findIndex((selNode) => selNode.label === nodeName);
+			if (idx > -1) {
+				return true;
+			}
+			return false;
 		});
 });
 
@@ -157,7 +188,7 @@ Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 			cy.window().then((win) => {
 				cy.get(srcSelector)
 					.trigger("mousedown", "topLeft", { which: 1, view: win });
-				cy.get(".svg-area")
+				cy.get("#canvas-div-0")
 					.trigger("mousemove", canvasX, canvasY, { view: win })
 					.trigger("mouseup", { which: 1, view: win });
 			});
@@ -168,4 +199,16 @@ Cypress.Commands.add("deleteNode", (nodeLabel) => {
 	// Delete node from context menu
 	cy.getNodeForLabel(nodeLabel).rightclick();
 	cy.clickOptionFromContextMenu("Delete");
+});
+
+Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
+	cy.getNodeForLabel(nodeLabel).then((node) => {
+		const nodeDimensions = {
+			x_pos: node[0].__data__.x_pos,
+			y_pos: node[0].__data__.y_pos,
+			width: node[0].__data__.width,
+			height: node[0].__data__.height
+		};
+		return nodeDimensions;
+	});
 });
