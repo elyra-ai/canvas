@@ -65,10 +65,25 @@ Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 });
 
 Cypress.Commands.add("getNumberOfSelectedComments", () => {
-	cy.get(".d3-comment-selection-highlight")
-		.then((comments) => {
-			const selectedComments = comments.filter((idx) => comments[idx].getAttribute("data-selected") === "yes");
-			return selectedComments.length;
+	cy.getSelectedComments()
+		.then((selectedComments) => selectedComments.length);
+});
+
+Cypress.Commands.add("getSelectedComments", () => {
+	cy.document().then((doc) => {
+		const selectedComments = doc.canvasController.getSelectedComments();
+		return selectedComments;
+	});
+});
+
+Cypress.Commands.add("isCommentSelected", (commentText) => {
+	cy.getSelectedComments()
+		.then((selectedComments) => {
+			const idx = selectedComments.findIndex((selComment) => selComment.content === commentText);
+			if (idx > -1) {
+				return true;
+			}
+			return false;
 		});
 });
 
@@ -94,6 +109,20 @@ Cypress.Commands.add("editTextInCommentInSubFlowNested", (originalCommentText, n
 		.get("textarea")
 		.clear()
 		.type(newCommentText);
+});
+
+Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) => {
+	cy.getCommentWithText(commentText)
+		.then((comment) => {
+			const srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
+			cy.window().then((win) => {
+				cy.get(srcSelector)
+					.trigger("mousedown", "topLeft", { which: 1, view: win });
+				cy.get("#canvas-div-0")
+					.trigger("mousemove", canvasX, canvasY, { view: win })
+					.trigger("mouseup", { which: 1, view: win });
+			});
+		});
 });
 
 Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
