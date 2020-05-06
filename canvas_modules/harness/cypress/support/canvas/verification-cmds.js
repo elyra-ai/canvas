@@ -365,3 +365,15 @@ Cypress.Commands.add("verifyNoErrorOrWarningMarkerOnNodeInSupernode", (nodeName,
 				.should("not.exist");
 		});
 });
+
+Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => {
+	cy.getCommentWithText(commentText)
+		.then((comment) => {
+			const commentSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
+			cy.getCommentDimensions(commentSelector)
+				.then((commentDimensions) => {
+					expect(commentDimensions.width).to.equal(width);
+					expect(commentDimensions.height).to.equal(height);
+				});
+		});
+});
