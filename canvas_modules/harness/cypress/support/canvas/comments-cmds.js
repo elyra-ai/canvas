@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint max-len: "off" */
 
 Cypress.Commands.add("getCommentWithText", (commentText) =>
 	cy.get(getCommentGrpSelector())
@@ -61,6 +62,11 @@ Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 				.type(selectedKey, { release: false })
 				.getCommentWithText(commentText)
 				.click();
+			// Cancel the command/ctrl key press -- the documentation doesn't say
+			// this needs to be done but if it isn't the command key stays pressed down
+			// causing problems with subsequent selections.
+			cy.get("body")
+				.type(selectedKey, { release: true });
 		});
 });
 
@@ -156,29 +162,30 @@ Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight)
 			const srcSizingSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "sizing") + "']";
 
 			cy.getCommentDimensions(srcBodySelector).then((commentDimensions) => {
-				const offsetForSizingArea = 10; // Offset from edge of body to somewhere in sizing area
+				const addOffsetForSizingArea = 9; // Offset from edge of body to somewhere in sizing area
+				const subtractOffsetForSizingArea = 10; // Adding two offset values to adjust the comment dimensions
 				let canvasX;
 				let canvasY;
 				let startPosition;
 
 				if (corner === "north-west") {
-					canvasX = commentDimensions.x_pos - (newWidth - commentDimensions.width) - offsetForSizingArea;
-					canvasY = commentDimensions.y_pos - (newHeight - commentDimensions.height) - offsetForSizingArea;
+					canvasX = commentDimensions.x_pos - (newWidth - commentDimensions.width) - subtractOffsetForSizingArea;
+					canvasY = commentDimensions.y_pos - (newHeight - commentDimensions.height) - subtractOffsetForSizingArea;
 					startPosition = "topLeft";
 
 				} else if (corner === "north-east") {
-					canvasX = commentDimensions.x_pos + newWidth + offsetForSizingArea;
-					canvasY = commentDimensions.y_pos - (newHeight - commentDimensions.height) - offsetForSizingArea;
+					canvasX = commentDimensions.x_pos + newWidth + addOffsetForSizingArea;
+					canvasY = commentDimensions.y_pos - (newHeight - commentDimensions.height) - subtractOffsetForSizingArea;
 					startPosition = "topRight";
 
 				} else if (corner === "south-west") {
-					canvasX = commentDimensions.x_pos - (newWidth - commentDimensions.width) - offsetForSizingArea;
-					canvasY = commentDimensions.y_pos + newHeight + offsetForSizingArea;
+					canvasX = commentDimensions.x_pos - (newWidth - commentDimensions.width) - subtractOffsetForSizingArea;
+					canvasY = commentDimensions.y_pos + newHeight + addOffsetForSizingArea;
 					startPosition = "bottomLeft";
 
 				} else { // "south-east"
-					canvasX = commentDimensions.x_pos + newWidth + offsetForSizingArea;
-					canvasY = commentDimensions.y_pos + newHeight + offsetForSizingArea;
+					canvasX = commentDimensions.x_pos + newWidth + addOffsetForSizingArea;
+					canvasY = commentDimensions.y_pos + newHeight + addOffsetForSizingArea;
 					startPosition = "bottomRight";
 				}
 
@@ -201,29 +208,30 @@ Cypress.Commands.add("resizeCommentOneDirection", (commentText, corner, newValue
 			const srcSizingSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "sizing") + "']";
 
 			cy.getCommentDimensions(srcBodySelector).then((commentDimensions) => {
-				const offsetForSizingArea = 10; // Offset from edge of body to somewhere in sizing area
+				const addOffsetForSizingArea = 9; // Offset from edge of body to somewhere in sizing area
+				const subtractOffsetForSizingArea = 10; // Adding two offset values to adjust the comment dimensions
 				let canvasX;
 				let canvasY;
 				let startPosition;
 
 				if (corner === "north") {
 					canvasX = commentDimensions.x_pos + (commentDimensions.width / 2);
-					canvasY = commentDimensions.y_pos - (newValue - commentDimensions.height) - offsetForSizingArea;
+					canvasY = commentDimensions.y_pos - (newValue - commentDimensions.height) - subtractOffsetForSizingArea;
 					startPosition = "top";
 
 				} else if (corner === "east") {
-					canvasX = commentDimensions.x_pos + newValue + offsetForSizingArea;
+					canvasX = commentDimensions.x_pos + newValue + addOffsetForSizingArea;
 					canvasY = commentDimensions.y_pos - (commentDimensions.height / 2);
 					startPosition = "right";
 
 				} else if (corner === "west") {
-					canvasX = commentDimensions.x_pos - (newValue - commentDimensions.width) - offsetForSizingArea;
+					canvasX = commentDimensions.x_pos - (newValue - commentDimensions.width) - subtractOffsetForSizingArea;
 					canvasY = commentDimensions.y_pos + (commentDimensions.height / 2);
 					startPosition = "left";
 
 				} else { // "south"
 					canvasX = commentDimensions.x_pos + (commentDimensions.width / 2);
-					canvasY = commentDimensions.y_pos + newValue + offsetForSizingArea;
+					canvasY = commentDimensions.y_pos + newValue + addOffsetForSizingArea;
 					startPosition = "bottom";
 				}
 
