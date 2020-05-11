@@ -966,7 +966,7 @@ export default class APIPipeline {
 	createNodeLink(srcInfo, trgInfo, data) {
 		if (this.isConnectionAllowed(srcInfo, trgInfo, data.type)) {
 			const link = {};
-			link.id = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
+			link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
 			link.type = data.type;
 			link.srcNodeId = srcInfo.id;
 			link.srcNodePortId = srcInfo.portId;
