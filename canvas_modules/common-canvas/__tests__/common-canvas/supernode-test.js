@@ -1052,6 +1052,7 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[0].nodes[1].inputs[1].links[1].node_id_ref; // Delete link node_id_ref.
 		delete pipelineFlow.pipelines[0].nodes[11].inputs[0].links[0].node_id_ref; // Delete existing supernode link node_id_ref.
 		delete pipelineFlow.pipelines[0].nodes[11].inputs[1].links[0].node_id_ref; // Delete existing supernode link node_id_ref.
+
 		pipelineFlow.pipelines[0].nodes[11] = deleteSupernodeSubflowNodeRef(pipelineFlow.pipelines[0].nodes[11]);
 
 		delete pipelineFlow.pipelines[0].nodes[13].id; // Delete new supernode id.
@@ -1064,6 +1065,7 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[2].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
+		removeGeneratedLinkIds(pipelineFlow, supernodeCanvas);
 
 		// console.log("Exp = " + JSON.stringify(test1ExpectedFlow, null, 2));
 		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
@@ -1071,6 +1073,7 @@ describe("Create Supernode Action", () => {
 		expect(isEqual(JSON.stringify(test1ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
+		// console.log("Act = " + JSON.stringify(objectModel.getPipelineFlow(), null, 2));
 		expect(isEqual(JSON.stringify(test1ExpectedUndoFlow), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
 
 		canvasController.contextMenuActionHandler("redo");
@@ -1106,8 +1109,11 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[2].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
+		removeGeneratedLinkIds(pipelineFlow, supernodeCanvas);
 
-		// console.log(JSON.stringify(pipelineFlow, null, 2));
+		// console.log("Exp = " + JSON.stringify(test1ExpectedFlow, null, 2));
+		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
+
 		expect(isEqual(JSON.stringify(test2ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -1145,8 +1151,9 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[2].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
+		removeGeneratedLinkIds(pipelineFlow, supernodeCanvas);
 
-		// console.log(JSON.stringify(pipelineFlow));
+		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
 		expect(isEqual(JSON.stringify(test3ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -1179,8 +1186,9 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[1].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
 		delete pipelineFlow.pipelines[2].nodes[2].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
+		removeGeneratedLinkIds(pipelineFlow, supernodeCanvas);
 
-		// console.log(JSON.stringify(pipelineFlow));
+		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
 		expect(isEqual(JSON.stringify(test4ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -1212,8 +1220,9 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].id; // Delete new subPipeline id.
 		delete pipelineFlow.pipelines[2].nodes[0].inputs[1].links[0].node_id_ref; // Delete new link node_id_ref.
 		delete pipelineFlow.pipelines[2].nodes[3].id; // Delete new binding node id.
+		removeGeneratedLinkIds(pipelineFlow, supernodeCanvas);
 
-		// console.log(JSON.stringify(pipelineFlow));
+		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
 		expect(isEqual(JSON.stringify(test5ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -1253,8 +1262,9 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[5].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[6].id; // Delete new binding node id.
+		removeGeneratedLinkIds(pipelineFlow, supernodeCanvas);
 
-		// console.log(JSON.stringify(pipelineFlow));
+		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
 		expect(isEqual(JSON.stringify(test6ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -1293,8 +1303,9 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[5].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[6].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[7].id; // Delete new binding node id.
+		removeGeneratedLinkIds(pipelineFlow, supernodeCanvas);
 
-		// console.log(JSON.stringify(pipelineFlow));
+		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
 		expect(isEqual(JSON.stringify(test7ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -1334,8 +1345,9 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[5].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[6].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[2].nodes[7].id; // Delete new binding node id.
+		removeGeneratedLinkIds(pipelineFlow, supernodeCanvas);
 
-		// console.log(JSON.stringify(pipelineFlow));
+		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
 		expect(isEqual(JSON.stringify(test8ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -1373,11 +1385,13 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[1].nodes[0].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
 		delete pipelineFlow.pipelines[1].nodes[2].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[1].nodes[3].id; // Delete new binding node id.
+		removeGeneratedLinkIds(pipelineFlow, associationLinkCanvas);
 
-		// console.log(JSON.stringify(pipelineFlow));
+		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
 		expect(isEqual(JSON.stringify(test9ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
+		// console.log("Act = " + JSON.stringify(objectModel.getPipelineFlow(), null, 2));
 		expect(isEqual(JSON.stringify(test9ExpectedUndoFlow), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
 
 		canvasController.contextMenuActionHandler("redo");
@@ -1413,8 +1427,9 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[1].nodes[0].inputs[0].links[0].node_id_ref; // Delete new link node_id_ref.
 		delete pipelineFlow.pipelines[1].nodes[3].id; // Delete new binding node id.
 		delete pipelineFlow.pipelines[1].nodes[4].id; // Delete new binding node id.
+		removeGeneratedLinkIds(pipelineFlow, associationLinkCanvas);
 
-		// console.log(JSON.stringify(pipelineFlow));
+		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
 		expect(isEqual(JSON.stringify(test10ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 
 		canvasController.contextMenuActionHandler("undo");
@@ -1833,4 +1848,77 @@ function compareNodePositions(expectedNodes, objectModel) {
 		expect(isEqual(expectedNode.x_pos, omNode.x_pos)).to.be.true;
 		expect(isEqual(expectedNode.y_pos, omNode.y_pos)).to.be.true;
 	});
+}
+
+function removeGeneratedLinkIds(firstPipelineFlow, secondPipelineFlow) {
+	firstPipelineFlow.pipelines.forEach((pipeline, pIdx) => {
+		if (pipeline.nodes) {
+			pipeline.nodes.forEach((node, mIdx) => {
+				if (node.inputs) {
+					node.inputs.forEach((input, iIdx) => {
+						if (input.links) {
+							input.links.forEach((link, lIds) => {
+								if (!findDataLinkInSecondPipelineFlow(link.id, secondPipelineFlow)) {
+									delete link.id;
+								}
+							});
+						}
+					});
+				}
+			});
+		}
+
+		if (pipeline.app_data && pipeline.app_data.ui_data && pipeline.app_data.ui_data.comments) {
+			pipeline.app_data.ui_data.comments.forEach((comment) => {
+				if (comment.associated_id_refs) {
+					comment.associated_id_refs.forEach((link) => {
+						if (findCommentLinkInSecondPipelineFlow(link.id, secondPipelineFlow)) {
+							delete link.id;
+						}
+					});
+				}
+			});
+		}
+	});
+	return firstPipelineFlow;
+}
+
+function findDataLinkInSecondPipelineFlow(linkId, secondPipelineFlow) {
+	let found = false;
+	secondPipelineFlow.pipelines.forEach((pipeline) => {
+		if (pipeline.nodes) {
+			pipeline.nodes.forEach((node) => {
+				if (node.inputs) {
+					node.inputs.forEach((input) => {
+						if (input.links) {
+							input.links.forEach((link) => {
+								if (link.id === linkId) {
+									found = true;
+								}
+							});
+						}
+					});
+				}
+			});
+		}
+	});
+	return found;
+}
+
+function findCommentLinkInSecondPipelineFlow(linkId, secondPipelineFlow) {
+	let found = false;
+	secondPipelineFlow.pipelines.forEach((pipeline, pIdx) => {
+		if (pipeline.app_data && pipeline.app_data.ui_data && pipeline.app_data.ui_data.comments) {
+			pipeline.app_data.ui_data.comments.forEach((comment) => {
+				if (comment.associated_id_refs) {
+					comment.associated_id_refs.forEach((link) => {
+						if (link.id === linkId) {
+							found = true;
+						}
+					});
+				}
+			});
+		}
+	});
+	return found;
 }

@@ -276,6 +276,7 @@ export default class PipelineOutHandler {
 
 	static createNewNodeLink(link) {
 		var newNodeLink = {
+			id: link.id,
 			node_id_ref: link.srcNodeId
 		};
 
