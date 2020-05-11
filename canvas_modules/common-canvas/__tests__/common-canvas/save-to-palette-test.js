@@ -24,7 +24,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 
 import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
-import supernodeCanvas from "../test_resources/json/supernodeCanvas.json";
+import supernodeCanvas from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
 import paletteJson from "../test_resources/palettes/test-palette.json";
 import expectedPaletteNode from "../test_resources/palettes/expected-add-node.json";
 import expectedPaletteSupernode from "../test_resources/palettes/expected-add-supernode.json";
@@ -106,8 +106,8 @@ describe("Expand and Collapse Supernode Action", () => {
 		delete expectedPalette.categories[1].node_types[0].app_data.ui_data.x_pos;
 		delete expectedPalette.categories[1].node_types[0].app_data.ui_data.y_pos;
 
-		// console.log("JSON = " + JSON.stringify(expectedPalette, null, 2));
-		// console.log("JSON = " + JSON.stringify(paletteData, null, 2));
+		// console.log("expectedPalette = " + JSON.stringify(expectedPalette, null, 2));
+		// console.log("paletteData = " + JSON.stringify(paletteData, null, 2));
 
 		expect(isEqual(expectedPalette, paletteData)).to.be.true;
 	});

@@ -216,9 +216,7 @@ export default class PipelineInHandler {
 						input.links.forEach((link) => {
 							if (this.isNode(nodes, link.node_id_ref)) {
 								const newLink = {
-									"id":
-										has(link, "app_data.ui_data.id")
-											? link.app_data.ui_data.id : this.getUUID(),
+									"id": has(link, "id") ? link.id : this.getUUID(),
 									"srcNodeId": link.node_id_ref,
 									"trgNodeId": node.id,
 									"trgNodePortId": input.id,
