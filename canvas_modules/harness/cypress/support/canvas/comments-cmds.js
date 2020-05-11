@@ -15,9 +15,16 @@
  */
 /* eslint max-len: "off" */
 
-Cypress.Commands.add("getCommentWithText", (commentText) =>
-	cy.get(getCommentGrpSelector())
-		.then((grpArray) => findGrpForText(grpArray, commentText)));
+Cypress.Commands.add("getCommentWithText", (commentText) => {
+	cy.get("body").then(($body) => {
+		if ($body.find(".d3-comment-group").length) {
+			cy.get(getCommentGrpSelector())
+				.then((grpArray) => findGrpForText(grpArray, commentText));
+		}
+		// No comments found on canvas
+		return null;
+	});
+});
 
 Cypress.Commands.add("getCommentWithTextInSubFlow", (commentText) =>
 	cy.get(getCommentGrpSelectorInSubFlow())
@@ -117,6 +124,25 @@ Cypress.Commands.add("editTextInCommentInSubFlowNested", (originalCommentText, n
 		.type(newCommentText);
 });
 
+Cypress.Commands.add("addCommentToPosition", (commentText, canvasX, canvasY) => {
+	cy.rightClickToDisplayContextMenu(canvasX, canvasY);
+	cy.clickOptionFromContextMenu("New comment");
+	cy.editTextInComment("", commentText);
+	// Click somewhere on canvas so that comment will be saved
+	cy.get("#common-canvas-items-container-0").click(400, 400);
+
+	// verify comment is in the DOM
+	cy.getCommentWithText(commentText)
+		.should("have.length", 1);
+
+	// verify that the comment is in the internal object model
+	cy.getCommentFromObjectModel(commentText)
+		.then((count) => expect(count).to.equal(1));
+
+	// verify that an event for a new comment is in the external object model event log
+	cy.verifyEditActionHandlerEditCommentEntryInConsole(commentText);
+});
+
 Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
@@ -136,13 +162,22 @@ Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
 	// srcSelector is the selector of guide
 	cy.getCommentWithText(commentText).click(0, 0)
 		.then((comment) => {
-			const srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "port") + "']";
-			cy.getNodeDimensions(nodeLabel).then((nodeDimensions) => {
-				// Target canvas position within the center of the target node
-				const canvasX = nodeDimensions.x_pos + (nodeDimensions.width / 2);
-				const canvasY = nodeDimensions.y_pos + (nodeDimensions.height / 2);
+			cy.document().then((doc) => {
+				// Connection Type - Halo
+				let srcSelector;
+				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
+					srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "halo") + "']";
+				} else {
+					// Connection Type - Ports
+					srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "port") + "']";
+				}
+				cy.getNodeDimensions(nodeLabel).then((nodeDimensions) => {
+					// Target canvas position within the center of the target node
+					const canvasX = nodeDimensions.x_pos + (nodeDimensions.width / 2);
+					const canvasY = nodeDimensions.y_pos + (nodeDimensions.height / 2);
 
-				cy.dragAndDrop(srcSelector, 0, 0, ".svg-area", canvasX, canvasY);
+					cy.dragAndDrop(srcSelector, 0, 0, ".svg-area", canvasX, canvasY);
+				});
 			});
 		});
 });
@@ -257,4 +292,14 @@ Cypress.Commands.add("getCommentDimensions", (commentSelector) => {
 		};
 		return commentDimensions;
 	});
+});
+
+Cypress.Commands.add("deleteComment", (commentText) => {
+	// Delete comment using context menu
+	cy.getCommentWithText(commentText)
+		.rightclick();
+	cy.clickOptionFromContextMenu("Delete");
+
+	// Verify comment is deleted
+	cy.verifyCommentIsDeleted(commentText);
 });

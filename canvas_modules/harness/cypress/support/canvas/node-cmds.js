@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-Cypress.Commands.add("getNodeForLabel", (nodeLabel) =>
-	cy.get(getNodeGrpSelector())
-		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel)));
+Cypress.Commands.add("getNodeForLabel", (nodeLabel) => {
+	cy.get("body").then(($body) => {
+		if ($body.find(".d3-node-group").length) {
+			cy.get(getNodeGrpSelector())
+				.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));
+		}
+		// No nodes found on canvas
+		return null;
+	});
+});
 
 Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
 	cy.getNodeForLabel(nodeLabel)
@@ -199,6 +206,9 @@ Cypress.Commands.add("deleteNode", (nodeLabel) => {
 	// Delete node from context menu
 	cy.getNodeForLabel(nodeLabel).rightclick();
 	cy.clickOptionFromContextMenu("Delete");
+
+	// Verify node is deleted
+	cy.verifyNodeIsDeleted(nodeLabel);
 });
 
 Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {

@@ -38,3 +38,31 @@ Cypress.Commands.add("useCtrlOrCmdKey", () => {
 	const selectedKey = Cypress.platform === "darwin" ? "{meta}" : "{ctrl}";
 	return selectedKey;
 });
+
+Cypress.Commands.add("deleteNodeUsingKeyboard", (nodeName) => {
+	// Delete node by pressing 'Delete' key on keyboard
+	cy.getNodeForLabel(nodeName)
+		.click()
+		.type("{del}");
+	// Verify node is deleted
+	cy.verifyNodeIsDeleted(nodeName, true);
+});
+
+Cypress.Commands.add("selectAllNodes", () => {
+	cy.get("#canvas-div-0").find(".node-image")
+		.then((nodes) => {
+			// Press and hold the shift key
+			cy.get("body")
+				.type("{shift}", { release: false });
+
+			// Click all the nodes
+			nodes.each((idx, node) => {
+				cy.wrap(node)
+					.click();
+			});
+
+			// Cancel the shift key press
+			cy.get("body")
+				.type("{shift}", { release: true });
+		});
+});

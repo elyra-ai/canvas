@@ -30,6 +30,29 @@ Cypress.Commands.add("verifyNodeTransformInSubFlow", (nodeLabel, transformValue)
 		.should("have.attr", "transform", transformValue);
 });
 
+Cypress.Commands.add("verifyNodeIsDeleted", (nodeName, deleteUsingKeyboard) => {
+	// verify node is not the canvas DOM
+	cy.getNodeForLabel(nodeName)
+		.should("not.exist");
+
+	// verify that the node is not in the internal object model
+	cy.getNodeFromObjectModel(nodeName)
+		.should("eq", 0);
+
+	// Verify delete selected objects entry in console
+	cy.verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole(nodeName, deleteUsingKeyboard);
+});
+
+Cypress.Commands.add("verifyCommentIsDeleted", (commentText) => {
+	// verify comment is not the canvas DOM
+	cy.getCommentWithText(commentText)
+		.should("not.exist");
+
+	// verify that the comment is not in the internal object model
+	cy.getCommentFromObjectModel(commentText)
+		.should("eq", 0);
+});
+
 Cypress.Commands.add("verifyNodeIsSelected", (nodeName) => {
 	// Verify node is selected on document
 	cy.getNodeForLabel(nodeName)
@@ -318,6 +341,37 @@ Cypress.Commands.add("verifyApplyPropertyChangesEntryInConsole", (propertyValue)
 	});
 });
 
+Cypress.Commands.add("verifyEditActionHandlerLinkNodesEntryInConsole", (srcNodeId, trgNodeId) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): linkNodes");
+		expect(lastEventLog.data.nodes[0].id).to.equal(srcNodeId);
+		expect(lastEventLog.data.targetNodes[0].id).to.equal(trgNodeId);
+	});
+});
+
+Cypress.Commands.add("verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole", (nodeName, deleteUsingKeyboard) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): deleteSelectedObjects");
+		if (deleteUsingKeyboard) {
+			// node is deleted using keyboard delete key
+			expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
+		} else {
+			// node is deleted using context menu
+			expect(lastEventLog.data.targetObject.label).to.equal(nodeName);
+		}
+	});
+});
+
+Cypress.Commands.add("verifyEditActionHandlerEditCommentEntryInConsole", (commentText) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc, 3);
+		expect(lastEventLog.event).to.equal("editActionHandler(): editComment");
+		expect(lastEventLog.data.content).to.equal(commentText);
+	});
+});
+
 Cypress.Commands.add("verifyErrorMarkerOnNode", (nodeName) => {
 	cy.getNodeForLabel(nodeName)
 		.find(".d3-error-circle")
@@ -376,4 +430,9 @@ Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => 
 					expect(commentDimensions.height).to.equal(height);
 				});
 		});
+});
+
+Cypress.Commands.add("verifyObjectModelIsEmpty", () => {
+	cy.isObjectModelEmpty()
+		.then((count) => expect(count).to.equal(0));
 });
