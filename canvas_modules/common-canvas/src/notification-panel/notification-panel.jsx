@@ -53,6 +53,12 @@ class NotificationPanel extends React.Component {
 				<Icon type={iconType} className={`notification-message-icon-${iconType}`} />
 			</div>);
 
+			const closeMessage = message.closeMessage
+				? (<div className = "notification-message-close">
+					{message.closeMessage}
+				</div>)
+				: null;
+
 			const timestamp = message.timestamp
 				? (<div className="notification-message-timestamp">
 					<div className="notification-message-timestamp-icon">
@@ -78,6 +84,7 @@ class NotificationPanel extends React.Component {
 							{message.content}
 						</div>
 						{timestamp}
+						{closeMessage}
 					</div>
 				</div>
 			</div>);
