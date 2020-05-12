@@ -921,10 +921,6 @@ export default class ObjectModel {
 	// Notification Messages methods
 	// ---------------------------------------------------------------------------
 
-	getNotificationMessages() {
-		return this.store.getState().notifications;
-	}
-
 	clearNotificationMessages() {
 		this.store.dispatch({ type: "CLEAR_NOTIFICATION_MESSAGES" });
 	}
@@ -945,7 +941,17 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: newMessages });
 	}
 
-	removeNotificationMessages(messageKeys) {
+	getNotificationMessages(messageType) {
+		const notificationMessages = this.store.getState().notifications;
+		if (messageType) {
+			return notificationMessages.filter((message) => {
+				return message.type === messageType;
+			});
+		}
+		return notificationMessages;
+	}
+
+	deleteNotificationMessages(messageKeys) {
 		// accept a single key or array of keys
 		const filterKeys = Array.isArray(messageKeys) ? messageKeys : [messageKeys];
 		const newMessages = this.getNotificationMessages().filter((message) => !filterKeys.includes(message.key));
