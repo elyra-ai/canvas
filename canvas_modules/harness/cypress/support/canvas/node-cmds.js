@@ -211,6 +211,18 @@ Cypress.Commands.add("deleteNode", (nodeLabel) => {
 	cy.verifyNodeIsDeleted(nodeLabel);
 });
 
+Cypress.Commands.add("deleteNodeUsingKeyboard", (nodeName) => {
+	// Delete node by pressing 'Delete' key on keyboard
+	cy.useDeleteKey()
+		.then((deleteKey) => {
+			cy.getNodeForLabel(nodeName)
+				.click()
+				.type(deleteKey);
+			// Verify node is deleted
+			cy.verifyNodeIsDeleted(nodeName, true);
+		});
+});
+
 Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
 	cy.getNodeForLabel(nodeLabel).then((node) => {
 		const nodeDimensions = {
@@ -221,4 +233,26 @@ Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
 		};
 		return nodeDimensions;
 	});
+});
+
+Cypress.Commands.add("selectAllNodes", () => {
+	cy.get("#canvas-div-0").find(".node-image")
+		.then((nodes) => {
+			cy.useShiftKey()
+				.then((shiftKey) => {
+					// Press and hold the shift key
+					cy.get("body")
+						.type(shiftKey, { release: false });
+
+					// Click all the nodes
+					nodes.each((idx, node) => {
+						cy.wrap(node)
+							.click();
+					});
+
+					// Cancel the shift key press
+					cy.get("body")
+						.type(shiftKey, { release: true });
+				});
+		});
 });
