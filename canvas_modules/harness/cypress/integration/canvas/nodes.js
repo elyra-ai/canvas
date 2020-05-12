@@ -148,3 +148,33 @@ describe("Sanity test changing node names is reflected in canvas", function() {
 		cy.getNodeForLabel("Var File3").should("exist");
 	});
 });
+
+describe("Sanity test from loaded file", function() {
+	before(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
+		cy.openCanvasDefinition("modelerCanvas.json");
+	});
+
+	it("Test number of links from loaded file", function() {
+		// Verify different types of links
+		cy.verifyNumberOfLinks(9);
+		cy.verifyNumberOfPortDataLinks(7);
+		cy.verifyNumberOfCommentLinks(0);
+	});
+});
+
+describe("Sanity test from loaded file in legacy format", function() {
+	before(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
+		cy.openCanvasDefinition("x-modelerCanvas.json");
+	});
+
+	it("Test number of links from loaded file in legacy format", function() {
+		// Verify different types of links
+		cy.verifyNumberOfLinks(9);
+		cy.verifyNumberOfPortDataLinks(7);
+		cy.verifyNumberOfCommentLinks(0);
+	});
+});
