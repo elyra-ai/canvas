@@ -29,7 +29,7 @@ describe("Sanity test adding nodes from palette", function() {
 		cy.dragNodeToPosition("Derive", 400, 200);
 		cy.linkNodes("Var. File", "Derive", 1);
 		cy.clickToolbarPaletteClose();
-		cy.getNodeForLabel("Derive").click();
+		cy.getNodeWithLabel("Derive").click();
 		cy.addCommentToPosition("This comment box should be linked to the derive node.", 300, 250);
 		cy.clickToolbarPaletteOpen();
 		cy.dragNodeToPosition("Filter", 500, 200);
@@ -42,7 +42,7 @@ describe("Sanity test adding nodes from palette", function() {
 		cy.clickToolbarPaletteClose();
 		cy.linkNodes("Type", "C5.0", 5);
 		cy.linkNodes("Type", "Neural Net", 6);
-		cy.getNodeForLabel("Type").click();
+		cy.getNodeWithLabel("Type").click();
 		cy.addCommentToPosition("This comment box should be linked to the type node.", 550, 350);
 		cy.linkCommentToNode("This comment box should be linked to the type node.", "Neural Net");
 		cy.addCommentToPosition(
@@ -88,9 +88,9 @@ describe("Sanity test selecting nodes open properties", function() {
 		cy.clickToolbarPaletteClose();
 
 		// Double-click one node at a time to open node properties
-		cy.getNodeForLabel("Derive").dblclick();
+		cy.getNodeWithLabel("Derive").dblclick();
 		cy.verifyPropertiesFlyoutTitle("Derive");
-		cy.getNodeForLabel("Var. File").dblclick();
+		cy.getNodeWithLabel("Var. File").dblclick();
 		cy.verifyPropertiesFlyoutTitle("Var. File");
 
 		// Selecting all nodes should not open node properties
@@ -101,7 +101,7 @@ describe("Sanity test selecting nodes open properties", function() {
 		cy.get(".svg-area").click(1, 1);
 
 		// Node properties should not exist after node is deleted
-		cy.getNodeForLabel("Var. File").dblclick();
+		cy.getNodeWithLabel("Var. File").dblclick();
 		cy.verifyPropertiesFlyoutTitle("Var. File");
 		cy.deleteNode("Var. File");
 		cy.verifyPropertiesFlyoutDoesNotExist();
@@ -122,7 +122,7 @@ describe("Sanity test changing node names is reflected in canvas", function() {
 		cy.clickToolbarPaletteClose();
 
 		// Double-click "Var. File" node to open node properties
-		cy.getNodeForLabel("Var. File").dblclick();
+		cy.getNodeWithLabel("Var. File").dblclick();
 		cy.verifyPropertiesFlyoutTitle("Var. File");
 
 		// Edit the name of properties flyout
@@ -134,7 +134,7 @@ describe("Sanity test changing node names is reflected in canvas", function() {
 		cy.verifyNewPropertiesFlyoutTitleEntryInConsole("Var File2");
 
 		// Double-click "Var File2" node to open node properties
-		cy.getNodeForLabel("Var File2").dblclick();
+		cy.getNodeWithLabel("Var File2").dblclick();
 		cy.verifyPropertiesFlyoutTitle("Var File2");
 
 		// Edit the name of properties flyout
@@ -145,7 +145,7 @@ describe("Sanity test changing node names is reflected in canvas", function() {
 		cy.get(".svg-area").click(1, 1);
 
 		// Verify new node name exists on canvas
-		cy.getNodeForLabel("Var File3").should("exist");
+		cy.getNodeWithLabel("Var File3").should("exist");
 	});
 });
 

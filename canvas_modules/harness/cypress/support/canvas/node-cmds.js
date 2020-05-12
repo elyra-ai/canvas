@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-Cypress.Commands.add("getNodeForLabel", (nodeLabel) => {
+Cypress.Commands.add("getNodeWithLabel", (nodeLabel) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(".d3-node-group").length) {
 			cy.get(getNodeGrpSelector())
@@ -26,15 +26,15 @@ Cypress.Commands.add("getNodeForLabel", (nodeLabel) => {
 });
 
 Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
-	cy.getNodeForLabel(nodeLabel)
+	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => node[0].getAttribute("data-id").substring(11)));
 
-Cypress.Commands.add("getNodeForLabelInSubFlow", (nodeLabel) =>
+Cypress.Commands.add("getNodeWithLabelInSubFlow", (nodeLabel) =>
 	cy.get(getNodeGrpSelectorInSubFlow())
 		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel)));
 
-Cypress.Commands.add("getNodeForLabelInSupernode", (nodeLabel, supernodeName) => {
-	cy.getNodeForLabel(supernodeName)
+Cypress.Commands.add("getNodeWithLabelInSupernode", (nodeLabel, supernodeName) => {
+	cy.getNodeWithLabel(supernodeName)
 		.then((supernode) => {
 			const supernodeId = supernode[0].getAttribute("data-id").substring(11);
 			cy.get(getNodeGrpSelectorInSupernode(supernodeId))
@@ -114,7 +114,7 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	cy.useCtrlOrCmdKey().then((selectedKey) => {
 		cy.get("body")
 			.type(selectedKey, { release: false })
-			.getNodeForLabel(nodeName)
+			.getNodeWithLabel(nodeName)
 			.click();
 		// Cancel the command/ctrl key press -- the documentation doesn't say
 		// this needs to be done but if it isn't the command key stays pressed down
@@ -125,7 +125,7 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 });
 
 Cypress.Commands.add("rightClickNode", (nodeName) => {
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.rightclick();
 });
 
@@ -154,7 +154,7 @@ Cypress.Commands.add("isNodeSelected", (nodeName) => {
 });
 
 Cypress.Commands.add("clickDecoratorHotspotOnNode", (decoratorId, nodeName) => {
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.find(`.d3-node-dec-outline[data-id=node_dec_outln_0_${decoratorId}]`)
 		.click();
 });
@@ -189,7 +189,7 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 
 // Solution found here - https://github.com/cypress-io/cypress/issues/3441#issuecomment-463239982
 Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
-	cy.getNodeForLabel(nodeLabel)
+	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => {
 			const srcSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "body") + "']";
 			cy.window().then((win) => {
@@ -204,7 +204,7 @@ Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 
 Cypress.Commands.add("deleteNode", (nodeLabel) => {
 	// Delete node from context menu
-	cy.getNodeForLabel(nodeLabel).rightclick();
+	cy.getNodeWithLabel(nodeLabel).rightclick();
 	cy.clickOptionFromContextMenu("Delete");
 
 	// Verify node is deleted
@@ -215,7 +215,7 @@ Cypress.Commands.add("deleteNodeUsingKeyboard", (nodeName) => {
 	// Delete node by pressing 'Delete' key on keyboard
 	cy.useDeleteKey()
 		.then((deleteKey) => {
-			cy.getNodeForLabel(nodeName)
+			cy.getNodeWithLabel(nodeName)
 				.click()
 				.type(deleteKey);
 			// Verify node is deleted
@@ -224,7 +224,7 @@ Cypress.Commands.add("deleteNodeUsingKeyboard", (nodeName) => {
 });
 
 Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
-	cy.getNodeForLabel(nodeLabel).then((node) => {
+	cy.getNodeWithLabel(nodeLabel).then((node) => {
 		const nodeDimensions = {
 			x_pos: node[0].__data__.x_pos,
 			y_pos: node[0].__data__.y_pos,

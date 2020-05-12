@@ -16,7 +16,7 @@
 import * as testUtils from "../../utils/eventlog-utils";
 
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, transformValue) => {
-	cy.getNodeForLabel(nodeLabel)
+	cy.getNodeWithLabel(nodeLabel)
 		.should("have.attr", "transform", transformValue);
 });
 
@@ -26,13 +26,13 @@ Cypress.Commands.add("verifyCommentTransform", (commentText, transformValue) => 
 });
 
 Cypress.Commands.add("verifyNodeTransformInSubFlow", (nodeLabel, transformValue) => {
-	cy.getNodeForLabelInSubFlow(nodeLabel)
+	cy.getNodeWithLabelInSubFlow(nodeLabel)
 		.should("have.attr", "transform", transformValue);
 });
 
 Cypress.Commands.add("verifyNodeIsDeleted", (nodeName, deleteUsingKeyboard) => {
 	// verify node is not the canvas DOM
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.should("not.exist");
 
 	// verify that the node is not in the internal object model
@@ -55,7 +55,7 @@ Cypress.Commands.add("verifyCommentIsDeleted", (commentText) => {
 
 Cypress.Commands.add("verifyNodeIsSelected", (nodeName) => {
 	// Verify node is selected on document
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.then((node) => {
 			const nodeOutlineSelector =
 			"[data-id='" + node[0].getAttribute("data-id").replace("grp", "sel_outline") + "']";
@@ -83,7 +83,7 @@ Cypress.Commands.add("verifyCommentIsSelected", (commentText) => {
 
 Cypress.Commands.add("verifyNodeIsNotSelected", (nodeName) => {
 	// Verify node is not selected on document
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.then((node) => {
 			const nodeOutlineSelector =
 			"[data-id='" + node[0].getAttribute("data-id").replace("grp", "sel_outline") + "']";
@@ -258,7 +258,7 @@ Cypress.Commands.add("verifySubmenuPushedUpBy", (distFromTop) => {
 });
 
 Cypress.Commands.add("verifyNumberOfDecoratorsOnNode", (nodeName, noOfDecorators) => {
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.find(".d3-node-dec-outline")
 		.should("have.length", noOfDecorators);
 });
@@ -270,7 +270,7 @@ Cypress.Commands.add("verifyNumberOfDecoratorsOnLink", (linkName, noOfDecorators
 });
 
 Cypress.Commands.add("verifyNumberOfLabelDecoratorsOnNode", (nodeName, noOfDecorators) => {
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.find(".d3-node-dec-label")
 		.should("have.length", noOfDecorators);
 });
@@ -291,7 +291,7 @@ Cypress.Commands.add("verifyLabelDecoration", (nodeName, decoratorId, label, xPo
 });
 
 Cypress.Commands.add("verifyDecorationTransformOnNode", (nodeName, decoratorId, xPos, yPos) => {
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.find(".d3-node-dec-group")
 		.then((decorators) => {
 			const decorator = decorators.filter((idx) =>
@@ -315,7 +315,7 @@ Cypress.Commands.add("verifyDecorationTransformOnLink", (linkName, decoratorId, 
 });
 
 Cypress.Commands.add("verifyDecorationImage", (nodeName, decoratorId, decoratorImage) => {
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.find(".d3-node-dec-image")
 		.then((decoratorImages) => {
 			const decorator = decoratorImages.filter((idx) =>
@@ -373,19 +373,19 @@ Cypress.Commands.add("verifyEditActionHandlerEditCommentEntryInConsole", (commen
 });
 
 Cypress.Commands.add("verifyErrorMarkerOnNode", (nodeName) => {
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.find(".d3-error-circle")
 		.should("have.length", 1);
 });
 
 Cypress.Commands.add("verifyWarningMarkerOnNode", (nodeName) => {
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.find(".d3-warning-circle")
 		.should("have.length", 1);
 });
 
 Cypress.Commands.add("verifyNoErrorOrWarningMarkerOnNode", (nodeName) => {
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.then((node) => {
 			// Verify error marker does not exist
 			cy.wrap(node)
@@ -400,13 +400,13 @@ Cypress.Commands.add("verifyNoErrorOrWarningMarkerOnNode", (nodeName) => {
 });
 
 Cypress.Commands.add("verifyErrorMarkerOnNodeInSupernode", (nodeName, supernodeName) => {
-	cy.getNodeForLabelInSupernode(nodeName, supernodeName)
+	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
 		.find(".d3-error-circle")
 		.should("have.length", 1);
 });
 
 Cypress.Commands.add("verifyNoErrorOrWarningMarkerOnNodeInSupernode", (nodeName, supernodeName) => {
-	cy.getNodeForLabelInSupernode(nodeName, supernodeName)
+	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
 		.then((node) => {
 			// Verify error marker does not exist
 			cy.wrap(node)
