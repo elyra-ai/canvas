@@ -44,20 +44,23 @@ const notificationMessageCallback = sinon.spy();
 const notificationMessage0 = {
 	id: "notification-0",
 	title: "Notification Message 0",
-	type: "info"
+	type: "info",
+	key: "key-0"
 };
 const notificationMessage1 = {
 	id: "notification-1",
 	title: "Notification Message 1",
 	type: "success",
-	content: "Notification message 1 content"
+	content: "Notification message 1 content",
+	key: "key-1"
 };
 const notificationMessage2 = {
 	id: "notification-2",
 	title: "Notification Message 2",
 	type: "warning",
 	content: "Notification message 2 content. This second line should wrap to the next line.",
-	timestamp: "May 7, 2018"
+	timestamp: "May 7, 2018",
+	key: "key-2"
 };
 const notificationMessage3 = {
 	id: "notification-3",
@@ -65,7 +68,8 @@ const notificationMessage3 = {
 	type: "error",
 	content: "Notification message 3 content",
 	timestamp: "May 7, 2018",
-	callback: notificationMessageCallback
+	callback: notificationMessageCallback,
+	key: "key-3"
 };
 
 const notificationMessage4 = {
@@ -90,6 +94,12 @@ const notificationMessages = [
 	notificationMessage1,
 	notificationMessage2,
 	notificationMessage3
+];
+
+const notificationMessages2 = [
+	notificationMessage4,
+	notificationMessage5,
+	notificationMessage6
 ];
 
 describe("notification panel renders correctly", () => {
@@ -176,7 +186,18 @@ describe("canvas controller APIs for notification panel work correctly", () => {
 		expect(canvasController.getNotificationMessages()).to.eql([]);
 
 		canvasController.setNotificationMessages(notificationMessages);
+		// all these messages already have keys, so no new keys should be generated for them
 		expect(canvasController.getNotificationMessages()).to.eql(notificationMessages);
+	});
+
+	it("set messages with new keys, if not present, correctly in canvasController", () => {
+		canvasController.setNotificationMessages([]);
+		expect(canvasController.getNotificationMessages()).to.eql([]);
+
+		canvasController.setNotificationMessages(notificationMessages2);
+
+		expect(canvasController.getNotificationMessages()).to.not.eql(notificationMessages2);
+		expect(compareMessages(canvasController.getNotificationMessages(), notificationMessages2)).to.be.true;
 	});
 
 	it("get messages correctly in canvasController", () => {
@@ -433,3 +454,10 @@ describe("notification counter and color updates correctly", () => {
 		expect(indicatorClasses).to.equal("canvas-icon properties-icon fill notificationCounterIcon error");
 	});
 });
+
+function compareMessages(messages1, messages2) {
+	// don't compare the randomly generated keys (if any) to the original messages
+	messages1.forEach((message) => delete message.key);
+	messages2.forEach((message) => delete message.key);
+	expect(isEqual(messages1, messages2)).to.be.true;
+}
