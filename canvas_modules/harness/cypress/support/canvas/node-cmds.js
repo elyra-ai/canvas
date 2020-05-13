@@ -14,20 +14,27 @@
  * limitations under the License.
  */
 
-Cypress.Commands.add("getNodeForLabel", (nodeLabel) =>
-	cy.get(getNodeGrpSelector())
-		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel)));
+Cypress.Commands.add("getNodeWithLabel", (nodeLabel) => {
+	cy.get("body").then(($body) => {
+		if ($body.find(".d3-node-group").length) {
+			cy.get(getNodeGrpSelector())
+				.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));
+		}
+		// No nodes found on canvas
+		return null;
+	});
+});
 
 Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
-	cy.getNodeForLabel(nodeLabel)
+	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => node[0].getAttribute("data-id").substring(11)));
 
-Cypress.Commands.add("getNodeForLabelInSubFlow", (nodeLabel) =>
+Cypress.Commands.add("getNodeWithLabelInSubFlow", (nodeLabel) =>
 	cy.get(getNodeGrpSelectorInSubFlow())
 		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel)));
 
-Cypress.Commands.add("getNodeForLabelInSupernode", (nodeLabel, supernodeName) => {
-	cy.getNodeForLabel(supernodeName)
+Cypress.Commands.add("getNodeWithLabelInSupernode", (nodeLabel, supernodeName) => {
+	cy.getNodeWithLabel(supernodeName)
 		.then((supernode) => {
 			const supernodeId = supernode[0].getAttribute("data-id").substring(11);
 			cy.get(getNodeGrpSelectorInSupernode(supernodeId))
@@ -107,7 +114,7 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	cy.useCtrlOrCmdKey().then((selectedKey) => {
 		cy.get("body")
 			.type(selectedKey, { release: false })
-			.getNodeForLabel(nodeName)
+			.getNodeWithLabel(nodeName)
 			.click();
 		// Cancel the command/ctrl key press -- the documentation doesn't say
 		// this needs to be done but if it isn't the command key stays pressed down
@@ -118,7 +125,7 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 });
 
 Cypress.Commands.add("rightClickNode", (nodeName) => {
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.rightclick();
 });
 
@@ -147,7 +154,7 @@ Cypress.Commands.add("isNodeSelected", (nodeName) => {
 });
 
 Cypress.Commands.add("clickDecoratorHotspotOnNode", (decoratorId, nodeName) => {
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.find(`.d3-node-dec-outline[data-id=node_dec_outln_0_${decoratorId}]`)
 		.click();
 });
@@ -182,7 +189,7 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 
 // Solution found here - https://github.com/cypress-io/cypress/issues/3441#issuecomment-463239982
 Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
-	cy.getNodeForLabel(nodeLabel)
+	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => {
 			const srcSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "body") + "']";
 			cy.window().then((win) => {
@@ -195,14 +202,30 @@ Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 		});
 });
 
-Cypress.Commands.add("deleteNode", (nodeLabel) => {
+Cypress.Commands.add("deleteNodeUsingContextMenu", (nodeLabel) => {
 	// Delete node from context menu
-	cy.getNodeForLabel(nodeLabel).rightclick();
+	cy.getNodeWithLabel(nodeLabel).rightclick();
 	cy.clickOptionFromContextMenu("Delete");
 });
 
+Cypress.Commands.add("deleteNodeUsingKeyboard", (nodeName) => {
+	// Delete node by pressing 'Delete' key on keyboard
+	cy.useDeleteKey()
+		.then((deleteKey) => {
+			cy.getNodeWithLabel(nodeName)
+				.click()
+				.type(deleteKey);
+		});
+});
+
+Cypress.Commands.add("deleteNodeUsingToolbar", (nodeName) => {
+	// Select node and press delete icon on toolbar
+	cy.getNodeWithLabel(nodeName).click();
+	cy.clickToolbarDelete();
+});
+
 Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
-	cy.getNodeForLabel(nodeLabel).then((node) => {
+	cy.getNodeWithLabel(nodeLabel).then((node) => {
 		const nodeDimensions = {
 			x_pos: node[0].__data__.x_pos,
 			y_pos: node[0].__data__.y_pos,
@@ -211,4 +234,26 @@ Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
 		};
 		return nodeDimensions;
 	});
+});
+
+Cypress.Commands.add("selectAllNodesUsingCtrlOrCmdKey", () => {
+	cy.get("#canvas-div-0").find(".node-image")
+		.then((nodes) => {
+			cy.useCtrlOrCmdKey()
+				.then((selectedKey) => {
+					// Press and hold the ctrl/cmd key
+					cy.get("body")
+						.type(selectedKey, { release: false });
+
+					// Click all the nodes
+					nodes.each((idx, node) => {
+						cy.wrap(node)
+							.click();
+					});
+
+					// Cancel the ctrl/cmd key press
+					cy.get("body")
+						.type(selectedKey, { release: true });
+				});
+		});
 });

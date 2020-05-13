@@ -76,7 +76,7 @@ describe("Sanity test auto layout variations", function() {
 		cy.verifyNumberOfPortDataLinks(3);
 
 		// Select Var. File node
-		cy.getNodeForLabel("Var. File").click();
+		cy.getNodeWithLabel("Var. File").click();
 
 		// Double click Sort node on canvas
 		cy.doubleClickNodeInCategory("Sort");
@@ -91,7 +91,7 @@ describe("Sanity test auto layout variations", function() {
 		cy.verifyNumberOfPortDataLinks(5);
 
 		// Select Aggregate node
-		cy.getNodeForLabel("Aggregate").click();
+		cy.getNodeWithLabel("Aggregate").click();
 
 		// Double click Balance node on canvas
 		cy.doubleClickNodeInCategory("Balance");
@@ -107,7 +107,7 @@ describe("Sanity test auto layout variations", function() {
 		cy.verifyNumberOfPortDataLinks(6);
 
 		// Select Database node
-		cy.getNodeForLabel("Database").click();
+		cy.getNodeWithLabel("Database").click();
 
 		// Double click Type node on canvas
 		cy.clickCategory("Field Ops");
@@ -117,7 +117,7 @@ describe("Sanity test auto layout variations", function() {
 		cy.verifyNumberOfPortDataLinks(7);
 
 		// Select Type node
-		cy.getNodeForLabel("Type").click();
+		cy.getNodeWithLabel("Type").click();
 
 		// Double click Object Store node on canvas
 		cy.clickCategory("Export");
@@ -127,7 +127,7 @@ describe("Sanity test auto layout variations", function() {
 		cy.verifyNumberOfPortDataLinks(8);
 
 		// Select Object Store node
-		cy.getNodeForLabel("Object Store").click();
+		cy.getNodeWithLabel("Object Store").click();
 
 		// Double click Object Store node on canvas
 		cy.doubleClickNodeInCategory("Object Store");
@@ -182,9 +182,9 @@ describe("Test that auto-nodes are added to an in-place expanded supernode", fun
 	});
 
 	it("Test that two auto nodes are added to the sub-flow", function() {
-		cy.getNodeForLabel("Supernode").rightclick();
+		cy.getNodeWithLabel("Supernode").rightclick();
 		cy.clickOptionFromContextMenu("Expand supernode");
-		cy.getNodeForLabelInSubFlow("Type").click();
+		cy.getNodeWithLabelInSubFlow("Type").click();
 
 		// Test that first auto node is added to the sub-flow
 		cy.clickToolbarPaletteOpen();

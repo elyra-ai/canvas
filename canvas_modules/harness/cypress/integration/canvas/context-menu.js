@@ -32,7 +32,7 @@ describe("Test of context menu", function() {
 		cy.verifyOptionInContextMenu("Undo");
 
 		// Test the node context menu has an enabled Edit menu
-		cy.getNodeForLabel("DRUG1n").rightclick();
+		cy.getNodeWithLabel("DRUG1n").rightclick();
 		cy.clickOptionFromContextSubmenu("Edit", "Copy");
 
 		// Test the context menu is pushed to the left when user clicks near right side of the page
@@ -51,7 +51,7 @@ describe("Test of context menu", function() {
 
 		// Test the context menu is pushed to the left correctly when the palette is open AND the right flyout is open
 		cy.get("#canvas-div-0").click(1, 1);
-		cy.getNodeForLabel("Na_to_K").dblclick();
+		cy.getNodeWithLabel("Na_to_K").dblclick();
 		cy.rightClickToDisplayContextMenu(640, 300);
 		cy.verifyContextMenuPosition(640, 300);
 
@@ -59,7 +59,7 @@ describe("Test of context menu", function() {
 		// where it would appear off the bottom of the screen
 		// To do this, use zoom to fit to get a node near the bottom of the screen
 		cy.clickToolbarZoomToFit();
-		cy.getNodeForLabel("Neural Net").rightclick();
+		cy.getNodeWithLabel("Neural Net").rightclick();
 		cy.clickOptionFromContextMenu("Highlight");
 		cy.verifySubmenuPushedUpBy(91);
 

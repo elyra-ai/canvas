@@ -23,7 +23,7 @@ describe("Test node link disconnection", function() {
 	it("Test disconnecting node from context menu", function() {
 		// Test disconnect context menu option functionality
 		cy.verifyNumberOfPortDataLinks(5);
-		cy.getNodeForLabel("Discard Fields").rightclick();
+		cy.getNodeWithLabel("Discard Fields").rightclick();
 		cy.clickOptionFromContextMenu("Disconnect");
 		cy.verifyNumberOfPortDataLinks(3);
 

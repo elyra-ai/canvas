@@ -38,3 +38,9 @@ Cypress.Commands.add("useCtrlOrCmdKey", () => {
 	const selectedKey = Cypress.platform === "darwin" ? "{meta}" : "{ctrl}";
 	return selectedKey;
 });
+
+// Press 'Delete' key on keyboard
+Cypress.Commands.add("useDeleteKey", () => "{del}");
+
+// Press 'shift' key on keyboard
+Cypress.Commands.add("useShiftKey", () => "{shift}");

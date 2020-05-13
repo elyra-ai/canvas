@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as testUtils from "../../utils/eventlog-utils";
 
 Cypress.Commands.add("verifyReadOnlyTextValue", (controlId, value) => {
 	cy.get("div[data-id='properties-" + controlId + "'] span")
@@ -31,4 +32,21 @@ Cypress.Commands.add("verifyNoTextOverflow", (controlId) => {
 	cy.get("div[data-id='properties-" + controlId + "'] span")
 		.invoke("height")
 		.should("be.lt", 25);
+});
+
+Cypress.Commands.add("verifyPropertiesFlyoutTitle", (givenTitle) => {
+	cy.get(".properties-title-editor-input input")
+		.should("have.value", givenTitle);
+});
+
+Cypress.Commands.add("verifyPropertiesFlyoutDoesNotExist", () => {
+	cy.get("#node-title-editor-right-flyout-panel")
+		.should("not.exist");
+});
+
+Cypress.Commands.add("verifyNewPropertiesFlyoutTitleEntryInConsole", (newTitle) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
+		expect(newTitle).to.equal(lastEventLog.data.title);
+	});
 });
