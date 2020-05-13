@@ -30,6 +30,7 @@ class NotificationPanel extends React.Component {
 		super(props);
 		this.state = {};
 		this.handleNotificationPanelClickOutside = this.handleNotificationPanelClickOutside.bind(this);
+		this.closeNotification = this.closeNotification.bind(this);
 	}
 
 	componentDidMount() {
@@ -54,7 +55,7 @@ class NotificationPanel extends React.Component {
 			</div>);
 
 			const closeMessage = message.closeMessage
-				? (<div className = "notification-message-close">
+				? (<div className = "notification-message-close" onClick={() => this.closeNotification(message.key)}>
 					{message.closeMessage}
 				</div>)
 				: null;
@@ -111,6 +112,10 @@ class NotificationPanel extends React.Component {
 		if (messageCallback) {
 			messageCallback(id);
 		}
+	}
+
+	closeNotification(messageKey) {
+		this.props.canvasController.deleteNotificationMessages(messageKey);
 	}
 
 	render() {
