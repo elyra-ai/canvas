@@ -49,7 +49,7 @@ Cypress.Commands.add("getSupernodePipeline", (supernodeName) => {
 	});
 });
 
-Cypress.Commands.add("getNodeFromObjectModel", (nodeName) => {
+Cypress.Commands.add("getNodeLabelCountFromObjectModel", (nodeName) => {
 	let count = 0;
 	cy.getPipeline()
 		.then((pipeline) => {
@@ -63,7 +63,7 @@ Cypress.Commands.add("getNodeFromObjectModel", (nodeName) => {
 		});
 });
 
-Cypress.Commands.add("getCommentFromObjectModel", (commentText) => {
+Cypress.Commands.add("getCommentContentCountFromObjectModel", (commentText) => {
 	let count = 0;
 	cy.getPipeline()
 		.then((pipeline) => {
@@ -141,7 +141,7 @@ Cypress.Commands.add("clearMessagesFromAllNodes", () => {
 	});
 });
 
-Cypress.Commands.add("isObjectModelEmpty", () => {
+Cypress.Commands.add("getObjectCountFromObjectModel", () => {
 	cy.getPipeline()
 		.then((pipeline) =>
 			(pipeline.nodes.length + pipeline.comments.length + pipeline.links.length)

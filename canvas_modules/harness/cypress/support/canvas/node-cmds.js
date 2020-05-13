@@ -236,14 +236,14 @@ Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
 	});
 });
 
-Cypress.Commands.add("selectAllNodesUsingShiftKey", () => {
+Cypress.Commands.add("selectAllNodesUsingCtrlOrCmdKey", () => {
 	cy.get("#canvas-div-0").find(".node-image")
 		.then((nodes) => {
-			cy.useShiftKey()
-				.then((shiftKey) => {
-					// Press and hold the shift key
+			cy.useCtrlOrCmdKey()
+				.then((selectedKey) => {
+					// Press and hold the ctrl/cmd key
 					cy.get("body")
-						.type(shiftKey, { release: false });
+						.type(selectedKey, { release: false });
 
 					// Click all the nodes
 					nodes.each((idx, node) => {
@@ -251,9 +251,9 @@ Cypress.Commands.add("selectAllNodesUsingShiftKey", () => {
 							.click();
 					});
 
-					// Cancel the shift key press
+					// Cancel the ctrl/cmd key press
 					cy.get("body")
-						.type(shiftKey, { release: true });
+						.type(selectedKey, { release: true });
 				});
 		});
 });

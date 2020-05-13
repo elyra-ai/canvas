@@ -35,7 +35,7 @@ describe("Sanity test adding nodes from palette", function() {
 		// Link comment to node
 		cy.getNodeWithLabel("Derive").click();
 		cy.addCommentToPosition("This comment box should be linked to the derive node.", 300, 250);
-		cy.verifyCommentIsAdded("This comment box should be linked to the derive node.");
+		cy.verifyCommentExists("This comment box should be linked to the derive node.");
 
 		// Add nodes from palette and link nodes
 		cy.clickToolbarPaletteOpen();
@@ -57,7 +57,7 @@ describe("Sanity test adding nodes from palette", function() {
 		// Link comment to node
 		cy.getNodeWithLabel("Type").click();
 		cy.addCommentToPosition("This comment box should be linked to the type node.", 550, 350);
-		cy.verifyCommentIsAdded("This comment box should be linked to the type node.");
+		cy.verifyCommentExists("This comment box should be linked to the type node.");
 		cy.linkCommentToNode("This comment box should be linked to the type node.", "Neural Net");
 
 		// Add comment
@@ -66,7 +66,7 @@ describe("Sanity test adding nodes from palette", function() {
 			"This comment is meant to simulate a typical comment for annotating the entire canvas.",
 			750, 50
 		);
-		cy.verifyCommentIsAdded(
+		cy.verifyCommentExists(
 			"This is the functional test canvas that we build through automated test cases. " +
 			"This comment is meant to simulate a typical comment for annotating the entire canvas."
 		);
@@ -130,8 +130,11 @@ describe("Sanity test selecting nodes open properties", function() {
 		cy.getNodeWithLabel("Var. File").dblclick();
 		cy.verifyPropertiesFlyoutTitle("Var. File");
 
+		// Click on canvas to clear selections
+		cy.get(".svg-area").click(1, 1);
+
 		// Selecting all nodes should not open node properties
-		cy.selectAllNodesUsingShiftKey();
+		cy.selectAllNodesUsingCtrlOrCmdKey();
 		cy.verifyPropertiesFlyoutDoesNotExist();
 
 		// Click on canvas to clear selections

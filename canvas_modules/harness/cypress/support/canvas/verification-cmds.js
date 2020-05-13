@@ -36,7 +36,7 @@ Cypress.Commands.add("verifyNodeIsDeleted", (nodeName, deleteUsingContextMenu) =
 		.should("not.exist");
 
 	// verify that the node is not in the internal object model
-	cy.getNodeFromObjectModel(nodeName)
+	cy.getNodeLabelCountFromObjectModel(nodeName)
 		.should("eq", 0);
 
 	// Verify delete selected objects entry in console
@@ -49,7 +49,7 @@ Cypress.Commands.add("verifyCommentIsDeleted", (commentText) => {
 		.should("not.exist");
 
 	// verify that the comment is not in the internal object model
-	cy.getCommentFromObjectModel(commentText)
+	cy.getCommentContentCountFromObjectModel(commentText)
 		.should("eq", 0);
 });
 
@@ -109,13 +109,13 @@ Cypress.Commands.add("verifyCommentIsNotSelected", (commentText) => {
 	cy.isCommentSelected(commentText).should("eq", false);
 });
 
-Cypress.Commands.add("verifyCommentIsAdded", (commentText) => {
+Cypress.Commands.add("verifyCommentExists", (commentText) => {
 	// verify comment is in the DOM
 	cy.getCommentWithText(commentText)
 		.should("have.length", 1);
 
 	// verify that the comment is in the internal object model
-	cy.getCommentFromObjectModel(commentText)
+	cy.getCommentContentCountFromObjectModel(commentText)
 		.then((count) => expect(count).to.equal(1));
 
 	// verify that an event for a new comment is in the external object model event log
@@ -446,7 +446,7 @@ Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => 
 });
 
 Cypress.Commands.add("verifyObjectModelIsEmpty", () => {
-	cy.isObjectModelEmpty()
+	cy.getObjectCountFromObjectModel()
 		.then((count) => expect(count).to.equal(0));
 });
 
