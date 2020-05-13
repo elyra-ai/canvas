@@ -102,30 +102,30 @@ describe("Test creating comment from toolbar and editing them within supernodes"
 		cy.dragNodeToPosition("Var. File", 400, 300);
 
 		// Add a comment using the toolbar (which should link the node to the comment)
-		cy.getNodeForLabel("Var. File").click();
+		cy.getNodeWithLabel("Var. File").click();
 		cy.clickToolbarAddComment();
 		cy.verifyNumberOfCommentLinks(1);
 		cy.editTextInComment("", "Inner node");
 
 		// Add the node and comment to a supernode
-		cy.getNodeForLabel("Var. File").rightclick();
+		cy.getNodeWithLabel("Var. File").rightclick();
 		cy.clickOptionFromContextMenu("Create supernode");
 
 		// Add a comment to the supernode
-		cy.getNodeForLabel("Supernode").click();
+		cy.getNodeWithLabel("Supernode").click();
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Inner Supernode");
 
 		// Create a supernode to contain the supernode and its comment
-		cy.getNodeForLabel("Supernode").rightclick();
+		cy.getNodeWithLabel("Supernode").rightclick();
 		cy.clickOptionFromContextMenu("Create supernode");
 
 		// Open the supernode
-		cy.getNodeForLabel("Supernode").rightclick();
+		cy.getNodeWithLabel("Supernode").rightclick();
 		cy.clickOptionFromContextMenu("Expand supernode");
 
 		// Open the inner supernode
-		cy.getNodeForLabelInSubFlow("Supernode").rightclick();
+		cy.getNodeWithLabelInSubFlow("Supernode").rightclick();
 		cy.clickOptionFromContextMenu("Expand supernode");
 
 		// Test editing the inner comment and the nested comment
