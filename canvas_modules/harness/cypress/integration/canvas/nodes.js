@@ -22,48 +22,85 @@ describe("Sanity test adding nodes from palette", function() {
 	});
 
 	it("Test adding nodes from palette, link nodes, link comment to node, delete node, delete comment", function() {
+		// Add nodes from palette and link nodes
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Import");
 		cy.dragNodeToPosition("Var. File", 300, 200);
 		cy.clickCategory("Field Ops");
 		cy.dragNodeToPosition("Derive", 400, 200);
-		cy.linkNodes("Var. File", "Derive", 1);
+		cy.linkNodes("Var. File", "Derive");
+		cy.verifyLinkBetweenNodes("Var. File", "Derive", 1);
 		cy.clickToolbarPaletteClose();
+
+		// Link comment to node
 		cy.getNodeWithLabel("Derive").click();
 		cy.addCommentToPosition("This comment box should be linked to the derive node.", 300, 250);
+		cy.verifyCommentIsAdded("This comment box should be linked to the derive node.");
+
+		// Add nodes from palette and link nodes
 		cy.clickToolbarPaletteOpen();
 		cy.dragNodeToPosition("Filter", 500, 200);
-		cy.linkNodes("Derive", "Filter", 3);
+		cy.linkNodes("Derive", "Filter");
+		cy.verifyLinkBetweenNodes("Derive", "Filter", 3);
 		cy.dragNodeToPosition("Type", 600, 200);
-		cy.linkNodes("Filter", "Type", 4);
+		cy.linkNodes("Filter", "Type");
+		cy.verifyLinkBetweenNodes("Filter", "Type", 4);
 		cy.clickCategory("Modeling");
 		cy.dragNodeToPosition("C5.0", 700, 100);
 		cy.dragNodeToPosition("Neural Net", 800, 300);
 		cy.clickToolbarPaletteClose();
-		cy.linkNodes("Type", "C5.0", 5);
-		cy.linkNodes("Type", "Neural Net", 6);
+		cy.linkNodes("Type", "C5.0");
+		cy.verifyLinkBetweenNodes("Type", "C5.0", 5);
+		cy.linkNodes("Type", "Neural Net");
+		cy.verifyLinkBetweenNodes("Type", "Neural Net", 6);
+
+		// Link comment to node
 		cy.getNodeWithLabel("Type").click();
 		cy.addCommentToPosition("This comment box should be linked to the type node.", 550, 350);
+		cy.verifyCommentIsAdded("This comment box should be linked to the type node.");
 		cy.linkCommentToNode("This comment box should be linked to the type node.", "Neural Net");
+
+		// Add comment
 		cy.addCommentToPosition(
 			"This is the functional test canvas that we build through automated test cases. " +
 			"This comment is meant to simulate a typical comment for annotating the entire canvas.",
 			750, 50
 		);
-
-		// Now delete everything and go back to empty canvas
-		cy.deleteNode("Var. File");
-		cy.deleteNodeUsingKeyboard("Derive");
-		cy.deleteComment("This comment box should be linked to the derive node.");
-		cy.deleteNode("Filter");
-		cy.deleteComment("This comment box should be linked to the type node.");
-		cy.deleteNode("Type");
-		cy.deleteNode("C5.0");
-		cy.deleteNode("Neural Net");
-		cy.deleteComment(
+		cy.verifyCommentIsAdded(
 			"This is the functional test canvas that we build through automated test cases. " +
 			"This comment is meant to simulate a typical comment for annotating the entire canvas."
 		);
+
+		// Now delete everything and go back to empty canvas
+		// Delete Nodes
+		cy.deleteNodeUsingContextMenu("Var. File");
+		cy.verifyNodeIsDeleted("Var. File", true);
+		cy.deleteNodeUsingKeyboard("Derive");
+		cy.verifyNodeIsDeleted("Derive");
+		cy.deleteNodeUsingToolbar("Filter");
+		cy.verifyNodeIsDeleted("Filter");
+
+		// Delete Comments
+		cy.deleteCommentUsingContextMenu("This comment box should be linked to the derive node.");
+		cy.verifyCommentIsDeleted("This comment box should be linked to the derive node.");
+		cy.deleteCommentUsingKeyboard("This comment box should be linked to the type node.");
+		cy.verifyCommentIsDeleted("This comment box should be linked to the type node.");
+		cy.deleteCommentUsingToolbar(
+			"This is the functional test canvas that we build through automated test cases. " +
+			"This comment is meant to simulate a typical comment for annotating the entire canvas."
+		);
+		cy.verifyCommentIsDeleted(
+			"This is the functional test canvas that we build through automated test cases. " +
+			"This comment is meant to simulate a typical comment for annotating the entire canvas."
+		);
+
+		// Delete Nodes
+		cy.deleteNodeUsingContextMenu("Type");
+		cy.verifyNodeIsDeleted("Type", true);
+		cy.deleteNodeUsingKeyboard("C5.0");
+		cy.verifyNodeIsDeleted("C5.0");
+		cy.deleteNodeUsingToolbar("Neural Net");
+		cy.verifyNodeIsDeleted("Neural Net");
 
 		// Verify that the diagram.json has no content.
 		cy.verifyObjectModelIsEmpty();
@@ -94,7 +131,7 @@ describe("Sanity test selecting nodes open properties", function() {
 		cy.verifyPropertiesFlyoutTitle("Var. File");
 
 		// Selecting all nodes should not open node properties
-		cy.selectAllNodes();
+		cy.selectAllNodesUsingShiftKey();
 		cy.verifyPropertiesFlyoutDoesNotExist();
 
 		// Click on canvas to clear selections
@@ -103,7 +140,8 @@ describe("Sanity test selecting nodes open properties", function() {
 		// Node properties should not exist after node is deleted
 		cy.getNodeWithLabel("Var. File").dblclick();
 		cy.verifyPropertiesFlyoutTitle("Var. File");
-		cy.deleteNode("Var. File");
+		cy.deleteNodeUsingContextMenu("Var. File");
+		cy.verifyNodeIsDeleted("Var. File", true);
 		cy.verifyPropertiesFlyoutDoesNotExist();
 	});
 });

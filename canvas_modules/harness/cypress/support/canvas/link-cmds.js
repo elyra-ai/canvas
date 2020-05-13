@@ -53,7 +53,7 @@ Cypress.Commands.add("clickDecoratorHotspotOnLink", (decoratorId, linkName) => {
 		.click();
 });
 
-Cypress.Commands.add("linkNodes", (srcNodeName, trgNodeName, linkCount) => {
+Cypress.Commands.add("linkNodes", (srcNodeName, trgNodeName) => {
 	// Link source node to target node
 	cy.getNodeWithLabel(srcNodeName)
 		.find(".d3-node-halo")
@@ -61,26 +61,6 @@ Cypress.Commands.add("linkNodes", (srcNodeName, trgNodeName, linkCount) => {
 	cy.getNodeWithLabel(trgNodeName)
 		.trigger("mousemove", { force: true })
 		.trigger("mouseup", { force: true });
-
-	// verify that the link is on DOM
-	cy.get(".d3-selectable-link")
-		.then((canvasLinks) => {
-			const noOfCanvasLinks = canvasLinks.length / 2; // Divide by 2 because line and arrow head use same class
-			expect(noOfCanvasLinks).to.equal(linkCount);
-		});
-
-	// verify that the link is in the internal object model
-	cy.getCountLinksBetweenNodes(srcNodeName, trgNodeName)
-		.then((noOfLinks) => expect(noOfLinks).to.equal(1));
-
-	// verify that an event for a new link is in the external object model event log
-	cy.getNodeIdForLabel(srcNodeName)
-		.then((srcNodeId) => {
-			cy.getNodeIdForLabel(trgNodeName)
-				.then((trgNodeId) => {
-					cy.verifyEditActionHandlerLinkNodesEntryInConsole(srcNodeId, trgNodeId);
-				});
-		});
 });
 
 Cypress.Commands.add("linkNodeOutputPortToNodeInputPort", (srcNodeName, srcPortId, trgNodeName, trgPortId) => {

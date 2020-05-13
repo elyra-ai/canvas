@@ -202,13 +202,10 @@ Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 		});
 });
 
-Cypress.Commands.add("deleteNode", (nodeLabel) => {
+Cypress.Commands.add("deleteNodeUsingContextMenu", (nodeLabel) => {
 	// Delete node from context menu
 	cy.getNodeWithLabel(nodeLabel).rightclick();
 	cy.clickOptionFromContextMenu("Delete");
-
-	// Verify node is deleted
-	cy.verifyNodeIsDeleted(nodeLabel);
 });
 
 Cypress.Commands.add("deleteNodeUsingKeyboard", (nodeName) => {
@@ -218,9 +215,13 @@ Cypress.Commands.add("deleteNodeUsingKeyboard", (nodeName) => {
 			cy.getNodeWithLabel(nodeName)
 				.click()
 				.type(deleteKey);
-			// Verify node is deleted
-			cy.verifyNodeIsDeleted(nodeName, true);
 		});
+});
+
+Cypress.Commands.add("deleteNodeUsingToolbar", (nodeName) => {
+	// Select node and press delete icon on toolbar
+	cy.getNodeWithLabel(nodeName).click();
+	cy.clickToolbarDelete();
 });
 
 Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
@@ -235,7 +236,7 @@ Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
 	});
 });
 
-Cypress.Commands.add("selectAllNodes", () => {
+Cypress.Commands.add("selectAllNodesUsingShiftKey", () => {
 	cy.get("#canvas-div-0").find(".node-image")
 		.then((nodes) => {
 			cy.useShiftKey()

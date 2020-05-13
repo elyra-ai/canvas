@@ -30,7 +30,7 @@ Cypress.Commands.add("verifyNodeTransformInSubFlow", (nodeLabel, transformValue)
 		.should("have.attr", "transform", transformValue);
 });
 
-Cypress.Commands.add("verifyNodeIsDeleted", (nodeName, deleteUsingKeyboard) => {
+Cypress.Commands.add("verifyNodeIsDeleted", (nodeName, deleteUsingContextMenu) => {
 	// verify node is not the canvas DOM
 	cy.getNodeWithLabel(nodeName)
 		.should("not.exist");
@@ -40,7 +40,7 @@ Cypress.Commands.add("verifyNodeIsDeleted", (nodeName, deleteUsingKeyboard) => {
 		.should("eq", 0);
 
 	// Verify delete selected objects entry in console
-	cy.verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole(nodeName, deleteUsingKeyboard);
+	cy.verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole(nodeName, deleteUsingContextMenu);
 });
 
 Cypress.Commands.add("verifyCommentIsDeleted", (commentText) => {
@@ -107,6 +107,19 @@ Cypress.Commands.add("verifyCommentIsNotSelected", (commentText) => {
 
 	// Verify comment is not selected in object model
 	cy.isCommentSelected(commentText).should("eq", false);
+});
+
+Cypress.Commands.add("verifyCommentIsAdded", (commentText) => {
+	// verify comment is in the DOM
+	cy.getCommentWithText(commentText)
+		.should("have.length", 1);
+
+	// verify that the comment is in the internal object model
+	cy.getCommentFromObjectModel(commentText)
+		.then((count) => expect(count).to.equal(1));
+
+	// verify that an event for a new comment is in the external object model event log
+	cy.verifyEditActionHandlerEditCommentEntryInConsole(commentText);
 });
 
 Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
@@ -350,16 +363,16 @@ Cypress.Commands.add("verifyEditActionHandlerLinkNodesEntryInConsole", (srcNodeI
 	});
 });
 
-Cypress.Commands.add("verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole", (nodeName, deleteUsingKeyboard) => {
+Cypress.Commands.add("verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole", (nodeName, deleteUsingContextMenu) => {
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc);
 		expect(lastEventLog.event).to.equal("editActionHandler(): deleteSelectedObjects");
-		if (deleteUsingKeyboard) {
-			// node is deleted using keyboard delete key
-			expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
-		} else {
+		if (deleteUsingContextMenu) {
 			// node is deleted using context menu
 			expect(lastEventLog.data.targetObject.label).to.equal(nodeName);
+		} else {
+			// node is deleted using keyboard delete key or using toolbar delete option
+			expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
 		}
 	});
 });
@@ -435,4 +448,26 @@ Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => 
 Cypress.Commands.add("verifyObjectModelIsEmpty", () => {
 	cy.isObjectModelEmpty()
 		.then((count) => expect(count).to.equal(0));
+});
+
+Cypress.Commands.add("verifyLinkBetweenNodes", (srcNodeName, trgNodeName, linkCount) => {
+	// verify that the link is on DOM
+	cy.get(".d3-selectable-link")
+		.then((canvasLinks) => {
+			const noOfCanvasLinks = canvasLinks.length / 2; // Divide by 2 because line and arrow head use same class
+			expect(noOfCanvasLinks).to.equal(linkCount);
+		});
+
+	// verify that the link is in the internal object model
+	cy.getCountLinksBetweenNodes(srcNodeName, trgNodeName)
+		.then((noOfLinks) => expect(noOfLinks).to.equal(1));
+
+	// verify that an event for a new link is in the external object model event log
+	cy.getNodeIdForLabel(srcNodeName)
+		.then((srcNodeId) => {
+			cy.getNodeIdForLabel(trgNodeName)
+				.then((trgNodeId) => {
+					cy.verifyEditActionHandlerLinkNodesEntryInConsole(srcNodeId, trgNodeId);
+				});
+		});
 });

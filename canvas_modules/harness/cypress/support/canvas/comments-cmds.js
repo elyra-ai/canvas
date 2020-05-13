@@ -130,17 +130,6 @@ Cypress.Commands.add("addCommentToPosition", (commentText, canvasX, canvasY) => 
 	cy.editTextInComment("", commentText);
 	// Click somewhere on canvas so that comment will be saved
 	cy.get("#common-canvas-items-container-0").click(400, 400);
-
-	// verify comment is in the DOM
-	cy.getCommentWithText(commentText)
-		.should("have.length", 1);
-
-	// verify that the comment is in the internal object model
-	cy.getCommentFromObjectModel(commentText)
-		.then((count) => expect(count).to.equal(1));
-
-	// verify that an event for a new comment is in the external object model event log
-	cy.verifyEditActionHandlerEditCommentEntryInConsole(commentText);
 });
 
 Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) => {
@@ -294,12 +283,25 @@ Cypress.Commands.add("getCommentDimensions", (commentSelector) => {
 	});
 });
 
-Cypress.Commands.add("deleteComment", (commentText) => {
+Cypress.Commands.add("deleteCommentUsingContextMenu", (commentText) => {
 	// Delete comment using context menu
 	cy.getCommentWithText(commentText)
 		.rightclick();
 	cy.clickOptionFromContextMenu("Delete");
+});
 
-	// Verify comment is deleted
-	cy.verifyCommentIsDeleted(commentText);
+Cypress.Commands.add("deleteCommentUsingKeyboard", (commentText) => {
+	// Delete comment by pressing 'Delete' key on keyboard
+	cy.useDeleteKey()
+		.then((deleteKey) => {
+			cy.getCommentWithText(commentText)
+				.click()
+				.type(deleteKey);
+		});
+});
+
+Cypress.Commands.add("deleteCommentUsingToolbar", (commentText) => {
+	// Select comment and press delete icon on toolbar
+	cy.getCommentWithText(commentText).click();
+	cy.clickToolbarDelete();
 });

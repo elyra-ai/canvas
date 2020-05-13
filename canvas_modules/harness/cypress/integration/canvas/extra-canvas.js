@@ -40,10 +40,12 @@ describe("Test of extra canvas node operation", function() {
 		cy.verifyNumberOfNodesInExtraCanvas(10);
 
 		// Delete node from extra canvas
-		cy.deleteNode("Define Types");
+		cy.deleteNodeUsingContextMenu("Define Types");
+		cy.verifyNodeIsDeleted("Define Types", true);
 		cy.verifyNumberOfNodesInExtraCanvas(9);
 
-		cy.deleteNode("Derive");
+		cy.deleteNodeUsingContextMenu("Derive");
+		cy.verifyNodeIsDeleted("Derive", true);
 		cy.verifyNumberOfNodesInExtraCanvas(8);
 
 	});
