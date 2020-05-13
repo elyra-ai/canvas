@@ -75,3 +75,15 @@ Cypress.Commands.add("saveWideFlyout", (panelName) => {
 			.click();
 	});
 });
+
+Cypress.Commands.add("clickPropertiesFlyoutTitleEditIcon", () => {
+	cy.get("button.properties-title-editor-btn.edit").click();
+});
+
+Cypress.Commands.add("enterNewPropertiesFlyoutTitle", (newTitle) => {
+	cy.get("div.properties-title-editor-input")
+		.find("input")
+		.focus()
+		.type("{selectall}")
+		.type(newTitle);
+});

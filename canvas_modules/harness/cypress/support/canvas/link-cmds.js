@@ -53,6 +53,16 @@ Cypress.Commands.add("clickDecoratorHotspotOnLink", (decoratorId, linkName) => {
 		.click();
 });
 
+Cypress.Commands.add("linkNodes", (srcNodeName, trgNodeName) => {
+	// Link source node to target node
+	cy.getNodeWithLabel(srcNodeName)
+		.find(".d3-node-halo")
+		.trigger("mousedown", "right", { button: 0 }, { force: true });
+	cy.getNodeWithLabel(trgNodeName)
+		.trigger("mousemove", { force: true })
+		.trigger("mouseup", { force: true });
+});
+
 Cypress.Commands.add("linkNodeOutputPortToNodeInputPort", (srcNodeName, srcPortId, trgNodeName, trgPortId) => {
 	cy.getNodePortSelector(srcNodeName, "out_port", srcPortId)
 		.then((srcSelector) => {

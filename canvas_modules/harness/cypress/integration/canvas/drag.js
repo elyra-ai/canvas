@@ -24,7 +24,7 @@ describe("Test to see if regular selection and drag behavior works " +
 	it("Test dragging single and multiple selected nodes, " +
   "test dragging a node and comment which is not selected", function() {
 		// Select one node
-		cy.getNodeForLabel("Execution node").click();
+		cy.getNodeWithLabel("Execution node").click();
 
 		// Verify only one node is selected
 		cy.verifyNodeIsSelected("Execution node");
@@ -117,7 +117,7 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 	it.skip("Test dragging single and multiple selected nodes, " +
   "test dragging a node and comment which is not selected", function() {
 		// Select one node
-		cy.getNodeForLabel("Execution node").click();
+		cy.getNodeWithLabel("Execution node").click();
 
 		// Verify only one node is selected
 		cy.verifyNodeIsSelected("Execution node");
