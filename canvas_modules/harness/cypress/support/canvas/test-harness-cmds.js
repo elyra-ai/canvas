@@ -56,8 +56,16 @@ Cypress.Commands.add("openCanvasPalette", (paletteName) => {
 	// allows the canvas to load and display before any more test case steps
 	// are executed. Note: this won't work if the testcase selects a second
 	// canvas while an existing canvas with nodes is displayed.
-	cy.get(".palette-flyout-category");
-	cy.toggleCommonCanvasSidePanel();
+	cy.document().then((doc) => {
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+			// Palette Layout - Modal
+			cy.get(".palette-categories");
+		} else {
+			// Palette Layout - Flyout
+			cy.get(".palette-flyout-category");
+		}
+		cy.toggleCommonCanvasSidePanel();
+	});
 });
 
 Cypress.Commands.add("openCanvasPaletteForExtraCanvas", (paletteName) => {
@@ -103,6 +111,18 @@ Cypress.Commands.add("updateDecorationsJSON", (decoratorsJSON) => {
 		.find("textarea")
 		.clear()
 		.type(decoratorsJSON);
+});
+
+Cypress.Commands.add("setCategoryId", (categoryId) => {
+	cy.get("#harness-categoryId")
+		.clear()
+		.type(categoryId);
+});
+
+Cypress.Commands.add("setCategoryName", (categoryName) => {
+	cy.get("#harness-categoryName")
+		.clear()
+		.type(categoryName);
 });
 
 Cypress.Commands.add("submitAPI", () => {

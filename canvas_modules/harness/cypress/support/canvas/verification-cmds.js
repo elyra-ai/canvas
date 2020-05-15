@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint max-len: "off" */
+
 import * as testUtils from "../../utils/eventlog-utils";
 
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, transformValue) => {
@@ -469,5 +471,32 @@ Cypress.Commands.add("verifyLinkBetweenNodes", (srcNodeName, trgNodeName, linkCo
 				.then((trgNodeId) => {
 					cy.verifyEditActionHandlerLinkNodesEntryInConsole(srcNodeId, trgNodeId);
 				});
+		});
+});
+
+Cypress.Commands.add("verifyNodeDoesnotExistInPalette", (nodeName) => {
+	// expect index is -1 since node should not be found in palette
+	cy.findNodeIndexInPalette(nodeName)
+		.then((idx) => expect(idx).to.equal(-1));
+});
+
+Cypress.Commands.add("verifyNodeIsAddedInPaletteCategory", (nodeName, nodeCategory) => {
+	// Verify category exists in palette
+	cy.findCategory(nodeCategory)
+		.should("not.be.null");
+
+	// Open category
+	cy.clickCategory(nodeCategory);
+
+	// Verify node exists in category
+	cy.findNodeIndexInPalette(nodeName)
+		.should("not.eq", -1);
+});
+
+Cypress.Commands.add("verifyNodeImageCSS", (nodeName, style, value) => {
+	cy.findNodeIndexInPalette(nodeName)
+		.then((nodeIndex) => {
+			cy.get(".palette-list-item-icon").eq(nodeIndex)
+				.should("have.css", style, value);
 		});
 });
