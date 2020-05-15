@@ -80,7 +80,7 @@ Feature: Palette
 		Then I resize the window size to 1400 width and 800 height
 
 		Given I am on the test harness
-		Given I have set this canvas config ""{"selectedPaletteLayout": "Flyout", "enableSaveToPalette": "true"}""
+		Given I have set this canvas config ""{"selectedPaletteLayout": "Flyout", "selectedSaveToPalette": "true"}""
 		Given I have uploaded palette "sparkPalette.json"
 		Given I have uploaded diagram "allTypesCanvas.json"
 
@@ -103,7 +103,7 @@ Feature: Palette
 		Then I resize the window size to 1400 width and 800 height
 
 		Given I am on the test harness
-		Given I have set this canvas config ""{"selectedPaletteLayout": "Flyout", "enableSaveToPalette": "true"}""
+		Given I have set this canvas config ""{"selectedPaletteLayout": "Flyout", "selectedSaveToPalette": "true"}""
 		Given I have uploaded palette "sparkPalette.json"
 		Given I have uploaded diagram "supernodeCanvas.json"
 

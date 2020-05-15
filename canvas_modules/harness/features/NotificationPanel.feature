@@ -66,9 +66,11 @@ Feature: NotificationPanel
 		Then I verify the the content of the notification message at index 1 contains text "Test error message in notification panel"
 		Then I verify the the content of the notification message at index 1 contains timestamp
 		Then I click the notification message at index 1
+		Then I switch focus back to main tab
 		Then I verify the event log of event type "Notification Message Callback" has data "Message harness-message-1 was clicked."
 		Then I verify the the content of the notification message at index 1 contains custom content "a"
-		Then I verify the browser has 1 tabs
-		Then I click the notification message link at index 1
 		Then I verify the browser has 2 tabs
+		Then I click the notification message link at index 1
+		Then I switch focus back to main tab
+		Then I verify the browser has 3 tabs
 		Then I switch focus back to main tab
