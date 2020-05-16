@@ -106,6 +106,69 @@ describe("Sanity test adding node type to existing category to palette Modal Pan
 	});
 });
 
+describe("Test saving 3 nodes of different types to palette", function() {
+	before(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout", "selectedSaveToPalette": true });
+		cy.openCanvasPalette("sparkPalette.json");
+		cy.openCanvasDefinition("allTypesCanvas.json");
+	});
+
+	it("Test saving 3 nodes of different types to palette", function() {
+		// Verify number of nodes on canvas
+		cy.clickToolbarPaletteOpen();
+		cy.verifyNumberOfNodes(5);
+
+		// Select multiple nodes and save to palette
+		cy.getNodeWithLabel("Binding (entry) node").click();
+		cy.ctrlOrCmdClickNode("Execution node");
+		cy.ctrlOrCmdClickNode("Model Node");
+		cy.rightClickNode("Execution node");
+		cy.clickOptionFromContextMenu("Save to palette");
+
+		// Open "Saved Nodes" palette category
+		cy.clickCategory("Saved Nodes");
+
+		// Add nodes from "Saved Nodes" category to canvas
+		cy.dragNodeToPosition("Binding (entry) node", 1200, 200);
+		cy.dragNodeToPosition("Execution node", 1200, 280);
+		cy.dragNodeToPosition("Model Node", 1200, 360);
+
+		// Verify number of nodes on canvas
+		cy.verifyNumberOfNodes(8);
+	});
+});
+
+describe("Test saving a supernode to palette", function() {
+	before(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout", "selectedSaveToPalette": true });
+		cy.openCanvasPalette("sparkPalette.json");
+		cy.openCanvasDefinition("supernodeCanvas.json");
+	});
+
+	it("Test saving a supernode to palette", function() {
+		// Verify number of nodes in pipeline
+		cy.clickToolbarPaletteOpen();
+		cy.verifyNumberOfNodesInPipeline(15);
+
+		// Save supernode to palette
+		cy.getNodeWithLabel("Supernode").click();
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Save to palette");
+
+		// Open "Saved Nodes" palette category
+		cy.clickCategory("Saved Nodes");
+
+		// Add Supernode from "Saved Nodes" category to canvas
+		cy.dragNodeToPosition("Supernode", 1200, 200);
+
+		// Verify number of nodes in pipeline and number of pipelines
+		cy.verifyNumberOfNodesInPipeline(16);
+		cy.verifyNumberOfPipelines(3);
+	});
+});
+
 describe("Test aspect ratio of images is preserved", function() {
 	before(() => {
 		cy.visit("/");

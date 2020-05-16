@@ -141,6 +141,13 @@ Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 	});
 });
 
+Cypress.Commands.add("verifyNumberOfNodesInPipeline", (noOfNodes) => {
+	// verify the number of nodes in the internal object model
+	cy.getPipeline().then((pipeline) => {
+		cy.getCountNodes(pipeline).should("eq", noOfNodes);
+	});
+});
+
 Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
 	cy.get("#canvas-div-1").find(".node-image")
 		.should("have.length", noOfNodes);
@@ -220,6 +227,12 @@ Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 	// verify the number of comment-links in the internal object model
 	cy.getPipeline().then((pipeline) => {
 		cy.getCountCommentLinks(pipeline).should("eq", noOfCommentLinks);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfPipelines", (noOfPipelines) => {
+	cy.getCanvasData().then((canvasData) => {
+		expect(canvasData.pipelines.length).to.equal(noOfPipelines);
 	});
 });
 
