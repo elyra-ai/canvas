@@ -38,7 +38,7 @@ describe("Sanity test adding nodes into empty canvas", function() {
 		cy.dragNodeToPosition("Select", 500, 200);
 
 		// Verify node doesn't exist in search results
-		cy.verifyNodeDoesnotExistInPalette("Sample");
+		cy.verifyNodeDoesNotExistInPalette("Sample");
 	});
 });
 

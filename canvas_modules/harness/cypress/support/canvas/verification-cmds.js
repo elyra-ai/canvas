@@ -487,7 +487,7 @@ Cypress.Commands.add("verifyLinkBetweenNodes", (srcNodeName, trgNodeName, linkCo
 		});
 });
 
-Cypress.Commands.add("verifyNodeDoesnotExistInPalette", (nodeName) => {
+Cypress.Commands.add("verifyNodeDoesNotExistInPalette", (nodeName) => {
 	// expect index is -1 since node should not be found in palette
 	cy.findNodeIndexInPalette(nodeName)
 		.then((idx) => expect(idx).to.equal(-1));
