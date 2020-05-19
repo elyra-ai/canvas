@@ -217,7 +217,7 @@ Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight)
 					cy.get(srcSizingSelector)
 						.trigger("mouseenter", startPosition, { view: win })
 						.trigger("mousedown", startPosition, { view: win });
-					cy.get(".svg-area")
+					cy.get("#canvas-div-0")
 						.trigger("mousemove", canvasX, canvasY, { view: win })
 						.trigger("mouseup", canvasX, canvasY, { view: win });
 				});
