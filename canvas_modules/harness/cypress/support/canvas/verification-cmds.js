@@ -513,3 +513,14 @@ Cypress.Commands.add("verifyNodeImageCSS", (nodeName, style, value) => {
 				.should("have.css", style, value);
 		});
 });
+
+Cypress.Commands.add("verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort", (srcNodeName, srcPortId, trgNodeName, trgPortId, linkCount) => {
+	// verify that the link is in the internal object model
+	cy.getPipeline()
+		.then((pipeline) => {
+			cy.getPortLinks(pipeline, srcNodeName, srcPortId, trgNodeName, trgPortId)
+				.then((links) => {
+					expect(links.length).to.equal(linkCount);
+				});
+		});
+});

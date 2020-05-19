@@ -79,6 +79,23 @@ Cypress.Commands.add("linkNodeOutputPortToNodeInputPort", (srcNodeName, srcPortI
 		});
 });
 
+Cypress.Commands.add("linkNodeOutputPortToNode", (srcNodeName, srcPortId, trgNodeName) => {
+	// This will simulate a drag from a specific port onto a target node rather
+	// than a specific port. This should be interpreted as a link to the zeroth
+	// port of the target node.
+	cy.getNodePortSelector(srcNodeName, "out_port", srcPortId)
+		.then((srcSelector) => {
+			cy.getNodeWithLabel(trgNodeName)
+				.then((trgSelector) => {
+					cy.get(srcSelector)
+						.trigger("mousedown", { button: 0 });
+					cy.get(trgSelector)
+						.trigger("mousemove", { force: true })
+						.trigger("mouseup", { force: true });
+				});
+		});
+});
+
 Cypress.Commands.add("getNodePortSelector", (nodeName, nodeElement, portId) => {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	cy.getNodeIdForLabel(nodeName)

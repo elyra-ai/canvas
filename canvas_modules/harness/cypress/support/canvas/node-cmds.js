@@ -27,7 +27,13 @@ Cypress.Commands.add("getNodeWithLabel", (nodeLabel) => {
 
 Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
 	cy.getNodeWithLabel(nodeLabel)
-		.then((node) => node[0].getAttribute("data-id").substring(11)));
+		.then((node) => {
+			if (node) {
+				return node[0].getAttribute("data-id").substring(11);
+			}
+			return null;
+		})
+);
 
 Cypress.Commands.add("getNodeWithLabelInSubFlow", (nodeLabel) =>
 	cy.get(getNodeGrpSelectorInSubFlow())
@@ -93,6 +99,17 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 Cypress.Commands.add("rightClickNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
 		.rightclick();
+});
+
+Cypress.Commands.add("rightClickSourcePortOfNode", (nodeName, srcPortId) => {
+	cy.getNodePortSelector(nodeName, "out_port", srcPortId)
+		.then((portSelector) => cy.get(portSelector).rightclick());
+});
+
+Cypress.Commands.add("rightClickTargetPortOfNode", (nodeName, trgPortId) => {
+	// Added { force: true } to disable element visibility errorCheck from Cypress
+	cy.getNodePortSelector(nodeName, "inp_port", trgPortId)
+		.then((portSelector) => cy.get(portSelector).rightclick({ force: true }));
 });
 
 Cypress.Commands.add("getNumberOfSelectedNodes", () => {
