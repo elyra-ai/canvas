@@ -27,7 +27,13 @@ Cypress.Commands.add("getNodeWithLabel", (nodeLabel) => {
 
 Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
 	cy.getNodeWithLabel(nodeLabel)
-		.then((node) => node[0].getAttribute("data-id").substring(11)));
+		.then((node) => {
+			if (node) {
+				return node[0].getAttribute("data-id").substring(11);
+			}
+			return null;
+		})
+);
 
 Cypress.Commands.add("getNodeWithLabelInSubFlow", (nodeLabel) =>
 	cy.get(getNodeGrpSelectorInSubFlow())
@@ -75,40 +81,6 @@ function findGrpForLabel(grpArray, nodeLabel) {
 	return null;
 }
 
-Cypress.Commands.add("clickCategory", (nodeCategory) => {
-	cy.document().then((doc) => {
-		// Palette Layout - Modal
-		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
-			cy.get(".palette-categories > div").each((category) => {
-				if (category[0].outerText === nodeCategory) {
-					category.click();
-				}
-			});
-		} else {
-			// Palette Layout - Flyout
-			cy.get(".palette-flyout-category").each((category) => {
-				if (category[0].attributes.value.value === nodeCategory) {
-					category.click();
-				}
-			});
-		}
-	});
-});
-
-Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
-	cy.document().then((doc) => {
-		// Palette Layout - Modal
-		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
-			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel)
-				.dblclick();
-		} else {
-			// Palette Layout - Flyout
-			cy.get(".palette-list-item-text-div > span").contains(nodeLabel)
-				.dblclick();
-		}
-	});
-});
-
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	// Get the os name to decide whether to click ctrl or cmd
 	cy.useCtrlOrCmdKey().then((selectedKey) => {
@@ -129,6 +101,16 @@ Cypress.Commands.add("rightClickNode", (nodeName) => {
 		.rightclick();
 });
 
+Cypress.Commands.add("rightClickSourcePortOfNode", (nodeName, srcPortId) => {
+	cy.getNodePortSelector(nodeName, "out_port", srcPortId)
+		.then((portSelector) => cy.get(portSelector).rightclick());
+});
+
+Cypress.Commands.add("rightClickTargetPortOfNode", (nodeName, trgPortId) => {
+	// Added { force: true } to disable element visibility errorCheck from Cypress
+	cy.getNodePortSelector(nodeName, "inp_port", trgPortId)
+		.then((portSelector) => cy.get(portSelector).rightclick({ force: true }));
+});
 
 Cypress.Commands.add("getNumberOfSelectedNodes", () => {
 	cy.getSelectedNodes()
@@ -256,4 +238,94 @@ Cypress.Commands.add("selectAllNodesUsingCtrlOrCmdKey", () => {
 						.type(selectedKey, { release: true });
 				});
 		});
+});
+
+// Palette commands
+Cypress.Commands.add("findCategory", (nodeCategory) => {
+	cy.document().then((doc) => {
+		// Palette Layout - Modal
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+			cy.get(".palette-categories > div")
+				.then((categories) => {
+					let category = null;
+					for (let idx = 0; idx < categories.length; idx++) {
+						if (categories[idx].outerText === nodeCategory) {
+							category = categories[idx];
+							break;
+						}
+					}
+					return category;
+				});
+		} else {
+			// Palette Layout - Flyout
+			cy.get(".palette-flyout-category")
+				.then((categories) => {
+					let category = null;
+					for (let idx = 0; idx < categories.length; idx++) {
+						if (categories[idx].attributes.value.value === nodeCategory) {
+							category = categories[idx];
+							break;
+						}
+					}
+					return category;
+				});
+		}
+	});
+});
+
+Cypress.Commands.add("clickCategory", (nodeCategory) => {
+	cy.findCategory(nodeCategory).click();
+});
+
+Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
+	cy.document().then((doc) => {
+		// Palette Layout - Modal
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel)
+				.dblclick();
+		} else {
+			// Palette Layout - Flyout
+			cy.get(".palette-list-item-text-div > span").contains(nodeLabel)
+				.dblclick();
+		}
+	});
+});
+
+Cypress.Commands.add("findNodeInPalette", (filterText) => {
+	cy.get(".palette-flyout-search").click();
+	cy.get(".palette-flyout-search")
+		.find("input")
+		.type("{selectall}")
+		.type(filterText);
+});
+
+Cypress.Commands.add("findNodeIndexInPalette", (nodeName) => {
+	cy.document().then((doc) => {
+		// Palette Layout - Modal
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+			cy.get(".palette-grid-node-text")
+				.then((listItems) => {
+					let nodeIndex = -1;
+					for (let idx = 0; idx < listItems.length; idx++) {
+						if (listItems[idx].textContent === nodeName) {
+							nodeIndex = idx;
+						}
+					}
+					return nodeIndex;
+				});
+		} else {
+			// Palette Layout - Flyout
+			cy.get(".palette-list-item-text-span")
+				.then((listItems) => {
+					let nodeIndex = -1;
+					for (let idx = 0; idx < listItems.length; idx++) {
+						if (listItems[idx].textContent === nodeName) {
+							nodeIndex = idx;
+							break;
+						}
+					}
+					return nodeIndex;
+				});
+		}
+	});
 });

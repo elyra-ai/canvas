@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint max-len: "off" */
+
 import * as testUtils from "../../utils/eventlog-utils";
 
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, transformValue) => {
@@ -139,6 +141,13 @@ Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 	});
 });
 
+Cypress.Commands.add("verifyNumberOfNodesInPipeline", (noOfNodes) => {
+	// verify the number of nodes in the internal object model
+	cy.getPipeline().then((pipeline) => {
+		cy.getCountNodes(pipeline).should("eq", noOfNodes);
+	});
+});
+
 Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
 	cy.get("#canvas-div-1").find(".node-image")
 		.should("have.length", noOfNodes);
@@ -218,6 +227,12 @@ Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 	// verify the number of comment-links in the internal object model
 	cy.getPipeline().then((pipeline) => {
 		cy.getCountCommentLinks(pipeline).should("eq", noOfCommentLinks);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfPipelines", (noOfPipelines) => {
+	cy.getCanvasData().then((canvasData) => {
+		expect(canvasData.pipelines.length).to.equal(noOfPipelines);
 	});
 });
 
@@ -468,6 +483,44 @@ Cypress.Commands.add("verifyLinkBetweenNodes", (srcNodeName, trgNodeName, linkCo
 			cy.getNodeIdForLabel(trgNodeName)
 				.then((trgNodeId) => {
 					cy.verifyEditActionHandlerLinkNodesEntryInConsole(srcNodeId, trgNodeId);
+				});
+		});
+});
+
+Cypress.Commands.add("verifyNodeDoesNotExistInPalette", (nodeName) => {
+	// expect index is -1 since node should not be found in palette
+	cy.findNodeIndexInPalette(nodeName)
+		.then((idx) => expect(idx).to.equal(-1));
+});
+
+Cypress.Commands.add("verifyNodeIsAddedInPaletteCategory", (nodeName, nodeCategory) => {
+	// Verify category exists in palette
+	cy.findCategory(nodeCategory)
+		.should("not.be.null");
+
+	// Open category
+	cy.clickCategory(nodeCategory);
+
+	// Verify node exists in category
+	cy.findNodeIndexInPalette(nodeName)
+		.should("not.eq", -1);
+});
+
+Cypress.Commands.add("verifyNodeImageCSS", (nodeName, style, value) => {
+	cy.findNodeIndexInPalette(nodeName)
+		.then((nodeIndex) => {
+			cy.get(".palette-list-item-icon").eq(nodeIndex)
+				.should("have.css", style, value);
+		});
+});
+
+Cypress.Commands.add("verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort", (srcNodeName, srcPortId, trgNodeName, trgPortId, linkCount) => {
+	// verify that the link is in the internal object model
+	cy.getPipeline()
+		.then((pipeline) => {
+			cy.getPortLinks(pipeline, srcNodeName, srcPortId, trgNodeName, trgPortId)
+				.then((links) => {
+					expect(links.length).to.equal(linkCount);
 				});
 		});
 });
