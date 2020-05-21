@@ -172,7 +172,7 @@ Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
 });
 
 Cypress.Commands.add("dragAndDrop", (srcSelector, srcXPos, srcYPos, trgSelector, trgXPos, trgYPos) => {
-	cy.get(srcSelector)
+	cy.get(srcSelector, { timeout: 10000 })
 		.trigger("mousedown", srcXPos, srcYPos, { force: true });
 	cy.get(trgSelector)
 		.trigger("mousemove", trgXPos, trgYPos)
