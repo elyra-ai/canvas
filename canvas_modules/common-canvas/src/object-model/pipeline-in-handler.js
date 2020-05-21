@@ -240,6 +240,12 @@ export default class PipelineInHandler {
 								if (link.link_name) { // link_name is also optional
 									newLink.linkName = link.link_name;
 								}
+								if (link.type_attr) { // type_attr is also optional
+									newLink.attrType = link.type_attr;
+								}
+								if (link.description) { // description is also optional
+									newLink.description = link.description;
+								}
 								links.push(newLink);
 							}
 						});
