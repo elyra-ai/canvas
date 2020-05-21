@@ -45,7 +45,7 @@ describe("Test the supernode expanded structure", function() {
 	});
 });
 
-describe("Sanity test supernode expanded to correct size", function() {
+describe("Test supernode expanded to correct size", function() {
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeCanvas.json");
@@ -109,7 +109,7 @@ describe("Sanity test supernode expanded to correct size", function() {
 	});
 });
 
-describe("Sanity test create supernode within a supernode with a new node from palette", function() {
+describe("Test create supernode within a supernode with a new node from palette", function() {
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
@@ -202,7 +202,7 @@ describe("Sanity test create supernode within a supernode with a new node from p
 	});
 });
 
-describe("Sanity test cut and copy supernode from first canvas to second canvas", function() {
+describe("Test cut and copy supernode from first canvas to second canvas", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedExtraCanvasDisplayed": true });
@@ -256,7 +256,7 @@ describe("Sanity test cut and copy supernode from first canvas to second canvas"
 	});
 });
 
-describe("Sanity test create a supernode with link that does not have port info", function() {
+describe("Test create a supernode with link that does not have port info", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
@@ -300,7 +300,7 @@ describe("Sanity test create a supernode with link that does not have port info"
 	});
 });
 
-describe("Sanity test selecting the canvas background of expanded supernodes", function() {
+describe("Test selecting the canvas background of expanded supernodes", function() {
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeNestedCanvas.json");

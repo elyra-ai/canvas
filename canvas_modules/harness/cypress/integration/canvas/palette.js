@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-describe("Sanity test adding nodes into empty canvas", function() {
+describe("Test adding nodes into empty canvas", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout" });
@@ -42,7 +42,7 @@ describe("Sanity test adding nodes into empty canvas", function() {
 	});
 });
 
-describe("Sanity test adding node type to palette Flyout Panel", function() {
+describe("Test adding node type to palette Flyout Panel", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout" });
@@ -58,7 +58,7 @@ describe("Sanity test adding node type to palette Flyout Panel", function() {
 	});
 });
 
-describe("Sanity test adding node type to palette Modal Panel", function() {
+describe("Test adding node type to palette Modal Panel", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Modal" });
@@ -74,7 +74,7 @@ describe("Sanity test adding node type to palette Modal Panel", function() {
 	});
 });
 
-describe("Sanity test adding node type to existing category to palette Flyout Panel", function() {
+describe("Test adding node type to existing category to palette Flyout Panel", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout" });
@@ -90,7 +90,7 @@ describe("Sanity test adding node type to existing category to palette Flyout Pa
 	});
 });
 
-describe("Sanity test adding node type to existing category to palette Modal Panel", function() {
+describe("Test adding node type to existing category to palette Modal Panel", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Modal" });

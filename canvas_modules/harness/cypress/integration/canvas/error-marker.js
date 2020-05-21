@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-describe("Sanity test to check if error markers are being displayed OK", function() {
+describe("Test to check if error markers are being displayed OK", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedNodeFormat": "Vertical" });
