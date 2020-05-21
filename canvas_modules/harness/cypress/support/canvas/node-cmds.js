@@ -48,9 +48,25 @@ Cypress.Commands.add("getNodeWithLabelInSupernode", (nodeLabel, supernodeName) =
 		});
 });
 
+Cypress.Commands.add("getNodeIdForLabelInSupernode", (nodeLabel, supernodeName) =>
+	cy.getNodeWithLabelInSupernode(nodeLabel, supernodeName)
+		.then((node) => {
+			if (node) {
+				return node[0].getAttribute("data-id").substring(11);
+			}
+			return null;
+		})
+);
+
 Cypress.Commands.add("getSupernodePipelineId", (supernodeName) => {
 	cy.get(getNodeGrpSelector())
 		.then((grpArray) => findGrpForLabel(grpArray, supernodeName).__data__.subflow_ref.pipeline_id_ref);
+});
+
+Cypress.Commands.add("getSupernodePipelineIdNested", (nodeName, supernodeName) => {
+	// Get pipeline id of a node within supernode
+	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
+		.then((node) => node[0].__data__.subflow_ref.pipeline_id_ref);
 });
 
 function getNodeGrpSelector() {
@@ -96,8 +112,26 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	});
 });
 
+Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) => {
+	// Get the os name to decide whether to click ctrl or cmd
+	cy.useCtrlOrCmdKey().then((selectedKey) => {
+		cy.get("body")
+			.type(selectedKey, { release: false })
+			.getNodeWithLabelInSupernode(nodeName, supernodeName)
+			.click();
+		// Cancel the command/ctrl key press
+		cy.get("body")
+			.type(selectedKey, { release: true });
+	});
+});
+
 Cypress.Commands.add("rightClickNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
+		.rightclick();
+});
+
+Cypress.Commands.add("rightClickNodeInSupernode", (nodeName, supernodeName) => {
+	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
 		.rightclick();
 });
 
@@ -206,6 +240,16 @@ Cypress.Commands.add("deleteNodeUsingToolbar", (nodeName) => {
 	cy.clickToolbarDelete();
 });
 
+Cypress.Commands.add("deleteNodeInSupernodeUsingKeyboard", (nodeName, supernodeName) => {
+	// Delete node in supernode by pressing 'Delete' key on keyboard
+	cy.useDeleteKey()
+		.then((deleteKey) => {
+			cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
+				.click()
+				.type(deleteKey);
+		});
+});
+
 Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
 	cy.getNodeWithLabel(nodeLabel).then((node) => {
 		const nodeDimensions = {
@@ -238,6 +282,35 @@ Cypress.Commands.add("selectAllNodesUsingCtrlOrCmdKey", () => {
 						.type(selectedKey, { release: true });
 				});
 		});
+});
+
+Cypress.Commands.add("clickExpandedCanvasBackgroundOfSupernode", (supernodeName) => {
+	cy.getNodeWithLabel(supernodeName)
+		.find(".svg-area")
+		.eq(0)
+		.click();
+});
+
+Cypress.Commands.add("rightClickExpandedCanvasBackgroundOfSupernode", (supernodeName) => {
+	cy.getNodeWithLabel(supernodeName)
+		.find(".svg-area")
+		.eq(0)
+		.rightclick();
+});
+
+Cypress.Commands.add("ctrlOrCmdClickExpandedCanvasBackgroundOfSupernode", (supernodeName) => {
+	// Get the os name to decide whether to click ctrl or cmd
+	cy.useCtrlOrCmdKey().then((selectedKey) => {
+		cy.get("body")
+			.type(selectedKey, { release: false })
+			.getNodeWithLabel(supernodeName)
+			.find(".svg-area")
+			.eq(0)
+			.click();
+		// Cancel the command/ctrl key press
+		cy.get("body")
+			.type(selectedKey, { release: true });
+	});
 });
 
 // Palette commands

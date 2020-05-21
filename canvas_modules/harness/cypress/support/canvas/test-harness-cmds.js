@@ -113,6 +113,16 @@ Cypress.Commands.add("updateDecorationsJSON", (decoratorsJSON) => {
 		.type(decoratorsJSON);
 });
 
+Cypress.Commands.add("selectNodeLabelFromDropDown", (nodeName) => {
+	cy.dropdownSelect("#harness-sidepanel-api-nodePortSelection", nodeName);
+});
+
+Cypress.Commands.add("setNewNodeLabel", (newNodeName) => {
+	cy.get("#harness-newLabel")
+		.clear()
+		.type(newNodeName);
+});
+
 Cypress.Commands.add("setCategoryId", (categoryId) => {
 	cy.get("#harness-categoryId")
 		.clear()

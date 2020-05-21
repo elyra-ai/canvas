@@ -32,6 +32,11 @@ Cypress.Commands.add("verifyNodeTransformInSubFlow", (nodeLabel, transformValue)
 		.should("have.attr", "transform", transformValue);
 });
 
+Cypress.Commands.add("verifyNodeTransformInSupernode", (nodeLabel, supernodeName, transformValue) => {
+	cy.getNodeWithLabelInSupernode(nodeLabel, supernodeName)
+		.should("have.attr", "transform", transformValue);
+});
+
 Cypress.Commands.add("verifyNodeIsDeleted", (nodeName, deleteUsingContextMenu) => {
 	// verify node is not the canvas DOM
 	cy.getNodeWithLabel(nodeName)
@@ -111,6 +116,18 @@ Cypress.Commands.add("verifyCommentIsNotSelected", (commentText) => {
 	cy.isCommentSelected(commentText).should("eq", false);
 });
 
+Cypress.Commands.add("verifyNodeExistsInExtraCanvas", (nodeName) => {
+	// Swtich to extra canvas
+	cy.inExtraCanvas();
+
+	// verify node is in the DOM
+	cy.getNodeWithLabel(nodeName)
+		.should("have.length", 1);
+
+	// Swtich back to regular canvas
+	cy.inRegularCanvas();
+});
+
 Cypress.Commands.add("verifyCommentExists", (commentText) => {
 	// verify comment is in the DOM
 	cy.getCommentWithText(commentText)
@@ -124,6 +141,28 @@ Cypress.Commands.add("verifyCommentExists", (commentText) => {
 	cy.verifyEditActionHandlerEditCommentEntryInConsole(commentText);
 });
 
+Cypress.Commands.add("verifyNodeElementLocation", (nodeName, nodeElement, xPos, yPos) => {
+	// nodeElement can be either "image" or "label"
+	cy.getNodeWithLabel(nodeName)
+		.then((node) => {
+			const nodeElementSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", nodeElement) + "']";
+			cy.get(nodeElementSelector)
+				.should("have.attr", "x", String(xPos))
+				.and("have.attr", "y", String(yPos));
+		});
+});
+
+Cypress.Commands.add("verifyNodeElementWidth", (nodeName, nodeElement, width) => {
+	// nodeElement can be either "image" or "label"
+	cy.getNodeWithLabel(nodeName)
+		.then((node) => {
+			const nodeElementSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", nodeElement) + "']";
+			cy.get(nodeElementSelector)
+				.invoke("css", "width")
+				.should("eq", width);
+		});
+});
+
 Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(".node-image").length) {
@@ -135,13 +174,6 @@ Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 		}
 	});
 
-	// verify the number of nodes in the internal object model
-	cy.getPipeline().then((pipeline) => {
-		cy.getCountNodes(pipeline).should("eq", noOfNodes);
-	});
-});
-
-Cypress.Commands.add("verifyNumberOfNodesInPipeline", (noOfNodes) => {
 	// verify the number of nodes in the internal object model
 	cy.getPipeline().then((pipeline) => {
 		cy.getCountNodes(pipeline).should("eq", noOfNodes);
@@ -236,6 +268,33 @@ Cypress.Commands.add("verifyNumberOfPipelines", (noOfPipelines) => {
 	});
 });
 
+Cypress.Commands.add("verifyNumberOfPipelinesInExtraCanvas", (noOfPipelines) => {
+	cy.getCanvasDataForExtraCanvas().then((extraCanvasData) => {
+		expect(extraCanvasData.pipelines.length).to.equal(noOfPipelines);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfNodesInPipeline", (noOfNodes) => {
+	// verify the number of nodes in the internal object model
+	cy.getPipeline().then((pipeline) => {
+		cy.getCountNodes(pipeline).should("eq", noOfNodes);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfLinksInPipeline", (noOfLinks) => {
+	// verify the number of links in the internal object model
+	cy.getPipeline().then((pipeline) => {
+		cy.getCountLinks(pipeline).should("eq", noOfLinks);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfNodesInPipelineInExtraCanvas", (noOfNodes) => {
+	// verify the number of nodes in the internal object model
+	cy.getPipelineForExtraCanvas().then((extraCanvasPipeline) => {
+		cy.getCountNodes(extraCanvasPipeline).should("eq", noOfNodes);
+	});
+});
+
 Cypress.Commands.add("verifyNumberOfNodesInSupernode", (supernodeName, noOfNodes) => {
 	cy.getSupernodePipeline(supernodeName).then((supernodePipeline) => {
 		cy.getCountNodes(supernodePipeline).should("eq", noOfNodes);
@@ -245,6 +304,18 @@ Cypress.Commands.add("verifyNumberOfNodesInSupernode", (supernodeName, noOfNodes
 Cypress.Commands.add("verifyNumberOfLinksInSupernode", (supernodeName, noOfLinks) => {
 	cy.getSupernodePipeline(supernodeName).then((supernodePipeline) => {
 		cy.getCountLinks(supernodePipeline).should("eq", noOfLinks);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfNodesInSupernodeNested", (nodeName, supernodeName, noOfNodes) => {
+	cy.getSupernodePipelineNested(nodeName, supernodeName).then((supernodePipelineNested) => {
+		cy.getCountNodes(supernodePipelineNested).should("eq", noOfNodes);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfLinksInSupernodeNested", (nodeName, supernodeName, noOfLinks) => {
+	cy.getSupernodePipelineNested(nodeName, supernodeName).then((supernodePipelineNested) => {
+		cy.getCountLinks(supernodePipelineNested).should("eq", noOfLinks);
 	});
 });
 
@@ -448,6 +519,15 @@ Cypress.Commands.add("verifyNoErrorOrWarningMarkerOnNodeInSupernode", (nodeName,
 		});
 });
 
+Cypress.Commands.add("verifyNodeDimensions", (nodeId, width, height) => {
+	// Find node in object model based on nodeId
+	cy.getNodeFromObjectModel(nodeId)
+		.then((node) => {
+			expect(node.width).to.equal(width);
+			expect(node.height).to.equal(height);
+		});
+});
+
 Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
@@ -523,4 +603,11 @@ Cypress.Commands.add("verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort",
 					expect(links.length).to.equal(linkCount);
 				});
 		});
+});
+
+Cypress.Commands.add("verifyNumberOfPortsOnNode", (nodeName, portType, noOfPorts) => {
+	// Verify the "Supernode" node has 1 "output" ports
+	cy.getNodeWithLabel(nodeName)
+		.find(".d3-node-port-" + portType)
+		.should("have.length", noOfPorts);
 });
