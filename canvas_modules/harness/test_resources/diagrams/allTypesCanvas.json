@@ -114,7 +114,9 @@
                       "class_name": "d3-data-link"
                     }
                   },
-                  "port_id_ref": "outPort"
+                  "port_id_ref": "outPort",
+                  "type_attr": "Primary",
+                  "description": "A test description for a link"
                 }
               ]
             }

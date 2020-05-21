@@ -241,7 +241,7 @@ export default class PipelineInHandler {
 									newLink.linkName = link.link_name;
 								}
 								if (link.type_attr) { // type_attr is also optional
-									newLink.attrType = link.type_attr;
+									newLink.typeAttr = link.type_attr;
 								}
 								if (link.description) { // description is also optional
 									newLink.description = link.description;
