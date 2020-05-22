@@ -69,6 +69,8 @@ describe("Test supernode expanded to correct size", function() {
 
 		// Select multiple nodes in supernode
 		cy.getNodeWithLabelInSupernode("Partition", "First Supernode").click();
+		cy.log("Selected nodes before ctrlOrCmdClickNodeInSupernode");
+		cy.getSelectedNodes().then((selNodes) => selNodes.forEach((node) => cy.log(node.label)));
 		cy.ctrlOrCmdClickNodeInSupernode("Distribution", "First Supernode");
 		cy.log("Blah123");
 		cy.getNumberOfSelectedNodes().then((a) => cy.log(a));
@@ -165,6 +167,8 @@ describe("Test create supernode within a supernode with a new node from palette"
 
 		// Select multiple nodes in supernode
 		cy.getNodeWithLabelInSupernode("Distribution", "First Supernode").click();
+		cy.log("Selected nodes before ctrlOrCmdClickNodeInSupernode");
+		cy.getSelectedNodes().then((selNodes) => selNodes.forEach((node) => cy.log(node.label)));
 		cy.ctrlOrCmdClickNodeInSupernode("Derive", "First Supernode");
 		cy.log("Blah222222222");
 		cy.getNumberOfSelectedNodes().then((a) => cy.log(a));
