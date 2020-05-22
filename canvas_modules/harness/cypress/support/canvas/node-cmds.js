@@ -120,16 +120,9 @@ Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) 
 			.getNodeWithLabelInSupernode(nodeName, supernodeName)
 			.click();
 
-		// cy.log()
-		cy.log("In ctrlOrCmdClickNodeInSupernode before:" + nodeName);
-		cy.getSelectedNodes().then((selNodes) => selNodes.forEach((node) => cy.log(node.label)));
 		// Cancel the command/ctrl key press
 		cy.get("body")
 			.type(selectedKey, { release: true });
-
-		// cy.log()
-		cy.log("In ctrlOrCmdClickNodeInSupernode after:" + nodeName);
-		cy.getSelectedNodes().then((selNodes) => selNodes.forEach((node) => cy.log(node.label)));
 	});
 });
 

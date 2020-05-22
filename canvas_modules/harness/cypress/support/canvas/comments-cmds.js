@@ -102,16 +102,9 @@ Cypress.Commands.add("ctrlOrCmdClickCommentInSupernode", (commentText, supernode
 				.getCommentWithTextInSupernode(commentText, supernodeName)
 				.click();
 
-			// cy.log()
-			cy.log("In ctrlOrCmdClickCommentInSupernode before:" + commentText);
-			cy.getSelectedComments().then((selComments) => selComments.forEach((comment) => cy.log(comment.content)));
 			// Cancel the command/ctrl key press
 			cy.get("body")
 				.type(selectedKey, { release: true });
-
-			// cy.log()
-			cy.log("In ctrlOrCmdClickCommentInSupernode after:" + commentText);
-			cy.getSelectedComments().then((selComments) => selComments.forEach((comment) => cy.log(comment.content)));
 		});
 });
 
