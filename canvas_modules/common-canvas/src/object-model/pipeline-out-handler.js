@@ -306,6 +306,15 @@ export default class PipelineOutHandler {
 		if (link.linkName) {
 			newNodeLink.link_name = link.linkName;
 		}
+
+		if (link.typeAttr) {
+			newNodeLink.type_attr = link.typeAttr;
+		}
+
+		if (link.description) {
+			newNodeLink.description = link.description;
+		}
+
 		return newNodeLink;
 	}
 
