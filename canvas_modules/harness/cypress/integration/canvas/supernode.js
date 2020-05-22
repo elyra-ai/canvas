@@ -40,7 +40,7 @@ describe("Test the supernode expanded structure", function() {
 		// Verify new label location and width
 		cy.verifyNodeElementLocation("New Very Long Supernode Label To Test The Label Abbreviation", "label", 30, 18);
 		cy.verifyNodeElementWidth(
-			"New Very Long Supernode Label To Test The Label Abbreviation", "label", "125.28125px"
+			"New Very Long Supernode Label To Test The Label Abbreviation", "label", "127.03125px"
 		);
 	});
 });

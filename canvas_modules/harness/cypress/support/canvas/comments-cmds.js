@@ -100,10 +100,19 @@ Cypress.Commands.add("ctrlOrCmdClickCommentInSupernode", (commentText, supernode
 			cy.get("body")
 				.type(selectedKey, { release: false })
 				.getCommentWithTextInSupernode(commentText, supernodeName)
+				.should("have.length", 1) // cy.log()
 				.click();
+
+			// cy.log()
+			cy.log("In ctrlOrCmdClickCommentInSupernode before:" + commentText);
+			cy.getSelectedComments().then((selComments) => selComments.forEach((comment) => cy.log(comment.content)));
 			// Cancel the command/ctrl key press
 			cy.get("body")
 				.type(selectedKey, { release: true });
+
+			// cy.log()
+			cy.log("In ctrlOrCmdClickCommentInSupernode after:" + commentText);
+			cy.getSelectedComments().then((selComments) => selComments.forEach((comment) => cy.log(comment.content)));
 		});
 });
 
@@ -199,11 +208,17 @@ Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) =>
 Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
 	// Click the comment at topLeft corner to display the guide
 	// srcSelector is the selector of guide
+	cy.getCommentWithText(commentText).then((comment) => {
+		const sel = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
+		cy.get(sel).click("topLeft");
+	});
 	cy.getCommentWithText(commentText).click(0, 0)
 		.then((comment) => {
 			cy.document().then((doc) => {
 				// Connection Type - Halo
 				let srcSelector;
+				cy.log("Comments blah");
+				cy.log(doc.canvasController.getCanvasConfig().enableConnectionType);
 				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
 					srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "halo") + "']";
 				} else {
