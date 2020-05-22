@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-dist: bionic
+dist: xenial
 branches:
   except:
     - master-last_success
