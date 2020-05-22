@@ -187,7 +187,7 @@ describe("ObjectModel files handling test", () => {
 	});
 
 	it("should upgrade a pipelineFlow from v2 to latest version for allTypesCanvasV2", () => {
-		upgradeToLatestVersion(allTypesCanvasV2, allTypesCanvas);
+		upgradeToLatestVersion(allTypesCanvasV2, removeNewLinkFields(allTypesCanvas));
 	});
 
 	it("should upgrade a pipelineFlow from v2 to latest version for bigCanvasV2", () => {
@@ -394,6 +394,25 @@ describe("ObjectModel files handling test", () => {
 		return expectedCanvas;
 	}
 
+
+	// Removes the new optional link.type_attr and link.description attributes
+	// which did not exist before the V3 schema.
+	function removeNewLinkFields(latestPipelineFlow) {
+		const expectedCanvas = JSON.parse(JSON.stringify(latestPipelineFlow));
+		expectedCanvas.pipelines[0].nodes.forEach((node) => {
+			if (node.inputs) {
+				node.inputs.forEach((inp) => {
+					if (inp.links) {
+						inp.links.forEach((link) => {
+							delete link.type_attr;
+							delete link.description;
+						});
+					}
+				});
+			}
+		});
+		return expectedCanvas;
+	}
 
 	// V0 needs a special function because runtime ref fields are not handled
 	// correctly with V0 (because the canvas does not contain runtime info)
