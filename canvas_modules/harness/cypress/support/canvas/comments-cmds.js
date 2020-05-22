@@ -136,6 +136,9 @@ Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText) 
 		.get("textarea")
 		.clear()
 		.type(newCommentText);
+
+	// Click somewhere on canvas to save comment
+	cy.get("#canvas-div-0").click();
 });
 
 Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newCommentText) => {
@@ -144,6 +147,9 @@ Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newComm
 		.get("textarea")
 		.clear()
 		.type(newCommentText);
+
+	// Click somewhere on canvas to save comment
+	cy.get("#canvas-div-0").click();
 });
 
 Cypress.Commands.add("editTextInCommentInSubFlowNested", (originalCommentText, newCommentText) => {
@@ -152,6 +158,9 @@ Cypress.Commands.add("editTextInCommentInSubFlowNested", (originalCommentText, n
 		.get("textarea")
 		.clear()
 		.type(newCommentText);
+
+	// Click somewhere on canvas to save comment
+	cy.get("#canvas-div-0").click();
 });
 
 Cypress.Commands.add("editTextInCommentInSupernode", (originalCommentText, newCommentText, supernodeName) => {

@@ -29,7 +29,7 @@ describe("Test the supernode expanded structure", function() {
 		// Verify expanded supernode's image and label location
 		cy.verifyNodeElementLocation("Supernode", "image", 5, 4);
 		cy.verifyNodeElementLocation("Supernode", "label", 30, 18);
-		cy.verifyNodeElementWidth("Supernode", "label", "65.015625px");
+		cy.verifyNodeElementWidth("Supernode", "label", "65.265625px");
 
 		// Add a very long label to the supernode
 		cy.openCanvasAPI("Set Node Label");
@@ -70,42 +70,53 @@ describe("Test supernode expanded to correct size", function() {
 		// Select multiple nodes in supernode
 		cy.getNodeWithLabelInSupernode("Partition", "First Supernode").click();
 		cy.ctrlOrCmdClickNodeInSupernode("Distribution", "First Supernode");
+		cy.log("Blah123");
+		cy.getNumberOfSelectedNodes().then((a) => cy.log(a));
+		cy.getNumberOfSelectedComments().then((b) => cy.log(b));
 		cy.verifyNumberOfSelectedObjects(2);
 
 		// Create a nested supernode
 		cy.rightClickNodeInSupernode("Partition", "First Supernode");
 		cy.clickOptionFromContextMenu("Create supernode");
 		cy.verifyNumberOfPipelines(3);
+		cy.log("Blah456");
 
 		// Rename nested supernode
 		cy.getNodeWithLabelInSupernode("Supernode", "First Supernode").dblclick();
 		cy.clickPropertiesFlyoutTitleEditIcon();
 		cy.enterNewPropertiesFlyoutTitle("Second Supernode");
 		cy.saveFlyout();
+		cy.log("Blah789");
 
 		// Delete nested supernode within supernode from primary pipeline
 		cy.deleteNodeInSupernodeUsingKeyboard("Second Supernode", "First Supernode");
 		cy.verifyNumberOfNodesInSupernode("First Supernode", 6);
 		cy.verifyNumberOfLinksInSupernode("First Supernode", 3);
+		cy.log("Blah101112");
 
 		// Undo delete nested supernode operation
 		cy.shortcutKeysUndo();
 		cy.verifyNumberOfNodesInSupernode("First Supernode", 7);
 		cy.verifyNumberOfLinksInSupernode("First Supernode", 6);
+		cy.log("Blah131415");
 
 		// Expand nested supernode
 		cy.rightClickNodeInSupernode("Second Supernode", "First Supernode");
 		cy.clickOptionFromContextMenu("Expand supernode");
+		cy.log("Blah161718");
 
 		// Verify number of nodes and links in all pipelines
 		cy.verifyNumberOfNodesInPipeline(15);
 		cy.verifyNumberOfLinksInPipeline(24);
+		cy.log("Blah192021");
 
 		cy.verifyNumberOfNodesInSupernode("First Supernode", 7);
 		cy.verifyNumberOfLinksInSupernode("First Supernode", 6);
+		cy.log("Blah222324");
 
 		cy.verifyNumberOfNodesInSupernodeNested("Second Supernode", "First Supernode", 5);
 		cy.verifyNumberOfLinksInSupernodeNested("Second Supernode", "First Supernode", 4);
+		cy.log("Blah252627");
 	});
 });
 
@@ -155,6 +166,9 @@ describe("Test create supernode within a supernode with a new node from palette"
 		// Select multiple nodes in supernode
 		cy.getNodeWithLabelInSupernode("Distribution", "First Supernode").click();
 		cy.ctrlOrCmdClickNodeInSupernode("Derive", "First Supernode");
+		cy.log("Blah222222222");
+		cy.getNumberOfSelectedNodes().then((a) => cy.log(a));
+		cy.getNumberOfSelectedComments().then((b) => cy.log(b));
 		cy.verifyNumberOfSelectedObjects(2);
 
 		// Create a nested supernode
@@ -340,6 +354,9 @@ describe("Test context menu for supernode canvas background doesn't deselect nod
 		cy.clickOptionFromContextMenu("Expand supernode");
 		cy.getNodeWithLabelInSupernode("Partition", "Supernode").click();
 		cy.rightClickExpandedCanvasBackgroundOfSupernode("Supernode");
+		cy.log("Blah33333333333");
+		cy.getNumberOfSelectedNodes().then((a) => cy.log(a));
+		cy.getNumberOfSelectedComments().then((b) => cy.log(b));
 		cy.verifyNumberOfSelectedObjects(1);
 
 		// Create a comment in the supernode and check right click on supernode background doesnot deselect it
@@ -348,6 +365,9 @@ describe("Test context menu for supernode canvas background doesn't deselect nod
 		cy.getNodeWithLabelInSupernode("Partition", "Supernode").click();
 		cy.ctrlOrCmdClickCommentInSupernode("Hello Canvas in a supernode!", "Supernode");
 		cy.rightClickExpandedCanvasBackgroundOfSupernode("Supernode");
+		cy.log("Blah444444444444");
+		cy.getNumberOfSelectedNodes().then((a) => cy.log(a));
+		cy.getNumberOfSelectedComments().then((b) => cy.log(b));
 		cy.verifyNumberOfSelectedObjects(2);
 	});
 });

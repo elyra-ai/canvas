@@ -465,7 +465,7 @@ Cypress.Commands.add("verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole
 
 Cypress.Commands.add("verifyEditActionHandlerEditCommentEntryInConsole", (commentText) => {
 	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc, 3);
+		const lastEventLog = testUtils.getLastLogOfType(doc, "editActionHandler(): editComment");
 		expect(lastEventLog.event).to.equal("editActionHandler(): editComment");
 		expect(lastEventLog.data.content).to.equal(commentText);
 	});
