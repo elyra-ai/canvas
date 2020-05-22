@@ -100,7 +100,6 @@ Cypress.Commands.add("ctrlOrCmdClickCommentInSupernode", (commentText, supernode
 			cy.get("body")
 				.type(selectedKey, { release: false })
 				.getCommentWithTextInSupernode(commentText, supernodeName)
-				.should("have.length", 1) // cy.log()
 				.click();
 
 			// cy.log()
@@ -215,8 +214,6 @@ Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
 		cy.document().then((doc) => {
 			// Connection Type - Halo
 			let srcSelector;
-			cy.log("Comments blah");
-			cy.log(doc.canvasController.getCanvasConfig().enableConnectionType);
 			if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
 				srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "halo") + "']";
 			} else {
@@ -232,28 +229,6 @@ Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
 			});
 		});
 	});
-	// cy.getCommentWithText(commentText).click()
-	// 	.then((comment) => {
-	// 		cy.document().then((doc) => {
-	// 			// Connection Type - Halo
-	// 			let srcSelector;
-	// 			cy.log("Comments blah");
-	// 			cy.log(doc.canvasController.getCanvasConfig().enableConnectionType);
-	// 			if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
-	// 				srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "halo") + "']";
-	// 			} else {
-	// 				// Connection Type - Ports
-	// 				srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "port") + "']";
-	// 			}
-	// 			cy.getNodeDimensions(nodeLabel).then((nodeDimensions) => {
-	// 				// Target canvas position within the center of the target node
-	// 				const canvasX = nodeDimensions.x_pos + (nodeDimensions.width / 2);
-	// 				const canvasY = nodeDimensions.y_pos + (nodeDimensions.height / 2);
-	//
-	// 				cy.dragAndDrop(srcSelector, 0, 0, ".svg-area", canvasX, canvasY);
-	// 			});
-	// 		});
-	// 	});
 });
 
 Cypress.Commands.add("dragAndDrop", (srcSelector, srcXPos, srcYPos, trgSelector, trgXPos, trgYPos) => {

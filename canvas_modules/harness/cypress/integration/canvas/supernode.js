@@ -68,11 +68,12 @@ describe("Test supernode expanded to correct size", function() {
 		cy.get("#harness-action-bar-sidepanel-api > a").click();
 
 		// Select multiple nodes in supernode
-		cy.getNodeWithLabelInSupernode("Partition", "First Supernode").click();
+		// cy.getNodeWithLabelInSupernode("Partition", "First Supernode").click();
+		cy.ctrlOrCmdClickNodeInSupernode("Partition", "First Supernode");
 		cy.log("Selected nodes before ctrlOrCmdClickNodeInSupernode");
 		cy.getSelectedNodes().then((selNodes) => selNodes.forEach((node) => cy.log(node.label)));
 		cy.ctrlOrCmdClickNodeInSupernode("Distribution", "First Supernode");
-		cy.log("Blah123");
+		cy.log("Blah111111111");
 		cy.getNumberOfSelectedNodes().then((a) => cy.log(a));
 		cy.getNumberOfSelectedComments().then((b) => cy.log(b));
 		cy.verifyNumberOfSelectedObjects(2);
@@ -81,44 +82,36 @@ describe("Test supernode expanded to correct size", function() {
 		cy.rightClickNodeInSupernode("Partition", "First Supernode");
 		cy.clickOptionFromContextMenu("Create supernode");
 		cy.verifyNumberOfPipelines(3);
-		cy.log("Blah456");
 
 		// Rename nested supernode
 		cy.getNodeWithLabelInSupernode("Supernode", "First Supernode").dblclick();
 		cy.clickPropertiesFlyoutTitleEditIcon();
 		cy.enterNewPropertiesFlyoutTitle("Second Supernode");
 		cy.saveFlyout();
-		cy.log("Blah789");
 
 		// Delete nested supernode within supernode from primary pipeline
 		cy.deleteNodeInSupernodeUsingKeyboard("Second Supernode", "First Supernode");
 		cy.verifyNumberOfNodesInSupernode("First Supernode", 6);
 		cy.verifyNumberOfLinksInSupernode("First Supernode", 3);
-		cy.log("Blah101112");
 
 		// Undo delete nested supernode operation
 		cy.shortcutKeysUndo();
 		cy.verifyNumberOfNodesInSupernode("First Supernode", 7);
 		cy.verifyNumberOfLinksInSupernode("First Supernode", 6);
-		cy.log("Blah131415");
 
 		// Expand nested supernode
 		cy.rightClickNodeInSupernode("Second Supernode", "First Supernode");
 		cy.clickOptionFromContextMenu("Expand supernode");
-		cy.log("Blah161718");
 
 		// Verify number of nodes and links in all pipelines
 		cy.verifyNumberOfNodesInPipeline(15);
 		cy.verifyNumberOfLinksInPipeline(24);
-		cy.log("Blah192021");
 
 		cy.verifyNumberOfNodesInSupernode("First Supernode", 7);
 		cy.verifyNumberOfLinksInSupernode("First Supernode", 6);
-		cy.log("Blah222324");
 
 		cy.verifyNumberOfNodesInSupernodeNested("Second Supernode", "First Supernode", 5);
 		cy.verifyNumberOfLinksInSupernodeNested("Second Supernode", "First Supernode", 4);
-		cy.log("Blah252627");
 	});
 });
 
@@ -358,9 +351,6 @@ describe("Test context menu for supernode canvas background doesn't deselect nod
 		cy.clickOptionFromContextMenu("Expand supernode");
 		cy.getNodeWithLabelInSupernode("Partition", "Supernode").click();
 		cy.rightClickExpandedCanvasBackgroundOfSupernode("Supernode");
-		cy.log("Blah33333333333");
-		cy.getNumberOfSelectedNodes().then((a) => cy.log(a));
-		cy.getNumberOfSelectedComments().then((b) => cy.log(b));
 		cy.verifyNumberOfSelectedObjects(1);
 
 		// Create a comment in the supernode and check right click on supernode background doesnot deselect it
@@ -369,7 +359,7 @@ describe("Test context menu for supernode canvas background doesn't deselect nod
 		cy.getNodeWithLabelInSupernode("Partition", "Supernode").click();
 		cy.ctrlOrCmdClickCommentInSupernode("Hello Canvas in a supernode!", "Supernode");
 		cy.rightClickExpandedCanvasBackgroundOfSupernode("Supernode");
-		cy.log("Blah444444444444");
+		cy.log("Blah333333333");
 		cy.getNumberOfSelectedNodes().then((a) => cy.log(a));
 		cy.getNumberOfSelectedComments().then((b) => cy.log(b));
 		cy.verifyNumberOfSelectedObjects(2);

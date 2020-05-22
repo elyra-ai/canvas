@@ -118,7 +118,6 @@ Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) 
 		cy.get("body")
 			.type(selectedKey, { release: false })
 			.getNodeWithLabelInSupernode(nodeName, supernodeName)
-			.should("have.length", 1) // cy.log()
 			.click();
 
 		// cy.log()
