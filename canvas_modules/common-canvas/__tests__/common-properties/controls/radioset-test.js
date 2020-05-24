@@ -280,7 +280,7 @@ describe("radioset works in table correctly", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(radioParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
-		const controlDiv = wrapper.find("button.properties-summary-link-button");
+		const controlDiv = wrapper.find("a.properties-summary-link");
 		controlDiv.simulate("click");
 		tableDiv = wrapper.find(".properties-vt");
 	});

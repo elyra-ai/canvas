@@ -145,25 +145,25 @@ module.exports = function() {
 	}
 
 	function findSummaryLinkButton(category, linkName) {
-		const summaryLinks = category.$$(".properties-summary-link-button");
-		var linkButton = null;
+		const summaryLinks = category.$$(".properties-summary-link");
+		let foundLink = null;
 		for (let idx = 0; idx < summaryLinks.length; idx++) {
-			const button = summaryLinks[idx];
-			if (button.$(".properties-icon-button-label").getText() === linkName) {
-				linkButton = button;
+			const link = summaryLinks[idx];
+			if (link.getText() === linkName) {
+				foundLink = link;
 				break;
 			}
 		}
-		return linkButton;
+		return foundLink;
 	}
 
 
 	function findSummaryContainer(category, linkName) {
-		const summaryLinks = category.$$(".properties-summary-link-button");
-		var summaryContainer = null;
+		const summaryLinks = category.$$(".properties-summary-link");
+		let summaryContainer = null;
 		for (let idx = 0; idx < summaryLinks.length; idx++) {
 			const summary = summaryLinks[idx];
-			if (summary.$(".properties-icon-button-label").getText() === linkName) {
+			if (summary.getText() === linkName) {
 				summaryContainer = summary;
 				break;
 			}

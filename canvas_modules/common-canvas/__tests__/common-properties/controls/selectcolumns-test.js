@@ -219,8 +219,6 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 
 	it("should prefix the correct schema for fields selected", () => {
 		// open the summary panel
-		// let summaryPanelWrapper = wrapper.find("div[data-id='properties-selectcolumns-values2']");
-		// summaryPanelWrapper.find("button").simulate("click");
 		const wideflyout = propertyUtils.openSummaryPanel(wrapper, "selectcolumns-values2");
 		// open the select columns field picker
 		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields");
@@ -382,8 +380,7 @@ describe("selectcolumns control displays the proper number of rows", () => {
 
 	it("should display 5 rows in select columns in subpanel", () => {
 		// open the summary on_panel and add a row to the table
-		const summaryPanelWrapper = wrapper.find("div[data-id='properties-structurelist-summary-panel2']");
-		summaryPanelWrapper.find("button").simulate("click");
+		propertyUtils.openSummaryPanel(wrapper, "structurelist-summary-panel2");
 		let tableWrapper = wrapper.find("div[data-id='properties-structurelist2']");
 		const addFieldsButtons = tableWrapper.find("button.properties-add-fields-button"); // add row button
 		addFieldsButtons.at(0).simulate("click"); // add row button
@@ -416,9 +413,7 @@ describe("selectcolumns control functions correctly in a table", () => {
 
 	it("should not display invalid fields warnings for selectColumns control in a table", () => {
 		// open the summary on_panel and add a row to the table
-		const summaryPanelWrapper = wrapper.find("div[data-id='properties-selectcolumns-tables-structurelist-summary']");
-		summaryPanelWrapper.find("button").simulate("click");
-
+		propertyUtils.openSummaryPanel(wrapper, "selectcolumns-tables-structurelist-summary");
 		// select the add column button
 		let tableWrapper = wrapper.find("div[data-id='properties-ft-structurelist_sub_panel']");
 		expect(tableWrapper.length).to.equal(1);

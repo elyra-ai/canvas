@@ -18,18 +18,18 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import IconButton from "../../components/icon-button";
 import WideFlyout from "./../../components/wide-flyout";
 import Icon from "./../../../icons/icon.jsx";
 
 import isEmpty from "lodash/isEmpty";
 import PropertyUtils from "./../../util/property-utils";
 import ControlUtils from "./../../util/control-utils";
-import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, CARBON_ICONS } from "./../../constants/constants";
+import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import uuid4 from "uuid/v4";
 import { STATES } from "./../../constants/constants.js";
 import { Type, ParamRole } from "./../../constants/form-constants.js";
 import classNames from "classnames";
+import Link from "carbon-components-react/lib/components/Link";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 
@@ -265,13 +265,13 @@ class SummaryPanel extends React.Component {
 	render() {
 		const icon = this._getSummaryIconState();
 		const link = (<div className="properties-summary-link-container">
-			<IconButton
-				className="properties-summary-link-button"
-				icon={<Icon type={CARBON_ICONS.ADD} />}
+			<Link
+				href="#"
+				className="properties-summary-link"
 				onClick={this.handleLinkClicked}
 			>
 				{this.props.panel.label}
-			</IconButton>
+			</Link>
 			{icon}
 		</div>);
 		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL);

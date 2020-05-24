@@ -362,7 +362,6 @@ class EditorForm extends React.Component {
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("customPanel"):
 			return this.generateCustomPanel(key, uiItem.panel);
-			// only generate summary panel for right side flyout
 		case ("action"):
 			return this.actionFactory.generateAction(key, uiItem.action);
 		case ("textPanel"):
@@ -564,7 +563,7 @@ class EditorForm extends React.Component {
 		}
 
 		let content = this.genUIContent(uiItems);
-		let wideFly = <div />;
+		let wideFly = null;
 
 		const form = this.props.controller.getForm();
 		const title = PropertyUtil.formatMessage(this.props.controller.getReactIntl(),

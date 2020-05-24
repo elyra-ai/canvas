@@ -51,9 +51,7 @@ describe("summary renders correctly", () => {
 			.trim()).to.equal("Cholesterol");
 	});
 	it("should open fieldpicker when type unknown", () => {
-		const sortSummary = wrapper.find("div[data-id='properties-structuretableSortOrder-summary-panel']");
-		const summaryButton = sortSummary.find("button.properties-summary-link-button");
-		summaryButton.simulate("click");
+		propertyUtils.openSummaryPanel(wrapper, "structuretableSortOrder-summary-panel");
 		const fieldPickerWrapper = tableUtils.openFieldPicker(wrapper, "properties-structuretableSortOrder");
 		tableUtils.fieldPicker(fieldPickerWrapper, ["Age"], ["Age", "Sex", "BP", "Cholesterol", "Na", "K", "Drug"]);
 	});
@@ -81,7 +79,7 @@ describe("summary panel renders correctly", () => {
 	});
 	it("should have a summary panel in a summary panel", () => {
 		const wideflyout = propertyUtils.openSummaryPanel(wrapper, "structuretableSortOrder-summary-panel");
-		const summaryButton = wideflyout.find("button.properties-summary-link-button");
+		const summaryButton = wideflyout.find("a.properties-summary-link");
 		expect(summaryButton).to.have.length(1);
 		const summaryData = wideflyout.find("tr.properties-summary-row");
 		expect(summaryData).to.have.length(1);
@@ -138,7 +136,7 @@ describe("summary panel renders error/warning status correctly", () => {
 		expect(summary.find("svg.warning")).to.have.length(1);
 
 		// add row back in tables
-		tableCategory.find("button.properties-summary-link-button").simulate("click");
+		tableCategory.find("a.properties-summary-link").simulate("click");
 		wideflyout = wrapper.find("div.properties-wf-content.show");
 		wideflyout.find("button.properties-add-fields-button").at(0)
 			.simulate("click");
@@ -203,7 +201,7 @@ describe("summary panel renders error/warning status correctly", () => {
 		expect(summary.find("svg.error")).to.have.length(1);
 
 		// add row back into Table Input table
-		tableCategory.find("button.properties-summary-link-button").simulate("click");
+		tableCategory.find("a.properties-summary-link").simulate("click");
 		wideflyout = wrapper.find("div.properties-wf-content.show");
 
 		wideflyout.find("button.properties-add-fields-button").at(1)
@@ -260,7 +258,7 @@ describe("summary panel visible and enabled conditions work correctly", () => {
 
 	it("summary panel link should be hidden", () => {
 		let secondSummary = wrapper.find("div[data-id='properties-structuretable-summary-panel2']");
-		const link = secondSummary.find("button.properties-summary-link-button");
+		const link = secondSummary.find("a.properties-summary-link");
 		expect(link).to.have.length(1);
 		expect(controller.getPanelState({ name: "structuretable-summary-panel2" })).to.equal("visible");
 		expect(secondSummary.find("div.properties-summary-values")).to.have.length(1);

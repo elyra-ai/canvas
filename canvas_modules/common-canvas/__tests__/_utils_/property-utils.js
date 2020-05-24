@@ -95,7 +95,7 @@ function genLongString(length) {
 function openSummaryPanel(wrapper, panelId) {
 	const summaryPanel = wrapper.find(`div[data-id='properties-${panelId}']`);
 	expect(summaryPanel).to.have.length(1);
-	summaryPanel.find("button.properties-summary-link-button")
+	summaryPanel.find("a.properties-summary-link")
 		.simulate("click");
 	return wrapper.find("div.properties-wf-content.show");
 }

@@ -154,7 +154,7 @@ describe("condition messages should add alerts tab for tables", () => {
 
 		// open the summary link for hide tables
 		let summary = wrapper.find("div[data-id='properties-structuretableRenameFields-summary-panel']");
-		let summaryButton = summary.find("button.properties-summary-link-button");
+		let summaryButton = summary.find("a.properties-summary-link");
 		summaryButton.simulate("click");
 
 		// set the error condition in the table
@@ -196,7 +196,7 @@ describe("condition messages should add alerts tab for tables", () => {
 
 		// open the summary link for the hide table
 		summary = wrapper.find("div[data-id='properties-structuretableRenameFields-summary-panel']");
-		summaryButton = summary.find("button.properties-summary-link-button");
+		summaryButton = summary.find("a.properties-summary-link");
 		summaryButton.simulate("click");
 
 		// hide the table
