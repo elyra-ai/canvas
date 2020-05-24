@@ -31,7 +31,7 @@ Cypress.Commands.add("saveFlyout", () => {
 
 
 Cypress.Commands.add("openSubPanel", (title) => {
-	cy.get(".properties-icon-button-label").contains(title)
+	cy.get(".properties-summary-link").contains(title)
 		.click();
 });
 
