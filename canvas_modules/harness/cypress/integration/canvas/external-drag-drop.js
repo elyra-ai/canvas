@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-describe("Sanity test drag and drop of external object to canvas", function() {
+describe("Test drag and drop of external object to canvas", function() {
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");

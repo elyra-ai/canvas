@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-describe("Sanity test to check if a port to port link can be made with a new node", function() {
+describe("Test to check if a port to port link can be made with a new node", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
@@ -65,7 +65,7 @@ describe("Sanity test to check if a port to port link can be made with a new nod
 	});
 });
 
-describe("Sanity test multiple ports operations", function() {
+describe("Test multiple ports operations", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
@@ -177,7 +177,7 @@ describe("Sanity test multiple ports operations", function() {
 	});
 });
 
-describe("Sanity test for dynamically adding ports by updating pipeline flow through API", function() {
+describe("Test for dynamically adding ports by updating pipeline flow through API", function() {
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("multiPortsCanvas3.json");

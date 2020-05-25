@@ -49,6 +49,19 @@ Cypress.Commands.add("getSupernodePipeline", (supernodeName) => {
 	});
 });
 
+Cypress.Commands.add("getSupernodePipelineNested", (nodeName, supernodeName) => {
+	// Get pipeline id of node within supernode
+	cy.getSupernodePipelineIdNested(nodeName, supernodeName).then((nestedSupernodePipelineId) => {
+		cy.getCanvasData().then((canvasData) =>
+			canvasData.pipelines.find((pipeline) => pipeline.id === nestedSupernodePipelineId));
+	});
+});
+
+Cypress.Commands.add("getNodeFromObjectModel", (nodeId) => {
+	cy.getPipeline().then((pipeline) =>
+		pipeline.nodes.find((node) => node.id === nodeId));
+});
+
 Cypress.Commands.add("getNodeLabelCountFromObjectModel", (nodeName) => {
 	let count = 0;
 	cy.getPipeline()
