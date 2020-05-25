@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-describe("Sanity test adding nodes from palette", function() {
+describe("Test adding nodes from palette", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
@@ -107,7 +107,7 @@ describe("Sanity test adding nodes from palette", function() {
 	});
 });
 
-describe("Sanity test selecting nodes open properties", function() {
+describe("Test selecting nodes open properties", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
@@ -149,7 +149,7 @@ describe("Sanity test selecting nodes open properties", function() {
 	});
 });
 
-describe("Sanity test changing node names is reflected in canvas", function() {
+describe("Test changing node names is reflected in canvas", function() {
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
@@ -190,7 +190,7 @@ describe("Sanity test changing node names is reflected in canvas", function() {
 	});
 });
 
-describe("Sanity test from loaded file", function() {
+describe("Test from loaded file", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
@@ -205,7 +205,7 @@ describe("Sanity test from loaded file", function() {
 	});
 });
 
-describe("Sanity test from loaded file in legacy format", function() {
+describe("Test from loaded file in legacy format", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });

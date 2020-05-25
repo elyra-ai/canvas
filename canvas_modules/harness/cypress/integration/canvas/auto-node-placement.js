@@ -15,7 +15,7 @@
  */
 
 
-describe("Sanity test auto layout variations", function() {
+describe("Test auto layout variations", function() {
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
