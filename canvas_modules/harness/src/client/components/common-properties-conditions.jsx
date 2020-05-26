@@ -244,7 +244,7 @@ class CommonPropertiesComponents extends React.Component {
 			<nav>
 				<ul className="harness-properties-documentation-navbar-items">
 					<li className="harness-properties-documentation-navbar-li">
-						<a id="harness-conditions-documentation-title">WDP Common Properties Conditions</a>
+						<a id="harness-conditions-documentation-title">Elyra-ai/canvas Common Properties Conditions</a>
 					</li>
 					<li className="harness-properties-documentation-navbar-li nav-divider">
 						<a onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Conditions" } })}>Conditions</a>
@@ -264,9 +264,9 @@ class CommonPropertiesComponents extends React.Component {
 		</div>);
 
 		const header = (<div id="main" className="harness-properties-documentation-section-header">
-			<h1>WDP Common Properties Conditions</h1>
+			<h1>Elyra-ai/canvas Common Properties Conditions</h1>
 			<a className="harness-properties-documentation-page-link"
-				href="https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/common-canvas"
+				href="https://github.com/elyra-ai/canvas/tree/master/canvas_modules/common-canvas"
 				target="_blank"
 			>
 				Source Code
@@ -281,9 +281,9 @@ class CommonPropertiesComponents extends React.Component {
 					between multiple parameters (i.e. valid values for parameter 1 depend upon the value of parameter 2).
 					To create a condition for a control, create a JSON that adheres to the&nbsp;
 				<a className="harness-properties-documentation-page-intro-link"
-					href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-pipeline/operators/conditions-documentation-v1-schema.json"
+					href="https://github.com/elyra-ai/pipeline-schemas/blob/master/common-pipeline/operators/conditions-v3-schema.json"
 				>Conditions schema</a>, and add it to the conditions array in the parameter definition&nbsp;
-				<a className="harness-properties-documentation-page-intro-link" href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-canvas/parameter-defs/parameter-defs-v1-schema.json">
+				<a className="harness-properties-documentation-page-intro-link" href="https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/parameter-defs/parameter-defs-v3-schema.json">
 					parameter definition</a> JSON.
 				</p>
 				<p>

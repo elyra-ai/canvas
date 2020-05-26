@@ -383,7 +383,7 @@ class CommonPropertiesComponents extends React.Component {
 			<nav>
 				<ul className="harness-properties-documentation-navbar-items">
 					<li className="harness-properties-documentation-navbar-li">
-						<span id="harness-properties-documentation-title">WDP Common Properties Components</span>
+						<span id="harness-properties-documentation-title">Elyra-ai/canvas Common Properties Components</span>
 					</li>
 					<li className="harness-properties-documentation-navbar-li nav-divider">
 						<a onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Groups" } })}>Groups</a>
@@ -403,9 +403,9 @@ class CommonPropertiesComponents extends React.Component {
 		</div>);
 
 		const header = (<div id="main" className="harness-properties-documentation-section-header">
-			<h1>WDP Common Properties Components</h1>
+			<h1>Elyra-ai/canvas Common Properties Components</h1>
 			<a className="harness-properties-documentation-page-link"
-				href="https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/common-canvas"
+				href="https://github.com/elyra-ai/canvas/tree/master/canvas_modules/common-canvas/src/common-properties"
 				target="_blank"
 			>
 				Source Code
@@ -415,14 +415,14 @@ class CommonPropertiesComponents extends React.Component {
 		const contentIntro = (<section id="Intro">
 			<h2 className="harness-properties-documentation-section-title">Introduction</h2>
 			<div className="harness-section-description">
-				<p>To create UIs based on the WDP Common Properties Components, a JSON adhering to the&nbsp;
+				<p>To create UIs based on the Elyra-ai/canvas Common Properties Components, a JSON document adhering to the&nbsp;
 					<a className="harness-properties-documentation-page-intro-link"
-						href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/tree/master/common-canvas/parameter-defs"
-					>Parameter Definition Schema</a> has to be provided. The JSON contains parameter definitions, uihints,
+						href="https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/parameter-defs"
+					>Parameter Definition Schema</a> has to be provided. The JSON document contains parameter definitions, uihints,
 					dataset_metadata, etc. The data in these sections is used to generate the UI. Certain parameter types
 					translate into specific controls. The control type can be overriden in the uihints section, which follows the&nbsp;
 					<a className="harness-properties-documentation-page-intro-link"
-						href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-pipeline/operators/uihints-v1-schema.json"
+						href="https://github.com/elyra-ai/pipeline-schemas/blob/master/common-pipeline/operators/uihints-v1-schema.json"
 					>UI Hints schema</a>. In addition, uihints are used to group UI controls.
 				</p>
 				<p>
@@ -444,8 +444,7 @@ class CommonPropertiesComponents extends React.Component {
 					to <span className="harness-highlight">Custom</span> and <span className="harness-highlight">rightFlyout</span> set to true.
 					Below is the minimum specifications to render CommonProperties. More options and details are listed in the&nbsp;
 				<a className="harness-properties-documentation-page-intro-link"
-					href={"https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/3.0-Common-properties-documentation-documentation" +
-					"#using-commonproperties-documentation-in-commoncanvas-right-flyout-panel"}
+					href={"https://github.com/elyra-ai/canvas/wiki/3.0-Common-properties-documentation"}
 				>
 					Common Properties wiki
 				</a>.
@@ -468,7 +467,7 @@ class CommonPropertiesComponents extends React.Component {
 				</pre>
 				<p>For more information with using CommonCanvas right-flyout for the properties editor, refer to the documentation in the&nbsp;
 					<a className="harness-properties-documentation-page-intro-link"
-						href={"https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/3.0-Common-properties-documentation-documentation" +
+						href={"https://github.com/elyra-ai/canvas/wiki/3.0-Common-properties-documentation" +
 						"#using-commonproperties-documentation-in-commoncanvas-right-flyout-panel"}
 					>
 						Common Properties wiki
@@ -554,10 +553,8 @@ class CommonPropertiesComponents extends React.Component {
 				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--subtabs" className="harness-section-subtitle">subTabs</h3>
 					<p>This is currently not supported in <span className="harness-highlight">Modal</span> dialogs.
-						Please let us know in the issue if this is desired:&nbsp;
-					<a className="harness-properties-documentation-page-intro-link"
-						href={"https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/2678"}
-					>#2678</a>. Please view the following example in the flyout.
+						Please open an issue if you need modal support.
+						Please view the following example in the flyout.
 					</p>
 					<p>To create vertical sub-tabs, set the <span className="harness-highlight">type</span> to <span className="harness-highlight">subTabs</span> and
 						add a nested <span className="harness-highlight">group_info</span> array with the objects
@@ -1619,7 +1616,7 @@ class CommonPropertiesComponents extends React.Component {
 						to <span className="harness-highlight">More than ten fields...</span> This placeholder text can be configured through
 						&nbsp;
 					<a className="harness-properties-documentation-page-intro-link"
-						href="https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/3.0-Common-Properties-documentation#internationalization-and-override-of-labels-in-commonproperties"
+						href="https://github.com/elyra-ai/canvas/wiki/3.0-Common-Properties-documentation#step-3--display-the-properties-editor"
 					>custom labels</a>.
 					</p>
 					<div className="harness-section-row">
