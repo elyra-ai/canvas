@@ -15,7 +15,6 @@
  */
 /*
 	This code is a modified version from portal-common-api for the common-canvas toolbar
-	https://github.ibm.com/dap/portal-common-api/blob/master/src/js/nav/v2/nav.js
 */
 
 import React from "react";
