@@ -16,8 +16,6 @@
 # limitations under the License.
 #
 
-# original https://github.ibm.com/NGP-TWC/WDP-Security/blob/master/automation/sourcescans/sonarqube/source_scan.sh
-
 if [[ ( "$TRAVIS_PULL_REQUEST" = "false" && "$TRAVIS_BRANCH" = "master" ) ]]; then
 	set -x
 	VER_NUMBER=$TRAVIS_BUILD_NUMBER

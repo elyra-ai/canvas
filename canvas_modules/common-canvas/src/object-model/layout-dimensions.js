@@ -64,7 +64,7 @@ const haloDefaultLayout = {
 		labelPosY: 63,
 
 		// An array of decorations to be applied to the node. For details see:
-		// https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/2.4.2-Decoration-Specification
+		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
 		decorations: [],
 
 		// Positions and dimensions for 9 enumerated default decorator positions.
@@ -405,7 +405,7 @@ const portsHorizontalDefaultLayout = {
 		labelPosY: 24,
 
 		// An array of decorations to be applied to the node. For details see:
-		// https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/2.4.2-Decoration-Specification
+		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
 		decorations: [],
 
 		// Positions and dimensions for 9 enumerated default decorator positions.
@@ -746,7 +746,7 @@ const portsVerticalDefaultLayout = {
 		labelPosY: 67,
 
 		// An array of decorations to be applied to the node. For details see:
-		// https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/2.4.2-Decoration-Specification
+		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
 		decorations: [],
 
 		// Positions and dimensions for 9 enumerated default decorator positions.
