@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Button from "carbon-components-react/lib/components/Button";
 import RadioButton from "carbon-components-react/lib/components/RadioButton";
-import Icon from "carbon-components-react/lib/components/Icon";
+import { WarningFilled16, ErrorFilled16 } from "@carbon/icons-react";
 import Dropdown from "carbon-components-react/lib/components/Dropdown";
 import { connect } from "react-redux";
 import isEqual from "lodash/isEqual";
@@ -650,9 +650,9 @@ class CustomEffectsCtrl extends React.Component {
 		if (this.props.messageInfo && this.props.messageInfo.text) {
 			messageText = this.props.messageInfo.text;
 			if (this.props.messageInfo.type === "warning") {
-				icon = (<Icon className="warning" name="warning--glyph" />);
+				icon = (<WarningFilled16 className="warning" />);
 			} else if (this.props.messageInfo.type === "error") {
-				icon = (<Icon className="error" name="error--glyph" />);
+				icon = (<ErrorFilled16 className="error" />);
 			}
 		}
 		let visibility;
