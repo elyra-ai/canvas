@@ -130,9 +130,19 @@ class NotificationPanel extends React.Component {
 
 		return (<div className={"notification-panel-container " + notificationPanelClassName} >
 			<div className="notification-panel">
-				<div className="notification-panel-header">{this.props.notificationHeader}</div>
+				<div className="notification-panel-header">
+					{this.props.notificationHeader}
+					<div className="notification-panel-subtitle">
+						{this.props.notificationSubtitle}
+					</div>
+				</div>
 				<div className="notification-panel-messages">
 					{notificationPanelMessages}
+					<div className="notification-panel-clear-all-container">
+						<div className="notification-panel-clear-all">
+							{"Clear all"}
+						</div>
+					</div>
 				</div>
 				<svg className="notification-popup-arrow" x="0px" y="0px" viewBox="0 0 16 9">
 					<polyline points="0,9 8,0 16,9" />
@@ -147,6 +157,7 @@ NotificationPanel.propTypes = {
 		PropTypes.string,
 		PropTypes.object
 	]),
+	notificationSubtitle: PropTypes.string,
 	isNotificationOpen: PropTypes.bool,
 	messages: PropTypes.array,
 	emptyMessage: PropTypes.oneOfType([
