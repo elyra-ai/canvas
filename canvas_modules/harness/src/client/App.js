@@ -849,8 +849,8 @@ export default class App extends React.Component {
 
 	appendNotificationMessages(message) {
 		this.harnessNotificationMessages = this.harnessNotificationMessages.concat(message);
-		this.canvasController.setNotificationMessages(this.flowNotificationMessages.concat(this.harnessNotificationMessages));
-		this.log("Set Notification Messages", "Set " + (this.flowNotificationMessages + this.harnessNotificationMessages.length) + " notification messages");
+		this.canvasController.setNotificationMessages(this.canvasController.getNotificationMessages().concat(message));
+		this.log("Set Notification Messages", "Set " + (this.canvasController.getNotificationMessages().length) + " notification messages");
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
