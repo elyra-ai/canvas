@@ -1639,9 +1639,9 @@ export default class App extends React.Component {
 			{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
 		];
 
-		const notificationConfig = { action: "notification", label: "Notifications", notificationHeader: "Notifications",
+		const notificationConfig = { action: "notification", label: "Notifications", notificationHeader: "Notifications", enable: true,
 			emptyMessage: "You don't have any notifications right now." };
-		const notificationConfig2 = { action: "notification", label: "Notifications", notificationHeader: "Notifications Canvas 2",
+		const notificationConfig2 = { action: "notification", label: "Notifications", notificationHeader: "Notifications Canvas 2", enable: true,
 			emptyMessage: "You don't have any notifications right now." };
 		const contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
