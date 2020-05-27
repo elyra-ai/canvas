@@ -157,7 +157,8 @@ class CommonCanvas extends React.Component {
 		}
 
 		if (newProps.notificationConfig) {
-			if (this.state.notificationConfig.label !== newProps.notificationConfig.label) {
+			if ((this.state.notificationConfig.label !== newProps.notificationConfig.label) ||
+					(this.state.notificationConfig.enable !== newProps.notificationConfig.enable)) {
 				this.setState({ notificationConfig: newProps.notificationConfig });
 			}
 		}
@@ -407,6 +408,10 @@ class CommonCanvas extends React.Component {
 					this.state.toolbarConfig[i].enable = deleteState;
 				}
 			}
+		}
+
+		if (typeof this.state.notificationConfig !== "undefined") {
+			this.state.notificationConfig.enable = this.canvasController.getNotificationMessages().length > 0;
 		}
 	}
 
