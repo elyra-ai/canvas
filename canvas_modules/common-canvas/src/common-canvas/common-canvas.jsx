@@ -409,10 +409,6 @@ class CommonCanvas extends React.Component {
 				}
 			}
 		}
-
-		if (typeof this.state.notificationConfig !== "undefined") {
-			this.state.notificationConfig.enable = this.canvasController.getNotificationMessages().length > 0;
-		}
 	}
 
 	render() {
