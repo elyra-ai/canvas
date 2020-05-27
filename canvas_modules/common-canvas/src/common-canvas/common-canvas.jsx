@@ -157,8 +157,7 @@ class CommonCanvas extends React.Component {
 		}
 
 		if (newProps.notificationConfig) {
-			if ((this.state.notificationConfig.label !== newProps.notificationConfig.label) ||
-					(this.state.notificationConfig.enable !== newProps.notificationConfig.enable)) {
+			if (this.state.notificationConfig.label !== newProps.notificationConfig.label) {
 				this.setState({ notificationConfig: newProps.notificationConfig });
 			}
 		}
@@ -409,10 +408,6 @@ class CommonCanvas extends React.Component {
 				}
 			}
 		}
-
-		if (typeof this.state.notificationConfig !== "undefined") {
-			this.state.notificationConfig.enable = this.canvasController.getNotificationMessages().length > 0;
-		}
 	}
 
 	render() {
@@ -476,6 +471,7 @@ class CommonCanvas extends React.Component {
 				notificationHeader={notificationHeader}
 				isNotificationOpen={this.state.isNotificationOpen}
 				messages={this.canvasController.getNotificationMessages()}
+				emptyMessage={this.state.notificationConfig.emptyMessage}
 				canvasController={this.canvasController}
 			/>);
 

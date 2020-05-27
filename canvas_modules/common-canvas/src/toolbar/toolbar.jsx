@@ -325,8 +325,7 @@ class Toolbar extends React.Component {
 		];
 
 		if (this.props.notificationConfig &&
-			typeof this.props.notificationConfig.action !== "undefined" &&
-			typeof this.props.notificationConfig.enable !== "undefined") {
+			typeof this.props.notificationConfig.action !== "undefined") {
 			const notificationCounter = [
 				{ divider: true },
 				this.props.notificationConfig
