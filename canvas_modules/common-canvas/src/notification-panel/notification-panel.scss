@@ -179,3 +179,7 @@ $notification-left-border-color-width: 4px;
 		margin-bottom: auto;
 	}
 }
+
+.notification-message-close:hover {
+	text-decoration: underline;
+}
