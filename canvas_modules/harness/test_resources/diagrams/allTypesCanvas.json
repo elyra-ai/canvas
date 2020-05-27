@@ -107,13 +107,16 @@
               },
               "links": [
                 {
+                  "id": "ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb",
                   "node_id_ref": "id8I6RH2V91XW",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
                   },
-                  "port_id_ref": "outPort"
+                  "port_id_ref": "outPort",
+                  "type_attr": "Primary",
+                  "description": "A test description for a link"
                 }
               ]
             }
@@ -204,6 +207,7 @@
               },
               "links": [
                 {
+                  "id": "a81684aa-9b09-4620-aa59-54035a5de913",
                   "node_id_ref": "|:;<,>.9?/`~!@#$%^&*()_+=-{}][",
                   "app_data": {
                     "ui_data": {
@@ -283,6 +287,7 @@
               },
               "links": [
                 {
+                  "id": "2a640b77-76f7-4601-a794-7e71fc7ee241",
                   "node_id_ref": "nodeIDSuperNodePE",
                   "app_data": {
                     "ui_data": {
@@ -365,6 +370,7 @@
               },
               "links": [
                 {
+                  "id": "d5bef845-9d69-4cca-95ec-27d481b4e776",
                   "node_id_ref": "nodeIDSuperNodePE",
                   "app_data": {
                     "ui_data": {

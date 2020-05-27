@@ -56,8 +56,16 @@ Cypress.Commands.add("openCanvasPalette", (paletteName) => {
 	// allows the canvas to load and display before any more test case steps
 	// are executed. Note: this won't work if the testcase selects a second
 	// canvas while an existing canvas with nodes is displayed.
-	cy.get(".palette-flyout-category");
-	cy.toggleCommonCanvasSidePanel();
+	cy.document().then((doc) => {
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+			// Palette Layout - Modal
+			cy.get(".palette-categories");
+		} else {
+			// Palette Layout - Flyout
+			cy.get(".palette-flyout-category");
+		}
+		cy.toggleCommonCanvasSidePanel();
+	});
 });
 
 Cypress.Commands.add("openCanvasPaletteForExtraCanvas", (paletteName) => {
@@ -103,6 +111,75 @@ Cypress.Commands.add("updateDecorationsJSON", (decoratorsJSON) => {
 		.find("textarea")
 		.clear()
 		.type(decoratorsJSON);
+});
+
+Cypress.Commands.add("selectNodeLabelFromDropDown", (nodeName) => {
+	cy.dropdownSelect("#harness-sidepanel-api-nodePortSelection", nodeName);
+});
+
+Cypress.Commands.add("setNewNodeLabel", (newNodeName) => {
+	cy.get("#harness-newLabel")
+		.clear()
+		.type(newNodeName);
+});
+
+Cypress.Commands.add("setCategoryId", (categoryId) => {
+	cy.get("#harness-categoryId")
+		.clear()
+		.type(categoryId);
+});
+
+Cypress.Commands.add("setCategoryName", (categoryName) => {
+	cy.get("#harness-categoryName")
+		.clear()
+		.type(categoryName);
+});
+
+// update the pipelineflow to add input and output ports to node
+Cypress.Commands.add("updatePipelineflowToAddInputOutputPortsToNode", (nodeName) => {
+	cy.get("#harness-sidepanel-api-pipelineFlow")
+		.find("textarea")
+		.invoke("text")
+		.then((flowText) => {
+			const pipelineFlow = JSON.parse(flowText);
+			const nodeList = pipelineFlow.pipelines[0].nodes;
+			const node = nodeList.find((nd) => nd.app_data.ui_data.label === nodeName);
+			const newInputPort = {
+				"id": "inPort2",
+				"app_data": {
+					"ui_data": {
+						"cardinality": {
+							"min": 0,
+							"max": 1
+						},
+						"label": "Input Port2"
+					}
+				},
+				"links": []
+			};
+
+			const newOutputPort = {
+				"id": "outPort2",
+				"app_data": {
+					"ui_data": {
+						"cardinality": {
+							"min": 0,
+							"max": -1
+						},
+						"label": "Output Port2"
+					}
+				}
+			};
+
+			node.inputs.push(newInputPort);
+			node.outputs.push(newOutputPort);
+
+			const newPipelineFlow = JSON.stringify(pipelineFlow);
+			cy.get("#harness-sidepanel-api-pipelineFlow")
+				.find("textarea")
+				.clear()
+				.type(newPipelineFlow, { parseSpecialCharSequences: false });
+		});
 });
 
 Cypress.Commands.add("submitAPI", () => {

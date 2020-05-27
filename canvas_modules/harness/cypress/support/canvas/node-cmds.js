@@ -14,20 +14,33 @@
  * limitations under the License.
  */
 
-Cypress.Commands.add("getNodeForLabel", (nodeLabel) =>
-	cy.get(getNodeGrpSelector())
-		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel)));
+Cypress.Commands.add("getNodeWithLabel", (nodeLabel) => {
+	cy.get("body").then(($body) => {
+		if ($body.find(".d3-node-group").length) {
+			cy.get(getNodeGrpSelector())
+				.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));
+		}
+		// No nodes found on canvas
+		return null;
+	});
+});
 
 Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
-	cy.getNodeForLabel(nodeLabel)
-		.then((node) => node[0].getAttribute("data-id").substring(11)));
+	cy.getNodeWithLabel(nodeLabel)
+		.then((node) => {
+			if (node) {
+				return node[0].getAttribute("data-id").substring(11);
+			}
+			return null;
+		})
+);
 
-Cypress.Commands.add("getNodeForLabelInSubFlow", (nodeLabel) =>
+Cypress.Commands.add("getNodeWithLabelInSubFlow", (nodeLabel) =>
 	cy.get(getNodeGrpSelectorInSubFlow())
 		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel)));
 
-Cypress.Commands.add("getNodeForLabelInSupernode", (nodeLabel, supernodeName) => {
-	cy.getNodeForLabel(supernodeName)
+Cypress.Commands.add("getNodeWithLabelInSupernode", (nodeLabel, supernodeName) => {
+	cy.getNodeWithLabel(supernodeName)
 		.then((supernode) => {
 			const supernodeId = supernode[0].getAttribute("data-id").substring(11);
 			cy.get(getNodeGrpSelectorInSupernode(supernodeId))
@@ -35,9 +48,25 @@ Cypress.Commands.add("getNodeForLabelInSupernode", (nodeLabel, supernodeName) =>
 		});
 });
 
+Cypress.Commands.add("getNodeIdForLabelInSupernode", (nodeLabel, supernodeName) =>
+	cy.getNodeWithLabelInSupernode(nodeLabel, supernodeName)
+		.then((node) => {
+			if (node) {
+				return node[0].getAttribute("data-id").substring(11);
+			}
+			return null;
+		})
+);
+
 Cypress.Commands.add("getSupernodePipelineId", (supernodeName) => {
 	cy.get(getNodeGrpSelector())
 		.then((grpArray) => findGrpForLabel(grpArray, supernodeName).__data__.subflow_ref.pipeline_id_ref);
+});
+
+Cypress.Commands.add("getSupernodePipelineIdNested", (nodeName, supernodeName) => {
+	// Get pipeline id of a node within supernode
+	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
+		.then((node) => node[0].__data__.subflow_ref.pipeline_id_ref);
 });
 
 function getNodeGrpSelector() {
@@ -68,46 +97,12 @@ function findGrpForLabel(grpArray, nodeLabel) {
 	return null;
 }
 
-Cypress.Commands.add("clickCategory", (nodeCategory) => {
-	cy.document().then((doc) => {
-		// Palette Layout - Modal
-		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
-			cy.get(".palette-categories > div").each((category) => {
-				if (category[0].outerText === nodeCategory) {
-					category.click();
-				}
-			});
-		} else {
-			// Palette Layout - Flyout
-			cy.get(".palette-flyout-category").each((category) => {
-				if (category[0].attributes.value.value === nodeCategory) {
-					category.click();
-				}
-			});
-		}
-	});
-});
-
-Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
-	cy.document().then((doc) => {
-		// Palette Layout - Modal
-		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
-			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel)
-				.dblclick();
-		} else {
-			// Palette Layout - Flyout
-			cy.get(".palette-list-item-text-div > span").contains(nodeLabel)
-				.dblclick();
-		}
-	});
-});
-
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	// Get the os name to decide whether to click ctrl or cmd
 	cy.useCtrlOrCmdKey().then((selectedKey) => {
 		cy.get("body")
 			.type(selectedKey, { release: false })
-			.getNodeForLabel(nodeName)
+			.getNodeWithLabel(nodeName)
 			.click();
 		// Cancel the command/ctrl key press -- the documentation doesn't say
 		// this needs to be done but if it isn't the command key stays pressed down
@@ -117,11 +112,40 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	});
 });
 
+Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) => {
+	// Get the os name to decide whether to click ctrl or cmd
+	cy.useCtrlOrCmdKey().then((selectedKey) => {
+		cy.get("body")
+			.type(selectedKey, { release: false })
+			.getNodeWithLabelInSupernode(nodeName, supernodeName)
+			.click();
+
+		// Cancel the command/ctrl key press
+		cy.get("body")
+			.type(selectedKey, { release: true });
+	});
+});
+
 Cypress.Commands.add("rightClickNode", (nodeName) => {
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.rightclick();
 });
 
+Cypress.Commands.add("rightClickNodeInSupernode", (nodeName, supernodeName) => {
+	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
+		.rightclick();
+});
+
+Cypress.Commands.add("rightClickSourcePortOfNode", (nodeName, srcPortId) => {
+	cy.getNodePortSelector(nodeName, "out_port", srcPortId)
+		.then((portSelector) => cy.get(portSelector).rightclick());
+});
+
+Cypress.Commands.add("rightClickTargetPortOfNode", (nodeName, trgPortId) => {
+	// Added { force: true } to disable element visibility errorCheck from Cypress
+	cy.getNodePortSelector(nodeName, "inp_port", trgPortId)
+		.then((portSelector) => cy.get(portSelector).rightclick({ force: true }));
+});
 
 Cypress.Commands.add("getNumberOfSelectedNodes", () => {
 	cy.getSelectedNodes()
@@ -147,7 +171,7 @@ Cypress.Commands.add("isNodeSelected", (nodeName) => {
 });
 
 Cypress.Commands.add("clickDecoratorHotspotOnNode", (decoratorId, nodeName) => {
-	cy.getNodeForLabel(nodeName)
+	cy.getNodeWithLabel(nodeName)
 		.find(`.d3-node-dec-outline[data-id=node_dec_outln_0_${decoratorId}]`)
 		.click();
 });
@@ -182,7 +206,7 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 
 // Solution found here - https://github.com/cypress-io/cypress/issues/3441#issuecomment-463239982
 Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
-	cy.getNodeForLabel(nodeLabel)
+	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => {
 			const srcSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "body") + "']";
 			cy.window().then((win) => {
@@ -195,14 +219,40 @@ Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 		});
 });
 
-Cypress.Commands.add("deleteNode", (nodeLabel) => {
+Cypress.Commands.add("deleteNodeUsingContextMenu", (nodeLabel) => {
 	// Delete node from context menu
-	cy.getNodeForLabel(nodeLabel).rightclick();
+	cy.getNodeWithLabel(nodeLabel).rightclick();
 	cy.clickOptionFromContextMenu("Delete");
 });
 
+Cypress.Commands.add("deleteNodeUsingKeyboard", (nodeName) => {
+	// Delete node by pressing 'Delete' key on keyboard
+	cy.useDeleteKey()
+		.then((deleteKey) => {
+			cy.getNodeWithLabel(nodeName)
+				.click()
+				.type(deleteKey);
+		});
+});
+
+Cypress.Commands.add("deleteNodeUsingToolbar", (nodeName) => {
+	// Select node and press delete icon on toolbar
+	cy.getNodeWithLabel(nodeName).click();
+	cy.clickToolbarDelete();
+});
+
+Cypress.Commands.add("deleteNodeInSupernodeUsingKeyboard", (nodeName, supernodeName) => {
+	// Delete node in supernode by pressing 'Delete' key on keyboard
+	cy.useDeleteKey()
+		.then((deleteKey) => {
+			cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
+				.click()
+				.type(deleteKey);
+		});
+});
+
 Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
-	cy.getNodeForLabel(nodeLabel).then((node) => {
+	cy.getNodeWithLabel(nodeLabel).then((node) => {
 		const nodeDimensions = {
 			x_pos: node[0].__data__.x_pos,
 			y_pos: node[0].__data__.y_pos,
@@ -210,5 +260,146 @@ Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
 			height: node[0].__data__.height
 		};
 		return nodeDimensions;
+	});
+});
+
+Cypress.Commands.add("selectAllNodesUsingCtrlOrCmdKey", () => {
+	cy.get("#canvas-div-0").find(".node-image")
+		.then((nodes) => {
+			cy.useCtrlOrCmdKey()
+				.then((selectedKey) => {
+					// Press and hold the ctrl/cmd key
+					cy.get("body")
+						.type(selectedKey, { release: false });
+
+					// Click all the nodes
+					nodes.each((idx, node) => {
+						cy.wrap(node)
+							.click();
+					});
+
+					// Cancel the ctrl/cmd key press
+					cy.get("body")
+						.type(selectedKey, { release: true });
+				});
+		});
+});
+
+Cypress.Commands.add("clickExpandedCanvasBackgroundOfSupernode", (supernodeName) => {
+	cy.getNodeWithLabel(supernodeName)
+		.find(".svg-area")
+		.eq(0)
+		.click();
+});
+
+Cypress.Commands.add("rightClickExpandedCanvasBackgroundOfSupernode", (supernodeName) => {
+	cy.getNodeWithLabel(supernodeName)
+		.find(".svg-area")
+		.eq(0)
+		.rightclick();
+});
+
+Cypress.Commands.add("ctrlOrCmdClickExpandedCanvasBackgroundOfSupernode", (supernodeName) => {
+	// Get the os name to decide whether to click ctrl or cmd
+	cy.useCtrlOrCmdKey().then((selectedKey) => {
+		cy.get("body")
+			.type(selectedKey, { release: false })
+			.getNodeWithLabel(supernodeName)
+			.find(".svg-area")
+			.eq(0)
+			.click();
+		// Cancel the command/ctrl key press
+		cy.get("body")
+			.type(selectedKey, { release: true });
+	});
+});
+
+// Palette commands
+Cypress.Commands.add("findCategory", (nodeCategory) => {
+	cy.document().then((doc) => {
+		// Palette Layout - Modal
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+			cy.get(".palette-categories > div")
+				.then((categories) => {
+					let category = null;
+					for (let idx = 0; idx < categories.length; idx++) {
+						if (categories[idx].outerText === nodeCategory) {
+							category = categories[idx];
+							break;
+						}
+					}
+					return category;
+				});
+		} else {
+			// Palette Layout - Flyout
+			cy.get(".palette-flyout-category")
+				.then((categories) => {
+					let category = null;
+					for (let idx = 0; idx < categories.length; idx++) {
+						if (categories[idx].attributes.value.value === nodeCategory) {
+							category = categories[idx];
+							break;
+						}
+					}
+					return category;
+				});
+		}
+	});
+});
+
+Cypress.Commands.add("clickCategory", (nodeCategory) => {
+	cy.findCategory(nodeCategory).click();
+});
+
+Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
+	cy.document().then((doc) => {
+		// Palette Layout - Modal
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel)
+				.dblclick();
+		} else {
+			// Palette Layout - Flyout
+			cy.get(".palette-list-item-text-div > span").contains(nodeLabel)
+				.dblclick();
+		}
+	});
+});
+
+Cypress.Commands.add("findNodeInPalette", (filterText) => {
+	cy.get(".palette-flyout-search").click();
+	cy.get(".palette-flyout-search")
+		.find("input")
+		.type("{selectall}")
+		.type(filterText);
+});
+
+Cypress.Commands.add("findNodeIndexInPalette", (nodeName) => {
+	cy.document().then((doc) => {
+		// Palette Layout - Modal
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+			cy.get(".palette-grid-node-text")
+				.then((listItems) => {
+					let nodeIndex = -1;
+					for (let idx = 0; idx < listItems.length; idx++) {
+						if (listItems[idx].textContent === nodeName) {
+							nodeIndex = idx;
+						}
+					}
+					return nodeIndex;
+				});
+		} else {
+			// Palette Layout - Flyout
+			cy.get(".palette-list-item-text-span")
+				.then((listItems) => {
+					let nodeIndex = -1;
+					for (let idx = 0; idx < listItems.length; idx++) {
+						if (listItems[idx].textContent === nodeName) {
+							nodeIndex = idx;
+							break;
+						}
+					}
+					return nodeIndex;
+				});
+		}
 	});
 });

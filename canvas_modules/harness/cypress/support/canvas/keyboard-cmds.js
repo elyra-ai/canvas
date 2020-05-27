@@ -29,6 +29,11 @@ Cypress.Commands.add("shortcutKeysPaste", () => {
 	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{v}", { release: false }));
 });
 
+Cypress.Commands.add("shortcutKeysUndo", () => {
+	// Press Ctrl/Cmnd+z to Undo
+	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{z}", { release: false }));
+});
+
 Cypress.Commands.add("useCtrlOrCmdKey", () => {
 	// Ctrl or Cmd keys are used to select multiple elements
 	// Get the os name to decide whether to click ctrl or cmd
@@ -38,3 +43,9 @@ Cypress.Commands.add("useCtrlOrCmdKey", () => {
 	const selectedKey = Cypress.platform === "darwin" ? "{meta}" : "{ctrl}";
 	return selectedKey;
 });
+
+// Press 'Delete' key on keyboard
+Cypress.Commands.add("useDeleteKey", () => "{del}");
+
+// Press 'shift' key on keyboard
+Cypress.Commands.add("useShiftKey", () => "{shift}");

@@ -2132,6 +2132,7 @@ export default class SVGCanvasRenderer {
 					const nodeImageType = that.getNodeImageType(nodeImage);
 					d3.select(this)
 						.append(nodeImageType)
+						.each(function() { that.setImageContent(this, nd); })
 						.attr("data-image", nodeImage) // Used in tests
 						.attr("data-id", (d) => that.getId("node_image", d.id))
 						.attr("data-pipeline-id", that.activePipeline.id)
@@ -2241,7 +2242,6 @@ export default class SVGCanvasRenderer {
 					// from the canvas) and when WML Canvas uses that clipboard support in place
 					// of its own.
 					nodeGrp.select(this.getSelectorForId("node_image", d.id))
-						.each(function() { that.setImageContent(this, d); })
 						.attr("x", (nd) => this.getNodeImagePosX(nd))
 						.attr("y", (nd) => this.getNodeImagePosY(nd))
 						.attr("width", (nd) => this.getNodeImageWidth(nd))
@@ -2625,6 +2625,7 @@ export default class SVGCanvasRenderer {
 				const nodeImageType = that.getNodeImageType(nodeImage);
 				d3.select(this)
 					.append(nodeImageType)
+					.each(function() { that.setImageContent(this, dec); })
 					.attr("data-image", nodeImage) // Used in tests
 					.attr("data-id", () => that.getId(`${objType}_dec_image`, dec.id)); // Used in tests
 			});
@@ -2663,7 +2664,6 @@ export default class SVGCanvasRenderer {
 					.attr("width", this.getDecoratorWidth(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
 					.attr("height", this.getDecoratorHeight(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
 					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-image`))
-					.each(function() { that.setImageContent(this, dec); })
 					.datum(decDatum);
 
 				decGrp.select(labelSelector)

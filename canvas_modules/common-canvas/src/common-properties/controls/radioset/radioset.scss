@@ -37,8 +37,6 @@
 		}
 
 		.bx--radio-button-wrapper > label {
-			@include carbon--type-style("body-short-01");
-			color: $text-01;
 			justify-content: left; // override carbon style to center justify radio-button labels
 		}
 	}

@@ -53,6 +53,16 @@ Cypress.Commands.add("clickDecoratorHotspotOnLink", (decoratorId, linkName) => {
 		.click();
 });
 
+Cypress.Commands.add("linkNodes", (srcNodeName, trgNodeName) => {
+	// Link source node to target node
+	cy.getNodeWithLabel(srcNodeName)
+		.find(".d3-node-halo")
+		.trigger("mousedown", "right", { button: 0 }, { force: true });
+	cy.getNodeWithLabel(trgNodeName)
+		.trigger("mousemove", { force: true })
+		.trigger("mouseup", { force: true });
+});
+
 Cypress.Commands.add("linkNodeOutputPortToNodeInputPort", (srcNodeName, srcPortId, trgNodeName, trgPortId) => {
 	cy.getNodePortSelector(srcNodeName, "out_port", srcPortId)
 		.then((srcSelector) => {
@@ -69,9 +79,52 @@ Cypress.Commands.add("linkNodeOutputPortToNodeInputPort", (srcNodeName, srcPortI
 		});
 });
 
+Cypress.Commands.add("linkNodeOutputPortToNodeInputPortInSupernode",
+	(supernodeName, srcNodeName, srcPortId, trgNodeName, trgPortId) => {
+		cy.getNodePortSelectorInSupernode(supernodeName, srcNodeName, "out_port", srcPortId)
+			.then((srcSelector) => {
+				cy.getNodePortSelectorInSupernode(supernodeName, trgNodeName, "inp_port", trgPortId)
+					.then((trgSelector) => {
+						// We're using { force: true } on mousemove and mouseup triggers
+						// to disable element visibility errorCheck from Cypress
+						cy.get(srcSelector)
+							.trigger("mousedown", { button: 0 });
+						cy.get(trgSelector)
+							.trigger("mousemove", { force: true })
+							.trigger("mouseup", { force: true });
+					});
+			});
+	});
+
+Cypress.Commands.add("linkNodeOutputPortToNode", (srcNodeName, srcPortId, trgNodeName) => {
+	// This will simulate a drag from a specific port onto a target node rather
+	// than a specific port. This should be interpreted as a link to the zeroth
+	// port of the target node.
+	cy.getNodePortSelector(srcNodeName, "out_port", srcPortId)
+		.then((srcSelector) => {
+			cy.getNodeWithLabel(trgNodeName)
+				.then((trgSelector) => {
+					cy.get(srcSelector)
+						.trigger("mousedown", { button: 0 });
+					cy.get(trgSelector)
+						.trigger("mousemove", { force: true })
+						.trigger("mouseup", { force: true });
+				});
+		});
+});
+
 Cypress.Commands.add("getNodePortSelector", (nodeName, nodeElement, portId) => {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	cy.getNodeIdForLabel(nodeName)
+		.then((nodeId) => {
+			const portSelector = `[data-id='node_${nodeElement}_${inst}_${nodeId}_${portId}']`;
+			return portSelector;
+		});
+});
+
+Cypress.Commands.add("getNodePortSelectorInSupernode", (supernodeName, nodeName, nodeElement, portId) => {
+	const inst = document.extraCanvas === true ? "1" : "0";
+	cy.getNodeIdForLabelInSupernode(nodeName, supernodeName)
 		.then((nodeId) => {
 			const portSelector = `[data-id='node_${nodeElement}_${inst}_${nodeId}_${portId}']`;
 			return portSelector;

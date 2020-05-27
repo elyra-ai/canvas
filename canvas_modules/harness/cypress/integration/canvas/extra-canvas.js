@@ -40,10 +40,12 @@ describe("Test of extra canvas node operation", function() {
 		cy.verifyNumberOfNodesInExtraCanvas(10);
 
 		// Delete node from extra canvas
-		cy.deleteNode("Define Types");
+		cy.deleteNodeUsingContextMenu("Define Types");
+		cy.verifyNodeIsDeleted("Define Types", true);
 		cy.verifyNumberOfNodesInExtraCanvas(9);
 
-		cy.deleteNode("Derive");
+		cy.deleteNodeUsingContextMenu("Derive");
+		cy.verifyNodeIsDeleted("Derive", true);
 		cy.verifyNumberOfNodesInExtraCanvas(8);
 
 	});
@@ -61,14 +63,14 @@ describe("Test of extra canvas property edit operation", function() {
 	it("Edit the properties of node in extra canvas and regular canvas", function() {
 		// Edit properties of node in extra canvas
 		cy.inExtraCanvas();
-		cy.getNodeForLabel("Define Types").dblclick();
+		cy.getNodeWithLabel("Define Types").dblclick();
 		cy.setTextFieldValue("samplingRatio", 25);
 		cy.saveFlyout();
 		cy.verifyApplyPropertyChangesEntryInConsole(25);
 
 		// Edit properties of node in regular canvas
 		cy.inRegularCanvas();
-		cy.getNodeForLabel("C5.0").dblclick();
+		cy.getNodeWithLabel("C5.0").dblclick();
 		cy.setTextFieldValue("samplingRatio", 10);
 		cy.saveFlyout();
 		cy.verifyApplyPropertyChangesEntryInConsole(10);

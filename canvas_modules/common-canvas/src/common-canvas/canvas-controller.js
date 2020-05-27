@@ -213,7 +213,7 @@ export default class CanvasController {
 
 	// Loads the pipelineFlow document provided into common-canvas and displays it.
 	// The document must conform to the pipelineFlow schema as documented in the
-	// wdp-pipeline-schemas repo. Documents conforming to older versions may be
+	// elyra-ai pipeline-schemas repo. Documents conforming to older versions may be
 	// provided but they will be upgraded to the most recent version.
 	setPipelineFlow(flow) {
 		this.objectModel.setPipelineFlow(flow);
@@ -225,7 +225,7 @@ export default class CanvasController {
 	}
 
 	// Returns the current pipelineFlow document in the latest version of the
-	// pipelineFlow schema as documented in the wdp-pipeline-schemas repo.
+	// pipelineFlow schema as documented in the elyra-ai pipeline-schemas repo.
 	getPipelineFlow() {
 		return this.objectModel.getPipelineFlow();
 	}
@@ -330,8 +330,8 @@ export default class CanvasController {
 	// Palette methods
 	// ---------------------------------------------------------------------------
 
-	// Loads the palette data as descibed in the palette schema in
-	// wdp-pipeline-schemas repo. Any version can be loaded and it will be
+	// Loads the palette data as described in the palette schema in
+	// elyra-ai pipeline-schemas repo. Any version can be loaded and it will be
 	// upgraded to the latest version.
 	setPipelineFlowPalette(palette) {
 		this.objectModel.setPipelineFlowPalette(palette);
@@ -360,8 +360,8 @@ export default class CanvasController {
 	// Adds a new node into the palette:
 	// nodeTypeObj - must conform to the style of node used by the palette as
 	// described in the palette schema. See objects in nodeTypes array in the
-	// palette-v2-schema:
-	//  https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-canvas/palette/palette-v2-schema.json)
+	// palette schema:
+	//  https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/palette/palette-v3-schema.json
 	// category - is the name of the palette category where the node will be
 	// added. If the category doesn't exist it will be created.
 	// categoryLabel - Is an optional param. If a new category is created it will
@@ -377,8 +377,8 @@ export default class CanvasController {
 	// Adds an array of new node into the palette:
 	// nodeTypeObjs - an array of nodetypes that must conform to the style of
 	// nodes used by the palette as described in the palette schema. See objects
-	// in nodeTypes array in the palette-v2-schema:
-	//  https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-canvas/palette/palette-v2-schema.json)
+	// in nodeTypes array in the palette schema:
+	//  https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/palette/palette-v3-schema.json
 	// category - is the name of the palette category where the node will be
 	// added. If the category doesn't exist it will be created.
 	// categoryLabel - is an optional param. If a new category is created it will

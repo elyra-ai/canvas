@@ -62,6 +62,12 @@ Cypress.Commands.add("clickToolbarPaste", () => {
 	cy.get("#paste-action").click();
 });
 
+Cypress.Commands.add("clickToolbarPasteInExtraCanvas", () => {
+	cy.get("#common-canvas-items-container-1")
+		.find("#paste-action")
+		.click();
+});
+
 Cypress.Commands.add("clickToolbarAddComment", () => {
 	cy.get("#createAutoComment-action").click();
 });

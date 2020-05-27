@@ -15,9 +15,16 @@
  */
 /* eslint max-len: "off" */
 
-Cypress.Commands.add("getCommentWithText", (commentText) =>
-	cy.get(getCommentGrpSelector())
-		.then((grpArray) => findGrpForText(grpArray, commentText)));
+Cypress.Commands.add("getCommentWithText", (commentText) => {
+	cy.get("body").then(($body) => {
+		if ($body.find(".d3-comment-group").length) {
+			cy.get(getCommentGrpSelector())
+				.then((grpArray) => findGrpForText(grpArray, commentText));
+		}
+		// No comments found on canvas
+		return null;
+	});
+});
 
 Cypress.Commands.add("getCommentWithTextInSubFlow", (commentText) =>
 	cy.get(getCommentGrpSelectorInSubFlow())
@@ -26,6 +33,15 @@ Cypress.Commands.add("getCommentWithTextInSubFlow", (commentText) =>
 Cypress.Commands.add("getCommentWithTextInSubFlowNested", (commentText) =>
 	cy.get(getCommentGrpSelectorInSubFlowNested())
 		.then((grpArray) => findGrpForText(grpArray, commentText)));
+
+Cypress.Commands.add("getCommentWithTextInSupernode", (commentText, supernodeName) => {
+	cy.getNodeWithLabel(supernodeName)
+		.then((supernode) => {
+			const supernodeId = supernode[0].getAttribute("data-id").substring(11);
+			cy.get(getCommentGrpSelectorInSupernode(supernodeId))
+				.then((grpArray) => findGrpForText(grpArray, commentText));
+		});
+});
 
 function getCommentGrpSelector() {
 	const inst = document.extraCanvas === true ? "1" : "0";
@@ -42,6 +58,13 @@ function getCommentGrpSelectorInSubFlow() {
 function getCommentGrpSelectorInSubFlowNested() {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	const selector = `div > svg > g > g > svg > g > g > svg > g > g[data-id^=comment_grp_${inst}]`;
+	return selector;
+}
+
+function getCommentGrpSelectorInSupernode(supernodeId) {
+	const inst = document.extraCanvas === true ? "1" : "0";
+	const selector =
+	`div > svg > g > g[data-id='node_grp_${inst}_${supernodeId}'] > svg > g > g[data-id^='comment_grp_${inst}']`;
 	return selector;
 }
 
@@ -65,6 +88,21 @@ Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 			// Cancel the command/ctrl key press -- the documentation doesn't say
 			// this needs to be done but if it isn't the command key stays pressed down
 			// causing problems with subsequent selections.
+			cy.get("body")
+				.type(selectedKey, { release: true });
+		});
+});
+
+Cypress.Commands.add("ctrlOrCmdClickCommentInSupernode", (commentText, supernodeName) => {
+	// Get the os name to decide whether to click ctrl or cmd
+	cy.useCtrlOrCmdKey()
+		.then((selectedKey) => {
+			cy.get("body")
+				.type(selectedKey, { release: false })
+				.getCommentWithTextInSupernode(commentText, supernodeName)
+				.click();
+
+			// Cancel the command/ctrl key press
 			cy.get("body")
 				.type(selectedKey, { release: true });
 		});
@@ -99,6 +137,9 @@ Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText) 
 		.get("textarea")
 		.clear()
 		.type(newCommentText);
+
+	// Click somewhere on canvas to save comment
+	cy.get("#canvas-div-0").click();
 });
 
 Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newCommentText) => {
@@ -107,6 +148,9 @@ Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newComm
 		.get("textarea")
 		.clear()
 		.type(newCommentText);
+
+	// Click somewhere on canvas to save comment
+	cy.get("#canvas-div-0").click();
 });
 
 Cypress.Commands.add("editTextInCommentInSubFlowNested", (originalCommentText, newCommentText) => {
@@ -115,6 +159,28 @@ Cypress.Commands.add("editTextInCommentInSubFlowNested", (originalCommentText, n
 		.get("textarea")
 		.clear()
 		.type(newCommentText);
+
+	// Click somewhere on canvas to save comment
+	cy.get("#canvas-div-0").click();
+});
+
+Cypress.Commands.add("editTextInCommentInSupernode", (originalCommentText, newCommentText, supernodeName) => {
+	cy.getCommentWithTextInSupernode(originalCommentText, supernodeName)
+		.dblclick()
+		.get("textarea")
+		.clear()
+		.type(newCommentText);
+
+	// Click somewhere on canvas to save comment
+	cy.get("#canvas-div-0").click();
+});
+
+Cypress.Commands.add("addCommentToPosition", (commentText, canvasX, canvasY) => {
+	cy.rightClickToDisplayContextMenu(canvasX, canvasY);
+	cy.clickOptionFromContextMenu("New comment");
+	cy.editTextInComment("", commentText);
+	// Click somewhere on canvas so that comment will be saved
+	cy.get("#common-canvas-items-container-0").click(400, 400);
 });
 
 Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) => {
@@ -134,9 +200,19 @@ Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) =>
 Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
 	// Click the comment at topLeft corner to display the guide
 	// srcSelector is the selector of guide
-	cy.getCommentWithText(commentText).click(0, 0)
-		.then((comment) => {
-			const srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "port") + "']";
+	cy.getCommentWithText(commentText).then((comment) => {
+		const sel = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
+		cy.get(sel).click();
+
+		cy.document().then((doc) => {
+			// Connection Type - Halo
+			let srcSelector;
+			if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
+				srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "halo") + "']";
+			} else {
+				// Connection Type - Ports
+				srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "port") + "']";
+			}
 			cy.getNodeDimensions(nodeLabel).then((nodeDimensions) => {
 				// Target canvas position within the center of the target node
 				const canvasX = nodeDimensions.x_pos + (nodeDimensions.width / 2);
@@ -145,6 +221,7 @@ Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
 				cy.dragAndDrop(srcSelector, 0, 0, ".svg-area", canvasX, canvasY);
 			});
 		});
+	});
 });
 
 Cypress.Commands.add("dragAndDrop", (srcSelector, srcXPos, srcYPos, trgSelector, trgXPos, trgYPos) => {
@@ -193,7 +270,7 @@ Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight)
 					cy.get(srcSizingSelector)
 						.trigger("mouseenter", startPosition, { view: win })
 						.trigger("mousedown", startPosition, { view: win });
-					cy.get(".svg-area")
+					cy.get("#canvas-div-0")
 						.trigger("mousemove", canvasX, canvasY, { view: win })
 						.trigger("mouseup", canvasX, canvasY, { view: win });
 				});
@@ -257,4 +334,27 @@ Cypress.Commands.add("getCommentDimensions", (commentSelector) => {
 		};
 		return commentDimensions;
 	});
+});
+
+Cypress.Commands.add("deleteCommentUsingContextMenu", (commentText) => {
+	// Delete comment using context menu
+	cy.getCommentWithText(commentText)
+		.rightclick();
+	cy.clickOptionFromContextMenu("Delete");
+});
+
+Cypress.Commands.add("deleteCommentUsingKeyboard", (commentText) => {
+	// Delete comment by pressing 'Delete' key on keyboard
+	cy.useDeleteKey()
+		.then((deleteKey) => {
+			cy.getCommentWithText(commentText)
+				.click()
+				.type(deleteKey);
+		});
+});
+
+Cypress.Commands.add("deleteCommentUsingToolbar", (commentText) => {
+	// Select comment and press delete icon on toolbar
+	cy.getCommentWithText(commentText).click();
+	cy.clickToolbarDelete();
 });
