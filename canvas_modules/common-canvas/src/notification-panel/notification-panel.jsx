@@ -122,8 +122,10 @@ class NotificationPanel extends React.Component {
 		const notificationPanelClassName = this.props.isNotificationOpen ? "" : "panel-hidden";
 		const notificationPanelMessages = this.props.messages.length > 0
 			? this.getNotifications()
-			: (<div>
-				{this.props.emptyMessage ? this.props.emptyMessage : null}
+			: (<div className="notification-panel-empty-message-container">
+				<div className="notification-panel-empty-message">
+					{this.props.emptyMessage ? this.props.emptyMessage : null}
+				</div>
 			</div>);
 
 		return (<div className={"notification-panel-container " + notificationPanelClassName} >
