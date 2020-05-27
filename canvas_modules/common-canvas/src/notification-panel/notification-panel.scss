@@ -71,7 +71,6 @@ $notification-left-border-color-width: 4px;
 	position: absolute;
 	width: inherit;
 	margin-top: $notification-panel-arrow-height + $notification-panel-header-height;
-	min-height: $notification-message-height;
 	max-height: calc((100% / 2) - #{$notification-panel-header-height});
 	overflow-y: auto;
 	background-color: $ui-01;
@@ -83,6 +82,15 @@ $notification-left-border-color-width: 4px;
 	.notifications-button-container {
 		border-bottom: 1px solid $ui-03;
 		min-height: $notification-message-height;
+	}
+	.notification-panel-empty-message-container {
+		min-height: $notification-message-height;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		.notification-panel-empty-message {
+			text-align: center;
+		}
 	}
 
 	.notifications-button-container:nth-last-of-type(1) {
