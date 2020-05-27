@@ -121,7 +121,7 @@ describe("Test for secondary toolbar resize", function() {
 		cy.verifyNumberOfItemsInToolbar(9); // 11 items in chimp test
 
 		cy.viewport(580, 600);
-		cy.verifyNumberOfItemsInToolbar(11); // 12 items in chimp test
+		cy.verifyNumberOfItemsInToolbar(9); // 12 items in chimp test
 
 		cy.viewport(620, 600);
 		cy.verifyNumberOfItemsInToolbar(13);
