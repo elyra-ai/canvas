@@ -115,16 +115,18 @@ describe("Test for secondary toolbar resize", function() {
 	it("Test number of items in toolbar for different window sizes", function() {
 		// TODO: For given viewport size, number of items in toolbar doesn't match with chimp tests
 		cy.viewport(500, 600);
-		cy.verifyNumberOfItemsInToolbar(6); // 10 items in chimp test
+		cy.verifyNumberOfItemsInToolbar(9); // 10 items in chimp test
 
 		cy.viewport(540, 600);
-		cy.verifyNumberOfItemsInToolbar(7); // 11 items in chimp test
+		cy.verifyNumberOfItemsInToolbar(10); // 11 items in chimp test
 
 		cy.viewport(580, 600);
-		cy.verifyNumberOfItemsInToolbar(7); // 12 items in chimp test
+		cy.log("1st log");
+		cy.verifyNumberOfItemsInToolbar(10); // 12 items in chimp test
 
 		cy.viewport(620, 600);
-		cy.verifyNumberOfItemsInToolbar(7); // 13 items in chimp test
+		cy.log("2nd log");
+		cy.verifyNumberOfItemsInToolbar(10); // 13 items in chimp test
 
 		cy.viewport(660, 600);
 	});
