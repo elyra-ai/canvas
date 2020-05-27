@@ -16,7 +16,7 @@
 
 $notification-panel-arrow-height: 8px;
 $notification-panel-header-height: 35px;
-$notification-message-height: 100px;
+$notification-message-height: 64px;
 
 $notification-left-border-color-width: 4px;
 
@@ -37,9 +37,11 @@ $notification-left-border-color-width: 4px;
 
 .notification-panel {
 	position: absolute;
-	width: 300px;
+	width: 320px;
 	height: 100%;
 	right: 8px;
+	padding-right: $spacing-05;
+	padding-left: $spacing-05;
 }
 
 .notification-popup-arrow {
@@ -60,11 +62,29 @@ $notification-left-border-color-width: 4px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	padding-left: 12px;
 	border: 1px solid $ui-03;
 	border-bottom: 0;
 	font-weight: 400;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+.notification-panel-clear-all-container {
+	height: $notification-panel-header-height;
+	margin-top: $notification-panel-arrow-height;
+	width: 100%;
+	background-color: $ui-02;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	border: 1px solid $ui-03;
+	border-bottom: 0;
+	font-weight: 400;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+	.notification-panel-clear-all {
+		padding-top: $spacing-05;
+		padding-bottom: $spacing-05;
+	}
+
 }
 
 .notification-panel-messages {
@@ -101,6 +121,7 @@ $notification-left-border-color-width: 4px;
 		padding: 10px 8px;
 		display: inline-flex;
 		width: 100%;
+		min-height: $notification-message-height;
 		background-color: $ui-01;
 		border-style: none;
 		border-left: $notification-left-border-color-width solid $ui-01;
