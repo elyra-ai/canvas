@@ -120,20 +120,22 @@ class NotificationPanel extends React.Component {
 
 	render() {
 		const notificationPanelClassName = this.props.isNotificationOpen ? "" : "panel-hidden";
-		const notificationPanel = this.props.messages.length > 0
-			? (<div className="notification-panel">
+		const notificationPanelMessages = this.props.messages.length > 0
+			? this.getNotifications()
+			: (<div>
+				{this.props.emptyMessage ? this.props.emptyMessage : null}
+			</div>);
+
+		return (<div className={"notification-panel-container " + notificationPanelClassName} >
+			<div className="notification-panel">
 				<div className="notification-panel-header">{this.props.notificationHeader}</div>
 				<div className="notification-panel-messages">
-					{this.getNotifications()}
+					{notificationPanelMessages}
 				</div>
 				<svg className="notification-popup-arrow" x="0px" y="0px" viewBox="0 0 16 9">
 					<polyline points="0,9 8,0 16,9" />
 				</svg>
-			</div>)
-			: <div />;
-
-		return (<div className={"notification-panel-container " + notificationPanelClassName} >
-			{notificationPanel}
+			</div>
 		</div>);
 	}
 }
@@ -145,6 +147,10 @@ NotificationPanel.propTypes = {
 	]),
 	isNotificationOpen: PropTypes.bool,
 	messages: PropTypes.array,
+	emptyMessage: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.object
+	]),
 	canvasController: PropTypes.object
 };
 
