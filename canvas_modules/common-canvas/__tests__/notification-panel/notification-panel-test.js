@@ -197,7 +197,7 @@ describe("canvas controller APIs for notification panel work correctly", () => {
 		canvasController.setNotificationMessages(notificationMessages2);
 
 		expect(canvasController.getNotificationMessages()).to.not.eql(notificationMessages2);
-		expect(compareMessages(canvasController.getNotificationMessages(), notificationMessages2)).to.be.true;
+		compareMessages(canvasController.getNotificationMessages(), notificationMessages2);
 	});
 
 	it("get messages correctly in canvasController", () => {
@@ -230,27 +230,26 @@ describe("null, empty string and undefined type messages are handled correctly",
 			type: "unspecified"
 		};
 		canvasController.setNotificationMessages([notificationMessage4]);
-		expect(isEqual(canvasController.getNotificationMessages("unspecified"), [expectedMessage4])).to.be.true;
+		compareMessages([canvasController.getNotificationMessages("unspecified")], [expectedMessage4]);
 	});
 
 	it("gets unspecified message correctly if type passed in is null", () => {
 		const expectedMessage5 = {
 			id: "notification-5",
 			title: "Notification Message 5",
-			type: "unspecified"
+			type: null
 		};
 		canvasController.setNotificationMessages([notificationMessage5]);
-		expect(isEqual(canvasController.getNotificationMessages("unspecified"), [expectedMessage5])).to.be.true;
+		compareMessages([canvasController.getNotificationMessages("unspecified")], [expectedMessage5]);
 	});
 
 	it("gets unspecified message correctly if type is not passed in", () => {
 		const expectedMessage6 = {
 			id: "notification-6",
 			title: "Notification Message 6",
-			type: "unspecified"
 		};
 		canvasController.setNotificationMessages([notificationMessage6]);
-		expect(isEqual(canvasController.getNotificationMessages("unspecified"), [expectedMessage6])).to.be.true;
+		compareMessages([canvasController.getNotificationMessages("unspecified")], [expectedMessage6]);
 	});
 });
 
@@ -457,7 +456,5 @@ describe("notification counter and color updates correctly", () => {
 
 function compareMessages(messages1, messages2) {
 	// don't compare the randomly generated keys (if any) to the original messages
-	messages1.forEach((message) => delete message.key);
-	messages2.forEach((message) => delete message.key);
-	expect(isEqual(messages1, messages2)).to.be.true;
+	expect(messages1.forEach((message) => delete message.key)).to.eql(messages2.forEach((message) => delete message.key));
 }
