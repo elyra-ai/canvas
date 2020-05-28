@@ -27,6 +27,21 @@ Cypress.Commands.add("verifyCommentTransform", (commentText, transformValue) => 
 		.should("have.attr", "transform", transformValue);
 });
 
+Cypress.Commands.add("verifyZoomTransform", (transformValue) => {
+	cy.get(".svg-area")
+		.find("g")
+		.eq(0)
+		.should("have.attr", "transform", transformValue);
+});
+
+Cypress.Commands.add("verifyZoomTransformInExtraCanvas", (transformValue) => {
+	cy.get(".svg-area")
+		.eq(1)
+		.find("g")
+		.eq(0)
+		.should("have.attr", "transform", transformValue);
+});
+
 Cypress.Commands.add("verifyNodeTransformInSubFlow", (nodeLabel, transformValue) => {
 	cy.getNodeWithLabelInSubFlow(nodeLabel)
 		.should("have.attr", "transform", transformValue);
@@ -610,4 +625,25 @@ Cypress.Commands.add("verifyNumberOfPortsOnNode", (nodeName, portType, noOfPorts
 	cy.getNodeWithLabel(nodeName)
 		.find(".d3-node-port-" + portType)
 		.should("have.length", noOfPorts);
+});
+
+Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
+	cy.get("#toolbar-items")
+		.find("li")
+		.its("length")
+		.then((totalItemsLength) => {
+			// Find hidden items length
+			cy.get("#actions-container")
+				.find("#overflow-action")
+				.eq(0)
+				.find(".toolbar-popover-list-hide")
+				.eq(0)
+				.find("li")
+				.its("length")
+				.then((hiddenItemsLength) => {
+					// Get number of visible items
+					const itemsVisible = totalItemsLength - hiddenItemsLength;
+					expect(itemsVisible).to.equal(noOfItems);
+				});
+		});
 });

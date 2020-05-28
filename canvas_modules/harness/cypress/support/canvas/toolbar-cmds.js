@@ -72,6 +72,12 @@ Cypress.Commands.add("clickToolbarAddComment", () => {
 	cy.get("#createAutoComment-action").click();
 });
 
+Cypress.Commands.add("clickToolbarAddCommentnInExtraCanvas", () => {
+	cy.get("#common-canvas-items-container-1")
+		.find("#createAutoComment-action")
+		.click();
+});
+
 Cypress.Commands.add("clickToolbarDelete", () => {
 	cy.get("#deleteSelectedObjects-action").click();
 });
@@ -88,8 +94,20 @@ Cypress.Commands.add("clickToolbarZoomIn", () => {
 	cy.get("#zoomIn-action").click();
 });
 
+Cypress.Commands.add("clickToolbarZoomInExtraCanvas", () => {
+	cy.get("#common-canvas-items-container-1")
+		.find("#zoomIn-action")
+		.click();
+});
+
 Cypress.Commands.add("clickToolbarZoomOut", () => {
 	cy.get("#zoomOut-action").click();
+});
+
+Cypress.Commands.add("clickToolbarZoomOutExtraCanvas", () => {
+	cy.get("#common-canvas-items-container-1")
+		.find("#zoomOut-action")
+		.click();
 });
 
 Cypress.Commands.add("clickToolbarZoomToFit", () => {
@@ -98,4 +116,8 @@ Cypress.Commands.add("clickToolbarZoomToFit", () => {
 
 Cypress.Commands.add("clickToolbarNotifications", () => {
 	cy.get("#notificationCounterIcon-action").click();
+});
+
+Cypress.Commands.add("clickToolbarOverflow", () => {
+	cy.get("#overflow-action").click();
 });
