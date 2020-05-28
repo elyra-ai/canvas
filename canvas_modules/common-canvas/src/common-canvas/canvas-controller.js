@@ -616,6 +616,14 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).deleteNode(nodeId);
 	}
 
+	// Sets the node properties
+	// nodeId - The ID of the node
+	// properties - An object containing properties to be overriden in the node
+	// pipelineId - The ID of the pipeline
+	setNodeProperties(nodeId, properties, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodeProperties(nodeId, properties);
+	}
+
 	// Sets the node parameters
 	// nodeId - The ID of the node
 	// parameters - An array of parameters

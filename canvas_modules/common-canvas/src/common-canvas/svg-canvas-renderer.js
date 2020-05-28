@@ -2132,8 +2132,6 @@ export default class SVGCanvasRenderer {
 					const nodeImageType = that.getNodeImageType(nodeImage);
 					d3.select(this)
 						.append(nodeImageType)
-						.each(function() { that.setImageContent(this, nd); })
-						.attr("data-image", nodeImage) // Used in tests
 						.attr("data-id", (d) => that.getId("node_image", d.id))
 						.attr("data-pipeline-id", that.activePipeline.id)
 						.attr("class", "node-image");
@@ -2235,6 +2233,7 @@ export default class SVGCanvasRenderer {
 					// Node styles
 					this.setNodeStyles(d, "default", nodeGrp);
 
+					// Node image
 					// This code will remove custom attributes from a node. This might happen when
 					// the user clicks the canvas background to remove the greyed out appearance of
 					// a node that was 'cut' to the clipboard.
@@ -2242,6 +2241,7 @@ export default class SVGCanvasRenderer {
 					// from the canvas) and when WML Canvas uses that clipboard support in place
 					// of its own.
 					nodeGrp.select(this.getSelectorForId("node_image", d.id))
+						.each(function() { this.setImageContent(this, d); })
 						.attr("x", (nd) => this.getNodeImagePosX(nd))
 						.attr("y", (nd) => this.getNodeImagePosY(nd))
 						.attr("width", (nd) => this.getNodeImageWidth(nd))
@@ -2626,7 +2626,6 @@ export default class SVGCanvasRenderer {
 				d3.select(this)
 					.append(nodeImageType)
 					.each(function() { that.setImageContent(this, dec); })
-					.attr("data-image", nodeImage) // Used in tests
 					.attr("data-id", () => that.getId(`${objType}_dec_image`, dec.id)); // Used in tests
 			});
 
@@ -2715,14 +2714,21 @@ export default class SVGCanvasRenderer {
 	// Sets the image content on the DOM imageElement from the image field of
 	// the object d (either a node or decoration) passed in. This means svg files
 	// will be loaded as inline SVG while other images files are loaded with href.
+	// We will only set a new image if the image is new or has changed from what
+	// it was previously set to. This allows applications to set new images while
+	// the canvas is being displayed.
 	setImageContent(imageElement, d) {
 		const imageObj = d3.select(imageElement);
 		const nodeImage = this.getNodeImage(d);
 		const nodeImageType = this.getNodeImageType(nodeImage);
-		if (nodeImageType === "svg") {
-			d3.text(nodeImage).then((img) => imageObj.html(img));
-		} else {
-			imageObj.attr("xlink:href", nodeImage);
+		if (nodeImage !== imageObj.attr("data-image")) {
+			// Save image field in DOM object to avoid unnecessary image refreshes.
+			imageObj.attr("data-image", nodeImage);
+			if (nodeImageType === "svg") {
+				d3.text(nodeImage).then((img) => imageObj.html(img));
+			} else {
+				imageObj.attr("xlink:href", nodeImage);
+			}
 		}
 	}
 
