@@ -132,6 +132,7 @@ Cypress.Commands.add("isCommentSelected", (commentText) => {
 });
 
 Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText) => {
+	cy.log("In editTextInComment");
 	cy.getCommentWithText(originalCommentText)
 		.dblclick()
 		.get("textarea")
@@ -183,11 +184,13 @@ Cypress.Commands.add("editTextInCommentInSupernode", (originalCommentText, newCo
 
 Cypress.Commands.add("addCommentToPosition", (commentText, canvasX, canvasY) => {
 	cy.rightClickToDisplayContextMenu(canvasX, canvasY);
-	cy.clickOptionFromContextMenu("New comment");
-	cy.log("In addCommentToPosition -> Calling editTextInComment");
-	cy.getCommentWithText("").its("length")
-		.then((com) => cy.log(String(com)));
-	cy.editTextInComment("", commentText);
+	cy.clickOptionFromContextMenu("New comment")
+		.then((commentAdded) => {
+			cy.log("In addCommentToPosition -> Calling editTextInComment");
+			cy.getCommentWithText("").its("length")
+				.then((com) => cy.log(String(com)));
+			cy.editTextInComment("", commentText);
+		});
 });
 
 Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) => {

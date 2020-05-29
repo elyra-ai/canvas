@@ -668,13 +668,16 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 
 		// Test Undo (using the context menu) of deletion of Supernode
 		cy.rightClickToDisplayContextMenu(300, 10);
-		cy.clickOptionFromContextMenu("Undo");
-		cy.log("Supernode log 11");
-		cy.verifyNumberOfPipelines(2);
-		cy.verifyNumberOfNodesInPipeline(1);
-		cy.verifyNumberOfLinksInPipeline(0);
-		cy.verifyNumberOfNodesInSupernode("Supernode", 2);
-		cy.verifyNumberOfLinksInSupernode("Supernode", 1);
+		cy.clickOptionFromContextMenu("Undo")
+			.then((undo) => {
+				cy.log("Supernode log 11");
+				cy.verifyNumberOfPipelines(2);
+				cy.verifyNumberOfNodesInPipeline(1);
+				cy.verifyNumberOfLinksInPipeline(0);
+				cy.verifyNumberOfNodesInSupernode("Supernode", 2);
+				cy.verifyNumberOfLinksInSupernode("Supernode", 1);
+			});
+		cy.getNodeWithLabel("Supernode").then((found) => cy.log("Supernode exists"));
 
 		// Test Undo (using the context menu) of creation of Supernode
 		cy.rightClickToDisplayContextMenu(300, 10);
