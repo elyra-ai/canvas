@@ -64,11 +64,18 @@ $notification-left-border-color-width: 4px;
 	border: 1px solid $ui-03;
 	border-bottom: 0;
 	font-weight: 400;
+	font-size: 16px;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
 	padding: $spacing-03 $spacing-05;
+	.notification-panel-subtitle {
+		padding-top: $spacing-03;
+		font-size: 11px;
+		color: $text-02;
+	}
 	.notification-panel-close-icon {
 		position: absolute;
 		right: $spacing-03;
+		top: $spacing-05;
 		cursor: pointer;
 	}
 }
