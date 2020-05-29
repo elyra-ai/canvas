@@ -39,6 +39,14 @@ const tipHandler = sinon.spy();
 const toolbarMenuActionHandler = sinon.spy();
 
 const notificationHeaderString = "Notifications Panel";
+
+const notificationConfigDefault = {
+	action: "notification",
+	label: "Notifications Panel",
+	enable: true,
+	notificationHeader: notificationHeaderString,
+};
+
 const notificationMessageCallback = sinon.spy();
 
 const notificationMessage0 = {
@@ -111,14 +119,14 @@ describe("notification panel renders correctly", () => {
 	it("props should have been defined", () => {
 		wrapper = mountWithIntl(
 			<NotificationPanel
-				notificationHeader={notificationHeaderString}
+				notificationConfig={notificationConfigDefault}
 				isNotificationOpen
 				messages={notificationMessages}
 				canvasController={canvasController}
 			/>
 		);
 
-		expect(wrapper.prop("notificationHeader")).to.equal(notificationHeaderString);
+		expect(wrapper.prop("notificationConfig")).to.equal(notificationConfigDefault);
 		expect(wrapper.prop("isNotificationOpen")).to.equal(true);
 		expect(wrapper.prop("messages")).to.equal(notificationMessages);
 		expect(wrapper.prop("canvasController")).to.equal(canvasController);
@@ -127,7 +135,7 @@ describe("notification panel renders correctly", () => {
 	it("notification panel should be hidden if isNotificationOpen is false", () => {
 		wrapper = mountWithIntl(
 			<NotificationPanel
-				notificationHeader={notificationHeaderString}
+				notificationConfig={notificationConfigDefault}
 				isNotificationOpen={false}
 				messages={[]}
 				canvasController={canvasController}
@@ -140,7 +148,15 @@ describe("notification panel renders correctly", () => {
 	it("notification panel should have 4 types of messages", () => {
 		wrapper = mountWithIntl(
 			<NotificationPanel
-				notificationHeader={notificationHeaderString}
+				notificationConfig={{
+					action: "notification",
+					label: "Notifications Panel",
+					enable: true,
+					notificationHeader: "Custom",
+					notificationSubtitle: "Custom subtitle",
+					emptyMessage: "custom empty message",
+					clearAllMessage: "Clear all"
+				}}
 				isNotificationOpen={false}
 				messages={notificationMessages}
 				canvasController={canvasController}
@@ -172,6 +188,37 @@ describe("notification panel renders correctly", () => {
 		expect(message3.find(".notification-message-content").text()).to.equal(notificationMessage3.content);
 		expect(message3.find(".notification-message-timestamp-icon")).to.have.length(1);
 		expect(message3.find(".notification-message-string").text()).to.equal("May 7, 2018");
+	});
+
+	it("notification panel should have render extra messages if passed in", () => {
+		wrapper = mountWithIntl(
+			<NotificationPanel
+				notificationConfig={{
+					action: "notification",
+					label: "Notifications Panel",
+					enable: true,
+					notificationHeader: notificationHeaderString,
+					notificationSubtitle: "Custom subtitle",
+					emptyMessage: "Custom empty message",
+					clearAllMessage: "Clear all"
+				}}
+				isNotificationOpen={false}
+				messages={[]}
+				canvasController={canvasController}
+			/>
+		);
+
+		const subtitle = wrapper.find(".notification-panel-container .notification-panel-subtitle");
+		expect(subtitle).to.have.length(1);
+		expect(subtitle.text()).to.eql("Custom subtitle");
+
+		const emptyMessage = wrapper.find(".notification-panel-container .notification-panel-empty-message");
+		expect(emptyMessage).to.have.length(1);
+		expect(emptyMessage.text()).to.eql("Custom empty message");
+
+		const clearAll = wrapper.find(".notification-panel-container button.notification-panel-clear-all");
+		expect(clearAll).to.have.length(1);
+		expect(clearAll.text()).to.eql("Clear all");
 	});
 });
 
@@ -451,6 +498,100 @@ describe("notification counter and color updates correctly", () => {
 		expect(indicatorClasses).to.equal("canvas-icon properties-icon fill notificationCounterIcon error");
 	});
 });
+
+describe("notification center buttons work properly", () => {
+	let wrapper;
+
+	beforeEach(() => {
+		canvasController = new CanvasController();
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("notification clear all button", () => {
+		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
+		wrapper = mountWithIntl(<CommonCanvas
+			config={canvasConfig}
+			contextMenuHandler={contextMenuHandler}
+			contextMenuActionHandler={contextMenuActionHandler}
+			editActionHandler={editActionHandler}
+			clickActionHandler={clickActionHandler}
+			decorationActionHandler={decorationActionHandler}
+			selectionChangeHandler={selectionChangeHandler}
+			tipHandler={tipHandler}
+			toolbarConfig={toolbarConfig}
+			notificationConfig={notificationConfig}
+			toolbarMenuActionHandler={toolbarMenuActionHandler}
+			showRightFlyout={false}
+			canvasController={canvasController}
+		/>);
+		// open the notification center
+		const notificationButton = wrapper.find("li[id='notification-open-action'] button.list-item");
+		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
+		notificationButton.simulate("click");
+		wrapper.update();
+		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(0);
+
+		// check that there are no messages and the clear all button is disabled
+		let clearAllButton = wrapper.find(".notification-panel-container button.notification-panel-clear-all");
+		expect(clearAllButton.prop("disabled")).to.equal(true);
+		expect(wrapper.find(".notification-panel-container .notification-panel-empty-message").length).to.equal(1);
+		expect(wrapper.find(".notification-panel-container .notifications").length).to.equal(0);
+		expect(canvasController.getNotificationMessages().length).to.equal(0);
+
+		// add a message and check if the clear all button is enabled
+		canvasController.setNotificationMessages([notificationMessage0]);
+		wrapper.update();
+		clearAllButton = wrapper.find(".notification-panel-container button.notification-panel-clear-all");
+		expect(clearAllButton.prop("disabled")).to.equal(false);
+		expect(wrapper.find(".notification-panel-container .notification-panel-empty-message").length).to.equal(0);
+		expect(wrapper.find(".notification-panel-container .notifications").length).to.equal(1);
+		expect(canvasController.getNotificationMessages().length).to.equal(1);
+
+		// after clicking the clear all button, messages should be removed and button disabled again
+		clearAllButton.simulate("click");
+		wrapper.update();
+
+		clearAllButton = wrapper.find(".notification-panel-container button.notification-panel-clear-all");
+		expect(clearAllButton.prop("disabled")).to.equal(true);
+		expect(wrapper.find(".notification-panel-container .notification-panel-empty-message").length).to.equal(1);
+		expect(wrapper.find(".notification-panel-container .notifications").length).to.equal(0);
+		expect(canvasController.getNotificationMessages().length).to.equal(0);
+	});
+	it("notification close button", () => {
+		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
+		wrapper = mountWithIntl(<CommonCanvas
+			config={canvasConfig}
+			contextMenuHandler={contextMenuHandler}
+			contextMenuActionHandler={contextMenuActionHandler}
+			editActionHandler={editActionHandler}
+			clickActionHandler={clickActionHandler}
+			decorationActionHandler={decorationActionHandler}
+			selectionChangeHandler={selectionChangeHandler}
+			tipHandler={tipHandler}
+			toolbarConfig={toolbarConfig}
+			notificationConfig={notificationConfig}
+			toolbarMenuActionHandler={toolbarMenuActionHandler}
+			showRightFlyout={false}
+			canvasController={canvasController}
+		/>);
+		// open the notification center
+		const notificationButton = wrapper.find("li[id='notification-open-action'] button.list-item");
+		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
+		notificationButton.simulate("click");
+		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(0);
+		wrapper.update();
+		// click the close button
+		wrapper.find(".notification-panel-container svg.notification-panel-close-icon").simulate("click");
+
+		// check that notification panel is closed
+		wrapper.update();
+		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
+
+	});
+});
+
 
 function compareMessages(messages1, messages2) {
 	// don't compare the randomly generated keys (if any) to the original messages
