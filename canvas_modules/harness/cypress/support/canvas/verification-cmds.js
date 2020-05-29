@@ -17,6 +17,7 @@
 
 import * as testUtils from "../../utils/eventlog-utils";
 
+
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, transformValue) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.should("have.attr", "transform", transformValue);
@@ -115,6 +116,16 @@ Cypress.Commands.add("verifyNodeIsNotSelected", (nodeName) => {
 
 	// Verify node is not selected in object model
 	cy.isNodeSelected(nodeName).should("eq", false);
+});
+
+Cypress.Commands.add("verifyNodeImage", (nodeLabel, value) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.then((node) => {
+			const nodeImageSelector =
+			"[data-id='" + node[0].getAttribute("data-id").replace("grp", "image") + "']";
+			cy.get(nodeImageSelector)
+				.should("have.attr", "data-image", value);
+		});
 });
 
 Cypress.Commands.add("verifyCommentIsNotSelected", (commentText) => {
@@ -601,7 +612,7 @@ Cypress.Commands.add("verifyNodeIsAddedInPaletteCategory", (nodeName, nodeCatego
 		.should("not.eq", -1);
 });
 
-Cypress.Commands.add("verifyNodeImageCSS", (nodeName, style, value) => {
+Cypress.Commands.add("verifyPaletteNodeImageCSS", (nodeName, style, value) => {
 	cy.findNodeIndexInPalette(nodeName)
 		.then((nodeIndex) => {
 			cy.get(".palette-list-item-icon").eq(nodeIndex)

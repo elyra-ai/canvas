@@ -182,7 +182,7 @@ describe("Test aspect ratio of images is preserved", function() {
 		cy.clickCategory("Animations");
 
 		// The aspect ratio is preserved when height and width are different.
-		cy.verifyNodeImageCSS("Triangle", "width", "28px");
-		cy.verifyNodeImageCSS("Triangle", "height", "25.53125px");
+		cy.verifyPaletteNodeImageCSS("Triangle", "width", "28px");
+		cy.verifyPaletteNodeImageCSS("Triangle", "height", "25.53125px");
 	});
 });
