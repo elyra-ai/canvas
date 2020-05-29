@@ -51,12 +51,25 @@ describe("Test basic undo/redo operations", function() {
 		// Add comment to selected node
 		cy.getNodeWithLabel("Select").click();
 		cy.addCommentToPosition("This comment box should be linked to the Select node.", 350, 250);
-		// Undo using toolbar twice
+
+		// Edit comment
+		cy.editTextInComment(
+			"This comment box should be linked to the Select node.", "This comment box should be edited."
+		);
+		// Undo and redo using toolbar
+		cy.clickToolbarUndo();
+		cy.verifyEditedCommentExists("This comment box should be linked to the Select node.");
+		cy.clickToolbarRedo();
+		cy.verifyEditedCommentExists("This comment box should be edited.");
+
+		// Undo edit comment, add comment
+		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfComments(0);
-		// Redo twice using shortcut keys and toolbar
+		// Redo add comment, edit comment
 		cy.shortcutKeysRedo();
+		cy.clickToolbarRedo();
 		cy.clickToolbarRedo();
 		cy.verifyNumberOfComments(1);
 
@@ -79,23 +92,15 @@ describe("Test basic undo/redo operations", function() {
 		cy.verifyNodeIsNotMoved("Var. File");
 		cy.clickToolbarRedo();
 
-		// Edit comment
-		cy.editTextInComment(
-			"This comment box should be linked to the Select node.", "This comment box should be edited."
-		);
-		// Undo and redo using toolbar
-		cy.clickToolbarUndo();
-		cy.verifyEditedCommentExists("This comment box should be linked to the Select node.");
-		cy.clickToolbarRedo();
-		cy.verifyEditedCommentExists("This comment box should be edited.");
-
 		// Move comment on canvas
 		cy.moveCommentToPosition("This comment box should be edited.", 100, 100);
 		cy.verifyCommentIsMoved("This comment box should be edited.");
-		// Undo and redo using toolbar
+		// Undo using toolbar
 		cy.clickToolbarUndo();
 		cy.verifyCommentIsNotMoved("This comment box should be edited.");
-		// cy.clickToolbarRedo();
+
+		// Click somewhere on canvas to deselect comment
+		cy.get("#canvas-div-0").click(1, 1);
 
 		// Delete node
 		cy.deleteNodeUsingContextMenu("Var. File");
@@ -250,11 +255,7 @@ describe("Test select all canvas objects undo/redo operations", function() {
 
 		// Select all nodes and comments using Ctrl/Cmnd+A and delete a node
 		cy.shortcutKeysSelectAllCanvasObjects();
-		cy.getNodeWithLabel("Define Types")
-			.click()
-			.rightclick();
-		cy.clickOptionFromContextMenu("Delete");
-		// cy.deleteNodeUsingContextMenu("Define Types");
+		cy.deleteNodeUsingContextMenu("Define Types");
 		cy.verifyNodeIsDeleted("Define Types", true);
 		// Verify canvas is empty
 		cy.verifyCanvasIsEmpty();
