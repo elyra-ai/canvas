@@ -22,7 +22,7 @@ describe("Test basic undo/redo operations", function() {
 	});
 
 	it("Test undo/ redo operations after dragging nodes from palette to canvas, link nodes, add comment to node, " +
-	"disconnect node, move node, move comment, delete node, delete comment, link comment to node, " +
+	"disconnect node, move node, move comment, edit comment, delete node, delete comment, link comment to node, " +
 	"delete data link, delete comment link", function() {
 		// Drag 2 nodes from palette to canvas
 		cy.clickToolbarPaletteOpen();
@@ -50,14 +50,31 @@ describe("Test basic undo/redo operations", function() {
 
 		// Add comment to selected node
 		cy.getNodeWithLabel("Select").click();
+		cy.log("Before addCommentToPosition");
 		cy.addCommentToPosition("This comment box should be linked to the Select node.", 350, 250);
+		cy.log("After addCommentToPosition");
 
-		// Undo add comment
+		// Edit comment
+		cy.log("Before editTextInComment");
+		cy.editTextInComment(
+			"This comment box should be linked to the Select node.", "This comment box should be edited."
+		);
+		cy.log("After editTextInComment");
+		// Undo and redo using toolbar
+		cy.clickToolbarUndo();
+		cy.verifyEditedCommentExists("This comment box should be linked to the Select node.");
+		cy.clickToolbarRedo();
+		cy.verifyEditedCommentExists("This comment box should be edited.");
+		cy.log("After undo redo editTextInComment");
+
+		// Undo edit comment, add comment
+		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfComments(0);
-		// Redo add comment
+		// Redo add comment, edit comment
 		cy.shortcutKeysRedo();
+		cy.clickToolbarRedo();
 		cy.clickToolbarRedo();
 		cy.verifyNumberOfComments(1);
 
@@ -81,11 +98,11 @@ describe("Test basic undo/redo operations", function() {
 		cy.clickToolbarRedo();
 
 		// Move comment on canvas
-		cy.moveCommentToPosition("This comment box should be linked to the Select node.", 100, 100);
-		cy.verifyCommentIsMoved("This comment box should be linked to the Select node.");
+		cy.moveCommentToPosition("This comment box should be edited.", 100, 100);
+		cy.verifyCommentIsMoved("This comment box should be edited.");
 		// Undo using toolbar
 		cy.clickToolbarUndo();
-		cy.verifyCommentIsNotMoved("This comment box should be linked to the Select node.");
+		cy.verifyCommentIsNotMoved("This comment box should be edited.");
 
 		// Click somewhere on canvas to deselect comment
 		cy.get("#canvas-div-0").click(1, 1);
@@ -100,8 +117,8 @@ describe("Test basic undo/redo operations", function() {
 		cy.verifyNumberOfNodes(1);
 
 		// Delete comment
-		cy.deleteCommentUsingContextMenu("This comment box should be linked to the Select node.");
-		cy.verifyCommentIsDeleted("This comment box should be linked to the Select node.");
+		cy.deleteCommentUsingContextMenu("This comment box should be edited.");
+		cy.verifyCommentIsDeleted("This comment box should be edited.");
 		// Undo and redo using toolbar
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfComments(1);
@@ -569,6 +586,7 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 		cy.clickOptionFromContextMenu("Create supernode");
 
 		// Verify Supernode created OK
+		cy.log("Supernode log 1");
 		cy.verifyNumberOfPipelines(2);
 		cy.verifyNumberOfNodesInPipeline(1);
 		cy.verifyNumberOfLinksInPipeline(0);
@@ -579,12 +597,14 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 		cy.deleteNodeUsingContextMenu("Supernode");
 
 		// Verify Supernode deleted OK
+		cy.log("Supernode log 2");
 		cy.verifyNodeIsDeleted("Supernode", true);
 		cy.verifyNumberOfNodesInPipeline(0);
 		cy.verifyNumberOfLinksInPipeline(0);
 
 		// Test Undo (using toolbar) of deletion of Supernode
 		cy.clickToolbarUndo();
+		cy.log("Supernode log 3");
 		cy.verifyNumberOfPipelines(2);
 		cy.verifyNumberOfNodesInPipeline(1);
 		cy.verifyNumberOfLinksInPipeline(0);
@@ -593,11 +613,13 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 
 		// Test Undo (using toolbar) of creation of Supernode
 		cy.clickToolbarUndo();
+		cy.log("Supernode log 4");
 		cy.verifyNumberOfNodesInPipeline(2);
 		cy.verifyNumberOfLinksInPipeline(1);
 
 		// Test Redo (using toolbar) of creation Supernode
 		cy.clickToolbarRedo();
+		cy.log("Supernode log 5");
 		cy.verifyNumberOfPipelines(2);
 		cy.verifyNumberOfNodesInPipeline(1);
 		cy.verifyNumberOfLinksInPipeline(0);
@@ -606,6 +628,7 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 
 		// Test Redo (using toolbar) of deletion of Supernode
 		cy.clickToolbarRedo();
+		cy.log("Supernode log 6");
 		cy.verifyNumberOfNodesInPipeline(0);
 		cy.verifyNumberOfLinksInPipeline(0);
 
@@ -613,6 +636,7 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 
 		// Test Undo (using the keyboard) of deletion of Supernode
 		cy.shortcutKeysUndo();
+		cy.log("Supernode log 7");
 		cy.verifyNumberOfPipelines(2);
 		cy.verifyNumberOfNodesInPipeline(1);
 		cy.verifyNumberOfLinksInPipeline(0);
@@ -621,11 +645,13 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 
 		// Test Undo (using the keyboard) of creation of Supernode
 		cy.shortcutKeysUndo();
+		cy.log("Supernode log 8");
 		cy.verifyNumberOfNodesInPipeline(2);
 		cy.verifyNumberOfLinksInPipeline(1);
 
 		// Test Redo (using the keyboard) of creation Supernode
 		cy.shortcutKeysRedo();
+		cy.log("Supernode log 9");
 		cy.verifyNumberOfPipelines(2);
 		cy.verifyNumberOfNodesInPipeline(1);
 		cy.verifyNumberOfLinksInPipeline(0);
@@ -634,6 +660,7 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 
 		// Test Redo (using the keyboard) of deletion of Supernode
 		cy.shortcutKeysRedo();
+		cy.log("Supernode log 10");
 		cy.verifyNumberOfNodesInPipeline(0);
 		cy.verifyNumberOfLinksInPipeline(0);
 
@@ -642,6 +669,7 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 		// Test Undo (using the context menu) of deletion of Supernode
 		cy.rightClickToDisplayContextMenu(300, 10);
 		cy.clickOptionFromContextMenu("Undo");
+		cy.log("Supernode log 11");
 		cy.verifyNumberOfPipelines(2);
 		cy.verifyNumberOfNodesInPipeline(1);
 		cy.verifyNumberOfLinksInPipeline(0);
@@ -651,12 +679,14 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 		// Test Undo (using the context menu) of creation of Supernode
 		cy.rightClickToDisplayContextMenu(300, 10);
 		cy.clickOptionFromContextMenu("Undo");
+		cy.log("Supernode log 12");
 		cy.verifyNumberOfNodesInPipeline(2);
 		cy.verifyNumberOfLinksInPipeline(1);
 
 		// Test Redo (using the context menu) of creation Supernode
 		cy.rightClickToDisplayContextMenu(300, 10);
 		cy.clickOptionFromContextMenu("Redo");
+		cy.log("Supernode log 13");
 		cy.verifyNumberOfPipelines(2);
 		cy.verifyNumberOfNodesInPipeline(1);
 		cy.verifyNumberOfLinksInPipeline(0);
@@ -666,7 +696,9 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 		// Test Redo (using the context menu) of deletion of Supernode
 		cy.rightClickToDisplayContextMenu(300, 10);
 		cy.clickOptionFromContextMenu("Redo");
+		cy.log("Supernode log 14");
 		cy.verifyNumberOfNodesInPipeline(0);
 		cy.verifyNumberOfLinksInPipeline(0);
+		cy.log("Supernode log 15");
 	});
 });

@@ -167,6 +167,16 @@ Cypress.Commands.add("verifyCommentExists", (commentText) => {
 	cy.verifyEditActionHandlerEditCommentEntryInConsole(commentText);
 });
 
+Cypress.Commands.add("verifyEditedCommentExists", (commentText) => {
+	// verify comment is in the DOM
+	cy.getCommentWithText(commentText)
+		.should("have.length", 1);
+
+	// verify that the comment is in the internal object model
+	cy.getCommentContentCountFromObjectModel(commentText)
+		.then((count) => expect(count).to.equal(1));
+});
+
 Cypress.Commands.add("verifyNodeElementLocation", (nodeName, nodeElement, xPos, yPos) => {
 	// nodeElement can be either "image" or "label"
 	cy.getNodeWithLabel(nodeName)
