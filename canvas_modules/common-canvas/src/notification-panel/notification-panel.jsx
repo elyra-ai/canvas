@@ -19,6 +19,8 @@ import PropTypes from "prop-types";
 import Icon from "./../icons/icon.jsx";
 import Button from "carbon-components-react/lib/components/Button";
 import { Close16 } from "@carbon/icons-react";
+import { DEFAULT_NOTIFICATION_HEADER } from "./../common-canvas/constants/canvas-constants.js";
+
 
 class NotificationPanel extends React.Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -130,23 +132,26 @@ class NotificationPanel extends React.Component {
 
 	render() {
 		const notificationPanelClassName = this.props.isNotificationOpen ? "" : "panel-hidden";
+		const notificationHeader = this.props.notificationConfig && this.props.notificationConfig.notificationHeader
+			? this.props.notificationConfig.notificationHeader
+			: DEFAULT_NOTIFICATION_HEADER;
+		const notificationSubtitle = this.props.notificationConfig && this.props.notificationConfig.notificationSubtitle
+			? (<div className="notification-panel-subtitle">
+				{this.props.notificationConfig.notificationSubtitle}
+			</div>)
+			: null;
 		const notificationPanelMessages = this.props.messages.length > 0
 			? this.getNotifications()
 			: (<div className="notification-panel-empty-message-container">
 				<div className="notification-panel-empty-message">
-					{this.props.emptyMessage ? this.props.emptyMessage : null}
+					{this.props.notificationConfig && this.props.notificationConfig.emptyMessage ? this.props.notificationConfig.emptyMessage : null}
 				</div>
 			</div>);
-		const notificationSubtitle = this.props.notificationSubtitle
-			? (<div className="notification-panel-subtitle">
-				{this.props.notificationSubtitle}
-			</div>)
-			: null;
 
 		return (<div className={"notification-panel-container " + notificationPanelClassName} >
 			<div className="notification-panel">
 				<div className="notification-panel-header">
-					{this.props.notificationHeader}
+					{notificationHeader}
 					{notificationSubtitle}
 					<Close16 className="notification-panel-close-icon" onClick={this.closeNotificationPanel} />
 				</div>
@@ -162,7 +167,7 @@ class NotificationPanel extends React.Component {
 							size="small"
 							disabled={this.props.messages.length === 0}
 						>
-							{this.props.clearAllMessage}
+							{this.props.notificationConfig ? this.props.notificationConfig.clearAllMessage : null}
 						</Button>
 					</div>
 				</div>
@@ -175,21 +180,23 @@ class NotificationPanel extends React.Component {
 }
 
 NotificationPanel.propTypes = {
-	notificationHeader: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.object
-	]),
-	notificationSubtitle: PropTypes.string,
+	notificationConfig: PropTypes.shape({
+		notificationHeader: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.object
+		]),
+		notificationSubtitle: PropTypes.string,
+		emptyMessage: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.object
+		]),
+		clearAllMessage: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.object
+		])
+	}),
 	isNotificationOpen: PropTypes.bool,
 	messages: PropTypes.array,
-	emptyMessage: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.object
-	]),
-	clearAllMessage: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.object
-	]),
 	canvasController: PropTypes.object
 };
 

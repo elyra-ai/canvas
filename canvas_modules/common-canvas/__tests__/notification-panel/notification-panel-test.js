@@ -135,7 +135,6 @@ describe("notification panel renders correctly", () => {
 		);
 
 		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
-		expect(wrapper.find(".notification-panel-messages")).to.have.length(0);
 	});
 
 	it("notification panel should have 4 types of messages", () => {
@@ -263,7 +262,7 @@ describe("toolbar notification icon state renders correctly", () => {
 		wrapper.unmount();
 	});
 
-	it("notification icon should be disabled in toolbar if no messages", () => {
+	it("notification icon should be empty in toolbar if no messages", () => {
 		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
 		wrapper = mountWithIntl(<CommonCanvas
 			config={canvasConfig}
@@ -283,13 +282,12 @@ describe("toolbar notification icon state renders correctly", () => {
 
 		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
 		expect(canvasController.getNotificationMessages().length).to.equal(0);
-		expect(wrapper.find("li[id='notificationCounterIcon-action']")
-			.find(".list-item-disabled")
-			.hostNodes()).to.have.length(1);
+		expect(wrapper.find(".notification-panel-empty-message-container")).to.have.length(1);
 
 		canvasController.setNotificationMessages([notificationMessage0]);
 		wrapper.update();
 		expect(wrapper.find("li[id='notification-open-action']")).to.have.length(1);
+		expect(wrapper.find(".notification-panel-empty-message-container")).to.have.length(0);
 	});
 
 	it("notification icon should be in correct states in toolbar", () => {
@@ -350,7 +348,7 @@ describe("toolbar notification icon state renders correctly", () => {
 		canvasController.setNotificationMessages([]);
 		wrapper.update();
 		// TODO need to fix
-		// notificationIcon = wrapper.find("li[id='notificationCounterIcon-action']");
+		// notificationIcon = wrapper.find("li[id='notification-open-action']");
 		// expect(notificationIcon).to.have.length(1);
 		// expect(notificationIcon.find("svg[type='notificationCounterIcon']")).to.have.length(1);
 	});
@@ -383,7 +381,7 @@ describe("notification counter and color updates correctly", () => {
 			showRightFlyout={false}
 			canvasController={canvasController}
 		/>);
-		let notificationIcon = wrapper.find("li[id='notificationCounterIcon-action']");
+		let notificationIcon = wrapper.find("li[id='notification-open-action']");
 		let notificationCounter = notificationIcon.find(".notificationCounterIcon .text-content");
 		expect(notificationCounter.text()).to.equal(" 0 ");
 		canvasController.setNotificationMessages([notificationMessage0]);
