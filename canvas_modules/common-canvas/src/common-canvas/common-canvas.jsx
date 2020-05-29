@@ -470,9 +470,11 @@ class CommonCanvas extends React.Component {
 				: DEFAULT_NOTIFICATION_HEADER;
 			notificationPanel = (<NotificationPanel
 				notificationHeader={notificationHeader}
+				notificationSubtitle={this.state.notificationConfig.notificationSubtitle}
 				isNotificationOpen={this.state.isNotificationOpen}
 				messages={this.canvasController.getNotificationMessages()}
 				emptyMessage={this.state.notificationConfig.emptyMessage}
+				clearAllMessage={this.state.notificationConfig.clearAllMessage}
 				canvasController={this.canvasController}
 			/>);
 

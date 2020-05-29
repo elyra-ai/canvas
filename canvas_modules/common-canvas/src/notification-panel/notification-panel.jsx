@@ -17,6 +17,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Icon from "./../icons/icon.jsx";
+import Button from "carbon-components-react/lib/components/Button";
+import { Close16 } from "@carbon/icons-react";
 
 class NotificationPanel extends React.Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -30,7 +32,7 @@ class NotificationPanel extends React.Component {
 		super(props);
 		this.state = {};
 		this.handleNotificationPanelClickOutside = this.handleNotificationPanelClickOutside.bind(this);
-		this.closeNotification = this.closeNotification.bind(this);
+		this.closeNotificationPanel = this.closeNotificationPanel.bind(this);
 	}
 
 	componentDidMount() {
@@ -55,7 +57,7 @@ class NotificationPanel extends React.Component {
 			</div>);
 
 			const closeMessage = message.closeMessage
-				? (<div className = "notification-message-close" onClick={() => this.closeNotification(message.key)}>
+				? (<div className = "notification-message-close" onClick={this.deleteNotification.bind(this, message.key)}>
 					{message.closeMessage}
 				</div>)
 				: null;
@@ -97,7 +99,7 @@ class NotificationPanel extends React.Component {
 	handleNotificationPanelClickOutside(e) {
 		const notificationIcon = document.getElementsByClassName("notificationCounterIcon")[0];
 		const notificationHeader = document.getElementsByClassName("notification-panel-header")[0];
-		const notificationMessages = document.getElementsByClassName("notification-panel-messages")[0];
+		const notificationMessages = document.getElementsByClassName("notification-panel-messages-container")[0];
 
 		if (this.props.isNotificationOpen &&
 				notificationIcon && !notificationIcon.contains(e.target) &&
@@ -114,8 +116,16 @@ class NotificationPanel extends React.Component {
 		}
 	}
 
-	closeNotification(messageKey) {
+	deleteNotification(messageKey) {
 		this.props.canvasController.deleteNotificationMessages(messageKey);
+	}
+
+	clearNotificationMessages() {
+		this.props.canvasController.clearNotificationMessages();
+	}
+
+	closeNotificationPanel() {
+		this.props.canvasController.toolbarActionHandler("closeNotificationPanel");
 	}
 
 	render() {
@@ -127,21 +137,33 @@ class NotificationPanel extends React.Component {
 					{this.props.emptyMessage ? this.props.emptyMessage : null}
 				</div>
 			</div>);
+		const notificationSubtitle = this.props.notificationSubtitle
+			? (<div className="notification-panel-subtitle">
+				{this.props.notificationSubtitle}
+			</div>)
+			: null;
 
 		return (<div className={"notification-panel-container " + notificationPanelClassName} >
 			<div className="notification-panel">
 				<div className="notification-panel-header">
 					{this.props.notificationHeader}
-					<div className="notification-panel-subtitle">
-						{this.props.notificationSubtitle}
-					</div>
+					{notificationSubtitle}
+					<Close16 className="notification-panel-close-icon" onClick={this.closeNotificationPanel} />
 				</div>
-				<div className="notification-panel-messages">
-					{notificationPanelMessages}
+				<div className="notification-panel-messages-container">
+					<div className="notification-panel-messages">
+						{notificationPanelMessages}
+					</div>
 					<div className="notification-panel-clear-all-container">
-						<div className="notification-panel-clear-all">
-							{"Clear all"}
-						</div>
+						<Button
+							className="notification-panel-clear-all"
+							onClick={this.clearNotificationMessages.bind(this)}
+							kind="ghost"
+							size="small"
+							disabled={this.props.messages.length === 0}
+						>
+							{this.props.clearAllMessage}
+						</Button>
 					</div>
 				</div>
 				<svg className="notification-popup-arrow" x="0px" y="0px" viewBox="0 0 16 9">
@@ -161,6 +183,10 @@ NotificationPanel.propTypes = {
 	isNotificationOpen: PropTypes.bool,
 	messages: PropTypes.array,
 	emptyMessage: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.object
+	]),
+	clearAllMessage: PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.object
 	]),
