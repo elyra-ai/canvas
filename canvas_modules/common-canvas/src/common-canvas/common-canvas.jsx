@@ -32,7 +32,7 @@ import isEmpty from "lodash/isEmpty";
 import Logger from "../logging/canvas-logger.js";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
-import { DEFAULT_NOTIFICATION_HEADER, PALETTE } from "./constants/canvas-constants.js";
+import { PALETTE } from "./constants/canvas-constants.js";
 
 class CommonCanvas extends React.Component {
 	constructor(props) {
@@ -465,16 +465,10 @@ class CommonCanvas extends React.Component {
 				}
 			}
 
-			const notificationHeader = this.state.notificationConfig && this.state.notificationConfig.notificationHeader
-				? this.state.notificationConfig.notificationHeader
-				: DEFAULT_NOTIFICATION_HEADER;
 			notificationPanel = (<NotificationPanel
-				notificationHeader={notificationHeader}
-				notificationSubtitle={this.state.notificationConfig.notificationSubtitle}
+				notificationConfig={this.state.notificationConfig}
 				isNotificationOpen={this.state.isNotificationOpen}
 				messages={this.canvasController.getNotificationMessages()}
-				emptyMessage={this.state.notificationConfig.emptyMessage}
-				clearAllMessage={this.state.notificationConfig.clearAllMessage}
 				canvasController={this.canvasController}
 			/>);
 
