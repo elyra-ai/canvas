@@ -167,16 +167,6 @@ Cypress.Commands.add("verifyCommentExists", (commentText) => {
 	cy.verifyEditActionHandlerEditCommentEntryInConsole(commentText);
 });
 
-Cypress.Commands.add("verifyEditedCommentExists", (commentText) => {
-	// verify comment is in the DOM
-	cy.getCommentWithText(commentText)
-		.should("have.length", 1);
-
-	// verify that the comment is in the internal object model
-	cy.getCommentContentCountFromObjectModel(commentText)
-		.then((count) => expect(count).to.equal(1));
-});
-
 Cypress.Commands.add("verifyNodeElementLocation", (nodeName, nodeElement, xPos, yPos) => {
 	// nodeElement can be either "image" or "label"
 	cy.getNodeWithLabel(nodeName)
@@ -354,6 +344,13 @@ Cypress.Commands.add("verifyNumberOfNodesInPipelineInExtraCanvas", (noOfNodes) =
 	// verify the number of nodes in the internal object model
 	cy.getPipelineForExtraCanvas().then((extraCanvasPipeline) => {
 		cy.getCountNodes(extraCanvasPipeline).should("eq", noOfNodes);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfNodesInPipelineAtIndex", (pipelineIndex, noOfNodes) => {
+	// verify pipeline 1 have 0 nodes
+	cy.getPipelineAtIndex(pipelineIndex).then((pipeline) => {
+		cy.getCountNodes(pipeline).should("eq", noOfNodes);
 	});
 });
 

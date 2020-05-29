@@ -22,7 +22,7 @@ describe("Test basic undo/redo operations", function() {
 	});
 
 	it("Test undo/ redo operations after dragging nodes from palette to canvas, link nodes, add comment to node, " +
-	"disconnect node, move node, move comment, edit comment, delete node, delete comment, link comment to node, " +
+	"disconnect node, move node, move comment, delete node, delete comment, link comment to node, " +
 	"delete data link, delete comment link", function() {
 		// Drag 2 nodes from palette to canvas
 		cy.clickToolbarPaletteOpen();
@@ -52,24 +52,12 @@ describe("Test basic undo/redo operations", function() {
 		cy.getNodeWithLabel("Select").click();
 		cy.addCommentToPosition("This comment box should be linked to the Select node.", 350, 250);
 
-		// Edit comment
-		cy.editTextInComment(
-			"This comment box should be linked to the Select node.", "This comment box should be edited."
-		);
-		// Undo and redo using toolbar
-		cy.clickToolbarUndo();
-		cy.verifyEditedCommentExists("This comment box should be linked to the Select node.");
-		cy.clickToolbarRedo();
-		cy.verifyEditedCommentExists("This comment box should be edited.");
-
-		// Undo edit comment, add comment
-		cy.clickToolbarUndo();
+		// Undo add comment
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfComments(0);
-		// Redo add comment, edit comment
+		// Redo add comment
 		cy.shortcutKeysRedo();
-		cy.clickToolbarRedo();
 		cy.clickToolbarRedo();
 		cy.verifyNumberOfComments(1);
 
@@ -93,11 +81,11 @@ describe("Test basic undo/redo operations", function() {
 		cy.clickToolbarRedo();
 
 		// Move comment on canvas
-		cy.moveCommentToPosition("This comment box should be edited.", 100, 100);
-		cy.verifyCommentIsMoved("This comment box should be edited.");
+		cy.moveCommentToPosition("This comment box should be linked to the Select node.", 100, 100);
+		cy.verifyCommentIsMoved("This comment box should be linked to the Select node.");
 		// Undo using toolbar
 		cy.clickToolbarUndo();
-		cy.verifyCommentIsNotMoved("This comment box should be edited.");
+		cy.verifyCommentIsNotMoved("This comment box should be linked to the Select node.");
 
 		// Click somewhere on canvas to deselect comment
 		cy.get("#canvas-div-0").click(1, 1);
@@ -112,8 +100,8 @@ describe("Test basic undo/redo operations", function() {
 		cy.verifyNumberOfNodes(1);
 
 		// Delete comment
-		cy.deleteCommentUsingContextMenu("This comment box should be edited.");
-		cy.verifyCommentIsDeleted("This comment box should be edited.");
+		cy.deleteCommentUsingContextMenu("This comment box should be linked to the Select node.");
+		cy.verifyCommentIsDeleted("This comment box should be linked to the Select node.");
 		// Undo and redo using toolbar
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfComments(1);
@@ -479,5 +467,206 @@ describe("Test for undo/redo of layout actions", function() {
 		cy.verifyNodeTransform("Define Types", "translate(120, 488)");
 		cy.verifyNodeTransform("C5.0", "translate(50, 634)");
 		cy.verifyNodeTransform("Neural Net", "translate(190, 634)");
+	});
+});
+
+describe("Test undo/redo property values and title in common-properties", function() {
+	before(() => {
+		cy.visit("/");
+		cy.openCanvasPalette("modelerPalette.json");
+	});
+
+	it("Test undo/redo property values and title in common-properties", function() {
+		// Drag 1 node from palette to canvas
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("Modeling");
+		cy.dragNodeToPosition("C5.0", 350, 200);
+
+		// Double-click "C5.0" node to open node properties
+		cy.getNodeWithLabel("C5.0").dblclick();
+		cy.verifyPropertiesFlyoutTitle("C5.0");
+		// Edit the name of properties flyout and delete value in samplingRatio
+		cy.clickPropertiesFlyoutTitleEditIcon();
+		cy.enterNewPropertiesFlyoutTitle("My C5.0 model");
+		cy.backspaceTextFieldValue("samplingRatio");
+		cy.saveFlyout();
+
+		//  Verification steps
+		cy.verifySamplingRatioParameterValueInConsole("samplingRatio", null);
+		cy.verifyErrorMessageForSamplingRatioParameterInConsole("error", "samplingRatio", "Select a sampling ratio");
+		cy.verifyNewPropertiesFlyoutTitleEntryInConsole("My C5.0 model");
+
+		// Double-click "My C5.0 model" node to open node properties
+		cy.getNodeWithLabel("My C5.0 model").dblclick();
+
+		// Undo using toolbar
+		cy.clickToolbarUndo();
+		cy.saveFlyout();
+
+		//  Verification steps
+		cy.verifySamplingRatioParameterValueInConsole("samplingRatio", 1);
+		cy.verifyNoErrorMessageInConsole();
+		cy.verifyNewPropertiesFlyoutTitleEntryInConsole("C5.0");
+	});
+});
+
+describe("Test undo/redo of shaper node", function() {
+	before(() => {
+		cy.visit("/");
+		cy.openCanvasPalette("sparkPalette.json");
+	});
+
+	it("Test undo/redo of shaper node", function() {
+		// Drag 1 node from palette to canvas
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("Transformations");
+		cy.dragNodeToPosition("Data Shaper", 350, 200);
+
+		// Verification steps
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodesInPipelineAtIndex(0, 1);
+		cy.verifyNumberOfNodesInPipelineAtIndex(1, 0);
+
+		// Undo using toolbar
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPipelines(1);
+		cy.verifyNumberOfNodesInPipelineAtIndex(0, 0);
+
+		// Redo using toolbar
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodesInPipeline(1);
+		cy.verifyNumberOfNodesInPipelineAtIndex(0, 1);
+		cy.verifyNumberOfNodesInPipelineAtIndex(1, 0);
+	});
+});
+
+describe("Test undo/redo of supernode creation and deletion", function() {
+	before(() => {
+		cy.visit("/");
+		cy.openCanvasPalette("modelerPalette.json");
+	});
+
+	it("Test undo/redo of supernode creation and deletion", function() {
+		// Drag 2 nodes from palette to canvas
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("Import");
+		cy.dragNodeToPosition("Var. File", 300, 200);
+		cy.clickCategory("Field Ops");
+		cy.dragNodeToPosition("Derive", 400, 200);
+
+		// Link source node's output port to target node's input port
+		cy.linkNodeOutputPortToNodeInputPort("Var. File", "outPort", "Derive", "inPort");
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Var. File", "outPort", "Derive", "inPort", 1
+		);
+		cy.clickToolbarPaletteClose();
+
+		// Select all nodes and create supernode
+		cy.rightClickToDisplayContextMenu(300, 10);
+		cy.clickOptionFromContextMenu("Select All");
+		cy.rightClickNode("Derive");
+		cy.clickOptionFromContextMenu("Create supernode");
+
+		// Verify Supernode created OK
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodesInPipeline(1);
+		cy.verifyNumberOfLinksInPipeline(0);
+		cy.verifyNumberOfNodesInSupernode("Supernode", 2);
+		cy.verifyNumberOfLinksInSupernode("Supernode", 1);
+
+		// Now delete the Supernode
+		cy.deleteNodeUsingContextMenu("Supernode");
+
+		// Verify Supernode deleted OK
+		cy.verifyNodeIsDeleted("Supernode", true);
+		cy.verifyNumberOfNodesInPipeline(0);
+		cy.verifyNumberOfLinksInPipeline(0);
+
+		// Test Undo (using toolbar) of deletion of Supernode
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodesInPipeline(1);
+		cy.verifyNumberOfLinksInPipeline(0);
+		cy.verifyNumberOfNodesInSupernode("Supernode", 2);
+		cy.verifyNumberOfLinksInSupernode("Supernode", 1);
+
+		// Test Undo (using toolbar) of creation of Supernode
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfNodesInPipeline(2);
+		cy.verifyNumberOfLinksInPipeline(1);
+
+		// Test Redo (using toolbar) of creation Supernode
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodesInPipeline(1);
+		cy.verifyNumberOfLinksInPipeline(0);
+		cy.verifyNumberOfNodesInSupernode("Supernode", 2);
+		cy.verifyNumberOfLinksInSupernode("Supernode", 1);
+
+		// Test Redo (using toolbar) of deletion of Supernode
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfNodesInPipeline(0);
+		cy.verifyNumberOfLinksInPipeline(0);
+
+		// Now try same set of undo/redo using the keyboard
+
+		// Test Undo (using the keyboard) of deletion of Supernode
+		cy.shortcutKeysUndo();
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodesInPipeline(1);
+		cy.verifyNumberOfLinksInPipeline(0);
+		cy.verifyNumberOfNodesInSupernode("Supernode", 2);
+		cy.verifyNumberOfLinksInSupernode("Supernode", 1);
+
+		// Test Undo (using the keyboard) of creation of Supernode
+		cy.shortcutKeysUndo();
+		cy.verifyNumberOfNodesInPipeline(2);
+		cy.verifyNumberOfLinksInPipeline(1);
+
+		// Test Redo (using the keyboard) of creation Supernode
+		cy.shortcutKeysRedo();
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodesInPipeline(1);
+		cy.verifyNumberOfLinksInPipeline(0);
+		cy.verifyNumberOfNodesInSupernode("Supernode", 2);
+		cy.verifyNumberOfLinksInSupernode("Supernode", 1);
+
+		// Test Redo (using the keyboard) of deletion of Supernode
+		cy.shortcutKeysRedo();
+		cy.verifyNumberOfNodesInPipeline(0);
+		cy.verifyNumberOfLinksInPipeline(0);
+
+		// Now try same set of undo/redo using the context menu
+
+		// Test Undo (using the context menu) of deletion of Supernode
+		cy.rightClickToDisplayContextMenu(300, 10);
+		cy.clickOptionFromContextMenu("Undo");
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodesInPipeline(1);
+		cy.verifyNumberOfLinksInPipeline(0);
+		cy.verifyNumberOfNodesInSupernode("Supernode", 2);
+		cy.verifyNumberOfLinksInSupernode("Supernode", 1);
+
+		// Test Undo (using the context menu) of creation of Supernode
+		cy.rightClickToDisplayContextMenu(300, 10);
+		cy.clickOptionFromContextMenu("Undo");
+		cy.verifyNumberOfNodesInPipeline(2);
+		cy.verifyNumberOfLinksInPipeline(1);
+
+		// Test Redo (using the context menu) of creation Supernode
+		cy.rightClickToDisplayContextMenu(300, 10);
+		cy.clickOptionFromContextMenu("Redo");
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodesInPipeline(1);
+		cy.verifyNumberOfLinksInPipeline(0);
+		cy.verifyNumberOfNodesInSupernode("Supernode", 2);
+		cy.verifyNumberOfLinksInSupernode("Supernode", 1);
+
+		// Test Redo (using the context menu) of deletion of Supernode
+		cy.rightClickToDisplayContextMenu(300, 10);
+		cy.clickOptionFromContextMenu("Redo");
+		cy.verifyNumberOfNodesInPipeline(0);
+		cy.verifyNumberOfLinksInPipeline(0);
 	});
 });

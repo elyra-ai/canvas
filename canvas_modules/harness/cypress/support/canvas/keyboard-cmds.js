@@ -71,3 +71,6 @@ Cypress.Commands.add("useDeleteKey", () => "{del}");
 
 // Press 'shift' key on keyboard
 Cypress.Commands.add("useShiftKey", () => "{shift}");
+
+// Press 'backspace' key on keyboard
+Cypress.Commands.add("useBackspaceKey", () => "{backspace}");

@@ -53,6 +53,14 @@ Cypress.Commands.add("setTextFieldValue", (controlId, labelText) => {
 		.type(labelText);
 });
 
+Cypress.Commands.add("backspaceTextFieldValue", (controlId) => {
+	cy.useBackspaceKey()
+		.then((backspaceKey) => {
+			cy.get("div[data-id='properties-" + controlId + "']").find("input")
+				.type(backspaceKey);
+		});
+});
+
 Cypress.Commands.add("getWideFlyoutPanel", (panelName) => {
 	cy.get(".properties-wf-content.show")
 		.then((wideFlyoutPanels) => {
