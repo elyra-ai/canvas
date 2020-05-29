@@ -50,9 +50,12 @@ describe("Test basic undo/redo operations", function() {
 
 		// Add comment to selected node
 		cy.getNodeWithLabel("Select").click();
-		cy.log("Before addCommentToPosition");
-		cy.addCommentToPosition("This comment box should be linked to the Select node.", 350, 250);
-		cy.log("After addCommentToPosition");
+		cy.clickToolbarAddComment();
+		cy.editTextInComment("", "This comment box should be linked to the Select node.");
+		cy.moveCommentToPosition("This comment box should be linked to the Select node.", 350, 250);
+		// cy.log("Before addCommentToPosition");
+		// cy.addCommentToPosition("This comment box should be linked to the Select node.", 350, 250);
+		// cy.log("After addCommentToPosition");
 
 		// Edit comment
 		cy.log("Before editTextInComment");
@@ -71,9 +74,11 @@ describe("Test basic undo/redo operations", function() {
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
+		cy.clickToolbarUndo();
 		cy.verifyNumberOfComments(0);
 		// Redo add comment, edit comment
 		cy.shortcutKeysRedo();
+		cy.clickToolbarRedo();
 		cy.clickToolbarRedo();
 		cy.clickToolbarRedo();
 		cy.verifyNumberOfComments(1);
@@ -667,17 +672,15 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 		// Now try same set of undo/redo using the context menu
 
 		// Test Undo (using the context menu) of deletion of Supernode
-		cy.rightClickToDisplayContextMenu(300, 10);
-		cy.clickOptionFromContextMenu("Undo")
-			.then((undo) => {
-				cy.log("Supernode log 11");
-				cy.verifyNumberOfPipelines(2);
-				cy.verifyNumberOfNodesInPipeline(1);
-				cy.verifyNumberOfLinksInPipeline(0);
-				cy.verifyNumberOfNodesInSupernode("Supernode", 2);
-				cy.verifyNumberOfLinksInSupernode("Supernode", 1);
-			});
-		cy.getNodeWithLabel("Supernode").then((found) => cy.log("Supernode exists"));
+		cy.rightClickToDisplayContextMenu(300, 100);
+		cy.clickOptionFromContextMenu("Undo");
+		cy.log("Supernode log 11");
+		// cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodesInPipeline(1);
+		cy.verifyNumberOfLinksInPipeline(0);
+		cy.verifyNumberOfNodesInSupernode("Supernode", 2);
+		cy.verifyNumberOfLinksInSupernode("Supernode", 1);
+
 
 		// Test Undo (using the context menu) of creation of Supernode
 		cy.rightClickToDisplayContextMenu(300, 10);

@@ -184,13 +184,8 @@ Cypress.Commands.add("editTextInCommentInSupernode", (originalCommentText, newCo
 
 Cypress.Commands.add("addCommentToPosition", (commentText, canvasX, canvasY) => {
 	cy.rightClickToDisplayContextMenu(canvasX, canvasY);
-	cy.clickOptionFromContextMenu("New comment")
-		.then((commentAdded) => {
-			cy.log("In addCommentToPosition -> Calling editTextInComment");
-			cy.getCommentWithText("").its("length")
-				.then((com) => cy.log(String(com)));
-			cy.editTextInComment("", commentText);
-		});
+	cy.clickOptionFromContextMenu("New comment");
+	cy.editTextInComment("", commentText);
 });
 
 Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) => {
