@@ -17,6 +17,7 @@
 
 import * as testUtils from "../../utils/eventlog-utils";
 
+
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, transformValue) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.should("have.attr", "transform", transformValue);
@@ -24,6 +25,21 @@ Cypress.Commands.add("verifyNodeTransform", (nodeLabel, transformValue) => {
 
 Cypress.Commands.add("verifyCommentTransform", (commentText, transformValue) => {
 	cy.getCommentWithText(commentText)
+		.should("have.attr", "transform", transformValue);
+});
+
+Cypress.Commands.add("verifyZoomTransform", (transformValue) => {
+	cy.get(".svg-area")
+		.find("g")
+		.eq(0)
+		.should("have.attr", "transform", transformValue);
+});
+
+Cypress.Commands.add("verifyZoomTransformInExtraCanvas", (transformValue) => {
+	cy.get(".svg-area")
+		.eq(1)
+		.find("g")
+		.eq(0)
 		.should("have.attr", "transform", transformValue);
 });
 
@@ -100,6 +116,16 @@ Cypress.Commands.add("verifyNodeIsNotSelected", (nodeName) => {
 
 	// Verify node is not selected in object model
 	cy.isNodeSelected(nodeName).should("eq", false);
+});
+
+Cypress.Commands.add("verifyNodeImage", (nodeLabel, value) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.then((node) => {
+			const nodeImageSelector =
+			"[data-id='" + node[0].getAttribute("data-id").replace("grp", "image") + "']";
+			cy.get(nodeImageSelector)
+				.should("have.attr", "data-image", value);
+		});
 });
 
 Cypress.Commands.add("verifyCommentIsNotSelected", (commentText) => {
@@ -586,7 +612,7 @@ Cypress.Commands.add("verifyNodeIsAddedInPaletteCategory", (nodeName, nodeCatego
 		.should("not.eq", -1);
 });
 
-Cypress.Commands.add("verifyNodeImageCSS", (nodeName, style, value) => {
+Cypress.Commands.add("verifyPaletteNodeImageCSS", (nodeName, style, value) => {
 	cy.findNodeIndexInPalette(nodeName)
 		.then((nodeIndex) => {
 			cy.get(".palette-list-item-icon").eq(nodeIndex)
@@ -610,4 +636,25 @@ Cypress.Commands.add("verifyNumberOfPortsOnNode", (nodeName, portType, noOfPorts
 	cy.getNodeWithLabel(nodeName)
 		.find(".d3-node-port-" + portType)
 		.should("have.length", noOfPorts);
+});
+
+Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
+	cy.get("#toolbar-items")
+		.find("li")
+		.its("length")
+		.then((totalItemsLength) => {
+			// Find hidden items length
+			cy.get("#actions-container")
+				.find("#overflow-action")
+				.eq(0)
+				.find(".toolbar-popover-list-hide")
+				.eq(0)
+				.find("li")
+				.its("length")
+				.then((hiddenItemsLength) => {
+					// Get number of visible items
+					const itemsVisible = totalItemsLength - hiddenItemsLength;
+					expect(itemsVisible).to.equal(noOfItems);
+				});
+		});
 });

@@ -35,9 +35,19 @@ Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
 		})
 );
 
+Cypress.Commands.add("setNodeImage", (nodeLabel, nodeImage) =>
+	cy.getNodeIdForLabel(nodeLabel)
+		.then((nodeId) => {
+			cy.document().then((doc) => {
+				doc.canvasController.setNodeProperties(nodeId, { image: nodeImage });
+			});
+		})
+);
+
 Cypress.Commands.add("getNodeWithLabelInSubFlow", (nodeLabel) =>
 	cy.get(getNodeGrpSelectorInSubFlow())
-		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel)));
+		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel))
+);
 
 Cypress.Commands.add("getNodeWithLabelInSupernode", (nodeLabel, supernodeName) => {
 	cy.getNodeWithLabel(supernodeName)

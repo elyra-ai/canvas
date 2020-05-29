@@ -139,7 +139,13 @@ Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText) 
 		.type(newCommentText);
 
 	// Click somewhere on canvas to save comment
-	cy.get("#canvas-div-0").click();
+	if (document.extraCanvas === true) {
+		// extra-canvas
+		cy.get("#canvas-div-1").click(1, 1);
+	} else {
+		// regular canvas
+		cy.get("#canvas-div-0").click(1, 1);
+	}
 });
 
 Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newCommentText) => {
@@ -357,4 +363,26 @@ Cypress.Commands.add("deleteCommentUsingToolbar", (commentText) => {
 	// Select comment and press delete icon on toolbar
 	cy.getCommentWithText(commentText).click();
 	cy.clickToolbarDelete();
+});
+
+Cypress.Commands.add("selectAllCommentsUsingCtrlOrCmdKey", () => {
+	cy.get("#canvas-div-0").find(".d3-comment-group")
+		.then((comments) => {
+			cy.useCtrlOrCmdKey()
+				.then((selectedKey) => {
+					// Press and hold the ctrl/cmd key
+					cy.get("body")
+						.type(selectedKey, { release: false });
+
+					// Click all the comments
+					comments.each((idx, node) => {
+						cy.wrap(node)
+							.click();
+					});
+
+					// Cancel the ctrl/cmd key press
+					cy.get("body")
+						.type(selectedKey, { release: true });
+				});
+		});
 });

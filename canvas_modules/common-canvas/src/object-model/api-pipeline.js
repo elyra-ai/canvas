@@ -588,6 +588,10 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "SET_OUTPUT_PORT_SUBFLOW_NODE_REF", data: { nodeId: nodeId, portId: portId, subflowNodeRef: subflowNodeRef }, pipelineId: this.pipelineId });
 	}
 
+	setNodeProperties(nodeId, properties) {
+		this.store.dispatch({ type: "SET_NODE_PROPERTIES", data: { nodeId: nodeId, properties: properties }, pipelineId: this.pipelineId });
+	}
+
 	setNodeMessage(nodeId, message) {
 		this.store.dispatch({ type: "SET_NODE_MESSAGE", data: { nodeId: nodeId, message: message }, pipelineId: this.pipelineId });
 	}
