@@ -50,3 +50,24 @@ Cypress.Commands.add("verifyNewPropertiesFlyoutTitleEntryInConsole", (newTitle) 
 		expect(newTitle).to.equal(lastEventLog.data.title);
 	});
 });
+
+Cypress.Commands.add("verifyColumnNameEntryInConsole", (columnName) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(columnName).to.equal(lastEventLog.data.form.colName);
+	});
+});
+
+Cypress.Commands.add("verifyTextValueIsNotPresentInColumnName", (columnName) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc, 2);
+		expect("").to.equal(lastEventLog.data.form.colName);
+	});
+});
+
+Cypress.Commands.add("verifyTextValueIsPresentInColumnName", (columnName) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc, 2);
+		expect(columnName).to.equal(lastEventLog.data.form.colName);
+	});
+});
