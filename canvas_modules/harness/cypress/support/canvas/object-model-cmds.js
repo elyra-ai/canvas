@@ -42,6 +42,13 @@ Cypress.Commands.add("getPipelineForExtraCanvas", () => {
 	});
 });
 
+Cypress.Commands.add("getPipelineAtIndex", (pipelineIndex) => {
+	cy.getCanvasData().then((canvasData) => {
+		const pipelineAtIndex = canvasData.pipelines[pipelineIndex];
+		return pipelineAtIndex;
+	});
+});
+
 Cypress.Commands.add("getSupernodePipeline", (supernodeName) => {
 	cy.getSupernodePipelineId(supernodeName).then((supernodePipelineId) => {
 		cy.getCanvasData().then((canvasData) =>

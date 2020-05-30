@@ -185,8 +185,6 @@ Cypress.Commands.add("addCommentToPosition", (commentText, canvasX, canvasY) => 
 	cy.rightClickToDisplayContextMenu(canvasX, canvasY);
 	cy.clickOptionFromContextMenu("New comment");
 	cy.editTextInComment("", commentText);
-	// Click somewhere on canvas so that comment will be saved
-	cy.get("#common-canvas-items-container-0").click(400, 400);
 });
 
 Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) => {

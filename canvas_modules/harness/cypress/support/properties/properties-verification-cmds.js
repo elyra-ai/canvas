@@ -50,3 +50,55 @@ Cypress.Commands.add("verifyNewPropertiesFlyoutTitleEntryInConsole", (newTitle) 
 		expect(newTitle).to.equal(lastEventLog.data.title);
 	});
 });
+
+Cypress.Commands.add("verifyColumnNameEntryInConsole", (columnName) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(columnName).to.equal(lastEventLog.data.form.colName);
+	});
+});
+
+Cypress.Commands.add("verifySamplingRatioParameterValueInConsole", (parameterName, value) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
+		expect(value).to.equal(lastEventLog.data.form[parameterName]);
+	});
+});
+
+Cypress.Commands.add("verifyErrorMessageForSamplingRatioParameterInConsole", (messageType, parameterName, message) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
+		expect(lastEventLog.data.messages.length).not.equal(0);
+		for (var idx = 0; idx < lastEventLog.data.messages.length; idx++) {
+			if (lastEventLog.data.messages[idx].text === message &&
+					lastEventLog.data.messages[idx].type === messageType &&
+					lastEventLog.data.messages[idx].id_ref === parameterName) {
+				expect(lastEventLog.data.messages[idx].text).to.equal(message);
+				expect(lastEventLog.data.messages[idx].type).to.equal(messageType);
+				expect(lastEventLog.data.messages[idx].id_ref).to.equal(parameterName);
+				break;
+			}
+		}
+	});
+});
+
+Cypress.Commands.add("verifyNoErrorMessageInConsole", () => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
+		expect(lastEventLog.data.messages.length).to.equal(0);
+	});
+});
+
+Cypress.Commands.add("verifyTextValueIsNotPresentInColumnName", (columnName) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc, 2);
+		expect("").to.equal(lastEventLog.data.form.colName);
+	});
+});
+
+Cypress.Commands.add("verifyTextValueIsPresentInColumnName", (columnName) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc, 2);
+		expect(columnName).to.equal(lastEventLog.data.form.colName);
+	});
+});

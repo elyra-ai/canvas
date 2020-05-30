@@ -30,8 +30,30 @@ Cypress.Commands.add("shortcutKeysPaste", () => {
 });
 
 Cypress.Commands.add("shortcutKeysUndo", () => {
+	cy.get("#canvas-div-0").click(1, 1); // Put foucs on the SVG area, ready for key press
 	// Press Ctrl/Cmnd+z to Undo
 	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{z}", { release: false }));
+});
+
+Cypress.Commands.add("shortcutKeysRedo", () => {
+	cy.get("#canvas-div-0").click(1, 1); // Put foucs on the SVG area, ready for key press
+	// Press Ctrl/Cmnd+Shift+z to Redo
+	cy.useCtrlOrCmdKey().then((selectedKey) => {
+		cy.useShiftKey().then((shiftKey) => {
+			cy.get("body").type(selectedKey + shiftKey + "{z}", { release: false });
+		});
+	});
+});
+
+Cypress.Commands.add("shortcutKeysDelete", () => {
+	// Delete all selected objects via the Delete key
+	cy.useDeleteKey().then((deleteKey) => cy.get("body").type(deleteKey));
+});
+
+Cypress.Commands.add("shortcutKeysSelectAllCanvasObjects", () => {
+	cy.get("#canvas-div-0").click(1, 1); // Put foucs on the SVG area, ready for key press
+	// Press Ctrl/Cmnd+A to Select all objects in canvas
+	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{A}", { release: true }));
 });
 
 Cypress.Commands.add("useCtrlOrCmdKey", () => {
@@ -49,3 +71,6 @@ Cypress.Commands.add("useDeleteKey", () => "{del}");
 
 // Press 'shift' key on keyboard
 Cypress.Commands.add("useShiftKey", () => "{shift}");
+
+// Press 'backspace' key on keyboard
+Cypress.Commands.add("useBackspaceKey", () => "{backspace}");
