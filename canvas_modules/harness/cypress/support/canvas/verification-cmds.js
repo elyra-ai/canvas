@@ -326,8 +326,6 @@ Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 
 Cypress.Commands.add("verifyNumberOfPipelines", (noOfPipelines) => {
 	cy.getCanvasData().then((canvasData) => {
-		cy.log("Inside verifyNumberOfPipelines");
-		cy.log(String(canvasData.pipelines.length));
 		expect(canvasData.pipelines.length).to.equal(noOfPipelines);
 	});
 });

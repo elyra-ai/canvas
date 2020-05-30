@@ -132,7 +132,6 @@ Cypress.Commands.add("isCommentSelected", (commentText) => {
 });
 
 Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText) => {
-	cy.log("In editTextInComment");
 	cy.getCommentWithText(originalCommentText)
 		.dblclick()
 		.get("textarea")
