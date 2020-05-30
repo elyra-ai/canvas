@@ -108,8 +108,8 @@ describe("Test basic undo/redo operations", function() {
 		cy.get("#canvas-div-0").click(1, 1);
 
 		// Delete node
-		cy.deleteNodeUsingContextMenu("Var. File");
-		cy.verifyNodeIsDeleted("Var. File", true);
+		cy.deleteNodeUsingToolbar("Var. File");
+		cy.verifyNodeIsDeleted("Var. File");
 		// Undo and redo using toolbar
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfNodes(2);
@@ -117,7 +117,7 @@ describe("Test basic undo/redo operations", function() {
 		cy.verifyNumberOfNodes(1);
 
 		// Delete comment
-		cy.deleteCommentUsingContextMenu("This comment box should be edited.");
+		cy.deleteCommentUsingToolbar("This comment box should be edited.");
 		cy.verifyCommentIsDeleted("This comment box should be edited.");
 		// Undo and redo using toolbar
 		cy.clickToolbarUndo();
