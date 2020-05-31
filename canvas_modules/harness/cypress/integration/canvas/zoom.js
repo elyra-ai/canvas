@@ -25,7 +25,7 @@ describe("Test of zoom operations", function() {
 	it("Test zoom-in,  zoom-out using toolbar and verify zoom transform", function() {
 		cy.log("Log 1");
 		cy.clickToolbarZoomIn();
-		cy.verifyZoomTransform("translate(125.93749999999999,7.349999999999994) scale(1.1)");
+		cy.verifyZoomTransform("translate(128.4140625,7.349999999999994) scale(1.1)");
 		cy.log("Log 2");
 
 		cy.clickToolbarZoomOut();
