@@ -23,27 +23,23 @@ describe("Test of zoom operations", function() {
 	});
 
 	it("Test zoom-in,  zoom-out using toolbar and verify zoom transform", function() {
-		cy.log("Log 1");
 		cy.clickToolbarZoomIn();
+		// TODO: Following zoom transform value is different for every travis build - Skipping this test
 		cy.verifyZoomTransform("translate(128.4140625,7.349999999999994) scale(1.1)");
-		cy.log("Log 2");
 
 		cy.clickToolbarZoomOut();
 		cy.verifyZoomTransform("translate(184,32.5) scale(1)");
-		cy.log("Log 3");
 
 		cy.clickToolbarZoomIn();
 		cy.clickToolbarZoomIn();
 		cy.clickToolbarZoomOut();
 		cy.verifyZoomTransform("translate(139.5,7.349999999999994) scale(1.1)");
-		cy.log("Log 4");
 
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomIn();
 		cy.clickToolbarZoomOut();
 		cy.verifyZoomTransform("translate(224.4545454545455,55.363636363636374) scale(0.9090909090909091)");
-		cy.log("Log 5");
 
 		cy.clickToolbarZoomIn();
 		cy.clickToolbarZoomIn();
@@ -53,7 +49,6 @@ describe("Test of zoom operations", function() {
 		cy.clickToolbarZoomIn();
 		cy.clickToolbarZoomIn();
 		cy.verifyZoomTransform("translate(-159.34464500000047,-161.54759150000027) scale(1.771561000000001)");
-		cy.log("Log 6");
 
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
@@ -66,7 +61,6 @@ describe("Test of zoom operations", function() {
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
 		cy.verifyZoomTransform("translate(325.0590123625436,112.22211597568476) scale(0.6830134553650705)");
-		cy.log("Log 7");
 	});
 });
 
