@@ -35,6 +35,14 @@ Cypress.Commands.add("verifyZoomTransform", (transformValue) => {
 		.should("have.attr", "transform", transformValue);
 });
 
+Cypress.Commands.add("verifyZoomTransformDoesNotExist", () => {
+	cy.get(".svg-area")
+		.find("g")
+		.eq(0)
+		.its("transform")
+		.should("not.exist");
+});
+
 Cypress.Commands.add("verifyZoomTransformInExtraCanvas", (transformValue) => {
 	cy.get(".svg-area")
 		.eq(1)
@@ -741,4 +749,14 @@ Cypress.Commands.add("verifyCommentIsNotMoved", (commentText) => {
 		expect(lastEventLog.event).to.equal("editActionHandler(): undo");
 		expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
 	});
+});
+
+Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
+	cy.getPipeline()
+		.then((pipeline) => {
+			const zoom = pipeline.zoom;
+			expect(zoom.x).to.equal(x);
+			expect(zoom.y).to.equal(y);
+			expect(zoom.k).to.equal(k);
+		});
 });
