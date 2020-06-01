@@ -163,3 +163,10 @@ Cypress.Commands.add("verifyLinkPath", (srcNodeName, srcPortId, trgNodeName, trg
 				});
 		});
 });
+
+Cypress.Commands.add("deleteLinkAt", (linkX, linkY) => {
+	// Delete link using context menu
+	cy.get(".d3-svg-canvas-div")
+		.rightclick(linkX, linkY);
+	cy.clickOptionFromContextMenu("Delete");
+});

@@ -35,6 +35,14 @@ Cypress.Commands.add("verifyZoomTransform", (transformValue) => {
 		.should("have.attr", "transform", transformValue);
 });
 
+Cypress.Commands.add("verifyZoomTransformDoesNotExist", () => {
+	cy.get(".svg-area")
+		.find("g")
+		.eq(0)
+		.its("transform")
+		.should("not.exist");
+});
+
 Cypress.Commands.add("verifyZoomTransformInExtraCanvas", (transformValue) => {
 	cy.get(".svg-area")
 		.eq(1)
@@ -167,6 +175,16 @@ Cypress.Commands.add("verifyCommentExists", (commentText) => {
 	cy.verifyEditActionHandlerEditCommentEntryInConsole(commentText);
 });
 
+Cypress.Commands.add("verifyEditedCommentExists", (commentText) => {
+	// verify comment is in the DOM
+	cy.getCommentWithText(commentText)
+		.should("have.length", 1);
+
+	// verify that the comment is in the internal object model
+	cy.getCommentContentCountFromObjectModel(commentText)
+		.then((count) => expect(count).to.equal(1));
+});
+
 Cypress.Commands.add("verifyNodeElementLocation", (nodeName, nodeElement, xPos, yPos) => {
 	// nodeElement can be either "image" or "label"
 	cy.getNodeWithLabel(nodeName)
@@ -219,7 +237,20 @@ Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
 Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(".d3-data-link").length) {
-			cy.get(".d3-data-link").should("have.length", noOfLinks);
+			cy.document().then((doc) => {
+				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
+					// Connection Type - Halo
+					cy.get(".d3-data-link")
+						.its("length")
+						.then((canvasLinks) => {
+							const noOfCanvasLinks = canvasLinks / 2; // Divide by 2 because line and arrow head use same class
+							expect(noOfCanvasLinks).to.equal(noOfLinks);
+						});
+				} else {
+					// Connection Type - Ports
+					cy.get(".d3-data-link").should("have.length", noOfLinks);
+				}
+			});
 		} else {
 			// No Port Data Links found on canvas
 			expect(0).equal(noOfLinks);
@@ -275,7 +306,20 @@ Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
 Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(".d3-comment-link").length) {
-			cy.get(".d3-comment-link").should("have.length", noOfCommentLinks);
+			cy.document().then((doc) => {
+				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
+					// Connection Type - Halo
+					cy.get(".d3-comment-link")
+						.its("length")
+						.then((canvasLinks) => {
+							const noOfCanvasLinks = canvasLinks / 2; // Divide by 2 because line and arrow head use same class
+							expect(noOfCanvasLinks).to.equal(noOfCommentLinks);
+						});
+				} else {
+					// Connection Type - Ports
+					cy.get(".d3-comment-link").should("have.length", noOfCommentLinks);
+				}
+			});
 		} else {
 			// No comment links found on canvas
 			expect(0).equal(noOfCommentLinks);
@@ -318,6 +362,13 @@ Cypress.Commands.add("verifyNumberOfNodesInPipelineInExtraCanvas", (noOfNodes) =
 	// verify the number of nodes in the internal object model
 	cy.getPipelineForExtraCanvas().then((extraCanvasPipeline) => {
 		cy.getCountNodes(extraCanvasPipeline).should("eq", noOfNodes);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfNodesInPipelineAtIndex", (pipelineIndex, noOfNodes) => {
+	// verify pipeline 1 have 0 nodes
+	cy.getPipelineAtIndex(pipelineIndex).then((pipeline) => {
+		cy.getCountNodes(pipeline).should("eq", noOfNodes);
 	});
 });
 
@@ -571,6 +622,15 @@ Cypress.Commands.add("verifyObjectModelIsEmpty", () => {
 		.then((count) => expect(count).to.equal(0));
 });
 
+Cypress.Commands.add("verifyCanvasIsEmpty", () => {
+	// Verify no nodes on canvas
+	cy.verifyNumberOfNodes(0);
+	// Verify no comments on canvas
+	cy.verifyNumberOfComments(0);
+	// Verify no links on canvas
+	cy.verifyNumberOfLinks(0);
+});
+
 Cypress.Commands.add("verifyLinkBetweenNodes", (srcNodeName, trgNodeName, linkCount) => {
 	// verify that the link is on DOM
 	cy.get(".d3-selectable-link")
@@ -656,5 +716,47 @@ Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
 					const itemsVisible = totalItemsLength - hiddenItemsLength;
 					expect(itemsVisible).to.equal(noOfItems);
 				});
+		});
+});
+
+Cypress.Commands.add("verifyNodeIsMoved", (nodeName) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): moveObjects");
+		expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
+	});
+});
+
+Cypress.Commands.add("verifyCommentIsMoved", (commentText) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): moveObjects");
+		expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
+	});
+});
+
+Cypress.Commands.add("verifyNodeIsNotMoved", (nodeName) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): undo");
+		expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
+	});
+});
+
+Cypress.Commands.add("verifyCommentIsNotMoved", (commentText) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): undo");
+		expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
+	});
+});
+
+Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
+	cy.getPipeline()
+		.then((pipeline) => {
+			const zoom = pipeline.zoom;
+			expect(zoom.x).to.equal(x);
+			expect(zoom.y).to.equal(y);
+			expect(zoom.k).to.equal(k);
 		});
 });
