@@ -932,10 +932,6 @@ export default class ObjectModel {
 			if (newMessageObj.type === null || newMessageObj.type === "" || typeof newMessageObj.type === "undefined") {
 				newMessageObj.type = "unspecified";
 			}
-			// add a key to each new notification
-			if (!newMessageObj.key) {
-				newMessageObj.key = uuid4() + "-notification-message";
-			}
 			newMessages.push(newMessageObj);
 		});
 		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: newMessages });
@@ -951,10 +947,10 @@ export default class ObjectModel {
 		return notificationMessages;
 	}
 
-	deleteNotificationMessages(messageKeys) {
+	deleteNotificationMessages(ids) {
 		// accept a single key or array of keys
-		const filterKeys = Array.isArray(messageKeys) ? messageKeys : [messageKeys];
-		const newMessages = this.getNotificationMessages().filter((message) => !filterKeys.includes(message.key));
+		const filterIds = Array.isArray(ids) ? ids : [ids];
+		const newMessages = this.getNotificationMessages().filter((message) => !filterIds.includes(message.id));
 		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: newMessages });
 	}
 
