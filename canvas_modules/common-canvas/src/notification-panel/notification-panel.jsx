@@ -103,7 +103,7 @@ class NotificationPanel extends React.Component {
 		const notificationHeader = document.getElementsByClassName("notification-panel-header")[0];
 		const notificationMessages = document.getElementsByClassName("notification-panel-messages-container")[0];
 
-		if (this.props.isNotificationOpen &&
+		if (!this.props.notificationConfig.keepOpen && this.props.isNotificationOpen &&
 				notificationIcon && !notificationIcon.contains(e.target) &&
 				notificationHeader && !notificationHeader.contains(e.target) &&
 				notificationMessages && !notificationMessages.contains(e.target)) {
@@ -193,7 +193,8 @@ NotificationPanel.propTypes = {
 		clearAllMessage: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.object
-		])
+		]),
+		keepOpen: PropTypes.bool
 	}),
 	isNotificationOpen: PropTypes.bool,
 	messages: PropTypes.array,
