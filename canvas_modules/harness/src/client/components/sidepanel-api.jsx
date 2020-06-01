@@ -463,7 +463,6 @@ export default class SidePanelAPI extends React.Component {
 				content: messageContent,
 				timestamp: this.state.appendTimestamp ? new Date().toLocaleString("en-US") : null,
 				callback: this.state.attachCallback ? this.notificationMessageCallback : null,
-				closeMessage: this.state.dismissMessage ? "Dismiss" : null
 			}
 		];
 	}

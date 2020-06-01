@@ -495,11 +495,6 @@ export default class CanvasController {
 		this.objectModel.clearNotificationMessages();
 	}
 
-	// Removes the notification message(s) with the given id(s)
-	deleteNotificationMessages(ids) {
-		this.objectModel.deleteNotificationMessages(ids);
-	}
-
 	// Returns the array of currently displayed notification messages shown in
 	// the notification panel. The format of a notification message is an object
 	// with these fields:
