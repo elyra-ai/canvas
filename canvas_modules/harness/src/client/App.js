@@ -851,8 +851,8 @@ export default class App extends React.Component {
 
 	appendNotificationMessages(message) {
 		this.harnessNotificationMessages = this.harnessNotificationMessages.concat(message);
-		this.canvasController.setNotificationMessages(this.flowNotificationMessages.concat(this.harnessNotificationMessages));
-		this.log("Set Notification Messages", "Set " + (this.flowNotificationMessages + this.harnessNotificationMessages.length) + " notification messages");
+		this.canvasController.setNotificationMessages(this.canvasController.getNotificationMessages().concat(message));
+		this.log("Set Notification Messages", "Set " + (this.canvasController.getNotificationMessages().length) + " notification messages");
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
@@ -1641,8 +1641,10 @@ export default class App extends React.Component {
 			{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
 		];
 
-		const notificationConfig = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications" };
-		const notificationConfig2 = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications Canvas 2" };
+		const notificationConfig = { action: "notification", label: "Notifications", notificationHeader: "Notification Center", notificationSubtitle: "subtitle status", enable: true,
+			emptyMessage: "You don't have any notifications right now.", clearAllMessage: "Clear all" };
+		const notificationConfig2 = { action: "notification", label: "Notifications", notificationHeader: "Notification Center Canvas 2", enable: true,
+			emptyMessage: "You don't have any notifications right now.", clearAllMessage: "Clear all" };
 		const contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
 			defaultMenuEntries: {
