@@ -52,23 +52,20 @@ const notificationMessageCallback = sinon.spy();
 const notificationMessage0 = {
 	id: "notification-0",
 	title: "Notification Message 0",
-	type: "info",
-	key: "key-0"
+	type: "info"
 };
 const notificationMessage1 = {
 	id: "notification-1",
 	title: "Notification Message 1",
 	type: "success",
-	content: "Notification message 1 content",
-	key: "key-1"
+	content: "Notification message 1 content"
 };
 const notificationMessage2 = {
 	id: "notification-2",
 	title: "Notification Message 2",
 	type: "warning",
 	content: "Notification message 2 content. This second line should wrap to the next line.",
-	timestamp: "May 7, 2018",
-	key: "key-2"
+	timestamp: "May 7, 2018"
 };
 const notificationMessage3 = {
 	id: "notification-3",
@@ -76,8 +73,7 @@ const notificationMessage3 = {
 	type: "error",
 	content: "Notification message 3 content",
 	timestamp: "May 7, 2018",
-	callback: notificationMessageCallback,
-	key: "key-3"
+	callback: notificationMessageCallback
 };
 
 const notificationMessage4 = {
@@ -102,12 +98,6 @@ const notificationMessages = [
 	notificationMessage1,
 	notificationMessage2,
 	notificationMessage3
-];
-
-const notificationMessages2 = [
-	notificationMessage4,
-	notificationMessage5,
-	notificationMessage6
 ];
 
 describe("notification panel renders correctly", () => {
@@ -236,16 +226,6 @@ describe("canvas controller APIs for notification panel work correctly", () => {
 		expect(canvasController.getNotificationMessages()).to.eql(notificationMessages);
 	});
 
-	it("set messages with new keys, if not present, correctly in canvasController", () => {
-		canvasController.setNotificationMessages([]);
-		expect(canvasController.getNotificationMessages()).to.eql([]);
-
-		canvasController.setNotificationMessages(notificationMessages2);
-
-		expect(canvasController.getNotificationMessages()).to.not.eql(notificationMessages2);
-		compareMessages(canvasController.getNotificationMessages(), notificationMessages2);
-	});
-
 	it("get messages correctly in canvasController", () => {
 		canvasController.setNotificationMessages(notificationMessages);
 
@@ -276,26 +256,27 @@ describe("null, empty string and undefined type messages are handled correctly",
 			type: "unspecified"
 		};
 		canvasController.setNotificationMessages([notificationMessage4]);
-		compareMessages([canvasController.getNotificationMessages("unspecified")], [expectedMessage4]);
+		expect(canvasController.getNotificationMessages("unspecified")).to.eql([expectedMessage4]);
 	});
 
 	it("gets unspecified message correctly if type passed in is null", () => {
 		const expectedMessage5 = {
 			id: "notification-5",
 			title: "Notification Message 5",
-			type: null
+			type: "unspecified"
 		};
 		canvasController.setNotificationMessages([notificationMessage5]);
-		compareMessages([canvasController.getNotificationMessages("unspecified")], [expectedMessage5]);
+		expect(canvasController.getNotificationMessages("unspecified")).to.eql([expectedMessage5]);
 	});
 
 	it("gets unspecified message correctly if type is not passed in", () => {
 		const expectedMessage6 = {
 			id: "notification-6",
 			title: "Notification Message 6",
+			type: "unspecified"
 		};
 		canvasController.setNotificationMessages([notificationMessage6]);
-		compareMessages([canvasController.getNotificationMessages("unspecified")], [expectedMessage6]);
+		expect(canvasController.getNotificationMessages("unspecified")).to.eql([expectedMessage6]);
 	});
 });
 
@@ -591,9 +572,3 @@ describe("notification center buttons work properly", () => {
 
 	});
 });
-
-
-function compareMessages(messages1, messages2) {
-	// don't compare the randomly generated keys (if any) to the original messages
-	expect(messages1.forEach((message) => delete message.key)).to.eql(messages2.forEach((message) => delete message.key));
-}
