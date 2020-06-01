@@ -58,6 +58,12 @@ class NotificationPanel extends React.Component {
 				<Icon type={iconType} className={`notification-message-icon-${iconType}`} />
 			</div>);
 
+			const closeMessage = message.closeMessage
+				? (<div className = "notification-message-close" onClick={this.deleteNotification.bind(this, message.key)}>
+					{message.closeMessage}
+				</div>)
+				: null;
+
 			const timestamp = message.timestamp
 				? (<div className="notification-message-timestamp">
 					<div className="notification-message-timestamp-icon">
@@ -83,6 +89,7 @@ class NotificationPanel extends React.Component {
 							{message.content}
 						</div>
 						{timestamp}
+						{closeMessage}
 					</div>
 				</div>
 			</div>);
@@ -109,6 +116,10 @@ class NotificationPanel extends React.Component {
 		if (messageCallback) {
 			messageCallback(id);
 		}
+	}
+
+	deleteNotification(messageKey) {
+		this.props.canvasController.deleteNotificationMessages(messageKey);
 	}
 
 	clearNotificationMessages() {
