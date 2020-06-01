@@ -1627,7 +1627,7 @@ export default class App extends React.Component {
 		const toolbarConfig = [
 			{ action: "palette", label: "Palette", enable: true },
 			{ divider: true },
-			{ action: "stopit", label: "Stop Execution", enable: false, iconEnabled: (<StopFilledAlt32 />), iconDisabled: (<StopFilledAlt32 />)  },
+			{ action: "stopit", label: "Stop Execution", enable: false, iconEnabled: (<StopFilledAlt32 />), iconDisabled: (<StopFilledAlt32 />) },
 			{ action: "runit", label: "Run Pipeline", enable: true, iconEnabled: (<Play32 />), iconDisabled: (<Play32 />) },
 			{ divider: true },
 			{ action: "undo", label: "Undo", enable: true },
