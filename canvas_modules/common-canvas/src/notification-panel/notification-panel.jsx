@@ -99,16 +99,18 @@ class NotificationPanel extends React.Component {
 	}
 
 	handleNotificationPanelClickOutside(e) {
-		const notificationIcon = document.getElementsByClassName("notificationCounterIcon")[0];
-		const notificationHeader = document.getElementsByClassName("notification-panel-header")[0];
-		const notificationMessages = document.getElementsByClassName("notification-panel-messages-container")[0];
+		if (!this.props.notificationConfig.keepOpen) {
+			const notificationIcon = document.getElementsByClassName("notificationCounterIcon")[0];
+			const notificationHeader = document.getElementsByClassName("notification-panel-header")[0];
+			const notificationMessages = document.getElementsByClassName("notification-panel-messages-container")[0];
 
-		if (!this.props.notificationConfig.keepOpen && this.props.isNotificationOpen &&
-				notificationIcon && !notificationIcon.contains(e.target) &&
-				notificationHeader && !notificationHeader.contains(e.target) &&
-				notificationMessages && !notificationMessages.contains(e.target)) {
-			this.props.canvasController.toolbarActionHandler("closeNotificationPanel");
-			e.stopPropagation(); // Prevent D3 canvas code from clearing the selections.
+			if (this.props.isNotificationOpen &&
+					notificationIcon && !notificationIcon.contains(e.target) &&
+					notificationHeader && !notificationHeader.contains(e.target) &&
+					notificationMessages && !notificationMessages.contains(e.target)) {
+				this.props.canvasController.toolbarActionHandler("closeNotificationPanel");
+				e.stopPropagation(); // Prevent D3 canvas code from clearing the selections.
+			}
 		}
 	}
 

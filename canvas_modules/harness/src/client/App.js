@@ -1642,7 +1642,7 @@ export default class App extends React.Component {
 		];
 
 		const notificationConfig = { action: "notification", label: "Notifications", notificationHeader: "Notification Center", notificationSubtitle: "subtitle status", enable: true,
-			emptyMessage: "You don't have any notifications right now.", clearAllMessage: "Clear all" };
+			emptyMessage: "You don't have any notifications right now.", clearAllMessage: "Clear all", keepOpen: true };
 		const notificationConfig2 = { action: "notification", label: "Notifications", notificationHeader: "Notification Center Canvas 2", enable: true,
 			emptyMessage: "You don't have any notifications right now.", clearAllMessage: "Clear all" };
 		const contextMenuConfig = {
