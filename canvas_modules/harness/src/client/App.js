@@ -67,6 +67,8 @@ import CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
+import { Play32, StopFilledAlt32 } from "@carbon/icons-react";
+
 import {
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
@@ -1108,7 +1110,7 @@ export default class App extends React.Component {
 		} else if (data.editType === "editNode") {
 			this.editNodeHandler(data.targetObject.id, data.pipelineId, inExtraCanvas);
 
-		} else if (data.editType === "run") {
+		} else if (data.editType === "runit") {
 			if (this.state.selectedCanvasDropdownFile === "allTypesCanvas.json" ||
 					this.state.selectedCanvasDropdownFile === "stylesCanvas.json") {
 				this.runProgress();
@@ -1625,8 +1627,8 @@ export default class App extends React.Component {
 		const toolbarConfig = [
 			{ action: "palette", label: "Palette", enable: true },
 			{ divider: true },
-			{ action: "stop", label: "Stop Execution", enable: false },
-			{ action: "run", label: "Run Pipeline", enable: true },
+			{ action: "stopit", label: "Stop Execution", enable: false, iconEnabled: (<StopFilledAlt32 />), iconDisabled: (<StopFilledAlt32 />)  },
+			{ action: "runit", label: "Run Pipeline", enable: true, iconEnabled: (<Play32 />), iconDisabled: (<Play32 />) },
 			{ divider: true },
 			{ action: "undo", label: "Undo", enable: true },
 			{ action: "redo", label: "Redo", enable: true },
