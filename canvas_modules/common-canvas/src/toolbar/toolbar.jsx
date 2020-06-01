@@ -195,10 +195,14 @@ class Toolbar extends React.Component {
 		// Customer provided icon.
 		if (actionObj.iconEnabled && actionObj.iconDisabled) {
 			const customIcon = actionObj.enable ? actionObj.iconEnabled : actionObj.iconDisabled;
-			const customIconClass = classNames("canvas-icon", "toolbar-icons", overflowClassName, iconClassname);
-			icon = (<SVG id={"toolbar-icon-" + actionObj.action} className={customIconClass} disabled={!actionObj.enable}
-				src={customIcon}
-			/>);
+			if (typeof customIcon === "string") {
+				const customIconClass = classNames("canvas-icon", "toolbar-icons", overflowClassName, iconClassname);
+				icon = (<SVG id={"toolbar-icon-" + actionObj.action} className={customIconClass} disabled={!actionObj.enable}
+					src={customIcon}
+				/>);
+			} else {
+				icon = customIcon;
+			}
 		}
 
 		const textContent = (typeof actionObj.textContent !== "undefined") ? <div className="text-content"> {actionObj.textContent} </div> : null;
