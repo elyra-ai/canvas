@@ -495,9 +495,9 @@ export default class CanvasController {
 		this.objectModel.clearNotificationMessages();
 	}
 
-	// Removes the notification message(s) with the given key(s)
-	deleteNotificationMessages(messageKeys) {
-		this.objectModel.deleteNotificationMessages(messageKeys);
+	// Removes the notification message(s) with the given id(s)
+	deleteNotificationMessages(ids) {
+		this.objectModel.deleteNotificationMessages(ids);
 	}
 
 	// Returns the array of currently displayed notification messages shown in
@@ -510,7 +510,6 @@ export default class CanvasController {
 	//   "content": string, html, JSX Object (Optional),
 	//   "timestamp": string (Optional)
 	//   "callback": function, the callback function when a message is clicked (Required)
-	//   "key": string, a uuid given to the message once it is added to the stack
 	// }
 	getNotificationMessages(messageType) {
 		return this.objectModel.getNotificationMessages(messageType);
