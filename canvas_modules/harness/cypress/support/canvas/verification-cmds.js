@@ -760,3 +760,102 @@ Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
 			expect(zoom.k).to.equal(k);
 		});
 });
+
+Cypress.Commands.add("verifyTipForCategory", (nodeCategory) => {
+	// Verify the tip shows next to given category
+	cy.get(".tip-palette-item")
+		.should("not.eq", null);
+	// Verify tip label
+	cy.get(".tip-palette-item")
+		.find(".tip-palette-label")
+		.should("have.text", nodeCategory);
+	// Verify tip description
+	cy.get(".tip-palette-item")
+		.find(".tip-palette-desc")
+		.should("have.text", "Description for " + nodeCategory);
+});
+
+Cypress.Commands.add("verifyTipForNodeInCategory", (nodeName, nodeCategory) => {
+	// Verify the tip shows next to the node in category
+	cy.get(".tip-palette-item")
+		.should("not.eq", null);
+	// Verify tip label
+	cy.findNodeIndexInPalette(nodeName)
+		.then((nodeIndex) => {
+			cy.get(".palette-list-item")
+				.eq(nodeIndex)
+				.then((paletteItem) => {
+					// get node dimensions
+					const nodeRight = paletteItem[0].getBoundingClientRect().x + paletteItem[0].getBoundingClientRect().width;
+					cy.get(".tip-palette-item")
+						.then((tip) => {
+							const tipLeft = tip[0].getBoundingClientRect().x;
+							expect(tipLeft).to.be.greaterThan(nodeRight);
+						});
+				});
+		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForNodeInCategory", (nodeName) => {
+	// Verify the tip doesn't show for node in category
+	cy.get(".tip-palette-item")
+		.should("not.exist");
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForNode", (nodeName) => {
+	// Verify the tip doesn't show for node on canvas
+	cy.getNodeWithLabel(nodeName)
+		.then((node) => {
+			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
+			cy.get(nodeTipSelector)
+				.should("not.exist");
+		});
+});
+
+Cypress.Commands.add("verifyTipForNodeAtLocation", (nodeName, tipLocation) => {
+	// Verify the tip shows "below" the node "Define Types"
+	cy.getNodeWithLabel(nodeName)
+		.then((node) => {
+			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
+			cy.get(nodeTipSelector)
+				.then((tip) => {
+					// Verify tip is displayed on canvas
+					cy.wrap(tip).should("have.length", 1);
+
+					// Verify tip location
+					const tipTop = tip[0].offsetTop;
+					if (tipLocation === "below") {
+						expect(tipTop).to.be.greaterThan(node[0].getBoundingClientRect().top + node[0].getBoundingClientRect().height);
+					} else if (location === "above") {
+						expect(tipTop).to.be.lessThan(node[0].getBoundingClientRect().top);
+					}
+
+					// Verify tip label
+					cy.wrap(tip)
+						.find(".tip-node-label")
+						.should("have.text", nodeName);
+				});
+		});
+});
+
+Cypress.Commands.add("verifyTipForInputPortOfNode", (nodeName, inputPortId, portName) => {
+	cy.getNodePortSelector(nodeName, "inp_port", inputPortId)
+		.then((portSelector) => {
+			cy.getNodePortTipSelector(inputPortId)
+				.then((portTipSelector) => {
+					cy.get(portTipSelector)
+						.then((tip) => {
+							// Verify tip is displayed on canvas
+							cy.wrap(tip).should("have.length", 1);
+
+							cy.get(portSelector)
+								.then((port) => {
+									console.log(port[0].getBoundingClientRect());
+									console.log(port[0].getBoundingClientRect().height);
+									console.log(tip[0].getBoundingClientRect().top);
+									cy.get("#harness-app-container").trigger("mouseover", port[0].getBoundingClientRect().top, port[0].getBoundingClientRect().height);
+								});
+						});
+				});
+		});
+});

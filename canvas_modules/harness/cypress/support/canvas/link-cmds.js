@@ -131,6 +131,12 @@ Cypress.Commands.add("getNodePortSelectorInSupernode", (supernodeName, nodeName,
 		});
 });
 
+Cypress.Commands.add("getNodePortTipSelector", (portId) => {
+	const inst = document.extraCanvas === true ? "1" : "0";
+	const portTipSelector = `[data-id='node_port_tip_${inst}_${portId}']`;
+	return portTipSelector;
+});
+
 Cypress.Commands.add("getPortLinks", (pipeline, srcNodeName, srcPortId, trgNodeName, trgPortId) => {
 	const links = pipeline.links;
 	cy.getNodeIdForLabel(srcNodeName)
