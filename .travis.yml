@@ -20,7 +20,7 @@ branches:
     - master-last_success
     - release-*
 language: node_js
-node_js: "8"
+node_js: "12"
 addons:
   apt:
     packages:
