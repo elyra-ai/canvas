@@ -22,7 +22,6 @@ const path = require("path");
 const webpack = require("webpack");
 const TerserPlugin = require("terser-webpack-plugin-legacy");
 const babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
-const SassLintPlugin = require("sasslint-webpack-plugin");
 const constants = require("./lib/constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
@@ -75,14 +74,6 @@ const rules = [
 const plugins = [
 	new webpack.DefinePlugin({
 		"process.env.NODE_ENV": "'production'"
-	}),
-	new SassLintPlugin({
-		configFile: ".sass-lint.yml",
-		context: "./src",
-		glob: "**/*.scss",
-		quiet: false,
-		failOnWarning: true,
-		failOnError: true
 	}),
 	new webpack.optimize.OccurrenceOrderPlugin(),
 	new TerserPlugin(),
