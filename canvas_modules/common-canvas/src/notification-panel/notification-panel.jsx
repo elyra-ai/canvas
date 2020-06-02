@@ -149,6 +149,19 @@ class NotificationPanel extends React.Component {
 					{this.props.notificationConfig && this.props.notificationConfig.emptyMessage ? this.props.notificationConfig.emptyMessage : null}
 				</div>
 			</div>);
+		const clearAll = this.props.notificationConfig && this.props.notificationConfig.clearAllMessage
+			? (<div className="notification-panel-clear-all-container">
+				<Button
+					className="notification-panel-clear-all"
+					onClick={this.clearNotificationMessages.bind(this)}
+					kind="ghost"
+					size="small"
+					disabled={this.props.messages.length === 0}
+				>
+					{this.props.notificationConfig.clearAllMessage}
+				</Button>
+			</div>)
+			: null;
 
 		return (<div className={"notification-panel-container " + notificationPanelClassName} >
 			<div className="notification-panel">
@@ -161,17 +174,7 @@ class NotificationPanel extends React.Component {
 					<div className="notification-panel-messages">
 						{notificationPanelMessages}
 					</div>
-					<div className="notification-panel-clear-all-container">
-						<Button
-							className="notification-panel-clear-all"
-							onClick={this.clearNotificationMessages.bind(this)}
-							kind="ghost"
-							size="small"
-							disabled={this.props.messages.length === 0}
-						>
-							{this.props.notificationConfig ? this.props.notificationConfig.clearAllMessage : null}
-						</Button>
-					</div>
+					{clearAll}
 				</div>
 				<svg className="notification-popup-arrow" x="0px" y="0px" viewBox="0 0 16 9">
 					<polyline points="0,9 8,0 16,9" />
