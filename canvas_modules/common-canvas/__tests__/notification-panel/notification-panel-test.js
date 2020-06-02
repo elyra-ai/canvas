@@ -490,8 +490,37 @@ describe("notification center buttons work properly", () => {
 		wrapper.unmount();
 	});
 
-	it("notification clear all button", () => {
+
+	it("notification clear all button doesn't render when disabled", () => {
 		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
+		wrapper = mountWithIntl(<CommonCanvas
+			config={canvasConfig}
+			contextMenuHandler={contextMenuHandler}
+			contextMenuActionHandler={contextMenuActionHandler}
+			editActionHandler={editActionHandler}
+			clickActionHandler={clickActionHandler}
+			decorationActionHandler={decorationActionHandler}
+			selectionChangeHandler={selectionChangeHandler}
+			tipHandler={tipHandler}
+			toolbarConfig={toolbarConfig}
+			notificationConfig={notificationConfig}
+			toolbarMenuActionHandler={toolbarMenuActionHandler}
+			showRightFlyout={false}
+			canvasController={canvasController}
+		/>);
+		// open the notification center
+		const notificationButton = wrapper.find("li[id='notification-open-action'] button.list-item");
+		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
+		notificationButton.simulate("click");
+		wrapper.update();
+		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(0);
+
+		// check that there is no clear all button
+		expect(wrapper.find(".notification-panel-container button.notification-panel-clear-all")).to.have.length(0);
+	});
+
+	it("notification clear all button renders and works when enabled", () => {
+		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom", clearAllMessage: "clear all" };
 		wrapper = mountWithIntl(<CommonCanvas
 			config={canvasConfig}
 			contextMenuHandler={contextMenuHandler}
