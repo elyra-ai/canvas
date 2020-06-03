@@ -87,7 +87,7 @@ export default class SidePanelAPI extends React.Component {
 			appendTimestamp: false,
 			attachCallback: false,
 			appendLink: false,
-			dismissMessage: false,
+			closeMessage: false,
 			notificationTitle: "",
 			notificationMessage: "",
 			notificationType: NOTIFICATION_MESSAGE_TYPE.INFO,
@@ -308,8 +308,8 @@ export default class SidePanelAPI extends React.Component {
 		this.setState({ appendLink: checked });
 	}
 
-	onDismissToggle(checked) {
-		this.setState({ dismissMessage: checked });
+	onCloseToggle(checked) {
+		this.setState({ closeMessage: checked });
 	}
 
 	getNodePortList(items) {
@@ -463,7 +463,7 @@ export default class SidePanelAPI extends React.Component {
 				content: messageContent,
 				timestamp: this.state.appendTimestamp ? new Date().toLocaleString("en-US") : null,
 				callback: this.state.attachCallback ? this.notificationMessageCallback : null,
-				closeMessage: this.state.dismissMessage ? "Dismiss" : null
+				closeMessage: this.state.closeMessage ? "Dismiss" : null
 			}
 		];
 	}
@@ -756,8 +756,8 @@ export default class SidePanelAPI extends React.Component {
 				<div>
 					<Toggle
 						id="harness-sidepanel-api-notification-dismiss"
-						toggled={this.state.dismissMessage}
-						onToggle={this.onDismissToggle.bind(this)}
+						toggled={this.state.closeMessage}
+						onToggle={this.onCloseToggle.bind(this)}
 					/>
 				</div>
 			</div>);
