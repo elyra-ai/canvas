@@ -59,7 +59,7 @@ class NotificationPanel extends React.Component {
 			</div>);
 
 			const closeMessage = message.closeMessage
-				? (<div className = "notification-message-close" onClick={this.deleteNotification.bind(this, message.key)}>
+				? (<div className = "notification-message-close" onClick={this.deleteNotification.bind(this, message.id)}>
 					{message.closeMessage}
 				</div>)
 				: null;
