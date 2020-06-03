@@ -47,12 +47,16 @@ _defineConstant("NONE_SAVE_ZOOM", "None");
 _defineConstant("LOCAL_STORAGE", "LocalStorage");
 _defineConstant("PIPELINE_FLOW", "Pipelineflow");
 
+_defineConstant("ZOOM_TYPE_REGULAR", "Regular");
+_defineConstant("ZOOM_TYPE_HIDE_NEGATIVE_SPACE1", "HideNegativeSpace-1");
+_defineConstant("ZOOM_TYPE_HIDE_NEGATIVE_SPACE2", "HideNegativeSpace-2");
+
 _defineConstant("NONE_DRAG", "None");
 _defineConstant("DURING_DRAG", "During");
 _defineConstant("AFTER_DRAG", "After");
 
-_defineConstant("MOUSE_INTERACTION", "Mouse");
-_defineConstant("TRACKPAD_INTERACTION", "Trackpad");
+_defineConstant("INTERACTION_MOUSE", "Mouse");
+_defineConstant("INTERACTION_TRACKPAD", "Trackpad");
 
 _defineConstant("PORTS_CONNECTION", "Ports");
 _defineConstant("HALO_CONNECTION", "Halo");

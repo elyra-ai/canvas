@@ -44,8 +44,8 @@ import {
 	HORIZONTAL_FORMAT,
 	HALO_CONNECTION,
 	PORTS_CONNECTION,
-	MOUSE_INTERACTION,
-	TRACKPAD_INTERACTION,
+	INTERACTION_MOUSE,
+	INTERACTION_TRACKPAD,
 	CURVE_LINKS,
 	ELBOW_LINKS,
 	STRAIGHT_LINKS,
@@ -62,6 +62,9 @@ import {
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	FLYOUT,
+	ZOOM_TYPE_REGULAR,
+	ZOOM_TYPE_HIDE_NEGATIVE_SPACE1,
+	ZOOM_TYPE_HIDE_NEGATIVE_SPACE2,
 	MODAL,
 	TIP_PALETTE,
 	TIP_NODES,
@@ -535,6 +538,32 @@ export default class SidePanelForms extends React.Component {
 		</div>
 		);
 
+		var zoomType = (<div>
+			<div className="harness-sidepanel-children" id="harness-sidepanel-zoom-type">
+				<div className="harness-sidepanel-headers">Zoom Type</div>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedZoomType" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedZoomType")}
+				>
+					<RadioButton
+						value={ZOOM_TYPE_REGULAR}
+						labelText={ZOOM_TYPE_REGULAR}
+					/>
+					<RadioButton
+						value={ZOOM_TYPE_HIDE_NEGATIVE_SPACE1}
+						labelText={ZOOM_TYPE_HIDE_NEGATIVE_SPACE1}
+					/>
+					<RadioButton
+						value={ZOOM_TYPE_HIDE_NEGATIVE_SPACE2}
+						labelText={ZOOM_TYPE_HIDE_NEGATIVE_SPACE2}
+					/>
+				</RadioButtonGroup>
+			</div>
+		</div>
+		);
+
 		var rbSize = { "height": "80px" };
 		var entrySize = { "width": "80px", "minWidth": "80px" };
 
@@ -733,12 +762,12 @@ export default class SidePanelForms extends React.Component {
 				defaultSelected={this.props.getStateValue("selectedInteractionType")}
 			>
 				<RadioButton
-					value={MOUSE_INTERACTION}
-					labelText={MOUSE_INTERACTION}
+					value={INTERACTION_MOUSE}
+					labelText={INTERACTION_MOUSE}
 				/>
 				<RadioButton
-					value={TRACKPAD_INTERACTION}
-					labelText={TRACKPAD_INTERACTION}
+					value={INTERACTION_TRACKPAD}
+					labelText={INTERACTION_TRACKPAD}
 				/>
 			</RadioButtonGroup>
 		</div>);
@@ -1110,9 +1139,11 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{snapToGrid}
 					{divider}
-					{enableZoomIntoSubFlows}
+					{zoomType}
 					{divider}
 					{saveZoom}
+					{divider}
+					{enableZoomIntoSubFlows}
 					{divider}
 					{paletteLayout}
 					{divider}
