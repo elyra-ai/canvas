@@ -22,6 +22,9 @@ describe("Test of custom panels", function() {
 	});
 
 	it("Test custom panels are working correctly", function() {
+		cy.get(".harness-custom-control-custom-toggle").first()
+			.find(".bx--form-item")
+			.click();
 		cy.get(".harness-custom-control-custom-toggle label").first()
 			.click();
 		// custom toggle should have an error
