@@ -34,8 +34,8 @@ _defineConstant("NOTIFICATION_ICON", "notificationCounterIcon");
 
 _defineConstant("DEFAULT_NOTIFICATION_HEADER", "Notifications");
 
-_defineConstant("MOUSE_INTERACTION", "Mouse");
-_defineConstant("TRACKPAD_INTERACTION", "Trackpad");
+_defineConstant("INTERACTION_MOUSE", "Mouse");
+_defineConstant("INTERACTION_TRACKPAD", "Trackpad");
 
 _defineConstant("LINK_TYPE_CURVE", "Curve");
 _defineConstant("LINK_TYPE_ELBOW", "Elbow");

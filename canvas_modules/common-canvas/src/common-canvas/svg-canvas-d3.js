@@ -97,6 +97,7 @@ export default class SVGCanvasD3 {
 				this.config.enableBoundingRectangles !== config.enableBoundingRectangles ||
 				this.config.enableSaveZoom !== config.enableSaveZoom ||
 				this.config.enableZoomIntoSubFlows !== config.enableZoomIntoSubFlows ||
+				this.config.enableZoomType !== config.enableZoomType ||
 				this.config.enableAssocLinkCreation !== config.enableAssocLinkCreation ||
 				this.config.enableAssocLinkType !== config.enableAssocLinkType ||
 				this.config.enableDragWithoutSelect !== config.enableDragWithoutSelect ||

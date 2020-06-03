@@ -75,7 +75,7 @@ import {
 	SIDE_PANEL_API,
 	SIDE_PANEL,
 	CHOOSE_FROM_LOCATION,
-	MOUSE_INTERACTION,
+	INTERACTION_MOUSE,
 	PORTS_CONNECTION,
 	VERTICAL_FORMAT,
 	NONE_SAVE_ZOOM,
@@ -91,6 +91,7 @@ import {
 	EXAMPLE_APP_TABLES,
 	CUSTOM,
 	FLYOUT,
+	ZOOM_TYPE_REGULAR,
 	NONE_DRAG,
 	INPUT_PORT,
 	OUTPUT_PORT,
@@ -143,11 +144,12 @@ export default class App extends React.Component {
 			selectedSnapToGridType: NONE_DRAG,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
-			selectedInteractionType: MOUSE_INTERACTION,
+			selectedInteractionType: INTERACTION_MOUSE,
 			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormat: VERTICAL_FORMAT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
+			selectedZoomType: ZOOM_TYPE_REGULAR,
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
@@ -1600,6 +1602,7 @@ export default class App extends React.Component {
 			// dropZoneCanvasContent: dropZoneCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
+			enableZoomType: this.state.selectedZoomType,
 			// enableCanvasLayout: {
 			// 	dataLinkArrowHead: true
 			// }
