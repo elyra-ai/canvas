@@ -9,8 +9,8 @@
     "bundle-report": "webpack-bundle-analyzer --host 127.0.0.1 --port 8888 .build/stats.json"
   },
   "engines": {
-    "node": "12.16.1",
-    "npm": "6.13.4"
+    "node": "12.x",
+    "npm": "6.x"
   },
   "dependencies": {
     "body-parser": "1.19.0",
