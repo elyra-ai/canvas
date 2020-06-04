@@ -11,7 +11,20 @@
      "custom_name_checkbox": false,
      "hidden_field": true,
      "custom_name": "",
-     "annotation": []
+     "annotation": [],
+     "options": " ",
+     "option_one": [
+       null,
+       "choice A"
+     ],
+     "option_two": [
+       null,
+       "choice A"
+     ],
+     "option_three": [
+       null,
+       "choice A"
+     ]
   },
   "complex_types": [
     {
@@ -62,6 +75,60 @@
           "role": "new_column"
         }
       ]
+    },
+    {
+      "id": "optionOneComplexType",
+      "parameters": [
+        {
+          "id": "option_1",
+          "type": "string",
+          "required": false
+        },
+        {
+          "id": "choices",
+          "enum": [
+            "choice A",
+            "choice B"
+          ],
+          "default": "choice A"
+        }
+      ]
+    },
+    {
+      "id": "optionTwoComplexType",
+      "parameters": [
+        {
+          "id": "option_2",
+          "type": "string",
+          "required": false
+        },
+        {
+          "id": "choices",
+          "enum": [
+            "choice A",
+            "choice B"
+          ],
+          "default": "choice A"
+        }
+      ]
+    },
+    {
+      "id": "optionThreeComplexType",
+      "parameters": [
+        {
+          "id": "option_3",
+          "type": "string",
+          "required": false
+        },
+        {
+          "id": "choices",
+          "enum": [
+            "choice A",
+            "choice B"
+          ],
+          "default": "choice A"
+        }
+      ]
     }
   ],
   "parameters": [
@@ -84,6 +151,29 @@
       "id": "layout_struct",
       "type": "nameLayout",
       "default": []
+    },
+    {
+      "id": "options",
+      "enum": [
+        " ",
+        "options"
+      ],
+      "default": " "
+    },
+    {
+      "id": "option_one",
+      "type": "optionOneComplexType",
+      "required": false
+    },
+    {
+      "id": "option_two",
+      "type": "optionTwoComplexType",
+      "required": false
+    },
+    {
+      "id": "option_three",
+      "type": "optionThreeComplexType",
+      "required": false
     }
   ],
   "uihints": {
@@ -161,6 +251,60 @@
             }
           }
         ]
+      },
+      {
+        "complex_type_ref": "optionOneComplexType",
+        "parameters": [
+          {
+            "parameter_ref": "option_1",
+            "description": {
+              "default": "Name of column for lookup lower bound."
+            }
+          },
+          {
+            "parameter_ref": "choices",
+            "control": "oneofselect",
+            "description": {
+              "default": "Whether this key is case sensitive or not."
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "option_two",
+        "parameters": [
+          {
+            "parameter_ref": "option_2",
+            "description": {
+              "default": "Name of column for lookup upper bound."
+            }
+          },
+          {
+            "parameter_ref": "choices",
+            "control": "oneofselect",
+            "description": {
+              "default": "Whether this key is case sensitive or not."
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "option_three",
+        "parameters": [
+          {
+            "parameter_ref": "option_3",
+            "description": {
+              "default": "Name of the column which will be bounded by the columns from the input stream table."
+            }
+          },
+          {
+            "parameter_ref": "choices",
+            "control": "oneofselect",
+            "description": {
+              "default": "Whether this key is case sensitive or not."
+            }
+          }
+        ]
       }
     ],
     "parameter_info": [
@@ -200,6 +344,23 @@
           "default": "Layout Controls"
         },
         "separator": "before"
+      },
+      {
+        "parameter_ref": "options",
+        "resource_key": "options",
+        "control": "oneofselect",
+        "description": {
+          "default": "Range for lookup defined by Lower and Upper."
+        }
+      },
+      {
+        "parameter_ref": "option_one"
+      },
+      {
+        "parameter_ref": "option_two"
+      },
+      {
+        "parameter_ref": "option_three"
       }
     ],
     "group_info": [
@@ -222,6 +383,25 @@
           "hider",
           "disabler",
           "layout_struct"
+        ]
+      },
+      {
+        "id": "complex-condition-panel",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "complex-condition-controls",
+            "type": "controls",
+            "parameter_refs": [
+              "options",
+              "option_one",
+              "option_two",
+              "option_three"
+            ]
+          }
         ]
       }
     ]
@@ -298,6 +478,61 @@
             "op": "notEquals",
             "parameter_2_ref": "field_type[1]"
           }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "option_three"
+        ],
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "op": "equals",
+                "parameter_ref": "options",
+                "value": "options"
+              }
+            },
+            {
+              "condition": {
+                "op": "isEmpty",
+                "parameter_ref": "option_one[0]"
+              }
+            },
+            {
+              "condition": {
+                "op": "isEmpty",
+                "parameter_ref": "option_two[0]"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "option_one",
+          "option_two"
+        ],
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "op": "equals",
+                "parameter_ref": "options",
+                "value": "options"
+              }
+            },
+            {
+              "condition": {
+                "op": "isEmpty",
+                "parameter_ref": "option_three[0]"
+              }
+            }
+          ]
         }
       }
     }
@@ -403,6 +638,8 @@
     "field_type.label": "",
     "fieldFilterEntry.input": "Input name",
     "fieldFilterEntry.output": "Output name",
-    "fieldFilterEntry.exclude": "Exclude"
+    "fieldFilterEntry.exclude": "Exclude",
+    "options. .label": "No",
+    "options.options.label": "Yes"
   }
 }
