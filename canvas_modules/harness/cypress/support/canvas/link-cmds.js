@@ -176,3 +176,10 @@ Cypress.Commands.add("deleteLinkAt", (linkX, linkY) => {
 		.rightclick(linkX, linkY);
 	cy.clickOptionFromContextMenu("Delete");
 });
+
+Cypress.Commands.add("hoverOverLinkName", (linkName) => {
+	cy.getLinkFromName(linkName)
+		.children()
+		.eq(1)
+		.trigger("mouseenter", { force: true });
+});

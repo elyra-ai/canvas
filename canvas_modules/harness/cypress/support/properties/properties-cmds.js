@@ -95,3 +95,125 @@ Cypress.Commands.add("enterNewPropertiesFlyoutTitle", (newTitle) => {
 		.type("{selectall}")
 		.type(newTitle);
 });
+
+Cypress.Commands.add("moveMouseToCoordinatesInCommonProperties", (x, y) => {
+	cy.get(".right-flyout-panel")
+		.trigger("mouseover", x, y);
+});
+
+Cypress.Commands.add("getControlContainerFromName", (givenName) => {
+	cy.get(".properties-label-container > .properties-control-label")
+		.then((labels) => {
+			let label = null;
+			for (let idx = 0; idx < labels.length; idx++) {
+				if (labels[idx].textContent === givenName) {
+					label = labels[idx];
+					break;
+				}
+			}
+			// return .properties-label-container having the given label
+			return cy.wrap(label).parent();
+		});
+});
+
+Cypress.Commands.add("selectPropertiesContainerType", (containerType) => {
+	if (containerType === "Custom" || containerType === "Flyout") {
+		cy.get("#harness-sidepanel-properties-container-type")
+			.find(".bx--radio-button-wrapper")
+			.eq(0)
+			.find("label")
+			.click();
+	} else if (containerType === "Modal") {
+		cy.get("#harness-sidepanel-properties-container-type")
+			.find(".bx--radio-button-wrapper")
+			.eq(1)
+			.find("label")
+			.click();
+	}
+});
+
+/** Hovers over the given text in the summaryPanel
+* @param text: value displayed in summary panels
+* @param summaryName: name of summaryPanel
+*/
+Cypress.Commands.add("hoverOverTextInSummaryPanel", (text, summaryName) => {
+	cy.getSummaryFromName(summaryName)
+		.then((summary) => {
+			if (summary !== null) {
+				cy.wrap(summary)
+					.find("span")
+					.then((values) => {
+						for (let idx = 0; idx < values.length; idx++) {
+							if (values[idx].textContent === text) {
+								cy.wrap(values[idx]).trigger("mouseover");
+								break;
+							}
+						}
+					});
+			}
+		});
+});
+
+Cypress.Commands.add("hoverOverValidationIconInSummaryPanel", (summaryPanelId) => {
+	cy.findValidationIconInSummaryPanel(summaryPanelId)
+		.then((validationIcon) => cy.wrap(validationIcon).trigger("mouseover"));
+});
+
+Cypress.Commands.add("findValidationIconInSummaryPanel", (summaryPanelId) => {
+	// Open the category
+	cy.get(`div[data-id='properties-${summaryPanelId}']`)
+		.then((summaryPanel) => {
+			cy.wrap(summaryPanel).should("exist");
+			// find the validation icon
+			cy.wrap(summaryPanel)
+				.find(".tooltip-container");
+		});
+});
+
+Cypress.Commands.add("getSummaryFromName", (summaryName) => {
+	cy.get(".properties-summary-values > .properties-summary-label")
+		.then((summaryLabels) => {
+			let sumaryLabel = null;
+			for (let idx = 0; idx < summaryLabels.length; idx++) {
+				if (summaryLabels[idx].textContent === summaryName) {
+					sumaryLabel = summaryLabels[idx];
+					break;
+				}
+			}
+
+			// return .properties-summary-value having the given summaryName
+			return cy.wrap(sumaryLabel).parent();
+		});
+});
+
+Cypress.Commands.add("selectRowInTable", (rowNumber, tableControlId) => {
+	//  Select the row 1 in the table "expressionCellTable"
+	cy.get(`div[data-id='properties-${tableControlId}']`)
+		.find("div[role='properties-data-row']")
+		.eq(rowNumber - 1)
+		.click();
+});
+
+Cypress.Commands.add("selectAllRowsInTable", (tableControlId) => {
+	cy.get(`div[data-id='properties-${tableControlId}']`)
+		.find(".properties-vt-header-checkbox")
+		.find("label")
+		.click();
+});
+
+Cypress.Commands.add("clickButtonInTable", (buttonName, tableControlId) => {
+	cy.get(`div[data-id='properties-ft-${tableControlId}']`)
+		.then((tableDiv) => {
+			cy.wrap(tableDiv).should("exist");
+
+			if (buttonName === "Add") {
+				cy.wrap(tableDiv)
+					.find(".properties-add-fields-button")
+					.click();
+			} else {
+				cy.wrap(tableDiv)
+					.find(".properties-remove-fields-button")
+					.click();
+			}
+		});
+});

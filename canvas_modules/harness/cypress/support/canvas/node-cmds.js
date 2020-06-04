@@ -162,8 +162,21 @@ Cypress.Commands.add("hoverOverNode", (nodeName) => {
 		.trigger("mouseenter");
 });
 
+Cypress.Commands.add("hoverOverNodeInSupernode", (nodeName, supernodeName) => {
+	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
+		.trigger("mouseenter", { force: true });
+});
+
 Cypress.Commands.add("hoverOverInputPortOfNode", (nodeName, inputPortId) => {
 	cy.getNodePortSelector(nodeName, "inp_port", inputPortId)
+		.then((portSelector) => {
+			cy.get(portSelector)
+				.trigger("mouseenter", { force: true });
+		});
+});
+
+Cypress.Commands.add("hoverOverOutputPortOfNode", (nodeName, outputPortId) => {
+	cy.getNodePortSelector(nodeName, "out_port", outputPortId)
 		.then((portSelector) => {
 			cy.get(portSelector)
 				.trigger("mouseenter", { force: true });

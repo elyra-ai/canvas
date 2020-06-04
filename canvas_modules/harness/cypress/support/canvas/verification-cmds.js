@@ -802,16 +802,6 @@ Cypress.Commands.add("verifyTipDoesNotShowForNodeInCategory", (nodeName) => {
 		.should("not.exist");
 });
 
-Cypress.Commands.add("verifyTipDoesNotShowForNode", (nodeName) => {
-	// Verify the tip doesn't show for node on canvas
-	cy.getNodeWithLabel(nodeName)
-		.then((node) => {
-			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
-			cy.get(nodeTipSelector)
-				.should("not.exist");
-		});
-});
-
 Cypress.Commands.add("verifyTipForNodeAtLocation", (nodeName, tipLocation) => {
 	// Verify the tip shows "below" the node "Define Types"
 	cy.getNodeWithLabel(nodeName)
@@ -826,7 +816,43 @@ Cypress.Commands.add("verifyTipForNodeAtLocation", (nodeName, tipLocation) => {
 					const tipTop = tip[0].offsetTop;
 					if (tipLocation === "below") {
 						expect(tipTop).to.be.greaterThan(node[0].getBoundingClientRect().top + node[0].getBoundingClientRect().height);
-					} else if (location === "above") {
+					} else if (tipLocation === "above") {
+						expect(tipTop).to.be.lessThan(node[0].getBoundingClientRect().top);
+					}
+
+					// Verify tip label
+					cy.wrap(tip)
+						.find(".tip-node-label")
+						.should("have.text", nodeName);
+				});
+		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForNode", (nodeName) => {
+	// Verify the tip doesn't show for node on canvas
+	cy.getNodeWithLabel(nodeName)
+		.then((node) => {
+			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
+			cy.get(nodeTipSelector)
+				.should("not.exist");
+		});
+});
+
+Cypress.Commands.add("verifyTipForNodeInSupernodeAtLocation", (nodeName, supernodeName, tipLocation) => {
+	// Verify the tip shows "below" the node "Discard Fields" in the supernode "Supernode"
+	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
+		.then((node) => {
+			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
+			cy.get(nodeTipSelector)
+				.then((tip) => {
+					// Verify tip is displayed on canvas
+					cy.wrap(tip).should("have.length", 1);
+
+					// Verify tip location
+					const tipTop = tip[0].offsetTop;
+					if (tipLocation === "below") {
+						expect(tipTop).to.be.greaterThan(node[0].getBoundingClientRect().top + node[0].getBoundingClientRect().height);
+					} else if (tipLocation === "above") {
 						expect(tipTop).to.be.lessThan(node[0].getBoundingClientRect().top);
 					}
 
@@ -848,14 +874,78 @@ Cypress.Commands.add("verifyTipForInputPortOfNode", (nodeName, inputPortId, port
 							// Verify tip is displayed on canvas
 							cy.wrap(tip).should("have.length", 1);
 
+							// Verify tip location
+							const tipTop = tip[0].offsetTop;
 							cy.get(portSelector)
 								.then((port) => {
-									console.log(port[0].getBoundingClientRect());
-									console.log(port[0].getBoundingClientRect().height);
-									console.log(tip[0].getBoundingClientRect().top);
-									cy.get("#harness-app-container").trigger("mouseover", port[0].getBoundingClientRect().top, port[0].getBoundingClientRect().height);
+									const portBottom = port[0].getBoundingClientRect().top + port[0].getBoundingClientRect().height;
+									expect(tipTop).to.be.greaterThan(portBottom);
 								});
+
+							// Verify tip label
+							cy.wrap(tip)
+								.get(".tip-port")
+								.should("have.text", portName);
 						});
 				});
 		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForInputPortId", (inputPortId) => {
+	// Verify the tip doesn't show for input port id "inPort2"
+	cy.getNodePortTipSelector(inputPortId)
+		.then((portTipSelector) => cy.get(portTipSelector).should("not.exist"));
+});
+
+Cypress.Commands.add("verifyTipForOutputPortOfNode", (nodeName, outputPortId, portName) => {
+	cy.getNodePortSelector(nodeName, "out_port", outputPortId)
+		.then((portSelector) => {
+			cy.getNodePortTipSelector(outputPortId)
+				.then((portTipSelector) => {
+					cy.get(portTipSelector)
+						.then((tip) => {
+							// Verify tip is displayed on canvas
+							cy.wrap(tip).should("have.length", 1);
+
+							// Verify tip location
+							const tipTop = tip[0].offsetTop;
+							cy.get(portSelector)
+								.then((port) => {
+									const portBottom = port[0].getBoundingClientRect().top + port[0].getBoundingClientRect().height;
+									expect(tipTop).to.be.greaterThan(portBottom);
+								});
+
+							// Verify tip label
+							cy.wrap(tip)
+								.get(".tip-port")
+								.should("have.text", portName);
+						});
+				});
+		});
+});
+
+Cypress.Commands.add("verifyTipForLink", (mouseY, sourceNode, sourcePort, targetNode, targetPort) => {
+	cy.get("[data-id*=link_tip_0_]") // Find tip with id that starts with 'link_tip_0_'
+		.then((tip) => {
+			// Verify tip is displayed on canvas
+			cy.wrap(tip).should("have.length", 1);
+
+			// Verify tip location
+			const tipTop = tip[0].offsetTop;
+			expect(tipTop).to.be.greaterThan(mouseY);
+
+			// Verify tip label
+			const sourceString = `'${sourceNode}', port '${sourcePort}'`;
+			const targetString = `'${targetNode}', port '${targetPort}'`;
+			const linkLabel = `Link from ${sourceString} to ${targetString}`;
+			cy.wrap(tip)
+				.find("#tooltipContainer")
+				.should("have.text", linkLabel);
+		});
+
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForLink", () => {
+	cy.get("[data-id*=link_tip_0_]") // Find tip with id that starts with 'link_tip_0_'
+		.should("not.exist");
 });
