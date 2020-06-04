@@ -258,51 +258,42 @@
           {
             "parameter_ref": "option_1",
             "description": {
-              "default": "Name of column for lookup lower bound."
+              "default": "If either option_1 or option_2 is not empty, option_3 will be hidden."
             }
           },
           {
             "parameter_ref": "choices",
-            "control": "oneofselect",
-            "description": {
-              "default": "Whether this key is case sensitive or not."
-            }
+            "control": "oneofselect"
           }
         ]
       },
       {
-        "complex_type_ref": "option_two",
+        "complex_type_ref": "optionTwoComplexType",
         "parameters": [
           {
             "parameter_ref": "option_2",
             "description": {
-              "default": "Name of column for lookup upper bound."
+              "default": "If either option_2 or option_1 is not empty, option_3 will be hidden."
             }
           },
           {
             "parameter_ref": "choices",
-            "control": "oneofselect",
-            "description": {
-              "default": "Whether this key is case sensitive or not."
-            }
+            "control": "oneofselect"
           }
         ]
       },
       {
-        "complex_type_ref": "option_three",
+        "complex_type_ref": "optionThreeComplexType",
         "parameters": [
           {
             "parameter_ref": "option_3",
             "description": {
-              "default": "Name of the column which will be bounded by the columns from the input stream table."
+              "default": "If not empty, option_1 and option_2 will be hidden."
             }
           },
           {
             "parameter_ref": "choices",
-            "control": "oneofselect",
-            "description": {
-              "default": "Whether this key is case sensitive or not."
-            }
+            "control": "oneofselect"
           }
         ]
       }
@@ -350,7 +341,7 @@
         "resource_key": "options",
         "control": "oneofselect",
         "description": {
-          "default": "Range for lookup defined by Lower and Upper."
+          "default": "Select 'Yes' to show more options."
         }
       },
       {
