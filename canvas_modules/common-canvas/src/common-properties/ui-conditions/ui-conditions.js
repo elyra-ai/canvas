@@ -344,12 +344,14 @@ function failedMessage(failedErrorMessage) {
 }
 
 function _getPropertyIdFromParam(propertyId, param) {
-	const paramPropertyID = cloneDeep(propertyId);
-	paramPropertyID.name = param;
+	let paramPropertyID = {};
 	const offset = param.indexOf("[");
 	if (offset > -1) {
+		paramPropertyID = cloneDeep(propertyId);
 		paramPropertyID.name = param.substring(0, offset);
 		paramPropertyID.col = _getColumnNumber(param);
+	} else {
+		paramPropertyID.name = param;
 	}
 	return paramPropertyID;
 }
