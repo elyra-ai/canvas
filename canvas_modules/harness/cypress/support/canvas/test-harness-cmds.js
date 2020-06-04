@@ -117,7 +117,11 @@ Cypress.Commands.add("selectNodeLabelFromDropDown", (nodeName) => {
 	cy.dropdownSelect("#harness-sidepanel-api-nodePortSelection", nodeName);
 });
 
-Cypress.Commands.add("setNewNodeLabel", (newNodeName) => {
+Cypress.Commands.add("selectPortFromDropDown", (portName) => {
+	cy.dropdownSelect("#harness-sidepanel-api-portSelection", portName);
+});
+
+Cypress.Commands.add("setNewLabel", (newNodeName) => {
 	cy.get("#harness-newLabel")
 		.clear()
 		.type(newNodeName);
