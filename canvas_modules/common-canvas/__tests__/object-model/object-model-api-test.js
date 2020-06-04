@@ -527,20 +527,20 @@ describe("ObjectModel API handle model OK", () => {
 
 
 	it("should add links for existing execution node", () => {
-		shouldAddLinksForExistingNodes("idGWRVT47XDV", null, "id8I6RH2V91XW", "outPort");
+		shouldAddLinksForExistingNodes("idGWRVT47XDV", null, "id8I6RH2V91XW", "outPort", "59f75162-3961-4aa9-98f3-f9e8dcf5e8d5");
 	});
 
 	it("should add links for existing exit binding node", () => {
-		shouldAddLinksForExistingNodes("id5KIRGGJ3FYT", null, "nodeIDSuperNodePE", "output1SuperNodePE");
+		shouldAddLinksForExistingNodes("id5KIRGGJ3FYT", null, "nodeIDSuperNodePE", "output1SuperNodePE", "bcbba6b7-4bda-4d1e-b989-5cfbb9ed6e19");
 	});
 
 	it("should add links for existing supernode", () => {
-		shouldAddLinksForExistingNodes("nodeIDSuperNodePE", "input2SuperNodePE", "idGWRVT47XDV");
+		shouldAddLinksForExistingNodes("nodeIDSuperNodePE", "input2SuperNodePE", "idGWRVT47XDV", null, "4d93922d-4f70-4036-9eb0-e2d0e9c8523c");
 	});
 
 
 	it("should add links for existing model node", () => {
-		shouldAddLinksForExistingNodes("id125TTEEIK7V", null, "nodeIDSuperNodePE");
+		shouldAddLinksForExistingNodes("id125TTEEIK7V", null, "nodeIDSuperNodePE", null, "15c62f78-018b-4112-adea-70fd4e2e60e7");
 	});
 
 	it("should update label for an executiom node", () => {
@@ -1401,7 +1401,7 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(JSON.stringify(actualValue, null, 2), JSON.stringify(myAppDataValue, null, 2))).to.be.true;
 	}
 
-	function shouldAddLinksForExistingNodes(targetNodeId, targetPortId, sourceNodeId, sourcePortId) {
+	function shouldAddLinksForExistingNodes(targetNodeId, targetPortId, sourceNodeId, sourcePortId, linkId) {
 		const startPipelineFlowNoLinks = JSON.parse(JSON.stringify(startPipelineFlow));
 
 		// remove existing link array
@@ -1416,6 +1416,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.setPipelineFlow(startPipelineFlowNoLinks);
 
 		const linkData = {
+			"id": linkId,
 			"editType": "linkNodes",
 			"nodes": [{ "id": sourceNodeId, "portId": sourcePortId }],
 			"targetNodes": [{ "id": targetNodeId, "portId": targetPortId }],

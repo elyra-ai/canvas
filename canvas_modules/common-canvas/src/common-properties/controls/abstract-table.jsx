@@ -57,6 +57,8 @@ export default class AbstractTable extends React.Component {
 			enableRemoveIcon: false
 		};
 		this.onPanelContainer = [];
+		// used to determine if column controls can be inline or if field picker is used
+		this.allowColumnControls = false;
 
 		this.indexOfColumn = this.indexOfColumn.bind(this);
 		this.setCurrentControlValueSelected = this.setCurrentControlValueSelected.bind(this);
@@ -302,7 +304,7 @@ export default class AbstractTable extends React.Component {
 			row: rowIndex,
 			col: colIndex
 		};
-		const tableInfo = { table: true };
+		const tableInfo = { table: true, allowColumnControls: this.allowColumnControls };
 		const cellClassName = "";
 		const ControlFactory = this.props.controller.getControlFactory();
 		let cellContent;
@@ -319,11 +321,10 @@ export default class AbstractTable extends React.Component {
 			} else {
 				cellContent = (<div className="properties-table-cell-control">
 					<ReadonlyControl
-						control={this.props.control}
+						control={this.props.controller.getControl(propertyId)}
 						propertyId={propertyId}
 						controller={this.props.controller}
 						tableControl
-						columnDef={columnDefObj}
 					/>
 				</div>);
 				if (columnDef.editStyle === EditStyle.ON_PANEL) {

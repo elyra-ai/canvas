@@ -76,7 +76,21 @@ module.exports = function() {
 
 
 	const expectedImages = {
-		"Data Shaper": "/images/palette-categories/operations_open.svg",
+		"Data Shaper": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdH" +
+		"JhdG9yIDE5LjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHh" +
+		"tbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXd" +
+		"Cb3g9IjI2NC44IDE2Mi44IDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAyNjQuOCAxNjIuOCA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZ" +
+		"lIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDojRUFFQUVBO30KCS5zdDF7ZmlsbDojREZERkRGO30KCS5zdDJ7ZmlsbDpub25lO3N0cm9rZTojMUQzNjQ" +
+		"5O3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDN7ZmlsbDpub25lO3N0cm9rZTojMUQzNjQ5O3N0cm9rZS13aWR0aDozO3N0cm9rZS1taXRlcmx" +
+		"pbWl0OjEwO30KCS5zdDR7ZmlsbDpub25lO30KCS5zdDV7ZmlsbDojNUFBQUZBO30KCS5zdDZ7Zm9udC1mYW1pbHk6J0hlbHZOZXVlQm9sZGZvcklCTSc7fQoJLnN0N3tmb25" +
+		"0LXNpemU6OHB4O30KPC9zdHlsZT4KPGc+CgkKCQk8aW1hZ2Ugc3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2OyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQ3IiB" +
+		"4bGluazpocmVmPSI5QzM3MDdGQTI2QjlERDNCLnBuZyIgIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMjY1IDE2NSkiPgoJPC9pbWFnZT4KCTxnPgoJCTxwb2x5Z29uIGN" +
+		"sYXNzPSJzdDAiIHBvaW50cz0iMjc4LjksMjA3IDI2Ny4yLDE4Ni41IDI3OC45LDE2NiAzMDIuNCwxNjYgMzE0LjIsMTg2LjUgMzAyLjQsMjA3IAkJIi8+Cgk8L2c+CjwvZz4" +
+		"KPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIyNzUuOCwyMDEuNSAyNzguOSwyMDcgMzAyLjQsMjA3IDMxNC4yLDE4Ni41IDMwNS40LDE3MS40ICIvPgo8Zz4KCQoJCTx" +
+		"pbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7IiB3aWR0aD0iNTciIGhlaWdodD0iNDkiIHhsaW5rOmhyZWY9IjlDMzcwN0ZBMjZCOUREMzkucG5" +
+		"nIiAgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAyNjMgMTY0KSI+Cgk8L2ltYWdlPgoJPGc+CgkJPHBvbHlnb24gY2xhc3M9InN0MiIgcG9pbnRzPSIyNzguOSwyMDcgMjY" +
+		"3LjIsMTg2LjUgMjc4LjksMTY2IDMwMi40LDE2NiAzMTQuMiwxODYuNSAzMDIuNCwyMDcgCQkiLz4KCTwvZz4KPC9nPgo8L3N2Zz4=",
+
 		"Var. File": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyY" +
 		"XRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIge" +
 		"G1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZ" +
@@ -562,6 +576,10 @@ module.exports = function() {
 				// verify node is in the canvas DOM
 				var imageName = browser.$("#canvas-div-0").$$(".node-image")[nodeNumber].getAttribute("href");
 
+				if (!imageName) {
+					imageName = browser.$("#canvas-div-0").$$(".node-image")[nodeNumber].getAttribute("data-image");
+				}
+
 				expect(imageName).toEqual(expectedImages[nodeType]);
 
 				// verify that the  node is in the internal object model
@@ -927,7 +945,7 @@ module.exports = function() {
 	this.Then(/^I click on the hotspot for decorator "([^"]*)" on the "([^"]*)" node$/, function(decoratorId, nodeName) {
 		const nodeSelector = getNodeSelector(nodeName, "grp");
 		const node = browser.$(nodeSelector);
-		const decoratorImage = node.$(".d3-node-dec-image[data-id=node_dec_image_0_" + decoratorId + "]");
+		const decoratorImage = node.$(".d3-node-dec-outline[data-id=node_dec_outln_0_" + decoratorId + "]");
 		decoratorImage.click();
 	});
 
@@ -979,7 +997,7 @@ module.exports = function() {
 			var id = decImage.getAttribute("data-id");
 			if (id === "node_dec_image_0_" + decoratorId) {
 				found = true;
-				img = decImage.getAttribute("href");
+				img = decImage.getAttribute("data-image");
 			}
 		}
 

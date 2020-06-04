@@ -29,12 +29,12 @@ class StructurelisteditorControl extends AbstractTable {
 	constructor(props) {
 		super(props);
 		this.addRow = this.addRow.bind(this);
+		this.allowColumnControls = true;
 	}
 
 	addRow() {
 		const newRow = this.getDefaultRow();
-		const rows = this.props.controller.getPropertyValue(this.props.propertyId);
-		rows.push(newRow);
+		const rows = this.props.controller.getPropertyValue(this.props.propertyId).concat([newRow]);
 		this.setCurrentControlValueSelected(rows);
 	}
 

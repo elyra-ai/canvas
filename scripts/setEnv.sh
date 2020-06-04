@@ -18,11 +18,6 @@
 
 set -e
 
-printf "registry=https://registry.npmjs.com/\n" >> .npmrc
-
-cp .npmrc ./canvas_modules/common-canvas/
-cp .npmrc ./canvas_modules/harness/
-
 if [[ ( "$TRAVIS_BRANCH" = "master" ) ]]; then
 	echo "Setting COVERAGE=true"
 	# Disabled until we upgrade to babel 7.  istanbul has issues when compiling with the current version of babel

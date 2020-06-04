@@ -21,10 +21,31 @@ Cypress.Commands.add("getCanvasData", () => {
 	});
 });
 
+Cypress.Commands.add("getCanvasDataForExtraCanvas", () => {
+	cy.document().then((doc) => {
+		const extraCanvasData = doc.canvasController2.getCanvasInfo();
+		return extraCanvasData;
+	});
+});
+
 Cypress.Commands.add("getPipeline", () => {
 	cy.getCanvasData().then((canvasData) => {
 		const pipeline = canvasData.pipelines[0];
 		return pipeline;
+	});
+});
+
+Cypress.Commands.add("getPipelineForExtraCanvas", () => {
+	cy.getCanvasDataForExtraCanvas().then((extraCanvasData) => {
+		const extraCanvasPipeline = extraCanvasData.pipelines[0];
+		return extraCanvasPipeline;
+	});
+});
+
+Cypress.Commands.add("getPipelineAtIndex", (pipelineIndex) => {
+	cy.getCanvasData().then((canvasData) => {
+		const pipelineAtIndex = canvasData.pipelines[pipelineIndex];
+		return pipelineAtIndex;
 	});
 });
 
@@ -33,6 +54,47 @@ Cypress.Commands.add("getSupernodePipeline", (supernodeName) => {
 		cy.getCanvasData().then((canvasData) =>
 			canvasData.pipelines.find((pipeline) => pipeline.id === supernodePipelineId));
 	});
+});
+
+Cypress.Commands.add("getSupernodePipelineNested", (nodeName, supernodeName) => {
+	// Get pipeline id of node within supernode
+	cy.getSupernodePipelineIdNested(nodeName, supernodeName).then((nestedSupernodePipelineId) => {
+		cy.getCanvasData().then((canvasData) =>
+			canvasData.pipelines.find((pipeline) => pipeline.id === nestedSupernodePipelineId));
+	});
+});
+
+Cypress.Commands.add("getNodeFromObjectModel", (nodeId) => {
+	cy.getPipeline().then((pipeline) =>
+		pipeline.nodes.find((node) => node.id === nodeId));
+});
+
+Cypress.Commands.add("getNodeLabelCountFromObjectModel", (nodeName) => {
+	let count = 0;
+	cy.getPipeline()
+		.then((pipeline) => {
+			const nodes = pipeline.nodes;
+			nodes.forEach(function(node) {
+				if (node.label === nodeName) {
+					count++;
+				}
+			});
+			return count;
+		});
+});
+
+Cypress.Commands.add("getCommentContentCountFromObjectModel", (commentText) => {
+	let count = 0;
+	cy.getPipeline()
+		.then((pipeline) => {
+			const comments = pipeline.comments;
+			comments.forEach(function(comment) {
+				if (comment.content === commentText) {
+					count++;
+				}
+			});
+			return count;
+		});
 });
 
 Cypress.Commands.add("getCountNodes", (pipeline) => pipeline.nodes.length);
@@ -61,4 +123,47 @@ Cypress.Commands.add("getCountCommentLinks", (pipeline) => {
 		}
 	});
 	return count;
+});
+
+Cypress.Commands.add("getCountLinksBetweenNodes", (srcNodeName, trgNodeName) => {
+	// Find the number of links in object model that have source and target ids.
+	cy.getPipeline()
+		.then((pipeline) => {
+			cy.getNodeIdForLabel(srcNodeName)
+				.then((srcNodeId) => {
+					cy.getNodeIdForLabel(trgNodeName)
+						.then((trgNodeId) => {
+							let count = 0;
+							const links = pipeline.links;
+							for (let lidx = 0; lidx < links.length; lidx++) {
+								if (links[lidx].srcNodeId === srcNodeId &&
+										links[lidx].trgNodeId === trgNodeId) {
+									count++;
+								}
+							}
+							return count;
+						});
+				});
+		});
+});
+
+Cypress.Commands.add("clearMessagesFromAllNodes", () => {
+	cy.document().then((doc) => {
+		cy.getCanvasData()
+			.then((canvasData) => {
+				canvasData.pipelines.forEach((pipeline) => {
+					pipeline.nodes.forEach((node) => {
+						delete node.messages;
+					});
+				});
+				doc.canvasController.getObjectModel().setCanvasInfo(canvasData);
+			});
+	});
+});
+
+Cypress.Commands.add("getObjectCountFromObjectModel", () => {
+	cy.getPipeline()
+		.then((pipeline) =>
+			(pipeline.nodes.length + pipeline.comments.length + pipeline.links.length)
+		);
 });

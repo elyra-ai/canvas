@@ -43,6 +43,8 @@ export default class SidePanel extends React.Component {
 			view = (<SidePanelCanvas
 				canvasConfig={this.props.canvasConfig}
 				log={this.props.log}
+				setStateValue={this.props.setStateValue}
+				getStateValue={this.props.getStateValue}
 			/>);
 			break;
 		case SIDE_PANEL_MODAL:
@@ -78,5 +80,7 @@ SidePanel.propTypes = {
 	openSidepanelModal: PropTypes.bool,
 	openSidepanelAPI: PropTypes.bool,
 	selectedPanel: PropTypes.string,
-	log: PropTypes.func
+	log: PropTypes.func,
+	setStateValue: PropTypes.func,
+	getStateValue: PropTypes.func
 };

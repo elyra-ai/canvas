@@ -187,7 +187,7 @@ describe("ObjectModel files handling test", () => {
 	});
 
 	it("should upgrade a pipelineFlow from v2 to latest version for allTypesCanvasV2", () => {
-		upgradeToLatestVersion(allTypesCanvasV2, allTypesCanvas);
+		upgradeToLatestVersion(allTypesCanvasV2, removeNewLinkFields(allTypesCanvas));
 	});
 
 	it("should upgrade a pipelineFlow from v2 to latest version for bigCanvasV2", () => {
@@ -356,8 +356,9 @@ describe("ObjectModel files handling test", () => {
 
 		objectModel.setPipelineFlow(earlierPipelineFlow);
 
-		const expectedCanvas = latestPipelineFlow;
-		const actualCanvas = objectModel.getPipelineFlow();
+		// When testing upgrade from old version we ignore generated link IDs.
+		const expectedCanvas = removeGeneratedLinkIds(JSON.parse(JSON.stringify(latestPipelineFlow)));
+		const actualCanvas = removeGeneratedLinkIds(objectModel.getPipelineFlow());
 
 		// console.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// console.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
@@ -394,6 +395,25 @@ describe("ObjectModel files handling test", () => {
 	}
 
 
+	// Removes the new optional link.type_attr and link.description attributes
+	// which did not exist before the V3 schema.
+	function removeNewLinkFields(latestPipelineFlow) {
+		const expectedCanvas = JSON.parse(JSON.stringify(latestPipelineFlow));
+		expectedCanvas.pipelines[0].nodes.forEach((node) => {
+			if (node.inputs) {
+				node.inputs.forEach((inp) => {
+					if (inp.links) {
+						inp.links.forEach((link) => {
+							delete link.type_attr;
+							delete link.description;
+						});
+					}
+				});
+			}
+		});
+		return expectedCanvas;
+	}
+
 	// V0 needs a special function because runtime ref fields are not handled
 	// correctly with V0 (because the canvas does not contain runtime info)
 	// so the runtime and schemas info needs to be removed before comparing.
@@ -403,8 +423,8 @@ describe("ObjectModel files handling test", () => {
 		objectModel.setPipelineFlow(earlierPipelineFlow);
 
 		// Clone expected canvas because earlier tests may have deep frozen it.
-		const expectedCanvas = JSON.parse(JSON.stringify(v2PipelineFlow));
-		const actualCanvas = objectModel.getPipelineFlow();
+		const expectedCanvas = removeGeneratedLinkIds(JSON.parse(JSON.stringify(v2PipelineFlow)));
+		const actualCanvas = removeGeneratedLinkIds(objectModel.getPipelineFlow());
 
 		delete actualCanvas.pipelines[0].runtime_ref;
 		delete expectedCanvas.pipelines[0].runtime_ref;
@@ -435,5 +455,30 @@ describe("ObjectModel files handling test", () => {
 			}
 		});
 		return outFlow;
+	}
+
+	function removeGeneratedLinkIds(pipelineFlow) {
+		pipelineFlow.pipelines.forEach((pipeline, pIdx) => {
+			if (pipeline.nodes) {
+				pipeline.nodes.forEach((node, mIdx) => {
+					if (node.inputs) {
+						node.inputs.forEach((input, iIdx) => {
+							if (input.links) {
+								input.links.forEach((link, lIds) => delete link.id);
+							}
+						});
+					}
+				});
+			}
+
+			if (pipeline.app_data && pipeline.app_data.ui_data && pipeline.app_data.ui_data.comments) {
+				pipeline.app_data.ui_data.comments.forEach((comment) => {
+					if (comment.associated_id_refs) {
+						comment.associated_id_refs.forEach((link) => delete link.id);
+					}
+				});
+			}
+		});
+		return pipelineFlow;
 	}
 });

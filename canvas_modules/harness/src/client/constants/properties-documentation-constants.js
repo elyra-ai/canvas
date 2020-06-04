@@ -1466,6 +1466,126 @@ _defineConstant("EXPRESSION_PROPS_INFO", {
 		]
 	}
 });
+_defineConstant("CODE_PROPS_INFO", {
+	"title": "Code Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: Code",
+			"editable": false
+		},
+		"current_parameters": {
+			"code": "print(bool(4 > 2))"
+		},
+		"parameters": [
+			{
+				"id": "code",
+				"type": "string"
+			}
+		],
+		"uihints": {
+			"id": "expressionBox",
+			"parameter_info": [
+				{
+					"parameter_ref": "code",
+					"language": "text/x-python",
+					"label": {
+						"default": "Code Control Name"
+					},
+					"control": "code",
+					"description": {
+						"default": "Code test"
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "Code-Control",
+					"type": "controls",
+					"parameter_refs": [
+						"code"
+					]
+				}
+			]
+		},
+		"dataset_metadata": [
+			{
+				"fields": [
+					{
+						"name": "Age",
+						"type": "integer",
+						"metadata": {
+							"description": "",
+							"measure": "range",
+							"modeling_role": "input",
+							"range": {
+								"min": 21,
+								"max": 55
+							}
+						}
+					},
+					{
+						"name": "Sex",
+						"type": "string",
+						"metadata": {
+							"description": "",
+							"measure": "discrete",
+							"modeling_role": "input",
+							"values": [
+								"male",
+								"female",
+								"not specified"
+							]
+						}
+					},
+					{
+						"name": "BP",
+						"type": "string",
+						"metadata": {
+							"description": "",
+							"measure": "discrete",
+							"modeling_role": "input",
+							"values": [
+								"very high",
+								"high",
+								"normal",
+								"low",
+								"very low"
+							]
+						}
+					},
+					{
+						"name": "Cholesterol",
+						"type": "string",
+						"metadata": {
+							"description": "",
+							"measure": "discrete",
+							"modeling_role": "input",
+							"values": [
+								"hdl good",
+								"hdl bad",
+								"ldl good",
+								"ldl bad"
+							]
+						}
+					},
+					{
+						"name": "Ag",
+						"type": "integer",
+						"metadata": {
+							"description": "",
+							"measure": "range",
+							"modeling_role": "input",
+							"range": {
+								"min": 18,
+								"max": 35
+							}
+						}
+					}
+				]
+			}
+		]
+	}
+});
 _defineConstant("READONLY_PROPS_INFO", {
 	"title": "Readonly Title",
 	"parameterDef": {

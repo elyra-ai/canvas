@@ -82,6 +82,7 @@
               },
               "links": [
                 {
+                  "id": "53ec6c8a-9065-42ed-a2d3-63ed311a1a54",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
@@ -160,6 +161,7 @@
               },
               "links": [
                 {
+                  "id": "f3064509-c235-45af-8186-a4e57f65346a",
                   "node_id_ref": "id2PZSCTRPRIJ",
                   "app_data": {
                     "ui_data": {
@@ -355,6 +357,7 @@
               },
               "links": [
                 {
+                  "id": "600b5ed5-6a8f-43ec-9600-0f6f7524fdb4",
                   "node_id_ref": "idGWRVT47XDV",
                   "app_data": {
                     "ui_data": {
@@ -413,6 +416,7 @@
               },
               "links": [
                 {
+                  "id": "57a17fcb-8b12-441c-a8c0-cc9ca6ada854",
                   "node_id_ref": "idGWRVT47XDV",
                   "app_data": {
                     "ui_data": {

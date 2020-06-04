@@ -82,7 +82,7 @@ export default class SidePanelForms extends React.Component {
 			canvasPalette2: "",
 			canvasFiles: [],
 			paletteFiles: [],
-			controlsDisabled: this.props.canvasConfig.selectedNodeLayout !== EXAMPLE_APP_NONE
+			controlsDisabled: this.props.getStateValue("selectedNodeLayout") !== EXAMPLE_APP_NONE
 		};
 
 		this.onCanvasFileSelect = this.onCanvasFileSelect.bind(this);
@@ -95,31 +95,12 @@ export default class SidePanelForms extends React.Component {
 		this.isReadyToSubmitPaletteData = this.isReadyToSubmitPaletteData.bind(this);
 		this.isReadyToSubmitPaletteData2 = this.isReadyToSubmitPaletteData2.bind(this);
 
-		this.saveZoomOptionChange = this.saveZoomOptionChange.bind(this);
-		this.snapToGridOptionChange = this.snapToGridOptionChange.bind(this);
-		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
-		this.useEnableDragWithoutSelect = this.useEnableDragWithoutSelect.bind(this);
-		this.useEnableInsertNodeDroppedOnLink = this.useEnableInsertNodeDroppedOnLink.bind(this);
-		this.useEnableAssocLinkCreation = this.useEnableAssocLinkCreation.bind(this);
-		this.useEnableSaveToPalette = this.useEnableSaveToPalette.bind(this);
-		this.useEnableDropZoneOnExternalDrag = this.useEnableDropZoneOnExternalDrag.bind(this);
-		this.useEnableCreateSupernodeNonContiguous = this.useEnableCreateSupernodeNonContiguous.bind(this);
-		this.onEnableMoveNodesOnSupernodeResizeToggle = this.onEnableMoveNodesOnSupernodeResizeToggle.bind(this);
-		this.connectionTypeOptionChange = this.connectionTypeOptionChange.bind(this);
-		this.interactionTypeOptionChange = this.interactionTypeOptionChange.bind(this);
-		this.nodeFormatTypeOptionChange = this.nodeFormatTypeOptionChange.bind(this);
-		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
-		this.linkDirectionOptionChange = this.linkDirectionOptionChange.bind(this);
-		this.assocLinkTypeOptionChange = this.assocLinkTypeOptionChange.bind(this);
+		this.setStateValue = this.setStateValue.bind(this);
+		this.enteredStateValue = this.enteredStateValue.bind(this);
+
 		this.nodeLayoutOptionChange = this.nodeLayoutOptionChange.bind(this);
-		this.paletteLayoutOptionChange = this.paletteLayoutOptionChange.bind(this);
 		this.tipConfigChange = this.tipConfigChange.bind(this);
-		this.extraCanvasChange = this.extraCanvasChange.bind(this);
-		this.schemaValidationChange = this.schemaValidationChange.bind(this);
-		this.narrowPalette = this.narrowPalette.bind(this);
 		this.onDragStart = this.onDragStart.bind(this);
-		this.changeDisplayFullLabelOnHover = this.changeDisplayFullLabelOnHover.bind(this);
-		this.useZoomIntoSubFlows = this.useZoomIntoSubFlows.bind(this);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
 	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
@@ -165,7 +146,6 @@ export default class SidePanelForms extends React.Component {
 	onCanvasPaletteSelect(evt) {
 		this.setState({ canvasPalette: "" });
 		this.props.canvasConfig.setPaletteJSON({});
-		this.props.canvasConfig.enableNavPalette(false);
 		if (evt.target.files.length > 0) {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
@@ -179,7 +159,6 @@ export default class SidePanelForms extends React.Component {
 	onCanvasPaletteSelect2(evt) {
 		this.setState({ canvasPalette2: "" });
 		this.props.canvasConfig.setPaletteJSON2({});
-		this.props.canvasConfig.enableNavPalette(false);
 		if (evt.target.files.length > 0) {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
@@ -206,10 +185,6 @@ export default class SidePanelForms extends React.Component {
 		this.props.canvasConfig.setPaletteDropdownSelect2(evt.target.selectedOptions[0].value);
 	}
 
-	onEnableMoveNodesOnSupernodeResizeToggle(checked) {
-		this.props.canvasConfig.setEnableMoveNodesOnSupernodeResize(checked);
-	}
-
 	onDragStart(ev) {
 		ev.dataTransfer.setData("text",
 			JSON.stringify({
@@ -219,6 +194,46 @@ export default class SidePanelForms extends React.Component {
 					op: "derive",
 				}
 			}));
+	}
+
+	// Set the state for the control in App.js. control will be set to the
+	// corresponding field name in App.js state.
+	setStateValue(value, control) {
+		this.props.setStateValue(control, value);
+	}
+
+	enteredStateValue(evt) {
+		this.props.setStateValue(evt.target.id, evt.target.value);
+	}
+
+	nodeLayoutOptionChange(value) {
+		if (value !== EXAMPLE_APP_NONE) {
+			this.setState({ controlsDisabled: true });
+		} else {
+			this.setState({ controlsDisabled: false });
+		}
+		this.props.setStateValue("selectedNodeLayout", value);
+	}
+
+	tipConfigChange(checked, target) {
+		const tipConf = Object.assign({}, this.props.getStateValue("selectedTipConfig"));
+		switch (target) {
+		case "tip_palette":
+			tipConf.palette = checked;
+			break;
+		case "tip_nodes":
+			tipConf.nodes = checked;
+			break;
+		case "tip_ports":
+			tipConf.ports = checked;
+			break;
+		case "tip_links":
+			tipConf.links = checked;
+			break;
+		default:
+			return;
+		}
+		this.props.setStateValue("selectedTipConfig", tipConf);
 	}
 
 	submitCanvas() {
@@ -269,10 +284,6 @@ export default class SidePanelForms extends React.Component {
 			}.bind(this);
 			fileReader.readAsText(this.state.canvasPalette);
 		}
-		// enable palette
-		if (this.isReadyToSubmitPaletteData()) {
-			this.props.canvasConfig.enableNavPalette(true);
-		}
 	}
 
 	submitPalette2() {
@@ -284,10 +295,6 @@ export default class SidePanelForms extends React.Component {
 				this.props.canvasConfig.setPaletteJSON2(content);
 			}.bind(this);
 			fileReader.readAsText(this.state.canvasPalette2);
-		}
-		// enable palette
-		if (this.isReadyToSubmitPaletteData2()) {
-			this.props.canvasConfig.enableNavPalette(true);
 		}
 	}
 
@@ -303,91 +310,6 @@ export default class SidePanelForms extends React.Component {
 			return true;
 		}
 		return false;
-	}
-
-	saveZoomOptionChange(value) {
-		this.props.canvasConfig.setSaveZoom(value);
-	}
-
-	snapToGridOptionChange(value) {
-		this.props.canvasConfig.setSnapToGridType(value);
-	}
-
-	snapToGridFieldChange(fieldName, evt) {
-		if (fieldName === "newSnapToGridX") {
-			this.props.canvasConfig.setSnapToGridX(evt.target.value);
-		} else {
-			this.props.canvasConfig.setSnapToGridY(evt.target.value);
-		}
-	}
-
-	useZoomIntoSubFlows(checked) {
-		this.props.canvasConfig.setZoomIntoSubFlows(checked);
-	}
-
-	useInternalObjectModel(checked) {
-		this.props.canvasConfig.useInternalObjectModel(checked);
-	}
-
-	useEnableDragWithoutSelect(checked) {
-		this.props.canvasConfig.useEnableDragWithoutSelect(checked);
-	}
-
-	useEnableInsertNodeDroppedOnLink(checked) {
-		this.props.canvasConfig.useEnableInsertNodeDroppedOnLink(checked);
-	}
-
-	useEnableAssocLinkCreation(checked) {
-		this.props.canvasConfig.useEnableAssocLinkCreation(checked);
-	}
-
-	useEnableSaveToPalette(checked) {
-		this.props.canvasConfig.useEnableSaveToPalette(checked);
-	}
-
-	useEnableDropZoneOnExternalDrag(checked) {
-		this.props.canvasConfig.useEnableDropZoneOnExternalDrag(checked);
-	}
-
-	useEnableCreateSupernodeNonContiguous(checked) {
-		this.props.canvasConfig.useEnableCreateSupernodeNonContiguous(checked);
-	}
-
-	connectionTypeOptionChange(value) {
-		this.props.canvasConfig.setConnectionType(value);
-	}
-
-	interactionTypeOptionChange(value) {
-		this.props.canvasConfig.setInteractionType(value);
-	}
-
-	nodeFormatTypeOptionChange(value) {
-		this.props.canvasConfig.setNodeFormatType(value);
-	}
-
-	linkTypeOptionChange(value) {
-		this.props.canvasConfig.setLinkType(value);
-	}
-
-	linkDirectionOptionChange(value) {
-		this.props.canvasConfig.setLinkDirection(value);
-	}
-
-	assocLinkTypeOptionChange(value) {
-		this.props.canvasConfig.setAssocLinkType(value);
-	}
-
-	nodeLayoutOptionChange(value) {
-		if (value !== EXAMPLE_APP_NONE) {
-			this.setState({ controlsDisabled: true });
-		} else {
-			this.setState({ controlsDisabled: false });
-		}
-		this.props.canvasConfig.setNodeLayout(value);
-	}
-
-	paletteLayoutOptionChange(value) {
-		this.props.canvasConfig.setPaletteLayout(value);
 	}
 
 	dropdownOptions(optionsInput, typeLabel) {
@@ -406,43 +328,6 @@ export default class SidePanelForms extends React.Component {
 		}
 		options.push(<SelectItemGroup key ={"form-option"} label = {typeLabel}>{groupOptions}</SelectItemGroup>);
 		return options;
-	}
-
-	tipConfigChange(checked, target) {
-		const tipConf = Object.assign({}, this.props.canvasConfig.commonCanvasConfig.tipConfig);
-		switch (target) {
-		case "tip_palette":
-			tipConf.palette = checked;
-			break;
-		case "tip_nodes":
-			tipConf.nodes = checked;
-			break;
-		case "tip_ports":
-			tipConf.ports = checked;
-			break;
-		case "tip_links":
-			tipConf.links = checked;
-			break;
-		default:
-			return;
-		}
-		this.props.canvasConfig.setTipConfig(tipConf);
-	}
-
-	extraCanvasChange(checked) {
-		this.props.canvasConfig.showExtraCanvas(checked);
-	}
-
-	changeDisplayFullLabelOnHover(checked) {
-		this.props.canvasConfig.changeDisplayFullLabelOnHover(checked);
-	}
-
-	schemaValidationChange(checked) {
-		this.props.canvasConfig.schemaValidation(checked);
-	}
-
-	narrowPalette(checked) {
-		this.props.canvasConfig.setNarrowPalette(checked);
 	}
 
 	render() {
@@ -484,7 +369,6 @@ export default class SidePanelForms extends React.Component {
 					<Button size="small"
 						disabled={!this.isReadyToSubmitPaletteData()}
 						onClick={this.submitPalette.bind(this)}
-						onChange={(evt) => this.props.canvasConfig.enableNavPalette(evt.target.checked)}
 					>
 					Submit
 					</Button>
@@ -556,7 +440,6 @@ export default class SidePanelForms extends React.Component {
 					<Button size="small"
 						disabled={!this.isReadyToSubmitPaletteData2()}
 						onClick={this.submitPalette2.bind(this)}
-						onChange={(evt) => this.props.canvasConfig.enableNavPalette(evt.target.checked)}
 					>
 					Submit
 					</Button>
@@ -568,7 +451,7 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-sidepanel-headers">Canvas Diagram</div>
 			<Select
 				id="harness-sidepanel-canvas2-dropdown"
-				disabled={!this.props.canvasConfig.extraCanvasDisplayed}
+				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
 				label="Canvas"
 				aria-label="Canvas"
 				onChange={this.onCanvasDropdownSelect2.bind(this)}
@@ -582,7 +465,7 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-sidepanel-headers">Canvas Palette</div>
 			<Select
 				id="harness-sidepanel-palette2-dropdown"
-				disabled={!this.props.canvasConfig.extraCanvasDisplayed}
+				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
 				label="Palette"
 				aria-label="Palette"
 				onChange={this.onPaletteDropdownSelect2.bind(this)}
@@ -599,9 +482,9 @@ export default class SidePanelForms extends React.Component {
 				<div className="harness-sidepanel-headers">Save Zoom</div>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
-					name="save_zoom_radio"
-					onChange={this.saveZoomOptionChange}
-					defaultSelected={this.props.canvasConfig.selectedSaveZoom}
+					name="selectedSaveZoom" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedSaveZoom")}
 				>
 					<RadioButton
 						value={NONE_SAVE_ZOOM}
@@ -636,9 +519,9 @@ export default class SidePanelForms extends React.Component {
 			<div style={rbSize}>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
-					name="snap_to_grid_radio"
-					onChange={this.snapToGridOptionChange}
-					defaultSelected={this.props.canvasConfig.selectedSnapToGrid}
+					name="selectedSnapToGridType" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedSnapToGridType")}
 				>
 					<RadioButton
 						value={NONE_DRAG}
@@ -660,18 +543,18 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-snap-to-grid">
 				<TextInput
 					style={entrySize}
-					id="harness-snap-to-grid-x"
+					id="enteredSnapToGridX" // Set ID to corresponding field in App.js state
 					labelText="X Grid Size"
 					placeholder="X Size"
-					onChange={this.snapToGridFieldChange.bind(this, "newSnapToGridX")}
-					value={this.props.canvasConfig.snapToGridX}
+					onChange={this.enteredStateValue}
+					value={this.props.getStateValue("enteredSnapToGridX")}
 				/>
 				<TextInput style={entrySize}
-					id="harness-snap-to-grid-y"
+					id="enteredSnapToGridY" // Set ID to corresponding field in App.js state
 					labelText="Y Grid Size"
 					placeholder="Y Size"
-					onChange={this.snapToGridFieldChange.bind(this, "newSnapToGridY")}
-					value={this.props.canvasConfig.snapToGridY}
+					onChange={this.enteredStateValue}
+					value={this.props.getStateValue("enteredSnapToGridY")}
 				/>
 			</div>
 		</div>);
@@ -681,9 +564,9 @@ export default class SidePanelForms extends React.Component {
 				<div className="harness-sidepanel-headers">Enable Drag Without Select</div>
 				<div>
 					<Toggle
-						id="harness-sidepanel-drag-without-select"
-						toggled={this.props.canvasConfig.dragWithoutSelect}
-						onToggle={this.useEnableDragWithoutSelect}
+						id="selectedDragWithoutSelect" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedDragWithoutSelect")}
+						onToggle={this.setStateValue}
 					/>
 				</div>
 			</form>
@@ -695,9 +578,9 @@ export default class SidePanelForms extends React.Component {
 				<div className="harness-sidepanel-headers">Enable Association Link Creation</div>
 				<div>
 					<Toggle
-						id="harness-sidepanel-assoc-link-creation-toggle"
-						toggled={this.props.canvasConfig.assocLinkCreation}
-						onToggle={this.useEnableAssocLinkCreation}
+						id="selectedAssocLinkCreation" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedAssocLinkCreation")}
+						onToggle={this.setStateValue}
 					/>
 				</div>
 			</form>
@@ -707,9 +590,9 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-sidepanel-headers">Association Link Type</div>
 			<RadioButtonGroup
 				className="harness-sidepanel-radio-group"
-				name="assoc_link_type_radio"
-				onChange={this.assocLinkTypeOptionChange}
-				defaultSelected={this.props.canvasConfig.selectedAssocLinkType}
+				name="selectedAssocLinkType" // Set name to corresponding field name in App.js
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedAssocLinkType")}
 			>
 				<RadioButton
 					value={ASSOC_STRAIGHT}
@@ -727,9 +610,9 @@ export default class SidePanelForms extends React.Component {
 				<div className="harness-sidepanel-headers">Use Object Model</div>
 				<div>
 					<Toggle
-						id="harness-sidepanel-object-model-toggle"
-						toggled={this.props.canvasConfig.internalObjectModel}
-						onToggle={this.useInternalObjectModel}
+						id="selectedInternalObjectModel" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedInternalObjectModel")}
+						onToggle={this.setStateValue}
 					/>
 				</div>
 			</form>
@@ -741,9 +624,9 @@ export default class SidePanelForms extends React.Component {
 					<div className="harness-sidepanel-headers">Enable Save To Palette</div>
 					<div>
 						<Toggle
-							id="harness-sidepanel-enable-save-to-palette-toggle"
-							toggled={this.props.canvasConfig.enableSaveToPalette}
-							onToggle={this.useEnableSaveToPalette}
+							id="selectedSaveToPalette" // Set ID to corresponding field in App.js state
+							toggled={this.props.getStateValue("selectedSaveToPalette")}
+							onToggle={this.setStateValue}
 						/>
 					</div>
 				</form>
@@ -755,9 +638,9 @@ export default class SidePanelForms extends React.Component {
 					<div className="harness-sidepanel-headers">Enable Insert Node Droped On Link</div>
 					<div>
 						<Toggle
-							id="harness-sidepanel-enable-insert-node-dropped-on-link-toggle"
-							toggled={this.props.canvasConfig.enableInsertNodeDroppedOnLink}
-							onToggle={this.useEnableInsertNodeDroppedOnLink}
+							id="selectedInsertNodeDroppedOnLink" // Set ID to corresponding field in App.js state
+							toggled={this.props.getStateValue("selectedInsertNodeDroppedOnLink")}
+							onToggle={this.setStateValue}
 						/>
 					</div>
 				</form>
@@ -769,9 +652,9 @@ export default class SidePanelForms extends React.Component {
 					<div className="harness-sidepanel-headers">Enable Zoom Into Sub-flows</div>
 					<div>
 						<Toggle
-							id="harness-sidepanel-enable-zoom-into-subflows-toggle"
-							toggled={this.props.canvasConfig.selectedZoomIntoSubFlows}
-							onToggle={this.useZoomIntoSubFlows}
+							id="selectedZoomIntoSubFlows" // Set ID to corresponding field in App.js state
+							toggled={this.props.getStateValue("selectedZoomIntoSubFlows")}
+							onToggle={this.setStateValue}
 						/>
 					</div>
 				</form>
@@ -783,9 +666,9 @@ export default class SidePanelForms extends React.Component {
 					<div className="harness-sidepanel-headers">Enable Drop Zone on Drag</div>
 					<div>
 						<Toggle
-							id="harness-sidepanel-enable-drop-zone-on-external-drag-toggle"
-							toggled={this.props.canvasConfig.enableDropZoneOnExternalDrag}
-							onToggle={this.useEnableDropZoneOnExternalDrag}
+							id="selectedDropZoneOnExternalDrag" // Set ID to corresponding field in App.js state
+							toggled={this.props.getStateValue("selectedDropZoneOnExternalDrag")}
+							onToggle={this.setStateValue}
 						/>
 					</div>
 				</form>
@@ -796,9 +679,9 @@ export default class SidePanelForms extends React.Component {
 				<div className="harness-sidepanel-headers">Enable Create Supernode for Noncontiguous Nodes</div>
 				<div>
 					<Toggle
-						id="harness-sidepanel-enable-create-supernode-toggle"
-						toggled={this.props.canvasConfig.enableCreateSupernodeNonContiguous}
-						onToggle={this.useEnableCreateSupernodeNonContiguous}
+						id="selectedCreateSupernodeNonContiguous" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedCreateSupernodeNonContiguous")}
+						onToggle={this.setStateValue}
 					/>
 				</div>
 			</form>
@@ -810,9 +693,9 @@ export default class SidePanelForms extends React.Component {
 					Enable move surrounding nodes when resizing a supernode.</div>
 				<div>
 					<Toggle
-						id="harness-sidepanel-enable-move-surrounding-nodes-toggle"
-						toggled={this.props.canvasConfig.enableMoveNodesOnSupernodeResize}
-						onToggle={this.onEnableMoveNodesOnSupernodeResizeToggle}
+						id="selectedMoveNodesOnSupernodeResize" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedMoveNodesOnSupernodeResize")}
+						onToggle={this.setStateValue}
 					/>
 				</div>
 			</form>
@@ -822,9 +705,9 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-sidepanel-headers">Interaction Type</div>
 			<RadioButtonGroup
 				className="harness-sidepanel-radio-group"
-				name="interaction_type_radio"
-				onChange={this.interactionTypeOptionChange}
-				defaultSelected={this.props.canvasConfig.selectedInteractionType}
+				name="selectedInteractionType" // Set name to corresponding field name in App.js
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedInteractionType")}
 			>
 				<RadioButton
 					value={MOUSE_INTERACTION}
@@ -842,9 +725,9 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-sidepanel-headers">Connection Type</div>
 			<RadioButtonGroup
 				className="harness-sidepanel-radio-group"
-				name="connection_type_radio"
-				onChange={this.connectionTypeOptionChange}
-				defaultSelected={this.props.canvasConfig.selectedConnectionType}
+				name="selectedConnectionType" // Set name to corresponding field name in App.js
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedConnectionType")}
 			>
 				<RadioButton
 					value={PORTS_CONNECTION}
@@ -861,9 +744,9 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-sidepanel-headers">Node Format Type (for 'Ports')</div>
 			<RadioButtonGroup
 				className="harness-sidepanel-radio-group"
-				name="node_format_type_radio"
-				onChange={this.nodeFormatTypeOptionChange}
-				defaultSelected={this.props.canvasConfig.selectedNodeFormat}
+				name="selectedNodeFormat" // Set name to corresponding field name in App.js
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedNodeFormat")}
 			>
 				<RadioButton
 					value={VERTICAL_FORMAT}
@@ -880,9 +763,9 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-sidepanel-headers">Link Type (for 'Ports')</div>
 			<RadioButtonGroup
 				className="harness-sidepanel-radio-group"
-				name="link_type_radio"
-				onChange={this.linkTypeOptionChange}
-				defaultSelected={this.props.canvasConfig.selectedLinkType}
+				name="selectedLinkType" // Set name to corresponding field name in App.js
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedLinkType")}
 			>
 				<RadioButton
 					value={CURVE_LINKS}
@@ -903,9 +786,9 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-sidepanel-headers">Link Direction (for 'Ports')</div>
 			<RadioButtonGroup
 				className="harness-sidepanel-radio-group"
-				name="link_type_direction"
-				onChange={this.linkDirectionOptionChange}
-				defaultSelected={this.props.canvasConfig.selectedLinkDirection}
+				name="selectedLinkDirection" // Set name to corresponding field name in App.js
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedLinkDirection")}
 			>
 				<RadioButton
 					value={DIRECTION_LEFT_RIGHT}
@@ -928,7 +811,7 @@ export default class SidePanelForms extends React.Component {
 				className="harness-sidepanel-radio-group"
 				name="node_layout_radio"
 				onChange={this.nodeLayoutOptionChange}
-				defaultSelected={this.props.canvasConfig.selectedNodeLayout}
+				defaultSelected={this.props.getStateValue("selectedNodeLayout")}
 			>
 				<RadioButton
 					value={EXAMPLE_APP_FLOWS}
@@ -964,10 +847,10 @@ export default class SidePanelForms extends React.Component {
 		var paletteLayout = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-layout">
 			<div className="harness-sidepanel-headers">Palette Layout</div>
 			<RadioButtonGroup
-				name="palette_layout_radio"
+				name="selectedPaletteLayout" // Set name to corresponding field name in App.js
 				className="harness-sidepanel-radio-group"
-				onChange={this.paletteLayoutOptionChange}
-				defaultSelected={this.props.canvasConfig.selectedPaletteLayout}
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedPaletteLayout")}
 			>
 				<RadioButton
 					value={FLYOUT}
@@ -981,9 +864,9 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-sidepanel-headers">Show Narrow Palette</div>
 			<div>
 				<Toggle
-					id="harness-sidepanel-narrow-flyout"
-					toggled={this.props.canvasConfig.narrowPalette}
-					onToggle={this.narrowPalette}
+					id="selectedNarrowPalette" // Set ID to corresponding field in App.js state
+					toggled={this.props.getStateValue("selectedNarrowPalette")}
+					onToggle={this.setStateValue}
 				/>
 			</div>
 		</div>);
@@ -994,25 +877,25 @@ export default class SidePanelForms extends React.Component {
 				id="tip_palette"
 				labelText={TIP_PALETTE}
 				onChange={this.tipConfigChange}
-				checked={this.props.canvasConfig.commonCanvasConfig.tipConfig.palette}
+				checked={this.props.getStateValue("selectedTipConfig").palette}
 			/>
 			<Checkbox
 				id="tip_nodes"
 				labelText={TIP_NODES}
 				onChange={this.tipConfigChange}
-				checked={this.props.canvasConfig.commonCanvasConfig.tipConfig.nodes}
+				checked={this.props.getStateValue("selectedTipConfig").nodes}
 			/>
 			<Checkbox
 				id="tip_ports"
 				labelText={TIP_PORTS}
 				onChange={this.tipConfigChange}
-				checked={this.props.canvasConfig.commonCanvasConfig.tipConfig.ports}
+				checked={this.props.getStateValue("selectedTipConfig").ports}
 			/>
 			<Checkbox
 				id="tip_links"
 				labelText={TIP_LINKS}
 				onChange={this.tipConfigChange}
-				checked={this.props.canvasConfig.commonCanvasConfig.tipConfig.links}
+				checked={this.props.getStateValue("selectedTipConfig").links}
 			/>
 		</div>);
 
@@ -1021,9 +904,9 @@ export default class SidePanelForms extends React.Component {
 				<div className="harness-sidepanel-headers">Extra canvas</div>
 				<div>
 					<Toggle
-						id="harness-sidepanel-object-extra-canvas"
-						toggled={this.props.canvasConfig.extraCanvasDisplayed}
-						onToggle={this.extraCanvasChange}
+						id="selectedExtraCanvasDisplayed" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedExtraCanvasDisplayed")}
+						onToggle={this.setStateValue}
 					/>
 				</div>
 			</form>
@@ -1052,9 +935,9 @@ export default class SidePanelForms extends React.Component {
 				<div className="harness-sidepanel-headers">Schema Validation</div>
 				<div>
 					<Toggle
-						id="harness-sidepanel-schema-validation"
-						toggled={this.props.canvasConfig.schemaValidationEnabled}
-						onToggle={this.schemaValidationChange}
+						id="selectedSchemaValidation" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedSchemaValidation")}
+						onToggle={this.setStateValue}
 					/>
 				</div>
 			</form>
@@ -1065,9 +948,9 @@ export default class SidePanelForms extends React.Component {
 				<div className="harness-sidepanel-headers">Display Bounding Rectangles</div>
 				<div>
 					<Toggle
-						id="harness-sidepanel-bounding-rectangles"
-						toggled={this.props.canvasConfig.displayBoundingRectanglesEnabled}
-						onToggle={this.props.canvasConfig.displayBoundingRectangles}
+						id="selectedBoundingRectangles" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedBoundingRectangles")}
+						onToggle={this.setStateValue}
 					/>
 				</div>
 			</form>
@@ -1077,9 +960,9 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-sidepanel-children">
 				<div className="harness-sidepanel-headers">Display full node label on hover</div>
 				<Toggle
-					id="harness-sidepanel-displayFullLabelOnHover-toggle"
-					toggled={this.props.canvasConfig.displayFullLabelOnHover}
-					onToggle={this.changeDisplayFullLabelOnHover}
+					id="selectedDisplayFullLabelOnHover" // Set ID to corresponding field in App.js state
+					toggled={this.props.getStateValue("selectedDisplayFullLabelOnHover")}
+					onToggle={this.setStateValue}
 				/>
 			</div>);
 
@@ -1151,12 +1034,9 @@ export default class SidePanelForms extends React.Component {
 
 SidePanelForms.propTypes = {
 	log: PropTypes.func,
+	setStateValue: PropTypes.func,
+	getStateValue: PropTypes.func,
 	canvasConfig: PropTypes.shape({
-		commonCanvasConfig: PropTypes.object,
-		enableNavPalette: PropTypes.func,
-		internalObjectModel: PropTypes.bool,
-		dragWithoutSelect: PropTypes.bool,
-		assocLinkCreation: PropTypes.bool,
 		setDiagramJSON: PropTypes.func,
 		setPaletteJSON: PropTypes.func,
 		setDiagramJSON2: PropTypes.func,
@@ -1165,14 +1045,10 @@ SidePanelForms.propTypes = {
 		canvasFileChooserVisible2: PropTypes.bool,
 		paletteFileChooserVisible: PropTypes.bool,
 		paletteFileChooserVisible2: PropTypes.bool,
-		enableSaveToPalette: PropTypes.bool,
-		useEnableSaveToPalette: PropTypes.func,
-		enableDropZoneOnExternalDrag: PropTypes.bool,
-		enableInsertNodeDroppedOnLink: PropTypes.bool,
-		useEnableInsertNodeDroppedOnLink: PropTypes.func,
-		useEnableDropZoneOnExternalDrag: PropTypes.func,
-		enableCreateSupernodeNonContiguous: PropTypes.bool,
-		useEnableCreateSupernodeNonContiguous: PropTypes.func,
+		selectedSaveToPalette: PropTypes.bool,
+		selectedDropZoneOnExternalDrag: PropTypes.bool,
+		selectedInsertNodeDroppedOnLink: PropTypes.bool,
+		selectedCreateSupernodeNonContiguous: PropTypes.bool,
 		selectedCanvasDropdownFile: PropTypes.string,
 		selectedCanvasDropdownFile2: PropTypes.string,
 		setCanvasDropdownFile: PropTypes.func,
@@ -1181,48 +1057,6 @@ SidePanelForms.propTypes = {
 		selectedPaletteDropdownFile2: PropTypes.string,
 		setPaletteDropdownSelect: PropTypes.func,
 		setPaletteDropdownSelect2: PropTypes.func,
-		setSaveZoom: PropTypes.func,
-		setZoomIntoSubFlows: PropTypes.func,
-		setSnapToGridType: PropTypes.func,
-		setSnapToGridX: PropTypes.func,
-		setSnapToGridY: PropTypes.func,
-		snapToGridX: PropTypes.string,
-		snapToGridY: PropTypes.string,
-		useInternalObjectModel: PropTypes.func,
-		useEnableDragWithoutSelect: PropTypes.func,
-		useEnableAssocLinkCreation: PropTypes.func,
-		setConnectionType: PropTypes.func,
-		selectedSnapToGrid: PropTypes.string,
-		selectedConnectionType: PropTypes.string,
-		setInteractionType: PropTypes.func,
-		selectedInteractionType: PropTypes.string,
-		setNodeFormatType: PropTypes.func,
-		selectedNodeFormat: PropTypes.string,
-		setLinkType: PropTypes.func,
-		setLinkDirection: PropTypes.func,
-		setAssocLinkType: PropTypes.func,
-		setNodeLayout: PropTypes.func,
-		selectedLinkType: PropTypes.string,
-		selectedLinkDirection: PropTypes.string,
-		selectedAssocLinkType: PropTypes.string,
-		selectedNodeLayout: PropTypes.string,
-		selectedSaveZoom: PropTypes.string,
-		selectedZoomIntoSubFlows: PropTypes.bool,
-		setPaletteLayout: PropTypes.func,
-		selectedPaletteLayout: PropTypes.string,
-		setTipConfig: PropTypes.func,
-		extraCanvasDisplayed: PropTypes.bool,
-		showExtraCanvas: PropTypes.func,
-		narrowPalette: PropTypes.bool,
-		setNarrowPalette: PropTypes.func,
-		schemaValidation: PropTypes.func,
-		schemaValidationEnabled: PropTypes.bool,
-		displayBoundingRectangles: PropTypes.func,
-		displayBoundingRectanglesEnabled: PropTypes.bool,
-		displayFullLabelOnHover: PropTypes.bool,
-		changeDisplayFullLabelOnHover: PropTypes.func,
-		enableMoveNodesOnSupernodeResize: PropTypes.bool,
-		setEnableMoveNodesOnSupernodeResize: PropTypes.func,
 		clearSavedZoomValues: PropTypes.func
 	})
 };

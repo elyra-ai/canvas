@@ -67,6 +67,8 @@ import CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
+import { Play32, StopFilledAlt32 } from "@carbon/icons-react";
+
 import {
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
@@ -115,57 +117,14 @@ export default class App extends React.Component {
 			consoleout: [],
 			consoleOpened: false,
 			contextMenuInfo: {},
-			internalObjectModel: true,
-			dragWithoutSelect: false,
-			assocLinkCreation: false,
-			propertiesContainerType: FLYOUT,
 			openSidepanelCanvas: false,
 			openSidepanelModal: false,
 			openSidepanelAPI: false,
-			paletteNavEnabled: false,
+
+			// Common canvas state variables
 			paletteOpened: false,
-			propertiesInfo: {},
-			propertiesInfo2: {},
-			propertiesJson: null,
-			selectedPanel: null,
-			selectedSnapToGridType: NONE_DRAG,
-			snapToGridX: "",
-			snapToGridY: "",
-			autoLayoutVerticalSpacing: null,
-			autoLayoutHorizontalSpacing: null,
-			selectedInteractionType: MOUSE_INTERACTION,
-			selectedConnectionType: PORTS_CONNECTION,
-			selectedNodeFormat: VERTICAL_FORMAT,
-			selectedSaveZoom: NONE_SAVE_ZOOM,
-			selectedZoomIntoSubFlows: false,
-			selectedLinkType: CURVE_LINKS,
-			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
-			selectedAssocLinkType: ASSOC_STRAIGHT,
-			selectedNodeLayout: EXAMPLE_APP_NONE,
-			selectedPaletteLayout: FLYOUT,
-			showContextMenu: false,
 			showPropertiesDialog: false,
 			showPropertiesDialog2: false,
-			tipConfig: {
-				"palette": true,
-				"nodes": true,
-				"ports": true,
-				"links": true
-			},
-			extraCanvasDisplayed: false,
-			displayAdditionalComponents: false,
-			enableSaveToPalette: false,
-			enableDropZoneOnExternalDrag: false,
-			insertNodeDroppedOnLink: false,
-			enableCreateSupernodeNonContiguous: false,
-			enableMoveNodesOnSupernodeResize: true,
-			applyOnBlur: true,
-			expressionBuilder: true,
-			expressionValidate: true,
-			displayFullLabelOnHover: false,
-			narrowPalette: true,
-			schemaValidationEnabled: true,
-			displayBoundingRectanglesEnabled: false,
 			canvasFileChooserVisible: false,
 			canvasFileChooserVisible2: false,
 			paletteFileChooserVisible: false,
@@ -178,6 +137,50 @@ export default class App extends React.Component {
 			selectedPaletteDropdownFile2: "",
 			canvasPalette: "",
 			canvasPalette2: "",
+			selectedInternalObjectModel: true,
+			selectedDragWithoutSelect: false,
+			selectedAssocLinkCreation: false,
+			selectedSnapToGridType: NONE_DRAG,
+			enteredSnapToGridX: "",
+			enteredSnapToGridY: "",
+			selectedInteractionType: MOUSE_INTERACTION,
+			selectedConnectionType: PORTS_CONNECTION,
+			selectedNodeFormat: VERTICAL_FORMAT,
+			selectedSaveZoom: NONE_SAVE_ZOOM,
+			selectedZoomIntoSubFlows: false,
+			selectedLinkType: CURVE_LINKS,
+			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
+			selectedAssocLinkType: ASSOC_STRAIGHT,
+			selectedNodeLayout: EXAMPLE_APP_NONE,
+			selectedPaletteLayout: FLYOUT,
+			selectedTipConfig: {
+				"palette": true,
+				"nodes": true,
+				"ports": true,
+				"links": true
+			},
+			selectedExtraCanvasDisplayed: false,
+			selectedSaveToPalette: false,
+			selectedDropZoneOnExternalDrag: false,
+			selectedInsertNodeDroppedOnLink: false,
+			selectedCreateSupernodeNonContiguous: false,
+			selectedMoveNodesOnSupernodeResize: true,
+			selectedDisplayFullLabelOnHover: false,
+			selectedNarrowPalette: true,
+			selectedSchemaValidation: true,
+			selectedBoundingRectangles: false,
+
+			// Common properties state variables
+			propertiesInfo: {},
+			propertiesInfo2: {},
+			propertiesJson: null,
+			selectedPanel: null,
+			propertiesContainerType: FLYOUT,
+			displayAdditionalComponents: false,
+			applyOnBlur: true,
+			expressionBuilder: true,
+			expressionValidate: true,
+
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
 			selectedPropertiesFileCategory: "",
@@ -196,7 +199,6 @@ export default class App extends React.Component {
 		this.openConsole = this.openConsole.bind(this);
 		this.log = this.log.bind(this);
 		this.download = this.download.bind(this);
-		this.enableNavPalette = this.enableNavPalette.bind(this);
 		this.setDiagramJSON = this.setDiagramJSON.bind(this);
 		this.setPaletteJSON = this.setPaletteJSON.bind(this);
 		this.setDiagramJSON2 = this.setDiagramJSON2.bind(this);
@@ -220,41 +222,17 @@ export default class App extends React.Component {
 		this.setPaletteDropdownSelect = this.setPaletteDropdownSelect.bind(this);
 		this.setPaletteDropdownSelect2 = this.setPaletteDropdownSelect2.bind(this);
 
-		this.setSaveZoom = this.setSaveZoom.bind(this);
-		this.setZoomIntoSubFlows = this.setZoomIntoSubFlows.bind(this);
-		this.useEnableInsertNodeDroppedOnLink = this.useEnableInsertNodeDroppedOnLink.bind(this);
-		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
-		this.useEnableDragWithoutSelect = this.useEnableDragWithoutSelect.bind(this);
-		this.useEnableAssocLinkCreation = this.useEnableAssocLinkCreation.bind(this);
+		this.setStateValue = this.setStateValue.bind(this);
+		this.getStateValue = this.getStateValue.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
-		this.useEnableSaveToPalette = this.useEnableSaveToPalette.bind(this);
-		this.useEnableDropZoneOnExternalDrag = this.useEnableDropZoneOnExternalDrag.bind(this);
-		this.useEnableCreateSupernodeNonContiguous = this.useEnableCreateSupernodeNonContiguous.bind(this);
-		this.setEnableMoveNodesOnSupernodeResize = this.setEnableMoveNodesOnSupernodeResize.bind(this);
+
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
-		this.setNarrowPalette = this.setNarrowPalette.bind(this);
-		this.schemaValidation = this.schemaValidation.bind(this);
-		this.displayBoundingRectangles = this.displayBoundingRectangles.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
-		this.setInteractionType = this.setInteractionType.bind(this);
-		this.setSnapToGridType = this.setSnapToGridType.bind(this);
-		this.setSnapToGridX = this.setSnapToGridX.bind(this);
-		this.setSnapToGridY = this.setSnapToGridY.bind(this);
-		this.setConnectionType = this.setConnectionType.bind(this);
-		this.setNodeFormatType = this.setNodeFormatType.bind(this);
-		this.setLinkType = this.setLinkType.bind(this);
-		this.setLinkDirection = this.setLinkDirection.bind(this);
-		this.setAssocLinkType = this.setAssocLinkType.bind(this);
-		this.setNodeLayout = this.setNodeLayout.bind(this);
-		this.setPaletteLayout = this.setPaletteLayout.bind(this);
 		this.getPipelineFlow = this.getPipelineFlow.bind(this);
 		this.setPipelineFlow = this.setPipelineFlow.bind(this);
-		this.setTipConfig = this.setTipConfig.bind(this);
-		this.showExtraCanvas = this.showExtraCanvas.bind(this);
-		this.displayFullLabelOnHover = this.displayFullLabelOnHover.bind(this);
 		this.addNodeTypeToPalette = this.addNodeTypeToPalette.bind(this);
 		this.getCanvasInfo = this.getCanvasInfo.bind(this);
 		this.setNodeLabel = this.setNodeLabel.bind(this);
@@ -649,74 +627,17 @@ export default class App extends React.Component {
 		this.log("Properties set");
 	}
 
-	setSaveZoom(selectedSaveZoom) {
-		this.setState({ selectedSaveZoom: selectedSaveZoom });
-		this.log("Save Zoom selected", selectedSaveZoom);
+	// Called by canvas sidepanel to set state variables
+	setStateValue(field, value) {
+		const data = {};
+		data[field] = value;
+		this.setState(data);
+		this.log(field + " = " + value);
 	}
 
-	setZoomIntoSubFlows(selectedZoomIntoSubFlows) {
-		this.setState({ selectedZoomIntoSubFlows: selectedZoomIntoSubFlows });
-		this.log("Zoom Into Sub-flows selected ", selectedZoomIntoSubFlows);
-	}
-
-	setSnapToGridType(selectedSnapToGridType) {
-		this.setState({ selectedSnapToGridType: selectedSnapToGridType });
-		this.log("Snap to Grid selected", selectedSnapToGridType);
-	}
-
-	setSnapToGridX(enteredSnapToGridX) {
-		this.setState({ snapToGridX: enteredSnapToGridX });
-		this.log("Snap to Grid X entered ", enteredSnapToGridX);
-	}
-
-	setSnapToGridY(enteredSnapToGridY) {
-		this.setState({ snapToGridY: enteredSnapToGridY });
-		this.log("Snap to Grid Y entered ", enteredSnapToGridY);
-	}
-
-	setInteractionType(selectedInteractionType) {
-		this.setState({ selectedInteractionType: selectedInteractionType });
-		this.log("Interaction Type selected", selectedInteractionType);
-	}
-
-	setConnectionType(selectedConnectionType) {
-		this.setState({ selectedConnectionType: selectedConnectionType });
-		this.log("Connection Type selected", selectedConnectionType);
-	}
-
-	setNodeFormatType(selectedNodeFormat) {
-		this.setState({ selectedNodeFormat: selectedNodeFormat });
-		this.log("Node Format selected", selectedNodeFormat);
-	}
-
-	setLinkType(selectedLinkType) {
-		this.setState({ selectedLinkType: selectedLinkType });
-		this.log("Link type selected", selectedLinkType);
-	}
-
-	setLinkDirection(selectedLinkDirection) {
-		this.setState({ selectedLinkDirection: selectedLinkDirection });
-		this.log("Link direction selected", selectedLinkDirection);
-	}
-
-	setAssocLinkType(selectedAssocLinkType) {
-		this.setState({ selectedAssocLinkType: selectedAssocLinkType });
-		this.log("Associated link type selected", selectedAssocLinkType);
-	}
-
-	setNodeLayout(selectedNodeLayout) {
-		this.setState({ selectedNodeLayout: selectedNodeLayout });
-		this.log("Node layout selected", selectedNodeLayout);
-	}
-
-	setPaletteLayout(selectedPaletteLayout) {
-		this.setState({ selectedPaletteLayout: selectedPaletteLayout });
-		this.log("Palette Layout selected", selectedPaletteLayout);
-	}
-
-	setNarrowPalette(enabled) {
-		this.setState({ narrowPalette: enabled });
-		this.log("show narrow palette", enabled);
+	// Called by canvas sidepanel to get state variables
+	getStateValue(field) {
+		return this.state[field];
 	}
 
 	setPipelineFlow(flow) {
@@ -727,11 +648,6 @@ export default class App extends React.Component {
 	setApiSelectedOperation(operation) {
 		this.setState({ apiSelectedOperation: operation });
 		this.log("API Operation Selected");
-	}
-
-	setEnableMoveNodesOnSupernodeResize(enabled) {
-		this.setState({ enableMoveNodesOnSupernodeResize: enabled });
-		this.log("enable move nodes on supernode resize", enabled);
 	}
 
 	getPipelineFlow(canvController) {
@@ -746,11 +662,6 @@ export default class App extends React.Component {
 
 	getCanvasInfo() {
 		return this.canvasController.getObjectModel().getCanvasInfoPipeline();
-	}
-
-	setTipConfig(newTipConfig) {
-		this.setState({ tipConfig: newTipConfig });
-		this.log("Set tip config", newTipConfig);
 	}
 
 	setNodeLabel(nodeId, newLabel) {
@@ -938,16 +849,6 @@ export default class App extends React.Component {
 		};
 	}
 
-	schemaValidation(enabled) {
-		this.setState({ schemaValidationEnabled: enabled });
-		this.log("Schema validation enabled ", enabled);
-	}
-
-	displayBoundingRectangles(enabled) {
-		this.setState({ displayBoundingRectanglesEnabled: enabled });
-		this.log("Display bounding rectangles enabled ", enabled);
-	}
-
 	appendNotificationMessages(message) {
 		this.harnessNotificationMessages = this.harnessNotificationMessages.concat(message);
 		this.canvasController.setNotificationMessages(this.flowNotificationMessages.concat(this.harnessNotificationMessages));
@@ -1057,31 +958,6 @@ export default class App extends React.Component {
 		ReactFileDownload(canvas, "canvas.json");
 	}
 
-	enableNavPalette(enabled) {
-		this.setState({ paletteNavEnabled: enabled });
-		// this.log("palette in nav bar enabled: " + enabled);
-	}
-
-	useInternalObjectModel(enabled) {
-		this.setState({ internalObjectModel: enabled });
-		this.log("use internal object model", enabled);
-	}
-
-	useEnableDragWithoutSelect(enabled) {
-		this.setState({ dragWithoutSelect: enabled });
-		this.log("enable drag without select", enabled);
-	}
-
-	useEnableAssocLinkCreation(enabled) {
-		this.setState({ assocLinkCreation: enabled });
-		this.log("enable association link creation", enabled);
-	}
-
-	useEnableInsertNodeDroppedOnLink(selectedInsert) {
-		this.setState({ insertNodeDroppedOnLink: selectedInsert });
-		this.log("Insert node droped  on link ", selectedInsert);
-	}
-
 	useApplyOnBlur(enabled) {
 		this.setState({ applyOnBlur: enabled });
 		this.log("apply changes on blur", enabled);
@@ -1102,30 +978,6 @@ export default class App extends React.Component {
 		this.log("additional components display", enabled);
 	}
 
-	useEnableSaveToPalette(enabled) {
-		this.setState({ enableSaveToPalette: enabled });
-		this.log("enable save to palette", enabled);
-	}
-
-	useEnableDropZoneOnExternalDrag(enabled) {
-		this.setState({ enableDropZoneOnExternalDrag: enabled });
-		this.log("enable drop zone on external drag", enabled);
-	}
-
-	useEnableCreateSupernodeNonContiguous(enabled) {
-		this.setState({ enableCreateSupernodeNonContiguous: enabled });
-		this.log("enable noncontiguous nodes supernode creation", enabled);
-	}
-
-	showExtraCanvas(enabled) {
-		this.setState({ extraCanvasDisplayed: enabled });
-		this.log("show extra canvas", enabled);
-	}
-
-	displayFullLabelOnHover(enabled) {
-		this.setState({ displayFullLabelOnHover: enabled });
-	}
-
 	usePropertiesContainerType(type) {
 		this.setState({ propertiesContainerType: type });
 		this.log("set properties container", type);
@@ -1135,10 +987,10 @@ export default class App extends React.Component {
 	clickActionHandler(source) {
 		this.log("clickActionHandler()", source);
 		if (source.objectType === "node" &&
-				((this.state.dragWithoutSelect &&
+				((this.state.selectedDragWithoutSelect &&
 					source.clickType === "SINGLE_CLICK" &&
 					this.canvasController.getSelectedObjectIds().length === 1) ||
-					(!this.state.dragWithoutSelect &&
+					(!this.state.selectedDragWithoutSelect &&
 						source.clickType === "DOUBLE_CLICK"))) {
 			this.editNodeHandler(source.id, source.pipelineId);
 		}
@@ -1147,10 +999,10 @@ export default class App extends React.Component {
 	extraCanvasClickActionHandler(source) {
 		this.log("extraCanvasClickActionHandler()", source);
 		if (source.objectType === "node" &&
-				((this.state.dragWithoutSelect &&
+				((this.state.selectedDragWithoutSelect &&
 					source.clickType === "SINGLE_CLICK" &&
 					this.canvasController2.getSelectedObjectIds().length === 1) ||
-					(!this.state.dragWithoutSelect &&
+					(!this.state.selectedDragWithoutSelect &&
 						source.clickType === "DOUBLE_CLICK"))) {
 			this.editNodeHandler(source.id, source.pipelineId, true);
 		}
@@ -1258,7 +1110,7 @@ export default class App extends React.Component {
 		} else if (data.editType === "editNode") {
 			this.editNodeHandler(data.targetObject.id, data.pipelineId, inExtraCanvas);
 
-		} else if (data.editType === "run") {
+		} else if (data.editType === "runit") {
 			if (this.state.selectedCanvasDropdownFile === "allTypesCanvas.json" ||
 					this.state.selectedCanvasDropdownFile === "stylesCanvas.json") {
 				this.runProgress();
@@ -1723,10 +1575,8 @@ export default class App extends React.Component {
 		const commonCanvasConfig = {
 			enableInteractionType: this.state.selectedInteractionType,
 			enableSnapToGridType: this.state.selectedSnapToGridType,
-			enableSnapToGridX: this.state.snapToGridX,
-			enableSnapToGridY: this.state.snapToGridY,
-			enableAutoLayoutVerticalSpacing: this.state.autoLayoutVerticalSpacing,
-			enableAutoLayoutHorizontalSpacing: this.state.autoLayoutHorizontalSpacing,
+			enableSnapToGridX: this.state.enteredSnapToGridX,
+			enableSnapToGridY: this.state.enteredSnapToGridY,
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
@@ -1734,19 +1584,19 @@ export default class App extends React.Component {
 			enableAssocLinkType: this.state.selectedAssocLinkType,
 			enableParentClass: parentClass,
 			enableNodeLayout: null,
-			enableInternalObjectModel: this.state.internalObjectModel,
-			enableDragWithoutSelect: this.state.dragWithoutSelect,
-			enableAssocLinkCreation: this.state.assocLinkCreation,
+			enableInternalObjectModel: this.state.selectedInternalObjectModel,
+			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
+			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
-			enableInsertNodeDroppedOnLink: this.state.insertNodeDroppedOnLink,
-			enableMoveNodesOnSupernodeResize: this.state.enableMoveNodesOnSupernodeResize,
-			tipConfig: this.state.tipConfig,
-			schemaValidation: this.state.schemaValidationEnabled,
-			enableNarrowPalette: this.state.narrowPalette,
-			enableDisplayFullLabelOnHover: this.state.displayFullLabelOnHover,
-			enableBoundingRectangles: this.state.displayBoundingRectanglesEnabled,
-			enableDropZoneOnExternalDrag: this.state.enableDropZoneOnExternalDrag,
+			enableInsertNodeDroppedOnLink: this.state.selectedInsertNodeDroppedOnLink,
+			enableMoveNodesOnSupernodeResize: this.state.selectedMoveNodesOnSupernodeResize,
+			tipConfig: this.state.selectedTipConfig,
+			schemaValidation: this.state.selectedSchemaValidation,
+			enableNarrowPalette: this.state.selectedNarrowPalette,
+			enableDisplayFullLabelOnHover: this.state.selectedDisplayFullLabelOnHover,
+			enableBoundingRectangles: this.state.selectedBoundingRectangles,
+			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
 			// dropZoneCanvasContent: dropZoneCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
@@ -1763,22 +1613,22 @@ export default class App extends React.Component {
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
 			enableParentClass: parentClass,
-			enableInternalObjectModel: this.state.internalObjectModel,
-			enableDragWithoutSelect: this.state.dragWithoutSelect,
+			enableInternalObjectModel: this.state.selectedInternalObjectModel,
+			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
-			enableMoveNodesOnSupernodeResize: true,
-			tipConfig: this.state.tipConfig,
-			schemaValidation: this.state.schemaValidationEnabled,
-			enableBoundingRectangles: this.state.displayBoundingRectanglesEnabled,
-			enableNarrowPalette: this.state.narrowPalette
+			selectedMoveNodesOnSupernodeResize: true,
+			tipConfig: this.state.selectedTipConfig,
+			schemaValidation: this.state.selectedSchemaValidation,
+			enableBoundingRectangles: this.state.selectedBoundingRectangles,
+			enableNarrowPalette: this.state.selectedNarrowPalette
 		};
 
 		const toolbarConfig = [
 			{ action: "palette", label: "Palette", enable: true },
 			{ divider: true },
-			{ action: "stop", label: "Stop Execution", enable: false },
-			{ action: "run", label: "Run Pipeline", enable: true },
+			{ action: "stopit", label: "Stop Execution", enable: false, iconEnabled: (<StopFilledAlt32 />), iconDisabled: (<StopFilledAlt32 />) },
+			{ action: "runit", label: "Run Pipeline", enable: true, iconEnabled: (<Play32 />), iconDisabled: (<Play32 />) },
 			{ divider: true },
 			{ action: "undo", label: "Undo", enable: true },
 			{ action: "redo", label: "Redo", enable: true },
@@ -1794,9 +1644,9 @@ export default class App extends React.Component {
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications" };
 		const notificationConfig2 = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications Canvas 2" };
 		const contextMenuConfig = {
-			enableCreateSupernodeNonContiguous: this.state.enableCreateSupernodeNonContiguous,
+			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
 			defaultMenuEntries: {
-				saveToPalette: this.state.enableSaveToPalette,
+				saveToPalette: this.state.selectedSaveToPalette,
 				createSupernode: true
 			}
 		};
@@ -1950,7 +1800,7 @@ export default class App extends React.Component {
 		const canvasContainerWidth = this.isSidePanelOpen() === false ? "100%" : "calc(100% - " + SIDE_PANEL.MAXIMIXED + ")";
 
 		let commonCanvas;
-		if (this.state.extraCanvasDisplayed === true) {
+		if (this.state.selectedExtraCanvasDisplayed === true) {
 			commonCanvas = (
 				<div className="harness-canvas-container double" style={{ width: canvasContainerWidth }}>
 					<div className="harness-canvas-single">
@@ -1979,11 +1829,6 @@ export default class App extends React.Component {
 		}
 
 		const sidePanelCanvasConfig = {
-			commonCanvasConfig: commonCanvasConfig,
-			enableNavPalette: this.enableNavPalette,
-			internalObjectModel: this.state.internalObjectModel,
-			dragWithoutSelect: this.state.dragWithoutSelect,
-			assocLinkCreation: this.state.assocLinkCreation,
 			setDiagramJSON: this.setDiagramJSON,
 			setPaletteJSON: this.setPaletteJSON,
 			setDiagramJSON2: this.setDiagramJSON2,
@@ -2000,57 +1845,6 @@ export default class App extends React.Component {
 			setPaletteDropdownSelect2: this.setPaletteDropdownSelect2,
 			selectedPaletteDropdownFile: this.state.selectedPaletteDropdownFile,
 			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
-			setSaveZoom: this.setSaveZoom,
-			setZoomIntoSubFlows: this.setZoomIntoSubFlows,
-			setBooleanValue: this.setBooleanValue,
-			enableInsertNodeDroppedOnLink: this.state.insertNodeDroppedOnLink,
-			useInternalObjectModel: this.useInternalObjectModel,
-			useEnableDragWithoutSelect: this.useEnableDragWithoutSelect,
-			useEnableInsertNodeDroppedOnLink: this.useEnableInsertNodeDroppedOnLink,
-			useEnableAssocLinkCreation: this.useEnableAssocLinkCreation,
-			setInteractionType: this.setInteractionType,
-			selectedInteractionType: this.state.selectedInteractionType,
-			setSnapToGridType: this.setSnapToGridType,
-			setSnapToGridX: this.setSnapToGridX,
-			setSnapToGridY: this.setSnapToGridY,
-			snapToGridX: this.state.snapToGridX,
-			snapToGridY: this.state.snapToGridY,
-			setConnectionType: this.setConnectionType,
-			selectedSnapToGrid: this.state.selectedSnapToGridType,
-			selectedConnectionType: this.state.selectedConnectionType,
-			setNodeFormatType: this.setNodeFormatType,
-			selectedNodeFormat: this.state.selectedNodeFormat,
-			setLinkType: this.setLinkType,
-			setLinkDirection: this.setLinkDirection,
-			setAssocLinkType: this.setAssocLinkType,
-			setNodeLayout: this.setNodeLayout,
-			selectedLinkType: this.state.selectedLinkType,
-			selectedLinkDirection: this.state.selectedLinkDirection,
-			selectedAssocLinkType: this.state.selectedAssocLinkType,
-			selectedNodeLayout: this.state.selectedNodeLayout,
-			selectedSaveZoom: this.state.selectedSaveZoom,
-			selectedZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
-			setPaletteLayout: this.setPaletteLayout,
-			selectedPaletteLayout: this.state.selectedPaletteLayout,
-			setTipConfig: this.setTipConfig,
-			extraCanvasDisplayed: this.state.extraCanvasDisplayed,
-			showExtraCanvas: this.showExtraCanvas,
-			narrowPalette: this.state.narrowPalette,
-			setNarrowPalette: this.setNarrowPalette,
-			schemaValidation: this.schemaValidation,
-			schemaValidationEnabled: this.state.schemaValidationEnabled,
-			displayBoundingRectangles: this.displayBoundingRectangles,
-			displayBoundingRectanglesEnabled: this.state.displayBoundingRectanglesEnabled,
-			displayFullLabelOnHover: this.state.displayFullLabelOnHover,
-			changeDisplayFullLabelOnHover: this.displayFullLabelOnHover,
-			enableSaveToPalette: this.state.enableSaveToPalette,
-			useEnableSaveToPalette: this.useEnableSaveToPalette,
-			enableDropZoneOnExternalDrag: this.state.enableDropZoneOnExternalDrag,
-			useEnableDropZoneOnExternalDrag: this.useEnableDropZoneOnExternalDrag,
-			enableCreateSupernodeNonContiguous: this.state.enableCreateSupernodeNonContiguous,
-			useEnableCreateSupernodeNonContiguous: this.useEnableCreateSupernodeNonContiguous,
-			enableMoveNodesOnSupernodeResize: this.state.enableMoveNodesOnSupernodeResize,
-			setEnableMoveNodesOnSupernodeResize: this.setEnableMoveNodesOnSupernodeResize,
 			clearSavedZoomValues: this.clearSavedZoomValues
 		};
 
@@ -2114,6 +1908,8 @@ export default class App extends React.Component {
 				openSidepanelAPI={this.state.openSidepanelAPI}
 				selectedPanel={this.state.selectedPanel}
 				log={this.log}
+				setStateValue={this.setStateValue}
+				getStateValue={this.getStateValue}
 			/>
 			{ !isEmpty(this.state.propertiesInfo) ? commonPropertiesContainer : null }
 			{commonCanvas}

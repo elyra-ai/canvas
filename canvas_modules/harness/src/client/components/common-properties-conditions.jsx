@@ -243,7 +243,7 @@ class CommonPropertiesComponents extends React.Component {
 			<nav>
 				<ul className="harness-properties-documentation-navbar-items">
 					<li className="harness-properties-documentation-navbar-li">
-						<a id="harness-conditions-documentation-title">WDP Common Properties Conditions</a>
+						<a id="harness-conditions-documentation-title">Elyra-ai/canvas Common Properties Conditions</a>
 					</li>
 					<li className="harness-properties-documentation-navbar-li nav-divider">
 						<a onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Conditions" } })}>Conditions</a>
@@ -263,9 +263,9 @@ class CommonPropertiesComponents extends React.Component {
 		</div>);
 
 		const header = (<div id="main" className="harness-properties-documentation-section-header">
-			<h1>WDP Common Properties Conditions</h1>
+			<h1>Elyra-ai/canvas Common Properties Conditions</h1>
 			<a className="harness-properties-documentation-page-link"
-				href="https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/common-canvas"
+				href="https://github.com/elyra-ai/canvas/tree/master/canvas_modules/common-canvas"
 				target="_blank"
 			>
 				Source Code
@@ -280,9 +280,9 @@ class CommonPropertiesComponents extends React.Component {
 					between multiple parameters (i.e. valid values for parameter 1 depend upon the value of parameter 2).
 					To create a condition for a control, create a JSON that adheres to the&nbsp;
 				<a className="harness-properties-documentation-page-intro-link"
-					href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-pipeline/operators/conditions-documentation-v1-schema.json"
+					href="https://github.com/elyra-ai/pipeline-schemas/blob/master/common-pipeline/operators/conditions-v3-schema.json"
 				>Conditions schema</a>, and add it to the conditions array in the parameter definition&nbsp;
-				<a className="harness-properties-documentation-page-intro-link" href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-canvas/parameter-defs/parameter-defs-v1-schema.json">
+				<a className="harness-properties-documentation-page-intro-link" href="https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/parameter-defs/parameter-defs-v3-schema.json">
 					parameter definition</a> JSON.
 				</p>
 				<p>
@@ -314,6 +314,8 @@ class CommonPropertiesComponents extends React.Component {
 			{ Control: "checkboxset ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
 			{ Control: "expression (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+			{ Control: "code (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
 			{ Control: "numberfield (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
@@ -1009,7 +1011,7 @@ class CommonPropertiesComponents extends React.Component {
 				<div className="harness-conditions-documentation-panels-controls-component">
 					<h3 id="--filteredEnum" className="harness-section-subtitle">Filtered Enumeration Conditions</h3>
 					<p>The <span className="harness-highlight">enum_filter</span> condition operates upon controls
-						whose parameter is backed by an enumerated list of options. This includes radiosets
+						whose parameter is backed by an enumerated list of options. This includes radioset, checkboxset,
 						and droplist controls. When the condition is true, enum_filter conditions allow authors
 						to dynamically filter the available enumeration options based upon the state of other parameters.
 					</p>

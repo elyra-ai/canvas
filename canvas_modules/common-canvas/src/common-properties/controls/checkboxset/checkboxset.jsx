@@ -23,11 +23,37 @@ import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
 import { STATES } from "./../../constants/constants.js";
 import uuid4 from "uuid/v4";
+import isEqual from "lodash/isEqual";
+import intersection from "lodash/intersection";
 
 class CheckboxsetControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.uuid = uuid4();
+		this.handleChange = this.handleChange.bind(this);
+		this.updateValueFromFilterEnum = this.updateValueFromFilterEnum.bind(this);
+	}
+
+	componentDidMount() {
+		this.updateValueFromFilterEnum(true);
+	}
+
+	componentDidUpdate(prevProps) {
+		// only update if filter options have changed. Fixes issue where filter options are updated after value in setProperties
+		if (!isEqual(this.props.controlOpts, prevProps.controlOpts)) {
+			this.updateValueFromFilterEnum();
+		}
+	}
+
+	// this is needed in order to reset the property value when a value is filtered out.
+	updateValueFromFilterEnum(skipValidateInput) {
+		// update property value if value isn't in current enum value.
+		if (Array.isArray(this.props.value)) {
+			const newValue = intersection(this.props.value, this.props.controlOpts.values);
+			if (!isEqual(this.props.value, newValue)) {
+				this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidateInput);
+			}
+		}
 	}
 
 	handleChange(val, checked) {
@@ -61,8 +87,9 @@ class CheckboxsetControl extends React.Component {
 			};
 			const val = this.props.control.values[i];
 			const checked = (controlValue.indexOf(val) >= 0);
+			const disabled = this.props.state === STATES.DISABLED || !this.props.controlOpts.values.includes(val);
 			checkboxes.push(<Checkbox
-				disabled={this.props.state === STATES.DISABLED}
+				disabled={disabled}
 				id={ControlUtils.getControlId(id, this.uuid)}
 				key={val + i}
 				labelText={this.props.control.valueLabels[i]}
@@ -88,13 +115,21 @@ CheckboxsetControl.propTypes = {
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux
+	controlOpts: PropTypes.oneOfType([
+		PropTypes.object,
+		PropTypes.array
+	]), // pass in by redux
 	messageInfo: PropTypes.object // pass in by redux
 };
 
-const mapStateToProps = (state, ownProps) => ({
-	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
-	state: ownProps.controller.getControlState(ownProps.propertyId),
-	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
-});
+const mapStateToProps = (state, ownProps) => {
+	const props = {
+		value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+		state: ownProps.controller.getControlState(ownProps.propertyId),
+		messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+	};
+	props.controlOpts = ownProps.controller.getFilteredEnumItems(ownProps.propertyId, ownProps.control);
+	return props;
+};
 
 export default connect(mapStateToProps, null)(CheckboxsetControl);

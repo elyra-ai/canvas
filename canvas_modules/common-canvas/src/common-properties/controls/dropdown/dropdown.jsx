@@ -141,8 +141,6 @@ class DropDown extends React.Component {
 	}
 
 	render() {
-		const dropdownType = (this.props.tableControl) ? "inline" : "default";
-
 		let dropDown;
 		if (this.props.control.controlType === ControlType.SELECTSCHEMA) {
 			dropDown = this.genSchemaSelectOptions(this.props.value);
@@ -152,25 +150,16 @@ class DropDown extends React.Component {
 			dropDown = this.genSelectOptions(this.props.value);
 		}
 
-		let dropdownComponent = (<Dropdown
-			id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
-			disabled={this.props.state === STATES.DISABLED}
-			type={dropdownType}
-			items={dropDown.options}
-			onChange={this.handleChange}
-			selectedItem={dropDown.selectedOption}
-			label={this.emptyLabel}
-		/>);
-
+		let dropdownComponent = null;
 		if (this.props.tableControl) {
 			const options = [];
 			const selection = dropDown.selectedOption && dropDown.selectedOption.value ? dropDown.selectedOption.value : "";
 			if (!dropDown.selectedOption) {
 				// need to add null option when no value set.  Shouldn't be an option for the user to select otherwise
-				options.push(<SelectItem text={this.emptyLabel} key="" value="" />);
+				options.push(<SelectItem text={this.emptyLabel} key={this.id} value="" />);
 			}
 			for (const option of dropDown.options) {
-				options.push(<SelectItem text={option.label} key={option.value} value={option.value} />);
+				options.push(<SelectItem text={option.label} key={this.id + "-" + option.value} value={option.value} />);
 			}
 			dropdownComponent = (<Select
 				id={this.id}
@@ -183,6 +172,16 @@ class DropDown extends React.Component {
 			>
 				{ options }
 			</Select>);
+		} else {
+			dropdownComponent = (<Dropdown
+				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
+				disabled={this.props.state === STATES.DISABLED}
+				type="default"
+				items={dropDown.options}
+				onChange={this.handleChange}
+				selectedItem={dropDown.selectedOption}
+				label={this.emptyLabel}
+			/>);
 		}
 
 		return (

@@ -43,8 +43,22 @@ Cypress.Commands.add("clickSubPanelButtonInRow", (controlId, row) => {
 });
 
 Cypress.Commands.add("setTextFieldValue", (controlId, labelText) => {
+	// Replace the existing text with new text in input field by
+	// selecting all the text and typing new text
+	// This is a workaround for issue -
+	// cy.type() on input[type='number'] prepends text to current value instead of appending
 	cy.get("div[data-id='properties-" + controlId + "']").find("input")
+		.focus()
+		.type("{selectall}")
 		.type(labelText);
+});
+
+Cypress.Commands.add("backspaceTextFieldValue", (controlId) => {
+	cy.useBackspaceKey()
+		.then((backspaceKey) => {
+			cy.get("div[data-id='properties-" + controlId + "']").find("input")
+				.type(backspaceKey);
+		});
 });
 
 Cypress.Commands.add("getWideFlyoutPanel", (panelName) => {
@@ -68,4 +82,16 @@ Cypress.Commands.add("saveWideFlyout", (panelName) => {
 			.find(".properties-modal-buttons button[data-id='properties-apply-button']")
 			.click();
 	});
+});
+
+Cypress.Commands.add("clickPropertiesFlyoutTitleEditIcon", () => {
+	cy.get("button.properties-title-editor-btn.edit").click();
+});
+
+Cypress.Commands.add("enterNewPropertiesFlyoutTitle", (newTitle) => {
+	cy.get("div.properties-title-editor-input")
+		.find("input")
+		.focus()
+		.type("{selectall}")
+		.type(newTitle);
 });

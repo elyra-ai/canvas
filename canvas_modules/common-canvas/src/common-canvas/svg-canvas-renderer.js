@@ -20,7 +20,7 @@
 
 // Import just the D3 modules that are needed. Doing this means that the
 // d3Event object needs to be explicitly imported.
-var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-zoom"));
+var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-zoom"), require("d3-fetch"));
 import { event as d3Event } from "d3-selection";
 import union from "lodash/union";
 import forIn from "lodash/forIn";
@@ -658,8 +658,10 @@ export default class SVGCanvasRenderer {
 	// TypeError: Value being assigned to SVGPoint.x is not a finite floating-point value.
 	// Note: d3Event.scale added to the if below because that property will exist
 	// on Safari when processing a 'gesturechange' event.
+	// Note 2: Add window.Cypress to if below because the other conditions are not
+	// met when running inside Cypress.
 	getMousePos(svg) {
-		if (d3Event instanceof MouseEvent || (d3Event && d3Event.sourceEvent) || d3Event.scale) {
+		if (d3Event instanceof MouseEvent || (d3Event && d3Event.sourceEvent) || d3Event.scale || window.Cypress) {
 			// Get mouse position relative to the top level SVG in the Div because,
 			// when we're rendering a sub-flow this.canvasSVG will be the SVG in the supernode.
 			const mousePos = d3.mouse(svg.node());
@@ -735,7 +737,7 @@ export default class SVGCanvasRenderer {
 	// called as a new link is being drawn towards a target node to highlight
 	// the target node.
 	setNewLinkOverNode() {
-		const node = this.getNodeAtMousePos(30);
+		const node = this.getNodeAtMousePos(this.canvasLayout.nodeProximity);
 		if (node && node.id !== this.drawingNewLinkData.srcObjId &&
 				((this.drawingNewLinkData.action === "node-node" && !this.isPortConnected(node)) ||
 					(this.drawingNewLinkData.action === "comment-node" && !this.isSrcObjConnectedToNode(this.drawingNewLinkData.srcObjId, node.id)))) {
@@ -771,7 +773,7 @@ export default class SVGCanvasRenderer {
 	// Removes the data-new-link-over attribute used for highlighting a node
 	// that a new link is being dragged towards or over.
 	setNewLinkOverNodeCancel() {
-		const node = this.getNodeAtMousePos(40);
+		const node = this.getNodeAtMousePos(this.canvasLayout.nodeProximity);
 		this.setNewLinkOverNodeHighlighting(node, false);
 		this.dragNewLinkOverNode = null;
 	}
@@ -924,7 +926,7 @@ export default class SVGCanvasRenderer {
 
 		const canvasSVG = parentObject
 			.append("svg")
-			.attr("class", "svg-area") // svg-area used by Chimp tests.
+			.attr("class", "svg-area") // svg-area used in tests.
 			.attr("width", dims.width)
 			.attr("height", dims.height)
 			.attr("x", dims.x)
@@ -2125,10 +2127,15 @@ export default class SVGCanvasRenderer {
 
 			// Node image
 			newNodeGroups.filter((d) => !this.isSuperBindingNode(d) && d.layout.imageDisplay)
-				.append("image")
-				.attr("data-id", (d) => this.getId("node_image", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "node-image");
+				.each(function(nd) {
+					const nodeImage = that.getNodeImage(nd);
+					const nodeImageType = that.getNodeImageType(nodeImage);
+					d3.select(this)
+						.append(nodeImageType)
+						.attr("data-id", (d) => that.getId("node_image", d.id))
+						.attr("data-pipeline-id", that.activePipeline.id)
+						.attr("class", "node-image");
+				});
 
 			// Label outline - this code used for debugging purposes
 			// newNodeGroups.filter((d) => !this.isSuperBindingNode(d))
@@ -2226,6 +2233,7 @@ export default class SVGCanvasRenderer {
 					// Node styles
 					this.setNodeStyles(d, "default", nodeGrp);
 
+					// Node image
 					// This code will remove custom attributes from a node. This might happen when
 					// the user clicks the canvas background to remove the greyed out appearance of
 					// a node that was 'cut' to the clipboard.
@@ -2233,7 +2241,7 @@ export default class SVGCanvasRenderer {
 					// from the canvas) and when WML Canvas uses that clipboard support in place
 					// of its own.
 					nodeGrp.select(this.getSelectorForId("node_image", d.id))
-						.attr("xlink:href", (nd) => this.getNodeImage(nd))
+						.each(function() { that.setImageContent(this, d); })
 						.attr("x", (nd) => this.getNodeImagePosX(nd))
 						.attr("y", (nd) => this.getNodeImagePosY(nd))
 						.attr("width", (nd) => this.getNodeImageWidth(nd))
@@ -2590,6 +2598,7 @@ export default class SVGCanvasRenderer {
 	//           This is a combination of the object's decorations with any
 	//           decorations from the layout config information.
 	addDecorations(d, objType, trgGrp, decs) {
+		const that = this;
 		const decorations = decs || [];
 		const decGrpClassName = `d3-${objType}-dec-group`;
 		const decGrpSelector = this.getSelectorForClass(decGrpClassName);
@@ -2598,7 +2607,7 @@ export default class SVGCanvasRenderer {
 
 		const newDecGroups = decGroupsSel.enter()
 			.append("g")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_group`, dec.id)) // Used in Chimp tests
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_group`, dec.id)) // Used in tests
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", decGrpClassName);
 
@@ -2608,15 +2617,21 @@ export default class SVGCanvasRenderer {
 
 		newDecGroups.filter((dec) => !dec.label && dec.outline !== false)
 			.append("rect")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_outln`, dec.id)); // Used in Chimp tests
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_outln`, dec.id)); // Used in tests
 
 		newDecGroups.filter((dec) => dec.image)
-			.append("image")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_image`, dec.id)); // Used in Chimp tests
+			.each(function(dec) {
+				const nodeImage = that.getNodeImage(dec);
+				const nodeImageType = that.getNodeImageType(nodeImage);
+				d3.select(this)
+					.append(nodeImageType)
+					.each(function() { that.setImageContent(this, dec); })
+					.attr("data-id", () => that.getId(`${objType}_dec_image`, dec.id)); // Used in tests
+			});
 
 		newDecGroups.filter((dec) => dec.label)
 			.append("text")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_label`, dec.id)); // Used in Chimp tests
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_label`, dec.id)); // Used in tests
 
 		const newAndExistingDecGrps =
 			decGroupsSel.enter().merge(decGroupsSel);
@@ -2648,7 +2663,6 @@ export default class SVGCanvasRenderer {
 					.attr("width", this.getDecoratorWidth(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
 					.attr("height", this.getDecoratorHeight(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
 					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-image`))
-					.attr("xlink:href", this.getDecoratorImage(dec))
 					.datum(decDatum);
 
 				decGrp.select(labelSelector)
@@ -2697,6 +2711,29 @@ export default class SVGCanvasRenderer {
 		return "d3-node-port-input";
 	}
 
+	// Sets the image content on the DOM imageElement from the image field of
+	// the object d (either a node or decoration) passed in. This means svg files
+	// will be loaded as inline SVG while other images files are loaded with href.
+	// We will only set a new image if the image is new or has changed from what
+	// it was previously set to. This allows applications to set new images while
+	// the canvas is being displayed.
+	setImageContent(imageElement, d) {
+		const imageObj = d3.select(imageElement);
+		const nodeImage = this.getNodeImage(d);
+		const nodeImageType = this.getNodeImageType(nodeImage);
+		if (nodeImage !== imageObj.attr("data-image")) {
+			// Save image field in DOM object to avoid unnecessary image refreshes.
+			imageObj.attr("data-image", nodeImage);
+			if (nodeImageType === "svg") {
+				d3.text(nodeImage).then((img) => imageObj.html(img));
+			} else {
+				imageObj.attr("xlink:href", nodeImage);
+			}
+		}
+	}
+
+	// Returns the appropriate image from the object (either node or decoration)
+	// passed in.
 	getNodeImage(d) {
 		if (!d.image) {
 			return null;
@@ -2706,6 +2743,12 @@ export default class SVGCanvasRenderer {
 			}
 		}
 		return d.image;
+	}
+
+	// Returns the type of image passed in, either "svg" or "image". This will
+	// be used to append an svg or image element to the DOM.
+	getNodeImageType(nodeImage) {
+		return nodeImage && nodeImage.endsWith(".svg") ? "svg" : "image";
 	}
 
 	getNodeImageWidth(d) {
@@ -4658,7 +4701,6 @@ export default class SVGCanvasRenderer {
 		var yPart = "";
 
 		const transPos = this.getTransformedMousePos();
-
 		if (transPos.x < d.x_pos + cornerResizeArea) {
 			xPart = "w";
 		} else if (transPos.x > d.x_pos + d.width - cornerResizeArea) {

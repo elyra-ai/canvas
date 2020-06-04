@@ -18,8 +18,20 @@ Cypress.Commands.add("clickToolbarPaletteOpen", () => {
 	cy.get("#palette-open-action").click();
 });
 
+Cypress.Commands.add("clickToolbarPaletteOpenInExtraCanvas", () => {
+	cy.get("#common-canvas-items-container-1")
+		.find("#palette-open-action")
+		.click();
+});
+
 Cypress.Commands.add("clickToolbarPaletteClose", () => {
 	cy.get("#palette-close-action").click();
+});
+
+Cypress.Commands.add("clickToolbarPaletteCloseInExtraCanvas", () => {
+	cy.get("#common-canvas-items-container-1")
+		.find("#palette-close-action")
+		.click();
 });
 
 Cypress.Commands.add("clickToolbarStop", () => {
@@ -50,8 +62,20 @@ Cypress.Commands.add("clickToolbarPaste", () => {
 	cy.get("#paste-action").click();
 });
 
+Cypress.Commands.add("clickToolbarPasteInExtraCanvas", () => {
+	cy.get("#common-canvas-items-container-1")
+		.find("#paste-action")
+		.click();
+});
+
 Cypress.Commands.add("clickToolbarAddComment", () => {
 	cy.get("#createAutoComment-action").click();
+});
+
+Cypress.Commands.add("clickToolbarAddCommentnInExtraCanvas", () => {
+	cy.get("#common-canvas-items-container-1")
+		.find("#createAutoComment-action")
+		.click();
 });
 
 Cypress.Commands.add("clickToolbarDelete", () => {
@@ -70,8 +94,20 @@ Cypress.Commands.add("clickToolbarZoomIn", () => {
 	cy.get("#zoomIn-action").click();
 });
 
+Cypress.Commands.add("clickToolbarZoomInExtraCanvas", () => {
+	cy.get("#common-canvas-items-container-1")
+		.find("#zoomIn-action")
+		.click();
+});
+
 Cypress.Commands.add("clickToolbarZoomOut", () => {
 	cy.get("#zoomOut-action").click();
+});
+
+Cypress.Commands.add("clickToolbarZoomOutExtraCanvas", () => {
+	cy.get("#common-canvas-items-container-1")
+		.find("#zoomOut-action")
+		.click();
 });
 
 Cypress.Commands.add("clickToolbarZoomToFit", () => {
@@ -82,27 +118,6 @@ Cypress.Commands.add("clickToolbarNotifications", () => {
 	cy.get("#notificationCounterIcon-action").click();
 });
 
-Cypress.Commands.add("shortcutKeysCut", () => {
-	// Press Ctrl/Cmnd+x to Cut
-	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{x}", { release: false }));
-});
-
-Cypress.Commands.add("shortcutKeysCopy", () => {
-	// Press Ctrl/Cmnd+c to Copy
-	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{c}", { release: false }));
-});
-
-Cypress.Commands.add("shortcutKeysPaste", () => {
-	// Press Ctrl/Cmnd+v to Paste
-	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{v}", { release: false }));
-});
-
-Cypress.Commands.add("useCtrlOrCmdKey", () => {
-	// Ctrl or Cmd keys are used to select multiple elements
-	// Get the os name to decide whether to click ctrl or cmd
-	// Cypress.platform returns the underlying OS name
-	// For MacOS, Cypress.platform returns "darwin". For windows, Cypress.platform returns "win32"
-	// For MacOS, return "{meta}" (which is "command" key) and for windows, return "{ctrl}" (which is "ctrl" key)
-	const selectedKey = Cypress.platform === "darwin" ? "{meta}" : "{ctrl}";
-	return selectedKey;
+Cypress.Commands.add("clickToolbarOverflow", () => {
+	cy.get("#overflow-action").click();
 });

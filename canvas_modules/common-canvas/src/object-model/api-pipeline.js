@@ -588,6 +588,10 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "SET_OUTPUT_PORT_SUBFLOW_NODE_REF", data: { nodeId: nodeId, portId: portId, subflowNodeRef: subflowNodeRef }, pipelineId: this.pipelineId });
 	}
 
+	setNodeProperties(nodeId, properties) {
+		this.store.dispatch({ type: "SET_NODE_PROPERTIES", data: { nodeId: nodeId, properties: properties }, pipelineId: this.pipelineId });
+	}
+
 	setNodeMessage(nodeId, message) {
 		this.store.dispatch({ type: "SET_NODE_MESSAGE", data: { nodeId: nodeId, message: message }, pipelineId: this.pipelineId });
 	}
@@ -966,7 +970,7 @@ export default class APIPipeline {
 	createNodeLink(srcInfo, trgInfo, data) {
 		if (this.isConnectionAllowed(srcInfo, trgInfo, data.type)) {
 			const link = {};
-			link.id = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
+			link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
 			link.type = data.type;
 			link.srcNodeId = srcInfo.id;
 			link.srcNodePortId = srcInfo.portId;

@@ -64,7 +64,7 @@ const haloDefaultLayout = {
 		labelPosY: 63,
 
 		// An array of decorations to be applied to the node. For details see:
-		// https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/2.4.2-Decoration-Specification
+		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
 		decorations: [],
 
 		// Positions and dimensions for 9 enumerated default decorator positions.
@@ -343,6 +343,10 @@ const haloDefaultLayout = {
 		snapToGridX: "25%",
 		snapToGridY: "20%",
 
+		// Indicates the proximity to a node, when dragging a new connection,
+		// to switch the data-new-link-over attribute to "yes".
+		nodeProximity: 20,
+
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
 		autoLayoutInitialMarginY: 50,
@@ -401,7 +405,7 @@ const portsHorizontalDefaultLayout = {
 		labelPosY: 24,
 
 		// An array of decorations to be applied to the node. For details see:
-		// https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/2.4.2-Decoration-Specification
+		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
 		decorations: [],
 
 		// Positions and dimensions for 9 enumerated default decorator positions.
@@ -680,6 +684,10 @@ const portsHorizontalDefaultLayout = {
 		snapToGridX: "20%",
 		snapToGridY: "33.33%",
 
+		// Indicates the proximity to a node, when dragging a new connection,
+		// to switch the data-new-link-over attribute to "yes".
+		nodeProximity: 20,
+
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
 		autoLayoutInitialMarginY: 50,
@@ -738,7 +746,7 @@ const portsVerticalDefaultLayout = {
 		labelPosY: 67,
 
 		// An array of decorations to be applied to the node. For details see:
-		// https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/2.4.2-Decoration-Specification
+		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
 		decorations: [],
 
 		// Positions and dimensions for 9 enumerated default decorator positions.
@@ -1016,6 +1024,10 @@ const portsVerticalDefaultLayout = {
 		// Sizes of snap to grid as a percentage of default node height and width
 		snapToGridX: "25%",
 		snapToGridY: "20%",
+
+		// Indicates the proximity to a node, when dragging a new connection,
+		// to switch the data-new-link-over attribute to "yes".
+		nodeProximity: 20,
 
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,

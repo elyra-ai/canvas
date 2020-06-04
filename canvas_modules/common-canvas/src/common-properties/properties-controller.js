@@ -119,16 +119,15 @@ export default class PropertiesController {
 			this.parsePanelTree();
 			conditionsUtil.injectDefaultValidations(this.controls, this.validationDefinitions, intl);
 			let datasetMetadata;
+			let propertyValues = {};
 			if (this.form.data) {
 				datasetMetadata = this.form.data.datasetMetadata;
-				const propertyValues = this.form.data.uiCurrentParameters ? assign({}, this.form.data.currentParameters, this.form.data.uiCurrentParameters)
+				propertyValues = this.form.data.uiCurrentParameters ? assign({}, this.form.data.currentParameters, this.form.data.uiCurrentParameters)
 					: this.form.data.currentParameters;
-				this.setPropertyValues(propertyValues);
 			}
-			// Determine from the current control set whether or not there can be multiple input datasets
-			this.multipleSchemas = this._canHaveMultipleSchemas();
 			// Set the opening dataset(s), during which multiples are flattened and compound names generated if necessary
 			this.setDatasetMetadata(datasetMetadata);
+			this.setPropertyValues(propertyValues); // needs to be after setDatasetMetadata to run conditions
 			// for control.type of structuretable that do not use FieldPicker, we need to add to
 			// the controlValue any missing data model fields.  We need to do it here so that
 			// validate can run against the added fields
@@ -898,6 +897,7 @@ export default class PropertiesController {
 		if (!skipValidateInput) {
 			conditionsUtil.validateInput(inPropertyId, this);
 		}
+
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{
