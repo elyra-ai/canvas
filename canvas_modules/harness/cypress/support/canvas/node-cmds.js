@@ -157,6 +157,32 @@ Cypress.Commands.add("rightClickTargetPortOfNode", (nodeName, trgPortId) => {
 		.then((portSelector) => cy.get(portSelector).rightclick({ force: true }));
 });
 
+Cypress.Commands.add("hoverOverNode", (nodeName) => {
+	cy.getNodeWithLabel(nodeName)
+		.trigger("mouseenter");
+});
+
+Cypress.Commands.add("hoverOverNodeInSupernode", (nodeName, supernodeName) => {
+	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
+		.trigger("mouseenter", { force: true });
+});
+
+Cypress.Commands.add("hoverOverInputPortOfNode", (nodeName, inputPortId) => {
+	cy.getNodePortSelector(nodeName, "inp_port", inputPortId)
+		.then((portSelector) => {
+			cy.get(portSelector)
+				.trigger("mouseenter", { force: true });
+		});
+});
+
+Cypress.Commands.add("hoverOverOutputPortOfNode", (nodeName, outputPortId) => {
+	cy.getNodePortSelector(nodeName, "out_port", outputPortId)
+		.then((portSelector) => {
+			cy.get(portSelector)
+				.trigger("mouseenter", { force: true });
+		});
+});
+
 Cypress.Commands.add("getNumberOfSelectedNodes", () => {
 	cy.getSelectedNodes()
 		.then((selectedNodes) => selectedNodes.length);
@@ -361,18 +387,33 @@ Cypress.Commands.add("clickCategory", (nodeCategory) => {
 	cy.findCategory(nodeCategory).click();
 });
 
-Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
+Cypress.Commands.add("hoverOverCategory", (nodeCategory) => {
+	cy.findCategory(nodeCategory).trigger("mouseover");
+});
+
+Cypress.Commands.add("findNodeInCategory", (nodeLabel) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
 		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
-			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel)
-				.dblclick();
+			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel);
 		} else {
 			// Palette Layout - Flyout
-			cy.get(".palette-list-item-text-div > span").contains(nodeLabel)
-				.dblclick();
+			cy.get(".palette-list-item-text-div > span").contains(nodeLabel);
 		}
 	});
+});
+
+Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
+	cy.findNodeInCategory(nodeLabel).dblclick();
+});
+
+Cypress.Commands.add("hoverOverNodeInCategory", (nodeLabel) => {
+	cy.findNodeIndexInPalette(nodeLabel)
+		.then((nodeIndex) => {
+			cy.get(".palette-list-item")
+				.eq(nodeIndex)
+				.trigger("mouseover");
+		});
 });
 
 Cypress.Commands.add("findNodeInPalette", (filterText) => {
@@ -412,4 +453,9 @@ Cypress.Commands.add("findNodeIndexInPalette", (nodeName) => {
 				});
 		}
 	});
+});
+
+Cypress.Commands.add("moveMouseToCoordinates", (x, y) => {
+	cy.get(".d3-svg-canvas-div")
+		.trigger("mouseover", x, y);
 });
