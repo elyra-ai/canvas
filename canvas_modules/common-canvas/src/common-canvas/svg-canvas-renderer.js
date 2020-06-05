@@ -1997,6 +1997,9 @@ export default class SVGCanvasRenderer {
 				.attr("class", "d3-node-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+					if (that.drawingNewLinkData === null && !that.dragging) {
+						d3.select(this).raise();
+					}
 					that.setNodeStyles(d, "hover", d3.select(this));
 					that.addDynamicNodeIcons(d, this);
 					if (that.canOpenTip(TIP_TYPE_NODE)) {
