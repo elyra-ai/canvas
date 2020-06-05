@@ -223,3 +223,142 @@ Cypress.Commands.add("verifyTipForValidationIconInSummaryPanel", (summaryPanelId
 				});
 		});
 });
+
+// Expression control verification commands
+Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type) => {
+	// Verify "is_real" is a "keyword" in ExpressionEditor
+	const searchClass = ".cm-" + type;
+	const testWord = (type === "string") ? "\"" + word + "\"" : word;
+	cy.get(".properties-expression-editor")
+		.find(".CodeMirror-line")
+		.then((codeMirrorLine) => {
+			for (let idx = 0; idx < codeMirrorLine.length; idx++) {
+				if (codeMirrorLine[idx].textContent.includes(testWord)) {
+					cy.wrap(codeMirrorLine[idx])
+						.find(searchClass)
+						.eq(0)
+						.should("have.class", "cm-" + type)
+						.should("have.text", testWord);
+					break;
+				}
+			}
+		});
+});
+
+Cypress.Commands.add("verifyNumberOfHintsForTextInExpressionEditor", (enteredText, hintCount) => {
+	// Enter "is" in ExpressionEditor and press autocomplete and verify that 18 autocomplete hints are displayed
+	cy.getAutoCompleteCountForText(enteredText)
+		.then((autoCompleteCount) => expect(autoCompleteCount).to.equal(hintCount));
+});
+
+Cypress.Commands.add("verifyTypeOfFirstAutoCompleteForText", (enteredText, selectedText, type) => {
+	// Enter "is_" in ExpressionEditor and press autocomplete and select "is_date" a "keyword"
+	cy.selectFirstAutoCompleteForText(enteredText)
+		.then((selectedAutoComplete) => {
+			const searchClass = ".cm-" + type;
+			cy.get(".properties-expression-editor")
+				.find(".CodeMirror-line")
+				.find(searchClass)
+				.should("have.class", "cm-" + type)
+				.should("have.text", selectedText);
+		});
+});
+
+Cypress.Commands.add("verifyTypeOfEnteredTextInExpressionEditor", (enteredText, type) => {
+	// Enter "and" in ExpressionEditor and verify it is a "keyword"
+	const setText = (type === "string") ? "\"" + enteredText + "\"" : enteredText;
+	cy.enterTextInExpressionEditor(setText)
+		.then((text) => {
+			const searchClass = ".cm-" + type;
+			cy.get(".properties-expression-editor")
+				.find(".CodeMirror-line")
+				.find(searchClass)
+				.should("have.class", "cm-" + type)
+				.should("have.text", setText);
+		});
+});
+
+Cypress.Commands.add("verifyConditionExpressionInConsole", (selectedText) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.data.form.conditionExpr).to.include(selectedText);
+	});
+});
+
+Cypress.Commands.add("verifyPlaceholderTextInExpressionEditor", (text) => {
+	cy.get(".properties-expression-editor")
+		.find(".CodeMirror-placeholder")
+		.should("have.text", text);
+});
+
+Cypress.Commands.add("verifyValidationMessage", (message) => {
+	cy.get(".properties-validation-message > span")
+		.first()
+		.should("have.text", message);
+});
+
+Cypress.Commands.add("verifyControlIsDisplayed", (controlId) => {
+	cy.get(`div[data-id='properties-ci-${controlId}']`)
+		.should("exist");
+});
+
+Cypress.Commands.add("verifyValueInSummaryPanelForCategory", (value, summaryName, rowNumber, categoryName) => {
+	cy.get(".right-flyout-panel")
+		.find(".properties-category-container")
+		.find(".properties-category-title")
+		.contains(categoryName)
+		.should("exist");
+
+	cy.getSummaryFromName(summaryName)
+		.find(".properties-summary-row")
+		.eq(rowNumber - 1)
+		.find(".properties-summary-row-data ")
+		.eq(1)
+		.invoke("text")
+		.then((text) => expect(text.trim()).to.equal(value));
+});
+
+Cypress.Commands.add("verifySummaryPanelValueForParameterInConsole", (testValue, parameterName) => {
+	// Verify that the event log has a value of "is_date" for the "expressionCellTable" parameter
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		const parameterValues = lastEventLog.data.form[parameterName];
+		let found = false;
+		for (var idx = 0; idx < parameterValues.length; idx++) {
+			const parameter = parameterValues[idx];
+			for (var indx = 0; indx < parameter.length; indx++) {
+				if (parameter[indx] === testValue) {
+					found = true;
+					break;
+				}
+			}
+		}
+		expect(found).to.equal(true);
+	});
+});
+
+Cypress.Commands.add("verifyIconInSubPanel", (iconName, panelName) => {
+	cy.getWideFlyoutPanel(panelName)
+		.then((wideFlyoutPanel) => {
+			cy.wrap(wideFlyoutPanel)
+				.find(".properties-expression-validate")
+				.then((validateButton) => {
+					if (iconName === "none") {
+						cy.wrap(validateButton)
+							.find(".validateIcon")
+							.should("not.exist");
+					} else {
+						cy.wrap(validateButton)
+							.find(".validateIcon")
+							.then((icon) => {
+								cy.wrap(icon)
+									.find("svg")
+									.invoke("attr", "class")
+									.then((iconClass) => {
+										expect(iconClass).to.include(iconName);
+									});
+							});
+					}
+				});
+		});
+});

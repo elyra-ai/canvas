@@ -217,3 +217,126 @@ Cypress.Commands.add("clickButtonInTable", (buttonName, tableControlId) => {
 			}
 		});
 });
+
+// Expression control commands
+Cypress.Commands.add("getAutoCompleteCountForText", (text) => {
+	// Select all and delete existing text in expression editor
+	cy.useCtrlOrCmdKey()
+		.then((selectedKey) => {
+			cy.get(".properties-expression-editor")
+				.find(".CodeMirror")
+				.find(".CodeMirror-code")
+				.type(selectedKey + "{a}{del}");
+
+			// Type text and ctrl + space to display hints
+			cy.get(".CodeMirror-code")
+				.type(text + "{ctrl} ");
+
+			cy.get(".CodeMirror-hints")
+				.eq(0)
+				.find("li")
+				.its("length");
+		});
+});
+
+Cypress.Commands.add("selectFirstAutoCompleteForText", (text) => {
+	// Select all and delete existing text in expression editor
+	cy.useCtrlOrCmdKey()
+		.then((selectedKey) => {
+			cy.get(".properties-expression-editor")
+				.find(".CodeMirror")
+				.find(".CodeMirror-code")
+				.type(selectedKey + "{a}{del}");
+
+			// Type text and ctrl + space to display hints
+			cy.get(".CodeMirror-code")
+				.type(text + "{ctrl} ");
+
+			// select the first one in the list of hints and make sure it is the text
+			cy.get(".CodeMirror-hints")
+				.eq(0)
+				.find("li")
+				.eq(0)
+				.click();
+		});
+});
+
+Cypress.Commands.add("enterTextInExpressionEditor", (text) => {
+	// Select all and delete existing text in expression editor
+	cy.useCtrlOrCmdKey()
+		.then((selectedKey) => {
+			cy.get(".properties-expression-editor")
+				.find(".CodeMirror")
+				.find(".CodeMirror-code")
+				.type(selectedKey + "{a}{del}");
+
+			// Type text
+			cy.get(".CodeMirror-code")
+				.type(text);
+		});
+});
+
+Cypress.Commands.add("clickValidateLink", () => {
+	cy.get(".properties-expression-validate")
+		.find(".validateLink")
+		.click();
+});
+
+Cypress.Commands.add("clickValidateLinkInSubPanel", (panelName) => {
+	cy.getWideFlyoutPanel(panelName)
+		.then((wideFlyoutPanel) => {
+			cy.wrap(wideFlyoutPanel)
+				.find(".properties-expression-validate")
+				.find(".validateLink")
+				.click();
+		});
+});
+
+Cypress.Commands.add("clickExpressionBuildButtonForProperty", (propertyName) => {
+	cy.get(`div[data-id='properties-ci-${propertyName}']`)
+		.find(".properties-expression-button")
+		.click();
+});
+
+Cypress.Commands.add("selectFieldFromPropertyInSubPanel", (fieldName, propertyName, panelName) => {
+	cy.getWideFlyoutPanel(panelName)
+		.then((wideFlyoutPanel) => {
+			cy.wrap(wideFlyoutPanel)
+				.find("div[role='properties-data-row']")
+				.find(".properties-expr-table-cell")
+				.then((tableCells) => {
+					cy.getCellMatch(tableCells, fieldName)
+						.then((cell) => {
+							expect(cell).to.not.equal(null);
+							cy.wrap(cell).dblclick({ force: true });
+						});
+				});
+		});
+});
+
+Cypress.Commands.add("selectTabFromPropertyInSubPanel", (tabName, propertyName, panelName) => {
+	cy.getWideFlyoutPanel(panelName)
+		.then((wideFlyoutPanel) => {
+			cy.wrap(wideFlyoutPanel)
+				.find(".properties-expression-selection-fieldOrFunction")
+				.find("a")
+				.then((tabs) => {
+					tabs.each((idx) => {
+						if (tabs[idx].textContent === tabName) {
+							cy.wrap(tabs[idx])
+								.parent()
+								.click();
+						}
+					});
+				});
+		});
+});
+
+Cypress.Commands.add("getCellMatch", (tableCells, fieldName) => {
+	for (let idx = 0; idx < tableCells.length; idx++) {
+		if (tableCells[idx].textContent === fieldName) {
+			return (tableCells[idx]);
+		}
+	}
+	return null;
+});
