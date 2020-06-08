@@ -120,8 +120,8 @@ class NotificationPanel extends React.Component {
 		}
 	}
 
-	deleteNotification(messageKey) {
-		this.props.canvasController.deleteNotificationMessages(messageKey);
+	deleteNotification(id) {
+		this.props.canvasController.deleteNotificationMessages(id);
 	}
 
 	clearNotificationMessages() {
