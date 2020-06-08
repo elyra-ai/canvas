@@ -2636,6 +2636,10 @@ export default class SVGCanvasRenderer {
 			.append("text")
 			.attr("data-id", (dec) => this.getId(`${objType}_dec_label`, dec.id)); // Used in tests
 
+		newDecGroups.filter((dec) => dec.path)
+			.append("path")
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_path`, dec.id)); // Used in tests
+
 		const newAndExistingDecGrps =
 			decGroupsSel.enter().merge(decGroupsSel);
 
@@ -2651,6 +2655,7 @@ export default class SVGCanvasRenderer {
 				const outlnSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_outln`, dec.id);
 				const imageSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_image`, dec.id);
 				const labelSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_label`, dec.id);
+				const pathSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_path`, dec.id);
 
 				decGrp.select(outlnSelector)
 					.attr("x", 0)
@@ -2673,6 +2678,13 @@ export default class SVGCanvasRenderer {
 					.attr("y", 0)
 					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
 					.text(dec.label)
+					.datum(decDatum);
+
+				decGrp.select(pathSelector)
+					.attr("x", 0)
+					.attr("y", 0)
+					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-path`))
+					.attr("d", dec.path)
 					.datum(decDatum);
 			});
 

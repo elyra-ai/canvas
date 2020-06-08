@@ -208,7 +208,7 @@ Cypress.Commands.add("isNodeSelected", (nodeName) => {
 
 Cypress.Commands.add("clickDecoratorHotspotOnNode", (decoratorId, nodeName) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(`.d3-node-dec-outline[data-id=node_dec_outln_0_${decoratorId}]`)
+		.find(`.d3-node-dec-group[data-id=node_dec_group_0_${decoratorId}]`)
 		.click();
 });
 
