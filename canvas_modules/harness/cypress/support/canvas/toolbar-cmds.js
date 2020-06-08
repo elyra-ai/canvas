@@ -115,7 +115,7 @@ Cypress.Commands.add("clickToolbarZoomToFit", () => {
 });
 
 Cypress.Commands.add("clickToolbarNotifications", () => {
-	cy.get("#notificationCounterIcon-action").click();
+	cy.get("li.notificationCounterIcon button").click();
 });
 
 Cypress.Commands.add("clickToolbarOverflow", () => {
