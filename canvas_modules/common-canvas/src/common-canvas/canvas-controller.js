@@ -495,7 +495,7 @@ export default class CanvasController {
 		this.objectModel.clearNotificationMessages();
 	}
 
-	// Removes the notification message(s) with the given id(s)
+	// Removes the notification messages from the given array of ids
 	deleteNotificationMessages(ids) {
 		this.objectModel.deleteNotificationMessages(ids);
 	}

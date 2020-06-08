@@ -45,7 +45,7 @@ $notification-left-border-color-width: 4px;
 
 .notification-popup-arrow {
 	display: block;
-	fill: $ui-02;
+	fill: $ui-01;
 	stroke: $ui-03;
 	position: absolute;
 	right: 16px;
@@ -86,7 +86,9 @@ $notification-left-border-color-width: 4px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	border: 1px solid $ui-03;
+	border-left: 1px solid $ui-03;
+	border-right: 1px solid $ui-03;
+	border-bottom: 1px solid $ui-03;
 	font-weight: 400;
 	padding: $spacing-03 $spacing-05;
 	.notification-panel-clear-all {
