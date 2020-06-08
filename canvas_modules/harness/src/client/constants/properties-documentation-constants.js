@@ -1586,6 +1586,51 @@ _defineConstant("CODE_PROPS_INFO", {
 		]
 	}
 });
+_defineConstant("HIDDEN_PROPS_INFO", {
+	"title": "Hidden Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: hidden",
+			"editable": false
+		},
+		"current_parameters": {
+			"hidden_param": "The more I study, the more insatiable do I feel my genius for it to be. 'Ada Lovelace'"
+		},
+		"parameters": [
+			{
+				"id": "hidden_param",
+				"type": "string"
+			}
+		],
+		"uihints": {
+			"id": "hidden_param-control",
+			"parameter_info": [
+				{
+					"parameter_ref": "hidden_param",
+					"label": {
+						"default": "Hidden Field"
+					},
+					"description": {
+						"default": "Hidden field that can't be edited"
+					},
+					"control": "hidden"
+				}
+			],
+			"group_info": [
+				{
+					"id": "hidden-group",
+					"label": {
+						"default": "Hidden Tab"
+					},
+					"type": "controls",
+					"parameter_refs": [
+						"hidden_param"
+					]
+				}
+			]
+		}
+	}
+});
 _defineConstant("READONLY_PROPS_INFO", {
 	"title": "Readonly Title",
 	"parameterDef": {
