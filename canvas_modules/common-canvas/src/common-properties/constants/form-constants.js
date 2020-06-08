@@ -88,7 +88,8 @@ const ControlType = {
 	TOGGLETEXT: "toggletext",
 	READONLY: "readonly",
 	SPINNER: "spinner",
-	CODE: "code"
+	CODE: "code",
+	HIDDEN: "hidden"
 };
 
 const ParamRole = {

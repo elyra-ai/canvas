@@ -92,6 +92,8 @@ export default class ControlFactory {
 			props.tableControl = tableInfo.table;
 		}
 		switch (control.controlType) {
+		case (ControlType.HIDDEN):
+			return null;
 		case (ControlType.TEXTFIELD):
 			return (<TextfieldControl {...props} />);
 		case (ControlType.READONLY):
