@@ -2740,10 +2740,24 @@ export default class SVGCanvasRenderer {
 			// Save image field in DOM object to avoid unnecessary image refreshes.
 			imageObj.attr("data-image", nodeImage);
 			if (nodeImageType === "svg") {
-				d3.text(nodeImage).then((img) => imageObj.html(img));
+				this.addCopyOfImageToDefs(nodeImage);
+				imageObj.append("use").attr("href", `#${nodeImage}`);
 			} else {
 				imageObj.attr("xlink:href", nodeImage);
 			}
+		}
+	}
+
+	// If the image doesn't exist in <defs>, retrieves the image from the
+	// server and places it in the <defs> element with an id equal to the
+	// nodeImage string.
+	addCopyOfImageToDefs(nodeImage) {
+		const defs = this.canvasSVG.select("defs");
+		// Select using id as an attribute because creating a selector with a
+		// # prefix won't work when nodeImage is a file name with special characters.
+		if (defs.select(`[id='${nodeImage}']`).empty()) {
+			const defsSvg = defs.append("svg").attr("id", nodeImage);
+			d3.text(nodeImage).then((img) => defsSvg.html(img));
 		}
 	}
 
