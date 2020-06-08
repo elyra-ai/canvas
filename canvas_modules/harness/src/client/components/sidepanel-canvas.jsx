@@ -207,15 +207,27 @@ export default class SidePanelForms extends React.Component {
 	}
 
 	notificationConfigChange(evt) {
-		const notificationConfig = this.props.getStateValue("notificationConfig");
-		notificationConfig[evt.target.id] = evt.target.value;
-		this.props.setStateValue("notificationConfig", notificationConfig);
+		let id = evt.target.id;
+		let config = "notificationConfig";
+		if (id.slice(-1) === "2") {
+			id = evt.target.id.slice(0, -1);
+			config = "notificationConfig2";
+		}
+		const notificationConfig = this.props.getStateValue(config);
+		notificationConfig[id] = evt.target.value;
+		this.props.setStateValue(notificationConfig, config);
 	}
 
 	notificationConfigToggle(value, control) {
-		const notificationConfig = this.props.getStateValue("notificationConfig");
-		notificationConfig[control] = value;
-		this.props.setStateValue("notificationConfig", notificationConfig);
+		let id = control;
+		let config = "notificationConfig";
+		if (id.slice(-1) === "2") {
+			id = control.slice(0, -1);
+			config = "notificationConfig2";
+		}
+		const notificationConfig = this.props.getStateValue(config);
+		notificationConfig[id] = value;
+		this.props.setStateValue(notificationConfig, config);
 	}
 
 	nodeLayoutOptionChange(value) {
@@ -940,6 +952,32 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
+		var schemaValidation = (<div className="harness-sidepanel-children">
+			<form>
+				<div className="harness-sidepanel-headers">Schema Validation</div>
+				<div>
+					<Toggle
+						id="selectedSchemaValidation" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedSchemaValidation")}
+						onToggle={this.setStateValue}
+					/>
+				</div>
+			</form>
+		</div>);
+
+		var displayBoudingRectangles = (<div className="harness-sidepanel-children">
+			<form>
+				<div className="harness-sidepanel-headers">Display Bounding Rectangles</div>
+				<div>
+					<Toggle
+						id="selectedBoundingRectangles" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedBoundingRectangles")}
+						onToggle={this.setStateValue}
+					/>
+				</div>
+			</form>
+		</div>);
+
 		var configureNotificationCenter = (<div className="harness-sidepanel-children" id="harness-sidepanel-configure-notification-center">
 			<div className="harness-sidepanel-headers">Configure Notification Center</div>
 			<div className="harness-notification-title">
@@ -987,27 +1025,53 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
-		var schemaValidation = (<div className="harness-sidepanel-children">
+		var configureNotificationCenter2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-configure-notification-center2">
+			<div className="harness-sidepanel-headers">Configure Notification Center 2</div>
+			<div className="harness-notification-title">
+				<TextInput
+					id="notificationHeader2" // Set ID to corresponding field in App.js state
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+					labelText="Title (will show default if empty)"
+					onChange={this.notificationConfigChange}
+					value={this.props.getStateValue("notificationConfig2").notificationHeader}
+				/>
+			</div>
+			<div className="harness-notification-subtitle">
+				<TextInput
+					id="notificationSubtitle2"
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+					labelText="Subtitle (will hide if empty)"
+					onChange={this.notificationConfigChange}
+					value={this.props.getStateValue("notificationConfig2").notificationSubtitle}
+				/>
+			</div>
+			<div className="harness-notification-empty-message">
+				<TextInput
+					id="emptyMessage2"
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+					labelText="Empty Message"
+					onChange={this.notificationConfigChange}
+					value={this.props.getStateValue("notificationConfig2").emptyMessage}
+				/>
+			</div>
+			<div className="harness-notification-clear-all">
+				<TextInput
+					id="clearAllMessage2"
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+					labelText="Clear All button (will hide if empty)"
+					onChange={this.notificationConfigChange}
+					value={this.props.getStateValue("notificationConfig2").clearAllMessage}
+				/>
+			</div>
 			<form>
-				<div className="harness-sidepanel-headers">Schema Validation</div>
+				<div className="harness-sidepanel-headers">Keep Notification Center Open</div>
 				<div>
 					<Toggle
-						id="selectedSchemaValidation" // Set ID to corresponding field in App.js state
-						toggled={this.props.getStateValue("selectedSchemaValidation")}
-						onToggle={this.setStateValue}
-					/>
-				</div>
-			</form>
-		</div>);
-
-		var displayBoudingRectangles = (<div className="harness-sidepanel-children">
-			<form>
-				<div className="harness-sidepanel-headers">Display Bounding Rectangles</div>
-				<div>
-					<Toggle
-						id="selectedBoundingRectangles" // Set ID to corresponding field in App.js state
-						toggled={this.props.getStateValue("selectedBoundingRectangles")}
-						onToggle={this.setStateValue}
+						id="keepOpen2"
+						disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+						labelText="When enabled, clicking outside the notification center will not close it"
+						toggled={this.props.getStateValue("notificationConfig2").keepOpen}
+						onToggle={this.notificationConfigToggle}
 					/>
 				</div>
 			</form>
@@ -1085,6 +1149,8 @@ export default class SidePanelForms extends React.Component {
 					{extraCanvas}
 					{canvasInput2}
 					{paletteInput2}
+					{divider}
+					{configureNotificationCenter2}
 				</div>
 			</div>
 		);
