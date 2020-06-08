@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint consistent-return: "off" */
 import * as testUtils from "../../utils/eventlog-utils";
 
 Cypress.Commands.add("verifyReadOnlyTextValue", (controlId, value) => {
@@ -361,4 +362,57 @@ Cypress.Commands.add("verifyIconInSubPanel", (iconName, panelName) => {
 					}
 				});
 		});
+});
+
+Cypress.Commands.add("verifyRowInSelectColumnsTable", (tableId, fieldName, rowNumber, panelName) => {
+	cy.getWideFlyoutPanel(panelName)
+		.find(`div[data-id='properties-ft-${tableId}']`)
+		.find("div[role='properties-data-row']")
+		.eq(rowNumber - 1)
+		.find(".properties-readonly")
+		.should("have.text", fieldName);
+});
+
+Cypress.Commands.add("verifyFieldIsSelectedInFieldPickerPanel", (fieldName, dataType, panelName) => {
+	// Following logic works based on assumption  - fieldName in each row is unique
+	let rowNumber;
+	cy.getWideFlyoutPanel(panelName)
+		.find("div[role='properties-data-row']")
+		.each(($el, index) => {
+			if ($el[0].childNodes[1].textContent === fieldName) {
+				rowNumber = index;
+				return false;
+			}
+		})
+		.then((rows) => {
+			cy.wrap(rows)
+				.eq(rowNumber)
+				.then((row) => {
+					// Verify field name
+					cy.wrap(row)
+						.find(".properties-fp-field-name")
+						.should("have.text", fieldName);
+					// Verify dataType
+					cy.wrap(row)
+						.find(".properties-fp-field-type")
+						.should("have.text", dataType);
+					// Verify checkbox is selected
+					cy.wrap(row)
+						.find(".properties-vt-row-checkbox")
+						.find("input")
+						.should("be.checked");
+				});
+		});
+});
+
+Cypress.Commands.add("verifyFieldsInStructureListEditorTable", (tableId, fields, rowNumber, columnNumber) => {
+	cy.get(`div[data-id='properties-ft-${tableId}']`)
+		.find(`div[data-id='properties-structurelist_sub_panel_${rowNumber}_${columnNumber}']`)
+		.should("have.text", fields);
+});
+
+Cypress.Commands.add("verifyHeightOfTable", (tableId, height) => {
+	cy.get(`div[data-id='properties-ft-${tableId}']`)
+		.find(".properties-ft-container-wrapper")
+		.should("have.css", "height", height);
 });
