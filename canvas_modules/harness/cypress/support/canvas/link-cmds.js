@@ -49,7 +49,7 @@ function getLinkSelector(linkId, element) {
 
 Cypress.Commands.add("clickDecoratorHotspotOnLink", (decoratorId, linkName) => {
 	cy.getLinkFromName(linkName)
-		.find(`.d3-link-dec-outline[data-id=link_dec_outln_0_${decoratorId}]`)
+		.find(`.d3-link-dec-group[data-id=link_dec_group_0_${decoratorId}]`)
 		.click();
 });
 

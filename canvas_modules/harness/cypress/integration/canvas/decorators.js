@@ -52,7 +52,7 @@ describe("Test adding a decorator to a node", function() {
 		cy.submitAPI();
 		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
 		cy.verifyDecorationTransformOnNode("No Decorator", "678", 46, 41);
-		cy.verifyDecorationImage("No Decorator", "678", "/images/decorators/zoom-in_32.svg");
+		cy.verifyDecorationImageOnNode("No Decorator", "678", "/images/decorators/zoom-in_32.svg");
 
 		// Click on the hot spot and make sure it calls the callback function
 		cy.clickDecoratorHotspotOnNode("678", "No Decorator");
@@ -87,18 +87,37 @@ describe("Test adding a decorator to a node", function() {
 		cy.verifyDecorationTransformOnNode("Big Node", "9", 70, 160);
 
 	});
+
+	it("Test adding a path decoration to a node", function() {
+		// Add a new decoration to the top left position
+		cy.selectNodeForDecoration("Custom position");
+		cy.updateDecorationsJSON("[{{}\"id\": \"123\", \"path\": \"M 0 0 L 10 10 -10 10 Z\", " +
+			"\"outline\": false, \"x_pos\": -20, \"y_pos\": 20, \"hotspot\": true{}}]");
+		cy.submitAPI();
+		cy.verifyNumberOfPathDecoratorsOnNode("Custom position", 1);
+		cy.verifyDecorationTransformOnNode("Custom position", "123", -20, 20);
+
+		// Click on the hot spot and make sure it calls the callback function
+		cy.clickDecoratorHotspotOnNode("123", "Custom position");
+		cy.verifyDecorationHandlerEntryInConsole("123");
+
+		// Check the path is correct
+		cy.verifyDecorationPathOnNode("Custom position", "123", "M 0 0 L 10 10 -10 10 Z");
+	});
 });
+
 
 describe("Test adding a decorator to a link", function() {
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("decoratorCanvas.json");
+		cy.openCanvasAPI("Set Link Decorations");
 	});
 
 	it("Test adding a new decoration to a link, remove decorations, add label decorator," +
   " add image decorator to a link", function() {
 		// Verify number of decorators on existing links
-		cy.verifyNumberOfDecoratorsOnLink("Top Left-Top Right", 3);
+		cy.verifyNumberOfDecoratorsOnLink("Top Left-Top Right", 4);
 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 3);
 
 		// Verify decoration transform on existing links
@@ -109,8 +128,6 @@ describe("Test adding a decorator to a link", function() {
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "123", 373, 225);
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "456", 478, 225);
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "789", 583, 225);
-
-		cy.openCanvasAPI("Set Link Decorations");
 
 		// Remove all decorations from the association link
 		cy.selectLinkForDecoration("Top Left-Top Right");
@@ -145,5 +162,21 @@ describe("Test adding a decorator to a link", function() {
 		// Click on the hotspot and make sure it works
 		cy.clickDecoratorHotspotOnLink("456", "Bottom Left-Bottom Right");
 		cy.verifyDecorationHandlerEntryInConsole("456");
+	});
+
+	it("Test adding a path decoration to a link", function() {
+		// Add a new decoration to the top left position
+		cy.selectLinkForDecoration("Bottom Left-Bottom Right");
+		cy.updateDecorationsJSON("[{{}\"id\": \"555\", \"path\": \"M 0 0 L 10 10 -10 10 Z\", " +
+			"\"outline\": false, \"x_pos\": -20, \"y_pos\": 20, \"hotspot\": true{}}]");
+		cy.submitAPI();
+		cy.verifyNumberOfPathDecoratorsOnLink("Bottom Left-Bottom Right", 1);
+
+		// Click on the hot spot and make sure it calls the callback function
+		cy.clickDecoratorHotspotOnLink("555", "Bottom Left-Bottom Right");
+		cy.verifyDecorationHandlerEntryInConsole("555");
+
+		// Check the path is correct
+		cy.verifyDecorationPathOnLink("Bottom Left-Bottom Right", "555", "M 0 0 L 10 10 -10 10 Z");
 	});
 });
