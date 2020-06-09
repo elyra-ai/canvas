@@ -148,7 +148,7 @@ Cypress.Commands.add("rightClickNodeInSupernode", (nodeName, supernodeName) => {
 
 Cypress.Commands.add("rightClickSourcePortOfNode", (nodeName, srcPortId) => {
 	cy.getNodePortSelector(nodeName, "out_port", srcPortId)
-		.then((portSelector) => cy.get(portSelector).rightclick());
+		.then((portSelector) => cy.get(portSelector).rightclick("bottom"));
 });
 
 Cypress.Commands.add("rightClickTargetPortOfNode", (nodeName, trgPortId) => {

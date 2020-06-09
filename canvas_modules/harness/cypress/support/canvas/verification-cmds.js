@@ -984,3 +984,78 @@ Cypress.Commands.add("verifyTipDoesNotShowForLink", () => {
 	cy.get("[data-id*=link_tip_0_]") // Find tip with id that starts with 'link_tip_0_'
 		.should("not.exist");
 });
+
+Cypress.Commands.add("verifyNotificationIconType", (type) => {
+	if (type) {
+		cy.get("svg.notificationCounterIcon").should("have.class", type);
+	} else {
+		cy.get("svg.notificationCounterIcon").should("not.have.any.keys", ["info", "success", "warning", "error"]);
+	}
+});
+
+Cypress.Commands.add("verifyNotificationCounter", (count) => {
+	cy.get(".notificationCounterIcon .text-content").should("have.text", " " + count + " ");
+});
+
+Cypress.Commands.add("verifyNotificationMessagesLength", (messagesLength) => {
+	cy.get(".notifications-button-container .notifications").should("have.length", messagesLength);
+});
+
+Cypress.Commands.add("verifyNotificationMessageContent", (index, type, title, content, timestamp) => {
+	cy.get(".notifications-button-container .notifications")
+		.eq(index)
+		.should((message) => {
+			if (type) {
+				expect(message).to.have.class(type);
+			}
+			if (title) {
+				expect(message.find(".notification-message-title")).to.have.text(title);
+			}
+			if (content) {
+				expect(message.find(".notification-message-content")).to.have.text(content);
+			}
+			if (timestamp) {
+				expect(message.find(".notification-message-timestamp")).to.exist;
+			} else if (typeof timestamp === "boolean" && timestamp === false) {
+				expect(message.find(".notification-message-timestamp")).to.not.exist;
+			}
+		});
+});
+
+Cypress.Commands.add("verifyLatestNotificationMessage", (messagesLength, type, timestamp) => {
+	cy.verifyNotificationCounter(messagesLength);
+	cy.verifyNotificationMessagesLength(messagesLength);
+	cy.verifyNotificationIconType(type);
+	cy.verifyNotificationMessageContent(messagesLength - 1, type, type + " title", type + " message", timestamp);
+});
+
+Cypress.Commands.add("verifyNotificationMessagesCallbackInConsole", (index, id) => {
+	cy.get(".notifications-button-container .notifications")
+		.eq(index)
+		.click();
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("Notification Message Callback");
+		if (id) {
+			expect(lastEventLog.data).to.equal("Message " + id + " was clicked.");
+		}
+	});
+});
+
+Cypress.Commands.add("verifyNotificationCenterHidden", (hidden) => {
+	if (hidden) {
+		cy.get(".notification-panel-container").should("have.class", "panel-hidden");
+	} else {
+		cy.get(".notification-panel-container").should("not.have.class", "panel-hidden");
+	}
+});
+
+Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
+	if (typeof content === "string" && content.length > 0) {
+		cy.get(".notification-panel-" + id).should("contain", content);
+	}	else if (typeof content === "string" && content.length === 0) {
+		cy.get(".notification-panel-" + id).should("be.empty");
+	} else {
+		cy.get(".notification-panel-" + id).should("not.exist");
+	}
+});

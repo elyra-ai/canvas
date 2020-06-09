@@ -947,6 +947,12 @@ export default class ObjectModel {
 		return notificationMessages;
 	}
 
+	deleteNotificationMessages(ids) {
+		const filterIds = Array.isArray(ids) ? ids : [ids];
+		const newMessages = this.getNotificationMessages().filter((message) => !filterIds.includes(message.id));
+		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: newMessages });
+	}
+
 	// ---------------------------------------------------------------------------
 	// Selection methods
 	// ---------------------------------------------------------------------------

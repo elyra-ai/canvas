@@ -184,7 +184,28 @@ export default class App extends React.Component {
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
 			selectedPropertiesFileCategory: "",
-			propertiesFileChooserVisible: false
+			propertiesFileChooserVisible: false,
+
+			notificationConfig: {
+				action: "notification",
+				label: "Notifications",
+				notificationHeader: "Notification Center",
+				notificationSubtitle: "subtitle",
+				enable: true,
+				emptyMessage: "You don't have any notifications right now.",
+				clearAllMessage: "Clear all",
+				keepOpen: true
+			},
+			notificationConfig2: {
+				action: "notification",
+				label: "Notifications",
+				notificationHeader: "Notification Center Canvas 2",
+				notificationSubtitle: "subtitle",
+				enable: true,
+				emptyMessage: "You don't have any notifications right now.",
+				clearAllMessage: "Clear all",
+				keepOpen: true
+			}
 		};
 
 		// There are several functions and variables with the identifiers name and name2. This is needed
@@ -851,8 +872,8 @@ export default class App extends React.Component {
 
 	appendNotificationMessages(message) {
 		this.harnessNotificationMessages = this.harnessNotificationMessages.concat(message);
-		this.canvasController.setNotificationMessages(this.flowNotificationMessages.concat(this.harnessNotificationMessages));
-		this.log("Set Notification Messages", "Set " + (this.flowNotificationMessages + this.harnessNotificationMessages.length) + " notification messages");
+		this.canvasController.setNotificationMessages(this.canvasController.getNotificationMessages().concat(message));
+		this.log("Set Notification Messages", "Set " + (this.canvasController.getNotificationMessages().length) + " notification messages");
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
@@ -1641,8 +1662,6 @@ export default class App extends React.Component {
 			{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
 		];
 
-		const notificationConfig = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications" };
-		const notificationConfig2 = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications Canvas 2" };
 		const contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
 			defaultMenuEntries: {
@@ -1739,7 +1758,7 @@ export default class App extends React.Component {
 				layoutHandler={this.layoutHandler}
 				tipHandler={this.tipHandler}
 				toolbarConfig={toolbarConfig}
-				notificationConfig={notificationConfig}
+				notificationConfig={this.state.notificationConfig}
 				contextMenuConfig={contextMenuConfig}
 				keyboardConfig={keyboardConfig}
 				rightFlyoutContent={rightFlyoutContent}
@@ -1814,7 +1833,7 @@ export default class App extends React.Component {
 							clickActionHandler= {this.extraCanvasClickActionHandler}
 							toolbarConfig={toolbarConfig}
 							canvasController={this.canvasController2}
-							notificationConfig={notificationConfig2}
+							notificationConfig={this.state.notificationConfig2}
 							rightFlyoutContent={rightFlyoutContent2}
 							showRightFlyout={showRightFlyoutProperties2}
 							selectionChangeHandler={this.selectionChangeHandler2}
@@ -1845,7 +1864,7 @@ export default class App extends React.Component {
 			setPaletteDropdownSelect2: this.setPaletteDropdownSelect2,
 			selectedPaletteDropdownFile: this.state.selectedPaletteDropdownFile,
 			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
-			clearSavedZoomValues: this.clearSavedZoomValues
+			clearSavedZoomValues: this.clearSavedZoomValue
 		};
 
 		const sidePanelPropertiesConfig = {

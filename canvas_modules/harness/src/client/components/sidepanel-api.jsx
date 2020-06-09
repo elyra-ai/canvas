@@ -87,6 +87,7 @@ export default class SidePanelAPI extends React.Component {
 			appendTimestamp: false,
 			attachCallback: false,
 			appendLink: false,
+			closeMessage: false,
 			notificationTitle: "",
 			notificationMessage: "",
 			notificationType: NOTIFICATION_MESSAGE_TYPE.INFO,
@@ -307,6 +308,10 @@ export default class SidePanelAPI extends React.Component {
 		this.setState({ appendLink: checked });
 	}
 
+	onCloseToggle(checked) {
+		this.setState({ closeMessage: checked });
+	}
+
 	getNodePortList(items) {
 		return items.map(function(item) {
 			return ({ label: item.label, value: item.id });
@@ -449,6 +454,7 @@ export default class SidePanelAPI extends React.Component {
 			{messageLink}
 		</div>);
 
+
 		return [
 			{
 				id: "harness-message-" + this.messageCounter++,
@@ -456,7 +462,8 @@ export default class SidePanelAPI extends React.Component {
 				title: this.state.notificationTitle ? this.state.notificationTitle : null,
 				content: messageContent,
 				timestamp: this.state.appendTimestamp ? new Date().toLocaleString("en-US") : null,
-				callback: this.state.attachCallback ? this.notificationMessageCallback : null
+				callback: this.state.attachCallback ? this.notificationMessageCallback : null,
+				closeMessage: this.state.closeMessage ? "Dismiss" : null
 			}
 		];
 	}
@@ -741,6 +748,16 @@ export default class SidePanelAPI extends React.Component {
 						id="harness-sidepanel-api-notification-link"
 						toggled={this.state.appendLink}
 						onToggle={this.onAppendLinkToggle.bind(this)}
+					/>
+				</div>
+				<div className="harness-sidepanel-headers">
+				Add dismiss link to message
+				</div>
+				<div>
+					<Toggle
+						id="harness-sidepanel-api-notification-dismiss"
+						toggled={this.state.closeMessage}
+						onToggle={this.onCloseToggle.bind(this)}
 					/>
 				</div>
 			</div>);

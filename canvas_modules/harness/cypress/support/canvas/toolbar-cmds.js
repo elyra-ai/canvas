@@ -115,7 +115,18 @@ Cypress.Commands.add("clickToolbarZoomToFit", () => {
 });
 
 Cypress.Commands.add("clickToolbarNotifications", () => {
-	cy.get("#notificationCounterIcon-action").click();
+	cy.get("li.notificationCounterIcon button").click();
+});
+
+Cypress.Commands.add("dismissNotificationMessage", (index) => {
+	cy.get(".notifications-button-container .notifications")
+		.eq(index)
+		.find(".notification-message-close")
+		.click();
+});
+
+Cypress.Commands.add("clearAllNotificationMessages", () => {
+	cy.get("button.notification-panel-clear-all").click();
 });
 
 Cypress.Commands.add("clickToolbarOverflow", () => {

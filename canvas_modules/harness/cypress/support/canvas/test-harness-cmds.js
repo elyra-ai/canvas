@@ -186,6 +186,79 @@ Cypress.Commands.add("updatePipelineflowToAddInputOutputPortsToNode", (nodeName)
 		});
 });
 
+Cypress.Commands.add("clickOutsideNotificationPanel", () => {
+	cy.get(".d3-svg-canvas-div").click();
+});
+
+Cypress.Commands.add("setNotificationCenterContent", (id, content) => {
+	cy.get("#" + id)
+		.clear()
+		.type(content);
+});
+
+Cypress.Commands.add("clearNotificationCenterContent", (id) => {
+	cy.get("#" + id)
+		.clear();
+});
+
+Cypress.Commands.add("toggleNotificationCenterKeepOpen", () => {
+	cy.get("label[for='keepOpen'] .bx--toggle__switch").click();
+});
+
+Cypress.Commands.add("selectNotificationMessageType", (type) => {
+	cy.get("#harness-sidepanel-api-nm-types")
+		.contains(type)
+		.click();
+});
+
+
+Cypress.Commands.add("selectNotificationMessageType", (type) => {
+	cy.get("#harness-sidepanel-api-nm-types")
+		.contains(type)
+		.click();
+});
+
+Cypress.Commands.add("setNotificationMessageTitle", (title) => {
+	cy.get("#harness-messageTitle")
+		.clear()
+		.type(title);
+});
+
+Cypress.Commands.add("setNotificationMessageContent", (content) => {
+	cy.get("#harness-sidepanel-api-nm-content")
+		.find("textarea")
+		.clear()
+		.type(content);
+});
+
+Cypress.Commands.add("toggleNotificationMessageTimestamp", () => {
+	cy.get("label[for='harness-sidepanel-api-notification-timestamp']").click();
+});
+
+Cypress.Commands.add("toggleNotificationMessageCallback", () => {
+	cy.get("label[for='harness-sidepanel-api-notification-callback']").click();
+});
+
+Cypress.Commands.add("toggleNotificationMessageDismiss", () => {
+	cy.get("label[for='harness-sidepanel-api-notification-dismiss']").click();
+});
+
+Cypress.Commands.add("generateNotificationMessage", (type, timestamp, callback, dismiss) => {
+	cy.selectNotificationMessageType(type);
+	cy.setNotificationMessageTitle(type + " title");
+	cy.setNotificationMessageContent(type + " message");
+	if (timestamp) {
+		cy.toggleNotificationMessageTimestamp();
+	}
+	if (callback) {
+		cy.toggleNotificationMessageCallback();
+	}
+	if (dismiss) {
+		cy.toggleNotificationMessageDismiss();
+	}
+	cy.submitAPI();
+});
+
 Cypress.Commands.add("submitAPI", () => {
 	cy.get("#harness-sidepanel-api-submit")
 		.find("button")
