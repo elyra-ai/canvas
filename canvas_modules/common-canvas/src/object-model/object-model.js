@@ -884,8 +884,8 @@ export default class ObjectModel {
 	// Layout Info methods
 	// ---------------------------------------------------------------------------
 
-	setLayoutType(type, config) {
-		const layoutInfo = Object.assign({}, LayoutDimensions.getLayout(type, config));
+	setLayoutType(config) {
+		const layoutInfo = Object.assign({}, LayoutDimensions.getLayoutForConfig(config));
 		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo.nodeLayout, layoutInfo.canvasLayout);
 
 		this.store.dispatch({ type: "SET_LAYOUT_INFO",
