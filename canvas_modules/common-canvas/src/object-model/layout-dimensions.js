@@ -1039,17 +1039,18 @@ const portsVerticalDefaultLayout = {
 
 
 export default class LayoutDimensions {
-	static getLayout(type, config) {
-		let defaultLayout;
-		if (type === "halo") {
-			defaultLayout = haloDefaultLayout;
-		} else if (type === "ports-vertical") {
-			defaultLayout = portsVerticalDefaultLayout;
-		} else {
-			defaultLayout = portsHorizontalDefaultLayout;
-		}
+	static getLayoutForConfig(config) {
+		let type;
+		if (config.enableConnectionType === "Halo") {
+			type = "halo";
 
-		let newLayout = Object.assign({}, defaultLayout);
+		} else if (config.enableNodeFormatType === "Horizontal") {
+			type = "ports-horizontal";
+
+		} else { // Vertical
+			type = "ports-vertical";
+		}
+		let newLayout = this.getLayout(type);
 		if (config) {
 			newLayout = this.overrideNodeLayout(newLayout, config); // Do this first because snap-to-grid depends on this.
 			newLayout = this.overrideCanvasLayout(newLayout, config);
@@ -1058,6 +1059,18 @@ export default class LayoutDimensions {
 			newLayout = this.overrideAutoLayout(newLayout, config);
 		}
 		return newLayout;
+	}
+
+	static getLayout(type) {
+		let defaultLayout;
+		if (type === "halo") {
+			defaultLayout = haloDefaultLayout;
+		} else if (type === "ports-vertical") {
+			defaultLayout = portsVerticalDefaultLayout;
+		} else {
+			defaultLayout = portsHorizontalDefaultLayout;
+		}
+		return Object.assign({}, defaultLayout);
 	}
 
 	static overrideNodeLayout(layout, config) {
