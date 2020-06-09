@@ -1997,6 +1997,9 @@ export default class SVGCanvasRenderer {
 				.attr("class", "d3-node-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+					if (that.drawingNewLinkData === null && !that.dragging) {
+						d3.select(this).raise();
+					}
 					that.setNodeStyles(d, "hover", d3.select(this));
 					that.addDynamicNodeIcons(d, this);
 					if (that.canOpenTip(TIP_TYPE_NODE)) {
@@ -2633,6 +2636,10 @@ export default class SVGCanvasRenderer {
 			.append("text")
 			.attr("data-id", (dec) => this.getId(`${objType}_dec_label`, dec.id)); // Used in tests
 
+		newDecGroups.filter((dec) => dec.path)
+			.append("path")
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_path`, dec.id)); // Used in tests
+
 		const newAndExistingDecGrps =
 			decGroupsSel.enter().merge(decGroupsSel);
 
@@ -2648,6 +2655,7 @@ export default class SVGCanvasRenderer {
 				const outlnSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_outln`, dec.id);
 				const imageSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_image`, dec.id);
 				const labelSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_label`, dec.id);
+				const pathSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_path`, dec.id);
 
 				decGrp.select(outlnSelector)
 					.attr("x", 0)
@@ -2670,6 +2678,13 @@ export default class SVGCanvasRenderer {
 					.attr("y", 0)
 					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
 					.text(dec.label)
+					.datum(decDatum);
+
+				decGrp.select(pathSelector)
+					.attr("x", 0)
+					.attr("y", 0)
+					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-path`))
+					.attr("d", dec.path)
 					.datum(decDatum);
 			});
 
@@ -2725,10 +2740,24 @@ export default class SVGCanvasRenderer {
 			// Save image field in DOM object to avoid unnecessary image refreshes.
 			imageObj.attr("data-image", nodeImage);
 			if (nodeImageType === "svg") {
-				d3.text(nodeImage).then((img) => imageObj.html(img));
+				this.addCopyOfImageToDefs(nodeImage);
+				imageObj.append("use").attr("href", `#${nodeImage}`);
 			} else {
 				imageObj.attr("xlink:href", nodeImage);
 			}
+		}
+	}
+
+	// If the image doesn't exist in <defs>, retrieves the image from the
+	// server and places it in the <defs> element with an id equal to the
+	// nodeImage string.
+	addCopyOfImageToDefs(nodeImage) {
+		const defs = this.canvasSVG.select("defs");
+		// Select using id as an attribute because creating a selector with a
+		// # prefix won't work when nodeImage is a file name with special characters.
+		if (defs.select(`[id='${nodeImage}']`).empty()) {
+			const defsSvg = defs.append("svg").attr("id", nodeImage);
+			d3.text(nodeImage).then((img) => defsSvg.html(img));
 		}
 	}
 

@@ -435,13 +435,13 @@ Cypress.Commands.add("verifySubmenuPushedUpBy", (distFromTop) => {
 
 Cypress.Commands.add("verifyNumberOfDecoratorsOnNode", (nodeName, noOfDecorators) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-node-dec-outline")
+		.find(".d3-node-dec-group")
 		.should("have.length", noOfDecorators);
 });
 
 Cypress.Commands.add("verifyNumberOfDecoratorsOnLink", (linkName, noOfDecorators) => {
 	cy.getLinkFromName(linkName)
-		.find(".d3-link-dec-outline")
+		.find(".d3-link-dec-group")
 		.should("have.length", noOfDecorators);
 });
 
@@ -451,9 +451,21 @@ Cypress.Commands.add("verifyNumberOfLabelDecoratorsOnNode", (nodeName, noOfDecor
 		.should("have.length", noOfDecorators);
 });
 
+Cypress.Commands.add("verifyNumberOfPathDecoratorsOnNode", (nodeName, noOfDecorators) => {
+	cy.getNodeWithLabel(nodeName)
+		.find(".d3-node-dec-path")
+		.should("have.length", noOfDecorators);
+});
+
 Cypress.Commands.add("verifyNumberOfLabelDecoratorsOnLink", (linkName, noOfDecorators) => {
 	cy.getLinkFromName(linkName)
 		.find(".d3-link-dec-label")
+		.should("have.length", noOfDecorators);
+});
+
+Cypress.Commands.add("verifyNumberOfPathDecoratorsOnLink", (linkName, noOfDecorators) => {
+	cy.getLinkFromName(linkName)
+		.find(".d3-link-dec-path")
 		.should("have.length", noOfDecorators);
 });
 
@@ -490,7 +502,7 @@ Cypress.Commands.add("verifyDecorationTransformOnLink", (linkName, decoratorId, 
 		});
 });
 
-Cypress.Commands.add("verifyDecorationImage", (nodeName, decoratorId, decoratorImage) => {
+Cypress.Commands.add("verifyDecorationImageOnNode", (nodeName, decoratorId, decoratorImage) => {
 	cy.getNodeWithLabel(nodeName)
 		.find(".d3-node-dec-image")
 		.then((decoratorImages) => {
@@ -500,6 +512,29 @@ Cypress.Commands.add("verifyDecorationImage", (nodeName, decoratorId, decoratorI
 			expect(decorator[0].getAttribute("data-image")).equal(decoratorImage);
 		});
 });
+
+Cypress.Commands.add("verifyDecorationPathOnNode", (nodeName, decoratorId, path) => {
+	cy.getNodeWithLabel(nodeName)
+		.find(".d3-node-dec-path")
+		.then((decoratorPaths) => {
+			const decorator = decoratorPaths.filter((idx) =>
+				decoratorPaths[idx].getAttribute("data-id") === ("node_dec_path_0_" + decoratorId));
+			expect(decorator[0].getAttribute("data-id")).equal(`node_dec_path_0_${decoratorId}`);
+			expect(decorator[0].getAttribute("d")).equal(path);
+		});
+});
+
+Cypress.Commands.add("verifyDecorationPathOnLink", (linkName, decoratorId, path) => {
+	cy.getLinkFromName(linkName)
+		.find(".d3-link-dec-path")
+		.then((decoratorPaths) => {
+			const decorator = decoratorPaths.filter((idx) =>
+				decoratorPaths[idx].getAttribute("data-id") === ("link_dec_path_0_" + decoratorId));
+			expect(decorator[0].getAttribute("data-id")).equal(`link_dec_path_0_${decoratorId}`);
+			expect(decorator[0].getAttribute("d")).equal(path);
+		});
+});
+
 
 Cypress.Commands.add("verifyDecorationHandlerEntryInConsole", (decoratorId) => {
 	cy.document().then((doc) => {

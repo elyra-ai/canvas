@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import { STATES, TOOL_TIP_DELAY_ICON, CARBON_ICONS } from "./../../constants/constants.js";
 import { Button } from "carbon-components-react";
+import { ControlType } from "./../../constants/form-constants";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import isEmpty from "lodash/isEmpty";
 import uuid4 from "uuid/v4";
@@ -35,6 +36,9 @@ class ControlItem extends React.Component {
 	}
 
 	render() {
+		if (this.props.control.controlType === ControlType.HIDDEN) {
+			return null;
+		}
 		const hidden = this.props.state === STATES.HIDDEN;
 		const disabled = this.props.state === STATES.DISABLED;
 		const that = this;

@@ -252,6 +252,17 @@ $new-halo-link-color: $ui-05;
 	user-select: none;
 }
 
+.d3-node-dec-path,
+.d3-link-dec-path {
+	fill: $node-decoration-outline;
+	stroke: $node-decoration-outline;
+	stroke-width: 1;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
+}
+
+
 /* Node halo styles */
 
 .d3-node-halo {
