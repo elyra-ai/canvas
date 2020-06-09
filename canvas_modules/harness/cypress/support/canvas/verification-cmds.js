@@ -1041,3 +1041,21 @@ Cypress.Commands.add("verifyNotificationMessagesCallbackInConsole", (index, id) 
 		}
 	});
 });
+
+Cypress.Commands.add("verifyNotificationCenterHidden", (hidden) => {
+	if (hidden) {
+		cy.get(".notification-panel-container").should("have.class", "panel-hidden");
+	} else {
+		cy.get(".notification-panel-container").should("not.have.class", "panel-hidden");
+	}
+});
+
+Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
+	if (typeof content === "string" && content.length > 0) {
+		cy.get(".notification-panel-" + id).should("contain", content);
+	}	else if (typeof content === "string" && content.length === 0) {
+		cy.get(".notification-panel-" + id).should("be.empty");
+	} else {
+		cy.get(".notification-panel-" + id).should("not.exist");
+	}
+});

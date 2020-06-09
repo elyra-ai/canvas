@@ -186,6 +186,32 @@ Cypress.Commands.add("updatePipelineflowToAddInputOutputPortsToNode", (nodeName)
 		});
 });
 
+Cypress.Commands.add("clickOutsideNotificationPanel", () => {
+	cy.get(".d3-svg-canvas-div").click();
+});
+
+Cypress.Commands.add("setNotificationCenterContent", (id, content) => {
+	cy.get("#" + id)
+		.clear()
+		.type(content);
+});
+
+Cypress.Commands.add("clearNotificationCenterContent", (id) => {
+	cy.get("#" + id)
+		.clear();
+});
+
+Cypress.Commands.add("toggleNotificationCenterKeepOpen", () => {
+	cy.get("label[for='keepOpen'] .bx--toggle__switch").click();
+});
+
+Cypress.Commands.add("selectNotificationMessageType", (type) => {
+	cy.get("#harness-sidepanel-api-nm-types")
+		.contains(type)
+		.click();
+});
+
+
 Cypress.Commands.add("selectNotificationMessageType", (type) => {
 	cy.get("#harness-sidepanel-api-nm-types")
 		.contains(type)
@@ -215,13 +241,6 @@ Cypress.Commands.add("toggleNotificationMessageCallback", () => {
 
 Cypress.Commands.add("toggleNotificationMessageDismiss", () => {
 	cy.get("label[for='harness-sidepanel-api-notification-dismiss']").click();
-});
-
-Cypress.Commands.add("dismissNotificationMessage", (index) => {
-	cy.get(".notifications-button-container .notifications")
-		.eq(index)
-		.find(".notification-message-close")
-		.click();
 });
 
 Cypress.Commands.add("generateNotificationMessage", (type, timestamp, callback, dismiss) => {

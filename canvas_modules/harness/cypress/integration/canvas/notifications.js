@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-describe("Test of notification center messages", function() {
+describe("Test of notification center message API", function() {
 	before(() => {
 		cy.visit("/");
-		cy.openCanvasAPI("Add Notification Message");
 	});
 
 	it("Sanity test notification message callback, custom content, dismiss, and clear all", function() {
+		cy.openCanvasAPI("Add Notification Message");
+
 		cy.verifyNotificationCounter(0);
 		cy.verifyNotificationMessagesLength(0);
 		cy.verifyNotificationIconType();
@@ -46,6 +47,54 @@ describe("Test of notification center messages", function() {
 
 		cy.dismissNotificationMessage(1);
 		cy.verifyLatestNotificationMessage(2, "warning", false);
+
+		cy.clearAllNotificationMessages();
+
+		cy.verifyNotificationCounter(0);
+		cy.verifyNotificationMessagesLength(0);
+		cy.verifyNotificationIconType();
+
+	});
+});
+
+describe("Test of notification center configuration", function() {
+	before(() => {
+		cy.visit("/");
+	});
+
+	it("Sanity test proper rendering of notification center components", function() {
+		cy.toggleCommonCanvasSidePanel();
+
+		cy.verifyNotificationCenterHidden(true);
+		cy.clickToolbarNotifications();
+		cy.verifyNotificationCenterHidden(false);
+
+		cy.clickOutsideNotificationPanel();
+		cy.verifyNotificationCenterHidden(false);
+
+		cy.setNotificationCenterContent("notificationHeader", "test header");
+		cy.verifyNotificationCenterContent("header", "test header");
+
+		cy.clearNotificationCenterContent("notificationHeader");
+		cy.verifyNotificationCenterContent("header", "Notifications");
+
+		cy.setNotificationCenterContent("notificationSubtitle", "test subtitle");
+		cy.verifyNotificationCenterContent("subtitle", "test subtitle");
+
+		cy.clearNotificationCenterContent("notificationSubtitle");
+		cy.verifyNotificationCenterContent("subtitle");
+
+		cy.setNotificationCenterContent("emptyMessage", "test empty message");
+		cy.verifyNotificationCenterContent("empty-message", "test empty message");
+
+		cy.clearNotificationCenterContent("emptyMessage");
+		cy.verifyNotificationCenterContent("empty-message", "");
+
+		cy.setNotificationCenterContent("clearAllMessage", "test clear all");
+		cy.verifyNotificationCenterContent("clear-all", "test clear all");
+
+		cy.clearNotificationCenterContent("clearAllMessage");
+		cy.verifyNotificationCenterContent("clear-all");
 
 	});
 });
