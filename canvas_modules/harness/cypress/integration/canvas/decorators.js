@@ -94,6 +94,9 @@ describe("Test adding a decorator to a node", function() {
 		cy.updateDecorationsJSON("[{{}\"id\": \"123\", \"path\": \"M 0 0 L 10 10 -10 10 Z\", " +
 			"\"outline\": false, \"x_pos\": -20, \"y_pos\": 20, \"hotspot\": true{}}]");
 		cy.submitAPI();
+		// TODO: this next click is a workaround, the next click on the toggle won't trigger
+		// an onClick unless elsewhere on the panel is clicked first. remove when fixed
+		cy.clickOutsideNotificationPanel();
 		cy.verifyNumberOfPathDecoratorsOnNode("Custom position", 1);
 		cy.verifyDecorationTransformOnNode("Custom position", "123", -20, 20);
 
