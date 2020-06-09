@@ -79,7 +79,6 @@ export default class CanvasController {
 			enableDisplayFullLabelOnHover: false,
 			enableDropZoneOnExternalDrag: false,
 			enableZoomIntoSubFlows: false,
-			enableZoomType: "Regular",
 			enableSaveZoom: "None",
 			enableSnapToGridType: "None",
 			enableSnapToGridX: null,
