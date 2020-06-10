@@ -35,6 +35,9 @@ import dmMeasurementEquals from "./dmMeasurementEquals";
 import dmMeasurementNotEquals from "./dmMeasurementNotEquals";
 import dmRoleEquals from "./dmRoleEquals";
 import dmRoleNotEquals from "./dmRoleNotEquals";
+import lengthEquals from "./lengthEquals";
+import lengthLessThan from "./lengthLessThan";
+import lengthGreaterThan from "./lengthGreaterThan";
 
 
 /**
@@ -62,6 +65,9 @@ function getConditionOps(customOps) {
 	ops[dmMeasurementNotEquals.op()] = dmMeasurementNotEquals.evaluate;
 	ops[dmRoleEquals.op()] = dmRoleEquals.evaluate;
 	ops[dmRoleNotEquals.op()] = dmRoleNotEquals.evaluate;
+	ops[lengthEquals.op()] = lengthEquals.evaluate;
+	ops[lengthLessThan.op()] = lengthLessThan.evaluate;
+	ops[lengthGreaterThan.op()] = lengthGreaterThan.evaluate;
 
 
 	if (Array.isArray(customOps)) {
