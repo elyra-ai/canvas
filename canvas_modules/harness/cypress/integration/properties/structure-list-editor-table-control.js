@@ -33,8 +33,8 @@ describe("Test of subpanel editing of selectcolumns in a structurelisteditor", f
 		cy.clickOnFieldPickerButton("apply");
 
 		// Verify two rows are in selectColumns
-		cy.verifyRowInSelectColumnsTable("fields2", "BP", 1, "structurelist_sub_panel_info");
-		cy.verifyRowInSelectColumnsTable("fields2", "Na", 2, "structurelist_sub_panel_info");
+		cy.verifyRowInSelectColumnsTable("fields2", "BP", 1);
+		cy.verifyRowInSelectColumnsTable("fields2", "Na", 2);
 
 		// Go back into field picker and verify the two options are still selected
 		cy.clickButtonInTable("Add", "fields2");
@@ -44,7 +44,7 @@ describe("Test of subpanel editing of selectcolumns in a structurelisteditor", f
 
 		// Verify the string array in structurelisteditor table
 		cy.saveWideFlyout("structurelist_sub_panel_info");
-		cy.verifyFieldsInStructureListEditorTable("structurelist_sub_panel", "BP, Na", 0, 0);
+		cy.verifyFieldsInTable("structurelist_sub_panel", "BP, Na", 0, 0);
 	});
 });
 

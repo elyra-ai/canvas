@@ -7,6 +7,7 @@ module.exports = {
 		"sourceType": "module"
 	},
 	rules: {
-		"no-unused-expressions": "off"
+		"no-unused-expressions": "off",
+		"consistent-return": "off"
 	}
 };

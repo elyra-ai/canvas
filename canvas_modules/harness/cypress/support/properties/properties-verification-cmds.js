@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint consistent-return: "off" */
 import * as testUtils from "../../utils/eventlog-utils";
 
-Cypress.Commands.add("verifyReadOnlyTextValue", (controlId, value) => {
-	cy.get("div[data-id='properties-" + controlId + "'] span")
+Cypress.Commands.add("verifyReadOnlyTextValue", (propertyId, value) => {
+	cy.get("div[data-id='properties-" + propertyId + "'] span")
 		.invoke("text")
 		.then((text) => {
 			expect(value).equal(text);
 		});
 });
 
-Cypress.Commands.add("verifyReadOnlyTextCSS", (controlId, style, value) => {
-	cy.get("div[data-id='properties-" + controlId + "'] span")
+Cypress.Commands.add("verifyReadOnlyTextCSS", (propertyId, style, value) => {
+	cy.get("div[data-id='properties-" + propertyId + "'] span")
 		.should("have.css", style, value);
 });
 
-Cypress.Commands.add("verifyNoTextOverflow", (controlId) => {
-	cy.get("div[data-id='properties-" + controlId + "'] span")
+Cypress.Commands.add("verifyNoTextOverflow", (propertyId) => {
+	cy.get("div[data-id='properties-" + propertyId + "'] span")
 		.invoke("height")
 		.should("be.lt", 25);
 });
@@ -226,11 +225,12 @@ Cypress.Commands.add("verifyTipForValidationIconInSummaryPanel", (summaryPanelId
 });
 
 // Expression control verification commands
-Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type) => {
+Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type, propertyId) => {
 	// Verify "is_real" is a "keyword" in ExpressionEditor
 	const searchClass = ".cm-" + type;
 	const testWord = (type === "string") ? "\"" + word + "\"" : word;
-	cy.get(".properties-expression-editor")
+	cy.get(`div[data-id='properties-ci-${propertyId}']`)
+		.find(".properties-expression-editor")
 		.find(".CodeMirror-line")
 		.then((codeMirrorLine) => {
 			for (let idx = 0; idx < codeMirrorLine.length; idx++) {
@@ -246,15 +246,15 @@ Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type) => {
 		});
 });
 
-Cypress.Commands.add("verifyNumberOfHintsForTextInExpressionEditor", (enteredText, hintCount) => {
+Cypress.Commands.add("verifyNumberOfHintsForTextInExpressionEditor", (enteredText, hintCount, propertyId) => {
 	// Enter "is" in ExpressionEditor and press autocomplete and verify that 18 autocomplete hints are displayed
-	cy.getAutoCompleteCountForText(enteredText)
+	cy.getAutoCompleteCountForText(enteredText, propertyId)
 		.then((autoCompleteCount) => expect(autoCompleteCount).to.equal(hintCount));
 });
 
-Cypress.Commands.add("verifyTypeOfFirstAutoCompleteForText", (enteredText, selectedText, type) => {
+Cypress.Commands.add("verifyTypeOfFirstAutoCompleteForText", (enteredText, selectedText, type, propertyId) => {
 	// Enter "is_" in ExpressionEditor and press autocomplete and select "is_date" a "keyword"
-	cy.selectFirstAutoCompleteForText(enteredText)
+	cy.selectFirstAutoCompleteForText(enteredText, propertyId)
 		.then((selectedAutoComplete) => {
 			const searchClass = ".cm-" + type;
 			cy.get(".properties-expression-editor")
@@ -265,10 +265,10 @@ Cypress.Commands.add("verifyTypeOfFirstAutoCompleteForText", (enteredText, selec
 		});
 });
 
-Cypress.Commands.add("verifyTypeOfEnteredTextInExpressionEditor", (enteredText, type) => {
+Cypress.Commands.add("verifyTypeOfEnteredTextInExpressionEditor", (enteredText, type, propertyId) => {
 	// Enter "and" in ExpressionEditor and verify it is a "keyword"
 	const setText = (type === "string") ? "\"" + enteredText + "\"" : enteredText;
-	cy.enterTextInExpressionEditor(setText)
+	cy.enterTextInExpressionEditor(setText, propertyId)
 		.then((text) => {
 			const searchClass = ".cm-" + type;
 			cy.get(".properties-expression-editor")
@@ -298,8 +298,8 @@ Cypress.Commands.add("verifyValidationMessage", (message) => {
 		.should("have.text", message);
 });
 
-Cypress.Commands.add("verifyControlIsDisplayed", (controlId) => {
-	cy.get(`div[data-id='properties-ci-${controlId}']`)
+Cypress.Commands.add("verifyControlIsDisplayed", (propertyId) => {
+	cy.get(`div[data-id='properties-ci-${propertyId}']`)
 		.should("exist");
 });
 
@@ -319,7 +319,7 @@ Cypress.Commands.add("verifyValueInSummaryPanelForCategory", (value, summaryName
 		.then((text) => expect(text.trim()).to.equal(value));
 });
 
-Cypress.Commands.add("verifySummaryPanelValueForParameterInConsole", (testValue, parameterName) => {
+Cypress.Commands.add("verifyValueForParameterInConsole", (testValue, parameterName) => {
 	// Verify that the event log has a value of "is_date" for the "expressionCellTable" parameter
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc);
@@ -338,35 +338,22 @@ Cypress.Commands.add("verifySummaryPanelValueForParameterInConsole", (testValue,
 	});
 });
 
-Cypress.Commands.add("verifyIconInSubPanel", (iconName, panelName) => {
-	cy.getWideFlyoutPanel(panelName)
-		.then((wideFlyoutPanel) => {
-			cy.wrap(wideFlyoutPanel)
-				.find(".properties-expression-validate")
-				.then((validateButton) => {
-					if (iconName === "none") {
-						cy.wrap(validateButton)
-							.find(".validateIcon")
-							.should("not.exist");
-					} else {
-						cy.wrap(validateButton)
-							.find(".validateIcon")
-							.then((icon) => {
-								cy.wrap(icon)
-									.find("svg")
-									.invoke("attr", "class")
-									.then((iconClass) => {
-										expect(iconClass).to.include(iconName);
-									});
-							});
-					}
-				});
-		});
+Cypress.Commands.add("verifyIconInSubPanel", (iconName) => {
+	if (iconName === "none") {
+		cy.getValidateIconInSubPanel()
+			.should("not.exist");
+	} else {
+		cy.getValidateIconInSubPanel()
+			.find("svg")
+			.invoke("attr", "class")
+			.then((iconClass) => {
+				expect(iconClass).to.include(iconName);
+			});
+	}
 });
 
-Cypress.Commands.add("verifyRowInSelectColumnsTable", (tableId, fieldName, rowNumber, panelName) => {
-	cy.getWideFlyoutPanel(panelName)
-		.find(`div[data-id='properties-ft-${tableId}']`)
+Cypress.Commands.add("verifyRowInSelectColumnsTable", (propertyId, fieldName, rowNumber) => {
+	cy.get(`div[data-id='properties-ft-${propertyId}']`)
 		.find("div[role='properties-data-row']")
 		.eq(rowNumber - 1)
 		.find(".properties-readonly")
@@ -405,14 +392,14 @@ Cypress.Commands.add("verifyFieldIsSelectedInFieldPickerPanel", (fieldName, data
 		});
 });
 
-Cypress.Commands.add("verifyFieldsInStructureListEditorTable", (tableId, fields, rowNumber, columnNumber) => {
-	cy.get(`div[data-id='properties-ft-${tableId}']`)
-		.find(`div[data-id='properties-structurelist_sub_panel_${rowNumber}_${columnNumber}']`)
+Cypress.Commands.add("verifyFieldsInTable", (propertyId, fields, rowNumber, columnNumber) => {
+	cy.get(`div[data-id='properties-ft-${propertyId}']`)
+		.find(`div[data-id='properties-${propertyId}_${rowNumber}_${columnNumber}']`)
 		.should("have.text", fields);
 });
 
-Cypress.Commands.add("verifyHeightOfTable", (tableId, height) => {
-	cy.get(`div[data-id='properties-ft-${tableId}']`)
+Cypress.Commands.add("verifyHeightOfTable", (propertyId, height) => {
+	cy.get(`div[data-id='properties-ft-${propertyId}']`)
 		.find(".properties-ft-container-wrapper")
 		.should("have.css", "height", height);
 });
