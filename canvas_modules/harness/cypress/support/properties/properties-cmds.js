@@ -35,28 +35,28 @@ Cypress.Commands.add("openSubPanel", (title) => {
 		.click();
 });
 
-Cypress.Commands.add("clickSubPanelButtonInRow", (controlId, row) => {
-	cy.get("div[data-id='properties-" + controlId + "']").find(".properties-subpanel-button")
+Cypress.Commands.add("clickSubPanelButtonInRow", (propertyId, row) => {
+	cy.get("div[data-id='properties-" + propertyId + "']").find(".properties-subpanel-button")
 		.then((idx) => {
 			idx[row].click();
 		});
 });
 
-Cypress.Commands.add("setTextFieldValue", (controlId, labelText) => {
+Cypress.Commands.add("setTextFieldValue", (propertyId, labelText) => {
 	// Replace the existing text with new text in input field by
 	// selecting all the text and typing new text
 	// This is a workaround for issue -
 	// cy.type() on input[type='number'] prepends text to current value instead of appending
-	cy.get("div[data-id='properties-" + controlId + "']").find("input")
+	cy.get("div[data-id='properties-" + propertyId + "']").find("input")
 		.focus()
 		.type("{selectall}")
 		.type(labelText);
 });
 
-Cypress.Commands.add("backspaceTextFieldValue", (controlId) => {
+Cypress.Commands.add("backspaceTextFieldValue", (propertyId) => {
 	cy.useBackspaceKey()
 		.then((backspaceKey) => {
-			cy.get("div[data-id='properties-" + controlId + "']").find("input")
+			cy.get("div[data-id='properties-" + propertyId + "']").find("input")
 				.type(backspaceKey);
 		});
 });
@@ -186,23 +186,23 @@ Cypress.Commands.add("getSummaryFromName", (summaryName) => {
 		});
 });
 
-Cypress.Commands.add("selectRowInTable", (rowNumber, tableControlId) => {
+Cypress.Commands.add("selectRowInTable", (rowNumber, propertyId) => {
 	//  Select the row 1 in the table "expressionCellTable"
-	cy.get(`div[data-id='properties-${tableControlId}']`)
+	cy.get(`div[data-id='properties-${propertyId}']`)
 		.find("div[role='properties-data-row']")
 		.eq(rowNumber - 1)
 		.click();
 });
 
-Cypress.Commands.add("selectAllRowsInTable", (tableControlId) => {
-	cy.get(`div[data-id='properties-${tableControlId}']`)
+Cypress.Commands.add("selectAllRowsInTable", (propertyId) => {
+	cy.get(`div[data-id='properties-${propertyId}']`)
 		.find(".properties-vt-header-checkbox")
 		.find("label")
 		.click();
 });
 
-Cypress.Commands.add("clickButtonInTable", (buttonName, tableControlId) => {
-	cy.get(`div[data-id='properties-ft-${tableControlId}']`)
+Cypress.Commands.add("clickButtonInTable", (buttonName, propertyId) => {
+	cy.get(`div[data-id='properties-ft-${propertyId}']`)
 		.then((tableDiv) => {
 			cy.wrap(tableDiv).should("exist");
 
@@ -216,4 +216,44 @@ Cypress.Commands.add("clickButtonInTable", (buttonName, tableControlId) => {
 					.click();
 			}
 		});
+});
+
+// StructureListEditorControl commands
+Cypress.Commands.add("selectFieldInFieldPickerPanel", (fieldName, dataType, panelName) => {
+	// Following logic works based on assumption  - fieldName in each row is unique
+	let rowNumber;
+	cy.getWideFlyoutPanel(panelName)
+		.find("div[role='properties-data-row']")
+		.each(($el, index) => {
+			if ($el[0].childNodes[1].textContent === fieldName) {
+				rowNumber = index;
+				return false;
+			}
+		})
+		.then((rows) => {
+			cy.wrap(rows)
+				.eq(rowNumber)
+				.then((row) => {
+					// Verify field name
+					cy.wrap(row)
+						.find(".properties-fp-field-name")
+						.should("have.text", fieldName);
+					// Verify dataType
+					cy.wrap(row)
+						.find(".properties-fp-field-type")
+						.should("have.text", dataType);
+					// Select the checkbox in this row
+					cy.wrap(row)
+						.find(".properties-vt-row-checkbox")
+						.find("label")
+						.click();
+				});
+		});
+});
+
+Cypress.Commands.add("clickOnFieldPickerButton", (buttonType) => {
+	// Clicks on "apply" or "cancel" buttons
+	cy.get(".properties-fp-table")
+		.find(`button[data-id='properties-${buttonType}-button']`)
+		.click();
 });

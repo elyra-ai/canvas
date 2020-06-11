@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test adding a decorator to a node", function() {
 	before(() => {
@@ -56,7 +57,7 @@ describe("Test adding a decorator to a node", function() {
 
 		// Click on the hot spot and make sure it calls the callback function
 		cy.clickDecoratorHotspotOnNode("678", "No Decorator");
-		cy.verifyDecorationHandlerEntryInConsole("678");
+		verifyDecorationHandlerEntryInConsole("678");
 
 		// Add a decoration at a customized position
 		cy.updateDecorationsJSON("[{{}\"id\": \"999\", \"x_pos\": -20, \"y_pos\": -25{}}]");
@@ -102,7 +103,7 @@ describe("Test adding a decorator to a node", function() {
 
 		// Click on the hot spot and make sure it calls the callback function
 		cy.clickDecoratorHotspotOnNode("123", "Custom position");
-		cy.verifyDecorationHandlerEntryInConsole("123");
+		verifyDecorationHandlerEntryInConsole("123");
 
 		// Check the path is correct
 		cy.verifyDecorationPathOnNode("Custom position", "123", "M 0 0 L 10 10 -10 10 Z");
@@ -164,7 +165,7 @@ describe("Test adding a decorator to a link", function() {
 
 		// Click on the hotspot and make sure it works
 		cy.clickDecoratorHotspotOnLink("456", "Bottom Left-Bottom Right");
-		cy.verifyDecorationHandlerEntryInConsole("456");
+		verifyDecorationHandlerEntryInConsole("456");
 	});
 
 	it("Test adding a path decoration to a link", function() {
@@ -177,9 +178,17 @@ describe("Test adding a decorator to a link", function() {
 
 		// Click on the hot spot and make sure it calls the callback function
 		cy.clickDecoratorHotspotOnLink("555", "Bottom Left-Bottom Right");
-		cy.verifyDecorationHandlerEntryInConsole("555");
+		verifyDecorationHandlerEntryInConsole("555");
 
 		// Check the path is correct
 		cy.verifyDecorationPathOnLink("Bottom Left-Bottom Right", "555", "M 0 0 L 10 10 -10 10 Z");
 	});
 });
+
+function verifyDecorationHandlerEntryInConsole(decoratorId) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal(`decorationHandler() Decoration ID = ${decoratorId}`);
+		expect(lastEventLog.data).to.equal(decoratorId);
+	});
+}

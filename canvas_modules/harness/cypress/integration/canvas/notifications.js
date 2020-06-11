@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test of notification center message API", function() {
 	before(() => {
 		cy.visit("/");
 	});
 
-	it("Sanity test notification message callback, custom content, dismiss, and clear all", function() {
+	it("Test notification message callback, custom content, dismiss, and clear all", function() {
 		cy.openCanvasAPI("Add Notification Message");
 
 		cy.verifyNotificationCounter(0);
@@ -30,14 +31,16 @@ describe("Test of notification center message API", function() {
 
 		cy.generateNotificationMessage("info", true, true, false);
 		cy.verifyLatestNotificationMessage(1, "info", true);
-		cy.verifyNotificationMessagesCallbackInConsole(0, "harness-message-0");
+		cy.clickNotificationAtIndex(0);
+		verifyNotificationMessagesCallbackInConsole("harness-message-0");
 
 		cy.generateNotificationMessage("success", true, true, true);
 		cy.verifyLatestNotificationMessage(2, "success", false);
 
 		cy.generateNotificationMessage("warning", false, true, false);
 		cy.verifyLatestNotificationMessage(3, "warning", false);
-		cy.verifyNotificationMessagesCallbackInConsole(2, "harness-message-2");
+		cy.clickNotificationAtIndex(2);
+		verifyNotificationMessagesCallbackInConsole("harness-message-2");
 
 		cy.generateNotificationMessage("error", true, true, false);
 		cy.verifyLatestNotificationMessage(4, "error", true);
@@ -62,7 +65,7 @@ describe("Test of notification center configuration", function() {
 		cy.visit("/");
 	});
 
-	it("Sanity test proper rendering of notification center components", function() {
+	it("Test proper rendering of notification center components", function() {
 		cy.toggleCommonCanvasSidePanel();
 
 		cy.verifyNotificationCenterHidden(true);
@@ -98,3 +101,13 @@ describe("Test of notification center configuration", function() {
 
 	});
 });
+
+function verifyNotificationMessagesCallbackInConsole(id) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("Notification Message Callback");
+		if (id) {
+			expect(lastEventLog.data).to.equal("Message " + id + " was clicked.");
+		}
+	});
+}
