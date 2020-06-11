@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test adding nodes from palette", function() {
 	before(() => {
@@ -172,7 +173,7 @@ describe("Test changing node properties is reflected in canvas", function() {
 		cy.saveFlyout();
 
 		// Verify name is updated in console
-		cy.verifyNewPropertiesFlyoutTitleEntryInConsole("Var File2");
+		verifyNewPropertiesFlyoutTitleEntryInConsole("Var File2");
 
 		// Double-click "Var File2" node to open node properties
 		cy.getNodeWithLabel("Var File2").dblclick();
@@ -234,3 +235,10 @@ describe("Test from loaded file in legacy format", function() {
 		cy.verifyNumberOfCommentLinks(0);
 	});
 });
+
+function verifyNewPropertiesFlyoutTitleEntryInConsole(newTitle) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
+		expect(newTitle).to.equal(lastEventLog.data.title);
+	});
+}
