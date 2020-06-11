@@ -133,7 +133,7 @@ $notification-left-border-color-width: 4px;
 	}
 
 	.notifications {
-		padding: $spacing-06 $spacing-05;
+		padding: $spacing-06, $spacing-05, $spacing-06, calc(#{$spacing-05} - #{$notification-left-border-color-width});
 		display: inline-flex;
 		width: 100%;
 		min-height: $notification-message-height;
@@ -178,7 +178,7 @@ $notification-left-border-color-width: 4px;
 		.notification-message-type {
 			display: flex;
 			justify-content: center;
-			height: 20px;
+			height: 18px;
 			width: fit-content;
 			padding-right: $spacing-05;
 
