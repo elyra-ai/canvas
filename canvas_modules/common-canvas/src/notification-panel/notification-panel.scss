@@ -71,7 +71,6 @@ $notification-left-border-color-width: 4px;
 		@include carbon--type-style("helper-text-01");
 		color: $text-02;
 		padding-top: $spacing-02;
-		font-size: 11px;
 	}
 	.notification-panel-close-icon {
 		position: absolute;
@@ -108,7 +107,6 @@ $notification-left-border-color-width: 4px;
 	max-height: calc(50% - #{$notification-panel-clear-all-height});
 	height: fit-content;
 	overflow-y: auto;
-	font-size: 11px;
 	line-height: normal;
 	background-color: $ui-01;
 	border: 1px solid $ui-03;
