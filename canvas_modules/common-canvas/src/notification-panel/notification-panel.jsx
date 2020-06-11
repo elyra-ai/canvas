@@ -165,10 +165,12 @@ class NotificationPanel extends React.Component {
 
 		return (<div className={"notification-panel-container " + notificationPanelClassName} >
 			<div className="notification-panel">
-				<div className="notification-panel-header">
-					{notificationHeader}
+				<div className="notification-panel-header-container">
+					<div className="notification-panel-header">
+						{notificationHeader}
+						<Close16 className="notification-panel-close-icon" onClick={this.closeNotificationPanel} />
+					</div>
 					{notificationSubtitle}
-					<Close16 className="notification-panel-close-icon" onClick={this.closeNotificationPanel} />
 				</div>
 				<div className="notification-panel-messages-container">
 					<div className="notification-panel-messages">

@@ -53,7 +53,7 @@ $notification-left-border-color-width: 4px;
 	width: 16px;
 }
 
-.notification-panel-header {
+.notification-panel-header-container {
 	min-height: $notification-panel-header-height;
 	margin-top: $notification-panel-arrow-height;
 	width: inherit;
@@ -63,13 +63,15 @@ $notification-left-border-color-width: 4px;
 	justify-content: center;
 	border: 1px solid $ui-03;
 	border-bottom: 0;
-	font-weight: 400;
-	font-size: 16px;
 	padding: $spacing-03 $spacing-05;
+	.notification-panel-header {
+		@include carbon--type-style("body-short-02");
+	}
 	.notification-panel-subtitle {
-		padding-top: $spacing-03;
-		font-size: 11px;
+		@include carbon--type-style("helper-text-01");
 		color: $text-02;
+		padding-top: $spacing-02;
+		font-size: 11px;
 	}
 	.notification-panel-close-icon {
 		position: absolute;
@@ -119,6 +121,7 @@ $notification-left-border-color-width: 4px;
 		justify-content: center;
 		align-items: center;
 		.notification-panel-empty-message {
+			@include carbon--type-style("body-short-01");
 			text-align: center;
 			padding-right: 30px;
 			padding-left: 30px;
@@ -175,15 +178,15 @@ $notification-left-border-color-width: 4px;
 		.notification-message-type {
 			display: flex;
 			justify-content: center;
-			height: 23px;
-			width: 25px;
+			height: 20px;
+			width: fit-content;
+			padding-right: $spacing-05;
 
 			> svg {
 				display: flex;
 				justify-content: center;
-				width: 17px;
+				width: $spacing-05;
 				height: 100%;
-				margin-right: 8px;
 			}
 		}
 
@@ -191,12 +194,11 @@ $notification-left-border-color-width: 4px;
 			text-align: left;
 
 			.notification-message-title {
-				color: $text-01;
-				font-weight: 600;
-				line-height: 1.5;
+				@include carbon--type-style("productive-heading-01");
 			}
 
 			.notification-message-content {
+				@include carbon--type-style("body-short-01");
 				color: $text-02;
 			}
 		}
