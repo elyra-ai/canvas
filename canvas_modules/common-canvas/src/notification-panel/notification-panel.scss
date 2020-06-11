@@ -39,7 +39,7 @@ $notification-left-border-color-width: 4px;
 .notification-panel {
 	position: absolute;
 	width: 320px;
-	height: 100%;
+	height: fit-content;
 	right: 8px;
 }
 
