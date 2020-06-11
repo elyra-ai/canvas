@@ -101,7 +101,8 @@ $notification-left-border-color-width: 4px;
 
 .notification-panel-messages-container {
 	width: inherit;
-	height: calc(100% - #{$notification-panel-arrow-height} - #{$notification-panel-header-height});
+	max-height: calc(100% - #{$notification-panel-arrow-height} - #{$notification-panel-header-height});
+	height: fit-content;
 }
 .notification-panel-messages {
 	max-height: calc(50% - #{$notification-panel-clear-all-height});
@@ -133,7 +134,7 @@ $notification-left-border-color-width: 4px;
 	}
 
 	.notifications {
-		padding: $spacing-06, $spacing-05, $spacing-06, calc(#{$spacing-05} - #{$notification-left-border-color-width});
+		padding: $spacing-06 $spacing-05 $spacing-06 calc(#{$spacing-05} - #{$notification-left-border-color-width});
 		display: inline-flex;
 		width: 100%;
 		min-height: $notification-message-height;
