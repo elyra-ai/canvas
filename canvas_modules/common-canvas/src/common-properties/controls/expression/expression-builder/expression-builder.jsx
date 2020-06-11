@@ -112,7 +112,7 @@ export default class ExpressionBuilder extends React.Component {
 			MESSAGE_KEYS.EXPRESSION_BUILDER_LABEL);
 
 		return (
-			<div >
+			<div className="properties-expression-builder">
 				<span className="properties-expression-title">{expressionLabel}</span>
 				<ExpressionControl
 					control={this.props.control}

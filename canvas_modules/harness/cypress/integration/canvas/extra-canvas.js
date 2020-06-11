@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test of extra canvas node operation", function() {
 	before(() => {
@@ -66,13 +67,21 @@ describe("Test of extra canvas property edit operation", function() {
 		cy.getNodeWithLabel("Define Types").dblclick();
 		cy.setTextFieldValue("samplingRatio", 25);
 		cy.saveFlyout();
-		cy.verifyApplyPropertyChangesEntryInConsole(25);
+		verifyApplyPropertyChangesEntryInConsole(25);
 
 		// Edit properties of node in regular canvas
 		cy.inRegularCanvas();
 		cy.getNodeWithLabel("C5.0").dblclick();
 		cy.setTextFieldValue("samplingRatio", 10);
 		cy.saveFlyout();
-		cy.verifyApplyPropertyChangesEntryInConsole(10);
+		verifyApplyPropertyChangesEntryInConsole(10);
 	});
 });
+
+function verifyApplyPropertyChangesEntryInConsole(propertyValue) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
+		expect("applyPropertyChanges()").to.equal(lastEventLog.event);
+		expect(propertyValue).to.equal(lastEventLog.data.form.samplingRatio);
+	});
+}
