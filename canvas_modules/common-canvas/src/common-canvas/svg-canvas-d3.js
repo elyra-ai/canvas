@@ -266,18 +266,7 @@ export default class SVGCanvasD3 {
 
 	// Initializes the dimensions for nodes, comments layout etc.
 	initializeLayoutInfo(config) {
-
-		if (config.enableConnectionType === "Halo") {
-			this.objectModel.setLayoutType("halo", config);
-
-		} else { // Ports connection type
-			if (config.enableNodeFormatType === "Horizontal") {
-				this.objectModel.setLayoutType("ports-horizontal", config);
-
-			} else { // Vertical
-				this.objectModel.setLayoutType("ports-vertical", config);
-			}
-		}
+		this.objectModel.setLayoutType(config);
 	}
 
 	paletteNodeDraggedOver(nodeTemplate, x, y) {

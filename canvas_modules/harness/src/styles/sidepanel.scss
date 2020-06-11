@@ -95,3 +95,12 @@
 		padding-right: 5px;
 	}
 }
+
+.harness-notification-title, .harness-notification-subtitle, .harness-notification-empty-message, .harness-notification-clear-all {
+	.bx--label {
+		margin: 0;
+	}
+	.bx--text-input__field-wrapper {
+		margin-bottom: 8px;
+	}
+}

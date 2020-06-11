@@ -85,20 +85,20 @@ class Toolbar extends React.Component {
 		const errorMessages = this.props.canvasController.getNotificationMessages(constants.ERROR);
 		const warningMessages = this.props.canvasController.getNotificationMessages(constants.WARNING);
 		const successMessages = this.props.canvasController.getNotificationMessages(constants.SUCCESS);
+		const infoMessages = this.props.canvasController.getNotificationMessages(constants.INFO);
 
 		let className = "fill " + constants.NOTIFICATION_ICON;
-		if (isIconEnabled) {
-			const notificationIconClassName = "fill " + constants.NOTIFICATION_ICON + " ";
+		if (notificationMessages.length > 0) {
+			className += " ";
+			// notification color indicator will show the highest severity status
 			if (errorMessages.length > 0) {
-				className = notificationIconClassName + constants.ERROR;
+				className += constants.ERROR;
 			} else if (warningMessages.length > 0) {
-				className = notificationIconClassName + constants.WARNING;
+				className += constants.WARNING;
 			} else if (successMessages.length > 0) {
-				className = notificationIconClassName + constants.SUCCESS;
-			} else if (notificationMessages.length > 0) {
-				className = notificationIconClassName + constants.INFO;
-			} else {
-				className = notificationIconClassName;
+				className += constants.SUCCESS;
+			} else if (infoMessages.length > 0) {
+				className += constants.INFO;
 			}
 		}
 		return {

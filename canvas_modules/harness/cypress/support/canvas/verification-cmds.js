@@ -71,8 +71,22 @@ Cypress.Commands.add("verifyNodeIsDeleted", (nodeName, deleteUsingContextMenu) =
 		.should("eq", 0);
 
 	// Verify delete selected objects entry in console
-	cy.verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole(nodeName, deleteUsingContextMenu);
+	verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole(nodeName, deleteUsingContextMenu);
 });
+
+function verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole(nodeName, deleteUsingContextMenu) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): deleteSelectedObjects");
+		if (deleteUsingContextMenu) {
+			// node is deleted using context menu
+			expect(lastEventLog.data.targetObject.label).to.equal(nodeName);
+		} else {
+			// node is deleted using keyboard delete key or using toolbar delete option
+			expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
+		}
+	});
+}
 
 Cypress.Commands.add("verifyCommentIsDeleted", (commentText) => {
 	// verify comment is not the canvas DOM
@@ -172,8 +186,16 @@ Cypress.Commands.add("verifyCommentExists", (commentText) => {
 		.then((count) => expect(count).to.equal(1));
 
 	// verify that an event for a new comment is in the external object model event log
-	cy.verifyEditActionHandlerEditCommentEntryInConsole(commentText);
+	verifyEditActionHandlerEditCommentEntryInConsole(commentText);
 });
+
+function verifyEditActionHandlerEditCommentEntryInConsole(commentText) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastLogOfType(doc, "editActionHandler(): editComment");
+		expect(lastEventLog.event).to.equal("editActionHandler(): editComment");
+		expect(lastEventLog.data.content).to.equal(commentText);
+	});
+}
 
 Cypress.Commands.add("verifyEditedCommentExists", (commentText) => {
 	// verify comment is in the DOM
@@ -435,13 +457,13 @@ Cypress.Commands.add("verifySubmenuPushedUpBy", (distFromTop) => {
 
 Cypress.Commands.add("verifyNumberOfDecoratorsOnNode", (nodeName, noOfDecorators) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-node-dec-outline")
+		.find(".d3-node-dec-group")
 		.should("have.length", noOfDecorators);
 });
 
 Cypress.Commands.add("verifyNumberOfDecoratorsOnLink", (linkName, noOfDecorators) => {
 	cy.getLinkFromName(linkName)
-		.find(".d3-link-dec-outline")
+		.find(".d3-link-dec-group")
 		.should("have.length", noOfDecorators);
 });
 
@@ -451,9 +473,21 @@ Cypress.Commands.add("verifyNumberOfLabelDecoratorsOnNode", (nodeName, noOfDecor
 		.should("have.length", noOfDecorators);
 });
 
+Cypress.Commands.add("verifyNumberOfPathDecoratorsOnNode", (nodeName, noOfDecorators) => {
+	cy.getNodeWithLabel(nodeName)
+		.find(".d3-node-dec-path")
+		.should("have.length", noOfDecorators);
+});
+
 Cypress.Commands.add("verifyNumberOfLabelDecoratorsOnLink", (linkName, noOfDecorators) => {
 	cy.getLinkFromName(linkName)
 		.find(".d3-link-dec-label")
+		.should("have.length", noOfDecorators);
+});
+
+Cypress.Commands.add("verifyNumberOfPathDecoratorsOnLink", (linkName, noOfDecorators) => {
+	cy.getLinkFromName(linkName)
+		.find(".d3-link-dec-path")
 		.should("have.length", noOfDecorators);
 });
 
@@ -490,7 +524,7 @@ Cypress.Commands.add("verifyDecorationTransformOnLink", (linkName, decoratorId, 
 		});
 });
 
-Cypress.Commands.add("verifyDecorationImage", (nodeName, decoratorId, decoratorImage) => {
+Cypress.Commands.add("verifyDecorationImageOnNode", (nodeName, decoratorId, decoratorImage) => {
 	cy.getNodeWithLabel(nodeName)
 		.find(".d3-node-dec-image")
 		.then((decoratorImages) => {
@@ -501,51 +535,26 @@ Cypress.Commands.add("verifyDecorationImage", (nodeName, decoratorId, decoratorI
 		});
 });
 
-Cypress.Commands.add("verifyDecorationHandlerEntryInConsole", (decoratorId) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal(`decorationHandler() Decoration ID = ${decoratorId}`);
-		expect(lastEventLog.data).to.equal(decoratorId);
-	});
+Cypress.Commands.add("verifyDecorationPathOnNode", (nodeName, decoratorId, path) => {
+	cy.getNodeWithLabel(nodeName)
+		.find(".d3-node-dec-path")
+		.then((decoratorPaths) => {
+			const decorator = decoratorPaths.filter((idx) =>
+				decoratorPaths[idx].getAttribute("data-id") === ("node_dec_path_0_" + decoratorId));
+			expect(decorator[0].getAttribute("data-id")).equal(`node_dec_path_0_${decoratorId}`);
+			expect(decorator[0].getAttribute("d")).equal(path);
+		});
 });
 
-Cypress.Commands.add("verifyApplyPropertyChangesEntryInConsole", (propertyValue) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
-		expect("applyPropertyChanges()").to.equal(lastEventLog.event);
-		expect(propertyValue).to.equal(lastEventLog.data.form.samplingRatio);
-	});
-});
-
-Cypress.Commands.add("verifyEditActionHandlerLinkNodesEntryInConsole", (srcNodeId, trgNodeId) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): linkNodes");
-		expect(lastEventLog.data.nodes[0].id).to.equal(srcNodeId);
-		expect(lastEventLog.data.targetNodes[0].id).to.equal(trgNodeId);
-	});
-});
-
-Cypress.Commands.add("verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole", (nodeName, deleteUsingContextMenu) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): deleteSelectedObjects");
-		if (deleteUsingContextMenu) {
-			// node is deleted using context menu
-			expect(lastEventLog.data.targetObject.label).to.equal(nodeName);
-		} else {
-			// node is deleted using keyboard delete key or using toolbar delete option
-			expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
-		}
-	});
-});
-
-Cypress.Commands.add("verifyEditActionHandlerEditCommentEntryInConsole", (commentText) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastLogOfType(doc, "editActionHandler(): editComment");
-		expect(lastEventLog.event).to.equal("editActionHandler(): editComment");
-		expect(lastEventLog.data.content).to.equal(commentText);
-	});
+Cypress.Commands.add("verifyDecorationPathOnLink", (linkName, decoratorId, path) => {
+	cy.getLinkFromName(linkName)
+		.find(".d3-link-dec-path")
+		.then((decoratorPaths) => {
+			const decorator = decoratorPaths.filter((idx) =>
+				decoratorPaths[idx].getAttribute("data-id") === ("link_dec_path_0_" + decoratorId));
+			expect(decorator[0].getAttribute("data-id")).equal(`link_dec_path_0_${decoratorId}`);
+			expect(decorator[0].getAttribute("d")).equal(path);
+		});
 });
 
 Cypress.Commands.add("verifyErrorMarkerOnNode", (nodeName) => {
@@ -648,10 +657,19 @@ Cypress.Commands.add("verifyLinkBetweenNodes", (srcNodeName, trgNodeName, linkCo
 		.then((srcNodeId) => {
 			cy.getNodeIdForLabel(trgNodeName)
 				.then((trgNodeId) => {
-					cy.verifyEditActionHandlerLinkNodesEntryInConsole(srcNodeId, trgNodeId);
+					verifyEditActionHandlerLinkNodesEntryInConsole(srcNodeId, trgNodeId);
 				});
 		});
 });
+
+function verifyEditActionHandlerLinkNodesEntryInConsole(srcNodeId, trgNodeId) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): linkNodes");
+		expect(lastEventLog.data.nodes[0].id).to.equal(srcNodeId);
+		expect(lastEventLog.data.targetNodes[0].id).to.equal(trgNodeId);
+	});
+}
 
 Cypress.Commands.add("verifyNodeDoesNotExistInPalette", (nodeName) => {
 	// expect index is -1 since node should not be found in palette
@@ -719,38 +737,6 @@ Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
 		});
 });
 
-Cypress.Commands.add("verifyNodeIsMoved", (nodeName) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): moveObjects");
-		expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
-	});
-});
-
-Cypress.Commands.add("verifyCommentIsMoved", (commentText) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): moveObjects");
-		expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
-	});
-});
-
-Cypress.Commands.add("verifyNodeIsNotMoved", (nodeName) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): undo");
-		expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
-	});
-});
-
-Cypress.Commands.add("verifyCommentIsNotMoved", (commentText) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): undo");
-		expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
-	});
-});
-
 Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
 	cy.getPipeline()
 		.then((pipeline) => {
@@ -759,4 +745,261 @@ Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
 			expect(zoom.y).to.equal(y);
 			expect(zoom.k).to.equal(k);
 		});
+});
+
+Cypress.Commands.add("verifyTipForCategory", (nodeCategory) => {
+	// Verify the tip shows next to given category
+	cy.get(".tip-palette-item")
+		.should("not.eq", null);
+	// Verify tip label
+	cy.get(".tip-palette-item")
+		.find(".tip-palette-label")
+		.should("have.text", nodeCategory);
+	// Verify tip description
+	cy.get(".tip-palette-item")
+		.find(".tip-palette-desc")
+		.should("have.text", "Description for " + nodeCategory);
+});
+
+Cypress.Commands.add("verifyTipForNodeInCategory", (nodeName, nodeCategory) => {
+	// Verify the tip shows next to the node in category
+	cy.get(".tip-palette-item")
+		.should("not.eq", null);
+	// Verify tip label
+	cy.findNodeIndexInPalette(nodeName)
+		.then((nodeIndex) => {
+			cy.get(".palette-list-item")
+				.eq(nodeIndex)
+				.then((paletteItem) => {
+					// get node dimensions
+					const nodeRight = paletteItem[0].getBoundingClientRect().x + paletteItem[0].getBoundingClientRect().width;
+					cy.get(".tip-palette-item")
+						.then((tip) => {
+							const tipLeft = tip[0].getBoundingClientRect().x;
+							expect(tipLeft).to.be.greaterThan(nodeRight);
+						});
+				});
+		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForNodeInCategory", (nodeName) => {
+	// Verify the tip doesn't show for node in category
+	cy.get(".tip-palette-item")
+		.should("not.exist");
+});
+
+Cypress.Commands.add("verifyTipForNodeAtLocation", (nodeName, tipLocation) => {
+	// Verify the tip shows "below" the node "Define Types"
+	cy.getNodeWithLabel(nodeName)
+		.then((node) => {
+			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
+			cy.get(nodeTipSelector)
+				.then((tip) => {
+					// Verify tip is displayed on canvas
+					cy.wrap(tip).should("have.length", 1);
+
+					// Verify tip location
+					const tipTop = tip[0].offsetTop;
+					if (tipLocation === "below") {
+						expect(tipTop).to.be.greaterThan(node[0].getBoundingClientRect().top + node[0].getBoundingClientRect().height);
+					} else if (tipLocation === "above") {
+						expect(tipTop).to.be.lessThan(node[0].getBoundingClientRect().top);
+					}
+
+					// Verify tip label
+					cy.wrap(tip)
+						.find(".tip-node-label")
+						.should("have.text", nodeName);
+				});
+		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForNode", (nodeName) => {
+	// Verify the tip doesn't show for node on canvas
+	cy.getNodeWithLabel(nodeName)
+		.then((node) => {
+			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
+			cy.get(nodeTipSelector)
+				.should("not.exist");
+		});
+});
+
+Cypress.Commands.add("verifyTipForNodeInSupernodeAtLocation", (nodeName, supernodeName, tipLocation) => {
+	// Verify the tip shows "below" the node "Discard Fields" in the supernode "Supernode"
+	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
+		.then((node) => {
+			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
+			cy.get(nodeTipSelector)
+				.then((tip) => {
+					// Verify tip is displayed on canvas
+					cy.wrap(tip).should("have.length", 1);
+
+					// Verify tip location
+					const tipTop = tip[0].offsetTop;
+					if (tipLocation === "below") {
+						expect(tipTop).to.be.greaterThan(node[0].getBoundingClientRect().top + node[0].getBoundingClientRect().height);
+					} else if (tipLocation === "above") {
+						expect(tipTop).to.be.lessThan(node[0].getBoundingClientRect().top);
+					}
+
+					// Verify tip label
+					cy.wrap(tip)
+						.find(".tip-node-label")
+						.should("have.text", nodeName);
+				});
+		});
+});
+
+Cypress.Commands.add("verifyTipForInputPortOfNode", (nodeName, inputPortId, portName) => {
+	cy.getNodePortSelector(nodeName, "inp_port", inputPortId)
+		.then((portSelector) => {
+			cy.getNodePortTipSelector(inputPortId)
+				.then((portTipSelector) => {
+					cy.get(portTipSelector)
+						.then((tip) => {
+							// Verify tip is displayed on canvas
+							cy.wrap(tip).should("have.length", 1);
+
+							// Verify tip location
+							const tipTop = tip[0].offsetTop;
+							cy.get(portSelector)
+								.then((port) => {
+									const portBottom = port[0].getBoundingClientRect().top + port[0].getBoundingClientRect().height;
+									expect(tipTop).to.be.greaterThan(portBottom);
+								});
+
+							// Verify tip label
+							cy.wrap(tip)
+								.get(".tip-port")
+								.should("have.text", portName);
+						});
+				});
+		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForInputPortId", (inputPortId) => {
+	// Verify the tip doesn't show for input port id "inPort2"
+	cy.getNodePortTipSelector(inputPortId)
+		.then((portTipSelector) => cy.get(portTipSelector).should("not.exist"));
+});
+
+Cypress.Commands.add("verifyTipForOutputPortOfNode", (nodeName, outputPortId, portName) => {
+	cy.getNodePortSelector(nodeName, "out_port", outputPortId)
+		.then((portSelector) => {
+			cy.getNodePortTipSelector(outputPortId)
+				.then((portTipSelector) => {
+					cy.get(portTipSelector)
+						.then((tip) => {
+							// Verify tip is displayed on canvas
+							cy.wrap(tip).should("have.length", 1);
+
+							// Verify tip location
+							const tipTop = tip[0].offsetTop;
+							cy.get(portSelector)
+								.then((port) => {
+									const portBottom = port[0].getBoundingClientRect().top + port[0].getBoundingClientRect().height;
+									expect(tipTop).to.be.greaterThan(portBottom);
+								});
+
+							// Verify tip label
+							cy.wrap(tip)
+								.get(".tip-port")
+								.should("have.text", portName);
+						});
+				});
+		});
+});
+
+Cypress.Commands.add("verifyTipForLink", (mouseY, sourceNode, sourcePort, targetNode, targetPort) => {
+	cy.get("[data-id*=link_tip_0_]") // Find tip with id that starts with 'link_tip_0_'
+		.then((tip) => {
+			// Verify tip is displayed on canvas
+			cy.wrap(tip).should("have.length", 1);
+
+			// Verify tip location
+			const tipTop = tip[0].offsetTop;
+			expect(tipTop).to.be.greaterThan(mouseY);
+
+			// Verify tip label
+			const sourceString = `'${sourceNode}', port '${sourcePort}'`;
+			const targetString = `'${targetNode}', port '${targetPort}'`;
+			const linkLabel = `Link from ${sourceString} to ${targetString}`;
+			cy.wrap(tip)
+				.find("#tooltipContainer")
+				.should("have.text", linkLabel);
+		});
+
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForLink", () => {
+	cy.get("[data-id*=link_tip_0_]") // Find tip with id that starts with 'link_tip_0_'
+		.should("not.exist");
+});
+
+Cypress.Commands.add("verifyNotificationIconType", (type) => {
+	if (type) {
+		cy.get("svg.notificationCounterIcon").should("have.class", type);
+	} else {
+		cy.get("svg.notificationCounterIcon").should("not.have.any.keys", ["info", "success", "warning", "error"]);
+	}
+});
+
+Cypress.Commands.add("verifyNotificationCounter", (count) => {
+	cy.get(".notificationCounterIcon .text-content").should("have.text", " " + count + " ");
+});
+
+Cypress.Commands.add("verifyNotificationMessagesLength", (messagesLength) => {
+	cy.get(".notifications-button-container .notifications").should("have.length", messagesLength);
+});
+
+Cypress.Commands.add("verifyNotificationMessageContent", (index, type, title, content, timestamp) => {
+	cy.get(".notifications-button-container .notifications")
+		.eq(index)
+		.should((message) => {
+			if (type) {
+				expect(message).to.have.class(type);
+			}
+			if (title) {
+				expect(message.find(".notification-message-title")).to.have.text(title);
+			}
+			if (content) {
+				expect(message.find(".notification-message-content")).to.have.text(content);
+			}
+			if (timestamp) {
+				expect(message.find(".notification-message-timestamp")).to.exist;
+			} else if (typeof timestamp === "boolean" && timestamp === false) {
+				expect(message.find(".notification-message-timestamp")).to.not.exist;
+			}
+		});
+});
+
+Cypress.Commands.add("verifyLatestNotificationMessage", (messagesLength, type, timestamp) => {
+	cy.verifyNotificationCounter(messagesLength);
+	cy.verifyNotificationMessagesLength(messagesLength);
+	cy.verifyNotificationIconType(type);
+	cy.verifyNotificationMessageContent(messagesLength - 1, type, type + " title", type + " message", timestamp);
+});
+
+Cypress.Commands.add("clickNotificationAtIndex", (index) => {
+	cy.get(".notifications-button-container .notifications")
+		.eq(index)
+		.click();
+});
+
+Cypress.Commands.add("verifyNotificationCenterHidden", (hidden) => {
+	if (hidden) {
+		cy.get(".notification-panel-container").should("have.class", "panel-hidden");
+	} else {
+		cy.get(".notification-panel-container").should("not.have.class", "panel-hidden");
+	}
+});
+
+Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
+	if (typeof content === "string" && content.length > 0) {
+		cy.get(".notification-panel-" + id).should("contain", content);
+	}	else if (typeof content === "string" && content.length === 0) {
+		cy.get(".notification-panel-" + id).should("be.empty");
+	} else {
+		cy.get(".notification-panel-" + id).should("not.exist");
+	}
 });

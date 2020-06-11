@@ -154,6 +154,7 @@ export default class CanvasController {
 	setCanvasConfig(config) {
 		this.canvasConfig = Object.assign(this.canvasConfig, config);
 		this.objectModel.setSchemaValidation(this.canvasConfig.schemaValidation);
+		this.objectModel.setLayoutType(config);
 	}
 
 	getCanvasConfig() {
@@ -494,6 +495,11 @@ export default class CanvasController {
 	// Deletes all notification messages shown in the notification panel.
 	clearNotificationMessages() {
 		this.objectModel.clearNotificationMessages();
+	}
+
+	// Removes the notification messages from the given array of ids
+	deleteNotificationMessages(ids) {
+		this.objectModel.deleteNotificationMessages(ids);
 	}
 
 	// Returns the array of currently displayed notification messages shown in

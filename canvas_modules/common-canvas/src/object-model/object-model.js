@@ -884,8 +884,8 @@ export default class ObjectModel {
 	// Layout Info methods
 	// ---------------------------------------------------------------------------
 
-	setLayoutType(type, config) {
-		const layoutInfo = Object.assign({}, LayoutDimensions.getLayout(type, config));
+	setLayoutType(config) {
+		const layoutInfo = Object.assign({}, LayoutDimensions.getLayoutForConfig(config));
 		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo.nodeLayout, layoutInfo.canvasLayout);
 
 		this.store.dispatch({ type: "SET_LAYOUT_INFO",
@@ -945,6 +945,12 @@ export default class ObjectModel {
 			});
 		}
 		return notificationMessages;
+	}
+
+	deleteNotificationMessages(ids) {
+		const filterIds = Array.isArray(ids) ? ids : [ids];
+		const newMessages = this.getNotificationMessages().filter((message) => !filterIds.includes(message.id));
+		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: newMessages });
 	}
 
 	// ---------------------------------------------------------------------------

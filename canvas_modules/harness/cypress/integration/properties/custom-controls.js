@@ -22,6 +22,11 @@ describe("Test of custom panels", function() {
 	});
 
 	it("Test custom panels are working correctly", function() {
+		// TODO: this next click is a workaround, the next click on the toggle won't trigger
+		// an onClick unless elsewhere on the panel is clicked first. remove when fixed
+		cy.get(".harness-custom-control-custom-toggle").first()
+			.find(".bx--form-item")
+			.click();
 		cy.get(".harness-custom-control-custom-toggle label").first()
 			.click();
 		// custom toggle should have an error

@@ -1,0 +1,137 @@
+{
+  "titleDefinition": {
+    "title": "Hidden Control Tests"
+  },
+  "current_parameters": {
+    "visible": "visible",
+    "hidden": "hidden",
+    "hidden_table_ctl": [
+      [
+        "Hopper",
+        "Turing"
+      ]
+    ],
+    "hidden_table": [
+      [
+        "Hopper",
+        "Turing"
+      ]
+    ]
+  },
+  "parameters": [
+    {
+      "id": "visible",
+      "type": "string"
+    },
+    {
+      "id": "hidden",
+      "type": "string"
+    },
+    {
+      "id": "hidden_table",
+      "type": "array[hiddenFields]"
+    },
+    {
+      "id": "hidden_table_ctl",
+      "type": "array[hiddenFields]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "hiddenFields",
+      "parameters": [
+        {
+          "id": "hidden",
+          "type": "string"
+        },
+        {
+          "id": "textfield",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "hidden.test",
+    "label": {
+      "default": "Hidden Test"
+    },
+    "editor_size": "small",
+    "description": {
+      "default": "Test hidden controls"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "visible",
+        "description": {
+          "default": "Visible control"
+        },
+        "text_after": {
+          "default": "Control below should be hidden"
+        }
+      },
+      {
+        "parameter_ref": "hidden",
+        "control": "hidden"
+      },
+      {
+        "parameter_ref": "hidden_table",
+        "label": {
+          "default": "Hidden control in a table"
+        },
+        "text_after": {
+          "default": "Table below should be hidden"
+        }
+      },
+      {
+        "parameter_ref": "hidden_table_ctl",
+        "label": {
+          "default": "Table is hidden control"
+        },
+        "control": "hidden"
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "hiddenFields",
+        "parameters": [
+          {
+            "parameter_ref": "hidden",
+            "control": "hidden"
+          },
+          {
+            "parameter_ref": "textfield",
+            "width": 10,
+            "label": {
+              "default": "Standard (Turing)"
+            }
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "Values",
+        "label": {
+          "default": "Values"
+        },
+        "parameter_refs": [
+          "visible",
+          "hidden"
+        ]
+      },
+      {
+        "id": "Table",
+        "label": {
+          "default": "Tables"
+        },
+        "parameter_refs": [
+          "hidden_table",
+          "hidden_table_ctl"
+        ]
+      }
+    ]
+  },
+  "conditions": [],
+  "resources": {}
+}

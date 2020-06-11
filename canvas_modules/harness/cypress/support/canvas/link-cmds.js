@@ -49,7 +49,7 @@ function getLinkSelector(linkId, element) {
 
 Cypress.Commands.add("clickDecoratorHotspotOnLink", (decoratorId, linkName) => {
 	cy.getLinkFromName(linkName)
-		.find(`.d3-link-dec-outline[data-id=link_dec_outln_0_${decoratorId}]`)
+		.find(`.d3-link-dec-group[data-id=link_dec_group_0_${decoratorId}]`)
 		.click();
 });
 
@@ -131,6 +131,12 @@ Cypress.Commands.add("getNodePortSelectorInSupernode", (supernodeName, nodeName,
 		});
 });
 
+Cypress.Commands.add("getNodePortTipSelector", (portId) => {
+	const inst = document.extraCanvas === true ? "1" : "0";
+	const portTipSelector = `[data-id='node_port_tip_${inst}_${portId}']`;
+	return portTipSelector;
+});
+
 Cypress.Commands.add("getPortLinks", (pipeline, srcNodeName, srcPortId, trgNodeName, trgPortId) => {
 	const links = pipeline.links;
 	cy.getNodeIdForLabel(srcNodeName)
@@ -169,4 +175,11 @@ Cypress.Commands.add("deleteLinkAt", (linkX, linkY) => {
 	cy.get(".d3-svg-canvas-div")
 		.rightclick(linkX, linkY);
 	cy.clickOptionFromContextMenu("Delete");
+});
+
+Cypress.Commands.add("hoverOverLinkName", (linkName) => {
+	cy.getLinkFromName(linkName)
+		.children()
+		.eq(1)
+		.trigger("mouseenter", { force: true });
 });
