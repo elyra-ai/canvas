@@ -26,15 +26,6 @@ Cypress.Commands.add("enterTextInExpressionEditor", (text, propertyId) => {
 		});
 });
 
-Cypress.Commands.add("getAutoCompleteCountForText", (text, propertyId) => {
-	cy.enterTextInExpressionEditor(text, propertyId);
-	// Get number of hints displayed
-	cy.get(".CodeMirror-hints")
-		.eq(0)
-		.find("li")
-		.its("length");
-});
-
 Cypress.Commands.add("selectFirstAutoCompleteForText", (text, propertyId) => {
 	cy.enterTextInExpressionEditor(text, propertyId);
 	// select the first one in the list of hints and make sure it is the text
@@ -45,13 +36,9 @@ Cypress.Commands.add("selectFirstAutoCompleteForText", (text, propertyId) => {
 		.click();
 });
 
-Cypress.Commands.add("getValidateButton", (propertyId) => {
-	cy.get(`div[data-id='properties-ci-${propertyId}']`)
-		.find(".properties-expression-validate");
-});
-
 Cypress.Commands.add("clickValidateLink", (propertyId) => {
-	cy.getValidateButton(propertyId)
+	cy.get(`div[data-id='properties-ci-${propertyId}']`)
+		.find(".properties-expression-validate")
 		.find(".validateLink")
 		.click();
 });

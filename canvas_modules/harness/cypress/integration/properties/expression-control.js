@@ -28,12 +28,17 @@ describe("Test of expression editor control", function() {
 		cy.verifyTypeOfWordInExpressionEditor("120", "number", "conditionExpr");
 		cy.verifyTypeOfWordInExpressionEditor("F", "string", "conditionExpr");
 
-		cy.verifyNumberOfHintsForTextInExpressionEditor("is", 18, "conditionExpr");
-		cy.verifyNumberOfHintsForTextInExpressionEditor("is_d", 2, "conditionExpr");
+		cy.enterTextInExpressionEditor("is", "conditionExpr");
+		cy.verifyNumberOfHintsInExpressionEditor(18);
+		cy.enterTextInExpressionEditor("is_d", "conditionExpr");
+		cy.verifyNumberOfHintsInExpressionEditor(2);
 
-		cy.verifyTypeOfFirstAutoCompleteForText("is_", "is_date", "keyword", "conditionExpr");
-		cy.verifyTypeOfFirstAutoCompleteForText("is_t", "is_time", "keyword", "conditionExpr");
-		cy.verifyTypeOfFirstAutoCompleteForText("a", "age", "variable", "conditionExpr");
+		cy.selectFirstAutoCompleteForText("is_", "conditionExpr");
+		cy.verifyTypeOfSelectedAutoComplete("is_date", "keyword");
+		cy.selectFirstAutoCompleteForText("is_t", "conditionExpr");
+		cy.verifyTypeOfSelectedAutoComplete("is_time", "keyword");
+		cy.selectFirstAutoCompleteForText("a", "conditionExpr");
+		cy.verifyTypeOfSelectedAutoComplete("age", "variable");
 
 		cy.verifyTypeOfEnteredTextInExpressionEditor("and", "keyword", "conditionExpr");
 		cy.verifyTypeOfEnteredTextInExpressionEditor("age", "variable", "conditionExpr");
@@ -42,14 +47,16 @@ describe("Test of expression editor control", function() {
 		cy.verifyTypeOfEnteredTextInExpressionEditor("120", "number", "conditionExpr");
 		cy.verifyTypeOfEnteredTextInExpressionEditor("this is a string", "string", "conditionExpr");
 
-		cy.verifyTypeOfFirstAutoCompleteForText("first", "first_index", "keyword", "conditionExpr");
+		cy.selectFirstAutoCompleteForText("first", "conditionExpr");
+		cy.verifyTypeOfSelectedAutoComplete("first_index", "keyword");
 		cy.saveFlyout();
 		cy.verifyConditionExpressionInConsole("first_index");
 
 		// placeholder text and validation
 		cy.openPropertyDefinition("Javascript_FilterRows_paramDef.json");
 		cy.verifyPlaceholderTextInExpressionEditor("Enter JavaScript text");
-		cy.verifyTypeOfFirstAutoCompleteForText("i", "isFinite", "variable", "conditionExpr");
+		cy.selectFirstAutoCompleteForText("i", "conditionExpr");
+		cy.verifyTypeOfSelectedAutoComplete("isFinite", "variable");
 		cy.clickValidateLink("conditionExpr");
 		cy.verifyValidationMessage("Cannot have value isFinite");
 		cy.saveFlyout();
@@ -68,7 +75,8 @@ describe("Test of expression editor control in a structure cell", function() {
 		cy.openSubPanel("Configure Derive Node");
 		cy.selectRowInTable(1, "expressionCellTable");
 		cy.verifyControlIsDisplayed("condition");
-		cy.verifyTypeOfFirstAutoCompleteForText("first", "first_index", "keyword", "condition");
+		cy.selectFirstAutoCompleteForText("first", "condition");
+		cy.verifyTypeOfSelectedAutoComplete("first_index", "keyword");
 		cy.saveWideFlyout("Configure Derive Node");
 		cy.verifyValueInSummaryPanelForCategory("first_index", "Values", 1, "Structure List Table");
 
@@ -76,7 +84,8 @@ describe("Test of expression editor control in a structure cell", function() {
 		cy.openSubPanel("Configure Derive Node");
 		cy.clickButtonInTable("Add", "expressionCellTable");
 		cy.selectRowInTable(2, "expressionCellTable");
-		cy.verifyTypeOfFirstAutoCompleteForText("is_", "is_date", "keyword", "condition");
+		cy.selectFirstAutoCompleteForText("is_", "condition");
+		cy.verifyTypeOfSelectedAutoComplete("is_date", "keyword");
 		cy.saveWideFlyout("Configure Derive Node");
 		cy.verifyValueInSummaryPanelForCategory("is_date", "Values", 2, "Structure List Table");
 		cy.saveFlyout();
@@ -131,9 +140,11 @@ describe("Test of Python and R expression controls", function() {
 		cy.verifyTypeOfWordInExpressionEditor("if", "keyword", "conditionExpr");
 		cy.verifyTypeOfWordInExpressionEditor("abs", "builtin", "conditionExpr");
 
-		cy.verifyNumberOfHintsForTextInExpressionEditor("is", 3, "conditionExpr");
+		cy.enterTextInExpressionEditor("is", "conditionExpr");
+		cy.verifyNumberOfHintsInExpressionEditor(3);
 
-		cy.verifyTypeOfFirstAutoCompleteForText("a", "age", "variable", "conditionExpr");
+		cy.selectFirstAutoCompleteForText("a", "conditionExpr");
+		cy.verifyTypeOfSelectedAutoComplete("age", "variable");
 
 		cy.verifyTypeOfEnteredTextInExpressionEditor("and", "keyword", "conditionExpr");
 		cy.verifyTypeOfEnteredTextInExpressionEditor("age", "variable", "conditionExpr");
@@ -158,10 +169,13 @@ describe("Test of Python and R expression controls", function() {
 		cy.verifyTypeOfWordInExpressionEditor("<-", "arrow", "conditionExpr");
 		cy.verifyTypeOfWordInExpressionEditor(";", "semi", "conditionExpr");
 
-		cy.verifyNumberOfHintsForTextInExpressionEditor("br", 5, "conditionExpr");
-		cy.verifyNumberOfHintsForTextInExpressionEditor("li", 6, "conditionExpr");
+		cy.enterTextInExpressionEditor("br", "conditionExpr");
+		cy.verifyNumberOfHintsInExpressionEditor(5);
+		cy.enterTextInExpressionEditor("li", "conditionExpr");
+		cy.verifyNumberOfHintsInExpressionEditor(6);
 
-		cy.verifyTypeOfFirstAutoCompleteForText("a", "age", "variable", "conditionExpr");
+		cy.selectFirstAutoCompleteForText("a", "conditionExpr");
+		cy.verifyTypeOfSelectedAutoComplete("age", "variable");
 
 		cy.verifyTypeOfEnteredTextInExpressionEditor("if", "keyword", "conditionExpr");
 		cy.verifyTypeOfEnteredTextInExpressionEditor("age", "variable", "conditionExpr");

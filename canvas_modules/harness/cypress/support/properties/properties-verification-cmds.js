@@ -246,23 +246,21 @@ Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type, property
 		});
 });
 
-Cypress.Commands.add("verifyNumberOfHintsForTextInExpressionEditor", (enteredText, hintCount, propertyId) => {
+Cypress.Commands.add("verifyNumberOfHintsInExpressionEditor", (hintCount) => {
 	// Enter "is" in ExpressionEditor and press autocomplete and verify that 18 autocomplete hints are displayed
-	cy.getAutoCompleteCountForText(enteredText, propertyId)
-		.then((autoCompleteCount) => expect(autoCompleteCount).to.equal(hintCount));
+	cy.get(".CodeMirror-hints")
+		.eq(0)
+		.find("li")
+		.should("have.length", hintCount);
 });
 
-Cypress.Commands.add("verifyTypeOfFirstAutoCompleteForText", (enteredText, selectedText, type, propertyId) => {
-	// Enter "is_" in ExpressionEditor and press autocomplete and select "is_date" a "keyword"
-	cy.selectFirstAutoCompleteForText(enteredText, propertyId)
-		.then((selectedAutoComplete) => {
-			const searchClass = ".cm-" + type;
-			cy.get(".properties-expression-editor")
-				.find(".CodeMirror-line")
-				.find(searchClass)
-				.should("have.class", "cm-" + type)
-				.should("have.text", selectedText);
-		});
+Cypress.Commands.add("verifyTypeOfSelectedAutoComplete", (selectedText, type) => {
+	const searchClass = ".cm-" + type;
+	cy.get(".properties-expression-editor")
+		.find(".CodeMirror-line")
+		.find(searchClass)
+		.should("have.class", "cm-" + type)
+		.should("have.text", selectedText);
 });
 
 Cypress.Commands.add("verifyTypeOfEnteredTextInExpressionEditor", (enteredText, type, propertyId) => {
