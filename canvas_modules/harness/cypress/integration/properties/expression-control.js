@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test of expression editor control", function() {
 	before(() => {
@@ -50,7 +51,7 @@ describe("Test of expression editor control", function() {
 		cy.selectFirstAutoCompleteForText("first", "conditionExpr");
 		cy.verifyTypeOfSelectedAutoComplete("first_index", "keyword");
 		cy.saveFlyout();
-		cy.verifyConditionExpressionInConsole("first_index");
+		verifyConditionExpressionInConsole("first_index");
 
 		// placeholder text and validation
 		cy.openPropertyDefinition("Javascript_FilterRows_paramDef.json");
@@ -89,7 +90,7 @@ describe("Test of expression editor control in a structure cell", function() {
 		cy.saveWideFlyout("Configure Derive Node");
 		cy.verifyValueInSummaryPanelForCategory("is_date", "Values", 2, "Structure List Table");
 		cy.saveFlyout();
-		cy.verifyValueForParameterInConsole("is_date", "expressionCellTable");
+		verifyValueForParameterInConsole("is_date", "expressionCellTable");
 	});
 });
 
@@ -184,3 +185,29 @@ describe("Test of Python and R expression controls", function() {
 		cy.verifyTypeOfEnteredTextInExpressionEditor("this is a string", "string", "conditionExpr");
 	});
 });
+
+function verifyConditionExpressionInConsole(selectedText) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.data.form.conditionExpr).to.include(selectedText);
+	});
+}
+
+function verifyValueForParameterInConsole(testValue, parameterName) {
+	// Verify that the event log has a value of "is_date" for the "expressionCellTable" parameter
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		const parameterValues = lastEventLog.data.form[parameterName];
+		let found = false;
+		for (var idx = 0; idx < parameterValues.length; idx++) {
+			const parameter = parameterValues[idx];
+			for (var indx = 0; indx < parameter.length; indx++) {
+				if (parameter[indx] === testValue) {
+					found = true;
+					break;
+				}
+			}
+		}
+		expect(found).to.equal(true);
+	});
+}

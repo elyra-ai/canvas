@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as testUtils from "../../utils/eventlog-utils";
 
 Cypress.Commands.add("verifyReadOnlyTextValue", (propertyId, value) => {
 	cy.get("div[data-id='properties-" + propertyId + "'] span")
@@ -42,65 +41,6 @@ Cypress.Commands.add("verifyPropertiesFlyoutTitle", (givenTitle) => {
 Cypress.Commands.add("verifyPropertiesFlyoutDoesNotExist", () => {
 	cy.get("#node-title-editor-right-flyout-panel")
 		.should("not.exist");
-});
-
-Cypress.Commands.add("verifyNewPropertiesFlyoutTitleEntryInConsole", (newTitle) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
-		expect(newTitle).to.equal(lastEventLog.data.title);
-	});
-});
-
-Cypress.Commands.add("verifyColumnNameEntryInConsole", (columnName) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(columnName).to.equal(lastEventLog.data.form.colName);
-	});
-});
-
-Cypress.Commands.add("verifySamplingRatioParameterValueInConsole", (parameterName, value) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
-		expect(value).to.equal(lastEventLog.data.form[parameterName]);
-	});
-});
-
-Cypress.Commands.add("verifyErrorMessageForSamplingRatioParameterInConsole", (messageType, parameterName, message) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
-		expect(lastEventLog.data.messages.length).not.equal(0);
-		for (var idx = 0; idx < lastEventLog.data.messages.length; idx++) {
-			if (lastEventLog.data.messages[idx].text === message &&
-					lastEventLog.data.messages[idx].type === messageType &&
-					lastEventLog.data.messages[idx].id_ref === parameterName) {
-				expect(lastEventLog.data.messages[idx].text).to.equal(message);
-				expect(lastEventLog.data.messages[idx].type).to.equal(messageType);
-				expect(lastEventLog.data.messages[idx].id_ref).to.equal(parameterName);
-				break;
-			}
-		}
-	});
-});
-
-Cypress.Commands.add("verifyNoErrorMessageInConsole", () => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
-		expect(lastEventLog.data.messages.length).to.equal(0);
-	});
-});
-
-Cypress.Commands.add("verifyTextValueIsNotPresentInColumnName", (columnName) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc, 2);
-		expect("").to.equal(lastEventLog.data.form.colName);
-	});
-});
-
-Cypress.Commands.add("verifyTextValueIsPresentInColumnName", (columnName) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc, 2);
-		expect(columnName).to.equal(lastEventLog.data.form.colName);
-	});
 });
 
 /** Verify the tooltip over the given text is 'visible'
@@ -277,13 +217,6 @@ Cypress.Commands.add("verifyTypeOfEnteredTextInExpressionEditor", (enteredText, 
 		});
 });
 
-Cypress.Commands.add("verifyConditionExpressionInConsole", (selectedText) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.data.form.conditionExpr).to.include(selectedText);
-	});
-});
-
 Cypress.Commands.add("verifyPlaceholderTextInExpressionEditor", (text) => {
 	cy.get(".properties-expression-editor")
 		.find(".CodeMirror-placeholder")
@@ -315,25 +248,6 @@ Cypress.Commands.add("verifyValueInSummaryPanelForCategory", (value, summaryName
 		.eq(1)
 		.invoke("text")
 		.then((text) => expect(text.trim()).to.equal(value));
-});
-
-Cypress.Commands.add("verifyValueForParameterInConsole", (testValue, parameterName) => {
-	// Verify that the event log has a value of "is_date" for the "expressionCellTable" parameter
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		const parameterValues = lastEventLog.data.form[parameterName];
-		let found = false;
-		for (var idx = 0; idx < parameterValues.length; idx++) {
-			const parameter = parameterValues[idx];
-			for (var indx = 0; indx < parameter.length; indx++) {
-				if (parameter[indx] === testValue) {
-					found = true;
-					break;
-				}
-			}
-		}
-		expect(found).to.equal(true);
-	});
 });
 
 Cypress.Commands.add("verifyIconInSubPanel", (iconName) => {
