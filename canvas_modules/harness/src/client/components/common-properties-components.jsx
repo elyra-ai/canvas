@@ -34,6 +34,7 @@ import {
 	PANEL_SELECTOR_INSERT_PROPS_INFO,
 	SUMMARY_PANEL_PROPS_INFO,
 	TWISTY_PANEL_PROPS_INFO,
+	COLUMN_PANEL_PROPS_INFO,
 	COLUMNSELECTION_PROPS_INFO,
 	TEXT_PANEL_PROPS_INFO,
 	TEXTFIELD_PROPS_INFO,
@@ -336,6 +337,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--panelSelector",
 					"--summaryPanel",
 					"--twistyPanel",
+					"--columnPanel",
 					"--columnSelection",
 					"--textPanel",
 					"Controls",
@@ -677,6 +679,26 @@ class CommonPropertiesComponents extends React.Component {
 							<div className="harness-section-column harness-section-column-code">
 								<pre className="harness-json-block">
 									{this.jsonReplacer(TWISTY_PANEL_PROPS_INFO.parameterDef, "panel")}
+								</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--columnPanel" className="harness-section-subtitle">columnPanel</h3>
+					<p>A panel that displays multiple columns of panels</p>
+					<div className="harness-section-row">
+						<div className="harness-section-row">
+							<div className="harness-section-column">
+								<CommonProperties
+									propertiesInfo={COLUMN_PANEL_PROPS_INFO}
+									propertiesConfig={this.propertiesConfig}
+								/>
+								{this.renderRightFlyoutButton(COLUMN_PANEL_PROPS_INFO)}
+							</div>
+							<div className="harness-section-column harness-section-column-code">
+								<pre className="harness-json-block">
+									{this.jsonReplacer(COLUMN_PANEL_PROPS_INFO.parameterDef, "panel")}
 								</pre>
 							</div>
 						</div>
