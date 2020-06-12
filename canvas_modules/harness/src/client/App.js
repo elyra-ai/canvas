@@ -82,6 +82,7 @@ import {
 	CURVE_LINKS,
 	DIRECTION_LEFT_RIGHT,
 	ASSOC_STRAIGHT,
+	UNDERLAY_NONE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
@@ -153,6 +154,7 @@ export default class App extends React.Component {
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
+			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedNodeLayout: EXAMPLE_APP_NONE,
 			selectedPaletteLayout: FLYOUT,
 			selectedTipConfig: {
@@ -171,7 +173,6 @@ export default class App extends React.Component {
 			selectedNarrowPalette: true,
 			selectedSchemaValidation: true,
 			selectedBoundingRectangles: false,
-			selectedCanvasUnderlay: false,
 
 			// Common properties state variables
 			propertiesInfo: {},
