@@ -169,7 +169,7 @@ export default class SVGCanvasRenderer {
 
 		this.canvasSVG = this.createCanvasSVG();
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG);
-		if (this.config.enableCanvasUnderlay) {
+		if (this.config.enableCanvasUnderlay && this.isDisplayingPrimaryFlowFullPage()) {
 			this.canvasGrp = this.createCanvasUnderlay(this.canvasGrp);
 		}
 
@@ -391,7 +391,7 @@ export default class SVGCanvasRenderer {
 			this.displayBoundingRectangles();
 		}
 
-		if (this.config.enableCanvasUnderlay) {
+		if (this.config.enableCanvasUnderlay && this.isDisplayingPrimaryFlowFullPage()) {
 			this.setCanvasUnderlaySize();
 		}
 
@@ -1553,7 +1553,7 @@ export default class SVGCanvasRenderer {
 			this.displayBoundingRectangles();
 		}
 
-		if (this.config.enableCanvasUnderlay) {
+		if (this.config.enableCanvasUnderlay && this.isDisplayingPrimaryFlowFullPage()) {
 			this.setCanvasUnderlaySize();
 		}
 
@@ -5389,7 +5389,7 @@ export default class SVGCanvasRenderer {
 			this.canvasGrp.selectAll(this.getSelectorForId("comment_grp", comments[idx].id)).lower();
 		}
 
-		if (this.config.enableCanvasUnderlay) {
+		if (this.config.enableCanvasUnderlay && this.isDisplayingPrimaryFlowFullPage()) {
 			this.canvasUnderlay.lower();
 		}
 	}
