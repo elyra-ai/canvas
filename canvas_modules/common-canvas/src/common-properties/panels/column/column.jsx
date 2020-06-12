@@ -19,11 +19,15 @@ class ColumnPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		let gridColumns = "";
-		props.children.forEach((item) => {
-			gridColumns += " auto";
+		props.children.forEach((item, idx) => {
+			if (idx === 0) {
+				gridColumns = "auto";
+			} else {
+				gridColumns += " auto";
+			}
 		});
 		this.style = {
-			"grid-template-columns": gridColumns
+			"gridTemplateColumns": gridColumns
 		};
 	}
 

@@ -147,7 +147,7 @@
         "label": {
           "default": "Fruit Color"
         },
-				"control": "oneofselect"
+        "control": "oneofselect"
       },
       {
         "parameter_ref": "col1_ctrl2",
@@ -160,7 +160,7 @@
         "label": {
           "default": "Fruit Color"
         },
-				"control": "oneofselect"
+        "control": "oneofselect"
       },
       {
         "parameter_ref": "col2_ctrl2",
@@ -348,7 +348,7 @@
       {
         "id": "panel-columns",
         "label": {
-          "default": "Panel (horizontal)"
+          "default": "Column Panels"
         },
         "type": "columnPanel",
         "group_info": [
