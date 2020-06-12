@@ -145,6 +145,16 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		}
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, panSubItems));
 	}
+	case GroupType.COLUMN_PANEL: {
+		const panSubItems = [];
+		if (Array.isArray(group.subGroups)) {
+			group.subGroups.forEach(function(subGroup) {
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				panSubItems.push(groupItem);
+			});
+		}
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_PANEL, panSubItems));
+	}
 	case GroupType.CUSTOM_PANEL: {
 		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, group.parameterNames(), group.data));
 	}

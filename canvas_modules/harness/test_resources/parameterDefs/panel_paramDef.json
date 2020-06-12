@@ -6,7 +6,11 @@
     "fruit-color": "red",
     "number": 11,
     "field1_panel": "age",
-    "field2_panel": "BP"
+    "field2_panel": "BP",
+    "col1_ctrl1": "blue",
+    "col1_ctrl2": 1,
+    "col2_ctrl1": "red",
+    "col2_ctrl2": 5
   },
   "parameters": [
     {
@@ -45,6 +49,30 @@
       "type": "array[string]",
       "role": "column",
       "required": true
+    },
+    {
+      "id": "col1_ctrl1",
+      "enum": [
+        "red",
+        "blue",
+        "yellow"
+      ]
+    },
+    {
+      "id": "col1_ctrl2",
+      "type": "double"
+    },
+    {
+      "id": "col2_ctrl1",
+      "enum": [
+        "red",
+        "blue",
+        "yellow"
+      ]
+    },
+    {
+      "id": "col2_ctrl2",
+      "type": "double"
     }
   ],
   "uihints": {
@@ -112,6 +140,32 @@
         },
         "description": {
           "default": "selectcolumns control where values are shared with selectcolumns 'Select Field'"
+        }
+      },
+      {
+        "parameter_ref": "col1_ctrl1",
+        "label": {
+          "default": "Fruit Color"
+        },
+				"control": "oneofselect"
+      },
+      {
+        "parameter_ref": "col1_ctrl2",
+        "label": {
+          "default": "number"
+        }
+      },
+      {
+        "parameter_ref": "col2_ctrl1",
+        "label": {
+          "default": "Fruit Color"
+        },
+				"control": "oneofselect"
+      },
+      {
+        "parameter_ref": "col2_ctrl2",
+        "label": {
+          "default": "number"
         }
       }
     ],
@@ -287,6 +341,31 @@
             "parameter_refs": [
               "selectcolumn",
               "selectcolumns"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "panel-columns",
+        "label": {
+          "default": "Panel (horizontal)"
+        },
+        "type": "columnPanel",
+        "group_info": [
+          {
+            "id": "panel1-values",
+            "type": "controls",
+            "parameter_refs": [
+              "col1_ctrl1",
+              "col1_ctrl2"
+            ]
+          },
+          {
+            "id": "panel2-values",
+            "type": "controls",
+            "parameter_refs": [
+              "col2_ctrl1",
+              "col2_ctrl2"
             ]
           }
         ]
