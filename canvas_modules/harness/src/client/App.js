@@ -171,6 +171,7 @@ export default class App extends React.Component {
 			selectedNarrowPalette: true,
 			selectedSchemaValidation: true,
 			selectedBoundingRectangles: false,
+			selectedCanvasUnderlay: false,
 
 			// Common properties state variables
 			propertiesInfo: {},
@@ -1619,6 +1620,7 @@ export default class App extends React.Component {
 			enableNarrowPalette: this.state.selectedNarrowPalette,
 			enableDisplayFullLabelOnHover: this.state.selectedDisplayFullLabelOnHover,
 			enableBoundingRectangles: this.state.selectedBoundingRectangles,
+			enableCanvasUnderlay: this.state.selectedCanvasUnderlay,
 			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
 			// dropZoneCanvasContent: dropZoneCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,

@@ -698,6 +698,20 @@ export default class SidePanelForms extends React.Component {
 				</form>
 			</div>);
 
+		var enableCanvasUnderlay = (
+			<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-underlay-toggle">
+				<form>
+					<div className="harness-sidepanel-headers">Enable Canvas Underlay</div>
+					<div>
+						<Toggle
+							id="selectedCanvasUnderlay" // Set ID to corresponding field in App.js state
+							toggled={this.props.getStateValue("selectedCanvasUnderlay")}
+							onToggle={this.setStateValue}
+						/>
+					</div>
+				</form>
+			</div>);
+
 		var enableZoomIntoSubFlows = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-zoom-into-subflows-toggle">
 				<form>
@@ -1143,9 +1157,11 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{saveZoom}
 					{divider}
-					{enableZoomIntoSubFlows}
-					{divider}
 					{paletteLayout}
+					{divider}
+					{enableCanvasUnderlay}
+					{divider}
+					{enableZoomIntoSubFlows}
 					{divider}
 					{enableDragWithoutSelect}
 					{divider}
