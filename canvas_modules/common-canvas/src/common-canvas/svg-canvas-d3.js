@@ -95,6 +95,7 @@ export default class SVGCanvasD3 {
 				this.config.enableInsertNodeDroppedOnLink !== config.enableInsertNodeDroppedOnLink ||
 				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize ||
 				this.config.enableBoundingRectangles !== config.enableBoundingRectangles ||
+				this.config.enableCanvasUnderlay !== config.enableCanvasUnderlay ||
 				this.config.enableSaveZoom !== config.enableSaveZoom ||
 				this.config.enableZoomIntoSubFlows !== config.enableZoomIntoSubFlows ||
 				this.config.enableZoomType !== config.enableZoomType ||

@@ -119,6 +119,10 @@ $new-halo-link-color: $ui-05;
 	fill: $canvas-background-color;
 }
 
+.d3-canvas-underlay {
+	fill: $ui-03;
+}
+
 /* Temporary overlay to display altered pointer cursor styles on dynamic drag operations */
 
 .d3-temp-cursor-overlay {
