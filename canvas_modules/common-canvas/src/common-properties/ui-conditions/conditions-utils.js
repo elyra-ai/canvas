@@ -882,6 +882,7 @@ function _updateStateIfPanel(newStates, referenceId, state, refStates) {
 		// Can only set a state to enabled if it was previously disabled. The same applies to hidden and visible
 		if (((prevValue === STATES.ENABLED || prevValue === STATES.VISIBLE) && (state === STATES.DISABLED || state === STATES.HIDDEN)) ||
 				(prevValue === STATES.DISABLED && state === STATES.ENABLED) ||
+				(prevValue === STATES.DISABLED && state === STATES.HIDDEN) ||
 				(prevValue === STATES.HIDDEN && state === STATES.VISIBLE)) {
 			updateState(refStates, referenceId, state);
 		}
