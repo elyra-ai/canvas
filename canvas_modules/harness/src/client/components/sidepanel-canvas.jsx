@@ -54,6 +54,9 @@ import {
 	DIRECTION_BOTTOM_TOP,
 	ASSOC_RIGHT_SIDE_CURVE,
 	ASSOC_STRAIGHT,
+	UNDERLAY_NONE,
+	UNDERLAY_VARIABLE,
+	UNDERLAY_TIED_TO_ORIGIN,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
@@ -657,6 +660,29 @@ export default class SidePanelForms extends React.Component {
 			</RadioButtonGroup>
 		</div>);
 
+		var enableCanvasUnderlay = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-underlay">
+			<div className="harness-sidepanel-headers">Enable Canvas Underlay</div>
+			<RadioButtonGroup
+				className="harness-sidepanel-radio-group"
+				name="selectedCanvasUnderlay" // Set name to corresponding field name in App.js
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedCanvasUnderlay")}
+			>
+				<RadioButton
+					value={UNDERLAY_NONE}
+					labelText={UNDERLAY_NONE}
+				/>
+				<RadioButton
+					value={UNDERLAY_VARIABLE}
+					labelText={UNDERLAY_VARIABLE}
+				/>
+				<RadioButton
+					value={UNDERLAY_TIED_TO_ORIGIN}
+					labelText={UNDERLAY_TIED_TO_ORIGIN}
+				/>
+			</RadioButtonGroup>
+		</div>);
+
 		var enableObjectModel = (<div className="harness-sidepanel-children">
 			<form>
 				<div className="harness-sidepanel-headers">Use Object Model</div>
@@ -1141,11 +1167,13 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{zoomType}
 					{divider}
+					{enableCanvasUnderlay}
+					{divider}
 					{saveZoom}
 					{divider}
-					{enableZoomIntoSubFlows}
-					{divider}
 					{paletteLayout}
+					{divider}
+					{enableZoomIntoSubFlows}
 					{divider}
 					{enableDragWithoutSelect}
 					{divider}

@@ -169,6 +169,9 @@ export default class SVGCanvasRenderer {
 
 		this.canvasSVG = this.createCanvasSVG();
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG);
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.canvasGrp = this.createCanvasUnderlay(this.canvasGrp);
+		}
 
 		this.resetCanvasSVGBehaviors();
 
@@ -387,6 +390,11 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableBoundingRectangles) {
 			this.displayBoundingRectangles();
 		}
+
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.setCanvasUnderlaySize();
+		}
+
 		this.logger.logEndTimer("displayCanvas");
 	}
 
@@ -704,6 +712,10 @@ export default class SVGCanvasRenderer {
 		if (this.isNodeTemplateInsertableIntoLink(nodeTemplate)) {
 			const link = this.getLinkAtMousePos(x, y);
 			this.setLinkHighlighting(link);
+		}
+
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.setCanvasUnderlaySize(x, y);
 		}
 	}
 
@@ -1080,6 +1092,23 @@ export default class SVGCanvasRenderer {
 
 	createCanvasGroup(canvasSVG) {
 		return canvasSVG.append("g");
+	}
+
+	createCanvasUnderlay(canvasGrp) {
+		this.canvasUnderlay = canvasGrp.append("rect").attr("class", "d3-canvas-underlay");
+		return canvasGrp;
+	}
+
+	setCanvasUnderlaySize(x = 0, y = 0) {
+		const canv = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
+		if (canv) {
+			const isVariable = this.config.enableCanvasUnderlay === "Variable";
+			this.canvasUnderlay
+				.attr("x", isVariable ? canv.left - 50 : 0)
+				.attr("y", isVariable ? canv.top - 50 : 0)
+				.attr("width", isVariable ? canv.width + 100 : Math.max(canv.right + 50, x + 75))
+				.attr("height", isVariable ? canv.height + 100 : Math.max(canv.bottom + 50, y + 75));
+		}
 	}
 
 	addBackToParentFlowArrow(canvasSVG) {
@@ -1527,6 +1556,10 @@ export default class SVGCanvasRenderer {
 
 		if (this.config.enableBoundingRectangles) {
 			this.displayBoundingRectangles();
+		}
+
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.setCanvasUnderlaySize();
 		}
 
 		// If this zoom is for a full page display (for either primary pipelines
@@ -5359,6 +5392,10 @@ export default class SVGCanvasRenderer {
 
 		for (var idx = comments.length - 1; idx > -1; idx--) {
 			this.canvasGrp.selectAll(this.getSelectorForId("comment_grp", comments[idx].id)).lower();
+		}
+
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.canvasUnderlay.lower();
 		}
 	}
 
