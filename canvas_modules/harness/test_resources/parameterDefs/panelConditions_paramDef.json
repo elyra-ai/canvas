@@ -75,7 +75,13 @@
     "textfieldInit13": "3",
     "actionNumber": 0,
     "actionDisable": false,
-    "actionHide": false
+    "actionHide": false,
+    "colDisable": false,
+    "colHide": false,
+    "col1_ctrl1": "blue",
+    "col1_ctrl2": 1,
+    "col2_ctrl1": "red",
+    "col2_ctrl2": 5
   },
   "parameters": [
     {
@@ -292,6 +298,38 @@
     {
       "id": "actionHide",
       "type": "boolean"
+    },
+    {
+      "id": "colDisable",
+      "type": "boolean"
+    },
+    {
+      "id": "colHide",
+      "type": "boolean"
+    },
+    {
+      "id": "col1_ctrl1",
+      "enum": [
+        "red",
+        "blue",
+        "yellow"
+      ]
+    },
+    {
+      "id": "col1_ctrl2",
+      "type": "double"
+    },
+    {
+      "id": "col2_ctrl1",
+      "enum": [
+        "red",
+        "blue",
+        "yellow"
+      ]
+    },
+    {
+      "id": "col2_ctrl2",
+      "type": "double"
     }
   ],
   "complex_types": [
@@ -734,6 +772,44 @@
         "parameter_ref": "actionHide",
         "label": {
           "default": "Hide 'action panel'"
+        }
+      },
+      {
+        "parameter_ref": "colDisable",
+        "label": {
+          "default": "Disable 'column panel'"
+        }
+      },
+      {
+        "parameter_ref": "colHide",
+        "label": {
+          "default": "Hide 'column panel'"
+        }
+      },
+      {
+        "parameter_ref": "col1_ctrl1",
+        "label": {
+          "default": "Fruit Color"
+        },
+        "control": "oneofselect"
+      },
+      {
+        "parameter_ref": "col1_ctrl2",
+        "label": {
+          "default": "number"
+        }
+      },
+      {
+        "parameter_ref": "col2_ctrl1",
+        "label": {
+          "default": "Fruit Color"
+        },
+        "control": "oneofselect"
+      },
+      {
+        "parameter_ref": "col2_ctrl2",
+        "label": {
+          "default": "number"
         }
       }
     ],
@@ -1433,6 +1509,45 @@
             ]
           }
         ]
+      },
+      {
+        "id": "column-panels",
+        "label": {
+          "default": "Column Panels"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "column-checkbox-control",
+            "type": "controls",
+            "parameter_refs": [
+              "colDisable",
+              "colHide"
+            ]
+          },
+          {
+            "id": "column-panels-cond",
+            "type": "columnPanel",
+            "group_info": [
+              {
+                "id": "panel1-values",
+                "type": "controls",
+                "parameter_refs": [
+                  "col1_ctrl1",
+                  "col1_ctrl2"
+                ]
+              },
+              {
+                "id": "panel2-values",
+                "type": "controls",
+                "parameter_refs": [
+                  "col2_ctrl1",
+                  "col2_ctrl2"
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -1921,7 +2036,8 @@
     {
       "visible": {
         "group_refs": [
-          "action-buttons-panel", "action-number-control"
+          "action-buttons-panel",
+          "action-number-control"
         ],
         "evaluate": {
           "condition": {
@@ -1935,11 +2051,40 @@
     {
       "enabled": {
         "group_refs": [
-          "action-buttons-panel", "action-number-control"
+          "action-buttons-panel",
+          "action-number-control"
         ],
         "evaluate": {
           "condition": {
             "parameter_ref": "actionDisable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "column-panels-cond"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "colHide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "column-panels-cond"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "colDisable",
             "op": "equals",
             "value": false
           }

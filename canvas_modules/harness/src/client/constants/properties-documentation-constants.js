@@ -1099,6 +1099,115 @@ _defineConstant("TWISTY_PANEL_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("COLUMN_PANEL_PROPS_INFO", {
+	"title": "Panel Type: ColumnPanel",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Group: columnPanel",
+			"editable": false
+		},
+		"current_parameters": {
+			"col1_ctrl1": "blue",
+			"col1_ctrl2": 1,
+			"col2_ctrl1": "red",
+			"col2_ctrl2": 5
+		},
+		"parameters": [
+			{
+				"id": "col1_ctrl1",
+				"enum": [
+					"red",
+					"blue",
+					"yellow"
+				]
+			},
+			{
+				"id": "col1_ctrl2",
+				"type": "double"
+			},
+			{
+				"id": "col2_ctrl1",
+				"enum": [
+					"red",
+					"blue",
+					"yellow"
+				]
+			},
+			{
+				"id": "col2_ctrl2",
+				"type": "double"
+			}
+		],
+		"uihints": {
+			"id": "ColumnPanel.test",
+			"icon": "images/na.svg",
+			"label": {
+				"default": "ColumnPanel Test"
+			},
+			"description": {
+				"default": "Test Column Panel"
+			},
+			"parameter_info": [
+				{
+					"parameter_ref": "col1_ctrl1",
+					"label": {
+						"default": "Fruit Color"
+					},
+					"control": "oneofselect"
+				},
+				{
+					"parameter_ref": "col1_ctrl2",
+					"label": {
+						"default": "number"
+					}
+				},
+				{
+					"parameter_ref": "col2_ctrl1",
+					"label": {
+						"default": "Fruit Color"
+					},
+					"control": "oneofselect"
+				},
+				{
+					"parameter_ref": "col2_ctrl2",
+					"label": {
+						"default": "number"
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "panel-columns",
+					"label": {
+						"default": "Column Panels"
+					},
+					"type": "columnPanel",
+					"group_info": [
+						{
+							"id": "panel1-values",
+							"type": "controls",
+							"parameter_refs": [
+								"col1_ctrl1",
+								"col1_ctrl2"
+							]
+						},
+						{
+							"id": "panel2-values",
+							"type": "controls",
+							"parameter_refs": [
+								"col2_ctrl1",
+								"col2_ctrl2"
+							]
+						}
+					]
+				}
+			]
+		},
+		"conditions": [],
+		"dataset_metadata": {},
+		"resources": {}
+	}
+});
 _defineConstant("COLUMNSELECTION_PROPS_INFO", {
 	"title": "Group Types: ColumnSelection",
 	"parameterDef": {
