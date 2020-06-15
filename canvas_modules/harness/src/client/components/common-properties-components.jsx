@@ -34,6 +34,7 @@ import {
 	PANEL_SELECTOR_INSERT_PROPS_INFO,
 	SUMMARY_PANEL_PROPS_INFO,
 	TWISTY_PANEL_PROPS_INFO,
+	COLUMN_PANEL_PROPS_INFO,
 	COLUMNSELECTION_PROPS_INFO,
 	TEXT_PANEL_PROPS_INFO,
 	TEXTFIELD_PROPS_INFO,
@@ -42,6 +43,7 @@ import {
 	EXPRESSION_PROPS_INFO,
 	CODE_PROPS_INFO,
 	READONLY_PROPS_INFO,
+	HIDDEN_PROPS_INFO,
 	NUMBERFIELD_PROPS_INFO,
 	NUMBERFIELD_GENERATOR_PROPS_INFO,
 	DATEFIELD_PROPS_INFO,
@@ -335,6 +337,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--panelSelector",
 					"--summaryPanel",
 					"--twistyPanel",
+					"--columnPanel",
 					"--columnSelection",
 					"--textPanel",
 					"Controls",
@@ -343,6 +346,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--password",
 					"--expression",
 					"--code",
+					"--hidden",
 					"--readonly",
 					"--numberfield",
 					"--spinner",
@@ -681,6 +685,26 @@ class CommonPropertiesComponents extends React.Component {
 					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--columnPanel" className="harness-section-subtitle">columnPanel</h3>
+					<p>A panel that displays multiple columns of panels</p>
+					<div className="harness-section-row">
+						<div className="harness-section-row">
+							<div className="harness-section-column">
+								<CommonProperties
+									propertiesInfo={COLUMN_PANEL_PROPS_INFO}
+									propertiesConfig={this.propertiesConfig}
+								/>
+								{this.renderRightFlyoutButton(COLUMN_PANEL_PROPS_INFO)}
+							</div>
+							<div className="harness-section-column harness-section-column-code">
+								<pre className="harness-json-block">
+									{this.jsonReplacer(COLUMN_PANEL_PROPS_INFO.parameterDef, "panel")}
+								</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--columnSelection" className="harness-section-subtitle">columnSelection</h3>
 					<p>To group multiple <a className="harness-properties-documentation-page-intro-link" href="#/properties#--selectcolumns">
 							selectcolumns
@@ -837,6 +861,25 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="harness-section-column harness-section-column-code">
 							<pre className="harness-json-block">
 								{this.jsonReplacer(CODE_PROPS_INFO.parameterDef, "control")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--hidden" className="harness-section-subtitle">hidden</h3>
+					<p>A hidden field is a field that can be used in common-properties but doesn't show up in the UI.  It has a parameter of attribute
+						<span className="harness-highlight"> control </span>and value <span className="harness-highlight">hidden</span></p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={HIDDEN_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+							/>
+							{this.renderRightFlyoutButton(HIDDEN_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(HIDDEN_PROPS_INFO.parameterDef, "control")}
 							</pre>
 						</div>
 					</div>
@@ -1308,6 +1351,7 @@ class CommonPropertiesComponents extends React.Component {
 				<ul className="harness-properties-documentation-list-indent">
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--textfield">textfield</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--textarea">textarea</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--hidden">hidden</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--readonly">readonly</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--expression">expression</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--code">code</a></li>

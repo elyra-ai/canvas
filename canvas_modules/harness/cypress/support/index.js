@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import "./properties/expression-editor-cmds";
 import "./properties/properties-cmds";
 import "./properties/properties-verification-cmds";
 import "./canvas/comments-cmds";

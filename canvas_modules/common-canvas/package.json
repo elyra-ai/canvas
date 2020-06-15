@@ -1,6 +1,6 @@
 {
   "name": "@elyra/canvas",
-  "version": "8.0.21",
+  "version": "8.0.24",
   "description": "Elyra common-canvas",
   "main": "dist/common-canvas.js",
   "homepage": "https://github.com/elyra-ai/canvas",
@@ -87,7 +87,6 @@
     "reactable": "1.1.0",
     "sass-lint": "1.13.1",
     "sass-loader": "6.0.6",
-    "sasslint-webpack-plugin": "1.0.4",
     "sinon": "8.1.0",
     "source-map-loader": "0.2.4",
     "style-loader": "0.18.2",

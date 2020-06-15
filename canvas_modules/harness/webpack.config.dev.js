@@ -22,7 +22,6 @@ const webpack = require("webpack");
 const babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
 const constants = require("./lib/constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const SassLintPlugin = require("sasslint-webpack-plugin");
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -89,14 +88,6 @@ if (!isDev) {
 // Plugins ------------------------------------------------------------>
 
 var plugins = [
-	new SassLintPlugin({
-		configFile: ".sass-lint.yml",
-		context: "./src",
-		glob: "**/*.scss",
-		quiet: false,
-		failOnWarning: false,
-		failOnError: false
-	}),
 	new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.NoEmitOnErrorsPlugin(),
 	// Generates an `index.html` file with the <script> injected.

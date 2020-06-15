@@ -34,7 +34,7 @@ describe("Test the supernode expanded structure", function() {
 		// Add a very long label to the supernode
 		cy.openCanvasAPI("Set Node Label");
 		cy.selectNodeLabelFromDropDown("Supernode");
-		cy.setNewNodeLabel("New Very Long Supernode Label To Test The Label Abbreviation");
+		cy.setNewLabel("New Very Long Supernode Label To Test The Label Abbreviation");
 		cy.submitAPI();
 
 		// Verify new label location and width
@@ -63,7 +63,7 @@ describe("Test supernode expanded to correct size", function() {
 		// Rename supernode
 		cy.openCanvasAPI("Set Node Label");
 		cy.selectNodeLabelFromDropDown("Supernode");
-		cy.setNewNodeLabel("First Supernode");
+		cy.setNewLabel("First Supernode");
 		cy.submitAPI();
 		cy.get("#harness-action-bar-sidepanel-api > a").click();
 
@@ -149,7 +149,7 @@ describe("Test create supernode within a supernode with a new node from palette"
 		// Rename supernode
 		cy.openCanvasAPI("Set Node Label");
 		cy.selectNodeLabelFromDropDown("Supernode");
-		cy.setNewNodeLabel("First Supernode");
+		cy.setNewLabel("First Supernode");
 		cy.submitAPI();
 		cy.get("#harness-action-bar-sidepanel-api > a").click();
 
@@ -216,7 +216,7 @@ describe("Test cut and copy supernode from first canvas to second canvas", funct
 		// Rename supernode
 		cy.openCanvasAPI("Set Node Label");
 		cy.selectNodeLabelFromDropDown("Supernode");
-		cy.setNewNodeLabel("First Supernode");
+		cy.setNewLabel("First Supernode");
 		cy.submitAPI();
 		cy.get("#harness-action-bar-sidepanel-api > a").click();
 

@@ -16,6 +16,7 @@
 
 $notification-panel-arrow-height: 8px;
 $notification-panel-header-height: 35px;
+$notification-message-height: 64px;
 
 $notification-left-border-color-width: 4px;
 
@@ -36,50 +37,93 @@ $notification-left-border-color-width: 4px;
 
 .notification-panel {
 	position: absolute;
-	width: 300px;
-	height: 100%;
+	width: 320px;
+	height: fit-content;
 	right: 8px;
 }
 
 .notification-popup-arrow {
 	display: block;
-	fill: $ui-02;
+	fill: $ui-01;
 	stroke: $ui-03;
 	position: absolute;
 	right: 16px;
+	top: 0;
 	width: 16px;
 }
 
-.notification-panel-header {
-	position: absolute;
-	height: $notification-panel-header-height;
+.notification-panel-header-container {
+	min-height: $notification-panel-header-height;
 	margin-top: $notification-panel-arrow-height;
 	width: inherit;
-	background-color: $ui-02;
+	background-color: $ui-01;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	padding-left: 12px;
 	border: 1px solid $ui-03;
 	border-bottom: 0;
-	font-weight: 400;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+	padding: $spacing-03 $spacing-05;
+	.notification-panel-header {
+		@include carbon--type-style("body-short-02");
+	}
+	.notification-panel-subtitle {
+		@include carbon--type-style("helper-text-01");
+		color: $text-02;
+		padding-top: $spacing-02;
+	}
+	.notification-panel-close-icon {
+		position: absolute;
+		right: $spacing-03;
+		top: $spacing-05;
+		cursor: pointer;
+	}
 }
 
-.notification-panel-messages {
-	position: absolute;
+.notification-panel-clear-all-container {
+	width: 100%;
+	height: 49px;
+	background-color: $ui-01;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	border-left: 1px solid $ui-03;
+	border-right: 1px solid $ui-03;
+	border-bottom: 1px solid $ui-03;
+	font-weight: 400;
+	padding: $spacing-03 $spacing-05;
+	.bx--btn--ghost.bx--btn--sm {
+		width: fit-content;
+		padding: 0;
+	}
+}
+
+.notification-panel-messages-container {
 	width: inherit;
-	margin-top: $notification-panel-arrow-height + $notification-panel-header-height;
-	max-height: calc((100% / 2) - #{$notification-panel-header-height});
+	max-height: calc(100% - #{$notification-panel-arrow-height} - #{$notification-panel-header-height});
+	height: fit-content;
+}
+.notification-panel-messages {
+	max-height: 500px;
+	height: fit-content;
 	overflow-y: auto;
+	line-height: normal;
 	background-color: $ui-01;
 	border: 1px solid $ui-03;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
-	font-size: 11px;
-	line-height: normal;
-
 	.notifications-button-container {
 		border-bottom: 1px solid $ui-03;
+		min-height: $notification-message-height;
+	}
+	.notification-panel-empty-message-container {
+		min-height: $notification-message-height;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		.notification-panel-empty-message {
+			@include carbon--type-style("body-short-01");
+			text-align: center;
+			padding-right: 30px;
+			padding-left: 30px;
+		}
 	}
 
 	.notifications-button-container:nth-last-of-type(1) {
@@ -87,9 +131,10 @@ $notification-left-border-color-width: 4px;
 	}
 
 	.notifications {
-		padding: 10px 8px;
+		padding: $spacing-06 $spacing-05 $spacing-06 calc(#{$spacing-05} - #{$notification-left-border-color-width});
 		display: inline-flex;
 		width: 100%;
+		min-height: $notification-message-height;
 		background-color: $ui-01;
 		border-style: none;
 		border-left: $notification-left-border-color-width solid $ui-01;
@@ -131,15 +176,15 @@ $notification-left-border-color-width: 4px;
 		.notification-message-type {
 			display: flex;
 			justify-content: center;
-			height: 23px;
-			width: 25px;
+			height: 18px;
+			width: fit-content;
+			padding-right: $spacing-05;
 
 			> svg {
 				display: flex;
 				justify-content: center;
-				width: 17px;
+				width: $spacing-05;
 				height: 100%;
-				margin-right: 8px;
 			}
 		}
 
@@ -147,12 +192,11 @@ $notification-left-border-color-width: 4px;
 			text-align: left;
 
 			.notification-message-title {
-				color: $text-01;
-				font-weight: 600;
-				line-height: 1.5;
+				@include carbon--type-style("productive-heading-01");
 			}
 
 			.notification-message-content {
+				@include carbon--type-style("body-short-01");
 				color: $text-02;
 			}
 		}
@@ -178,4 +222,8 @@ $notification-left-border-color-width: 4px;
 		margin-top: auto;
 		margin-bottom: auto;
 	}
+}
+
+.notification-message-close:hover {
+	text-decoration: underline;
 }

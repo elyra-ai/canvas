@@ -95,8 +95,10 @@ export default class SVGCanvasD3 {
 				this.config.enableInsertNodeDroppedOnLink !== config.enableInsertNodeDroppedOnLink ||
 				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize ||
 				this.config.enableBoundingRectangles !== config.enableBoundingRectangles ||
+				this.config.enableCanvasUnderlay !== config.enableCanvasUnderlay ||
 				this.config.enableSaveZoom !== config.enableSaveZoom ||
 				this.config.enableZoomIntoSubFlows !== config.enableZoomIntoSubFlows ||
+				this.config.enableZoomType !== config.enableZoomType ||
 				this.config.enableAssocLinkCreation !== config.enableAssocLinkCreation ||
 				this.config.enableAssocLinkType !== config.enableAssocLinkType ||
 				this.config.enableDragWithoutSelect !== config.enableDragWithoutSelect ||
@@ -265,18 +267,7 @@ export default class SVGCanvasD3 {
 
 	// Initializes the dimensions for nodes, comments layout etc.
 	initializeLayoutInfo(config) {
-
-		if (config.enableConnectionType === "Halo") {
-			this.objectModel.setLayoutType("halo", config);
-
-		} else { // Ports connection type
-			if (config.enableNodeFormatType === "Horizontal") {
-				this.objectModel.setLayoutType("ports-horizontal", config);
-
-			} else { // Vertical
-				this.objectModel.setLayoutType("ports-vertical", config);
-			}
-		}
+		this.objectModel.setLayoutType(config);
 	}
 
 	paletteNodeDraggedOver(nodeTemplate, x, y) {

@@ -657,7 +657,7 @@ export default class AbstractTable extends React.Component {
 						onChange={this.checkedAllValue.bind(this, j)}
 						labelText={columnDef.label.text}
 					/>) : columnDef.label.text;
-			if (columnDef.visible) {
+			if (columnDef.visible && columnDef.controlType !== ControlType.HIDDEN) {
 				if (columnDef.sortable) {
 					sortFields.push(columnDef.name);
 				}

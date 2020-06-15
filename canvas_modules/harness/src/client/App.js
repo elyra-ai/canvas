@@ -75,13 +75,14 @@ import {
 	SIDE_PANEL_API,
 	SIDE_PANEL,
 	CHOOSE_FROM_LOCATION,
-	MOUSE_INTERACTION,
+	INTERACTION_MOUSE,
 	PORTS_CONNECTION,
 	VERTICAL_FORMAT,
 	NONE_SAVE_ZOOM,
 	CURVE_LINKS,
 	DIRECTION_LEFT_RIGHT,
 	ASSOC_STRAIGHT,
+	UNDERLAY_NONE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
@@ -91,6 +92,7 @@ import {
 	EXAMPLE_APP_TABLES,
 	CUSTOM,
 	FLYOUT,
+	ZOOM_TYPE_REGULAR,
 	NONE_DRAG,
 	INPUT_PORT,
 	OUTPUT_PORT,
@@ -143,14 +145,16 @@ export default class App extends React.Component {
 			selectedSnapToGridType: NONE_DRAG,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
-			selectedInteractionType: MOUSE_INTERACTION,
+			selectedInteractionType: INTERACTION_MOUSE,
 			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormat: VERTICAL_FORMAT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
+			selectedZoomType: ZOOM_TYPE_REGULAR,
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
+			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedNodeLayout: EXAMPLE_APP_NONE,
 			selectedPaletteLayout: FLYOUT,
 			selectedTipConfig: {
@@ -184,7 +188,28 @@ export default class App extends React.Component {
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
 			selectedPropertiesFileCategory: "",
-			propertiesFileChooserVisible: false
+			propertiesFileChooserVisible: false,
+
+			notificationConfig: {
+				action: "notification",
+				label: "Notifications",
+				notificationHeader: "Notification Center",
+				notificationSubtitle: "subtitle",
+				enable: true,
+				emptyMessage: "You don't have any notifications right now.",
+				clearAllMessage: "Clear all",
+				keepOpen: true
+			},
+			notificationConfig2: {
+				action: "notification",
+				label: "Notifications",
+				notificationHeader: "Notification Center Canvas 2",
+				notificationSubtitle: "subtitle",
+				enable: true,
+				emptyMessage: "You don't have any notifications right now.",
+				clearAllMessage: "Clear all",
+				keepOpen: true
+			}
 		};
 
 		// There are several functions and variables with the identifiers name and name2. This is needed
@@ -851,8 +876,8 @@ export default class App extends React.Component {
 
 	appendNotificationMessages(message) {
 		this.harnessNotificationMessages = this.harnessNotificationMessages.concat(message);
-		this.canvasController.setNotificationMessages(this.flowNotificationMessages.concat(this.harnessNotificationMessages));
-		this.log("Set Notification Messages", "Set " + (this.flowNotificationMessages + this.harnessNotificationMessages.length) + " notification messages");
+		this.canvasController.setNotificationMessages(this.canvasController.getNotificationMessages().concat(message));
+		this.log("Set Notification Messages", "Set " + (this.canvasController.getNotificationMessages().length) + " notification messages");
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
@@ -1596,10 +1621,12 @@ export default class App extends React.Component {
 			enableNarrowPalette: this.state.selectedNarrowPalette,
 			enableDisplayFullLabelOnHover: this.state.selectedDisplayFullLabelOnHover,
 			enableBoundingRectangles: this.state.selectedBoundingRectangles,
+			enableCanvasUnderlay: this.state.selectedCanvasUnderlay,
 			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
 			// dropZoneCanvasContent: dropZoneCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
+			enableZoomType: this.state.selectedZoomType,
 			// enableCanvasLayout: {
 			// 	dataLinkArrowHead: true
 			// }
@@ -1641,8 +1668,6 @@ export default class App extends React.Component {
 			{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
 		];
 
-		const notificationConfig = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications" };
-		const notificationConfig2 = { action: "notification", label: "Notifications", enable: true, notificationHeader: "Notifications Canvas 2" };
 		const contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
 			defaultMenuEntries: {
@@ -1739,7 +1764,7 @@ export default class App extends React.Component {
 				layoutHandler={this.layoutHandler}
 				tipHandler={this.tipHandler}
 				toolbarConfig={toolbarConfig}
-				notificationConfig={notificationConfig}
+				notificationConfig={this.state.notificationConfig}
 				contextMenuConfig={contextMenuConfig}
 				keyboardConfig={keyboardConfig}
 				rightFlyoutContent={rightFlyoutContent}
@@ -1814,7 +1839,7 @@ export default class App extends React.Component {
 							clickActionHandler= {this.extraCanvasClickActionHandler}
 							toolbarConfig={toolbarConfig}
 							canvasController={this.canvasController2}
-							notificationConfig={notificationConfig2}
+							notificationConfig={this.state.notificationConfig2}
 							rightFlyoutContent={rightFlyoutContent2}
 							showRightFlyout={showRightFlyoutProperties2}
 							selectionChangeHandler={this.selectionChangeHandler2}
@@ -1845,7 +1870,7 @@ export default class App extends React.Component {
 			setPaletteDropdownSelect2: this.setPaletteDropdownSelect2,
 			selectedPaletteDropdownFile: this.state.selectedPaletteDropdownFile,
 			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
-			clearSavedZoomValues: this.clearSavedZoomValues
+			clearSavedZoomValues: this.clearSavedZoomValue
 		};
 
 		const sidePanelPropertiesConfig = {

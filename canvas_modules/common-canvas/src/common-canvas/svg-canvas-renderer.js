@@ -20,7 +20,7 @@
 
 // Import just the D3 modules that are needed. Doing this means that the
 // d3Event object needs to be explicitly imported.
-var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-zoom"), require("d3-fetch"));
+var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-fetch"), require("./d3-zoom-extension/src"));
 import { event as d3Event } from "d3-selection";
 import union from "lodash/union";
 import forIn from "lodash/forIn";
@@ -33,13 +33,14 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERRO
 	LINK_DIR_LEFT_RIGHT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
 	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
-	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
+	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, INTERACTION_MOUSE, INTERACTION_TRACKPAD, SUPER_NODE, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import Logger from "../logging/canvas-logger.js";
 import LocalStorage from "./local-storage.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import SvgCanvasLinks from "./svg-canvas-links.js";
+import SvgCanvasZoom from "./svg-canvas-zoom.js";
 
 const showLinksTime = false;
 
@@ -74,6 +75,7 @@ export default class SVGCanvasRenderer {
 		this.initializeZoomVariables();
 
 		this.linkUtils = new SvgCanvasLinks(this.canvasLayout, this.config);
+		this.zoomUtils = new SvgCanvasZoom(this);
 
 		// Dimensions for extent of canvas scaling
 		this.minScaleExtent = 0.2;
@@ -158,6 +160,8 @@ export default class SVGCanvasRenderer {
 		// Create a zoom object for use with the canvas.
 		this.zoom =
 			d3.zoom()
+				.trackpad(this.config.enableInteractionType === INTERACTION_TRACKPAD)
+				.wheelDelta(() => -d3Event.deltaY * (this.config.enableInteractionType === INTERACTION_TRACKPAD ? 0.02 : 0.002))
 				.scaleExtent([this.minScaleExtent, this.maxScaleExtent])
 				.on("start", this.zoomStart.bind(this))
 				.on("zoom", this.zoomAction.bind(this))
@@ -165,6 +169,9 @@ export default class SVGCanvasRenderer {
 
 		this.canvasSVG = this.createCanvasSVG();
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG);
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.canvasGrp = this.createCanvasUnderlay(this.canvasGrp);
+		}
 
 		this.resetCanvasSVGBehaviors();
 
@@ -383,6 +390,11 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableBoundingRectangles) {
 			this.displayBoundingRectangles();
 		}
+
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.setCanvasUnderlaySize();
+		}
+
 		this.logger.logEndTimer("displayCanvas");
 	}
 
@@ -547,7 +559,7 @@ export default class SVGCanvasRenderer {
 			.attr("data-id", this.getId("br_svg_rect_trans"))
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("height", transformedSVGRect.height)
-			.attr("width", transformedSVGRect.width)
+			.attr("width", transformedSVGRect.width - 2)
 			.attr("x", transformedSVGRect.x)
 			.attr("y", transformedSVGRect.y)
 			.style("fill", "none")
@@ -700,6 +712,10 @@ export default class SVGCanvasRenderer {
 		if (this.isNodeTemplateInsertableIntoLink(nodeTemplate)) {
 			const link = this.getLinkAtMousePos(x, y);
 			this.setLinkHighlighting(link);
+		}
+
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.setCanvasUnderlaySize(x, y);
 		}
 	}
 
@@ -992,56 +1008,12 @@ export default class SVGCanvasRenderer {
 
 		// If there are no nodes or comments we don't apply any zoom behaviors
 		// to the SVG area. We only attach the zoom behaviour to the top most SVG
-		//  area i.e. when we are displaying either the primary pipeline full page
+		// area i.e. when we are displaying either the primary pipeline full page
 		// or a sub-pipeline full page.
 		if (!this.isCanvasEmptyOrBindingsOnly() &&
 				this.isDisplayingFullPage()) {
-			// In mouse interaction mode the zoom behavior will hande all zooming
-			// but in trackpad interaction mode we only need the zoom behavior to
-			// handle region select
 			this.canvasSVG
 				.call(this.zoom);
-
-			if (this.config.enableInteractionType === TRACKPAD_INTERACTION) {
-				// On Safari, gesturestart, gesturechange, and gestureend will be
-				// called for the pinch/spread gesture. This code not only implements
-				// zoom on pinch/spread but also stops the whole browser page being
-				// zoomed which is the default behavior for that gesture on Safari.
-				// https://stackoverflow.com/questions/36458954/prevent-pinch-zoom-in-safari-for-osx
-				this.canvasSVG
-					.on("gesturestart", () => {
-						this.scale = d3Event.scale;
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					})
-					.on("gesturechange", () => {
-						const delta = this.scale - d3Event.scale;
-						this.scale = d3Event.scale;
-						this.pinchZoom(delta);
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					})
-					.on("gestureend", () => {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					})
-					// On Chrome and Firefox, the wheel event will be called for
-					// pinch/spread gesture with ctrlKey set to true (even when the
-					// ctrl key is not pressed). See this stack overflow issue for details:
-					// https://stackoverflow.com/questions/52130484/how-to-catch-pinch-and-stretch-gesture-events-in-d3-zoom-d3v4-v5
-					// On Chrome, Firefox and Safari, the wheel event will be called
-					// for two finger scroll.
-					.on("wheel.zoom", () => {
-						if (d3Event.ctrlKey) {
-							const wheelDelta = (d3Event.deltaY * 0.01);
-							this.pinchZoom(wheelDelta);
-						} else {
-							this.panCanvasBackground(
-								this.zoomTransform.x - d3Event.deltaX,
-								this.zoomTransform.y - d3Event.deltaY,
-								this.zoomTransform.k
-							);
-						}
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					});
-			}
 		}
 
 		// These behaviors will be applied to SVG areas at the top level and
@@ -1109,7 +1081,7 @@ export default class SVGCanvasRenderer {
 	// Retuens the appropriate cursor for the canvas SVG area.
 	getCanvasCursor() {
 		if (this.isDisplayingFullPage()) {
-			if (this.config.enableInteractionType === TRACKPAD_INTERACTION ||
+			if (this.config.enableInteractionType === INTERACTION_TRACKPAD ||
 					this.isCanvasEmptyOrBindingsOnly()) {
 				return "default";
 			}
@@ -1118,24 +1090,25 @@ export default class SVGCanvasRenderer {
 		return "pointer";
 	}
 
-	pinchZoom(zoomDelta) {
-		const canv = this.getCanvasDimensionsAdjustedForScale(1);
-		const transMousePos = this.getTransformedMousePos();
-		const k = this.zoomTransform.k - zoomDelta;
-
-		if (k > this.minScaleExtent && k < this.maxScaleExtent) {
-			let x = this.zoomTransform.x + (canv.left * zoomDelta);
-			let y = this.zoomTransform.y + (canv.top * zoomDelta);
-
-			x += ((transMousePos.x - canv.left) * zoomDelta);
-			y += ((transMousePos.y - canv.top) * zoomDelta);
-
-			this.zoomCanvasBackground(x, y, k);
-		}
-	}
-
 	createCanvasGroup(canvasSVG) {
 		return canvasSVG.append("g");
+	}
+
+	createCanvasUnderlay(canvasGrp) {
+		this.canvasUnderlay = canvasGrp.append("rect").attr("class", "d3-canvas-underlay");
+		return canvasGrp;
+	}
+
+	setCanvasUnderlaySize(x = 0, y = 0) {
+		const canv = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
+		if (canv) {
+			const isVariable = this.config.enableCanvasUnderlay === "Variable";
+			this.canvasUnderlay
+				.attr("x", isVariable ? canv.left - 50 : 0)
+				.attr("y", isVariable ? canv.top - 50 : 0)
+				.attr("width", isVariable ? canv.width + 100 : Math.max(canv.right + 50, x + 75))
+				.attr("height", isVariable ? canv.height + 100 : Math.max(canv.bottom + 50, y + 75));
+		}
 	}
 
 	addBackToParentFlowArrow(canvasSVG) {
@@ -1460,10 +1433,13 @@ export default class SVGCanvasRenderer {
 		// operation d3Event does not contain info about the shift key.
 		if (this.zoomingToFitForScale) {
 			this.regionSelect = false;
-		} else if (d3Event.sourceEvent && d3Event.sourceEvent.shiftKey) {
-			this.regionSelect = !(this.config.enableInteractionType === TRACKPAD_INTERACTION);
+		} else if ((this.config.enableInteractionType === INTERACTION_TRACKPAD &&
+								d3Event.sourceEvent && d3Event.sourceEvent.buttons === 1) || // Main button is pressed
+							(this.config.enableInteractionType === INTERACTION_MOUSE &&
+								d3Event.sourceEvent && d3Event.sourceEvent.shiftKey)) { // Shift key is pressed
+			this.regionSelect = true;
 		} else {
-			this.regionSelect = (this.config.enableInteractionType === TRACKPAD_INTERACTION);
+			this.regionSelect = false;
 		}
 
 		if (this.regionSelect) {
@@ -1489,6 +1465,7 @@ export default class SVGCanvasRenderer {
 		}
 
 		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
+		this.previousD3Event = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
 	}
 
 	zoomAction() {
@@ -1502,10 +1479,10 @@ export default class SVGCanvasRenderer {
 
 			} else {
 				this.addTempCursorOverlay("grabbing");
-				this.panCanvasBackground(d3Event.transform.x, d3Event.transform.y, d3Event.transform.k);
+				this.zoomCanvasBackground();
 			}
 		} else {
-			this.zoomCanvasBackground(d3Event.transform.x, d3Event.transform.y, d3Event.transform.k);
+			this.zoomCanvasBackground();
 		}
 	}
 
@@ -1522,7 +1499,8 @@ export default class SVGCanvasRenderer {
 			this.removeRegionSelector();
 
 			// Reset the transform x and y to what they were before the region
-			// selection action was started.
+			// selection action was started. This directly sets the x and y values
+			// in the __zoom property of the svgCanvas DOM object.
 			d3Event.transform.x = this.regionStartTransformX;
 			d3Event.transform.y = this.regionStartTransformY;
 
@@ -1536,6 +1514,11 @@ export default class SVGCanvasRenderer {
 			this.regionSelect = false;
 
 		} else if (this.isDisplayingFullPage()) {
+			// Set the internal zoom value for canvasSVG used by D3. This will be
+			// used by d3Event next time a zoom action is initiated.
+			this.canvasSVG.property("__zoom", this.zoomTransform);
+
+
 			if (this.config.enableSaveZoom === "Pipelineflow") {
 				const data = {
 					editType: "zoomPipeline",
@@ -1556,56 +1539,27 @@ export default class SVGCanvasRenderer {
 		this.removeTempCursorOverlay();
 	}
 
-	panCanvasBackground(panX, panY, panK) {
-		if (this.config.enableBoundingRectangles) {
-			this.displayBoundingRectangles();
-		}
-
-		let x = panX;
-		let y = panY;
-		const k = panK;
-
-		// If the canvas rectangle (nodes and comments) is smaller than the
-		// SVG area then don't let the canvas be dragged out of the SVG area.
-		// let canv;
-		const canv = this.getCanvasDimensionsAdjustedForScale(k, this.canvasLayout.zoomToFitPadding);
-		const zoomSvgRect = this.getViewPortDimensions();
-
-		if (canv && canv.width < zoomSvgRect.width) {
-			x = Math.max(-canv.left, Math.min(x, zoomSvgRect.width - canv.width - canv.left));
-		}
-		if (canv && canv.height < zoomSvgRect.height) {
-			y = Math.max(-canv.top, Math.min(y, zoomSvgRect.height - canv.height - canv.top));
-		}
-
-		// Readjust the d3Event properties to the newly calculated values so d3Event
-		// stays in sync with the actual pan amount. This is only needed when this
-		// method is called from zoomAction as a result of the d3 zoom behavior when
-		// using the Mouse interaction behavior. It is not needed when using the
-		// Trackpad interaction behavior.
-		if (d3Event && d3Event.transform) {
-			d3Event.transform.x = x;
-			d3Event.transform.y = y;
-		}
-
-		this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(k);
-		this.canvasGrp.attr("transform", this.zoomTransform);
-
-		// The supernode will not have any calculated port positions when the
-		// subflow is being displayed full screen, so calculate them first.
-		if (this.isDisplayingSubFlowFullPage()) {
-			this.displayPortsForSubFlowFullPage();
-		}
-	}
-
-	zoomCanvasBackground(x, y, k) {
+	zoomCanvasBackground() {
 		this.regionSelect = false;
 
-		this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(k);
+		if (this.isDisplayingPrimaryFlowFullPage()) {
+			const xInc = d3Event.transform.x - this.previousD3Event.x;
+			const yInc = d3Event.transform.y - this.previousD3Event.y;
+			this.zoomTransform = d3.zoomIdentity.translate(this.zoomTransform.x + xInc, this.zoomTransform.y + yInc).scale(d3Event.transform.k);
+			this.zoomTransform = this.zoomUtils.zoomConstrain(this.zoomTransform, this.previousD3Event.k, this.getViewPort());
+			this.previousD3Event = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
+		} else {
+			this.zoomTransform = d3.zoomIdentity.translate(d3Event.transform.x, d3Event.transform.y).scale(d3Event.transform.k);
+		}
+
 		this.canvasGrp.attr("transform", this.zoomTransform);
 
 		if (this.config.enableBoundingRectangles) {
 			this.displayBoundingRectangles();
+		}
+
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.setCanvasUnderlaySize();
 		}
 
 		// If this zoom is for a full page display (for either primary pipelines
@@ -1625,6 +1579,20 @@ export default class SVGCanvasRenderer {
 		if (this.isDisplayingSubFlowFullPage()) {
 			this.displayPortsForSubFlowFullPage();
 		}
+	}
+
+	// Returns the view port dimensions from the D3 zoom object. This is a bit
+	// weird in that you have to get the function from D3 and then call that
+	// function to get the data which is two arrays inside an array containing
+	// the points of the top left and bottom right corner of the view ports.
+	getViewPort() {
+		const extentFn = this.zoom.extent().bind(this.canvasSVG.node());
+		const extent = extentFn();
+
+		const width = extent[1][0] - extent[0][0];
+		const height = extent[1][1] - extent[0][1];
+
+		return { width, height };
 	}
 
 
@@ -1997,6 +1965,9 @@ export default class SVGCanvasRenderer {
 				.attr("class", "d3-node-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+					if (that.drawingNewLinkData === null && !that.dragging) {
+						d3.select(this).raise();
+					}
 					that.setNodeStyles(d, "hover", d3.select(this));
 					that.addDynamicNodeIcons(d, this);
 					if (that.canOpenTip(TIP_TYPE_NODE)) {
@@ -2633,6 +2604,10 @@ export default class SVGCanvasRenderer {
 			.append("text")
 			.attr("data-id", (dec) => this.getId(`${objType}_dec_label`, dec.id)); // Used in tests
 
+		newDecGroups.filter((dec) => dec.path)
+			.append("path")
+			.attr("data-id", (dec) => this.getId(`${objType}_dec_path`, dec.id)); // Used in tests
+
 		const newAndExistingDecGrps =
 			decGroupsSel.enter().merge(decGroupsSel);
 
@@ -2648,6 +2623,7 @@ export default class SVGCanvasRenderer {
 				const outlnSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_outln`, dec.id);
 				const imageSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_image`, dec.id);
 				const labelSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_label`, dec.id);
+				const pathSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_path`, dec.id);
 
 				decGrp.select(outlnSelector)
 					.attr("x", 0)
@@ -2670,6 +2646,13 @@ export default class SVGCanvasRenderer {
 					.attr("y", 0)
 					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
 					.text(dec.label)
+					.datum(decDatum);
+
+				decGrp.select(pathSelector)
+					.attr("x", 0)
+					.attr("y", 0)
+					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-path`))
+					.attr("d", dec.path)
 					.datum(decDatum);
 			});
 
@@ -2725,10 +2708,24 @@ export default class SVGCanvasRenderer {
 			// Save image field in DOM object to avoid unnecessary image refreshes.
 			imageObj.attr("data-image", nodeImage);
 			if (nodeImageType === "svg") {
-				d3.text(nodeImage).then((img) => imageObj.html(img));
+				this.addCopyOfImageToDefs(nodeImage);
+				imageObj.append("use").attr("href", `#${nodeImage}`);
 			} else {
 				imageObj.attr("xlink:href", nodeImage);
 			}
+		}
+	}
+
+	// If the image doesn't exist in <defs>, retrieves the image from the
+	// server and places it in the <defs> element with an id equal to the
+	// nodeImage string.
+	addCopyOfImageToDefs(nodeImage) {
+		const defs = this.canvasSVG.select("defs");
+		// Select using id as an attribute because creating a selector with a
+		// # prefix won't work when nodeImage is a file name with special characters.
+		if (defs.select(`[id='${nodeImage}']`).empty()) {
+			const defsSvg = defs.append("svg").attr("id", nodeImage);
+			d3.text(nodeImage).then((img) => defsSvg.html(img));
 		}
 	}
 
@@ -5395,6 +5392,10 @@ export default class SVGCanvasRenderer {
 
 		for (var idx = comments.length - 1; idx > -1; idx--) {
 			this.canvasGrp.selectAll(this.getSelectorForId("comment_grp", comments[idx].id)).lower();
+		}
+
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.canvasUnderlay.lower();
 		}
 	}
 

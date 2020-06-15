@@ -44,8 +44,8 @@ import {
 	HORIZONTAL_FORMAT,
 	HALO_CONNECTION,
 	PORTS_CONNECTION,
-	MOUSE_INTERACTION,
-	TRACKPAD_INTERACTION,
+	INTERACTION_MOUSE,
+	INTERACTION_TRACKPAD,
 	CURVE_LINKS,
 	ELBOW_LINKS,
 	STRAIGHT_LINKS,
@@ -54,6 +54,9 @@ import {
 	DIRECTION_BOTTOM_TOP,
 	ASSOC_RIGHT_SIDE_CURVE,
 	ASSOC_STRAIGHT,
+	UNDERLAY_NONE,
+	UNDERLAY_VARIABLE,
+	UNDERLAY_TIED_TO_ORIGIN,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
@@ -62,6 +65,9 @@ import {
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	FLYOUT,
+	ZOOM_TYPE_REGULAR,
+	ZOOM_TYPE_HIDE_NEGATIVE_SPACE1,
+	ZOOM_TYPE_HIDE_NEGATIVE_SPACE2,
 	MODAL,
 	TIP_PALETTE,
 	TIP_NODES,
@@ -96,6 +102,8 @@ export default class SidePanelForms extends React.Component {
 		this.setStateValue = this.setStateValue.bind(this);
 		this.enteredStateValue = this.enteredStateValue.bind(this);
 
+		this.notificationConfigChange = this.notificationConfigChange.bind(this);
+		this.notificationConfigToggle = this.notificationConfigToggle.bind(this);
 		this.nodeLayoutOptionChange = this.nodeLayoutOptionChange.bind(this);
 		this.tipConfigChange = this.tipConfigChange.bind(this);
 		this.onDragStart = this.onDragStart.bind(this);
@@ -202,6 +210,30 @@ export default class SidePanelForms extends React.Component {
 
 	enteredStateValue(evt) {
 		this.props.setStateValue(evt.target.id, evt.target.value);
+	}
+
+	notificationConfigChange(evt) {
+		let id = evt.target.id;
+		let config = "notificationConfig";
+		if (id.slice(-1) === "2") {
+			id = evt.target.id.slice(0, -1);
+			config = "notificationConfig2";
+		}
+		const notificationConfig = this.props.getStateValue(config);
+		notificationConfig[id] = evt.target.value;
+		this.props.setStateValue(notificationConfig, config);
+	}
+
+	notificationConfigToggle(value, control) {
+		let id = control;
+		let config = "notificationConfig";
+		if (id.slice(-1) === "2") {
+			id = control.slice(0, -1);
+			config = "notificationConfig2";
+		}
+		const notificationConfig = this.props.getStateValue(config);
+		notificationConfig[id] = value;
+		this.props.setStateValue(notificationConfig, config);
 	}
 
 	nodeLayoutOptionChange(value) {
@@ -509,6 +541,32 @@ export default class SidePanelForms extends React.Component {
 		</div>
 		);
 
+		var zoomType = (<div>
+			<div className="harness-sidepanel-children" id="harness-sidepanel-zoom-type">
+				<div className="harness-sidepanel-headers">Zoom Type</div>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedZoomType" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedZoomType")}
+				>
+					<RadioButton
+						value={ZOOM_TYPE_REGULAR}
+						labelText={ZOOM_TYPE_REGULAR}
+					/>
+					<RadioButton
+						value={ZOOM_TYPE_HIDE_NEGATIVE_SPACE1}
+						labelText={ZOOM_TYPE_HIDE_NEGATIVE_SPACE1}
+					/>
+					<RadioButton
+						value={ZOOM_TYPE_HIDE_NEGATIVE_SPACE2}
+						labelText={ZOOM_TYPE_HIDE_NEGATIVE_SPACE2}
+					/>
+				</RadioButtonGroup>
+			</div>
+		</div>
+		);
+
 		var rbSize = { "height": "80px" };
 		var entrySize = { "width": "80px", "minWidth": "80px" };
 
@@ -570,7 +628,6 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
-
 		var enableAssocLinkCreation = (<div className="harness-sidepanel-children">
 			<form>
 				<div className="harness-sidepanel-headers">Enable Association Link Creation</div>
@@ -599,6 +656,29 @@ export default class SidePanelForms extends React.Component {
 				<RadioButton
 					value={ASSOC_RIGHT_SIDE_CURVE}
 					labelText={ASSOC_RIGHT_SIDE_CURVE}
+				/>
+			</RadioButtonGroup>
+		</div>);
+
+		var enableCanvasUnderlay = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-underlay">
+			<div className="harness-sidepanel-headers">Enable Canvas Underlay</div>
+			<RadioButtonGroup
+				className="harness-sidepanel-radio-group"
+				name="selectedCanvasUnderlay" // Set name to corresponding field name in App.js
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedCanvasUnderlay")}
+			>
+				<RadioButton
+					value={UNDERLAY_NONE}
+					labelText={UNDERLAY_NONE}
+				/>
+				<RadioButton
+					value={UNDERLAY_VARIABLE}
+					labelText={UNDERLAY_VARIABLE}
+				/>
+				<RadioButton
+					value={UNDERLAY_TIED_TO_ORIGIN}
+					labelText={UNDERLAY_TIED_TO_ORIGIN}
 				/>
 			</RadioButtonGroup>
 		</div>);
@@ -708,16 +788,15 @@ export default class SidePanelForms extends React.Component {
 				defaultSelected={this.props.getStateValue("selectedInteractionType")}
 			>
 				<RadioButton
-					value={MOUSE_INTERACTION}
-					labelText={MOUSE_INTERACTION}
+					value={INTERACTION_MOUSE}
+					labelText={INTERACTION_MOUSE}
 				/>
 				<RadioButton
-					value={TRACKPAD_INTERACTION}
-					labelText={TRACKPAD_INTERACTION}
+					value={INTERACTION_TRACKPAD}
+					labelText={INTERACTION_TRACKPAD}
 				/>
 			</RadioButtonGroup>
 		</div>);
-
 
 		var connectionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-connection-type">
 			<div className="harness-sidepanel-headers">Connection Type</div>
@@ -954,6 +1033,105 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
+		var configureNotificationCenter = (<div className="harness-sidepanel-children" id="harness-sidepanel-configure-notification-center">
+			<div className="harness-sidepanel-headers">Configure Notification Center</div>
+			<div className="harness-notification-title">
+				<TextInput
+					id="notificationHeader" // Set ID to corresponding field in App.js state
+					labelText="Title (will show default if empty)"
+					onChange={this.notificationConfigChange}
+					value={this.props.getStateValue("notificationConfig").notificationHeader}
+				/>
+			</div>
+			<div className="harness-notification-subtitle">
+				<TextInput
+					id="notificationSubtitle" // Set ID to corresponding field in App.js state
+					labelText="Subtitle (will hide if empty)"
+					onChange={this.notificationConfigChange}
+					value={this.props.getStateValue("notificationConfig").notificationSubtitle}
+				/>
+			</div>
+			<div className="harness-notification-empty-message">
+				<TextInput
+					id="emptyMessage" // Set ID to corresponding field in App.js state
+					labelText="Empty Message"
+					onChange={this.notificationConfigChange}
+					value={this.props.getStateValue("notificationConfig").emptyMessage}
+				/>
+			</div>
+			<div className="harness-notification-clear-all">
+				<TextInput
+					id="clearAllMessage" // Set ID to corresponding field in App.js state
+					labelText="Clear All button (will hide if empty)"
+					onChange={this.notificationConfigChange}
+					value={this.props.getStateValue("notificationConfig").clearAllMessage}
+				/>
+			</div>
+			<form>
+				<div className="harness-sidepanel-headers">Keep Notification Center Open</div>
+				<div>
+					<Toggle
+						id="keepOpen" // Set ID to corresponding field in App.js state
+						labelText="When enabled, clicking outside the notification center will not close it"
+						toggled={this.props.getStateValue("notificationConfig").keepOpen}
+						onToggle={this.notificationConfigToggle}
+					/>
+				</div>
+			</form>
+		</div>);
+
+		var configureNotificationCenter2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-configure-notification-center2">
+			<div className="harness-sidepanel-headers">Configure Notification Center 2</div>
+			<div className="harness-notification-title">
+				<TextInput
+					id="notificationHeader2" // Set ID to corresponding field in App.js state
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+					labelText="Title (will show default if empty)"
+					onChange={this.notificationConfigChange}
+					value={this.props.getStateValue("notificationConfig2").notificationHeader}
+				/>
+			</div>
+			<div className="harness-notification-subtitle">
+				<TextInput
+					id="notificationSubtitle2"
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+					labelText="Subtitle (will hide if empty)"
+					onChange={this.notificationConfigChange}
+					value={this.props.getStateValue("notificationConfig2").notificationSubtitle}
+				/>
+			</div>
+			<div className="harness-notification-empty-message">
+				<TextInput
+					id="emptyMessage2"
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+					labelText="Empty Message"
+					onChange={this.notificationConfigChange}
+					value={this.props.getStateValue("notificationConfig2").emptyMessage}
+				/>
+			</div>
+			<div className="harness-notification-clear-all">
+				<TextInput
+					id="clearAllMessage2"
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+					labelText="Clear All button (will hide if empty)"
+					onChange={this.notificationConfigChange}
+					value={this.props.getStateValue("notificationConfig2").clearAllMessage}
+				/>
+			</div>
+			<form>
+				<div className="harness-sidepanel-headers">Keep Notification Center Open</div>
+				<div>
+					<Toggle
+						id="keepOpen2"
+						disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+						labelText="When enabled, clicking outside the notification center will not close it"
+						toggled={this.props.getStateValue("notificationConfig2").keepOpen}
+						onToggle={this.notificationConfigToggle}
+					/>
+				</div>
+			</form>
+		</div>);
+
 		const displayFullLabelOnHover = (
 			<div className="harness-sidepanel-children">
 				<div className="harness-sidepanel-headers">Display full node label on hover</div>
@@ -987,11 +1165,15 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{snapToGrid}
 					{divider}
-					{enableZoomIntoSubFlows}
+					{zoomType}
+					{divider}
+					{enableCanvasUnderlay}
 					{divider}
 					{saveZoom}
 					{divider}
 					{paletteLayout}
+					{divider}
+					{enableZoomIntoSubFlows}
 					{divider}
 					{enableDragWithoutSelect}
 					{divider}
@@ -1021,9 +1203,13 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{nodeDraggable}
 					{divider}
+					{configureNotificationCenter}
+					{divider}
 					{extraCanvas}
 					{canvasInput2}
 					{paletteInput2}
+					{divider}
+					{configureNotificationCenter2}
 				</div>
 			</div>
 		);
