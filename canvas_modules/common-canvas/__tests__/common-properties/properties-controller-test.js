@@ -22,6 +22,7 @@ import Form from "../../src/common-properties/form/Form";
 import conditionForm from "../test_resources/json/conditions-summary-form.json";
 import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
+import checkboxsetParamDef from "../test_resources/paramDefs/checkboxset_paramDef.json";
 
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
 
@@ -578,6 +579,27 @@ describe("Properties Controller states", () => {
 		reset();
 		const actualValues = controller.getControlStates();
 		expect(propStates).to.eql(actualValues);
+	});
+
+	it("disabled controls can be set to hidden/visible", () => {
+		const renderedObject = testUtils.flyoutEditorForm(checkboxsetParamDef);
+		// const wrapper = renderedObject.wrapper;
+		controller = renderedObject.controller;
+
+		const disableAndHiddenCheckboxId = { name: "disable_and_hide" };
+		const disableAndHiddenCheckboxsetId = { name: "checkboxset_disable_and_hide" };
+
+		// verify the control is initially disabled
+		let controlState = controller.getControlState(disableAndHiddenCheckboxsetId);
+		expect(controlState).to.equal("disabled");
+
+		controller.updatePropertyValue(disableAndHiddenCheckboxId, true);
+		controlState = controller.getControlState(disableAndHiddenCheckboxsetId);
+		expect(controlState).to.equal("hidden");
+
+		controller.updatePropertyValue(disableAndHiddenCheckboxId, false);
+		controlState = controller.getControlState(disableAndHiddenCheckboxsetId);
+		expect(controlState).to.equal("disabled");
 	});
 });
 
