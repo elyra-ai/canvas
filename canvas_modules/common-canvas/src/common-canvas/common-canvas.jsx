@@ -229,6 +229,10 @@ class CommonCanvas extends React.Component {
 		return this.diagramCanvasRef.current.getZoomToReveal(objectIds);
 	}
 
+	getZoom() {
+		return this.diagramCanvasRef.current.getZoom();
+	}
+
 	afterUpdate() {
 		this.afterUpdateCallbacks.forEach((callback) => callback());
 	}
@@ -351,6 +355,10 @@ class CommonCanvas extends React.Component {
 
 	zoomTo(zoomObject) {
 		this.diagramCanvasRef.current.zoomTo(zoomObject);
+	}
+
+	translateBy(x, y, animateTime) {
+		this.diagramCanvasRef.current.translateBy(x, y, animateTime);
 	}
 
 	focusOnCanvas() {

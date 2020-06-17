@@ -19,7 +19,7 @@
 
 // Import just the D3 modules that are needed. Doing this means that the
 // d3Event object needs to be explicitly imported.
-var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-zoom"));
+var d3 = Object.assign({}, require("d3-selection"));
 import { event as d3Event } from "d3-selection";
 import isMatch from "lodash/isMatch";
 import SVGCanvasRenderer from "./svg-canvas-renderer.js";
@@ -98,7 +98,6 @@ export default class SVGCanvasD3 {
 				this.config.enableCanvasUnderlay !== config.enableCanvasUnderlay ||
 				this.config.enableSaveZoom !== config.enableSaveZoom ||
 				this.config.enableZoomIntoSubFlows !== config.enableZoomIntoSubFlows ||
-				this.config.enableZoomType !== config.enableZoomType ||
 				this.config.enableAssocLinkCreation !== config.enableAssocLinkCreation ||
 				this.config.enableAssocLinkType !== config.enableAssocLinkType ||
 				this.config.enableDragWithoutSelect !== config.enableDragWithoutSelect ||
@@ -286,6 +285,10 @@ export default class SVGCanvasD3 {
 		this.renderer.zoomTo(zoomObject);
 	}
 
+	translateBy(x, y, animateTime) {
+		this.renderer.translateBy(x, y, animateTime);
+	}
+
 	zoomIn() {
 		this.renderer.zoomIn();
 	}
@@ -300,6 +303,10 @@ export default class SVGCanvasD3 {
 
 	getZoomToReveal(objectIds) {
 		return this.renderer ? this.renderer.getZoomToReveal(objectIds) : null;
+	}
+
+	getZoom() {
+		return this.renderer ? this.renderer.getZoom() : null;
 	}
 
 	refreshOnSizeChange() {

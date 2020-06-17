@@ -56,7 +56,6 @@ import {
 	ASSOC_STRAIGHT,
 	UNDERLAY_NONE,
 	UNDERLAY_VARIABLE,
-	UNDERLAY_TIED_TO_ORIGIN,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
@@ -65,9 +64,6 @@ import {
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	FLYOUT,
-	ZOOM_TYPE_REGULAR,
-	ZOOM_TYPE_HIDE_NEGATIVE_SPACE1,
-	ZOOM_TYPE_HIDE_NEGATIVE_SPACE2,
 	MODAL,
 	TIP_PALETTE,
 	TIP_NODES,
@@ -541,32 +537,6 @@ export default class SidePanelForms extends React.Component {
 		</div>
 		);
 
-		var zoomType = (<div>
-			<div className="harness-sidepanel-children" id="harness-sidepanel-zoom-type">
-				<div className="harness-sidepanel-headers">Zoom Type</div>
-				<RadioButtonGroup
-					className="harness-sidepanel-radio-group"
-					name="selectedZoomType" // Set name to corresponding field name in App.js
-					onChange={this.setStateValue}
-					defaultSelected={this.props.getStateValue("selectedZoomType")}
-				>
-					<RadioButton
-						value={ZOOM_TYPE_REGULAR}
-						labelText={ZOOM_TYPE_REGULAR}
-					/>
-					<RadioButton
-						value={ZOOM_TYPE_HIDE_NEGATIVE_SPACE1}
-						labelText={ZOOM_TYPE_HIDE_NEGATIVE_SPACE1}
-					/>
-					<RadioButton
-						value={ZOOM_TYPE_HIDE_NEGATIVE_SPACE2}
-						labelText={ZOOM_TYPE_HIDE_NEGATIVE_SPACE2}
-					/>
-				</RadioButtonGroup>
-			</div>
-		</div>
-		);
-
 		var rbSize = { "height": "80px" };
 		var entrySize = { "width": "80px", "minWidth": "80px" };
 
@@ -675,10 +645,6 @@ export default class SidePanelForms extends React.Component {
 				<RadioButton
 					value={UNDERLAY_VARIABLE}
 					labelText={UNDERLAY_VARIABLE}
-				/>
-				<RadioButton
-					value={UNDERLAY_TIED_TO_ORIGIN}
-					labelText={UNDERLAY_TIED_TO_ORIGIN}
 				/>
 			</RadioButtonGroup>
 		</div>);
@@ -1164,8 +1130,6 @@ export default class SidePanelForms extends React.Component {
 					{interactionType}
 					{divider}
 					{snapToGrid}
-					{divider}
-					{zoomType}
 					{divider}
 					{enableCanvasUnderlay}
 					{divider}

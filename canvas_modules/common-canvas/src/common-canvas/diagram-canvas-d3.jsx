@@ -90,6 +90,10 @@ export default class DiagramCanvas extends React.Component {
 		return this.canvasD3Layout.getZoomToReveal(objectIds);
 	}
 
+	getZoom() {
+		return this.canvasD3Layout.getZoom();
+	}
+
 	setIsDropZoneDisplayed(isDropZoneDisplayed) {
 		if (isDropZoneDisplayed !== this.state.isDropZoneDisplayed) {
 			this.setState({ isDropZoneDisplayed: isDropZoneDisplayed });
@@ -109,6 +113,10 @@ export default class DiagramCanvas extends React.Component {
 
 	zoomTo(zoomObject) {
 		this.canvasD3Layout.zoomTo(zoomObject);
+	}
+
+	translateBy(x, y, animateTime) {
+		this.canvasD3Layout.translateBy(x, y, animateTime);
 	}
 
 	mouseCoords(event) {
