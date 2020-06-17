@@ -214,6 +214,6 @@ describe("Test for secondary toolbar add comment", function() {
 		cy.clickToolbarZoomToFit();
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Comment 5a");
-		cy.verifyCommentTransform("Comment 5a", "translate(-1357.7483327072375, -307.2636620335587)");
+		cy.verifyCommentTransform("Comment 5a", "translate(-1357.7483327072375, -338.4953719008264)");
 	});
 });

@@ -1254,12 +1254,12 @@ export default class SVGCanvasRenderer {
 
 		// If there's no saved zoom, set to a default by panning the canvas objects
 		// so the canvas ara is are always visible in the viewport.
-		if (!newZoom) {
-			const canvWithPadding = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
-			if (canvWithPadding) {
-				newZoom = { x: -canvWithPadding.left, y: -canvWithPadding.top, k: 1 };
-			}
-		}
+		// if (!newZoom) {
+		// 	const canvWithPadding = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
+		// 	if (canvWithPadding) {
+		// 		newZoom = { x: -canvWithPadding.left, y: -canvWithPadding.top, k: 1 };
+		// 	}
+		// }
 
 		// If new zoom is different to the current zoom amount, apply it.
 		if (newZoom &&
@@ -1392,23 +1392,24 @@ export default class SVGCanvasRenderer {
 		const svgRect = this.getViewPortDimensions();
 		const transformedSVGRect = this.getTransformedSVGRect(svgRect, 0);
 		const nodes = this.getNodes(nodeIDs);
-		const canvasDimensions = this.getCanvasDimensionsAdjustedForScaleForObjs(nodes, [], 1, 10);
+		const canvasDimensions = this.getCanvasDimensions(nodes, []);
+		const canv = this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, 1, 10);
 
-		if (canvasDimensions) {
+		if (canv) {
 			let xOffset;
 			let yOffset;
 
-			if (canvasDimensions.right > transformedSVGRect.x + transformedSVGRect.width) {
-				xOffset = transformedSVGRect.x + transformedSVGRect.width - canvasDimensions.right;
+			if (canv.right > transformedSVGRect.x + transformedSVGRect.width) {
+				xOffset = transformedSVGRect.x + transformedSVGRect.width - canv.right;
 			}
-			if (canvasDimensions.left < transformedSVGRect.x) {
-				xOffset = transformedSVGRect.x - canvasDimensions.left;
+			if (canv.left < transformedSVGRect.x) {
+				xOffset = transformedSVGRect.x - canv.left;
 			}
-			if (canvasDimensions.bottom > transformedSVGRect.y + transformedSVGRect.height) {
-				yOffset = transformedSVGRect.y + transformedSVGRect.height - canvasDimensions.bottom;
+			if (canv.bottom > transformedSVGRect.y + transformedSVGRect.height) {
+				yOffset = transformedSVGRect.y + transformedSVGRect.height - canv.bottom;
 			}
-			if (canvasDimensions.top < transformedSVGRect.y) {
-				yOffset = transformedSVGRect.y - canvasDimensions.top;
+			if (canv.top < transformedSVGRect.y) {
+				yOffset = transformedSVGRect.y - canv.top;
 			}
 
 			if (typeof xOffset !== "undefined" || typeof yOffset !== "undefined") {
