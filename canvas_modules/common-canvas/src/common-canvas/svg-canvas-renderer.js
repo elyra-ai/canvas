@@ -40,7 +40,6 @@ import Logger from "../logging/canvas-logger.js";
 import LocalStorage from "./local-storage.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import SvgCanvasLinks from "./svg-canvas-links.js";
-import SvgCanvasZoom from "./svg-canvas-zoom.js";
 
 const showLinksTime = false;
 
@@ -75,11 +74,10 @@ export default class SVGCanvasRenderer {
 		this.initializeZoomVariables();
 
 		this.linkUtils = new SvgCanvasLinks(this.canvasLayout, this.config);
-		this.zoomUtils = new SvgCanvasZoom(this);
 
 		// Dimensions for extent of canvas scaling
 		this.minScaleExtent = 0.2;
-		this.maxScaleExtent = 2;
+		this.maxScaleExtent = 1.8;
 
 		// Allows us to track the sizing behavior of comments
 		this.commentSizing = false;
@@ -177,8 +175,12 @@ export default class SVGCanvasRenderer {
 
 		this.displayCanvas();
 
+		if (this.isDisplayingFullPage()) {
+			this.restoreZoom();
+		}
+
 		// If we are showing a sub-flow in full screen mode, or the options is
-		// switched on to alwas display it, show the back to parent control.
+		// switched on to always display it, show the 'back to parent' control.
 		if (this.isDisplayingSubFlowFullPage() ||
 				this.canvasLayout.alwaysDisplayBackToParentFlow) {
 			this.addBackToParentFlowArrow(this.canvasSVG);
@@ -376,9 +378,6 @@ export default class SVGCanvasRenderer {
 
 		if (this.isDisplayingSubFlowInPlace()) {
 			this.displaySVGToFitSupernode();
-
-		} else {
-			this.restoreZoom();
 		}
 
 		// The supernode will not have any calculated port positions when the
@@ -655,6 +654,19 @@ export default class SVGCanvasRenderer {
 		return id;
 	}
 
+	// Returns the passed in mouse position snapped to the grid
+	// if either option is switched on.
+	getMousePosSnapToGrid(mousePos) {
+		let transPos = mousePos;
+
+		if (this.config.enableSnapToGridType === "During" ||
+				this.config.enableSnapToGridType === "After") {
+			transPos = this.snapToGridObject(transPos);
+		}
+		return transPos;
+	}
+
+
 	// Returns the current mouse position transformed by the current zoom
 	// transformation amounts based on the local SVG -- that is, if we're
 	// displaying a sub-flow it is based on the SVG in the supernode.
@@ -837,13 +849,8 @@ export default class SVGCanvasRenderer {
 		mousePos.x -= (this.objectModel.getNodeLayout().defaultNodeWidth / 2) * this.zoomTransform.k;
 		mousePos.y -= (this.objectModel.getNodeLayout().defaultNodeHeight / 2) * this.zoomTransform.k;
 
-		let transPos = this.transformPos(mousePos);
-
-		if (this.config.enableSnapToGridType === "During" ||
-				this.config.enableSnapToGridType === "After") {
-			transPos = this.snapToGridObject(transPos);
-		}
-		return transPos;
+		const transPos = this.transformPos(mousePos);
+		return this.getMousePosSnapToGrid(transPos);
 	}
 
 	// Returns true if the nodeTemplate passed in is 'insertable' into a data
@@ -1102,12 +1109,11 @@ export default class SVGCanvasRenderer {
 	setCanvasUnderlaySize(x = 0, y = 0) {
 		const canv = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
 		if (canv) {
-			const isVariable = this.config.enableCanvasUnderlay === "Variable";
 			this.canvasUnderlay
-				.attr("x", isVariable ? canv.left - 50 : 0)
-				.attr("y", isVariable ? canv.top - 50 : 0)
-				.attr("width", isVariable ? canv.width + 100 : Math.max(canv.right + 50, x + 75))
-				.attr("height", isVariable ? canv.height + 100 : Math.max(canv.bottom + 50, y + 75));
+				.attr("x", canv.left - 50)
+				.attr("y", canv.top - 50)
+				.attr("width", canv.width + 100)
+				.attr("height", canv.height + 100);
 		}
 	}
 
@@ -1236,26 +1242,30 @@ export default class SVGCanvasRenderer {
 		let newZoom = null;
 
 		if (this.config.enableSaveZoom === "Pipelineflow" &&
-				this.activePipeline.zoom &&
-				this.activePipeline.zoom.k &&
-				this.activePipeline.zoom.x &&
-				this.activePipeline.zoom.y &&
-				this.activePipeline.zoom.k !== this.zoomTransform.k &&
-				this.activePipeline.zoom.x !== this.zoomTransform.x &&
-				this.activePipeline.zoom.y !== this.zoomTransform.y) {
+				this.activePipeline.zoom) {
 			newZoom = this.activePipeline.zoom;
 
 		} else if (this.config.enableSaveZoom === "LocalStorage") {
 			const savedZoom = this.getSavedZoom();
-			if (savedZoom &&
-					(savedZoom.k !== this.zoomTransform.k ||
-						savedZoom.x !== this.zoomTransform.x ||
-						savedZoom.y !== this.zoomTransform.y)) {
+			if (savedZoom) {
 				newZoom = savedZoom;
 			}
 		}
 
-		if (newZoom) {
+		// If there's no saved zoom, set to a default by panning the canvas objects
+		// so the canvas ara is are always visible in the viewport.
+		// if (!newZoom) {
+		// 	const canvWithPadding = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
+		// 	if (canvWithPadding) {
+		// 		newZoom = { x: -canvWithPadding.left, y: -canvWithPadding.top, k: 1 };
+		// 	}
+		// }
+
+		// If new zoom is different to the current zoom amount, apply it.
+		if (newZoom &&
+				(newZoom.k !== this.zoomTransform.k ||
+					newZoom.x !== this.zoomTransform.x ||
+					newZoom.y !== this.zoomTransform.y)) {
 			this.zoomCanvasInvokeZoomBehavior(newZoom);
 		}
 	}
@@ -1347,6 +1357,16 @@ export default class SVGCanvasRenderer {
 		this.zoomCanvasInvokeZoomBehavior(zoomObject, animateTime);
 	}
 
+	getZoom() {
+		return { x: this.zoomTransform.x, y: this.zoomTransform.y, k: this.zoomTransform.k };
+	}
+
+	translateBy(x, y, animateTime) {
+		const z = this.getZoomTransform();
+		const zoomObject = d3.zoomIdentity.translate(z.x + x, z.y + y).scale(z.k);
+		this.zoomCanvasInvokeZoomBehavior(zoomObject, animateTime);
+	}
+
 	zoomIn() {
 		if (this.zoomTransform.k < this.maxScaleExtent) {
 			const newScale = Math.min(this.zoomTransform.k * 1.1, this.maxScaleExtent);
@@ -1372,23 +1392,24 @@ export default class SVGCanvasRenderer {
 		const svgRect = this.getViewPortDimensions();
 		const transformedSVGRect = this.getTransformedSVGRect(svgRect, 0);
 		const nodes = this.getNodes(nodeIDs);
-		const canvasDimensions = this.getCanvasDimensionsAdjustedForScaleForObjs(nodes, [], 1, 10);
+		const canvasDimensions = this.getCanvasDimensions(nodes, []);
+		const canv = this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, 1, 10);
 
-		if (canvasDimensions) {
+		if (canv) {
 			let xOffset;
 			let yOffset;
 
-			if (canvasDimensions.right > transformedSVGRect.x + transformedSVGRect.width) {
-				xOffset = transformedSVGRect.x + transformedSVGRect.width - canvasDimensions.right;
+			if (canv.right > transformedSVGRect.x + transformedSVGRect.width) {
+				xOffset = transformedSVGRect.x + transformedSVGRect.width - canv.right;
 			}
-			if (canvasDimensions.left < transformedSVGRect.x) {
-				xOffset = transformedSVGRect.x - canvasDimensions.left;
+			if (canv.left < transformedSVGRect.x) {
+				xOffset = transformedSVGRect.x - canv.left;
 			}
-			if (canvasDimensions.bottom > transformedSVGRect.y + transformedSVGRect.height) {
-				yOffset = transformedSVGRect.y + transformedSVGRect.height - canvasDimensions.bottom;
+			if (canv.bottom > transformedSVGRect.y + transformedSVGRect.height) {
+				yOffset = transformedSVGRect.y + transformedSVGRect.height - canv.bottom;
 			}
-			if (canvasDimensions.top < transformedSVGRect.y) {
-				yOffset = transformedSVGRect.y - canvasDimensions.top;
+			if (canv.top < transformedSVGRect.y) {
+				yOffset = transformedSVGRect.y - canv.top;
 			}
 
 			if (typeof xOffset !== "undefined" || typeof yOffset !== "undefined") {
@@ -1466,6 +1487,7 @@ export default class SVGCanvasRenderer {
 
 		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
 		this.previousD3Event = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
+		this.zoomCanvasDimensions = this.getCanvasDimensions(this.activePipeline.nodes, this.activePipeline.comments);
 	}
 
 	zoomAction() {
@@ -1543,11 +1565,8 @@ export default class SVGCanvasRenderer {
 		this.regionSelect = false;
 
 		if (this.isDisplayingPrimaryFlowFullPage()) {
-			const xInc = d3Event.transform.x - this.previousD3Event.x;
-			const yInc = d3Event.transform.y - this.previousD3Event.y;
-			this.zoomTransform = d3.zoomIdentity.translate(this.zoomTransform.x + xInc, this.zoomTransform.y + yInc).scale(d3Event.transform.k);
-			this.zoomTransform = this.zoomUtils.zoomConstrain(this.zoomTransform, this.previousD3Event.k, this.getViewPort());
-			this.previousD3Event = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
+			const incTransform = this.getTransformIncrement();
+			this.zoomTransform = this.zoomConstrainRegular(incTransform, this.getViewPort(), this.zoomCanvasDimensions);
 		} else {
 			this.zoomTransform = d3.zoomIdentity.translate(d3Event.transform.x, d3Event.transform.y).scale(d3Event.transform.k);
 		}
@@ -1558,7 +1577,8 @@ export default class SVGCanvasRenderer {
 			this.displayBoundingRectangles();
 		}
 
-		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+		if (this.config.enableCanvasUnderlay !== "None" &&
+				this.isDisplayingPrimaryFlowFullPage()) {
 			this.setCanvasUnderlaySize();
 		}
 
@@ -1581,6 +1601,54 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	// Returns a new zoom which is the result of incrmenting the current zoom
+	// by the amount since the previous d3Event transform amount.
+	// We calculate increments because d3Event.transform is not based on
+	// the constrained zoom position (which is very annoying) so we keep track
+	// of the current constraind zoom amount in this.zoomTransform.
+	getTransformIncrement() {
+		const xInc = d3Event.transform.x - this.previousD3Event.x;
+		const yInc = d3Event.transform.y - this.previousD3Event.y;
+
+		const newTransform = { x: this.zoomTransform.x + xInc, y: this.zoomTransform.y + yInc, k: d3Event.transform.k };
+		this.previousD3Event = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
+		return newTransform;
+	}
+
+	// Returns a modifed transform object so that the canvas area (the area
+	// containing nodes and comments) is constrained such that it never totally
+	// disappears from the view port.
+	zoomConstrainRegular(transform, viewPort, canvasDimensions) {
+		const k = transform.k;
+		let x = transform.x;
+		let y = transform.y;
+
+		const canv =
+			this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, k, this.getZoomToFitPadding());
+
+		const rightOffsetLimit = viewPort.width - Math.min((viewPort.width * 0.25), (canv.width * 0.25));
+		const leftOffsetLimit = -(Math.max((canv.width - (viewPort.width * 0.25)), (canv.width * 0.75)));
+
+		const bottomOffsetLimit = viewPort.height - Math.min((viewPort.height * 0.25), (canv.height * 0.25));
+		const topOffsetLimit = -(Math.max((canv.height - (viewPort.height * 0.25)), (canv.height * 0.75)));
+
+		if (x > -canv.left + rightOffsetLimit) {
+			x = -canv.left + rightOffsetLimit;
+
+		} else if (x < -canv.left + leftOffsetLimit) {
+			x = -canv.left + leftOffsetLimit;
+		}
+
+		if (y > -canv.top + bottomOffsetLimit) {
+			y = -canv.top + bottomOffsetLimit;
+
+		} else if (y < -canv.top + topOffsetLimit) {
+			y = -canv.top + topOffsetLimit;
+		}
+
+		return d3.zoomIdentity.translate(x, y).scale(k);
+	}
+
 	// Returns the view port dimensions from the D3 zoom object. This is a bit
 	// weird in that you have to get the function from D3 and then call that
 	// function to get the data which is two arrays inside an array containing
@@ -1595,17 +1663,32 @@ export default class SVGCanvasRenderer {
 		return { width, height };
 	}
 
-
 	// Returns the dimensions in SVG coordinates of the canvas area. This is
 	// based on the position and width and height of the nodes and comments. It
 	// does not include the 'super binding nodes' which are the binding nodes in
 	// a sub-flow that map to a port in the containing supernode. The dimensions
 	// are scaled by k and padded by pad (if provided).
 	getCanvasDimensionsAdjustedForScale(k, pad) {
-		return this.getCanvasDimensionsAdjustedForScaleForObjs(this.activePipeline.nodes, this.activePipeline.comments, k, pad);
+		const canvasDimensions = this.getCanvasDimensions(this.activePipeline.nodes, this.activePipeline.comments);
+		return this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, k, pad);
 	}
 
-	getCanvasDimensionsAdjustedForScaleForObjs(nodes, comments, k, pad) {
+	convertCanvasDimensionsAdjustedForScaleWithPadding(canv, k, pad) {
+		const padding = pad || 0;
+		if (canv) {
+			return {
+				left: (canv.left * k) - padding,
+				top: (canv.top * k) - padding,
+				right: (canv.right * k) + padding,
+				bottom: (canv.bottom * k) + padding,
+				width: (canv.width * k) + (2 * padding),
+				height: (canv.height * k) + (2 * padding)
+			};
+		}
+		return null;
+	}
+
+	getCanvasDimensions(nodes, comments) {
 		var canvLeft = Infinity;
 		let canvTop = Infinity;
 		var canvRight = -Infinity;
@@ -1636,15 +1719,13 @@ export default class SVGCanvasRenderer {
 			return null;
 		}
 
-		var padding = pad || 0;
-
 		return {
-			left: (canvLeft * k) - padding,
-			top: (canvTop * k) - padding,
-			right: (canvRight * k) + padding,
-			bottom: (canvBottom * k) + padding,
-			width: (canvWidth * k) + (2 * padding),
-			height: (canvHeight * k) + (2 * padding)
+			left: canvLeft,
+			top: canvTop,
+			right: canvRight,
+			bottom: canvBottom,
+			width: canvWidth,
+			height: canvHeight
 		};
 	}
 
@@ -3251,7 +3332,7 @@ export default class SVGCanvasRenderer {
 			id: type === "canvas" ? null : d.id, // For historical puposes, we pass d.id as well as d as targetObject.
 			pipelineId: this.activePipeline.id,
 			cmPos: this.getMousePos(this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area.
-			mousePos: this.getTransformedMousePos(),
+			mousePos: this.getMousePosSnapToGrid(this.getTransformedMousePos()),
 			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
 			port: port,
 			zoom: this.zoomTransform.k });

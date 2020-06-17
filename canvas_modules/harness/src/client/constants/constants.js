@@ -47,13 +47,8 @@ _defineConstant("NONE_SAVE_ZOOM", "None");
 _defineConstant("LOCAL_STORAGE", "LocalStorage");
 _defineConstant("PIPELINE_FLOW", "Pipelineflow");
 
-_defineConstant("ZOOM_TYPE_REGULAR", "Regular");
-_defineConstant("ZOOM_TYPE_HIDE_NEGATIVE_SPACE1", "HideNegativeSpace-1");
-_defineConstant("ZOOM_TYPE_HIDE_NEGATIVE_SPACE2", "HideNegativeSpace-2");
-
 _defineConstant("UNDERLAY_NONE", "None");
 _defineConstant("UNDERLAY_VARIABLE", "Variable");
-_defineConstant("UNDERLAY_TIED_TO_ORIGIN", "UnderlayTiedToOrigin");
 
 _defineConstant("NONE_DRAG", "None");
 _defineConstant("DURING_DRAG", "During");

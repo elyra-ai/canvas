@@ -79,7 +79,6 @@ export default class CanvasController {
 			enableDisplayFullLabelOnHover: false,
 			enableDropZoneOnExternalDrag: false,
 			enableZoomIntoSubFlows: false,
-			enableZoomType: "Regular",
 			enableSaveZoom: "None",
 			enableSnapToGridType: "None",
 			enableSnapToGridX: null,
@@ -233,6 +232,11 @@ export default class CanvasController {
 		return this.objectModel.getPipelineFlow();
 	}
 
+	// Returns the current pipelineFlow document ID.
+	getPipelineFlowId() {
+		return this.objectModel.getPipelineFlowId();
+	}
+
 	// Returns the ID of the primary pipeline from the pipelineFlow.
 	getPrimaryPipelineId() {
 		return this.objectModel.getPrimaryPipelineId();
@@ -298,6 +302,11 @@ export default class CanvasController {
 	//    pixel amount to move. Negative up and positive down.
 	zoomPipeline(zoom, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).zoomPipeline(zoom);
+	}
+
+	// Returns the current zoom object for the currently displayed canvas.
+	getZoom() {
+		return this.commonCanvas.getZoom();
 	}
 
 	// Clears any saved zoom values stored in local storage. This means
@@ -1196,6 +1205,16 @@ export default class CanvasController {
 	zoomTo(zoomObject) {
 		if (this.commonCanvas) {
 			this.commonCanvas.zoomTo(zoomObject);
+		}
+	}
+
+	// Increments the translation of the canvas by the x and y increment
+	// amounts. The optional animateTime parameter can be provided to animate the
+	// movement of the canvas. It is a time for the animation in milliseconds.
+	// If omitted the movement happens immediately.
+	translateBy(x, y, animateTime) {
+		if (this.commonCanvas) {
+			this.commonCanvas.translateBy(x, y, animateTime);
 		}
 	}
 

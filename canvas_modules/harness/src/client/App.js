@@ -92,7 +92,6 @@ import {
 	EXAMPLE_APP_TABLES,
 	CUSTOM,
 	FLYOUT,
-	ZOOM_TYPE_REGULAR,
 	NONE_DRAG,
 	INPUT_PORT,
 	OUTPUT_PORT,
@@ -150,7 +149,6 @@ export default class App extends React.Component {
 			selectedNodeFormat: VERTICAL_FORMAT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
-			selectedZoomType: ZOOM_TYPE_REGULAR,
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
@@ -1626,7 +1624,6 @@ export default class App extends React.Component {
 			// dropZoneCanvasContent: dropZoneCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
-			enableZoomType: this.state.selectedZoomType,
 			// enableCanvasLayout: {
 			// 	dataLinkArrowHead: true
 			// }
@@ -1870,7 +1867,7 @@ export default class App extends React.Component {
 			setPaletteDropdownSelect2: this.setPaletteDropdownSelect2,
 			selectedPaletteDropdownFile: this.state.selectedPaletteDropdownFile,
 			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
-			clearSavedZoomValues: this.clearSavedZoomValue
+			clearSavedZoomValues: this.clearSavedZoomValues
 		};
 
 		const sidePanelPropertiesConfig = {
