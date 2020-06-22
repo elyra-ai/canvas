@@ -2790,7 +2790,7 @@ export default class SVGCanvasRenderer {
 			imageObj.attr("data-image", nodeImage);
 			if (nodeImageType === "svg") {
 				this.addCopyOfImageToDefs(nodeImage);
-				imageObj.append("use").attr("href", `#${nodeImage}`);
+				this.updateUseObject(imageObj, nodeImage);
 			} else {
 				imageObj.attr("xlink:href", nodeImage);
 			}
@@ -2807,6 +2807,18 @@ export default class SVGCanvasRenderer {
 		if (defs.select(`[id='${nodeImage}']`).empty()) {
 			const defsSvg = defs.append("svg").attr("id", nodeImage);
 			d3.text(nodeImage).then((img) => defsSvg.html(img));
+		}
+	}
+
+	// Updates the <use> object on the image to reference the nodeImage passed
+	// in. This will add a new <use> object if one doesn't yet exist or update
+	// it if it does exist.
+	updateUseObject(imageObj, nodeImage) {
+		const useSel = imageObj.select("use");
+		if (useSel.empty()) {
+			imageObj.append("use").attr("href", `#${nodeImage}`);
+		} else {
+			useSel.attr("href", `#${nodeImage}`);
 		}
 	}
 
