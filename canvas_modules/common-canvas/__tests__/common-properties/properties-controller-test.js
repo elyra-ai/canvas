@@ -23,6 +23,7 @@ import conditionForm from "../test_resources/json/conditions-summary-form.json";
 import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
 import checkboxsetParamDef from "../test_resources/paramDefs/checkboxset_paramDef.json";
+import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
 
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
 
@@ -1467,4 +1468,24 @@ describe("Properties Controller row selection methods", () => {
 		expect(structuretableSelections[1]).to.equal(4);
 	});
 
+});
+
+describe("Properties Controller action methods", () => {
+	it("Test getAction() returns correct value", () => {
+		const renderedObject = testUtils.flyoutEditorForm(actionParamDef);
+		controller = renderedObject.controller;
+		const action = controller.getAction({ name: "decrement" });
+		const expected = {
+			"name": "decrement",
+			"label": {
+				"text": "Decrement"
+			},
+			"actionType": "button",
+			"data": {
+				"parameter_ref": "number"
+			}
+		};
+		expect(JSON.stringify(action)).to.equal(JSON.stringify(expected));
+		expect(controller.getAction({ name: "dne" })).to.be.undefined;
+	});
 });
