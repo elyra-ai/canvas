@@ -70,7 +70,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 		const actualOptions = panel1.find("Dropdown").prop("items");
 		expect(actualOptions).to.eql(expectedOptions);
 		// open the dropdown
-		const dropdownButton = panel1.find("div[role='button']");
+		const dropdownButton = panel1.find("button");
 		dropdownButton.simulate("click");
 		panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
 		const dropdownList = panel1.find("div.bx--list-box__menu-item");
@@ -142,7 +142,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		let actualOptions2 = panel2.find("Dropdown").prop("items");
 		expect(actualOptions2).to.eql(expectedSelectColumn2Options);
 		// open the dropdown
-		const dropdownButton = panel1.find("div[role='button']");
+		const dropdownButton = panel1.find("button");
 		dropdownButton.simulate("click");
 		panel1 = wrapper.find("div[data-id='properties-field1_panel']");
 		const dropdownList = panel1.find("div.bx--list-box__menu-item");
@@ -214,7 +214,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		tableUtils.fieldPicker(fieldPicker, ["0.drug2", "2.drug2"], fieldTable);
 
 		// open the dropdown
-		const dropdownButton = panel1.find("div[role='button']");
+		const dropdownButton = panel1.find("button");
 		dropdownButton.simulate("click");
 		panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
 		const dropdownList = panel1.find("div.bx--list-box__menu-item");

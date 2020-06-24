@@ -466,7 +466,7 @@ describe("expression builder generates and accesses field dropdown correctly", (
 				/>
 			</Provider>
 		);
-		var dropDown = wrapper.find("div.properties-expression-field-select div.bx--list-box__field");
+		var dropDown = wrapper.find("div.properties-expression-field-select button");
 		dropDown.simulate("click");
 		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
 		// test globals
@@ -481,7 +481,7 @@ describe("expression builder generates and accesses field dropdown correctly", (
 		tableUtils.dblClickTableRows(valueTable, [0]);
 		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863");
 		// test mrs
-		dropDown = wrapper.find("div.properties-expression-field-select div.bx--list-box__field");
+		dropDown = wrapper.find("div.properties-expression-field-select button");
 		dropDown.simulate("click");
 		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
 		dropDownList.at(3).simulate("click");
