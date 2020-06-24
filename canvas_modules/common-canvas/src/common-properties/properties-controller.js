@@ -52,6 +52,7 @@ export default class PropertiesController {
 		this.allowChangeDefinitions = {};
 		this.panelTree = {};
 		this.controls = {};
+		this.actions = {};
 		this.customControls = [];
 		this.summaryPanelControls = {};
 		this.controllerHandlerCalled = false;
@@ -113,7 +114,8 @@ export default class PropertiesController {
 			this.visibleSubPanelCounter = 0;
 			this._parseUiConditions();
 			// should be done before running any validations
-			const controls = UiConditionsParser.parseControls([], this.form);
+			const controls = [];
+			UiConditionsParser.parseControls(controls, this.actions, this.form);
 			this.saveControls(controls); // saves controls without the subcontrols
 			this._parseSummaryControls(controls);
 			this.parsePanelTree();
@@ -1062,11 +1064,23 @@ export default class PropertiesController {
 	updateActionState(actionId, state) {
 		this.propertiesStore.updateActionState(actionId, state);
 	}
+
+	/**
+	* @param actionId {name: action.id}
+	*/
 	getActionState(actionId) {
 		return this.propertiesStore.getActionState(actionId);
 	}
+
 	getActionStates() {
 		return this.propertiesStore.getActionStates();
+	}
+
+	/**
+	* @param actionId {name: action.id}
+	*/
+	getAction(actionId) {
+		return this.actions[actionId.name];
 	}
 
 	/**

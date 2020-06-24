@@ -92,13 +92,12 @@ function condition(data, paramsList, defaultParameter) {
 }
 
 // Parse the set of Controls from the form data
-function parseControls(controls, formData) {
+function parseControls(controls, actions, formData) {
 	if (formData.uiItems) {
 		for (const uiItem of formData.uiItems) {
-			parseUiItem(controls, uiItem);
+			parseUiItem(controls, actions, uiItem);
 		}
 	}
-	return controls;
 }
 
 function parseControl(controls, control, parentCategoryId) {
@@ -122,7 +121,7 @@ function parseControl(controls, control, parentCategoryId) {
 	}
 }
 
-function parseUiItem(controls, uiItem, panelId, parentCategoryId) {
+function parseUiItem(controls, actions, uiItem, panelId, parentCategoryId) {
 	switch (uiItem.itemType) {
 	case ItemType.CONTROL: {
 		const control = uiItem.control;
@@ -138,7 +137,7 @@ function parseUiItem(controls, uiItem, panelId, parentCategoryId) {
 		// to be parsed.
 		if (uiItem.additionalItems) {
 			for (const additionalItem of uiItem.additionalItems) {
-				parseUiItem(controls, additionalItem.content, panelId, parentCategoryId);
+				parseUiItem(controls, actions, additionalItem.content, panelId, parentCategoryId);
 			}
 		}
 		break;
@@ -152,7 +151,7 @@ function parseUiItem(controls, uiItem, panelId, parentCategoryId) {
 				locPanelId = uiItem.panel.id;
 			}
 			for (const panelUiItem of uiItem.panel.uiItems) {
-				parseUiItem(controls, panelUiItem, locPanelId, parentCategoryId);
+				parseUiItem(controls, actions, panelUiItem, locPanelId, parentCategoryId);
 			}
 		}
 		break;
@@ -162,7 +161,7 @@ function parseUiItem(controls, uiItem, panelId, parentCategoryId) {
 	case ItemType.SUB_TABS: {
 		if (uiItem.tabs) {
 			for (const tab of uiItem.tabs) {
-				parseUiItem(controls, tab.content, panelId,
+				parseUiItem(controls, actions, tab.content, panelId,
 					uiItem.itemType === ItemType.PANEL_SELECTOR || uiItem.itemType === ItemType.SUB_TABS
 						? parentCategoryId
 						: tab.group);
@@ -188,6 +187,10 @@ function parseUiItem(controls, uiItem, panelId, parentCategoryId) {
 		}
 		break; // required parameters are handled by panel
 	case ItemType.ACTION:
+		if (uiItem.action && uiItem.action.name) {
+			actions[uiItem.action.name] = uiItem.action;
+		}
+		break;
 	case ItemType.STATIC_TEXT:
 	case ItemType.TEXT_PANEL:
 	case ItemType.HORIZONTAL_SEPARATOR: {
