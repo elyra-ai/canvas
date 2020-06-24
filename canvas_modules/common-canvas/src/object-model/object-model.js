@@ -21,6 +21,7 @@ import CanvasOutHandler from "./canvas-out-handler.js"; // TODO - Remove this wh
 import PipelineInHandler from "./pipeline-in-handler.js";
 import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
+import LocalStorage from "../common-canvas/local-storage.js";
 import APIPipeline from "./api-pipeline.js";
 
 import difference from "lodash/difference";
@@ -1563,5 +1564,102 @@ export default class ObjectModel {
 		const a = node.x_pos - x;
 		const b = node.y_pos - y;
 		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+	}
+
+	// ---------------------------------------------------------------------------
+	// Clipboard methods
+	// ---------------------------------------------------------------------------
+
+	// Copies the currently selected objects to the internal clipboard and
+	// returns true if successful. Returns false if there is nothing to copy to
+	// the clipboard.
+	copyToClipboard() {
+		var copyData = {};
+
+		const apiPipeline = this.getSelectionAPIPipeline();
+		if (!apiPipeline) {
+			return false;
+		}
+		const nodes = this.getSelectedNodes();
+		const comments = this.getSelectedComments();
+		const links = apiPipeline.getLinksBetween(nodes, comments);
+
+		if (nodes.length === 0 && comments.length === 0) {
+			return false;
+		}
+
+		if (nodes && nodes.length > 0) {
+			copyData.nodes = nodes;
+			let pipelines = [];
+			const supernodes = apiPipeline.getSupernodes(nodes);
+			supernodes.forEach((supernode) => {
+				pipelines = pipelines.concat(this.getSubPipelinesForSupernode(supernode));
+			});
+			copyData.pipelines = pipelines;
+		}
+		if (comments && comments.length > 0) {
+			copyData.comments = comments;
+		}
+		if (links && links.length > 0) {
+			copyData.links = links;
+		}
+
+		var clipboardData = JSON.stringify(copyData);
+		LocalStorage.set("canvasClipboard", clipboardData);
+
+		return true;
+	}
+
+	isClipboardEmpty() {
+		const value = LocalStorage.get("canvasClipboard");
+		if (value && value !== "") {
+			return false;
+		}
+		return true;
+	}
+
+	getObjectsToPaste(pipelineId) {
+		const textToPaste = LocalStorage.get("canvasClipboard");
+
+		if (!textToPaste) {
+			return {};
+		}
+
+		const objects = JSON.parse(textToPaste);
+
+		// If there are no nodes and no comments there's nothing to paste so just
+		// return.
+		if (!objects.nodes && !objects.comments) {
+			return {};
+		}
+
+		// If a pipeline is not provided (like when the user clicks paste in the
+		// toolbar or uses keyboard short cut) this will get an APIPipeline for
+		// the latest breadcrumbs entry.
+		const apiPipeline = this.getAPIPipeline(pipelineId);
+
+		// Offset position of pasted nodes and comments if they exactly overlap
+		// existing nodes and comments - this can happen when pasting over the top
+		// of the canvas from which the nodes and comments were copied.
+		while (apiPipeline.exactlyOverlaps(objects.nodes, objects.comments)) {
+			if (objects.nodes) {
+				objects.nodes.forEach((node) => {
+					node.x_pos += 10;
+					node.y_pos += 10;
+				});
+			}
+			if (objects.comments) {
+				objects.comments.forEach((comment) => {
+					comment.x_pos += 10;
+					comment.y_pos += 10;
+					comment.selectedObjectIds = [];
+				});
+			}
+		}
+
+		return {
+			objects: objects,
+			pipelineId: apiPipeline.pipelineId
+		};
 	}
 }

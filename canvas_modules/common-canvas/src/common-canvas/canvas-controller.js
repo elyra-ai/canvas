@@ -1237,52 +1237,20 @@ export default class CanvasController {
 		return null;
 	}
 
-	// Copies the currently selected objects to the internal clipboard and
-	// returns true if successful. Returns false if there is nothing to copy to
-	// the clipboard.
-	copyToClipboard() {
-		var copyData = {};
-
-		const apiPipeline = this.objectModel.getSelectionAPIPipeline();
-		if (!apiPipeline) {
-			return false;
-		}
-		const nodes = this.objectModel.getSelectedNodes();
-		const comments = this.objectModel.getSelectedComments();
-		const links = apiPipeline.getLinksBetween(nodes, comments);
-
-		if (nodes.length === 0 && comments.length === 0) {
-			return false;
-		}
-
-		if (nodes && nodes.length > 0) {
-			copyData.nodes = nodes;
-			let pipelines = [];
-			const supernodes = apiPipeline.getSupernodes(nodes);
-			supernodes.forEach((supernode) => {
-				pipelines = pipelines.concat(this.objectModel.getSubPipelinesForSupernode(supernode));
-			});
-			copyData.pipelines = pipelines;
-		}
-		if (comments && comments.length > 0) {
-			copyData.comments = comments;
-		}
-		if (links && links.length > 0) {
-			copyData.links = links;
-		}
-
-		var clipboardData = JSON.stringify(copyData);
-		LocalStorage.set("canvasClipboard", clipboardData);
-
-		return true;
+	// Cuts the currently selected objects to the internal clipboard.
+	cutToClipboard() {
+		this.editActionHandler({
+			editType: "cut",
+			editSource: "api"
+		});
 	}
 
-	isClipboardEmpty() {
-		const value = LocalStorage.get("canvasClipboard");
-		if (value && value !== "") {
-			return false;
-		}
-		return true;
+	// Copies the currently selected objects to the internal clipboard.
+	copyToClipboard() {
+		this.editActionHandler({
+			editType: "copy",
+			editSource: "api"
+		});
 	}
 
 	pasteFromClipboard(pipelineId) {
@@ -1293,49 +1261,8 @@ export default class CanvasController {
 		});
 	}
 
-	getObjectsToPaste(pipelineId) {
-		const textToPaste = LocalStorage.get("canvasClipboard");
-
-		if (!textToPaste) {
-			return {};
-		}
-
-		const objects = JSON.parse(textToPaste);
-
-		// If there are no nodes and no comments there's nothing to paste so just
-		// return.
-		if (!objects.nodes && !objects.comments) {
-			return {};
-		}
-
-		// If a pipeline is not provided (like when the user clicks paste in the
-		// toolbar or uses keyboard short cut) this will get an APIPipeline for
-		// the latest breadcrumbs entry.
-		const apiPipeline = this.objectModel.getAPIPipeline(pipelineId);
-
-		// Offset position of pasted nodes and comments if they exactly overlap
-		// existing nodes and comments - this can happen when pasting over the top
-		// of the canvas from which the nodes and comments were copied.
-		while (apiPipeline.exactlyOverlaps(objects.nodes, objects.comments)) {
-			if (objects.nodes) {
-				objects.nodes.forEach((node) => {
-					node.x_pos += 10;
-					node.y_pos += 10;
-				});
-			}
-			if (objects.comments) {
-				objects.comments.forEach((comment) => {
-					comment.x_pos += 10;
-					comment.y_pos += 10;
-					comment.selectedObjectIds = [];
-				});
-			}
-		}
-
-		return {
-			objects: objects,
-			pipelineId: apiPipeline.pipelineId
-		};
+	isClipboardEmpty() {
+		this.objectModel.isClipboardEmpty();
 	}
 
 	openTip(tipConfig) {
@@ -1885,16 +1812,16 @@ export default class CanvasController {
 				break;
 			}
 			case "cut": {
-				this.copyToClipboard();
+				this.objectModel.copyToClipboard();
 				command = new DeleteObjectsAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "copy":
-				this.copyToClipboard();
+				this.objectModel.copyToClipboard();
 				break;
 			case "paste": {
-				const pasteObj = this.getObjectsToPaste(data.pipelineId);
+				const pasteObj = this.objectModel.getObjectsToPaste(data.pipelineId);
 				if (pasteObj.objects) {
 					data = Object.assign(data, { objects: pasteObj.objects, pipelineId: pasteObj.pipelineId });
 					command = new CloneMultipleObjectsAction(data, this.objectModel);

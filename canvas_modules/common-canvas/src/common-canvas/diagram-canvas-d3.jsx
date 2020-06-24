@@ -49,6 +49,10 @@ export default class DiagramCanvas extends React.Component {
 		this.dragLeave = this.dragLeave.bind(this);
 		this.refreshOnSizeChange = this.refreshOnSizeChange.bind(this);
 
+		this.onCut = this.onCut.bind(this);
+		this.onCopy = this.onCopy.bind(this);
+		this.onPaste = this.onPaste.bind(this);
+
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
 		// dragged around over the top of the 'drop zone' canvas.
@@ -64,12 +68,42 @@ export default class DiagramCanvas extends React.Component {
 				this.svgCanvasDivSelector,
 				this.props.config,
 				this.props.canvasController);
+		document.addEventListener("cut", this.onCut, true);
+		document.addEventListener("copy", this.onCopy, true);
+		document.addEventListener("paste", this.onPaste, true);
 		this.focusOnCanvas();
 	}
 
 	componentDidUpdate() {
 		if (this.canvasD3Layout && !this.isDropZoneDisplayed()) {
 			this.canvasD3Layout.setCanvasInfo(this.props.canvasInfo, this.props.config);
+		}
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener("cut", this.onCut, true);
+		document.removeEventListener("copy", this.onCopy, true);
+		document.removeEventListener("paste", this.onPaste, true);
+	}
+
+	onCut(evt) {
+		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId) {
+			evt.preventDefault();
+			this.props.canvasController.cutToClipboard();
+		}
+	}
+
+	onCopy(evt) {
+		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId) {
+			evt.preventDefault();
+			this.props.canvasController.copyToClipboard();
+		}
+	}
+
+	onPaste(evt) {
+		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId) {
+			evt.preventDefault();
+			this.props.canvasController.pasteFromClipboard();
 		}
 	}
 
