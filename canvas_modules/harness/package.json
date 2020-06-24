@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@elyra/canvas": "file:../common-canvas",
-    "@carbon/icons-react": "10.14.0",
+    "@carbon/icons-react": "10.13.0",
     "@carbon/themes": "10.14.0",
     "@ibm/plex": "4.0.2",
     "autoprefixer": "7.1.2",
