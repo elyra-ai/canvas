@@ -21,8 +21,8 @@
   "dependencies": {
     "@elyra/pipeline-schemas": "3.0.13",
     "@carbon/icons-react": "10.8.2",
-    "carbon-components": "10.9.3",
-    "carbon-components-react": "7.9.3",
+    "carbon-components": "10.14.0",
+    "carbon-components-react": "7.14.0",
     "codemirror": "5.50.2",
     "d3": "5.15.0",
     "dagre": "0.8.5",
