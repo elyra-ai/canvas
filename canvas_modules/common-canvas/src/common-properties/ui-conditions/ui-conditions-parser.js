@@ -205,23 +205,6 @@ function parseUiItem(controls, actions, uiItem, panelId, parentCategoryId) {
 
 }
 
-// Parse Require Parameters from form Data
-
-function parseRequiredParameters(requiredParameters, formData, controls) {
-	var localControls = controls;
-	if (!localControls) {
-		localControls = [];
-		localControls = parseControls(localControls, formData);
-	}
-	const localRequired = localControls.filter(function(control) {
-		return (control.required);
-	});
-
-	return localRequired.map(function(required) {
-		return (required.name);
-	});
-}
-
 // Parse the condition section of the form data
 function parseConditions(container, uiCondition, conditionType) {
 	try {
@@ -266,7 +249,6 @@ function _setDefinitions(container, controls, groupDef) {
 
 module.exports = {
 	parseInput: parseInput,
-	parseRequiredParameters: parseRequiredParameters,
 	parseControls: parseControls,
 	parseConditions: parseConditions,
 	parseControl: parseControl
