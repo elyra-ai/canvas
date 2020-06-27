@@ -270,3 +270,7 @@ $harness-navbar-icon-width: 48px;
 	}
 
 }
+
+.toolbar-item > svg {
+	fill: $icon-01;
+}
