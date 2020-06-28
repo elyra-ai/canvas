@@ -77,9 +77,9 @@ describe("selectschema renders correctly", () => {
 			/>
 		);
 		let dropdownWrapper = wrapper.find("div[data-id='properties-test-selectschema']");
-		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
+		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-test-selectschema']");
@@ -118,12 +118,12 @@ describe("selectschema works correctly in common-properties", () => {
 	});
 	it("Validate selectschema_placeholder rendered correctly", () => {
 		const dropDown = wrapper.find("div[data-id='properties-selectschema_placeholder'] Dropdown");
-		expect(dropDown.find("div > span").text()).to.equal("None...");
+		expect(dropDown.find("button > span").text()).to.equal("None...");
 	});
 	it("Validate selectschema can select ''", () => {
 		let dropDown = wrapper.find("div[data-id='properties-selectschema'] Dropdown");
 		// open the dropdown
-		const dropdownButton = dropDown.find("div[role='button']");
+		const dropdownButton = dropDown.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		dropDown = wrapper.find("div[data-id='properties-selectschema'] Dropdown");

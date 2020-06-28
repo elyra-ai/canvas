@@ -45,7 +45,7 @@ function _init() {
 				}
 			}
 		},
-		categories: { default: { appenders: ["out"], level: "debug" } }
+		categories: { default: { appenders: ["out"], level: "error" } }
 	};
 	log4js.configure(appenders, {
 		reloadSecs: RELOAD_INTERVAL

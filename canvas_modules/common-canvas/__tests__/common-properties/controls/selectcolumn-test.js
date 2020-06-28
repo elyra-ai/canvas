@@ -138,9 +138,9 @@ describe("selectcolumn control renders correctly", () => {
 			/>
 		);
 		let dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
-		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
+		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
@@ -162,9 +162,9 @@ describe("selectcolumn control renders correctly", () => {
 			/>
 		);
 		let dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
-		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
+		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
@@ -187,9 +187,9 @@ describe("selectcolumn control renders correctly", () => {
 		);
 
 		let dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
-		expect(dropdownWrapper.find("div > span").text()).to.equal("age"); // should be the value for the control
+		expect(dropdownWrapper.find("button > span").text()).to.equal("age"); // should be the value for the control
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
@@ -388,14 +388,14 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 
 	it("should not show an error for a non-selection if the property isn't required", () => {
 		let selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
-		let dropdownButton = selectField.find("div[role='button']");
+		let dropdownButton = selectField.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
 		let dropdownList = selectField.find("div.bx--list-box__menu-item");
 		dropdownList.at(2).simulate("click");
 		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
-		dropdownButton = selectField.find("div[role='button']");
+		dropdownButton = selectField.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
@@ -456,7 +456,7 @@ describe("selectcolumn works correctly with multi input schemas", () => {
 
 		// Make sure you can select a item from the multiple databases
 		// open the dropdown
-		const dropdownButton = selectField.find("div[role='button']");
+		const dropdownButton = selectField.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		selectField = wrapper.find("div[data-id='properties-field'] Dropdown");

@@ -75,7 +75,7 @@ describe("custom control renders correctly", () => {
 	it("validate changing toggle value (custom control) changes enum values", () => {
 		// select the first item
 		let dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click"); // open dropdown
 		dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
 		let dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");

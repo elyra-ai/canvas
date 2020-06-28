@@ -34,7 +34,7 @@ describe("dm condition operators work correctly", () => {
 	it("checkbox control become enabled if selected item has a dmType equal to string", () => {
 		expect(controller.getControlState({ name: "checkbox" })).to.equal("disabled");
 		const dropDown = wrapper.find("div[data-id='properties-ci-dmTypeEqualList']");
-		const dropdownButton = dropDown.find("div[role='button']").at(0);
+		const dropdownButton = dropDown.find("button").at(0);
 		dropdownButton.simulate("click");
 		const dropdownList = wrapper.find("div.bx--list-box__menu-item");
 		dropdownList.at(3).simulate("click");
@@ -47,7 +47,7 @@ describe("dm condition operators work correctly", () => {
 	it("checkbox control become visible if selected item does not have a dmType equal to string", () => {
 		expect(controller.getControlState({ name: "checkbox1" })).to.equal("hidden");
 		const dropDown = wrapper.find("div[data-id='properties-ci-dmTypeNotEqualList']");
-		const dropdownButton = dropDown.find("div[role='button']").at(0);
+		const dropdownButton = dropDown.find("button").at(0);
 		dropdownButton.simulate("click");
 		const dropdownList = wrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(14);
@@ -59,7 +59,7 @@ describe("dm condition operators work correctly", () => {
 	it("checkbox control becomes enabled if selected item has a dmRole equal to input", () => {
 		expect(controller.getControlState({ name: "checkbox2" })).to.equal("disabled");
 		const dropDown = wrapper.find("div[data-id='properties-ci-dmRoleEqualList']");
-		const dropdownButton = dropDown.find("div[role='button']").at(0);
+		const dropdownButton = dropDown.find("button").at(0);
 		dropdownButton.simulate("click");
 		const dropdownList = wrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(14);
@@ -71,7 +71,7 @@ describe("dm condition operators work correctly", () => {
 	it("checkbox control become visible if selected item does not have a dmRole equal to input", () => {
 		expect(controller.getControlState({ name: "checkbox3" })).to.equal("hidden");
 		const dropDown = wrapper.find("div[data-id='properties-ci-dmRoleNotEqualList']");
-		const dropdownButton = dropDown.find("div[role='button']").at(0);
+		const dropdownButton = dropDown.find("button").at(0);
 		dropdownButton.simulate("click");
 		const dropdownList = wrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(14);
@@ -82,7 +82,7 @@ describe("dm condition operators work correctly", () => {
 
 	it("selectColumn control becomes validated if selected item has a dmRole equal to discrete", () => {
 		const dropDown = wrapper.find("div[data-id='properties-dmMeasurementEqualList']");
-		const dropdownButton = dropDown.find("div[role='button']").at(0);
+		const dropdownButton = dropDown.find("button").at(0);
 		dropdownButton.simulate("click");
 		const dropdownList = wrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(14);
@@ -98,7 +98,7 @@ describe("dm condition operators work correctly", () => {
 
 	it("selectColumn control become validated if selected item does not have a dmRole equal to discrete", () => {
 		const dropDown = wrapper.find("div[data-id='properties-dmMeasurementNotEqualList']");
-		const dropdownButton = dropDown.find("div[role='button']").at(0);
+		const dropdownButton = dropDown.find("button").at(0);
 		dropdownButton.simulate("click");
 		const dropdownList = wrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(14);
