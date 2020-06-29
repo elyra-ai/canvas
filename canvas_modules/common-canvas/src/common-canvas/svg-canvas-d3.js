@@ -103,6 +103,7 @@ export default class SVGCanvasD3 {
 				this.config.enableDragWithoutSelect !== config.enableDragWithoutSelect ||
 				this.config.enableParentClass !== config.enableParentClass ||
 				this.config.enableHightlightNodeOnNewLinkDrag !== config.enableHightlightNodeOnNewLinkDrag ||
+				this.config.enablePanIntoViewOnOpen !== config.enablePanIntoViewOnOpen ||
 				!this.enableCanvasLayoutExactlyMatches(this.config.enableCanvasLayout, config.enableCanvasLayout) ||
 				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
 			this.logger.logStartTimer("Initializing Canvas");

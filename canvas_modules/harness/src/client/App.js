@@ -161,6 +161,7 @@ export default class App extends React.Component {
 				"ports": true,
 				"links": true
 			},
+			selectedPanIntoViewOnOpen: false,
 			selectedExtraCanvasDisplayed: false,
 			selectedSaveToPalette: false,
 			selectedDropZoneOnExternalDrag: false,
@@ -1621,6 +1622,7 @@ export default class App extends React.Component {
 			enableBoundingRectangles: this.state.selectedBoundingRectangles,
 			enableCanvasUnderlay: this.state.selectedCanvasUnderlay,
 			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
+			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
 			// dropZoneCanvasContent: dropZoneCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
