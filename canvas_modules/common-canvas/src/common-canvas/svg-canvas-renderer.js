@@ -1238,7 +1238,7 @@ export default class SVGCanvasRenderer {
 
 	// Restores the zoom of the canvas, if it has changed, based on the type
 	// of 'save zoom' specified in the configuration and, if no saved zoom, was
-	// providd pans the canvas area so it is always visible.
+	// provided pans the canvas area so it is always visible.
 	restoreZoom() {
 		let newZoom = null;
 
@@ -1253,8 +1253,8 @@ export default class SVGCanvasRenderer {
 			}
 		}
 
-		// If there's no saved zoom, and enablePanIntoViewOnOpen is set, pan the
-		// so the canvas area (containing nodes and comments) is visible in the viewport.
+		// If there's no saved zoom, and enablePanIntoViewOnOpen is set, pan so
+		// the canvas area (containing nodes and comments) is visible in the viewport.
 		if (!newZoom && this.config.enablePanIntoViewOnOpen) {
 			const canvWithPadding = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
 			if (canvWithPadding) {
