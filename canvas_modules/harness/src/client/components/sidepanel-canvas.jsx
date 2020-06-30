@@ -585,6 +585,20 @@ export default class SidePanelForms extends React.Component {
 			</div>
 		</div>);
 
+		var enablePanIntoViewOnOpen = (<div className="harness-sidepanel-children">
+			<form>
+				<div className="harness-sidepanel-headers">Enable Pan Into View On Open</div>
+				<div>
+					<Toggle
+						id="selectedPanIntoViewOnOpen" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedPanIntoViewOnOpen")}
+						onToggle={this.setStateValue}
+					/>
+				</div>
+			</form>
+		</div>);
+
+
 		var enableDragWithoutSelect = (<div className="harness-sidepanel-children">
 			<form>
 				<div className="harness-sidepanel-headers">Enable Drag Without Select</div>
@@ -1136,6 +1150,8 @@ export default class SidePanelForms extends React.Component {
 					{saveZoom}
 					{divider}
 					{paletteLayout}
+					{divider}
+					{enablePanIntoViewOnOpen}
 					{divider}
 					{enableZoomIntoSubFlows}
 					{divider}
