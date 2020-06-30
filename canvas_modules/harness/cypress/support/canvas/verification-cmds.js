@@ -29,24 +29,20 @@ Cypress.Commands.add("verifyCommentTransform", (commentText, transformValue) => 
 });
 
 Cypress.Commands.add("verifyZoomTransform", (transformValue) => {
-	cy.get(".svg-area")
-		.find("g")
+	cy.get(".svg-area > g")
 		.eq(0)
 		.should("have.attr", "transform", transformValue);
 });
 
 Cypress.Commands.add("verifyZoomTransformDoesNotExist", () => {
-	cy.get(".svg-area")
-		.find("g")
+	cy.get(".svg-area > g")
 		.eq(0)
 		.its("transform")
 		.should("not.exist");
 });
 
 Cypress.Commands.add("verifyZoomTransformInExtraCanvas", (transformValue) => {
-	cy.get(".svg-area")
-		.eq(1)
-		.find("g")
+	cy.get("div#canvas-div-1 > div > .svg-area > g")
 		.eq(0)
 		.should("have.attr", "transform", transformValue);
 });

@@ -335,7 +335,7 @@ export default class App extends React.Component {
 			});
 	}
 
-	// Sets the state to the config passed in. This is called by the Chimp
+	// Sets the state to the config passed in. This is called by the Cypress
 	// testcases to set the test harness state in one go.
 	setCanvasConfig(config) {
 		this.setState(config);
