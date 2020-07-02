@@ -87,6 +87,13 @@
 		}
 	}
 }
+
+.properties-subtabs, .properties-primaryTabs{
+	.bx--tabs__nav {
+		overflow-x: auto; // override carbon so scrollbar doesn't always show
+	}
+}
+
 .properties-sub-tab-container.vertical {
 	margin-bottom: 20px;
 	border: 1px solid $ui-03;
@@ -119,7 +126,7 @@
 
 .properties-right-flyout {
 	.properties-sub-tab-container {
-		overflow-x: scroll;
+		overflow-x: auto;
 		.bx--tabs__nav-item:not(:first-of-type) {
 			margin-left: 1rem;
 		}
