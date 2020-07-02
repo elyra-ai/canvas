@@ -33,6 +33,7 @@ import SummaryPanel from "./../../panels/summary";
 import TwistyPanel from "./../../panels/twisty";
 import SubPanelButton from "./../../panels/sub-panel/button";
 import ColumnPanel from "./../../panels/column";
+import ControlPanel from "./../../panels/control";
 
 import WideFlyout from "./../wide-flyout";
 import FieldPicker from "./../field-picker";
@@ -421,12 +422,13 @@ class EditorForm extends React.Component {
 			this.generateSharedControlNames(panel);
 			// needs to be ran after setting shared controls to get correct fields in shared controls
 			content = this.genUIContent(panel.uiItems, propertyId, indexof);
-			return (<div
-				className="properties-control-panel"
-				key={key}
+			return (<ControlPanel
+				key={id}
+				controller={this.props.controller}
+				panel={panel}
 			>
 				{content}
-			</div>);
+			</ControlPanel>);
 		case ("summary"):
 			if (this.props.rightFlyout) {
 				return (
@@ -463,9 +465,13 @@ class EditorForm extends React.Component {
 					{content}
 				</ColumnPanel>);
 		default:
-			return (<div className="properties-control-panel" key={key} data-id={"properties-" + panel.id}>
+			return (<ControlPanel
+				key={id}
+				controller={this.props.controller}
+				panel={panel}
+			>
 				{content}
-			</div>);
+			</ControlPanel>);
 		}
 	}
 

@@ -22,28 +22,12 @@ import ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 
 
-class ColumnPanel extends React.Component {
-	constructor(props) {
-		super(props);
-		let gridColumns = "";
-		props.children.forEach((item, idx) => {
-			if (idx === 0) {
-				gridColumns = "1fr";
-			} else {
-				gridColumns += " 1fr";
-			}
-		});
-		this.style = {
-			"gridTemplateColumns": gridColumns
-		};
-	}
+class ControlPanel extends React.Component {
 
 	render() {
-		// grid-template-columns
 		return (
-			<div className={classNames("properties-column-panel", { "hide": this.props.panelState === STATES.HIDDEN })}
+			<div className={classNames("properties-control-panel", { "hide": this.props.panelState === STATES.HIDDEN })}
 				disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
-				style={this.style}
 			>
 				{this.props.children}
 			</div>
@@ -51,7 +35,7 @@ class ColumnPanel extends React.Component {
 	}
 }
 
-ColumnPanel.propTypes = {
+ControlPanel.propTypes = {
 	panel: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	children: PropTypes.array.isRequired,
@@ -62,4 +46,4 @@ const mapStateToProps = (state, ownProps) => ({
 	panelState: ownProps.controller.getPanelState({ name: ownProps.panel.id })
 });
 
-export default connect(mapStateToProps, null)(ColumnPanel);
+export default connect(mapStateToProps, null)(ControlPanel);
