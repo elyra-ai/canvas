@@ -15,7 +15,7 @@
  */
 
 import propertyUtils from "./../../_utils_/property-utils";
-import twistypanelParamDef from "./../../test_resources/paramDefs/panel_paramDef.json";
+import panelParamDef from "./../../test_resources/paramDefs/panel_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
 
 import { expect } from "chai";
@@ -23,7 +23,7 @@ import { expect } from "chai";
 describe("column panel renders correctly", () => {
 	var wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(twistypanelParamDef);
+		const renderedObject = propertyUtils.flyoutEditorForm(panelParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -36,7 +36,7 @@ describe("column panel renders correctly", () => {
 		// should render 2 control panels
 		expect(columnPanel.find("div.properties-control-panel")).to.have.length(2);
 		// each column adds a new `auto` to grid
-		expect(columnPanel.get(0).props.style).to.have.property("gridTemplateColumns", "auto auto");
+		expect(columnPanel.get(0).props.style).to.have.property("gridTemplateColumns", "1fr 1fr");
 	});
 });
 

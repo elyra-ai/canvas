@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 IBM Corporation
+ * Copyright 2020 IBM Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-@import "./summary/summary";
-@import "./sub-panel/sub-panel";
-@import "./twisty/twisty";
-@import "./text-panel/text-panel";
-@import "./action-panel/action-panel";
-@import "./column/column";
-@import "./control/control";
-
-.properties-category-content {
-	> .properties-control-panel { // only add top & bottom padding to first control panel
-		padding: 8px 0;
+.properties-control-panel {
+	display: block;
+	padding: 0 0 0 8px;
+	&.hide {
+		display: none;
+	}
+	&[disabled] {
+		opacity: 0.5;
+		pointer-events: none;
 	}
 }
