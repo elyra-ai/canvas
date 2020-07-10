@@ -1,6 +1,6 @@
 {
   "name": "@elyra/canvas",
-  "version": "8.0.30",
+  "version": "8.0.31",
   "description": "Elyra common-canvas",
   "main": "dist/common-canvas.js",
   "homepage": "https://github.com/elyra-ai/canvas",
@@ -30,7 +30,7 @@
     "immutable": "4.0.0-rc.12",
     "immutable-undo": "2.0.0",
     "jsonschema": "1.2.2",
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "log4js": "6.1.0",
     "moment": "2.24.0",
     "prop-types": "15.7.2",
