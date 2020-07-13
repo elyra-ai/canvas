@@ -21,7 +21,7 @@ import Button from "carbon-components-react/lib/components/Button";
 import PropertyUtils from "./../../../util/property-utils";
 import { MESSAGE_KEYS, TOOL_TIP_DELAY } from "./../../../constants/constants";
 import Tooltip from "./../../../../tooltip/tooltip.jsx";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 
 

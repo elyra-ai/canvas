@@ -23,7 +23,7 @@ import FlexibleTable from "./../../../components/flexible-table/flexible-table.j
 import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
 import PropertyUtils from "./../../../util/property-utils";
 import sortBy from "lodash/sortBy";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 
 export default class ExpressionSelectFieldOrFunction extends React.Component {
 

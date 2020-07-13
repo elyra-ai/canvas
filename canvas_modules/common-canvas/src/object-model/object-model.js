@@ -28,7 +28,7 @@ import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
 import has from "lodash/has";
 import union from "lodash/union";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
 import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@elyra/pipeline-schemas";
 import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from "./schemas-utils/upgrade-palette.js";

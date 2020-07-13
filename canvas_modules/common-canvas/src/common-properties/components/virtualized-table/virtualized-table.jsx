@@ -24,7 +24,7 @@ import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { TOOL_TIP_DELAY, SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS } from "./../../constants/constants";
 
 import isEmpty from "lodash/isEmpty";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 
 import PropTypes from "prop-types";

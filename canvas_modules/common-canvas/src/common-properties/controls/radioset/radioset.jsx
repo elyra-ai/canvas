@@ -25,7 +25,7 @@ import RadioButton from "carbon-components-react/lib/components/RadioButton";
 import classNames from "classnames";
 import { STATES } from "./../../constants/constants.js";
 import { ORIENTATIONS } from "./../../constants/form-constants.js";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 
 class RadiosetControl extends React.Component {
 	constructor(props) {

@@ -37,7 +37,7 @@ import findIndex from "lodash/findIndex";
 import sortBy from "lodash/sortBy";
 import cloneDeep from "lodash/cloneDeep";
 import isEqual from "lodash/isEqual";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 
 /* eslint max-depth: ["error", 5] */
 

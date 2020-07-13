@@ -20,7 +20,7 @@ import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { STATES, TOOL_TIP_DELAY } from "./../../constants/constants.js";
 import classNames from "classnames";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 
 export default class ValidationMessage extends React.Component {
 

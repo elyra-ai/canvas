@@ -24,7 +24,7 @@ import { STATES } from "./../../constants/constants.js";
 import { CHARACTER_LIMITS, TOOL_TIP_DELAY } from "./../../constants/constants.js";
 import classNames from "classnames";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 
 const newLine = "\n";
 

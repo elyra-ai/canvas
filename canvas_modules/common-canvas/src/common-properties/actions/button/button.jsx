@@ -21,7 +21,7 @@ import Button from "carbon-components-react/lib/components/Button";
 import { STATES, TOOL_TIP_DELAY } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 
 class ButtonAction extends React.Component {
 	constructor(props) {

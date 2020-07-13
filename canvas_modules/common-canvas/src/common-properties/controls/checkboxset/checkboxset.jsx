@@ -22,7 +22,7 @@ import ControlUtils from "./../../util/control-utils";
 import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
 import { STATES } from "./../../constants/constants.js";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 import isEqual from "lodash/isEqual";
 import intersection from "lodash/intersection";
 

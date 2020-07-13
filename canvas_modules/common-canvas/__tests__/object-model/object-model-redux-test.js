@@ -22,7 +22,6 @@ import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
 import ObjectModel from "../../src/object-model/object-model.js";
 import LayoutDimensions from "../../src/object-model/layout-dimensions.js";
-// import log4js from "log4js";
 
 describe("ObjectModel handle model OK", () => {
 

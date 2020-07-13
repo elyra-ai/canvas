@@ -35,7 +35,7 @@ import has from "lodash/has";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 
 export default class FieldPicker extends React.Component {
 	static getDerivedStateFromProps(nextProps, prevState) {

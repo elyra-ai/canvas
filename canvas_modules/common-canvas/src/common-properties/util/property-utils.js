@@ -18,7 +18,7 @@ import logger from "../../../utils/logger";
 import { ParamRole } from "../constants/form-constants";
 import { DATA_TYPE, CARBON_ICONS } from "../constants/constants";
 import cloneDeep from "lodash/cloneDeep";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 import defaultMessages from "../../../locales/common-properties/locales/en.json";
 
 /**

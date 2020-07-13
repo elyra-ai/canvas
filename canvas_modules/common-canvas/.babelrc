@@ -1,7 +1,9 @@
 {
   "presets": [
-    "react",
-    "env"
+    "@babel/preset-react",
+    "@babel/preset-env"
   ],
-  "sourceMap": "inline"
+  "plugins": [
+    "@babel/plugin-transform-modules-commonjs"
+  ]
 }

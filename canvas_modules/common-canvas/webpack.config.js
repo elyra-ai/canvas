@@ -17,14 +17,37 @@
 
 const path = require("path");
 const webpack = require("webpack");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const nodeExternals = require("webpack-node-externals");
 
-const isCoverage = process.env.COVERAGE === "true";
+const babelPlugins = ["@babel/plugin-transform-modules-commonjs"];
+if (process.env.COVERAGE === "true") {
+	babelPlugins.push("istanbul");
+}
+
+var plugins = [
+	new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
+	new MiniCssExtractPlugin({
+		filename: "[name].css"
+	}),
+	new OptimizeCssAssetsPlugin({
+		assetNameRegExp: /\.min.css$/g,
+		cssProcessorOptions: { discardComments: { removeAll: true }, postcssZindex: { disable: true } }
+	}),
+	new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/)
+];
+
+var externals = [nodeExternals({ allowlist: [/^d3.*$/] })];
+if (process.env.BUNDLE_REPORT) {
+	plugins.push(new BundleAnalyzerPlugin(
+		{ openAnalyzer: true, generateStatsFile: true, analyzerPort: 9999, defaultSizes: "stat" }));
+	externals = [];
+}
 
 module.exports = {
+	mode: "production",
 	context: __dirname,
 	devtool: "source-map",
 	entry: {
@@ -54,22 +77,26 @@ module.exports = {
 				exclude: /node_modules/,
 				loader: "babel-loader",
 				query: {
-					presets: ["react", "env"],
-					plugins: isCoverage ? ["istanbul"] : []
+					presets: ["@babel/preset-react", "@babel/preset-env"],
+					plugins: babelPlugins
 				}
 			},
 			{
 				test: /\.s*css$/,
-				use: ExtractTextPlugin.extract(
+				use: [
 					{
-						fallback: "style-loader",
-						use: [
-							{ loader: "css-loader" },
-							{ loader: "postcss-loader", options: { ident: "postcss", plugins: [require("autoprefixer")] } },
-							{ loader: "sass-loader", options: { includePaths: ["node_modules"] } }
-						]
+						loader: MiniCssExtractPlugin.loader,
+					},
+					{ loader: "css-loader" },
+					{ loader: "postcss-loader", options: { ident: "postcss", plugins: [require("autoprefixer")] } },
+					{ loader: "sass-loader",
+						options: {
+							sassOptions: {
+								includePaths: [".", "node_modules"]
+							}
+						}
 					}
-				)
+				]
 			},
 			{
 				test: /\.(woff|woff2|ttf|svg|png|eot)$/,
@@ -77,28 +104,10 @@ module.exports = {
 			}
 		]
 	},
-	plugins: [
-		new webpack.DefinePlugin({
-			"process.env.NODE_ENV": "'production'"
-		}),
-		new webpack.optimize.UglifyJsPlugin({ sourceMap: true }), // minify everything
-		new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
-		new ExtractTextPlugin("common-canvas.css"),
-		new ExtractTextPlugin("common-canvas.min.css"),
-		new OptimizeCssAssetsPlugin({
-			assetNameRegExp: /\.min.css$/g,
-			cssProcessorOptions: { discardComments: { removeAll: true }, postcssZindex: { disable: true } }
-		}),
-		new BundleAnalyzerPlugin(
-			{ generateStatsFile: true, openAnalyzer: false }),
-		new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/)
-	],
 	resolve: {
 		modules: ["node_modules"],
 		extensions: [".js", ".jsx", ".json"]
 	},
-	externals: [nodeExternals(
-		{
-			whitelist: [/^d3.*$/]
-		})]
+	plugins: plugins,
+	externals: externals
 };
