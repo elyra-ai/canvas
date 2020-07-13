@@ -29,7 +29,7 @@
     "dagre": "^0.8.5",
     "immutable": "^4.0.0-rc.12",
     "immutable-undo": "^2.0.0",
-    "jsonschema": "^1.2.6",
+    "jsonschema": "1.2.2",
     "lodash": "^4.17.19",
     "moment": "^2.27.0",
     "prop-types": "^15.7.2",
