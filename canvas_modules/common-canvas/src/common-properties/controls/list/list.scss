@@ -14,18 +14,27 @@
  * limitations under the License.
  */
 
-@import "./readonly/readonly";
-@import "./selectcolumns/selectcolumns";
-@import "./checkbox/checkbox";
-@import "./checkboxset/checkboxset";
-@import "./dropdown/dropdown";
-@import "./expression/expression";
-@import "./radioset/radioset";
-@import "./textarea/textarea";
-@import "./list/list";
-@import "./someofselect/someofselect";
-@import "./toggletext/toggletext";
-@import "./textfield/textfield";
-@import "./abstract-table";
-@import "./numberfield/numberfield";
-@import "./structureeditor/structureeditor";
+.properties-list {
+	.bx--form-item { // carbon overrides
+		margin-right: 0;
+		margin-bottom: 0;
+	}
+
+	list {
+		background-color: $field-02;
+	}
+
+	&.hide {
+		display: none;
+	}
+	&.error {
+		list {
+			box-shadow: 0 2px 0 0 $support-01;
+		}
+	}
+	&.warning {
+		list {
+			box-shadow: 0 2px 0 0 $support-03;
+		}
+	}
+}

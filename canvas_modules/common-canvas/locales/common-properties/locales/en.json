@@ -64,5 +64,6 @@
   "moveable.table.button.top": "Move to top.",
   "moveable.table.button.up": "Move up.",
   "moveable.table.button.down": "Move down.",
-  "moveable.table.button.bottom": "Move to bottom"
+  "moveable.table.button.bottom": "Move to bottom",
+  "list.table.label": "Values"
 }

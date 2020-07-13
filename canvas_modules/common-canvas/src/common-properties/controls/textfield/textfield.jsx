@@ -21,6 +21,7 @@ import { TextInput } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
+import { ControlType } from "./../../constants/form-constants.js";
 import { CHARACTER_LIMITS, TOOL_TIP_DELAY } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
@@ -45,7 +46,7 @@ class TextfieldControl extends React.Component {
 		if (this.charLimit !== -1 && value) {
 			value = value.substring(0, this.charLimit);
 		}
-		if (this.isList) {
+		if (this.isList && this.props.control.controlType !== ControlType.LIST) {
 			value = ControlUtils.splitNewlines(value, arrayValueDelimiter);
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);

@@ -71,7 +71,7 @@ class NumberfieldControl extends React.Component {
 	}
 
 	render() {
-		let controlValue;
+		let controlValue = null;
 		if (this.props.value !== null) {
 			controlValue = this.props.value;
 		}

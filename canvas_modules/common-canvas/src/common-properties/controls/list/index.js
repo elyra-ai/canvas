@@ -14,18 +14,5 @@
  * limitations under the License.
  */
 
-@import "./readonly/readonly";
-@import "./selectcolumns/selectcolumns";
-@import "./checkbox/checkbox";
-@import "./checkboxset/checkboxset";
-@import "./dropdown/dropdown";
-@import "./expression/expression";
-@import "./radioset/radioset";
-@import "./textarea/textarea";
-@import "./list/list";
-@import "./someofselect/someofselect";
-@import "./toggletext/toggletext";
-@import "./textfield/textfield";
-@import "./abstract-table";
-@import "./numberfield/numberfield";
-@import "./structureeditor/structureeditor";
+import List from "./list.jsx";
+module.exports = List;

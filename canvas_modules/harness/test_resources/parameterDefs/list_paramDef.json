@@ -1,0 +1,73 @@
+{
+  "titleDefinition": {
+    "title": "List Control"
+  },
+  "current_parameters": {
+    "list_string": [
+			"list item 1",
+			"list item 2",
+			"list item 3"
+		],
+		"list_integer": [
+			10,
+			20,
+			30
+		]
+  },
+  "parameters": [
+    {
+      "id": "list_string",
+      "type": "array[string]"
+    },
+    {
+      "id": "list_integer",
+      "type": "array[integer]"
+    }
+  ],
+  "complex_types": [],
+  "uihints": {
+    "id": "list",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "List fields"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "list_string",
+        "label": {
+          "default": "list of strings"
+        },
+        "description": {
+          "default": "list with a string array value"
+        },
+				"control": "list",
+				"moveable_rows": true
+      },
+      {
+        "parameter_ref": "list_integer",
+        "label": {
+          "default": "list of integers"
+        },
+        "description": {
+          "default": "list with an integer array value"
+        },
+				"control": "list"
+      }
+    ],
+    "complex_type_info": [],
+    "group_info": [
+      {
+        "id": "list-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "list_string",
+          "list_integer"
+        ]
+      }
+    ]
+  },
+  "conditions": []
+}

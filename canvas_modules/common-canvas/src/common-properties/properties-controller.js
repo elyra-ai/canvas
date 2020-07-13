@@ -1236,6 +1236,14 @@ export default class PropertiesController {
 		return control;
 	}
 
+	getControlPropType(propertyId) {
+		const control = this.getControl(propertyId);
+		if (typeof control.valueDef !== "undefined") {
+			return control.valueDef.propType;
+		}
+		return null;
+	}
+
 	updateControlEnumValues(propertyId, valuesObj) {
 		const control = this.getControl(propertyId);
 		if (!Array.isArray(valuesObj) || !control) {
