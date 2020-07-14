@@ -26,6 +26,7 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import isEmpty from "lodash/isEmpty";
 import forIn from "lodash/forIn";
 import has from "lodash/has";
+import { hot } from "react-hot-loader/root";
 
 import { getMessages } from "../intl/intl-utils";
 import HarnessBundles from "../intl/locales";
@@ -110,7 +111,7 @@ import FormsService from "./services/FormsService";
 
 import ExpressionInfo from "./constants/json/functionlist.json";
 
-export default class App extends React.Component {
+class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -1954,6 +1955,4 @@ export default class App extends React.Component {
 	}
 }
 
-App.propTypes = {
-
-};
+export default hot(App);

@@ -30,7 +30,7 @@ if (process.env.COVERAGE === "true") {
 var plugins = [
 	new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
 	new MiniCssExtractPlugin({
-		filename: "[name].css"
+		filename: "[name].min.css"
 	}),
 	new OptimizeCssAssetsPlugin({
 		assetNameRegExp: /\.min.css$/g,

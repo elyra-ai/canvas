@@ -17,7 +17,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import ReactDOM from "react-dom";
 import { setTitle } from "./../../actions";
 import Icon from "./../../../icons/icon.jsx";
 import Button from "carbon-components-react/lib/components/Button";

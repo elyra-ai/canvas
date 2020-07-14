@@ -13,40 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+"use strict";
 
 const assign = require("object-assign");
 
 const babelBaseOptions = {
 	babelrc: false, // required so webpack ignores the .babelrc file used for testing in root of project
-	presets: ["react", "env"]
+	presets: ["@babel/preset-react", "@babel/preset-env"],
+	plugins: ["@babel/plugin-transform-modules-commonjs"]
 };
 
 const babelClientOptions = assign({}, babelBaseOptions, {
-	cacheDirectory: true,
 	env: {
 		development: {
-			presets: ["react-hmre"]
-		}
-	}
-});
-
-const babelTestOptions = assign({}, babelBaseOptions, {
-	env: {
-		test: {
-			plugins: [
-				[
-					"babel-plugin-webpack-loaders",
-					{
-						// The config path is relative to the root of the project
-						config: "./webpack.config.test.js",
-						verbose: false
-					}
-				]
-			]
+			plugins: ["react-hot-loader/babel"]
 		}
 	}
 });
 
 exports.babelBaseOptions = babelBaseOptions;
-exports.babelTestOptions = babelTestOptions;
 exports.babelClientOptions = babelClientOptions;

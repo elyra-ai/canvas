@@ -15,22 +15,22 @@
  */
 /* eslint max-len: 0*/
 /* eslint global-require:0 */
+"use strict";
 
 // Modules
 
 const path = require("path");
 const webpack = require("webpack");
-const TerserPlugin = require("terser-webpack-plugin-legacy");
 const babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const constants = require("./lib/constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 // Entry & Output files ------------------------------------------------------------>
 
 const entry = {
-	canvas: "./src/client/index.js",
-	vendor: ["babel-polyfill", "react", "react-dom", "react-intl", "intl-messageformat", "intl-messageformat-parser"]
+	harness: ["@babel/polyfill", "./src/client/index.js"],
+	vendor: ["react", "react-dom", "react-intl", "intl-messageformat", "intl-messageformat-parser"]
 };
 
 const output = {
@@ -52,16 +52,20 @@ const rules = [
 	},
 	{
 		test: /\.s*css$/,
-		use: ExtractTextPlugin.extract(
+		use: [
 			{
-				fallback: "style-loader",
-				use: [
-					{ loader: "css-loader" },
-					{ loader: "postcss-loader", options: { plugins: [require("autoprefixer")] } },
-					{ loader: "sass-loader", options: { includePaths: ["node_modules"] } }
-				]
+				loader: MiniCssExtractPlugin.loader,
+			},
+			{ loader: "css-loader" },
+			{ loader: "postcss-loader", options: { ident: "postcss", plugins: [require("autoprefixer")] } },
+			{ loader: "sass-loader",
+				options: {
+					sassOptions: {
+						includePaths: [".", "node_modules"]
+					}
+				}
 			}
-		)
+		]
 	},
 	{
 		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
@@ -72,36 +76,40 @@ const rules = [
 
 // Plugins ------------------------------------------------------------>
 const plugins = [
-	new webpack.DefinePlugin({
-		"process.env.NODE_ENV": "'production'"
-	}),
 	new webpack.optimize.OccurrenceOrderPlugin(),
-	new TerserPlugin(),
 	new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
-	new ExtractTextPlugin("styles/harness.css"),
-	new webpack.optimize.CommonsChunkPlugin({
-		name: "vendor"
+	new MiniCssExtractPlugin({
+		filename: "[name].css"
 	}),
 	new webpack.NoEmitOnErrorsPlugin(),
 	// Generates an `index.html` file with the <script> injected.
 	new HtmlWebpackPlugin({
 		inject: true,
 		template: "index.html"
-	}),
-	new BundleAnalyzerPlugin(
-		{ generateStatsFile: true, openAnalyzer: false })
+	})
 ];
 
+if (process.env.BUNDLE_REPORT) {
+	plugins.push(new BundleAnalyzerPlugin(
+		{ openAnalyzer: true, generateStatsFile: true, analyzerPort: 9999, defaultSizes: "stat" }));
+}
+
+const optimization = {
+	splitChunks: {
+		name: true
+	}
+};
 
 // Exports ------------------------------------------------------------>
 
 
 module.exports = {
+	mode: "production",
+	context: __dirname,
 	entry: entry,
 	resolve: {
 		modules: [
 			__dirname,
-			"web_modules",
 			"node_modules"],
 		alias: {
 			"react": "node_modules/react",
@@ -116,5 +124,6 @@ module.exports = {
 	module: {
 		rules: rules
 	},
-	plugins: plugins
+	plugins: plugins,
+	optimization: optimization
 };

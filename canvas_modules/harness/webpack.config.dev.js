@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 /* eslint global-require:0 */
+"use strict";
 
 // Modules
 
 const path = require("path");
 const webpack = require("webpack");
-const babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
+const babelOptions = require("./scripts/babel/babelOptions").babelBaseOptions;
 const constants = require("./lib/constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-
-const isDev = process.env.NODE_ENV === "development";
 
 // Globals
 
@@ -31,7 +30,7 @@ const isDev = process.env.NODE_ENV === "development";
 
 const entry = [
 	"webpack-hot-middleware/client",
-	"babel-polyfill",
+	"@babel/polyfill",
 	"./src/client/index.js"
 ];
 
@@ -51,10 +50,6 @@ const output = {
 
 const rules = [
 	{
-		test: /\.json$/,
-		loader: "json-loader"
-	},
-	{
 		test: /\.js(x?)$/,
 		loader: "babel-loader",
 		exclude: /node_modules/,
@@ -63,10 +58,16 @@ const rules = [
 	{
 		test: /\.s*css$/,
 		use: [
-			{ loader: "style-loader", options: { sourceMap: true } },
+			{ loader: "style-loader" },
 			{ loader: "css-loader", options: { sourceMap: true } },
 			{ loader: "postcss-loader", options: { ident: "postcss", sourceMap: true, plugins: [require("autoprefixer")] } },
-			{ loader: "sass-loader", options: { sourceMap: true, includePaths: ["node_modules"] } }
+			{ loader: "sass-loader",
+				options: {
+					sassOptions: {
+						includePaths: [".", "node_modules"]
+					}
+				}
+			}
 		]
 	},
 	{
@@ -75,13 +76,6 @@ const rules = [
 	}
 ];
 
-if (!isDev) {
-	rules.push({
-		test: /common-canvas*\.js$/,
-		loader: "source-map-loader",
-		enforce: "pre"
-	});
-}
 // Custom functions (for plugins) ------------------------------------->
 
 
@@ -93,31 +87,27 @@ var plugins = [
 	// Generates an `index.html` file with the <script> injected.
 	new HtmlWebpackPlugin({
 		inject: true,
-		template: "index-dev.html"
+		template: "./index-dev.html"
 	}),
 	new webpack.HotModuleReplacementPlugin()
 ];
 
 // Exports ------------------------------------------------------------>
-let commonCanvas = "src/common-canvas.js";
-if (isDev) {
-	commonCanvas = "src/common-canvas-dev.js";
-}
 
 module.exports = {
+	mode: "development",
 	entry: entry,
 	resolve: {
 		modules: [
 			__dirname,
-			"node_modules",
-			"web_modules"
+			"node_modules"
 		],
 		alias: {
 			"react": "node_modules/react",
 			"react-dom": "node_modules/react-dom",
 			"react-redux": "node_modules/react-redux",
 			"react-intl": "node_modules/react-intl",
-			"common-canvas": commonCanvas,
+			"common-canvas": "src/common-canvas-dev.js",
 		},
 		extensions: [".js", ".jsx", ".json"]
 	},
@@ -126,7 +116,5 @@ module.exports = {
 		rules: rules
 	},
 	plugins: plugins,
-	devtool: "eval-source-map"
+	devtool: "source-map"
 };
-
-// devtool: "inline-source-map"
