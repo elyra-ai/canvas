@@ -175,12 +175,11 @@ export default class ObjectModel {
 	// object model.
 	convertNodeTemplate(nodeTemplate) {
 		if (nodeTemplate) {
-			const newNodeTemplate = Object.assign({}, nodeTemplate);
+			// Clone the template so we cannot accidentally modify any of its fields.
+			const newNodeTemplate = JSON.parse(JSON.stringify(nodeTemplate));
 
 			if (newNodeTemplate.app_data) {
-				// Ensure we've cloned the app_data not just refer to the original from the palette.
-				newNodeTemplate.app_data = JSON.parse(JSON.stringify(nodeTemplate.app_data));
-
+				// Flatten app_data.ui_data fields into top level fields in the new template.
 				if (newNodeTemplate.app_data.ui_data) {
 					newNodeTemplate.label = nodeTemplate.app_data.ui_data.label;
 					newNodeTemplate.image = nodeTemplate.app_data.ui_data.image;
@@ -189,7 +188,7 @@ export default class ObjectModel {
 					newNodeTemplate.decorations = nodeTemplate.app_data.ui_data.decorations;
 					newNodeTemplate.messages = nodeTemplate.app_data.ui_data.messages;
 
-					// We can remove the app_data.ui_data
+					// We can remove the app_data.ui_data now its fields have been flattened.
 					delete newNodeTemplate.app_data.ui_data;
 				}
 			}
@@ -208,7 +207,8 @@ export default class ObjectModel {
 	}
 
 	// Converts an incoming port (either input or output ) from a nodetemplate
-	// from the palette to an internal format port.
+	// from the palette to an internal format port by flattening the app_data.ui_data
+	// fields into the port object itself.
 	convertPort(port) {
 		const newPort = Object.assign({}, port);
 		if (port.app_data && port.app_data.ui_data) {
@@ -221,7 +221,7 @@ export default class ObjectModel {
 			if (port.app_data.ui_data.class_name) {
 				newPort.class_name = port.app_data.ui_data.class_name;
 			}
-			// We can remvove this as it is not needed in the internal format.
+			// We can remove this now its fields have been flattened.
 			delete newPort.app_data.ui_data;
 		}
 		return newPort;
