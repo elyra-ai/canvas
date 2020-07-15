@@ -58,7 +58,9 @@ module.exports = {
 	},
 	output: {
 		filename: "[name].js",
-		path: path.join(__dirname, "/dist")
+		path: path.join(__dirname, "/dist"),
+		library: "[name]",
+		libraryTarget: "umd"
 	},
 	module: {
 		rules: [
@@ -104,5 +106,11 @@ module.exports = {
 		hints: "error",
 		maxAssetSize: 2000000,
 		maxEntrypointSize: 2000000
+	},
+	externals: {
+		"react-intl": "react-intl",
+		"react": "react",
+		"react-redux": "react-redux",
+		"react-dom": "react-dom"
 	}
 };

@@ -52,6 +52,7 @@ const rules = [
 	},
 	{
 		test: /\.s*css$/,
+		sideEffects: true,
 		use: [
 			{
 				loader: MiniCssExtractPlugin.loader,
@@ -79,13 +80,12 @@ const plugins = [
 	new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
 	new MiniCssExtractPlugin({
-		filename: "[name].css"
+		filename: "harness.min.css"
 	}),
-	new webpack.NoEmitOnErrorsPlugin(),
 	// Generates an `index.html` file with the <script> injected.
 	new HtmlWebpackPlugin({
 		inject: true,
-		template: "index.html"
+		template: "./index.html"
 	})
 ];
 
