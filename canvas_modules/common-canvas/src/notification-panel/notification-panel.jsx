@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Icon from "./../icons/icon.jsx";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 import { Close16 } from "@carbon/icons-react";
 import { DEFAULT_NOTIFICATION_HEADER } from "./../common-canvas/constants/canvas-constants.js";
 

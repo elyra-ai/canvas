@@ -20,10 +20,9 @@ const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-const nodeExternals = require("webpack-node-externals");
 
-const babelPlugins = ["@babel/plugin-transform-modules-commonjs"];
-if (process.env.COVERAGE === "true") {
+const babelPlugins = [];
+if (process.env.COVERAGE) {
 	babelPlugins.push("istanbul");
 }
 
@@ -39,11 +38,9 @@ var plugins = [
 	new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/)
 ];
 
-var externals = [nodeExternals({ allowlist: [/^d3.*$/] })];
 if (process.env.BUNDLE_REPORT) {
 	plugins.push(new BundleAnalyzerPlugin(
 		{ openAnalyzer: true, generateStatsFile: true, analyzerPort: 9999, defaultSizes: "stat" }));
-	externals = [];
 }
 
 module.exports = {
@@ -60,24 +57,18 @@ module.exports = {
 		"common-canvas": "./src/index.js" // needs to be last to create correct combined css output
 	},
 	output: {
-		libraryTarget: "commonjs2",
 		filename: "[name].js",
 		path: path.join(__dirname, "/dist")
 	},
 	module: {
 		rules: [
 			{
-				enforce: "pre",
-				test: /\.js$/,
-				exclude: /node_modules\/intl-/,
-				loader: "source-map-loader"
-			},
-			{
 				test: /\.js(x?)$/,
 				exclude: /node_modules/,
 				loader: "babel-loader",
 				query: {
-					presets: ["@babel/preset-react", "@babel/preset-env"],
+					babelrc: false,
+					presets: ["@babel/preset-react", ["@babel/preset-env", { modules: false }]],
 					plugins: babelPlugins
 				}
 			},
@@ -108,6 +99,5 @@ module.exports = {
 		modules: ["node_modules"],
 		extensions: [".js", ".jsx", ".json"]
 	},
-	plugins: plugins,
-	externals: externals
+	plugins: plugins
 };

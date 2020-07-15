@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import { STATES, TOOL_TIP_DELAY_ICON, CARBON_ICONS } from "./../../constants/constants.js";
 import { ControlType } from "./../../constants/form-constants";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import isEmpty from "lodash/isEmpty";
 import { v4 as uuid4 } from "uuid";

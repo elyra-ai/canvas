@@ -17,8 +17,7 @@
 import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer";
 import { Column, Table } from "react-virtualized/dist/commonjs/Table";
 
-import Loading from "carbon-components-react/lib/components/Loading";
-import Checkbox from "carbon-components-react/lib/components/Checkbox";
+import { Checkbox, Loading } from "carbon-components-react";
 import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { TOOL_TIP_DELAY, SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS } from "./../../constants/constants";

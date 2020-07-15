@@ -16,7 +16,7 @@
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Modal from "carbon-components-react/lib/components/Modal";
+import { Modal } from "carbon-components-react";
 import classNames from "classnames";
 import { Portal } from "react-portal";
 

@@ -17,7 +17,7 @@
 /* eslint-disable no-empty-function */
 /* eslint-disable no-unused-vars */
 import React from "react";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 import paramDef from "./json/misclassification_paramDef.json";
 
 

@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import InlineLoading from "carbon-components-react/lib/components/InlineLoading";
+import { InlineLoading } from "carbon-components-react";
 import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
 import { TIP_TYPE_PALETTE_CATEGORY, CANVAS_CARBON_ICONS } from "../common-canvas/constants/canvas-constants.js";

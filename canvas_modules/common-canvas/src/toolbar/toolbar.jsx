@@ -21,7 +21,7 @@ import PropTypes from "prop-types";
 import Tooltip from "../tooltip/tooltip.jsx";
 import ReactResizeDetector from "react-resize-detector";
 import Icon from "../icons/icon.jsx";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 import constants from "../common-canvas/constants/canvas-constants";
 import classNames from "classnames";
 import SVG from "react-inlinesvg";

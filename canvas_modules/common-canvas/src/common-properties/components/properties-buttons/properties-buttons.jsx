@@ -17,7 +17,7 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 import classNames from "classnames";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 

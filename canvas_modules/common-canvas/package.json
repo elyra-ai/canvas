@@ -12,6 +12,7 @@
     "url": "https://github.com/elyra-ai/canvas/issues"
   },
   "license": "Apache-2.0",
+  "sideEffects": false,
   "scripts": {
     "test": "NODE_ENV=test jest",
     "test-coverage": "NODE_ENV=test jest --coverage",
