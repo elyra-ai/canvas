@@ -15,4 +15,4 @@
  */
 
 import StructureEditor from "./structureeditor.jsx";
-module.exports = StructureEditor;
+export default StructureEditor;

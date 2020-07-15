@@ -100,9 +100,9 @@ function openSummaryPanel(wrapper, panelId) {
 	return wrapper.find("div.properties-wf-content.show");
 }
 
-module.exports = {
-	flyoutEditorForm: flyoutEditorForm,
-	setControls: setControls,
-	genLongString: genLongString,
-	openSummaryPanel: openSummaryPanel
+export {
+	flyoutEditorForm,
+	setControls,
+	genLongString,
+	openSummaryPanel
 };

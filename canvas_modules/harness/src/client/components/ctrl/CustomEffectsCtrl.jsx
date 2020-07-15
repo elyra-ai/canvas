@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import { Button, Dropdown, RadioButton } from "carbon-components-react";
 import { WarningFilled16, ErrorFilled16 } from "@carbon/icons-react";
 import { connect } from "react-redux";
-import isEqual from "lodash/isEqual";
+import { isEqual } from "lodash";
 
 function *generateCombinations(arr, size) {
 	function *doGenerateCombinations(offset, combo) {

@@ -23,13 +23,11 @@ import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
 import ReactFileDownload from "react-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import isEmpty from "lodash/isEmpty";
-import forIn from "lodash/forIn";
-import has from "lodash/has";
+import { isEmpty, has, forIn } from "lodash";
 import { hot } from "react-hot-loader/root";
 
 import { getMessages } from "../intl/intl-utils";
-import HarnessBundles from "../intl/locales";
+import * as HarnessBundles from "../intl/locales";
 import CommandActionsBundles from "@elyra/canvas/locales/command-actions/locales";
 import CommonCanvasBundles from "@elyra/canvas/locales/common-canvas/locales";
 import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales";
@@ -63,8 +61,8 @@ import RandomEffectsPanel from "./components/custom-panels/RandomEffectsPanel";
 import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
 import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel";
 
-import CustomOpMax from "./custom/condition-ops/customMax";
-import CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
+import * as CustomOpMax from "./custom/condition-ops/customMax";
+import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 

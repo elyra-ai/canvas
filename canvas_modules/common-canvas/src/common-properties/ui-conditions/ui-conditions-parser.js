@@ -247,9 +247,9 @@ function _setDefinitions(container, controls, groupDef) {
 	}
 }
 
-module.exports = {
-	parseInput: parseInput,
-	parseControls: parseControls,
-	parseConditions: parseConditions,
-	parseControl: parseControl
+export {
+	parseInput,
+	parseControls,
+	parseConditions,
+	parseControl
 };

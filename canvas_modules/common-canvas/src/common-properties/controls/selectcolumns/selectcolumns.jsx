@@ -21,8 +21,8 @@ import FlexibleTable from "./../../components/flexible-table";
 import MoveableTableRows from "./../../components/moveable-table-rows";
 import AbstractTable from "./../abstract-table.jsx";
 import ValidationMessage from "./../../components/validation-message";
-import ControlUtils from "./../../util/control-utils";
-import PropertyUtils from "./../../util/property-utils";
+import * as ControlUtils from "./../../util/control-utils";
+import * as PropertyUtils from "./../../util/property-utils";
 
 import { TABLE_SCROLLBAR_WIDTH, STATES, MESSAGE_KEYS } from "./../../constants/constants";
 

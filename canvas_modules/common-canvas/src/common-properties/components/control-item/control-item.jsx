@@ -22,7 +22,7 @@ import { STATES, TOOL_TIP_DELAY_ICON, CARBON_ICONS } from "./../../constants/con
 import { ControlType } from "./../../constants/form-constants";
 import { Button } from "carbon-components-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import isEmpty from "lodash/isEmpty";
+import { isEmpty } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import Icon from "./../../../icons/icon.jsx";
 

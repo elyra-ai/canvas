@@ -15,4 +15,4 @@
  */
 
 import TextArea from "./textarea.jsx";
-module.exports = TextArea;
+export default TextArea;

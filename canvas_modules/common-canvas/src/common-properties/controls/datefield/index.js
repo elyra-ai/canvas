@@ -15,4 +15,4 @@
  */
 
 import DateField from "./datefield.jsx";
-module.exports = DateField;
+export default DateField;

@@ -22,7 +22,7 @@ import IconButton from "./../components/icon-button";
 import FlexibleTable from "./../components/flexible-table";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
-import PropertyUtils from "./../util/property-utils";
+import * as PropertyUtils from "./../util/property-utils";
 import Icon from "./../../icons/icon.jsx";
 import { SubtractAlt24 } from "@carbon/icons-react";
 import { ControlType, EditStyle } from "./../constants/form-constants";
@@ -32,10 +32,7 @@ import { MESSAGE_KEYS, TOOL_TIP_DELAY, STATES,
 	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION,
 	ROW_SELECTION, CARBON_ICONS } from "./../constants/constants";
 
-import findIndex from "lodash/findIndex";
-import sortBy from "lodash/sortBy";
-import cloneDeep from "lodash/cloneDeep";
-import isEqual from "lodash/isEqual";
+import { isEqual, findIndex, sortBy, cloneDeep } from "lodash";
 import { v4 as uuid4 } from "uuid";
 
 /* eslint max-depth: ["error", 5] */

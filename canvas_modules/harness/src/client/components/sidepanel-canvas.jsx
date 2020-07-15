@@ -20,7 +20,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { TextInput, FileUploader, Button, Select, SelectItemGroup, SelectItem, Checkbox, RadioButtonGroup, RadioButton, Toggle }
-	from "carbon-components-react/lib/components/TextInput";
+	from "carbon-components-react";
 
 
 import {

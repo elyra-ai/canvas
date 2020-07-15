@@ -15,4 +15,4 @@
  */
 
 import Column from "./column.jsx";
-module.exports = Column;
+export default Column;

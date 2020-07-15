@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import propertyOf from "lodash/propertyOf";
+import { propertyOf } from "lodash";
 
 export class L10nProvider {
 	constructor(resources) {

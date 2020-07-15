@@ -17,9 +17,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import isEqual from "lodash/isEqual";
-import ControlUtils from "./../../util/control-utils";
-import ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
+import { isEqual } from "lodash";
+import * as ControlUtils from "./../../util/control-utils";
+import * as ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
 import ValidationMessage from "./../../components/validation-message";
 import { RadioButton } from "carbon-components-react";
 import classNames from "classnames";

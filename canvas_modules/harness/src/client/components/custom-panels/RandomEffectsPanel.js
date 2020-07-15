@@ -15,7 +15,7 @@
  */
 
 import React from "react";
-import isEqual from "lodash/isEqual";
+import { isEqual } from "lodash";
 import CustomEffectsCtrl from "../ctrl/CustomEffectsCtrl.jsx";
 import { Dropdown, Button } from "carbon-components-react";
 

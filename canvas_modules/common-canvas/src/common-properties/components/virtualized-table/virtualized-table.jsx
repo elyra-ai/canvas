@@ -22,7 +22,7 @@ import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { TOOL_TIP_DELAY, SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS } from "./../../constants/constants";
 
-import isEmpty from "lodash/isEmpty";
+import { isEmpty } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 

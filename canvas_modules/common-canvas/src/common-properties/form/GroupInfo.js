@@ -16,8 +16,7 @@
 
 import { GroupType } from "../constants/form-constants";
 import { ResourceDef } from "../util/L10nProvider";
-import propertyOf from "lodash/propertyOf";
-import has from "lodash/has";
+import { has, propertyOf } from "lodash";
 import { v4 as uuid4 } from "uuid";
 
 class Group {

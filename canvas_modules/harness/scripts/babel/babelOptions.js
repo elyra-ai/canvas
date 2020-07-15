@@ -20,7 +20,7 @@ const assign = require("object-assign");
 const babelBaseOptions = {
 	babelrc: false, // required so webpack ignores the .babelrc file used for testing in root of project
 	presets: ["@babel/preset-react", "@babel/preset-env"],
-	plugins: ["@babel/plugin-transform-modules-commonjs"]
+	plugins: ["lodash", "@babel/plugin-proposal-class-properties", "@babel/plugin-transform-runtime"],
 };
 
 const babelClientOptions = assign({}, babelBaseOptions, {

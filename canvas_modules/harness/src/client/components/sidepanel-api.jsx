@@ -18,7 +18,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import isEmpty from "lodash/isEmpty";
+import { isEmpty } from "lodash";
 import { Toggle, Button, Dropdown, TextArea, TextInput, RadioButtonGroup, RadioButton } from "carbon-components-react";
 import {
 	API_SET_PIPELINEFLOW,

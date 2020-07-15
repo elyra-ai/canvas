@@ -15,4 +15,4 @@
  */
 
 import ImageAction from "./image.jsx";
-module.exports = ImageAction;
+export default ImageAction;

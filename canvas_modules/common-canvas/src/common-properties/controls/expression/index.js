@@ -15,4 +15,4 @@
  */
 
 import Expression from "./expression.jsx";
-module.exports = Expression;
+export default Expression;

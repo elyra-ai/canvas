@@ -15,4 +15,4 @@
  */
 
 import Checkboxset from "./checkboxset.jsx";
-module.exports = Checkboxset;
+export default Checkboxset;

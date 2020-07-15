@@ -15,4 +15,4 @@
  */
 
 import StructureListEditor from "./structurelisteditor.jsx";
-module.exports = StructureListEditor;
+export default StructureListEditor;

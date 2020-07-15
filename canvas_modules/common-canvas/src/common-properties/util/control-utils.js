@@ -65,10 +65,10 @@ function joinNewlines(list, joinValue) {
 	return list;
 }
 
-module.exports = {
-	getCharLimit: getCharLimit,
-	getControlId: getControlId,
-	getDataId: getDataId,
-	splitNewlines: splitNewlines,
-	joinNewlines: joinNewlines
+export {
+	getCharLimit,
+	getControlId,
+	getDataId,
+	splitNewlines,
+	joinNewlines
 };

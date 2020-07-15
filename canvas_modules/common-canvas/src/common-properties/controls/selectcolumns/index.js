@@ -15,4 +15,4 @@
  */
 
 import SelectColumns from "./selectcolumns.jsx";
-module.exports = SelectColumns;
+export default SelectColumns;

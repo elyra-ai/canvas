@@ -22,9 +22,9 @@ import IconButton from "../../components/icon-button";
 import WideFlyout from "./../../components/wide-flyout";
 import Icon from "./../../../icons/icon.jsx";
 
-import isEmpty from "lodash/isEmpty";
-import PropertyUtils from "./../../util/property-utils";
-import ControlUtils from "./../../util/control-utils";
+import { isEmpty } from "lodash";
+import * as PropertyUtils from "./../../util/property-utils";
+import * as ControlUtils from "./../../util/control-utils";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, CARBON_ICONS } from "./../../constants/constants";
 import { v4 as uuid4 } from "uuid";
 import { STATES } from "./../../constants/constants.js";

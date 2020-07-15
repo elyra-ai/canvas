@@ -18,11 +18,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { SelectItem, Select, Dropdown } from "carbon-components-react";
-import isEqual from "lodash/isEqual";
-import ControlUtils from "./../../util/control-utils";
+import { isEqual } from "lodash";
+import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
-import PropertyUtils from "./../../util/property-utils.js";
+import * as PropertyUtils from "./../../util/property-utils.js";
 import { ControlType } from "./../../constants/form-constants";
 import { STATES } from "./../../constants/constants.js";
 

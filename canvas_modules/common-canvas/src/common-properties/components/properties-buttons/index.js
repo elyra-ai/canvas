@@ -15,4 +15,4 @@
  */
 
 import PropertiesButtons from "./properties-buttons.jsx";
-module.exports = PropertiesButtons;
+export default PropertiesButtons;

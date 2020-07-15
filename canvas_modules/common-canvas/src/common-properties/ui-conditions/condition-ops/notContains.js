@@ -15,7 +15,7 @@
  */
 
 import logger from "./../../../../utils/logger";
-import utils from "./../conditions-utils.js";
+import { searchInArray } from "./../conditions-utils.js";
 
 function op() {
 	return "notContains";
@@ -32,7 +32,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			case "string":
 				return paramInfo.value.indexOf(param2Info.value) < 0;
 			case "object":
-				return paramInfo.value === null ? true : !utils.searchInArray(paramInfo.value, param2Info.value, false);
+				return paramInfo.value === null ? true : !searchInArray(paramInfo.value, param2Info.value, false);
 			default:
 				logger.warn("Ignoring condition operation 'notContains' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 				return true;
@@ -44,7 +44,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			case "string":
 				return paramInfo.value.indexOf(value) < 0;
 			case "object":
-				return paramInfo.value === null ? true : !utils.searchInArray(paramInfo.value, value, false);
+				return paramInfo.value === null ? true : !searchInArray(paramInfo.value, value, false);
 			default:
 				logger.warn("Ignoring condition operation 'notContains' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 				return true;
@@ -58,5 +58,4 @@ function evaluate(paramInfo, param2Info, value, controller) {
 
 // Public Methods ------------------------------------------------------------->
 
-module.exports.op = op;
-module.exports.evaluate = evaluate;
+export { op, evaluate };

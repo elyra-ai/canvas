@@ -15,7 +15,7 @@
  */
 
 import logger from "./../../../../utils/logger";
-import PropertyUtils from "./../../util/property-utils.js";
+import { toType } from "./../../util/property-utils.js";
 
 function op() {
 	return "cellNotEmpty";
@@ -24,7 +24,7 @@ function op() {
 function evaluate(paramInfo, param2Info, value, controller) {
 	const supportedControls = ["structuretable", "structureeditor", "structurelisteditor"];
 	if (supportedControls.indexOf(paramInfo.control.controlType) >= 0) {
-		const type = PropertyUtils.toType(paramInfo.value);
+		const type = toType(paramInfo.value);
 		return type !== "undefined" && type !== "null" && String(paramInfo.value).length > 0;
 	}
 	logger.warn("Ignoring unsupported condition operation 'cellNotEmpty' for control type " + paramInfo.control.controlType);
@@ -33,5 +33,4 @@ function evaluate(paramInfo, param2Info, value, controller) {
 
 // Public Methods ------------------------------------------------------------->
 
-module.exports.op = op;
-module.exports.evaluate = evaluate;
+export { op, evaluate };

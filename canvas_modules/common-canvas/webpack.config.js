@@ -21,7 +21,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
-const babelPlugins = [];
+const babelPlugins = ["lodash", "@babel/plugin-proposal-class-properties", "@babel/plugin-transform-runtime"];
 if (process.env.COVERAGE) {
 	babelPlugins.push("istanbul");
 }
@@ -99,5 +99,10 @@ module.exports = {
 		modules: ["node_modules"],
 		extensions: [".js", ".jsx", ".json"]
 	},
-	plugins: plugins
+	plugins: plugins,
+	performance: {
+		hints: "error",
+		maxAssetSize: 2000000,
+		maxEntrypointSize: 2000000
+	}
 };

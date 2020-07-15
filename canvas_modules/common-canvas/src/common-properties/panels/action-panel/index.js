@@ -15,4 +15,4 @@
  */
 
 import ActionPanel from "./action-panel.jsx";
-module.exports = ActionPanel;
+export default ActionPanel;

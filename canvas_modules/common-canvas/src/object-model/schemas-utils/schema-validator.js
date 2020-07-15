@@ -123,7 +123,7 @@ function getV3Validator() {
 	return validator3;
 }
 
-module.exports = {
-	validatePipelineFlowAgainstSchema: validatePipelineFlowAgainstSchema,
-	validatePaletteAgainstSchema: validatePaletteAgainstSchema
+export {
+	validatePipelineFlowAgainstSchema,
+	validatePaletteAgainstSchema
 };

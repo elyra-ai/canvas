@@ -19,11 +19,9 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { setActiveTab } from "./../../actions";
 import { Tab, Tabs } from "carbon-components-react";
-import PropertyUtil from "./../../util/property-utils";
+import * as PropertyUtil from "./../../util/property-utils";
 import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
-import isEmpty from "lodash/isEmpty";
-import sortBy from "lodash/sortBy";
-import cloneDeep from "lodash/cloneDeep";
+import { cloneDeep, isEmpty, sortBy } from "lodash";
 import logger from "./../../../../utils/logger";
 import classNames from "classnames";
 

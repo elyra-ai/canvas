@@ -18,13 +18,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Checkbox } from "carbon-components-react";
-import ControlUtils from "./../../util/control-utils";
+import * as ControlUtils from "./../../util/control-utils";
 import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
 import { STATES } from "./../../constants/constants.js";
 import { v4 as uuid4 } from "uuid";
-import isEqual from "lodash/isEqual";
-import intersection from "lodash/intersection";
+import { intersection, isEqual } from "lodash";
 
 class CheckboxsetControl extends React.Component {
 	constructor(props) {

@@ -15,4 +15,4 @@
  */
 
 import PropertiesMain from "./properties-main.jsx";
-module.exports = PropertiesMain;
+export default PropertiesMain;

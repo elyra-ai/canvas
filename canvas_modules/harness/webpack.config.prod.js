@@ -94,12 +94,6 @@ if (process.env.BUNDLE_REPORT) {
 		{ openAnalyzer: true, generateStatsFile: true, analyzerPort: 9999, defaultSizes: "stat" }));
 }
 
-const optimization = {
-	splitChunks: {
-		name: true
-	}
-};
-
 // Exports ------------------------------------------------------------>
 
 
@@ -124,6 +118,5 @@ module.exports = {
 	module: {
 		rules: rules
 	},
-	plugins: plugins,
-	optimization: optimization
+	plugins: plugins
 };

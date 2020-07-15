@@ -20,7 +20,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import FlexibleTable from "./../flexible-table";
 import PropertiesButtons from "./../properties-buttons";
-import PropertyUtils from "./../../util/property-utils";
+import * as PropertyUtils from "./../../util/property-utils";
 
 import { Button } from "carbon-components-react";
 
@@ -28,10 +28,7 @@ import { MESSAGE_KEYS, DATA_TYPE, TOOL_TIP_DELAY, SORT_DIRECTION, ROW_SELECTION 
 import Icon from "./../../../icons/icon.jsx";
 import { ArrowLeft24, Reset24 } from "@carbon/icons-react";
 
-import isEmpty from "lodash/isEmpty";
-import sortBy from "lodash/sortBy";
-import isEqual from "lodash/isEqual";
-import has from "lodash/has";
+import { has, isEmpty, sortBy, isEqual } from "lodash";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 

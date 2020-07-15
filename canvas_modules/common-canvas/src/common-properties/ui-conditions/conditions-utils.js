@@ -16,14 +16,12 @@
 /*	eslint max-depth: ["error", 10]*/
 
 import logger from "../../../utils/logger";
-import UiConditions from "./ui-conditions";
-import PropertyUtils from "../util/property-utils";
+import * as UiConditions from "./ui-conditions";
+import { formatMessage } from "../util/property-utils";
 import { DEFAULT_VALIDATION_MESSAGE, STATES, PANEL_TREE_ROOT,
 	CONDITION_TYPE, CONDITION_DEFINITION_INDEX,
 	MESSAGE_KEYS, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
-import isEmpty from "lodash/isEmpty";
-import cloneDeep from "lodash/cloneDeep";
-import has from "lodash/has";
+import { isEmpty, cloneDeep, has } from "lodash";
 import seedrandom from "seedrandom";
 
 
@@ -916,7 +914,7 @@ function _getState(refState, propertyId) {
 function _injectRequiredDefinition(control, valDefinitions, keyName, controlValId, intl) {
 	// inject required validation definition
 	const label = (control.label && control.label.text) ? control.label.text : keyName;
-	const errorMsg = PropertyUtils.formatMessage(intl,
+	const errorMsg = formatMessage(intl,
 		MESSAGE_KEYS.REQUIRED_ERROR, { label: label });
 	const injectedDefinition = {
 		params: keyName,
@@ -952,7 +950,7 @@ function _injectDateTimeDefinition(control, valDefinitions, keyName, controlValI
 	const format = (control.dateFormat) ? control.dateFormat : control.timeFormat;
 	const defaultFormat = (control.dateFormat) ? DEFAULT_DATE_FORMAT : DEFAULT_TIME_FORMAT;
 	const dtFormat = (format) ? format : defaultFormat;
-	const errorMsg = PropertyUtils.formatMessage(intl,
+	const errorMsg = formatMessage(intl,
 		MESSAGE_KEYS.DATETIME_FORMAT_ERROR, { role: control.role, format: dtFormat });
 	const injectedDefinition = {
 		params: keyName,
@@ -987,7 +985,7 @@ function _injectDateTimeDefinition(control, valDefinitions, keyName, controlValI
 function _injectInvalidFieldDefinition(control, valDefinitions, keyName, controlValId, intl) {
 	// inject invalid field validation definition
 	const label = (control.label && control.label.text) ? control.label.text : keyName;
-	const errorMsg = PropertyUtils.formatMessage(intl,
+	const errorMsg = formatMessage(intl,
 		MESSAGE_KEYS.INVALID_FIELD_ERROR, { label: label });
 	const injectedDefinition = {
 		params: keyName,
@@ -1056,15 +1054,17 @@ function getMetadataFieldMatch(paramInfo, metadata, key) {
 	return null;
 }
 
-module.exports.validatePropertiesValues = validatePropertiesValues;
-module.exports.validateConditions = validateConditions;
-module.exports.validatePropertiesConditions = validatePropertiesConditions;
-module.exports.validateInput = validateInput;
-module.exports.filterConditions = filterConditions;
-module.exports.allowConditions = allowConditions;
-module.exports.updateState = updateState;
-module.exports.getParamRefPropertyId = getParamRefPropertyId;
-module.exports.injectDefaultValidations = injectDefaultValidations;
-module.exports.updatePanelChildrenStatesForPanelIds = updatePanelChildrenStatesForPanelIds;
-module.exports.searchInArray = searchInArray;
-module.exports.getMetadataFieldMatch = getMetadataFieldMatch;
+export {
+	validatePropertiesValues,
+	validateConditions,
+	validatePropertiesConditions,
+	validateInput,
+	filterConditions,
+	allowConditions,
+	updateState,
+	getParamRefPropertyId,
+	injectDefaultValidations,
+	updatePanelChildrenStatesForPanelIds,
+	searchInArray,
+	getMetadataFieldMatch
+};
