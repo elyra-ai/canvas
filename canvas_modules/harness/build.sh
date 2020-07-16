@@ -26,9 +26,8 @@ cd $SCRIPT_DIR
 # install require modules
 echo "npm install"
 npm install
-export NODE_ENV=production
 echo "grunt build"
-grunt build > "$WORKING_DIR/grunt_logs.txt"
+npm run build-prod > "$WORKING_DIR/grunt_logs.txt"
 echo "Prune production"
 npm prune --production
 

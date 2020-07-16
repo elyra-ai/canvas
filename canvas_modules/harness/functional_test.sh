@@ -26,7 +26,7 @@ cd $SCRIPT_DIR
 # start the test harness
 echo "npm start"
 export NODE_ENV=production
-npm start &
+npm run start-prod &
 
 # start running the test Cases
 sleep 30
