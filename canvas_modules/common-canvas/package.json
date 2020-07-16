@@ -96,8 +96,7 @@
     "stylelint": "13.6.1",
     "url-loader": "4.1.0",
     "webpack": "4.43.0",
-    "webpack-bundle-analyzer": "3.8.0",
-    "webpack-node-externals": "2.5.0"
+    "webpack-bundle-analyzer": "3.8.0"
   },
   "peerDependencies": {
     "react": "^16.0.0",
