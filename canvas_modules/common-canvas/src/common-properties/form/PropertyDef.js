@@ -21,7 +21,7 @@ import { StructureMetadata } from "./StructureInfo";
 import { DEFAULT_LABEL_EDITABLE } from "../constants/constants";
 import { Size } from "../constants/form-constants";
 import { ResourceDef } from "../util/L10nProvider";
-import propertyOf from "lodash/propertyOf";
+import { propertyOf } from "lodash";
 
 export class PropertyDef {
 	constructor(cname, icon, editorSize, pixelWidth, label, labelEditable, help, description, structureMetadata, parameterMetadata, groupMetadata, actionMetadata) {

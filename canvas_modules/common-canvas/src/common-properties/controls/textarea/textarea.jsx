@@ -17,14 +17,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import TextArea from "carbon-components-react/lib/components/TextArea";
+import { TextArea } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
-import ControlUtils from "./../../util/control-utils";
+import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 import { CHARACTER_LIMITS, TOOL_TIP_DELAY } from "./../../constants/constants.js";
 import classNames from "classnames";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 
 const newLine = "\n";
 

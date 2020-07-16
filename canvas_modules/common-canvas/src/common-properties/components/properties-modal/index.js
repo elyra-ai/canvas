@@ -15,4 +15,4 @@
  */
 
 import PropertiesModal from "./properties-modal.jsx";
-module.exports = PropertiesModal;
+export default PropertiesModal;

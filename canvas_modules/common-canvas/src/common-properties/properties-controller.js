@@ -17,23 +17,20 @@
 
 import PropertiesStore from "./properties-store.js";
 import logger from "../../utils/logger";
-import UiConditionsParser from "./ui-conditions/ui-conditions-parser.js";
-import ExpressionInfoParser from "./controls/expression/expressionInfo-parser.js";
+import * as UiConditionsParser from "./ui-conditions/ui-conditions-parser.js";
+import setExpressionInfo from "./controls/expression/expressionInfo-parser.js";
 
-import UiGroupsParser from "./ui-conditions/ui-groups-parser.js";
-import conditionsUtil from "./ui-conditions/conditions-utils";
-import PropertyUtils from "./util/property-utils.js";
+import { parseUiContent } from "./ui-conditions/ui-groups-parser.js";
+import * as conditionsUtil from "./ui-conditions/conditions-utils";
+import * as PropertyUtils from "./util/property-utils.js";
 
 import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole } from "./constants/form-constants";
-import cloneDeep from "lodash/cloneDeep";
-import assign from "lodash/assign";
-import isEmpty from "lodash/isEmpty";
-import has from "lodash/has";
+import { has, cloneDeep, assign, isEmpty } from "lodash";
 
-import ConditionOps from "./ui-conditions/condition-ops/condition-ops";
+import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
 
 export default class PropertiesController {
 
@@ -62,7 +59,7 @@ export default class PropertiesController {
 		this.sharedCtrlInfo = [];
 		this.isSummaryPanel = false;
 		this.visibleSubPanelCounter = 0;
-		this.conditionOps = ConditionOps.getConditionOps();
+		this.conditionOps = getConditionOps();
 		this.expressionFunctionInfo = {};
 		this.expressionRecentlyUsed = [];
 		this.expressionFieldsRecentlyUsed = [];
@@ -270,7 +267,7 @@ export default class PropertiesController {
 	parsePanelTree() {
 		this.panelTree = {};
 		this.panelTree[PANEL_TREE_ROOT] = { controls: [], panels: [], actions: [] };
-		UiGroupsParser.parseUiContent(this.panelTree, this.form, PANEL_TREE_ROOT);
+		parseUiContent(this.panelTree, this.form, PANEL_TREE_ROOT);
 	}
 
 	_addToControlValues(resolveParameterRefs) {
@@ -464,7 +461,7 @@ export default class PropertiesController {
 	*	@param custOps object
 	*/
 	setConditionOps(custOps) {
-		this.conditionOps = ConditionOps.getConditionOps(custOps);
+		this.conditionOps = getConditionOps(custOps);
 	}
 
 	/**
@@ -800,7 +797,7 @@ export default class PropertiesController {
 	//
 
 	setExpressionInfo(expressionInfo) {
-		this.expressionFunctionInfo = ExpressionInfoParser.setExpressionInfo(expressionInfo);
+		this.expressionFunctionInfo = setExpressionInfo(expressionInfo);
 	}
 
 	getExpressionInfo() {

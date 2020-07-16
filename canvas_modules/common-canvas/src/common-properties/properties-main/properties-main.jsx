@@ -23,21 +23,17 @@ import EditorForm from "./../components/editor-form";
 import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
-import PropertyUtils from "./../util/property-utils";
+import * as PropertyUtils from "./../util/property-utils";
 import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
-import isEqual from "lodash/isEqual";
-import omit from "lodash/omit";
-import pick from "lodash/pick";
-import has from "lodash/has";
+import { has, isEqual, omit, pick, cloneDeep } from "lodash";
 import Icon from "./../../icons/icon.jsx";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 import { Provider } from "react-redux";
 import logger from "../../../utils/logger";
 
 import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
-import cloneDeep from "lodash/cloneDeep";
 
 import { injectIntl } from "react-intl";
 import styles from "./properties-main-widths.scss";

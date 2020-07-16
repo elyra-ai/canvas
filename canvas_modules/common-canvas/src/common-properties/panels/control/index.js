@@ -15,4 +15,4 @@
  */
 
 import Control from "./control.jsx";
-module.exports = Control;
+export default Control;

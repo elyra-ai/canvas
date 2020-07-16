@@ -22,6 +22,6 @@ function _getMessages(locale, bundles) {
 	return messages;
 }
 
-module.exports = {
-	getMessages: _getMessages
+export {
+	_getMessages as getMessages
 };

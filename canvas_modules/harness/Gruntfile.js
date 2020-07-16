@@ -16,6 +16,8 @@
 /* eslint global-require: 0 */
 /* eslint quote-props: 0 */
 
+"use strict";
+
 var IS_PRODUCTION = process.env.NODE_ENV === "production";
 var codeCoverageDir = "reports/coverage";
 

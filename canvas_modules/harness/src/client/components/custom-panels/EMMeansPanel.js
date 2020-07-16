@@ -15,7 +15,7 @@
  */
 
 import React from "react";
-import isEqual from "lodash/isEqual";
+import { isEqual } from "lodash";
 
 /*
  * This hidden panel exists to service the property requirements for the EMMeans tables in GLMM.

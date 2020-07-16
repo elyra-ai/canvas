@@ -738,5 +738,6 @@ function _parameterValueLabels(parameter, l10nProvider) {
 	return [];
 }
 
-module.exports.makePrimaryTab = makePrimaryTab;
-module.exports.makeControl = _makeControl;
+export {
+	makePrimaryTab, _makeControl as makeControl
+};

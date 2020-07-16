@@ -15,7 +15,7 @@
  */
 
 import logger from "./../../../../utils/logger";
-import PropertyUtils from "./../../util/property-utils.js";
+import { fieldValueMatchesProto } from "./../../util/property-utils.js";
 
 function op() {
 	return "colDoesExists";
@@ -52,12 +52,11 @@ function evaluate(paramInfo, param2Info, value, controller) {
 // Return the field if found in dataset, else undefined
 function valueInDataset(dataset, field) {
 	return dataset.find(function(dataModelField) {
-		return PropertyUtils.fieldValueMatchesProto(field, dataModelField);
+		return fieldValueMatchesProto(field, dataModelField);
 	});
 }
 
 
 // Public Methods ------------------------------------------------------------->
 
-module.exports.op = op;
-module.exports.evaluate = evaluate;
+export { op, evaluate };

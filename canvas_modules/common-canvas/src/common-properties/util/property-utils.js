@@ -17,8 +17,8 @@
 import logger from "../../../utils/logger";
 import { ParamRole } from "../constants/form-constants";
 import { DATA_TYPE, CARBON_ICONS } from "../constants/constants";
-import cloneDeep from "lodash/cloneDeep";
-import uuid4 from "uuid/v4";
+import { cloneDeep } from "lodash";
+import { v4 as uuid4 } from "uuid";
 import defaultMessages from "../../../locales/common-properties/locales/en.json";
 
 /**
@@ -396,18 +396,18 @@ function _findCorrespondingValue(input, values) {
 	return input;
 }
 
-module.exports = {
-	toType: toType,
-	formatMessage: formatMessage,
-	evaluateText: evaluateText,
-	getTableFieldIndex: getTableFieldIndex,
-	convertInputDataModel: convertInputDataModel,
-	getFieldsFromControlValues: getFieldsFromControlValues,
-	copy: copy,
-	stringifyFieldValue: stringifyFieldValue,
-	fieldValueMatchesProto: fieldValueMatchesProto,
-	fieldStringToValue: fieldStringToValue,
-	generateId: generateId,
-	getDMDefault: getDMDefault,
-	getDMFieldIcon: getDMFieldIcon
+export {
+	toType,
+	formatMessage,
+	evaluateText,
+	getTableFieldIndex,
+	convertInputDataModel,
+	getFieldsFromControlValues,
+	copy,
+	stringifyFieldValue,
+	fieldValueMatchesProto,
+	fieldStringToValue,
+	generateId,
+	getDMDefault,
+	getDMFieldIcon
 };

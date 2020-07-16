@@ -21,16 +21,16 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { UnControlled as CodeMirror } from "react-codemirror2";
 import Icon from "./../../../icons/icon.jsx";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 
 import ValidationMessage from "./../../components/validation-message";
 import WideFlyout from "./../../components/wide-flyout";
-import PropertyUtils from "./../../util/property-utils";
-import ExpressionBuilder from "./expression-builder/expression-builder.jsx";
+import { formatMessage } from "./../../util/property-utils";
+import ExpressionBuilder from "./expression-builder/expression-builder";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE } from "./../../constants/constants";
 import { Calculator24 } from "@carbon/icons-react";
-import ControlUtils from "./../../util/control-utils";
-import { STATES } from "./../../constants/constants.js";
+import * as ControlUtils from "./../../util/control-utils";
+import { STATES } from "./../../constants/constants";
 
 
 // required for server side rendering.
@@ -255,7 +255,7 @@ class ExpressionControl extends React.Component {
 				disabled={this.props.state === STATES.DISABLED}
 				onClick={this.showExpressionBuilder}
 				renderIcon={Calculator24}
-				iconDescription={PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE)}
+				iconDescription={formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE)}
 			/>)
 			: null;
 
@@ -268,7 +268,7 @@ class ExpressionControl extends React.Component {
 			</div>);
 		}
 
-		const validateLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_VALIDATE_LABEL);
+		const validateLabel = formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_VALIDATE_LABEL);
 		const validateLink = this.expressionInfo.validateLink && this.props.validateLink ? (
 			<div className="properties-expression-validate" disabled={this.props.state === STATES.DISABLED}>
 				<Button className="validateLink" kind="ghost" onClick={this.handleValidate} disabled={this.props.state === STATES.DISABLED}>
@@ -286,9 +286,9 @@ class ExpressionControl extends React.Component {
 			extraKeys: { "Ctrl-Space": "autocomplete" },
 			autoRefresh: true
 		};
-		const applyLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL);
-		const rejectLabel = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
-		const expressonTitle = PropertyUtils.formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE);
+		const applyLabel = formatMessage(reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL);
+		const rejectLabel = formatMessage(reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
+		const expressonTitle = formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE);
 
 		const flyout = this.state.showExpressionBuilder ? (<WideFlyout
 			cancelHandler={this.cancelExpressionBuilder}

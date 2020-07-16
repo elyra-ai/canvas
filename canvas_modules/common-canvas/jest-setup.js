@@ -29,7 +29,7 @@ console.warn = jest.fn(mockConsole(console.warn));
 console.error = jest.fn(mockConsole(console.error));
 
 function mockConsole(consoleMethod) {
-	const ignoredMessages = ["test was not wrapped in act(...)"];
+	const ignoredMessages = ["test was not wrapped in act(...)", "Rendering components directly into document.body is discouraged"];
 	return (message, ...args) => {
 		const hasIgnoredMessage = ignoredMessages.some((ignoredMessage) => message.includes(ignoredMessage));
 		if (!hasIgnoredMessage) {

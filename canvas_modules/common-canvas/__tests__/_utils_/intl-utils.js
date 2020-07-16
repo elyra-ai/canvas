@@ -21,14 +21,15 @@ import { mount, shallow } from "enzyme";
 const defaultLocale = "en-US";
 const locale = defaultLocale;
 
-export function mountWithIntl(node) {
-	return mount(node, {
+export function mountWithIntl(node, inOptions) {
+	const options = Object.assign({
 		wrappingComponent: IntlProvider,
 		wrappingComponentProps: {
 			locale,
 			defaultLocale
-		},
-	});
+		}
+	}, inOptions);
+	return mount(node, options);
 }
 
 export function shallowWithIntl(node) {

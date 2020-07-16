@@ -16,7 +16,7 @@
 
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
-import UiConditionsParser from "../../src/common-properties/ui-conditions/ui-conditions-parser.js";
+import * as UiConditionsParser from "../../src/common-properties/ui-conditions/ui-conditions-parser.js";
 import { mountWithIntl } from "./intl-utils";
 import { expect } from "chai";
 import cloneDeep from "lodash/cloneDeep";

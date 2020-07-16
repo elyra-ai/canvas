@@ -17,7 +17,7 @@
 import has from "lodash/has";
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 import { BINDING, EXECUTION_NODE, SUPER_NODE, MODEL_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class PipelineInHandler {

@@ -17,20 +17,19 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import ControlUtils from "./../../util/control-utils";
+import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
-import { STATES, TOOL_TIP_DELAY, DATA_TYPE } from "./../../constants/constants.js";
-import Tooltip from "./../../../tooltip/tooltip.jsx";
-import Icon from "./../../../icons/icon.jsx";
-import uuid4 from "uuid/v4";
+import { STATES, TOOL_TIP_DELAY, DATA_TYPE } from "./../../constants/constants";
+import Tooltip from "./../../../tooltip/tooltip";
+import Icon from "./../../../icons/icon";
+import { v4 as uuid4 } from "uuid";
 import moment from "moment";
-import isEqual from "lodash/isEqual";
-import intersection from "lodash/intersection";
+import { isEqual, intersection } from "lodash";
 
 import { ControlType } from "./../../constants/form-constants";
 
 import classNames from "classnames";
-import PropertyUtils from "./../../util/property-utils";
+import { stringifyFieldValue } from "./../../util/property-utils";
 
 class ReadonlyControl extends React.Component {
 	constructor(props) {
@@ -65,7 +64,7 @@ class ReadonlyControl extends React.Component {
 		if (typeof controlValue === "undefined" || controlValue === null) {
 			controlValue = "";
 		} else if (typeof controlValue === "object" && controlValue.link_ref) {
-			controlValue = PropertyUtils.stringifyFieldValue(controlValue, this.props.control);
+			controlValue = stringifyFieldValue(controlValue, this.props.control);
 		} else if (Array.isArray(controlValue)) {
 			// this is needed to comma separate an array of readonly strings.
 			controlValue = controlValue.join(", ");

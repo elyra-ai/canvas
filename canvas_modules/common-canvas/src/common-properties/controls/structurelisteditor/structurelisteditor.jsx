@@ -19,10 +19,10 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import AbstractTable from "./../abstract-table.jsx";
 import MoveableTableRows from "./../../components/moveable-table-rows";
-import PropertyUtils from "./../../util/property-utils";
+import { formatMessage } from "./../../util/property-utils";
 import ValidationMessage from "./../../components/validation-message";
 import { MESSAGE_KEYS, STATES } from "./../../constants/constants";
-import ControlUtils from "./../../util/control-utils";
+import * as ControlUtils from "./../../util/control-utils";
 
 class StructurelisteditorControl extends AbstractTable {
 
@@ -40,11 +40,11 @@ class StructurelisteditorControl extends AbstractTable {
 
 	render() {
 		const tableButtonConfig = {
-			addButtonLabel: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
+			addButtonLabel: formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_LABEL),
-			removeButtonTooltip: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
+			removeButtonTooltip: formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_REMOVEBUTTON_TOOLTIP),
-			addButtonTooltip: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
+			addButtonTooltip: formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_TOOLTIP),
 			addButtonFunction: this.addRow
 		};

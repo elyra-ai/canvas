@@ -17,8 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { WarningFilled16, ErrorFilled16 } from "@carbon/icons-react";
-import Toggle from "carbon-components-react/lib/components/Toggle";
-import ToggleSmall from "carbon-components-react/lib/components/ToggleSmall";
+import { Toggle, ToggleSmall } from "carbon-components-react";
 import { connect } from "react-redux";
 
 class CustomToggleCtrl extends React.Component {

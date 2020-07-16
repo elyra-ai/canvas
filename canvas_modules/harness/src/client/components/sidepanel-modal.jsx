@@ -19,15 +19,8 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import FileUploader from "carbon-components-react/lib/components/FileUploader";
 import PropTypes from "prop-types";
-import Button from "carbon-components-react/lib/components/Button";
-import Select from "carbon-components-react/lib/components/Select";
-import SelectItemGroup from "carbon-components-react/lib/components/SelectItemGroup";
-import SelectItem from "carbon-components-react/lib/components/SelectItem";
-import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
-import RadioButton from "carbon-components-react/lib/components/RadioButton";
-import Toggle from "carbon-components-react/lib/components/Toggle";
+import { Toggle, FileUploader, Button, Select, SelectItemGroup, SelectItem, RadioButtonGroup, RadioButton } from "carbon-components-react";
 
 import {
 	CHOOSE_FROM_LOCATION,

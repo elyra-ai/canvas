@@ -10,7 +10,4 @@ Contract with IBM Corp.
 const en = require("./en.json");
 const eo = require("./eo.json");
 
-module.exports = {
-	"en": en,
-	"eo": eo
-};
+export { en, eo };

@@ -15,8 +15,8 @@
  */
 
 import logger from "./../../../../utils/logger";
-import PropertyUtils from "./../../util/property-utils";
-import isEqual from "lodash/isEqual";
+import { fieldValueMatchesProto } from "./../../util/property-utils";
+import { isEqual } from "lodash";
 import { ParamRole } from "./../../constants/form-constants";
 
 function op() {
@@ -33,7 +33,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 		let columnExists = true;
 		// check if there are any matching values in dataModel
 		for (const field of dataModelFields) {
-			if (PropertyUtils.fieldValueMatchesProto(paramInfo.value, field)) {
+			if (fieldValueMatchesProto(paramInfo.value, field)) {
 				columnExists = false;
 				break;
 			}
@@ -79,5 +79,4 @@ function _findFieldColumnValues(paramInfo, controller) {
 
 // Public Methods ------------------------------------------------------------->
 
-module.exports.op = op;
-module.exports.evaluate = evaluate;
+export { op, evaluate };

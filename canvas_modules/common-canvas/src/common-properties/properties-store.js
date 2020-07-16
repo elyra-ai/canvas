@@ -15,8 +15,7 @@
  */
 
 import { createStore, combineReducers } from "redux";
-import has from "lodash/has";
-import isEqual from "lodash/isEqual";
+import { has, isEqual } from "lodash";
 
 import { setPropertyValues, updatePropertyValue, removePropertyValue } from "./actions";
 import { setControlStates, updateControlState } from "./actions";
@@ -37,7 +36,7 @@ import errorMessagesReducer from "./reducers/error-messages";
 import datasetMetadataReducer from "./reducers/dataset-metadata";
 import rowSelectionsReducer from "./reducers/row-selections";
 import componentMetadataReducer from "./reducers/component-metadata";
-import PropertyUtils from "./util/property-utils.js";
+import * as PropertyUtils from "./util/property-utils.js";
 import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS } from "./constants/constants.js";
 
 /* eslint max-depth: ["error", 6] */

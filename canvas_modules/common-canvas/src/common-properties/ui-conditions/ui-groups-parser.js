@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import has from "lodash/has";
+import { has } from "lodash";
 
 import logger from "../../../utils/logger";
 import { ItemType } from "../constants/form-constants";
@@ -109,6 +109,4 @@ function _newPanelTreeObject(panelTree, panelId) {
 	panelTree[panelId] = { controls: [], panels: [], actions: [] };
 }
 
-module.exports = {
-	parseUiContent: parseUiContent
-};
+export { parseUiContent };

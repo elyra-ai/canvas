@@ -15,4 +15,4 @@
  */
 
 import EditorForm from "./editor-form.jsx";
-module.exports = EditorForm;
+export default EditorForm;

@@ -15,7 +15,7 @@
  */
 
 import { ParameterDef, ParameterMetadata } from "./ParameterInfo";
-import propertyOf from "lodash/propertyOf";
+import { propertyOf } from "lodash";
 import { ResourceDef } from "../util/L10nProvider";
 
 export class StructureDef {

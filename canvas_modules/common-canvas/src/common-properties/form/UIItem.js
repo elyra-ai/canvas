@@ -15,7 +15,7 @@
  */
 
 import { ItemType } from "../constants/form-constants";
-import propertyOf from "lodash/propertyOf";
+import { propertyOf } from "lodash";
 
 export class UIItem {
 	constructor(elements) {

@@ -28,7 +28,7 @@ module.exports = {
 		jasmine: true,
 		jest: true
 	},
-	"parserOptions": {
-		"sourceType": "module"
+	parserOptions: {
+		"sourceType": "script"
 	}
 };

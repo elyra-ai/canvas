@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 
 /**
 * Used to return a unique id for a control that requires an html id
@@ -65,10 +65,10 @@ function joinNewlines(list, joinValue) {
 	return list;
 }
 
-module.exports = {
-	getCharLimit: getCharLimit,
-	getControlId: getControlId,
-	getDataId: getDataId,
-	splitNewlines: splitNewlines,
-	joinNewlines: joinNewlines
+export {
+	getCharLimit,
+	getControlId,
+	getDataId,
+	splitNewlines,
+	joinNewlines
 };

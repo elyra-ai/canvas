@@ -15,4 +15,4 @@
  */
 
 import TextPanel from "./text-panel.jsx";
-module.exports = TextPanel;
+export default TextPanel;
