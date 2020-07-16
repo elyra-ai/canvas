@@ -22,7 +22,7 @@ import flowValidationPipeline from "../test_resources/flow-validation/pipeline.j
 import subFlowValidationPipeline from "../test_resources/flow-validation/subFlowPipeline.json";
 import flowValidationNoMsgsPipeline from "../test_resources/flow-validation/noMsgsPipeline.json";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
-import FlowValidation from "../../src/flow-validation/validate-flow.js";
+import * as FlowValidation from "../../src/flow-validation/validate-flow.js";
 
 const canvasController = new CanvasController();
 const NodeIds = {

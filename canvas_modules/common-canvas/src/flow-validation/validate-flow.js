@@ -100,4 +100,4 @@ function _setNodeMessages(node, pipelineId, propertiesController, canvasControll
 	}
 }
 
-export default validateFlow;
+export { validateFlow };

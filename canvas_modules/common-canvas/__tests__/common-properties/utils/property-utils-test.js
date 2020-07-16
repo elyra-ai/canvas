@@ -15,7 +15,7 @@
  */
 
 import { expect } from "chai";
-import PropertyUtils from "./../../../src/common-properties/util/property-utils.js";
+import * as PropertyUtils from "./../../../src/common-properties/util/property-utils.js";
 import testUtils from "./../../_utils_/property-utils";
 import Controller from "./../../../src/common-properties/properties-controller";
 import propertyUtils from "./../../_utils_/property-utils";
