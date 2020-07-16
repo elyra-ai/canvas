@@ -1406,6 +1406,52 @@ _defineConstant("TEXTAREA_PROPS_INFO", {
 		"textareaControlName_not_empty": "Textarea Control cannot be empty"
 	}
 });
+_defineConstant("LIST_PROPS_INFO", {
+	"title": "List Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: list",
+			"editable": false
+		},
+		"current_parameters": {
+			"listControlName": [
+				"list item 1"
+			]
+		},
+		"parameters": [
+			{
+				"id": "listControlName",
+				"type": "array[string]",
+				"default": "listPlaceholderText"
+			}
+		],
+		"uihints": {
+			"id": "listControlName",
+			"parameter_info": [
+				{
+					"parameter_ref": "listControlName",
+					"label": {
+						"default": "List Control Name"
+					},
+					"description": {
+						"default": "List test"
+					},
+					"control": "list",
+					"moveable_rows": true
+				}
+			],
+			"group_info": [
+				{
+					"id": "List Control",
+					"type": "controls",
+					"parameter_refs": [
+						"listControlName"
+					]
+				}
+			]
+		}
+	}
+});
 _defineConstant("PASSWORD_FIELD_PROPS_INFO", {
 	"title": "Password Title",
 	"parameterDef": {

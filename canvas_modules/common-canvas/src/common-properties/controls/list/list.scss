@@ -14,27 +14,9 @@
  * limitations under the License.
  */
 
-.properties-list {
-	.bx--form-item { // carbon overrides
-		margin-right: 0;
-		margin-bottom: 0;
-	}
-
-	list {
-		background-color: $field-02;
-	}
-
-	&.hide {
-		display: none;
-	}
-	&.error {
-		list {
-			box-shadow: 0 2px 0 0 $support-01;
-		}
-	}
-	&.warning {
-		list {
-			box-shadow: 0 2px 0 0 $support-03;
-		}
+.properties-list-table {
+	.properties-input-control input, // textfields
+	.properties-numberfield input[type="number"] { // numberfields
+		background-color: $field-01;
 	}
 }

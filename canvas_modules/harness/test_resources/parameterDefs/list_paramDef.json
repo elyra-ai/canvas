@@ -4,15 +4,37 @@
   },
   "current_parameters": {
     "list_string": [
-			"list item 1",
-			"list item 2",
-			"list item 3"
-		],
-		"list_integer": [
-			10,
-			20,
-			30
-		]
+      "list item 1",
+      "list item 2",
+      "list item 3",
+      ""
+    ],
+    "list_integer": [
+      10,
+      20,
+      30,
+      null
+    ],
+    "list_string_error": [
+      "not empty"
+    ],
+    "list_integer_warning": [
+      0
+    ],
+    "hide": true,
+    "list_string_hidden": [
+      "list item 1",
+      "list item 2",
+      "list item 3",
+      ""
+    ],
+    "disable": true,
+    "list_integer_disabled": [
+      10,
+      20,
+      30,
+      null
+    ]
   },
   "parameters": [
     {
@@ -21,6 +43,30 @@
     },
     {
       "id": "list_integer",
+      "type": "array[integer]"
+    },
+    {
+      "id": "list_string_error",
+      "type": "array[string]"
+    },
+    {
+      "id": "list_integer_warning",
+      "type": "array[integer]"
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "list_string_hidden",
+      "type": "array[string]"
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "list_integer_disabled",
       "type": "array[integer]"
     }
   ],
@@ -40,8 +86,8 @@
         "description": {
           "default": "list with a string array value"
         },
-				"control": "list",
-				"moveable_rows": true
+        "control": "list",
+        "moveable_rows": true
       },
       {
         "parameter_ref": "list_integer",
@@ -51,7 +97,61 @@
         "description": {
           "default": "list with an integer array value"
         },
-				"control": "list"
+        "control": "list"
+      },
+      {
+        "parameter_ref": "list_string_error",
+        "label": {
+          "default": "list of strings"
+        },
+        "description": {
+          "default": "list with show error if empty"
+        },
+        "control": "list",
+        "moveable_rows": true
+      },
+      {
+        "parameter_ref": "list_integer_warning",
+        "label": {
+          "default": "list of integers"
+        },
+        "description": {
+          "default": "list will show warning if empty"
+        },
+        "control": "list"
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'List String Hidden'"
+        }
+      },
+      {
+        "parameter_ref": "list_string_hidden",
+        "label": {
+          "default": "list of strings"
+        },
+        "description": {
+          "default": "list with a string array value"
+        },
+        "control": "list",
+        "moveable_rows": true
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'List Integer Disabled'"
+        }
+      },
+      {
+        "parameter_ref": "list_integer_disabled",
+        "label": {
+          "default": "list of integers"
+        },
+        "description": {
+          "default": "list with an integer array value"
+        },
+        "control": "list"
       }
     ],
     "complex_type_info": [],
@@ -66,8 +166,86 @@
           "list_string",
           "list_integer"
         ]
+      },
+      {
+        "id": "list-values-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "list_string_error",
+          "list_integer_warning",
+          "hide",
+          "list_string_hidden",
+          "disable",
+          "list_integer_disabled"
+        ]
       }
     ]
   },
-  "conditions": []
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "list_string_error",
+          "message": {
+            "default": "List should not be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "list_string_error",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "list_integer_warning",
+          "message": {
+            "default": "List should not be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "list_integer_warning",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "list_string_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "list_integer_disabled"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ]
 }

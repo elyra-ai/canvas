@@ -456,6 +456,132 @@ _defineConstant("TEXTAREA_WARNING_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("LIST_ERROR_PROPS_INFO", {
+	"title": "List Title",
+	"parameterDef": {
+		"current_parameters": {
+			"listControlName": ["list1", "list2", "list3", ""]
+		},
+		"parameters": [
+			{
+				"id": "listControlName",
+				"type": "array[string]",
+				"default": "listPlaceholderText"
+			}
+		],
+		"uihints": {
+			"id": "listControlName",
+			"parameter_info": [
+				{
+					"parameter_ref": "listControlName",
+					"label": {
+						"default": "List Control Name"
+					},
+					"description": {
+						"default": "Show error if list is empty"
+					},
+					"control": "list",
+					"moveable_rows": true
+				}
+			],
+			"group_info": [
+				{
+					"id": "List Control",
+					"type": "controls",
+					"parameter_refs": [
+						"listControlName"
+					]
+				}
+			]
+		},
+		"conditions": [
+			{
+				"validation": {
+					"fail_message": {
+						"type": "error",
+						"message": {
+							"default": "list cannot be empty",
+							"resource_key": "listControlName_not_empty"
+						},
+						"focus_parameter_ref": "listControlName"
+					},
+					"evaluate": {
+						"condition": {
+							"parameter_ref": "listControlName",
+							"op": "isNotEmpty"
+						}
+					}
+				}
+			}
+		],
+		"resources": {
+			"listControlName_not_empty": "list cannot be empty"
+		}
+	}
+});
+_defineConstant("LIST_WARNING_PROPS_INFO", {
+	"title": "List Title",
+	"parameterDef": {
+		"current_parameters": {
+			"listNumberControlName": [10, 20, 30, null]
+		},
+		"parameters": [
+			{
+				"id": "listNumberControlName",
+				"type": "array[integer]",
+				"default": "listNumberPlaceholderText"
+			}
+		],
+		"uihints": {
+			"id": "listNumberControlName",
+			"parameter_info": [
+				{
+					"parameter_ref": "listNumberControlName",
+					"label": {
+						"default": "List Control Name"
+					},
+					"description": {
+						"default": "Show warning if list is empty"
+					},
+					"control": "list"
+				}
+			],
+			"group_info": [
+				{
+					"id": "List Number Control",
+					"type": "controls",
+					"parameter_refs": [
+						"listNumberControlName"
+					]
+				}
+			]
+		},
+		"conditions": [
+			{
+				"validation": {
+					"fail_message": {
+						"type": "warning",
+						"message": {
+							"default": "list cannot be empty",
+							"resource_key": "listNumberControlName_not_empty"
+						},
+						"focus_parameter_ref": "listNumberControlName"
+					},
+					"evaluate": {
+						"condition": {
+							"parameter_ref": "listNumberControlName",
+							"op": "notEquals",
+							"value": []
+						}
+					}
+				}
+			}
+		],
+		"resources": {
+			"listNumberControlName_not_empty": "list cannot be empty"
+		}
+	}
+});
 _defineConstant("PASSWORD_FIELD_ERROR_PROPS_INFO", {
 	"title": "Password Title",
 	"parameterDef": {

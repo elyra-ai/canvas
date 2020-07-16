@@ -25,10 +25,6 @@ import ValidationMessage from "./../../components/validation-message";
 import ControlUtils from "./../../util/control-utils";
 import { TABLE_SCROLLBAR_WIDTH, MESSAGE_KEYS, STATES } from "./../../constants/constants.js";
 import { Type } from "./../../constants/form-constants.js";
-// import { CHARACTER_LIMITS, TOOL_TIP_DELAY } from "./../../constants/constants.js";
-// import classNames from "classnames";
-// import Tooltip from "./../../../tooltip/tooltip.jsx";
-// import uuid4 from "uuid/v4";
 import NumberfieldControl from "./../numberfield";
 import TextfieldControl from "./../textfield";
 
@@ -190,10 +186,6 @@ ListControl.propTypes = {
 	selectedRows: PropTypes.array, // set by redux
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux
-	// value: PropTypes.oneOfType([
-	// 	PropTypes.string,
-	// 	PropTypes.array
-	// ]), // pass in by redux
 	messageInfo: PropTypes.object // pass in by redux
 };
 
