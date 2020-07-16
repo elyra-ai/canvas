@@ -71,7 +71,7 @@ class NumberfieldControl extends React.Component {
 	}
 
 	render() {
-		let controlValue = null;
+		let controlValue = ""; // Default to empty string to avoid '0' appearing when value is 'null'
 		if (this.props.value !== null) {
 			controlValue = this.props.value;
 		}

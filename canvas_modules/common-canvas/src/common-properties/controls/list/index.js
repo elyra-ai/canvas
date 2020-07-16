@@ -15,4 +15,4 @@
  */
 
 import List from "./list.jsx";
-module.exports = List;
+export default List;
