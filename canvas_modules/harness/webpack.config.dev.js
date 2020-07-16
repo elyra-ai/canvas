@@ -20,7 +20,7 @@
 
 const path = require("path");
 const webpack = require("webpack");
-const babelOptions = require("./scripts/babel/babelOptions").babelBaseOptions;
+const babelOptions = require("./scripts/babel/babelOptions").babelOptions;
 const constants = require("./lib/constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
@@ -47,6 +47,7 @@ const output = {
 
 
 // Loaders ------------------------------------------------------------>
+babelOptions.plugins.push("react-hot-loader/babel"); // needed for HMR support
 
 const rules = [
 	{
@@ -104,10 +105,10 @@ module.exports = {
 		],
 		alias: {
 			"react": "node_modules/react",
-			"react-dom": "node_modules/react-dom",
+			"react-dom": "node_modules/@hot-loader/react-dom",
 			"react-redux": "node_modules/react-redux",
 			"react-intl": "node_modules/react-intl",
-			"common-canvas": "src/common-canvas-dev.js",
+			"common-canvas": "src/common-canvas-dev.js"
 		},
 		extensions: [".js", ".jsx", ".json"]
 	},

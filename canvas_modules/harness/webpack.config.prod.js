@@ -21,7 +21,7 @@
 
 const path = require("path");
 const webpack = require("webpack");
-const babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
+const babelOptions = require("./scripts/babel/babelOptions").babelOptions;
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const constants = require("./lib/constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -52,7 +52,6 @@ const rules = [
 	},
 	{
 		test: /\.s*css$/,
-		sideEffects: true,
 		use: [
 			{
 				loader: MiniCssExtractPlugin.loader,
@@ -78,6 +77,7 @@ const rules = [
 // Plugins ------------------------------------------------------------>
 const plugins = [
 	new webpack.optimize.OccurrenceOrderPlugin(),
+	new webpack.NoEmitOnErrorsPlugin(),
 	new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
 	new MiniCssExtractPlugin({
 		filename: "harness.min.css"

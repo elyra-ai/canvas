@@ -28,6 +28,7 @@ if (process.env.COVERAGE) {
 
 var plugins = [
 	new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
+	new webpack.NoEmitOnErrorsPlugin(),
 	new MiniCssExtractPlugin({
 		filename: "[name].min.css"
 	}),

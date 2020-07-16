@@ -27,7 +27,7 @@ import { IntlProvider } from "react-intl";
 
 ReactDOM.render(
 	<HashRouter>
-		<IntlProvider>
+		<IntlProvider locale="en">
 			<div>
 				<Route exact path="/" component={ App } />
 				<Route path="/properties" component={ CommonPropertiesComponents } />
