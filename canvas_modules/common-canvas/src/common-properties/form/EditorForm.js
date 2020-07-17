@@ -373,6 +373,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let header;
 	let includeAllFields;
 	let layout;
+	let structureType;
 
 	// The control type defines the basic UI element that should be used to edit the property
 	if (parameter.getRole() === ParamRole.CUSTOM) {
@@ -460,6 +461,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 						layout = structureDef.layout;
 					}
 				}
+
+				structureType = parameter.getStructureType();
 			} else {
 				controlType = ControlType.TEXTFIELD;
 			}
@@ -495,6 +498,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	settings.labelVisible = typeof parameter.labelVisible === "boolean" ? parameter.labelVisible : labelVisible;
 	settings.controlType = parameter.getControl(controlType);
 	settings.valueDef = ValueDef.make(parameter);
+	settings.structureType = structureType;
 	settings.role = role;
 	settings.additionalText = additionalText;
 	settings.orientation = orientation;

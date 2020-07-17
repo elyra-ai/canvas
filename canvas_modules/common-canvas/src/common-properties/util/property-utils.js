@@ -184,6 +184,36 @@ function convertType(storage) {
 }
 
 /**
+ * Converts the currentValues of a structure control of structureType 'object'
+ *  from a nested array of objects to an array of values.
+ *  Example currentValues: [[{a: 1}, {b: 2}], [{a: 10}, {B; 20}]]
+ *  Example convertedValues: [[1, 2], [10, 20]]
+ */
+function convertObjectStructureToArray(controlId, currentValues) {
+	const convertedValues = [];
+	currentValues.forEach((valueList) => {
+		const newList = [];
+		valueList.forEach((value) => {
+			if (typeof value === "object") {
+				newList.push(Object.values(value)[0]); // There should only be 1 value
+			}
+		});
+		convertedValues.push(newList);
+	});
+	return convertedValues;
+}
+
+/**
+ * Converts the currentValues of a structure control of structureType 'object'
+ *  from a nested array of values to an array of objects.
+ *  Example currentValues: [[1, 2], [10, 20]]
+ *  Example convertedValues: [[{a: 1}, {b: 2}], [{a: 10}, {B; 20}]]
+ */
+function convertArrayStructureToObject(controlId, subControls, currentValues) {
+	// TODO
+}
+
+/**
  * Converts the input list of currentParameters into a simple array of field names
  * 	Will also remove invalid fields in currentParameters that are not in the data model.
  *
@@ -402,6 +432,8 @@ export {
 	evaluateText,
 	getTableFieldIndex,
 	convertInputDataModel,
+	convertObjectStructureToArray,
+	convertArrayStructureToObject,
 	getFieldsFromControlValues,
 	copy,
 	stringifyFieldValue,
