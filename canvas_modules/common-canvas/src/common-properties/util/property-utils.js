@@ -189,7 +189,7 @@ function convertType(storage) {
  *  Example currentValues: [[{a: 1}, {b: 2}], [{a: 10}, {B; 20}]]
  *  Example convertedValues: [[1, 2], [10, 20]]
  */
-function convertObjectStructureToArray(controlId, currentValues) {
+function convertObjectStructureToArray(currentValues) {
 	const convertedValues = [];
 	currentValues.forEach((valueList) => {
 		const newList = [];
@@ -209,7 +209,7 @@ function convertObjectStructureToArray(controlId, currentValues) {
  *  Example currentValues: [[1, 2], [10, 20]]
  *  Example convertedValues: [[{a: 1}, {b: 2}], [{a: 10}, {B; 20}]]
  */
-function convertArrayStructureToObject(controlId, subControls, currentValues) {
+function convertArrayStructureToObject(control, currentValues) {
 	// TODO
 }
 

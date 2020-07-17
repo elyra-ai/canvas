@@ -912,6 +912,7 @@ export default class PropertiesController {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
 		let filteredValue;
+
 		// don't return hidden/disabled values
 		if (filterHiddenDisabled) {
 			// top level value
@@ -939,9 +940,10 @@ export default class PropertiesController {
 					}
 				}
 			}
-			return filteredValue;
+			return this._convertObjectStructure(propertyId, filteredValue);
 		}
-		return propertyValue;
+
+		return this._convertObjectStructure(propertyId, propertyValue);
 	}
 
 	removePropertyValue(inPropertyId) {
@@ -949,8 +951,19 @@ export default class PropertiesController {
 		this.propertiesStore.removePropertyValue(propertyId);
 	}
 
+	// convert currentParameters of structureType:object to object values
+	_convertObjectStructure(propertyId, propertyValue) {
+		const control = this.getControl(propertyId);
+		if (control.structureType && control.structureType === "object") {
+			const convertedValues = PropertyUtils.convertArrayStructureToObject(control.subControls, propertyValue);
+			return convertedValues;
+		}
+		return propertyValue;
+	}
+
 	getPropertyValues(filterHiddenDisabled) {
 		const propertyValues = this.propertiesStore.getPropertyValues();
+		let returnValues = propertyValues;
 		if (filterHiddenDisabled) {
 			const filteredValues = {};
 			for (const propKey in propertyValues) {
@@ -963,9 +976,21 @@ export default class PropertiesController {
 					filteredValues[propKey] = filteredValue;
 				}
 			}
-			return filteredValues;
+			returnValues = filteredValues;
 		}
-		return propertyValues;
+
+		// convert currentParameters of structureType:object to object values
+		for (const controlId in returnValues) {
+			if (!has(returnValues, controlId)) {
+				continue;
+			}
+
+			const propertyId = this.convertPropertyId(controlId);
+			const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
+			returnValues[controlId] = this._convertObjectStructure(propertyId, propertyValue);
+		}
+
+		return returnValues;
 	}
 
 	setPropertyValues(values) {
