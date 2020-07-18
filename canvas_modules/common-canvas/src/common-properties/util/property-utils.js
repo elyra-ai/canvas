@@ -209,8 +209,21 @@ function convertObjectStructureToArray(currentValues) {
  *  Example currentValues: [[1, 2], [10, 20]]
  *  Example convertedValues: [[{a: 1}, {b: 2}], [{a: 10}, {B; 20}]]
  */
-function convertArrayStructureToObject(control, currentValues) {
-	// TODO
+function convertArrayStructureToObject(subControls, currentValues) {
+	const structureKeys = [];
+	subControls.forEach((control) => {
+		structureKeys.push(control.name);
+	});
+
+	const convertedValues = [];
+	currentValues.forEach((valueList) => {
+		const newObject = {};
+		valueList.forEach((value, index) => {
+			newObject[structureKeys[index]] = value;
+		});
+		convertedValues.push(newObject);
+	});
+	return convertedValues;
 }
 
 /**

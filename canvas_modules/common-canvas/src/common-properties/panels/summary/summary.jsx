@@ -87,7 +87,7 @@ class SummaryPanel extends React.Component {
 			const propertyId = { name: controlName };
 			const summaryControl = this.props.controller.getControl(propertyId);
 			// get filtered controlValue (filters out hidden and disabled values)
-			let controlValue = this.props.controller.getPropertyValue(propertyId, true);
+			let controlValue = this.props.controller.getPropertyValue(propertyId, { filterHiddenDisabled: true });
 			// let custom control set their own value to be displayed
 			const customValue = this.props.controller.getCustPropSumPanelValue(propertyId);
 			let showCustom = false;

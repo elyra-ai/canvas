@@ -908,13 +908,19 @@ export default class PropertiesController {
 		}
 	}
 
-	getPropertyValue(inPropertyId, filterHiddenDisabled) {
+	/*
+	* return the property value for the given 'inPropertyId'
+	* option - optional object of config options where
+	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
+	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
+	*/
+	getPropertyValue(inPropertyId, options) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
 		let filteredValue;
 
 		// don't return hidden/disabled values
-		if (filterHiddenDisabled) {
+		if (options && options.filterHiddenDisabled === true) {
 			// top level value
 			const controlState = this.getControlState(propertyId);
 			if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN) {
@@ -940,10 +946,16 @@ export default class PropertiesController {
 					}
 				}
 			}
-			return this._convertObjectStructure(propertyId, filteredValue);
+			if (options && options.applyProperties === true) {
+				return this._convertObjectStructure(propertyId, filteredValue);
+			}
+			return filteredValue;
 		}
 
-		return this._convertObjectStructure(propertyId, propertyValue);
+		if (options && options.applyProperties === true) {
+			return this._convertObjectStructure(propertyId, propertyValue);
+		}
+		return propertyValue;
 	}
 
 	removePropertyValue(inPropertyId) {
@@ -961,16 +973,22 @@ export default class PropertiesController {
 		return propertyValue;
 	}
 
-	getPropertyValues(filterHiddenDisabled) {
+	/*
+	* return the property values for all controls
+	* option - optional object of config options where
+	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
+	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
+	*/
+	getPropertyValues(options) {
 		const propertyValues = this.propertiesStore.getPropertyValues();
 		let returnValues = propertyValues;
-		if (filterHiddenDisabled) {
+		if (options && options.filterHiddenDisabled === true) {
 			const filteredValues = {};
 			for (const propKey in propertyValues) {
 				if (!has(propertyValues, propKey)) {
 					continue;
 				}
-				const filteredValue = this.getPropertyValue({ name: propKey }, filterHiddenDisabled);
+				const filteredValue = this.getPropertyValue({ name: propKey }, options);
 				// only set parameters with values
 				if (typeof filteredValue !== "undefined") {
 					filteredValues[propKey] = filteredValue;
@@ -980,14 +998,16 @@ export default class PropertiesController {
 		}
 
 		// convert currentParameters of structureType:object to object values
-		for (const controlId in returnValues) {
-			if (!has(returnValues, controlId)) {
-				continue;
-			}
+		if (options && options.applyProperties === true) {
+			for (const controlId in returnValues) {
+				if (!has(returnValues, controlId)) {
+					continue;
+				}
 
-			const propertyId = this.convertPropertyId(controlId);
-			const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
-			returnValues[controlId] = this._convertObjectStructure(propertyId, propertyValue);
+				const propertyId = this.convertPropertyId(controlId);
+				const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
+				returnValues[controlId] = this._convertObjectStructure(propertyId, propertyValue);
+			}
 		}
 
 		return returnValues;
