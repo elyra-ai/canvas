@@ -19,8 +19,8 @@ import List from "../../../src/common-properties/controls/list";
 import { mountWithIntl, shallowWithIntl } from "../../_utils_/intl-utils";
 import { Provider } from "react-redux";
 import { expect } from "chai";
-import propertyUtils from "../../_utils_/property-utils";
-import tableUtils from "./../../_utils_/table-utils";
+import { setControls } from "../../_utils_/property-utils";
+import { getTableRows, selectCheckboxes } from "./../../_utils_/table-utils";
 import Controller from "../../../src/common-properties/properties-controller";
 
 const controlString = {
@@ -62,7 +62,7 @@ const listIntegerPopertyId = { name: "test-list-integer" };
 
 describe("list renders correctly for array[string]", () => {
 	const controller = new Controller();
-	propertyUtils.setControls(controller, [controlString]);
+	setControls(controller, [controlString]);
 
 	beforeEach(() => {
 		controller.setErrorMessages({});
@@ -106,7 +106,7 @@ describe("list renders correctly for array[string]", () => {
 
 		expect(wrapper.find("button.properties-add-fields-button")).to.have.length(1);
 		expect(wrapper.find("button.properties-remove-fields-button")).to.have.length(1);
-		expect(tableUtils.getTableRows(wrapper)).to.have.length(2);
+		expect(getTableRows(wrapper)).to.have.length(2);
 	});
 
 	it("should be able to modify value in `list` control textfield", () => {
@@ -155,9 +155,9 @@ describe("list renders correctly for array[string]", () => {
 		expect(removeButton.prop("disabled")).to.equal(true);
 
 		// select the third row in the table
-		const tableData = tableUtils.getTableRows(wrapper);
+		const tableData = getTableRows(wrapper);
 		expect(tableData).to.have.length(4);
-		tableUtils.selectCheckboxes(wrapper, [2]);
+		selectCheckboxes(wrapper, [2]);
 		// ensure removed button is enabled and select it
 		removeButton = wrapper.find("button.properties-remove-fields-button");
 		expect(removeButton.prop("disabled")).to.equal(false);
@@ -169,7 +169,7 @@ describe("list renders correctly for array[string]", () => {
 
 describe("list renders correctly for array[integer]", () => {
 	const controller = new Controller();
-	propertyUtils.setControls(controller, [controlInteger]);
+	setControls(controller, [controlInteger]);
 
 	beforeEach(() => {
 		controller.setErrorMessages({});
@@ -213,7 +213,7 @@ describe("list renders correctly for array[integer]", () => {
 
 		expect(wrapper.find("button.properties-add-fields-button")).to.have.length(1);
 		expect(wrapper.find("button.properties-remove-fields-button")).to.have.length(1);
-		expect(tableUtils.getTableRows(wrapper)).to.have.length(2);
+		expect(getTableRows(wrapper)).to.have.length(2);
 	});
 
 	it("should be able to modify value in `list` control numberfield", () => {
@@ -262,9 +262,9 @@ describe("list renders correctly for array[integer]", () => {
 		expect(removeButton.prop("disabled")).to.equal(true);
 
 		// select the third row in the table
-		const tableData = tableUtils.getTableRows(wrapper);
+		const tableData = getTableRows(wrapper);
 		expect(tableData).to.have.length(4);
-		tableUtils.selectCheckboxes(wrapper, [2]);
+		selectCheckboxes(wrapper, [2]);
 		// ensure removed button is enabled and select it
 		removeButton = wrapper.find("button.properties-remove-fields-button");
 		expect(removeButton.prop("disabled")).to.equal(false);

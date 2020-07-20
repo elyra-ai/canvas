@@ -17,16 +17,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import NumberfieldControl from "./../numberfield";
+import TextfieldControl from "./../textfield";
 import AbstractTable from "./../abstract-table.jsx";
 import FlexibleTable from "./../../components/flexible-table";
 import MoveableTableRows from "./../../components/moveable-table-rows";
-import PropertyUtils from "./../../util/property-utils";
 import ValidationMessage from "./../../components/validation-message";
-import ControlUtils from "./../../util/control-utils";
+import { formatMessage } from "./../../util/property-utils";
+import { getDataId } from "./../../util/control-utils";
 import { TABLE_SCROLLBAR_WIDTH, MESSAGE_KEYS, STATES } from "./../../constants/constants.js";
 import { Type } from "./../../constants/form-constants.js";
-import NumberfieldControl from "./../numberfield";
-import TextfieldControl from "./../textfield";
 
 const NUMBER_TYPES = [Type.INTEGER, Type.DOUBLE, Type.LONG];
 
@@ -70,25 +70,14 @@ class ListControl extends AbstractTable {
 		if (controlValue) {
 			for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				const columns = [];
-				// If the propertyId contains 'row' then this list control is part of a table.
-				// Need to add an additional 'index' to retrieve the correct value from the control within a table.
-				const row = typeof this.props.propertyId.row !== "undefined"
-					? { row: this.props.propertyId.row, index: rowIndex }
-					: { row: rowIndex };
+				const row = { row: rowIndex };
 				const propertyId = Object.assign({}, this.props.propertyId, row);
 				const control = Object.assign({}, this.props.control);
-				if (control.dmImage) {
-					const fields = this.props.controller.getDatasetMetadataFields();
-					const value = PropertyUtils.stringifyFieldValue(this.props.controller.getPropertyValue(propertyId), control, true);
-					const icon = PropertyUtils.getDMFieldIcon(fields,
-						value, control.dmImage);
-					control.icon = icon;
-				}
 				const controlPropType = this.props.controller.getControlPropType(propertyId);
 				const cellContent = this.makeCell(control, propertyId, controlPropType);
 				columns.push({
-					key: rowIndex + "-0-field",
-					column: "field",
+					key: rowIndex + "-0-value",
+					column: "value",
 					content: cellContent
 				});
 				// add padding for scrollbar
@@ -101,7 +90,7 @@ class ListControl extends AbstractTable {
 					key: rowIndex,
 					onClickCallback: this.handleRowClick.bind(this, rowIndex, false),
 					columns: columns,
-					className: "column-select-table-row"
+					className: "list-table-row"
 				});
 			}
 		}
@@ -111,9 +100,8 @@ class ListControl extends AbstractTable {
 	makeHeader() {
 		const headers = [];
 		headers.push({
-			"key": "field",
-			"label": PropertyUtils.formatMessage(this.reactIntl,
-				MESSAGE_KEYS.LIST_TABLE_LABEL),
+			"key": "value",
+			"label": formatMessage(this.reactIntl, MESSAGE_KEYS.LIST_TABLE_LABEL),
 			"description": (null) });
 		headers.push({ "key": "scrollbar", "label": "", "width": TABLE_SCROLLBAR_WIDTH });
 		return headers;
@@ -123,16 +111,15 @@ class ListControl extends AbstractTable {
 		const headers = this.makeHeader();
 
 		const tableButtonConfig = {
-			addButtonLabel: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
+			addButtonLabel: formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_LABEL),
-			removeButtonTooltip: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
+			removeButtonTooltip: formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_REMOVEBUTTON_TOOLTIP),
-			addButtonTooltip: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
+			addButtonTooltip: formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_TOOLTIP),
 			addButtonFunction: this.addRow
 		};
 
-		// const table = this.createTable(this.props.state, tableButtonConfig);
 		const rows = this.makeRows(this.props.value, this.props.state);
 		const topRightPanel = this.makeAddRemoveButtonPanel(this.props.state, tableButtonConfig);
 		let rowToScrollTo;
@@ -164,7 +151,7 @@ class ListControl extends AbstractTable {
 		</div>);
 
 		return (
-			<div data-id={ControlUtils.getDataId(this.props.propertyId)} className="properties-list-control" >
+			<div data-id={getDataId(this.props.propertyId)} className="properties-list-control" >
 				<MoveableTableRows
 					tableContainer={tableContainer}
 					control={this.props.control}
