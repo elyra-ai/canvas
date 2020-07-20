@@ -332,7 +332,8 @@
                               "secondaryText": "RenameFieldEntry"
                             },
                             "addRemoveRows": true,
-                            "header": true
+                            "header": true,
+                            "structureType": "map"
                           }
                         }
                       ]
