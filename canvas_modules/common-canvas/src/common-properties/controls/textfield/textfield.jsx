@@ -21,7 +21,6 @@ import { TextInput } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
-import { ControlType } from "./../../constants/form-constants.js";
 import { CHARACTER_LIMITS, TOOL_TIP_DELAY } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
