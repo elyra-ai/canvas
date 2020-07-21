@@ -1489,3 +1489,23 @@ describe("Properties Controller action methods", () => {
 		expect(controller.getAction({ name: "dne" })).to.be.undefined;
 	});
 });
+
+describe("Properties Controller getControlPropType", () => {
+	beforeEach(() => {
+		reset();
+	});
+	it("should return correct propType from control", () => {
+		const propType = controller.getControlPropType({ name: "param_int" });
+		expect(propType).to.equal("integer");
+
+		const propType2 = controller.getControlPropType({ name: "param_complex" });
+		expect(propType2).to.equal("structure");
+	});
+	it("should return correct propType from subControl", () => {
+		const propType = controller.getControlPropType({ name: "param_complex", col: 0 }); // subcontrol: "zoom_value"
+		expect(propType).to.equal("double");
+
+		const propType2 = controller.getControlPropType({ name: "param_complex", col: 2 }); // subcontrol: "zoom_label"
+		expect(propType2).to.equal("string");
+	});
+});
