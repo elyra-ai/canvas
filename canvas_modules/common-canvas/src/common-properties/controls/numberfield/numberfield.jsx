@@ -87,6 +87,7 @@ class NumberfieldControl extends React.Component {
 					step={this.props.control.increment}
 					value={controlValue}
 					placeholder={this.props.control.additionalText}
+					allowEmpty
 				/>
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
