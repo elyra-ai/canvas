@@ -29,7 +29,6 @@ import { TABLE_SCROLLBAR_WIDTH, MESSAGE_KEYS, STATES } from "./../../constants/c
 import { Type } from "./../../constants/form-constants.js";
 
 const NUMBER_TYPES = [Type.INTEGER, Type.DOUBLE, Type.LONG];
-
 class ListControl extends AbstractTable {
 	constructor(props) {
 		super(props);
@@ -72,8 +71,8 @@ class ListControl extends AbstractTable {
 				const columns = [];
 				const row = { row: rowIndex };
 				const propertyId = Object.assign({}, this.props.propertyId, row);
-				const control = Object.assign({}, this.props.control);
 				const controlPropType = this.props.controller.getControlPropType(propertyId);
+				const control = {};
 				const cellContent = this.makeCell(control, propertyId, controlPropType);
 				columns.push({
 					key: rowIndex + "-0-value",

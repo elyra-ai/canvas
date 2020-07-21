@@ -18,8 +18,8 @@
     "list_string_error": [
       "not empty"
     ],
-    "list_integer_warning": [
-      0
+    "list_double_warning": [
+      1.1
     ],
     "hide": true,
     "list_string_hidden": [
@@ -29,11 +29,8 @@
       ""
     ],
     "disable": true,
-    "list_integer_disabled": [
-      10,
-      20,
-      30,
-      null
+    "list_long_disabled": [
+      12345678910
     ]
   },
   "parameters": [
@@ -50,8 +47,8 @@
       "type": "array[string]"
     },
     {
-      "id": "list_integer_warning",
-      "type": "array[integer]"
+      "id": "list_double_warning",
+      "type": "array[double]"
     },
     {
       "id": "hide",
@@ -66,8 +63,8 @@
       "type": "boolean"
     },
     {
-      "id": "list_integer_disabled",
-      "type": "array[integer]"
+      "id": "list_long_disabled",
+      "type": "array[long]"
     }
   ],
   "complex_types": [],
@@ -92,7 +89,7 @@
       {
         "parameter_ref": "list_integer",
         "label": {
-          "default": "list of integers"
+          "default": "list of integer values"
         },
         "description": {
           "default": "list with an integer array value"
@@ -111,9 +108,9 @@
         "moveable_rows": true
       },
       {
-        "parameter_ref": "list_integer_warning",
+        "parameter_ref": "list_double_warning",
         "label": {
-          "default": "list of integers"
+          "default": "list of double values"
         },
         "description": {
           "default": "list will show warning if empty"
@@ -144,9 +141,9 @@
         }
       },
       {
-        "parameter_ref": "list_integer_disabled",
+        "parameter_ref": "list_long_disabled",
         "label": {
-          "default": "list of integers"
+          "default": "list of long values"
         },
         "description": {
           "default": "list with an integer array value"
@@ -175,11 +172,11 @@
         "type": "controls",
         "parameter_refs": [
           "list_string_error",
-          "list_integer_warning",
+          "list_double_warning",
           "hide",
           "list_string_hidden",
           "disable",
-          "list_integer_disabled"
+          "list_long_disabled"
         ]
       }
     ]
@@ -206,14 +203,14 @@
       "validation": {
         "fail_message": {
           "type": "warning",
-          "focus_parameter_ref": "list_integer_warning",
+          "focus_parameter_ref": "list_double_warning",
           "message": {
             "default": "List should not be empty"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "list_integer_warning",
+            "parameter_ref": "list_double_warning",
             "op": "isNotEmpty"
           }
         }
@@ -236,7 +233,7 @@
     {
       "enabled": {
         "parameter_refs": [
-          "list_integer_disabled"
+          "list_long_disabled"
         ],
         "evaluate": {
           "condition": {

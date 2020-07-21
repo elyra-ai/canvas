@@ -46,7 +46,7 @@ class TextfieldControl extends React.Component {
 		if (this.charLimit !== -1 && value) {
 			value = value.substring(0, this.charLimit);
 		}
-		if (this.isList && this.props.control.controlType !== ControlType.LIST) {
+		if (this.isList) {
 			value = ControlUtils.splitNewlines(value, arrayValueDelimiter);
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
