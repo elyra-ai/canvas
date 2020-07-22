@@ -45,7 +45,7 @@ class ListControl extends AbstractTable {
 
 	makeCell(control, propertyId, controlPropType) {
 		if (NUMBER_TYPES.indexOf(controlPropType) > -1) {
-			return (<div className="properties-list-number-control">
+			return (<div className="properties-table-cell-control">
 				<NumberfieldControl
 					control={control}
 					propertyId={propertyId}
@@ -54,7 +54,7 @@ class ListControl extends AbstractTable {
 				/>
 			</div>);
 		}
-		return (<div className="properties-list-string-control">
+		return (<div className="properties-table-cell-control">
 			<TextfieldControl
 				control={control}
 				propertyId={propertyId}
