@@ -539,7 +539,7 @@ describe("New error messages of a control should be detected and applyPropertyCh
 });
 
 describe("CommonProperties should setForm correctly", () => {
-	it("form should set correctly with the currentParameters converted from object to array in object structure control", () => {
+	it("getPropertyValue: form should set correctly with the currentParameters converted from object to array in object structure control", () => {
 		// Verify input currentParameters converts correctly to internal format
 		const renderedObject = propertyUtils.flyoutEditorForm(structureListEditorParamDef); // default is applyOnBlur=true
 		const controller = renderedObject.controller;
@@ -550,6 +550,20 @@ describe("CommonProperties should setForm correctly", () => {
 		// Verify internal format gets returned correctly as array of objects
 		const originalFormat = structureListEditorParamDef.current_parameters.structurelisteditorObjectType;
 		const objectFormat = controller.getPropertyValue({ name: "structurelisteditorObjectType" }, { applyProperties: true });
+		expect(objectFormat).to.eql(originalFormat);
+	});
+
+	it("getPropertyValues: form should set correctly with the currentParameters converted from object to array in object structure control", () => {
+		// Verify input currentParameters converts correctly to internal format
+		const renderedObject = propertyUtils.flyoutEditorForm(structureListEditorParamDef); // default is applyOnBlur=true
+		const controller = renderedObject.controller;
+		const internalFormat = controller.getPropertyValues().structurelisteditorObjectType;
+		const expected = [[1, "Hello", "World", "string", "Readonly phrase"]];
+		expect(internalFormat).to.eql(expected);
+
+		// Verify internal format gets returned correctly as array of objects
+		const originalFormat = structureListEditorParamDef.current_parameters.structurelisteditorObjectType;
+		const objectFormat = controller.getPropertyValues({ applyProperties: true }).structurelisteditorObjectType;
 		expect(objectFormat).to.eql(originalFormat);
 	});
 });
