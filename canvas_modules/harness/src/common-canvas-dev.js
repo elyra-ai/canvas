@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import "../../common-canvas/src/index.scss";
 
 import { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation }
 	from "../../common-canvas/src/index";
+
+import "../../common-canvas/src/themes/light.scss";
 
 export { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation };
