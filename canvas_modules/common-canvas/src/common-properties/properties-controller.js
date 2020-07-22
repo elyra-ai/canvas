@@ -910,7 +910,7 @@ export default class PropertiesController {
 
 	/*
 	* return the property value for the given 'inPropertyId'
-	* option - optional object of config options where
+	* options - optional object of config options where
 	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
 	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
 	*/
@@ -975,7 +975,7 @@ export default class PropertiesController {
 
 	/*
 	* return the property values for all controls
-	* option - optional object of config options where
+	* options - optional object of config options where
 	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
 	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
 	*/

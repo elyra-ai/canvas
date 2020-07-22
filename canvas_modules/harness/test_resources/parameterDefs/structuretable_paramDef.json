@@ -151,6 +151,13 @@
         true,
         "Canadian"
       ]
+    ],
+    "structuretableObjectType": [
+      {
+        "field": "Cholesterol",
+        "structuretable_object_readonly_int": 1,
+        "structuretable_object_sort_order": "Ascending"
+      }
     ]
   },
   "parameters": [
@@ -225,6 +232,12 @@
       "type": "map[string,ST_mse_table]",
       "role": "column",
       "default": []
+    },
+    {
+      "id": "structuretableObjectType",
+      "type": "object[structuretableObjectType]",
+      "role": "column",
+      "required": true
     }
   ],
   "complex_types": [
@@ -540,6 +553,30 @@
           ]
         }
       ]
+    },
+    {
+      "id": "structuretableObjectType",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "structuretable_object_readonly_int",
+          "type": "integer",
+          "default": "5"
+        },
+        {
+          "id": "structuretable_object_sort_order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -726,6 +763,17 @@
             ]
           }
         ]
+      },
+      {
+        "parameter_ref": "structuretableObjectType",
+        "required": true,
+        "label": {
+          "default": "Sort by"
+        },
+        "description": {
+          "default": "This control will return the values as objects.",
+          "placement": "on_panel"
+        }
       }
     ],
     "complex_type_info": [
@@ -1264,6 +1312,51 @@
             "summary": true
           }
         ]
+      },
+      {
+        "complex_type_ref": "structuretableObjectType",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "resource_key": "structuretableObjectType.field.label"
+          },
+          "summary": true,
+          "dm_image": "invalid"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "structuretable_object_readonly_int",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableObjectType.structuretable_object_readonly_int.label"
+            },
+            "description": {
+              "resource_key": "structuretableObjectType.structuretable_object_readonly_int.desc"
+            },
+            "generated_values": {
+              "operation": "index",
+              "start_value": 5
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "structuretable_object_sort_order",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableObjectType.sort_order.label"
+            },
+            "description": {
+              "resource_key": "structuretableObjectType.sort_order.desc"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          }
+        ]
       }
     ],
     "group_info": [
@@ -1381,6 +1474,31 @@
                 },
                 "parameter_refs": [
                   "ST_mse_table"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Tables - Objects",
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "structuretableObjectType-summary-panel",
+            "label": {
+              "default": "Configure Sort Order"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableObjectType",
+                "type": "controls",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "structuretableObjectType"
                 ]
               }
             ]

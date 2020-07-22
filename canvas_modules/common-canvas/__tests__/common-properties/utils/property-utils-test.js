@@ -155,3 +155,19 @@ describe("getDMFieldIcon retrieves correct icon type for each measurement level 
 		expect(icon).to.equal("measurement-empty");
 	});
 });
+
+describe("convertObjectStructureToArray and convertArrayStructureToObject returns correct values ", () => {
+	const subControls = [{ name: "field1" }, { name: "field2" }, { name: "field3" }];
+	const arrayValues = [[1, 20, "hi"], [33, 404, "hello"], [55005, 612345, "hola"]];
+	const objectValues = [{ field1: 1, field2: 20, field3: "hi" }, { field1: 33, field2: 404, field3: "hello" }, { field1: 55005, field2: 612345, field3: "hola" }];
+
+	it("convertObjectStructureToArray returns correct values", () => {
+		const actual = PropertyUtils.convertObjectStructureToArray(objectValues);
+		expect(actual).to.eql(arrayValues);
+	});
+
+	it("convertArrayStructureToObject returns correct values", () => {
+		const actual = PropertyUtils.convertArrayStructureToObject(subControls, arrayValues);
+		expect(actual).to.eql(objectValues);
+	});
+});

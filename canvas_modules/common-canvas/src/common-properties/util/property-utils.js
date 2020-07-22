@@ -185,29 +185,25 @@ function convertType(storage) {
 
 /**
  * Converts the currentValues of a structure control of structureType 'object'
- *  from a nested array of objects to an array of values.
- *  Example currentValues: [[{a: 1}, {b: 2}], [{a: 10}, {B; 20}]]
+ *  from an array of objects to an array of values.
+ *  Example currentValues: [[{a: 1, b: 2}], [{a: 10, b; 20}]]
  *  Example convertedValues: [[1, 2], [10, 20]]
  */
 function convertObjectStructureToArray(currentValues) {
 	const convertedValues = [];
-	currentValues.forEach((valueList) => {
-		const newList = [];
-		valueList.forEach((value) => {
-			if (typeof value === "object") {
-				newList.push(Object.values(value)[0]); // There should only be 1 value
-			}
-		});
-		convertedValues.push(newList);
+	currentValues.forEach((row) => {
+		if (typeof row === "object") {
+			convertedValues.push(Object.values(row));
+		}
 	});
 	return convertedValues;
 }
 
 /**
  * Converts the currentValues of a structure control of structureType 'object'
- *  from a nested array of values to an array of objects.
+ *  from an array of values to an array of objects.
  *  Example currentValues: [[1, 2], [10, 20]]
- *  Example convertedValues: [[{a: 1}, {b: 2}], [{a: 10}, {B; 20}]]
+ *  Example convertedValues: [[{a: 1, b: 2}], [{a: 10, b; 20}]]
  */
 function convertArrayStructureToObject(subControls, currentValues) {
 	const structureKeys = [];
