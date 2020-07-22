@@ -26,8 +26,6 @@ $carbon--theme: $carbon--theme--g10;
 @import "carbon-components/scss/globals/scss/typography";
 
 
-@import "@elyra/canvas/src/index.scss";
-
 @import "../client/components/custom-canvases/tables/tables.scss";
 @import "../client/components/custom-canvases/blue-ellipses/blue-ellipses.scss";
 @import "../client/components/custom-canvases/explain/explain.scss";

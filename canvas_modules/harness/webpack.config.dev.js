@@ -29,6 +29,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 // Entry & Output files ------------------------------------------------------------>
 
 const entry = [
+	"react-hot-loader/patch",
 	"webpack-hot-middleware/client",
 	"@babel/polyfill",
 	"./src/client/index.js"
@@ -98,6 +99,7 @@ var plugins = [
 module.exports = {
 	mode: "development",
 	entry: entry,
+	cache: true,
 	resolve: {
 		modules: [
 			__dirname,
