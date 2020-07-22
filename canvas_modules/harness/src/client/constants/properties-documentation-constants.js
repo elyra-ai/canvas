@@ -1437,7 +1437,8 @@ _defineConstant("LIST_PROPS_INFO", {
 						"default": "List test"
 					},
 					"control": "list",
-					"moveable_rows": true
+					"moveable_rows": true,
+					"rows": 6
 				}
 			],
 			"group_info": [

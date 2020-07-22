@@ -92,9 +92,10 @@
           "default": "list of integer values"
         },
         "description": {
-          "default": "list with an integer array value"
+          "default": "list with an integer array value. Show '6' rows"
         },
-        "control": "list"
+        "control": "list",
+        "rows": 6
       },
       {
         "parameter_ref": "list_string_error",

@@ -243,7 +243,7 @@ class CommonPropertiesComponents extends React.Component {
 				"id", "type", "role", "enum", "required", "default",
 				"uihints",
 				"parameter_info",
-				"parameter_ref", "control", "label", "moveable_rows",
+				"parameter_ref", "control", "label", "moveable_rows", "rows",
 				"description",
 				"language",
 				"orientation"
@@ -804,6 +804,10 @@ class CommonPropertiesComponents extends React.Component {
 						when <span className="harness-highlight">control</span> is set to <span className="harness-highlight">list</span> in
 						the <span className="harness-highlight">parameter_info</span> section. The array type can be one of:
 						string, integer, double, or long. This control cannot be embedded in a structure.</p>
+					<p>This example also shows the <a className="harness-properties-documentation-page-intro-link" href="#/properties#--moveable_rows">moveable_rows</a>&nbsp;
+						and <span className="harness-highlight">rows</span> attributes. The <span className="harness-highlight">rows</span> option
+						sets the height of the list to show the number of rows specified. This defaults to 4.
+					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">
 							<CommonProperties
