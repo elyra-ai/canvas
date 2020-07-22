@@ -1,0 +1,5 @@
+@import "@carbon/themes/scss/themes";
+// Use the gray 10 theme
+$carbon--theme: $carbon--theme--g10;
+
+@import "../index.scss"

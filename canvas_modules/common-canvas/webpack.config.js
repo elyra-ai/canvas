@@ -56,7 +56,7 @@ module.exports = {
 		"lib/command-stack": "./src/command-stack/command-stack.js",
 		"lib/canvas": "./src/common-canvas/index.js",
 		"common-canvas": "./src/index.js",
-		"styles/common-canvas": "./src/index.scss"
+		"styles/common-canvas": "./src/themes/light.scss"
 	},
 	output: {
 		filename: "[name].js",
