@@ -20,7 +20,5 @@ import CommandStack from "./command-stack/command-stack";
 import * as FlowValidation from "./flow-validation/validate-flow";
 import ContextMenuWrapper from "./context-menu/context-menu-wrapper";
 
-import "./index.scss";
-
 export { CommonCanvas, CanvasController, CommonProperties, PropertiesController, FieldPicker, FlexibleTable,
 	CommandStack, FlowValidation, ContextMenuWrapper };

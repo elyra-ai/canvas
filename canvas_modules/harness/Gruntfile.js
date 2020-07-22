@@ -86,7 +86,7 @@ module.exports = function(grunt) {
 				files: [{
 					expand: true,
 					flatten: false,
-					cwd: "./node_modules/@elyra/canvas/dist",
+					cwd: "./node_modules/@elyra/canvas/dist/styles",
 					src: ["common-canvas*.css"],
 					dest: ".build"
 				},

@@ -53,6 +53,9 @@ module.exports = function(grunt) {
 			},
 			build: {
 				src: ["dist"]
+			},
+			postBuild: {
+				src: ["dist/lib/*.css*", "dist/styles/*.js*", "dist/*.css*"]
 			}
 		},
 		webpack: {
@@ -66,7 +69,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-yamllint");
 	grunt.loadNpmTasks("grunt-webpack");
 
-	var buildTasks = ["clean", "eslint", "jsonlint", "yamllint", "webpack"];
+	var buildTasks = ["clean", "eslint", "jsonlint", "yamllint", "webpack", "clean:postBuild"];
 
 	grunt.registerTask("build", buildTasks);
 	grunt.registerTask("default", ["build"]);

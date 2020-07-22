@@ -33,7 +33,7 @@ var plugins = [
 		filename: "[name].min.css"
 	}),
 	new OptimizeCssAssetsPlugin({
-		assetNameRegExp: /\.min.css$/g,
+		assetNameRegExp: /\styles.min.css$/g,
 		cssProcessorOptions: { discardComments: { removeAll: true }, postcssZindex: { disable: true } }
 	}),
 	new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/)
@@ -55,7 +55,8 @@ module.exports = {
 		"lib/context-menu": "./src/context-menu/context-menu-wrapper.jsx",
 		"lib/command-stack": "./src/command-stack/command-stack.js",
 		"lib/canvas": "./src/common-canvas/index.js",
-		"common-canvas": "./src/index.js" // needs to be last to create correct combined css output
+		"common-canvas": "./src/index.js",
+		"styles/common-canvas": "./src/index.scss"
 	},
 	output: {
 		filename: "[name].js",
