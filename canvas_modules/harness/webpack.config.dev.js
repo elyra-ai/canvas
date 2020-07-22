@@ -91,13 +91,19 @@ var plugins = [
 		inject: true,
 		template: "./index-dev.html"
 	}),
-	new webpack.HotModuleReplacementPlugin()
+	new webpack.HotModuleReplacementPlugin(),
+	// generates the source maps used for debugging.  Used instead of `devtool` option
+	new webpack.SourceMapDevToolPlugin({
+		module: true,
+		columns: false
+	})
 ];
 
 // Exports ------------------------------------------------------------>
 
 module.exports = {
 	mode: "development",
+	devtool: false,
 	entry: entry,
 	cache: true,
 	resolve: {
@@ -118,6 +124,5 @@ module.exports = {
 	module: {
 		rules: rules
 	},
-	plugins: plugins,
-	devtool: "source-map"
+	plugins: plugins
 };
