@@ -55,12 +55,20 @@ import {
 	EXAMPLE_APP_EXPLAIN2,
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
-	FLYOUT,
-	MODAL,
+	PALETTE_FLYOUT,
+	PALETTE_MODAL,
+	PALETTE_NONE,
 	TIP_PALETTE,
 	TIP_NODES,
 	TIP_PORTS,
-	TIP_LINKS
+	TIP_LINKS,
+	TOOLBAR_LAYOUT_NONE,
+	TOOLBAR_LAYOUT_TOP,
+	TOOLBAR_TYPE_DEFAULT,
+	TOOLBAR_TYPE_SINGLE_BAR,
+	TOOLBAR_TYPE_BEFORE_AFTER,
+	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
+	TOOLBAR_TYPE_CARBON_BUTTONS
 } from "../constants/constants.js";
 import FormsService from "../services/FormsService";
 
@@ -902,12 +910,16 @@ export default class SidePanelForms extends React.Component {
 				defaultSelected={this.props.getStateValue("selectedPaletteLayout")}
 			>
 				<RadioButton
-					value={FLYOUT}
-					labelText={FLYOUT}
+					value={PALETTE_FLYOUT}
+					labelText={PALETTE_FLYOUT}
 				/>
 				<RadioButton
-					value={MODAL}
-					labelText={MODAL}
+					value={PALETTE_MODAL}
+					labelText={PALETTE_MODAL}
+				/>
+				<RadioButton
+					value={PALETTE_NONE}
+					labelText={PALETTE_NONE}
 				/>
 			</RadioButtonGroup>
 			<div className="harness-sidepanel-headers">Show Narrow Palette</div>
@@ -918,6 +930,56 @@ export default class SidePanelForms extends React.Component {
 					onToggle={this.setStateValue}
 				/>
 			</div>
+		</div>);
+
+		var toolbarLayout = (<div className="harness-sidepanel-children" id="harness-sidepanel-toolbar-layout">
+			<div className="harness-sidepanel-headers">Toolbar Layout</div>
+			<RadioButtonGroup
+				name="selectedToolbarLayout" // Set name to corresponding field name in App.js
+				className="harness-sidepanel-radio-group"
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedToolbarLayout")}
+			>
+				<RadioButton
+					value={TOOLBAR_LAYOUT_NONE}
+					labelText={TOOLBAR_LAYOUT_NONE}
+				/>
+				<RadioButton
+					value={TOOLBAR_LAYOUT_TOP}
+					labelText={TOOLBAR_LAYOUT_TOP}
+				/>
+			</RadioButtonGroup>
+		</div>);
+
+		var toolbarType = (<div className="harness-sidepanel-children" id="harness-sidepanel-toolbar-type">
+			<div className="harness-sidepanel-headers">Toolbar Type</div>
+			<RadioButtonGroup
+				name="selectedToolbarType" // Set name to corresponding field name in App.js
+				className="harness-sidepanel-radio-group"
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedToolbarType")}
+			>
+				<RadioButton
+					value={TOOLBAR_TYPE_DEFAULT}
+					labelText={TOOLBAR_TYPE_DEFAULT}
+				/>
+				<RadioButton
+					value={TOOLBAR_TYPE_SINGLE_BAR}
+					labelText={TOOLBAR_TYPE_SINGLE_BAR}
+				/>
+				<RadioButton
+					value={TOOLBAR_TYPE_BEFORE_AFTER}
+					labelText={TOOLBAR_TYPE_BEFORE_AFTER}
+				/>
+				<RadioButton
+					value={TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE}
+					labelText={TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE}
+				/>
+				<RadioButton
+					value={TOOLBAR_TYPE_CARBON_BUTTONS}
+					labelText={TOOLBAR_TYPE_CARBON_BUTTONS}
+				/>
+			</RadioButtonGroup>
 		</div>);
 
 		var tipConfig = (<div className="harness-sidepanel-children" id="harness-sidepanel-tip-config">
@@ -1142,6 +1204,10 @@ export default class SidePanelForms extends React.Component {
 					{saveZoom}
 					{divider}
 					{paletteLayout}
+					{divider}
+					{toolbarLayout}
+					{divider}
+					{toolbarType}
 					{divider}
 					{enablePanIntoViewOnOpen}
 					{divider}

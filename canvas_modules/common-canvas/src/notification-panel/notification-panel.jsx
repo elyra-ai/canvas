@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import Icon from "./../icons/icon.jsx";
 import { Button } from "carbon-components-react";
 import { Close16 } from "@carbon/icons-react";
-import { DEFAULT_NOTIFICATION_HEADER } from "./../common-canvas/constants/canvas-constants.js";
+import { DEFAULT_NOTIFICATION_HEADER, NOTIFICATION_ICON_CLASS } from "./../common-canvas/constants/canvas-constants.js";
 
 
 class NotificationPanel extends React.Component {
@@ -100,7 +100,7 @@ class NotificationPanel extends React.Component {
 
 	handleNotificationPanelClickOutside(e) {
 		if (!this.props.notificationConfig.keepOpen) {
-			const notificationIcon = document.getElementsByClassName("notificationCounterIcon")[0];
+			const notificationIcon = document.getElementsByClassName(NOTIFICATION_ICON_CLASS)[0];
 			const notificationHeader = document.getElementsByClassName("notification-panel-header")[0];
 			const notificationMessages = document.getElementsByClassName("notification-panel-messages-container")[0];
 

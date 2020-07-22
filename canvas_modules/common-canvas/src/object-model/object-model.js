@@ -34,7 +34,7 @@ import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@elyra/pipe
 import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from "./schemas-utils/upgrade-palette.js";
 import { createCCStore } from "./redux/store.js";
 
-import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, CREATE_PIPELINE,
+import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
 	CLONE_PIPELINE, SUPER_NODE, HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM,
 	HIGHLIGHT_DOWNSTREAM } from "../common-canvas/constants/canvas-constants.js";
 
@@ -1266,6 +1266,29 @@ export default class ObjectModel {
 
 	getNodeMessages(node) {
 		return node ? node.messages : null;
+	}
+
+	// Returns the maximum message type from all notification messages.
+	getNotificationMessagesMaxType() {
+		const notificationMessages = this.getNotificationMessages();
+		const errorMessages = this.getNotificationMessages(ERROR);
+		const warningMessages = this.getNotificationMessages(WARNING);
+		const successMessages = this.getNotificationMessages(SUCCESS);
+		const infoMessages = this.getNotificationMessages(INFO);
+
+		let maxMessageType = null;
+		if (notificationMessages.length > 0) {
+			if (errorMessages.length > 0) {
+				maxMessageType = ERROR;
+			} else if (warningMessages.length > 0) {
+				maxMessageType = WARNING;
+			} else if (successMessages.length > 0) {
+				maxMessageType = SUCCESS;
+			} else if (infoMessages.length > 0) {
+				maxMessageType = INFO;
+			}
+		}
+		return maxMessageType;
 	}
 
 	// ---------------------------------------------------------------------------

@@ -15,110 +15,100 @@
  */
 
 Cypress.Commands.add("clickToolbarPaletteOpen", () => {
-	cy.get("#palette-open-action").click();
+	cy.getToolbarAction(".togglePalette-action").click();
 });
 
 Cypress.Commands.add("clickToolbarPaletteOpenInExtraCanvas", () => {
-	cy.get("#common-canvas-items-container-1")
-		.find("#palette-open-action")
-		.click();
+	cy.getToolbarActionInExtraCanvas(".togglePalette-action").click();
 });
 
 Cypress.Commands.add("clickToolbarPaletteClose", () => {
-	cy.get("#palette-close-action").click();
+	cy.getToolbarAction(".togglePalette-action").click();
 });
 
 Cypress.Commands.add("clickToolbarPaletteCloseInExtraCanvas", () => {
-	cy.get("#common-canvas-items-container-1")
-		.find("#palette-close-action")
-		.click();
+	cy.getToolbarActionInExtraCanvas(".togglePalette-action").click();
 });
 
 Cypress.Commands.add("clickToolbarStop", () => {
-	cy.get("#stop-action").click();
+	cy.getToolbarAction(".stop-action").click();
 });
 
 Cypress.Commands.add("clickToolbarRun", () => {
-	cy.get("#run-action").click();
+	cy.getToolbarAction(".run-action").click();
 });
 
 Cypress.Commands.add("clickToolbarUndo", () => {
-	cy.get("#undo-action").click();
+	cy.getToolbarAction(".undo-action").click();
 });
 
 Cypress.Commands.add("clickToolbarRedo", () => {
-	cy.get("#redo-action").click();
+	cy.getToolbarAction(".redo-action").click();
 });
 
 Cypress.Commands.add("clickToolbarCut", () => {
-	cy.get("#cut-action").click();
+	cy.getToolbarAction(".cut-action").click();
 });
 
 Cypress.Commands.add("clickToolbarCopy", () => {
-	cy.get("#copy-action").click();
+	cy.getToolbarAction(".copy-action").click();
 });
 
 Cypress.Commands.add("clickToolbarPaste", () => {
-	cy.get("#paste-action").click();
+	cy.getToolbarAction(".paste-action").click();
 });
 
 Cypress.Commands.add("clickToolbarPasteInExtraCanvas", () => {
-	cy.get("#common-canvas-items-container-1")
-		.find("#paste-action")
-		.click();
+	cy.getToolbarActionInExtraCanvas(".paste-action").click();
 });
 
 Cypress.Commands.add("clickToolbarAddComment", () => {
-	cy.get("#createAutoComment-action").click();
+	cy.getToolbarAction(".createAutoComment-action").click();
 });
 
 Cypress.Commands.add("clickToolbarAddCommentnInExtraCanvas", () => {
-	cy.get("#common-canvas-items-container-1")
-		.find("#createAutoComment-action")
-		.click();
+	cy.getToolbarActionInExtraCanvas(".createAutoComment-action").click();
 });
 
 Cypress.Commands.add("clickToolbarDelete", () => {
-	cy.get("#deleteSelectedObjects-action").click();
+	cy.getToolbarAction(".deleteSelectedObjects-action").click();
 });
 
 Cypress.Commands.add("clickToolbarArrangeHorizontally", () => {
-	cy.get("#arrangeHorizontally-action").click();
+	cy.getToolbarAction(".arrangeHorizontally-action").click();
 });
 
 Cypress.Commands.add("clickToolbarArrangeVertically", () => {
-	cy.get("#arrangeVertically-action").click();
+	cy.getToolbarAction(".arrangeVertically-action").click();
 });
 
 Cypress.Commands.add("clickToolbarZoomIn", () => {
-	cy.get("#zoomIn-action").click();
+	cy.getToolbarAction(".zoomIn-action").click();
 });
 
 Cypress.Commands.add("clickToolbarZoomInExtraCanvas", () => {
-	cy.get("#common-canvas-items-container-1")
-		.find("#zoomIn-action")
-		.click();
+	cy.getToolbarActionInExtraCanvas(".zoomIn-action").click();
 });
 
 Cypress.Commands.add("clickToolbarZoomOut", () => {
-	cy.get("#zoomOut-action").click();
+	cy.getToolbarAction(".zoomOut-action").click();
 });
 
 Cypress.Commands.add("clickToolbarZoomOutExtraCanvas", () => {
-	cy.get("#common-canvas-items-container-1")
-		.find("#zoomOut-action")
-		.click();
+	cy.getToolbarActionInExtraCanvas(".zoomOut-action").click();
 });
 
 Cypress.Commands.add("clickToolbarZoomToFit", () => {
-	cy.get("#zoomToFit-action").click();
+	cy.getToolbarAction(".zoomToFit-action").click();
 });
 
 Cypress.Commands.add("clickToolbarNotifications", () => {
-	cy.get("li.notificationCounterIcon button").click();
+	cy.getToolbarAction(".toggleNotificationPanel-action").click();
 });
 
 Cypress.Commands.add("dismissNotificationMessage", (index) => {
+	cy.getToolbarAction(".toggleNotificationPanel-action").click();
+
 	cy.get(".notifications-button-container .notifications")
 		.eq(index)
 		.find(".notification-message-close")
@@ -130,5 +120,52 @@ Cypress.Commands.add("clearAllNotificationMessages", () => {
 });
 
 Cypress.Commands.add("clickToolbarOverflow", () => {
-	cy.get("#overflow-action").click();
+	cy.getToolbarOverflowItem().click();
+});
+
+
+Cypress.Commands.add("getToolbarOverflowItem", () => {
+	cy.getCanvasToolbar()
+		.find(".toolbar-overflow-item")
+		.then((items) => {
+			let overflowItem = null;
+			let topRow = 0;
+			for (let i = 0; i < items.length; i++) {
+				const rect = items[i].getBoundingClientRect();
+				if (i === 0) {
+					topRow = rect.top;
+				}
+				if (rect.top === topRow) {
+					overflowItem = items[i];
+				}
+			}
+			return overflowItem;
+		});
+});
+
+
+Cypress.Commands.add("getToolbarAction", (action) => {
+	// First look for the action in the overflow menu. If it's not there
+	// look in the toolbar
+	const overflowMenuAction = ".toolbar-overflow-menu-item" + action;
+	const toolbarAction = ".toolbar-item" + action;
+
+	cy.get("body").then(($body) => {
+		if ($body.find(overflowMenuAction).length) {
+			return cy.getCanvasToolbar().find(overflowMenuAction);
+		}
+		return cy.getCanvasToolbar().find(toolbarAction);
+	});
+});
+
+Cypress.Commands.add("getToolbarActionInExtraCanvas", (action) => {
+	cy.getExtraCanvasToolbar().find(action);
+});
+
+Cypress.Commands.add("getCanvasToolbar", () => {
+	cy.get(".toolbar-div[instanceid=0]");
+});
+
+Cypress.Commands.add("getExtraCanvasToolbar", () => {
+	cy.get(".toolbar-div[instanceid=1]");
 });

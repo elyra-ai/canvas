@@ -73,6 +73,7 @@ export default class CanvasController {
 			enableDragWithoutSelect: false,
 			enableInternalObjectModel: true,
 			enablePaletteLayout: "Flyout",
+			enableToolbarLayout: "Top",
 			enableInsertNodeDroppedOnLink: false,
 			enableHightlightNodeOnNewLinkDrag: false,
 			enableMoveNodesOnSupernodeResize: true,
@@ -513,19 +514,27 @@ export default class CanvasController {
 		this.objectModel.deleteNotificationMessages(ids);
 	}
 
-	// Returns the array of currently displayed notification messages shown in
-	// the notification panel. The format of a notification message is an object
-	// with these fields:
+	// Returns the array of current notification messages. If the messageType is
+	// provided only messages of that type will be returned. If messageType is
+	// not provided, all messages will be returned. The format of a notification
+	// message is an object with these fields:
 	// {
 	//   "id": string (Required),
-	//   "type" : enum, oneOf ["informational", "success", "warning", "error"] (Required),
-	//   "title": string (Optional)
+	//   "type" : enum, oneOf ["info", "success", "warning", "error"] (Required),
+	//   "callback": function, the callback function when a message is clicked (Required),
+	//   "title": string (Optional),
 	//   "content": string, html, JSX Object (Optional),
-	//   "timestamp": string (Optional)
-	//   "callback": function, the callback function when a message is clicked (Required)
+	//   "timestamp": string (Optional),
+	//   "closeMessage": string (Optional)
 	// }
 	getNotificationMessages(messageType) {
 		return this.objectModel.getNotificationMessages(messageType);
+	}
+
+	// Returns the maximum notification message type present in the current set
+	// of notification messages. For this: ("error" > "warning" > "success" > "info")
+	getNotificationMessagesMaxType() {
+		return this.objectModel.getNotificationMessagesMaxType();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1133,6 +1142,12 @@ export default class CanvasController {
 		}
 	}
 
+	togglePalette() {
+		if (this.commonCanvas) {
+			this.commonCanvas.togglePalette();
+		}
+	}
+
 	openPalette() {
 		if (this.commonCanvas) {
 			this.commonCanvas.openPalette();
@@ -1174,6 +1189,12 @@ export default class CanvasController {
 	closeNotificationPanel() {
 		if (this.commonCanvas) {
 			this.commonCanvas.closeNotificationPanel();
+		}
+	}
+
+	toggleNotificationPanel() {
+		if (this.commonCanvas) {
+			this.commonCanvas.toggleNotificationPanel();
 		}
 	}
 
@@ -1675,11 +1696,36 @@ export default class CanvasController {
 			return;
 		}
 
-		// selectAll is supported for the external AND internal object models.
-		if (data.editType === "selectAll") {
+		// These commands are supported for the external AND internal object models.
+		switch (data.editType) {
+		case "selectAll": {
 			this.objectModel.selectAll(data.pipelineId);
+			break;
+		}
+		case "zoomIn": {
+			this.zoomIn();
+			break;
+		}
+		case "zoomOut": {
+			this.zoomOut();
+			break;
+		}
+		case "zoomToFit": {
+			this.zoomToFit();
+			break;
+		}
+		case "togglePalette": {
+			this.togglePalette();
+			break;
+		}
+		case "toggleNotificationPanel": {
+			this.toggleNotificationPanel();
+			break;
+		}
+		default:
 		}
 
+		// These commands are added to the command stack
 		let command = null;
 
 		if (this.canvasConfig.enableInternalObjectModel) {

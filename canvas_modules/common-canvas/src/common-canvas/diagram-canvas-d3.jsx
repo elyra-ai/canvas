@@ -298,11 +298,15 @@ export default class DiagramCanvas extends React.Component {
 		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
 		const svgCanvas = (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} />);
 
+		const dropDivClassName = this.props.config.enableToolbarLayout === "None"
+			? "common-canvas-drop-div common-canvas-toolbar-none"
+			: "common-canvas-drop-div";
+
 		return (
 			<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
 				<div
 					id={this.canvasDivId}
-					className="common-canvas-drop-div"
+					className={dropDivClassName}
 					onDrop={this.drop}
 					onDragOver={this.dragOver}
 					onDragEnter={this.dragEnter}

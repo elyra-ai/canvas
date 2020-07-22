@@ -24,7 +24,7 @@ import ArrangeVertically from "./../../assets/images/arrange_vertically.svg";
 import Double from "./../../assets/images/double.svg";
 import Integer from "./../../assets/images/integer.svg";
 import StringIcon from "./../../assets/images/string.svg";
-import NotificationCounterIcon from "./../../assets/images/notification_counter_icon.svg";
+import ToggleNotificationPanel from "./../../assets/images/notification_counter_icon.svg";
 import PaletteClose from "./../../assets/images/palette/palette_close.svg";
 import PaletteOpen from "./../../assets/images/palette/palette_open.svg";
 import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
@@ -56,7 +56,7 @@ export default class Icon extends React.Component {
 			double: Double,
 			integer: Integer,
 			string: StringIcon,
-			notificationCounterIcon: NotificationCounterIcon,
+			toggleNotificationPanel: ToggleNotificationPanel,
 			paletteClose: PaletteClose,
 			paletteOpen: PaletteOpen,
 			zoomToFit: ZoomToFit
@@ -64,7 +64,8 @@ export default class Icon extends React.Component {
 	}
 
 	getCarbonIcon(type, customClassName) {
-		const className = iconClassName + " " + customClassName;
+		const className = this.props.noAddedClasses ? null : iconClassName + " " + customClassName;
+
 		switch (type) {
 		case (ERROR):
 		case (CONDITION_MESSAGE_TYPE.ERROR):
@@ -162,7 +163,8 @@ export default class Icon extends React.Component {
 		if (!icon) {
 			icon = this.getCanvasIcon(this.props.type);
 			if (typeof icon !== "undefined") {
-				icon = <SVG src={icon} className={classNames("canvas-icon", iconClassName, this.props.className)} disabled={this.props.disabled} />;
+				const className = this.props.noAddedClasses ? null : classNames("canvas-icon", iconClassName, this.props.className);
+				icon = <SVG src={icon} className={className} disabled={this.props.disabled} />;
 			} else {
 				icon = <div />;
 			}
@@ -179,5 +181,6 @@ Icon.defaultProps = {
 Icon.propTypes = {
 	type: PropTypes.string.isRequired,
 	className: PropTypes.string,
-	disabled: PropTypes.bool
+	disabled: PropTypes.bool,
+	noAddedClasses: PropTypes.bool
 };

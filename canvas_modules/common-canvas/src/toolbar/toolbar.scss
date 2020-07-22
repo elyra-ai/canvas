@@ -18,131 +18,194 @@
 
 $toolbar-icon-label-margin: 8px;
 $toolbar-icon-size: 16px;
+$toolbar-button-height: 40px;
 $toolbar-button-width: 40px;
 $toolbar-divider-width: 1px;
-$toolbar-default-icons-count: 5;
 
-// sass-lint:disable no-misspelled-properties
-:export {
-	toolbarButtonWidth: $toolbar-button-width;
-	toolbarDividerWidth: $toolbar-divider-width;
-}
-// sass-lint:enable no-misspelled-properties
-
-#canvas-toolbar {
-	height: $toolbar-button-width;
-	min-width: ($toolbar-button-width * $toolbar-default-icons-count) + $toolbar-divider-width;
+.toolbar-div {
+	height: $toolbar-button-height;
 	width: 100%;
 	background-color: $ui-01;
 	border-bottom: $toolbar-divider-width solid $ui-04;
 	box-sizing: content-box;
 	position: relative;
-}
-
-.toolbar-fixed-location {
-	position: fixed;
-	z-index: 2;
-}
-
-#toolbar-items {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
 
 	display: flex;
+	justify-content: space-between;
+
+	/* Prevent elements from being dragged onto canvas */
+	-webkit-user-drag: none;
 }
 
-.toolbar-items-container {
+.toolbar-left-bar {
+	flex-shrink: 5000000; // Make sure left bar always shrinks first
+	display: block;
+	padding-right: 42px;
+	overflow: hidden;
+	align-items: center;
+
+}
+
+.toolbar-right-bar {
 	display: flex;
+	flex-direction: row-reverse;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	flex-shrink: 1;
+	overflow: hidden;
 }
 
-#zoom-actions-container {
-	position: absolute;
-	right: 2px; // accommodate notification onClick border
-}
+.toolbar-item {
+	background-color: $ui-01;
+	display: inline-block;
 
-.list-item-containers {
-	&.notificationCounterIcon {
-		.toolbar-item {
-			position: relative;
-		}
-		.text-content {
-			position: absolute;
-			z-index: 2;
-			top: 13px;
-			font-size: 9px;
-			line-height: 9px;
-			color: $icon-01;
-		}
-	}
-
-	.list-item {
+	& button {
 		padding: 0;
-		min-height: $toolbar-button-width;
-		width: $toolbar-button-width;
-		display: flex;
-		justify-content: center;
-		user-select: none;
+		border-top: 0;
+		border-bottom: 0;
+		min-height: 30px;
+	}
 
-		&.overflow {
-			height: auto;
-			width: 200px;
-			display: block;
+	&.default,
+	&.ghost {
+		& button {
+			background-color: $ui-01;
+		}
+
+		& button:hover {
+			background-color: $hover-field;
+		}
+
+		& button:disabled:hover {
+			background-color: $ui-01;
 		}
 	}
 
-	.list-item-disabled svg {
-		fill: $disabled-02;
+	&.tertiary {
+		& button {
+			color: $brand-03;
+			background-color: $ui-01;
+		}
+
+		& button:hover {
+			background-color: $hover-field;
+		}
+
+		& button:disabled,
+		& button:disabled:hover {
+			color: $disabled-02;
+			background-color: $ui-01;
+		}
+	}
+}
+
+.toolbar-spacer {
+	width: 0;
+	display: inline-block;
+}
+
+.toolbar-overflow-item {
+	background-color: $ui-01;
+	display: inline-block;
+
+	& button {
+		padding: 0;
+		border-top: 0;
+		border-bottom: 0;
+		min-height: 30px;
+		background-color: $ui-01;
+		border-right: $toolbar-divider-width solid $ui-03;
+		// Reduce width by 1 to hide the right border for the rightmost overflow icon in the leftbar.
+		width: calc(#{$toolbar-button-width} - 1px);
+	}
+
+	& button:hover {
+		background-color: $hover-field;
+	}
+
+	& button:disabled:hover {
+		background-color: $ui-01;
+	}
+}
+
+.toolbar-overflow-menu-item button {
+	width: 100%;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border: 0;
+	min-height: 20px;
+}
+
+.toolbar-item-content {
+	width: inherit;
+	display: flex;
+	justify-content: center;
+	padding: 12px 12px 8px;
+
+	&.overflow {
+		justify-content: left;
+		padding: 8px 0;
+	}
+
+	&.default {
+		color: $icon-01; // Used by label and pick up as currentColor in icons.
+	}
+
+	&.disabled.default {
+		color: $disabled-02;
+	}
+
+	.toolbar-icon {
+		& svg {
+			height: $toolbar-icon-size;
+			width: $toolbar-icon-size;
+			/* Prevent elements from being dragged onto canvas */
+			-webkit-user-drag: none;
+		}
+	}
+}
+
+.toolbar-text-content {
+	position: absolute;
+	top: 15px;
+	font-size: 9px;
+	line-height: 9px;
+	color: $icon-01;
+}
+
+.toolbar-icon-label {
+	height: 16px;
+	&.before {
+		padding-right: 8px;
+	}
+
+	&.after {
+		padding-left: 8px;
+	}
+
+	&.overflow {
+		padding-left: 8px;
+		word-break: break-word;
+		hyphens: auto;
 	}
 }
 
 .toolbar-divider {
 	border-right: $toolbar-divider-width solid $ui-03;
+	background-color: $ui-01;
+	display: inline-block;
+	height: $toolbar-button-height;
+	width: 0;
 }
 
-.overflow-toolbar-divider {
+.toolbar-divider-overflow {
 	border-bottom: $toolbar-divider-width solid $ui-03;
 }
 
-.toolbar-item {
-	// set height/width for tooltip
-	height: 34px;
-	width: 34px;
-
-	display: flex;
-	justify-content: center;
-	&.overflow {
-		width: inherit;
-		padding: 8px;
-
-		svg {
-			margin-right: 8px;
-		}
-	}
-}
-
-.toolbar-icons, .toolbar-item > svg {
-	height: $toolbar-icon-size;
-	width: $toolbar-icon-size;
-	margin: auto;
-	/* Prevent elements from being dragged onto canvas */
-	-webkit-user-drag: none;
-}
-
-.overflow-toolbar-icon-label {
-	color: $text-01;
-	width: 100%;
-	word-break: break-word;
-	hyphens: auto;
-
-	&.disabled {
-		color: $disabled-02;
-	}
-}
-
 .toolbar-popover-list {
+	width: 200px;
 	z-index: 1;
-	top: calc(#{$toolbar-button-width} + #{$toolbar-divider-width});
+	top: calc(#{$toolbar-button-height} + #{$toolbar-divider-width});
 	display: block;
 	position: absolute;
 	list-style-type: none;
