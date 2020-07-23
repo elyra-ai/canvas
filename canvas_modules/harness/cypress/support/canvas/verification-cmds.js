@@ -226,7 +226,9 @@ Cypress.Commands.add("verifyNodeElementWidth", (nodeName, nodeElement, width) =>
 			const nodeElementSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", nodeElement) + "']";
 			cy.get(nodeElementSelector)
 				.invoke("css", "width")
-				.should("eq", width);
+				.then((cssValue) => {
+					cy.verifyValueInCompareRange(width, cssValue);
+				});
 		});
 });
 
@@ -437,13 +439,13 @@ Cypress.Commands.add("verifyContextMenuPosition", (distFromLeft, distFromTop) =>
 	// first() returns context menu
 	cy.get(".context-menu-popover").first()
 		.invoke("css", "left")
-		.then((leftDist) => {
-			expect(Math.round(parseFloat(leftDist.split("px")[0]))).equal(distFromLeft);
+		.then((cssValue) => {
+			cy.verifyValueInCompareRange(distFromLeft, cssValue);
 		});
 	cy.get(".context-menu-popover").first()
 		.invoke("css", "top")
-		.then((topDist) => {
-			expect(Math.round(parseFloat(topDist.split("px")[0]))).equal(distFromTop);
+		.then((cssValue) => {
+			cy.verifyValueInCompareRange(distFromTop, cssValue);
 		});
 });
 
@@ -451,8 +453,10 @@ Cypress.Commands.add("verifySubmenuPushedUpBy", (distFromTop) => {
 	// last() returns context submenu
 	cy.get(".context-menu-popover").last()
 		.invoke("css", "top")
-		.then((topDist) => {
-			expect(Math.abs(parseFloat(topDist.split("px")[0]))).equal(distFromTop);
+		.then((cssValue) => {
+			// cssValue is a negative number Eg. -91px
+			// Sending 91px to verifyValueInCompareRange
+			cy.verifyValueInCompareRange(distFromTop, Math.abs(Number(cssValue.split("px")[0])) + "px");
 		});
 });
 
@@ -695,7 +699,10 @@ Cypress.Commands.add("verifyPaletteNodeImageCSS", (nodeName, style, value) => {
 	cy.findNodeIndexInPalette(nodeName)
 		.then((nodeIndex) => {
 			cy.get(".palette-list-item-icon").eq(nodeIndex)
-				.should("have.css", style, value);
+				.invoke("css", style)
+				.then((cssValue) => {
+					cy.verifyValueInCompareRange(value, cssValue);
+				});
 		});
 });
 
@@ -1003,4 +1010,9 @@ Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
 	} else {
 		cy.get(".notification-panel-" + id).should("not.exist");
 	}
+});
+
+Cypress.Commands.add("verifyValueInCompareRange", (value, cssValue) => {
+	// value should be in the compare range of cssValue
+	expect(Number(value.split("px")[0])).to.be.closeTo(Number(cssValue.split("px")[0]), Cypress.env("compareRange"));
 });
