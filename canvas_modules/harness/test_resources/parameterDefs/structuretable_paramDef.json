@@ -2016,6 +2016,14 @@
     "ST_mse_table.checkit.label": "Check",
     "ST_mse_table.sometext.label": "Text",
     "ST_mse_table.dummy_entry_sport_name.Football.label": "Football",
-    "ST_mse_table.dummy_entry_sport_name.Soccer.label": "Soccer"
+    "ST_mse_table.dummy_entry_sport_name.Soccer.label": "Soccer",
+    "structuretableObjectType.label": "Sort",
+    "structuretableObjectType.field.label": "Field",
+    "structuretableObjectType.sort_order.label": "Order",
+    "structuretableObjectType.sort_order.desc": "Update sort order",
+    "structuretableObjectType.structuretable_object_readonly_int.label": "Index From 5",
+    "structuretableObjectType.structuretable_object_readonly_int.desc": "Auto generated integers starting at 5",
+    "structuretableObjectType.sort_order.Ascending.label": "Ascending",
+    "structuretableObjectType.sort_order.Descending.label": "Descending"
   }
 }

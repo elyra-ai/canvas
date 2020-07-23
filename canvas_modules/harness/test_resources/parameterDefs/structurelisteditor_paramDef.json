@@ -1613,7 +1613,12 @@
     "textfield.desc": "",
     "sort_order.label": "Order",
     "sort_order.desc": "Update sort order",
-    "checkbox.label": "checkbox",
-    "checkbox.desc": ""
+    "checkbox.label": "checkbo  x",
+    "checkbox.desc": "",
+    "structurelisteditorObjectType.name.label": "Name",
+    "structurelisteditorObjectType.name.desc": "Enter a name",
+    "structurelisteditorObjectType.description.label": "Description",
+    "structurelisteditorObjectType.readonly_numbered_column_index.label": "Index",
+    "structurelisteditorObjectType.description.desc": "Enter a description"
   }
 }
