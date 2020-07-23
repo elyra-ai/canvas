@@ -162,12 +162,28 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 	const objectValues = [{ field1: 1, field2: 20, field3: "hi" }, { field1: 33, field2: 404, field3: "hello" }, { field1: 55005, field2: 612345, field3: "hola" }];
 
 	it("convertObjectStructureToArray returns correct values", () => {
-		const actual = PropertyUtils.convertObjectStructureToArray(objectValues);
+		const actual = PropertyUtils.convertObjectStructureToArray(subControls, objectValues);
 		expect(actual).to.eql(arrayValues);
 	});
 
 	it("convertArrayStructureToObject returns correct values", () => {
 		const actual = PropertyUtils.convertArrayStructureToObject(subControls, arrayValues);
 		expect(actual).to.eql(objectValues);
+	});
+
+	it("convertObjectStructureToArray returns correct values when key:values are missing", () => {
+		const missingArrayValues = [[1, null, "hi"], [null, 404, "hello"], [55005, null, null]];
+		const missingObjectValues = [{ field1: 1, field3: "hi" }, { field2: 404, field3: "hello" }, { field1: 55005 }];
+
+		const actual = PropertyUtils.convertObjectStructureToArray(subControls, missingObjectValues);
+		expect(actual).to.eql(missingArrayValues);
+	});
+
+	it("convertObjectStructureToArray returns correct values when values are missing", () => {
+		const missingArrayValues = [[1, null, ""], [null, 404, null], [null, "", null]];
+		const missingObjectValues = [{ field1: 1, field2: null, field3: "" }, { field1: null, field2: 404, field3: null }, { field1: null, field2: "", field3: null }];
+
+		const actual = PropertyUtils.convertObjectStructureToArray(subControls, missingObjectValues);
+		expect(actual).to.eql(missingArrayValues);
 	});
 });

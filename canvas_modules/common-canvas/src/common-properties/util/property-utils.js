@@ -189,11 +189,21 @@ function convertType(storage) {
  *  Example currentValues: [[{a: 1, b: 2}], [{a: 10, b; 20}]]
  *  Example convertedValues: [[1, 2], [10, 20]]
  */
-function convertObjectStructureToArray(currentValues) {
+function convertObjectStructureToArray(subControls, currentValues) {
+	const structureKeys = [];
+	subControls.forEach((control) => {
+		structureKeys.push(control.name);
+	});
+
 	const convertedValues = [];
 	currentValues.forEach((row) => {
 		if (typeof row === "object") {
-			convertedValues.push(Object.values(row));
+			const convertedRow = [];
+			structureKeys.forEach((key) => {
+				const value = typeof row[key] !== "undefined" ? row[key] : null;
+				convertedRow.push(value);
+			});
+			convertedValues.push(convertedRow);
 		}
 	});
 	return convertedValues;
