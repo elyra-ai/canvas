@@ -71,7 +71,7 @@ class NumberfieldControl extends React.Component {
 	}
 
 	render() {
-		let controlValue;
+		let controlValue = ""; // Default to empty string to avoid '0' appearing when value is 'null'
 		if (this.props.value !== null) {
 			controlValue = this.props.value;
 		}
@@ -87,6 +87,7 @@ class NumberfieldControl extends React.Component {
 					step={this.props.control.increment}
 					value={controlValue}
 					placeholder={this.props.control.additionalText}
+					allowEmpty
 				/>
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

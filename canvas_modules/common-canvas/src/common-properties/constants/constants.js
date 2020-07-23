@@ -86,7 +86,8 @@ _defineConstant("MESSAGE_KEYS", {
 	MOVEABLE_TABLE_BUTTON_TOP_DESCRIPTION: "moveable.table.button.top",
 	MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION: "moveable.table.button.up",
 	MOVEABLE_TABLE_BUTTON_DOWN_DESCRIPTION: "moveable.table.button.down",
-	MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION: "moveable.table.button.bottom"
+	MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION: "moveable.table.button.bottom",
+	LIST_TABLE_LABEL: "list.table.label"
 });
 
 _defineConstant("CHARACTER_LIMITS", {

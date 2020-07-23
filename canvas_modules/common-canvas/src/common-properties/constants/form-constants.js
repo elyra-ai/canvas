@@ -71,6 +71,7 @@ const ControlType = {
 	TEXTFIELD: "textfield",
 	PASSWORDFIELD: "passwordfield",
 	TEXTAREA: "textarea",
+	LIST: "list",
 	EXPRESSION: "expression",
 	NUMBERFIELD: "numberfield",
 	DATEFIELD: "datefield",

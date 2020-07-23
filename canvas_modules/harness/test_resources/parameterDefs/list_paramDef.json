@@ -1,0 +1,249 @@
+{
+  "titleDefinition": {
+    "title": "List Control"
+  },
+  "current_parameters": {
+    "list_string": [
+      "list item 1",
+      "list item 2",
+      "list item 3",
+      ""
+    ],
+    "list_integer": [
+      10,
+      20,
+      30,
+      null
+    ],
+    "list_string_error": [
+      "not empty"
+    ],
+    "list_double_warning": [
+      1.1
+    ],
+    "hide": true,
+    "list_string_hidden": [
+      "list item 1",
+      "list item 2",
+      "list item 3",
+      ""
+    ],
+    "disable": true,
+    "list_long_disabled": [
+      12345678910
+    ]
+  },
+  "parameters": [
+    {
+      "id": "list_string",
+      "type": "array[string]"
+    },
+    {
+      "id": "list_integer",
+      "type": "array[integer]"
+    },
+    {
+      "id": "list_string_error",
+      "type": "array[string]"
+    },
+    {
+      "id": "list_double_warning",
+      "type": "array[double]"
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "list_string_hidden",
+      "type": "array[string]"
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "list_long_disabled",
+      "type": "array[long]"
+    }
+  ],
+  "complex_types": [],
+  "uihints": {
+    "id": "list",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "List fields"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "list_string",
+        "label": {
+          "default": "list of strings"
+        },
+        "description": {
+          "default": "list with a string array value"
+        },
+        "control": "list",
+        "moveable_rows": true
+      },
+      {
+        "parameter_ref": "list_integer",
+        "label": {
+          "default": "list of integer values"
+        },
+        "description": {
+          "default": "list with an integer array value. Show '6' rows"
+        },
+        "control": "list",
+        "rows": 6
+      },
+      {
+        "parameter_ref": "list_string_error",
+        "label": {
+          "default": "list of strings"
+        },
+        "description": {
+          "default": "list with show error if empty"
+        },
+        "control": "list",
+        "moveable_rows": true
+      },
+      {
+        "parameter_ref": "list_double_warning",
+        "label": {
+          "default": "list of double values"
+        },
+        "description": {
+          "default": "list will show warning if empty"
+        },
+        "control": "list"
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'List String Hidden'"
+        }
+      },
+      {
+        "parameter_ref": "list_string_hidden",
+        "label": {
+          "default": "list of strings"
+        },
+        "description": {
+          "default": "list with a string array value"
+        },
+        "control": "list",
+        "moveable_rows": true
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'List Integer Disabled'"
+        }
+      },
+      {
+        "parameter_ref": "list_long_disabled",
+        "label": {
+          "default": "list of long values"
+        },
+        "description": {
+          "default": "list with an integer array value"
+        },
+        "control": "list"
+      }
+    ],
+    "complex_type_info": [],
+    "group_info": [
+      {
+        "id": "list-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "list_string",
+          "list_integer"
+        ]
+      },
+      {
+        "id": "list-values-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "list_string_error",
+          "list_double_warning",
+          "hide",
+          "list_string_hidden",
+          "disable",
+          "list_long_disabled"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "list_string_error",
+          "message": {
+            "default": "List should not be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "list_string_error",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "list_double_warning",
+          "message": {
+            "default": "List should not be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "list_double_warning",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "list_string_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "list_long_disabled"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ]
+}
