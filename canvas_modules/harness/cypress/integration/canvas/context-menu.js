@@ -25,7 +25,7 @@ describe("Test of context menu", function() {
 	it("Test context menu options and verify position of context menu when clicked at different locations", function() {
 		// Test the context menu appears OK in the middle of the canvas
 		cy.rightClickToDisplayContextMenu(800, 25);
-		cy.verifyContextMenuPosition(800, 25);
+		cy.verifyContextMenuPosition("800px", "25px");
 
 		// Test the context menu has some of the expected entries
 		cy.verifyOptionInContextMenu("New comment");
@@ -37,23 +37,23 @@ describe("Test of context menu", function() {
 
 		// Test the context menu is pushed to the left when user clicks near right side of the page
 		cy.rightClickToDisplayContextMenu(1300, 100);
-		cy.verifyContextMenuPosition(1140, 100);
+		cy.verifyContextMenuPosition("1140px", "100px");
 
 		// Test the context menu is pushed upwards when user clicks near bottom of the page
 		cy.rightClickToDisplayContextMenu(1000, 500);
-		cy.verifyContextMenuPosition(1000, 335);
+		cy.verifyContextMenuPosition("1000px", "335px");
 
 		// Test the context menu is pushed to the left correctly even when the palette is open
 		cy.get("#canvas-div-0").click(1, 1);
 		cy.clickToolbarPaletteOpen();
 		cy.rightClickToDisplayContextMenu(940, 300);
-		cy.verifyContextMenuPosition(940, 300);
+		cy.verifyContextMenuPosition("940px", "300px");
 
 		// Test the context menu is pushed to the left correctly when the palette is open AND the right flyout is open
 		cy.get("#canvas-div-0").click(1, 1);
 		cy.getNodeWithLabel("Na_to_K").dblclick();
 		cy.rightClickToDisplayContextMenu(640, 300);
-		cy.verifyContextMenuPosition(640, 300);
+		cy.verifyContextMenuPosition("640px", "300px");
 
 		// Test the context menu's 'Highlight' submenu is pushed up in a situation
 		// where it would appear off the bottom of the screen
@@ -61,7 +61,7 @@ describe("Test of context menu", function() {
 		cy.clickToolbarZoomToFit();
 		cy.getNodeWithLabel("Neural Net").rightclick();
 		cy.clickOptionFromContextMenu("Highlight");
-		cy.verifySubmenuPushedUpBy(91);
+		cy.verifySubmenuPushedUpBy("91px");
 
 		// Test that, when a set of objects are selected, a click opening the context menu will not clear the selections
 		cy.get("#canvas-div-0").click(1, 1); // To close context menu

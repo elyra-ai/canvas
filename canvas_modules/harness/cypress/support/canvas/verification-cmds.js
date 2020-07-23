@@ -454,7 +454,9 @@ Cypress.Commands.add("verifySubmenuPushedUpBy", (distFromTop) => {
 	cy.get(".context-menu-popover").last()
 		.invoke("css", "top")
 		.then((cssValue) => {
-			cy.verifyValueInCompareRange(distFromTop, cssValue);
+			// cssValue is a negative number Eg. -91px
+			// Sending 91px to verifyValueInCompareRange
+			cy.verifyValueInCompareRange(distFromTop, Math.abs(Number(cssValue.split("px")[0])) + "px");
 		});
 });
 
