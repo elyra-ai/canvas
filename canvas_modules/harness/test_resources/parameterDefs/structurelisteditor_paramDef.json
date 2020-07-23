@@ -124,6 +124,16 @@
         "description": "World",
         "data_type": "string",
         "readonly": "Readonly phrase"
+      },
+      {
+        "data_type": "number"
+      },
+      {
+        "readonly_numbered_column_index": null,
+        "name": null,
+        "description": null,
+        "data_type": null,
+        "readonly": null
       }
     ]
   },

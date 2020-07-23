@@ -157,6 +157,14 @@
         "field": "Cholesterol",
         "structuretable_object_readonly_int": 1,
         "structuretable_object_sort_order": "Ascending"
+      },
+      {
+        "structuretable_object_readonly_int": 6
+      },
+      {
+        "field": null,
+        "structuretable_object_readonly_int": null,
+        "structuretable_object_sort_order": null
       }
     ]
   },
