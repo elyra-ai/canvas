@@ -313,5 +313,10 @@ Cypress.Commands.add("verifyFieldsInTable", (propertyId, fields, rowNumber, colu
 Cypress.Commands.add("verifyHeightOfTable", (propertyId, height) => {
 	cy.get(`div[data-id='properties-ft-${propertyId}']`)
 		.find(".properties-ft-container-wrapper")
-		.should("have.css", "height", height);
+		.invoke("css", "height")
+		.then((cssValue) => {
+			// height should be in the compare range of cssValue
+			expect(Number(height.split("px")[0]))
+				.to.be.closeTo(Number(cssValue.split("px")[0]), Cypress.env("compareRange"));
+		});
 });

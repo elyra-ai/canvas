@@ -226,7 +226,10 @@ Cypress.Commands.add("verifyNodeElementWidth", (nodeName, nodeElement, width) =>
 			const nodeElementSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", nodeElement) + "']";
 			cy.get(nodeElementSelector)
 				.invoke("css", "width")
-				.should("eq", width);
+				.then((cssValue) => {
+					// width should be in the compare range of cssValue
+					expect(Number(width.split("px")[0])).to.be.closeTo(Number(cssValue.split("px")[0]), Cypress.env("compareRange"));
+				});
 		});
 });
 
@@ -695,7 +698,11 @@ Cypress.Commands.add("verifyPaletteNodeImageCSS", (nodeName, style, value) => {
 	cy.findNodeIndexInPalette(nodeName)
 		.then((nodeIndex) => {
 			cy.get(".palette-list-item-icon").eq(nodeIndex)
-				.should("have.css", style, value);
+				.invoke("css", style)
+				.then((cssValue) => {
+					// value should be in the compare range of cssValue
+					expect(Number(value.split("px")[0])).to.be.closeTo(Number(cssValue.split("px")[0]), Cypress.env("compareRange"));
+				});
 		});
 });
 

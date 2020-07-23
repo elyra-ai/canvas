@@ -20,7 +20,7 @@ describe("Test the supernode expanded structure", function() {
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
 
-	it("Test expanding supernode using context menu, verify exapanded supernode image and label location, " +
+	it("Test expanding supernode using context menu, verify expanded supernode image and label location, " +
 	"Add a very long label to the supernode", function() {
 		// Expand supernode using context menu
 		cy.rightClickNode("Supernode");
@@ -29,7 +29,7 @@ describe("Test the supernode expanded structure", function() {
 		// Verify expanded supernode's image and label location
 		cy.verifyNodeElementLocation("Supernode", "image", 5, 4);
 		cy.verifyNodeElementLocation("Supernode", "label", 30, 18);
-		cy.verifyNodeElementWidth("Supernode", "label", "65.265625px");
+		cy.verifyNodeElementWidth("Supernode", "label", "65px");
 
 		// Add a very long label to the supernode
 		cy.openCanvasAPI("Set Node Label");
@@ -40,7 +40,7 @@ describe("Test the supernode expanded structure", function() {
 		// Verify new label location and width
 		cy.verifyNodeElementLocation("New Very Long Supernode Label To Test The Label Abbreviation", "label", 30, 18);
 		cy.verifyNodeElementWidth(
-			"New Very Long Supernode Label To Test The Label Abbreviation", "label", "127.03125px"
+			"New Very Long Supernode Label To Test The Label Abbreviation", "label", "127px"
 		);
 	});
 });
