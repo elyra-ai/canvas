@@ -165,6 +165,23 @@ describe("list renders correctly for array[string]", () => {
 		// validate the third row is deleted
 		expect(controller.getPropertyValue(listStringPopertyId)).to.eql(listStringCurrentValues.concat([""]));
 	});
+
+	it("should be able to add row when no propertyValues are set", () => {
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<List
+					store={controller.getStore()}
+					control={controlString}
+					controller={controller}
+					propertyId={listStringPopertyId}
+				/>
+			</Provider>
+		);
+		controller.setPropertyValues({});
+		const addButton = wrapper.find("button.properties-add-fields-button");
+		addButton.simulate("click");
+		expect(controller.getPropertyValue(listStringPopertyId)).to.eql([""]);
+	});
 });
 
 describe("list renders correctly for array[integer]", () => {
