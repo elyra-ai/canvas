@@ -153,7 +153,7 @@ export class ParameterDef {
 
 	isList() {
 		if (this.type) {
-			return this.type.startsWith("array[") || this.type.startsWith("object[");
+			return this.type.startsWith("array[");
 		}
 		return false;
 	}
@@ -215,8 +215,8 @@ export class ParameterDef {
 	baseType() {
 		const typ = this.type;
 		if (this.isList()) {
-			// "array[<value-type>]" so remove the leading "array["|"object[" and trailing "]"
-			return typ.substring(typ.indexOf("[") + 1, this.type.length - 1);
+			// "array[<value-type>]" so remove the leading "array[" and trailing "]"
+			return typ.substring(6, this.type.length - 1);
 		} else if (this.isMapValue()) {
 			// "map[<key-type>,<value-type>]" so remove everything up to and including "," and drop the trailing "]"
 			return typ.substring(typ.indexOf(",") + 1, this.type.length - 1);

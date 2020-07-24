@@ -446,8 +446,7 @@
         },
         "description": {
           "default": "Layout Controls"
-        },
-        "separator": "before"
+        }
       }
     ],
     "group_info": [
