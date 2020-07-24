@@ -39,7 +39,14 @@ class ListControl extends AbstractTable {
 	addRow() {
 		const controlPropType = this.props.controller.getControlPropType(this.props.propertyId);
 		const newRow = NUMBER_TYPES.indexOf(controlPropType) > -1 ? null : "";
-		const rows = this.props.controller.getPropertyValue(this.props.propertyId).concat([newRow]);
+
+		// Handle case where no currentValue or default is defined.
+		let currentValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		if (typeof currentValue === "undefined") {
+			currentValue = [];
+		}
+
+		const rows = currentValue.concat([newRow]);
 		this.setCurrentControlValueSelected(rows);
 	}
 

@@ -22,16 +22,7 @@
       1.1
     ],
     "hide": true,
-    "list_string_hidden": [
-      "list item 1",
-      "list item 2",
-      "list item 3",
-      ""
-    ],
-    "disable": true,
-    "list_long_disabled": [
-      12345678910
-    ]
+    "disable": true
   },
   "parameters": [
     {
@@ -64,7 +55,8 @@
     },
     {
       "id": "list_long_disabled",
-      "type": "array[long]"
+      "type": "array[long]",
+      "default": []
     }
   ],
   "complex_types": [],
