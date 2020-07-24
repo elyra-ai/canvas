@@ -29,6 +29,7 @@ import expressionTestResource from "../test_resources/json/expression-one-catego
 import numberfieldResource from "../test_resources/paramDefs/numberfield_paramDef.json";
 import emptyParamDef from "../test_resources/paramDefs/empty_paramDef.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
+import structureEditorParamDef from "../test_resources/paramDefs/structureeditor_paramDef.json";
 import { IntlProvider } from "react-intl";
 
 
@@ -564,6 +565,34 @@ describe("CommonProperties should setForm correctly", () => {
 		// Verify internal format gets returned correctly as array of objects
 		const originalFormat = structureListEditorParamDef.current_parameters.structurelisteditorObjectType;
 		const objectFormat = controller.getPropertyValues({ applyProperties: true }).structurelisteditorObjectType;
+		expect(objectFormat).to.eql(originalFormat);
+	});
+
+	it("getPropertyValue: form should set correctly with the currentParameters converted from object to array in object structure control", () => {
+		// Verify input currentParameters converts correctly to internal format
+		const renderedObject = propertyUtils.flyoutEditorForm(structureEditorParamDef); // default is applyOnBlur=true
+		const controller = renderedObject.controller;
+		const internalFormat = controller.getPropertyValue({ name: "structureeditorObjectType" });
+		const expected = [null, "hi", false, ["there", "you"]];
+		expect(internalFormat).to.eql(expected);
+
+		// Verify internal format gets returned correctly as array of objects
+		const originalFormat = { "field_annotation": ["there", "you"], "first_field": "hi", "first_field_checkbox": false, "hidden_field": null };
+		const objectFormat = controller.getPropertyValue({ name: "structureeditorObjectType" }, { applyProperties: true });
+		expect(objectFormat).to.eql(originalFormat);
+	});
+
+	it("getPropertyValues: form should set correctly with the currentParameters converted from object to array in object structure control", () => {
+		// Verify input currentParameters converts correctly to internal format
+		const renderedObject = propertyUtils.flyoutEditorForm(structureEditorParamDef); // default is applyOnBlur=true
+		const controller = renderedObject.controller;
+		const internalFormat = controller.getPropertyValues().structureeditorObjectType;
+		const expected = [null, "hi", false, ["there", "you"]];
+		expect(internalFormat).to.eql(expected);
+
+		// Verify internal format gets returned correctly as array of objects
+		const originalFormat = { "field_annotation": ["there", "you"], "first_field": "hi", "first_field_checkbox": false, "hidden_field": null };
+		const objectFormat = controller.getPropertyValues({ applyProperties: true }).structureeditorObjectType;
 		expect(objectFormat).to.eql(originalFormat);
 	});
 });

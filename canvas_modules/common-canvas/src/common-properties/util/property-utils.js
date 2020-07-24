@@ -15,7 +15,7 @@
  */
 
 import logger from "../../../utils/logger";
-import { ParamRole } from "../constants/form-constants";
+import { ParamRole, ControlType } from "../constants/form-constants";
 import { DATA_TYPE, CARBON_ICONS } from "../constants/constants";
 import { cloneDeep } from "lodash";
 import { v4 as uuid4 } from "uuid";
@@ -189,11 +189,20 @@ function convertType(storage) {
  *  Example currentValues: [[{a: 1, b: 2}], [{a: 10, b; 20}]]
  *  Example convertedValues: [[1, 2], [10, 20]]
  */
-function convertObjectStructureToArray(subControls, currentValues) {
+function convertObjectStructureToArray(controlType, subControls, currentValues) {
 	const structureKeys = [];
 	subControls.forEach((control) => {
 		structureKeys.push(control.name);
 	});
+
+	if (controlType === ControlType.STRUCTUREEDITOR) {
+		const converted = [];
+		structureKeys.forEach((key, index) => {
+			const value = typeof currentValues[key] !== "undefined" ? currentValues[key] : null;
+			converted.push(value);
+		});
+		return converted;
+	}
 
 	const convertedValues = [];
 	currentValues.forEach((row) => {
@@ -215,17 +224,25 @@ function convertObjectStructureToArray(subControls, currentValues) {
  *  Example currentValues: [[1, 2], [10, 20]]
  *  Example convertedValues: [[{a: 1, b: 2}], [{a: 10, b; 20}]]
  */
-function convertArrayStructureToObject(subControls, currentValues) {
+function convertArrayStructureToObject(controlType, subControls, currentValues) {
 	const structureKeys = [];
 	subControls.forEach((control) => {
 		structureKeys.push(control.name);
 	});
 
+	if (controlType === ControlType.STRUCTUREEDITOR) {
+		const converted = {};
+		structureKeys.forEach((key, index) => {
+			converted[key] = typeof currentValues[index] !== "undefined" ? currentValues[index] : null;
+		});
+		return converted;
+	}
+
 	const convertedValues = [];
 	currentValues.forEach((valueList) => {
 		const newObject = {};
-		valueList.forEach((value, index) => {
-			newObject[structureKeys[index]] = value;
+		structureKeys.forEach((key, index) => {
+			newObject[key] = typeof valueList[index] !== "undefined" ? valueList[index] : null;
 		});
 		convertedValues.push(newObject);
 	});

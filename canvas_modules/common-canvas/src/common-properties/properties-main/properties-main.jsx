@@ -139,8 +139,8 @@ class PropertiesMain extends React.Component {
 			if (controls[controlId].structureType && controls[controlId].structureType === "object") {
 				const propertyId = this.propertiesController.convertPropertyId(controlId);
 				const currentValues = this.propertiesController.getPropertyValue(propertyId);
-				const subControls = controls[controlId].subControls;
-				const convertedValues = PropertyUtils.convertObjectStructureToArray(subControls, currentValues);
+				const control = controls[controlId];
+				const convertedValues = PropertyUtils.convertObjectStructureToArray(control.controlType, control.subControls, currentValues);
 				this.propertiesController.updatePropertyValue(propertyId, convertedValues, true);
 			}
 		});
