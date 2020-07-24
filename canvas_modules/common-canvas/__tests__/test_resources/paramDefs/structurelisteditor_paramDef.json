@@ -430,6 +430,7 @@
     },
     {
       "id": "structurelisteditorObjectType",
+      "type": "object",
       "parameters": [
         {
           "id": "readonly_numbered_column_index",
@@ -1040,7 +1041,6 @@
       },
       {
         "complex_type_ref": "structurelisteditorObjectType",
-        "type": "object",
         "parameters": [
           {
             "parameter_ref": "readonly_numbered_column_index",

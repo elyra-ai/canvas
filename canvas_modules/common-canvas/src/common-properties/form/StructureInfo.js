@@ -105,7 +105,7 @@ export class StructureDef {
 				propertyOf(uihints)("header"),
 				propertyOf(uihints)("include_all_fields"),
 				propertyOf(uihints)("layout"),
-				propertyOf(uihints)("type")
+				propertyOf(structure)("type")
 			);
 		}
 		return null;

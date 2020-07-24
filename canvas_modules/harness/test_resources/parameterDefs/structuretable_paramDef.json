@@ -564,6 +564,7 @@
     },
     {
       "id": "structuretableObjectType",
+      "type": "object",
       "key_definition": {
         "id": "field",
         "type": "string",
@@ -1324,7 +1325,6 @@
       {
         "complex_type_ref": "structuretableObjectType",
         "moveable_rows": true,
-        "type": "object",
         "key_definition": {
           "parameter_ref": "field",
           "width": 28,

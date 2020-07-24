@@ -137,6 +137,7 @@
     },
     {
       "id": "fieldLayout",
+      "type": "object",
       "parameters": [
         {
           "id": "hidden_field",
@@ -343,7 +344,6 @@
           ["first_field_checkbox", "first_field"],
           ["field_annotation"]
         ],
-        "type": "object",
         "parameters": [
           {
             "parameter_ref": "hidden_field",
