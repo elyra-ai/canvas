@@ -243,7 +243,7 @@
     },
     {
       "id": "structuretableObjectType",
-      "type": "object[structuretableObjectType]",
+      "type": "array[structuretableObjectType]",
       "role": "column",
       "required": true
     }
@@ -1324,6 +1324,7 @@
       {
         "complex_type_ref": "structuretableObjectType",
         "moveable_rows": true,
+        "type": "object",
         "key_definition": {
           "parameter_ref": "field",
           "width": 28,

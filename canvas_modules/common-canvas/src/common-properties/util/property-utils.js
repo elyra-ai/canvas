@@ -184,7 +184,7 @@ function convertType(storage) {
 }
 
 /**
- * Converts the currentValues of a structure control of structureType 'object'
+ * Converts the currentValues of a structure control of type 'object'
  *  from an array of objects to an array of values.
  *  Example currentValues: [[{a: 1, b: 2}], [{a: 10, b; 20}]]
  *  Example convertedValues: [[1, 2], [10, 20]]
@@ -210,7 +210,7 @@ function convertObjectStructureToArray(subControls, currentValues) {
 }
 
 /**
- * Converts the currentValues of a structure control of structureType 'object'
+ * Converts the currentValues of a structure control of type 'object'
  *  from an array of values to an array of objects.
  *  Example currentValues: [[1, 2], [10, 20]]
  *  Example convertedValues: [[{a: 1, b: 2}], [{a: 10, b; 20}]]

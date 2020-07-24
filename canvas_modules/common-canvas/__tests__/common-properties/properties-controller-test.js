@@ -166,8 +166,7 @@ const controls = [
 			}
 		],
 		"keyIndex": -1,
-		"defaultRow": [],
-		"structureType": "array"
+		"defaultRow": []
 	},
 	{
 		"name": "structureeditor",

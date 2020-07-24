@@ -226,16 +226,6 @@ export class ParameterDef {
 		return typ;
 	}
 
-	/**
-	 * Returns the struture type of a parameter: array|object|map
-	 */
-	getStructureType() {
-		if (this.isList() || this.isMapValue()) {
-			return this.type.substring(0, this.type.indexOf("["));
-		}
-		return null;
-	}
-
 	getValidValues() {
 		var undef;
 		if (this.valueRestriction) {

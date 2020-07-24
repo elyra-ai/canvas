@@ -170,7 +170,7 @@
     },
     {
       "id": "structurelisteditorObjectType",
-      "type": "object[structurelisteditorObjectType]"
+      "type": "array[structurelisteditorObjectType]"
     }
   ],
   "complex_types": [
@@ -1040,6 +1040,7 @@
       },
       {
         "complex_type_ref": "structurelisteditorObjectType",
+        "type": "object",
         "parameters": [
           {
             "parameter_ref": "readonly_numbered_column_index",

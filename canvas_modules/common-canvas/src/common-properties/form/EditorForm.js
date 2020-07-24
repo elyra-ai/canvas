@@ -373,7 +373,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let header;
 	let includeAllFields;
 	let layout;
-	let structureType;
+	let structureType = parameter.structureType;
 
 	// The control type defines the basic UI element that should be used to edit the property
 	if (parameter.getRole() === ParamRole.CUSTOM) {
@@ -462,7 +462,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 					}
 				}
 
-				structureType = parameter.getStructureType();
+				structureType = structureDef.type;
 			} else {
 				controlType = ControlType.TEXTFIELD;
 			}

@@ -133,7 +133,7 @@ class PropertiesMain extends React.Component {
 			this.propertiesController.setTitle(formData.label);
 		}
 
-		// convert currentParameters of structureType:object to array values
+		// convert currentParameters of type:object to array values
 		const controls = this.propertiesController.getControls();
 		Object.keys(controls).forEach((controlId) => {
 			if (controls[controlId].structureType && controls[controlId].structureType === "object") {

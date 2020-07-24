@@ -268,7 +268,7 @@
                       ],
                       "addRemoveRows": true,
                       "header": true,
-                      "structureType": "map"
+                      "structureType": "array"
                     }
                   }
                 ]
