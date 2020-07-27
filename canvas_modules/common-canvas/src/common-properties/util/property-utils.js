@@ -186,8 +186,9 @@ function convertType(storage) {
 /**
  * Converts the currentValues of a structure control of type 'object'
  *  from an array of objects to an array of values.
- *  Example currentValues: [[{a: 1, b: 2}], [{a: 10, b; 20}]]
- *  Example convertedValues: [[1, 2], [10, 20]]
+ *  @controlType one of ControlType.STRUCTURELISTEDITOR, ControlType.STRUCTURELISTEDITOR, ControlType.STRUCTUREEDITOR
+ *  Example currentValues: [{a: 1, b: 2}, {a: 10, b; 20}]  || {z: 9, y: 88, x: ["abc", "def"]}
+ *  Example convertedValues: [[1, 2], [10, 20]]            || [9, 88, ["abc", "def"]]
  */
 function convertObjectStructureToArray(controlType, subControls, currentValues) {
 	const structureKeys = [];
@@ -221,8 +222,9 @@ function convertObjectStructureToArray(controlType, subControls, currentValues) 
 /**
  * Converts the currentValues of a structure control of type 'object'
  *  from an array of values to an array of objects.
- *  Example currentValues: [[1, 2], [10, 20]]
- *  Example convertedValues: [[{a: 1, b: 2}], [{a: 10, b; 20}]]
+ *  @controlType one of ControlType.STRUCTURELISTEDITOR, ControlType.STRUCTURELISTEDITOR, ControlType.STRUCTUREEDITOR
+ *  Example currentValues: [[1, 2], [10, 20]]                || [9, 88, ["abc", "def"]]
+ *  Example convertedValues: [{a: 1, b: 2}, {a: 10, b; 20}]  || {z: 9, y: 88, x: ["abc", "def"]}
  */
 function convertArrayStructureToObject(controlType, subControls, currentValues) {
 	const structureKeys = [];
