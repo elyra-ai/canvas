@@ -15,7 +15,7 @@
  */
 
 import logger from "../../../utils/logger";
-import { ParamRole, ControlType } from "../constants/form-constants";
+import { ParamRole } from "../constants/form-constants";
 import { DATA_TYPE, CARBON_ICONS } from "../constants/constants";
 import { cloneDeep } from "lodash";
 import { v4 as uuid4 } from "uuid";
@@ -186,69 +186,69 @@ function convertType(storage) {
 /**
  * Converts the currentValues of a structure control of type 'object'
  *  from an array of objects to an array of values.
- *  @controlType one of ControlType.STRUCTURELISTEDITOR, ControlType.STRUCTURELISTEDITOR, ControlType.STRUCTUREEDITOR
+ *  @isList boolean, true if this structure is a list
  *  Example currentValues: [{a: 1, b: 2}, {a: 10, b; 20}]  || {z: 9, y: 88, x: ["abc", "def"]}
  *  Example convertedValues: [[1, 2], [10, 20]]            || [9, 88, ["abc", "def"]]
  */
-function convertObjectStructureToArray(controlType, subControls, currentValues) {
+function convertObjectStructureToArray(isList, subControls, currentValues) {
 	const structureKeys = [];
 	subControls.forEach((control) => {
 		structureKeys.push(control.name);
 	});
 
-	if (controlType === ControlType.STRUCTUREEDITOR) {
-		const converted = [];
-		structureKeys.forEach((key, index) => {
-			const value = typeof currentValues[key] !== "undefined" ? currentValues[key] : null;
-			converted.push(value);
+	if (isList) {
+		const convertedValues = [];
+		currentValues.forEach((row) => {
+			if (typeof row === "object") {
+				const convertedRow = [];
+				structureKeys.forEach((key) => {
+					const value = typeof row[key] !== "undefined" ? row[key] : null;
+					convertedRow.push(value);
+				});
+				convertedValues.push(convertedRow);
+			}
 		});
-		return converted;
+		return convertedValues;
 	}
 
-	const convertedValues = [];
-	currentValues.forEach((row) => {
-		if (typeof row === "object") {
-			const convertedRow = [];
-			structureKeys.forEach((key) => {
-				const value = typeof row[key] !== "undefined" ? row[key] : null;
-				convertedRow.push(value);
-			});
-			convertedValues.push(convertedRow);
-		}
+	const converted = [];
+	structureKeys.forEach((key, index) => {
+		const value = typeof currentValues[key] !== "undefined" ? currentValues[key] : null;
+		converted.push(value);
 	});
-	return convertedValues;
+	return converted;
 }
 
 /**
  * Converts the currentValues of a structure control of type 'object'
  *  from an array of values to an array of objects.
- *  @controlType one of ControlType.STRUCTURELISTEDITOR, ControlType.STRUCTURELISTEDITOR, ControlType.STRUCTUREEDITOR
+ *  @isList boolean, true if this structure is a list
  *  Example currentValues: [[1, 2], [10, 20]]                || [9, 88, ["abc", "def"]]
  *  Example convertedValues: [{a: 1, b: 2}, {a: 10, b; 20}]  || {z: 9, y: 88, x: ["abc", "def"]}
  */
-function convertArrayStructureToObject(controlType, subControls, currentValues) {
+function convertArrayStructureToObject(isList, subControls, currentValues) {
 	const structureKeys = [];
 	subControls.forEach((control) => {
 		structureKeys.push(control.name);
 	});
 
-	if (controlType === ControlType.STRUCTUREEDITOR) {
-		const converted = {};
-		structureKeys.forEach((key, index) => {
-			converted[key] = typeof currentValues[index] !== "undefined" ? currentValues[index] : null;
+	if (isList) {
+		const convertedValues = [];
+		currentValues.forEach((valueList) => {
+			const newObject = {};
+			structureKeys.forEach((key, index) => {
+				newObject[key] = typeof valueList[index] !== "undefined" ? valueList[index] : null;
+			});
+			convertedValues.push(newObject);
 		});
-		return converted;
+		return convertedValues;
 	}
 
-	const convertedValues = [];
-	currentValues.forEach((valueList) => {
-		const newObject = {};
-		structureKeys.forEach((key, index) => {
-			newObject[key] = typeof valueList[index] !== "undefined" ? valueList[index] : null;
-		});
-		convertedValues.push(newObject);
+	const converted = {};
+	structureKeys.forEach((key, index) => {
+		converted[key] = typeof currentValues[index] !== "undefined" ? currentValues[index] : null;
 	});
-	return convertedValues;
+	return converted;
 }
 
 /**

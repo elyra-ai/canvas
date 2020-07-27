@@ -19,7 +19,6 @@ import * as PropertyUtils from "./../../../src/common-properties/util/property-u
 import testUtils from "./../../_utils_/property-utils";
 import Controller from "./../../../src/common-properties/properties-controller";
 import propertyUtils from "./../../_utils_/property-utils";
-import { ControlType } from "./../../../src/common-properties/constants/form-constants";
 import structureTableParamDef from "./../../test_resources/paramDefs/structuretable_paramDef.json";
 
 
@@ -166,42 +165,42 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 	const structureEditorArrayValues = [1, ["string1", "string2"], "hi", null];
 	const structureEditorObjectValues = { field1: 1, field2: ["string1", "string2"], field3: "hi", field4: null };
 
-	it("convertObjectStructureToArray returns correct values for ControlType.STRUCTURETABLE", () => {
-		const actual = PropertyUtils.convertObjectStructureToArray(ControlType.STRUCTURETABLE, subControls, objectValues);
+	it("convertObjectStructureToArray returns correct values for lists", () => {
+		const actual = PropertyUtils.convertObjectStructureToArray(true, subControls, objectValues);
 		expect(actual).to.eql(arrayValues);
 	});
 
-	it("convertArrayStructureToObject returns correct values for ControlType.STRUCTURELISTEDITOR", () => {
-		const actual = PropertyUtils.convertArrayStructureToObject(ControlType.STRUCTURELISTEDITOR, subControls, arrayValues);
+	it("convertArrayStructureToObject returns correct values for lists", () => {
+		const actual = PropertyUtils.convertArrayStructureToObject(true, subControls, arrayValues);
 		expect(actual).to.eql(objectValues);
 	});
 
-	it("convertObjectStructureToArray returns correct values when key:values are missing for ControlType.STRUCTURETABLE", () => {
+	it("convertObjectStructureToArray returns correct values when key:values are missing for lists", () => {
 		const missingArrayValues = [[1, null, "hi"], [null, 404, "hello"], [55005, null, null]];
 		const missingObjectValues = [{ field1: 1, field3: "hi" }, { field2: 404, field3: "hello" }, { field1: 55005 }];
 
-		const actual = PropertyUtils.convertObjectStructureToArray(ControlType.STRUCTURETABLE, subControls, missingObjectValues);
+		const actual = PropertyUtils.convertObjectStructureToArray(true, subControls, missingObjectValues);
 		expect(actual).to.eql(missingArrayValues);
 	});
 
-	it("convertObjectStructureToArray returns correct values when values are missing for ControlType.STRUCTURELISTEDITOR", () => {
+	it("convertObjectStructureToArray returns correct values when values are missing for lists", () => {
 		const missingArrayValues = [[1, null, ""], [null, 404, null], [null, "", null]];
 		const missingObjectValues = [{ field1: 1, field2: null, field3: "" }, { field1: null, field2: 404, field3: null }, { field1: null, field2: "", field3: null }];
 
-		const actual = PropertyUtils.convertObjectStructureToArray(ControlType.STRUCTURELISTEDITOR, subControls, missingObjectValues);
+		const actual = PropertyUtils.convertObjectStructureToArray(true, subControls, missingObjectValues);
 		expect(actual).to.eql(missingArrayValues);
 	});
 
-	it("convertArrayStructureToObject returns correct values for ControlType.STRUCTUREEDITOR", () => {
-		const actual = PropertyUtils.convertArrayStructureToObject(ControlType.STRUCTUREEDITOR, structureEditorSubControls, structureEditorArrayValues);
+	it("convertArrayStructureToObject returns correct values for non lists", () => {
+		const actual = PropertyUtils.convertArrayStructureToObject(false, structureEditorSubControls, structureEditorArrayValues);
 		expect(actual).to.eql(structureEditorObjectValues);
 	});
 
-	it("convertObjectStructureToArray returns correct values when key:values are missing for ControlType.STRUCTUREEDITOR", () => {
+	it("convertObjectStructureToArray returns correct values when key:values are missing for non lists", () => {
 		const missingArrayValues = [1, ["string1", "string2"], null, null];
 		const missingObjectValues = { field1: 1, field2: ["string1", "string2"] };
 
-		const actual = PropertyUtils.convertObjectStructureToArray(ControlType.STRUCTUREEDITOR, structureEditorSubControls, missingObjectValues);
+		const actual = PropertyUtils.convertObjectStructureToArray(false, structureEditorSubControls, missingObjectValues);
 		expect(actual).to.eql(missingArrayValues);
 	});
 });

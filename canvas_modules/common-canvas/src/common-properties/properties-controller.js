@@ -967,7 +967,7 @@ export default class PropertiesController {
 	_convertObjectStructure(propertyId, propertyValue) {
 		const control = this.getControl(propertyId);
 		if (control && control.structureType && control.structureType === "object") {
-			const convertedValues = PropertyUtils.convertArrayStructureToObject(control.controlType, control.subControls, propertyValue);
+			const convertedValues = PropertyUtils.convertArrayStructureToObject(control.valueDef.isList, control.subControls, propertyValue);
 			return convertedValues;
 		}
 		return propertyValue;

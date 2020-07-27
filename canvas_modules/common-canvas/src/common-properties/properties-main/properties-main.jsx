@@ -140,7 +140,7 @@ class PropertiesMain extends React.Component {
 				const propertyId = this.propertiesController.convertPropertyId(controlId);
 				const currentValues = this.propertiesController.getPropertyValue(propertyId);
 				const control = controls[controlId];
-				const convertedValues = PropertyUtils.convertObjectStructureToArray(control.controlType, control.subControls, currentValues);
+				const convertedValues = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, currentValues);
 				this.propertiesController.updatePropertyValue(propertyId, convertedValues, true);
 			}
 		});
