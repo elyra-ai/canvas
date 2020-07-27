@@ -132,6 +132,19 @@ class PropertiesMain extends React.Component {
 			this.originalTitle = formData.label;
 			this.propertiesController.setTitle(formData.label);
 		}
+
+		// convert currentParameters of type:object to array values
+		const controls = this.propertiesController.getControls();
+		Object.keys(controls).forEach((controlId) => {
+			if (controls[controlId].structureType && controls[controlId].structureType === "object") {
+				const propertyId = this.propertiesController.convertPropertyId(controlId);
+				const currentValues = this.propertiesController.getPropertyValue(propertyId);
+				const control = controls[controlId];
+				const convertedValues = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, currentValues);
+				this.propertiesController.updatePropertyValue(propertyId, convertedValues, true);
+			}
+		});
+
 		// set initial values for undo
 		this.initialValueInfo = { additionalInfo: { messages: [] }, undoInfo: {} };
 		this.uiParameterKeys = this._getUiOnlyKeys();
@@ -237,9 +250,12 @@ class PropertiesMain extends React.Component {
 		return false;
 	}
 
-	_setValueInforProperties(valueInfo) {
+	// options is an object of config options where
+	//   applyProperties: true - this function is called from applyPropertiesEditing
+	_setValueInforProperties(valueInfo, options) {
+		const applyProperties = options && options.applyProperties === true;
 		const filterHiddenDisabled = this.props.propertiesConfig.conditionReturnValueHandling === CONDITION_RETURN_VALUE_HANDLING.NULL;
-		const properties = this.propertiesController.getPropertyValues(filterHiddenDisabled);
+		const properties = this.propertiesController.getPropertyValues({ filterHiddenDisabled: filterHiddenDisabled, applyProperties: applyProperties });
 		if (this.uiParameterKeys.length > 0) {
 			valueInfo.properties = omit(properties, this.uiParameterKeys);
 			valueInfo.uiProperties = pick(properties, this.uiParameterKeys);
@@ -286,7 +302,7 @@ class PropertiesMain extends React.Component {
 
 			// set current values
 			let valueInfo = { additionalInfo: {}, undoInfo: {} };
-			valueInfo = this._setValueInforProperties(valueInfo);
+			valueInfo = this._setValueInforProperties(valueInfo, { applyProperties: true });
 			valueInfo.undoInfo.properties = this.propertiesController.getPropertyValues();
 			const errorMessages = this.propertiesController.getErrorMessages(true, true, true);
 			if (errorMessages) {

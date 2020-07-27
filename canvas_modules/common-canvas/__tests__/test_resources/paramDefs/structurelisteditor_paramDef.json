@@ -116,6 +116,15 @@
         "Ascending",
         "cat"
       ]
+    ],
+    "structurelisteditorObjectType": [
+      {
+        "readonly_numbered_column_index": 1,
+        "name": "Hello",
+        "description": "World",
+        "data_type": "string",
+        "readonly": "Readonly phrase"
+      }
     ]
   },
   "parameters": [
@@ -158,6 +167,10 @@
       "id": "SLE_mse_table",
       "type": "array[SLE_mse_table]",
       "default": []
+    },
+    {
+      "id": "structurelisteditorObjectType",
+      "type": "array[structurelisteditorObjectType]"
     }
   ],
   "complex_types": [
@@ -414,6 +427,41 @@
           "default": "horse"
         }
       ]
+    },
+    {
+      "id": "structurelisteditorObjectType",
+      "type": "object",
+      "parameters": [
+        {
+          "id": "readonly_numbered_column_index",
+          "type": "integer"
+        },
+        {
+          "id": "name",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "description",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "data_type",
+          "enum": [
+            "string",
+            "number",
+            "boolean",
+            "time",
+            "date"
+          ],
+          "default": ""
+        },
+        {
+          "id": "readonly",
+          "type": "string"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -514,6 +562,15 @@
           "default": "When 'Animals' has a value of 'horse' the order cannot be changed to 'Descending'"
         },
         "rows": -1
+      },
+      {
+        "parameter_ref": "structurelisteditorObjectType",
+        "label": {
+          "default": "Table Input"
+        },
+        "description": {
+          "default": "The index column will be auto-populated with an integer value for each row starting at 1. Subsequent rows will be incremented by 1."
+        }
       }
     ],
     "complex_type_info": [
@@ -981,6 +1038,63 @@
             "edit_style": "inline"
           }
         ]
+      },
+      {
+        "complex_type_ref": "structurelisteditorObjectType",
+        "parameters": [
+          {
+            "parameter_ref": "readonly_numbered_column_index",
+            "label": {
+              "resource_key": "structurelisteditorObjectType.readonly_numbered_column_index.label"
+            },
+            "width": 15,
+            "generated_values": {
+              "operation": "index"
+            },
+            "control": "readonly",
+            "summary": true
+          },
+          {
+            "parameter_ref": "name",
+            "label": {
+              "default": "Structure Name",
+              "resource_key": "structurelisteditorObjectType.name.label"
+            },
+            "description": {
+              "resource_key": "structurelisteditorObjectType.name.desc"
+            },
+            "width": 15,
+            "edit_style": "subpanel",
+            "summary": true
+          },
+          {
+            "parameter_ref": "description",
+            "label": {
+              "resource_key": "structurelisteditorObjectType.description.label"
+            },
+            "description": {
+              "resource_key": "structurelisteditorObjectType.description.desc"
+            },
+            "width": 15,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "data_type",
+            "label": {
+              "default": "Type"
+            },
+            "width": 15,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "readonly",
+            "label": {
+              "default": "ReadOnly"
+            },
+            "control": "readonly",
+            "width": 20
+          }
+        ]
       }
     ],
     "group_info": [
@@ -1059,6 +1173,27 @@
                 "id": "SLE_mse_table",
                 "parameter_refs": [
                   "SLE_mse_table"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Tables - Objects",
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "structurelisteditorObjectType-summary-panel",
+            "label": {
+              "default": "Configure Table Input"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "Structure Table Inline Control",
+                "parameter_refs": [
+                  "structurelisteditorObjectType"
                 ]
               }
             ]

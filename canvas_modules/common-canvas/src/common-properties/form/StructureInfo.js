@@ -20,7 +20,7 @@ import { ResourceDef } from "../util/L10nProvider";
 
 export class StructureDef {
 	constructor(cname, keyDefinition, parameterMetadata, moveableRows, label,
-		rowSelection, addRemoveRows, header, includeAllFields, layout) {
+		rowSelection, addRemoveRows, header, includeAllFields, layout, type) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
@@ -42,6 +42,11 @@ export class StructureDef {
 		}
 		if (Array.isArray(layout)) {
 			this.layout = layout;
+		}
+		if (typeof type === "undefined") {
+			this.type = "array"; // set the default value
+		} else {
+			this.type = type;
 		}
 	}
 
@@ -99,7 +104,8 @@ export class StructureDef {
 				propertyOf(uihints)("add_remove_rows"),
 				propertyOf(uihints)("header"),
 				propertyOf(uihints)("include_all_fields"),
-				propertyOf(uihints)("layout")
+				propertyOf(uihints)("layout"),
+				propertyOf(structure)("type")
 			);
 		}
 		return null;

@@ -462,7 +462,7 @@ describe("Properties Controller property values", () => {
 	});
 	it("should get filtered a property value correctly", () => {
 		reset();
-		const actualValue = controller.getPropertyValue({ name: "param_mix_table" }, true);
+		const actualValue = controller.getPropertyValue({ name: "param_mix_table" }, { "filterHiddenDisabled": true });
 		const expectedValue = [
 			["field1", true, null, 0.674, "DSX"],
 			["field2", null, 10, 0.674, "WDP"],
@@ -473,17 +473,17 @@ describe("Properties Controller property values", () => {
 	});
 	it("should get filtered `undefined` property value correctly", () => {
 		reset();
-		const actualValue = controller.getPropertyValue({ name: "param_undefined" }, true);
+		const actualValue = controller.getPropertyValue({ name: "param_undefined" }, { "filterHiddenDisabled": true });
 		expect(actualValue).to.be.undefined;
 	});
 	it("should get filtered `null` property value correctly", () => {
 		reset();
-		const actualValue = controller.getPropertyValue({ name: "param_null" }, true);
+		const actualValue = controller.getPropertyValue({ name: "param_null" }, { "filterHiddenDisabled": true });
 		expect(actualValue).to.equal(null);
 	});
 	it("should get filtered property values correctly", () => {
 		reset();
-		const actualValues = controller.getPropertyValues(true);
+		const actualValues = controller.getPropertyValues({ "filterHiddenDisabled": true });
 		const expectedValues = {
 			param_int: 5,
 			param_str: "Testing a string parameter",

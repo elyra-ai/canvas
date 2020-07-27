@@ -24,7 +24,12 @@
      "option_three": [
        null,
        "choice A"
-     ]
+     ],
+   "structureeditorObjectType": {
+      "first_field": "hi",
+      "first_field_checkbox": false,
+      "field_annotation": [ "there", "you" ]
+    }
   },
   "complex_types": [
     {
@@ -129,6 +134,37 @@
           "default": "choice A"
         }
       ]
+    },
+    {
+      "id": "fieldLayout",
+      "type": "object",
+      "parameters": [
+        {
+          "id": "hidden_field",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "id": "first_field",
+          "type": "string",
+          "role": "new_column",
+          "default": ""
+        },
+        {
+          "id": "first_field_checkbox",
+          "type": "boolean",
+          "enum": [
+            "Add Description"
+          ],
+          "default": false
+        },
+        {
+          "id": "field_annotation",
+          "type": "array[string]",
+          "default": [],
+          "role": "new_column"
+        }
+      ]
     }
   ],
   "parameters": [
@@ -174,6 +210,11 @@
       "id": "option_three",
       "type": "optionThreeComplexType",
       "required": false
+    },
+    {
+      "id": "structureeditorObjectType",
+      "type": "fieldLayout",
+      "default": []
     }
   ],
   "uihints": {
@@ -296,6 +337,51 @@
             "control": "oneofselect"
           }
         ]
+      },
+      {
+        "complex_type_ref": "fieldLayout",
+        "layout": [
+          ["first_field_checkbox", "first_field"],
+          ["field_annotation"]
+        ],
+        "parameters": [
+          {
+            "parameter_ref": "hidden_field",
+            "label": {
+              "default": " "
+            },
+            "description": {
+              "default": ""
+            }
+          },
+          {
+            "parameter_ref": "first_field",
+            "label": {
+              "default": " "
+            },
+            "description": {
+              "default": ""
+            }
+          },
+          {
+            "parameter_ref": "first_field_checkbox",
+            "label": {
+              "default": "Custom name"
+            },
+            "description": {
+              "default": "Check this box in order to use a custom name for the node."
+            }
+          },
+          {
+            "parameter_ref": "field_annotation",
+            "label": {
+              "default": "Annotation"
+            },
+            "description": {
+              "default": "Annotation"
+            }
+          }
+        ]
       }
     ],
     "parameter_info": [
@@ -352,6 +438,15 @@
       },
       {
         "parameter_ref": "option_three"
+      },
+      {
+        "parameter_ref": "structureeditorObjectType",
+        "label": {
+          "default": "Layout Controls"
+        },
+        "description": {
+          "default": "Layout Controls"
+        }
       }
     ],
     "group_info": [
@@ -374,6 +469,15 @@
           "hider",
           "disabler",
           "layout_struct"
+        ]
+      },
+      {
+        "id": "structureeditor-object",
+        "label": {
+          "default": "Object"
+        },
+        "parameter_refs": [
+          "structureeditorObjectType"
         ]
       },
       {
