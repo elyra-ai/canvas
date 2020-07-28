@@ -89,7 +89,7 @@ describe("Toolbar renders correctly", () => {
 
 	});
 
-	it("should register a click when clicked on an disabled toolbar item", () => {
+	it("should NOT register a click when clicked on an disabled toolbar item", () => {
 		const toolbarConfig = {
 			rightBar: [
 				{ action: "zoomIn", label: "Cut", enable: true },

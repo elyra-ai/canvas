@@ -52,7 +52,6 @@ class Toolbar extends React.Component {
 		for (let i = 0; i < actionDefinitions.length; i++) {
 			const actionObj = actionDefinitions[i];
 			if (actionObj) {
-				// if (withSpacer && !this.isADividerAndLastItem(actionObj, i, actionDefinitions)) {
 				if (withSpacer && !actionObj.divider) {
 					newItems.push(this.generateOverflowIcon(i));
 				}
@@ -60,11 +59,6 @@ class Toolbar extends React.Component {
 			}
 		}
 		return newItems;
-	}
-
-	// Checks to see if a
-	isADividerAndLastItem(actionObj, i, actionDefinitions) {
-		return actionObj.divider && i === actionDefinitions.length - 1;
 	}
 
 	generateToolbarItem(actionObj, i, overflow) {

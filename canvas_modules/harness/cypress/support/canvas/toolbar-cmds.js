@@ -147,7 +147,7 @@ Cypress.Commands.add("getToolbarOverflowItem", () => {
 Cypress.Commands.add("getToolbarAction", (action) => {
 	// First look for the action in the overflow menu. If it's not there
 	// look in the toolbar
-	const overflowMenuAction = ".toolbar-overflow-menu-item" + action;
+	const overflowMenuAction = "toolbar-overflow-menu-item toolbar-item-content " + action;
 	const toolbarAction = ".toolbar-item" + action;
 
 	cy.get("body").then(($body) => {
