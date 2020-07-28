@@ -90,7 +90,7 @@ describe("Test for toolbar Create and Delete button", function() {
 
 		// Delete node using toolbar
 		cy.clickToolbarOverflow();
-		cy.clickToolbarDelete();
+		cy.clickToolbarDeleteInOverflowMenu();
 
 		// Verification steps
 		cy.verifyNodeIsDeleted("Define Types");

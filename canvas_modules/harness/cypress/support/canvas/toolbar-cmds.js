@@ -74,6 +74,12 @@ Cypress.Commands.add("clickToolbarDelete", () => {
 	cy.getToolbarAction(".deleteSelectedObjects-action").click();
 });
 
+Cypress.Commands.add("clickToolbarDeleteInOverflowMenu", () => {
+	// When calling overflow menu items we need to 'force: true' because
+	// Cypress thinks that the target menu item is hidden.
+	cy.getToolbarActionInOverflowMenu(".deleteSelectedObjects-action").click({ force: true });
+});
+
 Cypress.Commands.add("clickToolbarArrangeHorizontally", () => {
 	cy.getToolbarAction(".arrangeHorizontally-action").click();
 });
@@ -143,19 +149,13 @@ Cypress.Commands.add("getToolbarOverflowItem", () => {
 		});
 });
 
+Cypress.Commands.add("getToolbarActionInOverflowMenu", (action) => {
+	const overflowMenuAction = ".toolbar-overflow-menu-item" + action + " button";
+	cy.getCanvasToolbar().find(overflowMenuAction);
+});
 
 Cypress.Commands.add("getToolbarAction", (action) => {
-	// First look for the action in the overflow menu. If it's not there
-	// look in the toolbar
-	const overflowMenuAction = "toolbar-overflow-menu-item toolbar-item-content " + action;
-	const toolbarAction = ".toolbar-item" + action;
-
-	cy.get("body").then(($body) => {
-		if ($body.find(overflowMenuAction).length) {
-			return cy.getCanvasToolbar().find(overflowMenuAction);
-		}
-		return cy.getCanvasToolbar().find(toolbarAction);
-	});
+	cy.getCanvasToolbar().find(action);
 });
 
 Cypress.Commands.add("getToolbarActionInExtraCanvas", (action) => {

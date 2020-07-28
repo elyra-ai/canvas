@@ -61,8 +61,7 @@ $toolbar-divider-width: 1px;
 
 	& button {
 		padding: 0;
-		border-top: 0;
-		border-bottom: 0;
+		height: $toolbar-button-height;
 		min-height: 30px;
 	}
 
@@ -115,8 +114,6 @@ $toolbar-divider-width: 1px;
 		min-height: 30px;
 		background-color: $ui-01;
 		border-right: $toolbar-divider-width solid $ui-03;
-		// Reduce width by 1 to hide the right border for the rightmost overflow icon in the leftbar.
-		width: calc(#{$toolbar-button-width} - 1px);
 	}
 
 	& button:hover {
@@ -140,7 +137,7 @@ $toolbar-divider-width: 1px;
 	width: inherit;
 	display: flex;
 	justify-content: center;
-	padding: 12px 12px 8px;
+	padding: 11px;
 
 	&.overflow {
 		justify-content: left;
@@ -199,6 +196,7 @@ $toolbar-divider-width: 1px;
 }
 
 .toolbar-divider-overflow {
+	height: 0;
 	border-bottom: $toolbar-divider-width solid $ui-03;
 }
 
