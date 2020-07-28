@@ -24,8 +24,8 @@ import { Toggle, FileUploader, Button, Select, SelectItemGroup, SelectItem, Radi
 
 import {
 	CHOOSE_FROM_LOCATION,
-	FLYOUT,
-	MODAL,
+	PROPERTIES_FLYOUT,
+	PROPERTIES_MODAL,
 	LOCAL_FILE_OPTION,
 	FORMS,
 	PARAMETER_DEFS
@@ -237,12 +237,12 @@ export default class SidePanelModal extends React.Component {
 				valueSelected={this.props.propertiesConfig.propertiesContainerType}
 			>
 				<RadioButton
-					value={FLYOUT}
-					labelText={FLYOUT}
+					value={PROPERTIES_FLYOUT}
+					labelText={PROPERTIES_FLYOUT}
 				/>
 				<RadioButton
-					value={MODAL}
-					labelText={MODAL}
+					value={PROPERTIES_MODAL}
+					labelText={PROPERTIES_MODAL}
 				/>
 			</RadioButtonGroup>
 		</div>);
