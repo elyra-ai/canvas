@@ -38,11 +38,107 @@ class Toolbar extends React.Component {
 		this.generateExtensionMenuItems = this.generateExtensionMenuItems.bind(this);
 	}
 
+	// Prevents the inline-block elements of the left bar being scrolled to
+	// reveal the wrapped elements when the user tabs through the elements.
+	onScroll(evt) {
+		evt.currentTarget.scroll(0, 0);
+		evt.preventDefault();
+	}
+
 	// Close the overflow menu, if it is open, when the toolbar is resized in
 	// case a new menu needs to be displayed with the new toolbar width.
 	onToolbarResize() {
 		if (this.state.showExtendedMenuIndex > -1) {
 			this.setState({ showExtendedMenuIndex: -1 });
+		}
+
+		this.setLeftBarItemsTabIndex();
+		this.setRightBarItemsTabIndex();
+	}
+
+	setLeftBarItemsTabIndex() {
+		const bar = this.getBar("left");
+		if (!bar) {
+			return;
+		}
+
+		const items = bar.querySelectorAll("[data-toolbar-item=true]") || [];
+		const topRow = this.getTopOfFirstOverflowItem(bar);
+		let lastTopRowElement = -1;
+
+		for (let i = 0; i < items.length; i++) {
+			const itemRect = items[i].getBoundingClientRect();
+
+			this.setOverflowItemButtonTabIndex(i, -1, bar);
+
+			if (itemRect.top === topRow) {
+				lastTopRowElement = i;
+				this.setToolbarItemButtonTabIndex(items[i], 0);
+			} else {
+				this.setToolbarItemButtonTabIndex(items[i], -1);
+			}
+		}
+
+		if (lastTopRowElement < items.length) {
+			this.setOverflowItemButtonTabIndex(lastTopRowElement + 1, 0, bar);
+		}
+	}
+
+	setRightBarItemsTabIndex() {
+		const bar = this.getBar("right");
+		if (!bar) {
+			return;
+		}
+
+		const items = bar.querySelectorAll("[data-toolbar-item=true]") || [];
+		let topRow = 0;
+
+		for (let i = 0; i < items.length; i++) {
+			const itemRect = items[i].getBoundingClientRect();
+
+			if (i === 0) {
+				topRow = itemRect.top;
+			}
+
+			if (itemRect.top === topRow) {
+				this.setToolbarItemButtonTabIndex(items[i], 0);
+			} else {
+				this.setToolbarItemButtonTabIndex(items[i], -1);
+			}
+		}
+	}
+
+	getBar(side) {
+		const id = this.props.instanceId;
+		const part = document.querySelector(`.toolbar-div[instanceid='${id}'] > .toolbar-${side}-bar`) || [];
+		return part;
+	}
+
+	getTopOfFirstOverflowItem(bar) {
+		const firstOverflowItem = this.getOverflowItem(0, bar);
+		const rect = firstOverflowItem.getBoundingClientRect();
+		return rect.top;
+	}
+
+	getOverflowItem(index, bar) {
+		const overflowClassName = "toolbar-index-" + index;
+		return bar.getElementsByClassName(overflowClassName)[0];
+	}
+
+	setToolbarItemButtonTabIndex(item, tabIndex) {
+		const button = item.querySelector("button");
+		if (button) {
+			button.setAttribute("tabindex", tabIndex);
+		}
+	}
+
+	setOverflowItemButtonTabIndex(index, tabIndex, bar) {
+		const overflowItem = this.getOverflowItem(index, bar);
+		if (overflowItem) {
+			const overflowButton = overflowItem.querySelector("button");
+			if (overflowButton) {
+				overflowButton.setAttribute("tabindex", tabIndex);
+			}
 		}
 	}
 
@@ -111,8 +207,7 @@ class Toolbar extends React.Component {
 
 	generateRightOverflowItems() {
 		const newItems = [];
-		const id = this.props.instanceId;
-		const part = document.querySelector(`.toolbar-div[instanceid='${id}'] > .toolbar-right-bar`) || [];
+		const part = this.getBar("right");
 		if (!part) {
 			return [];
 		}
@@ -150,7 +245,7 @@ class Toolbar extends React.Component {
 		const canvasToolbar = (
 			<ReactResizeDetector handleWidth onResize={this.onToolbarResize}>
 				<div className="toolbar-div" instanceid={this.props.instanceId}>
-					<div className="toolbar-left-bar">
+					<div className="toolbar-left-bar" onScroll={this.onScroll}>
 						{leftItems}
 					</div>
 					<div className="toolbar-right-bar">

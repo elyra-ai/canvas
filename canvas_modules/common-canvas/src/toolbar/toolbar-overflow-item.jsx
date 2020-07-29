@@ -21,7 +21,7 @@ import Icon from "../icons/icon.jsx";
 import { Button } from "carbon-components-react";
 import { CANVAS_CARBON_ICONS } from "../common-canvas/constants/canvas-constants";
 
-class ToolbarExtensionItem extends React.Component {
+class ToolbarOverflowItem extends React.Component {
 	constructor(props) {
 		super(props);
 		this.toggleExtendedMenu = this.toggleExtendedMenu.bind(this);
@@ -44,9 +44,11 @@ class ToolbarExtensionItem extends React.Component {
 			);
 		}
 
+		const className = "toolbar-spacer toolbar-index-" + this.props.index;
+
 		return (
-			<div className="toolbar-spacer" tabIndex={-1} >
-				<div className={"toolbar-overflow-item"} tabIndex={1} >
+			<div className={className} >
+				<div className={"toolbar-overflow-item"}>
 					<Button kind="ghost"
 						onClick={this.toggleExtendedMenu}
 					>
@@ -63,11 +65,11 @@ class ToolbarExtensionItem extends React.Component {
 	}
 }
 
-ToolbarExtensionItem.propTypes = {
+ToolbarOverflowItem.propTypes = {
 	showExtendedMenu: PropTypes.bool.isRequired,
 	toggleExtendedMenu: PropTypes.func.isRequired,
 	index: PropTypes.number.isRequired,
 	generateExtensionMenuItems: PropTypes.func
 };
 
-export default ToolbarExtensionItem;
+export default ToolbarOverflowItem;
