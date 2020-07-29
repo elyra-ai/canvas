@@ -117,7 +117,7 @@ class Toolbar extends React.Component {
 			return [];
 		}
 
-		const items = part.querySelectorAll("[data-toolbar=true]") || [];
+		const items = part.querySelectorAll("[data-toolbar-item=true]") || [];
 		let topRow = 0;
 
 		for (let i = 0; i < items.length; i++) {

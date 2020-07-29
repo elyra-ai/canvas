@@ -130,8 +130,10 @@ class ToolbarActionItem extends React.Component {
 			);
 		}
 
+		const isToolbarItem = !this.props.overflow;
+
 		return (
-			<div className={itemClassName} data-toolbar>
+			<div className={itemClassName} data-toolbar-item={isToolbarItem}>
 				<Button kind={kind}
 					onClick={this.actionClickHandler}
 					disabled={!actionObj.enable}
