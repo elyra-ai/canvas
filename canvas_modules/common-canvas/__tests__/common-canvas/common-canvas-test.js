@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-import React from "react";
 import CanvasController from "../../src/common-canvas/canvas-controller";
-import CommonCanvas from "../../src/common-canvas/common-canvas.jsx";
 import DiagramCanvasD3 from "../../src/common-canvas/diagram-canvas-d3.jsx";
 import Palette from "../../src/palette/palette.jsx";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
 import NotificationPanel from "../../src/notification-panel/notification-panel.jsx";
+import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
-import { mountWithIntl } from "../_utils_/intl-utils";
 
 
 describe("CommonCanvas renders correctly", () => {
@@ -33,7 +31,7 @@ describe("CommonCanvas renders correctly", () => {
 		canvasController = new CanvasController();
 	});
 
-	it("should render one <DialogCanvasD3/> component", () => {
+	it("should render one <DiagramCanvasD3/> component", () => {
 		const config = { enableAutoLayout: "none" };
 		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(DiagramCanvasD3)).to.have.length(1);
@@ -175,38 +173,35 @@ describe("CommonCanvas renders correctly", () => {
 
 		expect(editActionHandler.called).to.be.false;
 	});
-
-
 });
 
 function createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig, handlers) {
 	canvasController.getObjectModel().setPipelineFlowPalette({});
 	const contextMenuHandler = sinon.spy();
-	const contextMenuActionHandler = sinon.spy();
 	const beforeEditActionHandler = handlers && handlers.beforeEditActionHandler ? handlers.beforeEditActionHandler : null;
 	const editActionHandler = handlers && handlers.editActionHandler ? handlers.editActionHandler : sinon.spy();
 	const clickActionHandler = sinon.spy();
 	const decorationActionHandler = sinon.spy();
 	const selectionChangeHandler = sinon.spy();
 	const tipHandler = sinon.spy();
-	const toolbarMenuActionHandler = sinon.spy();
-	const wrapper = mountWithIntl(
-		<CommonCanvas
-			config={config}
-			contextMenuHandler={contextMenuHandler}
-			contextMenuActionHandler={contextMenuActionHandler}
-			beforeEditActionHandler={beforeEditActionHandler}
-			editActionHandler={editActionHandler}
-			clickActionHandler={clickActionHandler}
-			decorationActionHandler={decorationActionHandler}
-			selectionChangeHandler={selectionChangeHandler}
-			tipHandler={tipHandler}
-			toolbarConfig={toolbarConfig}
-			notificationConfig={notificationConfig}
-			showRightFlyout={false}
-			toolbarMenuActionHandler={toolbarMenuActionHandler}
-			canvasController={canvasController}
-		/>
+	const contextMenuConfig = null;
+	const showRightFlyout = false;
+	const wrapper = createIntlCommonCanvas(
+		config,
+		contextMenuHandler,
+		beforeEditActionHandler,
+		editActionHandler,
+		clickActionHandler,
+		decorationActionHandler,
+		selectionChangeHandler,
+		tipHandler,
+
+		toolbarConfig,
+		notificationConfig,
+		contextMenuConfig,
+		showRightFlyout,
+		canvasController
 	);
+
 	return wrapper;
 }

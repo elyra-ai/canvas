@@ -66,7 +66,7 @@ import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
-import { Play32, StopFilledAlt32 } from "@carbon/icons-react";
+import { Edit32, Play32, StopFilledAlt32 } from "@carbon/icons-react";
 
 import {
 	SIDE_PANEL_CANVAS,
@@ -90,14 +90,21 @@ import {
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	CUSTOM,
-	FLYOUT,
+	PALETTE_FLYOUT,
+	PROPERTIES_FLYOUT,
 	NONE_DRAG,
 	INPUT_PORT,
 	OUTPUT_PORT,
 	NOTIFICATION_MESSAGE_TYPE,
 	FORMS,
 	PARAMETER_DEFS,
-	PRIMARY
+	PRIMARY,
+	TOOLBAR_LAYOUT_TOP,
+	TOOLBAR_TYPE_DEFAULT,
+	TOOLBAR_TYPE_SINGLE_BAR,
+	TOOLBAR_TYPE_BEFORE_AFTER,
+	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
+	TOOLBAR_TYPE_CARBON_BUTTONS
 } from "./constants/constants.js";
 
 import listview32 from "../graphics/list-view_32.svg";
@@ -146,6 +153,8 @@ class App extends React.Component {
 			selectedInteractionType: INTERACTION_MOUSE,
 			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormat: VERTICAL_FORMAT,
+			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
+			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
 			selectedLinkType: CURVE_LINKS,
@@ -153,7 +162,7 @@ class App extends React.Component {
 			selectedAssocLinkType: ASSOC_STRAIGHT,
 			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedNodeLayout: EXAMPLE_APP_NONE,
-			selectedPaletteLayout: FLYOUT,
+			selectedPaletteLayout: PALETTE_FLYOUT,
 			selectedTipConfig: {
 				"palette": true,
 				"nodes": true,
@@ -177,7 +186,7 @@ class App extends React.Component {
 			propertiesInfo2: {},
 			propertiesJson: null,
 			selectedPanel: null,
-			propertiesContainerType: FLYOUT,
+			propertiesContainerType: PROPERTIES_FLYOUT,
 			displayAdditionalComponents: false,
 			applyOnBlur: true,
 			expressionBuilder: true,
@@ -1611,6 +1620,7 @@ class App extends React.Component {
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
+			enableToolbarLayout: this.state.selectedToolbarLayout,
 			emptyCanvasContent: emptyCanvasDiv,
 			enableInsertNodeDroppedOnLink: this.state.selectedInsertNodeDroppedOnLink,
 			enableMoveNodesOnSupernodeResize: this.state.selectedMoveNodesOnSupernodeResize,
@@ -1649,24 +1659,88 @@ class App extends React.Component {
 			enableNarrowPalette: this.state.selectedNarrowPalette
 		};
 
-		const toolbarConfig = [
-			{ action: "palette", label: "Palette", enable: true },
-			{ divider: true },
-			{ action: "stopit", label: "Stop Execution", enable: false,
-				iconEnabled: (<StopFilledAlt32 className="harness-toolbar-icon" />), iconDisabled: (<StopFilledAlt32 className="harness-toolbar-icon" />) },
-			{ action: "runit", label: "Run Pipeline", enable: true,
-				iconEnabled: (<Play32 className="harness-toolbar-icon" />), iconDisabled: (<Play32 className="harness-toolbar-icon" />) },
-			{ divider: true },
-			{ action: "undo", label: "Undo", enable: true },
-			{ action: "redo", label: "Redo", enable: true },
-			{ action: "cut", label: "Cut", enable: true },
-			{ action: "copy", label: "Copy", enable: true },
-			{ action: "paste", label: "Paste", enable: true },
-			{ action: "createAutoComment", label: "Add Comment", enable: true },
-			{ action: "deleteSelectedObjects", label: "Delete", enable: true },
-			{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
-			{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
-		];
+		let toolbarConfig = null;
+		if (this.state.selectedToolbarType === TOOLBAR_TYPE_DEFAULT) {
+			toolbarConfig = null;
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_SINGLE_BAR) {
+			toolbarConfig = [
+				{ action: "palette", label: "Palette", enable: true },
+				{ divider: true },
+				{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt32 />) },
+				{ action: "runit", label: "Run", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Play32 />) },
+				{ divider: true },
+				{ action: "undo", label: "Undo", enable: true },
+				{ action: "redo", label: "Redo", enable: true },
+				{ action: "cut", label: "Cut", enable: true },
+				{ action: "copy", label: "Copy", enable: true },
+				{ action: "paste", label: "Paste", enable: true },
+				{ action: "createAutoComment", label: "Add Comment", enable: true },
+				{ action: "deleteSelectedObjects", label: "Delete", enable: true },
+				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
+			];
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_BEFORE_AFTER) {
+			toolbarConfig = {
+				leftBar: [
+					{ action: "before-enabled", incLabelWithIcon: "before", label: "Before - enabled", enable: true, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+					{ action: "before-disabled", incLabelWithIcon: "before", label: "Before - disbaled", enable: false, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+					{ action: "after-enabled", incLabelWithIcon: "after", label: "After - enabled", enable: true, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+					{ action: "after-disabled", incLabelWithIcon: "after", label: "After - disbaled", enable: false, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+				],
+				rightBar: [
+					{ divider: true },
+					{ divider: true },
+					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
+					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
+					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true }
+				]
+			};
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE) {
+			toolbarConfig = {
+				leftBar: [
+				],
+				rightBar: [
+					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
+					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
+					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true },
+					{ divider: true },
+					{ action: "undo", label: "Undo", enable: true },
+					{ action: "redo", label: "Redo", enable: true },
+					{ divider: true },
+					{ action: "cut", label: "Cut", enable: true },
+					{ action: "copy", label: "Copy", enable: true },
+					{ action: "paste", label: "Paste", enable: true },
+					{ divider: true },
+					{ action: "createAutoComment", label: "Add Comment", enable: true },
+					{ action: "deleteSelectedObjects", label: "Delete", enable: true },
+					{ divider: true },
+					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
+				]
+			};
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CARBON_BUTTONS) {
+			toolbarConfig = {
+				leftBar: [
+					{ action: "primary", label: "Primary", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit32 />) },
+					{ action: "danger", label: "Danger", enable: true, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit32 />) },
+					{ action: "secondary", label: "Secondary", enable: true, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit32 />) },
+					{ action: "tertiary", label: "Tertiary", enable: true, incLabelWithIcon: "before", kind: "tertiary", iconEnabled: (<Edit32 />) },
+					{ action: "ghost", label: "Ghost", enable: true, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit32 />) },
+					{ action: "default", label: "Default", enable: true, incLabelWithIcon: "before", iconEnabled: (<Edit32 />) },
+				],
+				rightBar: [
+					{ action: "dis-primary", label: "Primary", enable: false, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit32 />) },
+					{ action: "dis-danger", label: "Danger", enable: false, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit32 />) },
+					{ action: "dis-secondary", label: "Secondary", enable: false, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit32 />) },
+					{ action: "dis-ghost", label: "Ghost", enable: false, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit32 />) },
+					{ action: "dis-default", label: "Default", enable: false, incLabelWithIcon: "before", iconEnabled: (<Edit32 />) },
+				]
+			};
+		}
 
 		const contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
@@ -1686,8 +1760,8 @@ class App extends React.Component {
 		};
 
 		const propertiesConfig = {
-			containerType: this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType,
-			rightFlyout: this.state.propertiesContainerType === FLYOUT,
+			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
+			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur
 		};
 		const callbacks = {
@@ -1740,11 +1814,11 @@ class App extends React.Component {
 		let rightFlyoutContent2 = null;
 		let showRightFlyoutProperties = false;
 		let showRightFlyoutProperties2 = false;
-		if (this.state.propertiesContainerType === FLYOUT) {
+		if (this.state.propertiesContainerType === PROPERTIES_FLYOUT) {
 			rightFlyoutContent = commonProperties;
 			rightFlyoutContent2 = commonProperties2;
-			showRightFlyoutProperties = this.state.showPropertiesDialog && this.state.propertiesContainerType === FLYOUT;
-			showRightFlyoutProperties2 = this.state.showPropertiesDialog2 && this.state.propertiesContainerType === FLYOUT;
+			showRightFlyoutProperties = this.state.showPropertiesDialog && this.state.propertiesContainerType === PROPERTIES_FLYOUT;
+			showRightFlyoutProperties2 = this.state.showPropertiesDialog2 && this.state.propertiesContainerType === PROPERTIES_FLYOUT;
 		} else {
 			commonPropertiesContainer = (
 				<div className="harness-common-properties">
@@ -1837,7 +1911,7 @@ class App extends React.Component {
 							contextMenuHandler={this.contextMenuHandler}
 							editActionHandler= {this.extraCanvasEditActionHandler}
 							clickActionHandler= {this.extraCanvasClickActionHandler}
-							toolbarConfig={toolbarConfig}
+							toolbarConfig={this.toolbarConfig}
 							canvasController={this.canvasController2}
 							notificationConfig={this.state.notificationConfig2}
 							rightFlyoutContent={rightFlyoutContent2}

@@ -421,6 +421,7 @@ describe("Test for undo/redo of layout actions", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
+		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray" });
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});

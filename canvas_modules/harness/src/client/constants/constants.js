@@ -82,10 +82,23 @@ _defineConstant("EXAMPLE_APP_EXPLAIN2", "Explain2");
 _defineConstant("EXAMPLE_APP_STREAMS", "Streams");
 _defineConstant("EXAMPLE_APP_TABLES", "Tables");
 
-_defineConstant("FLYOUT", "Flyout");
-_defineConstant("MODAL", "Modal");
+_defineConstant("PALETTE_FLYOUT", "Flyout");
+_defineConstant("PALETTE_MODAL", "Modal");
+_defineConstant("PALETTE_NONE", "None");
+
+_defineConstant("PROPERTIES_FLYOUT", "Flyout");
+_defineConstant("PROPERTIES_MODAL", "Modal");
 _defineConstant("CUSTOM", "Custom");
 _defineConstant("EDITING", "Editing");
+
+_defineConstant("TOOLBAR_LAYOUT_NONE", "None");
+_defineConstant("TOOLBAR_LAYOUT_TOP", "Top");
+
+_defineConstant("TOOLBAR_TYPE_DEFAULT", "Default");
+_defineConstant("TOOLBAR_TYPE_SINGLE_BAR", "SingleLeftBarArray");
+_defineConstant("TOOLBAR_TYPE_BEFORE_AFTER", "TextBeforeAndAfter");
+_defineConstant("TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE", "CustomizedRightSide");
+_defineConstant("TOOLBAR_TYPE_CARBON_BUTTONS", "CarbonButtons");
 
 _defineConstant("CHOOSE_FROM_LOCATION", "Choose from location...");
 

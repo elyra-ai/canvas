@@ -22,7 +22,8 @@ describe("Test of canvas comments", function() {
 	});
 
 	it("Test adding a comment", function() {
-		cy.get("#createAutoComment-action").click();
+		cy.clickToolbarAddComment();
+
 		cy.document().then((doc) => {
 			const lastEventLog = testUtils.getLastEventLogData(doc);
 			expect("createAutoComment").to.equal(lastEventLog.data.editType);

@@ -946,14 +946,14 @@ Cypress.Commands.add("verifyTipDoesNotShowForLink", () => {
 
 Cypress.Commands.add("verifyNotificationIconType", (type) => {
 	if (type) {
-		cy.get("svg.notificationCounterIcon").should("have.class", type);
+		cy.get(".notificationCounterIcon").should("have.class", type);
 	} else {
-		cy.get("svg.notificationCounterIcon").should("not.have.any.keys", ["info", "success", "warning", "error"]);
+		cy.get(".notificationCounterIcon").should("not.have.any.keys", ["info", "success", "warning", "error"]);
 	}
 });
 
 Cypress.Commands.add("verifyNotificationCounter", (count) => {
-	cy.get(".notificationCounterIcon .text-content").should("have.text", " " + count + " ");
+	cy.get(".toggleNotificationPanel-action .toolbar-text-content").should("have.text", " " + count + " ");
 });
 
 Cypress.Commands.add("verifyNotificationMessagesLength", (messagesLength) => {

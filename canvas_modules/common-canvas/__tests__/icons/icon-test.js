@@ -38,7 +38,7 @@ describe("Icon renders correctly", () => {
 		expect(icon.find("svg.svg-test-class")).to.have.length(1);
 	});
 	it("should render a svg with class 'canvas-icon' if not in carbon", () => {
-		const icon = mount(<Icon type="notificationCounterIcon" className="svg-test-class" />);
+		const icon = mount(<Icon type="toggleNotificationPanel" className="svg-test-class" />);
 		expect(icon.find("svg.canvas-icon")).to.have.length(1);
 	});
 });
