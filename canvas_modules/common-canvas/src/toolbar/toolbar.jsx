@@ -33,13 +33,26 @@ class Toolbar extends React.Component {
 		this.leftBar = [];
 		this.rightBar = [];
 
+		this.onFocus = this.onFocus.bind(this);
 		this.onToolbarResize = this.onToolbarResize.bind(this);
 		this.toggleExtendedMenu = this.toggleExtendedMenu.bind(this);
 		this.generateExtensionMenuItems = this.generateExtensionMenuItems.bind(this);
 	}
 
+	// When the toolbar is initially opened the tabindex for each element may not
+	// be set correctly because of the time it takes to initially render the DOM.
+	// Typically, this means the tabindex is not set correctly on whichever
+	// overflow menu icon is displayed. Therefore, as the user moves the focus
+	// to the first element in the toolbar (whose tabindex IS typically OK) we
+	// set the tabindex for all elements again, this then sets the overflow
+	// icon's tabindex correctly.
+	onFocus() {
+		this.setLeftBarItemsTabIndex();
+		this.setRightBarItemsTabIndex();
+	}
+
 	// Prevents the inline-block elements of the left bar being scrolled to
-	// reveal the wrapped elements when the user tabs through the elements.
+	// reveal the wrapped elements, when the user tabs through the elements.
 	onScroll(evt) {
 		evt.currentTarget.scroll(0, 0);
 		evt.preventDefault();
@@ -56,6 +69,15 @@ class Toolbar extends React.Component {
 		this.setRightBarItemsTabIndex();
 	}
 
+	// Sets the tabindex on all left bar items so tabbing works correctly. This
+	// falls into two parts: 1. Set the tabindex for all overflow items to -1
+	// except the overflow item that is displayed (if there is one). 2. Set the
+	// tabindex of all hidden regular toolbar items to -1 and to 0 for all
+	// displayed regular toolbar items.
+	// Note: We detect the y coordinate of the 'top row' by using the top of
+	// the first overflow icon. This is because the toolbar might be compressed
+	// to the extent that the first overflow icon is the only item on the left
+	// of the toolbar.
 	setLeftBarItemsTabIndex() {
 		const bar = this.getBar("left");
 		if (!bar) {
@@ -84,13 +106,11 @@ class Toolbar extends React.Component {
 		}
 	}
 
+	// Sets the tabindex on all right bar items so tabbing works correctly. This
+	// involves setting the tabindex of all hidden regular toolbar items to -1
+	// and to 0 for all displayed regular toolbar items.
 	setRightBarItemsTabIndex() {
-		const bar = this.getBar("right");
-		if (!bar) {
-			return;
-		}
-
-		const items = bar.querySelectorAll("[data-toolbar-item=true]") || [];
+		const items = this.getRightBarItems();
 		let topRow = 0;
 
 		for (let i = 0; i < items.length; i++) {
@@ -112,6 +132,14 @@ class Toolbar extends React.Component {
 		const id = this.props.instanceId;
 		const part = document.querySelector(`.toolbar-div[instanceid='${id}'] > .toolbar-${side}-bar`) || [];
 		return part;
+	}
+
+	getRightBarItems() {
+		const bar = this.getBar("right");
+		if (!bar) {
+			return [];
+		}
+		return bar.querySelectorAll("[data-toolbar-item=true]") || [];
 	}
 
 	getTopOfFirstOverflowItem(bar) {
@@ -175,6 +203,7 @@ class Toolbar extends React.Component {
 						toolbarActionHandler={this.props.toolbarActionHandler}
 						overflow={overflow}
 						instanceId={this.props.instanceId}
+						onFocus={this.onFocus}
 					/>
 				);
 			}
@@ -190,12 +219,18 @@ class Toolbar extends React.Component {
 				showExtendedMenu={this.state.showExtendedMenuIndex === index}
 				toggleExtendedMenu={this.toggleExtendedMenu}
 				generateExtensionMenuItems={this.generateExtensionMenuItems}
+				onFocus={this.onFocus}
 			/>
 		);
 
 		return jsx;
 	}
 
+	// Generates an array of action definition elements that correspond to the
+	// hidden DOM items on the left and right of the toolbar. For any left bar
+	// items we can use the leftIndex passed in to split the leftBar defintion
+	// array, however for the right side we need to loop through the DOM items
+	// and discover which is hidden and which is displayed.
 	generateExtensionMenuItems(leftIndex) {
 		const rightItems = this.generateRightOverflowItems();
 		rightItems.reverse();
@@ -205,14 +240,11 @@ class Toolbar extends React.Component {
 		return extensionItems;
 	}
 
+	// Generates an array of right side defintion items that correspond to
+	// right side DOM items that are hidden.
 	generateRightOverflowItems() {
-		const newItems = [];
-		const part = this.getBar("right");
-		if (!part) {
-			return [];
-		}
-
-		const items = part.querySelectorAll("[data-toolbar-item=true]") || [];
+		const newDefItems = [];
+		const items = this.getRightBarItems();
 		let topRow = 0;
 
 		for (let i = 0; i < items.length; i++) {
@@ -223,10 +255,10 @@ class Toolbar extends React.Component {
 			}
 
 			if (rect.top !== topRow) {
-				newItems.push(this.rightBar[i]);
+				newDefItems.push(this.rightBar[i]);
 			}
 		}
-		return newItems;
+		return newDefItems;
 	}
 
 	toggleExtendedMenu(index) {

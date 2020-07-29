@@ -51,6 +51,7 @@ class ToolbarOverflowItem extends React.Component {
 				<div className={"toolbar-overflow-item"}>
 					<Button kind="ghost"
 						onClick={this.toggleExtendedMenu}
+						onFocus={this.props.onFocus}
 					>
 						<div className="toolbar-item-content default">
 							<div className="toolbar-icon">
@@ -69,7 +70,8 @@ ToolbarOverflowItem.propTypes = {
 	showExtendedMenu: PropTypes.bool.isRequired,
 	toggleExtendedMenu: PropTypes.func.isRequired,
 	index: PropTypes.number.isRequired,
-	generateExtensionMenuItems: PropTypes.func
+	generateExtensionMenuItems: PropTypes.func,
+	onFocus: PropTypes.func
 };
 
 export default ToolbarOverflowItem;

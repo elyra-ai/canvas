@@ -137,6 +137,7 @@ class ToolbarActionItem extends React.Component {
 				<Button kind={kind}
 					onClick={this.actionClickHandler}
 					disabled={!actionObj.enable}
+					onFocus={this.props.onFocus}
 				>
 					{buttonContent}
 				</Button>
@@ -163,7 +164,8 @@ ToolbarActionItem.propTypes = {
 	}),
 	toolbarActionHandler: PropTypes.func.isRequired,
 	instanceId: PropTypes.number.isRequired,
-	overflow: PropTypes.bool
+	overflow: PropTypes.bool,
+	onFocus: PropTypes.func
 };
 
 export default ToolbarActionItem;
