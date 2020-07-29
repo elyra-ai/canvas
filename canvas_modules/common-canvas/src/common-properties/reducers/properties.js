@@ -32,7 +32,13 @@ function properties(state = {}, action) {
 				if (typeof newState[propertyId.name][propertyId.row] === "undefined") {
 					newState[propertyId.name][propertyId.row] = [];
 				}
-				newState[propertyId.name][propertyId.row][propertyId.col] = action.property.value;
+
+				// todo: make recursive
+				if (typeof propertyId.propertyId !== "undefined" && typeof propertyId.propertyId.row !== "undefined") {
+					newState[propertyId.name][propertyId.row][propertyId.col][propertyId.propertyId.row] = action.property.value;
+				} else {
+					newState[propertyId.name][propertyId.row][propertyId.col] = action.property.value;
+				}
 			} else {
 				newState[propertyId.name][propertyId.row] = action.property.value;
 			}

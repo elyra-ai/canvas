@@ -76,8 +76,12 @@ class ListControl extends AbstractTable {
 		if (controlValue) {
 			for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				const columns = [];
-				const row = { row: rowIndex };
-				const propertyId = Object.assign({}, this.props.propertyId, row);
+
+				// todo: determine if control is in a structure
+				// const row = { row: rowIndex };
+				// const propertyId = Object.assign({}, this.props.propertyId, row);
+				const propertyId = this.props.controller.createNestedPropertyId(this.props.propertyId, { name: this.props.control.name, row: rowIndex });
+
 				const controlPropType = this.props.controller.getControlPropType(propertyId);
 				const control = {};
 				const cellContent = this.makeCell(control, propertyId, controlPropType);

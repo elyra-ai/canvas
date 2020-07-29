@@ -262,6 +262,15 @@ export default class PropertiesController {
 		return propertyId;
 	}
 
+	createNestedPropertyId(parentPropertyId, childPropertyId) {
+		if (typeof parentPropertyId.propertyID === "undefined") {
+			const propertyId = Object.assign({}, parentPropertyId);
+			propertyId.propertyId = childPropertyId;
+			return propertyId;
+		}
+		return childPropertyId; // todo: fix
+	}
+
 	// This function will traverse the form and build a tree representation of panels.
 	// Each panel entry will have an array of children controls and children panels.
 	parsePanelTree() {

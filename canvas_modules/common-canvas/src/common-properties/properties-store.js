@@ -72,6 +72,11 @@ export default class PropertiesStore {
 				if (typeof propertyId.index !== "undefined") {
 					return rowValue[propertyId.col][propertyId.index];
 				}
+
+				// todo: make recursive
+				if (typeof propertyId.propertyId !== "undefined" && typeof propertyId.propertyId.row !== "undefined") {
+					return rowValue[propertyId.col][propertyId.propertyId.row];
+				}
 				return rowValue[propertyId.col];
 			}
 			return rowValue;
