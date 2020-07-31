@@ -1,0 +1,888 @@
+{
+  "paramDef": {
+    "uihints": {
+      "editor_size": "medium",
+      "id": "stagePanels",
+      "group_info": [
+        {
+          "id": "detailsPanels",
+          "type": "subTabs",
+          "group_info": [
+            {
+              "id": "StageSubTab",
+              "label": {
+                "default": "STAGE"
+              },
+              "type": "panels",
+              "group_info": [
+                {
+                  "id": "PropertiesTab",
+                  "type": "twistyPanel",
+                  "label": {
+                    "default": "Properties"
+                  },
+                  "group_info": [
+                    {
+                      "id": "Sorting Keys",
+                      "type": "textPanel"
+                    },
+                    {
+                      "id": "Sorting KeysProps",
+                      "type": "controls",
+                      "parameter_refs": [
+                        "keyProperties"
+                      ]
+                    },
+                    {
+                      "id": "Options",
+                      "type": "textPanel"
+                    },
+                    {
+                      "id": "OptionsProps",
+                      "type": "controls",
+                      "parameter_refs": [
+                        "operator",
+                        "memory",
+                        "stable",
+                        "unique",
+                        "stats",
+                        "flagCluster",
+                        "flagKey",
+                        "workspace"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "AdvancedTab",
+                  "type": "twistyPanel",
+                  "label": {
+                    "default": "Advanced"
+                  },
+                  "group_info": [
+                    {
+                      "id": "AdvancedPropsControl",
+                      "type": "controls",
+                      "parameter_refs": [
+                        
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "localeTab",
+                  "type": "twistyPanel",
+                  "label": {
+                    "default": "NLS locale"
+                  },
+                  "group_info": [
+                    {
+                      "id": "NLSLocaleControl",
+                      "type": "controls",
+                      "parameter_refs": [
+                        
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "GeneralTab",
+                  "type": "twistyPanel",
+                  "label": {
+                    "default": "General"
+                  },
+                  "group_info": [
+                    {
+                      "id": "GeneralControl",
+                      "type": "controls",
+                      "parameter_refs": [
+                        "stageDescription"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "inputTab",
+              "label": {
+                "default": "INPUT"
+              },
+              "type": "panels",
+              "group_info": [
+                {
+                  "id": "inputControls",
+                  "type": "controls",
+                  "parameter_refs": [
+                    "inputName"
+                  ]
+                },
+                {
+                  "id": "partitioningInputPanel",
+                  "type": "twistyPanel",
+                  "label": {
+                    "default": "Partitioning"
+                  },
+                  "group_info": [
+                    {
+                      "id": "partitioningInputControl",
+                      "type": "controls",
+                      "parameter_refs": [
+                        
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "ColumnsInputPanel",
+                  "type": "twistyPanel",
+                  "label": {
+                    "default": "Columns"
+                  },
+                  "group_info": [
+                    {
+                      "id": "ColumnsInputControl",
+                      "type": "controls",
+                      "parameter_refs": [
+                        "inputcolProperties"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "AdvancedInputPanel",
+                  "type": "twistyPanel",
+                  "label": {
+                    "default": "Advanced"
+                  },
+                  "group_info": [
+                    {
+                      "id": "AdvancedInputControl",
+                      "type": "controls",
+                      "parameter_refs": [
+                        
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "GeneralInputPanel",
+                  "type": "twistyPanel",
+                  "label": {
+                    "default": "General"
+                  },
+                  "group_info": [
+                    {
+                      "id": "GeneralInputControl",
+                      "type": "controls",
+                      "parameter_refs": [
+                        "outputLinkDescription"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "outputTab",
+              "label": {
+                "default": "OUTPUT"
+              },
+              "type": "panels",
+              "group_info": [
+                {
+                  "id": "outputControls",
+                  "type": "controls",
+                  "parameter_refs": [
+                    "outputName"
+                  ]
+                },
+                {
+                  "id": "partitioningOutputPanel",
+                  "type": "twistyPanel",
+                  "label": {
+                    "default": "Partitioning"
+                  },
+                  "group_info": [
+                    {
+                      "id": "TargetProps",
+                      "type": "controls",
+                      "parameter_refs": [
+                        
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "ColumnsOutputPanel",
+                  "type": "twistyPanel",
+                  "label": {
+                    "default": "Columns"
+                  },
+                  "group_info": [
+                    {
+                      "id": "columnControls",
+                      "type": "controls",
+                      "parameter_refs": [
+                        "outputcolProperties"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "AdvancedOutputPanel",
+                  "type": "twistyPanel",
+                  "label": {
+                    "default": "Advanced"
+                  },
+                  "group_info": [
+                    {
+                      "id": "AdvancedControl",
+                      "type": "controls",
+                      "parameter_refs": [
+                        
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "OutputGeneralPanel",
+                  "type": "twistyPanel",
+                  "label": {
+                    "default": "General"
+                  },
+                  "group_info": [
+                    {
+                      "id": "outputGeneralControl",
+                      "type": "controls",
+                      "parameter_refs": [
+                        "outputLinkDescription"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "parameter_info": [
+        {
+          "parameter_ref": "keyProperties",
+          "label": {
+            "default": "Key"
+          },
+          "resource_key": "keyPropertiesRKey"
+        },
+        {
+          "parameter_ref": "workspace",
+          "label": {
+            "default": "Workspace"
+          },
+          "resource_key": "workspaceRKey"
+        },
+        {
+          "parameter_ref": "memory",
+          "label": {
+            "default": "Restrict Memory Usage (MB)"
+          },
+          "resource_key": "memoryRKey"
+        },
+        {
+          "parameter_ref": "operator",
+          "label": {
+            "default": "Sort Utility"
+          },
+          "resource_key": "operatorRKey",
+          "control": "oneofselect"
+        },
+        {
+          "parameter_ref": "stats",
+          "label": {
+            "default": "Output Statistics"
+          },
+          "resource_key": "statsRKey",
+          "control": "oneofselect"
+        },
+        {
+          "parameter_ref": "stable",
+          "label": {
+            "default": "Stable Sort"
+          },
+          "resource_key": "stableRKey",
+          "control": "oneofselect"
+        },
+        {
+          "parameter_ref": "unique",
+          "label": {
+            "default": "Allow Duplicates"
+          },
+          "resource_key": "uniqueRKey",
+          "control": "oneofselect"
+        },
+        {
+          "parameter_ref": "flagCluster",
+          "label": {
+            "default": "Create Cluster Key Change Column"
+          },
+          "resource_key": "flagClusterRKey",
+          "control": "oneofselect"
+        },
+        {
+          "parameter_ref": "flagKey",
+          "label": {
+            "default": "Create Key Change Column"
+          },
+          "resource_key": "flagKeyRKey",
+          "control": "oneofselect"
+        },
+        {
+          "parameter_ref": "stageDescription",
+          "label": {
+            "default": "Description"
+          }
+        },
+        {
+          "parameter_ref": "inputLinkDescription",
+          "label": {
+            "default": "Description"
+          }
+        },
+        {
+          "parameter_ref": "outputLinkDescription",
+          "label": {
+            "default": "Description"
+          }
+        },
+        {
+          "parameter_ref": "outputName",
+          "label": {
+            "default": "Output Name"
+          }
+        },
+        {
+          "parameter_ref": "inputName",
+          "label": {
+            "default": "Input Name"
+          }
+        },
+        {
+          "parameter_ref": "inputcolProperties",
+          "label": {
+            "default": "Columns"
+          }
+        },
+        {
+          "parameter_ref": "outputcolProperties",
+          "label": {
+            "default": "Columns"
+          }
+        }
+      ],
+      "complex_type_info": [
+        {
+          "complex_type_ref": "keySubProperties",
+          "label": {
+            "default": "Add keySubProperties"
+          },
+          "parameters": [
+            {
+              "parameter_ref": "key",
+              "label": {
+                "default": "Key"
+              },
+              "width": 20,
+              "edit_style": "inline",
+              "resource_key": "keyRKey"
+            },
+            {
+              "parameter_ref": "sorted-clustered",
+              "label": {
+                "default": "Sort Key Mode"
+              },
+              "width": 20,
+              "edit_style": "inline",
+              "resource_key": "sorted-clusteredRKey",
+              "control": "oneofselect"
+            },
+            {
+              "parameter_ref": "ci-cs",
+              "label": {
+                "default": "Case Sensitive"
+              },
+              "width": 20,
+              "edit_style": "inline",
+              "resource_key": "ci-csRKey",
+              "control": "oneofselect"
+            },
+            {
+              "parameter_ref": "ebcdic",
+              "label": {
+                "default": "Sort as EBCDIC"
+              },
+              "width": 20,
+              "edit_style": "inline",
+              "resource_key": "ebcdicRKey",
+              "control": "oneofselect"
+            },
+            {
+              "parameter_ref": "nulls",
+              "label": {
+                "default": "Nulls Position"
+              },
+              "width": 20,
+              "edit_style": "inline",
+              "resource_key": "nullsRKey",
+              "control": "oneofselect"
+            },
+            {
+              "parameter_ref": "asc-desc",
+              "label": {
+                "default": "Sort Order"
+              },
+              "width": 20,
+              "edit_style": "inline",
+              "resource_key": "asc-descRKey",
+              "control": "oneofselect"
+            }
+          ]
+        },
+        {
+          "complex_type_ref": "inputcolSubProperties",
+          "label": {
+            "default": "Add inputcolSubProperties"
+          },
+          "parameters": [
+            {
+              "parameter_ref": "ColumnName",
+              "label": {
+                "default": "Column Name"
+              },
+              "width": 20,
+              "edit_style": "inline",
+              "resource_key": "ColumnNameRKey",
+              "control": "readonly"
+            },
+            {
+              "parameter_ref": "DataType",
+              "label": {
+                "default": "Data Type"
+              },
+              "width": 20,
+              "edit_style": "inline",
+              "resource_key": "DataTypeRKey",
+              "control": "readonly"
+            }
+          ],
+          "add_remove_rows": false
+        },
+        {
+          "complex_type_ref": "outputcolSubProperties",
+          "label": {
+            "default": "Add outputcolSubProperties"
+          },
+          "parameters": [
+            {
+              "parameter_ref": "ColumnName",
+              "label": {
+                "default": "Column Name"
+              },
+              "width": 20,
+              "edit_style": "inline",
+              "resource_key": "ColumnNameRKey"
+            },
+            {
+              "parameter_ref": "DataType",
+              "label": {
+                "default": "Data Type"
+              },
+              "width": 20,
+              "edit_style": "inline",
+              "resource_key": "DataTypeRKey"
+            }
+          ]
+        }
+      ]
+    },
+    "conditions": [
+      {
+        "visible": {
+          "parameter_refs": [
+            "nulls",
+            "sorted-clustered",
+            "flagCluster",
+            "flagKey",
+            "collation_sequence"
+          ],
+          "evaluate": {
+            "condition": {
+              "op": "equals",
+              "parameter_ref": "operator",
+              "value": "tsort"
+            }
+          }
+        }
+      },
+      {
+        "visible": {
+          "parameter_refs": [
+            "unique",
+            "stable",
+            "stats",
+            "ebcdic"
+          ],
+          "evaluate": {
+            "condition": {
+              "op": "notEquals",
+              "parameter_ref": "operator",
+              "value": "psort -sorter unix"
+            }
+          }
+        }
+      },
+      {
+        "visible": {
+          "parameter_refs": [
+            "workspace"
+          ],
+          "evaluate": {
+            "condition": {
+              "op": "notEquals",
+              "parameter_ref": "operator",
+              "value": "tsort"
+            }
+          }
+        }
+      },
+      {
+        "visible": {
+          "parameter_refs": [
+            "nonStable"
+          ],
+          "evaluate": {
+            "and": [
+              {
+                "condition": {
+                  "op": "equals",
+                  "parameter_ref": "operator",
+                  "value": "tsort"
+                }
+              },
+              {
+                "condition": {
+                  "op": "equals",
+                  "parameter_ref": "stable",
+                  "value": " "
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "resources": {
+      "inputPort.label": "inPort",
+      "outputPort.label": "outPort",
+      "sorted-clusteredRKey.clustered.label": "Don't Sort (Previously Grouped)",
+      "sorted-clusteredRKey. .label": "Sort",
+      "sorted-clusteredRKey.sorted.label": "Don't Sort (Previously Sorted)",
+      "ci-csRKey.cs.label": "True",
+      "ci-csRKey.ci.label": "False",
+      "ebcdicRKey.ebcdic.label": "True",
+      "ebcdicRKey. .label": "False",
+      "nullsRKey.last.label": "Last",
+      "nullsRKey.first.label": "First",
+      "asc-descRKey.desc.label": "Descending",
+      "asc-descRKey.asc.label": "Ascending",
+      "operatorRKey.psort -sorter unix.label": "Unix",
+      "operatorRKey.tsort.label": "DataStage",
+      "statsRKey.stats.label": "True",
+      "statsRKey. .label": "False",
+      "stableRKey.stable.label": "True",
+      "stableRKey. .label": "False",
+      "uniqueRKey. .label": "True",
+      "uniqueRKey.unique.label": "False",
+      "flagClusterRKey.flagCluster.label": "True",
+      "flagClusterRKey. .label": "False",
+      "flagKeyRKey.flagKey.label": "True",
+      "flagKeyRKey. .label": "False",
+      "execmodeRKey.label": "Execution mode",
+      "execmodeRKey.default_par.label": "Default (Parallel)",
+      "execmodeRKey.par.label": "Parallel",
+      "execmodeRKey.seq.label": "Sequential",
+      "combinabilityRKey.label": "Combinability mode",
+      "combinabilityRKey.auto.label": "(Auto)",
+      "combinabilityRKey.combine.label": "Combinable",
+      "combinabilityRKey.nocombine.label": "Don't Combine",
+      "preserveRKey.label": "Preserve partitioning",
+      "preserveRKey.-2.label": "Default (Set)",
+      "preserveRKey.0.label": "Clear",
+      "preserveRKey.1.label": "Set"
+    },
+    "parameters": [
+      {
+        "id": "keyProperties",
+        "type": "array[keySubProperties]",
+        "default": [
+          
+        ]
+      },
+      {
+        "id": "workspace",
+        "type": "string",
+        "required": false
+      },
+      {
+        "id": "memory",
+        "type": "integer",
+        "default": 20
+      },
+      {
+        "id": "operator",
+        "type": "string",
+        "enum": [
+          "psort -sorter unix",
+          "tsort"
+        ],
+        "default": "tsort"
+      },
+      {
+        "id": "stats",
+        "type": "string",
+        "enum": [
+          "stats",
+          " "
+        ],
+        "default": " "
+      },
+      {
+        "id": "stable",
+        "type": "string",
+        "enum": [
+          "stable",
+          " "
+        ],
+        "default": "stable"
+      },
+      {
+        "id": "unique",
+        "type": "string",
+        "enum": [
+          " ",
+          "unique"
+        ],
+        "default": " "
+      },
+      {
+        "id": "flagCluster",
+        "type": "string",
+        "enum": [
+          "flagCluster",
+          " "
+        ],
+        "default": " "
+      },
+      {
+        "id": "flagKey",
+        "type": "string",
+        "enum": [
+          "flagKey",
+          " "
+        ],
+        "default": " "
+      },
+      {
+        "id": "stageDescription",
+        "type": "array[string]",
+        "role": "new_column",
+        "default": ""
+      },
+      {
+        "id": "inputLinkDescription",
+        "type": "array[string]",
+        "role": "new_column",
+        "default": ""
+      },
+      {
+        "id": "outputLinkDescription",
+        "type": "array[string]",
+        "role": "new_column",
+        "default": ""
+      },
+      {
+        "id": "outputName",
+        "type": "string",
+        "required": false
+      },
+      {
+        "id": "inputName",
+        "type": "string",
+        "required": false
+      },
+      {
+        "id": "inputcolProperties",
+        "type": "array[inputcolSubProperties]",
+        "default": [
+          
+        ]
+      },
+      {
+        "id": "outputcolProperties",
+        "type": "array[outputcolSubProperties]",
+        "default": [
+          
+        ]
+      }
+    ],
+    "complex_types": [
+      {
+        "id": "keySubProperties",
+        "parameters": [
+          {
+            "id": "key",
+            "type": "string",
+            "required": true
+          },
+          {
+            "id": "sorted-clustered",
+            "type": "string",
+            "enum": [
+              "clustered",
+              " ",
+              "sorted"
+            ],
+            "default": " "
+          },
+          {
+            "id": "ci-cs",
+            "type": "string",
+            "enum": [
+              "cs",
+              "ci"
+            ],
+            "default": "cs"
+          },
+          {
+            "id": "ebcdic",
+            "type": "string",
+            "enum": [
+              "ebcdic",
+              " "
+            ],
+            "default": " "
+          },
+          {
+            "id": "nulls",
+            "type": "string",
+            "enum": [
+              "last",
+              "first"
+            ],
+            "default": "first"
+          },
+          {
+            "id": "asc-desc",
+            "type": "string",
+            "enum": [
+              "desc",
+              "asc"
+            ],
+            "default": "asc"
+          }
+        ]
+      },
+      {
+        "id": "inputcolSubProperties",
+        "parameters": [
+          {
+            "id": "ColumnName",
+            "type": "string",
+            "label": "Column Name",
+            "required": true
+          },
+          {
+            "id": "DataType",
+            "type": "string",
+            "label": "Data Type",
+            "enum": [
+              "UNKNOWN",
+              "BIGINT",
+              "BINARY",
+              "BIT",
+              "CHAR",
+              "DATE",
+              "DECIMAL",
+              "DOUBLE",
+              "FLOAT",
+              "INTEGER",
+              "LONGNVARCHAR",
+              "LONGVARBINARY",
+              "LONGVARCHAR",
+              "NCHAR",
+              "NUMERIC",
+              "NVARCHAR",
+              "REAL",
+              "SMALLINT",
+              "TIME",
+              "TIMESTAMP",
+              "TINYINT",
+              "VARBINARY",
+              "VARCHAR"
+            ],
+            "default": "CHAR"
+          }
+        ]
+      },
+      {
+        "id": "outputcolSubProperties",
+        "parameters": [
+          {
+            "id": "ColumnName",
+            "type": "string",
+            "label": "Column Name",
+            "required": true
+          },
+          {
+            "id": "DataType",
+            "type": "string",
+            "label": "Data Type",
+            "enum": [
+              "UNKNOWN",
+              "BIGINT",
+              "BINARY",
+              "BIT",
+              "CHAR",
+              "DATE",
+              "DECIMAL",
+              "DOUBLE",
+              "FLOAT",
+              "INTEGER",
+              "LONGNVARCHAR",
+              "LONGVARBINARY",
+              "LONGVARCHAR",
+              "NCHAR",
+              "NUMERIC",
+              "NVARCHAR",
+              "REAL",
+              "SMALLINT",
+              "TIME",
+              "TIMESTAMP",
+              "TINYINT",
+              "VARBINARY",
+              "VARCHAR"
+            ],
+            "default": "CHAR"
+          }
+        ]
+      }
+    ],
+    "titleDefinition": {
+      "title": "Sort_1"
+    }
+  },
+  "appData": {
+    "nodeId": "aaf332f5-11b3-4e9c-8631-5c0f8ab51c18",
+    "pipelineId": "6bb1e43b-11ca-459f-accb-ce52e183df5b",
+    "nodeType": "operator"
+  }
+}

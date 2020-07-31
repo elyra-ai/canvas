@@ -17,8 +17,54 @@
 import propertyUtils from "./../../_utils_/property-utils";
 import twistypanelParamDef from "./../../test_resources/paramDefs/twistyPanel_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
+import subTabsTestSample from "./../../test_resources/json/subTabs-test-sample.json";
 
 import { expect } from "chai";
+
+describe("twisty panel with multiple tabs renders correctly", () => {
+	var wrapper;
+	const propertiesInfo = {};
+	propertiesInfo.parameterDef = subTabsTestSample.paramDef;
+	propertiesInfo.appData = {};
+	propertiesInfo.additionalComponents = {};
+	propertiesInfo.messages = [
+		{
+			id_ref: "samplingSize",
+			validation_id: "samplingSize",
+			type: "warning",
+			text: "Incorrect sample size",
+		},
+	];
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("Stage subtab should have propertiesTab open", () => {
+		const tabWrapper = wrapper.find("div[data-id='properties-StageSubTab']");
+		const twistyProperty = tabWrapper.find("div[data-id='properties-PropertiesTab']");
+		expect(twistyProperty.find("li.bx--accordion__item")).to.have.length(1);
+		expect(twistyProperty.find("li.bx--accordion__item--active")).to.have.length(1);
+	});
+
+	it("Input subtab should have PartitioningTab open", () => {
+		const tabWrapper = wrapper.find("div[data-id='properties-inputTab']");
+		const twistyPartitioning = tabWrapper.find("div[data-id='properties-partitioningInputPanel']");
+		expect(twistyPartitioning.find("li.bx--accordion__item")).to.have.length(1);
+		expect(twistyPartitioning.find("li.bx--accordion__item--active")).to.have.length(1);
+	});
+
+	it("Output subtab should have PartitioningTab open", () => {
+		const tabWrapper = wrapper.find("div[data-id='properties-outputTab']");
+		const twistyPartitioning = tabWrapper.find("div[data-id='properties-partitioningOutputPanel']");
+		expect(twistyPartitioning.find("li.bx--accordion__item")).to.have.length(1);
+		expect(twistyPartitioning.find("li.bx--accordion__item--active")).to.have.length(1);
+	});
+});
 
 describe("twisty panel renders correctly", () => {
 	var wrapper;
