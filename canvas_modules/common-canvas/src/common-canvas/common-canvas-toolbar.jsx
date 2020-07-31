@@ -129,8 +129,7 @@ class CommonCanvasToolbar extends React.Component {
 	}
 
 	// Copy the props config because we will alter its contents and we don't want to
-	// alter a props variable that is passed to us since that would alter the
-	// contents of the variabl for the parent.
+	// alter a props variable since that would alter the parent variable.
 	copyConfig() {
 		if (!this.props.config) {
 			return null;
