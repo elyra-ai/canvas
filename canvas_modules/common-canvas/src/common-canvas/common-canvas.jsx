@@ -384,7 +384,7 @@ class CommonCanvas extends React.Component {
 			if (config.enableToolbarLayout === "Top") {
 				canvasToolbar = (<CommonCanvasToolbar
 					config={this.props.toolbarConfig}
-					isPaletteEnabled={this.props.config.enablePaletteLayout !== "None"}
+					isPaletteEnabled={this.props.config && this.props.config.enablePaletteLayout !== "None"}
 					isPaletteOpen={this.state.isPaletteOpen}
 					isNotificationOpen={this.state.isNotificationOpen}
 					notificationConfig={this.state.notificationConfig}
