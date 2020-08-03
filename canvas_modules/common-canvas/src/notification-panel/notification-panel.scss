@@ -190,6 +190,7 @@ $notification-left-border-color-width: 4px;
 
 		.notification-message-details {
 			text-align: left;
+			overflow-wrap: anywhere;
 
 			.notification-message-title {
 				@include carbon--type-style("productive-heading-01");
