@@ -212,6 +212,7 @@ class Toolbar extends React.Component {
 	}
 
 	generateOverflowIcon(index) {
+		const label = this.props.additionalText ? this.props.additionalText.overflowMenuLabel : "";
 		const jsx = (
 			<ToolbarOverflowItem
 				key={"toolbar-overflow-item-key-" + index}
@@ -220,6 +221,7 @@ class Toolbar extends React.Component {
 				toggleExtendedMenu={this.toggleExtendedMenu}
 				generateExtensionMenuItems={this.generateExtensionMenuItems}
 				onFocus={this.onFocus}
+				label={label}
 			/>
 		);
 
@@ -293,7 +295,8 @@ class Toolbar extends React.Component {
 Toolbar.propTypes = {
 	config: PropTypes.object.isRequired,
 	instanceId: PropTypes.number,
-	toolbarActionHandler: PropTypes.func
+	toolbarActionHandler: PropTypes.func,
+	additionalText: PropTypes.object
 };
 
 export default Toolbar;

@@ -138,6 +138,7 @@ class ToolbarActionItem extends React.Component {
 					onClick={this.actionClickHandler}
 					disabled={!actionObj.enable}
 					onFocus={this.props.onFocus}
+					aria-label={actionObj.label}
 				>
 					{buttonContent}
 				</Button>

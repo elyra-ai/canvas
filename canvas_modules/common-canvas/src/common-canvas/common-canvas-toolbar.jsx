@@ -18,6 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
+import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import { ERROR, WARNING, SUCCESS, INFO,
@@ -35,7 +36,8 @@ class CommonCanvasToolbar extends React.Component {
 	}
 
 	getLabel(labelId) {
-		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultMessages[labelId] });
+		const defaultMessage = defaultMessages[labelId] ? defaultMessages[labelId] : defaultToolbarMessages[labelId];
+		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultMessage });
 	}
 
 	// Returns the default toolbar which is shown if the user does not specify
@@ -252,6 +254,7 @@ class CommonCanvasToolbar extends React.Component {
 				config={toolbarConfig}
 				instanceId={this.props.canvasController.getInstanceId()}
 				toolbarActionHandler={this.toolbarActionHandler}
+				additionalText={{ overflowMenuLabel: this.getLabel("toolbar.overflowMenu") }}
 			/>
 		);
 	}
