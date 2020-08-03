@@ -123,22 +123,24 @@ class App extends React.Component {
 			// enableZoomIntoSubFlows: true
 		};
 
-		const toolbarConfig = [
-			{ action: "palette", label: "Palette", enable: true },
-			// { divider: true },
-			// { action: "stop", label: "Stop Execution", enable: false },
-			// { action: "run", label: "Run Pipeline", enable: true },
-			// { divider: true },
-			{ action: "undo", label: "Undo", enable: true },
-			{ action: "redo", label: "Redo", enable: true },
-			{ action: "cut", label: "Cut", enable: true },
-			{ action: "copy", label: "Copy", enable: true },
-			{ action: "paste", label: "Paste", enable: true },
-			{ action: "createAutoComment", label: "Add Comment", enable: true },
-			{ action: "deleteSelectedObjects", label: "Delete", enable: true },
-			{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true }
-			// { action: "arrangeVertically", label: "Arrange Vertically", enable: true }
-		];
+		const toolbarConfig = {
+			leftBar: [
+				{ action: "palette", label: "Palette", enable: true },
+				// { divider: true },
+				// { action: "stop", label: "Stop Execution", enable: false },
+				// { action: "run", label: "Run Pipeline", enable: true },
+				// { divider: true },
+				{ action: "undo", label: "Undo", enable: true },
+				{ action: "redo", label: "Redo", enable: true },
+				{ action: "cut", label: "Cut", enable: true },
+				{ action: "copy", label: "Copy", enable: true },
+				{ action: "paste", label: "Paste", enable: true },
+				{ action: "createAutoComment", label: "Add Comment", enable: true },
+				{ action: "deleteSelectedObjects", label: "Delete", enable: true },
+				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true }
+				// { action: "arrangeVertically", label: "Arrange Vertically", enable: true }
+			]
+		};
 
 		const notificationConfig = {
 			action: "notification",
