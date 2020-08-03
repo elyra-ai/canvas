@@ -246,7 +246,7 @@ Cypress.Commands.add("selectFieldInFieldPickerPanel", (fieldName, dataType, pane
 					cy.wrap(row)
 						.find(".properties-vt-row-checkbox")
 						.find("label")
-						.click();
+						.click({ force: true });
 				});
 		});
 });
