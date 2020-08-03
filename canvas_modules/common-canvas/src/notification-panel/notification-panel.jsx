@@ -192,7 +192,10 @@ NotificationPanel.propTypes = {
 			PropTypes.string,
 			PropTypes.object
 		]),
-		notificationSubtitle: PropTypes.string,
+		notificationSubtitle: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.object
+		]),
 		emptyMessage: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.object
