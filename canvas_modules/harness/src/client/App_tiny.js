@@ -33,7 +33,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<div id="harness-app-container">
-				<IntlProvider>
+				<IntlProvider locale="en">
 					<CommonCanvas
 						canvasController={this.canvasController}
 					/>
