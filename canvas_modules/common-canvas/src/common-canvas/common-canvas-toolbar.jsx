@@ -155,6 +155,16 @@ class CommonCanvasToolbar extends React.Component {
 	}
 
 	optionallyAddPaletteTool(leftBar) {
+		// If the leftBar contains and old palette action and if followed by a
+		// divider remove them.
+		let newLeftBar = leftBar;
+		if (leftBar && leftBar.length > 0 && leftBar[0].action === "palette") {
+			newLeftBar = leftBar.slice(1);
+			if (leftBar.length > 1 && leftBar[1].divider) {
+				newLeftBar = leftBar.slice(2);
+			}
+		}
+
 		if (this.props.isPaletteEnabled) {
 			const paletteTools = [
 				{ action: "togglePalette",
@@ -164,9 +174,9 @@ class CommonCanvasToolbar extends React.Component {
 				},
 				{ divider: true }
 			];
-			return paletteTools.concat(leftBar);
+			return paletteTools.concat(newLeftBar);
 		}
-		return leftBar;
+		return newLeftBar;
 	}
 
 	optionallyAddNotificationTool(rightBar) {

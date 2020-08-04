@@ -358,33 +358,37 @@ class CommonCanvas extends React.Component {
 					{contextMenuWrapper}
 				</DiagramCanvasD3>);
 
-			if (config.enablePaletteLayout === "Modal") {
-				palette = (<Palette
-					paletteJSON={this.objectModel.getPaletteData()}
-					showPalette={this.state.isPaletteOpen}
-					parentDivId={this.itemsContainerDivId}
-					canvasController={this.canvasController}
-				/>);
-			} else if (config.enablePaletteLayout === "Flyout") {
+			// If there's no config we still want the palette
+			if (!config || config.enablePaletteLayout === "Flyout") {
 				palette = (<PaletteFlyout
 					paletteJSON={this.objectModel.getPaletteData()}
 					showPalette={this.state.isPaletteOpen}
 					canvasController={this.canvasController}
 					paletteWidth={this.state.paletteWidth}
 				/>);
+			} else if (config.enablePaletteLayout === "Modal") {
+				palette = (<Palette
+					paletteJSON={this.objectModel.getPaletteData()}
+					showPalette={this.state.isPaletteOpen}
+					parentDivId={this.itemsContainerDivId}
+					canvasController={this.canvasController}
+				/>);
 			}
 
-			notificationPanel = (<NotificationPanel
-				notificationConfig={this.state.notificationConfig}
-				isNotificationOpen={this.state.isNotificationOpen}
-				messages={this.canvasController.getNotificationMessages()}
-				canvasController={this.canvasController}
-			/>);
+			if (this.state.notificationConfig) {
+				notificationPanel = (<NotificationPanel
+					notificationConfig={this.state.notificationConfig}
+					isNotificationOpen={this.state.isNotificationOpen}
+					messages={this.canvasController.getNotificationMessages()}
+					canvasController={this.canvasController}
+				/>);
+			}
 
-			if (config.enableToolbarLayout === "Top") {
+			// If there's no config we still want the toolbar
+			if (!config || config.enableToolbarLayout === "Top") {
 				canvasToolbar = (<CommonCanvasToolbar
 					config={this.props.toolbarConfig}
-					isPaletteEnabled={this.props.config && this.props.config.enablePaletteLayout !== "None"}
+					isPaletteEnabled={!config || config.enablePaletteLayout !== "None"}
 					isPaletteOpen={this.state.isPaletteOpen}
 					isNotificationOpen={this.state.isNotificationOpen}
 					notificationConfig={this.state.notificationConfig}

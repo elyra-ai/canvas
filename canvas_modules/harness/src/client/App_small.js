@@ -125,8 +125,6 @@ class App extends React.Component {
 
 		const toolbarConfig = {
 			leftBar: [
-				{ action: "palette", label: "Palette", enable: true },
-				// { divider: true },
 				// { action: "stop", label: "Stop Execution", enable: false },
 				// { action: "run", label: "Run Pipeline", enable: true },
 				// { divider: true },
@@ -146,7 +144,8 @@ class App extends React.Component {
 			action: "notification",
 			label: "Notifications",
 			enable: true,
-			notificationHeader: "Notifications"
+			notificationHeader: "Notifications",
+			emptyMessage: "You don't have any notifications right now."
 		};
 
 		const contextMenuConfig = {
@@ -166,7 +165,7 @@ class App extends React.Component {
 		};
 
 		const commonCanvas = (
-			<IntlProvider>
+			<IntlProvider locale="en">
 				<CommonCanvas
 					canvasController={this.canvasController}
 
