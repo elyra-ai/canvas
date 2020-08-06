@@ -53,13 +53,12 @@ export default (state = [], action) => {
 		});
 
 	case "DELETE_LINKS": {
-		let newLinks = [...state];
-		action.data.linkIds.forEach((linkIdToDelete) => {
-			newLinks = newLinks.filter((link) => {
-				return link.id !== linkIdToDelete;
+		return state.filter((link) => {
+			const index = action.data.linkIds.findIndex((linkIdToDelete) => {
+				return link.id === linkIdToDelete.id;
 			});
+			return !(index > -1);
 		});
-		return newLinks;
 	}
 
 	case "SET_LINKS_CLASS_NAME":

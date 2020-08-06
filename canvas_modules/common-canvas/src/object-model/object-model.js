@@ -34,7 +34,7 @@ import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@elyra/pipe
 import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from "./schemas-utils/upgrade-palette.js";
 import { createCCStore } from "./redux/store.js";
 
-import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
+import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
 	CLONE_PIPELINE, SUPER_NODE, HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM,
 	HIGHLIGHT_DOWNSTREAM } from "../common-canvas/constants/canvas-constants.js";
 
@@ -997,8 +997,22 @@ export default class ObjectModel {
 		return objs;
 	}
 
+	getSelectedLinks() {
+		const objs = [];
+		const apiPipeline = this.getSelectedPipeline();
+		apiPipeline.getLinks().forEach((lnk) => {
+			if (this.getSelectedObjectIds().includes(lnk.id)) {
+				objs.push(lnk);
+			}
+		});
+
+		return objs;
+	}
+
 	getSelectedObjects() {
-		return this.getSelectedNodes().concat(this.getSelectedComments());
+		return this.getSelectedNodes()
+			.concat(this.getSelectedComments())
+			.concat(this.getSelectedLinks());
 	}
 
 	getSelectionInfo() {
@@ -1161,6 +1175,14 @@ export default class ObjectModel {
 		return connectedNodesIdsGroup.length === nodeIds.length;
 	}
 
+	// Returns true if all the selected objcts are links.
+	areAllSelectedObjectsLinks() {
+		const objs = this.getSelectedObjects();
+		const nonLinkIndex = this.getSelectedObjects().findIndex((selObj) => !this.isLink(selObj));
+		return nonLinkIndex === -1;
+
+	}
+
 	// Recursive function to add all connected nodes into the group.
 	addConnectedNodeIdToGroup(nodeId, connectedNodesIdsGroup, nodeIds, apiPipeline) {
 		if (connectedNodesIdsGroup.includes(nodeId)) {
@@ -1289,6 +1311,11 @@ export default class ObjectModel {
 			}
 		}
 		return maxMessageType;
+	}
+
+	// Returns true if the object passed in is a link.
+	isLink(obj) {
+		return obj.type === NODE_LINK || obj.type === COMMENT_LINK || obj.type === ASSOCIATION_LINK;
 	}
 
 	// ---------------------------------------------------------------------------

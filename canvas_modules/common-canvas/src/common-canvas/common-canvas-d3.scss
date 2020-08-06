@@ -611,3 +611,10 @@ g .d3-comment-link-selection-area:hover ~ .d3-selectable-link, /* Colors arrow h
 g .d3-association-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
 	stroke: $link-hightlight-color;
 }
+
+/* Colors line and arrow head when link is selected. */
+g .d3-selectable-link[data-selected="yes"],
+g .d3-selectable-link[data-selected="yes"] ~ .d3-selectable-link {
+	stroke: $link-hightlight-color;
+	stroke-width: 3px;
+}

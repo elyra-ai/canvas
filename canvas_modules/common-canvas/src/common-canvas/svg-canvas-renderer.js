@@ -2602,7 +2602,7 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("displayNodes " + this.getFlags());
 	}
 
-	// Performs required action for when either a comment or node is selected.
+	// Performs required action for when either a comment, node or link is selected.
 	// This may mean: simply selecting the object; or adding the object to the
 	// currently selected set of objects; or even toggling the object's selection
 	// off. This method also sends a SINGLE_CLICK action to the
@@ -2630,8 +2630,8 @@ export default class SVGCanvasRenderer {
 		// to be a timing issue since the same problem is not evident with the
 		// similar code for the node group object.
 		// TODO - Issue 2465 - Find out why this problem occurs.
-		const objectTypeName = this.getComment(d.id) ? "comment" : "node";
-		if (objectTypeName === "node") {
+		const objectTypeName = this.getObjectTypeName(d);
+		if (objectTypeName === "node" || objectTypeName === "link") {
 			this.canvasController.clickActionHandler({
 				clickType: d3EventType === "contextmenu" || this.ellipsisClicked ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
 				objectType: objectTypeName,
@@ -2640,6 +2640,16 @@ export default class SVGCanvasRenderer {
 				pipelineId: this.activePipeline.id });
 			this.ellipsisClicked = false;
 		}
+	}
+
+	// Returns the name of the type of object d.
+	getObjectTypeName(d) {
+		if (this.getComment(d.id)) {
+			return "comment";
+		} else if (this.getNode(d.id)) {
+			return "node";
+		}
+		return "link";
 	}
 
 	// Adds a set of decorations to either a node or link object.
@@ -5229,8 +5239,23 @@ export default class SVGCanvasRenderer {
 
 		if (this.selecting || this.regionSelect || this.canvasController.isTipOpening() || this.canvasController.isTipClosing()) {
 			// no lines update needed when selecting objects/region
+			if (this.config.enableLinkSelection) {
+				this.canvasGrp.selectAll(linkSelector).each(function(d) {
+					const linkGrp = d3.select(this);
+					linkGrp.select(that.getSelectorForId("link_line", d.id))
+						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no");
+				});
+
+				this.superRenderers.forEach((renderer) => {
+					renderer.selecting = true;
+					renderer.displayLinks();
+					renderer.selecting = false;
+				});
+			}
+
 			this.logger.logEndTimer("displayLinks " + this.getFlags());
 			return;
+
 		} else if (this.dragging || this.nodeSizing || this.commentSizing || this.movingBindingNodes) {
 			// while dragging etc. only remove lines that are affected by moving nodes/comments
 			let affectLinks;
@@ -5281,16 +5306,33 @@ export default class SVGCanvasRenderer {
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", "link-group")
 			.attr("style", (d) => this.getLinkGrpStyle(d))
-			.on("mousedown", () => {
-				// The context menu gesture will cause a mouse down event which
-				// will go through to canvas unless stopped.
-				d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
+			.on("mousedown", (d) => {
+				this.logger.log("Link Group - mouse down");
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				if (this.config.enableLinkSelection) {
+					this.selectObject(
+						d,
+						d3Event.type,
+						d3Event.shiftKey,
+						CanvasUtils.isCmndCtrlPressed(d3Event));
+				}
 			})
 			.on("mouseup", () => {
-				this.logger.log("Line - mouse up");
+				this.logger.log("Link Group - mouse up");
+			})
+			.on("click", (d) => {
+				this.logger.log("Link Group - click");
+				d3Event.stopPropagation();
 			})
 			.on("contextmenu", (d) => {
-				this.logger.log("Context menu on canvas background.");
+				this.logger.log("Link Group - context menu");
+				if (this.config.enableLinkSelection) {
+					this.selectObject(
+						d,
+						d3Event.type,
+						d3Event.shiftKey,
+						CanvasUtils.isCmndCtrlPressed(d3Event));
+				}
 				this.openContextMenu("link", d);
 			})
 			.on("mouseenter", function(link) {
@@ -5325,6 +5367,7 @@ export default class SVGCanvasRenderer {
 			.attr("d", (d) => d.pathInfo.path)
 			.attr("data-id", (d) => this.getId("link_line", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
+			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no"))
 			.attr("class", (d) => "d3-selectable-link " + this.getLinkClass(d))
 			.attr("style", (d) => that.getObjectStyle(d, "line", "default"))
 			.on("mouseenter", function(d) {

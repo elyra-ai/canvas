@@ -29,13 +29,16 @@ export default class DeleteObjectsAction extends Action {
 		this.supernodes = [];
 
 		this.data.selectedObjectIds.forEach((id) => {
-			const objectLinks = this.apiPipeline.getLinksContainingId(id);
-			// ensure each link is only stored once
-			objectLinks.forEach((objectLink) => {
-				if (!this.links.find((link) => (link.id === objectLink.id))) {
-					this.links.push(objectLink);
-				}
-			});
+			const link = this.apiPipeline.getLink(id);
+			if (link) {
+				this.insertLinkIfNew(link);
+			} else {
+				const objectLinks = this.apiPipeline.getLinksContainingId(id);
+				// ensure each link is only stored once
+				objectLinks.forEach((objectLink) => {
+					this.insertLinkIfNew(objectLink);
+				});
+			}
 		});
 
 		// Remember all the pipelines that are being deleted when any selected
@@ -54,11 +57,19 @@ export default class DeleteObjectsAction extends Action {
 		});
 	}
 
+	// Inserts the link provided into the links array if it is not already there.
+	insertLinkIfNew(newLink) {
+		if (!this.links.find((link) => link.id === newLink.id)) {
+			this.links.push(newLink);
+		}
+	}
+
 	// Standard methods
 	do() {
 		this.supernodes.forEach((supernode) => {
 			this.apiPipeline.deleteSupernode(supernode.id);
 		});
+		this.apiPipeline.deleteLinks(this.links);
 		this.apiPipeline.deleteObjects(this.data.selectedObjectIds);
 	}
 

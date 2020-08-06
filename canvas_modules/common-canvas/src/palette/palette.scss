@@ -180,6 +180,8 @@ $palette-border-color: $ui-03;
 		// on hover to appear.
 		button {
 			margin-right: 8px;
+			margin-top: 4px;
+			border-bottom-width: 0;
 
 			&.bx--search-close::before {
 				content: none;

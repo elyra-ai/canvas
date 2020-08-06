@@ -68,6 +68,7 @@ export default class CanvasController {
 			enableLinkType: "Curve",
 			enableLinkDirection: "LeftRight",
 			enableParentClass: "",
+			enableLinkSelection: false,
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,
@@ -491,6 +492,11 @@ export default class CanvasController {
 	// This is used when deciding to creating a supernode.
 	areSelectedNodesContiguous() {
 		return this.objectModel.areSelectedNodesContiguous();
+	}
+
+	// Returns true if all the selected objcts are links.
+	areAllSelectedObjectsLinks() {
+		return this.objectModel.areAllSelectedObjectsLinks();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1544,7 +1550,7 @@ export default class CanvasController {
 				{ divider: true }]);
 		}
 		// Delete objects
-		if (source.type === "node" || source.type === "comment") {
+		if (source.type === "node" || source.type === "comment" || (this.canvasConfig.enableLinkSelection && source.type === "link")) {
 			menuDefinition = menuDefinition.concat([{ action: "deleteSelectedObjects", label: this.getLabel("canvas.deleteObject") },
 				{ divider: true }]);
 		}
@@ -1573,7 +1579,7 @@ export default class CanvasController {
 			}
 		}
 		// Delete link
-		if (source.type === "link") {
+		if (!this.canvasConfig.enableLinkSelection && source.type === "link") {
 			menuDefinition = menuDefinition.concat([{ action: "deleteLink", label: this.getLabel("canvas.deleteObject") }]);
 		}
 		// Highlight submenu (Highlight Branch | Upstream | Downstream, Unhighlight)
@@ -1639,7 +1645,10 @@ export default class CanvasController {
 
 	toolbarActionHandler(action) {
 		this.logger.log("toolbarActionHandler - action: " + action);
-		this.editActionHandler({ editType: action, editSource: "toolbar" });
+		this.editActionHandler({
+			editType: action,
+			editSource: "toolbar",
+			pipelineId: this.objectModel.getSelectedPipelineId() });
 	}
 
 	keyboardActionHandler(action) {
