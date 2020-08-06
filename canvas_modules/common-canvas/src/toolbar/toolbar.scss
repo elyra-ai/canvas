@@ -169,7 +169,8 @@ $toolbar-divider-width: 1px;
 }
 
 .toolbar-icon-label {
-	height: 16px;
+	line-height: 16px;
+
 	&.before {
 		padding-right: 8px;
 	}
