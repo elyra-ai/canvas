@@ -1177,7 +1177,6 @@ export default class ObjectModel {
 
 	// Returns true if all the selected objcts are links.
 	areAllSelectedObjectsLinks() {
-		const objs = this.getSelectedObjects();
 		const nonLinkIndex = this.getSelectedObjects().findIndex((selObj) => !this.isLink(selObj));
 		return nonLinkIndex === -1;
 
