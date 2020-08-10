@@ -531,36 +531,29 @@ Cypress.Commands.add("verifyDecorationTransformOnLink", (linkName, decoratorId, 
 
 Cypress.Commands.add("verifyDecorationImageOnNode", (nodeName, decoratorId, decoratorImage) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-node-dec-image")
-		.then((decoratorImages) => {
-			const decorator = decoratorImages.filter((idx) =>
-				decoratorImages[idx].getAttribute("data-id") === ("node_dec_image_0_" + decoratorId));
-			expect(decorator[0].getAttribute("data-id")).equal(`node_dec_image_0_${decoratorId}`);
-			expect(decorator[0].getAttribute("data-image")).equal(decoratorImage);
+		.find(`.d3-node-dec-group[data-id=node_dec_group_0_${decoratorId}] g .d3-node-dec-image`)
+		.then((decImages) => {
+			expect(decImages[0].getAttribute("data-image")).equal(decoratorImage);
 		});
 });
 
 Cypress.Commands.add("verifyDecorationPathOnNode", (nodeName, decoratorId, path) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-node-dec-path")
-		.then((decoratorPaths) => {
-			const decorator = decoratorPaths.filter((idx) =>
-				decoratorPaths[idx].getAttribute("data-id") === ("node_dec_path_0_" + decoratorId));
-			expect(decorator[0].getAttribute("data-id")).equal(`node_dec_path_0_${decoratorId}`);
-			expect(decorator[0].getAttribute("d")).equal(path);
+		.find(`.d3-node-dec-group[data-id=node_dec_group_0_${decoratorId}] .d3-node-dec-path`)
+		.then((decPaths) => {
+			expect(decPaths[0].getAttribute("d")).equal(path);
 		});
 });
 
 Cypress.Commands.add("verifyDecorationPathOnLink", (linkName, decoratorId, path) => {
 	cy.getLinkFromName(linkName)
-		.find(".d3-link-dec-path")
-		.then((decoratorPaths) => {
-			const decorator = decoratorPaths.filter((idx) =>
-				decoratorPaths[idx].getAttribute("data-id") === ("link_dec_path_0_" + decoratorId));
-			expect(decorator[0].getAttribute("data-id")).equal(`link_dec_path_0_${decoratorId}`);
-			expect(decorator[0].getAttribute("d")).equal(path);
+		.find(`.d3-link-dec-group[data-id=link_dec_group_0_${decoratorId}] .d3-link-dec-path`)
+		.then((decPaths) => {
+			cy.log("d = " + decPaths[0].getAttribute("d"));
+			expect(decPaths[0].getAttribute("d")).equal(path);
 		});
 });
+
 
 Cypress.Commands.add("verifyErrorMarkerOnNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)

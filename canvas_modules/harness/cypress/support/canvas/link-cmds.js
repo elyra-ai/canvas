@@ -40,9 +40,9 @@ function getLinkSelector(linkId, element) {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	let selector = null;
 	if (element === "grp") {
-		selector = `div > svg > g > g[data-id^=link_${element}_${inst}_${linkId}]`;
+		selector = `div > svg > g > g[data-id^=link_grp_${inst}_${linkId}]`;
 	} else if (element === "line") {
-		selector = `div > svg > g > g > path[data-id^=link_${element}_${inst}_${linkId}]`;
+		selector = `div > svg > g > g[data-id^=link_grp_${inst}_${linkId}] > path`;
 	}
 	return selector;
 }

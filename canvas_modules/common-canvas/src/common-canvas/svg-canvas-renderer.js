@@ -2591,7 +2591,7 @@ export default class SVGCanvasRenderer {
 
 						// Display decorators
 						const decorations = CanvasUtils.getCombinedDecorations(d.layout.decorations, d.decorations);
-						this.addDecorations(d, DEC_NODE, nodeGrp, decorations);
+						this.displayDecorations(d, DEC_NODE, nodeGrp, decorations);
 					}
 				});
 
@@ -2651,7 +2651,7 @@ export default class SVGCanvasRenderer {
 		return "link";
 	}
 
-	// Adds a set of decorations to either a node or link object.
+	// Displays a set of decorations on either a node or link object.
 	// d       - This is a node or link object.
 	// objType - A string set to either DEC_NODE or DEC_LINK.
 	// trgGrp  - A D3 selection object that references the node or link to
@@ -2659,95 +2659,102 @@ export default class SVGCanvasRenderer {
 	// decs    - An array of decorations to be applied to the node or link.
 	//           This is a combination of the object's decorations with any
 	//           decorations from the layout config information.
-	addDecorations(d, objType, trgGrp, decs) {
+	displayDecorations(d, objType, trgGrp, decs) {
 		const that = this;
 		const decorations = decs || [];
 		const decGrpClassName = `d3-${objType}-dec-group`;
 		const decGrpSelector = this.getSelectorForClass(decGrpClassName);
-		const decGroupsSel = trgGrp.selectAll(decGrpSelector)
-			.data(decorations, function(dec) { return dec.id; });
+		trgGrp.selectAll(decGrpSelector)
+			.data(decorations, (dec) => dec.id)
+			.join(
+				(enter) => this.createNewDecorations(enter, objType, decGrpClassName)
+			)
+			.attr("transform", (dec) => `translate(${this.getDecoratorX(dec, d, objType)}, ${this.getDecoratorY(dec, d, objType)})`)
+			.on("mousedown", (dec) => (dec.hotspot ? that.callDecoratorCallback(d, dec) : null))
+			.each((dec, i, elements) => this.updateDecoration(dec, d3.select(elements[i]), objType, d));
+	}
 
-		const newDecGroups = decGroupsSel.enter()
+	createNewDecorations(enter, objType, decGrpClassName) {
+		const newDecGroups = enter
 			.append("g")
 			.attr("data-id", (dec) => this.getId(`${objType}_dec_group`, dec.id)) // Used in tests
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", decGrpClassName);
 
-		newDecGroups
-			.filter((dec) => dec.hotspot)
-			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
+		return newDecGroups;
+	}
 
-		newDecGroups.filter((dec) => !dec.label && dec.outline !== false)
-			.append("rect")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_outln`, dec.id)); // Used in tests
+	updateDecoration(dec, decSel, objType, d) {
+		this.updateDecOutlines(dec, decSel, objType, d);
+		this.updateDecPaths(dec, decSel, objType);
+		this.updateDecImages(dec, decSel, objType, d);
+		this.updateDecLabels(dec, decSel, objType);
+	}
 
-		newDecGroups.filter((dec) => dec.image)
-			.each(function(dec) {
-				const nodeImage = that.getNodeImage(dec);
-				const nodeImageType = that.getNodeImageType(nodeImage);
-				d3.select(this)
-					.append(nodeImageType)
-					.each(function() { that.setImageContent(this, dec); })
-					.attr("data-id", () => that.getId(`${objType}_dec_image`, dec.id)); // Used in tests
-			});
+	updateDecOutlines(dec, decSel, objType, d) {
+		let outlnSel = decSel.select("rect");
 
-		newDecGroups.filter((dec) => dec.label)
-			.append("text")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_label`, dec.id)); // Used in tests
+		if (!dec.label && dec.outline !== false) {
+			outlnSel = outlnSel.empty() ? decSel.append("rect") : outlnSel;
+			outlnSel
+				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-outline`))
+				.attr("x", 0)
+				.attr("y", 0)
+				.attr("width", this.getDecoratorWidth(dec, d, objType))
+				.attr("height", this.getDecoratorHeight(dec, d, objType))
+				.lower(); // Make sure the outline goes below the image
+		} else {
+			outlnSel.remove();
+		}
+	}
 
-		newDecGroups.filter((dec) => dec.path)
-			.append("path")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_path`, dec.id)); // Used in tests
+	updateDecPaths(dec, decSel, objType) {
+		let pathSel = decSel.select("path");
 
-		const newAndExistingDecGrps =
-			decGroupsSel.enter().merge(decGroupsSel);
+		if (dec.path) {
+			pathSel = pathSel.empty() ? decSel.append("path") : pathSel;
+			pathSel
+				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-path`))
+				.attr("x", 0)
+				.attr("y", 0)
+				.attr("d", dec.path);
+		} else {
+			pathSel.remove();
+		}
+	}
 
-		newAndExistingDecGrps
-			.each((dec) => {
-				const decGrp = trgGrp.selectAll(this.getSelectorForId(`${objType}_dec_group`, dec.id));
-				const decDatum = this.getDecorator(dec.id, decorations);
-				decGrp
-					.attr("transform", `translate(${this.getDecoratorX(dec, d, objType)}, ${this.getDecoratorY(dec, d, objType)})`);
+	updateDecImages(dec, decSel, objType, d) {
+		let imageSel = decSel.select("g");
 
-				// We didn't add pipeline ID to these sub-objects so don't include it in
-				// the predicate of the selector.
-				const outlnSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_outln`, dec.id);
-				const imageSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_image`, dec.id);
-				const labelSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_label`, dec.id);
-				const pathSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_path`, dec.id);
+		if (dec.image) {
+			const nodeImage = this.getNodeImage(dec);
+			const nodeImageType = this.getNodeImageType(nodeImage);
+			imageSel = imageSel.empty() ? decSel.append("g").append(nodeImageType) : imageSel.select(nodeImageType);
+			imageSel
+				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-image`))
+				.attr("x", this.getDecoratorPadding(dec, d, objType))
+				.attr("y", this.getDecoratorPadding(dec, d, objType))
+				.attr("width", this.getDecoratorWidth(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
+				.attr("height", this.getDecoratorHeight(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
+				.each(() => this.setImageContent(imageSel.node(), dec));
+		} else {
+			imageSel.remove();
+		}
+	}
 
-				decGrp.select(outlnSelector)
-					.attr("x", 0)
-					.attr("y", 0)
-					.attr("width", this.getDecoratorWidth(dec, d, objType))
-					.attr("height", this.getDecoratorHeight(dec, d, objType))
-					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-outline`))
-					.datum(decDatum);
+	updateDecLabels(dec, decSel, objType) {
+		let labelSel = decSel.select("text");
 
-				decGrp.select(imageSelector)
-					.attr("x", this.getDecoratorPadding(dec, d, objType))
-					.attr("y", this.getDecoratorPadding(dec, d, objType))
-					.attr("width", this.getDecoratorWidth(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
-					.attr("height", this.getDecoratorHeight(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
-					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-image`))
-					.datum(decDatum);
-
-				decGrp.select(labelSelector)
-					.attr("x", 0)
-					.attr("y", 0)
-					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
-					.text(dec.label)
-					.datum(decDatum);
-
-				decGrp.select(pathSelector)
-					.attr("x", 0)
-					.attr("y", 0)
-					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-path`))
-					.attr("d", dec.path)
-					.datum(decDatum);
-			});
-
-		decGroupsSel.exit().remove();
+		if (dec.label) {
+			labelSel = labelSel.empty() ? decSel.append("text") : labelSel;
+			labelSel
+				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
+				.attr("x", 0)
+				.attr("y", 0)
+				.text(dec.label);
+		} else {
+			labelSel.remove();
+		}
 	}
 
 	addErrorMarker(d, nodeGrp) {
@@ -5297,7 +5304,7 @@ export default class SVGCanvasRenderer {
 				// Update decorations on the node-node or association links.
 				joinedLinkGrps.each(function(d) {
 					if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
-						that.addDecorations(d, DEC_LINK, d3.select(this), d.decorations);
+						that.displayDecorations(d, DEC_LINK, d3.select(this), d.decorations);
 					}
 				});
 
