@@ -640,9 +640,9 @@ Cypress.Commands.add("verifyCanvasIsEmpty", () => {
 
 Cypress.Commands.add("verifyLinkBetweenNodes", (srcNodeName, trgNodeName, linkCount) => {
 	// verify that the link is on DOM
-	cy.get(".d3-selectable-link")
+	cy.get(".d3-link-group")
 		.then((canvasLinks) => {
-			const noOfCanvasLinks = canvasLinks.length / 2; // Divide by 2 because line and arrow head use same class
+			const noOfCanvasLinks = canvasLinks.length;
 			expect(noOfCanvasLinks).to.equal(linkCount);
 		});
 
