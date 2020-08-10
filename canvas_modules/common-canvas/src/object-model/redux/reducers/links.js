@@ -54,10 +54,7 @@ export default (state = [], action) => {
 
 	case "DELETE_LINKS": {
 		return state.filter((link) => {
-			const index = action.data.linkIds.findIndex((linkIdToDelete) => {
-				return link.id === linkIdToDelete.id;
-			});
-			return !(index > -1);
+			return action.data.linksToDelete.findIndex((delLnk) => link.id === delLnk.id) === -1;
 		});
 	}
 

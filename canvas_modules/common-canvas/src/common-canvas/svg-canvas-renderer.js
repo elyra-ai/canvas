@@ -22,8 +22,6 @@
 // d3Event object needs to be explicitly imported.
 var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-fetch"), require("./d3-zoom-extension/src"));
 import { event as d3Event } from "d3-selection";
-import union from "lodash/union";
-import forIn from "lodash/forIn";
 import get from "lodash/get";
 import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
@@ -302,7 +300,7 @@ export default class SVGCanvasRenderer {
 		// Reset the SVG area's zoom behaviors. We do this in case the canvas has
 		// changed from empty (no nodes/comments) where we do not need any zoom
 		// behavior to populated (with at least one node or comment) where we do
-		// need to zoom behavior, or vice versa.
+		// need the zoom behavior, or vice versa.
 		this.resetCanvasSVGBehaviors();
 
 		// Reset the canvas cursor, in case we went from an empty canvas
@@ -756,8 +754,9 @@ export default class SVGCanvasRenderer {
 	// This is called when the user drags an 'insertable' node over a link.
 	setLinkDragOverHighlighting(link, state) {
 		this.canvasGrp
-			.select(this.getSelectorForId("link_line", link.id))
-			.classed("d3-link-drop-node-highlight", state);
+			.selectAll(this.getSelectorForId("link_grp", link.id))
+			.selectAll(".d3-link-line")
+			.attr("data-drag-node-over", state ? true : null); // true will add the attr, null will rmeove it
 	}
 
 	// Switches on or off node port highlighting depending on the node
@@ -5235,16 +5234,17 @@ export default class SVGCanvasRenderer {
 
 		var startTimeDrawingLines = Date.now();
 		const that = this;
-		const linkSelector = this.getSelectorForClass("link-group");
+		const linkSelector = this.getSelectorForClass("d3-link-group");
 
-		if (this.selecting || this.regionSelect || this.canvasController.isTipOpening() || this.canvasController.isTipClosing()) {
-			// no lines update needed when selecting objects/region
+		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing()) {
+			return;
+
+		} else if (this.selecting || this.regionSelect) {
 			if (this.config.enableLinkSelection) {
-				this.canvasGrp.selectAll(linkSelector).each(function(d) {
-					const linkGrp = d3.select(this);
-					linkGrp.select(that.getSelectorForId("link_line", d.id))
-						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no");
-				});
+				this.canvasGrp
+					.selectAll(linkSelector)
+					.selectAll(".d3-link-line")
+					.attr("data-selected", (d) => (that.objectModel.isSelected(d.id, that.activePipeline.id) ? true : null));
 
 				this.superRenderers.forEach((renderer) => {
 					renderer.selecting = true;
@@ -5255,60 +5255,94 @@ export default class SVGCanvasRenderer {
 
 			this.logger.logEndTimer("displayLinks " + this.getFlags());
 			return;
-
-		} else if (this.dragging || this.nodeSizing || this.commentSizing || this.movingBindingNodes) {
-			// while dragging etc. only remove lines that are affected by moving nodes/comments
-			let affectLinks;
-			if (this.nodeSizing) {
-				affectLinks = this.getConnectedLinksFromNodeSizingArray(this.nodeSizingMovedNodes);
-
-			} else if (this.commentSizing) {
-				affectLinks = this.getConnectedLinksFromCommentBeingSized(this.resizeObj);
-
-			} else {
-				let affectedNodesAndComments;
-				if (this.dragging) {
-					affectedNodesAndComments = this.dragObjects;
-				} else {
-					affectedNodesAndComments = this.getSelectedNodesAndComments();
-				}
-				// For sub-flow rendering, we need to add the supernode binding nodes
-				// because their links will also need to be refreshed when dragging is ocurring.
-				if (this.isDisplayingSubFlow()) {
-					affectedNodesAndComments = affectedNodesAndComments.concat(this.getSupernodeBindingNodes());
-				}
-
-				if (this.canvasLayout.linkType === LINK_TYPE_ELBOW) {
-					affectedNodesAndComments = this.addAffectedNodesForElbow(affectedNodesAndComments);
-				}
-
-				affectLinks = this.getConnectedLinks(affectedNodesAndComments);
-			}
-
-			this.canvasGrp.selectAll(linkSelector)
-				.filter(
-					(linkGroupLink) => typeof affectLinks.find(
-						(link) => link.id === linkGroupLink.id) !== "undefined")
-				.remove();
-		} else {
-			this.canvasGrp.selectAll(linkSelector).remove();
 		}
 
-		var timeAfterDelete = Date.now();
-		var lineArray = this.buildLineArray();
-		var afterLineArray = Date.now();
+		const timeAfterDelete = Date.now();
+		const lineArray = this.buildLineArray();
+		const afterLineArray = Date.now();
 
-		var linkGroup = this.canvasGrp.selectAll(linkSelector)
+		this.canvasGrp.selectAll(linkSelector)
 			.data(lineArray, function(line) { return line.id; })
-			.enter()
-			.append("g")
+			.join(
+				(enter) => this.createNewLinks(enter)
+			)
+			.attr("style", (d) => this.getLinkGrpStyle(d))
+			.call((joinedLinkGrps) => {
+				// Update link selection area
+				joinedLinkGrps
+					.selectAll(".d3-link-selection-area")
+					.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+					.attr("d", (d) => d.pathInfo.path)
+					.attr("class", (d) => "d3-link-selection-area " + this.getLinkSelectionAreaClass(d));
+
+				// Update link line
+				joinedLinkGrps
+					.selectAll(".d3-link-line")
+					.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+					.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null))
+					.attr("d", (d) => d.pathInfo.path)
+					.attr("class", (d) => "d3-link-line " + this.getLinkClass(d))
+					.attr("style", (d) => that.getObjectStyle(d, "line", "default"));
+
+				// Update link line arrow head
+				joinedLinkGrps
+					.filter((d) => (d.type === NODE_LINK && this.canvasLayout.dataLinkArrowHead) ||
+													(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
+													(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
+					.selectAll(".d3-link-line-arrow-head")
+					.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+					.attr("d", (d) => this.getArrowHead(d))
+					.attr("class", (d) => "d3-link-line-arrow-head " + this.getLinkClass(d));
+
+				// Update decorations on the node-node or association links.
+				joinedLinkGrps.each(function(d) {
+					if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
+						that.addDecorations(d, DEC_LINK, d3.select(this), d.decorations);
+					}
+				});
+
+				this.setDisplayOrder(joinedLinkGrps);
+			});
+
+		// Set connection status of output ports and input ports plus arrow.
+		if (this.canvasLayout.connectionType === "ports") {
+			const portOutSelector = this.getSelectorForClass("d3-node-port-output");
+			const portInSelector = this.getSelectorForClass(this.getNodeInputPortClassName());
+			const portInArrSelector = this.getSelectorForClass("d3-node-port-input-arrow");
+			this.canvasGrp.selectAll(portOutSelector).attr("connected", "no");
+			this.canvasGrp.selectAll(portInSelector).attr("connected", "no");
+			this.canvasGrp.selectAll(portInArrSelector).attr("connected", "no");
+			lineArray.forEach((line) => {
+				if (line.type === NODE_LINK) {
+					this.setTrgPortStatus(line.trg.id, line.trgPortId, "yes");
+					this.setSrcPortStatus(line.src.id, line.srcPortId, "yes");
+				}
+			});
+		}
+
+		var endTimeDrawingLines = Date.now();
+
+		if (showLinksTime) {
+			this.logger.log("displayLinks R " + (timeAfterDelete - startTimeDrawingLines) +
+			" B " + (afterLineArray - timeAfterDelete) + " D " + (endTimeDrawingLines - afterLineArray));
+		}
+		this.logger.logEndTimer("displayLinks " + this.getFlags());
+	}
+
+	getBuildLineArrayData(id, lineArray) {
+		return lineArray.find((el) => el.id === id);
+	}
+
+	createNewLinks(enter) {
+		const that = this;
+
+		// Add groups for links
+		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", "link-group")
-			.attr("style", (d) => this.getLinkGrpStyle(d))
+			.attr("class", "d3-link-group")
 			.on("mousedown", (d) => {
 				this.logger.log("Link Group - mouse down");
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				if (this.config.enableLinkSelection) {
 					this.selectObject(
 						d,
@@ -5335,107 +5369,63 @@ export default class SVGCanvasRenderer {
 				}
 				this.openContextMenu("link", d);
 			})
-			.on("mouseenter", function(link) {
+			.on("mouseenter", function(link, index, elements) {
+				// Don't use 'this' pointer in this function because it isn't set
+				// to elements[index] as expected. Instead use direct reference to
+				// elements[index].
+				const targetObj = elements[index];
+
 				if (that.canOpenTip(TIP_TYPE_LINK)) {
 					that.canvasController.openTip({
 						id: that.getId("link_tip", link.id),
 						type: TIP_TYPE_LINK,
-						targetObj: this,
+						targetObj: targetObj,
 						mousePos: { x: d3Event.clientX, y: d3Event.clientY },
 						pipelineId: that.activePipeline.id,
 						link: link
 					});
 				}
 			})
-			.on("mouseleave", (d) => {
+			.on("mouseleave", () => {
 				this.canvasController.closeTip();
 			});
 
-		// Link selection area
-		linkGroup.append("path")
-			.attr("d", (d) => d.pathInfo.path)
-			.attr("class", (d) => this.getLinkSelectionAreaClass(d))
-			.on("mouseenter", function(link) {
-				that.setLinkLineStyles(link, "hover");
-			})
-			.on("mouseleave", function(link) {
-				that.setLinkLineStyles(link, "default");
-			});
-
-		// Link line
-		linkGroup.append("path")
-			.attr("d", (d) => d.pathInfo.path)
-			.attr("data-id", (d) => this.getId("link_line", d.id))
-			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no"))
-			.attr("class", (d) => "d3-selectable-link " + this.getLinkClass(d))
-			.attr("style", (d) => that.getObjectStyle(d, "line", "default"))
-			.on("mouseenter", function(d) {
-				that.setLinkLineStyles(d, "hover");
-			})
-			.on("mouseleave", function(d) {
-				that.setLinkLineStyles(d, "default");
-			});
-
-		// Arrow head
-		linkGroup.filter((d) => (d.type === NODE_LINK && this.canvasLayout.dataLinkArrowHead) ||
-														(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
-														(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
+		// Add selection area for link line
+		newLinkGrps
 			.append("path")
-			.attr("d", (d) => this.getArrowHead(d))
-			.attr("class", (d) => "d3-selectable-link " + this.getLinkClass(d))
-			.style("stroke-dasharray", "0"); // Ensure arrow head is always solid line style
-
-		// Add decorations to the node-node or association links.
-		linkGroup.each(function(d) {
-			if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
-				that.addDecorations(d, DEC_LINK, d3.select(this), d.decorations);
-			}
-		});
-
-		// Set connection status of output ports and input ports plus arrow.
-		if (this.canvasLayout.connectionType === "ports") {
-			const portOutSelector = this.getSelectorForClass("d3-node-port-output");
-			const portInSelector = this.getSelectorForClass(this.getNodeInputPortClassName());
-			const portInArrSelector = this.getSelectorForClass("d3-node-port-input-arrow");
-			this.canvasGrp.selectAll(portOutSelector).attr("connected", "no");
-			this.canvasGrp.selectAll(portInSelector).attr("connected", "no");
-			this.canvasGrp.selectAll(portInArrSelector).attr("connected", "no");
-			lineArray.forEach((line) => {
-				if (line.type === NODE_LINK) {
-					this.setTrgPortStatus(line.trg.id, line.trgPortId, "yes");
-					this.setSrcPortStatus(line.src.id, line.srcPortId, "yes");
-				}
+			.attr("class", "d3-link-selection-area")
+			.on("mouseenter", (link) => {
+				this.setLinkLineStyles(link, "hover");
+			})
+			.on("mouseleave", (link) => {
+				this.setLinkLineStyles(link, "default");
 			});
-		}
 
-		this.setDisplayOrder(linkGroup);
+		// Add displayed link line
+		newLinkGrps
+			.append("path")
+			.attr("class", (d) => "d3-link-line")
+			.on("mouseenter", (d) => {
+				this.setLinkLineStyles(d, "hover");
+			})
+			.on("mouseleave", (d) => {
+				this.setLinkLineStyles(d, "default");
+			});
 
-		var endTimeDrawingLines = Date.now();
+		// Add displayed link line arrow heads
+		newLinkGrps
+			.filter((d) => (d.type === NODE_LINK && this.canvasLayout.dataLinkArrowHead) ||
+											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
+											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
+			.append("path")
+			.attr("class", (d) => "d3-link-line-arrow-head");
 
-		if (showLinksTime) {
-			this.logger.log("displayLinks R " + (timeAfterDelete - startTimeDrawingLines) +
-			" B " + (afterLineArray - timeAfterDelete) + " D " + (endTimeDrawingLines - afterLineArray));
-		}
-		this.logger.logEndTimer("displayLinks " + this.getFlags());
+		return newLinkGrps;
 	}
 
 	setLinkLineStyles(link, type) {
 		const style = this.getObjectStyle(link, "line", type);
 		this.canvasGrp.select(this.getSelectorForId("link_line", link.id)).attr("style", style);
-	}
-
-	// Adds the binding nodes, which map to the containing supernode's ports, to
-	// the set of affected nodes and comments.
-	getSupernodeBindingNodes() {
-		const snBindingNodes = [];
-		this.activePipeline.nodes.forEach((node) => {
-			if (this.isSuperBindingNode(node)) {
-				snBindingNodes.push(node);
-			}
-		});
-
-		return snBindingNodes;
 	}
 
 	getLinkSelectionAreaClass(d) {
@@ -5829,57 +5819,6 @@ export default class SVGCanvasRenderer {
 			break;
 		}
 		return iconPath;
-	}
-
-	getConnectedLinks(selectedObjects) {
-		var links = [];
-		selectedObjects.forEach((selectedObject) => {
-			const linksContaining = this.activePipeline.links.filter(function(link) {
-				return (link.srcNodeId === selectedObject.id || link.trgNodeId === selectedObject.id);
-			});
-			links = union(links, linksContaining);
-		});
-		return links;
-	}
-
-	// Adds to the array of nodes and comments passed in, any nodes that are
-	// connected to the nodes in the input array provided they have multiple
-	// output ports. This is necessary for the Elbow link type because the
-	// minInitialIne of links emanating from multiple output ports of a node
-	// are affected by each other.
-	addAffectedNodesForElbow(affectedNodesAndComments) {
-		let newAffectedNodesAndComments = affectedNodesAndComments.map((obj) => obj);
-		affectedNodesAndComments.forEach((object) => {
-			const addObjects = [];
-			this.activePipeline.links.forEach((link) => {
-				if (link.trgNodeId === object.id) {
-					const srcNode = this.getNode(link.srcNodeId);
-					if (srcNode && srcNode.outputs && srcNode.outputs.length > 1) {
-						addObjects.push(srcNode);
-					}
-				}
-			});
-			newAffectedNodesAndComments = union(newAffectedNodesAndComments, addObjects);
-		});
-		return newAffectedNodesAndComments;
-	}
-
-	getConnectedLinksFromNodeSizingArray(selectedObjects) {
-		var links = [];
-		forIn(selectedObjects, (selectedObject, selectedObjectId) => {
-			const linksContaining = this.activePipeline.links.filter(function(link) {
-				return (link.srcNodeId === selectedObjectId || link.trgNodeId === selectedObjectId);
-			});
-			links = union(links, linksContaining);
-		});
-		return links;
-	}
-
-	getConnectedLinksFromCommentBeingSized(resizedComment) {
-		const links = this.activePipeline.links.filter(function(link) {
-			return (link.srcNodeId === resizedComment.id || link.trgNodeId === resizedComment.id);
-		});
-		return links;
 	}
 
 	getSelectedNodesAndComments() {

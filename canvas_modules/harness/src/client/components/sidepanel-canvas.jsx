@@ -706,7 +706,7 @@ export default class SidePanelForms extends React.Component {
 		var enableInsertNodeDroppedOnLink = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-insert-node-dropped-on-link-toggle">
 				<form>
-					<div className="harness-sidepanel-headers">Enable Insert Node Droped On Link</div>
+					<div className="harness-sidepanel-headers">Enable Insert Node Dropped On Link</div>
 					<div>
 						<Toggle
 							id="selectedInsertNodeDroppedOnLink" // Set ID to corresponding field in App.js state

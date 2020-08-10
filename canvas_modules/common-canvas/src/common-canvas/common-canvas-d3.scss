@@ -538,9 +538,14 @@ $new-halo-link-color: $ui-05;
 
 /* Link styles */
 
+// Common styles for all links
+.d3-link-line {
+	fill: none;
+	pointer-events: none; // Allow events to go to selection area
+}
+
 .d3-comment-link {
 	stroke: $comment-link-color;
-	fill: none;
 	stroke-width: 1;
 	stroke-dasharray: 7.3;
 }
@@ -548,7 +553,6 @@ $new-halo-link-color: $ui-05;
 .d3-comment-link-arrow-head {
 	stroke: $comment-link-color;
 	stroke-width: 2;
-	fill: transparent;
 	stroke-dasharray: 0;
 }
 
@@ -557,7 +561,6 @@ $new-halo-link-color: $ui-05;
 .d3-object-link {
 	stroke: $object-link-color;
 	stroke-width: 2;
-	fill: none;
 	stroke-dasharray: 5.5;
 }
 
@@ -566,55 +569,46 @@ $new-halo-link-color: $ui-05;
 .d3-association-link {
 	stroke: $association-link-color;
 	stroke-width: 2;
-	fill: none;
 }
 
 .d3-data-link {
 	stroke: $data-link-color;
-	fill: none;
 	stroke-width: 2;
 }
 
 .d3-data-link-arrow-head {
 	stroke: $data-link-color;
 	stroke-width: 2;
-	fill: transparent;
-	stroke-dasharray: 0;
+	stroke-dasharray: 0; // Ensure arrow head is always solid
 }
 
-.d3-association-link-selection-area,
-.d3-comment-link-selection-area,
-.d3-data-link-selection-area {
+.d3-link-selection-area {
 	fill: none;
 	stroke: transparent;
-	stroke-width: 10;
+	stroke-width: 12;
 	&.d3-extra-width {
 		stroke-width: 80;
 	}
 }
 
-.d3-link-drop-node-highlight {
+// Used when an insertable node is dragged over a link line.
+.d3-link-line.d3-data-link[data-drag-node-over] {
 	stroke: $link-hightlight-color;
 	stroke-width: 5;
 }
 
-/* When pointer hovers over the link's selectable area this style will be applied. */
-/* The ~ styles mean that any d3-selectable-link sibling which comes after the
-/* selectable area in the DOM will be styled this way. We use the g to make these
-/* style selectors more specific (to CSS) than any styles applied from the canvas JSON. */
-g .d3-comment-link:hover,
-g .d3-data-link:hover,
-g .d3-selectable-link:hover,
-g .d3-selectable-link:hover ~ .d3-selectable-link,      /* Colors arrow head when hovering over line. */
-g .d3-data-link-selection-area:hover ~ .d3-selectable-link, /* Colors arrow head when hovering over line selection area. */
-g .d3-comment-link-selection-area:hover ~ .d3-selectable-link, /* Colors arrow head when hovering over line selection area. */
-g .d3-association-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
+// When pointer hovers over the link's selectable area this style will be applied.
+// The ~ styles mean that any d3-link-line sibling which comes after the
+// selectable area in the DOM will be styled this way.
+.d3-link-selection-area:hover ~ .d3-link-line,
+.d3-link-selection-area:hover ~ .d3-link-line-arrow-head {
+
 	stroke: $link-hightlight-color;
 }
 
-/* Colors line and arrow head when link is selected. */
-g .d3-selectable-link[data-selected="yes"],
-g .d3-selectable-link[data-selected="yes"] ~ .d3-selectable-link {
+// Style line and arrow head when link is selected.
+.d3-link-line[data-selected],
+.d3-link-line[data-selected] ~ .d3-link-line-arrow-head {
 	stroke: $link-hightlight-color;
 	stroke-width: 3px;
 }
