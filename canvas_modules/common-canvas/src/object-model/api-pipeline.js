@@ -1079,9 +1079,12 @@ export default class APIPipeline {
 			newLink.srcNodeId = link.srcNodeId;
 			newLink.trgNodeId = link.trgNodeId;
 			newLink.class_name = link.class_name;
+			newLink.style = link.style;
+			newLink.style_temp = link.style_temp;
 			if (link.type === NODE_LINK) {
 				newLink.srcNodePortId = link.srcNodePortId;
 				newLink.trgNodePortId = link.trgNodePortId;
+				newLink.linkName = link.linkName;
 			}
 			return newLink;
 		});

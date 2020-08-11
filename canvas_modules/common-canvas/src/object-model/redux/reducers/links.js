@@ -32,7 +32,9 @@ export default (state = [], action) => {
 			class_name: action.data.class_name,
 			srcNodeId: action.data.srcNodeId,
 			trgNodeId: action.data.trgNodeId,
-			type: action.data.type
+			type: action.data.type,
+			style: action.data.style,
+			style_temp: action.data.style_temp
 		};
 
 		if (action.data.type === NODE_LINK) {

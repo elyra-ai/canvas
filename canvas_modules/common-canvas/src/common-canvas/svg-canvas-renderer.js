@@ -4567,6 +4567,9 @@ export default class SVGCanvasRenderer {
 	}
 
 	getObjectStyle(d, part, type) {
+		if (!d.style && !d.style_temp) {
+			return null;
+		}
 		let style = null;
 
 		if (type === "hover") {
@@ -5295,7 +5298,8 @@ export default class SVGCanvasRenderer {
 													(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
 					.selectAll(".d3-link-line-arrow-head")
 					.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
-					.attr("d", (d) => this.getArrowHead(d));
+					.attr("d", (d) => this.getArrowHead(d))
+					.attr("style", (d) => that.getObjectStyle(d, "line", "default"));
 
 				// Update decorations on the node-node or association links.
 				joinedLinkGrps.each(function(d) {
@@ -5372,15 +5376,17 @@ export default class SVGCanvasRenderer {
 				}
 				this.openContextMenu("link", d);
 			})
-			.on("mouseenter", function(link, index, elements) {
-				// Don't use 'this' pointer in this function because it isn't set
-				// to elements[index] as expected. Instead use direct reference to
-				// elements[index].
+			.on("mouseenter", (link, index, elements) => {
+				// When using function keyword the 'this' pointer in this function
+				// isn't set to elements[index] as expected. Not sure why not. So we use
+				// an arrow function instead and a direct reference to elements[index].
 				const targetObj = elements[index];
 
-				if (that.canOpenTip(TIP_TYPE_LINK)) {
-					that.canvasController.openTip({
-						id: that.getId("link_tip", link.id),
+				this.setLinkLineStyles(targetObj, link, "hover");
+
+				if (this.canOpenTip(TIP_TYPE_LINK)) {
+					this.canvasController.openTip({
+						id: this.getId("link_tip", link.id),
 						type: TIP_TYPE_LINK,
 						targetObj: targetObj,
 						mousePos: { x: d3Event.clientX, y: d3Event.clientY },
@@ -5389,31 +5395,21 @@ export default class SVGCanvasRenderer {
 					});
 				}
 			})
-			.on("mouseleave", () => {
+			.on("mouseleave", (link, index, elements) => {
+				const targetObj = elements[index];
+				this.setLinkLineStyles(targetObj, link, "default");
 				this.canvasController.closeTip();
 			});
 
 		// Add selection area for link line
 		newLinkGrps
 			.append("path")
-			.attr("class", "d3-link-selection-area")
-			.on("mouseenter", (link) => {
-				this.setLinkLineStyles(link, "hover");
-			})
-			.on("mouseleave", (link) => {
-				this.setLinkLineStyles(link, "default");
-			});
+			.attr("class", "d3-link-selection-area");
 
 		// Add displayed link line
 		newLinkGrps
 			.append("path")
-			.attr("class", (d) => "d3-link-line " + this.getLinkClass(d))
-			.on("mouseenter", (d) => {
-				this.setLinkLineStyles(d, "hover");
-			})
-			.on("mouseleave", (d) => {
-				this.setLinkLineStyles(d, "default");
-			});
+			.attr("class", (d) => "d3-link-line " + this.getLinkClass(d));
 
 		// Add displayed link line arrow heads
 		newLinkGrps
@@ -5426,9 +5422,11 @@ export default class SVGCanvasRenderer {
 		return newLinkGrps;
 	}
 
-	setLinkLineStyles(link, type) {
+	setLinkLineStyles(linkObj, link, type) {
 		const style = this.getObjectStyle(link, "line", type);
-		this.canvasGrp.select(this.getSelectorForId("link_line", link.id)).attr("style", style);
+		const linkSel = d3.select(linkObj);
+		linkSel.select(".d3-link-line").attr("style", style);
+		linkSel.select(".d3-link-line-arrow-head").attr("style", style);
 	}
 
 	getDataLinkClass(d) {
