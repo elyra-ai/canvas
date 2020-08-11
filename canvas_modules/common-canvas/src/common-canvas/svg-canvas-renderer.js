@@ -5250,7 +5250,6 @@ export default class SVGCanvasRenderer {
 			if (this.config.enableLinkSelection) {
 				this.canvasGrp
 					.selectAll(linkSelector)
-					.selectAll(".d3-link-line")
 					.attr("data-selected", (d) => (that.objectModel.isSelected(d.id, that.activePipeline.id) ? true : null));
 
 				this.superRenderers.forEach((renderer) => {
@@ -5274,21 +5273,19 @@ export default class SVGCanvasRenderer {
 				(enter) => this.createNewLinks(enter)
 			)
 			.attr("style", (d) => this.getLinkGrpStyle(d))
+			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null))
 			.call((joinedLinkGrps) => {
 				// Update link selection area
 				joinedLinkGrps
 					.selectAll(".d3-link-selection-area")
 					.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
-					.attr("d", (d) => d.pathInfo.path)
-					.attr("class", (d) => "d3-link-selection-area " + this.getLinkSelectionAreaClass(d));
+					.attr("d", (d) => d.pathInfo.path);
 
 				// Update link line
 				joinedLinkGrps
 					.selectAll(".d3-link-line")
 					.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
-					.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null))
 					.attr("d", (d) => d.pathInfo.path)
-					.attr("class", (d) => "d3-link-line " + this.getLinkClass(d))
 					.attr("style", (d) => that.getObjectStyle(d, "line", "default"));
 
 				// Update link line arrow head
@@ -5298,8 +5295,7 @@ export default class SVGCanvasRenderer {
 													(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
 					.selectAll(".d3-link-line-arrow-head")
 					.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
-					.attr("d", (d) => this.getArrowHead(d))
-					.attr("class", (d) => "d3-link-line-arrow-head " + this.getLinkClass(d));
+					.attr("d", (d) => this.getArrowHead(d));
 
 				// Update decorations on the node-node or association links.
 				joinedLinkGrps.each(function(d) {
@@ -5411,7 +5407,7 @@ export default class SVGCanvasRenderer {
 		// Add displayed link line
 		newLinkGrps
 			.append("path")
-			.attr("class", (d) => "d3-link-line")
+			.attr("class", (d) => "d3-link-line " + this.getLinkClass(d))
 			.on("mouseenter", (d) => {
 				this.setLinkLineStyles(d, "hover");
 			})
@@ -5425,7 +5421,7 @@ export default class SVGCanvasRenderer {
 											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
 											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
 			.append("path")
-			.attr("class", (d) => "d3-link-line-arrow-head");
+			.attr("class", (d) => "d3-link-line-arrow-head " + this.getLinkClass(d));
 
 		return newLinkGrps;
 	}
@@ -5433,15 +5429,6 @@ export default class SVGCanvasRenderer {
 	setLinkLineStyles(link, type) {
 		const style = this.getObjectStyle(link, "line", type);
 		this.canvasGrp.select(this.getSelectorForId("link_line", link.id)).attr("style", style);
-	}
-
-	getLinkSelectionAreaClass(d) {
-		if (d.type === ASSOCIATION_LINK) {
-			return "d3-association-link-selection-area";
-		} else if (d.type === COMMENT_LINK) {
-			return "d3-comment-link-selection-area";
-		}
-		return "d3-data-link-selection-area";
 	}
 
 	getDataLinkClass(d) {

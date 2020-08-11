@@ -357,6 +357,40 @@ Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 	});
 });
 
+Cypress.Commands.add("verifyLinkPath", (srcNodeName, srcPortId, trgNodeName, trgPortId, path) => {
+	cy.getPipeline()
+		.then((pipeline) => {
+			cy.getPortLinks(pipeline, srcNodeName, srcPortId, trgNodeName, trgPortId)
+				.then((links) => {
+					cy.wrap(links).should("have.length", 1);
+
+					cy.getLinkLineUsingLinkId(links[0].id, "line")
+						.then((link) => expect(link[0].getAttribute("d")).to.equal(path));
+				});
+		});
+});
+
+Cypress.Commands.add("verifyLinkIsSelected", (linkId) => {
+	cy.getLinkUsingLinkId(linkId)
+		.then((linkGrp) => expect(linkGrp[0].getAttribute("data-selected")).to.equal("true"));
+});
+
+Cypress.Commands.add("verifyLinkIsNotSelected", (linkId) => {
+	cy.getLinkUsingLinkId(linkId)
+		.then((linkGrp) => expect(linkGrp[0].getAttribute("data-selected")).to.equal(null)); // data-selected will be missing when link is not selected
+});
+
+Cypress.Commands.add("verifyLinkIsDeleted", (linkId, deleteUsingContextMenu) => {
+	// verify link is not the canvas DOM
+	cy.getLinkUsingLinkId(linkId)
+		.should("not.exist");
+
+	// verify that the link is not in the internal object model
+	cy.getLinkCountFromObjectModel(linkId)
+		.should("eq", 0);
+});
+
+
 Cypress.Commands.add("verifyNumberOfPipelines", (noOfPipelines) => {
 	cy.getCanvasData().then((canvasData) => {
 		expect(canvasData.pipelines.length).to.equal(noOfPipelines);

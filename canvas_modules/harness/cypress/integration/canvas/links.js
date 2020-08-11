@@ -15,7 +15,7 @@
  */
 
 describe("Test node link disconnection", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
@@ -36,7 +36,7 @@ describe("Test node link disconnection", function() {
 });
 
 describe("Test comment link disconnection", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
@@ -58,7 +58,7 @@ describe("Test comment link disconnection", function() {
 });
 
 describe("Test node and comment combination link disconnection", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
@@ -87,7 +87,7 @@ describe("Test node and comment combination link disconnection", function() {
 });
 
 describe("Test elbow connections from multi-port source node do not overlap", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedLinkType": "Elbow" });
 		cy.openCanvasDefinition("multiPortsCanvas2.json");
@@ -131,4 +131,90 @@ describe("Test elbow connections from multi-port source node do not overlap", fu
 			"144 520.25L 30 520.25Q 20 520.25 20 530.25L 20 547Q 20 557 30 557L 50 557"
 		);
 	});
+});
+
+describe("Test enableLinkSelection configuration option", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedLinkSelection": true });
+		cy.openCanvasDefinition("allTypesCanvas.json");
+	});
+
+	it("Test a link can be selected", function() {
+		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		cy.verifyLinkIsSelected("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+	});
+
+	it("Test multiple links can be selected with Cmnd + click", function() {
+		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+
+		cy.verifyLinkIsSelected("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		cy.verifyLinkIsSelected("a81684aa-9b09-4620-aa59-54035a5de913");
+	});
+
+	it("Test an already selected link can be deselcted with Cmnd + click", function() {
+		// Select two links
+		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+
+		// Deselect one of the links with cmnd + click
+		cy.ctrlOrCmdClickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+
+		// Chck one is selected and the other is not
+		cy.verifyLinkIsNotSelected("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		cy.verifyLinkIsSelected("a81684aa-9b09-4620-aa59-54035a5de913");
+	});
+
+	it("Test clicking on an unselected deselcts other selcted links", function() {
+		// Select two links
+		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+
+		// Select a third link
+		cy.clickLink("2a640b77-76f7-4601-a794-7e71fc7ee241");
+
+		// Check one is selected and the other two are not
+		cy.verifyLinkIsSelected("2a640b77-76f7-4601-a794-7e71fc7ee241");
+		cy.verifyLinkIsNotSelected("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		cy.verifyLinkIsNotSelected("a81684aa-9b09-4620-aa59-54035a5de913");
+	});
+
+	it("Test selecting a data link and an association link is successful", function() {
+		// Select a data link
+		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+
+		// Select an association link
+		cy.ctrlOrCmdClickLink("id5KIRGGJ3FYT.id125TTEEIK7V");
+
+		// Check all three are selected
+		cy.verifyLinkIsSelected("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		// cy.verifyLinkIsSelected("a8747ee1-6afd-4157-b0fb-05e296ba91e3");
+		cy.verifyLinkIsSelected("id5KIRGGJ3FYT.id125TTEEIK7V");
+	});
+
+
+	it("Test selecting a node and a link work OK", function() {
+		// Select a node and a link
+		cy.getNodeWithLabel("Binding (entry) node").click();
+		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+
+		// Chck one is selected and the other two are not
+		cy.verifyNodeIsSelected("Binding (entry) node");
+		cy.verifyLinkIsSelected("a81684aa-9b09-4620-aa59-54035a5de913");
+	});
+
+	it("Test selecting a node and a link and deleting them works OK", function() {
+		// Select a node and a link
+		cy.getNodeWithLabel("Binding (entry) node").click();
+		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+
+		// Delete them using the toolbar
+		cy.clickToolbarDelete();
+
+		// Check neither exists
+		cy.verifyNodeIsDeleted("Binding (entry) node", false);
+		cy.verifyLinkIsDeleted("a81684aa-9b09-4620-aa59-54035a5de913");
+	});
+
 });

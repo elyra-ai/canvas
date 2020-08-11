@@ -36,13 +36,23 @@ Cypress.Commands.add("getLinkFromName", (linkName) => {
 		});
 });
 
+
+Cypress.Commands.add("getLinkUsingId", (linkId) => {
+	cy.getPipeline()
+		.then((pipeline) => {
+			cy.get(getLinkSelector(linkId, "grp"))
+				.then((link) => link);
+		});
+});
+
+
 function getLinkSelector(linkId, element) {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	let selector = null;
 	if (element === "grp") {
-		selector = `div > svg > g > g[data-id^=link_grp_${inst}_${linkId}]`;
+		selector = `div > svg > g > g[data-id^="link_grp_${inst}_${linkId}"]`;
 	} else if (element === "line") {
-		selector = `div > svg > g > g[data-id^=link_grp_${inst}_${linkId}] > path`;
+		selector = `div > svg > g > g[data-id^="link_grp_${inst}_${linkId}"] > path`;
 	}
 	return selector;
 }
@@ -157,19 +167,6 @@ Cypress.Commands.add("getPortLinks", (pipeline, srcNodeName, srcPortId, trgNodeN
 		});
 });
 
-Cypress.Commands.add("verifyLinkPath", (srcNodeName, srcPortId, trgNodeName, trgPortId, path) => {
-	cy.getPipeline()
-		.then((pipeline) => {
-			cy.getPortLinks(pipeline, srcNodeName, srcPortId, trgNodeName, trgPortId)
-				.then((links) => {
-					cy.wrap(links).should("have.length", 1);
-
-					cy.get(getLinkSelector(links[0].id, "line"))
-						.then((link) => expect(link[0].getAttribute("d")).to.equal(path));
-				});
-		});
-});
-
 Cypress.Commands.add("deleteLinkAt", (linkX, linkY) => {
 	// Delete link using context menu
 	cy.get(".d3-svg-canvas-div")
@@ -182,4 +179,55 @@ Cypress.Commands.add("hoverOverLinkName", (linkName) => {
 		.children()
 		.eq(1)
 		.trigger("mouseenter", { force: true });
+});
+
+Cypress.Commands.add("getLinkUsingLinkId", (linkId) => {
+	cy.get("body").then(($body) => {
+		if ($body.find(".d3-link-group").length) {
+			cy.get(getLinkGrpSelector())
+				.then((grpArray) => findGrpForLinkId(grpArray, linkId));
+		}
+		// No nodes found on canvas
+		return null;
+	});
+});
+
+function getLinkGrpSelector() {
+	const inst = document.extraCanvas === true ? "1" : "0";
+	const selector = `div > svg > g > g[data-id^='link_grp_${inst}']`;
+	return selector;
+}
+
+function findGrpForLinkId(grpArray, linkId) {
+	for (let idx = 0; idx < grpArray.length; idx++) {
+		if (grpArray[idx].__data__.id === linkId) {
+			return grpArray[idx];
+		}
+	}
+	return null;
+}
+
+
+Cypress.Commands.add("getLinkLineUsingLinkId", (linkId) => {
+	cy.get(getLinkSelector(linkId, "line"))
+		.then((linkGrp) => linkGrp);
+});
+
+Cypress.Commands.add("clickLink", (linkId) => {
+	cy.getLinkUsingLinkId(linkId).click();
+});
+
+Cypress.Commands.add("ctrlOrCmdClickLink", (linkId) => {
+	// Get the os name to decide whether to click ctrl or cmd
+	cy.useCtrlOrCmdKey().then((selectedKey) => {
+		cy.get("body")
+			.type(selectedKey, { release: false })
+			.getLinkUsingLinkId(linkId)
+			.click();
+		// Cancel the command/ctrl key press -- the documentation doesn't say
+		// this needs to be done but if it isn't the command key stays pressed down
+		// causing problems with subsequent selections.
+		cy.get("body")
+			.type(selectedKey, { release: true });
+	});
 });
