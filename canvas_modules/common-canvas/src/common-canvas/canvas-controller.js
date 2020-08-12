@@ -1246,21 +1246,36 @@ export default class CanvasController {
 		}
 	}
 
-	// Returns a zoom object if any of the objects (nodes and/or comments)
-	// identified by the objectIds array are not fully within the canvas viewport.
-	// Returns null if all objects are fully within the canvas viewport.
-	// The zoom object returned is an object with three fields:
+	// Returns a zoom object (or null) required to pan the objects (nodes and/or comments)
+	// identified by the objectIds array to 'reveal' the objects in the viewport.
+	// The zoom object returned can be provided to the CanvasController.zoomTo()
+	// method to perform the zoom/pan action.
+	// If the position parameter is set to "center" it will return a zoom object
+	// to always pan the objects to the center of the viewport regardless of where
+	// they currently are positioned. If the position parameter is set to "side"
+	// or undefined (omitted), and all the objects are fully within the canvas
+	// viewport, it will return null. This can be used to detect whether the
+	// objects are fully visible or not. Otherwise it will return a zoom object
+	// which can be used to pan the objects into the viewport so they appear at
+	// the nearest side to where they are currently positioned.
+	// The zoom object has three fields:
 	// x: Is the horizontal translate amount which is a number indicating the
 	//    pixel amount to move. Negative left and positive right
 	// y: Is the vertical translate amount which is a number indicating the
 	//    pixel amount to move. Negative up and positive down.
 	// k: is the scale amount which is a number greater than 0 where 1 is the
 	//    default scale size.
-	// Parameter:
+	// Parameters:
 	// objectIds - An array of nodes and/or comment IDs.
-	getZoomToReveal(objectIds) {
+	// position - Optional. Can be set to "center" or "side". If omitted it
+	//            defaults to "side". If set to "center" the zoom will pan the
+	//            objects to the center of the viewport. If set to "side" (or
+	//            omitted) the returned zoom will pan the canvas so the objects
+	//            are in the viewport at the nearest side to where they are
+	//            currently located.
+	getZoomToReveal(objectIds, position) {
 		if (this.commonCanvas) {
-			return this.commonCanvas.getZoomToReveal(objectIds);
+			return this.commonCanvas.getZoomToReveal(objectIds, position);
 		}
 		return null;
 	}

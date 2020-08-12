@@ -1388,7 +1388,7 @@ export default class SVGCanvasRenderer {
 		this.zoomToFitForScale(newScale, canvasDimensions, viewPortDimensions);
 	}
 
-	getZoomToReveal(nodeIDs) {
+	getZoomToReveal(nodeIDs, position) {
 		const svgRect = this.getViewPortDimensions();
 		const transformedSVGRect = this.getTransformedSVGRect(svgRect, 0);
 		const nodes = this.getNodes(nodeIDs);
@@ -1399,17 +1399,23 @@ export default class SVGCanvasRenderer {
 			let xOffset;
 			let yOffset;
 
-			if (canv.right > transformedSVGRect.x + transformedSVGRect.width) {
-				xOffset = transformedSVGRect.x + transformedSVGRect.width - canv.right;
-			}
-			if (canv.left < transformedSVGRect.x) {
-				xOffset = transformedSVGRect.x - canv.left;
-			}
-			if (canv.bottom > transformedSVGRect.y + transformedSVGRect.height) {
-				yOffset = transformedSVGRect.y + transformedSVGRect.height - canv.bottom;
-			}
-			if (canv.top < transformedSVGRect.y) {
-				yOffset = transformedSVGRect.y - canv.top;
+			if (position === "center") {
+				xOffset = transformedSVGRect.x + (transformedSVGRect.width / 2) - (canv.left + (canv.width / 2));
+				yOffset = transformedSVGRect.y + (transformedSVGRect.height / 2) - (canv.top + (canv.height / 2));
+
+			} else {
+				if (canv.right > transformedSVGRect.x + transformedSVGRect.width) {
+					xOffset = transformedSVGRect.x + transformedSVGRect.width - canv.right;
+				}
+				if (canv.left < transformedSVGRect.x) {
+					xOffset = transformedSVGRect.x - canv.left;
+				}
+				if (canv.bottom > transformedSVGRect.y + transformedSVGRect.height) {
+					yOffset = transformedSVGRect.y + transformedSVGRect.height - canv.bottom;
+				}
+				if (canv.top < transformedSVGRect.y) {
+					yOffset = transformedSVGRect.y - canv.top;
+				}
 			}
 
 			if (typeof xOffset !== "undefined" || typeof yOffset !== "undefined") {

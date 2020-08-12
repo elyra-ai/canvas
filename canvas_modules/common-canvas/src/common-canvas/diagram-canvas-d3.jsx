@@ -120,8 +120,8 @@ export default class DiagramCanvas extends React.Component {
 		return this.canvasD3Layout.getSvgViewportOffset();
 	}
 
-	getZoomToReveal(objectIds) {
-		return this.canvasD3Layout.getZoomToReveal(objectIds);
+	getZoomToReveal(objectIds, position) {
+		return this.canvasD3Layout.getZoomToReveal(objectIds, position);
 	}
 
 	getZoom() {
