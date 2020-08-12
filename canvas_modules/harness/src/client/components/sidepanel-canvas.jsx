@@ -612,6 +612,19 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
+		var enableLinkSelection = (<div className="harness-sidepanel-children">
+			<form>
+				<div className="harness-sidepanel-headers">Enable Link Selection</div>
+				<div>
+					<Toggle
+						id="selectedLinkSelection" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedLinkSelection")}
+						onToggle={this.setStateValue}
+					/>
+				</div>
+			</form>
+		</div>);
+
 		var enableAssocLinkCreation = (<div className="harness-sidepanel-children">
 			<form>
 				<div className="harness-sidepanel-headers">Enable Association Link Creation</div>
@@ -693,7 +706,7 @@ export default class SidePanelForms extends React.Component {
 		var enableInsertNodeDroppedOnLink = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-insert-node-dropped-on-link-toggle">
 				<form>
-					<div className="harness-sidepanel-headers">Enable Insert Node Droped On Link</div>
+					<div className="harness-sidepanel-headers">Enable Insert Node Dropped On Link</div>
 					<div>
 						<Toggle
 							id="selectedInsertNodeDroppedOnLink" // Set ID to corresponding field in App.js state
@@ -1216,6 +1229,8 @@ export default class SidePanelForms extends React.Component {
 					{enableDragWithoutSelect}
 					{divider}
 					{enableInsertNodeDroppedOnLink}
+					{divider}
+					{enableLinkSelection}
 					{divider}
 					{enableAssocLinkCreation}
 					{divider}

@@ -97,6 +97,20 @@ Cypress.Commands.add("getCommentContentCountFromObjectModel", (commentText) => {
 		});
 });
 
+Cypress.Commands.add("getLinkCountFromObjectModel", (linkId) => {
+	let count = 0;
+	cy.getPipeline()
+		.then((pipeline) => {
+			const links = pipeline.links;
+			links.forEach(function(link) {
+				if (link.id === linkId) {
+					count++;
+				}
+			});
+			return count;
+		});
+});
+
 Cypress.Commands.add("getCountNodes", (pipeline) => pipeline.nodes.length);
 
 Cypress.Commands.add("getCountComments", (pipeline) => pipeline.comments.length);

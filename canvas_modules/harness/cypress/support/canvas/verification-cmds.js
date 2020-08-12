@@ -357,6 +357,40 @@ Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 	});
 });
 
+Cypress.Commands.add("verifyLinkPath", (srcNodeName, srcPortId, trgNodeName, trgPortId, path) => {
+	cy.getPipeline()
+		.then((pipeline) => {
+			cy.getPortLinks(pipeline, srcNodeName, srcPortId, trgNodeName, trgPortId)
+				.then((links) => {
+					cy.wrap(links).should("have.length", 1);
+
+					cy.getLinkLineUsingLinkId(links[0].id, "line")
+						.then((link) => expect(link[0].getAttribute("d")).to.equal(path));
+				});
+		});
+});
+
+Cypress.Commands.add("verifyLinkIsSelected", (linkId) => {
+	cy.getLinkUsingLinkId(linkId)
+		.then((linkGrp) => expect(linkGrp[0].getAttribute("data-selected")).to.equal("true"));
+});
+
+Cypress.Commands.add("verifyLinkIsNotSelected", (linkId) => {
+	cy.getLinkUsingLinkId(linkId)
+		.then((linkGrp) => expect(linkGrp[0].getAttribute("data-selected")).to.equal(null)); // data-selected will be missing when link is not selected
+});
+
+Cypress.Commands.add("verifyLinkIsDeleted", (linkId, deleteUsingContextMenu) => {
+	// verify link is not the canvas DOM
+	cy.getLinkUsingLinkId(linkId)
+		.should("not.exist");
+
+	// verify that the link is not in the internal object model
+	cy.getLinkCountFromObjectModel(linkId)
+		.should("eq", 0);
+});
+
+
 Cypress.Commands.add("verifyNumberOfPipelines", (noOfPipelines) => {
 	cy.getCanvasData().then((canvasData) => {
 		expect(canvasData.pipelines.length).to.equal(noOfPipelines);
@@ -531,36 +565,29 @@ Cypress.Commands.add("verifyDecorationTransformOnLink", (linkName, decoratorId, 
 
 Cypress.Commands.add("verifyDecorationImageOnNode", (nodeName, decoratorId, decoratorImage) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-node-dec-image")
-		.then((decoratorImages) => {
-			const decorator = decoratorImages.filter((idx) =>
-				decoratorImages[idx].getAttribute("data-id") === ("node_dec_image_0_" + decoratorId));
-			expect(decorator[0].getAttribute("data-id")).equal(`node_dec_image_0_${decoratorId}`);
-			expect(decorator[0].getAttribute("data-image")).equal(decoratorImage);
+		.find(`.d3-node-dec-group[data-id=node_dec_group_0_${decoratorId}] g .d3-node-dec-image`)
+		.then((decImages) => {
+			expect(decImages[0].getAttribute("data-image")).equal(decoratorImage);
 		});
 });
 
 Cypress.Commands.add("verifyDecorationPathOnNode", (nodeName, decoratorId, path) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-node-dec-path")
-		.then((decoratorPaths) => {
-			const decorator = decoratorPaths.filter((idx) =>
-				decoratorPaths[idx].getAttribute("data-id") === ("node_dec_path_0_" + decoratorId));
-			expect(decorator[0].getAttribute("data-id")).equal(`node_dec_path_0_${decoratorId}`);
-			expect(decorator[0].getAttribute("d")).equal(path);
+		.find(`.d3-node-dec-group[data-id=node_dec_group_0_${decoratorId}] .d3-node-dec-path`)
+		.then((decPaths) => {
+			expect(decPaths[0].getAttribute("d")).equal(path);
 		});
 });
 
 Cypress.Commands.add("verifyDecorationPathOnLink", (linkName, decoratorId, path) => {
 	cy.getLinkFromName(linkName)
-		.find(".d3-link-dec-path")
-		.then((decoratorPaths) => {
-			const decorator = decoratorPaths.filter((idx) =>
-				decoratorPaths[idx].getAttribute("data-id") === ("link_dec_path_0_" + decoratorId));
-			expect(decorator[0].getAttribute("data-id")).equal(`link_dec_path_0_${decoratorId}`);
-			expect(decorator[0].getAttribute("d")).equal(path);
+		.find(`.d3-link-dec-group[data-id=link_dec_group_0_${decoratorId}] .d3-link-dec-path`)
+		.then((decPaths) => {
+			cy.log("d = " + decPaths[0].getAttribute("d"));
+			expect(decPaths[0].getAttribute("d")).equal(path);
 		});
 });
+
 
 Cypress.Commands.add("verifyErrorMarkerOnNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
@@ -647,9 +674,9 @@ Cypress.Commands.add("verifyCanvasIsEmpty", () => {
 
 Cypress.Commands.add("verifyLinkBetweenNodes", (srcNodeName, trgNodeName, linkCount) => {
 	// verify that the link is on DOM
-	cy.get(".d3-selectable-link")
+	cy.get(".d3-link-group")
 		.then((canvasLinks) => {
-			const noOfCanvasLinks = canvasLinks.length / 2; // Divide by 2 because line and arrow head use same class
+			const noOfCanvasLinks = canvasLinks.length;
 			expect(noOfCanvasLinks).to.equal(linkCount);
 		});
 

@@ -220,9 +220,12 @@ class CommonCanvasToolbar extends React.Component {
 			if (!this.props.canvasController.canRedo()) {
 				redoState = false;
 			}
-			if (this.props.canvasController.getSelectedObjectIds().length === 0) {
+			if (this.props.canvasController.getSelectedObjectIds().length === 0 ||
+					this.props.canvasController.areAllSelectedObjectsLinks()) {
 				cutState = false;
 				copyState = false;
+			}
+			if (this.props.canvasController.getSelectedObjectIds().length === 0) {
 				deleteState = false;
 			}
 			if (this.props.canvasController.isClipboardEmpty()) {

@@ -97,8 +97,7 @@ export default class APIPipeline {
 				linksToDelete = this.pushUniqueLinks(objectLink, linksToDelete);
 			});
 		});
-		const linkIdsToDelete = linksToDelete.map((link) => link.id);
-		this.store.dispatch({ type: "DELETE_LINKS", data: { linkIds: linkIdsToDelete }, pipelineId: this.pipelineId });
+		this.store.dispatch({ type: "DELETE_LINKS", data: { linksToDelete: linksToDelete }, pipelineId: this.pipelineId });
 		return linksToDelete;
 	}
 
@@ -951,7 +950,7 @@ export default class APIPipeline {
 	}
 
 	deleteLinks(linksToDelete) {
-		this.store.dispatch({ type: "DELETE_LINKS", data: { linkIds: linksToDelete }, pipelineId: this.pipelineId });
+		this.store.dispatch({ type: "DELETE_LINKS", data: { linksToDelete: linksToDelete }, pipelineId: this.pipelineId });
 	}
 
 	createNodeLinks(data) {
@@ -1080,9 +1079,12 @@ export default class APIPipeline {
 			newLink.srcNodeId = link.srcNodeId;
 			newLink.trgNodeId = link.trgNodeId;
 			newLink.class_name = link.class_name;
+			newLink.style = link.style;
+			newLink.style_temp = link.style_temp;
 			if (link.type === NODE_LINK) {
 				newLink.srcNodePortId = link.srcNodePortId;
 				newLink.trgNodePortId = link.trgNodePortId;
+				newLink.linkName = link.linkName;
 			}
 			return newLink;
 		});
