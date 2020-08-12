@@ -5404,7 +5404,7 @@ export default class SVGCanvasRenderer {
 		// Add selection area for link line
 		newLinkGrps
 			.append("path")
-			.attr("class", "d3-link-selection-area");
+			.attr("class", (d) => "d3-link-selection-area " + this.getLinkSelectionAreaClass(d));
 
 		// Add displayed link line
 		newLinkGrps
@@ -5447,6 +5447,15 @@ export default class SVGCanvasRenderer {
 			return this.getCommentLinkClass(d);
 		}
 		return this.getDataLinkClass(d);
+	}
+
+	getLinkSelectionAreaClass(d) {
+		if (d.type === ASSOCIATION_LINK) {
+			return "d3-association-link-selection-area";
+		} else if (d.type === COMMENT_LINK) {
+			return "d3-comment-link-selection-area";
+		}
+		return "d3-data-link-selection-area";
 	}
 
 	getAssociationLinkClass(d) {
