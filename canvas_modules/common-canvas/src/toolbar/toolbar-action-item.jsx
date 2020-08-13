@@ -193,8 +193,10 @@ ToolbarActionItem.propTypes = {
 		iconTypeOverride: PropTypes.string,
 		kind: PropTypes.string,
 		jsx: PropTypes.object,
-		tooltip: PropTypes.string
-
+		tooltip: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.object
+		])
 	}),
 	toolbarActionHandler: PropTypes.func.isRequired,
 	instanceId: PropTypes.number.isRequired,
