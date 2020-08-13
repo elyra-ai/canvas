@@ -79,9 +79,7 @@ class ToolbarActionItem extends React.Component {
 		this.props.toolbarActionHandler(this.props.actionObj.action);
 	}
 
-	render() {
-		const actionObj = this.props.actionObj;
-
+	generateButton(actionObj) {
 		let labelBefore = null;
 		let labelAfter = null;
 
@@ -97,14 +95,6 @@ class ToolbarActionItem extends React.Component {
 
 		const icon = this.generateIcon(actionObj);
 		const textContent = actionObj.textContent ? (<div className="toolbar-text-content"> {actionObj.textContent} </div>) : null;
-		const actionName = actionObj.action + "-action";
-		const tooltipId = actionName + this.props.instanceId + "-tooltip";
-
-		const itemClassName = classNames(
-			{ "toolbar-overflow-menu-item": this.props.overflow,
-				"toolbar-item": !this.props.overflow },
-			actionObj.kind ? actionObj.kind : "default",
-			actionName);
 
 		const itemContentClassName = classNames(
 			"toolbar-item-content",
@@ -122,26 +112,66 @@ class ToolbarActionItem extends React.Component {
 			</div>
 		);
 
-		if (!this.props.overflow) {
-			buttonContent = (
-				<Tooltip id={tooltipId} tip={actionObj.label} disable={false} >
-					{buttonContent}
+		buttonContent = this.wrapInTooltip(buttonContent);
+
+		buttonContent = (
+			<Button kind={kind}
+				onClick={this.actionClickHandler}
+				disabled={!actionObj.enable}
+				onFocus={this.props.onFocus}
+				aria-label={actionObj.label}
+			>
+				{buttonContent}
+			</Button>
+		);
+
+		return buttonContent;
+	}
+
+	generateActionName(actionObj) {
+		return this.props.actionObj.action + "-action";
+	}
+
+	wrapInTooltip(content) {
+		if (!this.props.overflow && (this.props.actionObj.label || this.props.actionObj.tooltip)) {
+			const actionName = this.generateActionName();
+			const tipText = this.props.actionObj.tooltip ? this.props.actionObj.tooltip : this.props.actionObj.label;
+			const tooltipId = actionName + "-" + this.props.instanceId + "-tooltip";
+
+			return (
+				<Tooltip id={tooltipId} tip={tipText} disable={false} >
+					{content}
 				</Tooltip>
 			);
 		}
+		return content;
+	}
 
-		const isToolbarItem = !this.props.overflow;
+	render() {
+		const actionObj = this.props.actionObj;
+		const actionName = this.generateActionName();
+		let divContent = null;
+
+		if (actionObj.jsx) {
+			divContent = this.wrapInTooltip(actionObj.jsx);
+		} else {
+			divContent = this.generateButton(actionObj);
+		}
+
+		const isToolbarItem = this.props.overflow ? null : true; // null wil make data-toolbar-item be removed
+		const kindAsClass = actionObj.kind ? actionObj.kind : "default";
+
+		const itemClassName = classNames(
+			{ "toolbar-overflow-menu-item": this.props.overflow,
+				"toolbar-item": !this.props.overflow && !actionObj.jsx,
+				"toolbar-jsx-item": !this.props.overflow && actionObj.jsx,
+				"toolbar-overflow-jsx-item": this.props.overflow && actionObj.jsx },
+			kindAsClass,
+			actionName);
 
 		return (
 			<div className={itemClassName} data-toolbar-item={isToolbarItem}>
-				<Button kind={kind}
-					onClick={this.actionClickHandler}
-					disabled={!actionObj.enable}
-					onFocus={this.props.onFocus}
-					aria-label={actionObj.label}
-				>
-					{buttonContent}
-				</Button>
+				{divContent}
 			</div>
 		);
 	}
@@ -161,7 +191,10 @@ ToolbarActionItem.propTypes = {
 		className: PropTypes.string,
 		textContent: PropTypes.string,
 		iconTypeOverride: PropTypes.string,
-		kind: PropTypes.string
+		kind: PropTypes.string,
+		jsx: PropTypes.object,
+		tooltip: PropTypes.string
+
 	}),
 	toolbarActionHandler: PropTypes.func.isRequired,
 	instanceId: PropTypes.number.isRequired,
