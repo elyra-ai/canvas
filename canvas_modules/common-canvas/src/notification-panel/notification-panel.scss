@@ -62,7 +62,7 @@ $notification-left-border-color-width: 4px;
 	justify-content: center;
 	border: 1px solid $ui-03;
 	border-bottom: 0;
-	padding: $spacing-03 $spacing-05;
+	padding: $spacing-05;
 	.notification-panel-header {
 		@include carbon--type-style("body-short-02");
 	}
@@ -73,7 +73,7 @@ $notification-left-border-color-width: 4px;
 	}
 	.notification-panel-close-icon {
 		position: absolute;
-		right: $spacing-03;
+		right: $spacing-06;
 		top: $spacing-05;
 		cursor: pointer;
 	}
