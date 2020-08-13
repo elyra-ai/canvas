@@ -198,6 +198,7 @@ $toolbar-divider-width: 1px;
 }
 
 .toolbar-overflow-jsx-item {
+	width: 100%;
 	height: 38px;
 	display: inline-flex;
 	align-items: center;
@@ -206,7 +207,6 @@ $toolbar-divider-width: 1px;
 	// background-color: $ui-01;
 	padding: 0;
 }
-
 
 .toolbar-divider {
 	border-right: $toolbar-divider-width solid $ui-03;
