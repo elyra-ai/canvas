@@ -309,3 +309,14 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 .main-comment-box {
 	fill: #2BE2CA;
 }
+
+/* These styles are used by the custom JSX addd to the toolbar: TOOLBAR_TYPE_CUSTOM_ACTIONS */
+
+.toolbar-overflow-jsx-item .toolbar-custom-button {
+	width: 100%;
+	height: 100%;
+
+	& button {
+		height: 100%;
+	}
+}

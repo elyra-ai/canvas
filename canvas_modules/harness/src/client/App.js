@@ -1747,16 +1747,22 @@ class App extends React.Component {
 			};
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOM_ACTIONS) {
+			// This example shows hot cstom JSX can be provided to the toolbar in the
+			// jsx field to replace the content specified in the other fields. The jsx
+			// added can be customized using the host applications own css.
 			toolbarConfig = {
 				leftBar: [
 					{ action: "undo", label: "Undo", enable: true },
 					{ action: "redo", label: "Redo", enable: true },
 					{ divider: true },
-					{ action: "custom-loading", jsx: (<div style={{ padding: "0 11px" }}><InlineLoading status="active" description="Loading..." /></div>) },
+					{ action: "custom-loading",
+						jsx: (<div style={{ padding: "0 11px" }}><InlineLoading status="active" description="Loading..." /></div>) },
 					{ divider: true },
-					{ action: "custom-checkbox", jsx: (<div style={{ padding: "0 11px" }}><Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} /></div>) },
+					{ action: "custom-checkbox",
+						jsx: (<div style={{ padding: "0 11px" }}><Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} /></div>) },
 					{ divider: true },
-					{ action: "custom-button", tooltip: "A custom button of type primary!", jsx: (<div><Button id={"btn1"} size="field" kind="primary" >Custom button</Button></div>) },
+					{ action: "custom-button", tooltip: "A custom button of type primary!",
+						jsx: (<div className="toolbar-custom-button"><Button id={"btn1"} size="field" kind="primary">Custom button </Button></div>) },
 					{ divider: true }
 				]
 			};
