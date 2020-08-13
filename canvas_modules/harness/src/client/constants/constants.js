@@ -99,6 +99,7 @@ _defineConstant("TOOLBAR_TYPE_SINGLE_BAR", "SingleLeftBarArray");
 _defineConstant("TOOLBAR_TYPE_BEFORE_AFTER", "TextBeforeAndAfter");
 _defineConstant("TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE", "CustomizedRightSide");
 _defineConstant("TOOLBAR_TYPE_CARBON_BUTTONS", "CarbonButtons");
+_defineConstant("TOOLBAR_TYPE_CUSTOM_ACTIONS", "CustomActions");
 
 _defineConstant("CHOOSE_FROM_LOCATION", "Choose from location...");
 
