@@ -102,6 +102,7 @@ $toolbar-divider-width: 1px;
 	display: inline-block;
 }
 
+
 .toolbar-overflow-item {
 	background-color: $ui-01;
 	display: inline-block;
@@ -185,6 +186,27 @@ $toolbar-divider-width: 1px;
 		hyphens: auto;
 	}
 }
+
+.toolbar-jsx-item {
+	height: 40px;
+	display: inline-flex;
+	align-items: center;
+	vertical-align: top;
+	position: relative;
+	background-color: $ui-01;
+	padding: 0;
+}
+
+.toolbar-overflow-jsx-item {
+	height: 38px;
+	display: inline-flex;
+	align-items: center;
+	vertical-align: top;
+	position: relative;
+	// background-color: $ui-01;
+	padding: 0;
+}
+
 
 .toolbar-divider {
 	border-right: $toolbar-divider-width solid $ui-03;
