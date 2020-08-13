@@ -59,6 +59,7 @@ class TextareaControl extends React.Component {
 					value={value}
 					labelText={this.props.control.label ? this.props.control.label.text : ""}
 					hideLabel
+					light
 				/>
 			);
 		let display = textArea;

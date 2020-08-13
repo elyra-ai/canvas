@@ -25,7 +25,7 @@ import Icon from "./../../../icons/icon.jsx";
 import { isEmpty } from "lodash";
 import * as PropertyUtils from "./../../util/property-utils";
 import * as ControlUtils from "./../../util/control-utils";
-import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, CARBON_ICONS } from "./../../constants/constants";
+import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import { v4 as uuid4 } from "uuid";
 import { STATES } from "./../../constants/constants.js";
 import { Type, ParamRole } from "./../../constants/form-constants.js";
@@ -267,7 +267,6 @@ class SummaryPanel extends React.Component {
 		const link = (<div className="properties-summary-link-container">
 			<IconButton
 				className="properties-summary-link-button"
-				icon={<Icon type={CARBON_ICONS.ADD} />}
 				onClick={this.handleLinkClicked}
 			>
 				{this.props.panel.label}
