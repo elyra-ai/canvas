@@ -731,7 +731,7 @@ class App extends React.Component {
 
 	getZoomToReveal(nodeId) {
 		this.log("Zoom object requested");
-		return this.canvasController.getZoomToReveal([nodeId], { x: 10, y: 10 }); // Need to pass node Id in an array
+		return this.canvasController.getZoomToReveal([nodeId], "center"); // Need to pass node Id in an array
 	}
 
 	initLocale() {
