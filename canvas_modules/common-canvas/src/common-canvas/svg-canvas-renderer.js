@@ -1399,9 +1399,12 @@ export default class SVGCanvasRenderer {
 			let xOffset;
 			let yOffset;
 
-			if (position === "center") {
-				xOffset = transformedSVGRect.x + (transformedSVGRect.width / 2) - (canv.left + (canv.width / 2));
-				yOffset = transformedSVGRect.y + (transformedSVGRect.height / 2) - (canv.top + (canv.height / 2));
+			if (position && typeof position.x !== "undefined" && typeof position.y !== "undefined") {
+				xOffset = transformedSVGRect.x + (transformedSVGRect.width * position.x / 100) - (canv.left + (canv.width / 2));
+				yOffset = transformedSVGRect.y + (transformedSVGRect.height * position.y / 100) - (canv.top + (canv.height / 2));
+
+				// xOffset = transformedSVGRect.x + (transformedSVGRect.width / 2) - (canv.left + (canv.width / 2));
+				// yOffset = transformedSVGRect.y + (transformedSVGRect.height / 2) - (canv.top + (canv.height / 2));
 
 			} else {
 				if (canv.right > transformedSVGRect.x + transformedSVGRect.width) {

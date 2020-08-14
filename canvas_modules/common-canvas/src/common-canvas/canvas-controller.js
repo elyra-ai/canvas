@@ -1250,11 +1250,10 @@ export default class CanvasController {
 	// identified by the objectIds array to 'reveal' the objects in the viewport.
 	// The zoom object returned can be provided to the CanvasController.zoomTo()
 	// method to perform the zoom/pan action.
-	// If the position parameter is set to "center" it will return a zoom object
-	// to always pan the objects to the center of the viewport regardless of where
-	// they currently are positioned. If the position parameter is set to "side"
-	// or undefined (omitted), and all the objects are fully within the canvas
-	// viewport, it will return null. This can be used to detect whether the
+	// The position parameter is an object with "x" and "y" percentage properties. If passed in,
+	// it will return a zoom object that will pan the object to those percentages on the screen.
+	// If the position parameter is null, or undefined (omitted) and all the objects are fully
+	// within the canvas viewport, it will return null. This can be used to detect whether the
 	// objects are fully visible or not. Otherwise it will return a zoom object
 	// which can be used to pan the objects into the viewport so they appear at
 	// the nearest side to where they are currently positioned.
@@ -1267,10 +1266,10 @@ export default class CanvasController {
 	//    default scale size.
 	// Parameters:
 	// objectIds - An array of nodes and/or comment IDs.
-	// position - Optional. Can be set to "center" or "side". If omitted it
-	//            defaults to "side". If set to "center" the zoom will pan the
-	//            objects to the center of the viewport. If set to "side" (or
-	//            omitted) the returned zoom will pan the canvas so the objects
+	// position - Optional. An object that can be set to with an "x" and "y",
+	//            each between 0 and 100. The zoom will pan the objects to the
+	//            given viewport percentages.
+	//            If omitted, the returned zoom will pan the canvas so the objects
 	//            are in the viewport at the nearest side to where they are
 	//            currently located.
 	getZoomToReveal(objectIds, position) {
