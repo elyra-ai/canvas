@@ -157,7 +157,7 @@ export default class SidePanelAPI extends React.Component {
 		} else if (operation === API_ZOOM_CANVAS_TO_REVEAL) {
 			nodes = this.getNodePortList(this.props.apiConfig.getCanvasInfo().nodes);
 			if (!isEmpty(nodes)) {
-				const zoomObj = this.props.apiConfig.getZoomToReveal(nodes[0].value);
+				const zoomObj = this.props.apiConfig.getZoomToReveal(nodes[0].value, this.state.zoomXPos, this.state.zoomYPos);
 				newZoomObj = zoomObj ? JSON.stringify(newZoomObj) : "";
 			}
 		}
@@ -215,7 +215,7 @@ export default class SidePanelAPI extends React.Component {
 				}
 			} else if (this.props.apiConfig.selectedOperation === API_ZOOM_CANVAS_TO_REVEAL) {
 				// get list of output ports for the selected node and select the first one by default
-				const zoomObj = this.props.apiConfig.getZoomToReveal(existingNode.id);
+				const zoomObj = this.props.apiConfig.getZoomToReveal(existingNode.id, this.state.zoomXPos, this.state.zoomYPos);
 				newState.zoomObject = zoomObj ? JSON.stringify(zoomObj) : "";
 			}
 		}
@@ -279,6 +279,18 @@ export default class SidePanelAPI extends React.Component {
 				stateObj.isValidPaletteItem = false;
 			}
 			break;
+		case "zoomXPos": {
+			stateObj.zoomXPos = evt.target.value;
+			const zoomObj = this.props.apiConfig.getZoomToReveal(this.state.nodeId, stateObj.zoomXPos, this.state.zoomYPos);
+			stateObj.zoomObject = zoomObj ? JSON.stringify(zoomObj) : "";
+			break;
+		}
+		case "zoomYPos": {
+			stateObj.zoomYPos = evt.target.value;
+			const zoomObj = this.props.apiConfig.getZoomToReveal(this.state.nodeId, this.state.zoomXPos, stateObj.zoomYPos);
+			stateObj.zoomObject = zoomObj ? JSON.stringify(zoomObj) : "";
+			break;
+		}
 		default: {
 			break;
 		}
@@ -772,7 +784,30 @@ export default class SidePanelAPI extends React.Component {
 						items={this.dropdownOptions(this.state.nodes)}
 					/>
 				</div>
-				<div className="harness-sidepanel-spacer" />
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer1" />
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer2" />
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-x-content">
+					<TextArea
+						labelText="X position"
+						rows={1}
+						placeholder="X percent offset"
+						onChange={this.onFieldChange.bind(this, "zoomXPos")}
+						value={this.state.zoomXPos}
+					/>
+				</div>
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer3" />
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer4" />
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-y-content">
+					<TextArea
+						labelText="Y position"
+						rows={1}
+						placeholder="Y percent offset"
+						onChange={this.onFieldChange.bind(this, "zoomYPos")}
+						value={this.state.zoomYPos}
+					/>
+				</div>
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer5" />
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer6" />
 				<TextArea
 					labelText="Zoom Object"
 					rows={4}

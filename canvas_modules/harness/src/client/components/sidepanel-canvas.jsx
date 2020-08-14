@@ -68,7 +68,8 @@ import {
 	TOOLBAR_TYPE_SINGLE_BAR,
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
-	TOOLBAR_TYPE_CARBON_BUTTONS
+	TOOLBAR_TYPE_CARBON_BUTTONS,
+	TOOLBAR_TYPE_CUSTOM_ACTIONS
 } from "../constants/constants.js";
 import FormsService from "../services/FormsService";
 
@@ -991,6 +992,10 @@ export default class SidePanelForms extends React.Component {
 				<RadioButton
 					value={TOOLBAR_TYPE_CARBON_BUTTONS}
 					labelText={TOOLBAR_TYPE_CARBON_BUTTONS}
+				/>
+				<RadioButton
+					value={TOOLBAR_TYPE_CUSTOM_ACTIONS}
+					labelText={TOOLBAR_TYPE_CUSTOM_ACTIONS}
 				/>
 			</RadioButtonGroup>
 		</div>);
