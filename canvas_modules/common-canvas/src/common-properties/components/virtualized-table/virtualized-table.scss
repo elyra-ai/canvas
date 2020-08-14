@@ -32,19 +32,8 @@ $properties-vt-checkbox-margin: 5px;
 
 		.properties-vt-row-disabled {
 			opacity: 0.5;
-
 			&:hover {
-				border: 1px solid transparent;
 				border-bottom: 1px solid $ui-03;
-			}
-		}
-
-		div[role="properties-header-row"] {
-			border-bottom: 1px solid $hover-selected-ui;
-			&:hover {
-				border: 1px solid transparent;
-				border-bottom: 1px solid $hover-selected-ui;
-				background-color: $ui-03;
 			}
 		}
 	}
@@ -84,15 +73,22 @@ $properties-vt-checkbox-margin: 5px;
 		flex: 0 1 $properties-vt-checkbox-width;
 	}
 
+	.properties-vt-double-click:first-of-type {
+		.properties-vt-row-class {
+			border-top: 1px solid transparent;
+			&.properties-vt-row-selected{
+				border-top: 1px solid $hover-selected-ui;
+			}
+		}
+	}
+
 	.properties-vt-row-class {
 		line-height: 20px;
 		font-size: 14px;
-		border: 1px solid transparent;
 		border-bottom: 1px solid $ui-03;
 
 		&:hover {
 			background-color: $hover-row;
-			border: 1px solid $interactive-01;
 		}
 
 		// Required for numberfields within react-virtualized table cell
@@ -113,6 +109,7 @@ $properties-vt-checkbox-margin: 5px;
 
 	.properties-vt-row-selected {
 		background-color: $selected-ui;
+		border-bottom: 1px solid $hover-selected-ui;
 		&:hover {
 			background-color: $hover-selected-ui;
 		}
@@ -131,7 +128,6 @@ $properties-vt-checkbox-margin: 5px;
 		.properties-vt-row-selected {
 			border-left: 4px solid $interactive-01;
 			padding-left: 0;
-
 			&:not(.properties-vt-row-disabled):hover {
 				border-left: 4px solid $interactive-01;
 			}

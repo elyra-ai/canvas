@@ -46,8 +46,7 @@
 	background-color: $ui-01;
 	justify-content: space-between;
 	align-items: center;
-	padding-left: 20px;
-	padding-right: 20px;
+	padding: 0 $spacing-06;
 	border: 0; // override for button styling
 	outline: none; // override for button styling
 	border-bottom: 1px solid $ui-03;
@@ -64,7 +63,7 @@
 
 .properties-category-content {
 	height: 100%;
-	padding: 0 24px;
+	padding: $spacing-04 $spacing-06 $spacing-06 $spacing-06;
 	border-bottom: 1px solid $ui-03;
 	display: none;
 	&.show {
@@ -132,20 +131,19 @@
 .properties-static-text-container {
 	display: flex;
 	align-items: center;
-	padding: 4px 0;
+	padding: $spacing-02 0;
 	.properties-static-text {
-		cursor: text;
-		font-size: 14px;
+		@include carbon--type-style("body-short-01");
 		color: $text-01;
 		&.info {
-			font-style: italic;
+			@include carbon--type-style("label-01");
 			color: $text-02;
 		}
 	}
 	svg {
-		width: 17px;
-		height: 17px;
-		margin-right: 10px;
+		width: 16px;
+		height: 16px;
+		margin-right: $spacing-03;
 	}
 }
 
@@ -156,9 +154,9 @@
 
 .properties-link-text-container {
 	display: flex;
-	padding: 4px 0;
+	padding: $spacing-04 0 0 0;
 	svg {
-		margin-right: 4px;
+		margin-right: $spacing-05;
 		margin-top: 1px;
 		width: 16px;
 		height: 16px;

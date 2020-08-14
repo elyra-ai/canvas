@@ -48,7 +48,6 @@ $row-left-padding: 4px;
 	width: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
-	border: 1px solid $ui-03;
 	background-color: $ui-01;
 	display: flex; // address scrollbar with mouse issue
 	flex-direction: column; // address scrollbar with mouse issue
@@ -66,7 +65,6 @@ $row-left-padding: 4px;
 .properties-ft-container-absolute {
 	height: 100%;
 	width: 100%;
-	border: 1px solid $ui-03;
 	background-color: $ui-01;
 	&.error {
 		border: 1px solid $support-01;
@@ -83,11 +81,6 @@ $row-left-padding: 4px;
 		background-color: $ui-03;
 		display: inline-flex;
 		height: 2.5em;
-
-		&:hover {
-			border: 1px solid transparent;
-		}
-
 		.properties-autosized-vt-header {
 			&:focus {
 				outline: none;

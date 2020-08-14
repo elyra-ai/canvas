@@ -20,10 +20,8 @@
 		display: none;
 	}
 	button > img {
-		padding-left: 2px;
-		padding-right: 2px;
+		padding: 0 $spacing-03;
 		height: 16px;
-		width: 16px;
 	}
 	&.error {
 		button {
