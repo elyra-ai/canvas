@@ -15,21 +15,10 @@
  */
 
 .properties-icon-button {
-	&.bx--btn--ghost.bx--btn--sm { // override Carbon 10 to align items
-		margin-left: -3px;
-		padding-left: 0;
-		padding-right: 0;
-	}
-
 	> svg.properties-icon  {
 		fill: $interactive-01;
-		margin-left: 8px;
+		margin-left: $spacing-03;
 	}
-	span {
-		@include carbon--type-style("body-long-01");
-		color: $interactive-01;
-	}
-
 	&:hover > svg {
 		fill: $hover-primary;
 	}

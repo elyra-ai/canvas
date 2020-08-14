@@ -23,7 +23,6 @@ export default class IconButton extends Component {
 
 	render() {
 		const icon = this.props.icon ? this.props.icon : null;
-		const label = <span disabled={this.props.disabled} className="properties-icon-button-label">{this.props.children}</span>;
 		const className = classNames("properties-icon-button", this.props.className, { "hide": this.props.hide });
 
 		return (
@@ -34,7 +33,7 @@ export default class IconButton extends Component {
 				size="small"
 				kind="ghost"
 			>
-				{label}
+				{this.props.children}
 				{icon}
 			</Button>
 		);

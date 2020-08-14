@@ -5,8 +5,6 @@
   "structureListEditor.addButton.tooltip": "[Esperanto~Add new row~eo]",
   "structureTable.addButton.label": "[Esperanto~Add Columns~eo]",
   "structureTable.removeButton.label": "[Esperanto~Remove Columns~eo]",
-  "structureTable.addButton.tooltip": "[Esperanto~Select columns to add~~eo]",
-  "structureTable.removeButton.tooltip": "[Esperanto~Remove selected columns~~~~eo]",
   "fieldPicker.saveButton.label": "[Esperanto~Select Fields for~~~eo]",
   "fieldPicker.saveButton.tooltip": "[Esperanto~Save and return~eo]",
   "fieldPicker.resetButton.label": "[Esperanto~Reset ~eo]",

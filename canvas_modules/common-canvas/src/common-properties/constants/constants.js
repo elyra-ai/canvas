@@ -28,9 +28,7 @@ _defineConstant("MESSAGE_KEYS", {
 	STRUCTURELISTEDITOR_REMOVEBUTTON_TOOLTIP: "structureListEditor.removeButton.tooltip",
 	STRUCTURELISTEDITOR_ADDBUTTON_TOOLTIP: "structureListEditor.addButton.tooltip",
 	STRUCTURETABLE_ADDBUTTON_LABEL: "structureTable.addButton.label",
-	STRUCTURETABLE_ADDBUTTON_TOOLTIP: "structureTable.addButton.tooltip",
 	STRUCTURETABLE_REMOVEBUTTON_LABEL: "structureTable.removeButton.label",
-	STRUCTURETABLE_REMOVEBUTTON_TOOLTIP: "structureTable.removeButton.tooltip",
 	FIELDPICKER_SAVEBUTTON_LABEL: "fieldPicker.saveButton.label",
 	FIELDPICKER_SAVEBUTTON_TOOLTIP: "fieldPicker.saveButton.tooltip",
 	FIELDPICKER_RESETBUTTON_LABEL: "fieldPicker.resetButton.label",
@@ -197,7 +195,8 @@ _defineConstant("CARBON_ICONS", {
 		RIGHT: "chevron-right"
 	},
 	CALCULATOR: "calculator",
-	ADD: "add-alt",
+	ADD: "add",
+	REMOVE: "remove",
 	EDIT: "edit",
 	MEASUREMENTS: {
 		EMPTY: "measurement-empty",

@@ -5,8 +5,6 @@
   "structureListEditor.addButton.tooltip": "Add new row",
   "structureTable.addButton.label": "Add Columns",
   "structureTable.removeButton.label": "Remove Columns",
-  "structureTable.addButton.tooltip": "Select columns to add",
-  "structureTable.removeButton.tooltip": "Remove selected columns",
   "fieldPicker.saveButton.label": "Select Fields for",
   "fieldPicker.saveButton.tooltip": "Save and return",
   "fieldPicker.resetButton.label": "Reset ",

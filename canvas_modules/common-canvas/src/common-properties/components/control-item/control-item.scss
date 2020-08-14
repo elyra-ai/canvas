@@ -30,14 +30,14 @@
 .properties-label-container {
 	display: flex;
 	align-items: center;
-	padding-bottom: 5px;
+	padding-bottom: $spacing-03;
 	label, .properties-required-indicator {
 		@include carbon--type-style("label-01");
 		color: $text-02;
 	}
 	.properties-number-generator {
-		margin-left: 3px;
-		padding: 2px;
+		margin-left: $spacing-02;
+		padding: $spacing-01;
 		min-height: 30px;
 		span {
 			text-decoration: underline;
@@ -50,7 +50,7 @@
 		display: flex;
 		width: 16px;
 		height: 16px;
-		margin-left: 3px;
+		margin-left: $spacing-02;
 	}
 }
 
