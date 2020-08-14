@@ -15,7 +15,7 @@
  */
 
 .properties-control-item {
-	padding: 5px 0;
+	padding: 12px 0;
 	&.hide {
 		display: none;
 	}
@@ -31,9 +31,9 @@
 	display: flex;
 	align-items: center;
 	padding-bottom: 5px;
-	label {
-		@include carbon--type-style("productive-heading-01");
-		color: $text-01;
+	label, .properties-required-indicator {
+		@include carbon--type-style("label-01");
+		color: $text-02;
 	}
 	.properties-number-generator {
 		margin-left: 3px;
@@ -51,20 +51,10 @@
 		width: 16px;
 		height: 16px;
 		margin-left: 3px;
-		svg {
-			width: 16px;
-			height: 16px;
-			margin: 0 7px 0 3px;
-		}
 	}
 }
 
 .properties-control-description {
 	@include carbon--type-style("helper-text-01");
 	color: $text-02;
-}
-
-.properties-required-indicator {
-	color: $text-01;
-	font-weight: 700;
 }
