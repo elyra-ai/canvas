@@ -18,12 +18,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Checkbox } from "carbon-components-react";
-import IconButton from "./../components/icon-button";
+import { Button } from "carbon-components-react";
 import FlexibleTable from "./../components/flexible-table";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
 import Icon from "./../../icons/icon.jsx";
+import { Add16, Delete16 } from "@carbon/icons-react";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 
 import { MESSAGE_KEYS, STATES,
@@ -447,6 +448,7 @@ export default class AbstractTable extends React.Component {
 			: this.removeSelected;
 		const removeButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
+		const removeDisabled = !this.state.enableRemoveIcon || tableState === STATES.DISABLED;
 
 
 		let addButtonDisabled = false;
@@ -463,22 +465,26 @@ export default class AbstractTable extends React.Component {
 
 		return (
 			<div className="properties-at-buttons-container">
-				<IconButton
+				<Button
 					className="properties-remove-fields-button"
-					icon={<Icon type={CARBON_ICONS.REMOVE} />}
+					disabled={removeDisabled}
 					onClick={removeOnClick}
-					disabled={!this.state.enableRemoveIcon || tableState === STATES.DISABLED}
+					size="small"
+					kind="ghost"
+					renderIcon={Delete16}
 				>
 					{removeButtonLabel}
-				</IconButton>
-				<IconButton
+				</Button>
+				<Button
 					className="properties-add-fields-button"
-					icon={<Icon type={CARBON_ICONS.ADD} />}
-					onClick={this.addOnClick.bind(this, this.props.propertyId)}
 					disabled={addButtonDisabled}
+					onClick={this.addOnClick.bind(this, this.props.propertyId)}
+					size="small"
+					kind="ghost"
+					renderIcon={Add16}
 				>
 					{addButtonLabel}
-				</IconButton>
+				</Button>
 			</div>
 		);
 	}
