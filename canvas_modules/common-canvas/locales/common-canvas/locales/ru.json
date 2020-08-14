@@ -1,1 +1,24 @@
-{}
+{
+	"canvas.addComment": "Новый комментарий",
+	"canvas.deleteObject": "Удалить",
+	"canvas.redo": "Повторить",
+	"canvas.selectAll": "Выделить все",
+	"canvas.undo": "Отменить",
+	"canvas.validateFlow": "Проверить поток",
+	"edit.copySelection": "Скопировать",
+	"edit.cutSelection": "Вырезать",
+	"edit.pasteSelection": "Вставить",
+	"link.deleteLink": "Удалить",
+	"menu.highlight": "Выделить",
+	"menu.highlightBranch": "Выделить ветвь",
+	"menu.highlightDownstream": "Выделить нисходящий поток",
+	"menu.highlightUpstream": "Выделить восходящий поток",
+	"menu.unhighlight": "Отменить выделение",
+	"node.collapseSupernodeInPlace": "Свернуть надузел",
+	"node.createSupernode": "Создать надузел",
+	"node.disconnectNode": "Разъединиться",
+	"node.editMenu": "Правка",
+	"node.editNode": "Открыть",
+	"node.expandSupernodeInPlace": "Развернуть надузел",
+	"node.saveToPalette": "Сохранить в палитру"
+}

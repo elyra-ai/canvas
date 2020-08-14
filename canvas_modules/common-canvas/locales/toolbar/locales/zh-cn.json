@@ -1,1 +1,5 @@
-{}
+{
+	"toolbar.zoomIn": "放大",
+	"toolbar.zoomOut": "缩小",
+	"toolbar.zoomToFit": "缩放至合适大小"
+}

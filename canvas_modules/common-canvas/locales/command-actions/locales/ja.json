@@ -1,1 +1,9 @@
-{}
+{
+	"palette.saved.nodes.description": "このカテゴリーのノードは、以前にフローから保存されました。",
+	"palette.saved.nodes.label": "保存されたノード",
+	"supernode.binding.node.description": "スーパーノードのバインディング・ノード",
+	"supernode.binding.node.label": "バインディング",
+	"supernode.new.port.label": "スーパーノードのバインディング・ポート",
+	"supernode.template.description": "このスーパーノードは、共通のキャンバスによって作成されました。",
+	"supernode.template.label": "スーパーノード"
+}
