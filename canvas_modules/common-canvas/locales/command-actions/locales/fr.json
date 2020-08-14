@@ -1,1 +1,16 @@
-{}
+{
+	"PALETTE_SAVED_NODES_DESCRIPTION": "Les noeuds de cette catégorie étaient précédemment sauvegardés à partir d'un flux.",
+	"PALETTE_SAVED_NODES_LABEL": "Noeuds sauvegardés",
+	"SUPERNODE_BINDING_NODE_DESCRIPTION": "Noeud de liaison de super noeud",
+	"SUPERNODE_BINDING_NODE_LABEL": "Liaison",
+	"SUPERNODE_NEW_PORT_LABEL": "Port de liaison pour super noeud",
+	"SUPERNODE_TEMPLATE_DESCRIPTION": "Ce super noeud a été créé par un canevas commun.",
+	"SUPERNODE_TEMPLATE_LABEL": "Super noeud",
+	"palette.saved.nodes.description": "Les noeuds de cette catégorie étaient précédemment sauvegardés à partir d'un flux.",
+	"palette.saved.nodes.label": "Noeuds sauvegardés",
+	"supernode.binding.node.description": "Noeud de liaison de super noeud",
+	"supernode.binding.node.label": "Liaison",
+	"supernode.new.port.label": "Port de liaison pour super noeud",
+	"supernode.template.description": "Ce super noeud a été créé par un canevas commun.",
+	"supernode.template.label": "Super noeud"
+}

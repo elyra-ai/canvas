@@ -1,1 +1,8 @@
-{}
+{
+	"TOOLBAR_ZOOMIN": "放大",
+	"TOOLBAR_ZOOMOUT": "缩小",
+	"TOOLBAR_ZOOMTOFIT": "缩放至合适大小",
+	"toolbar.zoomIn": "放大",
+	"toolbar.zoomOut": "缩小",
+	"toolbar.zoomToFit": "缩放至合适大小"
+}

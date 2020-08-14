@@ -1,1 +1,16 @@
-{}
+{
+	"PALETTE_SAVED_NODES_DESCRIPTION": "Os nós nesta categoria foram salvos anteriormente por meio de um fluxo.",
+	"PALETTE_SAVED_NODES_LABEL": "Nós salvos",
+	"SUPERNODE_BINDING_NODE_DESCRIPTION": "Nó de ligação de supernó",
+	"SUPERNODE_BINDING_NODE_LABEL": "Ligações",
+	"SUPERNODE_NEW_PORT_LABEL": "Porta de ligação para o supernó",
+	"SUPERNODE_TEMPLATE_DESCRIPTION": "Este supernó foi criado por tela comum.",
+	"SUPERNODE_TEMPLATE_LABEL": "Supernó",
+	"palette.saved.nodes.description": "Os nós nesta categoria foram salvos anteriormente por meio de um fluxo.",
+	"palette.saved.nodes.label": "Nós salvos",
+	"supernode.binding.node.description": "Nó de ligação de supernó",
+	"supernode.binding.node.label": "Ligações",
+	"supernode.new.port.label": "Porta de ligação para o supernó",
+	"supernode.template.description": "Este supernó foi criado por tela comum.",
+	"supernode.template.label": "Supernó"
+}

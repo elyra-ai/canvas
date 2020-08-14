@@ -1,1 +1,8 @@
-{}
+{
+	"TOOLBAR_ZOOMIN": "Aumentar zoom",
+	"TOOLBAR_ZOOMOUT": "Reduzir zoom",
+	"TOOLBAR_ZOOMTOFIT": "Zoom para Ajustar",
+	"toolbar.zoomIn": "Aumentar zoom",
+	"toolbar.zoomOut": "Reduzir zoom",
+	"toolbar.zoomToFit": "Zoom para Ajustar"
+}

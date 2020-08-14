@@ -1,1 +1,16 @@
-{}
+{
+	"PALETTE_SAVED_NODES_DESCRIPTION": "このカテゴリーのノードは、以前にフローから保存されました。",
+	"PALETTE_SAVED_NODES_LABEL": "保存されたノード",
+	"SUPERNODE_BINDING_NODE_DESCRIPTION": "スーパーノードのバインディング・ノード",
+	"SUPERNODE_BINDING_NODE_LABEL": "バインディング",
+	"SUPERNODE_NEW_PORT_LABEL": "スーパーノードのバインディング・ポート",
+	"SUPERNODE_TEMPLATE_DESCRIPTION": "このスーパーノードは、共通のキャンバスによって作成されました。",
+	"SUPERNODE_TEMPLATE_LABEL": "スーパーノード",
+	"palette.saved.nodes.description": "このカテゴリーのノードは、以前にフローから保存されました。",
+	"palette.saved.nodes.label": "保存されたノード",
+	"supernode.binding.node.description": "スーパーノードのバインディング・ノード",
+	"supernode.binding.node.label": "バインディング",
+	"supernode.new.port.label": "スーパーノードのバインディング・ポート",
+	"supernode.template.description": "このスーパーノードは、共通のキャンバスによって作成されました。",
+	"supernode.template.label": "スーパーノード"
+}
