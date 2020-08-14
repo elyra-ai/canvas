@@ -66,10 +66,13 @@ $properties-vt-checkbox-margin: 5px;
 				width: 100%;
 
 				span {
+					@include carbon--type-style("productive-heading-01");
+					color: $text-01;
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;
 					width: 100%;
+					line-height: unset;
 				}
 			}
 		}

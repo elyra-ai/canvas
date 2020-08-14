@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-.properties-summary-panel {
+.properties-summary-panel.properties-summary-panel {
+	padding: 12px 0 12px 8px;
 	&.hide {
 		display: none;
 	}
