@@ -1246,18 +1246,19 @@ export default class CanvasController {
 		}
 	}
 
-	// Returns a zoom object (or null) required to pan the objects (nodes and/or comments)
+	// Returns a zoom object required to pan the objects (nodes and/or comments)
 	// identified by the objectIds array to 'reveal' the objects in the viewport.
 	// The zoom object returned can be provided to the CanvasController.zoomTo()
 	// method to perform the zoom/pan action.
-	// If the position parameter is set to "center" it will return a zoom object
-	// to always pan the objects to the center of the viewport regardless of where
-	// they currently are positioned. If the position parameter is set to "side"
-	// or undefined (omitted), and all the objects are fully within the canvas
-	// viewport, it will return null. This can be used to detect whether the
-	// objects are fully visible or not. Otherwise it will return a zoom object
-	// which can be used to pan the objects into the viewport so they appear at
-	// the nearest side to where they are currently positioned.
+	// If the xPos and yPos variables are provided it will return a zoom object
+	// to pan the objects to a location specified by a percentage offset of the
+	// viewport width and height respectively.
+	// If the xPos and yPos parameters are undefined (omitted) and all the
+	// objects are fully within the canvas viewport, it will return null.
+	// This can be used to detect whether the objects are fully visible or not.
+	// Otherwise it will return a zoom object which can be used to pan the
+	// objects into the viewport so they appear at the nearest side of the
+	// viewport to where they are currently positioned.
 	// The zoom object has three fields:
 	// x: Is the horizontal translate amount which is a number indicating the
 	//    pixel amount to move. Negative left and positive right
@@ -1267,15 +1268,11 @@ export default class CanvasController {
 	//    default scale size.
 	// Parameters:
 	// objectIds - An array of nodes and/or comment IDs.
-	// position - Optional. Can be set to "center" or "side". If omitted it
-	//            defaults to "side". If set to "center" the zoom will pan the
-	//            objects to the center of the viewport. If set to "side" (or
-	//            omitted) the returned zoom will pan the canvas so the objects
-	//            are in the viewport at the nearest side to where they are
-	//            currently located.
-	getZoomToReveal(objectIds, position) {
+	// xPos - Optional. Can be set to percentage offset of the viewport width.
+	// yPos - Optional. Can be set to percentage offset of the viewport height.
+	getZoomToReveal(objectIds, xPos, yPos) {
 		if (this.commonCanvas) {
-			return this.commonCanvas.getZoomToReveal(objectIds, position);
+			return this.commonCanvas.getZoomToReveal(objectIds, xPos, yPos);
 		}
 		return null;
 	}

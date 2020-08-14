@@ -732,9 +732,9 @@ class App extends React.Component {
 		this.log("Set new link decorations", { linkId: linkId, newDecorations: newDecs });
 	}
 
-	getZoomToReveal(nodeId) {
+	getZoomToReveal(nodeId, xOffset, yOffset) {
 		this.log("Zoom object requested");
-		return this.canvasController.getZoomToReveal([nodeId], "center"); // Need to pass node Id in an array
+		return this.canvasController.getZoomToReveal([nodeId], xOffset, yOffset); // Need to pass node Id in an array
 	}
 
 	initLocale() {
