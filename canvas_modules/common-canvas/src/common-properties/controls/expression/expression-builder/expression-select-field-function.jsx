@@ -27,6 +27,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.recentUseCat = formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_RECENTLY_USED);
 		this.recentUseCatInfo = {
@@ -58,7 +59,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			currentFieldDataset: this.fields.field_table_info[0].field_value_groups
 		};
 		this.controller = props.controller;
-		this.reactIntl = props.controller.getReactIntl();
 		this.onFunctionCatChange = this.onFunctionCatChange.bind(this);
 		this.onFieldCatChange = this.onFieldCatChange.bind(this);
 		this.onFieldFilter = this.onFieldFilter.bind(this);

@@ -381,9 +381,10 @@ export default class FieldPicker extends React.Component {
 				}
 			}
 			const filterTooltipId = uuid4() + "-tooltip-filters-" + ind;
+			const dataTypeLabel = PropertyUtils.formatMessage(that.props.controller.getReactIntl(), MESSAGE_KEYS[`FIELDPICKER_${filter.type.toUpperCase()}_LABEL`]);
 			const tooltip = (
 				<div className="properties-tooltips">
-					{filter.type}
+					{dataTypeLabel}
 				</div>
 			);
 			const row = (
