@@ -1,11 +1,4 @@
 {
-	"PALETTE_SAVED_NODES_DESCRIPTION": "Los nodos de esta categoría se han guardado previamente desde un flujo.",
-	"PALETTE_SAVED_NODES_LABEL": "Nodos guardados",
-	"SUPERNODE_BINDING_NODE_DESCRIPTION": "Nodo de enlace de supernodo",
-	"SUPERNODE_BINDING_NODE_LABEL": "Enlace",
-	"SUPERNODE_NEW_PORT_LABEL": "Puerto de enlace para supernodo",
-	"SUPERNODE_TEMPLATE_DESCRIPTION": "Este supernodo se ha creado mediante common-canvas.",
-	"SUPERNODE_TEMPLATE_LABEL": "Supernodo",
 	"palette.saved.nodes.description": "Los nodos de esta categoría se han guardado previamente desde un flujo.",
 	"palette.saved.nodes.label": "Nodos guardados",
 	"supernode.binding.node.description": "Nodo de enlace de supernodo",

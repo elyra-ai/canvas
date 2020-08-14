@@ -1,11 +1,4 @@
 {
-	"PALETTE_SAVED_NODES_DESCRIPTION": "Knoten in dieser Kategorie wurden zuvor aus einem Ablauf gespeichert.",
-	"PALETTE_SAVED_NODES_LABEL": "Gespeicherte Knoten",
-	"SUPERNODE_BINDING_NODE_DESCRIPTION": "Bindungsknoten für Superknoten",
-	"SUPERNODE_BINDING_NODE_LABEL": "Bindung",
-	"SUPERNODE_NEW_PORT_LABEL": "Bindungsport für Superknoten",
-	"SUPERNODE_TEMPLATE_DESCRIPTION": "Dieser Superknoten wurde mit common-canvas erstellt.",
-	"SUPERNODE_TEMPLATE_LABEL": "Superknoten",
 	"palette.saved.nodes.description": "Knoten in dieser Kategorie wurden zuvor aus einem Ablauf gespeichert.",
 	"palette.saved.nodes.label": "Gespeicherte Knoten",
 	"supernode.binding.node.description": "Bindungsknoten für Superknoten",

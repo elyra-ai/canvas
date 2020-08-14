@@ -1,7 +1,4 @@
 {
-	"TOOLBAR_ZOOMIN": "Vergrößern",
-	"TOOLBAR_ZOOMOUT": "Verkleinern",
-	"TOOLBAR_ZOOMTOFIT": "Automatisch zoomen",
 	"toolbar.zoomIn": "Vergrößern",
 	"toolbar.zoomOut": "Verkleinern",
 	"toolbar.zoomToFit": "Automatisch zoomen"

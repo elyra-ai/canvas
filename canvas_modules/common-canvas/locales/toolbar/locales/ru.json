@@ -1,7 +1,4 @@
 {
-	"TOOLBAR_ZOOMIN": "Увеличить",
-	"TOOLBAR_ZOOMOUT": "Уменьшить",
-	"TOOLBAR_ZOOMTOFIT": "Уместить",
 	"toolbar.zoomIn": "Увеличить",
 	"toolbar.zoomOut": "Уменьшить",
 	"toolbar.zoomToFit": "Уместить"

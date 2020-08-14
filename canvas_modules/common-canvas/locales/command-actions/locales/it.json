@@ -1,11 +1,4 @@
 {
-	"PALETTE_SAVED_NODES_DESCRIPTION": "I nodi in questa categoria sono già stati salvati da un flusso.",
-	"PALETTE_SAVED_NODES_LABEL": "Salva nodi",
-	"SUPERNODE_BINDING_NODE_DESCRIPTION": "Nodo binding supernodo",
-	"SUPERNODE_BINDING_NODE_LABEL": "Binding",
-	"SUPERNODE_NEW_PORT_LABEL": "Porta binding per supernodo",
-	"SUPERNODE_TEMPLATE_DESCRIPTION": "Questo supernodo è stato creato tramite Canvas comune.",
-	"SUPERNODE_TEMPLATE_LABEL": "Supernodo",
 	"palette.saved.nodes.description": "I nodi in questa categoria sono già stati salvati da un flusso.",
 	"palette.saved.nodes.label": "Salva nodi",
 	"supernode.binding.node.description": "Nodo binding supernodo",
