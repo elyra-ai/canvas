@@ -304,8 +304,8 @@ export default class SVGCanvasD3 {
 		this.renderer.zoomToFit();
 	}
 
-	getZoomToReveal(objectIds, position) {
-		return this.renderer ? this.renderer.getZoomToReveal(objectIds, position) : null;
+	getZoomToReveal(objectIds, xPos, yPos) {
+		return this.renderer ? this.renderer.getZoomToReveal(objectIds, xPos, yPos) : null;
 	}
 
 	getZoom() {

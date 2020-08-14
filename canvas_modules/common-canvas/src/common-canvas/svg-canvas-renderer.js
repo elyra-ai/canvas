@@ -1388,20 +1388,23 @@ export default class SVGCanvasRenderer {
 		this.zoomToFitForScale(newScale, canvasDimensions, viewPortDimensions);
 	}
 
-	getZoomToReveal(nodeIDs, position) {
+	getZoomToReveal(nodeIDs, xPos, yPos) {
 		const svgRect = this.getViewPortDimensions();
 		const transformedSVGRect = this.getTransformedSVGRect(svgRect, 0);
 		const nodes = this.getNodes(nodeIDs);
 		const canvasDimensions = this.getCanvasDimensions(nodes, []);
 		const canv = this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, 1, 10);
+		const xPosInt = parseInt(xPos, 10);
+		const yPosInt = typeof yPos === "undefined" ? xPosInt : parseInt(yPos, 10);
+
 
 		if (canv) {
 			let xOffset;
 			let yOffset;
 
-			if (position === "center") {
-				xOffset = transformedSVGRect.x + (transformedSVGRect.width / 2) - (canv.left + (canv.width / 2));
-				yOffset = transformedSVGRect.y + (transformedSVGRect.height / 2) - (canv.top + (canv.height / 2));
+			if (!Number.isNaN(xPosInt) && !Number.isNaN(yPosInt)) {
+				xOffset = transformedSVGRect.x + (transformedSVGRect.width * (xPosInt / 100)) - (canv.left + (canv.width / 2));
+				yOffset = transformedSVGRect.y + (transformedSVGRect.height * (yPosInt / 100)) - (canv.top + (canv.height / 2));
 
 			} else {
 				if (canv.right > transformedSVGRect.x + transformedSVGRect.width) {

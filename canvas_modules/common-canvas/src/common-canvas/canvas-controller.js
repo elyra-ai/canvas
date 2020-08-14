@@ -1273,9 +1273,9 @@ export default class CanvasController {
 	//            omitted) the returned zoom will pan the canvas so the objects
 	//            are in the viewport at the nearest side to where they are
 	//            currently located.
-	getZoomToReveal(objectIds, position) {
+	getZoomToReveal(objectIds, xPos, yPos) {
 		if (this.commonCanvas) {
-			return this.commonCanvas.getZoomToReveal(objectIds, position);
+			return this.commonCanvas.getZoomToReveal(objectIds, xPos, yPos);
 		}
 		return null;
 	}
