@@ -25,8 +25,7 @@ function _defineConstant(key, value) {
 _defineConstant("MESSAGE_KEYS", {
 	SUBPANEL_BUTTON_TOOLTIP: "subPanel.button.tooltip",
 	STRUCTURELISTEDITOR_ADDBUTTON_LABEL: "structureListEditor.addButton.label",
-	STRUCTURELISTEDITOR_REMOVEBUTTON_TOOLTIP: "structureListEditor.removeButton.tooltip",
-	STRUCTURELISTEDITOR_ADDBUTTON_TOOLTIP: "structureListEditor.addButton.tooltip",
+	STRUCTURELISTEDITOR_REMOVEBUTTON_LABEL: "structureListEditor.removeButton.label",
 	STRUCTURETABLE_ADDBUTTON_LABEL: "structureTable.addButton.label",
 	STRUCTURETABLE_REMOVEBUTTON_LABEL: "structureTable.removeButton.label",
 	FIELDPICKER_SAVEBUTTON_LABEL: "fieldPicker.saveButton.label",

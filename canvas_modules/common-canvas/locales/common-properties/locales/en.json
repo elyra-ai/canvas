@@ -1,10 +1,9 @@
 {
   "subPanel.button.tooltip": "Edit",
   "structureListEditor.addButton.label": "Add Value",
-  "structureListEditor.removeButton.tooltip": "Delete selected rows",
-  "structureListEditor.addButton.tooltip": "Add new row",
+  "structureListEditor.removeButton.label": "Remove",
   "structureTable.addButton.label": "Add Columns",
-  "structureTable.removeButton.label": "Remove Columns",
+  "structureTable.removeButton.label": "Remove",
   "fieldPicker.saveButton.label": "Select Fields for",
   "fieldPicker.saveButton.tooltip": "Save and return",
   "fieldPicker.resetButton.label": "Reset ",

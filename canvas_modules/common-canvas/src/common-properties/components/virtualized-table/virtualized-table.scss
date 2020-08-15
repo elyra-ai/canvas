@@ -40,7 +40,8 @@ $properties-vt-checkbox-margin: 5px;
 
 	.properties-vt-header-checkbox {
 		height: 40px;
-		padding-top: 5px;
+		display: flex;
+		align-items: center;
 		flex: 0 1 $properties-vt-checkbox-width;
 		margin-left: calc(#{$properties-vt-checkbox-margin} + 1px);
 	}
@@ -50,7 +51,7 @@ $properties-vt-checkbox-margin: 5px;
 
 		.properties-vt-column .bx--checkbox-wrapper {
 			margin-top: 0;
-
+			margin-bottom: 0;
 			.bx--checkbox-label {
 				width: 100%;
 

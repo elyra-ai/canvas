@@ -57,4 +57,5 @@
 .properties-control-description {
 	@include carbon--type-style("helper-text-01");
 	color: $text-02;
+	padding-bottom: $spacing-03;
 }

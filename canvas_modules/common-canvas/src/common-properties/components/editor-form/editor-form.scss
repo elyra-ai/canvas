@@ -22,7 +22,7 @@
 
 // styling when there is only 1 tab
 .properties-category {
-	padding: 8px 8px 8px 0;
+	padding: $spacing-04 $spacing-06 $spacing-06 $spacing-06;
 }
 
 .properties-category-container {
@@ -68,21 +68,6 @@
 	display: none;
 	&.show {
 		display: inherit;
-	}
-}
-
-.properties-sub-category-container {
-	padding: 5px 8px;
-	.properties-sub-category-title {
-		padding: 8px 0;
-		font-weight: 500;
-		font-size: 14px;
-	}
-	.properties-sub-panel-content {
-		> .properties-control-panel {
-			border-left: 5px solid $ui-03;
-			padding: 0 8px;
-		}
 	}
 }
 
@@ -148,8 +133,8 @@
 }
 
 .properties-h-separator {
-	margin-top: 15px;
-	margin-bottom: 15px;
+	margin-top: $spacing-05;
+	margin-bottom: $spacing-05;
 }
 
 .properties-link-text-container {
@@ -163,8 +148,6 @@
 		flex-shrink: 0;
 	}
 	.properties-link-text {
-		cursor: pointer;
-		font-size: 14px;
-		line-height: 1.4;
+		@include carbon--type-style("body-short-01");
 	}
 }

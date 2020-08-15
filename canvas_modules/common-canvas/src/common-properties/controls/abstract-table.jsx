@@ -446,8 +446,8 @@ export default class AbstractTable extends React.Component {
 		const removeOnClick = (tableButtonConfig && tableButtonConfig.removeButtonFunction)
 			? tableButtonConfig.removeButtonFunction
 			: this.removeSelected;
-		const removeButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-			MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
+		const removeButtonLabel = (tableButtonConfig && tableButtonConfig.removeButtonLabel) ? tableButtonConfig.removeButtonLabel
+			: PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
 		const removeDisabled = !this.state.enableRemoveIcon || tableState === STATES.DISABLED;
 
 
@@ -456,8 +456,7 @@ export default class AbstractTable extends React.Component {
 			? tableButtonConfig.addButtonFunction
 			: this.props.openFieldPicker;
 		const addButtonLabel = (tableButtonConfig && tableButtonConfig.addButtonLabel) ? tableButtonConfig.addButtonLabel
-			: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
+			: PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
 		if (tableState === STATES.DISABLED) {
 			addButtonDisabled = true;
 			this.addOnClickCallback = null;
