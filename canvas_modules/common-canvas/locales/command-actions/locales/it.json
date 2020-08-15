@@ -1,1 +1,9 @@
-{}
+{
+	"palette.saved.nodes.description": "I nodi in questa categoria sono già stati salvati da un flusso.",
+	"palette.saved.nodes.label": "Salva nodi",
+	"supernode.binding.node.description": "Nodo binding supernodo",
+	"supernode.binding.node.label": "Binding",
+	"supernode.new.port.label": "Porta binding per supernodo",
+	"supernode.template.description": "Questo supernodo è stato creato tramite Canvas comune.",
+	"supernode.template.label": "Supernodo"
+}

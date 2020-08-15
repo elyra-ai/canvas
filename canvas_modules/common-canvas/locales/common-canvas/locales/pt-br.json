@@ -1,1 +1,24 @@
-{}
+{
+	"canvas.addComment": "Novo comentário",
+	"canvas.deleteObject": "Excluir",
+	"canvas.redo": "Refazer",
+	"canvas.selectAll": "Selecionar todos",
+	"canvas.undo": "Desfazer",
+	"canvas.validateFlow": "Validar Fluxo",
+	"edit.copySelection": "Copiar",
+	"edit.cutSelection": "Cortar",
+	"edit.pasteSelection": "Colar",
+	"link.deleteLink": "Excluir",
+	"menu.highlight": "Destacar",
+	"menu.highlightBranch": "Destacar ramificação",
+	"menu.highlightDownstream": "Destacar recebimento de dados",
+	"menu.highlightUpstream": "Destacar envio de dados",
+	"menu.unhighlight": "Remover Destaque",
+	"node.collapseSupernodeInPlace": "Reduzir o supernó",
+	"node.createSupernode": "Criar o supernó",
+	"node.disconnectNode": "Desconectar",
+	"node.editMenu": "Editar",
+	"node.editNode": "Abrir",
+	"node.expandSupernodeInPlace": "Expandir o supernó",
+	"node.saveToPalette": "Salvar na paleta"
+}

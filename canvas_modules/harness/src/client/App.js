@@ -68,6 +68,8 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import { Edit32, Play32, StopFilledAlt32 } from "@carbon/icons-react";
 
+import { InlineLoading, Checkbox, Button } from "carbon-components-react";
+
 import {
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
@@ -104,7 +106,8 @@ import {
 	TOOLBAR_TYPE_SINGLE_BAR,
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
-	TOOLBAR_TYPE_CARBON_BUTTONS
+	TOOLBAR_TYPE_CARBON_BUTTONS,
+	TOOLBAR_TYPE_CUSTOM_ACTIONS
 } from "./constants/constants.js";
 
 import listview32 from "../graphics/list-view_32.svg";
@@ -729,9 +732,9 @@ class App extends React.Component {
 		this.log("Set new link decorations", { linkId: linkId, newDecorations: newDecs });
 	}
 
-	getZoomToReveal(nodeId) {
+	getZoomToReveal(nodeId, xOffset, yOffset) {
 		this.log("Zoom object requested");
-		return this.canvasController.getZoomToReveal([nodeId], "center"); // Need to pass node Id in an array
+		return this.canvasController.getZoomToReveal([nodeId], xOffset, yOffset); // Need to pass node Id in an array
 	}
 
 	initLocale() {
@@ -1674,9 +1677,9 @@ class App extends React.Component {
 				{ divider: true },
 				{ action: "undo", label: "Undo", enable: true },
 				{ action: "redo", label: "Redo", enable: true },
-				{ action: "cut", label: "Cut", enable: true },
-				{ action: "copy", label: "Copy", enable: true },
-				{ action: "paste", label: "Paste", enable: true },
+				{ action: "cut", label: "Cut", enable: true, tooltip: "Cut from clipboard" },
+				{ action: "copy", label: "Copy", enable: true, tooltip: "Copy from clipboard" },
+				{ action: "paste", label: "Paste", enable: true, tooltip: "Paste to canvas" },
 				{ action: "createAutoComment", label: "Add Comment", enable: true },
 				{ action: "deleteSelectedObjects", label: "Delete", enable: true },
 				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
@@ -1740,6 +1743,28 @@ class App extends React.Component {
 					{ action: "dis-secondary", label: "Secondary", enable: false, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit32 />) },
 					{ action: "dis-ghost", label: "Ghost", enable: false, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit32 />) },
 					{ action: "dis-default", label: "Default", enable: false, incLabelWithIcon: "before", iconEnabled: (<Edit32 />) },
+				]
+			};
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOM_ACTIONS) {
+			// This example shows how custom JSX can be provided to the toolbar in the
+			// jsx field to replace the content specified in the other fields. The JSX
+			// added can be customized using the host applications own CSS.
+			toolbarConfig = {
+				leftBar: [
+					{ action: "undo", label: "Undo", enable: true },
+					{ action: "redo", label: "Redo", enable: true },
+					{ divider: true },
+					{ action: "custom-loading",
+						jsx: (<div style={{ padding: "0 11px" }}><InlineLoading status="active" description="Loading..." /></div>) },
+					{ divider: true },
+					{ action: "custom-checkbox",
+						jsx: (<div style={{ padding: "0 11px" }}><Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} /></div>) },
+					{ divider: true },
+					{ action: "custom-button",
+						tooltip: "A custom button of type primary!",
+						jsx: (<div className="toolbar-custom-button"><Button id={"btn1"} size="field" kind="primary">Custom button </Button></div>) },
+					{ divider: true }
 				]
 			};
 		}

@@ -1,1 +1,5 @@
-{}
+{
+	"toolbar.zoomIn": "Zoom avanti",
+	"toolbar.zoomOut": "Zoom indietro",
+	"toolbar.zoomToFit": "Adatta zoom"
+}

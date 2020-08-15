@@ -1226,6 +1226,7 @@ export default class ObjectModel {
 
 		if (this.selectionChangeHandler) {
 			previousSelection = {
+				links: this.getSelectedLinks(),
 				nodes: this.getSelectedNodes(),
 				comments: this.getSelectedComments(),
 				pipelineId: this.getSelectedPipelineId()
@@ -1237,14 +1238,18 @@ export default class ObjectModel {
 		if (this.selectionChangeHandler) {
 
 			// determine delta in selected nodes and comments
+			const selectedLinks = this.getSelectedLinks();
 			const selectedNodes = this.getSelectedNodes();
 			const selectedComments = this.getSelectedComments();
 			const newSelection = {
 				selection: this.getSelectedObjectIds(),
+				selectedLinks: selectedLinks,
 				selectedNodes: selectedNodes,
 				selectedComments: selectedComments,
+				addedLinks: difference(selectedLinks, previousSelection.links),
 				addedNodes: difference(selectedNodes, previousSelection.nodes),
 				addedComments: difference(selectedComments, previousSelection.comments),
+				deselectedLinks: difference(previousSelection.links, selectedLinks),
 				deselectedNodes: difference(previousSelection.nodes, selectedNodes),
 				deselectedComments: difference(previousSelection.comments, selectedComments),
 				previousPipelineId: previousSelection.pipelineId,
@@ -1252,8 +1257,10 @@ export default class ObjectModel {
 			};
 
 			// only trigger event if selection has changed
-			if (!isEmpty(newSelection.addedNodes) ||
+			if (!isEmpty(newSelection.addedLinks) ||
+					!isEmpty(newSelection.addedNodes) ||
 					!isEmpty(newSelection.addedComments) ||
+					!isEmpty(newSelection.deselectedLinks) ||
 					!isEmpty(newSelection.deselectedNodes) ||
 					!isEmpty(newSelection.deselectedComments)) {
 				this.selectionChangeHandler(newSelection);

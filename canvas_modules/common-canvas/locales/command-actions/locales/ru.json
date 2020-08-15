@@ -1,1 +1,9 @@
-{}
+{
+	"palette.saved.nodes.description": "Узлы в этой категории были ранее сохранены из потока.",
+	"palette.saved.nodes.label": "Сохраненные узлы",
+	"supernode.binding.node.description": "Узел связывания надузла",
+	"supernode.binding.node.label": "Связывание",
+	"supernode.new.port.label": "Порт связывания для надузла",
+	"supernode.template.description": "Этот надузел был создан общим холстом.",
+	"supernode.template.label": "Надузел"
+}
