@@ -24,7 +24,7 @@ import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
 import Icon from "./../../icons/icon.jsx";
-import { Add16, Delete16 } from "@carbon/icons-react";
+import { Add16, TrashCan16 } from "@carbon/icons-react";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 
 import { MESSAGE_KEYS, STATES,
@@ -470,7 +470,7 @@ export default class AbstractTable extends React.Component {
 					onClick={removeOnClick}
 					size="small"
 					kind="ghost"
-					renderIcon={Delete16}
+					renderIcon={TrashCan16}
 				>
 					{removeButtonLabel}
 				</Button>

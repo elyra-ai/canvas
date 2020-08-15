@@ -20,8 +20,8 @@
 		display: none;
 	}
 	button > img {
-		padding: 0 $spacing-03;
 		height: 16px;
+		padding: 0 $spacing-03 0 0;
 	}
 	&.error {
 		button {
@@ -38,7 +38,7 @@
 // toggle control in table needs to fit within column
 .properties-table-cell-control {
 	button {
-		padding-left: 2px;
+		padding-left: $spacing-02;
 		width: calc(100% - #{$table-column-left-padding});
 		display: flex;
 		justify-content: flex-start;

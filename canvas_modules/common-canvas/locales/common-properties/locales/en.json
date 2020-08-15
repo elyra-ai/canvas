@@ -7,7 +7,6 @@
   "fieldPicker.saveButton.label": "Select Fields for",
   "fieldPicker.saveButton.tooltip": "Save and return",
   "fieldPicker.resetButton.label": "Reset ",
-  "fieldPicker.resetButton.tooltip": "Reset to previous values",
   "fieldPicker.filter.label": "Filter:",
   "fieldPicker.fieldColumn.label": "Field name",
   "fieldPicker.schemaColumn.label": "Schema name",

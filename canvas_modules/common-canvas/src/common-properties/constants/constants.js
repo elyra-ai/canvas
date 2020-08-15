@@ -31,7 +31,6 @@ _defineConstant("MESSAGE_KEYS", {
 	FIELDPICKER_SAVEBUTTON_LABEL: "fieldPicker.saveButton.label",
 	FIELDPICKER_SAVEBUTTON_TOOLTIP: "fieldPicker.saveButton.tooltip",
 	FIELDPICKER_RESETBUTTON_LABEL: "fieldPicker.resetButton.label",
-	FIELDPICKER_RESETBUTTON_TOOLTIP: "fieldPicker.resetButton.tooltip",
 	FIELDPICKER_FILTER_LABEL: "fieldPicker.filter.label",
 	FIELDPICKER_FIELDCOLUMN_LABEL: "fieldPicker.fieldColumn.label",
 	FIELDPICKER_SCHEMACOLUMN_LABEL: "fieldPicker.schemaColumn.label",
