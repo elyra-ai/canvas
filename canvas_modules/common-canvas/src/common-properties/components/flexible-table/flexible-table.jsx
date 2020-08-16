@@ -143,7 +143,7 @@ export default class FlexibleTable extends React.Component {
 	* @param parentTableWidth
 	*/
 	calculateColumnWidths(columns, parentTableWidth) {
-		let tableWidth = parentTableWidth - 15; // subtract 15 for the left padding scss $flexible-table-first-column-left-padding
+		let tableWidth = parentTableWidth - 12; // subtract 12 for the left padding scss $spacing-04
 		if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 			tableWidth -= 40;
 		}

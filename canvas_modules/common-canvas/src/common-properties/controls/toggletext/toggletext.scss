@@ -39,7 +39,7 @@
 .properties-table-cell-control {
 	button {
 		padding-left: $spacing-02;
-		width: calc(100% - #{$table-column-left-padding});
+		width: calc(100% - #{$spacing-04});
 		display: flex;
 		justify-content: flex-start;
 	}

@@ -15,7 +15,6 @@
  */
 
 $properties-vt-checkbox-width: 45px;
-$properties-vt-checkbox-margin: 5px;
 
 .properties-vt {
 	width: 100%;
@@ -43,7 +42,7 @@ $properties-vt-checkbox-margin: 5px;
 		display: flex;
 		align-items: center;
 		flex: 0 1 $properties-vt-checkbox-width;
-		margin-left: calc(#{$properties-vt-checkbox-margin} + 1px);
+		margin-left: $spacing-05;
 	}
 
 	.properties-autosized-vt-header {
@@ -70,7 +69,7 @@ $properties-vt-checkbox-margin: 5px;
 
 	.properties-vt-row-checkbox {
 		height: 32px;
-		margin-left: $properties-vt-checkbox-margin;
+		margin-left: $spacing-05;
 		flex: 0 1 $properties-vt-checkbox-width;
 	}
 
@@ -85,7 +84,6 @@ $properties-vt-checkbox-margin: 5px;
 
 	.properties-vt-row-class {
 		line-height: 20px;
-		font-size: 14px;
 		border-bottom: 1px solid $ui-03;
 
 		&:hover {
@@ -104,7 +102,7 @@ $properties-vt-checkbox-margin: 5px;
 		// Required to position the warning/error icons correctly within react-virtualized table cell
 		.ReactVirtualized__Table__headerColumn {
 			margin-right: 0;
-			margin-left: 12px;
+			margin-left: $spacing-04;
 		}
 	}
 
