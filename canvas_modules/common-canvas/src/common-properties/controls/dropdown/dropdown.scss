@@ -21,12 +21,12 @@
 		display: none;
 	}
 	&.error {
-		.bx--list-box__field {
+		.bx--list-box__field:not([disabled]) {
 			box-shadow: 0 2px 0 0 $support-01;
 		}
 	}
 	&.warning {
-		.bx--list-box__field {
+		.bx--list-box__field:not([disabled]) {
 			box-shadow: 0 2px 0 0 $support-03;
 		}
 	}

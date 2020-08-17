@@ -670,6 +670,24 @@
         }
       }
     },
+		{
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "radioDisable",
+          "message": {
+            "default": "Needs to be gini"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "radioDisable",
+            "op": "equals",
+            "value": "gini"
+          }
+        }
+      }
+    },
     {
       "visible": {
         "parameter_refs": [
