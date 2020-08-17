@@ -181,6 +181,7 @@ class DropDown extends React.Component {
 				onChange={this.handleChange}
 				selectedItem={dropDown.selectedOption}
 				label={this.emptyLabel}
+				light
 			/>);
 		}
 

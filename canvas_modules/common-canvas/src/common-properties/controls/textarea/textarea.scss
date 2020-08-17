@@ -20,20 +20,16 @@
 		margin-bottom: 0;
 	}
 
-	textarea {
-		background-color: $field-02;
-	}
-
 	&.hide {
 		display: none;
 	}
 	&.error {
-		textarea {
+		textarea:not([disabled]) {
 			box-shadow: 0 2px 0 0 $support-01;
 		}
 	}
 	&.warning {
-		textarea {
+		textarea:not([disabled]) {
 			box-shadow: 0 2px 0 0 $support-03;
 		}
 	}

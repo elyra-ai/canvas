@@ -88,6 +88,7 @@ class NumberfieldControl extends React.Component {
 					value={controlValue}
 					placeholder={this.props.control.additionalText}
 					allowEmpty
+					light
 				/>
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

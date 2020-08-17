@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "carbon-components-react";
 import { formatMessage } from "./../../util/property-utils";
-import { ArrowUp24, ArrowDown24, BackToTop24, DownToBottom24 } from "@carbon/icons-react";
+import { ArrowUp24, ArrowDown24, UpToTop24, DownToBottom24 } from "@carbon/icons-react";
 import classNames from "classnames";
 
 import { MESSAGE_KEYS } from "./../../constants/constants";
@@ -50,7 +50,7 @@ export default class MoveableTableRows extends React.Component {
 					onClick={this.topMoveRow}
 					disabled={!topEnabled}
 					kind="ghost"
-					renderIcon={BackToTop24}
+					renderIcon={UpToTop24}
 					iconDescription={topLabel}
 				/>
 				<Button

@@ -119,10 +119,8 @@ class ListControl extends AbstractTable {
 		const tableButtonConfig = {
 			addButtonLabel: formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_LABEL),
-			removeButtonTooltip: formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.STRUCTURELISTEDITOR_REMOVEBUTTON_TOOLTIP),
-			addButtonTooltip: formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_TOOLTIP),
+			removeButtonLabel: formatMessage(this.props.controller.getReactIntl(),
+				MESSAGE_KEYS.STRUCTURELISTEDITOR_REMOVEBUTTON_LABEL),
 			addButtonFunction: this.addRow
 		};
 

@@ -13,7 +13,7 @@
     "hide": true,
     "oneofselect_hidden": "blue",
     "disable": true,
-    "oneofselect_disabled": "blue",
+    "oneofselect_disabled": null,
     "filter": false,
     "oneofselect_filtered": "purple",
     "filter_default": false,

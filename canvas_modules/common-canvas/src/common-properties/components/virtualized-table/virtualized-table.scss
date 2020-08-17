@@ -15,11 +15,11 @@
  */
 
 $properties-vt-checkbox-width: 45px;
-$properties-vt-checkbox-margin: 5px;
 
 .properties-vt {
 	width: 100%;
 	height: 100%;
+	background: $ui-02;
 
 	.properties-autosized-vt {
 		// Table rows container
@@ -31,28 +31,18 @@ $properties-vt-checkbox-margin: 5px;
 
 		.properties-vt-row-disabled {
 			opacity: 0.5;
-
 			&:hover {
-				border: 1px solid transparent;
 				border-bottom: 1px solid $ui-03;
-			}
-		}
-
-		div[role="properties-header-row"] {
-			border-bottom: 1px solid $hover-selected-ui;
-			&:hover {
-				border: 1px solid transparent;
-				border-bottom: 1px solid $hover-selected-ui;
-				background-color: $ui-03;
 			}
 		}
 	}
 
 	.properties-vt-header-checkbox {
 		height: 40px;
-		padding-top: 5px;
+		display: flex;
+		align-items: center;
 		flex: 0 1 $properties-vt-checkbox-width;
-		margin-left: calc(#{$properties-vt-checkbox-margin} + 1px);
+		margin-left: $spacing-05;
 	}
 
 	.properties-autosized-vt-header {
@@ -60,15 +50,18 @@ $properties-vt-checkbox-margin: 5px;
 
 		.properties-vt-column .bx--checkbox-wrapper {
 			margin-top: 0;
-
+			margin-bottom: 0;
 			.bx--checkbox-label {
 				width: 100%;
 
 				span {
+					@include carbon--type-style("productive-heading-01");
+					color: $text-01;
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;
 					width: 100%;
+					line-height: unset;
 				}
 			}
 		}
@@ -76,19 +69,25 @@ $properties-vt-checkbox-margin: 5px;
 
 	.properties-vt-row-checkbox {
 		height: 32px;
-		margin-left: $properties-vt-checkbox-margin;
+		margin-left: $spacing-05;
 		flex: 0 1 $properties-vt-checkbox-width;
+	}
+
+	.properties-vt-double-click:first-of-type {
+		.properties-vt-row-class {
+			border-top: 1px solid transparent;
+			&.properties-vt-row-selected{
+				border-top: 1px solid $hover-selected-ui;
+			}
+		}
 	}
 
 	.properties-vt-row-class {
 		line-height: 20px;
-		font-size: 14px;
-		border: 1px solid transparent;
 		border-bottom: 1px solid $ui-03;
 
 		&:hover {
 			background-color: $hover-row;
-			border: 1px solid $interactive-01;
 		}
 
 		// Required for numberfields within react-virtualized table cell
@@ -103,12 +102,13 @@ $properties-vt-checkbox-margin: 5px;
 		// Required to position the warning/error icons correctly within react-virtualized table cell
 		.ReactVirtualized__Table__headerColumn {
 			margin-right: 0;
-			margin-left: 12px;
+			margin-left: $spacing-04;
 		}
 	}
 
 	.properties-vt-row-selected {
 		background-color: $selected-ui;
+		border-bottom: 1px solid $hover-selected-ui;
 		&:hover {
 			background-color: $hover-selected-ui;
 		}
@@ -127,7 +127,6 @@ $properties-vt-checkbox-margin: 5px;
 		.properties-vt-row-selected {
 			border-left: 4px solid $interactive-01;
 			padding-left: 0;
-
 			&:not(.properties-vt-row-disabled):hover {
 				border-left: 4px solid $interactive-01;
 			}

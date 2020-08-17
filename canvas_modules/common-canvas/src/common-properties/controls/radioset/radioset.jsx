@@ -199,7 +199,7 @@ class RadiosetControl extends React.Component {
 			>
 				<div
 					className={classNames("properties-radio-button-group", this.props.messageInfo ? this.props.messageInfo.type : null,
-						{ "horizontal": this.props.control.orientation !== ORIENTATIONS.VERTICAL })}
+						{ "horizontal": this.props.control.orientation !== ORIENTATIONS.VERTICAL })} disabled={this.props.state === STATES.DISABLED}
 				>
 					{buttons}
 				</div>

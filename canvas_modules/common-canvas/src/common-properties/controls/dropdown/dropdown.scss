@@ -17,20 +17,16 @@
 .properties-dropdown {
 	padding: 5px 0;
 
-	.bx--list-box__field {
-		background-color: $field-02;
-	}
-
 	&.hide {
 		display: none;
 	}
 	&.error {
-		.bx--list-box__field {
+		.bx--list-box__field:not([disabled]) {
 			box-shadow: 0 2px 0 0 $support-01;
 		}
 	}
 	&.warning {
-		.bx--list-box__field {
+		.bx--list-box__field:not([disabled]) {
 			box-shadow: 0 2px 0 0 $support-03;
 		}
 	}

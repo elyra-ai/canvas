@@ -81,6 +81,7 @@ class DatefieldControl extends React.Component {
 					value={displayValue}
 					labelText={this.props.control.label ? this.props.control.label.text : ""}
 					hideLabel
+					light
 				/>
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
