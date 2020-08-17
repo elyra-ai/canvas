@@ -670,7 +670,7 @@
         }
       }
     },
-		{
+    {
       "validation": {
         "fail_message": {
           "type": "warning",
