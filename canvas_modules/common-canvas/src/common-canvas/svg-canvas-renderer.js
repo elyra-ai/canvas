@@ -1502,6 +1502,13 @@ export default class SVGCanvasRenderer {
 	zoomAction() {
 		this.logger.log("zoomAction - " + JSON.stringify(d3Event.transform));
 
+		// Close the context menu, if it's open, before panning or zooming. Cannot
+		// do this in zoomStart because it would interfere with clicks on the
+		// canvas background that close the context menu in the usual way.
+		if (this.canvasController.isContextMenuDisplayed()) {
+			this.canvasController.closeContextMenu();
+		}
+
 		// If the scale amount is the same we are not zooming, so we must be panning.
 		if (d3Event.transform.k === this.zoomStartPoint.k) {
 			if (this.regionSelect) {
