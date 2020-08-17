@@ -41,24 +41,26 @@
 		}
 	}
 	.properties-btn-resize {
-		transition: visibility 0.5s, opacity 0.5s;
+		transition: visibility $duration--moderate-02, opacity $duration--moderate-02;
 		opacity: 0;
 		visibility: hidden;
 		position: absolute;
 		top: 50%;
 		left: -13px;
 		z-index: 1; // needs to sit on top of common-properties div
-		min-height: 20px;
-		border-radius: 5px;
+		min-height: 24px;
+		min-width: 24px;
 		background-color: $ui-01;
-		border: 1px $ui-03 solid;
+		border: 1px $ui-04 solid;
 		padding: 2px;
+		justify-content: center;
 		&:hover {
 			background-color: $ui-03;
 		}
 		svg {
-			width: 20px;
-			height: 20px;
+			fill: $icon-01;
+			width: 16px;
+			height: 16px;
 		}
 	}
 }

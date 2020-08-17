@@ -21,6 +21,7 @@ import { CommonCanvas, CanvasController } from "common-canvas";
 import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
 import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
 // import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
+import { hot } from "react-hot-loader/root";
 
 class App extends React.Component {
 	constructor(props) {
@@ -194,4 +195,4 @@ class App extends React.Component {
 	}
 }
 
-export default App;
+export default hot(App);

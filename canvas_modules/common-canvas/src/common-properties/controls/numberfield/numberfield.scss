@@ -29,16 +29,13 @@
 	.bx--label {
 		display: none;
 	}
-	input[type="number"] {
-		background-color: $field-02;
-	}
 	&.error {
-		input[type="number"], input[type="number"]:focus {
+		input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
 			box-shadow: 0 2px 0 0 $support-01;
 		}
 	}
 	&.warning {
-		input[type="number"], input[type="number"]:focus {
+		input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
 			box-shadow: 0 2px 0 0 $support-03;
 		}
 	}

@@ -40,11 +40,11 @@
 			justify-content: left; // override carbon style to center justify radio-button labels
 		}
 	}
-	&.error {
+	&.error:not([disabled]) {
 		padding: 3px;
 		border-bottom: 2px solid $support-01;
 	}
-	&.warning {
+	&.warning:not([disabled]) {
 		padding: 3px;
 		border-bottom: 2px solid $support-03;
 	}

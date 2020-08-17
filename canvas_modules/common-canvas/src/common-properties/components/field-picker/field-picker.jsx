@@ -337,35 +337,18 @@ export default class FieldPicker extends React.Component {
 	_genResetButton() {
 		const resetLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL);
-		const resetTooltip = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_TOOLTIP);
-		const tooltipId = uuid4() + "-tooltip-fp";
-		const tooltip = (
-			<div className="properties-tooltips">
-				{resetTooltip}
-			</div>
-		);
 		return (
-			<div className="properties-tooltips-fp-reset">
-				<Tooltip
-					id={tooltipId}
-					tip={tooltip}
-					direction="top"
-					delay={TOOL_TIP_DELAY}
-					className="properties-tooltips"
-				>
-					<Button
-						className="properties-fp-reset-button-container"
-						onClick={this.handleReset}
-						renderIcon={Reset24}
-						iconDescription={resetLabel}
-						size="small"
-						kind="ghost"
-					>
-						<span>{resetLabel}</span>
-					</Button>
-				</Tooltip>
-			</div>);
+			<Button
+				className="properties-fp-reset-button-container"
+				onClick={this.handleReset}
+				renderIcon={Reset24}
+				iconDescription={resetLabel}
+				size="small"
+				kind="ghost"
+			>
+				<span>{resetLabel}</span>
+			</Button>
+		);
 	}
 
 	_genFilterTypes() {

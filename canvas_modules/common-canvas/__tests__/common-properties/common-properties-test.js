@@ -129,7 +129,7 @@ describe("CommonProperties renders correctly", () => {
 
 	it("should override a structure table add button label", () => {
 		const wrapper = createCommonProperties("Editing", localMessages);
-		const tableButton = wrapper.find("div.properties-column-structure").find("span.properties-icon-button-label");
+		const tableButton = wrapper.find("div.properties-column-structure").find("button.properties-add-fields-button");
 		expect(tableButton.text()).to.equal("Add Some Stuff");
 	});
 });

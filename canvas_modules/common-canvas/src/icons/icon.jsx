@@ -37,7 +37,7 @@ import { WarningFilled16, ErrorFilled16, CheckmarkFilled16, InformationFilled16,
 	Search16,
 	Warning16,
 	Edit16,
-	StopFilledAlt16, Play16, Undo16, Redo16, Cut16, Copy16, Paste16, AddComment16, Delete16,
+	StopFilledAlt16, Play16, Undo16, Redo16, Cut16, Copy16, Paste16, AddComment16, TrashCan16,
 	ZoomIn16, ZoomOut16,
 	CircleDash16, RulerAlt16, ListNumbered16, ListBulleted16, Flag16, ChartVennDiagram16,
 	Calendar16, Time16, EventSchedule16 } from "@carbon/icons-react";
@@ -124,7 +124,7 @@ export default class Icon extends React.Component {
 		case (TOOLBAR_ACTIONS.TOOLBAR_CREATE_AUTO_COMMENT):
 			return <AddComment16 className={className} disabled={this.props.disabled} />;
 		case (TOOLBAR_ACTIONS.TOOLBAR_DELETE_SELECTED_OBJECTS):
-			return <Delete16 className={className} disabled={this.props.disabled} />;
+			return <TrashCan16 className={className} disabled={this.props.disabled} />;
 		case (TOOLBAR_ACTIONS.TOOLBAR_ZOOM_IN):
 			return <ZoomIn16 className={className} disabled={this.props.disabled} />;
 		case (TOOLBAR_ACTIONS.TOOLBAR_ZOOM_OUT):

@@ -25,16 +25,12 @@ function _defineConstant(key, value) {
 _defineConstant("MESSAGE_KEYS", {
 	SUBPANEL_BUTTON_TOOLTIP: "subPanel.button.tooltip",
 	STRUCTURELISTEDITOR_ADDBUTTON_LABEL: "structureListEditor.addButton.label",
-	STRUCTURELISTEDITOR_REMOVEBUTTON_TOOLTIP: "structureListEditor.removeButton.tooltip",
-	STRUCTURELISTEDITOR_ADDBUTTON_TOOLTIP: "structureListEditor.addButton.tooltip",
+	STRUCTURELISTEDITOR_REMOVEBUTTON_LABEL: "structureListEditor.removeButton.label",
 	STRUCTURETABLE_ADDBUTTON_LABEL: "structureTable.addButton.label",
-	STRUCTURETABLE_ADDBUTTON_TOOLTIP: "structureTable.addButton.tooltip",
 	STRUCTURETABLE_REMOVEBUTTON_LABEL: "structureTable.removeButton.label",
-	STRUCTURETABLE_REMOVEBUTTON_TOOLTIP: "structureTable.removeButton.tooltip",
 	FIELDPICKER_SAVEBUTTON_LABEL: "fieldPicker.saveButton.label",
 	FIELDPICKER_SAVEBUTTON_TOOLTIP: "fieldPicker.saveButton.tooltip",
 	FIELDPICKER_RESETBUTTON_LABEL: "fieldPicker.resetButton.label",
-	FIELDPICKER_RESETBUTTON_TOOLTIP: "fieldPicker.resetButton.tooltip",
 	FIELDPICKER_FILTER_LABEL: "fieldPicker.filter.label",
 	FIELDPICKER_FIELDCOLUMN_LABEL: "fieldPicker.fieldColumn.label",
 	FIELDPICKER_SCHEMACOLUMN_LABEL: "fieldPicker.schemaColumn.label",
@@ -203,7 +199,8 @@ _defineConstant("CARBON_ICONS", {
 		RIGHT: "chevron-right"
 	},
 	CALCULATOR: "calculator",
-	ADD: "add-alt",
+	ADD: "add",
+	REMOVE: "remove",
 	EDIT: "edit",
 	MEASUREMENTS: {
 		EMPTY: "measurement-empty",

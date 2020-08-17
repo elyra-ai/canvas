@@ -18,14 +18,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import IconButton from "../../components/icon-button";
+import { Button } from "carbon-components-react";
+import { Add16 } from "@carbon/icons-react";
 import WideFlyout from "./../../components/wide-flyout";
 import Icon from "./../../../icons/icon.jsx";
 
 import { isEmpty } from "lodash";
 import * as PropertyUtils from "./../../util/property-utils";
 import * as ControlUtils from "./../../util/control-utils";
-import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, CARBON_ICONS } from "./../../constants/constants";
+import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import { v4 as uuid4 } from "uuid";
 import { STATES } from "./../../constants/constants.js";
 import { Type, ParamRole } from "./../../constants/form-constants.js";
@@ -265,13 +266,15 @@ class SummaryPanel extends React.Component {
 	render() {
 		const icon = this._getSummaryIconState();
 		const link = (<div className="properties-summary-link-container">
-			<IconButton
+			<Button
 				className="properties-summary-link-button"
-				icon={<Icon type={CARBON_ICONS.ADD} />}
 				onClick={this.handleLinkClicked}
+				size="small"
+				kind="ghost"
+				renderIcon={Add16}
 			>
 				{this.props.panel.label}
-			</IconButton>
+			</Button>
 			{icon}
 		</div>);
 		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL);

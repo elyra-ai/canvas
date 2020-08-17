@@ -16,6 +16,7 @@
 
 .properties-column-panel {
 	display: grid;
+	column-gap: $spacing-05;
 	&.hide {
 		display: none;
 	}
