@@ -187,7 +187,7 @@ describe("ObjectModel files handling test", () => {
 	});
 
 	it("should upgrade a pipelineFlow from v2 to latest version for allTypesCanvasV2", () => {
-		upgradeToLatestVersion(allTypesCanvasV2, removeNewLinkFields(allTypesCanvas));
+		upgradeToLatestVersion(allTypesCanvasV2, removeConnectionFields(removeNewLinkFields(allTypesCanvas)));
 	});
 
 	it("should upgrade a pipelineFlow from v2 to latest version for bigCanvasV2", () => {
@@ -410,6 +410,18 @@ describe("ObjectModel files handling test", () => {
 					}
 				});
 			}
+		});
+		return expectedCanvas;
+	}
+
+	// The node's connection and data_asset fields were not corrctly supported in
+	// V2 of the schema and no one used those fields anyway so we remove them
+	// when comparing a v3 pipelineFlow with a v2 pipelineFlow.
+	function removeConnectionFields(latestPipelineFlow) {
+		const expectedCanvas = JSON.parse(JSON.stringify(latestPipelineFlow));
+		expectedCanvas.pipelines[0].nodes.forEach((node) => {
+			delete node.connection;
+			delete node.data_asset;
 		});
 		return expectedCanvas;
 	}

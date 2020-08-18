@@ -72,6 +72,32 @@
                 "field2": "binding-node-param-val2"
               }
             ]
+          },
+          "connection": {
+            "name": "connection1",
+            "app_data": {
+              "my_data": {
+                "field1": "value1"
+              }
+            },
+            "ref": "value1",
+            "catalog_ref": "value2",
+            "project_ref": "value3",
+            "properties": {
+              "field1": "value1",
+              "field2": "value2"
+            }
+          },
+          "data_asset": {
+            "ref": "value1",
+            "catalog_ref": "yyyyyyyyy",
+            "project_ref": "zzz",
+            "properties": {
+              "attachment_ref": "aaaa",
+              "name": "bbbb",
+              "no_write_schema": true,
+              "no_write_status": true
+            }
           }
         },
         {
@@ -381,7 +407,33 @@
                 }
               ]
             }
-          ]
+          ],
+          "connection": {
+            "name": "connection2",
+            "app_data": {
+              "my_data": {
+                "field1": "value1"
+              }
+            },
+            "ref": "ref2",
+            "catalog_ref": "value2",
+            "project_ref": "value3",
+            "properties": {
+              "field1": "value1",
+              "field2": "value2"
+            }
+          },
+          "data_asset": {
+            "ref": "value1",
+            "catalog_ref": "yyyyyyyyy",
+            "project_ref": "zzz",
+            "properties": {
+              "attachment_ref": "aaaa",
+              "name": "bbbb",
+              "no_write_schema": true,
+              "no_write_status": true
+            }
+          }
         }
       ],
       "app_data": {
