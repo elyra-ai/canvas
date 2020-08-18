@@ -427,7 +427,7 @@ export default class CanvasController {
 		return this.objectModel.getPaletteNode(operatorId);
 	}
 
-	// Returns the category of the palette node passed in
+	// Returns the category of the palette node identified by the operator passed in
 	getCategoryForNode(nodeOpIdRef) {
 		return this.objectModel.getCategoryForNode(nodeOpIdRef);
 	}
