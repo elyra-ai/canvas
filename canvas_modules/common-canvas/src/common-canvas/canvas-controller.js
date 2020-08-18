@@ -427,6 +427,11 @@ export default class CanvasController {
 		return this.objectModel.getPaletteNode(operatorId);
 	}
 
+	// Returns the category of the palette node identified by the operator passed in
+	getCategoryForNode(nodeOpIdRef) {
+		return this.objectModel.getCategoryForNode(nodeOpIdRef);
+	}
+
 	// Converts a node template from the format used in the palette (that conforms
 	// to the schema) to the internal node format.
 	convertNodeTemplate(nodeTemplate) {
