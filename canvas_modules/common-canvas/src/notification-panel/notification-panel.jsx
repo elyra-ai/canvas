@@ -126,6 +126,9 @@ class NotificationPanel extends React.Component {
 
 	clearNotificationMessages() {
 		this.props.canvasController.clearNotificationMessages();
+		if (typeof this.props.notificationConfig.clearAllCallback === "function") {
+			this.props.notificationConfig.clearAllCallback();
+		}
 	}
 
 	closeNotificationPanel() {
@@ -204,6 +207,7 @@ NotificationPanel.propTypes = {
 			PropTypes.string,
 			PropTypes.object
 		]),
+		clearAllCallback: PropTypes.function,
 		keepOpen: PropTypes.bool
 	}),
 	isNotificationOpen: PropTypes.bool,
