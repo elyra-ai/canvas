@@ -63,20 +63,8 @@ class CommonCanvasToolbar extends React.Component {
 
 	// Returns a toolbar config for the toolbar the way it was initially supported.
 	// That is, with an array of 'leftBar' items passed in to the toolbar config
-	// and a fixed set of 'rightBar' items. We remove any palette action item
-	// and following divider passed in because that will be replaced by a
-	// 'paletteToggle' item and divider, in the optionallyAddPaletteTool method
-	// called from the render method.
-	getConvertedLegacyToolbar(itemsArray) {
-		let leftBarItems = itemsArray;
-
-		if (leftBarItems.length > 0 && leftBarItems[0].action === "palette") {
-			leftBarItems = leftBarItems.slice(1);
-			if (leftBarItems.length > 0 && leftBarItems[0].divider) {
-				leftBarItems = leftBarItems.slice(1);
-			}
-		}
-
+	// and a fixed set of 'rightBar' items.
+	getConvertedLegacyToolbar(leftBarItems) {
 		return {
 			leftBar: leftBarItems,
 			rightBar: this.getDefaultRightBar()
@@ -155,20 +143,25 @@ class CommonCanvasToolbar extends React.Component {
 	}
 
 	optionallyAddPaletteTool(leftBar) {
+		let paletteLabel = this.getLabel("toolbar.palette");
+
 		// If the leftBar contains and old palette action and if followed by a
 		// divider remove them.
 		let newLeftBar = leftBar;
 		if (leftBar && leftBar.length > 0 && leftBar[0].action === "palette") {
+			// Use the existing palette label if one was provided.
+			paletteLabel = leftBar[0].label ? leftBar[0].label : paletteLabel;
 			newLeftBar = leftBar.slice(1);
 			if (leftBar.length > 1 && leftBar[1].divider) {
 				newLeftBar = leftBar.slice(2);
 			}
 		}
 
+		// Add the new togglePalette icon if the palette is enabled.
 		if (this.props.isPaletteEnabled) {
 			const paletteTools = [
 				{ action: "togglePalette",
-					label: "Palette",
+					label: paletteLabel,
 					enable: true,
 					iconTypeOverride: this.props.isPaletteOpen ? "paletteClose" : "paletteOpen"
 				},
