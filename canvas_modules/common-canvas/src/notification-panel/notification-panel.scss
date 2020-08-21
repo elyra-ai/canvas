@@ -195,10 +195,23 @@ $notification-left-border-color-width: 4px;
 
 			.notification-message-title {
 				@include carbon--type-style("productive-heading-01");
+				color: $text-02;
+			}
+
+			.notification-message-subtitle {
+				@include carbon--type-style("label-01");
+				color: $text-01;
+				padding-top: $spacing-02;
+				hr {
+					margin-top: $spacing-04;
+					margin-bottom: $spacing-04;
+					border-bottom: 0;
+					color: $text-02;
+				}
 			}
 
 			.notification-message-content {
-				@include carbon--type-style("body-short-01");
+				@include carbon--type-style("label-01");
 				color: $text-02;
 			}
 		}

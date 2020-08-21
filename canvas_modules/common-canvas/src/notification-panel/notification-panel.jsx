@@ -58,6 +58,13 @@ class NotificationPanel extends React.Component {
 				<Icon type={iconType} className={`notification-message-icon-${iconType}`} />
 			</div>);
 
+			const subtitle = message.subtitle
+				? (<div className = "notification-message-subtitle">
+					{message.subtitle}
+					<hr />
+				</div>)
+				: null;
+
 			const closeMessage = message.closeMessage
 				? (<div className = "notification-message-close" onClick={this.deleteNotification.bind(this, message.id)}>
 					{message.closeMessage}
@@ -85,6 +92,7 @@ class NotificationPanel extends React.Component {
 						<div className="notification-message-title">
 							{message.title}
 						</div>
+						{subtitle}
 						<div className="notification-message-content">
 							{message.content}
 						</div>
