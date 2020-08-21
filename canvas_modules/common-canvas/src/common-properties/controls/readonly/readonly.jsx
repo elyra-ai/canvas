@@ -61,6 +61,14 @@ class ReadonlyControl extends React.Component {
 
 	render() {
 		let controlValue = this.props.value;
+
+		// Use label for controlValue if possible
+		if (this.props.control.values && this.props.control.valueLabels) {
+			const controlIndex = this.props.control.values.indexOf(this.props.value);
+			if (controlIndex > -1 && this.props.control.valueLabels[controlIndex]) {
+				controlValue = this.props.control.valueLabels[controlIndex];
+			}
+		}
 		if (typeof controlValue === "undefined" || controlValue === null) {
 			controlValue = "";
 		} else if (typeof controlValue === "object" && controlValue.link_ref) {
