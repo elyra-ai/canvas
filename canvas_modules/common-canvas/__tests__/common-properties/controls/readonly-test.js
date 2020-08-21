@@ -26,6 +26,12 @@ const control = {
 	name: "test-readonly",
 };
 
+const controlWithValues = {
+	name: "test-valueLabels-readonly",
+	values: ["value 1"],
+	valueLabels: ["label 1"]
+};
+
 const propertyId = { name: "test-readonly" };
 
 describe("textfield-control renders correctly", () => {
@@ -63,6 +69,25 @@ describe("textfield-control renders correctly", () => {
 		const text = readonlyWrapper.find("span");
 		expect(text).to.have.length(1);
 		expect(text.text()).to.equal("Test value");
+	});
+	it("readonly should render with labels if possible", () => {
+		controller.setPropertyValues(
+			{ "test-readonly": "value 1" }
+		);
+		const wrapper = mount(
+			<Readonly
+				store={controller.getStore()}
+				control={controlWithValues}
+				controller={controller}
+				propertyId={propertyId}
+				value="value 1"
+			/>
+		);
+		const readonlyWrapper = wrapper.find("div[data-id='properties-test-readonly']");
+		const text = readonlyWrapper.find("span");
+
+		expect(text).to.have.length(1);
+		expect(text.text()).to.equal("label 1");
 	});
 	it("readonly handles null correctly", () => {
 		controller.setPropertyValues(
