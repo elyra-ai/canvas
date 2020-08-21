@@ -83,6 +83,7 @@ export default class SidePanelAPI extends React.Component {
 			appendLink: false,
 			closeMessage: false,
 			notificationTitle: "",
+			notificationSubtitle: "",
 			notificationMessage: "",
 			notificationType: NOTIFICATION_MESSAGE_TYPE.INFO,
 			zoomObject: JSON.stringify({ x: 0, y: 0, k: 1 }),
@@ -466,6 +467,7 @@ export default class SidePanelAPI extends React.Component {
 				id: "harness-message-" + this.messageCounter++,
 				type: this.state.notificationType,
 				title: this.state.notificationTitle ? this.state.notificationTitle : null,
+				subtitle: this.state.notificationSubtitle ? this.state.notificationSubtitle : null,
 				content: messageContent,
 				timestamp: this.state.appendTimestamp ? new Date().toLocaleString("en-US") : null,
 				callback: this.state.attachCallback ? this.notificationMessageCallback : null,
@@ -719,6 +721,16 @@ export default class SidePanelAPI extends React.Component {
 						placeholder="Message Title"
 						onChange={this.onFieldChange.bind(this, "notificationTitle")}
 						value={this.state.notificationTitle}
+					/>
+				</div>
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-nm-subtitle">
+					<TextInput
+						id="harness-messageSubtitle"
+						labelText="Message Subtitle (Optional)"
+						hideLabel
+						placeholder="Message Subtitle (Optional)"
+						onChange={this.onFieldChange.bind(this, "notificationSubtitle")}
+						value={this.state.notificationSubtitle}
 					/>
 				</div>
 				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-nm-content">
