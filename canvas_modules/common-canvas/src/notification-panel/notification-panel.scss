@@ -196,13 +196,13 @@ $notification-left-border-color-width: 4px;
 			.notification-message-title {
 				@include carbon--type-style("productive-heading-01");
 				color: $text-02;
+				padding-bottom: $spacing-02;
 			}
 
 			.notification-message-subtitle {
 				@include carbon--type-style("label-01");
 				color: $text-01;
 				hr {
-					margin-top: $spacing-02;
 					margin-bottom: $spacing-03;
 					border-bottom: 0;
 					border-top: solid 1px $ui-03;
