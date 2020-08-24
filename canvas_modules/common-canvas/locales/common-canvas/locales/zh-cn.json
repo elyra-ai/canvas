@@ -2,7 +2,7 @@
 	"canvas.addComment": "新建注释",
 	"canvas.deleteObject": "删除",
 	"canvas.redo": "重做",
-	"canvas.selectAll": "全部选中",
+	"canvas.selectAll": "全选",
 	"canvas.undo": "撤销",
 	"canvas.validateFlow": "验证流",
 	"edit.copySelection": "复制",
