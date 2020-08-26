@@ -1464,7 +1464,7 @@ export default class SVGCanvasRenderer {
 		if (this.canvasController.isContextMenuDisplayed() &&
 				!this.isDisplayingSubFlowInPlace()) {
 			this.canvasController.closeContextMenu();
-			this.contextMenuClosedOnZoom = this.activePipeline.id;
+			this.contextMenuClosedOnZoom = true;
 		}
 
 		// this.zoomingToFitForScale flag is used to avoid redo actions initialized
