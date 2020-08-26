@@ -1258,18 +1258,21 @@ class App extends React.Component {
 
 	tipHandler(tipType, data) {
 		if (tipType === "tipTypeLink") {
-			let sourceString = "comment";
-			if (data.link.src.outputs) {
+			let sourceString = data.link.type === "commentLink" ? "comment" : "detached source";
+			if (data.link.src && data.link.src.outputs) {
 				const srcPort = !data.link.src.outputs ? null : data.link.src.outputs.find(function(port) {
 					return port.id === data.link.srcPortId;
 				});
 				sourceString = `'${data.link.src.label}'` + (srcPort && srcPort.label ? `, port '${srcPort.label}'` : "");
 			}
 
-			const trgPort = data.link.trg.inputs.find(function(port) {
-				return port.id === data.link.trgPortId;
-			});
-			const targetString = `'${data.link.trg.label}'` + (trgPort && trgPort.label ? `, port '${trgPort.label}'` : "");
+			let targetString = "detached target";
+			if (data.link.trg && data.link.trg.inputs) {
+				const trgPort = data.link.trg.inputs.find(function(port) {
+					return port.id === data.link.trgPortId;
+				});
+				targetString = `'${data.link.trg.label}'` + (trgPort && trgPort.label ? `, port '${trgPort.label}'` : "");
+			}
 
 			return `Link from ${sourceString} to ${targetString}`;
 		}

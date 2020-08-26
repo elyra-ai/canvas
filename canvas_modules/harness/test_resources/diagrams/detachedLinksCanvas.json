@@ -2,8 +2,8 @@
   "doc_type": "pipeline",
   "version": "3.0",
   "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
-  "id": "153651d6-9b88-423c-b01b-861f12d01489-5555",
-  "primary_pipeline": "`~!@#$%^&*()_+=-{}][|:;<,>.9?/",
+  "id": "detached-link-pipeline-flow",
+  "primary_pipeline": "detached-link-pipeline",
   "parameters": {
     "props": [
       {
@@ -16,7 +16,7 @@
   },
   "pipelines": [
     {
-      "id": "`~!@#$%^&*()_+=-{}][|:;<,>.9?/",
+      "id": "detached-link-pipeline",
       "name": "My pipeline",
       "nodes": [
         {
@@ -75,7 +75,7 @@
           }
         },
         {
-          "id": "|:;<,>.9?/`~!@#$%^&*()_+=-{}][",
+          "id": "excution-node-id",
           "type": "execution_node",
           "op": "dummy_operator",
           "app_data": {
@@ -208,7 +208,7 @@
               "links": [
                 {
                   "id": "a81684aa-9b09-4620-aa59-54035a5de913",
-                  "node_id_ref": "|:;<,>.9?/`~!@#$%^&*()_+=-{}][",
+                  "node_id_ref": "excution-node-id",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
@@ -390,12 +390,12 @@
           "comments": [
             {
               "id": "id42ESQA3VPXB",
-              "x_pos": 20,
-              "y_pos": 20,
-              "width": 200,
-              "height": 64,
+              "x_pos": 15,
+              "y_pos": 12,
+              "width": 237,
+              "height": 76,
               "class_name": "canvas-comment",
-              "content": "This canvas shows the 4 different node types and three link types: node links, association links and comments links.",
+              "content": "This canvas shows examples of detached links. There are three types:\n1. Fully detached\n2. Semi-detached from source\n3. Semi-detached from targetnode",
               "associated_id_refs": []
             },
             {
@@ -412,7 +412,7 @@
                   "class_name": "canvas-comment-link"
                 },
                 {
-                  "node_ref": "|:;<,>.9?/`~!@#$%^&*()_+=-{}][",
+                  "node_ref": "excution-node-id",
                   "class_name": "canvas-comment-link"
                 },
                 {
@@ -430,8 +430,8 @@
             {
               "id": "total-detached-dddd-dddddddddd",
               "src_pos": {
-                "x_pos": 340,
-                "y_pos": 440
+                "x_pos": 360,
+                "y_pos": 480
               },
               "trg_pos": {
                 "x_pos": 320,
@@ -450,8 +450,8 @@
               "src_node_id": "id8I6RH2V91XW",
               "src_node_port_id": "outPort",
               "trg_pos": {
-                "x_pos": 320,
-                "y_pos": 420
+                "x_pos": 220,
+                "y_pos": 350
               },
               "app_data": {
                 "ui_data": {
@@ -464,11 +464,11 @@
             {
               "id": "target-attached-dddddddddd",
               "src_pos": {
-                "x_pos": 320,
-                "y_pos": 420
+                "x_pos": 260,
+                "y_pos": 360
               },
-              "trg_node_id": "|:;<,>.9?/`~!@#$%^&*()_+=-{}][",
-              "trg_node_port_id": "outPort",
+              "trg_node_id": "excution-node-id",
+              "trg_node_port_id": "inPort",
               "app_data": {
                 "ui_data": {
                   "class_name": "d3-data-link"

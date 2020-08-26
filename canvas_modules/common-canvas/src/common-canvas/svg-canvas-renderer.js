@@ -5613,16 +5613,32 @@ export default class SVGCanvasRenderer {
 		return lineArray;
 	}
 
-	getDetachedLineObj(link, srcObj, trgNode) {
-		const srcPortId = null;
-		const trgPortId = null;
+	// Returns a line object describing the detached (or semi-detached) link
+	// passed in. This will only ever be called when either srcNode OR trgNode
+	// are null (indicating a semi-detached link) or when both are null indicating
+	// a fully-detached link.
+	getDetachedLineObj(link, srcNode, trgNode) {
+		let srcPortId = null;
+		let trgPortId = null;
 		const coords = {};
 
-		if (srcObj === null) {
+		if (srcNode === null) {
 			coords.x1 = link.srcPos.x_pos;
 			coords.y1 = link.srcPos.y_pos;
 		} else {
-			// const srcPortId = this.getSourcePortId(link, srcObj);
+			if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
+				const endPos = { x: link.trgPos.x_pos, y: link.trgPos.y_pos };
+				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(srcNode, endPos);
+				coords.x1 = startPos.x;
+				coords.y1 = startPos.y;
+			} else {
+				srcPortId = this.getSourcePortId(link, srcNode);
+				const port = this.getOutputPort(srcNode, srcPortId);
+				if (port) {
+					coords.x1 = srcNode.x_pos + port.cx;
+					coords.y1 = srcNode.y_pos + port.cy;
+				}
+			}
 		}
 
 		if (trgNode === null) {
@@ -5630,8 +5646,19 @@ export default class SVGCanvasRenderer {
 			coords.y2 = link.trgPos.y_pos;
 
 		} else {
-			// const trgPortId = this.getTargetPortId(link, trgNode);
-
+			if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
+				const endPos = { x: link.srcPos.x_pos, y: link.srcPos.y_pos };
+				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(trgNode, endPos);
+				coords.x2 = startPos.x;
+				coords.y2 = startPos.y;
+			} else {
+				trgPortId = this.getTargetPortId(link, trgNode);
+				const port = this.getInputPort(trgNode, trgPortId);
+				if (port) {
+					coords.x2 = trgNode.x_pos + port.cx;
+					coords.y2 = trgNode.y_pos + port.cy;
+				}
+			}
 		}
 
 		return {
@@ -5641,7 +5668,7 @@ export default class SVGCanvasRenderer {
 			"style_temp": link.style_temp,
 			"type": link.type,
 			"decorations": link.decorations,
-			"src": srcObj,
+			"src": srcNode,
 			"srcPortId": srcPortId,
 			"trg": trgNode,
 			"trgPortId": trgPortId,
@@ -5652,6 +5679,19 @@ export default class SVGCanvasRenderer {
 		};
 	}
 
+	getOutputPort(srcNode, srcPortId) {
+		if (srcNode && srcNode.outputs) {
+			return srcNode.outputs.find((p) => p.id === srcPortId);
+		}
+		return null;
+	}
+
+	getInputPort(trgNode, trgPortId) {
+		if (trgNode && trgNode.inputs) {
+			return trgNode.inputs.find((p) => p.id === trgPortId);
+		}
+		return null;
+	}
 
 	// Returns a source port Id if one exists in the link, otherwise defaults
 	// to the first available port on the source node.

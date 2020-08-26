@@ -259,6 +259,9 @@ export default class PipelineOutHandler {
 			var filteredCanvasLinks = this.getFilteredCanvasLinks(ciLinks, ciNodeId, ciInputPortId, portIndex);
 
 			filteredCanvasLinks.forEach((link) => {
+				if (typeof link.srcNodeId === "undefined") {
+					return;
+				}
 				var newNodeLink = {
 					id: link.id,
 					node_id_ref: link.srcNodeId

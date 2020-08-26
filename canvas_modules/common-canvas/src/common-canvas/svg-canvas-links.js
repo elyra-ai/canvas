@@ -31,9 +31,10 @@ export default class SvgCanvasLinks {
 		this.config = config;
 	}
 
-	// Returns a start point for a new link when a straight line is being dragged
-	// out from a comment or a node.
-	getNewStraightCommentLinkStartPos(srcComment, transPos) {
+	// Returns an object containing the x and y coordinates of the start position
+	// of a straight line which extends from the source comment passed in to the
+	// end position which is an x, y cordinate.
+	getNewStraightCommentLinkStartPos(srcComment, endPos) {
 		return this.getOuterCoord(
 			srcComment.x_pos - this.canvasLayout.linkGap,
 			srcComment.y_pos - this.canvasLayout.linkGap,
@@ -41,31 +42,34 @@ export default class SvgCanvasLinks {
 			srcComment.height + (this.canvasLayout.linkGap * 2),
 			(srcComment.width / 2) + this.canvasLayout.linkGap,
 			(srcComment.height / 2) + this.canvasLayout.linkGap,
-			transPos.x,
-			transPos.y);
+			endPos.x,
+			endPos.y);
 	}
 
-	getNewStraightNodeLinkStartPos(srcNode, transPos) {
-		let srcCenterX;
-		let srcCenterY;
+	// Returns an object containing the x and y coordinates of the start position
+	// of a straight line which extends from the node passed in to the
+	// end position which is also an x, y cordinate.
+	getNewStraightNodeLinkStartPos(node, endPos) {
+		let nodeCenterX;
+		let nodeCenterY;
 
-		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			srcCenterX = srcNode.layout.imagePosX + (srcNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
-			srcCenterY = srcNode.layout.imagePosY + (srcNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
+		if (node.layout.drawNodeLinkLineFromTo === "image_center") {
+			nodeCenterX = node.layout.imagePosX + (node.layout.imageWidth / 2) + this.canvasLayout.linkGap;
+			nodeCenterY = node.layout.imagePosY + (node.layout.imageHeight / 2) + this.canvasLayout.linkGap;
 		} else {
-			srcCenterX = (srcNode.width / 2) + this.canvasLayout.linkGap;
-			srcCenterY = (srcNode.height / 2) + this.canvasLayout.linkGap;
+			nodeCenterX = (node.width / 2) + this.canvasLayout.linkGap;
+			nodeCenterY = (node.height / 2) + this.canvasLayout.linkGap;
 		}
 
 		return this.getOuterCoord(
-			srcNode.x_pos - this.canvasLayout.linkGap,
-			srcNode.y_pos - this.canvasLayout.linkGap,
-			srcNode.width + (this.canvasLayout.linkGap * 2),
-			srcNode.height + (this.canvasLayout.linkGap * 2),
-			srcCenterX,
-			srcCenterY,
-			transPos.x,
-			transPos.y);
+			node.x_pos - this.canvasLayout.linkGap,
+			node.y_pos - this.canvasLayout.linkGap,
+			node.width + (this.canvasLayout.linkGap * 2),
+			node.height + (this.canvasLayout.linkGap * 2),
+			nodeCenterX,
+			nodeCenterY,
+			endPos.x,
+			endPos.y);
 	}
 
 	// Returns the lineArray passed in with connection path info added to it.
