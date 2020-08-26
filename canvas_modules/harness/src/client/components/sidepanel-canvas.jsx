@@ -718,6 +718,19 @@ export default class SidePanelForms extends React.Component {
 				</form>
 			</div>);
 
+		var enableDetachableLinks = (<div className="harness-sidepanel-children">
+			<form>
+				<div className="harness-sidepanel-headers">Enable Detachable Links</div>
+				<div>
+					<Toggle
+						id="selectedDetachableLinks" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedDetachableLinks")}
+						onToggle={this.setStateValue}
+					/>
+				</div>
+			</form>
+		</div>);
+
 		var enableZoomIntoSubFlows = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-zoom-into-subflows-toggle">
 				<form>
@@ -1226,6 +1239,8 @@ export default class SidePanelForms extends React.Component {
 					{toolbarLayout}
 					{divider}
 					{toolbarType}
+					{divider}
+					{enableDetachableLinks}
 					{divider}
 					{enablePanIntoViewOnOpen}
 					{divider}

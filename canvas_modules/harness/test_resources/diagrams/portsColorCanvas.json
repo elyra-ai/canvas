@@ -170,22 +170,22 @@
                 {
                   "id": "2c996778-7e68-4fe3-a76e-a08d5ee9506b",
                   "node_id_ref": "b16deb33-4e84-45f1-a7d2-6a2e5d8d2618",
+                  "port_id_ref": "outPort5",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort5"
+                  }
                 },
                 {
                   "id": "d1bab368-7a85-462f-a8e8-97202f56a8c2",
                   "node_id_ref": "b16deb33-4e84-45f1-a7d2-6a2e5d8d2618",
+                  "port_id_ref": "outPort6",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort6"
+                  }
                 }
               ]
             },
@@ -205,22 +205,22 @@
                 {
                   "id": "19755367-7cd5-4632-9aee-b843a9831a0f",
                   "node_id_ref": "b16deb33-4e84-45f1-a7d2-6a2e5d8d2618",
+                  "port_id_ref": "outPort7",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort7"
+                  }
                 },
                 {
                   "id": "56a3f90f-9a06-47ce-bf75-60df4857d8b1",
                   "node_id_ref": "b16deb33-4e84-45f1-a7d2-6a2e5d8d2618",
+                  "port_id_ref": "outPort8",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort8"
+                  }
                 }
               ]
             }

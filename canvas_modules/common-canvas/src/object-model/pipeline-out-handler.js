@@ -259,7 +259,17 @@ export default class PipelineOutHandler {
 			var filteredCanvasLinks = this.getFilteredCanvasLinks(ciLinks, ciNodeId, ciInputPortId, portIndex);
 
 			filteredCanvasLinks.forEach((link) => {
-				newLinks.push(this.createNewNodeLink(link));
+				var newNodeLink = {
+					id: link.id,
+					node_id_ref: link.srcNodeId
+				};
+
+				if (link.srcNodePortId) {
+					newNodeLink.port_id_ref = link.srcNodePortId;
+				}
+
+				newNodeLink = this.addNodeLinkCommonAttrs(newNodeLink, link);
+				newLinks.push(newNodeLink);
 			});
 		}
 		return newLinks;
@@ -282,50 +292,6 @@ export default class PipelineOutHandler {
 		});
 	}
 
-	static createNewNodeLink(link) {
-		var newNodeLink = {
-			id: link.id,
-			node_id_ref: link.srcNodeId
-		};
-
-		if (link.app_data) {
-			set(newNodeLink, "app_data", link.app_data);
-		}
-
-		if (link.class_name) {
-			set(newNodeLink, "app_data.ui_data.class_name", link.class_name);
-		}
-
-		if (link.style) {
-			set(newNodeLink, "app_data.ui_data.style", link.style);
-		}
-
-		if (link.decorations) {
-			var newDecorations = this.createDecorations(link.decorations);
-			if (newDecorations.length > 0) {
-				set(newNodeLink, "app_data.ui_data.decorations", newDecorations);
-			}
-		}
-
-		if (link.srcNodePortId) {
-			newNodeLink.port_id_ref = link.srcNodePortId;
-		}
-
-		if (link.linkName) {
-			newNodeLink.link_name = link.linkName;
-		}
-
-		if (link.typeAttr) {
-			newNodeLink.type_attr = link.typeAttr;
-		}
-
-		if (link.description) {
-			newNodeLink.description = link.description;
-		}
-
-		return newNodeLink;
-	}
-
 	static createPipelineAppData(canvasInfoPipeline) {
 		if (canvasInfoPipeline.app_data) {
 			return Object.assign({}, canvasInfoPipeline.app_data, { ui_data: this.createPipelineUiData(canvasInfoPipeline) });
@@ -340,6 +306,12 @@ export default class PipelineOutHandler {
 				comments: this.createComments(canvasInfoPipeline.comments, canvasInfoPipeline.links) });
 		} else {
 			uiData = { comments: this.createComments(canvasInfoPipeline.comments, canvasInfoPipeline.links) };
+		}
+
+		const detLinks = this.createDetachedLinks(canvasInfoPipeline.links);
+
+		if (detLinks.length > 0) {
+			uiData.detached_links = detLinks;
 		}
 
 		if (canvasInfoPipeline.zoom) {
@@ -413,5 +385,75 @@ export default class PipelineOutHandler {
 			}
 		});
 		return associationsLinks;
+	}
+
+	static createDetachedLinks(ciLinks) {
+		const detachedLinks = [];
+		ciLinks.forEach((link) => {
+			if (!link.srcNodeId ||
+					!link.trgNodeId) {
+				var detachedLink = { id: link.id };
+
+				// Detached links will either have a source node (object) or, if the
+				// link is not attached to a source object, a source position object.
+				if (link.srcNodeId) {
+					detachedLink.src_node_id = link.srcNodeId;
+					if (link.srcNodePortId) {
+						detachedLink.src_node_port_id = link.srcNodePortId;
+					}
+				} else if (link.srcPos) {
+					detachedLink.src_pos = link.srcPos;
+				}
+
+				// Detached links will either have a source node (object) or, if the
+				// link is not attached to a source object, a source position object.
+				if (link.trgNodeId) {
+					detachedLink.trg_node_id = link.trgNodeId;
+					if (link.trgNodePortId) {
+						detachedLink.trg_node_port_id = link.trgNodePortId;
+					}
+				} else if (link.trgPos) {
+					detachedLink.trg_pos = link.trgPos;
+				}
+
+				detachedLink = this.addNodeLinkCommonAttrs(detachedLink, link);
+				detachedLinks.push(detachedLink);
+			}
+		});
+		return detachedLinks;
+	}
+
+	static addNodeLinkCommonAttrs(newLink, link) {
+		if (link.app_data) {
+			set(newLink, "app_data", link.app_data);
+		}
+
+		if (link.class_name) {
+			set(newLink, "app_data.ui_data.class_name", link.class_name);
+		}
+
+		if (link.style) {
+			set(newLink, "app_data.ui_data.style", link.style);
+		}
+
+		if (link.decorations) {
+			var newDecorations = this.createDecorations(link.decorations);
+			if (newDecorations.length > 0) {
+				set(newLink, "app_data.ui_data.decorations", newDecorations);
+			}
+		}
+
+		if (link.linkName) {
+			newLink.link_name = link.linkName;
+		}
+
+		if (link.typeAttr) {
+			newLink.type_attr = link.typeAttr;
+		}
+
+		if (link.description) {
+			newLink.description = link.description;
+		}
+		return newLink;
 	}
 }

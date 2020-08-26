@@ -37,12 +37,12 @@
                 {
                   "id": "6e4c412a-ac94-41a3-8cda-0910d0fd20fd",
                   "node_id_ref": "50f134cf-0518-443a-a677-9727a6f85cf1",
+                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }
@@ -114,12 +114,12 @@
                 {
                   "id": "f93fc211-bbe5-4ff6-ada9-3d4856ae3445",
                   "node_id_ref": "50f134cf-0518-443a-a677-9727a6f85cf1",
+                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }

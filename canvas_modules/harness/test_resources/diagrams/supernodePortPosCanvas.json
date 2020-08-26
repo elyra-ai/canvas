@@ -238,7 +238,6 @@
     },
     {
       "id": "sub-flow - 5136efe9-e2e1-47a3-a136-a10eb59a4707",
-      "name": "",
       "nodes": [
         {
           "id": "254c7ce3-5e4d-4a00-a566-47e0c1b7c2a3",
@@ -308,12 +307,12 @@
               "links": [
                 {
                   "node_id_ref": "ea8189ec-f02d-4665-9ad9-e09be2d9980d",
+                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             },
@@ -355,12 +354,12 @@
               "links": [
                 {
                   "node_id_ref": "254c7ce3-5e4d-4a00-a566-47e0c1b7c2a3",
+                  "port_id_ref": "777439a4-65be-49fe-9190-b5e2ae7995ae",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  },
-                  "port_id_ref": "777439a4-65be-49fe-9190-b5e2ae7995ae"
+                  }
                 }
               ]
             }
@@ -420,12 +419,12 @@
               "links": [
                 {
                   "node_id_ref": "1db3693e-77fa-4cbc-b32a-f7a574daa12b",
+                  "port_id_ref": "outPort2",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort2"
+                  }
                 }
               ]
             }
@@ -473,12 +472,12 @@
               "links": [
                 {
                   "node_id_ref": "41786865-f5e0-47d0-a526-8fc31122b6ad",
+                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }
@@ -537,12 +536,12 @@
               "links": [
                 {
                   "node_id_ref": "5e359c9e-7d3d-43d4-8473-a303a7e2246a",
+                  "port_id_ref": "output_5db667dc-b2a9-4c35-bff0-136c4e7b6d26_inPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  },
-                  "port_id_ref": "output_5db667dc-b2a9-4c35-bff0-136c4e7b6d26_inPort"
+                  }
                 }
               ]
             }
@@ -590,12 +589,12 @@
               "links": [
                 {
                   "node_id_ref": "35c7bcf2-4b69-4dbb-9bd5-923f5e079631",
+                  "port_id_ref": "output_ac584be2-8a3c-474f-a046-e10a3665b875_inPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  },
-                  "port_id_ref": "output_ac584be2-8a3c-474f-a046-e10a3665b875_inPort"
+                  }
                 }
               ]
             }
@@ -705,12 +704,12 @@
               "links": [
                 {
                   "node_id_ref": "ac584be2-8a3c-474f-a046-e10a3665b875",
+                  "port_id_ref": "outPort1",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort1"
+                  }
                 }
               ]
             }
@@ -742,12 +741,12 @@
               "links": [
                 {
                   "node_id_ref": "ac584be2-8a3c-474f-a046-e10a3665b875",
+                  "port_id_ref": "outPort2",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort2"
+                  }
                 }
               ]
             }
@@ -779,12 +778,12 @@
               "links": [
                 {
                   "node_id_ref": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }

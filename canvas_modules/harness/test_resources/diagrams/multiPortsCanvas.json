@@ -48,14 +48,14 @@
               },
               "links": [
                 {
-                  "id": "3a121a19-866c-466c-91f0-665d76e17125",
+                  "id": "c5ca003e-ff74-49df-b9aa-5ed4547c5392",
                   "node_id_ref": "id5RYSYN9CV1H",
+                  "port_id_ref": "outPort2",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort2"
+                  }
                 }
               ]
             },
@@ -139,7 +139,7 @@
               },
               "links": [
                 {
-                  "id": "955cf5ec-0803-4c01-9cdd-04e9f53e5072",
+                  "id": "c7f8f0a9-3445-4d56-adf6-a711b755e554",
                   "node_id_ref": "id6PXRG57DGIV",
                   "app_data": {
                     "ui_data": {
@@ -193,14 +193,14 @@
               },
               "links": [
                 {
-                  "id": "06ce830e-9916-40a9-aaa9-2fef0dbb3f17",
+                  "id": "3473c82a-f666-488d-b0fb-f9c5608f97a6",
                   "node_id_ref": "idGWRVT47XDV",
+                  "port_id_ref": "outPort1",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort1"
+                  }
                 }
               ]
             }
@@ -233,14 +233,14 @@
               },
               "links": [
                 {
-                  "id": "a32c288f-87bb-47b9-9fdc-53350e2334eb",
+                  "id": "623bb616-9b76-4011-9554-0d2412f8b3f8",
                   "node_id_ref": "idGWRVT47XDV",
+                  "port_id_ref": "outPort2",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort2"
+                  }
                 }
               ]
             }
@@ -301,7 +301,7 @@
               },
               "links": [
                 {
-                  "id": "4380ae26-9370-4d5e-91ed-09db48588fcd",
+                  "id": "a577513f-4e07-41b7-8fb2-ef6b6a8c73a2",
                   "node_id_ref": "id2PZSCTRPRIJ",
                   "app_data": {
                     "ui_data": {

@@ -5330,8 +5330,12 @@ export default class SVGCanvasRenderer {
 			this.canvasGrp.selectAll(portInArrSelector).attr("connected", "no");
 			lineArray.forEach((line) => {
 				if (line.type === NODE_LINK) {
-					this.setTrgPortStatus(line.trg.id, line.trgPortId, "yes");
-					this.setSrcPortStatus(line.src.id, line.srcPortId, "yes");
+					if (line.trg) {
+						this.setTrgPortStatus(line.trg.id, line.trgPortId, "yes");
+					}
+					if (line.src) {
+						this.setSrcPortStatus(line.src.id, line.srcPortId, "yes");
+					}
 				}
 			});
 		}
@@ -5548,6 +5552,13 @@ export default class SVGCanvasRenderer {
 			const trgNode = this.getNode(link.trgNodeId);
 			const srcObj = link.type === COMMENT_LINK ? this.getComment(link.srcNodeId) : this.getNode(link.srcNodeId);
 
+			if (this.config.enableDetachableLinks &&
+					(!srcObj || !trgNode)) {
+				const lineObj = this.getDetachedLineObj(link, srcObj, trgNode);
+				lineArray.push(lineObj);
+				return;
+			}
+
 			if (srcObj === null) {
 				this.logger.error(
 					"Common Canvas error trying to draw a link. A link was specified for source " + link.srcNodeId +
@@ -5601,6 +5612,46 @@ export default class SVGCanvasRenderer {
 
 		return lineArray;
 	}
+
+	getDetachedLineObj(link, srcObj, trgNode) {
+		const srcPortId = null;
+		const trgPortId = null;
+		const coords = {};
+
+		if (srcObj === null) {
+			coords.x1 = link.srcPos.x_pos;
+			coords.y1 = link.srcPos.y_pos;
+		} else {
+			// const srcPortId = this.getSourcePortId(link, srcObj);
+		}
+
+		if (trgNode === null) {
+			coords.x2 = link.trgPos.x_pos;
+			coords.y2 = link.trgPos.y_pos;
+
+		} else {
+			// const trgPortId = this.getTargetPortId(link, trgNode);
+
+		}
+
+		return {
+			"id": link.id,
+			"class_name": link.class_name,
+			"style": link.style,
+			"style_temp": link.style_temp,
+			"type": link.type,
+			"decorations": link.decorations,
+			"src": srcObj,
+			"srcPortId": srcPortId,
+			"trg": trgNode,
+			"trgPortId": trgPortId,
+			"x1": coords.x1,
+			"y1": coords.y1,
+			"x2": coords.x2,
+			"y2": coords.y2
+		};
+	}
+
 
 	// Returns a source port Id if one exists in the link, otherwise defaults
 	// to the first available port on the source node.
@@ -5689,7 +5740,7 @@ export default class SVGCanvasRenderer {
 	getNodeOutputLines(srcNode, lineArray) {
 		const outArray = [];
 		lineArray.forEach((lineData) => {
-			if (lineData.src.id === srcNode.id) {
+			if (lineData.src && lineData.src.id === srcNode.id) {
 				outArray.push(lineData);
 			}
 		});

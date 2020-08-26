@@ -291,12 +291,12 @@
                 {
                   "id": "dbe85734-7f8d-4a18-809b-40c99a7c23fa",
                   "node_id_ref": "nodeIDSuperNodePE",
+                  "port_id_ref": "output1SuperNodePE",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "output1SuperNodePE"
+                  }
                 }
               ]
             }
