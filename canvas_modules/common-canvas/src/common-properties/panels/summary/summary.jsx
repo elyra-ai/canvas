@@ -89,6 +89,7 @@ class SummaryPanel extends React.Component {
 			const summaryControl = this.props.controller.getControl(propertyId);
 			// get filtered controlValue (filters out hidden and disabled values)
 			let controlValue = this.props.controller.getPropertyValue(propertyId, { filterHiddenDisabled: true });
+
 			// let custom control set their own value to be displayed
 			const customValue = this.props.controller.getCustPropSumPanelValue(propertyId);
 			let showCustom = false;
@@ -163,10 +164,11 @@ class SummaryPanel extends React.Component {
 			} else if (controlValue) {
 				// assume simple parameter
 				if (this.props.controller.isSummary(propertyId) || showCustom) {
+					const displayValue = this._getSummaryDisplayValue(controlValue, propertyId);
 					summaryValues.push(
 						<tr key={"summary-row-" + controlName} className="properties-summary-row">
 							<td key={"summary-table-row-data-" + controlName} className={"properties-summary-rows-data"}>
-								{ controlValue }
+								{ displayValue }
 							</td>
 						</tr>
 					);
@@ -204,14 +206,23 @@ class SummaryPanel extends React.Component {
 	_getSummaryDisplayValue(displayValue, propertyId) {
 		let returnValue = displayValue;
 		const control = this.props.controller.getControl(propertyId);
-		if (PropertyUtils.toType(displayValue) === "object") {
+
+		// Use label for controlValue if possible
+		if (control.values && control.valueLabels) {
+			const displayIndex = control.values.indexOf(displayValue);
+			if (displayIndex > -1 && control.valueLabels[displayIndex]) {
+				returnValue = control.valueLabels[displayIndex];
+			}
+		}
+		if (PropertyUtils.toType(returnValue) === "object") {
 			if (control.valueDef.propType === Type.STRUCTURE && control.role === ParamRole.COLUMN) {
 				returnValue = PropertyUtils.stringifyFieldValue(displayValue, control);
 			} else {
 				// We don't know what this object is, but we know we can't display it as an object
-				returnValue = JSON.stringify(displayValue);
+				returnValue = JSON.stringify(returnValue);
 			}
 		}
+
 		return returnValue;
 	}
 

@@ -18,7 +18,7 @@
 	"node.createSupernode": "スーパーノードの作成",
 	"node.disconnectNode": "切断",
 	"node.editMenu": "編集",
-	"node.editNode": "オープン",
+	"node.editNode": "開く",
 	"node.expandSupernodeInPlace": "スーパーノードの展開",
 	"node.saveToPalette": "パレットに保存"
 }
