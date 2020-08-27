@@ -5595,54 +5595,18 @@ export default class SVGCanvasRenderer {
 		this.activePipeline.links.forEach((link) => {
 			const trgNode = this.getNode(link.trgNodeId);
 			const srcObj = link.type === COMMENT_LINK ? this.getComment(link.srcNodeId) : this.getNode(link.srcNodeId);
+			let lineObj = null;
 
 			if (this.config.enableDetachableLinks &&
 					(!srcObj || !trgNode)) {
-				const lineObj = this.getDetachedLineObj(link, srcObj, trgNode);
+				lineObj = this.getDetachedLineObj(link, srcObj, trgNode);
+
+			} else {
+				lineObj = this.getAttachedLineObj(link, srcObj, trgNode);
+			}
+
+			if (lineObj) {
 				lineArray.push(lineObj);
-				return;
-			}
-
-			if (srcObj === null) {
-				this.logger.error(
-					"Common Canvas error trying to draw a link. A link was specified for source " + link.srcNodeId +
-					" in the Canvas data that does not have a valid source node/comment.");
-			}
-
-			if (trgNode === null) {
-				this.logger.error(
-					"Common Canvas error trying to draw a link. A link was specified for target " + link.trgNodeId +
-					" in the Canvas data that does not have a valid target node.");
-			}
-
-			// Only proceed if we have a source and a target node/comment and the
-			// conditions are right for displaying the link.
-			if (srcObj && trgNode && this.shouldDisplayLink(srcObj, trgNode, link.type)) {
-				const srcPortId = this.getSourcePortId(link, srcObj);
-				const trgPortId = this.getTargetPortId(link, trgNode);
-				const assocLinkVariation =
-					link.type === ASSOCIATION_LINK && this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE
-						? this.getAssocLinkVariation(srcObj, trgNode)
-						: null;
-				const coords = this.linkUtils.getLinkCoords(link.type, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation);
-
-				lineArray.push({
-					"id": link.id,
-					"class_name": link.class_name,
-					"style": link.style,
-					"style_temp": link.style_temp,
-					"type": link.type,
-					"decorations": link.decorations,
-					"assocLinkVariation": assocLinkVariation,
-					"src": srcObj,
-					"srcPortId": srcPortId,
-					"trg": trgNode,
-					"trgPortId": trgPortId,
-					"x1": coords.x1,
-					"y1": coords.y1,
-					"x2": coords.x2,
-					"y2": coords.y2
-				});
 			}
 		});
 
@@ -5655,6 +5619,51 @@ export default class SVGCanvasRenderer {
 		lineArray = this.linkUtils.addConnectionPaths(lineArray);
 
 		return lineArray;
+	}
+
+	getAttachedLineObj(link, srcObj, trgNode) {
+		if (srcObj === null) {
+			this.logger.error(
+				"Common Canvas error trying to draw a link. A link was specified for source " + link.srcNodeId +
+				" in the Canvas data that does not have a valid source node/comment.");
+		}
+
+		if (trgNode === null) {
+			this.logger.error(
+				"Common Canvas error trying to draw a link. A link was specified for target " + link.trgNodeId +
+				" in the Canvas data that does not have a valid target node.");
+		}
+
+		// Only proceed if we have a source and a target node/comment and the
+		// conditions are right for displaying the link.
+		if (srcObj && trgNode && this.shouldDisplayLink(srcObj, trgNode, link.type)) {
+			const srcPortId = this.getSourcePortId(link, srcObj);
+			const trgPortId = this.getTargetPortId(link, trgNode);
+			const assocLinkVariation =
+				link.type === ASSOCIATION_LINK && this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE
+					? this.getAssocLinkVariation(srcObj, trgNode)
+					: null;
+			const coords = this.linkUtils.getLinkCoords(link.type, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation);
+
+			return {
+				"id": link.id,
+				"class_name": link.class_name,
+				"style": link.style,
+				"style_temp": link.style_temp,
+				"type": link.type,
+				"decorations": link.decorations,
+				"assocLinkVariation": assocLinkVariation,
+				"src": srcObj,
+				"srcPortId": srcPortId,
+				"trg": trgNode,
+				"trgPortId": trgPortId,
+				"x1": coords.x1,
+				"y1": coords.y1,
+				"x2": coords.x2,
+				"y2": coords.y2
+			};
+		}
+		return null;
 	}
 
 	// Returns a line object describing the detached (or semi-detached) link
