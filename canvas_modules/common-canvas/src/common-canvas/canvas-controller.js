@@ -1193,6 +1193,13 @@ export default class CanvasController {
 		}
 	}
 
+	isContextMenuDisplayed() {
+		if (this.commonCanvas) {
+			return this.commonCanvas.isContextMenuDisplayed();
+		}
+		return false;
+	}
+
 	openNotificationPanel() {
 		if (this.commonCanvas) {
 			this.commonCanvas.openNotificationPanel();
