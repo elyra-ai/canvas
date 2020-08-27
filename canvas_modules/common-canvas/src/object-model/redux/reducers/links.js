@@ -41,7 +41,8 @@ export default (state = [], action) => {
 			Object.assign(newLink, {
 				"srcNodePortId": action.data.srcNodePortId,
 				"trgNodePortId": action.data.trgNodePortId,
-				"linkName": action.data.linkName });
+				"linkName": action.data.linkName,
+				"trgPos": action.data.trgPos });
 		}
 		return [
 			...state,

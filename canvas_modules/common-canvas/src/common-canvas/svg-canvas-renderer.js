@@ -2099,7 +2099,7 @@ export default class SVGCanvasRenderer {
 					d3Event.stopPropagation();
 					this.logger.log("Node Group - mouse up");
 					if (this.drawingNewLinkData) {
-						this.completeNewLink(d);
+						this.completeNewLinkOnNode(d);
 					}
 				})
 				.on("click", (d) => {
@@ -3618,12 +3618,7 @@ export default class SVGCanvasRenderer {
 			.attr("linkType", linkType)
 			.on("mouseup", () => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				var trgNode = this.getNodeAtMousePos();
-				if (trgNode !== null) {
-					this.completeNewLink(trgNode);
-				} else {
-					this.stopDrawingNewLink();
-				}
+				this.completeNewLink();
 			})
 			.merge(connectionGuideSel)
 			.each(function(d) {
@@ -3676,12 +3671,7 @@ export default class SVGCanvasRenderer {
 			.attr("linkType", linkType)
 			.on("mouseup", () => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				var trgNode = this.getNodeAtMousePos();
-				if (trgNode !== null) {
-					this.completeNewLink(trgNode);
-				} else {
-					this.stopDrawingNewLink();
-				}
+				this.completeNewLink();
 			})
 			.merge(connectionGuideSel)
 			.attr("cx", (d) => d.x2)
@@ -3699,19 +3689,31 @@ export default class SVGCanvasRenderer {
 				.attr("linkType", linkType)
 				.on("mouseup", () => {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					var trgNode = this.getNodeAtMousePos();
-					if (trgNode !== null) {
-						this.completeNewLink(trgNode);
-					} else {
-						this.stopDrawingNewLink();
-					}
+					this.completeNewLink();
 				})
 				.merge(connectionArrowHeadSel)
 				.attr("d", (d) => this.getArrowHead(d));
 		}
 	}
 
-	completeNewLink(trgNode) {
+	// Handles the completion of a new link being drawn from a source node.
+	completeNewLink() {
+		var trgNode = this.getNodeAtMousePos();
+		if (trgNode !== null) {
+			this.completeNewLinkOnNode(trgNode);
+		} else {
+			if (this.config.enableDetachableLinks &&
+					this.drawingNewLinkData.action === "node-node" &&
+					!this.config.enableAssocLinkCreation) {
+				this.completeNewDetachedLink();
+			} else {
+				this.stopDrawingNewLink();
+			}
+		}
+	}
+
+	// Handles the completion of a new link when the end if dropped on a node.
+	completeNewLinkOnNode(trgNode) {
 		// If we completed a connection remove the new line objects.
 		this.removeNewLink();
 
@@ -3743,6 +3745,31 @@ export default class SVGCanvasRenderer {
 					pipelineId: this.pipelineId });
 			}
 		}
+
+		this.drawingNewLinkData = null;
+	}
+
+	// Handles the completion of a new link when the end if dropped away from
+	// a node (when enableDetachableLinks is set to true) which creates a new
+	// detached link.
+	completeNewDetachedLink() {
+		// If we completed a connection remove the new line objects.
+		this.removeNewLink();
+
+		// Switch 'new link over node' highlighting off
+		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+			this.setNewLinkOverNodeCancel();
+		}
+
+		const endPoint = this.getTransformedMousePos();
+		this.canvasController.editActionHandler({
+			editType: "createDetachedLink",
+			editSource: "canvas",
+			srcNodeId: this.drawingNewLinkData.srcObjId,
+			srcNodePortId: this.drawingNewLinkData.srcPortId,
+			trgPos: endPoint,
+			type: NODE_LINK,
+			pipelineId: this.pipelineId });
 
 		this.drawingNewLinkData = null;
 	}
@@ -5625,12 +5652,14 @@ export default class SVGCanvasRenderer {
 		if (srcNode === null) {
 			coords.x1 = link.srcPos.x_pos;
 			coords.y1 = link.srcPos.y_pos;
+
 		} else {
 			if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
 				const endPos = { x: link.trgPos.x_pos, y: link.trgPos.y_pos };
 				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(srcNode, endPos);
 				coords.x1 = startPos.x;
 				coords.y1 = startPos.y;
+
 			} else {
 				srcPortId = this.getSourcePortId(link, srcNode);
 				const port = this.getOutputPort(srcNode, srcPortId);
@@ -5651,6 +5680,7 @@ export default class SVGCanvasRenderer {
 				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(trgNode, endPos);
 				coords.x2 = startPos.x;
 				coords.y2 = startPos.y;
+
 			} else {
 				trgPortId = this.getTargetPortId(link, trgNode);
 				const port = this.getInputPort(trgNode, trgPortId);

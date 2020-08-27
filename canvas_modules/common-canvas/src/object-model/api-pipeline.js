@@ -998,6 +998,22 @@ export default class APIPipeline {
 		};
 	}
 
+	createNodeLinkDetached(data) {
+		const link = {};
+		link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(data.srcNodeId) });
+		link.type = data.type;
+		link.srcNodeId = data.srcNodeId;
+		link.srcNodePortId = data.srcNodePortId;
+		link.trgPos = { x_pos: data.trgPos.x, y_pos: data.trgPos.y };
+		if (data.class_name) {
+			link.class_name = data.class_name;
+		}
+		if (data.linkName) {
+			link.linkName = data.linkName;
+		}
+		return link;
+	}
+
 	createCommentLinks(data) {
 		const linkCommentList = [];
 		data.nodes.forEach((srcNodeId) => {
