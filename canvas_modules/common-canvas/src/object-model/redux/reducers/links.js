@@ -42,6 +42,7 @@ export default (state = [], action) => {
 				"srcNodePortId": action.data.srcNodePortId,
 				"trgNodePortId": action.data.trgNodePortId,
 				"linkName": action.data.linkName,
+				"srcPos": action.data.srcPos,
 				"trgPos": action.data.trgPos });
 		}
 		return [
