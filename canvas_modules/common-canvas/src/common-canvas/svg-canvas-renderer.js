@@ -1461,6 +1461,11 @@ export default class SVGCanvasRenderer {
 		this.canvasController.closeTip();
 
 		// Close the context menu, if it's open, before panning or zooming.
+		// If the context menu is opened inside the expanded supernode (in-place
+		// subflow), when the user zooms the canvas, the full page flow is handling
+		// that zoom, which causes a refresh in the subflow, so the full page flow
+		// will take care of closing the context menu. This means the in-place
+		// subflow doesn’t need to do anything on zoom, hence: !this.isDisplayingSubFlowInPlace()
 		if (this.canvasController.isContextMenuDisplayed() &&
 				!this.isDisplayingSubFlowInPlace()) {
 			this.canvasController.closeContextMenu();
