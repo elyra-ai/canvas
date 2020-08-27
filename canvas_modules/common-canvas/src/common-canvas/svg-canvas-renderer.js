@@ -126,6 +126,10 @@ export default class SVGCanvasRenderer {
 		// Allows us to track when the binding nodes in a subflow are being moved.
 		this.movingBindingNodes = false;
 
+		// Keep track of when the context menu has been closed so we don't remove
+		// selections when a context menu is closed during a zoom gesture.
+		this.contextMenuClosedOnZoom = false;
+
 		// Used to monitor the region selection rectangle.
 		this.regionSelect = false;
 		this.region = { startX: 0, startY: 0, width: 0, height: 0 };
@@ -1054,9 +1058,10 @@ export default class SVGCanvasRenderer {
 				this.selecting = true;
 				// Only clear selections if clicked on the canvas of the current active pipeline.
 				// Clicking the canvas of an expanded supernode will select that node.
-				if (this.isDisplayingCurrentPipeline()) {
+				if (this.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom) {
 					this.canvasController.clearSelections();
 				}
+				this.contextMenuClosedOnZoom = false;
 				// Ensure 'selecting' flag is off before calling click action callback.
 				this.selecting = false;
 				this.canvasController.clickActionHandler({
@@ -1454,6 +1459,18 @@ export default class SVGCanvasRenderer {
 
 		// Ensure any open tip is closed before starting a zoom operation.
 		this.canvasController.closeTip();
+
+		// Close the context menu, if it's open, before panning or zooming.
+		// If the context menu is opened inside the expanded supernode (in-place
+		// subflow), when the user zooms the canvas, the full page flow is handling
+		// that zoom, which causes a refresh in the subflow, so the full page flow
+		// will take care of closing the context menu. This means the in-place
+		// subflow doesn’t need to do anything on zoom, hence: !this.isDisplayingSubFlowInPlace()
+		if (this.canvasController.isContextMenuDisplayed() &&
+				!this.isDisplayingSubFlowInPlace()) {
+			this.canvasController.closeContextMenu();
+			this.contextMenuClosedOnZoom = true;
+		}
 
 		// this.zoomingToFitForScale flag is used to avoid redo actions initialized
 		// by Cmd+Shift+Z (where the shift key has been pressed) causing a region
