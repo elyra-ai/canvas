@@ -229,7 +229,7 @@ class EditorForm extends React.Component {
 		}
 		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
-			const subPanelItems = this.genUIItem(i, tab.content, propertyId, indexof);
+			const subPanelItems = this.genUIItem(i, tab.content, propertyId, indexof, tabs, true);
 			if (tab.content.panel.id === this.state.activeSubTabs[tabGroupId]) {
 				activeSubTab = i;
 			}
@@ -287,10 +287,10 @@ class EditorForm extends React.Component {
 		return subPanels;
 	}
 
-	genUIContent(uiItems, propertyId, indexof) {
+	genUIContent(uiItems, propertyId, indexof, isSubTabs = false) {
 		var uiContent = [];
 		for (var i = 0; i < uiItems.length; i++) {
-			uiContent.push(this.genUIItem(i, uiItems[i], propertyId, indexof));
+			uiContent.push(this.genUIItem(i, uiItems[i], propertyId, indexof, uiItems, isSubTabs));
 		}
 		return uiContent;
 	}
@@ -298,7 +298,7 @@ class EditorForm extends React.Component {
 	/*
 	*  propertyId and indexOf only used for subpanel in tables
 	*/
-	genUIItem(key, uiItem, inPropertyId, indexof) {
+	genUIItem(key, uiItem, inPropertyId, indexof, tabs = null, isSubTabs = false) {
 		let textClass = "";
 		let icon = null;
 		let text = "";
@@ -350,7 +350,7 @@ class EditorForm extends React.Component {
 		case ("hSeparator"):
 			return <hr key={"h-separator." + key} className="properties-h-separator" />;
 		case ("panel"):
-			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
+			return this.genPanel(key, uiItem.panel, inPropertyId, indexof, tabs, isSubTabs);
 		case ("subTabs"):
 			return this.genSubTabs(key, uiItem.tabs, inPropertyId, indexof);
 		case ("primaryTabs"):
@@ -411,8 +411,8 @@ class EditorForm extends React.Component {
 		this.props.controller.addSharedControls(panel.id, sharedCtrlNames);
 	}
 
-	genPanel(key, panel, propertyId, indexof) {
-		let content = this.genUIContent(panel.uiItems, propertyId, indexof);
+	genPanel(key, panel, propertyId, indexof, tabs = null, isSubTabs = false) {
+		let content = this.genUIContent(panel.uiItems, propertyId, indexof, isSubTabs);
 		const id = "panel." + key;
 		switch (panel.panelType) {
 		case ("columnSelection"):
@@ -444,14 +444,22 @@ class EditorForm extends React.Component {
 					{content}
 				</ActionPanel>);
 		case ("twisty"):
+		{
+			let idx = -1;
+			if (tabs) {
+				idx = tabs.map((item) => item.panel && item.panel.panelType).indexOf("twisty");
+			}
 			return (
 				<TwistyPanel
 					key={id}
 					controller={this.props.controller}
 					panel={panel}
+					open={idx === key && isSubTabs}
 				>
 					{content}
-				</TwistyPanel>);
+				</TwistyPanel>
+			);
+		}
 		case ("column"):
 			return (
 				<ColumnPanel

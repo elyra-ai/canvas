@@ -31,7 +31,7 @@ class TwistyPanel extends React.Component {
 				disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
 			>
 				<Accordion>
-					<AccordionItem title={this.props.panel.label}>
+					<AccordionItem title={this.props.panel.label} open={this.props.open}>
 						{this.props.children}
 					</AccordionItem>
 				</Accordion>
@@ -44,7 +44,8 @@ TwistyPanel.propTypes = {
 	panel: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	children: PropTypes.array,
-	panelState: PropTypes.string // set by redux
+	panelState: PropTypes.string, // set by redux
+	open: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({
