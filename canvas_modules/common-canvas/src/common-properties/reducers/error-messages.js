@@ -15,7 +15,7 @@
  */
 
 import { UPDATE_ERROR_MESSAGE, SET_ERROR_MESSAGES, CLEAR_ERROR_MESSAGE } from "../actions";
-import isEmpty from "lodash/isEmpty";
+import { isEmpty } from "lodash";
 /* eslint max-depth: ["error", 6] */
 
 /*

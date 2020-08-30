@@ -15,4 +15,4 @@
  */
 
 import Dropdown from "./dropdown.jsx";
-module.exports = Dropdown;
+export default Dropdown;

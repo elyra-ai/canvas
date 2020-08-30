@@ -17,27 +17,21 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "carbon-components-react/lib/components/Button";
-import Checkbox from "carbon-components-react/lib/components/Checkbox";
-import IconButton from "./../components/icon-button";
+import { Checkbox } from "carbon-components-react";
+import { Button } from "carbon-components-react";
 import FlexibleTable from "./../components/flexible-table";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
-import PropertyUtils from "./../util/property-utils";
+import * as PropertyUtils from "./../util/property-utils";
 import Icon from "./../../icons/icon.jsx";
-import { SubtractAlt24 } from "@carbon/icons-react";
+import { Add16, TrashCan16 } from "@carbon/icons-react";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 
-import Tooltip from "./../../tooltip/tooltip.jsx";
-import { MESSAGE_KEYS, TOOL_TIP_DELAY, STATES,
+import { MESSAGE_KEYS, STATES,
 	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION,
 	ROW_SELECTION, CARBON_ICONS } from "./../constants/constants";
 
-import findIndex from "lodash/findIndex";
-import sortBy from "lodash/sortBy";
-import cloneDeep from "lodash/cloneDeep";
-import isEqual from "lodash/isEqual";
-import uuid4 from "uuid/v4";
+import { isEqual, findIndex, sortBy, cloneDeep } from "lodash";
 
 /* eslint max-depth: ["error", 5] */
 
@@ -452,75 +446,44 @@ export default class AbstractTable extends React.Component {
 		const removeOnClick = (tableButtonConfig && tableButtonConfig.removeButtonFunction)
 			? tableButtonConfig.removeButtonFunction
 			: this.removeSelected;
-		const disabled = !this.state.enableRemoveIcon || tableState === STATES.DISABLED;
-		const removeButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-			MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
-		const removeButton = (<Button
-			className="properties-remove-fields-button"
-			disabled={disabled}
-			onClick={removeOnClick}
-			renderIcon={SubtractAlt24}
-			iconDescription={removeButtonLabel}
-			kind="ghost"
-		/>);
+		const removeButtonLabel = (tableButtonConfig && tableButtonConfig.removeButtonLabel) ? tableButtonConfig.removeButtonLabel
+			: PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
+		const removeDisabled = !this.state.enableRemoveIcon || tableState === STATES.DISABLED;
+
 
 		let addButtonDisabled = false;
 		this.addOnClickCallback = (tableButtonConfig && tableButtonConfig.addButtonFunction)
 			? tableButtonConfig.addButtonFunction
 			: this.props.openFieldPicker;
 		const addButtonLabel = (tableButtonConfig && tableButtonConfig.addButtonLabel) ? tableButtonConfig.addButtonLabel
-			: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
+			: PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
 		if (tableState === STATES.DISABLED) {
 			addButtonDisabled = true;
 			this.addOnClickCallback = null;
 		}
-		const addButton = (
-			<IconButton
-				className="properties-add-fields-button"
-				icon={<Icon type={CARBON_ICONS.ADD} />}
-				onClick={this.addOnClick.bind(this, this.props.propertyId)}
-				disabled={addButtonDisabled}
-			>
-				{addButtonLabel}
-			</IconButton>
-		);
 
-		const addToolTip = (
-			<div className="properties-tooltips">
-				{(tableButtonConfig && tableButtonConfig.addButtonTooltip) ? tableButtonConfig.addButtonTooltip
-					: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-						MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_TOOLTIP)}
-			</div>
-		);
-		const removeToolTip = (
-			<div className="properties-tooltips">
-				{(tableButtonConfig && tableButtonConfig.removeButtonTooltip) ? tableButtonConfig.removeButtonTooltip
-					: PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-						MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP)}
-			</div>
-		);
 		return (
 			<div className="properties-at-buttons-container">
-				<Tooltip
-					id={uuid4() + "-tooltip-remove-columns-" + this.props.control.name}
-					tip={removeToolTip}
-					direction="top"
-					delay={TOOL_TIP_DELAY}
-					className="properties-tooltips"
-					disable={disabled}
+				<Button
+					className="properties-remove-fields-button"
+					disabled={removeDisabled}
+					onClick={removeOnClick}
+					size="small"
+					kind="ghost"
+					renderIcon={TrashCan16}
 				>
-					{removeButton}
-				</Tooltip>
-				<Tooltip
-					id={uuid4() + "-tooltip-add-columns-" + this.props.control.name}
-					tip={addToolTip}
-					direction="top"
-					delay={TOOL_TIP_DELAY}
-					className="properties-tooltips"
+					{removeButtonLabel}
+				</Button>
+				<Button
+					className="properties-add-fields-button"
+					disabled={addButtonDisabled}
+					onClick={this.addOnClick.bind(this, this.props.propertyId)}
+					size="small"
+					kind="ghost"
+					renderIcon={Add16}
 				>
-					{addButton}
-				</Tooltip>
+					{addButtonLabel}
+				</Button>
 			</div>
 		);
 	}

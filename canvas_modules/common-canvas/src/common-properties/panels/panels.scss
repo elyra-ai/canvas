@@ -19,14 +19,11 @@
 @import "./twisty/twisty";
 @import "./text-panel/text-panel";
 @import "./action-panel/action-panel";
-
-.properties-control-panel {
-	display: block;
-	padding: 0 0 0 8px;
-}
+@import "./column/column";
+@import "./control/control";
 
 .properties-category-content {
 	> .properties-control-panel { // only add top & bottom padding to first control panel
-		padding: 8px 0;
+		padding: 0;
 	}
 }

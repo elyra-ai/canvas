@@ -15,4 +15,4 @@
  */
 
 import Summary from "./summary.jsx";
-module.exports = Summary;
+export default Summary;

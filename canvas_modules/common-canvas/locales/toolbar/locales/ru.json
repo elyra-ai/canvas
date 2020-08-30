@@ -1,1 +1,6 @@
-{}
+{
+	"toolbar.overflowMenu": "Меню переполнения",
+	"toolbar.zoomIn": "Увеличить",
+	"toolbar.zoomOut": "Уменьшить",
+	"toolbar.zoomToFit": "Уместить"
+}

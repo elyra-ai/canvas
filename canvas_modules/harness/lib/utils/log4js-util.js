@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+"use strict";
 
 // Modules
 
@@ -45,7 +45,7 @@ function _init() {
 				}
 			}
 		},
-		categories: { default: { appenders: ["out"], level: "debug" } }
+		categories: { default: { appenders: ["out"], level: "error" } }
 	};
 	log4js.configure(appenders, {
 		reloadSecs: RELOAD_INTERVAL

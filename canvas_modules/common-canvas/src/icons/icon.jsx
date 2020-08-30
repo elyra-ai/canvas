@@ -24,7 +24,7 @@ import ArrangeVertically from "./../../assets/images/arrange_vertically.svg";
 import Double from "./../../assets/images/double.svg";
 import Integer from "./../../assets/images/integer.svg";
 import StringIcon from "./../../assets/images/string.svg";
-import NotificationCounterIcon from "./../../assets/images/notification_counter_icon.svg";
+import ToggleNotificationPanel from "./../../assets/images/notification_counter_icon.svg";
 import PaletteClose from "./../../assets/images/palette/palette_close.svg";
 import PaletteOpen from "./../../assets/images/palette/palette_open.svg";
 import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
@@ -37,7 +37,7 @@ import { WarningFilled16, ErrorFilled16, CheckmarkFilled16, InformationFilled16,
 	Search16,
 	Warning16,
 	Edit16,
-	StopFilledAlt16, Play16, Undo16, Redo16, Cut16, Copy16, Paste16, AddComment16, Delete16,
+	StopFilledAlt16, Play16, Undo16, Redo16, Cut16, Copy16, Paste16, AddComment16, TrashCan16,
 	ZoomIn16, ZoomOut16,
 	CircleDash16, RulerAlt16, ListNumbered16, ListBulleted16, Flag16, ChartVennDiagram16,
 	Calendar16, Time16, EventSchedule16 } from "@carbon/icons-react";
@@ -56,7 +56,7 @@ export default class Icon extends React.Component {
 			double: Double,
 			integer: Integer,
 			string: StringIcon,
-			notificationCounterIcon: NotificationCounterIcon,
+			toggleNotificationPanel: ToggleNotificationPanel,
 			paletteClose: PaletteClose,
 			paletteOpen: PaletteOpen,
 			zoomToFit: ZoomToFit
@@ -64,7 +64,8 @@ export default class Icon extends React.Component {
 	}
 
 	getCarbonIcon(type, customClassName) {
-		const className = iconClassName + " " + customClassName;
+		const className = this.props.noAddedClasses ? null : iconClassName + " " + customClassName;
+
 		switch (type) {
 		case (ERROR):
 		case (CONDITION_MESSAGE_TYPE.ERROR):
@@ -123,7 +124,7 @@ export default class Icon extends React.Component {
 		case (TOOLBAR_ACTIONS.TOOLBAR_CREATE_AUTO_COMMENT):
 			return <AddComment16 className={className} disabled={this.props.disabled} />;
 		case (TOOLBAR_ACTIONS.TOOLBAR_DELETE_SELECTED_OBJECTS):
-			return <Delete16 className={className} disabled={this.props.disabled} />;
+			return <TrashCan16 className={className} disabled={this.props.disabled} />;
 		case (TOOLBAR_ACTIONS.TOOLBAR_ZOOM_IN):
 			return <ZoomIn16 className={className} disabled={this.props.disabled} />;
 		case (TOOLBAR_ACTIONS.TOOLBAR_ZOOM_OUT):
@@ -162,7 +163,8 @@ export default class Icon extends React.Component {
 		if (!icon) {
 			icon = this.getCanvasIcon(this.props.type);
 			if (typeof icon !== "undefined") {
-				icon = <SVG src={icon} className={classNames("canvas-icon", iconClassName, this.props.className)} disabled={this.props.disabled} />;
+				const className = this.props.noAddedClasses ? null : classNames("canvas-icon", iconClassName, this.props.className);
+				icon = <SVG src={icon} className={className} disabled={this.props.disabled} />;
 			} else {
 				icon = <div />;
 			}
@@ -179,5 +181,6 @@ Icon.defaultProps = {
 Icon.propTypes = {
 	type: PropTypes.string.isRequired,
 	className: PropTypes.string,
-	disabled: PropTypes.bool
+	disabled: PropTypes.bool,
+	noAddedClasses: PropTypes.bool
 };

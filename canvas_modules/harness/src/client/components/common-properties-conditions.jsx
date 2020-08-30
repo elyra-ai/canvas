@@ -18,14 +18,16 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
-import Button from "carbon-components-react/lib/components/Button";
+import { hot } from "react-hot-loader/root";
+import { Button, Dropdown } from "carbon-components-react";
 import {
 	TEXTFIELD_ERROR_PROPS_INFO,
 	TEXTFIELD_WARNING_PROPS_INFO,
 	TEXTFIELD_COLNOTEXISTS_PROPS_INFO,
 	TEXTAREA_ERROR_PROPS_INFO,
 	TEXTAREA_WARNING_PROPS_INFO,
+	LIST_ERROR_PROPS_INFO,
+	LIST_WARNING_PROPS_INFO,
 	PASSWORD_FIELD_ERROR_PROPS_INFO,
 	EXPRESSION_ERROR_PROPS_INFO,
 	EXPRESSION_WARNING_PROPS_INFO,
@@ -209,6 +211,7 @@ class CommonPropertiesComponents extends React.Component {
 					"SingleConditions",
 					"--textfield",
 					"--textarea",
+					"--list",
 					"--password",
 					"--expression",
 					"--numberfield",
@@ -337,6 +340,8 @@ class CommonPropertiesComponents extends React.Component {
 			{ Control: "someofselect ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
 			{ Control: "textarea (string/[string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+			{ Control: "list ([primitive])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
 			{ Control: "textfield (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "yes", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
@@ -519,6 +524,45 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
+
+
+				<div className="harness-conditions-documentation-panels-controls-component">
+					<h3 id="--list" className="harness-section-subtitle">list</h3>
+					<p>Similar to the <span className="harness-highlight">textarea</span> control,
+						the <span className="harness-highlight">list</span> is an array of values. The same conditions
+						may be applied to this list. Below is an example of an error when the list is empty.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={LIST_ERROR_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+							/>
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(LIST_ERROR_PROPS_INFO.parameterDef, "conditions")}
+							</pre>
+						</div>
+					</div>
+					<p>Below is an example of a <span className="harness-highlight">notEquals</span> condition
+						that shows a warning when the list is empty.</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={LIST_WARNING_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+							/>
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(LIST_WARNING_PROPS_INFO.parameterDef, "conditions")}
+							</pre>
+						</div>
+					</div>
+				</div>
+
+
 				<div className="harness-conditions-documentation-panels-controls-component">
 					<h3 id="--password" className="harness-section-subtitle">password</h3>
 					<p>Although a passwordfield control is of type <span className="harness-highlight">string</span>, it only supports
@@ -1226,4 +1270,4 @@ class CommonPropertiesComponents extends React.Component {
 	}
 }
 
-export default CommonPropertiesComponents;
+export default hot(CommonPropertiesComponents);

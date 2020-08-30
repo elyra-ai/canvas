@@ -20,12 +20,13 @@ import { Type, ControlType } from "./../constants/form-constants";
 import { PropertyDef } from "./../form/PropertyDef";
 import { makeControl } from "./../form/EditorForm";
 import { L10nProvider } from "./../util/L10nProvider";
-import ControlUtils from "./../util/control-utils";
+import * as ControlUtils from "./../util/control-utils";
 
 import TextfieldControl from "./textfield";
 import ReadonlyControl from "./readonly";
 import ToggletextControl from "./toggletext";
 import TextareaControl from "./textarea";
+import ListControl from "./list";
 import ExpressionControl from "./expression";
 import PasswordControl from "./passwordfield";
 import NumberfieldControl from "./numberfield";
@@ -102,6 +103,8 @@ export default class ControlFactory {
 			return (<ReadonlyControl {...props} />);
 		case (ControlType.TEXTAREA):
 			return (<TextareaControl {...props} />);
+		case (ControlType.LIST):
+			return (<ListControl {...props} />);
 		case (ControlType.EXPRESSION):
 			return (<ExpressionControl
 				{...props}

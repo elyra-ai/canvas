@@ -21,15 +21,19 @@ import CommonPropertiesComponents from "./components/common-properties-component
 import CommonPropertiesConditions from "./components/common-properties-conditions.jsx";
 import "../styles/index.scss";
 import App from "./App";
+import AppSmall from "./App_small";
+import AppTiny from "./App_tiny";
 import { HashRouter, Route } from "react-router-dom";
 import { IntlProvider } from "react-intl";
 
 
 ReactDOM.render(
 	<HashRouter>
-		<IntlProvider>
+		<IntlProvider locale="en">
 			<div>
 				<Route exact path="/" component={ App } />
+				<Route exact path="/app-small" component={ AppSmall } />
+				<Route exact path="/app-tiny" component={ AppTiny } />
 				<Route path="/properties" component={ CommonPropertiesComponents } />
 				<Route path="/conditions" component={ CommonPropertiesConditions } />
 			</div>

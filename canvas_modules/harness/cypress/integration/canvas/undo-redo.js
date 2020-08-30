@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test basic undo/redo operations", function() {
 	before(() => {
@@ -91,18 +92,18 @@ describe("Test basic undo/redo operations", function() {
 
 		// Move node on canvas
 		cy.moveNodeToPosition("Var. File", 50, 50);
-		cy.verifyNodeIsMoved("Var. File");
+		verifyNodeIsMoved("Var. File");
 		// Undo and redo using toolbar
 		cy.clickToolbarUndo();
-		cy.verifyNodeIsNotMoved("Var. File");
+		verifyNodeIsNotMoved("Var. File");
 		cy.clickToolbarRedo();
 
 		// Move comment on canvas
 		cy.moveCommentToPosition("This comment box should be edited.", 100, 100);
-		cy.verifyCommentIsMoved("This comment box should be edited.");
+		verifyCommentIsMoved("This comment box should be edited.");
 		// Undo using toolbar
 		cy.clickToolbarUndo();
-		cy.verifyCommentIsNotMoved("This comment box should be edited.");
+		verifyCommentIsNotMoved("This comment box should be edited.");
 
 		// Click somewhere on canvas to deselect comment
 		cy.get("#canvas-div-0").click(1, 1);
@@ -129,12 +130,12 @@ describe("Test basic undo/redo operations", function() {
 		cy.openPropertyDefinition("spark.AddColumn.json");
 		cy.setTextFieldValue("colName", "testValue");
 		cy.saveFlyout();
-		cy.verifyColumnNameEntryInConsole("testValue");
+		verifyColumnNameEntryInConsole("testValue");
 		// Undo and redo using toolbar
 		cy.clickToolbarUndo();
-		cy.verifyTextValueIsNotPresentInColumnName("testValue");
+		verifyTextValueIsNotPresentInColumnName("testValue");
 		cy.clickToolbarRedo();
-		cy.verifyTextValueIsPresentInColumnName("testValue");
+		verifyTextValueIsPresentInColumnName("testValue");
 
 		cy.openCanvasDefinition("commentColorCanvas.json");
 
@@ -284,19 +285,19 @@ describe("Test select all canvas objects undo/redo operations", function() {
 
 		// Move node on canvas
 		cy.moveNodeToPosition("Sort", 50, 50);
-		cy.verifyNodeIsMoved("Sort");
+		verifyNodeIsMoved("Sort");
 		// Undo using toolbar
 		cy.clickToolbarUndo();
-		cy.verifyNodeIsNotMoved("Sort");
+		verifyNodeIsNotMoved("Sort");
 		// Redo using toolbar
 		cy.clickToolbarRedo();
 
 		// Move comment on canvas
 		cy.moveCommentToPosition(" comment 1", 100, 100);
-		cy.verifyCommentIsMoved(" comment 1");
+		verifyCommentIsMoved(" comment 1");
 		// Undo using toolbar
 		cy.clickToolbarUndo();
-		cy.verifyCommentIsNotMoved(" comment 1");
+		verifyCommentIsNotMoved(" comment 1");
 		// Redo using toolbar
 		cy.clickToolbarRedo();
 	});
@@ -420,6 +421,7 @@ describe("Test for undo/redo of layout actions", function() {
 	before(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
+		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray" });
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
@@ -509,9 +511,9 @@ describe("Test undo/redo property values and title in common-properties", functi
 		cy.saveFlyout();
 
 		//  Verification steps
-		cy.verifySamplingRatioParameterValueInConsole("samplingRatio", null);
-		cy.verifyErrorMessageForSamplingRatioParameterInConsole("error", "samplingRatio", "Select a sampling ratio");
-		cy.verifyNewPropertiesFlyoutTitleEntryInConsole("My C5.0 model");
+		verifySamplingRatioParameterValueInConsole("samplingRatio", null);
+		verifyErrorMessageForSamplingRatioParameterInConsole("error", "samplingRatio", "Select a sampling ratio");
+		verifyNewPropertiesFlyoutTitleEntryInConsole("My C5.0 model");
 
 		// Double-click "My C5.0 model" node to open node properties
 		cy.getNodeWithLabel("My C5.0 model").dblclick();
@@ -521,9 +523,9 @@ describe("Test undo/redo property values and title in common-properties", functi
 		cy.saveFlyout();
 
 		//  Verification steps
-		cy.verifySamplingRatioParameterValueInConsole("samplingRatio", 1);
-		cy.verifyNoErrorMessageInConsole();
-		cy.verifyNewPropertiesFlyoutTitleEntryInConsole("C5.0");
+		verifySamplingRatioParameterValueInConsole("samplingRatio", 1);
+		verifyNoErrorMessageInConsole();
+		verifyNewPropertiesFlyoutTitleEntryInConsole("C5.0");
 	});
 });
 
@@ -689,3 +691,94 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 		// cy.verifyNumberOfLinksInPipeline(0);
 	});
 });
+
+function verifyNewPropertiesFlyoutTitleEntryInConsole(newTitle) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
+		expect(newTitle).to.equal(lastEventLog.data.title);
+	});
+}
+
+function verifyColumnNameEntryInConsole(columnName) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(columnName).to.equal(lastEventLog.data.form.colName);
+	});
+}
+
+function verifySamplingRatioParameterValueInConsole(parameterName, value) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
+		expect(value).to.equal(lastEventLog.data.form[parameterName]);
+	});
+}
+
+function verifyErrorMessageForSamplingRatioParameterInConsole(messageType, parameterName, message) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
+		expect(lastEventLog.data.messages.length).not.equal(0);
+		for (var idx = 0; idx < lastEventLog.data.messages.length; idx++) {
+			if (lastEventLog.data.messages[idx].text === message &&
+					lastEventLog.data.messages[idx].type === messageType &&
+					lastEventLog.data.messages[idx].id_ref === parameterName) {
+				expect(lastEventLog.data.messages[idx].text).to.equal(message);
+				expect(lastEventLog.data.messages[idx].type).to.equal(messageType);
+				expect(lastEventLog.data.messages[idx].id_ref).to.equal(parameterName);
+				break;
+			}
+		}
+	});
+}
+
+function verifyNoErrorMessageInConsole() {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
+		expect(lastEventLog.data.messages.length).to.equal(0);
+	});
+}
+
+function verifyTextValueIsNotPresentInColumnName(columnName) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc, 2);
+		expect("").to.equal(lastEventLog.data.form.colName);
+	});
+}
+
+function verifyTextValueIsPresentInColumnName(columnName) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc, 2);
+		expect(columnName).to.equal(lastEventLog.data.form.colName);
+	});
+}
+
+function verifyNodeIsMoved(nodeName) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): moveObjects");
+		expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
+	});
+}
+
+function verifyNodeIsNotMoved(nodeName) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): undo");
+		expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
+	});
+}
+
+function verifyCommentIsMoved(commentText) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): moveObjects");
+		expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
+	});
+}
+
+function verifyCommentIsNotMoved(commentText) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): undo");
+		expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
+	});
+}

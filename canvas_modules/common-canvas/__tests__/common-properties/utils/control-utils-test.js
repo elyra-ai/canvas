@@ -15,7 +15,7 @@
  */
 
 import { expect } from "chai";
-import ControlUtils from "./../../../src/common-properties/util/control-utils.js";
+import * as ControlUtils from "./../../../src/common-properties/util/control-utils.js";
 
 const propertyId = {
 	name: "test"

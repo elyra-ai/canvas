@@ -15,4 +15,4 @@
  */
 
 import SomeofSelect from "./someofselect.jsx";
-module.exports = SomeofSelect;
+export default SomeofSelect;

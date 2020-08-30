@@ -1,0 +1,611 @@
+/*
+ * Copyright 2017-2020 IBM Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Canvas background color
+$canvas-background-color: $ui-background;
+
+// Region selection colors
+$region-selector-stroke-color: $ui-05;
+$region-selector-fill-color: $ui-03;
+
+// 'Back to previous flow' control colors
+$back-to-previous-flow-box-color: $interactive-01;
+$back-to-previous-flow-box-fill-hover: $ui-03;
+
+// Node colors
+$node-body-stroke: $ui-05;
+$node-body-fill: $ui-01;
+
+$node-body-stroke-hover: $ui-03;
+$node-body-fill-hover: $hover-selected-ui;
+
+$node-selection-color: $inverse-link;
+$node-label-color: $text-01;
+
+$node-decoration-outline: $ui-05;
+$node-halo-color: $inverse-link;
+
+$node-super-expand-icon-color: $brand-01;
+$node-super-expand-icon-background-hover-color: $active-01;
+
+$node-ellipsis-color: $brand-01;
+$node-ellipsis-background-hover-color: $ui-03;
+
+$node-error-color: $support-01; // Error red
+$node-warning-color: $support-03; // Warning yellow
+
+// Output port styles
+
+$node-port-output-stroke-color: $inverse-02;
+$node-port-output-fill-color: $node-body-fill;
+
+$node-port-output-connected-stroke-color: $inverse-02;
+$node-port-output-connected-fill-color: $inverse-02;
+
+$node-port-output-hover-stroke: $inverse-02;
+$node-port-output-hover-fill: $inverse-02;
+
+// Input port styles
+
+$node-port-input-stroke-color: $inverse-02;
+$node-port-input-fill-color: $node-body-fill;
+
+$node-port-input-connected-stroke-color: $node-body-fill;
+$node-port-input-connected-fill-color: $node-body-fill;
+
+$node-port-input-connected-super-binding-stroke-color: $inverse-02;
+$node-port-input-connected-super-binding-fill-color: $ui-02;
+
+$node-port-input-arrow-connected-stroke-color: $inverse-02;
+$node-port-input-arrow-connected-fill-color: transparent;
+
+// Comment colors
+$comment-outline-color: $ui-04;
+$comment-fill-color: $ui-01;
+$comment-text-color: $text-02;
+$comment-halo-color: $inverse-link;
+
+// Comment font
+// These values are used for both comment text and the comment textarea used for
+// text entry. They must be the same for each.
+$comment-text-font-size: 12px;
+$comment-text-font-weight: 400;
+$comment-text-font-family: "ibm-plex-sans", Helvetica Neue, Arial, sans-serif;
+
+// Link colors
+$comment-link-color: $ui-04;
+$object-link-color: $ui-05; // Used for association links for a regular data flow canvas
+$association-link-color: $ui-04; // Used for association links when config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE.
+$data-link-color: $inverse-link;
+$link-hightlight-color: $support-04;
+$new-halo-link-color: $ui-05;
+
+/* Canvas styles */
+
+.d3-svg-canvas-div {
+	cursor: default;
+	height: 100%;
+	background-color: $canvas-background-color;
+}
+
+.d3-svg-canvas-div:focus {
+	outline: none;
+}
+
+/* Pull-out region rectangle used for object selection */
+
+.d3-region-selector {
+	stroke: $region-selector-stroke-color;
+	fill: $region-selector-fill-color;
+	opacity: 0.5;
+}
+
+/* Background rectangle for sub-flow display inside supernodes */
+
+.d3-svg-background {
+	fill: $canvas-background-color;
+}
+
+.d3-canvas-underlay {
+	fill: $ui-03;
+}
+
+/* Temporary overlay to display altered pointer cursor styles on dynamic drag operations */
+
+.d3-temp-cursor-overlay {
+	fill: transparent;
+}
+
+/* Back to Previous Flow control */
+
+.d3-back-to-previous-flow-box {
+	stroke: $back-to-previous-flow-box-color;
+	fill: $canvas-background-color;
+}
+
+.d3-back-to-previous-flow-box[data-pointer-hover="yes"] {
+	stroke: $back-to-previous-flow-box-color;
+	fill: $back-to-previous-flow-box-fill-hover;
+}
+
+.d3-back-to-previous-flow-text {
+	font-size: 14px;
+	font-weight: 400;
+	fill: $back-to-previous-flow-box-color;
+}
+
+.d3-back-to-previous-flow-box, .d3-back-to-previous-flow-text {
+	cursor: pointer;
+}
+
+/* Node and comment styles */
+
+.d3-node-group,
+.d3-comment-group {
+	cursor: pointer;
+}
+
+.d3-node-group-translucent {
+	opacity: 0.5;
+}
+
+.d3-node-sizing,
+.d3-comment-sizing {
+	fill: transparent;
+	stroke: transparent;
+}
+
+/* Node styles  */
+
+.d3-node-body-outline {
+	stroke: $node-body-stroke;
+	stroke-width: 1;
+	fill: $node-body-fill;
+}
+
+.d3-node-body-outline[hover="yes"] {
+	stroke: $node-body-stroke-hover;
+	stroke-width: 1;
+	fill: $node-body-fill-hover;
+}
+
+.d3-node-selection-highlight {
+	stroke-width: 0;
+	fill: transparent;
+}
+
+.d3-node-selection-highlight[data-selected="yes"] {
+	stroke: $node-selection-color;
+	stroke-dasharray: none; /* Solid line */
+	stroke-width: 5;
+	fill: transparent;
+}
+
+/* Used for debugging node image position. */
+.d3-node-image-outline {
+	stroke: $node-body-stroke;
+	stroke-width: 2;
+	fill: $node-body-fill;
+}
+
+.d3-node-label {
+	font-size: 12px;
+	font-weight: 500;
+	fill: $node-label-color;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
+}
+
+.d3-node-label-middle {
+	text-anchor: middle;
+}
+
+.d3-supernode-label {
+	font-size: 13px;
+	fill: $node-label-color;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
+}
+
+/* Node styles - Error indication */
+
+.d3-node-error-label {
+	fill: $node-error-color;
+}
+
+.d3-node-warning-label {
+	fill: $node-warning-color;
+}
+
+/* Used for debugging label position */
+
+.d3-label-outline {
+	fill: $node-body-fill;
+	stroke: $node-body-stroke;
+	stroke-width: 1;
+}
+
+.d3-node-dec-outline,
+.d3-link-dec-outline {
+	fill: transparent;
+	stroke: $node-decoration-outline;
+	stroke-width: 1;
+}
+
+.d3-node-dec-label,
+.d3-link-dec-label {
+	font-size: 13px;
+	fill: $node-label-color;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
+}
+
+.d3-node-dec-path,
+.d3-link-dec-path {
+	fill: $node-decoration-outline;
+	stroke: $node-decoration-outline;
+	stroke-width: 1;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
+}
+
+
+/* Node halo styles */
+
+.d3-node-halo {
+	fill: none;
+	stroke: transparent;
+	stroke-width: 8;
+}
+
+.d3-node-halo:hover {
+	fill: none;
+	stroke: $node-halo-color;
+	stroke-width: 8;
+}
+
+/* Super node styles */
+
+.d3-node-ellipsis-group {
+	.d3-node-ellipsis-background {
+		fill: transparent;
+		stroke-width: 0;
+		cursor: context-menu;
+	}
+
+	.d3-node-ellipsis {
+		fill: $node-ellipsis-color;
+		stroke-width: 0;
+		cursor: context-menu;
+	}
+
+	&:hover {
+		.d3-node-ellipsis-background {
+			fill: $node-ellipsis-background-hover-color;
+		}
+	}
+}
+
+.d3-node-super-expand-icon-group {
+	.d3-node-super-expand-icon-background {
+		fill: transparent;
+		stroke-width: 0;
+		cursor: context-menu;
+	}
+
+	.d3-node-super-expand-icon {
+		fill: $node-super-expand-icon-color;
+		stroke-width: 0;
+		cursor: context-menu;
+	}
+
+	&:hover {
+		.d3-node-super-expand-icon-background {
+			fill: $node-super-expand-icon-background-hover-color;
+		}
+	}
+}
+
+
+/* Error indicator */
+.d3-error-circle {
+	stroke: $canvas-background-color;
+	stroke-width: 2;
+	fill: $node-error-color;
+}
+
+/* Warning indicator */
+.d3-warning-circle {
+	stroke: $canvas-background-color;
+	stroke-width: 2;
+	fill: $node-warning-color;
+}
+
+/* Invisible Error indicator */
+.d3-error-circle-off {
+	display: none;
+}
+
+/* Styles for ports */
+
+.d3-node-port-output {
+	stroke: $node-port-output-stroke-color;
+	fill: $node-port-output-fill-color;
+	stroke-width: 1.25;
+}
+
+.d3-node-port-output[connected="yes"] {
+	stroke: $node-port-output-connected-stroke-color;
+	fill: $node-port-output-connected-fill-color;
+	stroke-width: 2;
+}
+
+.d3-node-port-output:hover {
+	stroke: $node-port-output-hover-stroke;
+	fill: $node-port-output-hover-fill;
+}
+
+.d3-node-port-input {
+	stroke: $node-port-input-stroke-color;
+	fill: $node-port-input-fill-color;
+	stroke-width: 1.25;
+}
+
+.d3-node-port-input-assoc {
+	stroke: $node-port-input-stroke-color;
+	fill: $node-port-input-fill-color;
+	stroke-width: 1.25;
+}
+
+.d3-node-port-input-assoc:hover {
+	stroke: $node-port-output-hover-stroke;
+	fill: $node-port-output-hover-fill;
+}
+
+.d3-node-port-input[connected="yes"] {
+	stroke: $node-port-input-connected-stroke-color;
+	fill: $node-port-input-connected-fill-color;
+	stroke-width: 1;
+}
+
+.d3-node-port-input[connected="yes"][isSupernodeBinding="yes"] {
+	stroke: $node-port-input-connected-super-binding-stroke-color;
+	fill: $node-port-input-connected-super-binding-fill-color;
+	stroke-width: 1;
+}
+
+.d3-node-port-input-arrow {
+	stroke: transparent;
+	fill: transparent;
+}
+
+.d3-node-port-input-arrow[connected="yes"] {
+	stroke: $node-port-input-arrow-connected-stroke-color;
+	stroke-width: 1;
+	fill: $node-port-input-arrow-connected-fill-color;
+}
+
+/* New connection dynamic line styles. */
+
+.d3-new-connection-line[linkType="nodeLink"],
+.d3-new-connection-line[linkType="associationLink"] {
+	stroke: $data-link-color;
+	stroke-width: 2;
+	stroke-dasharray: 10 10;
+	fill: none;
+}
+
+.d3-new-connection-start[linkType="nodeLink"],
+.d3-new-connection-start[linkType="associationLink"] {
+	stroke: $data-link-color;
+	fill: $canvas-background-color;
+}
+
+.d3-new-connection-guide[linkType="nodeLink"],
+.d3-new-connection-guide[linkType="associationLink"] {
+	stroke: $data-link-color;
+	fill: $data-link-color;
+}
+
+/* New connection dynamic line styles for comment links */
+
+.d3-new-connection-line[linkType="commentLink"] {
+	stroke: $comment-link-color;
+	stroke-width: 1;
+	stroke-dasharray: 10 10;
+	fill: none;
+}
+
+.d3-new-connection-guide[linkType="commentLink"] {
+	stroke: $comment-link-color;
+	stroke-width: 4;
+	fill: $comment-link-color;
+}
+
+.d3-new-connection-arrow[linkType="commentLink"] {
+	stroke: $comment-link-color;
+	stroke-width: 2;
+	fill: $comment-link-color;
+}
+
+.d3-comment-port-circle {
+	stroke: $comment-link-color;
+	stroke-width: 2;
+	fill: $comment-link-color;
+}
+
+/* Halo - Temporary connector line pulled out from halo */
+
+.d3-new-halo-connection {
+	stroke: $new-halo-link-color;
+	stroke-dasharray: 2.2;
+}
+
+/* Comment styles */
+
+/* Style for comment background rectangle */
+.d3-comment-rect {
+	fill: $comment-fill-color;
+	stroke: $comment-outline-color;
+	stroke-width: 1;
+
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly. */
+	user-select: none;
+}
+
+.d3-comment-selection-highlight {
+	stroke-width: 0;
+	fill: transparent;
+	pointer-events: none;
+}
+
+.d3-comment-selection-highlight[data-selected="yes"] {
+	stroke: $node-selection-color;
+	stroke-dasharray: none; /* Solid line */
+	stroke-width: 3;
+	fill: transparent;
+	pointer-events: none;
+}
+
+.d3-comment-text {
+	fill: $comment-text-color;  /* Must be the same as color in .d3-comment-display */
+}
+
+/* Style for comment text when displayed as SVG text */
+.d3-comment-text-tspan {
+	font-size: $comment-text-font-size;
+	font-weight: $comment-text-font-weight;
+	font-family: $comment-text-font-family;
+	position: absolute;
+	pointer-events: none;   /* This prevents strange problems with div focus that occur when the text is clicked. */
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	user-select: none;
+}
+
+/* Style for comment text entry when shown in an HTML textarea control. */
+.d3-comment-entry {
+	color: $comment-text-color;
+	font-size: $comment-text-font-size;
+	font-weight: $comment-text-font-weight;
+	font-family: $comment-text-font-family;
+	position: absolute;
+	border: 0;
+	resize: none;
+	padding-left: 10px;  /* This needs to be the same as the commentWidthPadding in layout-dimensions.js */
+	padding-right: 10px; /* This needs to be the same as the commentWidthPadding  in layout-dimensions.js */
+	padding-top: 8px;    /* This needs to be the same as the commentHeightPadding in layout-dimensions.js */
+	padding-bottom: 8px; /* This needs to be the same as the commentHeightPadding  in layout-dimensions.js */
+	overflow: hidden;
+	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
+	white-space: pre-line;
+	word-wrap: normal;
+	word-break: break-word;
+	background-color: transparent;
+}
+
+/* Comment halo styles */
+
+.d3-comment-halo {
+	fill: none;
+	stroke: transparent;
+	stroke-width: 8;
+}
+
+.d3-comment-halo:hover {
+	fill: none;
+	stroke: $comment-halo-color;
+	stroke-width: 8;
+}
+
+/* Link styles */
+
+// Common styles for all links
+.d3-link-line {
+	fill: none;
+	pointer-events: none; // Allow events to go to selection area
+}
+
+.d3-comment-link {
+	stroke: $comment-link-color;
+	stroke-width: 1;
+	stroke-dasharray: 7.3;
+}
+
+.d3-comment-link-arrow-head {
+	stroke: $comment-link-color;
+	stroke-width: 2;
+	stroke-dasharray: 0;
+}
+
+/* 'object link' is the historical name for an association link */
+/* This styles is used for association links on a regular data flow canvas */
+.d3-object-link {
+	stroke: $object-link-color;
+	stroke-width: 2;
+	stroke-dasharray: 5.5;
+}
+
+/* This style is used for association links which are displayed with the */
+/* enableAssocLinkType config variable set to ASSOC_RIGHT_SIDE_CURVE.  */
+.d3-association-link {
+	stroke: $association-link-color;
+	stroke-width: 2;
+}
+
+.d3-data-link {
+	stroke: $data-link-color;
+	stroke-width: 2;
+}
+
+.d3-data-link-arrow-head {
+	stroke: $data-link-color;
+	stroke-width: 2;
+	stroke-dasharray: 0; // Ensure arrow head is always solid
+}
+
+.d3-link-selection-area {
+	fill: none;
+	stroke: transparent;
+	stroke-width: 12;
+	&.d3-extra-width {
+		stroke-width: 80;
+	}
+}
+
+// Used when an insertable node is dragged over a link line.
+.d3-link-line.d3-data-link[data-drag-node-over] {
+	stroke: $link-hightlight-color;
+	stroke-width: 5;
+}
+
+// When pointer hovers over the link this style will be applied.
+.d3-link-group:hover .d3-link-line,
+.d3-link-group:hover .d3-link-line-arrow-head {
+	stroke: $link-hightlight-color;
+}
+
+// Style line and arrow head when link is selected.
+.d3-link-group[data-selected] .d3-link-line,
+.d3-link-group[data-selected] .d3-link-line-arrow-head {
+	stroke: $link-hightlight-color;
+	stroke-width: 3px;
+}

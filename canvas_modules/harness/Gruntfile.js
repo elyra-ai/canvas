@@ -16,6 +16,8 @@
 /* eslint global-require: 0 */
 /* eslint quote-props: 0 */
 
+"use strict";
+
 var IS_PRODUCTION = process.env.NODE_ENV === "production";
 var codeCoverageDir = "reports/coverage";
 
@@ -84,7 +86,7 @@ module.exports = function(grunt) {
 				files: [{
 					expand: true,
 					flatten: false,
-					cwd: "./node_modules/@elyra/canvas/dist",
+					cwd: "./node_modules/@elyra/canvas/dist/styles",
 					src: ["common-canvas*.css"],
 					dest: ".build"
 				},

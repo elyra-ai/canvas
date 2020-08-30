@@ -17,7 +17,7 @@
 import has from "lodash/has";
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 import { BINDING, EXECUTION_NODE, SUPER_NODE, MODEL_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class PipelineInHandler {
@@ -79,8 +79,7 @@ export default class PipelineInHandler {
 				"parameters": has(node, "parameters") ? node.parameters : [],
 				"messages": has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
 				"ui_parameters": has(node, "app_data.ui_data.ui_parameters") ? node.app_data.ui_data.ui_parameters : [],
-				"app_data": has(node, "app_data") ? this.removeUiDataFromAppData(node.app_data) : [],
-
+				"app_data": has(node, "app_data") ? this.removeUiDataFromAppData(node.app_data) : []
 			};
 			if (node.type === EXECUTION_NODE ||
 					node.type === BINDING ||
@@ -117,6 +116,12 @@ export default class PipelineInHandler {
 			}
 			if (has(node, "isSupernodeOutputBinding")) {
 				obj.isSupernodeOutputBinding = true;
+			}
+			if (has(node, "connection")) {
+				obj.connection = node.connection;
+			}
+			if (has(node, "data_asset")) {
+				obj.data_asset = node.data_asset;
 			}
 			return obj;
 		});

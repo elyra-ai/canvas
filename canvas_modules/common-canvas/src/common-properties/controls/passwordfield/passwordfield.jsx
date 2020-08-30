@@ -17,9 +17,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import TextInput from "carbon-components-react/lib/components/TextInput";
+import { TextInput } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
-import ControlUtils from "./../../util/control-utils";
+import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
 
@@ -49,6 +49,7 @@ class PasswordControl extends React.Component {
 					labelText={this.props.control.label ? this.props.control.label.text : ""}
 					hideLabel
 					type="password"
+					light
 				/>
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>);

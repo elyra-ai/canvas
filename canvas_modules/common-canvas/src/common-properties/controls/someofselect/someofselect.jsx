@@ -18,11 +18,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import FlexibleTable from "../../components/flexible-table";
-import ControlUtils from "./../../util/control-utils";
+import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
-import intersection from "lodash/intersection";
-import isEqual from "lodash/isEqual";
+import { isEqual, intersection } from "lodash";
 
 import { TABLE_SCROLLBAR_WIDTH, STATES } from "../../constants/constants";
 

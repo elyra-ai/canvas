@@ -18,27 +18,27 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { setActiveTab } from "./../../actions";
-import Tabs from "carbon-components-react/lib/components/Tabs";
-import Tab from "carbon-components-react/lib/components/Tab";
-import PropertyUtil from "./../../util/property-utils.js";
+import { Tab, Tabs } from "carbon-components-react";
+import * as PropertyUtil from "./../../util/property-utils";
 import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
-import isEmpty from "lodash/isEmpty";
-import sortBy from "lodash/sortBy";
-import cloneDeep from "lodash/cloneDeep";
+import { cloneDeep, isEmpty, sortBy } from "lodash";
 import logger from "./../../../../utils/logger";
 import classNames from "classnames";
 
 import SelectorPanel from "./../../panels/selector";
 import SummaryPanel from "./../../panels/summary";
 import TwistyPanel from "./../../panels/twisty";
-import SubPanelButton from "./../../panels/sub-panel/button.jsx";
+import SubPanelButton from "./../../panels/sub-panel/button";
+import ColumnPanel from "./../../panels/column";
+import ControlPanel from "./../../panels/control";
+import Subtabs from "./../../panels/subtabs";
 
 import WideFlyout from "./../wide-flyout";
 import FieldPicker from "./../field-picker";
 import TextPanel from "./../../panels/text-panel";
 import ActionPanel from "./../../panels/action-panel";
 
-import ActionFactory from "./../../actions/action-factory.js";
+import ActionFactory from "./../../actions/action-factory";
 import Icon from "./../../../icons/icon.jsx";
 
 const ALERT_TAB_GROUP = "alertMsgs";
@@ -48,8 +48,7 @@ class EditorForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showFieldPicker: false,
-			activeSubTabs: {} // map since there can be more than 1 subtab
+			showFieldPicker: false
 		};
 
 		this.genPanel = this.genPanel.bind(this);
@@ -123,12 +122,6 @@ class EditorForm extends React.Component {
 
 	_modalTabsOnClick(tabId) {
 		this.props.setActiveTab(tabId);
-	}
-
-	_subTabsOnClick(groupId, subTabId) {
-		const activeSubTabs = this.state.activeSubTabs;
-		activeSubTabs[groupId] = subTabId;
-		this.setState({ activeSubTabs: activeSubTabs });
 	}
 
 	genPrimaryTabs(key, tabs, propertyId, indexof) {
@@ -217,42 +210,6 @@ class EditorForm extends React.Component {
 			return index - 1;
 		}
 		return index;
-	}
-
-	genSubTabs(key, tabs, propertyId, indexof) {
-		// logger.info("genSubTabs");
-		const subTabs = [];
-		let activeSubTab = 0;
-		// generate id for group of tabs
-		let tabGroupId = "subtab";
-		for (const tab of tabs) {
-			tabGroupId += "." + tab.group;
-		}
-		for (let i = 0; i < tabs.length; i++) {
-			const tab = tabs[i];
-			const subPanelItems = this.genUIItem(i, tab.content, propertyId, indexof);
-			if (tab.content.panel.id === this.state.activeSubTabs[tabGroupId]) {
-				activeSubTab = i;
-			}
-			subTabs.push(
-				<Tab
-					className="properties-subtab"
-					key={"subtabs.tab." + key + "." + i}
-					tabIndex={i}
-					label={tab.text}
-					onClick={this._subTabsOnClick.bind(this, tabGroupId, tab.group)}
-				>
-					{subPanelItems}
-				</Tab>
-			);
-		}
-		return (
-			<div key={"subtabs.div." + key} className={classNames("properties-sub-tab-container", { vertical: !this.props.rightFlyout })}>
-				<Tabs key={"subtabs.tabs." + key} className="properties-subtabs" selected={activeSubTab}>
-					{subTabs}
-				</Tabs>
-			</div>
-		);
 	}
 
 	genPanelSelector(key, tabs, dependsOn, propertyId, indexof, panelId) {
@@ -353,7 +310,7 @@ class EditorForm extends React.Component {
 		case ("panel"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("subTabs"):
-			return this.genSubTabs(key, uiItem.tabs, inPropertyId, indexof);
+			return (<Subtabs key={"subtabs." + key} tabs={uiItem.tabs} controller={this.props.controller} rightFlyout={this.props.rightFlyout} genUIItem={this.genUIItem} />);
 		case ("primaryTabs"):
 			return this.genPrimaryTabs(key, uiItem.tabs, inPropertyId, indexof);
 		case ("panelSelector"):
@@ -420,12 +377,13 @@ class EditorForm extends React.Component {
 			this.generateSharedControlNames(panel);
 			// needs to be ran after setting shared controls to get correct fields in shared controls
 			content = this.genUIContent(panel.uiItems, propertyId, indexof);
-			return (<div
-				className="properties-control-panel"
-				key={key}
+			return (<ControlPanel
+				key={id}
+				controller={this.props.controller}
+				panel={panel}
 			>
 				{content}
-			</div>);
+			</ControlPanel>);
 		case ("summary"):
 			if (this.props.rightFlyout) {
 				return (
@@ -452,10 +410,23 @@ class EditorForm extends React.Component {
 				>
 					{content}
 				</TwistyPanel>);
+		case ("column"):
+			return (
+				<ColumnPanel
+					key={id}
+					controller={this.props.controller}
+					panel={panel}
+				>
+					{content}
+				</ColumnPanel>);
 		default:
-			return (<div className="properties-control-panel" key={key} data-id={"properties-" + panel.id}>
+			return (<ControlPanel
+				key={id}
+				controller={this.props.controller}
+				panel={panel}
+			>
 				{content}
-			</div>);
+			</ControlPanel>);
 		}
 	}
 

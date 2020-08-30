@@ -25,20 +25,22 @@ function _defineConstant(key, value) {
 _defineConstant("MESSAGE_KEYS", {
 	SUBPANEL_BUTTON_TOOLTIP: "subPanel.button.tooltip",
 	STRUCTURELISTEDITOR_ADDBUTTON_LABEL: "structureListEditor.addButton.label",
-	STRUCTURELISTEDITOR_REMOVEBUTTON_TOOLTIP: "structureListEditor.removeButton.tooltip",
-	STRUCTURELISTEDITOR_ADDBUTTON_TOOLTIP: "structureListEditor.addButton.tooltip",
+	STRUCTURELISTEDITOR_REMOVEBUTTON_LABEL: "structureListEditor.removeButton.label",
 	STRUCTURETABLE_ADDBUTTON_LABEL: "structureTable.addButton.label",
-	STRUCTURETABLE_ADDBUTTON_TOOLTIP: "structureTable.addButton.tooltip",
 	STRUCTURETABLE_REMOVEBUTTON_LABEL: "structureTable.removeButton.label",
-	STRUCTURETABLE_REMOVEBUTTON_TOOLTIP: "structureTable.removeButton.tooltip",
 	FIELDPICKER_SAVEBUTTON_LABEL: "fieldPicker.saveButton.label",
 	FIELDPICKER_SAVEBUTTON_TOOLTIP: "fieldPicker.saveButton.tooltip",
 	FIELDPICKER_RESETBUTTON_LABEL: "fieldPicker.resetButton.label",
-	FIELDPICKER_RESETBUTTON_TOOLTIP: "fieldPicker.resetButton.tooltip",
 	FIELDPICKER_FILTER_LABEL: "fieldPicker.filter.label",
 	FIELDPICKER_FIELDCOLUMN_LABEL: "fieldPicker.fieldColumn.label",
 	FIELDPICKER_SCHEMACOLUMN_LABEL: "fieldPicker.schemaColumn.label",
 	FIELDPICKER_DATATYPECOLUMN_LABEL: "fieldPicker.dataTypeColumn.label",
+	FIELDPICKER_INTEGER_LABEL: "fieldPicker.integer.label",
+	FIELDPICKER_DOUBLE_LABEL: "fieldPicker.double.label",
+	FIELDPICKER_STRING_LABEL: "fieldPicker.string.label",
+	FIELDPICKER_DATE_LABEL: "fieldPicker.date.label",
+	FIELDPICKER_TIME_LABEL: "fieldPicker.time.label",
+	FIELDPICKER_TIMESTAMP_LABEL: "fieldPicker.timestamp.label",
 	APPLYBUTTON_LABEL: "flyout.applyButton.label",
 	REJECTBUTTON_LABEL: "flyout.rejectButton.label",
 	PROPERTIESEDIT_CLOSEBUTTON_LABEL: "propertiesEdit.closeButton.label",
@@ -86,7 +88,8 @@ _defineConstant("MESSAGE_KEYS", {
 	MOVEABLE_TABLE_BUTTON_TOP_DESCRIPTION: "moveable.table.button.top",
 	MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION: "moveable.table.button.up",
 	MOVEABLE_TABLE_BUTTON_DOWN_DESCRIPTION: "moveable.table.button.down",
-	MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION: "moveable.table.button.bottom"
+	MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION: "moveable.table.button.bottom",
+	LIST_TABLE_LABEL: "list.table.label"
 });
 
 _defineConstant("CHARACTER_LIMITS", {
@@ -196,7 +199,8 @@ _defineConstant("CARBON_ICONS", {
 		RIGHT: "chevron-right"
 	},
 	CALCULATOR: "calculator",
-	ADD: "add-alt",
+	ADD: "add",
+	REMOVE: "remove",
 	EDIT: "edit",
 	MEASUREMENTS: {
 		EMPTY: "measurement-empty",

@@ -18,14 +18,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import isEmpty from "lodash/isEmpty";
-import Button from "carbon-components-react/lib/components/Button";
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
-import TextArea from "carbon-components-react/lib/components/TextArea";
-import TextInput from "carbon-components-react/lib/components/TextInput";
-import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
-import RadioButton from "carbon-components-react/lib/components/RadioButton";
-import Toggle from "carbon-components-react/lib/components/Toggle";
+import { isEmpty } from "lodash";
+import { Toggle, Button, Dropdown, TextArea, TextInput, RadioButtonGroup, RadioButton } from "carbon-components-react";
 import {
 	API_SET_PIPELINEFLOW,
 	API_ADD_PALETTE_ITEM,
@@ -89,6 +83,7 @@ export default class SidePanelAPI extends React.Component {
 			appendLink: false,
 			closeMessage: false,
 			notificationTitle: "",
+			notificationSubtitle: "",
 			notificationMessage: "",
 			notificationType: NOTIFICATION_MESSAGE_TYPE.INFO,
 			zoomObject: JSON.stringify({ x: 0, y: 0, k: 1 }),
@@ -163,7 +158,7 @@ export default class SidePanelAPI extends React.Component {
 		} else if (operation === API_ZOOM_CANVAS_TO_REVEAL) {
 			nodes = this.getNodePortList(this.props.apiConfig.getCanvasInfo().nodes);
 			if (!isEmpty(nodes)) {
-				const zoomObj = this.props.apiConfig.getZoomToReveal(nodes[0].value);
+				const zoomObj = this.props.apiConfig.getZoomToReveal(nodes[0].value, this.state.zoomXPos, this.state.zoomYPos);
 				newZoomObj = zoomObj ? JSON.stringify(newZoomObj) : "";
 			}
 		}
@@ -221,7 +216,7 @@ export default class SidePanelAPI extends React.Component {
 				}
 			} else if (this.props.apiConfig.selectedOperation === API_ZOOM_CANVAS_TO_REVEAL) {
 				// get list of output ports for the selected node and select the first one by default
-				const zoomObj = this.props.apiConfig.getZoomToReveal(existingNode.id);
+				const zoomObj = this.props.apiConfig.getZoomToReveal(existingNode.id, this.state.zoomXPos, this.state.zoomYPos);
 				newState.zoomObject = zoomObj ? JSON.stringify(zoomObj) : "";
 			}
 		}
@@ -285,6 +280,18 @@ export default class SidePanelAPI extends React.Component {
 				stateObj.isValidPaletteItem = false;
 			}
 			break;
+		case "zoomXPos": {
+			stateObj.zoomXPos = evt.target.value;
+			const zoomObj = this.props.apiConfig.getZoomToReveal(this.state.nodeId, stateObj.zoomXPos, this.state.zoomYPos);
+			stateObj.zoomObject = zoomObj ? JSON.stringify(zoomObj) : "";
+			break;
+		}
+		case "zoomYPos": {
+			stateObj.zoomYPos = evt.target.value;
+			const zoomObj = this.props.apiConfig.getZoomToReveal(this.state.nodeId, this.state.zoomXPos, stateObj.zoomYPos);
+			stateObj.zoomObject = zoomObj ? JSON.stringify(zoomObj) : "";
+			break;
+		}
 		default: {
 			break;
 		}
@@ -460,6 +467,7 @@ export default class SidePanelAPI extends React.Component {
 				id: "harness-message-" + this.messageCounter++,
 				type: this.state.notificationType,
 				title: this.state.notificationTitle ? this.state.notificationTitle : null,
+				subtitle: this.state.notificationSubtitle ? this.state.notificationSubtitle : null,
 				content: messageContent,
 				timestamp: this.state.appendTimestamp ? new Date().toLocaleString("en-US") : null,
 				callback: this.state.attachCallback ? this.notificationMessageCallback : null,
@@ -715,6 +723,16 @@ export default class SidePanelAPI extends React.Component {
 						value={this.state.notificationTitle}
 					/>
 				</div>
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-nm-subtitle">
+					<TextInput
+						id="harness-messageSubtitle"
+						labelText="Message Subtitle (Optional)"
+						hideLabel
+						placeholder="Message Subtitle (Optional)"
+						onChange={this.onFieldChange.bind(this, "notificationSubtitle")}
+						value={this.state.notificationSubtitle}
+					/>
+				</div>
 				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-nm-content">
 					<TextArea
 						labelText="Message Content"
@@ -778,7 +796,30 @@ export default class SidePanelAPI extends React.Component {
 						items={this.dropdownOptions(this.state.nodes)}
 					/>
 				</div>
-				<div className="harness-sidepanel-spacer" />
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer1" />
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer2" />
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-x-content">
+					<TextArea
+						labelText="X position"
+						rows={1}
+						placeholder="X percent offset"
+						onChange={this.onFieldChange.bind(this, "zoomXPos")}
+						value={this.state.zoomXPos}
+					/>
+				</div>
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer3" />
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer4" />
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-y-content">
+					<TextArea
+						labelText="Y position"
+						rows={1}
+						placeholder="Y percent offset"
+						onChange={this.onFieldChange.bind(this, "zoomYPos")}
+						value={this.state.zoomYPos}
+					/>
+				</div>
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer5" />
+				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer6" />
 				<TextArea
 					labelText="Zoom Object"
 					rows={4}

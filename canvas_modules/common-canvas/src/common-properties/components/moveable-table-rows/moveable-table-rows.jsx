@@ -16,9 +16,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "carbon-components-react/lib/components/Button";
-import PropertyUtils from "./../../util/property-utils";
-import { ArrowUp24, ArrowDown24, BackToTop24, DownToBottom24 } from "@carbon/icons-react";
+import { Button } from "carbon-components-react";
+import { formatMessage } from "./../../util/property-utils";
+import { ArrowUp24, ArrowDown24, UpToTop24, DownToBottom24 } from "@carbon/icons-react";
 import classNames from "classnames";
 
 import { MESSAGE_KEYS } from "./../../constants/constants";
@@ -41,8 +41,8 @@ export default class MoveableTableRows extends React.Component {
 		const topEnabled = (selected.length !== 0 && selected[0] !== 0) && !this.props.disabled;
 		const bottomEnabled = (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) && !this.props.disabled;
 
-		const topLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_TOP_DESCRIPTION);
-		const upLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION);
+		const topLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_TOP_DESCRIPTION);
+		const upLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION);
 		const topImages = (
 			<div key="topImages">
 				<Button
@@ -50,7 +50,7 @@ export default class MoveableTableRows extends React.Component {
 					onClick={this.topMoveRow}
 					disabled={!topEnabled}
 					kind="ghost"
-					renderIcon={BackToTop24}
+					renderIcon={UpToTop24}
 					iconDescription={topLabel}
 				/>
 				<Button
@@ -63,8 +63,8 @@ export default class MoveableTableRows extends React.Component {
 				/>
 			</div>
 		);
-		const bottomLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_DOWN_DESCRIPTION);
-		const downLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION);
+		const bottomLabel = formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_DOWN_DESCRIPTION);
+		const downLabel = formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION);
 		const bottomImages = (
 			<div key="bottomImages">
 				<Button

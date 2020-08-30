@@ -804,7 +804,7 @@
           "default": "Name"
         },
         "description": {
-          "default": "Enter your name to enable 'Expression'"
+          "default": "Enter your name to enable 'Expression'. Expression will be hidden if set to 'hide expression box'"
         }
       },
       {
@@ -1935,6 +1935,20 @@
           "condition": {
             "parameter_ref": "passwordField",
             "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "expressionBox"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "textfieldName",
+            "op": "notEquals",
+            "value": "hide expression box"
           }
         }
       }

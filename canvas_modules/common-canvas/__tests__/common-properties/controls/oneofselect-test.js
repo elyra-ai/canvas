@@ -88,7 +88,7 @@ describe("oneofselect renders correctly", () => {
 		);
 
 		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
+		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
 	});
 	it("dropdown handles null correctly", () => {
 		controller.setPropertyValues(
@@ -103,8 +103,8 @@ describe("oneofselect renders correctly", () => {
 			/>
 		);
 		let dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 
 		// select the first item
@@ -127,9 +127,9 @@ describe("oneofselect renders correctly", () => {
 			/>
 		);
 		let dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
+		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
@@ -152,7 +152,7 @@ describe("oneofselect renders correctly", () => {
 			/>
 		);
 		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		expect(dropdownWrapper.find("div > span").text()).to.equal(control.additionalText);
+		expect(dropdownWrapper.find("button > span").text()).to.equal(control.additionalText);
 	});
 	it("dropdown renders when disabled", () => {
 		controller.updateControlState(propertyId, "disabled");
@@ -192,7 +192,7 @@ describe("oneofselect renders correctly", () => {
 		);
 		let dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
 		// select the first item
@@ -237,7 +237,7 @@ describe("oneofselect paramDef works correctly", () => {
 
 	it("oneofselect allows enum label different from enum value", () => {
 		let dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
 		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
@@ -249,7 +249,7 @@ describe("oneofselect paramDef works correctly", () => {
 
 	it("oneofselect allows enum label to be created for an enum value with space", () => {
 		let dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
 		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
@@ -261,7 +261,7 @@ describe("oneofselect paramDef works correctly", () => {
 
 	it("Validate oneofselect should have options filtered by enum_filter", () => {
 		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect_filtered']");
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		// validate the correct number of options show up on open
 		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect_filtered']");

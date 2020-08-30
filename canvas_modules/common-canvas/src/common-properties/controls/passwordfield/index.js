@@ -15,4 +15,4 @@
  */
 
 import PasswordField from "./passwordfield.jsx";
-module.exports = PasswordField;
+export default PasswordField;

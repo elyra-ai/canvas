@@ -15,11 +15,9 @@
  */
 /* eslint no-console: "off" */
 
-import React from "react";
 import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller";
-import CommonCanvas from "../../src/common-canvas/common-canvas.jsx";
-import { mountWithIntl } from "../_utils_/intl-utils";
+import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 
@@ -116,32 +114,31 @@ describe("Expand and Collapse Supernode Action", () => {
 
 function createCommonCanvas(config, canvasController) {
 	const contextMenuHandler = sinon.spy();
-	const contextMenuActionHandler = sinon.spy();
+	const beforeEditActionHandler = null;
 	const editActionHandler = sinon.spy();
 	const clickActionHandler = sinon.spy();
 	const decorationActionHandler = sinon.spy();
 	const selectionChangeHandler = sinon.spy();
 	const tipHandler = sinon.spy();
-	const toolbarMenuActionHandler = sinon.spy();
 	const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 	const notificationConfig = { action: "notification", label: "Notifications", enable: true };
+	const contextMenuConfig = null;
+	const showRightFlyout = false;
+	const wrapper = createIntlCommonCanvas(
+		config,
+		contextMenuHandler,
+		beforeEditActionHandler,
+		editActionHandler,
+		clickActionHandler,
+		decorationActionHandler,
+		selectionChangeHandler,
+		tipHandler,
 
-	const wrapper = mountWithIntl(
-		<CommonCanvas
-			config={config}
-			contextMenuHandler={contextMenuHandler}
-			contextMenuActionHandler={contextMenuActionHandler}
-			editActionHandler={editActionHandler}
-			clickActionHandler={clickActionHandler}
-			decorationActionHandler={decorationActionHandler}
-			selectionChangeHandler={selectionChangeHandler}
-			tipHandler={tipHandler}
-			toolbarConfig={toolbarConfig}
-			notificationConfig={notificationConfig}
-			showRightFlyout={false}
-			toolbarMenuActionHandler={toolbarMenuActionHandler}
-			canvasController={canvasController}
-		/>
+		toolbarConfig,
+		notificationConfig,
+		contextMenuConfig,
+		showRightFlyout,
+		canvasController
 	);
 	return wrapper;
 }

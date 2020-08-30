@@ -24,6 +24,10 @@
     "checkbox_hidden": [
       "pear"
     ],
+    "disable_and_hide": false,
+    "checkboxset_disable_and_hide": [
+      "pear"
+    ],
     "filter": false,
     "filter2": false,
     "checkboxset_filtered": [
@@ -131,6 +135,19 @@
     },
     {
       "id": "checkboxset_hidden",
+      "type": "array[string]",
+      "enum": [
+        "apple",
+        "orange",
+        "pear"
+      ]
+    },
+    {
+      "id": "disable_and_hide",
+      "type": "boolean"
+    },
+    {
+      "id": "checkboxset_disable_and_hide",
       "type": "array[string]",
       "enum": [
         "apple",
@@ -390,7 +407,9 @@
           "disable",
           "checkboxset_disable",
           "hide",
-          "checkboxset_hidden"
+          "checkboxset_hidden",
+          "disable_and_hide",
+          "checkboxset_disable_and_hide"
         ]
       },
       {
@@ -492,6 +511,34 @@
             "parameter_ref": "disable",
             "op": "equals",
             "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "checkboxset_disable_and_hide"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable_and_hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "checkboxset_disable_and_hide"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable_and_hide",
+            "op": "equals",
+            "value": true
           }
         }
       }

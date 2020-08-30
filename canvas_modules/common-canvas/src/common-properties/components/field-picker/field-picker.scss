@@ -86,13 +86,12 @@
 	.properties-fp-top-row {
 		width: 50%;
 		float: right;
-		margin-bottom: 6px;
 		display: flex;
 		justify-content: space-between;
-
 		.properties-fp-reset-button-container {
+			margin-top: $spacing-03; // override toolbar bottom margin
 			span {
-				margin-right: 4px;
+				margin-right: $spacing-02;
 			}
 		}
 	}

@@ -23,12 +23,11 @@ import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
 import ReactFileDownload from "react-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import isEmpty from "lodash/isEmpty";
-import forIn from "lodash/forIn";
-import has from "lodash/has";
+import { isEmpty, has, forIn } from "lodash";
+import { hot } from "react-hot-loader/root";
 
 import { getMessages } from "../intl/intl-utils";
-import HarnessBundles from "../intl/locales";
+import * as HarnessBundles from "../intl/locales";
 import CommandActionsBundles from "@elyra/canvas/locales/command-actions/locales";
 import CommonCanvasBundles from "@elyra/canvas/locales/common-canvas/locales";
 import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales";
@@ -62,12 +61,14 @@ import RandomEffectsPanel from "./components/custom-panels/RandomEffectsPanel";
 import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
 import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel";
 
-import CustomOpMax from "./custom/condition-ops/customMax";
-import CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
+import * as CustomOpMax from "./custom/condition-ops/customMax";
+import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
-import { Play32, StopFilledAlt32 } from "@carbon/icons-react";
+import { Edit32, Play32, StopFilledAlt32 } from "@carbon/icons-react";
+
+import { InlineLoading, Checkbox, Button } from "carbon-components-react";
 
 import {
 	SIDE_PANEL_CANVAS,
@@ -75,13 +76,14 @@ import {
 	SIDE_PANEL_API,
 	SIDE_PANEL,
 	CHOOSE_FROM_LOCATION,
-	MOUSE_INTERACTION,
+	INTERACTION_MOUSE,
 	PORTS_CONNECTION,
 	VERTICAL_FORMAT,
 	NONE_SAVE_ZOOM,
 	CURVE_LINKS,
 	DIRECTION_LEFT_RIGHT,
 	ASSOC_STRAIGHT,
+	UNDERLAY_NONE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
@@ -90,14 +92,22 @@ import {
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	CUSTOM,
-	FLYOUT,
+	PALETTE_FLYOUT,
+	PROPERTIES_FLYOUT,
 	NONE_DRAG,
 	INPUT_PORT,
 	OUTPUT_PORT,
 	NOTIFICATION_MESSAGE_TYPE,
 	FORMS,
 	PARAMETER_DEFS,
-	PRIMARY
+	PRIMARY,
+	TOOLBAR_LAYOUT_TOP,
+	TOOLBAR_TYPE_DEFAULT,
+	TOOLBAR_TYPE_SINGLE_BAR,
+	TOOLBAR_TYPE_BEFORE_AFTER,
+	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
+	TOOLBAR_TYPE_CARBON_BUTTONS,
+	TOOLBAR_TYPE_CUSTOM_ACTIONS
 } from "./constants/constants.js";
 
 import listview32 from "../graphics/list-view_32.svg";
@@ -109,7 +119,7 @@ import FormsService from "./services/FormsService";
 
 import ExpressionInfo from "./constants/json/functionlist.json";
 
-export default class App extends React.Component {
+class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -143,22 +153,27 @@ export default class App extends React.Component {
 			selectedSnapToGridType: NONE_DRAG,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
-			selectedInteractionType: MOUSE_INTERACTION,
+			selectedInteractionType: INTERACTION_MOUSE,
 			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormat: VERTICAL_FORMAT,
+			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
+			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
+			selectedLinkSelection: false,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
+			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedNodeLayout: EXAMPLE_APP_NONE,
-			selectedPaletteLayout: FLYOUT,
+			selectedPaletteLayout: PALETTE_FLYOUT,
 			selectedTipConfig: {
 				"palette": true,
 				"nodes": true,
 				"ports": true,
 				"links": true
 			},
+			selectedPanIntoViewOnOpen: false,
 			selectedExtraCanvasDisplayed: false,
 			selectedSaveToPalette: false,
 			selectedDropZoneOnExternalDrag: false,
@@ -175,7 +190,7 @@ export default class App extends React.Component {
 			propertiesInfo2: {},
 			propertiesJson: null,
 			selectedPanel: null,
-			propertiesContainerType: FLYOUT,
+			propertiesContainerType: PROPERTIES_FLYOUT,
 			displayAdditionalComponents: false,
 			applyOnBlur: true,
 			expressionBuilder: true,
@@ -332,7 +347,7 @@ export default class App extends React.Component {
 			});
 	}
 
-	// Sets the state to the config passed in. This is called by the Chimp
+	// Sets the state to the config passed in. This is called by the Cypress
 	// testcases to set the test harness state in one go.
 	setCanvasConfig(config) {
 		this.setState(config);
@@ -717,9 +732,9 @@ export default class App extends React.Component {
 		this.log("Set new link decorations", { linkId: linkId, newDecorations: newDecs });
 	}
 
-	getZoomToReveal(nodeId) {
+	getZoomToReveal(nodeId, xOffset, yOffset) {
 		this.log("Zoom object requested");
-		return this.canvasController.getZoomToReveal([nodeId]); // Need to pass node Id in an array
+		return this.canvasController.getZoomToReveal([nodeId], xOffset, yOffset); // Need to pass node Id in an array
 	}
 
 	initLocale() {
@@ -1607,8 +1622,10 @@ export default class App extends React.Component {
 			enableNodeLayout: null,
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
+			enableLinkSelection: this.state.selectedLinkSelection,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
+			enableToolbarLayout: this.state.selectedToolbarLayout,
 			emptyCanvasContent: emptyCanvasDiv,
 			enableInsertNodeDroppedOnLink: this.state.selectedInsertNodeDroppedOnLink,
 			enableMoveNodesOnSupernodeResize: this.state.selectedMoveNodesOnSupernodeResize,
@@ -1617,7 +1634,9 @@ export default class App extends React.Component {
 			enableNarrowPalette: this.state.selectedNarrowPalette,
 			enableDisplayFullLabelOnHover: this.state.selectedDisplayFullLabelOnHover,
 			enableBoundingRectangles: this.state.selectedBoundingRectangles,
+			enableCanvasUnderlay: this.state.selectedCanvasUnderlay,
 			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
+			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
 			// dropZoneCanvasContent: dropZoneCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
@@ -1645,22 +1664,110 @@ export default class App extends React.Component {
 			enableNarrowPalette: this.state.selectedNarrowPalette
 		};
 
-		const toolbarConfig = [
-			{ action: "palette", label: "Palette", enable: true },
-			{ divider: true },
-			{ action: "stopit", label: "Stop Execution", enable: false, iconEnabled: (<StopFilledAlt32 />), iconDisabled: (<StopFilledAlt32 />) },
-			{ action: "runit", label: "Run Pipeline", enable: true, iconEnabled: (<Play32 />), iconDisabled: (<Play32 />) },
-			{ divider: true },
-			{ action: "undo", label: "Undo", enable: true },
-			{ action: "redo", label: "Redo", enable: true },
-			{ action: "cut", label: "Cut", enable: true },
-			{ action: "copy", label: "Copy", enable: true },
-			{ action: "paste", label: "Paste", enable: true },
-			{ action: "createAutoComment", label: "Add Comment", enable: true },
-			{ action: "deleteSelectedObjects", label: "Delete", enable: true },
-			{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
-			{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
-		];
+		let toolbarConfig = null;
+		if (this.state.selectedToolbarType === TOOLBAR_TYPE_DEFAULT) {
+			toolbarConfig = null;
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_SINGLE_BAR) {
+			toolbarConfig = [
+				{ action: "palette", label: "Palette", enable: true },
+				{ divider: true },
+				{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt32 />) },
+				{ action: "runit", label: "Run", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Play32 />) },
+				{ divider: true },
+				{ action: "undo", label: "Undo", enable: true },
+				{ action: "redo", label: "Redo", enable: true },
+				{ action: "cut", label: "Cut", enable: true, tooltip: "Cut from clipboard" },
+				{ action: "copy", label: "Copy", enable: true, tooltip: "Copy from clipboard" },
+				{ action: "paste", label: "Paste", enable: true, tooltip: "Paste to canvas" },
+				{ action: "createAutoComment", label: "Add Comment", enable: true },
+				{ action: "deleteSelectedObjects", label: "Delete", enable: true },
+				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
+			];
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_BEFORE_AFTER) {
+			toolbarConfig = {
+				leftBar: [
+					{ action: "before-enabled", incLabelWithIcon: "before", label: "Before - enabled", enable: true, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+					{ action: "before-disabled", incLabelWithIcon: "before", label: "Before - disbaled", enable: false, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+					{ action: "after-enabled", incLabelWithIcon: "after", label: "After - enabled", enable: true, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+					{ action: "after-disabled", incLabelWithIcon: "after", label: "After - disbaled", enable: false, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+				],
+				rightBar: [
+					{ divider: true },
+					{ divider: true },
+					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
+					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
+					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true }
+				]
+			};
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE) {
+			toolbarConfig = {
+				leftBar: [
+				],
+				rightBar: [
+					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
+					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
+					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true },
+					{ divider: true },
+					{ action: "undo", label: "Undo", enable: true },
+					{ action: "redo", label: "Redo", enable: true },
+					{ divider: true },
+					{ action: "cut", label: "Cut", enable: true },
+					{ action: "copy", label: "Copy", enable: true },
+					{ action: "paste", label: "Paste", enable: true },
+					{ divider: true },
+					{ action: "createAutoComment", label: "Add Comment", enable: true },
+					{ action: "deleteSelectedObjects", label: "Delete", enable: true },
+					{ divider: true },
+					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
+				]
+			};
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CARBON_BUTTONS) {
+			toolbarConfig = {
+				leftBar: [
+					{ action: "primary", label: "Primary", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit32 />) },
+					{ action: "danger", label: "Danger", enable: true, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit32 />) },
+					{ action: "secondary", label: "Secondary", enable: true, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit32 />) },
+					{ action: "tertiary", label: "Tertiary", enable: true, incLabelWithIcon: "before", kind: "tertiary", iconEnabled: (<Edit32 />) },
+					{ action: "ghost", label: "Ghost", enable: true, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit32 />) },
+					{ action: "default", label: "Default", enable: true, incLabelWithIcon: "before", iconEnabled: (<Edit32 />) },
+				],
+				rightBar: [
+					{ action: "dis-primary", label: "Primary", enable: false, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit32 />) },
+					{ action: "dis-danger", label: "Danger", enable: false, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit32 />) },
+					{ action: "dis-secondary", label: "Secondary", enable: false, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit32 />) },
+					{ action: "dis-ghost", label: "Ghost", enable: false, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit32 />) },
+					{ action: "dis-default", label: "Default", enable: false, incLabelWithIcon: "before", iconEnabled: (<Edit32 />) },
+				]
+			};
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOM_ACTIONS) {
+			// This example shows how custom JSX can be provided to the toolbar in the
+			// jsx field to replace the content specified in the other fields. The JSX
+			// added can be customized using the host applications own CSS.
+			toolbarConfig = {
+				leftBar: [
+					{ action: "undo", label: "Undo", enable: true },
+					{ action: "redo", label: "Redo", enable: true },
+					{ divider: true },
+					{ action: "custom-loading",
+						jsx: (<div style={{ padding: "0 11px" }}><InlineLoading status="active" description="Loading..." /></div>) },
+					{ divider: true },
+					{ action: "custom-checkbox",
+						jsx: (<div style={{ padding: "0 11px" }}><Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} /></div>) },
+					{ divider: true },
+					{ action: "custom-button",
+						tooltip: "A custom button of type primary!",
+						jsx: (<div className="toolbar-custom-button"><Button id={"btn1"} size="field" kind="primary">Custom button </Button></div>) },
+					{ divider: true }
+				]
+			};
+		}
 
 		const contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
@@ -1680,8 +1787,8 @@ export default class App extends React.Component {
 		};
 
 		const propertiesConfig = {
-			containerType: this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType,
-			rightFlyout: this.state.propertiesContainerType === FLYOUT,
+			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
+			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur
 		};
 		const callbacks = {
@@ -1734,11 +1841,11 @@ export default class App extends React.Component {
 		let rightFlyoutContent2 = null;
 		let showRightFlyoutProperties = false;
 		let showRightFlyoutProperties2 = false;
-		if (this.state.propertiesContainerType === FLYOUT) {
+		if (this.state.propertiesContainerType === PROPERTIES_FLYOUT) {
 			rightFlyoutContent = commonProperties;
 			rightFlyoutContent2 = commonProperties2;
-			showRightFlyoutProperties = this.state.showPropertiesDialog && this.state.propertiesContainerType === FLYOUT;
-			showRightFlyoutProperties2 = this.state.showPropertiesDialog2 && this.state.propertiesContainerType === FLYOUT;
+			showRightFlyoutProperties = this.state.showPropertiesDialog && this.state.propertiesContainerType === PROPERTIES_FLYOUT;
+			showRightFlyoutProperties2 = this.state.showPropertiesDialog2 && this.state.propertiesContainerType === PROPERTIES_FLYOUT;
 		} else {
 			commonPropertiesContainer = (
 				<div className="harness-common-properties">
@@ -1831,7 +1938,7 @@ export default class App extends React.Component {
 							contextMenuHandler={this.contextMenuHandler}
 							editActionHandler= {this.extraCanvasEditActionHandler}
 							clickActionHandler= {this.extraCanvasClickActionHandler}
-							toolbarConfig={toolbarConfig}
+							toolbarConfig={this.toolbarConfig}
 							canvasController={this.canvasController2}
 							notificationConfig={this.state.notificationConfig2}
 							rightFlyoutContent={rightFlyoutContent2}
@@ -1864,7 +1971,7 @@ export default class App extends React.Component {
 			setPaletteDropdownSelect2: this.setPaletteDropdownSelect2,
 			selectedPaletteDropdownFile: this.state.selectedPaletteDropdownFile,
 			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
-			clearSavedZoomValues: this.clearSavedZoomValue
+			clearSavedZoomValues: this.clearSavedZoomValues
 		};
 
 		const sidePanelPropertiesConfig = {
@@ -1947,6 +2054,4 @@ export default class App extends React.Component {
 	}
 }
 
-App.propTypes = {
-
-};
+export default hot(App);

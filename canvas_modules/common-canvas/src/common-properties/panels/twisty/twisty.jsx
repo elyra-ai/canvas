@@ -18,9 +18,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import Accordion from "carbon-components-react/lib/components/Accordion";
-import AccordionItem from "carbon-components-react/lib/components/AccordionItem";
-import ControlUtils from "./../../util/control-utils";
+import { Accordion, AccordionItem } from "carbon-components-react";
+import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 
 

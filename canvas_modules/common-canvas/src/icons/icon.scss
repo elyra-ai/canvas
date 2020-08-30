@@ -26,21 +26,6 @@
 	fill: $disabled-02;
 }
 
-.canvas-icon.notificationCounterIcon {
-	&.error > .dot {
-		fill: $support-01;
-	}
-	&.warning > .dot {
-		fill: $support-03;
-	}
-	&.success > .dot {
-		fill: $support-02;
-	}
-	&.info > .dot {
-		fill: $support-04;
-	}
-}
-
 svg.properties-icon, svg.canvas-icon {
 	fill: $icon-01;
 }

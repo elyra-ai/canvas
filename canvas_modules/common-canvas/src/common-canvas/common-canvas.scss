@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+$toolbar-button-height: 40px;
+
 /* right flyout panel */
 
 .right-flyout-panel {
 	height: 100%;
-	float: right;
-	right: 0;
 	position: relative;
 	box-shadow: 0 44px 8px 0 rgba(0, 0, 0, 0.4);
 }
@@ -50,13 +50,18 @@
 }
 
 .common-canvas-drop-div {
-	height: calc(100% - 40px);
+	height: calc(100% - #{$toolbar-button-height});
 	width: 100%;
 	min-width: inherit;
 	position: absolute;
 	cursor: default;
-	top: 40px;
+	top: $toolbar-button-height;
 	overflow: hidden;
+}
+
+.common-canvas-drop-div.common-canvas-toolbar-none {
+	height: 100%;
+	top: 0;
 }
 
 /* Styles for empty canvas objects */
@@ -110,4 +115,19 @@
 	border-color: $ui-04;
 	border-style: dashed;
 	border-width: 2px;
+}
+
+.toolbar-icon.notificationCounterIcon {
+	&.error > svg > .dot {
+		fill: $support-01;
+	}
+	&.warning > svg > .dot {
+		fill: $support-03;
+	}
+	&.success > svg > .dot {
+		fill: $support-02;
+	}
+	&.info > svg > .dot {
+		fill: $support-04;
+	}
 }

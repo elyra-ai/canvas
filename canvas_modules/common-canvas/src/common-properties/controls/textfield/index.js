@@ -15,4 +15,4 @@
  */
 
 import TextField from "./textfield.jsx";
-module.exports = TextField;
+export default TextField;

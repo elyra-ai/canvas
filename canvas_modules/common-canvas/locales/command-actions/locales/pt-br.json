@@ -1,1 +1,9 @@
-{}
+{
+	"palette.saved.nodes.description": "Os nós nesta categoria foram salvos anteriormente por meio de um fluxo.",
+	"palette.saved.nodes.label": "Nós salvos",
+	"supernode.binding.node.description": "Nó de ligação de supernó",
+	"supernode.binding.node.label": "Ligações",
+	"supernode.new.port.label": "Porta de ligação para o supernó",
+	"supernode.template.description": "Este supernó foi criado por tela comum.",
+	"supernode.template.label": "Supernó"
+}

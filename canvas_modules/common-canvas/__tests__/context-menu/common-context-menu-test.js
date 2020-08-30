@@ -17,13 +17,12 @@
 import React from "react";
 import CommonContextMenu from "../../src/context-menu/common-context-menu.jsx";
 import { shallow, mount } from "enzyme";
-import { mountWithIntl } from "../_utils_/intl-utils";
+import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 import { MenuItem, SubMenu } from "react-contextmenu";
 import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller";
-import CommonCanvas from "../../src/common-canvas/common-canvas.jsx";
 import supernodeFlow from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
 import canvasObj from "../test_resources/json/context-menu-test_canvasObject.json";
 import oneNodeObj from "../test_resources/json/context-menu-test_oneNodeObject.json";
@@ -354,13 +353,12 @@ function getNestedMenuDefinition() {
 
 function createCommonCanvas(config, canvasController, contextMenuConfig) {
 	const contextMenuHandler = sinon.spy();
-	const contextMenuActionHandler = sinon.spy();
+	const beforeEditActionHandler = null; // If sepcified, must return data
 	const editActionHandler = sinon.spy();
 	const clickActionHandler = sinon.spy();
 	const decorationActionHandler = sinon.spy();
 	const selectionChangeHandler = sinon.spy();
 	const tipHandler = sinon.spy();
-	const toolbarMenuActionHandler = sinon.spy();
 	const toolbarConfig = [
 		{
 			action: "palette",
@@ -374,22 +372,24 @@ function createCommonCanvas(config, canvasController, contextMenuConfig) {
 		enable: true
 	};
 
-	const wrapper = mountWithIntl(
-		<CommonCanvas
-			config={config}
-			contextMenuHandler={contextMenuHandler}
-			contextMenuActionHandler={contextMenuActionHandler}
-			editActionHandler={editActionHandler}
-			clickActionHandler={clickActionHandler}
-			decorationActionHandler={decorationActionHandler}
-			selectionChangeHandler={selectionChangeHandler}
-			tipHandler={tipHandler} toolbarConfig={toolbarConfig}
-			notificationConfig={notificationConfig}
-			showRightFlyout={false}
-			toolbarMenuActionHandler={toolbarMenuActionHandler}
-			canvasController={canvasController}
-			contextMenuConfig={contextMenuConfig}
-		/>);
+	const showRightFlyout = false;
+	const wrapper = createIntlCommonCanvas(
+		config,
+		contextMenuHandler,
+		beforeEditActionHandler,
+		editActionHandler,
+		clickActionHandler,
+		decorationActionHandler,
+		selectionChangeHandler,
+
+		tipHandler,
+		toolbarConfig,
+		notificationConfig,
+		contextMenuConfig,
+		showRightFlyout,
+		canvasController
+	);
+
 	return wrapper;
 }
 

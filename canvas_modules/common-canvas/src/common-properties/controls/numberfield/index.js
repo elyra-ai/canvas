@@ -15,4 +15,4 @@
  */
 
 import NumberField from "./numberfield.jsx";
-module.exports = NumberField;
+export default NumberField;

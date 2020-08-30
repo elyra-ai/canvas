@@ -32,7 +32,9 @@ export default (state = [], action) => {
 			class_name: action.data.class_name,
 			srcNodeId: action.data.srcNodeId,
 			trgNodeId: action.data.trgNodeId,
-			type: action.data.type
+			type: action.data.type,
+			style: action.data.style,
+			style_temp: action.data.style_temp
 		};
 
 		if (action.data.type === NODE_LINK) {
@@ -53,13 +55,9 @@ export default (state = [], action) => {
 		});
 
 	case "DELETE_LINKS": {
-		let newLinks = [...state];
-		action.data.linkIds.forEach((linkIdToDelete) => {
-			newLinks = newLinks.filter((link) => {
-				return link.id !== linkIdToDelete;
-			});
+		return state.filter((link) => {
+			return action.data.linksToDelete.findIndex((delLnk) => link.id === delLnk.id) === -1;
 		});
-		return newLinks;
 	}
 
 	case "SET_LINKS_CLASS_NAME":

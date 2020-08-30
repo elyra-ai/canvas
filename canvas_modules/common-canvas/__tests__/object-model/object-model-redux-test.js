@@ -22,7 +22,6 @@ import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
 import ObjectModel from "../../src/object-model/object-model.js";
 import LayoutDimensions from "../../src/object-model/layout-dimensions.js";
-// import log4js from "log4js";
 
 describe("ObjectModel handle model OK", () => {
 
@@ -244,7 +243,7 @@ describe("ObjectModel handle model OK", () => {
 		expect(isEqual(expectedPipeline, actualPipeline)).to.be.true;
 	});
 
-	it("should disconnect a node", () => {
+	it("should delete links", () => {
 		const objectModel = new ObjectModel();
 
 		const startPipeline =
@@ -260,7 +259,8 @@ describe("ObjectModel handle model OK", () => {
 				],
 				links: [
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
-					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
+					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" },
+					{ id: "link3", srcNodeId: "comment1", trgNodeId: "node3" }
 				]
 			};
 
@@ -268,7 +268,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "DELETE_LINKS",
-			data: { linkIds: ["link1"] },
+			data: { linksToDelete: [{ id: "link1" }, { id: "link3" }] },
 			pipelineId: "123"
 		});
 

@@ -16,8 +16,7 @@
 
 $notification-panel-arrow-height: 8px;
 $notification-panel-header-height: 35px;
-$notification-panel-clear-all-height: 49px;
-$notification-message-height: 64px;
+$notification-message-height: 48px;
 
 $notification-left-border-color-width: 4px;
 
@@ -39,7 +38,7 @@ $notification-left-border-color-width: 4px;
 .notification-panel {
 	position: absolute;
 	width: 320px;
-	height: 100%;
+	height: fit-content;
 	right: 8px;
 }
 
@@ -53,7 +52,7 @@ $notification-left-border-color-width: 4px;
 	width: 16px;
 }
 
-.notification-panel-header {
+.notification-panel-header-container {
 	min-height: $notification-panel-header-height;
 	margin-top: $notification-panel-arrow-height;
 	width: inherit;
@@ -63,25 +62,26 @@ $notification-left-border-color-width: 4px;
 	justify-content: center;
 	border: 1px solid $ui-03;
 	border-bottom: 0;
-	font-weight: 400;
-	font-size: 16px;
-	padding: $spacing-03 $spacing-05;
+	padding: $spacing-05;
+	.notification-panel-header {
+		@include carbon--type-style("body-short-02");
+	}
 	.notification-panel-subtitle {
-		padding-top: $spacing-03;
-		font-size: 11px;
+		@include carbon--type-style("helper-text-01");
 		color: $text-02;
+		padding-top: $spacing-02;
 	}
 	.notification-panel-close-icon {
 		position: absolute;
-		right: $spacing-03;
-		top: $spacing-05;
+		right: $spacing-05;
+		top: $spacing-06;
 		cursor: pointer;
 	}
 }
 
 .notification-panel-clear-all-container {
 	width: 100%;
-	height: $notification-panel-clear-all-height;
+	height: 49px;
 	background-color: $ui-01;
 	display: flex;
 	flex-direction: column;
@@ -91,7 +91,7 @@ $notification-left-border-color-width: 4px;
 	border-bottom: 1px solid $ui-03;
 	font-weight: 400;
 	padding: $spacing-03 $spacing-05;
-	.notification-panel-clear-all {
+	.bx--btn--ghost.bx--btn--sm {
 		width: fit-content;
 		padding: 0;
 	}
@@ -99,13 +99,13 @@ $notification-left-border-color-width: 4px;
 
 .notification-panel-messages-container {
 	width: inherit;
-	height: calc(100% - #{$notification-panel-arrow-height} - #{$notification-panel-header-height});
+	max-height: calc(100% - #{$notification-panel-arrow-height} - #{$notification-panel-header-height});
+	height: fit-content;
 }
 .notification-panel-messages {
-	max-height: calc(50% - #{$notification-panel-clear-all-height});
+	max-height: 500px;
 	height: fit-content;
 	overflow-y: auto;
-	font-size: 11px;
 	line-height: normal;
 	background-color: $ui-01;
 	border: 1px solid $ui-03;
@@ -119,6 +119,7 @@ $notification-left-border-color-width: 4px;
 		justify-content: center;
 		align-items: center;
 		.notification-panel-empty-message {
+			@include carbon--type-style("body-short-01");
 			text-align: center;
 			padding-right: 30px;
 			padding-left: 30px;
@@ -130,7 +131,7 @@ $notification-left-border-color-width: 4px;
 	}
 
 	.notifications {
-		padding: $spacing-06 $spacing-05;
+		padding: $spacing-05 $spacing-05 $spacing-05 calc(#{$spacing-05} - #{$notification-left-border-color-width});
 		display: inline-flex;
 		width: 100%;
 		min-height: $notification-message-height;
@@ -175,28 +176,41 @@ $notification-left-border-color-width: 4px;
 		.notification-message-type {
 			display: flex;
 			justify-content: center;
-			height: 23px;
-			width: 25px;
+			height: 18px;
+			width: fit-content;
+			padding-right: $spacing-03;
 
 			> svg {
 				display: flex;
 				justify-content: center;
-				width: 17px;
+				width: $spacing-05;
 				height: 100%;
-				margin-right: 8px;
 			}
 		}
 
 		.notification-message-details {
 			text-align: left;
+			overflow-wrap: break-word;
+			width: 266px;
 
 			.notification-message-title {
+				@include carbon--type-style("productive-heading-01");
+				color: $text-02;
+				padding-bottom: $spacing-02;
+			}
+
+			.notification-message-subtitle {
+				@include carbon--type-style("label-01");
 				color: $text-01;
-				font-weight: 600;
-				line-height: 1.5;
+				hr {
+					margin-bottom: $spacing-03;
+					border-bottom: 0;
+					border-top: solid 1px $ui-03;
+				}
 			}
 
 			.notification-message-content {
+				@include carbon--type-style("label-01");
 				color: $text-02;
 			}
 		}

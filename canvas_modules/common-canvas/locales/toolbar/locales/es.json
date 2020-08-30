@@ -1,1 +1,6 @@
-{}
+{
+	"toolbar.overflowMenu": "Menú de desbordamiento ",
+	"toolbar.zoomIn": "Acercar",
+	"toolbar.zoomOut": "Alejar",
+	"toolbar.zoomToFit": "Ajustar"
+}

@@ -17,14 +17,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import TextInput from "carbon-components-react/lib/components/TextInput";
+import { TextInput } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
-import ControlUtils from "./../../util/control-utils";
+import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 import { CHARACTER_LIMITS, TOOL_TIP_DELAY } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 
 const arrayValueDelimiter = ", ";
 
@@ -68,6 +68,7 @@ class TextfieldControl extends React.Component {
 				value={value}
 				labelText={this.props.control.label ? this.props.control.label.text : ""}
 				hideLabel
+				light
 			/>);
 		let display = textInput;
 		if (this.props.tableControl) {

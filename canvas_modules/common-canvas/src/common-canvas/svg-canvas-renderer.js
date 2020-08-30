@@ -20,10 +20,8 @@
 
 // Import just the D3 modules that are needed. Doing this means that the
 // d3Event object needs to be explicitly imported.
-var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-zoom"), require("d3-fetch"));
+var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-fetch"), require("./d3-zoom-extension/src"));
 import { event as d3Event } from "d3-selection";
-import union from "lodash/union";
-import forIn from "lodash/forIn";
 import get from "lodash/get";
 import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
@@ -33,7 +31,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERRO
 	LINK_DIR_LEFT_RIGHT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
 	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
-	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TRACKPAD_INTERACTION, SUPER_NODE, USE_DEFAULT_ICON }
+	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, INTERACTION_MOUSE, INTERACTION_TRACKPAD, SUPER_NODE, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import Logger from "../logging/canvas-logger.js";
@@ -77,7 +75,7 @@ export default class SVGCanvasRenderer {
 
 		// Dimensions for extent of canvas scaling
 		this.minScaleExtent = 0.2;
-		this.maxScaleExtent = 2;
+		this.maxScaleExtent = 1.8;
 
 		// Allows us to track the sizing behavior of comments
 		this.commentSizing = false;
@@ -128,6 +126,10 @@ export default class SVGCanvasRenderer {
 		// Allows us to track when the binding nodes in a subflow are being moved.
 		this.movingBindingNodes = false;
 
+		// Keep track of when the context menu has been closed so we don't remove
+		// selections when a context menu is closed during a zoom gesture.
+		this.contextMenuClosedOnZoom = false;
+
 		// Used to monitor the region selection rectangle.
 		this.regionSelect = false;
 		this.region = { startX: 0, startY: 0, width: 0, height: 0 };
@@ -158,6 +160,8 @@ export default class SVGCanvasRenderer {
 		// Create a zoom object for use with the canvas.
 		this.zoom =
 			d3.zoom()
+				.trackpad(this.config.enableInteractionType === INTERACTION_TRACKPAD)
+				.wheelDelta(() => -d3Event.deltaY * (this.config.enableInteractionType === INTERACTION_TRACKPAD ? 0.02 : 0.002))
 				.scaleExtent([this.minScaleExtent, this.maxScaleExtent])
 				.on("start", this.zoomStart.bind(this))
 				.on("zoom", this.zoomAction.bind(this))
@@ -165,13 +169,20 @@ export default class SVGCanvasRenderer {
 
 		this.canvasSVG = this.createCanvasSVG();
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG);
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.canvasGrp = this.createCanvasUnderlay(this.canvasGrp);
+		}
 
 		this.resetCanvasSVGBehaviors();
 
 		this.displayCanvas();
 
+		if (this.isDisplayingFullPage()) {
+			this.restoreZoom();
+		}
+
 		// If we are showing a sub-flow in full screen mode, or the options is
-		// switched on to alwas display it, show the back to parent control.
+		// switched on to always display it, show the 'back to parent' control.
 		if (this.isDisplayingSubFlowFullPage() ||
 				this.canvasLayout.alwaysDisplayBackToParentFlow) {
 			this.addBackToParentFlowArrow(this.canvasSVG);
@@ -293,7 +304,7 @@ export default class SVGCanvasRenderer {
 		// Reset the SVG area's zoom behaviors. We do this in case the canvas has
 		// changed from empty (no nodes/comments) where we do not need any zoom
 		// behavior to populated (with at least one node or comment) where we do
-		// need to zoom behavior, or vice versa.
+		// need the zoom behavior, or vice versa.
 		this.resetCanvasSVGBehaviors();
 
 		// Reset the canvas cursor, in case we went from an empty canvas
@@ -369,9 +380,6 @@ export default class SVGCanvasRenderer {
 
 		if (this.isDisplayingSubFlowInPlace()) {
 			this.displaySVGToFitSupernode();
-
-		} else {
-			this.restoreZoom();
 		}
 
 		// The supernode will not have any calculated port positions when the
@@ -383,6 +391,11 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableBoundingRectangles) {
 			this.displayBoundingRectangles();
 		}
+
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.setCanvasUnderlaySize();
+		}
+
 		this.logger.logEndTimer("displayCanvas");
 	}
 
@@ -547,7 +560,7 @@ export default class SVGCanvasRenderer {
 			.attr("data-id", this.getId("br_svg_rect_trans"))
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("height", transformedSVGRect.height)
-			.attr("width", transformedSVGRect.width)
+			.attr("width", transformedSVGRect.width - 2)
 			.attr("x", transformedSVGRect.x)
 			.attr("y", transformedSVGRect.y)
 			.style("fill", "none")
@@ -643,6 +656,19 @@ export default class SVGCanvasRenderer {
 		return id;
 	}
 
+	// Returns the passed in mouse position snapped to the grid
+	// if either option is switched on.
+	getMousePosSnapToGrid(mousePos) {
+		let transPos = mousePos;
+
+		if (this.config.enableSnapToGridType === "During" ||
+				this.config.enableSnapToGridType === "After") {
+			transPos = this.snapToGridObject(transPos);
+		}
+		return transPos;
+	}
+
+
 	// Returns the current mouse position transformed by the current zoom
 	// transformation amounts based on the local SVG -- that is, if we're
 	// displaying a sub-flow it is based on the SVG in the supernode.
@@ -701,6 +727,10 @@ export default class SVGCanvasRenderer {
 			const link = this.getLinkAtMousePos(x, y);
 			this.setLinkHighlighting(link);
 		}
+
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.setCanvasUnderlaySize(x, y);
+		}
 	}
 
 	// Switches on or off data link highlighting depending on the element
@@ -728,8 +758,9 @@ export default class SVGCanvasRenderer {
 	// This is called when the user drags an 'insertable' node over a link.
 	setLinkDragOverHighlighting(link, state) {
 		this.canvasGrp
-			.select(this.getSelectorForId("link_line", link.id))
-			.classed("d3-link-drop-node-highlight", state);
+			.selectAll(this.getSelectorForId("link_grp", link.id))
+			.selectAll(".d3-link-line")
+			.attr("data-drag-node-over", state ? true : null); // true will add the attr, null will rmeove it
 	}
 
 	// Switches on or off node port highlighting depending on the node
@@ -821,13 +852,8 @@ export default class SVGCanvasRenderer {
 		mousePos.x -= (this.objectModel.getNodeLayout().defaultNodeWidth / 2) * this.zoomTransform.k;
 		mousePos.y -= (this.objectModel.getNodeLayout().defaultNodeHeight / 2) * this.zoomTransform.k;
 
-		let transPos = this.transformPos(mousePos);
-
-		if (this.config.enableSnapToGridType === "During" ||
-				this.config.enableSnapToGridType === "After") {
-			transPos = this.snapToGridObject(transPos);
-		}
-		return transPos;
+		const transPos = this.transformPos(mousePos);
+		return this.getMousePosSnapToGrid(transPos);
 	}
 
 	// Returns true if the nodeTemplate passed in is 'insertable' into a data
@@ -992,56 +1018,12 @@ export default class SVGCanvasRenderer {
 
 		// If there are no nodes or comments we don't apply any zoom behaviors
 		// to the SVG area. We only attach the zoom behaviour to the top most SVG
-		//  area i.e. when we are displaying either the primary pipeline full page
+		// area i.e. when we are displaying either the primary pipeline full page
 		// or a sub-pipeline full page.
 		if (!this.isCanvasEmptyOrBindingsOnly() &&
 				this.isDisplayingFullPage()) {
-			// In mouse interaction mode the zoom behavior will hande all zooming
-			// but in trackpad interaction mode we only need the zoom behavior to
-			// handle region select
 			this.canvasSVG
 				.call(this.zoom);
-
-			if (this.config.enableInteractionType === TRACKPAD_INTERACTION) {
-				// On Safari, gesturestart, gesturechange, and gestureend will be
-				// called for the pinch/spread gesture. This code not only implements
-				// zoom on pinch/spread but also stops the whole browser page being
-				// zoomed which is the default behavior for that gesture on Safari.
-				// https://stackoverflow.com/questions/36458954/prevent-pinch-zoom-in-safari-for-osx
-				this.canvasSVG
-					.on("gesturestart", () => {
-						this.scale = d3Event.scale;
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					})
-					.on("gesturechange", () => {
-						const delta = this.scale - d3Event.scale;
-						this.scale = d3Event.scale;
-						this.pinchZoom(delta);
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					})
-					.on("gestureend", () => {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					})
-					// On Chrome and Firefox, the wheel event will be called for
-					// pinch/spread gesture with ctrlKey set to true (even when the
-					// ctrl key is not pressed). See this stack overflow issue for details:
-					// https://stackoverflow.com/questions/52130484/how-to-catch-pinch-and-stretch-gesture-events-in-d3-zoom-d3v4-v5
-					// On Chrome, Firefox and Safari, the wheel event will be called
-					// for two finger scroll.
-					.on("wheel.zoom", () => {
-						if (d3Event.ctrlKey) {
-							const wheelDelta = (d3Event.deltaY * 0.01);
-							this.pinchZoom(wheelDelta);
-						} else {
-							this.panCanvasBackground(
-								this.zoomTransform.x - d3Event.deltaX,
-								this.zoomTransform.y - d3Event.deltaY,
-								this.zoomTransform.k
-							);
-						}
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					});
-			}
 		}
 
 		// These behaviors will be applied to SVG areas at the top level and
@@ -1076,9 +1058,10 @@ export default class SVGCanvasRenderer {
 				this.selecting = true;
 				// Only clear selections if clicked on the canvas of the current active pipeline.
 				// Clicking the canvas of an expanded supernode will select that node.
-				if (this.isDisplayingCurrentPipeline()) {
+				if (this.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom) {
 					this.canvasController.clearSelections();
 				}
+				this.contextMenuClosedOnZoom = false;
 				// Ensure 'selecting' flag is off before calling click action callback.
 				this.selecting = false;
 				this.canvasController.clickActionHandler({
@@ -1109,7 +1092,7 @@ export default class SVGCanvasRenderer {
 	// Retuens the appropriate cursor for the canvas SVG area.
 	getCanvasCursor() {
 		if (this.isDisplayingFullPage()) {
-			if (this.config.enableInteractionType === TRACKPAD_INTERACTION ||
+			if (this.config.enableInteractionType === INTERACTION_TRACKPAD ||
 					this.isCanvasEmptyOrBindingsOnly()) {
 				return "default";
 			}
@@ -1118,24 +1101,24 @@ export default class SVGCanvasRenderer {
 		return "pointer";
 	}
 
-	pinchZoom(zoomDelta) {
-		const canv = this.getCanvasDimensionsAdjustedForScale(1);
-		const transMousePos = this.getTransformedMousePos();
-		const k = this.zoomTransform.k - zoomDelta;
-
-		if (k > this.minScaleExtent && k < this.maxScaleExtent) {
-			let x = this.zoomTransform.x + (canv.left * zoomDelta);
-			let y = this.zoomTransform.y + (canv.top * zoomDelta);
-
-			x += ((transMousePos.x - canv.left) * zoomDelta);
-			y += ((transMousePos.y - canv.top) * zoomDelta);
-
-			this.zoomCanvasBackground(x, y, k);
-		}
-	}
-
 	createCanvasGroup(canvasSVG) {
 		return canvasSVG.append("g");
+	}
+
+	createCanvasUnderlay(canvasGrp) {
+		this.canvasUnderlay = canvasGrp.append("rect").attr("class", "d3-canvas-underlay");
+		return canvasGrp;
+	}
+
+	setCanvasUnderlaySize(x = 0, y = 0) {
+		const canv = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
+		if (canv) {
+			this.canvasUnderlay
+				.attr("x", canv.left - 50)
+				.attr("y", canv.top - 50)
+				.attr("width", canv.width + 100)
+				.attr("height", canv.height + 100);
+		}
 	}
 
 	addBackToParentFlowArrow(canvasSVG) {
@@ -1258,31 +1241,36 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Restores the zoom of the canvas, if it has changed, based on the type
-	// of 'save zoom' specified in the configuration.
+	// of 'save zoom' specified in the configuration and, if no saved zoom, was
+	// provided pans the canvas area so it is always visible.
 	restoreZoom() {
 		let newZoom = null;
 
 		if (this.config.enableSaveZoom === "Pipelineflow" &&
-				this.activePipeline.zoom &&
-				this.activePipeline.zoom.k &&
-				this.activePipeline.zoom.x &&
-				this.activePipeline.zoom.y &&
-				this.activePipeline.zoom.k !== this.zoomTransform.k &&
-				this.activePipeline.zoom.x !== this.zoomTransform.x &&
-				this.activePipeline.zoom.y !== this.zoomTransform.y) {
+				this.activePipeline.zoom) {
 			newZoom = this.activePipeline.zoom;
 
 		} else if (this.config.enableSaveZoom === "LocalStorage") {
 			const savedZoom = this.getSavedZoom();
-			if (savedZoom &&
-					(savedZoom.k !== this.zoomTransform.k ||
-						savedZoom.x !== this.zoomTransform.x ||
-						savedZoom.y !== this.zoomTransform.y)) {
+			if (savedZoom) {
 				newZoom = savedZoom;
 			}
 		}
 
-		if (newZoom) {
+		// If there's no saved zoom, and enablePanIntoViewOnOpen is set, pan so
+		// the canvas area (containing nodes and comments) is visible in the viewport.
+		if (!newZoom && this.config.enablePanIntoViewOnOpen) {
+			const canvWithPadding = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
+			if (canvWithPadding) {
+				newZoom = { x: -canvWithPadding.left, y: -canvWithPadding.top, k: 1 };
+			}
+		}
+
+		// If new zoom is different to the current zoom amount, apply it.
+		if (newZoom &&
+				(newZoom.k !== this.zoomTransform.k ||
+					newZoom.x !== this.zoomTransform.x ||
+					newZoom.y !== this.zoomTransform.y)) {
 			this.zoomCanvasInvokeZoomBehavior(newZoom);
 		}
 	}
@@ -1374,6 +1362,16 @@ export default class SVGCanvasRenderer {
 		this.zoomCanvasInvokeZoomBehavior(zoomObject, animateTime);
 	}
 
+	getZoom() {
+		return { x: this.zoomTransform.x, y: this.zoomTransform.y, k: this.zoomTransform.k };
+	}
+
+	translateBy(x, y, animateTime) {
+		const z = this.getZoomTransform();
+		const zoomObject = d3.zoomIdentity.translate(z.x + x, z.y + y).scale(z.k);
+		this.zoomCanvasInvokeZoomBehavior(zoomObject, animateTime);
+	}
+
 	zoomIn() {
 		if (this.zoomTransform.k < this.maxScaleExtent) {
 			const newScale = Math.min(this.zoomTransform.k * 1.1, this.maxScaleExtent);
@@ -1395,27 +1393,37 @@ export default class SVGCanvasRenderer {
 		this.zoomToFitForScale(newScale, canvasDimensions, viewPortDimensions);
 	}
 
-	getZoomToReveal(nodeIDs) {
+	getZoomToReveal(nodeIDs, xPos, yPos) {
 		const svgRect = this.getViewPortDimensions();
 		const transformedSVGRect = this.getTransformedSVGRect(svgRect, 0);
 		const nodes = this.getNodes(nodeIDs);
-		const canvasDimensions = this.getCanvasDimensionsAdjustedForScaleForObjs(nodes, [], 1, 10);
+		const canvasDimensions = this.getCanvasDimensions(nodes, []);
+		const canv = this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, 1, 10);
+		const xPosInt = parseInt(xPos, 10);
+		const yPosInt = typeof yPos === "undefined" ? xPosInt : parseInt(yPos, 10);
 
-		if (canvasDimensions) {
+
+		if (canv) {
 			let xOffset;
 			let yOffset;
 
-			if (canvasDimensions.right > transformedSVGRect.x + transformedSVGRect.width) {
-				xOffset = transformedSVGRect.x + transformedSVGRect.width - canvasDimensions.right;
-			}
-			if (canvasDimensions.left < transformedSVGRect.x) {
-				xOffset = transformedSVGRect.x - canvasDimensions.left;
-			}
-			if (canvasDimensions.bottom > transformedSVGRect.y + transformedSVGRect.height) {
-				yOffset = transformedSVGRect.y + transformedSVGRect.height - canvasDimensions.bottom;
-			}
-			if (canvasDimensions.top < transformedSVGRect.y) {
-				yOffset = transformedSVGRect.y - canvasDimensions.top;
+			if (!Number.isNaN(xPosInt) && !Number.isNaN(yPosInt)) {
+				xOffset = transformedSVGRect.x + (transformedSVGRect.width * (xPosInt / 100)) - (canv.left + (canv.width / 2));
+				yOffset = transformedSVGRect.y + (transformedSVGRect.height * (yPosInt / 100)) - (canv.top + (canv.height / 2));
+
+			} else {
+				if (canv.right > transformedSVGRect.x + transformedSVGRect.width) {
+					xOffset = transformedSVGRect.x + transformedSVGRect.width - canv.right;
+				}
+				if (canv.left < transformedSVGRect.x) {
+					xOffset = transformedSVGRect.x - canv.left;
+				}
+				if (canv.bottom > transformedSVGRect.y + transformedSVGRect.height) {
+					yOffset = transformedSVGRect.y + transformedSVGRect.height - canv.bottom;
+				}
+				if (canv.top < transformedSVGRect.y) {
+					yOffset = transformedSVGRect.y - canv.top;
+				}
 			}
 
 			if (typeof xOffset !== "undefined" || typeof yOffset !== "undefined") {
@@ -1452,6 +1460,18 @@ export default class SVGCanvasRenderer {
 		// Ensure any open tip is closed before starting a zoom operation.
 		this.canvasController.closeTip();
 
+		// Close the context menu, if it's open, before panning or zooming.
+		// If the context menu is opened inside the expanded supernode (in-place
+		// subflow), when the user zooms the canvas, the full page flow is handling
+		// that zoom, which causes a refresh in the subflow, so the full page flow
+		// will take care of closing the context menu. This means the in-place
+		// subflow doesn’t need to do anything on zoom, hence: !this.isDisplayingSubFlowInPlace()
+		if (this.canvasController.isContextMenuDisplayed() &&
+				!this.isDisplayingSubFlowInPlace()) {
+			this.canvasController.closeContextMenu();
+			this.contextMenuClosedOnZoom = true;
+		}
+
 		// this.zoomingToFitForScale flag is used to avoid redo actions initialized
 		// by Cmd+Shift+Z (where the shift key has been pressed) causing a region
 		// selection to start. So whenever it is set, make sure we do a scale
@@ -1460,10 +1480,13 @@ export default class SVGCanvasRenderer {
 		// operation d3Event does not contain info about the shift key.
 		if (this.zoomingToFitForScale) {
 			this.regionSelect = false;
-		} else if (d3Event.sourceEvent && d3Event.sourceEvent.shiftKey) {
-			this.regionSelect = !(this.config.enableInteractionType === TRACKPAD_INTERACTION);
+		} else if ((this.config.enableInteractionType === INTERACTION_TRACKPAD &&
+								d3Event.sourceEvent && d3Event.sourceEvent.buttons === 1) || // Main button is pressed
+							(this.config.enableInteractionType === INTERACTION_MOUSE &&
+								d3Event.sourceEvent && d3Event.sourceEvent.shiftKey)) { // Shift key is pressed
+			this.regionSelect = true;
 		} else {
-			this.regionSelect = (this.config.enableInteractionType === TRACKPAD_INTERACTION);
+			this.regionSelect = false;
 		}
 
 		if (this.regionSelect) {
@@ -1489,6 +1512,8 @@ export default class SVGCanvasRenderer {
 		}
 
 		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
+		this.previousD3Event = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
+		this.zoomCanvasDimensions = this.getCanvasDimensions(this.activePipeline.nodes, this.activePipeline.comments);
 	}
 
 	zoomAction() {
@@ -1502,10 +1527,10 @@ export default class SVGCanvasRenderer {
 
 			} else {
 				this.addTempCursorOverlay("grabbing");
-				this.panCanvasBackground(d3Event.transform.x, d3Event.transform.y, d3Event.transform.k);
+				this.zoomCanvasBackground();
 			}
 		} else {
-			this.zoomCanvasBackground(d3Event.transform.x, d3Event.transform.y, d3Event.transform.k);
+			this.zoomCanvasBackground();
 		}
 	}
 
@@ -1522,7 +1547,8 @@ export default class SVGCanvasRenderer {
 			this.removeRegionSelector();
 
 			// Reset the transform x and y to what they were before the region
-			// selection action was started.
+			// selection action was started. This directly sets the x and y values
+			// in the __zoom property of the svgCanvas DOM object.
 			d3Event.transform.x = this.regionStartTransformX;
 			d3Event.transform.y = this.regionStartTransformY;
 
@@ -1536,6 +1562,11 @@ export default class SVGCanvasRenderer {
 			this.regionSelect = false;
 
 		} else if (this.isDisplayingFullPage()) {
+			// Set the internal zoom value for canvasSVG used by D3. This will be
+			// used by d3Event next time a zoom action is initiated.
+			this.canvasSVG.property("__zoom", this.zoomTransform);
+
+
 			if (this.config.enableSaveZoom === "Pipelineflow") {
 				const data = {
 					editType: "zoomPipeline",
@@ -1556,56 +1587,25 @@ export default class SVGCanvasRenderer {
 		this.removeTempCursorOverlay();
 	}
 
-	panCanvasBackground(panX, panY, panK) {
-		if (this.config.enableBoundingRectangles) {
-			this.displayBoundingRectangles();
-		}
-
-		let x = panX;
-		let y = panY;
-		const k = panK;
-
-		// If the canvas rectangle (nodes and comments) is smaller than the
-		// SVG area then don't let the canvas be dragged out of the SVG area.
-		// let canv;
-		const canv = this.getCanvasDimensionsAdjustedForScale(k, this.canvasLayout.zoomToFitPadding);
-		const zoomSvgRect = this.getViewPortDimensions();
-
-		if (canv && canv.width < zoomSvgRect.width) {
-			x = Math.max(-canv.left, Math.min(x, zoomSvgRect.width - canv.width - canv.left));
-		}
-		if (canv && canv.height < zoomSvgRect.height) {
-			y = Math.max(-canv.top, Math.min(y, zoomSvgRect.height - canv.height - canv.top));
-		}
-
-		// Readjust the d3Event properties to the newly calculated values so d3Event
-		// stays in sync with the actual pan amount. This is only needed when this
-		// method is called from zoomAction as a result of the d3 zoom behavior when
-		// using the Mouse interaction behavior. It is not needed when using the
-		// Trackpad interaction behavior.
-		if (d3Event && d3Event.transform) {
-			d3Event.transform.x = x;
-			d3Event.transform.y = y;
-		}
-
-		this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(k);
-		this.canvasGrp.attr("transform", this.zoomTransform);
-
-		// The supernode will not have any calculated port positions when the
-		// subflow is being displayed full screen, so calculate them first.
-		if (this.isDisplayingSubFlowFullPage()) {
-			this.displayPortsForSubFlowFullPage();
-		}
-	}
-
-	zoomCanvasBackground(x, y, k) {
+	zoomCanvasBackground() {
 		this.regionSelect = false;
 
-		this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(k);
+		if (this.isDisplayingPrimaryFlowFullPage()) {
+			const incTransform = this.getTransformIncrement();
+			this.zoomTransform = this.zoomConstrainRegular(incTransform, this.getViewPort(), this.zoomCanvasDimensions);
+		} else {
+			this.zoomTransform = d3.zoomIdentity.translate(d3Event.transform.x, d3Event.transform.y).scale(d3Event.transform.k);
+		}
+
 		this.canvasGrp.attr("transform", this.zoomTransform);
 
 		if (this.config.enableBoundingRectangles) {
 			this.displayBoundingRectangles();
+		}
+
+		if (this.config.enableCanvasUnderlay !== "None" &&
+				this.isDisplayingPrimaryFlowFullPage()) {
+			this.setCanvasUnderlaySize();
 		}
 
 		// If this zoom is for a full page display (for either primary pipelines
@@ -1627,6 +1627,67 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	// Returns a new zoom which is the result of incrmenting the current zoom
+	// by the amount since the previous d3Event transform amount.
+	// We calculate increments because d3Event.transform is not based on
+	// the constrained zoom position (which is very annoying) so we keep track
+	// of the current constraind zoom amount in this.zoomTransform.
+	getTransformIncrement() {
+		const xInc = d3Event.transform.x - this.previousD3Event.x;
+		const yInc = d3Event.transform.y - this.previousD3Event.y;
+
+		const newTransform = { x: this.zoomTransform.x + xInc, y: this.zoomTransform.y + yInc, k: d3Event.transform.k };
+		this.previousD3Event = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
+		return newTransform;
+	}
+
+	// Returns a modifed transform object so that the canvas area (the area
+	// containing nodes and comments) is constrained such that it never totally
+	// disappears from the view port.
+	zoomConstrainRegular(transform, viewPort, canvasDimensions) {
+		const k = transform.k;
+		let x = transform.x;
+		let y = transform.y;
+
+		const canv =
+			this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, k, this.getZoomToFitPadding());
+
+		const rightOffsetLimit = viewPort.width - Math.min((viewPort.width * 0.25), (canv.width * 0.25));
+		const leftOffsetLimit = -(Math.max((canv.width - (viewPort.width * 0.25)), (canv.width * 0.75)));
+
+		const bottomOffsetLimit = viewPort.height - Math.min((viewPort.height * 0.25), (canv.height * 0.25));
+		const topOffsetLimit = -(Math.max((canv.height - (viewPort.height * 0.25)), (canv.height * 0.75)));
+
+		if (x > -canv.left + rightOffsetLimit) {
+			x = -canv.left + rightOffsetLimit;
+
+		} else if (x < -canv.left + leftOffsetLimit) {
+			x = -canv.left + leftOffsetLimit;
+		}
+
+		if (y > -canv.top + bottomOffsetLimit) {
+			y = -canv.top + bottomOffsetLimit;
+
+		} else if (y < -canv.top + topOffsetLimit) {
+			y = -canv.top + topOffsetLimit;
+		}
+
+		return d3.zoomIdentity.translate(x, y).scale(k);
+	}
+
+	// Returns the view port dimensions from the D3 zoom object. This is a bit
+	// weird in that you have to get the function from D3 and then call that
+	// function to get the data which is two arrays inside an array containing
+	// the points of the top left and bottom right corner of the view ports.
+	getViewPort() {
+		const extentFn = this.zoom.extent().bind(this.canvasSVG.node());
+		const extent = extentFn();
+
+		const width = extent[1][0] - extent[0][0];
+		const height = extent[1][1] - extent[0][1];
+
+		return { width, height };
+	}
 
 	// Returns the dimensions in SVG coordinates of the canvas area. This is
 	// based on the position and width and height of the nodes and comments. It
@@ -1634,10 +1695,26 @@ export default class SVGCanvasRenderer {
 	// a sub-flow that map to a port in the containing supernode. The dimensions
 	// are scaled by k and padded by pad (if provided).
 	getCanvasDimensionsAdjustedForScale(k, pad) {
-		return this.getCanvasDimensionsAdjustedForScaleForObjs(this.activePipeline.nodes, this.activePipeline.comments, k, pad);
+		const canvasDimensions = this.getCanvasDimensions(this.activePipeline.nodes, this.activePipeline.comments);
+		return this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, k, pad);
 	}
 
-	getCanvasDimensionsAdjustedForScaleForObjs(nodes, comments, k, pad) {
+	convertCanvasDimensionsAdjustedForScaleWithPadding(canv, k, pad) {
+		const padding = pad || 0;
+		if (canv) {
+			return {
+				left: (canv.left * k) - padding,
+				top: (canv.top * k) - padding,
+				right: (canv.right * k) + padding,
+				bottom: (canv.bottom * k) + padding,
+				width: (canv.width * k) + (2 * padding),
+				height: (canv.height * k) + (2 * padding)
+			};
+		}
+		return null;
+	}
+
+	getCanvasDimensions(nodes, comments) {
 		var canvLeft = Infinity;
 		let canvTop = Infinity;
 		var canvRight = -Infinity;
@@ -1668,15 +1745,13 @@ export default class SVGCanvasRenderer {
 			return null;
 		}
 
-		var padding = pad || 0;
-
 		return {
-			left: (canvLeft * k) - padding,
-			top: (canvTop * k) - padding,
-			right: (canvRight * k) + padding,
-			bottom: (canvBottom * k) + padding,
-			width: (canvWidth * k) + (2 * padding),
-			height: (canvHeight * k) + (2 * padding)
+			left: canvLeft,
+			top: canvTop,
+			right: canvRight,
+			bottom: canvBottom,
+			width: canvWidth,
+			height: canvHeight
 		};
 	}
 
@@ -2542,7 +2617,7 @@ export default class SVGCanvasRenderer {
 
 						// Display decorators
 						const decorations = CanvasUtils.getCombinedDecorations(d.layout.decorations, d.decorations);
-						this.addDecorations(d, DEC_NODE, nodeGrp, decorations);
+						this.displayDecorations(d, DEC_NODE, nodeGrp, decorations);
 					}
 				});
 
@@ -2552,7 +2627,7 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("displayNodes " + this.getFlags());
 	}
 
-	// Performs required action for when either a comment or node is selected.
+	// Performs required action for when either a comment, node or link is selected.
 	// This may mean: simply selecting the object; or adding the object to the
 	// currently selected set of objects; or even toggling the object's selection
 	// off. This method also sends a SINGLE_CLICK action to the
@@ -2580,8 +2655,8 @@ export default class SVGCanvasRenderer {
 		// to be a timing issue since the same problem is not evident with the
 		// similar code for the node group object.
 		// TODO - Issue 2465 - Find out why this problem occurs.
-		const objectTypeName = this.getComment(d.id) ? "comment" : "node";
-		if (objectTypeName === "node") {
+		const objectTypeName = this.getObjectTypeName(d);
+		if (objectTypeName === "node" || objectTypeName === "link") {
 			this.canvasController.clickActionHandler({
 				clickType: d3EventType === "contextmenu" || this.ellipsisClicked ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
 				objectType: objectTypeName,
@@ -2592,7 +2667,17 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	// Adds a set of decorations to either a node or link object.
+	// Returns the name of the type of object d.
+	getObjectTypeName(d) {
+		if (this.getComment(d.id)) {
+			return "comment";
+		} else if (this.getNode(d.id)) {
+			return "node";
+		}
+		return "link";
+	}
+
+	// Displays a set of decorations on either a node or link object.
 	// d       - This is a node or link object.
 	// objType - A string set to either DEC_NODE or DEC_LINK.
 	// trgGrp  - A D3 selection object that references the node or link to
@@ -2600,95 +2685,102 @@ export default class SVGCanvasRenderer {
 	// decs    - An array of decorations to be applied to the node or link.
 	//           This is a combination of the object's decorations with any
 	//           decorations from the layout config information.
-	addDecorations(d, objType, trgGrp, decs) {
+	displayDecorations(d, objType, trgGrp, decs) {
 		const that = this;
 		const decorations = decs || [];
 		const decGrpClassName = `d3-${objType}-dec-group`;
 		const decGrpSelector = this.getSelectorForClass(decGrpClassName);
-		const decGroupsSel = trgGrp.selectAll(decGrpSelector)
-			.data(decorations, function(dec) { return dec.id; });
+		trgGrp.selectAll(decGrpSelector)
+			.data(decorations, (dec) => dec.id)
+			.join(
+				(enter) => this.createNewDecorations(enter, objType, decGrpClassName)
+			)
+			.attr("transform", (dec) => `translate(${this.getDecoratorX(dec, d, objType)}, ${this.getDecoratorY(dec, d, objType)})`)
+			.on("mousedown", (dec) => (dec.hotspot ? that.callDecoratorCallback(d, dec) : null))
+			.each((dec, i, elements) => this.updateDecoration(dec, d3.select(elements[i]), objType, d));
+	}
 
-		const newDecGroups = decGroupsSel.enter()
+	createNewDecorations(enter, objType, decGrpClassName) {
+		const newDecGroups = enter
 			.append("g")
 			.attr("data-id", (dec) => this.getId(`${objType}_dec_group`, dec.id)) // Used in tests
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", decGrpClassName);
 
-		newDecGroups
-			.filter((dec) => dec.hotspot)
-			.on("mousedown", (dec) => this.callDecoratorCallback(d, dec, objType));
+		return newDecGroups;
+	}
 
-		newDecGroups.filter((dec) => !dec.label && dec.outline !== false)
-			.append("rect")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_outln`, dec.id)); // Used in tests
+	updateDecoration(dec, decSel, objType, d) {
+		this.updateDecOutlines(dec, decSel, objType, d);
+		this.updateDecPaths(dec, decSel, objType);
+		this.updateDecImages(dec, decSel, objType, d);
+		this.updateDecLabels(dec, decSel, objType);
+	}
 
-		newDecGroups.filter((dec) => dec.image)
-			.each(function(dec) {
-				const nodeImage = that.getNodeImage(dec);
-				const nodeImageType = that.getNodeImageType(nodeImage);
-				d3.select(this)
-					.append(nodeImageType)
-					.each(function() { that.setImageContent(this, dec); })
-					.attr("data-id", () => that.getId(`${objType}_dec_image`, dec.id)); // Used in tests
-			});
+	updateDecOutlines(dec, decSel, objType, d) {
+		let outlnSel = decSel.select("rect");
 
-		newDecGroups.filter((dec) => dec.label)
-			.append("text")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_label`, dec.id)); // Used in tests
+		if (!dec.label && dec.outline !== false) {
+			outlnSel = outlnSel.empty() ? decSel.append("rect") : outlnSel;
+			outlnSel
+				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-outline`))
+				.attr("x", 0)
+				.attr("y", 0)
+				.attr("width", this.getDecoratorWidth(dec, d, objType))
+				.attr("height", this.getDecoratorHeight(dec, d, objType))
+				.lower(); // Make sure the outline goes below the image
+		} else {
+			outlnSel.remove();
+		}
+	}
 
-		newDecGroups.filter((dec) => dec.path)
-			.append("path")
-			.attr("data-id", (dec) => this.getId(`${objType}_dec_path`, dec.id)); // Used in tests
+	updateDecPaths(dec, decSel, objType) {
+		let pathSel = decSel.select("path");
 
-		const newAndExistingDecGrps =
-			decGroupsSel.enter().merge(decGroupsSel);
+		if (dec.path) {
+			pathSel = pathSel.empty() ? decSel.append("path") : pathSel;
+			pathSel
+				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-path`))
+				.attr("x", 0)
+				.attr("y", 0)
+				.attr("d", dec.path);
+		} else {
+			pathSel.remove();
+		}
+	}
 
-		newAndExistingDecGrps
-			.each((dec) => {
-				const decGrp = trgGrp.selectAll(this.getSelectorForId(`${objType}_dec_group`, dec.id));
-				const decDatum = this.getDecorator(dec.id, decorations);
-				decGrp
-					.attr("transform", `translate(${this.getDecoratorX(dec, d, objType)}, ${this.getDecoratorY(dec, d, objType)})`);
+	updateDecImages(dec, decSel, objType, d) {
+		let imageSel = decSel.select("g");
 
-				// We didn't add pipeline ID to these sub-objects so don't include it in
-				// the predicate of the selector.
-				const outlnSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_outln`, dec.id);
-				const imageSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_image`, dec.id);
-				const labelSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_label`, dec.id);
-				const pathSelector = this.getSelectorForIdWithoutPipeline(`${objType}_dec_path`, dec.id);
+		if (dec.image) {
+			const nodeImage = this.getNodeImage(dec);
+			const nodeImageType = this.getNodeImageType(nodeImage);
+			imageSel = imageSel.empty() ? decSel.append("g").append(nodeImageType) : imageSel.select(nodeImageType);
+			imageSel
+				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-image`))
+				.attr("x", this.getDecoratorPadding(dec, d, objType))
+				.attr("y", this.getDecoratorPadding(dec, d, objType))
+				.attr("width", this.getDecoratorWidth(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
+				.attr("height", this.getDecoratorHeight(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
+				.each(() => this.setImageContent(imageSel.node(), dec));
+		} else {
+			imageSel.remove();
+		}
+	}
 
-				decGrp.select(outlnSelector)
-					.attr("x", 0)
-					.attr("y", 0)
-					.attr("width", this.getDecoratorWidth(dec, d, objType))
-					.attr("height", this.getDecoratorHeight(dec, d, objType))
-					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-outline`))
-					.datum(decDatum);
+	updateDecLabels(dec, decSel, objType) {
+		let labelSel = decSel.select("text");
 
-				decGrp.select(imageSelector)
-					.attr("x", this.getDecoratorPadding(dec, d, objType))
-					.attr("y", this.getDecoratorPadding(dec, d, objType))
-					.attr("width", this.getDecoratorWidth(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
-					.attr("height", this.getDecoratorHeight(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
-					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-image`))
-					.datum(decDatum);
-
-				decGrp.select(labelSelector)
-					.attr("x", 0)
-					.attr("y", 0)
-					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
-					.text(dec.label)
-					.datum(decDatum);
-
-				decGrp.select(pathSelector)
-					.attr("x", 0)
-					.attr("y", 0)
-					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-path`))
-					.attr("d", dec.path)
-					.datum(decDatum);
-			});
-
-		decGroupsSel.exit().remove();
+		if (dec.label) {
+			labelSel = labelSel.empty() ? decSel.append("text") : labelSel;
+			labelSel
+				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
+				.attr("x", 0)
+				.attr("y", 0)
+				.text(dec.label);
+		} else {
+			labelSel.remove();
+		}
 	}
 
 	addErrorMarker(d, nodeGrp) {
@@ -2741,7 +2833,7 @@ export default class SVGCanvasRenderer {
 			imageObj.attr("data-image", nodeImage);
 			if (nodeImageType === "svg") {
 				this.addCopyOfImageToDefs(nodeImage);
-				imageObj.append("use").attr("href", `#${nodeImage}`);
+				this.updateUseObject(imageObj, nodeImage);
 			} else {
 				imageObj.attr("xlink:href", nodeImage);
 			}
@@ -2758,6 +2850,18 @@ export default class SVGCanvasRenderer {
 		if (defs.select(`[id='${nodeImage}']`).empty()) {
 			const defsSvg = defs.append("svg").attr("id", nodeImage);
 			d3.text(nodeImage).then((img) => defsSvg.html(img));
+		}
+	}
+
+	// Updates the <use> object on the image to reference the nodeImage passed
+	// in. This will add a new <use> object if one doesn't yet exist or update
+	// it if it does exist.
+	updateUseObject(imageObj, nodeImage) {
+		const useSel = imageObj.select("use");
+		if (useSel.empty()) {
+			imageObj.append("use").attr("href", `#${nodeImage}`);
+		} else {
+			useSel.attr("href", `#${nodeImage}`);
 		}
 	}
 
@@ -3283,7 +3387,7 @@ export default class SVGCanvasRenderer {
 			id: type === "canvas" ? null : d.id, // For historical puposes, we pass d.id as well as d as targetObject.
 			pipelineId: this.activePipeline.id,
 			cmPos: this.getMousePos(this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area.
-			mousePos: this.getTransformedMousePos(),
+			mousePos: this.getMousePosSnapToGrid(this.getTransformedMousePos()),
 			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
 			port: port,
 			zoom: this.zoomTransform.k });
@@ -4489,6 +4593,9 @@ export default class SVGCanvasRenderer {
 	}
 
 	getObjectStyle(d, part, type) {
+		if (!d.style && !d.style_temp) {
+			return null;
+		}
 		let style = null;
 
 		if (type === "hover") {
@@ -5163,130 +5270,72 @@ export default class SVGCanvasRenderer {
 
 		var startTimeDrawingLines = Date.now();
 		const that = this;
-		const linkSelector = this.getSelectorForClass("link-group");
+		const linkSelector = this.getSelectorForClass("d3-link-group");
 
-		if (this.selecting || this.regionSelect || this.canvasController.isTipOpening() || this.canvasController.isTipClosing()) {
-			// no lines update needed when selecting objects/region
+		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing()) {
+			return;
+
+		} else if (this.selecting || this.regionSelect) {
+			if (this.config.enableLinkSelection) {
+				this.canvasGrp
+					.selectAll(linkSelector)
+					.attr("data-selected", (d) => (that.objectModel.isSelected(d.id, that.activePipeline.id) ? true : null));
+
+				this.superRenderers.forEach((renderer) => {
+					renderer.selecting = true;
+					renderer.displayLinks();
+					renderer.selecting = false;
+				});
+			}
+
 			this.logger.logEndTimer("displayLinks " + this.getFlags());
 			return;
-		} else if (this.dragging || this.nodeSizing || this.commentSizing || this.movingBindingNodes) {
-			// while dragging etc. only remove lines that are affected by moving nodes/comments
-			let affectLinks;
-			if (this.nodeSizing) {
-				affectLinks = this.getConnectedLinksFromNodeSizingArray(this.nodeSizingMovedNodes);
-
-			} else if (this.commentSizing) {
-				affectLinks = this.getConnectedLinksFromCommentBeingSized(this.resizeObj);
-
-			} else {
-				let affectedNodesAndComments;
-				if (this.dragging) {
-					affectedNodesAndComments = this.dragObjects;
-				} else {
-					affectedNodesAndComments = this.getSelectedNodesAndComments();
-				}
-				// For sub-flow rendering, we need to add the supernode binding nodes
-				// because their links will also need to be refreshed when dragging is ocurring.
-				if (this.isDisplayingSubFlow()) {
-					affectedNodesAndComments = affectedNodesAndComments.concat(this.getSupernodeBindingNodes());
-				}
-
-				if (this.canvasLayout.linkType === LINK_TYPE_ELBOW) {
-					affectedNodesAndComments = this.addAffectedNodesForElbow(affectedNodesAndComments);
-				}
-
-				affectLinks = this.getConnectedLinks(affectedNodesAndComments);
-			}
-
-			this.canvasGrp.selectAll(linkSelector)
-				.filter(
-					(linkGroupLink) => typeof affectLinks.find(
-						(link) => link.id === linkGroupLink.id) !== "undefined")
-				.remove();
-		} else {
-			this.canvasGrp.selectAll(linkSelector).remove();
 		}
 
-		var timeAfterDelete = Date.now();
-		var lineArray = this.buildLineArray();
-		var afterLineArray = Date.now();
+		const timeAfterDelete = Date.now();
+		const lineArray = this.buildLineArray();
+		const afterLineArray = Date.now();
 
-		var linkGroup = this.canvasGrp.selectAll(linkSelector)
+		this.canvasGrp.selectAll(linkSelector)
 			.data(lineArray, function(line) { return line.id; })
-			.enter()
-			.append("g")
-			.attr("data-id", (d) => this.getId("link_grp", d.id))
-			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", "link-group")
+			.join(
+				(enter) => this.createNewLinks(enter)
+			)
 			.attr("style", (d) => this.getLinkGrpStyle(d))
-			.on("mousedown", () => {
-				// The context menu gesture will cause a mouse down event which
-				// will go through to canvas unless stopped.
-				d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
-			})
-			.on("mouseup", () => {
-				this.logger.log("Line - mouse up");
-			})
-			.on("contextmenu", (d) => {
-				this.logger.log("Context menu on canvas background.");
-				this.openContextMenu("link", d);
-			})
-			.on("mouseenter", function(link) {
-				if (that.canOpenTip(TIP_TYPE_LINK)) {
-					that.canvasController.openTip({
-						id: that.getId("link_tip", link.id),
-						type: TIP_TYPE_LINK,
-						targetObj: this,
-						mousePos: { x: d3Event.clientX, y: d3Event.clientY },
-						pipelineId: that.activePipeline.id,
-						link: link
-					});
-				}
-			})
-			.on("mouseleave", (d) => {
-				this.canvasController.closeTip();
+			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null))
+			.call((joinedLinkGrps) => {
+				// Update link selection area
+				joinedLinkGrps
+					.selectAll(".d3-link-selection-area")
+					.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+					.attr("d", (d) => d.pathInfo.path);
+
+				// Update link line
+				joinedLinkGrps
+					.selectAll(".d3-link-line")
+					.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+					.attr("d", (d) => d.pathInfo.path)
+					.attr("style", (d) => that.getObjectStyle(d, "line", "default"));
+
+				// Update link line arrow head
+				joinedLinkGrps
+					.filter((d) => (d.type === NODE_LINK && this.canvasLayout.dataLinkArrowHead) ||
+													(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
+													(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
+					.selectAll(".d3-link-line-arrow-head")
+					.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+					.attr("d", (d) => this.getArrowHead(d))
+					.attr("style", (d) => that.getObjectStyle(d, "line", "default"));
+
+				// Update decorations on the node-node or association links.
+				joinedLinkGrps.each(function(d) {
+					if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
+						that.displayDecorations(d, DEC_LINK, d3.select(this), d.decorations);
+					}
+				});
+
+				this.setDisplayOrder(joinedLinkGrps);
 			});
-
-		// Link selection area
-		linkGroup.append("path")
-			.attr("d", (d) => d.pathInfo.path)
-			.attr("class", (d) => this.getLinkSelectionAreaClass(d))
-			.on("mouseenter", function(link) {
-				that.setLinkLineStyles(link, "hover");
-			})
-			.on("mouseleave", function(link) {
-				that.setLinkLineStyles(link, "default");
-			});
-
-		// Link line
-		linkGroup.append("path")
-			.attr("d", (d) => d.pathInfo.path)
-			.attr("data-id", (d) => this.getId("link_line", d.id))
-			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", (d) => "d3-selectable-link " + this.getLinkClass(d))
-			.attr("style", (d) => that.getObjectStyle(d, "line", "default"))
-			.on("mouseenter", function(d) {
-				that.setLinkLineStyles(d, "hover");
-			})
-			.on("mouseleave", function(d) {
-				that.setLinkLineStyles(d, "default");
-			});
-
-		// Arrow head
-		linkGroup.filter((d) => (d.type === NODE_LINK && this.canvasLayout.dataLinkArrowHead) ||
-														(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
-														(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
-			.append("path")
-			.attr("d", (d) => this.getArrowHead(d))
-			.attr("class", (d) => "d3-selectable-link " + this.getLinkClass(d))
-			.style("stroke-dasharray", "0"); // Ensure arrow head is always solid line style
-
-		// Add decorations to the node-node or association links.
-		linkGroup.each(function(d) {
-			if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
-				that.addDecorations(d, DEC_LINK, d3.select(this), d.decorations);
-			}
-		});
 
 		// Set connection status of output ports and input ports plus arrow.
 		if (this.canvasLayout.connectionType === "ports") {
@@ -5304,8 +5353,6 @@ export default class SVGCanvasRenderer {
 			});
 		}
 
-		this.setDisplayOrder(linkGroup);
-
 		var endTimeDrawingLines = Date.now();
 
 		if (showLinksTime) {
@@ -5315,31 +5362,97 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("displayLinks " + this.getFlags());
 	}
 
-	setLinkLineStyles(link, type) {
+	getBuildLineArrayData(id, lineArray) {
+		return lineArray.find((el) => el.id === id);
+	}
+
+	createNewLinks(enter) {
+		const that = this;
+
+		// Add groups for links
+		const newLinkGrps = enter.append("g")
+			.attr("data-id", (d) => this.getId("link_grp", d.id))
+			.attr("data-pipeline-id", this.activePipeline.id)
+			.attr("class", "d3-link-group")
+			.on("mousedown", (d) => {
+				this.logger.log("Link Group - mouse down");
+				if (this.config.enableLinkSelection) {
+					this.selectObject(
+						d,
+						d3Event.type,
+						d3Event.shiftKey,
+						CanvasUtils.isCmndCtrlPressed(d3Event));
+				}
+			})
+			.on("mouseup", () => {
+				this.logger.log("Link Group - mouse up");
+			})
+			.on("click", (d) => {
+				this.logger.log("Link Group - click");
+				d3Event.stopPropagation();
+			})
+			.on("contextmenu", (d) => {
+				this.logger.log("Link Group - context menu");
+				if (this.config.enableLinkSelection) {
+					this.selectObject(
+						d,
+						d3Event.type,
+						d3Event.shiftKey,
+						CanvasUtils.isCmndCtrlPressed(d3Event));
+				}
+				this.openContextMenu("link", d);
+			})
+			.on("mouseenter", (link, index, elements) => {
+				// When using function keyword the 'this' pointer in this function
+				// isn't set to elements[index] as expected. Not sure why not. So we use
+				// an arrow function instead and a direct reference to elements[index].
+				const targetObj = elements[index];
+
+				this.setLinkLineStyles(targetObj, link, "hover");
+
+				if (this.canOpenTip(TIP_TYPE_LINK)) {
+					this.canvasController.openTip({
+						id: this.getId("link_tip", link.id),
+						type: TIP_TYPE_LINK,
+						targetObj: targetObj,
+						mousePos: { x: d3Event.clientX, y: d3Event.clientY },
+						pipelineId: that.activePipeline.id,
+						link: link
+					});
+				}
+			})
+			.on("mouseleave", (link, index, elements) => {
+				const targetObj = elements[index];
+				this.setLinkLineStyles(targetObj, link, "default");
+				this.canvasController.closeTip();
+			});
+
+		// Add selection area for link line
+		newLinkGrps
+			.append("path")
+			.attr("class", (d) => "d3-link-selection-area " + this.getLinkSelectionAreaClass(d));
+
+		// Add displayed link line
+		newLinkGrps
+			.append("path")
+			.attr("class", (d) => "d3-link-line " + this.getLinkClass(d));
+
+		// Add displayed link line arrow heads
+		newLinkGrps
+			.filter((d) => (d.type === NODE_LINK && this.canvasLayout.dataLinkArrowHead) ||
+											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
+											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
+			.append("path")
+			.attr("class", (d) => "d3-link-line-arrow-head " + this.getLinkClass(d));
+
+		return newLinkGrps;
+	}
+
+	setLinkLineStyles(linkObj, link, type) {
 		const style = this.getObjectStyle(link, "line", type);
-		this.canvasGrp.select(this.getSelectorForId("link_line", link.id)).attr("style", style);
-	}
-
-	// Adds the binding nodes, which map to the containing supernode's ports, to
-	// the set of affected nodes and comments.
-	getSupernodeBindingNodes() {
-		const snBindingNodes = [];
-		this.activePipeline.nodes.forEach((node) => {
-			if (this.isSuperBindingNode(node)) {
-				snBindingNodes.push(node);
-			}
-		});
-
-		return snBindingNodes;
-	}
-
-	getLinkSelectionAreaClass(d) {
-		if (d.type === ASSOCIATION_LINK) {
-			return "d3-association-link-selection-area";
-		} else if (d.type === COMMENT_LINK) {
-			return "d3-comment-link-selection-area";
-		}
-		return "d3-data-link-selection-area";
+		const linkSel = d3.select(linkObj);
+		linkSel.select(".d3-link-line").attr("style", style);
+		linkSel.select(".d3-link-line-arrow-head").attr("style", style);
 	}
 
 	getDataLinkClass(d) {
@@ -5360,6 +5473,15 @@ export default class SVGCanvasRenderer {
 			return this.getCommentLinkClass(d);
 		}
 		return this.getDataLinkClass(d);
+	}
+
+	getLinkSelectionAreaClass(d) {
+		if (d.type === ASSOCIATION_LINK) {
+			return "d3-association-link-selection-area";
+		} else if (d.type === COMMENT_LINK) {
+			return "d3-comment-link-selection-area";
+		}
+		return "d3-data-link-selection-area";
 	}
 
 	getAssociationLinkClass(d) {
@@ -5424,6 +5546,10 @@ export default class SVGCanvasRenderer {
 
 		for (var idx = comments.length - 1; idx > -1; idx--) {
 			this.canvasGrp.selectAll(this.getSelectorForId("comment_grp", comments[idx].id)).lower();
+		}
+
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			this.canvasUnderlay.lower();
 		}
 	}
 
@@ -5720,57 +5846,6 @@ export default class SVGCanvasRenderer {
 			break;
 		}
 		return iconPath;
-	}
-
-	getConnectedLinks(selectedObjects) {
-		var links = [];
-		selectedObjects.forEach((selectedObject) => {
-			const linksContaining = this.activePipeline.links.filter(function(link) {
-				return (link.srcNodeId === selectedObject.id || link.trgNodeId === selectedObject.id);
-			});
-			links = union(links, linksContaining);
-		});
-		return links;
-	}
-
-	// Adds to the array of nodes and comments passed in, any nodes that are
-	// connected to the nodes in the input array provided they have multiple
-	// output ports. This is necessary for the Elbow link type because the
-	// minInitialIne of links emanating from multiple output ports of a node
-	// are affected by each other.
-	addAffectedNodesForElbow(affectedNodesAndComments) {
-		let newAffectedNodesAndComments = affectedNodesAndComments.map((obj) => obj);
-		affectedNodesAndComments.forEach((object) => {
-			const addObjects = [];
-			this.activePipeline.links.forEach((link) => {
-				if (link.trgNodeId === object.id) {
-					const srcNode = this.getNode(link.srcNodeId);
-					if (srcNode && srcNode.outputs && srcNode.outputs.length > 1) {
-						addObjects.push(srcNode);
-					}
-				}
-			});
-			newAffectedNodesAndComments = union(newAffectedNodesAndComments, addObjects);
-		});
-		return newAffectedNodesAndComments;
-	}
-
-	getConnectedLinksFromNodeSizingArray(selectedObjects) {
-		var links = [];
-		forIn(selectedObjects, (selectedObject, selectedObjectId) => {
-			const linksContaining = this.activePipeline.links.filter(function(link) {
-				return (link.srcNodeId === selectedObjectId || link.trgNodeId === selectedObjectId);
-			});
-			links = union(links, linksContaining);
-		});
-		return links;
-	}
-
-	getConnectedLinksFromCommentBeingSized(resizedComment) {
-		const links = this.activePipeline.links.filter(function(link) {
-			return (link.srcNodeId === resizedComment.id || link.trgNodeId === resizedComment.id);
-		});
-		return links;
 	}
 
 	getSelectedNodesAndComments() {

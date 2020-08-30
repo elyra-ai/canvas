@@ -27,7 +27,7 @@ $node-body-stroke: $blue;
 $node-body-fill: $light-blue;
 
 $node-port-output-stroke-color: $blue;
-$node-port-output-fill-color: $canvas-background-color;
+$node-port-output-fill-color: $ui-background;
 
 $node-port-output-connected-stroke-color: $blue;
 $node-port-output-connected-fill-color: $light-blue;
@@ -36,7 +36,7 @@ $node-port-output-hover-stroke: $dark-blue;
 $node-port-output-hover-fill: $dark-blue;
 
 $node-port-input-stroke-color: $blue;
-$node-port-input-fill-color: $canvas-background-color;
+$node-port-input-fill-color: $ui-background;
 
 $node-port-input-connected-stroke-color: $blue;
 $node-port-input-connected-fill-color: $light-blue;
@@ -74,7 +74,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 	}
 
 	.d3-node-selection-highlight[data-selected="yes"] {
-		stroke: $node-selection-color;
+		stroke: $inverse-link;
 		stroke-dasharray: 5, 5;
 		stroke-width: 2;
 		fill: transparent;
@@ -83,7 +83,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 
 	.d3-node-label {
 		font-size: 13px;
-		fill: $node-label-color;
+		fill: $text-01;
 		/* Prevent elements from being selectable */
 		/* This stops it being dragged incorrectly.*/
 		user-select: none;
@@ -152,7 +152,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 	}
 
 	.d3-comment-selection-highlight[data-selected="yes"] {
-		stroke: $node-selection-color;
+		stroke: $inverse-link;
 		stroke-dasharray: 5 5;
 		stroke-width: 2;
 		fill: transparent;
@@ -308,4 +308,15 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 
 .main-comment-box {
 	fill: #2BE2CA;
+}
+
+/* These styles are used by the custom JSX addd to the toolbar: TOOLBAR_TYPE_CUSTOM_ACTIONS */
+
+.toolbar-overflow-jsx-item .toolbar-custom-button {
+	width: 100%;
+	height: 100%;
+
+	& button {
+		height: 100%;
+	}
 }

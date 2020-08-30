@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import has from "lodash/has";
+import { has } from "lodash";
 
 /*
 * Iterates over the conditions and replaces the default message with translated message
@@ -42,6 +42,4 @@ function searchMessage(object, l10nProvider) {
 	}
 }
 
-module.exports = {
-	translateMessages: translateMessages
-};
+export { translateMessages };

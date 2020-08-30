@@ -29,24 +29,20 @@ Cypress.Commands.add("verifyCommentTransform", (commentText, transformValue) => 
 });
 
 Cypress.Commands.add("verifyZoomTransform", (transformValue) => {
-	cy.get(".svg-area")
-		.find("g")
+	cy.get(".svg-area > g")
 		.eq(0)
 		.should("have.attr", "transform", transformValue);
 });
 
 Cypress.Commands.add("verifyZoomTransformDoesNotExist", () => {
-	cy.get(".svg-area")
-		.find("g")
+	cy.get(".svg-area > g")
 		.eq(0)
 		.its("transform")
 		.should("not.exist");
 });
 
 Cypress.Commands.add("verifyZoomTransformInExtraCanvas", (transformValue) => {
-	cy.get(".svg-area")
-		.eq(1)
-		.find("g")
+	cy.get("div#canvas-div-1 > div > .svg-area > g")
 		.eq(0)
 		.should("have.attr", "transform", transformValue);
 });
@@ -71,8 +67,22 @@ Cypress.Commands.add("verifyNodeIsDeleted", (nodeName, deleteUsingContextMenu) =
 		.should("eq", 0);
 
 	// Verify delete selected objects entry in console
-	cy.verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole(nodeName, deleteUsingContextMenu);
+	verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole(nodeName, deleteUsingContextMenu);
 });
+
+function verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole(nodeName, deleteUsingContextMenu) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): deleteSelectedObjects");
+		if (deleteUsingContextMenu) {
+			// node is deleted using context menu
+			expect(lastEventLog.data.targetObject.label).to.equal(nodeName);
+		} else {
+			// node is deleted using keyboard delete key or using toolbar delete option
+			expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
+		}
+	});
+}
 
 Cypress.Commands.add("verifyCommentIsDeleted", (commentText) => {
 	// verify comment is not the canvas DOM
@@ -130,9 +140,14 @@ Cypress.Commands.add("verifyNodeImage", (nodeLabel, value) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => {
 			const nodeImageSelector =
-			"[data-id='" + node[0].getAttribute("data-id").replace("grp", "image") + "']";
+				"[data-id='" + node[0].getAttribute("data-id").replace("grp", "image") + "']";
 			cy.get(nodeImageSelector)
 				.should("have.attr", "data-image", value);
+			// An SVG image should only ever have a single <use> element
+			const nodeUseSelector = nodeImageSelector + " use";
+			cy.get(nodeUseSelector)
+				.should("have.length", 1);
+
 		});
 });
 
@@ -172,8 +187,16 @@ Cypress.Commands.add("verifyCommentExists", (commentText) => {
 		.then((count) => expect(count).to.equal(1));
 
 	// verify that an event for a new comment is in the external object model event log
-	cy.verifyEditActionHandlerEditCommentEntryInConsole(commentText);
+	verifyEditActionHandlerEditCommentEntryInConsole(commentText);
 });
+
+function verifyEditActionHandlerEditCommentEntryInConsole(commentText) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastLogOfType(doc, "editActionHandler(): editComment");
+		expect(lastEventLog.event).to.equal("editActionHandler(): editComment");
+		expect(lastEventLog.data.content).to.equal(commentText);
+	});
+}
 
 Cypress.Commands.add("verifyEditedCommentExists", (commentText) => {
 	// verify comment is in the DOM
@@ -203,7 +226,9 @@ Cypress.Commands.add("verifyNodeElementWidth", (nodeName, nodeElement, width) =>
 			const nodeElementSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", nodeElement) + "']";
 			cy.get(nodeElementSelector)
 				.invoke("css", "width")
-				.should("eq", width);
+				.then((cssValue) => {
+					cy.verifyValueInCompareRange(width, cssValue);
+				});
 		});
 });
 
@@ -332,6 +357,40 @@ Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 	});
 });
 
+Cypress.Commands.add("verifyLinkPath", (srcNodeName, srcPortId, trgNodeName, trgPortId, path) => {
+	cy.getPipeline()
+		.then((pipeline) => {
+			cy.getPortLinks(pipeline, srcNodeName, srcPortId, trgNodeName, trgPortId)
+				.then((links) => {
+					cy.wrap(links).should("have.length", 1);
+
+					cy.getLinkLineUsingLinkId(links[0].id, "line")
+						.then((link) => expect(link[0].getAttribute("d")).to.equal(path));
+				});
+		});
+});
+
+Cypress.Commands.add("verifyLinkIsSelected", (linkId) => {
+	cy.getLinkUsingLinkId(linkId)
+		.then((linkGrp) => expect(linkGrp[0].getAttribute("data-selected")).to.equal("true"));
+});
+
+Cypress.Commands.add("verifyLinkIsNotSelected", (linkId) => {
+	cy.getLinkUsingLinkId(linkId)
+		.then((linkGrp) => expect(linkGrp[0].getAttribute("data-selected")).to.equal(null)); // data-selected will be missing when link is not selected
+});
+
+Cypress.Commands.add("verifyLinkIsDeleted", (linkId, deleteUsingContextMenu) => {
+	// verify link is not the canvas DOM
+	cy.getLinkUsingLinkId(linkId)
+		.should("not.exist");
+
+	// verify that the link is not in the internal object model
+	cy.getLinkCountFromObjectModel(linkId)
+		.should("eq", 0);
+});
+
+
 Cypress.Commands.add("verifyNumberOfPipelines", (noOfPipelines) => {
 	cy.getCanvasData().then((canvasData) => {
 		expect(canvasData.pipelines.length).to.equal(noOfPipelines);
@@ -414,13 +473,13 @@ Cypress.Commands.add("verifyContextMenuPosition", (distFromLeft, distFromTop) =>
 	// first() returns context menu
 	cy.get(".context-menu-popover").first()
 		.invoke("css", "left")
-		.then((leftDist) => {
-			expect(Math.round(parseFloat(leftDist.split("px")[0]))).equal(distFromLeft);
+		.then((cssValue) => {
+			cy.verifyValueInCompareRange(distFromLeft, cssValue);
 		});
 	cy.get(".context-menu-popover").first()
 		.invoke("css", "top")
-		.then((topDist) => {
-			expect(Math.round(parseFloat(topDist.split("px")[0]))).equal(distFromTop);
+		.then((cssValue) => {
+			cy.verifyValueInCompareRange(distFromTop, cssValue);
 		});
 });
 
@@ -428,8 +487,10 @@ Cypress.Commands.add("verifySubmenuPushedUpBy", (distFromTop) => {
 	// last() returns context submenu
 	cy.get(".context-menu-popover").last()
 		.invoke("css", "top")
-		.then((topDist) => {
-			expect(Math.abs(parseFloat(topDist.split("px")[0]))).equal(distFromTop);
+		.then((cssValue) => {
+			// cssValue is a negative number Eg. -91px
+			// Sending 91px to verifyValueInCompareRange
+			cy.verifyValueInCompareRange(distFromTop, Math.abs(Number(cssValue.split("px")[0])) + "px");
 		});
 });
 
@@ -504,84 +565,29 @@ Cypress.Commands.add("verifyDecorationTransformOnLink", (linkName, decoratorId, 
 
 Cypress.Commands.add("verifyDecorationImageOnNode", (nodeName, decoratorId, decoratorImage) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-node-dec-image")
-		.then((decoratorImages) => {
-			const decorator = decoratorImages.filter((idx) =>
-				decoratorImages[idx].getAttribute("data-id") === ("node_dec_image_0_" + decoratorId));
-			expect(decorator[0].getAttribute("data-id")).equal(`node_dec_image_0_${decoratorId}`);
-			expect(decorator[0].getAttribute("data-image")).equal(decoratorImage);
+		.find(`.d3-node-dec-group[data-id=node_dec_group_0_${decoratorId}] g .d3-node-dec-image`)
+		.then((decImages) => {
+			expect(decImages[0].getAttribute("data-image")).equal(decoratorImage);
 		});
 });
 
 Cypress.Commands.add("verifyDecorationPathOnNode", (nodeName, decoratorId, path) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-node-dec-path")
-		.then((decoratorPaths) => {
-			const decorator = decoratorPaths.filter((idx) =>
-				decoratorPaths[idx].getAttribute("data-id") === ("node_dec_path_0_" + decoratorId));
-			expect(decorator[0].getAttribute("data-id")).equal(`node_dec_path_0_${decoratorId}`);
-			expect(decorator[0].getAttribute("d")).equal(path);
+		.find(`.d3-node-dec-group[data-id=node_dec_group_0_${decoratorId}] .d3-node-dec-path`)
+		.then((decPaths) => {
+			expect(decPaths[0].getAttribute("d")).equal(path);
 		});
 });
 
 Cypress.Commands.add("verifyDecorationPathOnLink", (linkName, decoratorId, path) => {
 	cy.getLinkFromName(linkName)
-		.find(".d3-link-dec-path")
-		.then((decoratorPaths) => {
-			const decorator = decoratorPaths.filter((idx) =>
-				decoratorPaths[idx].getAttribute("data-id") === ("link_dec_path_0_" + decoratorId));
-			expect(decorator[0].getAttribute("data-id")).equal(`link_dec_path_0_${decoratorId}`);
-			expect(decorator[0].getAttribute("d")).equal(path);
+		.find(`.d3-link-dec-group[data-id=link_dec_group_0_${decoratorId}] .d3-link-dec-path`)
+		.then((decPaths) => {
+			cy.log("d = " + decPaths[0].getAttribute("d"));
+			expect(decPaths[0].getAttribute("d")).equal(path);
 		});
 });
 
-
-Cypress.Commands.add("verifyDecorationHandlerEntryInConsole", (decoratorId) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal(`decorationHandler() Decoration ID = ${decoratorId}`);
-		expect(lastEventLog.data).to.equal(decoratorId);
-	});
-});
-
-Cypress.Commands.add("verifyApplyPropertyChangesEntryInConsole", (propertyValue) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
-		expect("applyPropertyChanges()").to.equal(lastEventLog.event);
-		expect(propertyValue).to.equal(lastEventLog.data.form.samplingRatio);
-	});
-});
-
-Cypress.Commands.add("verifyEditActionHandlerLinkNodesEntryInConsole", (srcNodeId, trgNodeId) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): linkNodes");
-		expect(lastEventLog.data.nodes[0].id).to.equal(srcNodeId);
-		expect(lastEventLog.data.targetNodes[0].id).to.equal(trgNodeId);
-	});
-});
-
-Cypress.Commands.add("verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole", (nodeName, deleteUsingContextMenu) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): deleteSelectedObjects");
-		if (deleteUsingContextMenu) {
-			// node is deleted using context menu
-			expect(lastEventLog.data.targetObject.label).to.equal(nodeName);
-		} else {
-			// node is deleted using keyboard delete key or using toolbar delete option
-			expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
-		}
-	});
-});
-
-Cypress.Commands.add("verifyEditActionHandlerEditCommentEntryInConsole", (commentText) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastLogOfType(doc, "editActionHandler(): editComment");
-		expect(lastEventLog.event).to.equal("editActionHandler(): editComment");
-		expect(lastEventLog.data.content).to.equal(commentText);
-	});
-});
 
 Cypress.Commands.add("verifyErrorMarkerOnNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
@@ -668,9 +674,9 @@ Cypress.Commands.add("verifyCanvasIsEmpty", () => {
 
 Cypress.Commands.add("verifyLinkBetweenNodes", (srcNodeName, trgNodeName, linkCount) => {
 	// verify that the link is on DOM
-	cy.get(".d3-selectable-link")
+	cy.get(".d3-link-group")
 		.then((canvasLinks) => {
-			const noOfCanvasLinks = canvasLinks.length / 2; // Divide by 2 because line and arrow head use same class
+			const noOfCanvasLinks = canvasLinks.length;
 			expect(noOfCanvasLinks).to.equal(linkCount);
 		});
 
@@ -683,10 +689,19 @@ Cypress.Commands.add("verifyLinkBetweenNodes", (srcNodeName, trgNodeName, linkCo
 		.then((srcNodeId) => {
 			cy.getNodeIdForLabel(trgNodeName)
 				.then((trgNodeId) => {
-					cy.verifyEditActionHandlerLinkNodesEntryInConsole(srcNodeId, trgNodeId);
+					verifyEditActionHandlerLinkNodesEntryInConsole(srcNodeId, trgNodeId);
 				});
 		});
 });
+
+function verifyEditActionHandlerLinkNodesEntryInConsole(srcNodeId, trgNodeId) {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect(lastEventLog.event).to.equal("editActionHandler(): linkNodes");
+		expect(lastEventLog.data.nodes[0].id).to.equal(srcNodeId);
+		expect(lastEventLog.data.targetNodes[0].id).to.equal(trgNodeId);
+	});
+}
 
 Cypress.Commands.add("verifyNodeDoesNotExistInPalette", (nodeName) => {
 	// expect index is -1 since node should not be found in palette
@@ -711,7 +726,10 @@ Cypress.Commands.add("verifyPaletteNodeImageCSS", (nodeName, style, value) => {
 	cy.findNodeIndexInPalette(nodeName)
 		.then((nodeIndex) => {
 			cy.get(".palette-list-item-icon").eq(nodeIndex)
-				.should("have.css", style, value);
+				.invoke("css", style)
+				.then((cssValue) => {
+					cy.verifyValueInCompareRange(value, cssValue);
+				});
 		});
 });
 
@@ -752,38 +770,6 @@ Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
 					expect(itemsVisible).to.equal(noOfItems);
 				});
 		});
-});
-
-Cypress.Commands.add("verifyNodeIsMoved", (nodeName) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): moveObjects");
-		expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
-	});
-});
-
-Cypress.Commands.add("verifyCommentIsMoved", (commentText) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): moveObjects");
-		expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
-	});
-});
-
-Cypress.Commands.add("verifyNodeIsNotMoved", (nodeName) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): undo");
-		expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
-	});
-});
-
-Cypress.Commands.add("verifyCommentIsNotMoved", (commentText) => {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): undo");
-		expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
-	});
 });
 
 Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
@@ -987,14 +973,14 @@ Cypress.Commands.add("verifyTipDoesNotShowForLink", () => {
 
 Cypress.Commands.add("verifyNotificationIconType", (type) => {
 	if (type) {
-		cy.get("svg.notificationCounterIcon").should("have.class", type);
+		cy.get(".notificationCounterIcon").should("have.class", type);
 	} else {
-		cy.get("svg.notificationCounterIcon").should("not.have.any.keys", ["info", "success", "warning", "error"]);
+		cy.get(".notificationCounterIcon").should("not.have.any.keys", ["info", "success", "warning", "error"]);
 	}
 });
 
 Cypress.Commands.add("verifyNotificationCounter", (count) => {
-	cy.get(".notificationCounterIcon .text-content").should("have.text", " " + count + " ");
+	cy.get(".toggleNotificationPanel-action .toolbar-text-content").should("have.text", " " + count + " ");
 });
 
 Cypress.Commands.add("verifyNotificationMessagesLength", (messagesLength) => {
@@ -1029,17 +1015,10 @@ Cypress.Commands.add("verifyLatestNotificationMessage", (messagesLength, type, t
 	cy.verifyNotificationMessageContent(messagesLength - 1, type, type + " title", type + " message", timestamp);
 });
 
-Cypress.Commands.add("verifyNotificationMessagesCallbackInConsole", (index, id) => {
+Cypress.Commands.add("clickNotificationAtIndex", (index) => {
 	cy.get(".notifications-button-container .notifications")
 		.eq(index)
 		.click();
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("Notification Message Callback");
-		if (id) {
-			expect(lastEventLog.data).to.equal("Message " + id + " was clicked.");
-		}
-	});
 });
 
 Cypress.Commands.add("verifyNotificationCenterHidden", (hidden) => {
@@ -1058,4 +1037,9 @@ Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
 	} else {
 		cy.get(".notification-panel-" + id).should("not.exist");
 	}
+});
+
+Cypress.Commands.add("verifyValueInCompareRange", (value, cssValue) => {
+	// value should be in the compare range of cssValue
+	expect(Number(value.split("px")[0])).to.be.closeTo(Number(cssValue.split("px")[0]), Cypress.env("compareRange"));
 });

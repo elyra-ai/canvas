@@ -141,3 +141,19 @@ describe("Test to see if zoom IS saved in the pipeline flow with 'Save Zoom' set
 		cy.verifyPrimaryPipelineZoomInCanvasInfo(294.6649135987979, 95.04432757325321, 0.7513148009015777);
 	});
 });
+
+describe("Test to see if the canvas is panned into view when selectedPanIntoViewOnOpen is enabled", function() {
+	before(() => {
+		cy.viewport(1330, 660);
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedPanIntoViewOnOpen": true });
+		cy.openCanvasDefinition("allTypesCanvas.json");
+	});
+
+	it("Test to see if the canvas is panned into view when selectedPanIntoViewOnOpen is enabled", function() {
+		// The allTypesCanvas should have been panned to the left and up.
+		cy.verifyZoomTransformDoesNotExist();
+
+		cy.verifyZoomTransform("translate(-6,-6) scale(1)");
+	});
+});

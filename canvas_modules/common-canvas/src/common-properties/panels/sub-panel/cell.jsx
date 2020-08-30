@@ -16,11 +16,11 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "carbon-components-react/lib/components/Button";
-import uuid4 from "uuid/v4";
-import PropertyUtils from "./../../util/property-utils";
+import { Button } from "carbon-components-react";
+import { v4 as uuid4 } from "uuid";
+import { formatMessage } from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import cloneDeep from "lodash/cloneDeep";
+import { cloneDeep } from "lodash";
 
 import { MESSAGE_KEYS } from "./../../constants/constants";
 import { TOOL_TIP_DELAY } from "./../../constants/constants.js";
@@ -55,10 +55,10 @@ export default class SubPanelCell extends React.Component {
 	render() {
 		const tooltipId = "tooltip-subpanel-cell";
 		const disabled = typeof this.props.disabled !== "undefined" ? this.props.disabled : false;
-		const subPanelToolTip = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
+		const subPanelToolTip = formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.SUBPANEL_BUTTON_TOOLTIP);
-		const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL);
-		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL);
+		const applyLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL);
+		const rejectLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL);
 		const innerObject = this.props.buttonIcon ? this.props.buttonIcon : this.props.label || "";
 		return (
 

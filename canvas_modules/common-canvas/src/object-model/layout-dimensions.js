@@ -1041,10 +1041,10 @@ const portsVerticalDefaultLayout = {
 export default class LayoutDimensions {
 	static getLayoutForConfig(config) {
 		let type;
-		if (config.enableConnectionType === "Halo") {
+		if (config && config.enableConnectionType === "Halo") {
 			type = "halo";
 
-		} else if (config.enableNodeFormatType === "Horizontal") {
+		} else if (config && config.enableNodeFormatType === "Horizontal") {
 			type = "ports-horizontal";
 
 		} else { // Vertical

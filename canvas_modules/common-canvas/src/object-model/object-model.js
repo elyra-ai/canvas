@@ -21,19 +21,20 @@ import CanvasOutHandler from "./canvas-out-handler.js"; // TODO - Remove this wh
 import PipelineInHandler from "./pipeline-in-handler.js";
 import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
+import LocalStorage from "../common-canvas/local-storage.js";
 import APIPipeline from "./api-pipeline.js";
 
 import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
 import has from "lodash/has";
 import union from "lodash/union";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
 import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@elyra/pipeline-schemas";
 import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from "./schemas-utils/upgrade-palette.js";
 import { createCCStore } from "./redux/store.js";
 
-import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, CREATE_PIPELINE,
+import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
 	CLONE_PIPELINE, SUPER_NODE, HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM,
 	HIGHLIGHT_DOWNSTREAM } from "../common-canvas/constants/canvas-constants.js";
 
@@ -174,12 +175,11 @@ export default class ObjectModel {
 	// object model.
 	convertNodeTemplate(nodeTemplate) {
 		if (nodeTemplate) {
-			const newNodeTemplate = Object.assign({}, nodeTemplate);
+			// Clone the template so we cannot accidentally modify any of its fields.
+			const newNodeTemplate = JSON.parse(JSON.stringify(nodeTemplate));
 
 			if (newNodeTemplate.app_data) {
-				// Ensure we've cloned the app_data not just refer to the original from the palette.
-				newNodeTemplate.app_data = JSON.parse(JSON.stringify(nodeTemplate.app_data));
-
+				// Flatten app_data.ui_data fields into top level fields in the new template.
 				if (newNodeTemplate.app_data.ui_data) {
 					newNodeTemplate.label = nodeTemplate.app_data.ui_data.label;
 					newNodeTemplate.image = nodeTemplate.app_data.ui_data.image;
@@ -188,7 +188,7 @@ export default class ObjectModel {
 					newNodeTemplate.decorations = nodeTemplate.app_data.ui_data.decorations;
 					newNodeTemplate.messages = nodeTemplate.app_data.ui_data.messages;
 
-					// We can remove the app_data.ui_data
+					// We can remove the app_data.ui_data now its fields have been flattened.
 					delete newNodeTemplate.app_data.ui_data;
 				}
 			}
@@ -207,7 +207,8 @@ export default class ObjectModel {
 	}
 
 	// Converts an incoming port (either input or output ) from a nodetemplate
-	// from the palette to an internal format port.
+	// from the palette to an internal format port by flattening the app_data.ui_data
+	// fields into the port object itself.
 	convertPort(port) {
 		const newPort = Object.assign({}, port);
 		if (port.app_data && port.app_data.ui_data) {
@@ -220,7 +221,7 @@ export default class ObjectModel {
 			if (port.app_data.ui_data.class_name) {
 				newPort.class_name = port.app_data.ui_data.class_name;
 			}
-			// We can remvove this as it is not needed in the internal format.
+			// We can remove this now its fields have been flattened.
 			delete newPort.app_data.ui_data;
 		}
 		return newPort;
@@ -996,8 +997,22 @@ export default class ObjectModel {
 		return objs;
 	}
 
+	getSelectedLinks() {
+		const objs = [];
+		const apiPipeline = this.getSelectedPipeline();
+		apiPipeline.getLinks().forEach((lnk) => {
+			if (this.getSelectedObjectIds().includes(lnk.id)) {
+				objs.push(lnk);
+			}
+		});
+
+		return objs;
+	}
+
 	getSelectedObjects() {
-		return this.getSelectedNodes().concat(this.getSelectedComments());
+		return this.getSelectedNodes()
+			.concat(this.getSelectedComments())
+			.concat(this.getSelectedLinks());
 	}
 
 	getSelectionInfo() {
@@ -1160,6 +1175,13 @@ export default class ObjectModel {
 		return connectedNodesIdsGroup.length === nodeIds.length;
 	}
 
+	// Returns true if all the selected objcts are links.
+	areAllSelectedObjectsLinks() {
+		const nonLinkIndex = this.getSelectedObjects().findIndex((selObj) => !this.isLink(selObj));
+		return nonLinkIndex === -1;
+
+	}
+
 	// Recursive function to add all connected nodes into the group.
 	addConnectedNodeIdToGroup(nodeId, connectedNodesIdsGroup, nodeIds, apiPipeline) {
 		if (connectedNodesIdsGroup.includes(nodeId)) {
@@ -1204,6 +1226,7 @@ export default class ObjectModel {
 
 		if (this.selectionChangeHandler) {
 			previousSelection = {
+				links: this.getSelectedLinks(),
 				nodes: this.getSelectedNodes(),
 				comments: this.getSelectedComments(),
 				pipelineId: this.getSelectedPipelineId()
@@ -1215,14 +1238,18 @@ export default class ObjectModel {
 		if (this.selectionChangeHandler) {
 
 			// determine delta in selected nodes and comments
+			const selectedLinks = this.getSelectedLinks();
 			const selectedNodes = this.getSelectedNodes();
 			const selectedComments = this.getSelectedComments();
 			const newSelection = {
 				selection: this.getSelectedObjectIds(),
+				selectedLinks: selectedLinks,
 				selectedNodes: selectedNodes,
 				selectedComments: selectedComments,
+				addedLinks: difference(selectedLinks, previousSelection.links),
 				addedNodes: difference(selectedNodes, previousSelection.nodes),
 				addedComments: difference(selectedComments, previousSelection.comments),
+				deselectedLinks: difference(previousSelection.links, selectedLinks),
 				deselectedNodes: difference(previousSelection.nodes, selectedNodes),
 				deselectedComments: difference(previousSelection.comments, selectedComments),
 				previousPipelineId: previousSelection.pipelineId,
@@ -1230,8 +1257,10 @@ export default class ObjectModel {
 			};
 
 			// only trigger event if selection has changed
-			if (!isEmpty(newSelection.addedNodes) ||
+			if (!isEmpty(newSelection.addedLinks) ||
+					!isEmpty(newSelection.addedNodes) ||
 					!isEmpty(newSelection.addedComments) ||
+					!isEmpty(newSelection.deselectedLinks) ||
 					!isEmpty(newSelection.deselectedNodes) ||
 					!isEmpty(newSelection.deselectedComments)) {
 				this.selectionChangeHandler(newSelection);
@@ -1265,6 +1294,34 @@ export default class ObjectModel {
 
 	getNodeMessages(node) {
 		return node ? node.messages : null;
+	}
+
+	// Returns the maximum message type from all notification messages.
+	getNotificationMessagesMaxType() {
+		const notificationMessages = this.getNotificationMessages();
+		const errorMessages = this.getNotificationMessages(ERROR);
+		const warningMessages = this.getNotificationMessages(WARNING);
+		const successMessages = this.getNotificationMessages(SUCCESS);
+		const infoMessages = this.getNotificationMessages(INFO);
+
+		let maxMessageType = null;
+		if (notificationMessages.length > 0) {
+			if (errorMessages.length > 0) {
+				maxMessageType = ERROR;
+			} else if (warningMessages.length > 0) {
+				maxMessageType = WARNING;
+			} else if (successMessages.length > 0) {
+				maxMessageType = SUCCESS;
+			} else if (infoMessages.length > 0) {
+				maxMessageType = INFO;
+			}
+		}
+		return maxMessageType;
+	}
+
+	// Returns true if the object passed in is a link.
+	isLink(obj) {
+		return obj.type === NODE_LINK || obj.type === COMMENT_LINK || obj.type === ASSOCIATION_LINK;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1563,5 +1620,102 @@ export default class ObjectModel {
 		const a = node.x_pos - x;
 		const b = node.y_pos - y;
 		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+	}
+
+	// ---------------------------------------------------------------------------
+	// Clipboard methods
+	// ---------------------------------------------------------------------------
+
+	// Copies the currently selected objects to the internal clipboard and
+	// returns true if successful. Returns false if there is nothing to copy to
+	// the clipboard.
+	copyToClipboard() {
+		var copyData = {};
+
+		const apiPipeline = this.getSelectionAPIPipeline();
+		if (!apiPipeline) {
+			return false;
+		}
+		const nodes = this.getSelectedNodes();
+		const comments = this.getSelectedComments();
+		const links = apiPipeline.getLinksBetween(nodes, comments);
+
+		if (nodes.length === 0 && comments.length === 0) {
+			return false;
+		}
+
+		if (nodes && nodes.length > 0) {
+			copyData.nodes = nodes;
+			let pipelines = [];
+			const supernodes = apiPipeline.getSupernodes(nodes);
+			supernodes.forEach((supernode) => {
+				pipelines = pipelines.concat(this.getSubPipelinesForSupernode(supernode));
+			});
+			copyData.pipelines = pipelines;
+		}
+		if (comments && comments.length > 0) {
+			copyData.comments = comments;
+		}
+		if (links && links.length > 0) {
+			copyData.links = links;
+		}
+
+		var clipboardData = JSON.stringify(copyData);
+		LocalStorage.set("canvasClipboard", clipboardData);
+
+		return true;
+	}
+
+	isClipboardEmpty() {
+		const value = LocalStorage.get("canvasClipboard");
+		if (value && value !== "") {
+			return false;
+		}
+		return true;
+	}
+
+	getObjectsToPaste(pipelineId) {
+		const textToPaste = LocalStorage.get("canvasClipboard");
+
+		if (!textToPaste) {
+			return {};
+		}
+
+		const objects = JSON.parse(textToPaste);
+
+		// If there are no nodes and no comments there's nothing to paste so just
+		// return.
+		if (!objects.nodes && !objects.comments) {
+			return {};
+		}
+
+		// If a pipeline is not provided (like when the user clicks paste in the
+		// toolbar or uses keyboard short cut) this will get an APIPipeline for
+		// the latest breadcrumbs entry.
+		const apiPipeline = this.getAPIPipeline(pipelineId);
+
+		// Offset position of pasted nodes and comments if they exactly overlap
+		// existing nodes and comments - this can happen when pasting over the top
+		// of the canvas from which the nodes and comments were copied.
+		while (apiPipeline.exactlyOverlaps(objects.nodes, objects.comments)) {
+			if (objects.nodes) {
+				objects.nodes.forEach((node) => {
+					node.x_pos += 10;
+					node.y_pos += 10;
+				});
+			}
+			if (objects.comments) {
+				objects.comments.forEach((comment) => {
+					comment.x_pos += 10;
+					comment.y_pos += 10;
+					comment.selectedObjectIds = [];
+				});
+			}
+		}
+
+		return {
+			objects: objects,
+			pipelineId: apiPipeline.pipelineId
+		};
 	}
 }

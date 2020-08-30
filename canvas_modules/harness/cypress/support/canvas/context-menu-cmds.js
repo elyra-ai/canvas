@@ -52,3 +52,8 @@ Cypress.Commands.add("clickOptionFromContextSubmenu", (submenuName, optionName) 
 			});
 		});
 });
+
+
+Cypress.Commands.add("simulateClickInBrowsersEditMenu", (type) => {
+	cy.get("#canvas-div-0").trigger(type);
+});

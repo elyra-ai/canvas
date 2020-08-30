@@ -15,8 +15,7 @@
  */
 
 import React from "react";
-import Select from "carbon-components-react/lib/components/Select";
-import SelectItem from "carbon-components-react/lib/components/SelectItem";
+import { SelectItem, Select } from "carbon-components-react";
 
 
 class CustomEmmeansDroplist {

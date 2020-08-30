@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import "./properties/expression-editor-cmds";
 import "./properties/properties-cmds";
 import "./properties/properties-verification-cmds";
 import "./canvas/comments-cmds";
@@ -24,6 +25,7 @@ import "./canvas/node-cmds";
 import "./canvas/object-model-cmds";
 import "./canvas/test-harness-cmds";
 import "./canvas/toolbar-cmds";
+import "./canvas/utils-cmds";
 import "./canvas/verification-cmds";
 
 // turn off screenshots when running in headless mode.

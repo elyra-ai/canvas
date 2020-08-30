@@ -22,6 +22,8 @@ import Form from "../../src/common-properties/form/Form";
 import conditionForm from "../test_resources/json/conditions-summary-form.json";
 import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
+import checkboxsetParamDef from "../test_resources/paramDefs/checkboxset_paramDef.json";
+import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
 
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
 
@@ -460,7 +462,7 @@ describe("Properties Controller property values", () => {
 	});
 	it("should get filtered a property value correctly", () => {
 		reset();
-		const actualValue = controller.getPropertyValue({ name: "param_mix_table" }, true);
+		const actualValue = controller.getPropertyValue({ name: "param_mix_table" }, { "filterHiddenDisabled": true });
 		const expectedValue = [
 			["field1", true, null, 0.674, "DSX"],
 			["field2", null, 10, 0.674, "WDP"],
@@ -471,17 +473,17 @@ describe("Properties Controller property values", () => {
 	});
 	it("should get filtered `undefined` property value correctly", () => {
 		reset();
-		const actualValue = controller.getPropertyValue({ name: "param_undefined" }, true);
+		const actualValue = controller.getPropertyValue({ name: "param_undefined" }, { "filterHiddenDisabled": true });
 		expect(actualValue).to.be.undefined;
 	});
 	it("should get filtered `null` property value correctly", () => {
 		reset();
-		const actualValue = controller.getPropertyValue({ name: "param_null" }, true);
+		const actualValue = controller.getPropertyValue({ name: "param_null" }, { "filterHiddenDisabled": true });
 		expect(actualValue).to.equal(null);
 	});
 	it("should get filtered property values correctly", () => {
 		reset();
-		const actualValues = controller.getPropertyValues(true);
+		const actualValues = controller.getPropertyValues({ "filterHiddenDisabled": true });
 		const expectedValues = {
 			param_int: 5,
 			param_str: "Testing a string parameter",
@@ -578,6 +580,27 @@ describe("Properties Controller states", () => {
 		reset();
 		const actualValues = controller.getControlStates();
 		expect(propStates).to.eql(actualValues);
+	});
+
+	it("disabled controls can be set to hidden/visible", () => {
+		const renderedObject = testUtils.flyoutEditorForm(checkboxsetParamDef);
+		// const wrapper = renderedObject.wrapper;
+		controller = renderedObject.controller;
+
+		const disableAndHiddenCheckboxId = { name: "disable_and_hide" };
+		const disableAndHiddenCheckboxsetId = { name: "checkboxset_disable_and_hide" };
+
+		// verify the control is initially disabled
+		let controlState = controller.getControlState(disableAndHiddenCheckboxsetId);
+		expect(controlState).to.equal("disabled");
+
+		controller.updatePropertyValue(disableAndHiddenCheckboxId, true);
+		controlState = controller.getControlState(disableAndHiddenCheckboxsetId);
+		expect(controlState).to.equal("hidden");
+
+		controller.updatePropertyValue(disableAndHiddenCheckboxId, false);
+		controlState = controller.getControlState(disableAndHiddenCheckboxsetId);
+		expect(controlState).to.equal("disabled");
 	});
 });
 
@@ -1445,4 +1468,44 @@ describe("Properties Controller row selection methods", () => {
 		expect(structuretableSelections[1]).to.equal(4);
 	});
 
+});
+
+describe("Properties Controller action methods", () => {
+	it("Test getAction() returns correct value", () => {
+		const renderedObject = testUtils.flyoutEditorForm(actionParamDef);
+		controller = renderedObject.controller;
+		const action = controller.getAction({ name: "decrement" });
+		const expected = {
+			"name": "decrement",
+			"label": {
+				"text": "Decrement"
+			},
+			"actionType": "button",
+			"data": {
+				"parameter_ref": "number"
+			}
+		};
+		expect(JSON.stringify(action)).to.equal(JSON.stringify(expected));
+		expect(controller.getAction({ name: "dne" })).to.be.undefined;
+	});
+});
+
+describe("Properties Controller getControlPropType", () => {
+	beforeEach(() => {
+		reset();
+	});
+	it("should return correct propType from control", () => {
+		const propType = controller.getControlPropType({ name: "param_int" });
+		expect(propType).to.equal("integer");
+
+		const propType2 = controller.getControlPropType({ name: "param_complex" });
+		expect(propType2).to.equal("structure");
+	});
+	it("should return correct propType from subControl", () => {
+		const propType = controller.getControlPropType({ name: "param_complex", col: 0 }); // subcontrol: "zoom_value"
+		expect(propType).to.equal("double");
+
+		const propType2 = controller.getControlPropType({ name: "param_complex", col: 2 }); // subcontrol: "zoom_label"
+		expect(propType2).to.equal("string");
+	});
 });

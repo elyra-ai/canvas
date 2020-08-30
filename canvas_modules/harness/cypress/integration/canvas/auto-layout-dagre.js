@@ -19,6 +19,7 @@ describe("Test for toolbar horizontal and vertical layout", function() {
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeLayoutCanvas.json");
+		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray" });
 	});
 
 	it("Test the toolbar horizontal layout, vertical layout, undo, redo functions", function() {
@@ -125,6 +126,7 @@ describe("Test the horizontal layout of a multiport node with many descendants",
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("layoutMultiPortsCanvas.json");
+		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray" });
 	});
 
 	it("Test the horizontal layout of multiport node transforms having Vertical node format", function() {
@@ -174,6 +176,7 @@ describe("Test the horizontal layout of a flow and a sub-flow using curve and el
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("layoutSubFlowCanvas.json");
+		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray" });
 	});
 
 	it("Test the horizontal layout of flow and sub-flow node transforms " +

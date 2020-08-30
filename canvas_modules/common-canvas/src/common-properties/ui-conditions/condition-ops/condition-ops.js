@@ -15,29 +15,29 @@
  */
 import logger from "./../../../../utils/logger";
 
-import cellNotEmpty from "./cellNotEmpty";
-import colNotExists from "./colNotExists";
-import colDoesExists from "./colDoesExists";
-import contains from "./contains";
-import equals from "./equals";
-import greaterThan from "./greaterThan";
-import isEmpty from "./isEmpty";
-import isNotEmpty from "./isNotEmpty";
-import lessThan from "./lessThan";
-import matches from "./matches";
-import notContains from "./notContains";
-import notEquals from "./notEquals";
-import notMatches from "./notMatches";
-import isDateTime from "./isDateTime";
-import dmTypeEquals from "./dmTypeEquals";
-import dmTypeNotEquals from "./dmTypeNotEquals";
-import dmMeasurementEquals from "./dmMeasurementEquals";
-import dmMeasurementNotEquals from "./dmMeasurementNotEquals";
-import dmRoleEquals from "./dmRoleEquals";
-import dmRoleNotEquals from "./dmRoleNotEquals";
-import lengthEquals from "./lengthEquals";
-import lengthLessThan from "./lengthLessThan";
-import lengthGreaterThan from "./lengthGreaterThan";
+import * as cellNotEmpty from "./cellNotEmpty";
+import * as colNotExists from "./colNotExists";
+import * as colDoesExists from "./colDoesExists";
+import * as contains from "./contains";
+import * as equals from "./equals";
+import * as greaterThan from "./greaterThan";
+import * as isEmpty from "./isEmpty";
+import * as isNotEmpty from "./isNotEmpty";
+import * as lessThan from "./lessThan";
+import * as matches from "./matches";
+import * as notContains from "./notContains";
+import * as notEquals from "./notEquals";
+import * as notMatches from "./notMatches";
+import * as isDateTime from "./isDateTime";
+import * as dmTypeEquals from "./dmTypeEquals";
+import * as dmTypeNotEquals from "./dmTypeNotEquals";
+import * as dmMeasurementEquals from "./dmMeasurementEquals";
+import * as dmMeasurementNotEquals from "./dmMeasurementNotEquals";
+import * as dmRoleEquals from "./dmRoleEquals";
+import * as dmRoleNotEquals from "./dmRoleNotEquals";
+import * as lengthEquals from "./lengthEquals";
+import * as lengthLessThan from "./lengthLessThan";
+import * as lengthGreaterThan from "./lengthGreaterThan";
 
 
 /**
@@ -82,4 +82,4 @@ function getConditionOps(customOps) {
 	return ops;
 }
 
-module.exports.getConditionOps = getConditionOps;
+export { getConditionOps };

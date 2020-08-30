@@ -20,22 +20,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import FlexibleTable from "./../flexible-table";
 import PropertiesButtons from "./../properties-buttons";
-import PropertyUtils from "./../../util/property-utils";
+import * as PropertyUtils from "./../../util/property-utils";
 
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 
 import { MESSAGE_KEYS, DATA_TYPE, TOOL_TIP_DELAY, SORT_DIRECTION, ROW_SELECTION } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
 import { ArrowLeft24, Reset24 } from "@carbon/icons-react";
 
-import isEmpty from "lodash/isEmpty";
-import sortBy from "lodash/sortBy";
-import isEqual from "lodash/isEqual";
-import has from "lodash/has";
+import { has, isEmpty, sortBy, isEqual } from "lodash";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 
 export default class FieldPicker extends React.Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -340,35 +337,18 @@ export default class FieldPicker extends React.Component {
 	_genResetButton() {
 		const resetLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL);
-		const resetTooltip = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_TOOLTIP);
-		const tooltipId = uuid4() + "-tooltip-fp";
-		const tooltip = (
-			<div className="properties-tooltips">
-				{resetTooltip}
-			</div>
-		);
 		return (
-			<div className="properties-tooltips-fp-reset">
-				<Tooltip
-					id={tooltipId}
-					tip={tooltip}
-					direction="top"
-					delay={TOOL_TIP_DELAY}
-					className="properties-tooltips"
-				>
-					<Button
-						className="properties-fp-reset-button-container"
-						onClick={this.handleReset}
-						renderIcon={Reset24}
-						iconDescription={resetLabel}
-						size="small"
-						kind="ghost"
-					>
-						<span>{resetLabel}</span>
-					</Button>
-				</Tooltip>
-			</div>);
+			<Button
+				className="properties-fp-reset-button-container"
+				onClick={this.handleReset}
+				renderIcon={Reset24}
+				iconDescription={resetLabel}
+				size="small"
+				kind="ghost"
+			>
+				<span>{resetLabel}</span>
+			</Button>
+		);
 	}
 
 	_genFilterTypes() {
@@ -384,9 +364,10 @@ export default class FieldPicker extends React.Component {
 				}
 			}
 			const filterTooltipId = uuid4() + "-tooltip-filters-" + ind;
+			const dataTypeLabel = PropertyUtils.formatMessage(that.props.controller.getReactIntl(), MESSAGE_KEYS[`FIELDPICKER_${filter.type.toUpperCase()}_LABEL`]);
 			const tooltip = (
 				<div className="properties-tooltips">
-					{filter.type}
+					{dataTypeLabel}
 				</div>
 			);
 			const row = (

@@ -19,7 +19,7 @@
 
 // Import just the D3 modules that are needed. Doing this means that the
 // d3Event object needs to be explicitly imported.
-var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-zoom"));
+var d3 = Object.assign({}, require("d3-selection"));
 import { event as d3Event } from "d3-selection";
 import isMatch from "lodash/isMatch";
 import SVGCanvasRenderer from "./svg-canvas-renderer.js";
@@ -91,10 +91,13 @@ export default class SVGCanvasD3 {
 				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
 				this.config.enableLinkType !== config.enableLinkType ||
 				this.config.enableLinkDirection !== config.enableLinkDirection ||
+				this.config.enableLinkSelection !== config.enableLinkSelection ||
+				this.config.enableToolbarLayout !== config.enableToolbarLayout ||
 				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
 				this.config.enableInsertNodeDroppedOnLink !== config.enableInsertNodeDroppedOnLink ||
 				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize ||
 				this.config.enableBoundingRectangles !== config.enableBoundingRectangles ||
+				this.config.enableCanvasUnderlay !== config.enableCanvasUnderlay ||
 				this.config.enableSaveZoom !== config.enableSaveZoom ||
 				this.config.enableZoomIntoSubFlows !== config.enableZoomIntoSubFlows ||
 				this.config.enableAssocLinkCreation !== config.enableAssocLinkCreation ||
@@ -102,6 +105,7 @@ export default class SVGCanvasD3 {
 				this.config.enableDragWithoutSelect !== config.enableDragWithoutSelect ||
 				this.config.enableParentClass !== config.enableParentClass ||
 				this.config.enableHightlightNodeOnNewLinkDrag !== config.enableHightlightNodeOnNewLinkDrag ||
+				this.config.enablePanIntoViewOnOpen !== config.enablePanIntoViewOnOpen ||
 				!this.enableCanvasLayoutExactlyMatches(this.config.enableCanvasLayout, config.enableCanvasLayout) ||
 				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
 			this.logger.logStartTimer("Initializing Canvas");
@@ -284,6 +288,10 @@ export default class SVGCanvasD3 {
 		this.renderer.zoomTo(zoomObject);
 	}
 
+	translateBy(x, y, animateTime) {
+		this.renderer.translateBy(x, y, animateTime);
+	}
+
 	zoomIn() {
 		this.renderer.zoomIn();
 	}
@@ -296,8 +304,12 @@ export default class SVGCanvasD3 {
 		this.renderer.zoomToFit();
 	}
 
-	getZoomToReveal(objectIds) {
-		return this.renderer ? this.renderer.getZoomToReveal(objectIds) : null;
+	getZoomToReveal(objectIds, xPos, yPos) {
+		return this.renderer ? this.renderer.getZoomToReveal(objectIds, xPos, yPos) : null;
+	}
+
+	getZoom() {
+		return this.renderer ? this.renderer.getZoom() : null;
 	}
 
 	refreshOnSizeChange() {

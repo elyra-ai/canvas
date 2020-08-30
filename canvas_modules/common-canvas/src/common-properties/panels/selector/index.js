@@ -15,4 +15,4 @@
  */
 
 import Selector from "./selector.jsx";
-module.exports = Selector;
+export default Selector;

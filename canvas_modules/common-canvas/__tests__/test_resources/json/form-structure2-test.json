@@ -275,7 +275,8 @@
                       ],
                       "moveableRows": true,
                       "addRemoveRows": true,
-                      "header": true
+                      "header": true,
+                      "structureType": "array"
                     }
                   }
                 ]

@@ -19,16 +19,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import FileUploader from "carbon-components-react/lib/components/FileUploader";
-import Button from "carbon-components-react/lib/components/Button";
-import Select from "carbon-components-react/lib/components/Select";
-import SelectItemGroup from "carbon-components-react/lib/components/SelectItemGroup";
-import SelectItem from "carbon-components-react/lib/components/SelectItem";
-import Checkbox from "carbon-components-react/lib/components/Checkbox";
-import RadioButtonGroup from "carbon-components-react/lib/components/RadioButtonGroup";
-import RadioButton from "carbon-components-react/lib/components/RadioButton";
-import Toggle from "carbon-components-react/lib/components/Toggle";
-import TextInput from "carbon-components-react/lib/components/TextInput";
+import { TextInput, FileUploader, Button, Select, SelectItemGroup, SelectItem, Checkbox, RadioButtonGroup, RadioButton, Toggle }
+	from "carbon-components-react";
 
 
 import {
@@ -44,8 +36,8 @@ import {
 	HORIZONTAL_FORMAT,
 	HALO_CONNECTION,
 	PORTS_CONNECTION,
-	MOUSE_INTERACTION,
-	TRACKPAD_INTERACTION,
+	INTERACTION_MOUSE,
+	INTERACTION_TRACKPAD,
 	CURVE_LINKS,
 	ELBOW_LINKS,
 	STRAIGHT_LINKS,
@@ -54,6 +46,8 @@ import {
 	DIRECTION_BOTTOM_TOP,
 	ASSOC_RIGHT_SIDE_CURVE,
 	ASSOC_STRAIGHT,
+	UNDERLAY_NONE,
+	UNDERLAY_VARIABLE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
@@ -61,12 +55,21 @@ import {
 	EXAMPLE_APP_EXPLAIN2,
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
-	FLYOUT,
-	MODAL,
+	PALETTE_FLYOUT,
+	PALETTE_MODAL,
+	PALETTE_NONE,
 	TIP_PALETTE,
 	TIP_NODES,
 	TIP_PORTS,
-	TIP_LINKS
+	TIP_LINKS,
+	TOOLBAR_LAYOUT_NONE,
+	TOOLBAR_LAYOUT_TOP,
+	TOOLBAR_TYPE_DEFAULT,
+	TOOLBAR_TYPE_SINGLE_BAR,
+	TOOLBAR_TYPE_BEFORE_AFTER,
+	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
+	TOOLBAR_TYPE_CARBON_BUTTONS,
+	TOOLBAR_TYPE_CUSTOM_ACTIONS
 } from "../constants/constants.js";
 import FormsService from "../services/FormsService";
 
@@ -583,6 +586,20 @@ export default class SidePanelForms extends React.Component {
 			</div>
 		</div>);
 
+		var enablePanIntoViewOnOpen = (<div className="harness-sidepanel-children">
+			<form>
+				<div className="harness-sidepanel-headers">Enable Pan Into View On Open</div>
+				<div>
+					<Toggle
+						id="selectedPanIntoViewOnOpen" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedPanIntoViewOnOpen")}
+						onToggle={this.setStateValue}
+					/>
+				</div>
+			</form>
+		</div>);
+
+
 		var enableDragWithoutSelect = (<div className="harness-sidepanel-children">
 			<form>
 				<div className="harness-sidepanel-headers">Enable Drag Without Select</div>
@@ -590,6 +607,19 @@ export default class SidePanelForms extends React.Component {
 					<Toggle
 						id="selectedDragWithoutSelect" // Set ID to corresponding field in App.js state
 						toggled={this.props.getStateValue("selectedDragWithoutSelect")}
+						onToggle={this.setStateValue}
+					/>
+				</div>
+			</form>
+		</div>);
+
+		var enableLinkSelection = (<div className="harness-sidepanel-children">
+			<form>
+				<div className="harness-sidepanel-headers">Enable Link Selection</div>
+				<div>
+					<Toggle
+						id="selectedLinkSelection" // Set ID to corresponding field in App.js state
+						toggled={this.props.getStateValue("selectedLinkSelection")}
 						onToggle={this.setStateValue}
 					/>
 				</div>
@@ -628,6 +658,25 @@ export default class SidePanelForms extends React.Component {
 			</RadioButtonGroup>
 		</div>);
 
+		var enableCanvasUnderlay = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-underlay">
+			<div className="harness-sidepanel-headers">Enable Canvas Underlay</div>
+			<RadioButtonGroup
+				className="harness-sidepanel-radio-group"
+				name="selectedCanvasUnderlay" // Set name to corresponding field name in App.js
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedCanvasUnderlay")}
+			>
+				<RadioButton
+					value={UNDERLAY_NONE}
+					labelText={UNDERLAY_NONE}
+				/>
+				<RadioButton
+					value={UNDERLAY_VARIABLE}
+					labelText={UNDERLAY_VARIABLE}
+				/>
+			</RadioButtonGroup>
+		</div>);
+
 		var enableObjectModel = (<div className="harness-sidepanel-children">
 			<form>
 				<div className="harness-sidepanel-headers">Use Object Model</div>
@@ -658,7 +707,7 @@ export default class SidePanelForms extends React.Component {
 		var enableInsertNodeDroppedOnLink = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-insert-node-dropped-on-link-toggle">
 				<form>
-					<div className="harness-sidepanel-headers">Enable Insert Node Droped On Link</div>
+					<div className="harness-sidepanel-headers">Enable Insert Node Dropped On Link</div>
 					<div>
 						<Toggle
 							id="selectedInsertNodeDroppedOnLink" // Set ID to corresponding field in App.js state
@@ -733,12 +782,12 @@ export default class SidePanelForms extends React.Component {
 				defaultSelected={this.props.getStateValue("selectedInteractionType")}
 			>
 				<RadioButton
-					value={MOUSE_INTERACTION}
-					labelText={MOUSE_INTERACTION}
+					value={INTERACTION_MOUSE}
+					labelText={INTERACTION_MOUSE}
 				/>
 				<RadioButton
-					value={TRACKPAD_INTERACTION}
-					labelText={TRACKPAD_INTERACTION}
+					value={INTERACTION_TRACKPAD}
+					labelText={INTERACTION_TRACKPAD}
 				/>
 			</RadioButtonGroup>
 		</div>);
@@ -875,12 +924,16 @@ export default class SidePanelForms extends React.Component {
 				defaultSelected={this.props.getStateValue("selectedPaletteLayout")}
 			>
 				<RadioButton
-					value={FLYOUT}
-					labelText={FLYOUT}
+					value={PALETTE_FLYOUT}
+					labelText={PALETTE_FLYOUT}
 				/>
 				<RadioButton
-					value={MODAL}
-					labelText={MODAL}
+					value={PALETTE_MODAL}
+					labelText={PALETTE_MODAL}
+				/>
+				<RadioButton
+					value={PALETTE_NONE}
+					labelText={PALETTE_NONE}
 				/>
 			</RadioButtonGroup>
 			<div className="harness-sidepanel-headers">Show Narrow Palette</div>
@@ -891,6 +944,60 @@ export default class SidePanelForms extends React.Component {
 					onToggle={this.setStateValue}
 				/>
 			</div>
+		</div>);
+
+		var toolbarLayout = (<div className="harness-sidepanel-children" id="harness-sidepanel-toolbar-layout">
+			<div className="harness-sidepanel-headers">Toolbar Layout</div>
+			<RadioButtonGroup
+				name="selectedToolbarLayout" // Set name to corresponding field name in App.js
+				className="harness-sidepanel-radio-group"
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedToolbarLayout")}
+			>
+				<RadioButton
+					value={TOOLBAR_LAYOUT_NONE}
+					labelText={TOOLBAR_LAYOUT_NONE}
+				/>
+				<RadioButton
+					value={TOOLBAR_LAYOUT_TOP}
+					labelText={TOOLBAR_LAYOUT_TOP}
+				/>
+			</RadioButtonGroup>
+		</div>);
+
+		var toolbarType = (<div className="harness-sidepanel-children" id="harness-sidepanel-toolbar-type">
+			<div className="harness-sidepanel-headers">Toolbar Type</div>
+			<RadioButtonGroup
+				name="selectedToolbarType" // Set name to corresponding field name in App.js
+				className="harness-sidepanel-radio-group"
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedToolbarType")}
+			>
+				<RadioButton
+					value={TOOLBAR_TYPE_DEFAULT}
+					labelText={TOOLBAR_TYPE_DEFAULT}
+				/>
+				<RadioButton
+					value={TOOLBAR_TYPE_SINGLE_BAR}
+					labelText={TOOLBAR_TYPE_SINGLE_BAR}
+				/>
+				<RadioButton
+					value={TOOLBAR_TYPE_BEFORE_AFTER}
+					labelText={TOOLBAR_TYPE_BEFORE_AFTER}
+				/>
+				<RadioButton
+					value={TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE}
+					labelText={TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE}
+				/>
+				<RadioButton
+					value={TOOLBAR_TYPE_CARBON_BUTTONS}
+					labelText={TOOLBAR_TYPE_CARBON_BUTTONS}
+				/>
+				<RadioButton
+					value={TOOLBAR_TYPE_CUSTOM_ACTIONS}
+					labelText={TOOLBAR_TYPE_CUSTOM_ACTIONS}
+				/>
+			</RadioButtonGroup>
 		</div>);
 
 		var tipConfig = (<div className="harness-sidepanel-children" id="harness-sidepanel-tip-config">
@@ -1110,15 +1217,25 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{snapToGrid}
 					{divider}
-					{enableZoomIntoSubFlows}
+					{enableCanvasUnderlay}
 					{divider}
 					{saveZoom}
 					{divider}
 					{paletteLayout}
 					{divider}
+					{toolbarLayout}
+					{divider}
+					{toolbarType}
+					{divider}
+					{enablePanIntoViewOnOpen}
+					{divider}
+					{enableZoomIntoSubFlows}
+					{divider}
 					{enableDragWithoutSelect}
 					{divider}
 					{enableInsertNodeDroppedOnLink}
+					{divider}
+					{enableLinkSelection}
 					{divider}
 					{enableAssocLinkCreation}
 					{divider}

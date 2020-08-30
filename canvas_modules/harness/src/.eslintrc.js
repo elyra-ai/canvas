@@ -18,7 +18,7 @@ module.exports = {
 		"eslint-config-canvas",
 		"eslint-config-canvas/react"
 	].map(require.resolve),
-		"env": {
+		env: {
 		},
 		rules: {
 				// Disable strict warning on ES6 Components
@@ -28,10 +28,13 @@ module.exports = {
 			"react/jsx-indent-props": [2, "tab"],
 			"max-len": [2, 180, 4],
 		},
-		"globals": {
+		globals: {
 				"document": true,
 				"window": true,
 				"location": true,
 				"navigator": true
+		},
+		parserOptions: {
+			"sourceType": "module"
 		}
 };

@@ -17,15 +17,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import isEqual from "lodash/isEqual";
-import ControlUtils from "./../../util/control-utils";
-import ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
+import { isEqual } from "lodash";
+import * as ControlUtils from "./../../util/control-utils";
+import * as ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
 import ValidationMessage from "./../../components/validation-message";
-import RadioButton from "carbon-components-react/lib/components/RadioButton";
+import { RadioButton } from "carbon-components-react";
 import classNames from "classnames";
 import { STATES } from "./../../constants/constants.js";
 import { ORIENTATIONS } from "./../../constants/form-constants.js";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 
 class RadiosetControl extends React.Component {
 	constructor(props) {
@@ -199,7 +199,7 @@ class RadiosetControl extends React.Component {
 			>
 				<div
 					className={classNames("properties-radio-button-group", this.props.messageInfo ? this.props.messageInfo.type : null,
-						{ "horizontal": this.props.control.orientation !== ORIENTATIONS.VERTICAL })}
+						{ "horizontal": this.props.control.orientation !== ORIENTATIONS.VERTICAL })} disabled={this.props.state === STATES.DISABLED}
 				>
 					{buttons}
 				</div>

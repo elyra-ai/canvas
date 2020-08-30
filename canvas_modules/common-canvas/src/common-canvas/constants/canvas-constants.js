@@ -30,12 +30,13 @@ _defineConstant("DRAG_MOVE", "move");
 _defineConstant("DRAG_LINK", "link");
 _defineConstant("DRAG_SELECT_REGION", "selectRegion");
 
-_defineConstant("NOTIFICATION_ICON", "notificationCounterIcon");
-
 _defineConstant("DEFAULT_NOTIFICATION_HEADER", "Notifications");
 
-_defineConstant("MOUSE_INTERACTION", "Mouse");
-_defineConstant("TRACKPAD_INTERACTION", "Trackpad");
+// Used by both toolbar and notification panel.
+_defineConstant("NOTIFICATION_ICON_CLASS", "notificationCounterIcon");
+
+_defineConstant("INTERACTION_MOUSE", "Mouse");
+_defineConstant("INTERACTION_TRACKPAD", "Trackpad");
 
 _defineConstant("LINK_TYPE_CURVE", "Curve");
 _defineConstant("LINK_TYPE_ELBOW", "Elbow");
@@ -150,7 +151,8 @@ _defineConstant("TOOLBAR_ACTIONS", {
 	TOOLBAR_DELETE_SELECTED_OBJECTS: "deleteSelectedObjects",
 	TOOLBAR_ZOOM_IN: "zoomIn",
 	TOOLBAR_ZOOM_OUT: "zoomOut",
-	TOOLBAR_ZOOM_FIT: "zoomToFit"
+	TOOLBAR_ZOOM_FIT: "zoomToFit",
+	TOOLBAR_TOGGLE_NOTIFICATION_PANEL: "toggleNotificationPanel"
 });
 
 _defineConstant("NODE_MENU_ICON",

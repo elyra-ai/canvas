@@ -47,12 +47,15 @@ _defineConstant("NONE_SAVE_ZOOM", "None");
 _defineConstant("LOCAL_STORAGE", "LocalStorage");
 _defineConstant("PIPELINE_FLOW", "Pipelineflow");
 
+_defineConstant("UNDERLAY_NONE", "None");
+_defineConstant("UNDERLAY_VARIABLE", "Variable");
+
 _defineConstant("NONE_DRAG", "None");
 _defineConstant("DURING_DRAG", "During");
 _defineConstant("AFTER_DRAG", "After");
 
-_defineConstant("MOUSE_INTERACTION", "Mouse");
-_defineConstant("TRACKPAD_INTERACTION", "Trackpad");
+_defineConstant("INTERACTION_MOUSE", "Mouse");
+_defineConstant("INTERACTION_TRACKPAD", "Trackpad");
 
 _defineConstant("PORTS_CONNECTION", "Ports");
 _defineConstant("HALO_CONNECTION", "Halo");
@@ -79,10 +82,24 @@ _defineConstant("EXAMPLE_APP_EXPLAIN2", "Explain2");
 _defineConstant("EXAMPLE_APP_STREAMS", "Streams");
 _defineConstant("EXAMPLE_APP_TABLES", "Tables");
 
-_defineConstant("FLYOUT", "Flyout");
-_defineConstant("MODAL", "Modal");
+_defineConstant("PALETTE_FLYOUT", "Flyout");
+_defineConstant("PALETTE_MODAL", "Modal");
+_defineConstant("PALETTE_NONE", "None");
+
+_defineConstant("PROPERTIES_FLYOUT", "Flyout");
+_defineConstant("PROPERTIES_MODAL", "Modal");
 _defineConstant("CUSTOM", "Custom");
 _defineConstant("EDITING", "Editing");
+
+_defineConstant("TOOLBAR_LAYOUT_NONE", "None");
+_defineConstant("TOOLBAR_LAYOUT_TOP", "Top");
+
+_defineConstant("TOOLBAR_TYPE_DEFAULT", "Default");
+_defineConstant("TOOLBAR_TYPE_SINGLE_BAR", "SingleLeftBarArray");
+_defineConstant("TOOLBAR_TYPE_BEFORE_AFTER", "TextBeforeAndAfter");
+_defineConstant("TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE", "CustomizedRightSide");
+_defineConstant("TOOLBAR_TYPE_CARBON_BUTTONS", "CarbonButtons");
+_defineConstant("TOOLBAR_TYPE_CUSTOM_ACTIONS", "CustomActions");
 
 _defineConstant("CHOOSE_FROM_LOCATION", "Choose from location...");
 

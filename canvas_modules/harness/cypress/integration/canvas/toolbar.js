@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-describe("Test for secondary toolbar Cut and Paste buttons", function() {
+describe("Test for toolbar Cut and Paste buttons", function() {
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
@@ -42,7 +42,7 @@ describe("Test for secondary toolbar Cut and Paste buttons", function() {
 	});
 });
 
-describe("Test for secondary toolbar Copy and Paste buttons", function() {
+describe("Test for toolbar Copy and Paste buttons", function() {
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
@@ -70,7 +70,7 @@ describe("Test for secondary toolbar Copy and Paste buttons", function() {
 	});
 });
 
-describe("Test for secondary toolbar Create and Delete button", function() {
+describe("Test for toolbar Create and Delete button", function() {
 	before(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
@@ -90,7 +90,7 @@ describe("Test for secondary toolbar Create and Delete button", function() {
 
 		// Delete node using toolbar
 		cy.clickToolbarOverflow();
-		cy.clickToolbarDelete();
+		cy.clickToolbarDeleteInOverflowMenu();
 
 		// Verification steps
 		cy.verifyNodeIsDeleted("Define Types");
@@ -105,7 +105,7 @@ describe("Test for secondary toolbar Create and Delete button", function() {
 	});
 });
 
-describe("Test for secondary toolbar resize", function() {
+describe("Test for toolbar resize", function() {
 	before(() => {
 		cy.viewport(1400, 800);
 		cy.visit("/");
@@ -131,7 +131,7 @@ describe("Test for secondary toolbar resize", function() {
 	});
 });
 
-describe("Test for secondary toolbar add comment", function() {
+describe("Test for toolbar add comment", function() {
 	before(() => {
 		cy.viewport(1330, 660);
 		cy.visit("/");

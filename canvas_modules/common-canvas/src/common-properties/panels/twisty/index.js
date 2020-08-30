@@ -15,4 +15,4 @@
  */
 
 import Twisty from "./twisty.jsx";
-module.exports = Twisty;
+export default Twisty;

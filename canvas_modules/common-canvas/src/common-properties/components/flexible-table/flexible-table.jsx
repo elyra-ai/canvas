@@ -19,13 +19,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import Search from "carbon-components-react/lib/components/Search";
+import { Search } from "carbon-components-react";
 import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
-import PropertyUtils from "./../../util/property-utils";
+import { formatMessage } from "./../../util/property-utils";
 import { MESSAGE_KEYS, SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
 import ReactResizeDetector from "react-resize-detector";
 import classNames from "classnames";
-import has from "lodash/has";
+import { has } from "lodash";
 
 export default class FlexibleTable extends React.Component {
 
@@ -143,7 +143,7 @@ export default class FlexibleTable extends React.Component {
 	* @param parentTableWidth
 	*/
 	calculateColumnWidths(columns, parentTableWidth) {
-		let tableWidth = parentTableWidth - 15; // subtract 15 for the left padding scss $flexible-table-first-column-left-padding
+		let tableWidth = parentTableWidth - 12; // subtract 12 for the left padding scss $spacing-04
 		if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 			tableWidth -= 40;
 		}
@@ -395,7 +395,7 @@ export default class FlexibleTable extends React.Component {
 		let searchBar = null;
 
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
-			const placeHolder = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
+			const placeHolder = formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.TABLE_SEARCH_PLACEHOLDER) + " " + searchLabel;
 
 			searchBar = (

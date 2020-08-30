@@ -23,21 +23,17 @@ import EditorForm from "./../components/editor-form";
 import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
-import PropertyUtils from "./../util/property-utils";
+import * as PropertyUtils from "./../util/property-utils";
 import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
-import isEqual from "lodash/isEqual";
-import omit from "lodash/omit";
-import pick from "lodash/pick";
-import has from "lodash/has";
+import { has, isEqual, omit, pick, cloneDeep } from "lodash";
 import Icon from "./../../icons/icon.jsx";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 import { Provider } from "react-redux";
 import logger from "../../../utils/logger";
 
 import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
-import cloneDeep from "lodash/cloneDeep";
 
 import { injectIntl } from "react-intl";
 import styles from "./properties-main-widths.scss";
@@ -136,6 +132,19 @@ class PropertiesMain extends React.Component {
 			this.originalTitle = formData.label;
 			this.propertiesController.setTitle(formData.label);
 		}
+
+		// convert currentParameters of type:object to array values
+		const controls = this.propertiesController.getControls();
+		Object.keys(controls).forEach((controlId) => {
+			if (controls[controlId].structureType && controls[controlId].structureType === "object") {
+				const propertyId = this.propertiesController.convertPropertyId(controlId);
+				const currentValues = this.propertiesController.getPropertyValue(propertyId);
+				const control = controls[controlId];
+				const convertedValues = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, currentValues);
+				this.propertiesController.updatePropertyValue(propertyId, convertedValues, true);
+			}
+		});
+
 		// set initial values for undo
 		this.initialValueInfo = { additionalInfo: { messages: [] }, undoInfo: {} };
 		this.uiParameterKeys = this._getUiOnlyKeys();
@@ -241,9 +250,12 @@ class PropertiesMain extends React.Component {
 		return false;
 	}
 
-	_setValueInforProperties(valueInfo) {
+	// options is an object of config options where
+	//   applyProperties: true - this function is called from applyPropertiesEditing
+	_setValueInforProperties(valueInfo, options) {
+		const applyProperties = options && options.applyProperties === true;
 		const filterHiddenDisabled = this.props.propertiesConfig.conditionReturnValueHandling === CONDITION_RETURN_VALUE_HANDLING.NULL;
-		const properties = this.propertiesController.getPropertyValues(filterHiddenDisabled);
+		const properties = this.propertiesController.getPropertyValues({ filterHiddenDisabled: filterHiddenDisabled, applyProperties: applyProperties });
 		if (this.uiParameterKeys.length > 0) {
 			valueInfo.properties = omit(properties, this.uiParameterKeys);
 			valueInfo.uiProperties = pick(properties, this.uiParameterKeys);
@@ -290,7 +302,7 @@ class PropertiesMain extends React.Component {
 
 			// set current values
 			let valueInfo = { additionalInfo: {}, undoInfo: {} };
-			valueInfo = this._setValueInforProperties(valueInfo);
+			valueInfo = this._setValueInforProperties(valueInfo, { applyProperties: true });
 			valueInfo.undoInfo.properties = this.propertiesController.getPropertyValues();
 			const errorMessages = this.propertiesController.getErrorMessages(true, true, true);
 			if (errorMessages) {

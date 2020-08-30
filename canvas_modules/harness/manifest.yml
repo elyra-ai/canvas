@@ -20,4 +20,4 @@ applications:
   memory: 512M
   instances: 1
   path: .
-  command: npm start
+  command: npm run start-prod

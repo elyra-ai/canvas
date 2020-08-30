@@ -20,15 +20,13 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import AbstractTable from "./../abstract-table.jsx";
 import MoveableTableRows from "./../../components/moveable-table-rows";
-import PropertyUtils from "./../../util/property-utils";
+import * as PropertyUtils from "./../../util/property-utils";
 import { ParamRole } from "./../../constants/form-constants";
 import { STATES } from "./../../constants/constants";
 
 import ValidationMessage from "./../../components/validation-message";
-import findIndex from "lodash/findIndex";
-import reject from "lodash/reject";
-import ControlUtils from "./../../util/control-utils";
-import cloneDeep from "lodash/cloneDeep";
+import { reject, findIndex, cloneDeep } from "lodash";
+import * as ControlUtils from "./../../util/control-utils";
 
 class StructureTableControl extends AbstractTable {
 	constructor(props) {

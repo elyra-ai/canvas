@@ -15,4 +15,4 @@
  */
 
 import FieldPicker from "./field-picker.jsx";
-module.exports = FieldPicker;
+export default FieldPicker;

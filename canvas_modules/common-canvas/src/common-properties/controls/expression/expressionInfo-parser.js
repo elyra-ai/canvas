@@ -16,8 +16,7 @@
 
 import logger from "../../../../utils/logger";
 import { L10nProvider } from "../../util/L10nProvider";
-import propertyOf from "lodash/propertyOf";
-import cloneDeep from "lodash/cloneDeep";
+import { cloneDeep, propertyOf } from "lodash";
 
 function setExpressionInfo(inExpressionInfo) {
 	const expressionFunctionInfo = {};
@@ -124,6 +123,4 @@ function _getFunctionInfo(functionId, functionInfoList) {
 }
 
 
-module.exports = {
-	setExpressionInfo: setExpressionInfo
-};
+export default setExpressionInfo;

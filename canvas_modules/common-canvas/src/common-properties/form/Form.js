@@ -15,11 +15,11 @@
  */
 
 import { PropertyDef } from "./PropertyDef";
-import propertyOf from "lodash/propertyOf";
+import { propertyOf } from "lodash";
 import { makePrimaryTab } from "./EditorForm";
 import { UIItem } from "./UIItem";
 import { L10nProvider } from "../util/L10nProvider";
-import Conditions from "./Conditions";
+import { translateMessages } from "./Conditions";
 import { Size } from "../constants/form-constants";
 
 export default class Form {
@@ -71,7 +71,7 @@ export default class Form {
 				[UIItem.makePrimaryTabs(tabs)],
 				_defaultButtons(),
 				data,
-				Conditions.translateMessages(conditions, l10nProvider),
+				translateMessages(conditions, l10nProvider),
 				resources
 			);
 		}

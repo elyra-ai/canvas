@@ -49,6 +49,10 @@ export default class DiagramCanvas extends React.Component {
 		this.dragLeave = this.dragLeave.bind(this);
 		this.refreshOnSizeChange = this.refreshOnSizeChange.bind(this);
 
+		this.onCut = this.onCut.bind(this);
+		this.onCopy = this.onCopy.bind(this);
+		this.onPaste = this.onPaste.bind(this);
+
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
 		// dragged around over the top of the 'drop zone' canvas.
@@ -64,12 +68,42 @@ export default class DiagramCanvas extends React.Component {
 				this.svgCanvasDivSelector,
 				this.props.config,
 				this.props.canvasController);
+		document.addEventListener("cut", this.onCut, true);
+		document.addEventListener("copy", this.onCopy, true);
+		document.addEventListener("paste", this.onPaste, true);
 		this.focusOnCanvas();
 	}
 
 	componentDidUpdate() {
 		if (this.canvasD3Layout && !this.isDropZoneDisplayed()) {
 			this.canvasD3Layout.setCanvasInfo(this.props.canvasInfo, this.props.config);
+		}
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener("cut", this.onCut, true);
+		document.removeEventListener("copy", this.onCopy, true);
+		document.removeEventListener("paste", this.onPaste, true);
+	}
+
+	onCut(evt) {
+		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId) {
+			evt.preventDefault();
+			this.props.canvasController.cutToClipboard();
+		}
+	}
+
+	onCopy(evt) {
+		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId) {
+			evt.preventDefault();
+			this.props.canvasController.copyToClipboard();
+		}
+	}
+
+	onPaste(evt) {
+		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId) {
+			evt.preventDefault();
+			this.props.canvasController.pasteFromClipboard();
 		}
 	}
 
@@ -86,8 +120,12 @@ export default class DiagramCanvas extends React.Component {
 		return this.canvasD3Layout.getSvgViewportOffset();
 	}
 
-	getZoomToReveal(objectIds) {
-		return this.canvasD3Layout.getZoomToReveal(objectIds);
+	getZoomToReveal(objectIds, xPos, yPos) {
+		return this.canvasD3Layout.getZoomToReveal(objectIds, xPos, yPos);
+	}
+
+	getZoom() {
+		return this.canvasD3Layout.getZoom();
 	}
 
 	setIsDropZoneDisplayed(isDropZoneDisplayed) {
@@ -109,6 +147,10 @@ export default class DiagramCanvas extends React.Component {
 
 	zoomTo(zoomObject) {
 		this.canvasD3Layout.zoomTo(zoomObject);
+	}
+
+	translateBy(x, y, animateTime) {
+		this.canvasD3Layout.translateBy(x, y, animateTime);
 	}
 
 	mouseCoords(event) {
@@ -256,11 +298,15 @@ export default class DiagramCanvas extends React.Component {
 		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
 		const svgCanvas = (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} />);
 
+		const dropDivClassName = this.props.config.enableToolbarLayout === "None"
+			? "common-canvas-drop-div common-canvas-toolbar-none"
+			: "common-canvas-drop-div";
+
 		return (
 			<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
 				<div
 					id={this.canvasDivId}
-					className="common-canvas-drop-div"
+					className={dropDivClassName}
 					onDrop={this.drop}
 					onDragOver={this.dragOver}
 					onDragEnter={this.dragEnter}

@@ -15,9 +15,8 @@
  */
 
 .properties-validation-message {
-	padding-top: 5px;
+	margin-top: $spacing-03;
 	display: flex;
-	align-items: center;
 	.icon {
 		margin: 0 2px;
 		svg {
@@ -49,7 +48,7 @@
 		display: none;
 	}
 	&.inTable {
-		padding-top: 0;
+		margin-top: 0;
 		position: absolute;
 		top: 0;
 		.icon svg {

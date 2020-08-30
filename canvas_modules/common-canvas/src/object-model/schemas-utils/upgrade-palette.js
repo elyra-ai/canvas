@@ -181,8 +181,8 @@ function upgradePalette(palette) {
 }
 
 
-module.exports = {
-	upgradePalette: upgradePalette,
-	extractPaletteVersion: _extractPaletteVersion,
-	LATEST_PALETTE_VERSION: LATEST_PALETTE_VERSION
+export {
+	upgradePalette,
+	_extractPaletteVersion as extractPaletteVersion,
+	LATEST_PALETTE_VERSION
 };

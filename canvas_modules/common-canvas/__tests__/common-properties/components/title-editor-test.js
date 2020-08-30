@@ -104,11 +104,11 @@ describe("title-editor renders correctly", () => {
 				controller={controller}
 				labelEditable
 				help={help}
-			/>
+			/>, { attachTo: document.body }
 		);
 		const titleEdit = wrapper.find(".properties-title-editor-btn[data-id='edit']").hostNodes();
 		titleEdit.simulate("click");
-		expect(wrapper.find("input").getDOMNode()).to.equal(document.activeElement);
+		expect(wrapper.find("input").is(":focus")).to.be.true;
 	});
 	it("test editing node title", () => {
 		controller.setTitle("test title");

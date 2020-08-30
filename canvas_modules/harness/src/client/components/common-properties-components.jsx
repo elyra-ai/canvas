@@ -18,8 +18,8 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
-import Button from "carbon-components-react/lib/components/Button";
+import { hot } from "react-hot-loader/root";
+import { Button, Dropdown } from "carbon-components-react";
 import FunctionList from "../constants/json/functionlist.json";
 import {
 	CONTAINERS_RIGHT_FLYOUT_PROPERTIES,
@@ -34,10 +34,12 @@ import {
 	PANEL_SELECTOR_INSERT_PROPS_INFO,
 	SUMMARY_PANEL_PROPS_INFO,
 	TWISTY_PANEL_PROPS_INFO,
+	COLUMN_PANEL_PROPS_INFO,
 	COLUMNSELECTION_PROPS_INFO,
 	TEXT_PANEL_PROPS_INFO,
 	TEXTFIELD_PROPS_INFO,
 	TEXTAREA_PROPS_INFO,
+	LIST_PROPS_INFO,
 	PASSWORD_FIELD_PROPS_INFO,
 	EXPRESSION_PROPS_INFO,
 	CODE_PROPS_INFO,
@@ -241,7 +243,7 @@ class CommonPropertiesComponents extends React.Component {
 				"id", "type", "role", "enum", "required", "default",
 				"uihints",
 				"parameter_info",
-				"parameter_ref", "control", "label",
+				"parameter_ref", "control", "label", "moveable_rows", "rows",
 				"description",
 				"language",
 				"orientation"
@@ -336,11 +338,13 @@ class CommonPropertiesComponents extends React.Component {
 					"--panelSelector",
 					"--summaryPanel",
 					"--twistyPanel",
+					"--columnPanel",
 					"--columnSelection",
 					"--textPanel",
 					"Controls",
 					"--textfield",
 					"--textarea",
+					"--list",
 					"--password",
 					"--expression",
 					"--code",
@@ -683,6 +687,26 @@ class CommonPropertiesComponents extends React.Component {
 					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--columnPanel" className="harness-section-subtitle">columnPanel</h3>
+					<p>A panel that displays multiple columns of panels</p>
+					<div className="harness-section-row">
+						<div className="harness-section-row">
+							<div className="harness-section-column">
+								<CommonProperties
+									propertiesInfo={COLUMN_PANEL_PROPS_INFO}
+									propertiesConfig={this.propertiesConfig}
+								/>
+								{this.renderRightFlyoutButton(COLUMN_PANEL_PROPS_INFO)}
+							</div>
+							<div className="harness-section-column harness-section-column-code">
+								<pre className="harness-json-block">
+									{this.jsonReplacer(COLUMN_PANEL_PROPS_INFO.parameterDef, "panel")}
+								</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--columnSelection" className="harness-section-subtitle">columnSelection</h3>
 					<p>To group multiple <a className="harness-properties-documentation-page-intro-link" href="#/properties#--selectcolumns">
 							selectcolumns
@@ -770,6 +794,31 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="harness-section-column harness-section-column-code">
 							<pre className="harness-json-block">
 								{this.jsonReplacer(TEXTAREA_PROPS_INFO.parameterDef, "control")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--list" className="harness-section-subtitle">list</h3>
+					<p>A list is rendered for a parameter of <span className="harness-highlight">type</span> array[string]
+						when <span className="harness-highlight">control</span> is set to <span className="harness-highlight">list</span> in
+						the <span className="harness-highlight">parameter_info</span> section. The array type can be one of:
+						string, integer, double, or long. This control cannot be embedded in a structure.</p>
+					<p>This example also shows the <a className="harness-properties-documentation-page-intro-link" href="#/properties#--moveable_rows">moveable_rows</a>&nbsp;
+						and <span className="harness-highlight">rows</span> attributes. The <span className="harness-highlight">rows</span> option
+						sets the height of the list to show the number of rows specified. This defaults to 4.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={LIST_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+							/>
+							{this.renderRightFlyoutButton(LIST_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(LIST_PROPS_INFO.parameterDef, "control")}
 							</pre>
 						</div>
 					</div>
@@ -1783,4 +1832,4 @@ class CommonPropertiesComponents extends React.Component {
 	}
 }
 
-export default CommonPropertiesComponents;
+export default hot(CommonPropertiesComponents);

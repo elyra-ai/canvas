@@ -1,5 +1,7 @@
 {
+	"toolbar.palette": "[Esperanto~Palette~eo]",
 	"toolbar.zoomIn": "[Esperanto~Zoom In~eo]",
 	"toolbar.zoomOut": "[Esperanto~Zoom Out~~eo]",
-	"toolbar.zoomToFit": "[Esperanto~Zoom To Fit~eo]"
+	"toolbar.zoomToFit": "[Esperanto~Zoom To Fit~eo]",
+	"toolbar.overflowMenu": "[Esperanto~Overflow Menu~eo]"
 }

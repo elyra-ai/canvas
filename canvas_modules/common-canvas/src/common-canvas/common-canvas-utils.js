@@ -163,12 +163,14 @@ export default class CanvasUtils {
 			return bd;
 		});
 
-		overlayDecs.forEach((od) => {
-			const index = baseDecs.findIndex((bd) => bd.id === od.id);
-			if (index === -1) {
-				decs.push(od);
-			}
-		});
+		if (overlayDecs) {
+			overlayDecs.forEach((od) => {
+				const index = baseDecs.findIndex((bd) => bd.id === od.id);
+				if (index === -1) {
+					decs.push(od);
+				}
+			});
+		}
 
 		return decs;
 	}

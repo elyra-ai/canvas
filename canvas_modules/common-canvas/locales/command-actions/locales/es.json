@@ -1,1 +1,9 @@
-{}
+{
+	"palette.saved.nodes.description": "Los nodos de esta categoría se han guardado previamente desde un flujo.",
+	"palette.saved.nodes.label": "Nodos guardados",
+	"supernode.binding.node.description": "Nodo de enlace de supernodo",
+	"supernode.binding.node.label": "Enlace",
+	"supernode.new.port.label": "Puerto de enlace para supernodo",
+	"supernode.template.description": "Este supernodo se ha creado mediante common-canvas.",
+	"supernode.template.label": "Supernodo"
+}

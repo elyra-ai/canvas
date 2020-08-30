@@ -105,6 +105,14 @@ export default class PipelineOutHandler {
 			newNode.parameters = ciNode.parameters;
 		}
 
+		if (ciNode.connection) {
+			newNode.connection = ciNode.connection;
+		}
+
+		if (ciNode.data_asset) {
+			newNode.data_asset = ciNode.data_asset;
+		}
+
 		const assocationLinks = this.createAssociationLinks(ciNode, ciLinks);
 		if (!isEmpty(assocationLinks)) {
 			newNode.app_data.ui_data.associations = assocationLinks;

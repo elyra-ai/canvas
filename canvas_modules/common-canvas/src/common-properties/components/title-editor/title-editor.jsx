@@ -17,13 +17,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import ReactDOM from "react-dom";
 import { setTitle } from "./../../actions";
 import Icon from "./../../../icons/icon.jsx";
-import Button from "carbon-components-react/lib/components/Button";
-import TextInput from "carbon-components-react/lib/components/TextInput";
+import { TextInput, Button } from "carbon-components-react";
 import { MESSAGE_KEYS, CARBON_ICONS } from "./../../constants/constants";
-import PropertyUtils from "./../../util/property-utils";
+import * as PropertyUtils from "./../../util/property-utils";
 
 class TitleEditor extends Component {
 	constructor(props) {
@@ -31,20 +29,19 @@ class TitleEditor extends Component {
 		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.id = PropertyUtils.generateId();
+		this.textInputRef = React.createRef();
 		this.labelText = PropertyUtils.formatMessage(props.controller.getReactIntl(),
 			MESSAGE_KEYS.TITLE_EDITOR_LABEL);
 	}
 
 	_handleKeyPress(e) {
 		if (e.key === "Enter") {
-			ReactDOM.findDOMNode(this).querySelector("input")
-				.blur();
+			this.textInputRef.current.blur();
 		}
 	}
 
 	editTitleClickHandler() {
-		ReactDOM.findDOMNode(this).querySelector("input")
-			.focus();
+		this.textInputRef.current.focus();
 	}
 
 	helpClickHandler() {
@@ -66,13 +63,14 @@ class TitleEditor extends Component {
 			? (<Button kind="ghost" className="properties-title-editor-btn" data-id="help" onClick={this.helpClickHandler}>
 				<Icon type={CARBON_ICONS.INFORMATION} />
 			</Button>)
-			: <div />;
+			: null;
 
 		return (
 			<div className="properties-title-editor">
 				<div className="properties-title-editor-input">
 					<TextInput
 						id={this.id}
+						ref={this.textInputRef}
 						value={this.props.title}
 						onChange={(e) => this.props.setTitle(e.target.value)}
 						onKeyPress={(e) => this._handleKeyPress(e)}

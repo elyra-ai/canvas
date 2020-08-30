@@ -140,6 +140,9 @@ export class Control extends ControlDef {
 		if (typeof settings.includeAllFields === "boolean") {
 			this.includeAllFields = settings.includeAllFields;
 		}
+		if (settings.structureType) {
+			this.structureType = settings.structureType;
+		}
 		if (settings.layout) {
 			this.layout = settings.layout;
 		}

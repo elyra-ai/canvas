@@ -17,9 +17,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Button from "carbon-components-react/lib/components/Button";
+import { Button } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
-import ControlUtils from "./../../util/control-utils";
+import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
 
@@ -52,7 +52,7 @@ class ToggletextControl extends React.Component {
 		if (typeof this.iconsMap[this.props.value] !== "undefined") {
 			icon = <img className="icon" src={this.iconsMap[this.props.value]} />;
 		}
-		let button = <div />;
+		let button = null;
 		if (typeof rendered !== "undefined") {
 			button = (
 				<Button kind="tertiary" size="small" onClick={this.onClick.bind(this)} disabled={this.props.state === STATES.DISABLED} >

@@ -145,6 +145,16 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		}
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, panSubItems));
 	}
+	case GroupType.COLUMN_PANEL: {
+		const panSubItems = [];
+		if (Array.isArray(group.subGroups)) {
+			group.subGroups.forEach(function(subGroup) {
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				panSubItems.push(groupItem);
+			});
+		}
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_PANEL, panSubItems));
+	}
 	case GroupType.CUSTOM_PANEL: {
 		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, group.parameterNames(), group.data));
 	}
@@ -363,6 +373,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let header;
 	let includeAllFields;
 	let layout;
+	let structureType = parameter.structureType;
 
 	// The control type defines the basic UI element that should be used to edit the property
 	if (parameter.getRole() === ParamRole.CUSTOM) {
@@ -450,6 +461,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 						layout = structureDef.layout;
 					}
 				}
+
+				structureType = structureDef.type;
 			} else {
 				controlType = ControlType.TEXTFIELD;
 			}
@@ -485,6 +498,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	settings.labelVisible = typeof parameter.labelVisible === "boolean" ? parameter.labelVisible : labelVisible;
 	settings.controlType = parameter.getControl(controlType);
 	settings.valueDef = ValueDef.make(parameter);
+	settings.structureType = structureType;
 	settings.role = role;
 	settings.additionalText = additionalText;
 	settings.orientation = orientation;
@@ -728,5 +742,6 @@ function _parameterValueLabels(parameter, l10nProvider) {
 	return [];
 }
 
-module.exports.makePrimaryTab = makePrimaryTab;
-module.exports.makeControl = _makeControl;
+export {
+	makePrimaryTab, _makeControl as makeControl
+};

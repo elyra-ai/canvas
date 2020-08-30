@@ -68,16 +68,19 @@ export default class CanvasController {
 			enableLinkType: "Curve",
 			enableLinkDirection: "LeftRight",
 			enableParentClass: "",
+			enableLinkSelection: false,
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,
 			enableInternalObjectModel: true,
 			enablePaletteLayout: "Flyout",
+			enableToolbarLayout: "Top",
 			enableInsertNodeDroppedOnLink: false,
 			enableHightlightNodeOnNewLinkDrag: false,
 			enableMoveNodesOnSupernodeResize: true,
 			enableDisplayFullLabelOnHover: false,
 			enableDropZoneOnExternalDrag: false,
+			enablePanIntoViewOnOpen: false,
 			enableZoomIntoSubFlows: false,
 			enableSaveZoom: "None",
 			enableSnapToGridType: "None",
@@ -86,6 +89,7 @@ export default class CanvasController {
 			enableAutoLayoutVerticalSpacing: null,
 			enableAutoLayoutHorizontalSpacing: null,
 			enableBoundingRectangles: false,
+			enableCanvasUnderlay: "None",
 			enableNarrowPalette: true,
 			paletteInitialState: false,
 			emptyCanvasContent: null,
@@ -231,6 +235,11 @@ export default class CanvasController {
 		return this.objectModel.getPipelineFlow();
 	}
 
+	// Returns the current pipelineFlow document ID.
+	getPipelineFlowId() {
+		return this.objectModel.getPipelineFlowId();
+	}
+
 	// Returns the ID of the primary pipeline from the pipelineFlow.
 	getPrimaryPipelineId() {
 		return this.objectModel.getPrimaryPipelineId();
@@ -296,6 +305,11 @@ export default class CanvasController {
 	//    pixel amount to move. Negative up and positive down.
 	zoomPipeline(zoom, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).zoomPipeline(zoom);
+	}
+
+	// Returns the current zoom object for the currently displayed canvas.
+	getZoom() {
+		return this.commonCanvas.getZoom();
 	}
 
 	// Clears any saved zoom values stored in local storage. This means
@@ -413,6 +427,11 @@ export default class CanvasController {
 		return this.objectModel.getPaletteNode(operatorId);
 	}
 
+	// Returns the category of the palette node identified by the operator passed in
+	getCategoryForNode(nodeOpIdRef) {
+		return this.objectModel.getCategoryForNode(nodeOpIdRef);
+	}
+
 	// Converts a node template from the format used in the palette (that conforms
 	// to the schema) to the internal node format.
 	convertNodeTemplate(nodeTemplate) {
@@ -480,6 +499,11 @@ export default class CanvasController {
 		return this.objectModel.areSelectedNodesContiguous();
 	}
 
+	// Returns true if all the selected objcts are links.
+	areAllSelectedObjectsLinks() {
+		return this.objectModel.areAllSelectedObjectsLinks();
+	}
+
 	// ---------------------------------------------------------------------------
 	// Notification messages methods
 	// ---------------------------------------------------------------------------
@@ -501,19 +525,27 @@ export default class CanvasController {
 		this.objectModel.deleteNotificationMessages(ids);
 	}
 
-	// Returns the array of currently displayed notification messages shown in
-	// the notification panel. The format of a notification message is an object
-	// with these fields:
+	// Returns the array of current notification messages. If the messageType is
+	// provided only messages of that type will be returned. If messageType is
+	// not provided, all messages will be returned. The format of a notification
+	// message is an object with these fields:
 	// {
 	//   "id": string (Required),
-	//   "type" : enum, oneOf ["informational", "success", "warning", "error"] (Required),
-	//   "title": string (Optional)
+	//   "type" : enum, oneOf ["info", "success", "warning", "error"] (Required),
+	//   "callback": function, the callback function when a message is clicked (Required),
+	//   "title": string (Optional),
 	//   "content": string, html, JSX Object (Optional),
-	//   "timestamp": string (Optional)
-	//   "callback": function, the callback function when a message is clicked (Required)
+	//   "timestamp": string (Optional),
+	//   "closeMessage": string (Optional)
 	// }
 	getNotificationMessages(messageType) {
 		return this.objectModel.getNotificationMessages(messageType);
+	}
+
+	// Returns the maximum notification message type present in the current set
+	// of notification messages. For this: ("error" > "warning" > "success" > "info")
+	getNotificationMessagesMaxType() {
+		return this.objectModel.getNotificationMessagesMaxType();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1121,6 +1153,12 @@ export default class CanvasController {
 		}
 	}
 
+	togglePalette() {
+		if (this.commonCanvas) {
+			this.commonCanvas.togglePalette();
+		}
+	}
+
 	openPalette() {
 		if (this.commonCanvas) {
 			this.commonCanvas.openPalette();
@@ -1153,6 +1191,13 @@ export default class CanvasController {
 		}
 	}
 
+	isContextMenuDisplayed() {
+		if (this.commonCanvas) {
+			return this.commonCanvas.isContextMenuDisplayed();
+		}
+		return false;
+	}
+
 	openNotificationPanel() {
 		if (this.commonCanvas) {
 			this.commonCanvas.openNotificationPanel();
@@ -1162,6 +1207,12 @@ export default class CanvasController {
 	closeNotificationPanel() {
 		if (this.commonCanvas) {
 			this.commonCanvas.closeNotificationPanel();
+		}
+	}
+
+	toggleNotificationPanel() {
+		if (this.commonCanvas) {
+			this.commonCanvas.toggleNotificationPanel();
 		}
 	}
 
@@ -1197,71 +1248,61 @@ export default class CanvasController {
 		}
 	}
 
-	// Returns a zoom object if any of the objects (nodes and/or comments)
-	// identified by the objectIds array are not fully within the canvas viewport.
-	// Returns null if all objects are fully within the canvas viewport.
-	// The zoom object returned is an object with three fields:
+	// Increments the translation of the canvas by the x and y increment
+	// amounts. The optional animateTime parameter can be provided to animate the
+	// movement of the canvas. It is a time for the animation in milliseconds.
+	// If omitted the movement happens immediately.
+	translateBy(x, y, animateTime) {
+		if (this.commonCanvas) {
+			this.commonCanvas.translateBy(x, y, animateTime);
+		}
+	}
+
+	// Returns a zoom object required to pan the objects (nodes and/or comments)
+	// identified by the objectIds array to 'reveal' the objects in the viewport.
+	// The zoom object returned can be provided to the CanvasController.zoomTo()
+	// method to perform the zoom/pan action.
+	// If the xPos and yPos variables are provided it will return a zoom object
+	// to pan the objects to a location specified by a percentage offset of the
+	// viewport width and height respectively.
+	// If the xPos and yPos parameters are undefined (omitted) and all the
+	// objects are fully within the canvas viewport, it will return null.
+	// This can be used to detect whether the objects are fully visible or not.
+	// Otherwise it will return a zoom object which can be used to pan the
+	// objects into the viewport so they appear at the nearest side of the
+	// viewport to where they are currently positioned.
+	// The zoom object has three fields:
 	// x: Is the horizontal translate amount which is a number indicating the
 	//    pixel amount to move. Negative left and positive right
 	// y: Is the vertical translate amount which is a number indicating the
 	//    pixel amount to move. Negative up and positive down.
 	// k: is the scale amount which is a number greater than 0 where 1 is the
 	//    default scale size.
-	// Parameter:
+	// Parameters:
 	// objectIds - An array of nodes and/or comment IDs.
-	getZoomToReveal(objectIds) {
+	// xPos - Optional. Can be set to percentage offset of the viewport width.
+	// yPos - Optional. Can be set to percentage offset of the viewport height.
+	getZoomToReveal(objectIds, xPos, yPos) {
 		if (this.commonCanvas) {
-			return this.commonCanvas.getZoomToReveal(objectIds);
+			return this.commonCanvas.getZoomToReveal(objectIds, xPos, yPos);
 		}
 		return null;
 	}
 
-	// Copies the currently selected objects to the internal clipboard and
-	// returns true if successful. Returns false if there is nothing to copy to
-	// the clipboard.
-	copyToClipboard() {
-		var copyData = {};
-
-		const apiPipeline = this.objectModel.getSelectionAPIPipeline();
-		if (!apiPipeline) {
-			return false;
-		}
-		const nodes = this.objectModel.getSelectedNodes();
-		const comments = this.objectModel.getSelectedComments();
-		const links = apiPipeline.getLinksBetween(nodes, comments);
-
-		if (nodes.length === 0 && comments.length === 0) {
-			return false;
-		}
-
-		if (nodes && nodes.length > 0) {
-			copyData.nodes = nodes;
-			let pipelines = [];
-			const supernodes = apiPipeline.getSupernodes(nodes);
-			supernodes.forEach((supernode) => {
-				pipelines = pipelines.concat(this.objectModel.getSubPipelinesForSupernode(supernode));
-			});
-			copyData.pipelines = pipelines;
-		}
-		if (comments && comments.length > 0) {
-			copyData.comments = comments;
-		}
-		if (links && links.length > 0) {
-			copyData.links = links;
-		}
-
-		var clipboardData = JSON.stringify(copyData);
-		LocalStorage.set("canvasClipboard", clipboardData);
-
-		return true;
+	// Cuts the currently selected objects to the internal clipboard.
+	cutToClipboard() {
+		this.editActionHandler({
+			editType: "cut",
+			editSource: "api"
+		});
 	}
 
-	isClipboardEmpty() {
-		const value = LocalStorage.get("canvasClipboard");
-		if (value && value !== "") {
-			return false;
-		}
-		return true;
+	// Copies the currently selected objects to the internal clipboard.
+	copyToClipboard() {
+		this.editActionHandler({
+			editType: "copy",
+			editSource: "api"
+		});
 	}
 
 	pasteFromClipboard(pipelineId) {
@@ -1272,49 +1313,8 @@ export default class CanvasController {
 		});
 	}
 
-	getObjectsToPaste(pipelineId) {
-		const textToPaste = LocalStorage.get("canvasClipboard");
-
-		if (!textToPaste) {
-			return {};
-		}
-
-		const objects = JSON.parse(textToPaste);
-
-		// If there are no nodes and no comments there's nothing to paste so just
-		// return.
-		if (!objects.nodes && !objects.comments) {
-			return {};
-		}
-
-		// If a pipeline is not provided (like when the user clicks paste in the
-		// toolbar or uses keyboard short cut) this will get an APIPipeline for
-		// the latest breadcrumbs entry.
-		const apiPipeline = this.objectModel.getAPIPipeline(pipelineId);
-
-		// Offset position of pasted nodes and comments if they exactly overlap
-		// existing nodes and comments - this can happen when pasting over the top
-		// of the canvas from which the nodes and comments were copied.
-		while (apiPipeline.exactlyOverlaps(objects.nodes, objects.comments)) {
-			if (objects.nodes) {
-				objects.nodes.forEach((node) => {
-					node.x_pos += 10;
-					node.y_pos += 10;
-				});
-			}
-			if (objects.comments) {
-				objects.comments.forEach((comment) => {
-					comment.x_pos += 10;
-					comment.y_pos += 10;
-					comment.selectedObjectIds = [];
-				});
-			}
-		}
-
-		return {
-			objects: objects,
-			pipelineId: apiPipeline.pipelineId
-		};
+	isClipboardEmpty() {
+		this.objectModel.isClipboardEmpty();
 	}
 
 	openTip(tipConfig) {
@@ -1574,7 +1574,7 @@ export default class CanvasController {
 				{ divider: true }]);
 		}
 		// Delete objects
-		if (source.type === "node" || source.type === "comment") {
+		if (source.type === "node" || source.type === "comment" || (this.canvasConfig.enableLinkSelection && source.type === "link")) {
 			menuDefinition = menuDefinition.concat([{ action: "deleteSelectedObjects", label: this.getLabel("canvas.deleteObject") },
 				{ divider: true }]);
 		}
@@ -1603,7 +1603,7 @@ export default class CanvasController {
 			}
 		}
 		// Delete link
-		if (source.type === "link") {
+		if (!this.canvasConfig.enableLinkSelection && source.type === "link") {
 			menuDefinition = menuDefinition.concat([{ action: "deleteLink", label: this.getLabel("canvas.deleteObject") }]);
 		}
 		// Highlight submenu (Highlight Branch | Upstream | Downstream, Unhighlight)
@@ -1669,7 +1669,10 @@ export default class CanvasController {
 
 	toolbarActionHandler(action) {
 		this.logger.log("toolbarActionHandler - action: " + action);
-		this.editActionHandler({ editType: action, editSource: "toolbar" });
+		this.editActionHandler({
+			editType: action,
+			editSource: "toolbar",
+			pipelineId: this.objectModel.getSelectedPipelineId() });
 	}
 
 	keyboardActionHandler(action) {
@@ -1726,11 +1729,36 @@ export default class CanvasController {
 			return;
 		}
 
-		// selectAll is supported for the external AND internal object models.
-		if (data.editType === "selectAll") {
+		// These commands are supported for the external AND internal object models.
+		switch (data.editType) {
+		case "selectAll": {
 			this.objectModel.selectAll(data.pipelineId);
+			break;
+		}
+		case "zoomIn": {
+			this.zoomIn();
+			break;
+		}
+		case "zoomOut": {
+			this.zoomOut();
+			break;
+		}
+		case "zoomToFit": {
+			this.zoomToFit();
+			break;
+		}
+		case "togglePalette": {
+			this.togglePalette();
+			break;
+		}
+		case "toggleNotificationPanel": {
+			this.toggleNotificationPanel();
+			break;
+		}
+		default:
 		}
 
+		// These commands are added to the command stack
 		let command = null;
 
 		if (this.canvasConfig.enableInternalObjectModel) {
@@ -1864,16 +1892,16 @@ export default class CanvasController {
 				break;
 			}
 			case "cut": {
-				this.copyToClipboard();
+				this.objectModel.copyToClipboard();
 				command = new DeleteObjectsAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
 			case "copy":
-				this.copyToClipboard();
+				this.objectModel.copyToClipboard();
 				break;
 			case "paste": {
-				const pasteObj = this.getObjectsToPaste(data.pipelineId);
+				const pasteObj = this.objectModel.getObjectsToPaste(data.pipelineId);
 				if (pasteObj.objects) {
 					data = Object.assign(data, { objects: pasteObj.objects, pipelineId: pasteObj.pipelineId });
 					command = new CloneMultipleObjectsAction(data, this.objectModel);

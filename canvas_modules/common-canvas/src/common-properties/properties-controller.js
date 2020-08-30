@@ -17,23 +17,20 @@
 
 import PropertiesStore from "./properties-store.js";
 import logger from "../../utils/logger";
-import UiConditionsParser from "./ui-conditions/ui-conditions-parser.js";
-import ExpressionInfoParser from "./controls/expression/expressionInfo-parser.js";
+import * as UiConditionsParser from "./ui-conditions/ui-conditions-parser.js";
+import setExpressionInfo from "./controls/expression/expressionInfo-parser.js";
 
-import UiGroupsParser from "./ui-conditions/ui-groups-parser.js";
-import conditionsUtil from "./ui-conditions/conditions-utils";
-import PropertyUtils from "./util/property-utils.js";
+import { parseUiContent } from "./ui-conditions/ui-groups-parser.js";
+import * as conditionsUtil from "./ui-conditions/conditions-utils";
+import * as PropertyUtils from "./util/property-utils.js";
 
 import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole } from "./constants/form-constants";
-import cloneDeep from "lodash/cloneDeep";
-import assign from "lodash/assign";
-import isEmpty from "lodash/isEmpty";
-import has from "lodash/has";
+import { has, cloneDeep, assign, isEmpty } from "lodash";
 
-import ConditionOps from "./ui-conditions/condition-ops/condition-ops";
+import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
 
 export default class PropertiesController {
 
@@ -52,6 +49,7 @@ export default class PropertiesController {
 		this.allowChangeDefinitions = {};
 		this.panelTree = {};
 		this.controls = {};
+		this.actions = {};
 		this.customControls = [];
 		this.summaryPanelControls = {};
 		this.controllerHandlerCalled = false;
@@ -61,7 +59,7 @@ export default class PropertiesController {
 		this.sharedCtrlInfo = [];
 		this.isSummaryPanel = false;
 		this.visibleSubPanelCounter = 0;
-		this.conditionOps = ConditionOps.getConditionOps();
+		this.conditionOps = getConditionOps();
 		this.expressionFunctionInfo = {};
 		this.expressionRecentlyUsed = [];
 		this.expressionFieldsRecentlyUsed = [];
@@ -113,7 +111,8 @@ export default class PropertiesController {
 			this.visibleSubPanelCounter = 0;
 			this._parseUiConditions();
 			// should be done before running any validations
-			const controls = UiConditionsParser.parseControls([], this.form);
+			const controls = [];
+			UiConditionsParser.parseControls(controls, this.actions, this.form);
 			this.saveControls(controls); // saves controls without the subcontrols
 			this._parseSummaryControls(controls);
 			this.parsePanelTree();
@@ -268,7 +267,7 @@ export default class PropertiesController {
 	parsePanelTree() {
 		this.panelTree = {};
 		this.panelTree[PANEL_TREE_ROOT] = { controls: [], panels: [], actions: [] };
-		UiGroupsParser.parseUiContent(this.panelTree, this.form, PANEL_TREE_ROOT);
+		parseUiContent(this.panelTree, this.form, PANEL_TREE_ROOT);
 	}
 
 	_addToControlValues(resolveParameterRefs) {
@@ -462,7 +461,7 @@ export default class PropertiesController {
 	*	@param custOps object
 	*/
 	setConditionOps(custOps) {
-		this.conditionOps = ConditionOps.getConditionOps(custOps);
+		this.conditionOps = getConditionOps(custOps);
 	}
 
 	/**
@@ -798,7 +797,7 @@ export default class PropertiesController {
 	//
 
 	setExpressionInfo(expressionInfo) {
-		this.expressionFunctionInfo = ExpressionInfoParser.setExpressionInfo(expressionInfo);
+		this.expressionFunctionInfo = setExpressionInfo(expressionInfo);
 	}
 
 	getExpressionInfo() {
@@ -909,12 +908,19 @@ export default class PropertiesController {
 		}
 	}
 
-	getPropertyValue(inPropertyId, filterHiddenDisabled) {
+	/*
+	* return the property value for the given 'inPropertyId'
+	* options - optional object of config options where
+	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
+	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
+	*/
+	getPropertyValue(inPropertyId, options) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
 		let filteredValue;
+
 		// don't return hidden/disabled values
-		if (filterHiddenDisabled) {
+		if (options && options.filterHiddenDisabled === true) {
 			// top level value
 			const controlState = this.getControlState(propertyId);
 			if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN) {
@@ -940,7 +946,14 @@ export default class PropertiesController {
 					}
 				}
 			}
+			if (options && options.applyProperties === true) {
+				return this._convertObjectStructure(propertyId, filteredValue);
+			}
 			return filteredValue;
+		}
+
+		if (options && options.applyProperties === true) {
+			return this._convertObjectStructure(propertyId, propertyValue);
 		}
 		return propertyValue;
 	}
@@ -950,23 +963,54 @@ export default class PropertiesController {
 		this.propertiesStore.removePropertyValue(propertyId);
 	}
 
-	getPropertyValues(filterHiddenDisabled) {
+	// convert currentParameters of structureType:object to object values
+	_convertObjectStructure(propertyId, propertyValue) {
+		const control = this.getControl(propertyId);
+		if (control && control.structureType && control.structureType === "object") {
+			const convertedValues = PropertyUtils.convertArrayStructureToObject(control.valueDef.isList, control.subControls, propertyValue);
+			return convertedValues;
+		}
+		return propertyValue;
+	}
+
+	/*
+	* return the property values for all controls
+	* options - optional object of config options where
+	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
+	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
+	*/
+	getPropertyValues(options) {
 		const propertyValues = this.propertiesStore.getPropertyValues();
-		if (filterHiddenDisabled) {
+		let returnValues = propertyValues;
+		if (options && options.filterHiddenDisabled === true) {
 			const filteredValues = {};
 			for (const propKey in propertyValues) {
 				if (!has(propertyValues, propKey)) {
 					continue;
 				}
-				const filteredValue = this.getPropertyValue({ name: propKey }, filterHiddenDisabled);
+				const filteredValue = this.getPropertyValue({ name: propKey }, options);
 				// only set parameters with values
 				if (typeof filteredValue !== "undefined") {
 					filteredValues[propKey] = filteredValue;
 				}
 			}
-			return filteredValues;
+			returnValues = filteredValues;
 		}
-		return propertyValues;
+
+		// convert currentParameters of structureType:object to object values
+		if (options && options.applyProperties === true) {
+			for (const controlId in returnValues) {
+				if (!has(returnValues, controlId)) {
+					continue;
+				}
+
+				const propertyId = this.convertPropertyId(controlId);
+				const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
+				returnValues[controlId] = this._convertObjectStructure(propertyId, propertyValue);
+			}
+		}
+
+		return returnValues;
 	}
 
 	setPropertyValues(values) {
@@ -1062,11 +1106,23 @@ export default class PropertiesController {
 	updateActionState(actionId, state) {
 		this.propertiesStore.updateActionState(actionId, state);
 	}
+
+	/**
+	* @param actionId {name: action.id}
+	*/
 	getActionState(actionId) {
 		return this.propertiesStore.getActionState(actionId);
 	}
+
 	getActionStates() {
 		return this.propertiesStore.getActionStates();
+	}
+
+	/**
+	* @param actionId {name: action.id}
+	*/
+	getAction(actionId) {
+		return this.actions[actionId.name];
 	}
 
 	/**
@@ -1223,6 +1279,14 @@ export default class PropertiesController {
 			}
 		}
 		return control;
+	}
+
+	getControlPropType(propertyId) {
+		const control = this.getControl(propertyId);
+		if (typeof control.valueDef !== "undefined") {
+			return control.valueDef.propType;
+		}
+		return null;
 	}
 
 	updateControlEnumValues(propertyId, valuesObj) {

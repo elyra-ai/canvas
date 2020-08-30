@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-.properties-summary-panel {
+.properties-summary-panel.properties-summary-panel {
+	padding: $spacing-04 0 $spacing-04 8px;
 	&.hide {
 		display: none;
 	}
@@ -30,11 +31,6 @@
 .properties-summary-link-container {
 	display: flex;
 	align-items: center;
-
-	.properties-icon-button.properties-summary-link-button {
-		padding-left: 0;
-		padding-right: 0;
-	}
 }
 
 .properties-summary-values {

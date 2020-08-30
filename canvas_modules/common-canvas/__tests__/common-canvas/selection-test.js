@@ -25,7 +25,6 @@ import CanvasController from "../../src/common-canvas/canvas-controller";
 import LayoutDimensions from "../../src/object-model/layout-dimensions.js";
 import supernodeFlow from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
 
-// import log4js from "log4js";
 
 describe("Selection notification tests", () => {
 	let canvasController;

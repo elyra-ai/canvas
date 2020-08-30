@@ -246,11 +246,14 @@ Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 		.then((node) => {
 			const srcSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "body") + "']";
 			cy.window().then((win) => {
-				cy.get(srcSelector)
-					.trigger("mousedown", "topLeft", { which: 1, view: win });
-				cy.get("#canvas-div-0")
-					.trigger("mousemove", canvasX, canvasY, { view: win })
-					.trigger("mouseup", { which: 1, view: win });
+				cy.getCanvasTranslateCoords()
+					.then((transform) => {
+						cy.get(srcSelector)
+							.trigger("mousedown", "topLeft", { which: 1, view: win });
+						cy.get("#canvas-div-0")
+							.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })
+							.trigger("mouseup", { which: 1, view: win });
+					});
 			});
 		});
 });

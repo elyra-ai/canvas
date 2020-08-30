@@ -17,13 +17,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import isEmpty from "lodash/isEmpty";
-import Checkbox from "carbon-components-react/lib/components/Checkbox";
+import { isEmpty } from "lodash";
+import { Checkbox } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
-import ControlUtils from "./../../util/control-utils";
+import * as ControlUtils from "./../../util/control-utils";
 import { TOOL_TIP_DELAY, STATES } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import uuid4 from "uuid/v4";
+import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 
 class CheckboxControl extends React.Component {

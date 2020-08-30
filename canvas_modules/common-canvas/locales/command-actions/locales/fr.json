@@ -1,1 +1,9 @@
-{}
+{
+	"palette.saved.nodes.description": "Les noeuds de cette catégorie étaient précédemment sauvegardés à partir d'un flux.",
+	"palette.saved.nodes.label": "Noeuds sauvegardés",
+	"supernode.binding.node.description": "Noeud de liaison de super noeud",
+	"supernode.binding.node.label": "Liaison",
+	"supernode.new.port.label": "Port de liaison pour super noeud",
+	"supernode.template.description": "Ce super noeud a été créé par un canevas commun.",
+	"supernode.template.label": "Super noeud"
+}

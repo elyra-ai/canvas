@@ -164,9 +164,9 @@ describe("structureeditor control renders correctly", () => {
 			</Provider>
 		);
 		let dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
+		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
@@ -190,9 +190,9 @@ describe("structureeditor control renders correctly", () => {
 			</Provider>
 		);
 		let dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		expect(dropdownWrapper.find("div > span").text()).to.equal(emptyValueIndicator);
+		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
@@ -216,9 +216,9 @@ describe("structureeditor control renders correctly", () => {
 		);
 
 		let dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		expect(dropdownWrapper.find("div > span").text()).to.equal("age"); // should be the value for the control
+		expect(dropdownWrapper.find("button > span").text()).to.equal("age"); // should be the value for the control
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("div[role='button']");
+		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");

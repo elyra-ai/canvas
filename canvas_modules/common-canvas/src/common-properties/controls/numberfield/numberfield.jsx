@@ -17,9 +17,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import NumberInput from "carbon-components-react/lib/components/NumberInput";
+import { NumberInput } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
-import ControlUtils from "./../../util/control-utils";
+import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
 
@@ -71,7 +71,7 @@ class NumberfieldControl extends React.Component {
 	}
 
 	render() {
-		let controlValue;
+		let controlValue = ""; // Default to empty string to avoid '0' appearing when value is 'null'
 		if (this.props.value !== null) {
 			controlValue = this.props.value;
 		}
@@ -87,6 +87,8 @@ class NumberfieldControl extends React.Component {
 					step={this.props.control.increment}
 					value={controlValue}
 					placeholder={this.props.control.additionalText}
+					allowEmpty
+					light
 				/>
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

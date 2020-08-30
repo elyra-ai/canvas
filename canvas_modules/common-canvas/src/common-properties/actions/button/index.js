@@ -15,4 +15,4 @@
  */
 
 import ButtonAction from "./button.jsx";
-module.exports = ButtonAction;
+export default ButtonAction;

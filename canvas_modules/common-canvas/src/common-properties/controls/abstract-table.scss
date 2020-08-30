@@ -15,28 +15,13 @@
  */
 
 .properties-at-buttons-container {
-	display: flex;
 	float: right;
-	height: 32px;
-	margin-bottom: 6px;
-	align-items: center;
-}
-
-// override Carbon 10
-.properties-remove-fields-button.bx--btn--ghost {
-	padding: 0 4px;
-	min-height: 32px;
-	margin-right: 3px;
-
-	> svg {
-		margin-left: 0;
-	}
+	margin-top: $spacing-03; // override toolbar bottom margin
 }
 
 .properties-table-cell-control {
-
 	>div>:first-child {
-		margin-left: $table-column-left-padding;
+		margin-left: $spacing-04;
 	}
 }
 
