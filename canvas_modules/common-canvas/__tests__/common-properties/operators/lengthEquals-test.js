@@ -18,59 +18,74 @@ import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 
 
-describe("validating equals operator works correctly", () => {
+describe("validating lengthEquals operator works correctly", () => {
 	const controller = new Controller();
 	const lengthEquals = controller.getConditionOp("lengthEquals");
 	let undefinedPlaceholder;
 
-	function wrap(val, role = null) {
-		return { value: val, control: { controlType: role } };
+	function wrap(val) {
+		return { value: val, param: "test" };
 	}
-
-	function emptyFunc() {
-		return;
-	}
-
-	beforeEach(() => {
-		controller.setErrorMessages({});
-		controller.setControlStates({});
-	});
 
 	it("Test lengthEquals behaves as expected for edge cases", () => {
-		// passwordfield can't use equals, defaults to true
-		expect(lengthEquals(wrap(undefinedPlaceholder, "passwordfield"), null, null, controller)).to.equal(true);
-		expect(function() {
-			lengthEquals(wrap(undefinedPlaceholder), undefinedPlaceholder, undefinedPlaceholder, controller);
-		}).to.throw();
+		console.warn = jest.fn();
+		expect(lengthEquals(wrap("test"), null, null, controller)).to.equal(true); // null/undefined not support for value to check
+		expect(console.warn.mock.calls[0][0]).to.equal("[WARNING]: Ignoring condition operation 'lengthEquals' for parameter_ref test: ");
+		expect(lengthEquals(wrap(1), null, null, controller)).to.equal(true); // numeric value length not supported
+		expect(console.warn.mock.calls[1][0]).to.equal("[WARNING]: Ignoring condition operation 'lengthEquals' for parameter_ref test: ");
+		expect(lengthEquals(wrap(undefinedPlaceholder), null, 0, controller)).to.equal(true); // undefined should return a length of 0
+		expect(lengthEquals(wrap(undefinedPlaceholder), null, 1, controller)).to.equal(false); // undefined should return a length of 0
+		expect(lengthEquals(wrap(null), null, 0, controller)).to.equal(true); // null should return a length of 0
+		expect(lengthEquals(wrap(null), null, 1, controller)).to.equal(false); // null should return a length of 0
+
+		// string not supported in paramInfo2
+		expect(lengthEquals(wrap([1, 2, 3]), wrap("test"), null, controller)).to.equal(true);
+		expect(console.warn.mock.calls[2][0]).to.equal("[WARNING]: Ignoring condition operation 'lengthEquals' for parameter_ref test: ");
+		// undefined not supported in paramInfo2
+		expect(lengthEquals(wrap("test"), wrap(undefinedPlaceholder), null, controller)).to.equal(true);
+		expect(console.warn.mock.calls[3][0]).to.equal("[WARNING]: Ignoring condition operation 'lengthEquals' for parameter_ref test: ");
+		// null not supported in paramInfo2
+		expect(lengthEquals(wrap("test"), wrap(null), null, controller)).to.equal(true);
+		expect(console.warn.mock.calls[4][0]).to.equal("[WARNING]: Ignoring condition operation 'lengthEquals' for parameter_ref test: ");
+
+		// string not supported in value
+		expect(lengthEquals(wrap([1, 2, 3]), null, "test", controller)).to.equal(true);
+		expect(console.warn.mock.calls[5][0]).to.equal("[WARNING]: Ignoring condition operation 'lengthEquals' for parameter_ref test: ");
+		// undefined not supported in value
+		expect(lengthEquals(wrap("test"), null, undefinedPlaceholder, controller)).to.equal(true);
+		expect(console.warn.mock.calls[6][0]).to.equal("[WARNING]: Ignoring condition operation 'lengthEquals' for parameter_ref test: ");
+		// string not supported in value
+		expect(lengthEquals(wrap("test"), null, "test", controller)).to.equal(true);
+		expect(console.warn.mock.calls[7][0]).to.equal("[WARNING]: Ignoring condition operation 'lengthEquals' for parameter_ref test: ");
+
+		expect(console.warn.mock.calls.length).to.equal(8);
 	});
 
 	it("Test lengthEquals behaves as expected comparing paramInfo and paramInfo2", () => {
-		expect(lengthEquals(wrap(undefinedPlaceholder), undefinedPlaceholder, null, controller)).to.equal(false);
-		expect(lengthEquals(wrap(undefinedPlaceholder), wrap(undefinedPlaceholder), null, controller)).to.equal(true);
+		console.warn = jest.fn();
+		// check string length
+		expect(lengthEquals(wrap("test"), wrap(4), null, controller)).to.equal(true);
+		expect(lengthEquals(wrap("test"), wrap(5), null, controller)).to.equal(false);
+		expect(lengthEquals(wrap("test"), wrap(3), null, controller)).to.equal(false);
 
-		expect(lengthEquals(wrap(true), wrap(true), null, controller)).to.equal(true);
-		expect(lengthEquals(wrap("string"), wrap("string2"), null, controller)).to.equal(false);
-
-		expect(lengthEquals(wrap(1), wrap(1), null, controller)).to.equal(true);
-		expect(lengthEquals(wrap(null), wrap(null), null, controller)).to.equal(true);
-		expect(lengthEquals(wrap({ temp: "value" }), wrap({ temp: "value2" }), null, controller)).to.equal(false);
-		// pass in a function as a way to hit the default switch case
-		expect(lengthEquals(wrap(emptyFunc), null, null, controller)).to.equal(true);
+		// check array length
+		expect(lengthEquals(wrap([1, 2, 3]), wrap(3), null, controller)).to.equal(true);
+		expect(lengthEquals(wrap([1, 2, 3]), wrap(4), null, controller)).to.equal(false);
+		expect(lengthEquals(wrap([1, 2, 3]), wrap(2), null, controller)).to.equal(false);
+		expect(console.warn.mock.calls.length).to.equal(0);
 	});
 
 	it("Test lengthEquals behaves as expected comparing paramInfo and value", () => {
-		expect(lengthEquals(wrap("string"), undefinedPlaceholder, "string2", controller)).to.equal(false);
-		expect(lengthEquals(wrap(undefinedPlaceholder), undefinedPlaceholder, "not undefined", controller)).to.equal(false);
+		console.warn = jest.fn();
+		// check string length
+		expect(lengthEquals(wrap("test"), null, 4, controller)).to.equal(true);
+		expect(lengthEquals(wrap("test"), null, 5, controller)).to.equal(false);
+		expect(lengthEquals(wrap("test"), null, 3, controller)).to.equal(false);
 
-		expect(lengthEquals(wrap(true), undefinedPlaceholder, true, controller)).to.equal(true);
-		expect(lengthEquals(wrap("string"), undefinedPlaceholder, "string2", controller)).to.equal(false);
-
-		expect(lengthEquals(wrap(1), undefinedPlaceholder, 1, controller)).to.equal(true);
-		expect(lengthEquals(wrap(null), undefinedPlaceholder, null, controller)).to.equal(true);
-		expect(lengthEquals(wrap({ temp: "value" }), undefinedPlaceholder, { temp: "value2" }, controller)).to.equal(false);
-		// pass in a function as a way to hit the default switch case
-		expect(lengthEquals(wrap(emptyFunc), undefinedPlaceholder, null, controller)).to.equal(true);
+		// check array length
+		expect(lengthEquals(wrap([1, 2, 3]), null, 3, controller)).to.equal(true);
+		expect(lengthEquals(wrap([1, 2, 3]), null, 4, controller)).to.equal(false);
+		expect(lengthEquals(wrap([1, 2, 3]), null, 2, controller)).to.equal(false);
+		expect(console.warn.mock.calls.length).to.equal(0);
 	});
-
-
 });

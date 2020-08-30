@@ -17,7 +17,7 @@
 import logger from "./../../../../utils/logger";
 
 function op() {
-	return "lengthEquals";
+	return "lengthLessThan";
 }
 
 function evaluate(paramInfo, param2Info, value, controller) {
@@ -32,9 +32,9 @@ function evaluate(paramInfo, param2Info, value, controller) {
 		valueLength = 0;
 	}
 	if (typeof compareValue === "number" && typeof valueLength === "number") {
-		return valueLength === compareValue;
+		return valueLength < compareValue;
 	}
-	logger.warn("Ignoring condition operation 'lengthEquals' for parameter_ref " + paramInfo.param);
+	logger.warn("Ignoring condition operation 'lengthLessThan' for parameter_ref " + paramInfo.param);
 	return true;
 }
 
