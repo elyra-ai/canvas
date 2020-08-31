@@ -24,7 +24,6 @@ import { STATES } from "./../../constants/constants.js";
 import { CHARACTER_LIMITS, TOOL_TIP_DELAY } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
-import { v4 as uuid4 } from "uuid";
 
 const arrayValueDelimiter = ", ";
 
@@ -33,11 +32,11 @@ class TextfieldControl extends React.Component {
 		super(props);
 		this.charLimit = ControlUtils.getCharLimit(props.control, CHARACTER_LIMITS.TEXT_FIELD);
 		this.id = ControlUtils.getControlId(props.propertyId);
+		this.dataId = ControlUtils.getDataId(this.props.propertyId);
 		this.isList = false;
 		if (this.props.control.valueDef && this.props.control.valueDef.isList) {
 			this.isList = true;
 		}
-
 	}
 
 	handleChange(evt) {
@@ -53,6 +52,7 @@ class TextfieldControl extends React.Component {
 
 	render() {
 		let value = this.props.value ? this.props.value : "";
+
 		if (this.isList) {
 			value = ControlUtils.joinNewlines(value, arrayValueDelimiter);
 		}
@@ -72,7 +72,7 @@ class TextfieldControl extends React.Component {
 			/>);
 		let display = textInput;
 		if (this.props.tableControl) {
-			const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
+			const tooltipId = "tooltip-column-" + this.id;
 			let disabled = true;
 			if (value && this.props.state !== STATES.DISABLED) {
 				disabled = false;
@@ -94,7 +94,7 @@ class TextfieldControl extends React.Component {
 			</Tooltip>);
 		}
 		return (
-			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+			<div className={className} data-id={this.dataId}>
 				{display}
 				<ValidationMessage inTable={this.props.tableControl} state={ this.props.state} messageInfo={ this.props.messageInfo} />
 			</div>

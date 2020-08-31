@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import { setActiveTab } from "./../../actions";
 import { Tab, Tabs } from "carbon-components-react";
 import * as PropertyUtil from "./../../util/property-utils";
+import { propertyIdFromMap } from "./../../util/control-utils";
 import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import { cloneDeep, isEmpty, sortBy } from "lodash";
 import logger from "./../../../../utils/logger";
@@ -68,7 +69,6 @@ class EditorForm extends React.Component {
 		this.ControlFactory.setRightFlyout(props.rightFlyout);
 
 		this.actionFactory = new ActionFactory(this.props.controller);
-
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -278,7 +278,7 @@ class EditorForm extends React.Component {
 				uiItem.control.optionalPanels =
 					this.generateAdditionalPanels(uiItem.additionalItems, key, null, indexof, true);
 			}
-			return this.ControlFactory.createControlItem(uiItem.control, propertyId);
+			return this.ControlFactory.createControlItem(uiItem.control, propertyIdFromMap(propertyId));
 		case ("additionalLink"):
 			var subPanel = this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 			return (<SubPanelButton key={"sub-panel-button." + key}

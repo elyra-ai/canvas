@@ -23,6 +23,7 @@ import FlexibleTable from "./../components/flexible-table";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
+import { propertyIdFromMap } from "./../util/control-utils";
 import Icon from "./../../icons/icon.jsx";
 import { Add16, TrashCan16 } from "@carbon/icons-react";
 import { ControlType, EditStyle } from "./../constants/form-constants";
@@ -246,7 +247,7 @@ export default class AbstractTable extends React.Component {
 		this.updateRowSelections(selectedRows);
 	}
 
-	// this will got through all selected rows and update any column value in the row with the
+	// this will go through all selected rows and update any column value in the row with the
 	// column value in the selected summary row that has changed.
 	updateSelectedRowsValues() {
 		const summaryPropertyId = {
@@ -294,20 +295,19 @@ export default class AbstractTable extends React.Component {
 	}
 
 	_makeCell(columnDef, controlValue, propertyName, rowIndex, colIndex, tableState, selectSummaryRow) {
-		const propertyId = {
+		const propertyId = propertyIdFromMap({
 			name: propertyName,
 			row: rowIndex,
 			col: colIndex
-		};
+		});
 		const tableInfo = { table: true, allowColumnControls: this.allowColumnControls };
 		const cellClassName = "";
 		const ControlFactory = this.props.controller.getControlFactory();
 		let cellContent;
-		const columnDefObj = Object.assign({}, columnDef); // clone columnDef
-		if (columnDef.dmImage) {
+		if (columnDef.dmImage && !columnDef.icon) {
 			const fields = this.props.controller.getDatasetMetadataFields();
 			const stringValue = PropertyUtils.stringifyFieldValue(this.props.controller.getPropertyValue(propertyId), columnDef, true);
-			columnDefObj.icon = PropertyUtils.getDMFieldIcon(fields,
+			columnDef.icon = PropertyUtils.getDMFieldIcon(fields,
 				stringValue, columnDef.dmImage);
 		}
 		if (columnDef.editStyle === EditStyle.SUBPANEL || columnDef.editStyle === EditStyle.ON_PANEL) {
@@ -330,7 +330,7 @@ export default class AbstractTable extends React.Component {
 		} else { // defaults to inline control
 			tableInfo.editStyle = EditStyle.INLINE;
 			cellContent = (<div className="properties-table-cell-control">
-				{ControlFactory.createControl(columnDefObj, propertyId, tableInfo)}
+				{ControlFactory.createControl(columnDef, propertyId, tableInfo)}
 			</div>);
 
 		}
@@ -687,7 +687,7 @@ export default class AbstractTable extends React.Component {
 		// Assumes the child item is an "ADDITIONAL_LINK" object.
 		// However, we will extract information from the and will create our own Cell-based invoker.
 		const propertyId = { name: propName, row: rowIndex };
-		const subItemButton = this.props.buildUIItem(rowIndex, this.props.control.childItem, propertyId, this.indexOfColumn);
+		const subItemButton = this.props.buildUIItem(rowIndex, this.props.control.childItem, propertyIdFromMap(propertyId), this.indexOfColumn);
 		const settingsIcon = <Icon type={CARBON_ICONS.SETTINGS} />;
 		// Hack to decompose the button into our own in-table link
 		const subCell = (

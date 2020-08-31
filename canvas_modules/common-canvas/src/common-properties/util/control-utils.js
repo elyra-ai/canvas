@@ -15,6 +15,17 @@
  */
 import { v4 as uuid4 } from "uuid";
 
+var propertyIdMap = {};
+
+function propertyIdFromMap(propertyId) {
+	const propertyKey = getDataId(propertyId);
+	if (propertyIdMap[propertyKey]) {
+		return propertyIdMap[propertyKey];
+	}
+	propertyIdMap[propertyKey] = propertyId;
+	return propertyId;
+}
+
 /**
 * Used to return a unique id for a control that requires an html id
 * @param propertyId (required)
@@ -70,5 +81,6 @@ export {
 	getControlId,
 	getDataId,
 	splitNewlines,
-	joinNewlines
+	joinNewlines,
+	propertyIdFromMap
 };
