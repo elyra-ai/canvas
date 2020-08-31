@@ -953,6 +953,18 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "DELETE_LINKS", data: { linksToDelete: linksToDelete }, pipelineId: this.pipelineId });
 	}
 
+	detachLinks(detachLinksInfo) {
+		if (detachLinksInfo && detachLinksInfo.length > 0) {
+			this.store.dispatch({ type: "DETACH_LINKS", data: { detachLinksInfo: detachLinksInfo }, pipelineId: this.pipelineId });
+		}
+	}
+
+	attachLinks(attachLinksInfo) {
+		if (attachLinksInfo && attachLinksInfo.length > 0) {
+			this.store.dispatch({ type: "ATTACH_LINKS", data: { attachLinksInfo: attachLinksInfo }, pipelineId: this.pipelineId });
+		}
+	}
+
 	createNodeLinks(data) {
 		const linkNodeList = [];
 		data.nodes.forEach((srcInfo) => {

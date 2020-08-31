@@ -1845,7 +1845,7 @@ export default class CanvasController {
 				break;
 			}
 			case "deleteSelectedObjects": {
-				command = new DeleteObjectsAction(data, this.objectModel);
+				command = new DeleteObjectsAction(data, this.objectModel, this.canvasConfig.enableDetachableLinks);
 				this.commandStack.do(command);
 				break;
 			}
