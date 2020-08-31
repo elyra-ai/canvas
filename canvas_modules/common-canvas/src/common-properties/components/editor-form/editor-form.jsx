@@ -31,6 +31,7 @@ import TwistyPanel from "./../../panels/twisty";
 import SubPanelButton from "./../../panels/sub-panel/button";
 import ColumnPanel from "./../../panels/column";
 import ControlPanel from "./../../panels/control";
+import Subtabs from "./../../panels/subtabs";
 
 import WideFlyout from "./../wide-flyout";
 import FieldPicker from "./../field-picker";
@@ -47,8 +48,7 @@ class EditorForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showFieldPicker: false,
-			activeSubTabs: {} // map since there can be more than 1 subtab
+			showFieldPicker: false
 		};
 
 		this.genPanel = this.genPanel.bind(this);
@@ -122,12 +122,6 @@ class EditorForm extends React.Component {
 
 	_modalTabsOnClick(tabId) {
 		this.props.setActiveTab(tabId);
-	}
-
-	_subTabsOnClick(groupId, subTabId) {
-		const activeSubTabs = this.state.activeSubTabs;
-		activeSubTabs[groupId] = subTabId;
-		this.setState({ activeSubTabs: activeSubTabs });
 	}
 
 	genPrimaryTabs(key, tabs, propertyId, indexof) {
@@ -216,42 +210,6 @@ class EditorForm extends React.Component {
 			return index - 1;
 		}
 		return index;
-	}
-
-	genSubTabs(key, tabs, propertyId, indexof) {
-		// logger.info("genSubTabs");
-		const subTabs = [];
-		let activeSubTab = 0;
-		// generate id for group of tabs
-		let tabGroupId = "subtab";
-		for (const tab of tabs) {
-			tabGroupId += "." + tab.group;
-		}
-		for (let i = 0; i < tabs.length; i++) {
-			const tab = tabs[i];
-			const subPanelItems = this.genUIItem(i, tab.content, propertyId, indexof);
-			if (tab.content.panel.id === this.state.activeSubTabs[tabGroupId]) {
-				activeSubTab = i;
-			}
-			subTabs.push(
-				<Tab
-					className="properties-subtab"
-					key={"subtabs.tab." + key + "." + i}
-					tabIndex={i}
-					label={tab.text}
-					onClick={this._subTabsOnClick.bind(this, tabGroupId, tab.group)}
-				>
-					{subPanelItems}
-				</Tab>
-			);
-		}
-		return (
-			<div key={"subtabs.div." + key} className={classNames("properties-sub-tab-container", { vertical: !this.props.rightFlyout })}>
-				<Tabs key={"subtabs.tabs." + key} className="properties-subtabs" selected={activeSubTab}>
-					{subTabs}
-				</Tabs>
-			</div>
-		);
 	}
 
 	genPanelSelector(key, tabs, dependsOn, propertyId, indexof, panelId) {
@@ -352,7 +310,7 @@ class EditorForm extends React.Component {
 		case ("panel"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("subTabs"):
-			return this.genSubTabs(key, uiItem.tabs, inPropertyId, indexof);
+			return (<Subtabs key={"subtabs." + key} tabs={uiItem.tabs} controller={this.props.controller} rightFlyout={this.props.rightFlyout} genUIItem={this.genUIItem} />);
 		case ("primaryTabs"):
 			return this.genPrimaryTabs(key, uiItem.tabs, inPropertyId, indexof);
 		case ("panelSelector"):

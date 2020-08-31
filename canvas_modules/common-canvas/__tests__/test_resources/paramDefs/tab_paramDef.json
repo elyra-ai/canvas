@@ -3,6 +3,8 @@
     "title": "Tab and SubTab Test"
   },
   "current_parameters": {
+    "hide": false,
+    "disable": false,
     "fromValue": 2,
     "toValue": 1,
     "fruit": "apple",
@@ -29,6 +31,14 @@
     ]
   },
   "parameters": [
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
     {
       "id": "fromValue",
       "type": "double",
@@ -128,6 +138,7 @@
     "description": {
       "default": "Test Tab Panel"
     },
+    "editor_size": "medium",
     "parameter_info": [
       {
         "parameter_ref": "fromValue",
@@ -261,6 +272,14 @@
         },
         "type": "panels",
         "group_info": [
+          {
+            "id": "conditions",
+            "type": "controls",
+            "parameter_refs": [
+              "hide",
+              "disable"
+            ]
+          },
           {
             "id": "Subtabs",
             "label": {
@@ -472,5 +491,35 @@
         }
       }
     ]
-  }
+  },
+  "conditions": [
+    {
+      "visible": {
+        "group_refs": [
+          "table-subtab"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "fruit-subtab"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ]
 }
