@@ -50,7 +50,7 @@ describe("Test basic undo/redo operations", function() {
 		cy.verifyNumberOfPortDataLinks(1);
 
 		// Add comment to selected node
-		cy.getNodeWithLabel("Select").click();
+		cy.clickNode("Select");
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "This comment box should be linked to the Select node.");
 		cy.moveCommentToPosition("This comment box should be linked to the Select node.", 350, 250);
@@ -376,7 +376,7 @@ describe("Test for Multiple undo/redo operations", function() {
 		cy.verifyNumberOfNodes(22);
 
 		// Add comment for a node
-		cy.getNodeWithLabel("Filter").click();
+		cy.clickNode("Filter");
 		cy.addCommentToPosition("Some text comment.", 30, 300);
 		cy.verifyCommentExists("Some text comment.");
 		// Undo using toolbar

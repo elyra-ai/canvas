@@ -107,6 +107,10 @@ function findGrpForLabel(grpArray, nodeLabel) {
 	return null;
 }
 
+Cypress.Commands.add("clickNode", (nodeName) => {
+	cy.getNodeWithLabel(nodeName).click();
+});
+
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	// Get the os name to decide whether to click ctrl or cmd
 	cy.useCtrlOrCmdKey().then((selectedKey) => {

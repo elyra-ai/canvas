@@ -76,7 +76,7 @@ describe("Test auto layout variations", function() {
 		cy.verifyNumberOfPortDataLinks(3);
 
 		// Select Var. File node
-		cy.getNodeWithLabel("Var. File").click();
+		cy.clickNode("Var. File");
 
 		// Double click Sort node on canvas
 		cy.doubleClickNodeInCategory("Sort");
@@ -91,7 +91,7 @@ describe("Test auto layout variations", function() {
 		cy.verifyNumberOfPortDataLinks(5);
 
 		// Select Aggregate node
-		cy.getNodeWithLabel("Aggregate").click();
+		cy.clickNode("Aggregate");
 
 		// Double click Balance node on canvas
 		cy.doubleClickNodeInCategory("Balance");
@@ -107,7 +107,7 @@ describe("Test auto layout variations", function() {
 		cy.verifyNumberOfPortDataLinks(6);
 
 		// Select Database node
-		cy.getNodeWithLabel("Database").click();
+		cy.clickNode("Database");
 
 		// Double click Type node on canvas
 		cy.clickCategory("Field Ops");
@@ -117,7 +117,7 @@ describe("Test auto layout variations", function() {
 		cy.verifyNumberOfPortDataLinks(7);
 
 		// Select Type node
-		cy.getNodeWithLabel("Type").click();
+		cy.clickNode("Type");
 
 		// Double click Object Store node on canvas
 		cy.clickCategory("Export");
@@ -127,7 +127,7 @@ describe("Test auto layout variations", function() {
 		cy.verifyNumberOfPortDataLinks(8);
 
 		// Select Object Store node
-		cy.getNodeWithLabel("Object Store").click();
+		cy.clickNode("Object Store");
 
 		// Double click Object Store node on canvas
 		cy.doubleClickNodeInCategory("Object Store");

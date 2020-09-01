@@ -74,25 +74,26 @@ export default class DeleteObjectsAction extends Action {
 		return linksToDelete;
 	}
 
-	// Returns an array of link info objects that indicate which links should
+	// Returns an array of 'link info' objects that indicate which links should
 	// remain on the canvas as detached links when nodes they are connected to
-	// are deleted. This is only relavant when config field enableDetachableLinks
-	// is set. The linkInfo object contains a reference to the link and other
-	// fields that can be used to: (a) reattach the link to either the source node
-	// or target node from which it was detached and (b) position the source and
-	// target ends of detached links, that is, the position information as x/y
-	// coords for where the link will be drawn to/from in the absence of the
-	// nodes that were deleted.
-	// Return object contains fields:
-	// link - a refrence to the link being updated
+	// are deleted. There is one linkInfo object for each link that needs to be
+	// updated. This is only relavant when config field enableDetachableLinks
+	// is set. The linkInfo object contains:
+	// link - a refrence to the link being updated.
 	// srcNodeId - the srcNodeId of the link being updated. This is set if the
-	// source node is being deleted
+	// source node is being deleted.
 	// trgNodeId - the trgNodeId of the link being updated. This is set if the
-	// target node is being deleted
+	// target node is being deleted.
 	// srcPos - the position from which the link should be drawn. This is set if
-	// the source node ie being deldted. This contains x and y fields.
-	// trgPos - the position from which the link should be drawn. This is set if
+	// the source node ie being deleted. This contains x and y fields.
+	// trgPos - the position to which the link should be drawn. This is set if
 	// the target node ie being deleted. This contains x and y fields.
+	// Note: when a link is detached, as the result of its source or target node
+	// being deleted, the srcNodeId and/or trgNodeId in the link will be set to
+	// undefined. This indicates which end of the link is detached. The srcPos
+	// and trgPos coordinates will be set on the link to indicate where the line
+	// is drawn to or from. The linkInfo object's srcNodeId and trgNodeId is
+	// used to restore those values to the link on undo.
 	getLinksToUpdate() {
 		const linksToUpdate = [];
 		const allCurrentLinks = this.apiPipeline.getLinks();

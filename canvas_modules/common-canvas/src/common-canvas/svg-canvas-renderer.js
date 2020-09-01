@@ -875,10 +875,10 @@ export default class SVGCanvasRenderer {
 
 	// Returns true if the link is attached to both a source node and a
 	// target node which is indicated by the link having srcNodeId and trgNodeId
-	// fields. 	When either or both of these fields are undefined the link is
+	// fields. When either or both of these fields are undefined the link is
 	// semi or fully detached. This can happen when enableDetachableLinks is set.
 	isLinkFullyAttached(link) {
-		return link.srcNodeId && link.trgNodeId;
+		return typeof link.srcNodeId === "undefined" && typeof link.trgNodeId === "undefined";
 	}
 
 	getNode(nodeId) {

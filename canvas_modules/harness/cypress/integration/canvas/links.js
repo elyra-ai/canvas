@@ -337,6 +337,36 @@ describe("Test enableDetachableLinks configuration option", function() {
 		cy.verifyNumberOfAssociationLinks(1);
 	});
 
+	it("Test deleting nodes (linked with data links) leaves detached links behind", function() {
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Select and delete the source semi-detached link, the data link from
+		// execution node to supernode, and the model node.
+		cy.clickNode("Binding (entry) node");
+		cy.ctrlOrCmdClickNode("Execution node");
+		cy.ctrlOrCmdClickNode("Super node");
+		cy.ctrlOrCmdClickNode("Model Node");
+		cy.ctrlOrCmdClickNode("Binding (exit) node");
+		cy.clickToolbarDelete();
+		cy.verifyNumberOfPortDataLinks(6); // All data links should remain
+		cy.verifyNumberOfCommentLinks(0); // All comment links should be removed
+		cy.verifyNumberOfAssociationLinks(0); // Association link should be removed
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(0);
+		cy.verifyNumberOfAssociationLinks(0);
+	});
+
 	it("Test a combination of detached links, regular links and nodes can be deleted", function() {
 		cy.verifyNumberOfPortDataLinks(6);
 		cy.verifyNumberOfCommentLinks(4);
