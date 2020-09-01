@@ -268,8 +268,7 @@ Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
 					cy.get(".d3-link-group.d3-data-link")
 						.its("length")
 						.then((canvasLinks) => {
-							const noOfCanvasLinks = canvasLinks / 2; // Divide by 2 because line and arrow head use same class
-							expect(noOfCanvasLinks).to.equal(noOfLinks);
+							expect(canvasLinks).to.equal(noOfLinks);
 						});
 				} else {
 					// Connection Type - Ports
@@ -337,8 +336,7 @@ Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 					cy.get(".d3-link-group.d3-comment-link")
 						.its("length")
 						.then((canvasLinks) => {
-							const noOfCanvasLinks = canvasLinks / 2; // Divide by 2 because line and arrow head use same class
-							expect(noOfCanvasLinks).to.equal(noOfCommentLinks);
+							expect(canvasLinks).to.equal(noOfCommentLinks);
 						});
 				} else {
 					// Connection Type - Ports
