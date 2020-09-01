@@ -123,6 +123,21 @@ Cypress.Commands.add("linkNodeOutputPortToNode", (srcNodeName, srcPortId, trgNod
 		});
 });
 
+Cypress.Commands.add("linkNodeOutputPortToPointOnCanvas", (srcNodeName, srcPortId, xPos, yPos) => {
+	// This will simulate a drag from a specific port to a position on the canvas
+	// which will create a detached link when enableDetachableLinks config field
+	// is set to true.
+	cy.getNodePortSelector(srcNodeName, "out_port", srcPortId)
+		.then((srcSelector) => {
+			cy.get(srcSelector)
+				.trigger("mousedown", { button: 0 });
+			cy.get(".d3-svg-canvas-div > .svg-area")
+				.trigger("mousemove", { force: true })
+				.trigger("mouseup", xPos, yPos, { force: true });
+		});
+});
+
+
 Cypress.Commands.add("getNodePortSelector", (nodeName, nodeElement, portId) => {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	cy.getNodeIdForLabel(nodeName)

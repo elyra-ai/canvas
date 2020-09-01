@@ -30,8 +30,8 @@
             "ui_data": {
               "label": "Binding (entry) node",
               "image": "/images/nodes/varfile.svg",
-              "x_pos": 89,
-              "y_pos": 99.5,
+              "x_pos": 70,
+              "y_pos": 165,
               "description": "Imports data from a comma-delimited file"
             }
           },
@@ -85,8 +85,8 @@
             "ui_data": {
               "label": "Execution node",
               "image": "/images/nodes/sort.svg",
-              "x_pos": 297,
-              "y_pos": 138.5,
+              "x_pos": 332.5,
+              "y_pos": 165,
               "description": "Sorts the data"
             }
           },
@@ -104,9 +104,7 @@
                   },
                   "label": "Input Port"
                 }
-              },
-              "links": [
-              ]
+              }
             }
           ],
           "outputs": [
@@ -161,8 +159,8 @@
             "ui_data": {
               "label": "Super node",
               "image": "useDefaultIcon",
-              "x_pos": 500,
-              "y_pos": 170,
+              "x_pos": 542.5,
+              "y_pos": 165,
               "class_name": "canvas-node",
               "description": "nodeIDSuperNodePE",
               "is_expanded": false,
@@ -253,8 +251,8 @@
             "ui_data": {
               "label": "Model Node",
               "image": "/images/nodes/model.svg",
-              "x_pos": 760,
-              "y_pos": 230.99999237060547,
+              "x_pos": 700,
+              "y_pos": 270,
               "class_name": "canvas-node"
             }
           },
@@ -332,8 +330,8 @@
             "ui_data": {
               "label": "Binding (exit) node",
               "image": "/images/nodes/table.svg",
-              "x_pos": 642,
-              "y_pos": 375.99999237060547,
+              "x_pos": 542.5,
+              "y_pos": 390,
               "class_name": "canvas-node",
               "associations": [
                 {
@@ -378,22 +376,22 @@
           "comments": [
             {
               "id": "id42ESQA3VPXB",
-              "x_pos": 15,
-              "y_pos": 12,
+              "x_pos": 17.5,
+              "y_pos": 15,
               "width": 237,
               "height": 76,
               "class_name": "canvas-comment",
-              "content": "This canvas shows examples of detached links. There are three types:\n1. Fully detached\n2. Semi-detached from source\n3. Semi-detached from targetnode",
+              "content": "This canvas shows examples of detached links. There are three types:\n1. Fully detached\n2. Semi-detached from source node\n3. Semi-detached from target node",
               "associated_id_refs": []
             },
             {
               "id": ">.9?/`~!@#$%^&*()_+=-{}][|:;<,",
-              "x_pos": 400,
-              "y_pos": 50,
+              "x_pos": 507.5,
+              "y_pos": 60,
               "width": 200,
               "height": 37,
               "class_name": "canvas-comment",
-              "content": "The 4 different node types",
+              "content": "Comment attached to 4 nodes",
               "associated_id_refs": [
                 {
                   "node_ref": "id8I6RH2V91XW",

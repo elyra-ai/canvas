@@ -166,7 +166,7 @@ describe("Test enableLinkSelection configuration option", function() {
 		cy.verifyLinkIsSelected("a81684aa-9b09-4620-aa59-54035a5de913");
 	});
 
-	it("Test clicking on an unselected deselcts other selcted links", function() {
+	it("Test clicking on an unselected link deselcts other selcted links", function() {
 		// Select two links
 		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
@@ -216,5 +216,27 @@ describe("Test enableLinkSelection configuration option", function() {
 		cy.verifyNodeIsDeleted("Binding (entry) node", false);
 		cy.verifyLinkIsDeleted("a81684aa-9b09-4620-aa59-54035a5de913");
 	});
+
+});
+
+
+describe("Test enableDetachableLinks configuration option", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({
+			"selectedLinkSelection": true,
+			"selectedDetachableLinks": true,
+			"selectedLinkType": "Straight" });
+		cy.openCanvasDefinition("detachedLinksCanvas.json");
+	});
+
+	it("Test a detached link can be created", function() {
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfLinks(11);
+		cy.linkNodeOutputPortToPointOnCanvas("Binding (entry) node", "outPort", 200, 500);
+		cy.verifyNumberOfPortDataLinks(7);
+		cy.verifyNumberOfLinks(12);
+	});
+
 
 });

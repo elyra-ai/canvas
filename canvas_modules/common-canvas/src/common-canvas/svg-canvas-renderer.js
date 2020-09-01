@@ -1060,7 +1060,7 @@ export default class SVGCanvasRenderer {
 			.on("mouseup.zoom", () => {
 				this.logger.log("Canvas - mouseup-zoom");
 				if (this.drawingNewLinkData) {
-					this.stopDrawingNewLink();
+					this.completeNewLink();
 				}
 			})
 			.on("click.zoom", () => {
@@ -5414,7 +5414,7 @@ export default class SVGCanvasRenderer {
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", "d3-link-group")
+			.attr("class", (d) => "d3-link-group " + this.getLinkClass(d))
 			.on("mousedown", (d) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.config.enableLinkSelection) {
