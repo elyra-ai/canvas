@@ -725,9 +725,7 @@ export default class SVGCanvasRenderer {
 	paletteNodeDraggedOver(nodeTemplate, x, y) {
 		if (this.isNodeTemplateInsertableIntoLink(nodeTemplate)) {
 			const link = this.getLinkAtMousePos(x, y);
-			if (this.isLinkFullyAttached(link)) {
-				this.setLinkHighlighting(link);
-			}
+			this.setLinkHighlighting(link);
 		}
 
 		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
@@ -738,7 +736,7 @@ export default class SVGCanvasRenderer {
 	// Switches on or off data link highlighting depending on the element
 	// passed in and keeps track of the currently highlighted link.
 	setLinkHighlighting(link) {
-		if (link) {
+		if (link && this.isLinkFullyAttached(link)) {
 			if (!this.dragOverLink) {
 				this.dragOverLink = link;
 				this.setLinkDragOverHighlighting(this.dragOverLink, true);
@@ -878,7 +876,10 @@ export default class SVGCanvasRenderer {
 	// fields. When either or both of these fields are undefined the link is
 	// semi or fully detached. This can happen when enableDetachableLinks is set.
 	isLinkFullyAttached(link) {
-		return typeof link.srcNodeId === "undefined" && typeof link.trgNodeId === "undefined";
+		if (link) {
+			return typeof link.srcNodeId !== "undefined" && typeof link.trgNodeId !== "undefined";
+		}
+		return false;
 	}
 
 	getNode(nodeId) {
