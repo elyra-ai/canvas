@@ -725,7 +725,9 @@ export default class SVGCanvasRenderer {
 	paletteNodeDraggedOver(nodeTemplate, x, y) {
 		if (this.isNodeTemplateInsertableIntoLink(nodeTemplate)) {
 			const link = this.getLinkAtMousePos(x, y);
-			this.setLinkHighlighting(link);
+			if (this.isLinkFullyAttached(link)) {
+				this.setLinkHighlighting(link);
+			}
 		}
 
 		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
@@ -869,6 +871,14 @@ export default class SVGCanvasRenderer {
 		return (this.config.enableInsertNodeDroppedOnLink &&
 			this.dragObjects.length === 1 &&
 			this.isNonBindingNode(this.dragObjects[0]));
+	}
+
+	// Returns true if the link is attached to both a source node and a
+	// target node which is indicated by the link having srcNodeId and trgNodeId
+	// fields. 	When either or both of these fields are undefined the link is
+	// semi or fully detached. This can happen when enableDetachableLinks is set.
+	isLinkFullyAttached(link) {
+		return link.srcNodeId && link.trgNodeId;
 	}
 
 	getNode(nodeId) {
