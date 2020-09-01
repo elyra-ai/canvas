@@ -3729,7 +3729,7 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	// Handles the completion of a new link when the end if dropped on a node.
+	// Handles the completion of a new link when the end is dropped on a node.
 	completeNewLinkOnNode(trgNode) {
 		// If we completed a connection remove the new line objects.
 		this.removeNewLink();
@@ -3766,7 +3766,7 @@ export default class SVGCanvasRenderer {
 		this.drawingNewLinkData = null;
 	}
 
-	// Handles the completion of a new link when the end if dropped away from
+	// Handles the completion of a new link when the end is dropped away from
 	// a node (when enableDetachableLinks is set to true) which creates a new
 	// detached link.
 	completeNewDetachedLink() {
