@@ -355,6 +355,34 @@ Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 	});
 });
 
+Cypress.Commands.add("verifyNumberOfAssociationLinks", (noOfAssociationLinks) => {
+	cy.get("body").then(($body) => {
+		if ($body.find(".d3-link-group.d3-object-link").length) {
+			cy.document().then((doc) => {
+				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
+					// Connection Type - Halo
+					cy.get(".d3-link-group.d3-object-link")
+						.its("length")
+						.then((canvasLinks) => {
+							expect(canvasLinks).to.equal(noOfAssociationLinks);
+						});
+				} else {
+					// Connection Type - Ports
+					cy.get(".d3-link-group.d3-object-link").should("have.length", noOfAssociationLinks);
+				}
+			});
+		} else {
+			// No comment links found on canvas
+			expect(0).equal(noOfAssociationLinks);
+		}
+	});
+
+	// verify the number of comment-links in the internal object model
+	cy.getPipeline().then((pipeline) => {
+		cy.getCountAssociationLinks(pipeline).should("eq", noOfAssociationLinks);
+	});
+});
+
 Cypress.Commands.add("verifyLinkPath", (srcNodeName, srcPortId, trgNodeName, trgPortId, path) => {
 	cy.getPipeline()
 		.then((pipeline) => {

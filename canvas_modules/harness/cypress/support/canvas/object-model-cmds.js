@@ -139,6 +139,17 @@ Cypress.Commands.add("getCountCommentLinks", (pipeline) => {
 	return count;
 });
 
+Cypress.Commands.add("getCountAssociationLinks", (pipeline) => {
+	let count = 0;
+	const assoclinks = pipeline.links;
+	assoclinks.forEach(function(assoclink) {
+		if (assoclink.type === "associationLink") {
+			count++;
+		}
+	});
+	return count;
+});
+
 Cypress.Commands.add("getCountLinksBetweenNodes", (srcNodeName, trgNodeName) => {
 	// Find the number of links in object model that have source and target ids.
 	cy.getPipeline()
