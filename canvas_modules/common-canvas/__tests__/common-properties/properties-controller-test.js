@@ -1245,7 +1245,7 @@ describe("Properties Controller updateControlEnumValues validation", () => {
 		expect(control.valueLabels).to.eql(["Red", "Green"]);
 		expect(console.warn.mock.calls[0][0]).to.equal("[WARNING]: properties-controller: updateControlEnumValues - control not found or valuesObj not valid");
 		controller.updateControlEnumValues({ name: "invalid_control" }, []);
-		expect(console.warn.mock.calls[0][0]).to.equal("[WARNING]: properties-controller: updateControlEnumValues - control not found or valuesObj not valid");
+		expect(console.warn.mock.calls[1][0]).to.equal("[WARNING]: properties-controller: updateControlEnumValues - control not found or valuesObj not valid");
 	});
 
 	it("should update values or valueLabels when empty array passed in", () => {
