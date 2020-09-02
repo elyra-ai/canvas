@@ -946,7 +946,7 @@ export default class CanvasController {
 	// data - Data describing the links
 	// pipelineId - The ID of the pipeline
 	createNodeLinks(data, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).createNodeLinks(data);
+		return this.objectModel.getAPIPipeline(pipelineId).createNodeLinks(data);
 	}
 
 	// Creates comment links
