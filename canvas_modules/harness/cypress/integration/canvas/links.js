@@ -57,6 +57,24 @@ describe("Test comment link disconnection", function() {
 	});
 });
 
+describe("Test node link creation", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("allTypesCanvas.json");
+	});
+
+	it("Test dragging a link from a source node to canvas doesn't create a link", function() {
+		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyNumberOfLinks(9);
+
+		cy.linkNodeOutputPortToPointOnCanvas("Binding (entry) node", "outPort", 200, 500);
+
+		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyNumberOfLinks(9);
+	});
+});
+
+
 describe("Test node and comment combination link disconnection", function() {
 	beforeEach(() => {
 		cy.visit("/");
@@ -166,7 +184,7 @@ describe("Test enableLinkSelection configuration option", function() {
 		cy.verifyLinkIsSelected("a81684aa-9b09-4620-aa59-54035a5de913");
 	});
 
-	it("Test clicking on an unselected deselcts other selcted links", function() {
+	it("Test clicking on an unselected link deselcts other selcted links", function() {
 		// Select two links
 		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
@@ -217,4 +235,163 @@ describe("Test enableLinkSelection configuration option", function() {
 		cy.verifyLinkIsDeleted("a81684aa-9b09-4620-aa59-54035a5de913");
 	});
 
+});
+
+
+describe("Test enableDetachableLinks configuration option", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({
+			"selectedLinkSelection": true,
+			"selectedDetachableLinks": true,
+			"selectedLinkType": "Straight" });
+		cy.openCanvasDefinition("detachedLinksCanvas.json");
+	});
+
+	it("Test a detached link can be created and undone", function() {
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfLinks(11);
+
+		// Create detached node
+		cy.linkNodeOutputPortToPointOnCanvas("Binding (entry) node", "outPort", 200, 500);
+		cy.verifyNumberOfPortDataLinks(7); // One new data link should be created.
+		cy.verifyNumberOfLinks(12);
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPortDataLinks(6); // The data link should have been removed.
+		cy.verifyNumberOfLinks(11);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(7); // The data link should have been added back.
+		cy.verifyNumberOfLinks(12);
+	});
+
+	it("Test a node can be deleted and leave detached links behind", function() {
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Delete the supernode
+		cy.deleteNodeUsingContextMenu("Super node");
+		cy.verifyNumberOfPortDataLinks(6); // Data links should remain
+		cy.verifyNumberOfCommentLinks(3); // Comment link should be deleted
+		cy.verifyNumberOfAssociationLinks(1); // Association links should be unaffected
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPortDataLinks(6); // Data links should remain
+		cy.verifyNumberOfCommentLinks(4); // Comment link should be replaced
+		cy.verifyNumberOfAssociationLinks(1); // Association links should be unaffected
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(6); // Data links should remain
+		cy.verifyNumberOfCommentLinks(3); // Comment link should be removed
+		cy.verifyNumberOfAssociationLinks(1); // Association links should be unaffected
+	});
+
+	it("Test selected detached links can be deleted", function() {
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Select and delete the fully detached link
+		cy.clickLink("total-detached-dddd-dddddddddd");
+		cy.clickToolbarDelete();
+		cy.verifyNumberOfPortDataLinks(5); // The data link should be removed
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Select and delete the two semi-detached links
+		cy.clickLink("source-attached-dddddddddd");
+		cy.ctrlOrCmdClickLink("target-attached-dddddddddd");
+		cy.clickToolbarDelete();
+		cy.verifyNumberOfPortDataLinks(3); // The data links should be removed
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPortDataLinks(5); // The data links should be added back
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPortDataLinks(6); // The fully detached link should be added back
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(5); // The fully detached link should be added back
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(3); // The fully detached link should be added back
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+	});
+
+	it("Test deleting nodes (linked with data links) leaves detached links behind", function() {
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Select and delete the source semi-detached link, the data link from
+		// execution node to supernode, and the model node.
+		cy.clickNode("Binding (entry) node");
+		cy.ctrlOrCmdClickNode("Execution node");
+		cy.ctrlOrCmdClickNode("Super node");
+		cy.ctrlOrCmdClickNode("Model Node");
+		cy.ctrlOrCmdClickNode("Binding (exit) node");
+		cy.clickToolbarDelete();
+		cy.verifyNumberOfPortDataLinks(6); // All data links should remain
+		cy.verifyNumberOfCommentLinks(0); // All comment links should be removed
+		cy.verifyNumberOfAssociationLinks(0); // Association link should be removed
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(0);
+		cy.verifyNumberOfAssociationLinks(0);
+	});
+
+	it("Test a combination of detached links, regular links and nodes can be deleted", function() {
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Select and delete the source semi-detached link, the data link from
+		// execution node to supernode, and the model node.
+		cy.clickLink("source-attached-dddddddddd");
+		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.ctrlOrCmdClickNode("Model Node");
+		cy.clickToolbarDelete();
+		cy.verifyNumberOfPortDataLinks(4); // The data links should be removed
+		cy.verifyNumberOfCommentLinks(3); // Comment link to model node should be removed
+		cy.verifyNumberOfAssociationLinks(0); // Association link should be removed
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyNumberOfCommentLinks(3);
+		cy.verifyNumberOfAssociationLinks(0);
+	});
 });

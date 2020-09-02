@@ -92,6 +92,7 @@ export default class SVGCanvasD3 {
 				this.config.enableLinkType !== config.enableLinkType ||
 				this.config.enableLinkDirection !== config.enableLinkDirection ||
 				this.config.enableLinkSelection !== config.enableLinkSelection ||
+				this.config.enableDetachableLinks !== config.enableDetachableLinks ||
 				this.config.enableToolbarLayout !== config.enableToolbarLayout ||
 				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
 				this.config.enableInsertNodeDroppedOnLink !== config.enableInsertNodeDroppedOnLink ||

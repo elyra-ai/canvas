@@ -357,22 +357,22 @@
               "links": [
                 {
                   "node_id_ref": "b16deb33-4e84-45f1-a7d2-6a2e5d8d2618",
+                  "port_id_ref": "outPort6",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
                   },
-                  "port_id_ref": "outPort6",
                   "link_name": "link1"
                 },
                 {
                   "node_id_ref": "b16deb33-4e84-45f1-a7d2-6a2e5d8d2618",
+                  "port_id_ref": "outPort7",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
                   },
-                  "port_id_ref": "outPort7",
                   "link_name": "link1"
                 }
               ]
@@ -459,12 +459,12 @@
               "links": [
                 {
                   "node_id_ref": "e08c57b2-7106-439d-9b77-659c80a6deb5",
+                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
                   },
-                  "port_id_ref": "outPort",
                   "link_name": "link1"
                 }
               ]

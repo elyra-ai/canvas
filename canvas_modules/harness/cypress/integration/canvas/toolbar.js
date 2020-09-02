@@ -79,7 +79,7 @@ describe("Test for toolbar Create and Delete button", function() {
 	it("Test adding a new comment to selected node, delete node, " +
   "select all comments and delete using toolbar", function() {
 		// Select node
-		cy.getNodeWithLabel("C5.0").click();
+		cy.clickNode("C5.0");
 
 		// Add comment using toolbar
 		cy.clickToolbarAddComment();

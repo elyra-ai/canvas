@@ -23,6 +23,7 @@ import CreateCommentAction from "../command-actions/createCommentAction.js";
 import CreateCommentLinkAction from "../command-actions/createCommentLinkAction.js";
 import CreateNodeAction from "../command-actions/createNodeAction.js";
 import CreateNodeLinkAction from "../command-actions/createNodeLinkAction.js";
+import CreateNodeLinkDetachedAction from "../command-actions/createNodeLinkDetachedAction.js";
 import CreateNodeOnLinkAction from "../command-actions/createNodeOnLinkAction.js";
 import CreateSuperNodeAction from "../command-actions/createSuperNodeAction.js";
 import CollapseSuperNodeInPlaceAction from "../command-actions/collapseSuperNodeInPlaceAction.js";
@@ -69,6 +70,7 @@ export default class CanvasController {
 			enableLinkDirection: "LeftRight",
 			enableParentClass: "",
 			enableLinkSelection: false,
+			enableDetachableLinks: false,
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,
@@ -1836,8 +1838,14 @@ export default class CanvasController {
 				data = command.getData();
 				break;
 			}
+			case "createDetachedLink": {
+				command = new CreateNodeLinkDetachedAction(data, this.objectModel);
+				this.commandStack.do(command);
+				data = command.getData();
+				break;
+			}
 			case "deleteSelectedObjects": {
-				command = new DeleteObjectsAction(data, this.objectModel);
+				command = new DeleteObjectsAction(data, this.objectModel, this.canvasConfig.enableDetachableLinks);
 				this.commandStack.do(command);
 				break;
 			}

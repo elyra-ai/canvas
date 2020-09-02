@@ -261,19 +261,18 @@ Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
 
 Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-data-link").length) {
+		if ($body.find(".d3-link-group.d3-data-link").length) {
 			cy.document().then((doc) => {
 				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
 					// Connection Type - Halo
-					cy.get(".d3-data-link")
+					cy.get(".d3-link-group.d3-data-link")
 						.its("length")
 						.then((canvasLinks) => {
-							const noOfCanvasLinks = canvasLinks / 2; // Divide by 2 because line and arrow head use same class
-							expect(noOfCanvasLinks).to.equal(noOfLinks);
+							expect(canvasLinks).to.equal(noOfLinks);
 						});
 				} else {
 					// Connection Type - Ports
-					cy.get(".d3-data-link").should("have.length", noOfLinks);
+					cy.get(".d3-link-group.d3-data-link").should("have.length", noOfLinks);
 				}
 			});
 		} else {
@@ -310,14 +309,14 @@ Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
 		let dataLinks = 0;
 		let commentLinks = 0;
 		let associationLinks = 0;
-		if ($body.find(".d3-data-link").length) {
-			dataLinks = $body.find(".d3-data-link").length;
+		if ($body.find(".d3-link-group.d3-data-link").length) {
+			dataLinks = $body.find(".d3-link-group.d3-data-link").length;
 		}
-		if ($body.find(".d3-comment-link").length) {
-			commentLinks = $body.find(".d3-comment-link").length;
+		if ($body.find(".d3-link-group.d3-comment-link").length) {
+			commentLinks = $body.find(".d3-link-group.d3-comment-link").length;
 		}
-		if ($body.find(".d3-object-link").length) {
-			associationLinks = $body.find(".d3-object-link").length;
+		if ($body.find(".d3-link-group.d3-object-link").length) {
+			associationLinks = $body.find(".d3-link-group.d3-object-link").length;
 		}
 		expect(dataLinks + commentLinks + associationLinks).equal(noOfLinks);
 	});
@@ -330,19 +329,18 @@ Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
 
 Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-comment-link").length) {
+		if ($body.find(".d3-link-group.d3-comment-link").length) {
 			cy.document().then((doc) => {
 				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
 					// Connection Type - Halo
-					cy.get(".d3-comment-link")
+					cy.get(".d3-link-group.d3-comment-link")
 						.its("length")
 						.then((canvasLinks) => {
-							const noOfCanvasLinks = canvasLinks / 2; // Divide by 2 because line and arrow head use same class
-							expect(noOfCanvasLinks).to.equal(noOfCommentLinks);
+							expect(canvasLinks).to.equal(noOfCommentLinks);
 						});
 				} else {
 					// Connection Type - Ports
-					cy.get(".d3-comment-link").should("have.length", noOfCommentLinks);
+					cy.get(".d3-link-group.d3-comment-link").should("have.length", noOfCommentLinks);
 				}
 			});
 		} else {
@@ -354,6 +352,34 @@ Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 	// verify the number of comment-links in the internal object model
 	cy.getPipeline().then((pipeline) => {
 		cy.getCountCommentLinks(pipeline).should("eq", noOfCommentLinks);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfAssociationLinks", (noOfAssociationLinks) => {
+	cy.get("body").then(($body) => {
+		if ($body.find(".d3-link-group.d3-object-link").length) {
+			cy.document().then((doc) => {
+				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
+					// Connection Type - Halo
+					cy.get(".d3-link-group.d3-object-link")
+						.its("length")
+						.then((canvasLinks) => {
+							expect(canvasLinks).to.equal(noOfAssociationLinks);
+						});
+				} else {
+					// Connection Type - Ports
+					cy.get(".d3-link-group.d3-object-link").should("have.length", noOfAssociationLinks);
+				}
+			});
+		} else {
+			// No comment links found on canvas
+			expect(0).equal(noOfAssociationLinks);
+		}
+	});
+
+	// verify the number of comment-links in the internal object model
+	cy.getPipeline().then((pipeline) => {
+		cy.getCountAssociationLinks(pipeline).should("eq", noOfAssociationLinks);
 	});
 });
 

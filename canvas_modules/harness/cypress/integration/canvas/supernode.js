@@ -134,7 +134,7 @@ describe("Test create supernode within a supernode with a new node from palette"
 		cy.clickOptionFromContextMenu("Expand supernode");
 
 		// Cut node on canvas and paste it inside expanded supernode
-		cy.getNodeWithLabel("Derive").click();
+		cy.clickNode("Derive");
 		cy.clickToolbarCut();
 		cy.rightClickToDisplayContextMenu(440, 300);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
@@ -221,7 +221,7 @@ describe("Test cut and copy supernode from first canvas to second canvas", funct
 		cy.get("#harness-action-bar-sidepanel-api > a").click();
 
 		// Cut supernode from regular canvas and paste in extra canvas
-		cy.getNodeWithLabel("First Supernode").click();
+		cy.clickNode("First Supernode");
 		cy.clickToolbarCut();
 		cy.clickToolbarPasteInExtraCanvas();
 
@@ -231,7 +231,7 @@ describe("Test cut and copy supernode from first canvas to second canvas", funct
 		cy.verifyNodeExistsInExtraCanvas("First Supernode");
 
 		// Create a supernode on regular canvas
-		cy.getNodeWithLabel("Multiplot").click();
+		cy.clickNode("Multiplot");
 		cy.ctrlOrCmdClickNode("Execution node");
 		cy.rightClickNode("Multiplot");
 		cy.clickOptionFromContextMenu("Create supernode");
@@ -243,7 +243,7 @@ describe("Test cut and copy supernode from first canvas to second canvas", funct
 		cy.saveFlyout();
 
 		// Copy supernode from regular canvas and paste in extra canvas
-		cy.getNodeWithLabel("Second Supernode").click();
+		cy.clickNode("Second Supernode");
 		cy.clickToolbarCopy();
 		cy.clickToolbarPasteInExtraCanvas();
 
@@ -319,7 +319,7 @@ describe("Test selecting the canvas background of expanded supernodes", function
 		cy.verifyNumberOfSelectedObjects(0);
 
 		// Select a node and ctrl/cmd click canvas background of expanded supernode
-		cy.getNodeWithLabel("Database").click();
+		cy.clickNode("Database");
 		cy.ctrlOrCmdClickExpandedCanvasBackgroundOfSupernode("Supernode1");
 		cy.verifyNumberOfSelectedObjects(2);
 

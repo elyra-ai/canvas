@@ -32,6 +32,7 @@ import commentUnderlapCanvas from "../../../harness/test_resources/diagrams/comm
 import customAttrsCanvas from "../../../harness/test_resources/diagrams/customAttrsCanvas.json";
 import customNode from "../../../harness/test_resources/diagrams/customNode.json";
 import decoratorCanvas from "../../../harness/test_resources/diagrams/decoratorCanvas.json";
+import detachedLinksCanvas from "../../../harness/test_resources/diagrams/detachedLinksCanvas.json";
 import linkColorCanvas from "../../../harness/test_resources/diagrams/linkColorCanvas.json";
 import modelerCanvas from "../../../harness/test_resources/diagrams/modelerCanvas.json";
 import multiPortsCanvas from "../../../harness/test_resources/diagrams/multiPortsCanvas.json";
@@ -133,6 +134,10 @@ describe("ObjectModel files handling test", () => {
 
 	it("should read in and write out the same file: decoratorCanvas", () => {
 		readWriteSameFile(decoratorCanvas);
+	});
+
+	it("should read in and write out the same file: detachedLinksCanvas", () => {
+		readWriteSameFile(detachedLinksCanvas);
 	});
 
 	it("should read in and write out the same file: linkColorCanvas", () => {

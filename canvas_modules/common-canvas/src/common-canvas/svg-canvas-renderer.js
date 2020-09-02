@@ -736,7 +736,7 @@ export default class SVGCanvasRenderer {
 	// Switches on or off data link highlighting depending on the element
 	// passed in and keeps track of the currently highlighted link.
 	setLinkHighlighting(link) {
-		if (link) {
+		if (link && this.isLinkFullyAttached(link)) {
 			if (!this.dragOverLink) {
 				this.dragOverLink = link;
 				this.setLinkDragOverHighlighting(this.dragOverLink, true);
@@ -869,6 +869,17 @@ export default class SVGCanvasRenderer {
 		return (this.config.enableInsertNodeDroppedOnLink &&
 			this.dragObjects.length === 1 &&
 			this.isNonBindingNode(this.dragObjects[0]));
+	}
+
+	// Returns true if the link is attached to both a source node and a
+	// target node which is indicated by the link having srcNodeId and trgNodeId
+	// fields. When either or both of these fields are undefined the link is
+	// semi or fully detached. This can happen when enableDetachableLinks is set.
+	isLinkFullyAttached(link) {
+		if (link) {
+			return typeof link.srcNodeId !== "undefined" && typeof link.trgNodeId !== "undefined";
+		}
+		return false;
 	}
 
 	getNode(nodeId) {
@@ -1050,7 +1061,7 @@ export default class SVGCanvasRenderer {
 			.on("mouseup.zoom", () => {
 				this.logger.log("Canvas - mouseup-zoom");
 				if (this.drawingNewLinkData) {
-					this.stopDrawingNewLink();
+					this.completeNewLink();
 				}
 			})
 			.on("click.zoom", () => {
@@ -2116,7 +2127,7 @@ export default class SVGCanvasRenderer {
 					d3Event.stopPropagation();
 					this.logger.log("Node Group - mouse up");
 					if (this.drawingNewLinkData) {
-						this.completeNewLink(d);
+						this.completeNewLinkOnNode(d);
 					}
 				})
 				.on("click", (d) => {
@@ -3635,12 +3646,7 @@ export default class SVGCanvasRenderer {
 			.attr("linkType", linkType)
 			.on("mouseup", () => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				var trgNode = this.getNodeAtMousePos();
-				if (trgNode !== null) {
-					this.completeNewLink(trgNode);
-				} else {
-					this.stopDrawingNewLink();
-				}
+				this.completeNewLink();
 			})
 			.merge(connectionGuideSel)
 			.each(function(d) {
@@ -3693,12 +3699,7 @@ export default class SVGCanvasRenderer {
 			.attr("linkType", linkType)
 			.on("mouseup", () => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				var trgNode = this.getNodeAtMousePos();
-				if (trgNode !== null) {
-					this.completeNewLink(trgNode);
-				} else {
-					this.stopDrawingNewLink();
-				}
+				this.completeNewLink();
 			})
 			.merge(connectionGuideSel)
 			.attr("cx", (d) => d.x2)
@@ -3716,19 +3717,31 @@ export default class SVGCanvasRenderer {
 				.attr("linkType", linkType)
 				.on("mouseup", () => {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					var trgNode = this.getNodeAtMousePos();
-					if (trgNode !== null) {
-						this.completeNewLink(trgNode);
-					} else {
-						this.stopDrawingNewLink();
-					}
+					this.completeNewLink();
 				})
 				.merge(connectionArrowHeadSel)
 				.attr("d", (d) => this.getArrowHead(d));
 		}
 	}
 
-	completeNewLink(trgNode) {
+	// Handles the completion of a new link being drawn from a source node.
+	completeNewLink() {
+		var trgNode = this.getNodeAtMousePos();
+		if (trgNode !== null) {
+			this.completeNewLinkOnNode(trgNode);
+		} else {
+			if (this.config.enableDetachableLinks &&
+					this.drawingNewLinkData.action === "node-node" &&
+					!this.config.enableAssocLinkCreation) {
+				this.completeNewDetachedLink();
+			} else {
+				this.stopDrawingNewLink();
+			}
+		}
+	}
+
+	// Handles the completion of a new link when the end is dropped on a node.
+	completeNewLinkOnNode(trgNode) {
 		// If we completed a connection remove the new line objects.
 		this.removeNewLink();
 
@@ -3760,6 +3773,31 @@ export default class SVGCanvasRenderer {
 					pipelineId: this.pipelineId });
 			}
 		}
+
+		this.drawingNewLinkData = null;
+	}
+
+	// Handles the completion of a new link when the end is dropped away from
+	// a node (when enableDetachableLinks is set to true) which creates a new
+	// detached link.
+	completeNewDetachedLink() {
+		// If we completed a connection remove the new line objects.
+		this.removeNewLink();
+
+		// Switch 'new link over node' highlighting off
+		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+			this.setNewLinkOverNodeCancel();
+		}
+
+		const endPoint = this.getTransformedMousePos();
+		this.canvasController.editActionHandler({
+			editType: "createDetachedLink",
+			editSource: "canvas",
+			srcNodeId: this.drawingNewLinkData.srcObjId,
+			srcNodePortId: this.drawingNewLinkData.srcPortId,
+			trgPos: endPoint,
+			type: NODE_LINK,
+			pipelineId: this.pipelineId });
 
 		this.drawingNewLinkData = null;
 	}
@@ -5347,8 +5385,12 @@ export default class SVGCanvasRenderer {
 			this.canvasGrp.selectAll(portInArrSelector).attr("connected", "no");
 			lineArray.forEach((line) => {
 				if (line.type === NODE_LINK) {
-					this.setTrgPortStatus(line.trg.id, line.trgPortId, "yes");
-					this.setSrcPortStatus(line.src.id, line.srcPortId, "yes");
+					if (line.trg) {
+						this.setTrgPortStatus(line.trg.id, line.trgPortId, "yes");
+					}
+					if (line.src) {
+						this.setSrcPortStatus(line.src.id, line.srcPortId, "yes");
+					}
 				}
 			});
 		}
@@ -5373,7 +5415,7 @@ export default class SVGCanvasRenderer {
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", "d3-link-group")
+			.attr("class", (d) => "d3-link-group " + this.getLinkClass(d))
 			.on("mousedown", (d) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.config.enableLinkSelection) {
@@ -5564,47 +5606,18 @@ export default class SVGCanvasRenderer {
 		this.activePipeline.links.forEach((link) => {
 			const trgNode = this.getNode(link.trgNodeId);
 			const srcObj = link.type === COMMENT_LINK ? this.getComment(link.srcNodeId) : this.getNode(link.srcNodeId);
+			let lineObj = null;
 
-			if (srcObj === null) {
-				this.logger.error(
-					"Common Canvas error trying to draw a link. A link was specified for source " + link.srcNodeId +
-					" in the Canvas data that does not have a valid source node/comment.");
+			if (this.config.enableDetachableLinks &&
+					(!srcObj || !trgNode)) {
+				lineObj = this.getDetachedLineObj(link, srcObj, trgNode);
+
+			} else {
+				lineObj = this.getAttachedLineObj(link, srcObj, trgNode);
 			}
 
-			if (trgNode === null) {
-				this.logger.error(
-					"Common Canvas error trying to draw a link. A link was specified for target " + link.trgNodeId +
-					" in the Canvas data that does not have a valid target node.");
-			}
-
-			// Only proceed if we have a source and a target node/comment and the
-			// conditions are right for displaying the link.
-			if (srcObj && trgNode && this.shouldDisplayLink(srcObj, trgNode, link.type)) {
-				const srcPortId = this.getSourcePortId(link, srcObj);
-				const trgPortId = this.getTargetPortId(link, trgNode);
-				const assocLinkVariation =
-					link.type === ASSOCIATION_LINK && this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE
-						? this.getAssocLinkVariation(srcObj, trgNode)
-						: null;
-				const coords = this.linkUtils.getLinkCoords(link.type, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation);
-
-				lineArray.push({
-					"id": link.id,
-					"class_name": link.class_name,
-					"style": link.style,
-					"style_temp": link.style_temp,
-					"type": link.type,
-					"decorations": link.decorations,
-					"assocLinkVariation": assocLinkVariation,
-					"src": srcObj,
-					"srcPortId": srcPortId,
-					"trg": trgNode,
-					"trgPortId": trgPortId,
-					"x1": coords.x1,
-					"y1": coords.y1,
-					"x2": coords.x2,
-					"y2": coords.y2
-				});
+			if (lineObj) {
+				lineArray.push(lineObj);
 			}
 		});
 
@@ -5617,6 +5630,134 @@ export default class SVGCanvasRenderer {
 		lineArray = this.linkUtils.addConnectionPaths(lineArray);
 
 		return lineArray;
+	}
+
+	getAttachedLineObj(link, srcObj, trgNode) {
+		if (srcObj === null) {
+			this.logger.error(
+				"Common Canvas error trying to draw a link. A link was specified for source " + link.srcNodeId +
+				" in the Canvas data that does not have a valid source node/comment.");
+		}
+
+		if (trgNode === null) {
+			this.logger.error(
+				"Common Canvas error trying to draw a link. A link was specified for target " + link.trgNodeId +
+				" in the Canvas data that does not have a valid target node.");
+		}
+
+		// Only proceed if we have a source and a target node/comment and the
+		// conditions are right for displaying the link.
+		if (srcObj && trgNode && this.shouldDisplayLink(srcObj, trgNode, link.type)) {
+			const srcPortId = this.getSourcePortId(link, srcObj);
+			const trgPortId = this.getTargetPortId(link, trgNode);
+			const assocLinkVariation =
+				link.type === ASSOCIATION_LINK && this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE
+					? this.getAssocLinkVariation(srcObj, trgNode)
+					: null;
+			const coords = this.linkUtils.getLinkCoords(link.type, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation);
+
+			return {
+				"id": link.id,
+				"class_name": link.class_name,
+				"style": link.style,
+				"style_temp": link.style_temp,
+				"type": link.type,
+				"decorations": link.decorations,
+				"assocLinkVariation": assocLinkVariation,
+				"src": srcObj,
+				"srcPortId": srcPortId,
+				"trg": trgNode,
+				"trgPortId": trgPortId,
+				"x1": coords.x1,
+				"y1": coords.y1,
+				"x2": coords.x2,
+				"y2": coords.y2
+			};
+		}
+		return null;
+	}
+
+	// Returns a line object describing the detached (or semi-detached) link
+	// passed in. This will only ever be called when either srcNode OR trgNode
+	// are null (indicating a semi-detached link) or when both are null indicating
+	// a fully-detached link.
+	getDetachedLineObj(link, srcNode, trgNode) {
+		let srcPortId = null;
+		let trgPortId = null;
+		const coords = {};
+
+		if (srcNode === null) {
+			coords.x1 = link.srcPos.x_pos;
+			coords.y1 = link.srcPos.y_pos;
+
+		} else {
+			if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
+				const endPos = { x: link.trgPos.x_pos, y: link.trgPos.y_pos };
+				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(srcNode, endPos);
+				coords.x1 = startPos.x;
+				coords.y1 = startPos.y;
+
+			} else {
+				srcPortId = this.getSourcePortId(link, srcNode);
+				const port = this.getOutputPort(srcNode, srcPortId);
+				if (port) {
+					coords.x1 = srcNode.x_pos + port.cx;
+					coords.y1 = srcNode.y_pos + port.cy;
+				}
+			}
+		}
+
+		if (trgNode === null) {
+			coords.x2 = link.trgPos.x_pos;
+			coords.y2 = link.trgPos.y_pos;
+
+		} else {
+			if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
+				const endPos = { x: link.srcPos.x_pos, y: link.srcPos.y_pos };
+				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(trgNode, endPos);
+				coords.x2 = startPos.x;
+				coords.y2 = startPos.y;
+
+			} else {
+				trgPortId = this.getTargetPortId(link, trgNode);
+				const port = this.getInputPort(trgNode, trgPortId);
+				if (port) {
+					coords.x2 = trgNode.x_pos + port.cx;
+					coords.y2 = trgNode.y_pos + port.cy;
+				}
+			}
+		}
+
+		return {
+			"id": link.id,
+			"class_name": link.class_name,
+			"style": link.style,
+			"style_temp": link.style_temp,
+			"type": link.type,
+			"decorations": link.decorations,
+			"src": srcNode,
+			"srcPortId": srcPortId,
+			"trg": trgNode,
+			"trgPortId": trgPortId,
+			"x1": coords.x1,
+			"y1": coords.y1,
+			"x2": coords.x2,
+			"y2": coords.y2
+		};
+	}
+
+	getOutputPort(srcNode, srcPortId) {
+		if (srcNode && srcNode.outputs) {
+			return srcNode.outputs.find((p) => p.id === srcPortId);
+		}
+		return null;
+	}
+
+	getInputPort(trgNode, trgPortId) {
+		if (trgNode && trgNode.inputs) {
+			return trgNode.inputs.find((p) => p.id === trgPortId);
+		}
+		return null;
 	}
 
 	// Returns a source port Id if one exists in the link, otherwise defaults
@@ -5706,7 +5847,7 @@ export default class SVGCanvasRenderer {
 	getNodeOutputLines(srcNode, lineArray) {
 		const outArray = [];
 		lineArray.forEach((lineData) => {
-			if (lineData.src.id === srcNode.id) {
+			if (lineData.src && lineData.src.id === srcNode.id) {
 				outArray.push(lineData);
 			}
 		});

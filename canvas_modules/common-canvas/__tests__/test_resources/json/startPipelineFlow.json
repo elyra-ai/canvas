@@ -107,12 +107,12 @@
                 {
                   "id": "59f75162-3961-4aa9-98f3-f9e8dcf5e8d5",
                   "node_id_ref": "id8I6RH2V91XW",
+                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
                   },
-                  "port_id_ref": "outPort",
                   "link_name": "testLink2"
                 }
               ]
@@ -372,12 +372,12 @@
                 {
                   "id": "bcbba6b7-4bda-4d1e-b989-5cfbb9ed6e19",
                   "node_id_ref": "nodeIDSuperNodePE",
+                  "port_id_ref": "output1SuperNodePE",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
                   },
-                  "port_id_ref": "output1SuperNodePE",
                   "link_name": "testLink2"
                 }
               ]

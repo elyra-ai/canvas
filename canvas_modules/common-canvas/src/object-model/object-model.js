@@ -656,6 +656,21 @@ export default class ObjectModel {
 		return pipelineIds;
 	}
 
+	getDescendentPipelines(supernode) {
+		let pipelines = [];
+		const snPipelineId = this.getSupernodePipelineID(supernode);
+		if (snPipelineId) {
+			const subPipeline = this.getCanvasInfoPipeline(snPipelineId);
+			pipelines.push(subPipeline);
+
+			this.getAPIPipeline(snPipelineId).getSupernodes()
+				.forEach((supernode2) => {
+					pipelines = pipelines.concat(this.getDescendentPipelines(supernode2));
+				});
+		}
+		return pipelines;
+	}
+
 	// Returns a list of the given pipelineId ancestors, from "oldest" to "youngest".
 	// This is a list of objects containing the pipeline id and its corresponding supernode label and id.
 	// Includes itself.

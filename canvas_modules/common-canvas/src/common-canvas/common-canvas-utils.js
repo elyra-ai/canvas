@@ -210,4 +210,62 @@ export default class CanvasUtils {
 		return abs * gridSize;
 	}
 
+	// Returns the coordinate position along the edge of a rectangle where a
+	// straight should be drawn from. The line's direction originates from a
+	// point within the rectangle. The rectangle is described by the first four
+	// paramters, the origin of the line's direction is described by
+	// originX and originY which are an offset from the top left corener of
+	// the rectangle and the end point of the line is described by endX and endY.
+	static getOuterCoord(xPos, yPos, width, height, originX, originY, endX, endY) {
+		const topLeft = { x: xPos, y: yPos };
+		const topRight = { x: xPos + width, y: yPos };
+		const botLeft = { x: xPos, y: yPos + height };
+		const botRight = { x: xPos + width, y: yPos + height };
+		const center = { x: originX + xPos, y: originY + yPos };
+
+		var startPointX;
+		var startPointY;
+
+		// End point is to the right of center
+		if (endX > center.x) {
+			const topRightRatio = (center.y - topRight.y) / (center.x - topRight.x);
+			const botRightRatio = (center.y - botRight.y) / (center.x - botRight.x);
+			const ratioRight = (center.y - endY) / (center.x - endX);
+
+			// North
+			if (ratioRight < topRightRatio) {
+				startPointX = center.x - (originY / ratioRight);
+				startPointY = yPos;
+			// South
+			} else if (ratioRight > botRightRatio) {
+				startPointX = center.x + ((height - originY) / ratioRight);
+				startPointY = yPos + height;
+			// East
+			} else {
+				startPointX = xPos + width;
+				startPointY = center.y + (originX * ratioRight);
+			}
+		// End point is to the left of center
+		} else {
+			const topLeftRatio = (center.y - topLeft.y) / (center.x - topLeft.x);
+			const botLeftRatio = (center.y - botLeft.y) / (center.x - botLeft.x);
+			const ratioLeft = (center.y - endY) / (center.x - endX);
+
+			// North
+			if (ratioLeft > topLeftRatio) {
+				startPointX = center.x - (originY / ratioLeft);
+				startPointY = yPos;
+			// South
+			} else if (ratioLeft < botLeftRatio) {
+				startPointX = center.x + ((height - originY) / ratioLeft);
+				startPointY = yPos + height;
+			// West
+			} else {
+				startPointX = xPos;
+				startPointY = center.y - (originX * ratioLeft);
+			}
+		}
+
+		return { x: startPointX, y: startPointY };
+	}
 }

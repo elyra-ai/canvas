@@ -41,7 +41,9 @@ export default (state = [], action) => {
 			Object.assign(newLink, {
 				"srcNodePortId": action.data.srcNodePortId,
 				"trgNodePortId": action.data.trgNodePortId,
-				"linkName": action.data.linkName });
+				"linkName": action.data.linkName,
+				"srcPos": action.data.srcPos,
+				"trgPos": action.data.trgPos });
 		}
 		return [
 			...state,
@@ -59,6 +61,47 @@ export default (state = [], action) => {
 			return action.data.linksToDelete.findIndex((delLnk) => link.id === delLnk.id) === -1;
 		});
 	}
+
+	case "ATTACH_LINKS":
+		return state.map((link) => {
+			const linkInfo = action.data.attachLinksInfo.find((attLinkInfo) => attLinkInfo.link.id === link.id);
+			if (linkInfo) {
+				const newLink = Object.assign({}, link);
+				// If there is savedSrcNodeId in linkInfo we are attaching the source end
+				if (linkInfo.savedSrcNodeId) {
+					newLink.srcNodeId = linkInfo.savedSrcNodeId;
+					delete newLink.srcPos;
+				}
+				// If there is savedTrgNodeId in linkInfo we are attaching the target end
+				if (linkInfo.savedTrgNodeId) {
+					newLink.trgNodeId = linkInfo.savedTrgNodeId;
+					delete newLink.trgPos;
+				}
+				return newLink;
+			}
+			return link;
+		});
+
+
+	case "DETACH_LINKS":
+		return state.map((link) => {
+			const linkInfo = action.data.detachLinksInfo.find((detLinkInfo) => detLinkInfo.link.id === link.id);
+			if (linkInfo) {
+				const newLink = Object.assign({}, link);
+				// If there is savedSrcNodeId in linkInfo we are detaching the source end
+				if (linkInfo.savedSrcNodeId) {
+					delete newLink.srcNodeId;
+					newLink.srcPos = linkInfo.srcPos;
+				}
+				// If there is savedTrgNodeId in linkInfo we are detaching the target end
+				if (linkInfo.savedTrgNodeId) {
+					delete newLink.trgNodeId;
+					newLink.trgPos = linkInfo.trgPos;
+				}
+				return newLink;
+			}
+			return link;
+		});
 
 	case "SET_LINKS_CLASS_NAME":
 		return state.map((link) => {

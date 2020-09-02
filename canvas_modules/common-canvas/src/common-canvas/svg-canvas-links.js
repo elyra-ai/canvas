@@ -16,6 +16,7 @@
 
 /* eslint no-lonely-if: "off" */
 
+import CanvasUtils from "./common-canvas-utils.js";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_LEFT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
@@ -31,41 +32,45 @@ export default class SvgCanvasLinks {
 		this.config = config;
 	}
 
-	// Returns a start point for a new link when a straight line is being dragged
-	// out from a comment or a node.
-	getNewStraightCommentLinkStartPos(srcComment, transPos) {
-		return this.getOuterCoord(
+	// Returns an object containing the x and y coordinates of the start position
+	// of a straight line which extends from the source comment passed in to the
+	// end position which is an x, y cordinate.
+	getNewStraightCommentLinkStartPos(srcComment, endPos) {
+		return CanvasUtils.getOuterCoord(
 			srcComment.x_pos - this.canvasLayout.linkGap,
 			srcComment.y_pos - this.canvasLayout.linkGap,
 			srcComment.width + (this.canvasLayout.linkGap * 2),
 			srcComment.height + (this.canvasLayout.linkGap * 2),
 			(srcComment.width / 2) + this.canvasLayout.linkGap,
 			(srcComment.height / 2) + this.canvasLayout.linkGap,
-			transPos.x,
-			transPos.y);
+			endPos.x,
+			endPos.y);
 	}
 
-	getNewStraightNodeLinkStartPos(srcNode, transPos) {
-		let srcCenterX;
-		let srcCenterY;
+	// Returns an object containing the x and y coordinates of the start position
+	// of a straight line which extends from the node passed in to the
+	// end position which is also an x, y cordinate.
+	getNewStraightNodeLinkStartPos(node, endPos) {
+		let nodeCenterX;
+		let nodeCenterY;
 
-		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			srcCenterX = srcNode.layout.imagePosX + (srcNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
-			srcCenterY = srcNode.layout.imagePosY + (srcNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
+		if (node.layout.drawNodeLinkLineFromTo === "image_center") {
+			nodeCenterX = node.layout.imagePosX + (node.layout.imageWidth / 2) + this.canvasLayout.linkGap;
+			nodeCenterY = node.layout.imagePosY + (node.layout.imageHeight / 2) + this.canvasLayout.linkGap;
 		} else {
-			srcCenterX = (srcNode.width / 2) + this.canvasLayout.linkGap;
-			srcCenterY = (srcNode.height / 2) + this.canvasLayout.linkGap;
+			nodeCenterX = (node.width / 2) + this.canvasLayout.linkGap;
+			nodeCenterY = (node.height / 2) + this.canvasLayout.linkGap;
 		}
 
-		return this.getOuterCoord(
-			srcNode.x_pos - this.canvasLayout.linkGap,
-			srcNode.y_pos - this.canvasLayout.linkGap,
-			srcNode.width + (this.canvasLayout.linkGap * 2),
-			srcNode.height + (this.canvasLayout.linkGap * 2),
-			srcCenterX,
-			srcCenterY,
-			transPos.x,
-			transPos.y);
+		return CanvasUtils.getOuterCoord(
+			node.x_pos - this.canvasLayout.linkGap,
+			node.y_pos - this.canvasLayout.linkGap,
+			node.width + (this.canvasLayout.linkGap * 2),
+			node.height + (this.canvasLayout.linkGap * 2),
+			nodeCenterX,
+			nodeCenterY,
+			endPos.x,
+			endPos.y);
 	}
 
 	// Returns the lineArray passed in with connection path info added to it.
@@ -119,8 +124,10 @@ export default class SvgCanvasLinks {
 			minInitialLine = line.minInitialLineForElbow;
 		} else if (line.src && line.src.layout) {
 			minInitialLine = line.src.layout.minInitialLine;
-		} else {
+		} else if (drawingNewLinkMinInitialLine) {
 			minInitialLine = drawingNewLinkMinInitialLine;
+		} else {
+			minInitialLine = 10;
 		}
 		return minInitialLine;
 	}
@@ -167,7 +174,7 @@ export default class SvgCanvasLinks {
 			trgCenterY = (trgNode.height / 2) + this.canvasLayout.linkGap;
 		}
 
-		const startPos = this.getOuterCoord(
+		const startPos = CanvasUtils.getOuterCoord(
 			srcNode.x_pos - this.canvasLayout.linkGap,
 			srcNode.y_pos - this.canvasLayout.linkGap,
 			srcNode.width + (this.canvasLayout.linkGap * 2),
@@ -177,7 +184,7 @@ export default class SvgCanvasLinks {
 			trgNode.x_pos + (trgNode.width / 2),
 			trgNode.y_pos + (trgNode.height / 2));
 
-		const endPos = this.getOuterCoord(
+		const endPos = CanvasUtils.getOuterCoord(
 			trgNode.x_pos - this.canvasLayout.linkGap,
 			trgNode.y_pos - this.canvasLayout.linkGap,
 			trgNode.width + (this.canvasLayout.linkGap * 2),
@@ -258,7 +265,7 @@ export default class SvgCanvasLinks {
 	}
 
 	getCommentLinkCoords(srcComment, trgNode) {
-		const startPos = this.getOuterCoord(
+		const startPos = CanvasUtils.getOuterCoord(
 			srcComment.x_pos - this.canvasLayout.linkGap,
 			srcComment.y_pos - this.canvasLayout.linkGap,
 			srcComment.width + (this.canvasLayout.linkGap * 2),
@@ -279,7 +286,7 @@ export default class SvgCanvasLinks {
 			centerY = (trgNode.height / 2) + this.canvasLayout.linkGap;
 		}
 
-		const endPos = this.getOuterCoord(
+		const endPos = CanvasUtils.getOuterCoord(
 			trgNode.x_pos - this.canvasLayout.linkGap,
 			trgNode.y_pos - this.canvasLayout.linkGap,
 			trgNode.width + (this.canvasLayout.linkGap * 2),
@@ -291,60 +298,6 @@ export default class SvgCanvasLinks {
 
 		return { x1: startPos.x, y1: startPos.y, x2: endPos.x, y2: endPos.y };
 	}
-
-	getOuterCoord(xPos, yPos, width, height, innerCenterX, innerCenterY, outerCenterX, outerCenterY) {
-		const topLeft = { x: xPos, y: yPos };
-		const topRight = { x: xPos + width, y: yPos };
-		const botLeft = { x: xPos, y: yPos + height };
-		const botRight = { x: xPos + width, y: yPos + height };
-		const center = { x: innerCenterX + xPos, y: innerCenterY + yPos };
-
-		var startPointX;
-		var startPointY;
-
-		// Outer point is to the right of center
-		if (outerCenterX > center.x) {
-			const topRightRatio = (center.y - topRight.y) / (center.x - topRight.x);
-			const botRightRatio = (center.y - botRight.y) / (center.x - botRight.x);
-			const ratioRight = (center.y - outerCenterY) / (center.x - outerCenterX);
-
-			// North
-			if (ratioRight < topRightRatio) {
-				startPointX = center.x - (innerCenterY / ratioRight);
-				startPointY = yPos;
-			// South
-			} else if (ratioRight > botRightRatio) {
-				startPointX = center.x + ((height - innerCenterY) / ratioRight);
-				startPointY = yPos + height;
-			// East
-			} else {
-				startPointX = xPos + width;
-				startPointY = center.y + (innerCenterX * ratioRight);
-			}
-		// Outer point is to the left of center
-		} else {
-			const topLeftRatio = (center.y - topLeft.y) / (center.x - topLeft.x);
-			const botLeftRatio = (center.y - botLeft.y) / (center.x - botLeft.x);
-			const ratioLeft = (center.y - outerCenterY) / (center.x - outerCenterX);
-
-			// North
-			if (ratioLeft > topLeftRatio) {
-				startPointX = center.x - (innerCenterY / ratioLeft);
-				startPointY = yPos;
-			// South
-			} else if (ratioLeft < botLeftRatio) {
-				startPointX = center.x + ((height - innerCenterY) / ratioLeft);
-				startPointY = yPos + height;
-			// West
-			} else {
-				startPointX = xPos;
-				startPointY = center.y - (innerCenterX * ratioLeft);
-			}
-		}
-
-		return { x: startPointX, y: startPointY };
-	}
-
 
 	// Returns the path info, for the object passed in, which describes a
 	// curved connector line. The pathInfo contains:

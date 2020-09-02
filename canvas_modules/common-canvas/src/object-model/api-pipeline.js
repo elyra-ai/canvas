@@ -953,6 +953,18 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "DELETE_LINKS", data: { linksToDelete: linksToDelete }, pipelineId: this.pipelineId });
 	}
 
+	detachLinks(detachLinksInfo) {
+		if (detachLinksInfo && detachLinksInfo.length > 0) {
+			this.store.dispatch({ type: "DETACH_LINKS", data: { detachLinksInfo: detachLinksInfo }, pipelineId: this.pipelineId });
+		}
+	}
+
+	attachLinks(attachLinksInfo) {
+		if (attachLinksInfo && attachLinksInfo.length > 0) {
+			this.store.dispatch({ type: "ATTACH_LINKS", data: { attachLinksInfo: attachLinksInfo }, pipelineId: this.pipelineId });
+		}
+	}
+
 	createNodeLinks(data) {
 		const linkNodeList = [];
 		data.nodes.forEach((srcInfo) => {
@@ -996,6 +1008,22 @@ export default class APIPipeline {
 			trgNodeId: trgNodeId,
 			trgNodePortId: link.trgNodePortId
 		};
+	}
+
+	createNodeLinkDetached(data) {
+		const link = {};
+		link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(data.srcNodeId) });
+		link.type = data.type;
+		link.srcNodeId = data.srcNodeId;
+		link.srcNodePortId = data.srcNodePortId;
+		link.trgPos = { x_pos: data.trgPos.x, y_pos: data.trgPos.y };
+		if (data.class_name) {
+			link.class_name = data.class_name;
+		}
+		if (data.linkName) {
+			link.linkName = data.linkName;
+		}
+		return link;
 	}
 
 	createCommentLinks(data) {
