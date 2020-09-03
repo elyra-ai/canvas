@@ -289,8 +289,8 @@ class EditorForm extends React.Component {
 				// };
 
 				// todo: get the last child in inPropertyId and update that col with indexof(uiItem.control.name)
-				const updatedPropertyId = this.props.controller.updateChildPropertyId(parentPropertyId, { col: indexof(uiItem.control.name) });
-				return this.ControlFactory.createControlItem(uiItem.control, updatedPropertyId);
+				this.props.controller.updateChildPropertyId(parentPropertyId, { col: indexof(uiItem.control.name) });
+				return this.ControlFactory.createControlItem(uiItem.control, parentPropertyId);
 			}
 
 			return this.ControlFactory.createControlItem(uiItem.control, propertyId);

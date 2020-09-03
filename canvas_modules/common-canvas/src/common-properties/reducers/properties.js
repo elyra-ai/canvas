@@ -24,6 +24,7 @@ function properties(state = {}, action) {
 			return state;
 		}
 		var newState = state;
+		// updateNestedPropertyValue(propertyId, newState, action.property.value);
 		if (typeof propertyId.row !== "undefined") {
 			if (typeof newState[propertyId.name] === "undefined") {
 				newState[propertyId.name] = [];
@@ -34,8 +35,9 @@ function properties(state = {}, action) {
 				}
 
 				// todo: make recursive
-				if (typeof propertyId.propertyId !== "undefined" && typeof propertyId.propertyId.row !== "undefined") {
-					newState[propertyId.name][propertyId.row][propertyId.col][propertyId.propertyId.row] = action.property.value;
+				if (typeof propertyId.propertyId !== "undefined") {
+					// newState[propertyId.name][propertyId.row][propertyId.col][propertyId.propertyId.row] = action.property.value;
+					updateNestedPropertyValue(propertyId.propertyId, newState[propertyId.name][propertyId.row][propertyId.col], action.property.value);
 				} else {
 					newState[propertyId.name][propertyId.row][propertyId.col] = action.property.value;
 				}
@@ -59,6 +61,25 @@ function properties(state = {}, action) {
 	}
 	default:
 		return state;
+	}
+}
+
+function updateNestedPropertyValue(propertyId, newState, value) {
+	if (typeof propertyId.row !== "undefined") {
+		if (typeof propertyId.col !== "undefined") {
+			if (typeof newState[propertyId.row] === "undefined") {
+				newState[propertyId.row] = [];
+			}
+
+			// todo: make recursive
+			if (typeof propertyId.propertyId !== "undefined") {
+				updateNestedPropertyValue(propertyId.propertyId, newState[propertyId.row][propertyId.col], value);
+			} else {
+				newState[propertyId.row][propertyId.col] = value;
+			}
+		} else {
+			newState[propertyId.row] = value;
+		}
 	}
 }
 
