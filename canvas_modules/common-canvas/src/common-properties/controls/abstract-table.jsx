@@ -294,11 +294,18 @@ export default class AbstractTable extends React.Component {
 	}
 
 	_makeCell(columnDef, controlValue, propertyName, rowIndex, colIndex, tableState, selectSummaryRow) {
-		const propertyId = {
+		const childPropertyId = {
 			name: propertyName,
 			row: rowIndex,
 			col: colIndex
 		};
+
+		const parentPropertyId = cloneDeep(this.props.propertyId);
+		let propertyId = childPropertyId;
+		if (parentPropertyId.name !== childPropertyId.name) {
+			propertyId = this.props.controller.setChildPropertyId(parentPropertyId, childPropertyId);
+		}
+
 		const tableInfo = { table: true, allowColumnControls: this.allowColumnControls };
 		const cellClassName = "";
 		const ControlFactory = this.props.controller.getControlFactory();
@@ -686,7 +693,15 @@ export default class AbstractTable extends React.Component {
 	buildChildItem(propName, rowIndex, tableState) {
 		// Assumes the child item is an "ADDITIONAL_LINK" object.
 		// However, we will extract information from the and will create our own Cell-based invoker.
-		const propertyId = { name: propName, row: rowIndex };
+		const childPropertyId = { name: propName, row: rowIndex };
+		// need to find propName in this.props.propertyId and add row before passing into buildUIItem
+		const parentPropertyId = cloneDeep(this.props.propertyId);
+		// const propertyId = this.props.controller.updatePropertyId(parentPropertyId, childPropertyId);
+		let propertyId = childPropertyId;
+		if (parentPropertyId.name !== childPropertyId.name) {
+			propertyId = this.props.controller.setChildPropertyId(parentPropertyId, childPropertyId);
+		}
+
 		const subItemButton = this.props.buildUIItem(rowIndex, this.props.control.childItem, propertyId, this.indexOfColumn);
 		const settingsIcon = <Icon type={CARBON_ICONS.SETTINGS} />;
 		// Hack to decompose the button into our own in-table link

@@ -262,6 +262,7 @@ export default class PropertiesController {
 		return propertyId;
 	}
 
+	// todo: rewrite
 	createNestedPropertyId(parentPropertyId, childPropertyId) {
 		if (typeof parentPropertyId.propertyID === "undefined") {
 			const propertyId = Object.assign({}, parentPropertyId);
@@ -269,6 +270,44 @@ export default class PropertiesController {
 			return propertyId;
 		}
 		return childPropertyId; // todo: fix
+	}
+
+	// Find the childPropertyId in propertyId and update that row and col
+	updatePropertyId(propertyId, childPropertyId) {
+		if (propertyId.name === childPropertyId.name) {
+			if (typeof childPropertyId.row !== "undefined") {
+				propertyId.row = childPropertyId.row;
+			}
+			if (typeof childPropertyId.col !== "undefined") {
+				propertyId.col = childPropertyId.col;
+			}
+		} else if (typeof propertyId.propertyId !== "undefined") {
+			return this.updatePropertyId(propertyId.propertyId, childPropertyId);
+		}
+		return propertyId;
+	}
+
+	// Find the last child in propertyId and update the values
+	updateChildPropertyId(propertyId, childProperties) {
+		if (typeof propertyId.propertyId !== "undefined") {
+			return this.updateChildPropertyId(propertyId.propertyId, childProperties);
+		}
+		if (typeof childProperties.row !== "undefined") {
+			propertyId.row = childProperties.row;
+		}
+		if (typeof childProperties.col !== "undefined") {
+			propertyId.col = childProperties.col;
+		}
+		return propertyId;
+	}
+
+	// Set the child propertyId
+	setChildPropertyId(propertyId, childPropertyId) {
+		if (typeof propertyId.propertyId !== "undefined") {
+			return this.setChildPropertyId(propertyId.propertyId, childPropertyId);
+		}
+		propertyId.propertyId = childPropertyId;
+		return propertyId;
 	}
 
 	// This function will traverse the form and build a tree representation of panels.
