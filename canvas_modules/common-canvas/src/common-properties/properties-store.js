@@ -66,6 +66,10 @@ export default class PropertiesStore {
 	getPropertyValue(propertyId) {
 		const state = this.store.getState();
 		const propValue = state.propertiesReducer[propertyId.name];
+		return this.getNestedPropertyValue(propertyId, propValue);
+	}
+
+	getNestedPropertyValue(propertyId, propValue) {
 		if (typeof propertyId.row !== "undefined" && (typeof propValue !== "undefined" && propValue !== null)) {
 			const rowValue = propValue[propertyId.row];
 			if (typeof propertyId.col !== "undefined" && (typeof rowValue !== "undefined" && rowValue !== null) && Array.isArray(rowValue)) {
@@ -73,9 +77,8 @@ export default class PropertiesStore {
 					return rowValue[propertyId.col][propertyId.index];
 				}
 
-				// todo: make recursive
-				if (typeof propertyId.propertyId !== "undefined" && typeof propertyId.propertyId.row !== "undefined") {
-					return rowValue[propertyId.col][propertyId.propertyId.row];
+				if (typeof propertyId.propertyId !== "undefined") {
+					return this.getNestedPropertyValue(propertyId.propertyId, rowValue[propertyId.col]);
 				}
 				return rowValue[propertyId.col];
 			}
