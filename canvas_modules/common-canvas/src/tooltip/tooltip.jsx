@@ -156,9 +156,7 @@ class ToolTip extends React.Component {
 				tooltip.style.top = this.getStyleValue(triggerLayout.bottom + pointerLayout.height);
 			} else if (tooltipDirection === "left" || tooltipDirection === "right") {
 				let tooltipTop = triggerLayout.top;
-				if ((viewPortHeight - tooltip.offsetHeight) < triggerLayout.top) {
-					tooltipTop = viewPortHeight - tooltip.offsetHeight; // hitting bottom border
-				} else if (tooltip.offsetHeight > triggerLayout.height) {
+				if (tooltip.offsetHeight > triggerLayout.height) {
 					tooltipTop -= (tooltip.offsetHeight - triggerLayout.height) / 2; // distribute overlap evenly top and bottom
 					if (tooltipTop < 0) {
 						tooltipTop = triggerLayout.top; // hitting top border
@@ -167,6 +165,9 @@ class ToolTip extends React.Component {
 					tooltipTop += (triggerLayout.height - tooltip.offsetHeight) / 2; // center tip within triggerLayout
 				}
 				tooltip.style.top = this.getStyleValue(tooltipTop + pointerCorrection);
+				if ((viewPortHeight - tooltip.offsetHeight) < triggerLayout.top) {
+					tooltip.style.top = this.getStyleValue(viewPortHeight - tooltip.offsetHeight); // hitting bottom border
+				}
 			}
 
 			// pointer - left correction
