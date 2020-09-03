@@ -24,7 +24,6 @@ function properties(state = {}, action) {
 			return state;
 		}
 		var newState = state;
-		// updateNestedPropertyValue(propertyId, newState, action.property.value);
 		if (typeof propertyId.row !== "undefined") {
 			if (typeof newState[propertyId.name] === "undefined") {
 				newState[propertyId.name] = [];
@@ -34,9 +33,7 @@ function properties(state = {}, action) {
 					newState[propertyId.name][propertyId.row] = [];
 				}
 
-				// todo: make recursive
 				if (typeof propertyId.propertyId !== "undefined") {
-					// newState[propertyId.name][propertyId.row][propertyId.col][propertyId.propertyId.row] = action.property.value;
 					updateNestedPropertyValue(propertyId.propertyId, newState[propertyId.name][propertyId.row][propertyId.col], action.property.value);
 				} else {
 					newState[propertyId.name][propertyId.row][propertyId.col] = action.property.value;

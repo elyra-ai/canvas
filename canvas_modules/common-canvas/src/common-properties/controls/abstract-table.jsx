@@ -694,10 +694,10 @@ export default class AbstractTable extends React.Component {
 		// Assumes the child item is an "ADDITIONAL_LINK" object.
 		// However, we will extract information from the and will create our own Cell-based invoker.
 		const childPropertyId = { name: propName, row: rowIndex };
-		// need to find propName in this.props.propertyId and add row before passing into buildUIItem
 		const parentPropertyId = cloneDeep(this.props.propertyId);
-		// const propertyId = this.props.controller.updatePropertyId(parentPropertyId, childPropertyId);
+
 		let propertyId = childPropertyId;
+		// If childPropertyId name does not match the parent, then this is a subControl
 		if (parentPropertyId.name !== childPropertyId.name) {
 			propertyId = this.props.controller.setChildPropertyId(parentPropertyId, childPropertyId);
 		}

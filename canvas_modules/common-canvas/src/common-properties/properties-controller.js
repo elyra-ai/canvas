@@ -272,21 +272,6 @@ export default class PropertiesController {
 		return childPropertyId; // todo: fix
 	}
 
-	// Find the childPropertyId in propertyId and update that row and col
-	updatePropertyId(propertyId, childPropertyId) {
-		if (propertyId.name === childPropertyId.name) {
-			if (typeof childPropertyId.row !== "undefined") {
-				propertyId.row = childPropertyId.row;
-			}
-			if (typeof childPropertyId.col !== "undefined") {
-				propertyId.col = childPropertyId.col;
-			}
-		} else if (typeof propertyId.propertyId !== "undefined") {
-			return this.updatePropertyId(propertyId.propertyId, childPropertyId);
-		}
-		return propertyId;
-	}
-
 	// Find the last child in propertyId and update the values
 	updateChildPropertyId(propertyId, childProperties) {
 		if (typeof propertyId.propertyId !== "undefined") {
