@@ -208,24 +208,25 @@
                   {
                     "itemType": "control",
                     "control": {
-                      "labelVisible": true,
                       "name": "keys",
                       "label": {
                         "text": "Sort by"
                       },
+                      "labelVisible": true,
                       "controlType": "structuretable",
                       "valueDef": {
                         "propType": "structure",
                         "isList": true,
-                        "isMap": false
+                        "isMap": false,
+                        "defaultValue": []
                       },
                       "subControls": [
                         {
-                          "labelVisible": true,
                           "name": "field",
                           "label": {
                             "text": "Field"
                           },
+                          "labelVisible": true,
                           "controlType": "selectcolumn",
                           "valueDef": {
                             "propType": "string",
@@ -238,11 +239,11 @@
                           "width": 28
                         },
                         {
-                          "labelVisible": true,
                           "name": "sort_order",
                           "label": {
                             "text": "Order"
                           },
+                          "labelVisible": true,
                           "controlType": "toggletext",
                           "valueDef": {
                             "propType": "string",
