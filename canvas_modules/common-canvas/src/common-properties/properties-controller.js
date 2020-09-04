@@ -262,16 +262,6 @@ export default class PropertiesController {
 		return propertyId;
 	}
 
-	// todo: rewrite
-	createNestedPropertyId(parentPropertyId, childPropertyId) {
-		if (typeof parentPropertyId.propertyID === "undefined") {
-			const propertyId = Object.assign({}, parentPropertyId);
-			propertyId.propertyId = childPropertyId;
-			return propertyId;
-		}
-		return childPropertyId; // todo: fix
-	}
-
 	// Find the last child in propertyId and update the values
 	updateChildPropertyId(propertyId, childProperties) {
 		if (typeof propertyId.propertyId !== "undefined") {
@@ -286,7 +276,7 @@ export default class PropertiesController {
 		return propertyId;
 	}
 
-	// Set the child propertyId
+	// Set the childPropertyId as the last child of propertyId
 	setChildPropertyId(propertyId, childPropertyId) {
 		if (typeof propertyId.propertyId !== "undefined") {
 			return this.setChildPropertyId(propertyId.propertyId, childPropertyId);

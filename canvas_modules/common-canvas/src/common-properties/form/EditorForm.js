@@ -652,8 +652,6 @@ function _makeSubControl(parameter, l10nProvider, structureMetadata) {
 		break;
 	case Type.STRUCTURE : {
 		const structureDef = structureMetadata.getStructure(parameter.baseType());
-		// return _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata, structureMetadata);
-
 		if (structureDef) {
 			if (structureDef.hasSubPanel()) {
 				childItem = _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata);
