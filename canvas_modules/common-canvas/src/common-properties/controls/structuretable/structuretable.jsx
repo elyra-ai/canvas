@@ -116,14 +116,7 @@ class StructureTableControl extends AbstractTable {
 				}
 				const defaultRowValue = this.props.control.defaultRow[defaultRowIndex];
 				if (this.props.control.subControls[defaultRowIndex].valueDef.propType === Type.STRUCTURE) {
-					const rowList = [];
-					// if the defaultRow value is a parameterRef, get the property value
-					if (defaultRowValue && defaultRowValue.parameterRef) {
-						rowList.push(this.props.controller.getPropertyValue({ name: defaultRowValue.parameterRef }));
-					} else {
-						rowList.push(defaultRowValue);
-					}
-					row.push(rowList);
+					row.push([]); // nested structure will default to an empty array
 				} else if (defaultRowValue && defaultRowValue.parameterRef) {
 					row.push(this.props.controller.getPropertyValue({ name: defaultRowValue.parameterRef }));
 				} else {
