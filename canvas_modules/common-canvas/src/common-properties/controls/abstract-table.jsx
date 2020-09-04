@@ -293,6 +293,7 @@ export default class AbstractTable extends React.Component {
 		this.setCurrentControlValueSelected(rows);
 	}
 
+	// selectSummaryRow is true if creating the makeSelectedEditRow header row
 	_makeCell(columnDef, controlValue, propertyName, rowIndex, colIndex, tableState, selectSummaryRow) {
 		const childPropertyId = {
 			name: propertyName,
@@ -302,7 +303,8 @@ export default class AbstractTable extends React.Component {
 
 		const parentPropertyId = cloneDeep(this.props.propertyId);
 		let propertyId = childPropertyId;
-		if (parentPropertyId.name !== childPropertyId.name) {
+		// Do not use parentPropertyId if creating the makeSelectedEditRow
+		if (!selectSummaryRow && parentPropertyId.name !== childPropertyId.name) {
 			propertyId = this.props.controller.setChildPropertyId(parentPropertyId, childPropertyId);
 		}
 
