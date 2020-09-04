@@ -21,7 +21,7 @@ import { connect } from "react-redux";
 import AbstractTable from "./../abstract-table.jsx";
 import MoveableTableRows from "./../../components/moveable-table-rows";
 import * as PropertyUtils from "./../../util/property-utils";
-import { ParamRole } from "./../../constants/form-constants";
+import { Type, ParamRole } from "./../../constants/form-constants";
 import { STATES } from "./../../constants/constants";
 
 import ValidationMessage from "./../../components/validation-message";
@@ -115,7 +115,7 @@ class StructureTableControl extends AbstractTable {
 					defaultRowIndex -= 1;
 				}
 				const defaultRowValue = this.props.control.defaultRow[defaultRowIndex];
-				if (this.props.control.subControls[defaultRowIndex].valueDef.isList) {
+				if (this.props.control.subControls[defaultRowIndex].valueDef.propType === Type.STRUCTURE) {
 					const rowList = [];
 					// if the defaultRow value is a parameterRef, get the property value
 					if (defaultRowValue && defaultRowValue.parameterRef) {
