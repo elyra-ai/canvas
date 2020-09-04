@@ -47,6 +47,8 @@ export class ParameterDef {
 			} else {
 				this.defaultValue = settings.defaultValue;
 			}
+		} else if (typeof settings.defaultValue === "undefined" && (this.isList() || this.isMapValue())) {
+			this.defaultValue = []; // This is a nested structure
 		}
 		if (typeof settings.labelVisible === "boolean") {
 			this.labelVisible = settings.labelVisible;
