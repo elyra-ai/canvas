@@ -101,15 +101,18 @@ class ControlDef {
 		if (settings.action) {
 			this.action = settings.action;
 		}
+		if (settings.structureType) {
+			this.structureType = settings.structureType;
+		}
+		if (settings.subControls) {
+			this.subControls = settings.subControls;
+		}
 	}
 }
 
 export class Control extends ControlDef {
 	constructor(settings) {
 		super(settings);
-		if (settings.subControls) {
-			this.subControls = settings.subControls;
-		}
 		if (typeof settings.keyIndex === "number") {
 			this.keyIndex = settings.keyIndex;
 		}
@@ -139,9 +142,6 @@ export class Control extends ControlDef {
 		}
 		if (typeof settings.includeAllFields === "boolean") {
 			this.includeAllFields = settings.includeAllFields;
-		}
-		if (settings.structureType) {
-			this.structureType = settings.structureType;
 		}
 		if (settings.layout) {
 			this.layout = settings.layout;

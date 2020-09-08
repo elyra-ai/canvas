@@ -201,8 +201,12 @@ function convertObjectStructureToArray(isList, subControls, currentValues) {
 		currentValues.forEach((row) => {
 			if (typeof row === "object") {
 				const convertedRow = [];
-				structureKeys.forEach((key) => {
-					const value = typeof row[key] !== "undefined" ? row[key] : null;
+				structureKeys.forEach((key, index) => {
+					let value = typeof row[key] !== "undefined" ? row[key] : null;
+					// subControls that are type 'object' will need to be converted
+					if (subControls[index].structureType && subControls[index].structureType === "object") {
+						value = convertObjectStructureToArray(subControls[index].valueDef.isList, subControls[index].subControls, row[key]);
+					}
 					convertedRow.push(value);
 				});
 				convertedValues.push(convertedRow);
@@ -237,7 +241,12 @@ function convertArrayStructureToObject(isList, subControls, currentValues) {
 		currentValues.forEach((valueList) => {
 			const newObject = {};
 			structureKeys.forEach((key, index) => {
-				newObject[key] = typeof valueList[index] !== "undefined" ? valueList[index] : null;
+				// subControls that are type 'object' will need to be converted
+				if (subControls[index].structureType && subControls[index].structureType === "object") {
+					newObject[key] = convertArrayStructureToObject(subControls[index].valueDef.isList, subControls[index].subControls, valueList[index]);
+				} else {
+					newObject[key] = typeof valueList[index] !== "undefined" ? valueList[index] : null;
+				}
 			});
 			convertedValues.push(newObject);
 		});
