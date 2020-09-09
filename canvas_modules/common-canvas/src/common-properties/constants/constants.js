@@ -51,6 +51,7 @@ _defineConstant("MESSAGE_KEYS", {
 	PROPERTIES_CLOSE_MESSAGE: "properties.close.message",
 	PROPERTIES_SUPPORT_MESSAGE: "properties.support.message",
 	PROPERTIES_UNEXPECTED_MESSAGE: "properties.unexpected.message",
+	TABLE_SEARCH_HEADER: "table.search.header",
 	TABLE_SEARCH_PLACEHOLDER: "table.search.placeholder",
 	LONG_TABLE_SUMMARY_PLACEHOLDER: "summary.longTable.placeholder",
 	ALERTS_TAB_TITLE: "alerts.tab.title",

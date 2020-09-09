@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Tab, Tabs, Dropdown } from "carbon-components-react";
+import { Switch, ContentSwitcher, Dropdown } from "carbon-components-react";
 import FlexibleTable from "./../../../components/flexible-table/flexible-table";
 import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
 import { formatMessage } from "./../../../util/property-utils";
@@ -54,7 +54,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			valuesTableSortSpec: null,
 			functionTableSortSpec: null,
 			functionCategory: this.inCategories[0], // set the initial function category to the first one in the list.
-			selectedTab: 0,
+			selectedIndex: 0,
 			fieldCategory: "fields",
 			currentFieldDataset: this.fields.field_table_info[0].field_value_groups
 		};
@@ -76,9 +76,9 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		this.sortTableRows = this.sortTableRows.bind(this);
 	}
 
-	onTabClick(tabidx, evt) {
+	onSwitch(switchName, evt) {
 		this.setState({
-			selectedTab: tabidx
+			selectedIndex: switchName.index
 		});
 	}
 
@@ -495,8 +495,13 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		const last = items.slice(1);
 		items = first.concat({ value: this.recentUseCat, label: this.recentUseCat }, last);
 		const label = (this.state.functionCategory === this.recentUseCat) ? this.recentUseCat : this.props.functionList[this.state.functionCategory].locLabel;
+		const header = formatMessage(this.reactIntl,
+			MESSAGE_KEYS.TABLE_SEARCH_HEADER);
 		return (
 			<div className="properties-expression-function-select">
+				<div className="properties-expression-table-dropdown-header">
+					{header}
+				</div>
 				<Dropdown
 					id={"properties-expression-function-select-dropdown-" + uuid4()}
 					light
@@ -516,8 +521,13 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		const last = items.slice(1);
 		const newItems = first.concat({ value: this.recentUseCat, label: this.recentUseCat }, last);
 		const label = (this.state.fieldCategory === this.recentUseCat) ? this.recentUseCat : items[0].label;
+		const header = formatMessage(this.reactIntl,
+			MESSAGE_KEYS.TABLE_SEARCH_HEADER);
 		return (
 			<div className="properties-expression-field-select">
+				<div className="properties-expression-table-dropdown-header">
+					{header}
+				</div>
 				<Dropdown
 					id={"properties-expression-field-select-dropdown-" + uuid4()}
 					light
@@ -602,44 +612,40 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	}
 
 	render() {
-		const tabContent = [];
 		const fieldAndValueTable = this._makeFieldAndValuesContent();
 		const functionsTable = this._makeFunctionsContent();
 		const fieldsTab = formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_FIELD_TAB);
 		const functionsTab = formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_FUNCTIONS_TAB);
+		let content = null;
 
-		tabContent.push(
-			<Tab
-				key={0}
-				id={"expresson-builder-fields-tab"}
-				tabIndex={0}
-				label={fieldsTab}
-				onClick={this.onTabClick.bind(this, 0)}
-			>
-				{fieldAndValueTable}
-			</Tab>
-		);
-
-		tabContent.push(
-			<Tab
-				key={1}
-				id={"expresson-builder-function-tab"}
-				tabIndex={1}
-				label={functionsTab}
-				onClick={this.onTabClick.bind(this, 1)}
-			>
-				{functionsTable}
-			</Tab>
-		);
+		if (this.state.selectedIndex === 0) {
+			content = fieldAndValueTable;
+		} else if (this.state.selectedIndex === 1) {
+			content = functionsTable;
+		}
 
 
 		return (
 			<div className="properties-expression-selection-fieldOrFunction" >
-				<Tabs key={"tab.1"} className="properties-primaryTabs" selected={this.state.selectedTab}>
-					{tabContent}
-				</Tabs>
+				<div className="properties-expression-selection-content-switcher" >
+					<ContentSwitcher onChange={this.onSwitch.bind(this)} selectedIndex={this.state.selectedIndex}>
+						<Switch
+							key={0}
+							name={"expresson-builder-fields-tab"}
+							id={"expresson-builder-fields-tab"}
+							text={fieldsTab}
+						/>
+						<Switch
+							key={1}
+							name={"expresson-builder-function-tab"}
+							id={"expresson-builder-function-tab"}
+							text={functionsTab}
+						/>
+					</ContentSwitcher>
+				</div>
+				{content}
 			</div>
 		);
 	}

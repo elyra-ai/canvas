@@ -308,14 +308,26 @@ class ExpressionControl extends React.Component {
 		</WideFlyout>) : null;
 
 		const className = "properties-expression-editor " + messageType;
+
+		const expressionLink = (<div className="properties-expression-link-container" >
+			{button}
+			{validateLink}
+		</div>);
+
+		let header = expressionLink;
+
+		if (this.props.expressionLabel) {
+			header = (<div className="properties-expression-header">
+				<div className="properties-expression-title">{this.props.expressionLabel}</div>
+				{expressionLink}
+			</div>);
+		}
+
 		return (
 			<div className="properties-expression-editor-wrapper" >
 				{flyout}
 				<div className="properties-editor-container">
-					<div className="properties-expression-link-container" >
-						{button}
-						{validateLink}
-					</div>
+					{header}
 					<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
 						className={className}
 					>
@@ -348,6 +360,7 @@ ExpressionControl.propTypes = {
 	selectionRange: PropTypes.array,
 	onSelectionChange: PropTypes.func,
 	onBlur: PropTypes.func,
+	expressionLabel: PropTypes.object,
 	height: PropTypes.number, // height in px
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.string, // pass in by redux

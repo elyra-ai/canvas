@@ -54,6 +54,7 @@
 .properties-expression-link-container {
 	display: flex;
 	justify-content: space-between;
+
 	.properties-expression-validate {
 		display: flex;
 		flex-direction: row-reverse;
@@ -68,6 +69,22 @@
 			min-height: 34px;
 			padding: 4px;
 		}
+	}
+}
+
+.properties-expression-header {
+	position: relative;
+	height: 34px;
+	.properties-expression-title {
+		@include carbon--type-style("productive-heading-01");
+		position: absolute;
+		bottom: 0;
+		left: 0;
+	}
+	.properties-expression-link-container {
+		position: absolute;
+		bottom: 0;
+		right: 0;
 	}
 }
 
