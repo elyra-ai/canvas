@@ -157,6 +157,29 @@ class PropertiesMain extends React.Component {
 		this.initialValueInfo.additionalInfo.title = this.propertiesController.getTitle();
 	}
 
+	getApplyButtonLabel() {
+		if (this.props.propertiesConfig.buttonLabels) {
+			if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout && this.props.propertiesConfig.buttonLabels.rejectLabel) {
+				return this.props.propertiesConfig.buttonLabels.rejectLabel;
+			}
+			if (this.props.propertiesConfig.buttonLabels.applyLabel) {
+				return this.props.propertiesConfig.buttonLabels.applyLabel;
+			}
+		}
+		// Update apply button text to `Close` when applyOnBlur
+		if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout) {
+			return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
+		}
+		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
+	}
+
+	getRejectButtonLabel() {
+		if (this.props.propertiesConfig.buttonLabels && this.props.propertiesConfig.buttonLabels.rejectLabel) {
+			return this.props.propertiesConfig.buttonLabels.rejectLabel;
+		}
+		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
+	}
+
 	_getOverrideSize() {
 		const pixelWidth = this.propertiesController.getForm().pixelWidth;
 		const editorSizeInForm = this.propertiesController.getForm().editorSize;
@@ -355,29 +378,6 @@ class PropertiesMain extends React.Component {
 				});
 			}
 		}
-	}
-
-	getApplyButtonLabel() {
-		if (this.props.propertiesConfig.buttonLabels) {
-			if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout && this.props.propertiesConfig.buttonLabels.rejectLabel) {
-				return this.props.propertiesConfig.buttonLabels.rejectLabel;
-			}
-			if (this.props.propertiesConfig.buttonLabels.applyLabel) {
-				return this.props.propertiesConfig.buttonLabels.applyLabel;
-			}
-		}
-		// Update apply button text to `Close` when applyOnBlur
-		if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout) {
-			return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
-		}
-		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
-	}
-
-	getRejectButtonLabel() {
-		if (this.props.propertiesConfig.buttonLabels && this.props.propertiesConfig.buttonLabels.rejectLabel) {
-			return this.props.propertiesConfig.buttonLabels.rejectLabel;
-		}
-		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
 	}
 
 	render() {
