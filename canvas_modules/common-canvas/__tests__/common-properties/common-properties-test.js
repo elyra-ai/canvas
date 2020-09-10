@@ -515,6 +515,29 @@ describe("applyPropertiesEditing through an instance outside Common Properties",
 	});
 });
 
+describe("closePropertiesDialog through an instance outside Common Properties", () => {
+	it("closePropertiesDialog should be called with true if through applyPropertiesEditing", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { applyOnBlur: false });
+		const commonProperties = renderedObject.wrapper.find("CommonProperties");
+		commonProperties.find("button[data-id='properties-apply-button']")
+			.at(0)
+			.simulate("click");
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 1);
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
+		expect(renderedObject.callbacks.closePropertiesDialog.calledWith(true)).to.be.true;
+	});
+	it("closePropertiesDialog should be called with false if not through applyPropertiesEditing", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { applyOnBlur: false });
+		const commonProperties = renderedObject.wrapper.find("CommonProperties");
+		commonProperties.find("button[data-id='properties-cancel-button']")
+			.at(0)
+			.simulate("click");
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 1);
+		expect(renderedObject.callbacks.closePropertiesDialog.calledWith(false)).to.be.true;
+	});
+});
+
 describe("New error messages of a control should be detected and applyPropertyChanges() should be called onBlur and on close", () => {
 	it("An error message in expression control should trigger a applyPropertyChanges callback when editor is closed", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(expressionTestResource); // default is applyOnBlur=true

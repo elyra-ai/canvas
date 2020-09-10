@@ -1302,13 +1302,13 @@ class App extends React.Component {
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
 	}
 
-	closePropertiesEditorDialog() {
+	closePropertiesEditorDialog(calledFromApplyProperties) {
 		this.currentEditorId = null;
 		this.canvasController.setSelections([]); // clear selection
 		this.setState({ showPropertiesDialog: false, propertiesInfo: {} });
 	}
 
-	closePropertiesEditorDialog2() {
+	closePropertiesEditorDialog2(calledFromApplyProperties) {
 		this.currentEditorId2 = null;
 		this.canvasController2.setSelections([]); // clear selection
 		this.setState({ showPropertiesDialog2: false, propertiesInfo2: {} });

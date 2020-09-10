@@ -283,9 +283,11 @@ class PropertiesMain extends React.Component {
 		return uiOnlyKeys;
 	}
 
-	cancelHandler() {
+	// calledFromApplyPropertiesEditing is true if called from applyPropertiesEditing()
+	cancelHandler(calledFromApplyPropertiesEditing) {
+		const calledFromApplyProperties = calledFromApplyPropertiesEditing === true;
 		if (this.props.callbacks.closePropertiesDialog) {
-			this.props.callbacks.closePropertiesDialog();
+			this.props.callbacks.closePropertiesDialog(calledFromApplyProperties);
 		}
 	}
 
@@ -324,7 +326,7 @@ class PropertiesMain extends React.Component {
 			this.previousErrorMessages = this.propertiesController.getErrorMessages();
 		}
 		if (closeProperties) {
-			this.cancelHandler(); // close property editor
+			this.cancelHandler(true); // close property editor
 		}
 	}
 
