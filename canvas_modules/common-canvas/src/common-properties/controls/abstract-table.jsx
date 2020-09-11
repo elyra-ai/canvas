@@ -134,11 +134,13 @@ export default class AbstractTable extends React.Component {
 
 	getDefaultRow() {
 		const row = [];
-		for (const colValue of this.props.control.defaultRow) {
-			if (typeof colValue !== "undefined" && colValue !== null && colValue.parameterRef) {
-				row.push(this.props.controller.getPropertyValue({ name: colValue.parameterRef }));
-			} else {
-				row.push(colValue);
+		if (this.props.control.defaultRow) {
+			for (const colValue of this.props.control.defaultRow) {
+				if (typeof colValue !== "undefined" && colValue !== null && colValue.parameterRef) {
+					row.push(this.props.controller.getPropertyValue({ name: colValue.parameterRef }));
+				} else {
+					row.push(colValue);
+				}
 			}
 		}
 		return row;

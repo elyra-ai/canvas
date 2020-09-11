@@ -107,6 +107,9 @@ class ControlDef {
 		if (settings.subControls) {
 			this.subControls = settings.subControls;
 		}
+		if (settings.childItem) {
+			this.childItem = settings.childItem;
+		}
 	}
 }
 
@@ -118,9 +121,6 @@ export class Control extends ControlDef {
 		}
 		if (settings.defaultRow) {
 			this.defaultRow = settings.defaultRow;
-		}
-		if (settings.childItem) {
-			this.childItem = settings.childItem;
 		}
 		if (typeof settings.moveableRows === "boolean") {
 			this.moveableRows = settings.moveableRows;
