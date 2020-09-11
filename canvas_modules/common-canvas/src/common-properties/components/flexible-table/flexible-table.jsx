@@ -239,7 +239,7 @@ export default class FlexibleTable extends React.Component {
 				container = rootElement.getElementsByClassName("bx--modal-content");
 			}
 			if (container.length > 0) {
-				const parentElement = container[container.length - 1];
+				const parentElement = container[container.length - 1]; // Adjust height to the latest wide flyout opened
 				const tableElements =	parentElement.getElementsByClassName("properties-ft-container-wrapper");
 				const tableElement = tableElements.length > 0 ? tableElements[tableElements.length - 1] : null;
 				if (tableElement) {
