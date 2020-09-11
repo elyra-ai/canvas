@@ -14,6 +14,21 @@
       30,
       null
     ],
+    "complexListStructurelisteditor": [
+      [
+        1,
+        "Ascending",
+        []
+      ]
+    ],
+    "complexListStructuretable": [
+      [
+        "Cholesterol",
+        1,
+        "Ascending",
+        []
+      ]
+    ],
     "list_string_error": [
       "not empty"
     ],
@@ -34,6 +49,15 @@
     {
       "id": "list_integer",
       "type": "array[integer]"
+    },
+    {
+      "id": "complexListStructurelisteditor",
+      "type": "array[complexListStructurelisteditors]"
+    },
+    {
+      "id": "complexListStructuretable",
+      "type": "array[complexListStructuretables]",
+      "role": "column"
     },
     {
       "id": "list_string_error",
@@ -65,7 +89,58 @@
       "type": "array[string]"
     }
   ],
-  "complex_types": [],
+  "complex_types": [
+    {
+      "id": "complexListStructurelisteditors",
+      "parameters": [
+        {
+          "id": "complexListStructurelisteditor_readonly_int",
+          "type": "integer",
+          "default": "1"
+        },
+        {
+          "id": "complexListStructurelisteditor_sort_order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        },
+        {
+          "id": "complexListStructurelisteditor_list",
+          "type": "array[string]"
+        }
+      ]
+    },
+    {
+      "id": "complexListStructuretables",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "complexListStructuretable_readonly_int",
+          "type": "integer",
+          "default": "5"
+        },
+        {
+          "id": "complexListStructuretable_sort_order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        },
+        {
+          "id": "complexListStructuretable_list",
+          "type": "array[string]"
+        }
+      ]
+    }
+  ],
   "uihints": {
     "id": "list",
     "icon": "images/default.svg",
@@ -94,6 +169,28 @@
         },
         "control": "list",
         "rows": 6
+      },
+      {
+        "parameter_ref": "complexListStructurelisteditor",
+        "required": true,
+        "label": {
+          "default": "List in Structurelisteditor"
+        },
+        "description": {
+          "default": "Lists can be nested inside structurelisteditor. The list can be edited on panel by selecting a row.",
+          "placement": "on_panel"
+        }
+      },
+      {
+        "parameter_ref": "complexListStructuretable",
+        "required": true,
+        "label": {
+          "default": "List in Structuretable"
+        },
+        "description": {
+          "default": "Lists can be nested inside structuretable. The list can be edited in a subPanel via the settings button.",
+          "placement": "on_panel"
+        }
       },
       {
         "parameter_ref": "list_string_error",
@@ -161,7 +258,99 @@
         "moveable_rows": true
       }
     ],
-    "complex_type_info": [],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "complexListStructurelisteditors",
+        "moveable_rows": true,
+        "parameters": [
+          {
+            "parameter_ref": "complexListStructurelisteditor_readonly_int",
+            "width": 16,
+            "label": {
+              "default": "Index"
+            },
+            "generated_values": {
+              "operation": "index",
+              "start_value": 1
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "complexListStructurelisteditor_sort_order",
+            "width": 16,
+            "label": {
+              "default": "Direction"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          },
+          {
+            "parameter_ref": "complexListStructurelisteditor_list",
+            "width": 16,
+            "label": {
+              "default": "List"
+            },
+            "edit_style": "on_panel",
+            "control": "list",
+            "moveable_rows": true,
+            "summary": true
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "complexListStructuretables",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "default": "Column"
+          },
+          "summary": true,
+          "dm_image": "invalid"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "complexListStructuretable_readonly_int",
+            "width": 10,
+            "label": {
+              "default": "Index"
+            },
+            "generated_values": {
+              "operation": "index",
+              "start_value": 5
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "complexListStructuretable_sort_order",
+            "width": 16,
+            "label": {
+              "default": "Order by"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          },
+          {
+            "parameter_ref": "complexListStructuretable_list",
+            "width": 16,
+            "label": {
+              "default": "List"
+            },
+            "edit_style": "subpanel",
+            "control": "list",
+            "moveable_rows": true,
+            "summary": true
+          }
+        ]
+      }
+    ],
     "group_info": [
       {
         "id": "list-values",
@@ -172,6 +361,35 @@
         "parameter_refs": [
           "list_string",
           "list_integer"
+        ]
+      },
+      {
+        "id": "nested-list-conditions",
+        "label": {
+          "default": "Nested Structure"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "list-summary-panel",
+            "label": {
+              "default": "Nested Structures"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "list-structure",
+                "type": "controls",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "complexListStructurelisteditor",
+                  "complexListStructuretable"
+                ]
+              }
+            ]
+          }
         ]
       },
       {
@@ -263,6 +481,84 @@
           }
         }
       }
+    }
+  ],
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "ordered_set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "flag",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "collection",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "geospatial",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Ag",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "",
+            "modeling_role": "input"
+          }
+        }
+      ]
     }
   ]
 }
