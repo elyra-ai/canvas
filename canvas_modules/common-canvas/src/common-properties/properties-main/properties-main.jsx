@@ -24,7 +24,7 @@ import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
 import * as PropertyUtils from "./../util/property-utils";
-import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS } from "./../constants/constants";
+import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
 import { has, isEqual, omit, pick, cloneDeep } from "lodash";
 import Icon from "./../../icons/icon.jsx";
@@ -283,11 +283,10 @@ class PropertiesMain extends React.Component {
 		return uiOnlyKeys;
 	}
 
-	// calledFromApplyPropertiesEditing is true if called from applyPropertiesEditing()
-	cancelHandler(calledFromApplyPropertiesEditing) {
-		const calledFromApplyProperties = calledFromApplyPropertiesEditing === true;
+	// cancelSource is "apply" if called from applyPropertiesEditing(), else "cancel"
+	cancelHandler(cancelSource) {
 		if (this.props.callbacks.closePropertiesDialog) {
-			this.props.callbacks.closePropertiesDialog(calledFromApplyProperties);
+			this.props.callbacks.closePropertiesDialog(cancelSource);
 		}
 	}
 
@@ -326,7 +325,7 @@ class PropertiesMain extends React.Component {
 			this.previousErrorMessages = this.propertiesController.getErrorMessages();
 		}
 		if (closeProperties) {
-			this.cancelHandler(true); // close property editor
+			this.cancelHandler(APPLY); // close property editor
 		}
 	}
 
@@ -359,7 +358,7 @@ class PropertiesMain extends React.Component {
 	}
 
 	render() {
-		let cancelHandler = this.cancelHandler;
+		let cancelHandler = this.cancelHandler.bind(this, CANCEL);
 		let applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
 		// when onBlur cancel shouldn't be rendered.  Update apply button text to `Close`
 		if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout) {

@@ -515,8 +515,8 @@ describe("applyPropertiesEditing through an instance outside Common Properties",
 	});
 });
 
-describe("closePropertiesDialog through an instance outside Common Properties", () => {
-	it("closePropertiesDialog should be called with true if through applyPropertiesEditing", () => {
+describe.only("closePropertiesDialog through an instance outside Common Properties", () => {
+	it("closePropertiesDialog should be called with 'apply' if through save button", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { applyOnBlur: false });
 		const commonProperties = renderedObject.wrapper.find("CommonProperties");
 		commonProperties.find("button[data-id='properties-apply-button']")
@@ -524,9 +524,9 @@ describe("closePropertiesDialog through an instance outside Common Properties", 
 			.simulate("click");
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 1);
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
-		expect(renderedObject.callbacks.closePropertiesDialog.calledWith(true)).to.be.true;
+		expect(renderedObject.callbacks.closePropertiesDialog.calledWith("apply")).to.be.true;
 	});
-	it("closePropertiesDialog should be called with false if not through applyPropertiesEditing", () => {
+	it("closePropertiesDialog should be called with 'cancel' if through cancel button", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { applyOnBlur: false });
 		const commonProperties = renderedObject.wrapper.find("CommonProperties");
 		commonProperties.find("button[data-id='properties-cancel-button']")
@@ -534,7 +534,7 @@ describe("closePropertiesDialog through an instance outside Common Properties", 
 			.simulate("click");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 1);
-		expect(renderedObject.callbacks.closePropertiesDialog.calledWith(false)).to.be.true;
+		expect(renderedObject.callbacks.closePropertiesDialog.calledWith("cancel")).to.be.true;
 	});
 });
 
