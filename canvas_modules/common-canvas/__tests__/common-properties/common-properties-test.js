@@ -515,7 +515,7 @@ describe("applyPropertiesEditing through an instance outside Common Properties",
 	});
 });
 
-describe.only("closePropertiesDialog through an instance outside Common Properties", () => {
+describe("closePropertiesDialog through an instance outside Common Properties", () => {
 	it("closePropertiesDialog should be called with 'apply' if through save button", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { applyOnBlur: false });
 		const commonProperties = renderedObject.wrapper.find("CommonProperties");
