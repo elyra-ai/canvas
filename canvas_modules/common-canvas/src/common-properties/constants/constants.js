@@ -170,7 +170,7 @@ _defineConstant("DEFAULT_LABEL_EDITABLE", true);
 
 _defineConstant("ROW_HEIGHT", 42);
 
-_defineConstant("EXPRESSION_TABLE_ROWS", 6);
+_defineConstant("EXPRESSION_TABLE_ROWS", 7);
 
 _defineConstant("TABLE_SUBPANEL_BUTTON_WIDTH", "36px");
 

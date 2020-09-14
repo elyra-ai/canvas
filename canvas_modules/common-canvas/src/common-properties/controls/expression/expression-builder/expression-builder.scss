@@ -17,7 +17,7 @@
 /* These are used in custom expression builder */
 $field-function-width: 85%;
 $operators-width: 15%;
-$fields-table-margin: 50%;
+$fields-table-margin: 52%;
 $fields-table-width: 48%;
 $values-table-width: 48%;
 $functions-table-margin: 70%;
@@ -50,6 +50,7 @@ $operator-margin: 50%;
 	float: left;
 	.properties-ft-search-container {
 		width: 100%;
+		margin-bottom: 0;
 	}
 }
 
@@ -58,6 +59,7 @@ $operator-margin: 50%;
 	margin-left: $fields-table-margin;
 	.properties-ft-search-container {
 		width: 100%;
+		margin-bottom: 0;
 	}
 }
 .properties-functions-table {
@@ -65,6 +67,7 @@ $operator-margin: 50%;
 	float: left;
 	.properties-ft-search-container {
 		width: 100%;
+		margin-bottom: 0;
 	}
 }
 
@@ -110,25 +113,20 @@ $operator-margin: 50%;
 }
 
 .properties-expression-selection-content-switcher {
-	padding-bottom: $spacing-09;
+	padding-bottom: $spacing-08;
 	div {
 		max-width: 50%;
 		float: right;
 	}
 }
 
-.properties-expression-field-select {
-	width: 50%;
-	margin-bottom: 7px;
+.properties-expression-field-select, .properties-expression-function-select {
+	padding-top: $spacing-06;
+	padding-bottom: $spacing-06;
 }
 .properties-expression-table-dropdown-header {
 	@include carbon--type-style("label-01");
 	padding-bottom: $spacing-02;
-}
-
-.properties-expression-function-select {
-	width: 50%;
-	margin-bottom: 7px;
 }
 
 .properties-primaryTabs .bx--tabs-trigger {
