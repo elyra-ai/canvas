@@ -20,16 +20,17 @@ import { Modal } from "carbon-components-react";
 import classNames from "classnames";
 import { Portal } from "react-portal";
 import { Size } from "./../../constants/form-constants";
+import { CARBON_MODAL_SIZE_XSMALL, CARBON_MODAL_SIZE_SMALL, CARBON_MODAL_SIZE_LARGE } from "./../../constants/constants";
 
 export default class PropertiesModal extends Component {
 
 	// Map the editor_size in paramDef to the Carbon modal sizes
 	getCarbonModalSize() {
 		switch (this.props.bsSize) {
-		case Size.SMALL: return "xs";
-		case Size.LARGE: return "lg";
+		case Size.SMALL: return CARBON_MODAL_SIZE_XSMALL;
+		case Size.LARGE: return CARBON_MODAL_SIZE_LARGE;
 		case Size.MEDIUM:
-		default: return "sm";
+		default: return CARBON_MODAL_SIZE_SMALL;
 		}
 	}
 
