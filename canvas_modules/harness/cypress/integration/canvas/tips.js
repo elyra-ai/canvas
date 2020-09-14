@@ -161,7 +161,7 @@ describe("Test tip location adjusted based on boundaries of browser", function()
 	});
 
 	it("Test tip location adjusted based on boundaries of browser", function() {
-		cy.moveMouseToCoordinatesInCommonProperties(80, 80);
+		cy.moveMouseToCoordinatesInCommonProperties(75, 80);
 		cy.verifyTipForLabelIsVisibleAtLocation("Mode", "top", "Include or discard rows");
 
 		cy.moveMouseToCoordinatesInCommonProperties(255, 135);
