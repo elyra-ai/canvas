@@ -213,3 +213,6 @@ _defineConstant("CARBON_ICONS", {
 	INFORMATION: "informationHollow",
 	SETTINGS: "settings"
 });
+
+_defineConstant("APPLY", "apply");
+_defineConstant("CANCEL", "cancel");
