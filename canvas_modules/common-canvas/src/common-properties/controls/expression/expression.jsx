@@ -360,7 +360,10 @@ ExpressionControl.propTypes = {
 	selectionRange: PropTypes.array,
 	onSelectionChange: PropTypes.func,
 	onBlur: PropTypes.func,
-	expressionLabel: PropTypes.object,
+	expressionLabel: PropTypes.oneOfType([
+		PropTypes.object,
+		PropTypes.string
+	]),
 	height: PropTypes.number, // height in px
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.string, // pass in by redux
