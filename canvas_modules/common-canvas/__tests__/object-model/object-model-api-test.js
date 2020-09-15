@@ -37,6 +37,7 @@ import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CL
 	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK } from "../../src/common-canvas/constants/canvas-constants.js";
 
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
+import CanvasUtils from "../../src/common-canvas/common-canvas-utils.js";
 import CloneMultipleObjectsAction from "../../src/command-actions/cloneMultipleObjectsAction.js";
 
 const canvasController = new CanvasController();
@@ -1451,7 +1452,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.getAPIPipeline().setInputPortLabel(nodeId, portId, newLabel);
 		const node = objectModel.getAPIPipeline().getNode(nodeId);
 
-		expect(isEqual(newLabel, objectModel.getAPIPipeline().getPort(node.inputs, portId).label)).to.be.true;
+		expect(isEqual(newLabel, CanvasUtils.getPort(node.inputs, portId).label)).to.be.true;
 	}
 
 	function shouldUpdateOutputPortLabel(nodeId, portId, newLabel) {
@@ -1460,7 +1461,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.getAPIPipeline().setOutputPortLabel(nodeId, portId, newLabel);
 		const node = objectModel.getAPIPipeline().getNode(nodeId);
 
-		expect(isEqual(newLabel, objectModel.getAPIPipeline().getPort(node.outputs, portId).label)).to.be.true;
+		expect(isEqual(newLabel, CanvasUtils.getPort(node.outputs, portId).label)).to.be.true;
 	}
 
 });

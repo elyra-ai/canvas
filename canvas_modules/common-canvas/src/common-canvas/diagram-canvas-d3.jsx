@@ -157,25 +157,15 @@ export default class DiagramCanvas extends React.Component {
 		this.canvasD3Layout.translateBy(x, y, animateTime);
 	}
 
-	mouseCoords(event) {
-		const rect = event.currentTarget.getBoundingClientRect();
-
-		return {
-			x: event.clientX - Math.round(rect.left),
-			y: event.clientY - Math.round(rect.top)
-		};
-	}
-
 	drop(event) {
 		event.preventDefault();
 		this.first = false;
 		this.second = false;
 		this.setIsDropZoneDisplayed(false);
-		const mousePos = this.mouseCoords(event);
 
 		const nodeTemplate = event.canvasNodeTemplate;
 		if (nodeTemplate) {
-			this.canvasD3Layout.nodeTemplateDropped(nodeTemplate, mousePos);
+			this.canvasD3Layout.nodeTemplateDropped(nodeTemplate, event.clientX, event.clientY);
 
 		} else {
 			let dropData = this.getDNDJson(event);
@@ -191,7 +181,7 @@ export default class DiagramCanvas extends React.Component {
 					}
 				};
 			}
-			this.canvasD3Layout.externalObjectDropped(dropData, mousePos);
+			this.canvasD3Layout.externalObjectDropped(dropData, event.clientX, event.clientY);
 		}
 
 		// canvasNodeTemplate will persist in future events if we don't remove it

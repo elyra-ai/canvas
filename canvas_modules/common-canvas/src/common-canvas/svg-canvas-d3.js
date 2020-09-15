@@ -92,7 +92,6 @@ export default class SVGCanvasD3 {
 				this.config.enableLinkType !== config.enableLinkType ||
 				this.config.enableLinkDirection !== config.enableLinkDirection ||
 				this.config.enableLinkSelection !== config.enableLinkSelection ||
-				this.config.enableDetachableLinks !== config.enableDetachableLinks ||
 				this.config.enableToolbarLayout !== config.enableToolbarLayout ||
 				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
 				this.config.enableInsertNodeDroppedOnLink !== config.enableInsertNodeDroppedOnLink ||
@@ -277,12 +276,12 @@ export default class SVGCanvasD3 {
 		this.renderer.paletteNodeDraggedOver(nodeTemplate, x, y);
 	}
 
-	nodeTemplateDropped(nodeTemplate, mousePos) {
-		this.renderer.nodeTemplateDropped(nodeTemplate, mousePos);
+	nodeTemplateDropped(nodeTemplate, x, y) {
+		this.renderer.nodeTemplateDropped(nodeTemplate, x, y);
 	}
 
-	externalObjectDropped(dropData, mousePos) {
-		this.renderer.externalObjectDropped(dropData, mousePos);
+	externalObjectDropped(dropData, x, y) {
+		this.renderer.externalObjectDropped(dropData, x, y);
 	}
 
 	zoomTo(zoomObject) {

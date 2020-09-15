@@ -15,9 +15,11 @@
  */
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Action from "../command-stack/action.js";
+import { LINK_SELECTION_DETACHABLE } from "../common-canvas/constants/canvas-constants";
+
 
 export default class DeleteObjectsAction extends Action {
-	constructor(data, objectModel, enableDetachableLinks) {
+	constructor(data, objectModel, enableLinkSelection) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
@@ -26,21 +28,21 @@ export default class DeleteObjectsAction extends Action {
 		this.nodesToDelete = this.objectModel.getSelectedNodes();
 		this.commentsToDelete = this.objectModel.getSelectedComments();
 		this.linksToDelete = this.objectModel.getSelectedLinks(); // There'll only be selected links if enableLinkSelection is set
-		this.linksToUpdate = [];
+		this.linksToUpdateInfo = {};
 		this.supernodesToDelete = [];
 		this.nodeAndCommentsToDelete = this.nodesToDelete.concat(this.commentsToDelete);
 
-		// Handle links to update when enableDetachableLinks is set. These are links
+		// Handle links to update when detachable links are enabled. These are links
 		// that will remain on the canvas as detached links when the nodes or
 		// comments they are connected to are deleted. They need to be updated to
 		// have their source and target IDs removed (as appropriate based on
 		// whether the source and/or taget object is being deleted) which will
-		// indictae that the node is either partailly or fully detached.
-		if (enableDetachableLinks) {
+		// indicate that the node is either partailly or fully detached.
+		if (enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 			this.linksToDelete = this.getConnectedLinksToDelete(this.linksToDelete, "nodeLink");
-			this.linksToUpdate = this.getLinksToUpdate();
+			this.linksToUpdateInfo = this.getLinksToUpdateInfo();
 
-		// Handle links to delete. When enableDetachableLinks is not set we
+		// Handle links to delete. When detachable links are not enabled we
 		// implicitely delete links connected to nodes and comments being deleted.
 		// This means we find any links connected to those nodes and comments
 		// and add them to the array of links to delete.
@@ -77,25 +79,18 @@ export default class DeleteObjectsAction extends Action {
 	// Returns an array of 'link info' objects that indicate which links should
 	// remain on the canvas as detached links when nodes they are connected to
 	// are deleted. There is one linkInfo object for each link that needs to be
-	// updated. This is only relavant when config field enableDetachableLinks
-	// is set. The linkInfo object contains:
-	// link - a refrence to the link being updated.
-	// srcNodeId - the srcNodeId of the link being updated. This is set if the
-	// source node is being deleted.
-	// trgNodeId - the trgNodeId of the link being updated. This is set if the
-	// target node is being deleted.
-	// srcPos - the position from which the link should be drawn. This is set if
-	// the source node ie being deleted. This contains x and y fields.
-	// trgPos - the position to which the link should be drawn. This is set if
-	// the target node ie being deleted. This contains x and y fields.
+	// updated. This is only relavant when detachable links are enabled.
+	// The linkInfo object contains:
+	// newLinks - An array of new links to update existing links with detached info
+	// oldLinks - A corresponding array of original links.
 	// Note: when a link is detached, as the result of its source or target node
 	// being deleted, the srcNodeId and/or trgNodeId in the link will be set to
 	// undefined. This indicates which end of the link is detached. The srcPos
 	// and trgPos coordinates will be set on the link to indicate where the line
-	// is drawn to or from. The linkInfo object's srcNodeId and trgNodeId is
-	// used to restore those values to the link on undo.
-	getLinksToUpdate() {
-		const linksToUpdate = [];
+	// is drawn to or from.
+	getLinksToUpdateInfo() {
+		const newLinks = [];
+		const oldLinks = [];
 		const allCurrentLinks = this.apiPipeline.getLinks();
 
 		allCurrentLinks.forEach((link) => {
@@ -104,20 +99,23 @@ export default class DeleteObjectsAction extends Action {
 				const trg = this.isTargetToBeDeleted(link);
 
 				if (src || trg) {
-					const linkUpdateInfo = { link: link };
+					const newLink = Object.assign({}, link);
 					if (src) {
-						linkUpdateInfo.savedSrcNodeId = link.srcNodeId;
-						linkUpdateInfo.srcPos = this.getSrcPos(link);
+						delete newLink.srcNodeId;
+						delete newLink.srcNodePortId;
+						newLink.srcPos = this.getSrcPos(link);
 					}
 					if (trg) {
-						linkUpdateInfo.savedTrgNodeId = link.trgNodeId;
-						linkUpdateInfo.trgPos = this.getTrgPos(link);
+						delete newLink.trgNodeId;
+						delete newLink.trgNodePortId;
+						newLink.trgPos = this.getTrgPos(link);
 					}
-					linksToUpdate.push(linkUpdateInfo);
+					newLinks.push(newLink);
+					oldLinks.push(link);
 				}
 			}
 		});
-		return linksToUpdate;
+		return { newLinks, oldLinks };
 	}
 
 	getSrcPos(link) {
@@ -133,8 +131,17 @@ export default class DeleteObjectsAction extends Action {
 			outerCenterY = link.trgPos.y_pos;
 		}
 
-		const srcCenterX = srcNode.width / 2;
-		const srcCenterY = srcNode.height / 2;
+		let srcCenterX;
+		let srcCenterY;
+
+		if (srcNode.layout && srcNode.layout.drawNodeLinkLineFromTo === "image_center") {
+			srcCenterX = srcNode.layout.imagePosX + (srcNode.layout.imageWidth / 2);
+			srcCenterY = srcNode.layout.imagePosY + (srcNode.layout.imageHeight / 2);
+
+		} else {
+			srcCenterX = srcNode.width / 2;
+			srcCenterY = srcNode.height / 2;
+		}
 
 		const startPos = CanvasUtils.getOuterCoord(
 			srcNode.x_pos, srcNode.y_pos, srcNode.width, srcNode.height,
@@ -157,8 +164,17 @@ export default class DeleteObjectsAction extends Action {
 			outerCenterY = link.srcPos.y_pos;
 		}
 
-		const trgCenterX = trgNode.width / 2;
-		const trgCenterY = trgNode.height / 2;
+		let trgCenterX;
+		let trgCenterY;
+
+		if (trgNode.layout && trgNode.layout.drawNodeLinkLineFromTo === "image_center") {
+			trgCenterX = trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2);
+			trgCenterY = trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2);
+
+		} else {
+			trgCenterX = trgNode.width / 2;
+			trgCenterY = trgNode.height / 2;
+		}
 
 		const startPos = CanvasUtils.getOuterCoord(
 			trgNode.x_pos, trgNode.y_pos, trgNode.width, trgNode.height,
@@ -193,7 +209,7 @@ export default class DeleteObjectsAction extends Action {
 
 	// Standard methods
 	do() {
-		this.apiPipeline.detachLinks(this.linksToUpdate);
+		this.apiPipeline.updateLinks(this.linksToUpdateInfo.newLinks);
 		this.apiPipeline.deleteLinks(this.linksToDelete);
 
 		this.supernodesToDelete.forEach((supernode) => {
@@ -216,7 +232,7 @@ export default class DeleteObjectsAction extends Action {
 		});
 
 		this.apiPipeline.addLinks(this.linksToDelete);
-		this.apiPipeline.attachLinks(this.linksToUpdate);
+		this.apiPipeline.updateLinks(this.linksToUpdateInfo.oldLinks);
 	}
 
 	redo() {
