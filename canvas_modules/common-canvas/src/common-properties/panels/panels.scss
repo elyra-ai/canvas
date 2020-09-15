@@ -21,9 +21,3 @@
 @import "./action-panel/action-panel";
 @import "./column/column";
 @import "./control/control";
-
-.properties-category-content {
-	> .properties-control-panel { // only add top & bottom padding to first control panel
-		padding: 0;
-	}
-}

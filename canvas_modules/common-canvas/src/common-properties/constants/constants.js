@@ -213,3 +213,10 @@ _defineConstant("CARBON_ICONS", {
 	INFORMATION: "informationHollow",
 	SETTINGS: "settings"
 });
+
+_defineConstant("APPLY", "apply");
+_defineConstant("CANCEL", "cancel");
+
+_defineConstant("CARBON_MODAL_SIZE_XSMALL", "xs");
+_defineConstant("CARBON_MODAL_SIZE_SMALL", "sm");
+_defineConstant("CARBON_MODAL_SIZE_LARGE", "lg");

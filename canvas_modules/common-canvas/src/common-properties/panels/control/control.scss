@@ -16,7 +16,6 @@
 
 .properties-control-panel {
 	display: block;
-	padding: 0 0 0 8px;
 	&.hide {
 		display: none;
 	}
@@ -24,4 +23,8 @@
 		opacity: 0.5;
 		pointer-events: none;
 	}
+}
+
+.properties-editor-form .properties-control-panel .properties-control-panel {
+	padding: 0 0 0 $spacing-03; // Ensure grandchildren have a padding
 }
