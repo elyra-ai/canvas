@@ -157,6 +157,24 @@ class PropertiesMain extends React.Component {
 		this.initialValueInfo.additionalInfo.title = this.propertiesController.getTitle();
 	}
 
+	getApplyButtonLabel() {
+		if (this.props.propertiesConfig.buttonLabels && this.props.propertiesConfig.buttonLabels.primary) {
+			return this.props.propertiesConfig.buttonLabels.primary;
+		}
+		// Update apply button text to `Close` when applyOnBlur
+		if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout) {
+			return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
+		}
+		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
+	}
+
+	getRejectButtonLabel() {
+		if (this.props.propertiesConfig.buttonLabels && this.props.propertiesConfig.buttonLabels.secondary) {
+			return this.props.propertiesConfig.buttonLabels.secondary;
+		}
+		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
+	}
+
 	_getOverrideSize() {
 		const pixelWidth = this.propertiesController.getForm().pixelWidth;
 		const editorSizeInForm = this.propertiesController.getForm().editorSize;
@@ -359,13 +377,12 @@ class PropertiesMain extends React.Component {
 
 	render() {
 		let cancelHandler = this.cancelHandler.bind(this, CANCEL);
-		let applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
-		// when onBlur cancel shouldn't be rendered.  Update apply button text to `Close`
+		// when onBlur cancel shouldn't be rendered.
 		if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout) {
-			applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
 			cancelHandler = null;
 		}
-		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
+		const applyLabel = this.getApplyButtonLabel();
+		const rejectLabel = this.getRejectButtonLabel();
 
 		const formData = this.propertiesController.getForm();
 		if (formData !== null) {
@@ -471,7 +488,11 @@ PropertiesMain.propTypes = {
 		rightFlyout: PropTypes.bool,
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
-		conditionReturnValueHandling: PropTypes.string
+		conditionReturnValueHandling: PropTypes.string,
+		buttonLabels: PropTypes.shape({
+			primary: PropTypes.string,
+			secondary: PropTypes.string
+		})
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
