@@ -32,6 +32,7 @@ import structureListEditorParamDef from "../test_resources/paramDefs/structureli
 import structureEditorParamDef from "../test_resources/paramDefs/structureeditor_paramDef.json";
 import { IntlProvider } from "react-intl";
 
+import { CARBON_MODAL_SIZE_XSMALL, CARBON_MODAL_SIZE_SMALL, CARBON_MODAL_SIZE_LARGE } from "./../../src/common-properties/constants/constants";
 
 const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
@@ -371,6 +372,46 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(wrapper.find("div.properties-title-editor")).to.have.length(1);
 		expect(wrapper.find("div.properties-custom-container")).to.have.length(1);
 		expect(wrapper.find("div.properties-modal-buttons")).to.have.length(1);
+	});
+});
+
+describe("Common properties modals return the correct Carbon modal size", () => {
+	let wrapper;
+	let newPropertiesInfo;
+	beforeEach(() => {
+		newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+	});
+
+	it("should return 'xs' when editor_size is 'sm'", () => {
+		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
+		const renderedObject = propertyUtils.flyoutEditorForm(newPropertiesInfo.parameterDef, { containerType: "Modal" });
+		wrapper = renderedObject.wrapper;
+		const modalInstance = wrapper.find(PropertiesDialog).instance();
+		expect(modalInstance.getCarbonModalSize()).to.equal(CARBON_MODAL_SIZE_XSMALL);
+	});
+
+	it("should return 'sm' when editor_size is 'medium'", () => {
+		newPropertiesInfo.parameterDef.uihints.editor_size = "medium";
+		const renderedObject = propertyUtils.flyoutEditorForm(newPropertiesInfo.parameterDef, { containerType: "Modal" });
+		wrapper = renderedObject.wrapper;
+		const modalInstance = wrapper.find(PropertiesDialog).instance();
+		expect(modalInstance.getCarbonModalSize()).to.equal(CARBON_MODAL_SIZE_SMALL);
+	});
+
+	it("should return 'lg' when editor_size is 'large'", () => {
+		newPropertiesInfo.parameterDef.uihints.editor_size = "large";
+		const renderedObject = propertyUtils.flyoutEditorForm(newPropertiesInfo.parameterDef, { containerType: "Modal" });
+		wrapper = renderedObject.wrapper;
+		const modalInstance = wrapper.find(PropertiesDialog).instance();
+		expect(modalInstance.getCarbonModalSize()).to.equal(CARBON_MODAL_SIZE_LARGE);
+	});
+
+	it("should return 'xs' when editor_size is not set, defaults to 'small'", () => {
+		delete newPropertiesInfo.parameterDef.uihints.editor_size;
+		const renderedObject = propertyUtils.flyoutEditorForm(newPropertiesInfo.parameterDef, { containerType: "Modal" });
+		wrapper = renderedObject.wrapper;
+		const modalInstance = wrapper.find(PropertiesDialog).instance();
+		expect(modalInstance.getCarbonModalSize()).to.equal(CARBON_MODAL_SIZE_XSMALL);
 	});
 });
 
