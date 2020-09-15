@@ -665,8 +665,8 @@ describe("PropertiesButtons should render with the correct labels", () => {
 		const propertiesConfig = {
 			applyOnBlur: false,
 			buttonLabels: {
-				applyLabel: "test apply",
-				rejectLabel: "test reject"
+				primary: "test apply",
+				secondary: "test reject"
 			}
 		};
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
@@ -678,7 +678,7 @@ describe("PropertiesButtons should render with the correct labels", () => {
 		const propertiesConfig = {
 			applyOnBlur: false,
 			buttonLabels: {
-				applyLabel: "test apply"
+				primary: "test apply"
 			}
 		};
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
@@ -690,7 +690,7 @@ describe("PropertiesButtons should render with the correct labels", () => {
 		const propertiesConfig = {
 			applyOnBlur: false,
 			buttonLabels: {
-				rejectLabel: "test reject"
+				secondary: "test reject"
 			}
 		};
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
@@ -701,13 +701,13 @@ describe("PropertiesButtons should render with the correct labels", () => {
 	it("apply button should use a custom reject label if applyOnBlur", () => {
 		const propertiesConfig = {
 			buttonLabels: {
-				applyLabel: "test apply",
-				rejectLabel: "test reject"
+				primary: "test apply",
+				secondary: "test reject"
 			}
 		};
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
 		const wrapper = renderedObject.wrapper;
-		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("test reject");
+		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("test apply");
 	});
 });
 

@@ -158,13 +158,8 @@ class PropertiesMain extends React.Component {
 	}
 
 	getApplyButtonLabel() {
-		if (this.props.propertiesConfig.buttonLabels) {
-			if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout && this.props.propertiesConfig.buttonLabels.rejectLabel) {
-				return this.props.propertiesConfig.buttonLabels.rejectLabel;
-			}
-			if (this.props.propertiesConfig.buttonLabels.applyLabel) {
-				return this.props.propertiesConfig.buttonLabels.applyLabel;
-			}
+		if (this.props.propertiesConfig.buttonLabels && this.props.propertiesConfig.buttonLabels.primary) {
+			return this.props.propertiesConfig.buttonLabels.primary;
 		}
 		// Update apply button text to `Close` when applyOnBlur
 		if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout) {
@@ -174,8 +169,8 @@ class PropertiesMain extends React.Component {
 	}
 
 	getRejectButtonLabel() {
-		if (this.props.propertiesConfig.buttonLabels && this.props.propertiesConfig.buttonLabels.rejectLabel) {
-			return this.props.propertiesConfig.buttonLabels.rejectLabel;
+		if (this.props.propertiesConfig.buttonLabels && this.props.propertiesConfig.buttonLabels.secondary) {
+			return this.props.propertiesConfig.buttonLabels.secondary;
 		}
 		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
 	}
@@ -495,8 +490,8 @@ PropertiesMain.propTypes = {
 		enableResize: PropTypes.bool,
 		conditionReturnValueHandling: PropTypes.string,
 		buttonLabels: PropTypes.shape({
-			applyLabel: PropTypes.string,
-			rejectLabel: PropTypes.string
+			primary: PropTypes.string,
+			secondary: PropTypes.string
 		})
 	}),
 	callbacks: PropTypes.shape({
