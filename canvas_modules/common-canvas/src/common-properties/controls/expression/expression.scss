@@ -30,9 +30,9 @@
 	background: $field-02;
 }
 
-.cm-s-error.CodeMirror { border: 2px solid $support-01; }
+.cm-s-error.CodeMirror { border: $spacing-01 solid $support-01; }
 
-.cm-s-warning.CodeMirror { border: 2px solid $support-03; }
+.cm-s-warning.CodeMirror { border: $spacing-01 solid $support-03; }
 
 .cm-s-disabled.CodeMirror { opacity: 0.5}
 
@@ -59,22 +59,22 @@
 		display: flex;
 		flex-direction: row-reverse;
 		.icon {
-			margin: 2px;
+			margin: $spacing-01;
 			svg {
 				height: 10px;
 				width: 10px;
 			}
 		}
 		.validateLink {
-			min-height: 32px;
-			padding: 4px;
+			min-height: $spacing-07;
+			padding: $spacing-02;
 		}
 	}
 }
 
 .properties-expression-header {
 	position: relative;
-	height: 34px;
+	height: $spacing-07;
 	.properties-expression-title {
 		@include carbon--type-style("label-01");
 		position: absolute;
@@ -89,7 +89,7 @@
 }
 
 .properties-expression-button.bx--btn--sm.bx--btn--ghost {
-	padding: 4px;
+	padding: $spacing-02;
 	svg {
 		height: 20px;
 		width: 20px;

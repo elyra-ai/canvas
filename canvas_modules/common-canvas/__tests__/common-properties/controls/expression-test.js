@@ -280,7 +280,7 @@ describe("expression-builder select from tables correctly", () => {
 				/>
 			</Provider>
 		);
-		wrapper.find("button[id='expresson-builder-function-tab']").simulate("click");
+		wrapper.find("button.expresson-builder-function-tab").simulate("click");
 		const functionTable = wrapper.find("div.properties-functions-table-container");
 		tableUtils.dblClickTableRows(functionTable, [0]);
 		expect(controller.getPropertyValue(propertyId)).to.equal(" to_integer(?)");
@@ -556,7 +556,7 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 				/>
 			</Provider>
 		);
-		wrapper.find("button[id='expresson-builder-function-tab']").simulate("click");
+		wrapper.find("button.expresson-builder-function-tab").simulate("click");
 		let functionTable = wrapper.find("div.properties-functions-table");
 		let rows = tableUtils.getTableRows(functionTable);
 		expect(rows).to.have.length(4);
@@ -636,7 +636,7 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 				/>
 			</Provider>
 		);
-		wrapper.find("button[id='expresson-builder-function-tab']").simulate("click");
+		wrapper.find("button.expresson-builder-function-tab").simulate("click");
 		const functionTable = wrapper.find("div.properties-functions-table");
 		const rows = tableUtils.getTableRows(functionTable);
 		const sortHeaders = functionTable.find(".ReactVirtualized__Table__sortableHeaderColumn");
@@ -732,7 +732,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 				/>
 			</Provider>
 		);
-		wrapper.find("button[id='expresson-builder-function-tab']").simulate("click");
+		wrapper.find("button.expresson-builder-function-tab").simulate("click");
 		expect(wrapper.find("div.properties-expression-function-select span").text()).to.equal("General Functions");
 		let funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		expect(funcRows).to.have.length(4);

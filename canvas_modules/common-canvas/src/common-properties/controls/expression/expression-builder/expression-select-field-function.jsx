@@ -634,13 +634,13 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						<Switch
 							key={0}
 							name={"expresson-builder-fields-tab"}
-							id={"expresson-builder-fields-tab"}
+							className={"expresson-builder-fields-tab"}
 							text={fieldsTab}
 						/>
 						<Switch
 							key={1}
 							name={"expresson-builder-function-tab"}
-							id={"expresson-builder-function-tab"}
+							className={"expresson-builder-function-tab"}
 							text={functionsTab}
 						/>
 					</ContentSwitcher>

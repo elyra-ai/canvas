@@ -78,7 +78,7 @@ Cypress.Commands.add("selectFieldFromPropertyInSubPanel", (fieldName, propertyId
 
 Cypress.Commands.add("selectTabFromPropertyInSubPanel", (tabName, propertyId) => {
 	cy.get(".properties-expression-selection-fieldOrFunction")
-		.find(`button[id='expresson-builder-${propertyId}-tab']`)
+		.find(`button.expresson-builder-${propertyId}-tab`)
 		.click({ force: true });
 });
 
