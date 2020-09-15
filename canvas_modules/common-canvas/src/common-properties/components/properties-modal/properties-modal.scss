@@ -21,27 +21,9 @@
 	.bx--modal-container {
 		padding: 0;
 	}
-	&.large {
-		.bx--modal-container {
-			width: 90%;
-		}
-	}
-	&.medium {
-		.bx--modal-container {
-			max-width: 70%;
-		}
-	}
-	&.small {
-		.bx--modal-container {
-			max-width: 50%;
-		}
-	}
 	.bx--modal-content {
 		margin-bottom: 0;
-		padding: $layout-01;
-	}
-	.properties-modal-children {
-		padding: 0 $layout-01;
+		padding: 0;
 	}
 	&.noButtons {
 		.bx--modal-footer {

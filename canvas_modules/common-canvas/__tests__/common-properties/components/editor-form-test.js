@@ -31,7 +31,7 @@ describe("tabs and subtabs should be rendered correctly", () => {
 		wrapper.unmount();
 	});
 
-	it.skip("validate subtabs work correctly", () => {
+	it("validate subtabs work correctly", () => {
 		let category = wrapper.find("div[data-id='properties-Primary2']");
 		const subTabsContainer = category.find("div.properties-subtabs");
 		expect(subTabsContainer).to.have.length(1);
