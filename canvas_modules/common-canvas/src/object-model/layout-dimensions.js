@@ -307,6 +307,35 @@ const haloDefaultLayout = {
 		// Display an arrow head on the data links
 		dataLinkArrowHead: true,
 
+		// Link handle for input port can be "circle" or "image".
+		linkStartHandleObject: "circle",
+
+		// Link handle image to use when linkStartHandleObject is set to "image".
+		linkStartHandleImage: "",
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkStartHandleWidth: 12,
+		linkStartHandleHeight: 12,
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkStartHandleRadius: 6,
+
+		// Link handle for input port can be "circle" or "image".
+		linkEndHandleObject: "circle",
+
+		// Link handle image to use when linkStartHandleObject is set to "image".
+		linkEndHandleImage: "",
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkEndHandleWidth: 12,
+		linkEndHandleHeight: 12,
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkEndHandleRadius: 6,
+
+		// Link handle will rise to the top (above node port circles) when set to true.
+		linkHandleRaiseToTop: true,
+
 		// ---------------------------------------------------------------------------
 		// Layout values for comments
 		// ---------------------------------------------------------------------------
@@ -648,6 +677,35 @@ const portsHorizontalDefaultLayout = {
 		// Display an arrow head on the data links
 		dataLinkArrowHead: false,
 
+		// Link handle for input port can be "circle" or "image".
+		linkStartHandleObject: "circle",
+
+		// Link handle image to use when linkStartHandleObject is set to "image".
+		linkStartHandleImage: "",
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkStartHandleWidth: 12,
+		linkStartHandleHeight: 12,
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkStartHandleRadius: 5,
+
+		// Link handle for input port can be "circle" or "image".
+		linkEndHandleObject: "circle",
+
+		// Link handle image to use when linkStartHandleObject is set to "image".
+		linkEndHandleImage: "",
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkEndHandleWidth: 12,
+		linkEndHandleHeight: 12,
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkEndHandleRadius: 5,
+
+		// Link handle will rise to the top (above node port circles) when set to true.
+		linkHandleRaiseToTop: true,
+
 		// ---------------------------------------------------------------------------
 		// Layout values for comments
 		// ---------------------------------------------------------------------------
@@ -988,6 +1046,35 @@ const portsVerticalDefaultLayout = {
 
 		// Display an arrow head on the data links
 		dataLinkArrowHead: false,
+
+		// Link handle for input port can be "circle" or "image".
+		linkStartHandleObject: "circle",
+
+		// Link handle image to use when linkStartHandleObject is set to "image".
+		linkStartHandleImage: "",
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkStartHandleWidth: 12,
+		linkStartHandleHeight: 12,
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkStartHandleRadius: 6,
+
+		// Link handle for input port can be "circle" or "image".
+		linkEndHandleObject: "circle",
+
+		// Link handle image to use when linkStartHandleObject is set to "image".
+		linkEndHandleImage: "",
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkEndHandleWidth: 12,
+		linkEndHandleHeight: 12,
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkEndHandleRadius: 6,
+
+		// Link handle will rise to the top (above node port circles) when set to true.
+		linkHandleRaiseToTop: true,
 
 		// ---------------------------------------------------------------------------
 		// Layout values for comments

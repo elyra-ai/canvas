@@ -39,12 +39,13 @@ import MoveObjectsAction from "../command-actions/moveObjectsAction.js";
 import SaveToPaletteAction from "../command-actions/saveToPaletteAction.js";
 import SetObjectsStyleAction from "../command-actions/setObjectsStyleAction.js";
 import SetLinksStyleAction from "../command-actions/setLinksStyleAction.js";
+import UpdateLinkAction from "../command-actions/updateLinkAction.js";
 import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import LocalStorage from "./local-storage.js";
 import has from "lodash/has";
-import { ASSOC_STRAIGHT } from "./constants/canvas-constants";
+import { ASSOC_STRAIGHT, LINK_SELECTION_NONE } from "./constants/canvas-constants";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
 // Global instance ID counter
@@ -69,8 +70,7 @@ export default class CanvasController {
 			enableLinkType: "Curve",
 			enableLinkDirection: "LeftRight",
 			enableParentClass: "",
-			enableLinkSelection: false,
-			enableDetachableLinks: false,
+			enableLinkSelection: LINK_SELECTION_NONE,
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,
@@ -953,7 +953,7 @@ export default class CanvasController {
 	// data - Data describing the links
 	// pipelineId - The ID of the pipeline
 	createCommentLinks(data, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).createCommentLinks(data);
+		return this.objectModel.getAPIPipeline(pipelineId).createCommentLinks(data);
 	}
 
 	// Sets the class name on links
@@ -1576,7 +1576,8 @@ export default class CanvasController {
 				{ divider: true }]);
 		}
 		// Delete objects
-		if (source.type === "node" || source.type === "comment" || (this.canvasConfig.enableLinkSelection && source.type === "link")) {
+		if (source.type === "node" || source.type === "comment" ||
+				(this.canvasConfig.enableLinkSelection !== LINK_SELECTION_NONE && source.type === "link")) {
 			menuDefinition = menuDefinition.concat([{ action: "deleteSelectedObjects", label: this.getLabel("canvas.deleteObject") },
 				{ divider: true }]);
 		}
@@ -1605,7 +1606,8 @@ export default class CanvasController {
 			}
 		}
 		// Delete link
-		if (!this.canvasConfig.enableLinkSelection && source.type === "link") {
+		if (this.canvasConfig.enableLinkSelection === LINK_SELECTION_NONE &&
+				source.type === "link") {
 			menuDefinition = menuDefinition.concat([{ action: "deleteLink", label: this.getLabel("canvas.deleteObject") }]);
 		}
 		// Highlight submenu (Highlight Branch | Upstream | Downstream, Unhighlight)
@@ -1821,6 +1823,11 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
+			case "updateLink": {
+				command = new UpdateLinkAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
 			case "editComment": {
 				command = new EditCommentAction(data, this.objectModel);
 				this.commandStack.do(command);
@@ -1845,7 +1852,7 @@ export default class CanvasController {
 				break;
 			}
 			case "deleteSelectedObjects": {
-				command = new DeleteObjectsAction(data, this.objectModel, this.canvasConfig.enableDetachableLinks);
+				command = new DeleteObjectsAction(data, this.objectModel, this.canvasConfig.enableLinkSelection);
 				this.commandStack.do(command);
 				break;
 			}

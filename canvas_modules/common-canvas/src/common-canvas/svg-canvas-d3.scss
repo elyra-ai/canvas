@@ -245,6 +245,7 @@ $new-halo-link-color: $ui-05;
 	fill: transparent;
 	stroke: $node-decoration-outline;
 	stroke-width: 1;
+	stroke-dasharray: 0;
 }
 
 .d3-node-dec-label,
@@ -254,6 +255,8 @@ $new-halo-link-color: $ui-05;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	user-select: none;
+	stroke-width: 1;
+	stroke-dasharray: 0; // Override the dasharray from the link line
 }
 
 .d3-node-dec-path,
@@ -264,6 +267,11 @@ $new-halo-link-color: $ui-05;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	user-select: none;
+}
+
+.d3-link-dec-image {
+	stroke-width: 1;
+	stroke-dasharray: 0; // Override the dasharray from the link line
 }
 
 
@@ -608,4 +616,36 @@ $new-halo-link-color: $ui-05;
 .d3-link-group[data-selected] .d3-link-line-arrow-head {
 	stroke: $link-hightlight-color;
 	stroke-width: 3px;
+}
+
+// Styles for link handles at the start of a link line
+.d3-link-handle-start {
+	display: none;
+	stroke: transparent;
+	fill: transparent;
+	pointer-events: all;
+}
+
+.d3-link-group:hover .d3-link-handle-start,
+.d3-link-group[data-selected] .d3-link-handle-start {
+	display: inherit;
+	stroke: $link-hightlight-color;
+	fill: $data-link-color;
+	pointer-events: all;
+}
+
+// Styles for link handles at the end of a link line
+.d3-link-handle-end {
+	display: none;
+	stroke: transparent;
+	fill: transparent;
+	pointer-events: all;
+}
+
+.d3-link-group:hover .d3-link-handle-end,
+.d3-link-group[data-selected] .d3-link-handle-end {
+	display: inherit;
+	stroke: $link-hightlight-color;
+	fill: $data-link-color;
+	pointer-events: all;
 }

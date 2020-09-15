@@ -15,9 +15,11 @@
  */
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Action from "../command-stack/action.js";
+import { LINK_SELECTION_DETACHABLE } from "../common-canvas/constants/canvas-constants";
+
 
 export default class DeleteObjectsAction extends Action {
-	constructor(data, objectModel, enableDetachableLinks) {
+	constructor(data, objectModel, enableLinkSelection) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
@@ -30,17 +32,17 @@ export default class DeleteObjectsAction extends Action {
 		this.supernodesToDelete = [];
 		this.nodeAndCommentsToDelete = this.nodesToDelete.concat(this.commentsToDelete);
 
-		// Handle links to update when enableDetachableLinks is set. These are links
+		// Handle links to update when detachable links are enabled. These are links
 		// that will remain on the canvas as detached links when the nodes or
 		// comments they are connected to are deleted. They need to be updated to
 		// have their source and target IDs removed (as appropriate based on
 		// whether the source and/or taget object is being deleted) which will
-		// indictae that the node is either partailly or fully detached.
-		if (enableDetachableLinks) {
+		// indicate that the node is either partailly or fully detached.
+		if (enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 			this.linksToDelete = this.getConnectedLinksToDelete(this.linksToDelete, "nodeLink");
 			this.linksToUpdate = this.getLinksToUpdate();
 
-		// Handle links to delete. When enableDetachableLinks is not set we
+		// Handle links to delete. When detachable links are not enabled we
 		// implicitely delete links connected to nodes and comments being deleted.
 		// This means we find any links connected to those nodes and comments
 		// and add them to the array of links to delete.
@@ -77,8 +79,8 @@ export default class DeleteObjectsAction extends Action {
 	// Returns an array of 'link info' objects that indicate which links should
 	// remain on the canvas as detached links when nodes they are connected to
 	// are deleted. There is one linkInfo object for each link that needs to be
-	// updated. This is only relavant when config field enableDetachableLinks
-	// is set. The linkInfo object contains:
+	// updated. This is only relavant when detachable links are enabled.
+	// The linkInfo object contains:
 	// link - a refrence to the link being updated.
 	// srcNodeId - the srcNodeId of the link being updated. This is set if the
 	// source node is being deleted.

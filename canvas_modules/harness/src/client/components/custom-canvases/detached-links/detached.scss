@@ -1,0 +1,264 @@
+/*
+ * Copyright 2017-2020 IBM Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* Override styles for flows.json canvas */
+
+.detached-links {
+
+	.d3-node-group {
+		.d3-node-body-outline-austin,
+		.d3-node-body-outline {
+			fill: transparent;
+			stroke: transparent;
+
+			&[hover="yes"] {
+				fill: transparent;
+			}
+
+			&.node-disabled {
+				fill: $disabled-02;
+			}
+
+			&.node-disabled:hover {
+				fill: $disabled-02;
+			}
+		}
+
+		.d3-node-selection-highlight[data-selected="yes"] {
+			stroke: $gray-50;
+			stroke-dasharray: 5, 5;
+			stroke-width: 1;
+			fill: transparent;
+			pointer-events: none;
+		}
+
+		&[data-new-link-over="yes"] {
+			.d3-node-selection-highlight {
+				stroke: $interactive-01;
+				stroke-dasharray: 4;
+				stroke-width: 1;
+				fill: $ui-01;
+				pointer-events: none;
+			}
+		}
+
+		.d3-node-port-input {
+			stroke: transparent;
+			fill: transparent;
+			stroke-width: 1;
+
+			&[connected="yes"] {
+				stroke: transparent;
+				fill: transparent;
+				stroke-width: 2;
+			}
+		}
+
+		.d3-node-port-input-arrow[connected="yes"] {
+			stroke: transparent;
+			fill: none;
+			stroke-width: 2;
+		}
+
+		.d3-node-port-input-drop-target {
+			stroke: $interactive-01;
+			fill: $interactive-01;
+			stroke-width: 0;
+		}
+
+		.d3-node-port-input-drop-target-expanded {
+			stroke-width: 4; // Increases port radius by 2px because the stroke spans either side of the circle boundary.
+			transition: stroke-width 0.1s cubic-bezier(0.4, 0.14, 0.3, 1);
+		}
+
+		.d3-node-port-output {
+			opacity: 0;
+			transform: translateX(-8px);
+			transition: opacity 0.1s cubic-bezier(0.4, 0.14, 0.3, 1), transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			transition-delay: 0.125s;
+		}
+
+		.d3-node-ellipsis-group {
+			.d3-node-ellipsis {
+				fill: $icon-01;
+			}
+
+			&:hover {
+				.d3-node-ellipsis-background {
+					fill: $ui-03;
+				}
+			}
+		}
+
+		// Set the outline/background for decorations. This will only affect the
+		// zoom-in decorations on supernode since that is th eonly one with an
+		// outline.
+		.d3-node-dec-group {
+			.d3-node-dec-outline {
+				fill: transparent;
+				stroke-width: 0;
+			}
+
+			.d3-node-dec-image[data-id*="supernode-zoom"] {
+				display: none;
+				fill: transparent;
+				stroke-width: 0;
+			}
+		}
+
+		/* Hover over d3-node-group */
+		&:hover {
+			.d3-node-port-input {
+				stroke: transparent;
+				fill: transparent;
+				stroke-width: 1;
+			}
+
+			.d3-node-port-output {
+				opacity: 1;
+				transform: translateX(0);
+				transition: opacity 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				transition-delay: 0.125s;
+			}
+
+			// Set the outline/background for decorations. This will only affect the
+			// zoom-in decorations on supernode since that is the only one with an
+			// outline.
+			.d3-node-dec-group {
+				.d3-node-dec-image[data-id*="supernode-zoom"] {
+					display: block;
+					fill: $icon-01;
+					stroke-width: 0;
+				}
+
+				&:hover {
+					.d3-node-dec-outline {
+						fill: $ui-03;
+						stroke-width: 0;
+					}
+				}
+			}
+		}
+	}
+
+	.d3-data-link {
+		fill: none;
+		stroke: $ui-04;
+		stroke-width: 1;
+	}
+
+	/* For association link */
+	.d3-object-link {
+		stroke: $ui-04;
+		stroke-width: 2;
+		fill: none;
+		stroke-dasharray: 5.5;
+	}
+
+	.d3-comment-link {
+		stroke: $ui-04;
+		stroke-width: 1;
+		fill: none;
+		stroke-dasharray: 10.5;
+	}
+
+
+	g .d3-comment-link:hover,
+	g .d3-data-link:hover,
+	g .d3-selectable-link:hover,
+	g .d3-selectable-link:hover ~ .d3-selectable-link,      /* Colors arrow head when hovering over line. */
+	g .d3-data-link-selection-area:hover ~ .d3-selectable-link, /* Colors arrow head when hovering over line selection area. */
+	g .d3-comment-link-selection-area:hover ~ .d3-selectable-link, /* Colors arrow head when hovering over line selection area. */
+	g .d3-association-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
+		stroke: $interactive-01;
+		stroke-width: 2;
+	}
+
+	.d3-new-connection-line[linkType="nodeLink"] {
+		stroke: $interactive-01;
+		stroke-width: 2;
+		stroke-dasharray: 1 0;
+		fill: none;
+	}
+
+	.d3-comment-selection-highlight[data-selected="yes"] {
+		stroke: $gray-50;
+		stroke-dasharray: 5, 5;
+		stroke-width: 1;
+		fill: transparent;
+		pointer-events: none;
+	}
+
+	/* Decoration Styles */
+
+	.node-cache-empty {
+		fill: $ui-01;
+	}
+
+	.node-cache-full {
+		fill: $ui-01;
+	}
+
+	.node-sql-pushback {
+		fill: $ui-01;
+	}
+
+	/* Override styles in common canvas to fade out nodes and comments
+		 when they are cut to the clipboard.*/
+	.node-image[data-is-cut] {
+		zoom: 1;
+		filter: "alpha(opacity=50)";
+		opacity: 0.5;
+	}
+
+	.canvas-comment[data-is-cut] {
+		zoom: 1;
+		filter: "alpha(opacity=50)";
+		opacity: 0.5;
+	}
+
+	.canvas-ui-empty-placeholder {
+		height: 150px;
+		width: 320px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.canvas-ui-empty-image-placeholder {
+		height: 150px;
+		width: 250px;
+		float: left;
+		margin-left: -48px;
+	}
+
+	.canvas-ui-empty-text-placeholder {
+		@include carbon--type-style("productive-heading-03");
+		color: $text-01;
+	}
+
+	.canvas-ui-empty-subtext-placeholder {
+		@include carbon--type-style("body-long-02");
+		color: $text-02;
+		margin-top: 8px;
+	}
+
+	.canvas-ui-empty-node-text {
+		@include carbon--type-style("productive-heading-02");
+		color: $text-02;
+	}
+
+}

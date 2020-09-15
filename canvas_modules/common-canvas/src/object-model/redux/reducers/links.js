@@ -62,6 +62,32 @@ export default (state = [], action) => {
 		});
 	}
 
+	case "UPDATE_LINK": {
+		return state.map((link) => {
+			if (link.id === action.data.link.id) {
+				const newLink = Object.assign({}, link, action.data.link);
+				// Each link can only have either srcNodeId/srcNodePortId or srcPos so
+				// ensure the one is deleted in the presence of the other.
+				if (action.data.link.srcPos) {
+					delete newLink.srcNodeId;
+					delete newLink.srcNodePortId;
+				} else if (action.data.link.srcNodeId) {
+					delete newLink.srcPos;
+				}
+				// Each link can only have either trgNodeId/trgNodePortId or trgPos so
+				// ensure the one is deleted in the presence of the other.
+				if (action.data.link.trgPos) {
+					delete newLink.trgNodeId;
+					delete newLink.trgNodePortId;
+				} else if (action.data.link.trgNodeId) {
+					delete newLink.trgPos;
+				}
+				return newLink;
+			}
+			return link;
+		});
+	}
+
 	case "ATTACH_LINKS":
 		return state.map((link) => {
 			const linkInfo = action.data.attachLinksInfo.find((attLinkInfo) => attLinkInfo.link.id === link.id);

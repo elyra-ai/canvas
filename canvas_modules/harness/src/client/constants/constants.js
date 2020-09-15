@@ -71,12 +71,18 @@ _defineConstant("DIRECTION_LEFT_RIGHT", "LeftRight");
 _defineConstant("DIRECTION_TOP_BOTTOM", "TopBottom");
 _defineConstant("DIRECTION_BOTTOM_TOP", "BottomTop");
 
+_defineConstant("LINK_SELECTION_NONE", "None");
+_defineConstant("LINK_SELECTION_LINE_ONLY", "LineOnly");
+_defineConstant("LINK_SELECTION_HANDLES", "Handles");
+_defineConstant("LINK_SELECTION_DETACHABLE", "Detachable");
+
 _defineConstant("ASSOC_RIGHT_SIDE_CURVE", "RightSideCurve");
 _defineConstant("ASSOC_STRAIGHT", "Straight");
 
 _defineConstant("EXAMPLE_APP_NONE", "None - use options below");
 _defineConstant("EXAMPLE_APP_FLOWS", "Flows");
 _defineConstant("EXAMPLE_APP_BLUE_ELLIPSES", "Blue Ellipses");
+_defineConstant("EXAMPLE_APP_DETACHED", "Detached Links");
 _defineConstant("EXAMPLE_APP_EXPLAIN", "Explain");
 _defineConstant("EXAMPLE_APP_EXPLAIN2", "Explain2");
 _defineConstant("EXAMPLE_APP_STREAMS", "Streams");

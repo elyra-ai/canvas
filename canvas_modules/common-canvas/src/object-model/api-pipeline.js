@@ -363,7 +363,7 @@ export default class APIPipeline {
 				srcNode.outputs &&
 				newNode.inputs.length === 1 &&
 				srcNode.outputs.length === 1 &&
-				!this.isCardinalityExceeded(srcNode.outputs[0].id, newNode.inputs[0].id, srcNode, newNode)) {
+				!CanvasUtils.isCardinalityAtMax(srcNode.outputs[0].id, newNode.inputs[0].id, srcNode, newNode, this.getLinks())) {
 			isLinkNeededWithAutoNode = true;
 		}
 
@@ -547,10 +547,6 @@ export default class APIPipeline {
 
 	isSupernode(nodeId) {
 		return this.getNode(nodeId).type === SUPER_NODE;
-	}
-
-	doesNodeHavePorts(node) {
-		return node.inputs && node.inputs.length > 0;
 	}
 
 	getNodeParameters(nodeId) {
@@ -953,6 +949,10 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "DELETE_LINKS", data: { linksToDelete: linksToDelete }, pipelineId: this.pipelineId });
 	}
 
+	updateLink(link) {
+		this.store.dispatch({ type: "UPDATE_LINK", data: { link: link }, pipelineId: this.pipelineId });
+	}
+
 	detachLinks(detachLinksInfo) {
 		if (detachLinksInfo && detachLinksInfo.length > 0) {
 			this.store.dispatch({ type: "DETACH_LINKS", data: { detachLinksInfo: detachLinksInfo }, pipelineId: this.pipelineId });
@@ -979,7 +979,11 @@ export default class APIPipeline {
 	}
 
 	createNodeLink(srcInfo, trgInfo, data) {
-		if (this.isConnectionAllowed(srcInfo, trgInfo, data.type)) {
+		const srcNode = this.getNode(srcInfo.id);
+		const trgNode = this.getNode(trgInfo.id);
+		const links = this.getLinks();
+
+		if (CanvasUtils.isConnectionAllowed(srcInfo.portId, trgInfo.portId, srcNode, trgNode, links, data.type)) {
 			const link = {};
 			link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
 			link.type = data.type;
@@ -1030,7 +1034,7 @@ export default class APIPipeline {
 		const linkCommentList = [];
 		data.nodes.forEach((srcNodeId) => {
 			data.targetNodes.forEach((trgNodeId) => {
-				if (!this.commentLinkAlreadyExists(srcNodeId, trgNodeId)) {
+				if (CanvasUtils.isCommentLinkConnectionAllowed(srcNodeId, trgNodeId, this.getLinks())) {
 					const info = {};
 					info.id = this.objectModel.getUniqueId(CREATE_COMMENT_LINK, { "comment": this.getComment(srcNodeId), "targetNode": this.getNode(trgNodeId) });
 					info.type = data.type;
@@ -1131,15 +1135,17 @@ export default class APIPipeline {
 		return linksArray;
 	}
 
+	// Returns an array of fully-attached' links with id as the source ID.
 	getLinksContainingSourceId(id) {
 		return this.getLinks().filter((link) => {
-			return (link.srcNodeId === id);
+			return (link.srcNodeId === id && link.trgNodeId);
 		});
 	}
 
+	// Returns an array of fully-attached' links with id as the target ID.
 	getLinksContainingTargetId(id) {
 		return this.getLinks().filter((link) => {
-			return (link.trgNodeId === id);
+			return (link.trgNodeId === id && link.srcNodeId);
 		});
 	}
 
@@ -1251,89 +1257,6 @@ export default class APIPipeline {
 		return (link ? link.decorations : null);
 	}
 
-	// Returns a Boolean to indicate if a link can be created or not between
-	// two nodes identified by the objects provided.
-	isConnectionAllowed(srcNodeInfo, trgNodeInfo, type) {
-		if (type === ASSOCIATION_LINK) {
-			return this.isConnectionAllowedAssoc(srcNodeInfo, trgNodeInfo);
-		}
-		return this.isConnectionAllowedPorts(srcNodeInfo, trgNodeInfo);
-	}
-
-	// Returns a Boolean to indicate if an regular port-port link can be created
-	// or not between two nodes identified by the objects provided.
-	isConnectionAllowedPorts(srcNodeInfo, trgNodeInfo) {
-		const srcNode = this.getNode(srcNodeInfo.id);
-		const trgNode = this.getNode(trgNodeInfo.id);
-
-
-		if (!srcNode || !trgNode) { // Source ot target are not valid.
-			return false;
-		}
-
-		if (srcNodeInfo.id === trgNodeInfo.id) { // Cannot connect to ourselves, currently.
-			return false;
-		}
-
-		if (!this.doesNodeHavePorts(trgNode)) {
-			return false;
-		}
-
-		if (this.linkAlreadyExists(srcNodeInfo, trgNodeInfo)) {
-			return false;
-		}
-
-		if (this.isCardinalityExceeded(srcNodeInfo.portId, trgNodeInfo.portId, srcNode, trgNode)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	// Returns a Boolean to indicate if an association link can be created or
-	// not between two nodes identified by the objects provided.
-	isConnectionAllowedAssoc(srcNodeInfo, trgNodeInfo) {
-		const srcNode = this.getNode(srcNodeInfo.id);
-		const trgNode = this.getNode(trgNodeInfo.id);
-
-
-		if (!srcNode || !trgNode) { // Source ot target are not valid.
-			return false;
-		}
-
-		if (srcNodeInfo.id === trgNodeInfo.id) { // Cannot connect to ourselves, currently.
-			return false;
-		}
-
-		return true;
-	}
-
-	linkAlreadyExists(srcNodeInfo, trgNodeInfo) {
-		let exists = false;
-
-		this.getLinks().forEach((link) => {
-			if (link.srcNodeId === srcNodeInfo.id &&
-					(!link.srcNodePortId || link.srcNodePortId === srcNodeInfo.portId) &&
-					link.trgNodeId === trgNodeInfo.id &&
-					(!link.trgNodePortId || link.trgNodePortId === trgNodeInfo.portId)) {
-				exists = true;
-			}
-		});
-		return exists;
-	}
-
-	commentLinkAlreadyExists(srcNodeId, trgNodeId) {
-		let exists = false;
-
-		this.getLinks().forEach((link) => {
-			if (link.srcNodeId === srcNodeId &&
-					link.trgNodeId === trgNodeId) {
-				exists = true;
-			}
-		});
-		return exists;
-	}
-
 	// Returns true if the comment with the commentId passed in
 	// is linked to nonselected nodes.
 	isCommentLinkedToNonSelectedNodes(commentId) {
@@ -1348,73 +1271,6 @@ export default class APIPipeline {
 			}
 		}
 		return linkedToNonSelectedNodes;
-	}
-
-	isCardinalityExceeded(srcPortId, trgPortId, srcNode, trgNode) {
-		var srcCount = 0;
-		var trgCount = 0;
-
-		this.getLinks().forEach((link) => {
-			if (link.type === NODE_LINK) {
-				if (link.srcNodeId === srcNode.id && srcPortId) {
-					if (link.srcNodePortId === srcPortId ||
-							(!link.srcNodePortId && this.isFirstPort(srcNode.outputs, srcPortId))) {
-						srcCount++;
-					}
-				}
-
-				if (link.trgNodeId === trgNode.id && trgPortId) {
-					if (link.trgNodePortId === trgPortId ||
-							(!link.trgNodePortId && this.isFirstPort(trgNode.inputs, trgPortId))) {
-						trgCount++;
-					}
-				}
-			}
-		});
-
-		if (srcCount > 0) {
-			const srcPort = this.getPort(srcNode.outputs, srcPortId);
-			if (srcPort &&
-					srcPort.cardinality &&
-					Number(srcPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed
-					srcCount >= Number(srcPort.cardinality.max)) {
-				return true;
-			}
-		}
-
-		if (trgCount > 0) {
-			const trgPort = this.getPort(trgNode.inputs, trgPortId);
-			if (trgPort &&
-					trgPort.cardinality &&
-					Number(trgPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed
-					trgCount >= Number(trgPort.cardinality.max)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	isFirstPort(portArray, portId) {
-		const index = portArray.findIndex((port) => {
-			return port.id === portId;
-		});
-
-		if (index === 0) {
-			return true;
-		}
-		return false;
-	}
-
-	getPort(portArray, portId) {
-		const index = portArray.findIndex((port) => {
-			return port.id === portId;
-		});
-
-		if (index > -1) {
-			return portArray[index];
-		}
-		return null;
 	}
 
 	pushUniqueLinks(objectLink, linksToDelete) {

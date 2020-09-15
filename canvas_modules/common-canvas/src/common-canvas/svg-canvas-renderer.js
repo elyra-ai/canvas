@@ -25,10 +25,12 @@ import { event as d3Event } from "d3-selection";
 import get from "lodash/get";
 import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
+import cloneDeep from "lodash/cloneDeep";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERROR,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
 	LINK_DIR_LEFT_RIGHT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
+	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, INTERACTION_MOUSE, INTERACTION_TRACKPAD, SUPER_NODE, USE_DEFAULT_ICON }
@@ -42,6 +44,8 @@ import SvgCanvasLinks from "./svg-canvas-links.js";
 const showLinksTime = false;
 
 const NINETY_DEGREES_IN_RADIANS = 90 * (Math.PI / 180);
+const INPUT_TYPE = "input_type";
+const OUTPUT_TYPE = "output_type";
 
 
 export default class SVGCanvasRenderer {
@@ -156,6 +160,13 @@ export default class SVGCanvasRenderer {
 			.on("start", this.dragStart.bind(this))
 			.on("drag", this.dragMove.bind(this))
 			.on("end", this.dragEnd.bind(this));
+
+		this.draggingLinkData = null;
+
+		this.dragSelectionHandle = d3.drag()
+			.on("start", this.dragStartLinkHandle.bind(this))
+			.on("drag", this.dragMoveLinkHandle.bind(this))
+			.on("end", this.dragEndLinkHandle.bind(this));
 
 		// Create a zoom object for use with the canvas.
 		this.zoom =
@@ -760,7 +771,7 @@ export default class SVGCanvasRenderer {
 		this.canvasGrp
 			.selectAll(this.getSelectorForId("link_grp", link.id))
 			.selectAll(".d3-link-line")
-			.attr("data-drag-node-over", state ? true : null); // true will add the attr, null will rmeove it
+			.attr("data-drag-node-over", state ? true : null); // true will add the attr, null will remove it
 	}
 
 	// Switches on or off node port highlighting depending on the node
@@ -768,17 +779,15 @@ export default class SVGCanvasRenderer {
 	// called as a new link is being drawn towards a target node to highlight
 	// the target node.
 	setNewLinkOverNode() {
-		const node = this.getNodeAtMousePos(this.canvasLayout.nodeProximity);
-		if (node && node.id !== this.drawingNewLinkData.srcObjId &&
-				((this.drawingNewLinkData.action === "node-node" && !this.isPortConnected(node)) ||
-					(this.drawingNewLinkData.action === "comment-node" && !this.isSrcObjConnectedToNode(this.drawingNewLinkData.srcObjId, node.id)))) {
+		const nodeNearMouse = this.getNodeAtMousePos(this.canvasLayout.nodeProximity);
+		if (nodeNearMouse && this.isConnectionAllowedToNearbyNode(nodeNearMouse)) {
 			if (!this.dragNewLinkOverNode) {
-				this.dragNewLinkOverNode = node;
+				this.dragNewLinkOverNode = nodeNearMouse;
 				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, true);
 
-			} else if (node.id !== this.dragNewLinkOverNode.id) {
+			} else if (nodeNearMouse.id !== this.dragNewLinkOverNode.id) {
 				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, false);
-				this.dragNewLinkOverNode = node;
+				this.dragNewLinkOverNode = nodeNearMouse;
 				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, true);
 			}
 
@@ -790,12 +799,34 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	isConnectionAllowedToNearbyNode(nodeNearMouse) {
+		if (this.drawingNewLinkData) {
+			if (this.drawingNewLinkData.action === NODE_LINK) {
+				const srcNode = this.drawingNewLinkData.srcNode;
+				const trgNode = nodeNearMouse;
+				const srcNodePortId = this.drawingNewLinkData.srcNodePortId;
+				const trgNodePortId = this.getDefaultInputPortId(trgNode); // TODO - make specific to nodes.
+				return CanvasUtils.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, this.activePipeline.links);
+			}
+
+			if (this.drawingNewLinkData.action === COMMENT_LINK) {
+				return CanvasUtils.isCommentLinkConnectionAllowed(this.drawingNewLinkData.srcObjId, nodeNearMouse.id, this.activePipeline.links);
+			}
+		}
+
+		if (this.draggingLinkData) {
+			const newLink = this.getNewLinkOnDrag(this.canvasLayout.nodeProximity);
+			if (newLink) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	// Switches on or off the input-port highlighting on the node passed in.
 	// This is called when the user drags a new link towards a target node.
 	setNewLinkOverNodeHighlighting(node, state) {
-		if (node &&
-				((this.drawingNewLinkData.action === "node-node" && node.inputs && node.inputs.length > 0) ||
-					this.drawingNewLinkData.action === "comment-node")) {
+		if (node) {
 			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id))
 				.attr("data-new-link-over", state ? "yes" : "no");
 		}
@@ -804,26 +835,8 @@ export default class SVGCanvasRenderer {
 	// Removes the data-new-link-over attribute used for highlighting a node
 	// that a new link is being dragged towards or over.
 	setNewLinkOverNodeCancel() {
-		const node = this.getNodeAtMousePos(this.canvasLayout.nodeProximity);
-		this.setNewLinkOverNodeHighlighting(node, false);
+		this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, false);
 		this.dragNewLinkOverNode = null;
-	}
-
-	// Returns true if the first port of the node passed in is in connected state
-	// or false if it isn't connected.
-	isPortConnected(node) {
-		const connected = this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id))
-			.selectAll(this.getSelectorForClass(this.getNodeInputPortClassName()))
-			.attr("connected");
-		return connected === "yes";
-	}
-
-	// Returns true if the object for the src node ID passed in is currently
-	// connected to the node for the trgNodeId passed in.
-	isSrcObjConnectedToNode(srcObjId, trgNodeId) {
-		const ret = this.activePipeline.links.filter((link) =>
-			link.srcNodeId === srcObjId && link.trgNodeId === trgNodeId);
-		return ret.length > 0;
 	}
 
 	// Processes the drop of a palette node template onto the canvas.
@@ -874,12 +887,17 @@ export default class SVGCanvasRenderer {
 	// Returns true if the link is attached to both a source node and a
 	// target node which is indicated by the link having srcNodeId and trgNodeId
 	// fields. When either or both of these fields are undefined the link is
-	// semi or fully detached. This can happen when enableDetachableLinks is set.
+	// semi or fully detached. This can happen when detachable links are allowed.
 	isLinkFullyAttached(link) {
 		if (link) {
 			return typeof link.srcNodeId !== "undefined" && typeof link.trgNodeId !== "undefined";
 		}
 		return false;
+	}
+
+	getLink(linkId) {
+		const link = this.activePipeline.links.find((l) => l.id === linkId);
+		return (typeof link === "undefined") ? null : link;
 	}
 
 	getNode(nodeId) {
@@ -924,6 +942,18 @@ export default class SVGCanvasRenderer {
 			obj = this.getComment(id);
 		}
 		return obj;
+	}
+
+	// Returns the default input port ID for the node, which will be the ID of
+	// the first port, or null if there are no inputs.
+	getDefaultInputPortId(node) {
+		return (node.inputs && node.inputs.length > 0 ? node.inputs[0].id : null);
+	}
+
+	// Returns the default output port ID for the node, which will be the ID of
+	// the first port, or null if there are no outputs.
+	getDefaultOutputPortId(node) {
+		return (node.outputs && node.outputs.length > 0 ? node.outputs[0].id : null);
 	}
 
 	// Sets the maximum zoom extent if we are the renderer of the top level flow
@@ -1045,6 +1075,9 @@ export default class SVGCanvasRenderer {
 				if (this.drawingNewLinkData) {
 					this.drawNewLink();
 				}
+				if (this.draggingLinkData) {
+					this.dragLinkHandle();
+				}
 			})
 			// Don't use mousedown.zoom here as it will replace the zoom start behavior
 			// and prevent panning of canvas background.
@@ -1062,6 +1095,9 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Canvas - mouseup-zoom");
 				if (this.drawingNewLinkData) {
 					this.completeNewLink();
+				}
+				if (this.draggingLinkData) {
+					this.completeDraggedLink();
 				}
 			})
 			.on("click.zoom", () => {
@@ -1553,6 +1589,12 @@ export default class SVGCanvasRenderer {
 			this.drawingNewLinkData = null;
 		}
 
+		if (this.draggingLinkData) {
+			this.stopDraggingLink();
+			this.draggingLinkData = null;
+		}
+
+
 		if (d3Event.transform.k === this.zoomStartPoint.k &&
 				this.regionSelect === true) {
 			this.removeRegionSelector();
@@ -1850,8 +1892,10 @@ export default class SVGCanvasRenderer {
 			this.dragRunningX = 0;
 			this.dragRunningY = 0;
 			this.dragObjects = this.getDragObjects(d);
-			this.dragStartX = this.dragObjects[0].x_pos;
-			this.dragStartY = this.dragObjects[0].y_pos;
+			if (this.dragObjects && this.dragObjects.length > 0) {
+				this.dragStartX = this.dragObjects[0].x_pos;
+				this.dragStartY = this.dragObjects[0].y_pos;
+			}
 
 			// If we are dragging an 'insertable' node, set it to be translucent so
 			// that, when it is dragged over a link line, the highlightd line can be seen OK.
@@ -1943,11 +1987,7 @@ export default class SVGCanvasRenderer {
 			if (this.dragOffsetX === 0 &&
 					this.dragOffsetY === 0 &&
 					this.config.enableDragWithoutSelect) {
-				this.selectObject(
-					d,
-					d3Event.type,
-					d3Event.sourceEvent.shiftKey,
-					CanvasUtils.isCmndCtrlPressed(d3Event.sourceEvent));
+				this.selectObjectSourceEvent(d);
 
 			} else {
 				if (this.dragRunningX !== 0 ||
@@ -1985,6 +2025,48 @@ export default class SVGCanvasRenderer {
 			}
 		}
 		this.logger.logEndTimer("dragEnd", true);
+	}
+
+	dragStartLinkHandle(d, index, linkHandles) {
+		this.logger.logStartTimer("dragStartLinkHandle");
+
+		this.draggingLinkHandle = true;
+
+		const handleSelection = d3.select(linkHandles[index]);
+		const link = this.getLink(d.id);
+		const oldLink = cloneDeep(link);
+
+		const linkGrpSelector = this.getSelectorForId("link_grp", d.id);
+
+		this.draggingLinkData = {
+			lineInfo: d,
+			link: link,
+			oldLink: oldLink,
+			linkGrpSelection: d3.select(linkGrpSelector)
+		};
+
+		if (handleSelection.attr("class").includes("d3-link-handle-end")) {
+			this.draggingLinkData.endBeingDragged = "end";
+
+		} else if (handleSelection.attr("class").includes("d3-link-handle-start")) {
+			this.draggingLinkData.endBeingDragged = "start";
+		}
+
+		this.dragLinkHandle();
+		this.logger.logEndTimer("dragStartLinkHandle", true);
+	}
+
+	dragMoveLinkHandle() {
+		this.logger.logStartTimer("dragMoveLinkHandle");
+		this.dragLinkHandle();
+		this.logger.logEndTimer("dragMoveLinkHandle", true);
+	}
+
+	dragEndLinkHandle() {
+		this.logger.logStartTimer("dragEndLinkHandle");
+		this.completeDraggedLink();
+		this.draggingLinkHandle = false;
+		this.logger.logEndTimer("dragEndLinkHandle", true);
 	}
 
 	// Switches on or off the translucent state of the node identified by the
@@ -2083,9 +2165,6 @@ export default class SVGCanvasRenderer {
 				.attr("class", "d3-node-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
-					if (that.drawingNewLinkData === null && !that.dragging) {
-						d3.select(this).raise();
-					}
 					that.setNodeStyles(d, "hover", d3.select(this));
 					that.addDynamicNodeIcons(d, this);
 					if (that.canOpenTip(TIP_TYPE_NODE)) {
@@ -2110,11 +2189,7 @@ export default class SVGCanvasRenderer {
 				.on("mousedown", (d) => {
 					this.logger.log("Node Group - mouse down");
 					if (!this.config.enableDragWithoutSelect) {
-						this.selectObject(
-							d,
-							d3Event.type,
-							d3Event.shiftKey,
-							CanvasUtils.isCmndCtrlPressed(d3Event));
+						this.selectObjectD3Event(d);
 					}
 					this.logger.log("Node Group - finished mouse down");
 				})
@@ -2127,7 +2202,10 @@ export default class SVGCanvasRenderer {
 					d3Event.stopPropagation();
 					this.logger.log("Node Group - mouse up");
 					if (this.drawingNewLinkData) {
-						this.completeNewLinkOnNode(d);
+						this.completeNewLink();
+					}
+					if (this.draggingLinkData) {
+						this.completeDraggedLink(d);
 					}
 				})
 				.on("click", (d) => {
@@ -2153,7 +2231,7 @@ export default class SVGCanvasRenderer {
 						// With enableDragWithoutSelect set to true, the object for which the
 						// context menu is being requested needs to be implicitely selected.
 						if (this.config.enableDragWithoutSelect) {
-							this.selectObject(d, d3Event.type, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+							this.selectObjectD3Event(d);
 						}
 						that.openContextMenu("node", d);
 					}
@@ -2278,7 +2356,7 @@ export default class SVGCanvasRenderer {
 						d3Event.stopPropagation();
 						this.drawingNewLinkData = {
 							srcObjId: d.id,
-							action: "node-node",
+							action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
 							startPos: this.getTransformedMousePos(),
 							linkArray: []
 						};
@@ -2396,7 +2474,7 @@ export default class SVGCanvasRenderer {
 								.append(d.layout.inputPortObject)
 								.attr("data-id", (port) => this.getId("node_inp_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
-								.attr("data-port-id", (port) => port.id) // This is needed by getNodeInputPortAtMousePos
+								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
 								.attr("connected", "no")
 								.attr("isSupernodeBinding", this.isSuperBindingNode(d) ? "yes" : "no")
 								.on("mousedown", (port) => {
@@ -2408,7 +2486,7 @@ export default class SVGCanvasRenderer {
 											this.drawingNewLinkData = {
 												srcObjId: d.id,
 												srcPortId: port.id,
-												action: "node-node",
+												action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
 												srcNode: srcNode,
 												startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
 												portType: "input",
@@ -2449,7 +2527,7 @@ export default class SVGCanvasRenderer {
 									// With enableDragWithoutSelect set to true, the object for which the
 									// context menu is being requested needs to be implicitely selected.
 									if (this.config.enableDragWithoutSelect) {
-										this.selectObject(d, d3Event.type, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+										this.selectObjectD3Event(d);
 									}
 
 									this.openContextMenu("input_port", d, port);
@@ -2493,6 +2571,7 @@ export default class SVGCanvasRenderer {
 									.append("path")
 									.attr("data-id", (port) => this.getId("node_inp_port_arrow", d.id, port.id))
 									.attr("data-pipeline-id", this.activePipeline.id)
+									.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
 									.attr("class", "d3-node-port-input-arrow")
 									.attr("connected", "no")
 									.attr("isSupernodeBinding", this.isSuperBindingNode(d) ? "yes" : "no")
@@ -2518,7 +2597,7 @@ export default class SVGCanvasRenderer {
 										// With enableDragWithoutSelect set to true, the object for which the
 										// context menu is being requested needs to be implicitely selected.
 										if (this.config.enableDragWithoutSelect) {
-											this.selectObject(d, d3Event.type, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+											this.selectObjectD3Event(d);
 										}
 										this.openContextMenu("input_port", d, port);
 									})
@@ -2546,6 +2625,7 @@ export default class SVGCanvasRenderer {
 								.append(d.layout.outputPortObject)
 								.attr("data-id", (port) => this.getId("node_out_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
+								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
 								.on("mousedown", (port) => {
 									// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 									if (d3Event.button === 0) {
@@ -2554,7 +2634,7 @@ export default class SVGCanvasRenderer {
 										this.drawingNewLinkData = {
 											srcObjId: d.id,
 											srcPortId: port.id,
-											action: "node-node",
+											action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
 											srcNode: srcNode,
 											startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
 											portType: "output",
@@ -2594,7 +2674,7 @@ export default class SVGCanvasRenderer {
 									// With enableDragWithoutSelect set to true, the object for which the
 									// context menu is being requested needs to be implicitely selected.
 									if (this.config.enableDragWithoutSelect) {
-										this.selectObject(d, d3Event.type, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+										this.selectObjectD3Event(d);
 									}
 									this.openContextMenu("output_port", d, port);
 								})
@@ -2636,6 +2716,26 @@ export default class SVGCanvasRenderer {
 			nodeGroupSel.exit().remove();
 		}
 		this.logger.logEndTimer("displayNodes " + this.getFlags());
+	}
+
+	// Adds the object passed in to the set of selected objects using
+	// the regular D3Event object.
+	selectObjectD3Event(d) {
+		this.selectObject(
+			d,
+			d3Event.type,
+			d3Event.shiftKey,
+			CanvasUtils.isCmndCtrlPressed(d3Event));
+	}
+
+	// Adds the object passed in to the set of selected objects using
+	// the D3Event object's sourceEvent object.
+	selectObjectSourceEvent(d) {
+		this.selectObject(
+			d,
+			d3Event.type,
+			d3Event.sourceEvent.shiftKey,
+			CanvasUtils.isCmndCtrlPressed(d3Event.sourceEvent));
 	}
 
 	// Performs required action for when either a comment, node or link is selected.
@@ -2827,6 +2927,13 @@ export default class SVGCanvasRenderer {
 			return "d3-node-port-input-assoc";
 		}
 		return "d3-node-port-input";
+	}
+
+	getNodeOutputPortClassName(port) {
+		if (this.config.enableAssocLinkCreation) {
+			return "d3-node-port-output-assoc";
+		}
+		return "d3-node-port-output";
 	}
 
 	// Sets the image content on the DOM imageElement from the image field of
@@ -3554,7 +3661,7 @@ export default class SVGCanvasRenderer {
 		if (this.canvasLayout.connectionType === "halo") {
 			this.drawNewLinkForHalo(transPos);
 		} else {
-			if (this.drawingNewLinkData.action === "comment-node") {
+			if (this.drawingNewLinkData.action === COMMENT_LINK) {
 				this.drawNewCommentLinkForPorts(transPos);
 			} else {
 				this.drawNewNodeLinkForPorts(transPos);
@@ -3600,7 +3707,10 @@ export default class SVGCanvasRenderer {
 
 		if (this.config.enableAssocLinkCreation) {
 			this.drawingNewLinkData.linkArray[0].assocLinkVariation =
-				this.getNewLinkAssocVariation(this.drawingNewLinkData.linkArray[0].x1, this.drawingNewLinkData.linkArray[0].x2);
+				this.getNewLinkAssocVariation(
+					this.drawingNewLinkData.linkArray[0].x1,
+					this.drawingNewLinkData.linkArray[0].x2,
+					this.drawingNewLinkData.portType);
 		}
 
 		const pathInfo = this.linkUtils.getConnectorPathInfo(this.drawingNewLinkData.linkArray[0], this.drawingNewLinkData.minInitialLine);
@@ -3656,7 +3766,8 @@ export default class SVGCanvasRenderer {
 						.attr("x", d.x2 - (that.drawingNewLinkData.portWidth / 2))
 						.attr("y", d.y2 - (that.drawingNewLinkData.portHeight / 2))
 						.attr("width", that.drawingNewLinkData.portWidth)
-						.attr("height", that.drawingNewLinkData.portHeight);
+						.attr("height", that.drawingNewLinkData.portHeight)
+						.attr("transform", that.getGuideImageTransform(d));
 				} else {
 					d3.select(this)
 						.attr("cx", d.x2)
@@ -3664,6 +3775,14 @@ export default class SVGCanvasRenderer {
 						.attr("r", that.drawingNewLinkData.portRadius);
 				}
 			});
+	}
+
+	getGuideImageTransform(d) {
+		const adjacent = d.x2 - d.x1;
+		const opposite = d.y2 - d.y1;
+		let angle = Math.atan(opposite / adjacent) * (180 / Math.PI);
+		angle = adjacent >= 0 ? angle : angle + 180;
+		return `rotate(${angle},${d.x2},${d.y2})`;
 	}
 
 	drawNewCommentLinkForPorts(transPos) {
@@ -3730,8 +3849,8 @@ export default class SVGCanvasRenderer {
 		if (trgNode !== null) {
 			this.completeNewLinkOnNode(trgNode);
 		} else {
-			if (this.config.enableDetachableLinks &&
-					this.drawingNewLinkData.action === "node-node" &&
+			if (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE &&
+					this.drawingNewLinkData.action === NODE_LINK &&
 					!this.config.enableAssocLinkCreation) {
 				this.completeNewDetachedLink();
 			} else {
@@ -3751,26 +3870,33 @@ export default class SVGCanvasRenderer {
 		}
 
 		if (trgNode !== null) {
-			if (this.drawingNewLinkData.action === "node-node") {
-				var trgPortId = this.getNodeInputPortAtMousePos();
-				trgPortId = trgPortId || (trgNode.inputs && trgNode.inputs.length > 0 ? trgNode.inputs[0].id : null);
-				this.canvasController.editActionHandler({
-					editType: "linkNodes",
-					editSource: "canvas",
-					nodes: [{ "id": this.drawingNewLinkData.srcObjId, "portId": this.drawingNewLinkData.srcPortId }],
-					targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
-					type: (this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK),
-					linkType: "data", // Added for historical purposes - for WML Canvas support
-					pipelineId: this.pipelineId });
+			const type = this.drawingNewLinkData.action;
+			if (type === NODE_LINK || type === ASSOCIATION_LINK) {
+				const srcNode = this.getNode(this.drawingNewLinkData.srcObjId);
+				const srcPortId = this.drawingNewLinkData.srcPortId;
+				const trgPortId = this.getNodePortAtMousePos(INPUT_TYPE);
+
+				if (CanvasUtils.isConnectionAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links, type)) {
+					this.canvasController.editActionHandler({
+						editType: "linkNodes",
+						editSource: "canvas",
+						nodes: [{ "id": this.drawingNewLinkData.srcObjId, "portId": this.drawingNewLinkData.srcPortId }],
+						targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
+						type: type,
+						linkType: "data", // Added for historical purposes - for WML Canvas support
+						pipelineId: this.pipelineId });
+				}
 			} else {
-				this.canvasController.editActionHandler({
-					editType: "linkComment",
-					editSource: "canvas",
-					nodes: [this.drawingNewLinkData.srcObjId],
-					targetNodes: [trgNode.id],
-					type: COMMENT_LINK,
-					linkType: "comment", // Added for historical purposes - for WML Canvas support
-					pipelineId: this.pipelineId });
+				if (CanvasUtils.isCommentLinkConnectionAllowed(this.drawingNewLinkData.srcObjId, trgNode.id, this.activePipeline.links)) {
+					this.canvasController.editActionHandler({
+						editType: "linkComment",
+						editSource: "canvas",
+						nodes: [this.drawingNewLinkData.srcObjId],
+						targetNodes: [trgNode.id],
+						type: COMMENT_LINK,
+						linkType: "comment", // Added for historical purposes - for WML Canvas support
+						pipelineId: this.pipelineId });
+				}
 			}
 		}
 
@@ -3778,8 +3904,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Handles the completion of a new link when the end is dropped away from
-	// a node (when enableDetachableLinks is set to true) which creates a new
-	// detached link.
+	// a node (when enableLinkSelection is set to LINK_SELECTION_DETACHABLE)
+	// which creates a  new detached link.
 	completeNewDetachedLink() {
 		// If we completed a connection remove the new line objects.
 		this.removeNewLink();
@@ -3881,8 +4007,8 @@ export default class SVGCanvasRenderer {
 					.attr("x", saveX1 - (saveNewLinkData.portWidth / 2))
 					.attr("y", saveY1 - (saveNewLinkData.portHeight / 2))
 					.attr("cx", saveX1)
-					.attr("cy", saveY1);
-
+					.attr("cy", saveY1)
+					.attr("transform", null);
 				this.canvasGrp.selectAll(".d3-new-connection-line")
 					.transition()
 					.duration(1000)
@@ -3902,6 +4028,188 @@ export default class SVGCanvasRenderer {
 			this.canvasGrp.selectAll(".d3-new-connection-guide").remove();
 			this.canvasGrp.selectAll(".d3-new-connection-arrow").remove();
 		}
+	}
+
+	dragLinkHandle() {
+		const transPos = this.getTransformedMousePos();
+		const link = this.draggingLinkData.link;
+
+		if (this.draggingLinkData.endBeingDragged === "start") {
+			link.srcPos = { x_pos: transPos.x, y_pos: transPos.y };
+			delete link.srcNodeId;
+			delete link.srcNodePortId;
+
+		} else {
+			link.trgPos = { x_pos: transPos.x, y_pos: transPos.y };
+			delete link.trgNodeId;
+			delete link.trgNodePortId;
+		}
+
+		this.displayLinks();
+
+		// Switch on an attribute to indicate a new link is being dragged
+		// towards and over a target node.
+		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+			this.setNewLinkOverNode();
+		}
+	}
+
+	completeDraggedLink() {
+		const newLink = this.getNewLinkOnDrag();
+
+		if (newLink) {
+			this.canvasController.editActionHandler({
+				editType: "updateLink",
+				editSource: "canvas",
+				newLink: newLink,
+				pipelineId: this.pipelineId });
+		} else {
+			this.restoreLink(this.draggingLinkData.oldLink);
+			this.displayLinks();
+		}
+
+		// Switch 'new link over node' highlighting off
+		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+			this.setNewLinkOverNodeCancel();
+		}
+
+		this.stopDraggingLink();
+	}
+
+	// Returns a new link if one can be created given the current data in the
+	// this.draggingLinkData object. Returns null if a link cannot be created.
+	getNewLinkOnDrag(proximity) {
+		const oldLink = this.draggingLinkData.oldLink;
+		const newLink = cloneDeep(oldLink);
+
+		if (this.draggingLinkData.endBeingDragged === "start") {
+			delete newLink.srcNodeId;
+			delete newLink.srcNodePortId;
+			delete newLink.srcPos;
+
+			const srcNode = this.getNodeAtMousePos(proximity);
+			if (srcNode) {
+				newLink.srcNodeId = srcNode.id;
+				newLink.srcNodePortId = this.getNodePortAtMousePos(OUTPUT_TYPE, proximity);
+			}	else {
+				newLink.srcPos = this.draggingLinkData.link.srcPos;
+			}
+
+		} else {
+			delete newLink.trgNodeId;
+			delete newLink.trgNodePortId;
+			delete newLink.trgPos;
+
+			const trgNode = this.getNodeAtMousePos(proximity);
+			if (trgNode) {
+				newLink.trgNodeId = trgNode.id;
+				newLink.trgNodePortId = this.getNodePortAtMousePos(INPUT_TYPE, proximity);
+			}	else {
+				newLink.trgPos = this.draggingLinkData.link.trgPos;
+			}
+		}
+
+		// If links are not detachable, we cannot create a link if srcPos
+		// or trgPos are set because that would create a detached link unconnected
+		// to either a source node or a target node or both.
+		if (this.config.enableLinkSelection !== LINK_SELECTION_DETACHABLE &&
+				(newLink.srcPos || newLink.trgPos)) {
+			return null;
+		}
+
+		if (this.canExecuteUpdateLinkCommand(newLink, oldLink)) {
+			return newLink;
+		}
+		return null;
+	}
+
+	// Restores the link in the links array with the one passd in.
+	restoreLink(oldLink) {
+		const index = this.activePipeline.links.findIndex((l) => l.id === oldLink.id);
+		this.activePipeline.links.splice(index, 1, oldLink);
+	}
+
+	// Returns true if the update command for a dragged link can be executed.
+	// It might be prevented from executing if either the course
+	canExecuteUpdateLinkCommand(newLink, oldLink) {
+		const srcNode = this.getNode(newLink.srcNodeId);
+		const trgNode = this.getNode(newLink.trgNodeId);
+		const linkSrcChanged = this.hasLinkSrcChanged(newLink, oldLink);
+		const linkTrgChanged = this.hasLinkTrgChanged(newLink, oldLink);
+		const links = this.activePipeline.links;
+		let executeCommand = true;
+
+		if (linkSrcChanged && srcNode &&
+				!CanvasUtils.isSrcConnectionAllowedWithDetachedLinks(newLink.srcNodePortId, srcNode, links)) {
+			executeCommand = false;
+		}
+		if (linkTrgChanged && trgNode &&
+				!CanvasUtils.isTrgConnectionAllowedWithDetachedLinks(newLink.trgNodePortId, trgNode, links)) {
+			executeCommand = false;
+		}
+		if (srcNode && trgNode &&
+				!CanvasUtils.isConnectionAllowedWithDetachedLinks(newLink.srcNodePortId, newLink.trgNodePortId, srcNode, trgNode, links)) {
+			executeCommand = false;
+		}
+		return executeCommand;
+	}
+
+	// Returns true if the source information has changed between
+	// the two links.
+	hasLinkSrcChanged(newLink, oldLink) {
+		let linkUpdated = false;
+
+		if (newLink.srcNodeId) {
+			if (newLink.srcNodeId !== oldLink.srcNodeId) {
+				linkUpdated = true;
+			}
+
+			if (newLink.srcNodePortId !== oldLink.srcNodePortId) {
+				linkUpdated = true;
+			}
+
+		}	else {
+			if (oldLink.srcPos) {
+				if (newLink.srcPos.x_pos !== oldLink.srcPos.x_pos ||
+						newLink.srcPos.y_pos !== oldLink.srcPos.y_pos) {
+					linkUpdated = true;
+				}
+			} else {
+				linkUpdated = true;
+			}
+		}
+		return linkUpdated;
+	}
+
+	// Returns true if the target information has changed between
+	// the two links.
+	hasLinkTrgChanged(newLink, oldLink) {
+		let linkUpdated = false;
+
+		if (newLink.trgNodeId) {
+			if (newLink.trgNodeId !== oldLink.trgNodeId) {
+				linkUpdated = true;
+			}
+
+			if (newLink.trgNodePortId !== oldLink.trgNodePortId) {
+				linkUpdated = true;
+			}
+
+		}	else {
+			if (oldLink.trgPos) {
+				if (newLink.trgPos.x_pos !== oldLink.trgPos.x_pos ||
+						newLink.trgPos.y_pos !== oldLink.trgPos.y_pos) {
+					linkUpdated = true;
+				}
+			} else {
+				linkUpdated = true;
+			}
+		}
+		return linkUpdated;
+	}
+
+	stopDraggingLink() {
+		this.draggingLinkData = null;
 	}
 
 	// Returns a link, if one can be found, at the position indicated by x and y
@@ -3969,11 +4277,7 @@ export default class SVGCanvasRenderer {
 		return node;
 	}
 
-	// Returns the input port that is at the current mouse position. If
-	// nodeProximity and portProximity are provided they will be used as
-	// additional space beyond the node and port boundaries to decide if the
-	// node or port are under the current mouse position.
-	getNodeInputPortAtMousePos(nodeProximity, portProximity) {
+	getNodePortAtMousePos(portType, nodeProximity, portProximity) {
 		if (this.canvasLayout.connectionType === "halo") {
 			return null;
 		}
@@ -3982,17 +4286,36 @@ export default class SVGCanvasRenderer {
 		const node = this.getNodeAtMousePos(nodeProximity);
 		const portProx = portProximity || 0;
 		let portId = null;
+		let defaultPortId = null;
+
 		if (node) {
-			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id)).selectAll("." + this.getNodeInputPortClassName())
+			let portClassName;
+			let portObjectType;
+			let nodeWidthOffset;
+
+			if (portType === OUTPUT_TYPE) {
+				portClassName = this.getNodeOutputPortClassName();
+				portObjectType = node.layout.outputPortObject;
+				nodeWidthOffset = node.width;
+				defaultPortId = this.getDefaultOutputPortId(node);
+
+			} else {
+				portClassName = this.getNodeInputPortClassName();
+				portObjectType = node.layout.inputPortObject;
+				nodeWidthOffset = 0;
+				defaultPortId = this.getDefaultInputPortId(node);
+			}
+
+			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id)).selectAll("." + portClassName)
 				.each(function(p) { // Use function keyword so 'this' pointer references the dom object
 					const portObj = d3.select(this);
-					if (node.layout.inputPortObject === PORT_OBJECT_IMAGE) {
+					if (portObjectType === PORT_OBJECT_IMAGE) {
 						const xx = node.x_pos + Number(portObj.attr("x"));
 						const yy = node.y_pos + Number(portObj.attr("y"));
 						const wd = Number(portObj.attr("width"));
 						const ht = Number(portObj.attr("height"));
 						if (pos.x >= xx - portProx &&
-								pos.x <= xx + wd + portProx &&
+								pos.x <= xx + nodeWidthOffset + wd + portProx &&
 								pos.y >= yy - portProx &&
 								pos.y <= yy + ht + portProx) {
 							portId = this.getAttribute("data-port-id");
@@ -4009,8 +4332,13 @@ export default class SVGCanvasRenderer {
 					}
 				});
 		}
+
+		if (!portId) {
+			portId = defaultPortId;
+		}
 		return portId;
 	}
+
 
 	// Returns a sizing rectangle for nodes and comments. This extends an
 	// invisible area out beyond the highlight sizing line to improve usability
@@ -4387,7 +4715,7 @@ export default class SVGCanvasRenderer {
 								CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
 								that.drawingNewLinkData = {
 									srcObjId: d.id,
-									action: "comment-node",
+									action: COMMENT_LINK,
 									startPos: { x: d.x_pos - that.canvasLayout.commentHighlightGap, y: d.y_pos - that.canvasLayout.commentHighlightGap },
 									linkArray: []
 								};
@@ -4406,11 +4734,7 @@ export default class SVGCanvasRenderer {
 					this.logger.log("Comment Group - mouse down");
 
 					if (!this.config.enableDragWithoutSelect) {
-						this.selectObject(
-							d,
-							d3Event.type,
-							d3Event.shiftKey,
-							CanvasUtils.isCmndCtrlPressed(d3Event));
+						this.selectObjectD3Event(d);
 					}
 					this.logger.log("Comment Group - finished mouse down");
 				})
@@ -4436,7 +4760,7 @@ export default class SVGCanvasRenderer {
 					// With enableDragWithoutSelect set to true, the object for which the
 					// context menu is being requested needs to be implicitely selected.
 					if (this.config.enableDragWithoutSelect) {
-						this.selectObject(d, d3Event.type, d3Event.shiftKey, CanvasUtils.isCmndCtrlPressed(d3Event));
+						this.selectObjectD3Event(d);
 					}
 					this.openContextMenu("comment", d);
 				})
@@ -4516,7 +4840,7 @@ export default class SVGCanvasRenderer {
 						d3Event.stopPropagation();
 						this.drawingNewLinkData = {
 							srcObjId: d.id,
-							action: "comment-node",
+							action: COMMENT_LINK,
 							startPos: this.getTransformedMousePos(),
 							linkArray: []
 						};
@@ -5307,17 +5631,16 @@ export default class SVGCanvasRenderer {
 		// be still links on display that need to be deleted.
 
 		var startTimeDrawingLines = Date.now();
-		const that = this;
 		const linkSelector = this.getSelectorForClass("d3-link-group");
 
 		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing()) {
 			return;
 
 		} else if (this.selecting || this.regionSelect) {
-			if (this.config.enableLinkSelection) {
+			if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 				this.canvasGrp
 					.selectAll(linkSelector)
-					.attr("data-selected", (d) => (that.objectModel.isSelected(d.id, that.activePipeline.id) ? true : null));
+					.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null));
 
 				this.superRenderers.forEach((renderer) => {
 					renderer.selecting = true;
@@ -5342,37 +5665,7 @@ export default class SVGCanvasRenderer {
 			.attr("style", (d) => this.getLinkGrpStyle(d))
 			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null))
 			.call((joinedLinkGrps) => {
-				// Update link selection area
-				joinedLinkGrps
-					.selectAll(".d3-link-selection-area")
-					.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
-					.attr("d", (d) => d.pathInfo.path);
-
-				// Update link line
-				joinedLinkGrps
-					.selectAll(".d3-link-line")
-					.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
-					.attr("d", (d) => d.pathInfo.path)
-					.attr("style", (d) => that.getObjectStyle(d, "line", "default"));
-
-				// Update link line arrow head
-				joinedLinkGrps
-					.filter((d) => (d.type === NODE_LINK && this.canvasLayout.dataLinkArrowHead) ||
-													(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
-													(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
-					.selectAll(".d3-link-line-arrow-head")
-					.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
-					.attr("d", (d) => this.getArrowHead(d))
-					.attr("style", (d) => that.getObjectStyle(d, "line", "default"));
-
-				// Update decorations on the node-node or association links.
-				joinedLinkGrps.each(function(d) {
-					if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
-						that.displayDecorations(d, DEC_LINK, d3.select(this), d.decorations);
-					}
-				});
-
-				this.setDisplayOrder(joinedLinkGrps);
+				this.updateLinks(joinedLinkGrps, lineArray);
 			});
 
 		// Set connection status of output ports and input ports plus arrow.
@@ -5408,6 +5701,7 @@ export default class SVGCanvasRenderer {
 		return lineArray.find((el) => el.id === id);
 	}
 
+	// Creates all newly created links specified in the enter selection.
 	createNewLinks(enter) {
 		const that = this;
 
@@ -5416,15 +5710,12 @@ export default class SVGCanvasRenderer {
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", (d) => "d3-link-group " + this.getLinkClass(d))
-			.on("mousedown", (d) => {
+			.on("mousedown", (d, index, links) => {
 				this.logger.log("Link Group - mouse down");
-				if (this.config.enableLinkSelection) {
-					this.selectObject(
-						d,
-						d3Event.type,
-						d3Event.shiftKey,
-						CanvasUtils.isCmndCtrlPressed(d3Event));
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+					this.selectObjectD3Event(d);
 				}
+				d3Event.stopPropagation();
 			})
 			.on("mouseup", () => {
 				this.logger.log("Link Group - mouse up");
@@ -5435,12 +5726,8 @@ export default class SVGCanvasRenderer {
 			})
 			.on("contextmenu", (d) => {
 				this.logger.log("Link Group - context menu");
-				if (this.config.enableLinkSelection) {
-					this.selectObject(
-						d,
-						d3Event.type,
-						d3Event.shiftKey,
-						CanvasUtils.isCmndCtrlPressed(d3Event));
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+					this.selectObjectD3Event(d);
 				}
 				this.openContextMenu("link", d);
 			})
@@ -5450,9 +5737,15 @@ export default class SVGCanvasRenderer {
 				// an arrow function instead and a direct reference to elements[index].
 				const targetObj = elements[index];
 
+				if (this.canvasLayout.linkHandleRaiseToTop &&
+						(this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+							this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)) {
+					this.raiseLinkToTop(targetObj);
+				}
 				this.setLinkLineStyles(targetObj, link, "hover");
 
-				if (this.canOpenTip(TIP_TYPE_LINK)) {
+				if (this.canOpenTip(TIP_TYPE_LINK) &&
+						!this.draggingLinkData) {
 					this.canvasController.openTip({
 						id: this.getId("link_tip", link.id),
 						type: TIP_TYPE_LINK,
@@ -5465,6 +5758,9 @@ export default class SVGCanvasRenderer {
 			})
 			.on("mouseleave", (link, index, elements) => {
 				const targetObj = elements[index];
+				if (!targetObj.getAttribute("data-selected")) {
+					this.lowerLinkToBottom(targetObj);
+				}
 				this.setLinkLineStyles(targetObj, link, "default");
 				this.canvasController.closeTip();
 			});
@@ -5487,7 +5783,122 @@ export default class SVGCanvasRenderer {
 			.append("path")
 			.attr("class", (d) => "d3-link-line-arrow-head " + this.getLinkClass(d));
 
+		// Add link line handles at start and end of line
+		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+			newLinkGrps
+				.filter((d) => d.type === NODE_LINK)
+				.append(this.canvasLayout.linkStartHandleObject)
+				.attr("class", (d) => "d3-link-line d3-link-handle-start")
+				// Use mouse down instead of click because it gets called before drag start.
+				.on("mousedown", (d) => {
+					this.logger.log("Link start handle - mouse down");
+					if (!this.config.enableDragWithoutSelect) {
+						this.selectObjectD3Event(d);
+					}
+					this.logger.log("Link end handle - finished mouse down");
+				})
+				.call(this.dragSelectionHandle);
+
+			newLinkGrps
+				.filter((d) => d.type === NODE_LINK)
+				.append(this.canvasLayout.linkEndHandleObject)
+				.attr("class", (d) => "d3-link-line d3-link-handle-end")
+				// Use mouse down instead of click because it gets called before drag start.
+				.on("mousedown", (d) => {
+					this.logger.log("Link end handle - mouse down");
+					if (!this.config.enableDragWithoutSelect) {
+						this.selectObjectD3Event(d);
+					}
+					this.logger.log("Link end handle - finished mouse down");
+				})
+				.call(this.dragSelectionHandle);
+		}
+
 		return newLinkGrps;
+	}
+
+	// Updates all the link groups (and descendent objects) in the joinedLinkGrps
+	// selection object. The selection object will contain newly created links
+	// as well as existing links.
+	updateLinks(joinedLinkGrps, lineArray) {
+		const that = this;
+
+		// Update link selection area
+		joinedLinkGrps
+			.selectAll(".d3-link-selection-area")
+			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+			.attr("d", (d) => d.pathInfo.path);
+
+		// Update link line
+		joinedLinkGrps
+			.selectAll(".d3-link-line")
+			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+			.attr("d", (d) => d.pathInfo.path)
+			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
+
+		// Update link line arrow head
+		joinedLinkGrps
+			.filter((d) => (d.type === NODE_LINK && this.canvasLayout.dataLinkArrowHead) ||
+											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
+											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
+			.selectAll(".d3-link-line-arrow-head")
+			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+			.attr("d", (d) => this.getArrowHead(d))
+			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
+
+		// Update decorations on the node-node or association links.
+		joinedLinkGrps.each(function(d) {
+			if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
+				that.displayDecorations(d, DEC_LINK, d3.select(this), d.decorations);
+			}
+		});
+
+		if (that.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				that.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+			joinedLinkGrps
+				.selectAll(".d3-link-handle-start")
+				.each((datum, index, linkHandles) => {
+					const obj = d3.select(linkHandles[index]);
+					if (this.canvasLayout.linkStartHandleObject === "image") {
+						obj
+							.attr("xlink:href", this.canvasLayout.linkStartHandleImage)
+							.attr("x", (d) => d.x1 - (this.canvasLayout.linkStartHandleWidth / 2))
+							.attr("y", (d) => d.y1 - (this.canvasLayout.linkStartHandleHeight / 2))
+							.attr("width", this.canvasLayout.linkStartHandleWidth)
+							.attr("height", this.canvasLayout.linkStartHandleHeight);
+
+					} else if (this.canvasLayout.linkStartHandleObject === "circle") {
+						obj
+							.attr("r", this.canvasLayout.linkStartHandleRadius)
+							.attr("cx", (d) => d.x1)
+							.attr("cy", (d) => d.y1);
+					}
+				});
+
+			joinedLinkGrps
+				.selectAll(".d3-link-handle-end")
+				.each((datum, index, linkHandles) => {
+					const obj = d3.select(linkHandles[index]);
+					if (this.canvasLayout.linkEndHandleObject === "image") {
+						obj
+							.attr("xlink:href", this.canvasLayout.linkEndHandleImage)
+							.attr("x", (d) => d.x2 - (this.canvasLayout.linkEndHandleWidth / 2))
+							.attr("y", (d) => d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
+							.attr("width", this.canvasLayout.linkEndHandleWidth)
+							.attr("height", this.canvasLayout.linkEndHandleHeight)
+							.attr("transform", (d) => this.getGuideImageTransform(d));
+
+					} else if (this.canvasLayout.linkEndHandleObject === "circle") {
+						obj
+							.attr("r", this.canvasLayout.linkEndHandleRadius)
+							.attr("cx", (d) => d.x2)
+							.attr("cy", (d) => d.y2);
+					}
+				});
+		}
+
+		this.setDisplayOrder(joinedLinkGrps);
 	}
 
 	setLinkLineStyles(linkObj, link, type) {
@@ -5593,11 +6004,40 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
 			this.canvasUnderlay.lower();
 		}
+
+		if (this.canvasLayout.linkHandleRaiseToTop &&
+				(this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+					this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)) {
+			this.raiseSelectedLinksToTop();
+		}
+	}
+
+	// Moves any selected links to the top of the display order. This is necessary
+	// when selection handles are being displayed on selected links because the
+	// handles may be in the same positions as port circles on the nodes.
+	raiseSelectedLinksToTop() {
+		this.canvasGrp
+			.selectAll(".d3-data-link[data-selected]")
+			.raise();
+	}
+
+	raiseLinkToTop(obj) {
+		d3.select(obj)
+			.raise();
+	}
+
+	lowerLinkToBottom(obj) {
+		d3.select(obj)
+			.lower();
 	}
 
 	// Returns true if the link passed in has one or more decorations.
 	hasOneDecorationOrMore(link) {
 		return link.decorations && link.decorations.length > 0;
+	}
+
+	isLinkBeingDragged(link) {
+		return this.draggingLinkData && this.draggingLinkData.link.id === link.id;
 	}
 
 	buildLineArray() {
@@ -5608,7 +6048,8 @@ export default class SVGCanvasRenderer {
 			const srcObj = link.type === COMMENT_LINK ? this.getComment(link.srcNodeId) : this.getNode(link.srcNodeId);
 			let lineObj = null;
 
-			if (this.config.enableDetachableLinks &&
+			if (((this.config.enableLinkSelection === LINK_SELECTION_HANDLES && this.isLinkBeingDragged(link)) ||
+						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) &&
 					(!srcObj || !trgNode)) {
 				lineObj = this.getDetachedLineObj(link, srcObj, trgNode);
 
@@ -5901,11 +6342,11 @@ export default class SVGCanvasRenderer {
 	// Returns a variation of association link to draw when a new link is being
 	// drawn outwards from a port. startX is the beginning point of the line
 	// at the port. endX is the position where the mouse is currently positioned.
-	getNewLinkAssocVariation(startX, endX) {
-		if (this.drawingNewLinkData.portType === "input" && startX > endX) {
+	getNewLinkAssocVariation(startX, endX, portType) {
+		if (portType === "input" && startX > endX) {
 			return ASSOC_VAR_CURVE_LEFT;
 
-		} else if (this.drawingNewLinkData.portType === "output" && startX < endX) {
+		} else if (portType === "output" && startX < endX) {
 			return ASSOC_VAR_CURVE_RIGHT;
 		}
 		return ASSOC_VAR_DOUBLE_BACK_RIGHT;

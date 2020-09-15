@@ -106,6 +106,7 @@ export default (state = {}, action) => {
 	case "ADD_LINK":
 	case "DELETE_LINK":
 	case "DELETE_LINKS":
+	case "UPDATE_LINK":
 	case "DETACH_LINKS":
 	case "ATTACH_LINKS":
 	case "ADD_COMMENT":
