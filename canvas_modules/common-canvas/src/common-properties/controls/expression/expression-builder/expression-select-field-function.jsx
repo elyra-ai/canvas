@@ -630,7 +630,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		return (
 			<div className="properties-expression-selection-fieldOrFunction" >
 				<div className="properties-expression-selection-content-switcher" >
-					<ContentSwitcher onChange={this.onSwitch.bind(this)} selectedIndex={this.state.selectedIndex}>
+					<ContentSwitcher light onChange={this.onSwitch.bind(this)} selectedIndex={this.state.selectedIndex}>
 						<Switch
 							key={0}
 							name={"expresson-builder-fields-tab"}
