@@ -41,7 +41,6 @@
   "required.error": "[Esperanto~Required parameter ''{label}'' has no value.~~~~~~~~~~~eo]",
   "datetime.format.error": "[Esperanto~Invalid {role}. Format should be {format}.~~~~~~~~~~~eo]",
   "invalid.field.error": "[Esperanto~Invalid {label}, field not found in data set.~~~~~~~~~~~~~eo]",
-  "expression.operators.label": "[Esperanto~Operators~~~~eo]",
   "expression.validate.label": "[Esperanto~Validate~~eo]",
   "expression.builder.title": "[Esperanto~Expression Builder~~~~eo]",
   "expression.builder.label": "[Esperanto~Expression~~~~~~eo]",
