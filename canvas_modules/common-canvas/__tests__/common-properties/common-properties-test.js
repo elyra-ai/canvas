@@ -186,13 +186,6 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 	});
 
-	it("When applyOnBlur=false `Cancel` and `Save` buttons should be rendered", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { applyOnBlur: false });
-		wrapper = renderedObject.wrapper;
-		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("Save");
-		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("Cancel");
-	});
-
 	it("When applyOnBlur=false applyPropertyChanges should not be called", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { applyOnBlur: false });
 		wrapper = renderedObject.wrapper;
@@ -658,6 +651,63 @@ describe("CommonProperties should setForm correctly", () => {
 		const originalFormat = { "field_annotation": ["there", "you"], "first_field": "hi", "first_field_checkbox": false, "hidden_field": null };
 		const objectFormat = controller.getPropertyValues({ applyProperties: true }).structureeditorObjectType;
 		expect(objectFormat).to.eql(originalFormat);
+	});
+});
+
+describe("PropertiesButtons should render with the correct labels", () => {
+	it("When applyOnBlur=false `Cancel` and `Save` buttons should be rendered", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { applyOnBlur: false });
+		const wrapper = renderedObject.wrapper;
+		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("Save");
+		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("Cancel");
+	});
+	it("properties buttons should use a custom label if provided in propertiesConfig", () => {
+		const propertiesConfig = {
+			applyOnBlur: false,
+			buttonLabels: {
+				primary: "test apply",
+				secondary: "test reject"
+			}
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
+		const wrapper = renderedObject.wrapper;
+		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("test apply");
+		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("test reject");
+	});
+	it("apply button should use a custom label if provided in propertiesConfig", () => {
+		const propertiesConfig = {
+			applyOnBlur: false,
+			buttonLabels: {
+				primary: "test apply"
+			}
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
+		const wrapper = renderedObject.wrapper;
+		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("test apply");
+		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("Cancel");
+	});
+	it("reject button should use a custom label if provided in propertiesConfig", () => {
+		const propertiesConfig = {
+			applyOnBlur: false,
+			buttonLabels: {
+				secondary: "test reject"
+			}
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
+		const wrapper = renderedObject.wrapper;
+		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("Save");
+		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("test reject");
+	});
+	it("apply button should use a custom reject label if applyOnBlur", () => {
+		const propertiesConfig = {
+			buttonLabels: {
+				primary: "test apply",
+				secondary: "test reject"
+			}
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
+		const wrapper = renderedObject.wrapper;
+		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("test apply");
 	});
 });
 
