@@ -746,7 +746,6 @@ export default class SVGCanvasRenderer {
 
 	// Returns the ghost div selection.
 	getGhostDivSel() {
-		// return d3.selectAll("body").selectAll(`[data-id=${this.getGhostDivId()}]`);
 		return d3.selectAll("body").selectAll(".d3-ghost-div");
 	}
 
