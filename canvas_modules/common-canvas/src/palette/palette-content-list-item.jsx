@@ -43,6 +43,11 @@ class PaletteContentListItem extends React.Component {
 		// On firefox, the drag will not start unless something is written to
 		// the dataTransfer object so just write an empty string
 		ev.dataTransfer.setData(DND_DATA_TEXT, "");
+
+		const ghostData = this.props.canvasController.getGhostNode();
+		if (ghostData) {
+			ev.dataTransfer.setDragImage(ghostData.element, ghostData.width / 2, ghostData.height / 2);
+		}
 	}
 
 	onDoubleClick() {

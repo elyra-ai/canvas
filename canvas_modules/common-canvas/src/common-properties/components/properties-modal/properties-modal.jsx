@@ -19,15 +19,28 @@ import PropTypes from "prop-types";
 import { Modal } from "carbon-components-react";
 import classNames from "classnames";
 import { Portal } from "react-portal";
+import { Size } from "./../../constants/form-constants";
+import { CARBON_MODAL_SIZE_XSMALL, CARBON_MODAL_SIZE_SMALL, CARBON_MODAL_SIZE_LARGE } from "./../../constants/constants";
 
 export default class PropertiesModal extends Component {
 
+	// Map the editor_size in paramDef to the Carbon modal sizes
+	getCarbonModalSize() {
+		switch (this.props.bsSize) {
+		case Size.SMALL: return CARBON_MODAL_SIZE_XSMALL;
+		case Size.LARGE: return CARBON_MODAL_SIZE_LARGE;
+		case Size.MEDIUM:
+		default: return CARBON_MODAL_SIZE_SMALL;
+		}
+	}
+
 	render() {
+		const modalSize = this.getCarbonModalSize();
 
 		return (
 			<Portal>
 				<Modal
-					className={classNames("properties-modal", this.props.bsSize, { "noButtons": this.props.showPropertiesButtons === false })}
+					className={classNames("properties-modal", { "noButtons": this.props.showPropertiesButtons === false })}
 					open
 					modalHeading={this.props.title}
 					primaryButtonText={this.props.applyLabel}
@@ -35,6 +48,7 @@ export default class PropertiesModal extends Component {
 					onRequestSubmit={this.props.okHandler}
 					onSecondarySubmit={this.props.cancelHandler}
 					aria-label=""
+					size={modalSize}
 				>
 					<div className="properties-modal-children">
 						{this.props.children}

@@ -224,7 +224,11 @@ CommonProperties.propTypes = {
 		rightFlyout: PropTypes.bool,
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
-		conditionReturnValueHandling: PropTypes.string
+		conditionReturnValueHandling: PropTypes.string,
+		buttonLabels: PropTypes.shape({
+			primary: PropTypes.string,
+			secondary: PropTypes.string
+		})
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
