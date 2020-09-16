@@ -173,6 +173,8 @@ export default class SVGCanvasRenderer {
 			this.canvasGrp = this.createCanvasUnderlay(this.canvasGrp);
 		}
 
+		this.initializeGhostDiv();
+
 		this.resetCanvasSVGBehaviors();
 
 		this.displayCanvas();
@@ -718,6 +720,52 @@ export default class SVGCanvasRenderer {
 			height: (svgRect.height / this.zoomTransform.k) - (2 * transPad),
 			width: (svgRect.width / this.zoomTransform.k) - (2 * transPad)
 		};
+	}
+
+	// Creates the div which contains the ghost node rectangle for drag and
+	// drop actions from the palette. The way setDragImage is handled is
+	// browsers for HTML drag and drop is very odd since the image has to be
+	// 'visible'. Placing the div in the body element of the page with position
+	// as absolute & -5000px (above) the div was the only way I could get the
+	// ghost image to work without resorting to the approach described here:
+	// https://www.kryogenix.org/code/browser/custom-drag-image.html
+	// Even placing the div in one of the common-canvas divs, which would be
+	// preferable to placing it in the page 'body', would not work.
+	initializeGhostDiv() {
+		if (this.getGhostDivSel().empty()) {
+			d3.selectAll("body")
+				.append("div")
+				.attr("class", "d3-ghost-div")
+				.append("svg")
+				.append("rect")
+				.attr("class", "d3-ghost-node")
+				.attr("x", 0)
+				.attr("y", 0);
+		}
+	}
+
+	// Returns the ghost div selection.
+	getGhostDivSel() {
+		// return d3.selectAll("body").selectAll(`[data-id=${this.getGhostDivId()}]`);
+		return d3.selectAll("body").selectAll(".d3-ghost-div");
+	}
+
+	// Returns a ghost data object for displaying a ghost image when dragging
+	// nodes from the palette. The object contains a DOM element to display
+	// plus its width and height.
+	getGhostNode() {
+		const nodeLayout = this.objectModel.getNodeLayout();
+		const ghostWidth = nodeLayout.defaultNodeWidth * this.zoomTransform.k;
+		const ghostHeight = nodeLayout.defaultNodeHeight * this.zoomTransform.k;
+
+		// Always set the dimensions of the ghost node in case the zoom has
+		// changed the width and/or height.
+		const ghostDivSel = this.getGhostDivSel();
+		ghostDivSel.selectAll(".d3-ghost-node")
+			.attr("width", ghostWidth)
+			.attr("height", ghostHeight);
+
+		return { element: ghostDivSel.node(), width: ghostWidth, height: ghostHeight };
 	}
 
 	// Highlights any data link, that an 'insertable' nodeTemplate from the
