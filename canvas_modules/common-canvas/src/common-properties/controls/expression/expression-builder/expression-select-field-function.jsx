@@ -495,6 +495,10 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		const last = items.slice(1);
 		items = first.concat({ value: this.recentUseCat, label: this.recentUseCat }, last);
 		const label = (this.state.functionCategory === this.recentUseCat) ? this.recentUseCat : this.props.functionList[this.state.functionCategory].locLabel;
+		const listBoxMenuIconTranslationIds = {
+			"close.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLOSEMENU),
+			"open.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_OPENMENU)
+		};
 		return (
 			<div className="properties-expression-function-select">
 				<Dropdown
@@ -503,6 +507,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					label={label}
 					items={items}
 					onChange={this.onFunctionCatChange}
+					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 				/>
 			</div>);
 	}
@@ -516,6 +521,10 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		const last = items.slice(1);
 		const newItems = first.concat({ value: this.recentUseCat, label: this.recentUseCat }, last);
 		const label = (this.state.fieldCategory === this.recentUseCat) ? this.recentUseCat : items[0].label;
+		const listBoxMenuIconTranslationIds = {
+			"close.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLOSEMENU),
+			"open.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_OPENMENU)
+		};
 		return (
 			<div className="properties-expression-field-select">
 				<Dropdown
@@ -524,6 +533,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					label={label}
 					items={newItems}
 					onChange={this.onFieldCatChange}
+					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 				/>
 			</div>);
 	}
