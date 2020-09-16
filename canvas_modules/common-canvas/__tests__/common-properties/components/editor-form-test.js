@@ -19,6 +19,7 @@ import { expect } from "chai";
 import TAB_PARAM_DEF from "../../test_resources/paramDefs/tab_paramDef.json";
 import PARAMS_ONLY_DEF from "../../test_resources/paramDefs/paramsOnly_paramDef.json";
 
+window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
 describe("tabs and subtabs should be rendered correctly", () => {
 	let wrapper;
