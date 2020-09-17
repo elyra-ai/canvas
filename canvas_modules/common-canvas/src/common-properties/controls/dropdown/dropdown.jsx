@@ -24,7 +24,8 @@ import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
 import * as PropertyUtils from "./../../util/property-utils.js";
 import { ControlType } from "./../../constants/form-constants";
-import { STATES } from "./../../constants/constants.js";
+import { MESSAGE_KEYS, STATES } from "./../../constants/constants.js";
+import { formatMessage } from "./../../util/property-utils";
 
 class DropDown extends React.Component {
 	constructor(props) {
@@ -33,6 +34,7 @@ class DropDown extends React.Component {
 		if (props.control.additionalText) {
 			this.emptyLabel = props.control.additionalText;
 		}
+		this.reactIntl = props.controller.getReactIntl();
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 		this.handleChange = this.handleChange.bind(this);
 		this.genSchemaSelectOptions = this.genSchemaSelectOptions.bind(this);
@@ -173,6 +175,10 @@ class DropDown extends React.Component {
 				{ options }
 			</Select>);
 		} else {
+			const listBoxMenuIconTranslationIds = {
+				"close.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLOSEMENU),
+				"open.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_OPENMENU)
+			};
 			dropdownComponent = (<Dropdown
 				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
 				disabled={this.props.state === STATES.DISABLED}
@@ -182,6 +188,7 @@ class DropDown extends React.Component {
 				selectedItem={dropDown.selectedOption}
 				label={this.emptyLabel}
 				light
+				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 			/>);
 		}
 
