@@ -48,7 +48,7 @@ _defineConstant("LINK_DIR_BOTTOM_TOP", "BottomTop");
 
 // Values for enableLinkSelection config parameter
 _defineConstant("LINK_SELECTION_NONE", "None");
-_defineConstant("LINK_SELECTION_LINE_ONLY", "LineOnly");
+_defineConstant("LINK_SELECTION_LINK_ONLY", "LinkOnly");
 _defineConstant("LINK_SELECTION_HANDLES", "Handles");
 _defineConstant("LINK_SELECTION_DETACHABLE", "Detachable");
 

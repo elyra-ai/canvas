@@ -154,7 +154,7 @@ describe("Test elbow connections from multi-port source node do not overlap", fu
 describe("Test enableLinkSelection configuration option", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedLinkSelection": true });
+		cy.setCanvasConfig({ "selectedLinkSelection": "LinkOnly" });
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
@@ -242,8 +242,7 @@ describe("Test enableDetachableLinks configuration option", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({
-			"selectedLinkSelection": true,
-			"selectedDetachableLinks": true,
+			"selectedLinkSelection": "Detachable",
 			"selectedLinkType": "Straight" });
 		cy.openCanvasDefinition("detachedLinksCanvas.json");
 	});

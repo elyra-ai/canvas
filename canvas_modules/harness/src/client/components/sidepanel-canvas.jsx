@@ -45,7 +45,7 @@ import {
 	DIRECTION_TOP_BOTTOM,
 	DIRECTION_BOTTOM_TOP,
 	LINK_SELECTION_NONE,
-	LINK_SELECTION_LINE_ONLY,
+	LINK_SELECTION_LINK_ONLY,
 	LINK_SELECTION_HANDLES,
 	LINK_SELECTION_DETACHABLE,
 	ASSOC_RIGHT_SIDE_CURVE,
@@ -644,8 +644,8 @@ export default class SidePanelForms extends React.Component {
 					labelText={LINK_SELECTION_NONE}
 				/>
 				<RadioButton
-					value={LINK_SELECTION_LINE_ONLY}
-					labelText={LINK_SELECTION_LINE_ONLY}
+					value={LINK_SELECTION_LINK_ONLY}
+					labelText={LINK_SELECTION_LINK_ONLY}
 				/>
 				<RadioButton
 					value={LINK_SELECTION_HANDLES}
