@@ -22,7 +22,7 @@
   "dependencies": {
     "@carbon/icons-react": "10.13.0",
     "@carbon/themes": "10.14.0",
-    "@elyra/pipeline-schemas": "^3.0.20",
+    "@elyra/pipeline-schemas": "3.0.20",
     "carbon-components": "10.14.0",
     "carbon-components-react": "7.14.0",
     "carbon-icons": "7.0.7",
