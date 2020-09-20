@@ -320,7 +320,7 @@ export default class SVGCanvasD3 {
 		return this.renderer.getSvgViewportOffset();
 	}
 
-	getGhostNode() {
-		return this.renderer.getGhostNode();
+	getGhostNode(nodeTemplate) {
+		return this.renderer.getGhostNode(nodeTemplate);
 	}
 }

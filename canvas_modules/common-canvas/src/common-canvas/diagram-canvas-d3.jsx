@@ -128,8 +128,8 @@ export default class DiagramCanvas extends React.Component {
 		return this.canvasD3Layout.getZoom();
 	}
 
-	getGhostNode() {
-		return this.canvasD3Layout.getGhostNode();
+	getGhostNode(nodeTemplate) {
+		return this.canvasD3Layout.getGhostNode(nodeTemplate);
 	}
 
 	setIsDropZoneDisplayed(isDropZoneDisplayed) {

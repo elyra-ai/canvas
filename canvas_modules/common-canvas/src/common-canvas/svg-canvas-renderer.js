@@ -763,12 +763,7 @@ export default class SVGCanvasRenderer {
 		if (this.getGhostDivSel().empty()) {
 			d3.selectAll("body")
 				.append("div")
-				.attr("class", "d3-ghost-div")
-				.append("svg")
-				.append("rect")
-				.attr("class", "d3-ghost-node")
-				.attr("x", 0)
-				.attr("y", 0);
+				.attr("class", "d3-ghost-div");
 		}
 	}
 
@@ -782,23 +777,49 @@ export default class SVGCanvasRenderer {
 	// plus its width and height. This needs to be called each time a new node
 	// is dragged from the palette in case the dimensions of the ghost node
 	// have changed becuase the canvas has been zoomed.
-	getGhostNode() {
-		const ghost = this.getGhostDimensionsZoomed();
+	getGhostNode(nodeTemplate) {
+		const that = this;
+		const ghost = this.getGhostDimensions();
+		const node = this.canvasController.convertNodeTemplate(nodeTemplate);
+		node.layout = this.canvasController.getObjectModel().getNodeLayout();
+		node.width = ghost.width;
+		node.height = ghost.height;
+		const nodeImage = this.getNodeImage(node);
+		const nodeImageType = this.getNodeImageType(nodeImage);
 
 		const ghostDivSel = this.getGhostDivSel();
-		ghostDivSel.selectAll(".d3-ghost-node")
+
+		// First remove any old SVG object from the div
+		ghostDivSel
+			.selectAll(".d3-ghost-svg")
+			.remove();
+
+		const ghostGrp = ghostDivSel
+			.append("svg")
+			.attr("class", "d3-ghost-svg")
+			.append("g")
+			.attr("transform", `scale(${this.zoomTransform.k})`);
+
+		ghostGrp
+			.append("rect")
+			.attr("class", "d3-ghost-node")
+			.attr("x", 0)
+			.attr("y", 0)
 			.attr("width", ghost.width)
 			.attr("height", ghost.height);
 
-		return { element: ghostDivSel.node(), width: ghost.width, height: ghost.height };
-	}
+		ghostGrp
+			.append(nodeImageType)
+			.attr("class", "node-image")
+			.each(function() { that.setImageContent(this, node); })
+			.attr("x", this.getNodeImagePosX(node))
+			.attr("y", this.getNodeImagePosY(node))
+			.attr("width", this.getNodeImageWidth(node))
+			.attr("height", this.getNodeImageHeight(node));
 
-	// Returns an object containing the dimensions of the ghost node that hovers
-	// over canvas when a node is being dragged from the palette. The sizes are
-	// transformd for the current zoom amount.
-	getGhostDimensionsZoomed() {
-		const ghost = this.getGhostDimensions();
+
 		return {
+			element: ghostDivSel.node(),
 			width: ghost.width * this.zoomTransform.k,
 			height: ghost.height * this.zoomTransform.k
 		};
@@ -966,17 +987,20 @@ export default class SVGCanvasRenderer {
 		}
 		const transPos = this.transformMousePosForNode(x, y);
 
+		// If the node template was dropped on a link
 		if (this.dragOverLink) {
 			this.setLinkDragOverHighlighting(this.dragOverLink, false);
 			this.canvasController.createNodeFromTemplateOnLinkAt(
-				nodeTemplate, this.dragOverLink, transPos.x, this.pipelineId);
+				nodeTemplate, this.dragOverLink, transPos, this.pipelineId);
 
+		// If the node template was dropped on one or more detached links.
 		} else if (this.dragOverDetachedLinks.length > 0) {
 			this.dragOverDetachedLinks.forEach((link) => this.setLinkDragOverHighlighting(link, false));
 			this.dragPointerOffsetInNode = null;
 			this.canvasController.createNodeFromTemplateAttachLinks(
 				nodeTemplate, this.dragOverDetachedLinks, transPos, this.pipelineId);
 
+		// If the node template was dropped on the canvas.
 		} else {
 			this.canvasController.createNodeFromTemplateAt(
 				nodeTemplate, transPos, this.pipelineId);

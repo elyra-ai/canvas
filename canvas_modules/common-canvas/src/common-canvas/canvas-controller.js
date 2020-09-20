@@ -1293,9 +1293,9 @@ export default class CanvasController {
 		return null;
 	}
 
-	getGhostNode() {
+	getGhostNode(nodeTemplate) {
 		if (this.commonCanvas) {
-			return this.commonCanvas.getGhostNode();
+			return this.commonCanvas.getGhostNode(nodeTemplate);
 		}
 		return null;
 	}
