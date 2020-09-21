@@ -2412,12 +2412,11 @@ export default class SVGCanvasRenderer {
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("class", "d3-node-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
-				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
-					if (that.drawingNewLinkData === null && !that.dragging) {
-						d3.select(this).raise();
-					}
-					that.setNodeStyles(d, "hover", d3.select(this));
-					that.addDynamicNodeIcons(d, this);
+				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM node group object
+					const nodeGrp = d3.select(this);
+					that.raiseNodeToTop(nodeGrp);
+					that.setNodeStyles(d, "hover", nodeGrp);
+					that.addDynamicNodeIcons(d, nodeGrp);
 					if (that.canOpenTip(TIP_TYPE_NODE)) {
 						that.canvasController.closeTip(); // Ensure existing tip is removed when moving pointer within an in-place supernode
 						that.canvasController.openTip({
@@ -3392,9 +3391,8 @@ export default class SVGCanvasRenderer {
 		return d.isSupernodeInputBinding || d.isSupernodeOutputBinding;
 	}
 
-	addDynamicNodeIcons(d, nodeGrpSrc) {
+	addDynamicNodeIcons(d, nodeGrp) {
 		if (!this.nodeSizing && !this.isSuperBindingNode(d)) {
-			const nodeGrp = d3.select(nodeGrpSrc);
 			nodeGrp.select(this.getSelectorForId("node_body", d.id)).attr("hover", "yes");
 
 			const ellipsisGrp = nodeGrp
@@ -6258,6 +6256,16 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 			this.raiseSelectedLinksToTop();
+		}
+	}
+
+	// Raises the node above other nodes and objects (on the mouse entering
+	// the node). This is necessary for apps that have ports that protrude from
+	// the side of the node and where those nodes may be positioned close to each
+	// other so it makes the ports appear on top of any adjacent node.
+	raiseNodeToTop(nodeGrp) {
+		if (this.drawingNewLinkData === null && !this.dragging) {
+			nodeGrp.raise();
 		}
 	}
 

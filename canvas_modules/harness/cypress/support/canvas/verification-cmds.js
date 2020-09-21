@@ -760,7 +760,6 @@ Cypress.Commands.add("verifyPaletteNodeImageCSS", (nodeName, style, value) => {
 });
 
 Cypress.Commands.add("verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort", (srcNodeName, srcPortId, trgNodeName, trgPortId, linkCount) => {
-	// verify that the link is in the internal object model
 	cy.getPipeline()
 		.then((pipeline) => {
 			cy.getPortLinks(pipeline, srcNodeName, srcPortId, trgNodeName, trgPortId)
