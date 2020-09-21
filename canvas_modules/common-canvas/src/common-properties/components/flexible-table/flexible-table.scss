@@ -27,6 +27,9 @@ $row-left-padding: 4px;
 		svg {
 			fill: $icon-01;
 		}
+		input {
+			background-color: $field-02;
+		}
 	}
 	&.disabled {
 		opacity: 0.5;
