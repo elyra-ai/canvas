@@ -59,6 +59,7 @@ export default class ExpressionBuilder extends React.Component {
 		// This is needed to generate a render so that the selection will appear.
 		const exprValue = this.editor.getValue();
 		this.props.controller.updatePropertyValue(this.props.propertyId, exprValue, true);
+		this.lastCursorPos = this.editor.getCursor();
 	}
 
 	onSelectionChange(selection) {
