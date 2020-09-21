@@ -1079,7 +1079,7 @@ export default class SVGCanvasRenderer {
 		return attachableLinks;
 	}
 
-	// Return true if the position providd is within the area provided.
+	// Return true if the position provided is within the area provided.
 	isPosInArea(pos, area, pad) {
 		return pos.x_pos > area.x1 - pad &&
 			pos.x_pos < area.x2 + pad &&

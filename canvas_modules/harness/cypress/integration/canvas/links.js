@@ -288,6 +288,18 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 		// Check link now exists to new port.
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Execution node", undefined, "Super node", "input1SuperNodePE", 1);
+
+		// Undo
+		cy.clickToolbarUndo();
+		// Check the link from execution node to supernode is restored
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		// Check link to new port is retored.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input1SuperNodePE", 1);
 	});
 
 	it("Test if a link end handle is dragged to different node the link is updated", function() {
@@ -311,9 +323,21 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 		// Check the link from execution node to exit binding node exists.
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Execution node", undefined, "Binding (exit) node", "inPort", 1);
+
+		// Undo
+		cy.clickToolbarUndo();
+		// Check the link from execution node to supernode is restored
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 0);
+
+		// Redo
+		cy.clickToolbarRedo();
+		// Check the link from execution node to exit binding node is restored.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Binding (exit) node", "inPort", 1);
 	});
 
-	it("Test if a link start handle is dragged to different node the link is updated", function() {
+	it.only("Test if a link start handle is dragged to different node the link is updated", function() {
 		// Check the link from execution node to supernode exists
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
@@ -332,7 +356,20 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Execution node", undefined, "Super node", "input2SuperNodePE", 0);
 
-		// Check the link from execution node to exit binding node exists.
+		// Check the link from binding entry node to supernode exists.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Binding (entry) node", "outPort", "Super node", "input2SuperNodePE", 1);
+
+		// Undo
+		cy.clickToolbarUndo();
+		// Check the link from execution node to supernode is restored
+		// Note the undo restores the link with a source port specified instead of undefined.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", "outPort", "Super node", "input2SuperNodePE", 1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		// Check the link from execution node to exit binding node is restored
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Binding (entry) node", "outPort", "Super node", "input2SuperNodePE", 1);
 	});
