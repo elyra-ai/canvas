@@ -327,8 +327,9 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 		// Undo
 		cy.clickToolbarUndo();
 		// Check the link from execution node to supernode is restored
+		// Note the undo restores the link with a source port specified instead of undefined.
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
-			"Execution node", undefined, "Super node", "input2SuperNodePE", 0);
+			"Execution node", "outPort", "Super node", "input2SuperNodePE", 0);
 
 		// Redo
 		cy.clickToolbarRedo();
