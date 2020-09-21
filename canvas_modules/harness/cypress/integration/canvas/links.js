@@ -337,7 +337,7 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 			"Execution node", undefined, "Binding (exit) node", "inPort", 1);
 	});
 
-	it.only("Test if a link start handle is dragged to different node the link is updated", function() {
+	it("Test if a link start handle is dragged to different node the link is updated", function() {
 		// Check the link from execution node to supernode exists
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
