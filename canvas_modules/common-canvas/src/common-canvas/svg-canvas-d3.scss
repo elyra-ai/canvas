@@ -151,6 +151,18 @@ $new-halo-link-color: $ui-05;
 	cursor: pointer;
 }
 
+/* Ghost div and node used when dragging a node from the palette */
+
+.d3-ghost-div {
+	position: absolute;
+	top: -5000px;
+	left: 5000px;
+}
+
+.d3-ghost-node {
+	fill: $highlight;
+}
+
 /* Node and comment styles */
 
 .d3-node-group,

@@ -1291,6 +1291,13 @@ export default class CanvasController {
 		return null;
 	}
 
+	getGhostNode() {
+		if (this.commonCanvas) {
+			return this.commonCanvas.getGhostNode();
+		}
+		return null;
+	}
+
 	// Cuts the currently selected objects to the internal clipboard.
 	cutToClipboard() {
 		this.editActionHandler({

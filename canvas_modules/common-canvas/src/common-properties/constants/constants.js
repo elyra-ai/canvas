@@ -89,7 +89,9 @@ _defineConstant("MESSAGE_KEYS", {
 	MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION: "moveable.table.button.up",
 	MOVEABLE_TABLE_BUTTON_DOWN_DESCRIPTION: "moveable.table.button.down",
 	MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION: "moveable.table.button.bottom",
-	LIST_TABLE_LABEL: "list.table.label"
+	LIST_TABLE_LABEL: "list.table.label",
+	DROPDOWN_TOOLTIP_OPENMENU: "dropdown.tooltip.openMenu",
+	DROPDOWN_TOOLTIP_CLOSEMENU: "dropdown.tooltip.closeMenu"
 });
 
 _defineConstant("CHARACTER_LIMITS", {
