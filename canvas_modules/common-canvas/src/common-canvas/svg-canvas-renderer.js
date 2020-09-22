@@ -1054,8 +1054,8 @@ export default class SVGCanvasRenderer {
 		return this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE;
 	}
 
-	// Returns an array of detached links which can be attached to the node
-	// passd in, that exist in proximity to the mouse position provided. Proximity
+	// Returns an array of detached links, which can be attached to the node
+	// passed in, that exist in proximity to the mouse position provided. Proximity
 	// is specified by the dimensions ghost area passed in.
 	// Note: The passed in 'node' will be a node when an existing node on the
 	// canvas is being dragged but will be a node template when a node is being
@@ -2169,7 +2169,12 @@ export default class SVGCanvasRenderer {
 
 			if (this.isExistingNodeInsertableIntoLink()) {
 				const link = this.getLinkAtMousePos(d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
-				this.setLinkHighlighting(link);
+				// Set highlighting when there is no link becasue this will turn
+				// current highlighting off. And only switch on highlighting when we are
+				// over a fully attached link (not a detached link).
+				if (!link || this.isLinkFullyAttached(link)) {
+					this.setLinkHighlighting(link);
+				}
 			}
 
 			if (this.isExistingNodeAttachableToDetachedLinks()) {
