@@ -39,6 +39,7 @@ import CommonCanvasPackage from "@elyra/canvas/package.json";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
+import DetachedCanvas from "./components/custom-canvases/detached-links/detached-canvas";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
@@ -82,11 +83,13 @@ import {
 	NONE_SAVE_ZOOM,
 	CURVE_LINKS,
 	DIRECTION_LEFT_RIGHT,
+	LINK_SELECTION_NONE,
 	ASSOC_STRAIGHT,
 	UNDERLAY_NONE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
+	EXAMPLE_APP_DETACHED,
 	EXAMPLE_APP_EXPLAIN,
 	EXAMPLE_APP_EXPLAIN2,
 	EXAMPLE_APP_STREAMS,
@@ -162,8 +165,7 @@ class App extends React.Component {
 			selectedZoomIntoSubFlows: false,
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
-			selectedLinkSelection: false,
-			selectedDetachableLinks: false,
+			selectedLinkSelection: LINK_SELECTION_NONE,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
 			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedNodeLayout: EXAMPLE_APP_NONE,
@@ -1627,7 +1629,6 @@ class App extends React.Component {
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableLinkSelection: this.state.selectedLinkSelection,
-			enableDetachableLinks: this.state.selectedDetachableLinks,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			enableToolbarLayout: this.state.selectedToolbarLayout,
@@ -1894,6 +1895,13 @@ class App extends React.Component {
 		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_TABLES) {
 			firstCanvas = (
 				<TablesCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_DETACHED) {
+			firstCanvas = (
+				<DetachedCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>

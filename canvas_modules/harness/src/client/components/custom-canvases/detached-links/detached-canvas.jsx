@@ -3,19 +3,16 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas";
 
-import FlowsCanvasFlow from "./flowsCanvas.json";
-import FlowsPalette from "./flowsPalette.json";
-import FlowsLoadingPalette from "./flowsLoadingPalette.json";
+import DetachedCanvasFlow from "./detachedCanvas.json";
+import DetachedPalette from "./detachedPalette.json";
 
 
-export default class FlowsCanvas extends React.Component {
+export default class DetachedCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(FlowsCanvasFlow);
-		this.canvasController.setPipelineFlowPalette(FlowsLoadingPalette);
-
-		this.activateLoadingCanvas();
+		this.canvasController.setPipelineFlow(DetachedCanvasFlow);
+		this.canvasController.setPipelineFlowPalette(DetachedPalette);
 
 		this.getConfig = this.getConfig.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
@@ -23,14 +20,14 @@ export default class FlowsCanvas extends React.Component {
 
 	getConfig() {
 		const config = Object.assign({}, this.props.config, {
-			enableParentClass: "flows",
+			enableParentClass: "detached-links",
 			enableNodeFormatType: "Vertical",
 			enableConnectionType: "Ports",
 			enableLinkType: "Straight",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",
-			enableLinkSelection: "None",
-			paletteInitialState: true,
+			enableLinkSelection: "Detachable",
+			enableInsertNodeDroppedOnLink: true,
 			enableDropZoneOnExternalDrag: true,
 			enableHightlightNodeOnNewLinkDrag: true,
 			tipConfig: {
@@ -59,20 +56,28 @@ export default class FlowsCanvas extends React.Component {
 				portRadius: 10,
 				inputPortLeftPosX: 0,
 				inputPortLeftPosY: 28,
-				outputPortRightPosX: 5,
+				outputPortRightPosX: 4,
 				outputPortRightPosY: 30,
 				outputPortObject: "image",
-				outputPortImage: "/images/custom-canvases/flows/decorations/dragStateArrow.svg",
+				outputPortImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,
 				outputPortHeight: 20,
 				outputPortGuideObject: "image",
-				outputPortGuideImage: "/images/custom-canvases/flows/decorations/dragStateArrow.svg"
+				outputPortGuideImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg"
 			},
 			enableCanvasLayout: {
 				dataLinkArrowHead: true,
 				linkGap: 4,
 				displayLinkOnOverlap: false,
-				linkHandleRaiseToTop: false
+				linkStartHandleObject: "image",
+				linkStartHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateStart.svg",
+				linkStartHandleWidth: 20,
+				linkStartHandleHeight: 20,
+				linkEndHandleObject: "image",
+				linkEndHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				linkEndHandleWidth: 20,
+				linkEndHandleHeight: 20,
+				linkHandleRaiseToTop: true
 			}
 		});
 		return config;
@@ -83,20 +88,6 @@ export default class FlowsCanvas extends React.Component {
 			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
 			pipelineFlowId: "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159"
 		});
-	}
-
-	activateLoadingCanvas() {
-		this.canvasController.setCategoryLoadingText("recordOp", "Loading record ops");
-		this.canvasController.setCategoryLoadingText("fieldOp", "Loading field ops");
-		this.canvasController.setCategoryLoadingText("modeling", "Loading modeling");
-		this.canvasController.setCategoryLoadingText("TextMining", "Loading text mining");
-		this.canvasController.setCategoryLoadingText("graph", "Loading graphs");
-		this.canvasController.setCategoryLoadingText("output", "Loading outputs");
-		this.canvasController.setCategoryLoadingText("export", "Loading exports");
-		this.canvasController.setCategoryLoadingText("models", "Loading models");
-		setTimeout(() => {
-			this.canvasController.setPipelineFlowPalette(FlowsPalette);
-		}, 3000);
 	}
 
 	render() {
@@ -111,6 +102,6 @@ export default class FlowsCanvas extends React.Component {
 	}
 }
 
-FlowsCanvas.propTypes = {
+DetachedCanvas.propTypes = {
 	config: PropTypes.object
 };

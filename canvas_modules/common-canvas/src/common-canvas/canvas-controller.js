@@ -15,6 +15,7 @@
  */
 
 import ArrangeLayoutAction from "../command-actions/arrangeLayoutAction.js";
+import AttachNodeToLinksAction from "../command-actions/attachNodeToLinksAction.js";
 import CloneMultipleObjectsAction from "../command-actions/cloneMultipleObjectsAction.js";
 import CommandStack from "../command-stack/command-stack.js";
 import constants from "./constants/canvas-constants";
@@ -25,6 +26,7 @@ import CreateNodeAction from "../command-actions/createNodeAction.js";
 import CreateNodeLinkAction from "../command-actions/createNodeLinkAction.js";
 import CreateNodeLinkDetachedAction from "../command-actions/createNodeLinkDetachedAction.js";
 import CreateNodeOnLinkAction from "../command-actions/createNodeOnLinkAction.js";
+import CreateNodeAttachLinksAction from "../command-actions/createNodeAttachLinksAction.js";
 import CreateSuperNodeAction from "../command-actions/createSuperNodeAction.js";
 import CollapseSuperNodeInPlaceAction from "../command-actions/collapseSuperNodeInPlaceAction.js";
 import DeleteLinkAction from "../command-actions/deleteLinkAction.js";
@@ -39,12 +41,13 @@ import MoveObjectsAction from "../command-actions/moveObjectsAction.js";
 import SaveToPaletteAction from "../command-actions/saveToPaletteAction.js";
 import SetObjectsStyleAction from "../command-actions/setObjectsStyleAction.js";
 import SetLinksStyleAction from "../command-actions/setLinksStyleAction.js";
+import UpdateLinkAction from "../command-actions/updateLinkAction.js";
 import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import LocalStorage from "./local-storage.js";
 import has from "lodash/has";
-import { ASSOC_STRAIGHT } from "./constants/canvas-constants";
+import { ASSOC_STRAIGHT, LINK_SELECTION_NONE } from "./constants/canvas-constants";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
 // Global instance ID counter
@@ -69,8 +72,7 @@ export default class CanvasController {
 			enableLinkType: "Curve",
 			enableLinkDirection: "LeftRight",
 			enableParentClass: "",
-			enableLinkSelection: false,
-			enableDetachableLinks: false,
+			enableLinkSelection: LINK_SELECTION_NONE,
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,
@@ -953,7 +955,7 @@ export default class CanvasController {
 	// data - Data describing the links
 	// pipelineId - The ID of the pipeline
 	createCommentLinks(data, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).createCommentLinks(data);
+		return this.objectModel.getAPIPipeline(pipelineId).createCommentLinks(data);
 	}
 
 	// Sets the class name on links
@@ -1291,9 +1293,9 @@ export default class CanvasController {
 		return null;
 	}
 
-	getGhostNode() {
+	getGhostNode(nodeTemplate) {
 		if (this.commonCanvas) {
-			return this.commonCanvas.getGhostNode();
+			return this.commonCanvas.getGhostNode(nodeTemplate);
 		}
 		return null;
 	}
@@ -1395,24 +1397,6 @@ export default class CanvasController {
 		}
 	}
 
-	// Processes the drop of a palette node template onto the canvas.
-	// nodeTemplate - The node template being dragged from the palette
-	// link - the link where the node template is being dropped, or null if no link
-	// transPos - mouse position transformed for canvas co-ordinates
-	// pipelineId - the ID of the pipeline onto which the node is being dropped
-	createDroppedPalettedNode(nodeTemplate, link, transPos, pipelineId) {
-		if (nodeTemplate) {
-			const newNodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
-			if (link &&
-					this.canNodeBeDroppedOnLink(newNodeTemplate) &&
-					this.isInternalObjectModelEnabled()) {
-				this.createNodeFromTemplateOnLinkAt(newNodeTemplate, link, transPos.x, transPos.y, pipelineId);
-			} else {
-				this.createNodeFromTemplateAt(newNodeTemplate, transPos.x, transPos.y, pipelineId);
-			}
-		}
-	}
-
 	// Processes the drop of an 'external' object, either from the desktop or
 	// elsewhere on the browser page, onto the canvas.
 	// dropData - The data describing the object being dropped
@@ -1443,13 +1427,14 @@ export default class CanvasController {
 	}
 
 	// Called when a node is dragged from the palette onto the canvas
-	createNodeFromTemplateAt(nodeTemplate, x, y, pipelineId) {
+	createNodeFromTemplateAt(nodeTemplate, pos, pipelineId) {
+		const newNodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
 		var data = {
 			editType: "createNode",
 			editSource: "canvas",
-			nodeTemplate: nodeTemplate,
-			offsetX: x,
-			offsetY: y,
+			nodeTemplate: newNodeTemplate,
+			offsetX: pos.x,
+			offsetY: pos.y,
 			pipelineId: pipelineId
 		};
 
@@ -1458,18 +1443,41 @@ export default class CanvasController {
 
 	// Called when a node is dragged from the palette onto the canvas and dropped
 	// onto an existing link between two data nodes.
-	createNodeFromTemplateOnLinkAt(nodeTemplate, link, x, y, pipelineId) {
-		var data = {
-			editType: "createNodeOnLink",
-			editSource: "canvas",
-			nodeTemplate: nodeTemplate,
-			offsetX: x,
-			offsetY: y,
-			link: link,
-			pipelineId: pipelineId
-		};
+	createNodeFromTemplateOnLinkAt(nodeTemplate, link, pos, pipelineId) {
+		const newNodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
+		if (this.canNewNodeBeDroppedOnLink(newNodeTemplate)) {
+			var data = {
+				editType: "createNodeOnLink",
+				editSource: "canvas",
+				nodeTemplate: newNodeTemplate,
+				offsetX: pos.x,
+				offsetY: pos.y,
+				link: link,
+				pipelineId: pipelineId
+			};
 
-		this.editActionHandler(data);
+			this.editActionHandler(data);
+		}
+	}
+
+	// Called when a node is dragged from the palette onto the canvas and dropped
+	// onto one or more semi-detached or fully-detached links.
+	createNodeFromTemplateAttachLinks(nodeTemplate, detachedLinks, pos, pipelineId) {
+		const newNodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
+		if (detachedLinks &&
+				this.canNewNodeBeAttachedToLinks(newNodeTemplate)) {
+			var data = {
+				editType: "createNodeAttachLinks",
+				editSource: "canvas",
+				nodeTemplate: newNodeTemplate,
+				offsetX: pos.x,
+				offsetY: pos.y,
+				detachedLinks: detachedLinks,
+				pipelineId: pipelineId
+			};
+
+			this.editActionHandler(data);
+		}
 	}
 
 	// Called when a node is dragged from the 'output' window (in WML) onto the canvas
@@ -1502,13 +1510,22 @@ export default class CanvasController {
 		this.editActionHandler(data);
 	}
 
-	canNodeBeDroppedOnLink(nodeType) {
+	canNewNodeBeDroppedOnLink(nodeType) {
 		if (nodeType.inputs && nodeType.inputs.length > 0 &&
 				nodeType.outputs && nodeType.outputs.length > 0) {
 			return true;
 		}
 		return false;
 	}
+
+	canNewNodeBeAttachedToLinks(nodeType) {
+		if (nodeType.inputs && nodeType.inputs.length > 0 ||
+				nodeType.outputs && nodeType.outputs.length > 0) {
+			return true;
+		}
+		return false;
+	}
+
 
 	// Opens a full screen display if a sub-flow. pipelineInfo should contain two
 	// fields:
@@ -1583,7 +1600,8 @@ export default class CanvasController {
 				{ divider: true }]);
 		}
 		// Delete objects
-		if (source.type === "node" || source.type === "comment" || (this.canvasConfig.enableLinkSelection && source.type === "link")) {
+		if (source.type === "node" || source.type === "comment" ||
+				(this.canvasConfig.enableLinkSelection !== LINK_SELECTION_NONE && source.type === "link")) {
 			menuDefinition = menuDefinition.concat([{ action: "deleteSelectedObjects", label: this.getLabel("canvas.deleteObject") },
 				{ divider: true }]);
 		}
@@ -1612,7 +1630,8 @@ export default class CanvasController {
 			}
 		}
 		// Delete link
-		if (!this.canvasConfig.enableLinkSelection && source.type === "link") {
+		if (this.canvasConfig.enableLinkSelection === LINK_SELECTION_NONE &&
+				source.type === "link") {
 			menuDefinition = menuDefinition.concat([{ action: "deleteLink", label: this.getLabel("canvas.deleteObject") }]);
 		}
 		// Highlight submenu (Highlight Branch | Upstream | Downstream, Unhighlight)
@@ -1784,6 +1803,12 @@ export default class CanvasController {
 				data = command.getData();
 				break;
 			}
+			case "createNodeAttachLinks": {
+				command = new CreateNodeAttachLinksAction(data, this.objectModel);
+				this.commandStack.do(command);
+				data = command.getData();
+				break;
+			}
 			case "createAutoNode": {
 				command = new CreateAutoNodeAction(data, this.objectModel);
 				this.commandStack.do(command);
@@ -1808,6 +1833,11 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
+			case "attachNodeToLinks": {
+				command = new AttachNodeToLinksAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
 			case "moveObjects": {
 				command = new MoveObjectsAction(data, this.objectModel);
 				this.commandStack.do(command);
@@ -1825,6 +1855,11 @@ export default class CanvasController {
 			}
 			case "setLinksStyle": {
 				command = new SetLinksStyleAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "updateLink": {
+				command = new UpdateLinkAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
@@ -1852,7 +1887,7 @@ export default class CanvasController {
 				break;
 			}
 			case "deleteSelectedObjects": {
-				command = new DeleteObjectsAction(data, this.objectModel, this.canvasConfig.enableDetachableLinks);
+				command = new DeleteObjectsAction(data, this.objectModel, this.canvasConfig.enableLinkSelection);
 				this.commandStack.do(command);
 				break;
 			}

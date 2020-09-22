@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint no-undefined: "off" */
 
 describe("Test node link disconnection", function() {
 	beforeEach(() => {
@@ -151,10 +152,10 @@ describe("Test elbow connections from multi-port source node do not overlap", fu
 	});
 });
 
-describe("Test enableLinkSelection configuration option", function() {
+describe("Test enableLinkSelection = 'LinkOnly' configuration option", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedLinkSelection": true });
+		cy.setCanvasConfig({ "selectedLinkSelection": "LinkOnly" });
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
@@ -171,7 +172,7 @@ describe("Test enableLinkSelection configuration option", function() {
 		cy.verifyLinkIsSelected("a81684aa-9b09-4620-aa59-54035a5de913");
 	});
 
-	it("Test an already selected link can be deselcted with Cmnd + click", function() {
+	it("Test an already selected link can be deselected with Cmnd + click", function() {
 		// Select two links
 		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
@@ -184,7 +185,7 @@ describe("Test enableLinkSelection configuration option", function() {
 		cy.verifyLinkIsSelected("a81684aa-9b09-4620-aa59-54035a5de913");
 	});
 
-	it("Test clicking on an unselected link deselcts other selcted links", function() {
+	it("Test clicking on an unselected link deselcts other selected links", function() {
 		// Select two links
 		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
@@ -237,13 +238,149 @@ describe("Test enableLinkSelection configuration option", function() {
 
 });
 
-
-describe("Test enableDetachableLinks configuration option", function() {
+describe("Test enableLinkSelection = 'Handles' configuration option", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({
-			"selectedLinkSelection": true,
-			"selectedDetachableLinks": true,
+			"selectedLinkSelection": "Handles",
+			"selectedLinkType": "Curve" });
+		cy.openCanvasDefinition("allTypesCanvas.json");
+	});
+
+	it("Test if a link end handle is dragged to the canvas it has no effect", function() {
+		// Check the link from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+
+		// Drag end handle out onto arbitrary point canvas.
+		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.moveLinkHandleToPos("a81684aa-9b09-4620-aa59-54035a5de913", "endHandle", 300, 300);
+
+		// Make sure link still exists from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+	});
+
+	it("Test if a link start handle is dragged to the canvas it has no effect", function() {
+		// Check the link from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+
+		// Drag start handle out onto arbitrary point canvas.
+		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.moveLinkHandleToPos("a81684aa-9b09-4620-aa59-54035a5de913", "startHandle", 300, 300);
+
+		// Make sure link still exists from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+	});
+
+	it("Test if a link end handle is dragged to different port the link is updated", function() {
+		// Check the link from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+
+		// Move link between execution node and supernode to be between
+		// same nodes but on a different port
+		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.moveLinkHandleToPort("a81684aa-9b09-4620-aa59-54035a5de913", "endHandle", "Super node", "input1SuperNodePE");
+
+		// Check link now exists to new port.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input1SuperNodePE", 1);
+
+		// Undo
+		cy.clickToolbarUndo();
+		// Check the link from execution node to supernode is restored
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		// Check link to new port is retored.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input1SuperNodePE", 1);
+	});
+
+	it("Test if a link end handle is dragged to different node the link is updated", function() {
+		// Check the link from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+
+		// Delete the link from supernode to the binding exit node to make a free port
+		cy.clickLink("d5bef845-9d69-4cca-95ec-27d481b4e776");
+		cy.clickToolbarDelete();
+
+		// Move end of link between execution node and supernode to be between
+		// execution node and exit binding node.
+		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.moveLinkHandleToPort("a81684aa-9b09-4620-aa59-54035a5de913", "endHandle", "Binding (exit) node", "inPort");
+
+		// Check the link from execution node to supernode DOES NOT exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 0);
+
+		// Check the link from execution node to exit binding node exists.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Binding (exit) node", "inPort", 1);
+
+		// Undo
+		cy.clickToolbarUndo();
+		// Check the link from execution node to supernode is restored
+		// Note the undo restores the link with a source port specified instead of undefined.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", "outPort", "Super node", "input2SuperNodePE", 0);
+
+		// Redo
+		cy.clickToolbarRedo();
+		// Check the link from execution node to exit binding node is restored.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Binding (exit) node", "inPort", 1);
+	});
+
+	it("Test if a link start handle is dragged to different node the link is updated", function() {
+		// Check the link from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+
+		// Delete the link from binding entry node to the execution node to make a free port
+		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		cy.clickToolbarDelete();
+
+		// Move start of link between execution node and supernode to be between
+		// entry binding node and supernode.
+		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.moveLinkHandleToPort(
+			"a81684aa-9b09-4620-aa59-54035a5de913", "startHandle", "Binding (entry) node", "outPort");
+
+		// Check the link from execution node to supernode DOES NOT exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 0);
+
+		// Check the link from binding entry node to supernode exists.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Binding (entry) node", "outPort", "Super node", "input2SuperNodePE", 1);
+
+		// Undo
+		cy.clickToolbarUndo();
+		// Check the link from execution node to supernode is restored
+		// Note the undo restores the link with a source port specified instead of undefined.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", "outPort", "Super node", "input2SuperNodePE", 1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		// Check the link from execution node to exit binding node is restored
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Binding (entry) node", "outPort", "Super node", "input2SuperNodePE", 1);
+	});
+});
+
+describe("Test selectedLinkSelection = 'Detachable' configuration option", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({
+			"selectedLinkSelection": "Detachable",
 			"selectedLinkType": "Straight" });
 		cy.openCanvasDefinition("detachedLinksCanvas.json");
 	});

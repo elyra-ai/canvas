@@ -166,8 +166,8 @@ class CommonCanvas extends React.Component {
 		return this.diagramCanvasRef.current.getSvgViewportOffset();
 	}
 
-	getGhostNode() {
-		return this.diagramCanvasRef.current.getGhostNode();
+	getGhostNode(nodeTemplate) {
+		return this.diagramCanvasRef.current.getGhostNode(nodeTemplate);
 	}
 
 	getZoomToReveal(objectIds, xPos, yPos) {

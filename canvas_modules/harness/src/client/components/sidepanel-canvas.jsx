@@ -44,6 +44,10 @@ import {
 	DIRECTION_LEFT_RIGHT,
 	DIRECTION_TOP_BOTTOM,
 	DIRECTION_BOTTOM_TOP,
+	LINK_SELECTION_NONE,
+	LINK_SELECTION_LINK_ONLY,
+	LINK_SELECTION_HANDLES,
+	LINK_SELECTION_DETACHABLE,
 	ASSOC_RIGHT_SIDE_CURVE,
 	ASSOC_STRAIGHT,
 	UNDERLAY_NONE,
@@ -51,6 +55,7 @@ import {
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
+	EXAMPLE_APP_DETACHED,
 	EXAMPLE_APP_EXPLAIN,
 	EXAMPLE_APP_EXPLAIN2,
 	EXAMPLE_APP_STREAMS,
@@ -613,19 +618,6 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
-		var enableLinkSelection = (<div className="harness-sidepanel-children">
-			<form>
-				<div className="harness-sidepanel-headers">Enable Link Selection</div>
-				<div>
-					<Toggle
-						id="selectedLinkSelection" // Set ID to corresponding field in App.js state
-						toggled={this.props.getStateValue("selectedLinkSelection")}
-						onToggle={this.setStateValue}
-					/>
-				</div>
-			</form>
-		</div>);
-
 		var enableAssocLinkCreation = (<div className="harness-sidepanel-children">
 			<form>
 				<div className="harness-sidepanel-headers">Enable Association Link Creation</div>
@@ -637,6 +629,33 @@ export default class SidePanelForms extends React.Component {
 					/>
 				</div>
 			</form>
+		</div>);
+
+		var enableLinkSelection = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-selection">
+			<div className="harness-sidepanel-headers">Enable Link Selection</div>
+			<RadioButtonGroup
+				className="harness-sidepanel-radio-group"
+				name="selectedLinkSelection" // Set name to corresponding field name in App.js
+				onChange={this.setStateValue}
+				defaultSelected={this.props.getStateValue("selectedLinkSelection")}
+			>
+				<RadioButton
+					value={LINK_SELECTION_NONE}
+					labelText={LINK_SELECTION_NONE}
+				/>
+				<RadioButton
+					value={LINK_SELECTION_LINK_ONLY}
+					labelText={LINK_SELECTION_LINK_ONLY}
+				/>
+				<RadioButton
+					value={LINK_SELECTION_HANDLES}
+					labelText={LINK_SELECTION_HANDLES}
+				/>
+				<RadioButton
+					value={LINK_SELECTION_DETACHABLE}
+					labelText={LINK_SELECTION_DETACHABLE}
+				/>
+			</RadioButtonGroup>
 		</div>);
 
 		var assocLinkType = (<div className="harness-sidepanel-children" id="harness-sidepanel-assoc-link-type">
@@ -717,19 +736,6 @@ export default class SidePanelForms extends React.Component {
 					</div>
 				</form>
 			</div>);
-
-		var enableDetachableLinks = (<div className="harness-sidepanel-children">
-			<form>
-				<div className="harness-sidepanel-headers">Enable Detachable Links</div>
-				<div>
-					<Toggle
-						id="selectedDetachableLinks" // Set ID to corresponding field in App.js state
-						toggled={this.props.getStateValue("selectedDetachableLinks")}
-						onToggle={this.setStateValue}
-					/>
-				</div>
-			</form>
-		</div>);
 
 		var enableZoomIntoSubFlows = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-zoom-into-subflows-toggle">
@@ -900,6 +906,10 @@ export default class SidePanelForms extends React.Component {
 				<RadioButton
 					value={EXAMPLE_APP_FLOWS}
 					labelText={EXAMPLE_APP_FLOWS}
+				/>
+				<RadioButton
+					value={EXAMPLE_APP_DETACHED}
+					labelText={EXAMPLE_APP_DETACHED}
 				/>
 				<RadioButton
 					value={EXAMPLE_APP_EXPLAIN}
@@ -1240,21 +1250,19 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{toolbarType}
 					{divider}
-					{enableDetachableLinks}
+					{enableLinkSelection}
+					{divider}
+					{enableInsertNodeDroppedOnLink}
+					{divider}
+					{enableAssocLinkCreation}
+					{divider}
+					{assocLinkType}
 					{divider}
 					{enablePanIntoViewOnOpen}
 					{divider}
 					{enableZoomIntoSubFlows}
 					{divider}
 					{enableDragWithoutSelect}
-					{divider}
-					{enableInsertNodeDroppedOnLink}
-					{divider}
-					{enableLinkSelection}
-					{divider}
-					{enableAssocLinkCreation}
-					{divider}
-					{assocLinkType}
 					{divider}
 					{enableObjectModel}
 					{divider}
