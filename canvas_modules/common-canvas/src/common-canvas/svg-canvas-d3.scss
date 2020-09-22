@@ -612,7 +612,8 @@ $new-halo-link-color: $ui-05;
 }
 
 // Used when an insertable node is dragged over a link line.
-.d3-link-line.d3-data-link[data-drag-node-over] {
+.d3-link-line.d3-data-link[data-drag-node-over],
+.d3-link-group[data-selected] .d3-link-line.d3-data-link[data-drag-node-over] {
 	stroke: $link-hightlight-color;
 	stroke-width: 5;
 }
