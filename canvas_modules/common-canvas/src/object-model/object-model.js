@@ -1098,29 +1098,6 @@ export default class ObjectModel {
 		return node.isSupernodeInputBinding || node.isSupernodeOutputBinding;
 	}
 
-	selectInRegion(minX, minY, maxX, maxY, pipelineId) {
-		const pipeline = this.getAPIPipeline(pipelineId);
-		var regionSelections = [];
-		for (const node of pipeline.getNodes()) {
-			if (!this.isSupernodeBinding(node) && // Don't include binding nodes in select
-					minX < node.x_pos + node.width &&
-					maxX > node.x_pos &&
-					minY < node.y_pos + node.height &&
-					maxY > node.y_pos) {
-				regionSelections.push(node.id);
-			}
-		}
-		for (const comment of pipeline.getComments()) {
-			if (minX < comment.x_pos + comment.width &&
-					maxX > comment.x_pos &&
-					minY < comment.y_pos + comment.height &&
-					maxY > comment.y_pos) {
-				regionSelections.push(comment.id);
-			}
-		}
-		this.setSelections(regionSelections, pipelineId);
-	}
-
 	findNodesInSubGraph(startNodeId, endNodeId, selection, pipelineId) {
 		const pipeline = this.getAPIPipeline(pipelineId);
 		let retval = false;

@@ -1066,25 +1066,17 @@ export default class SVGCanvasRenderer {
 
 		const attachableLinks = this.activePipeline.links.filter((link) => {
 			if (link.srcPos && nodeHasOutputs &&
-					this.isPosInArea(link.srcPos, ghostArea, this.canvasLayout.ghostAreaPadding)) {
+					CanvasUtils.isPosInArea(link.srcPos, ghostArea, this.canvasLayout.ghostAreaPadding)) {
 				return true;
 			}
 			if (link.trgPos && nodeHasInputs &&
-					this.isPosInArea(link.trgPos, ghostArea, this.canvasLayout.ghostAreaPadding)) {
+					CanvasUtils.isPosInArea(link.trgPos, ghostArea, this.canvasLayout.ghostAreaPadding)) {
 				return true;
 			}
 			return false;
 		});
 
 		return attachableLinks;
-	}
-
-	// Return true if the position provided is within the area provided.
-	isPosInArea(pos, area, pad) {
-		return pos.x_pos > area.x1 - pad &&
-			pos.x_pos < area.x2 + pad &&
-			pos.y_pos > area.y1 - pad &&
-			pos.y_pos < area.y2 + pad;
 	}
 
 	// Returns true if the link is attached to both a source node and a
@@ -1797,7 +1789,6 @@ export default class SVGCanvasRenderer {
 			this.draggingLinkData = null;
 		}
 
-
 		if (d3Event.transform.k === this.zoomStartPoint.k &&
 				this.regionSelect === true) {
 			this.removeRegionSelector();
@@ -1813,7 +1804,10 @@ export default class SVGCanvasRenderer {
 					Math.abs(this.region.height) > 5) {
 				var { startX, startY, width, height } = this.getRegionDimensions();
 				this.isSelecting = true;
-				this.objectModel.selectInRegion(startX, startY, startX + width, startY + height, this.activePipeline.id);
+				const region = { x1: startX, y1: startY, x2: startX + width, y2: startY + height };
+				const selections =
+					CanvasUtils.selectInRegion(region, this.activePipeline, this.enableLinkSelection !== LINK_SELECTION_NONE);
+				this.canvasController.setSelections(selections, this.activePipeline.id);
 			}
 			this.regionSelect = false;
 

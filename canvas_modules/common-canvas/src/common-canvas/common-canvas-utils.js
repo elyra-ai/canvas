@@ -554,4 +554,66 @@ export default class CanvasUtils {
 		return { newLinks, oldLinks };
 	}
 
+
+	// Returns an array of selected object IDs for nodes, comments and links
+	// that are within the region provided. Links are only included if
+	// includeLinks is truthy.
+	static selectInRegion(region, pipeline, includeLinks) {
+		var regionSelections = [];
+		for (const node of pipeline.nodes) {
+			if (!this.isSupernodeBinding(node) && // Don't include binding nodes in select
+					region.x1 < node.x_pos + node.width &&
+					region.x2 > node.x_pos &&
+					region.y1 < node.y_pos + node.height &&
+					region.y2 > node.y_pos) {
+				regionSelections.push(node.id);
+			}
+		}
+		for (const comment of pipeline.comments) {
+			if (region.x1 < comment.x_pos + comment.width &&
+					region.x2 > comment.x_pos &&
+					region.y1 < comment.y_pos + comment.height &&
+					region.y2 > comment.y_pos) {
+				regionSelections.push(comment.id);
+			}
+		}
+		if (includeLinks) {
+			for (const link of pipeline.links) {
+				let srcInRegion = false;
+				if ((link.srcPos && this.isPosInArea(link.srcPos, region, 0)) ||
+						this.isSelected(link.srcNodeId, regionSelections)) {
+					srcInRegion = true;
+				}
+				let trgInRegion = false;
+				if ((link.trgPos && this.isPosInArea(link.trgPos, region, 0)) ||
+						this.isSelected(link.trgNodeId, regionSelections)) {
+					trgInRegion = true;
+				}
+				if (srcInRegion && trgInRegion) {
+					regionSelections.push(link.id);
+				}
+			}
+		}
+
+		return regionSelections;
+	}
+
+	// Returns true if the ID passed in is in the array.
+	static isSelected(nodeId, array) {
+		return array.findIndex((id) => id === nodeId) !== -1;
+	}
+
+	// Return true if the position provided is within the area provided.
+	static isPosInArea(pos, area, pad) {
+		return pos.x_pos > area.x1 - pad &&
+			pos.x_pos < area.x2 + pad &&
+			pos.y_pos > area.y1 - pad &&
+			pos.y_pos < area.y2 + pad;
+	}
+
+	// Returns true if the node passed in a binding node within a supernode's
+	// subflow.
+	static isSupernodeBinding(node) {
+		return node.isSupernodeInputBinding || node.isSupernodeOutputBinding;
+	}
 }
