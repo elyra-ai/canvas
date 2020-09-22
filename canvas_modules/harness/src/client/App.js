@@ -2039,7 +2039,9 @@ class App extends React.Component {
 		}
 
 		const mainView = (<div id="harness-app-container">
-			{navBar}
+			<header aria-label="Common Canvas Header" role="banner">
+				{navBar}
+			</header>
 			<SidePanel
 				canvasConfig={sidePanelCanvasConfig}
 				propertiesConfig={sidePanelPropertiesConfig}
