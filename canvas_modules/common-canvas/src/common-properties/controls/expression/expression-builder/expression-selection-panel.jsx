@@ -40,8 +40,8 @@ export default class ExpressionSelectionPanel extends React.Component {
 
 		return (
 			<div className="properties-expression-selection-container" >
-				{fieldsOrFunction}
 				{operators}
+				{fieldsOrFunction}
 			</div>
 		);
 	}

@@ -17,13 +17,13 @@
 /* These are used in custom expression builder */
 $field-function-width: 85%;
 $operators-width: 15%;
-$fields-table-margin: 50%;
+$fields-table-margin: 52%;
 $fields-table-width: 48%;
 $values-table-width: 48%;
 $functions-table-margin: 70%;
 $functions-table-width: 68%;
 $functions-help-width: 28%;
-$operator-width: 45%;
+$operator-width: 36px;
 $operator-margin: 50%;
 
 .properties-expression-selection-container, .properties-field-and-values-table-container,
@@ -36,23 +36,13 @@ $operator-margin: 50%;
 	}
 }
 
+
 .properties-expression-selection-container {
-	margin-top: 2%;
-}
-
-.properties-expression-title {
-	line-height: 2rem;
-	font-weight: bold;
-}
-
-.properties-expression-selection-fieldOrFunction {
-	width: $field-function-width;
-	float: left;
+	padding-top: $spacing-05;
 }
 
 .properties-expression-selection-operator {
-	width: $operators-width;
-	margin-left: $field-function-width;
+	padding-bottom: $spacing-07;
 }
 
 .properties-field-table-container {
@@ -100,33 +90,40 @@ $operator-margin: 50%;
 	text-align: center;
 }
 
-.properties-operator-button-container {
+.properties-operator-container {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-between;
-	width: 95px;
 
 	.properties-operator-tooltip-container {
 		width: $operator-width;
-		margin-bottom: 2px;
+		margin-right: $spacing-03;
 	}
 
 	.properties-operator-button {
-		margin-bottom: 2px;
-		height: 20px;
+		height: $operator-width;
 		width: $operator-width;
-		padding: 2px 35px 2px 10px;
+		padding: 0;
+		.properties-operator-button-label {
+			margin: 0 auto;
+		}
 	}
 }
 
-.properties-expression-field-select {
-	width: 50%;
-	margin-bottom: 7px;
+.properties-expression-selection-content-switcher {
+	padding-bottom: $spacing-08;
+	div {
+		max-width: 50%;
+		float: right;
+	}
 }
 
-.properties-expression-function-select {
-	width: 50%;
-	margin-bottom: 7px;
+.properties-expression-field-select, .properties-expression-function-select {
+	padding-top: $spacing-06;
+	padding-bottom: $spacing-06;
+}
+.properties-expression-table-dropdown-header {
+	@include carbon--type-style("label-01");
+	padding-bottom: $spacing-02;
 }
 
 .properties-primaryTabs .bx--tabs-trigger {

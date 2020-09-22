@@ -119,6 +119,8 @@ describe("Test of expression builder", function() {
 		cy.verifyIconInSubPanel("canvas-state-icon-error");
 
 		// substitute a param char '?' (dependent on the test above)
+		cy.selectTabFromPropertyInSubPanel("Fields", "fields");
+
 		cy.selectFieldFromPropertyInSubPanel("Age", "field");
 		cy.verifyIconInSubPanel("none");
 	});

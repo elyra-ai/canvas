@@ -78,9 +78,8 @@ Cypress.Commands.add("selectFieldFromPropertyInSubPanel", (fieldName, propertyId
 
 Cypress.Commands.add("selectTabFromPropertyInSubPanel", (tabName, propertyId) => {
 	cy.get(".properties-expression-selection-fieldOrFunction")
-		.find(`a[id='expresson-builder-${propertyId}-tab']`)
-		.parent()
-		.click();
+		.find(`button.expresson-builder-${propertyId}-tab`)
+		.click({ force: true });
 });
 
 function getCellMatch(tableCells, fieldName) {
