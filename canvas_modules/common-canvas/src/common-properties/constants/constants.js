@@ -51,6 +51,7 @@ _defineConstant("MESSAGE_KEYS", {
 	PROPERTIES_CLOSE_MESSAGE: "properties.close.message",
 	PROPERTIES_SUPPORT_MESSAGE: "properties.support.message",
 	PROPERTIES_UNEXPECTED_MESSAGE: "properties.unexpected.message",
+	TABLE_SEARCH_HEADER: "table.search.header",
 	TABLE_SEARCH_PLACEHOLDER: "table.search.placeholder",
 	LONG_TABLE_SUMMARY_PLACEHOLDER: "summary.longTable.placeholder",
 	ALERTS_TAB_TITLE: "alerts.tab.title",
@@ -63,7 +64,6 @@ _defineConstant("MESSAGE_KEYS", {
 	REQUIRED_ERROR: "required.error",
 	DATETIME_FORMAT_ERROR: "datetime.format.error",
 	INVALID_FIELD_ERROR: "invalid.field.error",
-	EXPRESSION_OPERATORS_LABEL: "expression.operators.label",
 	EXPRESSION_VALIDATE_LABEL: "expression.validate.label",
 	EXPRESSION_BUILDER_TITLE: "expression.builder.title",
 	EXPRESSION_BUILDER_LABEL: "expression.builder.label",
@@ -171,7 +171,7 @@ _defineConstant("DEFAULT_LABEL_EDITABLE", true);
 
 _defineConstant("ROW_HEIGHT", 42);
 
-_defineConstant("EXPRESSION_TABLE_ROWS", 6);
+_defineConstant("EXPRESSION_TABLE_ROWS", 7);
 
 _defineConstant("TABLE_SUBPANEL_BUTTON_WIDTH", "36px");
 

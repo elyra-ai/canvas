@@ -49,7 +49,6 @@
 }
 
 .properties-fp-filter-list {
-	margin-top: 6px;
 	display: flex;
 	align-items: center;
 
@@ -89,7 +88,6 @@
 		display: flex;
 		justify-content: space-between;
 		.properties-fp-reset-button-container {
-			margin-top: $spacing-03; // override toolbar bottom margin
 			span {
 				margin-right: $spacing-02;
 			}
