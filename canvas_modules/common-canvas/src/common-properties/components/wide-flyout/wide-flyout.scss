@@ -53,12 +53,6 @@ $properties-wf-title-height: 41px;
 		height: $properties-wf-title-height;
 		border-bottom: 1px solid $ui-03;
 	}
-	.properties-modal-buttons {
-		bottom: 0;
-		position: absolute;
-		width: 100%;
-		left: 0;
-	}
 	.properties-wf-children {
 		padding: $spacing-04 $spacing-06 $spacing-06 $spacing-06;
 		overflow-y: auto;
