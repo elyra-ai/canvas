@@ -67,7 +67,7 @@ export default class SidePanel extends React.Component {
 		</div>);
 
 		return (
-			<aside aria-label="Right side panel" role="complementary">{sidePanel}</aside>
+			<aside aria-label="Right Side Panel" role="complementary">{sidePanel}</aside>
 		);
 	}
 }

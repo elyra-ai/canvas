@@ -528,22 +528,24 @@ class Palette extends React.Component {
 		const displayValue = this.props.showPalette ? "block" : "none";
 
 		return (
-			<div className="palette-div"
-				ref="palette"
-				onMouseDown={this.mouseDownOnPalette}
-				style={{ display: displayValue }}
-			>
-				<PaletteTopbar mouseDownMethod={this.mouseDownOnTopBar}
-					showGridMethod={this.showGrid}
-					windowMaximizeMethod={this.windowMaximize}
-					showGrid={this.state.showGrid}
-					canvasController={this.props.canvasController}
-				/>
-				<PaletteContent paletteJSON={this.props.paletteJSON}
-					showGrid={this.state.showGrid}
-					canvasController={this.props.canvasController}
-				/>
-			</div>
+			<nav aria-label="Modal Palette" role="navigation">
+				<div className="palette-div"
+					ref="palette"
+					onMouseDown={this.mouseDownOnPalette}
+					style={{ display: displayValue }}
+				>
+					<PaletteTopbar mouseDownMethod={this.mouseDownOnTopBar}
+						showGridMethod={this.showGrid}
+						windowMaximizeMethod={this.windowMaximize}
+						showGrid={this.state.showGrid}
+						canvasController={this.props.canvasController}
+					/>
+					<PaletteContent paletteJSON={this.props.paletteJSON}
+						showGrid={this.state.showGrid}
+						canvasController={this.props.canvasController}
+					/>
+				</div>
+			</nav>
 		);
 	}
 }

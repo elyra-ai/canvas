@@ -298,21 +298,23 @@ export default class DiagramCanvas extends React.Component {
 			: "common-canvas-drop-div";
 
 		return (
-			<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
-				<div
-					id={this.canvasDivId}
-					className={dropDivClassName}
-					onDrop={this.drop}
-					onDragOver={this.dragOver}
-					onDragEnter={this.dragEnter}
-					onDragLeave={this.dragLeave}
-				>
-					{emptyCanvas}
-					{svgCanvas}
-					{this.props.children}
-					{dropZoneCanvas}
-				</div>
-			</ReactResizeDetector>
+			<main aria-label="Canvas" role="main">
+				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
+					<div
+						id={this.canvasDivId}
+						className={dropDivClassName}
+						onDrop={this.drop}
+						onDragOver={this.dragOver}
+						onDragEnter={this.dragEnter}
+						onDragLeave={this.dragLeave}
+					>
+						{emptyCanvas}
+						{svgCanvas}
+						{this.props.children}
+						{dropZoneCanvas}
+					</div>
+				</ReactResizeDetector>
+			</main>
 		);
 	}
 }

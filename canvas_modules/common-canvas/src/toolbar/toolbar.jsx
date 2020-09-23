@@ -277,16 +277,18 @@ class Toolbar extends React.Component {
 		const rightItems = this.generateToolbarItems(this.rightBar, false, false);
 
 		const canvasToolbar = (
-			<ReactResizeDetector handleWidth onResize={this.onToolbarResize}>
-				<div className="toolbar-div" instanceid={this.props.instanceId}>
-					<div className="toolbar-left-bar" onScroll={this.onScroll}>
-						{leftItems}
+			<section aria-label="Canvas Toolbar" role="toolbar">
+				<ReactResizeDetector handleWidth onResize={this.onToolbarResize}>
+					<div className="toolbar-div" instanceid={this.props.instanceId}>
+						<div className="toolbar-left-bar" onScroll={this.onScroll}>
+							{leftItems}
+						</div>
+						<div className="toolbar-right-bar">
+							{rightItems}
+						</div>
 					</div>
-					<div className="toolbar-right-bar">
-						{rightItems}
-					</div>
-				</div>
-			</ReactResizeDetector>
+				</ReactResizeDetector>
+			</section>
 		);
 		return canvasToolbar;
 	}

@@ -34,13 +34,15 @@ class PaletteFlyout extends React.Component {
 		}
 
 		return (
-			<div className={className} style={{ width: this.props.paletteWidth + "px" }}>
-				<PaletteFlyoutContent
-					paletteJSON={this.props.paletteJSON}
-					canvasController={this.props.canvasController}
-					isPaletteOpen={this.props.showPalette}
-				/>
-			</div>
+			<nav aria-label="Flyout Palette" role="navigation">
+				<div className={className} style={{ width: this.props.paletteWidth + "px" }}>
+					<PaletteFlyoutContent
+						paletteJSON={this.props.paletteJSON}
+						canvasController={this.props.canvasController}
+						isPaletteOpen={this.props.showPalette}
+					/>
+				</div>
+			</nav>
 		);
 	}
 }

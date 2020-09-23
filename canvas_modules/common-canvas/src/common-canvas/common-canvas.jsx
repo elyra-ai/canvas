@@ -431,17 +431,11 @@ class CommonCanvas extends React.Component {
 
 		return (
 			<div className={className} onDragOver={this.onDragOver} onDrop={this.onDrop}>
-				<nav aria-label="Palette" role="navigation">
-					{palette}
-				</nav>
+				{palette}
 				<div className="common-canvas-right-side-items">
 					<div id={this.itemsContainerDivId} className="common-canvas-items-container">
-						<main aria-label="Canvas" role="main">
-							{canvas}
-						</main>
-						<section aria-label="Canvas Toolbar" role="toolbar">
-							{canvasToolbar}
-						</section>
+						{canvas}
+						{canvasToolbar}
 						{notificationPanel}
 					</div>
 					{rightFlyout}

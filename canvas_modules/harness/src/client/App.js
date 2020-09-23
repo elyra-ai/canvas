@@ -1551,42 +1551,44 @@ class App extends React.Component {
 			currentPipelineId={currentPipelineId}
 		/>);
 
-		const navBar = (<div className="harness-app-navbar">
-			<ul className="harness-app-navbar-items">
-				<li className="harness-navbar-li">
-					<span className="harness-title">Common Canvas</span>
-					<span className="harness-version">{"v" + CommonCanvasPackage.version}</span>
-				</li>
-				<li className="harness-navbar-li harness-nav-divider" data-tip="console">
-					<a onClick={this.openConsole.bind(this) }>
-						<Isvg src={listview32} />
-					</a>
-				</li>
-				<li className="harness-navbar-li" data-tip="download">
-					<a onClick={this.download.bind(this) }>
-						<Isvg src={download32} />
-					</a>
-				</li>
-				<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
-					{breadcrumbs}
-				</li>
-				<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="API">
-					<a onClick={this.sidePanelAPI.bind(this) }>
-						<Isvg src={api32} />
-					</a>
-				</li>
-				<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip="Common Properties Modal">
-					<a onClick={this.sidePanelModal.bind(this) }>
-						<Isvg src={template32} />
-					</a>
-				</li>
-				<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="Common Canvas">
-					<a onClick={this.sidePanelCanvas.bind(this) }>
-						<Isvg src={justify32} />
-					</a>
-				</li>
-			</ul>
-		</div>);
+		const navBar = (<header aria-label="Common Canvas Header" role="banner">
+			<div className="harness-app-navbar">
+				<ul className="harness-app-navbar-items">
+					<li className="harness-navbar-li">
+						<span className="harness-title">Common Canvas</span>
+						<span className="harness-version">{"v" + CommonCanvasPackage.version}</span>
+					</li>
+					<li className="harness-navbar-li harness-nav-divider" data-tip="console">
+						<a onClick={this.openConsole.bind(this) }>
+							<Isvg src={listview32} />
+						</a>
+					</li>
+					<li className="harness-navbar-li" data-tip="download">
+						<a onClick={this.download.bind(this) }>
+							<Isvg src={download32} />
+						</a>
+					</li>
+					<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
+						{breadcrumbs}
+					</li>
+					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="API">
+						<a onClick={this.sidePanelAPI.bind(this) }>
+							<Isvg src={api32} />
+						</a>
+					</li>
+					<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip="Common Properties Modal">
+						<a onClick={this.sidePanelModal.bind(this) }>
+							<Isvg src={template32} />
+						</a>
+					</li>
+					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="Common Canvas">
+						<a onClick={this.sidePanelCanvas.bind(this) }>
+							<Isvg src={justify32} />
+						</a>
+					</li>
+				</ul>
+			</div>
+		</header>);
 
 		const emptyCanvasDiv = (
 			<div>
@@ -2039,9 +2041,7 @@ class App extends React.Component {
 		}
 
 		const mainView = (<div id="harness-app-container">
-			<header aria-label="Common Canvas Header" role="banner">
-				{navBar}
-			</header>
+			{navBar}
 			<SidePanel
 				canvasConfig={sidePanelCanvasConfig}
 				propertiesConfig={sidePanelPropertiesConfig}
