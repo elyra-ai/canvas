@@ -18,7 +18,11 @@
 	justify-content: flex-end;
 	display: flex;
 	background-color: $ui-01;
-	height: 48px;
+	height: 64px;
+	bottom: 0;
+	position: absolute;
+	width: 100%;
+	left: 0;
 	&.hide {
 		display: none;
 	}
