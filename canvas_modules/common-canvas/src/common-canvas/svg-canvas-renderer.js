@@ -911,7 +911,6 @@ export default class SVGCanvasRenderer {
 	setLinkDragOverHighlighting(link, state) {
 		this.canvasGrp
 			.selectAll(this.getSelectorForId("link_grp", link.id))
-			.selectAll(".d3-link-line")
 			.attr("data-drag-node-over", state ? true : null); // true will add the attr, null will remove it
 	}
 

@@ -611,24 +611,27 @@ $new-halo-link-color: $ui-05;
 	}
 }
 
-// Used when an insertable node is dragged over a link line.
-.d3-link-line.d3-data-link[data-drag-node-over],
-.d3-link-group[data-selected] .d3-link-line.d3-data-link[data-drag-node-over] {
-	stroke: $link-hightlight-color;
-	stroke-width: 5;
-}
-
 // When pointer hovers over the link this style will be applied.
 .d3-link-group:hover .d3-link-line,
 .d3-link-group:hover .d3-link-line-arrow-head {
 	stroke: $link-hightlight-color;
+	stroke-width: 2;
 }
 
 // Style line and arrow head when link is selected.
 .d3-link-group[data-selected] .d3-link-line,
 .d3-link-group[data-selected] .d3-link-line-arrow-head {
 	stroke: $link-hightlight-color;
-	stroke-width: 3px;
+	stroke-width: 3;
+}
+
+// Used when an insertable node is dragged over a link line.
+.d3-link-group[data-drag-node-over] .d3-link-line.d3-data-link,
+.d3-link-group[data-drag-node-over] .d3-link-line-arrow-head,
+.d3-link-group[data-selected][data-drag-node-over] .d3-link-line.d3-data-link,
+.d3-link-group[data-selected][data-drag-node-over] .d3-link-line-arrow-head {
+	stroke: $link-hightlight-color;
+	stroke-width: 5;
 }
 
 // Styles for link handles at the start of a link line
