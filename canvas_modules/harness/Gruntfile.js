@@ -76,10 +76,10 @@ module.exports = function(grunt) {
 			fonts: {
 				files: [{
 					expand: true,
-					flatten: true,
-					cwd: "./node_modules/@ibm/plex",
-					src: ["IBM-Plex*"],
-					dest: ".build/fonts"
+					flatten: false,
+					cwd: "./node_modules/carbon-components/src/globals/",
+					src: ["fonts/**/*"],
+					dest: ".build"
 				}]
 			},
 			styleguide: {
