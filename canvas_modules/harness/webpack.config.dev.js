@@ -62,7 +62,14 @@ const rules = [
 		use: [
 			{ loader: "style-loader" },
 			{ loader: "css-loader", options: { sourceMap: true } },
-			{ loader: "postcss-loader", options: { ident: "postcss", sourceMap: true, plugins: [require("autoprefixer")] } },
+			{ loader: "postcss-loader",
+				options: {
+					postcssOptions: {
+						sourceMap: true,
+						plugins: [require("autoprefixer")]
+					}
+				}
+			},
 			{ loader: "sass-loader",
 				options: {
 					sassOptions: {
