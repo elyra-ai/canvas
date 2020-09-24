@@ -45,7 +45,7 @@
     "carbon-components-react": "7.20.0",
     "carbon-icons": "7.0.7",
     "codemirror": "5.58.1",
-    "css-loader": "3.6.0",
+    "css-loader": "4.3.0",
     "cypress": "4.10.0",
     "eslint": "7.9.0",
     "eslint-config-canvas": "file:../eslint-config-canvas",
