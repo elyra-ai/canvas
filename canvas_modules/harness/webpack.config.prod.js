@@ -56,8 +56,14 @@ const rules = [
 			{
 				loader: MiniCssExtractPlugin.loader,
 			},
-			{ loader: "css-loader" },
-			{ loader: "postcss-loader", options: { ident: "postcss", plugins: [require("autoprefixer")] } },
+			{ loader: "css-loader", options: { url: false } },
+			{ loader: "postcss-loader",
+				options: {
+					postcssOptions: {
+						plugins: [require("autoprefixer")]
+					}
+				}
+			},
 			{ loader: "sass-loader",
 				options: {
 					sassOptions: {
