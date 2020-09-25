@@ -101,10 +101,10 @@
     "webpack-bundle-analyzer": "3.9.0"
   },
   "peerDependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-intl": "^5.8.2",
-    "react-redux": "^7.2.1"
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-intl": "^5.0.0",
+    "react-redux": "^7.0.0"
   },
   "jest": {
     "moduleFileExtensions": [
