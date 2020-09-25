@@ -38,7 +38,7 @@ $operator-margin: 50%;
 
 
 .properties-expression-selection-container {
-	padding-top: $spacing-05;
+	padding-top: $spacing-03;
 }
 
 .properties-expression-selection-operator {
@@ -97,6 +97,7 @@ $operator-margin: 50%;
 	.properties-operator-tooltip-container {
 		width: $operator-width;
 		margin-right: $spacing-03;
+		margin-top: $spacing-03;
 	}
 
 	.properties-operator-button {
