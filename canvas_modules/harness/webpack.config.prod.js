@@ -56,7 +56,7 @@ const rules = [
 			{
 				loader: MiniCssExtractPlugin.loader,
 			},
-			{ loader: "css-loader" },
+			{ loader: "css-loader", options: { url: false } },
 			{ loader: "postcss-loader",
 				options: {
 					postcssOptions: {
