@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-$font-prefix: "/fonts";
+$font-prefix: "../../.build/fonts";
 @import "@ibm/plex/scss/ibm-plex.scss";
 
 @import "@carbon/themes/scss/themes";

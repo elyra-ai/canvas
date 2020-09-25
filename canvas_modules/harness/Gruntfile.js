@@ -76,9 +76,9 @@ module.exports = function(grunt) {
 			fonts: {
 				files: [{
 					expand: true,
-					flatten: true,
+					flatten: false,
 					cwd: "./node_modules/@ibm/plex",
-					src: ["IBM-Plex*"],
+					src: ["IBM-Plex*/**"],
 					dest: ".build/fonts"
 				}]
 			},
