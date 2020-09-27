@@ -28,10 +28,22 @@ class PaletteContentGridNode extends React.Component {
 		this.state = {
 		};
 
+		this.ghostData = null;
+
 		this.onDragStart = this.onDragStart.bind(this);
 		this.onDoubleClick = this.onDoubleClick.bind(this);
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
+		this.onMouseDown = this.onMouseDown.bind(this);
+	}
+
+	onMouseDown() {
+		// Make sure the tip doesn't appear when starting to drag a node.
+		this.props.canvasController.closeTip();
+
+		// Prepare the ghost image on mouse down because asynchronous loading of
+		// SVG files will be too slow if this is done in onDragStart.
+		this.ghostData = this.props.canvasController.getGhostNode(this.props.nodeTemplate);
 	}
 
 	onDragStart(ev) {
@@ -44,9 +56,8 @@ class PaletteContentGridNode extends React.Component {
 		// the dataTransfer object so just write an empty string
 		ev.dataTransfer.setData(DND_DATA_TEXT, "");
 
-		const ghostData = this.props.canvasController.getGhostNode(this.props.nodeTemplate);
-		if (ghostData) {
-			ev.dataTransfer.setDragImage(ghostData.element, ghostData.width / 2, ghostData.height / 2);
+		if (this.ghostData) {
+			ev.dataTransfer.setDragImage(this.ghostData.element, this.ghostData.width / 2, this.ghostData.height / 2);
 		}
 	}
 
@@ -57,7 +68,7 @@ class PaletteContentGridNode extends React.Component {
 	}
 
 	onMouseOver(ev) {
-		if (ev.button === 0) {
+		if (ev.buttons === 0) {
 			const nodeTemplate = this.props.category.empty_text
 				? { app_data: { ui_data: { label: this.props.category.empty_text } } }
 				: this.props.nodeTemplate;
@@ -113,6 +124,7 @@ class PaletteContentGridNode extends React.Component {
 				onDoubleClick={this.onDoubleClick}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
+				onMouseDown={this.onMouseDown}
 				className="palette-grid-node-outer"
 			>
 				<div className="palette-grid-node-inner">
