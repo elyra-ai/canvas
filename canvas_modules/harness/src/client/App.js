@@ -181,6 +181,7 @@ class App extends React.Component {
 			selectedSaveToPalette: false,
 			selectedDropZoneOnExternalDrag: false,
 			selectedInsertNodeDroppedOnLink: false,
+			selectedHightlightNodeOnNewLinkDrag: false,
 			selectedCreateSupernodeNonContiguous: false,
 			selectedMoveNodesOnSupernodeResize: true,
 			selectedDisplayFullLabelOnHover: false,
@@ -1625,7 +1626,7 @@ class App extends React.Component {
 			enableLinkDirection: this.state.selectedLinkDirection,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
 			enableParentClass: parentClass,
-			enableNodeLayout: null,
+			enableHightlightNodeOnNewLinkDrag: this.state.selectedHightlightNodeOnNewLinkDrag,
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableLinkSelection: this.state.selectedLinkSelection,
@@ -1646,6 +1647,7 @@ class App extends React.Component {
 			// dropZoneCanvasContent: dropZoneCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
+			enableNodeLayout: null,
 			// enableCanvasLayout: {
 			// 	dataLinkArrowHead: true
 			// }
