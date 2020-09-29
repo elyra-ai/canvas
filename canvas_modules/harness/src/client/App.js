@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint complexity: ["error", 25] */
+/* eslint complexity: ["error", 27] */
 /* eslint max-len: ["error", 200] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
@@ -180,6 +180,8 @@ class App extends React.Component {
 			selectedExtraCanvasDisplayed: false,
 			selectedSaveToPalette: false,
 			selectedDropZoneOnExternalDrag: false,
+			selectedDisplayCustomizedDropZoneContent: false,
+			selectedDisplayCustomizedEmptyCanvasContent: true,
 			selectedInsertNodeDroppedOnLink: false,
 			selectedHightlightNodeOnNewLinkDrag: false,
 			selectedCreateSupernodeNonContiguous: false,
@@ -1588,24 +1590,27 @@ class App extends React.Component {
 			</ul>
 		</div>);
 
-		const emptyCanvasDiv = (
-			<div>
-				<img src={BlankCanvasImage} className="harness-empty-image" />
-				<span className="harness-empty-text">Welcome to the Common Canvas test harness.<br />Your flow is empty!</span>
-				<span className="harness-empty-link"
-					onClick={this.handleEmptyCanvasLinkClick}
-				>Click here to take a tour</span>
-			</div>);
+		let emptyCanvasDiv = null;
+		if (this.state.selectedDisplayCustomizedEmptyCanvasContent) {
+			emptyCanvasDiv = (
+				<div>
+					<img src={BlankCanvasImage} className="harness-empty-image" />
+					<span className="harness-empty-text">Welcome to the Common Canvas test harness.<br />Your flow is empty!</span>
+					<span className="harness-empty-link"
+						onClick={this.handleEmptyCanvasLinkClick}
+					>Click here to take a tour</span>
+				</div>);
+		}
 
-		// Uncomment the code below to experiement with passing in a custom div
-		// to specify the 'drop zone' content. Provide it in the dropZoneCanvasContent
-		// in the canvas config object below.
-		// const dropZoneCanvasDiv = (
-		// 	<div>
-		// 		<div className="dropzone-canvas" />
-		// 		<div className="dropzone-canvas-rect" />
-		// 		<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
-		// 	</div>);
+		let dropZoneCanvasDiv = null;
+		if (this.state.selectedDisplayCustomizedDropZoneContent) {
+			dropZoneCanvasDiv = (
+				<div>
+					<div className="dropzone-canvas" />
+					<div className="dropzone-canvas-rect" />
+					<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
+				</div>);
+		}
 
 		let parentClass = "";
 		if (this.state.selectedNodeFormat === "Vertical") {
@@ -1633,7 +1638,6 @@ class App extends React.Component {
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			enableToolbarLayout: this.state.selectedToolbarLayout,
-			emptyCanvasContent: emptyCanvasDiv,
 			enableInsertNodeDroppedOnLink: this.state.selectedInsertNodeDroppedOnLink,
 			enableMoveNodesOnSupernodeResize: this.state.selectedMoveNodesOnSupernodeResize,
 			tipConfig: this.state.selectedTipConfig,
@@ -1644,7 +1648,8 @@ class App extends React.Component {
 			enableCanvasUnderlay: this.state.selectedCanvasUnderlay,
 			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
 			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
-			// dropZoneCanvasContent: dropZoneCanvasDiv,
+			dropZoneCanvasContent: dropZoneCanvasDiv,
+			emptyCanvasContent: emptyCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
 			enableNodeLayout: null,

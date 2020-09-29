@@ -170,6 +170,14 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 	}
 }
 
+/* Drop zone customized text style */
+.dropzone-canvas-text {
+	position: absolute;
+	top: 100px;
+	left: 90px;
+	color: $ui-04;
+}
+
 /* This styles are used in the decoratorCanvas.json canvas file. */
 
 .leftDecoration {
