@@ -737,6 +737,20 @@ export default class SidePanelForms extends React.Component {
 				</form>
 			</div>);
 
+		var enableHightlightNodeOnNewLinkDrag = (
+			<div className="harness-sidepanel-children" id="harness-sidepanel-highlight-node-on-new-link-drag-toggle">
+				<form>
+					<div className="harness-sidepanel-headers">Enable Hightlight Node On New Link Drag</div>
+					<div>
+						<Toggle
+							id="selectedHightlightNodeOnNewLinkDrag" // Set ID to corresponding field in App.js state
+							toggled={this.props.getStateValue("selectedHightlightNodeOnNewLinkDrag")}
+							onToggle={this.setStateValue}
+						/>
+					</div>
+				</form>
+			</div>);
+
 		var enableZoomIntoSubFlows = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-zoom-into-subflows-toggle">
 				<form>
@@ -1253,6 +1267,8 @@ export default class SidePanelForms extends React.Component {
 					{enableLinkSelection}
 					{divider}
 					{enableInsertNodeDroppedOnLink}
+					{divider}
+					{enableHightlightNodeOnNewLinkDrag}
 					{divider}
 					{enableAssocLinkCreation}
 					{divider}
