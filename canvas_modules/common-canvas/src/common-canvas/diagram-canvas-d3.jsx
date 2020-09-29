@@ -20,9 +20,8 @@ import React from "react";
 import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
 import ReactResizeDetector from "react-resize-detector";
-import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
+import { FlowData16 } from "@carbon/icons-react";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
-
 import {
 	DND_DATA_TEXT
 } from "./constants/canvas-constants";
@@ -50,6 +49,7 @@ class DiagramCanvas extends React.Component {
 		this.dragEnter = this.dragEnter.bind(this);
 		this.dragLeave = this.dragLeave.bind(this);
 		this.refreshOnSizeChange = this.refreshOnSizeChange.bind(this);
+		this.getLabel = this.getLabel.bind(this);
 
 		this.onCut = this.onCut.bind(this);
 		this.onCopy = this.onCopy.bind(this);
@@ -108,6 +108,11 @@ class DiagramCanvas extends React.Component {
 			this.props.canvasController.pasteFromClipboard();
 		}
 	}
+
+	getLabel(labelId) {
+		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultMessages[labelId] });
+	}
+
 
 	getDNDJson(event) {
 		try {
@@ -267,10 +272,9 @@ class DiagramCanvas extends React.Component {
 			} else {
 				emptyCanvas = (
 					<div className="empty-canvas">
-						<div>
-							<img src={BlankCanvasImage} className="empty-canvas-image" />
-							<span className="empty-canvas-text">Your flow is empty!</span>
-						</div>
+						<div className="empty-canvas-image"><FlowData16 /></div>
+						<span className="empty-canvas-text1">{this.getLabel("canvas.flowIsEmpty")}</span>
+						<span className="empty-canvas-text2">{this.getLabel("canvas.addNodeToStart")}</span>
 					</div>);
 			}
 		}
@@ -300,7 +304,7 @@ class DiagramCanvas extends React.Component {
 			: "common-canvas-drop-div";
 
 		return (
-			<main aria-label={this.props.intl.formatMessage({ id: "canvas.label", defaultMessage: defaultMessages["canvas.label"] })} role="main">
+			<main aria-label={this.getLabel("canvas.label")} role="main">
 				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
 					<div
 						id={this.canvasDivId}
