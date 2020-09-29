@@ -49,8 +49,8 @@ class PaletteContentGridNode extends React.Component {
 	onDragStart(ev) {
 		// We cannot use the dataTransfer object for the nodeTemplate because
 		// the dataTransfer data is not available during dragOver events so we set
-		// the nodeTemplate into an event field.
-		ev.canvasNodeTemplate = this.props.nodeTemplate;
+		// the nodeTemplate into the canvas controller.
+		this.props.canvasController.setDragNodeTemplate(this.props.nodeTemplate);
 
 		// On firefox, the drag will not start unless something is written to
 		// the dataTransfer object so just write an empty string

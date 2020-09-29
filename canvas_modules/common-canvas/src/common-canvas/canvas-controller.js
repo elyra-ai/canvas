@@ -1300,6 +1300,14 @@ export default class CanvasController {
 		return null;
 	}
 
+	setDragNodeTemplate(nodeTemplate) {
+		CanvasController.dragNodeTemplate = nodeTemplate;
+	}
+
+	getDragNodeTemplate() {
+		return CanvasController.dragNodeTemplate;
+	}
+
 	// Cuts the currently selected objects to the internal clipboard.
 	cutToClipboard() {
 		this.editActionHandler({
@@ -2024,3 +2032,6 @@ export default class CanvasController {
 		this.addAfterUpdateCallback(moveCanvasToReveal);
 	}
 }
+
+// A static variable for saving the current node template being dragged.
+CanvasController.dragNodeTemplate = null;
