@@ -779,6 +779,34 @@ export default class SidePanelForms extends React.Component {
 				</form>
 			</div>);
 
+		var enableDisplayCustomizedDropZoneContent = (
+			<div className="harness-sidepanel-children" id="harness-sidepanel-display-drop-zone-content-toggle">
+				<form>
+					<div className="harness-sidepanel-headers">Display customized drop zone content</div>
+					<div>
+						<Toggle
+							id="selectedDisplayCustomizedDropZoneContent" // Set ID to corresponding field in App.js state
+							toggled={this.props.getStateValue("selectedDisplayCustomizedDropZoneContent")}
+							onToggle={this.setStateValue}
+						/>
+					</div>
+				</form>
+			</div>);
+
+		var enableDisplayCustomizedEmptyCanvasContent = (
+			<div className="harness-sidepanel-children" id="harness-sidepanel-display-empty-canvas-content-toggle">
+				<form>
+					<div className="harness-sidepanel-headers">Display customized empty canvas content</div>
+					<div>
+						<Toggle
+							id="selectedDisplayCustomizedEmptyCanvasContent" // Set ID to corresponding field in App.js state
+							toggled={this.props.getStateValue("selectedDisplayCustomizedEmptyCanvasContent")}
+							onToggle={this.setStateValue}
+						/>
+					</div>
+				</form>
+			</div>);
+
 		var enableCreateSupernodeNonContiguous = (<div className="harness-sidepanel-children">
 			<form>
 				<div className="harness-sidepanel-headers">Enable Create Supernode for Noncontiguous Nodes</div>
@@ -1285,6 +1313,10 @@ export default class SidePanelForms extends React.Component {
 					{enableSaveToPalette}
 					{divider}
 					{enableDropZoneOnExternalDrag}
+					{divider}
+					{enableDisplayCustomizedDropZoneContent}
+					{divider}
+					{enableDisplayCustomizedEmptyCanvasContent}
 					{divider}
 					{enableCreateSupernodeNonContiguous}
 					{divider}
