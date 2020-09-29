@@ -127,11 +127,10 @@ export default class SVGCanvasRenderer {
 		// pointer from the top left corner of the node that is being dragged.
 		this.dragPointerOffsetInNode = null;
 
-		// The node and port over which the 'guide' object for a new link is
-		// being dragged. Used when enableHightlightPortOnNewLinkDrag config
+		// The node over which the 'guide' object for a new link or a link handle
+		// is being dragged. Used when enableHightlightNodeOnNewLinkDrag config
 		// option is switched on.
 		this.dragNewLinkOverNode = null;
-		this.dragNewLinkOverPort = null;
 
 		// Allow us to track when a selection is being made so there is
 		// no need to re-render whole canvas
@@ -817,6 +816,16 @@ export default class SVGCanvasRenderer {
 			.attr("width", this.getNodeImageWidth(node))
 			.attr("height", this.getNodeImageHeight(node));
 
+		ghostGrp
+			.append("text")
+			.attr("x", this.getLabelPosX(node))
+			.attr("y", this.getLabelPosY(node))
+			.text(function() {
+				var textObj = d3.select(this);
+				return that.getNodeLabelText(node, textObj);
+			})
+			.attr("class", this.getLabelClass(node));
+
 
 		return {
 			element: ghostDivSel.node(),
@@ -952,9 +961,7 @@ export default class SVGCanvasRenderer {
 			if (this.drawingNewLinkData.action === COMMENT_LINK) {
 				return CanvasUtils.isCommentLinkConnectionAllowed(this.drawingNewLinkData.srcObjId, nodeNearMouse.id, this.activePipeline.links);
 			}
-		}
-
-		if (this.draggingLinkData) {
+		} else if (this.draggingLinkData) {
 			const newLink = this.getNewLinkOnDrag(this.canvasLayout.nodeProximity);
 			if (newLink) {
 				return true;

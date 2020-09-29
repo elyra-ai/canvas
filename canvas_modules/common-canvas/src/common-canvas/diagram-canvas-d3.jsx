@@ -163,7 +163,7 @@ export default class DiagramCanvas extends React.Component {
 		this.second = false;
 		this.setIsDropZoneDisplayed(false);
 
-		const nodeTemplate = event.canvasNodeTemplate;
+		const nodeTemplate = this.props.canvasController.getDragNodeTemplate();
 		if (nodeTemplate) {
 			this.canvasD3Layout.nodeTemplateDropped(nodeTemplate, event.clientX, event.clientY);
 
@@ -184,14 +184,15 @@ export default class DiagramCanvas extends React.Component {
 			this.canvasD3Layout.externalObjectDropped(dropData, event.clientX, event.clientY);
 		}
 
-		// canvasNodeTemplate will persist in future events if we don't remove it
-		delete event.canvasNodeTemplate;
+		// Clear the drag template.
+		this.props.canvasController.setDragNodeTemplate(null);
+
 		// Also clear dataTransfer data for when we get external objects.
 		event.dataTransfer.clearData();
 	}
 
 	dragOver(event) {
-		const nodeTemplate = event.canvasNodeTemplate;
+		const nodeTemplate = this.props.canvasController.getDragNodeTemplate();
 		if (nodeTemplate) {
 			this.canvasD3Layout.paletteNodeDraggedOver(nodeTemplate, event.clientX, event.clientY);
 		}
