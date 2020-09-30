@@ -1,5 +1,5 @@
 {
   "palette.flyout.search.placeholder": "Find palette nodes",
   "palette.flyout.label": "Flyout Palette",
-  "palette.modal.label": "Modal Palette"
+  "palette.dialog.label": "Dialog Palette"
 }

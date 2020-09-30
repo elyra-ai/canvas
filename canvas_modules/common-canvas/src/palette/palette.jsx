@@ -530,7 +530,7 @@ class Palette extends React.Component {
 		const displayValue = this.props.showPalette ? "block" : "none";
 
 		return (
-			<nav aria-label={this.props.intl.formatMessage({ id: "palette.modal.label", defaultMessage: defaultMessages["palette.modal.label"] })} role="navigation">
+			<nav aria-label={this.props.intl.formatMessage({ id: "palette.dialog.label", defaultMessage: defaultMessages["palette.dialog.label"] })} role="navigation">
 				<div className="palette-div"
 					ref="palette"
 					onMouseDown={this.mouseDownOnPalette}
