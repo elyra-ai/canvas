@@ -15,7 +15,7 @@
  */
 
 import React from "react";
-import { mount } from "enzyme";
+import { mountWithIntl } from "../_utils_/intl-utils";
 import { expect } from "chai";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
 import sinon from "sinon";
@@ -111,7 +111,7 @@ describe("Toolbar renders correctly", () => {
 
 function createToolbar(config, actionHandler) {
 	const toolbarActionHandler = actionHandler || sinon.spy();
-	const canvasToolbar = mount(
+	const canvasToolbar = mountWithIntl(
 		<Toolbar
 			config={config}
 			instanceId={0}

@@ -17,9 +17,11 @@
 /* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
 
 import React from "react";
+import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
 import ReactResizeDetector from "react-resize-detector";
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
+import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
 import {
 	DND_DATA_TEXT
@@ -28,7 +30,7 @@ import {
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
 
-export default class DiagramCanvas extends React.Component {
+class DiagramCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -298,29 +300,34 @@ export default class DiagramCanvas extends React.Component {
 			: "common-canvas-drop-div";
 
 		return (
-			<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
-				<div
-					id={this.canvasDivId}
-					className={dropDivClassName}
-					onDrop={this.drop}
-					onDragOver={this.dragOver}
-					onDragEnter={this.dragEnter}
-					onDragLeave={this.dragLeave}
-				>
-					{emptyCanvas}
-					{svgCanvas}
-					{this.props.children}
-					{dropZoneCanvas}
-				</div>
-			</ReactResizeDetector>
+			<main aria-label={this.props.intl.formatMessage({ id: "canvas.label", defaultMessage: defaultMessages["canvas.label"] })} role="main">
+				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
+					<div
+						id={this.canvasDivId}
+						className={dropDivClassName}
+						onDrop={this.drop}
+						onDragOver={this.dragOver}
+						onDragEnter={this.dragEnter}
+						onDragLeave={this.dragLeave}
+					>
+						{emptyCanvas}
+						{svgCanvas}
+						{this.props.children}
+						{dropZoneCanvas}
+					</div>
+				</ReactResizeDetector>
+			</main>
 		);
 	}
 }
 
 DiagramCanvas.propTypes = {
+	intl: PropTypes.object.isRequired,
 	canvasInfo: PropTypes.object,
 	config: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	children: PropTypes.element,
 	isCanvasEmpty: PropTypes.bool
 };
+
+export default injectIntl(DiagramCanvas, { forwardRef: true });
