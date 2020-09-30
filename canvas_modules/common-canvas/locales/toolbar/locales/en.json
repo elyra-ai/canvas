@@ -3,5 +3,6 @@
   "toolbar.zoomIn": "Zoom In",
   "toolbar.zoomOut": "Zoom Out",
   "toolbar.zoomToFit": "Zoom To Fit",
-  "toolbar.overflowMenu": "Overflow Menu"
+  "toolbar.overflowMenu": "Overflow Menu",
+  "toolbar.label": "Canvas Toolbar"
 }

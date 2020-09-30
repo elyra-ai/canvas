@@ -15,7 +15,9 @@
  */
 
 import React from "react";
+import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
+import defaultMessages from "../../locales/palette/locales/en.json";
 import PaletteTopbar from "./palette-topbar.jsx";
 import PaletteContent from "./palette-content.jsx";
 
@@ -528,7 +530,7 @@ class Palette extends React.Component {
 		const displayValue = this.props.showPalette ? "block" : "none";
 
 		return (
-			<nav aria-label="Modal Palette" role="navigation">
+			<nav aria-label={this.props.intl.formatMessage({ id: "palette.modal.label", defaultMessage: defaultMessages["palette.modal.label"] })} role="navigation">
 				<div className="palette-div"
 					ref="palette"
 					onMouseDown={this.mouseDownOnPalette}
@@ -551,10 +553,11 @@ class Palette extends React.Component {
 }
 
 Palette.propTypes = {
+	intl: PropTypes.object.isRequired,
 	paletteJSON: PropTypes.object.isRequired,
 	showPalette: PropTypes.bool.isRequired,
 	parentDivId: PropTypes.string.isRequired,
 	canvasController: PropTypes.object.isRequired
 };
 
-export default Palette;
+export default injectIntl(Palette);

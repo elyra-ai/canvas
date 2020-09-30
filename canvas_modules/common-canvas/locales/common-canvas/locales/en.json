@@ -7,6 +7,7 @@
   "edit.cutSelection": "Cut",
   "edit.copySelection": "Copy",
   "edit.pasteSelection": "Paste",
+  "canvas.label": "Canvas",
   "canvas.addComment": "New comment",
   "canvas.selectAll": "Select All",
   "canvas.undo": "Undo",

@@ -15,7 +15,9 @@
  */
 
 import React from "react";
+import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
+import defaultMessages from "../../locales/palette/locales/en.json";
 import PaletteFlyoutContent from "./palette-flyout-content.jsx";
 
 class PaletteFlyout extends React.Component {
@@ -34,7 +36,7 @@ class PaletteFlyout extends React.Component {
 		}
 
 		return (
-			<nav aria-label="Flyout Palette" role="navigation">
+			<nav aria-label={this.props.intl.formatMessage({ id: "palette.flyout.label", defaultMessage: defaultMessages["palette.flyout.label"] })} role="navigation">
 				<div className={className} style={{ width: this.props.paletteWidth + "px" }}>
 					<PaletteFlyoutContent
 						paletteJSON={this.props.paletteJSON}
@@ -48,10 +50,11 @@ class PaletteFlyout extends React.Component {
 }
 
 PaletteFlyout.propTypes = {
+	intl: PropTypes.object.isRequired,
 	paletteJSON: PropTypes.object.isRequired,
 	showPalette: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	paletteWidth: PropTypes.number.isRequired
 };
 
-export default PaletteFlyout;
+export default injectIntl(PaletteFlyout);
