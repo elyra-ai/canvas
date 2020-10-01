@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+@import "carbon-components/scss/globals/scss/_vars";
 $toolbar-button-height: 40px;
 
 /* right flyout panel */
@@ -77,16 +78,29 @@ $toolbar-button-height: 40px;
 }
 
 .empty-canvas-image {
-	margin-left: auto;
-	margin-right: auto;
+	color: $text-03; // Picked up by fill attribute in the icon.
+	opacity: 0.4;
 	display: block;
+	text-align: center;
+	& svg {
+		width: 175px;
+		height: 175px;
+	}
 }
 
-.empty-canvas-text {
+.empty-canvas-text1 {
+	@include carbon--type-style("productive-heading-03");
+	padding-top: $spacing-02;
+	color: $text-03;
 	display: block;
-	color: $text-01;
-	opacity: 0.2;
-	font-size: 20px;
+	text-align: center;
+}
+
+.empty-canvas-text2 {
+	@include carbon--type-style("body-short-02");
+	padding-top: $spacing-03;
+	color: $text-03;
+	display: block;
 	text-align: center;
 }
 

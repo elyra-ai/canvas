@@ -13,6 +13,8 @@
   "canvas.undo": "Undo",
   "canvas.redo": "Redo",
   "canvas.deleteObject": "Delete",
+  "canvas.flowIsEmpty": "Your flow is empty.",
+  "canvas.addNodeToStart": "Get started by adding a node.",
   "node.createSupernode": "Create supernode",
   "node.expandSupernodeInPlace": "Expand supernode",
   "node.collapseSupernodeInPlace": "Collapse supernode",
