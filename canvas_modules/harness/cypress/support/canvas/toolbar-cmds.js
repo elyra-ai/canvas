@@ -66,7 +66,7 @@ Cypress.Commands.add("clickToolbarAddComment", () => {
 	cy.getToolbarAction(".createAutoComment-action").click();
 });
 
-Cypress.Commands.add("clickToolbarAddCommentnInExtraCanvas", () => {
+Cypress.Commands.add("clickToolbarAddCommentInExtraCanvas", () => {
 	cy.getToolbarActionInExtraCanvas(".createAutoComment-action").click();
 });
 

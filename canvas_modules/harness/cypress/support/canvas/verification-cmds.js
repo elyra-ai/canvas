@@ -28,10 +28,13 @@ Cypress.Commands.add("verifyCommentTransform", (commentText, transformValue) => 
 		.should("have.attr", "transform", transformValue);
 });
 
-Cypress.Commands.add("verifyZoomTransform", (transformValue) => {
-	cy.get(".svg-area > g")
-		.eq(0)
-		.should("have.attr", "transform", transformValue);
+Cypress.Commands.add("verifyZoomTransform", (x, y, k) => {
+	cy.getCanvasTranslateCoords()
+		.then((transform) => {
+			cy.verifyValueInCompareRange(Math.round(transform.x), x);
+			cy.verifyValueInCompareRange(Math.round(transform.y), y);
+			cy.verifyValueInCompareRange(Math.round(transform.k * 100) / 100, k);
+		});
 });
 
 Cypress.Commands.add("verifyZoomTransformDoesNotExist", () => {
@@ -39,12 +42,6 @@ Cypress.Commands.add("verifyZoomTransformDoesNotExist", () => {
 		.eq(0)
 		.its("transform")
 		.should("not.exist");
-});
-
-Cypress.Commands.add("verifyZoomTransformInExtraCanvas", (transformValue) => {
-	cy.get("div#canvas-div-1 > div > .svg-area > g")
-		.eq(0)
-		.should("have.attr", "transform", transformValue);
 });
 
 Cypress.Commands.add("verifyNodeTransformInSubFlow", (nodeLabel, transformValue) => {
@@ -227,7 +224,7 @@ Cypress.Commands.add("verifyNodeElementWidth", (nodeName, nodeElement, width) =>
 			cy.get(nodeElementSelector)
 				.invoke("css", "width")
 				.then((cssValue) => {
-					cy.verifyValueInCompareRange(width, cssValue);
+					cy.verifyPixelValueInCompareRange(width, cssValue);
 				});
 		});
 });
@@ -500,12 +497,12 @@ Cypress.Commands.add("verifyContextMenuPosition", (distFromLeft, distFromTop) =>
 	cy.get(".context-menu-popover").first()
 		.invoke("css", "left")
 		.then((cssValue) => {
-			cy.verifyValueInCompareRange(distFromLeft, cssValue);
+			cy.verifyPixelValueInCompareRange(distFromLeft, cssValue);
 		});
 	cy.get(".context-menu-popover").first()
 		.invoke("css", "top")
 		.then((cssValue) => {
-			cy.verifyValueInCompareRange(distFromTop, cssValue);
+			cy.verifyPixelValueInCompareRange(distFromTop, cssValue);
 		});
 });
 
@@ -515,8 +512,8 @@ Cypress.Commands.add("verifySubmenuPushedUpBy", (distFromTop) => {
 		.invoke("css", "top")
 		.then((cssValue) => {
 			// cssValue is a negative number Eg. -91px
-			// Sending 91px to verifyValueInCompareRange
-			cy.verifyValueInCompareRange(distFromTop, Math.abs(Number(cssValue.split("px")[0])) + "px");
+			// Sending 91px to verifyPixelValueInCompareRange
+			cy.verifyPixelValueInCompareRange(distFromTop, Math.abs(Number(cssValue.split("px")[0])) + "px");
 		});
 });
 
@@ -678,8 +675,8 @@ Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => 
 			const commentSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
 			cy.getCommentDimensions(commentSelector)
 				.then((commentDimensions) => {
-					expect(commentDimensions.width).to.equal(width);
-					expect(commentDimensions.height).to.equal(height);
+					cy.verifyValueInCompareRange(commentDimensions.width, width);
+					cy.verifyValueInCompareRange(commentDimensions.height, height);
 				});
 		});
 });
@@ -754,7 +751,7 @@ Cypress.Commands.add("verifyPaletteNodeImageCSS", (nodeName, style, value) => {
 			cy.get(".palette-list-item-icon").eq(nodeIndex)
 				.invoke("css", style)
 				.then((cssValue) => {
-					cy.verifyValueInCompareRange(value, cssValue);
+					cy.verifyPixelValueInCompareRange(value, cssValue);
 				});
 		});
 });
@@ -801,9 +798,9 @@ Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
 	cy.getPipeline()
 		.then((pipeline) => {
 			const zoom = pipeline.zoom;
-			expect(zoom.x).to.equal(x);
-			expect(zoom.y).to.equal(y);
-			expect(zoom.k).to.equal(k);
+			expect(Math.round(zoom.x)).to.equal(x);
+			expect(Math.round(zoom.y)).to.equal(y);
+			expect((Math.round(zoom.k * 100)) / 100).to.equal(k);
 		});
 });
 
@@ -1064,7 +1061,13 @@ Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
 	}
 });
 
-Cypress.Commands.add("verifyValueInCompareRange", (value, cssValue) => {
+// Compares two pixel value to see if they are within the compareRange value or not.
+Cypress.Commands.add("verifyPixelValueInCompareRange", (value, cssValue) => {
 	// value should be in the compare range of cssValue
-	expect(Number(value.split("px")[0])).to.be.closeTo(Number(cssValue.split("px")[0]), Cypress.env("compareRange"));
+	cy.verifyValueInCompareRange(value.split("px")[0], cssValue.split("px")[0]);
+});
+
+// Compares two value to see if they are within the compareRange value or not.
+Cypress.Commands.add("verifyValueInCompareRange", (value, compareValue) => {
+	expect(Number(value)).to.be.closeTo(Number(compareValue), Cypress.env("compareRange"));
 });

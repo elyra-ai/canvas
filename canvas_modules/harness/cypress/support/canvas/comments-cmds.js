@@ -141,7 +141,7 @@ Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText) 
 	// Click somewhere on canvas to save comment
 	if (document.extraCanvas === true) {
 		// extra-canvas
-		cy.get("#canvas-div-1").click(1, 1);
+		cy.get("#canvas-div-1").click(2, 2);
 	} else {
 		// regular canvas
 		cy.get("#canvas-div-0").click(1, 1);

@@ -16,13 +16,16 @@
 
 // Global scope - extraCanvas
 document.extraCanvas = false;
+document.instanceId = 0;
 
 Cypress.Commands.add("inExtraCanvas", () => {
 	document.extraCanvas = true;
+	document.instanceId = 1;
 });
 
 Cypress.Commands.add("inRegularCanvas", () => {
 	document.extraCanvas = false;
+	document.instanceId = 0;
 });
 
 // `cy.log()` command's output can be seen on the screen along with test steps
