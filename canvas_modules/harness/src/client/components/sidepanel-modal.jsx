@@ -20,7 +20,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { Toggle, FileUploader, Button, Select, SelectItemGroup, SelectItem, RadioButtonGroup, RadioButton } from "carbon-components-react";
+import { Toggle, FileUploader, Button, Select, SelectItemGroup, SelectItem, RadioButtonGroup, RadioButton, FormGroup } from "carbon-components-react";
 
 import {
 	CHOOSE_FROM_LOCATION,
@@ -163,7 +163,7 @@ export default class SidePanelModal extends React.Component {
 		const formOptions = [];
 		const paramDefOptions = [];
 		const choosefromlocation = [];
-		options.push(<SelectItem key = "choose-an-option" hidden text = "Choose an option..." />);
+		options.push(<SelectItem key = "choose-an-option" text = "Choose an option..." />);
 		choosefromlocation.push(
 			<SelectItem key={"choose-from-location"} text = "Choose From Location" value = {CHOOSE_FROM_LOCATION} />);
 		options.push(
@@ -204,13 +204,13 @@ export default class SidePanelModal extends React.Component {
 		const propertiesInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-input">
 			<div className="filePicker">
 				<div className="harness-sidepanel-headers">
-					<span>Common Properties</span>
-					<Link to="/properties" target="_blank">documentation</Link>
+					<Link to="/properties" target="_blank">Common Properties documentation</Link>
 				</div>
 				<Select
 					id = "common-properties-select-item"
 					className = "common-properties-select-item"
 					labelText="Properties"
+					aria-label="Common Properties"
 					onChange={this.onDropdownSelect.bind(this)}
 					value={this.props.propertiesConfig.selectedPropertiesDropdownFile}
 				>
@@ -229,29 +229,33 @@ export default class SidePanelModal extends React.Component {
 		const containerType = (<div className="harness-sidepanel-children"
 			id="harness-sidepanel-properties-container-type"
 		>
-			<div className="harness-sidepanel-headers">Container Type</div>
-			<RadioButtonGroup
-				className="harness-sidepanel-radio-group"
-				name="properties-container_type_radio"
-				onChange={this.usePropertiesContainerType}
-				valueSelected={this.props.propertiesConfig.propertiesContainerType}
+			<FormGroup
+				legendText="Container Type"
 			>
-				<RadioButton
-					value={PROPERTIES_FLYOUT}
-					labelText={PROPERTIES_FLYOUT}
-				/>
-				<RadioButton
-					value={PROPERTIES_MODAL}
-					labelText={PROPERTIES_MODAL}
-				/>
-			</RadioButtonGroup>
+
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="properties-container_type_radio"
+					onChange={this.usePropertiesContainerType}
+					valueSelected={this.props.propertiesConfig.propertiesContainerType}
+				>
+					<RadioButton
+						value={PROPERTIES_FLYOUT}
+						labelText={PROPERTIES_FLYOUT}
+					/>
+					<RadioButton
+						value={PROPERTIES_MODAL}
+						labelText={PROPERTIES_MODAL}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		const applyOnBlur = (
 			<div className="harness-sidepanel-children">
-				<div className="harness-sidepanel-headers">Apply changes on blur</div>
 				<Toggle
 					id="harness-sidepanel-applyOnBlur-toggle"
+					labelText="Apply changes on blur"
 					toggled={this.props.propertiesConfig.applyOnBlur}
 					onToggle={this.useApplyOnBlur}
 				/>
@@ -259,9 +263,9 @@ export default class SidePanelModal extends React.Component {
 
 		const expressionBuilder = (
 			<div className="harness-sidepanel-children">
-				<div className="harness-sidepanel-headers">Show Expression Builder</div>
 				<Toggle
 					id="harness-sidepanel-expressionBuilder-toggle"
+					labelText="Show Expression Builder"
 					toggled={this.props.propertiesConfig.expressionBuilder}
 					onToggle={this.useExpressionBuilder}
 				/>
@@ -269,9 +273,9 @@ export default class SidePanelModal extends React.Component {
 
 		const expressionValidate = (
 			<div className="harness-sidepanel-children">
-				<div className="harness-sidepanel-headers">Show Expression Validate Link</div>
 				<Toggle
 					id="sidepanel-expressionValidate-toggle"
+					labelText="Show Expression Validate Link"
 					toggled={this.props.propertiesConfig.expressionValidate}
 					onToggle={this.useExpressionValidate}
 				/>
@@ -279,9 +283,9 @@ export default class SidePanelModal extends React.Component {
 
 		const addtlCmpts = (
 			<div className="harness-sidepanel-children" id="sidepanel-properties-additional-components">
-				<div className="harness-sidepanel-headers">Display additional components</div>
 				<Toggle
 					id="harness-sidepanel-additionalComponents-toggle"
+					labelText="Display additional components"
 					toggled={ this.props.propertiesConfig.displayAdditionalComponents }
 					onToggle={ this.useDisplayAdditionalComponents }
 				/>

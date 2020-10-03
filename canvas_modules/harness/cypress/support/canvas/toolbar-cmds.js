@@ -118,7 +118,7 @@ Cypress.Commands.add("dismissNotificationMessage", (index) => {
 	cy.get(".notifications-button-container .notifications")
 		.eq(index)
 		.find(".notification-message-close")
-		.click();
+		.click({ force: true });
 });
 
 Cypress.Commands.add("clearAllNotificationMessages", () => {
