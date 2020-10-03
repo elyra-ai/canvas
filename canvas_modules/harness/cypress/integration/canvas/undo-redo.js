@@ -430,62 +430,62 @@ describe("Test for undo/redo of layout actions", function() {
 		// Arrange nodes horizontally
 		cy.clickToolbarArrangeHorizontally();
 		// Verify node transform of all nodes
-		cy.verifyNodeTransform("DRUG1n", "translate(50, 123)");
-		cy.verifyNodeTransform("Na_to_K", "translate(190, 123)");
-		cy.verifyNodeTransform("Discard Fields", "translate(330, 123)");
-		cy.verifyNodeTransform("Define Types", "translate(470, 123)");
-		cy.verifyNodeTransform("C5.0", "translate(610, 50)");
-		cy.verifyNodeTransform("Neural Net", "translate(610, 196)");
+		cy.verifyNodeTransform("DRUG1n", 50, 123);
+		cy.verifyNodeTransform("Na_to_K", 190, 123);
+		cy.verifyNodeTransform("Discard Fields", 330, 123);
+		cy.verifyNodeTransform("Define Types", 470, 123);
+		cy.verifyNodeTransform("C5.0", 610, 50);
+		cy.verifyNodeTransform("Neural Net", 610, 196);
 
 		// Arrange nodes vertically
 		cy.clickToolbarArrangeVertically();
 		// Verify node transform of all nodes
-		cy.verifyNodeTransform("DRUG1n", "translate(120, 50)");
-		cy.verifyNodeTransform("Na_to_K", "translate(120, 196)");
-		cy.verifyNodeTransform("Discard Fields", "translate(120, 342)");
-		cy.verifyNodeTransform("Define Types", "translate(120, 488)");
-		cy.verifyNodeTransform("C5.0", "translate(50, 634)");
-		cy.verifyNodeTransform("Neural Net", "translate(190, 634)");
+		cy.verifyNodeTransform("DRUG1n", 120, 50);
+		cy.verifyNodeTransform("Na_to_K", 120, 196);
+		cy.verifyNodeTransform("Discard Fields", 120, 342);
+		cy.verifyNodeTransform("Define Types", 120, 488);
+		cy.verifyNodeTransform("C5.0", 50, 634);
+		cy.verifyNodeTransform("Neural Net", 190, 634);
 
 		// Undo vertical arrangement
 		cy.clickToolbarUndo();
 		// Verify node transform of all nodes
-		cy.verifyNodeTransform("DRUG1n", "translate(50, 123)");
-		cy.verifyNodeTransform("Na_to_K", "translate(190, 123)");
-		cy.verifyNodeTransform("Discard Fields", "translate(330, 123)");
-		cy.verifyNodeTransform("Define Types", "translate(470, 123)");
-		cy.verifyNodeTransform("C5.0", "translate(610, 50)");
-		cy.verifyNodeTransform("Neural Net", "translate(610, 196)");
+		cy.verifyNodeTransform("DRUG1n", 50, 123);
+		cy.verifyNodeTransform("Na_to_K", 190, 123);
+		cy.verifyNodeTransform("Discard Fields", 330, 123);
+		cy.verifyNodeTransform("Define Types", 470, 123);
+		cy.verifyNodeTransform("C5.0", 610, 50);
+		cy.verifyNodeTransform("Neural Net", 610, 196);
 
 		// Undo horizontal arrangement
 		cy.clickToolbarUndo();
 		// Verify node transform of all nodes
-		cy.verifyNodeTransform("DRUG1n", "translate(96, 219)");
-		cy.verifyNodeTransform("Na_to_K", "translate(218, 219)");
-		cy.verifyNodeTransform("Discard Fields", "translate(328, 219)");
-		cy.verifyNodeTransform("Define Types", "translate(445, 219)");
-		cy.verifyNodeTransform("C5.0", "translate(611, 151)");
-		cy.verifyNodeTransform("Neural Net", "translate(606, 310)");
+		cy.verifyNodeTransform("DRUG1n", 96, 219);
+		cy.verifyNodeTransform("Na_to_K", 218, 219);
+		cy.verifyNodeTransform("Discard Fields", 328, 219);
+		cy.verifyNodeTransform("Define Types", 445, 219);
+		cy.verifyNodeTransform("C5.0", 611, 151);
+		cy.verifyNodeTransform("Neural Net", 606, 310);
 
 		// Redo horizontal arrangement
 		cy.clickToolbarRedo();
 		// Verify node transform of all nodes
-		cy.verifyNodeTransform("DRUG1n", "translate(50, 123)");
-		cy.verifyNodeTransform("Na_to_K", "translate(190, 123)");
-		cy.verifyNodeTransform("Discard Fields", "translate(330, 123)");
-		cy.verifyNodeTransform("Define Types", "translate(470, 123)");
-		cy.verifyNodeTransform("C5.0", "translate(610, 50)");
-		cy.verifyNodeTransform("Neural Net", "translate(610, 196)");
+		cy.verifyNodeTransform("DRUG1n", 50, 123);
+		cy.verifyNodeTransform("Na_to_K", 190, 123);
+		cy.verifyNodeTransform("Discard Fields", 330, 123);
+		cy.verifyNodeTransform("Define Types", 470, 123);
+		cy.verifyNodeTransform("C5.0", 610, 50);
+		cy.verifyNodeTransform("Neural Net", 610, 196);
 
 		// Redo vertical arrangement
 		cy.clickToolbarRedo();
 		// Verify node transform of all nodes
-		cy.verifyNodeTransform("DRUG1n", "translate(120, 50)");
-		cy.verifyNodeTransform("Na_to_K", "translate(120, 196)");
-		cy.verifyNodeTransform("Discard Fields", "translate(120, 342)");
-		cy.verifyNodeTransform("Define Types", "translate(120, 488)");
-		cy.verifyNodeTransform("C5.0", "translate(50, 634)");
-		cy.verifyNodeTransform("Neural Net", "translate(190, 634)");
+		cy.verifyNodeTransform("DRUG1n", 120, 50);
+		cy.verifyNodeTransform("Na_to_K", 120, 196);
+		cy.verifyNodeTransform("Discard Fields", 120, 342);
+		cy.verifyNodeTransform("Define Types", 120, 488);
+		cy.verifyNodeTransform("C5.0", 50, 634);
+		cy.verifyNodeTransform("Neural Net", 190, 634);
 	});
 });
 

@@ -19,9 +19,15 @@ import * as testUtils from "../../utils/eventlog-utils";
 import { extractTransformValues } from "./utils-cmds.js";
 
 
-Cypress.Commands.add("verifyNodeTransform", (nodeLabel, transformValue) => {
+Cypress.Commands.add("verifyNodeTransform", (nodeLabel, x, y) => {
 	cy.getNodeWithLabel(nodeLabel)
-		.should("have.attr", "transform", transformValue);
+		.then((node) => {
+			const transformAttr = node[0].getAttribute("transform");
+			const transform = extractTransformValues(transformAttr);
+
+			cy.verifyValueInCompareRange(Math.round(transform.x), x);
+			cy.verifyValueInCompareRange(Math.round(transform.y), y);
+		});
 });
 
 Cypress.Commands.add("verifyCommentTransform", (commentText, x, y) => {
@@ -51,14 +57,26 @@ Cypress.Commands.add("verifyZoomTransformDoesNotExist", () => {
 		.should("not.exist");
 });
 
-Cypress.Commands.add("verifyNodeTransformInSubFlow", (nodeLabel, transformValue) => {
+Cypress.Commands.add("verifyNodeTransformInSubFlow", (nodeLabel, x, y) => {
 	cy.getNodeWithLabelInSubFlow(nodeLabel)
-		.should("have.attr", "transform", transformValue);
+		.then((node) => {
+			const transformAttr = node[0].getAttribute("transform");
+			const transform = extractTransformValues(transformAttr);
+
+			cy.verifyValueInCompareRange(Math.round(transform.x), x);
+			cy.verifyValueInCompareRange(Math.round(transform.y), y);
+		});
 });
 
-Cypress.Commands.add("verifyNodeTransformInSupernode", (nodeLabel, supernodeName, transformValue) => {
-	cy.getNodeWithLabelInSupernode(nodeLabel, supernodeName)
-		.should("have.attr", "transform", transformValue);
+Cypress.Commands.add("verifyNodeTransformInSupernode", (nodeLabel, supernodeName, x, y) => {
+	cy.getNodeWithLabelInSupernode(nodeLabel)
+		.then((node) => {
+			const transformAttr = node[0].getAttribute("transform");
+			const transform = extractTransformValues(transformAttr);
+
+			cy.verifyValueInCompareRange(Math.round(transform.x), x);
+			cy.verifyValueInCompareRange(Math.round(transform.y), y);
+		});
 });
 
 Cypress.Commands.add("verifyNodeIsDeleted", (nodeName, deleteUsingContextMenu) => {
