@@ -15,10 +15,9 @@
  */
 
 describe("Test of zoom operations", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.viewport(1330, 660);
 		cy.visit("/");
-		cy.openCanvasPalette("modelerPalette.json");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
