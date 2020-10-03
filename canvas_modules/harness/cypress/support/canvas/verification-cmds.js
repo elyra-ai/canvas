@@ -69,7 +69,7 @@ Cypress.Commands.add("verifyNodeTransformInSubFlow", (nodeLabel, x, y) => {
 });
 
 Cypress.Commands.add("verifyNodeTransformInSupernode", (nodeLabel, supernodeName, x, y) => {
-	cy.getNodeWithLabelInSupernode(nodeLabel)
+	cy.getNodeWithLabelInSupernode(nodeLabel, supernodeName)
 		.then((node) => {
 			const transformAttr = node[0].getAttribute("transform");
 			const transform = extractTransformValues(transformAttr);
