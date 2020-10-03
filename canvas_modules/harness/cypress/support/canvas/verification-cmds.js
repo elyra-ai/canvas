@@ -16,6 +16,7 @@
 /* eslint max-len: "off" */
 
 import * as testUtils from "../../utils/eventlog-utils";
+import { extractTransformValues } from "./utils-cmds.js";
 
 
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, transformValue) => {
@@ -23,9 +24,15 @@ Cypress.Commands.add("verifyNodeTransform", (nodeLabel, transformValue) => {
 		.should("have.attr", "transform", transformValue);
 });
 
-Cypress.Commands.add("verifyCommentTransform", (commentText, transformValue) => {
+Cypress.Commands.add("verifyCommentTransform", (commentText, x, y) => {
 	cy.getCommentWithText(commentText)
-		.should("have.attr", "transform", transformValue);
+		.then((comment) => {
+			const transformAttr = comment[0].getAttribute("transform");
+			const transform = extractTransformValues(transformAttr);
+
+			cy.verifyValueInCompareRange(Math.round(transform.x), x);
+			cy.verifyValueInCompareRange(Math.round(transform.y), y);
+		});
 });
 
 Cypress.Commands.add("verifyZoomTransform", (x, y, k) => {
