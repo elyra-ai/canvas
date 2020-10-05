@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "description": "Abstract Canvas diagram schema",
-  "id": "http://www.ibm.com/ibm/wdp/canvas/v1.0/palette-schema.json",
+  "id": "http://api.dataplatform.ibm.com/schemas/common-canvas/palette/palette-v1-schema.json",
   "properties": {
     "categories": {
       "description": "Array of palette categories",
