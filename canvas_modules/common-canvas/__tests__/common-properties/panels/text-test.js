@@ -26,9 +26,9 @@ describe("textPanel render correctly", () => {
 	it("should have displayed correct number of textPanel elements", () => {
 		const panel = wrapper.find("div[data-id='properties-text-panels']");
 		const staticText = panel.find("div.properties-text-panel");
-		expect(staticText).to.have.length(3);
+		expect(staticText).to.have.length(4);
 		const labels = panel.find("div.panel-label");
-		expect(labels).to.have.length(3);
+		expect(labels).to.have.length(4);
 		const descriptions = panel.find("div.panel-description");
 		expect(descriptions).to.have.length(3);
 	});
@@ -46,6 +46,12 @@ describe("textPanel render correctly", () => {
 		descriptions = panel.find("div.panel-description");
 		expect(descriptions.at(1).text()).to.equal("Percent: 192.307692 with 6 decimals. Percent: 192.31 with 2 decimals");
 		expect(descriptions.at(2).text()).to.equal("Sum: 1.04 with (number, number). Sum: 3.04 with (number, 2, number)");
+	});
+	it("should not show a description when one isn't provided", () => {
+		const panel = wrapper.find("div[data-id='properties-text-panels']");
+		const textPanel = panel.find("div.properties-text-panel").at(3); // panel without description
+		expect(textPanel.find("div.panel-label").text()).to.equal("This panel shouldn't have a description");
+		expect(textPanel.find("div.panel-description")).to.have.length(0);
 	});
 });
 
