@@ -1562,7 +1562,23 @@ export default class SVGCanvasRenderer {
 	zoomToFit() {
 		const padding = this.getZoomToFitPadding();
 		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, padding);
-		this.zoomToFitCanvas(canvasDimensions);
+		const viewPortDimensions = this.getViewPortDimensions();
+
+		if (canvasDimensions) {
+			const xRatio = viewPortDimensions.width / canvasDimensions.width;
+			const yRatio = viewPortDimensions.height / canvasDimensions.height;
+			const newScale = Math.min(xRatio, yRatio, 1); // Don't let the canvas be scaled more than 1 in either direction
+
+			let x = (viewPortDimensions.width - (canvasDimensions.width * newScale)) / 2;
+			let y = (viewPortDimensions.height - (canvasDimensions.height * newScale)) / 2;
+
+			x -= newScale * canvasDimensions.left;
+			y -= newScale * canvasDimensions.top;
+
+			this.zoomingToFit = true;
+			this.zoomCanvasInvokeZoomBehavior({ x: x, y: y, k: newScale });
+			this.zoomingToFit = false;
+		}
 	}
 
 	// Returns the padding space for the canvas objects to be zoomed which takes
@@ -1577,32 +1593,6 @@ export default class SVGCanvasRenderer {
 			padding = Math.max(padding, newPadding);
 		}
 		return padding;
-	}
-
-	zoomToFitCanvas(canvasDimensions) {
-		const viewPortDimensions = this.getViewPortDimensions();
-
-		if (canvasDimensions) {
-			const xRatio = viewPortDimensions.width / canvasDimensions.width;
-			const yRatio = viewPortDimensions.height / canvasDimensions.height;
-			const newScale = Math.min(xRatio, yRatio, 1); // Don't let the canvas be scaled more than 1 in either direction
-
-			this.zoomToFitForScale(newScale, canvasDimensions, viewPortDimensions);
-		}
-	}
-
-	zoomToFitForScale(newScale, canvasDimensions, viewPortDimensions) {
-		if (canvasDimensions) {
-			let x = (viewPortDimensions.width - (canvasDimensions.width * newScale)) / 2;
-			let y = (viewPortDimensions.height - (canvasDimensions.height * newScale)) / 2;
-
-			x -= newScale * canvasDimensions.left;
-			y -= newScale * canvasDimensions.top;
-
-			this.zoomingToFitForScale = true;
-			this.zoomCanvasInvokeZoomBehavior({ x: x, y: y, k: newScale });
-			this.zoomingToFitForScale = false;
-		}
 	}
 
 	zoomTo(zoomObject) {
@@ -1623,22 +1613,15 @@ export default class SVGCanvasRenderer {
 	zoomIn() {
 		if (this.zoomTransform.k < this.maxScaleExtent) {
 			const newScale = Math.min(this.zoomTransform.k * 1.1, this.maxScaleExtent);
-			this.zoomCanvasToViewPortCenter(newScale);
+			this.canvasSVG.call(this.zoom.scaleTo, newScale);
 		}
 	}
 
 	zoomOut() {
 		if (this.zoomTransform.k > this.minScaleExtent) {
 			const newScale = Math.max(this.zoomTransform.k / 1.1, this.minScaleExtent);
-			this.zoomCanvasToViewPortCenter(newScale);
+			this.canvasSVG.call(this.zoom.scaleTo, newScale);
 		}
-	}
-
-	zoomCanvasToViewPortCenter(newScale) {
-		const viewPortDimensions = this.getViewPortDimensions();
-		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1);
-
-		this.zoomToFitForScale(newScale, canvasDimensions, viewPortDimensions);
 	}
 
 	getZoomToReveal(nodeIDs, xPos, yPos) {
@@ -1720,13 +1703,13 @@ export default class SVGCanvasRenderer {
 			this.contextMenuClosedOnZoom = true;
 		}
 
-		// this.zoomingToFitForScale flag is used to avoid redo actions initialized
+		// this.zoomingToFit flag is used to avoid redo actions initialized
 		// by Cmd+Shift+Z (where the shift key has been pressed) causing a region
 		// selection to start. So whenever it is set, make sure we do a scale
 		// operation.
 		// Also, below, we must check the d3Event.sourceEvent because for a zoom
 		// operation d3Event does not contain info about the shift key.
-		if (this.zoomingToFitForScale) {
+		if (this.zoomingToFit) {
 			this.regionSelect = false;
 		} else if ((this.config.enableInteractionType === INTERACTION_TRACKPAD &&
 								d3Event.sourceEvent && d3Event.sourceEvent.buttons === 1) || // Main button is pressed

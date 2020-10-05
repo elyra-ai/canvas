@@ -142,78 +142,76 @@ describe("Test for toolbar add comment", function() {
 		// Add first comment using toolbar
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Comment 1");
-		cy.verifyCommentTransform("Comment 1", "translate(30, 30)");
+		cy.verifyCommentTransform("Comment 1", 30, 30);
 
 		// Zoom-in using toolbar
 		cy.clickToolbarZoomIn();
 		cy.clickToolbarZoomIn();
-		cy.verifyZoomTransform("translate(486.825,222.29) scale(1.2100000000000002)");
+		cy.verifyZoomTransform(-132, -59, 1.21);
 
 		// Add second comment using toolbar
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Comment 2");
-		cy.verifyCommentTransform("Comment 2", "translate(-372.33471074380157, -153.71074380165285)");
+		cy.verifyCommentTransform("Comment 2", 139, 79);
 
 		// Zoom-out using toolbar
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
-		cy.verifyZoomTransform("translate(698.1465746875213,317.7647701659722) scale(0.8264462809917354)");
+		cy.verifyZoomTransform(109, 49, 0.82);
 
 		// Add third comment using toolbar
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Comment 3");
-		cy.verifyCommentTransform("Comment 3", "translate(-814.7573553719008, -354.4953719008264)");
+		cy.verifyCommentTransform("Comment 3", -102, -29);
 
 		// Add fourth comment using toolbar
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Comment 4");
-		cy.verifyCommentTransform("Comment 4", "translate(-804.7573553719008, -344.4953719008264)");
+		cy.verifyCommentTransform("Comment 4", -92, -19);
 
 		// Set canvas config to display extra canvas
 		cy.setCanvasConfig({ "selectedExtraCanvasDisplayed": true });
 		cy.inExtraCanvas();
 
 		// Add first comment in extra canvas using toolbar
-		cy.clickToolbarAddCommentnInExtraCanvas();
+		cy.clickToolbarAddCommentInExtraCanvas();
 		cy.editTextInComment("", "Comment 5");
-		cy.verifyCommentTransform("Comment 5", "translate(30, 30)");
+		cy.verifyCommentTransform("Comment 5", 30, 30);
 
 		// Zoom-in extra canvas using toolbar
 		cy.clickToolbarZoomInExtraCanvas();
 		cy.clickToolbarZoomInExtraCanvas();
-		cy.verifyZoomTransformInExtraCanvas("translate(486.825,70.28999999999999) scale(1.2100000000000002)");
+		cy.verifyZoomTransform(-132, -27, 1.21);
 
 		// Add second comment in extra canvas using toolbar
-		cy.clickToolbarAddCommentnInExtraCanvas();
+		cy.clickToolbarAddCommentInExtraCanvas();
 		cy.editTextInComment("", "Comment 6");
-		cy.verifyCommentTransform("Comment 6", "translate(-372.33471074380157, -28.090909090909072)");
+		cy.verifyCommentTransform("Comment 6", 139, 52);
 
 		// Zoom-out in extra canvas using toolbar
 		cy.clickToolbarZoomOutExtraCanvas();
 		cy.clickToolbarZoomOutExtraCanvas();
 		cy.clickToolbarZoomOutExtraCanvas();
 		cy.clickToolbarZoomOutExtraCanvas();
-		cy.verifyZoomTransformInExtraCanvas(
-			"translate(698.1465746875213,113.85574755822688) scale(0.8264462809917354)"
-		);
+		cy.verifyZoomTransform(109, 22, 0.82);
 
 		// Add third comment in extra canvas using toolbar
-		cy.clickToolbarAddCommentnInExtraCanvas();
+		cy.clickToolbarAddCommentInExtraCanvas();
 		cy.editTextInComment("", "Comment 7");
-		cy.verifyCommentTransform("Comment 7", "translate(-814.7573553719008, -107.76545454545453)");
+		cy.verifyCommentTransform("Comment 7", -102, 2);
 
 		// Add fourth comment in extra canvas using toolbar
-		cy.clickToolbarAddCommentnInExtraCanvas();
+		cy.clickToolbarAddCommentInExtraCanvas();
 		cy.editTextInComment("", "Comment 8");
-		cy.verifyCommentTransform("Comment 8", "translate(-804.7573553719008, -97.76545454545453)");
+		cy.verifyCommentTransform("Comment 8", -92, 12);
 
 		// Add 5th comment to first canvas
 		cy.inRegularCanvas();
 		cy.clickToolbarZoomToFit();
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Comment 5a");
-		cy.verifyCommentTransform("Comment 5a", "translate(-1357.7483327072375, -338.4953719008264)");
+		cy.verifyCommentTransform("Comment 5a", -492, -56);
 	});
 });

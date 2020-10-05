@@ -316,6 +316,6 @@ Cypress.Commands.add("verifyHeightOfTable", (propertyId, height) => {
 		.find("div[role='rowgroup']")
 		.invoke("css", "height")
 		.then((cssValue) => {
-			cy.verifyValueInCompareRange(height, cssValue);
+			cy.verifyPixelValueInCompareRange(height, cssValue);
 		});
 });
