@@ -19,7 +19,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { TextInput, FileUploader, Button, Select, SelectItemGroup, SelectItem, Checkbox, RadioButtonGroup, RadioButton, Toggle }
+import { TextInput, FileUploader, Button, Select, SelectItemGroup, SelectItem, Checkbox, RadioButtonGroup, RadioButton, Toggle, FormGroup }
 	from "carbon-components-react";
 
 
@@ -349,7 +349,7 @@ export default class SidePanelForms extends React.Component {
 		let key = 1;
 		const groupOptions = [];
 		const choosefromlocation = [];
-		options.push(<SelectItem key = "choose-an-option" hidden text = "Choose an option..." />);
+		options.push(<SelectItem key = "choose-an-option" text = "Choose an option..." />);
 		choosefromlocation.push(
 			<SelectItem key={"choose-from-location"} text = "Choose From Location" value = {CHOOSE_FROM_LOCATION} />);
 		options.push(
@@ -409,11 +409,10 @@ export default class SidePanelForms extends React.Component {
 		}
 
 		var canvasInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-input">
-			<div className="harness-sidepanel-headers">Canvas Diagram</div>
 			<Select
 				id="harness-sidepanel-canvas-dropdown"
-				label="Canvas"
-				aria-label="Canvas"
+				labelText="Canvas Diagram"
+				aria-label="Canvas Diagram"
 				onChange={this.onCanvasDropdownSelect.bind(this)}
 				disabled={this.state.disabledControls}
 			>
@@ -423,11 +422,10 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		var paletteInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-input">
-			<div className="harness-sidepanel-headers">Canvas Palette</div>
 			<Select
 				id="harness-sidepanel-palette-dropdown"
-				label="Palette"
-				aria-label="Palette"
+				labelText="Canvas Palette"
+				aria-label="Canvas Palette"
 				onChange={this.onPaletteDropdownSelect.bind(this)}
 			>
 				{this.dropdownOptions(this.state.paletteFiles, "Palette")}
@@ -480,12 +478,11 @@ export default class SidePanelForms extends React.Component {
 		}
 
 		var canvasInput2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-input2">
-			<div className="harness-sidepanel-headers">Canvas Diagram</div>
 			<Select
 				id="harness-sidepanel-canvas2-dropdown"
 				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
-				label="Canvas"
-				aria-label="Canvas"
+				labelText="Canvas Diagram"
+				aria-label="Canvas Diagram"
 				onChange={this.onCanvasDropdownSelect2.bind(this)}
 			>
 				{this.dropdownOptions(this.state.canvasFiles, "Canvas")}
@@ -494,12 +491,11 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		var paletteInput2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-input2">
-			<div className="harness-sidepanel-headers">Canvas Palette</div>
 			<Select
 				id="harness-sidepanel-palette2-dropdown"
 				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
-				label="Palette"
-				aria-label="Palette"
+				labelText="Canvas Palette"
+				aria-label="Canvas Palette"
 				onChange={this.onPaletteDropdownSelect2.bind(this)}
 			>
 				{this.dropdownOptions(this.state.paletteFiles, "Palette")}
@@ -511,26 +507,29 @@ export default class SidePanelForms extends React.Component {
 
 		var saveZoom = (<div>
 			<div className="harness-sidepanel-children" id="harness-sidepanel-save-zoom">
-				<div className="harness-sidepanel-headers">Save Zoom</div>
-				<RadioButtonGroup
-					className="harness-sidepanel-radio-group"
-					name="selectedSaveZoom" // Set name to corresponding field name in App.js
-					onChange={this.setStateValue}
-					defaultSelected={this.props.getStateValue("selectedSaveZoom")}
+				<FormGroup
+					legendText="Save Zoom"
 				>
-					<RadioButton
-						value={NONE_SAVE_ZOOM}
-						labelText={NONE_SAVE_ZOOM}
-					/>
-					<RadioButton
-						value={LOCAL_STORAGE}
-						labelText={LOCAL_STORAGE}
-					/>
-					<RadioButton
-						value={PIPELINE_FLOW}
-						labelText={PIPELINE_FLOW}
-					/>
-				</RadioButtonGroup>
+					<RadioButtonGroup
+						className="harness-sidepanel-radio-group"
+						name="selectedSaveZoom" // Set name to corresponding field name in App.js
+						onChange={this.setStateValue}
+						defaultSelected={this.props.getStateValue("selectedSaveZoom")}
+					>
+						<RadioButton
+							value={NONE_SAVE_ZOOM}
+							labelText={NONE_SAVE_ZOOM}
+						/>
+						<RadioButton
+							value={LOCAL_STORAGE}
+							labelText={LOCAL_STORAGE}
+						/>
+						<RadioButton
+							value={PIPELINE_FLOW}
+							labelText={PIPELINE_FLOW}
+						/>
+					</RadioButtonGroup>
+				</FormGroup>
 			</div>
 			<div className="harness-sidepanel-spacer" />
 			<div style={pad}className="harness-sidepanel-clear-saved-storage">
@@ -543,31 +542,33 @@ export default class SidePanelForms extends React.Component {
 		</div>
 		);
 
-		var rbSize = { "height": "80px" };
 		var entrySize = { "width": "80px", "minWidth": "80px" };
 
 		var snapToGrid = (<div className="harness-sidepanel-children" id="harness-sidepanel-snap-to-grid-type">
-			<div className="harness-sidepanel-headers">Snap to Grid on Drag/Resize</div>
-			<div style={rbSize}>
-				<RadioButtonGroup
-					className="harness-sidepanel-radio-group"
-					name="selectedSnapToGridType" // Set name to corresponding field name in App.js
-					onChange={this.setStateValue}
-					defaultSelected={this.props.getStateValue("selectedSnapToGridType")}
+			<div>
+				<FormGroup
+					legendText="Snap to Grid on Drag/Resize"
 				>
-					<RadioButton
-						value={NONE_DRAG}
-						labelText={NONE_DRAG}
-					/>
-					<RadioButton
-						value={DURING_DRAG}
-						labelText={DURING_DRAG}
-					/>
-					<RadioButton
-						value={AFTER_DRAG}
-						labelText={AFTER_DRAG}
-					/>
-				</RadioButtonGroup>
+					<RadioButtonGroup
+						className="harness-sidepanel-radio-group"
+						name="selectedSnapToGridType" // Set name to corresponding field name in App.js
+						onChange={this.setStateValue}
+						defaultSelected={this.props.getStateValue("selectedSnapToGridType")}
+					>
+						<RadioButton
+							value={NONE_DRAG}
+							labelText={NONE_DRAG}
+						/>
+						<RadioButton
+							value={DURING_DRAG}
+							labelText={DURING_DRAG}
+						/>
+						<RadioButton
+							value={AFTER_DRAG}
+							labelText={AFTER_DRAG}
+						/>
+					</RadioButtonGroup>
+				</FormGroup>
 			</div>
 			<div className="harness-sidepanel-headers">
 				Enter a pixel size or percentage of node width/height ("25%").
@@ -593,10 +594,10 @@ export default class SidePanelForms extends React.Component {
 
 		var enablePanIntoViewOnOpen = (<div className="harness-sidepanel-children">
 			<form>
-				<div className="harness-sidepanel-headers">Enable Pan Into View On Open</div>
 				<div>
 					<Toggle
 						id="selectedPanIntoViewOnOpen" // Set ID to corresponding field in App.js state
+						labelText="Enable Pan Into View On Open"
 						toggled={this.props.getStateValue("selectedPanIntoViewOnOpen")}
 						onToggle={this.setStateValue}
 					/>
@@ -607,10 +608,10 @@ export default class SidePanelForms extends React.Component {
 
 		var enableDragWithoutSelect = (<div className="harness-sidepanel-children">
 			<form>
-				<div className="harness-sidepanel-headers">Enable Drag Without Select</div>
 				<div>
 					<Toggle
 						id="selectedDragWithoutSelect" // Set ID to corresponding field in App.js state
+						labelText="Enable Drag Without Select"
 						toggled={this.props.getStateValue("selectedDragWithoutSelect")}
 						onToggle={this.setStateValue}
 					/>
@@ -620,10 +621,10 @@ export default class SidePanelForms extends React.Component {
 
 		var enableAssocLinkCreation = (<div className="harness-sidepanel-children">
 			<form>
-				<div className="harness-sidepanel-headers">Enable Association Link Creation</div>
 				<div>
 					<Toggle
 						id="selectedAssocLinkCreation" // Set ID to corresponding field in App.js state
+						labelText="Enable Association Link Creation"
 						toggled={this.props.getStateValue("selectedAssocLinkCreation")}
 						onToggle={this.setStateValue}
 					/>
@@ -632,76 +633,85 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		var enableLinkSelection = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-selection">
-			<div className="harness-sidepanel-headers">Enable Link Selection</div>
-			<RadioButtonGroup
-				className="harness-sidepanel-radio-group"
-				name="selectedLinkSelection" // Set name to corresponding field name in App.js
-				onChange={this.setStateValue}
-				defaultSelected={this.props.getStateValue("selectedLinkSelection")}
+			<FormGroup
+				legendText="Enable Link Selection"
 			>
-				<RadioButton
-					value={LINK_SELECTION_NONE}
-					labelText={LINK_SELECTION_NONE}
-				/>
-				<RadioButton
-					value={LINK_SELECTION_LINK_ONLY}
-					labelText={LINK_SELECTION_LINK_ONLY}
-				/>
-				<RadioButton
-					value={LINK_SELECTION_HANDLES}
-					labelText={LINK_SELECTION_HANDLES}
-				/>
-				<RadioButton
-					value={LINK_SELECTION_DETACHABLE}
-					labelText={LINK_SELECTION_DETACHABLE}
-				/>
-			</RadioButtonGroup>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedLinkSelection" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedLinkSelection")}
+				>
+					<RadioButton
+						value={LINK_SELECTION_NONE}
+						labelText={LINK_SELECTION_NONE}
+					/>
+					<RadioButton
+						value={LINK_SELECTION_LINK_ONLY}
+						labelText={LINK_SELECTION_LINK_ONLY}
+					/>
+					<RadioButton
+						value={LINK_SELECTION_HANDLES}
+						labelText={LINK_SELECTION_HANDLES}
+					/>
+					<RadioButton
+						value={LINK_SELECTION_DETACHABLE}
+						labelText={LINK_SELECTION_DETACHABLE}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		var assocLinkType = (<div className="harness-sidepanel-children" id="harness-sidepanel-assoc-link-type">
-			<div className="harness-sidepanel-headers">Association Link Type</div>
-			<RadioButtonGroup
-				className="harness-sidepanel-radio-group"
-				name="selectedAssocLinkType" // Set name to corresponding field name in App.js
-				onChange={this.setStateValue}
-				defaultSelected={this.props.getStateValue("selectedAssocLinkType")}
+			<FormGroup
+				legendText="Association Link Type"
 			>
-				<RadioButton
-					value={ASSOC_STRAIGHT}
-					labelText={ASSOC_STRAIGHT}
-				/>
-				<RadioButton
-					value={ASSOC_RIGHT_SIDE_CURVE}
-					labelText={ASSOC_RIGHT_SIDE_CURVE}
-				/>
-			</RadioButtonGroup>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedAssocLinkType" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedAssocLinkType")}
+				>
+					<RadioButton
+						value={ASSOC_STRAIGHT}
+						labelText={ASSOC_STRAIGHT}
+					/>
+					<RadioButton
+						value={ASSOC_RIGHT_SIDE_CURVE}
+						labelText={ASSOC_RIGHT_SIDE_CURVE}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		var enableCanvasUnderlay = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-underlay">
-			<div className="harness-sidepanel-headers">Enable Canvas Underlay</div>
-			<RadioButtonGroup
-				className="harness-sidepanel-radio-group"
-				name="selectedCanvasUnderlay" // Set name to corresponding field name in App.js
-				onChange={this.setStateValue}
-				defaultSelected={this.props.getStateValue("selectedCanvasUnderlay")}
+			<FormGroup
+				legendText="Enable Canvas Underlay"
 			>
-				<RadioButton
-					value={UNDERLAY_NONE}
-					labelText={UNDERLAY_NONE}
-				/>
-				<RadioButton
-					value={UNDERLAY_VARIABLE}
-					labelText={UNDERLAY_VARIABLE}
-				/>
-			</RadioButtonGroup>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedCanvasUnderlay" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedCanvasUnderlay")}
+				>
+					<RadioButton
+						value={UNDERLAY_NONE}
+						labelText={UNDERLAY_NONE}
+					/>
+					<RadioButton
+						value={UNDERLAY_VARIABLE}
+						labelText={UNDERLAY_VARIABLE}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		var enableObjectModel = (<div className="harness-sidepanel-children">
 			<form>
-				<div className="harness-sidepanel-headers">Use Object Model</div>
 				<div>
 					<Toggle
 						id="selectedInternalObjectModel" // Set ID to corresponding field in App.js state
+						labelText="Use Object Model"
 						toggled={this.props.getStateValue("selectedInternalObjectModel")}
 						onToggle={this.setStateValue}
 					/>
@@ -712,10 +722,10 @@ export default class SidePanelForms extends React.Component {
 		var enableSaveToPalette = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-save-to-palette-toggle">
 				<form>
-					<div className="harness-sidepanel-headers">Enable Save To Palette</div>
 					<div>
 						<Toggle
 							id="selectedSaveToPalette" // Set ID to corresponding field in App.js state
+							labelText="Enable Save To Palette"
 							toggled={this.props.getStateValue("selectedSaveToPalette")}
 							onToggle={this.setStateValue}
 						/>
@@ -726,10 +736,10 @@ export default class SidePanelForms extends React.Component {
 		var enableInsertNodeDroppedOnLink = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-insert-node-dropped-on-link-toggle">
 				<form>
-					<div className="harness-sidepanel-headers">Enable Insert Node Dropped On Link</div>
 					<div>
 						<Toggle
 							id="selectedInsertNodeDroppedOnLink" // Set ID to corresponding field in App.js state
+							labelText="Enable Insert Node Dropped On Link"
 							toggled={this.props.getStateValue("selectedInsertNodeDroppedOnLink")}
 							onToggle={this.setStateValue}
 						/>
@@ -740,10 +750,10 @@ export default class SidePanelForms extends React.Component {
 		var enableHightlightNodeOnNewLinkDrag = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-highlight-node-on-new-link-drag-toggle">
 				<form>
-					<div className="harness-sidepanel-headers">Enable Hightlight Node On New Link Drag</div>
 					<div>
 						<Toggle
 							id="selectedHightlightNodeOnNewLinkDrag" // Set ID to corresponding field in App.js state
+							labelText="Enable Hightlight Node On New Link Drag"
 							toggled={this.props.getStateValue("selectedHightlightNodeOnNewLinkDrag")}
 							onToggle={this.setStateValue}
 						/>
@@ -754,10 +764,10 @@ export default class SidePanelForms extends React.Component {
 		var enableZoomIntoSubFlows = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-zoom-into-subflows-toggle">
 				<form>
-					<div className="harness-sidepanel-headers">Enable Zoom Into Sub-flows</div>
 					<div>
 						<Toggle
 							id="selectedZoomIntoSubFlows" // Set ID to corresponding field in App.js state
+							labelText="Enable Zoom Into Sub-flows"
 							toggled={this.props.getStateValue("selectedZoomIntoSubFlows")}
 							onToggle={this.setStateValue}
 						/>
@@ -768,10 +778,10 @@ export default class SidePanelForms extends React.Component {
 		var enableDropZoneOnExternalDrag = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-drop-zone-on-external-drag-toggle">
 				<form>
-					<div className="harness-sidepanel-headers">Enable Drop Zone on Drag</div>
 					<div>
 						<Toggle
 							id="selectedDropZoneOnExternalDrag" // Set ID to corresponding field in App.js state
+							labelText="Enable Drop Zone on Drag"
 							toggled={this.props.getStateValue("selectedDropZoneOnExternalDrag")}
 							onToggle={this.setStateValue}
 						/>
@@ -782,10 +792,10 @@ export default class SidePanelForms extends React.Component {
 		var enableDisplayCustomizedDropZoneContent = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-display-drop-zone-content-toggle">
 				<form>
-					<div className="harness-sidepanel-headers">Display customized drop zone content</div>
 					<div>
 						<Toggle
 							id="selectedDisplayCustomizedDropZoneContent" // Set ID to corresponding field in App.js state
+							labelText="Display customized drop zone content"
 							toggled={this.props.getStateValue("selectedDisplayCustomizedDropZoneContent")}
 							onToggle={this.setStateValue}
 						/>
@@ -796,10 +806,10 @@ export default class SidePanelForms extends React.Component {
 		var enableDisplayCustomizedEmptyCanvasContent = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-display-empty-canvas-content-toggle">
 				<form>
-					<div className="harness-sidepanel-headers">Display customized empty canvas content</div>
 					<div>
 						<Toggle
 							id="selectedDisplayCustomizedEmptyCanvasContent" // Set ID to corresponding field in App.js state
+							labelText="Display customized empty canvas content"
 							toggled={this.props.getStateValue("selectedDisplayCustomizedEmptyCanvasContent")}
 							onToggle={this.setStateValue}
 						/>
@@ -809,10 +819,10 @@ export default class SidePanelForms extends React.Component {
 
 		var enableCreateSupernodeNonContiguous = (<div className="harness-sidepanel-children">
 			<form>
-				<div className="harness-sidepanel-headers">Enable Create Supernode for Noncontiguous Nodes</div>
 				<div>
 					<Toggle
 						id="selectedCreateSupernodeNonContiguous" // Set ID to corresponding field in App.js state
+						labelText="Enable Create Supernode for Noncontiguous Nodes"
 						toggled={this.props.getStateValue("selectedCreateSupernodeNonContiguous")}
 						onToggle={this.setStateValue}
 					/>
@@ -822,11 +832,10 @@ export default class SidePanelForms extends React.Component {
 
 		var enableMoveNodesOnSupernodeResize = (<div className="harness-sidepanel-children">
 			<form>
-				<div className="harness-sidepanel-headers">
-					Enable move surrounding nodes when resizing a supernode.</div>
 				<div>
 					<Toggle
 						id="selectedMoveNodesOnSupernodeResize" // Set ID to corresponding field in App.js state
+						labelText="Enable move surrounding nodes when resizing a supernode."
 						toggled={this.props.getStateValue("selectedMoveNodesOnSupernodeResize")}
 						onToggle={this.setStateValue}
 					/>
@@ -835,176 +844,197 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		var interactionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-interaction-type">
-			<div className="harness-sidepanel-headers">Interaction Type</div>
-			<RadioButtonGroup
-				className="harness-sidepanel-radio-group"
-				name="selectedInteractionType" // Set name to corresponding field name in App.js
-				onChange={this.setStateValue}
-				defaultSelected={this.props.getStateValue("selectedInteractionType")}
+			<FormGroup
+				legendText="Interaction Type"
 			>
-				<RadioButton
-					value={INTERACTION_MOUSE}
-					labelText={INTERACTION_MOUSE}
-				/>
-				<RadioButton
-					value={INTERACTION_TRACKPAD}
-					labelText={INTERACTION_TRACKPAD}
-				/>
-			</RadioButtonGroup>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedInteractionType" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedInteractionType")}
+				>
+					<RadioButton
+						value={INTERACTION_MOUSE}
+						labelText={INTERACTION_MOUSE}
+					/>
+					<RadioButton
+						value={INTERACTION_TRACKPAD}
+						labelText={INTERACTION_TRACKPAD}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		var connectionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-connection-type">
-			<div className="harness-sidepanel-headers">Connection Type</div>
-			<RadioButtonGroup
-				className="harness-sidepanel-radio-group"
-				name="selectedConnectionType" // Set name to corresponding field name in App.js
-				onChange={this.setStateValue}
-				defaultSelected={this.props.getStateValue("selectedConnectionType")}
+			<FormGroup
+				legendText="Connection Type"
 			>
-				<RadioButton
-					value={PORTS_CONNECTION}
-					labelText={PORTS_CONNECTION}
-				/>
-				<RadioButton
-					value={HALO_CONNECTION}
-					labelText={HALO_CONNECTION}
-				/>
-			</RadioButtonGroup>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedConnectionType" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedConnectionType")}
+				>
+					<RadioButton
+						value={PORTS_CONNECTION}
+						labelText={PORTS_CONNECTION}
+					/>
+					<RadioButton
+						value={HALO_CONNECTION}
+						labelText={HALO_CONNECTION}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		var nodeFormatType = (<div className="harness-sidepanel-children">
-			<div className="harness-sidepanel-headers">Node Format Type (for 'Ports')</div>
-			<RadioButtonGroup
-				className="harness-sidepanel-radio-group"
-				name="selectedNodeFormat" // Set name to corresponding field name in App.js
-				onChange={this.setStateValue}
-				defaultSelected={this.props.getStateValue("selectedNodeFormat")}
+			<FormGroup
+				legendText="Node Format Type (for 'Ports')"
 			>
-				<RadioButton
-					value={VERTICAL_FORMAT}
-					labelText={VERTICAL_FORMAT}
-				/>
-				<RadioButton
-					value={HORIZONTAL_FORMAT}
-					labelText={HORIZONTAL_FORMAT}
-				/>
-			</RadioButtonGroup>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedNodeFormat" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedNodeFormat")}
+				>
+					<RadioButton
+						value={VERTICAL_FORMAT}
+						labelText={VERTICAL_FORMAT}
+					/>
+					<RadioButton
+						value={HORIZONTAL_FORMAT}
+						labelText={HORIZONTAL_FORMAT}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		var linkType = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-type">
-			<div className="harness-sidepanel-headers">Link Type (for 'Ports')</div>
-			<RadioButtonGroup
-				className="harness-sidepanel-radio-group"
-				name="selectedLinkType" // Set name to corresponding field name in App.js
-				onChange={this.setStateValue}
-				defaultSelected={this.props.getStateValue("selectedLinkType")}
+			<FormGroup
+				legendText="Link Type (for 'Ports')"
 			>
-				<RadioButton
-					value={CURVE_LINKS}
-					labelText={CURVE_LINKS}
-				/>
-				<RadioButton
-					value={ELBOW_LINKS}
-					labelText={ELBOW_LINKS}
-				/>
-				<RadioButton
-					value={STRAIGHT_LINKS}
-					labelText={STRAIGHT_LINKS}
-				/>
-			</RadioButtonGroup>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedLinkType" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedLinkType")}
+				>
+					<RadioButton
+						value={CURVE_LINKS}
+						labelText={CURVE_LINKS}
+					/>
+					<RadioButton
+						value={ELBOW_LINKS}
+						labelText={ELBOW_LINKS}
+					/>
+					<RadioButton
+						value={STRAIGHT_LINKS}
+						labelText={STRAIGHT_LINKS}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		var linkDirection = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-direction">
-			<div className="harness-sidepanel-headers">Link Direction (for 'Ports')</div>
-			<RadioButtonGroup
-				className="harness-sidepanel-radio-group"
-				name="selectedLinkDirection" // Set name to corresponding field name in App.js
-				onChange={this.setStateValue}
-				defaultSelected={this.props.getStateValue("selectedLinkDirection")}
+			<FormGroup
+				legendText="Link Direction (for 'Ports')"
 			>
-				<RadioButton
-					value={DIRECTION_LEFT_RIGHT}
-					labelText={DIRECTION_LEFT_RIGHT}
-				/>
-				<RadioButton
-					value={DIRECTION_TOP_BOTTOM}
-					labelText={DIRECTION_TOP_BOTTOM}
-				/>
-				<RadioButton
-					value={DIRECTION_BOTTOM_TOP}
-					labelText={DIRECTION_BOTTOM_TOP}
-				/>
-			</RadioButtonGroup>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedLinkDirection" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedLinkDirection")}
+				>
+					<RadioButton
+						value={DIRECTION_LEFT_RIGHT}
+						labelText={DIRECTION_LEFT_RIGHT}
+					/>
+					<RadioButton
+						value={DIRECTION_TOP_BOTTOM}
+						labelText={DIRECTION_TOP_BOTTOM}
+					/>
+					<RadioButton
+						value={DIRECTION_BOTTOM_TOP}
+						labelText={DIRECTION_BOTTOM_TOP}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		const exampleApps = (<div className="harness-sidepanel-children">
-			<div className="harness-sidepanel-headers">Example canvas apps</div>
-			<RadioButtonGroup
-				className="harness-sidepanel-radio-group"
-				name="node_layout_radio"
-				onChange={this.nodeLayoutOptionChange}
-				defaultSelected={this.props.getStateValue("selectedNodeLayout")}
+			<FormGroup
+				legendText="Example canvas apps"
 			>
-				<RadioButton
-					value={EXAMPLE_APP_FLOWS}
-					labelText={EXAMPLE_APP_FLOWS}
-				/>
-				<RadioButton
-					value={EXAMPLE_APP_DETACHED}
-					labelText={EXAMPLE_APP_DETACHED}
-				/>
-				<RadioButton
-					value={EXAMPLE_APP_EXPLAIN}
-					labelText={EXAMPLE_APP_EXPLAIN}
-				/>
-				<RadioButton
-					value={EXAMPLE_APP_EXPLAIN2}
-					labelText={EXAMPLE_APP_EXPLAIN2}
-				/>
-				<RadioButton
-					value={EXAMPLE_APP_STREAMS}
-					labelText={EXAMPLE_APP_STREAMS}
-				/>
-				<RadioButton
-					value={EXAMPLE_APP_TABLES}
-					labelText={EXAMPLE_APP_TABLES}
-				/>
-				<RadioButton
-					value={EXAMPLE_APP_BLUE_ELLIPSES}
-					labelText={EXAMPLE_APP_BLUE_ELLIPSES}
-				/>
-				<RadioButton
-					value={EXAMPLE_APP_NONE}
-					labelText={EXAMPLE_APP_NONE}
-				/>
-			</RadioButtonGroup>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="node_layout_radio"
+					onChange={this.nodeLayoutOptionChange}
+					defaultSelected={this.props.getStateValue("selectedNodeLayout")}
+				>
+					<RadioButton
+						value={EXAMPLE_APP_FLOWS}
+						labelText={EXAMPLE_APP_FLOWS}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_DETACHED}
+						labelText={EXAMPLE_APP_DETACHED}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_EXPLAIN}
+						labelText={EXAMPLE_APP_EXPLAIN}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_EXPLAIN2}
+						labelText={EXAMPLE_APP_EXPLAIN2}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_STREAMS}
+						labelText={EXAMPLE_APP_STREAMS}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_TABLES}
+						labelText={EXAMPLE_APP_TABLES}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_BLUE_ELLIPSES}
+						labelText={EXAMPLE_APP_BLUE_ELLIPSES}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_NONE}
+						labelText={EXAMPLE_APP_NONE}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		var paletteLayout = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-layout">
-			<div className="harness-sidepanel-headers">Palette Layout</div>
-			<RadioButtonGroup
-				name="selectedPaletteLayout" // Set name to corresponding field name in App.js
-				className="harness-sidepanel-radio-group"
-				onChange={this.setStateValue}
-				defaultSelected={this.props.getStateValue("selectedPaletteLayout")}
+			<FormGroup
+				legendText="Palette Layout"
 			>
-				<RadioButton
-					value={PALETTE_FLYOUT}
-					labelText={PALETTE_FLYOUT}
-				/>
-				<RadioButton
-					value={PALETTE_MODAL}
-					labelText={PALETTE_MODAL}
-				/>
-				<RadioButton
-					value={PALETTE_NONE}
-					labelText={PALETTE_NONE}
-				/>
-			</RadioButtonGroup>
-			<div className="harness-sidepanel-headers">Show Narrow Palette</div>
+				<RadioButtonGroup
+					name="selectedPaletteLayout" // Set name to corresponding field name in App.js
+					className="harness-sidepanel-radio-group"
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedPaletteLayout")}
+				>
+					<RadioButton
+						value={PALETTE_FLYOUT}
+						labelText={PALETTE_FLYOUT}
+					/>
+					<RadioButton
+						value={PALETTE_MODAL}
+						labelText={PALETTE_MODAL}
+					/>
+					<RadioButton
+						value={PALETTE_NONE}
+						labelText={PALETTE_NONE}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 			<div>
 				<Toggle
 					id="selectedNarrowPalette" // Set ID to corresponding field in App.js state
+					labelText="Show Narrow Palette"
 					toggled={this.props.getStateValue("selectedNarrowPalette")}
 					onToggle={this.setStateValue}
 				/>
@@ -1012,93 +1042,101 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		var toolbarLayout = (<div className="harness-sidepanel-children" id="harness-sidepanel-toolbar-layout">
-			<div className="harness-sidepanel-headers">Toolbar Layout</div>
-			<RadioButtonGroup
-				name="selectedToolbarLayout" // Set name to corresponding field name in App.js
-				className="harness-sidepanel-radio-group"
-				onChange={this.setStateValue}
-				defaultSelected={this.props.getStateValue("selectedToolbarLayout")}
+			<FormGroup
+				legendText="Toolbar Layout"
 			>
-				<RadioButton
-					value={TOOLBAR_LAYOUT_NONE}
-					labelText={TOOLBAR_LAYOUT_NONE}
-				/>
-				<RadioButton
-					value={TOOLBAR_LAYOUT_TOP}
-					labelText={TOOLBAR_LAYOUT_TOP}
-				/>
-			</RadioButtonGroup>
+				<RadioButtonGroup
+					name="selectedToolbarLayout" // Set name to corresponding field name in App.js
+					className="harness-sidepanel-radio-group"
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedToolbarLayout")}
+				>
+					<RadioButton
+						value={TOOLBAR_LAYOUT_NONE}
+						labelText={TOOLBAR_LAYOUT_NONE}
+					/>
+					<RadioButton
+						value={TOOLBAR_LAYOUT_TOP}
+						labelText={TOOLBAR_LAYOUT_TOP}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		var toolbarType = (<div className="harness-sidepanel-children" id="harness-sidepanel-toolbar-type">
-			<div className="harness-sidepanel-headers">Toolbar Type</div>
-			<RadioButtonGroup
-				name="selectedToolbarType" // Set name to corresponding field name in App.js
-				className="harness-sidepanel-radio-group"
-				onChange={this.setStateValue}
-				defaultSelected={this.props.getStateValue("selectedToolbarType")}
+			<FormGroup
+				legendText="Toolbar Type"
 			>
-				<RadioButton
-					value={TOOLBAR_TYPE_DEFAULT}
-					labelText={TOOLBAR_TYPE_DEFAULT}
-				/>
-				<RadioButton
-					value={TOOLBAR_TYPE_SINGLE_BAR}
-					labelText={TOOLBAR_TYPE_SINGLE_BAR}
-				/>
-				<RadioButton
-					value={TOOLBAR_TYPE_BEFORE_AFTER}
-					labelText={TOOLBAR_TYPE_BEFORE_AFTER}
-				/>
-				<RadioButton
-					value={TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE}
-					labelText={TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE}
-				/>
-				<RadioButton
-					value={TOOLBAR_TYPE_CARBON_BUTTONS}
-					labelText={TOOLBAR_TYPE_CARBON_BUTTONS}
-				/>
-				<RadioButton
-					value={TOOLBAR_TYPE_CUSTOM_ACTIONS}
-					labelText={TOOLBAR_TYPE_CUSTOM_ACTIONS}
-				/>
-			</RadioButtonGroup>
+				<RadioButtonGroup
+					name="selectedToolbarType" // Set name to corresponding field name in App.js
+					className="harness-sidepanel-radio-group"
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedToolbarType")}
+				>
+					<RadioButton
+						value={TOOLBAR_TYPE_DEFAULT}
+						labelText={TOOLBAR_TYPE_DEFAULT}
+					/>
+					<RadioButton
+						value={TOOLBAR_TYPE_SINGLE_BAR}
+						labelText={TOOLBAR_TYPE_SINGLE_BAR}
+					/>
+					<RadioButton
+						value={TOOLBAR_TYPE_BEFORE_AFTER}
+						labelText={TOOLBAR_TYPE_BEFORE_AFTER}
+					/>
+					<RadioButton
+						value={TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE}
+						labelText={TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE}
+					/>
+					<RadioButton
+						value={TOOLBAR_TYPE_CARBON_BUTTONS}
+						labelText={TOOLBAR_TYPE_CARBON_BUTTONS}
+					/>
+					<RadioButton
+						value={TOOLBAR_TYPE_CUSTOM_ACTIONS}
+						labelText={TOOLBAR_TYPE_CUSTOM_ACTIONS}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		var tipConfig = (<div className="harness-sidepanel-children" id="harness-sidepanel-tip-config">
-			<div className="harness-sidepanel-headers">Tips</div>
-			<Checkbox
-				id="tip_palette"
-				labelText={TIP_PALETTE}
-				onChange={this.tipConfigChange}
-				checked={this.props.getStateValue("selectedTipConfig").palette}
-			/>
-			<Checkbox
-				id="tip_nodes"
-				labelText={TIP_NODES}
-				onChange={this.tipConfigChange}
-				checked={this.props.getStateValue("selectedTipConfig").nodes}
-			/>
-			<Checkbox
-				id="tip_ports"
-				labelText={TIP_PORTS}
-				onChange={this.tipConfigChange}
-				checked={this.props.getStateValue("selectedTipConfig").ports}
-			/>
-			<Checkbox
-				id="tip_links"
-				labelText={TIP_LINKS}
-				onChange={this.tipConfigChange}
-				checked={this.props.getStateValue("selectedTipConfig").links}
-			/>
+			<fieldset className="bx--fieldset">
+				<legend className="bx--label">Tips</legend>
+				<Checkbox
+					id="tip_palette"
+					labelText={TIP_PALETTE}
+					onChange={this.tipConfigChange}
+					checked={this.props.getStateValue("selectedTipConfig").palette}
+				/>
+				<Checkbox
+					id="tip_nodes"
+					labelText={TIP_NODES}
+					onChange={this.tipConfigChange}
+					checked={this.props.getStateValue("selectedTipConfig").nodes}
+				/>
+				<Checkbox
+					id="tip_ports"
+					labelText={TIP_PORTS}
+					onChange={this.tipConfigChange}
+					checked={this.props.getStateValue("selectedTipConfig").ports}
+				/>
+				<Checkbox
+					id="tip_links"
+					labelText={TIP_LINKS}
+					onChange={this.tipConfigChange}
+					checked={this.props.getStateValue("selectedTipConfig").links}
+				/>
+			</fieldset>
 		</div>);
 
 		var extraCanvas = (<div className="harness-sidepanel-children" id="harness-sidepanel-extra-canvas">
 			<form>
-				<div className="harness-sidepanel-headers">Extra canvas</div>
 				<div>
 					<Toggle
 						id="selectedExtraCanvasDisplayed" // Set ID to corresponding field in App.js state
+						labelText="Extra canvas"
 						toggled={this.props.getStateValue("selectedExtraCanvasDisplayed")}
 						onToggle={this.setStateValue}
 					/>
@@ -1115,7 +1153,7 @@ export default class SidePanelForms extends React.Component {
 					onDragStart={this.onDragStart} onDragOver={this.onDragOver}
 				>
 					<div className="harness-sidepanel-list-item-icon">
-						<img draggable="false" src="/images/nodes/derive.svg" />
+						<img draggable="false" src="/images/nodes/derive.svg" alt="Derive Node" />
 					</div>
 					<div>
 						<span className="harness-sidepanel-list-item-text">Derive</span>
@@ -1126,10 +1164,10 @@ export default class SidePanelForms extends React.Component {
 
 		var schemaValidation = (<div className="harness-sidepanel-children">
 			<form>
-				<div className="harness-sidepanel-headers">Schema Validation</div>
 				<div>
 					<Toggle
 						id="selectedSchemaValidation" // Set ID to corresponding field in App.js state
+						labelText="Schema Validation"
 						toggled={this.props.getStateValue("selectedSchemaValidation")}
 						onToggle={this.setStateValue}
 					/>
@@ -1139,10 +1177,10 @@ export default class SidePanelForms extends React.Component {
 
 		var displayBoudingRectangles = (<div className="harness-sidepanel-children">
 			<form>
-				<div className="harness-sidepanel-headers">Display Bounding Rectangles</div>
 				<div>
 					<Toggle
 						id="selectedBoundingRectangles" // Set ID to corresponding field in App.js state
+						labelText="Display Bounding Rectangles"
 						toggled={this.props.getStateValue("selectedBoundingRectangles")}
 						onToggle={this.setStateValue}
 					/>
@@ -1185,11 +1223,10 @@ export default class SidePanelForms extends React.Component {
 				/>
 			</div>
 			<form>
-				<div className="harness-sidepanel-headers">Keep Notification Center Open</div>
 				<div>
 					<Toggle
 						id="keepOpen" // Set ID to corresponding field in App.js state
-						labelText="When enabled, clicking outside the notification center will not close it"
+						labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
 						toggled={this.props.getStateValue("notificationConfig").keepOpen}
 						onToggle={this.notificationConfigToggle}
 					/>
@@ -1236,12 +1273,11 @@ export default class SidePanelForms extends React.Component {
 				/>
 			</div>
 			<form>
-				<div className="harness-sidepanel-headers">Keep Notification Center Open</div>
 				<div>
 					<Toggle
 						id="keepOpen2"
 						disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
-						labelText="When enabled, clicking outside the notification center will not close it"
+						labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
 						toggled={this.props.getStateValue("notificationConfig2").keepOpen}
 						onToggle={this.notificationConfigToggle}
 					/>
@@ -1251,9 +1287,9 @@ export default class SidePanelForms extends React.Component {
 
 		const displayFullLabelOnHover = (
 			<div className="harness-sidepanel-children">
-				<div className="harness-sidepanel-headers">Display full node label on hover</div>
 				<Toggle
 					id="selectedDisplayFullLabelOnHover" // Set ID to corresponding field in App.js state
+					labelText="Display full node label on hover"
 					toggled={this.props.getStateValue("selectedDisplayFullLabelOnHover")}
 					onToggle={this.setStateValue}
 				/>
