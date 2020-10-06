@@ -593,43 +593,31 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		var enablePanIntoViewOnOpen = (<div className="harness-sidepanel-children">
-			<form>
-				<div>
-					<Toggle
-						id="selectedPanIntoViewOnOpen" // Set ID to corresponding field in App.js state
-						labelText="Enable Pan Into View On Open"
-						toggled={this.props.getStateValue("selectedPanIntoViewOnOpen")}
-						onToggle={this.setStateValue}
-					/>
-				</div>
-			</form>
+			<Toggle
+				id="selectedPanIntoViewOnOpen" // Set ID to corresponding field in App.js state
+				labelText="Enable Pan Into View On Open"
+				toggled={this.props.getStateValue("selectedPanIntoViewOnOpen")}
+				onToggle={this.setStateValue}
+			/>
 		</div>);
 
 
 		var enableDragWithoutSelect = (<div className="harness-sidepanel-children">
-			<form>
-				<div>
-					<Toggle
-						id="selectedDragWithoutSelect" // Set ID to corresponding field in App.js state
-						labelText="Enable Drag Without Select"
-						toggled={this.props.getStateValue("selectedDragWithoutSelect")}
-						onToggle={this.setStateValue}
-					/>
-				</div>
-			</form>
+			<Toggle
+				id="selectedDragWithoutSelect" // Set ID to corresponding field in App.js state
+				labelText="Enable Drag Without Select"
+				toggled={this.props.getStateValue("selectedDragWithoutSelect")}
+				onToggle={this.setStateValue}
+			/>
 		</div>);
 
 		var enableAssocLinkCreation = (<div className="harness-sidepanel-children">
-			<form>
-				<div>
-					<Toggle
-						id="selectedAssocLinkCreation" // Set ID to corresponding field in App.js state
-						labelText="Enable Association Link Creation"
-						toggled={this.props.getStateValue("selectedAssocLinkCreation")}
-						onToggle={this.setStateValue}
-					/>
-				</div>
-			</form>
+			<Toggle
+				id="selectedAssocLinkCreation" // Set ID to corresponding field in App.js state
+				labelText="Enable Association Link Creation"
+				toggled={this.props.getStateValue("selectedAssocLinkCreation")}
+				onToggle={this.setStateValue}
+			/>
 		</div>);
 
 		var enableLinkSelection = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-selection">
@@ -707,140 +695,100 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		var enableObjectModel = (<div className="harness-sidepanel-children">
-			<form>
-				<div>
-					<Toggle
-						id="selectedInternalObjectModel" // Set ID to corresponding field in App.js state
-						labelText="Use Object Model"
-						toggled={this.props.getStateValue("selectedInternalObjectModel")}
-						onToggle={this.setStateValue}
-					/>
-				</div>
-			</form>
+			<Toggle
+				id="selectedInternalObjectModel" // Set ID to corresponding field in App.js state
+				labelText="Use Object Model"
+				toggled={this.props.getStateValue("selectedInternalObjectModel")}
+				onToggle={this.setStateValue}
+			/>
 		</div>);
 
 		var enableSaveToPalette = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-save-to-palette-toggle">
-				<form>
-					<div>
-						<Toggle
-							id="selectedSaveToPalette" // Set ID to corresponding field in App.js state
-							labelText="Enable Save To Palette"
-							toggled={this.props.getStateValue("selectedSaveToPalette")}
-							onToggle={this.setStateValue}
-						/>
-					</div>
-				</form>
+				<Toggle
+					id="selectedSaveToPalette" // Set ID to corresponding field in App.js state
+					labelText="Enable Save To Palette"
+					toggled={this.props.getStateValue("selectedSaveToPalette")}
+					onToggle={this.setStateValue}
+				/>
 			</div>);
 
 		var enableInsertNodeDroppedOnLink = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-insert-node-dropped-on-link-toggle">
-				<form>
-					<div>
-						<Toggle
-							id="selectedInsertNodeDroppedOnLink" // Set ID to corresponding field in App.js state
-							labelText="Enable Insert Node Dropped On Link"
-							toggled={this.props.getStateValue("selectedInsertNodeDroppedOnLink")}
-							onToggle={this.setStateValue}
-						/>
-					</div>
-				</form>
+				<Toggle
+					id="selectedInsertNodeDroppedOnLink" // Set ID to corresponding field in App.js state
+					labelText="Enable Insert Node Dropped On Link"
+					toggled={this.props.getStateValue("selectedInsertNodeDroppedOnLink")}
+					onToggle={this.setStateValue}
+				/>
 			</div>);
 
 		var enableHightlightNodeOnNewLinkDrag = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-highlight-node-on-new-link-drag-toggle">
-				<form>
-					<div>
-						<Toggle
-							id="selectedHightlightNodeOnNewLinkDrag" // Set ID to corresponding field in App.js state
-							labelText="Enable Hightlight Node On New Link Drag"
-							toggled={this.props.getStateValue("selectedHightlightNodeOnNewLinkDrag")}
-							onToggle={this.setStateValue}
-						/>
-					</div>
-				</form>
+				<Toggle
+					id="selectedHightlightNodeOnNewLinkDrag" // Set ID to corresponding field in App.js state
+					labelText="Enable Hightlight Node On New Link Drag"
+					toggled={this.props.getStateValue("selectedHightlightNodeOnNewLinkDrag")}
+					onToggle={this.setStateValue}
+				/>
 			</div>);
 
 		var enableZoomIntoSubFlows = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-zoom-into-subflows-toggle">
-				<form>
-					<div>
-						<Toggle
-							id="selectedZoomIntoSubFlows" // Set ID to corresponding field in App.js state
-							labelText="Enable Zoom Into Sub-flows"
-							toggled={this.props.getStateValue("selectedZoomIntoSubFlows")}
-							onToggle={this.setStateValue}
-						/>
-					</div>
-				</form>
+				<Toggle
+					id="selectedZoomIntoSubFlows" // Set ID to corresponding field in App.js state
+					labelText="Enable Zoom Into Sub-flows"
+					toggled={this.props.getStateValue("selectedZoomIntoSubFlows")}
+					onToggle={this.setStateValue}
+				/>
 			</div>);
 
 		var enableDropZoneOnExternalDrag = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-drop-zone-on-external-drag-toggle">
-				<form>
-					<div>
-						<Toggle
-							id="selectedDropZoneOnExternalDrag" // Set ID to corresponding field in App.js state
-							labelText="Enable Drop Zone on Drag"
-							toggled={this.props.getStateValue("selectedDropZoneOnExternalDrag")}
-							onToggle={this.setStateValue}
-						/>
-					</div>
-				</form>
+				<Toggle
+					id="selectedDropZoneOnExternalDrag" // Set ID to corresponding field in App.js state
+					labelText="Enable Drop Zone on Drag"
+					toggled={this.props.getStateValue("selectedDropZoneOnExternalDrag")}
+					onToggle={this.setStateValue}
+				/>
 			</div>);
 
 		var enableDisplayCustomizedDropZoneContent = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-display-drop-zone-content-toggle">
-				<form>
-					<div>
-						<Toggle
-							id="selectedDisplayCustomizedDropZoneContent" // Set ID to corresponding field in App.js state
-							labelText="Display customized drop zone content"
-							toggled={this.props.getStateValue("selectedDisplayCustomizedDropZoneContent")}
-							onToggle={this.setStateValue}
-						/>
-					</div>
-				</form>
+				<Toggle
+					id="selectedDisplayCustomizedDropZoneContent" // Set ID to corresponding field in App.js state
+					labelText="Display customized drop zone content"
+					toggled={this.props.getStateValue("selectedDisplayCustomizedDropZoneContent")}
+					onToggle={this.setStateValue}
+				/>
 			</div>);
 
 		var enableDisplayCustomizedEmptyCanvasContent = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-display-empty-canvas-content-toggle">
-				<form>
-					<div>
-						<Toggle
-							id="selectedDisplayCustomizedEmptyCanvasContent" // Set ID to corresponding field in App.js state
-							labelText="Display customized empty canvas content"
-							toggled={this.props.getStateValue("selectedDisplayCustomizedEmptyCanvasContent")}
-							onToggle={this.setStateValue}
-						/>
-					</div>
-				</form>
+				<Toggle
+					id="selectedDisplayCustomizedEmptyCanvasContent" // Set ID to corresponding field in App.js state
+					labelText="Display customized empty canvas content"
+					toggled={this.props.getStateValue("selectedDisplayCustomizedEmptyCanvasContent")}
+					onToggle={this.setStateValue}
+				/>
 			</div>);
 
 		var enableCreateSupernodeNonContiguous = (<div className="harness-sidepanel-children">
-			<form>
-				<div>
-					<Toggle
-						id="selectedCreateSupernodeNonContiguous" // Set ID to corresponding field in App.js state
-						labelText="Enable Create Supernode for Noncontiguous Nodes"
-						toggled={this.props.getStateValue("selectedCreateSupernodeNonContiguous")}
-						onToggle={this.setStateValue}
-					/>
-				</div>
-			</form>
+			<Toggle
+				id="selectedCreateSupernodeNonContiguous" // Set ID to corresponding field in App.js state
+				labelText="Enable Create Supernode for Noncontiguous Nodes"
+				toggled={this.props.getStateValue("selectedCreateSupernodeNonContiguous")}
+				onToggle={this.setStateValue}
+			/>
 		</div>);
 
 		var enableMoveNodesOnSupernodeResize = (<div className="harness-sidepanel-children">
-			<form>
-				<div>
-					<Toggle
-						id="selectedMoveNodesOnSupernodeResize" // Set ID to corresponding field in App.js state
-						labelText="Enable move surrounding nodes when resizing a supernode."
-						toggled={this.props.getStateValue("selectedMoveNodesOnSupernodeResize")}
-						onToggle={this.setStateValue}
-					/>
-				</div>
-			</form>
+			<Toggle
+				id="selectedMoveNodesOnSupernodeResize" // Set ID to corresponding field in App.js state
+				labelText="Enable move surrounding nodes when resizing a supernode."
+				toggled={this.props.getStateValue("selectedMoveNodesOnSupernodeResize")}
+				onToggle={this.setStateValue}
+			/>
 		</div>);
 
 		var interactionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-interaction-type">
@@ -1132,60 +1080,46 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		var extraCanvas = (<div className="harness-sidepanel-children" id="harness-sidepanel-extra-canvas">
-			<form>
-				<div>
-					<Toggle
-						id="selectedExtraCanvasDisplayed" // Set ID to corresponding field in App.js state
-						labelText="Extra canvas"
-						toggled={this.props.getStateValue("selectedExtraCanvasDisplayed")}
-						onToggle={this.setStateValue}
-					/>
-				</div>
-			</form>
+			<Toggle
+				id="selectedExtraCanvasDisplayed" // Set ID to corresponding field in App.js state
+				labelText="Extra canvas"
+				toggled={this.props.getStateValue("selectedExtraCanvasDisplayed")}
+				onToggle={this.setStateValue}
+			/>
 		</div>);
 
 		var nodeDraggable = (<div className="harness-sidepanel-children">
-			<form>
-				<div className="harness-sidepanel-headers">
-					Draggable Node (Requires modelerPalette.json to be set.)
+			<div className="harness-sidepanel-headers">
+				Draggable Node (Requires modelerPalette.json to be set.)
+			</div>
+			<div id="harness-sidePanelNodeDraggable" draggable="true"
+				onDragStart={this.onDragStart} onDragOver={this.onDragOver}
+			>
+				<div className="harness-sidepanel-list-item-icon">
+					<img draggable="false" src="/images/nodes/derive.svg" alt="Derive Node" />
 				</div>
-				<div id="harness-sidePanelNodeDraggable" draggable="true"
-					onDragStart={this.onDragStart} onDragOver={this.onDragOver}
-				>
-					<div className="harness-sidepanel-list-item-icon">
-						<img draggable="false" src="/images/nodes/derive.svg" alt="Derive Node" />
-					</div>
-					<div>
-						<span className="harness-sidepanel-list-item-text">Derive</span>
-					</div>
+				<div>
+					<span className="harness-sidepanel-list-item-text">Derive</span>
 				</div>
-			</form>
+			</div>
 		</div>);
 
 		var schemaValidation = (<div className="harness-sidepanel-children">
-			<form>
-				<div>
-					<Toggle
-						id="selectedSchemaValidation" // Set ID to corresponding field in App.js state
-						labelText="Schema Validation"
-						toggled={this.props.getStateValue("selectedSchemaValidation")}
-						onToggle={this.setStateValue}
-					/>
-				</div>
-			</form>
+			<Toggle
+				id="selectedSchemaValidation" // Set ID to corresponding field in App.js state
+				labelText="Schema Validation"
+				toggled={this.props.getStateValue("selectedSchemaValidation")}
+				onToggle={this.setStateValue}
+			/>
 		</div>);
 
 		var displayBoudingRectangles = (<div className="harness-sidepanel-children">
-			<form>
-				<div>
-					<Toggle
-						id="selectedBoundingRectangles" // Set ID to corresponding field in App.js state
-						labelText="Display Bounding Rectangles"
-						toggled={this.props.getStateValue("selectedBoundingRectangles")}
-						onToggle={this.setStateValue}
-					/>
-				</div>
-			</form>
+			<Toggle
+				id="selectedBoundingRectangles" // Set ID to corresponding field in App.js state
+				labelText="Display Bounding Rectangles"
+				toggled={this.props.getStateValue("selectedBoundingRectangles")}
+				onToggle={this.setStateValue}
+			/>
 		</div>);
 
 		var configureNotificationCenter = (<div className="harness-sidepanel-children" id="harness-sidepanel-configure-notification-center">
@@ -1222,16 +1156,12 @@ export default class SidePanelForms extends React.Component {
 					value={this.props.getStateValue("notificationConfig").clearAllMessage}
 				/>
 			</div>
-			<form>
-				<div>
-					<Toggle
-						id="keepOpen" // Set ID to corresponding field in App.js state
-						labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
-						toggled={this.props.getStateValue("notificationConfig").keepOpen}
-						onToggle={this.notificationConfigToggle}
-					/>
-				</div>
-			</form>
+			<Toggle
+				id="keepOpen" // Set ID to corresponding field in App.js state
+				labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
+				toggled={this.props.getStateValue("notificationConfig").keepOpen}
+				onToggle={this.notificationConfigToggle}
+			/>
 		</div>);
 
 		var configureNotificationCenter2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-configure-notification-center2">
@@ -1272,17 +1202,13 @@ export default class SidePanelForms extends React.Component {
 					value={this.props.getStateValue("notificationConfig2").clearAllMessage}
 				/>
 			</div>
-			<form>
-				<div>
-					<Toggle
-						id="keepOpen2"
-						disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
-						labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
-						toggled={this.props.getStateValue("notificationConfig2").keepOpen}
-						onToggle={this.notificationConfigToggle}
-					/>
-				</div>
-			</form>
+			<Toggle
+				id="keepOpen2"
+				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+				labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
+				toggled={this.props.getStateValue("notificationConfig2").keepOpen}
+				onToggle={this.notificationConfigToggle}
+			/>
 		</div>);
 
 		const displayFullLabelOnHover = (
