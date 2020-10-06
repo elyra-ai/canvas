@@ -22,8 +22,9 @@ describe("Test of zoom operations", function() {
 	});
 
 	it("Test zoom-in,  zoom-out using toolbar and verify zoom transform", function() {
+		cy.verifyZoomTransformDoesNotExist();
 		cy.clickToolbarZoomIn();
-		cy.verifyZoomTransform(-52, -28, 1.10);
+		cy.verifyZoomTransform(-62, -28, 1.10);
 
 		cy.clickToolbarZoomOut();
 		cy.verifyZoomTransform(1, 0, 1.00);
