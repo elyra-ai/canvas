@@ -36,14 +36,14 @@ Cypress.Commands.add("toggleCommonCanvasSidePanel", () => {
 });
 
 Cypress.Commands.add("openCanvasDefinition", (canvasFileName) => {
-	cy.toggleCommonCanvasSidePanel();
-	cy.get("#harness-sidepanel-canvas-dropdown").select(canvasFileName);
+	cy.document().then((doc) => {
+		doc.setCanvasDropdownFile(canvasFileName);
+	});
 	// Wait until we can get a node from the canvas before proceeding. This
 	// allows the canvas to load and display before any more test case steps
 	// are executed. Note: this won't work if the testcase selects a second
 	// canvas while an existing canvas with nodes is displayed.
 	cy.get(".d3-node-group");
-	cy.toggleCommonCanvasSidePanel();
 });
 
 Cypress.Commands.add("openCanvasDefinitionForExtraCanvas", (canvasFileName) => {
