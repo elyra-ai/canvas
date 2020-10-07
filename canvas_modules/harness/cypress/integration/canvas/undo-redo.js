@@ -136,9 +136,18 @@ describe("Test basic undo/redo operations", function() {
 		verifyTextValueIsNotPresentInColumnName("testValue");
 		cy.clickToolbarRedo();
 		verifyTextValueIsPresentInColumnName("testValue");
+	});
+});
 
+describe("Test basic undo/redo operations", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
+		cy.openCanvasPalette("modelerPalette.json");
 		cy.openCanvasDefinition("commentColorCanvas.json");
+	});
 
+	it("Test undo/redo operations on adding comment and deleting links actions,", function() {
 		// Link comment to node
 		cy.linkCommentToNode(" comment 3 sample comment text", "Neural Net");
 		cy.verifyNumberOfCommentLinks(4);

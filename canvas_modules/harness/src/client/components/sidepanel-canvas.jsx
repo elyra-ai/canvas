@@ -601,6 +601,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableRightFlyoutUnderToolbar = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedRightFlyoutUnderToolbar" // Set ID to corresponding field in App.js state
+				labelText="Enable Right Flyout Under Toolbar"
+				toggled={this.props.getStateValue("selectedRightFlyoutUnderToolbar")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
 
 		var enableDragWithoutSelect = (<div className="harness-sidepanel-children">
 			<Toggle
@@ -1263,6 +1272,8 @@ export default class SidePanelForms extends React.Component {
 					{enableAssocLinkCreation}
 					{divider}
 					{assocLinkType}
+					{divider}
+					{enableRightFlyoutUnderToolbar}
 					{divider}
 					{enablePanIntoViewOnOpen}
 					{divider}

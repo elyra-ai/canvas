@@ -299,12 +299,20 @@ class DiagramCanvas extends React.Component {
 		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
 		const svgCanvas = (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} />);
 
-		const dropDivClassName = this.props.config.enableToolbarLayout === "None"
-			? "common-canvas-drop-div common-canvas-toolbar-none"
+		const mainClassName = this.props.config.enableRightFlyoutUnderToolbar
+			? "common-canvas-main"
+			: null;
+
+		let dropDivClassName = this.props.config.enableRightFlyoutUnderToolbar
+			? "common-canvas-drop-div-under-toolbar"
 			: "common-canvas-drop-div";
 
+		dropDivClassName = this.props.config.enableToolbarLayout === "None"
+			? dropDivClassName + " common-canvas-toolbar-none"
+			: dropDivClassName;
+
 		return (
-			<main aria-label={this.getLabel("canvas.label")} role="main">
+			<main aria-label={this.getLabel("canvas.label")} role="main" className={mainClassName}>
 				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
 					<div
 						id={this.canvasDivId}
