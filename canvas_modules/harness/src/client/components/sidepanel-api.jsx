@@ -19,7 +19,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { isEmpty } from "lodash";
-import { Toggle, Button, Dropdown, TextArea, TextInput, RadioButtonGroup, RadioButton } from "carbon-components-react";
+import { Toggle, Button, Dropdown, TextArea, TextInput, RadioButtonGroup, RadioButton, FormGroup } from "carbon-components-react";
 import {
 	API_SET_PIPELINEFLOW,
 	API_ADD_PALETTE_ITEM,
@@ -511,10 +511,11 @@ export default class SidePanelAPI extends React.Component {
 			(<div className="harness-sidepanel-children" id="harness-sidepanel-api-list">
 				<Dropdown
 					id="harness-sidepanel-api-ops-dropdown"
-					ariaLabel="Operations"
-					label="Operations"
+					ariaLabel="Operations. Before selecting an operation, make sure you have selected Canvas Diagram from Common Canvas configuration options."
+					label="Choose an operation..."
 					onChange={this.onOperationSelect.bind(this)}
 					items={dropdownOptions}
+					titleText="Operations"
 				/>
 			</div>);
 
@@ -533,6 +534,7 @@ export default class SidePanelAPI extends React.Component {
 		if (this.props.apiConfig.selectedOperation === API_SET_PIPELINEFLOW) {
 			setPipelineFlow = (<div className="harness-sidepanel-children" id="harness-sidepanel-api-pipelineFlow">
 				<TextArea
+					id="harness-pipelineFlow"
 					labelText="Pipeline Flow"
 					rows={20}
 					onChange={this.onFieldChange.bind(this, "pipelineFlow")}
@@ -571,6 +573,7 @@ export default class SidePanelAPI extends React.Component {
 				</div>
 				<div className="harness-sidepanel-spacer">
 					<TextArea
+						id="harness-paletteNodeItem"
 						labelText="Palette Node Item"
 						placeholder="Palette node item"
 						rows={10}
@@ -594,6 +597,7 @@ export default class SidePanelAPI extends React.Component {
 						onChange={this.onNodeSelect.bind(this)}
 						label="Node Selection"
 						ariaLabel="Node Selection"
+						titleText="Node Selection"
 						items={this.dropdownOptions(this.state.nodes)}
 					/>
 				</div>
@@ -605,15 +609,16 @@ export default class SidePanelAPI extends React.Component {
 						onChange={this.onPortSelect.bind(this)}
 						ariaLabel="Port Selection"
 						label="Port Selection"
+						titleText="Port Selection"
 						items={this.dropdownOptions(this.state.ports)}
 					/>
 				</div>
 				<div className="harness-sidepanel-spacer" />
 				<TextInput
 					id="harness-newLabel"
-					labelText="Label"
+					labelText={this.props.apiConfig.selectedOperation}
 					hideLabel
-					placeholder="Label"
+					placeholder={this.props.apiConfig.selectedOperation}
 					onChange={this.onFieldChange.bind(this, "newLabel")}
 					value={this.state.newLabel}
 					disabled={(this.props.apiConfig.selectedOperation === API_SET_NODE_LABEL && !this.state.nodeId) ||
@@ -636,11 +641,13 @@ export default class SidePanelAPI extends React.Component {
 						onChange={this.onNodeSelect.bind(this)}
 						label="Node Selection"
 						ariaLabel="Node Selection"
+						titleText="Node Selection"
 						items={this.dropdownOptions(this.state.nodes)}
 					/>
 				</div>
 				<div className="harness-sidepanel-spacer" />
 				<TextArea
+					id="harness-decorations"
 					labelText="Decorations JSON"
 					rows={10}
 					onChange={this.onFieldChange.bind(this, "newDecorations")}
@@ -661,11 +668,13 @@ export default class SidePanelAPI extends React.Component {
 						onChange={this.onLinkSelect.bind(this)}
 						label="Link Selection"
 						ariaLabel="Link Selection"
+						titleText="Link Selection"
 						items={this.dropdownOptions(this.state.links)}
 					/>
 				</div>
 				<div className="harness-sidepanel-spacer" />
 				<TextArea
+					id="harness-link-decorations"
 					labelText="Decorations JSON"
 					rows={10}
 					onChange={this.onFieldChange.bind(this, "newDecorations")}
@@ -687,31 +696,34 @@ export default class SidePanelAPI extends React.Component {
 					Clear Messages
 				</Button>
 				{divider}
-				<div className="harness-sidepanel-headers">Message Type</div>
 				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-nm-types">
-					<RadioButtonGroup
-						className="harness-sidepanel-radio-group"
-						name="notification_message_type"
-						onChange={this.onNotificationMessageTypeChange.bind(this)}
-						defaultSelected={NOTIFICATION_MESSAGE_TYPE.INFO}
+					<FormGroup
+						legendText="Message Type"
 					>
-						<RadioButton
-							value={NOTIFICATION_MESSAGE_TYPE.INFO}
-							labelText={NOTIFICATION_MESSAGE_TYPE.INFO}
-						/>
-						<RadioButton
-							value={NOTIFICATION_MESSAGE_TYPE.SUCCESS}
-							labelText={NOTIFICATION_MESSAGE_TYPE.SUCCESS}
-						/>
-						<RadioButton
-							value={NOTIFICATION_MESSAGE_TYPE.WARNING}
-							labelText={NOTIFICATION_MESSAGE_TYPE.WARNING}
-						/>
-						<RadioButton
-							value={NOTIFICATION_MESSAGE_TYPE.ERROR}
-							labelText={NOTIFICATION_MESSAGE_TYPE.ERROR}
-						/>
-					</RadioButtonGroup>
+						<RadioButtonGroup
+							className="harness-sidepanel-radio-group"
+							name="notification_message_type"
+							onChange={this.onNotificationMessageTypeChange.bind(this)}
+							defaultSelected={NOTIFICATION_MESSAGE_TYPE.INFO}
+						>
+							<RadioButton
+								value={NOTIFICATION_MESSAGE_TYPE.INFO}
+								labelText={NOTIFICATION_MESSAGE_TYPE.INFO}
+							/>
+							<RadioButton
+								value={NOTIFICATION_MESSAGE_TYPE.SUCCESS}
+								labelText={NOTIFICATION_MESSAGE_TYPE.SUCCESS}
+							/>
+							<RadioButton
+								value={NOTIFICATION_MESSAGE_TYPE.WARNING}
+								labelText={NOTIFICATION_MESSAGE_TYPE.WARNING}
+							/>
+							<RadioButton
+								value={NOTIFICATION_MESSAGE_TYPE.ERROR}
+								labelText={NOTIFICATION_MESSAGE_TYPE.ERROR}
+							/>
+						</RadioButtonGroup>
+					</FormGroup>
 				</div>
 				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-nm-title">
 					<TextInput
@@ -735,6 +747,7 @@ export default class SidePanelAPI extends React.Component {
 				</div>
 				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-nm-content">
 					<TextArea
+						id="harness-notification-message-content"
 						labelText="Message Content"
 						rows={4}
 						placeholder="Message"
@@ -742,38 +755,38 @@ export default class SidePanelAPI extends React.Component {
 						value={this.state.notificationMessage}
 					/>
 				</div>
-				<div className="harness-sidepanel-spacer harness-sidepanel-headers">Add Timestamp to Message</div>
 				<div>
 					<Toggle
 						id="harness-sidepanel-api-notification-timestamp"
+						className="harness-sidepanel-spacer harness-sidepanel-headers"
+						labelText="Add Timestamp to Message"
 						toggled={this.state.appendTimestamp}
 						onToggle={this.onAppendTimestampToggle.bind(this)}
 					/>
 				</div>
-				<div className="harness-sidepanel-headers">
-				Add Callback to Message for logging the message in the test harness console
-				</div>
 				<div>
 					<Toggle
 						id="harness-sidepanel-api-notification-callback"
+						className="harness-sidepanel-headers"
+						labelText="Add Callback to Message for logging the message in the test harness console"
 						toggled={this.state.attachCallback}
 						onToggle={this.onAttachCallback.bind(this)}
 					/>
 				</div>
-				<div className="harness-sidepanel-spacer harness-sidepanel-headers">Add Link to Wiki</div>
 				<div>
 					<Toggle
 						id="harness-sidepanel-api-notification-link"
+						className="harness-sidepanel-spacer harness-sidepanel-headers"
+						labelText="Add Link to Wiki"
 						toggled={this.state.appendLink}
 						onToggle={this.onAppendLinkToggle.bind(this)}
 					/>
 				</div>
-				<div className="harness-sidepanel-headers">
-				Add dismiss link to message
-				</div>
 				<div>
 					<Toggle
 						id="harness-sidepanel-api-notification-dismiss"
+						className="harness-sidepanel-headers"
+						labelText="Add dismiss link to message"
 						toggled={this.state.closeMessage}
 						onToggle={this.onCloseToggle.bind(this)}
 					/>
@@ -793,6 +806,7 @@ export default class SidePanelAPI extends React.Component {
 						onChange={this.onNodeSelect.bind(this)}
 						label="Node Selection"
 						ariaLabel="Node Selection"
+						titleText="Node Selection"
 						items={this.dropdownOptions(this.state.nodes)}
 					/>
 				</div>
@@ -800,6 +814,7 @@ export default class SidePanelAPI extends React.Component {
 				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer2" />
 				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-x-content">
 					<TextArea
+						id="harness-zoom-canvas-x-position"
 						labelText="X position"
 						rows={1}
 						placeholder="X percent offset"
@@ -811,6 +826,7 @@ export default class SidePanelAPI extends React.Component {
 				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer4" />
 				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-y-content">
 					<TextArea
+						id="harness-zoom-canvas-y-position"
 						labelText="Y position"
 						rows={1}
 						placeholder="Y percent offset"
@@ -821,6 +837,7 @@ export default class SidePanelAPI extends React.Component {
 				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer5" />
 				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer6" />
 				<TextArea
+					id="harness-zoom-canvas-object"
 					labelText="Zoom Object"
 					rows={4}
 					onChange={this.onFieldChange.bind(this, "zoomObject")}
