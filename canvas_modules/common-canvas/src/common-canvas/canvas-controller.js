@@ -84,6 +84,7 @@ export default class CanvasController {
 			enableMoveNodesOnSupernodeResize: true,
 			enableDisplayFullLabelOnHover: false,
 			enableDropZoneOnExternalDrag: false,
+			enableRightFlyoutUnderToolbar: false,
 			enablePanIntoViewOnOpen: false,
 			enableZoomIntoSubFlows: false,
 			enableSaveZoom: "None",

@@ -176,6 +176,7 @@ class App extends React.Component {
 				"ports": true,
 				"links": true
 			},
+			selectedRightFlyoutUnderToolbar: false,
 			selectedPanIntoViewOnOpen: false,
 			selectedExtraCanvasDisplayed: false,
 			selectedSaveToPalette: false,
@@ -1649,6 +1650,7 @@ class App extends React.Component {
 			enableBoundingRectangles: this.state.selectedBoundingRectangles,
 			enableCanvasUnderlay: this.state.selectedCanvasUnderlay,
 			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
+			enableRightFlyoutUnderToolbar: this.state.selectedRightFlyoutUnderToolbar,
 			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
 			dropZoneCanvasContent: dropZoneCanvasDiv,
 			emptyCanvasContent: emptyCanvasDiv,

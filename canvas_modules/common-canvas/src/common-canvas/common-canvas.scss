@@ -15,17 +15,12 @@
  */
 
 @import "carbon-components/scss/globals/scss/_vars";
-$toolbar-button-height: 40px;
+$toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 
-/* right flyout panel */
-
-.right-flyout-panel {
-	height: 100%;
-	position: relative;
-	box-shadow: 0 44px 8px 0 rgba(0, 0, 0, 0.4);
-}
-
-/* SVG Canvas styles */
+/* Default layout for common-canvas components where the canvas appears below
+ * the toolbar and right-side flyout appears to the right of the toolbar and
+ * compresses the toolbar when it is opened. These are used when the config field
+ * enableRightFlyoutUnderToolbar is false. */
 
 .common-canvas {
 	height: 100%;
@@ -50,6 +45,11 @@ $toolbar-button-height: 40px;
 	display: flex;
 }
 
+.common-canvas-main {
+	width: 100%;
+	height: 100%;
+}
+
 .common-canvas-drop-div {
 	height: calc(100% - #{$toolbar-button-height});
 	width: 100%;
@@ -63,6 +63,35 @@ $toolbar-button-height: 40px;
 .common-canvas-drop-div.common-canvas-toolbar-none {
 	height: 100%;
 	top: 0;
+}
+
+.right-flyout-panel {
+	height: 100%;
+	position: relative;
+	box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Alternative layout for common-canvas components where canvas and right-side
+ * flyout appear under the toolbar and the right-side flyout does not compress
+ * the toolbar when it is opened. These are used when the config field
+ * enableRightFlyoutUnderToolbar is true. */
+
+.common-canvas-right-side-items-under-toolbar {
+	width: 100%;
+}
+
+.common-canvas-items-container-under-toolbar {
+	height: calc(100% - #{$toolbar-button-height});
+	width: 100%;
+	display: flex;
+}
+
+.common-canvas-drop-div-under-toolbar {
+	height: 100%;
+	width: 100%;
+	position: relative; // Needed to allow textarea (for commnt editing) to be positiond OK.
+	cursor: default;
+	overflow: hidden;
 }
 
 /* Styles for empty canvas objects */

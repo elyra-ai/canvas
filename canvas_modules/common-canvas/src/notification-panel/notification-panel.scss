@@ -17,8 +17,8 @@
 $notification-panel-arrow-height: 8px;
 $notification-panel-header-height: 35px;
 $notification-message-height: 48px;
-
 $notification-left-border-color-width: 4px;
+$toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 
 // This section adds an ease-in ease-out effect for the notification-panel-container
 .notification-panel-container {
@@ -40,6 +40,7 @@ $notification-left-border-color-width: 4px;
 	width: 320px;
 	height: fit-content;
 	right: 8px;
+	top: $toolbar-button-height;
 }
 
 .notification-popup-arrow {
