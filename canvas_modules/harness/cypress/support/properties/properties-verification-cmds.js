@@ -314,7 +314,6 @@ Cypress.Commands.add("verifyHeightOfTable", (propertyId, height) => {
 	cy.get(`div[data-id='properties-ft-${propertyId}']`)
 		.find(".properties-ft-container-wrapper")
 		.find("div[role='rowgroup']")
-		.first()
 		.invoke("css", "height")
 		.then((cssValue) => {
 			cy.verifyPixelValueInCompareRange(height, cssValue);
