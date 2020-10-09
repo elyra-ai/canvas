@@ -36,12 +36,12 @@
               "links": [
                 {
                   "node_id_ref": "8b5ef5df-0163-484e-a766-32314b98aafb",
+                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }
@@ -89,12 +89,12 @@
               "links": [
                 {
                   "node_id_ref": "f65f884f-2a80-4f78-b32c-7644c0cca697",
+                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }
@@ -184,12 +184,12 @@
               "links": [
                 {
                   "node_id_ref": "d45c7b2c-a8bf-4a6a-926d-0ecc75809ee3",
+                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }
@@ -237,12 +237,12 @@
               "links": [
                 {
                   "node_id_ref": "9c531ba0-7a34-4a67-ab9a-c3248e0842c9",
+                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }
@@ -290,12 +290,12 @@
               "links": [
                 {
                   "node_id_ref": "d7a8678e-f853-4eb9-beab-3f64f4a726b9",
+                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }

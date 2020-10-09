@@ -17,10 +17,11 @@
 /* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
 
 import React from "react";
+import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
 import ReactResizeDetector from "react-resize-detector";
-import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
-
+import { FlowData16 } from "@carbon/icons-react";
+import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import {
 	DND_DATA_TEXT
 } from "./constants/canvas-constants";
@@ -28,7 +29,7 @@ import {
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
 
-export default class DiagramCanvas extends React.Component {
+class DiagramCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -48,6 +49,7 @@ export default class DiagramCanvas extends React.Component {
 		this.dragEnter = this.dragEnter.bind(this);
 		this.dragLeave = this.dragLeave.bind(this);
 		this.refreshOnSizeChange = this.refreshOnSizeChange.bind(this);
+		this.getLabel = this.getLabel.bind(this);
 
 		this.onCut = this.onCut.bind(this);
 		this.onCopy = this.onCopy.bind(this);
@@ -107,6 +109,11 @@ export default class DiagramCanvas extends React.Component {
 		}
 	}
 
+	getLabel(labelId) {
+		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultMessages[labelId] });
+	}
+
+
 	getDNDJson(event) {
 		try {
 			return JSON.parse(event.dataTransfer.getData(DND_DATA_TEXT));
@@ -126,6 +133,10 @@ export default class DiagramCanvas extends React.Component {
 
 	getZoom() {
 		return this.canvasD3Layout.getZoom();
+	}
+
+	getGhostNode(nodeTemplate) {
+		return this.canvasD3Layout.getGhostNode(nodeTemplate);
 	}
 
 	setIsDropZoneDisplayed(isDropZoneDisplayed) {
@@ -153,25 +164,15 @@ export default class DiagramCanvas extends React.Component {
 		this.canvasD3Layout.translateBy(x, y, animateTime);
 	}
 
-	mouseCoords(event) {
-		const rect = event.currentTarget.getBoundingClientRect();
-
-		return {
-			x: event.clientX - Math.round(rect.left),
-			y: event.clientY - Math.round(rect.top)
-		};
-	}
-
 	drop(event) {
 		event.preventDefault();
 		this.first = false;
 		this.second = false;
 		this.setIsDropZoneDisplayed(false);
-		const mousePos = this.mouseCoords(event);
 
-		const nodeTemplate = event.canvasNodeTemplate;
+		const nodeTemplate = this.props.canvasController.getDragNodeTemplate();
 		if (nodeTemplate) {
-			this.canvasD3Layout.nodeTemplateDropped(nodeTemplate, mousePos);
+			this.canvasD3Layout.nodeTemplateDropped(nodeTemplate, event.clientX, event.clientY);
 
 		} else {
 			let dropData = this.getDNDJson(event);
@@ -187,17 +188,18 @@ export default class DiagramCanvas extends React.Component {
 					}
 				};
 			}
-			this.canvasD3Layout.externalObjectDropped(dropData, mousePos);
+			this.canvasD3Layout.externalObjectDropped(dropData, event.clientX, event.clientY);
 		}
 
-		// canvasNodeTemplate will persist in future events if we don't remove it
-		delete event.canvasNodeTemplate;
+		// Clear the drag template.
+		this.props.canvasController.setDragNodeTemplate(null);
+
 		// Also clear dataTransfer data for when we get external objects.
 		event.dataTransfer.clearData();
 	}
 
 	dragOver(event) {
-		const nodeTemplate = event.canvasNodeTemplate;
+		const nodeTemplate = this.props.canvasController.getDragNodeTemplate();
 		if (nodeTemplate) {
 			this.canvasD3Layout.paletteNodeDraggedOver(nodeTemplate, event.clientX, event.clientY);
 		}
@@ -270,10 +272,9 @@ export default class DiagramCanvas extends React.Component {
 			} else {
 				emptyCanvas = (
 					<div className="empty-canvas">
-						<div>
-							<img src={BlankCanvasImage} className="empty-canvas-image" />
-							<span className="empty-canvas-text">Your flow is empty!</span>
-						</div>
+						<div className="empty-canvas-image"><FlowData16 /></div>
+						<span className="empty-canvas-text1">{this.getLabel("canvas.flowIsEmpty")}</span>
+						<span className="empty-canvas-text2">{this.getLabel("canvas.addNodeToStart")}</span>
 					</div>);
 			}
 		}
@@ -298,34 +299,47 @@ export default class DiagramCanvas extends React.Component {
 		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
 		const svgCanvas = (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} />);
 
-		const dropDivClassName = this.props.config.enableToolbarLayout === "None"
-			? "common-canvas-drop-div common-canvas-toolbar-none"
+		const mainClassName = this.props.config.enableRightFlyoutUnderToolbar
+			? "common-canvas-main"
+			: null;
+
+		let dropDivClassName = this.props.config.enableRightFlyoutUnderToolbar
+			? "common-canvas-drop-div-under-toolbar"
 			: "common-canvas-drop-div";
 
+		dropDivClassName = this.props.config.enableToolbarLayout === "None"
+			? dropDivClassName + " common-canvas-toolbar-none"
+			: dropDivClassName;
+
 		return (
-			<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
-				<div
-					id={this.canvasDivId}
-					className={dropDivClassName}
-					onDrop={this.drop}
-					onDragOver={this.dragOver}
-					onDragEnter={this.dragEnter}
-					onDragLeave={this.dragLeave}
-				>
-					{emptyCanvas}
-					{svgCanvas}
-					{this.props.children}
-					{dropZoneCanvas}
-				</div>
-			</ReactResizeDetector>
+			<main aria-label={this.getLabel("canvas.label")} role="main" className={mainClassName}>
+				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
+					<div
+						id={this.canvasDivId}
+						className={dropDivClassName}
+						onDrop={this.drop}
+						onDragOver={this.dragOver}
+						onDragEnter={this.dragEnter}
+						onDragLeave={this.dragLeave}
+					>
+						{emptyCanvas}
+						{svgCanvas}
+						{this.props.children}
+						{dropZoneCanvas}
+					</div>
+				</ReactResizeDetector>
+			</main>
 		);
 	}
 }
 
 DiagramCanvas.propTypes = {
+	intl: PropTypes.object.isRequired,
 	canvasInfo: PropTypes.object,
 	config: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	children: PropTypes.element,
 	isCanvasEmpty: PropTypes.bool
 };
+
+export default injectIntl(DiagramCanvas, { forwardRef: true });

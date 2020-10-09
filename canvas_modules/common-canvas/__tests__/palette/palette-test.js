@@ -15,7 +15,7 @@
  */
 
 import React from "react";
-import { shallow } from "enzyme";
+import { mountWithIntl } from "../_utils_/intl-utils";
 import Palette from "../../src/palette/palette.jsx";
 import PaletteTopbar from "../../src/palette/palette-topbar.jsx";
 import PaletteContent from "../../src/palette/palette-content.jsx";
@@ -46,7 +46,7 @@ const paletteSpec = {
 	"categories": [{
 		"category": "import",
 		"label": "Import",
-		"nodetypes": [{
+		"node_types": [{
 			"label": "Var. File",
 			"description": "Imports data from a comma-delimited file",
 			"typeId": "variablefile",
@@ -85,7 +85,7 @@ function createPalette() {
 	const createTempNodeCallback = sinon.spy();
 	const deleteTempNodeCallback = sinon.spy();
 	const canvasController = new CanvasController();
-	const popupPalette = shallow(
+	const popupPalette = mountWithIntl(
 		<Palette paletteJSON={paletteSpec}
 			showPalette
 			closePalette={closePaletteCallback}

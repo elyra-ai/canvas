@@ -16,15 +16,24 @@
 
 
 Cypress.Commands.add("getCanvasTranslateCoords", () => {
-	cy.get(".svg-area > g")
+	cy.get(`div#canvas-div-${document.instanceId} > div > .svg-area > g`)
 		.then((g) => {
 			const transform = g[0].getAttribute("transform");
-			if (transform) {
-				const coordArray = transform.substring(10, transform.indexOf(")")).split(",");
-				const transformX = Number(coordArray[0]);
-				const transformY = Number(coordArray[1]);
-				return { x: transformX, y: transformY };
-			}
-			return { x: 0, y: 0 };
+			return extractTransformValues(transform);
 		});
 });
+
+export function extractTransformValues(transform) {
+	if (transform) {
+		const coordArray = transform.substring(10, transform.indexOf(")")).split(",");
+		const transformX = Number(coordArray[0]);
+		const transformY = Number(coordArray[1]);
+
+		const scaleArray = transform.split("(");
+		const scale = scaleArray && scaleArray.length > 2 ? scaleArray[2].split(")")[0] : 1;
+
+		return { x: transformX, y: transformY, k: scale };
+	}
+
+	return { x: 0, y: 0, k: 1 };
+}

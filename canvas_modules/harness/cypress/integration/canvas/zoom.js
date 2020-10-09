@@ -15,40 +15,39 @@
  */
 
 describe("Test of zoom operations", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.viewport(1330, 660);
 		cy.visit("/");
-		cy.openCanvasPalette("modelerPalette.json");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
-	it.skip("Test zoom-in,  zoom-out using toolbar and verify zoom transform", function() {
+	it("Test zoom-in,  zoom-out using toolbar and verify zoom transform", function() {
+		cy.verifyZoomTransformDoesNotExist();
 		cy.clickToolbarZoomIn();
-		// TODO: Following zoom transform value is different for every travis build - Skipping this test
-		cy.verifyZoomTransform("translate(128.4140625,7.349999999999994) scale(1.1)");
+		cy.verifyZoomTransform(-62, -28, 1.10);
 
 		cy.clickToolbarZoomOut();
-		cy.verifyZoomTransform("translate(184,32.5) scale(1)");
-
-		cy.clickToolbarZoomIn();
-		cy.clickToolbarZoomIn();
-		cy.clickToolbarZoomOut();
-		cy.verifyZoomTransform("translate(139.5,7.349999999999994) scale(1.1)");
-
-		cy.clickToolbarZoomOut();
-		cy.clickToolbarZoomOut();
-		cy.clickToolbarZoomIn();
-		cy.clickToolbarZoomOut();
-		cy.verifyZoomTransform("translate(224.4545454545455,55.363636363636374) scale(0.9090909090909091)");
+		cy.verifyZoomTransform(1, 0, 1.00);
 
 		cy.clickToolbarZoomIn();
 		cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomOut();
+		cy.verifyZoomTransform(-63, -28, 1.10);
+
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomOut();
+		cy.verifyZoomTransform(58, 26, 0.90);
+
 		cy.clickToolbarZoomIn();
 		cy.clickToolbarZoomIn();
 		cy.clickToolbarZoomIn();
 		cy.clickToolbarZoomIn();
 		cy.clickToolbarZoomIn();
-		cy.verifyZoomTransform("translate(-159.34464500000047,-161.54759150000027) scale(1.771561000000001)");
+		cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomIn();
+		cy.verifyZoomTransform(-485, -219, 1.77);
 
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
@@ -60,7 +59,7 @@ describe("Test of zoom operations", function() {
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
-		cy.verifyZoomTransform("translate(325.0590123625436,112.22211597568476) scale(0.6830134553650705)");
+		cy.verifyZoomTransform(200, 90, 0.68);
 	});
 });
 
@@ -79,7 +78,7 @@ describe("Test to see if zoom is NOT preserved with 'Save Zoom' set to 'None'", 
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
-		cy.verifyZoomTransform("translate(294.6649135987979,95.04432757325321) scale(0.7513148009015777)");
+		cy.verifyZoomTransform(156, 71, 0.75);
 
 		// Now I load the blank canvas so I can return to the original canvas to make
 		// sure the zoom amount has returned to the default
@@ -107,7 +106,7 @@ describe("Test to see if zoom IS preserved with 'Save Zoom' set to 'LocalStorage
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
-		cy.verifyZoomTransform("translate(294.6649135987979,95.04432757325321) scale(0.7513148009015777)");
+		cy.verifyZoomTransform(156, 71, 0.75);
 
 		// Now I load the blank canvas so I can return to the original canvas to make
 		// sure the zoom amount has returned to the default
@@ -116,7 +115,7 @@ describe("Test to see if zoom IS preserved with 'Save Zoom' set to 'LocalStorage
 		// Now I reload the original canvas and the zoom should return to the default
 		// zoom because we are using 'LocalStorage' for the 'Save Zoom' parameter.
 		cy.openCanvasDefinition("commentColorCanvas.json");
-		cy.verifyZoomTransform("translate(294.6649135987979,95.04432757325321) scale(0.7513148009015777)");
+		cy.verifyZoomTransform(156, 71, 0.75);
 	});
 });
 
@@ -135,10 +134,10 @@ describe("Test to see if zoom IS saved in the pipeline flow with 'Save Zoom' set
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
-		cy.verifyZoomTransform("translate(294.6649135987979,95.04432757325321) scale(0.7513148009015777)");
+		cy.verifyZoomTransform(156, 71, 0.75);
 
 		// Check to see if the zoom amount in the canvas info for this pipeline is correct.
-		cy.verifyPrimaryPipelineZoomInCanvasInfo(294.6649135987979, 95.04432757325321, 0.7513148009015777);
+		cy.verifyPrimaryPipelineZoomInCanvasInfo(156, 71, 0.75);
 	});
 });
 
@@ -154,6 +153,6 @@ describe("Test to see if the canvas is panned into view when selectedPanIntoView
 		// The allTypesCanvas should have been panned to the left and up.
 		cy.verifyZoomTransformDoesNotExist();
 
-		cy.verifyZoomTransform("translate(-6,-6) scale(1)");
+		cy.verifyZoomTransform(-6, -6, 1);
 	});
 });

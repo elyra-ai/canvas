@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint no-undefined: "off" */
 
 describe("Test node link disconnection", function() {
 	beforeEach(() => {
@@ -56,6 +57,24 @@ describe("Test comment link disconnection", function() {
 		cy.verifyNumberOfCommentLinks(1);
 	});
 });
+
+describe("Test node link creation", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("allTypesCanvas.json");
+	});
+
+	it("Test dragging a link from a source node to canvas doesn't create a link", function() {
+		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyNumberOfLinks(9);
+
+		cy.linkNodeOutputPortToPointOnCanvas("Binding (entry) node", "outPort", 200, 500);
+
+		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyNumberOfLinks(9);
+	});
+});
+
 
 describe("Test node and comment combination link disconnection", function() {
 	beforeEach(() => {
@@ -133,10 +152,10 @@ describe("Test elbow connections from multi-port source node do not overlap", fu
 	});
 });
 
-describe("Test enableLinkSelection configuration option", function() {
+describe("Test enableLinkSelection = 'LinkOnly' configuration option", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedLinkSelection": true });
+		cy.setCanvasConfig({ "selectedLinkSelection": "LinkOnly" });
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
@@ -153,7 +172,7 @@ describe("Test enableLinkSelection configuration option", function() {
 		cy.verifyLinkIsSelected("a81684aa-9b09-4620-aa59-54035a5de913");
 	});
 
-	it("Test an already selected link can be deselcted with Cmnd + click", function() {
+	it("Test an already selected link can be deselected with Cmnd + click", function() {
 		// Select two links
 		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
@@ -166,7 +185,7 @@ describe("Test enableLinkSelection configuration option", function() {
 		cy.verifyLinkIsSelected("a81684aa-9b09-4620-aa59-54035a5de913");
 	});
 
-	it("Test clicking on an unselected deselcts other selcted links", function() {
+	it("Test clicking on an unselected link deselcts other selected links", function() {
 		// Select two links
 		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
@@ -217,4 +236,299 @@ describe("Test enableLinkSelection configuration option", function() {
 		cy.verifyLinkIsDeleted("a81684aa-9b09-4620-aa59-54035a5de913");
 	});
 
+});
+
+describe("Test enableLinkSelection = 'Handles' configuration option", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({
+			"selectedLinkSelection": "Handles",
+			"selectedLinkType": "Curve" });
+		cy.openCanvasDefinition("allTypesCanvas.json");
+	});
+
+	it("Test if a link end handle is dragged to the canvas it has no effect", function() {
+		// Check the link from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+
+		// Drag end handle out onto arbitrary point canvas.
+		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.moveLinkHandleToPos("a81684aa-9b09-4620-aa59-54035a5de913", "endHandle", 300, 300);
+
+		// Make sure link still exists from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+	});
+
+	it("Test if a link start handle is dragged to the canvas it has no effect", function() {
+		// Check the link from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+
+		// Drag start handle out onto arbitrary point canvas.
+		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.moveLinkHandleToPos("a81684aa-9b09-4620-aa59-54035a5de913", "startHandle", 300, 300);
+
+		// Make sure link still exists from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+	});
+
+	it("Test if a link end handle is dragged to different port the link is updated", function() {
+		// Check the link from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+
+		// Move link between execution node and supernode to be between
+		// same nodes but on a different port
+		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.moveLinkHandleToPort("a81684aa-9b09-4620-aa59-54035a5de913", "endHandle", "Super node", "input1SuperNodePE");
+
+		// Check link now exists to new port.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input1SuperNodePE", 1);
+
+		// Undo
+		cy.clickToolbarUndo();
+		// Check the link from execution node to supernode is restored
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		// Check link to new port is retored.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input1SuperNodePE", 1);
+	});
+
+	it("Test if a link end handle is dragged to different node the link is updated", function() {
+		// Check the link from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+
+		// Delete the link from supernode to the binding exit node to make a free port
+		cy.clickLink("d5bef845-9d69-4cca-95ec-27d481b4e776");
+		cy.clickToolbarDelete();
+
+		// Move end of link between execution node and supernode to be between
+		// execution node and exit binding node.
+		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.moveLinkHandleToPort("a81684aa-9b09-4620-aa59-54035a5de913", "endHandle", "Binding (exit) node", "inPort");
+
+		// Check the link from execution node to supernode DOES NOT exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 0);
+
+		// Check the link from execution node to exit binding node exists.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Binding (exit) node", "inPort", 1);
+
+		// Undo
+		cy.clickToolbarUndo();
+		// Check the link from execution node to supernode is restored
+		// Note the undo restores the link with a source port specified instead of undefined.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", "outPort", "Super node", "input2SuperNodePE", 0);
+
+		// Redo
+		cy.clickToolbarRedo();
+		// Check the link from execution node to exit binding node is restored.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Binding (exit) node", "inPort", 1);
+	});
+
+	it("Test if a link start handle is dragged to different node the link is updated", function() {
+		// Check the link from execution node to supernode exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 1);
+
+		// Delete the link from binding entry node to the execution node to make a free port
+		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		cy.clickToolbarDelete();
+
+		// Move start of link between execution node and supernode to be between
+		// entry binding node and supernode.
+		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.moveLinkHandleToPort(
+			"a81684aa-9b09-4620-aa59-54035a5de913", "startHandle", "Binding (entry) node", "outPort");
+
+		// Check the link from execution node to supernode DOES NOT exists
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", undefined, "Super node", "input2SuperNodePE", 0);
+
+		// Check the link from binding entry node to supernode exists.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Binding (entry) node", "outPort", "Super node", "input2SuperNodePE", 1);
+
+		// Undo
+		cy.clickToolbarUndo();
+		// Check the link from execution node to supernode is restored
+		// Note the undo restores the link with a source port specified instead of undefined.
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Execution node", "outPort", "Super node", "input2SuperNodePE", 1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		// Check the link from execution node to exit binding node is restored
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Binding (entry) node", "outPort", "Super node", "input2SuperNodePE", 1);
+	});
+});
+
+describe("Test selectedLinkSelection = 'Detachable' configuration option", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({
+			"selectedLinkSelection": "Detachable",
+			"selectedLinkType": "Straight" });
+		cy.openCanvasDefinition("detachedLinksCanvas.json");
+	});
+
+	it("Test a detached link can be created and undone", function() {
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfLinks(11);
+
+		// Create detached node
+		cy.linkNodeOutputPortToPointOnCanvas("Binding (entry) node", "outPort", 200, 500);
+		cy.verifyNumberOfPortDataLinks(7); // One new data link should be created.
+		cy.verifyNumberOfLinks(12);
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPortDataLinks(6); // The data link should have been removed.
+		cy.verifyNumberOfLinks(11);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(7); // The data link should have been added back.
+		cy.verifyNumberOfLinks(12);
+	});
+
+	it("Test a node can be deleted and leave detached links behind", function() {
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Delete the supernode
+		cy.deleteNodeUsingContextMenu("Super node");
+		cy.verifyNumberOfPortDataLinks(6); // Data links should remain
+		cy.verifyNumberOfCommentLinks(3); // Comment link should be deleted
+		cy.verifyNumberOfAssociationLinks(1); // Association links should be unaffected
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPortDataLinks(6); // Data links should remain
+		cy.verifyNumberOfCommentLinks(4); // Comment link should be replaced
+		cy.verifyNumberOfAssociationLinks(1); // Association links should be unaffected
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(6); // Data links should remain
+		cy.verifyNumberOfCommentLinks(3); // Comment link should be removed
+		cy.verifyNumberOfAssociationLinks(1); // Association links should be unaffected
+	});
+
+	it("Test selected detached links can be deleted", function() {
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Select and delete the fully detached link
+		cy.clickLink("total-detached-dddd-dddddddddd");
+		cy.clickToolbarDelete();
+		cy.verifyNumberOfPortDataLinks(5); // The data link should be removed
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Select and delete the two semi-detached links
+		cy.clickLink("source-attached-dddddddddd");
+		cy.ctrlOrCmdClickLink("target-attached-dddddddddd");
+		cy.clickToolbarDelete();
+		cy.verifyNumberOfPortDataLinks(3); // The data links should be removed
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPortDataLinks(5); // The data links should be added back
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPortDataLinks(6); // The fully detached link should be added back
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(5); // The fully detached link should be added back
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(3); // The fully detached link should be added back
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+	});
+
+	it("Test deleting nodes (linked with data links) leaves detached links behind", function() {
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Select and delete the source semi-detached link, the data link from
+		// execution node to supernode, and the model node.
+		cy.clickNode("Binding (entry) node");
+		cy.ctrlOrCmdClickNode("Execution node");
+		cy.ctrlOrCmdClickNode("Super node");
+		cy.ctrlOrCmdClickNode("Model Node");
+		cy.ctrlOrCmdClickNode("Binding (exit) node");
+		cy.clickToolbarDelete();
+		cy.verifyNumberOfPortDataLinks(6); // All data links should remain
+		cy.verifyNumberOfCommentLinks(0); // All comment links should be removed
+		cy.verifyNumberOfAssociationLinks(0); // Association link should be removed
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(0);
+		cy.verifyNumberOfAssociationLinks(0);
+	});
+
+	it("Test a combination of detached links, regular links and nodes can be deleted", function() {
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Select and delete the source semi-detached link, the data link from
+		// execution node to supernode, and the model node.
+		cy.clickLink("source-attached-dddddddddd");
+		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.ctrlOrCmdClickNode("Model Node");
+		cy.clickToolbarDelete();
+		cy.verifyNumberOfPortDataLinks(4); // The data links should be removed
+		cy.verifyNumberOfCommentLinks(3); // Comment link to model node should be removed
+		cy.verifyNumberOfAssociationLinks(0); // Association link should be removed
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyNumberOfCommentLinks(3);
+		cy.verifyNumberOfAssociationLinks(0);
+	});
 });

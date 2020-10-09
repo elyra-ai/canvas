@@ -17,6 +17,7 @@ export default class BlueEllipsesCanvas extends React.Component {
 		this.config = Object.assign({}, props.config, {
 			enableParentClass: "blue-ellipses",
 			enableNodeFormatType: "Vertical",
+			enableLinkSelection: "None",
 			enableNodeLayout:
 				{
 					bodyPath: "     M  0 30 Q  0  0 60  0 Q 120  0 120 30 Q 120 60 60 60 Q  0 60  0 30 Z",

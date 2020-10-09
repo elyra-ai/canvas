@@ -231,6 +231,7 @@
                 {
                   "id": "b54e3f37-4daf-41fc-877b-e0316253fc81",
                   "node_id_ref": "id2PZSCTRPRIJ",
+                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "d3-data-link",
@@ -257,8 +258,7 @@
                         }
                       ]
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }

@@ -135,6 +135,16 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 		stroke-width: 2;
 	}
 
+	.d3-node-group[data-new-link-over="yes"] {
+		.d3-node-selection-highlight {
+			stroke: $interactive-01;
+			stroke-dasharray: 4;
+			stroke-width: 1;
+			fill: $ui-01;
+			pointer-events: none;
+		}
+	}
+
 	.d3-node-port-input-arrow {
 		stroke: transparent;
 		fill: transparent;
@@ -158,6 +168,14 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 		fill: transparent;
 		pointer-events: none;
 	}
+}
+
+/* Drop zone customized text style */
+.dropzone-canvas-text {
+	position: absolute;
+	top: 100px;
+	left: 90px;
+	color: $ui-04;
 }
 
 /* This styles are used in the decoratorCanvas.json canvas file. */

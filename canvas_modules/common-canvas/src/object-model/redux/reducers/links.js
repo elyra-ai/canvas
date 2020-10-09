@@ -41,7 +41,9 @@ export default (state = [], action) => {
 			Object.assign(newLink, {
 				"srcNodePortId": action.data.srcNodePortId,
 				"trgNodePortId": action.data.trgNodePortId,
-				"linkName": action.data.linkName });
+				"linkName": action.data.linkName,
+				"srcPos": action.data.srcPos,
+				"trgPos": action.data.trgPos });
 		}
 		return [
 			...state,
@@ -57,6 +59,32 @@ export default (state = [], action) => {
 	case "DELETE_LINKS": {
 		return state.filter((link) => {
 			return action.data.linksToDelete.findIndex((delLnk) => link.id === delLnk.id) === -1;
+		});
+	}
+
+	case "UPDATE_LINK": {
+		return state.map((link) => {
+			if (link.id === action.data.link.id) {
+				const newLink = Object.assign({}, link, action.data.link);
+				// Each link can only have either srcNodeId/srcNodePortId or srcPos so
+				// ensure the one is deleted in the presence of the other.
+				if (action.data.link.srcPos) {
+					delete newLink.srcNodeId;
+					delete newLink.srcNodePortId;
+				} else if (action.data.link.srcNodeId) {
+					delete newLink.srcPos;
+				}
+				// Each link can only have either trgNodeId/trgNodePortId or trgPos so
+				// ensure the one is deleted in the presence of the other.
+				if (action.data.link.trgPos) {
+					delete newLink.trgNodeId;
+					delete newLink.trgNodePortId;
+				} else if (action.data.link.trgNodeId) {
+					delete newLink.trgPos;
+				}
+				return newLink;
+			}
+			return link;
 		});
 	}
 

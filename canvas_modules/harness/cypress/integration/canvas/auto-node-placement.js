@@ -28,14 +28,14 @@ describe("Test auto layout variations", function() {
 		// Double click Object Store node on canvas
 		cy.clickCategory("Export");
 		cy.doubleClickNodeInCategory("Object Store");
-		cy.verifyNodeTransform("Object Store", "translate(50, 50)");
+		cy.verifyNodeTransform("Object Store", 50, 50);
 		cy.verifyNumberOfNodes(1);
 		cy.verifyNumberOfPortDataLinks(0);
 
 		// Double click Table node on canvas
 		cy.clickCategory("Outputs");
 		cy.doubleClickNodeInCategory("Table");
-		cy.verifyNodeTransform("Table", "translate(200, 50)");
+		cy.verifyNodeTransform("Table", 200, 50);
 		cy.verifyNumberOfNodes(2);
 		cy.verifyNumberOfPortDataLinks(0);
 
@@ -52,82 +52,82 @@ describe("Test auto layout variations", function() {
 		// Double click Var. File node on canvas
 		cy.clickCategory("Import");
 		cy.doubleClickNodeInCategory("Var. File");
-		cy.verifyNodeTransform("Var. File", "translate(50, 50)");
+		cy.verifyNodeTransform("Var. File", 50, 50);
 		cy.verifyNumberOfNodes(1);
 		cy.verifyNumberOfPortDataLinks(0);
 
 		// Double click Select node on canvas
 		cy.clickCategory("Record Ops");
 		cy.doubleClickNodeInCategory("Select");
-		cy.verifyNodeTransform("Select", "translate(200, 50)");
+		cy.verifyNodeTransform("Select", 200, 50);
 		cy.verifyNumberOfNodes(2);
 		cy.verifyNumberOfPortDataLinks(1);
 
 		// Double click Sample node on canvas
 		cy.doubleClickNodeInCategory("Sample");
-		cy.verifyNodeTransform("Sample", "translate(350, 50)");
+		cy.verifyNodeTransform("Sample", 350, 50);
 		cy.verifyNumberOfNodes(3);
 		cy.verifyNumberOfPortDataLinks(2);
 
 		// Double click Merge node on canvas
 		cy.doubleClickNodeInCategory("Merge");
-		cy.verifyNodeTransform("Merge", "translate(500, 50)");
+		cy.verifyNodeTransform("Merge", 500, 50);
 		cy.verifyNumberOfNodes(4);
 		cy.verifyNumberOfPortDataLinks(3);
 
 		// Select Var. File node
-		cy.getNodeWithLabel("Var. File").click();
+		cy.clickNode("Var. File");
 
 		// Double click Sort node on canvas
 		cy.doubleClickNodeInCategory("Sort");
-		cy.verifyNodeTransform("Sort", "translate(200, 205)");
+		cy.verifyNodeTransform("Sort", 200, 205);
 		cy.verifyNumberOfNodes(5);
 		cy.verifyNumberOfPortDataLinks(4);
 
 		// Double click Aggregate node on canvas
 		cy.doubleClickNodeInCategory("Aggregate");
-		cy.verifyNodeTransform("Aggregate", "translate(350, 205)");
+		cy.verifyNodeTransform("Aggregate", 350, 205);
 		cy.verifyNumberOfNodes(6);
 		cy.verifyNumberOfPortDataLinks(5);
 
 		// Select Aggregate node
-		cy.getNodeWithLabel("Aggregate").click();
+		cy.clickNode("Aggregate");
 
 		// Double click Balance node on canvas
 		cy.doubleClickNodeInCategory("Balance");
-		cy.verifyNodeTransform("Balance", "translate(500, 205)");
+		cy.verifyNodeTransform("Balance", 500, 205);
 		cy.verifyNumberOfNodes(7);
 		cy.verifyNumberOfPortDataLinks(6);
 
 		// Double click Database node on canvas
 		cy.clickCategory("Import");
 		cy.doubleClickNodeInCategory("Database");
-		cy.verifyNodeTransform("Database", "translate(50, 360)");
+		cy.verifyNodeTransform("Database", 50, 360);
 		cy.verifyNumberOfNodes(8);
 		cy.verifyNumberOfPortDataLinks(6);
 
 		// Select Database node
-		cy.getNodeWithLabel("Database").click();
+		cy.clickNode("Database");
 
 		// Double click Type node on canvas
 		cy.clickCategory("Field Ops");
 		cy.doubleClickNodeInCategory("Type");
-		cy.verifyNodeTransform("Type", "translate(200, 360)");
+		cy.verifyNodeTransform("Type", 200, 360);
 		cy.verifyNumberOfNodes(9);
 		cy.verifyNumberOfPortDataLinks(7);
 
 		// Select Type node
-		cy.getNodeWithLabel("Type").click();
+		cy.clickNode("Type");
 
 		// Double click Object Store node on canvas
 		cy.clickCategory("Export");
 		cy.doubleClickNodeInCategory("Object Store");
-		cy.verifyNodeTransform("Object Store", "translate(350, 360)");
+		cy.verifyNodeTransform("Object Store", 350, 360);
 		cy.verifyNumberOfNodes(10);
 		cy.verifyNumberOfPortDataLinks(8);
 
 		// Select Object Store node
-		cy.getNodeWithLabel("Object Store").click();
+		cy.clickNode("Object Store");
 
 		// Double click Object Store node on canvas
 		cy.doubleClickNodeInCategory("Object Store");

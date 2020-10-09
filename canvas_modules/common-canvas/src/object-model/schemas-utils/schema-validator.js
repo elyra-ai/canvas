@@ -92,14 +92,14 @@ function validateAgainstSchema(data, schema, type, validator) {
 
 function getV1Validator() {
 	const validator1 = new SchemaValidator();
-	const prefix = "http://www.ibm.com/ibm/";
-	validator1.addSchema(pipelineFlowUIV1Schema, prefix + "wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/pipeline_overview_def");
-	validator1.addSchema(pipelineFlowUIV1Schema, prefix + "wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/pipeline_def");
-	validator1.addSchema(pipelineFlowUIV1Schema, prefix + "wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/port_info_def");
-	validator1.addSchema(pipelineFlowUIV1Schema, prefix + "wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/node_info_def");
-	validator1.addSchema(pipelineConnectionV1Schema, prefix + "wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_connection_def");
-	validator1.addSchema(pipelineConnectionV1Schema, prefix + "wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_data_asset_def");
-	validator1.addSchema(dataRecordMetadataV1Schema, prefix + "wml/datarecord-metadata/v1.0/datarecord-metadata-v1-schema.json#/definitions/record_schema");
+	const prefix = "http://api.dataplatform.ibm.com/schemas/common-pipeline/";
+	validator1.addSchema(pipelineFlowUIV1Schema, prefix + "pipeline-flow/pipeline-flow-ui-schema.json#/definitions/pipeline_overview_def");
+	validator1.addSchema(pipelineFlowUIV1Schema, prefix + "pipeline-flow/pipeline-flow-ui-schema.json#/definitions/pipeline_def");
+	validator1.addSchema(pipelineFlowUIV1Schema, prefix + "pipeline-flow/pipeline-flow-ui-schema.json#/definitions/port_info_def");
+	validator1.addSchema(pipelineFlowUIV1Schema, prefix + "pipeline-flow/pipeline-flow-ui-schema.json#/definitions/node_info_def");
+	validator1.addSchema(pipelineConnectionV1Schema, prefix + "pipeline-connection/pipeline-connection-v1-schema.json#/definitions/common_pipeline_connection_def");
+	validator1.addSchema(pipelineConnectionV1Schema, prefix + "pipeline-connection/pipeline-connection-v1-schema.json#/definitions/common_pipeline_data_asset_def");
+	validator1.addSchema(dataRecordMetadataV1Schema, prefix + "datarecord-metadata/datarecord-metadata-v1-schema.json#/definitions/record_schema");
 	return validator1;
 }
 

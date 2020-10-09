@@ -53,6 +53,10 @@ function getLinkSelector(linkId, element) {
 		selector = `div > svg > g > g[data-id^="link_grp_${inst}_${linkId}"]`;
 	} else if (element === "line") {
 		selector = `div > svg > g > g[data-id^="link_grp_${inst}_${linkId}"] > path`;
+	} else if (element === "startHandle") {
+		selector = `div > svg > g > g[data-id^="link_grp_${inst}_${linkId}"] > .d3-link-handle-start`;
+	} else if (element === "endHandle") {
+		selector = `div > svg > g > g[data-id^="link_grp_${inst}_${linkId}"] > .d3-link-handle-end`;
 	}
 	return selector;
 }
@@ -62,6 +66,31 @@ Cypress.Commands.add("clickDecoratorHotspotOnLink", (decoratorId, linkName) => {
 		.find(`.d3-link-dec-group[data-id=link_dec_group_0_${decoratorId}]`)
 		.click();
 });
+
+Cypress.Commands.add("moveLinkHandleToPos", (linkId, element, xPos, yPos) => {
+	cy.window().then((win) => {
+		cy.get(getLinkSelector(linkId, element))
+			.trigger("mousedown", { view: win });
+		cy.get(".d3-svg-canvas-div > .svg-area")
+			.trigger("mousemove", xPos, yPos)
+			.trigger("mouseup", xPos, yPos, { view: win });
+	});
+});
+
+Cypress.Commands.add("moveLinkHandleToPort", (linkId, element, nodeName, portId) => {
+	cy.window().then((win) => {
+		const portElement = element === "endHandle" ? "inp_port" : "out_port";
+		cy.getNodePortSelector(nodeName, portElement, portId)
+			.then((trgSelector) => {
+				cy.get(getLinkSelector(linkId, element))
+					.trigger("mousedown", { view: win });
+				cy.get(trgSelector)
+					.trigger("mousemove", { force: true, view: win })
+					.trigger("mouseup", { force: true, view: win });
+			});
+	});
+});
+
 
 Cypress.Commands.add("linkNodes", (srcNodeName, trgNodeName) => {
 	// Link source node to target node
@@ -120,6 +149,20 @@ Cypress.Commands.add("linkNodeOutputPortToNode", (srcNodeName, srcPortId, trgNod
 						.trigger("mousemove", { force: true })
 						.trigger("mouseup", { force: true });
 				});
+		});
+});
+
+Cypress.Commands.add("linkNodeOutputPortToPointOnCanvas", (srcNodeName, srcPortId, xPos, yPos) => {
+	// This will simulate a drag from a specific port to a position on the canvas
+	// which will create a detached link when enableDetachableLinks config field
+	// is set to true.
+	cy.getNodePortSelector(srcNodeName, "out_port", srcPortId)
+		.then((srcSelector) => {
+			cy.get(srcSelector)
+				.trigger("mousedown", { button: 0 });
+			cy.get(".d3-svg-canvas-div > .svg-area")
+				.trigger("mousemove", { force: true })
+				.trigger("mouseup", xPos, yPos, { force: true });
 		});
 });
 

@@ -307,6 +307,32 @@ const haloDefaultLayout = {
 		// Display an arrow head on the data links
 		dataLinkArrowHead: true,
 
+		// Link handle for input port can be "circle" or "image".
+		linkStartHandleObject: "circle",
+
+		// Link handle image to use when linkStartHandleObject is set to "image".
+		linkStartHandleImage: "",
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkStartHandleWidth: 12,
+		linkStartHandleHeight: 12,
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkStartHandleRadius: 6,
+
+		// Link handle for input port can be "circle" or "image".
+		linkEndHandleObject: "circle",
+
+		// Link handle image to use when linkStartHandleObject is set to "image".
+		linkEndHandleImage: "",
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkEndHandleWidth: 12,
+		linkEndHandleHeight: 12,
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkEndHandleRadius: 6,
+
 		// ---------------------------------------------------------------------------
 		// Layout values for comments
 		// ---------------------------------------------------------------------------
@@ -346,6 +372,10 @@ const haloDefaultLayout = {
 		// Indicates the proximity to a node, when dragging a new connection,
 		// to switch the data-new-link-over attribute to "yes".
 		nodeProximity: 20,
+
+		// Adds additional area around the ghost areaa dragged from the palette
+		// which can increase the possibility of detecting detached links.
+		ghostAreaPadding: 10,
 
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
@@ -648,6 +678,32 @@ const portsHorizontalDefaultLayout = {
 		// Display an arrow head on the data links
 		dataLinkArrowHead: false,
 
+		// Link handle for input port can be "circle" or "image".
+		linkStartHandleObject: "circle",
+
+		// Link handle image to use when linkStartHandleObject is set to "image".
+		linkStartHandleImage: "",
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkStartHandleWidth: 12,
+		linkStartHandleHeight: 12,
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkStartHandleRadius: 5,
+
+		// Link handle for input port can be "circle" or "image".
+		linkEndHandleObject: "circle",
+
+		// Link handle image to use when linkStartHandleObject is set to "image".
+		linkEndHandleImage: "",
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkEndHandleWidth: 12,
+		linkEndHandleHeight: 12,
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkEndHandleRadius: 5,
+
 		// ---------------------------------------------------------------------------
 		// Layout values for comments
 		// ---------------------------------------------------------------------------
@@ -687,6 +743,10 @@ const portsHorizontalDefaultLayout = {
 		// Indicates the proximity to a node, when dragging a new connection,
 		// to switch the data-new-link-over attribute to "yes".
 		nodeProximity: 20,
+
+		// Adds additional area around the ghost areaa dragged from the palette
+		// which can increase the possibility of detecting detached links.
+		ghostAreaPadding: 10,
 
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
@@ -989,6 +1049,32 @@ const portsVerticalDefaultLayout = {
 		// Display an arrow head on the data links
 		dataLinkArrowHead: false,
 
+		// Link handle for input port can be "circle" or "image".
+		linkStartHandleObject: "circle",
+
+		// Link handle image to use when linkStartHandleObject is set to "image".
+		linkStartHandleImage: "",
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkStartHandleWidth: 12,
+		linkStartHandleHeight: 12,
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkStartHandleRadius: 6,
+
+		// Link handle for input port can be "circle" or "image".
+		linkEndHandleObject: "circle",
+
+		// Link handle image to use when linkStartHandleObject is set to "image".
+		linkEndHandleImage: "",
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkEndHandleWidth: 12,
+		linkEndHandleHeight: 12,
+
+		// Link handle dimensions to use when linkStartHandleObject is set to "image".
+		linkEndHandleRadius: 6,
+
 		// ---------------------------------------------------------------------------
 		// Layout values for comments
 		// ---------------------------------------------------------------------------
@@ -1028,6 +1114,10 @@ const portsVerticalDefaultLayout = {
 		// Indicates the proximity to a node, when dragging a new connection,
 		// to switch the data-new-link-over attribute to "yes".
 		nodeProximity: 20,
+
+		// Adds additional area around the ghost areaa dragged from the palette
+		// which can increase the possibility of detecting detached links.
+		ghostAreaPadding: 10,
 
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,

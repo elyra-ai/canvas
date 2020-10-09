@@ -151,7 +151,7 @@ describe("Test selecting nodes open properties", function() {
 });
 
 describe("Test changing node properties is reflected in canvas", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
 	});
@@ -189,9 +189,15 @@ describe("Test changing node properties is reflected in canvas", function() {
 		// Verify new node name exists on canvas
 		cy.getNodeWithLabel("Var File3").should("exist");
 	});
+});
+
+describe("Test changing node image is reflected in canvas", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("allTypesCanvas.json");
+	});
 
 	it("Test changing node image is reflected in canvas", function() {
-		cy.openCanvasDefinition("allTypesCanvas.json");
 
 		cy.verifyNodeImage("Execution node", "/images/nodes/sort.svg");
 

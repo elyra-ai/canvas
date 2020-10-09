@@ -139,13 +139,7 @@ Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText) 
 		.type(newCommentText);
 
 	// Click somewhere on canvas to save comment
-	if (document.extraCanvas === true) {
-		// extra-canvas
-		cy.get("#canvas-div-1").click(1, 1);
-	} else {
-		// regular canvas
-		cy.get("#canvas-div-0").click(1, 1);
-	}
+	cy.get(`#canvas-div-${document.instanceId}`).click(2, 2);
 });
 
 Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newCommentText) => {
@@ -156,7 +150,7 @@ Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newComm
 		.type(newCommentText);
 
 	// Click somewhere on canvas to save comment
-	cy.get("#canvas-div-0").click();
+	cy.get(`#canvas-div-${document.instanceId}`).click();
 });
 
 Cypress.Commands.add("editTextInCommentInSubFlowNested", (originalCommentText, newCommentText) => {

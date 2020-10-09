@@ -24,7 +24,7 @@ import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
 import * as PropertyUtils from "./../util/property-utils";
-import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS } from "./../constants/constants";
+import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
 import { has, isEqual, omit, pick, cloneDeep } from "lodash";
 import Icon from "./../../icons/icon.jsx";
@@ -157,6 +157,24 @@ class PropertiesMain extends React.Component {
 		this.initialValueInfo.additionalInfo.title = this.propertiesController.getTitle();
 	}
 
+	getApplyButtonLabel() {
+		if (this.props.propertiesConfig.buttonLabels && this.props.propertiesConfig.buttonLabels.primary) {
+			return this.props.propertiesConfig.buttonLabels.primary;
+		}
+		// Update apply button text to `Close` when applyOnBlur
+		if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout) {
+			return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
+		}
+		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
+	}
+
+	getRejectButtonLabel() {
+		if (this.props.propertiesConfig.buttonLabels && this.props.propertiesConfig.buttonLabels.secondary) {
+			return this.props.propertiesConfig.buttonLabels.secondary;
+		}
+		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
+	}
+
 	_getOverrideSize() {
 		const pixelWidth = this.propertiesController.getForm().pixelWidth;
 		const editorSizeInForm = this.propertiesController.getForm().editorSize;
@@ -283,9 +301,10 @@ class PropertiesMain extends React.Component {
 		return uiOnlyKeys;
 	}
 
-	cancelHandler() {
+	// cancelSource is "apply" if called from applyPropertiesEditing(), else "cancel"
+	cancelHandler(cancelSource) {
 		if (this.props.callbacks.closePropertiesDialog) {
-			this.props.callbacks.closePropertiesDialog();
+			this.props.callbacks.closePropertiesDialog(cancelSource);
 		}
 	}
 
@@ -324,7 +343,7 @@ class PropertiesMain extends React.Component {
 			this.previousErrorMessages = this.propertiesController.getErrorMessages();
 		}
 		if (closeProperties) {
-			this.cancelHandler(); // close property editor
+			this.cancelHandler(APPLY); // close property editor
 		}
 	}
 
@@ -357,14 +376,13 @@ class PropertiesMain extends React.Component {
 	}
 
 	render() {
-		let cancelHandler = this.cancelHandler;
-		let applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
-		// when onBlur cancel shouldn't be rendered.  Update apply button text to `Close`
+		let cancelHandler = this.cancelHandler.bind(this, CANCEL);
+		// when onBlur cancel shouldn't be rendered.
 		if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout) {
-			applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
 			cancelHandler = null;
 		}
-		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
+		const applyLabel = this.getApplyButtonLabel();
+		const rejectLabel = this.getRejectButtonLabel();
 
 		const formData = this.propertiesController.getForm();
 		if (formData !== null) {
@@ -470,7 +488,11 @@ PropertiesMain.propTypes = {
 		rightFlyout: PropTypes.bool,
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
-		conditionReturnValueHandling: PropTypes.string
+		conditionReturnValueHandling: PropTypes.string,
+		buttonLabels: PropTypes.shape({
+			primary: PropTypes.string,
+			secondary: PropTypes.string
+		})
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,

@@ -28,6 +28,9 @@ fetch.mockResponse("<svg />");
 console.warn = jest.fn(mockConsole(console.warn));
 console.error = jest.fn(mockConsole(console.error));
 
+// Added to simulate scrollIntoView for react components
+window.HTMLElement.prototype.scrollIntoView = jest.fn();
+
 function mockConsole(consoleMethod) {
 	const ignoredMessages = ["test was not wrapped in act(...)", "Rendering components directly into document.body is discouraged"];
 	return (message, ...args) => {

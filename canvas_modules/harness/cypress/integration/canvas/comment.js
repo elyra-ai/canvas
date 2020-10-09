@@ -103,7 +103,7 @@ describe("Test creating comment from toolbar and editing them within supernodes"
 		cy.dragNodeToPosition("Var. File", 400, 300);
 
 		// Add a comment using the toolbar (which should link the node to the comment)
-		cy.getNodeWithLabel("Var. File").click();
+		cy.clickNode("Var. File");
 		cy.clickToolbarAddComment();
 		cy.verifyNumberOfCommentLinks(1);
 		cy.editTextInComment("", "Inner node");
@@ -113,7 +113,7 @@ describe("Test creating comment from toolbar and editing them within supernodes"
 		cy.clickOptionFromContextMenu("Create supernode");
 
 		// Add a comment to the supernode
-		cy.getNodeWithLabel("Supernode").click();
+		cy.clickNode("Supernode");
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Inner Supernode");
 

@@ -19,6 +19,7 @@ export default class StreamsCanvas extends React.Component {
 			enableLinkType: "Elbow",
 			enablePaletteLayout: "Flyout",
 			enableParentClass: "streams",
+			enableLinkSelection: "None",
 			enableAutoLayoutVerticalSpacing: 50,
 			enableAutoLayoutHorizontalSpacing: 80,
 			enableInternalObjectModel: true,

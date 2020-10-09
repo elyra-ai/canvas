@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "description": "WDP Pipeline Flow Schema",
   "type": "object",
-  "id": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json",
+  "id": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v1-schema.json",
   "properties": {
     "doc_type": {
       "description": "Document type",
@@ -17,7 +17,7 @@
     "json_schema": {
       "description": "Refers to the JSON schema used to validate documents of this type",
       "enum": [
-        "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json"
+        "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v1-schema.json"
       ]
     },
     "open_with_tool": {
@@ -46,7 +46,7 @@
       "type": "array",
       "minItems": 0,
       "items": {
-        "$ref": "http://www.ibm.com/ibm/wml/datarecord-metadata/v1.0/datarecord-metadata-v1-schema.json#/definitions/record_schema"
+        "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v1-schema.json#/definitions/record_schema"
       },
       "uniqueItems": true
     },
@@ -221,10 +221,10 @@
           "$ref": "#/definitions/app_data_def"
         },
         "connection":{
-          "$ref":"http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_connection_def"
+          "$ref":"http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-connection/pipeline-connection-v1-schema.json#/definitions/common_pipeline_connection_def"
         },
         "data_asset":{
-          "$ref":"http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_data_asset_def"
+          "$ref":"http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-connection/pipeline-connection-v1-schema.json#/definitions/common_pipeline_data_asset_def"
         }
       },
       "required": [
@@ -254,10 +254,10 @@
           "$ref": "#/definitions/app_data_def"
         },
         "connection":{
-          "$ref":"http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_connection_def"
+          "$ref":"http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-connection/pipeline-connection-v1-schema.json#/definitions/common_pipeline_connection_def"
         },
         "data_asset":{
-          "$ref":"http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_data_asset_def"
+          "$ref":"http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-connection/pipeline-connection-v1-schema.json#/definitions/common_pipeline_data_asset_def"
         }
       },
       "required": [
@@ -443,16 +443,16 @@
         "ui_data": {
           "anyOf": [
             {
-              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/pipeline_overview_def"
+              "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v1-schema.json#/definitions/pipeline_overview_def"
             },
             {
-              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/pipeline_def"
+              "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v1-schema.json#/definitions/pipeline_def"
             },
             {
-              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/port_info_def"
+              "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v1-schema.json#/definitions/port_info_def"
             },
             {
-              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/node_info_def"
+              "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v1-schema.json#/definitions/node_info_def"
             }
           ]
         }

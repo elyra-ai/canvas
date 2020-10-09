@@ -46,6 +46,11 @@ _defineConstant("LINK_DIR_LEFT_RIGHT", "LeftRight");
 _defineConstant("LINK_DIR_TOP_BOTTOM", "TopBottom");
 _defineConstant("LINK_DIR_BOTTOM_TOP", "BottomTop");
 
+// Values for enableLinkSelection config parameter
+_defineConstant("LINK_SELECTION_NONE", "None");
+_defineConstant("LINK_SELECTION_LINK_ONLY", "LinkOnly");
+_defineConstant("LINK_SELECTION_HANDLES", "Handles");
+_defineConstant("LINK_SELECTION_DETACHABLE", "Detachable");
 
 // Values for enableAssocLinkType config parameter
 _defineConstant("ASSOC_RIGHT_SIDE_CURVE", "RightSideCurve");

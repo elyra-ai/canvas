@@ -1,3 +1,5 @@
 {
-	"palette.flyout.search.placeholder": "[Esperanto~Find palette nodes~eo]"
+	"palette.flyout.search.placeholder": "[Esperanto~Find palette nodes~~~~eo]",
+	"palette.flyout.label": "[Esperanto~Flyout Palette~eo]",
+	"palette.dialog.label": "[Esperanto~Dialog Palette~eo]"
 }

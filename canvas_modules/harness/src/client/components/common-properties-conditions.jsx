@@ -309,46 +309,49 @@ class CommonPropertiesComponents extends React.Component {
 			{ key: "dmMeasurementEquals", label: <div>dmMeasurementEquals</div> },
 			{ key: "dmMeasurementNotEquals", label: <div>dmMeasurementNotEquals</div> },
 			{ key: "dmRoleEquals", label: <div>dmMeasurementEquals</div> },
-			{ key: "dmRoleNotEquals", label: <div>dmMeasurementNotEquals</div> }
+			{ key: "dmRoleNotEquals", label: <div>dmMeasurementNotEquals</div> },
+			{ key: "lengthEquals", label: <div>lengthEquals</div> },
+			{ key: "lengthGreaterThan", label: <div>lengthGreaterThan</div> },
+			{ key: "lengthLessThan", label: <div>lengthLessThan</div> }
 		];
 
 		const tableConditionsData = [
 			{ Control: "checkbox (boolean)", empty: "no", greaterLessThan: "no", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "checkboxset ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "expression (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "code (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "numberfield (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "oneofselect (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "timeField (time)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "yes", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "dateField (date)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "yes", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "password (string)", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "radioset (boolean|number|string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "selectcolumn (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "yes", dmTypeNotEquals: "yes",
-				dmMeasurementEquals: "yes", dmMeasurementNotEquals: "yes", dmRoleEquals: "yes", dmRoleNotEquals: "yes" },
+				dmMeasurementEquals: "yes", dmMeasurementNotEquals: "yes", dmRoleEquals: "yes", dmRoleNotEquals: "yes", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "selectcolumns  ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "yes", dmTypeNotEquals: "yes",
-				dmMeasurementEquals: "yes", dmMeasurementNotEquals: "yes", dmRoleEquals: "yes", dmRoleNotEquals: "yes" },
+				dmMeasurementEquals: "yes", dmMeasurementNotEquals: "yes", dmRoleEquals: "yes", dmRoleNotEquals: "yes", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "someofselect ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "textarea (string/[string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "list ([primitive])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "textfield (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "yes", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "structure-list-editor ([[string]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" },
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "structuretable ([[primitive]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
-				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no" }
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" }
 		];
 
 		const tableConditionsDataTypeHeader = [
@@ -371,7 +374,8 @@ class CommonPropertiesComponents extends React.Component {
 			{ Conditions: "isDateTime", boolean: "no", string: "no", number: "no", date_time: "yes", stringArray: "no", doubleArray: "no" },
 			{ Conditions: "dmTypeEquals/dmTypeNotEquals", boolean: "no", string: "yes", number: "no", date_time: "no", stringArray: "yes", doubleArray: "no" },
 			{ Conditions: "dmMeasurementEquals/dmMeasurementNotEquals", boolean: "no", string: "yes", number: "no", date_time: "no", stringArray: "yes", doubleArray: "no" },
-			{ Conditions: "dmRoleEquals/dmRoleNotEquals", boolean: "no", string: "yes", number: "no", date_time: "no", stringArray: "yes", doubleArray: "no" }
+			{ Conditions: "dmRoleEquals/dmRoleNotEquals", boolean: "no", string: "yes", number: "no", date_time: "no", stringArray: "yes", doubleArray: "no" },
+			{ Conditions: "lengthEquals/lengthGreaterThan/lengthLessThan", boolean: "no", string: "yes", number: "no", date_time: "no", stringArray: "yes", doubleArray: "yes" }
 
 		];
 

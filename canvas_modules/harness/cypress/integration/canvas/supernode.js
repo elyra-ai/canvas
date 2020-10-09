@@ -134,7 +134,7 @@ describe("Test create supernode within a supernode with a new node from palette"
 		cy.clickOptionFromContextMenu("Expand supernode");
 
 		// Cut node on canvas and paste it inside expanded supernode
-		cy.getNodeWithLabel("Derive").click();
+		cy.clickNode("Derive");
 		cy.clickToolbarCut();
 		cy.rightClickToDisplayContextMenu(440, 300);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
@@ -221,7 +221,7 @@ describe("Test cut and copy supernode from first canvas to second canvas", funct
 		cy.get("#harness-action-bar-sidepanel-api > a").click();
 
 		// Cut supernode from regular canvas and paste in extra canvas
-		cy.getNodeWithLabel("First Supernode").click();
+		cy.clickNode("First Supernode");
 		cy.clickToolbarCut();
 		cy.clickToolbarPasteInExtraCanvas();
 
@@ -231,7 +231,7 @@ describe("Test cut and copy supernode from first canvas to second canvas", funct
 		cy.verifyNodeExistsInExtraCanvas("First Supernode");
 
 		// Create a supernode on regular canvas
-		cy.getNodeWithLabel("Multiplot").click();
+		cy.clickNode("Multiplot");
 		cy.ctrlOrCmdClickNode("Execution node");
 		cy.rightClickNode("Multiplot");
 		cy.clickOptionFromContextMenu("Create supernode");
@@ -243,7 +243,7 @@ describe("Test cut and copy supernode from first canvas to second canvas", funct
 		cy.saveFlyout();
 
 		// Copy supernode from regular canvas and paste in extra canvas
-		cy.getNodeWithLabel("Second Supernode").click();
+		cy.clickNode("Second Supernode");
 		cy.clickToolbarCopy();
 		cy.clickToolbarPasteInExtraCanvas();
 
@@ -319,7 +319,7 @@ describe("Test selecting the canvas background of expanded supernodes", function
 		cy.verifyNumberOfSelectedObjects(0);
 
 		// Select a node and ctrl/cmd click canvas background of expanded supernode
-		cy.getNodeWithLabel("Database").click();
+		cy.clickNode("Database");
 		cy.ctrlOrCmdClickExpandedCanvasBackgroundOfSupernode("Supernode1");
 		cy.verifyNumberOfSelectedObjects(2);
 
@@ -381,45 +381,45 @@ describe("Test all the nodes are correctly positioned", function() {
 		// Check the first supernode (with 5 single-port binding nodes) is correctly positioned
 		cy.rightClickNode("Supernode-5-binding");
 		cy.clickOptionFromContextMenu("Expand supernode");
-		cy.verifyNodeTransform("Supernode-5-binding", "translate(76.90125274658203, 335.5875015258789)");
+		cy.verifyNodeTransform("Supernode-5-binding", 76.90125274658203, 335.5875015258789);
 
 		// Check the two nodes in the first supernode's supernode are correctly positioned
-		cy.verifyNodeTransformInSupernode("SN1-Filler", "Supernode-5-binding", "translate(235, 496.5)");
-		cy.verifyNodeTransformInSupernode("SN1-Sample", "Supernode-5-binding", "translate(234, 594.5)");
+		cy.verifyNodeTransformInSupernode("SN1-Filler", "Supernode-5-binding", 235, 496.5);
+		cy.verifyNodeTransformInSupernode("SN1-Sample", "Supernode-5-binding", 234, 594.5);
 
 		// Check the five single-port binding nodes in the first supernode are correctly positioned
 		cy.verifyNodeTransformInSupernode(
-			"SN1-BN-INPUT0", "Supernode-5-binding", "translate(5.5325910785737875, 541.2282679742564)"
+			"SN1-BN-INPUT0", "Supernode-5-binding", 5.5325910785737875, 541.2282679742564
 		);
 		cy.verifyNodeTransformInSupernode(
-			"SN1-BN-INPUT1", "Supernode-5-binding", "translate(5.5325910785737875, 577.7189309049523)"
+			"SN1-BN-INPUT1", "Supernode-5-binding", 5.5325910785737875, 577.7189309049523
 		);
 		cy.verifyNodeTransformInSupernode(
-			"SN1-BN-OUTPUT0", "Supernode-5-binding", "translate(463.4674089214262, 522.9829365089084)"
+			"SN1-BN-OUTPUT0", "Supernode-5-binding", 463.4674089214262, 522.9829365089084
 		);
 		cy.verifyNodeTransformInSupernode(
-			"SN1-BN-OUTPUT1", "Supernode-5-binding", "translate(463.4674089214262, 559.4735994396044)"
+			"SN1-BN-OUTPUT1", "Supernode-5-binding", 463.4674089214262, 559.4735994396044
 		);
 		cy.verifyNodeTransformInSupernode(
-			"SN1-BN-OUTPUT2", "Supernode-5-binding", "translate(463.4674089214262, 595.9642623703003)"
+			"SN1-BN-OUTPUT2", "Supernode-5-binding", 463.4674089214262, 595.9642623703003
 		);
 
 		// Check the second supernode (with 2 multi-port binding nodes) is correctly positioned
 		cy.rightClickNode("Supernode-2-binding");
 		cy.clickOptionFromContextMenu("Expand supernode");
-		cy.verifyNodeTransform("Supernode-2-binding", "translate(582.5964628569782, 329.97940826416016)");
+		cy.verifyNodeTransform("Supernode-2-binding", 582.5964628569782, 329.97940826416016);
 
 		// Check the three nodes in the second supernode's sub-flow are correctly positioned
-		cy.verifyNodeTransformInSupernode("SN2-Filler", "Supernode-2-binding", "translate(752, -351.49998474121094)");
-		cy.verifyNodeTransformInSupernode("SN2-Select", "Supernode-2-binding", "translate(889.5, -344.99998474121094)");
+		cy.verifyNodeTransformInSupernode("SN2-Filler", "Supernode-2-binding", 752, -351.49998474121094);
+		cy.verifyNodeTransformInSupernode("SN2-Select", "Supernode-2-binding", 889.5, -344.99998474121094);
 		cy.verifyNodeTransformInSupernode(
-			"SN2-Sample", "Supernode-2-binding", "translate(1039.5, -351.99998474121094)"
+			"SN2-Sample", "Supernode-2-binding", 1039.5, -351.99998474121094
 		);
 
 		// Check the two single-port binding nodes in the second supernode are correctly positioned
-		cy.verifyNodeTransformInSupernode("SN2-BN-INPUT", "Supernode-2-binding", "translate(598, -351.31031669823415)");
+		cy.verifyNodeTransformInSupernode("SN2-BN-INPUT", "Supernode-2-binding", 598, -351.31031669823415);
 		cy.verifyNodeTransformInSupernode(
-			"SN2-BN-OUTPUT", "Supernode-2-binding", "translate(1193.5, -354.72815902589485)"
+			"SN2-BN-OUTPUT", "Supernode-2-binding", 1193.5, -354.72815902589485
 		);
 	});
 });

@@ -59,6 +59,7 @@ export default class ExpressionBuilder extends React.Component {
 		// This is needed to generate a render so that the selection will appear.
 		const exprValue = this.editor.getValue();
 		this.props.controller.updatePropertyValue(this.props.propertyId, exprValue, true);
+		this.lastCursorPos = this.editor.getCursor();
 	}
 
 	onSelectionChange(selection) {
@@ -113,7 +114,6 @@ export default class ExpressionBuilder extends React.Component {
 
 		return (
 			<div className="properties-expression-builder">
-				<span className="properties-expression-title">{expressionLabel}</span>
 				<ExpressionControl
 					control={this.props.control}
 					propertyId={this.props.propertyId}
@@ -123,7 +123,8 @@ export default class ExpressionBuilder extends React.Component {
 					selectionRange={this.selection}
 					onSelectionChange={this.onSelectionChange}
 					onBlur={this.onBlur}
-					height={275}
+					height={96}
+					expressionLabel={expressionLabel}
 				/>
 				<ExpressionSelectionPanel
 					controller={this.props.controller}

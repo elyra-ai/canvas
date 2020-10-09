@@ -42,13 +42,14 @@ export default class PipelineInHandler {
 	static convertPipelineToCanvasInfoPipeline(pipeline, canvasLayout) {
 		const nodes = has(pipeline, "nodes") ? pipeline.nodes : [];
 		const comments = has(pipeline, "app_data.ui_data.comments") ? pipeline.app_data.ui_data.comments : [];
+		const detachedLinks = has(pipeline, "app_data.ui_data.detached_links") ? pipeline.app_data.ui_data.detached_links : [];
 
 		var canvas = {
 			"id": pipeline.id,
 			"name": pipeline.name,
 			"nodes": this.convertNodes(nodes, canvasLayout),
 			"comments": this.convertComments(comments),
-			"links": this.convertLinks(nodes, comments),
+			"links": this.convertLinks(nodes, comments, detachedLinks),
 			"runtime_ref": pipeline.runtime_ref,
 			"app_data": pipeline.app_data,
 			"parameters": pipeline.parameters
@@ -61,6 +62,11 @@ export default class PipelineInHandler {
 		// Remove comments from app_data.ui_data as it's now stored in canvas obj.
 		if (has(canvas, "app_data.ui_data.comments")) {
 			delete canvas.app_data.ui_data.comments;
+		}
+
+		// Remove detached_links from app_data.ui_data as it's now stored in canvas obj.
+		if (has(canvas, "app_data.ui_data.detached_links")) {
+			delete canvas.app_data.ui_data.detached_links;
 		}
 		return canvas;
 	}
@@ -211,7 +217,7 @@ export default class PipelineInHandler {
 		});
 	}
 
-	static convertLinks(nodes, comments) {
+	static convertLinks(nodes, comments, detachedLinks) {
 		const links = [];
 
 		nodes.forEach((node) => {
@@ -220,37 +226,8 @@ export default class PipelineInHandler {
 					if (input.links) {
 						input.links.forEach((link) => {
 							if (this.isNode(nodes, link.node_id_ref)) {
-								const newLink = {
-									"id": has(link, "id") ? link.id : this.getUUID(),
-									"srcNodeId": link.node_id_ref,
-									"trgNodeId": node.id,
-									"trgNodePortId": input.id,
-									"type": "nodeLink"
-								};
-								if (has(link, "app_data.ui_data.class_name")) {
-									newLink.class_name = link.app_data.ui_data.class_name;
-								}
-								if (has(link, "app_data.ui_data.style")) {
-									newLink.style = link.app_data.ui_data.style;
-								}
-								if (has(link, "app_data.ui_data.decorations")) {
-									newLink.decorations = link.app_data.ui_data.decorations;
-								}
-								if (link.app_data) {
-									newLink.app_data = this.removeUiDataFromAppData(link.app_data);
-								}
-								if (link.port_id_ref) { // according to the spec, port_id_ref is optional for links
-									newLink.srcNodePortId = link.port_id_ref;
-								}
-								if (link.link_name) { // link_name is also optional
-									newLink.linkName = link.link_name;
-								}
-								if (link.type_attr) { // type_attr is also optional
-									newLink.typeAttr = link.type_attr;
-								}
-								if (link.description) { // description is also optional
-									newLink.description = link.description;
-								}
+								const newLink =
+									this.createDataLink(link, link.node_id_ref, link.port_id_ref, node.id, input.id);
 								links.push(newLink);
 							}
 						});
@@ -258,7 +235,7 @@ export default class PipelineInHandler {
 				});
 			}
 
-			// association links are defined in UI data
+			// Association links are defined in UI data
 			if (has(node, "app_data.ui_data.associations") && !isEmpty(node.app_data.ui_data.associations)) {
 				node.app_data.ui_data.associations.forEach((association) => {
 					if (this.isNode(nodes, association.node_ref)) {
@@ -305,6 +282,21 @@ export default class PipelineInHandler {
 			}
 		});
 
+		// Detached links are defined in the UI data
+		detachedLinks.forEach((detLink) => {
+			const newDetLink = this.createDataLink(detLink,
+				detLink.src_node_id, detLink.src_node_port_id,
+				detLink.trg_node_id, detLink.trg_node_port_id);
+
+			if (detLink.src_pos) {
+				newDetLink.srcPos = detLink.src_pos;
+			}
+			if (detLink.trg_pos) {
+				newDetLink.trgPos = detLink.trg_pos;
+			}
+			links.push(newDetLink);
+		});
+
 		return links;
 	}
 
@@ -318,6 +310,46 @@ export default class PipelineInHandler {
 
 	static getUUID() {
 		return uuid4();
+	}
+
+	// Creates a new internal link from the pipelineFlow link and node and port
+	// info passed in. This is used for create a regular data link and also a
+	// detached data link. For a detached data link the node and port info passed
+	// in is undefined.
+	static createDataLink(link, srcNodeId, srcNodePortId, trgNodeId, trgNodePortId) {
+		const newLink = {
+			"id": has(link, "id") ? link.id : this.getUUID(),
+			"srcNodeId": srcNodeId,
+			"trgNodeId": trgNodeId,
+			"trgNodePortId": trgNodePortId,
+			"type": "nodeLink"
+		};
+		if (has(link, "app_data.ui_data.class_name")) {
+			newLink.class_name = link.app_data.ui_data.class_name;
+		}
+		if (has(link, "app_data.ui_data.style")) {
+			newLink.style = link.app_data.ui_data.style;
+		}
+		if (has(link, "app_data.ui_data.decorations")) {
+			newLink.decorations = link.app_data.ui_data.decorations;
+		}
+		if (link.app_data) {
+			newLink.app_data = this.removeUiDataFromAppData(link.app_data);
+		}
+		if (srcNodePortId) { // according to the spec, port_id_ref is optional for links
+			newLink.srcNodePortId = srcNodePortId;
+		}
+		if (link.link_name) { // link_name is also optional
+			newLink.linkName = link.link_name;
+		}
+		if (link.type_attr) { // type_attr is also optional
+			newLink.typeAttr = link.type_attr;
+		}
+		if (link.description) { // description is also optional
+			newLink.description = link.description;
+		}
+
+		return newLink;
 	}
 
 	// Removes ui_data field from appData passed in and returns the resulting

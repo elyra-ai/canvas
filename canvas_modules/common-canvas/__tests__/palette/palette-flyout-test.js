@@ -15,7 +15,6 @@
  */
 
 import React from "react";
-import { shallow } from "enzyme";
 import { mountWithIntl } from "../_utils_/intl-utils";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import PaletteFlyoutContent from "../../src/palette/palette-flyout-content.jsx";
@@ -141,7 +140,7 @@ describe("Palette renders correctly", () => {
 });
 
 function createPalette() {
-	const popupPalette = shallow(
+	const popupPalette = mountWithIntl(
 		<PaletteFlyout
 			paletteJSON={testPalette2}
 			showPalette

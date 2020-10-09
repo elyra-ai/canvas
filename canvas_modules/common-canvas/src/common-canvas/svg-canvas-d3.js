@@ -106,6 +106,7 @@ export default class SVGCanvasD3 {
 				this.config.enableParentClass !== config.enableParentClass ||
 				this.config.enableHightlightNodeOnNewLinkDrag !== config.enableHightlightNodeOnNewLinkDrag ||
 				this.config.enablePanIntoViewOnOpen !== config.enablePanIntoViewOnOpen ||
+				this.config.enableRightFlyoutUnderToolbar !== config.enableRightFlyoutUnderToolbar ||
 				!this.enableCanvasLayoutExactlyMatches(this.config.enableCanvasLayout, config.enableCanvasLayout) ||
 				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
 			this.logger.logStartTimer("Initializing Canvas");
@@ -276,12 +277,12 @@ export default class SVGCanvasD3 {
 		this.renderer.paletteNodeDraggedOver(nodeTemplate, x, y);
 	}
 
-	nodeTemplateDropped(nodeTemplate, mousePos) {
-		this.renderer.nodeTemplateDropped(nodeTemplate, mousePos);
+	nodeTemplateDropped(nodeTemplate, x, y) {
+		this.renderer.nodeTemplateDropped(nodeTemplate, x, y);
 	}
 
-	externalObjectDropped(dropData, mousePos) {
-		this.renderer.externalObjectDropped(dropData, mousePos);
+	externalObjectDropped(dropData, x, y) {
+		this.renderer.externalObjectDropped(dropData, x, y);
 	}
 
 	zoomTo(zoomObject) {
@@ -318,5 +319,9 @@ export default class SVGCanvasD3 {
 
 	getSvgViewportOffset() {
 		return this.renderer.getSvgViewportOffset();
+	}
+
+	getGhostNode(nodeTemplate) {
+		return this.renderer.getGhostNode(nodeTemplate);
 	}
 }

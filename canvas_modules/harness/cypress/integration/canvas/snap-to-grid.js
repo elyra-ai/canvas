@@ -25,31 +25,31 @@ describe("Test dragged node snaps to grid", function() {
 		// First move a node by an odd amount with no snap-to-grid to make sure
 		// it moves appropriately.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "None" });
-		cy.verifyNodeTransform("Binding (entry) node", "translate(89, 99.5)");
+		cy.verifyNodeTransform("Binding (entry) node", 89, 99.5);
 		cy.moveNodeToPosition("Binding (entry) node", 321, 281);
-		cy.verifyNodeTransform("Binding (entry) node", "translate(321, 280.5)");
+		cy.verifyNodeTransform("Binding (entry) node", 321, 280.5);
 
 		// Return the node to its original position
 		cy.clickToolbarUndo();
-		cy.verifyNodeTransform("Binding (entry) node", "translate(89, 99.5)");
+		cy.verifyNodeTransform("Binding (entry) node", 89, 99.5);
 
 		// Make the same change with Snap To Grid set to "During"
 		// and verify the node is at a different position.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "During" });
-		cy.verifyNodeTransform("Binding (entry) node", "translate(87.5, 105)");
+		cy.verifyNodeTransform("Binding (entry) node", 87.5, 105);
 		cy.moveNodeToPosition("Binding (entry) node", 321, 281);
-		cy.verifyNodeTransform("Binding (entry) node", "translate(315, 285)");
+		cy.verifyNodeTransform("Binding (entry) node", 315, 285);
 
 		// Return the node to its original position
 		cy.clickToolbarUndo();
-		cy.verifyNodeTransform("Binding (entry) node", "translate(87.5, 105)");
+		cy.verifyNodeTransform("Binding (entry) node", 87.5, 105);
 
 		// Make the same change with Snap To Grid set to "After"
 		// and verify the node is at a different position.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "After" });
-		cy.verifyNodeTransform("Binding (entry) node", "translate(87.5, 105)");
+		cy.verifyNodeTransform("Binding (entry) node", 87.5, 105);
 		cy.moveNodeToPosition("Binding (entry) node", 321, 281);
-		cy.verifyNodeTransform("Binding (entry) node", "translate(315, 285)");
+		cy.verifyNodeTransform("Binding (entry) node", 315, 285);
 	});
 });
 
@@ -64,31 +64,31 @@ describe("Test dragged comment snaps to grid", function() {
 		// First move a comment by an odd amount with no snap-to-grid to make sure
 		// it moves appropriately.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "None" });
-		cy.verifyCommentTransform("The 4 different node types", "translate(400, 50)");
+		cy.verifyCommentTransform("The 4 different node types", 400, 50);
 		cy.moveCommentToPosition("The 4 different node types", 321, 281);
-		cy.verifyCommentTransform("The 4 different node types", "translate(321, 281)");
+		cy.verifyCommentTransform("The 4 different node types", 321, 281);
 
 		// Return the comment to its original position
 		cy.clickToolbarUndo();
-		cy.verifyCommentTransform("The 4 different node types", "translate(400, 50)");
+		cy.verifyCommentTransform("The 4 different node types", 400, 50);
 
 		// Make the same change with Snap To Grid set to "During"
 		// and verify the comment is at a different position.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "During" });
-		cy.verifyCommentTransform("The 4 different node types", "translate(402.5, 45)");
+		cy.verifyCommentTransform("The 4 different node types", 402.5, 45);
 		cy.moveCommentToPosition("The 4 different node types", 321, 281);
-		cy.verifyCommentTransform("The 4 different node types", "translate(315, 285)");
+		cy.verifyCommentTransform("The 4 different node types", 315, 285);
 
 		// Return the comment to its original position
 		cy.clickToolbarUndo();
-		cy.verifyCommentTransform("The 4 different node types", "translate(402.5, 45)");
+		cy.verifyCommentTransform("The 4 different node types", 402.5, 45);
 
 		// Make the same change with Snap To Grid set to "After"
 		// and verify the comment is at a different position.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "After" });
-		cy.verifyCommentTransform("The 4 different node types", "translate(402.5, 45)");
+		cy.verifyCommentTransform("The 4 different node types", 402.5, 45);
 		cy.moveCommentToPosition("The 4 different node types", 321, 281);
-		cy.verifyCommentTransform("The 4 different node types", "translate(315, 285)");
+		cy.verifyCommentTransform("The 4 different node types", 315, 285);
 	});
 });
 

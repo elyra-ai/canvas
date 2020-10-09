@@ -213,6 +213,13 @@
             "description": {
               "default": "Sum: ${sum(number, number)} with (number, number). Sum: ${sum(number, 2, number)} with (number, 2, number)"
             }
+          },
+          {
+            "id": "textPanelWithoutDescription",
+            "type": "textPanel",
+            "label": {
+              "default": "This panel shouldn't have a description"
+            }
           }
         ]
       },

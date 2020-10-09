@@ -18,6 +18,9 @@
 // objects stored in redux and also the copy of canvas objects maintained by
 // the CanvasRender objects.
 
+import { ASSOCIATION_LINK, NODE_LINK } from "../common-canvas/constants/canvas-constants.js";
+
+
 export default class CanvasUtils {
 
 	static moveSurroundingNodes(newNodePositions, supernode, nodes, nodeSizingDirection, newWidth, newHeight, updateNodePos) {
@@ -210,4 +213,407 @@ export default class CanvasUtils {
 		return abs * gridSize;
 	}
 
+	// Returns the coordinate position along the edge of a rectangle where a
+	// straight should be drawn from. The line's direction originates from a
+	// point within the rectangle. The rectangle is described by the first four
+	// paramters, the origin of the line's direction is described by
+	// originX and originY which are an offset from the top left corener of
+	// the rectangle and the end point of the line is described by endX and endY.
+	static getOuterCoord(xPos, yPos, width, height, originX, originY, endX, endY) {
+		const topLeft = { x: xPos, y: yPos };
+		const topRight = { x: xPos + width, y: yPos };
+		const botLeft = { x: xPos, y: yPos + height };
+		const botRight = { x: xPos + width, y: yPos + height };
+		const center = { x: originX + xPos, y: originY + yPos };
+
+		var startPointX;
+		var startPointY;
+
+		// End point is to the right of center
+		if (endX > center.x) {
+			const topRightRatio = (center.y - topRight.y) / (center.x - topRight.x);
+			const botRightRatio = (center.y - botRight.y) / (center.x - botRight.x);
+			const ratioRight = (center.y - endY) / (center.x - endX);
+
+			// North
+			if (ratioRight < topRightRatio) {
+				startPointX = center.x - (originY / ratioRight);
+				startPointY = yPos;
+			// South
+			} else if (ratioRight > botRightRatio) {
+				startPointX = center.x + ((height - originY) / ratioRight);
+				startPointY = yPos + height;
+			// East
+			} else {
+				startPointX = xPos + width;
+				startPointY = center.y + (originX * ratioRight);
+			}
+		// End point is to the left of center
+		} else {
+			const topLeftRatio = (center.y - topLeft.y) / (center.x - topLeft.x);
+			const botLeftRatio = (center.y - botLeft.y) / (center.x - botLeft.x);
+			const ratioLeft = (center.y - endY) / (center.x - endX);
+
+			// North
+			if (ratioLeft > topLeftRatio) {
+				startPointX = center.x - (originY / ratioLeft);
+				startPointY = yPos;
+			// South
+			} else if (ratioLeft < botLeftRatio) {
+				startPointX = center.x + ((height - originY) / ratioLeft);
+				startPointY = yPos + height;
+			// West
+			} else {
+				startPointX = xPos;
+				startPointY = center.y - (originX * ratioLeft);
+			}
+		}
+
+		return { x: startPointX, y: startPointY };
+	}
+
+	// Returns true if a link of type `type` can be created between the two
+	// node/port combinations provided given the set of current links provided.
+	static isConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, type) {
+		if (type === ASSOCIATION_LINK) {
+			return this.isAssocConnectionAllowed(srcNode, trgNode, links);
+		}
+		return this.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links);
+	}
+
+	// Returns true if a node-node data link can be created between the two
+	// node/port combinations provided on a canvas where detached links are
+	// allowed, given the set of current link provided.
+	static isConnectionAllowedWithDetachedLinks(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+		if (srcNode && trgNode && srcNode.id === trgNode.id) { // Cannot connect to ourselves, currently.
+			return false;
+		}
+
+		if (srcNode && trgNode && this.linkAlreadyExists(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// Returns true if a connection is allowed to the source node and port
+	// passed in given the set of current links.
+	static isSrcConnectionAllowedWithDetachedLinks(srcNodePortId, srcNode, links) {
+		if (srcNode && !this.doesNodeHaveOutputPorts(srcNode)) {
+			return false;
+		}
+
+		if (srcNode && this.isSrcCardinalityAtMax(srcNodePortId, srcNode, links)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// Returns true if a connection is allowed to the target node and port
+	// passed in given the set of current links.
+	static isTrgConnectionAllowedWithDetachedLinks(trgNodePortId, trgNode, links) {
+		if (trgNode && !this.doesNodeHaveInputPorts(trgNode)) {
+			return false;
+		}
+
+		if (trgNode && this.isTrgCardinalityAtMax(trgNodePortId, trgNode, links)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// Returns true if the node has input ports.
+	static doesNodeHaveInputPorts(node) {
+		return node.inputs && node.inputs.length > 0;
+	}
+
+	// Returns true if the node has output ports.
+	static doesNodeHaveOutputPorts(node) {
+		return node.outputs && node.outputs.length > 0;
+	}
+
+	// Returns true if a regular node-node data link can be created between the
+	// two node/port combinations provided, given the current set of links
+	// passed in.
+	static isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+
+		if (!srcNode || !trgNode) { // Source ot target are not valid.
+			return false;
+		}
+
+		if (srcNode.id === trgNode.id) { // Cannot connect to ourselves, currently.
+			return false;
+		}
+
+		if (!this.doesNodeHaveInputPorts(trgNode)) {
+			return false;
+		}
+
+		if (this.linkAlreadyExists(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
+			return false;
+		}
+
+		if (this.isCardinalityAtMax(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// Returns true if an association link can be created between two nodes
+	// identified by the objects provided.
+	static isAssocConnectionAllowed(srcNode, trgNode, links) {
+		if (!srcNode || !trgNode) { // Source or target are not valid.
+			return false;
+		}
+
+		if (srcNode.id === trgNode.id) { // Cannot connect to ourselves, currently.
+			return false;
+		}
+
+		if (this.assocLinkAlreadyExists(srcNode, trgNode, links)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// Returns true if an association link already exists between the two nodes
+	// passed in given the set of links passd in.
+	static assocLinkAlreadyExists(srcNode, trgNode, links) {
+		let exists = false;
+
+		links.forEach((link) => {
+			if ((link.srcNodeId === srcNode.id && link.trgNodeId === trgNode.id) ||
+					(link.srcNodeId === trgNode.id && link.trgNodeId === srcNode.id)) {
+				exists = true;
+			}
+		});
+		return exists;
+	}
+
+	// Returns true if a link already exists from the source node and port to
+	// the target node and port passed in given the set of links passd in.
+	static linkAlreadyExists(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+		let exists = false;
+
+		links.forEach((link) => {
+			if (link.srcNodeId === srcNode.id &&
+					(!link.srcNodePortId || link.srcNodePortId === srcNodePortId) &&
+					link.trgNodeId === trgNode.id &&
+					(!link.trgNodePortId || link.trgNodePortId === trgNodePortId)) {
+				exists = true;
+			}
+		});
+		return exists;
+	}
+
+	// Returns true if the cardinality is maxed out for the source and target
+	// nodes and ports passed in. This means any additional connection would
+	// not be allowed from either node/port combination.
+	static isCardinalityAtMax(srcPortId, trgPortId, srcNode, trgNode, links) {
+		return this.isSrcCardinalityAtMax(srcPortId, srcNode, links) ||
+			this.isTrgCardinalityAtMax(trgPortId, trgNode, links);
+	}
+
+	// Returns true if the cardinality is maxed out for the source node and port
+	// passed in. This means any additional connection would not be allowed
+	// from this source node/port combination.
+	static isSrcCardinalityAtMax(srcPortId, srcNode, links) {
+		var srcCount = 0;
+
+		links.forEach((link) => {
+			if (link.type === NODE_LINK) {
+				if (link.srcNodeId === srcNode.id && srcPortId) {
+					if (link.srcNodePortId === srcPortId ||
+							(!link.srcNodePortId && this.isFirstPort(srcNode.outputs, srcPortId))) {
+						srcCount++;
+					}
+				}
+			}
+		});
+
+		if (srcCount > 0) {
+			const srcPort = this.getPort(srcNode.outputs, srcPortId);
+			if (srcPort &&
+					srcPort.cardinality &&
+					Number(srcPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed
+					srcCount >= Number(srcPort.cardinality.max)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// Returns true if the cardinality is maxed out for the taget node and port
+	// passed in. This means any additional connection would not be allowed
+	// to this target node/port combination.
+	static isTrgCardinalityAtMax(trgPortId, trgNode, links) {
+		var trgCount = 0;
+
+		links.forEach((link) => {
+			if (link.type === NODE_LINK) {
+				if (link.trgNodeId === trgNode.id && trgPortId) {
+					if (link.trgNodePortId === trgPortId ||
+							(!link.trgNodePortId && this.isFirstPort(trgNode.inputs, trgPortId))) {
+						trgCount++;
+					}
+				}
+			}
+		});
+
+		if (trgCount > 0) {
+			const trgPort = this.getPort(trgNode.inputs, trgPortId);
+			if (trgPort &&
+					trgPort.cardinality &&
+					Number(trgPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed
+					trgCount >= Number(trgPort.cardinality.max)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// Returns true if the portId passed in specifies the first port in the
+	// port array.
+	static isFirstPort(portArray, portId) {
+		const index = portArray.findIndex((port) => port.id === portId);
+
+		if (index === 0) {
+			return true;
+		}
+		return false;
+	}
+
+	// Returns the port from the port array indicated by the portId.
+	static getPort(portArray, portId) {
+		const index = portArray.findIndex((port) => port.id === portId);
+
+		if (index > -1) {
+			return portArray[index];
+		}
+		return null;
+	}
+
+	// Returns true if a connection is allowed from a comment to a target node,
+	// given the set of links passed in. At the moment this is only restricted
+	// if a current link exists between the two.
+	static isCommentLinkConnectionAllowed(commentId, trgNodeId, links) {
+		return !this.commentLinkAlreadyExists(commentId, trgNodeId, links);
+	}
+
+	// Returns true if a comment link already exists from the source comment
+	// to the target node, given the set of links passed in.
+	static commentLinkAlreadyExists(commentId, trgNodeId, links) {
+		let exists = false;
+
+		links.forEach((link) => {
+			if (link.srcNodeId === commentId &&
+					link.trgNodeId === trgNodeId) {
+				exists = true;
+			}
+		});
+		return exists;
+	}
+
+	// Returns an array of info objects that describe how links need to be updated
+	// during attach actions. The array is based on the array of
+	// detached links passed in and has one entry for each detached link that can
+	// be added to the node passed in. The output object contains the array of
+	// new links and an array of the original links. allDataLinks is the array of
+	// all node-node data links on the canvas.
+	static getDetachedLinksToUpdate(node, detachedLinks, allNodeDataLinks) {
+		const newLinks = [];
+		const oldLinks = [];
+		detachedLinks.forEach((link) => {
+			if (link.srcPos && node.outputs && node.outputs.length > 0) {
+				node.outputs.forEach((output) => {
+					if (this.isSrcConnectionAllowedWithDetachedLinks(output.id, node, allNodeDataLinks)) {
+						const newLink = Object.assign({}, link, { srcNodeId: node.id, srcNodePortId: output.id });
+						delete newLink.srcPos;
+						newLinks.push(newLink);
+						oldLinks.push(link);
+					}
+				});
+
+			} else if (link.trgPos && node.inputs && node.inputs.length > 0) {
+				node.inputs.forEach((input) => {
+					if (this.isTrgConnectionAllowedWithDetachedLinks(input.id, node, allNodeDataLinks)) {
+						const newLink = Object.assign({}, link, { trgNodeId: node.id, trgNodePortId: input.id });
+						delete newLink.trgPos;
+						newLinks.push(newLink);
+						oldLinks.push(link);
+					}
+				});
+			}
+		});
+		return { newLinks, oldLinks };
+	}
+
+
+	// Returns an array of selected object IDs for nodes, comments and links
+	// that are within the region provided. Links are only included if
+	// includeLinks is truthy.
+	static selectInRegion(region, pipeline, includeLinks) {
+		var regionSelections = [];
+		for (const node of pipeline.nodes) {
+			if (!this.isSupernodeBinding(node) && // Don't include binding nodes in select
+					region.x1 < node.x_pos + node.width &&
+					region.x2 > node.x_pos &&
+					region.y1 < node.y_pos + node.height &&
+					region.y2 > node.y_pos) {
+				regionSelections.push(node.id);
+			}
+		}
+		for (const comment of pipeline.comments) {
+			if (region.x1 < comment.x_pos + comment.width &&
+					region.x2 > comment.x_pos &&
+					region.y1 < comment.y_pos + comment.height &&
+					region.y2 > comment.y_pos) {
+				regionSelections.push(comment.id);
+			}
+		}
+		if (includeLinks) {
+			for (const link of pipeline.links) {
+				let srcInRegion = false;
+				if ((link.srcPos && this.isPosInArea(link.srcPos, region, 0)) ||
+						this.isSelected(link.srcNodeId, regionSelections)) {
+					srcInRegion = true;
+				}
+				let trgInRegion = false;
+				if ((link.trgPos && this.isPosInArea(link.trgPos, region, 0)) ||
+						this.isSelected(link.trgNodeId, regionSelections)) {
+					trgInRegion = true;
+				}
+				if (srcInRegion && trgInRegion) {
+					regionSelections.push(link.id);
+				}
+			}
+		}
+
+		return regionSelections;
+	}
+
+	// Returns true if the ID passed in is in the array.
+	static isSelected(nodeId, array) {
+		return array.findIndex((id) => id === nodeId) !== -1;
+	}
+
+	// Return true if the position provided is within the area provided.
+	static isPosInArea(pos, area, pad) {
+		return pos.x_pos > area.x1 - pad &&
+			pos.x_pos < area.x2 + pad &&
+			pos.y_pos > area.y1 - pad &&
+			pos.y_pos < area.y2 + pad;
+	}
+
+	// Returns true if the node passed in a binding node within a supernode's
+	// subflow.
+	static isSupernodeBinding(node) {
+		return node.isSupernodeInputBinding || node.isSupernodeOutputBinding;
+	}
 }

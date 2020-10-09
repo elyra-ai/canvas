@@ -29,6 +29,7 @@ export default class FlowsCanvas extends React.Component {
 			enableLinkType: "Straight",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",
+			enableLinkSelection: "None",
 			paletteInitialState: true,
 			enableDropZoneOnExternalDrag: true,
 			enableHightlightNodeOnNewLinkDrag: true,
@@ -58,8 +59,8 @@ export default class FlowsCanvas extends React.Component {
 				portRadius: 10,
 				inputPortLeftPosX: 0,
 				inputPortLeftPosY: 28,
-				outputPortRightPosX: 0,
-				outputPortRightPosY: 28,
+				outputPortRightPosX: 5,
+				outputPortRightPosY: 30,
 				outputPortObject: "image",
 				outputPortImage: "/images/custom-canvases/flows/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,
@@ -70,7 +71,8 @@ export default class FlowsCanvas extends React.Component {
 			enableCanvasLayout: {
 				dataLinkArrowHead: true,
 				linkGap: 4,
-				displayLinkOnOverlap: false
+				displayLinkOnOverlap: false,
+				linkHandleRaiseToTop: false
 			}
 		});
 		return config;

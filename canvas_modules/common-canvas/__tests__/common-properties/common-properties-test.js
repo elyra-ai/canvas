@@ -32,6 +32,7 @@ import structureListEditorParamDef from "../test_resources/paramDefs/structureli
 import structureEditorParamDef from "../test_resources/paramDefs/structureeditor_paramDef.json";
 import { IntlProvider } from "react-intl";
 
+import { CARBON_MODAL_SIZE_XSMALL, CARBON_MODAL_SIZE_SMALL, CARBON_MODAL_SIZE_LARGE } from "./../../src/common-properties/constants/constants";
 
 const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
@@ -183,13 +184,6 @@ describe("CommonProperties works correctly in flyout", () => {
 		commonProperties.simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 2);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
-	});
-
-	it("When applyOnBlur=false `Cancel` and `Save` buttons should be rendered", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { applyOnBlur: false });
-		wrapper = renderedObject.wrapper;
-		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("Save");
-		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("Cancel");
 	});
 
 	it("When applyOnBlur=false applyPropertyChanges should not be called", () => {
@@ -374,6 +368,46 @@ describe("CommonProperties works correctly in flyout", () => {
 	});
 });
 
+describe("Common properties modals return the correct Carbon modal size", () => {
+	let wrapper;
+	let newPropertiesInfo;
+	beforeEach(() => {
+		newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+	});
+
+	it("should return 'xs' when editor_size is 'sm'", () => {
+		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
+		const renderedObject = propertyUtils.flyoutEditorForm(newPropertiesInfo.parameterDef, { containerType: "Modal" });
+		wrapper = renderedObject.wrapper;
+		const modalInstance = wrapper.find(PropertiesDialog).instance();
+		expect(modalInstance.getCarbonModalSize()).to.equal(CARBON_MODAL_SIZE_XSMALL);
+	});
+
+	it("should return 'sm' when editor_size is 'medium'", () => {
+		newPropertiesInfo.parameterDef.uihints.editor_size = "medium";
+		const renderedObject = propertyUtils.flyoutEditorForm(newPropertiesInfo.parameterDef, { containerType: "Modal" });
+		wrapper = renderedObject.wrapper;
+		const modalInstance = wrapper.find(PropertiesDialog).instance();
+		expect(modalInstance.getCarbonModalSize()).to.equal(CARBON_MODAL_SIZE_SMALL);
+	});
+
+	it("should return 'lg' when editor_size is 'large'", () => {
+		newPropertiesInfo.parameterDef.uihints.editor_size = "large";
+		const renderedObject = propertyUtils.flyoutEditorForm(newPropertiesInfo.parameterDef, { containerType: "Modal" });
+		wrapper = renderedObject.wrapper;
+		const modalInstance = wrapper.find(PropertiesDialog).instance();
+		expect(modalInstance.getCarbonModalSize()).to.equal(CARBON_MODAL_SIZE_LARGE);
+	});
+
+	it("should return 'xs' when editor_size is not set, defaults to 'small'", () => {
+		delete newPropertiesInfo.parameterDef.uihints.editor_size;
+		const renderedObject = propertyUtils.flyoutEditorForm(newPropertiesInfo.parameterDef, { containerType: "Modal" });
+		wrapper = renderedObject.wrapper;
+		const modalInstance = wrapper.find(PropertiesDialog).instance();
+		expect(modalInstance.getCarbonModalSize()).to.equal(CARBON_MODAL_SIZE_XSMALL);
+	});
+});
+
 describe("CommonProperties validates on close in flyout", () => {
 	let wrapper;
 	afterEach(() => {
@@ -515,6 +549,29 @@ describe("applyPropertiesEditing through an instance outside Common Properties",
 	});
 });
 
+describe("closePropertiesDialog through an instance outside Common Properties", () => {
+	it("closePropertiesDialog should be called with 'apply' if through save button", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { applyOnBlur: false });
+		const commonProperties = renderedObject.wrapper.find("CommonProperties");
+		commonProperties.find("button[data-id='properties-apply-button']")
+			.at(0)
+			.simulate("click");
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 1);
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
+		expect(renderedObject.callbacks.closePropertiesDialog.calledWith("apply")).to.be.true;
+	});
+	it("closePropertiesDialog should be called with 'cancel' if through cancel button", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { applyOnBlur: false });
+		const commonProperties = renderedObject.wrapper.find("CommonProperties");
+		commonProperties.find("button[data-id='properties-cancel-button']")
+			.at(0)
+			.simulate("click");
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 1);
+		expect(renderedObject.callbacks.closePropertiesDialog.calledWith("cancel")).to.be.true;
+	});
+});
+
 describe("New error messages of a control should be detected and applyPropertyChanges() should be called onBlur and on close", () => {
 	it("An error message in expression control should trigger a applyPropertyChanges callback when editor is closed", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(expressionTestResource); // default is applyOnBlur=true
@@ -594,6 +651,63 @@ describe("CommonProperties should setForm correctly", () => {
 		const originalFormat = { "field_annotation": ["there", "you"], "first_field": "hi", "first_field_checkbox": false, "hidden_field": null };
 		const objectFormat = controller.getPropertyValues({ applyProperties: true }).structureeditorObjectType;
 		expect(objectFormat).to.eql(originalFormat);
+	});
+});
+
+describe("PropertiesButtons should render with the correct labels", () => {
+	it("When applyOnBlur=false `Cancel` and `Save` buttons should be rendered", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { applyOnBlur: false });
+		const wrapper = renderedObject.wrapper;
+		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("Save");
+		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("Cancel");
+	});
+	it("properties buttons should use a custom label if provided in propertiesConfig", () => {
+		const propertiesConfig = {
+			applyOnBlur: false,
+			buttonLabels: {
+				primary: "test apply",
+				secondary: "test reject"
+			}
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
+		const wrapper = renderedObject.wrapper;
+		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("test apply");
+		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("test reject");
+	});
+	it("apply button should use a custom label if provided in propertiesConfig", () => {
+		const propertiesConfig = {
+			applyOnBlur: false,
+			buttonLabels: {
+				primary: "test apply"
+			}
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
+		const wrapper = renderedObject.wrapper;
+		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("test apply");
+		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("Cancel");
+	});
+	it("reject button should use a custom label if provided in propertiesConfig", () => {
+		const propertiesConfig = {
+			applyOnBlur: false,
+			buttonLabels: {
+				secondary: "test reject"
+			}
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
+		const wrapper = renderedObject.wrapper;
+		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("Save");
+		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("test reject");
+	});
+	it("apply button should use a custom reject label if applyOnBlur", () => {
+		const propertiesConfig = {
+			buttonLabels: {
+				primary: "test apply",
+				secondary: "test reject"
+			}
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
+		const wrapper = renderedObject.wrapper;
+		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("test apply");
 	});
 });
 

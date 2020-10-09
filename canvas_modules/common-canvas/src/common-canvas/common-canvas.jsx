@@ -166,6 +166,10 @@ class CommonCanvas extends React.Component {
 		return this.diagramCanvasRef.current.getSvgViewportOffset();
 	}
 
+	getGhostNode(nodeTemplate) {
+		return this.diagramCanvasRef.current.getGhostNode(nodeTemplate);
+	}
+
 	getZoomToReveal(objectIds, xPos, yPos) {
 		return this.diagramCanvasRef.current.getZoomToReveal(objectIds, xPos, yPos);
 	}
@@ -329,9 +333,11 @@ class CommonCanvas extends React.Component {
 		let contextMenuWrapper = null;
 		let canvasToolbar = null;
 		let notificationPanel = null;
+		let rightSideItems = null;
 		let rightFlyout = (<div className="right-flyout-panel" />);
 		let tip = null;
 		const canvasInfo = this.objectModel.getCanvasInfo();
+		const config = this.canvasController.getCanvasConfig();
 
 		if (canvasInfo !== null) {
 			if (this.state.showContextMenu) {
@@ -344,8 +350,6 @@ class CommonCanvas extends React.Component {
 					stopPropagation
 				/>);
 			}
-
-			const config = this.canvasController.getCanvasConfig();
 
 			canvas = (
 				<DiagramCanvasD3
@@ -400,9 +404,11 @@ class CommonCanvas extends React.Component {
 		if (typeof this.state.rightFlyoutContent !== "undefined" &&
 				this.state.rightFlyoutContent !== null &&
 				this.props.showRightFlyout) {
-			rightFlyout = (<div className="right-flyout-panel">
-				{this.state.rightFlyoutContent}
-			</div>);
+			rightFlyout = (
+				<div className={"right-flyout-panel"}>
+					{this.state.rightFlyoutContent}
+				</div>
+			);
 		}
 
 		if (!isEmpty(this.state.tipDef)) {
@@ -420,6 +426,31 @@ class CommonCanvas extends React.Component {
 			/>);
 		}
 
+		if (config.enableRightFlyoutUnderToolbar) {
+			rightSideItems = (
+				<div className="common-canvas-right-side-items-under-toolbar">
+					{canvasToolbar}
+					<div id={this.itemsContainerDivId} className="common-canvas-items-container-under-toolbar">
+						{canvas}
+						{rightFlyout}
+						{notificationPanel}
+					</div>
+				</div>
+			);
+
+		} else {
+			rightSideItems = (
+				<div className="common-canvas-right-side-items">
+					<div id={this.itemsContainerDivId} className="common-canvas-items-container">
+						{canvasToolbar}
+						{canvas}
+						{notificationPanel}
+					</div>
+					{rightFlyout}
+				</div>
+			);
+		}
+
 		const className = "common-canvas" + (
 			this.props.config && this.props.config.enableParentClass
 				? " " + this.props.config.enableParentClass
@@ -428,14 +459,7 @@ class CommonCanvas extends React.Component {
 		return (
 			<div className={className} onDragOver={this.onDragOver} onDrop={this.onDrop}>
 				{palette}
-				<div className="common-canvas-right-side-items">
-					<div id={this.itemsContainerDivId} className="common-canvas-items-container">
-						{canvas}
-						{canvasToolbar}
-						{notificationPanel}
-					</div>
-					{rightFlyout}
-				</div>
+				{rightSideItems}
 				{tip}
 			</div>
 		);

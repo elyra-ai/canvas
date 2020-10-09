@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint complexity: ["error", 25] */
+/* eslint complexity: ["error", 27] */
 /* eslint max-len: ["error", 200] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
@@ -39,6 +39,7 @@ import CommonCanvasPackage from "@elyra/canvas/package.json";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
+import DetachedCanvas from "./components/custom-canvases/detached-links/detached-canvas";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
@@ -82,11 +83,13 @@ import {
 	NONE_SAVE_ZOOM,
 	CURVE_LINKS,
 	DIRECTION_LEFT_RIGHT,
+	LINK_SELECTION_NONE,
 	ASSOC_STRAIGHT,
 	UNDERLAY_NONE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
+	EXAMPLE_APP_DETACHED,
 	EXAMPLE_APP_EXPLAIN,
 	EXAMPLE_APP_EXPLAIN2,
 	EXAMPLE_APP_STREAMS,
@@ -162,7 +165,7 @@ class App extends React.Component {
 			selectedZoomIntoSubFlows: false,
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
-			selectedLinkSelection: false,
+			selectedLinkSelection: LINK_SELECTION_NONE,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
 			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedNodeLayout: EXAMPLE_APP_NONE,
@@ -173,11 +176,15 @@ class App extends React.Component {
 				"ports": true,
 				"links": true
 			},
+			selectedRightFlyoutUnderToolbar: false,
 			selectedPanIntoViewOnOpen: false,
 			selectedExtraCanvasDisplayed: false,
 			selectedSaveToPalette: false,
 			selectedDropZoneOnExternalDrag: false,
+			selectedDisplayCustomizedDropZoneContent: false,
+			selectedDisplayCustomizedEmptyCanvasContent: true,
 			selectedInsertNodeDroppedOnLink: false,
+			selectedHightlightNodeOnNewLinkDrag: false,
 			selectedCreateSupernodeNonContiguous: false,
 			selectedMoveNodesOnSupernodeResize: true,
 			selectedDisplayFullLabelOnHover: false,
@@ -1257,18 +1264,21 @@ class App extends React.Component {
 
 	tipHandler(tipType, data) {
 		if (tipType === "tipTypeLink") {
-			let sourceString = "comment";
-			if (data.link.src.outputs) {
+			let sourceString = data.link.type === "commentLink" ? "comment" : "detached source";
+			if (data.link.src && data.link.src.outputs) {
 				const srcPort = !data.link.src.outputs ? null : data.link.src.outputs.find(function(port) {
 					return port.id === data.link.srcPortId;
 				});
 				sourceString = `'${data.link.src.label}'` + (srcPort && srcPort.label ? `, port '${srcPort.label}'` : "");
 			}
 
-			const trgPort = data.link.trg.inputs.find(function(port) {
-				return port.id === data.link.trgPortId;
-			});
-			const targetString = `'${data.link.trg.label}'` + (trgPort && trgPort.label ? `, port '${trgPort.label}'` : "");
+			let targetString = "detached target";
+			if (data.link.trg && data.link.trg.inputs) {
+				const trgPort = data.link.trg.inputs.find(function(port) {
+					return port.id === data.link.trgPortId;
+				});
+				targetString = `'${data.link.trg.label}'` + (trgPort && trgPort.label ? `, port '${trgPort.label}'` : "");
+			}
 
 			return `Link from ${sourceString} to ${targetString}`;
 		}
@@ -1544,61 +1554,66 @@ class App extends React.Component {
 			currentPipelineId={currentPipelineId}
 		/>);
 
-		const navBar = (<div className="harness-app-navbar">
-			<ul className="harness-app-navbar-items">
-				<li className="harness-navbar-li">
-					<span className="harness-title">Common Canvas</span>
-					<span className="harness-version">{"v" + CommonCanvasPackage.version}</span>
-				</li>
-				<li className="harness-navbar-li harness-nav-divider" data-tip="console">
-					<a onClick={this.openConsole.bind(this) }>
-						<Isvg src={listview32} />
-					</a>
-				</li>
-				<li className="harness-navbar-li" data-tip="download">
-					<a onClick={this.download.bind(this) }>
-						<Isvg src={download32} />
-					</a>
-				</li>
-				<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
-					{breadcrumbs}
-				</li>
-				<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="API">
-					<a onClick={this.sidePanelAPI.bind(this) }>
-						<Isvg src={api32} />
-					</a>
-				</li>
-				<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip="Common Properties Modal">
-					<a onClick={this.sidePanelModal.bind(this) }>
-						<Isvg src={template32} />
-					</a>
-				</li>
-				<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="Common Canvas">
-					<a onClick={this.sidePanelCanvas.bind(this) }>
-						<Isvg src={justify32} />
-					</a>
-				</li>
-			</ul>
-		</div>);
+		const navBar = (<header aria-label="Common Canvas Header" role="banner">
+			<div className="harness-app-navbar">
+				<ul className="harness-app-navbar-items">
+					<li className="harness-navbar-li">
+						<span className="harness-title">Common Canvas</span>
+						<span className="harness-version">{"v" + CommonCanvasPackage.version}</span>
+					</li>
+					<li className="harness-navbar-li harness-nav-divider" data-tip="console">
+						<a onClick={this.openConsole.bind(this) }>
+							<Isvg src={listview32} />
+						</a>
+					</li>
+					<li className="harness-navbar-li" data-tip="download">
+						<a onClick={this.download.bind(this) }>
+							<Isvg src={download32} />
+						</a>
+					</li>
+					<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
+						{breadcrumbs}
+					</li>
+					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="API">
+						<a onClick={this.sidePanelAPI.bind(this) }>
+							<Isvg src={api32} />
+						</a>
+					</li>
+					<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip="Common Properties Modal">
+						<a onClick={this.sidePanelModal.bind(this) }>
+							<Isvg src={template32} />
+						</a>
+					</li>
+					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="Common Canvas">
+						<a onClick={this.sidePanelCanvas.bind(this) }>
+							<Isvg src={justify32} />
+						</a>
+					</li>
+				</ul>
+			</div>
+		</header>);
 
-		const emptyCanvasDiv = (
-			<div>
-				<img src={BlankCanvasImage} className="harness-empty-image" />
-				<span className="harness-empty-text">Welcome to the Common Canvas test harness.<br />Your flow is empty!</span>
-				<span className="harness-empty-link"
-					onClick={this.handleEmptyCanvasLinkClick}
-				>Click here to take a tour</span>
-			</div>);
+		let emptyCanvasDiv = null;
+		if (this.state.selectedDisplayCustomizedEmptyCanvasContent) {
+			emptyCanvasDiv = (
+				<div>
+					<img src={BlankCanvasImage} className="harness-empty-image" />
+					<span className="harness-empty-text">Welcome to the Common Canvas test harness.<br />Your flow is empty!</span>
+					<span className="harness-empty-link"
+						onClick={this.handleEmptyCanvasLinkClick}
+					>Click here to take a tour</span>
+				</div>);
+		}
 
-		// Uncomment the code below to experiement with passing in a custom div
-		// to specify the 'drop zone' content. Provide it in the dropZoneCanvasContent
-		// in the canvas config object below.
-		// const dropZoneCanvasDiv = (
-		// 	<div>
-		// 		<div className="dropzone-canvas" />
-		// 		<div className="dropzone-canvas-rect" />
-		// 		<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
-		// 	</div>);
+		let dropZoneCanvasDiv = null;
+		if (this.state.selectedDisplayCustomizedDropZoneContent) {
+			dropZoneCanvasDiv = (
+				<div>
+					<div className="dropzone-canvas" />
+					<div className="dropzone-canvas-rect" />
+					<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
+				</div>);
+		}
 
 		let parentClass = "";
 		if (this.state.selectedNodeFormat === "Vertical") {
@@ -1619,14 +1634,13 @@ class App extends React.Component {
 			enableLinkDirection: this.state.selectedLinkDirection,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
 			enableParentClass: parentClass,
-			enableNodeLayout: null,
+			enableHightlightNodeOnNewLinkDrag: this.state.selectedHightlightNodeOnNewLinkDrag,
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableLinkSelection: this.state.selectedLinkSelection,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			enableToolbarLayout: this.state.selectedToolbarLayout,
-			emptyCanvasContent: emptyCanvasDiv,
 			enableInsertNodeDroppedOnLink: this.state.selectedInsertNodeDroppedOnLink,
 			enableMoveNodesOnSupernodeResize: this.state.selectedMoveNodesOnSupernodeResize,
 			tipConfig: this.state.selectedTipConfig,
@@ -1636,10 +1650,13 @@ class App extends React.Component {
 			enableBoundingRectangles: this.state.selectedBoundingRectangles,
 			enableCanvasUnderlay: this.state.selectedCanvasUnderlay,
 			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
+			enableRightFlyoutUnderToolbar: this.state.selectedRightFlyoutUnderToolbar,
 			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
-			// dropZoneCanvasContent: dropZoneCanvasDiv,
+			dropZoneCanvasContent: dropZoneCanvasDiv,
+			emptyCanvasContent: emptyCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
+			enableNodeLayout: null,
 			// enableCanvasLayout: {
 			// 	dataLinkArrowHead: true
 			// }
@@ -1889,6 +1906,13 @@ class App extends React.Component {
 		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_TABLES) {
 			firstCanvas = (
 				<TablesCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_DETACHED) {
+			firstCanvas = (
+				<DetachedCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>

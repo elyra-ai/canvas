@@ -36,7 +36,7 @@ describe("Test to see if regular selection and drag behavior works " +
 
 		// Try dragging a single selected node
 		cy.moveNodeToPosition("Execution node", 300, 350);
-		cy.verifyNodeTransform("Execution node", "translate(300, 349.5)");
+		cy.verifyNodeTransform("Execution node", 300, 349.5);
 
 		// Select 2 nodes and 1 comment
 		cy.clickToolbarUndo();
@@ -53,8 +53,8 @@ describe("Test to see if regular selection and drag behavior works " +
 
 		// Try dragging a couple of selected nodes and a selected comment
 		cy.moveNodeToPosition("Binding (entry) node", 300, 350);
-		cy.verifyNodeTransform("Binding (entry) node", "translate(300, 349.5)");
-		cy.verifyNodeTransform("Execution node", "translate(508, 388.5)");
+		cy.verifyNodeTransform("Binding (entry) node", 300, 349.5);
+		cy.verifyNodeTransform("Execution node", 508, 388.5);
 
 		// Verify 2 nodes and 1 comment is selected after drag
 		cy.verifyNodeIsSelected("Execution node");
@@ -77,7 +77,7 @@ describe("Test to see if regular selection and drag behavior works " +
 		cy.verifyNodeIsNotSelected("Model Node");
 		cy.verifyCommentIsNotSelected("The 4 different node types");
 
-		cy.verifyNodeTransform("Super node", "translate(300, 350)");
+		cy.verifyNodeTransform("Super node", 300, 350);
 		cy.clickToolbarUndo();
 
 		// Try dragging a comment that is not selected -
@@ -101,7 +101,7 @@ describe("Test to see if regular selection and drag behavior works " +
 
 		cy.verifyCommentTransform(
 			"This canvas shows the 4 different node types and three link types: node links, " +
-			"association links and comments links.", "translate(300, 350)"
+			"association links and comments links.", 300, 350
 		);
 		cy.clickToolbarUndo();
 	});
@@ -129,7 +129,7 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 
 		// Try dragging a single selected node
 		cy.moveNodeToPosition("Execution node", 300, 350);
-		cy.verifyNodeTransform("Execution node", "translate(300, 349.5)");
+		cy.verifyNodeTransform("Execution node", 300, 349.5);
 
 		// Select 2 nodes and 1 comment
 		// TODO: Following code works on localhost but fails on travis - Skipping this test
@@ -148,8 +148,8 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 
 		// Try dragging a couple of selected nodes and a selected comment
 		cy.moveNodeToPosition("Binding (entry) node", 300, 350);
-		cy.verifyNodeTransform("Binding (entry) node", "translate(300, 349.5)");
-		cy.verifyNodeTransform("Execution node", "translate(508, 388.5)");
+		cy.verifyNodeTransform("Binding (entry) node", 300, 349.5);
+		cy.verifyNodeTransform("Execution node", 508, 388.5);
 
 		// Verify 2 nodes and 1 comment is selected after drag
 		cy.verifyNodeIsSelected("Execution node");
@@ -173,7 +173,7 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		cy.verifyNodeIsNotSelected("Model Node");
 		cy.verifyCommentIsSelected("The 4 different node types");
 
-		cy.verifyNodeTransform("Super node", "translate(300, 350)");
+		cy.verifyNodeTransform("Super node", 300, 350);
 		cy.clickToolbarUndo();
 
 		// Try dragging a comment that is not selected -
@@ -198,7 +198,7 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 
 		cy.verifyCommentTransform(
 			"This canvas shows the 4 different node types and three link types: node links, " +
-			"association links and comments links.", "translate(300, 350)"
+			"association links and comments links.", 300, 350
 		);
 		cy.clickToolbarUndo();
 	});
