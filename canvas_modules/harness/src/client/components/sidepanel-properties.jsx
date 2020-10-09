@@ -232,7 +232,6 @@ export default class SidePanelModal extends React.Component {
 			<FormGroup
 				legendText="Container Type"
 			>
-
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
 					name="properties-container_type_radio"
@@ -250,6 +249,15 @@ export default class SidePanelModal extends React.Component {
 				</RadioButtonGroup>
 			</FormGroup>
 		</div>);
+
+		const validateProperties = (
+			<div className="harness-sidepanel-children">
+				<Button size="small"
+					onClick={this.props.propertiesConfig.validateProperties}
+				>
+					Validate Properties
+				</Button>
+			</div>);
 
 		const applyOnBlur = (
 			<div className="harness-sidepanel-children">
@@ -297,6 +305,8 @@ export default class SidePanelModal extends React.Component {
 			<div>
 				{propertiesInput}
 				{divider}
+				{validateProperties}
+				{divider}
 				{containerType}
 				{divider}
 				{applyOnBlur}
@@ -316,6 +326,7 @@ SidePanelModal.propTypes = {
 	propertiesConfig: PropTypes.shape({
 		closePropertiesEditorDialog: PropTypes.func,
 		openPropertiesEditorDialog: PropTypes.func,
+		validateProperties: PropTypes.func,
 		setPropertiesJSON: PropTypes.func,
 		showPropertiesDialog: PropTypes.bool,
 		usePropertiesContainerType: PropTypes.func,
