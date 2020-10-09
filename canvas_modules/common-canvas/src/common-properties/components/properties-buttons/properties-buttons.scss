@@ -17,7 +17,6 @@
 .properties-modal-buttons {
 	justify-content: flex-end;
 	display: flex;
-	background-color: $ui-01;
 	height: 64px;
 	bottom: 0;
 	position: absolute;
@@ -29,7 +28,6 @@
 
 	.properties-apply-button, .properties-cancel-button {
 		width: 50%;
-		height: 100%;
 		max-width: unset;
 	}
 }
