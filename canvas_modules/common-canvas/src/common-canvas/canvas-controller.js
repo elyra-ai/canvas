@@ -47,7 +47,7 @@ import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import LocalStorage from "./local-storage.js";
 import has from "lodash/has";
-import { ASSOC_STRAIGHT, LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE } from "./constants/canvas-constants";
+import { ASSOC_STRAIGHT, LINK_SELECTION_NONE } from "./constants/canvas-constants";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
 // Global instance ID counter
