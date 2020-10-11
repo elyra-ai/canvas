@@ -274,3 +274,12 @@ Cypress.Commands.add("ctrlOrCmdClickLink", (linkId) => {
 			.type(selectedKey, { release: true });
 	});
 });
+
+Cypress.Commands.add("getNumberOfSelectedLinks", () => {
+	cy.getSelectedLinks()
+		.then((selectedLinks) => selectedLinks.length);
+});
+
+Cypress.Commands.add("getSelectedLinks", () => {
+	cy.document().then((doc) => doc.canvasController.getSelectedLinks());
+});

@@ -236,6 +236,25 @@ describe("Test enableLinkSelection = 'LinkOnly' configuration option", function(
 		cy.verifyLinkIsDeleted("a81684aa-9b09-4620-aa59-54035a5de913");
 	});
 
+	it("Test all objects including links are selected with SelectAll from keyboard", function() {
+		cy.shortcutKeysSelectAllCanvasObjects();
+		cy.verifyNumberOfSelectedObjects(16);
+
+		// Test delete key deletes all objects
+		cy.shortcutKeysDelete();
+		cy.verifyNumberOfSelectedObjects(0);
+	});
+
+	it("Test all objects including links are selected with SelectAll from context menu", function() {
+		cy.rightClickToDisplayContextMenu(400, 100);
+		cy.clickOptionFromContextMenu("Select All");
+		cy.verifyNumberOfSelectedObjects(16);
+
+		// Check delete in toolbar deletes all objects
+		cy.clickToolbarDelete();
+		cy.verifyNumberOfSelectedObjects(0);
+	});
+
 });
 
 describe("Test enableLinkSelection = 'Handles' configuration option", function() {
@@ -374,6 +393,26 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Binding (entry) node", "outPort", "Super node", "input2SuperNodePE", 1);
 	});
+
+	it("Test all objects including links are selected with SelectAll from keyboard", function() {
+		cy.shortcutKeysSelectAllCanvasObjects();
+		cy.verifyNumberOfSelectedObjects(16);
+
+		// Test delete key deletes all objects
+		cy.shortcutKeysDelete();
+		cy.verifyNumberOfSelectedObjects(0);
+	});
+
+	it("Test all objects including links are selected with SelectAll from context menu", function() {
+		cy.rightClickToDisplayContextMenu(400, 100);
+		cy.clickOptionFromContextMenu("Select All");
+		cy.verifyNumberOfSelectedObjects(16);
+
+		// Check delete in toolbar deletes all objects
+		cy.clickToolbarDelete();
+		cy.verifyNumberOfSelectedObjects(0);
+	});
+
 });
 
 describe("Test selectedLinkSelection = 'Detachable' configuration option", function() {
@@ -531,4 +570,24 @@ describe("Test selectedLinkSelection = 'Detachable' configuration option", funct
 		cy.verifyNumberOfCommentLinks(3);
 		cy.verifyNumberOfAssociationLinks(0);
 	});
+
+	it("Test all objects including links are selected with SelectAll from keyboard", function() {
+		cy.shortcutKeysSelectAllCanvasObjects();
+		cy.verifyNumberOfSelectedObjects(18);
+
+		// Test delete key deletes all objects
+		cy.shortcutKeysDelete();
+		cy.verifyNumberOfSelectedObjects(0);
+	});
+
+	it("Test all objects including links are selected with SelectAll from context menu", function() {
+		cy.rightClickToDisplayContextMenu(400, 100);
+		cy.clickOptionFromContextMenu("Select All");
+		cy.verifyNumberOfSelectedObjects(18);
+
+		// Check delete in toolbar deletes all objects
+		cy.clickToolbarDelete();
+		cy.verifyNumberOfSelectedObjects(0);
+	});
+
 });

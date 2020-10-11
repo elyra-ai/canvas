@@ -740,9 +740,9 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "SET_CANVAS_INFO", canvasInfo: canvasInfo, currentCanvasInfo: this.getCanvasInfo() });
 	}
 
-	isPrimaryPipelineEmpty() {
+	isPrimaryPipelineEmpty(includeLinks) {
 		const primaryPipeline = this.getAPIPipeline(this.getCanvasInfo().primary_pipeline);
-		return primaryPipeline.isEmpty();
+		return primaryPipeline.isEmpty(includeLinks);
 	}
 
 	getPipelineFlowId() {
@@ -1079,19 +1079,23 @@ export default class ObjectModel {
 		apiPipeline.deleteObjects(this.getSelectedObjectIds());
 	}
 
-	selectAll(pipelineId) {
+	selectAll(includeLinks, pipelineId) {
 		const selected = [];
-		const pipeId = pipelineId ? pipelineId : this.getAPIPipeline().pipelineId; // If no pipelineId is provided use the default pipelineId.
-		const pipeline = this.getAPIPipeline(pipeId);
-		for (const node of pipeline.getNodes()) {
+		const apiPipeline = this.getAPIPipeline(pipelineId);
+		for (const node of apiPipeline.getNodes()) {
 			if (!this.isSupernodeBinding(node)) { // Dont allow supernode binding nodes to be selected
 				selected.push(node.id);
 			}
 		}
-		for (const comment of pipeline.getComments()) {
+		for (const comment of apiPipeline.getComments()) {
 			selected.push(comment.id);
 		}
-		this.setSelections(selected, pipeId);
+		if (includeLinks) {
+			for (const link of apiPipeline.getLinks()) {
+				selected.push(link.id);
+			}
+		}
+		this.setSelections(selected, apiPipeline.pipelineId);
 	}
 
 	isSupernodeBinding(node) {

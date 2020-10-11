@@ -504,11 +504,14 @@ Cypress.Commands.add("verifyNumberOfLinksInSupernodeNested", (nodeName, supernod
 });
 
 Cypress.Commands.add("verifyNumberOfSelectedObjects", (noOfSelectedObjects) => {
-	cy.getNumberOfSelectedComments()
-		.then((selectedComments) => {
-			cy.getNumberOfSelectedNodes()
-				.then((selectedNodes) => {
-					expect(noOfSelectedObjects).equal(selectedComments + selectedNodes);
+	cy.getNumberOfSelectedLinks()
+		.then((selectedLinks) => {
+			cy.getNumberOfSelectedComments()
+				.then((selectedComments) => {
+					cy.getNumberOfSelectedNodes()
+						.then((selectedNodes) => {
+							expect(noOfSelectedObjects).equal(selectedLinks + selectedComments + selectedNodes);
+						});
 				});
 		});
 });
