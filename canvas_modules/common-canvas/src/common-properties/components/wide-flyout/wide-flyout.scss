@@ -15,6 +15,7 @@
  */
 
 $properties-wf-title-height: 41px;
+$properties-modal-buttons-height: 64px;
 
 .properties-wf-overlay {
 	position: fixed;
@@ -56,6 +57,6 @@ $properties-wf-title-height: 41px;
 	.properties-wf-children {
 		padding: $spacing-04 $spacing-06 $spacing-06 $spacing-06;
 		overflow-y: auto;
-		height: calc(100% - (#{$properties-wf-title-height} * 2));
+		height: calc(100% - #{$properties-wf-title-height} - #{$properties-modal-buttons-height});
 	}
 }
