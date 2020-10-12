@@ -463,8 +463,14 @@ export default class CanvasController {
 	}
 
 	// Selects all the objects on the canvas.
-	selectAll() {
-		this.objectModel.selectAll();
+	selectAll(pipelineId) {
+		// Include links in selectAll unless LinkSelection is "None"
+		const includeLinks = this.canvasConfig.enableLinkSelection !== LINK_SELECTION_NONE;
+		this.objectModel.selectAll(includeLinks, pipelineId);
+	}
+
+	isPrimaryPipelineEmpty() {
+		return this.objectModel.isPrimaryPipelineEmpty();
 	}
 
 	// Returns an array of the IDs of the currently selected objects.
@@ -482,7 +488,12 @@ export default class CanvasController {
 		return this.objectModel.getSelectedComments();
 	}
 
-	// Returns the currently selected objects (Nodes and Comments).
+	// Returns the currently selected Links.
+	getSelectedLinks() {
+		return this.objectModel.getSelectedLinks();
+	}
+
+	// Returns the currently selected objects (Nodes and Comments and Links).
 	getSelectedObjects() {
 		return this.objectModel.getSelectedObjects();
 	}
@@ -1769,7 +1780,7 @@ export default class CanvasController {
 		// These commands are supported for the external AND internal object models.
 		switch (data.editType) {
 		case "selectAll": {
-			this.objectModel.selectAll(data.pipelineId);
+			this.selectAll(data.pipelineId);
 			break;
 		}
 		case "zoomIn": {

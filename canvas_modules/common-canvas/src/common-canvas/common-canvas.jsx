@@ -357,7 +357,7 @@ class CommonCanvas extends React.Component {
 					canvasInfo={canvasInfo}
 					config={config}
 					canvasController={this.canvasController}
-					isCanvasEmpty={this.objectModel.isPrimaryPipelineEmpty()}
+					isCanvasEmpty={this.canvasController.isPrimaryPipelineEmpty()}
 				>
 					{contextMenuWrapper}
 				</DiagramCanvasD3>);
