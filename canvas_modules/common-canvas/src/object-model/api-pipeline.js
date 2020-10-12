@@ -101,7 +101,7 @@ export default class APIPipeline {
 		return linksToDelete;
 	}
 
-	isEmpty(includeLinks) {
+	isEmpty() {
 		if (this.getNodes() && this.getNodes().length === 0 &&
 				this.getComments() && this.getComments().length === 0 &&
 				this.getLinks() && this.getLinks().length === 0) {
