@@ -306,6 +306,7 @@ class App extends React.Component {
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog2 = this.closePropertiesEditorDialog2.bind(this);
 		this.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect.bind(this);
+		this.validateProperties = this.validateProperties.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
@@ -1320,6 +1321,15 @@ class App extends React.Component {
 		this.setState({ showPropertiesDialog2: false, propertiesInfo2: {} });
 	}
 
+	validateProperties() {
+		if (this.propertiesController) {
+			this.propertiesController.validatePropertiesValues();
+		}
+		if (this.propertiesController2) {
+			this.propertiesController2.validatePropertiesValues();
+		}
+	}
+
 	handleEmptyCanvasLinkClick() {
 		window.alert("Sorry the tour is not included with the test harness. :-( But " +
 			"this is a good example of how a host app could add their own link to " +
@@ -2001,6 +2011,7 @@ class App extends React.Component {
 		const sidePanelPropertiesConfig = {
 			closePropertiesEditorDialog: this.closePropertiesEditorDialog,
 			openPropertiesEditorDialog: this.openPropertiesEditorDialog,
+			validateProperties: this.validateProperties,
 			setPropertiesJSON: this.setPropertiesJSON,
 			showPropertiesDialog: this.state.showPropertiesDialog,
 			usePropertiesContainerType: this.usePropertiesContainerType,
