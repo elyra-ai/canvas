@@ -740,9 +740,9 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "SET_CANVAS_INFO", canvasInfo: canvasInfo, currentCanvasInfo: this.getCanvasInfo() });
 	}
 
-	isPrimaryPipelineEmpty(includeLinks) {
+	isPrimaryPipelineEmpty() {
 		const primaryPipeline = this.getAPIPipeline(this.getCanvasInfo().primary_pipeline);
-		return primaryPipeline.isEmpty(includeLinks);
+		return primaryPipeline.isEmpty();
 	}
 
 	getPipelineFlowId() {
