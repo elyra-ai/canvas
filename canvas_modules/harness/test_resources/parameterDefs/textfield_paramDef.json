@@ -59,6 +59,7 @@
     {
       "id": "string_empty",
       "type": "string",
+      "required": true,
       "default": "ERROR - should not be set"
     },
     {

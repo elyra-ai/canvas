@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import SidePanelCanvas from "./sidepanel-canvas.jsx";
-import SidePanelModal from "./sidepanel-modal.jsx";
+import SidePanelModal from "./sidepanel-properties.jsx";
 import SidePanelAPI from "./sidepanel-api.jsx";
 
 import {
