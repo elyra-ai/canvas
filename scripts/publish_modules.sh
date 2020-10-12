@@ -59,7 +59,7 @@ if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 	RELEASE_BUILD=`node -p "require('./package.json').version"`
 	echo "Release build $RELEASE_BUILD"
   # Need to skip release build otherwise builds will be into a loop
-	commit_changes ${RELEASE} "Update version for common-canvas to version ${RELEASE_BUILD} ${SKIP_CI}"
+	commit_changes ${RELEASE} "Update common-canvas to version ${RELEASE_BUILD} ${SKIP_CI}"
 	# Tag release build
 	cd ./scripts
 	./tagBuild.sh "${RELEASE}_${RELEASE_BUILD}"
@@ -78,7 +78,7 @@ if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 		MASTER_BUILD=`node -p "require('./package.json').version"`
 		echo "Updated master build $MASTER_BUILD"
 		# Need to run build so master can be at the same code base as release
-		commit_changes ${MASTER} "Update version for common-canvas to version ${MASTER_BUILD}"
+		commit_changes ${MASTER} "Update common-canvas to version ${MASTER_BUILD}"
 	fi
 	cd $WORKING_DIR
 	checkout_branch ${RELEASE}
