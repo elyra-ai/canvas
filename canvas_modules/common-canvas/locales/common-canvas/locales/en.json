@@ -23,5 +23,6 @@
   "node.editMenu": "Edit",
   "node.disconnectNode": "Disconnect",
   "node.saveToPalette": "Save to palette",
-  "link.deleteLink": "Delete"
+  "link.deleteLink": "Delete",
+  "properties.label": "Properties"
 }

@@ -19,7 +19,7 @@
 
 import React from "react";
 import { injectIntl } from "react-intl";
-
+import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import PropTypes from "prop-types";
 import ContextMenuWrapper from "../context-menu/context-menu-wrapper.jsx";
 import DiagramCanvasD3 from "./diagram-canvas-d3.jsx";
@@ -405,7 +405,11 @@ class CommonCanvas extends React.Component {
 				this.state.rightFlyoutContent !== null &&
 				this.props.showRightFlyout) {
 			rightFlyout = (
-				<div className={"right-flyout-panel"}>
+				<div
+					aria-label={this.props.intl.formatMessage({ id: "properties.label", defaultMessage: defaultMessages["properties.label"] })}
+					role="complementary"
+					className={"right-flyout-panel"}
+				>
 					{this.state.rightFlyoutContent}
 				</div>
 			);
