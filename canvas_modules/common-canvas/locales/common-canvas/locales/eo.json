@@ -13,6 +13,8 @@
 	"canvas.undo": "[Esperanto~Undo~eo]",
 	"canvas.redo": "[Esperanto~Redo~eo]",
 	"canvas.deleteObject": "[Esperanto~Delete~eo]",
+	"canvas.flowIsEmpty": "[Esperanto~Your flow is empty.~~~~~eo]",
+	"canvas.addNodeToStart": "[Esperanto~Get started by adding a node.~~~~~~~~~eo]",
 	"node.createSupernode": "[Esperanto~Create supernode~~eo]",
 	"node.expandSupernodeInPlace": "[Esperanto~Expand supernode~~eo]",
 	"node.collapseSupernodeInPlace": "[Esperanto~Collapse supernode~~~~eo]",
@@ -21,5 +23,6 @@
 	"node.editMenu": "[Esperanto~Edit~eo]",
 	"node.disconnectNode": "[Esperanto~Disconnect~~~~~~eo]",
 	"node.saveToPalette": "[Esperanto~Save to palette~eo]",
-	"link.deleteLink": "[Esperanto~Delete~eo]"
+	"link.deleteLink": "[Esperanto~Delete~eo]",
+	"properties.label": "[Esperanto~Properties~~~~~~eo]"
 }

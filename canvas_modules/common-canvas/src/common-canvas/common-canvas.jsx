@@ -19,7 +19,7 @@
 
 import React from "react";
 import { injectIntl } from "react-intl";
-
+import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import PropTypes from "prop-types";
 import ContextMenuWrapper from "../context-menu/context-menu-wrapper.jsx";
 import DiagramCanvasD3 from "./diagram-canvas-d3.jsx";
