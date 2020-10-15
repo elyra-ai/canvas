@@ -81,6 +81,7 @@ export default class CanvasController {
 			enableToolbarLayout: "Top",
 			enableInsertNodeDroppedOnLink: false,
 			enableHightlightNodeOnNewLinkDrag: false,
+			enablePositionNodeOnRightFlyoutOpen: false,
 			enableMoveNodesOnSupernodeResize: true,
 			enableDisplayFullLabelOnHover: false,
 			enableDropZoneOnExternalDrag: false,
@@ -1231,6 +1232,14 @@ export default class CanvasController {
 			this.commonCanvas.toggleNotificationPanel();
 		}
 	}
+
+	isRightFlyoutOpen() {
+		if (this.commonCanvas) {
+			return this.commonCanvas.isRightFlyoutOpen();
+		}
+		return false;
+	}
+
 
 	zoomIn() {
 		if (this.commonCanvas) {

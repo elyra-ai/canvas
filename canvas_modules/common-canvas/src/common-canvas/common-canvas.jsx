@@ -266,6 +266,10 @@ class CommonCanvas extends React.Component {
 		this.setState({ isNotificationOpen: false });
 	}
 
+	isRightFlyoutOpen() {
+		return this.props.showRightFlyout;
+	}
+
 	openTip(tipDef) {
 		const that = this;
 		if (this.pendingTooltip) {

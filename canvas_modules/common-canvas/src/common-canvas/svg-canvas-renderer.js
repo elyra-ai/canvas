@@ -384,6 +384,20 @@ export default class SVGCanvasRenderer {
 		if (this.isDisplayingSubFlowFullPage()) {
 			this.displayBindingNodesToFitSVG();
 		}
+
+		if (this.config.enableBoundingRectangles) {
+			this.displayBoundingRectangles();
+		}
+
+		if (this.config.enablePositionNodeOnRightFlyoutOpen &&
+				this.canvasController.isRightFlyoutOpen()) {
+			const posInfo = this.config.enablePositionNodeOnRightFlyoutOpen;
+			const x = posInfo.x ? posInfo.x : 50;
+			const y = posInfo.y ? posInfo.y : 50;
+			const selNodeIds = this.canvasController.getSelectedNodes().map((n) => n.id);
+			const zoom = this.getZoomToReveal(selNodeIds, x, y);
+			this.zoomTo(zoom);
+		}
 	}
 
 	hideCanvas() {
@@ -1632,7 +1646,6 @@ export default class SVGCanvasRenderer {
 		const canv = this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, 1, 10);
 		const xPosInt = parseInt(xPos, 10);
 		const yPosInt = typeof yPos === "undefined" ? xPosInt : parseInt(yPos, 10);
-
 
 		if (canv) {
 			let xOffset;

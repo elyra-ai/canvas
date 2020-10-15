@@ -107,6 +107,7 @@ export default class SVGCanvasD3 {
 				this.config.enableHightlightNodeOnNewLinkDrag !== config.enableHightlightNodeOnNewLinkDrag ||
 				this.config.enablePanIntoViewOnOpen !== config.enablePanIntoViewOnOpen ||
 				this.config.enableRightFlyoutUnderToolbar !== config.enableRightFlyoutUnderToolbar ||
+				!this.enableNodeRightFlyoutOpenExactlyMatches(this.config.enablePositionNodeOnRightFlyoutOpen, config.enablePositionNodeOnRightFlyoutOpen) ||
 				!this.enableCanvasLayoutExactlyMatches(this.config.enableCanvasLayout, config.enableCanvasLayout) ||
 				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
 			this.logger.logStartTimer("Initializing Canvas");
@@ -156,6 +157,24 @@ export default class SVGCanvasD3 {
 	// enableNodeLayout.
 	cloneConfig(config) {
 		return Object.assign({}, config);
+	}
+
+	// Returns true if the contents of enablePositionNode1 and enablePositionNode2 are
+	// exactly the same.
+	enableNodeRightFlyoutOpenExactlyMatches(enablePositionNode1, enablePositionNode2) {
+		if (typeof enablePositionNode1 === "boolean" &&
+				typeof enablePositionNode2 === "boolean") {
+			return enablePositionNode1 === enablePositionNode2;
+
+		} else if (typeof enablePositionNode1 === "object" &&
+								typeof enablePositionNode2 === "object") {
+			if (enablePositionNode1.x === enablePositionNode2.x &&
+					enablePositionNode1.y === enablePositionNode2.y) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	// Returns true if the contents of enableLayout1 and enableLayout2 are
