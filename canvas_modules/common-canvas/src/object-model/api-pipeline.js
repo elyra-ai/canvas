@@ -1236,6 +1236,10 @@ export default class APIPipeline {
 		});
 	}
 
+	setLinkData(linkId, linkData) {
+		this.store.dispatch({ type: "SET_LINK_DATA", data: { linkId: linkId, data: linkData }, pipelineId: this.pipelineId });
+	}
+
 	getLinkStyle(linkId, temporary) {
 		const obj = this.getLink(linkId);
 		if (temporary) {

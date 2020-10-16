@@ -917,6 +917,14 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getLinks();
 	}
 
+	// Sets the link data in the link identified by the linkId. The linkData
+	// is an object containing one or more fields that will replace the
+	// corresponding fields in the link. For example: if linkData is
+	// { trgNodePortId: "123" } the target node port ID will be set to "123"
+	setLinkData(linkId, linkData, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setLinkData(linkId, linkData);
+	}
+
 	// Gets a node to node data link
 	// srcNodeId - The ID of the source node
 	// srcNodePortId - The ID of the source node port
