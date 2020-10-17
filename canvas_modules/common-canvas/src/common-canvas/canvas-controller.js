@@ -872,6 +872,15 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).editComment(data);
 	}
 
+	// Sets the properties in the comment identified by the commentId. The
+	// commentProperties is an object containing one or more properties that will
+	// replace the corresponding properties in the comment. For example: if
+	// commentProperties is { x_pos: 50, y_pos: 70 } the comment
+	// will be set to that position.
+	setCommentProperties(commentId, commentProperties, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setCommentProperties(commentId, commentProperties);
+	}
+
 	// Deletes a comment
 	// comId - The ID of the comment
 	// pipelineId - The ID of the pipeline
@@ -917,12 +926,13 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getLinks();
 	}
 
-	// Sets the link data in the link identified by the linkId. The linkData
-	// is an object containing one or more fields that will replace the
-	// corresponding fields in the link. For example: if linkData is
-	// { trgNodePortId: "123" } the target node port ID will be set to "123"
-	setLinkData(linkId, linkData, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).setLinkData(linkId, linkData);
+	// Sets the properties in the link identified by the linkId. The
+	// linkProperties is an object containing one or more properties that will
+	// replace the corresponding properties in the link. For example: if
+	// linkProperties is { trgNodeId: "123", trgNodePortId: "789" } the target
+	// node ID will be set to "123" and the target port ID set to "789".
+	setLinkProperties(linkId, linkProperties, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setLinkProperties(linkId, linkProperties);
 	}
 
 	// Gets a node to node data link

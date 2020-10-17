@@ -26,11 +26,11 @@ import CanvasController from "../../src/common-canvas/canvas-controller.js";
 const canvasController = new CanvasController();
 
 describe("ObjectModel API handle model OK", () => {
-	it("should update a link with newData", () => {
+	it("should update a link with new properties", () => {
 		deepFreeze(startCanvas);
 
 		canvasController.setPipelineFlow(allTypesCanvas);
-		canvasController.setLinkData("a81684aa-9b09-4620-aa59-54035a5de913", { trgPortNodeId: "input1SuperNodePE" });
+		canvasController.setLinkProperties("a81684aa-9b09-4620-aa59-54035a5de913", { trgPortNodeId: "input1SuperNodePE" });
 
 		const pf = canvasController.getPipelineFlow();
 		canvasController.setPipelineFlow(pf);
@@ -49,7 +49,41 @@ describe("ObjectModel API handle model OK", () => {
 		// console.info("Actual Link   = " + JSON.stringify(actualLink, null, 2));
 
 		expect(isEqual(expectedLink, actualLink)).to.be.true;
+	});
 
+	it("should update a node with new properties", () => {
+		deepFreeze(startCanvas);
+
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setNodeProperties("id8I6RH2V91XW", { label: "New Node Label" });
+
+		const pf = canvasController.getPipelineFlow();
+		canvasController.setPipelineFlow(pf);
+		const actualNode = canvasController.getNode("id8I6RH2V91XW");
+		const expectedNode = { label: "New Node Label" };
+
+		// console.info("Expected Node = " + JSON.stringify(expectedNode, null, 2));
+		// console.info("Actual Node   = " + JSON.stringify(actualNode, null, 2));
+
+		expect(isEqual(expectedNode.label, actualNode.label)).to.be.true;
+	});
+
+	it("should update a comment with new properties", () => {
+		deepFreeze(startCanvas);
+
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setCommentProperties("id42ESQA3VPXB", { x_pos: 30, y_pos: 50 });
+
+		const pf = canvasController.getPipelineFlow();
+		canvasController.setPipelineFlow(pf);
+		const actualComment = canvasController.getComment("id42ESQA3VPXB");
+		const expectedComment = { x_pos: 30, y_pos: 50 };
+
+		// console.info("Expected Comment = " + JSON.stringify(expectedComment, null, 2));
+		// console.info("Actual Comment   = " + JSON.stringify(actualComment, null, 2));
+
+		expect(isEqual(expectedComment.x_pos, actualComment.x_pos)).to.be.true;
+		expect(isEqual(expectedComment.y_pos, actualComment.y_pos)).to.be.true;
 	});
 
 });

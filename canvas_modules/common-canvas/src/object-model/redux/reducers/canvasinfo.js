@@ -104,12 +104,13 @@ export default (state = {}, action) => {
 	case "MOVE_OBJECTS":
 	case "DELETE_OBJECT":
 	case "ADD_LINK":
-	case "SET_LINK_DATA":
+	case "SET_LINK_PROPERTIES":
 	case "DELETE_LINK":
 	case "DELETE_LINKS":
 	case "UPDATE_LINK":
 	case "ADD_COMMENT":
 	case "EDIT_COMMENT":
+	case "SET_COMMENT_PROPERTIES":
 	case "ADD_COMMENT_ATTR":
 	case "REMOVE_COMMENT_ATTR": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {

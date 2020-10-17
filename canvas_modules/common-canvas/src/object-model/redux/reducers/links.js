@@ -51,14 +51,13 @@ export default (state = [], action) => {
 		];
 	}
 
-	case "SET_LINK_DATA": {
+	case "SET_LINK_PROPERTIES":
 		return state.map((link) => {
 			if (link.id === action.data.linkId) {
-				return Object.assign({}, link, action.data.linkData);
+				return Object.assign({}, link, action.data.linkProperties);
 			}
 			return link;
 		});
-	}
 
 	case "DELETE_LINK":
 		return state.filter((link) => {
