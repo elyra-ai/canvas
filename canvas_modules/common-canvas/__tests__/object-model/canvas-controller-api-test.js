@@ -23,21 +23,50 @@ import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCan
 
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 
-const canvasController = new CanvasController();
-
 describe("ObjectModel API handle model OK", () => {
-	it("should update a link with new properties", () => {
+	it("should update a link with new properties using: setLinkProperties", () => {
 		deepFreeze(startCanvas);
 
+		const canvasController = new CanvasController();
 		canvasController.setPipelineFlow(allTypesCanvas);
-		canvasController.setLinkProperties("a81684aa-9b09-4620-aa59-54035a5de913", { trgPortNodeId: "input1SuperNodePE" });
+		canvasController.setLinkProperties("a81684aa-9b09-4620-aa59-54035a5de913", { trgNodePortId: "input1SuperNodePE" });
 
 		const pf = canvasController.getPipelineFlow();
 		canvasController.setPipelineFlow(pf);
+
 		const actualLink = canvasController.getLink("a81684aa-9b09-4620-aa59-54035a5de913");
 		const expectedLink = {
 			"id": "a81684aa-9b09-4620-aa59-54035a5de913",
 			"srcNodeId": "|:;<,>.9?/`~!@#$%^&*()_+=-{}][",
+			"trgNodeId": "nodeIDSuperNodePE",
+			"trgNodePortId": "input1SuperNodePE",
+			"type": "nodeLink",
+			"class_name": "d3-data-link",
+			"app_data": {}
+		};
+
+		// console.info("Expected Link = " + JSON.stringify(expectedLink, null, 2));
+		// console.info("Actual Link   = " + JSON.stringify(actualLink, null, 2));
+
+		expect(isEqual(expectedLink, actualLink)).to.be.true;
+	});
+
+	it("should update a link with new properties using: setNodeDataLinkSrcInfo", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.deleteLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		canvasController.setNodeDataLinkSrcInfo("a81684aa-9b09-4620-aa59-54035a5de913", "id8I6RH2V91XW", "outPort");
+
+		const pf = canvasController.getPipelineFlow();
+		canvasController.setPipelineFlow(pf);
+
+		const actualLink = canvasController.getLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		const expectedLink = {
+			"id": "a81684aa-9b09-4620-aa59-54035a5de913",
+			"srcNodeId": "id8I6RH2V91XW",
+			"srcNodePortId": "outPort",
 			"trgNodeId": "nodeIDSuperNodePE",
 			"trgNodePortId": "input2SuperNodePE",
 			"type": "nodeLink",
@@ -51,14 +80,45 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(expectedLink, actualLink)).to.be.true;
 	});
 
-	it("should update a node with new properties", () => {
+
+	it("should update a link with new properties using: setNodeDataLinkTrgInfo", () => {
 		deepFreeze(startCanvas);
 
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setNodeDataLinkTrgInfo("a81684aa-9b09-4620-aa59-54035a5de913", "nodeIDSuperNodePE", "input1SuperNodePE");
+
+		const pf = canvasController.getPipelineFlow();
+		canvasController.setPipelineFlow(pf);
+
+		const actualLink = canvasController.getLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		const expectedLink = {
+			"id": "a81684aa-9b09-4620-aa59-54035a5de913",
+			"srcNodeId": "|:;<,>.9?/`~!@#$%^&*()_+=-{}][",
+			"trgNodeId": "nodeIDSuperNodePE",
+			"trgNodePortId": "input1SuperNodePE",
+			"type": "nodeLink",
+			"class_name": "d3-data-link",
+			"app_data": {}
+		};
+
+		// console.info("Expected Link = " + JSON.stringify(expectedLink, null, 2));
+		// console.info("Actual Link   = " + JSON.stringify(actualLink, null, 2));
+
+		expect(isEqual(expectedLink, actualLink)).to.be.true;
+	});
+
+
+	it("should update a node with new properties using: setNodeProperties", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
 		canvasController.setPipelineFlow(allTypesCanvas);
 		canvasController.setNodeProperties("id8I6RH2V91XW", { label: "New Node Label" });
 
 		const pf = canvasController.getPipelineFlow();
 		canvasController.setPipelineFlow(pf);
+
 		const actualNode = canvasController.getNode("id8I6RH2V91XW");
 		const expectedNode = { label: "New Node Label" };
 
@@ -68,14 +128,16 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(expectedNode.label, actualNode.label)).to.be.true;
 	});
 
-	it("should update a comment with new properties", () => {
+	it("should update a comment with new properties using: setCommentProperties", () => {
 		deepFreeze(startCanvas);
 
+		const canvasController = new CanvasController();
 		canvasController.setPipelineFlow(allTypesCanvas);
 		canvasController.setCommentProperties("id42ESQA3VPXB", { x_pos: 30, y_pos: 50 });
 
 		const pf = canvasController.getPipelineFlow();
 		canvasController.setPipelineFlow(pf);
+
 		const actualComment = canvasController.getComment("id42ESQA3VPXB");
 		const expectedComment = { x_pos: 30, y_pos: 50 };
 

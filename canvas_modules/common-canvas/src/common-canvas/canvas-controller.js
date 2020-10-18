@@ -928,11 +928,29 @@ export default class CanvasController {
 
 	// Sets the properties in the link identified by the linkId. The
 	// linkProperties is an object containing one or more properties that will
-	// replace the corresponding properties in the link. For example: if
+	// replace the corresponding properties in the link. For exam`ple: if
 	// linkProperties is { trgNodeId: "123", trgNodePortId: "789" } the target
 	// node ID will be set to "123" and the target port ID set to "789".
 	setLinkProperties(linkId, linkProperties, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setLinkProperties(linkId, linkProperties);
+	}
+
+	// Sets the source properties in the data link identified by the linkId. The
+	// srcNodeId and srcNodePortId will be set to the values provided. If
+	// srcNodePortId is set to null the current srcNodePortId will be removed
+	// from the link. Also, if the link has a srcPos property (because its
+	// source end is detached) that will be removed.
+	setNodeDataLinkSrcInfo(linkId, srcNodeId, srcNodePortId, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodeDataLinkSrcInfo(linkId, srcNodeId, srcNodePortId);
+	}
+
+	// Sets the target properties in the data link identified by the linkId. The
+	// trgNodeId and trgNodePortId will be set to the values provided. If
+	// trgNodePortId is set to null the current trgNodePortId will be removed
+	// from the link. Also, if the link has a trgPos property (because its
+	// target end is detached) that will be removed.
+	setNodeDataLinkTrgInfo(linkId, trgNodeId, trgNodePortId, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodeDataLinkTrgInfo(linkId, trgNodeId, trgNodePortId);
 	}
 
 	// Gets a node to node data link

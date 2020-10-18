@@ -1241,7 +1241,15 @@ export default class APIPipeline {
 	}
 
 	setLinkProperties(linkId, linkProperties) {
-		this.store.dispatch({ type: "SET_LINK_PROPERTIES", data: { linkId: linkId, data: linkProperties }, pipelineId: this.pipelineId });
+		this.store.dispatch({ type: "SET_LINK_PROPERTIES", data: { linkId: linkId, linkProperties: linkProperties }, pipelineId: this.pipelineId });
+	}
+
+	setNodeDataLinkSrcInfo(linkId, srcNodeId, srcNodePortId) {
+		this.store.dispatch({ type: "SET_LINK_SRC_INFO", data: { linkId: linkId, srcNodeId: srcNodeId, srcNodePortId: srcNodePortId }, pipelineId: this.pipelineId });
+	}
+
+	setNodeDataLinkTrgInfo(linkId, trgNodeId, trgNodePortId) {
+		this.store.dispatch({ type: "SET_LINK_TRG_INFO", data: { linkId: linkId, trgNodeId: trgNodeId, trgNodePortId: trgNodePortId }, pipelineId: this.pipelineId });
 	}
 
 	getLinkStyle(linkId, temporary) {
