@@ -1076,7 +1076,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns an array of detached links, which can be attached to the node
 	// passed in, that exist in proximity to the mouse position provided. Proximity
-	// is specified by the dimensions ghost area passed in.
+	// is specified by the dimensions of the ghost area passed in.
 	// Note: The passed in 'node' will be a node when an existing node on the
 	// canvas is being dragged but will be a node template when a node is being
 	// dragged from the palette. Since both have inputs and outputs all should be OK.
@@ -1087,12 +1087,16 @@ export default class SVGCanvasRenderer {
 		const attachableLinks = this.activePipeline.links.filter((link) => {
 			if (link.srcPos && nodeHasOutputs &&
 					CanvasUtils.isPosInArea(link.srcPos, ghostArea, this.canvasLayout.ghostAreaPadding)) {
+				link.nodeOverSrcPos = true;
 				return true;
 			}
 			if (link.trgPos && nodeHasInputs &&
 					CanvasUtils.isPosInArea(link.trgPos, ghostArea, this.canvasLayout.ghostAreaPadding)) {
+				link.nodeOverTrgPos = true;
 				return true;
 			}
+			link.nodeOverSrcPos = false;
+			link.nodeOverTrgPos = false;
 			return false;
 		});
 

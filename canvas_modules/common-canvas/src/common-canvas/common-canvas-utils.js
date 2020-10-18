@@ -530,7 +530,7 @@ export default class CanvasUtils {
 		const newLinks = [];
 		const oldLinks = [];
 		detachedLinks.forEach((link) => {
-			if (link.srcPos && node.outputs && node.outputs.length > 0) {
+			if (link.nodeOverSrcPos && link.srcPos && node.outputs && node.outputs.length > 0) {
 				node.outputs.forEach((output) => {
 					if (this.isSrcConnectionAllowedWithDetachedLinks(output.id, node, allNodeDataLinks)) {
 						const newLink = Object.assign({}, link, { srcNodeId: node.id, srcNodePortId: output.id });
@@ -540,7 +540,7 @@ export default class CanvasUtils {
 					}
 				});
 
-			} else if (link.trgPos && node.inputs && node.inputs.length > 0) {
+			} else if (link.nodeOverTrgPos && link.trgPos && node.inputs && node.inputs.length > 0) {
 				node.inputs.forEach((input) => {
 					if (this.isTrgConnectionAllowedWithDetachedLinks(input.id, node, allNodeDataLinks)) {
 						const newLink = Object.assign({}, link, { trgNodeId: node.id, trgNodePortId: input.id });
