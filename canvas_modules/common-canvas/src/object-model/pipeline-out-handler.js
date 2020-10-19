@@ -94,10 +94,10 @@ export default class PipelineOutHandler {
 		newNode.app_data =
 			Object.assign({}, ciNode.app_data, { ui_data: this.createNodeUiData(ciNode) });
 
-		if (ciNode.inputs && ciNode.inputs.length > 0) {
+		if (ciNode.inputs) {
 			newNode.inputs = this.createInputs(ciNode, ciLinks);
 		}
-		if (ciNode.outputs && ciNode.outputs.length > 0) {
+		if (ciNode.outputs) {
 			newNode.outputs = this.createOutputs(ciNode);
 		}
 
