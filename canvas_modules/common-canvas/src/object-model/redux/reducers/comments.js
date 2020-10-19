@@ -67,6 +67,14 @@ export default (state = [], action) => {
 			return comment;
 		});
 
+	case "SET_COMMENT_PROPERTIES":
+		return state.map((comment) => {
+			if (comment.id === action.data.commentId) {
+				return Object.assign({}, comment, action.data.commentProperties);
+			}
+			return comment;
+		});
+
 	case "SIZE_AND_POSITION_OBJECTS":
 		return state.map((com, index) => {
 			const comObj = action.data.objectsInfo[com.id];

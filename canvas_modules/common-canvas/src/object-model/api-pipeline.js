@@ -1196,6 +1196,10 @@ export default class APIPipeline {
 		});
 	}
 
+	setCommentProperties(commentId, commentProperties) {
+		this.store.dispatch({ type: "SET_COMMENT_PROPERTIES", data: { commentId: commentId, commentProperties: commentProperties }, pipelineId: this.pipelineId });
+	}
+
 	getNodeAssocLinkFromInfo(id1, id2) {
 		return this.getLinks().find((link) => {
 			if (link.type === ASSOCIATION_LINK) {
@@ -1234,6 +1238,18 @@ export default class APIPipeline {
 		return this.getLinks().find((link) => {
 			return (link.id === linkId);
 		});
+	}
+
+	setLinkProperties(linkId, linkProperties) {
+		this.store.dispatch({ type: "SET_LINK_PROPERTIES", data: { linkId: linkId, linkProperties: linkProperties }, pipelineId: this.pipelineId });
+	}
+
+	setNodeDataLinkSrcInfo(linkId, srcNodeId, srcNodePortId) {
+		this.store.dispatch({ type: "SET_LINK_SRC_INFO", data: { linkId: linkId, srcNodeId: srcNodeId, srcNodePortId: srcNodePortId }, pipelineId: this.pipelineId });
+	}
+
+	setNodeDataLinkTrgInfo(linkId, trgNodeId, trgNodePortId) {
+		this.store.dispatch({ type: "SET_LINK_TRG_INFO", data: { linkId: linkId, trgNodeId: trgNodeId, trgNodePortId: trgNodePortId }, pipelineId: this.pipelineId });
 	}
 
 	getLinkStyle(linkId, temporary) {
