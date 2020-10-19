@@ -91,13 +91,16 @@ _defineConstant("MESSAGE_KEYS", {
 	MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION: "moveable.table.button.bottom",
 	LIST_TABLE_LABEL: "list.table.label",
 	DROPDOWN_TOOLTIP_OPENMENU: "dropdown.tooltip.openMenu",
-	DROPDOWN_TOOLTIP_CLOSEMENU: "dropdown.tooltip.closeMenu"
+	DROPDOWN_TOOLTIP_CLOSEMENU: "dropdown.tooltip.closeMenu",
+	TRUNCATE_LONG_STRING_ERROR: "truncate.long.string.error"
 });
 
 _defineConstant("CHARACTER_LIMITS", {
 	TEXT_FIELD: 128,
 	TEXT_AREA: 1024
 });
+
+_defineConstant("TRUNCATE_LIMIT", 10000);
 
 _defineConstant("CONDITION_ERROR_MESSAGE", {
 	HIDDEN: "0px",

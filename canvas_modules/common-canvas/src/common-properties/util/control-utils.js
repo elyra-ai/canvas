@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { v4 as uuid4 } from "uuid";
+import { TRUNCATE_LIMIT } from "../constants/constants";
 
 /**
 * Used to return a unique id for a control that requires an html id
@@ -58,11 +59,39 @@ function splitNewlines(text, splitValue) {
 	return [];
 }
 
+// returns an object
+//	value = string: the concatenated string
+//	truncated = boolean: indicating if any value was too long and had to be truncated
 function joinNewlines(list, joinValue) {
+	let truncated = false;
 	if (Array.isArray(list)) {
-		return list.length === 0 ? "" : list.join(joinValue);
+		if (list.length === 0) {
+			return { value: "", truncated };
+		}
+
+		let concatenatedValue = "";
+		list.forEach((value, index) => {
+			const truncatedValue = truncateDisplayValue(value);
+			const join = index === list.length - 1 ? "" : joinValue; // Do not add joinValue to last value in array
+			concatenatedValue += truncatedValue + join;
+			if (!truncated) { // we only need this to be set true once
+				truncated = truncatedValue.length !== value.length;
+			}
+		});
+		return {
+			value: concatenatedValue,
+			truncated
+		};
 	}
-	return list;
+	return { value: list, truncated };
+}
+
+// truncate the value that gets displayed if its too long
+function truncateDisplayValue(value) {
+	if (value.length > TRUNCATE_LIMIT) {
+		return value.substring(0, TRUNCATE_LIMIT) + "...";
+	}
+	return value;
 }
 
 export {
@@ -70,5 +99,6 @@ export {
 	getControlId,
 	getDataId,
 	splitNewlines,
-	joinNewlines
+	joinNewlines,
+	truncateDisplayValue
 };
