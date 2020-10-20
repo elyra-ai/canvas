@@ -408,8 +408,11 @@ class CommonCanvas extends React.Component {
 		if (typeof this.state.rightFlyoutContent !== "undefined" &&
 				this.state.rightFlyoutContent !== null &&
 				this.props.showRightFlyout) {
+			const rfClass = this.props.config.enableRightFlyoutUnderToolbar
+				? "right-flyout-panel under-toolbar"
+				: "right-flyout-panel";
 			rightFlyout = (
-				<div className={"right-flyout-panel"}>
+				<div className={rfClass}>
 					{this.state.rightFlyoutContent}
 				</div>
 			);

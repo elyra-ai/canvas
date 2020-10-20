@@ -2443,6 +2443,7 @@ export default class SVGCanvasRenderer {
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d) => {
 					this.logger.log("Node Group - mouse down");
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					if (!this.config.enableDragWithoutSelect) {
 						this.selectObjectD3Event(d);
 					}
@@ -2469,7 +2470,7 @@ export default class SVGCanvasRenderer {
 				})
 				.on("dblclick", (d) => {
 					this.logger.log("Node Group - double click");
-					d3Event.stopPropagation();
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					var selObjIds = this.objectModel.getSelectedObjectIds();
 					this.canvasController.clickActionHandler({
 						clickType: "DOUBLE_CLICK",
