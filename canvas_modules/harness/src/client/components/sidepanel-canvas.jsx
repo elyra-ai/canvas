@@ -620,6 +620,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enablePositionNodeOnRightFlyoutOpen = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedPositionNodeOnRightFlyoutOpen" // Set ID to corresponding field in App.js state
+				labelText="Enable Position Node On Right Flyout Open"
+				toggled={this.props.getStateValue("selectedPositionNodeOnRightFlyoutOpen")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
 		var enableAssocLinkCreation = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedAssocLinkCreation" // Set ID to corresponding field in App.js state
@@ -1274,6 +1283,8 @@ export default class SidePanelForms extends React.Component {
 					{assocLinkType}
 					{divider}
 					{enableRightFlyoutUnderToolbar}
+					{divider}
+					{enablePositionNodeOnRightFlyoutOpen}
 					{divider}
 					{enablePanIntoViewOnOpen}
 					{divider}

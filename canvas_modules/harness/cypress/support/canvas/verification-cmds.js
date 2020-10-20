@@ -46,7 +46,7 @@ Cypress.Commands.add("verifyZoomTransform", (x, y, k) => {
 		.then((transform) => {
 			cy.verifyValueInCompareRange(Math.round(transform.x), x);
 			cy.verifyValueInCompareRange(Math.round(transform.y), y);
-			cy.verifyValueInCompareRange(Math.round(transform.k * 100) / 100, k);
+			cy.verifyValueInCompareRange(Math.round(transform.k * 100), k * 100);
 		});
 });
 
@@ -504,11 +504,14 @@ Cypress.Commands.add("verifyNumberOfLinksInSupernodeNested", (nodeName, supernod
 });
 
 Cypress.Commands.add("verifyNumberOfSelectedObjects", (noOfSelectedObjects) => {
-	cy.getNumberOfSelectedComments()
-		.then((selectedComments) => {
-			cy.getNumberOfSelectedNodes()
-				.then((selectedNodes) => {
-					expect(noOfSelectedObjects).equal(selectedComments + selectedNodes);
+	cy.getNumberOfSelectedLinks()
+		.then((selectedLinks) => {
+			cy.getNumberOfSelectedComments()
+				.then((selectedComments) => {
+					cy.getNumberOfSelectedNodes()
+						.then((selectedNodes) => {
+							expect(noOfSelectedObjects).equal(selectedLinks + selectedComments + selectedNodes);
+						});
 				});
 		});
 });
@@ -825,7 +828,7 @@ Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
 			const zoom = pipeline.zoom;
 			expect(Math.round(zoom.x)).to.equal(x);
 			expect(Math.round(zoom.y)).to.equal(y);
-			expect((Math.round(zoom.k * 100)) / 100).to.equal(k);
+			expect((Math.round(zoom.k * 100))).to.equal(k * 100);
 		});
 });
 

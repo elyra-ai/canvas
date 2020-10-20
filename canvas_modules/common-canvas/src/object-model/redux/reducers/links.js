@@ -51,6 +51,46 @@ export default (state = [], action) => {
 		];
 	}
 
+	case "SET_LINK_PROPERTIES":
+		return state.map((link) => {
+			if (link.id === action.data.linkId) {
+				return Object.assign({}, link, action.data.linkProperties);
+			}
+			return link;
+		});
+
+	case "SET_LINK_SRC_INFO":
+		return state.map((link) => {
+			if (link.id === action.data.linkId) {
+				const newLink = Object.assign({}, link);
+				delete newLink.srcNodeId;
+				delete newLink.srcNodePortId;
+				delete newLink.srcPos;
+				newLink.srcNodeId = action.data.srcNodeId;
+				if (action.data.srcNodePortId) {
+					newLink.srcNodePortId = action.data.srcNodePortId;
+				}
+				return newLink;
+			}
+			return link;
+		});
+
+	case "SET_LINK_TRG_INFO":
+		return state.map((link) => {
+			if (link.id === action.data.linkId) {
+				const newLink = Object.assign({}, link);
+				delete newLink.trgNodeId;
+				delete newLink.trgNodePortId;
+				delete newLink.trgPos;
+				newLink.trgNodeId = action.data.trgNodeId;
+				if (action.data.trgNodePortId) {
+					newLink.trgNodePortId = action.data.trgNodePortId;
+				}
+				return newLink;
+			}
+			return link;
+		});
+
 	case "DELETE_LINK":
 		return state.filter((link) => {
 			return link.id !== action.data.id;

@@ -384,6 +384,20 @@ export default class SVGCanvasRenderer {
 		if (this.isDisplayingSubFlowFullPage()) {
 			this.displayBindingNodesToFitSVG();
 		}
+
+		if (this.config.enableBoundingRectangles) {
+			this.displayBoundingRectangles();
+		}
+
+		if (this.config.enablePositionNodeOnRightFlyoutOpen &&
+				this.canvasController.isRightFlyoutOpen()) {
+			const posInfo = this.config.enablePositionNodeOnRightFlyoutOpen;
+			const x = posInfo.x ? posInfo.x : 50;
+			const y = posInfo.y ? posInfo.y : 50;
+			const selNodeIds = this.canvasController.getSelectedNodes().map((n) => n.id);
+			const zoom = this.getZoomToReveal(selNodeIds, x, y);
+			this.zoomTo(zoom);
+		}
 	}
 
 	hideCanvas() {
@@ -1062,7 +1076,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns an array of detached links, which can be attached to the node
 	// passed in, that exist in proximity to the mouse position provided. Proximity
-	// is specified by the dimensions ghost area passed in.
+	// is specified by the dimensions of the ghost area passed in.
 	// Note: The passed in 'node' will be a node when an existing node on the
 	// canvas is being dragged but will be a node template when a node is being
 	// dragged from the palette. Since both have inputs and outputs all should be OK.
@@ -1073,12 +1087,16 @@ export default class SVGCanvasRenderer {
 		const attachableLinks = this.activePipeline.links.filter((link) => {
 			if (link.srcPos && nodeHasOutputs &&
 					CanvasUtils.isPosInArea(link.srcPos, ghostArea, this.canvasLayout.ghostAreaPadding)) {
+				link.nodeOverSrcPos = true;
 				return true;
 			}
 			if (link.trgPos && nodeHasInputs &&
 					CanvasUtils.isPosInArea(link.trgPos, ghostArea, this.canvasLayout.ghostAreaPadding)) {
+				link.nodeOverTrgPos = true;
 				return true;
 			}
+			link.nodeOverSrcPos = false;
+			link.nodeOverTrgPos = false;
 			return false;
 		});
 
@@ -1632,7 +1650,6 @@ export default class SVGCanvasRenderer {
 		const canv = this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, 1, 10);
 		const xPosInt = parseInt(xPos, 10);
 		const yPosInt = typeof yPos === "undefined" ? xPosInt : parseInt(yPos, 10);
-
 
 		if (canv) {
 			let xOffset;

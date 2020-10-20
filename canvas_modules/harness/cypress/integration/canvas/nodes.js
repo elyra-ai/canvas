@@ -150,6 +150,46 @@ describe("Test selecting nodes open properties", function() {
 	});
 });
 
+describe("Test opening properties moves node to center with enablePositionNodeOnRightFlyoutOpen", function() {
+	before(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedPositionNodeOnRightFlyoutOpen": true });
+		cy.openCanvasDefinition("allTypesCanvas.json");
+	});
+
+	it.only("Test double-clicking a node moves node to center of canvas", function() {
+		// Check the node's initial position.
+		cy.verifyZoomTransform(0, 0, 1);
+
+		// Double-click on node to open properties.
+		cy.getNodeWithLabel("Binding (exit) node").dblclick();
+
+		// Wait for the canvas to update
+		/* eslint cypress/no-unnecessary-waiting: "off" */
+		cy.wait(1000);
+
+		// Check new position of node.
+		cy.verifyZoomTransform(-173, -60, 1);
+
+		cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomIn();
+
+		// Check transform after zoom
+		cy.verifyZoomTransform(-315, -147, 1.21);
+
+		// Double-click on another node to open properties.
+		cy.getNodeWithLabel("Execution node").dblclick();
+
+		// Wait for the canvas to update
+		/* eslint cypress/no-unnecessary-waiting: "off" */
+		cy.wait(1500);
+
+		// Check new position of node.
+		cy.verifyZoomTransform(102, 141, 1.21);
+	});
+});
+
+
 describe("Test changing node properties is reflected in canvas", function() {
 	beforeEach(() => {
 		cy.visit("/");
