@@ -69,7 +69,12 @@ export default class ExpressionBuilder extends React.Component {
 	onBlur(editor, evt) {
 		this.lastCursorPos = editor.getCursor();
 		const newValue = this.editor.getValue();
-		this.props.controller.updatePropertyValue(this.props.propertyId, newValue, this.expressionInfo.validateLink);
+		let skipValidate = this.expressionInfo.validateLink;
+		if (this.expressionSelectionPanel && this.expressionSelectionPanel.contains(evt.relatedTarget)) {
+			// don't validate on old content when adding new content
+			skipValidate = true;
+		}
+		this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidate);
 	}
 
 	editorDidMount(editor, next) {
@@ -126,13 +131,15 @@ export default class ExpressionBuilder extends React.Component {
 					height={96}
 					expressionLabel={expressionLabel}
 				/>
-				<ExpressionSelectionPanel
-					controller={this.props.controller}
-					onChange={this.onChange}
-					functionList={this.expressionInfo.functionCategories}
-					operatorList={this.expressionInfo.operators}
-					language={this.props.control.language}
-				/>
+				<div ref={ (ref) => (this.expressionSelectionPanel = ref) }>
+					<ExpressionSelectionPanel
+						controller={this.props.controller}
+						onChange={this.onChange}
+						functionList={this.expressionInfo.functionCategories}
+						operatorList={this.expressionInfo.operators}
+						language={this.props.control.language}
+					/>
+				</div>
 			</div>
 		);
 	}

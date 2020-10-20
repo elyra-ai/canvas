@@ -229,7 +229,11 @@ class ExpressionControl extends React.Component {
 			this.props.onBlur(editor, evt);
 		} else {
 			const newValue = this.editor.getValue();
-			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, this.expressionInfo.validateLink);
+			// don't validate when opening the expression builder
+			const skipValidate = evt.relatedTarget && evt.relatedTarget.classList.contains("properties-expression-button")
+				? true
+				: this.expressionInfo.validateLink;
+			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidate);
 		}
 	}
 
