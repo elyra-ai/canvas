@@ -17,9 +17,10 @@
 import React from "react";
 import Textfield from "./../../../src/common-properties/controls/textfield";
 import Controller from "./../../../src/common-properties/properties-controller";
-import { CHARACTER_LIMITS } from "./../../../src/common-properties/constants/constants.js";
+import { CHARACTER_LIMITS, TRUNCATE_LIMIT } from "./../../../src/common-properties/constants/constants.js";
 import { mount } from "enzyme";
 import { expect } from "chai";
+import { Provider } from "react-redux";
 import propertyUtils from "../../_utils_/property-utils";
 
 
@@ -56,6 +57,27 @@ describe("textfield renders correctly", () => {
 		controller.setPropertyValues(
 			{ "test-text": "Test value" }
 		);
+	});
+
+	it("textfield should not be editable if created with a long value", () => {
+		const value = propertyUtils.genLongString(TRUNCATE_LIMIT + 10);
+		controller.setPropertyValues({ "test-text": value });
+		const wrapper = mount(
+			<Provider store={controller.getStore()}>
+				<Textfield
+					store={controller.getStore()}
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const textWrapper = wrapper.find("div[data-id='properties-test-text']");
+		expect(textWrapper.find(".properties-textinput-readonly")).to.have.length(1);
+
+		const validationMsg = textWrapper.find("div.properties-validation-message");
+		expect(validationMsg).to.have.length(1);
+		expect(validationMsg.find("svg.canvas-state-icon-error")).to.have.length(1);
 	});
 
 	it("textfield props should have been defined", () => {

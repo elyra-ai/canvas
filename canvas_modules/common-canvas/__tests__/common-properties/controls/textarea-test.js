@@ -16,7 +16,7 @@
 
 import React from "react";
 import TextArea from "../../../src/common-properties/controls/textarea";
-import { CHARACTER_LIMITS } from "../../../src/common-properties/constants/constants.js";
+import { CHARACTER_LIMITS, TRUNCATE_LIMIT } from "../../../src/common-properties/constants/constants.js";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
@@ -278,5 +278,24 @@ describe("textarea control renders correctly", () => {
 		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
 		const messageWrapper = textWrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
+	});
+
+	it("textarea should not be editable if created with a long value", () => {
+		const value = propertyUtils.genLongString(TRUNCATE_LIMIT + 10);
+		controller.setPropertyValues({ "test-textarea": [value] });
+		const wrapper = mount(
+			<TextArea
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
+		expect(textWrapper.find("textarea").prop("disabled")).to.equal(true);
+
+		const validationMsg = textWrapper.find("div.properties-validation-message");
+		expect(validationMsg).to.have.length(1);
+		expect(validationMsg.find("svg.canvas-state-icon-error")).to.have.length(1);
 	});
 });
