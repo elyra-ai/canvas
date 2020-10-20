@@ -667,6 +667,7 @@
               "description": "This supernode was created by common-canvas."
             }
           },
+          "inputs": [],
           "outputs": [
             {
               "id": "ac584be2-8a3c-474f-a046-e10a3665b875_outPort1",
