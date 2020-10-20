@@ -22,6 +22,8 @@ import { expect } from "chai";
 import { setControls } from "../../_utils_/property-utils";
 import { getTableRows, selectCheckboxes } from "./../../_utils_/table-utils";
 import Controller from "../../../src/common-properties/properties-controller";
+import propertyUtils from "../../_utils_/property-utils";
+import { TRUNCATE_LIMIT } from "./../../../src/common-properties/constants/constants.js";
 
 const controlString = {
 	"name": "test-list-string",
@@ -56,6 +58,8 @@ const controlInteger = {
 
 const listStringCurrentValues = ["list item 1", ""];
 const listIntegerCurrentValues = [10, null];
+
+const listLongStringCurrentValues = [propertyUtils.genLongString(TRUNCATE_LIMIT + 10)];
 
 const listStringPopertyId = { name: "test-list-string" };
 const listIntegerPopertyId = { name: "test-list-integer" };
@@ -182,6 +186,27 @@ describe("list renders correctly for array[string]", () => {
 		addButton.simulate("click");
 		expect(controller.getPropertyValue(listStringPopertyId)).to.eql([""]);
 	});
+
+	it("should render a readonly text input for long values", () => {
+		controller.setPropertyValues({ "test-list-string": listLongStringCurrentValues });
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<List
+					store={controller.getStore()}
+					control={controlString}
+					controller={controller}
+					propertyId={listStringPopertyId}
+				/>
+			</Provider>
+		);
+		const listWrapper = wrapper.find("div[data-id='properties-test-list-string']");
+		const textfields = listWrapper.find("TextfieldControl");
+		expect(textfields).to.have.length(1);
+		expect(listWrapper.find(".properties-textinput-readonly")).to.have.length(1);
+		const validationMsg = listWrapper.find("div.properties-validation-message.inTable");
+		expect(validationMsg).to.have.length(1);
+		expect(validationMsg.find("svg.canvas-state-icon-error")).to.have.length(1);
+	});
 });
 
 describe("list renders correctly for array[integer]", () => {
@@ -274,7 +299,8 @@ describe("list renders correctly for array[integer]", () => {
 		// add 2 rows
 		addButton.simulate("click");
 		addButton.simulate("click");
-		expect(controller.getPropertyValue(listIntegerPopertyId)).to.eql(listIntegerCurrentValues.concat([null, null]));
+		expect(controller.getPropertyValue(listIntegerPopertyId))
+			.to.eql(listIntegerCurrentValues.concat([null, null]));
 		expect(wrapper.find("NumberfieldControl")).to.have.length(4); // Ensure new Numberfields are added
 		expect(removeButton.prop("disabled")).to.equal(true);
 
@@ -287,6 +313,7 @@ describe("list renders correctly for array[integer]", () => {
 		expect(removeButton.prop("disabled")).to.equal(false);
 		removeButton.simulate("click");
 		// validate the third row is deleted
-		expect(controller.getPropertyValue(listIntegerPopertyId)).to.eql(listIntegerCurrentValues.concat([null]));
+		expect(controller.getPropertyValue(listIntegerPopertyId))
+			.to.eql(listIntegerCurrentValues.concat([null]));
 	});
 });

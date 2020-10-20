@@ -79,6 +79,9 @@ class ReadonlyControl extends React.Component {
 		} else if (typeof controlValue === "boolean") {
 			controlValue = controlValue.toString();
 		}
+
+		controlValue = ControlUtils.truncateDisplayValue(controlValue);
+
 		if (this.props.control.controlType === ControlType.CUSTOM) {
 			controlValue = this.props.controller.getCustomControl(this.props.propertyId, this.props.control, { table: true, editStyle: "summary" });
 		} else if (this.props.control.controlType === ControlType.TIMESTAMP ||

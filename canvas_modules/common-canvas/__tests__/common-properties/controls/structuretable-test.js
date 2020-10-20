@@ -1029,3 +1029,34 @@ describe("measurement icons should be rendered correctly in structuretable", () 
 		expect(tableWrapper.find("div.properties-field-type-icon")).to.have.length(0);
 	});
 });
+
+describe("structuretable with long text input values should render as readonly", () => {
+	let wrapper;
+	let table;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		wrapper = renderedObject.wrapper;
+		table = propertyUtils.openSummaryPanel(wrapper, "error_handling_summary");
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+	it("table should show disabled control and error icon for truncated value", () => {
+		expect(table.find(".properties-textinput-readonly")).to.have.length(1);
+		const cells = table.find(".properties-table-cell-control");
+		expect(cells).to.have.length(3);
+		expect(cells.at(1).find("div.properties-validation-message.inTable")).to.have.length(1);
+
+		const editButton = table.find(".properties-subpanel-button").at(0);
+		editButton.simulate("click");
+
+		const tables = wrapper.find("div[data-id='properties-structuretableLongValue']");
+		expect(tables).to.have.length(2); // first one is the table cell
+		const subpanelTable = tables.at(1); // second one is the textarea in subpanel flyout
+		expect(subpanelTable.find("textarea").prop("disabled")).to.equal(true);
+
+		const validationMsg = subpanelTable.find("div.properties-validation-message");
+		expect(validationMsg).to.have.length(1);
+		expect(validationMsg.find("svg.canvas-state-icon-error")).to.have.length(1);
+	});
+});

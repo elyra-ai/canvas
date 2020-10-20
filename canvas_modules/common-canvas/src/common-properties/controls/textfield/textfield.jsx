@@ -18,10 +18,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { TextInput } from "carbon-components-react";
+import ReadonlyControl from "./../readonly";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
+import { formatMessage } from "./../../util/property-utils";
 import { STATES } from "./../../constants/constants.js";
-import { CHARACTER_LIMITS, TOOL_TIP_DELAY } from "./../../constants/constants.js";
+import { CHARACTER_LIMITS, TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
@@ -31,6 +33,7 @@ const arrayValueDelimiter = ", ";
 class TextfieldControl extends React.Component {
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.charLimit = ControlUtils.getCharLimit(props.control, CHARACTER_LIMITS.TEXT_FIELD);
 		this.id = ControlUtils.getControlId(props.propertyId);
 		this.isList = false;
@@ -53,13 +56,36 @@ class TextfieldControl extends React.Component {
 
 	render() {
 		let value = this.props.value ? this.props.value : "";
+		let truncated = false;
 		if (this.isList) {
-			value = ControlUtils.joinNewlines(value, arrayValueDelimiter);
+			const joined = ControlUtils.joinNewlines(value, arrayValueDelimiter);
+			value = joined.value;
+			truncated = joined.truncated;
+		} else {
+			value = ControlUtils.truncateDisplayValue(value);
+			truncated = value.length !== 0 && value.length !== this.props.value.length;
 		}
 		const className = classNames("properties-textfield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
-		const textInput =
-			(<TextInput
+
+		let textInput = null;
+		if (truncated) {
+			const errorMessage = {
+				text: formatMessage(this.reactIntl, MESSAGE_KEYS.TRUNCATE_LONG_STRING_ERROR, { truncate_limit: TRUNCATE_LIMIT }),
+				type: CONDITION_MESSAGE_TYPE.ERROR,
+				validation_id: this.props.control.name
+			};
+			textInput = (<div className="properties-textinput-readonly">
+				<ReadonlyControl
+					control={this.props.control}
+					propertyId={this.props.propertyId}
+					controller={this.props.controller}
+					tableControl={this.props.tableControl}
+				/>
+				<ValidationMessage inTable={this.props.tableControl} state={""} messageInfo={errorMessage} />
+			</div>);
+		} else {
+			textInput = (<TextInput
 				autoComplete={this.props.tableControl === true ? "off" : "on"}
 				id={this.id}
 				disabled={ this.props.state === STATES.DISABLED}
@@ -70,6 +96,8 @@ class TextfieldControl extends React.Component {
 				hideLabel
 				light
 			/>);
+		}
+
 		let display = textInput;
 		if (this.props.tableControl) {
 			const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();

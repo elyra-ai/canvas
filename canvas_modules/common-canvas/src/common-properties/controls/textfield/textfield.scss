@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+$textinput-bottom-padding: 5px;
+
 .properties-input-control {
 	&.hide {
 		display: none;
@@ -40,7 +42,7 @@
 
 .properties-table-cell-control { // overrides when in a table cell
 	.properties-input-control {
-		padding-bottom: 5px;
+		padding-bottom: $textinput-bottom-padding;
 		width: 100%;
 		input { //override styling from carbon
 			background: unset;
@@ -57,5 +59,15 @@
 	}
 	input:disabled:hover {
 		box-shadow: 0 2px 0 0 $text-02;
+	}
+
+	// Readonly control for error handling in table cells
+	.properties-textinput-readonly {
+		margin-bottom: -$textinput-bottom-padding; // undo the padding set by textinput
+
+		// position error icon left of the readonly control
+		.properties-validation-message.inTable {
+			margin-left: -$spacing-04;
+		}
 	}
 }
