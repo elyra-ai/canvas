@@ -69,5 +69,6 @@
   "moveable.table.button.bottom": "Move to bottom",
   "list.table.label": "Values",
   "dropdown.tooltip.openMenu": "Open menu",
-  "dropdown.tooltip.closeMenu": "Close menu"
+  "dropdown.tooltip.closeMenu": "Close menu",
+  "truncate.long.string.error": "These values exceed the display limit of {truncate_limit} characters and can't be edited."
 }
