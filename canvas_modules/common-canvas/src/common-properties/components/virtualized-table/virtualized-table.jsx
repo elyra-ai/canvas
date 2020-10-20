@@ -72,7 +72,11 @@ class VirtualizedTable extends React.Component {
 			// Set selections
 			const selected = !this.isRowSelected(rowData.originalRowIndex);
 			if (typeof this.props.setRowsSelected === "function") {
-				this.props.setRowsSelected({ "index": index, "originalRowIndex": rowData.originalRowIndex, "selected": selected, "isOverSelectOption": this.isOverSelectOption }, evt);
+				this.props.setRowsSelected({
+					"index": index,
+					"originalRowIndex": rowData.originalRowIndex,
+					"selected": selected,
+					"isOverSelectOption": this.isOverSelectOption }, evt);
 			}
 		}
 	}
