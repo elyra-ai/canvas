@@ -66,10 +66,14 @@ class VirtualizedTable extends React.Component {
 
 	// This is also triggered when clicking on a checkbox
 	onRowClick(evt, rowData, index) {
-		// Set selections
-		const selected = !this.isRowSelected(rowData.originalRowIndex);
-		if (typeof this.props.setRowsSelected === "function") {
-			this.props.setRowsSelected({ "index": index, "originalRowIndex": rowData.originalRowIndex, "selected": selected, "isOverSelectOption": this.isOverSelectOption }, evt);
+		if (evt.target.className === "bx--select-option") {
+			evt.stopPropagation();
+		} else {
+			// Set selections
+			const selected = !this.isRowSelected(rowData.originalRowIndex);
+			if (typeof this.props.setRowsSelected === "function") {
+				this.props.setRowsSelected({ "index": index, "originalRowIndex": rowData.originalRowIndex, "selected": selected, "isOverSelectOption": this.isOverSelectOption }, evt);
+			}
 		}
 	}
 
