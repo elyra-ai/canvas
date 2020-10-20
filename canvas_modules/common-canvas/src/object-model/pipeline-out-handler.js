@@ -97,6 +97,7 @@ export default class PipelineOutHandler {
 		if (ciNode.inputs) {
 			newNode.inputs = this.createInputs(ciNode, ciLinks);
 		}
+
 		if (ciNode.outputs) {
 			newNode.outputs = this.createOutputs(ciNode);
 		}

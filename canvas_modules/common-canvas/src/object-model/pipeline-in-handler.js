@@ -143,13 +143,17 @@ export default class PipelineInHandler {
 	}
 
 	static convertOutputs(node) {
-		const outputs = node.outputs || [];
-		return outputs.map((output) => this.convertPortObject(output));
+		if (node.outputs) {
+			return node.outputs.map((output) => this.convertPortObject(output));
+		}
+		return node.outputs; // Return undefined if no outputs property
 	}
 
 	static convertInputs(node) {
-		const inputs = node.inputs || [];
-		return inputs.map((input) => this.convertPortObject(input));
+		if (node.inputs) {
+			return node.inputs.map((input) => this.convertPortObject(input));
+		}
+		return node.inputs; // Return undefined if no inputs property
 	}
 
 	static convertPortObject(port) {
