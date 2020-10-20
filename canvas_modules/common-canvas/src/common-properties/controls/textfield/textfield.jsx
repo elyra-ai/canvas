@@ -23,7 +23,7 @@ import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES } from "./../../constants/constants.js";
-import { CHARACTER_LIMITS, TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE, MESSAGE_KEYS } from "./../../constants/constants.js";
+import { CHARACTER_LIMITS, TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
@@ -33,6 +33,7 @@ const arrayValueDelimiter = ", ";
 class TextfieldControl extends React.Component {
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.charLimit = ControlUtils.getCharLimit(props.control, CHARACTER_LIMITS.TEXT_FIELD);
 		this.id = ControlUtils.getControlId(props.propertyId);
 		this.isList = false;
@@ -70,7 +71,7 @@ class TextfieldControl extends React.Component {
 		let textInput = null;
 		if (truncated) {
 			const errorMessage = {
-				text: formatMessage(this.reactIntl, MESSAGE_KEYS.TRUNCATE_LONG_STRING_ERROR),
+				text: formatMessage(this.reactIntl, MESSAGE_KEYS.TRUNCATE_LONG_STRING_ERROR, { truncate_limit: TRUNCATE_LIMIT }),
 				type: CONDITION_MESSAGE_TYPE.ERROR,
 				validation_id: this.props.control.name
 			};

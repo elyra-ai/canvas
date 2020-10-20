@@ -22,7 +22,7 @@ import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES } from "./../../constants/constants.js";
-import { CHARACTER_LIMITS, TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE, MESSAGE_KEYS } from "./../../constants/constants.js";
+import { CHARACTER_LIMITS, TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
 import classNames from "classnames";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { v4 as uuid4 } from "uuid";
@@ -32,6 +32,7 @@ const newLine = "\n";
 class TextareaControl extends React.Component {
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.charLimit = ControlUtils.getCharLimit(props.control, CHARACTER_LIMITS.TEXT_AREA);
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 	}
@@ -56,7 +57,7 @@ class TextareaControl extends React.Component {
 		let textArea = null;
 		if (truncated) { // A value is too long to show for editing, display as readonly
 			const errorMessage = {
-				text: formatMessage(this.reactIntl, MESSAGE_KEYS.TRUNCATE_LONG_STRING_ERROR),
+				text: formatMessage(this.reactIntl, MESSAGE_KEYS.TRUNCATE_LONG_STRING_ERROR, { truncate_limit: TRUNCATE_LIMIT }),
 				type: CONDITION_MESSAGE_TYPE.ERROR,
 				validation_id: this.props.control.name
 			};
