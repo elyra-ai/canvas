@@ -68,7 +68,11 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 .right-flyout-panel {
 	height: 100%;
 	position: relative;
-	box-shadow: -2px 0 4px 0 rgba(22, 22, 22, 0.25);
+	box-shadow: -2px #{$toolbar-button-height} 4px 0 rgba(22, 22, 22, 0.25);
+
+	&.under-toolbar {
+		box-shadow: -2px 0 4px 0 rgba(22, 22, 22, 0.25);
+	}
 }
 
 /* Alternative layout for common-canvas components where canvas and right-side
