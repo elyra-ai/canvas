@@ -25,6 +25,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 
 const CLOCKWISE = false;
 const ANTI_CLOCKWISE = true;
+const ONE_EIGHTY_DEGREES_IN_RADIANS = Math.PI;
 
 export default class SvgCanvasLinks {
 	constructor(canvasLayout, config) {
@@ -673,16 +674,24 @@ export default class SvgCanvasLinks {
 		return { elements, centerPoint };
 	}
 
-	// Returns the path string for the object passed in which describes a
-	// simple straight connector line from source to target. This is used for
-	// connectors from comments to data nodes.
+	// Returns an object containing the path string, center position and angle
+	// for the line object passed in which describes a simple straight connector
+	// line from source to target.
 	getStraightPath(data) {
 		const path = "M " + data.x1 + " " + data.y1 + " L " + data.x2 + " " + data.y2;
+		const xDiff = data.x2 - data.x1;
+		const yDiff = data.y2 - data.y1;
 		const centerPoint = {
-			x: data.x1 + ((data.x2 - data.x1) / 2),
-			y: data.y1 + ((data.y2 - data.y1) / 2)
+			x: data.x1 + (xDiff / 2),
+			y: data.y1 + (yDiff / 2)
 		};
-		return { path, centerPoint };
+		let angle = Math.atan(yDiff / xDiff); // Atan(Opposite / Adjacent) = Angle in Radians
+
+		if (xDiff < 0) {
+			angle = ONE_EIGHTY_DEGREES_IN_RADIANS + angle;
+		}
+
+		return { path, centerPoint, angle };
 	}
 
 	getAssociationCurvePath(data, minInitialLine) {

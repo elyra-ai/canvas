@@ -3087,7 +3087,7 @@ export default class SVGCanvasRenderer {
 	updateDecOutlines(dec, decSel, objType, d) {
 		let outlnSel = decSel.select("rect");
 
-		if (!dec.label && dec.outline !== false) {
+		if (!dec.label && !dec.path && dec.outline !== false) {
 			outlnSel = outlnSel.empty() ? decSel.append("rect") : outlnSel;
 			outlnSel
 				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-outline`))
@@ -3819,6 +3819,12 @@ export default class SVGCanvasRenderer {
 			x = link.pathInfo.targetPoint ? link.pathInfo.targetPoint.x : link.x2;
 		}
 		x = typeof dec.x_pos !== "undefined" ? x + Number(dec.x_pos) : x;
+
+		// 'angle' will only be available when displaying straight link lines so
+		//  offset field is only applicable with straight lines.
+		if (dec.offset && link.pathInfo && link.pathInfo.angle) {
+			x += Math.cos(link.pathInfo.angle) * dec.offset;
+		}
 		return x;
 	}
 
@@ -3853,6 +3859,13 @@ export default class SVGCanvasRenderer {
 			y = link.pathInfo.targetPoint ? link.pathInfo.targetPoint.y : link.y2;
 		}
 		y = typeof dec.y_pos !== "undefined" ? y + Number(dec.y_pos) : y;
+
+		// 'angle' will only be available when displaying straight link lines so
+		// offset field is only applicable with straight lines.
+		if (dec.offset && link.pathInfo && link.pathInfo.angle) {
+			y += Math.sin(link.pathInfo.angle) * dec.offset;
+		}
+
 		return y;
 	}
 

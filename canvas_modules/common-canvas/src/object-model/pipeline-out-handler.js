@@ -171,8 +171,10 @@ export default class PipelineOutHandler {
 		var newDecorations = [];
 		if (decorations) {
 			decorations.forEach((decoration) => {
-				const dec = Object.assign({}, decoration); // This will only copy over set values and ignore undefineds
-				newDecorations.push(dec);
+				if (!decoration.temporary) {
+					const dec = Object.assign({}, decoration); // This will only copy over set values and ignore undefineds
+					newDecorations.push(dec);
+				}
 			});
 		}
 		return newDecorations;
