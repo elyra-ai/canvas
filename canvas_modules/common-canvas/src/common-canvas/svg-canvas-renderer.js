@@ -24,6 +24,7 @@ var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-s
 import { event as d3Event } from "d3-selection";
 import get from "lodash/get";
 import set from "lodash/set";
+import has from "lodash/has";
 import isEmpty from "lodash/isEmpty";
 import cloneDeep from "lodash/cloneDeep";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERROR,
@@ -3821,9 +3822,10 @@ export default class SVGCanvasRenderer {
 		x = typeof dec.x_pos !== "undefined" ? x + Number(dec.x_pos) : x;
 
 		// 'angle' will only be available when displaying straight link lines so
-		//  offset field is only applicable with straight lines.
-		if (dec.offset && link.pathInfo && link.pathInfo.angle) {
-			x += Math.cos(link.pathInfo.angle) * dec.offset;
+		//  distance field is only applicable with straight lines.
+		// 'angle' may be 0 so use has to check that it is not undefined.
+		if (dec.distance && has(link, "pathInfo.angle")) {
+			x += Math.cos(link.pathInfo.angle) * dec.distance;
 		}
 		return x;
 	}
@@ -3861,9 +3863,10 @@ export default class SVGCanvasRenderer {
 		y = typeof dec.y_pos !== "undefined" ? y + Number(dec.y_pos) : y;
 
 		// 'angle' will only be available when displaying straight link lines so
-		// offset field is only applicable with straight lines.
-		if (dec.offset && link.pathInfo && link.pathInfo.angle) {
-			y += Math.sin(link.pathInfo.angle) * dec.offset;
+		// distance field is only applicable with straight lines.
+		// 'angle' may be 0 so use has to check that it is not undefined.
+		if (dec.distance && has(link, "pathInfo.angle")) {
+			y += Math.sin(link.pathInfo.angle) * dec.distance;
 		}
 
 		return y;
