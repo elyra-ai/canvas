@@ -462,7 +462,9 @@ class PropertiesMain extends React.Component {
 			}
 			return (
 				<Provider store={this.propertiesController.getStore()}>
-					<div
+					<aside
+						aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL)}
+						role="complementary"
 						ref={ (ref) => (this.commonProperties = ref) }
 						className={className}
 						tabIndex="0"
@@ -473,7 +475,7 @@ class PropertiesMain extends React.Component {
 						{propertiesTitle}
 						{propertiesDialog}
 						{buttonsContainer}
-					</div>
+					</aside>
 				</Provider>
 			);
 		}
