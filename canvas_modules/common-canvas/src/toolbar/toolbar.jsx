@@ -146,8 +146,11 @@ class Toolbar extends React.Component {
 
 	getTopOfFirstOverflowItem(bar) {
 		const firstOverflowItem = this.getOverflowItem(0, bar);
-		const rect = firstOverflowItem.getBoundingClientRect();
-		return rect.top;
+		if (firstOverflowItem) {
+			const rect = firstOverflowItem.getBoundingClientRect();
+			return rect.top;
+		}
+		return 0;
 	}
 
 	getOverflowItem(index, bar) {
