@@ -254,7 +254,7 @@ $new-halo-link-color: $ui-05;
 
 .d3-node-dec-outline,
 .d3-link-dec-outline {
-	fill: $canvas-background-color;
+	fill: transparent;
 	stroke: $node-decoration-outline;
 	stroke-width: 1;
 	stroke-dasharray: 0;
