@@ -17,7 +17,7 @@
 	"node.collapseSupernodeInPlace": "Свернуть надузел",
 	"node.createSupernode": "Создать надузел",
 	"node.disconnectNode": "Разъединиться",
-	"node.editMenu": "Правка",
+	"node.editMenu": "Изменить",
 	"node.editNode": "Открыть",
 	"node.expandSupernodeInPlace": "Развернуть надузел",
 	"node.saveToPalette": "Сохранить в палитру"
