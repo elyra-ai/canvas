@@ -111,12 +111,6 @@
 				fill: transparent;
 				stroke-width: 0;
 			}
-
-			.d3-node-dec-image[data-id*="supernode-zoom"] {
-				display: none;
-				fill: transparent;
-				stroke-width: 0;
-			}
 		}
 
 		/* Hover over d3-node-group */
@@ -158,6 +152,17 @@
 		fill: none;
 		stroke: $ui-04;
 		stroke-width: 1;
+
+		.d3-link-dec-group {
+			.d3-link-dec-label {
+				text-anchor: middle;
+			}
+
+			.d3-link-dec-path {
+				fill: $ui-background;
+				stroke: $ui-background;
+			}
+		}
 	}
 
 	/* For association link */
