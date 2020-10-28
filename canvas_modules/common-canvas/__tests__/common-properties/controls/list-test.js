@@ -20,7 +20,7 @@ import { mountWithIntl, shallowWithIntl } from "../../_utils_/intl-utils";
 import { Provider } from "react-redux";
 import { expect } from "chai";
 import { setControls } from "../../_utils_/property-utils";
-import { getTableRows, selectCheckboxes, openFieldPicker, fieldPicker } from "./../../_utils_/table-utils";
+import { getTableRows, selectCheckboxes } from "./../../_utils_/table-utils";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
 import { TRUNCATE_LIMIT } from "./../../../src/common-properties/constants/constants.js";
@@ -347,7 +347,7 @@ describe("list renders correctly as a nested control", () => {
 		let onPanelList = summaryPanel.find(".properties-onpanel-container")
 			.find("div[data-id='properties-ci-complexListStructurelisteditor_list']");
 		expect(onPanelList).to.have.length(0);
-		selectCheckboxes(summaryPanel, [0]); // Select first row for onPaneledit
+		selectCheckboxes(summaryPanel, [0]); // Select first row for onPanel edit
 
 		// verify onPanel edit shows list control
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");

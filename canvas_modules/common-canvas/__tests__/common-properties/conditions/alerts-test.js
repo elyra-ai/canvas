@@ -147,7 +147,7 @@ describe("condition messages should add alerts tab for tables", () => {
 
 	it("alerts should not show messages for hidden table controls", () => {
 		// open the conditions tabs
-		const conditionsCategory = wrapper.find("div.properties-category-container").at(3); // Conditions category
+		const conditionsCategory = wrapper.find("div.properties-category-container").at(4); // Conditions category
 		const conditionsButton = conditionsCategory.find("button.properties-category-title");
 		expect(conditionsButton.text()).to.equal("Conditions");
 		conditionsButton.simulate("click");
