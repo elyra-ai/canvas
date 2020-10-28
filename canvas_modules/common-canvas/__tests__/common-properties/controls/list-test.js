@@ -20,10 +20,12 @@ import { mountWithIntl, shallowWithIntl } from "../../_utils_/intl-utils";
 import { Provider } from "react-redux";
 import { expect } from "chai";
 import { setControls } from "../../_utils_/property-utils";
-import { getTableRows, selectCheckboxes } from "./../../_utils_/table-utils";
+import { getTableRows, selectCheckboxes, openFieldPicker, fieldPicker } from "./../../_utils_/table-utils";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
 import { TRUNCATE_LIMIT } from "./../../../src/common-properties/constants/constants.js";
+
+import listParamDef from "../../test_resources/paramDefs/list_paramDef.json";
 
 const controlString = {
 	"name": "test-list-string",
@@ -315,5 +317,184 @@ describe("list renders correctly for array[integer]", () => {
 		// validate the third row is deleted
 		expect(controller.getPropertyValue(listIntegerPopertyId))
 			.to.eql(listIntegerCurrentValues.concat([null]));
+	});
+});
+
+describe("list renders correctly as a nested control", () => {
+	let wrapper;
+	let renderedController;
+
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(listParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+		// renderedController.setErrorMessages({});
+		// renderedController.setControlStates({});
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should render a `list` control inside a structurelisteditor", () => {
+		const propertyId = { name: "complexListStructurelisteditor" };
+		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
+		let table = summaryPanel.find("div[data-id='properties-ci-complexListStructurelisteditor']");
+		let tableData = renderedController.getPropertyValue(propertyId);
+		const expectedOriginal = listParamDef.current_parameters.complexListStructurelisteditor;
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
+
+		let onPanelList = summaryPanel.find(".properties-onpanel-container")
+			.find("div[data-id='properties-ci-complexListStructurelisteditor_list']");
+		expect(onPanelList).to.have.length(0);
+		selectCheckboxes(summaryPanel, [0]); // Select first row for onPaneledit
+
+		// verify onPanel edit shows list control
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
+		table = summaryPanel.find("div[data-id='properties-ci-complexListStructurelisteditor']");
+		onPanelList = table.find(".properties-onpanel-container")
+			.find("div[data-id='properties-ci-complexListStructurelisteditor_list']");
+		expect(onPanelList).to.have.length(1);
+
+		// select the add column button in nested list
+		let addColumnButton = onPanelList.find("button.properties-add-fields-button");
+		expect(addColumnButton).to.have.length(1);
+		addColumnButton.simulate("click");
+		addColumnButton.simulate("click");
+
+		// The table content should increase by 2
+		tableData = renderedController.getPropertyValue(propertyId);
+		let expected = [[1, "Ascending", ["", ""]]];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+
+		// edit nested list row index 0
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
+		onPanelList = summaryPanel.find(".properties-onpanel-container")
+			.find("div[data-id='properties-ci-complexListStructurelisteditor_list']");
+		const textinputs = onPanelList.find(".bx--text-input__field-wrapper");
+		expect(textinputs).to.have.length(2);
+		textinputs.at(0).find("input")
+			.simulate("change", { target: { value: "new value list 0" } });
+		tableData = renderedController.getPropertyValue(propertyId);
+		expected = [[1, "Ascending", ["new value list 0", ""]]];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+
+		// edit nested list row index 1
+		textinputs.at(1).find("input")
+			.simulate("change", { target: { value: "new value list 1" } });
+		tableData = renderedController.getPropertyValue(propertyId);
+		expected = [[1, "Ascending", ["new value list 0", "new value list 1"]]];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+
+		// deselect the row
+		selectCheckboxes(summaryPanel, [0]);
+
+		// Add another row to main table
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
+		const mainTable = summaryPanel.find("div[data-id='properties-complexListStructurelisteditor']");
+		addColumnButton = mainTable.find("button.properties-add-fields-button");
+		expect(addColumnButton).to.have.length(1);
+		addColumnButton.simulate("click");
+		tableData = renderedController.getPropertyValue(propertyId);
+		expected = [[1, "Ascending", ["new value list 0", "new value list 1"]], [2, "Ascending", []]];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
+		onPanelList = summaryPanel.find(".properties-onpanel-container")
+			.find("div[data-id='properties-ci-complexListStructurelisteditor_list']");
+		expect(onPanelList).to.have.length(0);
+		selectCheckboxes(summaryPanel, [1]); // Select second row for onPaneledit
+
+		// verify onPanel edit shows list control
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
+		table = summaryPanel.find("div[data-id='properties-ci-complexListStructurelisteditor']");
+		onPanelList = table.find(".properties-onpanel-container")
+			.find("div[data-id='properties-ci-complexListStructurelisteditor_list']");
+		expect(onPanelList).to.have.length(1);
+
+		// select the add column button in nested list
+		addColumnButton = onPanelList.find("button.properties-add-fields-button");
+		expect(addColumnButton).to.have.length(1);
+		addColumnButton.simulate("click");
+
+		// edit nested list row index 0
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
+		onPanelList = summaryPanel.find(".properties-onpanel-container")
+			.find("div[data-id='properties-ci-complexListStructurelisteditor_list']");
+		const secondTextinputs = onPanelList.find(".bx--text-input__field-wrapper");
+		expect(secondTextinputs).to.have.length(1);
+		secondTextinputs.find("input").simulate("change", { target: { value: "new value list 10" } });
+		tableData = renderedController.getPropertyValue(propertyId);
+		expected = [[1, "Ascending", ["new value list 0", "new value list 1"]], [2, "Ascending", ["new value list 10"]]];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+	});
+
+	it("should render a `list` control inside a structuretable", () => {
+		const propertyId = { name: "complexListStructuretable" };
+		const summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
+		let table = summaryPanel.find("div[data-id='properties-ci-complexListStructuretable']");
+		let tableData = renderedController.getPropertyValue(propertyId);
+		const expectedOriginal = listParamDef.current_parameters.complexListStructuretable;
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
+
+		// click on subpanel edit
+		const editButton = table.find(".properties-subpanel-button").at(0);
+		editButton.simulate("click");
+
+		// subPanel table
+		let subPanelTable = wrapper.find("div[data-id='properties-complexListStructuretables']");
+		// select the add column button in nested list
+		let addColumnButton = subPanelTable.find("button.properties-add-fields-button");
+		expect(addColumnButton).to.have.length(1);
+		addColumnButton.simulate("click");
+		addColumnButton.simulate("click");
+
+		// The table content should increase by 2
+		tableData = renderedController.getPropertyValue(propertyId);
+		let expected = [["Cholesterol", 5, "Ascending", ["", ""]], ["Na", 6, "Ascending", []]];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+
+		// edit nested list row index 0
+		subPanelTable = wrapper.find("div[data-id='properties-complexListStructuretables']");
+		let textinputs = subPanelTable.find(".bx--text-input__field-wrapper");
+		expect(textinputs).to.have.length(2);
+		textinputs.at(0).find("input")
+			.simulate("change", { target: { value: "new value list 0" } });
+		tableData = renderedController.getPropertyValue(propertyId);
+		expected = [["Cholesterol", 5, "Ascending", ["new value list 0", ""]], ["Na", 6, "Ascending", []]];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+
+		// edit nested list row index 1
+		textinputs.at(1).find("input")
+			.simulate("change", { target: { value: "new value list 1" } });
+		tableData = renderedController.getPropertyValue(propertyId);
+		expected = [["Cholesterol", 5, "Ascending", ["new value list 0", "new value list 1"]], ["Na", 6, "Ascending", []]];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+
+		// click on edit subpanel button of second row
+		table = summaryPanel.find("div[data-id='properties-ci-complexListStructuretable']");
+		const editBtns = table.find("button.properties-subpanel-button");
+		expect(editBtns).to.have.length(2);
+		editBtns.at(1).simulate("click");
+
+		// subPanel table of second row
+		subPanelTable = wrapper.find("div[data-id='properties-complexListStructuretables']").at(1);
+		// select the add column button in nested list
+		addColumnButton = subPanelTable.find("button.properties-add-fields-button");
+		expect(addColumnButton).to.have.length(1);
+		addColumnButton.simulate("click");
+
+		tableData = renderedController.getPropertyValue(propertyId);
+		expected = [["Cholesterol", 5, "Ascending", ["new value list 0", "new value list 1"]], ["Na", 6, "Ascending", [""]]];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+
+		// edit nested list row index 0
+		subPanelTable = wrapper.find("div[data-id='properties-complexListStructuretables']").at(1);
+		textinputs = subPanelTable.find(".bx--text-input__field-wrapper");
+		expect(textinputs).to.have.length(1);
+		textinputs.find("input").simulate("change", { target: { value: "new value list 10" } });
+		tableData = renderedController.getPropertyValue(propertyId);
+		expected = [["Cholesterol", 5, "Ascending", ["new value list 0", "new value list 1"]], ["Na", 6, "Ascending", ["new value list 10"]]];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 	});
 });
