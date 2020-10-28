@@ -303,6 +303,8 @@ const propertyId = { name: "keys" };
 const propertyIdReadonlyControl = { name: "structuretableSortOrder" };
 const propertyIdReadonlyControlStartValue = { name: "structuretableSortOrderStartValue" };
 const propertyIdMSE = { name: "ST_mse_table" };
+const propertyIdNestedStructureObject = { name: "nestedStructureObject" };
+const propertyIdNestedStructureMap = { name: "nestedStructureMap" };
 
 propertyUtils.setControls(controller, [control, readonlyControlDefault, readonlyControlStartValue]);
 
@@ -539,7 +541,6 @@ describe("condition renders correctly with structure table control", () => {
 	});
 });
 
-
 describe("structuretable control with readonly numbered column renders correctly", () => {
 	beforeEach(() => {
 		setPropertyValue();
@@ -668,7 +669,6 @@ describe("structuretable control with multi input schemas renders correctly", ()
 		}
 	});
 });
-
 
 describe("structuretable control displays with no header and no button", () => {
 	let wrapper;
@@ -871,7 +871,6 @@ describe("structuretable control displays with checkbox header", () => {
 	});
 });
 
-
 describe("structuretable control checkbox header ignores disabled rows", () => {
 	let wrapper;
 	let renderedController;
@@ -1058,5 +1057,157 @@ describe("structuretable with long text input values should render as readonly",
 		const validationMsg = subpanelTable.find("div.properties-validation-message");
 		expect(validationMsg).to.have.length(1);
 		expect(validationMsg.find("svg.canvas-state-icon-error")).to.have.length(1);
+	});
+});
+
+describe("structuretable control with nested structure tables", () => {
+	let wrapper;
+	let renderedController;
+	let summaryPanel;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should render a nested structuretable control that returns nested objects", () => {
+		const table = summaryPanel.find("div[data-id='properties-ci-nestedStructureObject']");
+		let tableData = renderedController.getPropertyValue(propertyIdNestedStructureObject, { applyProperties: true });
+		const expectedOriginal = structuretableParamDef.current_parameters.nestedStructureObject;
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
+
+		// click on subpanel edit for main table
+		let editButton = table.find(".properties-subpanel-button").at(0);
+		editButton.simulate("click");
+
+		// subPanel table
+		let subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
+		const addValueBtn = subPanelTable.find("button.properties-add-fields-button");
+		addValueBtn.simulate("click");
+
+		// Verify new row added
+		tableData = renderedController.getPropertyValue(propertyIdNestedStructureObject, { applyProperties: true });
+		let expected = [
+			{
+				"field": "Cholesterol",
+				"nestedStructure_readonly_int": 5,
+				"nestedStructure_sort_order": "Ascending",
+				"nestedStructure_table": [
+					{
+						"nestedStructure_table_readonly_col_index": 1,
+						"nestedStructure_table_name": "hi",
+						"nestedStructure_table_data_type": "string"
+					}, {
+						"nestedStructure_table_readonly_col_index": 2,
+						"nestedStructure_table_name": null,
+						"nestedStructure_table_data_type": ""
+					}
+				]
+			}
+		];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+
+		// click on subpanel edit for nested table
+		subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
+		expect(subPanelTable).to.have.length(1);
+		editButton = subPanelTable.find("button.properties-subpanel-button");
+		expect(editButton).to.have.length(2);
+		editButton.at(1).simulate("click");
+
+		// Modify value of the nested structure
+		const nameInput = wrapper.find("div[data-id='properties-ci-nestedStructure_table_name']");
+		nameInput.find("input").simulate("change", { target: { value: "new name" } });
+
+		// Verify modified values for econd row
+		tableData = renderedController.getPropertyValue(propertyIdNestedStructureObject, { applyProperties: true });
+		expected = [
+			{
+				"field": "Cholesterol",
+				"nestedStructure_readonly_int": 5,
+				"nestedStructure_sort_order": "Ascending",
+				"nestedStructure_table": [
+					{
+						"nestedStructure_table_readonly_col_index": 1,
+						"nestedStructure_table_name": "hi",
+						"nestedStructure_table_data_type": "string"
+					}, {
+						"nestedStructure_table_readonly_col_index": 2,
+						"nestedStructure_table_name": "new name",
+						"nestedStructure_table_data_type": null
+					}
+				]
+			}
+		];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+	});
+
+	it("should render a nested structuretable map control that returns nested arrays", () => {
+		const table = summaryPanel.find("div[data-id='properties-ci-nestedStructureMap']");
+		let tableData = renderedController.getPropertyValue(propertyIdNestedStructureMap, { applyProperties: true });
+		const expectedOriginal = structuretableParamDef.current_parameters.nestedStructureMap;
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
+
+		// click on subpanel edit for main table
+		let editButton = table.find(".properties-subpanel-button").at(0);
+		editButton.simulate("click");
+
+		// subPanel table
+		let subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructureMap_structure']");
+		const addValueBtn = subPanelTable.find("button.properties-add-fields-button");
+		addValueBtn.simulate("click");
+
+		// Verify new row added
+		tableData = renderedController.getPropertyValue(propertyIdNestedStructureMap, { applyProperties: true });
+		let expected = [
+			[
+				"Cholesterol",
+				5,
+				"Ascending",
+				[
+					[
+						1, "hello", "number"
+					],
+					[
+						2, null, null
+					]
+				]
+			]
+		];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+
+		// click on subpanel edit for nested table
+		subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructureMap_structure']");
+		expect(subPanelTable).to.have.length(1);
+		editButton = subPanelTable.find("button.properties-subpanel-button");
+		expect(editButton).to.have.length(2);
+		editButton.at(1).simulate("click");
+
+		// Modify value of the nested structure
+		const nameInput = wrapper.find("div[data-id='properties-ci-nestedStructureMap_structure_name']");
+		nameInput.find("input").simulate("change", { target: { value: "new name" } });
+
+		// Verify modified values for econd row
+		tableData = renderedController.getPropertyValue(propertyIdNestedStructureMap, { applyProperties: true });
+		expected = [
+			[
+				"Cholesterol",
+				5,
+				"Ascending",
+				[
+					[
+						1, "hello", "number"
+					],
+					[
+						2, "new name", null
+					]
+				]
+			]
+		];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 	});
 });

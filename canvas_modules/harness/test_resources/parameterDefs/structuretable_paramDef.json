@@ -181,7 +181,7 @@
     "nestedStructureObject": [
       {
         "field": "Cholesterol",
-        "nestedStructure_readonly_int": 1,
+        "nestedStructure_readonly_int": 5,
         "nestedStructure_sort_order": "Ascending",
         "nestedStructure_table": [
           {
@@ -228,7 +228,7 @@
         [
           [
             1,
-            100,
+            "hello",
             "number"
           ]
         ]
