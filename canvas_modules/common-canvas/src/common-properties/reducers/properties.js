@@ -70,7 +70,6 @@ function updateNestedPropertyValue(propertyId, newState, value) {
 				newState[propertyId.row] = [];
 			}
 
-			// todo: make recursive
 			if (typeof propertyId.propertyId !== "undefined") {
 				updateNestedPropertyValue(propertyId.propertyId, newState[propertyId.row][propertyId.col], value);
 			} else {

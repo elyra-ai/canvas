@@ -253,16 +253,22 @@ export default class PropertiesController {
 			};
 		}
 		// used for complex types that aren't tables
-		// if (propertyId && typeof propertyId.col !== "undefined" && typeof propertyId.row === "undefined") {
-		// 	const updatedPropertyId = cloneDeep(propertyId);
-		// 	updatedPropertyId.row = propertyId.col;
-		// 	delete updatedPropertyId.col;
-		// 	return updatedPropertyId;
-		// 	// return {
-		// 	// 	name: propertyId.name,
-		// 	// 	row: propertyId.col
-		// 	// };
-		// }
+		return this.convertNestedPropertyId(propertyId);
+	}
+
+	convertNestedPropertyId(propertyId) {
+		if (propertyId && typeof propertyId.col !== "undefined" && typeof propertyId.row === "undefined") {
+
+			let childPropertyId;
+			if (typeof propertyId.propertyId !== "undefined") {
+				childPropertyId = this.convertNestedPropertyId(propertyId.propertyId);
+			}
+			return {
+				name: propertyId.name,
+				row: propertyId.col,
+				propertyId: childPropertyId
+			};
+		}
 		return propertyId;
 	}
 

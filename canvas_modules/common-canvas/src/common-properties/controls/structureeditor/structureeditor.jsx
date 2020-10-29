@@ -74,7 +74,7 @@ class StructureEditorControl extends React.Component {
 			if (control && control.visible) {
 				const childPropertyId = {
 					name: this.props.control.name,
-					row: this._getColumnIndex(rowCtrlNames[y])
+					col: this._getColumnIndex(rowCtrlNames[y])
 				};
 				const parentPropertyId = cloneDeep(this.props.propertyId);
 
@@ -82,10 +82,6 @@ class StructureEditorControl extends React.Component {
 				if (parentPropertyId.name !== childPropertyId.name) {
 					propertyId = this.props.controller.setChildPropertyId(parentPropertyId, childPropertyId);
 				}
-				// const propertyId = {
-				// 	name: this.props.propertyId.name,
-				// 	col: this._getColumnIndex(rowCtrlNames[y])
-				// };
 				row.push(this.controlFactory.createControlItem(control, propertyId));
 			}
 		}
@@ -113,7 +109,7 @@ class StructureEditorControl extends React.Component {
 				if (this.props.control.subControls[i].visible) {
 					const childPropertyId = {
 						name: this.props.control.name,
-						row: this._getColumnIndex(this.props.control.subControls[i].name)
+						col: this._getColumnIndex(this.props.control.subControls[i].name)
 					};
 					const parentPropertyId = cloneDeep(this.props.propertyId);
 
@@ -121,10 +117,6 @@ class StructureEditorControl extends React.Component {
 					if (parentPropertyId.name !== childPropertyId.name) {
 						propertyId = this.props.controller.setChildPropertyId(parentPropertyId, childPropertyId);
 					}
-					// const propertyId = {
-					// 	name: this.props.propertyId.name,
-					// 	col: this._getColumnIndex(this.props.control.subControls[i].name)
-					// };
 					controls.push([this.controlFactory.createControlItem(this.props.control.subControls[i], propertyId)]);
 				}
 			}
