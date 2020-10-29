@@ -328,8 +328,6 @@ describe("list renders correctly as a nested control", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(listParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
-		// renderedController.setErrorMessages({});
-		// renderedController.setControlStates({});
 	});
 
 	afterEach(() => {
