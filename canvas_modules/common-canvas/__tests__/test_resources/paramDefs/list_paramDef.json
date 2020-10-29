@@ -1,0 +1,579 @@
+{
+  "titleDefinition": {
+    "title": "List Control"
+  },
+  "current_parameters": {
+    "list_string": [
+      "list item 1",
+      "list item 2",
+      "list item 3"
+    ],
+    "list_integer": [
+      10,
+      20,
+      30,
+      null
+    ],
+    "complexListStructurelisteditor": [
+      [
+        1,
+        "Ascending",
+        []
+      ]
+    ],
+    "complexListStructuretable": [
+      [
+        "Cholesterol",
+        1,
+        "Ascending",
+        []
+      ]
+    ],
+    "list_string_error": [
+      "not empty"
+    ],
+    "list_double_warning": [
+      1.1
+    ],
+    "hide": true,
+    "disable": true,
+    "list_long_value": [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    ],
+    "complexListStructurelisteditor": [[1,"Ascending"]],
+    "complexListStructuretable": [
+        [
+          "Cholesterol",
+          5,
+          "Ascending",
+          []
+        ],
+				[
+          "Na",
+          6,
+          "Ascending",
+          []
+        ]
+      ]
+  },
+  "parameters": [
+    {
+      "id": "list_string",
+      "type": "array[string]"
+    },
+    {
+      "id": "list_integer",
+      "type": "array[integer]"
+    },
+    {
+      "id": "complexListStructurelisteditor",
+      "type": "array[complexListStructurelisteditors]"
+    },
+    {
+      "id": "complexListStructuretable",
+      "type": "array[complexListStructuretables]",
+      "role": "column"
+    },
+    {
+      "id": "list_string_error",
+      "type": "array[string]"
+    },
+    {
+      "id": "list_double_warning",
+      "type": "array[double]"
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "list_string_hidden",
+      "type": "array[string]"
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "list_long_disabled",
+      "type": "array[long]",
+      "default": []
+    },
+    {
+      "id": "list_long_value",
+      "type": "array[string]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "complexListStructurelisteditors",
+      "parameters": [
+        {
+          "id": "complexListStructurelisteditor_readonly_int",
+          "type": "integer",
+          "default": "1"
+        },
+        {
+          "id": "complexListStructurelisteditor_sort_order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        },
+        {
+          "id": "complexListStructurelisteditor_list",
+          "type": "array[string]"
+        }
+      ]
+    },
+    {
+      "id": "complexListStructuretables",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "complexListStructuretable_readonly_int",
+          "type": "integer",
+          "default": "5"
+        },
+        {
+          "id": "complexListStructuretable_sort_order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        },
+        {
+          "id": "complexListStructuretable_list",
+          "type": "array[string]"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "list",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "List fields"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "list_string",
+        "label": {
+          "default": "list of strings"
+        },
+        "description": {
+          "default": "list with a string array value"
+        },
+        "control": "list",
+        "moveable_rows": true
+      },
+      {
+        "parameter_ref": "list_integer",
+        "label": {
+          "default": "list of integer values"
+        },
+        "description": {
+          "default": "list with an integer array value. Show '6' rows"
+        },
+        "control": "list",
+        "rows": 6
+      },
+      {
+        "parameter_ref": "complexListStructurelisteditor",
+        "required": true,
+        "label": {
+          "default": "List in Structurelisteditor"
+        },
+        "description": {
+          "default": "Lists can be nested inside structurelisteditor. The list can be edited on panel by selecting a row.",
+          "placement": "on_panel"
+        }
+      },
+      {
+        "parameter_ref": "complexListStructuretable",
+        "required": true,
+        "label": {
+          "default": "List in Structuretable"
+        },
+        "description": {
+          "default": "Lists can be nested inside structuretable. The list can be edited in a subPanel via the settings button.",
+          "placement": "on_panel"
+        }
+      },
+      {
+        "parameter_ref": "list_string_error",
+        "label": {
+          "default": "list of strings"
+        },
+        "description": {
+          "default": "list with show error if empty"
+        },
+        "control": "list",
+        "moveable_rows": true
+      },
+      {
+        "parameter_ref": "list_double_warning",
+        "label": {
+          "default": "list of double values"
+        },
+        "description": {
+          "default": "list will show warning if empty"
+        },
+        "control": "list"
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'List String Hidden'"
+        }
+      },
+      {
+        "parameter_ref": "list_string_hidden",
+        "label": {
+          "default": "list of strings"
+        },
+        "description": {
+          "default": "list with a string array value"
+        },
+        "control": "list",
+        "moveable_rows": true
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'List Integer Disabled'"
+        }
+      },
+      {
+        "parameter_ref": "list_long_disabled",
+        "label": {
+          "default": "list of long values"
+        },
+        "description": {
+          "default": "list with an integer array value"
+        },
+        "control": "list"
+      },
+      {
+        "parameter_ref": "list_long_value",
+        "label": {
+          "default": "list of long strings"
+        },
+        "description": {
+          "default": "list with a string array value"
+        },
+        "control": "list",
+        "moveable_rows": true
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "complexListStructurelisteditors",
+        "moveable_rows": true,
+        "parameters": [
+          {
+            "parameter_ref": "complexListStructurelisteditor_readonly_int",
+            "width": 16,
+            "label": {
+              "default": "Index"
+            },
+            "generated_values": {
+              "operation": "index",
+              "start_value": 1
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "complexListStructurelisteditor_sort_order",
+            "width": 16,
+            "label": {
+              "default": "Direction"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          },
+          {
+            "parameter_ref": "complexListStructurelisteditor_list",
+            "width": 16,
+            "label": {
+              "default": "List"
+            },
+            "edit_style": "on_panel",
+            "control": "list",
+            "moveable_rows": true,
+            "summary": true
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "complexListStructuretables",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "default": "Column"
+          },
+          "summary": true,
+          "dm_image": "invalid"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "complexListStructuretable_readonly_int",
+            "width": 10,
+            "label": {
+              "default": "Index"
+            },
+            "generated_values": {
+              "operation": "index",
+              "start_value": 5
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "complexListStructuretable_sort_order",
+            "width": 16,
+            "label": {
+              "default": "Order by"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          },
+          {
+            "parameter_ref": "complexListStructuretable_list",
+            "width": 16,
+            "label": {
+              "default": "List"
+            },
+            "edit_style": "subpanel",
+            "control": "list",
+            "moveable_rows": true,
+            "summary": true
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "list-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "list_string",
+          "list_integer"
+        ]
+      },
+      {
+        "id": "nested-list-structures",
+        "label": {
+          "default": "Nested Structures"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "nested-list-summary-panel",
+            "label": {
+              "default": "Nested Structures"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "list-structure",
+                "type": "controls",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "complexListStructurelisteditor",
+                  "complexListStructuretable"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "list-values-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "list_string_error",
+          "list_double_warning",
+          "hide",
+          "list_string_hidden",
+          "disable",
+          "list_long_disabled"
+        ]
+      },
+      {
+        "id": "list-values-error-handling",
+        "label": {
+          "default": "Error handling"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "list_long_value"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "list_string_error",
+          "message": {
+            "default": "List should not be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "list_string_error",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "list_double_warning",
+          "message": {
+            "default": "List should not be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "list_double_warning",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "list_string_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "list_long_disabled"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "ordered_set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "flag",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "collection",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "geospatial",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Ag",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ]
+}
