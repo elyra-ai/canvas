@@ -110,6 +110,9 @@ class ControlDef {
 		if (settings.childItem) {
 			this.childItem = settings.childItem;
 		}
+		if (settings.layout) {
+			this.layout = settings.layout;
+		}
 	}
 }
 
@@ -142,9 +145,6 @@ export class Control extends ControlDef {
 		}
 		if (typeof settings.includeAllFields === "boolean") {
 			this.includeAllFields = settings.includeAllFields;
-		}
-		if (settings.layout) {
-			this.layout = settings.layout;
 		}
 		if (settings.dmImage) {
 			this.dmImage = settings.dmImage;

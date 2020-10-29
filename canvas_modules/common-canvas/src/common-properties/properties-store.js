@@ -82,6 +82,9 @@ export default class PropertiesStore {
 				}
 				return rowValue[propertyId.col];
 			}
+			if (typeof propertyId.propertyId !== "undefined") { // nested structureeditor
+				return this.getNestedPropertyValue(propertyId.propertyId, rowValue);
+			}
 			return rowValue;
 		}
 		return propValue;

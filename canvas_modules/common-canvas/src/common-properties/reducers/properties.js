@@ -38,6 +38,8 @@ function properties(state = {}, action) {
 				} else {
 					newState[propertyId.name][propertyId.row][propertyId.col] = action.property.value;
 				}
+			} else if (typeof propertyId.propertyId !== "undefined") { // nested structureeditor
+				updateNestedPropertyValue(propertyId.propertyId, newState[propertyId.name][propertyId.row], action.property.value);
 			} else {
 				newState[propertyId.name][propertyId.row] = action.property.value;
 			}

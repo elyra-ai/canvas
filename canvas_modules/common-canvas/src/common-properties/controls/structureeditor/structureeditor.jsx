@@ -22,6 +22,7 @@ import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
 import { STATES } from "./../../constants/constants.js";
+import { cloneDeep } from "lodash";
 
 
 class StructureEditorControl extends React.Component {
@@ -71,10 +72,20 @@ class StructureEditorControl extends React.Component {
 		for (let y = 0; y < rowCtrlNames.length; y++) {
 			const control = this._getSubControlDef(rowCtrlNames[y]);
 			if (control && control.visible) {
-				const propertyId = {
-					name: this.props.propertyId.name,
-					col: this._getColumnIndex(rowCtrlNames[y])
+				const childPropertyId = {
+					name: this.props.control.name,
+					row: this._getColumnIndex(rowCtrlNames[y])
 				};
+				const parentPropertyId = cloneDeep(this.props.propertyId);
+
+				let propertyId = childPropertyId;
+				if (parentPropertyId.name !== childPropertyId.name) {
+					propertyId = this.props.controller.setChildPropertyId(parentPropertyId, childPropertyId);
+				}
+				// const propertyId = {
+				// 	name: this.props.propertyId.name,
+				// 	col: this._getColumnIndex(rowCtrlNames[y])
+				// };
 				row.push(this.controlFactory.createControlItem(control, propertyId));
 			}
 		}
@@ -100,10 +111,20 @@ class StructureEditorControl extends React.Component {
 			// If there is no layout, just arrange the controls in a single ordered column
 			for (let i = 0; i < this.props.control.subControls.length; i++) {
 				if (this.props.control.subControls[i].visible) {
-					const propertyId = {
-						name: this.props.propertyId.name,
-						col: this._getColumnIndex(this.props.control.subControls[i].name)
+					const childPropertyId = {
+						name: this.props.control.name,
+						row: this._getColumnIndex(this.props.control.subControls[i].name)
 					};
+					const parentPropertyId = cloneDeep(this.props.propertyId);
+
+					let propertyId = childPropertyId;
+					if (parentPropertyId.name !== childPropertyId.name) {
+						propertyId = this.props.controller.setChildPropertyId(parentPropertyId, childPropertyId);
+					}
+					// const propertyId = {
+					// 	name: this.props.propertyId.name,
+					// 	col: this._getColumnIndex(this.props.control.subControls[i].name)
+					// };
 					controls.push([this.controlFactory.createControlItem(this.props.control.subControls[i], propertyId)]);
 				}
 			}

@@ -253,12 +253,16 @@ export default class PropertiesController {
 			};
 		}
 		// used for complex types that aren't tables
-		if (propertyId && typeof propertyId.col !== "undefined" && typeof propertyId.row === "undefined") {
-			return {
-				name: propertyId.name,
-				row: propertyId.col
-			};
-		}
+		// if (propertyId && typeof propertyId.col !== "undefined" && typeof propertyId.row === "undefined") {
+		// 	const updatedPropertyId = cloneDeep(propertyId);
+		// 	updatedPropertyId.row = propertyId.col;
+		// 	delete updatedPropertyId.col;
+		// 	return updatedPropertyId;
+		// 	// return {
+		// 	// 	name: propertyId.name,
+		// 	// 	row: propertyId.col
+		// 	// };
+		// }
 		return propertyId;
 	}
 
