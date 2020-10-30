@@ -92,7 +92,8 @@ _defineConstant("MESSAGE_KEYS", {
 	LIST_TABLE_LABEL: "list.table.label",
 	DROPDOWN_TOOLTIP_OPENMENU: "dropdown.tooltip.openMenu",
 	DROPDOWN_TOOLTIP_CLOSEMENU: "dropdown.tooltip.closeMenu",
-	TRUNCATE_LONG_STRING_ERROR: "truncate.long.string.error"
+	TRUNCATE_LONG_STRING_ERROR: "truncate.long.string.error",
+	PROPERTIES_LABEL: "properties.label"
 });
 
 _defineConstant("CHARACTER_LIMITS", {

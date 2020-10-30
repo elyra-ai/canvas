@@ -70,5 +70,7 @@
   "moveable.table.button.bottom": "[Esperanto~Move to bottom~~eo]",
   "list.table.label": "[Esperanto~Values~~~~eo]",
   "dropdown.tooltip.openMenu": "[Esperanto~Open menu~~~~eo]",
-  "dropdown.tooltip.closeMenu": "[Esperanto~Close menu~~~~~~eo]"
+  "dropdown.tooltip.closeMenu": "[Esperanto~Close menu~~~~~~eo]",
+  "truncate.long.string.error": "[Esperanto~These values exceed the display limit of {truncate_limit} characters and can't be edited.~~~~~~~~~~~~eo]",
+  "properties.label": "[Esperanto~Properties~~~~~~eo]"
 }

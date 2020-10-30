@@ -16,7 +16,7 @@
 import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test adding a decorator to a node", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("decoratorCanvas.json");
 		cy.openCanvasAPI("Set Node Decorations");
@@ -112,7 +112,7 @@ describe("Test adding a decorator to a node", function() {
 
 
 describe("Test adding a decorator to a link", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("decoratorCanvas.json");
 		cy.openCanvasAPI("Set Link Decorations");
@@ -183,6 +183,44 @@ describe("Test adding a decorator to a link", function() {
 		// Check the path is correct
 		cy.verifyDecorationPathOnLink("Bottom Left-Bottom Right", "555", "M 0 0 L 10 10 -10 10 Z");
 	});
+
+	it("Test positioning a decoration using distance on a straight line link", function() {
+		// The 'distance' property is only applicable with straight link lines.
+		cy.setCanvasConfig({ "selectedLinkType": "Straight" });
+
+		// Test positive distance from source position
+		cy.selectLinkForDecoration("Bottom Left-Bottom Right");
+		cy.updateDecorationsJSON("[{{}\"id\": \"555\", \"position\": \"source\", " +
+			"\"distance\": 30{}}]");
+		cy.submitAPI();
+
+		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 410, 243.5);
+
+		// Test negative distance from target position
+		cy.selectLinkForDecoration("Bottom Left-Bottom Right");
+		cy.updateDecorationsJSON("[{{}\"id\": \"555\", \"position\": \"target\", " +
+			"\"distance\": -30{}}]");
+		cy.submitAPI();
+
+		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 566, 243.5);
+
+		// Test negative distance from middle position
+		cy.selectLinkForDecoration("Bottom Left-Bottom Right");
+		cy.updateDecorationsJSON("[{{}\"id\": \"555\", \"position\": \"middle\", " +
+			"\"distance\": -20{}}]");
+		cy.submitAPI();
+
+		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 468, 243.5);
+
+		// Test positive distance from middle position
+		cy.selectLinkForDecoration("Bottom Left-Bottom Right");
+		cy.updateDecorationsJSON("[{{}\"id\": \"555\", \"position\": \"middle\", " +
+			"\"distance\": 20{}}]");
+		cy.submitAPI();
+
+		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 508, 243.5);
+	});
+
 });
 
 function verifyDecorationHandlerEntryInConsole(decoratorId) {

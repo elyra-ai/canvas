@@ -148,4 +148,67 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(expectedComment.y_pos, actualComment.y_pos)).to.be.true;
 	});
 
+
+	it("should not save a decoration for a node when temporary property is true", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+
+		// First save a decoration with 'temporary' property not set
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setNodeDecorations("id8I6RH2V91XW", [{ id: 123, position: "topRight" }]);
+
+		const pf = canvasController.getPipelineFlow();
+		canvasController.setPipelineFlow(pf);
+		const node = canvasController.getNode("id8I6RH2V91XW");
+
+		// console.log(JSON.stringify(node.decorations));
+
+		// There should be one decoration
+		expect(node.decorations.length === 1).to.be.true;
+
+		// Now save a decoration with 'temporary' property set to true
+		const canvasController2 = new CanvasController();
+		canvasController2.setPipelineFlow(allTypesCanvas);
+		canvasController2.setNodeDecorations("id8I6RH2V91XW", [{ id: 123, position: "topRight", temporary: true }]);
+
+		const pf2 = canvasController2.getPipelineFlow();
+		canvasController2.setPipelineFlow(pf2);
+		const node2 = canvasController2.getNode("id8I6RH2V91XW");
+
+		// console.log(JSON.stringify(node2.decorations));
+
+		// There should be no decorations property
+		expect(node2.decorations.length === 0).to.be.true;
+	});
+
+	it("should not save a decoration for a link when temporary property is true", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+
+		// First save a decoration with 'temporary' property not set
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setLinkDecorations("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb", [{ id: 123, position: "middle" }]);
+
+		const pf = canvasController.getPipelineFlow();
+		canvasController.setPipelineFlow(pf);
+		const link = canvasController.getLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+
+		// There should be one decoration
+		expect(link.decorations.length === 1).to.be.true;
+
+		// Now save a decoration with 'temporary' property set to true
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setLinkDecorations("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb", [{ id: 123, position: "middle", temporary: true }]);
+
+		const pf2 = canvasController.getPipelineFlow();
+		canvasController.setPipelineFlow(pf2);
+		const link2 = canvasController.getLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+
+		// There should be no decorations property
+		expect(typeof link2.decorations === "undefined").to.be.true;
+	});
+
+
 });

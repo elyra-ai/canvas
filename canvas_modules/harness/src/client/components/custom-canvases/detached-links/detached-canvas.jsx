@@ -16,6 +16,21 @@ export default class DetachedCanvas extends React.Component {
 
 		this.getConfig = this.getConfig.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
+
+		// Add decorations to the links
+		const pId = this.canvasController.getPrimaryPipelineId();
+		const pipelineLinkDecorations =
+			this.canvasController.getLinks().map((link) => {
+				const decs = [
+					{ id: "dec-1", position: "source", image: "images/up-triangle.svg", distance: 40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
+					{ id: "dec-2", position: "target", image: "images/down-triangle.svg", distance: -40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
+					{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", temporary: true },
+					{ id: "dec-4", position: "middle", label: link.id, y_pos: 5, temporary: true }
+				];
+				return { linkId: link.id, pipelineId: pId, decorations: decs };
+			});
+		this.canvasController.setLinksMultiDecorations(pipelineLinkDecorations);
+
 	}
 
 	getConfig() {

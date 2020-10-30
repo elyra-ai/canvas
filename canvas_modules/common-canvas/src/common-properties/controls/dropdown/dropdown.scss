@@ -17,6 +17,10 @@
 .properties-dropdown {
 	padding: 5px 0;
 
+	.bx--list-box--expanded .bx--list-box__menu {
+		margin-bottom: 1px; // Show dropdown menu border above Save/Cancel buttons
+	}
+
 	&.hide {
 		display: none;
 	}
