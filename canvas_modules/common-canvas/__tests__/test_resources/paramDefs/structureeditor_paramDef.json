@@ -38,6 +38,22 @@
         90210,
         "rental address"
       ]
+    ],
+    "nestedStructureeditorTable": [
+      "name",
+      23,
+      [
+        [
+          "address1",
+          90210,
+          ["rental address"]
+        ],
+        [
+          "address2",
+          90211,
+          ["work address"]
+        ]
+      ]
     ]
   },
   "complex_types": [
@@ -210,6 +226,42 @@
           "role": "new_column"
         }
       ]
+    },
+    {
+      "id": "userInfoTable",
+      "parameters": [
+        {
+          "id": "userName",
+          "type": "string"
+        },
+        {
+          "id": "userAge",
+          "type": "integer"
+        },
+        {
+          "id": "userAddressTable",
+          "type": "array[userAddressTable]"
+        }
+      ]
+    },
+    {
+      "id": "userAddressTable",
+      "parameters": [
+        {
+          "id": "userAddressTable",
+          "type": "string"
+        },
+        {
+          "id": "userZipTable",
+          "type": "integer"
+        },
+        {
+          "id": "annotationTable",
+          "type": "array[string]",
+          "default": [],
+          "role": "new_column"
+        }
+      ]
     }
   ],
   "parameters": [
@@ -264,6 +316,11 @@
     {
       "id": "nestedStructureeditor",
       "type": "userInfo",
+      "default": []
+    },
+    {
+      "id": "nestedStructureeditorTable",
+      "type": "userInfoTable",
       "default": []
     }
   ],
@@ -486,6 +543,63 @@
             }
           }
         ]
+      },
+      {
+        "complex_type_ref": "userInfoTable",
+        "layout": [
+          ["userName", "userAge"],
+          ["userAddressTable"]
+        ],
+        "parameters": [
+          {
+            "parameter_ref": "userName",
+            "label": {
+              "default": "Name"
+            }
+          },
+          {
+            "parameter_ref": "userAge",
+            "label": {
+              "default": "Age"
+            }
+          },
+          {
+            "parameter_ref": "userAddressTable",
+            "label": {
+              "default": "Address Info"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "userAddressTable",
+        "parameters": [
+          {
+            "parameter_ref": "userAddressTable",
+            "label": {
+              "default": "Address"
+            },
+            "width": 25
+          },
+          {
+            "parameter_ref": "userZipTable",
+            "label": {
+              "default": "Zip code"
+            },
+            "width": 10,
+            "edit_style": "subpanel",
+            "visible": false
+          },
+          {
+            "parameter_ref": "annotationTable",
+            "label": {
+              "default": "Note"
+            },
+            "edit_style": "subpanel",
+            "visible": false,
+            "width": 15
+          }
+        ]
       }
     ],
     "parameter_info": [
@@ -559,7 +673,18 @@
         },
         "description": {
           "default": "Example of a structureeditor control within a structureeditor"
-        }
+        },
+        "separator": "after"
+      },
+      {
+        "parameter_ref": "nestedStructureeditorTable",
+        "label": {
+          "default": "Nested Table in Layout"
+        },
+        "description": {
+          "default": "Example of a structurelisteditor control within a structureeditor"
+        },
+        "separator": "after"
       }
     ],
     "group_info": [
@@ -599,7 +724,8 @@
           "default": "Nested structures"
         },
         "parameter_refs": [
-          "nestedStructureeditor"
+          "nestedStructureeditor",
+          "nestedStructureeditorTable"
         ]
       },
       {

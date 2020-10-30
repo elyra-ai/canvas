@@ -401,4 +401,73 @@ describe("structureeditor control renders correctly in a nested structure", () =
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
 	});
 
+	it("structurlisteditor control can be nested in a structureeditor", () => {
+		const propertyId = { name: "nestedStructureeditorTable" };
+		let structure = wrapper.find("div[data-id='properties-ci-nestedStructureeditorTable']");
+		let actual = controller.getPropertyValue(propertyId);
+		let expected = structureeditorParamDef.current_parameters.nestedStructureeditorTable;
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+
+		// Add a new row to the nested table
+		const addValueBtn = structure.find("button.properties-add-fields-button");
+		expect(addValueBtn).to.have.length(1);
+		addValueBtn.simulate("click");
+
+		// Verify there are three rows
+		structure = wrapper.find("div[data-id='properties-ci-nestedStructureeditorTable']");
+		const tableRows = structure.find("div[role='properties-data-row']");
+		expect(tableRows).to.have.length(3);
+		const thirdRow = tableRows.at(2);
+
+		// Modify values in the third row
+		const addressInput = thirdRow.find(".properties-textfield").find("input");
+		addressInput.simulate("change", { target: { value: "add third address" } });
+		// Verify modified values
+		actual = controller.getPropertyValue(propertyId);
+		expected = [
+			"name",
+			23,
+			[
+				[
+					"address1", 90210, ["rental address"]
+				],
+				[
+					"address2", 90211, ["work address"]
+				],
+				[
+					"add third address"
+				]
+			]
+		];
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+
+		// Click on subpanel to edit the hidden fields 'userZipTable' and 'annotationTable'
+		const editButton = thirdRow.find("button.properties-subpanel-button");
+		expect(editButton).to.have.length(1);
+		editButton.simulate("click");
+
+		const zipInput = wrapper.find("div[data-id='properties-ci-userZipTable']").find("input");
+		zipInput.simulate("change", { target: { value: 99999 } });
+		const annotationInput = wrapper.find("div[data-id='properties-ci-annotationTable']").find("textarea");
+		annotationInput.simulate("change", { target: { value: "Set a dummy zip code" } });
+
+		// Verify modified values
+		actual = controller.getPropertyValue(propertyId);
+		expected = [
+			"name",
+			23,
+			[
+				[
+					"address1", 90210, ["rental address"]
+				],
+				[
+					"address2", 90211, ["work address"]
+				],
+				[
+					"add third address", 99999, ["Set a dummy zip code"]
+				]
+			]
+		];
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+	});
 });

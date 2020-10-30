@@ -29,6 +29,7 @@ class StructureEditorControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.controlFactory = new ControlFactory(this.props.controller);
+		this.controlFactory.setFunctions(this.props.openFieldPicker, this.props.buildUIItem);
 	}
 
 	/**
@@ -152,9 +153,12 @@ class StructureEditorControl extends React.Component {
 }
 
 StructureEditorControl.propTypes = {
+	buildUIItem: PropTypes.func,
 	control: PropTypes.object,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	openFieldPicker: PropTypes.func,
+	rightFlyout: PropTypes.bool,
 	state: PropTypes.string, // passed in by redux
 	value: PropTypes.array, // passed in by redux
 	messageInfo: PropTypes.object // passed in by redux
