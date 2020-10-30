@@ -62,13 +62,13 @@ describe("Flyout editor has the correct width", () => {
 	it("should display a fly out editor at normal width", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(panelParamDef);
 		const wrapper = renderedObject.wrapper;
-		const flyout = wrapper.find("div.properties-right-flyout.properties-small");
+		const flyout = wrapper.find("aside.properties-right-flyout.properties-small");
 		expect(flyout).to.have.length(1);
 	});
 	it("should display a wide fly out editor at wider width", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(panelParamDefWide);
 		const wrapper = renderedObject.wrapper;
-		const flyout = wrapper.find("div.properties-right-flyout.properties-medium");
+		const flyout = wrapper.find("aside.properties-right-flyout.properties-medium");
 		expect(flyout).to.have.length(1);
 	});
 });

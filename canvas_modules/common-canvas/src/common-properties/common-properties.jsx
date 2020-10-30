@@ -101,6 +101,7 @@ class CommonProperties extends React.Component {
 		const closeFunction = this.props.callbacks.closePropertiesDialog;
 		const revertText = formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REVERTBUTTON_LABEL);
 		const revertFunction = this.revertState;
+		const propertiesLandmarkRoleLabel = formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL);
 		let closeAndRevertContainer;
 		if (this.props.propertiesConfig.containerType === "Custom") { // Right flyout view or Custom
 			if (this.propertiesMainHasMounted === true) {
@@ -132,7 +133,11 @@ class CommonProperties extends React.Component {
 			}
 			if (this.props.propertiesConfig.rightFlyout) { // Right Flyout View
 				return (
-					<div className="properties-wrapper properties-right-flyout properties-small">
+					<aside
+						aria-label={propertiesLandmarkRoleLabel}
+						role="complementary"
+						className="properties-wrapper properties-right-flyout properties-small"
+					>
 						<div className="properties-flyout-error-container">
 							{errorHeading}
 							<br />
@@ -144,11 +149,15 @@ class CommonProperties extends React.Component {
 							</div >
 						</div>
 						{closeAndRevertContainer}
-					</div>
+					</aside>
 				);
 			}
 			return ( // Non Right Flyout Custom
-				<div className="properties-wrapper properties-custom-container">
+				<aside
+					aria-label={propertiesLandmarkRoleLabel}
+					role="complementary"
+					className="properties-wrapper properties-custom-container"
+				>
 					<div className= "properties-flyout-error-container">
 						{ errorHeading }
 						<br />
@@ -160,7 +169,7 @@ class CommonProperties extends React.Component {
 						</div >
 					</div>
 					{closeAndRevertContainer}
-				</div>
+				</aside>
 			);
 		}
 		// Modal View

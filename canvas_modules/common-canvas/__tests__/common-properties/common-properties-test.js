@@ -154,7 +154,7 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
-		const commonProperties = wrapper.find("div.properties-right-flyout").at(1);
+		const commonProperties = wrapper.find("aside.properties-right-flyout");
 		commonProperties.simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
@@ -200,7 +200,7 @@ describe("CommonProperties works correctly in flyout", () => {
 		enabledRemoveColumnButton.simulate("click");
 
 		// save again: should save changes
-		wrapper.find("div.properties-right-flyout").at(1)
+		wrapper.find("aside.properties-right-flyout")
 			.simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
@@ -223,14 +223,14 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(1);
-		expect(wrapper.find("div.properties-small")).to.have.length(1);
-		expect(wrapper.find("div.properties-medium")).to.have.length(0);
+		expect(wrapper.find("aside.properties-small")).to.have.length(1);
+		expect(wrapper.find("aside.properties-medium")).to.have.length(0);
 		resizeBtn.simulate("click");
-		expect(wrapper.find("div.properties-small")).to.have.length(0);
-		expect(wrapper.find("div.properties-medium")).to.have.length(1);
+		expect(wrapper.find("aside.properties-small")).to.have.length(0);
+		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
 		resizeBtn.simulate("click");
-		expect(wrapper.find("div.properties-small")).to.have.length(1);
-		expect(wrapper.find("div.properties-medium")).to.have.length(0);
+		expect(wrapper.find("aside.properties-small")).to.have.length(1);
+		expect(wrapper.find("aside.properties-medium")).to.have.length(0);
 	});
 
 	it("When enableResize=true and editor_size=small resize button should be rendered", () => {
@@ -240,14 +240,14 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(1);
-		expect(wrapper.find("div.properties-small")).to.have.length(1);
-		expect(wrapper.find("div.properties-medium")).to.have.length(0);
+		expect(wrapper.find("aside.properties-small")).to.have.length(1);
+		expect(wrapper.find("aside.properties-medium")).to.have.length(0);
 		resizeBtn.simulate("click");
-		expect(wrapper.find("div.properties-small")).to.have.length(0);
-		expect(wrapper.find("div.properties-medium")).to.have.length(1);
+		expect(wrapper.find("aside.properties-small")).to.have.length(0);
+		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
 		resizeBtn.simulate("click");
-		expect(wrapper.find("div.properties-small")).to.have.length(1);
-		expect(wrapper.find("div.properties-medium")).to.have.length(0);
+		expect(wrapper.find("aside.properties-small")).to.have.length(1);
+		expect(wrapper.find("aside.properties-medium")).to.have.length(0);
 	});
 
 	it("When enableResize=true and editor_size=medium resize button should be rendered", () => {
@@ -267,17 +267,17 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(1);
-		expect(wrapper.find("div.properties-small")).to.have.length(1);
-		expect(wrapper.find("div.properties-medium")).to.have.length(0);
-		expect(wrapper.find("div.properties-small").get(0).props.style).to.have.property("width", "400px");
+		expect(wrapper.find("aside.properties-small")).to.have.length(1);
+		expect(wrapper.find("aside.properties-medium")).to.have.length(0);
+		expect(wrapper.find("aside.properties-small").get(0).props.style).to.have.property("width", "400px");
 		resizeBtn.simulate("click");
-		expect(wrapper.find("div.properties-small")).to.have.length(0);
-		expect(wrapper.find("div.properties-medium")).to.have.length(1);
-		expect(wrapper.find("div.properties-medium").get(0).props.style).to.have.property("width", "800px");
+		expect(wrapper.find("aside.properties-small")).to.have.length(0);
+		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
+		expect(wrapper.find("aside.properties-medium").get(0).props.style).to.have.property("width", "800px");
 		resizeBtn.simulate("click");
-		expect(wrapper.find("div.properties-small")).to.have.length(1);
-		expect(wrapper.find("div.properties-medium")).to.have.length(0);
-		expect(wrapper.find("div.properties-small").get(0).props.style).to.have.property("width", "400px");
+		expect(wrapper.find("aside.properties-small")).to.have.length(1);
+		expect(wrapper.find("aside.properties-medium")).to.have.length(0);
+		expect(wrapper.find("aside.properties-small").get(0).props.style).to.have.property("width", "400px");
 	});
 
 	it("When enableResize=true and editor_size=medium and pixel_width min and max are set resize button should be rendered", () => {
@@ -288,17 +288,17 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(1);
-		expect(wrapper.find("div.properties-medium")).to.have.length(1);
-		expect(wrapper.find("div.properties-large")).to.have.length(0);
-		expect(wrapper.find("div.properties-medium").get(0).props.style).to.have.property("width", "400px");
+		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
+		expect(wrapper.find("aside.properties-large")).to.have.length(0);
+		expect(wrapper.find("aside.properties-medium").get(0).props.style).to.have.property("width", "400px");
 		resizeBtn.simulate("click");
-		expect(wrapper.find("div.properties-medium")).to.have.length(0);
-		expect(wrapper.find("div.properties-large")).to.have.length(1);
-		expect(wrapper.find("div.properties-large").get(0).props.style).to.have.property("width", "800px");
+		expect(wrapper.find("aside.properties-medium")).to.have.length(0);
+		expect(wrapper.find("aside.properties-large")).to.have.length(1);
+		expect(wrapper.find("aside.properties-large").get(0).props.style).to.have.property("width", "800px");
 		resizeBtn.simulate("click");
-		expect(wrapper.find("div.properties-medium")).to.have.length(1);
-		expect(wrapper.find("div.properties-large")).to.have.length(0);
-		expect(wrapper.find("div.properties-medium").get(0).props.style).to.have.property("width", "400px");
+		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
+		expect(wrapper.find("aside.properties-large")).to.have.length(0);
+		expect(wrapper.find("aside.properties-medium").get(0).props.style).to.have.property("width", "400px");
 	});
 
 	it("When enableResize=true and editor_size=small and pixel_width min and max are the same the resize button should not be rendered", () => {
@@ -309,8 +309,8 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(0);
-		expect(wrapper.find("div.properties-small")).to.have.length(1);
-		expect(wrapper.find("div.properties-small").get(0).props.style).to.have.property("width", "800px");
+		expect(wrapper.find("aside.properties-small")).to.have.length(1);
+		expect(wrapper.find("aside.properties-small").get(0).props.style).to.have.property("width", "800px");
 	});
 
 	it("When enableResize=true and editor_size=medium and pixel_width min and max are the same the resize button should not be rendered", () => {
@@ -321,8 +321,8 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(0);
-		expect(wrapper.find("div.properties-medium")).to.have.length(1);
-		expect(wrapper.find("div.properties-medium").get(0).props.style).to.have.property("width", "800px");
+		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
+		expect(wrapper.find("aside.properties-medium").get(0).props.style).to.have.property("width", "800px");
 	});
 
 	it("When enableResize=true and editor_size=large and pixel_width is ommited the resize button should not be rendered", () => {
@@ -332,7 +332,7 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(0);
-		expect(wrapper.find("div.properties-large")).to.have.length(1);
+		expect(wrapper.find("aside.properties-large")).to.have.length(1);
 	});
 
 	it("When enableResize=true and editor_size=large and pixel_width min and max is provided the resize button should not be rendered", () => {
@@ -343,8 +343,8 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(0);
-		expect(wrapper.find("div.properties-large")).to.have.length(1);
-		expect(wrapper.find("div.properties-large").get(0).props.style).to.have.property("width", "800px");
+		expect(wrapper.find("aside.properties-large")).to.have.length(1);
+		expect(wrapper.find("aside.properties-large").get(0).props.style).to.have.property("width", "800px");
 	});
 
 	it("When enableResize=true and editor_size is omitted and pixel_width min and max are the same the resize button should not be rendered", () => {
@@ -354,14 +354,14 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(0);
-		expect(wrapper.find("div.properties-small")).to.have.length(1);
-		expect(wrapper.find("div.properties-small").get(0).props.style).to.have.property("width", "800px");
+		expect(wrapper.find("aside.properties-small")).to.have.length(1);
+		expect(wrapper.find("aside.properties-small").get(0).props.style).to.have.property("width", "800px");
 	});
 
 	it("When no groups or parameters are defined the flyout should still render", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(emptyParamDef);
 		wrapper = renderedObject.wrapper;
-		expect(wrapper.find("div.properties-wrapper")).to.have.length(1);
+		expect(wrapper.find("aside.properties-wrapper")).to.have.length(1);
 		expect(wrapper.find("div.properties-title-editor")).to.have.length(1);
 		expect(wrapper.find("div.properties-custom-container")).to.have.length(1);
 		expect(wrapper.find("div.properties-modal-buttons")).to.have.length(1);
@@ -435,7 +435,7 @@ describe("CommonProperties validates on close in flyout", () => {
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
 
 		// similate blur with no changes, expect validation error messages
-		wrapper.find("div.properties-right-flyout").at(1)
+		wrapper.find("aside.properties-right-flyout")
 			.simulate("blur");
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErrorMessages));
 	});
@@ -590,7 +590,7 @@ describe("New error messages of a control should be detected and applyPropertyCh
 		renderedObject.wrapper.find("CommonProperties").find("div.properties-title-editor")
 			.at(0)
 			.simulate("click"); // Focus on the editor
-		renderedObject.wrapper.find("div.properties-right-flyout").at(1)
+		renderedObject.wrapper.find("aside.properties-right-flyout")
 			.simulate("blur"); // On blur
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 	});
