@@ -36,23 +36,7 @@
       [
         "address",
         90210,
-				"rental address"
-      ]
-    ],
-		"nestedStructureeditorTable": [
-      "name",
-      23,
-      [
-      	[
-					"address1",
-        	90210,
-					"rental address"
-				],
-				[
-					"address2",
-        	90211,
-					"work address"
-				]
+        "rental address"
       ]
     ]
   },
@@ -191,7 +175,7 @@
         }
       ]
     },
-		{
+    {
       "id": "userInfo",
       "parameters": [
         {
@@ -203,13 +187,13 @@
           "type": "integer"
         },
         {
-          "id": "userAddress",
-          "type": "userAddress"
+          "id": "userAddressInfo",
+          "type": "userAddressStructure"
         }
       ]
     },
-		{
-      "id": "userAddress",
+    {
+      "id": "userAddressStructure",
       "parameters": [
         {
           "id": "userAddress",
@@ -219,45 +203,9 @@
           "id": "userZip",
           "type": "integer"
         },
-				{
+        {
           "id": "annotation",
-					"type": "array[string]",
-          "default": [],
-          "role": "new_column"
-        }
-      ]
-    },
-		{
-      "id": "userInfoTable",
-      "parameters": [
-        {
-          "id": "userName",
-          "type": "string"
-        },
-        {
-          "id": "userAge",
-          "type": "integer"
-        },
-        {
-          "id": "userAddressTable",
-          "type": "array[userAddressTable]"
-        }
-      ]
-    },
-		{
-      "id": "userAddressTable",
-      "parameters": [
-        {
-          "id": "userAddress",
-          "type": "string"
-        },
-        {
-          "id": "userZip",
-          "type": "integer"
-        },
-				{
-          "id": "annotation",
-					"type": "array[string]",
+          "type": "array[string]",
           "default": [],
           "role": "new_column"
         }
@@ -316,11 +264,6 @@
     {
       "id": "nestedStructureeditor",
       "type": "userInfo",
-      "default": []
-    },
-    {
-      "id": "nestedStructureeditorTable",
-      "type": "userInfoTable",
       "default": []
     }
   ],
@@ -490,11 +433,11 @@
           }
         ]
       },
-			{
+      {
         "complex_type_ref": "userInfo",
         "layout": [
           ["userName", "userAge"],
-          ["userAddress"]
+          ["userAddressInfo"]
         ],
         "parameters": [
           {
@@ -510,15 +453,15 @@
             }
           },
           {
-            "parameter_ref": "userAddress",
+            "parameter_ref": "userAddressInfo",
             "label": {
               "default": "Address Info"
             }
           }
         ]
       },
-			{
-        "complex_type_ref": "userAddress",
+      {
+        "complex_type_ref": "userAddressStructure",
         "layout": [
           ["userAddress", "userZip"],
           ["annotation"]
@@ -541,60 +484,6 @@
             "label": {
               "default": "Note"
             }
-          }
-        ]
-      },
-			{
-        "complex_type_ref": "userInfoTable",
-        "layout": [
-          ["userName", "userAge"],
-          ["userAddress"]
-        ],
-        "parameters": [
-          {
-            "parameter_ref": "userName",
-            "label": {
-              "default": "Name"
-            }
-          },
-          {
-            "parameter_ref": "userAge",
-            "label": {
-              "default": "Age"
-            }
-          },
-          {
-            "parameter_ref": "userAddress",
-            "label": {
-              "default": "Address Info"
-            }
-          }
-        ]
-      },
-			{
-        "complex_type_ref": "userAddressTable",
-        "parameters": [
-          {
-            "parameter_ref": "userAddress",
-            "label": {
-              "default": "Address"
-            },
-            "width": 25
-          },
-          {
-            "parameter_ref": "userZip",
-            "label": {
-              "default": "Zip code"
-            },
-            "width": 10
-          },
-          {
-            "parameter_ref": "annotation",
-            "label": {
-              "default": "Note"
-            },
-            "edit_style": "subpanel",
-            "width": 15
           }
         ]
       }
@@ -663,22 +552,13 @@
           "default": "Layout Controls"
         }
       },
-			{
+      {
         "parameter_ref": "nestedStructureeditor",
         "label": {
           "default": "Nested Layout Controls"
         },
         "description": {
           "default": "Example of a structureeditor control within a structureeditor"
-        }
-      },
-			{
-        "parameter_ref": "nestedStructureeditorTable",
-        "label": {
-          "default": "Nested Table in Layout"
-        },
-        "description": {
-          "default": "Example of a structurelisteditor control within a structureeditor"
         }
       }
     ],
@@ -719,8 +599,7 @@
           "default": "Nested structures"
         },
         "parameter_refs": [
-          "nestedStructureeditor",
-					"nestedStructureeditorTable"
+          "nestedStructureeditor"
         ]
       },
       {

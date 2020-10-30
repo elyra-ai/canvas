@@ -363,3 +363,42 @@ describe("structureeditor control renders correctly with paramDef", () => {
 	});
 
 });
+
+describe("structureeditor control renders correctly in a nested structure", () => {
+	let wrapper;
+	let controller;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structureeditorParamDef);
+		wrapper = renderedObject.wrapper;
+		controller = renderedObject.controller;
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("structureeditor control can be nested in a structureeditor", () => {
+		const propertyId = { name: "nestedStructureeditor" };
+		const structure = wrapper.find("div[data-id='properties-ci-nestedStructureeditor']");
+		let actual = controller.getPropertyValue(propertyId);
+		let expected = structureeditorParamDef.current_parameters.nestedStructureeditor;
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+
+		const addressInput = structure.find("div[data-id='properties-ci-userAddress']").find("input");
+		addressInput.simulate("change", { target: { value: "some new address" } });
+
+		const zipInput = structure.find("div[data-id='properties-ci-userZip']").find("input");
+		zipInput.simulate("change", { target: { value: 99999 } });
+
+		// Verify modified values
+		actual = controller.getPropertyValue(propertyId);
+		expected = [
+			"name",
+			23,
+			[
+				"some new address", 99999, "rental address"
+			]
+		];
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+	});
+
+});
