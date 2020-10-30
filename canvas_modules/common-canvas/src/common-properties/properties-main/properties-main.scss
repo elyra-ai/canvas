@@ -22,7 +22,7 @@
 	width: 0;
 	height: 100%;
 	background-color: $ui-01;
-	overflow: hidden;
+	overflow: visible; //  Tooltips should be visible on overflow
 	border-left: 1px solid $ui-03;
 	outline: none;
 	&.properties-small {
@@ -69,6 +69,6 @@
 
 .properties-right-flyout > .properties-custom-container {
 	height: calc(100% - 106px);
-	overflow-y: auto;
+	overflow-y: visible;
 	transform: translateZ(0); // https://github.com/elyra-ai/canvas/issues/160
 }

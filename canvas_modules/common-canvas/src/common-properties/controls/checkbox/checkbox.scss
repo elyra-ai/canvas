@@ -25,3 +25,10 @@
 		padding: 1px; // Allow space for checkbox borders to show when embedded within a table.
 	}
 }
+.properties-checkbox-label {
+	display: flex;
+	align-self: center;
+}
+.properties-checkbox-tooltip {
+	margin-left: $spacing-03;
+}

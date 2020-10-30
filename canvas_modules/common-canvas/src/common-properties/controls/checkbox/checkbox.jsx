@@ -18,11 +18,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { isEmpty } from "lodash";
-import { Checkbox } from "carbon-components-react";
+import { Checkbox, TooltipIcon } from "carbon-components-react";
+import { Information16 } from "@carbon/icons-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
-import { TOOL_TIP_DELAY, STATES } from "./../../constants/constants.js";
-import Tooltip from "./../../../tooltip/tooltip.jsx";
+import { STATES } from "./../../constants/constants.js";
 import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 
@@ -46,29 +46,35 @@ class CheckboxControl extends React.Component {
 				<span >{this.props.control.description.text}</span>
 			);
 		}
+		const tooltipIcon = isEmpty(tooltip) ? "" : (
+			<TooltipIcon
+				id={tooltipId}
+				tooltipText={tooltip}
+				direction="top"
+				className="properties-checkbox-tooltip"
+				tabIndex="-1"
+			>
+				<Information16 />
+			</TooltipIcon>
+		);
+		const checkboxLabel = (
+			<span className="properties-checkbox-label">
+				{label}
+				{tooltipIcon}
+			</span>
+		);
 		return (
 			<div className={classNames("properties-checkbox", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}
 				data-id={ControlUtils.getDataId(this.props.propertyId)}
 			>
-				<div className="properties-tooltips-container">
-					<Tooltip
-						id={tooltipId}
-						tip={tooltip}
-						direction="right"
-						delay={TOOL_TIP_DELAY}
-						className="properties-tooltips"
-						disable={isEmpty(tooltip)}
-					>
-						<Checkbox
-							disabled={this.props.state === STATES.DISABLED}
-							id={this.id}
-							labelText={label}
-							onChange={this.handleChange.bind(this)}
-							checked={Boolean(this.props.value)}
-							hideLabel={this.props.tableControl}
-						/>
-					</Tooltip>
-				</div>
+				<Checkbox
+					disabled={this.props.state === STATES.DISABLED}
+					id={this.id}
+					labelText={checkboxLabel}
+					onChange={this.handleChange.bind(this)}
+					checked={Boolean(this.props.value)}
+					hideLabel={this.props.tableControl}
+				/>
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)} />
 			</div>
 		);
