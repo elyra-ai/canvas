@@ -54,6 +54,18 @@
           ["work address"]
         ]
       ]
+    ],
+    "nestedStructuretable": [
+      "name",
+      23,
+      [
+        [
+          "Field 5",
+          1,
+          ["annotation for field 5"]
+        ]
+
+      ]
     ]
   },
   "complex_types": [
@@ -262,6 +274,44 @@
           "role": "new_column"
         }
       ]
+    },
+    {
+      "id": "userHealth",
+      "parameters": [
+        {
+          "id": "userName",
+          "type": "string"
+        },
+        {
+          "id": "userAge",
+          "type": "integer"
+        },
+        {
+          "id": "userFieldsInfo",
+          "type": "array[userFieldsTable]",
+          "role": "column"
+        }
+      ]
+    },
+    {
+      "id": "userFieldsTable",
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column",
+          "default": ""
+        },
+        {
+          "id": "healthIndex",
+          "type": "integer"
+        },
+        {
+          "id": "annotation",
+          "type": "array[string]",
+          "default": []
+        }
+      ]
     }
   ],
   "parameters": [
@@ -321,6 +371,11 @@
     {
       "id": "nestedStructureeditorTable",
       "type": "userInfoTable",
+      "default": []
+    },
+    {
+      "id": "nestedStructuretable",
+      "type": "userHealth",
       "default": []
     }
   ],
@@ -600,6 +655,67 @@
             "width": 15
           }
         ]
+      },
+      {
+        "complex_type_ref": "userHealth",
+        "layout": [
+          ["userName", "userAge"],
+          ["userFieldsInfo"]
+        ],
+        "parameters": [
+          {
+            "parameter_ref": "userName",
+            "label": {
+              "default": "Name"
+            }
+          },
+          {
+            "parameter_ref": "userAge",
+            "label": {
+              "default": "Age"
+            }
+          },
+          {
+            "parameter_ref": "userFieldsInfo",
+            "label": {
+              "default": "Address Info"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "userFieldsTable",
+        "moveable_rows": true,
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "width": 15,
+            "label": {
+              "default": "Field"
+            }
+          },
+          {
+            "parameter_ref": "healthIndex",
+            "width": 10,
+            "label": {
+              "default": "Index"
+            },
+            "generated_values": {
+              "operation": "index",
+              "start_value": 1
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "annotation",
+            "label": {
+              "default": "Note"
+            },
+            "edit_style": "subpanel",
+            "visible": false,
+            "width": 15
+          }
+        ]
       }
     ],
     "parameter_info": [
@@ -685,6 +801,15 @@
           "default": "Example of a structurelisteditor control within a structureeditor"
         },
         "separator": "after"
+      },
+      {
+        "parameter_ref": "nestedStructuretable",
+        "label": {
+          "default": "Nested Structuretable in Layout"
+        },
+        "description": {
+          "default": "Example of a structuretable control within a structureeditor"
+        }
       }
     ],
     "group_info": [
@@ -725,7 +850,8 @@
         },
         "parameter_refs": [
           "nestedStructureeditor",
-          "nestedStructureeditorTable"
+          "nestedStructureeditorTable",
+          "nestedStructuretable"
         ]
       },
       {

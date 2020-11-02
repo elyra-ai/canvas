@@ -93,8 +93,7 @@ class StructureTableControl extends AbstractTable {
 			const dataColumnIndex = PropertyUtils.getTableFieldIndex(this.props.control);
 			for (let i = 0; i < this.props.value.length; i++) {
 				const fieldValue = this.props.value[i][dataColumnIndex];
-				if ((this.props.control.defaultRow && fieldValue === field) ||
-						(this.props.value[i] === field)) {
+				if (fieldValue === field || this.props.value[i] === field) {
 					return this.props.value[i];
 				}
 			}
