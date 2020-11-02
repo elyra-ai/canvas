@@ -268,6 +268,16 @@ export default class PropertiesController {
 				row: propertyId.col,
 				propertyId: childPropertyId
 			};
+		} else if (propertyId &&
+			typeof propertyId.col !== "undefined" &&
+			typeof propertyId.row !== "undefined" &&
+			typeof propertyId.propertyId !== "undefined") { // handle nested complex types that aren't tables
+			return {
+				name: propertyId.name,
+				row: propertyId.row,
+				col: propertyId.col,
+				propertyId: this.convertNestedPropertyId(propertyId.propertyId)
+			};
 		}
 		return propertyId;
 	}
