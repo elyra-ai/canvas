@@ -126,7 +126,7 @@
         "readonly": "Readonly phrase"
       }
     ],
-    "nestedStructurelisteditorObject": [
+    "nestedStructurelisteditor": [
       {
         "readonly_numbered_column_index": 1,
         "name": "Hello",
@@ -139,7 +139,7 @@
         ]
       }
     ],
-    "nestedStructurelisteditorArrayArray": [
+    "nestedStructuretable": [
       [
         1,
         "Hello",
@@ -150,6 +150,17 @@
             1,
             "Ascending"
           ]
+        ]
+      ]
+    ],
+    "nestedStructureeditorTable": [
+      [
+        "name",
+        23,
+        [
+          "address1",
+          90210,
+          ["rental address"]
         ]
       ]
     ]
@@ -200,16 +211,21 @@
       "type": "array[structurelisteditorObjectType]"
     },
     {
-      "id": "nestedStructurelisteditorObject",
-      "type": "array[nestedStructurelisteditorObject]"
+      "id": "nestedStructurelisteditor",
+      "type": "array[nestedStructurelisteditor]"
     },
     {
-      "id": "nestedStructurelisteditorObjectArray",
-      "type": "array[nestedStructurelisteditorObjectArray]"
+      "id": "nestedStructurelisteditorArray",
+      "type": "array[nestedStructurelisteditorArray]"
     },
     {
-      "id": "nestedStructurelisteditorArrayArray",
-      "type": "array[nestedStructurelisteditorArrayArray]"
+      "id": "nestedStructuretable",
+      "type": "array[nestedStructuretable]"
+    },
+    {
+      "id": "nestedStructureeditorTable",
+      "type": "array[userInfoTable]",
+      "default": []
     }
   ],
   "complex_types": [
@@ -503,7 +519,7 @@
       ]
     },
     {
-      "id": "nestedStructurelisteditorObject",
+      "id": "nestedStructurelisteditor",
       "type": "object",
       "parameters": [
         {
@@ -528,12 +544,12 @@
         },
         {
           "id": "nested_structure",
-          "type": "array[nestedStructurelisteditorObjects]"
+          "type": "array[nestedStructurelisteditors]"
         }
       ]
     },
     {
-      "id": "nestedStructurelisteditorObjects",
+      "id": "nestedStructurelisteditors",
       "type": "object",
       "parameters": [
         {
@@ -554,7 +570,7 @@
       ]
     },
     {
-      "id": "nestedStructurelisteditorArrayArray",
+      "id": "nestedStructuretable",
       "parameters": [
         {
           "id": "readonly_numbered_column_index",
@@ -603,6 +619,43 @@
             "Descending"
           ],
           "default": "Ascending"
+        }
+      ]
+    },
+    {
+      "id": "userInfoTable",
+      "parameters": [
+        {
+          "id": "userName",
+          "type": "string"
+        },
+        {
+          "id": "userAge",
+          "type": "integer"
+        },
+        {
+          "id": "userInfo",
+          "type": "userAddressTable",
+          "default": []
+        }
+      ]
+    },
+    {
+      "id": "userAddressTable",
+      "parameters": [
+        {
+          "id": "userAddress",
+          "type": "string"
+        },
+        {
+          "id": "userZip",
+          "type": "integer"
+        },
+        {
+          "id": "annotation",
+          "type": "array[string]",
+          "role": "text",
+          "default": []
         }
       ]
     }
@@ -716,22 +769,31 @@
         }
       },
       {
-        "parameter_ref": "nestedStructurelisteditorObject",
+        "parameter_ref": "nestedStructurelisteditor",
         "label": {
-          "default": "Table Input"
+          "default": "Nested Structurelisteditor"
         },
         "description": {
-          "default": "This is a nested structurelisteditor."
+          "default": "Example of a nested structurelisteditor inside a structurelisteditor."
         }
       },
       {
-        "parameter_ref": "nestedStructurelisteditorArrayArray",
+        "parameter_ref": "nestedStructuretable",
         "required": true,
         "label": {
-          "default": "Table Input"
+          "default": "Nested Structuretable"
         },
         "description": {
-          "default": "This is a nested structuretable inside a structurelisteditor."
+          "default": "Example of a nested structuretable inside a structurelisteditor."
+        }
+      },
+      {
+        "parameter_ref": "nestedStructureeditorTable",
+        "label": {
+          "default": "Nested Structureeditor"
+        },
+        "description": {
+          "default": "Example of a nested structureeditor inside a structurelisteditor"
         }
       }
     ],
@@ -1259,7 +1321,7 @@
         ]
       },
       {
-        "complex_type_ref": "nestedStructurelisteditorObject",
+        "complex_type_ref": "nestedStructurelisteditor",
         "parameters": [
           {
             "parameter_ref": "readonly_numbered_column_index",
@@ -1301,7 +1363,7 @@
         ]
       },
       {
-        "complex_type_ref": "nestedStructurelisteditorObjects",
+        "complex_type_ref": "nestedStructurelisteditors",
         "parameters": [
           {
             "parameter_ref": "nested_name",
@@ -1323,7 +1385,7 @@
         ]
       },
       {
-        "complex_type_ref": "nestedStructurelisteditorArrayArray",
+        "complex_type_ref": "nestedStructuretable",
         "parameters": [
           {
             "parameter_ref": "readonly_numbered_column_index",
@@ -1400,6 +1462,62 @@
               "/images/up-triangle.svg",
               "/images/down-triangle.svg"
             ]
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "userInfoTable",
+        "parameters": [
+          {
+            "parameter_ref": "userName",
+            "label": {
+              "default": "Name"
+            },
+            "width": 25,
+            "summary": true
+          },
+          {
+            "parameter_ref": "userAge",
+            "label": {
+              "default": "Age"
+            },
+            "width": 10,
+            "summary": true
+          },
+          {
+            "parameter_ref": "userInfo",
+            "label": {
+              "default": "Address Info"
+            },
+            "edit_style": "subpanel",
+            "width": 15
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "userAddressTable",
+        "layout": [
+          ["userAddress", "userZip"],
+          ["annotation"]
+        ],
+        "parameters": [
+          {
+            "parameter_ref": "userAddress",
+            "label": {
+              "default": "Address"
+            }
+          },
+          {
+            "parameter_ref": "userZip",
+            "label": {
+              "default": "Zip code"
+            }
+          },
+          {
+            "parameter_ref": "annotation",
+            "label": {
+              "default": "Note"
+            }
           }
         ]
       }
@@ -1525,8 +1643,9 @@
                   "default": "Columns"
                 },
                 "parameter_refs": [
-                  "nestedStructurelisteditorObject",
-                  "nestedStructurelisteditorArrayArray"
+                  "nestedStructurelisteditor",
+                  "nestedStructuretable",
+                  "nestedStructureeditorTable"
                 ]
               }
             ]

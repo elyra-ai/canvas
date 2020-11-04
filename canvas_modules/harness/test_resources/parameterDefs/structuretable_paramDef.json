@@ -228,9 +228,19 @@
         [
           [
             1,
-            "hello",
-            "number"
+            "BP"
           ]
+        ]
+      ]
+    ],
+    "nestedStructureeditor": [
+      [
+        "Cholesterol",
+        1,
+        [
+          "Name",
+          100,
+          ["some text"]
         ]
       ]
     ]
@@ -343,6 +353,12 @@
       "type": "map[string,nestedStructureMaps]",
       "role": "column",
       "required": true
+    },
+    {
+      "id": "nestedStructureeditor",
+      "type": "array[userHealthTable]",
+      "role": "column",
+      "default": []
     }
   ],
   "complex_types": [
@@ -863,7 +879,8 @@
         },
         {
           "id": "nestedStructureMap_structure",
-          "type": "array[nestedStructureMap_structures]"
+          "type": "array[nestedStructureMap_structures]",
+          "role": "column"
         }
       ]
     },
@@ -875,20 +892,47 @@
           "type": "integer"
         },
         {
-          "id": "nestedStructureMap_structure_name",
+          "id": "nestedStructureMap_structure_fields",
           "type": "string",
-          "role": "new_column"
+          "role": "column"
+        }
+      ]
+    },
+    {
+      "id": "userHealthTable",
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column",
+          "default": ""
         },
         {
-          "id": "nestedStructureMap_structure_nestedStructureMap_structure_data_type",
-          "enum": [
-            "string",
-            "number",
-            "boolean",
-            "time",
-            "date"
-          ],
-          "default": ""
+          "id": "healthIndex",
+          "type": "integer"
+        },
+        {
+          "id": "userHealthTable",
+          "type": "userInfoTable"
+        }
+      ]
+    },
+    {
+      "id": "userInfoTable",
+      "parameters": [
+        {
+          "id": "userName",
+          "type": "string"
+        },
+        {
+          "id": "userAge",
+          "type": "integer"
+        },
+        {
+          "id": "annotation",
+          "type": "array[string]",
+          "role": "text",
+          "default": []
         }
       ]
     }
@@ -1103,10 +1147,10 @@
         "parameter_ref": "nestedStructureObject",
         "required": true,
         "label": {
-          "default": "Nested Structure - Objects of Objects"
+          "default": "Nested Structurelisteditor - Objects of Objects"
         },
         "description": {
-          "default": "This is a nested structure where the values will be returned as objects.",
+          "default": "This is a nested structurelisteditor where the values will be returned as objects.",
           "placement": "on_panel"
         }
       },
@@ -1114,10 +1158,10 @@
         "parameter_ref": "nestedStructureObjectArray",
         "required": true,
         "label": {
-          "default": "Nested Structure - Objects of Arrays"
+          "default": "Nested Structurelisteditor - Objects of Arrays"
         },
         "description": {
-          "default": "This is a nested structure where the values will be returned as objects, but its child structure values will be returned as arrays.",
+          "default": "This is a nested structurelisteditor where the values will be returned as objects, but its child structure values will be returned as arrays.",
           "placement": "on_panel"
         }
       },
@@ -1125,10 +1169,10 @@
         "parameter_ref": "nestedStructureArrayArray",
         "required": true,
         "label": {
-          "default": "Nested Structure - Arrays of Arrays"
+          "default": "Nested Structurelisteditor - Arrays of Arrays"
         },
         "description": {
-          "default": "This is a nested structure where the values will be returned as arrays.",
+          "default": "This is a nested structurelisteditor where the values will be returned as arrays.",
           "placement": "on_panel"
         }
       },
@@ -1136,10 +1180,20 @@
         "parameter_ref": "nestedStructureMap",
         "required": true,
         "label": {
-          "default": "Nested Structure - Map of Arrays"
+          "default": "Nested Structuretable - Map of Arrays"
         },
         "description": {
-          "default": "This is a nested map structure.",
+          "default": "Example of a structuretable control within a structuretable. This is a nested map structure.",
+          "placement": "on_panel"
+        }
+      },
+      {
+        "parameter_ref": "nestedStructureeditor",
+        "label": {
+          "default": "Nested Structureeditor"
+        },
+        "description": {
+          "default": "Example of a structureeditor control within a structuretable",
           "placement": "on_panel"
         }
       }
@@ -2046,23 +2100,74 @@
             "summary": true
           },
           {
-            "parameter_ref": "nestedStructureMap_structure_name",
+            "parameter_ref": "nestedStructureMap_structure_fields",
             "label": {
-              "default": "Name",
-              "resource_key": "nestedStructureMap_structure.nestedStructureMap_structure_name.label"
+              "default": "Fields",
+              "resource_key": "nestedStructureMap_structure.nestedStructureMap_structure_fields.label"
             },
             "width": 15,
-            "edit_style": "subpanel",
+            "summary": true
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "userHealthTable",
+        "moveable_rows": true,
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "width": 15,
+            "label": {
+              "default": "Field"
+            },
             "summary": true
           },
           {
-            "parameter_ref": "nestedStructureMap_structure_data_type",
+            "parameter_ref": "healthIndex",
+            "width": 10,
             "label": {
-              "default": "Type",
-              "resource_key": "nestedStructureMap_structure.nestedStructureMap_structure_data_type.label"
+              "default": "Index"
             },
-            "width": 20,
-            "edit_style": "subpanel"
+            "generated_values": {
+              "operation": "index",
+              "start_value": 1
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "userHealthTable",
+            "label": {
+              "default": "Info"
+            },
+            "edit_style": "on_panel"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "userInfoTable",
+        "layout": [
+          ["userName", "userAge"],
+          ["annotation"]
+        ],
+        "parameters": [
+          {
+            "parameter_ref": "userName",
+            "label": {
+              "default": "Name"
+            }
+          },
+          {
+            "parameter_ref": "userAge",
+            "label": {
+              "default": "Age"
+            }
+          },
+          {
+            "parameter_ref": "annotation",
+            "label": {
+              "default": "Note"
+            },
+            "width": 15
           }
         ]
       }
@@ -2234,7 +2339,8 @@
                   "nestedStructureObject",
                   "nestedStructureObjectArray",
                   "nestedStructureArrayArray",
-                  "nestedStructureMap"
+                  "nestedStructureMap",
+                  "nestedStructureeditor"
                 ]
               }
             ]

@@ -622,6 +622,9 @@ function _makeSubControl(parameter, l10nProvider, structureMetadata) {
 		case ParamRole.EXPRESSION:
 			controlType = ControlType.EXPRESSION;
 			break;
+		case ParamRole.TEXT:
+			controlType = ControlType.TEXTAREA;
+			break;
 		default:
 			controlType = ControlType.TEXTFIELD;
 		}
