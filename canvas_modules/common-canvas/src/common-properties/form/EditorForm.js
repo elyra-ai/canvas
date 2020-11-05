@@ -676,8 +676,6 @@ function _makeSubControl(parameter, l10nProvider, structureMetadata) {
 				subControls.unshift(_makeSubControl(structureDef.keyDefinition, l10nProvider, structureMetadata));
 			}
 			if (parameter.isList() || parameter.isMapValue()) {
-				// TODO: subControl tables will not have a group, need another way to determine COLUMN_SELECTION
-				// if (group && typeof group.groupType !== "undefined" && group.groupType() === GroupType.COLUMN_SELECTION ||
 				if (parameter.control === ControlType.STRUCTURETABLE || parameter.getRole() === ParamRole.COLUMN) {
 					controlType = ControlType.STRUCTURETABLE;
 					moveableRows = structureDef.moveableRows;

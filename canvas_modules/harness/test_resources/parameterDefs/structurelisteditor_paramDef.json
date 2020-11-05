@@ -1462,7 +1462,7 @@
             "control": "readonly"
           },
           {
-            "parameter_ref": "nestedStructure_sort_order",
+            "parameter_ref": "nested_structuretable_sort_order",
             "width": 15,
             "label": {
               "default": "Sort by"
