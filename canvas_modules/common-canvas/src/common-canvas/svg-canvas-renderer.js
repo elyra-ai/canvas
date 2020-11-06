@@ -1813,7 +1813,7 @@ export default class SVGCanvasRenderer {
 				this.isSelecting = true;
 				const region = { x1: startX, y1: startY, x2: startX + width, y2: startY + height };
 				const selections =
-					CanvasUtils.selectInRegion(region, this.activePipeline, this.enableLinkSelection !== LINK_SELECTION_NONE);
+					CanvasUtils.selectInRegion(region, this.activePipeline, this.config.enableLinkSelection !== LINK_SELECTION_NONE);
 				this.canvasController.setSelections(selections, this.activePipeline.id);
 			}
 			this.regionSelect = false;
