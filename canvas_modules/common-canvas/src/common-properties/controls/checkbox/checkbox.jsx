@@ -42,9 +42,7 @@ class CheckboxControl extends React.Component {
 		const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
 		let tooltip = "";
 		if (this.props.control.description && !(this.props.state === STATES.DISABLED || this.props.state === STATES.HIDDEN) && !this.props.tableControl) {
-			tooltip = (
-				<span >{this.props.control.description.text}</span>
-			);
+			tooltip = this.props.control.description.text;
 		}
 		const tooltipIcon = isEmpty(tooltip) ? "" : (
 			<TooltipIcon
