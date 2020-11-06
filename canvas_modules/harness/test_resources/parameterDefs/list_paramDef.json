@@ -14,21 +14,6 @@
       30,
       null
     ],
-    "complexListStructurelisteditor": [
-      [
-        1,
-        "Ascending",
-        []
-      ]
-    ],
-    "complexListStructuretable": [
-      [
-        "Cholesterol",
-        1,
-        "Ascending",
-        []
-      ]
-    ],
     "list_string_error": [
       "not empty"
     ],
