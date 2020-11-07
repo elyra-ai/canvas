@@ -190,7 +190,7 @@
     "labelEditable": true,
     "help": {
       "data": {
-        "url":"randomUrl"
+        "url": "randomUrl"
       }
     },
     "editorSize": "small",
@@ -210,7 +210,6 @@
                   {
                     "itemType": "control",
                     "control": {
-                      "labelVisible": true,
                       "name": "renamed_fields",
                       "label": {
                         "text": "Rename columns"
@@ -218,6 +217,7 @@
                       "description": {
                         "text": "Rename columns in the active dataset"
                       },
+                      "labelVisible": true,
                       "controlType": "structuretable",
                       "valueDef": {
                         "propType": "structure",
@@ -225,13 +225,14 @@
                         "isMap": true,
                         "defaultValue": []
                       },
+                      "structureType": "array",
                       "subControls": [
                         {
-                          "labelVisible": true,
                           "name": "field",
                           "label": {
                             "text": "Input name"
                           },
+                          "labelVisible": true,
                           "controlType": "selectcolumn",
                           "valueDef": {
                             "propType": "string",
@@ -243,11 +244,11 @@
                           "width": 26
                         },
                         {
-                          "labelVisible": true,
                           "name": "new_name",
                           "label": {
                             "text": "Output name"
                           },
+                          "labelVisible": true,
                           "controlType": "textfield",
                           "valueDef": {
                             "propType": "string",
@@ -255,10 +256,8 @@
                             "isMap": false,
                             "defaultValue": ""
                           },
-                          "role": "new_column",
                           "visible": true,
-                          "width": 26,
-                          "editStyle": "inline"
+                          "width": 26
                         }
                       ],
                       "keyIndex": 0,
@@ -268,7 +267,7 @@
                       ],
                       "addRemoveRows": true,
                       "header": true,
-                      "structureType": "array"
+                      "editStyle": "inline"
                     }
                   }
                 ]
@@ -290,26 +289,6 @@
         "text": "Cancel",
         "isPrimary": false,
         "url": ""
-      }
-    ],
-    "conditions": [
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "renamed_fields",
-            "message": {
-              "resource_key": "output_name_not_empty",
-              "default": "The 'Output Name' field cannot be empty"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "renamed_fields",
-              "op": "isNotEmpty"
-            }
-          }
-        }
       }
     ],
     "data": {
@@ -393,6 +372,26 @@
         ]
       }
     },
+    "conditions": [
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focus_parameter_ref": "renamed_fields",
+            "message": {
+              "resource_key": "output_name_not_empty",
+              "default": "The 'Output Name' field cannot be empty"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "renamed_fields",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      }
+    ],
     "resources": {
       "rename.label": "Rename Columns",
       "field.label": "Input name",

@@ -436,7 +436,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 					"address2", 90211, ["work address"]
 				],
 				[
-					"add third address"
+					"add third address", null, []
 				]
 			]
 		];

@@ -220,6 +220,7 @@
                         "isMap": false,
                         "defaultValue": []
                       },
+                      "structureType": "array",
                       "subControls": [
                         {
                           "name": "field",
@@ -251,7 +252,6 @@
                             "isMap": false,
                             "defaultValue": "Ascending"
                           },
-                          "role": "enum",
                           "values": [
                             "Ascending",
                             "Descending"
@@ -265,8 +265,7 @@
                             "/images/down-triangle.svg"
                           ],
                           "visible": true,
-                          "width": 16,
-                          "editStyle": "inline"
+                          "width": 16
                         }
                       ],
                       "keyIndex": 0,
@@ -277,7 +276,7 @@
                       "moveableRows": true,
                       "addRemoveRows": true,
                       "header": true,
-                      "structureType": "array"
+                      "editStyle": "inline"
                     }
                   }
                 ]

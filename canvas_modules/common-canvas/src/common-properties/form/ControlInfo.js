@@ -17,7 +17,7 @@
 import { EditStyle } from "../constants/form-constants";
 
 
-class ControlDef {
+export class Control {
 	constructor(settings) {
 		this.name = settings.name;
 		if (settings.label) {
@@ -113,12 +113,6 @@ class ControlDef {
 		if (settings.layout) {
 			this.layout = settings.layout;
 		}
-	}
-}
-
-export class Control extends ControlDef {
-	constructor(settings) {
-		super(settings);
 		if (typeof settings.keyIndex === "number") {
 			this.keyIndex = settings.keyIndex;
 		}
@@ -149,12 +143,7 @@ export class Control extends ControlDef {
 		if (settings.dmImage) {
 			this.dmImage = settings.dmImage;
 		}
-	}
-}
 
-export class SubControl extends ControlDef {
-	constructor(settings) {
-		super(settings);
 		if (typeof settings.visible === "boolean") {
 			this.visible = settings.visible;
 		}
@@ -163,8 +152,8 @@ export class SubControl extends ControlDef {
 		}
 		if (settings.editStyle) {
 			this.editStyle = settings.editStyle;
-		} else if (!settings.isKeyField) {
-			this.editStyle = EditStyle.INLINE;
+		} else if (!settings.isKeyField && typeof settings.structureType !== "undefined") {
+			this.editStyle = EditStyle.INLINE; // Should only be set for structure controls
 		}
 		if (settings.dmDefault) {
 			this.dmDefault = settings.dmDefault;
