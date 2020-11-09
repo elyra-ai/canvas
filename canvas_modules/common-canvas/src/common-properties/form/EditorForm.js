@@ -297,7 +297,7 @@ function _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, struc
 
 function _makeStringControl(parameter, isSubControl) {
 	let controlType;
-	let role;
+	let role = parameter.getRole();
 	if (parameter.isList()) {
 		const controlObj = _processListParameter(parameter);
 		controlType = controlObj.controlType;

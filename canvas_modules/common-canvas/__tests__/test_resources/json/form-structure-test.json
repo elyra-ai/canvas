@@ -256,6 +256,7 @@
                             "isMap": false,
                             "defaultValue": ""
                           },
+                          "role": "new_column",
                           "visible": true,
                           "width": 26
                         }

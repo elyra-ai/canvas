@@ -275,6 +275,7 @@
                                   "isMap": false,
                                   "defaultValue": ""
                                 },
+                                "role": "new_column",
                                 "visible": true,
                                 "width": 26,
                                 "editStyle": "subpanel"
@@ -317,7 +318,8 @@
                                         "isList": false,
                                         "isMap": false,
                                         "defaultValue": ""
-                                      }
+                                      },
+                                      "role": "new_column"
                                     }
                                   }
                                 ]

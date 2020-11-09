@@ -252,6 +252,7 @@
                             "isMap": false,
                             "defaultValue": "Ascending"
                           },
+                          "role": "enum",
                           "values": [
                             "Ascending",
                             "Descending"
