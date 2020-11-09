@@ -47,7 +47,7 @@ import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import LocalStorage from "./local-storage.js";
 import has from "lodash/has";
-import { ASSOC_STRAIGHT, LINK_SELECTION_NONE } from "./constants/canvas-constants";
+import { ASSOC_STRAIGHT, LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE } from "./constants/canvas-constants";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
 // Global instance ID counter
@@ -519,6 +519,10 @@ export default class CanvasController {
 	// Returns true if all the selected objcts are links.
 	areAllSelectedObjectsLinks() {
 		return this.objectModel.areAllSelectedObjectsLinks();
+	}
+
+	areDetachableLinksSupported() {
+		return this.canvasConfig.enableLinkSelection === LINK_SELECTION_DETACHABLE;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1653,7 +1657,10 @@ export default class CanvasController {
 			}
 		}
 		// Edit submenu (cut, copy, paste)
-		if (source.type === "node" || source.type === "comment" || source.type === "canvas") {
+		if (source.type === "node" ||
+				source.type === "comment" ||
+				(source.type === "link" && this.areDetachableLinksSupported()) ||
+				source.type === "canvas") {
 			const editSubMenu = this.createEditMenu(source);
 			menuDefinition = menuDefinition.concat({ submenu: true, menu: editSubMenu, label: this.getLabel("node.editMenu") });
 			menuDefinition = menuDefinition.concat({ divider: true });
@@ -2007,19 +2014,21 @@ export default class CanvasController {
 				break;
 			}
 			case "cut": {
-				this.objectModel.copyToClipboard();
-				command = new DeleteObjectsAction(data, this.objectModel);
+				this.objectModel.copyToClipboard(this.areDetachableLinksSupported());
+				command = new DeleteObjectsAction(data, this.objectModel, this.canvasConfig.enableLinkSelection);
 				this.commandStack.do(command);
 				break;
 			}
-			case "copy":
-				this.objectModel.copyToClipboard();
+			case "copy": {
+				this.objectModel.copyToClipboard(this.areDetachableLinksSupported());
 				break;
+			}
 			case "paste": {
-				const pasteObj = this.objectModel.getObjectsToPaste(data.pipelineId);
-				if (pasteObj.objects) {
-					data = Object.assign(data, { objects: pasteObj.objects, pipelineId: pasteObj.pipelineId });
-					command = new CloneMultipleObjectsAction(data, this.objectModel);
+				const pasteObjects = this.objectModel.getObjectsToPaste();
+				if (pasteObjects) {
+					data.objects = pasteObjects;
+					const vpDims = this.commonCanvas.getTransformedViewportDimensions(0);
+					command = new CloneMultipleObjectsAction(data, this.objectModel, vpDims);
 					this.commandStack.do(command);
 					data = command.getData();
 				}

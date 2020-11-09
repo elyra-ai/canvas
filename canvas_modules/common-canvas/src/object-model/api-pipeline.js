@@ -997,16 +997,26 @@ export default class APIPipeline {
 		return null;
 	}
 
-	cloneNodeLink(link, srcNodeId, trgNodeId) {
-		return {
-			id: this.objectModel.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNodeId, "targetNodeId": trgNodeId }),
+	cloneNodeLink(link, srcNode, trgNode) {
+		const clonedLink = {
+			id: this.objectModel.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNode ? srcNode.id : null, "targetNodeId": trgNode ? trgNode.id : null }),
 			type: link.type,
 			class_name: link.class_name,
-			srcNodeId: srcNodeId,
-			srcNodePortId: link.srcNodePortId,
-			trgNodeId: trgNodeId,
-			trgNodePortId: link.trgNodePortId
 		};
+
+		if (srcNode) {
+			clonedLink.srcNodeId = srcNode.id;
+			clonedLink.srcNodePortId = link.srcNodePortId;
+		} else {
+			clonedLink.srcPos = link.srcPos;
+		}
+		if (trgNode) {
+			clonedLink.trgNodeId = trgNode.id;
+			clonedLink.trgNodePortId = link.trgNodePortId;
+		} else {
+			clonedLink.trgPos = link.trgPos;
+		}
+		return clonedLink;
 	}
 
 	createNodeLinkDetached(data) {

@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 import Action from "../command-stack/action.js";
+import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CloneMultipleObjectsAction extends Action {
-	constructor(data, objectModel) {
+	constructor(data, objectModel, viewportDimensions) {
 		super(data);
 		this.data = data;
+		this.viewportDimensions = viewportDimensions;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.clonedNodesInfo = [];
 		this.clonedCommentsInfo = [];
 		this.links = [];
 		this.clonedPipelines = []; // Map of original pipelineId to the new cloned pipeline.
+
+		// Make sure objects to be pasted are in an appropriate position for them
+		// to appear within the vieport
+		this.adjustObjectsPositions();
 
 		if (data.objects.nodes) {
 			data.objects.nodes.forEach((node) => {
@@ -50,10 +56,8 @@ export default class CloneMultipleObjectsAction extends Action {
 				if (link.type === "nodeLink" || link.type === "associationLink") {
 					const srcClonedNode = this.findClonedNode(link.srcNodeId);
 					const trgClonedNode = this.findClonedNode(link.trgNodeId);
-					if (srcClonedNode && trgClonedNode) {
-						const newLink = this.apiPipeline.cloneNodeLink(link, srcClonedNode.id, trgClonedNode.id);
-						this.links.push(newLink);
-					}
+					const newLink = this.apiPipeline.cloneNodeLink(link, srcClonedNode, trgClonedNode);
+					this.links.push(newLink);
 				} else {
 					const srcClonedComment = this.findClonedComment(link.srcNodeId);
 					const trgClonedNode = this.findClonedNode(link.trgNodeId);
@@ -63,6 +67,88 @@ export default class CloneMultipleObjectsAction extends Action {
 					}
 				}
 			});
+		}
+	}
+
+	// Adjusts the positions of the cloned objects appropriately. If the data
+	// object contains a mousePos property it will be the position on the canvas
+	// where the paste was requested using a context menu and we wil paste the
+	// objects at that position. If no mousePos is specified then the user will
+	// have pasted using the toolbar button or keyboard. In this case, we paste
+	// the objects in their original coordinate positions or, if that postion is
+	// not visible in the viewport, then in the center of the viewport.
+	adjustObjectsPositions() {
+		const objects = this.data.objects;
+		const pastedObjDimensions = CanvasUtils.getCanvasDimensions(objects.nodes, objects.comments, objects.links, 0);
+		if (pastedObjDimensions) {
+			if (this.data.mousePos && this.data.mousePos.x && this.data.mousePos.y) {
+				const xDelta = this.data.mousePos.x - pastedObjDimensions.left;
+				const yDelta = this.data.mousePos.y - pastedObjDimensions.top;
+				this.moveObjectsPositions(objects, xDelta, yDelta);
+			} else {
+				const transRect = this.viewportDimensions;
+				if (transRect.x < pastedObjDimensions.left &&
+						transRect.y < pastedObjDimensions.top &&
+						transRect.x + transRect.width > pastedObjDimensions.left &&
+						transRect.y + transRect.height > pastedObjDimensions.top) {
+					this.ensureNoOverlap(objects);
+				} else {
+					const xDelta = transRect.x + (transRect.width / 2) - (pastedObjDimensions.width / 2) - pastedObjDimensions.left;
+					const yDelta = transRect.y + (transRect.height / 2) - (pastedObjDimensions.height / 2) - pastedObjDimensions.top;
+					this.moveObjectsPositions(objects, xDelta, yDelta);
+					this.ensureNoOverlap(objects);
+				}
+			}
+		}
+	}
+
+	// Moves the coordinate positions of the canvas objects specified by the
+	// x and y amounts specified.
+	moveObjectsPositions(objects, xDelta, yDelta) {
+		if (objects.nodes) {
+			objects.nodes.forEach((node) => {
+				node.x_pos += xDelta;
+				node.y_pos += yDelta;
+			});
+		}
+		if (objects.comments) {
+			objects.comments.forEach((comment) => {
+				comment.x_pos += xDelta;
+				comment.y_pos += yDelta;
+			});
+		}
+		if (objects.links) {
+			objects.links.forEach((link) => {
+				if (link.srcPos) {
+					link.srcPos.x_pos += xDelta;
+					link.srcPos.y_pos += yDelta;
+				}
+				if (link.trgPos) {
+					link.trgPos.x_pos += xDelta;
+					link.trgPos.y_pos += yDelta;
+				}
+			});
+		}
+	}
+
+	// Offsets positions of the pasted nodes and comments if they exactly overlap
+	// existing nodes and comments - this can happen when pasting over the top
+	// of the canvas from which the nodes and comments were copied.
+	ensureNoOverlap(objects) {
+		while (this.apiPipeline.exactlyOverlaps(objects.nodes, objects.comments)) {
+			if (objects.nodes) {
+				objects.nodes.forEach((node) => {
+					node.x_pos += 10;
+					node.y_pos += 10;
+				});
+			}
+			if (objects.comments) {
+				objects.comments.forEach((comment) => {
+					comment.x_pos += 10;
+					comment.y_pos += 10;
+					comment.selectedObjectIds = [];
+				});
+			}
 		}
 	}
 
@@ -109,7 +195,7 @@ export default class CloneMultipleObjectsAction extends Action {
 			this.apiPipeline.deleteComment(clonedCommentInfo.comment.id);
 		});
 		this.links.forEach((link) => {
-			this.apiPipeline.deleteLink(link.id);
+			this.apiPipeline.deleteLink(link);
 		});
 	}
 

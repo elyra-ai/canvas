@@ -1625,7 +1625,7 @@ export default class ObjectModel {
 	// Copies the currently selected objects to the internal clipboard and
 	// returns true if successful. Returns false if there is nothing to copy to
 	// the clipboard.
-	copyToClipboard() {
+	copyToClipboard(areDetachableLinksSupported) {
 		var copyData = {};
 
 		const apiPipeline = this.getSelectionAPIPipeline();
@@ -1634,9 +1634,11 @@ export default class ObjectModel {
 		}
 		const nodes = this.getSelectedNodes();
 		const comments = this.getSelectedComments();
-		const links = apiPipeline.getLinksBetween(nodes, comments);
+		const links = areDetachableLinksSupported
+			? this.getSelectedLinks()
+			: apiPipeline.getLinksBetween(nodes, comments);
 
-		if (nodes.length === 0 && comments.length === 0) {
+		if (nodes.length === 0 && comments.length === 0 && links.length === 0) {
 			return false;
 		}
 
@@ -1649,11 +1651,38 @@ export default class ObjectModel {
 			});
 			copyData.pipelines = pipelines;
 		}
+
 		if (comments && comments.length > 0) {
 			copyData.comments = comments;
 		}
+
 		if (links && links.length > 0) {
-			copyData.links = links;
+			copyData.links = links.map((link) => {
+				// To handle attached or semi-detached links (where the attached node
+				// is not one of the nodes to be copied to the clipboard) we will need
+				// to alter the source and/or target info so make a copy of the link
+				// first.
+				const newLink = Object.assign({}, link);
+				// If the link is attached to a source node and that node is not to be
+				// clipboarded, set the srcPos coordinates and remove the source node info.
+				if (link.srcNodeId &&
+						nodes.findIndex((n) => n.id === link.srcNodeId) === -1) {
+					const srcNode = apiPipeline.getNode(link.srcNodeId);
+					delete newLink.srcNodeId;
+					delete newLink.srcNodePortId;
+					newLink.srcPos = { x_pos: srcNode.x_pos + srcNode.width, y_pos: srcNode.y_pos + (srcNode.height / 2) };
+				}
+				// If the link is attached to a target node and that node is not to be
+				// clipboarded, set the trgPos coordinates and remove the target node info.
+				if (link.trgNodeId &&
+						nodes.findIndex((n) => n.id === link.trgNodeId) === -1) {
+					const trgNode = apiPipeline.getNode(link.trgNodeId);
+					delete newLink.trgNodeId;
+					delete newLink.trgNodePortId;
+					newLink.trgPos = { x_pos: trgNode.x_pos, y_pos: trgNode.y_pos + (trgNode.height / 2) };
+				}
+				return newLink;
+			});
 		}
 
 		var clipboardData = JSON.stringify(copyData);
@@ -1670,7 +1699,9 @@ export default class ObjectModel {
 		return true;
 	}
 
-	getObjectsToPaste(pipelineId) {
+	// Ruturns a object containing arrays of canvas objects (node, comments and
+	// links) that are currently on the clipboard.
+	getObjectsToPaste() {
 		const textToPaste = LocalStorage.get("canvasClipboard");
 
 		if (!textToPaste) {
@@ -1680,38 +1711,11 @@ export default class ObjectModel {
 		const objects = JSON.parse(textToPaste);
 
 		// If there are no nodes and no comments there's nothing to paste so just
-		// return.
-		if (!objects.nodes && !objects.comments) {
-			return {};
+		// return null.
+		if (!objects.nodes && !objects.comments && !objects.links) {
+			return null;
 		}
 
-		// If a pipeline is not provided (like when the user clicks paste in the
-		// toolbar or uses keyboard short cut) this will get an APIPipeline for
-		// the latest breadcrumbs entry.
-		const apiPipeline = this.getAPIPipeline(pipelineId);
-
-		// Offset position of pasted nodes and comments if they exactly overlap
-		// existing nodes and comments - this can happen when pasting over the top
-		// of the canvas from which the nodes and comments were copied.
-		while (apiPipeline.exactlyOverlaps(objects.nodes, objects.comments)) {
-			if (objects.nodes) {
-				objects.nodes.forEach((node) => {
-					node.x_pos += 10;
-					node.y_pos += 10;
-				});
-			}
-			if (objects.comments) {
-				objects.comments.forEach((comment) => {
-					comment.x_pos += 10;
-					comment.y_pos += 10;
-					comment.selectedObjectIds = [];
-				});
-			}
-		}
-
-		return {
-			objects: objects,
-			pipelineId: apiPipeline.pipelineId
-		};
+		return objects;
 	}
 }
