@@ -2444,7 +2444,6 @@ export default class SVGCanvasRenderer {
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d) => {
 					this.logger.log("Node Group - mouse down");
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					if (!this.config.enableDragWithoutSelect) {
 						this.selectObjectD3Event(d);
 					}
