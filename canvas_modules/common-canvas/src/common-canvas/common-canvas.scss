@@ -69,6 +69,7 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	height: 100%;
 	position: relative;
 	box-shadow: -2px #{$toolbar-button-height} 4px 0 rgba(22, 22, 22, 0.25);
+	user-select: none; /* Prevent elements from being selectable */
 
 	&.under-toolbar {
 		box-shadow: -2px 0 4px 0 rgba(22, 22, 22, 0.25);
