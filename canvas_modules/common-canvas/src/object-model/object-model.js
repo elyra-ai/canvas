@@ -1083,7 +1083,7 @@ export default class ObjectModel {
 		const selected = [];
 		const apiPipeline = this.getAPIPipeline(pipelineId);
 		for (const node of apiPipeline.getNodes()) {
-			if (!this.isSupernodeBinding(node)) { // Dont allow supernode binding nodes to be selected
+			if (!CanvasUtils.isSuperBindingNode(node)) { // Dont allow supernode binding nodes to be selected
 				selected.push(node.id);
 			}
 		}
@@ -1096,10 +1096,6 @@ export default class ObjectModel {
 			}
 		}
 		this.setSelections(selected, apiPipeline.pipelineId);
-	}
-
-	isSupernodeBinding(node) {
-		return node.isSupernodeInputBinding || node.isSupernodeOutputBinding;
 	}
 
 	findNodesInSubGraph(startNodeId, endNodeId, selection, pipelineId) {
@@ -1470,7 +1466,7 @@ export default class ObjectModel {
 				}
 			});
 		} else if (currentPipeline.isEntryBindingNode(node) &&
-								this.isSupernodeBinding(node)) {
+								CanvasUtils.isSuperBindingNode(node)) {
 			const supernodeObj = this.getSupernodeObjReferencing(pipelineId);
 			const parentPipelineId = supernodeObj.parentPipelineId;
 			const parentPipeline = this.getAPIPipeline(parentPipelineId);
@@ -1543,7 +1539,7 @@ export default class ObjectModel {
 				}
 			});
 		} else if (currentPipeline.isExitBindingNode(node)) {
-			if (this.isSupernodeBinding(node)) {
+			if (CanvasUtils.isSuperBindingNode(node)) {
 				const supernodeObj = this.getSupernodeObjReferencing(pipelineId);
 				const parentPipelineId = supernodeObj.parentPipelineId;
 				const parentPipeline = this.getAPIPipeline(parentPipelineId);
