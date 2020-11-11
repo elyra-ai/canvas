@@ -795,7 +795,11 @@ describe("ObjectModel API handle model OK", () => {
 			objectModel.getAPIPipeline().getLink("7ec57e11-fe0b-4bc8-a3b8-b72920bf1a55"),
 			objectModel.getAPIPipeline().getLink(uniqueCommentLinkId)];
 
-		const cloneAction = new CloneMultipleObjectsAction(cloneData, objectModel);
+		// Simulate the objects copying from the clipboard by making a copy of them.
+		const copyCloneData = JSON.parse(JSON.stringify(cloneData));
+
+		const dummyViewportDimensions = { x: 0, y: 0, width: 1100, height: 640 };
+		const cloneAction = new CloneMultipleObjectsAction(copyCloneData, objectModel, dummyViewportDimensions, false);
 		cloneAction.do();
 
 		const actualCanvas = objectModel.getCanvasInfoPipeline();
