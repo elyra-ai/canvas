@@ -1703,7 +1703,7 @@ export default class ObjectModel {
 		return true;
 	}
 
-	// Ruturns a object containing arrays of canvas objects (node, comments and
+	// Returns an object containing arrays of canvas objects (node, comments and
 	// links) that are currently on the clipboard.
 	getObjectsToPaste() {
 		const textToPaste = LocalStorage.get("canvasClipboard");

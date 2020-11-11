@@ -73,7 +73,7 @@ export default class CloneMultipleObjectsAction extends Action {
 
 	// Adjusts the positions of the cloned objects appropriately. If the data
 	// object contains a mousePos property it will be the position on the canvas
-	// where the paste was requested using a context menu and we will paste the
+	// where the paste was requested, using a context menu, and we will paste the
 	// objects at that position. If no mousePos is specified then the user will
 	// have pasted using the toolbar button or keyboard. In this case, we paste
 	// the objects in their original coordinate positions or, if that position is
@@ -103,9 +103,10 @@ export default class CloneMultipleObjectsAction extends Action {
 		}
 	}
 
-	// Offsets positions of the pasted nodes and comments if they exactly overlap
-	// existing nodes and comments - this can happen when pasting over the top
-	// of the canvas from which the nodes and comments were copied.
+	// Offsets the positions of the canvas objects (nodes, comments and links)
+	// if they exactly overlap any existing nodes, comments and links.
+	// Exact overlap can happen when pasting over the top of the canvas from
+	// which the canvas objects  were copied.
 	ensureNoOverlap(objects) {
 		while (this.apiPipeline.exactlyOverlaps(objects.nodes, objects.comments, objects.links)) {
 			this.moveObjectsPositions(objects, 10, 10);
@@ -128,6 +129,9 @@ export default class CloneMultipleObjectsAction extends Action {
 				comment.selectedObjectIds = [];
 			});
 		}
+		// Only semi-detached or fully-detached links (which will have srcPos or
+		// trgPos properties) need to be moved. Other links will be moved due to
+		// their relationship with their source and target node/comment.
 		if (objects.links) {
 			objects.links.forEach((link) => {
 				if (link.srcPos) {

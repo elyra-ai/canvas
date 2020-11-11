@@ -1027,6 +1027,9 @@ export default class APIPipeline {
 		return null;
 	}
 
+	// Returns a clone of the link passed in using the source and target nodes
+	// passed in. If a semi-detached or fully-detached link is being cloned the
+	// srcNode and/or trgNode may be null.
 	cloneNodeLink(link, srcNode, trgNode) {
 		const clonedLink = {
 			id: this.objectModel.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNode ? srcNode.id : null, "targetNodeId": trgNode ? trgNode.id : null }),

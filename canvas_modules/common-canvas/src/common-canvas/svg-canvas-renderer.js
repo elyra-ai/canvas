@@ -750,13 +750,6 @@ export default class SVGCanvasRenderer {
 	}
 
 
-	// Returns an object representing the viewport dimensions which have been
-	// transformed for the current zoom amount.
-	getTransformedViewportDimensions() {
-		const svgRect = this.getViewportDimensions();
-		return this.getTransformedRect(svgRect, 0);
-	}
-
 	// Transforms the x, y, height and width fields of the object passed in by the
 	// current zoom transformation amounts to convert coordinate positions and
 	// dimensions in screen pixels to coordinate positions and dimensions in
@@ -1689,6 +1682,13 @@ export default class SVGCanvasRenderer {
 		}
 
 		return null;
+	}
+
+	// Returns an object representing the viewport dimensions which have been
+	// transformed for the current zoom amount.
+	getTransformedViewportDimensions() {
+		const svgRect = this.getViewportDimensions();
+		return this.getTransformedRect(svgRect, 0);
 	}
 
 	// Returns the dimensions of the SVG area. When we are displaying a sub-flow

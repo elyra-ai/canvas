@@ -2027,7 +2027,7 @@ export default class CanvasController {
 				const pasteObjects = this.objectModel.getObjectsToPaste();
 				if (pasteObjects) {
 					data.objects = pasteObjects;
-					const vpDims = this.commonCanvas.getTransformedViewportDimensions(0);
+					const vpDims = this.commonCanvas.getTransformedViewportDimensions();
 					command = new CloneMultipleObjectsAction(data, this.objectModel, vpDims, this.areDetachableLinksSupported());
 					this.commandStack.do(command);
 					data = command.getData();

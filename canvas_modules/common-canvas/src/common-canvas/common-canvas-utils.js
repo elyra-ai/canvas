@@ -617,7 +617,7 @@ export default class CanvasUtils {
 		return node.isSupernodeInputBinding || node.isSupernodeOutputBinding;
 	}
 
-	// Returns true if the node passd in is a binding node in a subflow
+	// Returns true if the node passed in is a binding node in a subflow
 	// for a supernode.
 	static isSuperBindingNode(d) {
 		return d.isSupernodeInputBinding || d.isSupernodeOutputBinding;
