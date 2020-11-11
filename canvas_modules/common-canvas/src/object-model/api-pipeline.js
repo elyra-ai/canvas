@@ -122,10 +122,10 @@ export default class APIPipeline {
 		return null;
 	}
 
-	// Returns true if any of the node, comment or link definitions passed in exactly
-	// overlap any of the existing nodes and comments. This is used by the
-	// paste-from-clipboard code to detect if nodes, comments and links being pasted
-	// overlap existing nodes, comments and links.
+	// Returns true if any of the node, comment or link definitions passed in
+	// exactly overlap any of the existing nodes, comments or links. This is used
+	// by the paste-from-clipboard code to detect if nodes, comments and links
+	// being pasted overlap existing nodes, comments and links.
 	exactlyOverlaps(nodeDefs, commentDefs, linkDefs) {
 		var overlaps = false;
 

@@ -103,6 +103,15 @@ export default class CloneMultipleObjectsAction extends Action {
 		}
 	}
 
+	// Offsets positions of the pasted nodes and comments if they exactly overlap
+	// existing nodes and comments - this can happen when pasting over the top
+	// of the canvas from which the nodes and comments were copied.
+	ensureNoOverlap(objects) {
+		while (this.apiPipeline.exactlyOverlaps(objects.nodes, objects.comments, objects.links)) {
+			this.moveObjectsPositions(objects, 10, 10);
+		}
+	}
+
 	// Moves the coordinate positions of the canvas objects specified by the
 	// x and y amounts specified.
 	moveObjectsPositions(objects, xDelta, yDelta) {
@@ -116,6 +125,7 @@ export default class CloneMultipleObjectsAction extends Action {
 			objects.comments.forEach((comment) => {
 				comment.x_pos += xDelta;
 				comment.y_pos += yDelta;
+				comment.selectedObjectIds = [];
 			});
 		}
 		if (objects.links) {
@@ -129,40 +139,6 @@ export default class CloneMultipleObjectsAction extends Action {
 					link.trgPos.y_pos += yDelta;
 				}
 			});
-		}
-	}
-
-	// Offsets positions of the pasted nodes and comments if they exactly overlap
-	// existing nodes and comments - this can happen when pasting over the top
-	// of the canvas from which the nodes and comments were copied.
-	ensureNoOverlap(objects) {
-		while (this.apiPipeline.exactlyOverlaps(objects.nodes, objects.comments, objects.links)) {
-			if (objects.nodes) {
-				objects.nodes.forEach((node) => {
-					node.x_pos += 10;
-					node.y_pos += 10;
-				});
-			}
-			if (objects.comments) {
-				objects.comments.forEach((comment) => {
-					comment.x_pos += 10;
-					comment.y_pos += 10;
-					comment.selectedObjectIds = [];
-				});
-			}
-			if (objects.links) {
-				objects.links.forEach((link) => {
-					if (link.srcPos) {
-						link.srcPos.x_pos += 10;
-						link.srcPos.y_pos += 10;
-					}
-					if (link.trgPos) {
-						link.trgPos.x_pos += 10;
-						link.trgPos.y_pos += 10;
-					}
-				});
-			}
-
 		}
 	}
 

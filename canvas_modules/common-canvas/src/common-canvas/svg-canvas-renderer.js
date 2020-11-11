@@ -1696,17 +1696,21 @@ export default class SVGCanvasRenderer {
 	// full-page so we can use getBoundingClientRect() to get the dimensions
 	// (for some reason that method doesn't return correct values with embedded SVG areas).
 	getViewportDimensions() {
-		let viewPortDimensions = {};
+		let viewportDimensions = {};
 
 		if (this.isDisplayingSubFlowInPlace()) {
 			const dims = this.getParentSupernodeSVGDimensions();
-			viewPortDimensions.width = dims.width;
-			viewPortDimensions.height = dims.height;
+			viewportDimensions.width = dims.width;
+			viewportDimensions.height = dims.height;
 
 		} else {
-			viewPortDimensions = this.canvasSVG.node().getBoundingClientRect();
+			if (this.canvasSVG && this.canvasSVG.node()) {
+				viewportDimensions = this.canvasSVG.node().getBoundingClientRect();
+			} else {
+				viewportDimensions = { x: 0, y: 0, width: 1100, height: 640 }; // Return a sensible default (for Jest tests)
+			}
 		}
-		return viewPortDimensions;
+		return viewportDimensions;
 	}
 
 	zoomStart() {

@@ -103,8 +103,8 @@
         }
       ],
       "inputs": [],
-      "x_pos": 154,
-      "y_pos": 97,
+      "x_pos": 164,
+      "y_pos": 107,
       "label": "Var. File",
           "inputPortsHeight": 3,
           "outputPortsHeight": 18,
@@ -135,8 +135,8 @@
           }
         }
       ],
-      "x_pos": 327,
-      "y_pos": 214,
+      "x_pos": 337,
+      "y_pos": 224,
       "label": "Select",
           "inputPortsHeight": 18,
           "outputPortsHeight": 18,
@@ -160,8 +160,8 @@
       "content": "",
       "height": 42,
       "width": 175,
-      "x_pos": 100,
-      "y_pos": 100
+      "x_pos": 110,
+      "y_pos": 110
     }
   ],
   "links": [
