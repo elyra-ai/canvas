@@ -561,7 +561,7 @@ export default class CanvasUtils {
 	static selectInRegion(region, pipeline, includeLinks) {
 		var regionSelections = [];
 		for (const node of pipeline.nodes) {
-			if (!this.isSupernodeBinding(node) && // Don't include binding nodes in select
+			if (!this.isSuperBindingNode(node) && // Don't include binding nodes in select
 					region.x1 < node.x_pos + node.width &&
 					region.x2 > node.x_pos &&
 					region.y1 < node.y_pos + node.height &&
@@ -609,12 +609,6 @@ export default class CanvasUtils {
 			pos.x_pos < area.x2 + pad &&
 			pos.y_pos > area.y1 - pad &&
 			pos.y_pos < area.y2 + pad;
-	}
-
-	// Returns true if the node passed in a binding node within a supernode's
-	// subflow.
-	static isSupernodeBinding(node) {
-		return node.isSupernodeInputBinding || node.isSupernodeOutputBinding;
 	}
 
 	// Returns true if the node passed in is a binding node in a subflow
