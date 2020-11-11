@@ -31,7 +31,7 @@ export default class CloneMultipleObjectsAction extends Action {
 		this.clonedPipelines = []; // Map of original pipelineId to the new cloned pipeline.
 
 		// Make sure objects to be pasted are in an appropriate position for them
-		// to appear within the vieport
+		// to appear within the viewport.
 		this.adjustObjectsPositions();
 
 		if (data.objects.nodes) {
@@ -73,11 +73,11 @@ export default class CloneMultipleObjectsAction extends Action {
 
 	// Adjusts the positions of the cloned objects appropriately. If the data
 	// object contains a mousePos property it will be the position on the canvas
-	// where the paste was requested using a context menu and we wil paste the
+	// where the paste was requested using a context menu and we will paste the
 	// objects at that position. If no mousePos is specified then the user will
 	// have pasted using the toolbar button or keyboard. In this case, we paste
-	// the objects in their original coordinate positions or, if that postion is
-	// not visible in the viewport, then in the center of the viewport.
+	// the objects in their original coordinate positions or, if that position is
+	// not visible in the viewport, we paste them in the center of the viewport.
 	adjustObjectsPositions() {
 		const objects = this.data.objects;
 		const pastedObjDimensions = CanvasUtils.getCanvasDimensions(objects.nodes, objects.comments, objects.links, 0);

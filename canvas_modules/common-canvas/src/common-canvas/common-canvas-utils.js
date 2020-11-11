@@ -381,7 +381,7 @@ export default class CanvasUtils {
 	}
 
 	// Returns true if an association link already exists between the two nodes
-	// passed in given the set of links passd in.
+	// passed in given the set of links passed in.
 	static assocLinkAlreadyExists(srcNode, trgNode, links) {
 		let exists = false;
 
