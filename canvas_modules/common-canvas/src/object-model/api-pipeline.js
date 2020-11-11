@@ -122,11 +122,11 @@ export default class APIPipeline {
 		return null;
 	}
 
-	// Returns true if any of the node or comment definitions passed in exactly
+	// Returns true if any of the node, comment or link definitions passed in exactly
 	// overlap any of the existing nodes and comments. This is used by the
-	// paste-from-clipboard code to detect if nodes and comments being pasted
-	// overlap existing nodes and comments.
-	exactlyOverlaps(nodeDefs, commentDefs) {
+	// paste-from-clipboard code to detect if nodes, comments and links being pasted
+	// overlap existing nodes, comments and links.
+	exactlyOverlaps(nodeDefs, commentDefs, linkDefs) {
 		var overlaps = false;
 
 		if (nodeDefs && nodeDefs.length > 0) {
@@ -140,6 +140,14 @@ export default class APIPipeline {
 		if (overlaps === false && commentDefs && commentDefs.length > 0) {
 			const index = commentDefs.findIndex((commentDef) => {
 				return this.exactlyOverlapsComments(commentDef);
+			});
+			if (index > -1) {
+				overlaps = true;
+			}
+		}
+		if (overlaps === false && linkDefs && linkDefs.length > 0) {
+			const index = linkDefs.findIndex((linkDef) => {
+				return this.exactlyOverlapsLinks(linkDef);
 			});
 			if (index > -1) {
 				overlaps = true;
@@ -190,13 +198,35 @@ export default class APIPipeline {
 		return overlap;
 	}
 
-	// Return true if the new comment definition passed in exactly overlaps any
+	// Return true if the comment definition passed in exactly overlaps any
 	// of the existing comments.
 	exactlyOverlapsComments(comment) {
 		var overlap = false;
 		this.getComments().forEach((canvasComment) => {
 			if (canvasComment.x_pos === comment.x_pos &&
 					canvasComment.y_pos === comment.y_pos) {
+				overlap = true;
+			}
+		});
+		return overlap;
+	}
+
+	// Return true if the link definition passed in exactly overlaps any
+	// of the existing links in its coordinate positions (if any) identified by
+	// the srcPos and trgPos properties.
+	exactlyOverlapsLinks(link) {
+		var overlap = false;
+		this.getLinks().forEach((canvasLink) => {
+			if (canvasLink.srcPos &&
+					link.srcPos &&
+					canvasLink.srcPos.x_pos === link.srcPos.x_pos &&
+					canvasLink.srcPos.y_pos === link.srcPos.y_pos) {
+				overlap = true;
+			}
+			if (canvasLink.trgPos &&
+					link.trgPos &&
+					canvasLink.trgPos.x_pos === link.trgPos.x_pos &&
+					canvasLink.trgPos.y_pos === link.trgPos.y_pos) {
 				overlap = true;
 			}
 		});
@@ -872,7 +902,7 @@ export default class APIPipeline {
 	getNewCommentPosition(svgPos) {
 		const pos = { x_pos: svgPos.x_pos, y_pos: svgPos.y_pos };
 
-		while (this.exactlyOverlaps(null, [pos])) {
+		while (this.exactlyOverlaps(null, [pos], null)) {
 			pos.x_pos += 10;
 			pos.y_pos += 10;
 		}

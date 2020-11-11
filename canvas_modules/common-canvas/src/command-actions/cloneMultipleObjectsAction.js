@@ -18,15 +18,16 @@ import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CloneMultipleObjectsAction extends Action {
-	constructor(data, objectModel, viewportDimensions) {
+	constructor(data, objectModel, viewportDimensions, areDetachableLinksSupported) {
 		super(data);
 		this.data = data;
 		this.viewportDimensions = viewportDimensions;
+		this.areDetachableLinksSupported = areDetachableLinksSupported;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.clonedNodesInfo = [];
 		this.clonedCommentsInfo = [];
-		this.links = [];
+		this.clonedLinks = [];
 		this.clonedPipelines = []; // Map of original pipelineId to the new cloned pipeline.
 
 		// Make sure objects to be pasted are in an appropriate position for them
@@ -57,13 +58,13 @@ export default class CloneMultipleObjectsAction extends Action {
 					const srcClonedNode = this.findClonedNode(link.srcNodeId);
 					const trgClonedNode = this.findClonedNode(link.trgNodeId);
 					const newLink = this.apiPipeline.cloneNodeLink(link, srcClonedNode, trgClonedNode);
-					this.links.push(newLink);
+					this.clonedLinks.push(newLink);
 				} else {
 					const srcClonedComment = this.findClonedComment(link.srcNodeId);
 					const trgClonedNode = this.findClonedNode(link.trgNodeId);
 					if (srcClonedComment && trgClonedNode) {
 						const newLink = this.apiPipeline.cloneCommentLink(link, srcClonedComment.id, trgClonedNode.id);
-						this.links.push(newLink);
+						this.clonedLinks.push(newLink);
 					}
 				}
 			});
@@ -135,7 +136,7 @@ export default class CloneMultipleObjectsAction extends Action {
 	// existing nodes and comments - this can happen when pasting over the top
 	// of the canvas from which the nodes and comments were copied.
 	ensureNoOverlap(objects) {
-		while (this.apiPipeline.exactlyOverlaps(objects.nodes, objects.comments)) {
+		while (this.apiPipeline.exactlyOverlaps(objects.nodes, objects.comments, objects.links)) {
 			if (objects.nodes) {
 				objects.nodes.forEach((node) => {
 					node.x_pos += 10;
@@ -149,6 +150,19 @@ export default class CloneMultipleObjectsAction extends Action {
 					comment.selectedObjectIds = [];
 				});
 			}
+			if (objects.links) {
+				objects.links.forEach((link) => {
+					if (link.srcPos) {
+						link.srcPos.x_pos += 10;
+						link.srcPos.y_pos += 10;
+					}
+					if (link.trgPos) {
+						link.trgPos.x_pos += 10;
+						link.trgPos.y_pos += 10;
+					}
+				});
+			}
+
 		}
 	}
 
@@ -157,7 +171,7 @@ export default class CloneMultipleObjectsAction extends Action {
 	getData() {
 		this.data.clonedNodesInfo = this.clonedNodesInfo;
 		this.data.clonedCommentsInfo = this.clonedCommentsInfo;
-		this.data.clonedLinks = this.links;
+		this.data.clonedLinks = this.clonedLinks;
 		return this.data;
 	}
 
@@ -179,7 +193,12 @@ export default class CloneMultipleObjectsAction extends Action {
 			addedObjectIds.push(clonedCommentInfo.comment.id);
 		});
 
-		this.apiPipeline.addLinks(this.links);
+
+		this.apiPipeline.addLinks(this.clonedLinks);
+		if (this.areDetachableLinksSupported) {
+			this.clonedLinks.forEach((clonedLink) => addedObjectIds.push(clonedLink.id));
+		}
+
 		this.objectModel.setSelections(addedObjectIds, this.apiPipeline.pipelineId);
 	}
 
@@ -194,8 +213,8 @@ export default class CloneMultipleObjectsAction extends Action {
 		this.clonedCommentsInfo.forEach((clonedCommentInfo) => {
 			this.apiPipeline.deleteComment(clonedCommentInfo.comment.id);
 		});
-		this.links.forEach((link) => {
-			this.apiPipeline.deleteLink(link);
+		this.clonedLinks.forEach((clonedLink) => {
+			this.apiPipeline.deleteLink(clonedLink);
 		});
 	}
 

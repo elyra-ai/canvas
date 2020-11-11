@@ -1663,18 +1663,22 @@ export default class ObjectModel {
 				// to alter the source and/or target info so make a copy of the link
 				// first.
 				const newLink = Object.assign({}, link);
-				// If the link is attached to a source node and that node is not to be
-				// clipboarded, set the srcPos coordinates and remove the source node info.
-				if (link.srcNodeId &&
+				// If the link is a node-node data link and it is attached to a source
+				// node and that node is not to be clipboarded, set the srcPos
+				// coordinates and remove the source node info.
+				if (link.type === NODE_LINK &&
+						link.srcNodeId &&
 						nodes.findIndex((n) => n.id === link.srcNodeId) === -1) {
 					const srcNode = apiPipeline.getNode(link.srcNodeId);
 					delete newLink.srcNodeId;
 					delete newLink.srcNodePortId;
 					newLink.srcPos = { x_pos: srcNode.x_pos + srcNode.width, y_pos: srcNode.y_pos + (srcNode.height / 2) };
 				}
-				// If the link is attached to a target node and that node is not to be
-				// clipboarded, set the trgPos coordinates and remove the target node info.
-				if (link.trgNodeId &&
+				// If the link is a node-node data link and it is attached to a target
+				// node and that node is not to be clipboarded, set the trgPos
+				// coordinates and remove the target node info.
+				if (link.type === NODE_LINK &&
+						link.trgNodeId &&
 						nodes.findIndex((n) => n.id === link.trgNodeId) === -1) {
 					const trgNode = apiPipeline.getNode(link.trgNodeId);
 					delete newLink.trgNodeId;

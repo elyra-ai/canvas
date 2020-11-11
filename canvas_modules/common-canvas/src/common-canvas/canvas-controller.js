@@ -1959,7 +1959,7 @@ export default class CanvasController {
 				break;
 			}
 			case "deleteSelectedObjects": {
-				command = new DeleteObjectsAction(data, this.objectModel, this.canvasConfig.enableLinkSelection);
+				command = new DeleteObjectsAction(data, this.objectModel, this.areDetachableLinksSupported());
 				this.commandStack.do(command);
 				break;
 			}
@@ -2015,7 +2015,7 @@ export default class CanvasController {
 			}
 			case "cut": {
 				this.objectModel.copyToClipboard(this.areDetachableLinksSupported());
-				command = new DeleteObjectsAction(data, this.objectModel, this.canvasConfig.enableLinkSelection);
+				command = new DeleteObjectsAction(data, this.objectModel, this.areDetachableLinksSupported());
 				this.commandStack.do(command);
 				break;
 			}
@@ -2028,7 +2028,7 @@ export default class CanvasController {
 				if (pasteObjects) {
 					data.objects = pasteObjects;
 					const vpDims = this.commonCanvas.getTransformedViewportDimensions(0);
-					command = new CloneMultipleObjectsAction(data, this.objectModel, vpDims);
+					command = new CloneMultipleObjectsAction(data, this.objectModel, vpDims, this.areDetachableLinksSupported());
 					this.commandStack.do(command);
 					data = command.getData();
 				}
