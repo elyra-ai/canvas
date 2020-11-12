@@ -18,13 +18,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { isEmpty } from "lodash";
-import { Checkbox, TooltipIcon } from "carbon-components-react";
-import { Information16 } from "@carbon/icons-react";
+import { Checkbox } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
-import { STATES } from "./../../constants/constants.js";
+import { TOOL_TIP_DELAY, STATES, CARBON_ICONS } from "./../../constants/constants.js";
+import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
+import Icon from "./../../../icons/icon.jsx";
 
 class CheckboxControl extends React.Component {
 
@@ -42,18 +43,20 @@ class CheckboxControl extends React.Component {
 		const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
 		let tooltip = "";
 		if (this.props.control.description && !(this.props.state === STATES.DISABLED || this.props.state === STATES.HIDDEN) && !this.props.tableControl) {
-			tooltip = this.props.control.description.text;
+			tooltip = (
+				<span >{this.props.control.description.text}</span>
+			);
 		}
 		const tooltipIcon = isEmpty(tooltip) ? "" : (
-			<TooltipIcon
+			<Tooltip
 				id={tooltipId}
-				tooltipText={tooltip}
+				tip={tooltip}
 				direction="top"
-				className="properties-checkbox-tooltip"
-				tabIndex="-1"
+				delay={TOOL_TIP_DELAY}
+				className="properties-tooltips"
 			>
-				<Information16 />
-			</TooltipIcon>
+				<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+			</Tooltip>
 		);
 		const checkboxLabel = (
 			<span className="properties-checkbox-label">

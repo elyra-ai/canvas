@@ -27,8 +27,9 @@
 }
 .properties-checkbox-label {
 	display: flex;
-	align-self: center;
-}
-.properties-checkbox-tooltip {
-	margin-left: $spacing-03;
+	align-items: center;
+	.tooltip-container {
+		height: 16px;
+		margin-left: $spacing-02;
+	}
 }
