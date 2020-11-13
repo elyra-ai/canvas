@@ -127,6 +127,10 @@ class DiagramCanvas extends React.Component {
 		return this.canvasD3Layout.getSvgViewportOffset();
 	}
 
+	getTransformedViewportDimensions() {
+		return this.canvasD3Layout.getTransformedViewportDimensions();
+	}
+
 	getZoomToReveal(objectIds, xPos, yPos) {
 		return this.canvasD3Layout.getZoomToReveal(objectIds, xPos, yPos);
 	}

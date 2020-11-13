@@ -381,7 +381,7 @@ export default class CanvasUtils {
 	}
 
 	// Returns true if an association link already exists between the two nodes
-	// passed in given the set of links passd in.
+	// passed in given the set of links passed in.
 	static assocLinkAlreadyExists(srcNode, trgNode, links) {
 		let exists = false;
 
@@ -561,7 +561,7 @@ export default class CanvasUtils {
 	static selectInRegion(region, pipeline, includeLinks) {
 		var regionSelections = [];
 		for (const node of pipeline.nodes) {
-			if (!this.isSupernodeBinding(node) && // Don't include binding nodes in select
+			if (!this.isSuperBindingNode(node) && // Don't include binding nodes in select
 					region.x1 < node.x_pos + node.width &&
 					region.x2 > node.x_pos &&
 					region.y1 < node.y_pos + node.height &&
@@ -611,9 +611,75 @@ export default class CanvasUtils {
 			pos.y_pos < area.y2 + pad;
 	}
 
-	// Returns true if the node passed in a binding node within a supernode's
-	// subflow.
-	static isSupernodeBinding(node) {
-		return node.isSupernodeInputBinding || node.isSupernodeOutputBinding;
+	// Returns true if the node passed in is a binding node in a subflow
+	// for a supernode.
+	static isSuperBindingNode(d) {
+		return d.isSupernodeInputBinding || d.isSupernodeOutputBinding;
 	}
+
+	// Returns an object containing the dimensions of an imaginary rectangle
+	// surrounding the nodes and comments and links passed in or null if
+	// no valid objects were provided.
+	static getCanvasDimensions(nodes, comments, links, commentHighlightGap) {
+		var canvLeft = Infinity;
+		let canvTop = Infinity;
+		var canvRight = -Infinity;
+		var canvBottom = -Infinity;
+
+		if (nodes) {
+			nodes.forEach((d) => {
+				if (this.isSuperBindingNode(d)) { // Always ignore Supernode binding nodes
+					return;
+				}
+				canvLeft = Math.min(canvLeft, d.x_pos - d.layout.nodeHighlightGap);
+				canvTop = Math.min(canvTop, d.y_pos - d.layout.nodeHighlightGap);
+				canvRight = Math.max(canvRight, d.x_pos + d.width + d.layout.nodeHighlightGap);
+				canvBottom = Math.max(canvBottom, d.y_pos + d.height + d.layout.nodeHighlightGap);
+			});
+		}
+
+		if (comments) {
+			comments.forEach((d) => {
+				canvLeft = Math.min(canvLeft, d.x_pos - commentHighlightGap);
+				canvTop = Math.min(canvTop, d.y_pos - commentHighlightGap);
+				canvRight = Math.max(canvRight, d.x_pos + d.width + commentHighlightGap);
+				canvBottom = Math.max(canvBottom, d.y_pos + d.height + commentHighlightGap);
+			});
+		}
+
+		// Take into account semi-detached and fully-detached links, if any.
+		if (links) {
+			links.forEach((link) => {
+				if (link.srcPos) {
+					canvLeft = Math.min(canvLeft, link.srcPos.x_pos);
+					canvTop = Math.min(canvTop, link.srcPos.y_pos);
+					canvRight = Math.max(canvRight, link.srcPos.x_pos);
+					canvBottom = Math.max(canvBottom, link.srcPos.y_pos);
+				}
+				if (link.trgPos) {
+					canvLeft = Math.min(canvLeft, link.trgPos.x_pos);
+					canvTop = Math.min(canvTop, link.trgPos.y_pos);
+					canvRight = Math.max(canvRight, link.trgPos.x_pos);
+					canvBottom = Math.max(canvBottom, link.trgPos.y_pos);
+				}
+			});
+		}
+		const canvWidth = canvRight - canvLeft;
+		const canvHeight = canvBottom - canvTop;
+
+		if (canvLeft === Infinity || canvTop === Infinity ||
+				canvRight === -Infinity || canvBottom === -Infinity) {
+			return null;
+		}
+
+		return {
+			left: canvLeft,
+			top: canvTop,
+			right: canvRight,
+			bottom: canvBottom,
+			width: canvWidth,
+			height: canvHeight
+		};
+	}
+
 }
