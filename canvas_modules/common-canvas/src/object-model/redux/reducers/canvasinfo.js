@@ -84,6 +84,7 @@ export default (state = {}, action) => {
 	case "ADD_NODE":
 	case "ADD_AUTO_NODE":
 	case "REPLACE_NODES":
+	case "REPLACE_NODE":
 	case "SIZE_AND_POSITION_OBJECTS":
 	case "SET_NODE_PROPERTIES":
 	case "SET_NODE_PARAMETERS":
