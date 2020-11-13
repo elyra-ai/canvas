@@ -634,6 +634,20 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "SET_NODE_PARAMETERS", data: { nodeId: nodeId, parameters: parameters }, pipelineId: this.pipelineId });
 	}
 
+	setNodeInputPorts(nodeId, inputs) {
+		const node = this.getNode(nodeId);
+		node.inputs = inputs;
+		const newNode = this.objectModel.setNodeAttributes(node);
+		this.store.dispatch({ type: "REPLACE_NODE", data: { node: newNode }, pipelineId: this.pipelineId });
+	}
+
+	setNodeOutputPorts(nodeId, outputs) {
+		const node = this.getNode(nodeId);
+		node.outputs = outputs;
+		const newNode = this.objectModel.setNodeAttributes(node);
+		this.store.dispatch({ type: "REPLACE_NODE", data: { node: newNode }, pipelineId: this.pipelineId });
+	}
+
 	addCustomAttrToNodes(nodeIds, attrName, attrValue) {
 		this.store.dispatch({ type: "ADD_NODE_ATTR", data: { objIds: nodeIds, attrName: attrName, attrValue: attrValue }, pipelineId: this.pipelineId });
 	}
@@ -662,6 +676,16 @@ export default class APIPipeline {
 			}
 		}
 		return null;
+	}
+
+	getNodeInputPorts(nodeId) {
+		const node = this.getNode(nodeId);
+		return node ? node.inputs : null;
+	}
+
+	getNodeOutputPorts(nodeId) {
+		const node = this.getNode(nodeId);
+		return node ? node.outputs : null;
 	}
 
 	getNodeStyle(nodeId, temporary) {

@@ -732,6 +732,24 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeDecorations(nodeId, newDecorations);
 	}
 
+	// Sets the input ports on a node. The inputs array of ports provided will
+	// replace any input ports for a node.
+	// nodeId - The ID of the node
+	// inputs - An array of input port objects.
+	// pipelineId - The ID of the pipeline
+	setNodeInputPorts(nodeId, inputs, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodeInputPorts(nodeId, inputs);
+	}
+
+	// Sets the output ports on a node. The outputs array of ports provided will
+	// replace any output ports for a node.
+	// nodeId - The ID of the node
+	// outputs - An array of output port objects.
+	// pipelineId - The ID of the pipeline
+	setNodeOutputPorts(nodeId, outputs, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodeOutputPorts(nodeId, outputs);
+	}
+
 	// Sets the decorations of multiple nodes at once. The decorations array
 	// passed in will replace any decorations currently applied to the nodes.
 	// pipelineNodeDecorations - Specifies the nodes and their decorations.
@@ -801,6 +819,22 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	getNodeMessage(nodeId, controlName, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeMessage(nodeId, controlName);
+	}
+
+	// Gets the array of input ports for the node or null if the node ID is
+	// not recognized.
+	// nodeId - The ID of the node
+	// pipelineId - The ID of the pipeline
+	getNodeInputPorts(nodeId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeInputPorts(nodeId);
+	}
+
+	// Gets the array of output ports for the node or null if the node ID is
+	// not recognized.
+	// nodeId - The ID of the node
+	// pipelineId - The ID of the pipeline
+	getNodeOutputPorts(nodeId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeOutputPorts(nodeId);
 	}
 
 	// Gets an array of decorations for a node

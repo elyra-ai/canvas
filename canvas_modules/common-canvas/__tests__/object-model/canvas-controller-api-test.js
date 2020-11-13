@@ -23,7 +23,7 @@ import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCan
 
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 
-describe("ObjectModel API handle model OK", () => {
+describe("Test canvas controller methods", () => {
 	it("should update a link with new properties using: setLinkProperties", () => {
 		deepFreeze(startCanvas);
 
@@ -208,6 +208,83 @@ describe("ObjectModel API handle model OK", () => {
 
 		// There should be no decorations property
 		expect(typeof link2.decorations === "undefined").to.be.true;
+	});
+
+
+	it("should retrieve and get input ports using: getNodeInputPorts and setNodeInputPorts", () => {
+		deepFreeze(allTypesCanvas);
+		const executionNodeId = "|:;<,>.9?/`~!@#$%^&*()_+=-{}][";
+		const newInputPort = {
+			id: "1234",
+			label: "New Input Port",
+			cardinality: { min: 0, max: 1 },
+			app_data: {
+				my_data: [
+					"abc"
+				]
+			}
+		};
+
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(allTypesCanvas);
+		const inputs = canvasController.getNodeInputPorts(executionNodeId);
+
+		inputs.push(newInputPort);
+
+		canvasController.setNodeInputPorts(executionNodeId, inputs);
+		const newPF = canvasController.getPipelineFlow();
+
+		// Create a new controller so there is no cross-contamination
+		const canvasController2 = new CanvasController();
+		canvasController2.setPipelineFlow(newPF);
+
+		const inputs2 = canvasController.getNodeInputPorts(executionNodeId);
+
+		const actualPortStr = JSON.stringify(inputs2[1], null, 2);
+		const expectedPortStr = JSON.stringify(newInputPort, null, 2);
+
+		// console.log(actualPortStr)
+		// console.log(expectedPortStr)
+
+		expect(isEqual(expectedPortStr, actualPortStr)).to.be.true;
+	});
+
+	it("should retrieve and get output ports using: getNodeOutputPorts and setNodeOutputPorts", () => {
+		deepFreeze(allTypesCanvas);
+		const executionNodeId = "|:;<,>.9?/`~!@#$%^&*()_+=-{}][";
+		const newOutputPort = {
+			id: "4321",
+			label: "New Output Port",
+			cardinality: { min: 0, max: -1 },
+			app_data: {
+				my_data: [
+					"cba"
+				]
+			}
+		};
+
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(allTypesCanvas);
+		const outputs = canvasController.getNodeOutputPorts(executionNodeId);
+
+		outputs.push(newOutputPort);
+
+		canvasController.setNodeOutputPorts(executionNodeId, outputs);
+		const newPF = canvasController.getPipelineFlow();
+
+		// Create a new controller so there is no cross-contamination
+		const canvasController2 = new CanvasController();
+		canvasController2.setPipelineFlow(newPF);
+
+		const outputs2 = canvasController.getNodeOutputPorts(executionNodeId);
+
+		const actualPortStr = JSON.stringify(outputs2[1], null, 2);
+		const expectedPortStr = JSON.stringify(newOutputPort, null, 2);
+
+		// console.log(actualPortStr);
+		// console.log(expectedPortStr);
+
+		expect(isEqual(expectedPortStr, actualPortStr)).to.be.true;
 	});
 
 

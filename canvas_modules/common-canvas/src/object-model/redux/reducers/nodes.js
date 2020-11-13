@@ -32,6 +32,14 @@ export default (state = [], action) => {
 		return action.data;
 	}
 
+	case "REPLACE_NODE":
+		return state.map((node, index) => {
+			if (action.data.node.id === node.id) {
+				return action.data.node;
+			}
+			return node;
+		});
+
 	case "MOVE_OBJECTS":
 		// action.data.nodes contains an array of node and comment Ids
 		if (action.data.nodes) {
