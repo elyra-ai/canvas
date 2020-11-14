@@ -1,3 +1,4 @@
 {
-	"dialog.nodePropertiesTitle": "Node Properties"
+	"dialog.nodePropertiesTitle": "Node Properties",
+	"readonlyStructurelistTableControl.readonlytable.edit.button.label" : "Edit test"
 }

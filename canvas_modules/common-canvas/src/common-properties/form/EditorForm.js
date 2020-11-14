@@ -472,6 +472,10 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 						layout = structureDef.layout;
 					}
 				}
+				if (structureDef.control && structureDef.control === ControlType.READONLYTABLE) {
+					controlType = ControlType.READONLYTABLE;
+					addRemoveRows = null;
+				}
 
 				structureType = structureDef.type;
 			} else {

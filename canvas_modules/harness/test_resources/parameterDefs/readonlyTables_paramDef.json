@@ -1,0 +1,383 @@
+{
+  "titleDefinition": {
+    "title": "Readonlytable Test"
+  },
+  "current_parameters": {
+		"readonlyStructureTableControl": [
+      [
+        0,
+        "Age",
+        "Age",
+        "string",
+        "2018-02-16"
+      ],
+      [
+        1,
+        "BP",
+        "BP-1",
+        "date",
+        "1982-02-23"
+      ]
+    ],
+		"readonlyStructurelistTableControl": [
+      [
+        1,
+        "Hello",
+        "World",
+        "string",
+        "Readonly phrase"
+      ],
+			[
+        2,
+        "hi",
+        "world",
+        "boolean",
+        "some phrase"
+      ]
+    ]
+  },
+  "parameters": [
+		{
+      "id": "readonlyStructureTableControl",
+      "type": "map[string,readonlyStructureTableControl]",
+      "role": "column",
+      "default": [],
+      "required": true
+    },
+		{
+      "id": "readonlyStructurelistTableControl",
+      "type": "array[readonlyStructurelistTableControl]",
+      "default": []
+    }
+  ],
+  "complex_types": [
+		{
+      "id": "readonlyStructureTableControl",
+      "key_definition": {
+        "id": "structuretableRenameFields_readonly_int",
+        "type": "integer"
+      },
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        },
+        {
+          "id": "new_name",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "new_datatype",
+          "enum": [
+            "string",
+            "integer",
+            "double",
+            "time",
+            "date",
+            "timestamp",
+            "binary",
+            "boolean"
+          ],
+          "default": "string"
+        },
+        {
+          "id": "new_date",
+          "type": "date"
+        }
+      ]
+    },
+		{
+      "id": "readonlyStructurelistTableControl",
+      "parameters": [
+        {
+          "id": "readonly_numbered_column_index",
+          "type": "integer"
+        },
+        {
+          "id": "name",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "description",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "data_type",
+          "enum": [
+            "string",
+            "number",
+            "boolean",
+            "time",
+            "date"
+          ],
+          "default": ""
+        },
+        {
+          "id": "readonly",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "readonlyTable.test",
+    "editor_size": "medium",
+    "label": {
+      "default": "ReadonlyTable Test"
+    },
+    "description": {
+      "default": "Test readonly table controls"
+    },
+    "parameter_info": [
+			{
+        "parameter_ref": "readonlyStructureTableControl",
+        "label": {
+          "default": "ReadonlyTable - structuretable"
+        },
+        "description": {
+          "default": "Readonly structuretable control with multi row selection",
+					"placement": "on_panel"
+        }
+      },
+			{
+        "parameter_ref": "readonlyStructurelistTableControl",
+        "label": {
+          "default": "ReadonlyTable - structurelisteditor"
+        },
+        "description": {
+          "default": "Readonly structurelisteditor with single row selection and a custom edit button label.",
+					"placement": "on_panel"
+        }
+      }
+    ],
+    "complex_type_info": [
+			{
+        "complex_type_ref": "readonlyStructureTableControl",
+        "label": {
+          "default": "Rename Subpanel"
+        },
+				"control": "readonlyTable",
+        "key_definition": {
+          "parameter_ref": "structuretableRenameFields_readonly_int",
+          "label": {
+            "default": "Index"
+          },
+          "width": 10,
+          "generated_values": {
+            "operation": "index"
+          },
+          "control": "readonly"
+
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "default": "Field"
+            },
+            "width": 15,
+            "summary": true,
+            "dm_image":"measure"
+          },
+          {
+            "parameter_ref": "new_name",
+            "label": {
+              "default": "New Name"
+            },
+            "description": {
+              "resource_key": "readonlyStructureTableControl.new_name.desc"
+            },
+            "width": 15,
+            "edit_style": "inline",
+            "filterable": true,
+            "summary": true
+          },
+          {
+            "parameter_ref": "new_datatype",
+            "label": {
+              "default": "Type"
+            },
+            "description": {
+              "default": "Data type"
+            },
+            "width": 15,
+            "edit_style": "inline",
+            "dm_default": "type"
+          },
+          {
+            "parameter_ref": "new_date",
+            "label": {
+              "default": "Date"
+            },
+            "width": 15,
+            "edit_style": "inline"
+          }
+        ]
+      },
+			{
+        "complex_type_ref": "readonlyStructurelistTableControl",
+        "parameters": [
+          {
+            "parameter_ref": "readonly_numbered_column_index",
+            "label": {
+              "default": " "
+            },
+            "width": 5,
+            "generated_values": {
+              "operation": "index"
+            },
+            "control": "readonly",
+            "summary": true
+          },
+          {
+            "parameter_ref": "name",
+            "label": {
+              "default": "Name"
+            },
+            "width": 15,
+            "edit_style": "subpanel",
+            "summary": true
+          },
+          {
+            "parameter_ref": "description",
+            "label": {
+              "default": "Description"
+            },
+            "width": 15,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "data_type",
+            "label": {
+              "default": "Type"
+            },
+            "width": 15,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "readonly",
+            "label": {
+              "default": "ReadOnly"
+            },
+            "control": "readonly",
+            "width": 20
+          }
+        ],
+				"row_selection": "single",
+				"control": "readonlyTable"
+      }
+    ],
+    "group_info": [
+      {
+        "id": "Tables",
+        "type": "panels",
+				"group_info": [
+					{
+						"id": "readonlyTable",
+						"type": "controls",
+						"label": {
+							"default": "Columns"
+						},
+						"parameter_refs": [
+							"readonlyStructureTableControl",
+							"readonlyStructurelistTableControl"
+						]
+					}
+				]
+      }
+    ]
+  },
+  "conditions": [],
+  "dataset_metadata": [
+		{
+		  "fields": [
+		    {
+		      "name": "Age",
+		      "type": "integer",
+		      "metadata": {
+		        "description": "",
+		        "measure": "range",
+		        "modeling_role": "input"
+		      }
+		    },
+		    {
+		      "name": "Sex",
+		      "type": "string",
+		      "metadata": {
+		        "description": "",
+		        "measure": "ordered_set",
+		        "modeling_role": "input"
+		      }
+		    },
+		    {
+		      "name": "BP",
+		      "type": "string",
+		      "metadata": {
+		        "description": "",
+		        "measure": "discrete",
+		        "modeling_role": "input"
+		      }
+		    },
+		    {
+		      "name": "Cholesterol",
+		      "type": "string",
+		      "metadata": {
+		        "description": "",
+		        "measure": "set",
+		        "modeling_role": "input"
+		      }
+		    },
+		    {
+		      "name": "Na",
+		      "type": "double",
+		      "metadata": {
+		        "description": "",
+		        "measure": "flag",
+		        "modeling_role": "input"
+		      }
+		    },
+		    {
+		      "name": "K",
+		      "type": "double",
+		      "metadata": {
+		        "description": "",
+		        "measure": "collection",
+		        "modeling_role": "input"
+		      }
+		    },
+		    {
+		      "name": "Drug",
+		      "type": "string",
+		      "metadata": {
+		        "description": "",
+		        "measure": "geospatial",
+		        "modeling_role": "input"
+		      }
+		    },
+		    {
+		      "name": "Ag",
+		      "type": "integer",
+		      "metadata": {
+		        "description": "",
+		        "measure": "",
+		        "modeling_role": "input"
+		      }
+		    }
+		  ]
+		}
+	],
+  "resources": {
+		"new_datatype.string.label": "STRING",
+		"new_datatype.integer.label": "INTEGER",
+		"new_datatype.double.label": "DOUBLE",
+		"new_datatype.time.label": "TIME",
+		"new_datatype.date.label": "DATE",
+		"new_datatype.timestamp.label": "TIMESTAMP",
+		"new_datatype.binary.label": "BINARY",
+		"new_datatype.boolean.label": "BOOLEAN"
+  }
+}
