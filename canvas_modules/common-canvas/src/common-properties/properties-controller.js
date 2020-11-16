@@ -282,10 +282,11 @@ export default class PropertiesController {
 		return propertyId;
 	}
 
-	// Find the last child in propertyId and update the values
-	updateChildPropertyId(propertyId, childProperties) {
+	// Given the parent's "propertyId", find the "propertyId" of the last child
+	//  and update the "row" and "col" properties defined in "childProperties"
+	updateLastChildPropertyId(propertyId, childProperties) {
 		if (typeof propertyId.propertyId !== "undefined") {
-			return this.updateChildPropertyId(propertyId.propertyId, childProperties);
+			return this.updateLastChildPropertyId(propertyId.propertyId, childProperties);
 		}
 		if (typeof childProperties.row !== "undefined") {
 			propertyId.row = childProperties.row;
@@ -296,7 +297,8 @@ export default class PropertiesController {
 		return propertyId;
 	}
 
-	// Set the childPropertyId as the last child of propertyId
+	// Given the parent's "propertyId", set the "childPropertyId" as the last child of "propertyId"
+	// The "childPropertyId" is a control of a nested structure
 	setChildPropertyId(propertyId, childPropertyId) {
 		if (typeof propertyId.propertyId !== "undefined") {
 			return this.setChildPropertyId(propertyId.propertyId, childPropertyId);

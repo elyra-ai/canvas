@@ -276,8 +276,8 @@ class EditorForm extends React.Component {
 			// Used for subpanels in tables
 			if (inPropertyId) {
 				const parentPropertyId = cloneDeep(inPropertyId);
-				// Get the last child in inPropertyId and update that col index
-				this.props.controller.updateChildPropertyId(parentPropertyId, { col: indexof(uiItem.control.name) });
+				// This control is the last child in parentPropertyId, need to update the child's col index
+				this.props.controller.updateLastChildPropertyId(parentPropertyId, { col: indexof(uiItem.control.name) });
 				return this.ControlFactory.createControlItem(uiItem.control, parentPropertyId);
 			}
 
