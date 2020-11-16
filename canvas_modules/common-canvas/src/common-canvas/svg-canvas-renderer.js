@@ -800,8 +800,11 @@ export default class SVGCanvasRenderer {
 		node.height = ghost.height;
 		const nodeImage = this.getNodeImage(node);
 		const nodeImageType = this.getNodeImageType(nodeImage);
-
 		const ghostDivSel = this.getGhostDivSel();
+		// Use an offset that will position the ghost in the middle of the ghost SVG
+		// area so any object drawn outside the ghost rectangle (eg a wide node
+		// label) are drawn fully and not truncated.
+		const ghostOffset = this.canvasLayout.ghostOffset;
 
 		// First remove any old SVG object from the div
 		ghostDivSel
@@ -810,9 +813,11 @@ export default class SVGCanvasRenderer {
 
 		const ghostGrp = ghostDivSel
 			.append("svg")
+			.attr("width", ghostOffset * 2)
+			.attr("height", ghostOffset * 2)
 			.attr("class", "d3-ghost-svg")
 			.append("g")
-			.attr("transform", `scale(${this.zoomTransform.k})`);
+			.attr("transform", `translate(${ghostOffset}, ${ghostOffset}) scale(${this.zoomTransform.k})`);
 
 		ghostGrp
 			.append("rect")
@@ -844,8 +849,8 @@ export default class SVGCanvasRenderer {
 
 		return {
 			element: ghostDivSel.node(),
-			width: ghost.width * this.zoomTransform.k,
-			height: ghost.height * this.zoomTransform.k
+			centerX: ((ghost.width * this.zoomTransform.k) / 2) + ghostOffset,
+			centerY: ((ghost.height * this.zoomTransform.k) / 2) + ghostOffset
 		};
 	}
 

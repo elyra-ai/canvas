@@ -57,7 +57,7 @@ class PaletteContentListItem extends React.Component {
 		ev.dataTransfer.setData(DND_DATA_TEXT, "");
 
 		if (this.ghostData) {
-			ev.dataTransfer.setDragImage(this.ghostData.element, this.ghostData.width / 2, this.ghostData.height / 2);
+			ev.dataTransfer.setDragImage(this.ghostData.element, this.ghostData.centerX, this.ghostData.centerY);
 		}
 	}
 
