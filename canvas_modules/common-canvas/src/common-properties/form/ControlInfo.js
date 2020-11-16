@@ -17,7 +17,7 @@
 import { EditStyle } from "../constants/form-constants";
 
 
-class ControlDef {
+export class Control {
 	constructor(settings) {
 		this.name = settings.name;
 		if (settings.label) {
@@ -101,23 +101,23 @@ class ControlDef {
 		if (settings.action) {
 			this.action = settings.action;
 		}
-	}
-}
-
-export class Control extends ControlDef {
-	constructor(settings) {
-		super(settings);
+		if (settings.structureType) {
+			this.structureType = settings.structureType;
+		}
 		if (settings.subControls) {
 			this.subControls = settings.subControls;
+		}
+		if (settings.childItem) {
+			this.childItem = settings.childItem;
+		}
+		if (settings.layout) {
+			this.layout = settings.layout;
 		}
 		if (typeof settings.keyIndex === "number") {
 			this.keyIndex = settings.keyIndex;
 		}
 		if (settings.defaultRow) {
 			this.defaultRow = settings.defaultRow;
-		}
-		if (settings.childItem) {
-			this.childItem = settings.childItem;
 		}
 		if (typeof settings.moveableRows === "boolean") {
 			this.moveableRows = settings.moveableRows;
@@ -140,21 +140,10 @@ export class Control extends ControlDef {
 		if (typeof settings.includeAllFields === "boolean") {
 			this.includeAllFields = settings.includeAllFields;
 		}
-		if (settings.structureType) {
-			this.structureType = settings.structureType;
-		}
-		if (settings.layout) {
-			this.layout = settings.layout;
-		}
 		if (settings.dmImage) {
 			this.dmImage = settings.dmImage;
 		}
-	}
-}
 
-export class SubControl extends ControlDef {
-	constructor(settings) {
-		super(settings);
 		if (typeof settings.visible === "boolean") {
 			this.visible = settings.visible;
 		}
@@ -163,8 +152,8 @@ export class SubControl extends ControlDef {
 		}
 		if (settings.editStyle) {
 			this.editStyle = settings.editStyle;
-		} else if (!settings.isKeyField) {
-			this.editStyle = EditStyle.INLINE;
+		} else if (!settings.isKeyField && typeof settings.structureType !== "undefined") {
+			this.editStyle = EditStyle.INLINE; // Should only be set for structure controls
 		}
 		if (settings.dmDefault) {
 			this.dmDefault = settings.dmDefault;

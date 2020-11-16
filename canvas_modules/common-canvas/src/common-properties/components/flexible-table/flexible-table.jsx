@@ -50,6 +50,9 @@ export default class FlexibleTable extends React.Component {
 		this.rowHeight = this.rowHeight.bind(this);
 		this.rowGetter = this.rowGetter.bind(this);
 
+		this.getOriginalRowIndex = this.getOriginalRowIndex.bind(this);
+		this.getLastChildPropertyIdRow = this.getLastChildPropertyIdRow.bind(this);
+
 		this.calculateColumnWidths = this.calculateColumnWidths.bind(this);
 		this.handleFilterChange = this.handleFilterChange.bind(this);
 		this.onSort = this.onSort.bind(this);
@@ -103,12 +106,26 @@ export default class FlexibleTable extends React.Component {
 	*/
 	getOriginalRowIndex(row, index) {
 		let rowIndex = index;
-		if (row.columns && has(row.columns[0], "content.props.children.props.propertyId.row")) {
+		if (row.columns && has(row.columns[0], "content.props.children.props.propertyId.propertyId")) {
+			// this is a nested control
+			rowIndex = this.getLastChildPropertyIdRow(row.columns[0].content.props.children.props.propertyId, index);
+		} else if (row.columns && has(row.columns[0], "content.props.children.props.propertyId.row")) {
 			rowIndex = row.columns[0].content.props.children.props.propertyId.row;
 		} else if (typeof row.rowKey === "number") { // expression tables uses rowKey
 			rowIndex = parseInt(row.rowKey, 10);
 		}
 		return rowIndex;
+	}
+
+	// Get the 'row' of the last child's propertyId
+	getLastChildPropertyIdRow(propertyId, defaultRowIndex) {
+		if (typeof propertyId.propertyId !== "undefined") {
+			return this.getLastChildPropertyIdRow(propertyId.propertyId);
+		}
+		if (typeof propertyId.row !== "undefined") {
+			return propertyId.row;
+		}
+		return defaultRowIndex;
 	}
 
 	/**
@@ -239,7 +256,7 @@ export default class FlexibleTable extends React.Component {
 				container = rootElement.getElementsByClassName("bx--modal-content");
 			}
 			if (container.length > 0) {
-				const parentElement = container[0];
+				const parentElement = container[container.length - 1]; // Adjust height to the latest wide flyout opened
 				const tableElements =	parentElement.getElementsByClassName("properties-ft-container-wrapper");
 				const tableElement = tableElements.length > 0 ? tableElements[tableElements.length - 1] : null;
 				if (tableElement) {

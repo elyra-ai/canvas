@@ -136,7 +136,7 @@ class PropertiesMain extends React.Component {
 		// convert currentParameters of type:object to array values
 		const controls = this.propertiesController.getControls();
 		Object.keys(controls).forEach((controlId) => {
-			if (controls[controlId].structureType && controls[controlId].structureType === "object") {
+			if (PropertyUtils.isSubControlStructureObjectType(controls[controlId])) {
 				const propertyId = this.propertiesController.convertPropertyId(controlId);
 				const currentValues = this.propertiesController.getPropertyValue(propertyId);
 				const control = controls[controlId];

@@ -216,7 +216,8 @@
                             "valueDef": {
                               "propType": "string",
                               "isList": true,
-                              "isMap": false
+                              "isMap": false,
+                              "defaultValue": []
                             },
                             "role": "column"
                           }
@@ -255,6 +256,7 @@
                         "isMap": false,
                         "defaultValue": "Include"
                       },
+                      "role": "enum",
                       "orientation": "horizontal",
                       "values": [
                         "Include",
@@ -361,14 +363,14 @@
                               "isMap": false,
                               "defaultValue": false
                             },
-	                          "values": [
-	                            true,
-	                            false
-	                          ],
-	                          "valueLabels": [
-	                            "true",
-	                            "false"
-	                          ]
+                            "values": [
+                              true,
+                              false
+                            ],
+                            "valueLabels": [
+                              "true",
+                              "false"
+                            ]
                           }
                         },
                         {

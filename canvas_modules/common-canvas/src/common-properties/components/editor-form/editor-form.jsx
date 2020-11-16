@@ -254,22 +254,14 @@ class EditorForm extends React.Component {
 	}
 
 	/*
-	*  propertyId and indexOf only used for subpanel in tables
+	*  inPropertyId and indexOf only used for subpanel in tables
 	*/
 	genUIItem(key, uiItem, inPropertyId, indexof) {
 		let textClass = "";
 		let icon = null;
 		let text = "";
-		const propertyId = {};
 		switch (uiItem.itemType) {
-		case ("control"):
-			propertyId.name = uiItem.control.name;
-			// Used for subpanels in tables
-			if (inPropertyId) {
-				propertyId.name = inPropertyId.name;
-				propertyId.row = inPropertyId.row;
-				propertyId.col = indexof(uiItem.control.name);
-			}
+		case ("control"): {
 			// If the uiItem has additonalPanels, this indicates that the uiItem is
 			// a vertical radio button set followed by a SelectorPanel which has the
 			// insert_panels boolean set to true.
@@ -278,7 +270,19 @@ class EditorForm extends React.Component {
 				uiItem.control.optionalPanels =
 					this.generateAdditionalPanels(uiItem.additionalItems, key, null, indexof, true);
 			}
+
+			const propertyId = { name: uiItem.control.name };
+
+			// Used for subpanels in tables
+			if (inPropertyId) {
+				const parentPropertyId = cloneDeep(inPropertyId);
+				// This control is the last child in parentPropertyId, need to update the child's col index
+				this.props.controller.updateLastChildPropertyId(parentPropertyId, { col: indexof(uiItem.control.name) });
+				return this.ControlFactory.createControlItem(uiItem.control, parentPropertyId);
+			}
+
 			return this.ControlFactory.createControlItem(uiItem.control, propertyId);
+		}
 		case ("additionalLink"):
 			var subPanel = this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 			return (<SubPanelButton key={"sub-panel-button." + key}

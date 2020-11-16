@@ -165,13 +165,44 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 	const structureEditorArrayValues = [1, ["string1", "string2"], "hi", null];
 	const structureEditorObjectValues = { field1: 1, field2: ["string1", "string2"], field3: "hi", field4: null };
 
+	it("isSubControlStructureObjectType returns false when there are no structures of type object", () => {
+		const controlArray = { structureType: "array" };
+		let actual = PropertyUtils.isSubControlStructureObjectType(controlArray);
+		expect(actual).to.eql(false);
+
+		const subControlsArray = [{ name: "fieldA", structureType: "array", subControls: subControls }];
+		actual = PropertyUtils.isSubControlStructureObjectType(subControlsArray);
+		expect(actual).to.eql(false);
+
+		const nestedSubControlsArray = [{ name: "field1" }, { name: "field2", subControls: subControlsArray }, { name: "field3" }];
+		const controlNested = { structureType: "array", subControls: nestedSubControlsArray };
+		actual = PropertyUtils.isSubControlStructureObjectType(controlNested);
+		expect(actual).to.eql(false);
+	});
+
+	it("isSubControlStructureObjectType returns true when there are structures of type object", () => {
+		const controlArray = { structureType: "object" };
+		let actual = PropertyUtils.isSubControlStructureObjectType(controlArray);
+		expect(actual).to.eql(true);
+
+		const subControlsObject = [{ name: "field1" }, { name: "field2", structureType: "object" }, { name: "field3" }];
+		const subControlObject = { structureType: "array", subControls: subControlsObject };
+		actual = PropertyUtils.isSubControlStructureObjectType(subControlObject);
+		expect(actual).to.eql(true);
+
+		const nestedSubControlsObject = [{ name: "field1" }, { name: "field2", subControls: subControlsObject }, { name: "field3" }];
+		const controlNested = { structureType: "array", subControls: nestedSubControlsObject };
+		actual = PropertyUtils.isSubControlStructureObjectType(controlNested);
+		expect(actual).to.eql(true);
+	});
+
 	it("convertObjectStructureToArray returns correct values for lists", () => {
 		const actual = PropertyUtils.convertObjectStructureToArray(true, subControls, objectValues);
 		expect(actual).to.eql(arrayValues);
 	});
 
 	it("convertArrayStructureToObject returns correct values for lists", () => {
-		const actual = PropertyUtils.convertArrayStructureToObject(true, subControls, arrayValues);
+		const actual = PropertyUtils.convertArrayStructureToObject(true, subControls, arrayValues, true);
 		expect(actual).to.eql(objectValues);
 	});
 
@@ -202,5 +233,105 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 
 		const actual = PropertyUtils.convertObjectStructureToArray(false, structureEditorSubControls, missingObjectValues);
 		expect(actual).to.eql(missingArrayValues);
+	});
+
+	const nestedStructuresArray = [
+		[
+			"Cholesterol",
+			5,
+			[
+				[
+					1,
+					"hi",
+					"string"
+				]
+			]
+		]
+	];
+
+	it("convertObjectStructureToArray/convertArrayStructureToObject returns correct values for nested structures - objects of objects", () => {
+		const nestedSubControls = [{ name: "field1" }, { name: "field2" }, { name: "field3" }];
+		const subControlObj = [{ name: "fieldA" }, { name: "fieldB" }, { name: "fieldC", structureType: "object", subControls: nestedSubControls, valueDef: { isList: true } }];
+		const currentValues = [{
+			"fieldA": "Cholesterol",
+			"fieldB": 5,
+			"fieldC": [{
+				"field1": 1,
+				"field2": "hi",
+				"field3": "string"
+			}]
+		}];
+
+		let actual = PropertyUtils.convertObjectStructureToArray(true, subControlObj, currentValues);
+		expect(actual).to.eql(nestedStructuresArray);
+
+		actual = PropertyUtils.convertArrayStructureToObject(true, subControlObj, nestedStructuresArray, true);
+		expect(actual).to.eql(currentValues);
+	});
+
+	it("convertObjectStructureToArray/convertArrayStructureToObject returns correct values for nested structures - objects of arrays", () => {
+		const nestedSubControls = [{ name: "field1" }, { name: "field2" }, { name: "field3" }];
+		const subControlObj = [{ name: "fieldA" }, { name: "fieldB" }, { name: "fieldC", structureType: "array", subControls: nestedSubControls, valueDef: { isList: true } }];
+		const currentValues = [{
+			"fieldA": "Cholesterol",
+			"fieldB": 5,
+			"fieldC": [[
+				1,
+				"hi",
+				"string"
+			]]
+		}];
+
+		let actual = PropertyUtils.convertObjectStructureToArray(true, subControlObj, currentValues);
+		expect(actual).to.eql(nestedStructuresArray);
+
+		actual = PropertyUtils.convertArrayStructureToObject(true, subControlObj, nestedStructuresArray, true);
+		expect(actual).to.eql(currentValues);
+	});
+
+	it("convertObjectStructureToArray/convertArrayStructureToObject returns correct values for nested structures - arrays of arrays", () => {
+		const nestedSubControls = [{ name: "field1" }, { name: "field2" }, { name: "field3" }];
+		const subControlObj = [{ name: "fieldA" }, { name: "fieldB" }, { name: "fieldC", structureType: "array", subControls: nestedSubControls, valueDef: { isList: true } }];
+		const currentValues = [
+			[
+				"Cholesterol",
+				5,
+				[
+					[
+						1,
+						"hi",
+						"string"
+					]
+				]
+			]
+		];
+
+		let actual = PropertyUtils.convertObjectStructureToArray(true, subControlObj, currentValues);
+		expect(actual).to.eql(nestedStructuresArray);
+
+		actual = PropertyUtils.convertArrayStructureToObject(true, subControlObj, nestedStructuresArray);
+		expect(actual).to.eql(currentValues);
+	});
+
+	it("convertObjectStructureToArray/convertArrayStructureToObject returns correct values for nested structures - arrays of objects", () => {
+		const nestedSubControls = [{ name: "field1" }, { name: "field2" }, { name: "field3" }];
+		const subControlObj = [{ name: "fieldA" }, { name: "fieldB" }, { name: "fieldC", structureType: "object", subControls: nestedSubControls, valueDef: { isList: true } }];
+		const currentValues = [
+			[
+				"Cholesterol",
+				5,
+				[{
+					"field1": 1,
+					"field2": "hi",
+					"field3": "string"
+				}]
+			]
+		];
+
+		let actual = PropertyUtils.convertObjectStructureToArray(true, subControlObj, currentValues);
+		expect(actual).to.eql(nestedStructuresArray);
+
+		actual = PropertyUtils.convertArrayStructureToObject(true, subControlObj, nestedStructuresArray);
+		expect(actual).to.eql(currentValues);
 	});
 });

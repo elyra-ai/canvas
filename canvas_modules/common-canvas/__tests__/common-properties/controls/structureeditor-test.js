@@ -22,6 +22,7 @@ import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import propertyUtils from "../../_utils_/property-utils";
+import tableUtils from "./../../_utils_/table-utils";
 import StructureEditorControl from "../../../src/common-properties/controls/structureeditor";
 import structureeditorParamDef from "../../test_resources/paramDefs/structureeditor_paramDef.json";
 
@@ -362,4 +363,167 @@ describe("structureeditor control renders correctly with paramDef", () => {
 		expect(structWrapper.hasClass("hide")).to.be.true;
 	});
 
+});
+
+describe("structureeditor control renders correctly in a nested structure", () => {
+	let wrapper;
+	let controller;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structureeditorParamDef);
+		wrapper = renderedObject.wrapper;
+		controller = renderedObject.controller;
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("structureeditor control can be nested in a structureeditor", () => {
+		const propertyId = { name: "nestedStructureeditor" };
+		const structure = wrapper.find("div[data-id='properties-ci-nestedStructureeditor']");
+		let actual = controller.getPropertyValue(propertyId);
+		let expected = structureeditorParamDef.current_parameters.nestedStructureeditor;
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+
+		const addressInput = structure.find("div[data-id='properties-ci-userAddress']").find("input");
+		addressInput.simulate("change", { target: { value: "some new address" } });
+
+		const zipInput = structure.find("div[data-id='properties-ci-userZip']").find("input");
+		zipInput.simulate("change", { target: { value: 99999 } });
+
+		// Verify modified values
+		actual = controller.getPropertyValue(propertyId);
+		expected = [
+			"name",
+			23,
+			[
+				"some new address", 99999, "rental address"
+			]
+		];
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+	});
+
+	it("structurelisteditor control can be nested in a structureeditor", () => {
+		const propertyId = { name: "nestedStructureeditorTable" };
+		let structure = wrapper.find("div[data-id='properties-ci-nestedStructureeditorTable']");
+		let actual = controller.getPropertyValue(propertyId);
+		let expected = structureeditorParamDef.current_parameters.nestedStructureeditorTable;
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+
+		// Add a new row to the nested table
+		const addValueBtn = structure.find("button.properties-add-fields-button");
+		expect(addValueBtn).to.have.length(1);
+		addValueBtn.simulate("click");
+
+		// Verify there are three rows
+		structure = wrapper.find("div[data-id='properties-ci-nestedStructureeditorTable']");
+		const tableRows = structure.find("div[role='properties-data-row']");
+		expect(tableRows).to.have.length(3);
+		const thirdRow = tableRows.at(2);
+
+		// Modify values in the third row
+		const addressInput = thirdRow.find(".properties-textfield").find("input");
+		addressInput.simulate("change", { target: { value: "add third address" } });
+		// Verify modified values
+		actual = controller.getPropertyValue(propertyId);
+		expected = [
+			"name",
+			23,
+			[
+				[
+					"address1", 90210, ["rental address"]
+				],
+				[
+					"address2", 90211, ["work address"]
+				],
+				[
+					"add third address", null, []
+				]
+			]
+		];
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+
+		// Click on subpanel to edit the hidden fields 'userZipTable' and 'annotationTable'
+		const editButton = thirdRow.find("button.properties-subpanel-button");
+		expect(editButton).to.have.length(1);
+		editButton.simulate("click");
+
+		const zipInput = wrapper.find("div[data-id='properties-ci-userZipTable']").find("input");
+		zipInput.simulate("change", { target: { value: 99999 } });
+		const annotationInput = wrapper.find("div[data-id='properties-ci-annotationTable']").find("textarea");
+		annotationInput.simulate("change", { target: { value: "Set a dummy zip code" } });
+
+		// Verify modified values
+		actual = controller.getPropertyValue(propertyId);
+		expected = [
+			"name",
+			23,
+			[
+				[
+					"address1", 90210, ["rental address"]
+				],
+				[
+					"address2", 90211, ["work address"]
+				],
+				[
+					"add third address", 99999, ["Set a dummy zip code"]
+				]
+			]
+		];
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+	});
+
+	it("structuretable control can be nested in a structureeditor", () => {
+		const propertyId = { name: "nestedStructuretable" };
+		let structure = wrapper.find("div[data-id='properties-ci-nestedStructuretable']");
+		let actual = controller.getPropertyValue(propertyId);
+		let expected = structureeditorParamDef.current_parameters.nestedStructuretable;
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+
+		// Add a new row to the nested table
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ci-userFieldsInfo");
+		tableUtils.fieldPicker(fieldPicker, ["Field 3"]);
+
+		// Verify there are two rows
+		structure = wrapper.find("div[data-id='properties-ci-nestedStructuretable']");
+		const tableRows = structure.find("div[role='properties-data-row']");
+		expect(tableRows).to.have.length(2);
+		const secondRow = tableRows.at(1);
+
+		actual = controller.getPropertyValue(propertyId);
+		expected = [
+			"name",
+			23,
+			[
+				[
+					"Field 5", 1, ["annotation for field 5"]
+				],
+				[
+					"Field 3", 2, []
+				]
+			]
+		];
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+
+		// // Modify values in the second row
+		const editButton = secondRow.find(".properties-subpanel-button").at(0);
+		editButton.simulate("click");
+		const userFields = wrapper.find("div[data-id='properties-userFieldsTable']");
+		userFields.find("textarea").simulate("change", { target: { value: "annotation for newly added Field 3" } });
+
+		// Verify updated values
+		actual = controller.getPropertyValue(propertyId);
+		expected = [
+			"name",
+			23,
+			[
+				[
+					"Field 5", 1, ["annotation for field 5"]
+				],
+				[
+					"Field 3", 2, ["annotation for newly added Field 3"]
+				]
+			]
+		];
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+	});
 });
