@@ -47,7 +47,7 @@ import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import LocalStorage from "./local-storage.js";
 import has from "lodash/has";
-import { ASSOC_STRAIGHT, LINK_SELECTION_NONE } from "./constants/canvas-constants";
+import { ASSOC_STRAIGHT, LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE } from "./constants/canvas-constants";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
 // Global instance ID counter
@@ -521,6 +521,10 @@ export default class CanvasController {
 		return this.objectModel.areAllSelectedObjectsLinks();
 	}
 
+	areDetachableLinksSupported() {
+		return this.canvasConfig.enableLinkSelection === LINK_SELECTION_DETACHABLE;
+	}
+
 	// ---------------------------------------------------------------------------
 	// Notification messages methods
 	// ---------------------------------------------------------------------------
@@ -728,6 +732,24 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeDecorations(nodeId, newDecorations);
 	}
 
+	// Sets the input ports on a node. The inputs array of ports provided will
+	// replace any input ports for a node.
+	// nodeId - The ID of the node
+	// inputs - An array of input port objects.
+	// pipelineId - The ID of the pipeline
+	setNodeInputPorts(nodeId, inputs, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodeInputPorts(nodeId, inputs);
+	}
+
+	// Sets the output ports on a node. The outputs array of ports provided will
+	// replace any output ports for a node.
+	// nodeId - The ID of the node
+	// outputs - An array of output port objects.
+	// pipelineId - The ID of the pipeline
+	setNodeOutputPorts(nodeId, outputs, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodeOutputPorts(nodeId, outputs);
+	}
+
 	// Sets the decorations of multiple nodes at once. The decorations array
 	// passed in will replace any decorations currently applied to the nodes.
 	// pipelineNodeDecorations - Specifies the nodes and their decorations.
@@ -797,6 +819,22 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	getNodeMessage(nodeId, controlName, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeMessage(nodeId, controlName);
+	}
+
+	// Gets the array of input ports for the node or null if the node ID is
+	// not recognized.
+	// nodeId - The ID of the node
+	// pipelineId - The ID of the pipeline
+	getNodeInputPorts(nodeId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeInputPorts(nodeId);
+	}
+
+	// Gets the array of output ports for the node or null if the node ID is
+	// not recognized.
+	// nodeId - The ID of the node
+	// pipelineId - The ID of the pipeline
+	getNodeOutputPorts(nodeId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeOutputPorts(nodeId);
 	}
 
 	// Gets an array of decorations for a node
@@ -1653,7 +1691,10 @@ export default class CanvasController {
 			}
 		}
 		// Edit submenu (cut, copy, paste)
-		if (source.type === "node" || source.type === "comment" || source.type === "canvas") {
+		if (source.type === "node" ||
+				source.type === "comment" ||
+				(source.type === "link" && this.areDetachableLinksSupported()) ||
+				source.type === "canvas") {
 			const editSubMenu = this.createEditMenu(source);
 			menuDefinition = menuDefinition.concat({ submenu: true, menu: editSubMenu, label: this.getLabel("node.editMenu") });
 			menuDefinition = menuDefinition.concat({ divider: true });
@@ -1952,7 +1993,7 @@ export default class CanvasController {
 				break;
 			}
 			case "deleteSelectedObjects": {
-				command = new DeleteObjectsAction(data, this.objectModel, this.canvasConfig.enableLinkSelection);
+				command = new DeleteObjectsAction(data, this.objectModel, this.areDetachableLinksSupported());
 				this.commandStack.do(command);
 				break;
 			}
@@ -2007,19 +2048,21 @@ export default class CanvasController {
 				break;
 			}
 			case "cut": {
-				this.objectModel.copyToClipboard();
-				command = new DeleteObjectsAction(data, this.objectModel);
+				this.objectModel.copyToClipboard(this.areDetachableLinksSupported());
+				command = new DeleteObjectsAction(data, this.objectModel, this.areDetachableLinksSupported());
 				this.commandStack.do(command);
 				break;
 			}
-			case "copy":
-				this.objectModel.copyToClipboard();
+			case "copy": {
+				this.objectModel.copyToClipboard(this.areDetachableLinksSupported());
 				break;
+			}
 			case "paste": {
-				const pasteObj = this.objectModel.getObjectsToPaste(data.pipelineId);
-				if (pasteObj.objects) {
-					data = Object.assign(data, { objects: pasteObj.objects, pipelineId: pasteObj.pipelineId });
-					command = new CloneMultipleObjectsAction(data, this.objectModel);
+				const pasteObjects = this.objectModel.getObjectsToPaste();
+				if (pasteObjects) {
+					data.objects = pasteObjects;
+					const vpDims = this.commonCanvas.getTransformedViewportDimensions();
+					command = new CloneMultipleObjectsAction(data, this.objectModel, vpDims, this.areDetachableLinksSupported());
 					this.commandStack.do(command);
 					data = command.getData();
 				}

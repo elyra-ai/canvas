@@ -122,11 +122,11 @@ export default class APIPipeline {
 		return null;
 	}
 
-	// Returns true if any of the node or comment definitions passed in exactly
-	// overlap any of the existing nodes and comments. This is used by the
-	// paste-from-clipboard code to detect if nodes and comments being pasted
-	// overlap existing nodes and comments.
-	exactlyOverlaps(nodeDefs, commentDefs) {
+	// Returns true if any of the node, comment or link definitions passed in
+	// exactly overlap any of the existing nodes, comments or links. This is used
+	// by the paste-from-clipboard code to detect if nodes, comments and links
+	// being pasted overlap existing nodes, comments and links.
+	exactlyOverlaps(nodeDefs, commentDefs, linkDefs) {
 		var overlaps = false;
 
 		if (nodeDefs && nodeDefs.length > 0) {
@@ -140,6 +140,14 @@ export default class APIPipeline {
 		if (overlaps === false && commentDefs && commentDefs.length > 0) {
 			const index = commentDefs.findIndex((commentDef) => {
 				return this.exactlyOverlapsComments(commentDef);
+			});
+			if (index > -1) {
+				overlaps = true;
+			}
+		}
+		if (overlaps === false && linkDefs && linkDefs.length > 0) {
+			const index = linkDefs.findIndex((linkDef) => {
+				return this.exactlyOverlapsLinks(linkDef);
 			});
 			if (index > -1) {
 				overlaps = true;
@@ -190,13 +198,35 @@ export default class APIPipeline {
 		return overlap;
 	}
 
-	// Return true if the new comment definition passed in exactly overlaps any
+	// Return true if the comment definition passed in exactly overlaps any
 	// of the existing comments.
 	exactlyOverlapsComments(comment) {
 		var overlap = false;
 		this.getComments().forEach((canvasComment) => {
 			if (canvasComment.x_pos === comment.x_pos &&
 					canvasComment.y_pos === comment.y_pos) {
+				overlap = true;
+			}
+		});
+		return overlap;
+	}
+
+	// Return true if the link definition passed in exactly overlaps any
+	// of the existing links in its coordinate positions (if any) identified by
+	// the srcPos and trgPos properties.
+	exactlyOverlapsLinks(link) {
+		var overlap = false;
+		this.getLinks().forEach((canvasLink) => {
+			if (canvasLink.srcPos &&
+					link.srcPos &&
+					canvasLink.srcPos.x_pos === link.srcPos.x_pos &&
+					canvasLink.srcPos.y_pos === link.srcPos.y_pos) {
+				overlap = true;
+			}
+			if (canvasLink.trgPos &&
+					link.trgPos &&
+					canvasLink.trgPos.x_pos === link.trgPos.x_pos &&
+					canvasLink.trgPos.y_pos === link.trgPos.y_pos) {
 				overlap = true;
 			}
 		});
@@ -604,6 +634,20 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "SET_NODE_PARAMETERS", data: { nodeId: nodeId, parameters: parameters }, pipelineId: this.pipelineId });
 	}
 
+	setNodeInputPorts(nodeId, inputs) {
+		const node = this.getNode(nodeId);
+		node.inputs = inputs;
+		const newNode = this.objectModel.setNodeAttributes(node);
+		this.store.dispatch({ type: "REPLACE_NODE", data: { node: newNode }, pipelineId: this.pipelineId });
+	}
+
+	setNodeOutputPorts(nodeId, outputs) {
+		const node = this.getNode(nodeId);
+		node.outputs = outputs;
+		const newNode = this.objectModel.setNodeAttributes(node);
+		this.store.dispatch({ type: "REPLACE_NODE", data: { node: newNode }, pipelineId: this.pipelineId });
+	}
+
 	addCustomAttrToNodes(nodeIds, attrName, attrValue) {
 		this.store.dispatch({ type: "ADD_NODE_ATTR", data: { objIds: nodeIds, attrName: attrName, attrValue: attrValue }, pipelineId: this.pipelineId });
 	}
@@ -632,6 +676,16 @@ export default class APIPipeline {
 			}
 		}
 		return null;
+	}
+
+	getNodeInputPorts(nodeId) {
+		const node = this.getNode(nodeId);
+		return node ? node.inputs : null;
+	}
+
+	getNodeOutputPorts(nodeId) {
+		const node = this.getNode(nodeId);
+		return node ? node.outputs : null;
 	}
 
 	getNodeStyle(nodeId, temporary) {
@@ -872,7 +926,7 @@ export default class APIPipeline {
 	getNewCommentPosition(svgPos) {
 		const pos = { x_pos: svgPos.x_pos, y_pos: svgPos.y_pos };
 
-		while (this.exactlyOverlaps(null, [pos])) {
+		while (this.exactlyOverlaps(null, [pos], null)) {
 			pos.x_pos += 10;
 			pos.y_pos += 10;
 		}
@@ -997,16 +1051,29 @@ export default class APIPipeline {
 		return null;
 	}
 
-	cloneNodeLink(link, srcNodeId, trgNodeId) {
-		return {
-			id: this.objectModel.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNodeId, "targetNodeId": trgNodeId }),
+	// Returns a clone of the link passed in using the source and target nodes
+	// passed in. If a semi-detached or fully-detached link is being cloned the
+	// srcNode and/or trgNode may be null.
+	cloneNodeLink(link, srcNode, trgNode) {
+		const clonedLink = {
+			id: this.objectModel.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNode ? srcNode.id : null, "targetNodeId": trgNode ? trgNode.id : null }),
 			type: link.type,
 			class_name: link.class_name,
-			srcNodeId: srcNodeId,
-			srcNodePortId: link.srcNodePortId,
-			trgNodeId: trgNodeId,
-			trgNodePortId: link.trgNodePortId
 		};
+
+		if (srcNode) {
+			clonedLink.srcNodeId = srcNode.id;
+			clonedLink.srcNodePortId = link.srcNodePortId;
+		} else {
+			clonedLink.srcPos = link.srcPos;
+		}
+		if (trgNode) {
+			clonedLink.trgNodeId = trgNode.id;
+			clonedLink.trgNodePortId = link.trgNodePortId;
+		} else {
+			clonedLink.trgPos = link.trgPos;
+		}
+		return clonedLink;
 	}
 
 	createNodeLinkDetached(data) {

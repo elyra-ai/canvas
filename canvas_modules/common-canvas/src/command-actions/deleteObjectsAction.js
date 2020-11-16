@@ -15,11 +15,9 @@
  */
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Action from "../command-stack/action.js";
-import { LINK_SELECTION_DETACHABLE } from "../common-canvas/constants/canvas-constants";
-
 
 export default class DeleteObjectsAction extends Action {
-	constructor(data, objectModel, enableLinkSelection) {
+	constructor(data, objectModel, areDetachableLinksSupported) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
@@ -38,7 +36,7 @@ export default class DeleteObjectsAction extends Action {
 		// have their source and target IDs removed (as appropriate based on
 		// whether the source and/or taget object is being deleted) which will
 		// indicate that the node is either partailly or fully detached.
-		if (enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+		if (areDetachableLinksSupported) {
 			this.linksToDelete = this.getConnectedLinksToDelete(this.linksToDelete, "nodeLink");
 			this.linksToUpdateInfo = this.getLinksToUpdateInfo();
 
