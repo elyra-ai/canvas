@@ -244,6 +244,7 @@
                               "isMap": true,
                               "defaultValue": []
                             },
+                            "structureType": "array",
                             "subControls": [
                               {
                                 "name": "field",
@@ -297,12 +298,6 @@
                                 "editStyle": "inline"
                               }
                             ],
-                            "keyIndex": 0,
-                            "defaultRow": [
-                              null,
-                              "",
-                              ""
-                            ],
                             "childItem": {
                               "itemType": "additionalLink",
                               "panel": {
@@ -323,7 +318,8 @@
                                         "isList": false,
                                         "isMap": false,
                                         "defaultValue": ""
-                                      }
+                                      },
+                                      "role": "new_column"
                                     }
                                   }
                                 ]
@@ -331,9 +327,15 @@
                               "text": "...",
                               "secondaryText": "RenameFieldEntry"
                             },
+                            "keyIndex": 0,
+                            "defaultRow": [
+                              null,
+                              "",
+                              ""
+                            ],
                             "addRemoveRows": true,
                             "header": true,
-                            "structureType": "array"
+                            "editStyle": "inline"
                           }
                         }
                       ]
@@ -442,13 +444,6 @@
         ]
       }
     },
-    "resources": {
-      "rename.label": "Rename Columns",
-      "RenameFieldEntry.field": "Input name",
-      "RenameFieldEntry.new_name": "Output name",
-      "RenameFieldEntry.new_label": "New Label",
-      "output_name_not_empty": "The 'Output Name' field cannot be empty"
-    },
     "conditions": [
       {
         "validation": {
@@ -468,6 +463,13 @@
           }
         }
       }
-    ]
+    ],
+    "resources": {
+      "rename.label": "Rename Columns",
+      "RenameFieldEntry.field": "Input name",
+      "RenameFieldEntry.new_name": "Output name",
+      "RenameFieldEntry.new_label": "New Label",
+      "output_name_not_empty": "The 'Output Name' field cannot be empty"
+    }
   }
 }

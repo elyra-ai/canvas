@@ -21,7 +21,7 @@ import { connect } from "react-redux";
 import AbstractTable from "./../abstract-table.jsx";
 import MoveableTableRows from "./../../components/moveable-table-rows";
 import * as PropertyUtils from "./../../util/property-utils";
-import { ParamRole } from "./../../constants/form-constants";
+import { Type, ParamRole } from "./../../constants/form-constants";
 import { STATES } from "./../../constants/constants";
 
 import ValidationMessage from "./../../components/validation-message";
@@ -93,8 +93,7 @@ class StructureTableControl extends AbstractTable {
 			const dataColumnIndex = PropertyUtils.getTableFieldIndex(this.props.control);
 			for (let i = 0; i < this.props.value.length; i++) {
 				const fieldValue = this.props.value[i][dataColumnIndex];
-				if ((this.props.control.defaultRow && fieldValue === field) ||
-						(this.props.value[i] === field)) {
+				if (fieldValue === field || this.props.value[i] === field) {
 					return this.props.value[i];
 				}
 			}
@@ -115,8 +114,10 @@ class StructureTableControl extends AbstractTable {
 					defaultRowIndex -= 1;
 				}
 				const defaultRowValue = this.props.control.defaultRow[defaultRowIndex];
-				// if the defaultRow value is a parameterRef, get the property value
-				if (defaultRowValue && defaultRowValue.parameterRef) {
+				if (this.props.control.subControls[defaultRowIndex].valueDef.propType === Type.STRUCTURE) {
+					row.push([]); // nested structure will default to an empty array
+				} else if (defaultRowValue && defaultRowValue.parameterRef) {
+					// if the defaultRow value is a parameterRef, get the property value
 					row.push(this.props.controller.getPropertyValue({ name: defaultRowValue.parameterRef }));
 				} else {
 					row.push(defaultRowValue);

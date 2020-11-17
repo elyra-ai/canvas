@@ -135,6 +135,44 @@
         "data_type": null,
         "readonly": null
       }
+    ],
+    "nestedStructurelisteditor": [
+      {
+        "readonly_numbered_column_index": 1,
+        "name": "Hello",
+        "data_type": "string",
+        "nested_structure": [
+          {
+            "nested_name": "hi",
+            "nested_data_type": "number"
+          }
+        ]
+      }
+    ],
+    "nestedStructuretable": [
+      [
+        1,
+        "Hello",
+        "string",
+        [
+          [
+            "Cholesterol",
+            1,
+            "Ascending"
+          ]
+        ]
+      ]
+    ],
+    "nestedStructureeditorTable": [
+      [
+        "name",
+        23,
+        [
+          "address1",
+          90210,
+          ["rental address"]
+        ]
+      ]
     ]
   },
   "parameters": [
@@ -181,6 +219,23 @@
     {
       "id": "structurelisteditorObjectType",
       "type": "array[structurelisteditorObjectType]"
+    },
+    {
+      "id": "nestedStructurelisteditor",
+      "type": "array[nestedStructurelisteditor]"
+    },
+    {
+      "id": "nestedStructurelisteditorArray",
+      "type": "array[nestedStructurelisteditorArray]"
+    },
+    {
+      "id": "nestedStructuretable",
+      "type": "array[nestedStructuretable]"
+    },
+    {
+      "id": "nestedStructureeditorTable",
+      "type": "array[userInfoTable]",
+      "default": []
     }
   ],
   "complex_types": [
@@ -472,6 +527,147 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "id": "nestedStructurelisteditor",
+      "type": "object",
+      "parameters": [
+        {
+          "id": "readonly_numbered_column_index",
+          "type": "integer"
+        },
+        {
+          "id": "name",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "data_type",
+          "enum": [
+            "string",
+            "number",
+            "boolean",
+            "time",
+            "date"
+          ],
+          "default": ""
+        },
+        {
+          "id": "nested_structure",
+          "type": "array[nestedStructurelisteditors]"
+        }
+      ]
+    },
+    {
+      "id": "nestedStructurelisteditors",
+      "type": "object",
+      "parameters": [
+        {
+          "id": "nested_name",
+          "type": "string"
+        },
+        {
+          "id": "nested_data_type",
+          "enum": [
+            "string",
+            "number",
+            "boolean",
+            "time",
+            "date"
+          ],
+          "default": ""
+        }
+      ]
+    },
+    {
+      "id": "nestedStructuretable",
+      "parameters": [
+        {
+          "id": "readonly_numbered_column_index",
+          "type": "integer"
+        },
+        {
+          "id": "name",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "data_type",
+          "enum": [
+            "string",
+            "number",
+            "boolean",
+            "time",
+            "date"
+          ],
+          "default": ""
+        },
+        {
+          "id": "nestedStructuretableArrayArrays",
+          "type": "array[nestedStructuretableArrayArrays]"
+        }
+      ]
+    },
+    {
+      "id": "nestedStructuretableArrayArrays",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "nested_structuretable_index",
+          "type": "integer",
+          "default": "5"
+        },
+        {
+          "id": "nested_structuretable_sort_order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
+    },
+    {
+      "id": "userInfoTable",
+      "parameters": [
+        {
+          "id": "userName",
+          "type": "string"
+        },
+        {
+          "id": "userAge",
+          "type": "integer"
+        },
+        {
+          "id": "userInfo",
+          "type": "userAddressTable",
+          "default": []
+        }
+      ]
+    },
+    {
+      "id": "userAddressTable",
+      "parameters": [
+        {
+          "id": "userAddress",
+          "type": "string"
+        },
+        {
+          "id": "userZip",
+          "type": "integer"
+        },
+        {
+          "id": "annotation",
+          "type": "array[string]",
+          "role": "text",
+          "default": []
+        }
+      ]
     }
   ],
   "uihints": {
@@ -580,6 +776,34 @@
         },
         "description": {
           "default": "The index column will be auto-populated with an integer value for each row starting at 1. Subsequent rows will be incremented by 1."
+        }
+      },
+      {
+        "parameter_ref": "nestedStructurelisteditor",
+        "label": {
+          "default": "Nested Structurelisteditor"
+        },
+        "description": {
+          "default": "Example of a nested structurelisteditor inside a structurelisteditor."
+        }
+      },
+      {
+        "parameter_ref": "nestedStructuretable",
+        "required": true,
+        "label": {
+          "default": "Nested Structuretable"
+        },
+        "description": {
+          "default": "Example of a nested structuretable inside a structurelisteditor."
+        }
+      },
+      {
+        "parameter_ref": "nestedStructureeditorTable",
+        "label": {
+          "default": "Nested Structureeditor"
+        },
+        "description": {
+          "default": "Example of a nested structureeditor inside a structurelisteditor"
         }
       }
     ],
@@ -1105,6 +1329,207 @@
             "width": 20
           }
         ]
+      },
+      {
+        "complex_type_ref": "nestedStructurelisteditor",
+        "parameters": [
+          {
+            "parameter_ref": "readonly_numbered_column_index",
+            "label": {
+              "default": "Index"
+            },
+            "width": 15,
+            "generated_values": {
+              "operation": "index"
+            },
+            "control": "readonly",
+            "summary": true
+          },
+          {
+            "parameter_ref": "name",
+            "label": {
+              "default": "Name"
+            },
+            "width": 15,
+            "edit_style": "subpanel",
+            "summary": true
+          },
+          {
+            "parameter_ref": "data_type",
+            "label": {
+              "default": "Type"
+            },
+            "width": 15,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "nested_structure",
+            "label": {
+              "default": "Structure"
+            },
+            "width": 15,
+            "edit_style": "subpanel"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "nestedStructurelisteditors",
+        "parameters": [
+          {
+            "parameter_ref": "nested_name",
+            "label": {
+              "default": "Nested Name"
+            },
+            "width": 15,
+            "summary": true,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "nested_data_type",
+            "label": {
+              "default": "Nested Type"
+            },
+            "width": 15,
+            "edit_style": "subpanel"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "nestedStructuretable",
+        "parameters": [
+          {
+            "parameter_ref": "readonly_numbered_column_index",
+            "label": {
+              "default": "Index"
+            },
+            "width": 15,
+            "generated_values": {
+              "operation": "index"
+            },
+            "control": "readonly",
+            "summary": true
+          },
+          {
+            "parameter_ref": "name",
+            "label": {
+              "default": "Name"
+            },
+            "width": 15,
+            "edit_style": "subpanel",
+            "summary": true
+          },
+          {
+            "parameter_ref": "data_type",
+            "label": {
+              "default": "Type"
+            },
+            "width": 15,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "nestedStructuretableArrayArrays",
+            "label": {
+              "default": "Structure"
+            },
+            "width": 15,
+            "edit_style": "subpanel"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "nestedStructuretableArrayArrays",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 15,
+          "label": {
+            "default": "Field"
+          },
+          "summary": true,
+          "dm_image": "invalid"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "nested_structuretable_index",
+            "width": 8,
+            "label": {
+              "default": "Index"
+            },
+            "generated_values": {
+              "operation": "index",
+              "start_value": 1
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "nested_structuretable_sort_order",
+            "width": 15,
+            "label": {
+              "default": "Sort by"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "userInfoTable",
+        "parameters": [
+          {
+            "parameter_ref": "userName",
+            "label": {
+              "default": "Name"
+            },
+            "width": 25,
+            "summary": true
+          },
+          {
+            "parameter_ref": "userAge",
+            "label": {
+              "default": "Age"
+            },
+            "width": 10,
+            "summary": true
+          },
+          {
+            "parameter_ref": "userInfo",
+            "label": {
+              "default": "Address Info"
+            },
+            "edit_style": "subpanel",
+            "width": 15
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "userAddressTable",
+        "layout": [
+          ["userAddress", "userZip"],
+          ["annotation"]
+        ],
+        "parameters": [
+          {
+            "parameter_ref": "userAddress",
+            "label": {
+              "default": "Address"
+            }
+          },
+          {
+            "parameter_ref": "userZip",
+            "label": {
+              "default": "Zip code"
+            }
+          },
+          {
+            "parameter_ref": "annotation",
+            "label": {
+              "default": "Note"
+            }
+          }
+        ]
       }
     ],
     "group_info": [
@@ -1204,6 +1629,33 @@
                 "id": "Structure Table Inline Control",
                 "parameter_refs": [
                   "structurelisteditorObjectType"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Nested Structures",
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "nested-structurelisteditor-summary-panel",
+            "label": {
+              "default": "Configure Tables"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "nestedStructuretable",
+                "type": "controls",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "nestedStructurelisteditor",
+                  "nestedStructuretable",
+                  "nestedStructureeditorTable"
                 ]
               }
             ]

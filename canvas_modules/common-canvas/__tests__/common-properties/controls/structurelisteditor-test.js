@@ -220,6 +220,9 @@ const mseControl = {
 
 
 const propertyId = { name: "keys" };
+const propertyIdNestedStructurelisteditorObject = { name: "nestedStructurelisteditor" };
+const propertyIdNestedStructurelisteditorArrayArray = { name: "nestedStructuretable" };
+const propertyIdNestedStructureeditor = { name: "nestedStructureeditorTable" };
 
 propertyUtils.setControls(controller, [control]);
 
@@ -629,4 +632,224 @@ describe("StructureListEditor render from paramdef", () => {
 
 	});
 
+});
+
+describe("StructureListEditor renders correctly with nested controls", () => {
+	let wrapper;
+	let renderedController;
+
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structureListEditorParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should render a `structurelisteditor` control inside a structurelisteditor", () => {
+		const summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
+		const table = summaryPanel.find("div[data-id='properties-ci-nestedStructurelisteditor']");
+		let tableData = renderedController.getPropertyValue(propertyIdNestedStructurelisteditorObject, { applyProperties: true });
+		const expectedOriginal = structureListEditorParamDef.current_parameters.nestedStructurelisteditor;
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
+
+		// click on subpanel edit for main table
+		let editButton = table.find(".properties-subpanel-button").at(0);
+		editButton.simulate("click");
+
+		// subPanel table
+		let subPanelTable = wrapper.find("div[data-id='properties-ft-nested_structure']");
+		expect(subPanelTable).to.have.length(1);
+		const addValueBtn = subPanelTable.find("button.properties-add-fields-button");
+		addValueBtn.simulate("click");
+
+		// Verify new row added
+		tableData = renderedController.getPropertyValue(propertyIdNestedStructurelisteditorObject, { applyProperties: true });
+		let expected = [
+			{
+				"readonly_numbered_column_index": 1,
+				"name": "Hello",
+				"data_type": "string",
+				"nested_structure": [
+					{
+						"nested_name": "hi",
+						"nested_data_type": "number"
+					}, {
+						"nested_name": null,
+						"nested_data_type": ""
+					}
+				]
+			}
+		];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+
+		// click on subpanel edit for nested table
+		subPanelTable = wrapper.find("div[data-id='properties-ft-nested_structure']");
+		editButton = subPanelTable.find("button.properties-subpanel-button");
+		expect(editButton).to.have.length(2);
+		editButton.at(1).simulate("click");
+
+		// Modify value of the nested structure
+		const nameInput = wrapper.find("div[data-id='properties-ci-nested_name']");
+		nameInput.find("input").simulate("change", { target: { value: "world" } });
+
+		// Verify modified values for second row
+		tableData = renderedController.getPropertyValue(propertyIdNestedStructurelisteditorObject, { applyProperties: true });
+		expected = [
+			{
+				"readonly_numbered_column_index": 1,
+				"name": "Hello",
+				"data_type": "string",
+				"nested_structure": [
+					{
+						"nested_name": "hi",
+						"nested_data_type": "number"
+					}, {
+						"nested_name": "world",
+						"nested_data_type": null
+					}
+				]
+			}
+		];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+	});
+
+	it("should render a `structuretable` control inside a structurelisteditor", () => {
+		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
+		let table = summaryPanel.find("div[data-id='properties-ci-nestedStructuretable']");
+		let tableData = renderedController.getPropertyValue(propertyIdNestedStructurelisteditorArrayArray);
+		const expectedOriginal = structureListEditorParamDef.current_parameters.nestedStructuretable;
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
+
+		// Add row to main table
+		let addValueBtn = table.find("button.properties-add-fields-button");
+		addValueBtn.simulate("click");
+
+		// Verify new row added
+		tableData = renderedController.getPropertyValue(propertyIdNestedStructurelisteditorArrayArray);
+		let expected = [
+			[
+				1,
+				"Hello",
+				"string",
+				[
+					["Cholesterol", 1, "Ascending"]
+				]
+			],
+			[
+				2, null, "", []
+			]
+		];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+
+		// click on subpanel edit for main table
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
+		table = summaryPanel.find("div[data-id='properties-ft-nestedStructuretable']");
+		const editButtons = table.find("button.properties-subpanel-button");
+		expect(editButtons).to.have.length(2);
+		editButtons.at(1).simulate("click"); // edit the second row
+
+		// subPanel table
+		const subPanelTable = wrapper.find("div[data-id='properties-ft-nestedStructuretableArrayArrays']");
+		expect(subPanelTable).to.have.length(1);
+		addValueBtn = subPanelTable.find("button.properties-add-fields-button");
+		addValueBtn.simulate("click");
+		addValueBtn.simulate("click"); // add two rows
+
+		// Verify new rows added
+		tableData = renderedController.getPropertyValue(propertyIdNestedStructurelisteditorArrayArray);
+		expected = [
+			[
+				1,
+				"Hello",
+				"string",
+				[
+					["Cholesterol", 1, "Ascending"]
+				]
+			],
+			[
+				2,
+				null,
+				null,
+				[
+					["", 1, "Ascending"],
+					["", 2, "Ascending"]
+				]
+			]
+		];
+		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
+	});
+
+	it("should render a `structureeditor` control inside a structurelisteditor", () => {
+		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
+		let table = summaryPanel.find("div[data-id='properties-ci-nestedStructureeditorTable']");
+		let actual = renderedController.getPropertyValue(propertyIdNestedStructureeditor);
+		const expectedOriginal = structureListEditorParamDef.current_parameters.nestedStructureeditorTable;
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expectedOriginal));
+
+		// Add row to main table
+		const addValueBtn = table.find("button.properties-add-fields-button");
+		addValueBtn.simulate("click");
+
+		// Verify new row added
+		actual = renderedController.getPropertyValue(propertyIdNestedStructureeditor);
+		let expected = [
+			[
+				"name",
+				23,
+				[
+					"address1", 90210, ["rental address"]
+				]
+			],
+			[
+				null, null, []
+			]
+		];
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
+		table = summaryPanel.find("div[data-id='properties-ft-nestedStructureeditorTable']");
+		const tableRows = table.find("div[role='properties-data-row']");
+		expect(tableRows).to.have.length(2);
+		const secondRow = tableRows.at(1);
+
+		// Edit second row values inline
+		const nameInput = secondRow.find("div[data-id='properties-nestedStructureeditorTable_1_0']");
+		nameInput.find("input").simulate("change", { target: { value: "second name" } });
+
+		// click on subpanel edit for main table
+		const editButton = secondRow.find("button.properties-subpanel-button");
+		editButton.simulate("click"); // edit the second row
+
+		// subPanel table
+		const subPanelTable = wrapper.find("div[data-id='properties-ci-userInfo']");
+		expect(subPanelTable).to.have.length(1);
+
+		const addressInput = subPanelTable.find("div[data-id='properties-ci-userAddress']");
+		addressInput.find("input").simulate("change", { target: { value: "new address for row 2" } });
+
+		const zipInput = subPanelTable.find("div[data-id='properties-ci-userZip']");
+		zipInput.find("input").simulate("change", { target: { value: 12345 } });
+
+		const annotationInput = subPanelTable.find("div[data-id='properties-ci-annotation']");
+		annotationInput.find("textarea").simulate("change", { target: { value: "fake address" } });
+
+		// Verify new row added
+		actual = renderedController.getPropertyValue(propertyIdNestedStructureeditor);
+		expected = [
+			[
+				"name",
+				23,
+				[
+					"address1", 90210, ["rental address"]
+				]
+			],
+			[
+				"second name", null, ["new address for row 2", 12345, ["fake address"]]
+			]
+		];
+		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+	});
 });

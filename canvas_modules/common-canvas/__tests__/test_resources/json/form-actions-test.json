@@ -265,7 +265,6 @@
                         {
                           "itemType": "control",
                           "control": {
-                            "labelVisible": true,
                             "name": "number",
                             "label": {
                               "text": "Integer"
@@ -273,6 +272,7 @@
                             "description": {
                               "text": "Try pressing Increment or Descrement buttons"
                             },
+                            "labelVisible": true,
                             "controlType": "readonly",
                             "valueDef": {
                               "propType": "integer",
@@ -326,7 +326,6 @@
                         {
                           "itemType": "control",
                           "control": {
-                            "labelVisible": true,
                             "name": "fields",
                             "label": {
                               "text": "Fields"
@@ -334,11 +333,13 @@
                             "description": {
                               "text": "Press 'Update Datamodel' to add a new field"
                             },
+                            "labelVisible": true,
                             "controlType": "selectcolumns",
                             "valueDef": {
                               "propType": "string",
                               "isList": true,
-                              "isMap": false
+                              "isMap": false,
+                              "defaultValue": []
                             },
                             "role": "column",
                             "summary": true,
@@ -445,11 +446,11 @@
         ]
       }
     },
+    "conditions": [],
     "resources": {
       "increment": "Increment",
       "decrement": "Decrement",
       "dm-update": "Update Datamodel"
-    },
-    "conditions": []
+    }
   }
 }

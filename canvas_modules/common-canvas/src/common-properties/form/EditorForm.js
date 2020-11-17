@@ -16,7 +16,7 @@
 
 /* eslint max-depth: ["error", 5] */
 
-import { Control, SubControl } from "./ControlInfo";
+import { Control } from "./ControlInfo";
 import { UIItem } from "./UIItem";
 import { GroupType, PanelType, Type, ControlType, ParamRole } from "../constants/form-constants";
 import { ORIENTATIONS } from "../constants/form-constants.js";
@@ -211,7 +211,7 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 			structureDef = structureMetadata.getStructure(prop.baseType());
 		}
 		if (!(group instanceof StructureDef) || (group instanceof StructureDef && prop.isSubPanelEdit())) {
-			const ctrl = _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata);
+			const ctrl = _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata, structureMetadata);
 			const control = UIItem.makeControl(ctrl);
 			if (prop.separatorBefore()) {
 				uiItems.push(UIItem.makeHSeparator());
@@ -295,9 +295,9 @@ function _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, struc
 	return panSelSubItems;
 }
 
-function _makeStringControl(parameter) {
+function _makeStringControl(parameter, isSubControl) {
 	let controlType;
-	let role;
+	let role = parameter.getRole();
 	if (parameter.isList()) {
 		const controlObj = _processListParameter(parameter);
 		controlType = controlObj.controlType;
@@ -318,7 +318,11 @@ function _makeStringControl(parameter) {
 			break;
 		case ParamRole.COLUMN:
 			role = ParamRole.COLUMN;
-			controlType = ControlType.SELECTCOLUMN;
+			if (isSubControl && _isEmbeddedMultiOption(parameter)) {
+				controlType = ControlType.SELECTCOLUMNS;
+			} else {
+				controlType = ControlType.SELECTCOLUMN;
+			}
 			break;
 		case ParamRole.EXPRESSION:
 			controlType = ControlType.EXPRESSION;
@@ -345,9 +349,11 @@ function _makeStringControl(parameter) {
 /**
  * Creates a control for the supplied property.
  */
-function _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata) {
+function _makeControl(parameterMetadata, paramName, group, structureDefinition, l10nProvider, actionMetadata, structureMetadata, subControl) {
+	const isSubControl = typeof subControl !== "undefined";
+
 	// Assume the property is defined
-	const parameter = parameterMetadata.getParameter(paramName);
+	const parameter = isSubControl ? subControl : parameterMetadata.getParameter(paramName);
 
 	const additionalText = parameter.getAdditionalText(l10nProvider);
 	const orientation = parameter.orientation;
@@ -360,13 +366,13 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	}
 
 	// The role is used to modify the behaviour of certain controls
-	let role;
 	let labelVisible = true;
+	let role;
+	let controlType;
 	let subControls;
 	let keyIndex;
 	let defaultRow;
 	let childItem;
-	let controlType;
 	let moveableRows = parameter.moveableRows;
 	let rowSelection;
 	let addRemoveRows;
@@ -376,12 +382,12 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let structureType = parameter.structureType;
 
 	// The control type defines the basic UI element that should be used to edit the property
-	if (parameter.getRole() === ParamRole.CUSTOM) {
+	if (!isSubControl && parameter.getRole() === ParamRole.CUSTOM) {
 		controlType = ControlType.CUSTOM;
 	} else {
 		switch (parameter.propType()) {
 		case Type.STRING: {
-			const returnObject = _makeStringControl(parameter);
+			const returnObject = _makeStringControl(parameter, isSubControl);
 			controlType = returnObject.controlType;
 			role = returnObject.role;
 			break;
@@ -418,10 +424,12 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				controlType = ControlType.TIMEFIELD;
 			}
 			break;
-		case Type.STRUCTURE:
+		case Type.STRUCTURE: {
+			const structureDef = isSubControl ? structureMetadata.getStructure(parameter.baseType()) : structureDefinition;
+
 			if (structureDef) {
 				if (structureDef.hasSubPanel()) {
-					childItem = _makeEditStyleSubPanel(structureDef, l10nProvider);
+					childItem = _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata);
 				}
 				keyIndex = structureDef.keyAttributeIndex();
 				// The defaultRow allows the UI to create a new row with sensible settings
@@ -431,17 +439,20 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				subControls = [];
 				if (structureDef.parameterMetadata && Array.isArray(structureDef.parameterMetadata.paramDefs)) {
 					structureDef.parameterMetadata.paramDefs.forEach(function(param) {
-						subControls.push(_makeSubControl(param, l10nProvider));
+						const newSubControl = _makeSubControl(param, l10nProvider, structureMetadata);
+						subControls.push(newSubControl);
 					});
 				}
 				// If the property is a keyed property or a structure list then the key should not be included in the
 				// structure definition. However it will still need to be included in the table column definitions.
 				if ((parameter.isMapValue() || parameter.isList()) && structureDef.keyDefinition) {
-					subControls.unshift(_makeSubControl(structureDef.keyDefinition, l10nProvider));
+					const newSubControl = _makeSubControl(structureDef.keyDefinition, l10nProvider, structureMetadata);
+					subControls.unshift(newSubControl);
 				}
 				if (parameter.isList() || parameter.isMapValue()) {
-					if (group && group.groupType() === GroupType.COLUMN_SELECTION ||
-							parameter.control === ControlType.STRUCTURETABLE || parameter.getRole() === ParamRole.COLUMN) {
+					if ((!isSubControl && group && typeof group.groupType !== "undefined" && group.groupType() === GroupType.COLUMN_SELECTION) ||
+							parameter.control === ControlType.STRUCTURETABLE ||
+							parameter.getRole() === ParamRole.COLUMN) {
 						controlType = ControlType.STRUCTURETABLE;
 						moveableRows = structureDef.moveableRows;
 						rowSelection = structureDef.rowSelection;
@@ -467,9 +478,18 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				controlType = ControlType.TEXTFIELD;
 			}
 			break;
+		}
 		case Type.OBJECT:
-			if (parameter.isCompoundField()) {
-				const returnObject = _makeStringControl(parameter);
+			if (isSubControl) {
+				role = parameter.getRole();
+				if (role === ParamRole.COLUMN) {
+					controlType = ControlType.SELECTCOLUMN;
+				} else {
+					logger.warn("Complex subControl type that is not a field! Name: " + parameter.name);
+					controlType = ControlType.READONLY;
+				}
+			} else if (parameter.isCompoundField()) {
+				const returnObject = _makeStringControl(parameter, isSubControl);
 				controlType = returnObject.controlType;
 				role = returnObject.role;
 			} else {
@@ -488,7 +508,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		valueLabels = _parameterValueLabels(parameter, l10nProvider);
 	}
 	let action;
-	if (parameter.actionRef) {
+	if (!isSubControl && parameter.actionRef) {
 		action = _makeAction(actionMetadata.getAction(parameter.actionRef), l10nProvider);
 	}
 	const settings = {};
@@ -532,6 +552,14 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	settings.layout = layout;
 	settings.dmImage = parameter.dmImage;
 	settings.action = action;
+
+	if (isSubControl) {
+		settings.visible = parameter.visible;
+		settings.width = parameter.columns(8);
+		settings.editStyle = parameter.editStyle;
+		settings.isKeyField = parameter.isKey;
+		settings.dmDefault = parameter.dmDefault;
+	}
 	return new Control(settings);
 }
 
@@ -558,8 +586,7 @@ function _processListParameter(parameter) {
 	return controlObj;
 }
 
-function _makeEditStyleSubPanel(structureDef, l10nProvider) {
-	var structureMetadata;
+function _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata) {
 	// If we"re not editing in-line then create a sub-panel that can be used to edit the attributes
 	const panel = new ControlPanel(
 		structureDef.name,
@@ -577,118 +604,14 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider) {
 /**
  * Creates a column control for the supplied property/attribute.
  */
-function _makeSubControl(parameter, l10nProvider) {
-	let labelVisible = true;
-	const additionalText = parameter.getAdditionalText(l10nProvider);
-	const orientation = parameter.orientation;
-	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
-	let controlDesc;
-	if (parameter.description) {
-		controlDesc = new Description(l10nProvider.l10nDesc(parameter, parameter.name),
-			parameter.description ? parameter.description.placement : null);
-	}
-
-	let role;
-	let controlType;
-	switch (parameter.propType()) {
-	case Type.STRING:
-		role = parameter.getRole();
-		switch (role) {
-		case ParamRole.ENUM:
-			controlType = ControlType.ONEOFSELECT;
-			break;
-		case ParamRole.COLUMN:
-			if (_isEmbeddedMultiOption(parameter)) {
-				controlType = ControlType.SELECTCOLUMNS;
-			} else {
-				controlType = ControlType.SELECTCOLUMN;
-			}
-			break;
-		case ParamRole.NEW_COLUMN:
-			controlType = ControlType.TEXTFIELD;
-			break;
-		case ParamRole.EXPRESSION:
-			controlType = ControlType.EXPRESSION;
-			break;
-		default:
-			controlType = ControlType.TEXTFIELD;
-		}
-		break;
-	case Type.PASSWORD:
-		controlType = ControlType.PASSWORDFIELD;
-		break;
-	case Type.BOOLEAN:
-		labelVisible = false;
-		controlType = ControlType.CHECKBOX;
-		break;
-	case Type.INTEGER:
-		controlType = ControlType.NUMBERFIELD;
-		break;
-	case Type.LONG:
-		controlType = ControlType.NUMBERFIELD;
-		break;
-	case Type.DOUBLE:
-		controlType = ControlType.NUMBERFIELD;
-		break;
-	case Type.DATE:
-		role = "date";
-		controlType = ControlType.DATEFIELD;
-		break;
-	case Type.TIME:
-		role = "time";
-		controlType = ControlType.TIMEFIELD;
-		break;
-	case Type.OBJECT:
-		role = parameter.getRole();
-		if (role === ParamRole.COLUMN) {
-			controlType = ControlType.SELECTCOLUMN;
-		} else {
-			logger.warn("Complex subControl type that is not a field! Name: " + parameter.name);
-			controlType = ControlType.READONLY;
-		}
-		break;
-	default:
-		role = "???" + parameter.propType() + "???";
-		controlType = ControlType.TEXTFIELD;
-	}
-
-	let valueLabels;
-	if (parameter.getRole() === ParamRole.ENUM) {
-		valueLabels = _parameterValueLabels(parameter, l10nProvider);
-	}
-	const settings = {};
-	settings.name = parameter.name;
-	settings.label = controlLabel;
-	settings.labelVisible = typeof parameter.labelVisible === "boolean" ? parameter.labelVisible : labelVisible;
-	settings.description = controlDesc;
-	settings.visible = parameter.visible;
-	settings.width = parameter.columns(8);
-	settings.controlType = parameter.getControl(controlType);
-	settings.valueDef = ValueDef.make(parameter);
-	settings.role = role;
-	settings.additionalText = additionalText;
-	settings.orientation = orientation;
-	settings.values = parameter.getValidValues();
-	settings.valueLabels = valueLabels;
-	settings.valueIcons = parameter.valueIcons;
-	settings.sortable = parameter.sortable;
-	settings.filterable = parameter.filterable;
-	settings.charLimit = parameter.charLimit;
-	settings.editStyle = parameter.editStyle;
-	settings.isKeyField = parameter.isKey;
-	settings.dmDefault = parameter.dmDefault;
-	settings.dmImage = parameter.dmImage;
-	settings.language = parameter.language;
-	settings.summary = parameter.summary;
-	settings.increment = parameter.increment;
-	settings.generatedValues = parameter.generatedValues;
-	settings.dateFormat = parameter.dateFormat;
-	settings.timeFormat = parameter.timeFormat;
-	settings.customControlId = parameter.customControlId;
-	settings.data = parameter.data;
-	settings.rows = parameter.rows;
-	settings.displayChars = parameter.displayChars;
-	return new SubControl(settings);
+function _makeSubControl(parameter, l10nProvider, structureMetadata) {
+	const parameterMetadata = null;
+	const paramName = null;
+	const group = null;
+	const structureDef = parameter.propType() === Type.STRUCTURE ? structureMetadata.getStructure(parameter.baseType()) : null;
+	const actionMetadata = null;
+	const subControl = parameter;
+	return _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata, structureMetadata, subControl);
 }
 
 /**

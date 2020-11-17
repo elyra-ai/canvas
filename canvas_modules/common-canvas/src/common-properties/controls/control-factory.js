@@ -193,7 +193,12 @@ export default class ControlFactory {
 				</div>
 			);
 		case (ControlType.STRUCTUREEDITOR):
-			return (<StructureEditorControl {...props} />);
+			return (<StructureEditorControl
+				{...props}
+				buildUIItem={this.genUIItem}
+				openFieldPicker={this.openFieldPicker}
+				rightFlyout={this.rightFlyout}
+			/>);
 		default:
 			return (<ReadonlyControl {...props} />);
 		}

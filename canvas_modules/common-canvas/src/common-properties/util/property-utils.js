@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/* eslint max-depth: ["error", 5] */
+
 import logger from "../../../utils/logger";
 import { ParamRole } from "../constants/form-constants";
 import { DATA_TYPE, CARBON_ICONS } from "../constants/constants";
@@ -184,6 +186,30 @@ function convertType(storage) {
 }
 
 /**
+ * Returns true if any subControl within control has 'structureType === object'
+ */
+function isSubControlStructureObjectType(control) {
+	if (control) {
+		if (control.structureType && control.structureType === "object") {
+			return true;
+		} else if (control.subControls) {
+			for (const subControl of control.subControls) {
+				if (subControl.structureType && subControl.structureType === "object") {
+					return true;
+				} else if (subControl.subControls) {
+					const objectType = isSubControlStructureObjectType(subControl);
+					if (objectType) { // continue if false
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	return false;
+}
+
+/**
  * Converts the currentValues of a structure control of type 'object'
  *  from an array of objects to an array of values.
  *  @isList boolean, true if this structure is a list
@@ -199,10 +225,24 @@ function convertObjectStructureToArray(isList, subControls, currentValues) {
 	if (isList) {
 		const convertedValues = [];
 		currentValues.forEach((row) => {
-			if (typeof row === "object") {
+			if (Array.isArray(row)) { // check if any values in the row is a nested object
 				const convertedRow = [];
-				structureKeys.forEach((key) => {
-					const value = typeof row[key] !== "undefined" ? row[key] : null;
+				row.forEach((field, index) => {
+					let value = field;
+					if (typeof field === "object") {
+						value = convertObjectStructureToArray(subControls[index].valueDef.isList, subControls[index].subControls, field);
+					}
+					convertedRow.push(value);
+				});
+				convertedValues.push(convertedRow);
+			} else if (typeof row === "object") {
+				const convertedRow = [];
+				structureKeys.forEach((key, index) => {
+					let value = typeof row[key] !== "undefined" ? row[key] : null;
+					// subControls that are type 'object' will need to be converted
+					if (subControls[index].structureType && subControls[index].structureType === "object") {
+						value = convertObjectStructureToArray(subControls[index].valueDef.isList, subControls[index].subControls, row[key]);
+					}
 					convertedRow.push(value);
 				});
 				convertedValues.push(convertedRow);
@@ -223,10 +263,12 @@ function convertObjectStructureToArray(isList, subControls, currentValues) {
  * Converts the currentValues of a structure control of type 'object'
  *  from an array of values to an array of objects.
  *  @isList boolean, true if this structure is a list
+ *  @convert boolean, true if the current control values need to be converted.
+ *    If false, need to determine if the subControls need to be converted
  *  Example currentValues: [[1, 2], [10, 20]]                || [9, 88, ["abc", "def"]]
  *  Example convertedValues: [{a: 1, b: 2}, {a: 10, b; 20}]  || {z: 9, y: 88, x: ["abc", "def"]}
  */
-function convertArrayStructureToObject(isList, subControls, currentValues) {
+function convertArrayStructureToObject(isList, subControls, currentValues, convert) {
 	const structureKeys = [];
 	subControls.forEach((control) => {
 		structureKeys.push(control.name);
@@ -234,12 +276,31 @@ function convertArrayStructureToObject(isList, subControls, currentValues) {
 
 	if (isList) {
 		const convertedValues = [];
-		currentValues.forEach((valueList) => {
-			const newObject = {};
-			structureKeys.forEach((key, index) => {
-				newObject[key] = typeof valueList[index] !== "undefined" ? valueList[index] : null;
-			});
-			convertedValues.push(newObject);
+		currentValues.forEach((row, idx) => {
+			if (convert) { // this control needs to be converted, convert all values in this row and determine if there are nested structures to be converted
+				const newObject = {};
+				structureKeys.forEach((key, keyIndex) => {
+					// subControls that are type 'object' will need to be converted
+					if (subControls[keyIndex].structureType && subControls[keyIndex].structureType === "object") { // nested object
+						newObject[key] = convertArrayStructureToObject(subControls[keyIndex].valueDef.isList, subControls[keyIndex].subControls, row[keyIndex], true);
+					} else if (typeof subControls.subControls !== "undefined") { // nested array
+						newObject[key] = convertArrayStructureToObject(subControls[keyIndex].valueDef.isList, subControls[keyIndex].subControls, row[keyIndex], false);
+					} else { // value
+						newObject[key] = typeof row[keyIndex] !== "undefined" ? row[keyIndex] : null;
+					}
+				});
+				convertedValues.push(newObject);
+			} else { // determine if each value in the row is a nested structure that needs to be converted
+				const convertedRow = [];
+				row.forEach((field, index) => {
+					let value = field;
+					if (subControls[index].structureType && subControls[index].structureType === "object") {
+						value = convertArrayStructureToObject(subControls[index].valueDef.isList, subControls[index].subControls, field, true);
+					}
+					convertedRow.push(value);
+				});
+				convertedValues.push(convertedRow);
+			}
 		});
 		return convertedValues;
 	}
@@ -470,6 +531,7 @@ export {
 	evaluateText,
 	getTableFieldIndex,
 	convertInputDataModel,
+	isSubControlStructureObjectType,
 	convertObjectStructureToArray,
 	convertArrayStructureToObject,
 	getFieldsFromControlValues,

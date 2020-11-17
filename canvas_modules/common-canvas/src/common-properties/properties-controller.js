@@ -253,12 +253,57 @@ export default class PropertiesController {
 			};
 		}
 		// used for complex types that aren't tables
+		return this.convertNestedPropertyId(propertyId);
+	}
+
+	convertNestedPropertyId(propertyId) {
 		if (propertyId && typeof propertyId.col !== "undefined" && typeof propertyId.row === "undefined") {
+
+			let childPropertyId;
+			if (typeof propertyId.propertyId !== "undefined") {
+				childPropertyId = this.convertNestedPropertyId(propertyId.propertyId);
+			}
 			return {
 				name: propertyId.name,
-				row: propertyId.col
+				row: propertyId.col,
+				propertyId: childPropertyId
+			};
+		} else if (propertyId &&
+			typeof propertyId.col !== "undefined" &&
+			typeof propertyId.row !== "undefined" &&
+			typeof propertyId.propertyId !== "undefined") { // handle nested complex types that aren't tables
+			return {
+				name: propertyId.name,
+				row: propertyId.row,
+				col: propertyId.col,
+				propertyId: this.convertNestedPropertyId(propertyId.propertyId)
 			};
 		}
+		return propertyId;
+	}
+
+	// Given the parent's "propertyId", find the "propertyId" of the last child
+	//  and update the "row" and "col" properties defined in "childProperties"
+	updateLastChildPropertyId(propertyId, childProperties) {
+		if (typeof propertyId.propertyId !== "undefined") {
+			return this.updateLastChildPropertyId(propertyId.propertyId, childProperties);
+		}
+		if (typeof childProperties.row !== "undefined") {
+			propertyId.row = childProperties.row;
+		}
+		if (typeof childProperties.col !== "undefined") {
+			propertyId.col = childProperties.col;
+		}
+		return propertyId;
+	}
+
+	// Given the parent's "propertyId", set the "childPropertyId" as the last child of "propertyId"
+	// The "childPropertyId" is a control of a nested structure
+	setChildPropertyId(propertyId, childPropertyId) {
+		if (typeof propertyId.propertyId !== "undefined") {
+			return this.setChildPropertyId(propertyId.propertyId, childPropertyId);
+		}
+		propertyId.propertyId = childPropertyId;
 		return propertyId;
 	}
 
@@ -966,8 +1011,9 @@ export default class PropertiesController {
 	// convert currentParameters of structureType:object to object values
 	_convertObjectStructure(propertyId, propertyValue) {
 		const control = this.getControl(propertyId);
-		if (control && control.structureType && control.structureType === "object") {
-			const convertedValues = PropertyUtils.convertArrayStructureToObject(control.valueDef.isList, control.subControls, propertyValue);
+		if (PropertyUtils.isSubControlStructureObjectType(control)) {
+			const convert = control.structureType && control.structureType === "object";
+			const convertedValues = PropertyUtils.convertArrayStructureToObject(control.valueDef.isList, control.subControls, propertyValue, convert);
 			return convertedValues;
 		}
 		return propertyValue;

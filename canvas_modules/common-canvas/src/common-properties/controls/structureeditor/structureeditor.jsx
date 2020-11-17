@@ -22,12 +22,14 @@ import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
 import { STATES } from "./../../constants/constants.js";
+import { cloneDeep } from "lodash";
 
 
 class StructureEditorControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.controlFactory = new ControlFactory(this.props.controller);
+		this.controlFactory.setFunctions(this.props.openFieldPicker, this.props.buildUIItem);
 	}
 
 	/**
@@ -71,10 +73,16 @@ class StructureEditorControl extends React.Component {
 		for (let y = 0; y < rowCtrlNames.length; y++) {
 			const control = this._getSubControlDef(rowCtrlNames[y]);
 			if (control && control.visible) {
-				const propertyId = {
-					name: this.props.propertyId.name,
+				const childPropertyId = {
+					name: this.props.control.name,
 					col: this._getColumnIndex(rowCtrlNames[y])
 				};
+				const parentPropertyId = cloneDeep(this.props.propertyId);
+
+				let propertyId = childPropertyId;
+				if (parentPropertyId.name !== childPropertyId.name) {
+					propertyId = this.props.controller.setChildPropertyId(parentPropertyId, childPropertyId);
+				}
 				row.push(this.controlFactory.createControlItem(control, propertyId));
 			}
 		}
@@ -100,10 +108,16 @@ class StructureEditorControl extends React.Component {
 			// If there is no layout, just arrange the controls in a single ordered column
 			for (let i = 0; i < this.props.control.subControls.length; i++) {
 				if (this.props.control.subControls[i].visible) {
-					const propertyId = {
-						name: this.props.propertyId.name,
+					const childPropertyId = {
+						name: this.props.control.name,
 						col: this._getColumnIndex(this.props.control.subControls[i].name)
 					};
+					const parentPropertyId = cloneDeep(this.props.propertyId);
+
+					let propertyId = childPropertyId;
+					if (parentPropertyId.name !== childPropertyId.name) {
+						propertyId = this.props.controller.setChildPropertyId(parentPropertyId, childPropertyId);
+					}
 					controls.push([this.controlFactory.createControlItem(this.props.control.subControls[i], propertyId)]);
 				}
 			}
@@ -139,9 +153,12 @@ class StructureEditorControl extends React.Component {
 }
 
 StructureEditorControl.propTypes = {
+	buildUIItem: PropTypes.func,
 	control: PropTypes.object,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	openFieldPicker: PropTypes.func,
+	rightFlyout: PropTypes.bool,
 	state: PropTypes.string, // passed in by redux
 	value: PropTypes.array, // passed in by redux
 	messageInfo: PropTypes.object // passed in by redux
