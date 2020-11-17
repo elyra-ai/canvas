@@ -29,7 +29,9 @@
 	display: flex;
 	align-items: center;
 	.tooltip-container {
-		height: 16px;
 		margin-left: $spacing-02;
+		.tooltip-trigger {
+			display: flex;
+		}
 	}
 }
