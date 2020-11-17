@@ -54,18 +54,17 @@ class ReadonlyTableControl extends AbstractTable {
 		const table = this.createTable(this.props.state, tableButtonConfig);
 		const content = (
 			<div>
-				<div className="properties-st properties-st-buttons">
+				<div className="properties-rt properties-rt-buttons">
 					{table}
 				</div>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>);
 
-		const onPanelContainer = this.getOnPanelContainer(this.props.selectedRows);
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
-				className="properties-column-structure-wrapper"
+				className="properties-readonly-table-wrapper"
 			>
-				<div className="properties-column-structure">
+				<div className="properties-readonly-table">
 					<MoveableTableRows
 						tableContainer={content}
 						control={this.props.control}
@@ -75,9 +74,6 @@ class ReadonlyTableControl extends AbstractTable {
 						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 						disabled={this.props.state === STATES.DISABLED}
 					/>
-				</div>
-				<div>
-					{onPanelContainer}
 				</div>
 			</div>
 		);

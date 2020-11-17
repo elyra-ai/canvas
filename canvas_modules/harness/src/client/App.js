@@ -1090,6 +1090,11 @@ class App extends React.Component {
 
 	buttonHandler(data) {
 		this.log("buttonHandler()", data);
+
+		// Trigger conditions to show an error
+		if (data.propertyId.name === "readonlyTableError") {
+			this.propertiesController.validateInput(data.propertyId);
+		}
 	}
 
 	helpClickHandler(nodeTypeId, helpData, appData) {
