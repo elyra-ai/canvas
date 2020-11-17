@@ -50,13 +50,13 @@ function getLinkSelector(linkId, element) {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	let selector = null;
 	if (element === "grp") {
-		selector = `div > svg > g > g[data-id^="link_grp_${inst}_${linkId}"]`;
+		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"]`;
 	} else if (element === "line") {
-		selector = `div > svg > g > g[data-id^="link_grp_${inst}_${linkId}"] > path`;
+		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > path`;
 	} else if (element === "startHandle") {
-		selector = `div > svg > g > g[data-id^="link_grp_${inst}_${linkId}"] > .d3-link-handle-start`;
+		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > .d3-link-handle-start`;
 	} else if (element === "endHandle") {
-		selector = `div > svg > g > g[data-id^="link_grp_${inst}_${linkId}"] > .d3-link-handle-end`;
+		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > .d3-link-handle-end`;
 	}
 	return selector;
 }
@@ -237,7 +237,7 @@ Cypress.Commands.add("getLinkUsingLinkId", (linkId) => {
 
 function getLinkGrpSelector() {
 	const inst = document.extraCanvas === true ? "1" : "0";
-	const selector = `div > svg > g > g[data-id^='link_grp_${inst}']`;
+	const selector = `div > svg > g > g > g[data-id^='link_grp_${inst}']`;
 	return selector;
 }
 
