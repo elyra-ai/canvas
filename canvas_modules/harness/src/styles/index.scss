@@ -18,9 +18,10 @@ $font-prefix: "/fonts";
 @import "@ibm/plex/scss/ibm-plex.scss";
 
 @import "@carbon/themes/scss/themes";
-// Use the gray 10 theme
-$carbon--theme: $carbon--theme--g10;
-// $carbon--theme: $carbon--theme--g90;
+// Switch the theme's below to change light <-> dark theme for harness
+// Modify common-canvas/src/themes/light.scss to switch common-canvas.
+$carbon--theme: $carbon--theme--g10; // The light (gray 10) theme
+// $carbon--theme: $carbon--theme--g90; // The dark theme
 @include carbon--theme;
 @import "carbon-components/scss/globals/scss/styles";
 @import "carbon-components/scss/globals/scss/typography";
