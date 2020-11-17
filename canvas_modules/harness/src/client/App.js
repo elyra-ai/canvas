@@ -310,6 +310,7 @@ class App extends React.Component {
 		this.validateProperties = this.validateProperties.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
+		this.buttonHandler = this.buttonHandler.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
@@ -1087,6 +1088,10 @@ class App extends React.Component {
 		}
 	}
 
+	buttonHandler(data) {
+		this.log("buttonHandler()", data);
+	}
+
 	helpClickHandler(nodeTypeId, helpData, appData) {
 		this.log("helpClickHandler()", { nodeTypeId, helpData, appData });
 	}
@@ -1826,7 +1831,8 @@ class App extends React.Component {
 			actionHandler: this.propertyActionHandler,
 			applyPropertyChanges: this.applyPropertyChanges,
 			closePropertiesDialog: this.closePropertiesEditorDialog,
-			helpClickHandler: this.helpClickHandler
+			helpClickHandler: this.helpClickHandler,
+			buttonHandler: this.buttonHandler
 		};
 		const callbacks2 = {
 			controllerHandler: this.propertiesControllerHandler2,

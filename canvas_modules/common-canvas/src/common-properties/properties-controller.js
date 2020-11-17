@@ -39,7 +39,8 @@ export default class PropertiesController {
 		this.handlers = {
 			propertyListener: null,
 			controllerHandler: null,
-			actionHandler: null
+			actionHandler: null,
+			buttonHandler: null
 		};
 		this.visibleDefinitions = {};
 		this.enabledDefinitions = {};
