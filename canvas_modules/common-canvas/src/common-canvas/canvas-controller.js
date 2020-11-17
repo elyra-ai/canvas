@@ -1428,7 +1428,7 @@ export default class CanvasController {
 	}
 
 	isClipboardEmpty() {
-		this.objectModel.isClipboardEmpty();
+		return this.objectModel.isClipboardEmpty();
 	}
 
 	openTip(tipConfig) {
