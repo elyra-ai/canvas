@@ -188,11 +188,13 @@ export default class SVGCanvasRenderer {
 				.on("zoom", this.zoomAction.bind(this))
 				.on("end", this.zoomEnd.bind(this));
 
+
 		this.canvasSVG = this.createCanvasSVG();
-		this.canvasGrp = this.createCanvasGroup(this.canvasSVG);
-		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
-			this.canvasGrp = this.createCanvasUnderlay(this.canvasGrp);
-		}
+		this.canvasGrp = this.createCanvasGroup(this.canvasSVG, "d3-canvas-group"); // Group to contain all canvas objects
+		this.canvasUnderlay = this.createCanvasUnderlay(this.canvasGrp, "d3-canvas-underlay"); // Put underlay rectangle under comments, nodes and links
+		this.commentsGrp = this.createCanvasGroup(this.canvasGrp, "d3-comments-group"); // Group to always position comments under nodes and links
+		this.nodesLinksGrp = this.createCanvasGroup(this.canvasGrp, "d3-nodes-links-group"); // Group to position nodes and links over comments
+		this.boundingRectsGrp = this.createBoundingRectanglesGrp(this.canvasGrp, "d3-bounding-rect-group"); // Group to optionally add bounding rectangles over all objects
 
 		this.initializeGhostDiv();
 
@@ -514,7 +516,7 @@ export default class SVGCanvasRenderer {
 		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM ||
 				this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
 			const svgWid = supernodeDatum.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
-			this.canvasGrp.selectAll(nodeSelector).each((d) => {
+			this.nodesLinksGrp.selectAll(nodeSelector).each((d) => {
 				if (d.isSupernodeInputBinding) {
 					const x = this.getSupernodePortXOffset(d.id, supernodeDatum.inputs);
 					d.x_pos = (transformedSVGRect.width * (x / svgWid)) + transformedSVGRect.x - d.outputs[0].cx;
@@ -533,7 +535,7 @@ export default class SVGCanvasRenderer {
 
 		} else {
 			const svgHt = supernodeDatum.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
-			this.canvasGrp.selectAll(nodeSelector).each((d) => {
+			this.nodesLinksGrp.selectAll(nodeSelector).each((d) => {
 				if (d.isSupernodeInputBinding) {
 					d.x_pos = transformedSVGRect.x - d.width;
 					const y = this.getSupernodePortYOffset(d.id, supernodeDatum.inputs);
@@ -575,12 +577,12 @@ export default class SVGCanvasRenderer {
 		const canv = this.getCanvasDimensionsAdjustedForScale(1);
 		const canvWithPadding = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
 
-		this.canvasGrp.selectAll(this.getSelectorForId("br_svg_rect")).remove();
-		this.canvasGrp.selectAll(this.getSelectorForId("br_svg_rect_trans")).remove();
-		this.canvasGrp.selectAll(this.getSelectorForId("br_canvas_rect")).remove();
-		this.canvasGrp.selectAll(this.getSelectorForId("br_canvas_rect_with_padding")).remove();
+		this.boundingRectsGrp.selectAll(this.getSelectorForId("br_svg_rect")).remove();
+		this.boundingRectsGrp.selectAll(this.getSelectorForId("br_svg_rect_trans")).remove();
+		this.boundingRectsGrp.selectAll(this.getSelectorForId("br_canvas_rect")).remove();
+		this.boundingRectsGrp.selectAll(this.getSelectorForId("br_canvas_rect_with_padding")).remove();
 
-		this.canvasGrp
+		this.boundingRectsGrp
 			.append("rect")
 			.attr("data-id", this.getId("br_svg_rect"))
 			.attr("data-pipeline-id", this.activePipeline.id)
@@ -591,7 +593,7 @@ export default class SVGCanvasRenderer {
 			.style("fill", "none")
 			.style("stroke", "black");
 
-		this.canvasGrp
+		this.boundingRectsGrp
 			.append("rect")
 			.attr("data-id", this.getId("br_svg_rect_trans"))
 			.attr("data-pipeline-id", this.activePipeline.id)
@@ -602,9 +604,8 @@ export default class SVGCanvasRenderer {
 			.style("fill", "none")
 			.style("stroke", "red");
 
-
 		if (canv) {
-			this.canvasGrp
+			this.boundingRectsGrp
 				.append("rect")
 				.attr("data-id", this.getId("br_canvas_rect"))
 				.attr("data-pipeline-id", this.activePipeline.id)
@@ -613,12 +614,11 @@ export default class SVGCanvasRenderer {
 				.attr("x", canv.left)
 				.attr("y", canv.top)
 				.style("fill", "none")
-				.style("stroke", "blue")
-				.lower();
+				.style("stroke", "blue");
 		}
 
 		if (canvWithPadding) {
-			this.canvasGrp
+			this.boundingRectsGrp
 				.append("rect")
 				.attr("data-id", this.getId("br_canvas_rect_with_padding"))
 				.attr("data-pipeline-id", this.activePipeline.id)
@@ -627,8 +627,7 @@ export default class SVGCanvasRenderer {
 				.attr("x", canvWithPadding.left)
 				.attr("y", canvWithPadding.top)
 				.style("fill", "none")
-				.style("stroke", "green")
-				.lower();
+				.style("stroke", "green");
 		}
 
 		if (this.config.enableBoundingRectangles &&
@@ -938,7 +937,7 @@ export default class SVGCanvasRenderer {
 	// Switches on or off the drop-node highlighting on the link passed in.
 	// This is called when the user drags an 'insertable' node over a link.
 	setLinkDragOverHighlighting(link, state) {
-		this.canvasGrp
+		this.nodesLinksGrp
 			.selectAll(this.getSelectorForId("link_grp", link.id))
 			.attr("data-drag-node-over", state ? true : null); // true will add the attr, null will remove it
 	}
@@ -994,7 +993,7 @@ export default class SVGCanvasRenderer {
 	// This is called when the user drags a new link towards a target node.
 	setNewLinkOverNodeHighlighting(node, state) {
 		if (node) {
-			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id))
+			this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", node.id))
 				.attr("data-new-link-over", state ? "yes" : "no");
 		}
 	}
@@ -1373,13 +1372,22 @@ export default class SVGCanvasRenderer {
 		return "pointer";
 	}
 
-	createCanvasGroup(canvasSVG) {
-		return canvasSVG.append("g");
+	createCanvasGroup(canvasObj, className) {
+		return canvasObj.append("g").attr("class", className);
 	}
 
-	createCanvasUnderlay(canvasGrp) {
-		this.canvasUnderlay = canvasGrp.append("rect").attr("class", "d3-canvas-underlay");
-		return canvasGrp;
+	createCanvasUnderlay(canvasGrp, className) {
+		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+			return canvasGrp.append("rect").attr("class", className);
+		}
+		return null;
+	}
+
+	createBoundingRectanglesGrp(canvasGrp, className) {
+		if (this.config.enableBoundingRectangles) {
+			return canvasGrp.append("g").attr("class", className);
+		}
+		return null;
 	}
 
 	setCanvasUnderlaySize(x = 0, y = 0) {
@@ -2346,7 +2354,7 @@ export default class SVGCanvasRenderer {
 
 		const nodeSelector = this.getSelectorForClass("d3-node-group");
 
-		var nodeGroupSel = this.canvasGrp
+		var nodeGroupSel = this.nodesLinksGrp
 			.selectAll(nodeSelector)
 			.data(this.activePipeline.nodes, function(d) { return d.id; });
 
@@ -2603,7 +2611,7 @@ export default class SVGCanvasRenderer {
 
 			newAndExistingNodeGrps
 				.each((d) => {
-					const nodeGrp = this.canvasGrp.selectAll(this.getSelectorForId("node_grp", d.id));
+					const nodeGrp = this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", d.id));
 					const node = this.getNode(d.id);
 
 					nodeGrp
@@ -3741,7 +3749,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	setTrgPortStatus(trgId, trgPortId, newStatus) {
-		const nodeGrp = this.canvasGrp.selectAll(this.getSelectorForId("node_grp", trgId));
+		const nodeGrp = this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", trgId));
 		const trgPrtSelector = this.getSelectorForId("node_inp_port", trgId, trgPortId);
 		const trgPrtArrSelector = this.getSelectorForId("node_inp_port_arrow", trgId, trgPortId);
 		nodeGrp.selectAll(trgPrtSelector).attr("connected", newStatus);
@@ -3749,7 +3757,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	setSrcPortStatus(srcId, srcPortId, newStatus) {
-		const nodeGrp = this.canvasGrp.selectAll(this.getSelectorForId("node_grp", srcId));
+		const nodeGrp = this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", srcId));
 		const srcPrtSelector = this.getSelectorForId("node_out_port", srcId, srcPortId);
 		nodeGrp.selectAll(srcPrtSelector).attr("connected", newStatus);
 	}
@@ -3920,7 +3928,7 @@ export default class SVGCanvasRenderer {
 
 	drawNewLinkForHalo(transPos) {
 		this.removeNewLink();
-		this.canvasGrp
+		this.nodesLinksGrp
 			.append("line")
 			.attr("x1", this.drawingNewLinkData.startPos.x)
 			.attr("y1", this.drawingNewLinkData.startPos.y)
@@ -3959,9 +3967,9 @@ export default class SVGCanvasRenderer {
 
 		const pathInfo = this.linkUtils.getConnectorPathInfo(this.drawingNewLinkData.linkArray[0], this.drawingNewLinkData.minInitialLine);
 
-		const connectionLineSel = this.canvasGrp.selectAll(".d3-new-connection-line");
-		const connectionStartSel = this.canvasGrp.selectAll(".d3-new-connection-start");
-		const connectionGuideSel = this.canvasGrp.selectAll(".d3-new-connection-guide");
+		const connectionLineSel = this.nodesLinksGrp.selectAll(".d3-new-connection-line");
+		const connectionStartSel = this.nodesLinksGrp.selectAll(".d3-new-connection-start");
+		const connectionGuideSel = this.nodesLinksGrp.selectAll(".d3-new-connection-guide");
 
 		connectionLineSel
 			.data(this.drawingNewLinkData.linkArray)
@@ -4042,8 +4050,8 @@ export default class SVGCanvasRenderer {
 			"y2": transPos.y,
 			"type": linkType }];
 
-		const connectionLineSel = this.canvasGrp.selectAll(".d3-new-connection-line");
-		const connectionGuideSel = this.canvasGrp.selectAll(".d3-new-connection-guide");
+		const connectionLineSel = this.nodesLinksGrp.selectAll(".d3-new-connection-line");
+		const connectionGuideSel = this.nodesLinksGrp.selectAll(".d3-new-connection-guide");
 
 		connectionLineSel
 			.data(this.drawingNewLinkData.linkArray)
@@ -4070,7 +4078,7 @@ export default class SVGCanvasRenderer {
 			.attr("r", this.canvasLayout.commentPortRadius);
 
 		if (this.canvasLayout.commentLinkArrowHead) {
-			const connectionArrowHeadSel = this.canvasGrp.selectAll(".d3-new-connection-arrow");
+			const connectionArrowHeadSel = this.nodesLinksGrp.selectAll(".d3-new-connection-arrow");
 
 			connectionArrowHeadSel
 				.data(this.drawingNewLinkData.linkArray)
@@ -4233,14 +4241,14 @@ export default class SVGCanvasRenderer {
 								"L " + saveX2 + " " + saveY2;
 		}
 
-		this.canvasGrp.selectAll(".d3-new-connection-line")
+		this.nodesLinksGrp.selectAll(".d3-new-connection-line")
 			.transition()
 			.duration(duration)
 			.attr("d", newPath)
 			.on("end", () => {
-				this.canvasGrp.selectAll(".d3-new-connection-arrow").remove();
+				this.nodesLinksGrp.selectAll(".d3-new-connection-arrow").remove();
 
-				this.canvasGrp.selectAll(".d3-new-connection-guide")
+				this.nodesLinksGrp.selectAll(".d3-new-connection-guide")
 					.transition()
 					.duration(1000)
 					.ease(d3.easeElastic)
@@ -4253,7 +4261,7 @@ export default class SVGCanvasRenderer {
 					.attr("cx", saveX1)
 					.attr("cy", saveY1)
 					.attr("transform", null);
-				this.canvasGrp.selectAll(".d3-new-connection-line")
+				this.nodesLinksGrp.selectAll(".d3-new-connection-line")
 					.transition()
 					.duration(1000)
 					.ease(d3.easeElastic)
@@ -4265,12 +4273,12 @@ export default class SVGCanvasRenderer {
 
 	removeNewLink() {
 		if (this.canvasLayout.connectionType === "halo") {
-			this.canvasGrp.selectAll(".d3-new-halo-connection").remove();
+			this.nodesLinksGrp.selectAll(".d3-new-halo-connection").remove();
 		} else {
-			this.canvasGrp.selectAll(".d3-new-connection-line").remove();
-			this.canvasGrp.selectAll(".d3-new-connection-start").remove();
-			this.canvasGrp.selectAll(".d3-new-connection-guide").remove();
-			this.canvasGrp.selectAll(".d3-new-connection-arrow").remove();
+			this.nodesLinksGrp.selectAll(".d3-new-connection-line").remove();
+			this.nodesLinksGrp.selectAll(".d3-new-connection-start").remove();
+			this.nodesLinksGrp.selectAll(".d3-new-connection-guide").remove();
+			this.nodesLinksGrp.selectAll(".d3-new-connection-arrow").remove();
 		}
 	}
 
@@ -4504,7 +4512,7 @@ export default class SVGCanvasRenderer {
 		var node = null;
 		const prox = proximity || 0;
 		const selector = this.getSelectorForClass("d3-node-group");
-		this.canvasGrp.selectAll(selector)
+		this.nodesLinksGrp.selectAll(selector)
 			.each(function(d) {
 				let portRadius = d.layout.portRadius;
 				if (CanvasUtils.isSuperBindingNode(d)) {
@@ -4550,7 +4558,7 @@ export default class SVGCanvasRenderer {
 				defaultPortId = this.getDefaultInputPortId(node);
 			}
 
-			this.canvasGrp.selectAll(this.getSelectorForId("node_grp", node.id)).selectAll("." + portClassName)
+			this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", node.id)).selectAll("." + portClassName)
 				.each(function(p) { // Use function keyword so 'this' pointer references the dom object
 					const portObj = d3.select(this);
 					if (portObjectType === PORT_OBJECT_IMAGE) {
@@ -4884,7 +4892,7 @@ export default class SVGCanvasRenderer {
 		const that = this;
 		const comSelector = this.getSelectorForClass("d3-comment-group");
 
-		var commentGroupSel = this.canvasGrp
+		var commentGroupSel = this.commentsGrp
 			.selectAll(comSelector)
 			.data(this.activePipeline.comments, function(d) { return d.id; });
 
@@ -4900,7 +4908,7 @@ export default class SVGCanvasRenderer {
 		} else if (this.selecting || this.regionSelect) {
 			commentGroupSel.each(function(d) {
 				const comOutlineSelector = that.getSelectorForId("comment_sel_outline", d.id);
-				that.canvasGrp.selectAll(comOutlineSelector)
+				that.commentsGrp.selectAll(comOutlineSelector)
 					.attr("height", d.height + (2 * that.canvasLayout.commentHighlightGap))
 					.attr("width", d.width + (2 * that.canvasLayout.commentHighlightGap))
 					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
@@ -4914,7 +4922,7 @@ export default class SVGCanvasRenderer {
 				// from the canvas) and when WML Canvas uses that clipboard support in place
 				// of its own.
 				const comBodySelector = that.getSelectorForId("comment_body", d.id);
-				that.canvasGrp.selectAll(comBodySelector)
+				that.commentsGrp.selectAll(comBodySelector)
 					.datum(() => that.getComment(d.id)) // Set the __data__ to the updated data
 					.each(function(cd) {
 						var imageObj = d3.select(this);
@@ -4970,7 +4978,7 @@ export default class SVGCanvasRenderer {
 				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
 					that.setCommentStyles(d, "default", d3.select(this));
 					if (that.canvasLayout.connectionType === "ports") {
-						that.canvasGrp.selectAll(that.getSelectorForId("comment_port", d.id)).remove();
+						that.commentsGrp.selectAll(that.getSelectorForId("comment_port", d.id)).remove();
 					}
 				})
 				// Use mouse down instead of click because it gets called before drag start.
@@ -5097,7 +5105,7 @@ export default class SVGCanvasRenderer {
 
 			newAndExistingCommentGrps
 				.each((d) => {
-					const commentGrp = this.canvasGrp.selectAll(that.getSelectorForId("comment_grp", d.id));
+					const commentGrp = this.commentsGrp.selectAll(that.getSelectorForId("comment_grp", d.id));
 					const comment = this.getComment(d.id);
 
 					commentGrp
@@ -5882,7 +5890,7 @@ export default class SVGCanvasRenderer {
 
 		} else if (this.selecting || this.regionSelect) {
 			if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-				this.canvasGrp
+				this.nodesLinksGrp
 					.selectAll(linkSelector)
 					.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null));
 
@@ -5901,7 +5909,7 @@ export default class SVGCanvasRenderer {
 		const lineArray = this.buildLineArray();
 		const afterLineArray = Date.now();
 
-		this.canvasGrp.selectAll(linkSelector)
+		this.nodesLinksGrp.selectAll(linkSelector)
 			.data(lineArray, function(line) { return line.id; })
 			.join(
 				(enter) => this.createNewLinks(enter)
@@ -5917,9 +5925,9 @@ export default class SVGCanvasRenderer {
 			const portOutSelector = this.getSelectorForClass("d3-node-port-output");
 			const portInSelector = this.getSelectorForClass(this.getNodeInputPortClassName());
 			const portInArrSelector = this.getSelectorForClass("d3-node-port-input-arrow");
-			this.canvasGrp.selectAll(portOutSelector).attr("connected", "no");
-			this.canvasGrp.selectAll(portInSelector).attr("connected", "no");
-			this.canvasGrp.selectAll(portInArrSelector).attr("connected", "no");
+			this.nodesLinksGrp.selectAll(portOutSelector).attr("connected", "no");
+			this.nodesLinksGrp.selectAll(portInSelector).attr("connected", "no");
+			this.nodesLinksGrp.selectAll(portInArrSelector).attr("connected", "no");
 			lineArray.forEach((line) => {
 				if (line.type === NODE_LINK) {
 					if (line.trg) {
@@ -6235,19 +6243,6 @@ export default class SVGCanvasRenderer {
 		linkGroup.filter((lnk) => this.hasOneDecorationOrMore(lnk)).lower();
 		linkGroup.filter((lnk) => !this.hasOneDecorationOrMore(lnk)).lower();
 
-		// We push comments to the back in the reverse order they were added to the
-		// comments array. This is to ensure that pasted comments get displayed on
-		// top of previously existing comments.
-		const comments = this.activePipeline.comments;
-
-		for (var idx = comments.length - 1; idx > -1; idx--) {
-			this.canvasGrp.selectAll(this.getSelectorForId("comment_grp", comments[idx].id)).lower();
-		}
-
-		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
-			this.canvasUnderlay.lower();
-		}
-
 		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 			this.raiseSelectedLinksToTop();
@@ -6268,7 +6263,7 @@ export default class SVGCanvasRenderer {
 	// when selection handles are being displayed on selected links because the
 	// handles may be in the same positions as port circles on the nodes.
 	raiseSelectedLinksToTop() {
-		this.canvasGrp
+		this.nodesLinksGrp
 			.selectAll(".d3-data-link[data-selected]")
 			.raise();
 	}
