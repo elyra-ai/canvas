@@ -291,7 +291,8 @@
         "description": {
           "default": "Readonly structuretable control with multi row selection",
           "placement": "on_panel"
-        }
+        },
+        "control": "readonlyTable"
       },
       {
         "parameter_ref": "readonlyStructurelistTableControl",
@@ -301,7 +302,8 @@
         "description": {
           "default": "Readonly structurelisteditor with single row selection and a custom edit button label.",
           "placement": "on_panel"
-        }
+        },
+        "control": "readonlyTable"
       },
       {
         "parameter_ref": "readonlyNestedStructure",
@@ -312,7 +314,8 @@
         "description": {
           "default": "Readonly structuretable with a nested structurelisteditor.",
           "placement": "on_panel"
-        }
+        },
+        "control": "readonlyTable"
       },
       {
         "parameter_ref": "readonlyTableError",
@@ -322,7 +325,8 @@
         "description": {
           "default": "readonlyTable control that has a non-valid field. Click the edit button to trigger the conditions.",
           "placement": "on_panel"
-        }
+        },
+        "control": "readonlyTable"
       },
       {
         "parameter_ref": "enableDisabledTable",
@@ -338,7 +342,8 @@
         "description": {
           "default": "readonlyTable that is disabled.",
           "placement": "on_panel"
-        }
+        },
+        "control": "readonlyTable"
       },
       {
         "parameter_ref": "showHiddenTable",
@@ -355,7 +360,8 @@
         "description": {
           "default": "readonlyTable control that was hidden because there are no rows in the table",
           "placement": "on_panel"
-        }
+        },
+        "control": "readonlyTable"
       }
     ],
     "complex_type_info": [
@@ -364,7 +370,6 @@
         "label": {
           "default": "Rename Subpanel"
         },
-        "control": "readonlyTable",
         "key_definition": {
           "parameter_ref": "structuretableRenameFields_readonly_int",
           "label": {
@@ -471,8 +476,7 @@
             "width": 20
           }
         ],
-        "row_selection": "single",
-        "control": "readonlyTable"
+        "row_selection": "single"
       },
       {
         "complex_type_ref": "readonlyNestedStructureArray",
@@ -510,8 +514,7 @@
               "resource_key": "Open subpanel to modify name and type"
             }
           }
-        ],
-        "control": "readonlyTable"
+        ]
       },
       {
         "complex_type_ref": "readonlyNestedStructureArrays",
