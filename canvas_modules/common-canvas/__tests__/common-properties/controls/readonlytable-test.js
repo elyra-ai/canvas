@@ -15,7 +15,7 @@
  */
 
 import React from "react";
-import ReadonlyTableControl from "../../../src/common-properties/controls/readonlyTable";
+import ReadonlyTableControl from "../../../src/common-properties/controls/readonlytable";
 import { mountWithIntl, shallowWithIntl } from "../../_utils_/intl-utils";
 import { Provider } from "react-redux";
 import { expect } from "chai";
