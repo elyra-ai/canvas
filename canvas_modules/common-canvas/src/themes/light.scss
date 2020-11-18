@@ -1,5 +1,8 @@
 @import "@carbon/themes/scss/themes";
-// Use the gray 10 theme
-$carbon--theme: $carbon--theme--g10;
 
-@import "../index.scss"
+// Switch the themes below to get light or dark.
+
+$carbon--theme: $carbon--theme--g10; // The light (gray 10) theme
+// $carbon--theme: $carbon--theme--g90; // The dark theme
+
+@import "../index.scss";
